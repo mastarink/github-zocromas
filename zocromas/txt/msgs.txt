@@ -1,0 +1,65 @@
+real	0m0.263s
+user	0m0.164s
+sys	0m0.042s
+  (  0s:    0) fork:24025 95:main                     :Start             
+  (  0s:  454) Main:24025 75:mas_init_argv            :A: 0 of 1. arg:'/mnt/miscn/mastar/develop/autotools/zocromas/src/.libs/mas_server'   
++0                  argv[0]: /mnt/miscn/mastar/develop/autotools/zocromas/src/.libs/mas_server
+                                           
++0                  opts.argv[0]: /mnt/miscn/mastar/develop/autotools/zocromas/src/.libs/mas_server
+                                           
++0                  opts.argv[0]: /mnt/miscn/mastar/develop/autotools/zocromas/src/.libs/mas_server
+                                           
++0  [*]     built at 20130105000005 : 20130105 : 130333 : 1357383813; (1357336805) pid=5dd9 ; tid:24025 [7f866066f700]    
+  (  0s:  781) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:213:mas_server_master        :creating ticker thread   
+  (  0s:  781) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:215:mas_server_master        :(0) created(?) ticker thread [7f866066d700]   
+  (  0s:  980) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:219:mas_server_master        :creating logger thread   
+  (  0s:  980) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:221:mas_server_master        :(0) created(?) logger thread [7f865fe6c700]   
+  (  0s: 1130) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:233:mas_server_master        :0. host zocromas.mastar.lan:5002   
+
+  (  0s: 1130) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:233:mas_server_master        :1. host zocromas.mastar.lan:5003   
+  (  0s: 1130) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:233:mas_server_master        :2. host zocromas.mastar.lan:5004   
+  (  0s: 1130) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:233:mas_server_master        :3. host zocromas.mastar.lan:5005   
+  (  0s: 1156) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:238:mas_server_master        :master loop for 4 hosts   
+  (  0s:  911) <|       TH   |>Main:24025 :1: pth:(t1) M0:2: 98:mas_lcontrol_make        :>C l/th ['zocromas.mastar.lan:5002':0]   
+  (  0s:  700) <|       TH   |>Main:24025 :1: pth:(t1) M0:2: 82:mas_lcontrol_register    :+C l/th 0x236aef8 ['zocromas.mastar.lan':5002]   
+  (  0s:  700) <|       TH   |>Main:24025 :1: pth:(t1) M0:2:104:mas_lcontrol_make        :>>C l/th 0x236aef8 ['zocromas.mastar.lan':5002]   
+  (  0s:  700) <|       TH   |>Main:24025 :1: pth:(t1) M0:2: 62:mas_listener_create      :<C l/th L0:0 for zocromas.mastar.lan:5002   
+  (  0s:  788) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 98:mas_lcontrol_make        :>C l/th ['zocromas.mastar.lan:5003':0]   
+  (  0s: 1016) <|       TH   |>Main:24025 :1: pth:(t2) L0:0:167:mas_listener_th          :mas_listener_th zocromas.mastar.lan:5002   
+  (  0s: 1032) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 82:mas_lcontrol_register    :+C l/th 0x236a038 ['zocromas.mastar.lan':5003]   
+  (  0s: 1032) <|       TH   |>Main:24025 :1: pth:(t1) M0:3:104:mas_lcontrol_make        :>>C l/th 0x236a038 ['zocromas.mastar.lan':5003]   
+  (  0s: 1032) <|       TH   |>Main:24025 :1: pth:(t2) L0:1:177:mas_listener_th          :setting cleanup for zocromas.mastar.lan:5002   
+  (  0s: 1245) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 62:mas_listener_create      :<C l/th L1:0 for zocromas.mastar.lan:5003   
+  (  0s: 1505) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 98:mas_lcontrol_make        :>C l/th ['zocromas.mastar.lan:5004':0]   
+  (  0s: 1693) <|       TH   |>Main:24025 :1: pth:(t2) L1:0:167:mas_listener_th          :mas_listener_th zocromas.mastar.lan:5003   
+  (  0s: 1709) <|       TH   |>Main:24025 :1: pth:(t2) L1:1:177:mas_listener_th          :setting cleanup for zocromas.mastar.lan:5003   
+  (  0s: 2054) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 82:mas_lcontrol_register    :+C l/th 0x236a388 ['zocromas.mastar.lan':5004]   
+  (  0s: 2054) <|       TH   |>Main:24025 :1: pth:(t1) M0:3:104:mas_lcontrol_make        :>>C l/th 0x236a388 ['zocromas.mastar.lan':5004]   
+  (  0s: 2054) <|        M   |>Main:24025 :1: pth:(t2) L1:1: 76:mas_channel_create       :host(19):zocromas.mastar.lan; port:5003   
+  (  0s: 2054) <|        M   |>Main:24025 :1: pth:(t2) L0:1: 76:mas_channel_create       :host(19):zocromas.mastar.lan; port:5002   
+  (  0s: 2054) <|       TH   |>Main:24025 :1: pth:(t2) L0:2:188:mas_listener_th          :l/th loop         
+  (  0s: 2054) <|     WAIT   |>Main:24025 :1: pth:(t2) L0:4: 53:mas_listener_wait_client :waiting client    
+  (  0s: 2054) <|     WAIT   |>Main:24025 :1: pth:(t2) L0:4: 56:mas_listener_wait_client :to open channel   
+  (  0s: 2166) <|       TH   |>Main:24025 :1: pth:(t2) L1:2:188:mas_listener_th          :l/th loop         
+  (  0s: 2166) <|     WAIT   |>Main:24025 :1: pth:(t2) L1:4: 53:mas_listener_wait_client :waiting client    
+  (  0s: 2166) <|     WAIT   |>Main:24025 :1: pth:(t2) L1:4: 56:mas_listener_wait_client :to open channel   
+  (  0s: 2278) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 62:mas_listener_create      :<C l/th L2:0 for zocromas.mastar.lan:5004   
+  (  0s: 2278) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 98:mas_lcontrol_make        :>C l/th ['zocromas.mastar.lan:5005':0]   
+  (  0s: 2466) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 82:mas_lcontrol_register    :+C l/th 0x236a848 ['zocromas.mastar.lan':5005]   
+  (  0s: 2466) <|       TH   |>Main:24025 :1: pth:(t1) M0:3:104:mas_lcontrol_make        :>>C l/th 0x236a848 ['zocromas.mastar.lan':5005]   
+  (  0s: 2594) <|       TH   |>Main:24025 :1: pth:(t2) L2:0:167:mas_listener_th          :mas_listener_th zocromas.mastar.lan:5004   
+  (  0s: 2738) <|       TH   |>Main:24025 :1: pth:(t1) M0:3: 62:mas_listener_create      :<C l/th L3:0 for zocromas.mastar.lan:5005   
+  (  0s: 2738) <|       TH   |>Main:24025 :1: pth:(t1) M0:4:173:mas_server_run_listeners :waiting...        
+  (  0s: 2738) <|       TH   |>Main:24025 :1: pth:(t1) M0:4: 56:mas_join_listener        :waiting at M0:4 for L0:4   
+  (  0s: 2738) <|       TH   |>Main:24025 :1: pth:(t2) L3:0:167:mas_listener_th          :mas_listener_th zocromas.mastar.lan:5005   
+  (  0s: 2754) <|       TH   |>Main:24025 :1: pth:(t2) L3:1:177:mas_listener_th          :setting cleanup for zocromas.mastar.lan:5005   
+  (  0s: 3099) <|       TH   |>Main:24025 :1: pth:(t2) L2:1:177:mas_listener_th          :setting cleanup for zocromas.mastar.lan:5004   
+  (  0s: 3444) <|        M   |>Main:24025 :1: pth:(t2) L3:1: 76:mas_channel_create       :host(19):zocromas.mastar.lan; port:5005   
+  (  0s: 3444) <|       TH   |>Main:24025 :1: pth:(t2) L3:2:188:mas_listener_th          :l/th loop         
+  (  0s: 3444) <|     WAIT   |>Main:24025 :1: pth:(t2) L3:4: 53:mas_listener_wait_client :waiting client    
+  (  0s: 3444) <|     WAIT   |>Main:24025 :1: pth:(t2) L3:4: 56:mas_listener_wait_client :to open channel   
+  (  0s: 3556) <|        M   |>Main:24025 :1: pth:(t2) L2:1: 76:mas_channel_create       :host(19):zocromas.mastar.lan; port:5004   
+  (  0s: 3556) <|       TH   |>Main:24025 :1: pth:(t2) L2:2:188:mas_listener_th          :l/th loop         
+  (  0s: 3556) <|     WAIT   |>Main:24025 :1: pth:(t2) L2:4: 53:mas_listener_wait_client :waiting client    
+  (  0s: 3556) <|     WAIT   |>Main:24025 :1: pth:(t2) L2:4: 56:mas_listener_wait_client :to open channel   
+

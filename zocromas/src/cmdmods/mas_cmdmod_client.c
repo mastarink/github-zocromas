@@ -28,7 +28,7 @@ related:
   mas_modules_commands_eval.c
 */
 
-char *
+static char *
 get_client_info_cmd( STD_CMD_ARGS )
 {
   char *sr;

@@ -1,0 +1,44 @@
+    1357383813.35402 (   0.00000) : main                          :098 : {main start}
+    1357383813.35406 (   0.00004) : mas_cli_options               :089 : {cli options got}
+    1357383813.35406 (   0.00004) : mas_init                      :191 : {init done, 4 hosts}
+    1357383813.35407 (   0.00005) : mas_server_master             :211 : {creating ticker thread}
+    1357383813.35407 (   0.00005) : mas_server_master             :216 : {(0) created(?) ticker thread [7f866066d700]}
+    1357383813.35407 (   0.00005) : mas_server_master             :218 : {creating logger thread}
+    1357383813.35408 (   0.00005) : mas_server_master             :222 : {(0) created(?) logger thread [7f865fe6c700]}
+    1357383813.35408 (   0.00006) : mas_server_master             :237 : {master loop for 4 hosts}
+    1357383813.45415 (   0.10012) : mas_listener_th               :161 : {listener thread started}
+    1357383813.45417 (   0.10015) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5002)}
+    1357383813.45417 (   0.10015) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5002}
+    1357383813.45418 (   0.10016) : mas_listener_th               :161 : {listener thread started}
+    1357383813.45418 (   0.10016) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5003)}
+    1357383813.45419 (   0.10016) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5003}
+    1357383813.45419 (   0.10017) : mas_channel_init              :128 : {using zocromas.mastar.lan:5002 to init channel}
+    1357383813.45419 (   0.10017) : mas_channel_init              :128 : {using zocromas.mastar.lan:5003 to init channel}
+    1357383813.45420 (   0.10017) : mas_listener_th               :161 : {listener thread started}
+    1357383813.45420 (   0.10018) : mas_listener_th               :161 : {listener thread started}
+    1357383813.45420 (   0.10018) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5005)}
+    1357383813.45421 (   0.10018) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5005}
+    1357383813.45421 (   0.10019) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5004)}
+    1357383813.45421 (   0.10019) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5004}
+    1357383813.45422 (   0.10019) : mas_channel_init              :128 : {using zocromas.mastar.lan:5005 to init channel}
+    1357383813.45422 (   0.10020) : mas_channel_init              :128 : {using zocromas.mastar.lan:5004 to init channel}
+    1357384664.75164 ( 851.39762) : mas_transaction_create        :049 : {client came}
+    1357384664.75167 ( 851.39765) : mas_transaction_create        :058 : {creating transaction thread; prcontrol=0x7f8654000b08}
+    1357384664.75167 ( 851.39765) : mas_transaction_create        :060 : {(0) created(?) transaction thread [7f865d03d700]}
+    1357384664.75168 ( 851.39766) : mas_transaction_th            :199 : {transaction thread started [7f865d03d700]}
+    1357384664.75168 ( 851.39766) : mas_transaction_th            :206 : {start r/th R0:0 @ L0:4}
+    1357384664.75169 ( 851.39767) : mas_channel_init              :128 : {using zocromas.mastar.lan:5002 to init channel}
+    1357384664.75169 ( 851.39767) : mas_evaluate_cmd              :051 : {evaluate 'top' args: 'check'}
+    1357384664.75170 ( 851.39767) : mas_evaluate_cmd              :069 : {to look for module top : top}
+    1357384664.75170 ( 851.39768) : mas_evaluate_cmd              :076 : {lib mas_servcmd_top}
+    1357384664.75170 ( 851.39768) : __mas_load_module             :038 : {module loaded: 'src/.libs/mas_servcmd_top.so'}
+    1357384664.75171 ( 851.39768) : mas_evaluate_cmd              :051 : {evaluate 'check' args: ''}
+    1357384705.32138 ( 891.96736) : mas_evaluate_cmd              :051 : {evaluate 'top' args: 'quit'}
+    1357384705.32139 ( 891.96737) : mas_evaluate_cmd              :051 : {evaluate 'quit' args: ''}
+    1357384705.32140 ( 891.96738) : mas_listeners_cancel          :095 : {cancel listeners}
+    1357384705.32141 ( 891.96738) : mas_transaction_th            :223 : {end r/th; i/s:0; i/c:0}
+    1357384705.32141 ( 891.96739) : mas_transaction_th            :238 : {transaction thread ending}
+    1357384705.32141 ( 891.96739) : mas_server_master             :253 : {just out of server main loop}
+    1357384705.32142 ( 891.96739) : mas_server_master             :267 : {exiting master server}
+    1357384705.32142 ( 891.96740) : mas_server_master             :271 : {cancelling logger}
+    1357384705.32142 ( 891.96740) : main                          :106 : {main end, memory_balance:1191}

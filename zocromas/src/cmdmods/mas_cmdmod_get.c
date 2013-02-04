@@ -136,7 +136,7 @@ uuid_cmd( STD_CMD_ARGS )
   return uuid;
 }
 
-char *
+static char *
 version_cmd( STD_CMD_ARGS )
 {
   char *s;

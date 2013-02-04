@@ -145,7 +145,7 @@ stop_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-char *
+static char *
 cls_cmd( STD_CMD_ARGS )
 {
 /* echo -en "\e[H\e[2J" >&2 */
@@ -153,7 +153,7 @@ cls_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-char *
+static char *
 exit_cmd( STD_CMD_ARGS )
 {
   ctrl.quit = 1;
@@ -162,7 +162,7 @@ exit_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-char *
+static char *
 restart_cmd( STD_CMD_ARGS )
 {
   ctrl.restart = 1;

@@ -1,0 +1,51 @@
+total 488
+lrwxrwxrwx 1 mastar mastar    18 Nov 29 2012 00:29:36 libmas_tools.la -> ../libmas_tools.la
+lrwxrwxrwx 1 mastar mastar    20 Nov 29 2012 00:29:36 libmas_connect.la -> ../libmas_connect.la
+lrwxrwxrwx 1 mastar mastar    21 Nov 29 2012 00:29:36 mas_servcmd_top.la -> ../mas_servcmd_top.la
+lrwxrwxrwx 1 mastar mastar    21 Nov 29 2012 00:29:36 mas_servcmd_set.la -> ../mas_servcmd_set.la
+lrwxrwxrwx 1 mastar mastar    21 Nov 29 2012 00:29:37 mas_servcmd_mem.la -> ../mas_servcmd_mem.la
+lrwxrwxrwx 1 mastar mastar    21 Nov 29 2012 00:29:36 mas_servcmd_get.la -> ../mas_servcmd_get.la
+lrwxrwxrwx 1 mastar mastar    21 Nov 29 2012 00:29:36 libmas_tools.so.0 -> libmas_tools.so.0.0.0
+lrwxrwxrwx 1 mastar mastar    21 Nov 29 2012 00:29:36 libmas_tools.so -> libmas_tools.so.0.0.0
+lrwxrwxrwx 1 mastar mastar    23 Nov 29 2012 00:29:36 libmas_connect.so.0 -> libmas_connect.so.0.0.0
+lrwxrwxrwx 1 mastar mastar    23 Nov 29 2012 00:29:36 libmas_connect.so -> libmas_connect.so.0.0.0
+lrwxrwxrwx 1 mastar mastar    24 Nov 29 2012 00:29:37 mas_servcmd_client.la -> ../mas_servcmd_client.la
+-rw------- 1 mastar mastar   930 Nov 29 2012 00:29:35 mas_cs.o
+-rw------- 1 mastar mastar   969 Nov 29 2012 00:29:35 mas_opts.o
+-rw------- 1 mastar mastar   976 Nov 29 2012 00:29:36 libmas_tools.lai
+-rw------- 1 mastar mastar   990 Nov 29 2012 00:29:36 libmas_connect.lai
+-rw------- 1 mastar mastar   998 Nov 29 2012 00:29:36 mas_servcmd_top.lai
+-rw------- 1 mastar mastar   998 Nov 29 2012 00:29:36 mas_servcmd_set.lai
+-rw------- 1 mastar mastar   998 Nov 29 2012 00:29:37 mas_servcmd_mem.lai
+-rw------- 1 mastar mastar   998 Nov 29 2012 00:29:36 mas_servcmd_get.lai
+-rw------- 1 mastar mastar  1019 Nov 29 2012 00:29:37 mas_servcmd_client.lai
+-rw------- 1 mastar mastar  1680 Nov 29 2012 00:29:35 mas_control.o
+-rw------- 1 mastar mastar  1824 Nov 29 2012 00:29:35 mas_lib0.o
+-rw------- 1 mastar mastar  3632 Nov 29 2012 00:29:36 mas_server_cmd_client.o
+-rw------- 1 mastar mastar  3906 Nov 29 2012 00:29:37 mas_servcmd_client.a
+-rw------- 1 mastar mastar  4128 Nov 29 2012 00:29:36 mas_server_cmd_set.o
+-rw------- 1 mastar mastar  4224 Nov 29 2012 00:29:36 mas_server_cmd_mem.o
+-rw------- 1 mastar mastar  4386 Nov 29 2012 00:29:36 mas_servcmd_set.a
+-rw------- 1 mastar mastar  4488 Nov 29 2012 00:29:37 mas_servcmd_mem.a
+-rw------- 1 mastar mastar  4760 Nov 29 2012 00:29:36 mas_server_cmd_get.o
+-rw------- 1 mastar mastar  5036 Nov 29 2012 00:29:36 mas_servcmd_get.a
+-rw------- 1 mastar mastar  5080 Nov 29 2012 00:29:35 mas_sig.o
+-rw------- 1 mastar mastar  6144 Nov 29 2012 00:29:35 mas_memory.o
+-rw------- 1 mastar mastar  6760 Nov 29 2012 00:29:35 mas_load_module.o
+-rw------- 1 mastar mastar  7256 Nov 29 2012 00:29:35 mas_listen.o
+-rwx------ 1 mastar mastar  7838 Nov 29 2012 00:29:36 mas_servcmd_set.so
+-rwx------ 1 mastar mastar  7953 Nov 29 2012 00:29:37 mas_servcmd_client.so
+-rwx------ 1 mastar mastar 12201 Nov 29 2012 00:29:36 mas_servcmd_get.so
+-rwx------ 1 mastar mastar 12244 Nov 29 2012 00:29:37 mas_servcmd_mem.so
+-rw------- 1 mastar mastar 12288 Nov 29 2012 00:29:35 mas_tools.o
+-rw------- 1 mastar mastar 12480 Nov 29 2012 00:29:35 mas_server_cmd_top.o
+-rw------- 1 mastar mastar 13608 Nov 29 2012 00:29:35 mas_open.o
+-rw------- 1 mastar mastar 14868 Nov 29 2012 00:29:36 mas_servcmd_top.a
+-rwx------ 1 mastar mastar 18483 Nov 29 2012 00:29:36 mas_servcmd_top.so
+-rw------- 1 mastar mastar 20816 Nov 29 2012 00:29:35 mas_common_cs.o
+-rwx------ 1 mastar mastar 23686 Nov 29 2012 00:29:37 mas_client
+-rwx------ 1 mastar mastar 29367 Nov 29 2012 00:29:36 libmas_tools.so.0.0.0
+-rwx------ 1 mastar mastar 31477 Nov 29 2012 00:29:36 libmas_connect.so.0.0.0
+-rw------- 1 mastar mastar 34168 Nov 29 2012 00:29:36 libmas_tools.a
+-rwx------ 1 mastar mastar 42587 Nov 29 2012 00:29:37 mas_server
+-rw------- 1 mastar mastar 43306 Nov 29 2012 00:29:36 libmas_connect.a

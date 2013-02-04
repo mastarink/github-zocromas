@@ -1,0 +1,56 @@
+Server
+1. main program thread : main @ mas_server_main.c
+      - setting some values to ctrl global structure
+      - making some processings of command line parameters
+      - call master muti-server mas_server_master @ mas_server_master.c
+   1.2. mas_server_master @ mas_server_master.c
+        - loop while ctrl.keep_listening:
+	  - create ctrl.listening_controls listening controls array
+	  - create thread for ticker - just for fun
+	  - prepare actions for listener thread final actions
+	  - create listener thread for each host mentioned (in command line) in parameter ( mas_server_listener_th @ mas_server_listener.c )	  
+	  - wait for listeners to end with mas_master_join_listeners
+
+2. listener thread : mas_server_listener_th @ mas_server_listener.c
+      - create plcontrol->transaction_controls transactions controls array
+      - create channel for given address, port etc.
+      - loop with mas_server_listener_client @ mas_server_serve.c
+          - wait for client connection
+	  - create transaction thread when client came ( mas_transaction_th @ mas_server_transaction.c )
+
+3. transaction thread : mas_transaction_th @ mas_server_transaction.c
+      - mas_transaction @ mas_server_transaction.c
+        3.1 mas_transaction @ mas_server_transaction.c
+	  - loop while data exchange / processing with client
+	  - close channel to client - client gone
+      - free data passed to thread
+
+
+
+
+
+
+
+The substitute command can be used to replace all occurrences of a word with
+another word: >
+
+	:%s/four/4/g
+
+	pattern		match count ~
+	\{,4}		0, 1, 2, 3 or 4
+	\{3,}		3, 4, 5, etc.
+	\{0,1}		0 or 1, same as \=
+	\{0,}		0 or more, same as *
+	\{1,}		1 or more, same as \+
+	\{3}		3
+
+
+:make
+:clist
+:cc
+:cnext
+
+
+
+
+:map <FX> GoDate: <Esc>:read !date<CR>kJ

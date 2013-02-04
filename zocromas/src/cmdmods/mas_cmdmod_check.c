@@ -29,13 +29,13 @@ related:
 
 
 
-char *
+static char *
 version_cmd( STD_CMD_ARGS )
 {
   return NULL;
 }
 
-char *
+static char *
 args_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
@@ -56,7 +56,7 @@ args_cmd( STD_CMD_ARGS )
   return result;
 }
 
-char *
+static char *
 uuid_cmd( STD_CMD_ARGS )
 {
   char *uuid = NULL;

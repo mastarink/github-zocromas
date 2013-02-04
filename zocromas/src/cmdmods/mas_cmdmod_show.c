@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+#include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "mas_common.h"
 
 #include "modules/inc/mas_modules_commands_eval.h"
@@ -22,11 +25,12 @@ related:
 
 
 
-char *
+static char *
 msg_cmd( STD_CMD_ARGS )
 {
-  mas_options_t *result = NULL;
+  char *result = NULL;
 
+  result = mas_strdup( "smth" );
   MFP( "msg: c%d\n", opts.f.bit.msg_c );
   MFP( "msg: s%d\n", opts.f.bit.msg_s );
   return ( char * ) result;
@@ -35,7 +39,7 @@ msg_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "msg", NULL, "show"}
+  {1, "msg", msg_cmd, "show"}
   ,
   {999, NULL, NULL, NULL}
 };

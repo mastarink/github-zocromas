@@ -1,0 +1,116 @@
+[ .../mastar/develop/autotools/zocromas ] :) 2$ /usr/sbin/ab2 -c1000 -n1000 http://mastar.lan:80/
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking mastar.lan (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
+
+
+Server Software:        Apache
+Server Hostname:        mastar.lan
+Server Port:            80
+
+Document Path:          /
+Document Length:        45 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   1.031 seconds
+Complete requests:      1000
+Failed requests:        0
+Write errors:           0
+Total transferred:      282564 bytes
+HTML transferred:       45090 bytes
+Requests per second:    969.81 [#/sec] (mean)
+Time per request:       1031.133 [ms] (mean)
+Time per request:       1.031 [ms] (mean, across all concurrent requests)
+Transfer rate:          267.61 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1  142 336.2     13    1005
+Processing:     1   15   6.4     15      29
+Waiting:        1   11   5.0     11      23
+Total:         19  157 332.9     28    1014
+
+Percentage of the requests served within a certain time (ms)
+  50%     28
+  66%     29
+  75%     31
+  80%     32
+  90%   1008
+  95%   1012
+  98%   1014
+  99%   1014
+ 100%   1014 (longest request)
+
+
+153x48  ==(xterm)=(/dev/pts/6) 12583256
+[mastar@mastar Wed 26 23:15:03] [] [devel]
+#116[ {6s} {10h 52:02} ~28342] ◇
+[ .../mastar/develop/autotools/zocromas ] :) 2$ /usr/sbin/ab2 -c1000 -n1000 http://mastar.lan:5003/
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking mastar.lan (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
+
+
+Server Software:        mas-1659651
+Server Hostname:        mastar.lan
+Server Port:            5003
+
+Document Path:          /
+Document Length:        224 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   1.005 seconds
+Complete requests:      1000
+Failed requests:        0
+Write errors:           0
+Total transferred:      398000 bytes
+HTML transferred:       224000 bytes
+Requests per second:    994.88 [#/sec] (mean)
+Time per request:       1005.146 [ms] (mean)
+Time per request:       1.005 [ms] (mean, across all concurrent requests)
+Transfer rate:          386.68 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    4  54.9      0    1003
+Processing:     0    4   1.3      3      13
+Waiting:        0    4   1.2      3      13
+Total:          1    7  54.8      4    1004
+
+Percentage of the requests served within a certain time (ms)
+  50%      4
+  66%      4
+  75%      4
+  80%      4
+  90%      6
+  95%     12
+  98%     17
+  99%     18
+ 100%   1004 (longest request)
+

@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <wait.h>
 
+#include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "mas_common.h"
 
 #include "server/inc/mas_server_tools.h"
@@ -24,15 +27,37 @@ related:
   mas_modules_commands_eval.c
 */
 
+/*
+ * if there is f-n <libname>_cmd than subtable ignored ! - is it FIXME ?
+*/
+/*
 char *
 ctrl_cmd( STD_CMD_ARGS )
 {
   char *r = NULL;
+
+  return r;
+}
+*/
+
+static char *
+sleep_cmd( STD_CMD_ARGS )
+{
+  char *r = NULL;
+  int secs = 0;
+
+  sscanf( args, "%d", &secs );
+  MFP("\nSLEEP %d", secs);
+  sleep( secs );
+  r = mas_strdup( "Ha-ha-ha" );
   return r;
 }
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, ctrl_cmd, NULL}
+  /* {0, NULL, ctrl_cmd, NULL} */
+  {0, NULL, list_commands_cmd, NULL}
+  ,
+  {1, "sleep", sleep_cmd, NULL}
   ,
   {999, NULL, NULL, NULL}
 };
