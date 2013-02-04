@@ -1,0 +1,325 @@
+
+chdir(/etc/vim)
+fchdir() to previous dir
+sourcing "/etc/vim/vimrc"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 93: sourcing "/usr/share/vim/vim73/syntax/syntax.vim"
+Searching for "syntax/synload.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/syntax/synload.vim"
+Searching for "/usr/share/vim/vimfiles/syntax/synload.vim"
+Searching for "/usr/share/vim/vim73/syntax/synload.vim"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 19: sourcing "/usr/share/vim/vim73/syntax/synload.vim"
+Searching for "syntax/syncolor.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/syntax/syncolor.vim"
+Searching for "/usr/share/vim/vimfiles/syntax/syncolor.vim"
+Searching for "/usr/share/vim/vim73/syntax/syncolor.vim"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 21: sourcing "/usr/share/vim/vim73/syntax/syncolor.vim"
+finished sourcing /usr/share/vim/vim73/syntax/syncolor.vim
+continuing in /usr/share/vim/vim73/syntax/synload.vim
+Searching for "/usr/share/vim/vimfiles/after/syntax/syncolor.vim"
+Searching for "/home/mastar/.vim/after/syntax/syncolor.vim"
+finished sourcing /usr/share/vim/vim73/syntax/synload.vim
+continuing in /usr/share/vim/vim73/syntax/syntax.vim
+Searching for "filetype.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/filetype.vim"
+Searching for "/usr/share/vim/vimfiles/filetype.vim"
+Searching for "/usr/share/vim/vim73/filetype.vim"
+chdir(/usr/share/vim/vim73)
+fchdir() to previous dir
+line 25: sourcing "/usr/share/vim/vim73/filetype.vim"
+Searching for "ftdetect/*.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/ftdetect/*.vim"
+Searching for "/usr/share/vim/vimfiles/ftdetect/*.vim"
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/cmake.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/cmake.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/conkyrc.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/conkyrc.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/dhcpd.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/dhcpd.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/gentoo.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/gentoo.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/luakit.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/luakit.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/nginx.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/nginx.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/pam.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/pam.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/proto.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/proto.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+chdir(/usr/share/vim/vimfiles/ftdetect)
+fchdir() to previous dir
+line 2591: sourcing "/usr/share/vim/vimfiles/ftdetect/uzbl.vim"
+finished sourcing /usr/share/vim/vimfiles/ftdetect/uzbl.vim
+continuing in /usr/share/vim/vim73/filetype.vim
+Searching for "/usr/share/vim/vim73/ftdetect/*.vim"
+Searching for "/usr/share/vim/vimfiles/after/ftdetect/*.vim"
+Searching for "/home/mastar/.vim/after/ftdetect/*.vim"
+finished sourcing /usr/share/vim/vim73/filetype.vim
+continuing in /usr/share/vim/vim73/syntax/syntax.vim
+Searching for "/usr/share/vim/vimfiles/after/filetype.vim"
+Searching for "/home/mastar/.vim/after/filetype.vim"
+finished sourcing /usr/share/vim/vim73/syntax/syntax.vim
+continuing in /etc/vim/vimrc
+Searching for "filetype.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/filetype.vim"
+Searching for "/usr/share/vim/vimfiles/filetype.vim"
+Searching for "/usr/share/vim/vim73/filetype.vim"
+chdir(/usr/share/vim/vim73)
+fchdir() to previous dir
+line 118: sourcing "/usr/share/vim/vim73/filetype.vim"
+finished sourcing /usr/share/vim/vim73/filetype.vim
+continuing in /etc/vim/vimrc
+Searching for "/usr/share/vim/vimfiles/after/filetype.vim"
+Searching for "/home/mastar/.vim/after/filetype.vim"
+Searching for "ftplugin.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/ftplugin.vim"
+Searching for "/usr/share/vim/vimfiles/ftplugin.vim"
+Searching for "/usr/share/vim/vim73/ftplugin.vim"
+chdir(/usr/share/vim/vim73)
+fchdir() to previous dir
+line 118: sourcing "/usr/share/vim/vim73/ftplugin.vim"
+finished sourcing /usr/share/vim/vim73/ftplugin.vim
+continuing in /etc/vim/vimrc
+Searching for "/usr/share/vim/vimfiles/after/ftplugin.vim"
+Searching for "/home/mastar/.vim/after/ftplugin.vim"
+finished sourcing /etc/vim/vimrc
+chdir(/home/mastar)
+fchdir() to previous dir
+sourcing "$HOME/.vimrc"
+chdir(/home/mastar/.mas/config/vim)
+fchdir() to previous dir
+line 7: sourcing "/home/mastar/.mas/config/vim/.vimrc-mastar"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 2: sourcing "/usr/share/vim/vim73/syntax/nosyntax.vim"
+finished sourcing /usr/share/vim/vim73/syntax/nosyntax.vim
+continuing in /home/mastar/.mas/config/vim/.vimrc-mastar
+Searching for "filetype.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/filetype.vim"
+Searching for "/usr/share/vim/vimfiles/filetype.vim"
+Searching for "/usr/share/vim/vim73/filetype.vim"
+chdir(/usr/share/vim/vim73)
+fchdir() to previous dir
+line 23: sourcing "/usr/share/vim/vim73/filetype.vim"
+finished sourcing /usr/share/vim/vim73/filetype.vim
+continuing in /home/mastar/.mas/config/vim/.vimrc-mastar
+Searching for "/usr/share/vim/vimfiles/after/filetype.vim"
+Searching for "/home/mastar/.vim/after/filetype.vim"
+Searching for "ftplugin.vim" in "/home/mastar/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim73,/usr/share/vim/vimfiles/after,/home/mastar/.vim/after"
+Searching for "/home/mastar/.vim/ftplugin.vim"
+Searching for "/usr/share/vim/vimfiles/ftplugin.vim"
+Searching for "/usr/share/vim/vim73/ftplugin.vim"
+chdir(/usr/share/vim/vim73)
+fchdir() to previous dir
+line 23: sourcing "/usr/share/vim/vim73/ftplugin.vim"
+finished sourcing /usr/share/vim/vim73/ftplugin.vim
+continuing in /home/mastar/.mas/config/vim/.vimrc-mastar
+Searching for "/usr/share/vim/vimfiles/after/ftplugin.vim"
+Searching for "/home/mastar/.vim/after/ftplugin.vim"
+Searching for "colors/mastar.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/colors/mastar.vim"
+chdir(/home/mastar/.mas/config/vim/colors)
+fchdir() to previous dir
+line 166: sourcing "/home/mastar/.mas/config/vim/colors/mastar.vim"
+finished sourcing /home/mastar/.mas/config/vim/colors/mastar.vim
+continuing in /home/mastar/.mas/config/vim/.vimrc-mastar
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 171: sourcing "/usr/share/vim/vim73/syntax/syntax.vim"
+Searching for "syntax/synload.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/syntax/synload.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/syntax/synload.vim"
+Searching for "/usr/share/vim/vim73/syntax/synload.vim"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 19: sourcing "/usr/share/vim/vim73/syntax/synload.vim"
+Searching for "colors/mastar.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/colors/mastar.vim"
+chdir(/home/mastar/.mas/config/vim/colors)
+fchdir() to previous dir
+line 19: sourcing "/home/mastar/.mas/config/vim/colors/mastar.vim"
+Searching for "syntax/syncolor.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/syntax/syncolor.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/syntax/syncolor.vim"
+Searching for "/usr/share/vim/vim73/syntax/syncolor.vim"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 2: sourcing "/usr/share/vim/vim73/syntax/syncolor.vim"
+finished sourcing /usr/share/vim/vim73/syntax/syncolor.vim
+continuing in /home/mastar/.mas/config/vim/colors/mastar.vim
+Searching for "/usr/share/vim/vim73/../vimfiles/after/syntax/syncolor.vim"
+Searching for "/home/mastar/.mas/config/vim/after/syntax/syncolor.vim"
+Searching for "syntax/syncolor.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/syntax/syncolor.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/syntax/syncolor.vim"
+Searching for "/usr/share/vim/vim73/syntax/syncolor.vim"
+chdir(/usr/share/vim/vim73/syntax)
+fchdir() to previous dir
+line 4: sourcing "/usr/share/vim/vim73/syntax/syncolor.vim"
+finished sourcing /usr/share/vim/vim73/syntax/syncolor.vim
+continuing in /home/mastar/.mas/config/vim/colors/mastar.vim
+Searching for "/usr/share/vim/vim73/../vimfiles/after/syntax/syncolor.vim"
+Searching for "/home/mastar/.mas/config/vim/after/syntax/syncolor.vim"
+finished sourcing /home/mastar/.mas/config/vim/colors/mastar.vim
+continuing in /usr/share/vim/vim73/syntax/synload.vim
+chdir(/home/mastar/.mas/config/vim)
+fchdir() to previous dir
+line 73: sourcing "/home/mastar/.mas/config/vim/mysyntax.vim"
+finished sourcing /home/mastar/.mas/config/vim/mysyntax.vim
+continuing in /usr/share/vim/vim73/syntax/synload.vim
+finished sourcing /usr/share/vim/vim73/syntax/synload.vim
+continuing in /usr/share/vim/vim73/syntax/syntax.vim
+finished sourcing /usr/share/vim/vim73/syntax/syntax.vim
+continuing in /home/mastar/.mas/config/vim/.vimrc-mastar
+chdir(.)
+fchdir() to previous dir
+line 237: sourcing "./vimrc-mastar"
+finished sourcing ./vimrc-mastar
+continuing in /home/mastar/.mas/config/vim/.vimrc-mastar
+finished sourcing /home/mastar/.mas/config/vim/.vimrc-mastar
+continuing in /home/mastar/.vimrc
+finished sourcing $HOME/.vimrc
+could not source ".vimrc"
+could not source ".exrc"
+Searching for "plugin/**/*.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/plugin/**/*.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/plugin/**/*.vim"
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/../vimfiles/plugin/bugsummary.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/bugsummary.vim
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/../vimfiles/plugin/newebuild.vim"
+Searching for "plugin/gentoo-common.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/plugin/gentoo-common.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+line 13: sourcing "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim
+continuing in /usr/share/vim/vimfiles/plugin/newebuild.vim
+Searching for "/usr/share/vim/vim73/plugin/gentoo-common.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/after/plugin/gentoo-common.vim"
+Searching for "/home/mastar/.mas/config/vim/after/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/newebuild.vim
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/../vimfiles/plugin/newinitd.vim"
+Searching for "plugin/gentoo-common.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/plugin/gentoo-common.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+line 13: sourcing "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim
+continuing in /usr/share/vim/vimfiles/plugin/newinitd.vim
+Searching for "/usr/share/vim/vim73/plugin/gentoo-common.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/after/plugin/gentoo-common.vim"
+Searching for "/home/mastar/.mas/config/vim/after/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/newinitd.vim
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/../vimfiles/plugin/newmetadata.vim"
+Searching for "plugin/gentoo-common.vim" in "/home/mastar/.mas/config/vim,/usr/share/vim/vim73/../vimfiles,/usr/share/vim/vim73,/usr/share/vim/vim73/../vimfiles/after,/home/mastar/.mas/config/vim/after"
+Searching for "/home/mastar/.mas/config/vim/plugin/gentoo-common.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+chdir(/usr/share/vim/vim73/../vimfiles/plugin)
+fchdir() to previous dir
+line 13: sourcing "/usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/gentoo-common.vim
+continuing in /usr/share/vim/vimfiles/plugin/newmetadata.vim
+Searching for "/usr/share/vim/vim73/plugin/gentoo-common.vim"
+Searching for "/usr/share/vim/vim73/../vimfiles/after/plugin/gentoo-common.vim"
+Searching for "/home/mastar/.mas/config/vim/after/plugin/gentoo-common.vim"
+finished sourcing /usr/share/vim/vim73/../vimfiles/plugin/newmetadata.vim
+Searching for "/usr/share/vim/vim73/plugin/**/*.vim"
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/getscriptPlugin.vim"
+finished sourcing /usr/share/vim/vim73/plugin/getscriptPlugin.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/gzip.vim"
+finished sourcing /usr/share/vim/vim73/plugin/gzip.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/matchparen.vim"
+finished sourcing /usr/share/vim/vim73/plugin/matchparen.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/netrwPlugin.vim"
+finished sourcing /usr/share/vim/vim73/plugin/netrwPlugin.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/rrhelper.vim"
+finished sourcing /usr/share/vim/vim73/plugin/rrhelper.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/spellfile.vim"
+finished sourcing /usr/share/vim/vim73/plugin/spellfile.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/tarPlugin.vim"
+finished sourcing /usr/share/vim/vim73/plugin/tarPlugin.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/tohtml.vim"
+finished sourcing /usr/share/vim/vim73/plugin/tohtml.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/vimballPlugin.vim"
+finished sourcing /usr/share/vim/vim73/plugin/vimballPlugin.vim
+chdir(/usr/share/vim/vim73/plugin)
+fchdir() to previous dir
+sourcing "/usr/share/vim/vim73/plugin/zipPlugin.vim"
+finished sourcing /usr/share/vim/vim73/plugin/zipPlugin.vim
+Searching for "/usr/share/vim/vim73/../vimfiles/after/plugin/**/*.vim"
+Searching for "/home/mastar/.mas/config/vim/after/plugin/**/*.vim"
+Opening the X display took 0 msec
+Reading viminfo file "/home/mastar/.viminfo" info oldfiles
+Opening the X display took 94 msec
+Executing BufEnter Auto commands for "*"
+autocommand sil! call s:LocalBrowse(expand("<amatch>"))
+
+Executing VimEnter Auto commands for "*"
+autocommand sil! call s:VimEnter(expand("<amatch>"))
+
+Executing CursorMoved Auto commands for "*"
+autocommand call s:Highlight_Matching_Pair()
+
+
+Writing viminfo file "/home/mastar/.viminfo"

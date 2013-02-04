@@ -1,0 +1,24 @@
+"
+" set viminfo='50,<1000,s100,:0,n~/vim/viminfo
+" set ttyfast
+" set notbi
+" autocmd! VimEnter *.mased source %.vim
+" echo 'in ' . expand('<sfile>')
+let dfile=expand('%')
+let sfile='mased/' . expand('%') . '.vim'
+if filereadable(sfile)
+" set viminfo='50,<1000,s1000,.viminfo
+  execute "set viminfo='50,<1000,s1000,n" . expand('%') . ".viminfo"
+  set verbosefile=verbose.tmp
+  set path=src,src/server,src/server/inc,src/inc,src/fileinfo,src/fileinfo/inc,src/io,src/io/inc,src/init,src/init/inc,src/zoctools,src/zoctools/inc,src/cmdmods,src/cmdmods/inc,src/control,src/control/inc,src/client,src/client/inc,src/http,src/http/inc,src/listener,src/listener/inc,src/channel,src/channel/inc,src/modules,src/modules/inc,src/transaction,src/transaction/inc,src/variables,src/variables/inc,src/log,src/log/inc,src/xcromas,src/xcromas/inc
+  tab new
+
+  sil so `=sfile`
+" au ColorScheme sil so `=sfile`
+" autocmd! VimEnter * source gvim-vimenter.vim
+  au GUIEnter * winsize 156 50
+  au GUIEnter * source gvim-vimenter.vim
+
+  " echo 'later: gvim-vimenter.vim'
+endif
+" echo 'out ' . expand('<sfile>')

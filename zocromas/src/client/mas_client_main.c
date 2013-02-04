@@ -1,0 +1,50 @@
+#include "mas_basic_def.h"
+
+#include "mas_common.h"
+
+#include "init/inc/mas_init.h"
+#include "mas_init_client.h"
+
+#include "mas_client.h"
+
+
+/*
+this:
+  mas_client_main.c
+related:
+  mas_client.c
+  mas_client_session.c
+  mas_client_readline.c
+  mas_client_sig.c
+  mas_server_main.c
+more:
+  mas_client.h
+  mas_client_readline.h
+  mas_client_session.h
+  mas_cmdmod_client.c
+  mas_init_client.c
+  mas_init_client.h
+  mas_listener_wait_client.c
+  mas_listener_wait_client.h
+
+*/
+
+
+int
+main( int argc, char *argv[], char *env[] )
+{
+  ctrl.status = MAS_STATUS_START;
+
+  /* opts.restart_sleep = 1; */
+
+  HMSG( "Start" );
+  mas_init_client( mas_atexit, 1, argc, argv, env );
+  HMSG( "Inited (%d hosts)", opts.hosts_num );
+
+  for ( int ia = opts.hosts_num; ia > 0; ia-- )
+  {
+    mas_client( opts.hosts[ia - 1] );
+    break;
+  }
+  return 0;
+}

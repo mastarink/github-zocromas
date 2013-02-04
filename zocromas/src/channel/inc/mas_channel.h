@@ -1,0 +1,23 @@
+#ifndef MAS_CHANNEL_H
+#  define MAS_CHANNEL_H
+
+#  include "mas_channel_types.h"
+
+int mas_channel_fd( const mas_channel_t * pchannel );
+FILE *mas_channel_stream( const mas_channel_t * pchannel );
+
+mas_channel_t *mas_channel_clone( mas_channel_t * pchannel_src );
+
+
+int mas_channel_writef( const mas_channel_t * pchannel, const char *fmt, ... );
+int mas_channel_vwritef( const mas_channel_t * pchannel, const char *fmt, va_list args );
+
+int mas_channel_write_string( const mas_channel_t * pchannel, char *cbuf, int z );
+
+int mas_channel_write( const mas_channel_t * pchannel, char *cbuf, size_t sz );
+
+char *mas_channel_ip_string( mas_channel_t * pchannel );
+
+int mas_channel_read_all( mas_channel_t * pchannel, char **pbuf, size_t * psz );
+
+#endif
