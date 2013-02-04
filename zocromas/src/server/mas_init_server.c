@@ -83,7 +83,7 @@ mas_destroy_server( void )
   if ( ctrl.lcontrols_list )
   {
     MAS_LOG( "to cancel listeners" );
-    MFP( "\nTO CANCEL LISTENERS\n" );
+    MFP( "\nTO CANCEL LISTENERS" );
     mas_listeners_cancel(  );
   }
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
@@ -98,10 +98,10 @@ mas_destroy_server( void )
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
-  MFP( "\nTO STOP LOGGER\n" );
+  MFP( "\nTO STOP LOGGER" );
   mas_logger_stop(  );
-  MFP( "\nTO STOP TICKER\n" );
+  MFP( "\nTO STOP TICKER" );
   mas_ticker_stop(  );
   MAS_LOG( "destroy server done" );
-  MFP( "\nDESTROY SERVER DONE\n" );
+  MFP( "\nDESTROY SERVER DONE" );
 }

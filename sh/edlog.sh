@@ -1,6 +1,6 @@
 #!/bin/sh
 ! type -t gvim_caller && . $MAS_SHLIB/libstdbins.bash
-. ~/.mas/develop/autotools/sh/setup.sh
+. $MAS_MAS_DIR/develop/autotools/zoc/sh/setup.sh
 
 if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
   if [[ "$MAS_PERSONAL_EDITOR" ]] ; then

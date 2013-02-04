@@ -87,10 +87,10 @@
 #define MAS_CFLAGS "-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\"${pkglibdir}\" -DMAS_LIBDIR=\"${libdir}\" -ltcmalloc"
 
 /* cdate */
-#define MAS_C_DATE "20130204211531"
+#define MAS_C_DATE "20130205000321"
 
 /* Enable additional debugging at the expense of performance and size */
-/* #undef MAS_DEBUG */
+#define MAS_DEBUG 1
 
 /* */
 #define MAS_FREE free
@@ -114,16 +114,16 @@
 #define MAS_STRDUP strdup
 
 /* sdate */
-#define MAS_S_DATE "1360005331"
+#define MAS_S_DATE "1360015401"
 
 /* Enable additional tracememing at the expense of performance and size */
-/* #undef MAS_TRACEMEM */
+#define MAS_TRACEMEM 1
 
 /* uname */
 #define MAS_UNAME "Linux mastar 3.6.11-gentoo.130126.m.g #1 SMP Sat Jan 26 16:56:11 EET 2013 x86_64 Intel(R) Core(TM) i3-3240 CPU @ 3.40GHz GenuineIntel GNU/Linux"
 
 /* uuidgen */
-#define MAS_UUID "1e898ee5-b635-4f5d-9f13-f55ba5f0290b"
+#define MAS_UUID "468747ed-a6f0-4be1-b763-60183b262137"
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 /* #undef NO_MINUS_C_MINUS_O */

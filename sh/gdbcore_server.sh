@@ -1,4 +1,4 @@
 #!/bin/sh
-. ~/.mas/develop/autotools/sh/setup.sh
+. $MAS_MAS_DIR/develop/autotools/zoc/sh/setup.sh
 
 gdb_core_any $0 $@ 

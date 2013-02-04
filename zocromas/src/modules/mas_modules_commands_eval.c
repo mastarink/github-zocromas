@@ -97,7 +97,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
     if ( !libname )
       libname = pcommand->name;
 
-    MAS_LOG( "to look for module %s.%s : %p", libname, pcommand->name, ( void * ) ( unsigned long ) pcommand->function );
+    MAS_LOG( "to look for module %s.%s : %p", libname, pcommand->name, ( void * ) ( unsigned long long ) pcommand->function );
     cMSG( "to look for module %s : %s", libname, pcommand->name );
     {
       full_libname = mas_strdup( "mas_cmdmod_" );
@@ -111,6 +111,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
       {
         cmd_fun = mas_modules_load_func( full_libname, full_fun_name );
         loaded_subtable = mas_modules_load_subtable( full_libname );
+        cMSG( "cmd_fun %s.%s: %p", full_libname, full_fun_name, ( void * ) ( unsigned long long ) cmd_fun );
         MAS_LOG( "loading  func. %s:%s => func:%p subt:%p", full_libname, full_fun_name, ( void * ) ( unsigned long ) cmd_fun,
                  ( void * ) loaded_subtable );
         if ( !cmd_fun && loaded_subtable )
@@ -230,17 +231,21 @@ mas_evaluate_command( STD_CMD_ARGS )
       r = mas_missing_funsetup( this_command );
       MAS_LOG( "evaluate : missing function - '%s' args: '%s'", this_command->name, args );
     }
+    cMSG( "(%d) function:%p", r, ( void * ) ( unsigned long long ) this_command->function );
     if ( r >= 0 && this_command->function )
     {
+      cMSG( "eval %d. %s : %p : %d", this_command->id, this_command->name,
+            ( void * ) ( unsigned long long ) ( this_command->function ), this_command->function == universal_complex_cmd );
       answer = ( this_command->function ) ( STD_CMD_PASS );
       if ( MAS_VALID_ANSWER( answer ) )
       {
+        cMSG( "answer %s", answer );
         MAS_LOG( "(lev.%d) evaluated: %s(%s); answer: '%s'", level, this_command->name, args, level == 1 ? answer : "SKIPPED" );
       }
     }
     else
     {
-      /* EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname ); */
+      EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
       /* MAS_LOG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name,                       */
       /*          this_command->libname );                                                                                          */
       answer = MAS_INVALID_ANSWER;
