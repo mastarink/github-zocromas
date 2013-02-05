@@ -1,11 +1,8 @@
-#include <mastar/wrap/mas_std_def.h>
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-/* #include "mas_basic_def.h" */
-
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include "mas_arg_tools.h"

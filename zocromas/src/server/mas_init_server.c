@@ -18,6 +18,7 @@
 #include "log/inc/mas_logger.h"
 #include "log/inc/mas_log.h"
 
+#include "zoctools/inc/mas_lib_thread.h"
 #include "zoctools/inc/mas_thread_tools.h"
 #include "mas_init_threads.h"
 
@@ -83,7 +84,7 @@ mas_destroy_server( void )
   if ( ctrl.lcontrols_list )
   {
     MAS_LOG( "to cancel listeners" );
-    MFP( "\nTO CANCEL LISTENERS" );
+    FMSG( "\nTO CANCEL LISTENERS" );
     mas_listeners_cancel(  );
   }
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
@@ -98,10 +99,10 @@ mas_destroy_server( void )
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
-  MFP( "\nTO STOP LOGGER" );
+  FMSG( "\nTO STOP LOGGER" );
   mas_logger_stop(  );
-  MFP( "\nTO STOP TICKER" );
+  FMSG( "\nTO STOP TICKER" );
   mas_ticker_stop(  );
   MAS_LOG( "destroy server done" );
-  MFP( "\nDESTROY SERVER DONE" );
+  FMSG( "\nDESTROY SERVER DONE" );
 }

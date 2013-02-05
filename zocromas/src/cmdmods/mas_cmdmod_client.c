@@ -47,7 +47,7 @@ get_client_info_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "info", get_client_info_cmd, NULL}
+  {1, "info", get_client_info_cmd, NULL} /* get client info */
   ,
   {999, NULL, NULL, NULL}
 };

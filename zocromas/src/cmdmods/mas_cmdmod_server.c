@@ -9,11 +9,11 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/channel/mas_channel.h>
+
 #include "mas_common.h"
 
-#include "channel/inc/mas_channel.h"
 #include "server/inc/mas_server_tools.h"
-
 #include "zoctools/inc/mas_lib_thread.h"
 
 #include "transaction/inc/mas_transaction_control.h"
@@ -184,19 +184,19 @@ quit_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "info", info_cmd, NULL}
+  {1, "info", info_cmd, NULL} /* server info */
   ,
-  {2, "listener", NULL, "listener"}
+  {2, "listener", NULL, "listener"} /* server listener ... */
   ,
-  {3, "stop", stop_cmd, NULL}
+  {3, "stop", stop_cmd, NULL} /* server stop */
   ,
-  {4, "cls", cls_cmd, NULL}
+  {4, "cls", cls_cmd, NULL} /* server cls */
   ,
-  {5,.name = "restart",.function = restart_cmd,.libname = NULL}
+  {5,.name = "restart",.function = restart_cmd,.libname = NULL} /* server restart */
   ,
-  {6,.name = "exit",.function = exit_cmd,.libname = NULL}
+  {6,.name = "exit",.function = exit_cmd,.libname = NULL} /* server exit */
   ,
-  {7,.name = "quit",.function = quit_cmd,.libname = NULL}
+  {7,.name = "quit",.function = quit_cmd,.libname = NULL} /* server quit */
   ,
   {999, NULL, NULL, NULL}
 };

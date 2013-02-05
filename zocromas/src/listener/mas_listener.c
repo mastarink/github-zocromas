@@ -11,14 +11,14 @@
 
 #include <mastar/wrap/mas_lib.h>
 
+#include <mastar/channel/mas_channel.h>
+#include <mastar/channel/mas_channel_object.h>
+
 #include "mas_common.h"
 #include "log/inc/mas_log.h"
 
 #include "zoctools/inc/mas_lib_thread.h"
 #include "zoctools/inc/mas_thread_tools.h"
-
-#include "channel/inc/mas_channel.h"
-#include "channel/inc/mas_channel_object.h"
 
 #include "transaction/inc/mas_transaction.h"
 
@@ -74,7 +74,7 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
     /* tMSG( "joined th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) plcontrol->thread ); */
     thMSG( "joined M0:%u & L%lu:%u", ctrl.status, plcontrol->serial, plcontrol->status );
     r = 0;
-    MFP( "\nLISTENER %lu STOPPED\n", plcontrol->serial );
+    FMSG( "\nLISTENER %lu STOPPED", plcontrol->serial );
   }
   return r;
 }
@@ -288,7 +288,7 @@ mas_listener_th( void *arg )
 
   /* mas_lcontrols_delete( plcontrol );  ---> done at mas_listener_cleanup ?!?! */
 
-  MFP( "\nLISTENER STOP\n" );
+  FMSG( "\nLISTENER STOP" );
   mas_pthread_exit( NULL );
   return NULL;
 }

@@ -9,11 +9,11 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 
+#include <mastar/channel/mas_channel_object.h>
+#include <mastar/channel/mas_channel.h>
+
 #include "mas_common.h"
 #include "log/inc/mas_log.h"
-
-#include "channel/inc/mas_channel_object.h"
-#include "channel/inc/mas_channel.h"
 
 #include "transaction/inc/mas_transaction_control.h"
 #include "transaction/inc/mas_rcontrol_object.h"
@@ -27,7 +27,8 @@ related:
   mas_transaction.h
   mas_transaction_control.c
   mas_transaction_control_types.h
-  mas_server_master.c
+  mas_master.c
+  mas_client.c
   mas_transaction_xcromas.c
   mas_transaction_http.c
   

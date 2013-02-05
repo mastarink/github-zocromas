@@ -6,11 +6,11 @@
 #include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/io/mas_io.h>
+#include <mastar/channel/mas_channel.h>
 
 #include "mas_common.h"
-#include "channel/inc/mas_channel.h"
 
-#include "io/inc/mas_io.h"
 #include "mas_message_io.h"
 
 

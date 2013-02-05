@@ -92,8 +92,9 @@ _mas_strcat_xt( const char *func, int line, char *s1, const char *s2 )
 static void
 memerror( mas_mem_head_t * m )
 {
-  fprintf( stderr, "MEMORY ERROR %lx > [%lx : id:%lx]\n", ( unsigned long ) m, m->sig, m->id );
+  fprintf( stderr, "\nMEMORY ERROR %lx > [%lx : id:%lx]\n", ( unsigned long ) m, m->sig, m->id );
   /* sleep( 98 ); */
+      exit( 11 );
 }
 
 #endif
@@ -152,12 +153,12 @@ print_memlist( const char *func, int line )
     if ( memar[im] )
     {
       if ( !h++ )
-        fprintf( stderr, "\n%s:%d MEMORY TABLE\n", func, line );
-      fprintf( stderr, "id: %lx; sz:%lu; %s:%u\n", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line );
+        fprintf( stderr, "\n%s:%d MEMORY TABLE", func, line );
+      fprintf( stderr, "\nid: %lx; sz:%lu; %s:%u", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line );
     }
   }
   if ( !h )
-    fprintf( stderr, "\nEMPTY MEMORY TABLE\n" );
+    fprintf( stderr, "\nEMPTY MEMORY TABLE" );
 }
 
 void *
@@ -209,7 +210,7 @@ _mas_malloc( const char *func, int line, size_t size )
     }
     else
     {
-      fprintf( stderr, "MALLOC - CAN'T ALLOCATE\n" );
+      fprintf( stderr, "\nMALLOC - CAN'T ALLOCATE\n" );
       exit( 11 );
     }
   }

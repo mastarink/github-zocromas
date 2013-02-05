@@ -1,5 +1,3 @@
-#include <mastar/wrap/mas_std_def.h>
-
 /* tools */
 #include <stdio.h>
 #include <stdarg.h>
@@ -11,12 +9,10 @@
 #include <time.h>
 #include <string.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
-
-
-/* #include "mas_common.h" */
 
 #include "mas_tools.h"
 

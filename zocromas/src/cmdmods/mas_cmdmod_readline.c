@@ -47,7 +47,7 @@ readline_cmd( STD_CMD_ARGS )
 }
 
 mas_cmd_t subcmdtable[] = {
-  {1, NULL, readline_cmd, NULL}
+  {1, NULL, readline_cmd, NULL} /* get readline */
   ,
   {999, NULL, NULL, NULL}
 };

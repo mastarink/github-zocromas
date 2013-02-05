@@ -33,14 +33,13 @@ msg_cmd( STD_CMD_ARGS )
   result = mas_strdup( "smth" );
   MFP( "msg: c%d\n", opts.f.bit.msg_c );
   MFP( "msg: s%d\n", opts.f.bit.msg_s );
-
   return ( char * ) result;
 }
 
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "msg", msg_cmd, "show"}
+  {1, "msg", msg_cmd, "show"} /* show msg ... */
   ,
   {999, NULL, NULL, NULL}
 };

@@ -16512,7 +16512,7 @@ _ACEOF
 
 ac_config_headers="$ac_config_headers config.h"
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/inc/Makefile src/io/Makefile src/io/inc/Makefile src/log/Makefile src/log/inc/Makefile src/control/Makefile src/control/inc/Makefile src/zoctools/Makefile src/zoctools/inc/Makefile src/modules/Makefile src/modules/inc/Makefile src/xcromas/Makefile src/xcromas/inc/Makefile src/variables/Makefile src/variables/inc/Makefile src/channel/Makefile src/channel/inc/Makefile src/fileinfo/Makefile src/fileinfo/inc/Makefile src/cmdmods/Makefile src/cmdmods/inc/Makefile src/init/Makefile src/init/inc/Makefile src/http/Makefile src/http/inc/Makefile src/client/Makefile src/client/inc/Makefile src/listener/Makefile src/listener/inc/Makefile src/transaction/Makefile src/transaction/inc/Makefile src/server/Makefile src/server/inc/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/inc/Makefile src/log/Makefile src/log/inc/Makefile src/control/Makefile src/control/inc/Makefile src/zoctools/Makefile src/zoctools/inc/Makefile src/modules/Makefile src/modules/inc/Makefile src/xcromas/Makefile src/xcromas/inc/Makefile src/variables/Makefile src/variables/inc/Makefile src/fileinfo/Makefile src/fileinfo/inc/Makefile src/cmdmods/Makefile src/cmdmods/inc/Makefile src/init/Makefile src/init/inc/Makefile src/http/Makefile src/http/inc/Makefile src/client/Makefile src/client/inc/Makefile src/listener/Makefile src/listener/inc/Makefile src/transaction/Makefile src/transaction/inc/Makefile src/server/Makefile src/server/inc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -17634,8 +17634,6 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/inc/Makefile" ;;
-    "src/io/Makefile") CONFIG_FILES="$CONFIG_FILES src/io/Makefile" ;;
-    "src/io/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/io/inc/Makefile" ;;
     "src/log/Makefile") CONFIG_FILES="$CONFIG_FILES src/log/Makefile" ;;
     "src/log/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/log/inc/Makefile" ;;
     "src/control/Makefile") CONFIG_FILES="$CONFIG_FILES src/control/Makefile" ;;
@@ -17648,8 +17646,6 @@ do
     "src/xcromas/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/xcromas/inc/Makefile" ;;
     "src/variables/Makefile") CONFIG_FILES="$CONFIG_FILES src/variables/Makefile" ;;
     "src/variables/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/variables/inc/Makefile" ;;
-    "src/channel/Makefile") CONFIG_FILES="$CONFIG_FILES src/channel/Makefile" ;;
-    "src/channel/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/channel/inc/Makefile" ;;
     "src/fileinfo/Makefile") CONFIG_FILES="$CONFIG_FILES src/fileinfo/Makefile" ;;
     "src/fileinfo/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/fileinfo/inc/Makefile" ;;
     "src/cmdmods/Makefile") CONFIG_FILES="$CONFIG_FILES src/cmdmods/Makefile" ;;

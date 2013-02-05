@@ -109,9 +109,9 @@ mas_master_th( void *arg )
   MAS_LOG( "bunch end, m/b:%lu", memory_balance );
 #endif
   MAS_LOG( "to stop spec. threads" );
-  MFP( "\nTO STOP LOGGER" );
+  FMSG( "\nTO STOP LOGGER" );
   mas_logger_stop(  );
-  MFP( "\nTO STOP TICKER" );
+  FMSG( "\nTO STOP TICKER" );
   mas_ticker_stop(  );
   MAS_LOG( "stopped spec. threads" );
 

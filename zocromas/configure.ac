@@ -221,9 +221,6 @@ AC_CONFIG_FILES([Makefile
 		src/Makefile
 		src/inc/Makefile
 
-		src/io/Makefile		
-		src/io/inc/Makefile		
-
 		src/log/Makefile		
 		src/log/inc/Makefile		
 
@@ -241,9 +238,6 @@ AC_CONFIG_FILES([Makefile
 		
 		src/variables/Makefile
 		src/variables/inc/Makefile
-		
-		src/channel/Makefile
-		src/channel/inc/Makefile
 		
 		src/fileinfo/Makefile
 		src/fileinfo/inc/Makefile

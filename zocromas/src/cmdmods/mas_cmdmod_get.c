@@ -67,13 +67,21 @@ env_cmd( STD_CMD_ARGS )
     if ( ctrl.launchere )
     {
       char *const *pe;
+      const char *notan;
 
       val = NULL;
       pe = ctrl.launchere;
       while ( pe && *pe )
       {
-        val = mas_strcat_x( val, *pe );
-        val = mas_strcat_x( val, "\n" );
+        notan = mas_find_eq_value( *pe );
+        if ( **pe < ' ' || **pe == '}' || ( notan && notan[0] == '(' && notan[1] == ')' ) )
+        {
+        }
+        else
+        {
+          val = mas_strcat_x( val, *pe );
+          val = mas_strcat_x( val, "\n" );
+        }
         pe++;
       }
     }
@@ -150,27 +158,27 @@ version_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "opts", opts_cmd, NULL}   // in this module, name: opts_cmd
+  {1, "opts", opts_cmd, NULL}   /* get opts */// in this module, name: opts_cmd
   ,
-  {2, "env", env_cmd, NULL}     // in this module, name: env_cmd
+  {2, "env", env_cmd, NULL}     /* get env */// in this module, name: env_cmd
   ,
-  {3, "mem", NULL, NULL}        // in module 'mem'
+  {3, "mem", NULL, NULL}        /* get mem */// in module 'mem'
   ,
-  {4, "client", NULL, NULL}
+  {4, "client", NULL, NULL}     /* get client */
   ,
-  {5, "server", NULL, NULL}
+  {5, "server", NULL, NULL}     /* get server */
   ,
-  {6, "date", date_cmd, NULL}
+  {6, "date", date_cmd, NULL}   /* get date */
   ,
-  {7, "args", args_cmd, NULL}
+  {7, "args", args_cmd, NULL}   /* get args */
   ,
-  {8, "var", var_cmd, NULL}
+  {8, "var", var_cmd, NULL}     /* get var */
   ,
-  {9, "uuid", uuid_cmd, NULL}
+  {9, "uuid", uuid_cmd, NULL}   /* get uuid */
   ,
-  {10,.name = "version",.function = version_cmd,.libname = NULL}
+  {10,.name = "version",.function = version_cmd,.libname = NULL} /* get version */
   ,
-  {11, "readline", NULL, NULL}
+  {11, "readline", NULL, NULL}  /* get readline */
   ,
   {999, NULL, NULL, NULL}
 };

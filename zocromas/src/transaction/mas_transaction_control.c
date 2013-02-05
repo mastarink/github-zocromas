@@ -5,11 +5,12 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 
+/* #include <mastar/channel/mas_channel_object.h> */
+#include <mastar/channel/mas_channel_open.h>
+#include <mastar/channel/mas_channel.h>
+
 #include "mas_common.h"
 #include "log/inc/mas_log.h"
-
-#include "channel/inc/mas_channel_open.h"
-#include "channel/inc/mas_channel.h"
 
 #include "transaction/inc/mas_transaction_control.h"
 

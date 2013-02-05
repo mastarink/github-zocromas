@@ -3,7 +3,9 @@
 
 #  include "mas_list_def.h"
 #  include "mas_th_types.h"
-#  include "channel/inc/mas_channel_types.h"
+
+#  include <mastar/channel/mas_channel_types.h>
+
 #  include "listener/inc/mas_listener_control_types.h"
 #  include "transaction/inc/mas_transaction_control_types.h"
 

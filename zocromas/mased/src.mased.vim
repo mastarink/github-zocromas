@@ -2,8 +2,6 @@
 " win 155 53
 " winpos 2 25
 " :let mas_incdir = 'inc'
-" :set path=src,src/server,src/server/inc,src/inc,src/fileinfo,src/fileinfo/inc,src/cmdmods,src/cmdmods/inc,src/maslibs,src/maslibs/inc,src/client,src/client/inc,src/channel,src/channel/inc
-" set path=src,src/server,src/server/inc,src/inc,src/fileinfo,src/fileinfo/inc,src/io,src/io/inc,src/init,src/init/inc,src/zoctools,src/zoctools/inc,src/cmdmods,src/cmdmods/inc,src/control,src/control/inc,src/client,src/client/inc,src/http,src/http/inc,src/listener,src/listener/inc,src/channel,src/channel/inc,src/modules,src/modules/inc,src/transaction,src/transaction/inc,src/variables,src/variables/inc,src/log,src/log/inc,src/xcromas,src/xcromas/inc
 
 " sbuffer %
 " e source.vim
@@ -133,18 +131,6 @@ sfind mas_client_readline.c
 sfind mas_client_readline.h
 sfind mas_client_session.h
 sfind mas_client.h
-
-tab sfind mas_channel.c
-sfind mas_channel_object.c
-sfind mas_channel_object.h
-sfind mas_channel_listen.c
-sfind mas_channel_open.c
-sfind mas_channel_socket.c
-sfind mas_channel.h
-sfind mas_channel_listen.h
-sfind mas_channel_open.h
-sfind mas_channel_socket.h
-sfind mas_channel_types.h
 
 tab sfind mas_io.c
 sfind mas_io.h

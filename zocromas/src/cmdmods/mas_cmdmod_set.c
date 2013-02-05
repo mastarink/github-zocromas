@@ -116,6 +116,7 @@ var_cmd( STD_CMD_ARGS )
   char *result = NULL;
 
   mas_variable_t *var;
+
   /*                                                      */
   /* var = mas_thread_variables_find( "client", "uuid" ); */
   /* if ( var )                                           */
@@ -166,11 +167,11 @@ mas_cmd_t subcmdtable[] = {
   ,
   {1, "msg", msg_cmd, NULL}
   ,
-  {2, "log", log_cmd, NULL}
+  {2, "log", log_cmd, NULL}     /* set log ... */
   ,
-  {3, "ticker", ticker_cmd, NULL}
+  {3, "ticker", ticker_cmd, NULL} /* set ticker ... */
   ,
-  {4, "var", var_cmd, NULL}
+  {4, "var", var_cmd, NULL}     /* set var ... */
   ,
   {999, NULL, NULL, NULL}
 };

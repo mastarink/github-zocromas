@@ -192,41 +192,41 @@ getcd_cmd( STD_CMD_ARGS )
 /*==========================================================================================*/
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, list_commands_cmd, NULL}
+  {0, NULL, list_commands_cmd, NULL} /*  */
   ,
 /*==========================================================================================*/
-  {.name = "server",.function = NULL,.libname = "server"}
+  {.name = "server",.function = NULL,.libname = "server"} /* server ... */
   ,
-  {.name = "test",.function = test_cmd,.libname = NULL}
-  ,
-/*==========================================================================================*/
-  {3,.name = "system",.function = system_cmd,.libname = NULL}
-  ,
-  {4,.name = "!",.function = system_cmd,.libname = NULL}
-  ,
-  {5,.name = "exec",.function = exec_cmd,.libname = NULL}
-  ,
-  {6,.name = "do",.function = NULL,.libname = "do",.only_level = 0}
-  ,
-  {7,.name = "check",.function = NULL,.libname = "check"}
+  {.name = "test",.function = test_cmd,.libname = NULL} /* test ... */
   ,
 /*==========================================================================================*/
-  {8,.name = "pwd",.function = getpwd_cmd,.libname = NULL}
+  {3,.name = "system",.function = system_cmd,.libname = NULL} /* system ... */
   ,
-  {9,.name = "cd",.function = getcd_cmd,.libname = NULL}
+  {4,.name = "!",.function = system_cmd,.libname = NULL} /* ! ... */
+  ,
+  {5,.name = "exec",.function = exec_cmd,.libname = NULL} /* exec ... */
+  ,
+  {6,.name = "do",.function = NULL,.libname = "do",.only_level = 0} /* do ... */
+  ,
+  {7,.name = "check",.function = NULL,.libname = "check"} /* check ... */
   ,
 /*==========================================================================================*/
-  {10,.name = "get",.function = NULL,.libname = "get",.only_level = 0}
+  {8,.name = "pwd",.function = getpwd_cmd,.libname = NULL} /* pwd */
   ,
-  {11,.name = "set",.function = NULL,.libname = "set"}
+  {9,.name = "cd",.function = getcd_cmd,.libname = NULL} /* cd */
   ,
-  {12,.name = "show",.function = NULL,.libname = "show"}
+/*==========================================================================================*/
+  {10,.name = "get",.function = NULL,.libname = "get",.only_level = 0} /* get ... */
   ,
-  {13,.name = "list",.function = NULL,.libname = "list"}
+  {11,.name = "set",.function = NULL,.libname = "set"} /* set ... */
   ,
-  {14,.name = "ctrl",.function = NULL,.libname = "ctrl"}
+  {12,.name = "show",.function = NULL,.libname = "show"} /* show */
   ,
-  {15,.name = "nof",.function = NULL,.libname = NULL}
+  {13,.name = "list",.function = NULL,.libname = "list"} /* list */
+  ,
+  {14,.name = "ctrl",.function = NULL,.libname = "ctrl"} /* ctrl */
+  ,
+  {15,.name = "nof",.function = NULL,.libname = NULL} /* nof */
   ,
 /*==========================================================================================*/
   {999, NULL, NULL, NULL}

@@ -12,22 +12,25 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/channel/mas_channel.h>
+#include <mastar/channel/mas_channel_object.h>
+
 #include "mas_common.h"
 #include "log/inc/mas_log.h"
 
-#include "channel/inc/mas_channel.h"
-#include "channel/inc/mas_channel_object.h"
 #include "variables/inc/mas_variables.h"
 
 #include "mas_lcontrol_object.h"
 
 /*
 this:
-  mas_listener_control.c
+  mas_lcontrol_object.c
 related:
+  mas_listener_control.c
   mas_listener.c
-  mas_channel_object.c
+  mas_rcontrol_object.c
 
+  mas_channel_object.c
   mas_channel.c
   mas_control_types.h
 */
@@ -155,7 +158,7 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const char *host, unsigned port )
   plcontrol->status = MAS_STATUS_NONE;
 
   plcontrol->pchannel = mas_channel_create(  );
-  mas_channel_init( plcontrol->pchannel, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );
+  mas_channel_init( plcontrol->pchannel, ctrl.is_server, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );
   {
     struct timeval td;
 

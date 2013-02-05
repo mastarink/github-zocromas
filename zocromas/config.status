@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile src/Makefile src/inc/Makefile src/io/Makefile src/io/inc/Makefile src/log/Makefile src/log/inc/Makefile src/control/Makefile src/control/inc/Makefile src/zoctools/Makefile src/zoctools/inc/Makefile src/modules/Makefile src/modules/inc/Makefile src/xcromas/Makefile src/xcromas/inc/Makefile src/variables/Makefile src/variables/inc/Makefile src/channel/Makefile src/channel/inc/Makefile src/fileinfo/Makefile src/fileinfo/inc/Makefile src/cmdmods/Makefile src/cmdmods/inc/Makefile src/init/Makefile src/init/inc/Makefile src/http/Makefile src/http/inc/Makefile src/client/Makefile src/client/inc/Makefile src/listener/Makefile src/listener/inc/Makefile src/transaction/Makefile src/transaction/inc/Makefile src/server/Makefile src/server/inc/Makefile"
+config_files=" Makefile src/Makefile src/inc/Makefile src/log/Makefile src/log/inc/Makefile src/control/Makefile src/control/inc/Makefile src/zoctools/Makefile src/zoctools/inc/Makefile src/modules/Makefile src/modules/inc/Makefile src/xcromas/Makefile src/xcromas/inc/Makefile src/variables/Makefile src/variables/inc/Makefile src/fileinfo/Makefile src/fileinfo/inc/Makefile src/cmdmods/Makefile src/cmdmods/inc/Makefile src/init/Makefile src/init/inc/Makefile src/http/Makefile src/http/inc/Makefile src/client/Makefile src/client/inc/Makefile src/listener/Makefile src/listener/inc/Makefile src/transaction/Makefile src/transaction/inc/Makefile src/server/Makefile src/server/inc/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles libtool"
 
@@ -807,8 +807,6 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/inc/Makefile" ;;
-    "src/io/Makefile") CONFIG_FILES="$CONFIG_FILES src/io/Makefile" ;;
-    "src/io/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/io/inc/Makefile" ;;
     "src/log/Makefile") CONFIG_FILES="$CONFIG_FILES src/log/Makefile" ;;
     "src/log/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/log/inc/Makefile" ;;
     "src/control/Makefile") CONFIG_FILES="$CONFIG_FILES src/control/Makefile" ;;
@@ -821,8 +819,6 @@ do
     "src/xcromas/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/xcromas/inc/Makefile" ;;
     "src/variables/Makefile") CONFIG_FILES="$CONFIG_FILES src/variables/Makefile" ;;
     "src/variables/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/variables/inc/Makefile" ;;
-    "src/channel/Makefile") CONFIG_FILES="$CONFIG_FILES src/channel/Makefile" ;;
-    "src/channel/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/channel/inc/Makefile" ;;
     "src/fileinfo/Makefile") CONFIG_FILES="$CONFIG_FILES src/fileinfo/Makefile" ;;
     "src/fileinfo/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/fileinfo/inc/Makefile" ;;
     "src/cmdmods/Makefile") CONFIG_FILES="$CONFIG_FILES src/cmdmods/Makefile" ;;
@@ -1123,7 +1119,7 @@ D["MAS_DEBUG"]=" 1"
 D["MAS_TRACEMEM"]=" 1"
 D["MAS_CFLAGS"]=" \"-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${pkglibdi"\
 "r}\\\" -DMAS_LIBDIR=\\\"${libdir}\\\" -ltcmalloc\""
-D["MAS_C_DATE"]=" \"20130205000321\""
+D["MAS_C_DATE"]=" \"20130205125621\""
 D["MAS_MALLOC"]=" malloc"
 D["MAS_FREE"]=" free"
 D["MAS_CALLOC"]=" calloc"
@@ -1133,8 +1129,8 @@ D["MAS_UNAME"]=" \"Linux mastar 3.6.11-gentoo.130126.m.g #1 SMP Sat Jan 26 16:56
 "ntel GNU/Linux\""
 D["MAS_OSVER"]=" \"Linux version 3.6.11-gentoo.130126.m.g (root@mastar) (gcc version 4.5.4 (Gentoo 4.5.4 p1.0, pie-0.4.7) ) #1 SMP Sat Jan 26 16:56:"\
 "11 EET 2013\""
-D["MAS_UUID"]=" \"468747ed-a6f0-4be1-b763-60183b262137\""
-D["MAS_S_DATE"]=" \"1360015401\""
+D["MAS_UUID"]=" \"3b7587f9-dfd1-4bd7-8163-eb2e0f83bccc\""
+D["MAS_S_DATE"]=" \"1360061781\""
   for (key in D) D_is_set[key] = 1
   FS = ""
 }

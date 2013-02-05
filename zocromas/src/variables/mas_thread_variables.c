@@ -7,9 +7,9 @@
 
 #include <pthread.h>
 
-#include "mas_common.h"
+#include <mastar/channel/mas_channel.h>
 
-#include "channel/inc/mas_channel.h"
+#include "mas_common.h"
 
 #include "zoctools/inc/mas_thread_tools.h"
 

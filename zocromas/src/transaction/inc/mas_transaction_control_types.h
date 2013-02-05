@@ -2,7 +2,7 @@
 #  define MAS_TRANSACTION_CONTROL_TYPES_H
 
 #  include "mas_common_types.h"
-#  include "channel/inc/mas_channel_types.h"
+#  include <mastar/channel/mas_channel_types.h>
 
 // *INDENT-OFF*
 typedef MAS_LIST_HEAD( mas_rcontrol_list_s, mas_rcontrol_s ) mas_rcontrol_list_head_t;

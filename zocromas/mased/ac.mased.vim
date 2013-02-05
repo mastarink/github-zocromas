@@ -5,9 +5,6 @@ sp Makefile.am
 sp src/Makefile.am
 sp src/inc/Makefile.am
 
-tab sp src/channel/inc/Makefile.am
-sp src/channel/Makefile.am
-
 tab sp src/client/inc/Makefile.am
 sp src/client/Makefile.am
 
@@ -25,9 +22,6 @@ sp src/http/Makefile.am
 
 tab sp src/init/inc/Makefile.am
 sp src/init/Makefile.am
-
-tab sp src/io/inc/Makefile.am
-sp src/io/Makefile.am
 
 tab sp src/listener/inc/Makefile.am
 sp src/listener/Makefile.am

@@ -259,9 +259,9 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
-  MFP( "\nAT EXIT\n" );
+  FMSG( "\nAT EXIT\n" );
   mas_destroy_server(  );
-  MFP( "\n\n\nAT EXIT, memory_balance:%ld", memory_balance );
+  FMSG( "\n\n\nAT EXIT, memory_balance:%ld", memory_balance );
 #ifdef MAS_TRACEMEM
   print_memlist( FL );
 #endif

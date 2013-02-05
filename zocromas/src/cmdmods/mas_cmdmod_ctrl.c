@@ -28,9 +28,9 @@ related:
 */
 
 /*
- * if there is f-n <libname>_cmd than subtable ignored ! - is it FIXME ?
+ * if there is f-n non-static <libname>_cmd than subtable ignored ! - is it FIXME ?
 */
-/*
+
 char *
 ctrl_cmd( STD_CMD_ARGS )
 {
@@ -38,7 +38,6 @@ ctrl_cmd( STD_CMD_ARGS )
 
   return r;
 }
-*/
 
 static char *
 sleep_cmd( STD_CMD_ARGS )
@@ -47,17 +46,17 @@ sleep_cmd( STD_CMD_ARGS )
   int secs = 0;
 
   sscanf( args, "%d", &secs );
-  MFP("\nSLEEP %d", secs);
   sleep( secs );
   r = mas_strdup( "Ha-ha-ha" );
   return r;
 }
 
 mas_cmd_t subcmdtable[] = {
-  /* {0, NULL, ctrl_cmd, NULL} */
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "sleep", sleep_cmd, NULL}
+  {1, "ctrl", ctrl_cmd, NULL}   /* ctrl ctrl */
+  ,
+  {2, "sleep", sleep_cmd, NULL} /* ctrl sleep */
   ,
   {999, NULL, NULL, NULL}
 };

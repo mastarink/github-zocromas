@@ -125,13 +125,14 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
-  HMSG( "at exit" );
   /* mas_destroy(  ); */
 
   mas_destroy_client(  );
-  FMSG( "\n\n\nAt exit, memory_balance:%lu", memory_balance );
 #ifdef MAS_TRACEMEM
+  FMSG( "\nAt exit, memory_balance:%lu", memory_balance );
   print_memlist( FL );
+#else
+  FMSG( "\nAt exit." );
 #endif
   if ( ctrl.saved_stderr_file )
   {

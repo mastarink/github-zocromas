@@ -143,17 +143,17 @@ mas_logger_write( mas_loginfo_t * li )
   }
 }
 
-static void
+void
 mas_logger_cleanup( void *arg )
 {
   ctrl.keep_logging = 0;
-  MFP( "\nTO FLUSH LOGGER\n" );
+  FMSG( "\nTO FLUSH LOGGER" );
   ctrl.log_disabled = 1;
   mas_logger_flush(  );
   mas_log_clean_queue(  );
   mas_logger_close(  );
   MAS_LOG( "logger cleanup" );
-  MFP( "\nLOGGER CLEANUP DONE\n" );
+  FMSG( "\nLOGGER CLEANUP DONE" );
 }
 
 static void *
@@ -176,7 +176,7 @@ mas_logger_th( void *arg )
   }
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
-  MFP( "\nLOGGER STOP\n" );
+  FMSG( "\nLOGGER STOP\n" );
   mas_pthread_exit( NULL );
   return NULL;
 }
@@ -190,8 +190,8 @@ mas_logger_start( void )
 
   if ( !ctrl.logger_thread )
   {
-    pthread_setconcurrency(4);
-    MAS_LOG( "starting logger th. [concurrency:%u]", pthread_getconcurrency() );
+    pthread_setconcurrency( 4 );
+    MAS_LOG( "starting logger th. [concurrency:%u]", pthread_getconcurrency(  ) );
     {
       int r;
 
@@ -247,10 +247,6 @@ mas_logger_flush( void )
 {
   int r = -1;
 
-  if ( ctrl.log_disabled )
-  {
-    MFP( "\nLOGGER FLUSH...\n" );
-  }
 
   while ( ctrl.log_list && !MAS_LIST_EMPTY( ctrl.log_list ) )
   {
@@ -266,7 +262,17 @@ mas_logger_flush( void )
     ctrl.log_q_mem -= strlen( li->message );
     pthread_rwlock_unlock( &logger_queue_rwlock );
     mas_logger_write( li );
+
+    /* if ( ctrl.log_disabled )                                                                                         */
+    /* {                                                                                                                */
+    /*   FMSG( "\nLOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
+    /* }                                                                                                                */
+
     r = 0;
+  }
+  if ( ctrl.log_disabled )
+  {
+    FMSG( "\nLOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
   return r;
 }

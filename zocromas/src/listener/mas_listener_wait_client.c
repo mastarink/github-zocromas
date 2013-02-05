@@ -4,10 +4,10 @@
 
 #include <pthread.h>
 
+#include <mastar/channel/mas_channel_open.h>
+
 #include "mas_common.h"
 #include "log/inc/mas_log.h"
-
-#include "channel/inc/mas_channel_open.h"
 
 #include "transaction/inc/mas_transaction_control.h"
 #include "transaction/inc/mas_transaction.h"

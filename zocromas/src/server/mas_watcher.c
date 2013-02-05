@@ -59,7 +59,7 @@ mas_watcher_cleanup( void *arg )
 /* mas_lcontrols_cleaning_transactions returns not-joined-count */
   MAS_LOG( "by the way (watcher ending): cleaning transactions" );
   mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
-  MFP( "\nWATCHER CLEANUP" );
+  FMSG( "\nWATCHER CLEANUP" );
   MAS_LOG( "watcher cleanup" );
 }
 
@@ -199,7 +199,7 @@ mas_watcher( void )
         MAS_LOG( "WATCH ==========================================================================================" );
       if ( ctrl.watcher_stop )
       {
-        MFP( "\nWATCHER STOP : %d %d %d", nlistener_open, ntransaction, nlisteners_ever_open );
+        FMSG( "\nWATCHER STOP : %d %d %d", nlistener_open, ntransaction, nlisteners_ever_open );
         if ( nlistener_open == 0 && ntransaction == 0 /* && nlisteners_ever_open */  )
         {
           stop = 1;
@@ -207,7 +207,7 @@ mas_watcher( void )
       }
       else if ( !ctrl.main_thread || !ctrl.master_thread || !ctrl.watcher_thread || !ctrl.logger_thread || !ctrl.ticker_thread )
       {
-        MFP( "\nWATCHER?" );
+        FMSG( "\nWATCHER?" );
       }
       /* fprintf( stderr, "WATCHER %u %u %u\n", nlistener_open, ntransaction, nlisteners_ever_open ); */
     }
@@ -232,7 +232,7 @@ mas_watcher_th( void *arg )
   pthread_cleanup_pop( 1 );
 
   MAS_LOG( "watcher stop" );
-  MFP( "\nWATCHER STOP" );
+  FMSG( "\nWATCHER STOP" );
   mas_pthread_exit( NULL );
   return ( NULL );
 }
@@ -280,7 +280,7 @@ mas_watcher_stop( void )
     mas_xpthread_join( ctrl.watcher_thread );
     MAS_LOG( "stopped watcher" );
     ctrl.watcher_thread = ( pthread_t ) 0;
-    MFP( "\nWATCHER STOPPED" );
+    FMSG( "\nWATCHER STOPPED" );
   }
   else
   {

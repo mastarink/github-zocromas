@@ -93,9 +93,9 @@ listener_add_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "add", listener_add_cmd, NULL,.min_args = 2,.max_args = 2}
+  {1, "add", listener_add_cmd, NULL,.min_args = 2,.max_args = 2} /* server listener add */
   ,
-  {2, "remove", listener_remove_cmd, NULL,.min_args = 2,.max_args = 2}
+  {2, "remove", listener_remove_cmd, NULL,.min_args = 2,.max_args = 2} /* server listener remove */
   ,
   {999, NULL, NULL, NULL}
 };

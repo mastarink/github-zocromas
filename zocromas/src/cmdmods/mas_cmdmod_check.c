@@ -100,11 +100,11 @@ uuid_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
   ,
-  {1, "version", version_cmd, NULL}
+  {1, "version", version_cmd, NULL} /* check version */
   ,
-  {2, "args", args_cmd, NULL}
+  {2, "args", args_cmd, NULL} /* check args */
   ,
-  {3, "uuid", uuid_cmd, NULL}
+  {3, "uuid", uuid_cmd, NULL} /* check uuid */
   ,
   {999, NULL, NULL, NULL}
 };

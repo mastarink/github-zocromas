@@ -116,12 +116,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
     }
     else if ( answer_buffer && *answer_buffer )
     {
-      if ( 0 )
-      {
-        MFP( "answer\n>\x1b[1;44;33m%s\x1b[0m<\n (r:%d) from %x - %lx\n", answer_buffer, r, header ? header->pid : 0,
-             header ? header->pth : 0 );
-      }
-      else if ( answer_format )
+      if ( answer_format )
       {
         fprintf( stdout, answer_format, answer_buffer );
       }

@@ -2,16 +2,17 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "mas_common.h"
+#include <mastar/channel/mas_channel_object.h>
+#include <mastar/channel/mas_channel_open.h>
 
-#include "channel/inc/mas_channel_object.h"
-#include "channel/inc/mas_channel_open.h"
+#include "mas_common.h"
 
 #include "log/inc/mas_logger.h"
 
@@ -29,13 +30,16 @@ related:
   mas_client_main.c
   mas_client_readline.c
   mas_client_sig.c
+  
+  mas_init_client.c
 
   mas_open.c
+  mas_log.c
 
 */
 
 static int
-mas_client_connected( mas_channel_t * pchannel )
+mas_client_transaction( mas_channel_t * pchannel )
 {
   unsigned cnt = 0;
 
@@ -70,6 +74,12 @@ mas_client( const char *host_port )
   mas_channel_t *pchannel;
   int r = 0, rop = 0;
 
+
+
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoc_romas" ) < 0 )
+  {
+    P_ERR;
+  }
   pchannel = mas_channel_create(  );
   while ( ctrl.in_client && !ctrl.fatal )
   {
@@ -80,7 +90,7 @@ mas_client( const char *host_port )
     HMSG( "(i/c:%u; i/p:%d) client external loop %s", ctrl.in_client, ctrl.in_pipe, host_port );
     HMSG( "to init '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
     hostlen = mas_parse_host_port( host_port, &hport, opts.default_port );
-    r = mas_channel_init( pchannel, CHN_SOCKET, host_port, hostlen, hport );
+    r = mas_channel_init( pchannel, 0 /* is_server */ , CHN_SOCKET, host_port, hostlen, hport );
     HMSG( "to open '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
     if ( r >= 0 )
     {
@@ -153,7 +163,7 @@ mas_client( const char *host_port )
 
     if ( opts.disconnect_prompt || r > 0 )
     {
-      mas_client_connected( pchannel );
+      mas_client_transaction( pchannel );
     }
     else if ( opts.wait_server )
     {

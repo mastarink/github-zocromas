@@ -61,7 +61,7 @@ mas_ticker_cleanup( void *arg )
 /* mas_lcontrols_cleaning_transactions returns not-joined-count */
   MAS_LOG( "by the way (ticker ending): cleaning transactions" );
   mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
-  MFP( "\nTICKER CLEANUP\n" );
+  FMSG( "\nTICKER CLEANUP" );
   MAS_LOG( "ticker cleanup" );
 }
 
@@ -164,7 +164,7 @@ mas_ticker_th( void *arg )
   pthread_cleanup_pop( 1 );
 
   MAS_LOG( "ticker stop" );
-  MFP( "\nTICKER STOP\n" );
+  FMSG( "\nTICKER STOP" );
   mas_pthread_exit( NULL );
   return ( NULL );
 }
@@ -218,7 +218,7 @@ mas_ticker_stop( void )
 
   if ( ctrl.ticker_thread )
   {
-    MFP( "\nCANCEL TICKER\n" );
+    FMSG( "\nCANCEL TICKER" );
     MAS_LOG( "stopping (cancelling) ticker [%lx]", ctrl.ticker_thread );
 
     mas_pthread_cancel( ctrl.ticker_thread );
@@ -228,7 +228,7 @@ mas_ticker_stop( void )
     mMSG( "JOINED ticker" );
     MAS_LOG( "stopped ticker" );
     ctrl.ticker_thread = ( pthread_t ) 0;
-    MFP( "\nTICKER STOPPED\n" );
+    FMSG( "\nTICKER STOPPED" );
   }
   else
   {

@@ -10,15 +10,15 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/channel/mas_channel_object.h>
+#include <mastar/channel/mas_channel_open.h>
+#include <mastar/channel/mas_channel.h>
+
 #include "mas_common.h"
 #include "log/inc/mas_log.h"
 
 #include "zoctools/inc/mas_lib_thread.h"
 #include "zoctools/inc/mas_thread_tools.h"
-
-#include "channel/inc/mas_channel_object.h"
-#include "channel/inc/mas_channel_open.h"
-#include "channel/inc/mas_channel.h"
 
 #include "variables/inc/mas_thread_variables.h"
 

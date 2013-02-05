@@ -239,7 +239,7 @@ mas_evaluate_command( STD_CMD_ARGS )
       answer = ( this_command->function ) ( STD_CMD_PASS );
       if ( MAS_VALID_ANSWER( answer ) )
       {
-        cMSG( "answer %s", answer );
+        cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" );
         MAS_LOG( "(lev.%d) evaluated: %s(%s); answer: '%s'", level, this_command->name, args, level == 1 ? answer : "SKIPPED" );
       }
     }

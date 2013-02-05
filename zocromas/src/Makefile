@@ -285,7 +285,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-SUBDIRS = inc control log channel io fileinfo cmdmods init zoctools variables http modules xcromas listener transaction client server
+SUBDIRS = inc control log fileinfo cmdmods init zoctools variables http modules xcromas listener transaction client server
 # mas_parg
 
 ##########################################################################################

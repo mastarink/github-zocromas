@@ -6,6 +6,7 @@
 
 #include "mas_common.h"
 
+#include "log/inc/mas_logger.h"
 #include "init/inc/mas_opts.h"
 #include "mas_client_readline.h"
 
@@ -47,7 +48,7 @@ void
 mas_destroy_client( void )
 {
   /* {                          */
-  /*   mas_logger_flush(  );    */
+  mas_logger_cleanup( NULL );
   /*   mas_logger_close(  );    */
   /*   mas_log_clean_queue(  ); */
   /* }                          */

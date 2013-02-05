@@ -76,7 +76,7 @@ do_cmd( STD_CMD_ARGS )
 /*==========================================================================================*/
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, do_cmd, NULL}
+  {0, NULL, do_cmd, NULL} /* do ... */
   ,
   {999, NULL, NULL, NULL}
 };

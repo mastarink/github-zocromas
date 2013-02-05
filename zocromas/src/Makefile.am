@@ -1,4 +1,4 @@
-SUBDIRS= inc control log channel io fileinfo cmdmods init zoctools variables http modules xcromas listener transaction client server
+SUBDIRS= inc control log fileinfo cmdmods init zoctools variables http modules xcromas listener transaction client server
 ##########################################################################################
 ## cd /home/mastar/.mas/develop/autotools/zocromas
 ## export MAS_ZOCROMAS_DEFOPTS='-H193.222.140.165:5002 -H193.222.140.165:5003 -L/mnt/miscn/mastar/develop/autotools/zocromas/log'

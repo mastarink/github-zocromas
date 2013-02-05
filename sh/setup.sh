@@ -4,6 +4,8 @@ if [[ -f "configure.ac" ]] ; then
   {
     local rootdir
     rootdir="${MAS_MAS_DIR}/develop/autotools/zoc/"
+    export LD_LIBRARY_PATH=/usr/local/lib
+
     if [[ -d "$rootdir" ]] ; then
       savedir=$( realpath "$rootdir/saved/" )
 
@@ -111,7 +113,7 @@ if [[ -f "configure.ac" ]] ; then
   echo "binsdir: $binsdir" >&2
 
 
-    export LD_LIBRARY_PATH=$libsdirs
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
     ulimit -c
 
     cmdfile="$debugdir/debug_${rname}.cmd"
@@ -156,7 +158,7 @@ if [[ -f "configure.ac" ]] ; then
     #done
 
 
-    export LD_LIBRARY_PATH=$libsdirs
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
     ulimit -c
 
     corename=$( ls -1tr /tmp/core.$UID.$UID.${name}.* | tail -1 )
