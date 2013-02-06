@@ -1,35 +1,42 @@
 #!/bin/sh
 . $MAS_MAS_DIR/develop/autotools/zoc/sh/setup.sh
 # show_setup
-
-if [[ "$name" ]] && [[ "$ver" ]] ; then
-  if [[ "$updir" ]] && [[ -d "$updir" ]] ; then
-    cd $updir
-    echo "rm $indir/log/server.*.log" >&2
-    echo "rm $indir/log/client.*.log" >&2
-    if [[ -d "$indir/log" ]] ; then
-      rm -f $indir/log/server.*.log
-      rm -f $indir/log/client.*.log
-    fi
-   (
-     cd $indir
-     make -s distclean 
-   )
-#   echo "Saving $indir/*.{bz2,gz} to $savedir" >&2
-#   mv $indir/*.{bz2,gz} "$savedir"
-    if [[ "$name" ]] && [[ -d "$name" ]] ; then
-      tar --wildcards --exclude '.*.sw*' --exclude-caches --exclude-tag mas-tar-exclude -jvcf $name.$ver.`datemt`.tar.bz2 $name/
+function tarme ()
+{
+  if [[ "$savedirtarme" ]] &&  [[ -d "$savedirtarme" ]] && [[ "$updir" ]] && [[ -d "$updir" ]] && [[ "$indir" ]] && [[ -d "$indir" ]] ; then
+    if [[ "$name" ]] && [[ "$ver" ]] ; then
+      cd $indir || return 1
+      make -s distclean     || return 1  
+      cd $updir  || return 1
+      if [[ -d "$indir/log" ]] ; then
+        echo "rm $indir/log/server.*.log" >&2
+        echo "rm $indir/log/client.*.log" >&2
+	rm -f $indir/log/server.*.log
+	rm -f $indir/log/client.*.log
+	rm -f $indir/errors/make.*.result
+      fi     
+  #   echo "Saving $indir/*.{bz2,gz} to $savedirtar" >&2
+  #   mv $indir/*.{bz2,gz} "$savedirtar"
+      cd $updir  || return 1
+      if [[ "$name" ]] && [[ -d "$name" ]] ; then
+	echo "Saving *.tar.{bz2,gz} to $savedirtarme" >&2
+	tar --wildcards --exclude '.*.sw*' --exclude-caches --exclude-tag mas-tar-exclude -jvcf "$savedirtarme/$name.$ver.`datemt`.tar.bz2" $name/  || return 1
+      fi
+  #     mv *.tar.bz2 "$savedirtarme"     
+      echo "Change to $indir to rebuild" >&2
+      if cd "$indir" ; then
+	sh/autoreconf.sh || return 1
+	sh/configure.sh || return 1
+	sh/make.sh || return 1
+      else
+	echo "Error change to $indir" >&2
+	return 1
+      fi     
     else
-      echo "name: $name; pwd : `pwd`" >&2
-    fi
-    echo "Saving *.tar.{bz2,gz} to $savedir" >&2
-    mv *.tar.bz2 "$savedir"    
-   (
-    echo "Change to $indir" >&2
-    cd "$indir"
-    autoreconf
-    ./configure --enable-tracemem --enable-debug --silent
-    sh/make.sh
-   )
+      echo "No name / ver" >&2
+      return 1
+    fi    
   fi
-fi
+  return 0
+}
+tarme $@

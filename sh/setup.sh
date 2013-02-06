@@ -2,14 +2,35 @@
 if [[ -f "configure.ac" ]] ; then
   function setup_dirs ()
   {
-    local rootdir
     rootdir="${MAS_MAS_DIR}/develop/autotools/zoc/"
     export LD_LIBRARY_PATH=/usr/local/lib
 
     if [[ -d "$rootdir" ]] ; then
+      stamp=`datem`
       savedir=$( realpath "$rootdir/saved/" )
-
+      if [[ -d "$rootdir" ]] && ! [[ -d "$savedir" ]]; then
+        mkdir "$savedir"
+      fi
+      savedirdist="$savedir/dist/"
+      if [[ -d "$savedir" ]] && ! [[ -d "$savedirdist" ]]; then
+        mkdir "$savedirdist"
+      fi
+      savedirtar="$savedir/tar/"
+      if [[ -d "$savedir" ]] && ! [[ -d "$savedirtar" ]]; then
+        mkdir "$savedirtar"
+      fi
+      savedirtarme="${savedirtar}/${stamp}"
+      if [[ -d "$savedirtar" ]] && ! [[ -d "$savedirtarme" ]]; then
+        mkdir "$savedirtarme"
+      fi
+      instdir="${rootdir}/install"
+      if [[ -d "$rootdir" ]] && ! [[ -d "$instdir" ]]; then
+        mkdir "$instdir"
+      fi
       tmpdir="$rootdir/tmp/"
+      if [[ -d "$rootdir" ]] && ! [[ -d "$tmpdir" ]]; then
+        mkdir "$tmpdir"
+      fi
       wd=`pwd`
       me="$wd/$0"
       shdir=$( dirname "$me" )
@@ -17,8 +38,7 @@ if [[ -f "configure.ac" ]] ; then
       indir="$( realpath "$shdirup" )"
       updir="$( realpath $indir/.. )"
       debugdir=$indir/debug
-     #savedir=$updir
-      # name=$( basename $indir )
+      prjname=$( basename $indir )
       if [[ -f "$indir/configure" ]] ; then
 	name=$( cd "$indir" && ./configure -V|head -1|awk '{print $1}' )
 	ver=$( cd "$indir" && ./configure -V|head -1|awk '{print $3}' )
@@ -174,27 +194,27 @@ if [[ -f "configure.ac" ]] ; then
   }
   function masmake ()
   {
-    local ername
-    ername=errors/make.`datemt`.result
-    if [[ "$ername" ]] ; then
-      if ! [[ -f "$ername" ]] ; then
-	if make -s $@ >$ername 2>&1 ; then
-	  rm $ername
-	  return 0
+    local ername erdir
+    erdir='errors'
+    ername="$erdir/make.`datemt`.result"
+    if [[ "$erdir" ]] && ! [[ -d "$erdir" ]] ; then
+      mkdir $erdir
+    fi
+    if [[ "$ername" ]] && ! [[ -f "$ername" ]] ; then
+      if make -s $@ >$ername 2>&1 ; then
+	rm $ername
+	return 0
+      elif [[ -s "$ername" ]] ; then
+	echo -n "$ername >>>>>>>>" >&2
+	if false ; then
+	  cat $ername
 	else
-	  if [[ -s "$ername" ]] ; then
-	    echo -n "$ername >>>>>>>>" >&2
-	    if false ; then
-	      cat $ername
-	    else
-	      grep -v '^Making all in ' $ername >&2
-	    fi
-	    echo -n "<<<<<<<<" >&2
-	# grep error $ername | head -1 | sed -ne 's/^\([a-z]\+\.[ch]\):\([[:digit:]]\+\):.*$/\1 :: \2/p'
-	  else
-	    echo "$LINENO ERROR make" >&2
-	  fi
+	  grep -v '^Making all in ' $ername >&2
 	fi
+	echo -n "<<<<<<<<" >&2
+      # grep error $ername | head -1 | sed -ne 's/^\([a-z]\+\.[ch]\):\([[:digit:]]\+\):.*$/\1 :: \2/p'
+      else
+        echo "$LINENO ERROR make" >&2
       fi
     fi
     return 1

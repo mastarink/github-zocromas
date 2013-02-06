@@ -1,4 +1,4 @@
 set print thread-events off
 handle SIGPIPE nostop noprint
-run  -t ddddddddd eeeeeeeeee -H1.zocromas.mastar.lan:5005 -h 'aaaaa vvvvvvvv' fffffffff
+run  
 bt
