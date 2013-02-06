@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 /* ميخائيل */
@@ -10,15 +11,21 @@
 #include <pthread.h>
 
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/wrap/mas_lib_thread.h>
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
 
 #include <mastar/channel/mas_channel.h>
 #include <mastar/channel/mas_channel_object.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
 
-#include "zoctools/inc/mas_lib_thread.h"
-#include "zoctools/inc/mas_thread_tools.h"
+#include <mastar/thtools/mas_thread_tools.h>
 
 #include "transaction/inc/mas_transaction.h"
 
@@ -53,6 +60,12 @@ more:
 
 */
 
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+
+
+
 /* (w/o stop) join */
 int
 mas_listener_wait( mas_lcontrol_t * plcontrol )
@@ -60,21 +73,23 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
   int r = 0;
   pthread_t pth;
 
-  thMSG( "waiting at M0:%u for L%lu:%u", ctrl.status, plcontrol->serial, plcontrol->status );
-  if ( plcontrol && plcontrol->thread )
+  /* thMSG( "waiting at M0:%u for L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->h.status ); */
+  if ( plcontrol && plcontrol->h.thread )
   {
-    MAS_LOG( "to wait for listener [%lx] to stop", plcontrol->thread );
+    MAS_LOG( "to wait for listener [%lx] to stop", plcontrol->h.thread );
   }
-  if ( plcontrol && ( pth = plcontrol->thread ) && 0 == mas_xpthread_join( pth ) )
+  if ( plcontrol && ( pth = plcontrol->h.thread ) && 0 == mas_xpthread_join( pth ) )
   {
     r = -1;
     MAS_LOG( "stopped listener [%lx]", pth );
-    plcontrol->thread = ( pthread_t ) 0;
+    plcontrol->h.thread = ( pthread_t ) 0;
     ctrl.status = MAS_STATUS_CLOSE;
-    /* tMSG( "joined th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) plcontrol->thread ); */
-    thMSG( "joined M0:%u & L%lu:%u", ctrl.status, plcontrol->serial, plcontrol->status );
+    /* tMSG( "joined th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) plcontrol->h.thread ); */
+    /* thMSG( "joined M0:%u & L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->h.status ); */
     r = 0;
-    FMSG( "\nLISTENER %lu STOPPED", plcontrol->serial );
+#ifdef FMSG
+    FMSG( "\nLISTENER %lu STOPPED", plcontrol->h.serial );
+#endif
   }
   return r;
 }
@@ -93,9 +108,9 @@ mas_listener_join_transactions( mas_lcontrol_t * plcontrol, int removeit )
 /* mas_lcontrol_cleaning_transactions returns not-joined-count */
   while ( mas_lcontrol_cleaning_transactions( plcontrol, removeit, 700000000 /* jwait */  ) > 0 )
   {
-    thMSG( "WAIT MORE" );
+    /* thMSG( "WAIT MORE" ); */
   }
-  plcontrol->status = MAS_STATUS_STOP;
+  plcontrol->h.status = MAS_STATUS_STOP;
   return 0;
 }
 
@@ -121,7 +136,7 @@ mas_listener_start( char *host_port, unsigned port )
       int r;
 
       r = pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
-      thMSG( "cr. listener th. stack:%lu @ %p", listener_stacksize, listener_stackaddr );
+      /* thMSG( "cr. listener th. stack:%lu @ %p", listener_stacksize, listener_stackaddr ); */
     }
     if ( opts.listener_single )
     {
@@ -130,27 +145,32 @@ mas_listener_start( char *host_port, unsigned port )
     }
     else
     {
-      MAS_LOG( "cr'ing ls. th; plc=%p #%lu", ( void * ) plcontrol, plcontrol->serial );
-      /* r = mas_xpthread_create( &( plcontrol->thread ), mas_listener_th, MAS_THREAD_LISTENER, ( void * ) plcontrol ); */
-      r = pthread_create( &plcontrol->thread, &ctrl.thglob.listener_attr, mas_listener_th, ( void * ) plcontrol );
-      if ( plcontrol->thread )
+      MAS_LOG( "cr'ing ls. th; plc=%p #%lu", ( void * ) plcontrol, plcontrol->h.serial );
+      /* r = mas_xpthread_create( &( plcontrol->h.thread ), mas_listener_th, MAS_THREAD_LISTENER, ( void * ) plcontrol ); */
+      r = pthread_create( &plcontrol->h.thread, &ctrl.thglob.listener_attr, mas_listener_th, ( void * ) plcontrol );
+      if ( plcontrol->h.thread )
       {
-        MAS_LOG( "cr'ed ls. th; plc=%p [%lx] #%lu", ( void * ) plcontrol, plcontrol->thread, plcontrol->serial );
+        MAS_LOG( "cr'ed ls. th; plc=%p [%lx] #%lu", ( void * ) plcontrol, plcontrol->h.thread, plcontrol->h.serial );
       }
     }
     if ( r == 0 )
     {
-      thMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->serial, plcontrol->status, plcontrol->host, plcontrol->port );
+      /* thMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->h.serial, plcontrol->h.status, plcontrol->host, plcontrol->port ); */
       ctrl.status = MAS_STATUS_OPEN;
     }
     else
     {
+#ifdef EMSG
       P_ERR;
+      EMSG("why?");
+#endif
     }
   }
   else
   {
-    FEMSG( "no host defined" );
+#ifdef EMSG
+    EMSG( "no host defined" );
+#endif
   }
   return r;
 }
@@ -169,16 +189,18 @@ mas_listener_cancel( mas_lcontrol_t * plcontrol )
 
     prc->persistent_transaction = 0;
     rcond = pthread_cond_signal( &prc->waitchan_cond );
-    thMSG( "COND_SIGNAL :%d", rcond );
+    /* thMSG( "COND_SIGNAL :%d", rcond ); */
   }
   pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
 #endif
 
-  /* thMSG( "CANCEL th %lx", ( unsigned long ) plcontrol->thread ); */
-  EMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->serial, plcontrol->status, ( void * ) plcontrol, plcontrol->thread );
-  MAS_LOG( "cancelling L%lu:%u", plcontrol->serial, plcontrol->status );
-  if ( plcontrol->thread )
-    mas_pthread_cancel( plcontrol->thread );
+  /* thMSG( "CANCEL th %lx", ( unsigned long ) plcontrol->h.thread ); */
+#ifdef EMSG
+  EMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->h.serial, plcontrol->h.status, ( void * ) plcontrol, plcontrol->h.thread );
+#endif
+  MAS_LOG( "cancelling L%lu:%u", plcontrol->h.serial, plcontrol->h.status );
+  if ( plcontrol->h.thread )
+    mas_pthread_cancel( plcontrol->h.thread );
   return 0;
 }
 
@@ -190,10 +212,10 @@ mas_listener_cleanup( void *arg )
   if ( ( plcontrol = ( mas_lcontrol_t * ) arg ) )
   {
     MAS_LOG( "listener cleanup plc:%p", ( void * ) plcontrol );
-    plcontrol->status = MAS_STATUS_END;
+    plcontrol->h.status = MAS_STATUS_END;
     MAS_LOG( "listener cleanup : to delete channel" );
-    mas_channel_delete( plcontrol->pchannel, 0, 1 );
-    plcontrol->pchannel = NULL;
+    mas_channel_delete( plcontrol->h.pchannel, 0, 1 );
+    plcontrol->h.pchannel = NULL;
 
     MAS_LOG( "listener cleanup : to end transactons" );
     /* TODO : move to another pthread ??? - NO */
@@ -202,7 +224,9 @@ mas_listener_cleanup( void *arg )
   }
   else
   {
+#ifdef EMSG
     EMSG( "!" );
+#endif
     MAS_LOG( "listener cleanup - NO plcontrol" );
   }
   /* thMSG( "cleanup for l/th %lx", mas_pthread_self(  ) ); */
@@ -217,15 +241,15 @@ mas_listener( mas_lcontrol_t * plcontrol )
 {
   int r = -1;
 
-  plcontrol->status = MAS_STATUS_INIT;
+  plcontrol->h.status = MAS_STATUS_INIT;
 
   MAS_LOG( "l/th loop" );
   while ( !ctrl.fatal && 0 == ( r = mas_listener_wait_client( plcontrol ) ) )
   {
     MAS_LOG( "listener next client ..." );
   }
-  plcontrol->status = MAS_STATUS_CLOSE;
-  thMSG( "stopped listening r:%d", r );
+  plcontrol->h.status = MAS_STATUS_CLOSE;
+  /* thMSG( "stopped listening r:%d", r ); */
   MAS_LOG( "exiting listening (stopped listening) r:%d", r );
   /* mas_listener_join_transactions( &channel.transaction_threads ); */
   return r;
@@ -257,26 +281,28 @@ mas_listener_th( void *arg )
   {
     MAS_LOG( "listener th. started %s:%u", plcontrol->host, plcontrol->port );
     mas_in_thread( MAS_THREAD_LISTENER, plcontrol, NULL );
-    thMSG( "mas_listener_th %s:%u", plcontrol->host, plcontrol->port );
-    plcontrol->tid = mas_gettid(  );
+    /* thMSG( "mas_listener_th %s:%u", plcontrol->host, plcontrol->port ); */
+    plcontrol->h.tid = mas_gettid(  );
     /* host = ( char * ) arg ? arg : "localhost"; */
     if ( !plcontrol->host )
     {
+#ifdef EMSG
       EMSG( "host not set" );
+#endif
       MAS_LOG( "listener: host not set" );
     }
-    plcontrol->status = MAS_STATUS_START;
+    plcontrol->h.status = MAS_STATUS_START;
 #ifdef MAS_TR_PERSIST
     {
       for ( int it = 0; it < 10; it++ )
       {
-        thMSG( "Pre-tr. plcontrol->channel; opened : %d", plcontrol->pchannel ? plcontrol->pchannel->opened : -1 );
+        /* thMSG( "Pre-tr. plcontrol->channel; opened : %d", plcontrol->h.pchannel ? plcontrol->h.pchannel->opened : -1 ); */
         mas_transaction_start( plcontrol, 1 /* persistent tr. */  );
       }
     }
 #endif
     {
-      thMSG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port );
+      /* thMSG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port ); */
       MAS_LOG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port );
       pthread_cleanup_push( mas_listener_cleanup, plcontrol );
       r = mas_listener( plcontrol );
@@ -288,7 +314,9 @@ mas_listener_th( void *arg )
 
   /* mas_lcontrols_delete( plcontrol );  ---> done at mas_listener_cleanup ?!?! */
 
+#ifdef FMSG
   FMSG( "\nLISTENER STOP" );
+#endif
   mas_pthread_exit( NULL );
   return NULL;
 }

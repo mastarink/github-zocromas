@@ -72,8 +72,8 @@ AC_HEADER_STDC
 AC_CONFIG_MACRO_DIR([m4])
 AC_LANG([C])
 
-AC_CHECK_FUNCS([memset,dup2,atexit, mkfifo,socket,strchr,strdup,strndup,strtol,strstr,inet_ntoa,gethostbyname,gettimeofday])
-AC_CHECK_HEADERS([arpa/inet.h,fcntl.h,limits.h,malloc.h,netdb.h,stdlib.h,string.h,sys/ioctl.h,sys/socket.h,sys/time.h,unistd.h])
+AC_CHECK_FUNCS([memset dup2 atexit  mkfifo socket strchr strdup strndup strtol strstr inet_ntoa gethostbyname gettimeofday])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h malloc.h netdb.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h])
 AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_STRERROR_R
@@ -167,7 +167,7 @@ AC_SUBST(MAS_CFLAGS)
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
@@ -194,9 +194,9 @@ AC_SUBST([MAS_STRDUP])
 
 
 
-AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
-AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
-AC_SUBST([MAS_MODULES_DIR])
+# AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
+# AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
+# AC_SUBST([MAS_MODULES_DIR])
 
 AH_TEMPLATE([MAS_UNAME],[mas_uname])
 AC_DEFINE_UNQUOTED( MAS_UNAME, "`uname -a`", [uname])
@@ -221,30 +221,15 @@ AC_CONFIG_FILES([Makefile
 		src/Makefile
 		src/inc/Makefile
 
-		src/log/Makefile		
-		src/log/inc/Makefile		
-
 		src/control/Makefile		
 		src/control/inc/Makefile		
 
-		src/zoctools/Makefile
-		src/zoctools/inc/Makefile
+		src/cli/Makefile
+		src/cli/inc/Makefile
 		
-		src/modules/Makefile
-		src/modules/inc/Makefile
-
 		src/xcromas/Makefile
 		src/xcromas/inc/Makefile
 		
-		src/variables/Makefile
-		src/variables/inc/Makefile
-		
-		src/fileinfo/Makefile
-		src/fileinfo/inc/Makefile
-
-		src/cmdmods/Makefile
-		src/cmdmods/inc/Makefile
-
 		src/init/Makefile
 		src/init/inc/Makefile
 

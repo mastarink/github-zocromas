@@ -1,7 +1,7 @@
 #ifndef MAS_TRANSACTION_H
 #  define MAS_TRANSACTION_H
 
-#  include "transaction/inc/mas_transaction_control_types.h"
+#  include <mastar/types/mas_transaction_control_types.h>
 
 /*
 this:

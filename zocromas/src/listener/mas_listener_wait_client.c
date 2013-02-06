@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <sys/time.h>
@@ -6,8 +7,16 @@
 
 #include <mastar/channel/mas_channel_open.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
 
 #include "transaction/inc/mas_transaction_control.h"
 #include "transaction/inc/mas_transaction.h"
@@ -49,7 +58,7 @@ mas_listener_find_free_transaction( mas_lcontrol_t * plcontrol )
 
   MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
   {
-    if ( !( prcontrol->pchannel && prcontrol->pchannel->opened ) && prcontrol->waitchan_waiting )
+    if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) && prcontrol->waitchan_waiting )
       break;
   }
   pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
@@ -63,19 +72,19 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   int r = 0;
   mas_rcontrol_t *prcontrol = NULL;
 
-  plcontrol->status = MAS_STATUS_WAIT;
-  wMSG( "waiting client" );
+  plcontrol->h.status = MAS_STATUS_WAIT;
+  /* wMSG( "waiting client" ); */
   MAS_LOG( "waiting client" );
   if ( plcontrol )
   {
-    if ( plcontrol->pchannel->opened )
+    if ( plcontrol->h.pchannel->opened )
     {
       MAS_LOG( "why OPENED before open?" );
     }
-    wMSG( "to open channel opened : %d", plcontrol->pchannel->opened );
+    /* wMSG( "to open channel opened : %d", plcontrol->h.pchannel->opened ); */
     {
-      plcontrol->pchannel->cloned = 0;
-      r = mas_channel_open( plcontrol->pchannel );
+      plcontrol->h.pchannel->cloned = 0;
+      r = mas_channel_open( plcontrol->h.pchannel );
 /* ?????? fcntl(fd, F_SETFD, FD_CLOEXEC) */
       MAS_LOG( "(%d) opened channel ========", r );
     }
@@ -83,30 +92,32 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       struct timeval td;
 
       gettimeofday( &td, NULL );
-      plcontrol->activity_time = td;
+      plcontrol->h.activity_time = td;
     }
-    wMSG( "(%d) opened? channel; opened : %d", r, plcontrol->pchannel->opened );
+    /* wMSG( "(%d) opened? channel; opened : %d", r, plcontrol->h.pchannel->opened ); */
     if ( r < 0 )
     {
+#ifdef EMSG
       P_ERR;
       EMSG( "r:%d", r );
-      MAS_LOG( "(%d) NOT opened? channel; opened : %d", r, plcontrol->pchannel->opened );
+#endif
+      MAS_LOG( "(%d) NOT opened? channel; opened : %d", r, plcontrol->h.pchannel->opened );
     }
     else if ( ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
     {
       int rcond;
 
-      MAS_LOG( "(%d)found free tr. (s%lu); at l opened:%d", r, plcontrol->serial,
-               plcontrol->pchannel ? plcontrol->pchannel->opened : 0 );
-      r = mas_rcontrol_set_channel( prcontrol, plcontrol->pchannel );
-      MAS_LOG( "cond signal to R%lu", prcontrol->serial );
+      MAS_LOG( "(%d)found free tr. (s%lu); at l opened:%d", r, plcontrol->h.serial,
+               plcontrol->h.pchannel ? plcontrol->h.pchannel->opened : 0 );
+      r = mas_rcontrol_set_channel( prcontrol, plcontrol->h.pchannel );
+      MAS_LOG( "cond signal to R%lu", prcontrol->h.serial );
       rcond = pthread_cond_signal( &prcontrol->waitchan_cond );
     }
     else if ( 1 )
     {
 
-      /* plcontrol->status = MAS_STATUS_OPEN; */
-      plcontrol->status = MAS_STATUS_WORK;
+      /* plcontrol->h.status = MAS_STATUS_OPEN; */
+      plcontrol->h.status = MAS_STATUS_WORK;
 #ifdef MAS_TR_PERSIST
       r = mas_transaction_start( plcontrol, 0 /* persistent tr. */  );
 #else
@@ -114,14 +125,14 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
 #endif
       MAS_LOG( "transaction started r:%d", r );
     }
-    MAS_LOG( "opened : %d", plcontrol->pchannel->opened );
+    MAS_LOG( "opened : %d", plcontrol->h.pchannel->opened );
 //  tMSG( "to close2" );
 //  {
 //    int rcl;
 
 //    /* preserve earlier error */
-//    MAS_LOG( "cloned : %d", plcontrol->pchannel->cloned );
-//    rcl = mas_channel_close2( plcontrol->pchannel );
+//    MAS_LOG( "cloned : %d", plcontrol->h.pchannel->cloned );
+//    rcl = mas_channel_close2( plcontrol->h.pchannel );
 //    MAS_LOG( "(%d) close2", rcl );
 //    if ( r >= 0 )
 //    {
@@ -136,19 +147,21 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   }
   else
   {
+#ifdef EMSG
     EMSG( "no plcontrol" );
+#endif
     /* ctrl.keep_listening = 0; */
   }
 
   if ( !ctrl.keep_listening )
   {
-    wMSG( "not ctrl.keep_listening" );
+    /* wMSG( "not ctrl.keep_listening" ); */
     r = 7;
     MAS_LOG( "not ctrl.keep_listening r:%d", r );
   }
   else
   {
-    tMSG( "ctrl.keep_listening" );
+    /* tMSG( "ctrl.keep_listening" ); */
   }
   /* wMSG( "(%d) stop waiting", r ); */
   return r;

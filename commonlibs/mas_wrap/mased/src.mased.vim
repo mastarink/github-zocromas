@@ -8,4 +8,7 @@ sfind mas_lib.h
 tab sfind mas_lib0.c
 sfind mas_lib0.h
 
+tab sfind mas_lib_thread.c
+sfind mas_lib_thread.h
+
 tab sfind mas_std_def.h

@@ -1,7 +1,7 @@
 #ifndef MAS_HTTP_REPLY_H
 #  define MAS_HTTP_REPLY_H
 
-#  include "mas_http_types.h"
+#  include <mastar/types/mas_http_types.h>
 
 mas_http_t *mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http );
 mas_http_t *mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http );

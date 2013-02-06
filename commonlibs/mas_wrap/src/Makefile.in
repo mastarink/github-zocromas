@@ -94,7 +94,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmas_wrap_la_LIBADD =
-am_libmas_wrap_la_OBJECTS = mas_lib.lo mas_lib0.lo mas_memory.lo
+am_libmas_wrap_la_OBJECTS = mas_lib.lo mas_lib0.lo mas_memory.lo \
+	mas_lib_thread.lo
 libmas_wrap_la_OBJECTS = $(am_libmas_wrap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -313,7 +314,7 @@ SUBDIRS = inc
 lib_LTLIBRARIES = \
 	libmas_wrap.la
 
-libmas_wrap_la_SOURCES = mas_lib.c mas_lib0.c mas_memory.c
+libmas_wrap_la_SOURCES = mas_lib.c mas_lib0.c mas_memory.c mas_lib_thread.c
 all: all-recursive
 
 .SUFFIXES:
@@ -391,6 +392,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mas_lib.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mas_lib0.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mas_lib_thread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mas_memory.Plo@am__quote@
 
 .c.o:

@@ -180,7 +180,7 @@ am__relativize = \
 ACLOCAL = ${SHELL} /mnt/new_misc/develop/autotools/zoc/commonlibs/mas_tools/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AM_CFLAGS = -pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\"${pkglibdir}\" -DMAS_LIBDIR=\"${libdir}\" -ltcmalloc
-AM_CPPFLAGS = -I$(srcdir)/inc -I$(top_srcdir)/src/inc -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(srcdir)/inc -I$(top_srcdir)/src/inc -I$(top_srcdir)/src -I$(prefix)/include
 AM_DEFAULT_VERBOSITY = 0
 AM_LDFLAGS = -ldl -Wl,--defsym,__MAS_LINK_DATE__=`date +0x%Y%m%d`,--defsym,__MAS_LINK_TIME__=`date +0x%H%M%S`,--defsym,__MAS_LINK_TIMESTAMP__=`date +%s`
 AR = ar
@@ -301,7 +301,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /home/mastar/.mas/develop/autotools/zoc//install
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin

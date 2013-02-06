@@ -137,7 +137,6 @@ MAS_FREE = @MAS_FREE@
 MAS_LIBDIR = @MAS_LIBDIR@
 MAS_MALLOC = @MAS_MALLOC@
 MAS_MODULESDIR = @MAS_MODULESDIR@
-MAS_MODULES_DIR = @MAS_MODULES_DIR@
 MAS_OSVER = @MAS_OSVER@
 MAS_STRDUP = @MAS_STRDUP@
 MAS_S_DATE = @MAS_S_DATE@
@@ -217,10 +216,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_HEADERS = \
-	mas_control_types.h \
-	mas_control.h
-
+noinst_HEADERS = mas_control.h
 all: all-am
 
 .SUFFIXES:

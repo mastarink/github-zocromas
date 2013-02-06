@@ -639,7 +639,6 @@ MAS_S_DATE
 MAS_UUID
 MAS_OSVER
 MAS_UNAME
-MAS_MODULES_DIR
 MAS_STRDUP
 MAS_CALLOC
 MAS_FREE
@@ -1913,60 +1912,6 @@ fi
 
 } # ac_fn_cxx_try_link
 
-# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
-# -------------------------------------------
-# Tests whether TYPE exists after having included INCLUDES, setting cache
-# variable VAR accordingly.
-ac_fn_c_check_type ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-$as_echo_n "checking for $2... " >&6; }
-if eval \${$3+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  eval "$3=no"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-if (sizeof ($2))
-	 return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-if (sizeof (($2)))
-	    return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-
-else
-  eval "$3=yes"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-eval ac_res=\$$3
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-
-} # ac_fn_c_check_type
-
 # ac_fn_c_check_header_mongrel LINENO HEADER VAR INCLUDES
 # -------------------------------------------------------
 # Tests whether HEADER exists, giving a warning if it cannot be compiled using
@@ -2057,6 +2002,60 @@ fi
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_header_mongrel
+
+# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
+# -------------------------------------------
+# Tests whether TYPE exists after having included INCLUDES, setting cache
+# variable VAR accordingly.
+ac_fn_c_check_type ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+$as_echo_n "checking for $2... " >&6; }
+if eval \${$3+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  eval "$3=no"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+if (sizeof ($2))
+	 return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+if (sizeof (($2)))
+	    return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  eval "$3=yes"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_type
 
 # ac_fn_c_check_decl LINENO SYMBOL VAR INCLUDES
 # ---------------------------------------------
@@ -15757,7 +15756,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-for ac_func in memset,dup2,atexit, mkfifo,socket,strchr,strdup,strndup,strtol,strstr,inet_ntoa,gethostbyname,gettimeofday
+for ac_func in memset dup2 atexit  mkfifo socket strchr strdup strndup strtol strstr inet_ntoa gethostbyname gettimeofday
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -15769,14 +15768,15 @@ _ACEOF
 fi
 done
 
-for ac_header in arpa/inet.h,fcntl.h,limits.h,malloc.h,netdb.h,stdlib.h,string.h,sys/ioctl.h,sys/socket.h,sys/time.h,unistd.h
+for ac_header in arpa/inet.h fcntl.h limits.h malloc.h netdb.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h
 do :
-  ac_fn_c_check_header_compile "$LINENO" "arpa/inet.h" "ac_cv_header_arpa_inet_h" "malloc.h
-"
-if test "x$ac_cv_header_arpa_inet_h" = xyes; then :
-  fcntl.h
-else
-  limits.h
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
 fi
 
 done
@@ -16433,7 +16433,7 @@ _ACEOF
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
 
 
 
@@ -16468,13 +16468,9 @@ $as_echo "#define MAS_STRDUP strdup" >>confdefs.h
 
 
 
-
-
-cat >>confdefs.h <<_ACEOF
-#define MAS_MODULES_DIR "`find -name mas_cmdmod_root.c -printf '%h'`"
-_ACEOF
-
-
+# AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
+# AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
+# AC_SUBST([MAS_MODULES_DIR])
 
 
 
@@ -16512,7 +16508,7 @@ _ACEOF
 
 ac_config_headers="$ac_config_headers config.h"
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/inc/Makefile src/log/Makefile src/log/inc/Makefile src/control/Makefile src/control/inc/Makefile src/zoctools/Makefile src/zoctools/inc/Makefile src/modules/Makefile src/modules/inc/Makefile src/xcromas/Makefile src/xcromas/inc/Makefile src/variables/Makefile src/variables/inc/Makefile src/fileinfo/Makefile src/fileinfo/inc/Makefile src/cmdmods/Makefile src/cmdmods/inc/Makefile src/init/Makefile src/init/inc/Makefile src/http/Makefile src/http/inc/Makefile src/client/Makefile src/client/inc/Makefile src/listener/Makefile src/listener/inc/Makefile src/transaction/Makefile src/transaction/inc/Makefile src/server/Makefile src/server/inc/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/inc/Makefile src/control/Makefile src/control/inc/Makefile src/cli/Makefile src/cli/inc/Makefile src/xcromas/Makefile src/xcromas/inc/Makefile src/init/Makefile src/init/inc/Makefile src/http/Makefile src/http/inc/Makefile src/client/Makefile src/client/inc/Makefile src/listener/Makefile src/listener/inc/Makefile src/transaction/Makefile src/transaction/inc/Makefile src/server/Makefile src/server/inc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -17634,22 +17630,12 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/inc/Makefile" ;;
-    "src/log/Makefile") CONFIG_FILES="$CONFIG_FILES src/log/Makefile" ;;
-    "src/log/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/log/inc/Makefile" ;;
     "src/control/Makefile") CONFIG_FILES="$CONFIG_FILES src/control/Makefile" ;;
     "src/control/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/control/inc/Makefile" ;;
-    "src/zoctools/Makefile") CONFIG_FILES="$CONFIG_FILES src/zoctools/Makefile" ;;
-    "src/zoctools/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/zoctools/inc/Makefile" ;;
-    "src/modules/Makefile") CONFIG_FILES="$CONFIG_FILES src/modules/Makefile" ;;
-    "src/modules/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/modules/inc/Makefile" ;;
+    "src/cli/Makefile") CONFIG_FILES="$CONFIG_FILES src/cli/Makefile" ;;
+    "src/cli/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/cli/inc/Makefile" ;;
     "src/xcromas/Makefile") CONFIG_FILES="$CONFIG_FILES src/xcromas/Makefile" ;;
     "src/xcromas/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/xcromas/inc/Makefile" ;;
-    "src/variables/Makefile") CONFIG_FILES="$CONFIG_FILES src/variables/Makefile" ;;
-    "src/variables/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/variables/inc/Makefile" ;;
-    "src/fileinfo/Makefile") CONFIG_FILES="$CONFIG_FILES src/fileinfo/Makefile" ;;
-    "src/fileinfo/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/fileinfo/inc/Makefile" ;;
-    "src/cmdmods/Makefile") CONFIG_FILES="$CONFIG_FILES src/cmdmods/Makefile" ;;
-    "src/cmdmods/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/cmdmods/inc/Makefile" ;;
     "src/init/Makefile") CONFIG_FILES="$CONFIG_FILES src/init/Makefile" ;;
     "src/init/inc/Makefile") CONFIG_FILES="$CONFIG_FILES src/init/inc/Makefile" ;;
     "src/http/Makefile") CONFIG_FILES="$CONFIG_FILES src/http/Makefile" ;;

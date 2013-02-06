@@ -1,7 +1,7 @@
 #ifndef MAS_LCONTROL_OBJECT_H
 #  define MAS_LCONTROL_OBJECT_H
 
-#  include "mas_listener_control_types.h"
+#  include <mastar/types/mas_listener_control_types.h>
 
 
 

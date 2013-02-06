@@ -1,7 +1,7 @@
 #ifndef MAS_CHANNEL_OBJECT_H
 #  define MAS_CHANNEL_OBJECT_H
 
-#  include "mas_channel_types.h"
+#  include <mastar/types/mas_channel_types.h>
 
 mas_channel_t *mas_channel_create( void );
 int mas_channel_delete( mas_channel_t * pchannel, int toclose, int d );

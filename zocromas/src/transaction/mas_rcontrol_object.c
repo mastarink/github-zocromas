@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <string.h>
@@ -12,11 +13,18 @@
 #include <mastar/channel/mas_channel_object.h>
 #include <mastar/channel/mas_channel.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "transaction/inc/mas_transaction_control.h"
-#include "transaction/inc/mas_rcontrol_object.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/log/mas_log.h>
+
+#include "mas_transaction_control.h"
+#include "mas_rcontrol_object.h"
 
 
 /*
@@ -32,8 +40,8 @@ related:
   mas_transaction_xcromas.c
   mas_transaction_http.c
   
-  mas_lib_thread.c
-
+  mas_listener_control_types.h
+  mas_control.c
 */
 
 
@@ -59,12 +67,12 @@ mas_rcontrol_init( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol )
   MAS_LOG( "init transaction" );
   if ( plcontrol )
   {
-    if ( plcontrol->pchannel && plcontrol->pchannel->opened )
+    if ( plcontrol->h.pchannel && plcontrol->h.pchannel->opened )
     {
-      mas_rcontrol_set_channel( prcontrol, plcontrol->pchannel );
-      /* prcontrol->pchannel = mas_channel_clone( plcontrol->pchannel ); */
-      /* prcontrol->serv = prcontrol->pchannel->serv;               */
-      /* prcontrol->port = prcontrol->pchannel->port;                    */
+      mas_rcontrol_set_channel( prcontrol, plcontrol->h.pchannel );
+      /* prcontrol->h.pchannel = mas_channel_clone( plcontrol->h.pchannel ); */
+      /* prcontrol->serv = prcontrol->h.pchannel->serv;               */
+      /* prcontrol->port = prcontrol->h.pchannel->port;                    */
     }
 #ifdef MAS_TR_PERSIST
     prcontrol->persistent_transaction = persistent_transaction;
@@ -76,12 +84,14 @@ mas_rcontrol_init( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol )
       struct timeval td;
 
       gettimeofday( &td, NULL );
-      prcontrol->activity_time = td;
+      prcontrol->h.activity_time = td;
     }
   }
   else
   {
+#ifdef EMSG
     EMSG( "FATAL: no plcontrol" );
+#endif
   }
   return 0;
 }
@@ -91,13 +101,13 @@ mas_rcontrol_register( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol )
 {
   if ( plcontrol->transaction_controls_list )
   {
-    /* thMSG( "ADD %lu %lx", prcontrol->serial, prcontrol->thread ); */
+    /* thMSG( "ADD %lu %lx", prcontrol->h.serial, prcontrol->h.thread ); */
     /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
     pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
     {
       MAS_LIST_ADD( plcontrol->transaction_controls_list, prcontrol, next );
-      prcontrol->serial = ++plcontrol->transaction_serial;
-      MAS_LOG( "registering transaction; serial:%lu", prcontrol->serial );
+      prcontrol->h.serial = ++plcontrol->transaction_serial;
+      MAS_LOG( "registering transaction; serial:%lu", prcontrol->h.serial );
     }
     pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
     /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
@@ -140,8 +150,8 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
   plcontrol = prcontrol->plcontrol;
   if ( !prcontrol->complete )
   {
-    /* EMSG( "!!!!!!!! FATAL: R%lu:%u @ L%lu:%u NOT complete", prcontrol->serial, prcontrol->status, plcontrol->serial, */
-    /*       plcontrol->status );                                                                                       */
+    /* EMSG( "!!!!!!!! FATAL: R%lu:%u @ L%lu:%u NOT complete", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial, */
+    /*       plcontrol->h.status );                                                                                       */
     prcontrol->nc++;
   }
   else
@@ -150,24 +160,24 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
     pthread_cond_destroy( &prcontrol->waitchan_cond );
     if ( prcontrol->nc )
     {
-      MAS_LOG( "rm with nc=%u R%lu:%u @ L%lu:%u NOT complete", prcontrol->nc, prcontrol->serial, prcontrol->status,
-               plcontrol->serial, plcontrol->status );
+      MAS_LOG( "rm with nc=%u R%lu:%u @ L%lu:%u NOT complete", prcontrol->nc, prcontrol->h.serial, prcontrol->h.status,
+               plcontrol->h.serial, plcontrol->h.status );
     }
     else
     {
-      /* thMSG( "rm R%lu:%u @ L%lu:%u", prcontrol->serial, prcontrol->status, plcontrol->serial, plcontrol->status ); */
-      MAS_LOG( "rm R%lu:%u @ L%lu:%u", prcontrol->serial, prcontrol->status, plcontrol->serial, plcontrol->status );
+      /* thMSG( "rm R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial, plcontrol->h.status ); */
+      MAS_LOG( "rm R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial, plcontrol->h.status );
     }
     if ( prcontrol->uuid )
       mas_free( prcontrol->uuid );
     prcontrol->uuid = NULL;
 
-    if ( prcontrol->pchannel )
+    if ( prcontrol->h.pchannel )
     {
       mas_channel_t *pchannel = NULL;
 
-      pchannel = prcontrol->pchannel;
-      prcontrol->pchannel = NULL;
+      pchannel = prcontrol->h.pchannel;
+      prcontrol->h.pchannel = NULL;
       mas_channel_delete( pchannel, toclose /* close */ , 0 );
     }
 
@@ -179,7 +189,7 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
     }
     pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
     /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
-    /* thMSG( "RM %lu %lx", prcontrol->serial, prcontrol->thread ); */
+    /* thMSG( "RM %lu %lx", prcontrol->h.serial, prcontrol->h.thread ); */
     mas_free( prcontrol );
   }
   return 0;

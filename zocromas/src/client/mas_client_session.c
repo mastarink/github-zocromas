@@ -1,3 +1,4 @@
+#include "mas_client_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -7,10 +8,21 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/channel/mas_channel.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
-#include "zoctools/inc/mas_curses.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+#ifdef MAS_CLIENT_LOG
+#include <mastar/log/mas_log.h>
+#endif
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/msg/mas_curses.h>
+/* #include "mas_common.h" */
 
 #include "xcromas/inc/mas_message_io.h"
 
@@ -42,7 +54,9 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
   /* HMSG( "(%d) written data string %s", r, question ); */
   if ( r <= 0 )
   {
+#ifdef EMSG
     EMSG( "(%d) client write err", r );
+#endif
   }
   else
   {
@@ -52,7 +66,9 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
     if ( r <= 0 )
     {
       /* MSG( "(%d) client back none", r ); */
-      tMSG( "(%d) none", r );
+#ifdef EMSG
+      EMSG( "(%d) none", r );
+#endif
     }
     else if ( header && header->binary )
     {
@@ -86,10 +102,14 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
         HMSG( "Empty command" );
         break;
       case MSG_BIN_UNKNOWN_COMMAND:
+#ifdef EMSG
         EMSG( "Unknown command : %s", answer_buffer && *answer_buffer ? answer_buffer : "?" );
+#endif
         break;
       case MSG_BIN_ERROR_IN_COMMAND:
+#ifdef EMSG
         EMSG( "Error in command : %s", answer_buffer && *answer_buffer ? answer_buffer : "?" );
+#endif
         break;
       case MSG_BIN_QUIT:
         HMSG( "it's QUIT" );

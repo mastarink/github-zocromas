@@ -1,8 +1,8 @@
 #ifndef MAS_CONTROL_H
 #  define MAS_CONTROL_H
 
-/* #include "mas_control_types.h" */
-#include "init/inc/mas_opts_types.h"
+/* #include <mastar/types/mas_control_types.h> */
+#include <mastar/types/mas_opts_types.h>
 
 void mas_ctrl_init( mas_options_t * popts );
 void mas_ctrl_destroy( void );

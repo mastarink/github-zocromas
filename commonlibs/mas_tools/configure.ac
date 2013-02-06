@@ -72,8 +72,8 @@ AC_HEADER_STDC
 AC_CONFIG_MACRO_DIR([m4])
 AC_LANG([C])
 
-AC_CHECK_FUNCS([memset,dup2,atexit, mkfifo,socket,strchr,strdup,strndup,strtol,strstr,inet_ntoa,gethostbyname,gettimeofday])
-AC_CHECK_HEADERS([arpa/inet.h,fcntl.h,limits.h,malloc.h,netdb.h,stdlib.h,string.h,sys/ioctl.h,sys/socket.h,sys/time.h,unistd.h])
+AC_CHECK_FUNCS([memset dup2 atexit  mkfifo socket strchr strdup strndup strtol strstr inet_ntoa gethostbyname gettimeofday])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h malloc.h netdb.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h])
 AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_STRERROR_R
@@ -157,7 +157,7 @@ AC_SUBST(MAS_CFLAGS)
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])

@@ -1,7 +1,7 @@
 #ifndef MAS_CHANNEL_OPEN_H
 #  define MAS_CHANNEL_OPEN_H
 
-#  include "mas_channel_types.h"
+#  include <mastar/types/mas_channel_types.h>
 
 int mas_channel_open( mas_channel_t * pchannel );
 

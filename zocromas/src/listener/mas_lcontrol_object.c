@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -12,13 +13,22 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+
 #include <mastar/channel/mas_channel.h>
 #include <mastar/channel/mas_channel_object.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
 
-#include "variables/inc/mas_variables.h"
+#include <mastar/variables/mas_variables.h>
 
 #include "mas_lcontrol_object.h"
 
@@ -71,7 +81,9 @@ mas_lcontrol_create( void )
   }
   else
   {
+#ifdef EMSG
     EMSG( "FATAL" );
+#endif
   }
   return plcontrol;
 }
@@ -84,8 +96,8 @@ mas_lcontrol_register( mas_lcontrol_t * plcontrol )
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
     pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
     MAS_LIST_ADD( ctrl.lcontrols_list, plcontrol, next );
-    plcontrol->serial = ++ctrl.listener_serial;
-    MAS_LOG( "registering listener; serial:%lu", plcontrol->serial );
+    plcontrol->h.serial = ++ctrl.listener_serial;
+    MAS_LOG( "registering listener; serial:%lu", plcontrol->h.serial );
 
     pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
@@ -95,7 +107,9 @@ mas_lcontrol_register( mas_lcontrol_t * plcontrol )
   else
   {
     /* ........... */
+#ifdef EMSG
     EMSG( "+C l/th %p ['%s':%u]", ( void * ) plcontrol, plcontrol->host, plcontrol->port );
+#endif
     sleep( 10 );
   }
   return 0;
@@ -117,7 +131,9 @@ mas_lcontrol_make( const char *host, unsigned port )
   }
   else
   {
+#ifdef EMSG
     EMSG( "?" );
+#endif
   }
   return plcontrol;
 }
@@ -151,19 +167,19 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const char *host, unsigned port )
   plcontrol->host = mas_strndup( host, plcontrol->hostlen );
   plcontrol->port = hport;
   /* thMSG( "HOST: %s; PORT:%u", plcontrol->host, plcontrol->port ); */
-  plcontrol->thread = ( pthread_t ) 0;
+  plcontrol->h.thread = ( pthread_t ) 0;
   /* pthread_mutex_init( &plcontrol->transaction_mutex, NULL ); */
   pthread_rwlock_init( &plcontrol->transaction_rwlock, NULL );
   pthread_rwlock_init( &plcontrol->variables_rwlock, NULL );
-  plcontrol->status = MAS_STATUS_NONE;
+  plcontrol->h.status = MAS_STATUS_NONE;
 
-  plcontrol->pchannel = mas_channel_create(  );
-  mas_channel_init( plcontrol->pchannel, ctrl.is_server, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );
+  plcontrol->h.pchannel = mas_channel_create(  );
+  mas_channel_init( plcontrol->h.pchannel, ctrl.is_server, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );
   {
     struct timeval td;
 
     gettimeofday( &td, NULL );
-    plcontrol->activity_time = td;
+    plcontrol->h.activity_time = td;
   }
   mas_lcontrol_create_transaction_controls_list( plcontrol );
   return 0;
@@ -175,7 +191,7 @@ mas_lcontrol_delete( mas_lcontrol_t * plcontrol )
 {
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
-    thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol );
+    /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
     pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
 
@@ -194,10 +210,10 @@ mas_lcontrol_delete( mas_lcontrol_t * plcontrol )
       mas_variables_delete( vars );
     }
 
-    if ( plcontrol->pchannel )
+    if ( plcontrol->h.pchannel )
     {
-      mas_channel_delete( plcontrol->pchannel, 0, 0 );
-      plcontrol->pchannel = NULL;
+      mas_channel_delete( plcontrol->h.pchannel, 0, 0 );
+      plcontrol->h.pchannel = NULL;
     }
     if ( plcontrol->transaction_controls_list )
     {
@@ -213,8 +229,8 @@ mas_lcontrol_delete( mas_lcontrol_t * plcontrol )
     pthread_rwlock_destroy( &plcontrol->transaction_rwlock );
     /* memset( &plcontrol->transaction_mutex, 0, sizeof( plcontrol->transaction_mutex ) ); */
     memset( &plcontrol->transaction_rwlock, 0, sizeof( plcontrol->transaction_rwlock ) );
-    thMSG( "FREE %d %p", __LINE__, ( void * ) plcontrol );
-    plcontrol->thread = ( pthread_t ) 0;
+    /* thMSG( "FREE %d %p", __LINE__, ( void * ) plcontrol ); */
+    plcontrol->h.thread = ( pthread_t ) 0;
     mas_free( plcontrol );
   }
   return 0;

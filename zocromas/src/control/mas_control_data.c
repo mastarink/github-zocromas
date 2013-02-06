@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include "mas_common.h"
-
-#include "mas_control_types.h"
+/* #include "mas_common.h" */
+#include "mas_global.h"
+#include <mastar/types/mas_control_types.h>
 
 /*
 this:

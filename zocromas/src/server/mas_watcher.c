@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <stdlib.h>
@@ -7,13 +8,23 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "zoctools/inc/mas_lib_thread.h"
-#include "zoctools/inc/mas_thread_tools.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/log/mas_log.h>
+
+#include <mastar/thtools/mas_ocontrol_tools.h>
+#include <mastar/thtools/mas_thread_tools.h>
+#include "server/inc/mas_server_tools.h"
 
 #include "transaction/inc/mas_transaction_control.h"
 #include "transaction/inc/mas_transaction.h"
@@ -112,8 +123,8 @@ mas_watcher( void )
         {
           gettimeofday( &lnow_time, NULL );
           {
-            linactive_time.tv_sec = lnow_time.tv_sec - plcontrol->activity_time.tv_sec;
-            linactive_time.tv_usec = lnow_time.tv_usec - plcontrol->activity_time.tv_usec;
+            linactive_time.tv_sec = lnow_time.tv_sec - plcontrol->h.activity_time.tv_sec;
+            linactive_time.tv_usec = lnow_time.tv_usec - plcontrol->h.activity_time.tv_usec;
             if ( linactive_time.tv_usec < 0 )
             {
               linactive_time.tv_usec += 1000000;
@@ -125,10 +136,10 @@ mas_watcher( void )
         if ( out )
         {
           MAS_LOG( "WATCH > %u. %20s:%-6u;tid:%5u; [%lx] {%lu - %lu = %lu} {%lu.%06lu %lu.%06lu I/A:%lu.%06lu}  [%s]", nlistener,
-                   plcontrol->host, plcontrol->port, plcontrol->tid, plcontrol->thread, plcontrol->clients_came,
-                   plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone, plcontrol->activity_time.tv_sec,
-                   plcontrol->activity_time.tv_usec, lnow_time.tv_sec, lnow_time.tv_usec, linactive_time.tv_sec,
-                   linactive_time.tv_usec, plcontrol->pchannel ? "L" : "C" );
+                   plcontrol->host, plcontrol->port, plcontrol->h.tid, plcontrol->h.thread, plcontrol->clients_came,
+                   plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone, plcontrol->h.activity_time.tv_sec,
+                   plcontrol->h.activity_time.tv_usec, lnow_time.tv_sec, lnow_time.tv_usec, linactive_time.tv_sec,
+                   linactive_time.tv_usec, plcontrol->h.pchannel ? "L" : "C" );
         }
         {
           mas_rcontrol_t *prcontrol;
@@ -146,7 +157,7 @@ mas_watcher( void )
 
             ntransaction_in_l++;
             ntransaction++;
-            if ( plcontrol->pchannel )
+            if ( plcontrol->h.pchannel )
             {
               nlisteners_ever_open++;
               nlistener_open++;
@@ -154,8 +165,8 @@ mas_watcher( void )
             {
               gettimeofday( &rnow_time, NULL );
               {
-                rinactive_time.tv_sec = rnow_time.tv_sec - prcontrol->activity_time.tv_sec;
-                rinactive_time.tv_usec = rnow_time.tv_usec - prcontrol->activity_time.tv_usec;
+                rinactive_time.tv_sec = rnow_time.tv_sec - prcontrol->h.activity_time.tv_sec;
+                rinactive_time.tv_usec = rnow_time.tv_usec - prcontrol->h.activity_time.tv_usec;
                 if ( rinactive_time.tv_usec < 0 )
                 {
                   rinactive_time.tv_usec += 1000000;
@@ -163,7 +174,7 @@ mas_watcher( void )
                 }
               }
             }
-            pchannel = prcontrol ? prcontrol->pchannel : NULL;
+            pchannel = prcontrol ? prcontrol->h.pchannel : NULL;
             if ( out )
             {
               const char *proto_name = NULL;
@@ -173,8 +184,8 @@ mas_watcher( void )
 
               proto_name = mas_rcontrol_protocol_name( prcontrol );
               MAS_LOG( "WATCH  >> %u. %s %s:%u;tid:%5u; [%lx] {%lu.%06lu %lu.%06lu I/A:%lu.%06lu} #%u", ntransaction_in_l,
-                       proto_name, sip ? sip : "?", pchannel?pchannel->port:0, prcontrol->tid, prcontrol->thread,
-                       prcontrol->activity_time.tv_sec, prcontrol->activity_time.tv_usec, rnow_time.tv_sec, rnow_time.tv_usec,
+                       proto_name, sip ? sip : "?", pchannel?pchannel->port:0, prcontrol->h.tid, prcontrol->h.thread,
+                       prcontrol->h.activity_time.tv_sec, prcontrol->h.activity_time.tv_usec, rnow_time.tv_sec, rnow_time.tv_usec,
                        rinactive_time.tv_sec, rinactive_time.tv_usec, prcontrol->xch_cnt );
               if ( sip )
                 mas_free( sip );

@@ -3,4 +3,4 @@ SUBDIRS= inc
 lib_LTLIBRARIES = \
 	libmas_wrap.la
 
-libmas_wrap_la_SOURCES         = mas_lib.c mas_lib0.c mas_memory.c
+libmas_wrap_la_SOURCES         = mas_lib.c mas_lib0.c mas_memory.c mas_lib_thread.c

@@ -5,7 +5,12 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "mas_common.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
 
 #include "mas_control.h"
 

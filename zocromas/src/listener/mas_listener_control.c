@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -10,12 +11,20 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
-#include "zoctools/inc/mas_thread_tools.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "variables/inc/mas_variables.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
+
+#include <mastar/thtools/mas_thread_tools.h>
+
+#include <mastar/variables/mas_variables.h>
 #include "transaction/inc/mas_rcontrol_object.h"
 
 #include "mas_listener_control.h"
@@ -73,7 +82,7 @@ mas_lcontrols_cleaning_transactions( int removeit, long nanos )
       jr = mas_lcontrol_cleaning_transactions( plcontrol, removeit, nanos );
       /* if ( jr > 0 )                                                                 */
       /* {                                                                             */
-      /*   MAS_LOG( "listener #%lu cleaned ; remains: %d tr.", plcontrol->serial, jr ); */
+      /*   MAS_LOG( "listener #%lu cleaned ; remains: %d tr.", plcontrol->h.serial, jr ); */
       /* }                                                                             */
       join_result += jr;
     }
@@ -119,13 +128,13 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
       /* MAS_LOG( "to clean transactions list (nanos:%lu)", nanos ); */
       MAS_LIST_FOREACH_SAFE( prcontrol, plcontrol->transaction_controls_list, next, prcontrol_tmp )
       {
-        /* thMSG( "to join r/th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) prcontrol->thread ); */
-        if ( prcontrol->thread )
+        /* thMSG( "to join r/th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) prcontrol->h.thread ); */
+        if ( prcontrol->h.thread )
         {
 //        if ( nanos >= 0 )
 //        {
-//          thMSG( "waiting (%lu) cl. R%lu:%u @ L%lu:%u to go (server quit)", nanos, prcontrol->serial, prcontrol->status,
-//                 plcontrol->serial, plcontrol->status );
+//          thMSG( "waiting (%lu) cl. R%lu:%u @ L%lu:%u to go (server quit)", nanos, prcontrol->h.serial, prcontrol->h.status,
+//                 plcontrol->h.serial, plcontrol->h.status );
 //        }
           {
             int j;
@@ -135,22 +144,22 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
               /* TEST */
               int rcond;
 
-              if ( !( prcontrol->pchannel && prcontrol->pchannel->opened ) )
+              if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) )
               {
                 rcond = pthread_cond_signal( &prcontrol->waitchan_cond );
-                thMSG( "COND_SIGNAL :%d", rcond );
+                /* thMSG( "COND_SIGNAL :%d", rcond ); */
               }
             }
-            /* j = Jwait ? mas_xpthread_join( prcontrol->thread ) : mas_xpthread_tryjoin_np( prcontrol->thread ); */
-            j = mas_xxpthread_join( prcontrol->thread, nanos );
+            /* j = Jwait ? mas_xpthread_join( prcontrol->h.thread ) : mas_xpthread_tryjoin_np( prcontrol->h.thread ); */
+            j = mas_xxpthread_join( prcontrol->h.thread, nanos );
             if ( 0 == j )
             {
-              /* MAS_LOG( "stoped transaction [%lx]", prcontrol->thread ); */
-              prcontrol->thread = ( pthread_t ) 0;
+              /* MAS_LOG( "stoped transaction [%lx]", prcontrol->h.thread ); */
+              prcontrol->h.thread = ( pthread_t ) 0;
               rmcnt++;
-              /* thMSG( "joined L%lu:%u & R%lu:%u", plcontrol->serial, plcontrol->status, prcontrol->serial, prcontrol->status ); */
-              MAS_LOG( "stopeed  R%lu:%u @ L%lu:%u; rmcnt:%u", prcontrol->serial, prcontrol->status, plcontrol->serial,
-                     plcontrol->status, rmcnt );
+              /* thMSG( "joined L%lu:%u & R%lu:%u", plcontrol->h.serial, plcontrol->h.status, prcontrol->h.serial, prcontrol->h.status ); */
+              MAS_LOG( "stopeed  R%lu:%u @ L%lu:%u; rmcnt:%u", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial,
+                     plcontrol->h.status, rmcnt );
             }
             else
             {
@@ -166,7 +175,7 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
         {
           /* EMSG( "transaction thread not set at list - this is not good" ); */
         }
-        if ( prcontrol && !prcontrol->thread && removeit )
+        if ( prcontrol && !prcontrol->h.thread && removeit )
         {
           MAS_LOG( "to delete transaction" );
           mas_rcontrol_delete( prcontrol, 0 );
@@ -185,7 +194,7 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
   }
   else
   {
-    thMSG( "no plcontrol" );
+    /* thMSG( "no plcontrol" ); */
   }
   return join_result;
 }

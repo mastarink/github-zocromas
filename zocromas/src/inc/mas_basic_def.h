@@ -24,4 +24,14 @@
 /* #  define MAS_TR_PERSIST */
 
 
+/*
+this:
+  mas_basic_def.h
+related:
+  mas_client_def.h
+  mas_server_def.h
+*/
+
+
+
 #endif

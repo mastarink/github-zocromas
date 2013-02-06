@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 /**
@@ -24,8 +25,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "mas_common.h"
-#include "zoctools/inc/mas_lib_thread.h"
+#include <mastar/wrap/mas_lib_thread.h>
+
+/* #include "mas_common.h" */
 
 #include "mas_master.h"
 

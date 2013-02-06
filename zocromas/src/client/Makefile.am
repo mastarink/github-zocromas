@@ -6,11 +6,12 @@ mas_client_SOURCES=  mas_client_main.c mas_client_sig.c mas_client_readline.c \
 
 mas_client_CFLAGS=${AM_CFLAGS} \
 	-lreadline       -luuid \
-	-lmas_wrap -lmas_tools -lmas_arg_tools -lmas_io -lmas_channel \
+	-L\$(prefix)/lib \
+	-lmas_wrap -lmas_tools -lmas_arg_tools -lmas_io -lmas_channel -lmas_variables -lmas_log -lmas_msg \
+	-lmas_thtools \
 	-L../xcromas     -lmas_xcromasio \
 	-L../control     -lmas_control \
-	-L../log	 -lmas_log \
-	-L../zoctools    -lmas_zoctools -lmas_msgtools -lmas_thread_tools \
-	-L../variables   -lmas_variables \
+	-L../cli	 -lmas_cli \
 	-L../init        -lmas_init \
 	-rdynamic
+

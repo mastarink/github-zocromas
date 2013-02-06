@@ -1,6 +1,14 @@
+#include "mas_client_def.h"
 #include "mas_basic_def.h"
 
-#include "mas_common.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include "init/inc/mas_init.h"
 #include "mas_init_client.h"
@@ -34,8 +42,6 @@ int
 main( int argc, char *argv[], char *env[] )
 {
   ctrl.status = MAS_STATUS_START;
-
-  /* opts.restart_sleep = 1; */
 
   HMSG( "Start" );
   mas_init_client( mas_atexit, 1, argc, argv, env );

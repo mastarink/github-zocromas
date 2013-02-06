@@ -1,7 +1,7 @@
 #ifndef MAS_RCONTROL_OBJECT_H
 #  define MAS_RCONTROL_OBJECT_H
 
-#  include "transaction/inc/mas_transaction_control_types.h"
+#  include <mastar/types/mas_transaction_control_types.h>
 
 mas_rcontrol_t *mas_rcontrol_create( void );
 int mas_rcontrol_register( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol );

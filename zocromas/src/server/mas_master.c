@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <fcntl.h>
@@ -6,18 +7,25 @@
 
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/log/mas_log.h>
 
 #include "mas_ticker.h"
 #include "mas_watcher.h"
 
-#include "log/inc/mas_logger.h"
+#include <mastar/log/mas_logger.h>
 
-#include "zoctools/inc/mas_lib_thread.h"
-#include "zoctools/inc/mas_thread_tools.h"
+#include <mastar/thtools/mas_thread_tools.h>
 
 #include "listener/inc/mas_listeners.h"
 #include "mas_init_server.h"
@@ -45,6 +53,7 @@ more:
   mas_listeners.h
   mas_listener_wait_client.h
 
+  mas_client.c
 */
 
 /*
@@ -105,6 +114,8 @@ mas_master_th( void *arg )
   }
   /* mas_destroy_server(  ); */
 #ifdef MAS_TRACEMEM
+  extern unsigned long memory_balance;
+
   mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
   MAS_LOG( "bunch end, m/b:%lu", memory_balance );
 #endif
@@ -162,6 +173,7 @@ mas_master( void )
     {
       MAS_LOG( "master loop for %d hosts", opts.hosts_num );
       thMSG( "master loop for %d hosts", opts.hosts_num );
+  /* mas_listeners.c */
       r = mas_listeners_start(  );
 
       thMSG( "waiting..." );
@@ -200,6 +212,8 @@ mas_master( void )
 
   MAS_LOG( "exiting master server" );
 #ifdef MAS_TRACEMEM
+  extern unsigned long memory_balance;
+
   mMSG( "exiting master server, memory_balance:%lu", memory_balance );
   MAS_LOG( "master end, m/b:%lu", memory_balance );
 #endif

@@ -1,13 +1,19 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 /* server tools */
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "zoctools/inc/mas_thread_tools.h"
+/* #include "mas_common.h"      */
+#include <mastar/log/mas_log.h>
 
-#include "listener/inc/mas_listener_control.h"
+#include <mastar/thtools/mas_thread_tools.h>
+
+/* #include "listener/inc/mas_listener_control.h" */
 #include "listener/inc/mas_listeners.h"
 
 #include "mas_server_tools.h"
@@ -37,64 +43,37 @@ more:
 
 
 
-unsigned
-mas_clients_count( mas_rcontrol_t * prcontrol )
-{
-  unsigned cnt = 0;
-
-  if ( prcontrol )
-  {
-    mas_lcontrol_t *plcontrol = NULL;
-
-    plcontrol = prcontrol->plcontrol;
-/* mas_lcontrol_cleaning_transactions returns not-joined-count */
-    if ( plcontrol )
-      cnt = mas_lcontrol_cleaning_transactions( plcontrol, 0 /* removeit */ , 0 /* don't wait */  );
-  }
-  return cnt;
-}
+//  unsigned
+//  mas_clients_count( mas_rcontrol_t * prcontrol )
+//  {
+//    unsigned cnt = 0;
+//
+//    if ( prcontrol )
+//    {
+//      mas_lcontrol_t *plcontrol = NULL;
+//
+//      plcontrol = prcontrol->plcontrol;
+//  /* mas_lcontrol_cleaning_transactions returns not-joined-count */
+//      if ( plcontrol )
+//        cnt = mas_lcontrol_cleaning_transactions( plcontrol, 0 /* removeit */ , 0 /* don't wait */  );
+//    }
+//    return cnt;
+//  }
 
 void
-do_quit_server( mas_rcontrol_t * prcontrol, bin_type_t * pbinary )
+do_quit_server( mas_rcontrol_t * prcontrol )
 {
   ctrl.keep_listening = 0;
   prcontrol->keep_alive = 0;
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
-  if ( pbinary )
+  /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
+  if ( prcontrol )
   {
     if ( ctrl.restart )
-      *pbinary = MSG_BIN_RESTART;
+      prcontrol->qbin = MSG_BIN_RESTART;
     else if ( ctrl.quit )
-      *pbinary = MSG_BIN_QUIT;
+      prcontrol->qbin = MSG_BIN_QUIT;
     else
-      *pbinary = MSG_BIN_DISCONNECT;
+      prcontrol->qbin = MSG_BIN_DISCONNECT;
   }
   mas_listeners_cancel(  );
-}
-
-const char *
-mas_sstatus( mas_status_t status )
-{
-  switch ( status )
-  {
-  case MAS_STATUS_NONE:
-    return "NONE";
-  case MAS_STATUS_START:
-    return "START";
-  case MAS_STATUS_INIT:
-    return "INIT";
-  case MAS_STATUS_OPEN:
-    return "OPEN";
-  case MAS_STATUS_WAIT:
-    return "WAIT";
-  case MAS_STATUS_WORK:
-    return "WORK";
-  case MAS_STATUS_CLOSE:
-    return "CLOSE";
-  case MAS_STATUS_STOP:
-    return "STOP";
-  case MAS_STATUS_END:
-    return "END";
-  }
-  return NULL;
 }

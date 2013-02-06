@@ -1,3 +1,4 @@
+#include "mas_client_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -10,7 +11,15 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "mas_common.h"
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
 
 #include "mas_client_session.h"
 #include "mas_client.h"

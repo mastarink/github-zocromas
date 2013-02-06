@@ -1,7 +1,7 @@
 #ifndef MAS_TRANSACTION_CONTROL_H
 #  define MAS_TRANSACTION_CONTROL_H
 
-#  include "transaction/inc/mas_transaction_control_types.h"
+#  include <mastar/types/mas_transaction_control_types.h>
 
 /*
 this:
@@ -21,6 +21,5 @@ related:
 
 
 int mas_rcontrol_set_channel( mas_rcontrol_t * prcontrol, mas_channel_t * pchannel );
-const char *mas_rcontrol_protocol_name( mas_rcontrol_t * prcontrol );
 
 #endif

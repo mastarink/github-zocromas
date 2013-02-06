@@ -1,7 +1,7 @@
 #ifndef MAS_CHANNEL_H
 #  define MAS_CHANNEL_H
 
-#  include "mas_channel_types.h"
+#  include <mastar/types/mas_channel_types.h>
 
 int mas_channel_fd( const mas_channel_t * pchannel );
 FILE *mas_channel_stream( const mas_channel_t * pchannel );

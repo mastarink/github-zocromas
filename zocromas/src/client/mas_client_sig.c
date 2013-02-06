@@ -1,3 +1,4 @@
+#include "mas_client_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -7,9 +8,17 @@
 #include <signal.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib_thread.h>
 
-#include "mas_common.h"
-#include "zoctools/inc/mas_lib_thread.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include <mastar/msg/mas_msg_def.h>   */
+/* #include <mastar/msg/mas_msg_tools.h> */
+/* #include <mastar/msg/mas_curses.h>    */
+/* #include "mas_common.h" */
 
 #include "mas_init_client.h"
 
@@ -85,7 +94,9 @@ sigquit_han( int s )
   ctrl.in_client = 0;
   ctrl.keep_listening = 0;
   ctrl.in_pipe--;
+#ifdef EMSG
   EMSG( "QUIT%s", "." );
+#endif
 }
 
 void
@@ -94,13 +105,17 @@ sigabrt_han( int s )
   ctrl.in_client = 0;
   ctrl.keep_listening = 0;
   ctrl.in_pipe--;
+#ifdef EMSG
   EMSG( "ABRT%s", "." );
+#endif
 }
 
 void
 sigterm_han( int s )
 {
+#ifdef EMSG
   EMSG( "TERM %d", ctrl.term_cnt );
+#endif
   ctrl.term_cnt++;
   ctrl.keep_listening = 0;
   ctrl.in_client = 0;
@@ -110,14 +125,18 @@ sigterm_han( int s )
 void
 sighup_han( int s )
 {
+#ifdef EMSG
   EMSG( "HUP" );
+#endif
   ctrl.in_client = 0;
 }
 
 void
 sigpipe_han( int s )
 {
+#ifdef EMSG
   EMSG( "PIPE" );
+#endif
   /* ctrl.in_client = 1; */
   /* ctrl.in_pipe--; */
 }
@@ -129,10 +148,18 @@ mas_atexit( void )
 
   mas_destroy_client(  );
 #ifdef MAS_TRACEMEM
+
+#ifdef FMSG
+  extern unsigned long memory_balance;
   FMSG( "\nAt exit, memory_balance:%lu", memory_balance );
+#endif
   print_memlist( FL );
 #else
+
+#ifdef FMSG
   FMSG( "\nAt exit." );
+#endif
+
 #endif
   if ( ctrl.saved_stderr_file )
   {

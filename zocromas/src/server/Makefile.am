@@ -7,17 +7,16 @@ mas_server_SOURCES= mas_server_main.c mas_server_sig.c  \
 	mas_init_server.c mas_ticker.c mas_watcher.c
 mas_server_CFLAGS=${AM_CFLAGS} -pthread \
 	-luuid \
-	-lmas_wrap -lmas_tools -lmas_arg_tools -lmas_io -lmas_channel \
+	-L\$(prefix)/lib \
+	-lmas_wrap -lmas_tools -lmas_arg_tools -lmas_thtools -lmas_io -lmas_channel -lmas_modules -lmas_variables \
+	-lmas_fileinfo -lmas_log -lmas_msg \
+	\
 	-L../control     -lmas_control \
-	-L../log	 -lmas_log \
-	-L../zoctools    -lmas_zoctools -lmas_msgtools -lmas_thread_tools \
-	-L../variables   -lmas_variables \
+	-L../cli	 -lmas_cli \
 	-L../init        -lmas_init \
 	-L../listener    -lmas_listener \
 	-L../transaction -lmas_transaction \
 	-L../http        -lmas_http \
-	-L../fileinfo    -lmas_fileinfo \
-	-L../modules     -lmas_modules \
 	-L../xcromas     -lmas_xcromas \
 	-L../xcromas     -lmas_xcromasio \
 	-rdynamic

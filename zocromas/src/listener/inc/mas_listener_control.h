@@ -1,7 +1,7 @@
 #ifndef MAS_LISTENER_CONTROL_H
 #  define MAS_LISTENER_CONTROL_H
 
-#  include "mas_listener_control_types.h"
+#  include <mastar/types/mas_listener_control_types.h>
 
 
 unsigned mas_lcontrols_cleaning_transactions( int removeit, long jwait );

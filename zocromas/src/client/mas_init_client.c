@@ -1,12 +1,19 @@
+#include "mas_client_def.h"
 #include "mas_basic_def.h"
 
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_lib.h>
 
-#include "mas_common.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "log/inc/mas_logger.h"
+/* #include "mas_common.h" */
+#ifdef MAS_CLIENT_LOG
+#  include <mastar/log/mas_logger.h>
+#endif
 #include "init/inc/mas_opts.h"
 #include "mas_client_readline.h"
 
@@ -32,6 +39,9 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
 {
   int k;
 
+#ifndef MAS_CLIENT_LOG
+  ctrl.log_disabled = 1;
+#endif
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_client = 1;
   ctrl.is_server = 0;
@@ -47,12 +57,13 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
 void
 mas_destroy_client( void )
 {
+#ifdef MAS_CLIENT_LOG
   /* {                          */
   mas_logger_cleanup( NULL );
   /*   mas_logger_close(  );    */
   /*   mas_log_clean_queue(  ); */
   /* }                          */
-
+#endif
   if ( !ctrl.opts_saved )
     mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
   {

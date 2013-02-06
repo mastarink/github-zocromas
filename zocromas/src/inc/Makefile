@@ -88,7 +88,7 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} /mnt/new_misc/develop/autotools/zoc/zocromas/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AM_CFLAGS = -pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\"${pkglibdir}\" -DMAS_LIBDIR=\"${libdir}\" -ltcmalloc
-AM_CPPFLAGS = -I$(srcdir)/inc -I$(top_srcdir)/src/inc -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(srcdir)/inc -I$(top_srcdir)/src/inc -I$(top_srcdir)/src -I$(prefix)/include
 AM_DEFAULT_VERBOSITY = 0
 AM_LDFLAGS = -ldl -Wl,--defsym,__MAS_LINK_DATE__=`date +0x%Y%m%d`,--defsym,__MAS_LINK_TIME__=`date +0x%H%M%S`,--defsym,__MAS_LINK_TIMESTAMP__=`date +%s`
 AR = ar
@@ -140,7 +140,6 @@ MAS_FREE =
 MAS_LIBDIR = ${libdir}
 MAS_MALLOC = 
 MAS_MODULESDIR = ${pkglibdir}
-MAS_MODULES_DIR = 
 MAS_OSVER = 
 MAS_STRDUP = 
 MAS_S_DATE = 
@@ -209,7 +208,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /home/mastar/.mas/develop/autotools/zoc//install
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -222,12 +221,10 @@ top_builddir = ../..
 top_srcdir = ../..
 noinst_HEADERS = \
 	mas_basic_def.h \
-	mas_common.h \
-	mas_common_types.h \
+	mas_server_def.h \
+	mas_client_def.h \
 	mas_global.h \
-	mas_list_def.h \
-	mas_sig.h \
-	mas_th_types.h 
+	mas_sig.h
 
 all: all-am
 
@@ -466,8 +463,6 @@ uninstall-am:
 	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am
 
-
-# mas_server_SOURCES= mas_client.h mas_io.h mas_cs.h mas_global.h mas_cmdmod_client.h mas_cmdmod_get.h mas_cmdmod_mem.h mas_cmdmod_set.h mas_cmdmocmdmods.h mas_server_master.h mas_server_sig.h mas_sig.h mas_tools_def.h mas_tools.h mas_weak.h 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

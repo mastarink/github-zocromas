@@ -205,7 +205,6 @@ MAS_FREE = @MAS_FREE@
 MAS_LIBDIR = @MAS_LIBDIR@
 MAS_MALLOC = @MAS_MALLOC@
 MAS_MODULESDIR = @MAS_MODULESDIR@
-MAS_MODULES_DIR = @MAS_MODULES_DIR@
 MAS_OSVER = @MAS_OSVER@
 MAS_STRDUP = @MAS_STRDUP@
 MAS_S_DATE = @MAS_S_DATE@
@@ -285,14 +284,14 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = inc control log fileinfo cmdmods init zoctools variables http modules xcromas listener transaction client server
+SUBDIRS = inc control init cli http xcromas listener transaction client server
 # mas_parg
 
 ##########################################################################################
 
 # mas_parg_SOURCES=parg.c
 mas_minitest_SOURCES = minitest.c
-mas_minitest_CFLAGS = ${AM_CFLAGS}  -lmas_wrap -lmas_arg_tools -Lcontrol -lmas_control
+mas_minitest_CFLAGS = ${AM_CFLAGS} -L\$(prefix)/lib -lmas_wrap -lmas_arg_tools -Lcontrol -lmas_control
 all: all-recursive
 
 .SUFFIXES:

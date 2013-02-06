@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 /* ميخائيل */
@@ -9,8 +10,18 @@
 /* be used in matching pairs at the same nesting level of braces.          */
 #include <pthread.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/wrap/mas_lib_thread.h>
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
 
 #include "mas_listener_control_list.h"
 #include "mas_listener.h"
@@ -43,25 +54,29 @@ more:
 */
 
 
+
 int
 mas_listeners_start( void )
 {
   int r = 0;
 
   MAS_LOG( "to start listeners" );
+  thMSG( "to start listeners" );
   if ( !opts.nolistener )
   {
     for ( unsigned ith = 0; ith < opts.hosts_num; ith++ )
     {
       if ( opts.hosts[ith] )
       {
-        tMSG( "host %d: '%s'", ith, opts.hosts[ith] );
+        thMSG( "host %d: '%s'", ith, opts.hosts[ith] );
         MAS_LOG( "to start listener #%d %s", ith + 1, opts.hosts[ith] );
         r = mas_listener_start( opts.hosts[ith], opts.default_port );
       }
       else
       {
+#ifdef EMSG
         EMSG( "no host for %d", ith );
+#endif
         MAS_LOG( "no host for #%d", ith );
         r = -1;
       }
@@ -82,7 +97,9 @@ mas_listeners_stop( void )
 {
   mas_listeners_cancel(  );
   mas_listeners_wait(  );
-  MFP( "\nl's STOPPED\n" );
+#ifdef FMSG
+  FMSG( "\nl's STOPPED" );
+#endif
   return 0;
 }
 
@@ -93,7 +110,9 @@ mas_listeners_cancel( void )
   {
     mas_lcontrol_t *plcontrol = NULL;
 
-    MFP( "\nCANCEL l's\n" );
+#ifdef FMSG
+    FMSG( "\nCANCEL l's" );
+#endif
     MAS_LOG( "cancelling listeners" );
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
     pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
@@ -119,14 +138,15 @@ mas_listeners_wait( void )
     mas_lcontrols_clean_list( 0 );
   }
   ctrl.status = MAS_STATUS_STOP;
-  MFP( "\nl's STOPPED\n" );
-
+#ifdef FMSG
+  FMSG( "\nl's STOPPED" );
+#endif
   /* ??????????? */
   /* mas_lcontrols_clean_list( 0 ); */
 
   ctrl.status = MAS_STATUS_END;
-  /* thMSG( "joined l/th's" ); */
-  /* thMSG( "finished waiters" ); */
+  thMSG( "joined l/th's" );
+  thMSG( "finished waiters" );
   MAS_LOG( "stopped listeners" );
   return 0;
 }

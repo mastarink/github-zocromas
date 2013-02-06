@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <string.h>
@@ -9,12 +10,12 @@
 
 #include <mastar/wrap/mas_memory.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
 
 /* #include "channel/inc/mas_channel.h" */
 #include "transaction/inc/mas_transaction.h"
-#include "variables/inc/mas_variables.h"
+#include <mastar/variables/mas_variables.h>
 
 #include "mas_http_utils.h"
 

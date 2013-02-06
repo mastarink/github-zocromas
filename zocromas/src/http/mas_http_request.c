@@ -1,15 +1,25 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "variables/inc/mas_variables.h"
-#include "fileinfo/inc/mas_fileinfo.h"
-#include "fileinfo/inc/mas_fileinfo_object.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/log/mas_log.h>
+
+#include "server/inc/mas_server_tools.h"
+#include <mastar/thtools/mas_ocontrol_tools.h>
+#include <mastar/variables/mas_variables.h>
+#include <mastar/fileinfo/mas_fileinfo.h>
+#include <mastar/fileinfo/mas_fileinfo_object.h>
 
 #include "transaction/inc/mas_transaction_control.h"
 

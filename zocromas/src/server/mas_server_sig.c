@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -9,12 +10,19 @@
 #include <signal.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "zoctools/inc/mas_lib_thread.h"
-#include "zoctools/inc/mas_thread_tools.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/thtools/mas_thread_tools.h>
 
 
 /* mas_destroy */
@@ -78,9 +86,9 @@ info( FILE * ftinfo )
   MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
   {
     fprintf( ftinfo, "\t\t%u. %20s:%-6u; \ttid:%5u/%4x; [%lx] {%lu - %lu = %lu} %s\n", ith,
-             plcontrol->host, plcontrol->port, plcontrol->tid, plcontrol->tid, plcontrol->thread, plcontrol->clients_came,
+             plcontrol->host, plcontrol->port, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread, plcontrol->clients_came,
              plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone,
-             plcontrol->pchannel ? "listening" : "closed" );
+             plcontrol->h.pchannel ? "listening" : "closed" );
     {
       unsigned itr;
       mas_rcontrol_t *prcontrol;
@@ -98,8 +106,8 @@ info( FILE * ftinfo )
         struct timeval inactive_time;
 
         gettimeofday( &now_time, NULL );
-        inactive_time.tv_sec = now_time.tv_sec - prcontrol->activity_time.tv_sec;
-        inactive_time.tv_usec = now_time.tv_usec - prcontrol->activity_time.tv_usec;
+        inactive_time.tv_sec = now_time.tv_sec - prcontrol->h.activity_time.tv_sec;
+        inactive_time.tv_usec = now_time.tv_usec - prcontrol->h.activity_time.tv_usec;
         if ( inactive_time.tv_usec < 0 )
         {
           inactive_time.tv_usec += 1000000;
@@ -107,14 +115,14 @@ info( FILE * ftinfo )
         }
         /* cMSG( "srv L %p", prcontrol ); */
 
-        pchannel = prcontrol ? prcontrol->pchannel : NULL;
+        pchannel = prcontrol ? prcontrol->h.pchannel : NULL;
         /* if ( pchannel )                            */
         /*   sip = mas_channel_ip_string( pchannel ); */
         if ( pchannel )
           sip = mas_ip_string( &pchannel->serv.addr.sin_addr );
 
         fprintf( ftinfo, "\t\t\t%u. %s:%u \ttid:%5u/%4x; [%lx] I/A %ld.%-ld #%u\n", itr, sip ? sip : "?",
-                 pchannel ? pchannel->port : 0, prcontrol->tid, prcontrol->tid, prcontrol->thread, inactive_time.tv_sec,
+                 pchannel ? pchannel->port : 0, prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, inactive_time.tv_sec,
                  inactive_time.tv_usec, prcontrol->xch_cnt );
         if ( sip )
           mas_free( sip );
@@ -259,6 +267,8 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
+  extern unsigned long memory_balance;
+
   FMSG( "\nAT EXIT\n" );
   mas_destroy_server(  );
   FMSG( "\n\n\nAT EXIT, memory_balance:%ld", memory_balance );

@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <stdio.h>
@@ -9,15 +10,22 @@
 #include <pthread.h>
 
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "zoctools/inc/mas_curses.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/log/mas_log.h>
 
-#include "zoctools/inc/mas_lib_thread.h"
-#include "zoctools/inc/mas_thread_tools.h"
+#include <mastar/msg/mas_curses.h>
+
+#include <mastar/thtools/mas_thread_tools.h>
 
 #include "listener/inc/mas_listener_control.h"
 
@@ -110,12 +118,15 @@ mas_ticker( void )
 /* for test only : */
       if ( use_curses )
       {
+        extern unsigned long memory_balance;
+
         MFP( "(E%3lus:m%5lu) [%s] it%d; [c0%lu:c%lu:g%lu:g2%lu:D%ld] i/p:%d; keep l:%d\r", elapsed_time,
              memory_balance, outstr, itick, ctrl.clients_came0, ctrl.clients_came, ctrl.clients_gone, ctrl.clients_gone2,
              ctrl.clients_came - ctrl.clients_gone, ctrl.in_pipe, ctrl.keep_listening );
       }
       else
       {
+        extern unsigned long memory_balance;
         double a1, a2, a10, a60;
 
         a1 = ( ( double ) ( ( gone_history[0] - gone_history[1] ) / 1 ) ) / zinterval;
@@ -127,8 +138,7 @@ mas_ticker( void )
         MFP( "(%3lus:m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] " "(lock:%d:%d) i/p:%d;"
              " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K\r", elapsed_time, memory_balance, outstr, itick,
              ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
-             ctrl.maxclients,  ctrl.log_q_came,
-             ctrl.log_q_gone, ctrl.log_q_came-ctrl.log_q_gone, ctrl.log_q_mem );
+             ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
 
         /* MFP( "(%3lus:m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] " "(lock:%d:%d) i/p:%d;"                                                    */
         /*      " {%lu:%8.2f(%6.4g):%6.2f} {%6.2f:%6.2f:%6.2f} log %lu-%lu=%lu\x1b[K\r", elapsed_time, memory_balance, outstr, itick, */

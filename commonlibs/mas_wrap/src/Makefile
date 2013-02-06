@@ -94,7 +94,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmas_wrap_la_LIBADD =
-am_libmas_wrap_la_OBJECTS = mas_lib.lo mas_lib0.lo mas_memory.lo
+am_libmas_wrap_la_OBJECTS = mas_lib.lo mas_lib0.lo mas_memory.lo \
+	mas_lib_thread.lo
 libmas_wrap_la_OBJECTS = $(am_libmas_wrap_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -176,7 +177,7 @@ am__relativize = \
 ACLOCAL = ${SHELL} /mnt/new_misc/develop/autotools/zoc/commonlibs/mas_wrap/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AM_CFLAGS = -pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\"${pkglibdir}\" -DMAS_LIBDIR=\"${libdir}\" -ltcmalloc
-AM_CPPFLAGS = -I$(srcdir)/inc -I$(top_srcdir)/src/inc -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(srcdir)/inc -I$(top_srcdir)/src/inc -I$(top_srcdir)/src -I$(prefix)/include
 AM_DEFAULT_VERBOSITY = 0
 AM_LDFLAGS = -ldl -Wl,--defsym,__MAS_LINK_DATE__=`date +0x%Y%m%d`,--defsym,__MAS_LINK_TIME__=`date +0x%H%M%S`,--defsym,__MAS_LINK_TIMESTAMP__=`date +%s`
 AR = ar
@@ -297,7 +298,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /home/mastar/.mas/develop/autotools/zoc//install
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -313,7 +314,7 @@ SUBDIRS = inc
 lib_LTLIBRARIES = \
 	libmas_wrap.la
 
-libmas_wrap_la_SOURCES = mas_lib.c mas_lib0.c mas_memory.c
+libmas_wrap_la_SOURCES = mas_lib.c mas_lib0.c mas_memory.c mas_lib_thread.c
 all: all-recursive
 
 .SUFFIXES:
@@ -391,6 +392,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/mas_lib.Plo
 include ./$(DEPDIR)/mas_lib0.Plo
+include ./$(DEPDIR)/mas_lib_thread.Plo
 include ./$(DEPDIR)/mas_memory.Plo
 
 .c.o:

@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <string.h>
@@ -8,14 +9,19 @@
 /* mas_xvstrftime */
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "variables/inc/mas_variables.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
 
-#include "fileinfo/inc/mas_unidata.h"
-#include "fileinfo/inc/mas_fileinfo.h"
-#include "fileinfo/inc/mas_fileinfo_object.h"
+#include <mastar/variables/mas_variables.h>
+
+#include <mastar/fileinfo/mas_unidata.h>
+#include <mastar/fileinfo/mas_fileinfo.h>
+#include <mastar/fileinfo/mas_fileinfo_object.h>
 
 #include "mas_http_utils.h"
 #include "mas_http_request.h"
@@ -191,7 +197,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
       }
       else
       {
-        http->port = prcontrol->pchannel->port;
+        http->port = prcontrol->h.pchannel->port;
       }
     }
     else

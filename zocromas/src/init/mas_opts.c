@@ -8,19 +8,23 @@
 #include <time.h>
 #include <uuid/uuid.h>
 
-/* #include <stdarg.h> */
-
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "zoctools/inc/mas_lib_thread.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/log/mas_log.h>
 
-#include "variables/inc/mas_variables.h"
+#include <mastar/variables/mas_variables.h>
 
 #include "mas_opts.h"
 
@@ -51,6 +55,10 @@ mas_opts_destroy( void )
   if ( opts.uuid )
     mas_free( opts.uuid );
   opts.uuid = NULL;
+
+  if ( opts.modsdir )
+    mas_free( opts.modsdir );
+  opts.modsdir = NULL;
 
   if ( opts.logdir )
     mas_free( opts.logdir );
@@ -266,10 +274,10 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 
         {
           r = fprintf( f,
-                       "env_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlogger=%d\nlog=%d\n"
+                       "env_optsname=%s\nenv_hostname=%s\nmodsdir=%s\nlogdir=%s\nlogger=%d\nlog=%d\n"
                        "max_config_backup=%u\ndaemon=%u\nmessages=%u\n"
                        "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\nrestart_sleep=%lg\n"
-                       "disconnect_prompt=%u\nwait_server=%u\n", opts.env_optsname, opts.env_hostname, opts.logdir,
+                       "disconnect_prompt=%u\nwait_server=%u\n", opts.env_optsname, opts.env_hostname, opts.modsdir, opts.logdir,
                        !opts.nologger, !opts.nolog, opts.max_config_backup, !opts.nodaemon, !opts.nomessages, opts.default_port,
                        opts.save_opts, opts.save_opts_plus, opts.restart_sleep, opts.disconnect_prompt, opts.wait_server );
           if ( r > 0 )
@@ -394,7 +402,7 @@ mas_opts_save_plus( const char *dirname, const char *filename, ... )
   }
   /* else                                    */
   /* {                                       */
-  /*   MAS_LOG( "already saved opts plus" ); */
+    MAS_LOG( "already saved opts plus" );
   /* }                                       */
   va_end( args );
   return r;
@@ -500,6 +508,10 @@ mas_opts_restore_nosection( const char *s )
     mas_opts_set_unsigned( &v, s );
     opts.nologger = !v;
     /* mMSG( "READ NOLOGGER :%d", opts.nologger ); */
+  }
+  else if ( 0 == mas_strcmp2( s, "modsdir=" ) )
+  {
+    mas_opts_set_pstrvalue( &opts.modsdir, s );
   }
   else if ( 0 == mas_strcmp2( s, "logdir=" ) )
   {

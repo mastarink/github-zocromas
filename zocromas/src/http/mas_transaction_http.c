@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <string.h>
@@ -8,16 +9,18 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
+#include <mastar/thtools/mas_ocontrol_tools.h>
 
-#include "modules/inc/mas_modules_commands_eval.h"
+#include <mastar/modules/mas_modules_commands_eval.h>
 #include "transaction/inc/mas_transaction_control.h"
 
-#include "fileinfo/inc/mas_fileinfo.h"
-#include "fileinfo/inc/mas_fileinfo_object.h"
+#include <mastar/fileinfo/mas_fileinfo.h>
+#include <mastar/fileinfo/mas_fileinfo_object.h>
+#include "server/inc/mas_server_tools.h"
 
-#include "variables/inc/mas_variables.h"
+#include <mastar/variables/mas_variables.h>
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"

@@ -1,6 +1,11 @@
 #include "mas_basic_def.h"
 
-#include "mas_common.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
 
 
 /*
@@ -92,6 +97,7 @@ mas_options_t opts = {
   .commands_num = 0,
   .commands = NULL,
   .client_attempts = 1,
+  .modsdir = NULL,
   .logdir = NULL,
   .configdir = NULL,
   .configfilename = NULL,

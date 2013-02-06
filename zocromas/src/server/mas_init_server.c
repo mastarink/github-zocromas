@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <string.h>
@@ -5,7 +6,16 @@
 #include <stdlib.h>
 #include <uuid/uuid.h>
 
-#include "mas_common.h"
+#include <mastar/wrap/mas_lib_thread.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include "listener/inc/mas_listener_control_list.h"
 #include "listener/inc/mas_listeners.h"
@@ -13,13 +23,12 @@
 #include "init/inc/mas_opts.h"
 #include "mas_ticker.h"
 
-#include "zoctools/inc/mas_curses.h"
+#include <mastar/msg/mas_curses.h>
 
-#include "log/inc/mas_logger.h"
-#include "log/inc/mas_log.h"
+#include <mastar/log/mas_logger.h>
+#include <mastar/log/mas_log.h>
 
-#include "zoctools/inc/mas_lib_thread.h"
-#include "zoctools/inc/mas_thread_tools.h"
+#include <mastar/thtools/mas_thread_tools.h>
 #include "mas_init_threads.h"
 
 #include "mas_init_server.h"

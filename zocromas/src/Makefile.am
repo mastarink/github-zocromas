@@ -1,4 +1,4 @@
-SUBDIRS= inc control log fileinfo cmdmods init zoctools variables http modules xcromas listener transaction client server
+SUBDIRS= inc control init cli http xcromas listener transaction client server
 ##########################################################################################
 ## cd /home/mastar/.mas/develop/autotools/zocromas
 ## export MAS_ZOCROMAS_DEFOPTS='-H193.222.140.165:5002 -H193.222.140.165:5003 -L/mnt/miscn/mastar/develop/autotools/zocromas/log'
@@ -34,7 +34,7 @@ bin_PROGRAMS=mas_minitest
 # mas_parg_SOURCES=parg.c
 
 mas_minitest_SOURCES=minitest.c
-mas_minitest_CFLAGS=${AM_CFLAGS}  -lmas_wrap -lmas_arg_tools -Lcontrol -lmas_control
+mas_minitest_CFLAGS=${AM_CFLAGS} -L\$(prefix)/lib -lmas_wrap -lmas_arg_tools -Lcontrol -lmas_control
 
 ##########################################################################################
 ##########################################################################################

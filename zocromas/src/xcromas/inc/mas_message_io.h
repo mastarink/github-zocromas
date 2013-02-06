@@ -1,7 +1,7 @@
 #ifndef MAS_MESSAGE_IO_H
 #  define MAS_MESSAGE_IO_H
 
-#  include "mas_message_types.h"
+#  include <mastar/types/mas_message_types.h>
 
 /* int mas_read_message( int fd, char **pbuf, pid_t * psender_pid, unsigned long *psender_vdate, unsigned long *psender_vtime ) ; */
 #  ifndef MAS_CHANNEL_STREAM_READ

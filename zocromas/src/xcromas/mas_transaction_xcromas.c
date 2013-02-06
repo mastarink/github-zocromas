@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <unistd.h>
@@ -5,11 +6,18 @@
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/modules/mas_modules_commands_eval.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "modules/inc/mas_modules_commands_eval.h"
+/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/log/mas_log.h>
+
 
 #include "mas_message_io.h"
 #include "mas_transaction_xcromas.h"
@@ -33,7 +41,10 @@ mas_proto_xcromas_evaluate_and_answer( const char *question, mas_header_t * phea
   int r = -1;
   char *answer = NULL;
 
-  answer = mas_evaluate_command( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */ , &pheader->binary );
+  prcontrol->qbin = MSG_BIN_NONE;
+  answer = mas_evaluate_command( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
+  pheader->binary = prcontrol->qbin;
+  mMSG( ">>> QBIN : %d", prcontrol->qbin);
   /* if ( ( answer = mas_evaluate_cmd( 0 (* only_level *) , question, question (* args *) , 1 (*level *) , pheader, NULL, */
   /*                                   prcontrol, NULL ) ) )                                                              */
   if ( MAS_VALID_ANSWER( answer ) )
@@ -50,7 +61,7 @@ mas_proto_xcromas_evaluate_and_answer( const char *question, mas_header_t * phea
     {
       if ( pheader && MAS_VALID_ANSWER( answer ) && !pheader->binary )
         pheader->len = strlen( answer ) + 1;
-      r = mas_channel_write_message( prcontrol->pchannel, answer, pheader );
+      r = mas_channel_write_message( prcontrol->h.pchannel, answer, pheader );
       /* EMSG( "ANSWER: %d => %s", r, answer ); */
       if ( r < 0 )
       {
@@ -65,7 +76,7 @@ mas_proto_xcromas_evaluate_and_answer( const char *question, mas_header_t * phea
   {
     if ( answer && pheader )
       pheader->binary = MSG_BIN_UNKNOWN_COMMAND;
-    r = mas_channel_write_message( prcontrol->pchannel, NULL, pheader );
+    r = mas_channel_write_message( prcontrol->h.pchannel, NULL, pheader );
     tMSG( "written %d", r );
     if ( r < 0 )
     {
@@ -102,11 +113,6 @@ mas_proto_xcromas( mas_rcontrol_t * prcontrol, mas_header_t * pheader_data )
 
       tMSG( "got msg from pid=%u", header.pid );
       MAS_LOG( "xc (pid:%u) Q: %s", header.pid, question && *question ? question : "-" );
-      if ( 0 && header.sender_stamp.vts != vts )
-      {
-        EMSG( "error vdate/vtime : %lx ? %lx ; %lx ? %lx ; %lu ? %lu", header.sender_stamp.vdate, vdate,
-              header.sender_stamp.vtime, vtime, header.sender_stamp.vts, vts );
-      }
 
       header.new_opts = 0;
       if ( header.sign != MSG_SIGNATURE )

@@ -1,3 +1,4 @@
+#include "mas_server_def.h"
 #include "mas_basic_def.h"
 
 #include <string.h>
@@ -9,10 +10,15 @@
 #include <mastar/channel/mas_channel_open.h>
 #include <mastar/channel/mas_channel.h>
 
-#include "mas_common.h"
-#include "log/inc/mas_log.h"
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-#include "transaction/inc/mas_transaction_control.h"
+/* #include "mas_common.h" */
+#include <mastar/log/mas_log.h>
+
+#include "mas_transaction_control.h"
 
 /*
 this:
@@ -29,6 +35,7 @@ related:
   
   mas_lib_thread.c
   mas_cmdmod_server.c
+  mas_server_tools.c
 */
 
 
@@ -37,13 +44,13 @@ mas_rcontrol_set_channel( mas_rcontrol_t * prcontrol, mas_channel_t * pchannel )
 {
   int r = -1;
 
-  if ( pchannel && !prcontrol->pchannel )
+  if ( pchannel && !prcontrol->h.pchannel )
   {
-    prcontrol->pchannel = mas_channel_clone( pchannel );
+    prcontrol->h.pchannel = mas_channel_clone( pchannel );
     pchannel->cloned = 1;
-    /* prcontrol->serv = prcontrol->pchannel->serv; */
-    /* prcontrol->port = prcontrol->pchannel->port; */
-    tMSG( "to close2" );
+    /* prcontrol->serv = prcontrol->h.pchannel->serv; */
+    /* prcontrol->port = prcontrol->h.pchannel->port; */
+    /* tMSG( "to close2" ); */
     {
       /* preserve earlier error */
       r = mas_channel_close2( pchannel );
@@ -51,28 +58,4 @@ mas_rcontrol_set_channel( mas_rcontrol_t * prcontrol, mas_channel_t * pchannel )
     }
   }
   return r;
-}
-
-const char *
-mas_rcontrol_protocol_name( mas_rcontrol_t * prcontrol )
-{
-  const char *p = NULL;
-
-  if ( prcontrol )
-    switch ( prcontrol->proto )
-    {
-    case MAS_TRANSACTION_PROTOCOL_NONE:
-      p = "NONE";
-      break;
-    case MAS_TRANSACTION_PROTOCOL_XCROMAS:
-      p = "XCRO_MAS";
-      break;
-    case MAS_TRANSACTION_PROTOCOL_HTTP:
-      p = "HTTP_MAS";
-      break;
-    default:
-      p = "UNKNOWN";
-      break;
-    }
-  return p;
 }
