@@ -1,0 +1,63 @@
+#ifndef MAS_TRANSACTION_CONTROL_TYPES_H
+#  define MAS_TRANSACTION_CONTROL_TYPES_H
+
+#  include <mastar/types/mas_common_types.h>
+#  include <mastar/types/mas_list_def.h>
+#  include <mastar/types/mas_channel_types.h>
+
+/*
+this:
+  mas_transaction_control_types.h
+related:
+  mas_common_types.h
+  mas_listener_control_types.h
+*/
+
+// *INDENT-OFF*
+typedef MAS_LIST_HEAD( mas_rcontrol_list_s, mas_rcontrol_s ) mas_rcontrol_list_head_t;
+typedef MAS_LIST_ENTRY( mas_rcontrol_s ) mas_rcontrol_list_entry_t;
+// *INDENT-ON*
+
+typedef enum mas_transaction_protocol_s
+{
+  MAS_TRANSACTION_PROTOCOL_NONE,
+  MAS_TRANSACTION_PROTOCOL_XCROMAS,
+  MAS_TRANSACTION_PROTOCOL_HTTP,
+} mas_transaction_protocol_t;
+
+/* struct mas_r_control_s                          */
+/* {                                               */
+/*   unsigned id;                                  */
+/*   pthread_t thread;                             */
+/* };                                              */
+/* typedef struct mas_r_control_s mas_r_control_t; */
+
+typedef struct mas_rcontrol_s
+{
+  mas_rcontrol_list_entry_t next;
+  struct mas_ocontrol_s h;
+
+  double start_time;
+  struct mas_lcontrol_s *plcontrol;
+
+  bin_type_t qbin;
+  /* struct sockaddr_in addr; */
+  /* mas_serv_addr_t serv; */
+  /* int port;             */
+  /* mas_status_t status; */
+  unsigned nc;
+  unsigned xch_cnt;
+  char *uuid;
+  mas_transaction_protocol_t proto;
+  pthread_cond_t waitchan_cond;
+  pthread_mutex_t waitchan_mutex;
+  unsigned complete:1;
+  unsigned keep_alive:1;
+#  ifdef MAS_TR_PERSIST
+  unsigned persistent_transaction:1;
+#  endif
+  unsigned waitchan_waiting:1;
+} mas_rcontrol_t;
+
+
+#endif
