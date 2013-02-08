@@ -163,25 +163,45 @@ mas_channel_deaf( mas_channel_t * pchannel )
 {
   int r = -1;
 
-  if ( mas_channel_test( pchannel ) && pchannel->is_server && pchannel->listening )
+  if ( mas_channel_test( pchannel ) )
   {
-    switch ( pchannel->type )
+    if ( pchannel->is_server && pchannel->listening )
     {
-    case CHN_SOCKET:
-      if ( pchannel->fd_socket > 0 )
+      switch ( pchannel->type )
       {
-        r = mas_close( pchannel->fd_socket );
-        if ( r == 0 )
+      case CHN_SOCKET:
+        if ( pchannel->fd_socket > 0 )
         {
-          pchannel->fd_socket = 0;
-          if ( pchannel->serv.path.sun_family == AF_UNIX && pchannel->serv.path.sun_path[0] )
-            unlink( pchannel->serv.path.sun_path );
+          r = mas_close( pchannel->fd_socket );
+#ifdef EMSG
+          if ( r < 0 )
+          {
+            EMSG( "deaf err" );
+            P_ERR;
+          }
+#endif
+          if ( r == 0 )
+          {
+            pchannel->fd_socket = 0;
+            if ( pchannel->serv.path.sun_family == AF_UNIX && pchannel->serv.path.sun_path[0] )
+              unlink( pchannel->serv.path.sun_path );
+          }
         }
+        break;
       }
-      break;
+      if ( r >= 0 )
+        pchannel->listening = 0;
     }
-    if ( r >= 0 )
-      pchannel->listening = 0;
+  }
+  else
+  {
+#ifdef EMSG
+    if ( r < 0 )
+    {
+      EMSG( "deaf err" );
+      P_ERR;
+    }
+#endif
   }
 #ifdef EMSG
   if ( r < 0 )

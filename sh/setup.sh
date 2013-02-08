@@ -2,9 +2,8 @@
 if [[ -f "configure.ac" ]] ; then
   function setup_dirs ()
   {
-    rootdir="${MAS_MAS_DIR}/develop/autotools/zoc/"
-    export LD_LIBRARY_PATH=/usr/local/lib
-
+    rootdir=$(dirname $(dirname $(realpath $0)))
+    prjgroup=$(basename $rootdir)
     if [[ -d "$rootdir" ]] ; then
       stamp=`datem`
       savedir=$( realpath "$rootdir/saved/" )
@@ -23,10 +22,11 @@ if [[ -f "configure.ac" ]] ; then
       if [[ -d "$savedirtar" ]] && ! [[ -d "$savedirtarme" ]]; then
         mkdir "$savedirtarme"
       fi
-      instdir="${rootdir}/install"
+      instdir="$rootdir/install"
       if [[ -d "$rootdir" ]] && ! [[ -d "$instdir" ]]; then
         mkdir "$instdir"
       fi
+#     export LD_LIBRARY_PATH=/usr/local/lib
       tmpdir="$rootdir/tmp/"
       if [[ -d "$rootdir" ]] && ! [[ -d "$tmpdir" ]]; then
         mkdir "$tmpdir"
@@ -78,6 +78,14 @@ if [[ -f "configure.ac" ]] ; then
       return 1
     fi
     return 0
+  }
+  function prjconfname ()
+  {
+    ./configure -V|head -1|awk '{print $1}'
+  }
+  function prjconfversion ()
+  {
+    ./configure -V|head -1|awk '{print $3}'
   }
   function run_any ()
   {
@@ -259,8 +267,81 @@ if [[ -f "configure.ac" ]] ; then
   #    exit
     fi
   }
+  function doprj ()
+  {
+    local prj act
+    local list
+    
+    if [[ "$1" == 'full' ]] ; then
+      list='autoreconf configure make install'
+    else
+      list=$@
+    fi
+    prj=$(basename `pwd`)
+    if [[ -d sh ]] ; then
+      for act in $list ; do
+	shfile="sh/${act}.sh"
+	if [[ "$act" ]] && [[ -L "sh" ]] && [[ -x $shfile ]] ; then
+	  echo "${nn}.	$act $prj" >&2
+	# echo "$act at $dir" >&2
+	  if false ; then
+	    echo "SKIP $shfile @ `pwd`" >&2
+	  elif ! eval $shfile ; then
+	    echo "FAIL $act $prj" >&2
+	    return 1
+	  fi
+	else
+	  echo "${nn}.	>>>> skipping act [$act]" >&2
+	  return 1
+	fi
+      done
+    fi
+  }
+  function doall ()
+  {  
+    local prj nn
+    if [[ -d "$tmpdir" ]] && [[ "$rootdir" ]] && [[ -d "$rootdir" ]] && cd $rootdir ; then
+      if [[ -f projects.list ]] ; then
+	list=`cat projects.list`
+#	echo "pwd: {$( pwd )}" >&2
+      else
+	echo "not exists projects.list" >&2
+	return 1
+      fi
+      nn=0
+      for prj in $list ; do
+	cd $rootdir
+        dir=$( realpath $prj )  || return 1
+	if [[ "$prj" ]] && [[ -d "$prj" ]] ; then
+          cd $dir                 || return 1
+	  doprj $@ || return 1
+	else
+	  echo "${nn}.	>>>> skipping dir [$dir]" >&2
+	fi
+	nn=$(( $nn + 1 ))
+      done
+    else
+      return 1
+    fi
+    return 0
+  }
+  function configure ()
+  {
+    if [[ "$indir" ]] && [[ -d "$indir" ]] ; then
+      cd $indir
+      if [[ -d "$instdir" ]] ; then
+	./configure --prefix="$instdir" --silent --enable-silent-rules --enable-tracemem --enable-debug || return 1
+      else
+    #   ./configure --silent --enable-silent-rules --enable-tracemem --enable-debug
+	echo "no dir $instdir" >&2
+	return 1
+      fi
+    fi
+    return 0
+  }
+ 
   setup_dirs
 else
-  echo "no project in this directory" >&2
+  echo "no project in this directory - call it from any project dir" >&2
   exit
 fi

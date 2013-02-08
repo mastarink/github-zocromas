@@ -1,4 +1,6 @@
 #!/bin/sh
-. $MAS_MAS_DIR/develop/autotools/zoc/sh/setup.sh
+if [[ -f "sh/setup.sh" ]] ; then
+  . sh/setup.sh
 
-make_target install $@
+  make_any && make_target install $@
+fi

@@ -137,7 +137,7 @@
 #define MAS_CFLAGS "-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\"${pkglibdir}\" -DMAS_LIBDIR=\"${libdir}\" -ltcmalloc"
 
 /* cdate */
-#define MAS_C_DATE "20130208124800"
+#define MAS_C_DATE "20130208155127"
 
 /* Enable additional debugging at the expense of performance and size */
 #define MAS_DEBUG 1
@@ -161,7 +161,7 @@
 #define MAS_STRDUP strdup
 
 /* sdate */
-#define MAS_S_DATE "1360320480"
+#define MAS_S_DATE "1360331487"
 
 /* Enable additional tracememing at the expense of performance and size */
 #define MAS_TRACEMEM 1
@@ -170,7 +170,7 @@
 #define MAS_UNAME "Linux mastar 3.6.11-gentoo.130207.m.g #1 SMP Thu Feb 7 19:35:03 EET 2013 x86_64 Intel(R) Core(TM) i3-3240 CPU @ 3.40GHz GenuineIntel GNU/Linux"
 
 /* uuidgen */
-#define MAS_UUID "1c05352d-e994-4fb4-853c-df214846a8e5"
+#define MAS_UUID "2a4f321c-bae6-46d9-b1f4-fc92185b0e67"
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 /* #undef NO_MINUS_C_MINUS_O */
@@ -185,7 +185,7 @@
 #define PACKAGE_NAME "zoctypes"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "zoctypes 1.0.4.20130208.124751"
+#define PACKAGE_STRING "zoctypes 1.0.4.20130208.154944"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "zoctypes"
@@ -194,7 +194,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.0.4.20130208.124751"
+#define PACKAGE_VERSION "1.0.4.20130208.154944"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -203,7 +203,7 @@
 /* #undef STRERROR_R_CHAR_P */
 
 /* Version number of package */
-#define VERSION "1.0.4.20130208.124751"
+#define VERSION "1.0.4.20130208.154944"
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 /* #undef gid_t */

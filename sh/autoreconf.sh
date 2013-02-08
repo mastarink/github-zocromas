@@ -1,10 +1,12 @@
 #!/bin/sh
-. $MAS_MAS_DIR/develop/autotools/zoc/sh/setup.sh
-if [[ "$indir" ]] && [[ -d "$indir" ]] ; then
-  cd $indir
-  if ! [[ -d m4 ]] ; then
-    mkdir m4
+if [[ -f "sh/setup.sh" ]] ; then
+  . sh/setup.sh
+  if [[ "$indir" ]] && [[ -d "$indir" ]] ; then
+    cd $indir
+    if ! [[ -d m4 ]] ; then
+      mkdir m4
+    fi
+    make -s maintainer-clean
+    autoreconf -i
   fi
-  make -s maintainer-clean
-  autoreconf -i
 fi
