@@ -135,6 +135,9 @@
 /* compile flags */
 #undef MAS_CFLAGS
 
+/* Enable cliet logging at the expense of performance and size */
+#undef MAS_CLIENT_LOG
+
 /* cdate */
 #undef MAS_C_DATE
 
@@ -162,7 +165,7 @@
 /* sdate */
 #undef MAS_S_DATE
 
-/* Enable additional tracememing at the expense of performance and size */
+/* Enable tracememing at the expense of performance and size */
 #undef MAS_TRACEMEM
 
 /* uname */

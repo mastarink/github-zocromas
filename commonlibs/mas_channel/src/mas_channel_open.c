@@ -11,9 +11,14 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 
-/* #include "mas_common.h" */
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-/* #include "log/inc/mas_log.h" */
+#include <mastar/log/mas_log.h>
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include "mas_channel_socket.h"
 #include "mas_channel_object.h"

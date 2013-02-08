@@ -10,7 +10,9 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
 #ifdef MAS_CLIENT_LOG
 #  include <mastar/log/mas_logger.h>
 #endif

@@ -136,8 +136,11 @@
 /* compile flags */
 #define MAS_CFLAGS "-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\"${pkglibdir}\" -DMAS_LIBDIR=\"${libdir}\" -ltcmalloc"
 
+/* Enable cliet logging at the expense of performance and size */
+#define MAS_CLIENT_LOG 1
+
 /* cdate */
-#define MAS_C_DATE "20130206225613"
+#define MAS_C_DATE "20130208125346"
 
 /* Enable additional debugging at the expense of performance and size */
 #define MAS_DEBUG 1
@@ -155,22 +158,22 @@
 /* #undef MAS_MODULESDIR */
 
 /* os version */
-#define MAS_OSVER "Linux version 3.6.11-gentoo.130126.m.g (root@mastar) (gcc version 4.5.4 (Gentoo 4.5.4 p1.0, pie-0.4.7) ) #1 SMP Sat Jan 26 16:56:11 EET 2013"
+#define MAS_OSVER "Linux version 3.6.11-gentoo.130207.m.g (root@mastar) (gcc version 4.5.4 (Gentoo 4.5.4 p1.0, pie-0.4.7) ) #1 SMP Thu Feb 7 19:35:03 EET 2013"
 
 /* */
 #define MAS_STRDUP strdup
 
 /* sdate */
-#define MAS_S_DATE "1360184173"
+#define MAS_S_DATE "1360320826"
 
-/* Enable additional tracememing at the expense of performance and size */
+/* Enable tracememing at the expense of performance and size */
 #define MAS_TRACEMEM 1
 
 /* uname */
-#define MAS_UNAME "Linux mastar 3.6.11-gentoo.130126.m.g #1 SMP Sat Jan 26 16:56:11 EET 2013 x86_64 Intel(R) Core(TM) i3-3240 CPU @ 3.40GHz GenuineIntel GNU/Linux"
+#define MAS_UNAME "Linux mastar 3.6.11-gentoo.130207.m.g #1 SMP Thu Feb 7 19:35:03 EET 2013 x86_64 Intel(R) Core(TM) i3-3240 CPU @ 3.40GHz GenuineIntel GNU/Linux"
 
 /* uuidgen */
-#define MAS_UUID "e69cfe98-5ea7-4fcb-adb2-f1e467429cb7"
+#define MAS_UUID "a3dc68dc-e752-444c-9c51-bb90dfafde6a"
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 /* #undef NO_MINUS_C_MINUS_O */
@@ -185,7 +188,7 @@
 #define PACKAGE_NAME "zocromas"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "zocromas 1.0.1.3"
+#define PACKAGE_STRING "zocromas 1.0.4.20130208.125335"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "zocromas"
@@ -194,7 +197,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.0.1.3"
+#define PACKAGE_VERSION "1.0.4.20130208.125335"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -203,7 +206,7 @@
 /* #undef STRERROR_R_CHAR_P */
 
 /* Version number of package */
-#define VERSION "1.0.1.3"
+#define VERSION "1.0.4.20130208.125335"
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 /* #undef gid_t */

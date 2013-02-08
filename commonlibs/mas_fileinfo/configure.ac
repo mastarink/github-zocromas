@@ -23,11 +23,11 @@ AC_PREREQ([2.69])
 # you can modernize it as follow:
 #         
 
-# AC_INIT([mumble],[1.5])
 # AC_CONFIG_SRCDIR(src/foo.c)
 # AM_INIT_AUTOMAKE
 
-AC_INIT([mas_fileinfo],[1.0.1.3],[bug-report@mastarink.net])
+# AC_INIT([mas_fileinfo],[1.0.1.3],[bug-report@mastarink.net])
+AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_fileinfo.c])
 

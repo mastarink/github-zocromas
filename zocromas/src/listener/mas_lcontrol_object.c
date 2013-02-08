@@ -25,9 +25,7 @@ extern mas_options_t opts;
 #include <mastar/channel/mas_channel.h>
 #include <mastar/channel/mas_channel_object.h>
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
-
 #include <mastar/variables/mas_variables.h>
 
 #include "mas_lcontrol_object.h"

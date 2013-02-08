@@ -15,10 +15,9 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include <mastar/msg/mas_msg_def.h>   */
-/* #include <mastar/msg/mas_msg_tools.h> */
-/* #include <mastar/msg/mas_curses.h>    */
-/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+#include <mastar/msg/mas_curses.h>
 
 #include "mas_init_client.h"
 

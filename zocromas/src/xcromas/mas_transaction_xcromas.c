@@ -13,11 +13,11 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
+#include "server/inc/mas_server_tools.h"
 
 #include "mas_message_io.h"
 #include "mas_transaction_xcromas.h"
@@ -35,21 +35,29 @@ related:
 */
 
 
-int
-mas_proto_xcromas_evaluate_and_answer( const char *question, mas_header_t * pheader, mas_rcontrol_t * prcontrol )
+static int
+mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *question, mas_header_t * pheader )
 {
   int r = -1;
   char *answer = NULL;
 
   prcontrol->qbin = MSG_BIN_NONE;
   answer = mas_evaluate_command( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
+  cMSG( "B(%d) Q(%d)", prcontrol->qbin, ctrl.do_quit );
+  if ( ctrl.do_quit )
+  {
+    MAS_LOG( "qbin => %u", prcontrol->qbin );
+    rMSG( "qbin => %u", prcontrol->qbin );
+    do_quit_server( prcontrol );
+    rMSG( "qbin => %u", prcontrol->qbin );
+  }
   pheader->binary = prcontrol->qbin;
-  mMSG( ">>> QBIN : %d", prcontrol->qbin);
+  HMSG( ">>> QBIN : %d", prcontrol->qbin );
   /* if ( ( answer = mas_evaluate_cmd( 0 (* only_level *) , question, question (* args *) , 1 (*level *) , pheader, NULL, */
   /*                                   prcontrol, NULL ) ) )                                                              */
   if ( MAS_VALID_ANSWER( answer ) )
   {
-    /* EMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer ); */
+    HMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer );
     tMSG( "%s%ssign %s;answer is %s (%s)", pheader->binary ? "bin;" : "", pheader->new_opts ? "new opts;" : "",
           pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer ? "+" : "-" );
     if ( pheader->bad )
@@ -88,51 +96,51 @@ mas_proto_xcromas_evaluate_and_answer( const char *question, mas_header_t * phea
 }
 
 int
-mas_proto_xcromas( mas_rcontrol_t * prcontrol, mas_header_t * pheader_data )
+mas_proto_xcromas( mas_rcontrol_t * prcontrol, const mas_header_t * pheader_data )
 {
   int r = -1;
 
-  /* rMSG( "CHECK SPC" ); */
   if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )
   {
-    mas_header_t header;
+    mas_header_t header_copy;
     const char *question = NULL;
 
-    memset( &header, 0, sizeof( header ) );
+    memset( &header_copy, 0, sizeof( header_copy ) );
     MAS_LOG( "xcromas session" );
     prcontrol->proto = MAS_TRANSACTION_PROTOCOL_XCROMAS;
     if ( pheader_data )
     {
-      header = *pheader_data;
+      header_copy = *pheader_data;
       question = ( char * ) ( pheader_data + 1 );
     }
-    rMSG( "q:%s", question && *question ? question : "-" );
-    tMSG( "cl. q:%s from pid %u", question && *question ? question : "-EMPTY-", header.pid );
+    rMSG( "Q:%s", question && *question ? question : "-" );
+    tMSG( "cl. q:%s from pid %u", question && *question ? question : "-EMPTY-", header_copy.pid );
 
+
+    rMSG( "got msg from pid=%u", header_copy.pid );
+    MAS_LOG( "xc (pid:%u) Q: %s", header_copy.pid, question && *question ? question : "-" );
+
+    header_copy.new_opts = 0;
+    if ( header_copy.sign != MSG_SIGNATURE )
     {
-
-      tMSG( "got msg from pid=%u", header.pid );
-      MAS_LOG( "xc (pid:%u) Q: %s", header.pid, question && *question ? question : "-" );
-
-      header.new_opts = 0;
-      if ( header.sign != MSG_SIGNATURE )
+      EMSG( "header_copy sig : %lx", ( unsigned long ) header_copy.sign );
+      header_copy.bad = 1;
+    }
+    {
+      header_copy.done_cmd = 0;
+      if ( header_copy.bad )
       {
-        EMSG( "header sig : %lx", ( unsigned long ) header.sign );
-        header.bad = 1;
+        r = -2;
+        EMSG( "r:%d", r );
       }
+      else
       {
-        header.done_cmd = 0;
-        if ( header.bad )
-        {
-          r = -2;
-          EMSG( "r:%d", r );
-        }
-        else
-        {
-          r = mas_proto_xcromas_evaluate_and_answer( question, &header, prcontrol );
-        }
+        rMSG( "q for e & a :%s", question );
+        r = mas_proto_xcromas_evaluate_and_answer( prcontrol, question, &header_copy );
+        rMSG( "e & a :%d", r );
       }
     }
+
     question = NULL;
   }
   else

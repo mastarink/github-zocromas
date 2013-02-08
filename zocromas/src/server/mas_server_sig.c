@@ -30,7 +30,6 @@ extern mas_options_t opts;
 
 #include "listener/inc/mas_listeners.h"
 
-#include "mas_sig.h"
 #include "mas_server_sig.h"
 
 /*
@@ -46,8 +45,9 @@ related:
 
 
 
-int term_cnt = 0;
-int try_cnt = 0;
+static int term_cnt = 0;
+
+/* static int try_cnt = 0; */
 
 /* typedef void ( *sighandler_t ) ( int ); */
 /* sighandler_t signal( int signum, sighandler_t handler ); */

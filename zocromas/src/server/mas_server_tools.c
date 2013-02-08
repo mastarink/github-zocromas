@@ -8,12 +8,12 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h"      */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-/* #include "listener/inc/mas_listener_control.h" */
 #include "listener/inc/mas_listeners.h"
 
 #include "mas_server_tools.h"
@@ -65,7 +65,7 @@ do_quit_server( mas_rcontrol_t * prcontrol )
 {
   ctrl.keep_listening = 0;
   prcontrol->keep_alive = 0;
-  /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
+  MAS_LOG( "KA => %u", prcontrol->keep_alive );
   if ( prcontrol )
   {
     if ( ctrl.restart )

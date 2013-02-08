@@ -23,11 +23,13 @@ AC_PREREQ([2.69])
 # you can modernize it as follow:
 #         
 
-# AC_INIT([mumble],[1.5])
 # AC_CONFIG_SRCDIR(src/foo.c)
 # AM_INIT_AUTOMAKE
 
-AC_INIT([zocromas],[1.0.1.3],[bug-report@mastarink.net])
+# AM_INIT_AUTOMAKE([1.11 silent-rules])
+
+# AC_INIT([zocromas],[1.0.1.3],[bug-report@mastarink.net])
+AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/minitest.c])
 
@@ -111,6 +113,7 @@ AC_CHECK_LIB(readline, readline)
 #     [enable debug code (default is no)])],
 #   [debug="$withval"], [debug=no])
 
+########### debug   ########################################################################
 AC_ARG_ENABLE([debug],
 	      AC_HELP_STRING([--enable-debug],
 			     [turn on debugging]),,
@@ -120,7 +123,7 @@ if test x$enable_debug = xyes ; then
     AC_DEFINE(MAS_DEBUG, 1,
 	[Enable additional debugging at the expense of performance and size])
 fi
-
+########## tracemem #########################################################################
 AC_ARG_ENABLE([tracemem],
 	      AC_HELP_STRING([--enable-tracemem],
 			     [turn on tracememing]),,
@@ -128,8 +131,19 @@ AC_ARG_ENABLE([tracemem],
 
 if test x$enable_tracemem = xyes ; then
     AC_DEFINE(MAS_TRACEMEM, 1,
-	[Enable additional tracememing at the expense of performance and size])
+	[Enable tracememing at the expense of performance and size])
 fi
+########## clientlog ########################################################################
+AC_ARG_ENABLE([clientlog],
+	      AC_HELP_STRING([--disable-clientlog],
+			     [turn off clientlogging]),,
+	      [enable_clientlog=yes])
+
+if test x$enable_clientlog = xyes ; then
+    AC_DEFINE(MAS_CLIENT_LOG, 1,
+	[Enable cliet logging at the expense of performance and size])
+fi
+#############################################################################################
 
 # AC_REQUIRE([AM_MAINTAINER_MODE])
 # 

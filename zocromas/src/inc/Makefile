@@ -155,17 +155,17 @@ OTOOL64 =
 PACKAGE = zocromas
 PACKAGE_BUGREPORT = bug-report@mastarink.net
 PACKAGE_NAME = zocromas
-PACKAGE_STRING = zocromas 1.0.1.3
+PACKAGE_STRING = zocromas 1.0.4.20130208.125335
 PACKAGE_TARNAME = zocromas
 PACKAGE_URL = 
-PACKAGE_VERSION = 1.0.1.3
+PACKAGE_VERSION = 1.0.4.20130208.125335
 PATH_SEPARATOR = :
 RANLIB = ranlib
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = strip
-VERSION = 1.0.1.3
+VERSION = 1.0.4.20130208.125335
 abs_builddir = /mnt/new_misc/develop/autotools/zoc/zocromas/src/inc
 abs_srcdir = /mnt/new_misc/develop/autotools/zoc/zocromas/src/inc
 abs_top_builddir = /mnt/new_misc/develop/autotools/zoc/zocromas
@@ -223,8 +223,7 @@ noinst_HEADERS = \
 	mas_basic_def.h \
 	mas_server_def.h \
 	mas_client_def.h \
-	mas_global.h \
-	mas_sig.h
+	mas_global.h
 
 all: all-am
 

@@ -5,5 +5,6 @@ if [[ "$indir" ]] && [[ -d "$indir" ]] ; then
   if ! [[ -d m4 ]] ; then
     mkdir m4
   fi
+  make -s maintainer-clean
   autoreconf -i
 fi

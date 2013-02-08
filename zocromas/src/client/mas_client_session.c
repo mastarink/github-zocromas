@@ -9,6 +9,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/channel/mas_channel.h>
+#include <mastar/channel/mas_channel_open.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -16,13 +17,12 @@ extern mas_control_t ctrl;
 extern mas_options_t opts;
 
 #ifdef MAS_CLIENT_LOG
-#include <mastar/log/mas_log.h>
+#  include <mastar/log/mas_log.h>
 #endif
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/msg/mas_curses.h>
-/* #include "mas_common.h" */
 
 #include "xcromas/inc/mas_message_io.h"
 
@@ -44,31 +44,33 @@ static int
 _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header_t * header, const char *answer_format )
 {
   int r = 0;
-  char *answer_buffer = NULL;
+  char *answer = NULL;
   WINDOW *w_win;
 
   w_win = w_main;
 
-  /* HMSG( "to write data string %s", question ); */
+  tMSG( "to write data string %s", question );
   r = mas_channel_write_message( pchannel, question, NULL );
-  /* HMSG( "(%d) written data string %s", r, question ); */
+  tMSG( "(%d) written data string %s", r, question );
   if ( r <= 0 )
   {
 #ifdef EMSG
-    EMSG( "(%d) client write err", r );
+    EMSG( "WRITE error" );
 #endif
+    P_ERR;
   }
   else
   {
-    /* HMSG( "to read message" ); */
-    r = mas_channel_read_message( pchannel, &answer_buffer, header );
-    /* EMSG( "READ %d", r ); */
+    HMSG( "to read message" );
+    r = mas_channel_read_message( pchannel, &answer, header );
+    HMSG( "it's message(%d)", r );
     if ( r <= 0 )
     {
-      /* MSG( "(%d) client back none", r ); */
 #ifdef EMSG
-      EMSG( "(%d) none", r );
+      EMSG( "READ error" );
 #endif
+      P_ERR;
+      mas_channel_close( pchannel );
     }
     else if ( header && header->binary )
     {
@@ -76,11 +78,11 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
       switch ( header->binary )
       {
       case MSG_BIN_OPTS:
-        HMSG( "it's OPTS" );
+        MSG( "it's OPTS" );
         {
           mas_options_t *new_opts;
 
-          new_opts = ( mas_options_t * ) answer_buffer;
+          new_opts = ( mas_options_t * ) answer;
           /* MSG( "opts:%x", ( *( unsigned int * ) new_opts ) ); */
           /* MSG( "msg:%d / %d", new_opts->msg_c, new_opts->msg_s ); */
           /* MSG( "msg:%d / %d", opts.f.bit.msg_c, opts.f.bit.msg_s ); */
@@ -99,25 +101,25 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
         }
         break;
       case MSG_BIN_EMPTY_COMMAND:
-        HMSG( "Empty command" );
+        MSG( "Empty command" );
         break;
       case MSG_BIN_UNKNOWN_COMMAND:
 #ifdef EMSG
-        EMSG( "Unknown command : %s", answer_buffer && *answer_buffer ? answer_buffer : "?" );
+        EMSG( "Unknown command : %s", answer && *answer ? answer : "?" );
 #endif
         break;
       case MSG_BIN_ERROR_IN_COMMAND:
 #ifdef EMSG
-        EMSG( "Error in command : %s", answer_buffer && *answer_buffer ? answer_buffer : "?" );
+        EMSG( "Command : %s", answer && *answer ? answer : "?" );
 #endif
         break;
       case MSG_BIN_QUIT:
-        HMSG( "it's QUIT" );
+        MSG( "it's QUIT" );
         ctrl.in_client = 0;
         ctrl.in_pipe--;
         break;
       case MSG_BIN_RESTART:
-        HMSG( "it's RESTART" );
+        MSG( "it's RESTART" );
         ctrl.restart = 1;
         ctrl.in_client = 0;
         ctrl.in_pipe--;
@@ -126,26 +128,33 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
         ctrl.in_pipe--;
         break;
       default:
+        tMSG( "it's unknown BIN%d", header->binary );
         break;
       }
     }
-    else if ( answer_buffer && *answer_buffer && 0 == strcmp( answer_buffer, "[QUIT]" ) )
+    else if ( answer && *answer && 0 == strcmp( answer, "[QUIT]" ) )
     {
+      tMSG( "it's NOBIN; %s", answer );
       ctrl.in_client = 0;
       ctrl.in_pipe--;
     }
-    else if ( answer_buffer && *answer_buffer )
+    else if ( answer && *answer )
     {
+      tMSG( "it's NOBIN; %s", answer );
       if ( answer_format )
       {
-        fprintf( stdout, answer_format, answer_buffer );
+        fprintf( stdout, answer_format, answer );
+      }
+      else
+      {
+        fprintf( stdout, "%s", answer );
       }
     }
     else
     {
-      tMSG( "nothing (r:%d) from %x - %lx\n", r, header ? header->pid : 0, header ? header->pth : 0 );
+      HMSG( "nothing (r:%d) from %x - %lx\n", r, header ? header->pid : 0, header ? header->pth : 0 );
     }
-    mas_free( answer_buffer );
+    mas_free( answer );
   }
   return r;
 }

@@ -283,6 +283,7 @@ mas_evaluate_command( STD_CMD_ARGS )
             ( void * ) ( unsigned long long ) ( this_command->function ), this_command->function == universal_complex_cmd );
       /* EVALUATING COMMAND */
       answer = ( this_command->function ) ( STD_CMD_PASS );
+      cMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol->qbin, ctrl.do_quit );
       if ( MAS_VALID_ANSWER( answer ) )
       {
         cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" );

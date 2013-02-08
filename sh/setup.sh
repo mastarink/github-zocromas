@@ -63,7 +63,22 @@ if [[ -f "configure.ac" ]] ; then
     echo "name: $name" >&2
     echo "ver: $ver" >&2
   }
-
+  function make_target ()
+  {
+    local ilog target
+    target=$1
+    shift
+  # echo "install [$prjname]" >&2
+    ilog="/tmp/$target-$prjname.log"
+    if make -s $target > $ilog ; then
+      echo "$prjname $target OK : $ilog" >&2
+    else
+      echo "$prjname $target FAIL" >&2
+      cat "$ilog" >&2
+      return 1
+    fi
+    return 0
+  }
   function run_any ()
   {
     local mcaller=$1
@@ -92,6 +107,7 @@ if [[ -f "configure.ac" ]] ; then
        ulimit -c unlimited
 
   #     make_any && usleep 500000 && clear && exec $srcdir/$rname "$@"
+       echo "to run  $srcdir/$rname" >&2
        make_any && usleep 50000 && exec $srcdir/$rname "$@"
     fi
   }

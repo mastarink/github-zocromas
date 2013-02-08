@@ -8,6 +8,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/io/mas_io.h>
 #include <mastar/channel/mas_channel.h>
+#include <mastar/channel/mas_channel_open.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -39,6 +40,7 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
 #endif
 {
   int r = -1;
+
   /* int rf=0; */
   int len = 0;
   int msgsz = 0;
@@ -268,7 +270,6 @@ mas_channel_read_message( const mas_channel_t * pchannel, char **pbuf, mas_heade
 #else
   r = mas_fread_message( mas_channel_stream( pchannel ), pbuf, pheader );
 #endif
-  /* EMSG( "READ %d", r ); */
   return r;
 }
 
@@ -283,6 +284,6 @@ mas_channel_write_message( const mas_channel_t * pchannel, const char *cbuf, mas
 #else
   w = mas_fwrite_message( mas_channel_stream( pchannel ), cbuf, pheader );
 #endif
-  /* EMSG( "WRITTEN %d", w ); */
+
   return w;
 }

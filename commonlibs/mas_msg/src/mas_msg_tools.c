@@ -132,7 +132,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
       }
       if ( pid == ctrl.main_pid )
       {
-        MFP( "\x1b[1;31mMain\x1b[0m:%5u", pid );
+        MFP( "\x1b[1;31mMain\x1b[0m:%5u.%u", pid, ctrl.restart_cnt );
         if ( ctrl.is_server )
           MFP( " :%1d: ", ctrl.keep_listening );
       }

@@ -218,7 +218,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_HEADERS = \
 	mas_init.h \
-	mas_opts.h
+	mas_opts.h \
+	mas_sig.h
 
 all: all-am
 

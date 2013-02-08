@@ -8,13 +8,18 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
 
-/* #include "mas_common.h" */
-/* #include "log/inc/mas_log.h" */
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+#include <mastar/log/mas_log.h>
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/io/mas_io.h>
 
 #include "mas_channel_listen.h"
-/* #include "mas_channel_open.h" */
 
 #include "mas_channel.h"
 
@@ -194,7 +199,7 @@ mas_channel_read_all( mas_channel_t * pchannel, char **pbuf, size_t * psz )
 {
   int r;
 
-  /* MAS_LOG( "to read ch (read all)" ); */
+  MAS_LOG( "to read ch (read all)" );
 #ifndef MAS_CHANNEL_STREAM_READ
   int rfd = mas_channel_fd( pchannel );
 

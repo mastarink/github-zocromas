@@ -12,9 +12,14 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 
-/* #include "mas_common.h" */
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
 
-/* #include "log/inc/mas_log.h" */
+#include <mastar/log/mas_log.h>
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include "mas_channel_open.h"
 #include "mas_channel_listen.h"
@@ -44,32 +49,51 @@ mas_channel_create( void )
 {
   mas_channel_t *pchannel = NULL;
 
-  /* tMSG( "channel create" ); */
+  tMSG( "channel create" );
   pchannel = mas_malloc( sizeof( mas_channel_t ) );
-  /* tMSG( "channel create 2" ); */
+  tMSG( "channel create 2" );
 
   if ( mas_channel_test( pchannel ) )
     memset( pchannel, 0, sizeof( mas_channel_t ) );
-  /* tMSG( "/channel create" ); */
+  tMSG( "/channel create" );
   return pchannel;
 }
 
 int
-mas_channel_delete( mas_channel_t * pchannel, int toclose, int d )
+mas_channel_reset( mas_channel_t * pchannel, int toclose, int todeaf )
 {
   if ( mas_channel_test( pchannel ) )
   {
     if ( toclose )
       mas_channel_close( pchannel );
-    if ( d )
+    if ( todeaf )
       mas_channel_deaf( pchannel );
 
-    mas_free( pchannel->error_func );
+    if ( pchannel->error_func )
+      mas_free( pchannel->error_func );
     pchannel->error_func = NULL;
+    {
+      char *host;
 
-    mas_free( pchannel->host );
+      host = pchannel->host;
+      memset( pchannel, 0, sizeof( mas_channel_t ) );
+      pchannel->host = host;
+    }
+  }
+  return 0;
+}
+
+int
+mas_channel_delete( mas_channel_t * pchannel, int toclose, int todeaf )
+{
+  tMSG( "to delete channel" );
+  if ( mas_channel_test( pchannel ) )
+  {
+    mas_channel_reset( pchannel, toclose, todeaf );
+
+    if ( pchannel->host )
+      mas_free( pchannel->host );
     pchannel->host = NULL;
-
     mas_free( pchannel );
   }
   return 0;
@@ -117,7 +141,7 @@ mas_set_address( const char *host, unsigned port, mas_serv_addr_t * sa )
     r = getaddrinfo( host, NULL, &hints, &result );
     if ( r >= 0 && result )
     {
-      /* tMSG( "(%d) getaddrinfo %s (%p)", r, host, ( void * ) result ); */
+      tMSG( "(%d) getaddrinfo %s (%p)", r, host, ( void * ) result );
 
       for ( rp = result; rp != NULL; rp = rp->ai_next )
       {
@@ -130,8 +154,8 @@ mas_set_address( const char *host, unsigned port, mas_serv_addr_t * sa )
         sa->addr.sin_addr = aip->sin_addr;
         sa->addr.sin_port = htons( port );
         pip = mas_inet_ntop( AF_INET, &sa->addr.sin_addr, ip, sizeof( ip ) );
-        /* tMSG( "ip 0x%X : %s", htonl( *( ( unsigned int * ) &sa->addr.sin_addr ) ), pip ); */
-        /* tMSG( "ip 0x%X : %s", htonl( sa->addr.sin_addr.s_addr ), pip );                   */
+        tMSG( "ip 0x%X : %s", htonl( *( ( unsigned int * ) &sa->addr.sin_addr ) ), pip );
+        tMSG( "ip 0x%X : %s", htonl( sa->addr.sin_addr.s_addr ), pip );
       }
       if ( result )
         freeaddrinfo( result );
@@ -163,11 +187,14 @@ __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, co
 {
   int r;
 
-  /* MAS_LOG( "init chn. w/%s:%d", host, port ); */
-
+  MAS_LOG( "init chn. w/%s:%d", host, port );
+  mas_channel_reset( pchannel, 1, 1 );
   pchannel->is_server = is_server ? 1 : 0;
   pchannel->type = type ? type : CHN_SOCKET;
-  pchannel->host = mas_strndup( host, hostlen );
+  if ( !pchannel->host )
+  {
+    pchannel->host = mas_strndup( host, hostlen );
+  }
   r = mas_set_address( pchannel->host, port, &pchannel->serv );
   if ( pchannel->serv.addr.sin_family == AF_INET )
     pchannel->port = port;
@@ -183,7 +210,7 @@ __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, co
       r = pchannel->fd_socket = socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 );
       /* r = mas_setsockopt( pchannel->fd_socket, SOL_SOCKET, SO_KEEPALIVE, ( void * ) &keepvalue, sizeof( keepvalue ) ); */
       /*  socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) */
-      /* tMSG( "(%d) create l/socket", r ); */
+      tMSG( "(%d) create l/socket", r );
     }
   }
 
@@ -202,9 +229,9 @@ _mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, con
 {
   int r = 0;
 
-  /* MAS_LOG( "chn. cr'ing from %s (def.p:%u)", host, port ); */
-  /* MAS_LOG( "chn. cr'ed for %s:%u", host, port ); */
-  /* mMSG( "host(%lu):%s; port:%d", hostlen, host, port ); */
+  MAS_LOG( "chn. cr'ing from %s (def.p:%u)", host, port );
+  MAS_LOG( "chn. cr'ed for %s:%u", host, port );
+  mMSG( "host(%lu):%s; port:%d", hostlen, host, port );
 
   if ( mas_channel_test( pchannel ) && !pchannel->opened )
     r = __mas_channel_init( pchannel, is_server, type, host, hostlen, port );
@@ -233,6 +260,6 @@ mas_channel_test( mas_channel_t * pchannel )
   int r;
 
   r = pchannel ? 1 : 0;
-  /* MAS_LOG( "pchannel not set" ); */
+  MAS_LOG( "pchannel not set" );
   return r;
 }

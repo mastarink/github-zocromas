@@ -22,10 +22,10 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include "server/inc/mas_server_tools.h"
 #include <mastar/thtools/mas_thread_tools.h>
 
 #include <mastar/variables/mas_thread_variables.h>
@@ -208,18 +208,18 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 /* This is last */
         MAS_LOG( "try xcromas %d : %s", r, mas_rcontrol_protocol_name( prcontrol ) );
         r = mas_proto_xcromas( prcontrol, ( mas_header_t * ) data );
-        /* rMSG( "%d : tried xcromas ; keep_alive:%d", r, prcontrol->keep_alive ); */
+        rMSG( "%d : tried xcromas ; keep_alive:%d", r, prcontrol->keep_alive );
       }
       else if ( r > 0 )
       {
 //        prcontrol->keep_alive = 0;
-        /* rMSG( "written http: %d", r ); */
+        rMSG( "written http: %d", r );
         /* r = 0; */
       }
     }
     else
     {
-      /* rMSG( "no data - cl.gone (r:%d)", r ); */
+      rMSG( "no data - cl.gone (r:%d)", r );
       r = 0;
     }
     if ( data )
@@ -231,8 +231,6 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     MAS_LOG( "KA => %u", prcontrol->keep_alive );
     r = -1;
   }
-  if ( ctrl.do_quit )
-    do_quit_server( prcontrol );
   return r;
 }
 

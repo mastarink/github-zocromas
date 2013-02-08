@@ -1,4 +1,4 @@
-#  include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_std_def.h>
 
 #include <string.h>
 #include <stdlib.h>
@@ -20,12 +20,6 @@ extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-
-/* #include "mas_common.h" */
-
-/* #include "server/inc/mas_server_tools.h" */
-
-/* #include "transaction/inc/mas_transaction_control.h" */
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
@@ -157,16 +151,26 @@ info_cmd( STD_CMD_ARGS )
     bufsz = bufsz0;
 
     {
-      mas_tstrftime( s1lts, sizeof( s1lts ), "%Y%m%d %T", ctrl.stamp.first_lts );
-      mas_tstrftime( slts, sizeof( slts ), "%Y%m%d %T", ctrl.stamp.lts );
-      mas_tstrftime( splts, sizeof( splts ), "%Y%m%d %T", ctrl.stamp.prev_lts );
+      s1lts[0] = '-';
+      s1lts[1] = '\0';
+      if ( ctrl.stamp.first_lts && ctrl.stamp.first_lts != ctrl.stamp.lts )
+        mas_tstrftime( s1lts, sizeof( s1lts ), "first lts: %Y%m%d %T", ctrl.stamp.first_lts );
+      slts[0] = '-';
+      slts[1] = '\0';
+      if ( ctrl.stamp.lts )
+        mas_tstrftime( slts, sizeof( slts ), "lts: %Y%m%d %T", ctrl.stamp.lts );
+      splts[0] = '-';
+      splts[1] = '\0';
+      if ( ctrl.stamp.prev_lts )
+        mas_tstrftime( splts, sizeof( splts ), "prev.lts:%Y%m%d %T", ctrl.stamp.prev_lts );
     }
     {
       len = snprintf( cp, bufsz,
-                      "(%u/%u) #%u Server info:\n\tclients: {%lu - %lu = %lu}\n" "\tfirst lts: %s; lts: %s; prev.lts:%s\nmodsdir:%s\n"
+                      "(%u/%u) #%u Server info:\n\n\tbin: %s\n\tclients: {%lu - %lu = %lu}\n"
+                      "\t%s; %s; %s\n\tmodsdir:%s\n"
                       "\t(%lu - %lu) logdir: %s;\n\tlogpath: %s;\n\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", level,
-                      this_command ? this_command->only_level : 0, ctrl.restart_cnt, ctrl.clients_came, ctrl.clients_gone,
-                      ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, ctrl.log_q_came,
+                      this_command ? this_command->only_level : 0, ctrl.restart_cnt, ctrl.launcherv[0], ctrl.clients_came,
+                      ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, ctrl.log_q_came,
                       ctrl.log_q_gone, opts.logdir, ctrl.logpath, ctrl.main_pid, ctrl.main_tid, ctrl.main_tid, ctrl.main_thread );
       cp += len;
       bufsz -= len;
@@ -191,7 +195,7 @@ static char *
 stop_cmd( STD_CMD_ARGS )
 {
   /* do_quit_server( prcontrol, pbinary ); */
-  ctrl.do_quit=1;
+  ctrl.do_quit = 1;
   return NULL;
 }
 
@@ -217,7 +221,7 @@ restart_cmd( STD_CMD_ARGS )
 {
   ctrl.restart = 1;
   /* do_quit_server( prcontrol, pbinary ); */
-  ctrl.do_quit=1;
+  ctrl.do_quit = 1;
   return NULL;
 }
 
@@ -226,7 +230,7 @@ quit_cmd( STD_CMD_ARGS )
 {
   ctrl.quit = 1;
   /* do_quit_server( prcontrol, pbinary ); */
-  ctrl.do_quit=1;
+  ctrl.do_quit = 1;
   return NULL;
 }
 

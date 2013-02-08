@@ -6,6 +6,5 @@ noinst_HEADERS = \
 	mas_basic_def.h \
 	mas_server_def.h \
 	mas_client_def.h \
-	mas_global.h \
-	mas_sig.h
+	mas_global.h
 	
