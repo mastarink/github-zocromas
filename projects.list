@@ -1,0 +1,13 @@
+zoctypes
+commonlibs/mas_wrap
+commonlibs/mas_tools
+commonlibs/mas_io
+commonlibs/mas_thtools
+commonlibs/mas_msg
+commonlibs/mas_log
+commonlibs/mas_channel
+commonlibs/mas_variables
+commonlibs/mas_fileinfo
+commonlibs/mas_modules
+zocmds
+zocromas
