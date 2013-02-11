@@ -1,0 +1,2 @@
+open zocromas.mastar.lan 5002
+status
