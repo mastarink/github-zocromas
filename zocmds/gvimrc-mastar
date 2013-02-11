@@ -9,7 +9,7 @@ let sfile='mased/' . expand('%') . '.vim'
 if filereadable(sfile)
 " set viminfo='50,<1000,s1000,.viminfo
   execute "set viminfo='50,<1000,s1000,n" . expand('%') . ".viminfo"
-  set verbosefile=verbose.tmp
+  set verbosefile=vrb.tmp
   set path=src,src/inc
   tab new
 
