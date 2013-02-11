@@ -1,0 +1,39 @@
+# Sat, 02 Feb 2013 21:13:57 +0200
+#
+# uuid=663595d1-dc09-4135-bf3c-62543e534ba0
+env_optsname=MAS_ZOCROMAS_DEFOPTS
+env_hostname=MAS_ZOCROMAS_DEFHOST
+logdir=log
+modsdir=/home/mastar/.mas/develop/autotools/zoc/install/lib/zocmds/
+protodir=/home/mastar/.mas/develop/autotools/zoc/install/lib/zocprotos/
+logger=1
+log=1
+configdir=/home/mastar/.zocromas/
+configfilename=server
+max_config_backup=5
+daemon=0
+messages=1
+default_port=5000
+save_opts=0
+save_opts_plus=0
+restart_sleep=0.25
+disconnect_prompt=1
+wait_server=0
+
+[protos]
+proto=xcromas
+proto=http
+
+[listen 2]
+host=zocromas.mastar.lan:5005
+host=mastarink.net:8900
+host=/tmp/zocromas.socket
+
+[host mastarink.net:8900]
+docroot=/var/www/mastarink.net/mastarink.net/htdocs
+
+[host zocromas.mastar.lan:5005]
+docroot=/var/www/mastarink.net/mastarink.net/htdocs
+
+[host 1.zocromas.mastar.lan5005]
+docroot=/def

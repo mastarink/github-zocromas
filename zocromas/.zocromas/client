@@ -1,0 +1,27 @@
+# Sat, 02 Feb 2013 21:13:57 +0200
+#
+# uuid=68e144b6-3298-4c1b-ac3a-c01b0de6dd5f
+env_optsname=MAS_ZOCROMAS_DEFOPTS
+env_hostname=MAS_ZOCROMAS_DEFHOST
+logdir=log
+logger=1
+log=1
+max_config_backup=5
+daemon=0
+messages=1
+default_port=6006
+save_opts=0
+save_opts_plus=0
+restart_sleep=0.1
+disconnect_prompt=0
+wait_server=0
+
+[hosts 1]
+host=/tmp/zocromas.socket
+host=zocromas.mastar.lan:5005
+
+[commands 2]
+command=get server info
+# command=set msg off
+# command=server cls
+command=pwd
