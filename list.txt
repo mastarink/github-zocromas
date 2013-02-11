@@ -1,0 +1,2 @@
+ls -1 commonlibs/mas_{channel,control,fileinfo,io,log,modules,msg,thtools,tools,variables,wrap}/{gvim-*,{g,}vimrc-*,configure,config.{guess,status,sub},libtool,install-sh,libtool,*.{ac,am,in,h,m4},m4/*,mased/*,src/{*.{am,in,c},inc/*.{am,in,h}}} | sort | uniq > files1.txt
+

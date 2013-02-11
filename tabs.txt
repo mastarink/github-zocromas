@@ -1,0 +1,15 @@
+zocromas
+zoctypes
+zocmds
+commonlibs/mas_modules
+commonlibs/mas_msg
+commonlibs/mas_log
+commonlibs/mas_fileinfo
+commonlibs/mas_variables
+commonlibs/mas_thtools
+commonlibs/mas_channel
+commonlibs/mas_io
+commonlibs/mas_tools
+commonlibs/mas_wrap
+zocromas
+install.sh
