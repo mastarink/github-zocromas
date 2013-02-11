@@ -11,7 +11,6 @@ commonlibs/mas_channel/gvimrc-mastar
 commonlibs/mas_channel/gvim-vimenter.vim
 commonlibs/mas_channel/install-sh
 commonlibs/mas_channel/libtool
-commonlibs/mas_channel/libtool
 commonlibs/mas_channel/ltmain.sh
 commonlibs/mas_channel/m4/libtool.m4
 commonlibs/mas_channel/m4/lt~obsolete.m4
@@ -54,7 +53,6 @@ commonlibs/mas_fileinfo/gvimrc-mastar
 commonlibs/mas_fileinfo/gvim-vimenter.vim
 commonlibs/mas_fileinfo/install-sh
 commonlibs/mas_fileinfo/libtool
-commonlibs/mas_fileinfo/libtool
 commonlibs/mas_fileinfo/ltmain.sh
 commonlibs/mas_fileinfo/m4/libtool.m4
 commonlibs/mas_fileinfo/m4/lt~obsolete.m4
@@ -93,7 +91,6 @@ commonlibs/mas_io/gvimrc-mastar
 commonlibs/mas_io/gvim-vimenter.vim
 commonlibs/mas_io/install-sh
 commonlibs/mas_io/libtool
-commonlibs/mas_io/libtool
 commonlibs/mas_io/ltmain.sh
 commonlibs/mas_io/m4/libtool.m4
 commonlibs/mas_io/m4/lt~obsolete.m4
@@ -127,7 +124,6 @@ commonlibs/mas_log/gvim-funcs.vim
 commonlibs/mas_log/gvimrc-mastar
 commonlibs/mas_log/gvim-vimenter.vim
 commonlibs/mas_log/install-sh
-commonlibs/mas_log/libtool
 commonlibs/mas_log/libtool
 commonlibs/mas_log/ltmain.sh
 commonlibs/mas_log/m4/libtool.m4
@@ -164,7 +160,6 @@ commonlibs/mas_modules/gvim-funcs.vim
 commonlibs/mas_modules/gvimrc-mastar
 commonlibs/mas_modules/gvim-vimenter.vim
 commonlibs/mas_modules/install-sh
-commonlibs/mas_modules/libtool
 commonlibs/mas_modules/libtool
 commonlibs/mas_modules/ltmain.sh
 commonlibs/mas_modules/m4/libtool.m4
@@ -204,7 +199,6 @@ commonlibs/mas_msg/gvimrc-mastar
 commonlibs/mas_msg/gvim-vimenter.vim
 commonlibs/mas_msg/install-sh
 commonlibs/mas_msg/libtool
-commonlibs/mas_msg/libtool
 commonlibs/mas_msg/ltmain.sh
 commonlibs/mas_msg/m4/libtool.m4
 commonlibs/mas_msg/m4/lt~obsolete.m4
@@ -242,7 +236,6 @@ commonlibs/mas_thtools/gvimrc-mastar
 commonlibs/mas_thtools/gvim-vimenter.vim
 commonlibs/mas_thtools/install-sh
 commonlibs/mas_thtools/libtool
-commonlibs/mas_thtools/libtool
 commonlibs/mas_thtools/ltmain.sh
 commonlibs/mas_thtools/m4/libtool.m4
 commonlibs/mas_thtools/m4/lt~obsolete.m4
@@ -278,7 +271,6 @@ commonlibs/mas_tools/gvim-funcs.vim
 commonlibs/mas_tools/gvimrc-mastar
 commonlibs/mas_tools/gvim-vimenter.vim
 commonlibs/mas_tools/install-sh
-commonlibs/mas_tools/libtool
 commonlibs/mas_tools/libtool
 commonlibs/mas_tools/ltmain.sh
 commonlibs/mas_tools/m4/libtool.m4
@@ -316,7 +308,6 @@ commonlibs/mas_variables/gvimrc-mastar
 commonlibs/mas_variables/gvim-vimenter.vim
 commonlibs/mas_variables/install-sh
 commonlibs/mas_variables/libtool
-commonlibs/mas_variables/libtool
 commonlibs/mas_variables/ltmain.sh
 commonlibs/mas_variables/m4/libtool.m4
 commonlibs/mas_variables/m4/lt~obsolete.m4
@@ -352,7 +343,6 @@ commonlibs/mas_wrap/gvim-funcs.vim
 commonlibs/mas_wrap/gvimrc-mastar
 commonlibs/mas_wrap/gvim-vimenter.vim
 commonlibs/mas_wrap/install-sh
-commonlibs/mas_wrap/libtool
 commonlibs/mas_wrap/libtool
 commonlibs/mas_wrap/ltmain.sh
 commonlibs/mas_wrap/m4/libtool.m4
@@ -426,7 +416,6 @@ zocmds/gvimrc-mastar
 zocmds/gvim-vimenter.vim
 zocmds/install-sh
 zocmds/libtool
-zocmds/libtool
 zocmds/ltmain.sh
 zocmds/m4/libtool.m4
 zocmds/m4/lt~obsolete.m4
@@ -471,7 +460,6 @@ zocromas/gvim-funcs.vim
 zocromas/gvimrc-mastar
 zocromas/gvim-vimenter.vim
 zocromas/install-sh
-zocromas/libtool
 zocromas/libtool
 zocromas/ltmain.sh
 zocromas/m4/libtool.m4
@@ -535,10 +523,7 @@ zocromas/src/http/mas_http_request.c
 zocromas/src/http/mas_http_utils.c
 zocromas/src/http/mas_transaction_http.c
 zocromas/src/inc/Makefile
-zocromas/src/inc/Makefile
 zocromas/src/inc/Makefile.am
-zocromas/src/inc/Makefile.am
-zocromas/src/inc/Makefile.in
 zocromas/src/inc/Makefile.in
 zocromas/src/inc/mas_basic_def.h
 zocromas/src/inc/mas_client_def.h
@@ -658,7 +643,6 @@ zoctypes/inc/mas_transaction_control_types.h
 zoctypes/inc/mas_unidata_types.h
 zoctypes/inc/mas_variables_types.h
 zoctypes/install-sh
-zoctypes/libtool
 zoctypes/libtool
 zoctypes/ltmain.sh
 zoctypes/m4/libtool.m4
