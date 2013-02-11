@@ -54,6 +54,8 @@ struct mas_options_s
   char env_hostname[256];
   unsigned argc;
   char **argv;
+  int protos_num;
+  char **protos;
   int hosts_num;
   char **hosts;
   int commands_num;
@@ -61,6 +63,7 @@ struct mas_options_s
   unsigned client_attempts;
   char *uuid;
   char *modsdir;
+  char *protodir;
   char *logdir;
   char *configdir;
   char *configfilename;

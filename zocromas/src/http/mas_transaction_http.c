@@ -9,18 +9,16 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
 #include <mastar/thtools/mas_ocontrol_tools.h>
 
 #include <mastar/modules/mas_modules_commands_eval.h>
-#include "transaction/inc/mas_transaction_control.h"
 
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
-#include "server/inc/mas_server_tools.h"
 
 #include <mastar/variables/mas_variables.h>
+
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"
@@ -119,10 +117,11 @@ more:
 */
 
 int
-mas_proto_http( mas_rcontrol_t * prcontrol, const char *string )
+mas_proto_http( mas_rcontrol_t * prcontrol, const void *string_void )
 {
   int w = 0;
   mas_http_t *http = NULL;
+  const char *string = ( const char * ) string_void;
 
 //  GET / HTTP/1.1
 //  Host: mastarink.net:5002
@@ -164,13 +163,11 @@ mas_proto_http( mas_rcontrol_t * prcontrol, const char *string )
       /*         mas_variable_create_text( http->outdata, MAS_THREAD_TRANSACTION, "header", "Content-Type", "text/plain", 0 ); */
       /* }                                                                                                                     */
       http->content =
-            mas_fileinfo_init( http->content, http->docroot, http->URI, mas_evaluate_command_slash_plus,
-                               ( const void * ) prcontrol );
+            mas_fileinfo_init( http->content, http->docroot, http->URI, mas_evaluate_command_slash_plus, ( const void * ) prcontrol );
       mas_fileinfo_set_icontent_type( http->content, MAS_CONTENT_TEXT );
     }
     else
-      http->content =
-            mas_fileinfo_init( http->content, http->docroot, http->URI, mas_load_file, ( const void * ) NULL /* prcontrol */  );
+      http->content = mas_fileinfo_init( http->content, http->docroot, http->URI, mas_load_file, ( const void * ) NULL /* prcontrol */  );
   }
   MAS_LOG( "http: protocol-specific" );
   if ( http )
@@ -185,8 +182,7 @@ mas_proto_http( mas_rcontrol_t * prcontrol, const char *string )
     case MAS_HTTP_METHOD_PUT:
     case MAS_HTTP_METHOD_UNKNOWN:
       http->status_code = MAS_HTTP_CODE_NOT_IMPLEMENTED;
-      http = mas_http_make_out_header( http, "Title", "%d %s", http->status_code,
-                                       mas_http_status_code_message( prcontrol, http ) );
+      http = mas_http_make_out_header( http, "Title", "%d %s", http->status_code, mas_http_status_code_message( prcontrol, http ) );
       http = mas_http_make_out_header_simple( http, "Allow", "GET,HEAD,OPTIONS" );
       http = mas_http_make_data_auto( prcontrol, http );
       /* http = mas_http_make_body_simple( prcontrol, http ); */

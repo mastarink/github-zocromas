@@ -4,7 +4,7 @@
 #  include <stdio.h>
 
 #  include <mastar/types/mas_common_types.h>
-#  include <mastar/types/mas_log_types.h>
+/* #  include <mastar/types/mas_log_types.h> */
 #  include <mastar/types/mas_variables_types.h>
 
 #  include <mastar/types/mas_listener_control_types.h>
@@ -78,6 +78,7 @@ struct mas_control_s
   unsigned daemon:1;
   unsigned keep_listening:1;
   unsigned keep_logging:1;
+  unsigned stop_listeners:1;
 
   unsigned disconnect:1;
   unsigned restart:1;
@@ -98,12 +99,15 @@ struct mas_control_s
   /* unsigned npthclients; */
   /* unsigned listening_max; */
   mas_lcontrol_list_head_t *lcontrols_list;
-  mas_loginfo_list_head_t *log_list;
+  /* mas_loginfo_list_head_t *log_list; */
   mas_variables_list_head_t *hostvars;
   char *const *launcherv;
   int launcherc;
   char *const *launchere;
   int argv_nonoptind;
+
+  size_t protos_num;
+  mas_transaction_protodesc_t *protos;
 
   mas_stamp_t stamp;
 

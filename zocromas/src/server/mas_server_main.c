@@ -40,6 +40,7 @@ related:
   mas_curses.c
   mas_listener_wait_client.c
   mas_server_sig.c
+  mas_init_server.c
   mas_client_main.c
 
   mas_control.c

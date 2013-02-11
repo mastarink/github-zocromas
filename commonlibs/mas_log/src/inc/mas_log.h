@@ -3,8 +3,10 @@
 
 #  include <stdarg.h>
 #  include <errno.h>
-#  include <mastar/types/mas_log_types.h>
 
+#  include "mas_log_types.h"
+
+void mas_log_delete_loginfo( mas_loginfo_t * li );
 
 /* int mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args );     */
 /* int mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list args ); */

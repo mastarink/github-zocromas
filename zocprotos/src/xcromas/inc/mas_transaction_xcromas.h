@@ -3,7 +3,7 @@
 
 #  include <mastar/types/mas_message_types.h>
 
-int mas_proto_xcromas( mas_rcontrol_t * prcontrol, const mas_header_t * pheader );
+/* int mas_proto_xcromas( mas_rcontrol_t * prcontrol, const void * pheader_void ); */
 
 
 #  undef MAS_WEAK

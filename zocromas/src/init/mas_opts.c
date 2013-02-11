@@ -48,6 +48,10 @@ mas_opts_destroy( void )
   opts.hosts_num = 0;
   opts.hosts = NULL;
 
+  mas_del_argv( opts.protos_num, opts.protos, 0 );
+  opts.protos_num = 0;
+  opts.protos = NULL;
+
   mas_del_argv( opts.commands_num, opts.commands, 0 );
   opts.commands_num = 0;
   opts.commands = NULL;
@@ -58,6 +62,10 @@ mas_opts_destroy( void )
 
   if ( opts.modsdir )
     mas_free( opts.modsdir );
+  opts.modsdir = NULL;
+
+  if ( opts.protodir )
+    mas_free( opts.protodir );
   opts.modsdir = NULL;
 
   if ( opts.logdir )
@@ -284,20 +292,41 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
             rtot += r;
         }
         {
-          r = fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num );
-          if ( r > 0 )
-            rtot += r;
-        }
-
-        if ( opts.hosts_num )
-        {
-          for ( int ih = 0; ih < opts.hosts_num; ih++ )
           {
-            int r;
-
-            r = fprintf( f, "host=%s\n", opts.hosts[ih] );
+            r = fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num );
             if ( r > 0 )
               rtot += r;
+          }
+
+          if ( opts.hosts_num )
+          {
+            for ( int ih = 0; ih < opts.hosts_num; ih++ )
+            {
+              int r;
+
+              r = fprintf( f, "host=%s\n", opts.hosts[ih] );
+              if ( r > 0 )
+                rtot += r;
+            }
+          }
+        }
+        {
+          {
+            r = fprintf( f, "\n[%s %d]\n",  "protos" , opts.protos_num );
+            if ( r > 0 )
+              rtot += r;
+          }
+
+          if ( opts.protos_num )
+          {
+            for ( int ih = 0; ih < opts.protos_num; ih++ )
+            {
+              int r;
+
+              r = fprintf( f, "proto=%s\n", opts.protos[ih] );
+              if ( r > 0 )
+                rtot += r;
+            }
           }
         }
         if ( opts.commands_num )
@@ -402,7 +431,7 @@ mas_opts_save_plus( const char *dirname, const char *filename, ... )
   }
   /* else                                    */
   /* {                                       */
-    MAS_LOG( "already saved opts plus" );
+  MAS_LOG( "already saved opts plus" );
   /* }                                       */
   va_end( args );
   return r;
@@ -430,7 +459,7 @@ mas_opts_set_pstrvalue( char **ppstr, const char *s )
   {
     if ( *ppstr )
       mas_free( *ppstr );
-    *ppstr = mas_strdup( se );
+    *ppstr = se && ( 0 != strcmp( se, "(null)" ) ) ? mas_strdup( se ) : NULL;
   }
 }
 
@@ -512,6 +541,10 @@ mas_opts_restore_nosection( const char *s )
   else if ( 0 == mas_strcmp2( s, "modsdir=" ) )
   {
     mas_opts_set_pstrvalue( &opts.modsdir, s );
+  }
+  else if ( 0 == mas_strcmp2( s, "protodir=" ) )
+  {
+    mas_opts_set_pstrvalue( &opts.protodir, s );
   }
   else if ( 0 == mas_strcmp2( s, "logdir=" ) )
   {
@@ -671,6 +704,18 @@ _mas_opts_restore( const char *dirname, const char *filename )
             else
             {
               mMSG( "%d. HOST :%s @ [%s] %d", opts.hosts_num, s, section, ctrl.is_client );
+            }
+          }
+          else if ( 0 == mas_strcmp2( s, "proto=" ) )
+          {
+            if ( 0 == strcmp( section, "protos" ) )
+            {
+              /* mMSG( "%d. +PROTO :%s", opts.protos_num, s ); */
+              mas_opts_set_argv( &opts.protos_num, &opts.protos, s );
+            }
+            else
+            {
+              mMSG( "%d. PROTO :%s @ [%s]", opts.protos_num, s, section );
             }
           }
           else if ( 0 == mas_strcmp2( s, "command=" ) && 0 == strcmp( section, "commands" ) )

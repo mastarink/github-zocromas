@@ -48,6 +48,7 @@ more:
   mas_listeners.h
   mas_listener_wait_client.h
   mas_server_main.c
+  mas_ticker.c
 
   mas_cmdmod_listener.c
 */

@@ -1,5 +1,7 @@
 #include <mastar/wrap/mas_std_def.h>
 
+/* #define MS_DUP_FUNC_NAME */
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -40,34 +42,47 @@ more:
 
 
 void
+mas_log_delete_loginfo( mas_loginfo_t * li )
+{
+  if ( li )
+  {
+    if ( li->message )
+      mas_free( li->message );
+    li->message = NULL;
+#ifdef MS_DUP_FUNC_NAME
+    if ( li->func )
+      mas_free( li->func );
+#endif
+    mas_free( li );
+  }
+}
+
+void
 mas_log_clean_queue( void )
 {
   mas_loginfo_t *li = NULL, *li_tmp;
+  mas_loginfo_list_head_t *log_list;
 
+  log_list = mas_logger_list( 0 );
   ctrl.keep_logging = 0;
-  if ( ctrl.log_list )
+  if ( log_list )
   {
     /* TODO mutex */
-    if ( !MAS_LIST_EMPTY( ctrl.log_list ) )
+    if ( !MAS_LIST_EMPTY( log_list ) )
     {
-      MAS_LIST_FOREACH_SAFE( li, ctrl.log_list, next, li_tmp )
+      MAS_LIST_FOREACH_SAFE( li, log_list, next, li_tmp )
       {
         /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
         pthread_rwlock_wrlock( &logger_queue_rwlock );
 
-        MAS_LIST_REMOVE( ctrl.log_list, li, mas_loginfo_s, next );
+        MAS_LIST_REMOVE( log_list, li, mas_loginfo_s, next );
         ctrl.log_q_gone++;
         pthread_rwlock_unlock( &logger_queue_rwlock );
         /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
-
-        mas_free( li->message );
-        li->message = NULL;
-        mas_free( li->func );
-        mas_free( li );
+        mas_log_delete_loginfo( li );
       }
     }
-    mas_free( ctrl.log_list );
-    ctrl.log_list = NULL;
+    mas_delete_logger_list( );
   }
   /* mMSG( "cleaned logger queue" ); */
 }
@@ -75,9 +90,11 @@ mas_log_clean_queue( void )
 static int
 mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
+  mas_loginfo_list_head_t *log_list = NULL;
   char buffer[1024 * 8];
   mas_loginfo_t *li = NULL;
 
+  log_list = mas_logger_list( 1 );
   /* pthread_t pth;                           */
   /* th_type_t thtype;                        */
   /* const mas_channel_t *pchannel = NULL;    */
@@ -93,10 +110,13 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
 
   li = mas_malloc( sizeof( mas_loginfo_t ) );
   memset( li, 0, sizeof( mas_loginfo_t ) );
-  li->func = mas_strdup( func );
-  li->line = line;
   li->message = mas_strdup( buffer );
-
+  li->line = line;
+#ifdef MS_DUP_FUNC_NAME
+  li->func = mas_strdup( func );
+#else
+  li->func = ( func );
+#endif
   li->pth = mas_pthread_self(  );
   li->thtype = mas_thself_type(  );
   li->pchannel = mas_thself_pchannel(  );
@@ -114,13 +134,7 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
   /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */
   /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
   pthread_rwlock_wrlock( &logger_queue_rwlock );
-  if ( !ctrl.log_list )
-  {
-    ctrl.log_list = mas_malloc( sizeof( mas_loginfo_t ) );
-    memset( ctrl.log_list, 0, sizeof( mas_loginfo_t ) );
-    MAS_LIST_INIT( ctrl.log_list );
-  }
-  MAS_LIST_ADD( ctrl.log_list, li, next );
+  MAS_LIST_ADD( log_list, li, next );
   ctrl.log_q_came++;
   ctrl.log_q_mem += strlen( li->message );
 
@@ -136,12 +150,12 @@ mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list a
   if ( !ctrl.log_offmem && ctrl.log_q_mem > 200000000 )
   {
     ctrl.log_offmem = 1;
-    mas_log_unlim(FL, 0, "memory .....");
+    mas_log_unlim( FL, 0, "memory ....." );
   }
   else if ( ctrl.log_offmem && ctrl.log_q_mem < 150000000 )
   {
     ctrl.log_offmem = 0;
-    mas_log_unlim(FL, 0, "... memory");
+    mas_log_unlim( FL, 0, "... memory" );
   }
   if ( !ctrl.log_disabled && !ctrl.log_offmem && !opts.nolog )
     mas_vlog( func, line, merrno, fmt, args );
@@ -159,6 +173,7 @@ mas_log( const char *func, int line, int merrno, const char *fmt, ... )
   va_end( args );
   return r;
 }
+
 int
 mas_log_unlim( const char *func, int line, int merrno, const char *fmt, ... )
 {

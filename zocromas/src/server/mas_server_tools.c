@@ -60,20 +60,4 @@ more:
 //    return cnt;
 //  }
 
-void
-do_quit_server( mas_rcontrol_t * prcontrol )
-{
-  ctrl.keep_listening = 0;
-  prcontrol->keep_alive = 0;
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
-  if ( prcontrol )
-  {
-    if ( ctrl.restart )
-      prcontrol->qbin = MSG_BIN_RESTART;
-    else if ( ctrl.quit )
-      prcontrol->qbin = MSG_BIN_QUIT;
-    else
-      prcontrol->qbin = MSG_BIN_DISCONNECT;
-  }
-  mas_listeners_cancel(  );
-}
+

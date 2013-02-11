@@ -27,11 +27,10 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
-
 #include <mastar/variables/mas_thread_variables.h>
 
-#include "http/inc/mas_transaction_http.h"
-#include "xcromas/inc/mas_transaction_xcromas.h"
+/* #include "http/inc/mas_transaction_http.h" */
+/* #include "xcromas/inc/mas_transaction_xcromas.h" */
 
 #include <mastar/variables/mas_variables.h>
 
@@ -127,10 +126,7 @@ mas_transaction_start( mas_lcontrol_t * plcontrol )
 int
 mas_transaction_cancel( mas_rcontrol_t * prcontrol )
 {
-#ifdef EMSG
-  EMSG( "CANCEL R%lu:%u (prcontrol:%p) th:%lx", prcontrol->h.serial, prcontrol->h.status, ( void * ) prcontrol,
-        prcontrol->h.thread );
-#endif
+  EMSG( "CANCEL R%lu:%u (prcontrol:%p) th:%lx", prcontrol->h.serial, prcontrol->h.status, ( void * ) prcontrol, prcontrol->h.thread );
   MAS_LOG( "cancelling R%lu:%u", prcontrol->h.serial, prcontrol->h.status );
   if ( prcontrol->h.thread )
   {
@@ -139,6 +135,14 @@ mas_transaction_cancel( mas_rcontrol_t * prcontrol )
   }
   return 0;
 }
+
+/* mas_transaction_protodesc_t _protos[] = {                 */
+/*   {MAS_TRANSACTION_PROTOCOL_HTTP, mas_proto_http}         */
+/*   , {MAS_TRANSACTION_PROTOCOL_XCROMAS, mas_proto_xcromas} */
+/* };                                                        */
+
+/* size_t protos_num = (* sizeof( _protos ) / sizeof( _protos[0] ) *) 0; */
+/* mas_transaction_protodesc_t *protos = (* &_protos[0] *) NULL;      */
 
 /* transaction should be cancelled?
  * FIXME all transactions remains active (keep-alive?) when one 1 of 2 quit
@@ -149,78 +153,55 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   int r = -1;
 
   MAS_LOG( "starting transaction xch" );
+  rMSG( "@@@@@@@@@@ starting transaction" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
     char *data = NULL;
     size_t sz = 0;
 
     r = 0;
+
+    MAS_LOG( "to read rq (read all)" );
+    r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz );
+    MAS_LOG( "read rq: %d", r );
+    if ( r == 0 )
+    {
+      mas_channel_close( prcontrol->h.pchannel );
+      MAS_LOG( "read none" );
+    }
+
     {
       struct timeval td;
-
-      MAS_LOG( "to read rq (read all)" );
-      r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz );
-      MAS_LOG( "read rq: %d", r );
-      if ( r == 0 )
-      {
-        mas_channel_close( prcontrol->h.pchannel );
-        MAS_LOG( "read none" );
-      }
 
       gettimeofday( &td, NULL );
       prcontrol->h.activity_time = td;
     }
-    if ( r < 0 )
-    {
-#ifdef EMSG
-      EMSG( "r:%d; i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client );
-#endif
-      MAS_LOG( "error r:%d; i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client );
-    }
-    else if ( data )
+    if ( r >= 0 && data )
     {
       prcontrol->h.status = MAS_STATUS_WORK;
 
-      /* EMSG( ">>>>>>>>>>>>>> %s", ( char * ) &MSG_SIGNATURE ); */
-      /* if ( *( ( unsigned * ) data ) == MSG_SIGNATURE )                                                                           */
-      /* {                                                                                                                          */
-      /*   prcontrol->proto = MAS_TRANSACTION_PROTOCOL_XCROMAS;                                                                     */
-      /*   EMSG( ">>>>>>>>>>>>>> %s - %s", ( unsigned char * ) data, 0==strcmp( ( char * ) data, "\xaf\xbe\xad\xde" )?"YES":"NO" ); */
-      /*   for ( int i = 0; i < strlen( ( char * ) data ); i++ )                                                                    */
-      /*   {                                                                                                                        */
-      /*     EMSG( ">>>>>>>>>>>>>> %x", ( ( unsigned char * ) data )[i] );                                                          */
-      /*   }                                                                                                                        */
-      /* }                                                                                                                          */
+      for ( int np = 0; np < ctrl.protos_num; np++ )
+      {
+        EMSG( "(%d)@@@@@@@@@@(%u) proto:%u : %p", r, prcontrol->proto, ctrl.protos[np].proto,
+              ( void * ) ( unsigned long long ) ctrl.protos[np].function );
+        if ( r > 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == ctrl.protos[np].proto ) )
+        {
+          EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto, ctrl.protos[np].proto,
+                ( void * ) ( unsigned long long ) ctrl.protos[np].function );
+          r = ( ctrl.protos[np].function ) ( prcontrol, data );
+        }
+      }
 
-      if ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_HTTP )
-      {
-        MAS_LOG( "try http %d : %s", r, mas_rcontrol_protocol_name( prcontrol ) );
-        r = mas_proto_http( prcontrol, data );
-        MAS_LOG( "%d : tried http ; keep_alive:%d", r, prcontrol->keep_alive );
-      }
-/*
- * 0 = try another 'protocol'
- * <0 error
- */
-      if ( ( r == 0 && prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE )
-           || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_XCROMAS )
-      {
-/* This is last */
-        MAS_LOG( "try xcromas %d : %s", r, mas_rcontrol_protocol_name( prcontrol ) );
-        r = mas_proto_xcromas( prcontrol, ( mas_header_t * ) data );
-        rMSG( "%d : tried xcromas ; keep_alive:%d", r, prcontrol->keep_alive );
-      }
-      else if ( r > 0 )
-      {
-//        prcontrol->keep_alive = 0;
-        rMSG( "written http: %d", r );
-        /* r = 0; */
-      }
+      /* if ( r == 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_HTTP ) )    */
+      /*   r = mas_proto_http( prcontrol, data );                                                                                       */
+      /* if ( r == 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_XCROMAS ) ) */
+      /*   r = mas_proto_xcromas( prcontrol, data );                                                                                    */
     }
-    else
+    if ( r < 0 )
     {
       rMSG( "no data - cl.gone (r:%d)", r );
-      r = 0;
+      EMSG( "r:%d; i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client );
+      MAS_LOG( "error r:%d; i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client );
     }
     if ( data )
       mas_free( data );
@@ -264,7 +245,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       prcontrol->h.status = MAS_STATUS_INIT;
       prcontrol->keep_alive = 1;
       MAS_LOG( "KA => %u", prcontrol->keep_alive );
-      while ( r >= 0 && prcontrol->keep_alive && prcontrol->h.pchannel && prcontrol->h.pchannel->opened )
+      while ( r >= 0 && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened )
       {
         MAS_LOG( "starting transaction keep-alive block" );
         prcontrol->h.status = MAS_STATUS_WAIT;
@@ -273,7 +254,10 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         prcontrol->h.status = MAS_STATUS_OPEN;
         prcontrol->qbin = MSG_BIN_NONE;
         r = mas_transaction_xch( prcontrol );
-
+        /* if ( prcontrol->stop_listeners ) */
+        /* {                                */
+        /*   mas_listeners_cancel(  );      */
+        /* }                                */
         prcontrol->xch_cnt++;
         mas_pthread_mutex_lock( &ctrl.thglob.cnttr3_mutex );
         ctrl.xch_cnt++;

@@ -1,7 +1,10 @@
 #ifndef MAS_LOGGER_H
 #  define MAS_LOGGER_H
 
-#  include <mastar/types/mas_log_types.h>
+#  include "mas_log_types.h"
+
+mas_loginfo_list_head_t *mas_logger_list( int create );
+void mas_delete_logger_list( void );
 
 int mas_logger_start( void );
 int mas_logger_stop( void );

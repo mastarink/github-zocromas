@@ -24,4 +24,3 @@ sfind mas_modules_types.h
 sfind mas_thread_variables_types.h
 sfind mas_th_types.h
 sfind mas_log_types.h
-sfind mas_control_types.h

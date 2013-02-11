@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <uuid/uuid.h>
 
+#include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
 
 #include <mastar/types/mas_control_types.h>
@@ -16,6 +17,8 @@ extern mas_options_t opts;
 /* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
+
+#include <mastar/modules/mas_modules_load_module.h>
 
 #include "listener/inc/mas_listener_control_list.h"
 #include "listener/inc/mas_listeners.h"
@@ -49,6 +52,28 @@ more:
 
 */
 
+static mas_transaction_protodesc_t *
+mas_init_load_protos( void )
+{
+  int protos_num = 0;
+  mas_transaction_protodesc_t *protos;
+
+  /* rMSG( "@@@@@@@@@@ protodir:%s", opts.protodir ); */
+  /* EMSG( "@@@@@@@@@@ protodir:%s", opts.protodir ); */
+  protos = mas_calloc( opts.protos_num, sizeof( void * ) );
+  for ( int ipr = 0; ipr < opts.protos_num; ipr++ )
+  {
+    protos_num++;
+    /* from one */
+    protos[ipr].proto = protos_num;
+    protos[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
+    /* EMSG( "@@@@@@@@@@ proto:%s : %p", opts.protos[ipr], ( void * ) ( unsigned long long ) protos[ipr].function ); */
+  }
+  ctrl.protos_num = protos_num;
+  ctrl.protos = protos;
+  return protos;
+}
+
 
 void
 mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
@@ -73,6 +98,8 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     fprintf( stderr, "ERROR curses %d\n", r );
     /* exit( 33 ); */
   }
+  if ( !ctrl.protos )
+    mas_init_load_protos(  );
 
   mas_threads_init(  );
   mas_init( atexit_fun, initsig, argc, argv, env );

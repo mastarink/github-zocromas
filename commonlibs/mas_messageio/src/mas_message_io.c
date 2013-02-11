@@ -1,4 +1,5 @@
-#include "mas_basic_def.h"
+#  define MSG_VERSION 0x20130210
+#include <mastar/wrap/mas_std_def.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,7 +16,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 

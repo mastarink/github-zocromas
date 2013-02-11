@@ -22,7 +22,6 @@
 #include <mastar/channel/mas_channel.h>
 #include <mastar/channel/mas_channel_object.h>
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thtools/mas_thread_tools.h>

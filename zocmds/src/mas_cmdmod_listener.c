@@ -7,8 +7,6 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-/* #include "mas_common.h" */
-
 #ifdef MAS_USE_LISTENER
 #include "listener/inc/mas_listener_control_list.h"
 #include "listener/inc/mas_listener.h"
@@ -45,8 +43,6 @@ listener_remove_cmd( STD_CMD_ARGS )
     for ( int ih = 0; ih < targc; ih += 2 )
     {
       cMSG( "Listener remove %u(%u): %s:%s", ih, targc, targv[ih], targv[ih + 1] );
-      /* cMSG( "Listener stop 1:'%s'", targv[1] ); */
-      /* cMSG( "Listener stop 2:'%s'", targv[2] ); */
       sscanf( targv[ih + 1], "%u", &port );
       plcontrol = mas_lcontrol_find( targv[ih], port );
       if ( plcontrol )

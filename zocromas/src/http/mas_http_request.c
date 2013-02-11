@@ -10,18 +10,15 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include "server/inc/mas_server_tools.h"
+/* #include "server/inc/mas_server_tools.h" */
 #include <mastar/thtools/mas_ocontrol_tools.h>
 #include <mastar/variables/mas_variables.h>
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
-
-#include "transaction/inc/mas_transaction_control.h"
 
 #include "mas_http_utils.h"
 #include "mas_http_request.h"

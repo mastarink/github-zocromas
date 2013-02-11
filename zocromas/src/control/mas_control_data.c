@@ -66,7 +66,6 @@ mas_control_t ctrl = {
   /* .npthclients = 100, */
   /* .listening_max = 0, */
   .lcontrols_list = NULL,
-  .log_list = NULL,
   /* .listening_controls_list = NULL, */
 
   .launcherv = NULL,
@@ -92,6 +91,8 @@ mas_control_t ctrl = {
   .log_q_gone = 0,
   .maxclients = 0,
   .maxtrtime = 0.0,
+
+  .protos = NULL,
 
   .logpath = NULL,
   .logfile = NULL,

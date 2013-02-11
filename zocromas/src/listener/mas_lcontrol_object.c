@@ -187,16 +187,15 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const char *host, unsigned port )
 int
 mas_lcontrol_delete( mas_lcontrol_t * plcontrol )
 {
+  /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
+  pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
-    /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
-    /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
-    pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
-
     MAS_LIST_REMOVE( ctrl.lcontrols_list, plcontrol, mas_lcontrol_s, next );
-
-    pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
-    /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
+  }
+  pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
+  if ( plcontrol )
+  {
     if ( plcontrol->host )
       mas_free( plcontrol->host );
     plcontrol->host = NULL;

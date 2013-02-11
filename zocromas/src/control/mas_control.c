@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+#include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
@@ -52,6 +53,10 @@ mas_ctrl_destroy( void )
   mas_del_argv( ctrl.commands_num, ctrl.commands, 0 );
   ctrl.commands_num = 0;
   ctrl.commands = NULL;
+  if ( ctrl.protos )
+    mas_free( ctrl.protos );
+  ctrl.protos_num = 0;
+  ctrl.protos = NULL;
 }
 
 void

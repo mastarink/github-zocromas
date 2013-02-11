@@ -19,7 +19,11 @@ struct mas_loginfo_s
   th_type_t thtype;
   pid_t pid;
   pthread_t pth;
+#ifdef MS_DUP_FUNC_NAME
   char *func;
+#else
+  const char *func;
+#endif
   int line;
   char *message;
   mas_loginfo_list_entry_t next;

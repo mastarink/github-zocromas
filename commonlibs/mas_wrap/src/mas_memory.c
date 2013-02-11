@@ -89,12 +89,13 @@ _mas_strcat_xt( const char *func, int line, char *s1, const char *s2 )
   }
   return r;
 }
+
 static void
 memerror( mas_mem_head_t * m )
 {
   fprintf( stderr, "\nMEMORY ERROR %lx > [%lx : id:%lx]\n", ( unsigned long ) m, m->sig, m->id );
   /* sleep( 98 ); */
-      exit( 11 );
+  exit( 11 );
 }
 
 #endif
@@ -189,22 +190,21 @@ _mas_malloc( const char *func, int line, size_t size )
     real_ptr = ( mas_mem_head_t * ) mas_other_malloc( real_size );
     if ( real_ptr )
     {
-      {
-        pthread_mutex_lock( &malloc_mutex );
-        memory_allocated += size;
-        memory_allocated_cnt++;
-        memory_balance += size;
-        memory_balance_cnt++;
-        real_ptr->sig = 0x6cdb7c9c89c7ad3a;
-        real_ptr->id = memory_allocated_cnt;
-        if ( memory_allocated_cnt < sizeof( memar ) / sizeof( memar[0] ) )
-          memar[memory_allocated_cnt] = real_ptr;
-        real_ptr->func = func;
-        real_ptr->line = line;
-        real_ptr->size = size;
-        pthread_mutex_unlock( &malloc_mutex );
-        /* memMSG( "@ _mas_malloc %lx > id:%lx; %lu", ( unsigned long ) real_ptr, real_ptr->id, size ); */
-      }
+      pthread_mutex_lock( &malloc_mutex );
+      memory_allocated += size;
+      memory_allocated_cnt++;
+      memory_balance += size;
+      memory_balance_cnt++;
+      real_ptr->sig = 0x6cdb7c9c89c7ad3a;
+      real_ptr->id = memory_allocated_cnt;
+      if ( memory_allocated_cnt < sizeof( memar ) / sizeof( memar[0] ) )
+        memar[memory_allocated_cnt] = real_ptr;
+      real_ptr->func = func;
+      real_ptr->line = line;
+      real_ptr->size = size;
+      pthread_mutex_unlock( &malloc_mutex );
+      /* memMSG( "@ _mas_malloc %lx > id:%lx; %lu", ( unsigned long ) real_ptr, real_ptr->id, size ); */
+
       real_ptr++;
       ptr = ( void * ) real_ptr;
     }

@@ -40,7 +40,7 @@ more:
 
 */
 
-
+static mas_loginfo_list_head_t *logger_list;
 
 /* mas_th_types.h */
 
@@ -51,6 +51,25 @@ more:
 
 pthread_rwlock_t logger_queue_rwlock;
 pthread_mutex_t logger_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+mas_loginfo_list_head_t *
+mas_logger_list( int create )
+{
+  if ( create && !logger_list )
+  {
+    logger_list = mas_malloc( sizeof( mas_loginfo_t ) );
+    memset( logger_list, 0, sizeof( mas_loginfo_t ) );
+    MAS_LIST_INIT( logger_list );
+  }
+  return logger_list;
+}
+
+void
+mas_delete_logger_list( void )
+{
+  mas_free( logger_list );
+  logger_list = NULL;
+}
 
 static void
 mas_logger_write( mas_loginfo_t * li )
@@ -143,12 +162,8 @@ mas_logger_write( mas_loginfo_t * li )
           errdone = 1;
         }
       }
-      mas_free( li->message );
-      li->message = NULL;
     }
-    mas_free( li->func );
-    li->func = NULL;
-    mas_free( li );
+    mas_log_delete_loginfo( li );
   }
 }
 
@@ -263,16 +278,16 @@ mas_logger_flush( void )
   int r = -1;
 
 
-  while ( ctrl.log_list && !MAS_LIST_EMPTY( ctrl.log_list ) )
+  while ( logger_list && !MAS_LIST_EMPTY( logger_list ) )
   {
     mas_loginfo_t *li;
 
     /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
 
     pthread_rwlock_wrlock( &logger_queue_rwlock );
-    li = MAS_LIST_FIRST( ctrl.log_list );
-    /* MAS_LIST_REMOVE( ctrl.log_list, li, mas_loginfo_s, next ); */
-    MAS_LIST_REMOVE_HEAD( ctrl.log_list, next );
+    li = MAS_LIST_FIRST( logger_list );
+    /* MAS_LIST_REMOVE( logger_list, li, mas_loginfo_s, next ); */
+    MAS_LIST_REMOVE_HEAD( logger_list, next );
     ctrl.log_q_gone++;
     ctrl.log_q_mem -= strlen( li->message );
     pthread_rwlock_unlock( &logger_queue_rwlock );

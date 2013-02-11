@@ -3,7 +3,7 @@
 
 #  include <mastar/types/mas_transaction_control_types.h>
 
-int mas_proto_http( mas_rcontrol_t * prcontrol, const char *string );
+int mas_proto_http( mas_rcontrol_t * prcontrol, const void *string );
 
 #  undef MAS_WEAK
 #endif

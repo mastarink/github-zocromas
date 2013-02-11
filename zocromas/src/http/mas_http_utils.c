@@ -9,12 +9,8 @@
 #include <sys/stat.h>
 
 #include <mastar/wrap/mas_memory.h>
-
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
-
-/* #include "channel/inc/mas_channel.h" */
-#include "transaction/inc/mas_transaction.h"
+#include <mastar/channel/mas_channel.h>
 #include <mastar/variables/mas_variables.h>
 
 #include "mas_http_utils.h"
@@ -91,22 +87,13 @@ mas_proto_http_write( mas_http_t * http, char *cbuf, size_t sz )
   int w = -1;
 
   if ( http )
-    w = mas_transaction_write( http->prcontrol, cbuf, sz );
-  MAS_LOG( "written http %u of %lu", w, sz );
-  if ( w > 0 )
-    http->written += w;
-  return http;
-}
-
-mas_http_t *
-mas_proto_http_vwritef( mas_http_t * http, const char *fmt, va_list args )
-{
-  int w = -1;
-
-  if ( http )
-    w = mas_transaction_vwritef( http->prcontrol, fmt, args );
-  if ( w > 0 )
-    http->written += w;
+  {
+    if ( http->prcontrol )
+      w = mas_channel_write( http->prcontrol->h.pchannel, cbuf, sz );
+    MAS_LOG( "written http %u of %lu", w, sz );
+    if ( w > 0 )
+      http->written += w;
+  }
   return http;
 }
 
@@ -114,10 +101,16 @@ mas_http_t *
 mas_proto_http_writef( mas_http_t * http, const char *fmt, ... )
 {
   va_list args;
+  int w = -1;
 
   va_start( args, fmt );
   if ( http )
-    http = mas_proto_http_vwritef( http, fmt, args );
+  {
+    if ( http->prcontrol )
+      w = mas_channel_vwritef( http->prcontrol->h.pchannel, fmt, args );
+    if ( w > 0 )
+      http->written += w;
+  }
   va_end( args );
   return http;
 }
@@ -147,17 +140,5 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
       mas_free( buf );
     }
   }
-  return http;
-}
-
-mas_http_t *
-mas_proto_http_write_values( mas_http_t * http, const char *set )
-{
-  int w = -1;
-
-  if ( http )
-    w = mas_transaction_write_values( http->outdata, set, http->prcontrol );
-  if ( w > 0 )
-    http->written += w;
   return http;
 }

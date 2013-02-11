@@ -77,7 +77,7 @@ __mas_modules_load_module( const char *fullname, int noerr )
   return module_handle;
 }
 
-static void *
+void *
 _mas_load_module( const char *libname, const char *path, int noerr )
 {
   void *module_handle;
@@ -114,8 +114,23 @@ mas_modules_load_module( const char *libname )
   return module_handle;
 }
 
+void *
+mas_modules_load_proto( const char *libname )
+{
+  void *module_handle;
+
+  if ( opts.protodir )
+  {
+#ifdef MAS_LOG
+    MAS_LOG( "load proto from %s", opts.protodir );
+#endif
+    module_handle = _mas_load_module( libname, opts.protodir, 1 );
+  }
+  return module_handle;
+}
+
 mas_cmd_fun_t
-mas_modules_load_func( const char *libname, const char *funname )
+mas_modules_load_cmd_func( const char *libname, const char *funname )
 {
   mas_cmd_fun_t cmd_fun = NULL;
   void *module_handle;
@@ -142,6 +157,36 @@ mas_modules_load_func( const char *libname, const char *funname )
   MAS_LOG( "load func from %s => %p (mod:%p)", libname, ( void * ) ( unsigned long ) cmd_fun, ( void * ) module_handle );
 #endif
   return cmd_fun;
+}
+
+mas_transaction_fun_t
+mas_modules_load_proto_func( const char *libname, const char *funname )
+{
+  mas_transaction_fun_t transaction_fun = NULL;
+  void *module_handle;
+
+  module_handle = mas_modules_load_proto( libname );
+  if ( module_handle )
+  {
+    /* tMSG( "dlsym %s; %lx", funname, ( unsigned long ) transaction_fun ); */
+#ifdef MAS_LOG
+    MAS_LOG( "dlsym %s;", funname );
+#endif
+    cMSG( "dlsym %s;", funname );
+    transaction_fun = ( mas_transaction_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
+    if ( !transaction_fun )
+    {
+      EMSG( "%s", dlerror(  ) );
+#ifdef MAS_LOG
+      MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
+#endif
+    }
+    /* tMSG( "dlsym %s; %lx", funname, ( unsigned long ) transaction_fun ); */
+  }
+#ifdef MAS_LOG
+  MAS_LOG( "load func from %s => %p (mod:%p)", libname, ( void * ) ( unsigned long ) transaction_fun, ( void * ) module_handle );
+#endif
+  return transaction_fun;
 }
 
 mas_cmd_t *

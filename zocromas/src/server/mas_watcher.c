@@ -30,6 +30,7 @@ extern mas_options_t opts;
 #include "transaction/inc/mas_transaction.h"
 
 #include "listener/inc/mas_listener_control.h"
+#include "listener/inc/mas_listeners.h"
 
 #include "mas_watcher.h"
 
@@ -184,7 +185,7 @@ mas_watcher( void )
 
               proto_name = mas_rcontrol_protocol_name( prcontrol );
               MAS_LOG( "WATCH  >> %u. %s %s:%u;tid:%5u; [%lx] {%lu.%06lu %lu.%06lu I/A:%lu.%06lu} #%u", ntransaction_in_l,
-                       proto_name, sip ? sip : "?", pchannel?pchannel->port:0, prcontrol->h.tid, prcontrol->h.thread,
+                       proto_name, sip ? sip : "?", pchannel ? pchannel->port : 0, prcontrol->h.tid, prcontrol->h.thread,
                        prcontrol->h.activity_time.tv_sec, prcontrol->h.activity_time.tv_usec, rnow_time.tv_sec, rnow_time.tv_usec,
                        rinactive_time.tv_sec, rinactive_time.tv_usec, prcontrol->xch_cnt );
               if ( sip )
@@ -222,6 +223,14 @@ mas_watcher( void )
       }
       /* fprintf( stderr, "WATCHER %u %u %u\n", nlistener_open, ntransaction, nlisteners_ever_open ); */
     }
+    if ( ctrl.stop_listeners )
+    {
+      mas_listeners_cancel(  );
+      /* ctrl.stop_listeners = 0; */
+      FMSG( "\nWATCHER - STOP LISTENERS" );
+    }
+    /* FMSG( "\nWATCHER SL %d", ctrl.stop_listeners ); */
+
     mas_nanosleep( interval );
 
     mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );

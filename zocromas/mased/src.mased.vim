@@ -9,22 +9,6 @@ find main.c
 sfind mas_server_main.c
 sfind mas_client_main.c
 
-tab sfind mas_http_get.c
-sfind mas_http_request.c
-sfind mas_http_request.h
-sfind mas_http_reply.c
-sfind mas_http_reply.h
-sfind mas_http_utils.c
-sfind mas_http_utils.h
-sfind mas_transaction_http.c
-sfind mas_transaction_http.h
-sfind mas_http_get.h
-
-tab sfind mas_transaction_xcromas.c
-sfind     mas_transaction_xcromas.h
-sfind mas_message_io.c
-sfind mas_message_io.h
-
 tab sfind mas_transaction.c
 sfind mas_transaction_control.c
 sfind mas_transaction.h

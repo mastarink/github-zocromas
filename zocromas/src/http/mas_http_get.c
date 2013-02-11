@@ -8,22 +8,16 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/modules/mas_modules_commands_eval.h>
 
-/* #include "mas_common.h" */
-
 #include <mastar/log/mas_log.h>
 
 #include <mastar/variables/mas_variables.h>
 #include <mastar/variables/mas_thread_variables.h>
 
-/* #include "xcromas/inc/mas_transaction_xcromas.h" */
-
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include "mas_http_utils.h"
 #include "mas_http_reply.h"
 
-
 #include "mas_http_get.h"
-
 
 /*
 this:

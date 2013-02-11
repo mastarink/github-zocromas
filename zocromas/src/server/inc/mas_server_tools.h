@@ -5,7 +5,6 @@
 #  include <mastar/types/mas_transaction_control_types.h>
 
 /* unsigned mas_clients_count( mas_rcontrol_t * prcontrol ); */
-void do_quit_server( mas_rcontrol_t * prcontrol );
 
 #  undef MAS_WEAK
 #endif

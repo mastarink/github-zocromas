@@ -1,5 +1,4 @@
-#include "mas_server_def.h"
-#include "mas_basic_def.h"
+#include <mastar/wrap/mas_std_def.h>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -17,9 +16,8 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include "server/inc/mas_server_tools.h"
 
-#include "mas_message_io.h"
+#include <mastar/message_io/mas_message_io.h>
 #include "mas_transaction_xcromas.h"
 
 
@@ -34,6 +32,23 @@ related:
   mas_msg_tools.c
 */
 
+static void
+do_quit_server( mas_rcontrol_t * prcontrol )
+{
+  ctrl.keep_listening = 0;
+  prcontrol->keep_alive = 0;
+  MAS_LOG( "KA => %u", prcontrol->keep_alive );
+  if ( prcontrol )
+  {
+    if ( ctrl.restart )
+      prcontrol->qbin = MSG_BIN_RESTART;
+    else if ( ctrl.quit )
+      prcontrol->qbin = MSG_BIN_QUIT;
+    else
+      prcontrol->qbin = MSG_BIN_DISCONNECT;
+  }
+  ctrl.stop_listeners = 1;
+}
 
 static int
 mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *question, mas_header_t * pheader )
@@ -43,13 +58,13 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 
   prcontrol->qbin = MSG_BIN_NONE;
   answer = mas_evaluate_command( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
-  cMSG( "B(%d) Q(%d)", prcontrol->qbin, ctrl.do_quit );
+  cMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_quit, ctrl.stop_listeners );
   if ( ctrl.do_quit )
   {
     MAS_LOG( "qbin => %u", prcontrol->qbin );
-    rMSG( "qbin => %u", prcontrol->qbin );
+    cMSG( "qbin => %u; ctrl.stop_listeners:%u", prcontrol->qbin, ctrl.stop_listeners );
     do_quit_server( prcontrol );
-    rMSG( "qbin => %u", prcontrol->qbin );
+    cMSG( "qbin => %u; ctrl.stop_listeners:%u", prcontrol->qbin, ctrl.stop_listeners );
   }
   pheader->binary = prcontrol->qbin;
   HMSG( ">>> QBIN : %d", prcontrol->qbin );
@@ -96,9 +111,10 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 }
 
 int
-mas_proto_xcromas( mas_rcontrol_t * prcontrol, const mas_header_t * pheader_data )
+mas_proto_main( mas_rcontrol_t * prcontrol, const void *pheader_void )
 {
   int r = -1;
+  const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;
 
   if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )
   {

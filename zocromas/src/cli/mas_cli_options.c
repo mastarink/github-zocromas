@@ -57,9 +57,11 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_DAEMON = 'd',
   MAS_CLI_OPT_HOST = 'H',
   MAS_CLI_OPT_PORT = 'P',
-  MAS_CLI_OPT_LOGDIR = 'L',
   MAS_CLI_OPT_MODSDIR = 'M',
+  MAS_CLI_OPT_LOGDIR = 'L',
   MAS_CLI_OPT_PLUS = 10000,
+  MAS_CLI_OPT_PROTODIR,
+  MAS_CLI_OPT_PROTO,
   MAS_CLI_OPT_NODAEMON,
   MAS_CLI_OPT_MSG,
   MAS_CLI_OPT_NOMSG,
@@ -102,8 +104,9 @@ static struct option cli_longopts[] = {
   {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},
   {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},
   {"log", no_argument, NULL, MAS_CLI_OPT_LOG},
-  {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
   {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},
+  {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},
+  {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
   {"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
   {"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER},
   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
@@ -115,6 +118,7 @@ static struct option cli_longopts[] = {
   {"nolisten", optional_argument, NULL, MAS_CLI_OPT_NOLISTEN},
   {"listen", no_argument, NULL, MAS_CLI_OPT_LISTEN},
   {"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON},
+  {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},
   {"host", required_argument, NULL, MAS_CLI_OPT_HOST},
   {"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS},
   {"port", required_argument, NULL, MAS_CLI_OPT_PORT},
@@ -141,6 +145,10 @@ mas_cli_make_option( int opt, const char *m_optarg )
     opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, optarg );
     mMSG( "HOST %d: %s [%p]", opts.hosts_num, optarg, ( void * ) opts.hosts );
     break;
+  case MAS_CLI_OPT_PROTO:
+    opts.protos_num = mas_add_argv_arg( opts.protos_num, &opts.protos, optarg );
+    mMSG( "PROTO %d: %s [%p]", opts.protos_num, optarg, ( void * ) opts.protos );
+    break;
   case MAS_CLI_OPT_PORT:
     {
       opts.default_port = 0;
@@ -154,6 +162,13 @@ mas_cli_make_option( int opt, const char *m_optarg )
     opts.modsdir = NULL;
     if ( optarg && *optarg )
       opts.modsdir = mas_strdup( optarg );
+    break;
+  case MAS_CLI_OPT_PROTODIR:
+    if ( opts.protodir )
+      mas_free( opts.protodir );
+    opts.protodir = NULL;
+    if ( optarg && *optarg )
+      opts.protodir = mas_strdup( optarg );
     break;
   case MAS_CLI_OPT_LOGDIR:
     if ( opts.logdir )

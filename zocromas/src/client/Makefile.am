@@ -7,9 +7,8 @@ mas_client_SOURCES=  mas_client_main.c mas_client_sig.c mas_client_readline.c \
 mas_client_CFLAGS=${AM_CFLAGS} \
 	-lreadline       -luuid \
 	-L\$(prefix)/lib \
-	-lmas_wrap -lmas_tools -lmas_arg_tools -lmas_io -lmas_channel -lmas_variables -lmas_log -lmas_msg \
+	-lmas_wrap -lmas_tools -lmas_arg_tools -lmas_io -lmas_channel -lmas_variables -lmas_log -lmas_msg -lmas_message_io \
 	-lmas_thtools \
-	-L../xcromas     -lmas_xcromasio \
 	-L../control     -lmas_control \
 	-L../cli	 -lmas_cli \
 	-L../init        -lmas_init \
