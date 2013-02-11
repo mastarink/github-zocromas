@@ -94,6 +94,7 @@ mas_lcontrol_register( mas_lcontrol_t * plcontrol )
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
     pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
     MAS_LIST_ADD( ctrl.lcontrols_list, plcontrol, next );
+    plcontrol->in_list = 1;
     plcontrol->h.serial = ++ctrl.listener_serial;
     MAS_LOG( "registering listener; serial:%lu", plcontrol->h.serial );
 
@@ -187,15 +188,16 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const char *host, unsigned port )
 int
 mas_lcontrol_delete( mas_lcontrol_t * plcontrol )
 {
-  /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
-  pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
-  if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
-  {
-    MAS_LIST_REMOVE( ctrl.lcontrols_list, plcontrol, mas_lcontrol_s, next );
-  }
-  pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
   if ( plcontrol )
   {
+    /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
+    pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
+    if ( plcontrol->in_list && ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
+    {
+      MAS_LIST_REMOVE( ctrl.lcontrols_list, plcontrol, mas_lcontrol_s, next );
+      plcontrol->in_list = 0;
+    }
+    pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
     if ( plcontrol->host )
       mas_free( plcontrol->host );
     plcontrol->host = NULL;

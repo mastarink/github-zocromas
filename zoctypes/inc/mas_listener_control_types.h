@@ -35,6 +35,7 @@ typedef struct mas_lcontrol_s
   unsigned long clients_came;
   unsigned long clients_gone;
   mas_variables_list_head_t *variables;
+  unsigned in_list:1;
 } mas_lcontrol_t;
 
 /* struct mas_lcontrol_s                                  */

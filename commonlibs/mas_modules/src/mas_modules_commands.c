@@ -43,40 +43,40 @@ related:
 
 
 static mas_cmd_t *
-mas_server_lookup_command( mas_cmd_t * cmdtable, const char *question, const char **pargs )
+mas_modules_lookup_cmd( mas_cmd_t * cmdtable, const char *question, const char **pargs )
 {
   const char *args = NULL;
   const char *q = NULL;
-  int quo = 0;
   size_t len;
   mas_cmd_t *found = NULL;
-  mas_cmd_t *cmd = NULL;
 
-  args = mas_find_next_arg( question, &q, &len, &quo );
-#ifdef MAS_LOG
-  MAS_LOG( "looking for q:'%s' args:'%s'", q, args );
-#endif
-  cmd = cmdtable;
-  while ( question && cmd && !found && ( cmd->name || cmd->function || cmd->libname /* || cp->subtable */  ) )
   {
-    size_t l = 0;
+    int quo = 0;
 
-    if ( ( !cmd->name && !*question ) || (  cmd->name && 0 == strncmp( cmd->name, question, ( l = strlen( cmd->name )) ) && l == len ) )
-    {
-#ifdef MAS_LOG
-      MAS_LOG( "located #%d: cmd '%s'", cmd->id, question );
-#endif
-      cMSG( "located #%d: cmd '%s'", cmd->id, question );
-      found = cmd;
-      if ( pargs )
-        ( *pargs ) = args;
-    }
-    cmd++;
+    args = mas_find_next_arg( question, &q, &len, &quo );
   }
-#ifdef MAS_LOG
+  MAS_LOG( "looking for q:'%s' args:'%s'", q, args );
+  {
+    mas_cmd_t *cmd = NULL;
+
+    cmd = cmdtable;
+    while ( question && cmd && !found && ( cmd->name || cmd->function || cmd->libname /* || cp->subtable */  ) )
+    {
+      size_t l = 0;
+
+      if ( ( !cmd->name && !*question ) || ( cmd->name && 0 == strncmp( cmd->name, question, ( l = strlen( cmd->name ) ) ) && l == len ) )
+      {
+        MAS_LOG( "located #%d: cmd '%s'", cmd->id, question );
+        tMSG( "located #%d: cmd '%s'", cmd->id, question );
+        found = cmd;
+        if ( pargs )
+          ( *pargs ) = args;
+      }
+      cmd++;
+    }
+  }
   MAS_LOG( "cmd %s : %s (%s)", question, found ? "FOUND" : "NOT found", found ? found->name : "" );
-#endif
-  cMSG( "look for '%s' : %s", question, found ? "FOUND" : "NOT found" );
+  tMSG( "cmd %s : %s (%s)", question, found ? "FOUND" : "NOT found", found ? found->name : "" );
   return found;
 }
 
@@ -88,30 +88,19 @@ mas_modules_commands( STD_CMD_ARGS )
   static mas_cmd_t def_cmd = { 1, "unknown", NULL, NULL, 1 };
   mas_cmd_t *found = NULL;
 
-  cMSG( "@ level:%d %s", level, question );
-
-  if ( question )
+  if ( question && this_command )
   {
-    if ( this_command )
+    found = mas_modules_lookup_cmd( this_command->subtable, question, &args );
+    MAS_LOG( "(L%u) command %s (%s) %s", level, found ? found->name : NULL, question, found ? "FOUND" : "NOT FOUND" );
+    if ( !found )
     {
-      found = mas_server_lookup_command( this_command->subtable, question, &args );
-#ifdef MAS_LOG
-      MAS_LOG( "found command %p : %s", ( void * ) found, found ? found->name : NULL );
-#endif
-      if ( !found )
-      {
-        found = &def_cmd;
-#ifdef MAS_LOG
-        MAS_LOG( "setting def_cmd %p : %s", ( void * ) found, found ? found->name : NULL );
-#endif
-      }
+      found = &def_cmd;
+      MAS_LOG( "setting def_cmd %p : %s", ( void * ) found, found ? found->name : NULL );
     }
   }
-  else if ( !level  )
+  else if ( !level )
   {
-#ifdef MAS_LOG
     MAS_LOG( "empty command; level %d", level );
-#endif
     prcontrol->qbin = MSG_BIN_EMPTY_COMMAND;
   }
 
@@ -119,44 +108,30 @@ mas_modules_commands( STD_CMD_ARGS )
   {
     if ( found->unknown )
     {
-        prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
-#ifdef EMSG
+      prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
       EMSG( "NOT found cmd '%s'", question );
-#endif
-#ifdef MAS_LOG
       MAS_LOG( "NOT found cmd '%s'", question );
-#endif
       answer = mas_strdup( question );
     }
     else if ( found->only_level && found->only_level != level )
     {
-        prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
-#ifdef EMSG
+      prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
       EMSG( "NOT found @ level %u / %u cmd '%s'", level, found->only_level, question );
-#endif
-#ifdef MAS_LOG
       MAS_LOG( "NOT found @ level %u / %u cmd '%s'", level, found->only_level, question );
-#endif
       answer = mas_strdup( question );
     }
     else
     {
       tMSG( "evaluating %s ( %s )", question, args );
-#ifdef MAS_LOG
       MAS_LOG( "evaluating %s ( %s )", question, args );
-#endif
       answer = mas_evaluate_command( 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
     }
   }
   else
   {
-      prcontrol->qbin= MSG_BIN_UNKNOWN_COMMAND;
-#ifdef MAS_LOG
+    prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
     MAS_LOG( "NO question, no answer" );
-#endif
-#ifdef EMSG
     EMSG( "NOT FOUND; question:'%s'", question );
-#endif
   }
   return answer;
 }

@@ -173,13 +173,11 @@ mas_channel_deaf( mas_channel_t * pchannel )
         if ( pchannel->fd_socket > 0 )
         {
           r = mas_close( pchannel->fd_socket );
-#ifdef EMSG
           if ( r < 0 )
           {
             EMSG( "deaf err" );
             P_ERR;
           }
-#endif
           if ( r == 0 )
           {
             pchannel->fd_socket = 0;
@@ -193,22 +191,13 @@ mas_channel_deaf( mas_channel_t * pchannel )
         pchannel->listening = 0;
     }
   }
-  else
-  {
-#ifdef EMSG
-    if ( r < 0 )
-    {
-      EMSG( "deaf err" );
-      P_ERR;
-    }
-#endif
-  }
-#ifdef EMSG
   if ( r < 0 )
   {
-    EMSG( "deaf err" );
+    if ( errno )
+    {
+      EMSG( "deaf err" );
+    }
     P_ERR;
   }
-#endif
   return r;
 }

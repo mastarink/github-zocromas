@@ -269,9 +269,9 @@ mas_atexit( void )
 {
   extern unsigned long memory_balance;
 
-  FMSG( "\nAT EXIT\n" );
+  FMSG( "AT EXIT" );
   mas_destroy_server(  );
-  FMSG( "\n\n\nAT EXIT, memory_balance:%ld", memory_balance );
+  FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
 #ifdef MAS_TRACEMEM
   print_memlist( FL );
 #endif

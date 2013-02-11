@@ -204,7 +204,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
     }
     if ( opts.f.bit.msg_funline )
     {
-      MFP( " L%3d:%-25s:", line, func );
+      MFP( " L%03d:%-25s:", line, func );
       /* MFP( "\t" ); */
     }
     else

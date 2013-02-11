@@ -121,7 +121,7 @@ mas_destroy_server( void )
   if ( ctrl.lcontrols_list )
   {
     MAS_LOG( "to cancel listeners" );
-    FMSG( "\nTO CANCEL LISTENERS" );
+    FMSG( "TO CANCEL LISTENERS" );
     mas_listeners_cancel(  );
   }
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
@@ -136,10 +136,10 @@ mas_destroy_server( void )
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
-  FMSG( "\nTO STOP LOGGER" );
+  FMSG( "TO STOP LOGGER" );
   mas_logger_stop(  );
-  FMSG( "\nTO STOP TICKER" );
+  FMSG( "TO STOP TICKER" );
   mas_ticker_stop(  );
   MAS_LOG( "destroy server done" );
-  FMSG( "\nDESTROY SERVER DONE" );
+  FMSG( "DESTROY SERVER DONE" );
 }

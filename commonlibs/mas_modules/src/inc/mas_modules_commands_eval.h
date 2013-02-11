@@ -9,7 +9,5 @@ char *mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t
 
 char *list_commands_cmd( STD_CMD_ARGS );
 
-/* char *mas_evaluate_cmd( STD_CMD_ARGS_BASE, mas_rcontrol_t * prcontrol, mas_cmd_t ** pcommand ); */
-
 #  undef MAS_WEAK
 #endif

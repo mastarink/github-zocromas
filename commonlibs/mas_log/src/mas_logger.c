@@ -13,6 +13,8 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -172,7 +174,7 @@ mas_logger_cleanup( void *arg )
 {
   ctrl.keep_logging = 0;
 #ifdef FMSG
-  FMSG( "\nTO FLUSH LOGGER" );
+  FMSG( "TO FLUSH LOGGER" );
 #endif
   ctrl.log_disabled = 1;
   mas_logger_flush(  );
@@ -180,7 +182,7 @@ mas_logger_cleanup( void *arg )
   mas_logger_close(  );
   MAS_LOG( "logger cleanup" );
 #ifdef FMSG
-  FMSG( "\nLOGGER CLEANUP DONE" );
+  FMSG( "LOGGER CLEANUP DONE" );
 #endif
 }
 
@@ -205,7 +207,7 @@ mas_logger_th( void *arg )
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
 #ifdef FMSG
-  FMSG( "\nLOGGER STOP\n" );
+  FMSG( "LOGGER STOP" );
 #endif
   mas_pthread_exit( NULL );
   return NULL;
@@ -295,7 +297,7 @@ mas_logger_flush( void )
 
     /* if ( ctrl.log_disabled )                                                                                         */
     /* {                                                                                                                */
-    /*   FMSG( "\nLOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
+    /*   FMSG( "LOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
     /* }                                                                                                                */
 
     r = 0;
@@ -303,7 +305,7 @@ mas_logger_flush( void )
   if ( ctrl.log_disabled )
   {
 #ifdef FMSG
-    FMSG( "\nLOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
+    FMSG( "LOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
 #endif
   }
   return r;

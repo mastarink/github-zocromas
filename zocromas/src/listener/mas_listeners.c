@@ -98,7 +98,7 @@ mas_listeners_stop( void )
   mas_listeners_cancel(  );
   mas_listeners_wait(  );
 #ifdef FMSG
-  FMSG( "\nl's STOPPED" );
+  FMSG( "l's STOPPED" );
 #endif
   return 0;
 }
@@ -111,7 +111,7 @@ mas_listeners_cancel( void )
     mas_lcontrol_t *plcontrol = NULL;
 
 #ifdef FMSG
-    FMSG( "\nCANCEL l's" );
+    FMSG( "CANCEL l's" );
 #endif
     MAS_LOG( "cancelling listeners" );
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
@@ -139,7 +139,7 @@ mas_listeners_wait( void )
   }
   ctrl.status = MAS_STATUS_STOP;
 #ifdef FMSG
-  FMSG( "\nl's STOPPED" );
+  FMSG( "l's STOPPED" );
 #endif
   /* ??????????? */
   /* mas_lcontrols_clean_list( 0 ); */

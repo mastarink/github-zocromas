@@ -153,7 +153,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   int r = -1;
 
   MAS_LOG( "starting transaction xch" );
-  rMSG( "@@@@@@@@@@ starting transaction" );
+  rMSG( "starting transaction" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
     char *data = NULL;
@@ -182,13 +182,10 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       r = 0;
       for ( int np = 0; np < ctrl.protos_num; np++ )
       {
-        EMSG( "(r:%d)@@@@@@@@@@(pr->id:%u) proto id:%u : %p", r, prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1,
-              ctrl.proto_descs[np].proto_id, ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );
-        EMSG( "@@@@@@@@@r:%d T:%s; C:%s", r, prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", ctrl.proto_descs[np].name );
         if ( r == 0 || prcontrol->proto_desc == &ctrl.proto_descs[np] )
         {
-          EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1, ctrl.proto_descs[np].proto_id,
-                ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );
+          /* EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1, ctrl.proto_descs[np].proto_id, */
+          /*       ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );                                                           */
           r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], data );
           if ( r > 0 )
             prcontrol->proto_desc = &ctrl.proto_descs[np];

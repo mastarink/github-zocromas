@@ -86,9 +86,7 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
     /* tMSG( "joined th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) plcontrol->h.thread ); */
     /* thMSG( "joined M0:%u & L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->h.status ); */
     r = 0;
-#ifdef FMSG
-    FMSG( "\nLISTENER %lu STOPPED", plcontrol->h.serial );
-#endif
+    FMSG( "LISTENER %lu STOPPED", plcontrol->h.serial );
   }
   return r;
 }
@@ -159,17 +157,13 @@ mas_listener_start( char *host_port, unsigned port )
     }
     else
     {
-#ifdef EMSG
       P_ERR;
       EMSG("why?");
-#endif
     }
   }
   else
   {
-#ifdef EMSG
     EMSG( "no host defined" );
-#endif
   }
   return r;
 }
@@ -194,9 +188,7 @@ mas_listener_cancel( mas_lcontrol_t * plcontrol )
 #endif
 
   /* thMSG( "CANCEL th %lx", ( unsigned long ) plcontrol->h.thread ); */
-#ifdef EMSG
-  EMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->h.serial, plcontrol->h.status, ( void * ) plcontrol, plcontrol->h.thread );
-#endif
+  FMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->h.serial, plcontrol->h.status, ( void * ) plcontrol, plcontrol->h.thread );
   MAS_LOG( "cancelling L%lu:%u", plcontrol->h.serial, plcontrol->h.status );
   if ( plcontrol->h.thread )
     mas_pthread_cancel( plcontrol->h.thread );
@@ -223,9 +215,7 @@ mas_listener_cleanup( void *arg )
   }
   else
   {
-#ifdef EMSG
-    EMSG( "!" );
-#endif
+    EMSG( "listener cleanup - NO plcontrol" );
     MAS_LOG( "listener cleanup - NO plcontrol" );
   }
   /* thMSG( "cleanup for l/th %lx", mas_pthread_self(  ) ); */
@@ -285,9 +275,7 @@ mas_listener_th( void *arg )
     /* host = ( char * ) arg ? arg : "localhost"; */
     if ( !plcontrol->host )
     {
-#ifdef EMSG
       EMSG( "host not set" );
-#endif
       MAS_LOG( "listener: host not set" );
     }
     plcontrol->h.status = MAS_STATUS_START;
@@ -313,9 +301,7 @@ mas_listener_th( void *arg )
 
   /* mas_lcontrols_delete( plcontrol );  ---> done at mas_listener_cleanup ?!?! */
 
-#ifdef FMSG
-  FMSG( "\nLISTENER STOP" );
-#endif
+  FMSG( "LISTENER STOP" );
   mas_pthread_exit( NULL );
   return NULL;
 }

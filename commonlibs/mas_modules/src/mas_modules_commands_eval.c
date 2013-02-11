@@ -78,7 +78,7 @@ universal_complex_cmd( STD_CMD_ARGS )
     if ( this_command->subtable )
     {
       /* MAS_LOG( "(%s) UNI command table %p", this_command->name, ( void * ) this_command->subtable ); */
-      EMSG( "(%s) UNI command", this_command->name );
+      tMSG( "UNI command %s", this_command->name );
       MAS_LOG( "UNI command %s", this_command->name );
       question = args;
       args = NULL;
@@ -110,10 +110,10 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
       libname = pcommand->name;
 
     MAS_LOG( "to look for module %s.%s : %p", libname, pcommand->name, ( void * ) ( unsigned long long ) pcommand->function );
-    cMSG( "to look for module %s : %s", libname, pcommand->name );
+    tMSG( "to look for module %s : %s", libname, pcommand->name );
     {
       full_libname = mas_strdup( "mas_cmdmod_" );
-      cMSG( "lib %s + %s", full_libname, libname );
+      tMSG( "lib %s + %s", full_libname, libname );
       MAS_LOG( "lib %s + %s", full_libname, libname );
       full_libname = mas_strcat_x( full_libname, libname );
 
@@ -123,7 +123,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
       {
         cmd_fun = mas_modules_load_cmd_func( full_libname, full_fun_name );
         loaded_subtable = mas_modules_load_subtable( full_libname );
-        cMSG( "cmd_fun %s.%s: %p", full_libname, full_fun_name, ( void * ) ( unsigned long long ) cmd_fun );
+        tMSG( "cmd_fun %s.%s: %p", full_libname, full_fun_name, ( void * ) ( unsigned long long ) cmd_fun );
         MAS_LOG( "loading  func. %s:%s => func:%p subt:%p", full_libname, full_fun_name, ( void * ) ( unsigned long ) cmd_fun,
                  ( void * ) loaded_subtable );
         if ( !cmd_fun )
@@ -132,7 +132,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
           {
             cmd_fun = universal_complex_cmd;
             MAS_LOG( "universal command for %s {%p}", libname, ( void * ) ( unsigned long ) cmd_fun );
-            cMSG( "universal command for %s.%s", full_libname, full_fun_name );
+            tMSG( "universal command for %s.%s", full_libname, full_fun_name );
           }
           else
           {
@@ -142,7 +142,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
         mas_free( full_fun_name );
       }
     }
-    cMSG( "cmd_fun:%p", ( void * ) ( unsigned long ) cmd_fun );
+    tMSG( "cmd_fun:%p", ( void * ) ( unsigned long ) cmd_fun );
     if ( cmd_fun )
     {
       if ( pcommand )
@@ -251,17 +251,17 @@ mas_evaluate_command( STD_CMD_ARGS )
       r = mas_missing_funsetup( this_command );
       MAS_LOG( "evaluate : missing function - '%s' args: '%s'", this_command->name, args );
     }
-    cMSG( "(%d) function:%p", r, ( void * ) ( unsigned long long ) this_command->function );
+    tMSG( "(%d) function:%p", r, ( void * ) ( unsigned long long ) this_command->function );
     if ( r >= 0 && this_command->function )
     {
-      cMSG( "eval %d. %s : %p : %d", this_command->id, this_command->name,
+      tMSG( "eval %d. %s : %p : %d", this_command->id, this_command->name,
             ( void * ) ( unsigned long long ) ( this_command->function ), this_command->function == universal_complex_cmd );
       /* EVALUATING COMMAND */
       answer = ( this_command->function ) ( STD_CMD_PASS );
-      cMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol->qbin, ctrl.do_quit );
+      tMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol->qbin, ctrl.do_quit );
       if ( MAS_VALID_ANSWER( answer ) )
       {
-        cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" );
+        /* cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" ); */
         MAS_LOG( "(lev.%d) evaluated: %s(%s); answer: '%s'", level, this_command->name, args, level == 1 ? answer : "SKIPPED" );
       }
     }

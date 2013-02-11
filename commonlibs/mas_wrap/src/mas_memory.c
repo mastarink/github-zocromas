@@ -154,12 +154,12 @@ print_memlist( const char *func, int line )
     if ( memar[im] )
     {
       if ( !h++ )
-        fprintf( stderr, "\n%s:%d MEMORY TABLE", func, line );
-      fprintf( stderr, "\nid: %lx; sz:%lu; %s:%u", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line );
+        fprintf( stderr, "%s:%d MEMORY TABLE\n", func, line );
+      fprintf( stderr, "id: %lx; sz:%lu; %s:%u\n", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line );
     }
   }
   if ( !h )
-    fprintf( stderr, "\nEMPTY MEMORY TABLE" );
+    fprintf( stderr, "** EMPTY MEMORY TABLE **\n" );
 }
 
 void *

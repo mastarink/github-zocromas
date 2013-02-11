@@ -150,13 +150,13 @@ mas_atexit( void )
 
 #ifdef FMSG
   extern unsigned long memory_balance;
-  FMSG( "\nAt exit, memory_balance:%lu", memory_balance );
+  FMSG( "At exit, memory_balance:%lu", memory_balance );
 #endif
   print_memlist( FL );
 #else
 
 #ifdef FMSG
-  FMSG( "\nAt exit." );
+  FMSG( "At exit." );
 #endif
 
 #endif
