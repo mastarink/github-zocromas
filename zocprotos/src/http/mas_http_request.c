@@ -56,7 +56,8 @@ mas_proto_http_create_request( mas_rcontrol_t * prcontrol )
 }
 
 mas_http_t *
-mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http, const char *smessage )
+mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * proto_desc, mas_http_t * http,
+                              const char *smessage )
 {
   const char *pstring;
 
@@ -67,6 +68,8 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http, con
   /* if ( 0 == strncasecmp( pstring, "http:", 5 ) || 0 == strncasecmp( pstring, "https:", 6 ) ) */
   if ( http )
   {
+    int good = 0;
+
     http->smethod = mas_proto_http_nonblank( pstring, &pstring );
     /* EMSG( "@@>>>@@@@@@@@@@@ s3: %x", *( ( unsigned * ) http->smethod ) ); */
     MAS_LOG( "http parse smethod: %s - %s", http->smethod, pstring );
@@ -76,14 +79,18 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http, con
     MAS_LOG( "URI: %s", http->URI );
     MAS_LOG( "http parse URI: %s", http->URI );
     http->protocol_name = mas_proto_http_nonc( pstring, &pstring, " /" );
-    MAS_LOG( "http parse protocol: %s", http->protocol_name );
+    MAS_LOG( "http to parse protocol: %s", http->protocol_name );
     if ( http->protocol_name && ( 0 == strcmp( http->protocol_name, "HTTP" ) || 0 == strcmp( http->protocol_name, "HTTPS" ) ) )
-      prcontrol->proto = MAS_TRANSACTION_PROTOCOL_HTTP;
-    else if ( http->URI && *http->URI == '/' && http->imethod != MAS_HTTP_METHOD_NONE  && http->imethod != MAS_HTTP_METHOD_BAD )
-      prcontrol->proto = MAS_TRANSACTION_PROTOCOL_HTTP;
-    MAS_LOG( "http parse protocol: %s === %s", mas_rcontrol_protocol_name( prcontrol ), http->protocol_name );
-    if ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_HTTP )
+      good = 1;
+    else if ( http->URI && *http->URI == '/' && http->imethod != MAS_HTTP_METHOD_NONE && http->imethod != MAS_HTTP_METHOD_BAD )
+      good = 1;
+    if ( good )
     {
+      prcontrol->proto_desc = proto_desc;
+      MAS_LOG( "good (1), http parsed protocol: %s === %s", prcontrol
+               && proto_desc ? proto_desc->name : "?", http->protocol_name );
+      MAS_LOG( "good (2), http parsed protocol: %s === %s", prcontrol
+               && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );
       if ( pstring && *pstring == '/' )
         pstring++;
       http->sversion = mas_proto_http_nonblank( pstring, &pstring );
@@ -127,6 +134,11 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http, con
           break;
         }
       }
+    }
+    else
+    {
+      mas_proto_http_delete_request( http );
+      http = NULL;
     }
   }
   /* else                                          */

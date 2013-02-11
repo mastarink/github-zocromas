@@ -132,6 +132,20 @@ mas_master_th( void *arg )
   return NULL;
 }
 
+
+/*
+Creating a daemon
+   1 Create a normal process (Parent process)
+   2 Create a child process from within the above parent process
+   3 The process hierarchy at this stage looks like :  TERMINAL -> PARENT PROCESS -> CHILD PROCESS
+   4 Terminate the the parent process.
+   5 The child process now becomes orphan and is taken over by the init process.
+   6 Call setsid() function to run the process in new session and have a new group.
+   7 After the above step we can say that now this process becomes a daemon process without having a controlling terminal.
+   8 Change the working directory of the daemon process to root and close stdin, stdout and stderr file descriptors.
+   9 Let the main logic of daemon process run.
+*/
+
 /*
  * logger + ticker = 179
  * logger = 107

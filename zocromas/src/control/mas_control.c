@@ -53,10 +53,15 @@ mas_ctrl_destroy( void )
   mas_del_argv( ctrl.commands_num, ctrl.commands, 0 );
   ctrl.commands_num = 0;
   ctrl.commands = NULL;
-  if ( ctrl.protos )
-    mas_free( ctrl.protos );
+
+
+  for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
+    if ( ctrl.proto_descs[ipd].name )
+      mas_free( ctrl.proto_descs[ipd].name );
+  if ( ctrl.proto_descs )
+    mas_free( ctrl.proto_descs );
   ctrl.protos_num = 0;
-  ctrl.protos = NULL;
+  ctrl.proto_descs = NULL;
 }
 
 void

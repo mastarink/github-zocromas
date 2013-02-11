@@ -81,10 +81,10 @@ mas_client( const char *host_port )
 
 
 
-  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zoc_romas" ) < 0 ) */
-  /* {                                                              */
-  /*   P_ERR;                                                       */
-  /* }                                                              */
+  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocromas-client" ) < 0 ) */
+  /* {                                                                    */
+  /*   P_ERR;                                                             */
+  /* }                                                                    */
   HMSG( "CLIENT" );
   pchannel = mas_channel_create(  );
   while ( r >= 0 && ctrl.in_client && !ctrl.fatal )

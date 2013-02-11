@@ -16,7 +16,6 @@ mas_server_CFLAGS=${AM_CFLAGS} -pthread \
 	-L../init        -lmas_init \
 	-L../listener    -lmas_listener \
 	-L../transaction -lmas_transaction \
-	-L../http        -lmas_http \
 	-rdynamic
 
 

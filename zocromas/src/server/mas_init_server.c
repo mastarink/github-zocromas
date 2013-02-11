@@ -56,22 +56,23 @@ static mas_transaction_protodesc_t *
 mas_init_load_protos( void )
 {
   int protos_num = 0;
-  mas_transaction_protodesc_t *protos;
+  mas_transaction_protodesc_t *proto_descs;
 
-  /* rMSG( "@@@@@@@@@@ protodir:%s", opts.protodir ); */
-  /* EMSG( "@@@@@@@@@@ protodir:%s", opts.protodir ); */
-  protos = mas_calloc( opts.protos_num, sizeof( void * ) );
+  rMSG( "@@@@@@@@@@ protodir:%s [%u]", opts.protodir, opts.protos_num );
+  EMSG( "@@@@@@@@@@ protodir:%s [%u]", opts.protodir, opts.protos_num );
+  proto_descs = mas_calloc( opts.protos_num, sizeof( mas_transaction_protodesc_t ) );
   for ( int ipr = 0; ipr < opts.protos_num; ipr++ )
   {
-    protos_num++;
     /* from one */
-    protos[ipr].proto = protos_num;
-    protos[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
-    /* EMSG( "@@@@@@@@@@ proto:%s : %p", opts.protos[ipr], ( void * ) ( unsigned long long ) protos[ipr].function ); */
+    proto_descs[ipr].proto_id = protos_num + 1;
+    proto_descs[ipr].name = mas_strdup( opts.protos[ipr] );
+    proto_descs[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
+    EMSG( "@@@@@@@@@@ %u proto:%s : %p", ipr, opts.protos[ipr], ( void * ) ( unsigned long long ) proto_descs[ipr].function );
+    protos_num++;
   }
   ctrl.protos_num = protos_num;
-  ctrl.protos = protos;
-  return protos;
+  ctrl.proto_descs = proto_descs;
+  return proto_descs;
 }
 
 
@@ -98,7 +99,7 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     fprintf( stderr, "ERROR curses %d\n", r );
     /* exit( 33 ); */
   }
-  if ( !ctrl.protos )
+  if ( !ctrl.proto_descs )
     mas_init_load_protos(  );
 
   mas_threads_init(  );

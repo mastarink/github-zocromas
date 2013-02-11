@@ -105,8 +105,7 @@ mas_watcher( void )
       {
         /* thMSG( "watcher %lu", elapsed_time ); */
         MAS_LOG( "WATCH ==========================================================================================" );
-        MAS_LOG( "WATCH main th: %u [%lx] master th: %u [%lx]", ctrl.main_tid, ctrl.main_thread, ctrl.master_tid,
-                 ctrl.master_thread );
+        MAS_LOG( "WATCH main th: %u [%lx] master th: %u [%lx]", ctrl.main_tid, ctrl.main_thread, ctrl.master_tid, ctrl.master_thread );
         MAS_LOG( "WATCH ticker th: %u [%lx] watcher th: %u [%lx] logger th: %u [%lx]", ctrl.ticker_tid, ctrl.ticker_thread,
                  ctrl.watcher_tid, ctrl.watcher_thread, ctrl.logger_tid, ctrl.logger_thread );
         MAS_LOG( "WATCH clients: {%lu - %lu = %lu};server pid:%u; tid:%5u; [%lx]", ctrl.clients_came, ctrl.clients_gone,
@@ -183,7 +182,7 @@ mas_watcher( void )
               if ( pchannel )
                 sip = mas_ip_string( &pchannel->serv.addr.sin_addr );
 
-              proto_name = mas_rcontrol_protocol_name( prcontrol );
+              proto_name = prcontrol->proto_desc ? prcontrol->proto_desc->name : "?";
               MAS_LOG( "WATCH  >> %u. %s %s:%u;tid:%5u; [%lx] {%lu.%06lu %lu.%06lu I/A:%lu.%06lu} #%u", ntransaction_in_l,
                        proto_name, sip ? sip : "?", pchannel ? pchannel->port : 0, prcontrol->h.tid, prcontrol->h.thread,
                        prcontrol->h.activity_time.tv_sec, prcontrol->h.activity_time.tv_usec, rnow_time.tv_sec, rnow_time.tv_usec,
@@ -191,16 +190,10 @@ mas_watcher( void )
               if ( sip )
                 mas_free( sip );
             }
-            switch ( prcontrol->proto )
+            if ( 0 == strcmp( prcontrol->proto_desc->name, "http" ) && rinactive_time.tv_sec > 10 )
             {
-            case MAS_TRANSACTION_PROTOCOL_XCROMAS:
-              break;
-            case MAS_TRANSACTION_PROTOCOL_HTTP:
-              if ( rinactive_time.tv_sec > 10 )
-                mas_transaction_cancel( prcontrol );
-              break;
-            case MAS_TRANSACTION_PROTOCOL_NONE:
-              break;
+              FMSG( "\nWATCHER : http tr.end!!" );
+              mas_transaction_cancel( prcontrol );
             }
           }
         }

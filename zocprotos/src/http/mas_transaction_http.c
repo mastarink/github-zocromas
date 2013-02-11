@@ -116,7 +116,7 @@ more:
 */
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, const void *string_void )
+mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t *proto_desc, const void *string_void )
 {
   int w = 0;
   mas_http_t *http = NULL;
@@ -142,8 +142,8 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const void *string_void )
   http = mas_proto_http_create_request( prcontrol );
   MAS_LOG( "http?: to parse rq" );
   if ( http )
-    http = mas_proto_http_parse_request( prcontrol, http, string );
-  MAS_LOG( "http?: parsed rq : %s", mas_rcontrol_protocol_name( prcontrol ) );
+    http = mas_proto_http_parse_request( prcontrol, proto_desc, http, string );
+  MAS_LOG( "http?: parsed rq : %s", prcontrol && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
 
   MAS_LOG( "http: to make docroot" );
   if ( http )

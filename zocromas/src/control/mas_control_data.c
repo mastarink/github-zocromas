@@ -92,7 +92,7 @@ mas_control_t ctrl = {
   .maxclients = 0,
   .maxtrtime = 0.0,
 
-  .protos = NULL,
+  .proto_descs = NULL,
 
   .logpath = NULL,
   .logfile = NULL,

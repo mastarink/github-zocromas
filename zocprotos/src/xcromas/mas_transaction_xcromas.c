@@ -111,7 +111,7 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 }
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, const void *pheader_void )
+mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t *proto_desc, const void *pheader_void )
 {
   int r = -1;
   const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;
@@ -123,7 +123,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const void *pheader_void )
 
     memset( &header_copy, 0, sizeof( header_copy ) );
     MAS_LOG( "xcromas session" );
-    prcontrol->proto = MAS_TRANSACTION_PROTOCOL_XCROMAS;
+    /* prcontrol->proto = MAS_TRANSACTION_PROTOCOL_XCROMAS; */
     if ( pheader_data )
     {
       header_copy = *pheader_data;

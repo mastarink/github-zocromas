@@ -179,16 +179,19 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     if ( r >= 0 && data )
     {
       prcontrol->h.status = MAS_STATUS_WORK;
-
+      r = 0;
       for ( int np = 0; np < ctrl.protos_num; np++ )
       {
-        EMSG( "(%d)@@@@@@@@@@(%u) proto:%u : %p", r, prcontrol->proto, ctrl.protos[np].proto,
-              ( void * ) ( unsigned long long ) ctrl.protos[np].function );
-        if ( r > 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == ctrl.protos[np].proto ) )
+        EMSG( "(r:%d)@@@@@@@@@@(pr->id:%u) proto id:%u : %p", r, prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1,
+              ctrl.proto_descs[np].proto_id, ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );
+        EMSG( "@@@@@@@@@r:%d T:%s; C:%s", r, prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", ctrl.proto_descs[np].name );
+        if ( r == 0 || prcontrol->proto_desc == &ctrl.proto_descs[np] )
         {
-          EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto, ctrl.protos[np].proto,
-                ( void * ) ( unsigned long long ) ctrl.protos[np].function );
-          r = ( ctrl.protos[np].function ) ( prcontrol, data );
+          EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1, ctrl.proto_descs[np].proto_id,
+                ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );
+          r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], data );
+          if ( r > 0 )
+            prcontrol->proto_desc = &ctrl.proto_descs[np];
         }
       }
 
@@ -206,7 +209,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     if ( data )
       mas_free( data );
   }
-  if ( prcontrol && prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE )
+  if ( prcontrol && ( !prcontrol->proto_desc || prcontrol->proto_desc->proto_id == 0 ) )
   {
     prcontrol->keep_alive = 0;
     MAS_LOG( "KA => %u", prcontrol->keep_alive );
@@ -264,7 +267,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         mas_pthread_mutex_unlock( &ctrl.thglob.cnttr3_mutex );
         prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
-        MAS_LOG( "end tr. keep-alive block, %s", mas_rcontrol_protocol_name( prcontrol ) );
+        MAS_LOG( "end tr. keep-alive block, %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
       }
       prcontrol->h.status = MAS_STATUS_STOP;
     }

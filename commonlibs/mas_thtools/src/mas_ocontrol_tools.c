@@ -39,26 +39,26 @@ mas_sstatus( mas_status_t status )
   return NULL;
 }
 
-const char *
-mas_rcontrol_protocol_name( mas_rcontrol_t * prcontrol )
-{
-  const char *p = NULL;
-
-  if ( prcontrol )
-    switch ( prcontrol->proto )
-    {
-    case MAS_TRANSACTION_PROTOCOL_NONE:
-      p = "NONE";
-      break;
-    case MAS_TRANSACTION_PROTOCOL_XCROMAS:
-      p = "XCRO_MAS";
-      break;
-    case MAS_TRANSACTION_PROTOCOL_HTTP:
-      p = "HTTP_MAS";
-      break;
-    default:
-      p = "UNKNOWN";
-      break;
-    }
-  return p;
-}
+/* const char *                                             */
+/* mas_rcontrol_protocol_name( mas_rcontrol_t * prcontrol ) */
+/* {                                                        */
+/*   const char *p = NULL;                                  */
+/*                                                          */
+/*   if ( prcontrol )                                       */
+/*     switch ( prcontrol->proto )                          */
+/*     {                                                    */
+/*     case MAS_TRANSACTION_PROTOCOL_NONE:                  */
+/*       p = "NONE";                                        */
+/*       break;                                             */
+/*     case MAS_TRANSACTION_PROTOCOL_XCROMAS:               */
+/*       p = "XCRO_MAS";                                    */
+/*       break;                                             */
+/*     case MAS_TRANSACTION_PROTOCOL_HTTP:                  */
+/*       p = "HTTP_MAS";                                    */
+/*       break;                                             */
+/*     default:                                             */
+/*       p = "UNKNOWN";                                     */
+/*       break;                                             */
+/*     }                                                    */
+/*   return p;                                              */
+/* }                                                        */

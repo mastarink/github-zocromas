@@ -133,8 +133,8 @@ info_cmd( STD_CMD_ARGS )
               sip = mas_ip_string( &pchannel->cli.addr.sin_addr );
           }
 
-          snprintf( cp, szbuf - ( cp - buf ), "\t\t\t%u(s%lu). %s %s \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
-                    prcontrol->h.serial, sip ? sip : "?", mas_rcontrol_protocol_name( prcontrol ),
+          snprintf( cp, szbuf - ( cp - buf ), "\t\t\t%u(s%lu). [<%s>] %s \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
+                    prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
                     prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
                     pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
                     prcontrol->xch_cnt );

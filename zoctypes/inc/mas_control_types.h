@@ -107,7 +107,7 @@ struct mas_control_s
   int argv_nonoptind;
 
   size_t protos_num;
-  mas_transaction_protodesc_t *protos;
+  mas_transaction_protodesc_t *proto_descs;
 
   mas_stamp_t stamp;
 
