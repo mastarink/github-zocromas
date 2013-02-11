@@ -3,3 +3,6 @@ test/
 bcromas
 misc/
 boxes/
+log/
+tmp/
+configure.ac.2*
