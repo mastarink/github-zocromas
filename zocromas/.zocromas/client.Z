@@ -1,0 +1,17 @@
+env_optsname=MAS_ZOCROMAS_DEFOPTS
+env_hostname=MAS_ZOCROMAS_DEFHOST
+logdir=/mnt/miscn/mastar/develop/autotools/zocromas/log
+configdir=/home/mastar/.zocromas/
+configfilename=client
+max_config_backup=5
+default_port=5000
+disconnect_prompt=0
+wait_server=0
+
+[hosts=4]
+host=zocromas.mastar.lan:5002
+host=zocromas.mastar.lan:5007
+host=zocromas.mastar.lan:5004
+host=zocromas.mastar.lan:5002
+
+command=get server info

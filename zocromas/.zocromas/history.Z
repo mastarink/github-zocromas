@@ -1,0 +1,17 @@
+bye
+exit
+get client info
+get mem info
+get mim anfo
+get mim info
+get server info
+pwd
+quit
+reconnect
+restart
+server listener remove zocromas.mastar.lan 5003
+server listener remove zocromas.mastar.lan 5004
+set msg off
+set msg on
+system cal
+system date
