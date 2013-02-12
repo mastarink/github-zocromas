@@ -77,6 +77,7 @@ mas_options_t opts = {
   .wait_server = 0,
   .listener_single = 0,
   .transaction_single = 0,
+  .noclose_std = 0,
   .nologger = 0,
   .nolog = 0,
   .noticker = 0,

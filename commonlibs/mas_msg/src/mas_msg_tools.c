@@ -39,6 +39,20 @@ more:
 
 */
 
+int
+mas_msg_set_file( const char *path )
+{
+  if ( ctrl.msgfile )
+  {
+    fclose( ctrl.msgfile );
+    ctrl.msgfile = NULL;
+  }
+  if ( path )
+  {
+    ctrl.msgfile = fopen( path, "a" );
+  }
+  return 0;
+}
 
 static int
 __mas_msg( const char *func, int line, int allow, int is_trace, int details, int msgcolor, const char *prefix_fmt,
@@ -55,6 +69,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
   pthread_t pth = 0;
   mas_lcontrol_t *plcontrol = NULL;
   mas_rcontrol_t *prcontrol = NULL;
+
   /* const mas_channel_t *pchannel = NULL; */
 
   w_win = w_other;
@@ -230,13 +245,13 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
       if ( use_curses )
       {
         /* MFP( prefix_fmt ? prefix_fmt : " %s   ", prefix ); */
-        MFP( "%-15s", message );
+        MFP( "%-20s", message );
         MFP( "   %s", suffix ? suffix : "" );
       }
       else
       {
         MFP( prefix_fmt ? prefix_fmt : " \x1b[1;43;33m%s\x1b[0m   ", prefix );
-        MFP( "\x1b[K%-15s", message );
+        MFP( "\x1b[K%-20s", message );
         MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
       }
     }
@@ -261,6 +276,7 @@ mas_msg( const char *func, int line, int allow, int is_trace, int details, int m
 {
   int r = 0;
   va_list args;
+
   /* mas_channel_t *pchannel = NULL; */
 
   va_start( args, fmt );
@@ -326,6 +342,7 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
 
   mas_lcontrol_t *plcontrol = NULL;
   mas_rcontrol_t *prcontrol = NULL;
+
   /* mas_channel_t *pchannel = NULL; */
 
   pid_t pid;

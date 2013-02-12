@@ -89,7 +89,7 @@ mas_ticker( void )
     if ( !ctrl.stamp.start_time )
       ctrl.stamp.start_time = ( unsigned long ) time( NULL );
 
-    if ( itick % MUL == 0 && !ctrl.ticker_hide )
+    if ( itick % MUL == 0 && !ctrl.ticker_hide && ( unsigned long ) time( NULL ) - ctrl.sigint_time > 5 )
     {
       /* extern char edata, end; */
       int l1 = 0, l2 = 0;

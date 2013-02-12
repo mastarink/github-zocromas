@@ -36,24 +36,35 @@ more:
 */
 
 
-void
+int
 mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
 {
-  int k;
+  int r = 0;
 
+  HMSG( "INIT CLIENT" );
 #ifndef MAS_CLIENT_LOG
   ctrl.log_disabled = 1;
 #endif
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_client = 1;
   ctrl.is_server = 0;
-  mas_pre_init( argc, argv, env );
+  r = mas_pre_init( argc, argv, env );
 
-  k = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
-  if ( k <= 0 )
-    k = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
-  mas_init( atexit_fun, initsig, argc, argv, env );
-  mas_client_init_readline(  );
+  if ( r >= 0 )
+  {
+    r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
+    if ( r <= 0 )
+      r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+  }
+  HMSG( "-> INIT" );
+  if ( r >= 0 )
+    r = mas_init( atexit_fun, initsig, argc, argv, env );
+  HMSG( "<- INIT" );
+  if ( r >= 0 )
+    r = mas_client_init_readline(  );
+  if ( r >= 0 )
+  r = mas_post_init( argc, argv, env );
+  return r;
 }
 
 void

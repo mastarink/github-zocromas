@@ -101,21 +101,24 @@ mas_modules_commands( STD_CMD_ARGS )
   else if ( !level )
   {
     MAS_LOG( "empty command; level %d", level );
-    prcontrol->qbin = MSG_BIN_EMPTY_COMMAND;
+    if ( prcontrol )
+      prcontrol->qbin = MSG_BIN_EMPTY_COMMAND;
   }
 
   if ( found )
   {
     if ( found->unknown )
     {
-      prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
+      if ( prcontrol )
+        prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
       EMSG( "NOT found cmd '%s'", question );
       MAS_LOG( "NOT found cmd '%s'", question );
       answer = mas_strdup( question );
     }
     else if ( found->only_level && found->only_level != level )
     {
-      prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
+      if ( prcontrol )
+        prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
       EMSG( "NOT found @ level %u / %u cmd '%s'", level, found->only_level, question );
       MAS_LOG( "NOT found @ level %u / %u cmd '%s'", level, found->only_level, question );
       answer = mas_strdup( question );
@@ -124,12 +127,13 @@ mas_modules_commands( STD_CMD_ARGS )
     {
       tMSG( "evaluating %s ( %s )", question, args );
       MAS_LOG( "evaluating %s ( %s )", question, args );
-      answer = mas_evaluate_command( 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
+      answer = mas_evaluate_cmd( 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
     }
   }
   else
   {
-    prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
+    if ( prcontrol )
+      prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
     MAS_LOG( "NO question, no answer" );
     EMSG( "NOT FOUND; question:'%s'", question );
   }

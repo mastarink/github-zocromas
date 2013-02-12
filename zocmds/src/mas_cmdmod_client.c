@@ -33,28 +33,9 @@ related:
   mas_modules_commands_eval.c
 */
 
-static char *
-get_client_info_cmd( STD_CMD_ARGS )
-{
-  char *sr;
-  char *buf;
-  size_t bufsz;
-
-  bufsz = 1024 * 10;
-  buf = mas_malloc( bufsz );
-
-#ifdef MAS_USE_SERVER_TOOLS
-  snprintf( buf, bufsz, "Clients:%u", mas_clients_count( prcontrol ) );
-#endif
-  sr = mas_strdup( buf );
-  mas_free( buf );
-  return sr;
-}
 
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
-  ,
-  {1, "info", get_client_info_cmd, NULL} /* get client info */
   ,
   {999, NULL, NULL, NULL}
 };

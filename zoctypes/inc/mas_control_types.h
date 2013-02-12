@@ -63,6 +63,7 @@ struct mas_control_s
   int saved_stderr;
   FILE *saved_stderr_file;
   int saved_stdout;
+  FILE *msgfile;
 
   unsigned int_cnt;
   unsigned term_cnt;
@@ -76,6 +77,7 @@ struct mas_control_s
   unsigned is_server:1;
   unsigned messages:1;
   unsigned daemon:1;
+  unsigned noclose_std:1;
   unsigned keep_listening:1;
   unsigned keep_logging:1;
   unsigned stop_listeners:1;
@@ -93,7 +95,6 @@ struct mas_control_s
   unsigned watcher_stop:1;
 
   mas_pthread_globals_t thglob;
-
 
   unsigned long listener_serial;
   /* unsigned npthclients; */
@@ -122,6 +123,7 @@ struct mas_control_s
   unsigned long xch_cnt;
   unsigned long maxclients;
   double maxtrtime;
+  unsigned long sigint_time;
   char *logpath;
   FILE *logfile;
   unsigned log_disabled:1;

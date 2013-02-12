@@ -40,7 +40,7 @@ more:
 */
 
 
-void
+int
 mas_threads_init( void )
 {
   mas_in_thread( MAS_THREAD_MAIN, NULL, NULL );
@@ -114,6 +114,7 @@ mas_threads_init( void )
   }
   ctrl.main_thread = pthread_self(  );
   ctrl.main_tid = mas_gettid(  );
+  return 0;
 }
 
 void

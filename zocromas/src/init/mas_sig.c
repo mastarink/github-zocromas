@@ -45,7 +45,7 @@ sigusr2_han( int s )
 
 
 
-void
+int
 mas_init_sig( void )
 {
 #if 0
@@ -118,6 +118,7 @@ mas_init_sig( void )
   /* sigaction( SIGHUP, SIG_DFL, NULL ); */
   /* sigaction( SIGTERM, SIG_DFL, NULL ); */
 #endif
+  return 0;
 }
 
 void

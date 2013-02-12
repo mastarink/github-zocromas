@@ -92,6 +92,7 @@ mas_lcontrol_register( mas_lcontrol_t * plcontrol )
   if ( ctrl.lcontrols_list )
   {
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
+    HMSG( "REG. LISTENER CTRL" );
     pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
     MAS_LIST_ADD( ctrl.lcontrols_list, plcontrol, next );
     plcontrol->in_list = 1;
@@ -120,6 +121,7 @@ mas_lcontrol_make( const char *host, unsigned port )
 {
   mas_lcontrol_t *plcontrol = NULL;
 
+  HMSG( "LISTENER CTRL MAKE" );
   /* thMSG( ">C l/th ['%s':%u]", host, port ); */
   plcontrol = mas_lcontrol_create(  );
   if ( plcontrol )

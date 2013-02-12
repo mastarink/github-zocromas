@@ -60,10 +60,16 @@ mas_listeners_start( void )
 {
   int r = 0;
 
-  MAS_LOG( "to start listeners" );
-  thMSG( "to start listeners" );
-  if ( !opts.nolistener )
+  if ( opts.nolistener )
   {
+    MAS_LOG( "stopped run w/o listeners" );
+    sleep( opts.nolistener );
+  }
+  else
+  {
+    MAS_LOG( "to start listeners" );
+    thMSG( "to start listeners" );
+    HMSG( "LISTENERS START" );
     for ( unsigned ith = 0; ith < opts.hosts_num; ith++ )
     {
       if ( opts.hosts[ith] )
@@ -84,10 +90,6 @@ mas_listeners_start( void )
         break;
     }
     ctrl.status = MAS_STATUS_WAIT;
-  }
-  else
-  {
-    MAS_LOG( "stopped run w/o listeners" );
   }
   return r;
 }
@@ -132,6 +134,7 @@ mas_listeners_wait( void )
   mas_lcontrol_t *plcontrol = NULL;
 
   MAS_LOG( "to wait for listeners to stop ..." );
+  thMSG( "to wait for listeners to stop ..." );
   while ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) && ( plcontrol = MAS_LIST_FIRST( ctrl.lcontrols_list ) )
           && mas_listener_wait( plcontrol ) == 0 )
   {

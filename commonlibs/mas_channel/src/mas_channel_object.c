@@ -229,9 +229,8 @@ _mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, con
 {
   int r = 0;
 
-  MAS_LOG( "chn. cr'ing from %s (def.p:%u)", host, port );
-  MAS_LOG( "chn. cr'ed for %s:%u", host, port );
-  mMSG( "host(%lu):%s; port:%d", hostlen, host, port );
+  MAS_LOG( "chn. initing from %s (def.p:%u)", host, port );
+  tMSG( "chn. initing from %s (def.p:%u)", host, port );
 
   if ( mas_channel_test( pchannel ) && !pchannel->opened )
     r = __mas_channel_init( pchannel, is_server, type, host, hostlen, port );

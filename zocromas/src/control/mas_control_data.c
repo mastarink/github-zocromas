@@ -4,8 +4,12 @@
 #include <pthread.h>
 
 /* #include "mas_common.h" */
-#include "mas_global.h"
+/* #include "mas_global.h" */
 #include <mastar/types/mas_control_types.h>
+
+extern unsigned long __MAS_LINK_DATE__;
+extern unsigned long __MAS_LINK_TIME__;
+extern unsigned long __MAS_LINK_TIMESTAMP__;
 
 /*
 this:
@@ -30,6 +34,7 @@ mas_control_t ctrl = {
   .master_tid = 0,
   .ticker_thread = ( pthread_t ) 0,
   .ticker_tid = 0,
+  .sigint_time = 0,
   .watcher_thread = ( pthread_t ) 0,
   .watcher_tid = 0,
   .logger_thread = ( pthread_t ) 0,
@@ -38,6 +43,7 @@ mas_control_t ctrl = {
   .saved_stderr = -1,
   .saved_stderr_file = NULL,
   .saved_stdout = -1,
+  .noclose_std = 0,
   .transactions_time = 0.0,
   .fatal = 0,
 

@@ -109,16 +109,16 @@ if [[ -f "configure.ac" ]] ; then
 
     if [[ "$rname" ]] ; then
        echo "<<< $rname >>>" >&2
-       env | grep MAS_ZOCROMAS >&2
+#      env | grep MAS_ZOCROMAS >&2
 
     # for core dump:
        ulimit -c unlimited
 
   #     make_any && usleep 500000 && clear && exec $srcdir/$rname "$@"
-       echo "to run  $srcdir/$rname" >&2
-       echo "starting $MAS_ZOCROMAS_HERE" >&2
+#      echo "bash:to run  $srcdir/$rname" >&2
+       echo "bash:starting $MAS_ZOCROMAS_HERE" >&2
        make_any && usleep 50000 && exec $srcdir/$rname "$@"
-       echo "$MAS_ZOCROMAS_HERE exited" >&2
+       echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
     fi
   }
 

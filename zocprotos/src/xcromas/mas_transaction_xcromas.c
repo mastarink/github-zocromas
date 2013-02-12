@@ -35,9 +35,6 @@ related:
 static void
 do_quit_server( mas_rcontrol_t * prcontrol )
 {
-  ctrl.keep_listening = 0;
-  prcontrol->keep_alive = 0;
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
   if ( prcontrol )
   {
     if ( ctrl.restart )
@@ -46,8 +43,10 @@ do_quit_server( mas_rcontrol_t * prcontrol )
       prcontrol->qbin = MSG_BIN_QUIT;
     else
       prcontrol->qbin = MSG_BIN_DISCONNECT;
+    prcontrol->keep_alive = 0;
   }
   ctrl.stop_listeners = 1;
+  /* ctrl.watcher_stop = 1; */
 }
 
 static int
@@ -57,7 +56,7 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
   char *answer = NULL;
 
   prcontrol->qbin = MSG_BIN_NONE;
-  answer = mas_evaluate_command( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
+  answer = mas_evaluate_transaction_command( prcontrol, question );
   tMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_quit, ctrl.stop_listeners );
   if ( ctrl.do_quit )
   {

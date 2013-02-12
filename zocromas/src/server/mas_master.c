@@ -1,28 +1,28 @@
 #include "mas_server_def.h"
 #include "mas_basic_def.h"
 
+#include <unistd.h>
 #include <fcntl.h>
 
 #include <pthread.h>
 
-#include <mastar/wrap/mas_lib0.h>
+/* #include <mastar/wrap/mas_lib0.h> */
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
-#include <mastar/tools/mas_tools.h>
+/* #include <mastar/tools/mas_tools.h> */
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-#include <mastar/log/mas_log.h>
 
 #include "mas_ticker.h"
 #include "mas_watcher.h"
 
+#include <mastar/log/mas_log.h>
 #include <mastar/log/mas_logger.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
@@ -75,104 +75,40 @@ threads created:
 
 
 
-void *
-mas_master_th( void *arg )
-{
-  int r = -1;
-
-  ctrl.master_tid = mas_gettid(  );
-  /* mas_malloc(1234); */
-  MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
-  mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );
-
-  if ( ctrl.main_exit && ctrl.main_thread )
-  {
-    mas_pthread_detach( ctrl.main_thread );
-    mas_xpthread_join( ctrl.main_thread );
-    ctrl.main_thread = 0;
-  }
-  if ( ctrl.daemon )
-  {
-    int foutd = -1;
-    int ferrd = -1;
-
-    foutd = mas_open( "daemon_stdout.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777 );
-    ferrd = mas_open( "daemon_stderr.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777 );
-    ctrl.saved_stderr = dup( STDERR_FILENO );
-    ctrl.saved_stderr_file = fdopen( ctrl.saved_stderr, "w" );
-    ctrl.saved_stdout = dup( STDOUT_FILENO );
-    dup2( foutd, STDOUT_FILENO );
-    dup2( ferrd, STDERR_FILENO );
-    mas_close( foutd );
-    mas_close( ferrd );
-  }
-  r = mas_master(  );
-  if ( 0 && ctrl.daemon )
-  {
-    mas_close( STDOUT_FILENO );
-    mas_close( STDERR_FILENO );
-  }
-  /* mas_destroy_server(  ); */
-#ifdef MAS_TRACEMEM
-  extern unsigned long memory_balance;
-
-  mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
-  MAS_LOG( "bunch end, m/b:%lu", memory_balance );
-#endif
-  MAS_LOG( "to stop spec. threads" );
-  FMSG( "TO STOP LOGGER" );
-  mas_logger_stop(  );
-  FMSG( "TO STOP TICKER" );
-  mas_ticker_stop(  );
-  MAS_LOG( "stopped spec. threads" );
-
-  /* mas_watcher_stop(  ); */
-  ctrl.watcher_stop = 1;
-  mas_pthread_exit( NULL );
-  return NULL;
-}
-
-
-/*
-Creating a daemon
-   1 Create a normal process (Parent process)
-   2 Create a child process from within the above parent process
-   3 The process hierarchy at this stage looks like :  TERMINAL -> PARENT PROCESS -> CHILD PROCESS
-   4 Terminate the the parent process.
-   5 The child process now becomes orphan and is taken over by the init process.
-   6 Call setsid() function to run the process in new session and have a new group.
-   7 After the above step we can say that now this process becomes a daemon process without having a controlling terminal.
-   8 Change the working directory of the daemon process to root and close stdin, stdout and stderr file descriptors.
-   9 Let the main logic of daemon process run.
-*/
-
-/*
- * logger + ticker = 179
- * logger = 107
- * ticker =
- * */
 int
 mas_master( void )
 {
   int r = 0;
 
+  HMSG( "MASTER START L:%d T:%d W:%d", !opts.nologger, !opts.noticker, !opts.nowatcher );
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
   if ( !opts.nologger )
+  {
+    HMSG( "LOGGER TO START" );
     mas_logger_start(  );
+  }
   if ( !opts.noticker )
+  {
+    HMSG( "TICKER TO START" );
     mas_ticker_start(  );
+  }
   else
   {
     MAS_LOG( "running w/o ticker" );
   }
+  mMSG( "OOOO" );
   if ( !opts.nowatcher )
+  {
+    HMSG( "WATCHER TO START" );
     mas_watcher_start(  );
+  }
   else
   {
     MAS_LOG( "running w/o watcher" );
   }
+  mMSG( "OOOO" );
   if ( opts.nomaster )
   {
     sleep( opts.nomaster );
@@ -187,11 +123,12 @@ mas_master( void )
     {
       MAS_LOG( "master loop for %d hosts", opts.hosts_num );
       thMSG( "master loop for %d hosts", opts.hosts_num );
-  /* mas_listeners.c */
+      /* mas_listeners.c */
+      mMSG( "OOOO" );
       r = mas_listeners_start(  );
+      mMSG( "OOOO" );
 
-      thMSG( "waiting..." );
-
+      HMSG( "waiting..." );
       r = mas_listeners_wait(  );
 
       thMSG( "(%d) master loop for %d hosts", r, opts.hosts_num );
@@ -223,6 +160,15 @@ mas_master( void )
   }
   if ( opts.exitsleep )
     sleep( opts.exitsleep );
+  MAS_LOG( "to stop spec. threads" );
+  FMSG( "TO STOP LOGGER" );
+  mas_logger_stop(  );
+  FMSG( "TO STOP TICKER" );
+  mas_ticker_stop(  );
+  MAS_LOG( "stopped spec. threads" );
+
+  /* mas_watcher_stop(  ); */
+  ctrl.watcher_stop = 1;
 
   MAS_LOG( "exiting master server" );
 #ifdef MAS_TRACEMEM
@@ -231,28 +177,74 @@ mas_master( void )
   mMSG( "exiting master server, memory_balance:%lu", memory_balance );
   MAS_LOG( "master end, m/b:%lu", memory_balance );
 #endif
+  HMSG( "MASTER_TH TO END : %d", r );
   return r;
+}
+
+void *
+mas_master_th( void *arg )
+{
+  int r = -1;
+
+  HMSG( "MASTER_TH START" );
+  ctrl.master_tid = mas_gettid(  );
+  /* mas_malloc(1234); */
+  MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
+  mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );
+
+  if ( ctrl.main_exit && ctrl.main_thread )
+  {
+    mas_pthread_detach( ctrl.main_thread );
+    mas_xpthread_join( ctrl.main_thread );
+    ctrl.main_thread = 0;
+  }
+  r = mas_master(  );
+#ifdef MAS_TRACEMEM
+  extern unsigned long memory_balance;
+
+  mMSG( "mas_master_th end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
+  MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
+#endif
+  HMSG( "MASTER_TH TO END" );
+  /* mas_pthread_exit( NULL ); */
+  return NULL;
 }
 
 int
 mas_master_bunch( int argc, char *argv[], char *env[] )
 {
-  int r = 0;
+  int r = -1;
 
   ctrl.main_tid = mas_gettid(  );
 
   MAS_LOG( "bunch start" );
-  ctrl.status = MAS_STATUS_START;
-  ctrl.start_time = mas_double_time(  );
-  mas_init_server( mas_atexit, 1, argc, argv, env );
-
-  /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
-  r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL );
-  if ( !ctrl.main_exit && ctrl.master_thread )
+  r = mas_init_server( mas_atexit, 1, argc, argv, env );
+  if ( r >= 0 )
   {
-    mas_xpthread_join( ctrl.master_thread );
-    ctrl.master_thread = 0;
+    /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
+    if ( opts.make_master_thread )
+    {
+      r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL );
+      if ( !ctrl.main_exit && ctrl.master_thread )
+      {
+        mas_xpthread_join( ctrl.master_thread );
+        ctrl.master_thread = ( pthread_t ) 0;
+      }
+    }
+    else
+    {
+      r = mas_master(  );
+#ifdef MAS_TRACEMEM
+      extern unsigned long memory_balance;
+
+      mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
+      MAS_LOG( "bunch end, m/b:%lu", memory_balance );
+#endif
+    }
+    HMSG( "BUNCH TO END" );
+    /* mas_pthread_exit( &r ); */
   }
   MAS_LOG( "bunch end : %d", r );
+  HMSG( "BUNCH END" );
   return r;
 }

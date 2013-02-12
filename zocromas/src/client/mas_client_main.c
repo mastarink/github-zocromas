@@ -40,16 +40,18 @@ more:
 int
 main( int argc, char *argv[], char *env[] )
 {
+  int r = -1;
+
   ctrl.status = MAS_STATUS_START;
 
-  HMSG( "Start" );
-  mas_init_client( mas_atexit, 1, argc, argv, env );
+  HMSG( "MAIN" );
+  r = mas_init_client( mas_atexit, 1, argc, argv, env );
   HMSG( "Inited (%d hosts)", opts.hosts_num );
-
-  for ( int ia = opts.hosts_num; ia > 0; ia-- )
-  {
-    mas_client( opts.hosts[ia - 1] );
-    break;
-  }
+  if ( r >= 0 )
+    for ( int ia = opts.hosts_num; ia > 0; ia-- )
+    {
+      mas_client( opts.hosts[ia - 1] );
+      break;
+    }
   return 0;
 }

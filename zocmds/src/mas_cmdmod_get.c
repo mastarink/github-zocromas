@@ -133,12 +133,12 @@ var_cmd( STD_CMD_ARGS )
   /* if ( var )                                           */
   {
     mas_lcontrol_t *plcontrol = NULL;
-    const char *uuid;
+    const char *uuid = NULL;
 
     /* uuid = var->value; */
-    uuid = prcontrol->uuid;
     if ( prcontrol )
     {
+      uuid = prcontrol->uuid;
       plcontrol = prcontrol->plcontrol;
     }
     if ( plcontrol )
@@ -186,7 +186,7 @@ mas_cmd_t subcmdtable[] = {
   ,
   {5, "server", NULL, NULL}     /* get server */
   ,
-  {5, "server_old", NULL, NULL}     /* get server_old */
+  {5, "server_old", NULL, NULL} /* get server_old */
   ,
   {6, "date", date_cmd, NULL}   /* get date */
   ,

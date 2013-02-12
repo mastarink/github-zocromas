@@ -106,7 +106,7 @@ mas_client( const char *host_port )
       do
       {
         rop = r = mas_channel_open( pchannel );
-        if ( r < 0 && ctrl.restart_cnt>0)
+        if ( r < 0 && ctrl.restart_cnt > 0 )
         {
           HMSG( "restarted %s (delay %10.5f sec)\n", opts.argv[0], opts.restart_sleep );
           mas_nanosleep( opts.restart_sleep );
@@ -133,7 +133,7 @@ mas_client( const char *host_port )
       r = mas_client_exchange( pchannel, cmd, "%s\n" );
       mas_free( cmd );
     }
-    if ( r > 0 )
+    if ( r > 0 && ctrl.in_client )
     {
       char *cmd;
 
@@ -154,29 +154,29 @@ mas_client( const char *host_port )
       HMSG( "connected to %s [%d]", pchannel->host, ctrl.argv_nonoptind );
     }
 
-    if ( r >= 0 && opts.commands_num )
+    HMSG( "(%d) OPTS COMMANDS[%u]:", r, opts.commands_num );
+    if ( r >= 0 && ctrl.in_client && opts.commands_num )
     {
-      HMSG( "OPTS COMMANDS:" );
       for ( int ic = 0; ic < opts.commands_num; ic++ )
       {
         HMSG( "(opts) command to execute : '%s'", opts.commands[ic] );
         r = mas_client_exchange( pchannel, opts.commands[ic], "%s\n" );
-        if ( r < 0 )
+        if ( r < 0 || !ctrl.in_client )
           break;
       }
     }
-    if ( r >= 0 && ctrl.commands_num )
+    HMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commands_num );
+    if ( r >= 0 && ctrl.in_client && ctrl.commands_num )
     {
-      HMSG( "CTRL COMMANDS:" );
       for ( int ic = 0; ic < ctrl.commands_num; ic++ )
       {
         HMSG( "(ctrl) command to execute : '%s'", ctrl.commands[ic] );
         r = mas_client_exchange( pchannel, ctrl.commands[ic], "%s\n" );
-        if ( r < 0 )
+        if ( r < 0 || !ctrl.in_client )
           break;
       }
     }
-    if ( r >= 0 )
+    if ( r >= 0 && ctrl.in_client )
     {
       if ( opts.disconnect_prompt || r > 0 )
       {

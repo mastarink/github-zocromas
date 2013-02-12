@@ -11,8 +11,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
-
 #include "mas_control.h"
 
 /*

@@ -1384,3 +1384,15 @@ restart
 server restart
 server info
 server quit
+bye
+server quit
+bye
+server info
+bye
+server quit
+bye
+server quit
+bye
+server quit
+bye
+server quit

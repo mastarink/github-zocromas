@@ -207,19 +207,20 @@ mas_watcher( void )
       {
         FMSG( "WATCHER STOP : %d %d %d", nlistener_open, ntransaction, nlisteners_ever_open );
         if ( nlistener_open == 0 && ntransaction == 0 /* && nlisteners_ever_open */  )
-        {
           stop = 1;
-        }
       }
-      else if ( !ctrl.main_thread || !ctrl.master_thread || !ctrl.watcher_thread || !ctrl.logger_thread || !ctrl.ticker_thread )
+      else if ( !ctrl.main_thread || ( !ctrl.master_thread && opts.make_master_thread ) || !ctrl.watcher_thread || !ctrl.logger_thread
+                || !ctrl.ticker_thread )
       {
-        FMSG( "WATCHER?" );
+        FMSG( "WATCHER main:%d; master:%d", ctrl.main_thread ? 1 : 0, ctrl.master_thread ? 1 : 0 );
       }
       /* fprintf( stderr, "WATCHER %u %u %u\n", nlistener_open, ntransaction, nlisteners_ever_open ); */
     }
     if ( ctrl.stop_listeners )
     {
+      ctrl.keep_listening = 0;
       mas_listeners_cancel(  );
+      ctrl.watcher_stop = 1;
       /* ctrl.stop_listeners = 0; */
       FMSG( "WATCHER - STOP LISTENERS" );
     }

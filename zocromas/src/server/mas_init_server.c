@@ -5,9 +5,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <uuid/uuid.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib_thread.h>
+#include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -52,14 +57,13 @@ more:
 
 */
 
-static mas_transaction_protodesc_t *
+static int
 mas_init_load_protos( void )
 {
   int protos_num = 0;
   mas_transaction_protodesc_t *proto_descs;
 
-  rMSG( "@@@@@@@@@@ protodir:%s [%u]", opts.protodir, opts.protos_num );
-  EMSG( "@@@@@@@@@@ protodir:%s [%u]", opts.protodir, opts.protos_num );
+  tMSG( "@@@@@@@@@@ protodir:%s [%u]", opts.protodir, opts.protos_num );
   proto_descs = mas_calloc( opts.protos_num, sizeof( mas_transaction_protodesc_t ) );
   for ( int ipr = 0; ipr < opts.protos_num; ipr++ )
   {
@@ -67,28 +71,90 @@ mas_init_load_protos( void )
     proto_descs[ipr].proto_id = protos_num + 1;
     proto_descs[ipr].name = mas_strdup( opts.protos[ipr] );
     proto_descs[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
-    EMSG( "@@@@@@@@@@ %u proto:%s : %p", ipr, opts.protos[ipr], ( void * ) ( unsigned long long ) proto_descs[ipr].function );
+    tMSG( "@@@@@@@@@@ %u proto:%s : %p", ipr, opts.protos[ipr], ( void * ) ( unsigned long long ) proto_descs[ipr].function );
     protos_num++;
   }
   ctrl.protos_num = protos_num;
   ctrl.proto_descs = proto_descs;
-  return proto_descs;
+  return proto_descs ? 0 : -1;
 }
 
+/*
+Creating a daemon
+   1 Create a normal process (Parent process)
+   2 Create a child process from within the above parent process
+   3 The process hierarchy at this stage looks like :  TERMINAL -> PARENT PROCESS -> CHILD PROCESS
+   4 Terminate the the parent process.
+   5 The child process now becomes orphan and is taken over by the init process.
+   6 Call setsid() function to run the process in new session and have a new group.
+   7 After the above step we can say that now this process becomes a daemon process without having a controlling terminal.
+   8 Change the working directory of the daemon process to root and close stdin, stdout and stderr file descriptors.
+   9 Let the main logic of daemon process run.
+*/
+static int
+mas_init_daemon( void )
+{
+  int r = 0;
+  pid_t pid_child;
 
-void
+  pid_child = mas_fork(  );
+  if ( pid_child == 0 )
+  {
+    if ( opts.msgfilename )
+      mas_msg_set_file( opts.msgfilename );
+    HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
+    /* sleep(200); */
+    if ( !ctrl.noclose_std )
+    {
+      int foutd = -1;
+      int ferrd = -1;
+
+      foutd = mas_open( "daemon_stdout.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777 );
+      ferrd = mas_open( "daemon_stderr.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777 );
+      ctrl.saved_stderr = dup( STDERR_FILENO );
+      ctrl.saved_stderr_file = fdopen( ctrl.saved_stderr, "w" );
+      ctrl.saved_stdout = dup( STDOUT_FILENO );
+      dup2( foutd, STDOUT_FILENO );
+      dup2( ferrd, STDERR_FILENO );
+      mas_close( foutd );
+      mas_close( ferrd );
+      if ( ctrl.daemon )
+      {
+        mas_close( STDOUT_FILENO );
+        mas_close( STDERR_FILENO );
+      }
+    }
+    /* mas_destroy_server(  ); */
+  }
+  else if ( pid_child > 0 )
+  {
+    HMSG( "PARENT : %u @ %u @ %u", pid_child, getpid(  ), getppid(  ) );
+    r = -2;
+  }
+  else
+  {
+    r = -1;
+  }
+  return r;
+}
+
+int
 mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
 {
   int r = 0;
   int k;
 
+  ctrl.status = MAS_STATUS_START;
+  ctrl.start_time = mas_double_time(  );
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_client = 0;
   ctrl.is_server = 1;
   mas_pre_init( argc, argv, env );
 
   MAS_LOG( "init server" );
-  mMSG( "PPID : %u - %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  HMSG( "PPID: %u", getppid(  ) );
+  HMSG( "BASH: %s", getenv( "MAS_PID_AT_BASHRC" ) );
+  MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   k = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
   if ( k <= 0 )
     mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
@@ -99,13 +165,24 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     fprintf( stderr, "ERROR curses %d\n", r );
     /* exit( 33 ); */
   }
-  if ( !ctrl.proto_descs )
-    mas_init_load_protos(  );
+  if ( r >= 0 )
+    r = mas_init( atexit_fun, initsig, argc, argv, env );
+  /* mMSG( "ARGV_NONOPTIND :%d", ctrl.argv_nonoptind ); */
+  /* HMSG( "(%d) DAEMON: %d", opts.nodaemon, ctrl.daemon ); */
+  if ( r >= 0 && ctrl.daemon )
+    r = mas_init_daemon(  );
 
-  mas_threads_init(  );
-  mas_init( atexit_fun, initsig, argc, argv, env );
-  mas_lcontrols_list_create(  );
+  if ( r >= 0 )
+    r = mas_threads_init(  );
+  if ( r >= 0 && !ctrl.proto_descs )
+    r = mas_init_load_protos(  );
+
+  if ( r >= 0 )
+    mas_lcontrols_list_create(  );
   MAS_LOG( "init server done" );
+  if ( r >= 0 )
+    r = mas_post_init( argc, argv, env );
+  return r;
 }
 
 void
@@ -136,10 +213,16 @@ mas_destroy_server( void )
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
-  FMSG( "TO STOP LOGGER" );
-  mas_logger_stop(  );
-  FMSG( "TO STOP TICKER" );
-  mas_ticker_stop(  );
+  if ( ctrl.logger_thread )
+  {
+    FMSG( "TO STOP LOGGER" );
+    mas_logger_stop(  );
+  }
+  if ( ctrl.ticker_thread )
+  {
+    FMSG( "TO STOP TICKER" );
+    mas_ticker_stop(  );
+  }
   MAS_LOG( "destroy server done" );
   FMSG( "DESTROY SERVER DONE" );
 }

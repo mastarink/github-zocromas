@@ -37,6 +37,7 @@ struct mas_options_s
   unsigned transaction_single:1;
   unsigned nomessages:1;
   unsigned nodaemon:1;
+  unsigned noclose_std:1;
   unsigned nologger:1;
   unsigned nolog:1;
   unsigned noticker:1;
@@ -45,9 +46,10 @@ struct mas_options_s
   unsigned save_opts_plus:1;
   unsigned disconnect_prompt:1;
   unsigned wait_server:1;
+  unsigned make_master_thread:1;
+  unsigned nomaster;
   unsigned nolistener;
   unsigned nolisten;
-  unsigned nomaster;
   unsigned exitsleep;
   unsigned default_port;
   char env_optsname[256];
@@ -62,6 +64,7 @@ struct mas_options_s
   char **commands;
   unsigned client_attempts;
   char *uuid;
+  char *msgfilename;
   char *modsdir;
   char *protodir;
   char *logdir;

@@ -152,8 +152,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
   int r = -1;
 
-  MAS_LOG( "starting transaction xch" );
-  rMSG( "starting transaction" );
+  MAS_LOG( "starting transaction xch (%lu protos)", ctrl.protos_num );
+  rMSG( "starting transaction xch (%lu protos)", ctrl.protos_num );
   if ( prcontrol && prcontrol->h.pchannel )
   {
     char *data = NULL;
@@ -180,6 +180,11 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     {
       prcontrol->h.status = MAS_STATUS_WORK;
       r = 0;
+      if ( !ctrl.protos_num )
+      {
+        EMSG( "No proto's loaded; data[%lu]", sz );
+        MAS_LOG( "No proto's loaded; data[%lu]", sz );
+      }
       for ( int np = 0; np < ctrl.protos_num; np++ )
       {
         if ( r == 0 || prcontrol->proto_desc == &ctrl.proto_descs[np] )
@@ -212,6 +217,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     MAS_LOG( "KA => %u", prcontrol->keep_alive );
     r = -1;
   }
+  MAS_LOG( "end transaction xch" );
+  rMSG( "end transaction xch" );
   return r;
 }
 
@@ -223,6 +230,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
   int r = 1;
 
   MAS_LOG( "starting transaction" );
+  rMSG( "starting transaction" );
 
   if ( prcontrol )
   {
@@ -270,6 +278,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
     }
   }
   MAS_LOG( "end transaction" );
+  rMSG( "end transaction" );
   return NULL;
 }
 
@@ -432,7 +441,7 @@ mas_transaction_th( void *trcontrol )
     /* rMSG( MAS_SEPARATION_LINE ); */
     /* ??? mas_lcontrol_cleaning_transactions( ... ); */
   }
-  MAS_LOG( "tr. th. ending" );
+  MAS_LOG( "tr. th. end" );
   mas_pthread_exit( NULL );
   return r;
 }

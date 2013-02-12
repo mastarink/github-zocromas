@@ -279,7 +279,6 @@ mas_logger_flush( void )
 {
   int r = -1;
 
-
   while ( logger_list && !MAS_LIST_EMPTY( logger_list ) )
   {
     mas_loginfo_t *li;

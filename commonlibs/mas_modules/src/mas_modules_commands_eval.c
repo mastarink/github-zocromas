@@ -183,7 +183,7 @@ mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size,
     while ( *p != '/' );
   if ( p && *p )
     p++;
-  answer = mas_evaluate_command_slash( prcontrol, p );
+  answer = mas_evaluate_transaction_command_slash( prcontrol, p );
   if ( ptruesize )
   {
     if ( answer )
@@ -195,7 +195,7 @@ mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size,
 }
 
 char *
-mas_evaluate_command_slash( mas_rcontrol_t * prcontrol, const char *uri )
+mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *uri )
 {
   char *p;
   char *question = NULL;
@@ -207,10 +207,10 @@ mas_evaluate_command_slash( mas_rcontrol_t * prcontrol, const char *uri )
   while ( ( p = strchr( p, '/' ) ) )
     *p = ' ';
   MAS_LOG( "to make out XCROMAS %s", question );
-  answer = mas_evaluate_command( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
+  answer = mas_evaluate_transaction_command( prcontrol, question );
   if ( answer == ( char * ) -1L )
     answer = NULL;
-  else if ( prcontrol->qbin )
+  else if ( prcontrol && prcontrol->qbin )
   {
     MAS_LOG( "to make out XCROMAS %s => %s", question, answer );
     MAS_LOG( "to make out XCROMAS %p => %p", ( void * ) question, ( void * ) answer );
@@ -223,16 +223,26 @@ mas_evaluate_command_slash( mas_rcontrol_t * prcontrol, const char *uri )
   return answer;
 }
 
-/* char *                                                                                                                             */
-/* mas_evaluate_command( mas_cmd_t * ptable, mas_cmd_t * this_command,                                                                */
-/*                       mas_rcontrol_t * prcontrol, const char *question, const char *args, unsigned level, mas_header_t * pheader ) */
 char *
-mas_evaluate_command( STD_CMD_ARGS )
+mas_evaluate_command( const char *question )
+{
+  return mas_evaluate_transaction_command( NULL, question );
+}
+
+char *
+mas_evaluate_transaction_command( mas_rcontrol_t * prcontrol, const char *question )
+{
+  return mas_evaluate_cmd( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
+}
+
+char *
+mas_evaluate_cmd( STD_CMD_ARGS )
 {
   int r = 0;
   char *answer = NULL;
 
-  prcontrol->qbin = MSG_BIN_NONE;
+  if ( prcontrol )
+    prcontrol->qbin = MSG_BIN_NONE;
   MAS_LOG( "evaluate: cmd %p", ( void * ) this_command );
   if ( !this_command )
   {
@@ -258,7 +268,8 @@ mas_evaluate_command( STD_CMD_ARGS )
             ( void * ) ( unsigned long long ) ( this_command->function ), this_command->function == universal_complex_cmd );
       /* EVALUATING COMMAND */
       answer = ( this_command->function ) ( STD_CMD_PASS );
-      tMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol->qbin, ctrl.do_quit );
+      tMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol ? prcontrol->qbin : 0,
+            ctrl.do_quit );
       if ( MAS_VALID_ANSWER( answer ) )
       {
         /* cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" ); */

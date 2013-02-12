@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -66,6 +67,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_MSG,
   MAS_CLI_OPT_NOMSG,
   MAS_CLI_OPT_NOHOSTS,
+  MAS_CLI_OPT_CLOSE_STD,
+  MAS_CLI_OPT_NOCLOSE_STD,
   MAS_CLI_OPT_MESSAGES,
   MAS_CLI_OPT_NOMESSAGES,
   MAS_CLI_OPT_NOLOGGER,
@@ -78,6 +81,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_WATCHER,
   MAS_CLI_OPT_NOMASTER,
   MAS_CLI_OPT_MASTER,
+  MAS_CLI_OPT_NOMASTER_THREAD,
+  MAS_CLI_OPT_MASTER_THREAD,
   MAS_CLI_OPT_LISTEN,
   MAS_CLI_OPT_NOLISTEN,
   MAS_CLI_OPT_LISTENER,
@@ -86,6 +91,7 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_LISTENER_SINGLE,
   MAS_CLI_OPT_TRANSACTION_SINGLE,
   MAS_CLI_OPT_COMMAND,
+  MAS_CLI_OPT_MSGTO,
 } mas_cli_opts_t;
 
 static char cli_enabled_options[] = "hH:P:L:t";
@@ -96,10 +102,13 @@ static struct option cli_longopts[] = {
   {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},
   {"daemon", no_argument, NULL, MAS_CLI_OPT_DAEMON},
   {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},
+  {"message-to", required_argument, NULL, MAS_CLI_OPT_MSGTO},
   {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},
   {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},
   {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},
   {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},
+  {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},
+  {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},
   {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},
   {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},
   {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},
@@ -107,15 +116,19 @@ static struct option cli_longopts[] = {
   {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},
   {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},
   {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
+  {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER},
+  {"watcher", no_argument, NULL, MAS_CLI_OPT_WATCHER},
   {"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
   {"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER},
   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
   {"watcher", no_argument, NULL, MAS_CLI_OPT_TICKER},
-  {"nomaster", optional_argument, NULL, MAS_CLI_OPT_NOMASTER},
+  {"nomaster", required_argument, NULL, MAS_CLI_OPT_NOMASTER},
   {"master", no_argument, NULL, MAS_CLI_OPT_MASTER},
-  {"nolistener", optional_argument, NULL, MAS_CLI_OPT_NOLISTENER},
+  {"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD},
+  {"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD},
+  {"nolistener", required_argument, NULL, MAS_CLI_OPT_NOLISTENER},
   {"listener", no_argument, NULL, MAS_CLI_OPT_LISTENER},
-  {"nolisten", optional_argument, NULL, MAS_CLI_OPT_NOLISTEN},
+  {"nolisten", required_argument, NULL, MAS_CLI_OPT_NOLISTEN},
   {"listen", no_argument, NULL, MAS_CLI_OPT_LISTEN},
   {"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON},
   {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},
@@ -126,9 +139,37 @@ static struct option cli_longopts[] = {
   {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},
 };
 
+long
+mas_cli_optval( const char *arg, long def, int *pr )
+{
+  long val = 0;
+
+  if ( arg && *arg )
+  {
+    val = strtol( arg, NULL, 10 );
+    if ( ( errno == ERANGE && ( val == LONG_MAX || val == LONG_MIN ) ) || ( errno != 0 && val == 0 ) )
+    {
+      val = 0;
+      *pr = -1;
+    }
+    else
+      *pr = 0;
+  }
+  else if ( pr )
+  {
+    val = def;
+    *pr = 1;
+  }
+
+  return val;
+}
+
 int
 mas_cli_make_option( int opt, const char *m_optarg )
 {
+  int r = 0;
+
+  /* HMSG( "CLI M/O %d", opt ); */
   switch ( opt )
   {
   case MAS_CLI_OPT_TEST:
@@ -138,8 +179,16 @@ mas_cli_make_option( int opt, const char *m_optarg )
     HMSG( "Help" );
     break;
   case MAS_CLI_OPT_COMMAND:
-    mMSG( "COMMAND %s", optarg );
+    HMSG( "COMMAND %s", optarg );
     mas_ctrl_add_command( optarg );
+    break;
+  case MAS_CLI_OPT_MSGTO:
+    HMSG( "MSG>%s", optarg );
+    if ( opts.msgfilename )
+      mas_free( opts.msgfilename );
+    opts.msgfilename = NULL;
+    if ( optarg && *optarg )
+      opts.msgfilename = mas_strdup( optarg );
     break;
   case MAS_CLI_OPT_HOST:
     opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, optarg );
@@ -214,22 +263,34 @@ mas_cli_make_option( int opt, const char *m_optarg )
     opts.nowatcher = 0;
     break;
   case MAS_CLI_OPT_NOLISTENER:
-    opts.nolistener = ( unsigned ) ( optarg && *optarg ? strtol( optarg, NULL, 10 ) : 30 );
+    opts.nolistener = mas_cli_optval( optarg, 30, &r );
     break;
   case MAS_CLI_OPT_LISTENER:
     opts.nolistener = 0;
     break;
   case MAS_CLI_OPT_NOLISTEN:
-    opts.nolisten = ( unsigned ) ( optarg && *optarg ? strtol( optarg, NULL, 10 ) : 30 );
+    opts.nolisten = mas_cli_optval( optarg, 30, &r );
     break;
   case MAS_CLI_OPT_LISTEN:
     opts.nolisten = 0;
     break;
   case MAS_CLI_OPT_NOMASTER:
-    opts.nomaster = ( unsigned ) ( optarg && *optarg ? strtol( optarg, NULL, 10 ) : 30 );
+    opts.nomaster = mas_cli_optval( optarg, 30, &r );
+    break;
+  case MAS_CLI_OPT_MASTER_THREAD:
+    opts.make_master_thread = 1;
+    break;
+  case MAS_CLI_OPT_NOMASTER_THREAD:
+    opts.make_master_thread = 0;
     break;
   case MAS_CLI_OPT_MASTER:
     opts.nomaster = 0;
+    break;
+  case MAS_CLI_OPT_NOCLOSE_STD:
+    opts.noclose_std = 1;
+    break;
+  case MAS_CLI_OPT_CLOSE_STD:
+    opts.noclose_std = 0;
     break;
   case MAS_CLI_OPT_NOMESSAGES:
     opts.nomessages = 1;
@@ -265,23 +326,27 @@ mas_cli_make_option( int opt, const char *m_optarg )
     break;
   }
   /* HMSG( "getopt_long:%d Usage: %s [--help -h]", argv[0] ); */
-  return 0;
+  return r;
 }
 
 int
 mas_cli_options( int argc, char *const argv[] )
 {
+  int r = 0;
   int opt;
   int indx = 0;
   int afterlast = 0;
 
+  HMSG( "CLI" );
   optind = 1;
   while ( ( opt = getopt_long( argc, argv, cli_enabled_options, cli_longopts, &indx ) ) != -1 && !ctrl.fatal )
   {
-    mas_cli_make_option( opt, optarg );
+    r = mas_cli_make_option( opt, optarg );
+    HMSG( "CLI %d", r );
     afterlast = optind;
     /* MSG( "cli option made (%d) ctrl.fatal:%u {%d:%d}", opt, ctrl.fatal, ctrl.argv_nonoptind, optind ); */
   }
+  HMSG( "/CLI %d", optind );
   MAS_LOG( "cli options made" );
   return afterlast;
 }

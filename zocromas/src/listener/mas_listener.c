@@ -127,6 +127,7 @@ mas_listener_start( char *host_port, unsigned port )
   if ( host_port )
   {
     mas_lcontrol_t *plcontrol;
+    HMSG( "LISTENER START" );
 
     plcontrol = mas_lcontrol_make( host_port, port );
     {

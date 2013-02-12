@@ -16,7 +16,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
@@ -30,7 +29,8 @@ extern mas_options_t opts;
 #include "listener/inc/mas_listener_control.h"
 #include "cli/inc/mas_cli_options.h"
 
-#include "init/inc/mas_init.h"
+#include "mas_sig.h"
+#include "mas_init.h"
 
 
 int use_curses = 0;
@@ -92,30 +92,38 @@ mas_init_env(  )
 }
 
 
-static void
+static int
 mas_init_message( void )
 {
   if ( use_curses )
   {
-    IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s) pid=%lx ; tid:%u [%lx]", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION,
-          MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts,
-          ctrl.stamp.vtsc, ( unsigned long ) ctrl.main_pid, ( unsigned ) ctrl.main_tid, ( unsigned long ) ctrl.main_thread );
+    IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
+          ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
+    IMSG( "[%s] pid=%lx ; tid:%u [%lx]", ctrl.progname, ( unsigned long ) ctrl.main_pid, ( unsigned ) ctrl.main_tid,
+          ( unsigned long ) ctrl.main_thread );
   }
   else
   {
-    IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) pid=%lx ; tid:%u [%lx] \x1b[0m",
-          ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate,
-          ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc, ( unsigned long ) ctrl.main_pid,
+    IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,
+          PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime,
+          ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
+    IMSG( "\x1b[100;27;1;32m [%s] pid=%lx ; tid:%u [%lx] \x1b[0m", ctrl.progname, ( unsigned long ) ctrl.main_pid,
           ( unsigned ) ctrl.main_tid, ( unsigned long ) ctrl.main_thread );
-}}
+  }
+  return 0;
+}
 
-void
+int
 mas_pre_init( int argc, char **argv, char **env )
 {
   const char *pn;
 
+  HMSG( "PRE-INIT" );
+  ctrl.stamp.lts = ( unsigned long ) time( NULL );
+  ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
   ctrl.binname = mas_strdup( basename( argv[0] ) );
+  ctrl.main_pid = getpid(  );
   pn = strchr( ctrl.binname, '_' );
   if ( pn )
   {
@@ -123,13 +131,61 @@ mas_pre_init( int argc, char **argv, char **env )
     if ( *pn )
       ctrl.progname = mas_strdup( pn );
   }
+  return 0;
 }
 
-void
+int
+mas_post_init( int argc, char **argv, char **env )
+{
+  int r = 0;
+
+  HMSG( "POST-INIT" );
+#if 0
+  if ( r >= 0 && !opts.hosts_num )
+  {
+    char *defhost = NULL;
+
+    if ( opts.env_hostname )
+      defhost = getenv( opts.env_hostname );
+    if ( !defhost )
+      defhost = "localhost";
+    opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, defhost );
+    /* for ( int ih = 0; ih <= opts.hosts_num; ih++ )                     */
+    /* {                                                                  */
+    /*   thMSG( "@@@@@@ %d. host %s (%s)", ih, opts.hosts[ih], defhost ); */
+    /* }                                                                  */
+  }
+#endif
+/*  
+  if ( !opts.logdir )
+    opts.logdir = mas_strdup( ".........." );
+*/
+  if ( r >= 0 && opts.logdir )
+  {
+    char namebuf[512];
+
+    snprintf( namebuf, sizeof( namebuf ), ctrl.is_client ? "/client.%lu.%u.log" : "/server.%lu.%u.log", ctrl.stamp.first_lts, getpid(  ) );
+    ctrl.logpath = mas_strdup( opts.logdir );
+    ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
+  }
+  else
+  {
+    EMSG( "logdir not set" );
+  }
+
+  /* ctrl.listening_max = opts.hosts_num; */
+  MAS_LOG( "(%d) init done, %d hosts", r, opts.hosts_num );
+
+  r = mas_init_message(  );
+  return r;
+}
+
+int
 mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
 {
-  ctrl.stamp.lts = ( unsigned long ) time( NULL );
-  ctrl.stamp.first_lts = 0;
+  int r = 0;
+
+  HMSG( "INIT" );
   {
     char name[512];
     char *ren = NULL, *ren0;
@@ -159,56 +215,21 @@ mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, cha
     ctrl.stamp.first_lts = ctrl.stamp.lts;
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts, ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
-  ctrl.main_pid = getpid(  );
 
-  if ( !( mas_init_argv( argc, argv, env ) > 1 ) )
-    mas_init_env(  );
+  if ( r >= 0 && !( mas_init_argv( argc, argv, env ) > 1 ) )
+    r = mas_init_env(  );
 
   /* HMSG( "opts.argv[0]: %s\n", opts.argv[0] ); */
-  mas_init_message(  );
-  mas_ctrl_init( &opts );
-
+  /* mas_init_message(  ); */
   atexit( atexit_fun );
-  if ( initsig )
-    mas_init_sig(  );
+  if ( r >= 0 && initsig )
+    r = mas_init_sig(  );
 
   ctrl.argv_nonoptind = mas_cli_options( opts.argc, opts.argv );
-  /* mMSG( "ARGV_NONOPTIND :%d", ctrl.argv_nonoptind ); */
+  if ( r >= 0 )
+    mas_ctrl_init( &opts );
 
-  if ( !opts.hosts_num && 0 )
-  {
-    char *defhost = NULL;
-
-    if ( opts.env_hostname )
-      defhost = getenv( opts.env_hostname );
-    if ( !defhost )
-      defhost = "localhost";
-    opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, defhost );
-    /* for ( int ih = 0; ih <= opts.hosts_num; ih++ )                     */
-    /* {                                                                  */
-    /*   thMSG( "@@@@@@ %d. host %s (%s)", ih, opts.hosts[ih], defhost ); */
-    /* }                                                                  */
-  }
-/*  
-  if ( !opts.logdir )
-    opts.logdir = mas_strdup( ".........." );
-*/
-  if ( opts.logdir )
-  {
-    char namebuf[512];
-
-    snprintf( namebuf, sizeof( namebuf ), ctrl.is_client ? "/client.%lu.%u.log" : "/server.%lu.%u.log", ctrl.stamp.first_lts,
-              getpid(  ) );
-    ctrl.logpath = mas_strdup( opts.logdir );
-    ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
-  }
-  else
-  {
-    EMSG( "logdir not set" );
-  }
-
-  /* ctrl.listening_max = opts.hosts_num; */
-  MAS_LOG( "init done, %d hosts", opts.hosts_num );
+  return r;
 }
 
 void
@@ -260,6 +281,8 @@ mas_destroy( void )
 
   MAS_LOG( "destroy done" );
   MAS_LOG( "destroy done" );
+  mas_log_clean_queue(  );
+  HMSG( "DESTROY DONE" );
 #ifdef MAS_TRACEMEM
   {
     extern unsigned long memory_balance;

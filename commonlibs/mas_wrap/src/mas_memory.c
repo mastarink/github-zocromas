@@ -159,7 +159,7 @@ print_memlist( const char *func, int line )
     }
   }
   if ( !h )
-    fprintf( stderr, "** EMPTY MEMORY TABLE **\n" );
+    fprintf( stderr, "** EMPTY MEMORY TABLE ** %s:%u\n", func, line );
 }
 
 void *

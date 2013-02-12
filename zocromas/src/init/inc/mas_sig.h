@@ -12,7 +12,7 @@ void sighup_han( int s );
 void sigpipe_han( int s );
 void sigwinch_han( int s );
 
-void mas_init_sig( void );
+int mas_init_sig( void );
 void mas_dfl_sig( void );
 
 #endif

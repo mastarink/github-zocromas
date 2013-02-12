@@ -126,7 +126,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
   return r;
 }
 
-void
+int
 mas_client_init_readline( void )
 {
   int rh = 0;
@@ -163,6 +163,7 @@ mas_client_init_readline( void )
     add_history( "server listener remove zocromas.mastar.lan 5003" );
     /* HMSG( "/init readline" ); */
   }
+  return 0;
 }
 
 void

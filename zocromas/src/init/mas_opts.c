@@ -64,6 +64,10 @@ mas_opts_destroy( void )
     mas_free( opts.modsdir );
   opts.modsdir = NULL;
 
+  if ( opts.msgfilename )
+    mas_free( opts.msgfilename );
+  opts.msgfilename = NULL;
+
   if ( opts.protodir )
     mas_free( opts.protodir );
   opts.modsdir = NULL;
@@ -312,7 +316,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
         }
         {
           {
-            r = fprintf( f, "\n[%s %d]\n",  "protos" , opts.protos_num );
+            r = fprintf( f, "\n[%s %d]\n", "protos", opts.protos_num );
             if ( r > 0 )
               rtot += r;
           }
@@ -790,7 +794,7 @@ _mas_opts_restore_plus( const char *dirname, const char *filename, va_list args 
 
   fn = mas_strdup( filename );
 
-  FMSG( "FN:%s", fn );
+  /* FMSG( "FN:%s", fn ); */
   while ( ( s = va_arg( args, char * ) ) )
   {
     if ( s )
@@ -801,6 +805,7 @@ _mas_opts_restore_plus( const char *dirname, const char *filename, va_list args 
   }
   if ( x )
   {
+    HMSG( "OPTS:%s", fn );
     r = _mas_opts_restore( dirname, fn );
   }
   mas_free( fn );

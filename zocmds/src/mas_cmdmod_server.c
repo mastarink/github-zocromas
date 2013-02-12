@@ -47,32 +47,35 @@ static size_t
 info_transaction( mas_rcontrol_t * prcontrol, unsigned itr, char *cp, size_t bufsz )
 {
   size_t len = 0;
-  mas_channel_t *pchannel = NULL;
   char *sip = NULL;
   char *cp0;
 
   cp0 = cp;
 
-  /* cMSG( "srv L %p", prcontrol ); */
-
-  pchannel = prcontrol ? prcontrol->h.pchannel : NULL;
-  /* if ( pchannel )                            */
-  /*   sip = mas_channel_ip_string( pchannel ); */
-  if ( pchannel )
+  if ( prcontrol )
   {
-    if ( pchannel->serv.path.sun_family == AF_UNIX )
-      sip = mas_strdup( pchannel->cli.path.sun_path );
-    else
-      sip = mas_ip_string( &pchannel->cli.addr.sin_addr );
-  }
+    mas_channel_t *pchannel = NULL;
 
-  len = snprintf( cp, bufsz, "\t\t\t%u(s%lu). %s [<%s>] \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
-                  prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
-                  prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
-                  pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
-                  prcontrol->xch_cnt );
-  cp += len;
-  bufsz -= len;
+    /* cMSG( "srv L %p", prcontrol ); */
+    pchannel = prcontrol->h.pchannel;
+    /* if ( pchannel )                            */
+    /*   sip = mas_channel_ip_string( pchannel ); */
+    if ( pchannel )
+    {
+      if ( pchannel->serv.path.sun_family == AF_UNIX )
+        sip = mas_strdup( pchannel->cli.path.sun_path );
+      else
+        sip = mas_ip_string( &pchannel->cli.addr.sin_addr );
+    }
+
+    len = snprintf( cp, bufsz, "\t\t\t%u(s%lu). %s [<%s>] \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
+                    prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
+                    prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
+                    pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
+                    prcontrol->xch_cnt );
+    cp += len;
+    bufsz -= len;
+  }
   mas_free( sip );
   return cp - cp0;
 }
@@ -194,7 +197,6 @@ info_cmd( STD_CMD_ARGS )
 static char *
 stop_cmd( STD_CMD_ARGS )
 {
-  /* do_quit_server( prcontrol, pbinary ); */
   ctrl.do_quit = 1;
   return NULL;
 }
@@ -211,8 +213,6 @@ static char *
 exit_cmd( STD_CMD_ARGS )
 {
   ctrl.quit = 1;
-  if ( prcontrol )
-    prcontrol->qbin = MSG_BIN_QUIT;
   return NULL;
 }
 
@@ -220,7 +220,6 @@ static char *
 restart_cmd( STD_CMD_ARGS )
 {
   ctrl.restart = 1;
-  /* do_quit_server( prcontrol, pbinary ); */
   ctrl.do_quit = 1;
   return NULL;
 }
@@ -229,7 +228,6 @@ char *
 quit_cmd( STD_CMD_ARGS )
 {
   ctrl.quit = 1;
-  /* do_quit_server( prcontrol, pbinary ); */
   ctrl.do_quit = 1;
   return NULL;
 }
