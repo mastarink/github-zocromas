@@ -1,5 +1,5 @@
 #!/bin/sh
-if [[ -f "sh/setup.sh" ]] ; then
+if [[ -f "sh/setup.sh" ]] && [[ -f "configure.ac" ]] ; then
   . sh/setup.sh
   function testdist ()
   {
@@ -8,7 +8,7 @@ if [[ -f "sh/setup.sh" ]] ; then
     name=$( cd $indir && ./configure -V|head -1|awk '{print $1}' )
     distfile="${name}-${ver}.tar.bz2"
 
-    if [[ "$name" ]] && [[ "$ver" ]] && [[ "$unpackdir" ]] && [[ "$builddir" ]] ; then
+    if [[ "$name" ]] && [[ "$ver" ]] && [[ "$unpackdir" ]] && [[ "$ibuilddir" ]] ; then
       if cd "$indir" ; then
       # make -d dist
       # make -s dist
@@ -17,22 +17,28 @@ if [[ -f "sh/setup.sh" ]] ; then
 	mv *.tar.{bz2,gz} $savedirdist || return 1
 
 	if cd "$workdir" ; then
-	  if [[ -d "$builddir" ]] ; then
-	    rm -Rf "$builddir" || return 1
+	  if [[ -d "$ibuilddir" ]] ; then
+	    rm -Rf "$ibuilddir" || return 1
 	  fi
-	  mkdir -p "$builddir" || return 1
+	  mkdir -p "$ibuilddir" || return 1
 
 	  if [[ -d "$unpackdir" ]] ; then
 	    rm -Rf "$unpackdir" || return 1
 	  fi
 	  if cd $workdir && [[ -f "$savedirdist/$distfile" ]] ; then
 	    tar -jxf "$savedirdist/$distfile" || return 1
-	    if cd $builddir ; then
-      #	pwd
+	    if [[ "$ibuilddir" ]] && cd "$ibuilddir" ; then
+	      pwd
+	      echo "wbuilddir  : $wbuilddir"
+	      echo "ibuilddir  : $ibuilddir"
+	      echo "workdir    : $workdir"
+	      echo "unpackdir  : $unpackdir"
 	    # ls -l ../zocromas-*/configure
 	    # sleep 5
 	      if [[ -f "$unpackdir/configure" ]] ; then
-		$unpackdir/configure --enable-tracemem --enable-debug --silent --enable-silent-rules || return 1
+	        configuredir=$unpackdir
+ 		configure || return 1
+#		$unpackdir/configure --enable-tracemem --enable-debug --silent --enable-silent-rules || return 1
 		make -s || return 1
 	    # ls -lAtr src
 	      else
@@ -40,7 +46,7 @@ if [[ -f "sh/setup.sh" ]] ; then
 		return 1
 	      fi
 	    else
-	      echo "No dir $builddir" >&2
+	      echo "No dir $ibuilddir" >&2
 	      return 1
 	    fi
 	  else
@@ -59,14 +65,14 @@ if [[ -f "sh/setup.sh" ]] ; then
     echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-">&2
     echo "$unpackdir">&2
     echo "TODO as root:">&2
-    echo "cd $builddir && make install" >&2
+    echo "cd $ibuilddir && make install" >&2
     instshdir="$rootdir/install.sh"
     if [[ "$rootdir" ]] && cd $rootdir && [[ "$name" ]] && [[ "$ver" ]] && [[ -d "$instshdir" ]]; then
       instshname="$instshdir/${name}-${ver}.sh"
       if ! [[ -f "$instshname" ]] ; then
 	echo '#!/bin/sh' >> $instshname
 	echo "# $( date )" >> $instshname
-	echo "cd $builddir && make install" >> $instshname
+	echo "cd $ibuilddir && make install" >> $instshname
 	chmod +x "$instshname"
       fi
     fi

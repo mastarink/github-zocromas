@@ -1,5 +1,5 @@
 #!/bin/sh
-if [[ -f "sh/setup.sh" ]] ; then
+if [[ -f "sh/setup.sh" ]] && [[ -f "configure.ac" ]] ; then
   . sh/setup.sh
   if [[ "$indir" ]] && [[ -d "$indir" ]] ; then
     cd $indir

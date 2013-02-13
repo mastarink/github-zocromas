@@ -9,7 +9,9 @@ if [[ -f "sh/setup.sh" ]] ; then
     if [[ "$timname" ]] ; then
       if ! [[ -f "$timname" ]] ; then
 	tstart=`date`
-	if make_any $@ > $timname 2>&1 ; then
+	if make_any $@ > "$timname" 2>&1 ; then
+    pwd >&2
+    echo "timname:$timname" >&2
 	  echo "$tstart; $( grep '^real' $timname | sed -ne 's/^real\s*//p' )" >> makes.log
 	  cat "$timname"
 	  rm "$timname"
