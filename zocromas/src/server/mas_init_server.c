@@ -14,6 +14,7 @@
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
+
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
@@ -227,6 +228,7 @@ mas_destroy_server( void )
     FMSG( "TO STOP TICKER" );
     mas_ticker_stop(  );
   }
+  mas_modules_destroy(  );
   MAS_LOG( "destroy server done" );
   FMSG( "DESTROY SERVER DONE" );
 }

@@ -10,6 +10,7 @@ commonlibs/mas_channel
 commonlibs/mas_variables
 commonlibs/mas_fileinfo
 commonlibs/mas_modules
-zocmds
+zocmds/1
+zocmds/2
 zocprotos
 zocromas

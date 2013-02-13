@@ -58,91 +58,6 @@ related:
   mas_thread_variables.c
 */
 
-/* static size_t transaction_stacksize = 0; */
-/* static void *transaction_stackaddr = NULL; */
-
-/* naming : setup + pthread_create = start */
-int
-#ifdef MAS_TR_PERSIST
-mas_transaction_start( mas_lcontrol_t * plcontrol, unsigned persistent_transaction )
-#else
-mas_transaction_start( mas_lcontrol_t * plcontrol )
-#endif
-{
-  int r = 0;
-
-  if ( plcontrol )
-  {
-    /* tMSG( "opnd chn(j.bef/ fork) r:%d", r ); */
-
-    /* ??????? not here */
-    /* mas_lcontrol_cleaning_transactions( ... ); */
-
-    /* wMSG( "cl. come in" ); */
-    MAS_LOG( "client came prc:%p", ( void * ) plcontrol );
-    plcontrol->h.status = MAS_STATUS_WORK;
-    {
-      mas_rcontrol_t *prcontrol = NULL;
-
-#ifdef MAS_TR_PERSIST
-      prcontrol = mas_rcontrol_make( plcontrol, persistent_transaction );
-#else
-      prcontrol = mas_rcontrol_make( plcontrol );
-#endif
-      if ( prcontrol )
-      {
-        ctrl.clients_came0++;
-        if ( opts.transaction_single )
-        {
-          mas_transaction( prcontrol );
-          mas_transaction_cleanup( prcontrol );
-          mas_rcontrol_delete( prcontrol, 1 );
-        }
-        else
-        {
-          MAS_LOG( "cr'ing tr. th; prc=%p #%lu", ( void * ) prcontrol, prcontrol->h.serial );
-          /* r = mas_xpthread_create( &prcontrol->h.thread, mas_transaction_th, MAS_THREAD_TRANSACTION, ( void * ) prcontrol ); */
-          /* pthread_mutex_lock( &ctrl.thglob.logger_mutex );   */
-          /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
-          r = pthread_create( &prcontrol->h.thread, &ctrl.thglob.transaction_attr, mas_transaction_th, ( void * ) prcontrol );
-          if ( prcontrol->h.thread )
-          {
-            MAS_LOG( "cr'ed tr. th; prc=%p [%lx] #%lu", ( void * ) prcontrol, prcontrol->h.thread, prcontrol->h.serial );
-          }
-        }
-      }
-    }
-  }
-  else
-  {
-#ifdef EMSG
-    EMSG( "no plcontrol" );
-#endif
-    ctrl.keep_listening = 0;
-  }
-  return r;
-}
-
-int
-mas_transaction_cancel( mas_rcontrol_t * prcontrol )
-{
-  EMSG( "CANCEL R%lu:%u (prcontrol:%p) th:%lx", prcontrol->h.serial, prcontrol->h.status, ( void * ) prcontrol, prcontrol->h.thread );
-  MAS_LOG( "cancelling R%lu:%u", prcontrol->h.serial, prcontrol->h.status );
-  if ( prcontrol->h.thread )
-  {
-    mas_pthread_cancel( prcontrol->h.thread );
-    /* prcontrol->complete = 1;    (* ????????????? *) */
-  }
-  return 0;
-}
-
-/* mas_transaction_protodesc_t _protos[] = {                 */
-/*   {MAS_TRANSACTION_PROTOCOL_HTTP, mas_proto_http}         */
-/*   , {MAS_TRANSACTION_PROTOCOL_XCROMAS, mas_proto_xcromas} */
-/* };                                                        */
-
-/* size_t protos_num = (* sizeof( _protos ) / sizeof( _protos[0] ) *) 0; */
-/* mas_transaction_protodesc_t *protos = (* &_protos[0] *) NULL;      */
 
 /* transaction should be cancelled?
  * FIXME all transactions remains active (keep-alive?) when one 1 of 2 quit
@@ -154,7 +69,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 
   MAS_LOG( "starting transaction xch (%lu protos)", ctrl.protos_num );
   tMSG( "starting transaction xch (%lu protos)", ctrl.protos_num );
-  HMSG("+ TRANS EXCHANGE");
+  HMSG( "+ TRANS EXCHANGE" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
     char *data = NULL;
@@ -220,13 +135,13 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   }
   MAS_LOG( "end transaction xch" );
   tMSG( "end transaction xch" );
-  HMSG("- TRANS EXCHANGE");
+  HMSG( "- TRANS EXCHANGE" );
   return r;
 }
 
 /* return 0 to end transaction */
 /* return >0 to continue       */
-void *
+static void *
 mas_transaction( mas_rcontrol_t * prcontrol )
 {
   int r = 1;
@@ -286,51 +201,10 @@ mas_transaction( mas_rcontrol_t * prcontrol )
   return NULL;
 }
 
-void
-mas_transaction_cleanup( void *arg )
-{
-  mas_rcontrol_t *prcontrol = NULL;
-
-  prcontrol = ( mas_rcontrol_t * ) arg;
-  if ( prcontrol )
-  {
-    MAS_LOG( "tr. th cleanup prc:%p #%lu", ( void * ) prcontrol, prcontrol->h.serial );
-    /* usleep( 1000000 ); */
-    if ( prcontrol->h.pchannel )
-    {
-      mas_channel_t *tch;
-
-      tch = prcontrol->h.pchannel;
-      prcontrol->h.pchannel = NULL;
-
-      /* mas_channel_close( prcontrol->h.pchannel ); */
-      mas_channel_delete( tch, 1, 0 );
-    }
-
-    ctrl.in_pipe--;
-    prcontrol->h.status = MAS_STATUS_END;
-    /* rMSG( "end transaction; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
-
-    mas_thread_variables_delete(  );
-
-    {
-      mas_lcontrol_t *plcontrol;
-
-      plcontrol = prcontrol ? prcontrol->plcontrol : NULL;
-      mas_pthread_mutex_lock( &ctrl.thglob.cnttr1_mutex );
-      plcontrol->clients_gone++;
-      ctrl.clients_gone++;
-      ctrl.transactions_time += mas_double_time(  ) - prcontrol->start_time;
-      mas_pthread_mutex_unlock( &ctrl.thglob.cnttr1_mutex );
-    }
-    prcontrol->complete = 1;
-    /* mas_rcontrol_delete( prcontrol, 0 ); */
-  }
-}
 
 /* working with client */
 /* naming : pthread_create argument = th */
-void *
+static void *
 mas_transaction_th( void *trcontrol )
 {
   void *r = NULL;
@@ -448,6 +322,123 @@ mas_transaction_th( void *trcontrol )
   MAS_LOG( "tr. th. end" );
   mas_pthread_exit( NULL );
   return r;
+}
+
+/* naming : setup + pthread_create = start */
+int
+#ifdef MAS_TR_PERSIST
+mas_transaction_start( mas_lcontrol_t * plcontrol, unsigned persistent_transaction )
+#else
+mas_transaction_start( mas_lcontrol_t * plcontrol )
+#endif
+{
+  int r = 0;
+
+  if ( plcontrol )
+  {
+    /* tMSG( "opnd chn(j.bef/ fork) r:%d", r ); */
+
+    /* ??????? not here */
+    /* mas_lcontrol_cleaning_transactions( ... ); */
+
+    /* wMSG( "cl. come in" ); */
+    MAS_LOG( "client came prc:%p", ( void * ) plcontrol );
+    plcontrol->h.status = MAS_STATUS_WORK;
+    {
+      mas_rcontrol_t *prcontrol = NULL;
+
+#ifdef MAS_TR_PERSIST
+      prcontrol = mas_rcontrol_make( plcontrol, persistent_transaction );
+#else
+      prcontrol = mas_rcontrol_make( plcontrol );
+#endif
+      if ( prcontrol )
+      {
+        ctrl.clients_came0++;
+        if ( opts.transaction_single )
+        {
+          mas_transaction( prcontrol );
+          mas_transaction_cleanup( prcontrol );
+          mas_rcontrol_delete( prcontrol, 1 );
+        }
+        else
+        {
+          MAS_LOG( "cr'ing tr. th; prc=%p #%lu", ( void * ) prcontrol, prcontrol->h.serial );
+          /* r = mas_xpthread_create( &prcontrol->h.thread, mas_transaction_th, MAS_THREAD_TRANSACTION, ( void * ) prcontrol ); */
+          /* pthread_mutex_lock( &ctrl.thglob.logger_mutex );   */
+          /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
+          r = pthread_create( &prcontrol->h.thread, &ctrl.thglob.transaction_attr, mas_transaction_th, ( void * ) prcontrol );
+          if ( prcontrol->h.thread )
+          {
+            MAS_LOG( "cr'ed tr. th; prc=%p [%lx] #%lu", ( void * ) prcontrol, prcontrol->h.thread, prcontrol->h.serial );
+          }
+        }
+      }
+    }
+  }
+  else
+  {
+#ifdef EMSG
+    EMSG( "no plcontrol" );
+#endif
+    ctrl.keep_listening = 0;
+  }
+  return r;
+}
+
+int
+mas_transaction_cancel( mas_rcontrol_t * prcontrol )
+{
+  EMSG( "CANCEL R%lu:%u (prcontrol:%p) th:%lx", prcontrol->h.serial, prcontrol->h.status, ( void * ) prcontrol, prcontrol->h.thread );
+  MAS_LOG( "cancelling R%lu:%u", prcontrol->h.serial, prcontrol->h.status );
+  if ( prcontrol->h.thread )
+  {
+    mas_pthread_cancel( prcontrol->h.thread );
+    /* prcontrol->complete = 1;    (* ????????????? *) */
+  }
+  return 0;
+}
+
+void
+mas_transaction_cleanup( void *arg )
+{
+  mas_rcontrol_t *prcontrol = NULL;
+
+  prcontrol = ( mas_rcontrol_t * ) arg;
+  if ( prcontrol )
+  {
+    MAS_LOG( "tr. th cleanup prc:%p #%lu", ( void * ) prcontrol, prcontrol->h.serial );
+    /* usleep( 1000000 ); */
+    if ( prcontrol->h.pchannel )
+    {
+      mas_channel_t *tch;
+
+      tch = prcontrol->h.pchannel;
+      prcontrol->h.pchannel = NULL;
+
+      /* mas_channel_close( prcontrol->h.pchannel ); */
+      mas_channel_delete( tch, 1, 0 );
+    }
+
+    ctrl.in_pipe--;
+    prcontrol->h.status = MAS_STATUS_END;
+    /* rMSG( "end transaction; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
+
+    mas_thread_variables_delete(  );
+
+    {
+      mas_lcontrol_t *plcontrol;
+
+      plcontrol = prcontrol ? prcontrol->plcontrol : NULL;
+      mas_pthread_mutex_lock( &ctrl.thglob.cnttr1_mutex );
+      plcontrol->clients_gone++;
+      ctrl.clients_gone++;
+      ctrl.transactions_time += mas_double_time(  ) - prcontrol->start_time;
+      mas_pthread_mutex_unlock( &ctrl.thglob.cnttr1_mutex );
+    }
+    prcontrol->complete = 1;
+    /* mas_rcontrol_delete( prcontrol, 0 ); */
+  }
 }
 
 int

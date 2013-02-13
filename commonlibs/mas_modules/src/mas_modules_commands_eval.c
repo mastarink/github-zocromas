@@ -126,7 +126,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
       {
         char *full_libname = NULL;
 
-        full_libname = mas_strdup( "mas_cmdmod_" );
+        /* full_libname = mas_strdup( "mas_cmdmod_" ); */
         tMSG( "lib %s + %s", full_libname, libname );
         MAS_LOG( "lib %s + %s", full_libname, libname );
         full_libname = mas_strcat_x( full_libname, libname );
@@ -246,7 +246,7 @@ mas_evaluate_command( const char *question )
 char *
 mas_evaluate_transaction_command( mas_rcontrol_t * prcontrol, const char *question )
 {
-  HMSG( "EVAL TR %s", question );
+  HMSG( "EVAL TR '%s'", question );
   return mas_evaluate_cmd( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
 }
 

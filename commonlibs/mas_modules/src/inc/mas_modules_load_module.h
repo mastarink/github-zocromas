@@ -14,6 +14,7 @@ mas_transaction_fun_t mas_modules_load_proto_func( const char *libname, const ch
 mas_transaction_fun_t mas_modules_load_transaction_func( const char *libname, const char *funname );
 mas_cmd_t *mas_modules_load_subtable( const char *libname );
 
+void mas_modules_destroy( void );
 
 #  undef MAS_WEAK
 #endif

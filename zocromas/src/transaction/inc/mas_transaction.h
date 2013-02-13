@@ -27,9 +27,9 @@ int mas_transaction_start( mas_lcontrol_t * plcontrol );
 #  endif
 int mas_transaction_cancel( mas_rcontrol_t * prcontrol );
 
-void *mas_transaction( mas_rcontrol_t * prcontrol );
+/* void *mas_transaction( mas_rcontrol_t * prcontrol ); */
 
-void *mas_transaction_th( void *trcontrol );
+/* void *mas_transaction_th( void *trcontrol ); */
 
 void mas_transaction_cleanup( void *arg );
 

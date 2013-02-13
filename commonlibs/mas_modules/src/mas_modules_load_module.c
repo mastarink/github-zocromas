@@ -53,13 +53,42 @@ __mas_modules_load_module( const char *fullname, int noerr )
   }
   else
   {
+    char *dler;
+
     module_handle = dlopen( fullname, RTLD_LAZY | RTLD_LOCAL );
+    dler = dlerror(  );
+    dler = mas_strdup( dler );
+    MAS_LOG( "ERROR: module not loaded: '%s' (%s)", fullname, dler );
     if ( !module_handle && !noerr )
     {
-      EMSG( "%s", dlerror(  ) );
-      MAS_LOG( "ERROR: module not loaded: '%s'", fullname );
     }
+    EMSG( "%s", dler );
+    if ( dler )
+      mas_free( dler );
     MAS_LOG( "module load: '%s' (%p)", fullname, ( void * ) module_handle );
+    if ( module_handle )
+    {
+      unsigned cnt, size;
+      void **array;
+
+      pthread_rwlock_wrlock( &ctrl.thglob.modules_list_rwlock );
+      array = ctrl.loaded_modules;
+      /* ctrl.loaded_modules = NULL;  */
+      /* ctrl.loaded_modules_cnt = 0; */
+      cnt = ctrl.loaded_modules_cnt;
+      size = cnt + 1;
+
+      if ( array )
+        array = mas_realloc( array, sizeof( void * ) * size );
+      else
+        array = mas_malloc( sizeof( void * ) * size );
+      array[cnt] = module_handle;
+
+      ctrl.loaded_modules = array;
+      ctrl.loaded_modules_cnt = size;
+      HMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, fullname );
+      pthread_rwlock_unlock( &ctrl.thglob.modules_list_rwlock );
+    }
   }
   return module_handle;
 }
@@ -75,9 +104,9 @@ _mas_load_module( const char *libname, const char *path, int noerr )
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
   module_handle = __mas_modules_load_module( fullname, noerr );
-  HMSG("MOD %s %s", libname, module_handle?"ok":"fail");
-  tMSG("load module %s %s", libname, module_handle?"OK":"FAIL");
-  MAS_LOG("load module %s %s", libname, module_handle?"OK":"FAIL");
+  HMSG( "MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
+  tMSG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
+  MAS_LOG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   mas_free( fullname );
   return module_handle;
 }
@@ -156,4 +185,21 @@ mas_modules_load_subtable( const char *libname )
     cmd_tab = ( mas_cmd_t * ) ( unsigned long ) dlsym( module_handle, "subcmdtable" );
   MAS_LOG( "load subtable from %s => %p", libname, ( void * ) cmd_tab );
   return cmd_tab;
+}
+
+void
+mas_modules_destroy( void )
+{
+  if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )
+  {
+    for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )
+    {
+      HMSG( "MODULE DESTROY %u. %p", im, ( void * ) ctrl.loaded_modules[im] );
+      dlclose( ctrl.loaded_modules[im] );
+      ctrl.loaded_modules[im] = NULL;
+    }
+    ctrl.loaded_modules_cnt = 0;
+    mas_free( ctrl.loaded_modules );
+    ctrl.loaded_modules = NULL;
+  }
 }

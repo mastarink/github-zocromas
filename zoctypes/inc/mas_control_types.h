@@ -22,6 +22,7 @@ struct mas_pthread_globals_s
   pthread_mutex_t malloc_mutex;
   /* pthread_mutex_t lcontrols_list_mutex; */
   pthread_rwlock_t lcontrols_list_rwlock;
+  pthread_rwlock_t modules_list_rwlock;
   pthread_mutex_t cleanup_transactions_mutex;
   pthread_mutex_t msg_mutex;
   pthread_mutex_t emsg_mutex;
@@ -59,6 +60,10 @@ struct mas_control_s
   pid_t logger_tid;
   char *binname;
   char *progname;
+
+  void **loaded_modules;
+  unsigned loaded_modules_cnt;
+
   double start_time;
   double transactions_time;
 
@@ -78,13 +83,13 @@ struct mas_control_s
   unsigned is_client:1;
   unsigned is_server:1;
 
-  /* from opts: */  
+  /* from opts: */
   unsigned messages:1;
 
   unsigned daemon:1;
   unsigned close_std:1;
   unsigned redirect_std:1;
-  /* /from opts: */  
+  /* /from opts: */
 
   unsigned keep_listening:1;
   unsigned keep_logging:1;

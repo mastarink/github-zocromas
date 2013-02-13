@@ -1434,3 +1434,42 @@ server
 get 
 get server
 server quit
+get server
+server quit
+bye
+get server
+server quit
+notify Wow
+notify
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server info
+notify msg Wow
+server quit
+notify msg Wow
+server info
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify msg Wow
+server quit
+notify nt Wow
+notify nt Wahhh
+server quit
