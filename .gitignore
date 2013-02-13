@@ -6,6 +6,7 @@ install.sh/
 #
 testx/
 saved/
+try/
 install/
 files*.txt
-
+*.env
