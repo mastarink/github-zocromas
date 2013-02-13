@@ -73,6 +73,7 @@ function setup_dirs ()
       fi
     fi
   fi
+  export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
 }
 function show_setup ()
 {

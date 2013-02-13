@@ -1,3 +1,10 @@
 ACLOCAL_AMFLAGS = -I m4
 #? include_HEADERS = inc/stdio.h
-SUBDIRS=src
+SUBDIRS= src
+
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = @PACKAGE_NAME@.pc
+
+# ? mas_tools.pc: mas_tools.pc.in
+

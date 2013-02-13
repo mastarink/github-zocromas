@@ -93,7 +93,6 @@ AC_CHECK_LIB(readline, readline)
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
 # AC_SUBST(GLADE_CFLAGS)
-
 # PKG_CHECK_MODULES([GLADE], [libglade-2.0])
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 
@@ -103,6 +102,7 @@ AC_CHECK_LIB(readline, readline)
 
 # Checks for library functions.
 
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_io mas_msg mas_log])
 
 # Configure options: --enable-debug[=no].
 
@@ -140,7 +140,7 @@ fi
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
 # AM_LDFLAGS="-ldl -Wl,--wrap=strdup,--wrap=malloc,--wrap=free,--wrap=realloc,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
-AM_LDFLAGS="-ldl -Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
+AM_LDFLAGS="-Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
 # __MAS_LINK_DATE__=\`date +0x%Y%m%d\`
 AC_SUBST(AM_LDFLAGS)
 

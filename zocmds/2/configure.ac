@@ -27,14 +27,14 @@ AC_PREREQ([2.69])
 # AM_INIT_AUTOMAKE
 
 # AC_INIT([zocmds],[1.0.1.3],[bug-report@mastarink.net])
-AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
+AC_INIT([zocmds2],m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_cmdmod2_notify.c])
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
-# AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -94,7 +94,6 @@ AC_CHECK_LIB(readline, readline)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
 # AC_SUBST(GLADE_CFLAGS)
 # PKG_CHECK_MODULES([GLADE], [libglade-2.0])
-
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 PKG_CHECK_MODULES([LIBNOTIFY], [libnotify])
 PKG_CHECK_MODULES([GTK], [gtk+-2.0])
@@ -105,6 +104,7 @@ PKG_CHECK_MODULES([GTK], [gtk+-2.0])
 
 # Checks for library functions.
 
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_io mas_msg mas_log])
 
 # Configure options: --enable-debug[=no].
 
@@ -169,7 +169,7 @@ AC_SUBST(MAS_CFLAGS)
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(includedir)"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
@@ -196,9 +196,6 @@ AC_SUBST([MAS_STRDUP])
 
 
 
-AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
-AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
-AC_SUBST([MAS_MODULES_DIR])
 
 AH_TEMPLATE([MAS_UNAME],[mas_uname])
 AC_DEFINE_UNQUOTED( MAS_UNAME, "`uname -a`", [uname])

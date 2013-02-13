@@ -28,7 +28,6 @@ AC_PREREQ([2.69])
 
 # AC_INIT([mas_modules],[1.0.1.3],[bug-report@mastarink.net])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
-
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_modules_commands.c])
 
@@ -104,6 +103,7 @@ AC_CHECK_LIB(readline, readline)
 
 # Checks for library functions.
 
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_msg mas_log])
 
 # Configure options: --enable-debug[=no].
 
@@ -164,11 +164,10 @@ AC_DEFINE_UNQUOTED(MAS_CFLAGS, "${AM_CFLAGS}", [compile flags])
 AC_SUBST(MAS_CFLAGS)
 
 
-
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(includedir)"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
@@ -195,9 +194,6 @@ AC_SUBST([MAS_STRDUP])
 
 
 
-AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
-AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
-AC_SUBST([MAS_MODULES_DIR])
 
 AH_TEMPLATE([MAS_UNAME],[mas_uname])
 AC_DEFINE_UNQUOTED( MAS_UNAME, "`uname -a`", [uname])
@@ -218,9 +214,11 @@ AC_SUBST([MAS_S_DATE])
 #OBJDIR=masobj
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile
+AC_CONFIG_FILES([${PACKAGE_NAME}.pc
+		Makefile
 		src/Makefile
 		src/inc/Makefile
+
 		])
 AC_OUTPUT
 

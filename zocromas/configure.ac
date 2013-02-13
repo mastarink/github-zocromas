@@ -95,9 +95,10 @@ AC_CHECK_LIB(readline, readline)
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
 # AC_SUBST(GLADE_CFLAGS)
-
 # PKG_CHECK_MODULES([GLADE], [libglade-2.0])
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
+
+
 
 # Checks for header files.
 
@@ -105,6 +106,7 @@ AC_CHECK_LIB(readline, readline)
 
 # Checks for library functions.
 
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_io mas_channel mas_variables mas_messageio mas_thtools mas_msg mas_log])
 
 # Configure options: --enable-debug[=no].
 

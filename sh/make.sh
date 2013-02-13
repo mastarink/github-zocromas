@@ -1,7 +1,7 @@
 #!/bin/sh
 if [[ -f "sh/setup.sh" ]] ; then
   . sh/setup.sh
-
+  echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2
   function make_any_tilme ()
   {
     local timname tstart

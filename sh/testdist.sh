@@ -12,6 +12,7 @@ if [[ -f "sh/setup.sh" ]] && [[ -f "configure.ac" ]] ; then
       if cd "$indir" ; then
       # make -d dist
       # make -s dist
+#       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2
 	make -s distcheck || return 1
 	echo "Saving *.tar.{bz2,gz} to $savedirdist" >&2
 	mv *.tar.{bz2,gz} $savedirdist || return 1

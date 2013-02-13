@@ -103,9 +103,14 @@ AC_CHECK_LIB(readline, readline)
 
 # Checks for library functions.
 
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_thtools])
 
 # Configure options: --enable-debug[=no].
 
+# AC_ARG_ENABLE([debug],
+#   [AS_HELP_STRING([--enable-debug],
+#     [enable debug code (default is no)])],
+#   [debug="$withval"], [debug=no])
 
 AC_ARG_ENABLE([debug],
 	      AC_HELP_STRING([--enable-debug],
@@ -126,6 +131,12 @@ if test x$enable_tracemem = xyes ; then
     AC_DEFINE(MAS_TRACEMEM, 1,
 	[Enable additional tracememing at the expense of performance and size])
 fi
+
+# AC_REQUIRE([AM_MAINTAINER_MODE])
+# 
+# if test $USE_MAINTAINER_MODE = yes; then
+# ..........
+# fi
 
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
@@ -153,11 +164,10 @@ AC_DEFINE_UNQUOTED(MAS_CFLAGS, "${AM_CFLAGS}", [compile flags])
 AC_SUBST(MAS_CFLAGS)
 
 
-
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(includedir)"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
@@ -184,9 +194,6 @@ AC_SUBST([MAS_STRDUP])
 
 
 
-AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
-AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
-AC_SUBST([MAS_MODULES_DIR])
 
 AH_TEMPLATE([MAS_UNAME],[mas_uname])
 AC_DEFINE_UNQUOTED( MAS_UNAME, "`uname -a`", [uname])
@@ -207,7 +214,8 @@ AC_SUBST([MAS_S_DATE])
 #OBJDIR=masobj
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile
+AC_CONFIG_FILES([${PACKAGE_NAME}.pc
+		Makefile
 		src/Makefile
 		src/inc/Makefile
 

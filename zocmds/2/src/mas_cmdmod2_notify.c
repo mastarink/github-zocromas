@@ -69,13 +69,21 @@ msg_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
+/* static void                                       */
+/* n_closed( GtkWidget * widget, gpointer data )     */
+/* {                                                 */
+/*   fprintf( stderr, ">>> %s\n", ( char * ) data ); */
+/*   gtk_main_quit(  );                              */
+/* }                                                 */
+
 static char *
 msg_nt( STD_CMD_ARGS )
 {
-  NotifyNotification *notif;
+  static NotifyNotification *notif = NULL;
   GError *error = NULL;
 
-  notif = notify_notification_new( args, NULL, NULL );
+  if ( !notif )
+    notif = notify_notification_new( args, NULL, NULL );
   /* notify_notification_set_timeout( notif, NOTIFY_EXPIRES_NEVER ); */
   notify_notification_set_timeout( notif, 10000 );
   /* if ( accepts_actions )                                                                              */
@@ -83,6 +91,7 @@ msg_nt( STD_CMD_ARGS )
   /*   notify_notification_add_action( notif, "Wow", "Lab", cb, ( "Hooo" ), ff (* ff not working? *)  ); */
   /*   notify_notification_add_action( notif, "quit", "Quit", cb, ( "Hooo" ), NULL );                    */
   /* }                                                                                                   */
+  notify_notification_update( notif, "*zocromas*", args, NULL );
   notify_notification_show( notif, &error );
 
   /* g_signal_connect( notif, "closed", ( GCallback ) n_closed, clabel ); */
