@@ -153,7 +153,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   int r = -1;
 
   MAS_LOG( "starting transaction xch (%lu protos)", ctrl.protos_num );
-  rMSG( "starting transaction xch (%lu protos)", ctrl.protos_num );
+  tMSG( "starting transaction xch (%lu protos)", ctrl.protos_num );
+  HMSG("+ TRANS EXCHANGE");
   if ( prcontrol && prcontrol->h.pchannel )
   {
     char *data = NULL;
@@ -218,7 +219,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     r = -1;
   }
   MAS_LOG( "end transaction xch" );
-  rMSG( "end transaction xch" );
+  tMSG( "end transaction xch" );
+  HMSG("- TRANS EXCHANGE");
   return r;
 }
 
@@ -230,7 +232,8 @@ mas_transaction( mas_rcontrol_t * prcontrol )
   int r = 1;
 
   MAS_LOG( "starting transaction" );
-  rMSG( "starting transaction" );
+  tMSG( "starting transaction" );
+  HMSG( "+ TRANS" );
 
   if ( prcontrol )
   {
@@ -278,7 +281,8 @@ mas_transaction( mas_rcontrol_t * prcontrol )
     }
   }
   MAS_LOG( "end transaction" );
-  rMSG( "end transaction" );
+  tMSG( "end transaction" );
+  HMSG( "- TRANS" );
   return NULL;
 }
 

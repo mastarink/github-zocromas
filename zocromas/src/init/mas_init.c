@@ -219,7 +219,7 @@ mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, cha
   if ( r >= 0 && !( mas_init_argv( argc, argv, env ) > 1 ) )
     r = mas_init_env(  );
 
-  /* HMSG( "opts.argv[0]: %s\n", opts.argv[0] ); */
+  /* HMSG( "opts.argv[0]: %s", opts.argv[0] ); */
   /* mas_init_message(  ); */
   atexit( atexit_fun );
   if ( r >= 0 && initsig )
@@ -242,7 +242,8 @@ mas_destroy( void )
 
   if ( opts.argv )
   {
-    HMSG( "(%d) destroy, restart:%d [%s]\n", __LINE__, ctrl.restart, opts.argv[0] );
+    /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, opts.argv[0] ); */
+    HMSG( "DESTROY, restart:%d", ctrl.restart );
     tMSG( ">>>>> %s %s", opts.argv[0], *( &opts.argv[1] ) );
     if ( ctrl.restart )
     {
@@ -260,7 +261,7 @@ mas_destroy( void )
         setenv( name, val, 1 );
       }
       r = execvp( opts.argv[0], &opts.argv[0] );
-      HMSG( "FAIL restart %d %s\n", r, opts.argv[0] );
+      HMSG( "FAIL restart %d %s", r, opts.argv[0] );
       P_ERR;
     }
   }

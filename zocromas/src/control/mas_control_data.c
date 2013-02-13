@@ -28,6 +28,7 @@ related:
 mas_control_t ctrl = {
   .main_exit = 0,
   .main_pid = 0,
+  .child_pid = 0,
   .main_thread = ( pthread_t ) 0,
   .main_tid = 0,
   .master_thread = ( pthread_t ) 0,
@@ -43,7 +44,6 @@ mas_control_t ctrl = {
   .saved_stderr = -1,
   .saved_stderr_file = NULL,
   .saved_stdout = -1,
-  .noclose_std = 0,
   .transactions_time = 0.0,
   .fatal = 0,
 
@@ -57,7 +57,11 @@ mas_control_t ctrl = {
   .is_client = 0,
   .is_server = 0,
   .messages = 1,
+  
   .daemon = 0,
+  .close_std = 0,
+  .redirect_std = 0,
+
   .keep_listening = 0,
   .keep_logging = 0,
 

@@ -68,21 +68,20 @@ mas_listeners_start( void )
   else
   {
     MAS_LOG( "to start listeners" );
-    thMSG( "to start listeners" );
+    tMSG( "to start listeners" );
     HMSG( "LISTENERS START" );
     for ( unsigned ith = 0; ith < opts.hosts_num; ith++ )
     {
       if ( opts.hosts[ith] )
       {
-        thMSG( "host %d: '%s'", ith, opts.hosts[ith] );
+        tMSG( "host %d: '%s'", ith, opts.hosts[ith] );
+	HMSG("LISTEN AT %d.%s", ith, opts.hosts[ith]);
         MAS_LOG( "to start listener #%d %s", ith + 1, opts.hosts[ith] );
         r = mas_listener_start( opts.hosts[ith], opts.default_port );
       }
       else
       {
-#ifdef EMSG
         EMSG( "no host for %d", ith );
-#endif
         MAS_LOG( "no host for #%d", ith );
         r = -1;
       }
@@ -99,9 +98,7 @@ mas_listeners_stop( void )
 {
   mas_listeners_cancel(  );
   mas_listeners_wait(  );
-#ifdef FMSG
   FMSG( "l's STOPPED" );
-#endif
   return 0;
 }
 
@@ -112,9 +109,7 @@ mas_listeners_cancel( void )
   {
     mas_lcontrol_t *plcontrol = NULL;
 
-#ifdef FMSG
     FMSG( "CANCEL l's" );
-#endif
     MAS_LOG( "cancelling listeners" );
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
     pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
@@ -134,16 +129,14 @@ mas_listeners_wait( void )
   mas_lcontrol_t *plcontrol = NULL;
 
   MAS_LOG( "to wait for listeners to stop ..." );
-  thMSG( "to wait for listeners to stop ..." );
+  tMSG( "to wait for listeners to stop ..." );
   while ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) && ( plcontrol = MAS_LIST_FIRST( ctrl.lcontrols_list ) )
           && mas_listener_wait( plcontrol ) == 0 )
   {
     mas_lcontrols_clean_list( 0 );
   }
   ctrl.status = MAS_STATUS_STOP;
-#ifdef FMSG
   FMSG( "l's STOPPED" );
-#endif
   /* ??????????? */
   /* mas_lcontrols_clean_list( 0 ); */
 

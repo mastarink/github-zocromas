@@ -80,6 +80,7 @@ universal_complex_cmd( STD_CMD_ARGS )
       /* MAS_LOG( "(%s) UNI command table %p", this_command->name, ( void * ) this_command->subtable ); */
       tMSG( "UNI command %s", this_command->name );
       MAS_LOG( "UNI command %s", this_command->name );
+      HMSG( "UNI %s", this_command->name );
       question = args;
       args = NULL;
       answer = mas_modules_commands( STD_CMD_PASS );
@@ -93,53 +94,66 @@ universal_complex_cmd( STD_CMD_ARGS )
 }
 
 static int
-mas_missing_funsetup( mas_cmd_t * pcommand )
+mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
 {
   int r = -1;
-  char *full_libname = NULL;
-  mas_cmd_t *loaded_subtable = NULL;
-  mas_cmd_fun_t cmd_fun = NULL;
-  const char *libname;
 
   if ( pcommand )
   {
-    char *full_fun_name = NULL;
+    const char *libname;
+    const char *name;
+    mas_cmd_fun_t cmd_fun = NULL;
+    mas_cmd_t *loaded_subtable = NULL;
 
+    name = pcommand->name;
     libname = pcommand->libname;
+    HMSG( "MISSING FUNC for %s [sub:%d]", name, pcommand->subtable ? 1 : 0 );
     if ( !libname )
-      libname = pcommand->name;
-
-    MAS_LOG( "to look for module %s.%s : %p", libname, pcommand->name, ( void * ) ( unsigned long long ) pcommand->function );
-    tMSG( "to look for module %s : %s", libname, pcommand->name );
     {
-      full_libname = mas_strdup( "mas_cmdmod_" );
-      tMSG( "lib %s + %s", full_libname, libname );
-      MAS_LOG( "lib %s + %s", full_libname, libname );
-      full_libname = mas_strcat_x( full_libname, libname );
+      HMSG( "LIB by CMD %s", name );
+      libname = name;
+      name = "";
+    }
 
-      full_fun_name = mas_strdup( pcommand->name );
-      full_fun_name = mas_strcat_x( full_fun_name, "_cmd" );
-      if ( full_fun_name )
+    MAS_LOG( "to look for module %s.%s : %p", libname, name, ( void * ) ( unsigned long long ) pcommand->function );
+    tMSG( "to look for module %s : %s", libname, name );
+    {
+
+      HMSG( "CMD NAME %s.%s L%d", libname, name, level );
+      if ( name && *name )
       {
-        cmd_fun = mas_modules_load_cmd_func( full_libname, full_fun_name );
-        loaded_subtable = mas_modules_load_subtable( full_libname );
-        tMSG( "cmd_fun %s.%s: %p", full_libname, full_fun_name, ( void * ) ( unsigned long long ) cmd_fun );
-        MAS_LOG( "loading  func. %s:%s => func:%p subt:%p", full_libname, full_fun_name, ( void * ) ( unsigned long ) cmd_fun,
-                 ( void * ) loaded_subtable );
+      }
+      {
+        char *full_libname = NULL;
+
+        full_libname = mas_strdup( "mas_cmdmod_" );
+        tMSG( "lib %s + %s", full_libname, libname );
+        MAS_LOG( "lib %s + %s", full_libname, libname );
+        full_libname = mas_strcat_x( full_libname, libname );
+        if ( 0 && name && *name )
+        {
+          char *full_fun_name = NULL;
+
+          MAS_LOG( "loading  func. %s:%s", full_libname, full_fun_name );
+          cmd_fun = mas_modules_load_cmd_func( full_libname, full_fun_name );
+          mas_free( full_fun_name );
+        }
         if ( !cmd_fun )
         {
+          loaded_subtable = mas_modules_load_subtable( full_libname );
           if ( loaded_subtable )
           {
             cmd_fun = universal_complex_cmd;
+            HMSG( "SET UNI for %s", name );
             MAS_LOG( "universal command for %s {%p}", libname, ( void * ) ( unsigned long ) cmd_fun );
-            tMSG( "universal command for %s.%s", full_libname, full_fun_name );
+            tMSG( "universal command for %s.%s", libname, name );
           }
           else
           {
-            EMSG( "No subtable at %s.%s", full_libname, full_fun_name );
+            EMSG( "No subtable at %s.%s", libname, name );
           }
         }
-        mas_free( full_fun_name );
+        mas_free( full_libname );
       }
     }
     tMSG( "cmd_fun:%p", ( void * ) ( unsigned long ) cmd_fun );
@@ -150,18 +164,17 @@ mas_missing_funsetup( mas_cmd_t * pcommand )
         pcommand->function = cmd_fun;
         pcommand->subtable = loaded_subtable;
         /* MAS_LOG( "cmd_fun:%p ; subtable:%p", ( void * ) ( unsigned long ) cmd_fun, ( void * ) loaded_subtable ); */
-        MAS_LOG( "{%p} set fun/sbt for module %s.%s : %p : %p", ( void * ) pcommand, libname, pcommand->name,
+        MAS_LOG( "{%p} set fun/sbt for module %s.%s : %p : %p", ( void * ) pcommand, libname, name,
                  ( void * ) ( unsigned long ) pcommand->function, ( void * ) pcommand->subtable );
         r = 0;
       }
     }
     else if ( pcommand )
     {
-      EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", pcommand->id, pcommand->name, libname );
-      MAS_LOG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", pcommand->id, pcommand->name, libname );
+      EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", pcommand->id, name, libname );
+      MAS_LOG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", pcommand->id, name, libname );
       r = -1;
     }
-    mas_free( full_libname );
   }
   return r;
 }
@@ -226,12 +239,14 @@ mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *
 char *
 mas_evaluate_command( const char *question )
 {
+  HMSG( "EVAL CMD %s", question );
   return mas_evaluate_transaction_command( NULL, question );
 }
 
 char *
 mas_evaluate_transaction_command( mas_rcontrol_t * prcontrol, const char *question )
 {
+  HMSG( "EVAL TR %s", question );
   return mas_evaluate_cmd( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
 }
 
@@ -244,11 +259,16 @@ mas_evaluate_cmd( STD_CMD_ARGS )
   if ( prcontrol )
     prcontrol->qbin = MSG_BIN_NONE;
   MAS_LOG( "evaluate: cmd %p", ( void * ) this_command );
-  if ( !this_command )
+  if ( this_command )
+  {
+    HMSG( "EVAL %s", this_command->name );
+  }
+  else
   {
     this_command = &root_command;
     MAS_LOG( "evaluate: ROOT %s cmd %p subtab:%p", this_command ? this_command->name : NULL, ( void * ) this_command,
              ( void * ) this_command->subtable );
+    HMSG( "EVAL ROOT %s", this_command->name );
   }
   if ( this_command )
   {
@@ -258,7 +278,7 @@ mas_evaluate_cmd( STD_CMD_ARGS )
     {
       MAS_LOG( "{%p} must set fun/sbt for module %s.%s : %p : %p", ( void * ) this_command, this_command->libname,
                this_command->name, ( void * ) ( unsigned long ) this_command->function, ( void * ) this_command->subtable );
-      r = mas_missing_funsetup( this_command );
+      r = mas_missing_funsetup( this_command, level );
       MAS_LOG( "evaluate : missing function - '%s' args: '%s'", this_command->name, args );
     }
     tMSG( "(%d) function:%p", r, ( void * ) ( unsigned long long ) this_command->function );

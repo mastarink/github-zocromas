@@ -67,6 +67,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_MSG,
   MAS_CLI_OPT_NOMSG,
   MAS_CLI_OPT_NOHOSTS,
+  MAS_CLI_OPT_REDIRECT_STD,
+  MAS_CLI_OPT_NOREDIRECT_STD,
   MAS_CLI_OPT_CLOSE_STD,
   MAS_CLI_OPT_NOCLOSE_STD,
   MAS_CLI_OPT_MESSAGES,
@@ -107,8 +109,10 @@ static struct option cli_longopts[] = {
   {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},
   {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},
   {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},
-  {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},
+  {"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD},
+  {"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD},
   {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},
+  {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},
   {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},
   {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},
   {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},
@@ -286,7 +290,13 @@ mas_cli_make_option( int opt, const char *m_optarg )
   case MAS_CLI_OPT_MASTER:
     opts.nomaster = 0;
     break;
-  case MAS_CLI_OPT_NOCLOSE_STD:
+  case MAS_CLI_OPT_NOREDIRECT_STD:
+    opts.noredirect_std = 1;
+    break;
+  case MAS_CLI_OPT_REDIRECT_STD:
+    opts.noredirect_std = 0;
+    break;
+      case MAS_CLI_OPT_NOCLOSE_STD:
     opts.noclose_std = 1;
     break;
   case MAS_CLI_OPT_CLOSE_STD:

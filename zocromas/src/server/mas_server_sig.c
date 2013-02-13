@@ -183,8 +183,11 @@ sigint_han( int s )
     /* sleep( 10 ); */
     /* exit( 3 ); */
   }
+  /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
   if ( ctrl.daemon && ctrl.saved_stderr_file )
   {
+    int fr = -1;
+
     if ( int_cnt < 2 )
     {
       char *infos = NULL;
@@ -194,7 +197,9 @@ sigint_han( int s )
       /* show_info( ctrl.saved_stderr_file ); */
       mas_free( infos );
     }
-    fprintf( ctrl.saved_stderr_file, "INT %d of %d\x1b[K\r", int_cnt, MAS_MAX_INT_2 );
+    fr = fprintf( ctrl.saved_stderr_file, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
+    fflush(ctrl.saved_stderr_file);
+    /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
   }
   else
   {
@@ -283,11 +288,11 @@ mas_atexit( void )
 #else
   FMSG( "AT EXIT" );
 #endif
-  FMSG( "=====[%u @ %u]=================================================================", getpid(  ), getppid() );
+  FMSG( "=====[%u @ %u]=================================================================", getpid(  ), getppid(  ) );
   if ( ctrl.msgfile )
   {
     fclose( ctrl.msgfile );
     ctrl.msgfile = NULL;
   }
-  _exit(0);
+  _exit( 0 );
 }

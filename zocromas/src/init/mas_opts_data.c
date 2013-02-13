@@ -77,7 +77,6 @@ mas_options_t opts = {
   .wait_server = 0,
   .listener_single = 0,
   .transaction_single = 0,
-  .noclose_std = 0,
   .nologger = 0,
   .nolog = 0,
   .noticker = 0,
@@ -87,7 +86,11 @@ mas_options_t opts = {
   .nolisten = 0,
   .nomessages = 0,
   .exitsleep = 0,
+  
   .nodaemon = 0,
+  .noredirect_std = 0,
+  .noclose_std = 0,
+
   .default_port = MAS_DEFAULT_PORT,
   .env_optsname = "MAS_ZOCROMAS_DEFOPTS",
   .env_hostname = "MAS_ZOCROMAS_DEFHOST",

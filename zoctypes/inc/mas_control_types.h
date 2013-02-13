@@ -16,6 +16,7 @@ this:
 more:
   mas_common_types.h
 */
+typedef struct mas_pthread_globals_s mas_pthread_globals_t;
 struct mas_pthread_globals_s
 {
   pthread_mutex_t malloc_mutex;
@@ -39,13 +40,14 @@ struct mas_pthread_globals_s
   pthread_attr_t transaction_attr;
 
 };
-typedef struct mas_pthread_globals_s mas_pthread_globals_t;
 
 
 struct mas_control_s
 {
   pid_t main_pid;
   pthread_t main_thread;
+  pid_t child_pid;
+  pthread_t child_thread;
   pid_t main_tid;
   pthread_t master_thread;
   pid_t master_tid;
@@ -75,9 +77,15 @@ struct mas_control_s
   unsigned in_pipe;
   unsigned is_client:1;
   unsigned is_server:1;
+
+  /* from opts: */  
   unsigned messages:1;
+
   unsigned daemon:1;
-  unsigned noclose_std:1;
+  unsigned close_std:1;
+  unsigned redirect_std:1;
+  /* /from opts: */  
+
   unsigned keep_listening:1;
   unsigned keep_logging:1;
   unsigned stop_listeners:1;

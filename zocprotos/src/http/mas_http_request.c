@@ -252,7 +252,8 @@ mas_proto_http_parse_spc_headers( mas_rcontrol_t * prcontrol, mas_http_t * http,
 {
   if ( 0 == strcmp( name, "Connection" ) )
   {
-    rMSG( ">>>>>> HTTP HEADER: %s:%s", name, value );
+    tMSG( ">>>>>> HTTP HEADER: %s:%s", name, value );
+    HMSG("HTTP HEADER %s", name);
     MAS_LOG( "HTTP HEADER: %s:%s", name, value );
     if ( 0 == strcasecmp( value, "keep-alive" ) )
     {
@@ -296,7 +297,6 @@ mas_proto_http_parse_headers0( mas_rcontrol_t * prcontrol, mas_http_t * http )
       name = mas_proto_http_nonc( sp, &sp, ": " );
     MAS_LOG( "http parse headers 3" );
     value = mas_strdup( sp );
-    /* rMSG( "HTTP HEADER:'%s' --> '%s' = '%s'", s, name, value ); */
     http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
 
     http = mas_proto_http_parse_spc_headers( prcontrol, http, name, value );

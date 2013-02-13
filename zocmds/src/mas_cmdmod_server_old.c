@@ -55,105 +55,6 @@ more:
   mas_list_def.h
 */
 
-
-static char *
-info_cmd( STD_CMD_ARGS )
-{
-  /* cMSG( "args:%s", args ); */
-  char *buf = NULL;
-  size_t szbuf = 1024 * 30;
-
-  /* if ( pheader )                */
-  /* {                            */
-  /*   pheader->no_len = 1;        */
-  /*   pheader->direct_output = 1; */
-  /* }                            */
-  buf = mas_malloc( szbuf );
-  {
-    char *cp;
-    unsigned ith;
-    mas_lcontrol_t *plcontrol;
-
-    *buf = 0;
-    cp = buf;
-    char s1lts[64];
-    char slts[64];
-    char splts[64];
-
-    {
-      mas_tstrftime( s1lts, sizeof( s1lts ), "%Y%m%d %T", ctrl.stamp.first_lts );
-      mas_tstrftime( slts, sizeof( slts ), "%Y%m%d %T", ctrl.stamp.lts );
-      mas_tstrftime( splts, sizeof( splts ), "%Y%m%d %T", ctrl.stamp.prev_lts );
-    }
-    snprintf( cp, szbuf - ( cp - buf ),
-              "(%u/%u) #%u Server info:\n\tclients: {%lu - %lu = %lu}\n" "\tfirst lts: %s; lts: %s; prev.lts:%s\nmodsdir:%s\n"
-              "\t(%lu - %lu) logdir: %s;\n\tlogpath: %s;\n\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", level,
-              this_command ? this_command->only_level : 0, ctrl.restart_cnt, ctrl.clients_came, ctrl.clients_gone,
-              ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, ctrl.log_q_came,
-              ctrl.log_q_gone, opts.logdir, ctrl.logpath, ctrl.main_pid, ctrl.main_tid, ctrl.main_tid, ctrl.main_thread );
-    ith = 0;
-    /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
-    pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
-    MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
-    {
-      unsigned port = 0;
-      mas_channel_t *plchannel = NULL;
-
-      plchannel = plcontrol ? plcontrol->h.pchannel : NULL;
-      if ( plchannel->serv.path.sun_family != AF_UNIX )
-        port = plcontrol->port;
-      cp += strlen( cp );
-      snprintf( cp, szbuf - ( cp - buf ), "\t\t%u(s%lu). %s:%u; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu}\n", ith,
-                plcontrol->h.serial, plcontrol->host, port, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread,
-                plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone );
-      {
-        unsigned itr;
-        mas_rcontrol_t *prcontrol;
-
-        /* cMSG( "srv S" ); */
-        itr = 0;
-        /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
-        pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
-        MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
-        {
-          mas_channel_t *pchannel = NULL;
-          char *sip = NULL;
-
-          /* cMSG( "srv L %p", prcontrol ); */
-
-          cp += strlen( cp );
-          pchannel = prcontrol ? prcontrol->h.pchannel : NULL;
-          /* if ( pchannel )                            */
-          /*   sip = mas_channel_ip_string( pchannel ); */
-          if ( pchannel )
-          {
-            if ( pchannel->serv.path.sun_family == AF_UNIX )
-              sip = mas_strdup( pchannel->cli.path.sun_path );
-            else
-              sip = mas_ip_string( &pchannel->cli.addr.sin_addr );
-          }
-
-          snprintf( cp, szbuf - ( cp - buf ), "\t\t\t%u(s%lu). [<%s>] %s \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
-                    prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
-                    prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
-                    pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
-                    prcontrol->xch_cnt );
-          mas_free( sip );
-          itr++;
-        }
-        pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
-        /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
-        /* cMSG( "srv E" ); */
-      }
-      ith++;
-    }
-    pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
-    /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
-  }
-  buf = mas_realloc( buf, strlen( buf ) + 1 );
-  return buf;
-}
-
 static char *
 stop_cmd( STD_CMD_ARGS )
 {
@@ -202,8 +103,6 @@ quit_cmd( STD_CMD_ARGS )
 
 mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL}
-  ,
-  {1, "info", info_cmd, NULL}   /* server info */
   ,
   {2, "listener", NULL, "listener"} /* server listener ... */
   ,

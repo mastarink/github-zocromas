@@ -191,7 +191,8 @@ mas_ticker_start( void )
       int r;
 
       r = pthread_attr_getstack( &ctrl.thglob.ticker_attr, &ticker_stackaddr, &ticker_stacksize );
-      thMSG( "creating ticker thread stack:%lu @ %p", ticker_stacksize, ticker_stackaddr );
+      tMSG( "creating ticker thread stack:%lu @ %p", ticker_stacksize, ticker_stackaddr );
+      HMSG( "+ TICKER" );
     }
 
     /* if ( !tmp )                 */
@@ -209,7 +210,7 @@ mas_ticker_start( void )
       /* SCHED_IDLE ... SCHED_RR */
       rs = pthread_setschedparam( ctrl.ticker_thread, SCHED_IDLE, &sched );
       /* rs = pthread_getschedparam( ctrl.ticker_thread, &policy, &sched ); */
-      thMSG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.ticker_thread, policy, sched.sched_priority, rs );
+      tMSG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.ticker_thread, policy, sched.sched_priority, rs );
     }
     MAS_LOG( "(%d) created(?) ticker thread [%lx]", r, ctrl.ticker_thread );
   }
@@ -238,6 +239,7 @@ mas_ticker_stop( void )
     mMSG( "JOINED ticker" );
     MAS_LOG( "stopped ticker" );
     ctrl.ticker_thread = ( pthread_t ) 0;
+    HMSG( "- TICKER" );
     FMSG( "TICKER STOPPED" );
   }
   else

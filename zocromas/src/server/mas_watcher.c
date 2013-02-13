@@ -264,7 +264,8 @@ mas_watcher_start( void )
       int r;
 
       r = pthread_attr_getstack( &ctrl.thglob.watcher_attr, &watcher_stackaddr, &watcher_stacksize );
-      thMSG( "creating watcher thread stack:%lu @ %p", watcher_stacksize, watcher_stackaddr );
+      tMSG( "creating watcher thread stack:%lu @ %p", watcher_stacksize, watcher_stackaddr );
+      HMSG( "+ WATCHER" );
     }
 
     MAS_LOG( "starting watcher th." );
@@ -295,6 +296,7 @@ mas_watcher_stop( void )
     mas_xpthread_join( ctrl.watcher_thread );
     MAS_LOG( "stopped watcher" );
     ctrl.watcher_thread = ( pthread_t ) 0;
+    HMSG( "- WATCHER" );
     FMSG( "WATCHER STOPPED" );
   }
   else

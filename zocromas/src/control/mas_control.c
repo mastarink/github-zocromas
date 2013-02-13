@@ -41,8 +41,12 @@ mas_ctrl_init( mas_options_t * popts )
     ctrl.in_client = 1;
   else
     ctrl.keep_listening = 1;
+  
   ctrl.messages = !popts->nomessages;
+
   ctrl.daemon = !popts->nodaemon;
+  ctrl.redirect_std = !popts->noredirect_std;
+  ctrl.close_std = !popts->noclose_std;
 }
 
 void

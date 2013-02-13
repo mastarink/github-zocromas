@@ -168,17 +168,17 @@ mas_set_address( const char *host, unsigned port, mas_serv_addr_t * sa )
     }
 #endif
   }
-  if ( sa->addr.sin_family == AF_INET )
-  {
-    r = mas_inet_pton( AF_INET, host, &sa->addr.sin_addr );
-#ifdef EMSG
-    if ( r <= 0 )
-    {
-      P_ERR;
-      EMSG( "inet_pton error occured" );
-    }
-#endif
-  }
+/*   if ( sa->addr.sin_family == AF_INET )                       */
+/*   {                                                           */
+/*     r = mas_inet_pton( AF_INET, host, &sa->addr.sin_addr );   */
+/* #ifdef EMSG                                                   */
+/*     if ( r <= 0 )                                             */
+/*     {                                                         */
+/*       P_ERR;                                                  */
+/*       EMSG( "(%d) inet_pton error occured @ '%s'", r, host ); */
+/*     }                                                         */
+/* #endif                                                        */
+/*   }                                                           */
   return r;
 }
 

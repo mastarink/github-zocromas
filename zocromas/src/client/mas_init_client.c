@@ -87,7 +87,7 @@ mas_destroy_client( void )
   mas_client_destroy_readline(  );
   /* if ( ctrl.restart )                                                                  */
   /* {                                                                                    */
-  /*   HMSG( "restart sleep %10.5f sec and run %s\n", ctrl.restart_sleep, opts.argv[0] ); */
+  /*   HMSG( "restart sleep %10.5f sec and run %s", ctrl.restart_sleep, opts.argv[0] ); */
   /*   mas_nanosleep( ctrl.restart_sleep );                                               */
   /* }                                                                                    */
   mas_destroy(  );

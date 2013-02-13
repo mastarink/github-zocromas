@@ -97,14 +97,16 @@ mas_init_daemon( void )
   int r = 0;
   pid_t pid_child;
 
+  HMSG( "DAEMONIZE" );
   pid_child = mas_fork(  );
   if ( pid_child == 0 )
   {
+    ctrl.child_pid = getpid(  );
     if ( opts.msgfilename )
       mas_msg_set_file( opts.msgfilename );
     HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
     /* sleep(200); */
-    if ( !ctrl.noclose_std )
+    if ( ctrl.redirect_std )
     {
       int foutd = -1;
       int ferrd = -1;
@@ -118,16 +120,18 @@ mas_init_daemon( void )
       dup2( ferrd, STDERR_FILENO );
       mas_close( foutd );
       mas_close( ferrd );
-      if ( ctrl.daemon )
-      {
-        mas_close( STDOUT_FILENO );
-        mas_close( STDERR_FILENO );
-      }
+    }
+    if ( ctrl.close_std && ctrl.daemon )
+    {
+      mas_close( STDIN_FILENO );
+      mas_close( STDOUT_FILENO );
+      mas_close( STDERR_FILENO );
     }
     /* mas_destroy_server(  ); */
   }
   else if ( pid_child > 0 )
   {
+    ctrl.child_pid = pid_child;
     HMSG( "PARENT : %u @ %u @ %u", pid_child, getpid(  ), getppid(  ) );
     r = -2;
   }
@@ -168,7 +172,7 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );
   /* mMSG( "ARGV_NONOPTIND :%d", ctrl.argv_nonoptind ); */
-  /* HMSG( "(%d) DAEMON: %d", opts.nodaemon, ctrl.daemon ); */
+  /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
   if ( r >= 0 && ctrl.daemon )
     r = mas_init_daemon(  );
 

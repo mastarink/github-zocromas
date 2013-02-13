@@ -50,7 +50,7 @@
 /* #  define EMSGfl(f,l,...) MAS_MSGFL(l,  1,                               0,1,          31,"<  %4s   >" , "E.R.R.O.R", NULL, __VA_ARGS__) */
 #    define IMSG(...) MAS_MSGFL(  1,				            0,0,          0,NULL          , "[*] "   , NULL,              __VA_ARGS__)
 #    define GDMSG(...) MAS_MSGFL( 1,				            0,1,          0,NULL          , NULL     , NULL,              __VA_ARGS__)
-#    define HMSG(...) MAS_MSGFL(  1,				            0,0,          0,NULL, "             ","                                        ", __VA_ARGS__)
+#    define HMSG(...) MAS_MSGFL(  1,				            0,0,          0,NULL, "             ","                ", __VA_ARGS__)
 #  else
 #    define MSG(...)
 #    define tMSG(...)
@@ -71,6 +71,8 @@
 // #  define FMSG(...) MAS_MSGFL(  777,         1,1,NULL,     0,NULL, "           ","             ", __VA_ARGS__)
 #  define FMSG(...) {MFP("%s:%u:%lx:", FL, mas_pthread_self());MFP(__VA_ARGS__);MFP("\n");}
 #  define EMSG(...) { mas_error(FL, errno, __VA_ARGS__); }
+#  define EHMSG(cnd, ...) { if(cnd){EMSG(__VA_ARGS__);}else{HMSG(__VA_ARGS__);} }
+#  define HEMSG(...) EHMSG(__VA_ARGS__)
 #  define EMSG_ONCE(...) { static int shown=0; if (!shown) { mas_error(FL, errno, __VA_ARGS__); shown=1; } }
 #  define EMSGfl(f,l,...) { mas_error(f,l, errno, __VA_ARGS__); }
 #  define EEMSG(...) {    EMSG(__VA_ARGS__) ; }

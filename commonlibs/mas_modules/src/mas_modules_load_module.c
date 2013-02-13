@@ -75,7 +75,8 @@ _mas_load_module( const char *libname, const char *path, int noerr )
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
   module_handle = __mas_modules_load_module( fullname, noerr );
-  cMSG("load module %s %s", libname, module_handle?"OK":"FAIL");
+  HMSG("MOD %s %s", libname, module_handle?"ok":"fail");
+  tMSG("load module %s %s", libname, module_handle?"OK":"FAIL");
   MAS_LOG("load module %s %s", libname, module_handle?"OK":"FAIL");
   mas_free( fullname );
   return module_handle;
@@ -111,7 +112,8 @@ mas_modules_load_cmd_func( const char *libname, const char *funname )
   if ( module_handle )
   {
     cmd_fun = ( mas_cmd_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
-    cMSG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
+    tMSG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
+    EHMSG( cmd_fun, "LOAD CMD FUNC %s.%s %s", libname, funname, cmd_fun ? "OK" : "FAIL" );
     MAS_LOG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
     if ( !cmd_fun )
     {

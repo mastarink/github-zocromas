@@ -6,10 +6,9 @@
 
 #include <pthread.h>
 
-/* #include <mastar/wrap/mas_lib0.h> */
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
-/* #include <mastar/tools/mas_tools.h> */
+#include <mastar/wrap/mas_memory.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -80,7 +79,7 @@ mas_master( void )
 {
   int r = 0;
 
-  HMSG( "MASTER START L:%d T:%d W:%d", !opts.nologger, !opts.noticker, !opts.nowatcher );
+  HMSG( "MASTER START %c%c%c", !opts.nologger ? 'L' : 'l', !opts.noticker ? 'T' : 't', !opts.nowatcher ? 'W' : 'w' );
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
@@ -98,7 +97,6 @@ mas_master( void )
   {
     MAS_LOG( "running w/o ticker" );
   }
-  mMSG( "OOOO" );
   if ( !opts.nowatcher )
   {
     HMSG( "WATCHER TO START" );
@@ -108,7 +106,6 @@ mas_master( void )
   {
     MAS_LOG( "running w/o watcher" );
   }
-  mMSG( "OOOO" );
   if ( opts.nomaster )
   {
     sleep( opts.nomaster );
@@ -122,16 +119,15 @@ mas_master( void )
     while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal )
     {
       MAS_LOG( "master loop for %d hosts", opts.hosts_num );
-      thMSG( "master loop for %d hosts", opts.hosts_num );
+      tMSG( "master loop for %d hosts", opts.hosts_num );
+      HMSG( "MASTER LOOP %dh", opts.hosts_num );
       /* mas_listeners.c */
-      mMSG( "OOOO" );
       r = mas_listeners_start(  );
-      mMSG( "OOOO" );
 
-      HMSG( "waiting..." );
+      HMSG( "WAITING..." );
       r = mas_listeners_wait(  );
 
-      thMSG( "(%d) master loop for %d hosts", r, opts.hosts_num );
+      tMSG( "(%d) master loop for %d hosts", r, opts.hosts_num );
 
       {
         /* ???????? All listeners closed, what shall I do ?
@@ -206,7 +202,7 @@ mas_master_th( void *arg )
   MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
 #endif
   HMSG( "MASTER_TH TO END" );
-  /* mas_pthread_exit( NULL ); */
+  mas_pthread_exit( NULL );
   return NULL;
 }
 
@@ -242,7 +238,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 #endif
     }
     HMSG( "BUNCH TO END" );
-    /* mas_pthread_exit( &r ); */
+    mas_pthread_exit( &r );
   }
   MAS_LOG( "bunch end : %d", r );
   HMSG( "BUNCH END" );

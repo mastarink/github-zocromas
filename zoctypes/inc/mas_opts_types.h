@@ -36,8 +36,11 @@ struct mas_options_s
   unsigned listener_single:1;
   unsigned transaction_single:1;
   unsigned nomessages:1;
+  
   unsigned nodaemon:1;
   unsigned noclose_std:1;
+  unsigned noredirect_std:1;
+
   unsigned nologger:1;
   unsigned nolog:1;
   unsigned noticker:1;

@@ -151,6 +151,12 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
         if ( ctrl.is_server )
           MFP( " :%1d: ", ctrl.keep_listening );
       }
+      else if ( pid == ctrl.child_pid )
+      {
+        MFP( "\x1b[1;31mChild\x1b[0m:%5u.%u", pid, ctrl.restart_cnt );
+        if ( ctrl.is_server )
+          MFP( " :%1d: ", ctrl.keep_listening );
+      }
       else
       {
         MFP( "\x1b[1;33mfork\x1b[0m:%5u", pid );
@@ -239,19 +245,19 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
   }
   else if ( !details && *message != *MAS_SEPARATION_LINE )
   {
-    MFP( "+%lu ", elapsed_time );
+    MFP( "+%05lu ", elapsed_time );
     if ( prefix && *prefix )
     {
       if ( use_curses )
       {
         /* MFP( prefix_fmt ? prefix_fmt : " %s   ", prefix ); */
-        MFP( "%-20s", message );
+        MFP( "%-50s", message );
         MFP( "   %s", suffix ? suffix : "" );
       }
       else
       {
         MFP( prefix_fmt ? prefix_fmt : " \x1b[1;43;33m%s\x1b[0m   ", prefix );
-        MFP( "\x1b[K%-20s", message );
+        MFP( "\x1b[K%-50s", message );
         MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
       }
     }

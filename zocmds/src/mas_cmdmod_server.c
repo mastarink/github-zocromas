@@ -127,7 +127,6 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
 static char *
 info_cmd( STD_CMD_ARGS )
 {
-  cMSG( "args:%s", args );
   char *buf = NULL;
   size_t bufsz0 = 1024 * 30;
 
