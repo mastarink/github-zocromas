@@ -26,8 +26,8 @@ extern mas_options_t opts;
 
 #include <mastar/modules/mas_modules_load_module.h>
 
-#include "listener/inc/mas_listener_control_list.h"
-#include "listener/inc/mas_listeners.h"
+#include <mastar/listener/mas_listener_control_list.h>
+#include <mastar/listener/mas_listeners.h>
 
 #include "init/inc/mas_opts.h"
 #include "mas_ticker.h"

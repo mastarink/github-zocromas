@@ -14,7 +14,7 @@ extern mas_options_t opts;
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-#include "listener/inc/mas_listeners.h"
+#include <mastar/listener/mas_listeners.h>
 
 #include "mas_server_tools.h"
 

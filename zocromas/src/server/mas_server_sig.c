@@ -29,7 +29,7 @@ extern mas_options_t opts;
 /* mas_destroy */
 #include "mas_init_server.h"
 
-#include "listener/inc/mas_listeners.h"
+#include <mastar/listener/mas_listeners.h>
 
 #include "mas_server_sig.h"
 

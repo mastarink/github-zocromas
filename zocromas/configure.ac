@@ -107,7 +107,8 @@ AC_CHECK_LIB(readline, readline)
 
 PKG_CHECK_MODULES([DEPSS], [mas_modules mas_fileinfo])
 PKG_CHECK_MODULES([DEPSC], [mas_messageio])
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools mas_msg mas_log mas_transaction])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools
+				mas_msg mas_log mas_transaction mas_listener])
 
 # Configure options: --enable-debug[=no].
 
@@ -252,9 +253,6 @@ AC_CONFIG_FILES([Makefile
 
 		src/client/Makefile
 		src/client/inc/Makefile
-
-		src/listener/Makefile
-		src/listener/inc/Makefile
 
 		src/server/Makefile
 		src/server/inc/Makefile

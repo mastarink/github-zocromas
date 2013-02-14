@@ -18,8 +18,11 @@ function configure_m ()
     cfgdir=$configuredir
   fi
 # echo "$cfgdir/configure $configure_opts" >&2
-  $cfgdir/configure $configure_opts || return 1
-  return 0
+  if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] ; then 
+    $cfgdir/configure $configure_opts || return 1
+    return 0
+  fi
+  return 1$cfgdir/configure
 }
 function remove_unpacked_z ()
 {

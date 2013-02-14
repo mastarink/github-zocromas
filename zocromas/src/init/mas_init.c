@@ -27,7 +27,7 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_curses.h>
 #include <mastar/variables/mas_variables.h>
 
-#include "listener/inc/mas_listener_control.h"
+#include <mastar/listener/mas_listener_control.h>
 #include "cli/inc/mas_cli_options.h"
 
 #include "mas_sig.h"

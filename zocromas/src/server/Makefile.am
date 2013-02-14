@@ -9,7 +9,6 @@ mas_server_LDFLAGS=${AM_LDFLAGS} -luuid \
 	${DEPSS_LIBS} \
 	-L../cli	 -lmas_cli \
 	-L../init        -lmas_init \
-	-L../listener    -lmas_listener \
 	-rdynamic
 
 

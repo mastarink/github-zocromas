@@ -29,8 +29,8 @@ extern mas_options_t opts;
 #include <mastar/transaction/mas_transaction_control.h>
 #include <mastar/transaction/mas_transaction.h>
 
-#include "listener/inc/mas_listener_control.h"
-#include "listener/inc/mas_listeners.h"
+#include <mastar/listener/mas_listener_control.h>
+#include <mastar/listener/mas_listeners.h>
 
 #include "mas_watcher.h"
 
