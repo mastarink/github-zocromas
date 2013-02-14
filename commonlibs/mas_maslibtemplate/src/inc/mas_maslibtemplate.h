@@ -1,0 +1,5 @@
+#ifndef MAS_MASLIBTEMPLATE_H
+#  define MAS_MASLIBTEMPLATE_H
+
+
+#endif
