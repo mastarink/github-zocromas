@@ -17,7 +17,7 @@ function configure_m ()
   else
     cfgdir=$configuredir
   fi
-  echo "$cfgdir/configure $configure_opts" >&2
+# echo "$cfgdir/configure $configure_opts" >&2
   $cfgdir/configure $configure_opts || return 1
   return 0
 }
@@ -32,10 +32,10 @@ function unpack_z ()
 {
   if [[ "$tmpunpack" ]] && [[ -d "$tmpunpack" ]] && [[ "$distfile" ]] && [[ -f "$distfile" ]] && cd "$tmpunpack" ; then
     if [[ "$distfile" =~ \.tar\.gz ]] ; then
-      echo "gz unpack $distfile (`pwd`)" >&2
+#     echo "gz unpack $distfile (`pwd`)" >&2
       tar -zxf $distfile
     elif [[ "$distfile" =~ \.tar\.bz2 ]] ; then
-      echo "bz2 unpack $distfile (`pwd`)" >&2
+#     echo "bz2 unpack $distfile (`pwd`)" >&2
       tar -jxf $distfile
     fi
   fi
@@ -51,7 +51,7 @@ function install_z ()
 # show_setup
   if [[ $mas_name ]] && [[ "$mas_vers" ]] ; then
     if [[ -f "$distfile" ]] ; then
-      echo "distfile ok: $distfile" >&2
+#     echo "distfile ok: $distfile" >&2
       remove_unpacked_z
       if [[ "$unpackdir" ]] && [[ -d "$unpackdir" ]] ; then
         echo "$LINENO ERROR not removed: $unpackdir" >&2
@@ -59,23 +59,23 @@ function install_z ()
       fi
       unpack_z
       if [[ "$unpackdir" ]] ; then
-        echo "unpack at $unpackdir" >&2
-        if [[ -d "$unpackdir" ]] ; then
-          echo "unpack dir exists: $unpackdir" >&2
-	else
-          echo "unpack dir absent: $unpackdir" >&2
-        fi
+#       echo "unpack at $unpackdir" >&2
+#       if [[ -d "$unpackdir" ]] ; then
+#         echo "unpack dir exists: $unpackdir" >&2
+#       else
+#         echo "unpack dir absent: $unpackdir" >&2
+#       fi
 	if [[ -d "$unpackdir" ]] ; then
 	  if [[ "$ibuilddir" ]] ; then
-	    echo "to build at $ibuilddir" >&2
+#	    echo "to build at $ibuilddir" >&2
 	    if [[ -d "$ibuilddir" ]] ; then
-	      echo "build dir exists: $ibuilddir" >&2
+#	      echo "build dir exists: $ibuilddir" >&2
 	      rm -Rf $ibuilddir
 	    fi
 	    if mkdir "$ibuilddir" && cd "$ibuilddir" ; then
-	      echo "configuredir: $configuredir" >&2
-	      echo "From $unpackdir" >&2
-	      echo "At `pwd`" >&2
+#             echo "configuredir: $configuredir" >&2
+#             echo "From $unpackdir" >&2
+#             echo "At `pwd`" >&2
  	      configure_m $unpackdir || return 1
 	      make_m
 	      make_target install
@@ -116,7 +116,7 @@ function testdist ()
       return 1
     fi
     zips=$( echo ${indir}/${mas_fullname}.tar.{bz2,gz} )
-    echo "Saving $zips to $savedirdist" >&2
+    echo "saving $zips to $savedirdist" >&2
     mv $zips $savedirdist || return 1
     return 0
   fi
@@ -167,10 +167,10 @@ SC
         chmod +x "$instshname"
       fi
     fi
-    echo "mas_name: $mas_name" >&2
-    echo "mas_vers: $mas_vers" >&2
-    echo "instshname: $instshname" >&2
-    echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-">&2
+#   echo "mas_name: $mas_name" >&2
+#   echo "mas_vers: $mas_vers" >&2
+#   echo "instshname: $instshname" >&2
+#   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-">&2
   fi
   return 0
 }
