@@ -11,6 +11,7 @@ commonlibs/mas_variables
 commonlibs/mas_fileinfo
 commonlibs/mas_modules
 commonlibs/mas_messageio
+commonlibs/mas_transaction
 zocmds/1
 zocmds/2
 zocprotos
