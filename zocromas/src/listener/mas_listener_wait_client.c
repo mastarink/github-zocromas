@@ -15,11 +15,10 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
 
-#include "transaction/inc/mas_transaction_control.h"
-#include "transaction/inc/mas_transaction.h"
+#include <mastar/transaction/mas_transaction_control.h>
+#include <mastar/transaction/mas_transaction.h>
 
 #include "mas_listener_control.h"
 #include "mas_listener_wait_client.h"

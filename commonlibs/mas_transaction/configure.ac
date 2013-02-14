@@ -26,17 +26,15 @@ AC_PREREQ([2.69])
 # AC_CONFIG_SRCDIR(src/foo.c)
 # AM_INIT_AUTOMAKE
 
-# AM_INIT_AUTOMAKE([1.11 silent-rules])
-
-# AC_INIT([zocromas],[1.0.1.3],[bug-report@mastarink.net])
+# AC_INIT([mas_maslibtemplate],[1.0.1.3],[bug-report@mastarink.net])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_SRCDIR([src/client/mas_client.c])
+AC_CONFIG_SRCDIR([src/mas_transaction.c])
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
-# AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -95,9 +93,9 @@ AC_CHECK_LIB(readline, readline)
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
 # AC_SUBST(GLADE_CFLAGS)
+
 # PKG_CHECK_MODULES([GLADE], [libglade-2.0])
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
-
 
 # Checks for header files.
 
@@ -105,9 +103,7 @@ AC_CHECK_LIB(readline, readline)
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPSS], [mas_modules mas_fileinfo])
-PKG_CHECK_MODULES([DEPSC], [mas_messageio])
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools mas_msg mas_log mas_transaction])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_thtools mas_msg mas_variables mas_channel mas_log mas_control])
 
 # Configure options: --enable-debug[=no].
 
@@ -116,7 +112,6 @@ PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_ch
 #     [enable debug code (default is no)])],
 #   [debug="$withval"], [debug=no])
 
-########### debug   ########################################################################
 AC_ARG_ENABLE([debug],
 	      AC_HELP_STRING([--enable-debug],
 			     [turn on debugging]),,
@@ -126,7 +121,7 @@ if test x$enable_debug = xyes ; then
     AC_DEFINE(MAS_DEBUG, 1,
 	[Enable additional debugging at the expense of performance and size])
 fi
-########## tracemem #########################################################################
+
 AC_ARG_ENABLE([tracemem],
 	      AC_HELP_STRING([--enable-tracemem],
 			     [turn on tracememing]),,
@@ -134,19 +129,8 @@ AC_ARG_ENABLE([tracemem],
 
 if test x$enable_tracemem = xyes ; then
     AC_DEFINE(MAS_TRACEMEM, 1,
-	[Enable tracememing at the expense of performance and size])
+	[Enable additional tracememing at the expense of performance and size])
 fi
-########## clientlog ########################################################################
-AC_ARG_ENABLE([clientlog],
-	      AC_HELP_STRING([--disable-clientlog],
-			     [turn off clientlogging]),,
-	      [enable_clientlog=yes])
-
-if test x$enable_clientlog = xyes ; then
-    AC_DEFINE(MAS_CLIENT_LOG, 1,
-	[Enable cliet logging at the expense of performance and size])
-fi
-#############################################################################################
 
 # AC_REQUIRE([AM_MAINTAINER_MODE])
 # 
@@ -157,7 +141,7 @@ fi
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
 # AM_LDFLAGS="-ldl -Wl,--wrap=strdup,--wrap=malloc,--wrap=free,--wrap=realloc,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
-AM_LDFLAGS="-ldl -Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\` ${DEPS_LIBS}"
+AM_LDFLAGS="-ldl -Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
 # __MAS_LINK_DATE__=\`date +0x%Y%m%d\`
 AC_SUBST(AM_LDFLAGS)
 
@@ -172,8 +156,7 @@ MAS_LIBDIR="\${libdir}"
 AC_SUBST(MAS_LIBDIR)
 
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" -ltcmalloc ${DEPS_CFLAGS}"
-# AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
 
@@ -181,11 +164,10 @@ AC_DEFINE_UNQUOTED(MAS_CFLAGS, "${AM_CFLAGS}", [compile flags])
 AC_SUBST(MAS_CFLAGS)
 
 
-
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(includedir)"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
@@ -212,9 +194,6 @@ AC_SUBST([MAS_STRDUP])
 
 
 
-# AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])
-# AC_DEFINE_UNQUOTED( MAS_MODULES_DIR, "`find -name mas_cmdmod_root.c -printf '%h'`", [uname])
-# AC_SUBST([MAS_MODULES_DIR])
 
 AH_TEMPLATE([MAS_UNAME],[mas_uname])
 AC_DEFINE_UNQUOTED( MAS_UNAME, "`uname -a`", [uname])
@@ -233,31 +212,12 @@ AC_DEFINE_UNQUOTED( MAS_S_DATE, "`date +%s`", [sdate])
 AC_SUBST([MAS_S_DATE])
 
 #OBJDIR=masobj
-AC_MSG_NOTICE([@@@@@@@@@ DEPS_LIBS: ${DEPS_LIBS} @@@@@@@@@])
-AC_MSG_NOTICE([@@@@@@@@@ DEPS_CFLAGS: ${DEPS_CFLAGS} @@@@@@@@@])
-AC_MSG_NOTICE([@@@@@@@@@ DEPSS_LIBS: ${DEPSS_LIBS} @@@@@@@@@])
-AC_MSG_NOTICE([@@@@@@@@@ DEPSS_CFLAGS: ${DEPSS_CFLAGS} @@@@@@@@@])
-
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile
+AC_CONFIG_FILES([${PACKAGE_NAME}.pc
+		Makefile
 		src/Makefile
 		src/inc/Makefile
-
-		src/cli/Makefile
-		src/cli/inc/Makefile
-		
-		src/init/Makefile
-		src/init/inc/Makefile
-
-		src/client/Makefile
-		src/client/inc/Makefile
-
-		src/listener/Makefile
-		src/listener/inc/Makefile
-
-		src/server/Makefile
-		src/server/inc/Makefile
 
 		])
 AC_OUTPUT

@@ -26,7 +26,7 @@
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-#include "transaction/inc/mas_transaction.h"
+#include <mastar/transaction/mas_transaction.h>
 
 #include "mas_listener_wait_client.h"
 #include "mas_lcontrol_object.h"

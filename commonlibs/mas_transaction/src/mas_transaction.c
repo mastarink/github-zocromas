@@ -1,5 +1,6 @@
-#include "mas_server_def.h"
-#include "mas_basic_def.h"
+#include <mastar/wrap/mas_std_def.h>
+/* #include "mas_server_def.h" */
+/* #include "mas_basic_def.h"  */
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -28,9 +29,6 @@ extern mas_options_t opts;
 
 #include <mastar/thtools/mas_thread_tools.h>
 #include <mastar/variables/mas_thread_variables.h>
-
-/* #include "http/inc/mas_transaction_http.h" */
-/* #include "xcromas/inc/mas_transaction_xcromas.h" */
 
 #include <mastar/variables/mas_variables.h>
 

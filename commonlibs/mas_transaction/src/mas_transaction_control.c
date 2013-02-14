@@ -1,5 +1,6 @@
-#include "mas_server_def.h"
-#include "mas_basic_def.h"
+#include <mastar/wrap/mas_std_def.h>
+/* #include "mas_server_def.h" */
+/* #include "mas_basic_def.h" */
 
 #include <string.h>
 
@@ -15,7 +16,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
 
 #include "mas_transaction_control.h"

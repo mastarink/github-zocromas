@@ -10,7 +10,6 @@ mas_server_LDFLAGS=${AM_LDFLAGS} -luuid \
 	-L../cli	 -lmas_cli \
 	-L../init        -lmas_init \
 	-L../listener    -lmas_listener \
-	-L../transaction -lmas_transaction \
 	-rdynamic
 
 

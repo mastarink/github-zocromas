@@ -19,13 +19,12 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
 
 #include <mastar/variables/mas_variables.h>
-#include "transaction/inc/mas_rcontrol_object.h"
+#include <mastar/transaction/mas_rcontrol_object.h>
 
 #include "mas_listener_control.h"
 

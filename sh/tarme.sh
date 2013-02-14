@@ -6,7 +6,7 @@ if [[ -f "sh/setup.sh" ]] ; then
   function tarme ()
   {
     if [[ "$savedirtarme" ]] &&  [[ -d "$savedirtarme" ]] && [[ "$updir" ]] && [[ -d "$updir" ]] && [[ "$indir" ]] && [[ -d "$indir" ]] ; then
-      if [[ "$mas_name" ]] && [[ "$mas_ver" ]] ; then
+      if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
 	cd $indir || return 1
 	make -s distclean     || return 1  
 	cd $updir  || return 1
@@ -22,7 +22,7 @@ if [[ -f "sh/setup.sh" ]] ; then
 	cd $updir  || return 1
 	if [[ "$mas_name" ]] && [[ -d "$mas_name" ]] ; then
 	  echo "Saving *.tar.{bz2,gz} to $savedirtarme" >&2
-	  tar --wildcards --exclude '.*.sw*' --exclude-caches --exclude-tag mas-tar-exclude -jvcf "$savedirtarme/${mas_name}.${mas_ver}.`datemt`.tar.bz2" $mas_name/  || return 1
+	  tar --wildcards --exclude '.*.sw*' --exclude-caches --exclude-tag mas-tar-exclude -jvcf "$savedirtarme/${mas_name}.${mas_vers}.`datemt`.tar.bz2" $mas_name/  || return 1
 	fi
     #     mv *.tar.bz2 "$savedirtarme"     
 	echo "Change to $indir to rebuild" >&2
@@ -35,7 +35,7 @@ if [[ -f "sh/setup.sh" ]] ; then
 	  return 1
 	fi     
       else
-	echo "No mas_name / mas_ver" >&2
+	echo "No mas_name / mas_vers" >&2
 	return 1
       fi    
     fi

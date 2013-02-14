@@ -17,8 +17,5 @@ sp src/listener/Makefile.am
 tab sp src/server/inc/Makefile.am
 sp src/server/Makefile.am
 
-tab sp src/transaction/inc/Makefile.am
-sp src/transaction/Makefile.am
-
 tab sp src/cli/inc/Makefile.am
 sp src/cli/Makefile.am

@@ -26,8 +26,8 @@ extern mas_options_t opts;
 #include <mastar/thtools/mas_thread_tools.h>
 #include "server/inc/mas_server_tools.h"
 
-#include "transaction/inc/mas_transaction_control.h"
-#include "transaction/inc/mas_transaction.h"
+#include <mastar/transaction/mas_transaction_control.h>
+#include <mastar/transaction/mas_transaction.h>
 
 #include "listener/inc/mas_listener_control.h"
 #include "listener/inc/mas_listeners.h"
