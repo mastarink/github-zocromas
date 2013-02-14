@@ -4,7 +4,7 @@ if [[ -f "sh/setup.sh" ]] ; then
 
   if [[ -f "$rootdir/zocversion.txt" ]] ; then
     if type -t datemt 2>&1 >/dev/null ; then
-      echo -n "$( cat $rootdir/zocversion.txt ).$( datemt )"
+      echo -n "$( cat $rootdir/zocversion.txt ).$( datem )"
     else
       echo -n "$( cat $rootdir/zocversion.txt )"
     fi

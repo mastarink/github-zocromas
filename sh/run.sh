@@ -1,6 +1,7 @@
 #!/bin/sh
-if [[ -f "sh/setup.sh" ]] ; then
+if [[ -f "sh/run_functions.sh" ]] ; then
   . sh/setup.sh
+  . sh/run_functions.sh
 
   if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
     run_any ${MAS_ZOCROMAS_HERE} "$@"

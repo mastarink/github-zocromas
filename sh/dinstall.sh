@@ -1,19 +1,25 @@
 #!/bin/sh
+if [[ -f "sh/build_functions.sh" ]] ; then
+  . sh/setup.sh
+  . sh/build_functions.sh
+ 
+# echo "==================================================" >&2
+# echo "distname: $distname" >&2
+# echo "distfile: $distfile" >&2
+# echo "ibuilddir: $ibuilddir" >&2
+# echo "workdir: $workdir" >&2
+# echo "configuredir: $configuredir" >&2
+# echo "==================================================" >&2
+# echo ">>> $@ <<<" >&2
 
-if [[ -f "sh/setup.sh" ]] ; then
-  . sh/setupz.sh
-  wbuilddir=$ibuilddir
-  if [[ "$unpackdir" ]] && [[ -f "$unpackdir/configure" ]] ; then
-    configuredir=$unpackdir
-  elif [[ "$indir" ]] && [[ -f "$indir/configure" ]] ; then
-    configuredir=$indir
-  fi
+  install_z $@
+  
+# echo "==================================================" >&2
+# echo "distname: $distname" >&2
+# echo "distfile: $distfile" >&2
+# echo "ibuilddir: $ibuilddir" >&2
+# echo "workdir: $workdir" >&2
+# echo "configuredir: $configuredir" >&2
+# echo "==================================================" >&2
 
-  echo "rootdir      :$rootdir" >&2
-  echo "indir        :$indir" >&2
-  echo "configuredir :$configuredir" >&2
-  echo "ibuilddir    :$ibuilddir" >&2
-  echo "wbuilddir    :$wbuilddir" >&2
-  echo "At `pwd`" >&2
-  make_target install
 fi
