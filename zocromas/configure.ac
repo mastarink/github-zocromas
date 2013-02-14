@@ -31,12 +31,12 @@ AC_PREREQ([2.69])
 # AC_INIT([zocromas],[1.0.1.3],[bug-report@mastarink.net])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_SRCDIR([src/minitest.c])
+AC_CONFIG_SRCDIR([src/client/mas_client.c])
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
-AM_SILENT_RULES([yes])
+# AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -99,14 +99,15 @@ AC_CHECK_LIB(readline, readline)
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 
 
-
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_io mas_channel mas_variables mas_messageio mas_thtools mas_msg mas_log])
+PKG_CHECK_MODULES([DEPSS], [mas_modules mas_fileinfo])
+PKG_CHECK_MODULES([DEPSC], [mas_messageio])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools mas_msg mas_log])
 
 # Configure options: --enable-debug[=no].
 
@@ -156,7 +157,7 @@ fi
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
 # AM_LDFLAGS="-ldl -Wl,--wrap=strdup,--wrap=malloc,--wrap=free,--wrap=realloc,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
-AM_LDFLAGS="-ldl -Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
+AM_LDFLAGS="-ldl -Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\` ${DEPS_LIBS}"
 # __MAS_LINK_DATE__=\`date +0x%Y%m%d\`
 AC_SUBST(AM_LDFLAGS)
 
@@ -171,7 +172,7 @@ MAS_LIBDIR="\${libdir}"
 AC_SUBST(MAS_LIBDIR)
 
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" -ltcmalloc"
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" -ltcmalloc ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
@@ -232,14 +233,16 @@ AC_DEFINE_UNQUOTED( MAS_S_DATE, "`date +%s`", [sdate])
 AC_SUBST([MAS_S_DATE])
 
 #OBJDIR=masobj
+AC_MSG_NOTICE([@@@@@@@@@ DEPS_LIBS: ${DEPS_LIBS} @@@@@@@@@])
+AC_MSG_NOTICE([@@@@@@@@@ DEPS_CFLAGS: ${DEPS_CFLAGS} @@@@@@@@@])
+AC_MSG_NOTICE([@@@@@@@@@ DEPSS_LIBS: ${DEPSS_LIBS} @@@@@@@@@])
+AC_MSG_NOTICE([@@@@@@@@@ DEPSS_CFLAGS: ${DEPSS_CFLAGS} @@@@@@@@@])
+
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
 		src/Makefile
 		src/inc/Makefile
-
-		src/control/Makefile		
-		src/control/inc/Makefile		
 
 		src/cli/Makefile
 		src/cli/inc/Makefile

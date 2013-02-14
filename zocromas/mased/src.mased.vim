@@ -76,11 +76,6 @@ sfind mas_client_sig.c
 sfind mas_server_sig.c
 sfind mas_server_sig.h
 
-tab sfind mas_control.c
-sfind mas_control_data.c
-sfind mas_control.h
-sfind mas_global.h
-
 tab sfind mas_basic_def.h
 sfind mas_client_def.h
 sfind mas_server_def.h

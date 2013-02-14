@@ -29,7 +29,7 @@
      mas_pthread_mutex_unlock( &ctrl.mfp_mutex );  \
   }
 #  else
-#    define MFP(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ );}
+#    define MFP(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ );fflush(ctrl.msgfile?ctrl.msgfile:stderr);}
 #  endif
 #  ifndef MAS_NOMSG
 #    define MSG(...) MAS_MSGFL( (( opts.f.bit.msg_c && !ctrl.is_server ) \

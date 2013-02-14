@@ -20,7 +20,7 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 
 #include "init/inc/mas_opts.h"
-#include "control/inc/mas_control.h"
+#include <mastar/control/mas_control.h>
 
 #include "mas_cli_options.h"
 

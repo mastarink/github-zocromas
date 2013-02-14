@@ -21,7 +21,7 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 
 
-#include "control/inc/mas_control.h"
+#include <mastar/control/mas_control.h>
 #include "mas_opts.h"
 
 #include <mastar/msg/mas_curses.h>

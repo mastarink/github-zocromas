@@ -103,7 +103,7 @@ AC_CHECK_LIB(readline, readline)
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools  mas_msg mas_thtools])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools  mas_msg mas_thtools])
 
 # Configure options: --enable-debug[=no].
 
@@ -156,7 +156,7 @@ MAS_LIBDIR="\${libdir}"
 AC_SUBST(MAS_LIBDIR)
 
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
 

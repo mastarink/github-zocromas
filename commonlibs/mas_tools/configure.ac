@@ -34,7 +34,7 @@ AC_CONFIG_SRCDIR([src/mas_tools.c])
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
-AM_SILENT_RULES([yes])
+# AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -156,7 +156,7 @@ MAS_LIBDIR="\${libdir}"
 AC_SUBST(MAS_LIBDIR)
 
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
 

@@ -24,7 +24,7 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/msg/mas_curses.h>
 
-#include <mastar/message_io/mas_message_io.h>
+#include <mastar/messageio/mas_message_io.h>
 
 #include "mas_client_session.h"
 

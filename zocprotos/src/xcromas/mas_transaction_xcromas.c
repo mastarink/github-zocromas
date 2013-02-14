@@ -17,7 +17,7 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 
 
-#include <mastar/message_io/mas_message_io.h>
+#include <mastar/messageio/mas_message_io.h>
 #include "mas_transaction_xcromas.h"
 
 
