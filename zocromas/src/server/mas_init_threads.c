@@ -43,6 +43,7 @@ more:
 int
 mas_threads_init( void )
 {
+  HMSG( "INIT THREADS" );
   mas_in_thread( MAS_THREAD_MAIN, NULL, NULL );
 
   pthread_rwlock_init( &ctrl.thglob.lcontrols_list_rwlock, NULL );

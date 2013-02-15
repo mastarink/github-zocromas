@@ -667,6 +667,7 @@ _mas_opts_restore( const char *dirname, const char *filename )
     {
       FILE *f;
 
+      HMSG( "OPTS from %s", fpath );
       f = mas_fopen( fpath, "r" );
       if ( f )
       {

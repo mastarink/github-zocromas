@@ -41,6 +41,7 @@ more:
 */
 
 
+#ifdef MAS_INIT_SEPARATE
 int
 mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
 {
@@ -49,9 +50,9 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   HMSG( "INIT CLIENT" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
-#ifndef MAS_CLIENT_LOG
+#  ifndef MAS_CLIENT_LOG
   ctrl.log_disabled = 1;
-#endif
+#  endif
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_client = 1;
   ctrl.is_server = 0;
@@ -64,9 +65,10 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     r = mas_client_init_readline(  );
   MAS_LOG( "init client done" );
   if ( r >= 0 )
-    r = mas_post_init( argc, argv, env );
+    r = mas_post_init(  );
   return r;
 }
+#endif
 
 void
 mas_destroy_client( void )

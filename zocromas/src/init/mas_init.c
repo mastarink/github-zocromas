@@ -10,6 +10,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -117,7 +118,7 @@ mas_init_message( void )
 int
 mas_pre_init( int argc, char **argv, char **env )
 {
-  int r=0;
+  int r = 0;
   const char *pn;
 
   HMSG( "PRE-INIT" );
@@ -147,7 +148,7 @@ mas_pre_init( int argc, char **argv, char **env )
 }
 
 int
-mas_post_init( int argc, char **argv, char **env )
+mas_post_init( void )
 {
   int r = 0;
 
@@ -241,6 +242,38 @@ mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, cha
   if ( r >= 0 )
     mas_ctrl_init( &opts );
 
+  return r;
+}
+
+int
+mas_init_plus( int is_server, void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env, ... )
+{
+  int r = 0;
+  va_list args;
+
+  HMSG( "INIT %s", is_server ? "SERVER" : "CLIENT" );
+  ctrl.status = MAS_STATUS_START;
+  ctrl.start_time = mas_double_time(  );
+#ifndef MAS_CLIENT_LOG
+  ctrl.log_disabled = 1;
+#endif
+  /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
+  ctrl.is_server = is_server;
+  ctrl.is_client = !ctrl.is_server;
+  r = mas_pre_init( argc, argv, env );
+  if ( r >= 0 )
+    r = mas_init( atexit_fun, initsig, argc, argv, env );
+  {
+    typedef int ( *v_t ) ( void );
+    v_t fun;
+
+    va_start( args, env );
+    while ( r >= 0 && ( fun = va_arg( args, v_t ) ) )
+      r = ( fun ) (  );
+    va_end( args );
+  }
+  if ( r >= 0 )
+    r = mas_post_init(  );
   return r;
 }
 

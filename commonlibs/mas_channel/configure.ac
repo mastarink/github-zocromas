@@ -150,16 +150,16 @@ AC_SUBST(AM_LDFLAGS)
 
 
 
-AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
-MAS_MODULESDIR="\${pkglibdir}"
-AC_SUBST(MAS_MODULESDIR)
+# AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
+# MAS_MODULESDIR="\${pkglibdir}"
+# AC_SUBST(MAS_MODULESDIR)
 
-AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
-MAS_LIBDIR="\${libdir}"
-AC_SUBST(MAS_LIBDIR)
+# AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
+# MAS_LIBDIR="\${libdir}"
+# AC_SUBST(MAS_LIBDIR)
 
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" ${DEPS_CFLAGS}"
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
 

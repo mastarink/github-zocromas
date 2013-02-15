@@ -48,6 +48,8 @@ more:
 void
 mas_lcontrols_list_create( void )
 {
+  HMSG( "INIT LCONTROLS_LIST" );
+
   ctrl.lcontrols_list = mas_malloc( sizeof( mas_lcontrol_list_head_t ) );
   memset( ctrl.lcontrols_list, 0, sizeof( mas_lcontrol_list_head_t ) );
   MAS_LIST_INIT( ctrl.lcontrols_list );

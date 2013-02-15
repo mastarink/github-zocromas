@@ -1,13 +1,16 @@
 client
 
-
--  process type
+- start time
+- process type
   - server
   - client
 
--  pre-init
--  opts restore
-
+- pre-init
+  - lts
+  - binname
+  - main_pid
+  - progname
+  - opts restore
 -  init
   - restart (lts...) from env MAS_%s_%u_RESTART
   - init env
@@ -16,8 +19,10 @@ client
   - init signals
   - CLI options
   - ctrl init
--  mas_client_init_readline
+- init readline
 
 
 
--  mas_post_init
+- mas_post_init
+  - logpath
+  - init message

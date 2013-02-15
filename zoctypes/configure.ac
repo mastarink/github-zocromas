@@ -141,22 +141,22 @@ fi
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
 # AM_LDFLAGS="-ldl -Wl,--wrap=strdup,--wrap=malloc,--wrap=free,--wrap=realloc,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
-AM_LDFLAGS="-ldl -Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
+AM_LDFLAGS="-Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
 # __MAS_LINK_DATE__=\`date +0x%Y%m%d\`
 AC_SUBST(AM_LDFLAGS)
 
 
 
-AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
-MAS_MODULESDIR="\${pkglibdir}"
-AC_SUBST(MAS_MODULESDIR)
+# AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
+# MAS_MODULESDIR="\${pkglibdir}"
+# AC_SUBST(MAS_MODULESDIR)
 
-AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
-MAS_LIBDIR="\${libdir}"
-AC_SUBST(MAS_LIBDIR)
+# AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
+# MAS_LIBDIR="\${libdir}"
+# AC_SUBST(MAS_LIBDIR)
 
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
 

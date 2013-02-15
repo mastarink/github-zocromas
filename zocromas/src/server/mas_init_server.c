@@ -57,11 +57,13 @@ more:
   mas_init_threads.h
 */
 
-static int
+int
 mas_init_load_protos( void )
 {
   int protos_num = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
+
+  HMSG( "INIT PROTOS" );
 
   if ( !ctrl.proto_descs )
   {
@@ -74,7 +76,7 @@ mas_init_load_protos( void )
       proto_descs[ipr].name = mas_strdup( opts.protos[ipr] );
       proto_descs[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
       tMSG( "@@@@@@@@@@ %u proto:%s : %p", ipr, opts.protos[ipr], ( void * ) ( unsigned long long ) proto_descs[ipr].function );
-      if (! proto_descs[ipr].function )
+      if ( !proto_descs[ipr].function )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
       }
@@ -98,12 +100,13 @@ Creating a daemon
    8 Change the working directory of the daemon process to root and close stdin, stdout and stderr file descriptors.
    9 Let the main logic of daemon process run.
 */
-static int
+int
 mas_init_daemon( void )
 {
   int r = 0;
   pid_t pid_child;
 
+  HMSG( "INIT DAEMON" );
   if ( ctrl.daemon )
   {
     HMSG( "DAEMONIZE" );
@@ -151,7 +154,7 @@ mas_init_daemon( void )
   }
   return r;
 }
-
+#ifdef MAS_INIT_SEPARATE
 int
 mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
 {
@@ -169,13 +172,8 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   r = mas_pre_init( argc, argv, env );
 
   MAS_LOG( "init server" );
-  /* r = mas_init_curses(  ); */
-  if ( r < 0 && use_curses )
-  {
-    mas_close_curses(  );
-    fprintf( stderr, "ERROR curses %d\n", r );
-    /* exit( 33 ); */
-  }
+  /* if ( r >= 0 )              */
+  /*   r = mas_init_curses(  ); */
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );
   HMSG( "<- INIT" );
@@ -189,10 +187,10 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     mas_lcontrols_list_create(  );
   MAS_LOG( "init server done" );
   if ( r >= 0 )
-    r = mas_post_init( argc, argv, env );
+    r = mas_post_init(  );
   return r;
 }
-
+#endif
 void
 mas_destroy_server( void )
 {

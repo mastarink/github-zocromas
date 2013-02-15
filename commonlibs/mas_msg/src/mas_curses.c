@@ -162,6 +162,12 @@ mas_init_curses( void )
     use_curses = 1;
     /* HMSG( "@@@@@@@@@@@@@@@@@@@@@@@@@@@" ); */
   }
+  if ( r < 0 && use_curses )
+  {
+    mas_close_curses(  );
+    fprintf( stderr, "ERROR curses %d\n", r );
+    /* exit( 33 ); */
+  }
   return r;
 }
 

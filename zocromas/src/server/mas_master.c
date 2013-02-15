@@ -27,6 +27,10 @@ extern mas_options_t opts;
 #include <mastar/thtools/mas_thread_tools.h>
 
 #include <mastar/listener/mas_listeners.h>
+
+#include "init/inc/mas_init.h"
+#include "server/inc/mas_init_threads.h"
+#include <mastar/listener/mas_listener_control_list.h>
 #include "mas_init_server.h"
 
 #include "mas_master.h"
@@ -214,7 +218,12 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   ctrl.main_tid = mas_gettid(  );
 
   MAS_LOG( "bunch start" );
+#ifdef MAS_INIT_SEPARATE
   r = mas_init_server( mas_atexit, 1, argc, argv, env );
+#else
+  r = mas_init_plus( 1, mas_atexit, 1, argc, argv, env, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
+                     NULL );
+#endif
   if ( r >= 0 )
   {
     /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
