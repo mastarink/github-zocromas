@@ -14,17 +14,17 @@ function mas_debug ()
   fi
   echo "<< $dname >>">&2
 
-  if [[ -d "$indir/src/$bname" ]] ; then
-    srcdir="$indir/src/$bname"
+  if [[ -d "$build_at/src/$bname" ]] ; then
+    builddir="$build_at/src/$bname"
   else
-    srcdir="$indir/src"
+    builddir="$build_at/src"
   fi
 
-  if [[ -f "$srcdir/.libs/$dname" ]] ; then
-    binsdir="$srcdir/.libs"
+  if [[ -f "$builddir/.libs/$dname" ]] ; then
+    binsdir="$builddir/.libs"
     lt=yes
   else
-    binsdir="$srcdir"
+    binsdir="$builddir"
     unset lt
   fi
   libsdirs="$( find -type d -name '.libs' -printf '%p:' )"
@@ -35,7 +35,7 @@ function mas_debug ()
 # echo "mas_name: $mas_name" >&2
 # echo "bname: $bname" >&2
 # echo "dname: $dname" >&2
-# echo "srcdir: $srcdir" >&2
+# echo "builddir: $builddir" >&2
 # echo "binsdir: $binsdir" >&2
 
 
@@ -65,7 +65,7 @@ function mas_debug ()
 }
 function gdb_core_any ()
 {
-  local mcaller dname bname srcdir binsdir libsdirs corename
+  local mcaller dname bname builddir binsdir libsdirs corename
 
   mcaller=$1
   shift
@@ -79,28 +79,28 @@ function gdb_core_any ()
   fi
   echo "<< $dname >>">&2
 
-  if [[ -d "$indir/src/$bname" ]] ; then
-    srcdir="$indir/src/$bname"
+  if [[ -d "$build_at/src/$bname" ]] ; then
+    builddir="$build_at/src/$bname"
   else
-    srcdir="$indir/src"
+    builddir="$build_at/src"
   fi
 
-  if [[ -f "$srcdir/.libs/$dname" ]] ; then
-    binsdir="$srcdir/.libs"
+  if [[ -f "$builddir/.libs/$dname" ]] ; then
+    binsdir="$builddir/.libs"
     lt=yes
   else
-    binsdir="$srcdir"
+    binsdir="$builddir"
     unset lt
   fi
   libsdirs="$( find -type d -name '.libs' -printf '%p:' )"
-# srcdir="$indir/src/$bname"
-# binsdir="$srcdir/.libs"
+# builddir="$indir/src/$bname"
+# binsdir="$builddir/.libs"
 # libsdirs="$( find -type d -name '.libs' -printf '%p ' )"
 
 # echo "mas_name: $mas_name" >&2
 # echo "bname: $bname" >&2
 # echo "dname: $dname" >&2
-# echo "srcdir: $srcdir" >&2
+# echo "builddir: $builddir" >&2
 # echo "binsdir: $binsdir" >&2
 
 

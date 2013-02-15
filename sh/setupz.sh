@@ -1,21 +1,27 @@
 #!/bin/sh
 . sh/dir_functions.sh
 . sh/make_functions.sh
+function prjconfV ()
+{
+  if [[ "$build_at" ]] && [[ -f "$build_at/config.status" ]] ; then
+    $build_at/config.status -V
+  elif [[ -f "./config.status" ]] ; then
+    ./config.status -V
+  elif [[ -f "./configure" ]] ; then
+    ./configure -V
+  fi
+}
+function prjconffullversion ()
+{
+  prjconfV | head -1
+}
 function prjconfname ()
 {
-  if [[ -f "./config.status" ]] ; then
-    ./config.status -V|head -1|awk '{print $1}'
-  elif [[ -f "./configure" ]] ; then
-    ./configure -V|head -1|awk '{print $1}'
-  fi
+  prjconffullversion |awk '{print $1}'
 }
 function prjconfversion ()
 {
-  if [[ -f "./config.status" ]] ; then
-    ./config.status -V|head -1|awk '{print $3}'
-  elif [[ -f "./configure" ]] ; then
-    ./configure -V|head -1|awk '{print $3}'
-  fi
+  prjconffullversion |awk '{print $3}'
 }  
 function setup_vers ()
 {

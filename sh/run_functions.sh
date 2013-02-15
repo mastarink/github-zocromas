@@ -1,6 +1,6 @@
 function run_installed ()
 {
-  local binary srcdir bname rname mcaller
+  local binary builddir bname rname mcaller
   mcaller=$1
   shift
   rname=$( basename $mcaller )
@@ -29,8 +29,8 @@ function run_installed ()
   # for core dump:
      ulimit -c unlimited
 
-#     make_any && usleep 500000 && clear && exec $srcdir/$rname "$@"
-#      echo "bash:to run  $srcdir/$rname" >&2
+#     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
+#      echo "bash:to run  $builddir/$rname" >&2
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
      make_any && usleep 50000 && exec $binary "$@"
      echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
@@ -38,7 +38,7 @@ function run_installed ()
 }
 function run_any ()
 {
-  local binary srcdir bname rname mcaller
+  local binary builddir bname rname mcaller
   mcaller=$1
   shift
   rname=$( basename $mcaller )
@@ -51,12 +51,12 @@ function run_any ()
   fi
 
 # show_setup
-  if [[ -d "$indir/src/$bname" ]] ; then
-    srcdir="$indir/src/$bname"
+  if [[ -d "$build_at/src/$bname" ]] ; then
+    builddir="$build_at/src/$bname"
   else
-    srcdir="$indir/src"
+    builddir="$build_at/src"
   fi
-  binary="$srcdir/$rname"
+  binary="$builddir/$rname"
 
   if [[ "$rname" ]] ; then
      echo "<<< $rname >>>" >&2
@@ -65,8 +65,8 @@ function run_any ()
   # for core dump:
      ulimit -c unlimited
 
-#     make_any && usleep 500000 && clear && exec $srcdir/$rname "$@"
-#      echo "bash:to run  $srcdir/$rname" >&2
+#     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
+#      echo "bash:to run  $builddir/$rname" >&2
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
      make_any && usleep 50000 && exec $binary "$@"
      echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
