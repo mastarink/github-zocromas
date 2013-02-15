@@ -37,7 +37,8 @@ function setup_vers ()
 	distfile="$savedirdist/$distname"
 	distfile_prefix="$savedirdist/${n}"
       fi
-      wbuilddir=$indir
+      wbuilddir="$indir/build"
+      build_at="$wbuilddir"
       configuredir=$indir
       mas_name=$n
       mas_vers=$v
@@ -57,6 +58,8 @@ function show_setup ()
   echo "shdirup:	$shdirup" >&2
   echo "indir:		$indir" >&2
   echo "updir:		$updir" >&2
+  echo "configuredir:	$configuredir" >&2
+  echo "wbuilddir:	$wbuilddir" >&2
   
   echo "= SAVE:" >&2
   echo "savedir:	$savedir" >&2

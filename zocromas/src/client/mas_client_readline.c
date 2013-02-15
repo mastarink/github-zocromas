@@ -57,10 +57,11 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
   while ( !mas_readline_buffer )
   {
     char prompt[256];
+
     ctrl.status = MAS_STATUS_WAIT;
     /* mas_readline_buffer = readline( " % \x1b[K" ); */
     /* rl_catch_signals = 0; */
-    snprintf(prompt, sizeof(prompt),  "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
+    snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
     mas_readline_buffer = readline( prompt );
     ctrl.status = MAS_STATUS_WORK;
     {
@@ -80,14 +81,14 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 #else
       if ( mas_readline_buffer && *mas_readline_buffer )
       {
-        if ( 0 != strcmp( he->line, mas_readline_buffer ) )
+        if ( he && 0 != strcmp( he->line, mas_readline_buffer ) )
         {
           /* mMSG( "HISTORY ADD:%s {%s} hp:%d", mas_readline_buffer, he ? he->line : "-", hp ? 1 : 0 ); */
           add_history( mas_readline_buffer );
         }
         else
         {
-          HMSG( "HISTORY NOT ADDED:%s {%s}", he->line, mas_readline_buffer );
+          HMSG( "HISTORY NOT ADDED:%s {%s}", he ? he->line : NULL, mas_readline_buffer );
         }
       }
 #endif
@@ -131,6 +132,7 @@ mas_client_init_readline( void )
 {
   int rh = 0;
 
+  HMSG( "HISTORY to LOAD" );
   if ( opts.configdir )
   {
     char *fpath = NULL;
@@ -140,7 +142,12 @@ mas_client_init_readline( void )
     fpath = mas_strcat_x( fpath, "history" );
 
     rh = read_history( fpath );
+    HMSG( "(%d) HISTORY LOAD: %s", rh, fpath );
     mas_free( fpath );
+  }
+  else
+  {
+    EMSG( "configdir not set" );
   }
   if ( rh != 0 )
   {
@@ -169,6 +176,7 @@ mas_client_init_readline( void )
 void
 mas_client_destroy_readline( void )
 {
+  HMSG( "HISTORY to SAVE" );
   if ( opts.configdir )
   {
     int rh = 0;
@@ -179,6 +187,7 @@ mas_client_destroy_readline( void )
     fpath = mas_strcat_x( fpath, "history" );
 
     rh = write_history( fpath );
+    HMSG( "(%d) HISTORY SAVE: %s", rh, fpath );
     mas_free( fpath );
   }
 }

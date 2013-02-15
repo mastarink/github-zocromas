@@ -1,9 +1,13 @@
 #include "mas_client_def.h"
 #include "mas_basic_def.h"
 
+#include <unistd.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 #include <mastar/wrap/mas_lib.h>
+#include <mastar/tools/mas_tools.h>
+
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -15,6 +19,7 @@ extern mas_options_t opts;
 
 #ifdef MAS_CLIENT_LOG
 #  include <mastar/log/mas_logger.h>
+#  include <mastar/log/mas_log.h>
 #endif
 #include "init/inc/mas_opts.h"
 #include "mas_client_readline.h"
@@ -42,6 +47,8 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   int r = 0;
 
   HMSG( "INIT CLIENT" );
+  ctrl.status = MAS_STATUS_START;
+  ctrl.start_time = mas_double_time(  );
 #ifndef MAS_CLIENT_LOG
   ctrl.log_disabled = 1;
 #endif
@@ -50,20 +57,14 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   ctrl.is_server = 0;
   r = mas_pre_init( argc, argv, env );
 
-  if ( r >= 0 )
-  {
-    r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
-    if ( r <= 0 )
-      r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
-  }
-  HMSG( "-> INIT" );
+  MAS_LOG( "init client" );
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );
-  HMSG( "<- INIT" );
   if ( r >= 0 )
     r = mas_client_init_readline(  );
+  MAS_LOG( "init client done" );
   if ( r >= 0 )
-  r = mas_post_init( argc, argv, env );
+    r = mas_post_init( argc, argv, env );
   return r;
 }
 

@@ -53,18 +53,21 @@ __mas_modules_load_module( const char *fullname, int noerr )
   }
   else
   {
-    char *dler;
-
     module_handle = dlopen( fullname, RTLD_LAZY | RTLD_LOCAL );
-    dler = dlerror(  );
-    dler = mas_strdup( dler );
-    MAS_LOG( "ERROR: module not loaded: '%s' (%s)", fullname, dler );
-    if ( !module_handle && !noerr )
+    if ( !module_handle )
     {
+      char *dler;
+
+      dler = dlerror(  );
+      dler = mas_strdup( dler );
+      if ( !noerr )
+      {
+        MAS_LOG( "ERROR: module not loaded: '%s' (%s)", fullname, dler );
+        EMSG( "%s", dler );
+      }
+      if ( dler )
+        mas_free( dler );
     }
-    EMSG( "%s", dler );
-    if ( dler )
-      mas_free( dler );
     MAS_LOG( "module load: '%s' (%p)", fullname, ( void * ) module_handle );
     if ( module_handle )
     {
@@ -124,10 +127,11 @@ mas_modules_load_module( const char *libname )
 void *
 mas_modules_load_proto( const char *libname )
 {
-  void *module_handle;
+  void *module_handle = NULL;
 
   if ( opts.protodir )
     module_handle = _mas_load_module( libname, opts.protodir, 1 );
+  HMSG( "PROTO LOAD [%d] %s", module_handle ? 1 : 0, libname );
   return module_handle;
 }
 
@@ -163,13 +167,13 @@ mas_modules_load_proto_func( const char *libname, const char *funname )
   if ( module_handle )
   {
     transaction_fun = ( mas_transaction_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
-    tMSG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
-    MAS_LOG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
-    if ( !transaction_fun )
-    {
-      EMSG( "%s", dlerror(  ) );
-      MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
-    }
+  }
+  tMSG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
+  MAS_LOG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
+  if ( !transaction_fun )
+  {
+    EMSG( "%s", dlerror(  ) );
+    MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
   }
   return transaction_fun;
 }

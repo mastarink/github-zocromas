@@ -164,29 +164,35 @@ AC_SUBST(AM_LDFLAGS)
 
 
 
-AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
-MAS_MODULESDIR="\${pkglibdir}"
-AC_SUBST(MAS_MODULESDIR)
+# AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
+# MAS_MODULESDIR="\${pkglibdir}"
+# AC_SUBST(MAS_MODULESDIR)
+#
+# AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
+# MAS_LIBDIR="\${libdir}"
+# AC_SUBST(MAS_LIBDIR)
 
-AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
-MAS_LIBDIR="\${libdir}"
-AC_SUBST(MAS_LIBDIR)
 
-
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\" -ltcmalloc ${DEPS_CFLAGS}"
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -ltcmalloc ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
 
+
+
 AC_DEFINE_UNQUOTED(MAS_CFLAGS, "${AM_CFLAGS}", [compile flags])
 AC_SUBST(MAS_CFLAGS)
+
+# AC_DEFINE_UNQUOTED(MAS_XX, "\${ac_cs_config}", [testing])
+# AC_SUBST(MAS_XX)
 
 
 
 # AM_CXXFLAGS="-O0"
 # AC_SUBST(AM_CXXFLAGS)
 
-AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(prefix)/include"
+# AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(includedir)"
+AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src"
 AC_SUBST(AM_CPPFLAGS)
 
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
@@ -241,7 +247,9 @@ AC_MSG_NOTICE([@@@@@@@@@ DEPSS_CFLAGS: ${DEPSS_CFLAGS} @@@@@@@@@])
 
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile
+AC_CONFIG_FILES([
+		masconfig.h
+		Makefile
 		src/Makefile
 		src/inc/Makefile
 

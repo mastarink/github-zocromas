@@ -70,7 +70,7 @@ mas_opts_destroy( void )
 
   if ( opts.protodir )
     mas_free( opts.protodir );
-  opts.modsdir = NULL;
+  opts.protodir = NULL;
 
   if ( opts.logdir )
     mas_free( opts.logdir );
@@ -286,12 +286,25 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 
         {
           r = fprintf( f,
-                       "env_optsname=%s\nenv_hostname=%s\nmodsdir=%s\nlogdir=%s\nlogger=%d\nlog=%d\n"
-                       "max_config_backup=%u\ndaemon=%u\nmessages=%u\n"
-                       "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\nrestart_sleep=%lg\n"
-                       "disconnect_prompt=%u\nwait_server=%u\n", opts.env_optsname, opts.env_hostname, opts.modsdir, opts.logdir,
-                       !opts.nologger, !opts.nolog, opts.max_config_backup, !opts.nodaemon, !opts.nomessages, opts.default_port,
-                       opts.save_opts, opts.save_opts_plus, opts.restart_sleep, opts.disconnect_prompt, opts.wait_server );
+                       "# common\nenv_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlog=%d\n"
+                       "max_config_backup=%u\nmessages=%u\n"
+                       "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
+                       "# -\n", opts.env_optsname, opts.env_hostname, opts.logdir,
+                       !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
+                       opts.save_opts_plus, opts.restart_sleep );
+          if ( r > 0 )
+            rtot += r;
+        }
+        if ( ctrl.is_server )
+        {
+          r = fprintf( f, "# server\ndaemon=%u\nlogger=%d\nmodsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, !opts.nologger, opts.modsdir,
+                       opts.protodir );
+          if ( r > 0 )
+            rtot += r;
+        }
+        else if ( ctrl.is_client )
+        {
+          r = fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", opts.disconnect_prompt, opts.wait_server );
           if ( r > 0 )
             rtot += r;
         }
@@ -541,6 +554,10 @@ mas_opts_restore_nosection( const char *s )
     mas_opts_set_unsigned( &v, s );
     opts.nologger = !v;
     /* mMSG( "READ NOLOGGER :%d", opts.nologger ); */
+  }
+  else if ( 0 == mas_strcmp2( s, "message=" ) )
+  {
+    HMSG( "RESTORE OPTS: %s", mas_find_eq_value( s ) );
   }
   else if ( 0 == mas_strcmp2( s, "modsdir=" ) )
   {

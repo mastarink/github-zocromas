@@ -147,14 +147,8 @@
 /* */
 #undef MAS_FREE
 
-/* mas_libdir */
-#undef MAS_LIBDIR
-
 /* */
 #undef MAS_MALLOC
-
-/* mas_modulesdir */
-#undef MAS_MODULESDIR
 
 /* os version */
 #undef MAS_OSVER

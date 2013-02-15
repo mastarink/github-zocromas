@@ -117,6 +117,7 @@ mas_init_message( void )
 int
 mas_pre_init( int argc, char **argv, char **env )
 {
+  int r=0;
   const char *pn;
 
   HMSG( "PRE-INIT" );
@@ -132,7 +133,17 @@ mas_pre_init( int argc, char **argv, char **env )
     if ( *pn )
       ctrl.progname = mas_strdup( pn );
   }
-  return 0;
+  HMSG( "PPID: %u", getppid(  ) );
+  HMSG( "BASH: %s", getenv( "MAS_PID_AT_BASHRC" ) );
+  MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  if ( r >= 0 )
+  {
+    r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
+    if ( r <= 0 )
+      r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+    /* r = mas_init_curses(  ); */
+  }
+  return r;
 }
 
 int

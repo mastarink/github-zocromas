@@ -1,1 +1,1 @@
-../../zocversion.txt
+../../files/zocversion.txt

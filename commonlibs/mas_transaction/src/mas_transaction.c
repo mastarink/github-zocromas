@@ -103,9 +103,11 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       {
         if ( r == 0 || prcontrol->proto_desc == &ctrl.proto_descs[np] )
         {
+          r = -1;
           /* EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1, ctrl.proto_descs[np].proto_id, */
           /*       ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );                                                           */
-          r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], data );
+          if ( ctrl.proto_descs[np].function )
+            r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], data );
           if ( r > 0 )
             prcontrol->proto_desc = &ctrl.proto_descs[np];
         }

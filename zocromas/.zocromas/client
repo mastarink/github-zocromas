@@ -15,6 +15,7 @@ save_opts_plus=0
 restart_sleep=0.1
 disconnect_prompt=0
 wait_server=0
+message=mas CLIENT config
 
 [hosts 1]
 host=/tmp/zocromas.socket

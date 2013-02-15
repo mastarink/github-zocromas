@@ -1,13 +1,14 @@
 function autoreconf_m ()
 {
-  if [[ "$indir" ]] && [[ -d "$indir" ]] ; then
-    cd $indir
-    if ! [[ -d m4 ]] ; then
-      mkdir m4
-    fi
-    make -s maintainer-clean
-    autoreconf -i
+  if ! [[ -d m4 ]] ; then
+    mkdir m4 || return 1
   fi
+  if [[ "$build_at" ]] && pushd "$build_at"  >/dev/null ; then
+    make -s maintainer-clean >/dev/null
+  fi
+  popd  >/dev/null || return 1 
+  autoreconf -i
+  return 0
 }
 function configure_m ()
 {
@@ -18,11 +19,15 @@ function configure_m ()
     cfgdir=$configuredir
   fi
 # echo "$cfgdir/configure $configure_opts" >&2
-  if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] ; then 
-    $cfgdir/configure $configure_opts || return 1
-    return 0
+  if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] \
+  		&& [[ "$build_at" ]] && pushd "$build_at"  >/dev/null ; then 
+    if $cfgdir/configure $configure_opts ; then
+      popd >/dev/null || return 1
+      return 0
+    fi
   fi
-  return 1$cfgdir/configure
+  popd >/dev/null
+  return 1
 }
 function remove_unpacked_z ()
 {
@@ -75,10 +80,11 @@ function install_z ()
 #	      echo "build dir exists: $ibuilddir" >&2
 	      rm -Rf $ibuilddir
 	    fi
-	    if mkdir "$ibuilddir" && cd "$ibuilddir" ; then
+	    if mkdir "$ibuilddir" ; then
 #             echo "configuredir: $configuredir" >&2
 #             echo "From $unpackdir" >&2
 #             echo "At `pwd`" >&2
+	      build_at="$ibuilddir" || return 1
  	      configure_m $unpackdir || return 1
 	      make_m
 	      make_target install

@@ -1,28 +1,31 @@
 function make_dirs ()
 {
   if [[ -d "$rootdir" ]] && ! [[ -d "$savedir" ]]; then
-    mkdir "$savedir"
+    mkdir "$savedir" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirdist" ]]; then
-    mkdir "$savedirdist"
+    mkdir "$savedirdist" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirtar" ]]; then
-    mkdir "$savedirtar"
+    mkdir "$savedirtar" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$savedirtar" ]] && ! [[ -d "$savedirtarme" ]]; then
-    mkdir "$savedirtarme"
+    mkdir "$savedirtarme" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$rootdir" ]] && ! [[ -d "$instdir" ]]; then
-    mkdir "$instdir"
+    mkdir "$instdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$rootdir" ]] && ! [[ -d "$tmpdir" ]]; then
-    mkdir "$tmpdir"
+    mkdir "$tmpdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpbuild" ]]; then
-    mkdir "$tmpbuild"
+    mkdir "$tmpbuild" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpunpack" ]]; then
-    mkdir "$tmpunpack"
+    mkdir "$tmpunpack" || echo "$LINENO ERROR make_dirs" >&2
+  fi
+  if [[ "$wbuilddir" ]] && ! [[ -d "$wbuilddir" ]]; then
+    mkdir "$wbuilddir" || echo "$LINENO ERROR make_dirs" >&2
   fi
 }
 function setup_dirs ()
@@ -55,6 +58,10 @@ function setup_dirs ()
     tmpunpack=$(realpath "$tmpdir/unpack/" )
 
     debugdir="$indir/debug"
+    
+    wbuilddir="$indir/build"
+    build_at="$wbuilddir"
+
     if [[ -d "$rootdir" ]] ; then
       prjgroup=$(basename $rootdir)
       make_dirs

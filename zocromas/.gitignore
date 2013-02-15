@@ -5,4 +5,5 @@ misc/
 boxes/
 log/
 tmp/
+build/
 configure.ac.2*
