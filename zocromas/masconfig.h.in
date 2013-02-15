@@ -1,0 +1,18 @@
+#ifndef MAS_CONFIGURE_H
+#  define MAS_CONFIGURE_H
+
+#  define MAS_SRCDIR  "@srcdir@"
+#  define MAS_PREFIX  "@prefix@"
+#  define MAS_AM_CFLAGS "@AM_CFLAGS@"
+#  define MAS_AM_LDFLAGS "@AM_LDFLAGS@"
+#  define MAS_AM_MAKEFLAGS "@AM_MAKEFLAGS@"
+#  define MAS_BUILDDIR  "@builddir@"
+#  define MAS_ABS_BUILDDIR  "@abs_builddir@"
+#  define MAS_ABS_SRCDIR  "@abs_srcdir@"
+#  define MAS_PKG_CONFIG_PATH  "@PKG_CONFIG_PATH@"
+#  define MAS_HOST_CPU  "@host_cpu@"
+#  define MAS_HOST_OS  "@host_os@"
+#  define MAS_BUILD  "@build@"
+#  define MAS_TOP_BUILDDIR  "@top_builddir@"
+#  define MAS_TOP_SRCDIR  "@top_srcdir@"
+#endif

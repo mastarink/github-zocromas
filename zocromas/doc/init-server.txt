@@ -1,0 +1,23 @@
+server
+
+-  status; start time
+-  process type
+  - server
+  - client
+
+-  pre-init
+-  opts restore
+-  curses
+-  init
+  - restart (lts...) from env MAS_%s_%u_RESTART
+  - init env
+    - ...
+  - set at_exit
+  - init signals
+  - CLI options
+  - ctrl init
+-  daemon
+-  threads
+-  load protos
+-  l.controls create
+-  mas_post_init

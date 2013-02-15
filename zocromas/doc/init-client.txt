@@ -1,0 +1,23 @@
+client
+
+
+-  process type
+  - server
+  - client
+
+-  pre-init
+-  opts restore
+
+-  init
+  - restart (lts...) from env MAS_%s_%u_RESTART
+  - init env
+    - ...
+  - set at_exit
+  - init signals
+  - CLI options
+  - ctrl init
+-  mas_client_init_readline
+
+
+
+-  mas_post_init
