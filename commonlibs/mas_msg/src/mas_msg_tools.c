@@ -50,6 +50,8 @@ mas_msg_set_file( const char *path )
   if ( path )
   {
     ctrl.msgfile = fopen( path, "a" );
+    /* ffcntl( ctrl.msgfile, F_SETFL, O_SYNC ); */
+    setvbuf( ctrl.msgfile, NULL, _IONBF, 0 );
   }
   return 0;
 }

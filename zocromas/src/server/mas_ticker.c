@@ -135,8 +135,8 @@ mas_ticker( void )
         a60 = ( ( gone_history[0] - gone_history[60] ) / 60 ) / zinterval;
         if ( peak < a1 )
           peak = a1;
-        MFP( "(%3lus:m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] " "(lock:%d:%d) i/p:%d;"
-             " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K\r", elapsed_time, memory_balance, outstr, itick,
+        MFP( "\r(\x1b[33;41;1m%3lus\x1b[0m:\x1b[37;44;1mm%5lu\x1b[0m) [\x1b[33;42;1m%s\x1b[0m] %d; [%lu:%lu:%ld:%lu] "
+             "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K", elapsed_time, memory_balance, outstr, itick,
              ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
              ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
 

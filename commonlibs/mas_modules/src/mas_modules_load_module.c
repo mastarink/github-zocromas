@@ -42,7 +42,7 @@ more:
 
 
 static void *
-__mas_modules_load_module( const char *fullname, int noerr )
+__mas_modules_load_module( const char *fullname, const char *name, int noerr )
 {
   void *module_handle;
 
@@ -89,8 +89,8 @@ __mas_modules_load_module( const char *fullname, int noerr )
 
       ctrl.loaded_modules = array;
       ctrl.loaded_modules_cnt = size;
-      HMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, fullname );
       pthread_rwlock_unlock( &ctrl.thglob.modules_list_rwlock );
+      HMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, name );
     }
   }
   return module_handle;
@@ -106,8 +106,8 @@ _mas_load_module( const char *libname, const char *path, int noerr )
   fullname = mas_strdup( path );
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
-  module_handle = __mas_modules_load_module( fullname, noerr );
-  HMSG( "MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
+  module_handle = __mas_modules_load_module( fullname, libname, noerr );
+  HMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
   tMSG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   MAS_LOG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   mas_free( fullname );
@@ -117,7 +117,7 @@ _mas_load_module( const char *libname, const char *path, int noerr )
 void *
 mas_modules_load_module( const char *libname )
 {
-  void *module_handle;
+  void *module_handle = NULL;
 
   if ( opts.modsdir )
     module_handle = _mas_load_module( libname, opts.modsdir, 1 );
@@ -131,7 +131,7 @@ mas_modules_load_proto( const char *libname )
 
   if ( opts.protodir )
     module_handle = _mas_load_module( libname, opts.protodir, 1 );
-  HMSG( "PROTO LOAD [%d] %s", module_handle ? 1 : 0, libname );
+  HMSG( "PROTO LOAD %s %s", libname, module_handle ? "OK" : "FAIL" );
   return module_handle;
 }
 

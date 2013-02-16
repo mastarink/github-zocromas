@@ -9,7 +9,7 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-#include "init/inc/mas_init.h"
+#include <mastar/init/mas_init.h>
 #include "mas_init_client.h"
 #include "mas_client_readline.h"
 
@@ -42,8 +42,6 @@ int
 main( int argc, char *argv[], char *env[] )
 {
   int r = -1;
-
-  ctrl.status = MAS_STATUS_START;
 
   HMSG( "MAIN" );
 #ifdef MAS_INIT_SEPARATE

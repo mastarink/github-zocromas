@@ -1,4 +1,5 @@
-#include "mas_basic_def.h"
+#include <mastar/wrap/mas_std_def.h>
+/* #include "mas_basic_def.h" */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,14 +15,13 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include "init/inc/mas_opts.h"
 #include <mastar/control/mas_control.h>
 
+#include "mas_opts.h"
 #include "mas_cli_options.h"
 
 

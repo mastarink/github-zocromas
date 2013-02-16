@@ -21,7 +21,9 @@ extern mas_options_t opts;
 #  include <mastar/log/mas_logger.h>
 #  include <mastar/log/mas_log.h>
 #endif
-#include "init/inc/mas_opts.h"
+
+#include <mastar/init/mas_init.h>
+#include <mastar/init/mas_opts.h>
 #include "mas_client_readline.h"
 
 #include "mas_init_client.h"

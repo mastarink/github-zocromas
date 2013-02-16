@@ -7,8 +7,6 @@ mas_server_SOURCES= mas_server_main.c mas_server_sig.c  \
 mas_server_CFLAGS=${AM_CFLAGS} -pthread ${DEPSS_CFLAGS}
 mas_server_LDFLAGS=${AM_LDFLAGS} -luuid \
 	${DEPSS_LIBS} \
-	-L../cli	 -lmas_cli \
-	-L../init        -lmas_init \
 	-rdynamic
 
 

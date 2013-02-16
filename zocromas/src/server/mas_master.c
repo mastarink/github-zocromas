@@ -28,9 +28,11 @@ extern mas_options_t opts;
 
 #include <mastar/listener/mas_listeners.h>
 
-#include "init/inc/mas_init.h"
 #include "server/inc/mas_init_threads.h"
+
+#include <mastar/init/mas_init.h>
 #include <mastar/listener/mas_listener_control_list.h>
+
 #include "mas_init_server.h"
 
 #include "mas_master.h"
@@ -172,10 +174,12 @@ mas_master( void )
 
   MAS_LOG( "exiting master server" );
 #ifdef MAS_TRACEMEM
-  extern unsigned long memory_balance;
+  {
+    extern unsigned long memory_balance;
 
-  mMSG( "exiting master server, memory_balance:%lu", memory_balance );
-  MAS_LOG( "master end, m/b:%lu", memory_balance );
+    mMSG( "exiting master server, memory_balance:%lu", memory_balance );
+    MAS_LOG( "master end, m/b:%lu", memory_balance );
+  }
 #endif
   HMSG( "MASTER_TH TO END : %d", r );
   return r;
@@ -215,8 +219,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 {
   int r = -1;
 
-  ctrl.main_tid = mas_gettid(  );
-
+  HMSG( "BUNCH START" );
   MAS_LOG( "bunch start" );
 #ifdef MAS_INIT_SEPARATE
   r = mas_init_server( mas_atexit, 1, argc, argv, env );
@@ -239,13 +242,15 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
     else
     {
       r = mas_master(  );
+    }
 #ifdef MAS_TRACEMEM
+    {
       extern unsigned long memory_balance;
 
       mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
       MAS_LOG( "bunch end, m/b:%lu", memory_balance );
-#endif
     }
+#endif
     HMSG( "BUNCH TO END" );
     mas_pthread_exit( &r );
   }

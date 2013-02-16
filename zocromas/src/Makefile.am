@@ -1,4 +1,4 @@
-SUBDIRS= inc init cli client server
+SUBDIRS= inc client server
 ##########################################################################################
 ## cd /home/mastar/.mas/develop/autotools/zocromas
 ## export MAS_ZOCROMAS_DEFOPTS='-H193.222.140.165:5002 -H193.222.140.165:5003 -L/mnt/miscn/mastar/develop/autotools/zocromas/log'

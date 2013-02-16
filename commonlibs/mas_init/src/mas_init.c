@@ -1,4 +1,5 @@
-#include "mas_basic_def.h"
+#include <mastar/wrap/mas_std_def.h>
+/* #include "mas_basic_def.h" */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,7 @@
 #include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_tools.h>
@@ -23,13 +25,12 @@ extern mas_options_t opts;
 
 
 #include <mastar/control/mas_control.h>
-#include "mas_opts.h"
 
 #include <mastar/msg/mas_curses.h>
 #include <mastar/variables/mas_variables.h>
 
-#include <mastar/listener/mas_listener_control.h>
-#include "cli/inc/mas_cli_options.h"
+#include "mas_opts.h"
+#include "mas_cli_options.h"
 
 #include "mas_sig.h"
 #include "mas_init.h"
@@ -189,6 +190,12 @@ mas_post_init( void )
   /* ctrl.listening_max = opts.hosts_num; */
   MAS_LOG( "(%d) init done, %d hosts", r, opts.hosts_num );
 
+  if ( opts.msgfilename )
+  {
+    HMSG( "MESSAGES to %s", opts.msgfilename );
+    mas_msg_set_file( opts.msgfilename );
+    MFP( "\x1b[H\x1b[2J" );
+  }
   r = mas_init_message(  );
   return r;
 }
@@ -251,15 +258,17 @@ mas_init_plus( int is_server, void ( *atexit_fun ) ( void ), int initsig, int ar
   int r = 0;
   va_list args;
 
-  HMSG( "INIT %s", is_server ? "SERVER" : "CLIENT" );
+  ctrl.main_tid = mas_gettid(  );
+  HMSG( "INIT+ %s", is_server ? "SERVER" : "CLIENT" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
-#ifndef MAS_CLIENT_LOG
-  ctrl.log_disabled = 1;
-#endif
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_server = is_server;
   ctrl.is_client = !ctrl.is_server;
+#ifndef MAS_CLIENT_LOG
+  if ( ctrl.is_client )
+    ctrl.log_disabled = 1;
+#endif
   r = mas_pre_init( argc, argv, env );
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );

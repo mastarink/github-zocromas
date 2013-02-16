@@ -1,4 +1,7 @@
-#include "mas_basic_def.h"
+#define MAS_DEFAULT_PORT 5002
+
+#include <mastar/wrap/mas_std_def.h>
+/* #include "mas_basic_def.h" */
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -86,7 +89,7 @@ mas_options_t opts = {
   .nolisten = 0,
   .nomessages = 0,
   .exitsleep = 0,
-  
+
   .nodaemon = 0,
   .noredirect_std = 0,
   .noclose_std = 0,

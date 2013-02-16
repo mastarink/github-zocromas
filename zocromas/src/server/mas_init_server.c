@@ -37,9 +37,10 @@ extern mas_options_t opts;
 
 #include <mastar/thtools/mas_thread_tools.h>
 #include "mas_init_threads.h"
-
-#include "init/inc/mas_opts.h"
 #include "mas_ticker.h"
+
+#include <mastar/init/mas_init.h>
+#include <mastar/init/mas_opts.h>
 
 #include "mas_init_server.h"
 
@@ -64,10 +65,8 @@ mas_init_load_protos( void )
   mas_transaction_protodesc_t *proto_descs = NULL;
 
   HMSG( "INIT PROTOS" );
-
   if ( !ctrl.proto_descs )
   {
-    tMSG( "@@@@@@@@@@ protodir:%s [%u]", opts.protodir, opts.protos_num );
     proto_descs = mas_calloc( opts.protos_num, sizeof( mas_transaction_protodesc_t ) );
     for ( int ipr = 0; ipr < opts.protos_num; ipr++ )
     {
@@ -75,7 +74,6 @@ mas_init_load_protos( void )
       proto_descs[ipr].proto_id = protos_num + 1;
       proto_descs[ipr].name = mas_strdup( opts.protos[ipr] );
       proto_descs[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
-      tMSG( "@@@@@@@@@@ %u proto:%s : %p", ipr, opts.protos[ipr], ( void * ) ( unsigned long long ) proto_descs[ipr].function );
       if ( !proto_descs[ipr].function )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
@@ -114,8 +112,6 @@ mas_init_daemon( void )
     if ( pid_child == 0 )
     {
       ctrl.child_pid = getpid(  );
-      if ( opts.msgfilename )
-        mas_msg_set_file( opts.msgfilename );
       HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
       /* sleep(200); */
       if ( ctrl.redirect_std )
