@@ -27,7 +27,7 @@ function doprj ()
       elif [[ "$act" == 'configure' ]] || [[ "$act" == 'c' ]] ; then
 	configure_m || return 1
       elif [[ "$act" == 'install' ]] || [[ "$act" == 'i' ]] ; then
-	make_any && make_target install || return 1
+	make_m && make_target install || return 1
       elif [[ "$act" == 'uninstall' ]] || [[ "$act" == 'u' ]] ; then
 	make_target uninstall || return 1
       elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && ! eval $shfile ; then

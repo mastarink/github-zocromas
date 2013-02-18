@@ -17,4 +17,6 @@ commonlibs/mas_init
 zocmds/1
 zocmds/2
 zocprotos
+bins/client
+bins/server
 zocromas
