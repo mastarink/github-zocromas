@@ -87,8 +87,6 @@ AC_TYPE_UID_T
 
 
 # Checks for libraries.
-AC_CHECK_LIB(pthread, pthread_create)
-AC_CHECK_LIB(readline, readline)
 # GLADE_LIBS="`pkg-config --libs libglade-2.0`"
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
@@ -159,9 +157,6 @@ AC_SUBST(AM_LDFLAGS)
 AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe ${DEPS_CFLAGS}"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
-
-AC_DEFINE_UNQUOTED(MAS_CFLAGS, "${AM_CFLAGS}", [compile flags])
-AC_SUBST(MAS_CFLAGS)
 
 
 # AM_CXXFLAGS="-O0"

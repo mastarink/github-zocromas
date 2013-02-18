@@ -31,7 +31,8 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/xcromas/mas_transaction_xcromas.c])
 
-AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign   -Wall -Werror dist-bzip2])
 
 
 # AM_SILENT_RULES([yes])
@@ -87,8 +88,6 @@ AC_TYPE_UID_T
 
 
 # Checks for libraries.
-AC_CHECK_LIB(pthread, pthread_create)
-AC_CHECK_LIB(readline, readline)
 # GLADE_LIBS="`pkg-config --libs libglade-2.0`"
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"

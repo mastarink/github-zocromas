@@ -38,13 +38,14 @@ function run_installed ()
 }
 function run_any ()
 {
-  local binary builddir bname rname mcaller
+  local binary builddir bname rname mcaller made
   mcaller=$1
   shift
   if [[ "$mcaller" == '.' ]] ; then
     if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
       mcaller=$MAS_ZOCROMAS_HERE
     elif make_any && [[ -x "$build_at/src/${binprefix}${prjname}" ]] ; then
+      made=1
       mcaller=$prjname
     else
       echo "ERROR : prjname=$prjname ; no x: $build_at/src/${binprefix}${prjname}" >&2
@@ -81,7 +82,11 @@ function run_any ()
 #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
 #      echo "bash:to run  $builddir/$rname" >&2
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
-     make_any && usleep 50000 && exec $binary "$@"
+     if [[ "$made" ]] ||  make_any ; then
+       usleep 50000 && exec $binary "$@"
+     else
+       echo "make error" >&2
+     fi
      echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
   fi
 }

@@ -1,41 +1,24 @@
-function make_target ()
-{
-  local ilog target
-  target=$1
-  shift
-# echo "install [$prjname]" >&2
-  ilog="/tmp/$target-$prjname.log"
-  if [[ "$build_at" ]] && pushd "$build_at" >/dev/null ; then
-    if make -s $target > $ilog ; then
-      echo "$prjname $target OK : $ilog" >&2
-    else
-      echo "$prjname $target FAIL" >&2
-      cat "$ilog" >&2
-      popd  >/dev/null
-      return 1
-    fi
-  fi
-  popd >/dev/null || return 1
-  return 0
-}
 function make_m ()
 {
   local ername erdir
   erdir='errors'
-  ername="$erdir/make.`datemt`.result"
+  ername="$erdir/make_m.`datemt`.result"
   if [[ "$build_at" ]] && pushd "$build_at" >/dev/null ; then
     if [[ "$erdir" ]] && ! [[ -d "$erdir" ]] ; then
       if ! mkdir "$erdir" ; then
         popd >/dev/null
+	echo "$LINENO ERROR make_m" >&2
 	return 1
       fi
     fi
     if [[ "$ername" ]] && ! [[ -f "$ername" ]] ; then
-      if make -s $@ >$ername 2>&1 ; then
-	rm $ername
+      echo ">>>>>>>>>>>>>> $( realpath $ername )" >&2
+      if make -s $@  >$ername 2>&1 ; then
+#	rm $ername
   #     echo "$LINENO GOOD make_m" >&2
-  	popd >/dev/null || return 1
-	return 0
+  	popd >/dev/null && return 0
+	echo "$LINENO ERROR make_m" >&2
+	return 1
       elif [[ -s "$ername" ]] ; then
 	echo -n "$ername >>>>>>>>" >&2
 	if false ; then
@@ -46,13 +29,17 @@ function make_m ()
 	echo -n "<<<<<<<<" >&2
       # grep error $ername | head -1 | sed -ne 's/^\([a-z]\+\.[ch]\):\([[:digit:]]\+\):.*$/\1 :: \2/p'
       else
-	echo "$LINENO ERROR make_m" >&2
+	echo "$LINENO ERROR make_m ; ername:$ername" >&2
       fi
+    else
+      echo "$LINENO ERROR make_m ; ername:$ername exists" >&2
+      cat $ername
     fi
   else
     echo "$LINENO ERROR make_m" >&2
   fi
   popd  >/dev/null
+  echo "$LINENO ERROR make_m" >&2
   return 1
 }
 function grep_make_m ()
@@ -94,6 +81,26 @@ function make_any_tilme ()
       fi
     fi
   fi
+  return 0
+}
+function make_target ()
+{
+  local ilog target
+  target=$1
+  shift
+# echo "install [$prjname]" >&2
+  ilog="/tmp/$target-$prjname.log"
+  if [[ "$build_at" ]] && pushd "$build_at" >/dev/null ; then
+    if make -s $target > $ilog ; then
+      echo "$prjname $target OK : $ilog" >&2
+    else
+      echo "$prjname $target FAIL" >&2
+      cat "$ilog" >&2
+      popd  >/dev/null
+      return 1
+    fi
+  fi
+  popd >/dev/null || return 1
   return 0
 }
 

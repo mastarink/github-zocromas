@@ -87,8 +87,8 @@ AC_TYPE_UID_T
 
 
 # Checks for libraries.
-AC_CHECK_LIB(pthread, pthread_create)
-AC_CHECK_LIB(readline, readline)
+AC_CHECK_LIB([readline], [readline])
+AC_CHECK_LIB([uuid], [uuid_generate])
 # GLADE_LIBS="`pkg-config --libs libglade-2.0`"
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"

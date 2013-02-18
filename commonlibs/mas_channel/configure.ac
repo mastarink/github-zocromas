@@ -89,8 +89,6 @@ AC_TYPE_UID_T
 
 
 # Checks for libraries.
-AC_CHECK_LIB(pthread, pthread_create)
-AC_CHECK_LIB(readline, readline)
 # GLADE_LIBS="`pkg-config --libs libglade-2.0`"
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
@@ -107,6 +105,7 @@ AC_CHECK_LIB(readline, readline)
 # Checks for library functions.
 
 PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_io mas_msg mas_log])
+PKG_CHECK_MODULES([DEPSL], [mas_io])
 
 # Configure options: --enable-debug[=no].
 
