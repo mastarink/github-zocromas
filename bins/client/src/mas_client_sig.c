@@ -1,5 +1,5 @@
-#  define MAS_MAX_INT_1 2
-#  define MAS_MAX_INT_2 10
+#define MAS_MAX_INT_1 2
+#define MAS_MAX_INT_2 10
 #include <mastar/wrap/mas_std_def.h>
 /* #include "mas_client_def.h" */
 /* #include "mas_basic_def.h"  */
@@ -161,4 +161,19 @@ mas_atexit( void )
     ctrl.saved_stderr_file = NULL;
   }
   FMSG( "======================================================================" );
+}
+
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  atexit( mas_atexit );
+  ctrl.is_client = 1;
+  ctrl.is_server = 0;
+  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+}
+
+__attribute__ ( ( destructor ) )
+     static void master_destructor( void )
+{
+  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

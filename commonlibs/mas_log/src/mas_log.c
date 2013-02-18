@@ -7,7 +7,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+
+#ifndef MAS_NO_THREADS
 #include <pthread.h>
+#endif
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -74,13 +77,16 @@ mas_log_clean_queue( void )
     {
       MAS_LIST_FOREACH_SAFE( li, log_list, next, li_tmp )
       {
+#ifndef MAS_NO_THREADS
         /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
         pthread_rwlock_wrlock( &logger_queue_rwlock );
-
+#endif
         MAS_LIST_REMOVE( log_list, li, mas_loginfo_s, next );
         ctrl.log_q_gone++;
+#ifndef MAS_NO_THREADS
         pthread_rwlock_unlock( &logger_queue_rwlock );
         /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
+#endif
         mas_log_delete_loginfo( li );
       }
     }
@@ -119,11 +125,13 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
 #else
   li->func = ( func );
 #endif
+#ifndef MAS_NO_THREADS
   li->pth = mas_pthread_self(  );
   li->thtype = mas_thself_type(  );
   li->pchannel = mas_thself_pchannel(  );
   li->plcontrol = mas_thself_plcontrol(  );
   li->prcontrol = mas_thself_prcontrol(  );
+#endif
   li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
   li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
   li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;
@@ -133,16 +141,20 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
   li->serial = ctrl.log_q_came;
   /* errno = 0; */
 
+#ifndef MAS_NO_THREADS
   /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */
   /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
   pthread_rwlock_wrlock( &logger_queue_rwlock );
+#endif
   MAS_LIST_ADD( log_list, li, next );
   ctrl.log_q_came++;
   ctrl.log_q_mem += strlen( li->message );
 
+#ifndef MAS_NO_THREADS
   pthread_rwlock_unlock( &logger_queue_rwlock );
   /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
   /* mas_pthread_mutex_unlock( &ctrl.thglob.log_mutex ); */
+#endif
   return 0;
 }
 

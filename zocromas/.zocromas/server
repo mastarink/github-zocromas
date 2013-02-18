@@ -18,6 +18,7 @@ restart_sleep=0.25
 # server
 daemon=1
 logger=1
+pidsdir=/mnt/new_misc/develop/autotools/zoc/zocromas/pid/
 modsdir=/home/mastar/.mas/develop/autotools/zoc/install/lib/zocmds/
 protodir=/home/mastar/.mas/develop/autotools/zoc/install/lib/zocprotos/
 

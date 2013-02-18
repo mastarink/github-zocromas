@@ -68,6 +68,7 @@ struct mas_options_s
   unsigned client_attempts;
   char *uuid;
   char *msgfilename;
+  char *pidsdir;
   char *modsdir;
   char *protodir;
   char *logdir;

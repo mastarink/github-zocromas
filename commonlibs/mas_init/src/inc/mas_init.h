@@ -3,8 +3,8 @@
 
 int mas_pre_init( int argc, char **argv, char **env );
 int mas_post_init( void );
-int mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env );
-int mas_init_plus( int is_server, void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env, ... );
+int mas_init( int argc, char **argv, char **env );
+int mas_init_plus( int argc, char **argv, char **env, ... );
 
 
 void mas_destroy( void );

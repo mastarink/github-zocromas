@@ -8,3 +8,4 @@ tmp/
 build/
 .build/
 configure.ac.2*
+pid/

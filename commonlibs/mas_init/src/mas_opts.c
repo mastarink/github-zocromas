@@ -20,7 +20,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
@@ -64,6 +63,10 @@ mas_opts_destroy( void )
   if ( opts.modsdir )
     mas_free( opts.modsdir );
   opts.modsdir = NULL;
+
+  if ( opts.pidsdir )
+    mas_free( opts.pidsdir );
+  opts.pidsdir = NULL;
 
   if ( opts.msgfilename )
     mas_free( opts.msgfilename );
@@ -298,8 +301,8 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
         }
         if ( ctrl.is_server )
         {
-          r = fprintf( f, "# server\ndaemon=%u\nlogger=%d\nmodsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, !opts.nologger, opts.modsdir,
-                       opts.protodir );
+          r = fprintf( f, "# server\ndaemon=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, !opts.nologger,
+                       opts.modsdir, opts.pidsdir, opts.protodir );
           if ( r > 0 )
             rtot += r;
         }
@@ -561,33 +564,21 @@ mas_opts_restore_nosection( const char *s )
     HMSG( "RESTORE OPTS: %s", mas_find_eq_value( s ) );
   }
   else if ( 0 == mas_strcmp2( s, "modsdir=" ) )
-  {
     mas_opts_set_pstrvalue( &opts.modsdir, s );
-  }
+  else if ( 0 == mas_strcmp2( s, "pidsdir=" ) )
+    mas_opts_set_pstrvalue( &opts.pidsdir, s );
   else if ( 0 == mas_strcmp2( s, "protodir=" ) )
-  {
     mas_opts_set_pstrvalue( &opts.protodir, s );
-  }
   else if ( 0 == mas_strcmp2( s, "logdir=" ) )
-  {
     mas_opts_set_pstrvalue( &opts.logdir, s );
-  }
   else if ( 0 == mas_strcmp2( s, "configdir=" ) )
-  {
     mas_opts_set_pstrvalue( &opts.configdir, s );
-  }
   else if ( 0 == mas_strcmp2( s, "configfilename=" ) )
-  {
     mas_opts_set_pstrvalue( &opts.configfilename, s );
-  }
   else if ( 0 == mas_strcmp2( s, "max_config_backup=" ) )
-  {
     mas_opts_set_unsigned( &opts.max_config_backup, s );
-  }
   else if ( 0 == mas_strcmp2( s, "default_port=" ) )
-  {
     mas_opts_set_unsigned( &opts.default_port, s );
-  }
   else if ( 0 == mas_strcmp2( s, "daemon=" ) )
   {
     unsigned v = 0;

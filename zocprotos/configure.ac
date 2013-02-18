@@ -31,11 +31,10 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/xcromas/mas_transaction_xcromas.c])
 
-# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
-AM_INIT_AUTOMAKE([foreign   -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
-# AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -102,7 +101,8 @@ AC_TYPE_UID_T
 # Checks for library functions.
 
 PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools mas_io mas_msg mas_log])
-PKG_CHECK_MODULES([NEEDDEPS], [mas_messageio])
+PKG_CHECK_MODULES([XCROMAS_DEPS], [mas_messageio])
+PKG_CHECK_MODULES([HTTP_DEPS], [mas_fileinfo])
 
 # Configure options: --enable-debug[=no].
 

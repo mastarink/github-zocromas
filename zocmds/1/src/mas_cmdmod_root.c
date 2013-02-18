@@ -21,7 +21,9 @@ extern mas_options_t opts;
 
 #include <mastar/log/mas_log.h>
 
+#ifdef MAS_USE_CURSES
 #include <mastar/msg/mas_curses.h>
+#endif
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
@@ -106,25 +108,35 @@ system_cmd( STD_CMD_ARGS )
     char **argv = NULL;
 
     /* use_curses = 0; */
+#ifdef MAS_USE_CURSES
     if ( !use_curses )
+#endif
       cMSG( "system_cmd pid=%u", getpid(  ) );
     mas_close( pfildes[0] );    /* close read end of pipe               */
     dup2( pfildes[1], STDOUT_FILENO ); /* make 1 same as write-to end of pipe  */
     mas_close( pfildes[1] );    /* close excess fildes                  */
+#ifdef MAS_USE_CURSES
     if ( !use_curses )
+#endif
       cMSG( "Args:'%s'", args );
 
     /* argc = mas_make_argv( args, 0, &argv, 0 ); */
     argc = mas_add_argv_args( argc, &argv, args, 0 );
 
+#ifdef MAS_USE_CURSES
     if ( !use_curses )
+#endif
       cMSG( "argc:%d", argc );
     if ( argc && argv )
     {
+#ifdef MAS_USE_CURSES
       if ( !use_curses )
+#endif
         cMSG( "exec ARgs:'%s'", args );
       RP_ERR( execvp( argv[0], &argv[0] ) );
+#ifdef MAS_USE_CURSES
       if ( !use_curses )
+#endif
         cMSG( "after exec ARGs:'%s'", args );
     }
     else
@@ -134,7 +146,9 @@ system_cmd( STD_CMD_ARGS )
     mas_del_argv( argc, argv, 0 );
     /* RP_ERR( execlp( args, "", NULL ) ); */
 
+#ifdef MAS_USE_CURSES
     if ( !use_curses )
+#endif
       cMSG( "execlp: %d", r );
     _exit( 0 );                 /* no flush                             */
   }

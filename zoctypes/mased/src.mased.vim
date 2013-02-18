@@ -1,3 +1,4 @@
+set path=inc/,src/inc/
 " set syntax on
 " win 155 53
 " winpos 2 25

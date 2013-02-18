@@ -7,5 +7,5 @@ if [[ -f "sh/setup.sh" ]] ; then
     port=$1
     shift
   fi
-  httperf --server zocromas.mastar.lan --http-version=1.0 --port=$port --server-name zocromas.mastar.lan:$port  --uri=/HarryHarrison.jpeg --num-conns=100 --num-calls=1000 $@
+  httperf --server zocromas.mastar.lan --http-version=1.0 --port=$port --server-name zocromas.mastar.lan:$port  --uri=/HarryHarrison.jpeg --num-conns=50 --num-calls=2000 $@
 fi

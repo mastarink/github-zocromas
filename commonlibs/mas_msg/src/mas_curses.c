@@ -4,19 +4,24 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <curses.h>
-
+#ifdef MAS_USE_CURSES
+#  include <curses.h>
+#endif
 
 /* #include "mas_common.h" */
 
 #include "mas_curses.h"
 
+#ifdef MAS_USE_CURSES
 static SCREEN *screen;
+#endif
 
 int
 mas_init_curses( void )
 {
   int r = 0;
+
+#ifdef MAS_USE_CURSES
 
 //if ( ( w_rootwin = initscr(  ) ) == NULL )
 //{
@@ -168,12 +173,14 @@ mas_init_curses( void )
     fprintf( stderr, "ERROR curses %d\n", r );
     /* exit( 33 ); */
   }
+#endif
   return r;
 }
 
 int
 mas_close_curses( void )
 {
+#ifdef MAS_USE_CURSES
   if ( use_curses )
   {
     use_curses = 0;
@@ -203,5 +210,6 @@ mas_close_curses( void )
     delscreen( screen );
     refresh(  );
   }
+#endif
   return 0;
 }

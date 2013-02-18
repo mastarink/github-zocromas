@@ -1,6 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_server_def.h" */
-/* #include "mas_basic_def.h"  */
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -79,7 +77,7 @@ threads created:
 
 
 
-int
+static int
 mas_master( void )
 {
   int r = 0;
@@ -176,7 +174,7 @@ mas_master( void )
   {
     extern unsigned long memory_balance;
 
-    mMSG( "exiting master server, memory_balance:%lu", memory_balance );
+    /* mMSG( "exiting master server, memory_balance:%lu", memory_balance ); */
     MAS_LOG( "master end, m/b:%lu", memory_balance );
   }
 #endif
@@ -184,7 +182,7 @@ mas_master( void )
   return r;
 }
 
-void *
+static void *
 mas_master_th( void *arg )
 {
   int r = -1;
@@ -205,12 +203,46 @@ mas_master_th( void *arg )
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 
-  mMSG( "mas_master_th end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
+  /* mMSG( "mas_master_th end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread ); */
   MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
 #endif
   HMSG( "MASTER_TH TO END" );
   mas_pthread_exit( NULL );
   return NULL;
+}
+
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+}
+
+__attribute__ ( ( destructor ) )
+     static void master_destructor( void )
+{
+  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+}
+
+static int
+mas_master_optional_thread( void )
+{
+  int r = 0;
+
+  /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
+  if ( opts.make_master_thread )
+  {
+    r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL );
+    if ( !ctrl.main_exit && ctrl.master_thread )
+    {
+      mas_xpthread_join( ctrl.master_thread );
+      ctrl.master_thread = ( pthread_t ) 0;
+    }
+  }
+  else
+  {
+    r = mas_master(  );
+  }
+  return r;
 }
 
 int
@@ -221,27 +253,13 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   HMSG( "BUNCH START" );
   MAS_LOG( "bunch start" );
 #ifdef MAS_INIT_SEPARATE
-  r = mas_init_server( mas_atexit, 1, argc, argv, env );
+  r = mas_init_server( argc, argv, env );
 #else
-  r = mas_init_plus( 1, mas_atexit, 1, argc, argv, env, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
-                     NULL );
+  r = mas_init_plus( argc, argv, env, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, NULL );
 #endif
   if ( r >= 0 )
   {
-    /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
-    if ( opts.make_master_thread )
-    {
-      r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL );
-      if ( !ctrl.main_exit && ctrl.master_thread )
-      {
-        mas_xpthread_join( ctrl.master_thread );
-        ctrl.master_thread = ( pthread_t ) 0;
-      }
-    }
-    else
-    {
-      r = mas_master(  );
-    }
+    mas_master_optional_thread(  );
 #ifdef MAS_TRACEMEM
     {
       extern unsigned long memory_balance;

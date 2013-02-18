@@ -87,6 +87,8 @@ AC_TYPE_UID_T
 
 
 # Checks for libraries.
+# AC_CHECK_LIB([pthread], [pthread_create])
+
 # GLADE_LIBS="`pkg-config --libs libglade-2.0`"
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
@@ -213,6 +215,8 @@ AC_SUBST([MAS_S_DATE])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([${PACKAGE_NAME}.pc
+		${PACKAGE_NAME}s.pc
+		${PACKAGE_NAME}c.pc
 		Makefile
 		src/Makefile
 		src/inc/Makefile

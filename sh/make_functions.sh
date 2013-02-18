@@ -1,8 +1,9 @@
 function make_m ()
 {
-  local ername erdir
+  local ername erdir 
   erdir='errors'
-  ername="$erdir/make_m.`datemt`.result"
+  ername="$erdir/make_m.`datemt`.${MAS_MAKE_CNT}.result"
+  MAS_MAKE_CNT=$(( $MAS_MAKE_CNT + 1 ))
   if [[ "$build_at" ]] && pushd "$build_at" >/dev/null ; then
     if [[ "$erdir" ]] && ! [[ -d "$erdir" ]] ; then
       if ! mkdir "$erdir" ; then
@@ -32,7 +33,7 @@ function make_m ()
 	echo "$LINENO ERROR make_m ; ername:$ername" >&2
       fi
     else
-      echo "$LINENO ERROR make_m ; ername:$ername exists" >&2
+      echo "$LINENO ($make_cnt) ERROR make_m ; ername:$ername exists" >&2
       cat $ername
     fi
   else

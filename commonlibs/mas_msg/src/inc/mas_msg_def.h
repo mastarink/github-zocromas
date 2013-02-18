@@ -21,7 +21,7 @@
 #  define MFPZ(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ ); }
 #  ifdef MAS_IS_CLIENT
 #    define MFP(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ );}
-#  elif defined(MAS_WITHOUT_CURSES)
+#  elif defined(MAS_USE_CURSES)
 #    define MFP(...) { if (use_curses) \
   { \
      mas_pthread_mutex_lock( &ctrl.mfp_mutex );  \
@@ -69,7 +69,11 @@
 #    define HMSG(...)
 #  endif
 // #  define FMSG(...) MAS_MSGFL(  777,         1,1,NULL,     0,NULL, "           ","             ", __VA_ARGS__)
+#ifndef MAS_NO_THREADS
 #  define FMSG(...) {MFP("%s:%u:%lx:", FL, mas_pthread_self());MFP(__VA_ARGS__);MFP("\n");}
+#else
+#  define FMSG(...) {MFP("%s:%u:%lx:", FL, 0L);MFP(__VA_ARGS__);MFP("\n");}
+#endif
 #  define EMSG(...) { mas_error(FL, errno, __VA_ARGS__); }
 #  define EHMSG(cnd, ...) { if(cnd){EMSG(__VA_ARGS__);}else{HMSG(__VA_ARGS__);} }
 #  define HEMSG(...) EHMSG(__VA_ARGS__)

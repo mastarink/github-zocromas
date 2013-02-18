@@ -46,10 +46,11 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 {
   int r = 0;
   char *answer = NULL;
+#ifdef MAS_USE_CURSES
   WINDOW *w_win;
 
   w_win = w_main;
-
+#endif
   tMSG( "to write data string %s", question );
   r = mas_channel_write_message( pchannel, question, NULL );
   tMSG( "(%d) written data string %s", r, question );

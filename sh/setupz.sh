@@ -94,4 +94,5 @@ function show_setup ()
   
 }
 
+export MAS_MAKE_CNT=0
 setup_dirs

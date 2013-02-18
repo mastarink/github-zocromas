@@ -1,4 +1,4 @@
-#include <mastar/wrap/mas_std_def.h>
+/* #include <mastar/wrap/mas_std_def.h> */
 /* #include "mas_client_def.h" */
 /* #include "mas_basic_def.h"  */
 
@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include <mastar/wrap/mas_lib.h>
+/* #include <mastar/wrap/mas_lib.h> */
 #include <mastar/tools/mas_tools.h>
 
 

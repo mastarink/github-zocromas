@@ -47,7 +47,7 @@ related:
 
 
 __attribute__ ( ( constructor ) )
-     static void c_notify(  )
+     static void c_notify( void )
 {
   fprintf( ctrl.msgfile ? ctrl.msgfile : stderr, "##              >>C<<\n" );
   cMSG( "##              >>mC<<\n" );
@@ -55,7 +55,7 @@ __attribute__ ( ( constructor ) )
 }
 
 __attribute__ ( ( destructor ) )
-     static void d_notify(  )
+     static void d_notify( void )
 {
   fprintf( ctrl.msgfile ? ctrl.msgfile : stderr, "##              >>D<<\n" );
   cMSG( "##              >>mD<<\n" );

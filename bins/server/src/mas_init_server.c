@@ -34,7 +34,9 @@ extern mas_options_t opts;
 #include <mastar/listener/mas_listener_control_list.h>
 #include <mastar/listener/mas_listeners.h>
 
+#ifdef MAS_USE_CURSES
 #include <mastar/msg/mas_curses.h>
+#endif
 
 #include <mastar/thtools/mas_thread_tools.h>
 #include "mas_init_threads.h"
@@ -169,8 +171,10 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   r = mas_pre_init( argc, argv, env );
 
   MAS_LOG( "init server" );
+#ifdef MAS_USE_CURSES
   /* if ( r >= 0 )              */
   /*   r = mas_init_curses(  ); */
+#endif
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );
   HMSG( "<- INIT" );
@@ -206,10 +210,11 @@ mas_destroy_server( void )
   }
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
 
+#ifdef MAS_USE_CURSES
   if ( use_curses )
     sleep( 1 );
   mas_close_curses(  );
-
+#endif
   mas_lcontrols_delete_list(  );
   mas_in_thread_end(  );
   mas_threads_destroy(  );

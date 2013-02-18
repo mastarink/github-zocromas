@@ -46,9 +46,9 @@ main( int argc, char *argv[], char *env[] )
 
   HMSG( "MAIN" );
 #ifdef MAS_INIT_SEPARATE
-  r = mas_init_client( mas_atexit, 1, argc, argv, env );
+  r = mas_init_client( argc, argv, env );
 #else
-  r = mas_init_plus( 0, mas_atexit, 1, argc, argv, env, mas_client_init_readline, NULL );
+  r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL );
 #endif
   HMSG( "Inited (%d hosts)", opts.hosts_num );
   if ( r >= 0 )

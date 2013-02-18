@@ -283,9 +283,9 @@ mas_xxspthread_join( pthread_t thread, long sec, long nanos )
   t.tv_sec = sec;
   t.tv_nsec = nanos;
   if ( nanos < 0 )
-    /* wait forever */ return mas_xpthread_join( thread );
+    /* wait forever */ return pthread_join( thread, NULL );
   else if ( sec == 0 && nanos == 0 )
-    /* don't wait */ return mas_xpthread_tryjoin_np( thread );
+    /* don't wait */ return pthread_tryjoin_np( thread , NULL);
   else
     /* wnait nanoseconds */ return mas_xxtspthread_join( thread, &t );
 }

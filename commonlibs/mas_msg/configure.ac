@@ -101,7 +101,8 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools mas_thtools])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools])
+PKG_CHECK_MODULES([DEPSX], [mas_thtools])
 
 # Configure options: --enable-debug[=no].
 

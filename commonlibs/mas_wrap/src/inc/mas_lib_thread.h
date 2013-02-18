@@ -1,11 +1,13 @@
 #ifndef MAS_LIB_THREAD_H
 #  define MAS_LIB_THREAD_H
 
-#include <pthread.h>
+#  ifndef MAS_NO_THREADS
+#    include <pthread.h>
 
 int mas_pthread_cancel( pthread_t th );
 
 int mas_pthread_create( pthread_t * thread, const pthread_attr_t * attr, void *( *start_routine ) ( void * ), void *arg );
+
 /* int mas_xpthread_create( pthread_t * thread, void *( *start_routine ) ( void * ), th_type_t thtype, void *arg ); */
 
 int mas_pthread_mutex_lock( pthread_mutex_t * mutex );
@@ -33,5 +35,6 @@ void mas_pthread_exit( void *retval );
 /* int mas_xpthread_mutex_destroy( pthread_mutex_t * mutex );                                                 */
 /* int mas_xpthread_mutex_init( pthread_mutex_t * restrict mutex );                                           */
 
-#  undef MAS_WEAK
+#    undef MAS_WEAK
+#  endif
 #endif

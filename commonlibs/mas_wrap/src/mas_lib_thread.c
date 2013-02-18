@@ -1,5 +1,6 @@
 #include "mas_std_def.h"
 
+#  ifndef MAS_NO_THREADS
 #include <pthread.h>
 
 /* #include "mas_common.h" */
@@ -140,3 +141,4 @@ mas_pthread_exit( void *retval )
 /* {                                                                                                     */
 /*   return pthread_mutex_init( mutex, NULL );                                                           */
 /* }                                                                                                     */
+#endif

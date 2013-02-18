@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#include <pthread.h>
+/* #include <pthread.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -26,7 +26,9 @@ extern mas_options_t opts;
 
 #include <mastar/control/mas_control.h>
 
-#include <mastar/msg/mas_curses.h>
+#ifdef MAS_USE_CURSES
+#  include <mastar/msg/mas_curses.h>
+#endif
 #include <mastar/variables/mas_variables.h>
 
 #include "mas_opts.h"
@@ -36,10 +38,11 @@ extern mas_options_t opts;
 #include "mas_init.h"
 
 
+#ifdef MAS_USE_CURSES
 int use_curses = 0;
 WINDOW *w_rootwin = NULL, *w_main0 = NULL, *w_main = NULL, *w_listen0 = NULL, *w_listen = NULL, *w_trans0 = NULL, *w_trans =
       NULL, *w_other0 = NULL, *w_other = NULL;
-
+#endif
 
 /*
 this:
@@ -98,6 +101,7 @@ mas_init_env(  )
 static int
 mas_init_message( void )
 {
+#ifdef MAS_USE_CURSES
   if ( use_curses )
   {
     IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
@@ -106,13 +110,15 @@ mas_init_message( void )
           ( unsigned long ) ctrl.main_thread );
   }
   else
+#endif
   {
     IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime,
           ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
-    IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.main_pid, ctrl.main_pid,
-          ( unsigned ) ctrl.main_tid, ( unsigned long ) ctrl.main_thread );
-  } return 0;
+    IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.main_pid,
+          ctrl.main_pid, ( unsigned ) ctrl.main_tid, ( unsigned long ) ctrl.main_thread );
+  }
+  return 0;
 }
 
 int
@@ -122,7 +128,7 @@ mas_pre_init( int argc, char **argv, char **env )
   const char *pn;
 
   HMSG( "PRE-INIT" );
-  ctrl.stamp.lts = ( unsigned long ) time( NULL );
+  /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
   ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
   ctrl.binname = mas_strdup( basename( argv[0] ) );
@@ -142,7 +148,9 @@ mas_pre_init( int argc, char **argv, char **env )
     r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
     if ( r <= 0 )
       r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+#ifdef MAS_USE_CURSES
     /* r = mas_init_curses(  ); */
+#endif
   }
   return r;
 }
@@ -177,13 +185,40 @@ mas_post_init( void )
   {
     char namebuf[512];
 
-    snprintf( namebuf, sizeof( namebuf ), ctrl.is_client ? "/client.%lu.%u.log" : "/server.%lu.%u.log", ctrl.stamp.first_lts, getpid(  ) );
+    snprintf( namebuf, sizeof( namebuf ), "/%s.%lu.%u.log" , ctrl.is_client ? "client" : "server", ctrl.stamp.first_lts, getpid(  ) );
     ctrl.logpath = mas_strdup( opts.logdir );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
   }
   else
   {
     EMSG( "logdir not set" );
+  }
+  HMSG( "PIDSDIR:%s", opts.pidsdir );
+  if ( r >= 0 && opts.pidsdir )
+  {
+    char namebuf[512];
+    char *pidpath;
+
+    snprintf( namebuf, sizeof( namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
+    pidpath = mas_strdup( opts.pidsdir );
+    pidpath = mas_strcat_x( pidpath, namebuf );
+    HMSG( "PIDPATH:%s", pidpath );
+    if ( pidpath )
+    {
+      FILE *f;
+
+      f = fopen( pidpath, "w" );
+      if ( f )
+      {
+        int w;
+
+        /* w = fwrite( pidpath, 1, strlen( pidpath ), f ); */
+        w = fprintf( f, "%u", getpid(  ) );
+        HMSG( "PIDW:%d", w );
+        fclose( f );
+      }
+    }
+    mas_free( pidpath );
   }
 
   /* ctrl.listening_max = opts.hosts_num; */
@@ -200,38 +235,48 @@ mas_post_init( void )
 }
 
 int
-mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
+mas_init_restart_count( void )
+{
+  char name[512];
+  char *ren = NULL, *ren0;
+
+  /* snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) ); */
+  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
+  ren0 = ren = getenv( name );
+  if ( ren )
+  {
+    fprintf( stderr, "@@@@@@@@ A:%u : %lu\n", ctrl.restart_cnt, ctrl.stamp.first_lts );
+    sscanf( ren, "%u", &ctrl.restart_cnt );
+    ren = strchr( ren, ':' );
+    if ( ren )
+    {
+      ren++;
+      sscanf( ren, "%lu", &ctrl.stamp.first_lts );
+    }
+    fprintf( stderr, "@@@@@@@@ B:%u : %lu\n", ctrl.restart_cnt, ctrl.stamp.first_lts );
+    ren = strchr( ren, ':' );
+    ctrl.stamp.prev_lts = 0;
+    if ( ren )
+    {
+      ren++;
+      sscanf( ren, "%lu", &ctrl.stamp.prev_lts );
+    }
+    MAS_LOG( "@ init [%s='%s']", name, ren0 );
+    if ( !ctrl.stamp.first_lts )
+      ctrl.stamp.first_lts = ctrl.stamp.lts;
+  }
+  return 0;
+}
+
+int
+mas_init( int argc, char **argv, char **env )
 {
   int r = 0;
 
   HMSG( "INIT" );
-  {
-    char name[512];
-    char *ren = NULL, *ren0;
-
-    snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) );
-    ren0 = ren = getenv( name );
-    if ( ren )
-    {
-      sscanf( ren, "%u", &ctrl.restart_cnt );
-      ren = strchr( ren, ':' );
-      if ( ren )
-      {
-        ren++;
-        sscanf( ren, "%lu", &ctrl.stamp.first_lts );
-      }
-      ren = strchr( ren, ':' );
-      ctrl.stamp.prev_lts = 0;
-      if ( ren )
-      {
-        ren++;
-        sscanf( ren, "%lu", &ctrl.stamp.prev_lts );
-      }
-      MAS_LOG( "@ init [%s='%s']", name, ren0 );
-    }
-  }
-  if ( !ctrl.stamp.first_lts )
-    ctrl.stamp.first_lts = ctrl.stamp.lts;
+  ctrl.stamp.lts = ( unsigned long ) time( NULL );
+  if ( r >= 0 )
+    r = mas_init_restart_count(  );
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts, ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
 
@@ -240,8 +285,8 @@ mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, cha
 
   /* HMSG( "opts.argv[0]: %s", opts.argv[0] ); */
   /* mas_init_message(  ); */
-  atexit( atexit_fun );
-  if ( r >= 0 && initsig )
+  /* atexit( atexit_fun ); */
+  if ( r >= 0 )
     r = mas_init_sig(  );
 
   ctrl.argv_nonoptind = mas_cli_options( opts.argc, opts.argv );
@@ -252,25 +297,25 @@ mas_init( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, cha
 }
 
 int
-mas_init_plus( int is_server, void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env, ... )
+mas_init_plus( int argc, char **argv, char **env, ... )
 {
   int r = 0;
   va_list args;
 
   ctrl.main_tid = mas_gettid(  );
-  HMSG( "INIT+ %s", is_server ? "SERVER" : "CLIENT" );
+  HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
-  ctrl.is_server = is_server;
-  ctrl.is_client = !ctrl.is_server;
+  /* ctrl.is_server = is_server;       */
+  /* ctrl.is_client = !ctrl.is_server; */
 #ifndef MAS_CLIENT_LOG
   if ( ctrl.is_client )
     ctrl.log_disabled = 1;
 #endif
   r = mas_pre_init( argc, argv, env );
   if ( r >= 0 )
-    r = mas_init( atexit_fun, initsig, argc, argv, env );
+    r = mas_init( argc, argv, env );
   {
     typedef int ( *v_t ) ( void );
     v_t fun;
@@ -290,9 +335,10 @@ mas_destroy( void )
 {
   MAS_LOG( "destroy server" );
   /* mutex?? */
+#ifdef MAS_USE_CURSES
   if ( ctrl.is_client )
     mas_close_curses(  );
-
+#endif
   if ( opts.argv )
   {
     /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, opts.argv[0] ); */
@@ -309,7 +355,7 @@ mas_destroy( void )
         char val[512];
         char name[512];
 
-        snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) );
+        snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
         snprintf( val, sizeof( val ), "%u:%lu:%lu", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts );
         setenv( name, val, 1 );
       }
@@ -345,4 +391,23 @@ mas_destroy( void )
     print_memlist( FL );
   }
 #endif
+}
+
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  char name[512];
+  char *value = NULL;
+
+  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
+  value = getenv( name );
+  fprintf( stderr, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );
+  /* ctrl.is_server = 0; */
+  /* ctrl.is_client = 0; */
+}
+
+__attribute__ ( ( destructor ) )
+     static void master_destructor( void )
+{
+  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

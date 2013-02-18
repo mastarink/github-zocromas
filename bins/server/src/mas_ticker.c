@@ -24,7 +24,9 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
+#ifdef MAS_USE_CURSES
 #include <mastar/msg/mas_curses.h>
+#endif
 
 #include <mastar/thtools/mas_thread_tools.h>
 
@@ -117,6 +119,7 @@ mas_ticker( void )
       elapsed_time = cur_time - ctrl.stamp.start_time;
 
 /* for test only : */
+#ifdef MAS_USE_CURSES
       if ( use_curses )
       {
         extern unsigned long memory_balance;
@@ -126,6 +129,7 @@ mas_ticker( void )
              ctrl.clients_came - ctrl.clients_gone, ctrl.in_pipe, ctrl.keep_listening );
       }
       else
+#endif
       {
         extern unsigned long memory_balance;
         double a1, a2, a10, a60;

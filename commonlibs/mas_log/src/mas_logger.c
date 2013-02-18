@@ -7,7 +7,9 @@
 #include <string.h>
 #include <errno.h>
 
-#include <pthread.h>
+#ifndef MAS_NO_THREADS
+#  include <pthread.h>
+#endif
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -44,6 +46,7 @@ more:
 
 static mas_loginfo_list_head_t *logger_list;
 
+#ifndef MAS_NO_THREADS
 /* mas_th_types.h */
 
 /* pthread_mutex_t logger_queue_mutex = PTHREAD_MUTEX_INITIALIZER; */
@@ -53,6 +56,7 @@ static mas_loginfo_list_head_t *logger_list;
 
 pthread_rwlock_t logger_queue_rwlock;
 pthread_mutex_t logger_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
 
 mas_loginfo_list_head_t *
 mas_logger_list( int create )
@@ -124,10 +128,17 @@ mas_logger_write( mas_loginfo_t * li )
 
           /* fprintf( ctrl.logfile, "%16.5f + %7.5f : %16.5f (%7.5f) : %-25s:%03d %s:R%lu:%u @ L%lu:%u: {%s}\n", li->logtime, */
           /* mas_pthread_mutex_lock( &logger_write_mutex ); */
+#ifndef MAS_NO_THREADS
           fprintf( ctrl.logfile, "%lu/%lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s: %s:R%lu:%u @ L%lu:%u: {%s}\n", serial,
                    li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ( ltime - li->logtime ) * 1E3,
                    ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-",
                    mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
+#else
+          fprintf( ctrl.logfile, "%lu/%lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s: *:R%lu:%u @ L%lu:%u: {%s}\n", serial,
+                   li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ( ltime - li->logtime ) * 1E3,
+                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-",
+                   li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
+#endif
           /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
           if ( li->lerrno )
           {
@@ -138,10 +149,16 @@ mas_logger_write( mas_loginfo_t * li )
             se = strerror_r( li->lerrno, errbuf, sizeof( errbuf ) );
             /* fprintf( ctrl.logfile,  "ERROR %u : %s\n", li->lerrno, se ? se : NULL); */
             /* mas_pthread_mutex_lock( &logger_write_mutex ); */
+#ifndef MAS_NO_THREADS
             fprintf( ctrl.logfile, "%18.7f + %18.7f D%9.7f (%10.7f) :%-25s:%03d: %s:R%lu:%u @ L%lu:%u: ERROR{%d:%s}\n",
                      li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ltime - li->logtime, ( li->logtime - ctrl.start_time ),
                      li->func ? li->func : "-", li->line, mas_thread_type_name( li->thtype ), li->rserial, li->rstatus,
                      li->lserial, li->lstatus, li->lerrno, se );
+#else
+            fprintf( ctrl.logfile, "%18.7f + %18.7f D%9.7f (%10.7f) :%-25s:%03d: *:R%lu:%u @ L%lu:%u: ERROR{%d:%s}\n",
+                     li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ltime - li->logtime, ( li->logtime - ctrl.start_time ),
+                     li->func ? li->func : "-", li->line, li->rserial, li->rstatus, li->lserial, li->lstatus, li->lerrno, se );
+#endif
             /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
             mas_free( errbuf );
           }
@@ -186,6 +203,7 @@ mas_logger_cleanup( void *arg )
 #endif
 }
 
+#ifndef MAS_NO_THREADS
 static void *
 mas_logger_th( void *arg )
 {
@@ -206,9 +224,9 @@ mas_logger_th( void *arg )
   }
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
-#ifdef FMSG
+#  ifdef FMSG
   FMSG( "LOGGER STOP" );
-#endif
+#  endif
   mas_pthread_exit( NULL );
   return NULL;
 }
@@ -273,6 +291,7 @@ mas_logger_stop( void )
   }
   return r;
 }
+#endif
 
 int
 mas_logger_flush( void )
@@ -283,15 +302,19 @@ mas_logger_flush( void )
   {
     mas_loginfo_t *li;
 
+#ifndef MAS_NO_THREADS
     /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
 
     pthread_rwlock_wrlock( &logger_queue_rwlock );
+#endif
     li = MAS_LIST_FIRST( logger_list );
     /* MAS_LIST_REMOVE( logger_list, li, mas_loginfo_s, next ); */
     MAS_LIST_REMOVE_HEAD( logger_list, next );
     ctrl.log_q_gone++;
     ctrl.log_q_mem -= strlen( li->message );
+#ifndef MAS_NO_THREADS
     pthread_rwlock_unlock( &logger_queue_rwlock );
+#endif
     mas_logger_write( li );
 
     /* if ( ctrl.log_disabled )                                                                                         */

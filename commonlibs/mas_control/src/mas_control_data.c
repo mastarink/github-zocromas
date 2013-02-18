@@ -52,8 +52,8 @@ mas_control_t ctrl = {
 
   .in_client = 0,
   .in_pipe = 0,
-  .is_client = 0,
-  .is_server = 0,
+  /* .is_client = 0, */
+  /* .is_server = 0, */
   .messages = 1,
   
   .daemon = 0,

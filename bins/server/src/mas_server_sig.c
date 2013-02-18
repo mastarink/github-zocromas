@@ -201,7 +201,7 @@ sigint_han( int s )
       mas_free( infos );
     }
     fr = fprintf( ctrl.saved_stderr_file, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
-    fflush(ctrl.saved_stderr_file);
+    fflush( ctrl.saved_stderr_file );
     /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
   }
   else
@@ -298,4 +298,19 @@ mas_atexit( void )
     ctrl.msgfile = NULL;
   }
   _exit( 0 );
+}
+
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  ctrl.is_client = 0;
+  ctrl.is_server = 1;
+  atexit( mas_atexit );
+  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+}
+
+__attribute__ ( ( destructor ) )
+     static void master_destructor( void )
+{
+  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

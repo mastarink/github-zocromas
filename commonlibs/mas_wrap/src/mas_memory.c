@@ -9,7 +9,9 @@
 #include <time.h>
 #include <string.h>
 
-#include <pthread.h>
+#ifndef MAS_NO_THREADS
+#  include <pthread.h>
+#endif
 #include <errno.h>
 
 /* #include "mas_common.h" */
@@ -32,7 +34,9 @@ related:
 
 */
 
+#ifndef MAS_NO_THREADS
 pthread_mutex_t malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
 
 #ifdef MAS_TRACEMEM
 #else
@@ -190,7 +194,9 @@ _mas_malloc( const char *func, int line, size_t size )
     real_ptr = ( mas_mem_head_t * ) mas_other_malloc( real_size );
     if ( real_ptr )
     {
+#  ifndef MAS_NO_THREADS
       pthread_mutex_lock( &malloc_mutex );
+#  endif
       memory_allocated += size;
       memory_allocated_cnt++;
       memory_balance += size;
@@ -202,7 +208,9 @@ _mas_malloc( const char *func, int line, size_t size )
       real_ptr->func = func;
       real_ptr->line = line;
       real_ptr->size = size;
+#  ifndef MAS_NO_THREADS
       pthread_mutex_unlock( &malloc_mutex );
+#  endif
       /* memMSG( "@ _mas_malloc %lx > id:%lx; %lu", ( unsigned long ) real_ptr, real_ptr->id, size ); */
 
       real_ptr++;
@@ -238,7 +246,9 @@ _mas_free( const char *func, int line, void *ptr )
         {
           unsigned long id;
 
+#  ifndef MAS_NO_THREADS
           pthread_mutex_lock( &malloc_mutex );
+#  endif
           id = real_ptr->id;
           if ( id < sizeof( memar ) / sizeof( memar[0] ) )
             memar[id] = 0;
@@ -247,7 +257,9 @@ _mas_free( const char *func, int line, void *ptr )
           memory_freed_cnt++;
           memory_balance -= size;
           memory_balance_cnt--;
+#  ifndef MAS_NO_THREADS
           pthread_mutex_unlock( &malloc_mutex );
+#  endif
           /* memMSG( "@ _mas_free %lx > id:%lx; %lu", ( unsigned long ) real_ptr, id, size ); */
         }
         mas_other_free( real_ptr );
