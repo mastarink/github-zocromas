@@ -31,7 +31,7 @@ AC_PREREQ([2.69])
 # AC_INIT([zocromas],[1.0.1.3],[bug-report@mastarink.net])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_SRCDIR([src/client/mas_client.c])
+AC_CONFIG_SRCDIR([src/minitest.c])
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
@@ -252,12 +252,6 @@ AC_CONFIG_FILES([
 		Makefile
 		src/Makefile
 		src/inc/Makefile
-
-		src/client/Makefile
-		src/client/inc/Makefile
-
-		src/server/Makefile
-		src/server/inc/Makefile
 
 		])
 AC_OUTPUT

@@ -7,10 +7,10 @@ function mas_debug ()
   dname=$( basename $mcaller )
   if [[ $dname =~ debug_([a-z]+)\.sh ]] ; then
     bname=${BASH_REMATCH[1]}
-    dname="mas_$bname"
+    dname="${binprefix}$bname"
   elif [[ $dname =~ ^([a-z]+)$ ]] ; then
     bname=${BASH_REMATCH[1]}
-    dname="mas_$bname"
+    dname="${binprefix}$bname"
   fi
   echo "<< $dname >>">&2
 
@@ -72,10 +72,10 @@ function gdb_core_any ()
   dname=$( basename $mcaller )
   if [[ $dname =~ gdbcore_([a-z]+)\.sh ]] ; then
     bname=${BASH_REMATCH[1]}
-    dname="mas_$bname"
+    dname="${binprefix}$bname"
   elif [[ $dname =~ ^([a-z]+)$ ]] ; then
     bname=${BASH_REMATCH[1]}
-    dname="mas_$bname"
+    dname="${binprefix}$bname"
   fi
   echo "<< $dname >>">&2
 

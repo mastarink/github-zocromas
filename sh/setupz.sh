@@ -43,7 +43,7 @@ function setup_vers ()
 	distfile="$savedirdist/$distname"
 	distfile_prefix="$savedirdist/${n}"
       fi
-      wbuilddir="$indir/build"
+      wbuilddir="$inbuilddir"
       build_at="$wbuilddir"
       configuredir=$indir
       mas_name=$n

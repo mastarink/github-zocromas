@@ -102,7 +102,7 @@ mas_init_message( void )
   {
     IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
           ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
-    IMSG( "[%s] pid=%lx ; tid:%u [%lx]", ctrl.progname, ( unsigned long ) ctrl.main_pid, ( unsigned ) ctrl.main_tid,
+    IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.main_pid, ctrl.main_pid, ( unsigned ) ctrl.main_tid,
           ( unsigned long ) ctrl.main_thread );
   }
   else
@@ -110,10 +110,9 @@ mas_init_message( void )
     IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime,
           ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
-    IMSG( "\x1b[100;27;1;32m [%s] pid=%lx ; tid:%u [%lx] \x1b[0m", ctrl.progname, ( unsigned long ) ctrl.main_pid,
+    IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.main_pid, ctrl.main_pid,
           ( unsigned ) ctrl.main_tid, ( unsigned long ) ctrl.main_thread );
-  }
-  return 0;
+  } return 0;
 }
 
 int

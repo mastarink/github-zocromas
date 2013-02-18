@@ -97,6 +97,7 @@ AC_CHECK_LIB(readline, readline)
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 PKG_CHECK_MODULES([LIBNOTIFY], [libnotify])
 PKG_CHECK_MODULES([GTK], [gtk+-2.0])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools mas_io mas_msg mas_log mas_variables])
 
 # Checks for header files.
 
@@ -104,7 +105,6 @@ PKG_CHECK_MODULES([GTK], [gtk+-2.0])
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools mas_io mas_msg mas_log])
 
 # Configure options: --enable-debug[=no].
 

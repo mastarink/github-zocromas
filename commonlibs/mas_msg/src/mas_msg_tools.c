@@ -145,7 +145,9 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
     {
       if ( ctrl.is_server && prefix && *prefix )
       {
-        MFP( prefix_fmt ? prefix_fmt : " \x1b[1;43;33m%s\x1b[0m   ", prefix );
+	MFP("\x1b[1;43;33m");
+        MFP( prefix_fmt ? prefix_fmt : "-- %-5s", prefix );
+	MFP("\x1b[0m");
       }
       if ( pid == ctrl.main_pid )
       {
@@ -258,8 +260,9 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
       }
       else
       {
-        MFP( prefix_fmt ? prefix_fmt : " \x1b[1;43;33m%s\x1b[0m   ", prefix );
-        MFP( "\x1b[K%-50s", message );
+        MFP( "\x1b[1;43;33m");
+        MFP( prefix_fmt ? prefix_fmt : " %s ", prefix );
+        MFP( "\x1b[0m \x1b[K%-50s\x1b[0m", message );
         MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
       }
     }

@@ -6,4 +6,5 @@ boxes/
 log/
 tmp/
 build/
+.build/
 configure.ac.2*

@@ -7,10 +7,10 @@ function run_installed ()
 
   if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
     bname=${BASH_REMATCH[1]}
-    rname="mas_$bname"
+    rname="${binprefix}$bname"
   elif [[ $rname =~ ^([a-z]+)$ ]] ; then
     bname=${BASH_REMATCH[1]}
-    rname="mas_$bname"
+    rname="${binprefix}$bname"
   fi
 
   binary="$instdir/bin/$rname"
@@ -41,13 +41,26 @@ function run_any ()
   local binary builddir bname rname mcaller
   mcaller=$1
   shift
+  if [[ "$mcaller" == '.' ]] ; then
+    if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
+      mcaller=$MAS_ZOCROMAS_HERE
+    elif make_any && [[ -x "$build_at/src/${binprefix}${prjname}" ]] ; then
+      mcaller=$prjname
+    else
+      echo "ERROR : prjname=$prjname ; no x: $build_at/src/${binprefix}${prjname}" >&2
+    fi
+  fi
+#   echo "Please set " >&2
+#   echo "  export MAS_ZOCROMAS_HERE=server" >&2
+#   echo "    or" >&2
+#   echo "  export MAS_ZOCROMAS_HERE=client" >&2
   rname=$( basename $mcaller )
   if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
     bname=${BASH_REMATCH[1]}
-    rname="mas_$bname"
+    rname="${binprefix}$bname"
   elif [[ $rname =~ ^([a-z]+)$ ]] ; then
     bname=${BASH_REMATCH[1]}
-    rname="mas_$bname"
+    rname="${binprefix}$bname"
   fi
 
 # show_setup

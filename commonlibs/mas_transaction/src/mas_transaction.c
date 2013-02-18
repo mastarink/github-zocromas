@@ -173,6 +173,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       MAS_LOG( "KA => %u", prcontrol->keep_alive );
       while ( r >= 0 && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened )
       {
+        HMSG( "+ KA" );
         MAS_LOG( "starting transaction keep-alive block" );
         prcontrol->h.status = MAS_STATUS_WAIT;
         /* rMSG( "waiting cl.data; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
@@ -191,6 +192,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
         MAS_LOG( "end tr. keep-alive block, %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
+        HMSG( "- KA" );
       }
       prcontrol->h.status = MAS_STATUS_STOP;
     }

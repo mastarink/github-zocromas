@@ -1,11 +1,14 @@
 #ifndef MAS_CONFIGURE_H
+/* @MAS_C_DATE@ */
+/* $(MAS_C_DATE) */
+/* ${MAS_C_DATE} */
 #  define MAS_CONFIGURE_H
 
 #  define MAS_SRCDIR  "@srcdir@"
+
 #  define MAS_PREFIX  "@prefix@"
 #  define MAS_AM_CFLAGS "@AM_CFLAGS@"
 #  define MAS_AM_LDFLAGS "@AM_LDFLAGS@"
-#  define MAS_AM_MAKEFLAGS "@AM_MAKEFLAGS@"
 #  define MAS_BUILDDIR  "@builddir@"
 #  define MAS_ABS_BUILDDIR  "@abs_builddir@"
 #  define MAS_ABS_SRCDIR  "@abs_srcdir@"

@@ -59,7 +59,8 @@ function setup_dirs ()
 
     debugdir="$indir/debug"
     
-    wbuilddir="$indir/build"
+    inbuilddir="$indir/.build"
+    wbuilddir="$inbuilddir"
     build_at="$wbuilddir"
 
     if [[ -d "$rootdir" ]] ; then
@@ -71,6 +72,7 @@ function setup_dirs ()
       setup_vers
       export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
     fi
+    binprefix=mas_
   else
     echo "FATAL : bad script call ($0)" >&2
   fi

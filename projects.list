@@ -13,6 +13,7 @@ commonlibs/mas_modules
 commonlibs/mas_messageio
 commonlibs/mas_transaction
 commonlibs/mas_listener
+commonlibs/mas_init
 zocmds/1
 zocmds/2
 zocprotos
