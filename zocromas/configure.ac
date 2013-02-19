@@ -33,8 +33,9 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/minitest.c])
 
-AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
-
+# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign  -Wall -Werror dist-bzip2])
+AM_MAINTAINER_MODE([enable])
 
 # AM_SILENT_RULES([yes])
 
@@ -103,10 +104,11 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPSS], [mas_modules mas_fileinfo])
-PKG_CHECK_MODULES([DEPSC], [mas_messageio])
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools
-				mas_msg mas_log mas_transaction mas_listener mas_init])
+# PKG_CHECK_MODULES([DEPSS], [mas_modules mas_fileinfo])
+# PKG_CHECK_MODULES([DEPSC], [mas_messageio])
+# PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools
+#				mas_msg mas_log mas_transaction mas_listener mas_init])
+PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrapc mas_tools])
 
 # Configure options: --enable-debug[=no].
 
@@ -170,8 +172,7 @@ AC_SUBST(AM_LDFLAGS)
 # MAS_LIBDIR="\${libdir}"
 # AC_SUBST(MAS_LIBDIR)
 
-
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -ltcmalloc ${DEPS_CFLAGS}"
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -ltcmalloc ${DEPS_CFLAGS} -DMAS_SYSCONFIR='${sysconfdir}'"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
@@ -214,7 +215,8 @@ AC_DEFINE( MAS_STRDUP, strdup)
 AC_SUBST([MAS_STRDUP])
 
 
-
+# AC_DEFINE_DIR([DATADIR], [datadir], [Where data are placed to.])
+# AC_DEFINE_DIR([SYSCONFDIR], [sysconfdir], [Where sys.conf are placed to.])
 
 
 # AH_TEMPLATE([MAS_MODULES_DIR],[mas_modules_place])

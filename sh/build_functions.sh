@@ -115,16 +115,18 @@ function install_z ()
 function testdist ()
 {
   local zips errfile
+  echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2
   if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
     errfile="/tmp/distcheck.${name}-${ver}.tmp"
     # make -d dist
     # make -s dist
 #       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2
-    if ! make -s distcheck >$errfile 2>&1 ; then
+    if ! make_target distcheck >$errfile 2>&1 ; then
       cat $errfile
+      echo "$LINENO ERROR testdist" >&2
       return 1
     fi
-    zips=$( echo ${indir}/${mas_fullname}.tar.{bz2,gz} )
+    zips=$( echo $build_at/${mas_fullname}.tar.{bz2,gz} )
     echo "saving $zips to $savedirdist" >&2
     mv $zips $savedirdist || return 1
     return 0

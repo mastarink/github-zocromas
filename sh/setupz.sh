@@ -1,4 +1,3 @@
-#!/bin/sh
 . sh/dir_functions.sh
 . sh/make_functions.sh
 function prjconfV ()

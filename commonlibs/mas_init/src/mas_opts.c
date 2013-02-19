@@ -301,8 +301,8 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
         }
         if ( ctrl.is_server )
         {
-          r = fprintf( f, "# server\ndaemon=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, !opts.nologger,
-                       opts.modsdir, opts.pidsdir, opts.protodir );
+          r = fprintf( f, "# server\ndaemon=%u\nsingle-instance=%u\nsingle-child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
+                       ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir, opts.protodir );
           if ( r > 0 )
             rtot += r;
         }
@@ -497,6 +497,13 @@ mas_opts_set_unsigned( unsigned *pint, const char *s )
 }
 
 static void
+mas_opts_set_unsigned_no( unsigned *pint, const char *s )
+{
+  mas_opts_set_unsigned( pint, s );
+  *pint = !*pint;
+}
+
+static void
 mas_opts_set_double( double *pint, const char *s )
 {
   const char *se;
@@ -532,37 +539,21 @@ mas_opts_add_command( const char *s )
 int
 mas_opts_restore_nosection( const char *s )
 {
-  if ( 0 == mas_strcmp2( s, "env_optsname=" ) )
-  {
-    mas_opts_set_strvalue( opts.env_optsname, sizeof( opts.env_optsname ), s );
-  }
-  else if ( 0 == mas_strcmp2( s, "env_hostname=" ) )
-  {
-    mas_opts_set_strvalue( opts.env_hostname, sizeof( opts.env_hostname ), s );
-  }
-  else if ( 0 == mas_strcmp2( s, "uuid=" ) )
-  {
-    mas_opts_set_pstrvalue( &opts.uuid, s );
-  }
-  else if ( 0 == mas_strcmp2( s, "log=" ) )
-  {
-    unsigned v = 0;
+  unsigned v;
+  unsigned nv;
 
-    mas_opts_set_unsigned( &v, s );
-    opts.nolog = !v;
-  }
-  else if ( 0 == mas_strcmp2( s, "logger=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
-    opts.nologger = !v;
-    /* mMSG( "READ NOLOGGER :%d", opts.nologger ); */
-  }
-  else if ( 0 == mas_strcmp2( s, "message=" ) )
+  mas_opts_set_unsigned( &v, s );
+  mas_opts_set_unsigned_no( &nv, s );
+  if ( 0 == mas_strcmp2( s, "message=" ) )
   {
     HMSG( "RESTORE OPTS: %s", mas_find_eq_value( s ) );
   }
+  else if ( 0 == mas_strcmp2( s, "env_optsname=" ) )
+    mas_opts_set_strvalue( opts.env_optsname, sizeof( opts.env_optsname ), s );
+  else if ( 0 == mas_strcmp2( s, "env_hostname=" ) )
+    mas_opts_set_strvalue( opts.env_hostname, sizeof( opts.env_hostname ), s );
+  else if ( 0 == mas_strcmp2( s, "uuid=" ) )
+    mas_opts_set_pstrvalue( &opts.uuid, s );
   else if ( 0 == mas_strcmp2( s, "modsdir=" ) )
     mas_opts_set_pstrvalue( &opts.modsdir, s );
   else if ( 0 == mas_strcmp2( s, "pidsdir=" ) )
@@ -575,58 +566,36 @@ mas_opts_restore_nosection( const char *s )
     mas_opts_set_pstrvalue( &opts.configdir, s );
   else if ( 0 == mas_strcmp2( s, "configfilename=" ) )
     mas_opts_set_pstrvalue( &opts.configfilename, s );
+  else if ( 0 == mas_strcmp2( s, "log=" ) )
+    opts.nolog = nv;
+  else if ( 0 == mas_strcmp2( s, "logger=" ) )
+    opts.nologger = nv;
   else if ( 0 == mas_strcmp2( s, "max_config_backup=" ) )
-    mas_opts_set_unsigned( &opts.max_config_backup, s );
+    opts.max_config_backup = v;
   else if ( 0 == mas_strcmp2( s, "default_port=" ) )
-    mas_opts_set_unsigned( &opts.default_port, s );
+    opts.default_port = v;
   else if ( 0 == mas_strcmp2( s, "daemon=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
-    opts.nodaemon = !v;
-  }
+    opts.nodaemon = nv;
+  else if ( 0 == mas_strcmp2( s, "single-instance=" ) )
+    opts.single_instance = nv;
+  else if ( 0 == mas_strcmp2( s, "single-child=" ) )
+    opts.single_child = nv;
   else if ( 0 == mas_strcmp2( s, "messages=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
-    opts.nomessages = !v;
-  }
+    opts.nomessages = nv;
   else if ( 0 == mas_strcmp2( s, "save_opts=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
     opts.save_opts = v;
-  }
   else if ( 0 == mas_strcmp2( s, "save_opts_plus=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
     opts.save_opts_plus = v;
-  }
   else if ( 0 == mas_strcmp2( s, "disconnect_prompt=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
     opts.disconnect_prompt = v;
-  }
+  else if ( 0 == mas_strcmp2( s, "wait_server=" ) )
+    opts.wait_server = v;
   else if ( 0 == mas_strcmp2( s, "restart_sleep=" ) )
   {
-    double v = 0;
+    double dv = 0;
 
-    mas_opts_set_double( &v, s );
-    opts.restart_sleep = v;
-  }
-  else if ( 0 == mas_strcmp2( s, "wait_server=" ) )
-  {
-    unsigned v = 0;
-
-    mas_opts_set_unsigned( &v, s );
-    opts.wait_server = v;
+    mas_opts_set_double( &dv, s );
+    opts.restart_sleep = dv;
   }
   return 0;
 }

@@ -14,6 +14,7 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 
 #include <mastar/types/mas_control_types.h>
@@ -35,7 +36,7 @@ extern mas_options_t opts;
 #include <mastar/listener/mas_listeners.h>
 
 #ifdef MAS_USE_CURSES
-#include <mastar/msg/mas_curses.h>
+#  include <mastar/msg/mas_curses.h>
 #endif
 
 #include <mastar/thtools/mas_thread_tools.h>
@@ -101,6 +102,85 @@ Creating a daemon
    8 Change the working directory of the daemon process to root and close stdin, stdout and stderr file descriptors.
    9 Let the main logic of daemon process run.
 */
+
+
+static int
+mas_init_pid( int indx, const char *name )
+{
+  int r = -1;
+
+  if ( name && *name && indx < MAS_MAX_PIDFD )
+  {
+    char *pidpath;
+
+    pidpath = mas_strdup( opts.pidsdir );
+    pidpath = mas_strcat_x( pidpath, name );
+    HMSG( "PIDPATH: %s", pidpath );
+    ctrl.pidfd[indx] = open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR );
+    if ( ctrl.pidfd[indx] > 0 )
+    {
+      int w, lck;
+
+      lck = lockf( ctrl.pidfd[indx], F_TLOCK, 0 );
+      HMSG( "PIDLCK: %d (%d)", lck, ctrl.pidfd[indx] );
+      /* setvbuf( ctrl.pidfile, NULL, _IONBF, 0 ); */
+      if ( lck >= 0 )
+      {
+        /* w = fwrite( pidpath, 1, strlen( pidpath ), f ); */
+        /* w = fprintf( f, "%u", getpid(  ) ); */
+        w = write( ctrl.pidfd[indx], &ctrl.main_pid, sizeof( ctrl.main_pid ) );
+        HMSG( "PIDW: %d", w );
+        if ( w > 0 )
+          r = 0;
+      }
+      else
+      {
+        P_ERR;
+        close( ctrl.pidfd[indx] );
+        ctrl.pidfd[indx] = -1;
+      }
+    }
+    else
+    {
+      P_ERR;
+    }
+    mas_free( pidpath );
+  }
+  return r;
+}
+
+int
+mas_init_pids( void )
+{
+  int r = 0;
+  char *namebuf = NULL;
+
+  namebuf = mas_malloc( 512 );
+  if ( namebuf )
+  {
+    int indx = 0;
+
+    *namebuf = 0;
+    HMSG( "PIDSDIR: %s", opts.pidsdir );
+    if ( opts.single_instance && opts.pidsdir )
+    {
+      snprintf( namebuf, sizeof( namebuf ), "/%s.pid", ctrl.is_client ? "client" : "server" );
+      indx = 0;
+    }
+    else if ( opts.single_child && opts.pidsdir )
+    {
+      snprintf( namebuf, sizeof( namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
+      indx = 1;
+    }
+    if ( *namebuf )
+      r = mas_init_pid( indx, namebuf );
+    else
+      r = -1;
+    mas_free( namebuf );
+  }
+  return r;
+}
+
 int
 mas_init_daemon( void )
 {
@@ -114,6 +194,16 @@ mas_init_daemon( void )
     pid_child = mas_fork(  );
     if ( pid_child == 0 )
     {
+      for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
+      {
+        if ( ctrl.pidfd[i] > 0 )
+        {
+          int lck;
+
+          lck = lockf( ctrl.pidfd[i], F_LOCK, 0 );
+          HMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
+        }
+      }
       ctrl.child_pid = getpid(  );
       HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
       /* sleep(200); */
@@ -144,7 +234,7 @@ mas_init_daemon( void )
     {
       ctrl.child_pid = pid_child;
       HMSG( "PARENT : %u @ %u @ %u", pid_child, getpid(  ), getppid(  ) );
-      r = -2;
+      ctrl.is_parent = 1;
     }
     else
     {
@@ -153,6 +243,7 @@ mas_init_daemon( void )
   }
   return r;
 }
+
 #ifdef MAS_INIT_SEPARATE
 int
 mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
@@ -162,33 +253,40 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   HMSG( "INIT SERVER" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
-#ifdef MAS_SERVER_NOLOG
+#  ifdef MAS_SERVER_NOLOG
   ctrl.log_disabled = 1;
-#endif
+#  endif
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_client = 0;
   ctrl.is_server = 1;
   r = mas_pre_init( argc, argv, env );
 
   MAS_LOG( "init server" );
-#ifdef MAS_USE_CURSES
+#  ifdef MAS_USE_CURSES
   /* if ( r >= 0 )              */
   /*   r = mas_init_curses(  ); */
-#endif
+#  endif
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );
   HMSG( "<- INIT" );
   if ( r >= 0 )
     r = mas_init_daemon(  );
-  if ( r >= 0 )
-    r = mas_threads_init(  );
-  if ( r >= 0 )
-    r = mas_init_load_protos(  );
-  if ( r >= 0 )
-    mas_lcontrols_list_create(  );
-  MAS_LOG( "init server done" );
-  if ( r >= 0 )
-    r = mas_post_init(  );
+  /* if ( ctrl.is_parent )       */
+  /* {                           */
+  /*   HMSG( "PARENT to exit" ); */
+  /* }                           */
+  /* else                        */
+  {
+    if ( r >= 0 )
+      r = mas_threads_init(  );
+    if ( r >= 0 )
+      r = mas_init_load_protos(  );
+    if ( r >= 0 )
+      mas_lcontrols_list_create(  );
+    MAS_LOG( "init server done" );
+    if ( r >= 0 )
+      r = mas_post_init(  );
+  }
   return r;
 }
 #endif
@@ -232,6 +330,17 @@ mas_destroy_server( void )
     mas_ticker_stop(  );
   }
   mas_modules_destroy(  );
+  {
+    for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
+    {
+      if ( ctrl.pidfd[i] > 0 )
+      {
+        close( ctrl.pidfd[i] );
+      }
+      ctrl.pidfd[i] = 0;
+    }
+  }
+
   MAS_LOG( "destroy server done" );
   FMSG( "DESTROY SERVER DONE" );
 }

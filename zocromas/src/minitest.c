@@ -1,5 +1,3 @@
-#include "mas_basic_def.h"
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -15,8 +13,8 @@ extern mas_control_t ctrl;
 extern mas_options_t opts;
 
 /* #include "mas_common.h" */
-#include <mastar/msg/mas_msg_def.h>
-#include <mastar/msg/mas_msg_tools.h>
+/* #include <mastar/msg/mas_msg_def.h>   */
+/* #include <mastar/msg/mas_msg_tools.h> */
 
 void
 testprint( int targc, char *targv[] )
@@ -65,7 +63,7 @@ test20130100( int argc, char *argv[], char *env[] )
     fprintf( stderr, "\ntargc:%u; targv:%p\n", targc, ( void * ) targv );
     mas_del_argv( targc, targv, 0 );
 #ifdef MAS_TRACEMEM
-    print_memlist( FL );
+    print_memlist( __func__, __LINE__ );
 #endif
   }
   fprintf( stderr, "\n== B =====================\n" );
@@ -79,7 +77,7 @@ test20130100( int argc, char *argv[], char *env[] )
     mas_del_argv( targc, targv, 0 );
 
 #ifdef MAS_TRACEMEM
-    print_memlist( FL );
+    print_memlist( __func__, __LINE__ );
 #endif
   }
 }

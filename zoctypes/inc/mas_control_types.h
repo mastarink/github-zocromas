@@ -10,6 +10,7 @@
 #  include <mastar/types/mas_listener_control_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>
 
+#define MAS_MAX_PIDFD 5
 /*
 this:
   mas_control_types.h
@@ -82,6 +83,7 @@ struct mas_control_s
   unsigned in_pipe;
   unsigned is_client:1;
   unsigned is_server:1;
+  unsigned is_parent:1;
 
   /* from opts: */
   unsigned messages:1;
@@ -106,6 +108,9 @@ struct mas_control_s
   unsigned ticker_hide:1;
   unsigned watcher_hide:1;
   unsigned watcher_stop:1;
+
+  unsigned log_disabled:1;
+  unsigned log_offmem:1;
 
   mas_pthread_globals_t thglob;
 
@@ -137,10 +142,10 @@ struct mas_control_s
   unsigned long maxclients;
   double maxtrtime;
   unsigned long sigint_time;
+  FILE *pidfile;
+  int pidfd[MAS_MAX_PIDFD];
   char *logpath;
   FILE *logfile;
-  unsigned log_disabled:1;
-  unsigned log_offmem:1;
   int commands_num;
   char **commands;
 

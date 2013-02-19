@@ -94,6 +94,10 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_TRANSACTION_SINGLE,
   MAS_CLI_OPT_COMMAND,
   MAS_CLI_OPT_MSGTO,
+  MAS_CLI_OPT_SINGLE_INSTANCE,
+  MAS_CLI_OPT_NOSINGLE_INSTANCE,
+  MAS_CLI_OPT_SINGLE_CHILD,
+  MAS_CLI_OPT_NOSINGLE_CHILD,
 } mas_cli_opts_t;
 
 static char cli_enabled_options[] = "hH:P:L:t";
@@ -103,6 +107,11 @@ static struct option cli_longopts[] = {
   {"help", no_argument, NULL, MAS_CLI_OPT_HELP},
   {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},
   {"daemon", no_argument, NULL, MAS_CLI_OPT_DAEMON},
+  {"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
+  {"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
+  {"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE},
+  {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},
+  {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},
   {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},
   {"message-to", required_argument, NULL, MAS_CLI_OPT_MSGTO},
   {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},
@@ -242,6 +251,18 @@ mas_cli_make_option( int opt, const char *m_optarg )
   case MAS_CLI_OPT_DAEMON:
     opts.nodaemon = 0;
     break;
+  case MAS_CLI_OPT_NOSINGLE_CHILD:
+    opts.single_child = 0;
+    break;
+  case MAS_CLI_OPT_SINGLE_CHILD:
+    opts.single_child = 1;
+    break;
+  case MAS_CLI_OPT_NOSINGLE_INSTANCE:
+    opts.single_instance = 0;
+    break;
+  case MAS_CLI_OPT_SINGLE_INSTANCE:
+    opts.single_instance = 1;
+    break;
   case MAS_CLI_OPT_NOLOGGER:
     opts.nologger = 1;
     break;
@@ -347,16 +368,14 @@ mas_cli_options( int argc, char *const argv[] )
   int indx = 0;
   int afterlast = 0;
 
-  HMSG( "CLI" );
   optind = 1;
   while ( ( opt = getopt_long( argc, argv, cli_enabled_options, cli_longopts, &indx ) ) != -1 && !ctrl.fatal )
   {
     r = mas_cli_make_option( opt, optarg );
-    HMSG( "CLI %d", r );
+    HMSG( "CLI %d", optind );
     afterlast = optind;
     /* MSG( "cli option made (%d) ctrl.fatal:%u {%d:%d}", opt, ctrl.fatal, ctrl.argv_nonoptind, optind ); */
   }
-  HMSG( "/CLI %d", optind );
   MAS_LOG( "cli options made" );
   return afterlast;
 }

@@ -255,9 +255,14 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 #ifdef MAS_INIT_SEPARATE
   r = mas_init_server( argc, argv, env );
 #else
-  r = mas_init_plus( argc, argv, env, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, NULL );
+  r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
+                     NULL );
 #endif
-  if ( r >= 0 )
+  if ( ctrl.is_parent )
+  {
+    HMSG( "PARENT to exit" );
+  }
+  else if ( r >= 0 )
   {
     mas_master_optional_thread(  );
 #ifdef MAS_TRACEMEM
@@ -272,6 +277,6 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
     mas_pthread_exit( &r );
   }
   MAS_LOG( "bunch end : %d", r );
-  HMSG( "BUNCH END" );
+  HMSG( "BUNCH %s END", ctrl.is_parent?"(parent)":""  );
   return r;
 }

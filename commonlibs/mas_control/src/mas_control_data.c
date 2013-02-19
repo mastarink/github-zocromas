@@ -102,6 +102,8 @@ mas_control_t ctrl = {
 
   .proto_descs = NULL,
 
+  .pidfile = NULL,
+
   .logpath = NULL,
   .logfile = NULL,
   .log_disabled = 0,

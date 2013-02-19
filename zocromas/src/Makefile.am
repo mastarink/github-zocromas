@@ -24,7 +24,7 @@ SUBDIRS= inc
 ############# binaries ###################################################################
 ##########################################################################################
 
-# bin_PROGRAMS=mas_minitest
+bin_PROGRAMS=mas_minitest
 # mas_parg
 
 
@@ -33,9 +33,10 @@ SUBDIRS= inc
 
 # mas_parg_SOURCES=parg.c
 
-# mas_minitest_SOURCES=minitest.c
+mas_minitest_SOURCES=minitest.c
 # mas_minitest_CFLAGS=@AM_CFLAGS@ -L\$(prefix)/lib -lmas_wrap -lmas_arg_tools -lmas_control
 # mas_minitest_CFLAGS=
+mas_minitest_CFLAGS=@AM_CFLAGS@
 
 ##########################################################################################
 ##########################################################################################

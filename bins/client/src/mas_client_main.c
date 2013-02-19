@@ -45,12 +45,16 @@ main( int argc, char *argv[], char *env[] )
   int r = -1;
 
   HMSG( "MAIN" );
+#ifndef MAS_CLIENT_LOG
+  if ( ctrl.is_client )
+    ctrl.log_disabled = 1;
+#endif
+
 #ifdef MAS_INIT_SEPARATE
   r = mas_init_client( argc, argv, env );
 #else
   r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL );
 #endif
-  HMSG( "Inited (%d hosts)", opts.hosts_num );
   if ( r >= 0 )
     for ( int ia = opts.hosts_num; ia > 0; ia-- )
     {

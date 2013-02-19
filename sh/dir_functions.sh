@@ -44,7 +44,9 @@ function setup_dirs ()
     updir="$( realpath $indir/.. )"
     updirr="$( realpath $indirr/.. )"
     rootdir=$indirr
-    
+    export    MAS_WORK_ROOT_DIR=$rootdir
+    export    MAS_WORK_IN_DIR=$rootdir
+
     savedir=$(realpath "$rootdir/saved/" )
     instdir=$(realpath "$rootdir/install" )
     instshdir=$(realpath "$rootdir/install.sh" )

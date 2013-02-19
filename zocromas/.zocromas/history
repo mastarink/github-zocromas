@@ -45,3 +45,5 @@ get version
 server quit
 get version
 server quit
+bye
+server quit

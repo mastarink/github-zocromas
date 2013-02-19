@@ -33,6 +33,8 @@ struct mas_options_s
       unsigned msg_funline:1;
     } bit;
   } f;
+  unsigned single_instance:1;
+  unsigned single_child:1;
   unsigned listener_single:1;
   unsigned transaction_single:1;
   unsigned nomessages:1;

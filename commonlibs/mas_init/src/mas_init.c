@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 /* #include <pthread.h> */
 
@@ -121,27 +125,25 @@ mas_init_message( void )
   return 0;
 }
 
-int
-mas_pre_init( int argc, char **argv, char **env )
+static int
+mas_pre_init( char *runpath )
 {
   int r = 0;
   const char *pn;
 
+  ctrl.status = MAS_STATUS_START;
   HMSG( "PRE-INIT" );
+  ctrl.main_tid = mas_gettid(  );
+  ctrl.start_time = mas_double_time(  );
   /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
   ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
-  ctrl.binname = mas_strdup( basename( argv[0] ) );
   ctrl.main_pid = getpid(  );
+  ctrl.binname = mas_strdup( basename( runpath ) );
   pn = strchr( ctrl.binname, '_' );
-  if ( pn )
-  {
-    pn++;
-    if ( *pn )
-      ctrl.progname = mas_strdup( pn );
-  }
-  HMSG( "PPID: %u", getppid(  ) );
-  HMSG( "BASH: %s", getenv( "MAS_PID_AT_BASHRC" ) );
+  if ( pn && *pn++ && *pn )
+    ctrl.progname = mas_strdup( pn );
+  HMSG( "PPID: %u; BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   if ( r >= 0 )
   {
@@ -155,7 +157,7 @@ mas_pre_init( int argc, char **argv, char **env )
   return r;
 }
 
-int
+static int
 mas_post_init( void )
 {
   int r = 0;
@@ -185,52 +187,29 @@ mas_post_init( void )
   {
     char namebuf[512];
 
-    snprintf( namebuf, sizeof( namebuf ), "/%s.%lu.%u.log" , ctrl.is_client ? "client" : "server", ctrl.stamp.first_lts, getpid(  ) );
+    snprintf( namebuf, sizeof( namebuf ), "/%s%u.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent, ctrl.stamp.first_lts,
+              getpid(  ) );
     ctrl.logpath = mas_strdup( opts.logdir );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
+    HMSG( "LOG: %s", ctrl.logpath );
   }
   else
   {
     EMSG( "logdir not set" );
   }
-  HMSG( "PIDSDIR:%s", opts.pidsdir );
-  if ( r >= 0 && opts.pidsdir )
+  if ( !ctrl.is_parent )
   {
-    char namebuf[512];
-    char *pidpath;
-
-    snprintf( namebuf, sizeof( namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
-    pidpath = mas_strdup( opts.pidsdir );
-    pidpath = mas_strcat_x( pidpath, namebuf );
-    HMSG( "PIDPATH:%s", pidpath );
-    if ( pidpath )
+    if ( r >= 0 && opts.msgfilename )
     {
-      FILE *f;
-
-      f = fopen( pidpath, "w" );
-      if ( f )
-      {
-        int w;
-
-        /* w = fwrite( pidpath, 1, strlen( pidpath ), f ); */
-        w = fprintf( f, "%u", getpid(  ) );
-        HMSG( "PIDW:%d", w );
-        fclose( f );
-      }
+      HMSG( "MESSAGES to %s", opts.msgfilename );
+      mas_msg_set_file( opts.msgfilename );
+      MFP( "\x1b[H\x1b[2J" );
     }
-    mas_free( pidpath );
+    if ( r >= 0 )
+      r = mas_init_message(  );
   }
-
-  /* ctrl.listening_max = opts.hosts_num; */
-  MAS_LOG( "(%d) init done, %d hosts", r, opts.hosts_num );
-
-  if ( opts.msgfilename )
-  {
-    HMSG( "MESSAGES to %s", opts.msgfilename );
-    mas_msg_set_file( opts.msgfilename );
-    MFP( "\x1b[H\x1b[2J" );
-  }
-  r = mas_init_message(  );
+  MAS_LOG( "(%d) init done", r );
+  HMSG( "INIT DONE" );
   return r;
 }
 
@@ -296,37 +275,40 @@ mas_init( int argc, char **argv, char **env )
   return r;
 }
 
+static int
+mas_init_vplus( va_list args )
+{
+  int r = 0;
+  typedef int ( *v_t ) ( void );
+  v_t fun;
+
+  /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
+  while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
+    r = ( fun ) (  );
+  return r;
+}
+
 int
 mas_init_plus( int argc, char **argv, char **env, ... )
 {
   int r = 0;
   va_list args;
 
-  ctrl.main_tid = mas_gettid(  );
   HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
-  ctrl.status = MAS_STATUS_START;
-  ctrl.start_time = mas_double_time(  );
-  /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
-  /* ctrl.is_server = is_server;       */
-  /* ctrl.is_client = !ctrl.is_server; */
-#ifndef MAS_CLIENT_LOG
-  if ( ctrl.is_client )
-    ctrl.log_disabled = 1;
-#endif
-  r = mas_pre_init( argc, argv, env );
+  if ( r >= 0 )
+    r = mas_pre_init( argv[0] );
   if ( r >= 0 )
     r = mas_init( argc, argv, env );
   {
-    typedef int ( *v_t ) ( void );
-    v_t fun;
-
     va_start( args, env );
-    while ( r >= 0 && ( fun = va_arg( args, v_t ) ) )
-      r = ( fun ) (  );
+    if ( r >= 0 )
+      r = mas_init_vplus( args );
     va_end( args );
   }
+  HMSG( "(%d) >POST-INIT", r );
   if ( r >= 0 )
     r = mas_post_init(  );
+  HMSG( "INIT %s", r < 0 ? "FAIL" : "OK" );
   return r;
 }
 
@@ -342,12 +324,12 @@ mas_destroy( void )
   if ( opts.argv )
   {
     /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, opts.argv[0] ); */
-    HMSG( "DESTROY, restart:%d", ctrl.restart );
     tMSG( ">>>>> %s %s", opts.argv[0], *( &opts.argv[1] ) );
     if ( ctrl.restart )
     {
       int r = 0;
 
+      HMSG( "DESTROY, RESTART" );
 /* see mas_control_data.c mas_control_types.h etc. */
       HMSG( "execvp %s %s", opts.argv[0], opts.argv[1] );
       ctrl.restart_cnt++;
