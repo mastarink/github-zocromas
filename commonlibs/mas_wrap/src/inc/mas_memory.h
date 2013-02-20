@@ -1,6 +1,9 @@
 #ifndef MAS_MEMORY_H
 #  define MAS_MEMORY_H
 
+/* FILE */
+#  include <stdio.h>
+
 struct mas_mem_head_s
 {
   const char *func;
@@ -38,7 +41,8 @@ void *_mas_realloc( const char *func, int line, void *ptr, size_t size );
 char *_mas_strdup( const char *func, int line, const char *str );
 char *_mas_strndup( const char *func, int line, const char *s, size_t n );
 
-void print_memlist( const char *func, int line );
+int print_memlist( FILE * f, const char *func, int line );
+int _print_memlist( FILE * f, const char *func, int line, int s_f );
 
 #    define mas_strcat_x(...)  _mas_strcat_xt(FL, __VA_ARGS__)
 #    define mas_strcat(...)  _mas_strcat_xt(FL, __VA_ARGS__)

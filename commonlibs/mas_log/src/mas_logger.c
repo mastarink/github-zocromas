@@ -129,14 +129,14 @@ mas_logger_write( mas_loginfo_t * li )
           /* fprintf( ctrl.logfile, "%16.5f + %7.5f : %16.5f (%7.5f) : %-25s:%03d %s:R%lu:%u @ L%lu:%u: {%s}\n", li->logtime, */
           /* mas_pthread_mutex_lock( &logger_write_mutex ); */
 #ifndef MAS_NO_THREADS
-          fprintf( ctrl.logfile, "%lu/%lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s: %s:R%lu:%u @ L%lu:%u: {%s}\n", serial,
+          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s:%u %s:R%lu:%u @ L%lu:%u: {%s}\n", serial,
                    li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ( ltime - li->logtime ) * 1E3,
-                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-",
+                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
                    mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #else
-          fprintf( ctrl.logfile, "%lu/%lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s: *:R%lu:%u @ L%lu:%u: {%s}\n", serial,
+          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s:%u *:R%lu:%u @ L%lu:%u: {%s}\n", serial,
                    li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ( ltime - li->logtime ) * 1E3,
-                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-",
+                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
                    li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #endif
           /* mas_pthread_mutex_unlock( &logger_write_mutex ); */

@@ -148,22 +148,42 @@ mas_tmp(  )
 int imemar = 0;
 mas_mem_head_t *memar[4096];
 
-void
-print_memlist( const char *func, int line )
+int
+_print_memlist( FILE * f, const char *func, int line, int s_f )
 {
   int h = 0;
+  int r = -1;
 
-  for ( int im = 0; im < ( sizeof( memar ) / sizeof( memar[0] ) ); im++ )
+  if ( f )
   {
-    if ( memar[im] )
+    r = 0;
+    for ( int im = 0; r >= 0 && im < ( sizeof( memar ) / sizeof( memar[0] ) ); im++ )
     {
-      if ( !h++ )
-        fprintf( stderr, "%s:%d MEMORY TABLE\n", func, line );
-      fprintf( stderr, "id: %lx; sz:%lu; %s:%u\n", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line );
+      if ( memar[im] )
+      {
+        mas_mem_head_t *real_ptr;
+
+        if ( !h++ )
+          r = fprintf( f, "%s:%d MEMORY TABLE\n", func, line );
+
+        real_ptr = ( mas_mem_head_t * ) memar[im];
+        real_ptr--;
+
+        if ( r >= 0 )
+          fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line,
+                   s_f ? ( char * ) real_ptr : "-" );
+      }
     }
+    if ( !h && r >= 0 )
+      r = fprintf( stderr, "** EMPTY MEMORY TABLE ** %s:%u\n", func, line );
   }
-  if ( !h )
-    fprintf( stderr, "** EMPTY MEMORY TABLE ** %s:%u\n", func, line );
+  return r;
+}
+
+int
+print_memlist( FILE * f, const char *func, int line )
+{
+  return _print_memlist( f, func, line, 0 );
 }
 
 void *

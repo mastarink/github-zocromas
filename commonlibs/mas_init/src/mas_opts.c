@@ -137,16 +137,10 @@ mas_opts_set_configfilename( const char *filename )
   char *wfilename = NULL;
 
   if ( opts.configfilename )
-  {
     mas_free( opts.configfilename );
-    opts.configfilename = NULL;
-  }
+  opts.configfilename = NULL;
 
-  wfilename = opts.configfilename;
-  if ( !wfilename )
-    wfilename = filename ? mas_strdup( filename ) : NULL;
-  if ( !wfilename )
-    wfilename = opts.configfilename ? mas_strdup( opts.configfilename ) : NULL;
+  wfilename = filename ? mas_strdup( filename ) : NULL;
   if ( !wfilename )
   {
     char *t;
@@ -263,133 +257,137 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
     fpath = mas_strdup( opts.configdir );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, opts.configfilename );
-    if ( mas_opts_check_old_file( fpath, 0, 0, backup, overwrite ) == 0 )
+    if ( fpath )
     {
-      FILE *f;
-
-      f = mas_fopen( fpath, "w" );
-      if ( f )
+      if ( mas_opts_check_old_file( fpath, 0, 0, backup, overwrite ) == 0 )
       {
-        int r;
-        char outstr[128] = "#   ";
+        FILE *f;
 
-        rtot = 0;
+        f = mas_fopen( fpath, "w" );
+        if ( f )
+        {
+          int r;
+          char outstr[128] = "#   ";
 
-        {
-          strftime( outstr, sizeof( outstr ), "%a, %d %b %Y %T %z", mas_xlocaltime(  ) );
-          r = fprintf( f, "# %s\n#\n", outstr );
-          if ( r > 0 )
-            rtot += r;
-        }
-        if ( opts.uuid )
-        {
-          r = fprintf( f, "uuid=%s\n", opts.uuid );
-          if ( r > 0 )
-            rtot += r;
-        }
+          rtot = 0;
 
-        {
-          r = fprintf( f,
-                       "# common\nenv_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlog=%d\n"
-                       "max_config_backup=%u\nmessages=%u\n"
-                       "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
-                       "# -\n", opts.env_optsname, opts.env_hostname, opts.logdir,
-                       !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
-                       opts.save_opts_plus, opts.restart_sleep );
-          if ( r > 0 )
-            rtot += r;
-        }
-        if ( ctrl.is_server )
-        {
-          r = fprintf( f, "# server\ndaemon=%u\nsingle-instance=%u\nsingle-child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
-                       ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir, opts.protodir );
-          if ( r > 0 )
-            rtot += r;
-        }
-        else if ( ctrl.is_client )
-        {
-          r = fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", opts.disconnect_prompt, opts.wait_server );
-          if ( r > 0 )
-            rtot += r;
-        }
-        {
           {
-            r = fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num );
+            strftime( outstr, sizeof( outstr ), "%a, %d %b %Y %T %z", mas_xlocaltime(  ) );
+            r = fprintf( f, "# %s\n#\n", outstr );
+            if ( r > 0 )
+              rtot += r;
+          }
+          if ( opts.uuid )
+          {
+            r = fprintf( f, "uuid=%s\n", opts.uuid );
             if ( r > 0 )
               rtot += r;
           }
 
-          if ( opts.hosts_num )
           {
-            for ( int ih = 0; ih < opts.hosts_num; ih++ )
+            r = fprintf( f,
+                         "# common\nenv_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlog=%d\n"
+                         "max_config_backup=%u\nmessages=%u\n"
+                         "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
+                         "# -\n", opts.env_optsname, opts.env_hostname, opts.logdir,
+                         !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
+                         opts.save_opts_plus, opts.restart_sleep );
+            if ( r > 0 )
+              rtot += r;
+          }
+          if ( ctrl.is_server )
+          {
+            r = fprintf( f,
+                         "# server\ndaemon=%u\nsingle-instance=%u\nsingle-child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
+                         ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir, opts.protodir );
+            if ( r > 0 )
+              rtot += r;
+          }
+          else if ( ctrl.is_client )
+          {
+            r = fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", opts.disconnect_prompt, opts.wait_server );
+            if ( r > 0 )
+              rtot += r;
+          }
+          {
+            {
+              r = fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num );
+              if ( r > 0 )
+                rtot += r;
+            }
+
+            if ( opts.hosts_num )
+            {
+              for ( int ih = 0; ih < opts.hosts_num; ih++ )
+              {
+                int r;
+
+                r = fprintf( f, "host=%s\n", opts.hosts[ih] );
+                if ( r > 0 )
+                  rtot += r;
+              }
+            }
+          }
+          {
+            {
+              r = fprintf( f, "\n[%s %d]\n", "protos", opts.protos_num );
+              if ( r > 0 )
+                rtot += r;
+            }
+
+            if ( opts.protos_num )
+            {
+              for ( int ih = 0; ih < opts.protos_num; ih++ )
+              {
+                int r;
+
+                r = fprintf( f, "proto=%s\n", opts.protos[ih] );
+                if ( r > 0 )
+                  rtot += r;
+              }
+            }
+          }
+          if ( opts.commands_num )
+          {
+            r = fprintf( f, "\n[commands %d]\n", opts.commands_num );
+            if ( r > 0 )
+              rtot += r;
+            for ( int ih = 0; ih < opts.commands_num; ih++ )
             {
               int r;
 
-              r = fprintf( f, "host=%s\n", opts.hosts[ih] );
+              r = fprintf( f, "command=%s\n", opts.commands[ih] );
               if ( r > 0 )
                 rtot += r;
             }
           }
-        }
-        {
           {
-            r = fprintf( f, "\n[%s %d]\n", "protos", opts.protos_num );
-            if ( r > 0 )
-              rtot += r;
-          }
+            mas_variable_t *var = NULL;
+            char *vclass = NULL;
+            const char *name = "docroot";
 
-          if ( opts.protos_num )
-          {
-            for ( int ih = 0; ih < opts.protos_num; ih++ )
+            while ( ( var = mas_variable_matching( ctrl.hostvars, var, vclass, name ) ) )
             {
-              int r;
-
-              r = fprintf( f, "proto=%s\n", opts.protos[ih] );
+              r = fprintf( f, "\n[host %s]\n", var->vclass );
               if ( r > 0 )
                 rtot += r;
+              r = fprintf( f, "%s=%s\n", var->name, var->value );
+              if ( r > 0 )
+                rtot += r;
+              /* vclass = ...; */
+              /* name = ...;   */
             }
           }
         }
-        if ( opts.commands_num )
+        if ( f )
         {
-          r = fprintf( f, "\n[commands %d]\n", opts.commands_num );
-          if ( r > 0 )
-            rtot += r;
-          for ( int ih = 0; ih < opts.commands_num; ih++ )
-          {
-            int r;
-
-            r = fprintf( f, "command=%s\n", opts.commands[ih] );
-            if ( r > 0 )
-              rtot += r;
-          }
-        }
-        {
-          mas_variable_t *var = NULL;
-          char *vclass = NULL;
-          const char *name = "docroot";
-
-          while ( ( var = mas_variable_matching( ctrl.hostvars, var, vclass, name ) ) )
-          {
-            r = fprintf( f, "\n[host %s]\n", var->vclass );
-            if ( r > 0 )
-              rtot += r;
-            r = fprintf( f, "%s=%s\n", var->name, var->value );
-            if ( r > 0 )
-              rtot += r;
-            /* vclass = ...; */
-            /* name = ...;   */
-          }
+          mas_fclose( f );
+          f = NULL;
+          ctrl.opts_saved = 1;
         }
       }
-      if ( f )
-      {
-        mas_fclose( f );
-        f = NULL;
-        ctrl.opts_saved = 1;
-      }
+      mas_free( fpath );
     }
-    mas_free( fpath );
   }
   return rtot;
 }
@@ -562,10 +560,6 @@ mas_opts_restore_nosection( const char *s )
     mas_opts_set_pstrvalue( &opts.protodir, s );
   else if ( 0 == mas_strcmp2( s, "logdir=" ) )
     mas_opts_set_pstrvalue( &opts.logdir, s );
-  else if ( 0 == mas_strcmp2( s, "configdir=" ) )
-    mas_opts_set_pstrvalue( &opts.configdir, s );
-  else if ( 0 == mas_strcmp2( s, "configfilename=" ) )
-    mas_opts_set_pstrvalue( &opts.configfilename, s );
   else if ( 0 == mas_strcmp2( s, "log=" ) )
     opts.nolog = nv;
   else if ( 0 == mas_strcmp2( s, "logger=" ) )
@@ -611,11 +605,6 @@ _mas_opts_restore( const char *dirname, const char *filename )
     opts.configdir = NULL;
   }
   mas_opts_set_configdir( dirname );
-  if ( opts.configfilename )
-  {
-    mas_free( opts.configfilename );
-    opts.configfilename = NULL;
-  }
   mas_opts_set_configfilename( filename );
   if ( mas_opts_check_dir(  ) == 0 )
   {
@@ -784,7 +773,7 @@ _mas_opts_restore_plus( const char *dirname, const char *filename, va_list args 
   }
   if ( x )
   {
-    HMSG( "OPTS:%s", fn );
+    /* HMSG( "OPTS from:%s", fn ); */
     r = _mas_opts_restore( dirname, fn );
   }
   mas_free( fn );

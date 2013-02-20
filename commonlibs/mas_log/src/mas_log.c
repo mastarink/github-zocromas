@@ -9,7 +9,7 @@
 #include <string.h>
 
 #ifndef MAS_NO_THREADS
-#include <pthread.h>
+#  include <pthread.h>
 #endif
 
 #include <mastar/wrap/mas_memory.h>
@@ -90,9 +90,12 @@ mas_log_clean_queue( void )
         mas_log_delete_loginfo( li );
       }
     }
-    mas_delete_logger_list( );
+    mas_delete_logger_list(  );
+    /* HMSG( "CLEARED logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
+    /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
   }
-  /* mMSG( "cleaned logger queue" ); */
+  /* HMSG( "cleaned logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
+  /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
 }
 
 static int
@@ -111,50 +114,55 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
 
   /* pthread_mutex_lock( &ctrl.thglob.logger_mutex );   */
   /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
+  if ( log_list )
+  {
+    vsnprintf( buffer, sizeof( buffer ), fmt, args );
 
-  vsnprintf( buffer, sizeof( buffer ), fmt, args );
+    /* FMSG( "loginfo size : %lu", sizeof( mas_loginfo_t ) ); */
 
-  /* FMSG( "loginfo size : %lu", sizeof( mas_loginfo_t ) ); */
-
-  li = mas_malloc( sizeof( mas_loginfo_t ) );
-  memset( li, 0, sizeof( mas_loginfo_t ) );
-  li->message = mas_strdup( buffer );
-  li->line = line;
+    li = mas_malloc( sizeof( mas_loginfo_t ) );
+    memset( li, 0, sizeof( mas_loginfo_t ) );
+    li->message = mas_strdup( buffer );
+    li->line = line;
 #ifdef MS_DUP_FUNC_NAME
-  li->func = mas_strdup( func );
+    li->func = mas_strdup( func );
 #else
-  li->func = ( func );
+    li->func = ( func );
 #endif
 #ifndef MAS_NO_THREADS
-  li->pth = mas_pthread_self(  );
-  li->thtype = mas_thself_type(  );
-  li->pchannel = mas_thself_pchannel(  );
-  li->plcontrol = mas_thself_plcontrol(  );
-  li->prcontrol = mas_thself_prcontrol(  );
+    li->pth = mas_pthread_self(  );
+    li->thtype = mas_thself_type(  );
+    li->pchannel = mas_thself_pchannel(  );
+    li->plcontrol = mas_thself_plcontrol(  );
+    li->prcontrol = mas_thself_prcontrol(  );
 #endif
-  li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
-  li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
-  li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;
-  li->rstatus = li->prcontrol ? li->prcontrol->h.status : 0;
-  li->logtime = mas_double_time(  );
-  li->lerrno = merrno;
-  li->serial = ctrl.log_q_came;
-  /* errno = 0; */
+    li->pid = getpid(  );
+    li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
+    li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
+    li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;
+    li->rstatus = li->prcontrol ? li->prcontrol->h.status : 0;
+    li->logtime = mas_double_time(  );
+    li->lerrno = merrno;
+    li->serial = ctrl.log_q_came;
+    /* errno = 0; */
 
 #ifndef MAS_NO_THREADS
-  /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */
-  /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
-  pthread_rwlock_wrlock( &logger_queue_rwlock );
+    /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */
+    /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
+    pthread_rwlock_wrlock( &logger_queue_rwlock );
 #endif
-  MAS_LIST_ADD( log_list, li, next );
-  ctrl.log_q_came++;
-  ctrl.log_q_mem += strlen( li->message );
+    MAS_LIST_ADD( log_list, li, next );
+    ctrl.log_q_came++;
+    ctrl.log_q_mem += strlen( li->message );
 
 #ifndef MAS_NO_THREADS
-  pthread_rwlock_unlock( &logger_queue_rwlock );
-  /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
-  /* mas_pthread_mutex_unlock( &ctrl.thglob.log_mutex ); */
+    pthread_rwlock_unlock( &logger_queue_rwlock );
+    /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
+    /* mas_pthread_mutex_unlock( &ctrl.thglob.log_mutex ); */
 #endif
+  }
+  /* HMSG( "logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
+  /*       ctrl.log_q_came - ctrl.log_q_gone );                                                               */
   return 0;
 }
 

@@ -18,18 +18,20 @@
 
 #  define MAS_MSGFL(...) { if (&mas_msg) { mas_msg(FL, __VA_ARGS__); } }
 
-#  define MFPZ(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ ); }
-#  ifdef MAS_IS_CLIENT
-#    define MFP(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ );}
-#  elif defined(MAS_USE_CURSES)
+#  define MFPZ(...) { \
+    if ( ctrl.msgfile ) \
+      fprintf( ctrl.msgfile, __VA_ARGS__ ); \
+    else if ( ctrl.stderrfile ) \
+      fprintf( ctrl.stderrfile, __VA_ARGS__ ); \
+   }
+#  ifdef MAS_USE_CURSES
 #    define MFP(...) { if (use_curses) \
-  { \
-     mas_pthread_mutex_lock( &ctrl.mfp_mutex );  \
-     wprintw( w_win, __VA_ARGS__ );wrefresh(w_win);} else {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ );} \
-     mas_pthread_mutex_unlock( &ctrl.mfp_mutex );  \
+     { mas_pthread_mutex_lock( &ctrl.mfp_mutex ); wprintw( w_win, __VA_ARGS__ );wrefresh(w_win); mas_pthread_mutex_unlock( &ctrl.mfp_mutex );} \
+     else \
+       MFPZ(__VA_ARGS__) \
   }
 #  else
-#    define MFP(...) {fprintf( ctrl.msgfile?ctrl.msgfile:stderr, __VA_ARGS__ );}
+#    define MFP(...) MFPZ(__VA_ARGS__)
 #  endif
 #  ifndef MAS_NOMSG
 #    define MSG(...) MAS_MSGFL( (( opts.f.bit.msg_c && !ctrl.is_server ) \

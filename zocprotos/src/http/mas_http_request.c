@@ -324,7 +324,6 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   {
     char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
 
-    /* fprintf( stderr, "\n'%s'\n", pstring ); */
     name = pstring;
     ename = pstring;
     while ( ename && *ename > ' ' && *ename != ':' )
@@ -341,7 +340,6 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     name = mas_strndup( name, ename - name );
     value = mas_strndup( value, evalue - value );
     MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
-    /* fprintf( stderr, "http parse headers name:'%s' value:'%s'\n", name, value ); */
 
     http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
 

@@ -1,3 +1,4 @@
+# unalias cp
 . sh/dir_functions.sh
 . sh/make_functions.sh
 function prjconfV ()
@@ -47,6 +48,7 @@ function setup_vers ()
       configuredir=$indir
       mas_name=$n
       mas_vers=$v
+      mas_base_vers='0.0.5.20130219'
     fi
     configure_opts="--prefix=$instdir --silent --enable-silent-rules --enable-tracemem --enable-debug"
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"

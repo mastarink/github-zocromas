@@ -187,7 +187,7 @@ sigint_han( int s )
     /* exit( 3 ); */
   }
   /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
-  if ( ctrl.daemon && ctrl.saved_stderr_file )
+  if ( ctrl.daemon && ctrl.old_stderrfile )
   {
     int fr = -1;
 
@@ -196,12 +196,13 @@ sigint_han( int s )
       char *infos = NULL;
 
       infos = mas_evaluate_command( "server info" );
-      fputs( infos, stderr );
-      /* show_info( ctrl.saved_stderr_file ); */
+      if ( ctrl.stderrfile )
+        fputs( infos, ctrl.stderrfile );
+      /* show_info( ctrl.old_stderrfile ); */
       mas_free( infos );
     }
-    fr = fprintf( ctrl.saved_stderr_file, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
-    fflush( ctrl.saved_stderr_file );
+    fr = fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
+    fflush( ctrl.old_stderrfile );
     /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
   }
   else
@@ -211,11 +212,13 @@ sigint_han( int s )
       char *infos = NULL;
 
       infos = mas_evaluate_command( "server info" );
-      fputs( infos, stderr );
-      /* show_info( ctrl.saved_stderr_file ); */
+      if ( ctrl.stderrfile )
+        fputs( infos, ctrl.stderrfile );
+      /* show_info( ctrl.old_stderrfile ); */
       mas_free( infos );
     }
-    fprintf( stderr, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.main_thread );
+    if ( ctrl.stderrfile )
+      fprintf( ctrl.stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.main_thread );
   }
   ctrl.sigint_time = ( unsigned long ) time( NULL );
 }
@@ -287,7 +290,11 @@ mas_atexit( void )
   extern unsigned long memory_balance;
 
   FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
-  print_memlist( FL );
+  if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
+    if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
+      if ( print_memlist( ctrl.msgfile, FL ) < 0 )
+        print_memlist( stderr, FL );
+  FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
 #else
   FMSG( "AT EXIT" );
 #endif
@@ -303,14 +310,18 @@ mas_atexit( void )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  if ( !ctrl.stderrfile )
+    ctrl.stderrfile = stderr;
   ctrl.is_client = 0;
   ctrl.is_server = 1;
   atexit( mas_atexit );
-  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

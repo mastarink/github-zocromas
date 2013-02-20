@@ -10,7 +10,7 @@
 #  include <mastar/types/mas_listener_control_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>
 
-#define MAS_MAX_PIDFD 5
+#  define MAS_MAX_PIDFD 5
 /*
 this:
   mas_control_types.h
@@ -40,27 +40,39 @@ struct mas_pthread_globals_s
   pthread_attr_t logger_attr;
   pthread_attr_t listener_attr;
   pthread_attr_t transaction_attr;
-
 };
 
 
 struct mas_control_s
 {
   pid_t main_pid;
-  pthread_t main_thread;
-  pid_t child_pid;
-  pthread_t child_thread;
   pid_t main_tid;
-  pthread_t master_thread;
+  pthread_t main_thread;
+
+  pid_t child_pid;
+  pid_t child_tid;
+  pthread_t child_thread;
+
+  pid_t master_pid;
   pid_t master_tid;
+  pthread_t master_thread;
+
+  pid_t server_pid;
+  pid_t server_tid;
+  pthread_t server_thread;
+
   pthread_t ticker_thread;
   pid_t ticker_tid;
+
   pthread_t watcher_thread;
   pid_t watcher_tid;
+
   pthread_t logger_thread;
   pid_t logger_tid;
+
   char *binname;
   char *progname;
+  char *exepath;
 
   void **loaded_modules;
   unsigned loaded_modules_cnt;
@@ -68,9 +80,10 @@ struct mas_control_s
   double start_time;
   double transactions_time;
 
-  int saved_stderr;
-  FILE *saved_stderr_file;
-  int saved_stdout;
+  int old_stderr;
+  FILE *old_stderrfile;
+  FILE *stderrfile;
+  int old_stdout;
   FILE *msgfile;
 
   unsigned int_cnt;

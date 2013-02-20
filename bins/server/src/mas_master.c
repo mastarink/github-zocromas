@@ -189,6 +189,8 @@ mas_master_th( void *arg )
 
   HMSG( "MASTER_TH START" );
   ctrl.master_tid = mas_gettid(  );
+  ctrl.master_pid = getpid(  );
+  ctrl.server_pid = getpid(  );
   /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
   mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );
@@ -214,13 +216,17 @@ mas_master_th( void *arg )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  if ( !ctrl.stderrfile )
+    ctrl.stderrfile = stderr;
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
 }
 
 static int
@@ -255,8 +261,10 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 #ifdef MAS_INIT_SEPARATE
   r = mas_init_server( argc, argv, env );
 #else
+  MAS_LOG( "(%d) bunch: to init +", r );
   r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
                      NULL );
+  MAS_LOG( "(%d) bunch: init + done", r );
 #endif
   if ( ctrl.is_parent )
   {
@@ -277,6 +285,6 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
     mas_pthread_exit( &r );
   }
   MAS_LOG( "bunch end : %d", r );
-  HMSG( "BUNCH %s END", ctrl.is_parent?"(parent)":""  );
+  HMSG( "BUNCH %s END", ctrl.is_parent ? "(parent)" : "" );
   return r;
 }

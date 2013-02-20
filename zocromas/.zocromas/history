@@ -14,36 +14,26 @@ restart
 get client info
 get server info
 server listener remove zocromas.mastar.lan 5003
+get server info
+server quit
+server restart
+server info
+server quit
+bye
+server quit
 bye
 server quit
 bye
 server quit
-server info
+server restart
 server quit
-server info
-server quit
-server info
-server quit
-bye
-server info
-server cls
-server quit
-server cls
-server quit
+server restart
+server reconnect
 server restart
 server quit
 server restart
 server quit
 server restart
-server quit
-server restart
-server quit
 server info
-pwd
-version
-get version
-server quit
-get version
-server quit
-bye
+server restart
 server quit

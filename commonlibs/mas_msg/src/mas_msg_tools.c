@@ -46,7 +46,8 @@ mas_msg_set_file( const char *path )
 {
   if ( ctrl.msgfile )
   {
-    fclose( ctrl.msgfile );
+    if ( ctrl.msgfile != ctrl.stderrfile )
+      fclose( ctrl.msgfile );
     ctrl.msgfile = NULL;
   }
   if ( path )
@@ -123,13 +124,13 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
 #ifdef MAS_USE_CURSES
     if ( use_curses )
     {
-      MFP( "%-5lus:%-5lu:", elapsed_time, memory_balance );
+      MFP( "{%d} %-5lus:%-5lu:", errno, elapsed_time, memory_balance );
     }
     else
 #endif
     {
       MFP( "  " );
-      MFP( "(%3lus:%5lu) ", elapsed_time, memory_balance );
+      MFP( "{%d} (%3lus:%5lu) ", errno, elapsed_time, memory_balance );
     }
 #ifdef MAS_USE_CURSES
     if ( use_curses )
@@ -266,7 +267,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
   }
   else if ( !details && *message != *MAS_SEPARATION_LINE )
   {
-    MFP( "+%05lu ", elapsed_time );
+    MFP( "{%d} +%05lu ", errno, elapsed_time );
     if ( prefix && *prefix )
     {
 #ifdef MAS_USE_CURSES
@@ -296,7 +297,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
     else
 #endif
     {
-      MFP( "@\x1b[K\x1b[0;43;30m%s\x1b[0m\n", message );
+      MFP( "{%d} @\x1b[K\x1b[0;43;30m%s\x1b[0m\n", errno, message );
     }
   }
   return r;
@@ -373,6 +374,7 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
   pid_t pid;
   pthread_t pth;
   th_type_t thtype;
+
 #ifdef MAS_USE_CURSES
   WINDOW *w_win;
 

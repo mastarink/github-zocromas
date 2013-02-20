@@ -49,7 +49,6 @@ related:
 __attribute__ ( ( constructor ) )
      static void c_notify( void )
 {
-  fprintf( ctrl.msgfile ? ctrl.msgfile : stderr, "##              >>C<<\n" );
   cMSG( "##              >>mC<<\n" );
   notify_init( "zocromas" );
 }
@@ -57,7 +56,6 @@ __attribute__ ( ( constructor ) )
 __attribute__ ( ( destructor ) )
      static void d_notify( void )
 {
-  fprintf( ctrl.msgfile ? ctrl.msgfile : stderr, "##              >>D<<\n" );
   cMSG( "##              >>mD<<\n" );
   notify_uninit(  );
 }
@@ -65,14 +63,13 @@ __attribute__ ( ( destructor ) )
 static char *
 msg_cmd( STD_CMD_ARGS )
 {
-  fprintf( ctrl.msgfile ? ctrl.msgfile : stderr, ">>[%s]<<\n", args );
+  cMSG( ">>[%s]<<\n", args );
   return NULL;
 }
 
 /* static void                                       */
 /* n_closed( GtkWidget * widget, gpointer data )     */
 /* {                                                 */
-/*   fprintf( stderr, ">>> %s\n", ( char * ) data ); */
 /*   gtk_main_quit(  );                              */
 /* }                                                 */
 

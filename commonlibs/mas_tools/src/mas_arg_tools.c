@@ -271,14 +271,13 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
         targv[targc + ita] = mas_strndup( a + q, len );
         ita++;
       }
-      /* fprintf( stderr, "nargs:%u; ia_offset:%u; targc:%u; ita:%u; q:%d [%lu] %s\n", nargs, ia_offset, targc, ita, q, len, a ); */
     }
     targv[totargc] = NULL;
     *ptargv = targv;
   }
   else
   {
-    fprintf( stderr, "no ptargv\n" );
+    /* FPRINTF( STDERR, "no ptargv\n" ); */
   }
   return totargc;
 }

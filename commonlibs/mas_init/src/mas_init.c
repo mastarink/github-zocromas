@@ -140,6 +140,33 @@ mas_pre_init( char *runpath )
   ctrl.status = MAS_STATUS_INIT;
   ctrl.main_pid = getpid(  );
   ctrl.binname = mas_strdup( basename( runpath ) );
+  {
+    char lexe[256];
+    struct stat sb;
+    char *linkname;
+
+    HMSG( "LINKNAME ?" );
+    sprintf( lexe, "/proc/%u/exe", getpid(  ) );
+    if ( lstat( lexe, &sb ) >= 0 )
+    {
+      size_t sz;
+
+      sz = ( sb.st_size ? sb.st_size : 512 ) + 1;
+      linkname = mas_malloc( sz );
+      r = readlink( lexe, linkname, sz );
+      if ( r >= 0 )
+      {
+        linkname[sz] = '\0';
+        HMSG( "(%s) [%lu] LINKNAME [%d]: '%s'", lexe, sz, r, linkname );
+      }
+      else
+      {
+        P_ERR;
+        HMSG( "(%s) LINKNAME: ---", lexe );
+      }
+      ctrl.exepath = linkname;
+    }
+  }
   pn = strchr( ctrl.binname, '_' );
   if ( pn && *pn++ && *pn )
     ctrl.progname = mas_strdup( pn );
@@ -154,6 +181,7 @@ mas_pre_init( char *runpath )
     /* r = mas_init_curses(  ); */
 #endif
   }
+  HMSG( "(%d) PRE-INIT", r );
   return r;
 }
 
@@ -187,8 +215,8 @@ mas_post_init( void )
   {
     char namebuf[512];
 
-    snprintf( namebuf, sizeof( namebuf ), "/%s%u.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent, ctrl.stamp.first_lts,
-              getpid(  ) );
+    snprintf( namebuf, sizeof( namebuf ), "/%s.%s.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent ? "parent" : "child",
+              ctrl.stamp.first_lts, getpid(  ) );
     ctrl.logpath = mas_strdup( opts.logdir );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     HMSG( "LOG: %s", ctrl.logpath );
@@ -209,7 +237,7 @@ mas_post_init( void )
       r = mas_init_message(  );
   }
   MAS_LOG( "(%d) init done", r );
-  HMSG( "INIT DONE" );
+  HMSG( "(%d) POST INIT DONE", r );
   return r;
 }
 
@@ -224,7 +252,6 @@ mas_init_restart_count( void )
   ren0 = ren = getenv( name );
   if ( ren )
   {
-    fprintf( stderr, "@@@@@@@@ A:%u : %lu\n", ctrl.restart_cnt, ctrl.stamp.first_lts );
     sscanf( ren, "%u", &ctrl.restart_cnt );
     ren = strchr( ren, ':' );
     if ( ren )
@@ -232,7 +259,6 @@ mas_init_restart_count( void )
       ren++;
       sscanf( ren, "%lu", &ctrl.stamp.first_lts );
     }
-    fprintf( stderr, "@@@@@@@@ B:%u : %lu\n", ctrl.restart_cnt, ctrl.stamp.first_lts );
     ren = strchr( ren, ':' );
     ctrl.stamp.prev_lts = 0;
     if ( ren )
@@ -241,8 +267,6 @@ mas_init_restart_count( void )
       sscanf( ren, "%lu", &ctrl.stamp.prev_lts );
     }
     MAS_LOG( "@ init [%s='%s']", name, ren0 );
-    if ( !ctrl.stamp.first_lts )
-      ctrl.stamp.first_lts = ctrl.stamp.lts;
   }
   return 0;
 }
@@ -254,23 +278,32 @@ mas_init( int argc, char **argv, char **env )
 
   HMSG( "INIT" );
   ctrl.stamp.lts = ( unsigned long ) time( NULL );
+  ctrl.stamp.first_lts = ctrl.stamp.lts;
   if ( r >= 0 )
     r = mas_init_restart_count(  );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts, ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
 
   if ( r >= 0 && !( mas_init_argv( argc, argv, env ) > 1 ) )
     r = mas_init_env(  );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
 
   /* HMSG( "opts.argv[0]: %s", opts.argv[0] ); */
   /* mas_init_message(  ); */
   /* atexit( atexit_fun ); */
   if ( r >= 0 )
     r = mas_init_sig(  );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
 
-  ctrl.argv_nonoptind = mas_cli_options( opts.argc, opts.argv );
+  r = mas_cli_options( opts.argc, opts.argv );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
   if ( r >= 0 )
-    mas_ctrl_init( &opts );
+  {
+    ctrl.argv_nonoptind = r;
+    r = mas_ctrl_init( &opts );
+    HMSG( "(%d) INIT %d", r, __LINE__ );
+  }
 
   return r;
 }
@@ -279,12 +312,19 @@ static int
 mas_init_vplus( va_list args )
 {
   int r = 0;
+  int pos = 0;
   typedef int ( *v_t ) ( void );
   v_t fun;
 
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
   while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
+  {
+    MAS_LOG( "(%d) init + #%d", r, pos );
     r = ( fun ) (  );
+    HMSG( "(%d) INIT %d", r, __LINE__ );
+    pos++;
+  }
+  MAS_LOG( "(%d) init + done", r );
   return r;
 }
 
@@ -297,17 +337,20 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
   if ( r >= 0 )
     r = mas_pre_init( argv[0] );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
   if ( r >= 0 )
     r = mas_init( argc, argv, env );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
   {
     va_start( args, env );
     if ( r >= 0 )
       r = mas_init_vplus( args );
+    HMSG( "(%d) INIT %d", r, __LINE__ );
     va_end( args );
   }
-  HMSG( "(%d) >POST-INIT", r );
   if ( r >= 0 )
     r = mas_post_init(  );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
   HMSG( "INIT %s", r < 0 ? "FAIL" : "OK" );
   return r;
 }
@@ -352,25 +395,42 @@ mas_destroy( void )
   ctrl.hostvars = NULL;
 
   ctrl.log_disabled = 1;
+
   if ( ctrl.logpath )
     mas_free( ctrl.logpath );
+  ctrl.logpath = NULL;
+
   if ( ctrl.binname )
     mas_free( ctrl.binname );
+  ctrl.binname = NULL;
+
   if ( ctrl.progname )
     mas_free( ctrl.progname );
-  ctrl.logpath = NULL;
+  ctrl.progname = NULL;
+
+  if ( ctrl.exepath )
+    mas_free( ctrl.exepath );
+  ctrl.exepath = NULL;
+
   mas_ctrl_destroy(  );
 
-  MAS_LOG( "destroy done" );
   MAS_LOG( "destroy done" );
   mas_log_clean_queue(  );
   HMSG( "DESTROY DONE" );
 #ifdef MAS_TRACEMEM
   {
+    /* int k; */
     extern unsigned long memory_balance;
 
+    /* k = print_memlist( ctrl.msgfile, FL ); */
     FMSG( "destroy, memory_balance:%ld;", memory_balance );
-    print_memlist( FL );
+    /* k = print_memlist( ctrl.msgfile, FL ); */
+    if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
+      if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
+        if ( print_memlist( ctrl.msgfile, FL ) < 0 )
+          print_memlist( stderr, FL );
+    /* k = print_memlist( ctrl.msgfile, FL ); */
+    fflush( ctrl.msgfile );
   }
 #endif
 }
@@ -381,9 +441,13 @@ __attribute__ ( ( constructor ) )
   char name[512];
   char *value = NULL;
 
-  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
+  if ( !ctrl.stderrfile )
+    ctrl.stderrfile = stderr;
+
+  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.main_pid );
   value = getenv( name );
-  fprintf( stderr, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );
   /* ctrl.is_server = 0; */
   /* ctrl.is_client = 0; */
 }
@@ -391,5 +455,6 @@ __attribute__ ( ( constructor ) )
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

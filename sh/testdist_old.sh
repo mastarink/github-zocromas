@@ -1,7 +1,7 @@
 #!/bin/sh
 if [[ -f "sh/setup.sh" ]] && [[ -f "configure.ac" ]] ; then
   . sh/setup.sh
-  function testdist ()
+  function testdist_old ()
   {
     local instshdir instshname
     if [[ "$name" ]] ; then
@@ -85,6 +85,6 @@ if [[ -f "sh/setup.sh" ]] && [[ -f "configure.ac" ]] ; then
     fi
     return 0
   }
-  testdist $@
+  testdist_old $@
 fi
 

@@ -115,7 +115,6 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
         P_ERR;
       }
       ioMSG( "written(sent); new opts:%d; size: %d", msg->h.new_opts, msgsz );
-      /* fprintf( stderr, "(%d) wrote h/msg %d\n", r, msgsz ); */
     }
     mas_free( msg );
   }

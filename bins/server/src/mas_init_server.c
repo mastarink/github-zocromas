@@ -65,10 +65,12 @@ more:
 int
 mas_init_load_protos( void )
 {
+  int r = 0;
   int protos_num = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
 
   HMSG( "INIT PROTOS" );
+  MAS_LOG( "(%d) init / load protos", r );
   if ( !ctrl.proto_descs )
   {
     proto_descs = mas_calloc( opts.protos_num, sizeof( mas_transaction_protodesc_t ) );
@@ -83,11 +85,14 @@ mas_init_load_protos( void )
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
       }
       protos_num++;
+      MAS_LOG( "(%d) init / load protos #%d", r, protos_num );
     }
     ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
   }
-  return ctrl.proto_descs ? 0 : -1;
+  r = ctrl.proto_descs ? 0 : -1;
+  MAS_LOG( "(%d) init / load protos done", r );
+  return r;
 }
 
 /*
@@ -146,6 +151,7 @@ mas_init_pid( int indx, const char *name )
     }
     mas_free( pidpath );
   }
+  HMSG( "(%d) INIT %s", r, __func__ );
   return r;
 }
 
@@ -156,9 +162,10 @@ mas_init_pids( void )
   char *namebuf = NULL;
 
   namebuf = mas_malloc( 512 );
+  MAS_LOG( "(%d) init pids", r );
   if ( namebuf )
   {
-    int indx = 0;
+    int indx = -1;
 
     *namebuf = 0;
     HMSG( "PIDSDIR: %s", opts.pidsdir );
@@ -172,12 +179,17 @@ mas_init_pids( void )
       snprintf( namebuf, sizeof( namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
       indx = 1;
     }
-    if ( *namebuf )
-      r = mas_init_pid( indx, namebuf );
-    else
-      r = -1;
+    if ( indx >= 0 )
+    {
+      if ( *namebuf )
+        r = mas_init_pid( indx, namebuf );
+      else
+        r = -1;
+    }
     mas_free( namebuf );
   }
+  MAS_LOG( "(%d) init pids done", r );
+  HMSG( "(%d) INIT %s", r, __func__ );
   return r;
 }
 
@@ -188,10 +200,13 @@ mas_init_daemon( void )
   pid_t pid_child;
 
   HMSG( "INIT DAEMON" );
+  MAS_LOG( "(%d) init daemon", r );
   if ( ctrl.daemon )
   {
     HMSG( "DAEMONIZE" );
+    MAS_LOG( "(%d) init daemonize", r );
     pid_child = mas_fork(  );
+    MAS_LOG( "(%d) init fork", r );
     if ( pid_child == 0 )
     {
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
@@ -201,10 +216,12 @@ mas_init_daemon( void )
           int lck;
 
           lck = lockf( ctrl.pidfd[i], F_LOCK, 0 );
+          MAS_LOG( "(%d) init daemon; lock", r );
           HMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
         }
       }
       ctrl.child_pid = getpid(  );
+      ctrl.server_pid = getpid(  );
       HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
       /* sleep(200); */
       if ( ctrl.redirect_std )
@@ -213,20 +230,42 @@ mas_init_daemon( void )
         int ferrd = -1;
 
         foutd = mas_open( "daemon_stdout.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777 );
+        MAS_LOG( "(%d) init daemon; open foutd", r );
         ferrd = mas_open( "daemon_stderr.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777 );
-        ctrl.saved_stderr = dup( STDERR_FILENO );
-        ctrl.saved_stderr_file = fdopen( ctrl.saved_stderr, "w" );
-        ctrl.saved_stdout = dup( STDOUT_FILENO );
+        MAS_LOG( "(%d) init daemon; open ferrd", r );
+        ctrl.old_stderr = dup( STDERR_FILENO );
+        ctrl.old_stderrfile = fdopen( ctrl.old_stderr, "w" );
+        setvbuf( ctrl.old_stderrfile, NULL, _IONBF, 0 );
+        MAS_LOG( "(%d) init daemon; fdopen", r );
+        ctrl.old_stdout = dup( STDOUT_FILENO );
+        MAS_LOG( "(%d) init daemon; dup", r );
         dup2( foutd, STDOUT_FILENO );
+        MAS_LOG( "(%d) init daemon; dup2 / out", r );
         dup2( ferrd, STDERR_FILENO );
+        MAS_LOG( "(%d) init daemon; dup2 / err", r );
         mas_close( foutd );
+        MAS_LOG( "(%d) init daemon; close foutd", r );
         mas_close( ferrd );
+        MAS_LOG( "(%d) init daemon; close ferrd", r );
       }
       if ( ctrl.close_std && ctrl.daemon )
       {
+        int same;
+
+        same = ( ctrl.stderrfile == ctrl.msgfile );
         mas_close( STDIN_FILENO );
+        MAS_LOG( "(%d) init daemon; close STDIN", r );
         mas_close( STDOUT_FILENO );
+        MAS_LOG( "(%d) init daemon; close STDOUT", r );
+        MAS_LOG( "(%d) init to close stderr", r );
         mas_close( STDERR_FILENO );
+        ctrl.stderrfile = NULL;
+        if ( same )
+        {
+          ctrl.msgfile = ctrl.old_stderrfile;
+          MAS_LOG( "(%d) init daemon; same msgfile!!", r );
+        }
+        MAS_LOG( "(%d) init daemon; close STDERR", r );
       }
       /* mas_destroy_server(  ); */
     }
@@ -241,6 +280,9 @@ mas_init_daemon( void )
       r = -1;
     }
   }
+  MAS_LOG( "(%d) init daemon almost done", r );
+  HMSG( "(%d) INIT %s", r, __func__ );
+  MAS_LOG( "(%d) init daemon done", r );
   return r;
 }
 
@@ -253,6 +295,7 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   HMSG( "INIT SERVER" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
+  ctrl.server_pid = getpid(  );
 #  ifdef MAS_SERVER_NOLOG
   ctrl.log_disabled = 1;
 #  endif
@@ -260,6 +303,7 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   ctrl.is_client = 0;
   ctrl.is_server = 1;
   r = mas_pre_init( argc, argv, env );
+  HMSG( "(%d) INIT %s", r, __func__ );
 
   MAS_LOG( "init server" );
 #  ifdef MAS_USE_CURSES
@@ -268,24 +312,34 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
 #  endif
   if ( r >= 0 )
     r = mas_init( atexit_fun, initsig, argc, argv, env );
-  HMSG( "<- INIT" );
+  HMSG( "(%d) INIT %s", r, __func__ );
   if ( r >= 0 )
     r = mas_init_daemon(  );
+  HMSG( "(%d) INIT %s", r, __func__ );
   /* if ( ctrl.is_parent )       */
   /* {                           */
   /*   HMSG( "PARENT to exit" ); */
   /* }                           */
   /* else                        */
   {
+    MAS_LOG( "(%d) init server: to init threads", r );
     if ( r >= 0 )
       r = mas_threads_init(  );
+    HMSG( "(%d) INIT %s", r, __func__ );
+    MAS_LOG( "(%d) init server: to load protos", r );
     if ( r >= 0 )
       r = mas_init_load_protos(  );
+    HMSG( "(%d) INIT %s", r, __func__ );
+    MAS_LOG( "(%d) init server: to create lcontrols", r );
     if ( r >= 0 )
       mas_lcontrols_list_create(  );
+    HMSG( "(%d) INIT %s", r, __func__ );
     MAS_LOG( "init server done" );
+    MAS_LOG( "(%d) init server: to post-init", r );
     if ( r >= 0 )
       r = mas_post_init(  );
+    HMSG( "(%d) INIT %s", r, __func__ );
+    MAS_LOG( "(%d) end init server", r );
   }
   return r;
 }

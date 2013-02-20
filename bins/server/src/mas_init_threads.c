@@ -19,6 +19,11 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#ifndef MAS_SERVER_NOLOG
+#  include <mastar/log/mas_logger.h>
+#  include <mastar/log/mas_log.h>
+#endif
+
 #include <mastar/thtools/mas_thread_tools.h>
 
 #include "mas_init_threads.h"
@@ -44,7 +49,10 @@ more:
 int
 mas_threads_init( void )
 {
+  int r = 0;
+
   HMSG( "INIT THREADS" );
+  MAS_LOG( "(%d) init threads", r );
   mas_in_thread( MAS_THREAD_MAIN, NULL, NULL );
 
   pthread_rwlock_init( &ctrl.thglob.lcontrols_list_rwlock, NULL );
@@ -69,12 +77,12 @@ mas_threads_init( void )
   {
     int r;
 
-    size_t master_stacksize =  1024 * 40;
-    size_t ticker_stacksize =  1024 * 50;
-    size_t watcher_stacksize =  1024 * 50;
-    size_t logger_stacksize =  1024 * 100;
-    size_t listener_stacksize =  1024 * 50;
-    size_t transaction_stacksize =  1024 * 32;
+    size_t master_stacksize = 1024 * 40;
+    size_t ticker_stacksize = 1024 * 50;
+    size_t watcher_stacksize = 1024 * 50;
+    size_t logger_stacksize = 1024 * 100;
+    size_t listener_stacksize = 1024 * 50;
+    size_t transaction_stacksize = 1024 * 32;
 
 /* getrlimit(RLIMIT_STACK, &rlim); */
     r = pthread_attr_setstacksize( &ctrl.thglob.master_attr, master_stacksize );
@@ -107,7 +115,7 @@ mas_threads_init( void )
       P_ERR;
       EMSG( "setting listener stack %lu (min:%lu)?", listener_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
-       r = pthread_attr_setstacksize( &ctrl.thglob.transaction_attr, transaction_stacksize );
+    r = pthread_attr_setstacksize( &ctrl.thglob.transaction_attr, transaction_stacksize );
     if ( r )
     {
       P_ERR;
@@ -116,7 +124,8 @@ mas_threads_init( void )
   }
   ctrl.main_thread = pthread_self(  );
   ctrl.main_tid = mas_gettid(  );
-  return 0;
+  MAS_LOG( "(%d) init threads done", r );
+  return r;
 }
 
 void

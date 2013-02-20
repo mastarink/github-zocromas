@@ -28,10 +28,27 @@ more:
   mas_rcontrol_object.c
 */
 
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  if ( !ctrl.stderrfile )
+    ctrl.stderrfile = stderr;
+  if ( !ctrl.msgfile )
+    ctrl.msgfile = ctrl.stderrfile;
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
+}
+
+__attribute__ ( ( destructor ) )
+     static void master_destructor( void )
+{
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
+}
 
 /*
  * */
-void
+int
 mas_ctrl_init( mas_options_t * popts )
 {
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
@@ -41,12 +58,15 @@ mas_ctrl_init( mas_options_t * popts )
     ctrl.in_client = 1;
   else
     ctrl.keep_listening = 1;
-  
+
   ctrl.messages = !popts->nomessages;
+  if ( !ctrl.msgfile )
+    ctrl.msgfile = ctrl.stderrfile;
 
   ctrl.daemon = !popts->nodaemon;
   ctrl.redirect_std = !popts->noredirect_std;
   ctrl.close_std = !popts->noclose_std;
+  return 0;
 }
 
 void

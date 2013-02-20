@@ -168,12 +168,19 @@ info_cmd( STD_CMD_ARGS )
     }
     {
       len = snprintf( cp, bufsz,
-                      "(%u/%u) #%u Server info:\n\n\tbin: %s\n\tclients: {%lu - %lu = %lu}\n"
-                      "\t%s; %s; %s\n\tmodsdir:%s\n"
-                      "\t(%lu - %lu) logdir: %s;\n\tlogpath: %s;\n\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", level,
-                      this_command ? this_command->only_level : 0, ctrl.restart_cnt, ctrl.launcherv[0], ctrl.clients_came,
-                      ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, ctrl.log_q_came,
-                      ctrl.log_q_gone, opts.logdir, ctrl.logpath, ctrl.main_pid, ctrl.main_tid, ctrl.main_tid, ctrl.main_thread );
+                      "(%u/%u) #%u Server info:\n\n\texe: %s\n"
+                      "\tmain pid:%u;server pid:%u; \t\t [%lx]\n"
+                      "\tclients: {%lu - %lu = %lu}\n"
+                      "\t%s; %s; %s\n"
+                      "\tmodsdir:%s\n"
+                      "\tpidsdir:%s\n"
+                      "\t(%lu - %lu) logdir: %s;\n\tlogpath: %s;\n"
+                      "%c",
+                      level, this_command ? this_command->only_level : 0, ctrl.restart_cnt, ctrl.exepath,
+                      ctrl.main_pid, ctrl.server_pid, ctrl.server_thread,
+                      ctrl.clients_came,
+                      ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, opts.pidsdir, ctrl.log_q_came,
+                      ctrl.log_q_gone, opts.logdir, ctrl.logpath, '#' );
       cp += len;
       bufsz -= len;
     }

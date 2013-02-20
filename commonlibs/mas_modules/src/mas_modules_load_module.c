@@ -62,9 +62,9 @@ __mas_modules_load_module( const char *fullname, const char *name, int noerr )
       dler = mas_strdup( dler );
       if ( !noerr )
       {
-        MAS_LOG( "ERROR: module not loaded: '%s' (%s)", fullname, dler );
         EMSG( "%s", dler );
       }
+      MAS_LOG( "ERROR: module not loaded: '%s' (%s)", fullname, dler );
       if ( dler )
         mas_free( dler );
     }
@@ -119,6 +119,7 @@ mas_modules_load_module( const char *libname )
 {
   void *module_handle = NULL;
 
+  MAS_LOG( "load module %s @ %s", libname, opts.modsdir );
   if ( opts.modsdir )
     module_handle = _mas_load_module( libname, opts.modsdir, 1 );
   return module_handle;
@@ -129,6 +130,7 @@ mas_modules_load_proto( const char *libname )
 {
   void *module_handle = NULL;
 
+  MAS_LOG( "load proto %s @ %s", libname, opts.protodir );
   if ( opts.protodir )
     module_handle = _mas_load_module( libname, opts.protodir, 1 );
   HMSG( "PROTO LOAD %s %s", libname, module_handle ? "OK" : "FAIL" );

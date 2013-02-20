@@ -15,6 +15,7 @@ function make_m ()
     if [[ "$ername" ]] && ! [[ -f "$ername" ]] ; then
       echo ">>>>>>>>>>>>>> $( realpath $ername )" >&2
       if make -s $@  >$ername 2>&1 ; then
+        setup_vers
 #	rm $ername
   #     echo "$LINENO GOOD make_m" >&2
   	popd >/dev/null && return 0

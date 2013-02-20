@@ -58,8 +58,9 @@ sigint_han( int s )
     start_time = ( unsigned long ) time( NULL );
     ctrl.int_cnt = 0;
   }
-  fprintf( stderr, "INT %d of %d; i/c:%d; i/p:%d k/l:%u\n", ctrl.int_cnt, MAS_MAX_INT_2, ctrl.in_client, ctrl.in_pipe,
-           ctrl.keep_listening );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "INT %d of %d; i/c:%d; i/p:%d k/l:%u\n", ctrl.int_cnt, MAS_MAX_INT_2, ctrl.in_client, ctrl.in_pipe,
+             ctrl.keep_listening );
 /*
   if (pthread_equal( pthread_self(  ),ctrl.pth ))
   {
@@ -151,14 +152,18 @@ mas_atexit( void )
   extern unsigned long memory_balance;
 
   FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
-  print_memlist( FL );
+  if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
+    if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
+      if ( print_memlist( ctrl.msgfile, FL ) < 0 )
+        print_memlist( stderr, FL );
+
 #else
   FMSG( "AT EXIT" );
 #endif
-  if ( ctrl.saved_stderr_file )
+  if ( ctrl.old_stderrfile )
   {
-    fclose( ctrl.saved_stderr_file );
-    ctrl.saved_stderr_file = NULL;
+    fclose( ctrl.old_stderrfile );
+    ctrl.old_stderrfile = NULL;
   }
   FMSG( "======================================================================" );
 }
@@ -166,14 +171,18 @@ mas_atexit( void )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  if ( !ctrl.stderrfile )
+    ctrl.stderrfile = stderr;
   atexit( mas_atexit );
   ctrl.is_client = 1;
   ctrl.is_server = 0;
-  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

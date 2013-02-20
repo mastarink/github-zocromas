@@ -27,6 +27,7 @@ function configure_m ()
     fi
   fi
   popd >/dev/null
+  setup_vers
   return 1
 }
 function remove_unpacked_z ()
@@ -112,7 +113,7 @@ function install_z ()
   fi
   return 0
 }
-function testdist ()
+function testdist_m ()
 {
   local zips errfile
   echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2
@@ -185,3 +186,64 @@ SC
   fi
   return 0
 }
+function ebuild_m ()
+{
+  local cmd ebname ebname_base
+  cmd=$1
+  echo "[$ebuild_dir]" >&2
+  if [[ "$ebuild_dir" ]] && [[ -d "$ebuild_dir" ]] ; then
+    pushd $ebuild_dir >/dev/null
+    ebname="${mas_name}-${mas_vers}.ebuild"
+    ebname_base="${mas_name}-${mas_base_vers}.ebuild"
+    case $cmd in
+      list)
+	ls -l
+      ;;
+      check)
+	if [[ -f $ebname ]] ; then
+	  ls -l $ebname
+	else
+	  echo "no file '$ebname'"
+	  return 1
+	fi
+      ;;
+      update)
+        if ! [[ -f "$ebname" ]] && [[ -f "$ebname_base" ]] ; then
+	  cp $ebname_base $ebname
+	  echo "creating $ebname" >&2
+	else
+	  echo "$ebname OK" >&2
+	fi
+	if [[ "$distfile" ]] && [[ -f "$distfile" ]] && [[ -f $ebname ]] ; then
+#	  echo "Version:$mas_vers" >&2
+#	  echo "distfile:$distfile" >&2
+	  if [[ -f "/usr/portage/distfiles/$distname" ]] ; then
+	    rm /usr/portage/distfiles/$distname || return 1
+	  fi
+#	  echo "---saved dist---" >&2
+#	  ls -l $savedirdist/${mas_name}-*.tar.bz2 >&2
+	  cp -a $savedirdist/${mas_name}-*.tar.bz2 /usr/portage/distfiles/ || return 1
+	  if [[ -f Manifest ]] ; then
+	    rm Manifest || return 1
+	  fi
+#	  echo "---portage dist---" >&2
+#	  ls -l /usr/portage/distfiles/${mas_name}-*.tar.bz2 >&2
+#	  echo "---ebuilds etc.---" >&2
+#	  ls -l >&2
+	  echo "$mas_vers : updating Manifest" >&2
+	  ebuild $ebname manifest 2>/dev/null || return 1
+	  return 0
+#	  ls -l Manifest || return 1
+	else
+	  echo "no distfile ($distfile) or no '$ebname'" >&2
+	  return 1
+	fi
+      ;;
+      *)
+      ;;
+    esac
+    popd >/dev/null
+  fi
+  return 1
+}
+

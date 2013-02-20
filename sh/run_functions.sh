@@ -38,7 +38,7 @@ function run_installed ()
 }
 function run_any ()
 {
-  local binary builddir bname rname mcaller made
+  local binary rbinary builddir bname rname mcaller made
   mcaller=$1
   shift
   if [[ "$mcaller" == '.' ]] ; then
@@ -71,6 +71,14 @@ function run_any ()
     builddir="$build_at/src"
   fi
   binary="$builddir/$rname"
+  rbinary=$( realpath --relative-to=. $binary )
+# echo "mcaller:$mcaller" >&2
+# echo "rname:$rname" >&2
+# echo "bname:$bname" >&2
+# echo "instdir:$instdir" >&2
+# echo "binary:$binary" >&2
+# echo "rbinary:$rbinary" >&2
+# echo "MAS_ZOCROMAS_HERE:$MAS_ZOCROMAS_HERE" >&2
 
   if [[ "$rname" ]] ; then
      echo "<<< $rname >>>" >&2
@@ -81,9 +89,9 @@ function run_any ()
 
 #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
 #      echo "bash:to run  $builddir/$rname" >&2
-     echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
+     echo "bash:starting $MAS_ZOCROMAS_HERE : $rbinary" >&2
      if [[ "$made" ]] ||  make_any ; then
-       usleep 50000 && exec $binary "$@"
+       usleep 50000 && exec $rbinary "$@"
      else
        echo "make error" >&2
      fi

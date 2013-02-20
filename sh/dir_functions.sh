@@ -71,6 +71,7 @@ function setup_dirs ()
   #   export LD_LIBRARY_PATH=/usr/local/lib
 
       prjname=$( basename $indir )
+      ebuild_dir=$rootdir/ebuilds/mas-tar/$mas_name
       setup_vers
       export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
     fi

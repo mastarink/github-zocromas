@@ -26,6 +26,7 @@ related:
 mas_control_t ctrl = {
   .main_exit = 0,
   .main_pid = 0,
+  .master_pid = 0,
   .child_pid = 0,
   .main_thread = ( pthread_t ) 0,
   .main_tid = 0,
@@ -39,9 +40,9 @@ mas_control_t ctrl = {
   .logger_thread = ( pthread_t ) 0,
   .logger_tid = 0,
   .start_time = 0.0,
-  .saved_stderr = -1,
-  .saved_stderr_file = NULL,
-  .saved_stdout = -1,
+  .old_stderr = -1,
+  .old_stderrfile = NULL,
+  .old_stdout = -1,
   .transactions_time = 0.0,
   .fatal = 0,
 
