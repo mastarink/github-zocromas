@@ -37,3 +37,7 @@ server restart
 server info
 server restart
 server quit
+server info
+server quit
+server info
+server quit

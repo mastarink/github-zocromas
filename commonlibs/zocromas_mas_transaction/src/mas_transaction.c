@@ -7,6 +7,7 @@
 #include <sys/time.h>
 
 #include <pthread.h>
+#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -111,6 +112,11 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
           if ( r > 0 )
             prcontrol->proto_desc = &ctrl.proto_descs[np];
         }
+        if ( r < 0 )
+        {
+          MAS_LOG( "no function for proto %d. %s", np, ctrl.proto_descs[np].name );
+          break;
+        }
       }
 
       /* if ( r == 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_HTTP ) )    */
@@ -211,6 +217,11 @@ mas_transaction_th( void *trcontrol )
 {
   void *r = NULL;
   mas_rcontrol_t *prcontrol = NULL;
+
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoctrans" ) < 0 )
+  {
+    P_ERR;
+  }
 
   MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
   /* struct sched_param sched;                                               */

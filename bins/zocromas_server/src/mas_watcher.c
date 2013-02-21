@@ -6,6 +6,7 @@
 #include <sys/time.h>
 
 #include <pthread.h>
+#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -240,6 +241,10 @@ static void *
 mas_watcher_th( void *arg )
 {
   ctrl.watcher_tid = mas_gettid(  );
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zocwatch" ) < 0 )
+  {
+    P_ERR;
+  }
 
   MAS_LOG( "watcher start" );
   mas_in_thread( MAS_THREAD_WATCHER, NULL, NULL );

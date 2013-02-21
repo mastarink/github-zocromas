@@ -79,6 +79,7 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_LOG,
   MAS_CLI_OPT_NOTICKER,
   MAS_CLI_OPT_TICKER,
+  MAS_CLI_OPT_TICKER_MODE,
   MAS_CLI_OPT_NOWATCHER,
   MAS_CLI_OPT_WATCHER,
   MAS_CLI_OPT_NOMASTER,
@@ -106,50 +107,68 @@ static struct option cli_longopts[] = {
   {"test", no_argument, NULL, MAS_CLI_OPT_TEST},
   {"help", no_argument, NULL, MAS_CLI_OPT_HELP},
   {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},
-  {"daemon", no_argument, NULL, MAS_CLI_OPT_DAEMON},
+
   {"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
   {"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
   {"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE},
+
   {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},
   {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},
+
   {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},
   {"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO},
   {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},
   {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},
+
   {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},
   {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},
+
   {"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD},
   {"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD},
+
   {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},
   {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},
+
   {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},
   {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},
+
   {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},
   {"log", no_argument, NULL, MAS_CLI_OPT_LOG},
+
   {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},
   {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},
   {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
+
   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER},
   {"watcher", no_argument, NULL, MAS_CLI_OPT_WATCHER},
+
   {"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
   {"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER},
-  {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
-  {"watcher", no_argument, NULL, MAS_CLI_OPT_TICKER},
+  {"set-ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE},
+
   {"nomaster", required_argument, NULL, MAS_CLI_OPT_NOMASTER},
   {"master", no_argument, NULL, MAS_CLI_OPT_MASTER},
+
   {"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD},
   {"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD},
+
   {"nolistener", required_argument, NULL, MAS_CLI_OPT_NOLISTENER},
   {"listener", no_argument, NULL, MAS_CLI_OPT_LISTENER},
+
   {"nolisten", required_argument, NULL, MAS_CLI_OPT_NOLISTEN},
   {"listen", no_argument, NULL, MAS_CLI_OPT_LISTEN},
+
   {"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON},
+  {"daemon", no_argument, NULL, MAS_CLI_OPT_DAEMON},
+
   {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},
   {"host", required_argument, NULL, MAS_CLI_OPT_HOST},
   {"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS},
   {"port", required_argument, NULL, MAS_CLI_OPT_PORT},
+
   {"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG},
   {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},
+
   {NULL, 0, NULL, 0},
 };
 
@@ -214,6 +233,7 @@ mas_cli_make_option( int opt, const char *m_optarg )
     mMSG( "PROTO %d: %s [%p]", opts.protos_num, optarg, ( void * ) opts.protos );
     break;
   case MAS_CLI_OPT_PORT:
+    if ( optarg && *optarg )
     {
       opts.default_port = 0;
       sscanf( optarg, "%u", &opts.default_port );
@@ -282,6 +302,13 @@ mas_cli_make_option( int opt, const char *m_optarg )
     break;
   case MAS_CLI_OPT_TICKER:
     opts.noticker = 0;
+    break;
+  case MAS_CLI_OPT_TICKER_MODE:
+    if ( optarg && *optarg )
+    {
+      opts.ticker_mode = 0;
+      sscanf( optarg, "%u", &opts.ticker_mode );
+    }
     break;
   case MAS_CLI_OPT_NOWATCHER:
     opts.nowatcher = 1;

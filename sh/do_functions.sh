@@ -7,6 +7,7 @@ function doprj ()
   local list
   
   setup_dirs
+  setup_vers
   if [[ "$1" == 'full' ]] ; then
     list='autoreconf configure make install'
   else
@@ -16,7 +17,7 @@ function doprj ()
   for act in $list ; do
     shfile="sh/${act}.sh"
     if [[ "$act" ]] ; then
-      echo "${nn}.	$act $mas_name" >&2
+      echo "$nn.	$act : $mas_name . $mas_vers" >&2
     # echo "$act at $dir" >&2
       if false ; then
 	echo "SKIP $shfile @ `pwd`" >&2
@@ -34,6 +35,7 @@ function doprj ()
 	make_target uninstall || return 1
       elif [[ "$act" == 'ebuild'     ]] || [[ "$act" == 'e' ]] ; then
 	ebuild_m update || return 1
+	echo 'z.' >&2
       elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && ! eval $shfile ; then
 	echo "$LINENO FAIL action:$act prj:$prj mas_name:$mas_name ($shfile)" >&2
 	return 1
@@ -59,10 +61,10 @@ function doall ()
     nn=0
     for prj in $list ; do
       cd $rootdir
+      echo "-- prj:$prj" >&2
       dir=$( realpath $prj )  || return 1
       if [[ "$prj" ]] && [[ -d "$prj" ]] ; then
 	cd $dir                 || return 1
-#	setup_vers
 	doprj $@ || return 1
       else
 	echo "${nn}.	>>>> skipping dir [$dir]" >&2

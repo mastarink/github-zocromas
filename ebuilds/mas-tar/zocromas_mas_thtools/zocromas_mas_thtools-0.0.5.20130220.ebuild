@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="dev-libs/glib:2 mas-tar/zoctypes mas-tar/mas_wrap"
+DEPEND="dev-libs/glib:2 mas-tar/zocromas_zoctypes mas-tar/zocromas_mas_wrap"
 RDEPEND="${DEPEND}"
 
 src_configure() {

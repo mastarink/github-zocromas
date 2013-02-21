@@ -33,11 +33,10 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/minitest.c])
 
-# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
-AM_INIT_AUTOMAKE([foreign  -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 AM_MAINTAINER_MODE([enable])
 
-# AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -64,7 +63,6 @@ AC_PROG_CXX
 
 # AM_PROG_CC_STDC
 # AC_C_CONST
-AM_INIT_AUTOMAKE
 AM_PROG_CC_C_O
 
 LT_INIT
@@ -104,11 +102,11 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-# PKG_CHECK_MODULES([DEPSS], [mas_modules mas_fileinfo])
-# PKG_CHECK_MODULES([DEPSC], [mas_messageio])
-# PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_tools mas_control mas_io mas_channel mas_variables mas_thtools
+# PKG_CHECK_MODULES([DEPSS], [zocromas_mas_modules zocromas_mas_fileinfo])
+# PKG_CHECK_MODULES([DEPSC], [zocromas_mas_messageio])
+# PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control zocromas_mas_io zocromas_mas_channel zocromas_mas_variables zocromas_mas_thtools
 #				mas_msg mas_log mas_transaction mas_listener mas_init])
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrapc mas_tools])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools])
 
 # Configure options: --enable-debug[=no].
 
@@ -242,8 +240,6 @@ AC_SUBST([MAS_S_DATE])
 #OBJDIR=masobj
 AC_MSG_NOTICE([@@@@@@@@@ DEPS_LIBS: ${DEPS_LIBS} @@@@@@@@@])
 AC_MSG_NOTICE([@@@@@@@@@ DEPS_CFLAGS: ${DEPS_CFLAGS} @@@@@@@@@])
-AC_MSG_NOTICE([@@@@@@@@@ DEPSS_LIBS: ${DEPSS_LIBS} @@@@@@@@@])
-AC_MSG_NOTICE([@@@@@@@@@ DEPSS_CFLAGS: ${DEPSS_CFLAGS} @@@@@@@@@])
 
 
 AC_CONFIG_HEADERS([config.h])

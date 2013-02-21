@@ -10,6 +10,7 @@
 /* pthread_cleanup_push and pthread_cleanup_pop are macros and must always */
 /* be used in matching pairs at the same nesting level of braces.          */
 #include <pthread.h>
+#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -128,6 +129,7 @@ mas_listener_start( char *host_port, unsigned port )
   if ( host_port )
   {
     mas_lcontrol_t *plcontrol;
+
     HMSG( "LISTENER START" );
 
     plcontrol = mas_lcontrol_make( host_port, port );
@@ -160,7 +162,7 @@ mas_listener_start( char *host_port, unsigned port )
     else
     {
       P_ERR;
-      EMSG("why?");
+      EMSG( "why?" );
     }
   }
   else
@@ -253,6 +255,10 @@ mas_listener_th( void *arg )
   int r = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) < 0 )
+  {
+    P_ERR;
+  }
 
   /* {                                                                       */
   /*   int rs;                                                               */

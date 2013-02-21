@@ -64,6 +64,7 @@ mas_ctrl_init( mas_options_t * popts )
     ctrl.msgfile = ctrl.stderrfile;
 
   ctrl.daemon = !popts->nodaemon;
+  ctrl.ticker_mode = popts->ticker_mode;
   ctrl.redirect_std = !popts->noredirect_std;
   ctrl.close_std = !popts->noclose_std;
   return 0;

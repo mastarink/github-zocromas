@@ -26,6 +26,7 @@ extern mas_options_t opts;
 
 #include "mas_msg_tools.h"
 
+#define MAS_DROP_PREFIX "?zocromas_"
 
 /*
 this:
@@ -65,6 +66,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
 {
   int r = 0;
   char message[4096];
+  const char *qprefix;
 
 #ifdef MAS_USE_CURSES
   WINDOW *w_win;
@@ -117,6 +119,13 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
   {
     MFP( "\r" );
   }
+  qprefix = prefix;
+  {
+    int lqp = strlen( MAS_DROP_PREFIX );
+
+    if ( qprefix && *qprefix && 0 == strncmp( prefix, MAS_DROP_PREFIX, lqp ) )
+      qprefix = qprefix + lqp;
+  }
   if ( details && *message != *MAS_SEPARATION_LINE )
   {
     extern unsigned long memory_balance;
@@ -160,7 +169,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
       if ( ctrl.is_server && prefix && *prefix )
       {
         MFP( "\x1b[1;43;33m" );
-        MFP( prefix_fmt ? prefix_fmt : "-- %-5s", prefix );
+        MFP( prefix_fmt ? prefix_fmt : "-- %-5s", qprefix );
         MFP( "\x1b[0m" );
       }
       if ( pid == ctrl.main_pid )
@@ -273,7 +282,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
 #ifdef MAS_USE_CURSES
       if ( use_curses )
       {
-        /* MFP( prefix_fmt ? prefix_fmt : " %s   ", prefix ); */
+        /* MFP( prefix_fmt ? prefix_fmt : " %s   ", qprefix ); */
         MFP( "%-50s", message );
         MFP( "   %s", suffix ? suffix : "" );
       }
@@ -281,7 +290,7 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
 #endif
       {
         MFP( "\x1b[1;43;33m" );
-        MFP( prefix_fmt ? prefix_fmt : " %s ", prefix );
+        MFP( prefix_fmt ? prefix_fmt : " %s ", qprefix );
         MFP( "\x1b[0m \x1b[K%-50s\x1b[0m", message );
         MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
       }

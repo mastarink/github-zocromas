@@ -4,26 +4,24 @@
 # common
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
-logdir=log
+logdir=/mnt/new_misc/develop/autotools/zoc/log/
 log=1
-configdir=/home/mastar/.zocromas/
-configfilename=server
 max_config_backup=5
 messages=1
 default_port=5000
 save_opts=0
 save_opts_plus=0
 restart_sleep=0.25
-
+# -
 # server
 daemon=1
 single-instance=1
 single-child=1
 logger=1
-modsdir=/home/mastar/.mas/develop/autotools/zoc/install/lib/zocmds/
+modsdir=/mnt/new_misc/develop/autotools/zoc/install/lib/zocmds/
 pidsdir=/mnt/new_misc/develop/autotools/zoc/zocromas/pid/
-protodir=/home/mastar/.mas/develop/autotools/zoc/install/lib/zocprotos/
-
+protodir=/mnt/new_misc/develop/autotools/zoc/install/lib/zocromas_zocprotos/
+# -
 
 [listen 3]
 host=zocromas.mastar.lan:5005

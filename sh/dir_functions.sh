@@ -6,6 +6,9 @@ function make_dirs ()
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirdist" ]]; then
     mkdir "$savedirdist" || echo "$LINENO ERROR make_dirs" >&2
   fi
+  if [[ -d "$savedir" ]] && ! [[ -d "$savedirgentoo" ]]; then
+    mkdir "$savedirgentoo" || echo "$LINENO ERROR make_dirs" >&2
+  fi
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirtar" ]]; then
     mkdir "$savedirtar" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -44,6 +47,9 @@ function setup_dirs ()
     updir="$( realpath $indir/.. )"
     updirr="$( realpath $indirr/.. )"
     rootdir=$indirr
+    runconfigdirname=.zocromas
+    runconfigdir=$HOME/$runconfigdirname/
+    runconfigdir=$rootdir/zocromas/$runconfigdirname/
     export    MAS_WORK_ROOT_DIR=$rootdir
     export    MAS_WORK_IN_DIR=$rootdir
 
@@ -53,6 +59,7 @@ function setup_dirs ()
     tmpdir=$(realpath "$rootdir/tmp/" )
     
     savedirdist=$(realpath "$savedir/dist/" )
+    savedirgentoo=$(realpath "$savedir/gentoo/" )
     savedirtar=$(realpath "$savedir/tar/" )
     savedirtarme=$(realpath "${savedirtar}/${stamp}" )
     
@@ -70,8 +77,6 @@ function setup_dirs ()
       make_dirs
   #   export LD_LIBRARY_PATH=/usr/local/lib
 
-      prjname=$( basename $indir )
-      ebuild_dir=$rootdir/ebuilds/mas-tar/$mas_name
       setup_vers
       export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
     fi

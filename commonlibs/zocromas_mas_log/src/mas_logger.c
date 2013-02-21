@@ -10,6 +10,8 @@
 #ifndef MAS_NO_THREADS
 #  include <pthread.h>
 #endif
+#include <sys/prctl.h>
+
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -210,6 +212,10 @@ mas_logger_th( void *arg )
   int lf = -1;
 
   ctrl.logger_tid = mas_gettid(  );
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) < 0 )
+  {
+    P_ERR;
+  }
 
   MAS_LOG( "logger start" );
   mas_in_thread( MAS_THREAD_LOGGER, NULL, NULL );

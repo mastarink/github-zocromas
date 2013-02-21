@@ -15,16 +15,16 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="dev-libs/glib:2 mas-tar/zoctypes mas-tar/mas_wrap
-mas-tar/mas_channel
-mas-tar/mas_fileinfo
-mas-tar/mas_log
-mas-tar/mas_messageio
-mas-tar/mas_modules
-mas-tar/mas_msg
-mas-tar/mas_thtools
-mas-tar/mas_tools
-mas-tar/mas_variables
+DEPEND="dev-libs/glib:2 mas-tar/zocromas_zoctypes mas-tar/zocromas_mas_wrap
+mas-tar/zocromas_mas_channel
+mas-tar/zocromas_mas_fileinfo
+mas-tar/zocromas_mas_log
+mas-tar/zocromas_mas_messageio
+mas-tar/zocromas_mas_modules
+mas-tar/zocromas_mas_msg
+mas-tar/zocromas_mas_thtools
+mas-tar/zocromas_mas_tools
+mas-tar/zocromas_mas_variables
 "
 
 RDEPEND="${DEPEND}"

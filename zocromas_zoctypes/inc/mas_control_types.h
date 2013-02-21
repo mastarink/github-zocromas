@@ -118,12 +118,13 @@ struct mas_control_s
   unsigned forget_transactions:1;
   unsigned opts_saved:1;
   unsigned opts_saved_plus:1;
-  unsigned ticker_hide:1;
   unsigned watcher_hide:1;
   unsigned watcher_stop:1;
 
   unsigned log_disabled:1;
   unsigned log_offmem:1;
+  unsigned ticker_hide:1;
+  unsigned ticker_mode;
 
   mas_pthread_globals_t thglob;
 

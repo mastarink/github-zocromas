@@ -31,11 +31,10 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_client.c])
 
-# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
-AM_INIT_AUTOMAKE([foreign   -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
-# AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -104,9 +103,9 @@ AC_CHECK_LIB([uuid], [uuid_generate])
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrapc mas_tools mas_channel mas_init mas_logc mas_msg mas_messageio])
-# PKG_CHECK_MODULES([DEPSX], [mas_control mas_variables mas_io])
-PKG_CHECK_MODULES([DEPSX], [mas_control])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel zocromas_mas_init zocromas_mas_logc zocromas_mas_msg zocromas_mas_messageio])
+# PKG_CHECK_MODULES([DEPSX], [zocromas_mas_control zocromas_mas_variables zocromas_mas_io])
+PKG_CHECK_MODULES([DEPSX], [zocromas_mas_control])
 
 # Configure options: --enable-debug[=no].
 

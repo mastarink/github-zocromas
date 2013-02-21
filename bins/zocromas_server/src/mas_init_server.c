@@ -1,6 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_server_def.h" */
-/* #include "mas_basic_def.h"  */
 
 #include <string.h>
 #include <unistd.h>
@@ -9,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib0.h>
@@ -209,6 +208,11 @@ mas_init_daemon( void )
     MAS_LOG( "(%d) init fork", r );
     if ( pid_child == 0 )
     {
+      if ( prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) < 0 )
+      {
+        P_ERR;
+      }
+
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
       {
         if ( ctrl.pidfd[i] > 0 )
@@ -247,6 +251,9 @@ mas_init_daemon( void )
         MAS_LOG( "(%d) init daemon; close foutd", r );
         mas_close( ferrd );
         MAS_LOG( "(%d) init daemon; close ferrd", r );
+        setvbuf( stderr, NULL, _IONBF, 0 );
+        MFP( "MFP to redirected stderr\n" );
+        fprintf( stderr, "fprintf to redirected stderr\n" );
       }
       if ( ctrl.close_std && ctrl.daemon )
       {
@@ -268,6 +275,7 @@ mas_init_daemon( void )
         MAS_LOG( "(%d) init daemon; close STDERR", r );
       }
       /* mas_destroy_server(  ); */
+      setsid(  );
     }
     else if ( pid_child > 0 )
     {

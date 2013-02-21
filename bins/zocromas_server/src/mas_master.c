@@ -4,6 +4,8 @@
 #include <fcntl.h>
 
 #include <pthread.h>
+#include <sys/prctl.h>
+
 
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -189,6 +191,11 @@ mas_master_th( void *arg )
 
   HMSG( "MASTER_TH START" );
   ctrl.master_tid = mas_gettid(  );
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) < 0 )
+  {
+    P_ERR;
+  }
+
   ctrl.master_pid = getpid(  );
   ctrl.server_pid = getpid(  );
   /* mas_malloc(1234); */
@@ -258,6 +265,11 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 
   HMSG( "BUNCH START" );
   MAS_LOG( "bunch start" );
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) < 0 )
+  {
+    P_ERR;
+  }
+
 #ifdef MAS_INIT_SEPARATE
   r = mas_init_server( argc, argv, env );
 #else

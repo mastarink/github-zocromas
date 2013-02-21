@@ -1,23 +1,25 @@
 # Sat, 02 Feb 2013 21:13:57 +0200
 #
-# uuid=68e144b6-3298-4c1b-ac3a-c01b0de6dd5f
+# uuid=6d883baa-d8d6-4d24-ac20-94141e6606d8
+#common
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
-logdir=log
-logger=1
+logdir=/mnt/new_misc/develop/autotools/zoc/zocromas/log
 log=1
 max_config_backup=5
-daemon=0
 messages=1
 default_port=6006
 save_opts=0
 save_opts_plus=0
 restart_sleep=0.1
+# -
+# client
 disconnect_prompt=0
 wait_server=0
 message=mas CLIENT config
+# -
 
-[hosts 1]
+[hosts 2]
 host=/tmp/zocromas.socket
 host=zocromas.mastar.lan:5005
 

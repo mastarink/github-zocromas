@@ -103,7 +103,7 @@ AC_CHECK_LIB(pthread, pthread_create)
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap])
 
 # Configure options: --enable-debug[=no].
 

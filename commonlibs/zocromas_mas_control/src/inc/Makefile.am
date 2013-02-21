@@ -1,5 +1,5 @@
 # noinst_HEADERS = mas_control.h
 
-libmas_controlincludedir = $(includedir)/mastar/control
-libmas_controlinclude_HEADERS = mas_control.h
+libzocromas_mas_controlincludedir = $(includedir)/mastar/control
+libzocromas_mas_controlinclude_HEADERS = mas_control.h
 

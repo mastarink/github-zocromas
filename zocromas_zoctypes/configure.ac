@@ -101,7 +101,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-# PKG_CHECK_MODULES([DEPS], [zoctypes])
+# PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes])
 
 # Configure options: --enable-debug[=no].
 

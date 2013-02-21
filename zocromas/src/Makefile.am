@@ -35,7 +35,7 @@ bin_PROGRAMS=mas_minitest
 
 mas_minitest_SOURCES=minitest.c
 # mas_minitest_CFLAGS=@AM_CFLAGS@ -L\$(prefix)/lib -lmas_wrap -lmas_arg_tools -lmas_control
-# mas_minitest_CFLAGS=
+mas_minitest_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@
 mas_minitest_CFLAGS=@AM_CFLAGS@
 
 ##########################################################################################

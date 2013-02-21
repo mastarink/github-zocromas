@@ -9,6 +9,7 @@
 #include <malloc.h>
 
 #include <pthread.h>
+#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -25,7 +26,7 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 
 #ifdef MAS_USE_CURSES
-#include <mastar/msg/mas_curses.h>
+#  include <mastar/msg/mas_curses.h>
 #endif
 
 #include <mastar/thtools/mas_thread_tools.h>
@@ -140,11 +141,20 @@ mas_ticker( void )
         a60 = ( ( gone_history[0] - gone_history[60] ) / 60 ) / zinterval;
         if ( peak < a1 )
           peak = a1;
-        MFP( "\r\x1b[33;41;1m+%05lus\x1b[0m\x1b[37;44;1m(m%5lu\x1b[0m) [\x1b[33;42;1m%s\x1b[0m] %d; [%lu:%lu:%ld:%lu] "
-             "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K", elapsed_time, memory_balance, outstr, itick,
-             ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
-             ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
-
+        if ( ctrl.ticker_mode == 1 )
+        {
+          MFP( "\x1b]2;+%05lus(m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] "
+               "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x7", elapsed_time, memory_balance, outstr, itick,
+               ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
+               ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
+        }
+        else if ( ctrl.ticker_mode == 2 )
+        {
+          MFP( "\r\x1b[33;41;1m+%05lus\x1b[0m\x1b[37;44;1m(m%5lu\x1b[0m) [\x1b[33;42;1m%s\x1b[0m] %d; [%lu:%lu:%ld:%lu] "
+               "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K", elapsed_time, memory_balance, outstr, itick,
+               ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
+               ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
+        }
         /* MFP( "(%3lus:m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] " "(lock:%d:%d) i/p:%d;"                                                    */
         /*      " {%lu:%8.2f(%6.4g):%6.2f} {%6.2f:%6.2f:%6.2f} log %lu-%lu=%lu\x1b[K\r", elapsed_time, memory_balance, outstr, itick, */
         /*      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,      */
@@ -169,6 +179,10 @@ mas_ticker_th( void *arg )
   int old_cancelability = 0;
 
   ctrl.ticker_tid = mas_gettid(  );
+  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoctick" ) < 0 )
+  {
+    P_ERR;
+  }
 
   MAS_LOG( "ticker start" );
   pthread_setcanceltype( PTHREAD_CANCEL_ASYNCHRONOUS, &old_cancelability );
@@ -190,6 +204,7 @@ mas_ticker_start( void )
 {
   int r = 0;
 
+  MFP( "\x1b]2;starting ticker; mode:%d\x7", ctrl.ticker_mode );
   if ( !ctrl.ticker_thread )
   {
     {
@@ -197,7 +212,7 @@ mas_ticker_start( void )
 
       r = pthread_attr_getstack( &ctrl.thglob.ticker_attr, &ticker_stackaddr, &ticker_stacksize );
       tMSG( "creating ticker thread stack:%lu @ %p", ticker_stacksize, ticker_stackaddr );
-      HMSG( "+ TICKER" );
+      HMSG( "+ TICKER mode %d", ctrl.ticker_mode );
     }
 
     /* if ( !tmp )                 */
@@ -246,6 +261,7 @@ mas_ticker_stop( void )
     ctrl.ticker_thread = ( pthread_t ) 0;
     HMSG( "- TICKER" );
     FMSG( "TICKER STOPPED" );
+    MFP( "\x1b]2;stopped ticker; mode:%d\x7", ctrl.ticker_mode );
   }
   else
   {

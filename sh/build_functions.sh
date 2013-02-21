@@ -20,13 +20,15 @@ function configure_m ()
   fi
 # echo "$cfgdir/configure $configure_opts" >&2
   if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] \
-  		&& [[ "$build_at" ]] && pushd "$build_at"  >/dev/null ; then 
-    if $cfgdir/configure $configure_opts ; then
-      popd >/dev/null || return 1
-      return 0
+  		&& [[ "$build_at" ]] ; then
+    if pushd "$build_at"  >/dev/null ; then 
+      if $cfgdir/configure $configure_opts ; then
+	popd >/dev/null || return 1
+	return 0
+      fi
+      popd >/dev/null
     fi
   fi
-  popd >/dev/null
   setup_vers
   return 1
 }
@@ -193,8 +195,8 @@ function ebuild_m ()
   echo "[$ebuild_dir]" >&2
   if [[ "$ebuild_dir" ]] && [[ -d "$ebuild_dir" ]] ; then
     pushd $ebuild_dir >/dev/null
-    ebname="${mas_name}-${mas_vers}.ebuild"
-    ebname_base="${mas_name}-${mas_base_vers}.ebuild"
+    ebname="${ebuild_prefix}${mas_name}-${mas_vers}.ebuild"
+    ebname_base="${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild"
     case $cmd in
       list)
 	ls -l
@@ -214,24 +216,34 @@ function ebuild_m ()
 	else
 	  echo "$ebname OK" >&2
 	fi
-	if [[ "$distfile" ]] && [[ -f "$distfile" ]] && [[ -f $ebname ]] ; then
+	if [[ "$distfile" ]] && [[ -f "$distfile" ]] && [[ -f $ebname ]] \
+			&& [[ "$savedirdist" ]] && [[ "$savedirgentoo" ]] \
+			&& [[ -d "$savedirdist" ]] && [[ -d "$savedirgentoo" ]] ; then
 #	  echo "Version:$mas_vers" >&2
 #	  echo "distfile:$distfile" >&2
-	  if [[ -f "/usr/portage/distfiles/$distname" ]] ; then
-	    rm /usr/portage/distfiles/$distname || return 1
-	  fi
+########  if [[ -f "/usr/portage/distfiles/$distname" ]] ; then
+########    rm /usr/portage/distfiles/$distname || return 1
+########  fi
 #	  echo "---saved dist---" >&2
 #	  ls -l $savedirdist/${mas_name}-*.tar.bz2 >&2
-	  cp -a $savedirdist/${mas_name}-*.tar.bz2 /usr/portage/distfiles/ || return 1
+          echo "1. $savedirdist/${mas_name}-*.tar.bz2" >&2
+ 	  cp -a  $savedirdist/${mas_name}-*.tar.bz2 $savedirgentoo/ || return 1
+          echo "2. $savedirgentoo/${mas_name}-*" >&2
+ 	  /usr/bin/rename "$mas_name" "${ebuild_prefix}${mas_name}" $savedirgentoo/${mas_name}-*.tar.bz2 || return 1
+          echo "3. $savedirgentoo/${ebuild_prefix}${mas_name}-*.tar.bz2" >&2
+	  /bin/cp -a $savedirgentoo/${ebuild_prefix}${mas_name}-*.tar.bz2 /usr/portage/distfiles/ || return 1
+	  echo "4." >&2
 	  if [[ -f Manifest ]] ; then
 	    rm Manifest || return 1
 	  fi
+	  echo "5." >&2
 #	  echo "---portage dist---" >&2
 #	  ls -l /usr/portage/distfiles/${mas_name}-*.tar.bz2 >&2
 #	  echo "---ebuilds etc.---" >&2
 #	  ls -l >&2
-	  echo "$mas_vers : updating Manifest" >&2
-	  ebuild $ebname manifest 2>/dev/null || return 1
+	  echo "6. $mas_vers : updating Manifest" >&2
+	  ebuild $ebname manifest || return 1
+	  echo "7." >&2
 	  return 0
 #	  ls -l Manifest || return 1
 	else
@@ -240,9 +252,17 @@ function ebuild_m ()
 	fi
       ;;
       *)
+        echo "unknown cmd fpr ebuild_m : '$cmd'" >&2
       ;;
     esac
     popd >/dev/null
+  else
+    if [[ "$mas_name" == 'zocromas' ]] ; then
+      echo "skipping '$ebuild_dir'" >&2
+      return 0
+    else
+      echo "error: [$mas_name] no dir '$ebuild_dir'" >&2
+    fi
   fi
   return 1
 }

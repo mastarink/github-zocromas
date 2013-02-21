@@ -27,7 +27,7 @@ AC_PREREQ([2.69])
 # AM_INIT_AUTOMAKE
 
 # AC_INIT([zocmds],[1.0.1.3],[bug-report@mastarink.net])
-AC_INIT([zocmds1],m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
+AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_cmdmod_root.c])
 
@@ -100,7 +100,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools mas_io mas_msg mas_log])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_control zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log])
 
 # Configure options: --enable-debug[=no].
 

@@ -571,9 +571,9 @@ mas_opts_restore_nosection( const char *s )
   else if ( 0 == mas_strcmp2( s, "daemon=" ) )
     opts.nodaemon = nv;
   else if ( 0 == mas_strcmp2( s, "single-instance=" ) )
-    opts.single_instance = nv;
+    opts.single_instance = v;
   else if ( 0 == mas_strcmp2( s, "single-child=" ) )
-    opts.single_child = nv;
+    opts.single_child = v;
   else if ( 0 == mas_strcmp2( s, "messages=" ) )
     opts.nomessages = nv;
   else if ( 0 == mas_strcmp2( s, "save_opts=" ) )

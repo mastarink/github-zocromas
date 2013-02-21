@@ -27,7 +27,7 @@ AC_PREREQ([2.69])
 # AM_INIT_AUTOMAKE
 
 # AC_INIT([zocmds],[1.0.1.3],[bug-report@mastarink.net])
-AC_INIT([zocmds2],m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
+AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_cmdmod2_notify.c])
 
@@ -95,7 +95,7 @@ AC_TYPE_UID_T
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 PKG_CHECK_MODULES([LIBNOTIFY], [libnotify])
 PKG_CHECK_MODULES([GTK], [gtk+-2.0])
-PKG_CHECK_MODULES([DEPS], [zoctypes mas_wrap mas_control mas_tools mas_io mas_msg mas_log mas_variables])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_control zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log zocromas_mas_variables])
 
 # Checks for header files.
 

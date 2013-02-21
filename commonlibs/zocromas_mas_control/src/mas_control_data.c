@@ -112,6 +112,7 @@ mas_control_t ctrl = {
   .opts_saved_plus = 0,
   .mas_thread_key_once = PTHREAD_ONCE_INIT,
   .ticker_hide = 0,
+  .ticker_mode = 0,
   .watcher_hide = 0,
   .watcher_stop = 0,
   /* .pthread_custom_attr = ..., */

@@ -10,3 +10,4 @@ try/
 install/
 files*.txt
 *.env
+log/

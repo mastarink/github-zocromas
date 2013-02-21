@@ -3,12 +3,12 @@
 . sh/make_functions.sh
 function prjconfV ()
 {
-  if [[ "$build_at" ]] && [[ -f "$build_at/config.status" ]] ; then
-    $build_at/config.status -V
+  if [[ -f "./configure" ]] ; then
+    ./configure -V
   elif [[ -f "./config.status" ]] ; then
     ./config.status -V
-  elif [[ -f "./configure" ]] ; then
-    ./configure -V
+  elif [[ "$build_at" ]] && [[ -f "$build_at/config.status" ]] ; then
+    $build_at/config.status -V
   fi
 }
 function prjconffullversion ()
@@ -32,6 +32,7 @@ function setup_vers ()
   shift
   if ! [[ "$n" ]] ; then n=`prjconfname`    ; fi
   if ! [[ "$v" ]] ; then v=`prjconfversion` ; fi
+# echo "`pwd` SV>> $n . $v" >&2
   if [[ "$n" ]] && [[ "$v" ]] ; then
 #   echo "[$( basename $0 )] SET name:$n; version:$v" >&2
     if [[ -f "$indir/configure" ]] ; then
@@ -48,12 +49,17 @@ function setup_vers ()
       configuredir=$indir
       mas_name=$n
       mas_vers=$v
+#     echo "`pwd`>> [$mas_name] [$mas_vers]" >&2
       mas_base_vers='0.0.5.20130219'
     fi
     configure_opts="--prefix=$instdir --silent --enable-silent-rules --enable-tracemem --enable-debug"
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
   fi
+# echo "[$mas_name] [$mas_vers]" >&2
+  prjname=$( basename $indir )
+# ebuild_prefix=zocromas_
+  ebuild_dir=$rootdir/ebuilds/mas-tar/${ebuild_prefix}${mas_name}
 }
 function show_setup ()
 {
