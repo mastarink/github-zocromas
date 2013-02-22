@@ -1,0 +1,4 @@
+set print thread-events off
+handle SIGPIPE nostop noprint
+run sh/debug.sh --nodaemon
+bt
