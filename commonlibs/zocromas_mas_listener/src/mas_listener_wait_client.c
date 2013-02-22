@@ -69,7 +69,7 @@ mas_listener_find_free_transaction( mas_lcontrol_t * plcontrol )
 int
 mas_listener_wait_client( mas_lcontrol_t * plcontrol )
 {
-  int r = 0;
+  int r = 0, ro = 0;
   mas_rcontrol_t *prcontrol = NULL;
 
   plcontrol->h.status = MAS_STATUS_WAIT;
@@ -84,7 +84,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     /* wMSG( "to open channel opened : %d", plcontrol->h.pchannel->opened ); */
     {
       plcontrol->h.pchannel->cloned = 0;
-      r = mas_channel_open( plcontrol->h.pchannel );
+      ro = r = mas_channel_open( plcontrol->h.pchannel );
 /* ?????? fcntl(fd, F_SETFD, FD_CLOEXEC) */
       MAS_LOG( "(%d) opened channel ========", r );
     }
@@ -113,7 +113,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       MAS_LOG( "cond signal to R%lu", prcontrol->h.serial );
       rcond = pthread_cond_signal( &prcontrol->waitchan_cond );
     }
-    else if ( 1 )
+    else
     {
 
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
@@ -164,5 +164,5 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     /* tMSG( "ctrl.keep_listening" ); */
   }
   /* wMSG( "(%d) stop waiting", r ); */
-  return r;
+  return ro < 0 ? ( r > 0 ? r : 0 ) : r;
 }

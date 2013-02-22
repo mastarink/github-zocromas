@@ -13,12 +13,12 @@ extern pthread_key_t mas_thread_key;
 /* mas_lcontrol_t *mas_find_listener_control( pthread_t pth, int *ppos );                                */
 /* mas_rcontrol_t *mas_find_transaction_control( mas_lcontrol_t * plcontrol, pthread_t pth, int *ppos ); */
 
-mas_thdata_t *mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol,
-                             mas_rcontrol_t * prcontrol /*, mas_channel_t * pchannel */  );
+mas_thdata_t *mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * prcontrol /*, mas_channel_t * pchannel */  );
 void mas_in_thread_end( void );
 
 
 th_type_t mas_thself_type( void );
+const char *mas_thread_self_type_name( void );
 
 
 mas_lcontrol_t *mas_thself_plcontrol( void );

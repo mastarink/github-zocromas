@@ -25,7 +25,7 @@ function prjconfversion ()
 }  
 function setup_vers ()
 {
-  local n v
+  local n v rprefix rname_case
   n=$1
   shift
   v=$1
@@ -60,6 +60,59 @@ function setup_vers ()
   prjname=$( basename $indir )
 # ebuild_prefix=zocromas_
   ebuild_dir=$rootdir/ebuilds/mas-tar/${ebuild_prefix}${mas_name}
+
+  rprefix=$binprefix
+ 
+  mcaller_preset=$0
+  mcaller_fname=$( basename $0 )
+  if [[ $mcaller_fname =~ (run|debug|gdbcore)_(${rprefix}.*)\.sh$ ]] ; then
+    rname_preset=${BASH_REMATCH[2]}
+    rname_case=1
+  elif [[ "$MAS_ZOCROMAS_HERE" ]] ; then
+    rname_preset=$MAS_ZOCROMAS_HERE
+    rname_case=2
+  elif binary_preset="$build_at/src/${rprefix}${prjname}"  && [[ -x $binary_preset ]] ; then
+    rname_preset=$prjname
+    rname_case=3
+  elif binary_preset="$build_at/src/${rprefix}${mas_name}" && [[ -x $binary_preset ]] ; then
+    rname_preset=$mas_name
+    rname_case=4
+  elif binary_preset="$build_at/src/${mas_name}"           && [[ -x $binary_preset ]] ; then
+    rname_preset=$mas_name
+    rname_case=5
+    rprefix=''
+# else
+#   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
+#   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
+  fi
+  if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
+    short_name=${BASH_REMATCH[1]}
+  else
+    echo "$rname_preset ::: ${binprefix} :: ---" >&2
+  fi
+  if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
+    rbinary_preset=$( realpath --relative-to=$indir $binary_preset )
+  fi
+# rname_preset=$( basename $mcaller )
+# if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
+#   bname=${BASH_REMATCH[1]}
+#   rname="${rprefix}$bname"
+# elif [[ $rname =~ ^([a-z]+)$ ]] ; then
+#   bname=${BASH_REMATCH[1]}
+#   rname="${rprefix}$bname"
+# else
+#   echo "$LINENO error ; rname:'$rname'" >&2
+# fi
+
+# echo ">>>>>>> setup_vers <<<<<<" >&2
+# echo "@<<binprefix [$binprefix] >>@" >&2
+# echo "@<<rprefix [$rprefix] >>@" >&2
+# echo "@<<mcaller_preset $mcaller_preset >>@" >&2
+# echo "@<<mcaller_fname $mcaller_fname >>@" >&2
+# echo "@<<rname_preset [$rname_case]  $rname_preset >>@" >&2
+# echo "@<<short_name $short_name >>@" >&2
+# echo "@<<binary_preset $binary_preset >>@" >&2
+# echo "@<<rbinary_preset $rbinary_preset >>@" >&2
 }
 function show_setup ()
 {
@@ -102,4 +155,6 @@ function show_setup ()
 }
 
 export MAS_MAKE_CNT=0
+# echo "SETUPZ" >&2
 setup_dirs
+# echo "/SETUPZ" >&2

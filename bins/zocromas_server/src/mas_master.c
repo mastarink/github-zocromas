@@ -191,13 +191,17 @@ mas_master_th( void *arg )
 
   HMSG( "MASTER_TH START" );
   ctrl.master_tid = mas_gettid(  );
+  ctrl.master_pid = getpid(  );
+
+  ctrl.server_pid = ctrl.master_pid;
+  ctrl.server_tid = mas_gettid(  );
+  ctrl.server_thread = mas_pthread_self(  );
+
   if ( prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) < 0 )
   {
     P_ERR;
   }
 
-  ctrl.master_pid = getpid(  );
-  ctrl.server_pid = getpid(  );
   /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
   mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );

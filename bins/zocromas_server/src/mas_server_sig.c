@@ -15,6 +15,7 @@
 #include <signal.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
@@ -153,6 +154,19 @@ sigterm_han( int s )
 /*   (* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); *)                                                                         */
 /* }                                                                                                                                          */
 
+void
+pinfo( void )
+{
+  char *infos = NULL;
+
+  infos = mas_evaluate_command( "server info" );
+  if ( !ctrl.stderrfile || fputs( infos, ctrl.stderrfile ) < 0 )
+    if ( !ctrl.old_stderrfile || fputs( infos, ctrl.old_stderrfile ) < 0 )
+      fputs( infos, ctrl.msgfile );
+
+  /* show_info( ctrl.old_stderrfile ); */
+  mas_free( infos );
+}
 
 void
 sigint_han( int s )
@@ -175,50 +189,42 @@ sigint_han( int s )
     }
   }
   */
-  int_cnt++;
-  /* RL_SETSTATE( RL_STATE_DONE ); */
-  if ( int_cnt > MAS_MAX_INT_2 )
+  if ( ctrl.server_pid == mas_gettid(  ) )
   {
-    to_quit(  );
-
-    thMSG( "waiting at %lx", mas_pthread_self(  ) );
-
-    /* sleep( 10 ); */
-    /* exit( 3 ); */
-  }
-  /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
-  if ( ctrl.daemon && ctrl.old_stderrfile )
-  {
-    int fr = -1;
-
-    if ( int_cnt < 2 )
+    int_cnt++;
+    /* RL_SETSTATE( RL_STATE_DONE ); */
+    if ( int_cnt > MAS_MAX_INT_2 )
     {
-      char *infos = NULL;
+      to_quit(  );
 
-      infos = mas_evaluate_command( "server info" );
-      if ( ctrl.stderrfile )
-        fputs( infos, ctrl.stderrfile );
-      /* show_info( ctrl.old_stderrfile ); */
-      mas_free( infos );
+      thMSG( "waiting at %lx", mas_pthread_self(  ) );
+
+      /* sleep( 10 ); */
+      /* exit( 3 ); */
     }
-    fr = fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
-    fflush( ctrl.old_stderrfile );
-    /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
-  }
-  else
-  {
-    if ( int_cnt < 2 )
+    /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
+    if ( ctrl.daemon && ctrl.old_stderrfile )
     {
-      char *infos = NULL;
+      int fr = -1;
 
-      infos = mas_evaluate_command( "server info" );
-      if ( ctrl.stderrfile )
-        fputs( infos, ctrl.stderrfile );
-      /* show_info( ctrl.old_stderrfile ); */
-      mas_free( infos );
+      if ( int_cnt < 2 )
+        pinfo(  );
+      fr = fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
+      /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
     }
-    if ( ctrl.stderrfile )
-      fprintf( ctrl.stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.main_thread );
+    else
+    {
+      if ( int_cnt < 2 )
+        pinfo(  );
+      if ( !ctrl.stderrfile
+           || fprintf( ctrl.stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ),
+                       ctrl.main_thread ) < 0 )
+        if ( !ctrl.old_stderrfile
+             || fprintf( ctrl.old_stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ),
+                         ctrl.main_thread ) < 0 )
+          fprintf( ctrl.msgfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.main_thread );
+      errno = 0;
+    }
   }
   ctrl.sigint_time = ( unsigned long ) time( NULL );
 }

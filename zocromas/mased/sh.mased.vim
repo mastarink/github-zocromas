@@ -60,18 +60,12 @@ sfind build_functions.sh
 sfind run_functions.sh
 sfind debug_functions.sh
 
-tab sfind run_client.sh
-sfind run_duf.sh
+tab sfind run_duf.sh
 sfind run_minitest.sh
-sfind run_server.sh
 
-tab sfind debug_client.sh
-sfind debug_duf.sh
+tab sfind debug_duf.sh
 sfind debug_minitest.sh
-sfind debug_server.sh
 
-tab sfind gdbcore_client.sh
-sfind gdbcore_server.sh
-
-
+tab sfind abrt_server.sh
+sfind psshow.sh
 

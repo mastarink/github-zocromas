@@ -61,64 +61,10 @@ mas_msg_set_file( const char *path )
 }
 
 static int
-__mas_msg( const char *func, int line, int allow, int is_trace, int details, int msgcolor, const char *prefix_fmt,
-           const char *prefix, const char *suffix, const char *fmt, va_list args, th_type_t thtype )
+__mas_msg_prefix( int fdetails, pid_t pid, const char *prefix_fmt, const char *prefix )
 {
-  int r = 0;
-  char message[4096];
   const char *qprefix;
 
-#ifdef MAS_USE_CURSES
-  WINDOW *w_win;
-#endif
-  unsigned long cur_time = ( unsigned long ) time( NULL );
-  unsigned long elapsed_time;
-  pid_t pid;
-
-  pid = getpid(  );
-  pthread_t pth = 0;
-  mas_lcontrol_t *plcontrol = NULL;
-  mas_rcontrol_t *prcontrol = NULL;
-
-  /* const mas_channel_t *pchannel = NULL; */
-
-
-  pth = pthread_self(  );
-  /* pchannel = mas_thself_pchannel(  ); */
-  plcontrol = mas_thself_plcontrol(  );
-  prcontrol = mas_thself_prcontrol(  );
-
-
-#ifdef MAS_USE_CURSES
-  w_win = w_other;
-  if ( thtype == MAS_THREAD_MASTER )
-    w_win = w_main;
-  else if ( thtype == MAS_THREAD_LISTENER )
-    w_win = w_listen;
-  else if ( thtype == MAS_THREAD_TRANSACTION )
-    w_win = w_trans;
-  else
-    w_win = w_other;
-#endif
-  /* struct mallinfo mi; */
-
-  /* mi = mallinfo(  ); */
-
-  if ( !ctrl.stamp.start_time )
-    ctrl.stamp.start_time = ( unsigned long ) time( NULL );
-  elapsed_time = cur_time - ctrl.stamp.start_time;
-
-  vsnprintf( ( char * ) message, sizeof( message ), fmt, args );
-#ifdef MAS_USE_CURSES
-  if ( use_curses )
-  {
-    MFP( "\n*" );
-  }
-  else
-#endif
-  {
-    MFP( "\r" );
-  }
   qprefix = prefix;
   {
     int lqp = strlen( MAS_DROP_PREFIX );
@@ -126,23 +72,11 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
     if ( qprefix && *qprefix && 0 == strncmp( prefix, MAS_DROP_PREFIX, lqp ) )
       qprefix = qprefix + lqp;
   }
-  if ( details && *message != *MAS_SEPARATION_LINE )
-  {
-    extern unsigned long memory_balance;
 
 #ifdef MAS_USE_CURSES
-    if ( use_curses )
-    {
-      MFP( "{%d} %-5lus:%-5lu:", errno, elapsed_time, memory_balance );
-    }
-    else
-#endif
-    {
-      MFP( "  " );
-      MFP( "{%d} (%3lus:%5lu) ", errno, elapsed_time, memory_balance );
-    }
-#ifdef MAS_USE_CURSES
-    if ( use_curses )
+  if ( use_curses )
+  {
+    if ( fdetails )
     {
       if ( ctrl.is_server && prefix && *prefix )
       {
@@ -163,10 +97,13 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
         MFP( ">%5u:%1d:", pid, ctrl.keep_listening );
       }
     }
-    else
+  }
+  else
 #endif
+  {
+    if ( fdetails )
     {
-      if ( ctrl.is_server && prefix && *prefix )
+      if ( ctrl.is_server && qprefix && *qprefix )
       {
         MFP( "\x1b[1;43;33m" );
         MFP( prefix_fmt ? prefix_fmt : "-- %-5s", qprefix );
@@ -191,67 +128,94 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
           MFP( " :%1d: ", ctrl.keep_listening );
       }
     }
-
-    if ( ctrl.is_server )
+    else
     {
-#ifdef MAS_USE_CURSES
-      if ( use_curses )
-      {
-        unsigned color = 0;
+      MFP( "\x1b[1;43;33m" );
+      MFP( prefix_fmt ? prefix_fmt : " %s ", qprefix );
+    }
+  }
+  return 0;
+}
 
-        wattron( w_win, A_BOLD );
-        /* MFP( "pth:" ); */
-        wcolor_set( w_win, color, NULL );
-        switch ( thtype )
-        {
-        case MAS_THREAD_MASTER:
-          MFP( "M0:%u ", ctrl.status );
-          break;
-        case MAS_THREAD_LISTENER:
-          MFP( "L%lu:%u ", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
-          break;
-        case MAS_THREAD_TRANSACTION:
-          MFP( "R%lu:%u @ L%lu:%u ", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
-               prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
-               prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
-          break;
-        case MAS_THREAD_LOGGER:
-        case MAS_THREAD_WATCHER:
-        case MAS_THREAD_TICKER:
-          MFP( "%s[%lx]", mas_thread_type_name( thtype ), pth );
-          break;
-        default:
-          MFP( "[%lx]", pth );
-          break;
-        }
-        wcolor_set( w_win, 1, NULL );
-        MFP( ":" );
-        wattroff( w_win, A_BOLD );
-      }
-      else
-#endif
+static int
+__mas_msg_thread_info( int fdetails, th_type_t thtype )
+{
+  if ( fdetails )
+  {
+    pthread_t pth = 0;
+
+    pth = pthread_self(  );
+    mas_lcontrol_t *plcontrol = NULL;
+    mas_rcontrol_t *prcontrol = NULL;
+
+    plcontrol = mas_thself_plcontrol(  );
+    prcontrol = mas_thself_prcontrol(  );
+#ifdef MAS_USE_CURSES
+    if ( use_curses )
+    {
+      unsigned color = 0;
+
+      wattron( w_win, A_BOLD );
+      /* MFP( "pth:" ); */
+      wcolor_set( w_win, color, NULL );
+      switch ( thtype )
       {
-        switch ( thtype )
-        {
-        case MAS_THREAD_MASTER:
-          MFP( "pth:\x1b[1;%dm(%s) M0:%u\x1b[0m:", 33, mas_thread_type_name( thtype ), ctrl.status );
-          break;
-        case MAS_THREAD_LISTENER:
-          MFP( "pth:\x1b[1;%dm(%s) L%lu:%u\x1b[0m:", 34, mas_thread_type_name( thtype ),
-               plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
-          break;
-        case MAS_THREAD_TRANSACTION:
-          MFP( "pth:\x1b[1;%dm(%s) R%lu:%u @ L%lu:%u\x1b[0m:", 35, mas_thread_type_name( thtype ),
-               prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
-               prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
-               prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
-          break;
-        default:
-          MFP( "pth:\x1b[1;%dm(%s) [%lx]\x1b[0m:", 38, mas_thread_type_name( thtype ), pth );
-          break;
-        }
+      case MAS_THREAD_MASTER:
+        MFP( "M0:%u ", ctrl.status );
+        break;
+      case MAS_THREAD_LISTENER:
+        MFP( "L%lu:%u ", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+        break;
+      case MAS_THREAD_TRANSACTION:
+        MFP( "R%lu:%u @ L%lu:%u ", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
+             prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
+             prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
+        break;
+      case MAS_THREAD_LOGGER:
+      case MAS_THREAD_WATCHER:
+      case MAS_THREAD_TICKER:
+        MFP( "%s[%lx]", mas_thread_type_name( thtype ), pth );
+        break;
+      default:
+        MFP( "[%lx]", pth );
+        break;
+      }
+      wcolor_set( w_win, 1, NULL );
+      MFP( ":" );
+      wattroff( w_win, A_BOLD );
+    }
+    else
+#endif
+    {
+      switch ( thtype )
+      {
+      case MAS_THREAD_MASTER:
+        MFP( "pth:\x1b[1;%dm(%s) M0:%u\x1b[0m:", 33, mas_thread_type_name( thtype ), ctrl.status );
+        break;
+      case MAS_THREAD_LISTENER:
+        MFP( "pth:\x1b[1;%dm(%s) L%lu:%u\x1b[0m:", 34, mas_thread_type_name( thtype ),
+             plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+        break;
+      case MAS_THREAD_TRANSACTION:
+        MFP( "pth:\x1b[1;%dm(%s) R%lu:%u @ L%lu:%u\x1b[0m:", 35, mas_thread_type_name( thtype ),
+             prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
+             prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
+             prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
+        break;
+      default:
+        MFP( "pth:\x1b[1;%dm(%s) [%lx]\x1b[0m:", 38, mas_thread_type_name( thtype ), pth );
+        break;
       }
     }
+  }
+  return 0;
+}
+
+static int
+__mas_msg_code_position( int fdetails, int line, const char *func )
+{
+  if ( fdetails )
+  {
     if ( opts.f.bit.msg_funline )
     {
       MFP( " L%03d:%-25s:", line, func );
@@ -261,42 +225,103 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
     {
       MFP( "<>" );
     }
+  }
+  return 0;
+}
+
+int
+__mas_msg_message( int fdetails, const char *message )
+{
+#ifdef MAS_USE_CURSES
+  if ( use_curses )
+  {
+    MFP( fdetails ? "%-15s" : "%-50s", message );
+  }
+  else
+#endif
+  {
+    MFP( fdetails ? "\x1b[K%-15s" : "\x1b[0m \x1b[K%-50s\x1b[0m", message );
+  }
+  return 0;
+}
+
+int
+__mas_msg_suffix( int fdetails, const char *suffix )
+{
+#ifdef MAS_USE_CURSES
+  if ( use_curses )
+  {
+    MFP( "   %s", suffix ? suffix : "" );
+  }
+  else
+#endif
+  {
+    MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
+  }
+  return 0;
+}
+
+int
+__mas_msg_suffix2( int fdetails, const char *suffix )
+{
+  return __mas_msg_suffix( 0, suffix );
+}
+
+int
+__mas_msg_consume( int fdetails )
+{
+  extern unsigned long memory_balance;
+  unsigned long elapsed_time;
+  unsigned long cur_time = ( unsigned long ) time( NULL );
+
+  elapsed_time = cur_time - ctrl.stamp.start_time;
+
+  if ( !fdetails )
+  {
+    MFP( "{%d} +%05lu ", errno, elapsed_time );
+  }
+  else
+  {
 #ifdef MAS_USE_CURSES
     if ( use_curses )
     {
-      MFP( "%-15s", message );
-      MFP( "   %s", suffix ? suffix : "" );
+      MFP( "{%d} %-5lus:%-5lu:", errno, elapsed_time, memory_balance );
     }
     else
 #endif
     {
-      MFP( "\x1b[K%-15s", message );
-      MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
+      MFP( "  " );
+      MFP( "{%d} (%3lus:%5lu) ", errno, elapsed_time, memory_balance );
     }
   }
-  else if ( !details && *message != *MAS_SEPARATION_LINE )
-  {
-    MFP( "{%d} +%05lu ", errno, elapsed_time );
-    if ( prefix && *prefix )
-    {
+  return 0;
+}
+
+static int
+__mas_vmsg( const char *func, int line, int allow, int is_trace, int details, int msgcolor, const char *prefix_fmt,
+           const char *prefix, const char *suffix, const char *fmt, va_list args, th_type_t thtype )
+{
+  int r = 0;
+  char message[4096];
+
+  pid_t pid;
+  pid = getpid(  );
+
+  if ( !ctrl.stamp.start_time )
+    ctrl.stamp.start_time = ( unsigned long ) time( NULL );
+
+  vsnprintf( ( char * ) message, sizeof( message ), fmt, args );
 #ifdef MAS_USE_CURSES
-      if ( use_curses )
-      {
-        /* MFP( prefix_fmt ? prefix_fmt : " %s   ", qprefix ); */
-        MFP( "%-50s", message );
-        MFP( "   %s", suffix ? suffix : "" );
-      }
-      else
-#endif
-      {
-        MFP( "\x1b[1;43;33m" );
-        MFP( prefix_fmt ? prefix_fmt : " %s ", qprefix );
-        MFP( "\x1b[0m \x1b[K%-50s\x1b[0m", message );
-        MFP( "   \x1b[1;43;33m%s\x1b[0m\n", suffix ? suffix : "" );
-      }
-    }
+  if ( use_curses )
+  {
+    MFP( "\n*" );
   }
   else
+#endif
+  {
+    MFP( "\r" );
+  }
+  if ( *message == *MAS_SEPARATION_LINE )
   {
 #ifdef MAS_USE_CURSES
     if ( use_curses )
@@ -308,6 +333,16 @@ __mas_msg( const char *func, int line, int allow, int is_trace, int details, int
     {
       MFP( "{%d} @\x1b[K\x1b[0;43;30m%s\x1b[0m\n", errno, message );
     }
+  }
+  else
+  {
+    __mas_msg_consume( details );
+    __mas_msg_prefix( details, pid, prefix_fmt, prefix );
+    if ( ctrl.is_server )
+      __mas_msg_thread_info( details, thtype );
+    __mas_msg_code_position( details, line, func );
+    __mas_msg_message( details, message );
+    __mas_msg_suffix( details, suffix );
   }
   return r;
 }
@@ -326,15 +361,9 @@ mas_msg( const char *func, int line, int allow, int is_trace, int details, int m
   /* if (is_trace && ){} */
   if ( allow )
   {
-    pthread_t pth;
-
     th_type_t thtype;
 
     thtype = mas_thself_type(  );
-    /* pchannel = mas_thself_pchannel(  ); */
-
-    pth = pthread_self(  );
-
     {
       int can = 0;
 
@@ -366,7 +395,7 @@ mas_msg( const char *func, int line, int allow, int is_trace, int details, int m
       if ( can )
       {
         pthread_mutex_lock( &ctrl.thglob.msg_mutex );
-        r = __mas_msg( func, line, allow, is_trace, details, msgcolor, prefix_fmt, prefix, suffix, fmt, args, thtype );
+        r = __mas_vmsg( func, line, allow, is_trace, details, msgcolor, prefix_fmt, prefix, suffix, fmt, args, thtype );
         pthread_mutex_unlock( &ctrl.thglob.msg_mutex );
       }
     }
@@ -380,8 +409,6 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
 {
   int r = 0;
 
-  pid_t pid;
-  pthread_t pth;
   th_type_t thtype;
 
 #ifdef MAS_USE_CURSES
@@ -389,8 +416,6 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
 
   w_win = w_other;
 #endif
-  pid = getpid(  );
-  pth = pthread_self(  );
   thtype = mas_thself_type(  );
   pthread_mutex_lock( &ctrl.thglob.emsg_mutex );
 
@@ -402,11 +427,11 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
 
     se = strerror_r( errno, errbuf, sizeof( errbuf ) );
     snprintf( pref, sizeof( pref ), "(%u:%s) i/s:%u:i/c:%u", errno, se ? se : NULL, ctrl.keep_listening, ctrl.in_client );
-    r = __mas_msg( func, line, 1, 1, 1, 31, "{  %4s   }", pref, NULL, fmt, args, thtype );
+    r = __mas_vmsg( func, line, 1, 1, 1, 31, "{  %4s   }", pref, NULL, fmt, args, thtype );
   }
   else
   {
-    r = __mas_msg( func, line, 1, 1, 1, 31, "{  %4s   }", "E-R-R-O-R", NULL, fmt, args, thtype );
+    r = __mas_vmsg( func, line, 1, 1, 1, 31, "{  %4s   }", "E-R-R-O-R", NULL, fmt, args, thtype );
   }
   pthread_mutex_unlock( &ctrl.thglob.emsg_mutex );
   switch ( errno )

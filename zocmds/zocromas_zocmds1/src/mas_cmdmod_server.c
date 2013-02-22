@@ -7,8 +7,10 @@
 #include <stdarg.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/thtools/mas_thread_tools.h>
 #include <mastar/thtools/mas_ocontrol_tools.h>
 
 #include <mastar/channel/mas_channel.h>
@@ -168,19 +170,23 @@ info_cmd( STD_CMD_ARGS )
     }
     {
       len = snprintf( cp, bufsz,
-                      "(%u/%u) #%u Server info:\n\n\texe: %s\n"
-                      "\tmain pid:%u;server pid:%u; \t\t [%lx]\n"
+                      "(%u/%u) #%u Server info:\n"
+                      "\t[%u:%s]\n"
+                      "\texe: %s\n"
+                      "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
                       "\tclients: {%lu - %lu = %lu}\n"
                       "\t%s; %s; %s\n"
                       "\tmodsdir:%s\n"
                       "\tpidsdir:%s\n"
                       "\t(%lu - %lu) logdir: %s;\n\tlogpath: %s;\n"
                       "%c",
-                      level, this_command ? this_command->only_level : 0, ctrl.restart_cnt, ctrl.exepath,
-                      ctrl.main_pid, ctrl.server_pid, ctrl.server_thread,
+                      level, this_command ? this_command->only_level : 0, ctrl.restart_cnt,
+                      mas_gettid(  ), mas_thread_self_type_name(  ),
+                      ctrl.exepath,
+                      ctrl.main_pid, ctrl.master_pid, ctrl.child_pid, ctrl.server_pid, ctrl.server_thread,
                       ctrl.clients_came,
-                      ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, opts.pidsdir, ctrl.log_q_came,
-                      ctrl.log_q_gone, opts.logdir, ctrl.logpath, '#' );
+                      ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, opts.pidsdir,
+                      ctrl.log_q_came, ctrl.log_q_gone, opts.logdir, ctrl.logpath, '#' );
       cp += len;
       bufsz -= len;
     }
@@ -238,6 +244,15 @@ quit_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
+static char *
+segv_cmd( STD_CMD_ARGS )
+{
+  char *p = NULL;
+  char ho;
+
+  ho = *p;
+  return NULL;
+}
 
 
 
@@ -265,6 +280,9 @@ mas_cmd_t subcmdtable[] = {
   ,
   {
    7,.name = "quit",.function = quit_cmd,.libname = NULL} /* server quit */
+  ,
+  {
+   8, "segv", segv_cmd, NULL}   /* server segv */
   ,
   {
    999, NULL, NULL, NULL}

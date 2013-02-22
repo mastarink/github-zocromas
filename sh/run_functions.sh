@@ -42,47 +42,10 @@ function run_any ()
   mcaller=$1
   shift
   rprefix=$binprefix
-  if [[ "$mcaller" == '.' ]] ; then
-    if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
-      mcaller=$MAS_ZOCROMAS_HERE
-    elif make_any && [[ -x "$build_at/src/${rprefix}${prjname}" ]] ; then
-      made=1
-      mcaller=$prjname
-    elif make_any && [[ -x "$build_at/src/${rprefix}${mas_name}" ]] ; then
-      made=1
-      mcaller=$mas_name
-    elif make_any && [[ -x "$build_at/src/${mas_name}" ]] ; then
-      made=1
-      mcaller=$mas_name
-      rprefix=''
-    else
-      echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
-      echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
-    fi
-  fi
-#   echo "Please set " >&2
-#   echo "  export MAS_ZOCROMAS_HERE=server" >&2
-#   echo "    or" >&2
-#   echo "  export MAS_ZOCROMAS_HERE=client" >&2
-  rname=$( basename $mcaller )
-  if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
-    bname=${BASH_REMATCH[1]}
-    rname="${rprefix}$bname"
-  elif [[ $rname =~ ^([a-z]+)$ ]] ; then
-    bname=${BASH_REMATCH[1]}
-    rname="${rprefix}$bname"
-  else
-    echo "$LINENO error ; rname:'$rname'" >&2
-  fi
+  binary=$binary_preset
+  rname=$rname_preset
+  rbinary=$rbinary_preset
 
-# show_setup
-  if [[ -d "$build_at/src/$bname" ]] ; then
-    builddir="$build_at/src/$bname"
-  else
-    builddir="$build_at/src"
-  fi
-  binary="$builddir/$rname"
-  rbinary=$( realpath --relative-to=. $binary )
   echo "mcaller:$mcaller" >&2
   echo "rname:$rname" >&2
   echo "bname:$bname" >&2
@@ -90,7 +53,6 @@ function run_any ()
   echo "binary:$binary" >&2
   echo "rbinary:$rbinary" >&2
   echo "MAS_ZOCROMAS_HERE:$MAS_ZOCROMAS_HERE" >&2
-
   if [[ "$rname" ]] ; then
      echo "<<< $rname >>>" >&2
 #      env | grep MAS_ZOCROMAS >&2
@@ -133,4 +95,21 @@ function eddiffconfig ()
     echo "  export MAS_ZOCROMAS_HERE=client" >&2
   fi
 }
+function psshow ()
+{
+  export PS_FORMAT=tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
+# bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
+  /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-150 | sed -ne 's/$/  .../p'
+}
+function server_pid ()
+{
+  local spid name
+  for name in zocromas_server zocchild zocbunch ; do
+    if spid=$( ps -C $name -o pid= ) ; then
+      break
+    fi
+  done
+  echo $spid
+}
+
 

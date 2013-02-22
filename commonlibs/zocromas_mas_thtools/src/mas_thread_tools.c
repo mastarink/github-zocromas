@@ -40,6 +40,12 @@ more:
 */
 
 const char *
+mas_thread_self_type_name( void )
+{
+  return mas_thread_type_name( mas_thself_type(  ) );
+}
+
+const char *
 mas_thread_type_name( th_type_t typ )
 {
   const char *s = NULL;
@@ -285,7 +291,7 @@ mas_xxspthread_join( pthread_t thread, long sec, long nanos )
   if ( nanos < 0 )
     /* wait forever */ return pthread_join( thread, NULL );
   else if ( sec == 0 && nanos == 0 )
-    /* don't wait */ return pthread_tryjoin_np( thread , NULL);
+    /* don't wait */ return pthread_tryjoin_np( thread, NULL );
   else
     /* wnait nanoseconds */ return mas_xxtspthread_join( thread, &t );
 }

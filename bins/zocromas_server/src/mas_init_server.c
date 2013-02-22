@@ -11,6 +11,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib0.h>
+#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -160,6 +161,10 @@ mas_init_pids( void )
   int r = 0;
   char *namebuf = NULL;
 
+  ctrl.server_pid = getpid(  );
+  ctrl.server_tid = mas_gettid(  );
+  ctrl.server_thread = mas_pthread_self(  );
+
   namebuf = mas_malloc( 512 );
   MAS_LOG( "(%d) init pids", r );
   if ( namebuf )
@@ -208,6 +213,13 @@ mas_init_daemon( void )
     MAS_LOG( "(%d) init fork", r );
     if ( pid_child == 0 )
     {
+      ctrl.child_pid = getpid(  );
+      ctrl.child_tid = mas_gettid(  );
+      ctrl.child_thread = mas_pthread_self(  );
+      ctrl.server_pid = getpid(  );
+      ctrl.server_tid = mas_gettid(  );
+      ctrl.server_thread = mas_pthread_self(  );
+
       if ( prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) < 0 )
       {
         P_ERR;
@@ -224,8 +236,6 @@ mas_init_daemon( void )
           HMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
         }
       }
-      ctrl.child_pid = getpid(  );
-      ctrl.server_pid = getpid(  );
       HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
       /* sleep(200); */
       if ( ctrl.redirect_std )
@@ -303,7 +313,11 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   HMSG( "INIT SERVER" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
+  
   ctrl.server_pid = getpid(  );
+  ctrl.server_tid = mas_gettid(  );
+  ctrl.server_thread = mas_pthread_self(  );
+
 #  ifdef MAS_SERVER_NOLOG
   ctrl.log_disabled = 1;
 #  endif

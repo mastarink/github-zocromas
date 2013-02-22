@@ -41,3 +41,17 @@ server info
 server quit
 server info
 server quit
+quit
+server quit
+server segv
+server info
+server quit
+server info
+bye
+server info
+server quit
+bye
+server info
+server quit
+bye
+server quit

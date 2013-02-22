@@ -1,102 +1,42 @@
 function mas_debug ()
 {
-  local sedex cmdfile tmpcmd lt mcaller dname
+  local sedex cmdfile tmpcmd lt dname binsdir bin
 
-  mcaller=$1
-  shift
-  dname=$( basename $mcaller )
-  if [[ $dname =~ debug_([a-z]+)\.sh ]] ; then
-    bname=${BASH_REMATCH[1]}
-    dname="${binprefix}$bname"
-  elif [[ $dname =~ ^([a-z]+)$ ]] ; then
-    bname=${BASH_REMATCH[1]}
-    dname="${binprefix}$bname"
-  fi
-  echo "<< $dname >>">&2
-
-  if [[ -d "$build_at/src/$bname" ]] ; then
-    builddir="$build_at/src/$bname"
-  else
-    builddir="$build_at/src"
-  fi
-
-  if [[ -f "$builddir/.libs/$dname" ]] ; then
-    binsdir="$builddir/.libs"
-    lt=yes
-  else
-    binsdir="$builddir"
-    unset lt
-  fi
-  libsdirs="$( find -type d -name '.libs' -printf '%p:' )"
-
-
-
-
-# echo "mas_name: $mas_name" >&2
-# echo "bname: $bname" >&2
-# echo "dname: $dname" >&2
-# echo "builddir: $builddir" >&2
-# echo "binsdir: $binsdir" >&2
-
-
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
   ulimit -c
 
-  cmdfile="$debugdir/debug_${dname}.cmd"
-  sedex="s@^\(run\)@\1  $@@"
+  binsdir="${build_at}/src"
+  bin=${binsdir}/${rname_preset}
+  cmdfile="$debugdir/debug_${rname_preset}.cmd"
+  sedex="s@^\(run\)@\1 $@@"
 
   tmpcmd="${cmdfile}.tmp"
   sed -e "$sedex" "$cmdfile" > $tmpcmd
-  echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
+# echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
   
-
+# exit
   if [[ "$lt" ]] ; then
-    echo "[$mcaller] [$dname] [$bname] {$cmdfile} $binsdir/$dname -- $tmpcmd" >&2
     if [[ -f "$tmpcmd" ]] && [[ -s "$tmpcmd" ]] ; then
   # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpcmd
-      libtool --mode=execute gdb        $binsdir/$dname -x $tmpcmd
+      libtool --mode=execute gdb        $bin -x $tmpcmd
     else
       echo "no file : $cmdfile" >&2
     fi
   else
-    echo "[$mcaller] [$dname] [$bname] {$cmdfile} $binsdir/$dname -- $tmpcmd" >&2
-    gdb        $binsdir/$dname -x $tmpcmd
+    gdb        $bin -x $tmpcmd
   fi
 }
+
 function gdb_core_any ()
 {
-  local mcaller dname bname builddir binsdir libsdirs corename
+  local  dname bname builddir binsdir libsdirs corename
 
-  mcaller=$1
-  shift
-  dname=$( basename $mcaller )
-  if [[ $dname =~ gdbcore_([a-z]+)\.sh ]] ; then
-    bname=${BASH_REMATCH[1]}
-    dname="${binprefix}$bname"
-  elif [[ $dname =~ ^([a-z]+)$ ]] ; then
-    bname=${BASH_REMATCH[1]}
-    dname="${binprefix}$bname"
-  fi
-  echo "<< $dname >>">&2
-
-  if [[ -d "$build_at/src/$bname" ]] ; then
-    builddir="$build_at/src/$bname"
-  else
-    builddir="$build_at/src"
-  fi
-
-  if [[ -f "$builddir/.libs/$dname" ]] ; then
-    binsdir="$builddir/.libs"
-    lt=yes
-  else
-    binsdir="$builddir"
-    unset lt
-  fi
-  libsdirs="$( find -type d -name '.libs' -printf '%p:' )"
-# builddir="$indir/src/$bname"
-# binsdir="$builddir/.libs"
-# libsdirs="$( find -type d -name '.libs' -printf '%p ' )"
-
+    if corename=$( ls -1tr /tmp/*${rname_preset}.core.$UID.$UID.* | tail -1 ) && [[ -f "$corename" ]] ; then
+      echo "$LINENO $corename" >&2
+    else
+      echo "$LINENO $corename" >&2
+      unset corename
+    fi
 # echo "mas_name: $mas_name" >&2
 # echo "bname: $bname" >&2
 # echo "dname: $dname" >&2
@@ -104,13 +44,15 @@ function gdb_core_any ()
 # echo "binsdir: $binsdir" >&2
 
 
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
   ulimit -c
 
-  corename=$( ls -1tr /tmp/core.$UID.$UID.${dname}.* | tail -1 )
-  echo "dname: {$dname} ; core:{$corename}" >&2
-  if [[ -f "$corename" ]] ; then
-    libtool --mode=execute gdb $binsdir/$dname -c "$corename"
+  if [[ -f "$corename" ]] && [[ -x $binsdir/$dname ]] ; then
+    libtool --mode=execute gdb $binary_preset -c "$corename"
+  elif [[ -f "$corename" ]] && [[ -x $binsdir/$dname ]] ; then
+    libtool --mode=execute gdb $binary_preset -c "$corename"
+  else
+    echo "no file(s)  $binary_preset ( $corename )">&2
   fi
 }
 function debug_any ()

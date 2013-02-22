@@ -425,8 +425,8 @@ mas_destroy( void )
     /* k = print_memlist( ctrl.msgfile, FL ); */
     FMSG( "destroy, memory_balance:%ld;", memory_balance );
     /* k = print_memlist( ctrl.msgfile, FL ); */
-    if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
-      if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
+    if ( !ctrl.stderrfile || print_memlist( ctrl.stderrfile, FL ) < 0 )
+      if ( !ctrl.old_stderrfile || print_memlist( ctrl.old_stderrfile, FL ) < 0 )
         if ( print_memlist( ctrl.msgfile, FL ) < 0 )
           print_memlist( stderr, FL );
     /* k = print_memlist( ctrl.msgfile, FL ); */

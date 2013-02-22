@@ -27,6 +27,9 @@ function make_dirs ()
   if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpunpack" ]]; then
     mkdir "$tmpunpack" || echo "$LINENO ERROR make_dirs" >&2
   fi
+  if [[ "$debugdir" ]] && ! [[ -d "$debugdir" ]]; then
+    mkdir "$debugdir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
   if [[ "$wbuilddir" ]] && ! [[ -d "$wbuilddir" ]]; then
     mkdir "$wbuilddir" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -77,12 +80,12 @@ function setup_dirs ()
       make_dirs
   #   export LD_LIBRARY_PATH=/usr/local/lib
 
-      setup_vers
       export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
     fi
-    binprefix=mas_
+    binprefix=zocromas_
   else
     echo "FATAL : bad script call ($0)" >&2
   fi
+  setup_vers
 }
 
