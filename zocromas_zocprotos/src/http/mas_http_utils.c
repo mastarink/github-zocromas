@@ -89,7 +89,7 @@ mas_proto_http_write( mas_http_t * http, char *cbuf, size_t sz )
   {
     if ( http->prcontrol )
       w = mas_channel_write( http->prcontrol->h.pchannel, cbuf, sz );
-    MAS_LOG( "written http %u of %lu", w, sz );
+    MAS_LOG( "written http %u of %lu", w, ( unsigned long ) sz );
     if ( w > 0 )
       http->written += w;
   }

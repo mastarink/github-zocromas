@@ -90,7 +90,7 @@ mas_watcher( void )
 
   while ( !ctrl.fatal && !stop )
   {
-    unsigned long cur_time = ( unsigned long ) time( NULL );
+    /* unsigned long cur_time = ( unsigned long ) time( NULL ); */
     int out;
 
     if ( !ctrl.stamp.start_time )
@@ -100,10 +100,10 @@ mas_watcher( void )
       unsigned nlistener = 0;
       unsigned ntransaction = 0;
       unsigned nlistener_open = 0;
-      unsigned long elapsed_time;
+      /* unsigned long elapsed_time; */
       mas_lcontrol_t *plcontrol = NULL;
 
-      elapsed_time = cur_time - ctrl.stamp.start_time;
+      /* elapsed_time = cur_time - ctrl.stamp.start_time; */
       if ( out )
       {
         /* thMSG( "watcher %lu", elapsed_time ); */
@@ -268,10 +268,8 @@ mas_watcher_start( void )
   if ( !ctrl.watcher_thread )
   {
     {
-      int r;
-
-      r = pthread_attr_getstack( &ctrl.thglob.watcher_attr, &watcher_stackaddr, &watcher_stacksize );
-      tMSG( "creating watcher thread stack:%lu @ %p", watcher_stacksize, watcher_stackaddr );
+      ( void ) /* r = */ pthread_attr_getstack( &ctrl.thglob.watcher_attr, &watcher_stackaddr, &watcher_stacksize );
+      tMSG( "creating watcher thread stack:%lu @ %p", ( unsigned long ) watcher_stacksize, watcher_stackaddr );
       HMSG( "+ WATCHER" );
     }
 

@@ -1,4 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -187,8 +188,6 @@ mas_master( void )
 static void *
 mas_master_th( void *arg )
 {
-  int r = -1;
-
   HMSG( "MASTER_TH START" );
   ctrl.master_tid = mas_gettid(  );
   ctrl.master_pid = getpid(  );
@@ -212,7 +211,7 @@ mas_master_th( void *arg )
     mas_xpthread_join( ctrl.main_thread );
     ctrl.main_thread = 0;
   }
-  r = mas_master(  );
+  ( void ) /* r= */ mas_master(  );
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 
@@ -248,7 +247,8 @@ mas_master_optional_thread( void )
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
   if ( opts.make_master_thread )
   {
-    r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL );
+    /* r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
+    IEVAL( r, pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ) );
     if ( !ctrl.main_exit && ctrl.master_thread )
     {
       mas_xpthread_join( ctrl.master_thread );
@@ -257,7 +257,8 @@ mas_master_optional_thread( void )
   }
   else
   {
-    r = mas_master(  );
+    /* r = mas_master(  ); */
+    IEVAL( r, mas_master(  ) );
   }
   return r;
 }
@@ -265,7 +266,7 @@ mas_master_optional_thread( void )
 int
 mas_master_bunch( int argc, char *argv[], char *env[] )
 {
-  int r = -1;
+  int r = 0;
 
   HMSG( "BUNCH START" );
   MAS_LOG( "bunch start" );
@@ -275,20 +276,24 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   }
 
 #ifdef MAS_INIT_SEPARATE
-  r = mas_init_server( argc, argv, env );
+  /* r = mas_init_server( argc, argv, env ); */
+  IEVAL( r, mas_init_server( argc, argv, env ) );
 #else
   MAS_LOG( "(%d) bunch: to init +", r );
-  r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
-                     NULL );
+  /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
+  /*                    NULL );                                                                                                             */
+  IEVAL( r,
+         mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
+                        NULL ) );
   MAS_LOG( "(%d) bunch: init + done", r );
 #endif
   if ( ctrl.is_parent )
   {
     HMSG( "PARENT to exit" );
   }
-  else if ( r >= 0 )
+  else                          /* if ( r >= 0 ) */
   {
-    mas_master_optional_thread(  );
+    IEVAL( r, mas_master_optional_thread(  ) );
 #ifdef MAS_TRACEMEM
     {
       extern unsigned long memory_balance;

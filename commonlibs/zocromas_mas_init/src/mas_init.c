@@ -1,5 +1,7 @@
 #include <mastar/wrap/mas_std_def.h>
 /* #include "mas_basic_def.h" */
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,9 +10,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
-
-/* #include <pthread.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -126,12 +125,21 @@ mas_init_message( void )
 }
 
 static int
+error_handler_at_init( const char *func, int line, int rcode )
+{
+  mas_error( func, line, errno, " ERROR #%d", rcode );
+  mas_log( func, line, errno, " ErRoR #%d", rcode );
+  return 0;
+}
+
+static int
 mas_pre_init( char *runpath )
 {
   int r = 0;
   const char *pn;
 
   ctrl.status = MAS_STATUS_START;
+  ctrl.error_handler = error_handler_at_init;
   HMSG( "PRE-INIT" );
   ctrl.main_tid = mas_gettid(  );
   ctrl.start_time = mas_double_time(  );
@@ -157,7 +165,7 @@ mas_pre_init( char *runpath )
       if ( r >= 0 )
       {
         linkname[sz] = '\0';
-        HMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, (unsigned)sz, r, linkname );
+        HMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
       }
       else
       {
@@ -227,16 +235,18 @@ mas_post_init( void )
   }
   if ( !ctrl.is_parent )
   {
-    if ( r >= 0 && opts.msgfilename )
+    if ( opts.msgfilename )
     {
       HMSG( "MESSAGES to %s", opts.msgfilename );
-      mas_msg_set_file( opts.msgfilename );
+      MAS_LOG( "(%d) init msg to set file e%d", r, errno );
+      IEVAL( r, mas_msg_set_file( opts.msgfilename ) );
+      MAS_LOG( "(%d) init msg set file done e%d", r, errno );
+
       MFP( "\x1b[H\x1b[2J" );
     }
-    if ( r >= 0 )
-      r = mas_init_message(  );
+    IEVAL( r, mas_init_message(  ) );
   }
-  MAS_LOG( "(%d) init done", r );
+  MAS_LOG( "(%d) init done e%d", r, errno );
   HMSG( "(%d) POST INIT DONE", r );
   return r;
 }
@@ -279,31 +289,26 @@ mas_init( int argc, char **argv, char **env )
   HMSG( "INIT" );
   ctrl.stamp.lts = ( unsigned long ) time( NULL );
   ctrl.stamp.first_lts = ctrl.stamp.lts;
-  if ( r >= 0 )
-    r = mas_init_restart_count(  );
+  IEVAL( r, mas_init_restart_count(  ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts, ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
 
-  if ( r >= 0 && !( mas_init_argv( argc, argv, env ) > 1 ) )
-    r = mas_init_env(  );
+  if ( !( mas_init_argv( argc, argv, env ) > 1 ) )
+    IEVAL( r, mas_init_env(  ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
 
   /* HMSG( "opts.argv[0]: %s", opts.argv[0] ); */
   /* mas_init_message(  ); */
   /* atexit( atexit_fun ); */
-  if ( r >= 0 )
-    r = mas_init_sig(  );
+  IEVAL( r, mas_init_sig(  ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
 
-  r = mas_cli_options( opts.argc, opts.argv );
+  IEVAL( r, mas_cli_options( opts.argc, opts.argv ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
-  if ( r >= 0 )
-  {
-    ctrl.argv_nonoptind = r;
-    r = mas_ctrl_init( &opts );
-    HMSG( "(%d) INIT %d", r, __LINE__ );
-  }
+  ctrl.argv_nonoptind = r;
+  IEVAL( r, mas_ctrl_init( &opts ) );
+  HMSG( "(%d) INIT %d", r, __LINE__ );
 
   return r;
 }
@@ -320,8 +325,9 @@ mas_init_vplus( va_list args )
   while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
   {
     MAS_LOG( "(%d) init + #%d", r, pos );
-    r = ( fun ) (  );
-    HMSG( "(%d) INIT %d", r, __LINE__ );
+    IEVAL( r, ( fun ) (  ) );
+    HMSG( "(%d) INIT %d  - %d", r, __LINE__, ctrl.error_handler ? 1 : 0 );
+    /* ( ctrl.error_handler ) ( FL, 77 ); */
     pos++;
   }
   MAS_LOG( "(%d) init + done", r );
@@ -335,21 +341,17 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   va_list args;
 
   HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
-  if ( r >= 0 )
-    r = mas_pre_init( argv[0] );
+  IEVAL( r, mas_pre_init( argv[0] ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
-  if ( r >= 0 )
-    r = mas_init( argc, argv, env );
+  IEVAL( r, mas_init( argc, argv, env ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
   {
     va_start( args, env );
-    if ( r >= 0 )
-      r = mas_init_vplus( args );
+    IEVAL( r, mas_init_vplus( args ) );
     HMSG( "(%d) INIT %d", r, __LINE__ );
     va_end( args );
   }
-  if ( r >= 0 )
-    r = mas_post_init(  );
+  IEVAL( r, mas_post_init(  ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
   HMSG( "INIT %s", r < 0 ? "FAIL" : "OK" );
   return r;

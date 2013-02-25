@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <errno.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <netinet/tcp.h>
 
@@ -161,7 +163,7 @@ mas_channel_listen( mas_channel_t * pchannel )
 int
 mas_channel_deaf( mas_channel_t * pchannel )
 {
-  int r = -1;
+  int r = 0;
 
   if ( mas_channel_test( pchannel ) )
   {
@@ -172,17 +174,20 @@ mas_channel_deaf( mas_channel_t * pchannel )
       case CHN_SOCKET:
         if ( pchannel->fd_socket > 0 )
         {
-          r = mas_close( pchannel->fd_socket );
-          if ( r < 0 )
-          {
-            EMSG( "deaf err" );
-            P_ERR;
-          }
+          /* r = mas_close( pchannel->fd_socket ); */
+          /* if ( r < 0 )                          */
+          /* {                                     */
+          /*   EMSG( "deaf err" );                 */
+          /*   P_ERR;                              */
+          /* }                                     */
+          IEVAL( r, mas_close( pchannel->fd_socket ) );
           if ( r == 0 )
           {
             pchannel->fd_socket = 0;
             if ( pchannel->serv.path.sun_family == AF_UNIX && pchannel->serv.path.sun_path[0] )
-              unlink( pchannel->serv.path.sun_path );
+            {
+              IEVAL( r, unlink( pchannel->serv.path.sun_path ) );
+            }
           }
         }
         break;

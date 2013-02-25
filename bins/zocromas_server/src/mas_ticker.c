@@ -101,7 +101,7 @@ mas_ticker( void )
       char outstr[200];
       static unsigned long gone_history[61];
       static unsigned long gone_history_cnt = 0;
-      static double peak = 0.;
+      /* static double peak = 0.; */
 
       if ( !gone_history_cnt )
       {
@@ -133,14 +133,14 @@ mas_ticker( void )
 #endif
       {
         extern unsigned long memory_balance;
-        double a1, a2, a10, a60;
-
-        a1 = ( ( double ) ( ( gone_history[0] - gone_history[1] ) / 1 ) ) / zinterval;
-        a2 = ( ( double ) ( ( gone_history[0] - gone_history[2] ) / 2 ) ) / zinterval;
-        a10 = ( ( gone_history[0] - gone_history[10] ) / 10 ) / zinterval;
-        a60 = ( ( gone_history[0] - gone_history[60] ) / 60 ) / zinterval;
-        if ( peak < a1 )
-          peak = a1;
+        /* double a1, a2, a10, a60;                                                       */
+        /*                                                                                */
+        /* a1 = ( ( double ) ( ( gone_history[0] - gone_history[1] ) / 1 ) ) / zinterval; */
+        /* a2 = ( ( double ) ( ( gone_history[0] - gone_history[2] ) / 2 ) ) / zinterval; */
+        /* a10 = ( ( gone_history[0] - gone_history[10] ) / 10 ) / zinterval;             */
+        /* a60 = ( ( gone_history[0] - gone_history[60] ) / 60 ) / zinterval;             */
+        /* if ( peak < a1 ) */
+        /*   peak = a1;     */
         if ( ctrl.ticker_mode == 1 )
         {
           MFP( "\x1b]2;+%05lus(m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] "
@@ -208,10 +208,8 @@ mas_ticker_start( void )
   if ( !ctrl.ticker_thread )
   {
     {
-      int r;
-
-      r = pthread_attr_getstack( &ctrl.thglob.ticker_attr, &ticker_stackaddr, &ticker_stacksize );
-      tMSG( "creating ticker thread stack:%lu @ %p", ticker_stacksize, ticker_stackaddr );
+      ( void ) /* r = */ pthread_attr_getstack( &ctrl.thglob.ticker_attr, &ticker_stackaddr, &ticker_stacksize );
+      tMSG( "creating ticker thread stack:%lu @ %p", ( unsigned long ) ticker_stacksize, ticker_stackaddr );
       HMSG( "+ TICKER mode %d", ctrl.ticker_mode );
     }
 

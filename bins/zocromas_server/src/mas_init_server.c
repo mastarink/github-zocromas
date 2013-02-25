@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <string.h>
 #include <unistd.h>
@@ -90,7 +92,8 @@ mas_init_load_protos( void )
     ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
   }
-  r = ctrl.proto_descs ? 0 : -1;
+  /* r = ctrl.proto_descs ? 0 : -1; */
+  IEVAL( r, ctrl.proto_descs ? 0 : -1 );
   MAS_LOG( "(%d) init / load protos done", r );
   return r;
 }
@@ -185,10 +188,7 @@ mas_init_pids( void )
     }
     if ( indx >= 0 )
     {
-      if ( *namebuf )
-        r = mas_init_pid( indx, namebuf );
-      else
-        r = -1;
+      IEVAL( r, *namebuf ? mas_init_pid( indx, namebuf ) : -1 );
     }
     mas_free( namebuf );
   }
@@ -209,7 +209,8 @@ mas_init_daemon( void )
   {
     HMSG( "DAEMONIZE" );
     MAS_LOG( "(%d) init daemonize", r );
-    pid_child = mas_fork(  );
+    IEVAL( r, mas_fork(  ) );
+    pid_child = r;
     MAS_LOG( "(%d) init fork", r );
     if ( pid_child == 0 )
     {
@@ -268,6 +269,7 @@ mas_init_daemon( void )
       if ( ctrl.close_std && ctrl.daemon )
       {
         int same;
+
 /* Instead of close:                        */
 /* int tmpfd = open("/dev/null", O_WRONLY); */
 /* dup2(tmpfd, 2);                          */
@@ -296,10 +298,6 @@ mas_init_daemon( void )
       HMSG( "PARENT : %u @ %u @ %u", pid_child, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
     }
-    else
-    {
-      r = -1;
-    }
   }
   MAS_LOG( "(%d) init daemon almost done", r );
   HMSG( "(%d) INIT %s", r, __func__ );
@@ -316,7 +314,7 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   HMSG( "INIT SERVER" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
-  
+
   ctrl.server_pid = getpid(  );
   ctrl.server_tid = mas_gettid(  );
   ctrl.server_thread = mas_pthread_self(  );
@@ -327,7 +325,8 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.is_client = 0;
   ctrl.is_server = 1;
-  r = mas_pre_init( argc, argv, env );
+  /* r = mas_pre_init( argc, argv, env ); */
+  IEVAL( r, mas_pre_init( argc, argv, env ) );
   HMSG( "(%d) INIT %s", r, __func__ );
 
   MAS_LOG( "init server" );
@@ -335,11 +334,13 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   /* if ( r >= 0 )              */
   /*   r = mas_init_curses(  ); */
 #  endif
-  if ( r >= 0 )
-    r = mas_init( atexit_fun, initsig, argc, argv, env );
+  /* if ( r >= 0 )                                           */
+  /*   r = mas_init( atexit_fun, initsig, argc, argv, env ); */
+  IEVAL( r, mas_init( atexit_fun, initsig, argc, argv, env ) );
   HMSG( "(%d) INIT %s", r, __func__ );
-  if ( r >= 0 )
-    r = mas_init_daemon(  );
+  /* if ( r >= 0 )              */
+  /*   r = mas_init_daemon(  ); */
+  IEVAL( r, mas_init_daemon(  ) );
   HMSG( "(%d) INIT %s", r, __func__ );
   /* if ( ctrl.is_parent )       */
   /* {                           */
@@ -348,12 +349,14 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   /* else                        */
   {
     MAS_LOG( "(%d) init server: to init threads", r );
-    if ( r >= 0 )
-      r = mas_threads_init(  );
+    /* if ( r >= 0 )               */
+    /*   r = mas_threads_init(  ); */
+    IEVAL( r, mas_threads_init(  ) );
     HMSG( "(%d) INIT %s", r, __func__ );
     MAS_LOG( "(%d) init server: to load protos", r );
-    if ( r >= 0 )
-      r = mas_init_load_protos(  );
+    /* if ( r >= 0 )                   */
+    /*   r = mas_init_load_protos(  ); */
+    IEVAL( r, mas_init_load_protos(  ) );
     HMSG( "(%d) INIT %s", r, __func__ );
     MAS_LOG( "(%d) init server: to create lcontrols", r );
     if ( r >= 0 )
@@ -361,8 +364,9 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     HMSG( "(%d) INIT %s", r, __func__ );
     MAS_LOG( "init server done" );
     MAS_LOG( "(%d) init server: to post-init", r );
-    if ( r >= 0 )
-      r = mas_post_init(  );
+    /* if ( r >= 0 )            */
+    /*   r = mas_post_init(  ); */
+    IEVAL( r, mas_post_init(  ) );
     HMSG( "(%d) INIT %s", r, __func__ );
     MAS_LOG( "(%d) end init server", r );
   }

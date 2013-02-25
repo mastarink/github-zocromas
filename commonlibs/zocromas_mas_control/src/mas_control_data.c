@@ -22,6 +22,8 @@ related:
 
 */
 
+static int mas_error_handler( const char *func, int line, int rcode );
+
 
 mas_control_t ctrl = {
   .main_exit = 0,
@@ -56,7 +58,7 @@ mas_control_t ctrl = {
   /* .is_client = 0, */
   /* .is_server = 0, */
   .messages = 1,
-  
+
   .daemon = 0,
   .close_std = 0,
   .redirect_std = 0,
@@ -129,4 +131,25 @@ mas_control_t ctrl = {
              },
   .commands_num = 0,
   .commands = NULL,
+  .error_handler = mas_error_handler,
 };
+
+static int
+mas_error_handler( const char *func, int line, int rcode )
+{
+  if ( !ctrl.stderrfile || fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line ) < 0 )
+    if ( !ctrl.old_stderrfile || fprintf( ctrl.old_stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line ) < 0 )
+      if ( ctrl.msgfile )
+        fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+
+  if ( 0 )
+  {
+    if ( ctrl.stderrfile )
+      fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+    if ( ctrl.old_stderrfile )
+      fprintf( ctrl.old_stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+    if ( ctrl.msgfile )
+      fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+  }
+  return 0;
+}

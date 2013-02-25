@@ -1,4 +1,4 @@
-
+set path=src/xcromas,src/http,src/xcromas/inc,src/http/inc
 find mas_transaction_xcromas.c
 sfind mas_transaction_xcromas.h
 

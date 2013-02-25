@@ -47,10 +47,8 @@ more:
 mas_http_t *
 mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  int r = -1;
-
   if ( http )
-    r = mas_fileinfo_make_etag( http->content );
+    ( void ) /* r = */ mas_fileinfo_make_etag( http->content );
   /* rMSG( "(%d) CHECK ETAG %s : %s", r, http->content->filepath, http->content->etag ); */
   return http;
 }
@@ -164,12 +162,12 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     datasz = mas_fileinfo_data_size( http->content );
 
 
-    MAS_LOG( "to write body %lu [%s]", datasz, datasz < 100 ? data : "..." );
+    MAS_LOG( "to write body %lu [%s]", ( unsigned long ) datasz, datasz < 100 ? data : "..." );
     /* http = mas_proto_http_write_values( http, "body" ); */
     /* mas_transaction_write( prcontrol, _mas_fileinfo_data( fileinfo ), mas_fileinfo_data_size( fileinfo ) ); */
 
     http = mas_proto_http_write( http, data, datasz );
-    MAS_LOG( "written %lu of %lu", http ? http->written : 0, datasz );
+    MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
   }
   /* to close connection */
   return http;

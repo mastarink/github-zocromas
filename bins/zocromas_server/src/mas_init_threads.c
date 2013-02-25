@@ -89,37 +89,37 @@ mas_threads_init( void )
     if ( r )
     {
       P_ERR;
-      EMSG( "setting master stack %lu (min:%lu)?", master_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
+      EMSG( "setting master stack %lu (min:%lu)?", ( unsigned long ) master_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
     r = pthread_attr_setstacksize( &ctrl.thglob.ticker_attr, ticker_stacksize );
     if ( r )
     {
       P_ERR;
-      EMSG( "setting ticker stack %lu (min:%lu)?", ticker_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
+      EMSG( "setting ticker stack %lu (min:%lu)?", ( unsigned long ) ticker_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
     r = pthread_attr_setstacksize( &ctrl.thglob.watcher_attr, watcher_stacksize );
     if ( r )
     {
       P_ERR;
-      EMSG( "setting watcher stack %lu (min:%lu)?", watcher_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
+      EMSG( "setting watcher stack %lu (min:%lu)?", ( unsigned long ) watcher_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
     r = pthread_attr_setstacksize( &ctrl.thglob.logger_attr, logger_stacksize );
     if ( r )
     {
       P_ERR;
-      EMSG( "setting logger stack %lu (min:%lu)?", logger_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
+      EMSG( "setting logger stack %lu (min:%lu)?", ( unsigned long ) logger_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
     r = pthread_attr_setstacksize( &ctrl.thglob.listener_attr, listener_stacksize );
     if ( r )
     {
       P_ERR;
-      EMSG( "setting listener stack %lu (min:%lu)?", listener_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
+      EMSG( "setting listener stack %lu (min:%lu)?", ( unsigned long ) listener_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
     r = pthread_attr_setstacksize( &ctrl.thglob.transaction_attr, transaction_stacksize );
     if ( r )
     {
       P_ERR;
-      EMSG( "setting transaction stack %lu (min:%lu)?", transaction_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
+      EMSG( "setting transaction stack %lu (min:%lu)?", ( unsigned long ) transaction_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
   }
   ctrl.main_thread = pthread_self(  );

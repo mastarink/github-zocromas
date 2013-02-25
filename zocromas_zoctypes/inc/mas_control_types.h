@@ -42,6 +42,7 @@ struct mas_pthread_globals_s
   pthread_attr_t transaction_attr;
 };
 
+typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int rcode );
 
 struct mas_control_s
 {
@@ -73,6 +74,7 @@ struct mas_control_s
   char *binname;
   char *progname;
   char *exepath;
+  mas_error_handler_fun_t error_handler;
 
   void **loaded_modules;
   unsigned loaded_modules_cnt;

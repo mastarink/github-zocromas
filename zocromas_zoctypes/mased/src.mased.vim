@@ -8,6 +8,7 @@ set path=inc/,src/inc/
 " e source.vim
 
 find mas_common_types.h
+sfind mas_common_defs.h
 
 tab sfind mas_http_types.h
 sfind mas_unidata_types.h

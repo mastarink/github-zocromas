@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +12,10 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
+
+#include <mastar/log/mas_log.h>
+
+
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -45,19 +51,43 @@ more:
 int
 mas_msg_set_file( const char *path )
 {
+  int r = 0;
+
+  MAS_LOG( "set.msg" );
   if ( ctrl.msgfile )
   {
-    if ( ctrl.msgfile != ctrl.stderrfile )
-      fclose( ctrl.msgfile );
+    MAS_LOG( "set.msg" );
+    if ( ctrl.msgfile != ctrl.stderrfile && EOF == fclose( ctrl.msgfile ) )
+    {
+      IEVAL( r, -1 );
+    }
+    MAS_LOG( "set.msg" );
     ctrl.msgfile = NULL;
   }
+  r = 0;
+  MAS_LOG( "set.msg" );
   if ( path )
   {
+    MAS_LOG( "set.msg" );
     ctrl.msgfile = fopen( path, "a" );
     /* ffcntl( ctrl.msgfile, F_SETFL, O_SYNC ); */
-    setvbuf( ctrl.msgfile, NULL, _IONBF, 0 );
+    MAS_LOG( "set.msg" );
+    if ( ctrl.msgfile )
+    {
+      /* for /dev/pts/... : ERROR{29:Illegal seek} */
+      errno = 0;
+      MAS_LOG( "set.msg" );
+      IEVAL( r, setvbuf( ctrl.msgfile, NULL, _IONBF, 0 ) );
+      MAS_LOG( "set.msg" );
+    }
+    else
+    {
+      IEVAL( r, -1 );
+    }
+    MAS_LOG( "set.msg" );
   }
-  return 0;
+  MAS_LOG( "set.msg" );
+  return r;
 }
 
 static int
@@ -193,8 +223,8 @@ __mas_msg_thread_info( int fdetails, th_type_t thtype )
         MFP( "pth:\x1b[1;%dm(%s) M0:%u\x1b[0m:", 33, mas_thread_type_name( thtype ), ctrl.status );
         break;
       case MAS_THREAD_LISTENER:
-        MFP( "pth:\x1b[1;%dm(%s) L%lu:%u\x1b[0m:", 34, mas_thread_type_name( thtype ),
-             plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+        MFP( "pth:\x1b[1;%dm(%s) L%lu:%u\x1b[0m:", 34, mas_thread_type_name( thtype ), plcontrol ? plcontrol->h.serial : 0xffffffff,
+             plcontrol ? plcontrol->h.status : 999 );
         break;
       case MAS_THREAD_TRANSACTION:
         MFP( "pth:\x1b[1;%dm(%s) R%lu:%u @ L%lu:%u\x1b[0m:", 35, mas_thread_type_name( thtype ),
@@ -275,23 +305,22 @@ __mas_msg_consume( int fdetails )
   unsigned long cur_time = ( unsigned long ) time( NULL );
 
   elapsed_time = cur_time - ctrl.stamp.start_time;
-
   if ( !fdetails )
   {
-    MFP( "{%d} +%05lu ", errno, elapsed_time );
+    MFP( "{e%03d} +%05lu ", errno, elapsed_time );
   }
   else
   {
 #ifdef MAS_USE_CURSES
     if ( use_curses )
     {
-      MFP( "{%d} %-5lus:%-5lu:", errno, elapsed_time, memory_balance );
+      MFP( "{e%03d} %-5lus:%-5lu:", errno, elapsed_time, memory_balance );
     }
     else
 #endif
     {
       MFP( "  " );
-      MFP( "{%d} (%3lus:%5lu) ", errno, elapsed_time, memory_balance );
+      MFP( "{e%03d} (%3lus:%5lu) ", errno, elapsed_time, memory_balance );
     }
   }
   return 0;
@@ -299,17 +328,15 @@ __mas_msg_consume( int fdetails )
 
 static int
 __mas_vmsg( const char *func, int line, int allow, int is_trace, int details, int msgcolor, const char *prefix_fmt,
-           const char *prefix, const char *suffix, const char *fmt, va_list args, th_type_t thtype )
+            const char *prefix, const char *suffix, const char *fmt, va_list args, th_type_t thtype )
 {
   int r = 0;
   char message[4096];
-
   pid_t pid;
-  pid = getpid(  );
 
+  pid = getpid(  );
   if ( !ctrl.stamp.start_time )
     ctrl.stamp.start_time = ( unsigned long ) time( NULL );
-
   vsnprintf( ( char * ) message, sizeof( message ), fmt, args );
 #ifdef MAS_USE_CURSES
   if ( use_curses )
@@ -331,7 +358,7 @@ __mas_vmsg( const char *func, int line, int allow, int is_trace, int details, in
     else
 #endif
     {
-      MFP( "{%d} @\x1b[K\x1b[0;43;30m%s\x1b[0m\n", errno, message );
+      MFP( "{e%03d} @\x1b[K\x1b[0;43;30m%s\x1b[0m\n", errno, message );
     }
   }
   else
@@ -355,9 +382,7 @@ mas_msg( const char *func, int line, int allow, int is_trace, int details, int m
   va_list args;
 
   /* mas_channel_t *pchannel = NULL; */
-
   va_start( args, fmt );
-
   /* if (is_trace && ){} */
   if ( allow )
   {
@@ -408,7 +433,6 @@ int
 mas_verror( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
   int r = 0;
-
   th_type_t thtype;
 
 #ifdef MAS_USE_CURSES
@@ -418,7 +442,6 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
 #endif
   thtype = mas_thself_type(  );
   pthread_mutex_lock( &ctrl.thglob.emsg_mutex );
-
   if ( errno )
   {
     char pref[512];

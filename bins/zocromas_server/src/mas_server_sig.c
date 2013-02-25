@@ -205,11 +205,9 @@ sigint_han( int s )
     /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
     if ( ctrl.daemon && ctrl.old_stderrfile )
     {
-      int fr = -1;
-
       if ( int_cnt < 2 )
         pinfo(  );
-      fr = fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
+      fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
       /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
     }
     else

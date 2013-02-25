@@ -116,7 +116,7 @@ more:
 */
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t *proto_desc, const void *string_void )
+mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * proto_desc, const void *string_void )
 {
   int w = 0;
   mas_http_t *http = NULL;
@@ -192,7 +192,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t *p
       break;
     case MAS_HTTP_METHOD_GET:
     case MAS_HTTP_METHOD_HEAD:
-      MAS_LOG( "http: get/head :(%lu) %s", strlen( string ), string );
+      MAS_LOG( "http: get/head :(%u) %s", ( unsigned ) strlen( string ), string );
       http = mas_http_make_out_head_get( prcontrol, http );
       break;
     }
