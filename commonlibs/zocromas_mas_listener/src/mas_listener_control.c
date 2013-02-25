@@ -121,17 +121,23 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
     /* MAS_LOG( "cleanup transactions; locked" ); */
     if ( plcontrol->transaction_controls_list && !MAS_LIST_EMPTY( plcontrol->transaction_controls_list ) )
     {
-      mas_rcontrol_t *prcontrol = NULL, *prcontrol_tmp = NULL;
+      mas_rcontrol_t *prcontrol = NULL;
+      mas_rcontrol_t *prcontrol_next = NULL;
+
+      /* mas_rcontrol_t *prcontrol_tmp = NULL; */
 
       /* while ( plcontrol && ( prcontrol = MAS_LIST_FIRST( plcontrol->transaction_controls_list ) ) ) */
       /* pthread_rwlock_rdlock( &plcontrol->transaction_rwlock ); */
 
       /* MAS_LOG( "to clean transactions list (nanos:%lu)", nanos ); */
-      MAS_LIST_FOREACH_SAFE( prcontrol, plcontrol->transaction_controls_list, next, prcontrol_tmp )
+
+      for ( prcontrol = MAS_LIST_FIRST( plcontrol->transaction_controls_list ); prcontrol; prcontrol = prcontrol_next )
+        /* MAS_LIST_FOREACH_SAFE( prcontrol, plcontrol->transaction_controls_list, next, prcontrol_tmp ) */
       {
         /* thMSG( "to join r/th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) prcontrol->h.thread ); */
         if ( prcontrol->h.thread )
         {
+          prcontrol_next = MAS_LIST_NEXT( prcontrol, next );
 //        if ( nanos >= 0 )
 //        {
 //          thMSG( "waiting (%lu) cl. R%lu:%u @ L%lu:%u to go (server quit)", nanos, prcontrol->h.serial, prcontrol->h.status,
@@ -143,11 +149,11 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
             if ( 0 )
             {
               /* TEST */
-              int rcond;
+              /* int rcond; */
 
               if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) )
               {
-                rcond = pthread_cond_signal( &prcontrol->waitchan_cond );
+                ( void ) /* rcond = */ pthread_cond_signal( &prcontrol->waitchan_cond );
                 /* thMSG( "COND_SIGNAL :%d", rcond ); */
               }
             }
@@ -160,7 +166,7 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
               rmcnt++;
               /* thMSG( "joined L%lu:%u & R%lu:%u", plcontrol->h.serial, plcontrol->h.status, prcontrol->h.serial, prcontrol->h.status ); */
               MAS_LOG( "stopeed  R%lu:%u @ L%lu:%u; rmcnt:%u", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial,
-                     plcontrol->h.status, rmcnt );
+                       plcontrol->h.status, rmcnt );
             }
             else
             {
@@ -224,8 +230,7 @@ mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, lo
 
 
 int
-mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, th_type_t thtype, const char *vclass, const char *name,
-                                   const char *txt )
+mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, th_type_t thtype, const char *vclass, const char *name, const char *txt )
 {
   int r = 0;
 
@@ -239,8 +244,7 @@ mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, th_type_t thtype,
 }
 
 int
-mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, th_type_t thtype, const char *vclass, const char *name,
-                                const char *txt )
+mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, th_type_t thtype, const char *vclass, const char *name, const char *txt )
 {
   int r = 0;
 

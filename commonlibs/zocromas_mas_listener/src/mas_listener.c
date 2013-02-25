@@ -134,9 +134,7 @@ mas_listener_start( char *host_port, unsigned port )
 
     plcontrol = mas_lcontrol_make( host_port, port );
     {
-      int r;
-
-      r = pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
+      ( void ) pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
       /* thMSG( "cr. listener th. stack:%lu @ %p", listener_stacksize, listener_stackaddr ); */
     }
     if ( opts.listener_single )
@@ -224,9 +222,9 @@ mas_listener_cleanup( void *arg )
   }
   /* thMSG( "cleanup for l/th %lx", mas_pthread_self(  ) ); */
   /* thMSG( "C DELETE %d %p", __LINE__, ( void * ) plcontrol ); */
-  /* NOT HERE : mas_lcontrol_delete( plcontrol ); */
+  /* NOT HERE : mas_lcontrol_remove_delete( plcontrol ); */
   MAS_LOG( "listener cleanup; to delete plc:%p", ( void * ) plcontrol );
-  mas_lcontrol_delete( plcontrol );
+  mas_lcontrol_remove_delete( plcontrol );
 }
 
 int
@@ -252,7 +250,6 @@ mas_listener( mas_lcontrol_t * plcontrol )
 void *
 mas_listener_th( void *arg )
 {
-  int r = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
   if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) < 0 )
@@ -297,10 +294,12 @@ mas_listener_th( void *arg )
     }
 #endif
     {
+      /* int r = 0; */
+
       /* thMSG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port ); */
       MAS_LOG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port );
       pthread_cleanup_push( mas_listener_cleanup, plcontrol );
-      r = mas_listener( plcontrol );
+      ( void ) /*r = */ mas_listener( plcontrol );
       pthread_cleanup_pop( 1 );
     }
   }

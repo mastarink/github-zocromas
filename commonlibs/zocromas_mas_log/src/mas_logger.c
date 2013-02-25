@@ -249,9 +249,7 @@ mas_logger_start( void )
     pthread_setconcurrency( 4 );
     MAS_LOG( "starting logger th. [concurrency:%u]", pthread_getconcurrency(  ) );
     {
-      int r;
-
-      r = pthread_attr_getstack( &ctrl.thglob.logger_attr, &logger_stackaddr, &logger_stacksize );
+      (void) pthread_attr_getstack( &ctrl.thglob.logger_attr, &logger_stackaddr, &logger_stacksize );
       /* thMSG( "creating logger thread stack:%lu @ %p", logger_stacksize, logger_stackaddr ); */
     }
     /* r = mas_xpthread_create( &ctrl.logger_thread, mas_logger_th, MAS_THREAD_LOGGER, NULL ); */

@@ -136,14 +136,6 @@ mas_other_free( void *p )
   MAS_FREE( p );
 }
 
-void
-mas_tmp(  )
-{
-  int k;
-
-  k = 1;
-}
-
 #ifdef MAS_TRACEMEM
 int imemar = 0;
 mas_mem_head_t *memar[4096];

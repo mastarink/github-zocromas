@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libzocromas_mas_log.la libzocromas_mas_logc.la libzocromas_mas
 
 
 libzocromas_mas_logs_la_SOURCES          = mas_log.c mas_logger.c
-libzocromas_mas_logs_la_CFLAGS=@AM_CFLAGS@  -pthreads
+libzocromas_mas_logs_la_CFLAGS=@AM_CFLAGS@  -pthread
 libzocromas_mas_logs_la_LDFLAGS=@AM_LDFLAGS@   @LIBS@
 
 libzocromas_mas_logc_la_SOURCES          = mas_log.c mas_logger.c

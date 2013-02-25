@@ -147,10 +147,11 @@ size_t
 mas_fwrite( const void *ptr, size_t size, size_t nmemb, FILE * stream )
 {
   size_t w;
-  int rf;
+  /* int rf; */
 
   w = fwrite( ptr, size, nmemb, stream );
-  rf = fflush( stream );
+  /* rf = fflush( stream ); */
+  (void) fflush( stream );
   /* mMSG( "written %ld rf:%d", w, rf ); */
   return w;
 }

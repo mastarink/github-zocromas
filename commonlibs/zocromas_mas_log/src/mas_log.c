@@ -65,35 +65,29 @@ mas_log_delete_loginfo( mas_loginfo_t * li )
 void
 mas_log_clean_queue( void )
 {
-  mas_loginfo_t *li = NULL, *li_tmp;
+  mas_loginfo_t *li = NULL;
   mas_loginfo_list_head_t *log_list;
 
   log_list = mas_logger_list( 0 );
   ctrl.keep_logging = 0;
-  if ( log_list )
+  while ( log_list && !MAS_LIST_EMPTY( log_list ) && ( li = MAS_LIST_FIRST( log_list ) ) )
   {
-    /* TODO mutex */
-    if ( !MAS_LIST_EMPTY( log_list ) )
-    {
-      MAS_LIST_FOREACH_SAFE( li, log_list, next, li_tmp )
-      {
 #ifndef MAS_NO_THREADS
-        /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
-        pthread_rwlock_wrlock( &logger_queue_rwlock );
+    /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
+    pthread_rwlock_wrlock( &logger_queue_rwlock );
 #endif
-        MAS_LIST_REMOVE( log_list, li, mas_loginfo_s, next );
-        ctrl.log_q_gone++;
+    MAS_LIST_REMOVE_HEAD( log_list, next );
+    ctrl.log_q_gone++;
 #ifndef MAS_NO_THREADS
-        pthread_rwlock_unlock( &logger_queue_rwlock );
-        /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
+    pthread_rwlock_unlock( &logger_queue_rwlock );
+    /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
 #endif
-        mas_log_delete_loginfo( li );
-      }
-    }
-    mas_delete_logger_list(  );
-    /* HMSG( "CLEARED logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
-    /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
+    mas_log_delete_loginfo( li );
   }
+  mas_delete_logger_list(  );
+  /* HMSG( "CLEARED logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
+  /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
+
   /* HMSG( "cleaned logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
   /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
 }

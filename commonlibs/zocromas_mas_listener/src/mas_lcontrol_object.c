@@ -189,7 +189,7 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const char *host, unsigned port )
 
 /* naming : free members + free = delete */
 int
-mas_lcontrol_delete( mas_lcontrol_t * plcontrol )
+mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
 {
   if ( plcontrol )
   {

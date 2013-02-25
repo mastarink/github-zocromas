@@ -132,6 +132,11 @@ function testdist_m ()
     zips=$( echo $build_at/${mas_fullname}.tar.{bz2,gz} )
     echo "saving $zips to $savedirdist" >&2
     mv $zips $savedirdist || return 1
+    if [[ -f $savedirdist/${mas_fullname}.tar.bz2 ]] && [[ -d /mnt/new_misc/vboxshared/zoc/ ]] ; then
+      cp $savedirdist/${mas_fullname}.tar.bz2  /mnt/new_misc/vboxshared/zoc/
+      ls -l /mnt/new_misc/vboxshared/zoc/${mas_fullname}.tar.bz2
+      chmod a+r /mnt/new_misc/vboxshared/zoc/${mas_fullname}.tar.bz2
+    fi
     return 0
   fi
   return 1

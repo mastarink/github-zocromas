@@ -157,7 +157,7 @@ mas_pre_init( char *runpath )
       if ( r >= 0 )
       {
         linkname[sz] = '\0';
-        HMSG( "(%s) [%lu] LINKNAME [%d]: '%s'", lexe, sz, r, linkname );
+        HMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, (unsigned)sz, r, linkname );
       }
       else
       {

@@ -66,9 +66,9 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
     ctrl.status = MAS_STATUS_WORK;
     {
       HIST_ENTRY *he;
-      int hp;
+      /* int hp; */
 
-      hp = where_history(  );
+      (void)/* hp = */ where_history(  );
       /* if ( hp >= 0 )          */
       /* {                       */
       /*   remove_history( hp ); */

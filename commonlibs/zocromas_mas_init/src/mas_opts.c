@@ -7,8 +7,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#ifdef HAVE_LIBUUID
 #include <uuid/uuid.h>
-
+#endif
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -737,6 +738,7 @@ mas_opts_restore( const char *dirname, const char *filename )
   if ( r < 0 )
   {
   }
+#ifdef HAVE_LIBUUID
   if ( !opts.uuid )
   {
     uuid_t uuid;
@@ -748,7 +750,7 @@ mas_opts_restore( const char *dirname, const char *filename )
     fprintf( stderr, "UUID %s\n", buffer );
     opts.uuid = mas_strdup( buffer );
   }
-
+#endif
   return r;
 }
 

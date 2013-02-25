@@ -66,8 +66,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
   int r = -1;
 
-  MAS_LOG( "starting transaction xch (%lu protos)", ctrl.protos_num );
-  tMSG( "starting transaction xch (%lu protos)", ctrl.protos_num );
+  MAS_LOG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
+  tMSG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
   HMSG( "+ TRANS EXCHANGE" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
@@ -97,8 +97,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       r = 0;
       if ( !ctrl.protos_num )
       {
-        EMSG( "No proto's loaded; data[%lu]", sz );
-        MAS_LOG( "No proto's loaded; data[%lu]", sz );
+        EMSG( "No proto's loaded; data[%lu]", ( unsigned long ) sz );
+        MAS_LOG( "No proto's loaded; data[%lu]", ( unsigned long ) sz );
       }
       for ( int np = 0; np < ctrl.protos_num; np++ )
       {
@@ -165,10 +165,6 @@ mas_transaction( mas_rcontrol_t * prcontrol )
     }
     if ( prcontrol->h.pchannel )
     {
-      mas_lcontrol_t *plcontrol;
-
-      plcontrol = prcontrol ? prcontrol->plcontrol : NULL;
-
       MAS_LOG( "starting transaction 1" );
       /* rMSG( "start transaction" ); */
       MAS_LOG( "starting transaction 2" );
@@ -461,7 +457,7 @@ mas_transaction_write( const mas_rcontrol_t * prcontrol, char *cbuf, size_t sz )
 
   if ( prcontrol )
     w = mas_channel_write( prcontrol->h.pchannel, cbuf, sz );
-  MAS_LOG( "written transaction %u of %lu", w, sz );
+  MAS_LOG( "written transaction %u of %lu", w, ( unsigned long ) sz );
   return w;
 }
 

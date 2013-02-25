@@ -268,7 +268,10 @@ mas_init_daemon( void )
       if ( ctrl.close_std && ctrl.daemon )
       {
         int same;
-
+/* Instead of close:                        */
+/* int tmpfd = open("/dev/null", O_WRONLY); */
+/* dup2(tmpfd, 2);                          */
+/* close(tmpfd);                            */
         same = ( ctrl.stderrfile == ctrl.msgfile );
         mas_close( STDIN_FILENO );
         MAS_LOG( "(%d) init daemon; close STDIN", r );

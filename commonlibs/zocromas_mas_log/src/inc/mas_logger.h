@@ -1,5 +1,6 @@
 #ifndef MAS_LOGGER_H
 #  define MAS_LOGGER_H
+#define MAS_LIST_QH
 
 #  include "mas_log_types.h"
 

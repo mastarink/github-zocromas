@@ -19,7 +19,9 @@ sfind make.sh
 tab sfind doprj.sh
 sfind doall.sh
 sfind prjname.sh
+
 tab sfind tarme.sh
+sfind tarme_new.sh
 
 tab sfind grep-exclude-misc.sh
 sfind grepch.sh

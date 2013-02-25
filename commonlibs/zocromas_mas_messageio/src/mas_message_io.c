@@ -1,4 +1,4 @@
-#  define MSG_VERSION 0x20130210
+#define MSG_VERSION 0x20130210
 #include <mastar/wrap/mas_std_def.h>
 
 #include <stdlib.h>
@@ -87,7 +87,7 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
         msg->h = *header;
       if ( cbuf )
       {
-        ioMSG( "w. to memcpy message to %p; len:%lu", ( void * ) msg->message, strlen( msg->message ) );
+        ioMSG( "w. to memcpy message to %p; len:%u", ( void * ) msg->message, ( unsigned ) strlen( msg->message ) );
         memcpy( msg->message, cbuf, len );
         ioMSG( "w.  memcpy'd message" );
       }

@@ -36,7 +36,20 @@ function make_dirs ()
 }
 function setup_dirs ()
 {
-  stamp=`datem`
+  if ! [[ "$stamp" ]] ; then
+    if [[ "$MAS_DOALL_STAMP" ]] ; then
+      stamp=$MAS_DOALL_STAMP
+    else
+      stamp=`datem`
+    fi
+  fi
+  if ! [[ "$now_stamp" ]] ; then
+    if [[ "$MAS_DOALL_NOW_STAMP" ]] ; then
+      now_stamp=$MAS_DOALL_NOW_STAMP
+    else
+      now_stamp=`datemt`
+    fi
+  fi  
   wd=`pwd`
   me="$wd/$0"
   mer="$(realpath $0)"

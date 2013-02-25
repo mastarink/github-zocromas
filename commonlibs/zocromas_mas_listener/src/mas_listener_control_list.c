@@ -60,11 +60,15 @@ mas_lcontrols_clean_list( int force )
 {
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
-    mas_lcontrol_t *plcontrol, *plcontrol_tmp;
+    mas_lcontrol_t *plcontrol = NULL, *plcontrol_next = NULL;
+
+    /* mas_lcontrol_t *plcontrol_tmp; */
 
     MAS_LOG( "to clean listeners list" );
-    MAS_LIST_FOREACH_SAFE( plcontrol, ctrl.lcontrols_list, next, plcontrol_tmp )
+    for ( plcontrol = MAS_LIST_FIRST( ctrl.lcontrols_list ); plcontrol; plcontrol = plcontrol_next )
+      /* MAS_LIST_FOREACH_SAFE( plcontrol, ctrl.lcontrols_list, next, plcontrol_next ) */
     {
+      plcontrol_next = MAS_LIST_NEXT( plcontrol, next );
       MAS_LOG( "to remove listener plc %p from list [%lx] (force:%d)", ( void * ) plcontrol, plcontrol->h.thread, force );
       if ( force || !plcontrol->h.thread )
       {
@@ -77,7 +81,7 @@ mas_lcontrols_clean_list( int force )
 
         /* thMSG( "L DELETE %d %p", __LINE__, ( void * ) plcontrol ); */
         /* naming : free members + free = delete */
-        mas_lcontrol_delete( plcontrol );
+        mas_lcontrol_remove_delete( plcontrol );
         plcontrol = NULL;
       }
     }

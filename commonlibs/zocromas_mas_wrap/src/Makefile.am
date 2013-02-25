@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libzocromas_mas_wraps.la libzocromas_mas_wrapc.la libzocromas_
 
 #? libmas_wraaplibdir = $(libdir)/mastar
 libzocromas_mas_wraps_la_SOURCES         = mas_lib.c mas_lib0.c mas_memory.c mas_lib_thread.c
-libzocromas_mas_wraps_la_CFLAGS=@AM_CFLAGS@   -pthreads
+libzocromas_mas_wraps_la_CFLAGS=@AM_CFLAGS@   -pthread
 libzocromas_mas_wraps_la_LDFLAGS=@AM_LDFLAGS@   @LIBS@
 
 libzocromas_mas_wrapc_la_SOURCES         = mas_lib.c mas_lib0.c mas_memory.c

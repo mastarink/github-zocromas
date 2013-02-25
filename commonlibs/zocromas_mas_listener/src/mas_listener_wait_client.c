@@ -105,13 +105,13 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     }
     else if ( ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
     {
-      int rcond;
+      /* int rcond; */
 
       MAS_LOG( "(%d)found free tr. (s%lu); at l opened:%d", r, plcontrol->h.serial,
                plcontrol->h.pchannel ? plcontrol->h.pchannel->opened : 0 );
       r = mas_rcontrol_set_channel( prcontrol, plcontrol->h.pchannel );
       MAS_LOG( "cond signal to R%lu", prcontrol->h.serial );
-      rcond = pthread_cond_signal( &prcontrol->waitchan_cond );
+      ( void ) /*rcond = */ pthread_cond_signal( &prcontrol->waitchan_cond );
     }
     else
     {
