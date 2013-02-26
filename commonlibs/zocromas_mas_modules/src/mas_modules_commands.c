@@ -108,7 +108,14 @@ mas_modules_commands( STD_CMD_ARGS )
   {
     HMSG( "LOOKUP ... from %s.%s sub", "...", this_command->name );
     found = mas_modules_lookup_question( this_command->libname, this_command->subtable, question, &args );
-    MAS_LOG( "(L%u) command %s (%s) %s", level, found ? found->name : NULL, question, found ? "FOUND" : "NOT FOUND" );
+    MAS_LOG( "(L%u) command %s (%s) %s [%s]", level, found ? found->name : NULL, question, found ? "FOUND" : "NOT FOUND", args );
+    if ( !found )
+    {
+      found = mas_modules_lookup_question( this_command->libname, this_command->subtable, "*", &args );
+      if ( found )
+        args = question;
+    }
+    MAS_LOG( "(L%u) command %s (%s) %s [%s]", level, found ? found->name : NULL, "*", found ? "FOUND" : "NOT FOUND", args );
     if ( !found )
     {
       found = &def_cmd;

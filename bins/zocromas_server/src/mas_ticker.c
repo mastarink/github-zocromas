@@ -75,6 +75,7 @@ mas_ticker_cleanup( void *arg )
   mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
   FMSG( "TICKER CLEANUP" );
   MAS_LOG( "ticker cleanup" );
+  /* mas_in_thread_end(  ); */
 }
 
 static void
@@ -101,6 +102,7 @@ mas_ticker( void )
       char outstr[200];
       static unsigned long gone_history[61];
       static unsigned long gone_history_cnt = 0;
+
       /* static double peak = 0.; */
 
       if ( !gone_history_cnt )
@@ -133,6 +135,7 @@ mas_ticker( void )
 #endif
       {
         extern unsigned long memory_balance;
+
         /* double a1, a2, a10, a60;                                                       */
         /*                                                                                */
         /* a1 = ( ( double ) ( ( gone_history[0] - gone_history[1] ) / 1 ) ) / zinterval; */
@@ -141,14 +144,14 @@ mas_ticker( void )
         /* a60 = ( ( gone_history[0] - gone_history[60] ) / 60 ) / zinterval;             */
         /* if ( peak < a1 ) */
         /*   peak = a1;     */
-        if ( ctrl.ticker_mode == 1 )
+        if ( ctrl.ticker_mode & 1 )
         {
           MFP( "\x1b]2;+%05lus(m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] "
                "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x7", elapsed_time, memory_balance, outstr, itick,
                ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
                ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
         }
-        else if ( ctrl.ticker_mode == 2 )
+        if ( ctrl.ticker_mode & 2 )
         {
           MFP( "\r\x1b[33;41;1m+%05lus\x1b[0m\x1b[37;44;1m(m%5lu\x1b[0m) [\x1b[33;42;1m%s\x1b[0m] %d; [%lu:%lu:%ld:%lu] "
                "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K", elapsed_time, memory_balance, outstr, itick,

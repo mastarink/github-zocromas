@@ -16,42 +16,94 @@ get server info
 server listener remove zocromas.mastar.lan 5003
 get server info
 server quit
-server restart
-server info
+notify aaaaaaaaaaa
+server notify aaaaaaaaaaa
+notify aaaaaaaaaaa
 server quit
-bye
+notify aaaaaaaaaaa
+notify nt aaaaaaaaaaa
+notify 
+notify zzzzzzzz
 server quit
-bye
+notify zzzzzzzz
 server quit
-bye
+notify zzzzzzzz
+notify 
 server quit
-server restart
+notify zzzzzzzz
 server quit
-server restart
-server reconnect
-server restart
+notify nt zzzzzzzz
 server quit
-server restart
+notify nt zzzzzzzz
+notify nt aaaaaaaaaaa
 server quit
-server restart
-server info
-server restart
+notify nt aaaaaaaaaaa
 server quit
-server info
+notify nt aaaaaaaaaaa
 server quit
-server info
+notify nt aaaaaaaaaaa
 server quit
-quit
+notify nt aaaaaaaaaaa
 server quit
-server segv
-server info
+notify nt aaaaaaaaaaa
 server quit
-server info
-bye
-server info
+notify nt aaaaaaaaaaa
 server quit
-bye
-server info
+notify nt aaaaaaaaaaa
 server quit
-bye
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify nt aaaaaaaaaaa
+server quit
+notify test aaaaaaaaaaa
+server quit
+notify test aaaaaaaaaaa
+server quit
+notify test aaaaaaaaaaa
 server quit

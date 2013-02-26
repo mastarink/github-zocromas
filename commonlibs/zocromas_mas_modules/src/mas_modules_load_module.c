@@ -193,6 +193,7 @@ mas_modules_load_subtable( const char *libname )
   return cmd_tab;
 }
 
+typedef int ( *mas_v_fun_t ) ( void );
 void
 mas_modules_destroy( void )
 {
@@ -200,8 +201,15 @@ mas_modules_destroy( void )
   {
     for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )
     {
-      HMSG( "MODULE DESTROY %u. %p", im, ( void * ) ctrl.loaded_modules[im] );
-      dlclose( ctrl.loaded_modules[im] );
+      int unload = 1;
+      mas_v_fun_t fun;
+
+      fun = ( mas_v_fun_t ) ( unsigned long ) dlsym( ctrl.loaded_modules[im], "module_before_close" );
+      HMSG( "MODULE DESTROY %u. %p [%d] %s", im, ( void * ) ctrl.loaded_modules[im], fun ? 1 : 0, dlerror(  ) );
+      if ( fun )
+        unload = ( fun ) (  );
+      if ( unload && ctrl.loaded_modules[im] )
+        dlclose( ctrl.loaded_modules[im] );
       ctrl.loaded_modules[im] = NULL;
     }
     ctrl.loaded_modules_cnt = 0;

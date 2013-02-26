@@ -227,12 +227,18 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
       /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
     }
     /* pthread_mutex_destroy( &plcontrol->transaction_mutex ); */
+
     pthread_rwlock_destroy( &plcontrol->variables_rwlock );
+    memset( &plcontrol->variables_rwlock, 0, sizeof( plcontrol->variables_rwlock ) );
+
     pthread_rwlock_destroy( &plcontrol->transaction_rwlock );
-    /* memset( &plcontrol->transaction_mutex, 0, sizeof( plcontrol->transaction_mutex ) ); */
     memset( &plcontrol->transaction_rwlock, 0, sizeof( plcontrol->transaction_rwlock ) );
+
+    /* memset( &plcontrol->transaction_mutex, 0, sizeof( plcontrol->transaction_mutex ) ); */
+
     /* thMSG( "FREE %d %p", __LINE__, ( void * ) plcontrol ); */
     plcontrol->h.thread = ( pthread_t ) 0;
+    /* FIXME : double free or corruption (!prev) --- sometimes, on final destroy */
     mas_free( plcontrol );
   }
   return 0;

@@ -223,7 +223,8 @@ mas_listener_cleanup( void *arg )
   /* thMSG( "cleanup for l/th %lx", mas_pthread_self(  ) ); */
   /* thMSG( "C DELETE %d %p", __LINE__, ( void * ) plcontrol ); */
   /* NOT HERE : mas_lcontrol_remove_delete( plcontrol ); */
-  MAS_LOG( "listener cleanup; to delete plc:%p", ( void * ) plcontrol );
+  MAS_LOG( "listener cleanup; to delete plc:%p in list:%d", ( void * ) plcontrol, plcontrol->in_list );
+  /* mas_in_thread_end(  ); */
   mas_lcontrol_remove_delete( plcontrol );
 }
 

@@ -1,6 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_client_def.h" */
-/* #include "mas_basic_def.h"  */
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,13 +46,15 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 {
   int r = 0;
   char *answer = NULL;
+
 #ifdef MAS_USE_CURSES
   WINDOW *w_win;
 
   w_win = w_main;
 #endif
   tMSG( "to write data string %s", question );
-  r = mas_channel_write_message( pchannel, question, NULL );
+  /* r = mas_channel_write_message( pchannel, question, NULL ); */
+  IEVAL( r, mas_channel_write_message( pchannel, question, NULL ) );
   tMSG( "(%d) written data string %s", r, question );
   if ( r <= 0 )
   {
@@ -63,15 +65,16 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
   }
   else
   {
-    HMSG( "to read message" );
-    r = mas_channel_read_message( pchannel, &answer, header );
-    HMSG( "it's message(%d)", r );
+    /* HMSG( "to read message" ); */
+    /* r = mas_channel_read_message( pchannel, &answer, header ); */
+    IEVAL( r, mas_channel_read_message( pchannel, &answer, header ) );
+    /* HMSG( "it's message(%d)", r ); */
     if ( r <= 0 )
     {
-#ifdef EMSG
-      EMSG( "READ error" );
-#endif
-      P_ERR;
+/* #ifdef EMSG                 */
+/*       EMSG( "READ error" ); */
+/* #endif                      */
+/*       P_ERR;                */
       mas_channel_close( pchannel );
     }
     else if ( header && header->binary )
@@ -168,12 +171,14 @@ mas_client_exchange( mas_channel_t * pchannel, const char *question, const char 
   mas_header_t header;
 
   memset( &header, 0, sizeof( header ) );
-  r = _mas_client_exchange( pchannel, question, &header, answer_format );
+  /* r = _mas_client_exchange( pchannel, question, &header, answer_format ); */
+  IEVAL( r, _mas_client_exchange( pchannel, question, &header, answer_format ) );
   if ( header.new_opts )
   {
     HMSG( "before _mas_client_exchange" );
     /* MSG( "NEW OPTS, get opts : %d", header.new_opts ); */
-    r = _mas_client_exchange( pchannel, "get opts", &header, NULL );
+    /* r = _mas_client_exchange( pchannel, "get opts", &header, NULL ); */
+    IEVAL( r, _mas_client_exchange( pchannel, "get opts", &header, NULL ) );
     HMSG( "after exchange_cs" );
   }
 

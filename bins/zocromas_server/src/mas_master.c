@@ -19,6 +19,7 @@ extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
+#include <mastar/modules/mas_modules_load_module.h>
 
 #include "mas_ticker.h"
 #include "mas_watcher.h"
@@ -283,7 +284,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
   IEVAL( r,
-         mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create,
+         mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
                         NULL ) );
   MAS_LOG( "(%d) bunch: init + done", r );
 #endif
@@ -303,9 +304,24 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
     }
 #endif
     HMSG( "BUNCH TO END" );
-    mas_pthread_exit( &r );
+    /* XXX XXX XXX [ if use mas_pthread_exit - forever wait 'foreign' threads ] XXX XXX XXX
+       mas_pthread_exit( &r ); 
+     */
   }
-  MAS_LOG( "bunch end : %d", r );
-  HMSG( "BUNCH %s END", ctrl.is_parent ? "(parent)" : "" );
+  FMSG( "TO DESTROY MODULES" );
+  mas_modules_destroy(  );
+  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.master_thread, ctrl.logger_thread,
+        ctrl.ticker_thread, ctrl.watcher_thread, ctrl.lcontrols_list ? 1 : 0 );
+  /* MAS_LOG( "bunch end : %d", r ); */
+  if ( ctrl.master_thread )
+    mas_xpthread_join( ctrl.master_thread );
+  if ( ctrl.logger_thread )
+    mas_xpthread_join( ctrl.logger_thread );
+  if ( ctrl.watcher_thread )
+    mas_xpthread_join( ctrl.watcher_thread );
+  if ( ctrl.main_thread )
+    mas_xpthread_join( ctrl.main_thread );
+  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.master_thread, ctrl.logger_thread,
+        ctrl.ticker_thread, ctrl.watcher_thread, ctrl.lcontrols_list ? 1 : 0 );
   return r;
 }

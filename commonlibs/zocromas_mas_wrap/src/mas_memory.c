@@ -269,6 +269,8 @@ _mas_free( const char *func, int line, void *ptr )
           memory_freed_cnt++;
           memory_balance -= size;
           memory_balance_cnt--;
+          real_ptr->sig = 0;
+          real_ptr->size = 0;
 #  ifndef MAS_NO_THREADS
           pthread_mutex_unlock( &malloc_mutex );
 #  endif

@@ -127,8 +127,11 @@ mas_init_message( void )
 static int
 error_handler_at_init( const char *func, int line, int rcode )
 {
-  mas_error( func, line, errno, " ERROR #%d", rcode );
-  mas_log( func, line, errno, " ErRoR #%d", rcode );
+  const char *fmt = " !!!!!!!!!!!!!! ERROR #%d !!!!!!!!!!!!!!";
+
+  HMSG( fmt, rcode );
+  mas_error( func, line, errno, fmt, rcode );
+  mas_log( func, line, errno, fmt, rcode );
   return 0;
 }
 
@@ -324,8 +327,8 @@ mas_init_vplus( va_list args )
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
   while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
   {
-    MAS_LOG( "(%d) init + #%d", r, pos );
     IEVAL( r, ( fun ) (  ) );
+    MAS_LOG( "(%d) init + #%d", r, pos );
     HMSG( "(%d) INIT %d  - %d", r, __LINE__, ctrl.error_handler ? 1 : 0 );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
     pos++;

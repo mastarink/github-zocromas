@@ -3,8 +3,8 @@ SUBDIRS= inc
 ######### modules ########################################################################
 ##########################################################################################
 
-pkglibdir=$(libdir)/zocmds
-pkglib_LTLIBRARIES = \
+moduledir=$(libdir)/zocmds
+module_LTLIBRARIES = \
 	check.la \
 	client.la \
 	ctrl.la \

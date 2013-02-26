@@ -76,6 +76,7 @@ mas_watcher_cleanup( void *arg )
   mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
   FMSG( "WATCHER CLEANUP" );
   MAS_LOG( "watcher cleanup" );
+  /* mas_in_thread_end(  ); */
 }
 
 static void
@@ -299,7 +300,7 @@ mas_watcher_stop( void )
     mas_pthread_cancel( ctrl.watcher_thread );
 
     mas_xpthread_join( ctrl.watcher_thread );
-    MAS_LOG( "stopped watcher" );
+    /* MAS_LOG( "stopped watcher" ); */
     ctrl.watcher_thread = ( pthread_t ) 0;
     HMSG( "- WATCHER" );
     FMSG( "WATCHER STOPPED" );

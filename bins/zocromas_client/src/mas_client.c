@@ -1,6 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_client_def.h" */
-/* #include "mas_basic_def.h"  */
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -61,12 +61,13 @@ mas_client_transaction( mas_channel_t * pchannel )
   do
   {
     cnt++;
-    HMSG( "(%u:%u) client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host );
-    r = mas_exchange_with_readline( pchannel );
+    /* HMSG( "(%u:%u) client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host ); */
+    /* r = mas_exchange_with_readline( pchannel ); */
+    IEVAL( r, mas_exchange_with_readline( pchannel ) );
 #ifdef MAS_CLIENT_LOG
     mas_logger_flush(  );
 #endif
-    HMSG( "(%u:%u) / client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host );
+    /* HMSG( "(%u:%u) / client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host ); */
   }
   while ( r >= 0 && ctrl.in_client && ctrl.in_pipe );
   ctrl.status = MAS_STATUS_CLOSE;
@@ -80,12 +81,11 @@ mas_client( const char *host_port )
   mas_channel_t *pchannel;
   int r = 0, rop = -1;
 
-
-
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclient" ) < 0 )
-  {
-    P_ERR;
-  }
+  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclient" ) < 0 ) */
+  /* {                                                             */
+  /*   P_ERR;                                                      */
+  /* }                                                             */
+  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclient" ) );
   HMSG( "CLIENT" );
   pchannel = mas_channel_create(  );
   while ( r >= 0 && ctrl.in_client && !ctrl.fatal )
@@ -97,7 +97,8 @@ mas_client( const char *host_port )
     HMSG( "(i/c:%u; i/p:%d) client external loop %s", ctrl.in_client, ctrl.in_pipe, host_port );
     HMSG( "to init '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
     hostlen = mas_parse_host_port( host_port, &hport, opts.default_port );
-    r = mas_channel_init( pchannel, 0 /* is_server */ , CHN_SOCKET, host_port, hostlen, hport );
+    /* r = mas_channel_init( pchannel, 0  , CHN_SOCKET, host_port, hostlen, hport ); */
+    IEVAL( r, mas_channel_init( pchannel, 0, CHN_SOCKET, host_port, hostlen, hport ) );
     HMSG( "to open '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
     if ( r >= 0 )
     {
@@ -106,7 +107,9 @@ mas_client( const char *host_port )
       HMSG( "to open '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
       do
       {
-        rop = r = mas_channel_open( pchannel );
+        /* r = mas_channel_open( pchannel ); */
+        IEVAL( r, mas_channel_open( pchannel ) );
+        rop = r;
         if ( r < 0 && ctrl.restart_cnt > 0 )
         {
           HMSG( "restarted %s (delay %10.5f sec)\n", opts.argv[0], opts.restart_sleep );
@@ -131,7 +134,8 @@ mas_client( const char *host_port )
 
       cmd = mas_strdup( "check uuid " );
       cmd = mas_strcat_x( cmd, opts.uuid );
-      r = mas_client_exchange( pchannel, cmd, "%s\n" );
+      /* r = mas_client_exchange( pchannel, cmd, "%s\n" ); */
+      IEVAL( r, mas_client_exchange( pchannel, cmd, "%s\n" ) );
       mas_free( cmd );
     }
     if ( r > 0 && ctrl.in_client )
@@ -147,7 +151,8 @@ mas_client( const char *host_port )
         mas_free( args );
       }
       /* HMSG( MAS_SEPARATION_LINE ); */
-      r = mas_client_exchange( pchannel, cmd, "%s\n" );
+      /* r = mas_client_exchange( pchannel, cmd, "%s\n" ); */
+      IEVAL( r, mas_client_exchange( pchannel, cmd, "%s\n" ) );
       mas_free( cmd );
     }
     if ( r >= 0 )
@@ -161,7 +166,8 @@ mas_client( const char *host_port )
       for ( int ic = 0; ic < opts.commands_num; ic++ )
       {
         HMSG( "(opts) command to execute : '%s'", opts.commands[ic] );
-        r = mas_client_exchange( pchannel, opts.commands[ic], "%s\n" );
+        /* r = mas_client_exchange( pchannel, opts.commands[ic], "%s\n" ); */
+        IEVAL( r, mas_client_exchange( pchannel, opts.commands[ic], "%s\n" ) );
         if ( r < 0 || !ctrl.in_client )
           break;
       }
@@ -172,7 +178,8 @@ mas_client( const char *host_port )
       for ( int ic = 0; ic < ctrl.commands_num; ic++ )
       {
         HMSG( "(ctrl) command to execute : '%s'", ctrl.commands[ic] );
-        r = mas_client_exchange( pchannel, ctrl.commands[ic], "%s\n" );
+        /* r = mas_client_exchange( pchannel, ctrl.commands[ic], "%s\n" ); */
+        IEVAL( r, mas_client_exchange( pchannel, ctrl.commands[ic], "%s\n" ) );
         if ( r < 0 || !ctrl.in_client )
           break;
       }
@@ -181,7 +188,8 @@ mas_client( const char *host_port )
     {
       if ( opts.disconnect_prompt || r > 0 )
       {
-        r = mas_client_transaction( pchannel );
+        /* r = mas_client_transaction( pchannel ); */
+        IEVAL( r, mas_client_transaction( pchannel ) );
       }
       else if ( opts.wait_server )
       {
@@ -209,18 +217,20 @@ mas_client( const char *host_port )
     /* }                                                */
     if ( rop >= 0 )
     {
-      rop = mas_channel_close( pchannel );
-      if ( rop >= 0 )
-      {
-        HMSG( "closed (%d:%d)", pchannel ? 1 : 0, pchannel ? pchannel->opened : 0 );
-      }
-      else
-      {
-#ifdef EMSG
-        P_ERR;
-        EEMSG( "(%d) can't close : (i/c:%u;fatal:%u)", r, ctrl.in_client, ctrl.fatal );
-#endif
-      }
+      /* rop = mas_channel_close( pchannel ); */
+      IEVAL( r, mas_channel_close( pchannel ) );
+      rop = r;
+      /* if ( r >= 0 )                                                                  */
+      /* {                                                                              */
+      /*   HMSG( "closed (%d:%d)", pchannel ? 1 : 0, pchannel ? pchannel->opened : 0 ); */
+      /* }                                                                              */
+/*       else                                                                              */
+/*       {                                                                                 */
+/* #ifdef EMSG                                                                             */
+/*         P_ERR;                                                                          */
+/*         EEMSG( "(%d) can't close : (i/c:%u;fatal:%u)", r, ctrl.in_client, ctrl.fatal ); */
+/* #endif                                                                                  */
+/*       }                                                                                 */
       rop = -1;
     }
     HMSG( "(i/c:%u;fatal:%u) %s / external loop", ctrl.in_client, ctrl.fatal, pchannel->host );
@@ -241,11 +251,13 @@ mas_client( const char *host_port )
 int
 mas_channel_deaf( mas_channel_t * pchannel )
 {
+  EMSG( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" );
   return 0;
 }
 
 int
 mas_channel_listen( mas_channel_t * pchannel )
 {
+  EMSG( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" );
   return 0;
 }

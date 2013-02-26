@@ -1,6 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_client_def.h" */
-/* #include "mas_basic_def.h"  */
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,9 +66,10 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
     ctrl.status = MAS_STATUS_WORK;
     {
       HIST_ENTRY *he;
+
       /* int hp; */
 
-      (void)/* hp = */ where_history(  );
+      ( void ) /* hp = */ where_history(  );
       /* if ( hp >= 0 )          */
       /* {                       */
       /*   remove_history( hp ); */
@@ -110,7 +111,8 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
       else
       {
 //      r = mas_client_exchange( pchannel, mas_readline_buffer, "answer\n>\x1b[1;44;33m%s\x1b[0m<\n" );
-        r = mas_client_exchange( pchannel, mas_readline_buffer, "%s\n" );
+        /* r = mas_client_exchange( pchannel, mas_readline_buffer, "%s\n" ); */
+        IEVAL( r, mas_client_exchange( pchannel, mas_readline_buffer, "%s\n" ) );
         mas_other_free( mas_readline_buffer );
         mas_readline_buffer = NULL;
       }

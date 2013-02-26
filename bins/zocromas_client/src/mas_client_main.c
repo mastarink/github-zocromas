@@ -1,6 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_client_def.h" */
-/* #include "mas_basic_def.h"  */
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -42,7 +42,7 @@ more:
 int
 main( int argc, char *argv[], char *env[] )
 {
-  int r = -1;
+  int r = 0;
 
   HMSG( "MAIN" );
 #ifndef MAS_CLIENT_LOG
@@ -51,15 +51,17 @@ main( int argc, char *argv[], char *env[] )
 #endif
 
 #ifdef MAS_INIT_SEPARATE
-  r = mas_init_client( argc, argv, env );
+  /* r = mas_init_client( argc, argv, env ); */
+  IEVAL( r, mas_init_client( argc, argv, env ) );
 #else
-  r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL );
+  /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
+  IEVAL( r, mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ) );
 #endif
-  if ( r >= 0 )
-    for ( int ia = opts.hosts_num; ia > 0; ia-- )
-    {
-      mas_client( opts.hosts[ia - 1] );
-      break;
-    }
+  for ( int ia = opts.hosts_num; r >= 0 && ia > 0; ia-- )
+  {
+    /* mas_client( opts.hosts[ia - 1] ); */
+    IEVAL( r, mas_client( opts.hosts[ia - 1] ) );
+    break;
+  }
   return 0;
 }

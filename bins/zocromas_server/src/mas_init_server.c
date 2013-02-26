@@ -377,6 +377,7 @@ void
 mas_destroy_server( void )
 {
   MAS_LOG( "destroy server" );
+  FMSG( "DESTROY SERVER" );
   MAS_LOG( "to save opts" );
   if ( !ctrl.opts_saved )
     mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
@@ -396,8 +397,11 @@ mas_destroy_server( void )
     sleep( 1 );
   mas_close_curses(  );
 #endif
+  FMSG( "1 DESTROY SERVER" );
   mas_lcontrols_delete_list(  );
+  FMSG( "2 DESTROY SERVER" );
   mas_in_thread_end(  );
+  FMSG( "3 DESTROY SERVER" );
   mas_threads_destroy(  );
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
@@ -412,6 +416,7 @@ mas_destroy_server( void )
     FMSG( "TO STOP TICKER" );
     mas_ticker_stop(  );
   }
+  FMSG( "TO DESTROY MODULES" );
   mas_modules_destroy(  );
   {
     for ( int i = 0; i < MAS_MAX_PIDFD; i++ )

@@ -1,6 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_server_def.h" */
-/* #include "mas_basic_def.h"  */
 
 #include <stdlib.h>
 #include <pthread.h>
@@ -15,7 +13,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/log/mas_log.h>
 
 #include "mas_lcontrol_object.h"
@@ -44,6 +41,12 @@ more:
   mas_cmdmod_listener.c
 */
 
+int
+mas_lcontrols_init( void )
+{
+  mas_lcontrols_list_create(  );
+  return 0;
+}
 
 void
 mas_lcontrols_list_create( void )
@@ -81,6 +84,8 @@ mas_lcontrols_clean_list( int force )
 
         /* thMSG( "L DELETE %d %p", __LINE__, ( void * ) plcontrol ); */
         /* naming : free members + free = delete */
+
+        /* FIXME : double free or corruption (!prev) */
         mas_lcontrol_remove_delete( plcontrol );
         plcontrol = NULL;
       }
@@ -92,6 +97,7 @@ void
 mas_lcontrols_delete_list( void )
 {
   mas_lcontrols_clean_list( 1 );
+  HMSG( "1 LCONTROLS DELETE LIST" );
   if ( ctrl.lcontrols_list && MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
@@ -101,8 +107,10 @@ mas_lcontrols_delete_list( void )
     ctrl.lcontrols_list = NULL;
 
     pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
+    HMSG( "2 LCONTROLS DELETE LIST" );
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }
+  HMSG( "3 LCONTROLS DELETE LIST" );
 }
 
 /* find by host + port */

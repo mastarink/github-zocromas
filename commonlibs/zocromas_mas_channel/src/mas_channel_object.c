@@ -7,6 +7,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+#include <mastar/types/mas_common_defs.h>
+
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib0.h>
@@ -138,7 +141,8 @@ mas_set_address( const char *host, unsigned port, mas_serv_addr_t * sa )
   {
     struct addrinfo *result = NULL, *rp = NULL;
 
-    r = getaddrinfo( host, NULL, &hints, &result );
+    /* r = getaddrinfo( host, NULL, &hints, &result ); */
+    IEVAL( r, getaddrinfo( host, NULL, &hints, &result ) );
     if ( r >= 0 && result )
     {
       tMSG( "(%d) getaddrinfo %s (%p)", r, host, ( void * ) result );
@@ -185,7 +189,7 @@ mas_set_address( const char *host, unsigned port, mas_serv_addr_t * sa )
 static int
 __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, const char *host, size_t hostlen, int port )
 {
-  int r;
+  int r = 0;
 
   MAS_LOG( "init chn. w/%s:%d", host, port );
   mas_channel_reset( pchannel, 1, 1 );
@@ -195,7 +199,8 @@ __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, co
   {
     pchannel->host = mas_strndup( host, hostlen );
   }
-  r = mas_set_address( pchannel->host, port, &pchannel->serv );
+  /* r = mas_set_address( pchannel->host, port, &pchannel->serv ); */
+  IEVAL( r, mas_set_address( pchannel->host, port, &pchannel->serv ) );
   if ( pchannel->serv.addr.sin_family == AF_INET )
     pchannel->port = port;
 
@@ -207,20 +212,22 @@ __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, co
       /* tMSG( "(%d) to create [%d] l/socket (was:%d)", r, pchannel->type, pchannel->fd_socket ); */
       /* int keepvalue = 0; */
 
-      r = pchannel->fd_socket = socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 );
+      /* r = pchannel->fd_socket = socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 ); */
+      IEVAL( r, socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 ) );
+      pchannel->fd_socket = r;
       /* r = mas_setsockopt( pchannel->fd_socket, SOL_SOCKET, SO_KEEPALIVE, ( void * ) &keepvalue, sizeof( keepvalue ) ); */
       /*  socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) */
       tMSG( "(%d) create l/socket", r );
     }
   }
 
-#ifdef EMSG
-  if ( r < 0 )
-  {
-    P_ERR;
-    EMSG( "fd_socket:%d", pchannel->fd_socket );
-  }
-#endif
+/* #ifdef EMSG                                      */
+/*   if ( r < 0 )                                   */
+/*   {                                              */
+/*     P_ERR;                                       */
+/*     EMSG( "fd_socket:%d", pchannel->fd_socket ); */
+/*   }                                              */
+/* #endif                                           */
   return r;
 }
 
@@ -233,7 +240,10 @@ _mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, con
   tMSG( "chn. initing from %s (def.p:%u)", host, port );
 
   if ( mas_channel_test( pchannel ) && !pchannel->opened )
-    r = __mas_channel_init( pchannel, is_server, type, host, hostlen, port );
+  {
+    /* r = __mas_channel_init( pchannel, is_server, type, host, hostlen, port ); */
+    IEVAL( r, __mas_channel_init( pchannel, is_server, type, host, hostlen, port ) );
+  }
   return r;
 }
 
@@ -243,22 +253,29 @@ mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, cons
   int r = 0;
 
   if ( host )
-    r = _mas_channel_init( pchannel, is_server, type, host, hostlen, port );
-#ifdef EMSG
-  if ( r < 0 )
   {
-    P_ERR;
+    /* r = _mas_channel_init( pchannel, is_server, type, host, hostlen, port ); */
+    IEVAL( r, _mas_channel_init( pchannel, is_server, type, host, hostlen, port ) );
   }
-#endif
+/* #ifdef EMSG    */
+/*   if ( r < 0 ) */
+/*   {            */
+/*     P_ERR;     */
+/*   }            */
+/* #endif         */
   return r;
 }
 
 int
-mas_channel_test( mas_channel_t * pchannel )
+mas_channel_test( const mas_channel_t * pchannel )
 {
   int r;
 
   r = pchannel ? 1 : 0;
-  MAS_LOG( "pchannel not set" );
+  if ( !r )
+  {
+    MAS_LOG( "pchannel not set" );
+    IEVAL( r, -1 );
+  }
   return r;
 }

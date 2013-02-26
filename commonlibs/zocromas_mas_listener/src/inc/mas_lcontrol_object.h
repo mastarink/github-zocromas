@@ -6,6 +6,7 @@
 
 
 mas_lcontrol_t *mas_lcontrol_create( void );
+
 /* naming : create + init + register = make */
 mas_lcontrol_t *mas_lcontrol_make( const char *host, unsigned port );
 int mas_lcontrol_init( mas_lcontrol_t * plcontrol, const char *host, unsigned port );
@@ -14,4 +15,3 @@ int mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol );
 
 
 #endif
-

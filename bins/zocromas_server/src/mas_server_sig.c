@@ -291,14 +291,16 @@ mas_atexit( void )
 {
   mas_destroy_server(  );
 #ifdef MAS_TRACEMEM
-  extern unsigned long memory_balance;
+  {
+    extern unsigned long memory_balance;
 
-  FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
-  if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
-    if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
-      if ( print_memlist( ctrl.msgfile, FL ) < 0 )
-        print_memlist( stderr, FL );
-  FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
+    FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
+    if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
+      if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
+        if ( print_memlist( ctrl.msgfile, FL ) < 0 )
+          print_memlist( stderr, FL );
+    FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
+  }
 #else
   FMSG( "AT EXIT" );
 #endif
