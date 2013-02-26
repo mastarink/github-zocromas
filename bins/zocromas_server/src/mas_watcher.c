@@ -101,6 +101,7 @@ mas_watcher( void )
       unsigned nlistener = 0;
       unsigned ntransaction = 0;
       unsigned nlistener_open = 0;
+
       /* unsigned long elapsed_time; */
       mas_lcontrol_t *plcontrol = NULL;
 
@@ -109,11 +110,13 @@ mas_watcher( void )
       {
         /* thMSG( "watcher %lu", elapsed_time ); */
         MAS_LOG( "WATCH ==========================================================================================" );
-        MAS_LOG( "WATCH main th: %u [%lx] master th: %u [%lx]", ctrl.main_tid, ctrl.main_thread, ctrl.master_tid, ctrl.master_thread );
-        MAS_LOG( "WATCH ticker th: %u [%lx] watcher th: %u [%lx] logger th: %u [%lx]", ctrl.ticker_tid, ctrl.ticker_thread,
-                 ctrl.watcher_tid, ctrl.watcher_thread, ctrl.logger_tid, ctrl.logger_thread );
+        MAS_LOG( "WATCH main th: %u [%lx] master th: %u [%lx]", ctrl.threads.n.main.tid, ctrl.threads.n.main.thread,
+                 ctrl.threads.n.master.tid, ctrl.threads.n.master.thread );
+        MAS_LOG( "WATCH ticker th: %u [%lx] watcher th: %u [%lx] logger th: %u [%lx]", ctrl.threads.n.ticker.tid,
+                 ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.tid, ctrl.threads.n.watcher.thread, ctrl.threads.n.logger.tid,
+                 ctrl.threads.n.logger.thread );
         MAS_LOG( "WATCH clients: {%lu - %lu = %lu};server pid:%u; tid:%5u; [%lx]", ctrl.clients_came, ctrl.clients_gone,
-                 ctrl.clients_came - ctrl.clients_gone, ctrl.main_pid, ctrl.main_tid, ctrl.main_thread );
+                 ctrl.clients_came - ctrl.clients_gone, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.thread );
       }
       nlistener = 0;
       ntransaction = 0;
@@ -213,10 +216,10 @@ mas_watcher( void )
         if ( nlistener_open == 0 && ntransaction == 0 /* && nlisteners_ever_open */  )
           stop = 1;
       }
-      else if ( !ctrl.main_thread || ( !ctrl.master_thread && opts.make_master_thread ) || !ctrl.watcher_thread || !ctrl.logger_thread
-                || !ctrl.ticker_thread )
+      else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && opts.make_master_thread )
+                || !ctrl.threads.n.watcher.thread || !ctrl.threads.n.logger.thread || !ctrl.threads.n.ticker.thread )
       {
-        FMSG( "WATCHER main:%d; master:%d", ctrl.main_thread ? 1 : 0, ctrl.master_thread ? 1 : 0 );
+        FMSG( "WATCHER main:%d; master:%d", ctrl.threads.n.main.thread ? 1 : 0, ctrl.threads.n.master.thread ? 1 : 0 );
       }
       /* fprintf( stderr, "WATCHER %u %u %u\n", nlistener_open, ntransaction, nlisteners_ever_open ); */
     }
@@ -241,7 +244,7 @@ mas_watcher( void )
 static void *
 mas_watcher_th( void *arg )
 {
-  ctrl.watcher_tid = mas_gettid(  );
+  ctrl.threads.n.watcher.tid = mas_gettid(  );
   if ( prctl( PR_SET_NAME, ( unsigned long ) "zocwatch" ) < 0 )
   {
     P_ERR;
@@ -266,7 +269,7 @@ mas_watcher_start( void )
 {
   int r = 0;
 
-  if ( !ctrl.watcher_thread )
+  if ( !ctrl.threads.n.watcher.thread )
   {
     {
       ( void ) /* r = */ pthread_attr_getstack( &ctrl.thglob.watcher_attr, &watcher_stackaddr, &watcher_stacksize );
@@ -276,9 +279,9 @@ mas_watcher_start( void )
 
     MAS_LOG( "starting watcher th." );
 
-    /* r = mas_xpthread_create( &ctrl.watcher_thread, mas_watcher_th, MAS_THREAD_WATCHER, NULL ); */
-    r = pthread_create( &ctrl.watcher_thread, &ctrl.thglob.watcher_attr, mas_watcher_th, NULL );
-    MAS_LOG( "(%d) created(?) watcher thread [%lx]", r, ctrl.watcher_thread );
+    /* r = mas_xpthread_create( &ctrl.threads.n.watcher.thread, mas_watcher_th, MAS_THREAD_WATCHER, NULL ); */
+    r = pthread_create( &ctrl.threads.n.watcher.thread, &ctrl.thglob.watcher_attr, mas_watcher_th, NULL );
+    MAS_LOG( "(%d) created(?) watcher thread [%lx]", r, ctrl.threads.n.watcher.thread );
   }
   else
   {
@@ -293,15 +296,15 @@ mas_watcher_stop( void )
 {
   int r = 0;
 
-  if ( ctrl.watcher_thread )
+  if ( ctrl.threads.n.watcher.thread )
   {
-    MAS_LOG( "stopping (cancelling) watcher [%lx]", ctrl.watcher_thread );
+    MAS_LOG( "stopping (cancelling) watcher [%lx]", ctrl.threads.n.watcher.thread );
 
-    mas_pthread_cancel( ctrl.watcher_thread );
+    mas_pthread_cancel( ctrl.threads.n.watcher.thread );
 
-    mas_xpthread_join( ctrl.watcher_thread );
+    mas_xpthread_join( ctrl.threads.n.watcher.thread );
     /* MAS_LOG( "stopped watcher" ); */
-    ctrl.watcher_thread = ( pthread_t ) 0;
+    ctrl.threads.n.watcher.thread = ( pthread_t ) 0;
     HMSG( "- WATCHER" );
     FMSG( "WATCHER STOPPED" );
   }

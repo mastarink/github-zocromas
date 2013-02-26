@@ -183,10 +183,10 @@ info_cmd( STD_CMD_ARGS )
                       level, this_command ? this_command->only_level : 0, ctrl.restart_cnt,
                       mas_gettid(  ), mas_thread_self_type_name(  ),
                       ctrl.exepath,
-                      ctrl.main_pid, ctrl.master_pid, ctrl.child_pid, ctrl.server_pid, ctrl.server_thread,
-                      ctrl.clients_came,
-                      ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir, opts.pidsdir,
-                      ctrl.log_q_came, ctrl.log_q_gone, opts.logdir, ctrl.logpath, '#' );
+                      ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.child.pid,
+                      ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
+                      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir,
+                      opts.pidsdir, ctrl.log_q_came, ctrl.log_q_gone, opts.logdir, ctrl.logpath, '#' );
       cp += len;
       bufsz -= len;
     }

@@ -189,34 +189,37 @@ mas_master( void )
 static void *
 mas_master_th( void *arg )
 {
+  int r = 0;
+
   HMSG( "MASTER_TH START" );
-  ctrl.master_tid = mas_gettid(  );
-  ctrl.master_pid = getpid(  );
+  ctrl.threads.n.master.tid = mas_gettid(  );
+  ctrl.threads.n.master.pid = getpid(  );
+  ctrl.threads.n.master.thread = mas_pthread_self(  );
+  ctrl.pserver_thread = &ctrl.threads.n.master;
 
-  ctrl.server_pid = ctrl.master_pid;
-  ctrl.server_tid = mas_gettid(  );
-  ctrl.server_thread = mas_pthread_self(  );
+  ctrl.pserver_thread = &ctrl.threads.n.master;
 
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) < 0 )
-  {
-    P_ERR;
-  }
+  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) < 0 ) */
+  /* {                                                              */
+  /*   P_ERR;                                                       */
+  /* }                                                              */
+  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) );
 
   /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
   mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );
 
-  if ( ctrl.main_exit && ctrl.main_thread )
+  if ( ctrl.main_exit && ctrl.threads.n.main.thread )
   {
-    mas_pthread_detach( ctrl.main_thread );
-    mas_xpthread_join( ctrl.main_thread );
-    ctrl.main_thread = 0;
+    mas_pthread_detach( ctrl.threads.n.main.thread );
+    mas_xpthread_join( ctrl.threads.n.main.thread );
+    ctrl.threads.n.main.thread = 0;
   }
   ( void ) /* r= */ mas_master(  );
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 
-  /* mMSG( "mas_master_th end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread ); */
+  /* mMSG( "mas_master_th end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.threads.n.ticker.thread, ctrl.threads.n.logger.thread ); */
   MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
 #endif
   HMSG( "MASTER_TH TO END" );
@@ -248,12 +251,12 @@ mas_master_optional_thread( void )
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
   if ( opts.make_master_thread )
   {
-    /* r = pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
-    IEVAL( r, pthread_create( &ctrl.master_thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ) );
-    if ( !ctrl.main_exit && ctrl.master_thread )
+    /* r = pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
+    IEVAL( r, pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ) );
+    if ( !ctrl.main_exit && ctrl.threads.n.master.thread )
     {
-      mas_xpthread_join( ctrl.master_thread );
-      ctrl.master_thread = ( pthread_t ) 0;
+      mas_xpthread_join( ctrl.threads.n.master.thread );
+      ctrl.threads.n.master.thread = ( pthread_t ) 0;
     }
   }
   else
@@ -271,10 +274,11 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 
   HMSG( "BUNCH START" );
   MAS_LOG( "bunch start" );
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) < 0 )
-  {
-    P_ERR;
-  }
+  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) < 0 ) */
+  /* {                                                             */
+  /*   P_ERR;                                                      */
+  /* }                                                             */
+  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
 
 #ifdef MAS_INIT_SEPARATE
   /* r = mas_init_server( argc, argv, env ); */
@@ -299,7 +303,8 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
     {
       extern unsigned long memory_balance;
 
-      mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.ticker_thread, ctrl.logger_thread );
+      mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.threads.n.ticker.thread,
+            ctrl.threads.n.logger.thread );
       MAS_LOG( "bunch end, m/b:%lu", memory_balance );
     }
 #endif
@@ -310,18 +315,18 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   }
   FMSG( "TO DESTROY MODULES" );
   mas_modules_destroy(  );
-  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.master_thread, ctrl.logger_thread,
-        ctrl.ticker_thread, ctrl.watcher_thread, ctrl.lcontrols_list ? 1 : 0 );
+  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.threads.n.master.thread,
+        ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
   /* MAS_LOG( "bunch end : %d", r ); */
-  if ( ctrl.master_thread )
-    mas_xpthread_join( ctrl.master_thread );
-  if ( ctrl.logger_thread )
-    mas_xpthread_join( ctrl.logger_thread );
-  if ( ctrl.watcher_thread )
-    mas_xpthread_join( ctrl.watcher_thread );
-  if ( ctrl.main_thread )
-    mas_xpthread_join( ctrl.main_thread );
-  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.master_thread, ctrl.logger_thread,
-        ctrl.ticker_thread, ctrl.watcher_thread, ctrl.lcontrols_list ? 1 : 0 );
+  for ( int ith = 0; ith < sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ); ith++ )
+  {
+    FMSG( "TO JOIN #%d of %ld", ith, sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ) );
+    if ( ctrl.threads.a[ith].thread )
+      mas_xpthread_join( ctrl.threads.a[ith].thread );
+    ctrl.threads.a[ith].thread = 0;
+  }
+  FMSG( "/ JOIN" );
+  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.threads.n.master.thread,
+        ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
   return r;
 }

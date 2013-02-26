@@ -109,8 +109,8 @@ mas_init_message( void )
   {
     IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
           ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
-    IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.main_pid, ctrl.main_pid, ( unsigned ) ctrl.main_tid,
-          ( unsigned long ) ctrl.main_thread );
+    IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.threads.n.main.pid, ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid,
+          ( unsigned long ) ctrl.threads.n.main.thread );
   }
   else
 #endif
@@ -118,8 +118,8 @@ mas_init_message( void )
     IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime,
           ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
-    IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.main_pid,
-          ctrl.main_pid, ( unsigned ) ctrl.main_tid, ( unsigned long ) ctrl.main_thread );
+    IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid,
+          ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
   }
   return 0;
 }
@@ -127,9 +127,9 @@ mas_init_message( void )
 static int
 error_handler_at_init( const char *func, int line, int rcode )
 {
-  const char *fmt = " !!!!!!!!!!!!!! ERROR #%d !!!!!!!!!!!!!!";
+  const char *fmt = " r #%d";
 
-  HMSG( fmt, rcode );
+  /* HMSG( fmt, rcode ); */
   mas_error( func, line, errno, fmt, rcode );
   mas_log( func, line, errno, fmt, rcode );
   return 0;
@@ -144,12 +144,12 @@ mas_pre_init( char *runpath )
   ctrl.status = MAS_STATUS_START;
   ctrl.error_handler = error_handler_at_init;
   HMSG( "PRE-INIT" );
-  ctrl.main_tid = mas_gettid(  );
+  ctrl.threads.n.main.tid = mas_gettid(  );
   ctrl.start_time = mas_double_time(  );
   /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
   ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
-  ctrl.main_pid = getpid(  );
+  ctrl.threads.n.main.pid = getpid(  );
   ctrl.binname = mas_strdup( basename( runpath ) );
   {
     char lexe[256];
@@ -449,7 +449,7 @@ __attribute__ ( ( constructor ) )
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
 
-  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.main_pid );
+  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid );
   value = getenv( name );
   if ( ctrl.stderrfile )
     fprintf( ctrl.stderrfile, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );

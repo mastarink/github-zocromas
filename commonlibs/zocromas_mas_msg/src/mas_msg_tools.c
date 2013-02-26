@@ -112,7 +112,7 @@ __mas_msg_prefix( int fdetails, pid_t pid, const char *prefix_fmt, const char *p
       {
         /* MFP( prefix_fmt ? prefix_fmt : " %-6s ", prefix ); */
       }
-      if ( pid == ctrl.main_pid )
+      if ( pid == ctrl.main.pid )
       {
         wattron( w_win, A_BOLD );
         MFP( "+" );
@@ -139,13 +139,13 @@ __mas_msg_prefix( int fdetails, pid_t pid, const char *prefix_fmt, const char *p
         MFP( prefix_fmt ? prefix_fmt : "-- %-5s", qprefix );
         MFP( "\x1b[0m" );
       }
-      if ( pid == ctrl.main_pid )
+      if ( pid == ctrl.threads.n.main.pid )
       {
         MFP( "\x1b[1;31mMain\x1b[0m:%5u.%u", pid, ctrl.restart_cnt );
         if ( ctrl.is_server )
           MFP( " :%1d: ", ctrl.keep_listening );
       }
-      else if ( pid == ctrl.child_pid )
+      else if ( pid == ctrl.threads.n.child.pid )
       {
         MFP( "\x1b[1;31mChild\x1b[0m:%5u.%u", pid, ctrl.restart_cnt );
         if ( ctrl.is_server )

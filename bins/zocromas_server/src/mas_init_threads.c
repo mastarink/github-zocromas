@@ -122,8 +122,8 @@ mas_threads_init( void )
       EMSG( "setting transaction stack %lu (min:%lu)?", ( unsigned long ) transaction_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
   }
-  ctrl.main_thread = pthread_self(  );
-  ctrl.main_tid = mas_gettid(  );
+  ctrl.threads.n.main.thread = pthread_self(  );
+  ctrl.threads.n.main.tid = mas_gettid(  );
   MAS_LOG( "(%d) init threads done", r );
   return r;
 }

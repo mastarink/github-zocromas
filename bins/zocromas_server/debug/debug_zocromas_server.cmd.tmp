@@ -2,7 +2,7 @@ set print thread-events off
 set breakpoint pending on
 handle SIGPIPE nostop noprint
 # break mas_init.c:134
-break mas_in_thread_end
+# break mas_in_thread_end
 run --nodaemon --set-ticker-mode=3 --redirect-messages=/dev/pts/30
 bt
 # vi: ft=gdb

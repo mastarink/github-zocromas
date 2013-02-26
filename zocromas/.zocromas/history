@@ -107,3 +107,12 @@ notify test aaaaaaaaaaa
 server quit
 notify test aaaaaaaaaaa
 server quit
+notify nt aaaaaaaaaaa
+server info
+server quit
+server info
+server quit
+server info
+server quit
+server info
+server quit

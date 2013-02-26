@@ -181,7 +181,7 @@ mas_ticker_th( void *arg )
 {
   int old_cancelability = 0;
 
-  ctrl.ticker_tid = mas_gettid(  );
+  ctrl.threads.n.ticker.tid = mas_gettid(  );
   if ( prctl( PR_SET_NAME, ( unsigned long ) "zoctick" ) < 0 )
   {
     P_ERR;
@@ -208,7 +208,7 @@ mas_ticker_start( void )
   int r = 0;
 
   MFP( "\x1b]2;starting ticker; mode:%d\x7", ctrl.ticker_mode );
-  if ( !ctrl.ticker_thread )
+  if ( !ctrl.threads.n.ticker.thread )
   {
     {
       ( void ) /* r = */ pthread_attr_getstack( &ctrl.thglob.ticker_attr, &ticker_stackaddr, &ticker_stacksize );
@@ -220,20 +220,20 @@ mas_ticker_start( void )
     /*   tmp = mas_malloc( 4321 ); */
     MAS_LOG( "starting ticker th." );
 
-    /* r = mas_xpthread_create( &ctrl.ticker_thread, mas_ticker_th, MAS_THREAD_TICKER, NULL ); */
-    r = pthread_create( &ctrl.ticker_thread, &ctrl.thglob.ticker_attr, mas_ticker_th, NULL );
+    /* r = mas_xpthread_create( &ctrl.threads.n.ticker.thread, mas_ticker_th, MAS_THREAD_TICKER, NULL ); */
+    r = pthread_create( &ctrl.threads.n.ticker.thread, &ctrl.thglob.ticker_attr, mas_ticker_th, NULL );
     {
       int policy, rs;
       struct sched_param sched;
 
-      rs = pthread_getschedparam( ctrl.ticker_thread, &policy, &sched );
-      MAS_LOG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.ticker_thread, policy, sched.sched_priority, rs );
+      rs = pthread_getschedparam( ctrl.threads.n.ticker.thread, &policy, &sched );
+      MAS_LOG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.threads.n.ticker.thread, policy, sched.sched_priority, rs );
       /* SCHED_IDLE ... SCHED_RR */
-      rs = pthread_setschedparam( ctrl.ticker_thread, SCHED_IDLE, &sched );
-      /* rs = pthread_getschedparam( ctrl.ticker_thread, &policy, &sched ); */
-      tMSG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.ticker_thread, policy, sched.sched_priority, rs );
+      rs = pthread_setschedparam( ctrl.threads.n.ticker.thread, SCHED_IDLE, &sched );
+      /* rs = pthread_getschedparam( ctrl.threads.n.ticker.thread, &policy, &sched ); */
+      tMSG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.threads.n.ticker.thread, policy, sched.sched_priority, rs );
     }
-    MAS_LOG( "(%d) created(?) ticker thread [%lx]", r, ctrl.ticker_thread );
+    MAS_LOG( "(%d) created(?) ticker thread [%lx]", r, ctrl.threads.n.ticker.thread );
   }
   else
   {
@@ -248,18 +248,18 @@ mas_ticker_stop( void )
 {
   int r = 0;
 
-  if ( ctrl.ticker_thread )
+  if ( ctrl.threads.n.ticker.thread )
   {
     FMSG( "CANCEL TICKER" );
-    MAS_LOG( "stopping (cancelling) ticker [%lx]", ctrl.ticker_thread );
+    MAS_LOG( "stopping (cancelling) ticker [%lx]", ctrl.threads.n.ticker.thread );
 
-    mas_pthread_cancel( ctrl.ticker_thread );
+    mas_pthread_cancel( ctrl.threads.n.ticker.thread );
 
-    mas_xpthread_join( ctrl.ticker_thread );
-    /* mas_pthread_detach( ctrl.ticker_thread ); */
+    mas_xpthread_join( ctrl.threads.n.ticker.thread );
+    /* mas_pthread_detach( ctrl.threads.n.ticker.thread ); */
     mMSG( "JOINED ticker" );
     MAS_LOG( "stopped ticker" );
-    ctrl.ticker_thread = ( pthread_t ) 0;
+    ctrl.threads.n.ticker.thread = ( pthread_t ) 0;
     HMSG( "- TICKER" );
     FMSG( "TICKER STOPPED" );
     MFP( "\x1b]2;stopped ticker; mode:%d\x7", ctrl.ticker_mode );

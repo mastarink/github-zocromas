@@ -27,20 +27,15 @@ static int mas_error_handler( const char *func, int line, int rcode );
 
 mas_control_t ctrl = {
   .main_exit = 0,
-  .main_pid = 0,
-  .master_pid = 0,
-  .child_pid = 0,
-  .main_thread = ( pthread_t ) 0,
-  .main_tid = 0,
-  .master_thread = ( pthread_t ) 0,
-  .master_tid = 0,
-  .ticker_thread = ( pthread_t ) 0,
-  .ticker_tid = 0,
+  .threads = {.n = {
+                    .main = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
+                    .master = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
+                    .child = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
+                    .ticker = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
+                    .logger = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
+                    .watcher = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0}}
+              },
   .sigint_time = 0,
-  .watcher_thread = ( pthread_t ) 0,
-  .watcher_tid = 0,
-  .logger_thread = ( pthread_t ) 0,
-  .logger_tid = 0,
   .start_time = 0.0,
   .old_stderr = -1,
   .old_stderrfile = NULL,

@@ -224,7 +224,7 @@ mas_thself_type( void )
   mas_thdata_t *thd;
   th_type_t thtype = MAS_THREAD_NONE;
 
-  if ( ctrl.main_thread && pthread_equal( ctrl.main_thread, pthread_self(  ) ) )
+  if ( ctrl.threads.n.main.thread && pthread_equal( ctrl.threads.n.main.thread, pthread_self(  ) ) )
   {
     thtype = MAS_THREAD_MAIN;
   }

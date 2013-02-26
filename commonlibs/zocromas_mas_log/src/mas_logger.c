@@ -211,7 +211,7 @@ mas_logger_th( void *arg )
 {
   int lf = -1;
 
-  ctrl.logger_tid = mas_gettid(  );
+  ctrl.threads.n.logger.tid = mas_gettid(  );
   if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) < 0 )
   {
     P_ERR;
@@ -222,7 +222,7 @@ mas_logger_th( void *arg )
 
   /* FMSG( "(!) logger %d\x1b[K", ctrl.keep_logging ); */
   ctrl.keep_logging = 1;
-  MAS_LOG( "logger start [%lx]", ctrl.logger_thread );
+  MAS_LOG( "logger start [%lx]", ctrl.threads.n.logger.thread );
   pthread_cleanup_push( mas_logger_cleanup, NULL );
   while ( ( lf = mas_logger_flush(  ) ) == 0 || ctrl.keep_logging )
   {
@@ -244,7 +244,7 @@ mas_logger_start( void )
 {
   int r = 0;
 
-  if ( !ctrl.logger_thread )
+  if ( !ctrl.threads.n.logger.thread )
   {
     pthread_setconcurrency( 4 );
     MAS_LOG( "starting logger th. [concurrency:%u]", pthread_getconcurrency(  ) );
@@ -252,10 +252,10 @@ mas_logger_start( void )
       (void) pthread_attr_getstack( &ctrl.thglob.logger_attr, &logger_stackaddr, &logger_stacksize );
       /* thMSG( "creating logger thread stack:%lu @ %p", logger_stacksize, logger_stackaddr ); */
     }
-    /* r = mas_xpthread_create( &ctrl.logger_thread, mas_logger_th, MAS_THREAD_LOGGER, NULL ); */
-    r = pthread_create( &ctrl.logger_thread, &ctrl.thglob.logger_attr, mas_logger_th, NULL );
-    /* thMSG( "(%d) created(?) logger thread [%lx]", r, ctrl.logger_thread ); */
-    MAS_LOG( "(%d) created(?) logger thread [%lx]", r, ctrl.logger_thread );
+    /* r = mas_xpthread_create( &ctrl.threads.n.logger.thread, mas_logger_th, MAS_THREAD_LOGGER, NULL ); */
+    r = pthread_create( &ctrl.threads.n.logger.thread, &ctrl.thglob.logger_attr, mas_logger_th, NULL );
+    /* thMSG( "(%d) created(?) logger thread [%lx]", r, ctrl.threads.n.logger.thread ); */
+    MAS_LOG( "(%d) created(?) logger thread [%lx]", r, ctrl.threads.n.logger.thread );
     if ( opts.logdir && ctrl.logpath )
     {
       ctrl.keep_logging = 1;
@@ -273,21 +273,21 @@ mas_logger_stop( void )
 {
   int r = 0;
 
-  if ( ctrl.logger_thread )
+  if ( ctrl.threads.n.logger.thread )
   {
     MAS_LOG( "cancelling logger" );
-    /* mMSG( "cancelling logger [%lx]", ctrl.logger_thread ); */
+    /* mMSG( "cancelling logger [%lx]", ctrl.threads.n.logger.thread ); */
     /* mas_pthread_mutex_lock( &logger_write_mutex ); */
-    mas_pthread_cancel( ctrl.logger_thread );
+    mas_pthread_cancel( ctrl.threads.n.logger.thread );
     /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
     /* mMSG( "stopping (cancelling) logger" ); */
     /* MAS_LOG( "canceled logger" ); */
     /* MAS_LOG( "joining logger" ); */
     /* mMSG( "joining logger" ); */
-    mas_xpthread_join( ctrl.logger_thread );
+    mas_xpthread_join( ctrl.threads.n.logger.thread );
     /* mMSG( "stoped logger" ); */
     /* MAS_LOG( "stopped logger" ); */
-    ctrl.logger_thread = ( pthread_t ) 0;
+    ctrl.threads.n.logger.thread = ( pthread_t ) 0;
   }
   else
   {

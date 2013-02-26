@@ -43,34 +43,32 @@ struct mas_pthread_globals_s
 };
 
 typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int rcode );
-
+typedef struct mas_thread_info_s mas_thread_info_t;
+struct mas_thread_info_s
+{
+  pid_t pid;
+  pid_t tid;
+  pthread_t thread;
+};
+typedef struct mas_std_threads_set_s
+{
+  mas_thread_info_t ticker;
+  mas_thread_info_t watcher;
+  mas_thread_info_t logger;
+  mas_thread_info_t master;
+  mas_thread_info_t child;
+  mas_thread_info_t main;
+} mas_std_threads_set_t;
 struct mas_control_s
 {
-  pid_t main_pid;
-  pid_t main_tid;
-  pthread_t main_thread;
-
-  pid_t child_pid;
-  pid_t child_tid;
-  pthread_t child_thread;
-
-  pid_t master_pid;
-  pid_t master_tid;
-  pthread_t master_thread;
-
-  pid_t server_pid;
-  pid_t server_tid;
-  pthread_t server_thread;
-
-  pthread_t ticker_thread;
-  pid_t ticker_tid;
-
-  pthread_t watcher_thread;
-  pid_t watcher_tid;
-
-  pthread_t logger_thread;
-  pid_t logger_tid;
-
+  union
+  {
+    mas_std_threads_set_t n;
+    mas_thread_info_t a[sizeof( mas_std_threads_set_t ) / sizeof( mas_thread_info_t )];
+  }
+  threads;
+  mas_thread_info_t *pserver_thread;
+  
   char *binname;
   char *progname;
   char *exepath;

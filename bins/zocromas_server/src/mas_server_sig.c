@@ -89,13 +89,13 @@ sigterm_han( int s )
 /*   fprintf( ftinfo, "\n" );                                                                                                                 */
 /*   fprintf( ftinfo,                                                                                                                         */
 /*            "main_thread: %u [%lx]\nmaster_thread: %u [%lx]\nticker_thread: %u [%lx]\nlogger_thread: %u [%lx]\nwatcher_thread: %u [%lx]\n", */
-/*            ctrl.main_tid, ctrl.main_thread, ctrl.master_tid, ctrl.master_thread, ctrl.ticker_tid, ctrl.ticker_thread,                      */
-/*            ctrl.logger_tid, ctrl.logger_thread, ctrl.watcher_tid, ctrl.watcher_thread );                                                   */
+/*            ctrl.threads.n.main.tid, ctrl.threads.n.main.thread, ctrl.threads.n.master.tid, ctrl.threads.n.master.thread, ctrl.threads.n.ticker.tid, ctrl.threads.n.ticker.thread,                      */
+/*            ctrl.threads.n.logger.tid, ctrl.threads.n.logger.thread, ctrl.threads.n.watcher.tid, ctrl.threads.n.watcher.thread );                                                   */
 /*   fprintf( ftinfo,                                                                                                                         */
 /*            "Server info:\n\tclients: {%lu - %lu = %lu}\n" "\tlogdir: %s;\tlogpath: %s;\n"                                                  */
 /*            "\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", ctrl.clients_came, ctrl.clients_gone,                                             */
-/*            ctrl.clients_came - ctrl.clients_gone, opts.logdir, ctrl.logpath, ctrl.main_pid, ctrl.main_tid, ctrl.main_tid,                  */
-/*            ctrl.main_thread );                                                                                                             */
+/*            ctrl.clients_came - ctrl.clients_gone, opts.logdir, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
+/*            ctrl.threads.n.main.thread );                                                                                                             */
 /*   ith = 0;                                                                                                                                 */
 /*   (* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); *)                                                                           */
 /*   pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );                                                                             */
@@ -180,7 +180,7 @@ sigint_han( int s )
   {
     pthread_t *pt;
 
-    pt = ctrl.listening_threads;
+    pt = ctrl.threads.n.listening.threads;
     while ( pt && *pt )
     {
       EMSG( "INT to %lx @ %lx", ( unsigned long ) *pt, mas_pthread_self(  ) );
@@ -189,7 +189,7 @@ sigint_han( int s )
     }
   }
   */
-  if ( ctrl.server_pid == mas_gettid(  ) )
+  if ( ctrl.pserver_thread && ctrl.pserver_thread->pid == mas_gettid(  ) )
   {
     int_cnt++;
     /* RL_SETSTATE( RL_STATE_DONE ); */
@@ -216,11 +216,11 @@ sigint_han( int s )
         pinfo(  );
       if ( !ctrl.stderrfile
            || fprintf( ctrl.stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ),
-                       ctrl.main_thread ) < 0 )
+                       ctrl.threads.n.main.thread ) < 0 )
         if ( !ctrl.old_stderrfile
              || fprintf( ctrl.old_stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ),
-                         ctrl.main_thread ) < 0 )
-          fprintf( ctrl.msgfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.main_thread );
+                         ctrl.threads.n.main.thread ) < 0 )
+          fprintf( ctrl.msgfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.threads.n.main.thread );
       errno = 0;
     }
   }
@@ -253,7 +253,7 @@ sigabrt_han( int s )
      {
      pthread_t *pt;
 
-     pt = ctrl.listening_threads;
+     pt = ctrl.threads.n.listening.threads;
      while ( pt && *pt )
      {
      GMSG( "HUP to %lx @ %lx", ( unsigned long ) *pt, mas_pthread_self(  ) );
@@ -275,7 +275,7 @@ sigpipe_han( int s )
      {
      pthread_t *pt;
 
-     pt = ctrl.listening_threads;
+     pt = ctrl.threads.n.listening.threads;
      while ( pt && *pt )
      {
      GMSG( "PIPE to %lx @ %lx", ( unsigned long ) *pt, mas_pthread_self(  ) );

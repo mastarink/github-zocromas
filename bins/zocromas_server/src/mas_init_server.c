@@ -115,7 +115,7 @@ Creating a daemon
 static int
 mas_init_pid( int indx, const char *name )
 {
-  int r = -1;
+  int r = 0;
 
   if ( name && *name && indx < MAS_MAX_PIDFD )
   {
@@ -124,35 +124,25 @@ mas_init_pid( int indx, const char *name )
     pidpath = mas_strdup( opts.pidsdir );
     pidpath = mas_strcat_x( pidpath, name );
     HMSG( "PIDPATH: %s", pidpath );
-    ctrl.pidfd[indx] = open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR );
-    if ( ctrl.pidfd[indx] > 0 )
+    IEVAL( r, open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ) );
+    if ( r > 0 )
     {
-      int w, lck;
-
-      lck = lockf( ctrl.pidfd[indx], F_TLOCK, 0 );
-      HMSG( "PIDLCK: %d (%d)", lck, ctrl.pidfd[indx] );
-      /* setvbuf( ctrl.pidfile, NULL, _IONBF, 0 ); */
-      if ( lck >= 0 )
+      ctrl.pidfd[indx] = r;
+      IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
+      HMSG( "PIDLCK: %d (%d)", r, ctrl.pidfd[indx] );
+      IEVAL( r, write( ctrl.pidfd[indx], &ctrl.threads.n.main.pid, sizeof( ctrl.threads.n.main.pid ) ) );
+      HMSG( "PIDW: %d", r );
+      if ( r < 0 )
       {
-        /* w = fwrite( pidpath, 1, strlen( pidpath ), f ); */
-        /* w = fprintf( f, "%u", getpid(  ) ); */
-        w = write( ctrl.pidfd[indx], &ctrl.main_pid, sizeof( ctrl.main_pid ) );
-        HMSG( "PIDW: %d", w );
-        if ( w > 0 )
-          r = 0;
-      }
-      else
-      {
-        P_ERR;
         close( ctrl.pidfd[indx] );
         ctrl.pidfd[indx] = -1;
       }
     }
-    else
-    {
-      P_ERR;
-    }
     mas_free( pidpath );
+  }
+  else
+  {
+    IEVAL( r, -1 );
   }
   HMSG( "(%d) INIT %s", r, __func__ );
   return r;
@@ -164,9 +154,10 @@ mas_init_pids( void )
   int r = 0;
   char *namebuf = NULL;
 
-  ctrl.server_pid = getpid(  );
-  ctrl.server_tid = mas_gettid(  );
-  ctrl.server_thread = mas_pthread_self(  );
+  ctrl.threads.n.main.tid = mas_gettid(  );
+  ctrl.threads.n.main.pid = getpid(  );
+  ctrl.threads.n.main.thread = mas_pthread_self(  );
+  ctrl.pserver_thread = &ctrl.threads.n.main;
 
   namebuf = mas_malloc( 512 );
   MAS_LOG( "(%d) init pids", r );
@@ -214,17 +205,16 @@ mas_init_daemon( void )
     MAS_LOG( "(%d) init fork", r );
     if ( pid_child == 0 )
     {
-      ctrl.child_pid = getpid(  );
-      ctrl.child_tid = mas_gettid(  );
-      ctrl.child_thread = mas_pthread_self(  );
-      ctrl.server_pid = getpid(  );
-      ctrl.server_tid = mas_gettid(  );
-      ctrl.server_thread = mas_pthread_self(  );
+      ctrl.threads.n.child.pid = getpid(  );
+      ctrl.threads.n.child.tid = mas_gettid(  );
+      ctrl.threads.n.child.thread = mas_pthread_self(  );
+      ctrl.pserver_thread = &ctrl.threads.n.child;
 
-      if ( prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) < 0 )
-      {
-        P_ERR;
-      }
+      /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) < 0 ) */
+      /* {                                                             */
+      /*   P_ERR;                                                      */
+      /* }                                                             */
+      IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) );
 
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
       {
@@ -294,7 +284,7 @@ mas_init_daemon( void )
     }
     else if ( pid_child > 0 )
     {
-      ctrl.child_pid = pid_child;
+      ctrl.threads.n.child.pid = pid_child;
       HMSG( "PARENT : %u @ %u @ %u", pid_child, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
     }
@@ -315,9 +305,6 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
 
-  ctrl.server_pid = getpid(  );
-  ctrl.server_tid = mas_gettid(  );
-  ctrl.server_thread = mas_pthread_self(  );
 
 #  ifdef MAS_SERVER_NOLOG
   ctrl.log_disabled = 1;
@@ -406,12 +393,12 @@ mas_destroy_server( void )
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
-  if ( ctrl.logger_thread )
+  if ( ctrl.threads.n.logger.thread )
   {
     FMSG( "TO STOP LOGGER" );
     mas_logger_stop(  );
   }
-  if ( ctrl.ticker_thread )
+  if ( ctrl.threads.n.ticker.thread )
   {
     FMSG( "TO STOP TICKER" );
     mas_ticker_stop(  );
