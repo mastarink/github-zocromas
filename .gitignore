@@ -11,3 +11,6 @@ install/
 files*.txt
 *.env
 log/
+pthe
+pthe.c
+libxml2-example.c
