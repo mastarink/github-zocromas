@@ -116,3 +116,5 @@ server info
 server quit
 server info
 server quit
+bye
+server quit

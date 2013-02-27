@@ -1,5 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_basic_def.h" */
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdlib.h>
 #include <sys/types.h>
@@ -8,7 +9,7 @@
 #include <string.h>
 #include <time.h>
 #ifdef HAVE_LIBUUID
-#include <uuid/uuid.h>
+#  include <uuid/uuid.h>
 #endif
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -40,7 +41,6 @@ related:
   mas_control.c
 
 */
-
 
 int
 mas_opts_destroy( void )
@@ -165,21 +165,24 @@ mas_opts_check_dir( void )
   int r = 0;
   struct stat dir_stat;
 
-  r = stat( opts.configdir, &dir_stat );
-  if ( r < 0 )
-  {
-    if ( errno == ENOENT )
-    {
-      EMSG( "no configdir : %s", opts.configdir );
-    }
-    else
-    {
-      EMSG( "why? : %s", opts.configdir );
-    }
-  }
-  else
-  {
-  }
+  if ( !opts.configdir || !*opts.configdir )
+    IEVALM( r, -1, "(%d)config dir not set", NULL );
+  /* r = stat( opts.configdir, &dir_stat ); */
+  IEVALM( r, stat( opts.configdir, &dir_stat ), "(%d)no configdir: '%s'", opts.configdir );
+  /* if ( r < 0 )                                     */
+  /* {                                                */
+  /*   if ( errno == ENOENT )                         */
+  /*   {                                              */
+  /*     EMSG( "no configdir : %s", opts.configdir ); */
+  /*   }                                              */
+  /*   else                                           */
+  /*   {                                              */
+  /*     EMSG( "why? : %s", opts.configdir );         */
+  /*   }                                              */
+  /* }                                                */
+  /* else                                             */
+  /* {                                                */
+  /* }                                                */
   return r;
 }
 
@@ -247,11 +250,13 @@ mas_opts_check_old_file( const char *fpath, int deep, int remove_ext, int backup
 int
 _mas_opts_save( const char *dirname, const char *filename, int backup, int overwrite )
 {
+  int r = 0;
   int rtot = -1;
 
-  mas_opts_set_configdir( dirname );
-  mas_opts_set_configfilename( filename );
-  if ( mas_opts_check_dir(  ) == 0 )
+  IEVAL( r, mas_opts_set_configdir( dirname ) );
+  IEVAL( r, mas_opts_set_configfilename( filename ) );
+  IEVAL( r, mas_opts_check_dir(  ) );
+  if ( r == 0 )
   {
     char *fpath = NULL;
 
@@ -267,52 +272,51 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
         f = mas_fopen( fpath, "w" );
         if ( f )
         {
-          int r;
           char outstr[128] = "#   ";
 
           rtot = 0;
-
           {
             strftime( outstr, sizeof( outstr ), "%a, %d %b %Y %T %z", mas_xlocaltime(  ) );
-            r = fprintf( f, "# %s\n#\n", outstr );
+            IEVAL( r, fprintf( f, "# %s\n#\n", outstr ) );
             if ( r > 0 )
               rtot += r;
           }
           if ( opts.uuid )
           {
-            r = fprintf( f, "uuid=%s\n", opts.uuid );
+            IEVAL( r, fprintf( f, "uuid=%s\n", opts.uuid ) );
             if ( r > 0 )
               rtot += r;
           }
 
           {
-            r = fprintf( f,
-                         "# common\nenv_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlog=%d\n"
-                         "max_config_backup=%u\nmessages=%u\n"
-                         "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
-                         "# -\n", opts.env_optsname, opts.env_hostname, opts.logdir,
-                         !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
-                         opts.save_opts_plus, opts.restart_sleep );
+            IEVAL( r, fprintf( f,
+                               "# common\nenv_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlog=%d\n"
+                               "max_config_backup=%u\nmessages=%u\n"
+                               "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
+                               "# -\n", opts.env_optsname, opts.env_hostname, opts.logdir,
+                               !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
+                               opts.save_opts_plus, opts.restart_sleep ) );
             if ( r > 0 )
               rtot += r;
           }
           if ( ctrl.is_server )
           {
-            r = fprintf( f,
-                         "# server\ndaemon=%u\nsingle-instance=%u\nsingle-child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
-                         ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir, opts.protodir );
+            IEVAL( r, fprintf( f,
+                               "# server\ndaemon=%u\nsingle-instance=%u\nsingle-child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
+                               ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir,
+                               opts.protodir ) );
             if ( r > 0 )
               rtot += r;
           }
           else if ( ctrl.is_client )
           {
-            r = fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", opts.disconnect_prompt, opts.wait_server );
+            IEVAL( r, fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", opts.disconnect_prompt, opts.wait_server ) );
             if ( r > 0 )
               rtot += r;
           }
           {
             {
-              r = fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num );
+              IEVAL( r, fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num ) );
               if ( r > 0 )
                 rtot += r;
             }
@@ -321,9 +325,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
             {
               for ( int ih = 0; ih < opts.hosts_num; ih++ )
               {
-                int r;
-
-                r = fprintf( f, "host=%s\n", opts.hosts[ih] );
+                IEVAL( r, fprintf( f, "host=%s\n", opts.hosts[ih] ) );
                 if ( r > 0 )
                   rtot += r;
               }
@@ -331,7 +333,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           }
           {
             {
-              r = fprintf( f, "\n[%s %d]\n", "protos", opts.protos_num );
+              IEVAL( r, fprintf( f, "\n[%s %d]\n", "protos", opts.protos_num ) );
               if ( r > 0 )
                 rtot += r;
             }
@@ -340,9 +342,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
             {
               for ( int ih = 0; ih < opts.protos_num; ih++ )
               {
-                int r;
-
-                r = fprintf( f, "proto=%s\n", opts.protos[ih] );
+                IEVAL( r, fprintf( f, "proto=%s\n", opts.protos[ih] ) );
                 if ( r > 0 )
                   rtot += r;
               }
@@ -350,14 +350,12 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           }
           if ( opts.commands_num )
           {
-            r = fprintf( f, "\n[commands %d]\n", opts.commands_num );
+            IEVAL( r, fprintf( f, "\n[commands %d]\n", opts.commands_num ) );
             if ( r > 0 )
               rtot += r;
             for ( int ih = 0; ih < opts.commands_num; ih++ )
             {
-              int r;
-
-              r = fprintf( f, "command=%s\n", opts.commands[ih] );
+              IEVAL( r, fprintf( f, "command=%s\n", opts.commands[ih] ) );
               if ( r > 0 )
                 rtot += r;
             }
@@ -369,10 +367,10 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 
             while ( ( var = mas_variable_matching( ctrl.hostvars, var, vclass, name ) ) )
             {
-              r = fprintf( f, "\n[host %s]\n", var->vclass );
+              IEVAL( r, fprintf( f, "\n[host %s]\n", var->vclass ) );
               if ( r > 0 )
                 rtot += r;
-              r = fprintf( f, "%s=%s\n", var->name, var->value );
+              IEVAL( r, fprintf( f, "%s=%s\n", var->name, var->value ) );
               if ( r > 0 )
                 rtot += r;
               /* vclass = ...; */
@@ -401,7 +399,7 @@ mas_opts_save( const char *dirname, const char *filename )
   if ( opts.save_opts )
   {
     MAS_LOG( "to save opts %s", filename );
-    r = _mas_opts_save( dirname, filename, 1, opts.save_opts );
+    IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.save_opts ) );
     MAS_LOG( "saved opts : %d", r );
   }
   else
@@ -414,7 +412,7 @@ mas_opts_save( const char *dirname, const char *filename )
 int
 _mas_opts_save_plus( const char *dirname, const char *filename, int backup, int overwrite, va_list args )
 {
-  int r = -1;
+  int r = 0;
   char *s = NULL;
   int x = 0;
   char *fn = NULL;
@@ -430,7 +428,11 @@ _mas_opts_save_plus( const char *dirname, const char *filename, int backup, int 
   }
   if ( x )
   {
-    r = _mas_opts_save( dirname, fn, backup, overwrite );
+    IEVAL( r, _mas_opts_save( dirname, fn, backup, overwrite ) );
+  }
+  else
+  {
+    IEVAL( r, -1 );
   }
   mas_free( fn );
   return r;
@@ -439,14 +441,14 @@ _mas_opts_save_plus( const char *dirname, const char *filename, int backup, int 
 int
 mas_opts_save_plus( const char *dirname, const char *filename, ... )
 {
-  int r = -1;
+  int r = 0;
   va_list args;
 
   va_start( args, filename );
   /* if ( opts.save_opts_plus ) */
   {
     MAS_LOG( "to save opts plus %s", filename );
-    r = _mas_opts_save_plus( dirname, filename, 1, opts.save_opts_plus, args );
+    IEVAL( r, _mas_opts_save_plus( dirname, filename, 1, opts.save_opts_plus, args ) );
     MAS_LOG( "saved opts plus : %d", r );
   }
   /* else                                    */
@@ -514,9 +516,10 @@ mas_opts_set_double( double *pint, const char *s )
   }
 }
 
-void
+static int
 mas_opts_set_argv( int *pargc, char ***pargv, const char *s )
 {
+  int r = 0;
   const char *se;
 
   se = mas_find_eq_value( s );
@@ -524,9 +527,14 @@ mas_opts_set_argv( int *pargc, char ***pargv, const char *s )
   {
     *pargc = mas_add_argv_arg( *pargc, pargv, se );
   }
+  else
+  {
+    IEVAL( r, -1 );
+  }
+  return r;
 }
 
-void
+static void
 mas_opts_add_command( const char *s )
 {
   const char *se;
@@ -538,6 +546,7 @@ mas_opts_add_command( const char *s )
 int
 mas_opts_restore_nosection( const char *s )
 {
+  int r = 0;
   unsigned v;
   unsigned nv;
 
@@ -592,22 +601,27 @@ mas_opts_restore_nosection( const char *s )
     mas_opts_set_double( &dv, s );
     opts.restart_sleep = dv;
   }
-  return 0;
+  else
+  {
+    IEVAL( r, -1 );
+  }
+  return r;
 }
 
 int
 _mas_opts_restore( const char *dirname, const char *filename )
 {
-  int r = -1;
+  int r = 0;
 
   if ( opts.configdir )
   {
     mas_free( opts.configdir );
     opts.configdir = NULL;
   }
-  mas_opts_set_configdir( dirname );
-  mas_opts_set_configfilename( filename );
-  if ( mas_opts_check_dir(  ) == 0 )
+  IEVALM( r, mas_opts_set_configdir( dirname ), "(%d)set config dir: '%s'", dirname );
+  IEVALM( r, mas_opts_set_configfilename( filename ), "(%d)opts file:'%s'", filename );
+  IEVALM( r, mas_opts_check_dir(  ), "(%d)config dir: '%s'", opts.configdir );
+  if ( r == 0 )
   {
     char *fpath = NULL;
 
@@ -666,13 +680,15 @@ _mas_opts_restore( const char *dirname, const char *filename )
             continue;
           }
           if ( !section )
-            mas_opts_restore_nosection( s );
+          {
+            IEVAL( r, mas_opts_restore_nosection( s ) );
+          }
           else if ( 0 == mas_strcmp2( s, "host=" ) )
           {
             if ( 0 == strcmp( section, ctrl.is_client ? "hosts" : "listen" ) )
             {
               /* mMSG( "%d. +HOST :%s", opts.hosts_num, s ); */
-              mas_opts_set_argv( &opts.hosts_num, &opts.hosts, s );
+              IEVAL( r, mas_opts_set_argv( &opts.hosts_num, &opts.hosts, s ) );
             }
             else
             {
@@ -684,7 +700,7 @@ _mas_opts_restore( const char *dirname, const char *filename )
             if ( 0 == strcmp( section, "protos" ) )
             {
               /* mMSG( "%d. +PROTO :%s", opts.protos_num, s ); */
-              mas_opts_set_argv( &opts.protos_num, &opts.protos, s );
+              IEVAL( r, mas_opts_set_argv( &opts.protos_num, &opts.protos, s ) );
             }
             else
             {
@@ -713,8 +729,12 @@ _mas_opts_restore( const char *dirname, const char *filename )
       }
       else
       {
-        r = -1;
+        IEVALM( r, -1, "(%d)opts file:'%s'", fpath );
       }
+    }
+    else
+    {
+      IEVAL( r, -1 );
     }
     mas_free( fpath );
   }
@@ -726,17 +746,15 @@ mas_opts_restore( const char *dirname, const char *filename )
 {
   int r = 0;
 
+  if ( filename )
   {
     char *fn;
 
     /* mMSG( "FILENAME: %s", filename ); */
     fn = mas_strdup( filename );
-    r = _mas_opts_restore( dirname, fn );
+    IEVAL( r, _mas_opts_restore( dirname, fn ) );
     /* mMSG( "BBB: %s - %d", getenv( "MAS_PID_AT_BASHRC" ), r ); */
     mas_free( fn );
-  }
-  if ( r < 0 )
-  {
   }
 #ifdef HAVE_LIBUUID
   if ( !opts.uuid )
@@ -757,39 +775,94 @@ mas_opts_restore( const char *dirname, const char *filename )
 int
 _mas_opts_restore_plus( const char *dirname, const char *filename, va_list args )
 {
-  int r = -1;
+  int r = 0;
   char *s = NULL;
   int x = 0;
   char *fn = NULL;
 
-  fn = mas_strdup( filename );
+  if ( filename )
+  {
+    fn = mas_strdup( filename );
 
-  /* FMSG( "FN:%s", fn ); */
-  while ( ( s = va_arg( args, char * ) ) )
-  {
-    if ( s )
+    /* FMSG( "FN:%s", fn ); */
+    while ( ( s = va_arg( args, char * ) ) )
     {
-      fn = mas_strcat_x( fn, s );
-      x++;
+      if ( s )
+      {
+        fn = mas_strcat_x( fn, s );
+        x++;
+      }
     }
+    if ( x )
+    {
+      /* HMSG( "OPTS from:%s", fn ); */
+      IEVAL( r, _mas_opts_restore( dirname, fn ) );
+    }
+    mas_free( fn );
   }
-  if ( x )
+  else
   {
-    /* HMSG( "OPTS from:%s", fn ); */
-    r = _mas_opts_restore( dirname, fn );
+    IEVAL( r, -1 );
   }
-  mas_free( fn );
   return r;
 }
 
 int
 mas_opts_restore_plus( const char *dirname, const char *filename, ... )
 {
-  int r = -1;
+  int r = 0;
   va_list args;
 
   va_start( args, filename );
-  r = _mas_opts_restore_plus( dirname, filename, args );
+  IEVAL( r, _mas_opts_restore_plus( dirname, filename, args ) );
   va_end( args );
   return r;
+}
+
+int
+mas_pre_init_default_opts( void )
+{
+#ifdef MAS_SERVER_STRING
+  opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, MAS_SERVER_STRING );
+#endif
+#ifdef MAS_SERVER_DEF_PROTO
+  opts.protos_num = mas_add_argv_arg( opts.protos_num, &opts.protos, MAS_SERVER_DEF_PROTO );
+#endif
+#ifdef MAS_BASE_DIR
+#  ifdef MAS_LOG_DIR
+  if ( !opts.logdir )
+  {
+    opts.logdir = mas_strdup( MAS_BASE_DIR "/" MAS_LOG_DIR );
+    HMSG( "DEF.LOGDIR: %s < '%s'", opts.logdir, MAS_BASE_DIR "/" MAS_LOG_DIR );
+  }
+#  endif
+#endif
+#ifdef MAS_PIDS_DIR
+  if ( !opts.pidsdir )
+  {
+    opts.pidsdir = mas_strdup( MAS_BASE_DIR "/" MAS_PIDS_DIR );
+    HMSG( "DEF.PIDSDIR: %s", opts.pidsdir );
+  }
+#endif
+
+
+#define XSTR(s) STR(s)
+#define STR(s) #s
+#ifdef MAS_LIBDIR
+#  ifdef MAS_MODS_DIR
+  if ( !opts.modsdir )
+  {
+    opts.modsdir = mas_strdup( XSTR( MAS_LIBDIR ) "/" MAS_MODS_DIR );
+    HMSG( "DEF.MODSDIR: %s", opts.modsdir );
+  }
+#  endif
+#  ifdef MAS_PROTO_DIR
+  if ( !opts.protodir )
+  {
+    opts.protodir = mas_strdup( XSTR( MAS_LIBDIR ) "/" MAS_PROTO_DIR );
+    HMSG( "DEF.PROTODIR: %s", opts.protodir );
+  }
+#  endif
+#endif
+  return 0;
 }

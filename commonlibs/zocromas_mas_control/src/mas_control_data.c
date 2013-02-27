@@ -22,7 +22,7 @@ related:
 
 */
 
-static int mas_error_handler( const char *func, int line, int rcode );
+static int mas_error_handler( const char *func, int line, int rcode, const char *fmt, const char *msg );
 
 
 mas_control_t ctrl = {
@@ -130,21 +130,23 @@ mas_control_t ctrl = {
 };
 
 static int
-mas_error_handler( const char *func, int line, int rcode )
+mas_error_handler( const char *func, int line, int rcode, const char *fmt, const char *msg )
 {
-  if ( !ctrl.stderrfile || fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line ) < 0 )
-    if ( !ctrl.old_stderrfile || fprintf( ctrl.old_stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line ) < 0 )
+  if ( !ctrl.stderrfile
+       || fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" ) < 0 )
+    if ( !ctrl.old_stderrfile
+         || fprintf( ctrl.old_stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" ) < 0 )
       if ( ctrl.msgfile )
-        fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+        fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" );
 
   if ( 0 )
   {
     if ( ctrl.stderrfile )
-      fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+      fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" );
     if ( ctrl.old_stderrfile )
-      fprintf( ctrl.old_stderrfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+      fprintf( ctrl.old_stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" );
     if ( ctrl.msgfile )
-      fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d\n", __LINE__, rcode, func, line );
+      fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" );
   }
-  return 0;
+  return rcode;
 }

@@ -71,7 +71,7 @@ mas_init_load_protos( void )
   int protos_num = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
 
-  HMSG( "INIT PROTOS" );
+  HMSG( "INIT S PROTOS" );
   MAS_LOG( "(%d) init / load protos", r );
   if ( !ctrl.proto_descs )
   {
@@ -85,16 +85,31 @@ mas_init_load_protos( void )
       if ( !proto_descs[ipr].function )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
+        IEVAL( r, -1 );
+        HMSG( "INIT PROTOS - #%d: %s", ipr, opts.protos[ipr] );
+      }
+      else
+      {
+        HMSG( "INIT PROTOS + #%d: %s", ipr, opts.protos[ipr] );
       }
       protos_num++;
       MAS_LOG( "(%d) init / load protos #%d", r, protos_num );
     }
     ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
+    if ( !ctrl.protos_num )
+    {
+      IEVAL( r, -1 );
+    }
+  }
+  else
+  {
+    IEVAL( r, -1 );
   }
   /* r = ctrl.proto_descs ? 0 : -1; */
   IEVAL( r, ctrl.proto_descs ? 0 : -1 );
   MAS_LOG( "(%d) init / load protos done", r );
+  HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_num, opts.protos_num );
   return r;
 }
 
@@ -314,7 +329,7 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   ctrl.is_server = 1;
   /* r = mas_pre_init( argc, argv, env ); */
   IEVAL( r, mas_pre_init( argc, argv, env ) );
-  HMSG( "(%d) INIT %s", r, __func__ );
+  HMSG( "(%d) INIT S %s", r, __func__ );
 
   MAS_LOG( "init server" );
 #  ifdef MAS_USE_CURSES
@@ -324,11 +339,11 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   /* if ( r >= 0 )                                           */
   /*   r = mas_init( atexit_fun, initsig, argc, argv, env ); */
   IEVAL( r, mas_init( atexit_fun, initsig, argc, argv, env ) );
-  HMSG( "(%d) INIT %s", r, __func__ );
+  HMSG( "(%d) INIT S %s", r, __func__ );
   /* if ( r >= 0 )              */
   /*   r = mas_init_daemon(  ); */
   IEVAL( r, mas_init_daemon(  ) );
-  HMSG( "(%d) INIT %s", r, __func__ );
+  HMSG( "(%d) INIT S %s", r, __func__ );
   /* if ( ctrl.is_parent )       */
   /* {                           */
   /*   HMSG( "PARENT to exit" ); */
@@ -339,22 +354,22 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     /* if ( r >= 0 )               */
     /*   r = mas_threads_init(  ); */
     IEVAL( r, mas_threads_init(  ) );
-    HMSG( "(%d) INIT %s", r, __func__ );
+    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "(%d) init server: to load protos", r );
     /* if ( r >= 0 )                   */
     /*   r = mas_init_load_protos(  ); */
     IEVAL( r, mas_init_load_protos(  ) );
-    HMSG( "(%d) INIT %s", r, __func__ );
+    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "(%d) init server: to create lcontrols", r );
     if ( r >= 0 )
       mas_lcontrols_list_create(  );
-    HMSG( "(%d) INIT %s", r, __func__ );
+    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "init server done" );
     MAS_LOG( "(%d) init server: to post-init", r );
     /* if ( r >= 0 )            */
     /*   r = mas_post_init(  ); */
     IEVAL( r, mas_post_init(  ) );
-    HMSG( "(%d) INIT %s", r, __func__ );
+    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "(%d) end init server", r );
   }
   return r;

@@ -53,6 +53,13 @@ function setup_vers ()
       mas_base_vers='0.0.5.20130219'
     fi
     configure_opts="--prefix=$instdir --silent --enable-silent-rules --enable-tracemem --enable-debug"
+    configure_opts="$configure_opts --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
+    configure_opts="$configure_opts --with-pids-dir=zocromas/pid"
+    configure_opts="$configure_opts --with-mods-dir=zocmds"
+    configure_opts="$configure_opts --with-proto-dir=zocromas_zocprotos"
+    configure_opts="$configure_opts --with-log-dir=log"
+    configure_opts="$configure_opts --with-server=/tmp/zocromas.socket"
+    configure_opts="$configure_opts --with-def-proto=xcromas"
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
   fi

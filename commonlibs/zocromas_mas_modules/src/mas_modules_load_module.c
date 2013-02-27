@@ -54,6 +54,7 @@ __mas_modules_load_module( const char *fullname, const char *name, int noerr )
   else
   {
     module_handle = dlopen( fullname, RTLD_LAZY | RTLD_LOCAL );
+  HMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
     if ( !module_handle )
     {
       char *dler;
@@ -104,6 +105,7 @@ _mas_load_module( const char *libname, const char *path, int noerr )
 
   MAS_LOG( "make path %s", path );
   fullname = mas_strdup( path );
+  fullname = mas_strcat_x( fullname, "/" );
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
   module_handle = __mas_modules_load_module( fullname, libname, noerr );
@@ -133,7 +135,7 @@ mas_modules_load_proto( const char *libname )
   MAS_LOG( "load proto %s @ %s", libname, opts.protodir );
   if ( opts.protodir )
     module_handle = _mas_load_module( libname, opts.protodir, 1 );
-  HMSG( "PROTO LOAD %s %s", libname, module_handle ? "OK" : "FAIL" );
+  HMSG( "PROTO LOAD %s @ %s %s", libname, opts.protodir, module_handle ? "OK" : "FAIL" );
   return module_handle;
 }
 
@@ -169,14 +171,18 @@ mas_modules_load_proto_func( const char *libname, const char *funname )
   if ( module_handle )
   {
     transaction_fun = ( mas_transaction_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
+    if ( !transaction_fun )
+    {
+      EMSG( "%s", dlerror(  ) );
+      MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
+    }
+  }
+  else
+  {
+    EMSG( "NO module_handle passed for %s.%s", libname, funname );
   }
   tMSG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
   MAS_LOG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
-  if ( !transaction_fun )
-  {
-    EMSG( "%s", dlerror(  ) );
-    MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
-  }
   return transaction_fun;
 }
 

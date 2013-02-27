@@ -1,5 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_basic_def.h" */
 #include <mastar/types/mas_common_defs.h>
 
 
@@ -109,8 +108,8 @@ mas_init_message( void )
   {
     IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
           ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
-    IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.threads.n.main.pid, ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid,
-          ( unsigned long ) ctrl.threads.n.main.thread );
+    IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.threads.n.main.pid, ctrl.threads.n.main.pid,
+          ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
   }
   else
 #endif
@@ -125,25 +124,85 @@ mas_init_message( void )
 }
 
 static int
-error_handler_at_init( const char *func, int line, int rcode )
+error_handler_at_init( const char *func, int line, int rcode, const char *fmt, const char *msg )
 {
-  const char *fmt = " r #%d";
+  if ( !fmt )
+    fmt = " r #%d [%s]";
+
+  /* va_list args; */
+  /* int masierrno; */
 
   /* HMSG( fmt, rcode ); */
-  mas_error( func, line, errno, fmt, rcode );
-  mas_log( func, line, errno, fmt, rcode );
-  return 0;
+  mas_error( func, line, errno, fmt, rcode, msg ? msg : "-" );
+  mas_log( func, line, errno, fmt, rcode, msg ? msg : "-" );
+  /* va_start( args, rcode );                  */
+  /* while ( masierrno = va_arg( args, int ) ) */
+  /* {                                         */
+  /*   const char *fmt;                        */
+  /* }                                         */
+  /* va_end( args );                           */
+  return rcode;
 }
 
 static int
-mas_pre_init( char *runpath )
+mas_pre_init_proc( void )
+{
+  int r = 0;
+  char lexe[256];
+  struct stat sb;
+  char *linkname;
+
+  HMSG( "LINKNAME ?" );
+  sprintf( lexe, "/proc/%u/exe", getpid(  ) );
+  /* if ( lstat( lexe, &sb ) >= 0 ) */
+  IEVAL( r, lstat( lexe, &sb ) );
+  if ( !( r < 0 ) )
+  {
+    size_t sz;
+
+    sz = ( sb.st_size ? sb.st_size : 512 ) + 1;
+    linkname = mas_malloc( sz );
+    /* r = readlink( lexe, linkname, sz ); */
+    IEVAL( r, readlink( lexe, linkname, sz ) );
+    if ( !( r < 0 ) )
+    {
+      linkname[sz] = '\0';
+      HMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
+    }
+    ctrl.exepath = linkname;
+  }
+  return r;
+}
+
+static int
+mas_pre_init_opt_files( void )
+{
+  int r = 0;
+
+  HMSG( "PPID: %u; BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  {
+    int rone = 0;
+
+    /* r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
+    IEVAL_OPT( rone, mas_opts_restore_plus( NULL, ctrl.progname, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) );
+    if ( !( rone > 0 ) )
+    {
+      /* r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" ); */
+      IEVALM( r, mas_opts_restore( NULL, ctrl.progname ), "(%d) no opt file(s) for prog: '%s'", ctrl.progname );
+    }
+  }
+  return r;
+}
+
+static int
+mas_pre_init_runpath( char *runpath )
 {
   int r = 0;
   const char *pn;
 
   ctrl.status = MAS_STATUS_START;
   ctrl.error_handler = error_handler_at_init;
-  HMSG( "PRE-INIT" );
   ctrl.threads.n.main.tid = mas_gettid(  );
   ctrl.start_time = mas_double_time(  );
   /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
@@ -151,48 +210,10 @@ mas_pre_init( char *runpath )
   ctrl.status = MAS_STATUS_INIT;
   ctrl.threads.n.main.pid = getpid(  );
   ctrl.binname = mas_strdup( basename( runpath ) );
-  {
-    char lexe[256];
-    struct stat sb;
-    char *linkname;
-
-    HMSG( "LINKNAME ?" );
-    sprintf( lexe, "/proc/%u/exe", getpid(  ) );
-    if ( lstat( lexe, &sb ) >= 0 )
-    {
-      size_t sz;
-
-      sz = ( sb.st_size ? sb.st_size : 512 ) + 1;
-      linkname = mas_malloc( sz );
-      r = readlink( lexe, linkname, sz );
-      if ( r >= 0 )
-      {
-        linkname[sz] = '\0';
-        HMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
-      }
-      else
-      {
-        P_ERR;
-        HMSG( "(%s) LINKNAME: ---", lexe );
-      }
-      ctrl.exepath = linkname;
-    }
-  }
   pn = strchr( ctrl.binname, '_' );
   if ( pn && *pn++ && *pn )
     ctrl.progname = mas_strdup( pn );
-  HMSG( "PPID: %u; BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
-  MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
-  if ( r >= 0 )
-  {
-    r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
-    if ( r <= 0 )
-      r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
-#ifdef MAS_USE_CURSES
-    /* r = mas_init_curses(  ); */
-#endif
-  }
-  HMSG( "(%d) PRE-INIT", r );
+
   return r;
 }
 
@@ -344,7 +365,21 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   va_list args;
 
   HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
-  IEVAL( r, mas_pre_init( argv[0] ) );
+  HMSG( "PRE-INIT" );
+  IEVAL( r, mas_pre_init_runpath( argv[0] ) );
+  IEVAL( r, mas_pre_init_proc(  ) );
+  IEVAL( r, mas_pre_init_opt_files(  ) );
+  if ( r < 0 )
+  {
+    r = 0;
+    IEVAL( r, mas_pre_init_default_opts(  ) );
+    HMSG( "(%d) PRE-INIT-DEF", r );
+  }
+  HMSG( "(%d) PRE-INIT", r );
+#ifdef MAS_USE_CURSES
+  /* // r = mas_init_curses(  ); */
+  /* IEVAL( r, mas_init_curses(  ) ); */
+#endif
   HMSG( "(%d) INIT %d", r, __LINE__ );
   IEVAL( r, mas_init( argc, argv, env ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );

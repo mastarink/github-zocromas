@@ -42,7 +42,7 @@ struct mas_pthread_globals_s
   pthread_attr_t transaction_attr;
 };
 
-typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int rcode );
+typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int rcode, const char *fmt, const char *xmsg );
 typedef struct mas_thread_info_s mas_thread_info_t;
 struct mas_thread_info_s
 {
@@ -68,7 +68,7 @@ struct mas_control_s
   }
   threads;
   mas_thread_info_t *pserver_thread;
-  
+
   char *binname;
   char *progname;
   char *exepath;

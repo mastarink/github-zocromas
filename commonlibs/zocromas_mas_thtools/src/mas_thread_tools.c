@@ -196,7 +196,7 @@ mas_in_thread_end( void )
 mas_thdata_t *
 mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * prcontrol /* , mas_channel_t * pchannel */  )
 {
-  mas_thdata_t *thd;
+  mas_thdata_t *thd=NULL;
 
   pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
   if ( ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) == NULL )

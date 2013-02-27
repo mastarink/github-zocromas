@@ -80,7 +80,7 @@ mas_threads_init( void )
     size_t master_stacksize = 1024 * 40;
     size_t ticker_stacksize = 1024 * 50;
     size_t watcher_stacksize = 1024 * 50;
-    size_t logger_stacksize = 1024 * 100;
+    size_t logger_stacksize = 1024 * 101;
     size_t listener_stacksize = 1024 * 50;
     size_t transaction_stacksize = 1024 * 32;
 
