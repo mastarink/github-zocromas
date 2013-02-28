@@ -30,6 +30,7 @@ struct mas_channel_s
   int fd_io;
   FILE *stream_io;
   mas_serv_addr_t serv;
+  mas_serv_addr_t serv_instance;
   mas_serv_addr_t cli;
   int port;
   char *host;

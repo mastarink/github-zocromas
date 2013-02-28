@@ -1,8 +1,10 @@
 #ifndef MAS_COMMON_TYPES_H
 #  define MAS_COMMON_TYPES_H
 
-#include <pthread.h>
-#include <mastar/types/mas_list_def.h>
+#  include <sys/time.h>
+#  include <stdint.h>
+#  include <pthread.h>
+#  include <mastar/types/mas_list_def.h>
 
 typedef enum
 {
@@ -19,14 +21,14 @@ typedef enum
 
 struct mas_stamp_s
 {
-  char *vtsc;
-  unsigned long vdate;
-  unsigned long vtime;
-  unsigned long vts;
-  unsigned long lts;
-  unsigned long first_lts;
-  unsigned long prev_lts;
-  unsigned long start_time;
+  char vtsc[16];
+  /* uint64_t vdate; */
+  /* uint64_t vtime; */
+  /* uint64_t vts;   */
+  uint64_t lts;
+  uint64_t first_lts;
+  uint64_t prev_lts;
+  uint64_t start_time;
 };
 typedef struct mas_stamp_s mas_stamp_t;
 

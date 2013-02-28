@@ -112,7 +112,16 @@ msg_nt( STD_CMD_ARGS )
   if ( !notify_is_initted(  ) )
     notify_init( "zocromas" );
   if ( !notif )
+#ifdef NOTIFY_CHECK_VERSION
+#  if NOTIFY_CHECK_VERSION (0, 7, 0)
     notif = notify_notification_new( args, NULL, NULL );
+#  else
+    notif = notify_notification_new( args, NULL, NULL, NULL );
+#  endif
+#else
+    notif = notify_notification_new( args, NULL, NULL, NULL );
+#endif
+
 
   /* notify_notification_set_category( notify, type );          */
   /* notify_notification_set_urgency( notify, urgency );        */
@@ -148,11 +157,21 @@ msg_test( STD_CMD_ARGS )
   g_log_set_always_fatal( G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL );
   if ( !notify_init( "notify-send" ) )
     exit( 1 );
+#ifdef NOTIFY_CHECK_VERSION
+#  if NOTIFY_CHECK_VERSION (0, 7, 0)
   notify = notify_notification_new( "Hello", "Wow", NULL );
+  notify_notification_set_app_name( notify, "Boooo" );
+#  else
+  notify = notify_notification_new( "Hello", "Wow", NULL, NULL );
+#  endif
+#else
+  notify = notify_notification_new( "Hello", "Wow", NULL, NULL );
+#endif
+
+
   notify_notification_set_category( notify, "the category" );
   notify_notification_set_urgency( notify, NOTIFY_URGENCY_NORMAL );
   notify_notification_set_timeout( notify, NOTIFY_EXPIRES_DEFAULT );
-  notify_notification_set_app_name( notify, "Boooo" );
   notify_notification_show( notify, NULL );
   g_object_unref( G_OBJECT( notify ) );
   notify_uninit(  );

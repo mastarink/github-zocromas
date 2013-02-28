@@ -11,6 +11,11 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+
+
 #include "mas_io.h"
 
 /*
@@ -147,11 +152,12 @@ size_t
 mas_fwrite( const void *ptr, size_t size, size_t nmemb, FILE * stream )
 {
   size_t w;
+
   /* int rf; */
 
   w = fwrite( ptr, size, nmemb, stream );
   /* rf = fflush( stream ); */
-  (void) fflush( stream );
+  ( void ) fflush( stream );
   /* mMSG( "written %ld rf:%d", w, rf ); */
   return w;
 }
@@ -290,7 +296,7 @@ mas_fread_all( FILE * stream, char **pbuf, size_t * psz )
 #else
       readsz = mas_fread( buf, 1, rsz, stream );
 #endif
-      /* mMSG( "read 'all' %ld", readsz ); */
+      HMSG( "READ 'ALL' %ld", ( unsigned long ) readsz );
       buf[readsz] = 0;
       /* tMSG( "r:[%d] [%s]", readsz, buf ); */
       if ( readsz > 0 )

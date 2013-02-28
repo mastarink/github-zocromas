@@ -16,6 +16,7 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
+#include <mastar/tools/mas_tools.h>
 
 
 #include "mas_channel.h"
@@ -72,22 +73,36 @@ int
 mas_channel_accept( mas_channel_t * pchannel )
 {
   int fd_io = -1;
-  struct sockaddr *sa = NULL;
-  socklen_t l;
+  struct sockaddr *sac = NULL;
+  struct sockaddr *saa = NULL;
+  socklen_t lc;
+      socklen_t la;
 
   if ( mas_channel_test( pchannel ) )
   {
     if ( pchannel->serv.path.sun_family == AF_UNIX )
     {
-      l = sizeof( pchannel->cli.path );
-      sa = ( struct sockaddr * ) &pchannel->cli.path;
+      lc = sizeof( pchannel->cli.path );
+      la = sizeof( pchannel->serv_instance.path );
+      sac = ( struct sockaddr * ) &pchannel->cli.path;
+      saa = ( struct sockaddr * ) &pchannel->serv_instance.path;
     }
     else
     {
-      l = sizeof( pchannel->cli.addr );
-      sa = ( struct sockaddr * ) &pchannel->cli.addr;
+      lc = sizeof( pchannel->cli.addr );
+      la = sizeof( pchannel->serv_instance.addr );
+      sac = ( struct sockaddr * ) &pchannel->cli.addr;
+      saa = ( struct sockaddr * ) &pchannel->serv_instance.addr;
     }
-    fd_io = mas_accept( pchannel->fd_socket, sa, &l );
+    fd_io = mas_accept( pchannel->fd_socket, sac, &lc );
+    {
+      char *ip = NULL;
+
+      getsockname( fd_io, saa, &la );
+      ip = mas_ip_string( &pchannel->serv_instance.addr.sin_addr );
+      HMSG( "ACCEPT AT: %s", ip );
+      mas_free( ip );
+    }
   }
   return fd_io;
 }

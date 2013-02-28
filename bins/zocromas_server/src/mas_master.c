@@ -320,7 +320,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   /* MAS_LOG( "bunch end : %d", r ); */
   for ( int ith = 0; ith < sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ); ith++ )
   {
-    FMSG( "TO JOIN #%d of %ld", ith, sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ) );
+    FMSG( "TO JOIN #%d of %u", ith, ( unsigned ) ( sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ) ) );
     if ( ctrl.threads.a[ith].thread )
       mas_xpthread_join( ctrl.threads.a[ith].thread );
     ctrl.threads.a[ith].thread = 0;

@@ -56,18 +56,18 @@ info_transaction( mas_rcontrol_t * prcontrol, unsigned itr, char *cp, size_t buf
 
   if ( prcontrol )
   {
-    mas_channel_t *pchannel = NULL;
+    mas_channel_t *prchannel = NULL;
 
     /* cMSG( "srv L %p", prcontrol ); */
-    pchannel = prcontrol->h.pchannel;
-    /* if ( pchannel )                            */
-    /*   sip = mas_channel_ip_string( pchannel ); */
-    if ( pchannel )
+    prchannel = prcontrol->h.pchannel;
+    /* if ( prchannel )                            */
+    /*   sip = mas_channel_ip_string( prchannel ); */
+    if ( prchannel )
     {
-      if ( pchannel->serv.path.sun_family == AF_UNIX )
-        sip = mas_strdup( pchannel->cli.path.sun_path );
+      if ( prchannel->cli.path.sun_family == AF_UNIX )
+        sip = mas_strdup( prchannel->cli.path.sun_path );
       else
-        sip = mas_ip_string( &pchannel->cli.addr.sin_addr );
+        sip = mas_ip_string( &prchannel->cli.addr.sin_addr );
     }
 
     len = snprintf( cp, bufsz, "\t\t\t%u(s%lu). %s [<%s>] \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
@@ -78,7 +78,8 @@ info_transaction( mas_rcontrol_t * prcontrol, unsigned itr, char *cp, size_t buf
     cp += len;
     bufsz -= len;
   }
-  mas_free( sip );
+  if ( sip )
+    mas_free( sip );
   return cp - cp0;
 }
 
@@ -94,34 +95,49 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
   itr = 0;
 
   cp0 = cp;
-  plchannel = plcontrol ? plcontrol->h.pchannel : NULL;
-  if ( plchannel->serv.path.sun_family != AF_UNIX )
-    port = plcontrol->port;
-
+  if ( plcontrol )
   {
-    len = snprintf( cp, bufsz, "\t\t%u(s%lu). %s:%u; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu}\n", ith,
-                    plcontrol->h.serial, plcontrol->host, port, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread,
-                    plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone );
-    cp += len;
-    bufsz -= len;
-  }
-  {
-    mas_rcontrol_t *prcontrol;
-
-    /* cMSG( "srv S" ); */
-    /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
-    pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
-    MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
     {
-      len = info_transaction( prcontrol, itr, cp, bufsz );
-      cp += len;
-      bufsz -= len;
-      itr++;
-    }
+      char *aip = NULL;
 
-    pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
-    /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
-    /* cMSG( "srv E" ); */
+      plchannel = plcontrol->h.pchannel;
+      if ( plchannel )
+      {
+        if ( plchannel->serv.path.sun_family != AF_UNIX )
+          port = plcontrol->port;
+        if ( plchannel->serv_instance.path.sun_family == AF_UNIX )
+          aip = mas_strdup( plchannel->serv_instance.path.sun_path );
+        else
+          aip = mas_ip_string( &plchannel->serv_instance.addr.sin_addr );
+      }
+      {
+        len = snprintf( cp, bufsz, "\t\t%u(s%lu). %s:%u * %s; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu}\n", ith,
+                        plcontrol->h.serial, plcontrol->host, port, aip, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread,
+                        plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone );
+        cp += len;
+        bufsz -= len;
+      }
+      if ( aip )
+        mas_free( aip );
+    }
+    {
+      mas_rcontrol_t *prcontrol;
+
+      /* cMSG( "srv S" ); */
+      /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
+      pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
+      MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
+      {
+        len = info_transaction( prcontrol, itr, cp, bufsz );
+        cp += len;
+        bufsz -= len;
+        itr++;
+      }
+
+      pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
+      /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
+      /* cMSG( "srv E" ); */
+    }
   }
   return cp - cp0;
 }
@@ -251,6 +267,7 @@ segv_cmd( STD_CMD_ARGS )
   char ho;
 
   ho = *p;
+  *p = ho;
   return NULL;
 }
 

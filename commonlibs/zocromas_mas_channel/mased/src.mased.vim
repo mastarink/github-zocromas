@@ -11,6 +11,5 @@ sfind mas_channel_open.h
 tab sfind mas_channel_socket.c
 sfind mas_channel_listen.h
 sfind mas_channel_socket.h
-sfind mas_channel_types.h
 
 

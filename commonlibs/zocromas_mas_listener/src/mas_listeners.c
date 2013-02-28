@@ -76,7 +76,7 @@ mas_listeners_start( void )
       if ( opts.hosts[ith] )
       {
         tMSG( "host %d: '%s'", ith, opts.hosts[ith] );
-	HMSG("LISTEN AT %d.%s", ith, opts.hosts[ith]);
+        HMSG( "LISTEN AT (#%d) %s", ith + 1, opts.hosts[ith] );
         MAS_LOG( "to start listener #%d %s", ith + 1, opts.hosts[ith] );
         r = mas_listener_start( opts.hosts[ith], opts.default_port );
       }

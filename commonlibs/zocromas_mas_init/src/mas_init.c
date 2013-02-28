@@ -103,11 +103,17 @@ mas_init_env(  )
 static int
 mas_init_message( void )
 {
+  extern unsigned long __MAS_LINK_DATE__;
+  extern unsigned long __MAS_LINK_TIME__;
+  extern unsigned long __MAS_LINK_TIMESTAMP__;
+
+
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
     IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
-          ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime, ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
+          ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ), ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ),
+          ctrl.stamp.vtsc );
     IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.threads.n.main.pid, ctrl.threads.n.main.pid,
           ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
   }
@@ -115,8 +121,8 @@ mas_init_message( void )
 #endif
   {
     IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,
-          PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ctrl.stamp.vdate, ( unsigned long ) ctrl.stamp.vtime,
-          ( unsigned long ) ctrl.stamp.vts, ctrl.stamp.vtsc );
+          PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),
+          ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.stamp.vtsc );
     IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid,
           ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
   }
@@ -132,7 +138,7 @@ error_handler_at_init( const char *func, int line, int rcode, const char *fmt, c
   /* va_list args; */
   /* int masierrno; */
 
-  /* HMSG( fmt, rcode ); */
+  HMSG( "%d:%s ; r:%d ; msg : %s", line, func, rcode, msg ? msg : "-" );
   mas_error( func, line, errno, fmt, rcode, msg ? msg : "-" );
   mas_log( func, line, errno, fmt, rcode, msg ? msg : "-" );
   /* va_start( args, rcode );                  */
@@ -248,7 +254,7 @@ mas_post_init( void )
     char namebuf[512];
 
     snprintf( namebuf, sizeof( namebuf ), "/%s.%s.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent ? "parent" : "child",
-              ctrl.stamp.first_lts, getpid(  ) );
+              ( unsigned long ) ctrl.stamp.first_lts, getpid(  ) );
     ctrl.logpath = mas_strdup( opts.logdir );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     HMSG( "LOG: %s", ctrl.logpath );
@@ -290,15 +296,21 @@ mas_init_restart_count( void )
     ren = strchr( ren, ':' );
     if ( ren )
     {
+      unsigned long t;
+
       ren++;
-      sscanf( ren, "%lu", &ctrl.stamp.first_lts );
+      sscanf( ren, "%lu", &t );
+      ctrl.stamp.first_lts = t;
     }
     ren = strchr( ren, ':' );
     ctrl.stamp.prev_lts = 0;
     if ( ren )
     {
+      unsigned long t;
+
       ren++;
-      sscanf( ren, "%lu", &ctrl.stamp.prev_lts );
+      sscanf( ren, "%lu", &t );
+      ctrl.stamp.prev_lts = t;
     }
     MAS_LOG( "@ init [%s='%s']", name, ren0 );
   }
@@ -315,7 +327,8 @@ mas_init( int argc, char **argv, char **env )
   ctrl.stamp.first_lts = ctrl.stamp.lts;
   IEVAL( r, mas_init_restart_count(  ) );
   HMSG( "(%d) INIT %d", r, __LINE__ );
-  MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts, ctrl.stamp.prev_lts );
+  MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts, ( unsigned long ) ctrl.stamp.lts,
+           ( unsigned long ) ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
 
   if ( !( mas_init_argv( argc, argv, env ) > 1 ) )
@@ -421,7 +434,8 @@ mas_destroy( void )
         char name[512];
 
         snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
-        snprintf( val, sizeof( val ), "%u:%lu:%lu", ctrl.restart_cnt, ctrl.stamp.first_lts, ctrl.stamp.lts );
+        snprintf( val, sizeof( val ), "%u:%lu:%lu", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts,
+                  ( unsigned long ) ctrl.stamp.lts );
         setenv( name, val, 1 );
       }
       r = execvp( opts.argv[0], &opts.argv[0] );

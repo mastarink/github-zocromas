@@ -17,10 +17,6 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-#include <mastar/msg/mas_msg_def.h>
-#include <mastar/msg/mas_msg_tools.h>
-
-#include <mastar/log/mas_log.h>
 
 #include "mas_thread_tools.h"
 
@@ -171,7 +167,7 @@ mas_delete_thread_specific( void *ptr )
   thd = ( mas_thdata_t * ) ptr;
   if ( thd )
   {
-    HMSG( "IN THREAD END [%lx] (self) %s", pthread_self(  ), mas_thread_type_name( thd->type ) );
+    /* HMSG( "IN THREAD END [%lx] (self) %s", pthread_self(  ), mas_thread_type_name( thd->type ) ); */
   }
   mas_free( ptr );
 }
@@ -209,11 +205,11 @@ mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * pr
     thd->plcontrol = plcontrol;
     thd->prcontrol = prcontrol;
     ( void ) pthread_setspecific( ctrl.mas_thread_key, thd );
-    HMSG( "IN THREAD [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) );
+    /* HMSG( "IN THREAD [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) ); */
   }
   else
   {
-    HMSG( "IN THREAD NO [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) );
+    /* HMSG( "IN THREAD NO [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) ); */
   }
   return thd;
 }

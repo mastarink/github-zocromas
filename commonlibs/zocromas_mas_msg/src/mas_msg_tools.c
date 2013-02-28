@@ -13,7 +13,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
 
-#include <mastar/log/mas_log.h>
+/* #include <mastar/log/mas_log.h> */
 
 
 
@@ -53,40 +53,40 @@ mas_msg_set_file( const char *path )
 {
   int r = 0;
 
-  MAS_LOG( "set.msg" );
+  /* MAS_LOG( "set.msg" ); */
   if ( ctrl.msgfile )
   {
-    MAS_LOG( "set.msg" );
+    /* MAS_LOG( "set.msg" ); */
     if ( ctrl.msgfile != ctrl.stderrfile && EOF == fclose( ctrl.msgfile ) )
     {
       IEVAL( r, -1 );
     }
-    MAS_LOG( "set.msg" );
+    /* MAS_LOG( "set.msg" ); */
     ctrl.msgfile = NULL;
   }
   r = 0;
-  MAS_LOG( "set.msg" );
+  /* MAS_LOG( "set.msg" ); */
   if ( path )
   {
-    MAS_LOG( "set.msg" );
+    /* MAS_LOG( "set.msg" ); */
     ctrl.msgfile = fopen( path, "a" );
     /* ffcntl( ctrl.msgfile, F_SETFL, O_SYNC ); */
-    MAS_LOG( "set.msg" );
+    /* MAS_LOG( "set.msg" ); */
     if ( ctrl.msgfile )
     {
       /* for /dev/pts/... : ERROR{29:Illegal seek} */
       errno = 0;
-      MAS_LOG( "set.msg" );
+      /* MAS_LOG( "set.msg" ); */
       IEVAL( r, setvbuf( ctrl.msgfile, NULL, _IONBF, 0 ) );
-      MAS_LOG( "set.msg" );
+      /* MAS_LOG( "set.msg" ); */
     }
     else
     {
       IEVAL( r, -1 );
     }
-    MAS_LOG( "set.msg" );
+    /* MAS_LOG( "set.msg" ); */
   }
-  MAS_LOG( "set.msg" );
+  /* MAS_LOG( "set.msg" ); */
   return r;
 }
 

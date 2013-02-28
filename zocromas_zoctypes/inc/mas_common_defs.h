@@ -6,7 +6,7 @@
   if (!(_rv<0)) \
   { \
     _rv = ( _code ); \
-    if (_rv<0) { if (ctrl.error_handler) { r=(ctrl.error_handler)(FL, _rv, fmt, msg); } } \
+    if (_rv<0) { if (ctrl.error_handler) { _rv=(ctrl.error_handler)(FL, _rv, fmt, msg); } } \
   } \
 }
 #  define IEVAL_OPT(_rv, _code) { if (!(_rv<0)) { _rv = ( _code ); } }

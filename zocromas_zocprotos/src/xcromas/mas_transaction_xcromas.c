@@ -131,11 +131,11 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
       question = ( char * ) ( pheader_data + 1 );
     }
     tMSG( "Q:%s", question && *question ? question : "-" );
-    tMSG( "cl. q:%s from pid %u", question && *question ? question : "-EMPTY-", header_copy.pid );
+    tMSG( "cl. q:%s from pid %lu", question && *question ? question : "-EMPTY-", ( unsigned long ) header_copy.pid );
 
 
-    tMSG( "got msg from pid=%u", header_copy.pid );
-    MAS_LOG( "xc (pid:%u) Q: %s", header_copy.pid, question && *question ? question : "-" );
+    tMSG( "got msg from pid=%lu", ( unsigned long )header_copy.pid );
+    MAS_LOG( "xc (pid:%lu) Q: %s",( unsigned long ) header_copy.pid, question && *question ? question : "-" );
 
     header_copy.new_opts = 0;
     if ( header_copy.sign != MSG_SIGNATURE )

@@ -56,14 +56,14 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
   /* r = mas_channel_write_message( pchannel, question, NULL ); */
   IEVAL( r, mas_channel_write_message( pchannel, question, NULL ) );
   tMSG( "(%d) written data string %s", r, question );
-  if ( r <= 0 )
-  {
-#ifdef EMSG
-    EMSG( "WRITE error" );
-#endif
-    P_ERR;
-  }
-  else
+/*   if ( r <= 0 )            */
+/*   {                        */
+/* #ifdef EMSG                */
+/*     EMSG( "WRITE error" ); */
+/* #endif                     */
+/*     P_ERR;                 */
+/*   }                        */
+/*   else                     */
   {
     /* HMSG( "to read message" ); */
     /* r = mas_channel_read_message( pchannel, &answer, header ); */
@@ -75,11 +75,12 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 /*       EMSG( "READ error" ); */
 /* #endif                      */
 /*       P_ERR;                */
+      IEVAL( r, -1 );
       mas_channel_close( pchannel );
     }
     else if ( header && header->binary )
     {
-      tMSG( "(%d) BINARY from %x : %lx", r, header->pid, header->pth );
+      tMSG( "(%d) BINARY from %lx : %lx", r, ( unsigned long ) header->pid, ( unsigned long ) header->pth );
       switch ( header->binary )
       {
       case MSG_BIN_OPTS:
@@ -157,7 +158,8 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
     }
     else
     {
-      HMSG( "nothing (r:%d) from %x - %lx\n", r, header ? header->pid : 0, header ? header->pth : 0 );
+      HMSG( "nothing (r:%d) from %lx - %lx\n", r, ( unsigned long ) ( header ? header->pid : 0 ),
+            ( unsigned long ) ( header ? header->pth : 0 ) );
     }
     mas_free( answer );
   }
@@ -173,14 +175,13 @@ mas_client_exchange( mas_channel_t * pchannel, const char *question, const char 
   memset( &header, 0, sizeof( header ) );
   /* r = _mas_client_exchange( pchannel, question, &header, answer_format ); */
   IEVAL( r, _mas_client_exchange( pchannel, question, &header, answer_format ) );
-  if ( header.new_opts )
+  if ( ( !( r < 0 ) ) && header.new_opts )
   {
-    HMSG( "before _mas_client_exchange" );
     /* MSG( "NEW OPTS, get opts : %d", header.new_opts ); */
     /* r = _mas_client_exchange( pchannel, "get opts", &header, NULL ); */
     IEVAL( r, _mas_client_exchange( pchannel, "get opts", &header, NULL ) );
-    HMSG( "after exchange_cs" );
   }
+  HMSG( "(%d)after exchange", r );
 
   return r;
 }

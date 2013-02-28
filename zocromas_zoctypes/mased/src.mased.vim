@@ -25,3 +25,6 @@ sfind mas_variables_types.h
 sfind mas_modules_types.h
 sfind mas_thread_variables_types.h
 sfind mas_th_types.h
+
+tab sfind mas_channel_types.h 
+

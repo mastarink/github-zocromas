@@ -80,9 +80,13 @@ mas_control_t ctrl = {
   .argv_nonoptind = 0,
 
   .stamp.vtsc = MAS_S_DATE,
-  .stamp.vdate = ( unsigned long ) ( &__MAS_LINK_DATE__ ),
-  .stamp.vtime = ( unsigned long ) ( &__MAS_LINK_TIME__ ),
-  .stamp.vts = ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ),
+  
+  
+  /* .stamp.vdate = ( uint64_t ) ( unsigned long long ) ( &__MAS_LINK_DATE__ ),    */
+  /* .stamp.vtime = ( uint64_t ) ( unsigned long long ) ( &__MAS_LINK_TIME__ ),    */
+  /* .stamp.vts = ( uint64_t ) ( unsigned long long ) ( &__MAS_LINK_TIMESTAMP__ ), */
+
+
   .stamp.first_lts = 0,
   .stamp.prev_lts = 0,
   .stamp.lts = 0,

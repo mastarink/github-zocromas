@@ -222,18 +222,21 @@ mas_ticker_start( void )
 
     /* r = mas_xpthread_create( &ctrl.threads.n.ticker.thread, mas_ticker_th, MAS_THREAD_TICKER, NULL ); */
     r = pthread_create( &ctrl.threads.n.ticker.thread, &ctrl.thglob.ticker_attr, mas_ticker_th, NULL );
+#ifdef SCHED_IDLE
     {
       int policy, rs;
       struct sched_param sched;
 
       rs = pthread_getschedparam( ctrl.threads.n.ticker.thread, &policy, &sched );
-      MAS_LOG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.threads.n.ticker.thread, policy, sched.sched_priority, rs );
       /* SCHED_IDLE ... SCHED_RR */
       rs = pthread_setschedparam( ctrl.threads.n.ticker.thread, SCHED_IDLE, &sched );
       /* rs = pthread_getschedparam( ctrl.threads.n.ticker.thread, &policy, &sched ); */
+      MAS_LOG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.threads.n.ticker.thread, policy, sched.sched_priority, rs );
       tMSG( "(%d) created(?) ticker thread [%lx] %d - %d (%d)", r, ctrl.threads.n.ticker.thread, policy, sched.sched_priority, rs );
     }
+#else
     MAS_LOG( "(%d) created(?) ticker thread [%lx]", r, ctrl.threads.n.ticker.thread );
+#endif
   }
   else
   {

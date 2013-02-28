@@ -74,6 +74,10 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
 mas_http_t *
 mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
+  /* extern unsigned long __MAS_LINK_DATE__; */
+  extern unsigned long __MAS_LINK_TIME__;
+  /* extern unsigned long __MAS_LINK_TIMESTAMP__; */
+
   if ( http )
   {
     MAS_LOG( "to make date" );
@@ -82,7 +86,7 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
                                  mas_xgmtime(  ), 0 );
     http->outdata =
           mas_variable_create_x( http->outdata, MAS_THREAD_TRANSACTION, "header", "Server", mas_xvsnprintf, "mas-%lu",
-                                 ( unsigned long ) ctrl.stamp.vtime, 0 );
+                                 ( unsigned long ) ( &__MAS_LINK_TIME__ ), 0 );
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->content );
     http = mas_http_make_out_header_simple( http, "Connection", prcontrol->keep_alive ? "Keep-Alive" : "close" );
   }
