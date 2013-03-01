@@ -294,17 +294,16 @@ mas_atexit( void )
   {
     extern unsigned long memory_balance;
 
-    FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
     if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
       if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
         if ( print_memlist( ctrl.msgfile, FL ) < 0 )
           print_memlist( stderr, FL );
-    FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
+    IMSG( "AT EXIT, memory_balance:%ld", memory_balance );
   }
 #else
-  FMSG( "AT EXIT" );
+  IMSG( "AT EXIT" );
 #endif
-  FMSG( "=====[%u @ %u]=================================================================", getpid(  ), getppid(  ) );
+  IMSG( "=====[%u @ %u]=================================================================", getpid(  ), getppid(  ) );
   if ( ctrl.msgfile )
   {
     fclose( ctrl.msgfile );

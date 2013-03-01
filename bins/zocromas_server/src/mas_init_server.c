@@ -71,7 +71,6 @@ mas_init_load_protos( void )
   int protos_num = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
 
-  HMSG( "INIT S PROTOS" );
   MAS_LOG( "(%d) init / load protos", r );
   if ( !ctrl.proto_descs )
   {
@@ -86,11 +85,11 @@ mas_init_load_protos( void )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
         IEVAL( r, -1 );
-        HMSG( "INIT PROTOS - #%d: %s", ipr, opts.protos[ipr] );
+        WMSG( "INIT PROTOS - #%d: %s", ipr, opts.protos[ipr] );
       }
       else
       {
-        HMSG( "INIT PROTOS + #%d: %s", ipr, opts.protos[ipr] );
+        WMSG( "INIT PROTOS + #%d: %s", ipr, opts.protos[ipr] );
       }
       protos_num++;
       MAS_LOG( "(%d) init / load protos #%d", r, protos_num );
@@ -138,15 +137,15 @@ mas_init_pid( int indx, const char *name )
 
     pidpath = mas_strdup( opts.pidsdir );
     pidpath = mas_strcat_x( pidpath, name );
-    HMSG( "PIDPATH: %s", pidpath );
+    WMSG( "PIDPATH: %s", pidpath );
     IEVAL( r, open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ) );
     if ( r > 0 )
     {
       ctrl.pidfd[indx] = r;
       IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
-      HMSG( "PIDLCK: %d (%d)", r, ctrl.pidfd[indx] );
+      WMSG( "PIDLCK: %d (%d)", r, ctrl.pidfd[indx] );
       IEVAL( r, write( ctrl.pidfd[indx], &ctrl.threads.n.main.pid, sizeof( ctrl.threads.n.main.pid ) ) );
-      HMSG( "PIDW: %d", r );
+      WMSG( "PIDW: %d", r );
       if ( r < 0 )
       {
         close( ctrl.pidfd[indx] );
@@ -159,7 +158,6 @@ mas_init_pid( int indx, const char *name )
   {
     IEVAL( r, -1 );
   }
-  HMSG( "(%d) INIT %s", r, __func__ );
   return r;
 }
 
@@ -181,7 +179,7 @@ mas_init_pids( void )
     int indx = -1;
 
     *namebuf = 0;
-    HMSG( "PIDSDIR: %s", opts.pidsdir );
+    WMSG( "PIDSDIR: %s", opts.pidsdir );
     if ( opts.single_instance && opts.pidsdir )
     {
       snprintf( namebuf, sizeof( namebuf ), "/%s.pid", ctrl.is_client ? "client" : "server" );
@@ -199,7 +197,6 @@ mas_init_pids( void )
     mas_free( namebuf );
   }
   MAS_LOG( "(%d) init pids done", r );
-  HMSG( "(%d) INIT %s", r, __func__ );
   return r;
 }
 
@@ -209,11 +206,10 @@ mas_init_daemon( void )
   int r = 0;
   pid_t pid_child;
 
-  HMSG( "INIT DAEMON" );
   MAS_LOG( "(%d) init daemon", r );
   if ( ctrl.daemon )
   {
-    HMSG( "DAEMONIZE" );
+    WMSG( "DAEMONIZE" );
     MAS_LOG( "(%d) init daemonize", r );
     IEVAL( r, mas_fork(  ) );
     pid_child = r;
@@ -229,6 +225,7 @@ mas_init_daemon( void )
       /* {                                                             */
       /*   P_ERR;                                                      */
       /* }                                                             */
+
       IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) );
 
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
@@ -237,9 +234,9 @@ mas_init_daemon( void )
         {
           int lck;
 
-          lck = lockf( ctrl.pidfd[i], F_LOCK, 0 );
+          IEVAL( lck, lockf( ctrl.pidfd[i], F_LOCK, 0 ) );
           MAS_LOG( "(%d) init daemon; lock", r );
-          HMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
+          WMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
         }
       }
       HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
@@ -305,7 +302,6 @@ mas_init_daemon( void )
     }
   }
   MAS_LOG( "(%d) init daemon almost done", r );
-  HMSG( "(%d) INIT %s", r, __func__ );
   MAS_LOG( "(%d) init daemon done", r );
   return r;
 }
@@ -316,7 +312,6 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
 {
   int r = 0;
 
-  HMSG( "INIT SERVER" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
 
@@ -329,7 +324,6 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   ctrl.is_server = 1;
   /* r = mas_pre_init( argc, argv, env ); */
   IEVAL( r, mas_pre_init( argc, argv, env ) );
-  HMSG( "(%d) INIT S %s", r, __func__ );
 
   MAS_LOG( "init server" );
 #  ifdef MAS_USE_CURSES
@@ -339,11 +333,10 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
   /* if ( r >= 0 )                                           */
   /*   r = mas_init( atexit_fun, initsig, argc, argv, env ); */
   IEVAL( r, mas_init( atexit_fun, initsig, argc, argv, env ) );
-  HMSG( "(%d) INIT S %s", r, __func__ );
   /* if ( r >= 0 )              */
   /*   r = mas_init_daemon(  ); */
   IEVAL( r, mas_init_daemon(  ) );
-  HMSG( "(%d) INIT S %s", r, __func__ );
+  /* malloc_trim( 0 ); */
   /* if ( ctrl.is_parent )       */
   /* {                           */
   /*   HMSG( "PARENT to exit" ); */
@@ -354,22 +347,18 @@ mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
     /* if ( r >= 0 )               */
     /*   r = mas_threads_init(  ); */
     IEVAL( r, mas_threads_init(  ) );
-    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "(%d) init server: to load protos", r );
     /* if ( r >= 0 )                   */
     /*   r = mas_init_load_protos(  ); */
     IEVAL( r, mas_init_load_protos(  ) );
-    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "(%d) init server: to create lcontrols", r );
     if ( r >= 0 )
       mas_lcontrols_list_create(  );
-    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "init server done" );
     MAS_LOG( "(%d) init server: to post-init", r );
     /* if ( r >= 0 )            */
     /*   r = mas_post_init(  ); */
     IEVAL( r, mas_post_init(  ) );
-    HMSG( "(%d) INIT S %s", r, __func__ );
     MAS_LOG( "(%d) end init server", r );
   }
   return r;
@@ -379,7 +368,7 @@ void
 mas_destroy_server( void )
 {
   MAS_LOG( "destroy server" );
-  FMSG( "DESTROY SERVER" );
+  WMSG( "DESTROY SERVER" );
   MAS_LOG( "to save opts" );
   if ( !ctrl.opts_saved )
     mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
@@ -389,7 +378,7 @@ mas_destroy_server( void )
   if ( ctrl.lcontrols_list )
   {
     MAS_LOG( "to cancel listeners" );
-    FMSG( "TO CANCEL LISTENERS" );
+    WMSG( "TO CANCEL LISTENERS" );
     mas_listeners_cancel(  );
   }
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
@@ -399,26 +388,26 @@ mas_destroy_server( void )
     sleep( 1 );
   mas_close_curses(  );
 #endif
-  FMSG( "1 DESTROY SERVER" );
+  WMSG( "1 DESTROY SERVER" );
   mas_lcontrols_delete_list(  );
-  FMSG( "2 DESTROY SERVER" );
+  WMSG( "2 DESTROY SERVER" );
   mas_in_thread_end(  );
-  FMSG( "3 DESTROY SERVER" );
+  WMSG( "3 DESTROY SERVER" );
   mas_threads_destroy(  );
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
   if ( ctrl.threads.n.logger.thread )
   {
-    FMSG( "TO STOP LOGGER" );
+    WMSG( "TO STOP LOGGER" );
     mas_logger_stop(  );
   }
   if ( ctrl.threads.n.ticker.thread )
   {
-    FMSG( "TO STOP TICKER" );
+    WMSG( "TO STOP TICKER" );
     mas_ticker_stop(  );
   }
-  FMSG( "TO DESTROY MODULES" );
+  WMSG( "TO DESTROY MODULES" );
   mas_modules_destroy(  );
   {
     for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
@@ -432,5 +421,5 @@ mas_destroy_server( void )
   }
 
   MAS_LOG( "destroy server done" );
-  FMSG( "DESTROY SERVER DONE" );
+  WMSG( "DESTROY SERVER DONE" );
 }

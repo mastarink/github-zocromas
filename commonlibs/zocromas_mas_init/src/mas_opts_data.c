@@ -28,22 +28,21 @@ related:
 
 #if 0
 mas_options_t opts = {
-  .msg_c = 1,
-  .msg_s = 0,
+  .msg_notice = 1,
   .msg_io = 0,
 
-  .msg_tr = 1,
+  .msg_trace = 1,
   .msg_trace_main = 1,
   .msg_trace_listener = 1,
   .msg_trace_transaction = 1,
 
-  .msg_m = 0,
+  .msg_main = 0,
 /* respoder */
-  .msg_r = 1,
-  .msg_l = 1,
-  .msg_w = 1,
-  .msg_th = 1,
-  .msg_sg = 1,
+  .msg_transaction = 1,
+  .msg_listen = 1,
+  .msg_wait = 1,
+  .msg_thread = 1,
+  .msg_signal = 1,
   .msg_cmd = 1,
   .msg_mem = 0,
   .msg_funline = 0,
@@ -52,22 +51,22 @@ mas_options_t opts = {
 mas_options_t opts = {
   .f = {
         .bit = {
-                .msg_c = 1,
-                .msg_s = 0,
+                .msg_notice = 1,
+                .msg_watch = 0,
                 .msg_io = 0,
 
-                .msg_tr = 0,    /* tMSG */
+                .msg_trace = 0,    /* tMSG */
                 .msg_trace_main = 1,
                 .msg_trace_listener = 1,
                 .msg_trace_transaction = 1,
 
-                .msg_m = 1,     /* mMSG */
+                .msg_main = 0,     /* mMSG */
 /* respoder */
-                .msg_r = 1,
-                .msg_l = 1,
-                .msg_w = 1,
-                .msg_th = 1,
-                .msg_sg = 1,
+                .msg_transaction = 1,
+                .msg_listen = 0,
+                .msg_wait = 1,
+                .msg_thread = 0,
+                .msg_signal = 1,
                 .msg_cmd = 1,
                 .msg_mem = 0,
                 .msg_funline = 1,

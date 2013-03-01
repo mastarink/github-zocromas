@@ -100,6 +100,17 @@ related:
 /* + /usr/include/asm-generic/errno.h      */
 /* + /usr/include/asm-generic/errno-base.h */
 
+/* Z  - Main           */
+/* B  - Bunch          */
+/*   BI - Bunch, init  */
+/* D  - Daemon / child */
+/* M  - Master         */
+/* G  - Logger         */
+/* T  - Ticker         */
+/* W  - Watcher        */
+/* L  - Listener       */
+/* R  - Transaction    */
+/* ZBIDMGTWLR          */
 
 int
 main( int argc, char *argv[], char *env[] )

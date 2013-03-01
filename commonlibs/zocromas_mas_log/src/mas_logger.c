@@ -192,17 +192,13 @@ void
 mas_logger_cleanup( void *arg )
 {
   ctrl.keep_logging = 0;
-#ifdef FMSG
-  FMSG( "TO FLUSH LOGGER" );
-#endif
+  WMSG( "TO FLUSH LOGGER" );
   ctrl.log_disabled = 1;
   mas_logger_flush(  );
   mas_log_clean_queue(  );
   mas_logger_close(  );
   MAS_LOG( "logger cleanup" );
-#ifdef FMSG
-  FMSG( "LOGGER CLEANUP DONE" );
-#endif
+  WMSG( "LOGGER CLEANUP DONE" );
 }
 
 #ifndef MAS_NO_THREADS
@@ -220,7 +216,7 @@ mas_logger_th( void *arg )
   MAS_LOG( "logger start" );
   mas_in_thread( MAS_THREAD_LOGGER, NULL, NULL );
 
-  /* FMSG( "(!) logger %d\x1b[K", ctrl.keep_logging ); */
+  /* WMSG( "(!) logger %d\x1b[K", ctrl.keep_logging ); */
   ctrl.keep_logging = 1;
   MAS_LOG( "logger start [%lx]", ctrl.threads.n.logger.thread );
   pthread_cleanup_push( mas_logger_cleanup, NULL );
@@ -230,9 +226,7 @@ mas_logger_th( void *arg )
   }
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
-#  ifdef FMSG
-  FMSG( "LOGGER STOP" );
-#  endif
+  WMSG( "LOGGER STOP" );
   mas_pthread_exit( NULL );
   return NULL;
 }
@@ -323,16 +317,14 @@ mas_logger_flush( void )
 
     /* if ( ctrl.log_disabled )                                                                                         */
     /* {                                                                                                                */
-    /*   FMSG( "LOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
+    /*   WMSG( "LOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
     /* }                                                                                                                */
 
     r = 0;
   }
   if ( ctrl.log_disabled )
   {
-#ifdef FMSG
-    FMSG( "LOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
-#endif
+    WMSG( "LOGGER FLUSH [%lu-%lu=%ld]...", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
   return r;
 }

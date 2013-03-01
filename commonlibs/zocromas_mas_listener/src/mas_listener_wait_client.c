@@ -1,6 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_server_def.h" */
-/* #include "mas_basic_def.h"  */
+#include <mastar/types/mas_common_defs.h>
 
 #include <sys/time.h>
 
@@ -73,7 +72,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   mas_rcontrol_t *prcontrol = NULL;
 
   plcontrol->h.status = MAS_STATUS_WAIT;
-  /* wMSG( "waiting client" ); */
+  OMSG( "WAITING CLIENT" );
   MAS_LOG( "waiting client" );
   if ( plcontrol )
   {
@@ -84,10 +83,12 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     /* wMSG( "to open channel opened : %d", plcontrol->h.pchannel->opened ); */
     {
       plcontrol->h.pchannel->cloned = 0;
-      ro = r = mas_channel_open( plcontrol->h.pchannel );
+      IEVAL( r, mas_channel_open( plcontrol->h.pchannel ) );
+      ro = r;
 /* ?????? fcntl(fd, F_SETFD, FD_CLOEXEC) */
       MAS_LOG( "(%d) opened channel ========", r );
     }
+    OMSG( "INCOMING CONNECTION" );
     {
       struct timeval td;
 
@@ -97,10 +98,6 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     /* wMSG( "(%d) opened? channel; opened : %d", r, plcontrol->h.pchannel->opened ); */
     if ( r < 0 )
     {
-#ifdef EMSG
-      P_ERR;
-      EMSG( "r:%d", r );
-#endif
       MAS_LOG( "(%d) NOT opened? channel; opened : %d", r, plcontrol->h.pchannel->opened );
     }
     else if ( ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
@@ -109,7 +106,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
 
       MAS_LOG( "(%d)found free tr. (s%lu); at l opened:%d", r, plcontrol->h.serial,
                plcontrol->h.pchannel ? plcontrol->h.pchannel->opened : 0 );
-      r = mas_rcontrol_set_channel( prcontrol, plcontrol->h.pchannel );
+      IEVAL( r, mas_rcontrol_set_channel( prcontrol, plcontrol->h.pchannel ) );
       MAS_LOG( "cond signal to R%lu", prcontrol->h.serial );
       ( void ) /*rcond = */ pthread_cond_signal( &prcontrol->waitchan_cond );
     }

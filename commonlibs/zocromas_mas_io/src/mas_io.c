@@ -11,6 +11,12 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -296,8 +302,7 @@ mas_fread_all( FILE * stream, char **pbuf, size_t * psz )
 #else
       readsz = mas_fread( buf, 1, rsz, stream );
 #endif
-      HMSG( "READ 'ALL' %ld", ( unsigned long ) readsz );
-      buf[readsz] = 0;
+      WMSG( "READ 'ALL' %ld", ( unsigned long ) readsz );
       /* tMSG( "r:[%d] [%s]", readsz, buf ); */
       if ( readsz > 0 )
       {

@@ -57,8 +57,6 @@ opts_cmd( STD_CMD_ARGS )
   result = mas_malloc( sizeof( opts ) );
   *result = opts;
 #ifdef cMSG
-  cMSG( "msg:%d / %d", result->f.bit.msg_c, result->f.bit.msg_s );
-  cMSG( "msg:%d / %d", opts.f.bit.msg_c, opts.f.bit.msg_s );
   cMSG( "opts:%x", ( *( unsigned int * ) result ) );
 #endif
   return ( char * ) result;

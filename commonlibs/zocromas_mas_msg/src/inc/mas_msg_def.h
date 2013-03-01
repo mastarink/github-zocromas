@@ -3,8 +3,72 @@
 
 #  include <errno.h>
 
-/* #  define MAS_SEPARATOR_MARKER ":" */
-#  define MAS_SEPARATION_LINE "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+enum mas_msg_type_e
+{
+  MAS_MSG_NONE,
+  MAS_MSG_TITLE,
+  MAS_MSG_SUBTITLE,
+  MAS_MSG_INFO,
+  MAS_MSG_NOTICE,
+  MAS_MSG_WATCH,
+  MAS_MSG_WARNING,
+  MAS_MSG_TRAP,
+  MAS_MSG_DEBUG,
+
+  MAS_MSG_ERR,
+  MAS_MSG_CRIT,
+  MAS_MSG_ALERT,
+  MAS_MSG_EMERG,
+  MAS_MSG_MAX
+};
+typedef enum mas_msg_type_e mas_msg_type_t;
+enum mas_msg_field_type_e
+{
+  MAS_MSG_FIELD_ELAPSED,
+  MAS_MSG_FIELD_ERRCODE,
+  MAS_MSG_FIELD_CONSUME,
+  MAS_MSG_FIELD_PREFIX,
+  MAS_MSG_FIELD_CODEPOS,
+  MAS_MSG_FIELD_MESSAGE,
+  MAS_MSG_FIELD_SUFFIX,
+  MAS_MSG_FIELD_PID,
+  MAS_MSG_FIELD_PIDNAME,
+  MAS_MSG_FIELD_THREAD_INFO,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME,
+
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_MAIN,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_MASTER,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_LISTENER,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_TRANSACTION,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_TICKER,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_WATCHER,
+  MAS_MSG_FIELD_THREAD_TYPE_NAME_LOGGER,
+
+  MAS_MSG_FIELD_THREAD_STATUS,
+  MAS_MSG_FIELD_EOL,
+};
+typedef enum mas_msg_field_type_e mas_msg_field_type_t;
+enum mas_msg_color_e
+{
+  MAS_MSG_COLOR_NONE,
+  MAS_MSG_COLOR_BLACK,
+  MAS_MSG_COLOR_RED,
+  MAS_MSG_COLOR_GREEN,
+  MAS_MSG_COLOR_YELLOW,
+  MAS_MSG_COLOR_BLUE,
+  MAS_MSG_COLOR_MAGENTA,
+  MAS_MSG_COLOR_CYAN,
+  MAS_MSG_COLOR_WHITE,
+  MAS_MSG_COLOR_BLACKP,
+  MAS_MSG_COLOR_REDP,
+  MAS_MSG_COLOR_GREENP,
+  MAS_MSG_COLOR_YELLOWP,
+  MAS_MSG_COLOR_BLUEP,
+  MAS_MSG_COLOR_MAGENTAP,
+  MAS_MSG_COLOR_CYANP,
+  MAS_MSG_COLOR_WHITEP,
+};
+typedef enum mas_msg_color_e mas_msg_color_t;
 
 #  define MAS_FIFO_DIR "/tmp"
 #  define MAS_FIFO_PREF "masfifo_"
@@ -16,8 +80,12 @@
 /* #  define PTR(typ,p) (p?p:(typ)mas_fatal()) */
 
 
-#  define MAS_MSGFL(...) { if (&mas_msg) { mas_msg(FL, __VA_ARGS__); } }
-
+#  ifndef MAS_NOMSG
+#    define MAS_MSGFL(...) {  mas_msg(FL, __VA_ARGS__); }
+#    define MAS_ERRFL(...) {  mas_error(FL, __VA_ARGS__); }
+#  else
+#    define MAS_MSGFL(...)
+#  endif
 #  define MFPZ(...) { \
     if ( ctrl.msgfile ) \
       fprintf( ctrl.msgfile, __VA_ARGS__ ); \
@@ -33,56 +101,35 @@
 #  else
 #    define MFP(...) MFPZ(__VA_ARGS__)
 #  endif
-#  ifndef MAS_NOMSG
-#    define MSG(...) MAS_MSGFL( (( opts.f.bit.msg_c && !ctrl.is_server ) \
-  || ( opts.f.bit.msg_s && ctrl.is_server )),                               0,1,          31,"      %5s     " ,"@@",        NULL, __VA_ARGS__)
-#    define tMSG(...)   MAS_MSGFL(  ( opts.f.bit.msg_tr ),                  1,1,          31,"<|    %5s   |>", "trace",     NULL, __VA_ARGS__)
-#    define thMSG(...)  MAS_MSGFL(  ( opts.f.bit.msg_th ),                  0,1,          96,"<|    %5s   |>", "TH",        NULL, __VA_ARGS__)
-#    define sigMSG(...) MAS_MSGFL(  ( opts.f.bit.msg_sg ),                  0,1,          96,"<|    %5s   |>", "SG",        NULL, __VA_ARGS__)
-// #    define memMSG(...) MAS_MSGFL( ( opts.f.bit.msg_mem ),               0,1,          96,"<|    %5s   |>", "MEM",       NULL, __VA_ARGS__)
-#    define memMSG(...) if (opts.f.bit.msg_mem){MFP("%s:%u:", FL);MFP(__VA_ARGS__);MFP("\n");}
-#    define ioMSG(...)  MAS_MSGFL(  ( opts.f.bit.msg_io ),                  0,1,          96,"<|    %5s   |>", "IO",        NULL, __VA_ARGS__)
-#    define mMSG(...)   MAS_MSGFL(  ( opts.f.bit.msg_m ),		    0,1,          96,"<|    %5s   |>", "M",         NULL, __VA_ARGS__)
-#    define rMSG(...)   MAS_MSGFL(  ( opts.f.bit.msg_r && ctrl.is_server ), 0,1,          96,"<|    %5s   |>", "R",         NULL, __VA_ARGS__)
-#    define lMSG(...)   MAS_MSGFL(  ( opts.f.bit.msg_l && ctrl.is_server ), 0,1,          96,"<|    %5s   |>", "L",         NULL, __VA_ARGS__)
-#    define wMSG(...)   MAS_MSGFL(  ( opts.f.bit.msg_w && ctrl.is_server ), 0,1,          96,"<|    %5s   |>", "WAIT",      NULL, __VA_ARGS__)
-#    define GMSG(...)   MAS_MSGFL(	 1,			            0,0,          96,"      %5s     ", "G",         NULL, __VA_ARGS__)
-#    define cMSG(...)   MAS_MSGFL( ( opts.f.bit.msg_cmd ),	            0,1,          96,"<|    %5s   |>", "CMD",       NULL, __VA_ARGS__)
-/* #  define EMSG(...) MAS_MSGFL(  1,                                       0,1,          31,"<  %4s   >" , "E.R.R.O.R", NULL, __VA_ARGS__) */
-/* #  define EMSGfl(f,l,...) MAS_MSGFL(l,  1,                               0,1,          31,"<  %4s   >" , "E.R.R.O.R", NULL, __VA_ARGS__) */
-#    define IMSG(...) MAS_MSGFL(  1,				            0,0,          0,NULL          , "[*] "   , NULL,              __VA_ARGS__)
-#    define GDMSG(...) MAS_MSGFL( 1,				            0,1,          0,NULL          , NULL     , NULL,              __VA_ARGS__)
-#    define HMSG(...) MAS_MSGFL(  1,				            0,0,          0,"%-15s", "?"PACKAGE,"                ", __VA_ARGS__)
-#  else
-#    define MSG(...)
-#    define tMSG(...)
-#    define thMSG(...)
-#    define sigMSG(...)
-#    define memMSG(...)
-#    define ioMSG(...)
-#    define mMSG(...)
-#    define rMSG(...)
-#    define lMSG(...)
-#    define wMSG(...)
-#    define GMSG(...)
-#    define cMSG(...)
-#    define IMSG(...)
-#    define GDMSG(...)
-#    define HMSG(...)
-#  endif
-// #  define FMSG(...) MAS_MSGFL(  777,         1,1,NULL,     0,NULL, "           ","             ", __VA_ARGS__)
-#  ifndef MAS_NO_THREADS
-#    define FMSG(...) {MFP("%s:%u:%lx:", FL, mas_pthread_self());MFP(__VA_ARGS__);MFP("\n");}
-#  else
-#    define FMSG(...) {MFP("%s:%u:%lx:", FL, 0L);MFP(__VA_ARGS__);MFP("\n");}
-#  endif
-#  define EMSG(...) { mas_error(FL, errno, __VA_ARGS__); }
-#  define EHMSG(cnd, ...) { if(cnd){EMSG(__VA_ARGS__);}else{HMSG(__VA_ARGS__);} }
-#  define HEMSG(...) EHMSG(__VA_ARGS__)
-#  define EMSG_ONCE(...) { static int shown=0; if (!shown) { mas_error(FL, errno, __VA_ARGS__); shown=1; } }
-#  define EMSGfl(f,l,...) { mas_error(f,l, errno, __VA_ARGS__); }
+#  define memMSG(...) if (opts.f.bit.msg_mem){MFP("%s:%u:", FL);MFP(__VA_ARGS__);MFP("\n");}
+// *INDENT-OFF*
+// #    define memMSG(...) MAS_MSGFL( ( opts.f.bit.msg_mem ),               1, "<|    %5s   |>", "MEM",       NULL, __VA_ARGS__)
+//						allow				details		pref_fmt	pref	suff	fmt,...
+#define MSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( opts.f.bit.msg_notice	),	1, "%-15s"      , "?"PACKAGE,  NULL,		__VA_ARGS__)
+#define HMSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( opts.f.bit.msg_notice	),	0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
+#define FMSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,   1,					0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
+#define WMSG(...)	MAS_MSGFL( MAS_MSG_WATCH,   ( opts.f.bit.msg_watch	),	0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
+#define tMSG(...)	MAS_MSGFL( MAS_MSG_DEBUG,   ( opts.f.bit.msg_trace	),	1, "<|   %-8s|>", "TRACE",	NULL,		__VA_ARGS__)
+#define thMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_thread	),	1, "<|   %-8s|>", "TH",		NULL,		__VA_ARGS__)
+#define sigMSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( opts.f.bit.msg_signal	),	1, "<|   %-8s|>", "SG",		NULL,		__VA_ARGS__)
+#define ioMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_io		),	1, "<|   %-8s|>", "IO",		NULL,		__VA_ARGS__)
+#define mMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_main	),	1, "<|   %-8s|>", "M",		NULL,		__VA_ARGS__)
+#define rMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_transaction),	1, "<|   %-8s|>", "R",		NULL,		__VA_ARGS__)
+#define lMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_listen	),	1, "<|   %-8s|>", "L",		NULL,		__VA_ARGS__)
+#define wMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_wait	),	1, "<|   %-8s|>", "WAIT",	NULL,		__VA_ARGS__)
+#define GMSG(...)	MAS_MSGFL( MAS_MSG_WARNING,  1,					0, "     %-8s  ", "G",		NULL,		__VA_ARGS__)
+#define cMSG(...)	MAS_MSGFL( MAS_MSG_WARNING, ( opts.f.bit.msg_cmd	),	1, "<|   %-8s|>", "CMD",	NULL,		__VA_ARGS__)
+#define IMSG(...)	MAS_MSGFL( MAS_MSG_TITLE,    1,					0, NULL         , "[*] ",	NULL,		__VA_ARGS__)
+#define OMSG(...)	MAS_MSGFL( MAS_MSG_SUBTITLE, 1,					0, NULL         , NULL,		NULL,		__VA_ARGS__)
+#define GDMSG(...)	MAS_MSGFL( MAS_MSG_WARNING,  1,					1, NULL         , NULL,		NULL,		__VA_ARGS__)
+// *INDENT-ON*
+
+#  define EMSG(...) { MAS_ERRFL( errno, __VA_ARGS__); }
+/* #  define EHMSG(cnd, ...) { if(cnd){EMSG(__VA_ARGS__);}else{HMSG(__VA_ARGS__);} } */
+/* #  define HEMSG(...) EHMSG(__VA_ARGS__) */
+#  define EMSG_ONCE(...) { static int shown=0; if (!shown) { MAS_ERRFL( errno, __VA_ARGS__); shown=1; } }
 #  define EEMSG(...) {    EMSG(__VA_ARGS__) ; }
-#  define FEMSG(...) { ctrl.fatal=1 ; mas_error(FL, errno, __VA_ARGS__); }
+#  define FEMSG(...) { ctrl.fatal=1 ; MAS_ERRFL( errno, __VA_ARGS__); }
 #  define P_ERR { mas_perr(FL); }
 #  define RP_ERR(arg) { r = arg;if ( r < 0 ) { P_ERR; } }
 /* #  include "mas_msg_tools.h" */

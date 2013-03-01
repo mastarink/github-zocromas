@@ -1,5 +1,5 @@
 
-tab sfind mas_listener.c
+find mas_listener.c
 sfind mas_listener_wait_client.c
 sfind mas_listener.h
 sfind mas_listener_wait_client.h

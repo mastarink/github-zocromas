@@ -112,7 +112,7 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
   {
     vsnprintf( buffer, sizeof( buffer ), fmt, args );
 
-    /* FMSG( "loginfo size : %lu", sizeof( mas_loginfo_t ) ); */
+    /* WMSG( "loginfo size : %lu", sizeof( mas_loginfo_t ) ); */
 
     li = mas_malloc( sizeof( mas_loginfo_t ) );
     memset( li, 0, sizeof( mas_loginfo_t ) );

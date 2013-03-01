@@ -1,6 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_server_def.h" */
-/* #include "mas_basic_def.h"  */
+#include <mastar/types/mas_common_defs.h>
 
 #include <stdio.h>
 #include <stdlib.h>

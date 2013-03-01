@@ -39,8 +39,6 @@ msg_cmd( STD_CMD_ARGS )
   char *result = NULL;
 
   result = mas_strdup( "smth" );
-  MFP( "msg: c%d\n", opts.f.bit.msg_c );
-  MFP( "msg: s%d\n", opts.f.bit.msg_s );
   return ( char * ) result;
 }
 

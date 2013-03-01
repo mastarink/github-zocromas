@@ -8,23 +8,23 @@ struct mas_options_s
     unsigned long word;
     struct mas_optflags_s
     {
-      unsigned msg_c:1;
-      unsigned msg_s:1;
+      unsigned msg_notice:1;
+      unsigned msg_watch:1;
       /* main */
-      unsigned msg_m:1;
+      unsigned msg_main:1;
       /* communication */
       unsigned msg_io:1;
       /* listener */
-      unsigned msg_l:1;
+      unsigned msg_listen:1;
       /* transaction */
-      unsigned msg_r:1;
+      unsigned msg_transaction:1;
       /* waiter */
-      unsigned msg_w:1;
-      unsigned msg_th:1;
+      unsigned msg_wait:1;
+      unsigned msg_thread:1;
       /* signal */
-      unsigned msg_sg:1;
+      unsigned msg_signal:1;
       /* trace */
-      unsigned msg_tr:1;
+      unsigned msg_trace:1;
       unsigned msg_trace_main:1;
       unsigned msg_trace_listener:1;
       unsigned msg_trace_transaction:1;

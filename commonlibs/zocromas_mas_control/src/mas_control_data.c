@@ -22,7 +22,7 @@ related:
 
 */
 
-static int mas_error_handler( const char *func, int line, int rcode, const char *fmt, const char *msg );
+static int mas_error_handler( const char *func, int line, int rcode, int ierrno, const char *fmt, const char *msg );
 
 
 mas_control_t ctrl = {
@@ -134,7 +134,7 @@ mas_control_t ctrl = {
 };
 
 static int
-mas_error_handler( const char *func, int line, int rcode, const char *fmt, const char *msg )
+mas_error_handler( const char *func, int line, int rcode, int ierrno, const char *fmt, const char *msg )
 {
   if ( !ctrl.stderrfile
        || fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" ) < 0 )

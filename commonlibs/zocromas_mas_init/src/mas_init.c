@@ -63,6 +63,7 @@ more:
 static int
 mas_init_argv( int argc, char **argv, char **env )
 {
+  WMSG( "INIT ARGV" );
   ctrl.launcherv = argv;
   ctrl.launcherc = argc;
   ctrl.launchere = env;
@@ -107,6 +108,7 @@ mas_init_message( void )
   extern unsigned long __MAS_LINK_TIME__;
   extern unsigned long __MAS_LINK_TIMESTAMP__;
 
+  WMSG( "INIT MESSAGE" );
 
 #ifdef MAS_USE_CURSES
   if ( use_curses )
@@ -120,17 +122,24 @@ mas_init_message( void )
   else
 #endif
   {
-    IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,
+    IMSG( "-" );
+    IMSG( " [%s] %s V.%s built at %s : %lx : %lx : %lu; (%s) ", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),
           ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.stamp.vtsc );
-    IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid,
+    IMSG( " [%s] pid=[ %u ](%x) ; tid:%u [%lx] ", ctrl.progname, ctrl.threads.n.main.pid,
           ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
+    IMSG( "-" );
+    /* IMSG( "\x1b[100;27;1;32m [%s] %s V.%s built\x1b[0;100m at %s : %lx : %lx : %lu; (%s) \x1b[0m", ctrl.progname, PACKAGE_NAME,          */
+    /*       PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),               */
+    /*       ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.stamp.vtsc );                                                              */
+    /* IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid, */
+    /*       ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );                 */
   }
   return 0;
 }
 
 static int
-error_handler_at_init( const char *func, int line, int rcode, const char *fmt, const char *msg )
+error_handler_at_init( const char *func, int line, int rcode, int ierrno, const char *fmt, const char *msg )
 {
   if ( !fmt )
     fmt = " r #%d [%s]";
@@ -139,8 +148,8 @@ error_handler_at_init( const char *func, int line, int rcode, const char *fmt, c
   /* int masierrno; */
 
   HMSG( "%d:%s ; r:%d ; msg : %s", line, func, rcode, msg ? msg : "-" );
-  mas_error( func, line, errno, fmt, rcode, msg ? msg : "-" );
-  mas_log( func, line, errno, fmt, rcode, msg ? msg : "-" );
+  mas_error( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
+  mas_log( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
   /* va_start( args, rcode );                  */
   /* while ( masierrno = va_arg( args, int ) ) */
   /* {                                         */
@@ -158,7 +167,7 @@ mas_pre_init_proc( void )
   struct stat sb;
   char *linkname;
 
-  HMSG( "LINKNAME ?" );
+  WMSG( "PRE-INIT" );
   sprintf( lexe, "/proc/%u/exe", getpid(  ) );
   /* if ( lstat( lexe, &sb ) >= 0 ) */
   IEVAL( r, lstat( lexe, &sb ) );
@@ -173,7 +182,7 @@ mas_pre_init_proc( void )
     if ( !( r < 0 ) )
     {
       linkname[sz] = '\0';
-      HMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
+      WMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
     }
     ctrl.exepath = linkname;
   }
@@ -185,7 +194,8 @@ mas_pre_init_opt_files( void )
 {
   int r = 0;
 
-  HMSG( "PPID: %u; BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  WMSG( "INIT OPT FILES" );
+  WMSG( "PPID: %u; BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   {
     int rone = 0;
@@ -210,7 +220,9 @@ mas_pre_init_runpath( char *runpath )
   ctrl.status = MAS_STATUS_START;
   ctrl.error_handler = error_handler_at_init;
   ctrl.threads.n.main.tid = mas_gettid(  );
+
   ctrl.start_time = mas_double_time(  );
+  ctrl.stamp.start_time = ( unsigned long ) time( NULL );
   /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
   ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
@@ -228,7 +240,7 @@ mas_post_init( void )
 {
   int r = 0;
 
-  HMSG( "POST-INIT" );
+  WMSG( "POST-INIT" );
 #if 0
   if ( r >= 0 && !opts.hosts_num )
   {
@@ -257,7 +269,7 @@ mas_post_init( void )
               ( unsigned long ) ctrl.stamp.first_lts, getpid(  ) );
     ctrl.logpath = mas_strdup( opts.logdir );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
-    HMSG( "LOG: %s", ctrl.logpath );
+    WMSG( "LOG: [%s]", ctrl.logpath );
   }
   else
   {
@@ -272,12 +284,13 @@ mas_post_init( void )
       IEVAL( r, mas_msg_set_file( opts.msgfilename ) );
       MAS_LOG( "(%d) init msg set file done e%d", r, errno );
 
+      /* TODO if console: */
       MFP( "\x1b[H\x1b[2J" );
     }
     IEVAL( r, mas_init_message(  ) );
   }
   MAS_LOG( "(%d) init done e%d", r, errno );
-  HMSG( "(%d) POST INIT DONE", r );
+  WMSG( "(%d) POST INIT DONE", r );
   return r;
 }
 
@@ -287,6 +300,7 @@ mas_init_restart_count( void )
   char name[512];
   char *ren = NULL, *ren0;
 
+  WMSG( "INIT RESTART COUNT" );
   /* snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) ); */
   snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
   ren0 = ren = getenv( name );
@@ -322,30 +336,26 @@ mas_init( int argc, char **argv, char **env )
 {
   int r = 0;
 
-  HMSG( "INIT" );
+  WMSG( "INIT" );
   ctrl.stamp.lts = ( unsigned long ) time( NULL );
   ctrl.stamp.first_lts = ctrl.stamp.lts;
   IEVAL( r, mas_init_restart_count(  ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts, ( unsigned long ) ctrl.stamp.lts,
            ( unsigned long ) ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
 
   if ( !( mas_init_argv( argc, argv, env ) > 1 ) )
     IEVAL( r, mas_init_env(  ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
 
   /* HMSG( "opts.argv[0]: %s", opts.argv[0] ); */
   /* mas_init_message(  ); */
   /* atexit( atexit_fun ); */
   IEVAL( r, mas_init_sig(  ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
+  WMSG( "(%d) INIT %d", r, __LINE__ );
 
   IEVAL( r, mas_cli_options( opts.argc, opts.argv ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
   ctrl.argv_nonoptind = r;
   IEVAL( r, mas_ctrl_init( &opts ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
 
   return r;
 }
@@ -358,12 +368,12 @@ mas_init_vplus( va_list args )
   typedef int ( *v_t ) ( void );
   v_t fun;
 
+  WMSG( "INIT V+" );
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
   while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
   {
     IEVAL( r, ( fun ) (  ) );
     MAS_LOG( "(%d) init + #%d", r, pos );
-    HMSG( "(%d) INIT %d  - %d", r, __LINE__, ctrl.error_handler ? 1 : 0 );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
     pos++;
   }
@@ -377,8 +387,7 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   int r = 0;
   va_list args;
 
-  HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
-  HMSG( "PRE-INIT" );
+  WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
   IEVAL( r, mas_pre_init_runpath( argv[0] ) );
   IEVAL( r, mas_pre_init_proc(  ) );
   IEVAL( r, mas_pre_init_opt_files(  ) );
@@ -386,24 +395,20 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   {
     r = 0;
     IEVAL( r, mas_pre_init_default_opts(  ) );
-    HMSG( "(%d) PRE-INIT-DEF", r );
+    WMSG( "(%d) PRE-INIT-DEF", r );
   }
-  HMSG( "(%d) PRE-INIT", r );
+  WMSG( "(%d) PRE-INIT", r );
 #ifdef MAS_USE_CURSES
   /* // r = mas_init_curses(  ); */
   /* IEVAL( r, mas_init_curses(  ) ); */
 #endif
-  HMSG( "(%d) INIT %d", r, __LINE__ );
   IEVAL( r, mas_init( argc, argv, env ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
   {
     va_start( args, env );
     IEVAL( r, mas_init_vplus( args ) );
-    HMSG( "(%d) INIT %d", r, __LINE__ );
     va_end( args );
   }
   IEVAL( r, mas_post_init(  ) );
-  HMSG( "(%d) INIT %d", r, __LINE__ );
   HMSG( "INIT %s", r < 0 ? "FAIL" : "OK" );
   return r;
 }
@@ -411,6 +416,7 @@ mas_init_plus( int argc, char **argv, char **env, ... )
 void
 mas_destroy( void )
 {
+  WMSG( "DESTROY" );
   MAS_LOG( "destroy server" );
   /* mutex?? */
 #ifdef MAS_USE_CURSES
@@ -427,7 +433,7 @@ mas_destroy( void )
 
       HMSG( "DESTROY, RESTART" );
 /* see mas_control_data.c mas_control_types.h etc. */
-      HMSG( "execvp %s %s", opts.argv[0], opts.argv[1] );
+      WMSG( "execvp %s %s", opts.argv[0], opts.argv[1] );
       ctrl.restart_cnt++;
       {
         char val[512];
@@ -438,7 +444,7 @@ mas_destroy( void )
                   ( unsigned long ) ctrl.stamp.lts );
         setenv( name, val, 1 );
       }
-      r = execvp( opts.argv[0], &opts.argv[0] );
+      IEVAL( r, execvp( opts.argv[0], &opts.argv[0] ) );
       HMSG( "FAIL restart %d %s", r, opts.argv[0] );
       P_ERR;
     }

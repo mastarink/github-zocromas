@@ -1,5 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_basic_def.h" */
+#include <mastar/types/mas_common_defs.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -362,7 +362,7 @@ mas_cli_make_option( int opt, const char *m_optarg )
     /* HMSG( "flags: %lo", opts.f.word ); */
     opts.f.word = 0;
     /* HMSG( "flags: %lo", opts.f.word ); */
-    opts.f.bit.msg_tr = 0;
+    opts.f.bit.msg_trace = 0;
     /* HMSG( "flags: %lo", opts.f.word ); */
     break;
   case MAS_CLI_OPT_MSG:
@@ -384,12 +384,13 @@ mas_cli_make_option( int opt, const char *m_optarg )
     ctrl.fatal = 1;
     ctrl.keep_listening = 0;
     HMSG( "CLI unknown opt:%d [%c]", opt, opt > ' ' && opt <= 'z' ? opt : '-' );
-    r = -1;
+    IEVAL( r, -1 );
     break;
   }
   if ( v < 0 )
   {
     HMSG( "CLI wrong value '%s'", optarg );
+    IEVAL( r, -1 );
   }
   /* HMSG( "getopt_long:%d Usage: %s [--help -h]", argv[0] ); */
   return r;
@@ -406,11 +407,10 @@ mas_cli_options( int argc, char *const argv[] )
   optind = 1;
   while ( r >= 0 && !ctrl.fatal && ( opt = getopt_long( argc, argv, cli_enabled_options, cli_longopts, &indx ) ) >= 0 )
   {
-    HMSG( "CLI opt:%d: optind:%d err:%d / %d", opt, optind, opt == '?', opt == ':' );
-    r = mas_cli_make_option( opt, optarg );
+    /* HMSG( "CLI opt:%d: optind:%d err:%d / %d", opt, optind, opt == '?', opt == ':' ); */
+    IEVAL( r, mas_cli_make_option( opt, optarg ) );
     afterlast = optind;
-    /* MSG( "cli option made (%d) ctrl.fatal:%u {%d:%d}", opt, ctrl.fatal, ctrl.argv_nonoptind, optind ); */
-    HMSG( "(%d) CLI %d: %d", r, opt, optind );
+    /* HMSG( "(%d) CLI %d: %d", r, opt, optind ); */
   }
   MAS_LOG( "(%d) cli options made", r );
   return r < 0 ? r : afterlast;

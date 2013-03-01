@@ -91,7 +91,7 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
       if ( cbuf )
       {
         /* ioMSG( "w. to memcpy message to %p; len:%u", ( void * ) msg->message, ( unsigned ) strlen( msg->message ) ); */
-        HMSG( "MESSAGE sLEN:%u", ( unsigned ) strlen( cbuf ) );
+        WMSG( "MESSAGE sLEN:%u", ( unsigned ) strlen( cbuf ) );
         memcpy( msg->message, cbuf, len );
         ioMSG( "w.  memcpy'd message" );
       }
@@ -112,7 +112,7 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
       /* rf = fflush( stream ); */
 #endif
       /* HMSG( "fwritten h/msg %d", r ); */
-      HMSG( "(%d)WRITE r:%d of %d v.%x [h:%u] {u:%u ul:%u ull:%u vp:%u c:%u pid:%u pth:%u stamp:%u bin:%u i:%u}",
+      WMSG( "(%d)WRITE r:%d of %d v.%x [h:%u] {u:%u ul:%u ull:%u vp:%u c:%u pid:%u pth:%u stamp:%u bin:%u i:%u}",
             ctrl.error_handler ? 1 : 0, r, ( int ) msgsz, msg->h.vers, ( unsigned ) sizeof( mas_header_t ), ( unsigned ) sizeof( unsigned ),
             ( unsigned ) sizeof( unsigned long ), ( unsigned ) sizeof( unsigned long long ), ( unsigned ) sizeof( void * ),
             ( unsigned ) sizeof( char ), ( unsigned ) sizeof( pid_t ), ( unsigned ) sizeof( pthread_t ), ( unsigned ) sizeof( mas_stamp_t ),

@@ -57,7 +57,6 @@ mas_client_transaction( mas_channel_t * pchannel )
   unsigned cnt = 0;
 
   ctrl.in_pipe++;
-  opts.f.bit.msg_c = 0;
   do
   {
     cnt++;

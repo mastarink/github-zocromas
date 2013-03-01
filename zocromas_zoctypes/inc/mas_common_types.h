@@ -6,6 +6,8 @@
 #  include <pthread.h>
 #  include <mastar/types/mas_list_def.h>
 
+typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int rcode, int ierrno, const char *fmt, const char *xmsg );
+
 typedef enum
 {
   MAS_STATUS_NONE,

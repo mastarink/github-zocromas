@@ -131,7 +131,7 @@ mas_master( void )
       /* mas_listeners.c */
       r = mas_listeners_start(  );
 
-      HMSG( "WAITING..." );
+      OMSG( "WAITING..." );
       r = mas_listeners_wait(  );
 
       tMSG( "(%d) master loop for %d hosts", r, opts.hosts_num );
@@ -164,9 +164,9 @@ mas_master( void )
   if ( opts.exitsleep )
     sleep( opts.exitsleep );
   MAS_LOG( "to stop spec. threads" );
-  FMSG( "TO STOP LOGGER" );
+  WMSG( "TO STOP LOGGER" );
   mas_logger_stop(  );
-  FMSG( "TO STOP TICKER" );
+  WMSG( "TO STOP TICKER" );
   mas_ticker_stop(  );
   MAS_LOG( "stopped spec. threads" );
 
@@ -313,20 +313,19 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
        mas_pthread_exit( &r ); 
      */
   }
-  FMSG( "TO DESTROY MODULES" );
+  WMSG( "TO DESTROY MODULES" );
   mas_modules_destroy(  );
-  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.threads.n.master.thread,
-        ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
   /* MAS_LOG( "bunch end : %d", r ); */
   for ( int ith = 0; ith < sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ); ith++ )
   {
-    FMSG( "TO JOIN #%d of %u", ith, ( unsigned ) ( sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ) ) );
+    WMSG( "TO JOIN #%d of %u", ith, ( unsigned ) ( sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ) ) );
     if ( ctrl.threads.a[ith].thread )
       mas_xpthread_join( ctrl.threads.a[ith].thread );
     ctrl.threads.a[ith].thread = 0;
   }
-  FMSG( "/ JOIN" );
-  HMSG( "BUNCH %s END master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.is_parent ? "(parent)" : "", ctrl.threads.n.master.thread,
+  WMSG( "/ JOIN" );
+  WMSG( "BUNCH END DATA master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.threads.n.master.thread,
         ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
+  HMSG( "BUNCH %s END", ctrl.is_parent ? "(parent)" : "" );
   return r;
 }

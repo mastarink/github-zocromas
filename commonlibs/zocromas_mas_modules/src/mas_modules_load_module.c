@@ -54,7 +54,7 @@ __mas_modules_load_module( const char *fullname, const char *name, int noerr )
   else
   {
     module_handle = dlopen( fullname, RTLD_LAZY | RTLD_LOCAL );
-  HMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
+    WMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
     if ( !module_handle )
     {
       char *dler;
@@ -91,7 +91,7 @@ __mas_modules_load_module( const char *fullname, const char *name, int noerr )
       ctrl.loaded_modules = array;
       ctrl.loaded_modules_cnt = size;
       pthread_rwlock_unlock( &ctrl.thglob.modules_list_rwlock );
-      HMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, name );
+      WMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, name );
     }
   }
   return module_handle;
@@ -109,7 +109,7 @@ _mas_load_module( const char *libname, const char *path, int noerr )
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
   module_handle = __mas_modules_load_module( fullname, libname, noerr );
-  HMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
+  WMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
   tMSG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   MAS_LOG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   mas_free( fullname );
@@ -135,7 +135,7 @@ mas_modules_load_proto( const char *libname )
   MAS_LOG( "load proto %s @ %s", libname, opts.protodir );
   if ( opts.protodir )
     module_handle = _mas_load_module( libname, opts.protodir, 1 );
-  HMSG( "PROTO LOAD %s @ %s %s", libname, opts.protodir, module_handle ? "OK" : "FAIL" );
+  WMSG( "PROTO LOAD %s @ %s %s", libname, opts.protodir, module_handle ? "OK" : "FAIL" );
   return module_handle;
 }
 
@@ -150,7 +150,7 @@ mas_modules_load_cmd_func( const char *libname, const char *funname )
   {
     cmd_fun = ( mas_cmd_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
     tMSG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
-    EHMSG( cmd_fun, "LOAD CMD FUNC %s.%s %s", libname, funname, cmd_fun ? "OK" : "FAIL" );
+    WMSG( "LOAD CMD FUNC %s.%s %s", libname, funname, cmd_fun ? "OK" : "FAIL" );
     MAS_LOG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
     if ( !cmd_fun )
     {
@@ -211,7 +211,7 @@ mas_modules_destroy( void )
       mas_v_fun_t fun;
 
       fun = ( mas_v_fun_t ) ( unsigned long ) dlsym( ctrl.loaded_modules[im], "module_before_close" );
-      HMSG( "MODULE DESTROY %u. %p [%d] %s", im, ( void * ) ctrl.loaded_modules[im], fun ? 1 : 0, dlerror(  ) );
+      WMSG( "MODULE DESTROY %u. %p [%d] %s", im, ( void * ) ctrl.loaded_modules[im], fun ? 1 : 0, dlerror(  ) );
       if ( fun )
         unload = ( fun ) (  );
       if ( unload && ctrl.loaded_modules[im] )

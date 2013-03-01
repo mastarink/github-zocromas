@@ -173,7 +173,6 @@ mas_client_exchange( mas_channel_t * pchannel, const char *question, const char 
   mas_header_t header;
 
   memset( &header, 0, sizeof( header ) );
-  /* r = _mas_client_exchange( pchannel, question, &header, answer_format ); */
   IEVAL( r, _mas_client_exchange( pchannel, question, &header, answer_format ) );
   if ( ( !( r < 0 ) ) && header.new_opts )
   {
@@ -181,7 +180,5 @@ mas_client_exchange( mas_channel_t * pchannel, const char *question, const char 
     /* r = _mas_client_exchange( pchannel, "get opts", &header, NULL ); */
     IEVAL( r, _mas_client_exchange( pchannel, "get opts", &header, NULL ) );
   }
-  HMSG( "(%d)after exchange", r );
-
   return r;
 }

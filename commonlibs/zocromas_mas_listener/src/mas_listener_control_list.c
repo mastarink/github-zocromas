@@ -51,8 +51,7 @@ mas_lcontrols_init( void )
 void
 mas_lcontrols_list_create( void )
 {
-  HMSG( "INIT LCONTROLS_LIST" );
-
+  WMSG( "INIT LCONTROLS_LIST" );
   ctrl.lcontrols_list = mas_malloc( sizeof( mas_lcontrol_list_head_t ) );
   memset( ctrl.lcontrols_list, 0, sizeof( mas_lcontrol_list_head_t ) );
   MAS_LIST_INIT( ctrl.lcontrols_list );
@@ -97,7 +96,7 @@ void
 mas_lcontrols_delete_list( void )
 {
   mas_lcontrols_clean_list( 1 );
-  HMSG( "1 LCONTROLS DELETE LIST" );
+  WMSG( "1 LCONTROLS DELETE LIST" );
   if ( ctrl.lcontrols_list && MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
@@ -107,10 +106,10 @@ mas_lcontrols_delete_list( void )
     ctrl.lcontrols_list = NULL;
 
     pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
-    HMSG( "2 LCONTROLS DELETE LIST" );
+    WMSG( "2 LCONTROLS DELETE LIST" );
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }
-  HMSG( "3 LCONTROLS DELETE LIST" );
+  WMSG( "3 LCONTROLS DELETE LIST" );
 }
 
 /* find by host + port */

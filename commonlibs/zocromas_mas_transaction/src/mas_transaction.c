@@ -68,7 +68,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 
   MAS_LOG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
   tMSG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
-  HMSG( "+ TRANS EXCHANGE" );
+  WMSG( "+ TRANS EXCHANGE" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
     char *data = NULL;
@@ -77,7 +77,9 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     r = 0;
 
     MAS_LOG( "to read rq (read all)" );
+    OMSG( "WAITING DATA..." );
     r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz );
+    OMSG( "GOT DATA (%u)", r );
     MAS_LOG( "read rq: %d", r );
     if ( r == 0 )
     {
@@ -141,7 +143,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   }
   MAS_LOG( "end transaction xch" );
   tMSG( "end transaction xch" );
-  HMSG( "- TRANS EXCHANGE" );
+  WMSG( "- TRANS EXCHANGE" );
   return r;
 }
 
@@ -154,7 +156,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
 
   MAS_LOG( "starting transaction" );
   tMSG( "starting transaction" );
-  HMSG( "+ TRANS" );
+  WMSG( "+ TRANS" );
 
   if ( prcontrol )
   {
@@ -175,7 +177,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       MAS_LOG( "KA => %u", prcontrol->keep_alive );
       while ( r >= 0 && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened )
       {
-        HMSG( "+ KA" );
+        WMSG( "+ KEEPALIVE" );
         MAS_LOG( "starting transaction keep-alive block" );
         prcontrol->h.status = MAS_STATUS_WAIT;
         /* rMSG( "waiting cl.data; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
@@ -194,14 +196,14 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
         MAS_LOG( "end tr. keep-alive block, %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
-        HMSG( "- KA" );
+        WMSG( "- KEEPALIVE" );
       }
       prcontrol->h.status = MAS_STATUS_STOP;
     }
   }
   MAS_LOG( "end transaction" );
   tMSG( "end transaction" );
-  HMSG( "- TRANS" );
+  WMSG( "- TRANS" );
   return NULL;
 }
 

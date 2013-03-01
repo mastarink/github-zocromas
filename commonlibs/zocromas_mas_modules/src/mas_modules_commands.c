@@ -60,7 +60,7 @@ mas_modules_lookup_question( const char *ownerlib, mas_cmd_t * cmdtable, const c
     mas_cmd_t *cmd = NULL;
 
     cmd = cmdtable;
-    HMSG( "LOOKUP : '%s'", question );
+    WMSG( "LOOKUP : '%s'", question );
     while ( cmd && !found && ( cmd->name || cmd->function || cmd->libname /* || cp->subtable */  ) )
     {
       size_t l = 0;
@@ -87,11 +87,11 @@ mas_modules_lookup_question( const char *ownerlib, mas_cmd_t * cmdtable, const c
   tMSG( "cmd %s : %s (%s)", question, found ? "FOUND" : "NOT found", found ? found->name : "" );
   if ( found )
   {
-    HMSG( "FOUND %s.%s", ownerlib, found->name );
+    WMSG( "FOUND %s.%s", ownerlib, found->name );
   }
   else
   {
-    HMSG( "NOT FOUND %s.%s", ownerlib, question );
+    WMSG( "NOT FOUND %s.%s", ownerlib, question );
   }
   return found;
 }
@@ -106,7 +106,7 @@ mas_modules_commands( STD_CMD_ARGS )
 
   if ( this_command )
   {
-    HMSG( "LOOKUP ... from %s.%s sub", "...", this_command->name );
+    WMSG( "LOOKUP ... from %s.%s sub", "...", this_command->name );
     found = mas_modules_lookup_question( this_command->libname, this_command->subtable, question, &args );
     MAS_LOG( "(L%u) command %s (%s) %s [%s]", level, found ? found->name : NULL, question, found ? "FOUND" : "NOT FOUND", args );
     if ( !found )
@@ -151,7 +151,7 @@ mas_modules_commands( STD_CMD_ARGS )
     {
       tMSG( "evaluating %s ( %s )", question, args );
       MAS_LOG( "evaluating %s ( %s )", question, args );
-      HMSG( "EVAL FOUND %s.%s", this_command->libname, found->name );
+      WMSG( "EVAL FOUND %s.%s", this_command->libname, found->name );
       answer = mas_evaluate_cmd( 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
     }
   }

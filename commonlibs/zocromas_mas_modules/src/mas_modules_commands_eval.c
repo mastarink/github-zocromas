@@ -78,9 +78,8 @@ universal_complex_cmd( STD_CMD_ARGS )
     if ( this_command->subtable )
     {
       /* MAS_LOG( "(%s) UNI command table %p", this_command->name, ( void * ) this_command->subtable ); */
-      tMSG( "UNI command %s", this_command->name );
       MAS_LOG( "UNI command %s", this_command->name );
-      HMSG( "UNI %s", this_command->name );
+      WMSG( "UNI command %s", this_command->name );
       question = args;
       args = NULL;
       answer = mas_modules_commands( STD_CMD_PASS );
@@ -144,7 +143,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           if ( loaded_subtable )
           {
             cmd_fun = universal_complex_cmd;
-            HMSG( "SET UNI for %s", name );
+            WMSG( "SET UNI for %s", name );
             MAS_LOG( "universal command for %s {%p}", libname, ( void * ) ( unsigned long ) cmd_fun );
             tMSG( "universal command for %s.%s", libname, name );
           }
@@ -239,14 +238,14 @@ mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *
 char *
 mas_evaluate_command( const char *question )
 {
-  HMSG( "EVAL CMD %s", question );
+  WMSG( "EVAL CMD %s", question );
   return mas_evaluate_transaction_command( NULL, question );
 }
 
 char *
 mas_evaluate_transaction_command( mas_rcontrol_t * prcontrol, const char *question )
 {
-  HMSG( "EVAL TR '%s'", question );
+  WMSG( "EVAL TR '%s'", question );
   return mas_evaluate_cmd( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
 }
 
@@ -261,14 +260,14 @@ mas_evaluate_cmd( STD_CMD_ARGS )
   MAS_LOG( "evaluate: cmd %p", ( void * ) this_command );
   if ( this_command )
   {
-    HMSG( "EVAL %s", this_command->name );
+    WMSG( "EVAL %s", this_command->name );
   }
   else
   {
     this_command = &root_command;
     MAS_LOG( "evaluate: ROOT %s cmd %p subtab:%p", this_command ? this_command->name : NULL, ( void * ) this_command,
              ( void * ) this_command->subtable );
-    HMSG( "EVAL ROOT %s", this_command->name );
+    WMSG( "EVAL ROOT %s", this_command->name );
   }
   if ( this_command )
   {

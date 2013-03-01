@@ -51,7 +51,6 @@ mas_threads_init( void )
 {
   int r = 0;
 
-  HMSG( "INIT THREADS" );
   MAS_LOG( "(%d) init threads", r );
   mas_in_thread( MAS_THREAD_MAIN, NULL, NULL );
 
