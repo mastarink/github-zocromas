@@ -70,6 +70,7 @@ struct mas_control_s
 
   char *binname;
   char *progname;
+  char *pkgname;
   char *exepath;
   mas_error_handler_fun_t error_handler;
 

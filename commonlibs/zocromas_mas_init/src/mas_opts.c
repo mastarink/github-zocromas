@@ -1,7 +1,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
-
+#include <stddef.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -302,7 +302,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           if ( ctrl.is_server )
           {
             IEVAL( r, fprintf( f,
-                               "# server\ndaemon=%u\nsingle-instance=%u\nsingle-child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
+                               "# server\ndaemon=%u\nsingle_instance=%u\nsingle_child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
                                ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir,
                                opts.protodir ) );
             if ( r > 0 )
@@ -485,34 +485,52 @@ mas_opts_set_pstrvalue( char **ppstr, const char *s )
   }
 }
 
+/* static void                                            */
+/* mas_opts_set_unsigned( unsigned *pint, const char *s ) */
+/* {                                                      */
+/*   const char *se;                                      */
+/*                                                        */
+/*   se = mas_find_eq_value( s );                         */
+/*   if ( se )                                            */
+/*   {                                                    */
+/*     sscanf( se, "%u", pint );                          */
+/*   }                                                    */
+/* }                                                      */
+
+/* static void                                               */
+/* mas_opts_set_unsigned_no( unsigned *pint, const char *s ) */
+/* {                                                         */
+/*   mas_opts_set_unsigned( pint, s );                       */
+/*   *pint = !*pint;                                         */
+/* }                                                         */
+
+/* static void                                        */
+/* mas_opts_set_double( double *pint, const char *s ) */
+/* {                                                  */
+/*   const char *se;                                  */
+/*                                                    */
+/*   se = mas_find_eq_value( s );                     */
+/*   if ( se )                                        */
+/*   {                                                */
+/*     sscanf( se, "%lg", pint );                     */
+/*   }                                                */
+/* }                                                  */
+
 static void
-mas_opts_set_unsigned( unsigned *pint, const char *s )
+mas_opts_set_double_o( void *data, size_t off, const char *str )
 {
   const char *se;
+  double d;
+  char *cptr;
+  double *dptr;
 
-  se = mas_find_eq_value( s );
+  se = mas_find_eq_value( str );
   if ( se )
   {
-    sscanf( se, "%u", pint );
-  }
-}
-
-static void
-mas_opts_set_unsigned_no( unsigned *pint, const char *s )
-{
-  mas_opts_set_unsigned( pint, s );
-  *pint = !*pint;
-}
-
-static void
-mas_opts_set_double( double *pint, const char *s )
-{
-  const char *se;
-
-  se = mas_find_eq_value( s );
-  if ( se )
-  {
-    sscanf( se, "%lg", pint );
+    sscanf( se, "%lg", &d );
+    cptr = ( ( char * ) data ) + off;
+    dptr = ( double * ) cptr;
+    *dptr = d;
   }
 }
 
@@ -543,68 +561,65 @@ mas_opts_add_command( const char *s )
   opts.commands_num = mas_add_argv_arg( opts.commands_num, &opts.commands, se );
 }
 
+static unsigned
+mas_opts_atou( const char *s )
+{
+  unsigned rv = 0;
+  const char *pv;
+
+  pv = mas_find_eq_value( s );
+  if ( pv )
+    rv = atol( pv );
+  return rv;
+}
+
+/* #define IFOPT1(n) if ( 0 == mas_strcmp2( s, #name "=" ) ) mas_opts_set_pstrvalue( (char*)(&opts) + offsetof(mas_options_t, name), sizeof( opts.name ), s ); */
+#define OPT_STR(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) mas_opts_set_strvalue( opts.name, sizeof( opts.name ), val )
+#define OPT_PSTR(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) mas_opts_set_pstrvalue( &opts.name, val )
+#define OPT_FLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) opts.name = ( mas_opts_atou(val) )
+#define OPT_NOFLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) opts.no##name = !( mas_opts_atou(val) )
+#define OPT_DOUBLE(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) mas_opts_set_double_o( &opts, offsetof(mas_options_t, name), val )
+
 int
 mas_opts_restore_nosection( const char *s )
 {
   int r = 0;
-  unsigned v;
-  unsigned nv;
 
-  mas_opts_set_unsigned( &v, s );
-  mas_opts_set_unsigned_no( &nv, s );
+  /* unsigned v; */
+  /* unsigned nv; */
+
+  /* mas_opts_set_unsigned( &v, s ); */
+  /* mas_opts_set_unsigned_no( &nv, s ); */
+  /* nv = !v; */
   if ( 0 == mas_strcmp2( s, "message=" ) )
   {
     HMSG( "RESTORE OPTS: %s", mas_find_eq_value( s ) );
   }
-  else if ( 0 == mas_strcmp2( s, "env_optsname=" ) )
-    mas_opts_set_strvalue( opts.env_optsname, sizeof( opts.env_optsname ), s );
-  else if ( 0 == mas_strcmp2( s, "env_hostname=" ) )
-    mas_opts_set_strvalue( opts.env_hostname, sizeof( opts.env_hostname ), s );
-  else if ( 0 == mas_strcmp2( s, "uuid=" ) )
-    mas_opts_set_pstrvalue( &opts.uuid, s );
-  else if ( 0 == mas_strcmp2( s, "modsdir=" ) )
-    mas_opts_set_pstrvalue( &opts.modsdir, s );
-  else if ( 0 == mas_strcmp2( s, "pidsdir=" ) )
-    mas_opts_set_pstrvalue( &opts.pidsdir, s );
-  else if ( 0 == mas_strcmp2( s, "protodir=" ) )
-    mas_opts_set_pstrvalue( &opts.protodir, s );
-  else if ( 0 == mas_strcmp2( s, "logdir=" ) )
-    mas_opts_set_pstrvalue( &opts.logdir, s );
-  else if ( 0 == mas_strcmp2( s, "log=" ) )
-    opts.nolog = nv;
-  else if ( 0 == mas_strcmp2( s, "logger=" ) )
-    opts.nologger = nv;
-  else if ( 0 == mas_strcmp2( s, "max_config_backup=" ) )
-    opts.max_config_backup = v;
-  else if ( 0 == mas_strcmp2( s, "default_port=" ) )
-    opts.default_port = v;
-  else if ( 0 == mas_strcmp2( s, "daemon=" ) )
-    opts.nodaemon = nv;
-  else if ( 0 == mas_strcmp2( s, "single-instance=" ) )
-    opts.single_instance = v;
-  else if ( 0 == mas_strcmp2( s, "single-child=" ) )
-    opts.single_child = v;
-  else if ( 0 == mas_strcmp2( s, "messages=" ) )
-    opts.nomessages = nv;
-  else if ( 0 == mas_strcmp2( s, "save_opts=" ) )
-    opts.save_opts = v;
-  else if ( 0 == mas_strcmp2( s, "save_opts_plus=" ) )
-    opts.save_opts_plus = v;
-  else if ( 0 == mas_strcmp2( s, "disconnect_prompt=" ) )
-    opts.disconnect_prompt = v;
-  else if ( 0 == mas_strcmp2( s, "wait_server=" ) )
-    opts.wait_server = v;
-  else if ( 0 == mas_strcmp2( s, "restart_sleep=" ) )
-  {
-    double dv = 0;
-
-    mas_opts_set_double( &dv, s );
-    opts.restart_sleep = dv;
-  }
+  OPT_DOUBLE( restart_sleep, s );
+  OPT_STR( env_optsname, s );
+  OPT_STR( env_hostname, s );
+  OPT_PSTR( uuid, s );
+  OPT_PSTR( modsdir, s );
+  OPT_PSTR( pidsdir, s );
+  OPT_PSTR( protodir, s );
+  OPT_PSTR( logdir, s );
+  OPT_NOFLAG( log, s );
+  OPT_NOFLAG( logger, s );
+  OPT_FLAG( max_config_backup, s );
+  OPT_FLAG( default_port, s );
+  OPT_NOFLAG( daemon, s );
+  OPT_FLAG( single_instance, s );
+  OPT_FLAG( single_child, s );
+  OPT_NOFLAG( messages, s );
+  OPT_FLAG( save_opts, s );
+  OPT_FLAG( save_opts_plus, s );
+  OPT_FLAG( disconnect_prompt, s );
+  OPT_FLAG( wait_server, s );
   else
   {
     IEVAL( r, -1 );
   }
+  /* HMSG( "RESTORE OPT restart_sleep: %lg", opts.restart_sleep ); */
   return r;
 }
 
@@ -632,6 +647,7 @@ _mas_opts_restore( const char *dirname, const char *filename )
     {
       FILE *f;
 
+      /* HMSG( "offsetof : %lu", ( unsigned long ) offsetof( mas_options_t, ticker_mode ) ); */
       HMSG( "OPTS from %s", fpath );
       f = mas_fopen( fpath, "r" );
       if ( f )
@@ -756,19 +772,6 @@ mas_opts_restore( const char *dirname, const char *filename )
     /* mMSG( "BBB: %s - %d", getenv( "MAS_PID_AT_BASHRC" ), r ); */
     mas_free( fn );
   }
-#ifdef HAVE_LIBUUID
-  if ( !opts.uuid )
-  {
-    uuid_t uuid;
-    char buffer[256];
-
-    memset( uuid, 0, sizeof( uuid ) );
-    uuid_generate( uuid );
-    uuid_unparse_lower( uuid, buffer );
-    fprintf( stderr, "UUID %s\n", buffer );
-    opts.uuid = mas_strdup( buffer );
-  }
-#endif
   return r;
 }
 
@@ -818,6 +821,31 @@ mas_opts_restore_plus( const char *dirname, const char *filename, ... )
   va_end( args );
   return r;
 }
+
+#define XSTR(s) STR(s)
+#define STR(s) #s
+int
+mas_opts_restore_zero( const char *filename )
+{
+  int r = 0;
+  char *dir;
+  char *p;
+  size_t l;
+
+  dir = mas_strdup( XSTR( MAS_SYSCONFDIR ) );
+  dir = mas_strcat_x( dir, "/" );
+  l = strlen( dir );
+  if ( ctrl.binname )
+    dir = mas_strcat_x( dir, ctrl.binname );
+  else
+    dir = mas_strcat_x( dir, "zocromas_uni" );
+  while ( ( p = strchr( dir + l, '_' ) ) )
+    *p = '/';
+  IEVAL( r, _mas_opts_restore( dir, filename ) );
+  mas_free( dir );
+  return r;
+}
+
 
 int
 mas_pre_init_default_opts( void )

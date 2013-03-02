@@ -45,6 +45,7 @@ struct mas_header_s
 
   bin_type_t binary;
   uint16_t len;
+  uint16_t restart_cnt;
 };
 
 typedef struct mas_header_s mas_header_t;

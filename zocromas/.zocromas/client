@@ -11,7 +11,7 @@ messages=1
 default_port=6006
 save_opts=0
 save_opts_plus=0
-restart_sleep=0.1
+restart_sleep=0.41
 # -
 # client
 disconnect_prompt=0

@@ -1,6 +1,6 @@
 #!/bin/sh
 if [[ -f "sh/setup.sh" ]] ; then
-  . sh/setup.sh
+  . sh/setupz.sh
   . sh/run_functions.sh
 
   psshow

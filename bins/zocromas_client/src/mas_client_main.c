@@ -1,6 +1,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
+#include <mastar/wrap/mas_lib.h>
+#include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -59,8 +61,21 @@ main( int argc, char *argv[], char *env[] )
 #endif
   for ( int ia = opts.hosts_num; r >= 0 && ia > 0; ia-- )
   {
+      int maxit = 0;
     /* mas_client( opts.hosts[ia - 1] ); */
-    IEVAL( r, mas_client( opts.hosts[ia - 1] ) );
+    if (!(r<0))do
+    {
+      r = 0;
+      IEVAL( r, mas_client( opts.hosts[ia - 1] ) );
+      if ( r < 0 && ctrl.restart_cnt > 0 )
+      {
+        HMSG( "RESTART %s DELAY %10.5fs", opts.argv[0], opts.restart_sleep );
+        mas_nanosleep( opts.restart_sleep );
+      }
+      maxit++;
+    }
+    while ( r < 0 && ctrl.restart_cnt && maxit < 25 );
+
     break;
   }
   return 0;

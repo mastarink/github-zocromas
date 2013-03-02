@@ -132,3 +132,57 @@ server info
 server quit
 server info
 server quit
+server info
+bye
+server quit
+bye
+server quit
+server restart
+bye
+server info
+pwd
+server quit
+server info
+server restart
+bye
+server restart
+bye
+server restart
+bye
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server quit
+server restart
+server info
+server quit
+server restart
+server quit
+bye
+disconnect
+reconnect
+bye

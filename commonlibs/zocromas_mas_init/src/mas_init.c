@@ -9,6 +9,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifdef HAVE_LIBUUID
+#  include <uuid/uuid.h>
+#endif
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -113,9 +116,9 @@ mas_init_message( void )
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
-    IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
+    IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; #%u (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
           ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ), ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ),
-          ctrl.stamp.vtsc );
+          ctrl.restart_cnt, ctrl.stamp.vtsc );
     IMSG( "[%s] pid=%u(x%x) ; tid:%u [%lx]", ctrl.progname, ctrl.threads.n.main.pid, ctrl.threads.n.main.pid,
           ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
   }
@@ -123,9 +126,9 @@ mas_init_message( void )
 #endif
   {
     IMSG( "-" );
-    IMSG( " [%s] %s V.%s built at %s : %lx : %lx : %lu; (%s) ", ctrl.progname, PACKAGE_NAME,
+    IMSG( " [%s] %s V.%s built at %s : %lx : %lx : %lu; #%u (%s) ", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),
-          ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.stamp.vtsc );
+          ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ), ctrl.restart_cnt, ctrl.stamp.vtsc );
     IMSG( " [%s] pid=[ %u ](%x) ; tid:%u [%lx] ", ctrl.progname, ctrl.threads.n.main.pid,
           ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );
     IMSG( "-" );
@@ -193,20 +196,38 @@ static int
 mas_pre_init_opt_files( void )
 {
   int r = 0;
+  char sppid[64] = "";
 
   WMSG( "INIT OPT FILES" );
-  WMSG( "PPID: %u; BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
-  MAS_LOG( "PPID: %u BASH: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  HMSG( "PPID: %u; BASH VAR: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
+  MAS_LOG( "PPID: %u BASH VAR: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   {
+    snprintf( sppid, sizeof( sppid ), "%lu", ( unsigned long ) getppid(  ) );
+  }
+  if ( *sppid )
+  {
+#ifdef MAS_ONE_OF_CONFIGS
     int rone = 0;
 
     /* r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
-    IEVAL_OPT( rone, mas_opts_restore_plus( NULL, ctrl.progname, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) );
+
+    /* IEVAL_OPT( rone, mas_opts_restore_plus( NULL, ctrl.progname, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+    IEVAL_OPT( rone, mas_opts_restore_plus( NULL, ctrl.progname, ".", sppid, NULL ) );
     if ( !( rone > 0 ) )
     {
       /* r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" ); */
       IEVALM( r, mas_opts_restore( NULL, ctrl.progname ), "(%d) no opt file(s) for prog: '%s'", ctrl.progname );
     }
+#else
+    int rzero = 0;
+    int rone = 0;
+    int rtwo = 0;
+
+    IEVAL_OPT( rzero, mas_opts_restore_zero( ctrl.progname ) );
+    IEVAL_OPT( rone, mas_opts_restore( NULL, ctrl.progname ) );
+    /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, ctrl.progname, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+    IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, ctrl.progname, ".", sppid, NULL ) );
+#endif
   }
   return r;
 }
@@ -231,7 +252,7 @@ mas_pre_init_runpath( char *runpath )
   pn = strchr( ctrl.binname, '_' );
   if ( pn && *pn++ && *pn )
     ctrl.progname = mas_strdup( pn );
-
+/* ctrl.pkgname=mas_strdup(_pkgname); */
   return r;
 }
 
@@ -300,13 +321,14 @@ mas_init_restart_count( void )
   char name[512];
   char *ren = NULL, *ren0;
 
-  WMSG( "INIT RESTART COUNT" );
+  HMSG( "INIT RESTART COUNT %u", ctrl.restart_cnt );
   /* snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) ); */
   snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
   ren0 = ren = getenv( name );
   if ( ren )
   {
     sscanf( ren, "%u", &ctrl.restart_cnt );
+    HMSG( "INIT RESTART COUNT (%s) %u", ren, ctrl.restart_cnt );
     ren = strchr( ren, ':' );
     if ( ren )
     {
@@ -336,7 +358,7 @@ mas_init( int argc, char **argv, char **env )
 {
   int r = 0;
 
-  WMSG( "INIT" );
+  HMSG( "INIT" );
   ctrl.stamp.lts = ( unsigned long ) time( NULL );
   ctrl.stamp.first_lts = ctrl.stamp.lts;
   IEVAL( r, mas_init_restart_count(  ) );
@@ -382,6 +404,24 @@ mas_init_vplus( va_list args )
 }
 
 int
+mas_init_uuid( void )
+{
+#ifdef HAVE_LIBUUID
+  if ( !opts.uuid )
+  {
+    uuid_t uuid;
+    char buffer[256];
+
+    memset( uuid, 0, sizeof( uuid ) );
+    uuid_generate( uuid );
+    uuid_unparse_lower( uuid, buffer );
+    opts.uuid = mas_strdup( buffer );
+  }
+#endif
+  return 0;
+}
+
+int
 mas_init_plus( int argc, char **argv, char **env, ... )
 {
   int r = 0;
@@ -390,7 +430,11 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
   IEVAL( r, mas_pre_init_runpath( argv[0] ) );
   IEVAL( r, mas_pre_init_proc(  ) );
+  /* uuid BEFORE opt_files !! */
+  IEVAL( r, mas_init_uuid(  ) );
+  HMSG( "UUID %s", opts.uuid );
   IEVAL( r, mas_pre_init_opt_files(  ) );
+  HMSG( "UUID %s", opts.uuid );
   if ( r < 0 )
   {
     r = 0;
@@ -442,6 +486,7 @@ mas_destroy( void )
         snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
         snprintf( val, sizeof( val ), "%u:%lu:%lu", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts,
                   ( unsigned long ) ctrl.stamp.lts );
+        HMSG( "RESTART : %s='%s'", name, val );
         setenv( name, val, 1 );
       }
       IEVAL( r, execvp( opts.argv[0], &opts.argv[0] ) );
@@ -506,7 +551,7 @@ __attribute__ ( ( constructor ) )
 
   snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid );
   value = getenv( name );
-  if ( ctrl.stderrfile )
+  if ( ctrl.stderrfile && value )
     fprintf( ctrl.stderrfile, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );
   /* ctrl.is_server = 0; */
   /* ctrl.is_client = 0; */

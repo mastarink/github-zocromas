@@ -42,7 +42,7 @@ related:
 
 
 static int
-_mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header_t * header, const char *answer_format )
+_mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header_t * pheader, const char *answer_format )
 {
   int r = 0;
   char *answer = NULL;
@@ -66,9 +66,9 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 /*   else                     */
   {
     /* HMSG( "to read message" ); */
-    /* r = mas_channel_read_message( pchannel, &answer, header ); */
-    IEVAL( r, mas_channel_read_message( pchannel, &answer, header ) );
-    /* HMSG( "it's message(%d)", r ); */
+    /* r = mas_channel_read_message( pchannel, &answer, pheader ); */
+    IEVAL( r, mas_channel_read_message( pchannel, &answer, pheader ) );
+    HMSG( "GOT MESSAGE(%d) R:%d", r, pheader->restart_cnt );
     if ( r <= 0 )
     {
 /* #ifdef EMSG                 */
@@ -78,10 +78,10 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
       IEVAL( r, -1 );
       mas_channel_close( pchannel );
     }
-    else if ( header && header->binary )
+    else if ( pheader && pheader->binary )
     {
-      tMSG( "(%d) BINARY from %lx : %lx", r, ( unsigned long ) header->pid, ( unsigned long ) header->pth );
-      switch ( header->binary )
+      tMSG( "(%d) BINARY from %lx : %lx", r, ( unsigned long ) pheader->pid, ( unsigned long ) pheader->pth );
+      switch ( pheader->binary )
       {
       case MSG_BIN_OPTS:
         MSG( "it's OPTS" );
@@ -134,7 +134,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
         ctrl.in_pipe--;
         break;
       default:
-        tMSG( "it's unknown BIN%d", header->binary );
+        tMSG( "it's unknown BIN%d", pheader->binary );
         break;
       }
     }
@@ -158,8 +158,8 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
     }
     else
     {
-      HMSG( "nothing (r:%d) from %lx - %lx\n", r, ( unsigned long ) ( header ? header->pid : 0 ),
-            ( unsigned long ) ( header ? header->pth : 0 ) );
+      HMSG( "nothing (r:%d) from %lx - %lx\n", r, ( unsigned long ) ( pheader ? pheader->pid : 0 ),
+            ( unsigned long ) ( pheader ? pheader->pth : 0 ) );
     }
     mas_free( answer );
   }

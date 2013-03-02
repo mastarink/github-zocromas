@@ -69,7 +69,7 @@ mas_channel_reset( mas_channel_t * pchannel, int toclose, int todeaf )
   {
     if ( toclose )
       mas_channel_close( pchannel );
-    if ( todeaf )
+    if ( todeaf && pchannel->is_server )
       mas_channel_deaf( pchannel );
 
     if ( pchannel->error_func )

@@ -79,12 +79,15 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     MAS_LOG( "to read rq (read all)" );
     OMSG( "WAITING DATA..." );
     r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz );
-    OMSG( "GOT DATA (%u)", r );
     MAS_LOG( "read rq: %d", r );
     if ( r == 0 )
     {
       mas_channel_close( prcontrol->h.pchannel );
       MAS_LOG( "read none" );
+    }
+    else
+    {
+      OMSG( "GOT DATA (%u)", r );
     }
 
     {
@@ -415,6 +418,7 @@ mas_transaction_cleanup( void *arg )
 {
   mas_rcontrol_t *prcontrol = NULL;
 
+  OMSG( "DISCONNECT" );
   prcontrol = ( mas_rcontrol_t * ) arg;
   if ( prcontrol )
   {

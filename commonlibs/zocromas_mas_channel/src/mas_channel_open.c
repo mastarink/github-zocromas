@@ -7,6 +7,7 @@
 
 #include <errno.h>
 
+#include <mastar/types/mas_common_defs.h>
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
@@ -80,9 +81,40 @@ mas_channel_open( mas_channel_t * pchannel )
   int r = 0;
 
   /* MAS_LOG( "to open chn." ); */
+  IEVAL( r, mas_channel_test( pchannel ) );
+  /* IEVAL( r, pchannel->opened ? 0 : -1 ); */
+  if ( !( r < 0 ) && !pchannel->opened )
+  {
+    if ( pchannel->is_server )
+    {
+      /* MAS_LOG( "to listem chn." ); */
+      /* r = mas_channel_listen( pchannel ); */
+      IEVAL( r, mas_channel_listen( pchannel ) );
+      /* MAS_LOG( "(%d)listen chn.", r ); */
+    }
+    if ( r >= 0 )
+      switch ( pchannel->type )
+      {
+      case CHN_SOCKET:
+        /* MAS_LOG( "to open socket" ); */
+        IEVAL( r, _mas_channel_open_tcp( pchannel ) );
+        /* MAS_LOG( "(%d) tcp chn. socket:%d", r, pchannel->fd_socket ); */
+        /* MAS_LOG( "(%d)tcp chn. socket:%d", r, pchannel->fd_socket ); */
+      }
+  }
+  /* MAS_LOG( "opened chn. %d", r ); */
+  return r;
+}
+
+int
+mas_channel_open_old( mas_channel_t * pchannel )
+{
+  int r = 0;
+
+  /* MAS_LOG( "to open chn." ); */
   if ( mas_channel_test( pchannel ) && !pchannel->opened )
   {
-    if ( r >= 0 )
+    if ( r >= 0 && pchannel->is_server )
     {
       /* MAS_LOG( "to listem chn." ); */
       r = mas_channel_listen( pchannel );

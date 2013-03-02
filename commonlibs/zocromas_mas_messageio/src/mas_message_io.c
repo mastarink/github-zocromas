@@ -98,6 +98,7 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
       ioMSG( "w. to fill header" );
       msg->h.sign = MSG_SIGNATURE;
       msg->h.vers = MSG_VERSION;
+      msg->h.restart_cnt = ctrl.restart_cnt;
       msg->h.len = len;
       msg->h.sender_stamp = ctrl.stamp;
       msg->h.pid = getpid(  );

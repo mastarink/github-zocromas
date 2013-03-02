@@ -15,8 +15,8 @@ restart_sleep=0.25
 # -
 # server
 daemon=1
-single-instance=1
-single-child=1
+single_instance=1
+single_child=1
 logger=1
 modsdir=/mnt/new_misc/develop/autotools/zoc/install/lib/zocmds/
 pidsdir=/mnt/new_misc/develop/autotools/zoc/zocromas/pid/

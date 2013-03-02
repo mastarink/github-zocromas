@@ -95,6 +95,12 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       gettimeofday( &td, NULL );
       plcontrol->h.activity_time = td;
     }
+
+
+    IEVAL( r, ctrl.stop_listeners ? -1 : 0 );
+
+
+
     /* wMSG( "(%d) opened? channel; opened : %d", r, plcontrol->h.pchannel->opened ); */
     if ( r < 0 )
     {

@@ -97,8 +97,7 @@ function setup_dirs ()
     fi
     binprefix=zocromas_
   else
-    echo "FATAL : bad script call ($0)" >&2
+    echo "FATAL : '$me' bad SCRIPT call ($0)" >&2
   fi
   setup_vers
 }
-
