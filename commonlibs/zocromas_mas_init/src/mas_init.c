@@ -188,6 +188,7 @@ mas_pre_init_proc( void )
       WMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
     }
     ctrl.exepath = linkname;
+    ctrl.exename = mas_strdup( basename( ctrl.exepath ) );
   }
   return r;
 }
@@ -206,27 +207,27 @@ mas_pre_init_opt_files( void )
   }
   if ( *sppid )
   {
+    /* const char *name = ctrl.progname; */
+    const char *name = ctrl.exename;
+
 #ifdef MAS_ONE_OF_CONFIGS
     int rone = 0;
 
-    /* r = mas_opts_restore_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
-
-    /* IEVAL_OPT( rone, mas_opts_restore_plus( NULL, ctrl.progname, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
-    IEVAL_OPT( rone, mas_opts_restore_plus( NULL, ctrl.progname, ".", sppid, NULL ) );
+    /* IEVAL_OPT( rone, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+    IEVAL_OPT( rone, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
     if ( !( rone > 0 ) )
     {
-      /* r = mas_opts_restore( NULL, ctrl.progname ? ctrl.progname : "Unknown" ); */
-      IEVALM( r, mas_opts_restore( NULL, ctrl.progname ), "(%d) no opt file(s) for prog: '%s'", ctrl.progname );
+      IEVALM( r, mas_opts_restore( NULL, name ), "(%d) no opt file(s) for prog: '%s'", name );
     }
 #else
     int rzero = 0;
     int rone = 0;
     int rtwo = 0;
 
-    IEVAL_OPT( rzero, mas_opts_restore_zero( ctrl.progname ) );
-    IEVAL_OPT( rone, mas_opts_restore( NULL, ctrl.progname ) );
-    /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, ctrl.progname, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
-    IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, ctrl.progname, ".", sppid, NULL ) );
+    IEVAL_OPT( rzero, mas_opts_restore_zero( name ) );
+    IEVAL_OPT( rone, mas_opts_restore( NULL, name ) );
+    /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+    IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
 #endif
   }
   return r;
@@ -248,10 +249,13 @@ mas_pre_init_runpath( char *runpath )
   ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
   ctrl.threads.n.main.pid = getpid(  );
+
   ctrl.binname = mas_strdup( basename( runpath ) );
   pn = strchr( ctrl.binname, '_' );
   if ( pn && *pn++ && *pn )
     ctrl.progname = mas_strdup( pn );
+
+
 /* ctrl.pkgname=mas_strdup(_pkgname); */
   return r;
 }
@@ -516,6 +520,10 @@ mas_destroy( void )
   if ( ctrl.exepath )
     mas_free( ctrl.exepath );
   ctrl.exepath = NULL;
+
+  if ( ctrl.exename )
+    mas_free( ctrl.exename );
+  ctrl.exename = NULL;
 
   mas_ctrl_destroy(  );
 

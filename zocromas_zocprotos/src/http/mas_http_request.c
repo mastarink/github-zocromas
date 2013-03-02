@@ -61,19 +61,16 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
 {
   const char *pstring;
 
-  /* EMSG( "@@>>>@@@@@@@@@@@ s1: %x", *( ( unsigned * ) smessage ) ); */
   pstring = smessage;
-  /* EMSG( "@@>>>@@@@@@@@@@@ s2: %x", *( ( unsigned * ) pstring ) ); */
   MAS_LOG( "http parse 1" );
-  /* if ( 0 == strncasecmp( pstring, "http:", 5 ) || 0 == strncasecmp( pstring, "https:", 6 ) ) */
   if ( http )
   {
     int good = 0;
 
     http->smethod = mas_proto_http_nonblank( pstring, &pstring );
-    /* EMSG( "@@>>>@@@@@@@@@@@ s3: %x", *( ( unsigned * ) http->smethod ) ); */
     MAS_LOG( "http parse smethod: %s - %s", http->smethod, pstring );
     mas_proto_http_parse_method( http );
+    HMSG( "HTTP METHOD: %d. %s", http->imethod, mas_proto_http_method_name( http ) );
     MAS_LOG( "http parse method: %s (%u)", mas_proto_http_method_name( http ), http->imethod );
     http->URI = mas_proto_http_nonblank( pstring, &pstring );
     MAS_LOG( "URI: %s", http->URI );
@@ -87,8 +84,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
     if ( good )
     {
       prcontrol->proto_desc = proto_desc;
-      MAS_LOG( "good (1), http parsed protocol: %s === %s", prcontrol
-               && proto_desc ? proto_desc->name : "?", http->protocol_name );
+      MAS_LOG( "good (1), http parsed protocol: %s === %s", prcontrol && proto_desc ? proto_desc->name : "?", http->protocol_name );
       MAS_LOG( "good (2), http parsed protocol: %s === %s", prcontrol
                && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );
       if ( pstring && *pstring == '/' )
@@ -121,6 +117,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
           break;
         case MAS_HTTP_METHOD_GET:
         case MAS_HTTP_METHOD_HEAD:
+        case MAS_HTTP_METHOD_POST:
           /* prcontrol->keep_alive = 0;                    */
           /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
           break;
@@ -192,6 +189,7 @@ static const mas_http_method_pair_t emethods[] = {
   , {MAS_HTTP_METHOD_GET, "GET"}
   , {MAS_HTTP_METHOD_HEAD, "HEAD"}
   , {MAS_HTTP_METHOD_PUT, "PUT"}
+  , {MAS_HTTP_METHOD_POST, "POST"}
   , {MAS_HTTP_METHOD_OPTIONS, "OPTIONS"}
   , {MAS_HTTP_METHOD_UNKNOWN, "UNKNOWN"}
   , {.id = MAS_HTTP_METHOD_NONE,.name = NULL}
@@ -247,13 +245,29 @@ mas_proto_http_method_name( mas_http_t * http )
   return p;
 }
 
+/* const char *                                                                */
+/* mas_proto_http_method_name( mas_http_t * http )                             */
+/* {                                                                           */
+/*   const char *name = NULL;                                                  */
+/*                                                                             */
+/*   for ( int im = 0; im < sizeof( emethods ) / sizeof( emethods[0] ); im++ ) */
+/*   {                                                                         */
+/*     if ( http->imethod == emethods[im].id )                                 */
+/*     {                                                                       */
+/*       name = emethods[im].name;                                             */
+/*       break;                                                                */
+/*     }                                                                       */
+/*   }                                                                         */
+/*   return name;                                                              */
+/* }                                                                           */
+
 static mas_http_t *
 mas_proto_http_parse_spc_headers( mas_rcontrol_t * prcontrol, mas_http_t * http, const char *name, const char *value )
 {
   if ( 0 == strcmp( name, "Connection" ) )
   {
     tMSG( ">>>>>> HTTP HEADER: %s:%s", name, value );
-    HMSG("HTTP HEADER %s", name);
+    HMSG( "HTTP HEADER %s", name );
     MAS_LOG( "HTTP HEADER: %s:%s", name, value );
     if ( 0 == strcasecmp( value, "keep-alive" ) )
     {

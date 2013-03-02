@@ -692,6 +692,18 @@ _mas_opts_restore( const char *dirname, const char *filename )
             }
             else if ( rbp )
               section = mas_strndup( s + 1, rbp - s - 1 );
+            if ( opts.protos && 0 == strcmp( section, "protos" ) )
+            {
+              mas_del_argv( opts.protos_num, opts.protos, 0 );
+              opts.protos_num = 0;
+              opts.protos = NULL;
+            }
+            else if ( opts.commands && 0 == strcmp( section, "commands" ) )
+            {
+              mas_del_argv( opts.commands_num, opts.commands, 0 );
+              opts.commands_num = 0;
+              opts.commands = NULL;
+            }
             /* mMSG( "SECTION :'%s'", section ); */
             continue;
           }

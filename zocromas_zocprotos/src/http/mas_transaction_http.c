@@ -8,6 +8,14 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+extern mas_options_t opts;
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
 #include <mastar/log/mas_log.h>
 #include <mastar/thtools/mas_ocontrol_tools.h>
 
@@ -141,6 +149,34 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
   MAS_LOG( "http?: to create rq" );
   http = mas_proto_http_create_request( prcontrol );
   MAS_LOG( "http?: to parse rq" );
+  {
+    char *s;
+    char *sb;
+    char *se;
+    int n = 0;
+
+    s = mas_strdup( string );
+    sb = s;
+    while ( sb && *sb )
+    {
+      char c = '\0';
+
+      se = sb;
+      while ( se && *se && !( *se == '\r' || *se == '\n' ) )
+        se++;
+      if ( se && *se )
+      {
+        c = *se;
+        *se++ = '\0';
+      }
+      HMSG( "Q%d: '%s'", n, sb );
+      if ( se && *se && ( *se == '\r' || *se == '\n' ) && *se != c )
+        se++;
+      n++;
+      sb = se;
+    }
+    mas_free( s );
+  }
   if ( http )
     http = mas_proto_http_parse_request( prcontrol, proto_desc, http, string );
   MAS_LOG( "http?: parsed rq : %s", prcontrol && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
@@ -192,7 +228,8 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
       break;
     case MAS_HTTP_METHOD_GET:
     case MAS_HTTP_METHOD_HEAD:
-      MAS_LOG( "http: get/head :(%u) %s", ( unsigned ) strlen( string ), string );
+    case MAS_HTTP_METHOD_POST:
+      MAS_LOG( "http: get/head/post :(%u) %s", ( unsigned ) strlen( string ), string );
       http = mas_http_make_out_head_get( prcontrol, http );
       break;
     }

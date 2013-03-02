@@ -72,6 +72,12 @@ mas_init_load_protos( void )
   mas_transaction_protodesc_t *proto_descs = NULL;
 
   MAS_LOG( "(%d) init / load protos", r );
+  if ( !opts.protos_num )
+  {
+    HMSG("NO PROTCOLOS DEFINED");
+    WMSG("no protcolos defined");
+    IEVAL( r, -1 );
+  }
   if ( !ctrl.proto_descs )
   {
     proto_descs = mas_calloc( opts.protos_num, sizeof( mas_transaction_protodesc_t ) );
@@ -96,7 +102,7 @@ mas_init_load_protos( void )
     }
     ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
-    if ( !ctrl.protos_num )
+    if ( opts.protos_num && !ctrl.protos_num )
     {
       IEVAL( r, -1 );
     }

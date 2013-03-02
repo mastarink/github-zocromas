@@ -72,6 +72,7 @@ struct mas_control_s
   char *progname;
   char *pkgname;
   char *exepath;
+  char *exename;
   mas_error_handler_fun_t error_handler;
 
   void **loaded_modules;

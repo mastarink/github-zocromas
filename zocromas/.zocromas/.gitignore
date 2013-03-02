@@ -1,3 +1,5 @@
 server.[0-9]*
 client.[0-9]*
+zocromas_server.[0-9]*
+zocromas_client.[0-9]*
 

@@ -70,7 +70,7 @@ info_transaction( mas_rcontrol_t * prcontrol, unsigned itr, char *cp, size_t buf
         sip = mas_ip_string( &prchannel->cli.addr.sin_addr );
     }
 
-    len = snprintf( cp, bufsz, "\t\t\t%u(s%lu). %s [<%s>] \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
+    len = snprintf( cp, bufsz, "\t\t%u(s%lu). %s [<%s>] \ttid:%5u/%4x; [%lx] %s %s %6s #%u\n", itr,
                     prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
                     prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
                     pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
@@ -111,7 +111,7 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
           aip = mas_ip_string( &plchannel->serv_instance.addr.sin_addr );
       }
       {
-        len = snprintf( cp, bufsz, "\t\t%u(s%lu). %s:%u * %s; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu}\n", ith,
+        len = snprintf( cp, bufsz, "\t%u(s%lu). %s:%u * %s; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu}\n", ith,
                         plcontrol->h.serial, plcontrol->host, port, aip, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread,
                         plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone );
         cp += len;
@@ -186,7 +186,8 @@ info_cmd( STD_CMD_ARGS )
     }
     {
       len = snprintf( cp, bufsz,
-                      "(%u/%u) #%u Server info:\n"
+                      "- (%u/%u)\n"
+                      "- #%u Server info:\n"
                       "\t[%u:%s]\n"
                       "\texe: %s\n"
                       "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
@@ -194,28 +195,68 @@ info_cmd( STD_CMD_ARGS )
                       "\t%s; %s; %s\n"
                       "\tmodsdir:%s\n"
                       "\tpidsdir:%s\n"
-                      "\t(%lu - %lu) logdir: %s;\n\tlogpath: %s;\n"
-                      "%c",
+                      "\tlogdir: %s;\n\tlogpath: %s;\n"
+                      "\tlog stat (%lu - %lu)\n",
                       level, this_command ? this_command->only_level : 0, ctrl.restart_cnt,
                       mas_gettid(  ), mas_thread_self_type_name(  ),
                       ctrl.exepath,
                       ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.child.pid,
                       ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
-                      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, opts.modsdir,
-                      opts.pidsdir, ctrl.log_q_came, ctrl.log_q_gone, opts.logdir, ctrl.logpath, '#' );
+                      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone,
+                      s1lts, slts, splts, opts.modsdir, opts.pidsdir, opts.logdir, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone );
       cp += len;
       bufsz -= len;
     }
-    /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
-    pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
-    MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
     {
-      len = info_listener( plcontrol, ith, cp, bufsz );
-      cp += len;
-      bufsz -= len;
-      ith++;
+      int z = 0;
+
+      for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
+      {
+        if ( ctrl.proto_descs[ipd].name )
+        {
+          if ( !z )
+          {
+            len = snprintf( cp, bufsz, "- loaded protocols:\n" );
+            cp += len;
+            bufsz -= len;
+            z = 1;
+          }
+          len = snprintf( cp, bufsz, "\t%u. %s\n", ipd, ctrl.proto_descs[ipd].name );
+          cp += len;
+          bufsz -= len;
+        }
+      }
     }
-    pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
+    /* if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )                  */
+    /* {                                                                      */
+    /*   for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )               */
+    /*   {                                                                    */
+    /*     const char *name;                                                  */
+    /*                                                                        */
+    /*     name = ( char * ) dlsym( ctrl.loaded_modules[im], "module_name" ); */
+    /*   }                                                                    */
+    /* }                                                                      */
+    {
+      int z = 0;
+
+      /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
+      pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
+      MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
+      {
+        if ( !z )
+        {
+          len = snprintf( cp, bufsz, "- connections:\n" );
+          cp += len;
+          bufsz -= len;
+          z = 1;
+        }
+        len = info_listener( plcontrol, ith, cp, bufsz );
+        cp += len;
+        bufsz -= len;
+        ith++;
+      }
+      pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
+    }
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }
   buf = mas_realloc( buf, strlen( buf ) + 1 );

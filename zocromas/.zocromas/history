@@ -186,3 +186,18 @@ bye
 disconnect
 reconnect
 bye
+reconnect
+pwd
+reconnect
+server info
+reconnect
+server quit
+server info
+reconnect
+server quit
+server restart
+server quit
+server info
+server quit
+bye
+server quit
