@@ -213,6 +213,7 @@ AC_SUBST([MAS_S_DATE])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([${PACKAGE_NAME}.pc
+		${PACKAGE_NAME}_nooc.pc
 		Makefile
 		src/Makefile
 		src/inc/Makefile

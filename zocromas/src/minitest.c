@@ -1,3 +1,4 @@
+#include <mastar/wrap/mas_std_def.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -7,10 +8,18 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+/* #include <mastar/types/mas_control_types.h> */
+/* #include <mastar/types/mas_opts_types.h>    */
+/* extern mas_control_t ctrl;                  */
+/* extern mas_options_t opts;                  */
+/*                                             */
+
+#include <mastar/channel/mas_channel_object.h>
+#include <mastar/channel/mas_channel_open.h>
+#include <mastar/channel/mas_channel.h>
 
 /* #include "mas_common.h" */
 /* #include <mastar/msg/mas_msg_def.h>   */
@@ -121,9 +130,14 @@ test20130120( void )
 int
 main( int argc, char *argv[], char *env[] )
 {
+  int r = 0;
+  mas_channel_t *pchannel;
+
   /* test20130100( argc, argv, env ); */
-  test20130120(  );
-
-
-  return 0;
+  /* test20130120(  ); */
+  pchannel = mas_channel_create(  );
+  r = mas_channel_init( pchannel, 0, CHN_RFILE, "/mnt/new_misc/develop/autotools/zoc/zocromas/configure.scan", 0, 0 );
+  HMSG( "(%d) CHANNEL_INIT", r );
+  mas_channel_delete( pchannel, 1, 1 );
+  return r;
 }

@@ -1,12 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
-/* #include <mastar/log/mas_log.h> */
-
 #include "mas_thread_tools.h"
 #include "mas_ocontrol_tools.h"
 

@@ -268,18 +268,23 @@ mas_read_string( int fd, char **pbuf )
 
 #ifndef MAS_CHANNEL_STREAM_READ
 int
-mas_read_all( int fd, char **pbuf, size_t * psz )
+mas_read_all( int fd, char **pbuf, size_t * psz, size_t maxsz )
 #else
 int
-mas_fread_all( FILE * stream, char **pbuf, size_t * psz )
+mas_fread_all( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
 #endif
 {
   ssize_t tsz = -1;
   void *t = NULL;
   char *buf = NULL;
-  size_t bufsz = 1024 * 4;
   ssize_t readsz = 0;
   ssize_t rsz;
+  size_t bufsz;
+
+  if ( maxsz )
+    bufsz = maxsz;
+  else
+    bufsz = 1024 * 4;
 
   /* MAS_LOG( "to read io (read all)" ); */
 #ifndef MAS_CHANNEL_STREAM_READ

@@ -10,11 +10,6 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/log/mas_log.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -108,12 +103,7 @@ mas_channel_writef( const mas_channel_t * pchannel, const char *fmt, ... )
   va_list args;
 
   va_start( args, fmt );
-  /* r = mas_channel_vwritef( pchannel, fmt, args ); */
   IEVAL( r, mas_channel_vwritef( pchannel, fmt, args ) );
-  /* if ( r < 0 )               */
-  /* {                          */
-  /*   EMSG( "written %d", r ); */
-  /* }                          */
   va_end( args );
   return r;
 }
@@ -126,18 +116,12 @@ mas_channel_vwritef( const mas_channel_t * pchannel, const char *fmt, va_list ar
 #ifndef MAS_CHANNEL_STREAM_WRITE
   int wfd = mas_channel_fd( pchannel );
 
-  /* r = mas_vwritef( wfd, fmt, args ); */
   IEVAL( r, mas_vwritef( wfd, fmt, args ) );
 #else
   FILE *wstream = mas_channel_stream( pchannel );
 
-  /* r = mas_vfprintf( wstream, fmt, args ); */
   IEVAL( r, mas_vfprintf( wstream, fmt, args ) );
 #endif
-  /* if ( r < 0 )               */
-  /* {                          */
-  /*   EMSG( "written %d", r ); */
-  /* }                          */
   return r;
 }
 
@@ -152,18 +136,12 @@ mas_channel_write_string( const mas_channel_t * pchannel, char *cbuf, int z )
 #ifndef MAS_CHANNEL_STREAM_WRITE
   int wfd = mas_channel_fd( pchannel );
 
-  /* r = mas_write_string( wfd, cbuf, z ); */
   IEVAL( r, mas_write_string( wfd, cbuf, z ) );
 #else
   FILE *wstream = mas_channel_stream( pchannel );
 
-  /* r = mas_fwrite_string( wstream, cbuf, z ); */
   IEVAL( r, mas_fwrite_string( wstream, cbuf, z ) );
 #endif
-  /* if ( r < 0 )               */
-  /* {                          */
-  /*   EMSG( "written %d", r ); */
-  /* }                          */
   return r;
 }
 
@@ -175,7 +153,6 @@ mas_channel_write( const mas_channel_t * pchannel, char *cbuf, size_t sz )
 #ifndef MAS_CHANNEL_STREAM_WRITE
   int wfd = mas_channel_fd( pchannel );
 
-  /* r = mas_write( wfd, cbuf, sz ); */
   IEVAL( r, mas_write( wfd, cbuf, sz ) );
 #else
   FILE *wstream = mas_channel_stream( pchannel );
@@ -186,10 +163,6 @@ mas_channel_write( const mas_channel_t * pchannel, char *cbuf, size_t sz )
   IEVAL( r, mas_fwrite( cbuf, 1, sz, wstream ) );
   /* rf = fflush( wstream ); */
 #endif
-  /* if ( r < 0 )               */
-  /* {                          */
-  /*   EMSG( "written %d", r ); */
-  /* }                          */
   return r;
 }
 
@@ -205,7 +178,7 @@ mas_channel_ip_string( mas_channel_t * pchannel )
 }
 
 int
-mas_channel_read_all( mas_channel_t * pchannel, char **pbuf, size_t * psz )
+mas_channel_read_all( mas_channel_t * pchannel, char **pbuf, size_t * psz, size_t maxsz )
 {
   int r = 0;
 
@@ -213,13 +186,11 @@ mas_channel_read_all( mas_channel_t * pchannel, char **pbuf, size_t * psz )
 #ifndef MAS_CHANNEL_STREAM_READ
   int rfd = mas_channel_fd( pchannel );
 
-  /* r = mas_read_all( rfd, pbuf, psz ); */
-  IEVAL( r, mas_read_all( rfd, pbuf, psz ) );
+  IEVAL( r, mas_read_all( rfd, pbuf, psz, maxsz ) );
 #else
   FILE *rstream = mas_channel_stream( pchannel );
 
-  /* r = mas_fread_all( rstream, pbuf, psz ); */
-  IEVAL( r, mas_fread_all( rstream, pbuf, psz ) );
+  IEVAL( r, mas_fread_all( rstream, pbuf, psz, maxsz ) );
 #endif
   return r;
 }

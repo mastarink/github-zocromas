@@ -25,7 +25,7 @@ function prjconfversion ()
 }  
 function setup_vers ()
 {
-  local n v rprefix rname_case
+  local n v rprefix rname_case configure_opts1 configure_opts2 configure_opts3 c
   n=$1
   shift
   v=$1
@@ -52,14 +52,24 @@ function setup_vers ()
 #     echo "`pwd`>> [$mas_name] [$mas_vers]" >&2
       mas_base_vers='0.0.5.20130219'
     fi
-    configure_opts="--prefix=$instdir --silent --enable-silent-rules --enable-tracemem --enable-debug"
-    configure_opts="$configure_opts --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
-    configure_opts="$configure_opts --with-pids-dir=zocromas/pid"
-    configure_opts="$configure_opts --with-mods-dir=zocmds"
-    configure_opts="$configure_opts --with-proto-dir=zocromas_zocprotos"
-    configure_opts="$configure_opts --with-log-dir=log"
-    configure_opts="$configure_opts --with-server=/tmp/zocromas.socket"
-    configure_opts="$configure_opts --with-def-proto=xcromas"
+    configure_opts1="--prefix=$instdir"
+#   configure_opts2=" --silent --enable-silent-rules --enable-tracemem --enable-debug"
+#   configure_opts2="$configure_opts2 --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
+#   configure_opts2="$configure_opts2 --with-pids-dir=zocromas/pid"
+#   configure_opts2="$configure_opts2 --with-mods-dir=zocmds"
+#   configure_opts2="$configure_opts2 --with-proto-dir=zocromas_zocprotos"
+#   configure_opts2="$configure_opts2 --with-log-dir=log"
+#   configure_opts2="$configure_opts2 --with-server=/tmp/zocromas.socket"
+#   configure_opts2="$configure_opts2 --with-def-proto=xcromas"
+    while read c ; do 
+      configure_opts2="$configure_opts2 $c"
+    done < $rootdir/configure_opts
+    if [[ -f $indir/configure_opts ]] ; then
+      while read c ; do 
+        configure_opts3="$configure_opts3 $c"
+      done < $indir/configure_opts 
+    fi
+    configure_opts="$configure_opts1 $configure_opts2 $configure_opts3"
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
   fi
@@ -94,8 +104,8 @@ function setup_vers ()
   fi
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
     short_name=${BASH_REMATCH[1]}
-  else
-    echo "$rname_preset ::: ${binprefix} :: ---" >&2
+# else
+#   echo "$rname_preset ::: ${binprefix} :: ---" >&2
   fi
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
     rbinary_preset=$( realpath --relative-to=$indir $binary_preset )

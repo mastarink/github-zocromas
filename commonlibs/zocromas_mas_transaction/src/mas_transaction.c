@@ -1,6 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_server_def.h" */
-/* #include "mas_basic_def.h"  */
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -78,7 +76,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 
     MAS_LOG( "to read rq (read all)" );
     OMSG( "WAITING DATA..." );
-    r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz );
+    r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz, 0 /* maxsz */  );
     MAS_LOG( "read rq: %d", r );
     if ( r == 0 )
     {

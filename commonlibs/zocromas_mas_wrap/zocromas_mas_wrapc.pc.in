@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: @PACKAGE_NAME@
+Name: @PACKAGE_NAME@c
 Description: @PACKAGE_NAME@ library (@PACKAGE_NAME@).
 # Requires: something-3.0 somethingelse-2.0 somethingmore-1.0
 Version: @PACKAGE_VERSION@

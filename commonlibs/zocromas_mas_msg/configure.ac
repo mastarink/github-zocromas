@@ -111,6 +111,7 @@ PKG_CHECK_MODULES([DEPSX], [zocromas_mas_thtools])
 #     [enable debug code (default is no)])],
 #   [debug="$withval"], [debug=no])
 
+########### debug   ########################################################################
 AC_ARG_ENABLE([debug],
 	      AC_HELP_STRING([--enable-debug],
 			     [turn on debugging]),,
@@ -120,7 +121,7 @@ if test x$enable_debug = xyes ; then
     AC_DEFINE(MAS_DEBUG, 1,
 	[Enable additional debugging at the expense of performance and size])
 fi
-
+########## tracemem #########################################################################
 AC_ARG_ENABLE([tracemem],
 	      AC_HELP_STRING([--enable-tracemem],
 			     [turn on tracememing]),,
@@ -130,6 +131,37 @@ if test x$enable_tracemem = xyes ; then
     AC_DEFINE(MAS_TRACEMEM, 1,
 	[Enable additional tracememing at the expense of performance and size])
 fi
+########### ctrl   ########################################################################
+AC_ARG_ENABLE([noctrl],
+	      AC_HELP_STRING([--enable-noctrl],
+			     [turn off ctrl]),,
+	      [enable_noctrl=no])
+
+if test x$enable_noctrl = xyes ; then
+    AC_DEFINE(MAS_NO_CTRL, 1,
+	[Enable ctrl-less prog.])
+fi
+########### opts   ########################################################################
+AC_ARG_ENABLE([noopts],
+	      AC_HELP_STRING([--enable-noopts],
+			     [turn off opts]),,
+	      [enable_noopts=no])
+
+if test x$enable_noopts = xyes ; then
+    AC_DEFINE(MAS_NO_OPTS, 1,
+	[Enable opts-less prog.])
+fi
+########### thtools   ########################################################################
+AC_ARG_ENABLE([nothtools],
+	      AC_HELP_STRING([--enable-nothtools],
+			     [turn off thtools]),,
+	      [enable_nothtools=no])
+
+if test x$enable_nothtools = xyes ; then
+    AC_DEFINE(MAS_NO_THTOOLS, 1,
+	[Enable thtools-less prog.])
+fi
+#############################################################################################
 
 # AC_REQUIRE([AM_MAINTAINER_MODE])
 # 
@@ -214,6 +246,7 @@ AC_SUBST([MAS_S_DATE])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([${PACKAGE_NAME}.pc
+		${PACKAGE_NAME}_nooc.pc
 		Makefile
 		src/Makefile
 		src/inc/Makefile

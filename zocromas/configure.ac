@@ -102,11 +102,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-# PKG_CHECK_MODULES([DEPSS], [zocromas_mas_modules zocromas_mas_fileinfo])
-# PKG_CHECK_MODULES([DEPSC], [zocromas_mas_messageio])
-# PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control zocromas_mas_io zocromas_mas_channel zocromas_mas_variables zocromas_mas_thtools
-#				mas_msg mas_log mas_transaction mas_listener mas_init])
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel_nooc zocromas_mas_msg_nooc])
 
 # Configure options: --enable-debug[=no].
 
@@ -144,6 +140,26 @@ AC_ARG_ENABLE([clientlog],
 if test x$enable_clientlog = xyes ; then
     AC_DEFINE(MAS_CLIENT_LOG, 1,
 	[Enable cliet logging at the expense of performance and size])
+fi
+########### ctrl   ########################################################################
+AC_ARG_ENABLE([noctrl],
+	      AC_HELP_STRING([--enable-noctrl],
+			     [turn off ctrl]),,
+	      [enable_noctrl=no])
+
+if test x$enable_noctrl = xyes ; then
+    AC_DEFINE(MAS_NO_CTRL, 1,
+	[Enable ctrl-less prog.])
+fi
+########### opts   ########################################################################
+AC_ARG_ENABLE([noopts],
+	      AC_HELP_STRING([--enable-noopts],
+			     [turn off opts]),,
+	      [enable_noopts=no])
+
+if test x$enable_noopts = xyes ; then
+    AC_DEFINE(MAS_NO_OPTS, 1,
+	[Enable opts-less prog.])
 fi
 #############################################################################################
 

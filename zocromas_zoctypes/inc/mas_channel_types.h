@@ -7,7 +7,12 @@
 #  include <arpa/inet.h>
 
 typedef enum
-{ CHN_SOCKET } chn_type_t;
+{
+  CHN_NONE,
+  CHN_RFILE,
+  CHN_WFILE,
+  CHN_SOCKET,
+} chn_type_t;
 
 typedef union
 {

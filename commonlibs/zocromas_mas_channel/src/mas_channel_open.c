@@ -12,11 +12,6 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/log/mas_log.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -41,6 +36,37 @@ more:
   mas_channel_open.h
 
 */
+static int
+_mas_channel_open_rfile( mas_channel_t * pchannel )
+{
+  int fd_io = -1;
+
+  pchannel->error = 0;
+
+  if ( pchannel->is_server )
+  {
+    fd_io = open( pchannel->host, O_RDONLY );
+  }
+  else
+  {
+    fd_io = open( pchannel->host, O_RDONLY );
+  }
+  if ( fd_io > 0 )
+  {
+    pchannel->fd_io = fd_io;
+    pchannel->stream_io = fdopen( fd_io, "r+" );
+    pchannel->opened = 1;
+  }
+  else
+  {
+    pchannel->error = 1;
+#ifdef EMSG
+    P_ERR;
+    EMSG( "connect r:%d fd_socket:%d", fd_io, pchannel->fd_socket );
+#endif
+  }
+  return pchannel->opened ? 1 : ( pchannel->error ? -1 : 0 );
+}
 
 static int
 _mas_channel_open_tcp( mas_channel_t * pchannel )
@@ -75,6 +101,7 @@ _mas_channel_open_tcp( mas_channel_t * pchannel )
   return pchannel->opened ? 1 : ( pchannel->error ? -1 : 0 );
 }
 
+
 int
 mas_channel_open( mas_channel_t * pchannel )
 {
@@ -95,66 +122,27 @@ mas_channel_open( mas_channel_t * pchannel )
     if ( r >= 0 )
       switch ( pchannel->type )
       {
+      case CHN_NONE:
+        break;
       case CHN_SOCKET:
         /* MAS_LOG( "to open socket" ); */
         IEVAL( r, _mas_channel_open_tcp( pchannel ) );
         /* MAS_LOG( "(%d) tcp chn. socket:%d", r, pchannel->fd_socket ); */
         /* MAS_LOG( "(%d)tcp chn. socket:%d", r, pchannel->fd_socket ); */
+        break;
+      case CHN_RFILE:
+        IEVAL( r, _mas_channel_open_rfile( pchannel ) );
+        break;
+      case CHN_WFILE:
+        IEVAL( r, -1 );
+        break;
       }
   }
   /* MAS_LOG( "opened chn. %d", r ); */
   return r;
 }
 
-int
-mas_channel_open_old( mas_channel_t * pchannel )
-{
-  int r = 0;
-
-  /* MAS_LOG( "to open chn." ); */
-  if ( mas_channel_test( pchannel ) && !pchannel->opened )
-  {
-    if ( r >= 0 && pchannel->is_server )
-    {
-      /* MAS_LOG( "to listem chn." ); */
-      r = mas_channel_listen( pchannel );
-      /* MAS_LOG( "(%d)listen chn.", r ); */
-    }
-    if ( r >= 0 )
-      switch ( pchannel->type )
-      {
-      case CHN_SOCKET:
-        /* MAS_LOG( "to open socket" ); */
-        r = _mas_channel_open_tcp( pchannel );
-        /* MAS_LOG( "(%d) tcp chn. socket:%d", r, pchannel->fd_socket ); */
-        /* MAS_LOG( "(%d)tcp chn. socket:%d", r, pchannel->fd_socket ); */
-      }
-#ifdef EMSG
-    if ( r < 0 )
-    {
-      P_ERR;
-    }
-#endif
-  }
-  else
-  {
-#ifdef EMSG
-    EMSG( "pchannel not defined or opened (%d:%d)", pchannel ? 1 : 0, pchannel ? pchannel->opened : 0 );
-#endif
-    r = -1;
-  }
-
-#ifdef EMSG
-  if ( r < 0 )
-  {
-    EMSG( "?" );
-  }
-#endif
-  /* MAS_LOG( "opened chn. %d", r ); */
-  return r;
-}
-
-int
+static int
 _mas_channel_close_tcp( mas_channel_t * pchannel )
 {
   int r = 0;
@@ -178,6 +166,31 @@ _mas_channel_close_tcp( mas_channel_t * pchannel )
   return r;
 }
 
+static int
+_mas_channel_close_file( mas_channel_t * pchannel )
+{
+  int r = 0;
+
+  if ( pchannel->fd_io > 0 )
+  {
+    /* shutdown( pchannel->fd_io, SHUT_RDWR ); */
+    r = mas_close( pchannel->fd_io );
+#ifdef EMSG
+    if ( r < 0 )
+    {
+      P_ERR;
+      EMSG( "r:%d", r );
+      EMSG( "fd_io:%d", pchannel->fd_io );
+    }
+#endif
+    pchannel->fd_io = 0;
+  }
+  /* pchannel->fd_socket = 0; */
+  pchannel->opened = 0;
+  return r;
+}
+
+
 int
 mas_channel_close_tcp( mas_channel_t * pchannel )
 {
@@ -189,7 +202,28 @@ mas_channel_close_tcp( mas_channel_t * pchannel )
 }
 
 int
-mas_channel_close_tcp2( mas_channel_t * pchannel )
+mas_channel_close_file( mas_channel_t * pchannel )
+{
+  int r = 0;
+
+  if ( mas_channel_test( pchannel ) && pchannel->opened )
+    _mas_channel_close_file( pchannel );
+  return r;
+}
+
+
+static int
+mas_channel_close2_tcp( mas_channel_t * pchannel )
+{
+  int r = 0;
+
+  if ( mas_channel_test( pchannel ) && pchannel->opened )
+    pchannel->opened = 0;
+  return r;
+}
+
+static int
+mas_channel_close2_file( mas_channel_t * pchannel )
 {
   int r = 0;
 
@@ -207,8 +241,16 @@ mas_channel_close( mas_channel_t * pchannel )
   {
     switch ( pchannel->type )
     {
+    case CHN_NONE:
+      break;
     case CHN_SOCKET:
-      r = mas_channel_close_tcp( pchannel );
+      IEVAL( r, mas_channel_close_tcp( pchannel ) );
+      break;
+    case CHN_RFILE:
+      IEVAL( r, mas_channel_close_file( pchannel ) );
+      break;
+    case CHN_WFILE:
+      IEVAL( r, -1 );
       break;
     }
   }
@@ -226,8 +268,17 @@ mas_channel_close2( mas_channel_t * pchannel )
   {
     switch ( pchannel->type )
     {
+    case CHN_NONE:
+      break;
     case CHN_SOCKET:
-      r = mas_channel_close_tcp2( pchannel );
+      IEVAL( r, mas_channel_close2_tcp( pchannel ) );
+      break;
+    case CHN_RFILE:
+      IEVAL( r, mas_channel_close2_file( pchannel ) );
+      break;
+    case CHN_WFILE:
+      /* IEVAL(r , mas_channel_close2_file( pchannel )); */
+      IEVAL( r, -1 );
       break;
     }
   }

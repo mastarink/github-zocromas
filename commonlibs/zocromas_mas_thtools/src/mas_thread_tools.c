@@ -13,9 +13,7 @@
 #include <mastar/wrap/mas_lib_thread.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 
 #include "mas_thread_tools.h"

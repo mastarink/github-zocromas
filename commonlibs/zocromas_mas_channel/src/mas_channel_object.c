@@ -15,11 +15,6 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/log/mas_log.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -197,30 +192,35 @@ __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, co
   pchannel->type = type ? type : CHN_SOCKET;
   if ( !pchannel->host )
   {
-    pchannel->host = mas_strndup( host, hostlen );
+    if ( hostlen )
+      pchannel->host = mas_strndup( host, hostlen );
+    else
+      pchannel->host = mas_strdup( host );
   }
-  /* r = mas_set_address( pchannel->host, port, &pchannel->serv ); */
-  IEVAL( r, mas_set_address( pchannel->host, port, &pchannel->serv ) );
-  if ( pchannel->serv.addr.sin_family == AF_INET )
-    pchannel->port = port;
-
-  if ( r >= 0 )
+  if ( type == CHN_SOCKET )
   {
-    pchannel->type = type;
-    if ( !pchannel->fd_socket )
-    {
-      /* tMSG( "(%d) to create [%d] l/socket (was:%d)", r, pchannel->type, pchannel->fd_socket ); */
-      /* int keepvalue = 0; */
+    /* r = mas_set_address( pchannel->host, port, &pchannel->serv ); */
+    IEVAL( r, mas_set_address( pchannel->host, port, &pchannel->serv ) );
+    if ( pchannel->serv.addr.sin_family == AF_INET )
+      pchannel->port = port;
 
-      /* r = pchannel->fd_socket = socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 ); */
-      IEVAL( r, socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 ) );
-      pchannel->fd_socket = r;
-      /* r = mas_setsockopt( pchannel->fd_socket, SOL_SOCKET, SO_KEEPALIVE, ( void * ) &keepvalue, sizeof( keepvalue ) ); */
-      /*  socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) */
-      tMSG( "(%d) create l/socket", r );
+    if ( r >= 0 )
+    {
+      pchannel->type = type;
+      if ( !pchannel->fd_socket )
+      {
+        /* tMSG( "(%d) to create [%d] l/socket (was:%d)", r, pchannel->type, pchannel->fd_socket ); */
+        /* int keepvalue = 0; */
+
+        /* r = pchannel->fd_socket = socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 ); */
+        IEVAL( r, socket( pchannel->serv.path.sun_family, SOCK_STREAM, 0 ) );
+        pchannel->fd_socket = r;
+        /* r = mas_setsockopt( pchannel->fd_socket, SOL_SOCKET, SO_KEEPALIVE, ( void * ) &keepvalue, sizeof( keepvalue ) ); */
+        /*  socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) */
+        tMSG( "(%d) create l/socket", r );
+      }
     }
   }
-
 /* #ifdef EMSG                                      */
 /*   if ( r < 0 )                                   */
 /*   {                                              */
