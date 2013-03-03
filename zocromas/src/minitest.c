@@ -132,12 +132,24 @@ main( int argc, char *argv[], char *env[] )
 {
   int r = 0;
   mas_channel_t *pchannel;
+  char *pbuf;
+  size_t sz = 0;
 
   /* test20130100( argc, argv, env ); */
   /* test20130120(  ); */
   pchannel = mas_channel_create(  );
-  r = mas_channel_init( pchannel, 0, CHN_RFILE, "/mnt/new_misc/develop/autotools/zoc/zocromas/configure.scan", 0, 0 );
+  if ( !( r < 0 ) )
+    r = mas_channel_init( pchannel, 0, CHN_RFILE, "/mnt/new_misc/develop/autotools/zoc/zocromas/configure.scan", 0, 0 );
   HMSG( "(%d) CHANNEL_INIT", r );
+  if ( !( r < 0 ) )
+    r = mas_channel_open( pchannel );
+  HMSG( "(%d) CHANNEL_OPEN", r );
+
+
+  if ( !( r < 0 ) )
+    r = mas_channel_read_all( pchannel, &pbuf, &sz, 0 );
+  HMSG( "(%d) CHANNEL_READ : %lu", r, ( unsigned long ) sz );
+
   mas_channel_delete( pchannel, 1, 1 );
   return r;
 }
