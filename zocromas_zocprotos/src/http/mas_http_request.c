@@ -5,9 +5,7 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -18,6 +16,9 @@ extern mas_options_t opts;
 #include <mastar/variables/mas_variables.h>
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
+
+#include <mastar/channel/mas_channel_buffer.h>
+#include <mastar/channel/mas_channel.h>
 
 #include "mas_http_utils.h"
 #include "mas_http_request.h"
@@ -56,94 +57,90 @@ mas_proto_http_create_request( mas_rcontrol_t * prcontrol )
 }
 
 mas_http_t *
-mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * proto_desc, mas_http_t * http,
-                              const char *smessage )
+mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * proto_desc, mas_http_t * http )
 {
-  const char *pstring;
+  char *pstring;
+  const char *cstring;
 
-  pstring = smessage;
-  MAS_LOG( "http parse 1" );
-  if ( http )
+  pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+  if ( pstring )
   {
-    int good = 0;
-
-    http->smethod = mas_proto_http_nonblank( pstring, &pstring );
-    MAS_LOG( "http parse smethod: %s - %s", http->smethod, pstring );
-    mas_proto_http_parse_method( http );
-    HMSG( "HTTP METHOD: %d. %s", http->imethod, mas_proto_http_method_name( http ) );
-    MAS_LOG( "http parse method: %s (%u)", mas_proto_http_method_name( http ), http->imethod );
-    http->URI = mas_proto_http_nonblank( pstring, &pstring );
-    MAS_LOG( "URI: %s", http->URI );
-    MAS_LOG( "http parse URI: %s", http->URI );
-    http->protocol_name = mas_proto_http_nonc( pstring, &pstring, " /" );
-    MAS_LOG( "http to parse protocol: %s", http->protocol_name );
-    if ( http->protocol_name && ( 0 == strcmp( http->protocol_name, "HTTP" ) || 0 == strcmp( http->protocol_name, "HTTPS" ) ) )
-      good = 1;
-    else if ( http->URI && *http->URI == '/' && http->imethod != MAS_HTTP_METHOD_NONE && http->imethod != MAS_HTTP_METHOD_BAD )
-      good = 1;
-    if ( good )
+    cstring = ( const char * ) pstring;
+    MAS_LOG( "http parse 1" );
+    if ( http )
     {
-      prcontrol->proto_desc = proto_desc;
-      MAS_LOG( "good (1), http parsed protocol: %s === %s", prcontrol && proto_desc ? proto_desc->name : "?", http->protocol_name );
-      MAS_LOG( "good (2), http parsed protocol: %s === %s", prcontrol
-               && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );
-      if ( pstring && *pstring == '/' )
-        pstring++;
-      http->sversion = mas_proto_http_nonblank( pstring, &pstring );
-      MAS_LOG( "http parse p.version" );
-      sscanf( http->sversion, "%3f", &http->fversion );
-      MAS_LOG( "HTTP parse f.version %s => %5.2f", http->sversion, http->fversion );
-      if ( http->rest )
-        mas_free( http->rest );
-      http->rest = mas_strdup( pstring );
-      http = mas_proto_http_parse_headers( prcontrol, http );
+      int good = 0;
+
+      http->smethod = mas_proto_http_nonblank( cstring, &cstring );
+      MAS_LOG( "http parse smethod: %s - %s", http->smethod, cstring );
+      mas_proto_http_parse_method( http );
+      HMSG( "HTTP METHOD: %d. %s", http->imethod, mas_proto_http_method_name( http ) );
+      MAS_LOG( "http parse method: %s (%u)", mas_proto_http_method_name( http ), http->imethod );
+      http->URI = mas_proto_http_nonblank( cstring, &cstring );
+      MAS_LOG( "URI: %s", http->URI );
+      MAS_LOG( "http parse URI: %s", http->URI );
+      http->protocol_name = mas_proto_http_nonc( cstring, &cstring, " /" );
+      MAS_LOG( "http to parse protocol: %s", http->protocol_name );
+      if ( http->protocol_name && ( 0 == strcmp( http->protocol_name, "HTTP" ) || 0 == strcmp( http->protocol_name, "HTTPS" ) ) )
+        good = 1;
+      else if ( http->URI && *http->URI == '/' && http->imethod != MAS_HTTP_METHOD_NONE && http->imethod != MAS_HTTP_METHOD_BAD )
+        good = 1;
+      if ( good )
       {
-        switch ( http->imethod )
+        prcontrol->proto_desc = proto_desc;
+        MAS_LOG( "good (1), http parsed protocol: %s === %s", prcontrol && proto_desc ? proto_desc->name : "?", http->protocol_name );
+        MAS_LOG( "good (2), http parsed protocol: %s === %s", prcontrol
+                 && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );
+        if ( cstring && *cstring == '/' )
+          cstring++;
+        http->sversion = mas_proto_http_nonblank( cstring, &cstring );
+        MAS_LOG( "http parse p.version" );
+        sscanf( http->sversion, "%3f", &http->fversion );
+        MAS_LOG( "HTTP parse f.version %s => %5.2f", http->sversion, http->fversion );
+        http = mas_proto_http_parse_headers( prcontrol, http );
         {
-        case MAS_HTTP_METHOD_BAD:
-        case MAS_HTTP_METHOD_NONE:
-          /* Not HTTP */
-          mas_proto_http_delete_request( http );
-          http = NULL;
-          break;
-        case MAS_HTTP_METHOD_UNKNOWN:
-          /* 501 Method Not Implemented */
-          /* Allow: GET,HEAD,POST,OPTIONS */
-          /* Title: 501 Method Not Implemented */
-          /* mas_proto_http_delete_request( http ); */
-          /* http = NULL;                           */
-          prcontrol->keep_alive = 0;
-          MAS_LOG( "KA => %u", prcontrol->keep_alive );
-          break;
-        case MAS_HTTP_METHOD_GET:
-        case MAS_HTTP_METHOD_HEAD:
-        case MAS_HTTP_METHOD_POST:
-          /* prcontrol->keep_alive = 0;                    */
-          /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
-          break;
-        case MAS_HTTP_METHOD_PUT:
-          prcontrol->keep_alive = 0;
-          MAS_LOG( "KA => %u", prcontrol->keep_alive );
-          break;
-        case MAS_HTTP_METHOD_OPTIONS:
-          prcontrol->keep_alive = 0;
-          MAS_LOG( "KA => %u", prcontrol->keep_alive );
-          break;
+          switch ( http->imethod )
+          {
+          case MAS_HTTP_METHOD_BAD:
+          case MAS_HTTP_METHOD_NONE:
+            /* Not HTTP */
+            mas_proto_http_delete_request( http );
+            http = NULL;
+            break;
+          case MAS_HTTP_METHOD_UNKNOWN:
+            /* 501 Method Not Implemented */
+            /* Allow: GET,HEAD,POST,OPTIONS */
+            /* Title: 501 Method Not Implemented */
+            /* mas_proto_http_delete_request( http ); */
+            /* http = NULL;                           */
+            prcontrol->keep_alive = 0;
+            MAS_LOG( "KA => %u", prcontrol->keep_alive );
+            break;
+          case MAS_HTTP_METHOD_GET:
+          case MAS_HTTP_METHOD_HEAD:
+          case MAS_HTTP_METHOD_POST:
+            /* prcontrol->keep_alive = 0;                    */
+            /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
+            break;
+          case MAS_HTTP_METHOD_PUT:
+            prcontrol->keep_alive = 0;
+            MAS_LOG( "KA => %u", prcontrol->keep_alive );
+            break;
+          case MAS_HTTP_METHOD_OPTIONS:
+            prcontrol->keep_alive = 0;
+            MAS_LOG( "KA => %u", prcontrol->keep_alive );
+            break;
+          }
         }
       }
+      else
+      {
+        mas_proto_http_delete_request( http );
+        http = NULL;
+      }
     }
-    else
-    {
-      mas_proto_http_delete_request( http );
-      http = NULL;
-    }
+    mas_free( pstring );
   }
-  /* else                                          */
-  /* {                                             */
-  /*   MAS_LOG( "http parse 3 bad: %s", pstring ); */
-  /*   mas_proto_http_delete_request( http );      */
-  /*   http = NULL;                                */
-  /* }                                             */
   if ( http && http->indata )
     mas_variables_log_pairs( http->indata, "inheader" );
   return http;
@@ -171,9 +168,6 @@ mas_proto_http_delete_request( mas_http_t * http )
 
     mas_fileinfo_delete( http->content );
     http->content = NULL;
-
-    if ( http->rest )
-      mas_free( http->rest );
 
     if ( http->indata )
       mas_variables_delete( http->indata );
@@ -262,7 +256,7 @@ mas_proto_http_method_name( mas_http_t * http )
 /* }                                                                           */
 
 static mas_http_t *
-mas_proto_http_parse_spc_headers( mas_rcontrol_t * prcontrol, mas_http_t * http, const char *name, const char *value )
+mas_proto_http_parse_spc_header( mas_rcontrol_t * prcontrol, mas_http_t * http, const char *name, const char *value )
 {
   if ( 0 == strcmp( name, "Connection" ) )
   {
@@ -288,53 +282,14 @@ mas_proto_http_parse_spc_headers( mas_rcontrol_t * prcontrol, mas_http_t * http,
 }
 
 mas_http_t *
-mas_proto_http_parse_headers0( mas_rcontrol_t * prcontrol, mas_http_t * http )
-{
-  char *s;
-  const char *pstring;
-
-  prcontrol->keep_alive = ( http->fversion >= 1.1 );
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
-  pstring = http->rest;
-  MAS_LOG( "http parse headers 1" );
-  while ( pstring && *pstring )
-  {
-    char *name = NULL, *value = NULL;
-    const char *sp;
-
-    s = mas_proto_http_nonc( pstring, &pstring, "\r\n" );
-    if ( !s || !*s )
-      break;
-    sp = s;
-    MAS_LOG( "http parse headers 2" );
-    if ( sp )
-      name = mas_proto_http_nonc( sp, &sp, ": " );
-    MAS_LOG( "http parse headers 3" );
-    value = mas_strdup( sp );
-    http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
-
-    http = mas_proto_http_parse_spc_headers( prcontrol, http, name, value );
-    if ( name )
-      mas_free( name );
-    if ( value )
-      mas_free( value );
-    if ( s )
-      mas_free( s );
-    MAS_LOG( "http parse headers 4" );
-  }
-  return http;
-}
-
-mas_http_t *
 mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   char *pstring;
 
   prcontrol->keep_alive = ( http->fversion >= 1.1 );
   MAS_LOG( "KA => %u", prcontrol->keep_alive );
-  pstring = http->rest;
   MAS_LOG( "http parse headers 1" );
-  while ( pstring && *pstring && *pstring > ' ' )
+  while ( ( pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel ) ) && *pstring && *pstring > ' ' )
   {
     char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
 
@@ -348,7 +303,7 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     while ( value && *value == ' ' )
       value++;
     evalue = value;
-    while ( evalue && *evalue >= ' ' )
+    while ( evalue && *evalue && *evalue >= ' ' )
       evalue++;
 
     name = mas_strndup( name, ename - name );
@@ -371,16 +326,18 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     {
     }
 
-
-    http = mas_proto_http_parse_spc_headers( prcontrol, http, name, value );
+    http = mas_proto_http_parse_spc_header( prcontrol, http, name, value );
     if ( name )
       mas_free( name );
     if ( value )
       mas_free( value );
     MAS_LOG( "http parse headers 4" );
-    pstring = evalue;
-    while ( pstring && *pstring && *pstring < ' ' )
-      pstring++;
+    if ( pstring )
+      mas_free( pstring );
+    pstring = NULL;
   }
+  if ( pstring )
+    mas_free( pstring );
+  pstring = NULL;
   return http;
 }

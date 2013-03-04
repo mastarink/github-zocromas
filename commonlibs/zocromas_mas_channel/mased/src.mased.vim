@@ -1,6 +1,9 @@
 find mas_channel.c
 sfind mas_channel.h
 
+tab sfind mas_channel_buffer.c
+sfind mas_channel_buffer.h
+
 tab sfind mas_channel_object.c
 sfind mas_channel_object.h
 

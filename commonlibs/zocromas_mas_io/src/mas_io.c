@@ -268,12 +268,13 @@ mas_read_string( int fd, char **pbuf )
 
 #ifndef MAS_CHANNEL_STREAM_READ
 int
-mas_read_all( int fd, char **pbuf, size_t * psz, size_t maxsz )
+mas_read_all_new_bad( int fd, char **pbuf, size_t * psz, size_t maxsz )
 #else
 int
-mas_fread_all( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
+mas_fread_all_new_bad( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
 #endif
 {
+  ssize_t totread = 0;
   ssize_t tsz = -1;
   void *t = NULL;
   char *buf = NULL;
@@ -281,12 +282,9 @@ mas_fread_all( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
   ssize_t rsz;
   size_t bufsz;
 
-  if ( maxsz )
-    bufsz = maxsz;
-  else
-    bufsz = 1024 * 4;
+  bufsz = 1024 * 4;
 
-  /* MAS_LOG( "to read io (read all)" ); */
+  WMSG( "TO READ io (read all)" );
 #ifndef MAS_CHANNEL_STREAM_READ
   if ( fd > 0 )
 #else
@@ -294,40 +292,61 @@ mas_fread_all( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
 #endif
   {
     buf = mas_malloc( bufsz );
+
     tsz = 0;
+    if ( pbuf )
+    {
+      t = *pbuf;
+      if ( psz )
+        tsz = *psz;
+      maxsz += tsz;
+    }
     rsz = bufsz - 5;
 
-    if ( pbuf )
-      *pbuf = NULL;
     do
     {
-      /* mMSG( "to read 'all'" ); */
-#ifndef MAS_CHANNEL_STREAM_READ
-      readsz = read( fd, buf, rsz );
-#else
-      readsz = mas_fread( buf, 1, rsz, stream );
-#endif
-      WMSG( "READ 'ALL' %ld", ( unsigned long ) readsz );
-      /* tMSG( "r:[%d] [%s]", readsz, buf ); */
-      if ( readsz > 0 )
-      {
-        size_t xsz = 0;
-        unsigned char *x = NULL;
+      ssize_t xmaxsz, rsza;
 
-        xsz = tsz + readsz;
-        x = mas_malloc( xsz + 1 );
-        /* tMSG( "new size:%lu (%lu+%lu)", xsz, tsz, readsz ); */
-        if ( t )
+      xmaxsz = tsz + rsz;
+      rsza = rsz;
+      if ( maxsz && xmaxsz > maxsz )
+      {
+        rsza = rsz - xmaxsz + maxsz;
+      }
+      WMSG( "TO READ io : rsz:%lu; rsza:%lu; maxsz:%lu; xmaxsz:%lu", ( unsigned long ) rsz, ( unsigned long ) rsza, ( unsigned long ) maxsz,
+            ( unsigned long ) xmaxsz );
+      if ( rsza <= 0 )
+        break;
+      {
+        /* mMSG( "to read 'all'" ); */
+#ifndef MAS_CHANNEL_STREAM_READ
+        readsz = read( fd, buf, rsza );
+#else
+        readsz = mas_fread( buf, 1, rsza, stream );
+#endif
+        WMSG( "READ io 'all' %ld", ( unsigned long ) readsz );
+        /* tMSG( "r:[%d] [%s]", readsz, buf ); */
+        if ( readsz > 0 )
         {
-          memcpy( x, t, tsz );
-          x[tsz] = 0;
-          mas_free( t );
+          size_t xsz = 0;
+          unsigned char *x = NULL;
+
+          totread += readsz;
+          xsz = tsz + readsz;
+          x = mas_malloc( xsz + 1 );
+          /* tMSG( "new size:%lu (%lu+%lu)", xsz, tsz, readsz ); */
+          if ( t )
+          {
+            memcpy( x, t, tsz );
+            x[tsz] = 0;
+            mas_free( t );
+          }
+          memcpy( x + tsz, buf, readsz );
+          x[tsz + readsz] = 0;
+          t = x;
+          tsz = xsz;
+          /* tMSG( "%u new str:[%s]", tsz, t ); */
         }
-        memcpy( x + tsz, buf, readsz );
-        x[tsz + readsz] = 0;
-        t = x;
-        tsz = xsz;
-        /* tMSG( "%u new str:[%s]", tsz, t ); */
       }
     }
     while ( readsz == rsz );
@@ -346,5 +365,110 @@ mas_fread_all( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
     }
     mas_free( buf );
   }
-  return tsz > 0 ? tsz : readsz;
+  return totread;
+}
+
+void
+mas_io_append2buffer( char **px_buffer, ssize_t * px_buffer_size, char *read_buf, ssize_t readsz )
+{
+  size_t xsz = 0;
+  char *x = NULL;
+
+  xsz = *px_buffer_size + readsz;
+  x = mas_malloc( xsz + 1 );
+  /* tMSG( "new size:%lu (%lu+%lu)", xsz, x_buffer_size, readsz ); */
+  if ( *px_buffer )
+  {
+    memcpy( x, *px_buffer, *px_buffer_size );
+    x[*px_buffer_size] = 0;
+    mas_free( *px_buffer );
+    *px_buffer = NULL;
+  }
+  memcpy( x + *px_buffer_size, read_buf, readsz );
+  x[xsz] = 0;
+  *px_buffer = x;
+  *px_buffer_size = xsz;
+  /* tMSG( "%u new str:[%s]", x_buffer_size, x_buffer ); */
+}
+
+#ifndef MAS_CHANNEL_STREAM_READ
+int
+mas_io_read_some( int fd, char **px_buffer, size_t * pxbuffer_size, int *peof, size_t maxsz )
+#else
+int
+mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, int *peof, size_t maxsz )
+#endif
+{
+  ssize_t totread = 0;
+  ssize_t x_buffer_size = -1;
+  char *x_buffer = NULL;
+  char *read_buf = NULL;
+  ssize_t readsz = 0;
+  ssize_t rsz;
+  size_t bufsz;
+
+  bufsz = 1024 * 4;
+
+  /* MAS_LOG( "to read io (read some)" ); */
+#ifndef MAS_CHANNEL_STREAM_READ
+  if ( fd > 0 )
+#else
+  if ( stream )
+#endif
+  {
+    read_buf = mas_malloc( bufsz );
+    x_buffer_size = 0;
+    rsz = bufsz - 5;
+    /* if ( px_buffer )     */
+    /*   *px_buffer = NULL; */
+    if ( px_buffer )
+    {
+      x_buffer = *px_buffer;
+      if ( pxbuffer_size )
+        x_buffer_size = *pxbuffer_size;
+    }
+    do
+    {
+      if ( rsz > maxsz - totread )
+        rsz = maxsz - totread;
+      readsz = 0;
+      if ( rsz <= 0 )
+        break;
+      {
+        /* mMSG( "to read 'all'" ); */
+#ifndef MAS_CHANNEL_STREAM_READ
+        readsz = read( fd, read_buf, rsz );
+#else
+        readsz = mas_fread( read_buf, 1, rsz, stream );
+#endif
+        /* WMSG( "READ 'ALL' %ld", ( unsigned long ) readsz ); */
+      }
+      if ( readsz > 0 )
+      {
+        read_buf[readsz] = 0;
+        mas_io_append2buffer( &x_buffer, &x_buffer_size, read_buf, readsz );
+        totread += readsz;
+      }
+      /* HMSG( "READ %lu (tot %lu) max %lu x_buffer_size %lu {%s}", ( unsigned long ) readsz, ( unsigned long ) totread, */
+      /*       ( unsigned long ) maxsz, ( unsigned long ) x_buffer_size, x_buffer );                                     */
+    }
+    while ( readsz == rsz );
+    if ( peof )
+    {
+      if ( readsz != rsz )
+        *peof = 1;
+      else
+        *peof = 0;
+    }
+    /* tMSG( "%u x_buffer:[%s]", x_buffer_size, x_buffer ); */
+    if ( px_buffer )
+    {
+      /* tMSG( "%u ret x_buffer:[%s]", x_buffer_size, x_buffer ); */
+      *px_buffer = x_buffer;
+      if ( pxbuffer_size )
+        *pxbuffer_size = x_buffer_size;
+    }
+    mas_free( read_buf );
+  }
+  return totread;
 }

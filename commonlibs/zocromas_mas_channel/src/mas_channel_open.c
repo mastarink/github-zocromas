@@ -19,6 +19,8 @@
 #include "mas_channel_socket.h"
 #include "mas_channel_object.h"
 #include "mas_channel_listen.h"
+#include "mas_channel_buffer.h"
+
 #include "mas_channel_open.h"
 
 /*
@@ -185,6 +187,7 @@ _mas_channel_close_file( mas_channel_t * pchannel )
 #endif
     pchannel->fd_io = 0;
   }
+  mas_channel_delete_buffer( pchannel );
   /* pchannel->fd_socket = 0; */
   pchannel->opened = 0;
   return r;
@@ -253,6 +256,7 @@ mas_channel_close( mas_channel_t * pchannel )
       IEVAL( r, -1 );
       break;
     }
+    mas_channel_delete_buffer( pchannel );
   }
   /* MAS_LOG( "closed chn. %d", r ); */
   return r;

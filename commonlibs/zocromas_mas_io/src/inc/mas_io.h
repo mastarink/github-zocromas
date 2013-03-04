@@ -15,9 +15,9 @@ int mas_read_buf( int fd, char **pbuf );
 int mas_read_string( int fd, char **pbuf );
 
 #  ifndef MAS_CHANNEL_STREAM_READ
-int mas_read_all( int fd, char **pbuf, size_t * psz, size_t maxsz );
+int mas_io_read_some( int fd, char **pbuf, size_t * psz, int *peof, size_t maxsz );
 #  else
-int mas_fread_all( FILE * f, char **pbuf, size_t * psz, size_t maxsz );
+int mas_io_fread_some( FILE * f, char **pbuf, size_t * psz, int *peof, size_t maxsz );
 #  endif
 
 int mas_fprintf( FILE * f, const char *fmt, ... );

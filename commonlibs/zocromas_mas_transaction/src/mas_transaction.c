@@ -14,9 +14,11 @@
 
 #include <mastar/channel/mas_channel_object.h>
 #include <mastar/channel/mas_channel_open.h>
+#include <mastar/channel/mas_channel_buffer.h>
 #include <mastar/channel/mas_channel.h>
 
 #include <mastar/types/mas_control_types.h>
+
 #include <mastar/thtools/mas_ocontrol_tools.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
@@ -62,39 +64,26 @@ related:
 static int
 mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
-  int r = -1;
+  int r = 0;
+
+  /* int buffer_unlink = 0; */
 
   MAS_LOG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
   tMSG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
   WMSG( "+ TRANS EXCHANGE" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
-    char *data = NULL;
     size_t sz = 0;
 
-    r = 0;
-
-    MAS_LOG( "to read rq (read all)" );
+    MAS_LOG( "to read rq (read some)" );
     OMSG( "WAITING DATA..." );
-    r = mas_channel_read_all( prcontrol->h.pchannel, &data, &sz, 0 /* maxsz */  );
     MAS_LOG( "read rq: %d", r );
-    if ( r == 0 )
-    {
-      mas_channel_close( prcontrol->h.pchannel );
-      MAS_LOG( "read none" );
-    }
-    else
-    {
-      OMSG( "GOT DATA (%u)", r );
-    }
-
     {
       struct timeval td;
 
       gettimeofday( &td, NULL );
       prcontrol->h.activity_time = td;
     }
-    if ( r >= 0 && data )
     {
       prcontrol->h.status = MAS_STATUS_WORK;
       r = 0;
@@ -103,38 +92,24 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
         EMSG( "No proto's loaded; data[%lu]", ( unsigned long ) sz );
         MAS_LOG( "No proto's loaded; data[%lu]", ( unsigned long ) sz );
       }
-      for ( int np = 0; np < ctrl.protos_num; np++ )
+      for ( int np = 0; !( r < 0 ) && np < ctrl.protos_num; np++ )
       {
         if ( r == 0 || prcontrol->proto_desc == &ctrl.proto_descs[np] )
         {
-          r = -1;
-          /* EMSG( "@~~~~~~~~~(%u) proto:%u : %p", prcontrol->proto_desc ? prcontrol->proto_desc->proto_id : -1, ctrl.proto_descs[np].proto_id, */
-          /*       ( void * ) ( unsigned long long ) ctrl.proto_descs[np].function );                                                           */
+          /* calling proto_main(...) */
           if ( ctrl.proto_descs[np].function )
-            r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], data );
+            r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], NULL /* data */  );
+	  else r = -1;
           if ( r > 0 )
             prcontrol->proto_desc = &ctrl.proto_descs[np];
         }
-        if ( r < 0 )
-        {
-          MAS_LOG( "no function for proto %d. %s", np, ctrl.proto_descs[np].name );
-          break;
-        }
       }
-
-      /* if ( r == 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_HTTP ) )    */
-      /*   r = mas_proto_http( prcontrol, data );                                                                                       */
-      /* if ( r == 0 && ( prcontrol->proto == MAS_TRANSACTION_PROTOCOL_NONE || prcontrol->proto == MAS_TRANSACTION_PROTOCOL_XCROMAS ) ) */
-      /*   r = mas_proto_xcromas( prcontrol, data );                                                                                    */
     }
-    if ( r < 0 )
-    {
-      rMSG( "no data - cl.gone (r:%d)", r );
-      EMSG( "r:%d; i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client );
-      MAS_LOG( "error r:%d; i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client );
-    }
-    if ( data )
-      mas_free( data );
+    mas_channel_delete_buffer( prcontrol->h.pchannel );
+  }
+  else
+  {
+    r = -1;
   }
   if ( prcontrol && ( !prcontrol->proto_desc || prcontrol->proto_desc->proto_id == 0 ) )
   {
@@ -176,7 +151,8 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       prcontrol->h.status = MAS_STATUS_INIT;
       prcontrol->keep_alive = 1;
       MAS_LOG( "KA => %u", prcontrol->keep_alive );
-      while ( r >= 0 && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened )
+      while ( r >= 0 && prcontrol && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened
+              && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
         WMSG( "+ KEEPALIVE" );
         MAS_LOG( "starting transaction keep-alive block" );
@@ -191,13 +167,17 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         /*   mas_listeners_cancel(  );      */
         /* }                                */
         prcontrol->xch_cnt++;
-        mas_pthread_mutex_lock( &ctrl.thglob.cnttr3_mutex );
-        ctrl.xch_cnt++;
-        mas_pthread_mutex_unlock( &ctrl.thglob.cnttr3_mutex );
+        {
+          mas_pthread_mutex_lock( &ctrl.thglob.cnttr3_mutex );
+          ctrl.xch_cnt++;
+          mas_pthread_mutex_unlock( &ctrl.thglob.cnttr3_mutex );
+        }
         prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
         MAS_LOG( "end tr. keep-alive block, %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
         WMSG( "- KEEPALIVE" );
+        /* if ( mas_channel_buffer_eof( prcontrol->h.pchannel ) ) */
+        /*   mas_channel_close( prcontrol->h.pchannel );          */
       }
       prcontrol->h.status = MAS_STATUS_STOP;
     }
@@ -317,16 +297,8 @@ mas_transaction_th( void *trcontrol )
 #ifdef MAS_TR_PERSIST
     while ( prcontrol->persistent_transaction );
 #endif
-    /* {                                       */
-    /*   mas_channel_t *pchannel = NULL;       */
-    /*                                         */
-    /*   pchannel = prcontrol->h.pchannel;       */
-    /*   prcontrol->h.pchannel = NULL;           */
-    /*   mas_channel_delete( pchannel, 0, 0 ); */
-    /* }                                       */
     prcontrol->complete = 1;
     /* NO?! : mas_rcontrol_delete( prcontrol, prcontrol->plcontrol ); */
-
 
     /* rMSG( MAS_SEPARATION_LINE ); */
     /* ??? mas_lcontrol_cleaning_transactions( ... ); */

@@ -66,7 +66,7 @@ tab sfind run_duf.sh
 sfind run_minitest.sh
 
 tab sfind debug_duf.sh
-sfind debug_minitest.sh
+sfind debug_mas_minitest.sh
 
 tab sfind abrt_server.sh
 sfind psshow.sh

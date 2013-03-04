@@ -79,7 +79,7 @@ struct mas_http_s
   char *URI;
   char *protocol_name;
   mas_fileinfo_t *content;
-  char *rest;
+  /* char *rest; */
   mas_variables_list_head_t *indata;
   mas_variables_list_head_t *outdata;
   char *sversion;

@@ -1,5 +1,17 @@
 #!/bin/sh
-fname=/tmp/ab2.tmp
-/usr/sbin/ab2 $@ http://zocromas.mastar.lan:5005/HarryHarrison.jpeg > $fname 2>&1
+if [[ -f "sh/setup.sh" ]] ; then
+  . sh/setup.sh
+
+  port=5005
+  if [[ "$1" ]] ; then
+    port=$1
+    shift
+  fi
+  if [[ -d "$testdir" ]] ; then
+    /usr/sbin/ab2 -c5 -n10000  http://zocromas.mastar.lan:$port/HarryHarrison.jpeg > "$testdir/${now_stamp}.ab2" 2>&1
 #grep '^\(Time\sper\srequest:.*(mean)\)'  $fname
-cat $fname
+  fi
+  if [[ -f $testdir/${now_stamp}.ab2 ]] ; then
+    cat $testdir/${now_stamp}.ab2
+  fi
+fi

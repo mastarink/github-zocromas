@@ -85,6 +85,9 @@ function setup_vers ()
   if [[ $mcaller_fname =~ (run|debug|gdbcore)_(${rprefix}.*)\.sh$ ]] ; then
     rname_preset=${BASH_REMATCH[2]}
     rname_case=1
+  elif [[ $mcaller_fname =~ (run|debug|gdbcore)_(.*)\.sh$ ]] ; then
+    rname_preset=${BASH_REMATCH[2]}
+    rname_case=1
   elif [[ "$MAS_ZOCROMAS_HERE" ]] ; then
     rname_preset=$MAS_ZOCROMAS_HERE
     rname_case=2
@@ -102,6 +105,7 @@ function setup_vers ()
 #   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
 #   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
   fi
+  echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
     short_name=${BASH_REMATCH[1]}
 # else

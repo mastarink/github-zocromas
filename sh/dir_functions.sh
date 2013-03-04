@@ -30,6 +30,9 @@ function make_dirs ()
   if [[ "$debugdir" ]] && ! [[ -d "$debugdir" ]]; then
     mkdir "$debugdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
+  if [[ "$testdir" ]] && ! [[ -d "$testdir" ]]; then
+    mkdir "$testdir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
   if [[ "$wbuilddir" ]] && ! [[ -d "$wbuilddir" ]]; then
     mkdir "$wbuilddir" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -83,6 +86,7 @@ function setup_dirs ()
     tmpunpack=$(realpath "$tmpdir/unpack/" )
 
     debugdir="$indir/debug"
+    testdir="$indir/test"
     
     inbuilddir="$indir/.build"
     wbuilddir="$inbuilddir"

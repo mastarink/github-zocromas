@@ -21,6 +21,8 @@
 
 #include "mas_channel_open.h"
 #include "mas_channel_listen.h"
+#include "mas_channel_buffer.h"
+
 #include "mas_channel_object.h"
 
 /*
@@ -92,6 +94,7 @@ mas_channel_delete( mas_channel_t * pchannel, int toclose, int todeaf )
     if ( pchannel->host )
       mas_free( pchannel->host );
     pchannel->host = NULL;
+    mas_channel_delete_buffer( pchannel );
     mas_free( pchannel );
   }
   return 0;

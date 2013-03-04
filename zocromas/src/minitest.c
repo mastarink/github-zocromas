@@ -19,6 +19,7 @@
 
 #include <mastar/channel/mas_channel_object.h>
 #include <mastar/channel/mas_channel_open.h>
+#include <mastar/channel/mas_channel_buffer.h>
 #include <mastar/channel/mas_channel.h>
 
 /* #include "mas_common.h" */
@@ -132,8 +133,6 @@ main( int argc, char *argv[], char *env[] )
 {
   int r = 0;
   mas_channel_t *pchannel;
-  char *pbuf;
-  size_t sz = 0;
 
   /* test20130100( argc, argv, env ); */
   /* test20130120(  ); */
@@ -144,12 +143,91 @@ main( int argc, char *argv[], char *env[] )
   if ( !( r < 0 ) )
     r = mas_channel_open( pchannel );
   HMSG( "(%d) CHANNEL_OPEN", r );
+#if 0
+  {
+    size_t sz = 0;
+    char *buffer;
 
+    for ( int ic = 0; ic < 5; ic++ )
+    {
+      if ( !( r < 0 ) )
+      {
+        r = mas_channel_read_some( pchannel );
+      }
+      HMSG( "(%d) CHANNEL_READ : %lu", r, ( unsigned long ) sz );
+    }
+    mas_channel_strip_buffer( pchannel, 100 );
+    buffer = mas_channel_buffer( pchannel, &sz, 0 );
+    HMSG( "Buffer[%lu]", ( unsigned long ) sz );
+    fputs( buffer, stdout );
+  }
+#elseif 0
+  {
+    size_t sz = 0;
+    int cnt = 0;
 
-  if ( !( r < 0 ) )
-    r = mas_channel_read_all( pchannel, &pbuf, &sz, 0 );
-  HMSG( "(%d) CHANNEL_READ : %lu", r, ( unsigned long ) sz );
+    while ( !mas_channel_buffer_eof( pchannel ) )
+    {
+      const char *s;
+      char *sc;
+      int peof;
 
+      sc = NULL;
+      peof = mas_channel_buffer_eof( pchannel );
+      s = mas_channel_buffer_nl( pchannel, &sz );
+      if ( s )
+      {
+        sc = mas_strndup( s, sz );
+      }
+      fprintf( stdout, "%d. [%02x:%d:%d] [%ld] {%s}\n", cnt, ( unsigned char ) ( s ? *s : '\xff' ), peof,
+               mas_channel_buffer_eof( pchannel ), ( unsigned long ) sz, sc );
+      mas_free( sc );
+      cnt++;
+    }
+  }
+#elseif 0
+  {
+    size_t sz = 0;
+    const char *s;
+    int cnt = 0;
+
+    /* mas_channel_buffer_set_maxread( pchannel, 256 ); */
+    while ( cnt < 10000 && ( s = mas_channel_buffer_nl( pchannel, &sz ) ) )
+    {
+      char *sc;
+
+      if ( cnt == 20 )
+      {
+        mas_channel_buffer_strip( pchannel, pchannel->buffer.size / 2 );
+      }
+      sc = mas_strndup( s, sz );
+      fputs( sc, stdout );
+      mas_free( sc );
+      cnt++;
+    }
+    /* fputs( "--------------------------------------------------------\n", stdout ); */
+    /* fputs( pchannel->buffer.buffer, stdout ); */
+  }
+#else
+  {
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    /* mas_channel_read_remainder( pchannel );    */
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    mas_channel_read_some( pchannel );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+  }
+#endif
   mas_channel_delete( pchannel, 1, 1 );
   return r;
 }

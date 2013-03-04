@@ -27,6 +27,17 @@ typedef enum
   MSG_PROTO_HTTP
 } mas_proto_t;
 
+struct mas_channel_buffer_s
+{
+  size_t maxread;
+  size_t size;
+  ssize_t length;
+  char *buffer;
+  ssize_t iptr;
+  unsigned feof:1;
+};
+typedef struct mas_channel_buffer_s mas_channel_buffer_t;
+
 struct mas_channel_s
 {
   /* pid_t pid; */
@@ -43,10 +54,12 @@ struct mas_channel_s
   int error_line;
   int error_errno;
   mas_proto_t proto;
+  mas_channel_buffer_t buffer;
   unsigned is_server:1;
   unsigned listening:1;
   unsigned opened:1;
   unsigned cloned:1;
+  unsigned feof:1;
   unsigned error:1;
 };
 typedef struct mas_channel_s mas_channel_t;

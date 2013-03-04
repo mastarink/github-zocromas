@@ -18,6 +18,7 @@
 
 #include "mas_channel_object.h"
 #include "mas_channel_listen.h"
+#include "mas_channel_buffer.h"
 
 #include "mas_channel.h"
 
@@ -178,19 +179,41 @@ mas_channel_ip_string( mas_channel_t * pchannel )
 }
 
 int
-mas_channel_read_all( mas_channel_t * pchannel, char **pbuf, size_t * psz, size_t maxsz )
+mas_channel_read_some( mas_channel_t * pchannel )
 {
   int r = 0;
+  int feof = 0;
 
   MAS_LOG( "to read ch (read all)" );
 #ifndef MAS_CHANNEL_STREAM_READ
   int rfd = mas_channel_fd( pchannel );
 
-  IEVAL( r, mas_read_all( rfd, pbuf, psz, maxsz ) );
+  if ( !pchannel->buffer.maxread )
+    pchannel->buffer.maxread = 1024;
+  /* WMSG( "READ ALL IPTR: %ld", ( unsigned long ) iptr ); */
+  HMSG( "(%d)SOME", r );
+  IEVAL( r, mas_io_read_some( rfd, &pchannel->buffer.buffer, &pchannel->buffer.size, &feof, pchannel->buffer.maxread ) );
 #else
   FILE *rstream = mas_channel_stream( pchannel );
 
-  IEVAL( r, mas_fread_all( rstream, pbuf, psz, maxsz ) );
+  IEVAL( r, mas_io_fread_some( rstream, &pchannel->buffer.buffer, &pchannel->buffer.size, &feof, pchannel->buffer.maxread ) );
 #endif
+  HMSG( "(%d)SOME %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
+  if ( feof )
+    pchannel->buffer.feof = 1;
+  if ( r > 0 )
+    pchannel->buffer.length += r;
+  /* WMSG( "Ch.READ ALL : %d (%lu:%lu) ; eof:%d ; feof:%d", r, ( unsigned long ) pchannel->buffer.length,        */
+  /*       ( unsigned long ) pchannel->buffer.size, mas_channel_buffer_eof( pchannel ), pchannel->buffer.feof ); */
+  return r;
+}
+
+int
+mas_channel_read_remainder( mas_channel_t * pchannel )
+{
+  int r = 0;
+
+  while ( !( r < 0 ) && !mas_channel_buffer_feof( pchannel ) )
+    r = mas_channel_read_some( pchannel );
   return r;
 }

@@ -8,14 +8,16 @@
 #include <mastar/modules/mas_modules_commands_eval.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
+/* #include <mastar/channel/mas_channel_object.h> */
+/* #include <mastar/channel/mas_channel_open.h> */
+#include <mastar/channel/mas_channel_buffer.h>
+#include <mastar/channel/mas_channel.h>
 
 #include <mastar/messageio/mas_message_io.h>
 #include "mas_transaction_xcromas.h"
@@ -115,6 +117,11 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
   int r = -1;
   const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;
 
+  mas_channel_read_remainder( prcontrol->h.pchannel );
+  pheader_data = ( mas_header_t * ) mas_channel_buffer_start( prcontrol->h.pchannel );
+
+  HMSG( "XCROMAS %lu", ( unsigned long ) prcontrol->h.pchannel->buffer.length );
+
   if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )
   {
     mas_header_t header_copy;
@@ -134,8 +141,8 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
     tMSG( "cl. q:%s from pid %lu", question && *question ? question : "-EMPTY-", ( unsigned long ) header_copy.pid );
 
 
-    tMSG( "got msg from pid=%lu", ( unsigned long )header_copy.pid );
-    MAS_LOG( "xc (pid:%lu) Q: %s",( unsigned long ) header_copy.pid, question && *question ? question : "-" );
+    tMSG( "got msg from pid=%lu", ( unsigned long ) header_copy.pid );
+    MAS_LOG( "xc (pid:%lu) Q: %s", ( unsigned long ) header_copy.pid, question && *question ? question : "-" );
 
     header_copy.new_opts = 0;
     if ( header_copy.sign != MSG_SIGNATURE )

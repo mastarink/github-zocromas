@@ -326,20 +326,20 @@ _mas_strndup( const char *func, int line, const char *str, size_t n )
 
   if ( 1 )
   {
-    size_t l;
-
     if ( str )
     {
+      size_t l;
+
       l = strlen( str );
-      if ( l )
+      /* if ( l ) */
       {
         if ( n < l )
           l = n;
-        if ( l )
-          s = _mas_malloc( func, line, l + 1 );
+        s = _mas_malloc( func, line, l + 1 );
         if ( s )
         {
-          memcpy( s, str, l );
+          if ( l > 0 )
+            memcpy( s, str, l );
           s[l] = 0;
         }
       }

@@ -35,24 +35,27 @@ more:
 char *
 mas_proto_http_nonblank( const char *smessage, const char **ppsn )
 {
-  const unsigned char *ps, *pse;
+  const unsigned char *ps = NULL, *pse = NULL;
 
-  ps = ( unsigned char * ) smessage;
-  while ( *ps && *ps <= ' ' )
-    ps++;
-  pse = ps;
-  while ( *pse && *pse > ' ' )
-    pse++;
-  if ( ppsn )
+  if ( smessage )
   {
-    const unsigned char *psn = NULL;
+    ps = ( unsigned char * ) smessage;
+    while ( *ps && *ps <= ' ' )
+      ps++;
+    pse = ps;
+    while ( *pse && *pse > ' ' )
+      pse++;
+    if ( ppsn )
+    {
+      const unsigned char *psn = NULL;
 
-    psn = pse;
-    while ( *psn && *psn <= ' ' )
-      psn++;
-    *ppsn = ( char * ) psn;
+      psn = pse;
+      while ( *psn && *psn <= ' ' )
+        psn++;
+      *ppsn = ( char * ) psn;
+    }
   }
-  return mas_strndup( ( char * ) ps, pse - ps );
+  return ps ? mas_strndup( ( char * ) ps, pse - ps ) : NULL;
 }
 
 char *
