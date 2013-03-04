@@ -1,0 +1,23 @@
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:5005 --port=5005 --uri=/HarryHarrison.jpeg --http-version=1.0 --send-buffer=4096 --recv-buffer=16384 --num-conns=50 --num-calls=2000
+Maximum connect burst length: 1
+
+Total: connections 50 requests 100000 replies 100000 test-duration 17.666 s
+
+Connection rate: 2.8 conn/s (353.3 ms/conn, <=1 concurrent connections)
+Connection time [ms]: min 211.7 avg 353.3 max 566.1 median 338.5 stddev 68.8
+Connection time [ms]: connect 0.1
+Connection length [replies/conn]: 2000.000
+
+Request rate: 5660.5 req/s (0.2 ms/req)
+Request size [B]: 119.0
+
+Reply rate [replies/s]: min 5050.2 avg 5789.3 max 6504.9 stddev 727.6 (3 samples)
+Reply time [ms]: response 0.1 transfer 0.1
+Reply size [B]: header 253.0 content 30942.0 footer 0.0 (total 31195.0)
+Reply status: 1xx=0 2xx=100000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 3.57 system 13.88 (user 20.2% system 78.6% total 98.8%)
+Net I/O: 173099.6 KB/s (1418.0*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0

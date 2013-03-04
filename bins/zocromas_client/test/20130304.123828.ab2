@@ -1,0 +1,54 @@
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking zocromas.mastar.lan (be patient)
+Completed 1000 requests
+Completed 2000 requests
+Completed 3000 requests
+Completed 4000 requests
+Completed 5000 requests
+Completed 6000 requests
+Completed 7000 requests
+Completed 8000 requests
+Completed 9000 requests
+Completed 10000 requests
+Finished 10000 requests
+
+
+Server Software:        mas-1132546
+Server Hostname:        zocromas.mastar.lan
+Server Port:            5005
+
+Document Path:          /HarryHarrison.jpeg
+Document Length:        30942 bytes
+
+Concurrency Level:      5
+Time taken for tests:   1.999 seconds
+Complete requests:      10000
+Failed requests:        0
+Write errors:           0
+Total transferred:      311900000 bytes
+HTML transferred:       309420000 bytes
+Requests per second:    5002.64 [#/sec] (mean)
+Time per request:       0.999 [ms] (mean)
+Time per request:       0.200 [ms] (mean, across all concurrent requests)
+Transfer rate:          152375.45 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       1
+Processing:     0    1   1.1      1      17
+Waiting:        0    1   1.0      0      17
+Total:          0    1   1.1      1      17
+
+Percentage of the requests served within a certain time (ms)
+  50%      1
+  66%      1
+  75%      1
+  80%      1
+  90%      2
+  95%      3
+  98%      5
+  99%      6
+ 100%     17 (longest request)
