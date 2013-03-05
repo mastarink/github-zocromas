@@ -59,7 +59,7 @@ related:
 
 
 /* transaction should be cancelled?
- * FIXME all transactions remains active (keep-alive?) when one 1 of 2 quit
+ * FIXME all transactions remains active (keep-alive?) when one 1 of 2 Quit
  * */
 static int
 mas_transaction_xch( mas_rcontrol_t * prcontrol )
@@ -70,11 +70,10 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 
   MAS_LOG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
   tMSG( "starting transaction xch (%lu protos)", ( unsigned long ) ctrl.protos_num );
-  WMSG( "+ TRANS EXCHANGE" );
+  HMSG( "+ TRANS EXCHANGE" );
   if ( prcontrol && prcontrol->h.pchannel )
   {
-    size_t sz = 0;
-
+    mas_channel_read_some_new( prcontrol->h.pchannel );
     MAS_LOG( "to read rq (read some)" );
     OMSG( "WAITING DATA..." );
     MAS_LOG( "read rq: %d", r );
@@ -89,17 +88,19 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       r = 0;
       if ( !ctrl.protos_num )
       {
-        EMSG( "No proto's loaded; data[%lu]", ( unsigned long ) sz );
-        MAS_LOG( "No proto's loaded; data[%lu]", ( unsigned long ) sz );
+        EMSG( "No proto's loaded; data" );
+        MAS_LOG( "No proto's loaded; data" );
       }
       for ( int np = 0; !( r < 0 ) && np < ctrl.protos_num; np++ )
       {
-        if ( r == 0 || prcontrol->proto_desc == &ctrl.proto_descs[np] )
+        if (  /* r == 0 || */ !prcontrol->proto_desc || prcontrol->proto_desc == &ctrl.proto_descs[np] )
         {
+          HMSG( "PROTO %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
           /* calling proto_main(...) */
           if ( ctrl.proto_descs[np].function )
             r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], NULL /* data */  );
-	  else r = -1;
+          else
+            r = -1;
           if ( r > 0 )
             prcontrol->proto_desc = &ctrl.proto_descs[np];
         }
@@ -119,7 +120,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   }
   MAS_LOG( "end transaction xch" );
   tMSG( "end transaction xch" );
-  WMSG( "- TRANS EXCHANGE" );
+  HMSG( "- TRANS EXCHANGE" );
   return r;
 }
 
@@ -132,7 +133,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
 
   MAS_LOG( "starting transaction" );
   tMSG( "starting transaction" );
-  WMSG( "+ TRANS" );
+  HMSG( "+ TRANS" );
 
   if ( prcontrol )
   {
@@ -154,7 +155,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       while ( r >= 0 && prcontrol && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened
               && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
-        WMSG( "+ KEEPALIVE" );
+        rMSG( "+ keep alive loop" );
         MAS_LOG( "starting transaction keep-alive block" );
         prcontrol->h.status = MAS_STATUS_WAIT;
         /* rMSG( "waiting cl.data; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
@@ -175,7 +176,8 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
         MAS_LOG( "end tr. keep-alive block, %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
-        WMSG( "- KEEPALIVE" );
+        rMSG( "- keep alive loop %d %d %d %d %d", prcontrol->keep_alive, !prcontrol->stop, prcontrol->h.pchannel ? 1 : 0,
+              prcontrol->h.pchannel->opened, !mas_channel_buffer_eof( prcontrol->h.pchannel ) );
         /* if ( mas_channel_buffer_eof( prcontrol->h.pchannel ) ) */
         /*   mas_channel_close( prcontrol->h.pchannel );          */
       }
@@ -184,7 +186,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
   }
   MAS_LOG( "end transaction" );
   tMSG( "end transaction" );
-  WMSG( "- TRANS" );
+  HMSG( "- TRANS" );
   return NULL;
 }
 

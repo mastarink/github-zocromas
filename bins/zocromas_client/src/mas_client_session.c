@@ -55,7 +55,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
   tMSG( "to write data string %s", question );
   /* r = mas_channel_write_message( pchannel, question, NULL ); */
   IEVAL( r, mas_channel_write_message( pchannel, question, NULL ) );
-  tMSG( "(%d) written data string %s", r, question );
+  HMSG( "(%d) written data string %s", r, question );
 /*   if ( r <= 0 )            */
 /*   {                        */
 /* #ifdef EMSG                */
@@ -65,10 +65,12 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 /*   }                        */
 /*   else                     */
   {
-    /* HMSG( "to read message" ); */
+    pchannel->buffer.enddata=0;
+
+    HMSG( "TO READ MESSAGE enddata:%d", pchannel->buffer.enddata );
     /* r = mas_channel_read_message( pchannel, &answer, pheader ); */
     IEVAL( r, mas_channel_read_message( pchannel, &answer, pheader ) );
-    HMSG( "GOT MESSAGE(%d) R:%d", r, pheader->restart_cnt );
+    HMSG( "GOT MESSAGE(%d) [hdr:%lu] R:%d enddata:%d", r, sizeof( mas_header_t ), pheader->restart_cnt, pchannel->buffer.enddata );
     if ( r <= 0 )
     {
 /* #ifdef EMSG                 */
@@ -172,6 +174,7 @@ mas_client_exchange( mas_channel_t * pchannel, const char *question, const char 
   int r = 0;
   mas_header_t header;
 
+  HMSG( "CLIENT EXCHANGE" );
   memset( &header, 0, sizeof( header ) );
   IEVAL( r, _mas_client_exchange( pchannel, question, &header, answer_format ) );
   if ( ( !( r < 0 ) ) && header.new_opts )

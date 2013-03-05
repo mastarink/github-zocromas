@@ -435,13 +435,13 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, int 
       if ( rsz <= 0 )
         break;
       {
-        /* mMSG( "to read 'all'" ); */
+        HMSG( "TO READ 'ALL'" );
 #ifndef MAS_CHANNEL_STREAM_READ
         readsz = read( fd, read_buf, rsz );
 #else
         readsz = mas_fread( read_buf, 1, rsz, stream );
 #endif
-        /* WMSG( "READ 'ALL' %ld", ( unsigned long ) readsz ); */
+        HMSG( "READ 'ALL' %ld of %ld (e%d)", ( unsigned long ) readsz, ( unsigned long ) rsz, errno );
       }
       if ( readsz > 0 )
       {
@@ -455,6 +455,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, int 
     while ( readsz == rsz );
     if ( peof )
     {
+      HMSG( "READ 'ALL' %ld ( %lu )", ( signed long ) readsz, ( unsigned long ) rsz );
       if ( readsz != rsz )
         *peof = 1;
       else

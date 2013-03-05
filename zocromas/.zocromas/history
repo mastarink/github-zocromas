@@ -6,7 +6,6 @@ set msg off
 get mem info
 get mim info
 get mim anfo
-quit
 exit
 bye
 reconnect
@@ -15,133 +14,15 @@ get client info
 get server info
 server listener remove zocromas.mastar.lan 5003
 get server info
-server quit
-notify aaaaaaaaaaa
-server notify aaaaaaaaaaa
-notify aaaaaaaaaaa
-server quit
-notify aaaaaaaaaaa
-notify nt aaaaaaaaaaa
 notify 
-notify zzzzzzzz
-server quit
-notify zzzzzzzz
-server quit
-notify zzzzzzzz
-notify 
-server quit
-notify zzzzzzzz
-server quit
-notify nt zzzzzzzz
-server quit
-notify nt zzzzzzzz
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server quit
-notify test aaaaaaaaaaa
-server quit
-notify test aaaaaaaaaaa
-server quit
-notify test aaaaaaaaaaa
-server quit
-notify nt aaaaaaaaaaa
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-bye
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
 server info
 bye
-server quit
+server info
 bye
-server quit
 server restart
 bye
 server info
 pwd
-server quit
 server info
 server restart
 bye
@@ -150,38 +31,8 @@ bye
 server restart
 bye
 server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
-server quit
-server restart
 server info
-server quit
 server restart
-server quit
 bye
 disconnect
 reconnect
@@ -191,101 +42,72 @@ pwd
 reconnect
 server info
 reconnect
-server quit
 server info
 reconnect
-server quit
 server restart
-server quit
 server info
-server quit
 bye
-server quit
 server info
 q
-server quit
 server info
 q
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-bye
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-server info
-server quit
-bye
-server quit
-bye
-server info
-server quit
-bye
-server quit
-bye
-server info
-bye
-server quit
-bye
-server quit
-bye
-server quit
-bye
-server quit
-bye
-server quit
-bye
-server quit
-bye
-server quit
-bye
-server quit
 server info
 bye
 server info
+bye
+server 
 server quit
+server exit
+server sigquit
+server exit
+server sigquit
+server exit
+server sigquit
+bye
+uuid
+get uuid
+bye
+get uuid
+bye
+server exit
+get uuid
+bye
+get uuid
+server exit
+pwd
+server exit
+sssssss
+server exit
+server quit
+server  exit
+bye
+server quit
+server exit
 bye
 server quit
 bye
-server quit
+server exit
+get server info
 bye
-server quit
+server exit
+server info
+server exit
+server info
+server exit
 bye
-server quit
+server exit
+server info
+server exit
 bye
-server quit
-bye
-server quit
-bye
-server quit
 server info
 bye
 server info
-server quit
+server exit
+server info
+bye
+server exit
+bye
+server exit
+bye
+server info
+bye

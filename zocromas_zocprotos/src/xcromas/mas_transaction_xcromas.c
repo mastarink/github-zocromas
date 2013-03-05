@@ -20,7 +20,10 @@ extern mas_control_t ctrl;
 #include <mastar/channel/mas_channel.h>
 
 #include <mastar/messageio/mas_message_io.h>
-#include "mas_transaction_xcromas.h"
+
+
+#include <mastar/types/mas_message_types.h>
+
 
 
 /*
@@ -35,13 +38,13 @@ related:
 */
 
 static void
-do_quit_server( mas_rcontrol_t * prcontrol )
+do_exit_server( mas_rcontrol_t * prcontrol )
 {
   if ( prcontrol )
   {
     if ( ctrl.restart )
       prcontrol->qbin = MSG_BIN_RESTART;
-    else if ( ctrl.quit )
+    else if ( ctrl.exit )
       prcontrol->qbin = MSG_BIN_QUIT;
     else
       prcontrol->qbin = MSG_BIN_DISCONNECT;
@@ -59,21 +62,21 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 
   prcontrol->qbin = MSG_BIN_NONE;
   answer = mas_evaluate_transaction_command( prcontrol, question );
-  tMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_quit, ctrl.stop_listeners );
-  if ( ctrl.do_quit )
+  tMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_exit, ctrl.stop_listeners );
+  if ( ctrl.do_exit )
   {
     MAS_LOG( "qbin => %u", prcontrol->qbin );
     tMSG( "qbin => %u; ctrl.stop_listeners:%u", prcontrol->qbin, ctrl.stop_listeners );
-    do_quit_server( prcontrol );
+    do_exit_server( prcontrol );
     tMSG( "qbin => %u; ctrl.stop_listeners:%u", prcontrol->qbin, ctrl.stop_listeners );
   }
   pheader->binary = prcontrol->qbin;
-  tMSG( ">>> QBIN : %d", prcontrol->qbin );
+  HMSG( "ANSWERING" );
   /* if ( ( answer = mas_evaluate_cmd( 0 (* only_level *) , question, question (* args *) , 1 (*level *) , pheader, NULL, */
   /*                                   prcontrol, NULL ) ) )                                                              */
   if ( MAS_VALID_ANSWER( answer ) )
   {
-    tMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer );
+    HMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer );
     tMSG( "%s%ssign %s;answer is %s (%s)", pheader->binary ? "bin;" : "", pheader->new_opts ? "new opts;" : "",
           pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer ? "+" : "-" );
     if ( pheader->bad )
@@ -101,7 +104,7 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
     if ( answer && pheader )
       pheader->binary = MSG_BIN_UNKNOWN_COMMAND;
     r = mas_channel_write_message( prcontrol->h.pchannel, NULL, pheader );
-    tMSG( "written %d", r );
+    HMSG( "WRITTEN %d", r );
     if ( r < 0 )
     {
       P_ERR;
@@ -117,16 +120,22 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
   int r = -1;
   const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;
 
-  mas_channel_read_remainder( prcontrol->h.pchannel );
-  pheader_data = ( mas_header_t * ) mas_channel_buffer_start( prcontrol->h.pchannel );
+  pheader_data = ( mas_header_t * ) mas_channel_buffer( prcontrol->h.pchannel, NULL );
 
-  HMSG( "XCROMAS %lu", ( unsigned long ) prcontrol->h.pchannel->buffer.length );
+  HMSG( "XCROMAS (%d) %lu", pheader_data ? 1 : 0, ( unsigned long ) prcontrol->h.pchannel->buffer.length );
+  
+  
+  /* if ( !pheader_data ) */
+  /*   sleep( 2 );        */
+
+
 
   if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )
   {
     mas_header_t header_copy;
     const char *question = NULL;
 
+    mas_channel_read_remainder( prcontrol->h.pchannel );
     prcontrol->proto_desc = proto_desc;
 
     memset( &header_copy, 0, sizeof( header_copy ) );

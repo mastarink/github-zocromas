@@ -199,7 +199,7 @@ mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t *
   {
     dsz = fileinfo->filesize;
   }
-  if ( dsz )
+  if ( 1 || dsz )
   {
     mas_variable_create_x( outdata, MAS_THREAD_TRANSACTION, "header", "Content-Length", NULL, "%d", dsz );
   }

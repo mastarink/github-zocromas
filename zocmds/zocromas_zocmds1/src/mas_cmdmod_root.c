@@ -50,15 +50,6 @@ more:
 
 
 
-/* char *                           */
-/* quit_cmd_old( STD_CMD_ARGS )     */
-/* {                                */
-/*   ctrl.keep_listening = 0;       */
-/*   mas_cancel_listeners(  );      */
-/*   return mas_strdup( "[QUIT]" ); */
-/* }                                */
-
-
 char *
 test_cmd( STD_CMD_ARGS )
 {

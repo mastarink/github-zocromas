@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <sys/types.h>
+#include <signal.h>
 
 #include <stdarg.h>
 
@@ -266,7 +268,7 @@ info_cmd( STD_CMD_ARGS )
 static char *
 stop_cmd( STD_CMD_ARGS )
 {
-  ctrl.do_quit = 1;
+  ctrl.do_exit = 1;
   return NULL;
 }
 
@@ -279,25 +281,30 @@ cls_cmd( STD_CMD_ARGS )
 }
 
 static char *
-exit_cmd( STD_CMD_ARGS )
-{
-  ctrl.quit = 1;
-  return NULL;
-}
-
-static char *
 restart_cmd( STD_CMD_ARGS )
 {
   ctrl.restart = 1;
-  ctrl.do_quit = 1;
+  ctrl.do_exit = 1;
   return NULL;
 }
 
 char *
-quit_cmd( STD_CMD_ARGS )
+exit_cmd( STD_CMD_ARGS )
 {
-  ctrl.quit = 1;
-  ctrl.do_quit = 1;
+  ctrl.exit = 1;
+  ctrl.do_exit = 1;
+  return NULL;
+}
+
+char *
+sigquit_cmd( STD_CMD_ARGS )
+{
+  int r = 0;
+
+  HMSG( "KILL -QUIT %u", ctrl.pserver_thread->pid );
+  if ( ctrl.pserver_thread && ctrl.pserver_thread->pid )
+    r = kill( ctrl.pserver_thread->pid, SIGQUIT );
+  HMSG( "(%d) KILL -QUIT %u", r, ctrl.pserver_thread->pid );
   return NULL;
 }
 
@@ -334,13 +341,13 @@ mas_cmd_t subcmdtable[] = {
    5,.name = "restart",.function = restart_cmd,.libname = NULL} /* server restart */
   ,
   {
-   6,.name = "exit",.function = exit_cmd,.libname = NULL} /* server exit */
+   7,.name = "exit",.function = exit_cmd,.libname = NULL} /* server exit */
   ,
   {
-   7,.name = "quit",.function = quit_cmd,.libname = NULL} /* server quit */
+   8,.name = "sigquit",.function = sigquit_cmd,.libname = NULL} /* server exit */
   ,
   {
-   8, "segv", segv_cmd, NULL}   /* server segv */
+   9, "segv", segv_cmd, NULL}   /* server segv */
   ,
   {
    999, NULL, NULL, NULL}

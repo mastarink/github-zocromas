@@ -14,5 +14,4 @@ tab sfind mas_cmdmod_do.c
 sfind mas_cmdmod_root.c
 
 
-tab sfind mas_cmdmod_server_old.c
-sfind mas_cmdmod_server.c
+tab sfind mas_cmdmod_server.c

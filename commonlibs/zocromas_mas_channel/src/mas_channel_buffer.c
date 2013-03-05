@@ -1,5 +1,10 @@
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include <errno.h>
 #include <arpa/inet.h>
 
@@ -57,6 +62,9 @@ mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz )
   /* HMSG( "STRIP %ld", ( unsigned long ) sz ); */
   if ( pchannel )
   {
+    int fd_copy;
+
+    fd_copy = pchannel->buffer.fd_copy;
     oldbuf = pchannel->buffer.buffer;
     oldsz = pchannel->buffer.size;
     oldlength = pchannel->buffer.length;
@@ -78,6 +86,13 @@ mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz )
         newbufiptr = oldbufiptr - sz;
 
         memcpy( newbuf, oldbuf + sz, newsz );
+        if ( fd_copy )
+        {
+          int r;
+
+          r = write( fd_copy, oldbuf, sz );
+          HMSG( "CUT/COPY %d (%lu)", r, sz );
+        }
 
         pchannel->buffer.buffer = newbuf;
         pchannel->buffer.iptr = newbufiptr;
@@ -96,18 +111,15 @@ mas_channel_buffer_start( mas_channel_t * pchannel )
 }
 
 char *
-mas_channel_buffer( mas_channel_t * pchannel, size_t * psz, int unlink )
+mas_channel_buffer( mas_channel_t * pchannel, size_t * psz )
 {
   char *b = NULL;
 
+  if ( !pchannel->buffer.buffer )
+    ( void ) /* r = */ mas_channel_read_some( pchannel );
   if ( psz )
     *psz = pchannel->buffer.size;
   b = pchannel ? pchannel->buffer.buffer : NULL;
-  if ( unlink )
-  {
-    pchannel->buffer.buffer = NULL;
-    pchannel->buffer.size = 0;
-  }
   return b;
 }
 
@@ -126,11 +138,32 @@ mas_channel_set_buffer_ptr( mas_channel_t * pchannel, const char *ptr )
 }
 
 void
-mas_channel_set_buffer( mas_channel_t * pchannel, char *buffer, size_t size )
+mas_channel_set_buffer_copy( mas_channel_t * pchannel, const char *path )
+{
+  mas_channel_buffer_strip( pchannel, pchannel->buffer.iptr );
+  if ( pchannel->buffer.fd_copy )
+  {
+    close( pchannel->buffer.fd_copy );
+    pchannel->buffer.fd_copy = 0;
+  }
+  if ( path )
+  {
+    pchannel->buffer.fd_copy = open( path, O_CREAT | O_WRONLY, 0644 );
+    HMSG( "(%d)OPEN COPY '%s'", pchannel->buffer.fd_copy, path );
+    if ( pchannel->buffer.fd_copy < 0 )
+    {
+      perror( "OPEN COPY : " );
+    }
+  }
+}
+
+static void
+_mas_channel_set_buffer( mas_channel_t * pchannel, char *buffer, size_t size )
 {
   pchannel->buffer.buffer = buffer;
   pchannel->buffer.iptr = 0;
   pchannel->buffer.length = 0;
+  /* pchannel->buffer.enddata = 0; */
   pchannel->buffer.size = size;
 }
 
@@ -139,10 +172,25 @@ mas_channel_delete_buffer( mas_channel_t * pchannel )
 {
   char *buffer;
 
+  /* size_t length; */
+  /* size_t size; */
+  if ( pchannel->buffer.fd_copy )
+  {
+    int r;
+
+    r = write( pchannel->buffer.fd_copy, pchannel->buffer.buffer, pchannel->buffer.length );
+    HMSG( "DEL/COPY %d", r );
+  }
+
   buffer = pchannel->buffer.buffer;
-  mas_channel_set_buffer( pchannel, NULL, 0 );
+  /* length = pchannel->buffer.length; */
+  /* size = pchannel->buffer.size; */
+  _mas_channel_set_buffer( pchannel, NULL, 0 );
   if ( buffer )
+  {
+    HMSG( "DELETE BUFFER" );
     mas_free( buffer );
+  }
 }
 
 const char *
@@ -160,6 +208,7 @@ mas_channel_buffer_find_eol( mas_channel_t * pchannel )
 
       curlen = ptr - mas_channel_buffer_ptr( pchannel );
       IEVAL( r, mas_channel_read_some( pchannel ) );
+      HMSG( "(%d)SOME/EOL %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
       ptr = mas_channel_buffer_ptr( pchannel ) + curlen;
     }
     if ( !*ptr || *ptr == '\n' || *ptr == '\r' )
@@ -218,17 +267,24 @@ mas_channel_buffer_nl( mas_channel_t * pchannel, size_t * psz )
 }
 
 int
-mas_channel_buffer_feof( mas_channel_t * pchannel )
+mas_channel_buffer_enddata( mas_channel_t * pchannel )
 {
-  if ( !pchannel->buffer.buffer )
-    ( void ) /* r = */ mas_channel_read_some( pchannel );
-  return pchannel->buffer.feof;
+  /* if ( !pchannel->buffer.buffer )               */
+  /*   ( void ) mas_channel_read_some( pchannel ); */
+  return pchannel->buffer.enddata;
+}
+int
+mas_channel_buffer_endfile( mas_channel_t * pchannel )
+{
+  /* if ( !pchannel->buffer.buffer )               */
+  /*   ( void ) mas_channel_read_some( pchannel ); */
+  return pchannel->buffer.endfile;
 }
 
 int
 mas_channel_buffer_eof( mas_channel_t * pchannel )
 {
-  return pchannel->buffer.feof && mas_channel_buffer_ptr( pchannel ) == pchannel->buffer.buffer + pchannel->buffer.length;
+  return pchannel->buffer.endfile && mas_channel_buffer_ptr( pchannel ) == pchannel->buffer.buffer + pchannel->buffer.length;
 }
 
 void

@@ -1,14 +1,15 @@
 #define MAS_MAX_INT_1 2
 #define MAS_MAX_INT_2 10
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_client_def.h" */
-/* #include "mas_basic_def.h"  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include <signal.h>
+
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -89,6 +90,8 @@ sigint_han( int s )
   }
   /* rl_done = 1;             */
   /* rl_reset_after_signal(); */
+  rl_forced_update_display ();
+  /* rl_reset_line_state(  ); */
 }
 
 void

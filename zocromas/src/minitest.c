@@ -127,18 +127,18 @@ test20130120( void )
 }
 
 
-
-int
-main( int argc, char *argv[], char *env[] )
+void
+test_readline( const char *to_read, const char *fdc_pathz )
 {
   int r = 0;
   mas_channel_t *pchannel;
+  char *fdc_path = mas_strdup( fdc_pathz );
 
   /* test20130100( argc, argv, env ); */
   /* test20130120(  ); */
   pchannel = mas_channel_create(  );
   if ( !( r < 0 ) )
-    r = mas_channel_init( pchannel, 0, CHN_RFILE, "/mnt/new_misc/develop/autotools/zoc/zocromas/configure.scan", 0, 0 );
+    r = mas_channel_init( pchannel, 0, CHN_RFILE, to_read, 0, 0 );
   HMSG( "(%d) CHANNEL_INIT", r );
   if ( !( r < 0 ) )
     r = mas_channel_open( pchannel );
@@ -208,26 +208,69 @@ main( int argc, char *argv[], char *env[] )
     /* fputs( "--------------------------------------------------------\n", stdout ); */
     /* fputs( pchannel->buffer.buffer, stdout ); */
   }
-#else
+#elseif 0
   {
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     /* mas_channel_read_remainder( pchannel );    */
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
     mas_channel_read_some( pchannel );
-    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof(pchannel) );
+    HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
+  }
+#else
+  {
+    int cnt = 0;
+    char *pstring = NULL;
+    ssize_t l;
+
+    l = strlen( fdc_path ) - 5;
+
+    HMSG( "%ld fdc_path:%s", l, fdc_path );
+    fdc_path[l] = 'a';
+    HMSG( "fdc_path:%s", fdc_path );
+    mas_channel_set_buffer_copy( pchannel, fdc_path );
+    do
+    {
+      pstring = mas_channel_buffer_nl_dup( pchannel );
+      /* HMSG( "[%d] p: {%s}", mas_channel_buffer_eof( pchannel ), pstring ); */
+
+      if ( cnt == 26 )
+      {
+        fdc_path[l] = 'b';
+        HMSG( "fdc_path:%s", fdc_path );
+        mas_channel_set_buffer_copy( pchannel, fdc_path );
+      }
+      if ( cnt == 70 )
+      {
+        fdc_path[l] = 'c';
+        HMSG( "fdc_path:%s", fdc_path );
+        mas_channel_set_buffer_copy( pchannel, fdc_path );
+      }
+      mas_free( pstring );
+      cnt++;
+    }
+    while ( pstring );
   }
 #endif
   mas_channel_delete( pchannel, 1, 1 );
-  return r;
+  mas_free( fdc_path );
+}
+
+int
+main( int argc, char *argv[], char *env[] )
+{
+  test_readline( "/tmp/wss.tmp", "/tmp/wss1a.tmp" );
+  test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test1.txt", "/tmp/fdcopy1a.tmp" );
+  test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" );
+  print_memlist( stderr, FL );
 }

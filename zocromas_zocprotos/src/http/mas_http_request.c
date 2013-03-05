@@ -62,6 +62,15 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
   char *pstring;
   const char *cstring;
 
+  {
+    char bcpath[512];
+
+    snprintf( bcpath, sizeof( bcpath ), "/tmp/%u-%lu-%lu-%u.tmp", ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ), __LINE__ );
+    /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
+    mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
+    HMSG( "ANY BODY %s ?", bcpath );
+  }
+  HMSG( "HTTP REQUEST (parse)" );
   pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
   if ( pstring )
   {
@@ -98,6 +107,35 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
         sscanf( http->sversion, "%3f", &http->fversion );
         MAS_LOG( "HTTP parse f.version %s => %5.2f", http->sversion, http->fversion );
         http = mas_proto_http_parse_headers( prcontrol, http );
+
+        {
+          char *pstring = NULL;
+
+#if 1
+          {
+            char bcpath[512];
+
+            snprintf( bcpath, sizeof( bcpath ), "/tmp/%u-%lu-%lu-%u.tmp", ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ),
+                      __LINE__ );
+            /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
+            mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
+            HMSG( "ANY BODY %s ?", bcpath );
+          }
+#endif
+          while ( 0 )
+          {
+            pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+            if ( !pstring )
+              break;
+            /* ( pstring && *pstring && *pstring > ' ' ); */
+            HMSG( "pSTRING: {%s}", pstring );
+            if ( pstring )
+              mas_free( pstring );
+            pstring = NULL;
+          }
+        }
+
+
         {
           switch ( http->imethod )
           {
@@ -260,8 +298,7 @@ mas_proto_http_parse_spc_header( mas_rcontrol_t * prcontrol, mas_http_t * http, 
 {
   if ( 0 == strcmp( name, "Connection" ) )
   {
-    tMSG( ">>>>>> HTTP HEADER: %s:%s", name, value );
-    HMSG( "HTTP HEADER %s", name );
+    HMSG( "HTTP (spc) HEADER (parse) %s", name );
     MAS_LOG( "HTTP HEADER: %s:%s", name, value );
     if ( 0 == strcasecmp( value, "keep-alive" ) )
     {
@@ -282,60 +319,78 @@ mas_proto_http_parse_spc_header( mas_rcontrol_t * prcontrol, mas_http_t * http, 
 }
 
 mas_http_t *
-mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char *pstring )
 {
-  char *pstring;
+  char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
 
-  prcontrol->keep_alive = ( http->fversion >= 1.1 );
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
-  MAS_LOG( "http parse headers 1" );
-  while ( ( pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel ) ) && *pstring && *pstring > ' ' )
+  name = pstring;
+  ename = pstring;
+  while ( ename && *ename > ' ' && *ename != ':' )
+    ename++;
+  value = ename;
+  if ( value && *value == ':' )
+    value++;
+  while ( value && *value == ' ' )
+    value++;
+  evalue = value;
+  while ( evalue && *evalue && *evalue >= ' ' )
+    evalue++;
+
+  name = mas_strndup( name, ename - name );
+  value = mas_strndup( value, evalue - value );
+  MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
+
+  HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
+  http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
+
+  if ( 0 == strcasecmp( name, "User-Agent" ) )
   {
-    char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
-
-    name = pstring;
-    ename = pstring;
-    while ( ename && *ename > ' ' && *ename != ':' )
-      ename++;
-    value = ename;
-    if ( value && *value == ':' )
-      value++;
-    while ( value && *value == ' ' )
-      value++;
-    evalue = value;
-    while ( evalue && *evalue && *evalue >= ' ' )
-      evalue++;
-
-    name = mas_strndup( name, ename - name );
-    value = mas_strndup( value, evalue - value );
-    MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
-
-    http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
-
-    if ( 0 == strcasecmp( name, "User-Agent" ) )
+    if ( 0 == strncmp( value, "httperf", 7 ) )
     {
-      if ( 0 == strncmp( value, "httperf", 7 ) )
-      {
-        ctrl.messages = 0;
-      }
-      else
-      {
-      }
+      ctrl.messages = 0;
     }
     else
     {
     }
+  }
+  else
+  {
+  }
 
-    http = mas_proto_http_parse_spc_header( prcontrol, http, name, value );
-    if ( name )
-      mas_free( name );
-    if ( value )
-      mas_free( value );
-    MAS_LOG( "http parse headers 4" );
+  http = mas_proto_http_parse_spc_header( prcontrol, http, name, value );
+  if ( name )
+    mas_free( name );
+  if ( value )
+    mas_free( value );
+  MAS_LOG( "http parse headers 4" );
+  return http;
+}
+
+mas_http_t *
+mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
+{
+  char *pstring = NULL;
+
+  HMSG( "HTTP HEADERS (parse)" );
+  prcontrol->keep_alive = ( http->fversion >= 1.1 );
+  MAS_LOG( "KA => %u", prcontrol->keep_alive );
+  MAS_LOG( "http parse headers 1" );
+  do
+  {
     if ( pstring )
       mas_free( pstring );
     pstring = NULL;
+    pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+    http = mas_proto_http_parse_header( prcontrol, http, pstring );
   }
+  while ( pstring && *pstring && *pstring > ' ' );
+  /* while ( ( pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel ) ) && *pstring && *pstring > ' ' ) */
+  /* {                                                                                                        */
+  /*   http = mas_proto_http_parse_header( prcontrol, http, pstring );                                        */
+  /*   if ( pstring )                                                                                         */
+  /*     mas_free( pstring );                                                                                 */
+  /*   pstring = NULL;                                                                                        */
+  /* }                                                                                                        */
   if ( pstring )
     mas_free( pstring );
   pstring = NULL;

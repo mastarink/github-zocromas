@@ -9,11 +9,14 @@
 #include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
-/* #include "mas_common.h" */
+/* extern mas_options_t opts; */
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
 #include <mastar/log/mas_log.h>
 
 #include <mastar/variables/mas_variables.h>
@@ -47,6 +50,7 @@ more:
 mas_http_t *
 mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
+  HMSG( "HTTP make ETAG" );
   if ( http )
     ( void ) /* r = */ mas_fileinfo_make_etag( http->content );
   /* rMSG( "(%d) CHECK ETAG %s : %s", r, http->content->filepath, http->content->etag ); */
@@ -76,7 +80,9 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   /* extern unsigned long __MAS_LINK_DATE__; */
   extern unsigned long __MAS_LINK_TIME__;
+
   /* extern unsigned long __MAS_LINK_TIMESTAMP__; */
+  HMSG( "HTTP make OUT STD HEADERS" );
 
   if ( http )
   {
@@ -140,6 +146,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   char *data;
 
+  HMSG( "HTTP REPLY" );
   MAS_LOG( "to write protocol name/version" );
   data = mas_fileinfo_data( http->content );
 
@@ -150,6 +157,8 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     else
       http->status_code = MAS_HTTP_CODE_NOT_FOUND;
   }
+  HMSG( "HTTP REPLY status %d", http->status_code );
+  HMSG( "HTTP HTTP" );
   http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
   if ( http )
     http = mas_http_make_out_std_headers( prcontrol, http );
@@ -164,6 +173,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     size_t datasz;
 
     datasz = mas_fileinfo_data_size( http->content );
+    HMSG( "HTTP write DATA (%lu)", ( unsigned long ) datasz );
 
 
     MAS_LOG( "to write body %lu [%s]", ( unsigned long ) datasz, datasz < 100 ? data : "..." );
@@ -172,6 +182,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
     http = mas_proto_http_write( http, data, datasz );
     MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
+    HMSG( "HTTP written DATA (%lu)", ( unsigned long ) http ? http->written : 0 );
   }
   /* to close connection */
   return http;
@@ -180,6 +191,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
+  HMSG( "HTTP make DOCROOT" );
   if ( !http->docroot )
   {
     mas_variable_t *host_var;

@@ -113,8 +113,8 @@ struct mas_control_s
 
   unsigned disconnect:1;
   unsigned restart:1;
-  unsigned quit:1;
-  unsigned do_quit:1;
+  unsigned exit:1;
+  unsigned do_exit:1;
 
   unsigned forget_transactions:1;
   unsigned opts_saved:1;

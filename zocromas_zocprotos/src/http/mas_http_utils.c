@@ -3,11 +3,15 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <time.h>
+/* #include <time.h> */
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #include <mastar/wrap/mas_memory.h>
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
 #include <mastar/log/mas_log.h>
 #include <mastar/channel/mas_channel.h>
 #include <mastar/variables/mas_variables.h>
@@ -137,6 +141,7 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
         strcpy( buf + wm, "\r\n" );
         wm += 2;
         MAS_LOG( "w.pairs:[%s]", buf );
+        HMSG( "HTTP write OUT HEADERS" );
         http = mas_proto_http_write( http, buf, wm );
       }
       mas_free( buf );

@@ -19,6 +19,7 @@ int mas_channel_write( const mas_channel_t * pchannel, char *cbuf, size_t sz );
 char *mas_channel_ip_string( mas_channel_t * pchannel );
 
 int mas_channel_read_some( mas_channel_t * pchannel );
+int mas_channel_read_some_new( mas_channel_t * pchannel );
 int mas_channel_read_remainder( mas_channel_t * pchannel );
 
 

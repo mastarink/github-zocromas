@@ -14,7 +14,6 @@ module_LTLIBRARIES = \
 	mem.la \
 	readline.la \
 	server.la \
-	server_old.la \
 	set.la \
 	show.la \
 	root.la
@@ -45,9 +44,6 @@ readline_la_SOURCES      = mas_cmdmod_readline.c
                        
 server_la_LDFLAGS        = -module -avoid-version -no-undefined @AM_LDFLAGS@
 server_la_SOURCES        = mas_cmdmod_server.c
-
-server_old_la_LDFLAGS    = -module -avoid-version -no-undefined @AM_LDFLAGS@
-server_old_la_SOURCES    = mas_cmdmod_server_old.c
 
 set_la_LDFLAGS           =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 set_la_SOURCES           = mas_cmdmod_set.c

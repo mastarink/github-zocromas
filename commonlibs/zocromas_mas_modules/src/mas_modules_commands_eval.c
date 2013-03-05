@@ -164,7 +164,7 @@ mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
         pcommand->subtable = loaded_subtable;
         /* MAS_LOG( "cmd_fun:%p ; subtable:%p", ( void * ) ( unsigned long ) cmd_fun, ( void * ) loaded_subtable ); */
         MAS_LOG( "{%p} set fun/sbt for module %s.%s : %d : %p", ( void * ) pcommand, libname, name,
-                  pcommand->function?1:0, ( void * ) pcommand->subtable );
+                 pcommand->function ? 1 : 0, ( void * ) pcommand->subtable );
         r = 0;
       }
     }
@@ -286,9 +286,11 @@ mas_evaluate_cmd( STD_CMD_ARGS )
       tMSG( "eval %d. %s : %d : %d", this_command->id, this_command->name,
             this_command->function ? 1 : 0, this_command->function == universal_complex_cmd );
       /* EVALUATING COMMAND */
+      HMSG( "EVAL %s", this_command->name );
       answer = ( this_command->function ) ( STD_CMD_PASS );
       tMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol ? prcontrol->qbin : 0,
-            ctrl.do_quit );
+            ctrl.do_exit );
+      HMSG( "QUIT (%s) %u", this_command->name, ctrl.do_exit );
       if ( MAS_VALID_ANSWER( answer ) )
       {
         /* cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" ); */

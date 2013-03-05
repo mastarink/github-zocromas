@@ -33,8 +33,10 @@ struct mas_channel_buffer_s
   size_t size;
   ssize_t length;
   char *buffer;
+  int fd_copy;
   ssize_t iptr;
-  unsigned feof:1;
+  unsigned enddata:1;
+  unsigned endfile:1;
 };
 typedef struct mas_channel_buffer_s mas_channel_buffer_t;
 
@@ -59,7 +61,6 @@ struct mas_channel_s
   unsigned listening:1;
   unsigned opened:1;
   unsigned cloned:1;
-  unsigned feof:1;
   unsigned error:1;
 };
 typedef struct mas_channel_s mas_channel_t;

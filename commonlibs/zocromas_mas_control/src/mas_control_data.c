@@ -63,7 +63,7 @@ mas_control_t ctrl = {
 
   .disconnect = 0,
   .restart = 0,
-  .quit = 0,
+  .exit = 0,
 
   .forget_transactions = 1,
 

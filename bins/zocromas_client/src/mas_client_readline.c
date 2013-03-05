@@ -46,6 +46,7 @@ more:
 
 */
 
+static char prompt[256];
 
 
 int
@@ -56,12 +57,10 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 
   while ( !mas_readline_buffer )
   {
-    char prompt[256];
 
     ctrl.status = MAS_STATUS_WAIT;
     /* mas_readline_buffer = readline( " % \x1b[K" ); */
     /* rl_catch_signals = 0; */
-    snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
     mas_readline_buffer = readline( prompt );
     ctrl.status = MAS_STATUS_WORK;
     {
@@ -130,10 +129,134 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 }
 
 int
+mas_client_readline_event( void )
+{
+  /* HMSG( "HOOK" ); */
+  return 0;
+}
+
+/*                                            */
+/* "\e[3;3~":  "# Alt-Delete\n"               */
+/* "\eO1;3P":  "# Alt-F1\n"                   */
+/* "\e[21;3~": "# Alt-F10\n"                  */
+/* "\e[23;3~": "# Alt-F11\n"                  */
+/* "\e[24;3~": "# Alt-F12\n"                  */
+/* "\eO1;3Q":  "# Alt-F2\n"                   */
+/* "\eO1;3R":  "# Alt-F3\n"                   */
+/* "\eO1;3S":  "# Alt-F4\n"                   */
+/* "\e[15;3~": "# Alt-F5\n"                   */
+/* "\e[17;3~": "# Alt-F6\n"                   */
+/* "\e[18;3~": "# Alt-F7\n"                   */
+/* "\e[19;3~": "# Alt-F8\n"                   */
+/* "\e[20;3~": "# Alt-F9\n"                   */
+/* "\e[3;5~":  "# Control-Delete\n"           */
+/* "\e[1;5B":  "# Control-Down\n"             */
+/* "\e[21;5~": "# Control-F10\n"              */
+/* "\e[23;5~": "# Control-F11\n"              */
+/* "\e[24;5~": "# Control-F12\n"              */
+/* "\eO1;5P":  "# Control-F1\n" # not working */
+/* "\eO1;5Q":  "# Control-F2\n"               */
+/* "\eO1;5R":  "# Control-F3\n"               */
+/* "\eO1;5S":  "# Control-F4\n"               */
+/* "\e[15;5~": "# Control-F5\n"               */
+/* "\e[17;5~": "# Control-F6\n"               */
+/* "\e[18;5~": "# Control-F7\n"               */
+/* "\e[19;5~": "# Control-F8\n"               */
+/* "\e[20;5~": "# Control-F9\n"               */
+/* "\e[16;5~": "# Control-Fx\n"               */
+/* "\e[1;5D":  "# Control-Left\n"             */
+/* "\e[1;5C":  "# Control-Right\n"            */
+/* "\e[1;5A":  "# Control-Up\n"               */
+/* "\e[3~":    "# Delete\n"                   */
+/* "\eOF":     "# End\n"                      */
+/* "\eOP":     "# F01\n"                      */
+/* "\e[21~":   "# F10\n"                      */
+/* "\e[23~":   "# F11\n"                      */
+/* "\e[24~":   "# F12\n"                      */
+/* "\eOQ":     "# F2\n"                       */
+/* "\eOR":     "# F3\n"                       */
+/* "\eOS":     "# F4\n"                       */
+/* "\e[15~":   "# F5\n"                       */
+/* "\e[17~":   "# F6\n"                       */
+/* "\e[18~":   "# F7\n"                       */
+/* "\e[19~":   "# F8\n"                       */
+/* "\e[20~":   "# F9\n"                       */
+/* "\e[22~":   "# Fx\n"                       */
+/* "\e[16~":   "# Fx1\n"                      */
+/* "\eOH":     "# Home\n"                     */
+/* "\e[2~":    "# Insert\n"                   */
+/* "\e[6~":    "# PageDown"                   */
+/* "\e[5~":    "# PageUp\n"                   */
+/* "\e[3;2~":  "# Shift-Delete\n"             */
+/* "\eO1;2P":  "# Shift-F1\n"                 */
+/* #"\e[22;2~": "# Shift-F10\n" # not working */
+/* "\e[23;2~": "# Shift-F11\n"                */
+/* "\e[24;2~": "# Shift-F12\n"                */
+/* "\eO1;2Q":  "# Shift-F2\n"                 */
+/* "\eO1;2R":  "# Shift-F3\n"                 */
+/* "\eO1;2S":  "# Shift-F4\n"                 */
+/* "\e[15;2~": "# Shift-F5\n"                 */
+/* "\e[17;2~": "# Shift-F6\n"                 */
+/* "\e[18;2~": "# Shift-F7\n"                 */
+/* "\e[19;2~": "# Shift-F8\n"                 */
+/* "\e[20;2~": "# Shift-F9\n"                 */
+/* "\e[21;2~": "# Shift-F10\n"                */
+/* "\e[16;2~": "# Shift-Fx1\n"                */
+/*                                            */
+/* "\eq": "# Alt-q\n"                         */
+/* "\ew": "# Alt-w\n"                         */
+/* "\ee": "# Alt-e\n"                         */
+/* "\er": "# Alt-r\n"                         */
+/* "\et": "# Alt-t\n"                         */
+/* "\ey": "# Alt-y\n"                         */
+/* "\eu": "# Alt-u\n"                         */
+/* "\ei": "# Alt-i\n"                         */
+/* "\eo": "# Alt-o\n"                         */
+/* "\ep": "# Alt-p\n"                         */
+/* "\e[": "# Alt-[\n"                         */
+/* "\e]": "# Alt-]\n"                         */
+/* "\ea": "# Alt-a\n"                         */
+/* "\es": "# Alt-s\n"                         */
+/* #"\ed": "# Alt-d\n"                        */
+/* "\ef": "# Alt-f\n"                         */
+/* "\eg": "# Alt-g\n"                         */
+/* "\eh": "# Alt-h\n"                         */
+/* "\ej": "# Alt-j\n"                         */
+/* "\ek": "# Alt-k\n"                         */
+/* "\el": "# Alt-l\n"                         */
+/* "\e;": "# Alt-;\n"                         */
+/* "\e'": "# Alt-'\n"                         */
+/*                                            */
+/* "\ez": "# Alt-z\n"                         */
+/* "\ex": "# Alt-x\n"                         */
+/* "\ec": "# Alt-c\n"                         */
+/* "\ev": "# Alt-v\n"                         */
+/* "\eb": "# Alt-b\n"                         */
+/* "\en": "# Alt-n\n"                         */
+/* "\em": "# Alt-m\n"                         */
+/* "\e,": "# Alt-,\n"                         */
+/* "\e.": "# Alt-.\n"                         */
+/* "\e/": "# Alt-/\n"                         */
+/* "\e\\": "# Alt-\\\n"                       */
+/*                                            */
+/* #Meta-u: "# Hu\n"                          */
+/* #Meta-Control-u: "# MCU\n"                 */
+/*                                            */
+/*                                            */
+int
 mas_client_init_readline( void )
 {
   int rh = 0;
 
+  /* rl_add_defun( "quit", mas_client_readline_quit, CTRL( 'q' ) ); */
+  /* rl_parse_and_bind( "\"\\C-q\": \"server_quit\"\n" ); */
+  rl_generic_bind( ISMACR, "\x1bq", ( char * ) "server exit\n", rl_get_keymap(  ) );
+  rl_generic_bind( ISMACR, "\x1b[21~", ( char * ) "server exit\n", rl_get_keymap(  ) );
+  rl_generic_bind( ISMACR, "\x1bi", ( char * ) "get server info\n", rl_get_keymap(  ) );
+  rl_generic_bind( ISMACR, "\x1b" "b", ( char * ) "bye\n", rl_get_keymap(  ) );
+
+  snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
+  /* rl_event_hook = mas_client_readline_event; */
   HMSG( "HISTORY to LOAD" );
   if ( opts.configdir )
   {
@@ -162,7 +285,6 @@ mas_client_init_readline( void )
     add_history( "get mem info" );
     add_history( "get mim info" );
     add_history( "get mim anfo" );
-    add_history( "quit" );
     add_history( "exit" );
     add_history( "bye" );
     add_history( "reconnect" );

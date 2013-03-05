@@ -3,15 +3,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <time.h>
+/* #include <time.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
-extern mas_options_t opts;
+/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -26,12 +26,12 @@ extern mas_options_t opts;
 
 #include <mastar/variables/mas_variables.h>
 
+#  include <mastar/types/mas_transaction_control_types.h>
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"
 #include "mas_http_get.h"
 
-#include "mas_transaction_http.h"
 
 
 /*
@@ -128,6 +128,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
 {
   int w = 0;
   mas_http_t *http = NULL;
+
   /* const char *string = ( const char * ) string_void; */
 
 //  GET / HTTP/1.1
@@ -144,7 +145,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
 /*
  * The Do Not Track (DNT) header
 */
-
+  HMSG( "HTTP main" );
   /* MAS_LOG( "http?: to create rq :(%lu) %s", strlen( string ), string ); */
   MAS_LOG( "http?: to create rq" );
   http = mas_proto_http_create_request( prcontrol );
@@ -160,6 +161,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
   {
     if ( http->URI && 0 == strncmp( http->URI, "/xcromas/", 9 ) )
     {
+      HMSG( "HTTP make /xcromas" );
       /* char *answer = NULL;                                                                                                  */
       /*                                                                                                                       */
       /* answer = mas_evaluate_command_slash( http->URI + 9 );                                                                 */
@@ -202,6 +204,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
     case MAS_HTTP_METHOD_HEAD:
     case MAS_HTTP_METHOD_POST:
       MAS_LOG( "http: get/head/post" );
+      HMSG( "HTTP make OUT HEADERS" );
       http = mas_http_make_out_head_get( prcontrol, http );
       break;
     }
@@ -222,6 +225,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
 
   if ( http )
     http = mas_http_reply( prcontrol, http );
+  HMSG( "WRITTEN %lu", http ? http->written : 0 );
   MAS_LOG( "WRITTEN %lu", http ? http->written : 0 );
   if ( http )
     mas_proto_http_delete_request( http );
@@ -230,5 +234,6 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
   /* {                      */
   /*   EMSG( "BAD %d", w ); */
   /* }                      */
+  HMSG ("HTTP W: %d",w);
   return http ? w : 0;
 }

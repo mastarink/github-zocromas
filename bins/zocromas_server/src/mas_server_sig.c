@@ -58,7 +58,7 @@ static int term_cnt = 0;
 /* sighandler_t signal( int signum, sighandler_t handler ); */
 
 static void
-to_quit( void )
+to_exit( void )
 {
   if ( ctrl.keep_listening )
   {
@@ -75,7 +75,7 @@ sigterm_han( int s )
 {
   GDMSG( "TERM %d", term_cnt );
   term_cnt++;
-  to_quit(  );
+  to_exit(  );
   ctrl.in_client = 0;
   ctrl.in_pipe--;
 }
@@ -195,7 +195,7 @@ sigint_han( int s )
     /* RL_SETSTATE( RL_STATE_DONE ); */
     if ( int_cnt > MAS_MAX_INT_2 )
     {
-      to_quit(  );
+      to_exit(  );
 
       thMSG( "waiting at %lx", mas_pthread_self(  ) );
 
@@ -231,7 +231,7 @@ void
 sighup_han( int s )
 {
   ctrl.restart = 1;
-  to_quit(  );
+  to_exit(  );
   thMSG( "waiting at %lx", mas_pthread_self(  ) );
   EMSG( "HUP" );
 }
@@ -239,7 +239,7 @@ sighup_han( int s )
 void
 sigquit_han( int s )
 {
-  to_quit(  );
+  to_exit(  );
   thMSG( "waiting at %lx", mas_pthread_self(  ) );
   EMSG( "QUIT" );
 }
@@ -247,7 +247,7 @@ sigquit_han( int s )
 void
 sigabrt_han( int s )
 {
-  to_quit(  );
+  to_exit(  );
   /*
      if ( pthread_equal( mas_pthread_self(  ), ctrl.pth ) )
      {
