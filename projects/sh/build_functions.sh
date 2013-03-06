@@ -29,7 +29,7 @@ function configure_m ()
       popd >/dev/null
     fi
   fi
-  setup_vers
+# setup_vers
   return 1
 }
 function remove_unpacked_z ()
@@ -57,7 +57,7 @@ function install_z ()
   version=$1
   shift
   if [[ $mas_name ]] && [[ "$version" ]] ; then
-    setup_vers "$mas_name" "$version"
+    setup_vers "$mas_name" "$version" || return 1
   fi
 # show_setup
   if [[ $mas_name ]] && [[ "$mas_vers" ]] ; then
@@ -146,7 +146,7 @@ function testdist_m ()
 function makd_dinst_script ()
 {
   if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
-    if [[ "$rootdir" ]] && [[ "$instshname" ]] && cd $rootdir \
+    if [[ "$projectsdir" ]] && [[ "$instshname" ]] && cd $projectsdir \
     			&& [[ "$mas_name" ]] && [[ "$mas_vers" ]] && [[ "$instshdir" ]] && [[ -d "$instshdir" ]] ; then
       if [[ -f "$instshname" ]] ; then
         rm "$instshname"

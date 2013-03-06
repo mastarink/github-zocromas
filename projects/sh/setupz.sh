@@ -72,7 +72,7 @@ function setup_vers ()
 #   configure_opts2="$configure_opts2 --with-def-proto=xcromas"
     while read c ; do 
       configure_opts2="$configure_opts2 $c"
-    done < $rootdir/configure_opts
+    done < $projectsdir/configure_opts
     if [[ -f $indir/configure_opts ]] ; then
       while read c ; do 
         configure_opts3="$configure_opts3 $c"
@@ -85,7 +85,7 @@ function setup_vers ()
 # echo "[$mas_name] [$mas_vers]" >&2
   prjname=$( basename $indir )
 # ebuild_prefix=zocromas_
-  ebuild_dir=$rootdir/ebuilds/mas-tar/${ebuild_prefix}${mas_name}
+  ebuild_dir=$projectsdir/ebuilds/mas-tar/${ebuild_prefix}${mas_name}
 
   rprefix=$binprefix
  
@@ -121,7 +121,7 @@ function setup_vers ()
 #   echo "$rname_preset ::: ${binprefix} :: ---" >&2
   fi
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
-    rbinary_preset=$( realpath --relative-to=$indir $binary_preset )
+    rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) || return 1
   fi
 # rname_preset=$( basename $mcaller )
 # if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
@@ -143,6 +143,7 @@ function setup_vers ()
 # echo "@<<short_name $short_name >>@" >&2
 # echo "@<<binary_preset $binary_preset >>@" >&2
 # echo "@<<rbinary_preset $rbinary_preset >>@" >&2
+  return 0
 }
 function show_setup ()
 {
@@ -180,11 +181,14 @@ function show_setup ()
   echo "mas_vers:	$mas_vers" >&2
 
   echo "= ROOT:" >&2
-  echo "rootdir:	$rootdir" >&2
+  echo "projectsdir:	$projectsdir" >&2
   
 }
 
 export MAS_MAKE_CNT=0
 # echo "SETUPZ" >&2
-setup_dirs
+if ! setup_dirs ; then
+  echo "setup error" >&2
+  exit 
+fi
 # echo "/SETUPZ" >&2

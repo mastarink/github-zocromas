@@ -2,7 +2,7 @@
 if [[ -f "sh/setup.sh" ]] ; then
   . sh/setup.sh
 
-  if [[ "$rootdir" ]] && [[ -d "$rootdir" ]] ; then
+  if [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] ; then
     grep --binary-files=without-match \
     	--exclude='*.viminfo' \
 	--exclude='output.*' \
@@ -21,6 +21,6 @@ if [[ -f "sh/setup.sh" ]] ; then
 	--exclude='*.Po' \
 	--exclude='config.status' \
 	--exclude='*.result' \
-	-r --color=yes $@ $rootdir
+	-r --color=yes $@ $projectsdir
   fi
 fi

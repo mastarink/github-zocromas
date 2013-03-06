@@ -4,17 +4,17 @@ if [[ -f "sh/setup.sh" ]] ; then
   function grepch ()
   {
     local project projects
-    if [[ "$rootdir" ]] && [[ -d "$rootdir" ]] ; then
-      cd $rootdir || return 1
-      if [[ -f "projects.list" ]] ; then
-        projects=$( echo "`cat projects.list`" )
+    if [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] ; then
+      cd $projectsdir || return 1
+      if [[ -f "$admindir/projects.list" ]] ; then
+        projects=$( echo "`cat $admindir/projects.list`" )
 #       while read project ; do
 #         if [[ "$projects" ]] ; then
 #           projects="$projects,$project"
 #         else
 #           projects="$project"
 #         fi
-#       done < projects.list 
+#       done < $admindir/projects.list 
 #	echo "projects: $projects"
 
 

@@ -39,7 +39,7 @@ sfind httperf_test2.sh
 
 tab sfind findgarbage.sh
 sfind boxit.sh
-sfind rootdir.sh
+sfind projectsdir.sh
 
 
 sfind git-push.sh
@@ -72,3 +72,6 @@ tab sfind abrt_server.sh
 sfind psshow.sh
 
 tab sfind ebuild.sh
+tab sfind projects-list.sh 
+sfind findfile.sh 
+sfind grepacam.sh

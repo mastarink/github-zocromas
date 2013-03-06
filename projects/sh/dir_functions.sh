@@ -1,8 +1,9 @@
 function make_dirs ()
 {
-  if [[ -d "$rootdir" ]] && ! [[ -d "$savedir" ]]; then
-    mkdir "$savedir" || echo "$LINENO ERROR make_dirs" >&2
-  fi
+# if [[ -d "$projectsdir" ]] && ! [[ -d "$savedir" ]]; then
+#   mkdir "$savedir" || echo "$LINENO ERROR make_dirs" >&2
+# fi
+  if ! [[ -d "$projectsdir" ]] ; then return 1 ; fi
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirdist" ]]; then
     mkdir "$savedirdist" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -15,10 +16,10 @@ function make_dirs ()
   if [[ -d "$savedirtar" ]] && ! [[ -d "$savedirtarme" ]]; then
     mkdir "$savedirtarme" || echo "$LINENO ERROR make_dirs" >&2
   fi
-  if [[ -d "$rootdir" ]] && ! [[ -d "$instdir" ]]; then
+  if [[ -d "$projectsdir" ]] && ! [[ -d "$instdir" ]]; then
     mkdir "$instdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
-  if [[ -d "$rootdir" ]] && ! [[ -d "$tmpdir" ]]; then
+  if [[ -d "$projectsdir" ]] && ! [[ -d "$tmpdir" ]]; then
     mkdir "$tmpdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpbuild" ]]; then
@@ -55,35 +56,37 @@ function setup_dirs ()
   fi  
   wd=`pwd`
   me="$wd/$0"
-  mer="$(realpath $0)"
+  mer="$(realpath $0)" || return 1
   if [[ -f "$me" ]] && [[ -x "$me" ]] ; then
     shdir=$( dirname "$me" )
     shdirr=$( dirname "$mer" )
     shdirup=$( dirname $shdir )
     shdirupr=$( dirname $shdirr )
-    indir="$( realpath "$shdirup" )"
-    indirr="$( realpath "$shdirupr" )"
-    updir="$( realpath $indir/.. )"
-    updirr="$( realpath $indirr/.. )"
-    rootdir=$indirr
+    indir="$( realpath "$shdirup" )" || return 1
+    indirr="$( realpath "$shdirupr" )" || return 1
+    indirrr="$( realpath "$shdirupr/.." )" || return 1
+    updir="$( realpath $indir/.. )" || return 1
+    updirr="$( realpath $indirr/.. )" || return 1
+    projectsdir=$indirr
+    admindir=$indirrr
     runconfigdirname=.zocromas
     runconfigdir=$HOME/$runconfigdirname/
-    runconfigdir=$rootdir/zocromas/$runconfigdirname/
-    export    MAS_WORK_ROOT_DIR=$rootdir
-    export    MAS_WORK_IN_DIR=$rootdir
+    runconfigdir=$projectsdir/zocromas/$runconfigdirname/
+    export    MAS_WORK_ROOT_DIR=$projectsdir
+    export    MAS_WORK_IN_DIR=$projectsdir
 
-    savedir=$(realpath "$rootdir/saved/" )
-    instdir=$(realpath "$rootdir/install" )
-    instshdir=$(realpath "$rootdir/install.sh" )
-    tmpdir=$(realpath "$rootdir/tmp/" )
+    savedir=$(realpath "$admindir/saved/" ) || return 1
+    instdir=$(realpath "$admindir/install" ) || return 1
+    instshdir=$(realpath "$admindir/install.sh" ) || return 1
+    tmpdir=$(realpath "$admindir/tmp/" ) || return 1
     
-    savedirdist=$(realpath "$savedir/dist/" )
-    savedirgentoo=$(realpath "$savedir/gentoo/" )
-    savedirtar=$(realpath "$savedir/tar/" )
-    savedirtarme=$(realpath "${savedirtar}/${stamp}" )
+    savedirdist=$(realpath "$savedir/dist/" ) || return 1
+    savedirgentoo=$(realpath "$savedir/gentoo/" ) || return 1
+    savedirtar=$(realpath "$savedir/tar/" ) || return 1
+    savedirtarme=$(realpath "${savedirtar}/${stamp}" ) || return 1
     
-    tmpbuild=$(realpath "$tmpdir/build/" )
-    tmpunpack=$(realpath "$tmpdir/unpack/" )
+    tmpbuild=$(realpath "$tmpdir/build/" ) || return 1
+    tmpunpack=$(realpath "$tmpdir/unpack/" ) || return 1
 
     debugdir="$indir/debug"
     testdir="$indir/test"
@@ -92,9 +95,9 @@ function setup_dirs ()
     wbuilddir="$inbuilddir"
     build_at="$wbuilddir"
 
-    if [[ -d "$rootdir" ]] ; then
-      prjgroup=$(basename $rootdir)
-      make_dirs
+    if [[ -d "$projectsdir" ]] ; then
+      prjgroup=$(basename $projectsdir)
+      make_dirs || return 1
   #   export LD_LIBRARY_PATH=/usr/local/lib
 
       export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
@@ -103,5 +106,6 @@ function setup_dirs ()
   else
     echo "FATAL : '$me' bad SCRIPT call ($0)" >&2
   fi
-  setup_vers
+  setup_vers || return 1
+  return 0
 }

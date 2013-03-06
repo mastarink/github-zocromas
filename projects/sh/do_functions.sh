@@ -6,7 +6,7 @@ function mas_enabled_doprj ()
   local act disfile
   act=$1
   shift
-  disfile=$rootdir/disabled_do.txt
+  disfile=$projectsdir/disabled_do.txt
   if [[ "$act" ]] && [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
     if [[ -f "$disfile" ]] ; then
   #    echo ">>>>>>>> [$act:$mas_name-$mas_vers] $disfile" >&2
@@ -24,8 +24,8 @@ function doprj ()
   local list
   local cnt
   cnt=0
-  setup_dirs
-  setup_vers
+  setup_dirs || return 1
+  setup_vers || return 1
   if [[ "$1" == 'full' ]] ; then
     list='autoreconf configure make install'
   else
@@ -98,17 +98,17 @@ function doprj ()
 function doall ()
 {  
   local prj nn
-  if [[ -d "$tmpdir" ]] && [[ "$rootdir" ]] && [[ -d "$rootdir" ]] && cd $rootdir ; then
-    if [[ -f projects.list ]] ; then
-      list=`cat projects.list`
+  if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] && cd $projectsdir ; then
+    if [[ -f $admindir/projects.list ]] ; then
+      list=`cat $admindir/projects.list`
 #	echo "pwd: {$( pwd )}" >&2
     else
-      echo "not exists projects.list" >&2
+      echo "not exists $admindir/projects.list" >&2
       return 1
     fi
     nn=0
     for prj in $list ; do
-      cd $rootdir
+      cd $projectsdir || return 1
       echo "-- prj:$prj" >&2
       dir=$( realpath $prj )  || return 1
       if [[ "$prj" ]] && [[ -d "$prj" ]] ; then

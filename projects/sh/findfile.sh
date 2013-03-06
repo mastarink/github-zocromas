@@ -1,13 +1,13 @@
 #!/bin/sh
 if [[ -f "sh/setup.sh" ]] ; then
   . sh/setup.sh
-  if [[ "$rootdir" ]] && [[ -d "$rootdir" ]] ; then
+  if [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] ; then
     if [[ "$1" ]] ; then 
-      find "$rootdir" -type f -name "$@"
+      find "$projectsdir" -type f -name "$@"
     else
-      find "$rootdir" -type f -name '*.[ch]'
+      find "$projectsdir" -type f -name '*.[ch]'
     fi \
-	| sed -ne "s@${rootdir}\/@@p" \
+	| sed -ne "s@${projectsdir}\/@@p" \
 	| grep -v '^\(apue\|testx\|install\|templates\|tmp\|commonlibs\/mas_maslibtemplate\)\>' \
 	| grep -v '\(\/\.build\/\|zocromas\/misc\/\)'
   fi
