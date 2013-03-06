@@ -71,3 +71,4 @@ sfind debug_mas_minitest.sh
 tab sfind abrt_server.sh
 sfind psshow.sh
 
+tab sfind ebuild.sh

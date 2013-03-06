@@ -96,7 +96,7 @@ function make_target ()
     if make -s $target > $ilog ; then
       echo "$prjname $target OK : $ilog" >&2
     else
-      echo "$prjname $target FAIL" >&2
+      zoc_error "$LINENO" "${BASH_SOURCE[0]}" "$prjname $target FAIL : $ilog"
       cat "$ilog" >&2
       popd  >/dev/null
       return 1

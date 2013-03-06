@@ -18,7 +18,7 @@ function configure_m ()
   else
     cfgdir=$configuredir
   fi
-# echo "$cfgdir/configure $configure_opts" >&2
+  echo "$cfgdir/configure $configure_opts" >&2
   if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] \
   		&& [[ "$build_at" ]] ; then
     if pushd "$build_at"  >/dev/null ; then 
@@ -65,7 +65,8 @@ function install_z ()
 #     echo "distfile ok: $distfile" >&2
       remove_unpacked_z
       if [[ "$unpackdir" ]] && [[ -d "$unpackdir" ]] ; then
-        echo "$LINENO ERROR not removed: $unpackdir" >&2
+        zoc_error "$LINENO" "${BASH_SOURCE[0]}" not removed: $unpackdir
+#        echo "$LINENO ERROR not removed: $unpackdir" >&2
         return 1
       fi
       unpack_z
@@ -92,7 +93,8 @@ function install_z ()
 	      make_m
 	      make_target install
 	    else
-	      echo "ERROR $LINENO" >&2
+#	      echo "ERROR $LINENO" >&2
+              zoc_error "$LINENO" "${BASH_SOURCE[0]}" "mkdir $ibuilddir"
 	      return 1
 	    fi
 	  fi
@@ -120,13 +122,13 @@ function testdist_m ()
   local zips errfile
   echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2
   if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
-    errfile="/tmp/distcheck.${name}-${ver}.tmp"
+    errfile="/tmp/distcheck.${mas_name}-${mas_vers}.tmp"
     # make -d dist
     # make -s dist
 #       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2
-    if ! make_target distcheck >$errfile 2>&1 ; then
-      cat $errfile
-      echo "$LINENO ERROR testdist" >&2
+    if ! make_target distcheck ; then
+      zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't make testdist"
+#     echo "$LINENO ERROR testdist" >&2
       return 1
     fi
     zips=$( echo $build_at/${mas_fullname}.tar.{bz2,gz} )
@@ -200,8 +202,7 @@ function ebuild_m ()
   echo "[$ebuild_dir]" >&2
   if [[ "$ebuild_dir" ]] && [[ -d "$ebuild_dir" ]] ; then
     pushd $ebuild_dir >/dev/null
-    ebname="${ebuild_prefix}${mas_name}-${mas_vers}.ebuild"
-    ebname_base="${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild"
+         ebname="${ebuild_prefix}${mas_name}-${mas_vers}.ebuild"
     case $cmd in
       list)
 	ls -l
@@ -215,9 +216,18 @@ function ebuild_m ()
 	fi
       ;;
       update)
-        if ! [[ -f "$ebname" ]] && [[ -f "$ebname_base" ]] ; then
-	  cp $ebname_base $ebname
-	  echo "creating $ebname" >&2
+        if ! [[ -f "$ebname" ]] ; then 
+	  ebname_base="${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild"
+	  echo "creating $ebname ebuild from $ebname_base" >&2
+	  ebname_base=$( ls -1tr | tail -1 )
+	  echo "creating $ebname ebuild from $ebname_base" >&2
+	  if [[ "$ebname_base" ]] && [[ -f "$ebname_base" ]] ; then
+	    cp $ebname_base $ebname
+	    chmod a+r $ebname
+	    echo "created $ebname" >&2
+	  else
+	    zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't create ebuild - no template"
+	  fi
 	else
 	  echo "$ebname OK" >&2
 	fi
@@ -235,8 +245,8 @@ function ebuild_m ()
  	  cp -a  $savedirdist/${mas_name}-*.tar.bz2 $savedirgentoo/ || return 1
           echo "2. $savedirgentoo/${mas_name}-*" >&2
  	  /usr/bin/rename "$mas_name" "${ebuild_prefix}${mas_name}" $savedirgentoo/${mas_name}-*.tar.bz2 || return 1
-          echo "3. $savedirgentoo/${ebuild_prefix}${mas_name}-*.tar.bz2" >&2
-	  /bin/cp -a $savedirgentoo/${ebuild_prefix}${mas_name}-*.tar.bz2 /usr/portage/distfiles/ || return 1
+          echo "3. $savedirgentoo/${ebuild_prefix}${mas_name}-${mas_vers}.tar.bz2" >&2
+	  /bin/cp -a $savedirgentoo/${ebuild_prefix}${mas_name}-${mas_vers}.tar.bz2 /usr/portage/distfiles/ || return 1
 	  echo "4." >&2
 	  if [[ -f Manifest ]] ; then
 	    rm Manifest || return 1

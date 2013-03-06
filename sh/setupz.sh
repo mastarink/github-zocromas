@@ -1,4 +1,13 @@
 # unalias cp
+function zoc_error ()
+{
+  local ln fn
+  ln=$1
+  shift
+  fn=$1
+  shift
+  echo "$ln $fn ERROR $@" >&2
+}
 . sh/dir_functions.sh
 . sh/make_functions.sh
 function prjconfV ()
@@ -105,7 +114,7 @@ function setup_vers ()
 #   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
 #   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
   fi
-  echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
+# echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
     short_name=${BASH_REMATCH[1]}
 # else

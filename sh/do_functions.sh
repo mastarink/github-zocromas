@@ -1,11 +1,29 @@
 . sh/build_functions.sh
 . sh/make_functions.sh
 
+function mas_enabled_doprj ()
+{
+  local act disfile
+  act=$1
+  shift
+  disfile=$rootdir/disabled_do.txt
+  if [[ "$act" ]] && [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
+    if [[ -f "$disfile" ]] ; then
+  #    echo ">>>>>>>> [$act:$mas_name-$mas_vers] $disfile" >&2
+      grep "^${act}$" $disfile && return 1
+      grep "^${act}:${mas_name}$" $disfile && return 1
+      grep "^${act}:${mas_name}-${mas_vers}$" $disfile && return 1
+    fi
+  fi
+  return 0
+}
+
 function doprj ()
 {
   local prj act
   local list
-  
+  local cnt
+  cnt=0
   setup_dirs
   setup_vers
   if [[ "$1" == 'full' ]] ; then
@@ -15,27 +33,56 @@ function doprj ()
   fi
   prj=$(basename `pwd`)
   for act in $list ; do
-    shfile="sh/${act}.sh"
     if [[ "$act" ]] ; then
-      echo "$nn.	$act : $mas_name . $mas_vers" >&2
+      case $act in
+        m)
+	  act=make
+	;;
+        a)
+	  act=autoreconf
+	;;
+        c)
+	  act=configure
+	;;
+        t)
+	  act=testdist
+	;;
+        i)
+	  act=install
+	;;
+        u)
+	  act=uninstall
+	;;
+        e)
+	  act=ebuild
+	;;
+      esac
+      shfile="sh/${act}.sh"
+
     # echo "$act at $dir" >&2
-      if false ; then
-	echo "SKIP $shfile @ `pwd`" >&2
-      elif [[ "$act" == 'make'       ]] || [[ "$act" == 'm' ]] ; then
+      if ! mas_enabled_doprj $act ; then
+	echo "SKIP ${act}:${mas_name}-${mas_vers}" >&2
+      elif [[ "$act" == 'make'       ]] ; then
 	make_m || return 1
-      elif [[ "$act" == 'autoreconf' ]] || [[ "$act" == 'a' ]] ; then
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'autoreconf' ]] ; then
 	autoreconf_m || return 1
-      elif [[ "$act" == 'configure'  ]] || [[ "$act" == 'c' ]] ; then
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'configure'  ]] ; then
 	configure_m || return 1
-      elif [[ "$act" == 'testdist'   ]] || [[ "$act" == 't' ]] ; then
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'testdist'   ]] ; then
 	testdist_m || return 1
-      elif [[ "$act" == 'install'    ]] || [[ "$act" == 'i' ]] ; then
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'install'    ]] ; then
 	make_m && make_target install || return 1
-      elif [[ "$act" == 'uninstall'  ]] || [[ "$act" == 'u' ]] ; then
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'uninstall'  ]] ; then
 	make_target uninstall || return 1
-      elif [[ "$act" == 'ebuild'     ]] || [[ "$act" == 'e' ]] ; then
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'ebuild'     ]] ; then
 	ebuild_m update || return 1
-	echo 'z.' >&2
+        cnt=$(( $cnt + 1 ))
       elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && ! eval $shfile ; then
 	echo "$LINENO FAIL action:$act prj:$prj mas_name:$mas_name ($shfile)" >&2
 	return 1
@@ -45,6 +92,7 @@ function doprj ()
       return 1
     fi
   done
+  echo "DONE $cnt actions for ${mas_name}-${mas_vers}" >&2
   return 0
 }
 function doall ()
