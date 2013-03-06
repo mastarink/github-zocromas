@@ -25,6 +25,12 @@ function make_dirs ()
   if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpbuild" ]]; then
     mkdir "$tmpbuild" || echo "$LINENO ERROR make_dirs" >&2
   fi
+  if [[ "$auxdir" ]] && ! [[ -d "$auxdir" ]]; then
+    mkdir "$auxdir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
+  if [[ "$m4dir" ]] && ! [[ -d "$m4dir" ]]; then
+    mkdir "$m4dir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
   if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpunpack" ]]; then
     mkdir "$tmpunpack" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -36,6 +42,9 @@ function make_dirs ()
   fi
   if [[ "$wbuilddir" ]] && ! [[ -d "$wbuilddir" ]]; then
     mkdir "$wbuilddir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
+  if [[ "$make_errdir" ]] && ! [[ -d "$make_errdir" ]]; then
+    mkdir "$make_errdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
 }
 function setup_dirs ()
@@ -68,7 +77,7 @@ function setup_dirs ()
     updir="$( realpath $indir/.. )" || return 1
     updirr="$( realpath $indirr/.. )" || return 1
     projectsdir=$indirr
-    admindir=$indirrr
+    admindir=$indirrr/admin
     runconfigdirname=.zocromas
     runconfigdir=$HOME/$runconfigdirname/
     runconfigdir=$projectsdir/zocromas/$runconfigdirname/
@@ -91,9 +100,15 @@ function setup_dirs ()
     debugdir="$indir/debug"
     testdir="$indir/test"
     
-    inbuilddir="$indir/.build"
+    auxdir="$indir/.auxdir"
+    m4dir="$auxdir/m4"
+    inbuilddir="$auxdir/.build"
     wbuilddir="$inbuilddir"
     build_at="$wbuilddir"
+    make_errdir="$inbuilddir/.errors"
+    make_logname="makes.log"
+    make_logfile="$make_errdir/$make_logname"
+    logdir="$admindir/log"
 
     if [[ -d "$projectsdir" ]] ; then
       prjgroup=$(basename $projectsdir)

@@ -30,6 +30,8 @@ AC_PREREQ([2.69])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_client.c])
+AC_CONFIG_AUX_DIR([.auxdir])
+AC_CONFIG_MACRO_DIR([.auxdir/m4])
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
@@ -69,7 +71,6 @@ AC_PROG_INSTALL
 
 AC_HEADER_STDC
 # AM_PATH_GTK_2_0([2.10.0],,AC_MSG_ERROR([Gtk+ 2.10.0 or higher required.]))
-AC_CONFIG_MACRO_DIR([m4])
 AC_LANG([C])
 
 AC_CHECK_FUNCS([memset dup2 atexit  mkfifo socket strchr strdup strndup strtol strstr inet_ntoa gethostbyname gettimeofday])

@@ -5,7 +5,7 @@ if [[ -f "sh/setup.sh" ]] ; then
 
   if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
     if [[ "$MAS_PERSONAL_EDITOR" ]] ; then
-      $MAS_PERSONAL_EDITOR $( ls -1tr log/${MAS_ZOCROMAS_HERE}.*|tail -1 )
+      $MAS_PERSONAL_EDITOR $( ls -1tr $logdir/${MAS_ZOCROMAS_HERE}.*|tail -1 )
     fi
   else
     echo "Pleasem set " >&2

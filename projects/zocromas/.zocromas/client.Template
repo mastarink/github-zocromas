@@ -1,6 +1,6 @@
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
-logdir=/mnt/miscn/mastar/develop/autotools/zocromas/log
+logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
 configdir=/home/mastar/.zocromas/
 configfilename=client
 max_config_backup=5

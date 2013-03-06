@@ -10,12 +10,12 @@ if [[ -f "sh/setup.sh" ]] ; then
 	cd $indir || return 1
 	make -s distclean     || return 1  
 	cd $updir  || return 1
-	if [[ -d "$indir/log" ]] ; then
-	  echo "rm $indir/log/server.*.log" >&2
-	  echo "rm $indir/log/client.*.log" >&2
-	  rm -f $indir/log/server.*.log
-	  rm -f $indir/log/client.*.log
-	  rm -f $indir/errors/make.*.result
+	if [[ -d "$mas_logdir" ]] ; then
+	  echo "rm $mas_logdir/server.*.log" >&2
+	  echo "rm $mas_logdir/client.*.log" >&2
+	  rm -f $mas_logdir/server.*.log
+	  rm -f $mas_logdir/client.*.log
+	  rm -f $make_errdir/make.*.result
 	fi     
     #   echo "Saving $indir/*.{bz2,gz} to $savedirtar" >&2
     #   mv $indir/*.{bz2,gz} "$savedirtar"

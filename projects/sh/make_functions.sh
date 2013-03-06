@@ -1,12 +1,11 @@
 function make_m ()
 {
-  local ername erdir 
-  erdir='errors'
-  ername="$erdir/make_m.`datemt`.${MAS_MAKE_CNT}.result"
+  local ername 
+  ername="$make_errdir/make_m.`datemt`.${MAS_MAKE_CNT}.result"
   MAS_MAKE_CNT=$(( $MAS_MAKE_CNT + 1 ))
   if [[ "$build_at" ]] && pushd "$build_at" >/dev/null ; then
-    if [[ "$erdir" ]] && ! [[ -d "$erdir" ]] ; then
-      if ! mkdir "$erdir" ; then
+    if [[ "$make_errdir" ]] && ! [[ -d "$make_errdir" ]] ; then
+      if ! mkdir "$make_errdir" ; then
         popd >/dev/null
 	echo "$LINENO ERROR make_m" >&2
 	return 1
@@ -72,11 +71,11 @@ function make_any_tilme ()
       if make_any $@ > "$timname" 2>&1 ; then
 #   pwd >&2
 #   echo "timname:$timname" >&2
-	echo "$tstart; $( grep '^real' $timname | sed -ne 's/^real\s*//p' )" >> makes.log
+	echo "$tstart; $( grep '^real' $timname | sed -ne 's/^real\s*//p' )" >> $make_logfile
 	cat "$timname"
 	rm "$timname"
       else
-	echo "$tstart; $( grep '^real' $timname | sed -ne 's/^real\s*//p' )" >> makes.log
+	echo "$tstart; $( grep '^real' $timname | sed -ne 's/^real\s*//p' )" >> $make_logfile
 	cat "$timname"
 	rm "$timname"
 	return 1

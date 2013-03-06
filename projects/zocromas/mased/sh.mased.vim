@@ -45,7 +45,6 @@ sfind projectsdir.sh
 sfind git-push.sh
 sfind list_autofiles.sh
 
-sfind testdist_old.sh
 sfind zocversion.sh
 
 tab sfind edconfig.sh
@@ -75,3 +74,4 @@ tab sfind ebuild.sh
 tab sfind projects-list.sh 
 sfind findfile.sh 
 sfind grepacam.sh
+sfind find_autofiles.sh 

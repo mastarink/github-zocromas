@@ -1,4 +1,7 @@
 #!/bin/sh
+if [[ -f "sh/setup.sh" ]] ; then
+  . sh/setup.sh
+  . sh/run_functions.sh
 find . src src/inc inc \
 	 -maxdepth 1 \
      \( \
@@ -19,7 +22,7 @@ find . src src/inc inc \
 	-name Makefile.in -o \
 	-name Makefile -o \
 	-name Makefile -o \
-	-name makes.log -o \
+	-name "$make_logname" -o \
 	-name missing -o \
 	-name stamp-h1 -o \
 	-name '*.viminfo' -o \
@@ -34,3 +37,4 @@ find . src src/inc inc \
 #
 #	2>/dev/null | grep -v '\/mas-tar-exclude$'
 
+fi

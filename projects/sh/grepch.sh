@@ -6,15 +6,15 @@ if [[ -f "sh/setup.sh" ]] ; then
     local project projects
     if [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] ; then
       cd $projectsdir || return 1
-      if [[ -f "$admindir/projects.list" ]] ; then
-        projects=$( echo "`cat $admindir/projects.list`" )
+      if [[ -f "$projectsfile" ]] ; then
+        projects=$( echo "`cat $projectsfile`" )
 #       while read project ; do
 #         if [[ "$projects" ]] ; then
 #           projects="$projects,$project"
 #         else
 #           projects="$project"
 #         fi
-#       done < $admindir/projects.list 
+#       done < $projectsfile 
 #	echo "projects: $projects"
 
 

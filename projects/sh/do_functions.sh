@@ -99,11 +99,11 @@ function doall ()
 {  
   local prj nn
   if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] && cd $projectsdir ; then
-    if [[ -f $admindir/projects.list ]] ; then
-      list=`cat $admindir/projects.list`
+    if [[ -f $projectsfile ]] ; then
+      list=`cat $projectsfile`
 #	echo "pwd: {$( pwd )}" >&2
     else
-      echo "not exists $admindir/projects.list" >&2
+      echo "not exists $projectsfile" >&2
       return 1
     fi
     nn=0

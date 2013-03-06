@@ -123,6 +123,7 @@ function setup_vers ()
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
     rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) || return 1
   fi
+  projectsfile=$projectsdir/projects.list
 # rname_preset=$( basename $mcaller )
 # if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
 #   bname=${BASH_REMATCH[1]}

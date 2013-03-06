@@ -1,8 +1,5 @@
 function autoreconf_m ()
 {
-  if ! [[ -d m4 ]] ; then
-    mkdir m4 || return 1
-  fi
   if [[ "$build_at" ]] && pushd "$build_at"  >/dev/null ; then
     make -s maintainer-clean >/dev/null
   fi
