@@ -1,0 +1,2 @@
+testdist:zocromas
+ebuild:zocromas
