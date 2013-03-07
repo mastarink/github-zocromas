@@ -108,32 +108,6 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
         MAS_LOG( "HTTP parse f.version %s => %5.2f", http->sversion, http->fversion );
         http = mas_proto_http_parse_headers( prcontrol, http );
 
-        {
-          char *pstring = NULL;
-
-#if 1
-          {
-            char bcpath[512];
-
-            snprintf( bcpath, sizeof( bcpath ), "/tmp/%u-%lu-%lu-%u.tmp", ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ),
-                      __LINE__ );
-            /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
-            mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
-            HMSG( "ANY BODY %s ?", bcpath );
-          }
-#endif
-          while ( 0 )
-          {
-            pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
-            if ( !pstring )
-              break;
-            /* ( pstring && *pstring && *pstring > ' ' ); */
-            HMSG( "pSTRING: {%s}", pstring );
-            if ( pstring )
-              mas_free( pstring );
-            pstring = NULL;
-          }
-        }
 
 
         {
@@ -156,7 +130,34 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
             break;
           case MAS_HTTP_METHOD_GET:
           case MAS_HTTP_METHOD_HEAD:
+            break;
           case MAS_HTTP_METHOD_POST:
+            {
+              char *pstring = NULL;
+
+#if 0
+              {
+                char bcpath[512];
+
+                snprintf( bcpath, sizeof( bcpath ), "/tmp/%u-%lu-%lu-%u.tmp", ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ),
+                          __LINE__ );
+                /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
+                mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
+                HMSG( "ANY BODY %s ?", bcpath );
+              }
+#endif
+              while ( 1 )
+              {
+                pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+                if ( !pstring )
+                  break;
+                /* ( pstring && *pstring && *pstring > ' ' ); */
+                HMSG( "pSTRING: {%s}", pstring );
+                if ( pstring )
+                  mas_free( pstring );
+                pstring = NULL;
+              }
+            }
             /* prcontrol->keep_alive = 0;                    */
             /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
             break;

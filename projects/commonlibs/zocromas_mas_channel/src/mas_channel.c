@@ -181,7 +181,6 @@ mas_channel_ip_string( mas_channel_t * pchannel )
 int
 mas_channel_read_some_new( mas_channel_t * pchannel )
 {
-  pchannel->buffer.enddata = 0;
   return mas_channel_read_some( pchannel );
 }
 
@@ -190,31 +189,25 @@ mas_channel_read_some( mas_channel_t * pchannel )
 {
   int r = 0;
 
-  int enddata = 0;
-
   MAS_LOG( "to read ch (read all)" );
 #ifndef MAS_CHANNEL_STREAM_READ
   int rfd = mas_channel_fd( pchannel );
 
   if ( !pchannel->buffer.maxread )
     pchannel->buffer.maxread = 1024;
-  /* HMSG( "READ ALL IPTR: %ld", ( unsigned long ) pchannel->buffer.iptr ); */
+  /* HMSG( "READ SOME IPTR: %ld", ( unsigned long ) pchannel->buffer.iptr ); */
   /* HMSG( "(%d)SOME", r ); */
-  IEVAL( r, mas_io_read_some( rfd, &pchannel->buffer.buffer, &pchannel->buffer.size, &enddata, pchannel->buffer.maxread ) );
+  IEVAL( r, mas_io_read_some( rfd, &pchannel->buffer.buffer, &pchannel->buffer.size, pchannel->buffer.maxread ) );
 #else
   FILE *rstream = mas_channel_stream( pchannel );
 
-  IEVAL( r, mas_io_fread_some( rstream, &pchannel->buffer.buffer, &pchannel->buffer.size, &enddata, pchannel->buffer.maxread ) );
+  IEVAL( r, mas_io_fread_some( rstream, &pchannel->buffer.buffer, &pchannel->buffer.size, pchannel->buffer.maxread ) );
 #endif
   if ( r == 0 )
     pchannel->buffer.endfile = 1;
   HMSG( "(%d)SOME %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
-  if ( enddata )
-    pchannel->buffer.enddata = 1;
   if ( r > 0 )
     pchannel->buffer.length += r;
-  /* WMSG( "Ch.READ ALL : %d (%lu:%lu) ; eof:%d ; enddata:%d", r, ( unsigned long ) pchannel->buffer.length,        */
-  /*       ( unsigned long ) pchannel->buffer.size, mas_channel_buffer_eof( pchannel ), pchannel->buffer.enddata ); */
   return r;
 }
 
@@ -223,7 +216,7 @@ mas_channel_read_remainder( mas_channel_t * pchannel )
 {
   int r = 0;
 
-  while ( !( r < 0 ) && !mas_channel_buffer_enddata( pchannel ) )
+  while ( !( r < 0 ) && !mas_channel_buffer_endfile( pchannel ) )
   {
     r = mas_channel_read_some( pchannel );
     HMSG( "(%d)SOME/REM %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );

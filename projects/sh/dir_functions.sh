@@ -105,6 +105,7 @@ function setup_dirs ()
     inbuilddir="$auxdir/.build"
     wbuilddir="$inbuilddir"
     build_at="$wbuilddir"
+    bsrcdir="$build_at/src"
     make_errdir="$inbuilddir/.errors"
     make_logname="makes.log"
     make_logfile="$make_errdir/$make_logname"

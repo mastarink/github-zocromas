@@ -293,7 +293,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
   {
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.hide_with_details = 1},
-   .errcode = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.hide_with_details = 1},
+   .errcode = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_REDP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .message = {.bold = 0,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 1},
    .codepos = {.bold = 0,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 1},
@@ -731,7 +731,7 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
   else
 #endif
   {
-    if ( MAS_CTRL_IS_SERVER && qprefix && *qprefix )
+    if ( /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_PREFIX );
       MFP( prefix_fmt ? prefix_fmt : "-- %-5s", qprefix );
@@ -1129,9 +1129,10 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
 }
 
 static int
-mas_verror( const char *func, int line, mas_msg_type_t msgt, int merrno, const char *fmt, va_list args )
+mas_verror( const char *func, int line,  int merrno, const char *fmt, va_list args )
 {
   int r = 0;
+  mas_msg_type_t msgt = MAS_MSG_ERR;
 
 #ifdef MAS_USE_CURSES
   WINDOW *w_win;
@@ -1143,17 +1144,17 @@ mas_verror( const char *func, int line, mas_msg_type_t msgt, int merrno, const c
 #ifndef MAS_NO_CTRL
   pthread_mutex_lock( &ctrl.thglob.emsg_mutex );
 #endif
-  if ( errno )
+  if ( merrno )
   {
     char pref[512];
     char errbuf[1024];
     char *se = NULL;
 
-    se = strerror_r( errno, errbuf, sizeof( errbuf ) );
+    se = strerror_r( merrno, errbuf, sizeof( errbuf ) );
 #ifndef MAS_NO_CTRL
-    snprintf( pref, sizeof( pref ), "(%u:%s) i/s:%u:i/c:%u", errno, se ? se : NULL, ctrl.keep_listening, MAS_CTRL_IN_CLIENT );
+    snprintf( pref, sizeof( pref ), "(%u:%s) i/s:%u:i/c:%u", merrno, se ? se : NULL, ctrl.keep_listening, MAS_CTRL_IN_CLIENT );
 #else
-    snprintf( pref, sizeof( pref ), "(%u:%s)", errno, se ? se : NULL );
+    snprintf( pref, sizeof( pref ), "(%u:%s)", merrno, se ? se : NULL );
 #endif
     r = __mas_vmsg( func, line, msgt, 1, "{  %4s   }", pref, NULL, fmt, args );
   }
@@ -1164,7 +1165,7 @@ mas_verror( const char *func, int line, mas_msg_type_t msgt, int merrno, const c
 #ifndef MAS_NO_CTRL
   pthread_mutex_unlock( &ctrl.thglob.emsg_mutex );
 #endif
-  switch ( errno )
+  switch ( merrno )
   {
   case EINTR:
   case ECONNRESET:
@@ -1184,7 +1185,7 @@ mas_error( const char *func, int line, int merrno, const char *fmt, ... )
   va_list args;
 
   va_start( args, fmt );
-  r = mas_verror( func, line, MAS_MSG_ERR, merrno, fmt, args );
+  r = mas_verror( func, line,  merrno, fmt, args );
   va_end( args );
   return r;
 }

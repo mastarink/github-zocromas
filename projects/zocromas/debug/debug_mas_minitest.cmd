@@ -3,7 +3,7 @@ set breakpoint pending on
 handle SIGPIPE nostop noprint
 # break minitest.c:170
 #trace minitest.c:170
-
+break mas_memory.c:100
 # break mas_channel.c:287
 # break mas_channel.c:317
 run

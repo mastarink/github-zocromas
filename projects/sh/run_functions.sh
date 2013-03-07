@@ -38,56 +38,25 @@ function run_installed ()
 }
 function run_any ()
 {
-  local binary rbinary builddir bname rname mcaller made rprefix
-  mcaller=$1
-  shift
-  rprefix=$binprefix
-  binary=$binary_preset
-  rname=$rname_preset
-  rbinary=$rbinary_preset
-
-  echo "mcaller:$mcaller" >&2
-  echo "rname:$rname" >&2
-  echo "bname:$bname" >&2
-  echo "instdir:$instdir" >&2
-  echo "binary:$binary" >&2
-  echo "rbinary:$rbinary" >&2
-  echo "MAS_ZOCROMAS_HERE:$MAS_ZOCROMAS_HERE" >&2
-  if [[ "$rname" ]] ; then
-     echo "<<< $rname >>>" >&2
-#      env | grep MAS_ZOCROMAS >&2
-
+  echo "To RUN rbinary: $rbinary_preset" >&2
   # for core dump:
-     ulimit -c unlimited
+  ulimit -c unlimited
 
-#     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
-#      echo "bash:to run  $builddir/$rname" >&2
-     echo "bash:starting $MAS_ZOCROMAS_HERE : $rbinary" >&2
-     if [[ "$made" ]] ||  make_any ; then
-       usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary "$@"
-#      usleep 50000 && exec $rbinary "$@"
-     else
-       echo "make error" >&2
-     fi
-     echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
+  #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
+  #      echo "bash:to run  $builddir/$rname" >&2
+  if [[ "$made" ]] ||  make_any ; then
+   usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+  else
+   echo "make error" >&2
   fi
+  echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
 }
 function eddiffconfig ()
 {
-  local here
-  if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
-    here=$MAS_ZOCROMAS_HERE
-  elif [[ -x "$build_at/src/${rprefix}${prjname}" ]] ; then
-    here=$prjname
-  elif [[ -x "$build_at/src/${rprefix}${mas_name}" ]] ; then
-    here=$mas_name
-  elif [[ -x "$build_at/src/${mas_name}" ]] ; then
-    here=$mas_name
-  fi
-  if [[ "$here" ]] && [[ -f $runconfigdir/${here} ]] ; then
-    gvim -d $runconfigdir/${here}{.$PPID,}
-  elif [[ $mas_name =~ ^zocromas_(.*)$ ]] && here=${BASH_REMATCH[1]} && [[ "$here" ]] && [[ -f $runconfigdir/${here} ]] ; then
-    gvim -d $runconfigdir/${here}{.$PPID,}
+  if [[ "$rname_preset" ]] && [[ -f $runconfigdir/${rname_preset} ]] ; then
+    gvim -d $runconfigdir/${rname_preset}{.$PPID,}
+  elif [[ $mas_name =~ ^zocromas_(.*)$ ]] && rname_preset=${BASH_REMATCH[1]} && [[ "$rname_preset" ]] && [[ -f $runconfigdir/${rname_preset} ]] ; then
+    gvim -d $runconfigdir/${rname_preset}{.$PPID,}
   else
     echo "mas_name: ${mas_name}" >&2
     echo "Pleasem set " >&2

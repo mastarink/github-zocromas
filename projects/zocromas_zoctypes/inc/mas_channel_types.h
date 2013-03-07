@@ -35,7 +35,6 @@ struct mas_channel_buffer_s
   char *buffer;
   int fd_copy;
   ssize_t iptr;
-  unsigned enddata:1;
   unsigned endfile:1;
 };
 typedef struct mas_channel_buffer_s mas_channel_buffer_t;

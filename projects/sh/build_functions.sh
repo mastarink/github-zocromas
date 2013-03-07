@@ -220,7 +220,6 @@ function ebuild_m ()
 	  echo "creating $ebname ebuild from $ebname_base" >&2
 	  if [[ "$ebname_base" ]] && [[ -f "$ebname_base" ]] ; then
 	    cp $ebname_base $ebname
-	    chmod a+r $ebname
 	    echo "created $ebname" >&2
 	  else
 	    zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't create ebuild - no template"
@@ -228,6 +227,7 @@ function ebuild_m ()
 	else
 	  echo "$ebname OK" >&2
 	fi
+	chmod a+r $ebname
 	if [[ "$distfile" ]] && [[ -f "$distfile" ]] && [[ -f $ebname ]] \
 			&& [[ "$savedirdist" ]] && [[ "$savedirgentoo" ]] \
 			&& [[ -d "$savedirdist" ]] && [[ -d "$savedirgentoo" ]] ; then

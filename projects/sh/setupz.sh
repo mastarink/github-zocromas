@@ -100,20 +100,24 @@ function setup_vers ()
   elif [[ "$MAS_ZOCROMAS_HERE" ]] ; then
     rname_preset=$MAS_ZOCROMAS_HERE
     rname_case=2
-  elif binary_preset="$build_at/src/${rprefix}${prjname}"  && [[ -x $binary_preset ]] ; then
-    rname_preset=$prjname
+  fi
+  if binary_preset="$bsrcdir/$rname_preset"           && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
     rname_case=3
-  elif binary_preset="$build_at/src/${rprefix}${mas_name}" && [[ -x $binary_preset ]] ; then
-    rname_preset=$mas_name
+  elif binary_preset="$bsrcdir/${rprefix}${prjname}"  && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
+    rname_preset=$prjname
     rname_case=4
-  elif binary_preset="$build_at/src/${mas_name}"           && [[ -x $binary_preset ]] ; then
+  elif binary_preset="$bsrcdir/${rprefix}${mas_name}" && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
     rname_preset=$mas_name
     rname_case=5
+  elif binary_preset="$bsrcdir/${mas_name}"           && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
+    rname_preset=$mas_name
+    rname_case=6
     rprefix=''
 # else
 #   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
 #   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
   fi
+  echo "($rname_case)::: $rname_preset" >&2
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
     short_name=${BASH_REMATCH[1]}
@@ -123,27 +127,15 @@ function setup_vers ()
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
     rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) || return 1
   fi
+# echo "build_at: $build_at" >&2
+# echo "bsrcdir: $bsrcdir" >&2
+# echo "binary_preset: $binary_preset" >&2
+# echo "mcaller_preset: $mcaller_preset" >&2
+# echo "rbinary_preset: $rbinary_preset" >&2
+# echo "rname_preset: $rname_preset" >&2
+# echo "binprefix: $binprefix" >&2
+# echo "short_name: $short_name" >&2
   projectsfile=$projectsdir/projects.list
-# rname_preset=$( basename $mcaller )
-# if [[ $rname =~ run_([a-z]+)\.sh ]] ; then
-#   bname=${BASH_REMATCH[1]}
-#   rname="${rprefix}$bname"
-# elif [[ $rname =~ ^([a-z]+)$ ]] ; then
-#   bname=${BASH_REMATCH[1]}
-#   rname="${rprefix}$bname"
-# else
-#   echo "$LINENO error ; rname:'$rname'" >&2
-# fi
-
-# echo ">>>>>>> setup_vers <<<<<<" >&2
-# echo "@<<binprefix [$binprefix] >>@" >&2
-# echo "@<<rprefix [$rprefix] >>@" >&2
-# echo "@<<mcaller_preset $mcaller_preset >>@" >&2
-# echo "@<<mcaller_fname $mcaller_fname >>@" >&2
-# echo "@<<rname_preset [$rname_case]  $rname_preset >>@" >&2
-# echo "@<<short_name $short_name >>@" >&2
-# echo "@<<binary_preset $binary_preset >>@" >&2
-# echo "@<<rbinary_preset $rbinary_preset >>@" >&2
   return 0
 }
 function show_setup ()

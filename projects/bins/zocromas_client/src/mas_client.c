@@ -162,7 +162,10 @@ mas_client( const char *host_port )
 
     WMSG( "(%d : %d) AFTER OPEN", r, errno );
     ctrl.status = MAS_STATUS_OPEN;
-    IEVAL( r, mas_client_zerocommands( pchannel ) );
+    if ( 0 )
+    {
+      IEVAL( r, mas_client_zerocommands( pchannel ) );
+    }
     HMSG( "(%d) CONNECTED TO %s [%d]", r, pchannel->host, ctrl.argv_nonoptind );
 
     IEVAL( r, mas_client_autocommands( pchannel ) );

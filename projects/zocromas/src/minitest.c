@@ -156,7 +156,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
       }
       HMSG( "(%d) CHANNEL_READ : %lu", r, ( unsigned long ) sz );
     }
-    mas_channel_strip_buffer( pchannel, 100 );
+    mas_channel_buffer_strip( pchannel, 100, 0 );
     buffer = mas_channel_buffer( pchannel, &sz, 0 );
     HMSG( "Buffer[%lu]", ( unsigned long ) sz );
     fputs( buffer, stdout );
@@ -198,7 +198,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
 
       if ( cnt == 20 )
       {
-        mas_channel_buffer_strip( pchannel, pchannel->buffer.size / 2 );
+        mas_channel_buffer_strip( pchannel, pchannel->buffer.size / 2, 0 );
       }
       sc = mas_strndup( s, sz );
       fputs( sc, stdout );
@@ -227,7 +227,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
     mas_channel_read_some( pchannel );
     HMSG( "BF %lu %d", pchannel->buffer.length, mas_channel_buffer_feof( pchannel ) );
   }
-#else
+#elseif 0
   {
     int cnt = 0;
     char *pstring = NULL;
@@ -261,6 +261,187 @@ test_readline( const char *to_read, const char *fdc_pathz )
     }
     while ( pstring );
   }
+#elseif 0
+  {
+    const char *s = "\r\n-----------------------------18235086615837691481974917453";
+    size_t len;
+    size_t offset;
+
+    offset = 2;
+    len = strlen( s );
+    mas_channel_set_buffer_copy( pchannel, "/tmp/part1.tmp" );
+    {
+      const char *f;
+      char *f1;
+
+      f1 = NULL;
+      f = mas_channel_search( pchannel, s + offset, len - offset );
+      if ( f )
+      {
+        char *pstring;
+
+        f1 = mas_strndup( f, 50 );
+        HMSG( "NEEDLE:'%s'", s );
+        HMSG( "1 FOUND:%s ...", f1 );
+        HMSG( "IPTR:%lu", pchannel->buffer.iptr );
+        mas_free( f1 );
+        mas_channel_set_buffer_copy( pchannel, NULL );
+        pstring = mas_channel_buffer_nl_dup( pchannel );
+        HMSG( "PS:'%s'", pstring );
+        mas_free( pstring );
+        if ( 1 )
+        {
+          int b = 0;
+
+          do
+          {
+            pstring = mas_channel_buffer_nl_dup( pchannel );
+            HMSG( ">>>>>>>> PS:'%s'", pstring );
+            b = ( pstring && *pstring != '\n' && *pstring != '\r' ? 1 : 0 );
+            mas_free( pstring );
+            pstring = NULL;
+          }
+          while ( b );
+        }
+
+        mas_channel_set_buffer_copy( pchannel, "/tmp/part2.tmp" );
+      }
+
+    }
+    offset = 0;
+    {
+      const char *f;
+      char *f1;
+
+      f1 = NULL;
+      f = mas_channel_search( pchannel, s + offset, len - offset );
+      if ( f )
+      {
+        char *pstring;
+
+        f1 = mas_strndup( f, 50 );
+        HMSG( "NEEDLE:'%s'", s );
+        HMSG( "2 FOUND:%s ...", f1 );
+        HMSG( "IPTR:%lu", pchannel->buffer.iptr );
+        mas_free( f1 );
+        mas_channel_set_buffer_copy( pchannel, NULL );
+        pstring = mas_channel_buffer_nl_dup( pchannel );
+        mas_free( pstring );
+        pstring = mas_channel_buffer_nl_dup( pchannel );
+        HMSG( "PS:'%s'", pstring );
+        mas_free( pstring );
+        if ( 1 )
+        {
+          int b = 0;
+
+          do
+          {
+            pstring = mas_channel_buffer_nl_dup( pchannel );
+            HMSG( ">>>>>>>> PS:'%s'", pstring );
+            b = ( pstring && *pstring != '\n' && *pstring != '\r' ? 1 : 0 );
+            mas_free( pstring );
+          }
+          while ( b );
+        }
+        mas_channel_set_buffer_copy( pchannel, "/tmp/part3.tmp" );
+      }
+    }
+    offset = 0;
+    {
+      const char *f;
+      char *f1;
+
+      f1 = NULL;
+      f = mas_channel_search( pchannel, s + offset, len - offset );
+      if ( f )
+      {
+        char *pstring;
+
+        f1 = mas_strndup( f, 50 );
+        HMSG( "NEEDLE:'%s'", s );
+        HMSG( "3 FOUND:%s ...", f1 );
+        HMSG( "IPTR:%lu", pchannel->buffer.iptr );
+        mas_free( f1 );
+        mas_channel_set_buffer_copy( pchannel, NULL );
+        pstring = mas_channel_buffer_nl_dup( pchannel );
+        mas_free( pstring );
+        pstring = mas_channel_buffer_nl_dup( pchannel );
+        HMSG( "PS:'%s'", pstring );
+        mas_free( pstring );
+        if ( 1 )
+        {
+          int b = 0;
+
+          do
+          {
+            pstring = mas_channel_buffer_nl_dup( pchannel );
+            HMSG( ">>>>>>>> PS:'%s'", pstring );
+            b = ( pstring && *pstring != '\n' && *pstring != '\r' ? 1 : 0 );
+            mas_free( pstring );
+          }
+          while ( b );
+        }
+        mas_channel_set_buffer_copy( pchannel, "/tmp/part4.tmp" );
+      }
+      else
+      {
+        HMSG( "3 NOT FOUND ..." );
+      }
+    }
+  }
+#else
+  {
+    const char *s = "\r\n-----------------------------18235086615837691481974917453";
+    size_t len;
+    size_t offset;
+    int np;
+
+    np = 0;
+    offset = 2;
+    len = strlen( s );
+    while ( 1 )
+    {
+      char cname[512];
+      const char *f;
+      char *f1;
+
+      f1 = NULL;
+      snprintf( cname, sizeof( cname ), "/tmp/part%d.tmp", np++ );
+      mas_channel_set_buffer_copy( pchannel, cname );
+      HMSG( "FFF %s", cname );
+      f = mas_channel_search( pchannel, s + offset, len - offset );
+      if ( f )
+      {
+        char *pstring;
+
+        f1 = mas_strndup( f, len + 2 );
+        /* HMSG( "NEEDLE:'%s'", s ); */
+        /* HMSG( "%d FOUND:%s ...[[ %02x %02x %02x ]]", np, f1, f[len - offset], f[len - offset + 1], f[len - offset + 2] ); */
+        mas_free( f1 );
+        mas_channel_set_buffer_copy( pchannel, NULL );
+        if ( f[len - offset] == '-' && f[len - offset + 1] == '-' )
+          break;
+        /* HMSG( "IPTR:%lu", pchannel->buffer.iptr ); */
+        HMSG( "ZZZ" );
+        pstring = mas_channel_buffer_nl_dup( pchannel );
+        HMSG( "PS:'%s'", pstring );
+        mas_free( pstring );
+        {
+          int b = 0;
+
+          do
+          {
+            pstring = mas_channel_buffer_nl_dup( pchannel );
+            HMSG( "PS PLUS:'%s'", pstring );
+            b = ( pstring && *pstring != '\n' && *pstring != '\r' ? 1 : 0 );
+            mas_free( pstring );
+            pstring = NULL;
+          }
+          while ( b );
+        }
+      }
+    }
+  }
 #endif
   mas_channel_delete( pchannel, 1, 1 );
   mas_free( fdc_path );
@@ -269,9 +450,14 @@ test_readline( const char *to_read, const char *fdc_pathz )
 int
 main( int argc, char *argv[], char *env[] )
 {
-  test_readline( "/tmp/wss.tmp", "/tmp/wss1a.tmp" );
-  test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test1.txt", "/tmp/fdcopy1a.tmp" );
-  test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" );
+/* /home/mastar/.topvars      */
+/* /home/mastar/projects.list */
+
+
+  /* test_readline( "/tmp/wss.tmp", "/tmp/wss1a.tmp" ); */
+  test_readline( "/mnt/new_misc/develop/autotools/zoc/projects/bins/zocromas_server/13984-2-1362637472-143.tmp", "/tmp/fdcopy143.tmp" );
+  /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test1.txt", "/tmp/fdcopy1a.tmp" ); */
+  /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" ); */
 #ifdef MAS_TRACEMEM
   print_memlist( stderr, FL );
 #endif

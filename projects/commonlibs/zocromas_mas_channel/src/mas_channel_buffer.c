@@ -48,23 +48,30 @@ more:
 */
 
 void
-mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz )
+mas_channel_buffer_strip_to( mas_channel_t * pchannel, size_t sz, int dontcopy )
 {
-  size_t oldsz;
-  size_t oldlength;
-  char *oldbuf;
-  ssize_t oldbufiptr;
-  ssize_t newsz;
-  ssize_t newlength;
-  char *newbuf;
-  ssize_t newbufiptr;
+  if ( !sz )
+    sz = pchannel->buffer.length / 2;
+  if ( pchannel->buffer.length > sz )
+  {
+    mas_channel_buffer_strip( pchannel, pchannel->buffer.length - sz, dontcopy );
+  }
+}
 
-  /* HMSG( "STRIP %ld", ( unsigned long ) sz ); */
+void
+mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz, int dontcopy )
+{
+  size_t oldsz = 0;
+  size_t oldlength = 0;
+  char *oldbuf = NULL;
+  ssize_t oldbufiptr = 0;
+  ssize_t newsz = 0;
+  ssize_t newlength = 0;
+  char *newbuf = NULL;
+  ssize_t newbufiptr = 0;
+
   if ( pchannel )
   {
-    int fd_copy;
-
-    fd_copy = pchannel->buffer.fd_copy;
     oldbuf = pchannel->buffer.buffer;
     oldsz = pchannel->buffer.size;
     oldlength = pchannel->buffer.length;
@@ -76,6 +83,7 @@ mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz )
       pchannel->buffer.buffer = NULL;
       pchannel->buffer.iptr = 0;
 
+      /* is there something yet ? */
       if ( sz < oldsz )
       {
         newsz = oldsz - sz;
@@ -86,19 +94,26 @@ mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz )
         newbufiptr = oldbufiptr - sz;
 
         memcpy( newbuf, oldbuf + sz, newsz );
+      }
+      if ( !dontcopy )
+      {
+        int fd_copy;
+
+        fd_copy = pchannel->buffer.fd_copy;
         if ( fd_copy )
         {
+	  /*
           int r;
 
-          r = write( fd_copy, oldbuf, sz );
-          HMSG( "CUT/COPY %d (%lu)", r, sz );
+          r = */write( fd_copy, oldbuf, sz );
+          /* HMSG( "CUT/COPY %d (%lu)", r, sz ); */
         }
-
-        pchannel->buffer.buffer = newbuf;
-        pchannel->buffer.iptr = newbufiptr;
-        pchannel->buffer.size = newsz;
-        pchannel->buffer.length = newlength;
       }
+      pchannel->buffer.buffer = newbuf;
+      pchannel->buffer.iptr = newbufiptr;
+      pchannel->buffer.size = newsz;
+      pchannel->buffer.length = newlength;
+
       mas_free( oldbuf );
     }
   }
@@ -123,6 +138,14 @@ mas_channel_buffer( mas_channel_t * pchannel, size_t * psz )
   return b;
 }
 
+ssize_t
+mas_channel_buffer_iptr( mas_channel_t * pchannel )
+{
+  if ( !pchannel->buffer.buffer )
+    ( void ) /* r = */ mas_channel_read_some( pchannel );
+  return pchannel->buffer.iptr;
+}
+
 const char *
 mas_channel_buffer_ptr( mas_channel_t * pchannel )
 {
@@ -140,15 +163,18 @@ mas_channel_set_buffer_ptr( mas_channel_t * pchannel, const char *ptr )
 void
 mas_channel_set_buffer_copy( mas_channel_t * pchannel, const char *path )
 {
-  mas_channel_buffer_strip( pchannel, pchannel->buffer.iptr );
+  mas_channel_buffer_strip( pchannel, pchannel->buffer.iptr, 0 );
   if ( pchannel->buffer.fd_copy )
   {
-    close( pchannel->buffer.fd_copy );
+    /* int r;
+
+    r = */ close( pchannel->buffer.fd_copy );
+    /* HMSG( "(%d)CLOSE COPY", r ); */
     pchannel->buffer.fd_copy = 0;
   }
   if ( path )
   {
-    pchannel->buffer.fd_copy = open( path, O_CREAT | O_WRONLY, 0644 );
+    pchannel->buffer.fd_copy = open( path, O_CREAT | O_TRUNC | O_WRONLY, 0644 );
     HMSG( "(%d)OPEN COPY '%s'", pchannel->buffer.fd_copy, path );
     if ( pchannel->buffer.fd_copy < 0 )
     {
@@ -163,7 +189,6 @@ _mas_channel_set_buffer( mas_channel_t * pchannel, char *buffer, size_t size )
   pchannel->buffer.buffer = buffer;
   pchannel->buffer.iptr = 0;
   pchannel->buffer.length = 0;
-  /* pchannel->buffer.enddata = 0; */
   pchannel->buffer.size = size;
 }
 
@@ -197,25 +222,21 @@ const char *
 mas_channel_buffer_find_eol( mas_channel_t * pchannel )
 {
   int r = 0;
-  const char *ptr;
 
-  ptr = mas_channel_buffer_ptr( pchannel );
-  while ( ptr )
+  while ( 1 /* !mas_channel_buffer_eof( pchannel ) */ )
   {
-    if ( !*ptr )
+    if ( mas_channel_buffer_eob( pchannel ) )
     {
-      ssize_t curlen;
-
-      curlen = ptr - mas_channel_buffer_ptr( pchannel );
+      /* mas_channel_buffer_strip_to( pchannel, 0, 0 ); */
       IEVAL( r, mas_channel_read_some( pchannel ) );
       HMSG( "(%d)SOME/EOL %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
-      ptr = mas_channel_buffer_ptr( pchannel ) + curlen;
     }
-    if ( !*ptr || *ptr == '\n' || *ptr == '\r' )
+    if ( !pchannel->buffer.buffer[pchannel->buffer.iptr] || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\n'
+         || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\r' || mas_channel_buffer_eof( pchannel ) )
       break;
-    ptr++;
+    pchannel->buffer.iptr++;
   }
-  return ptr;
+  return mas_channel_buffer_ptr( pchannel );
 }
 
 char *
@@ -235,30 +256,31 @@ mas_channel_buffer_nl_dup( mas_channel_t * pchannel )
 const char *
 mas_channel_buffer_nl( mas_channel_t * pchannel, size_t * psz )
 {
-  const char *ptr = NULL;
   const char *begline = NULL;
+  size_t iptr0 = 0;
   size_t sz = 0;
 
+  iptr0 = pchannel->buffer.iptr;
   if ( !mas_channel_buffer_eof( pchannel ) )
   {
     /* begline = mas_channel_buffer_ptr( pchannel ); */
-    if ( mas_channel_buffer_ptr( pchannel ) )
     {
-      ptr = mas_channel_buffer_find_eol( pchannel );
-      if ( *ptr == '\r' || *ptr == '\n' )
+      mas_channel_buffer_find_eol( pchannel );
+      if ( pchannel->buffer.buffer[pchannel->buffer.iptr] == '\r' || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\n' )
       {
         char c;
 
-        c = *ptr++;
-        if ( ( *ptr == '\r' || *ptr == '\n' ) && c != *ptr )
-          ptr++;
+        c = pchannel->buffer.buffer[pchannel->buffer.iptr++];
+        if ( ( pchannel->buffer.buffer[pchannel->buffer.iptr] == '\r' || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\n' )
+             && c != pchannel->buffer.buffer[pchannel->buffer.iptr] && !mas_channel_buffer_eof( pchannel ) )
+          pchannel->buffer.iptr++;
       }
-      sz = ( ptr - mas_channel_buffer_ptr( pchannel ) );
+      sz = ( pchannel->buffer.iptr - iptr0 );
+      /* HMSG( "!!!! SZ: %lu P: %p %p", sz, pchannel->buffer.buffer, pchannel->buffer.buffer + pchannel->buffer.length ); */
       if ( !sz && mas_channel_buffer_eof( pchannel ) )
         begline = NULL;
       else
-        begline = mas_channel_buffer_ptr( pchannel );
-      mas_channel_set_buffer_ptr( pchannel, ptr );
+        begline = &pchannel->buffer.buffer[iptr0];
     }
   }
   if ( psz )
@@ -266,13 +288,57 @@ mas_channel_buffer_nl( mas_channel_t * pchannel, size_t * psz )
   return begline;
 }
 
-int
-mas_channel_buffer_enddata( mas_channel_t * pchannel )
+const char *
+mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len )
 {
-  /* if ( !pchannel->buffer.buffer )               */
-  /*   ( void ) mas_channel_read_some( pchannel ); */
-  return pchannel->buffer.enddata;
+  size_t match = 0;
+  size_t niptr = 0;
+
+  {
+    /* HMSG( "TO SEARCH  %lu iptr:%lu len:%lu L:%lu [%d:%d]", match, pchannel->buffer.iptr, len, pchannel->buffer.length, */
+    /*       mas_channel_buffer_eof( pchannel ), mas_channel_buffer_eob( pchannel ) );                                    */
+    while ( match < len && !mas_channel_buffer_eof( pchannel ) /*??? && len < pchannel->buffer.size */  )
+    {
+      if ( mas_channel_buffer_eob( pchannel ) /* || !pchannel->buffer.buffer */  )
+      {
+        int r;
+
+        mas_channel_buffer_strip_to( pchannel, 0, 0 );
+        IEVAL( r, mas_channel_read_some( pchannel ) );
+      }
+      if ( !mas_channel_buffer_eob( pchannel ) )
+      {
+        /* HMSG( "LOOP %lu iptr:%lu len:%lu L:%lu [%d:%d]", match, pchannel->buffer.iptr, len, pchannel->buffer.length, */
+        /*       mas_channel_buffer_eof( pchannel ), mas_channel_buffer_eob( pchannel ) );                              */
+        if ( needle[niptr] == pchannel->buffer.buffer[pchannel->buffer.iptr] )
+        {
+          match++;
+          /* HMSG( "   MATCH %lu of %lu N[%lu]:'%c' %02x ? S[%lu]:'%c' %02x", match, len, niptr, needle[niptr] >= ' ' ? needle[niptr] : '.', */
+          /*       needle[niptr], pchannel->buffer.iptr,                                                                                     */
+          /*       pchannel->buffer.buffer[pchannel->buffer.iptr] >= ' ' ? pchannel->buffer.buffer[niptr] : '.',                             */
+          /*       pchannel->buffer.buffer[niptr] );                                                                                         */
+          niptr++;
+          pchannel->buffer.iptr++;
+        }
+        else
+        {
+          /* HMSG( "DISMATCH %lu of %lu N[%lu]:'%c' %02x ? S[%lu]:'%c' %02x", match, len, niptr, needle[niptr] >= ' ' ? needle[niptr] : '.', */
+          /*       needle[niptr], pchannel->buffer.iptr,                                                                                     */
+          /*       pchannel->buffer.buffer[pchannel->buffer.iptr] >= ' ' ? pchannel->buffer.buffer[niptr] : '.',                             */
+          /*       pchannel->buffer.buffer[pchannel->buffer.iptr] );                                                                         */
+          pchannel->buffer.iptr -= match;
+          pchannel->buffer.iptr++;
+          match = 0;
+          niptr = 0;
+        }
+      }
+    }
+  }
+  if ( match )
+    pchannel->buffer.iptr -= len;
+  return match ? mas_channel_buffer_ptr( pchannel ) : NULL;
 }
+
 int
 mas_channel_buffer_endfile( mas_channel_t * pchannel )
 {
@@ -282,9 +348,16 @@ mas_channel_buffer_endfile( mas_channel_t * pchannel )
 }
 
 int
+mas_channel_buffer_eob( mas_channel_t * pchannel )
+{
+  return mas_channel_buffer_iptr( pchannel ) >= pchannel->buffer.length;
+}
+
+int
 mas_channel_buffer_eof( mas_channel_t * pchannel )
 {
-  return pchannel->buffer.endfile && mas_channel_buffer_ptr( pchannel ) == pchannel->buffer.buffer + pchannel->buffer.length;
+  /* return pchannel->buffer.endfile && mas_channel_buffer_ptr( pchannel ) >= pchannel->buffer.buffer + pchannel->buffer.length; */
+  return pchannel->buffer.endfile && mas_channel_buffer_eob( pchannel );
 }
 
 void

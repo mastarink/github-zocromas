@@ -169,11 +169,21 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
   if ( pbuf )
     *pbuf = NULL;
 
-  mas_channel_read_remainder( pchannel );
+  HMSG( "READ MESSAGE (h:%lu)", sizeof( mas_header_t ) );
+  mas_channel_read_some( pchannel );
+  msg = ( mas_message_t * ) pchannel->buffer.buffer;
+
+  /* HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), prcontrol->h.pchannel->buffer.length, pheader->len ); */
+  HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+
+  if ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length )
+    mas_channel_read_remainder( pchannel );
+  
+  msg = ( mas_message_t * ) pchannel->buffer.buffer;
+
   r = pchannel->buffer.length;
   if ( r > 0 )
     rmsg += r;
-  msg = ( mas_message_t * ) pchannel->buffer.buffer;
   if ( r > 0 && rmsg >= 0 )
   {
     if ( r > msghsz && msg->h.len > 0 )

@@ -97,7 +97,7 @@ _mas_strcat_xt( const char *func, int line, char *s1, const char *s2 )
 static void
 memerror( mas_mem_head_t * m )
 {
-  fprintf( stderr, "\nMEMORY ERROR %lx > [%lx : id:%lx]\n", ( unsigned long ) m, m->sig, m->id );
+  fprintf( stderr, "\nMEMORY ERROR 0x%lx > [0x%lx : id:0x%lx]\n", ( unsigned long ) m, m->sig, m->id );
   /* sleep( 98 ); */
   exit( 11 );
 }
@@ -238,6 +238,7 @@ _mas_malloc( const char *func, int line, size_t size )
   {
     ptr = mas_other_malloc( size );
   }
+  /* fprintf( stderr, "\nMALLOC 0x%p\n", ptr ); */
   return ptr;
 }
 

@@ -65,12 +65,10 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 /*   }                        */
 /*   else                     */
   {
-    pchannel->buffer.enddata=0;
-
-    HMSG( "TO READ MESSAGE enddata:%d", pchannel->buffer.enddata );
+    HMSG( "TO READ MESSAGE" );
     /* r = mas_channel_read_message( pchannel, &answer, pheader ); */
     IEVAL( r, mas_channel_read_message( pchannel, &answer, pheader ) );
-    HMSG( "GOT MESSAGE(%d) [hdr:%lu] R:%d enddata:%d", r, sizeof( mas_header_t ), pheader->restart_cnt, pchannel->buffer.enddata );
+    HMSG( "GOT MESSAGE(%d) [hdr:%lu] R:%d", r, sizeof( mas_header_t ), pheader->restart_cnt );
     if ( r <= 0 )
     {
 /* #ifdef EMSG                 */

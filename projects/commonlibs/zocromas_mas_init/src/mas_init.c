@@ -150,7 +150,7 @@ error_handler_at_init( const char *func, int line, int rcode, int ierrno, const 
   /* va_list args; */
   /* int masierrno; */
 
-  HMSG( "%d:%s ; r:%d ; msg : %s", line, func, rcode, msg ? msg : "-" );
+  /* HMSG( "ERROR HANDLER >>>>>>>>>>>> %d:%s ; r:%d e:%d; msg : %s", line, func, rcode, ierrno, msg ? msg : "-" ); */
   mas_error( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
   mas_log( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
   /* va_start( args, rcode );                  */
