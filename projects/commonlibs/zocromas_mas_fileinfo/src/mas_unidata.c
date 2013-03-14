@@ -43,18 +43,14 @@ void
 mas_udata_set_icontent_type( mas_unidata_t * ud, mas_content_type_t ict )
 {
   if ( ud )
-  {
     ud->icontent_type = ict;
-  }
 }
 
 void
 mas_udata_set_icontent_size( mas_unidata_t * ud, size_t size )
 {
   if ( ud )
-  {
     ud->size = size;
-  }
 }
 
 mas_unidata_t *

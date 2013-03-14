@@ -160,10 +160,22 @@ _print_memlist( FILE * f, const char *func, int line, int s_f )
 
         real_ptr = ( mas_mem_head_t * ) memar[im];
         real_ptr--;
-
         if ( r >= 0 )
-          fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", memar[im]->id, memar[im]->size, memar[im]->func, memar[im]->line,
-                   s_f ? ( char * ) real_ptr : "-" );
+        {
+          mas_mem_head_t *_mhp;
+          unsigned long _id;
+          unsigned long _size;
+          unsigned _line;
+          const char *_func;
+
+          _mhp = memar[im];
+          _id = _mhp->id;
+          _size = _mhp->size;
+          _func = _mhp->func;
+          _line = _mhp->line;
+          /* fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", _id, _size, _func, _line, s_f ? ( char * ) real_ptr : "-" ); */
+          fprintf( f, "id: %lx; sz:%lu; fun#%lx:%u [%s]\n", _id, _size, ( unsigned long ) _func, _line, s_f ? ( char * ) real_ptr : "-" );
+        }
       }
     }
     if ( !h && r >= 0 )

@@ -194,9 +194,9 @@ mas_channel_read_some( mas_channel_t * pchannel )
   int rfd = mas_channel_fd( pchannel );
 
   if ( !pchannel->buffer.maxread )
-    pchannel->buffer.maxread = 1024;
-  /* HMSG( "READ SOME IPTR: %ld", ( unsigned long ) pchannel->buffer.iptr ); */
-  /* HMSG( "(%d)SOME", r ); */
+    pchannel->buffer.maxread = 1028;
+  /* WMSG( "READ SOME IPTR: %ld", ( unsigned long ) pchannel->buffer.iptr ); */
+  /* WMSG( "(%d)SOME", r ); */
   IEVAL( r, mas_io_read_some( rfd, &pchannel->buffer.buffer, &pchannel->buffer.size, pchannel->buffer.maxread ) );
 #else
   FILE *rstream = mas_channel_stream( pchannel );
@@ -205,7 +205,7 @@ mas_channel_read_some( mas_channel_t * pchannel )
 #endif
   if ( r == 0 )
     pchannel->buffer.endfile = 1;
-  HMSG( "(%d)SOME %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
+  WMSG( "(%d)SOME %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
   if ( r > 0 )
     pchannel->buffer.length += r;
   return r;
@@ -219,7 +219,7 @@ mas_channel_read_remainder( mas_channel_t * pchannel )
   while ( !( r < 0 ) && !mas_channel_buffer_endfile( pchannel ) )
   {
     r = mas_channel_read_some( pchannel );
-    HMSG( "(%d)SOME/REM %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
+    WMSG( "(%d)SOME/REM %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
   }
   return r;
 }

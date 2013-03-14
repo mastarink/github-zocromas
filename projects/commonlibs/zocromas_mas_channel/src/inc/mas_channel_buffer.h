@@ -1,6 +1,7 @@
 #ifndef MAS_CHANNEL_BUFFER_H
 #  define MAS_CHANNEL_BUFFER_H
 
+#  include <mastar/types/mas_common_types.h>
 #  include <mastar/types/mas_channel_types.h>
 
 char *mas_channel_buffer( mas_channel_t * pchannel, size_t * psz );
@@ -15,7 +16,7 @@ ssize_t mas_channel_buffer_iptr( mas_channel_t * pchannel );
 const char *mas_channel_buffer_ptr( mas_channel_t * pchannel );
 void mas_channel_set_buffer_ptr( mas_channel_t * pchannel, const char *ptr );
 
-const char *mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len );
+const char *mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len, mas_voidp_fun_t cb, void *arg );
 
 void mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz, int dontcopy );
 void mas_channel_buffer_strip_to( mas_channel_t * pchannel, size_t sz, int dontcopy );

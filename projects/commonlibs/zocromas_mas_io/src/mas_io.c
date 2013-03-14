@@ -283,7 +283,7 @@ mas_fread_all_new_bad( FILE * stream, char **pbuf, size_t * psz, size_t maxsz )
   ssize_t rsz;
   size_t bufsz;
 
-  bufsz = 1024 * 4;
+  bufsz = 1024 * 4 + 5;
 
   WMSG( "TO READ io (read all)" );
 #ifndef MAS_CHANNEL_STREAM_READ
@@ -403,12 +403,11 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
   ssize_t totread = 0;
   ssize_t x_buffer_size = -1;
   char *x_buffer = NULL;
-  char *read_buf = NULL;
   ssize_t readsz = 0;
   ssize_t rsz;
   size_t bufsz;
 
-  bufsz = 1024 * 4;
+  bufsz = 1024 * 4 + 4;
 
   /* MAS_LOG( "to read io (read some)" ); */
 #ifndef MAS_CHANNEL_STREAM_READ
@@ -417,6 +416,8 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
   if ( stream )
 #endif
   {
+    char *read_buf = NULL;
+
     read_buf = mas_malloc( bufsz );
     x_buffer_size = 0;
     rsz = bufsz - 5;
@@ -436,13 +437,17 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
       if ( rsz <= 0 )
         break;
       {
-        HMSG( "TO READ 'SOME'" );
+        WMSG( "TO READ 'SOME' %lu", rsz );
+        if ( rsz > bufsz )
+        {
+          HMSG( "WOOOOOOOOOOOOOO !TO READ 'SOME' %lu", rsz );
+        }
 #ifndef MAS_CHANNEL_STREAM_READ
         IEVAL( readsz, read( fd, read_buf, rsz ) );
 #else
         IEVAL( readsz, mas_fread( read_buf, 1, rsz, stream ) );
 #endif
-        HMSG( "READ 'SOME' %ld of %ld (e%d)", ( unsigned long ) readsz, ( unsigned long ) rsz, errno );
+        WMSG( "READ 'SOME' %ld of %ld (e%d)", ( unsigned long ) readsz, ( unsigned long ) rsz, errno );
       }
       if ( readsz > 0 )
       {
@@ -450,22 +455,22 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
         mas_io_append2buffer( &x_buffer, &x_buffer_size, read_buf, readsz );
         totread += readsz;
       }
-      /* HMSG( "READ %lu (tot %lu) max %lu x_buffer_size %lu {%s}", ( unsigned long ) readsz, ( unsigned long ) totread, */
+      /* WMSG( "READ %lu (tot %lu) max %lu x_buffer_size %lu {%s}", ( unsigned long ) readsz, ( unsigned long ) totread, */
       /*       ( unsigned long ) maxsz, ( unsigned long ) x_buffer_size, x_buffer );                                     */
       if ( readsz == rsz )
       {
         if ( readsz )
         {
-          HMSG( "READ 'SOME' BUFFER FULL %ld", ( signed long ) readsz );
+          WMSG( "READ 'SOME' BUFFER FULL %ld", ( signed long ) readsz );
         }
         else
         {
-          HMSG( "READ 'SOME' BUFFER EMPTY %ld", ( signed long ) readsz );
+          WMSG( "READ 'SOME' BUFFER EMPTY %ld", ( signed long ) readsz );
         }
       }
       else
       {
-        HMSG( "READ 'SOME' BUFFER PART %ld", ( signed long ) readsz );
+        WMSG( "READ 'SOME' BUFFER PART %ld", ( signed long ) readsz );
       }
     }
     while ( readsz == rsz );
@@ -475,7 +480,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
     /*     *peof = 1;                                                                     */
     /*   else                                                                             */
     /*     *peof = 0;                                                                     */
-    /*   HMSG( "READ 'SOME' SET BF %s", *peof ? ( readsz ? "PART" : "EMPTY" ) : "FULL" ); */
+    /*   WMSG( "READ 'SOME' SET BF %s", *peof ? ( readsz ? "PART" : "EMPTY" ) : "FULL" ); */
     /* }                                                                                  */
     /* tMSG( "%u x_buffer:[%s]", x_buffer_size, x_buffer ); */
     if ( px_buffer )
@@ -487,6 +492,6 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
     }
     mas_free( read_buf );
   }
-  HMSG( "READ '/SOME' %lu", totread );
+  WMSG( "READ '/SOME' %lu", totread );
   return totread;
 }

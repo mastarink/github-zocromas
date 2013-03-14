@@ -306,6 +306,12 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
       mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.threads.n.ticker.thread,
             ctrl.threads.n.logger.thread );
       MAS_LOG( "bunch end, m/b:%lu", memory_balance );
+#  if 0
+      if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
+        if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
+          if ( print_memlist( ctrl.msgfile, FL ) < 0 )
+            print_memlist( stderr, FL );
+#  endif
     }
 #endif
     HMSG( "BUNCH TO END" );

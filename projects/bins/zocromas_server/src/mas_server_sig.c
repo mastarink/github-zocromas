@@ -294,6 +294,7 @@ mas_atexit( void )
   {
     extern unsigned long memory_balance;
 
+    IMSG( "AT EXIT, memory_balance:%ld", memory_balance );
     if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
       if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
         if ( print_memlist( ctrl.msgfile, FL ) < 0 )

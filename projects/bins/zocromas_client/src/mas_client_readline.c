@@ -258,11 +258,11 @@ mas_client_init_readline( void )
   snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
   /* rl_event_hook = mas_client_readline_event; */
   HMSG( "HISTORY to LOAD" );
-  if ( opts.configdir )
+  if ( opts.historydir )
   {
     char *fpath = NULL;
 
-    fpath = mas_strdup( opts.configdir );
+    fpath = mas_strdup( opts.historydir );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, "history" );
 
@@ -272,7 +272,7 @@ mas_client_init_readline( void )
   }
   else
   {
-    EMSG( "configdir not set" );
+    EMSG( "historydir not set" );
   }
   if ( rh != 0 )
   {

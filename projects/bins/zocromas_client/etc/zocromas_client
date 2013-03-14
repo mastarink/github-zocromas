@@ -4,6 +4,11 @@
 #common
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
+
+read_user_conf=1
+read_user_conf_plus=0
+
+
 logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
 log=1
 max_config_backup=5

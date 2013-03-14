@@ -225,9 +225,15 @@ mas_pre_init_opt_files( void )
     int rtwo = 0;
 
     IEVAL_OPT( rzero, mas_opts_restore_zero( name ) );
-    IEVAL_OPT( rone, mas_opts_restore( NULL, name ) );
-    /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
-    IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
+    if ( opts.read_user_conf )
+    {
+      IEVAL_OPT( rone, mas_opts_restore( NULL, name ) );
+      if ( opts.read_user_conf_plus )
+      {
+        /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+        IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
+      }
+    }
 #endif
   }
   return r;

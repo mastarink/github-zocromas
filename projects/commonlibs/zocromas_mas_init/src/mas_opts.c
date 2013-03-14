@@ -81,6 +81,10 @@ mas_opts_destroy( void )
     mas_free( opts.logdir );
   opts.logdir = NULL;
 
+  if ( opts.historydir )
+    mas_free( opts.historydir );
+  opts.historydir = NULL;
+
   if ( opts.configdir )
     mas_free( opts.configdir );
   opts.configdir = NULL;
@@ -290,10 +294,10 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 
           {
             IEVAL( r, fprintf( f,
-                               "# common\nenv_optsname=%s\nenv_hostname=%s\nlogdir=%s\nlog=%d\n"
+                               "# common\nenv_optsname=%s\nenv_hostname=%s\nhistorydir=%s\nlogdir=%s\nlog=%d\n"
                                "max_config_backup=%u\nmessages=%u\n"
                                "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
-                               "# -\n", opts.env_optsname, opts.env_hostname, opts.logdir,
+                               "# -\n", opts.env_optsname, opts.env_hostname, opts.historydir, opts.logdir,
                                !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
                                opts.save_opts_plus, opts.restart_sleep ) );
             if ( r > 0 )
@@ -302,9 +306,10 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           if ( ctrl.is_server )
           {
             IEVAL( r, fprintf( f,
-                               "# server\ndaemon=%u\nsingle_instance=%u\nsingle_child=%u\nlogger=%d\nmodsdir=%s\npidsdir=%s\nprotodir=%s\n# -\n",
-                               ctrl.daemon, opts.single_instance, opts.single_child, !opts.nologger, opts.modsdir, opts.pidsdir,
-                               opts.protodir ) );
+                               "# server\ndaemon=%u\nread_user_conf=%u\nread_user_conf_plus=%u\n"
+                               "single_instance=%u\nsingle_child=%u\nlogger=%d\nmodsdir=%s\n" "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon,
+                               opts.read_user_conf, opts.read_user_conf_plus, opts.single_instance, opts.single_child, !opts.nologger,
+                               opts.modsdir, opts.pidsdir, opts.protodir ) );
             if ( r > 0 )
               rtot += r;
           }
@@ -603,11 +608,14 @@ mas_opts_restore_nosection( const char *s )
   OPT_PSTR( pidsdir, s );
   OPT_PSTR( protodir, s );
   OPT_PSTR( logdir, s );
+  OPT_PSTR( historydir, s );
   OPT_NOFLAG( log, s );
   OPT_NOFLAG( logger, s );
   OPT_FLAG( max_config_backup, s );
   OPT_FLAG( default_port, s );
   OPT_NOFLAG( daemon, s );
+  OPT_FLAG( read_user_conf, s );
+  OPT_FLAG( read_user_conf_plus, s );
   OPT_FLAG( single_instance, s );
   OPT_FLAG( single_child, s );
   OPT_NOFLAG( messages, s );

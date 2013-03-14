@@ -61,6 +61,7 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_MODSDIR = 'M',
   MAS_CLI_OPT_LOGDIR = 'L',
   MAS_CLI_OPT_PLUS = 10000,
+  MAS_CLI_OPT_HISTORYDIR,
   MAS_CLI_OPT_PROTODIR,
   MAS_CLI_OPT_PROTO,
   MAS_CLI_OPT_NODAEMON,
@@ -138,6 +139,7 @@ static struct option cli_longopts[] = {
   {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},
   {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},
   {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
+  {"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR},
 
   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER},
   {"watcher", no_argument, NULL, MAS_CLI_OPT_WATCHER},
@@ -261,6 +263,13 @@ mas_cli_make_option( int opt, const char *m_optarg )
     if ( optarg && *optarg )
       opts.logdir = mas_strdup( optarg );
     break;
+  case MAS_CLI_OPT_HISTORYDIR:
+    if ( opts.historydir )
+      mas_free( opts.historydir );
+    opts.historydir = NULL;
+    if ( optarg && *optarg )
+      opts.historydir = mas_strdup( optarg );
+    break;    
   case MAS_CLI_OPT_LISTENER_SINGLE:
     opts.listener_single = 1;
     break;

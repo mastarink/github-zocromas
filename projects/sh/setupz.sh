@@ -117,7 +117,7 @@ function setup_vers ()
 #   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
 #   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
   fi
-  echo "($rname_case)::: $rname_preset" >&2
+# echo "($rname_case)::: $rname_preset" >&2
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
     short_name=${BASH_REMATCH[1]}

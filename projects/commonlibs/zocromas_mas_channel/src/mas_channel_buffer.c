@@ -102,10 +102,10 @@ mas_channel_buffer_strip( mas_channel_t * pchannel, size_t sz, int dontcopy )
         fd_copy = pchannel->buffer.fd_copy;
         if ( fd_copy )
         {
-	  /*
-          int r;
+          /*
+             int r;
 
-          r = */write( fd_copy, oldbuf, sz );
+             r = */ write( fd_copy, oldbuf, sz );
           /* HMSG( "CUT/COPY %d (%lu)", r, sz ); */
         }
       }
@@ -168,7 +168,7 @@ mas_channel_set_buffer_copy( mas_channel_t * pchannel, const char *path )
   {
     /* int r;
 
-    r = */ close( pchannel->buffer.fd_copy );
+       r = */ close( pchannel->buffer.fd_copy );
     /* HMSG( "(%d)CLOSE COPY", r ); */
     pchannel->buffer.fd_copy = 0;
   }
@@ -223,13 +223,13 @@ mas_channel_buffer_find_eol( mas_channel_t * pchannel )
 {
   int r = 0;
 
-  while ( 1 /* !mas_channel_buffer_eof( pchannel ) */ )
+  while ( 1 /* !mas_channel_buffer_eof( pchannel ) */  )
   {
     if ( mas_channel_buffer_eob( pchannel ) )
     {
       /* mas_channel_buffer_strip_to( pchannel, 0, 0 ); */
       IEVAL( r, mas_channel_read_some( pchannel ) );
-      HMSG( "(%d)SOME/EOL %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
+      WMSG( "(%d)SOME/EOL %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
     }
     if ( !pchannel->buffer.buffer[pchannel->buffer.iptr] || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\n'
          || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\r' || mas_channel_buffer_eof( pchannel ) )
@@ -289,7 +289,7 @@ mas_channel_buffer_nl( mas_channel_t * pchannel, size_t * psz )
 }
 
 const char *
-mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len )
+mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len, mas_voidp_fun_t cb, void *arg )
 {
   size_t match = 0;
   size_t niptr = 0;
@@ -305,6 +305,8 @@ mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len )
 
         mas_channel_buffer_strip_to( pchannel, 0, 0 );
         IEVAL( r, mas_channel_read_some( pchannel ) );
+        if ( cb )
+          ( cb ) ( arg );
       }
       if ( !mas_channel_buffer_eob( pchannel ) )
       {

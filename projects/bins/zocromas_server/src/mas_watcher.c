@@ -198,7 +198,7 @@ mas_watcher( void )
             if ( prcontrol->proto_desc && 0 == strcmp( prcontrol->proto_desc->name, "http" ) )
               if ( rinactive_time.tv_sec > 10 )
               {
-                WMSG( "WATCHER : http tr.end!!" );
+               HMSG( "WATCHER : http tr. inactive %lus!!", rinactive_time.tv_sec  );
                 mas_transaction_cancel( prcontrol );
               }
           }

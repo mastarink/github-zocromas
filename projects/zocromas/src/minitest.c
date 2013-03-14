@@ -275,7 +275,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
       char *f1;
 
       f1 = NULL;
-      f = mas_channel_search( pchannel, s + offset, len - offset );
+      f = mas_channel_search( pchannel, s + offset, len - offset, NULL, NULL );
       if ( f )
       {
         char *pstring;
@@ -314,7 +314,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
       char *f1;
 
       f1 = NULL;
-      f = mas_channel_search( pchannel, s + offset, len - offset );
+      f = mas_channel_search( pchannel, s + offset, len - offset, NULL, NULL );
       if ( f )
       {
         char *pstring;
@@ -352,7 +352,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
       char *f1;
 
       f1 = NULL;
-      f = mas_channel_search( pchannel, s + offset, len - offset );
+      f = mas_channel_search( pchannel, s + offset, len - offset, NULL, NULL );
       if ( f )
       {
         char *pstring;
@@ -409,7 +409,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
       snprintf( cname, sizeof( cname ), "/tmp/part%d.tmp", np++ );
       mas_channel_set_buffer_copy( pchannel, cname );
       HMSG( "FFF %s", cname );
-      f = mas_channel_search( pchannel, s + offset, len - offset );
+      f = mas_channel_search( pchannel, s + offset, len - offset, NULL, NULL );
       if ( f )
       {
         char *pstring;

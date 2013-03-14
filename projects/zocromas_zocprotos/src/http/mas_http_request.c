@@ -58,6 +58,16 @@ mas_proto_http_create_request( mas_rcontrol_t * prcontrol )
   return http;
 }
 
+void
+cb( void *arg )
+{
+  struct timeval td;
+  mas_rcontrol_t *prcontrol;
+
+  prcontrol = ( mas_rcontrol_t * ) arg;
+  gettimeofday( &td, NULL );
+  prcontrol->h.activity_time = td;
+}
 
 mas_http_t *
 mas_proto_http_parse_multipart( mas_rcontrol_t * prcontrol, mas_http_t * http )
@@ -78,11 +88,12 @@ mas_proto_http_parse_multipart( mas_rcontrol_t * prcontrol, mas_http_t * http )
     const char *f;
     char *f1;
 
+
     f1 = NULL;
     snprintf( cname, sizeof( cname ), "/tmp/part%d.tmp", np++ );
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, cname );
     HMSG( "FFF %s", cname );
-    f = mas_channel_search( prcontrol->h.pchannel, eol_boundary + offset, len - offset );
+    f = mas_channel_search( prcontrol->h.pchannel, eol_boundary + offset, len - offset, cb, prcontrol );
     if ( f )
     {
       char *pstring;
@@ -303,6 +314,9 @@ mas_proto_http_delete_request( mas_http_t * http )
 
     mas_fileinfo_delete( http->reply_content );
     http->reply_content = NULL;
+
+    mas_fileinfo_delete( http->request_content );
+    http->request_content = NULL;
 
     if ( http->indata )
       mas_variables_delete( http->indata );

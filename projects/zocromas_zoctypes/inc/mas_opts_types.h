@@ -52,6 +52,8 @@ struct mas_options_s
   unsigned wait_server:1;
   unsigned make_master_thread:1;
   unsigned noticker:1;
+  unsigned read_user_conf:1;
+  unsigned read_user_conf_plus:1;
   unsigned ticker_mode;
   unsigned nomaster;
   unsigned nolistener;
@@ -75,6 +77,7 @@ struct mas_options_s
   char *modsdir;
   char *protodir;
   char *logdir;
+  char *historydir;
   char *configdir;
   char *configfilename;
   char *saved_configfilename;
