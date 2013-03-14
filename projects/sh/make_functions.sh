@@ -91,17 +91,23 @@ function make_target ()
   shift
 # echo "install [$prjname]" >&2
   ilog="/tmp/$target-$prjname.log"
-  if [[ "$build_at" ]] && pushd "$build_at" >/dev/null ; then
-    if make -s $target > $ilog ; then
-      echo "$prjname $target OK : $ilog" >&2
+  if [[ "$build_at" ]] ; then
+    if pushd "$build_at" >/dev/null ; then
+      if make -s $target > $ilog ; then
+	echo "$prjname $target OK : $ilog" >&2
+      else
+	zoc_error "$LINENO" "${BASH_SOURCE[0]}" "$prjname $target FAIL : $ilog"
+#	cat "$ilog" >&2
+	popd  >/dev/null
+	return 1
+      fi
+      popd >/dev/null || return 1
     else
-      zoc_error "$LINENO" "${BASH_SOURCE[0]}" "$prjname $target FAIL : $ilog"
-      cat "$ilog" >&2
-      popd  >/dev/null
       return 1
     fi
+  else
+    return 1
   fi
-  popd >/dev/null || return 1
   return 0
 }
 

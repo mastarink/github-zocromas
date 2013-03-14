@@ -10,8 +10,7 @@ set path=inc/,src/inc/
 find mas_common_types.h
 sfind mas_common_defs.h
 
-tab sfind mas_http_types.h
-sfind mas_unidata_types.h
+tab sfind mas_unidata_types.h
 sfind mas_fileinfo_types.h
 
 tab sfind     mas_message_types.h

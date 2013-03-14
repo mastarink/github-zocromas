@@ -21,6 +21,8 @@ extern mas_control_t ctrl;
 #include <mastar/channel/mas_channel.h>
 
 #include "mas_http_utils.h"
+
+#include "mas_http_request_headers.h"
 #include "mas_http_request.h"
 
 /*
@@ -52,7 +54,68 @@ mas_proto_http_create_request( mas_rcontrol_t * prcontrol )
   http = mas_malloc( sizeof( mas_http_t ) );
   memset( http, 0, sizeof( mas_http_t ) );
   http->prcontrol = prcontrol;
-  http->content = mas_fileinfo_create(  );
+  http->reply_content = mas_fileinfo_create(  );
+  return http;
+}
+
+
+mas_http_t *
+mas_proto_http_parse_multipart( mas_rcontrol_t * prcontrol, mas_http_t * http )
+{
+  char *eol_boundary;
+  size_t len;
+  size_t offset;
+  int np;
+
+  eol_boundary = mas_strdup( "\r\n--" );
+  eol_boundary = mas_strcat_x( eol_boundary, http->boundary );
+  np = 0;
+  offset = 2;
+  len = strlen( eol_boundary );
+  while ( 1 )
+  {
+    char cname[512];
+    const char *f;
+    char *f1;
+
+    f1 = NULL;
+    snprintf( cname, sizeof( cname ), "/tmp/part%d.tmp", np++ );
+    mas_channel_set_buffer_copy( prcontrol->h.pchannel, cname );
+    HMSG( "FFF %s", cname );
+    f = mas_channel_search( prcontrol->h.pchannel, eol_boundary + offset, len - offset );
+    if ( f )
+    {
+      char *pstring;
+
+      f1 = mas_strndup( f, len + 2 );
+      /* HMSG( "NEEDLE:'%s'", eol_boundary ); */
+      /* HMSG( "%d FOUND:%s ...[[ %02x %02x %02x ]]", np, f1, f[len - offset], f[len - offset + 1], f[len - offset + 2] ); */
+      mas_free( f1 );
+      mas_channel_set_buffer_copy( prcontrol->h.pchannel, NULL );
+      if ( f[len - offset] == '-' && f[len - offset + 1] == '-' )
+        break;
+      /* HMSG( "IPTR:%lu",prcontrol-> pchannel->buffer.iptr ); */
+      HMSG( "ZZZ" );
+      pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+      HMSG( "PS:'%s'", pstring );
+      mas_free( pstring );
+      {
+        int b = 0;
+
+        do
+        {
+          pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+          HMSG( "PS PLUS:'%s'", pstring );
+          b = ( pstring && *pstring != '\n' && *pstring != '\r' ? 1 : 0 );
+          mas_free( pstring );
+          pstring = NULL;
+        }
+        while ( b );
+      }
+    }
+    offset = 0;
+  }
+  mas_free( eol_boundary );
   return http;
 }
 
@@ -72,6 +135,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
   }
   HMSG( "HTTP REQUEST (parse)" );
   pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+  HMSG( "HTTP REQUEST (parse) '%s'", pstring );
   if ( pstring )
   {
     cstring = ( const char * ) pstring;
@@ -108,8 +172,6 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
         MAS_LOG( "HTTP parse f.version %s => %5.2f", http->sversion, http->fversion );
         http = mas_proto_http_parse_headers( prcontrol, http );
 
-
-
         {
           switch ( http->imethod )
           {
@@ -133,8 +195,19 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
             break;
           case MAS_HTTP_METHOD_POST:
             {
-              char *pstring = NULL;
+/*        HTTP Host='zocromas.mastar.lan:5005'                                                                        */
+/*        HTTP User-Agent='Mozilla/5.0 (X11; Linux x86_64; rv:10.0.11) Gecko/20100101 Firefox/10.0.11'                */
+/*        HTTP Accept='text/html,application/xhtml+xml,application/xml;q=0.9,*)*;q=0.8'                               */
+/*        HTTP Accept-Language='uk,ru;q=0.8,en-us;q=0.5,en;q=0.3'                                                     */
+/*        HTTP Accept-Encoding='gzip, deflate'                                                                        */
+/*        HTTP DNT='1'                                                                                                */
+/*        HTTP Connection='keep-alive'                                                                                */
+/*  (+)   HTTP Connection                                                                                             */
+/*        HTTP Referer='http://zocromas.mastar.lan:5005/post.html'                                                    */
+/*        HTTP Content-Type='multipart/form-data; boundary=---------------------------213557806320239878091684659415' */
+/*        HTTP Content-Length='2473'                                                                                  */
 
+              /* boundary = mas_variables_find( http->indata, "inheader", "Host" ); */
 #if 0
               {
                 char bcpath[512];
@@ -146,17 +219,25 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
                 HMSG( "ANY BODY %s ?", bcpath );
               }
 #endif
-              while ( 1 )
+#if 0
               {
-                pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
-                if ( !pstring )
-                  break;
-                /* ( pstring && *pstring && *pstring > ' ' ); */
-                HMSG( "pSTRING: {%s}", pstring );
-                if ( pstring )
-                  mas_free( pstring );
-                pstring = NULL;
+                char *pstring = NULL;
+
+                while ( 1 )
+                {
+                  pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
+                  if ( !pstring )
+                    break;
+                  /* ( pstring && *pstring && *pstring > ' ' ); */
+                  HMSG( "pSTRING: {%s}", pstring );
+                  if ( pstring )
+                    mas_free( pstring );
+                  pstring = NULL;
+                }
               }
+#else
+              http = mas_proto_http_parse_multipart( prcontrol, http );
+#endif
             }
             /* prcontrol->keep_alive = 0;                    */
             /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
@@ -194,24 +275,43 @@ mas_proto_http_delete_request( mas_http_t * http )
     /* .......... */
     if ( http->protocol_name )
       mas_free( http->protocol_name );
+    http->protocol_name = NULL;
+
+    if ( http->boundary )
+      mas_free( http->boundary );
+    http->boundary = NULL;
+
     if ( http->smethod )
       mas_free( http->smethod );
+    http->smethod = NULL;
+
     if ( http->URI )
       mas_free( http->URI );
+    http->URI = NULL;
+
     if ( http->sversion )
       mas_free( http->sversion );
+    http->sversion = NULL;
+
     if ( http->docroot )
       mas_free( http->docroot );
+    http->docroot = NULL;
+
     if ( http->host )
       mas_free( http->host );
+    http->host = NULL;
 
-    mas_fileinfo_delete( http->content );
-    http->content = NULL;
+    mas_fileinfo_delete( http->reply_content );
+    http->reply_content = NULL;
 
     if ( http->indata )
       mas_variables_delete( http->indata );
+    http->indata = NULL;
+
     if ( http->outdata )
       mas_variables_delete( http->outdata );
+    http->outdata = NULL;
+
     mas_free( http );
   }
   return 0;
@@ -236,6 +336,7 @@ mas_proto_http_parse_method( mas_http_t * http )
     http->imethod = MAS_HTTP_METHOD_NONE;
     if ( http->smethod )
     {
+      HMSG( "HTTP METHOD %s", http->smethod );
       http->imethod = MAS_HTTP_METHOD_UNKNOWN;
       /* EMSG( "@@@@@@@@@@@@@ smethod: %s %x", http->smethod, *( ( unsigned * ) http->smethod ) ); */
       for ( int im = 0; im < sizeof( emethods ) / sizeof( emethods[0] ); im++ )
@@ -293,107 +394,3 @@ mas_proto_http_method_name( mas_http_t * http )
 /*   }                                                                         */
 /*   return name;                                                              */
 /* }                                                                           */
-
-static mas_http_t *
-mas_proto_http_parse_spc_header( mas_rcontrol_t * prcontrol, mas_http_t * http, const char *name, const char *value )
-{
-  if ( 0 == strcmp( name, "Connection" ) )
-  {
-    HMSG( "HTTP (spc) HEADER (parse) %s", name );
-    MAS_LOG( "HTTP HEADER: %s:%s", name, value );
-    if ( 0 == strcasecmp( value, "keep-alive" ) )
-    {
-      rMSG( ">>>>>> HTTP HEADER: Connection is Keep-Alive" );
-      MAS_LOG( "HTTP HEADER: Connection is Keep-Alive" );
-      prcontrol->keep_alive = 1;
-      MAS_LOG( "KA => %u", prcontrol->keep_alive );
-    }
-    else if ( 0 == strcasecmp( value, "close" ) )
-    {
-      rMSG( ">>>>>> HTTP HEADER: Connection is Keep-Alive" );
-      MAS_LOG( "HTTP HEADER: Connection is Keep-Alive" );
-      prcontrol->keep_alive = 0;
-      MAS_LOG( "KA => %u", prcontrol->keep_alive );
-    }
-  }
-  return http;
-}
-
-mas_http_t *
-mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char *pstring )
-{
-  char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
-
-  name = pstring;
-  ename = pstring;
-  while ( ename && *ename > ' ' && *ename != ':' )
-    ename++;
-  value = ename;
-  if ( value && *value == ':' )
-    value++;
-  while ( value && *value == ' ' )
-    value++;
-  evalue = value;
-  while ( evalue && *evalue && *evalue >= ' ' )
-    evalue++;
-
-  name = mas_strndup( name, ename - name );
-  value = mas_strndup( value, evalue - value );
-  MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
-
-  HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
-  http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
-
-  if ( 0 == strcasecmp( name, "User-Agent" ) )
-  {
-    if ( 0 == strncmp( value, "httperf", 7 ) )
-    {
-      ctrl.messages = 0;
-    }
-    else
-    {
-    }
-  }
-  else
-  {
-  }
-
-  http = mas_proto_http_parse_spc_header( prcontrol, http, name, value );
-  if ( name )
-    mas_free( name );
-  if ( value )
-    mas_free( value );
-  MAS_LOG( "http parse headers 4" );
-  return http;
-}
-
-mas_http_t *
-mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
-{
-  char *pstring = NULL;
-
-  HMSG( "HTTP HEADERS (parse)" );
-  prcontrol->keep_alive = ( http->fversion >= 1.1 );
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
-  MAS_LOG( "http parse headers 1" );
-  do
-  {
-    if ( pstring )
-      mas_free( pstring );
-    pstring = NULL;
-    pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
-    http = mas_proto_http_parse_header( prcontrol, http, pstring );
-  }
-  while ( pstring && *pstring && *pstring > ' ' );
-  /* while ( ( pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel ) ) && *pstring && *pstring > ' ' ) */
-  /* {                                                                                                        */
-  /*   http = mas_proto_http_parse_header( prcontrol, http, pstring );                                        */
-  /*   if ( pstring )                                                                                         */
-  /*     mas_free( pstring );                                                                                 */
-  /*   pstring = NULL;                                                                                        */
-  /* }                                                                                                        */
-  if ( pstring )
-    mas_free( pstring );
-  pstring = NULL;
-  return http;
-}

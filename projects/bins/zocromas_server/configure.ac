@@ -215,6 +215,7 @@ AC_SUBST([MAS_S_DATE])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
+		etc/Makefile
 		src/Makefile
 		src/inc/Makefile
 

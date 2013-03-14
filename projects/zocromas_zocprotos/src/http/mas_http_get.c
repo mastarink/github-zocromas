@@ -41,10 +41,10 @@ more:
 mas_http_t *
 mas_http_make_out_head_get( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  if ( http && http->content )
+  if ( http && http->reply_content )
   {
     MAS_LOG( "to make out" );
-    MAS_LOG( "SIZE %lu", ( unsigned long ) mas_fileinfo_data_size( http->content ) );
+    MAS_LOG( "SIZE %lu", ( unsigned long ) mas_fileinfo_data_size( http->reply_content ) );
 
     http = mas_http_make_out_header_simple( http, "Accept-Ranges", "bytes" );
     /* {                                                        */

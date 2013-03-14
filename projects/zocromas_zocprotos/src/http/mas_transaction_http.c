@@ -167,16 +167,16 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
       /* answer = mas_evaluate_command_slash( http->URI + 9 );                                                                 */
       /* if ( answer )                                                                                                         */
       /* {                                                                                                                     */
-      /*   _mas_fileinfo_link_dataz( http->content, answer );                                                                  */
+      /*   _mas_fileinfo_link_dataz( http->reply_content, answer );                                                                  */
       /*   http->outdata =                                                                                                     */
       /*         mas_variable_create_text( http->outdata, MAS_THREAD_TRANSACTION, "header", "Content-Type", "text/plain", 0 ); */
       /* }                                                                                                                     */
-      http->content =
-            mas_fileinfo_init( http->content, http->docroot, http->URI, mas_evaluate_command_slash_plus, ( const void * ) prcontrol );
-      mas_fileinfo_set_icontent_type( http->content, MAS_CONTENT_TEXT );
+      http->reply_content =
+            mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_evaluate_command_slash_plus, ( const void * ) prcontrol );
+      mas_fileinfo_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT );
     }
     else
-      http->content = mas_fileinfo_init( http->content, http->docroot, http->URI, mas_load_file, ( const void * ) NULL /* prcontrol */  );
+      http->reply_content = mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_file, ( const void * ) NULL /* prcontrol */  );
   }
   MAS_LOG( "http: protocol-specific" );
   if ( http )
@@ -217,7 +217,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
   /*   http = mas_http_make_out_std_headers( prcontrol, http ); */
   /* if ( http && http->status_code == MAS_HTTP_CODE_NONE ) */
   /* {                                                      */
-  /*   if ( http->content && http->content->filesize )      */
+  /*   if ( http->reply_content && http->reply_content->filesize )      */
   /*     http->status_code = MAS_HTTP_CODE_OK;              */
   /*   else                                                 */
   /*     http->status_code = MAS_HTTP_CODE_NOT_FOUND;       */

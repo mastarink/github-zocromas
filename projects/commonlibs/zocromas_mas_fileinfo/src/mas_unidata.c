@@ -8,6 +8,9 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
 #include "mas_unidata.h"
 
 /*
@@ -42,6 +45,15 @@ mas_udata_set_icontent_type( mas_unidata_t * ud, mas_content_type_t ict )
   if ( ud )
   {
     ud->icontent_type = ict;
+  }
+}
+
+void
+mas_udata_set_icontent_size( mas_unidata_t * ud, size_t size )
+{
+  if ( ud )
+  {
+    ud->size = size;
   }
 }
 
@@ -82,7 +94,48 @@ content_type_details_t content_types[] = {
   {MAS_CONTENT_GIF, "image", "gif"}
   ,
   {MAS_CONTENT_JPEG, "image", "jpeg"}
+  ,
+  {MAS_CONTENT_FORM_DATA, "multipart", "form-data"}
 };
+
+mas_content_type_t
+mas_unidata_parse_content_type( const char *ct )
+{
+  const char *p;
+  mas_content_type_t ict = MAS_CONTENT_BAD;
+
+  p = ct;
+  while ( p && *p && *p != '/' )
+    p++;
+  HMSG( "UNIDATA parse ct 1 %s", ct );
+
+  if ( p && *p == '/' )
+  {
+    char *c1 = NULL, *c2 = NULL;
+
+    c1 = mas_strndup( ct, p - ct );
+    p++;
+    if ( p && *p )
+      c2 = mas_strdup( p );
+    if ( c1 && c2 )
+      for ( int it = 0; it < sizeof( content_types ) / sizeof( content_types[0] ); it++ )
+      {
+        HMSG( "UNIDATA parse ct 2 %s ? %s :: %s ? %s", content_types[it].mtype, c1, content_types[it].dtype, c2 );
+        if ( 0 == strcmp( content_types[it].mtype, c1 ) && 0 == strcmp( content_types[it].dtype, c2 ) )
+        {
+          ict = content_types[it].ctype;
+          HMSG( "UNIDATA found #%d : %d", it, ict );
+          break;
+        }
+      }
+    if ( c2 )
+      mas_free( c2 );
+    if ( c1 )
+      mas_free( c1 );
+  }
+  HMSG( "UNIDATA return %d", ict );
+  return ict;
+}
 
 char *
 mas_unidata_content_type_string( mas_unidata_t * ud )

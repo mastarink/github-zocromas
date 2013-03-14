@@ -841,18 +841,21 @@ mas_opts_restore_zero( const char *filename )
 {
   int r = 0;
   char *dir;
-  char *p;
-  size_t l;
 
   dir = mas_strdup( XSTR( MAS_SYSCONFDIR ) );
   dir = mas_strcat_x( dir, "/" );
-  l = strlen( dir );
   if ( ctrl.binname )
     dir = mas_strcat_x( dir, ctrl.binname );
   else
     dir = mas_strcat_x( dir, "zocromas_uni" );
-  while ( ( p = strchr( dir + l, '_' ) ) )
-    *p = '/';
+  /* {                                          */
+  /*   char *p;                                 */
+  /*   size_t l;                                */
+  /*                                            */
+  /*   l = strlen( dir );                       */
+  /*   while ( ( p = strchr( dir + l, '_' ) ) ) */
+  /*     *p = '/';                              */
+  /* }                                          */
   IEVAL( r, _mas_opts_restore( dir, filename ) );
   mas_free( dir );
   return r;

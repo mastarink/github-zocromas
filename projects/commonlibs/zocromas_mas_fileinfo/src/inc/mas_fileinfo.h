@@ -36,7 +36,11 @@ size_t mas_fileinfo_data_size( mas_fileinfo_t * fileinfo );
 
 mas_content_type_t mas_fileinfo_content_type_by_ext( mas_fileinfo_t * fileinfo );
 mas_content_type_t mas_fileinfo_icontent_type( mas_fileinfo_t * fileinfo );
-void mas_fileinfo_set_icontent_type( mas_fileinfo_t * ud, mas_content_type_t ict );
+void mas_fileinfo_set_icontent_type( mas_fileinfo_t * fileinfo, mas_content_type_t ict );
+void mas_fileinfo_set_icontent_size( mas_fileinfo_t * fileinfo, size_t size );
+
+unsigned long mas_fileinfo_content_size( mas_fileinfo_t * fileinfo );
+void mas_fileinfo_set_content_size( mas_fileinfo_t * fileinfo, const char *ssize );
 
 
 #endif

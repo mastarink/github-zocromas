@@ -52,8 +52,8 @@ mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   HMSG( "HTTP make ETAG" );
   if ( http )
-    ( void ) /* r = */ mas_fileinfo_make_etag( http->content );
-  /* rMSG( "(%d) CHECK ETAG %s : %s", r, http->content->filepath, http->content->etag ); */
+    ( void ) /* r = */ mas_fileinfo_make_etag( http->reply_content );
+  /* rMSG( "(%d) CHECK ETAG %s : %s", r, http->reply_content->filepath, http->reply_content->etag ); */
   return http;
 }
 
@@ -93,7 +93,7 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     http->outdata =
           mas_variable_create_x( http->outdata, MAS_THREAD_TRANSACTION, "header", "Server", mas_xvsnprintf, "mas-%lu",
                                  ( unsigned long ) ( &__MAS_LINK_TIME__ ), 0 );
-    http->outdata = mas_fileinfo_make_headers( http->outdata, http->content );
+    http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
     http = mas_http_make_out_header_simple( http, "Connection", prcontrol->keep_alive ? "Keep-Alive" : "close" );
   }
   return http;
@@ -103,7 +103,7 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
 /* mas_http_make_body_simple( mas_rcontrol_t * prcontrol, mas_http_t * http )                                             */
 /* {                                                                                                                      */
 /*   if ( http )                                                                                                          */
-/*     http->outdata = mas_fileinfo_make_body( http->outdata, http->content );                                            */
+/*     http->outdata = mas_fileinfo_make_body( http->outdata, http->reply_content );                                            */
 /*   return http;                                                                                                         */
 /* }                                                                                                                      */
 /*                                                                                                                        */
@@ -148,11 +148,11 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
   HMSG( "HTTP REPLY" );
   MAS_LOG( "to write protocol name/version" );
-  data = mas_fileinfo_data( http->content );
+  data = mas_fileinfo_data( http->reply_content );
 
   if ( http && http->status_code == MAS_HTTP_CODE_NONE )
   {
-    if ( http->content && mas_unidata_data_size( http->content->udata ) )
+    if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
       http->status_code = MAS_HTTP_CODE_OK;
     else
       http->status_code = MAS_HTTP_CODE_NOT_FOUND;
@@ -172,7 +172,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
   {
     size_t datasz;
 
-    datasz = mas_fileinfo_data_size( http->content );
+    datasz = mas_fileinfo_data_size( http->reply_content );
     HMSG( "HTTP write DATA (%lu)", ( unsigned long ) datasz );
 
 
@@ -271,14 +271,14 @@ mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http )
       text = mas_malloc( txsize );
       /* snprintf( text, txsize, fmt, http->status_code, sm, sm, mas_proto_http_method_name( http ), http->URI ); */
       snprintf( text, txsize, fmt, http->status_code, sm, sm, http->smethod, http->URI, http->host, http->port );
-      if ( http->content )
+      if ( http->reply_content )
       {
-        mas_free( http->content->etag );
-        http->content->etag = NULL;
-        http->content->filetime = 0;
-        /* http->content->icontent_type = MAS_CONTENT_NONE; */
+        mas_free( http->reply_content->etag );
+        http->reply_content->etag = NULL;
+        http->reply_content->filetime = 0;
+        /* http->reply_content->icontent_type = MAS_CONTENT_NONE; */
       }
-      _mas_fileinfo_link_dataz( http->content, text );
+      _mas_fileinfo_link_dataz( http->reply_content, text );
       /* mas_free( text ); */
     }
     /* http = mas_http_make_body( prcontrol, http, fmt, http->status_code, sm, sm, mas_proto_http_method_name( http ), http->URI ); */

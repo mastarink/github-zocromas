@@ -215,8 +215,8 @@ function ebuild_m ()
       update)
         if ! [[ -f "$ebname" ]] ; then 
 	  ebname_base="${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild"
-	  echo "creating $ebname ebuild from $ebname_base" >&2
-	  ebname_base=$( ls -1tr | tail -1 )
+	  echo "creating $ebname ebuild from $ebname_base (${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild)" >&2
+	  ebname_base=$( ls -1tr *.ebuild | tail -1 )
 	  echo "creating $ebname ebuild from $ebname_base" >&2
 	  if [[ "$ebname_base" ]] && [[ -f "$ebname_base" ]] ; then
 	    cp $ebname_base $ebname

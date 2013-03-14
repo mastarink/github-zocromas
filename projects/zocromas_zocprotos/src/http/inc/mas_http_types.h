@@ -78,7 +78,9 @@ struct mas_http_s
   mas_http_method_t imethod;
   char *URI;
   char *protocol_name;
-  mas_fileinfo_t *content;
+  char *boundary;
+  mas_fileinfo_t *request_content;
+  mas_fileinfo_t *reply_content;
   /* char *rest; */
   mas_variables_list_head_t *indata;
   mas_variables_list_head_t *outdata;

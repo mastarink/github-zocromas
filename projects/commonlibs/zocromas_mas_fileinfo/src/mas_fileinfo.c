@@ -61,6 +61,26 @@ mas_fileinfo_set_icontent_type( mas_fileinfo_t * fileinfo, mas_content_type_t ic
   }
 }
 
+void
+mas_fileinfo_set_icontent_size( mas_fileinfo_t * fileinfo, size_t size )
+{
+  if ( fileinfo )
+  {
+    if ( !fileinfo->udata )
+      fileinfo->udata = mas_unidata_create(  );
+    mas_udata_set_icontent_size( fileinfo->udata, size );
+  }
+}
+
+void
+mas_fileinfo_set_content_size( mas_fileinfo_t * fileinfo, const char *ssize )
+{
+  unsigned long size = 0;
+
+  size = atol( ssize );
+  mas_fileinfo_set_icontent_size( fileinfo, size );
+}
+
 mas_content_type_t
 mas_fileinfo_icontent_type( mas_fileinfo_t * fileinfo )
 {

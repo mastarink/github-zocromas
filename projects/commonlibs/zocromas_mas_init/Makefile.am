@@ -4,3 +4,5 @@ SUBDIRS=src
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = @PACKAGE_NAME@.pc
+# pkgdata_DATA = server client
+# sysconf_DATA = server client

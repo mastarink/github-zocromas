@@ -1,7 +1,7 @@
 #ifndef MAS_HTTP_UTILS_H
 #  define MAS_HTTP_UTILS_H
 
-#  include <mastar/types/mas_http_types.h>
+#  include "mas_http_types.h"
 
 
 char *mas_proto_http_nonblank( const char *smessage, const char **ppsn );

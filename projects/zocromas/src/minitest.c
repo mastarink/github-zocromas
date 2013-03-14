@@ -440,6 +440,7 @@ test_readline( const char *to_read, const char *fdc_pathz )
           while ( b );
         }
       }
+      offset = 0;
     }
   }
 #endif
@@ -455,7 +456,7 @@ main( int argc, char *argv[], char *env[] )
 
 
   /* test_readline( "/tmp/wss.tmp", "/tmp/wss1a.tmp" ); */
-  test_readline( "/mnt/new_misc/develop/autotools/zoc/projects/bins/zocromas_server/13984-2-1362637472-143.tmp", "/tmp/fdcopy143.tmp" );
+  test_readline( "/mnt/new_misc/develop/autotools/zoc/projects/zocromas/test/13984-2-1362637472-143.dat", "/tmp/fdcopy143.tmp" );
   /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test1.txt", "/tmp/fdcopy1a.tmp" ); */
   /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" ); */
 #ifdef MAS_TRACEMEM

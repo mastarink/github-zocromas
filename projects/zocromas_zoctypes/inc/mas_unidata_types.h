@@ -11,7 +11,8 @@ typedef enum mas_content_type_e
   MAS_CONTENT_HTML,
   MAS_CONTENT_TEXT,
   MAS_CONTENT_GIF,
-  MAS_CONTENT_JPEG
+  MAS_CONTENT_JPEG,
+  MAS_CONTENT_FORM_DATA,
 } mas_content_type_t;
 
 
