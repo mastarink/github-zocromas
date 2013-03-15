@@ -365,7 +365,7 @@ mas_strcat_xt( char *s1, const char *s2 )
     if ( s1 )
     {
       strcpy( r, s1 );
-      free( s1 );
+      mas_free( s1 );
     }
     if ( s2 )
       strcpy( r + l1, s2 );

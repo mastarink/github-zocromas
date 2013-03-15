@@ -94,7 +94,10 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
             bou = p;
             while ( p && *p && *p != ';' )
               p++;
-            http->boundary = mas_strndup( bou, p - bou );
+            if ( *bou == '"' && p > bou + 1 && *( p - 1 ) == '"' )
+              http->boundary = mas_strndup( bou + 1, p - bou - 2 );
+            else
+              http->boundary = mas_strndup( bou, p - bou );
             HMSG( "BOUNDARY '%s'", bou );
           }
           else

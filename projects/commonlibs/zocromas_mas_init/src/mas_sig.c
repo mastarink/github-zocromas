@@ -81,9 +81,9 @@ mas_init_sig( void )
   static struct sigaction sa_term = {
     .sa_handler = sigterm_han
   };
-  static struct sigaction sa_abrt = {
-    .sa_handler = sigabrt_han
-  };
+  /* static struct sigaction sa_abrt = { */
+  /*   .sa_handler = sigabrt_han         */
+  /* };                                  */
   static struct sigaction sa_quit = {
     .sa_handler = sigquit_han
   };
@@ -111,7 +111,7 @@ mas_init_sig( void )
   sigaction( SIGINT, &sa_int, NULL );
   sigaction( SIGHUP, &sa_hup, NULL );
   sigaction( SIGTERM, &sa_term, NULL );
-  sigaction( SIGABRT, &sa_abrt, NULL );
+  /* sigaction( SIGABRT, &sa_abrt, NULL ); */
   sigaction( SIGPIPE, &sa_pipe, NULL );
   sigaction( SIGUSR1, &sa_usr1, NULL );
   sigaction( SIGUSR2, &sa_usr2, NULL );

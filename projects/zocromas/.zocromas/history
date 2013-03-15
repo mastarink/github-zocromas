@@ -13,5 +13,4 @@ restart
 get client info
 get server info
 server listener remove zocromas.mastar.lan 5003
-server quit
 server exit

@@ -5,7 +5,7 @@ if [[ -f "sh/setup.sh" ]] ; then
   
   sig=$1
   shift
-  if ! [[ "$sig" ]] ; then sig=ABRT ; fi
+  if ! [[ "$sig" ]] ; then sig=QUIT ; fi
   spid=$( server_pid )
   if [[ "$spid" ]] ; then
     kill -$sig $spid

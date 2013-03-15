@@ -8,7 +8,7 @@ env_hostname=MAS_ZOCROMAS_DEFHOST
 read_user_conf=1
 read_user_conf_plus=0
 
-
+historydir=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/.zocromas
 logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
 log=1
 max_config_backup=5

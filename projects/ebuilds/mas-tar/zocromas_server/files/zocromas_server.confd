@@ -1,0 +1,9 @@
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+# the zocromas_server executable
+ZOCROMAS_SERVER_EXEC=/usr/bin/zocromas_server
+
+# various options to pass to the daemon
+ZOCROMAS_SERVER_OPTS="--nohosts --host=zocromas.mastar.lan:5005 --nomessage --daemon --redirect-messages=/dev/tty11"
+

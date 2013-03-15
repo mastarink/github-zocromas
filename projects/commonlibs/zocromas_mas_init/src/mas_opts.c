@@ -85,6 +85,10 @@ mas_opts_destroy( void )
     mas_free( opts.historydir );
   opts.historydir = NULL;
 
+  if ( opts.postdir )
+    mas_free( opts.postdir );
+  opts.postdir = NULL;
+
   if ( opts.configdir )
     mas_free( opts.configdir );
   opts.configdir = NULL;
@@ -294,21 +298,21 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 
           {
             IEVAL( r, fprintf( f,
-                               "# common\nenv_optsname=%s\nenv_hostname=%s\nhistorydir=%s\nlogdir=%s\nlog=%d\n"
+                               "# common\nenv_optsname=%s\nenv_hostname=%s\nhistorydir=%s\npostdir=%s\nlogdir=%s\nlog=%d\n"
                                "max_config_backup=%u\nmessages=%u\n"
-                               "default_port=%u\nsave_opts=%u\nsave_opts_plus=%u\n" "restart_sleep=%lg\n"
-                               "# -\n", opts.env_optsname, opts.env_hostname, opts.historydir, opts.logdir,
-                               !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_opts,
-                               opts.save_opts_plus, opts.restart_sleep ) );
+                               "default_port=%u\nsave_user_opts=%u\nsave_user_opts_plus=%u\n" "restart_sleep=%lg\n"
+                               "# -\n", opts.env_optsname, opts.env_hostname, opts.historydir, opts.postdir, opts.logdir,
+                               !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_user_opts,
+                               opts.save_user_opts_plus, opts.restart_sleep ) );
             if ( r > 0 )
               rtot += r;
           }
           if ( ctrl.is_server )
           {
             IEVAL( r, fprintf( f,
-                               "# server\ndaemon=%u\nread_user_conf=%u\nread_user_conf_plus=%u\n"
+                               "# server\ndaemon=%u\nread_user_opts=%u\nread_user_opts_plus=%u\n"
                                "single_instance=%u\nsingle_child=%u\nlogger=%d\nmodsdir=%s\n" "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon,
-                               opts.read_user_conf, opts.read_user_conf_plus, opts.single_instance, opts.single_child, !opts.nologger,
+                               opts.read_user_opts, opts.read_user_opts_plus, opts.single_instance, opts.single_child, !opts.nologger,
                                opts.modsdir, opts.pidsdir, opts.protodir ) );
             if ( r > 0 )
               rtot += r;
@@ -401,10 +405,10 @@ mas_opts_save( const char *dirname, const char *filename )
 {
   int r = -1;
 
-  if ( opts.save_opts )
+  if ( opts.save_user_opts )
   {
     MAS_LOG( "to save opts %s", filename );
-    IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.save_opts ) );
+    IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.save_user_opts ) );
     MAS_LOG( "saved opts : %d", r );
   }
   else
@@ -450,10 +454,10 @@ mas_opts_save_plus( const char *dirname, const char *filename, ... )
   va_list args;
 
   va_start( args, filename );
-  /* if ( opts.save_opts_plus ) */
+  /* if ( opts.save_user_opts_plus ) */
   {
     MAS_LOG( "to save opts plus %s", filename );
-    IEVAL( r, _mas_opts_save_plus( dirname, filename, 1, opts.save_opts_plus, args ) );
+    IEVAL( r, _mas_opts_save_plus( dirname, filename, 1, opts.save_user_opts_plus, args ) );
     MAS_LOG( "saved opts plus : %d", r );
   }
   /* else                                    */
@@ -609,18 +613,19 @@ mas_opts_restore_nosection( const char *s )
   OPT_PSTR( protodir, s );
   OPT_PSTR( logdir, s );
   OPT_PSTR( historydir, s );
+  OPT_PSTR( postdir, s );
   OPT_NOFLAG( log, s );
   OPT_NOFLAG( logger, s );
   OPT_FLAG( max_config_backup, s );
   OPT_FLAG( default_port, s );
   OPT_NOFLAG( daemon, s );
-  OPT_FLAG( read_user_conf, s );
-  OPT_FLAG( read_user_conf_plus, s );
+  OPT_FLAG( read_user_opts, s );
+  OPT_FLAG( read_user_opts_plus, s );
   OPT_FLAG( single_instance, s );
   OPT_FLAG( single_child, s );
   OPT_NOFLAG( messages, s );
-  OPT_FLAG( save_opts, s );
-  OPT_FLAG( save_opts_plus, s );
+  OPT_FLAG( save_user_opts, s );
+  OPT_FLAG( save_user_opts_plus, s );
   OPT_FLAG( disconnect_prompt, s );
   OPT_FLAG( wait_server, s );
   else

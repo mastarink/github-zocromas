@@ -1,6 +1,9 @@
 #ifndef MAS_ARG_TOOLS_H
 #  define MAS_ARG_TOOLS_H
 
+#    define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
+#    define mas_strncat_x(...)  mas_strncat_xt (__VA_ARGS__)
+
 size_t mas_wordlen( const char *s );
 char *mas_chomp( char *s );
 int mas_strcmp2( const char *s1, const char *s2 );

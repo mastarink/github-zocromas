@@ -83,12 +83,12 @@ mas_destroy_client( void )
   /*   mas_log_clean_queue(  ); */
   /* }                          */
 #endif
-  if ( !ctrl.opts_saved )
-    mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
-  {
-    if ( !ctrl.opts_saved_plus )
-      mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
-  }
+  /* if ( !ctrl.opts_saved )                                                                                              */
+  /*   mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );                                                  */
+  /* {                                                                                                                    */
+  /*   if ( !ctrl.opts_saved_plus )                                                                                       */
+  /*     mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
+  /* }                                                                                                                    */
 
   mas_client_destroy_readline(  );
   /* if ( ctrl.restart )                                                                  */

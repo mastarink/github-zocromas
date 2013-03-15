@@ -1,0 +1,23 @@
+#!/sbin/runscript
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+depend() {
+        use dns
+}
+
+start() {
+	ebegin "Starting zocromas_server daemon"
+#	start-stop-daemon --start --quiet --exec ${ZOCROMAS_SERVER_EXEC} -- ${ZOCROMAS_SERVER_OPTS}
+	start-stop-daemon --start --exec ${ZOCROMAS_SERVER_EXEC} -- ${ZOCROMAS_SERVER_OPTS}
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping zocromas_server daemon"
+#	start-stop-daemon --stop --quiet --signal=QUIT
+	start-stop-daemon --stop --name zocchild --signal=QUIT
+	eend $?
+}
+
+

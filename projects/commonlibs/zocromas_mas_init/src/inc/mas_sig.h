@@ -1,7 +1,7 @@
 #ifndef MAS_SIG_H
 #define MAS_SIG_H
 
-void sigabrt_han( int s );
+/* void sigabrt_han( int s ); */
 void sigterm_han( int s );
 void sigint_han( int s );
 void sigquit_han( int s );

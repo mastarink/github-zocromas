@@ -31,8 +31,6 @@ void mas_other_free( void * );
 
 #  ifdef MAS_TRACEMEM
 
-char *_mas_strcat_xt( const char *func, int line, char *s1, const char *s2 );
-char *_mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t maxs2 );
 
 void *_mas_calloc( const char *func, int line, size_t nmemb, size_t size );
 void *_mas_malloc( const char *func, int line, size_t size );
@@ -44,9 +42,6 @@ char *_mas_strndup( const char *func, int line, const char *s, size_t n );
 int print_memlist( FILE * f, const char *func, int line );
 int _print_memlist( FILE * f, const char *func, int line, int s_f );
 
-#    define mas_strcat_x(...)  _mas_strcat_xt(FL, __VA_ARGS__)
-#    define mas_strcat(...)  _mas_strcat_xt(FL, __VA_ARGS__)
-#    define mas_strncat_x(...) _mas_strncat_xt(FL, __VA_ARGS__)
 #    define mas_calloc(...)  _mas_calloc(FL, __VA_ARGS__)
 #    define mas_malloc(...)  _mas_malloc(FL, __VA_ARGS__)
 #    define mas_free(...)    _mas_free(FL, __VA_ARGS__)
@@ -56,9 +51,6 @@ int _print_memlist( FILE * f, const char *func, int line, int s_f );
 
 #  else
 
-#    define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
-#    define mas_strcat(...)  strcat (__VA_ARGS__)
-#    define mas_strncat_x(...) mas_strncat_xt(__VA_ARGS__)
 #    define mas_calloc(...)  calloc (__VA_ARGS__)
 #    define mas_malloc(...)  malloc (__VA_ARGS__)
 #    define mas_free(...)    free   (__VA_ARGS__)

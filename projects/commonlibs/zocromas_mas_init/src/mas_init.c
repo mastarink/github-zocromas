@@ -225,10 +225,10 @@ mas_pre_init_opt_files( void )
     int rtwo = 0;
 
     IEVAL_OPT( rzero, mas_opts_restore_zero( name ) );
-    if ( opts.read_user_conf )
+    if ( opts.read_user_opts )
     {
       IEVAL_OPT( rone, mas_opts_restore( NULL, name ) );
-      if ( opts.read_user_conf_plus )
+      if ( opts.read_user_opts_plus )
       {
         /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
         IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
@@ -470,6 +470,16 @@ mas_init_plus( int argc, char **argv, char **env, ... )
 void
 mas_destroy( void )
 {
+  char sppid[64] = "";
+
+  snprintf( sppid, sizeof( sppid ), "%lu", ( unsigned long ) getppid(  ) );
+  if ( *sppid )
+  {
+    if ( !ctrl.opts_saved )
+      mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+    if ( !ctrl.opts_saved_plus )
+      mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL );
+  }
   WMSG( "DESTROY" );
   MAS_LOG( "destroy server" );
   /* mutex?? */

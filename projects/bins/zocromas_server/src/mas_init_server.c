@@ -376,11 +376,11 @@ mas_destroy_server( void )
   MAS_LOG( "destroy server" );
   WMSG( "DESTROY SERVER" );
   MAS_LOG( "to save opts" );
-  if ( !ctrl.opts_saved )
-    mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
-  if ( !ctrl.opts_saved_plus )
-    mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL );
-
+  /* if ( !ctrl.opts_saved )                                                                                            */
+  /*   mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );                                                */
+  /* if ( !ctrl.opts_saved_plus )                                                                                       */
+  /*   mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
+  
   if ( ctrl.lcontrols_list )
   {
     MAS_LOG( "to cancel listeners" );

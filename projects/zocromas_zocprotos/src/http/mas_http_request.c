@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
 extern mas_control_t ctrl;
@@ -90,7 +91,9 @@ mas_proto_http_parse_multipart( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
 
     f1 = NULL;
-    snprintf( cname, sizeof( cname ), "/tmp/part%d.tmp", np++ );
+    snprintf( cname, sizeof( cname ), "%s/%s.%lu-%u.part%u.post-%lu", opts.postdir ? opts.postdir : "/tmp",
+              opts.uuid, prcontrol->h.serial, ctrl.pserver_thread->pid, ++np, time( NULL ) );
+
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, cname );
     HMSG( "FFF %s", cname );
     f = mas_channel_search( prcontrol->h.pchannel, eol_boundary + offset, len - offset, cb, prcontrol );
@@ -139,10 +142,11 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
   {
     char bcpath[512];
 
-    snprintf( bcpath, sizeof( bcpath ), "/tmp/%u-%lu-%lu-%u.tmp", ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ), __LINE__ );
+    snprintf( bcpath, sizeof( bcpath ), "%s/%s.%lu-%u.part%u.post-%lu", opts.postdir ? opts.postdir : "/tmp",
+              opts.uuid, prcontrol->h.serial, ctrl.pserver_thread->pid, 0, time( NULL ) );
     /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
-    HMSG( "ANY BODY %s ?", bcpath );
+    HMSG( "ANY BODY %s ? [%s]", bcpath, opts.postdir );
   }
   HMSG( "HTTP REQUEST (parse)" );
   pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
@@ -223,8 +227,8 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
               {
                 char bcpath[512];
 
-                snprintf( bcpath, sizeof( bcpath ), "/tmp/%u-%lu-%lu-%u.tmp", ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ),
-                          __LINE__ );
+                snprintf( bcpath, sizeof( bcpath ), "%s/%u-%lu-%lu-%u.post", opts.postdir ? opts.postdir : "/tmp", ctrl.pserver_thread->pid,
+                          prcontrol->h.serial, time( NULL ), __LINE__ );
                 /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
                 mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
                 HMSG( "ANY BODY %s ?", bcpath );

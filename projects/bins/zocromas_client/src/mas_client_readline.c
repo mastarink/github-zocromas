@@ -257,7 +257,7 @@ mas_client_init_readline( void )
 
   snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
   /* rl_event_hook = mas_client_readline_event; */
-  HMSG( "HISTORY to LOAD" );
+  HMSG( "HISTORY to LOAD from %s", opts.historydir );
   if ( opts.historydir )
   {
     char *fpath = NULL;
@@ -301,12 +301,12 @@ void
 mas_client_destroy_readline( void )
 {
   HMSG( "HISTORY to SAVE" );
-  if ( opts.configdir )
+  if ( opts.historydir )
   {
     int rh = 0;
     char *fpath = NULL;
 
-    fpath = mas_strdup( opts.configdir );
+    fpath = mas_strdup( opts.historydir );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, "history" );
 

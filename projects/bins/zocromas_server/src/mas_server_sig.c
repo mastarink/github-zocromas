@@ -244,27 +244,27 @@ sigquit_han( int s )
   EMSG( "QUIT" );
 }
 
-void
-sigabrt_han( int s )
-{
-  to_exit(  );
-  /*
-     if ( pthread_equal( mas_pthread_self(  ), ctrl.pth ) )
-     {
-     pthread_t *pt;
-
-     pt = ctrl.threads.n.listening.threads;
-     while ( pt && *pt )
-     {
-     GMSG( "HUP to %lx @ %lx", ( unsigned long ) *pt, mas_pthread_self(  ) );
-     // pthread_kill( *pt, SIGHUP );
-     pthread_cancel( *pt );
-     pt++;
-     }
-     }
-   */
-  EMSG( "ABRT" );
-}
+/* void                                                                          */
+/* sigabrt_han( int s )                                                          */
+/* {                                                                             */
+/*   to_exit(  );                                                                */
+/*   (*                                                                          */
+/*      if ( pthread_equal( mas_pthread_self(  ), ctrl.pth ) )                   */
+/*      {                                                                        */
+/*      pthread_t *pt;                                                           */
+/*                                                                               */
+/*      pt = ctrl.threads.n.listening.threads;                                   */
+/*      while ( pt && *pt )                                                      */
+/*      {                                                                        */
+/*      GMSG( "HUP to %lx @ %lx", ( unsigned long ) *pt, mas_pthread_self(  ) ); */
+/*      // pthread_kill( *pt, SIGHUP );                                          */
+/*      pthread_cancel( *pt );                                                   */
+/*      pt++;                                                                    */
+/*      }                                                                        */
+/*      }                                                                        */
+/*    *)                                                                         */
+/*   EMSG( "ABRT" );                                                             */
+/* }                                                                             */
 
 void
 sigpipe_han( int s )

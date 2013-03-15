@@ -70,30 +70,6 @@ _mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t ma
   return r;
 }
 
-
-char *
-_mas_strcat_xt( const char *func, int line, char *s1, const char *s2 )
-{
-  char *r = NULL;
-  int l, l1, l2;
-
-  l1 = s1 ? strlen( s1 ) : 0;
-  l2 = s2 ? strlen( s2 ) : 0;
-  l = l1 + l2;
-  if ( l > 0 )
-  {
-    r = _mas_malloc( func, line, l + 1 );
-    if ( s1 )
-    {
-      strcpy( r, s1 );
-      _mas_free( func, line, s1 );
-    }
-    if ( s2 )
-      strcpy( r + l1, s2 );
-  }
-  return r;
-}
-
 static void
 memerror( mas_mem_head_t * m )
 {

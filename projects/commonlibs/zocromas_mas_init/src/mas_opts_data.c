@@ -73,8 +73,10 @@ mas_options_t opts = {
                 }
         }
   ,
-  .save_opts = 0,
-  .save_opts_plus = 1,
+  .read_user_opts = 0,
+  .read_user_opts_plus = 0,
+  .save_user_opts = 0,
+  .save_user_opts_plus = 0,
   .disconnect_prompt = 1,
   .wait_server = 0,
   .listener_single = 0,

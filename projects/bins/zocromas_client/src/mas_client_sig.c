@@ -105,16 +105,16 @@ sigquit_han( int s )
 #endif
 }
 
-void
-sigabrt_han( int s )
-{
-  ctrl.in_client = 0;
-  ctrl.keep_listening = 0;
-  ctrl.in_pipe--;
-#ifdef EMSG
-  EMSG( "ABRT%s", "." );
-#endif
-}
+/* void                       */
+/* sigabrt_han( int s )       */
+/* {                          */
+/*   ctrl.in_client = 0;      */
+/*   ctrl.keep_listening = 0; */
+/*   ctrl.in_pipe--;          */
+/* #ifdef EMSG                */
+/*   EMSG( "ABRT%s", "." );   */
+/* #endif                     */
+/* }                          */
 
 void
 sigterm_han( int s )
