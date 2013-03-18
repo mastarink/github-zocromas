@@ -39,14 +39,13 @@ pthread_mutex_t malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
 #ifdef MAS_TRACEMEM
+int mas_tracemem_flag = 1;
 #else
+int mas_tracemem_flag = 0;
 #endif
-
-
 #ifdef MAS_TRACEMEM
-char *
-_mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t maxs2 )
-{
+      char *
+      _mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t maxs2 ) {
   char *r = NULL;
   int l, l1, l2;
 

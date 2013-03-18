@@ -19,7 +19,7 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 
 src_configure() {
-    econf  --enable-silent-rules --enable-tracemem --enable-debug
+    econf  --enable-silent-rules
 }
 
 src_install() {

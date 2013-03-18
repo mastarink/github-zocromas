@@ -408,7 +408,7 @@ mas_opts_save_user( const char *dirname, const char *filename )
   if ( opts.save_user_opts )
   {
     MAS_LOG( "to save opts %s", filename );
-    IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.save_user_opts ) );
+    IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.overwrite_user_opts ) );
     MAS_LOG( "saved opts : %d", r );
   }
   return r;
@@ -450,10 +450,10 @@ mas_opts_save_user_plus( const char *dirname, const char *filename, ... )
   va_list args;
 
   va_start( args, filename );
-  /* if ( opts.save_user_opts_plus ) */
+  if ( opts.save_user_opts_plus )
   {
     MAS_LOG( "to save opts plus %s", filename );
-    IEVAL( r, _mas_opts_save_plus( dirname, filename, 1, opts.save_user_opts_plus, args ) );
+    IEVAL( r, _mas_opts_save_plus( dirname, filename, 1, opts.overwrite_user_opts_plus, args ) );
     MAS_LOG( "saved opts plus : %d", r );
   }
   /* else                                    */
@@ -623,6 +623,8 @@ mas_opts_restore_nosection( const char *s )
   OPT_NOFLAG( messages, s );
   OPT_FLAG( save_user_opts, s );
   OPT_FLAG( save_user_opts_plus, s );
+  OPT_FLAG( overwrite_user_opts, s );
+  OPT_FLAG( overwrite_user_opts_plus, s );
   OPT_FLAG( disconnect_prompt, s );
   OPT_FLAG( wait_server, s );
   else

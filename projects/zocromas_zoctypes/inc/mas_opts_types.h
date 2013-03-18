@@ -58,6 +58,8 @@ struct mas_options_s
   unsigned read_user_opts_plus:1;
   unsigned save_user_opts:1;
   unsigned save_user_opts_plus:1;
+  unsigned overwrite_user_opts:1;
+  unsigned overwrite_user_opts_plus:1;
   unsigned ticker_mode;
   unsigned nomaster;
   unsigned nolistener;

@@ -16,10 +16,10 @@ if [[ -f "sh/setup.sh" ]] ; then
 #         fi
 #       done < $projectsfile 
 #	echo "projects: $projects"
-
+        arg="$@"
 
 #       find $projects \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color $@ \{\} \; || return 1
-        find $projects \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} 2>/dev/null \+ || return 1
+        find $projects \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color "$arg" \{\} 2>/dev/null \+ || return 1
       else
         return 1
   #   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}

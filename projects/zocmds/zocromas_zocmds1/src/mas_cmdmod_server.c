@@ -187,6 +187,8 @@ info_cmd( STD_CMD_ARGS )
         mas_tstrftime( splts, sizeof( splts ), "prev.lts:%Y%m%d %T", ctrl.stamp.prev_lts );
     }
     {
+      extern int mas_tracemem_flag;
+
       len = snprintf( cp, bufsz,
                       "\n- (%u/%u)\tuuid:\t%s\n"
                       "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
@@ -199,16 +201,17 @@ info_cmd( STD_CMD_ARGS )
                       "\tmodsdir:\t%s\n"
                       "\tpidsdir:\t%s\n\n"
                       "\tlogdir: \t%s;\n" "\tlogpath:\t%s;\n"
-                      "\tlog stat (%lu - %lu)\n\n",
+                      "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
                       level, this_command ? this_command->only_level : 0, opts.uuid,
                       ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.child.pid,
                       ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
                       ctrl.restart_cnt,
                       mas_gettid(  ), mas_thread_self_type_name(  ),
-                      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts, 
+                      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts,
                       ctrl.exepath,
-		      opts.msgfilename,
-                      opts.protodir, opts.modsdir, opts.pidsdir, opts.logdir, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone );
+                      opts.msgfilename,
+                      opts.protodir, opts.modsdir, opts.pidsdir, opts.logdir, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone,
+                      mas_tracemem_flag );
       cp += len;
       bufsz -= len;
     }
