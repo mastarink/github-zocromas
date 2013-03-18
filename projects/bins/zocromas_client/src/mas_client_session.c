@@ -9,7 +9,9 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
+
 #include <mastar/channel/mas_channel.h>
+#include <mastar/channel/mas_channel_buffer.h>
 #include <mastar/channel/mas_channel_open.h>
 
 #include <mastar/types/mas_control_types.h>
@@ -67,8 +69,32 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
   {
     HMSG( "TO READ MESSAGE" );
     /* r = mas_channel_read_message( pchannel, &answer, pheader ); */
+
+#if 0
+    {
+      const mas_header_t *pheader_data;
+
+      pheader_data = ( mas_header_t * ) mas_channel_buffer( pchannel, NULL );
+      if ( pheader_data && pheader_data->sign == MSG_SIGNATURE )
+      {
+        while ( sizeof( mas_header_t ) + pheader_data->len < pchannel->buffer.length )
+        {
+          HMSG( "pheader_data->len:%u; buflen:%lu", pheader_data->len, pchannel->buffer.length );
+          mas_channel_read_some( pchannel );
+        }
+        *pheader = *pheader_data;
+      }
+    }
+#else
+    pchannel->buffer.maxread = 1028 * 4;
     IEVAL( r, mas_channel_read_message( pchannel, &answer, pheader ) );
-    HMSG( "GOT MESSAGE(%d) [hdr:%lu] R:%d", r, sizeof( mas_header_t ), pheader->restart_cnt );
+#endif
+
+
+
+
+
+    HMSG( "GOT MESSAGE(%d:%u) [hdr:%lu]", r, pheader->len, sizeof( mas_header_t ) );
     if ( r <= 0 )
     {
 /* #ifdef EMSG                 */

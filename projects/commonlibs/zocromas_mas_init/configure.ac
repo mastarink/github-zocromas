@@ -153,11 +153,18 @@ AC_DEFINE_UNQUOTED(MAS_LOG_DIR, "${with_log_dir}",
 AC_SUBST([MAS_LOG_DIR])
 
 AC_ARG_WITH([server], [ AC_HELP_STRING([--with-server], [server])  ],
-  [with_server=$withval],[with_server="0.0.0.0:5015"])
+  [with_server=$withval],[with_server="0.0.0.0"])
 AC_SUBST([with_server])
 AC_DEFINE_UNQUOTED(MAS_SERVER_STRING, "${with_server}",
 	       [Define server_string])
 AC_SUBST([MAS_SERVER_STRING])
+
+AC_ARG_WITH([default-port], [ AC_HELP_STRING([--with-default-port=PORT], [default port])  ],
+  [with_default_port=$withval],[with_default_port=50005])
+AC_SUBST([with_default_port])
+AC_DEFINE_UNQUOTED(MAS_DEFAULT_PORT, ${with_default_port},
+	       [Define default port])
+AC_SUBST([MAS_DEFAULT_PORT])
 
 AC_ARG_WITH([def-proto], [ AC_HELP_STRING([--with-def-proto], [def-proto])  ],
   [with_def_proto=$withval],[with_def_proto="xcromas"])

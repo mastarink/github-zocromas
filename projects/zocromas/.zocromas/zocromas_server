@@ -9,8 +9,8 @@ log=1
 max_config_backup=5
 messages=1
 default_port=5000
-save_opts=0
-save_opts_plus=0
+save_user_opts=0
+save_user_opts_plus=0
 restart_sleep=0.25
 # -
 # server
@@ -24,7 +24,7 @@ protodir=/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocromas_zocproto
 # -
 
 [listen 3]
-host=zocromas.mastar.lan:5005
+host=zocromas.mastar.lan
 host=mastarink.net:8900
 host=/tmp/zocromas.socket
 
@@ -35,8 +35,5 @@ proto=http
 [host mastarink.net:8900]
 docroot=/var/www/mastarink.net/mastarink.net/htdocs
 
-[host zocromas.mastar.lan:5005]
+[host zocromas.mastar.lan]
 docroot=/var/www/mastarink.net/mastarink.net/htdocs
-
-[host 1.zocromas.mastar.lan5005]
-docroot=/def

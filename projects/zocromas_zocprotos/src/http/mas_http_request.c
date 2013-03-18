@@ -210,7 +210,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
             break;
           case MAS_HTTP_METHOD_POST:
             {
-/*        HTTP Host='zocromas.mastar.lan:5005'                                                                        */
+/*        HTTP Host='zocromas.mastar.lan:60006'                                                                        */
 /*        HTTP User-Agent='Mozilla/5.0 (X11; Linux x86_64; rv:10.0.11) Gecko/20100101 Firefox/10.0.11'                */
 /*        HTTP Accept='text/html,application/xhtml+xml,application/xml;q=0.9,*)*;q=0.8'                               */
 /*        HTTP Accept-Language='uk,ru;q=0.8,en-us;q=0.5,en;q=0.3'                                                     */
@@ -218,7 +218,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
 /*        HTTP DNT='1'                                                                                                */
 /*        HTTP Connection='keep-alive'                                                                                */
 /*  (+)   HTTP Connection                                                                                             */
-/*        HTTP Referer='http://zocromas.mastar.lan:5005/post.html'                                                    */
+/*        HTTP Referer='http://zocromas.mastar.lan:60006/post.html'                                                    */
 /*        HTTP Content-Type='multipart/form-data; boundary=---------------------------213557806320239878091684659415' */
 /*        HTTP Content-Length='2473'                                                                                  */
 

@@ -7,27 +7,27 @@
     1357383813.35408 (   0.00005) : mas_server_master             :222 : {(0) created(?) logger thread [7f865fe6c700]}
     1357383813.35408 (   0.00006) : mas_server_master             :237 : {master loop for 4 hosts}
     1357383813.45415 (   0.10012) : mas_listener_th               :161 : {listener thread started}
-    1357383813.45417 (   0.10015) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5002)}
-    1357383813.45417 (   0.10015) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5002}
+    1357383813.45417 (   0.10015) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:x002)}
+    1357383813.45417 (   0.10015) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:x002}
     1357383813.45418 (   0.10016) : mas_listener_th               :161 : {listener thread started}
-    1357383813.45418 (   0.10016) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5003)}
-    1357383813.45419 (   0.10016) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5003}
-    1357383813.45419 (   0.10017) : mas_channel_init              :128 : {using zocromas.mastar.lan:5002 to init channel}
-    1357383813.45419 (   0.10017) : mas_channel_init              :128 : {using zocromas.mastar.lan:5003 to init channel}
+    1357383813.45418 (   0.10016) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:x003)}
+    1357383813.45419 (   0.10016) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:x003}
+    1357383813.45419 (   0.10017) : mas_channel_init              :128 : {using zocromas.mastar.lan:x002 to init channel}
+    1357383813.45419 (   0.10017) : mas_channel_init              :128 : {using zocromas.mastar.lan:x003 to init channel}
     1357383813.45420 (   0.10017) : mas_listener_th               :161 : {listener thread started}
     1357383813.45420 (   0.10018) : mas_listener_th               :161 : {listener thread started}
-    1357383813.45420 (   0.10018) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5005)}
-    1357383813.45421 (   0.10018) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5005}
-    1357383813.45421 (   0.10019) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:5004)}
-    1357383813.45421 (   0.10019) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:5004}
-    1357383813.45422 (   0.10019) : mas_channel_init              :128 : {using zocromas.mastar.lan:5005 to init channel}
-    1357383813.45422 (   0.10020) : mas_channel_init              :128 : {using zocromas.mastar.lan:5004 to init channel}
+    1357383813.45420 (   0.10018) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:x005)}
+    1357383813.45421 (   0.10018) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:x005}
+    1357383813.45421 (   0.10019) : mas_channel_create            :071 : {channel creating from zocromas.mastar.lan (def.port:x004)}
+    1357383813.45421 (   0.10019) : mas_channel_create            :075 : {channel created for zocromas.mastar.lan:x004}
+    1357383813.45422 (   0.10019) : mas_channel_init              :128 : {using zocromas.mastar.lan:x005 to init channel}
+    1357383813.45422 (   0.10020) : mas_channel_init              :128 : {using zocromas.mastar.lan:x004 to init channel}
     1357384664.75164 ( 851.39762) : mas_transaction_create        :049 : {client came}
     1357384664.75167 ( 851.39765) : mas_transaction_create        :058 : {creating transaction thread; prcontrol=0x7f8654000b08}
     1357384664.75167 ( 851.39765) : mas_transaction_create        :060 : {(0) created(?) transaction thread [7f865d03d700]}
     1357384664.75168 ( 851.39766) : mas_transaction_th            :199 : {transaction thread started [7f865d03d700]}
     1357384664.75168 ( 851.39766) : mas_transaction_th            :206 : {start r/th R0:0 @ L0:4}
-    1357384664.75169 ( 851.39767) : mas_channel_init              :128 : {using zocromas.mastar.lan:5002 to init channel}
+    1357384664.75169 ( 851.39767) : mas_channel_init              :128 : {using zocromas.mastar.lan:x002 to init channel}
     1357384664.75169 ( 851.39767) : mas_evaluate_cmd              :051 : {evaluate 'top' args: 'check'}
     1357384664.75170 ( 851.39767) : mas_evaluate_cmd              :069 : {to look for module top : top}
     1357384664.75170 ( 851.39768) : mas_evaluate_cmd              :076 : {lib mas_servcmd_top}

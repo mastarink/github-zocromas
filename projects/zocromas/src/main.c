@@ -1,5 +1,3 @@
-#include "mas_basic_def.h"
-
 #include <stdio.h>
 /*
  * mkdir m4

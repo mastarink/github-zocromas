@@ -67,21 +67,21 @@ static int
 mas_init_argv( int argc, char **argv, char **env )
 {
   WMSG( "INIT ARGV" );
-  ctrl.launcherv = argv;
-  ctrl.launcherc = argc;
-  ctrl.launchere = env;
+  ctrl.launchervv.v = argv;
+  ctrl.launchervv.c = argc;
+  ctrl.launcherev.v = env;
   /* if ( argc > 1 ) */
   {
     for ( int ia = 0; ia < argc; ia++ )
     {
-      opts.argc = mas_add_argv_arg( opts.argc, &opts.argv, argv[ia] );
+      opts.argvv.c = mas_add_argv_arg( opts.argvv.c, &opts.argvv.v, argv[ia] );
     }
     /* for ( int ia = 0; ia < argc; ia++ )                              */
     /* {                                                                */
-    /*   mMSG( "A: %d of %d. arg:'%s'", ia, opts.argc, opts.argv[ia] ); */
+    /*   mMSG( "A: %d of %d. arg:'%s'", ia, opts.argvv.c, opts.argvv.v[ia] ); */
     /* }                                                                */
   }
-  return opts.argc;
+  return opts.argvv.c;
 }
 
 int
@@ -92,14 +92,14 @@ mas_init_env(  )
   if ( opts.env_optsname && ( seopts = getenv( opts.env_optsname ) ) )
   {
     mMSG( "E: %s='%s'", opts.env_optsname, seopts );
-    /* opts.argc = mas_make_argv( seopts, opts.argc, &opts.argv, 0 ); */
-    opts.argc = mas_add_argv_args( opts.argc, &opts.argv, seopts, 0 );
-    /* for ( int ia = 0; ia < opts.argc; ia++ )                         */
+    /* opts.argvv.c = mas_make_argv( seopts, opts.argvv.c, &opts.argvv.v, 0 ); */
+    opts.argvv.c = mas_add_argv_args( opts.argvv.c, &opts.argvv.v, seopts, 0 );
+    /* for ( int ia = 0; ia < opts.argvv.c; ia++ )                         */
     /* {                                                                */
-    /*   mMSG( "E: %d of %d. arg:'%s'", ia, opts.argc, opts.argv[ia] ); */
+    /*   mMSG( "E: %d of %d. arg:'%s'", ia, opts.argvv.c, opts.argvv.v[ia] ); */
     /* }                                                                */
   }
-  /* opts.argc = mas_make_argv( "-P5001 -H192.168.71.2 -H192.168.71.2:5002 -H192.168.71.2:5003", opts.argc, &opts.argv, 0 ); */
+  /* opts.argvv.c = mas_make_argv( "-P5001 -H192.168.71.2 -H192.168.71.2:5002 -H192.168.71.2:5003", opts.argvv.c, &opts.argvv.v, 0 ); */
   return 0;
 }
 
@@ -151,6 +151,7 @@ error_handler_at_init( const char *func, int line, int rcode, int ierrno, const 
   /* int masierrno; */
 
   /* HMSG( "ERROR HANDLER >>>>>>>>>>>> %d:%s ; r:%d e:%d; msg : %s", line, func, rcode, ierrno, msg ? msg : "-" ); */
+  /* mas_set_error( func, line, ierrno, rcode, msg ? msg : "-" ); */
   mas_error( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
   mas_log( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
   /* va_start( args, rcode );                  */
@@ -207,34 +208,43 @@ mas_pre_init_opt_files( void )
   }
   if ( *sppid )
   {
-    /* const char *name = ctrl.progname; */
+    int rzero = 0;
     const char *name = ctrl.exename;
 
-#ifdef MAS_ONE_OF_CONFIGS
-    int rone = 0;
-
-    /* IEVAL_OPT( rone, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
-    IEVAL_OPT( rone, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
-    if ( !( rone > 0 ) )
-    {
-      IEVALM( r, mas_opts_restore( NULL, name ), "(%d) no opt file(s) for prog: '%s'", name );
-    }
-#else
-    int rzero = 0;
-    int rone = 0;
-    int rtwo = 0;
+    /* const char *name = ctrl.progname; */
 
     IEVAL_OPT( rzero, mas_opts_restore_zero( name ) );
-    if ( opts.read_user_opts )
     {
-      IEVAL_OPT( rone, mas_opts_restore( NULL, name ) );
-      if ( opts.read_user_opts_plus )
+      int rone = 0;
+
+#ifdef MAS_ONE_OF_CONFIGS
+
+      if ( opts.read_user_opts )
       {
-        /* IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
-        IEVAL_OPT( rtwo, mas_opts_restore_plus( NULL, name, ".", sppid, NULL ) );
+        /* IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+        if ( opts.read_user_opts_plus )
+        {
+          IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
+        }
+        if ( !( rone > 0 ) )
+        {
+          IEVALM( r, mas_opts_restore_user( NULL, name ), "(%d) no opt file(s) for prog: '%s'", name );
+        }
       }
-    }
+#else
+      int rtwo = 0;
+
+      if ( opts.read_user_opts )
+      {
+        IEVAL_OPT( rone, mas_opts_restore_user( NULL, name ) );
+        if ( opts.read_user_opts_plus )
+        {
+          /* IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+          IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
+        }
+      }
 #endif
+    }
   }
   return r;
 }
@@ -379,13 +389,13 @@ mas_init( int argc, char **argv, char **env )
   if ( !( mas_init_argv( argc, argv, env ) > 1 ) )
     IEVAL( r, mas_init_env(  ) );
 
-  /* HMSG( "opts.argv[0]: %s", opts.argv[0] ); */
+  /* HMSG( "opts.argvv.v[0]: %s", opts.argvv.v[0] ); */
   /* mas_init_message(  ); */
   /* atexit( atexit_fun ); */
   IEVAL( r, mas_init_sig(  ) );
   WMSG( "(%d) INIT %d", r, __LINE__ );
 
-  IEVAL( r, mas_cli_options( opts.argc, opts.argv ) );
+  IEVAL( r, mas_cli_options( opts.argvv.c, opts.argvv.v ) );
   ctrl.argv_nonoptind = r;
   IEVAL( r, mas_ctrl_init( &opts ) );
 
@@ -476,9 +486,9 @@ mas_destroy( void )
   if ( *sppid )
   {
     if ( !ctrl.opts_saved )
-      mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+      mas_opts_save_user( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
     if ( !ctrl.opts_saved_plus )
-      mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL );
+      mas_opts_save_user_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL );
   }
   WMSG( "DESTROY" );
   MAS_LOG( "destroy server" );
@@ -487,17 +497,17 @@ mas_destroy( void )
   if ( ctrl.is_client )
     mas_close_curses(  );
 #endif
-  if ( opts.argv )
+  if ( opts.argvv.v )
   {
-    /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, opts.argv[0] ); */
-    tMSG( ">>>>> %s %s", opts.argv[0], *( &opts.argv[1] ) );
+    /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, opts.argvv.v[0] ); */
+    tMSG( ">>>>> %s %s", opts.argvv.v[0], *( &opts.argvv.v[1] ) );
     if ( ctrl.restart )
     {
       int r = 0;
 
       HMSG( "DESTROY, RESTART" );
 /* see mas_control_data.c mas_control_types.h etc. */
-      WMSG( "execvp %s %s", opts.argv[0], opts.argv[1] );
+      WMSG( "execvp %s %s", opts.argvv.v[0], opts.argvv.v[1] );
       ctrl.restart_cnt++;
       {
         char val[512];
@@ -509,8 +519,8 @@ mas_destroy( void )
         HMSG( "RESTART : %s='%s'", name, val );
         setenv( name, val, 1 );
       }
-      IEVAL( r, execvp( opts.argv[0], &opts.argv[0] ) );
-      HMSG( "FAIL restart %d %s", r, opts.argv[0] );
+      IEVAL( r, execvp( opts.argvv.v[0], &opts.argvv.v[0] ) );
+      HMSG( "FAIL restart %d %s", r, opts.argvv.v[0] );
       P_ERR;
     }
   }

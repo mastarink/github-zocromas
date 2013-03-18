@@ -73,9 +73,13 @@ mas_ctrl_init( mas_options_t * popts )
 void
 mas_ctrl_destroy( void )
 {
-  mas_del_argv( ctrl.commands_num, ctrl.commands, 0 );
-  ctrl.commands_num = 0;
-  ctrl.commands = NULL;
+  mas_del_argv( ctrl.commandsv.c, ctrl.commandsv.v, 0 );
+  ctrl.commandsv.c = 0;
+  ctrl.commandsv.v = NULL;
+
+  mas_del_argv( ctrl.loaded_optsv.c, ctrl.loaded_optsv.v, 0 );
+  ctrl.loaded_optsv.c = 0;
+  ctrl.loaded_optsv.v = NULL;
 
 
   for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
@@ -93,5 +97,5 @@ mas_ctrl_add_command( const char *s )
   /* const char *se;              */
   /*                              */
   /* se = mas_find_eq_value( s ); */
-  ctrl.commands_num = mas_add_argv_arg( ctrl.commands_num, &ctrl.commands, s );
+  ctrl.commandsv.c = mas_add_argv_arg( ctrl.commandsv.c, &ctrl.commandsv.v, s );
 }

@@ -1,5 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_basic_def.h" */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +6,6 @@
 
 #include <signal.h>
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 

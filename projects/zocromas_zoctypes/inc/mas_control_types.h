@@ -135,10 +135,19 @@ struct mas_control_s
   mas_lcontrol_list_head_t *lcontrols_list;
   /* mas_loginfo_list_head_t *log_list; */
   mas_variables_list_head_t *hostvars;
-  char *const *launcherv;
-  int launcherc;
-  char *const *launchere;
+
+  /* int launcherc;          */
+  /* char *const *launcherv; */
+  mas_string_csetv_t launcherv;
   int argv_nonoptind;
+
+  /* char *const *launchere; */
+  mas_string_csetv_t launchervv;
+  mas_string_csetv_t launcherev;
+
+  /* char *const *loaded_optsv; */
+  /* int loaded_optsc;          */
+  mas_string_setv_t loaded_optsv;
 
   size_t protos_num;
   mas_transaction_protodesc_t *proto_descs;
@@ -161,8 +170,10 @@ struct mas_control_s
   int pidfd[MAS_MAX_PIDFD];
   char *logpath;
   FILE *logfile;
-  int commands_num;
-  char **commands;
+
+  /* char **commands;  */
+  /* int commands_num; */
+  mas_string_setv_t commandsv;
 
   pthread_key_t mas_thread_key;
   pthread_once_t mas_thread_key_once;

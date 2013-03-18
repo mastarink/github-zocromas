@@ -59,17 +59,17 @@ main( int argc, char *argv[], char *env[] )
   /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
   IEVAL( r, mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ) );
 #endif
-  for ( int ia = opts.hosts_num; r >= 0 && ia > 0; ia-- )
+  for ( int ia = opts.hostsv.c; r >= 0 && ia > 0; ia-- )
   {
       int maxit = 0;
-    /* mas_client( opts.hosts[ia - 1] ); */
+    /* mas_client( opts.hostsv.v[ia - 1] ); */
     if (!(r<0))do
     {
       r = 0;
-      IEVAL( r, mas_client( opts.hosts[ia - 1] ) );
+      IEVAL( r, mas_client( opts.hostsv.v[ia - 1] ) );
       if ( r < 0 && ctrl.restart_cnt > 0 )
       {
-        HMSG( "RESTART %s DELAY %10.5fs", opts.argv[0], opts.restart_sleep );
+        HMSG( "RESTART %s DELAY %10.5fs", opts.argvv.v[0], opts.restart_sleep );
         mas_nanosleep( opts.restart_sleep );
       }
       maxit++;

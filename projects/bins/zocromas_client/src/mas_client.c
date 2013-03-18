@@ -96,7 +96,7 @@ mas_client_zerocommands( mas_channel_t * pchannel )
     char *args;
 
     cmd = mas_strdup( "check args " );
-    args = mas_argv_string( ctrl.launcherc, ctrl.launcherv, ctrl.argv_nonoptind );
+    args = mas_argv_string( ctrl.launchervv.c, ctrl.launchervv.v, ctrl.argv_nonoptind );
     cmd = mas_strcat_x( cmd, args );
     mas_free( args );
     /* HMSG( MAS_SEPARATION_LINE ); */
@@ -111,17 +111,17 @@ mas_client_autocommands( mas_channel_t * pchannel )
 {
   int r = 0;
 
-  HMSG( "(%d) OPTS COMMANDS[%u]:", r, opts.commands_num );
-  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < opts.commands_num; ic++ )
+  HMSG( "(%d) OPTS COMMANDS[%u]:", r, opts.commandsv.c );
+  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < opts.commandsv.c; ic++ )
   {
-    HMSG( "(opts) command to execute : '%s'", opts.commands[ic] );
-    IEVAL( r, mas_client_exchange( pchannel, opts.commands[ic], "%s\n" ) );
+    HMSG( "(opts) command to execute : '%s'", opts.commandsv.v[ic] );
+    IEVAL( r, mas_client_exchange( pchannel, opts.commandsv.v[ic], "%s\n" ) );
   }
-  HMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commands_num );
-  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < ctrl.commands_num; ic++ )
+  HMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commandsv.c );
+  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < ctrl.commandsv.c; ic++ )
   {
-    HMSG( "(ctrl) command to execute : '%s'", ctrl.commands[ic] );
-    IEVAL( r, mas_client_exchange( pchannel, ctrl.commands[ic], "%s\n" ) );
+    HMSG( "(ctrl) command to execute : '%s'", ctrl.commandsv.v[ic] );
+    IEVAL( r, mas_client_exchange( pchannel, ctrl.commandsv.v[ic], "%s\n" ) );
   }
   return r;
 }
@@ -145,10 +145,10 @@ mas_client( const char *host_port )
     size_t hostlen = 0;
     unsigned hport = 0;
 
-    HMSG( "R.CLIENT %u", cnt );
     /* mMSG( "host_port:%s", host_port ); */
     WMSG( "(i/c:%u; i/p:%d) client external loop %s", ctrl.in_client, ctrl.in_pipe, host_port );
     WMSG( "to init '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
+    HMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, opts.default_port );
     hostlen = mas_parse_host_port( host_port, &hport, opts.default_port );
     /* r = mas_channel_init( pchannel, 0  , CHN_SOCKET, host_port, hostlen, hport ); */
     IEVAL( r, mas_channel_init( pchannel, 0, CHN_SOCKET, host_port, hostlen, hport ) );

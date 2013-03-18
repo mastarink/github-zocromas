@@ -1,14 +1,11 @@
-#define MAS_DEFAULT_PORT 5002
-
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_basic_def.h" */
+#include <stdlib.h>
 
-#include <mastar/types/mas_control_types.h>
+/* #include <mastar/types/mas_control_types.h> */
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
+/* extern mas_control_t ctrl; */
 extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 
 
 /*
@@ -55,12 +52,12 @@ mas_options_t opts = {
                 .msg_watch = 0,
                 .msg_io = 0,
 
-                .msg_trace = 0,    /* tMSG */
+                .msg_trace = 0, /* tMSG */
                 .msg_trace_main = 1,
                 .msg_trace_listener = 1,
                 .msg_trace_transaction = 1,
 
-                .msg_main = 0,     /* mMSG */
+                .msg_main = 0,  /* mMSG */
 /* respoder */
                 .msg_transaction = 1,
                 .msg_listen = 0,
@@ -95,17 +92,23 @@ mas_options_t opts = {
   .noredirect_std = 0,
   .noclose_std = 0,
 
+#  ifdef MAS_DEFAULT_PORT
   .default_port = MAS_DEFAULT_PORT,
+#  endif
   .env_optsname = "MAS_ZOCROMAS_DEFOPTS",
   .env_hostname = "MAS_ZOCROMAS_DEFHOST",
-  .argc = 0,
-  .argv = NULL,
-  .hosts_num = 0,
-  .hosts = NULL,
-  .protos_num = 0,
-  .protos = NULL,
-  .commands_num = 0,
-  .commands = NULL,
+  .argvv={0,NULL},
+  /* .argc = 0,    */
+  /* .argv = NULL, */
+  .hostsv={0,NULL},
+  /* .hosts_num = 0, */
+  /* .hosts = NULL,  */
+  .protosv={0,NULL},
+  /* .protos_num = 0, */
+  /* .protos = NULL,  */
+  .commandsv={0,NULL},
+  /* .commands_num = 0, */
+  /* .commands = NULL,  */
   .client_attempts = 1,
   .modsdir = NULL,
   .protodir = NULL,

@@ -1,6 +1,10 @@
 #ifndef MAS_OPTS_TYPES_H
 #  define MAS_OPTS_TYPES_H
 
+#  include <stdio.h>
+
+#  include <mastar/types/mas_common_types.h>
+
 struct mas_options_s
 {
   union mas_options_u
@@ -38,7 +42,7 @@ struct mas_options_s
   unsigned listener_single:1;
   unsigned transaction_single:1;
   unsigned nomessages:1;
-  
+
   unsigned nodaemon:1;
   unsigned noclose_std:1;
   unsigned noredirect_std:1;
@@ -62,14 +66,23 @@ struct mas_options_s
   unsigned default_port;
   char env_optsname[256];
   char env_hostname[256];
-  unsigned argc;
-  char **argv;
-  int protos_num;
-  char **protos;
-  int hosts_num;
-  char **hosts;
-  int commands_num;
-  char **commands;
+
+  /* unsigned argc; */
+  /* char **argv;   */
+  mas_string_setv_t argvv;
+
+  /* int protos_num; */
+  /* char **protos;  */
+  mas_string_setv_t protosv;
+
+  /* int hosts_num; */
+  /* char **hosts;  */
+  mas_string_setv_t hostsv;
+
+  /* int commands_num; */
+  /* char **commands;  */
+  mas_string_setv_t commandsv;
+
   unsigned client_attempts;
   char *uuid;
   char *msgfilename;

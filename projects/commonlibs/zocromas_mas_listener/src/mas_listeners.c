@@ -69,15 +69,15 @@ mas_listeners_start( void )
   {
     MAS_LOG( "to start listeners" );
     lMSG( "to start listeners" );
-    WMSG( "LISTENERS START" );
-    for ( unsigned ith = 0; ith < opts.hosts_num; ith++ )
+    HMSG( "LISTENERS START" );
+    for ( unsigned ith = 0; ith < opts.hostsv.c; ith++ )
     {
-      if ( opts.hosts[ith] )
+      if ( opts.hostsv.v[ith] )
       {
-        lMSG( "host %d: '%s'", ith, opts.hosts[ith] );
-        WMSG( "LISTEN AT (#%d) %s", ith + 1, opts.hosts[ith] );
-        MAS_LOG( "to start listener #%d %s", ith + 1, opts.hosts[ith] );
-        r = mas_listener_start( opts.hosts[ith], opts.default_port );
+        lMSG( "host %d: '%s'", ith, opts.hostsv.v[ith] );
+        HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, opts.hostsv.v[ith], opts.default_port );
+        MAS_LOG( "to start listener #%d %s", ith + 1, opts.hostsv.v[ith] );
+        r = mas_listener_start( opts.hostsv.v[ith], opts.default_port );
       }
       else
       {

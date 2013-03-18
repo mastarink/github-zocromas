@@ -33,6 +33,7 @@ src_configure() {
 src_install() {
     emake DESTDIR="${D}" install
 
+	newenvd "${FILESDIR}"/zocromas_client.envd 50zocromas_client || die
 #    dodoc FAQ NEWS README
 #    dohtml EXTENDING.html ctags.html
 }

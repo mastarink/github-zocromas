@@ -117,30 +117,30 @@ mas_master( void )
   {
     sleep( opts.nomaster );
   }
-  else if ( opts.hosts_num > 0 && opts.hosts )
+  else if ( opts.hostsv.c > 0 && opts.hostsv.v )
   {
-    /* for ( int ih = 0; ih < opts.hosts_num; ih++ ) */
+    /* for ( int ih = 0; ih < opts.hostsv.c; ih++ ) */
     /* {                                             */
-    /*   thMSG( "%d. host %s", ih, opts.hosts[ih] ); */
+    /*   thMSG( "%d. host %s", ih, opts.hostsv.v[ih] ); */
     /* }                                             */
     while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal )
     {
-      MAS_LOG( "master loop for %d hosts", opts.hosts_num );
-      tMSG( "master loop for %d hosts", opts.hosts_num );
-      HMSG( "MASTER LOOP %dh", opts.hosts_num );
+      MAS_LOG( "master loop for %d hosts", opts.hostsv.c );
+      tMSG( "master loop for %d hosts", opts.hostsv.c );
+      HMSG( "MASTER LOOP %dh", opts.hostsv.c );
       /* mas_listeners.c */
       r = mas_listeners_start(  );
 
       OMSG( "WAITING..." );
       r = mas_listeners_wait(  );
 
-      tMSG( "(%d) master loop for %d hosts", r, opts.hosts_num );
+      tMSG( "(%d) master loop for %d hosts", r, opts.hostsv.c );
 
       {
         /* ???????? All listeners closed, what shall I do ?
          * 1. exit ( what is to be done with 'ctrl.keep_listening = 0' )
          * 2. re-run default listener(s)
-         * 3. re-run defined ( opts.hosts ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
+         * 3. re-run defined ( opts.hostsv.v ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
          * */
         if ( MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
         {

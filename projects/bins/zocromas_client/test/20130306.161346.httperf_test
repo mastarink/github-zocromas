@@ -1,4 +1,4 @@
-httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:5005 --port=5005 --uri=/HarryHarrison.jpeg --http-version=1.0 --send-buffer=4096 --recv-buffer=16384 --num-conns=50 --num-calls=2000
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:x005 --port=x005 --uri=/HarryHarrison.jpeg --http-version=1.0 --send-buffer=4096 --recv-buffer=16384 --num-conns=50 --num-calls=2000
 Maximum connect burst length: 1
 
 Total: connections 50 requests 100000 replies 100000 test-duration 19.779 s

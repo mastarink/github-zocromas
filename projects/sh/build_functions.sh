@@ -12,6 +12,7 @@ function configure_m ()
   local cfgdir
   if [[ "$1" ]] ; then
     cfgdir=$1
+    shift
   else
     cfgdir=$configuredir
   fi
@@ -19,7 +20,7 @@ function configure_m ()
   if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] \
   		&& [[ "$build_at" ]] ; then
     if pushd "$build_at"  >/dev/null ; then 
-      if $cfgdir/configure $configure_opts ; then
+      if $cfgdir/configure $configure_opts $@ ; then
 	popd >/dev/null || return 1
 	return 0
       fi

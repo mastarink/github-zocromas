@@ -68,44 +68,46 @@ int
 mas_init_load_protos( void )
 {
   int r = 0;
-  int protos_num = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
 
   MAS_LOG( "(%d) init / load protos", r );
-  if ( !opts.protos_num )
+  if ( !opts.protosv.c )
   {
-    HMSG("NO PROTCOLOS DEFINED");
-    WMSG("no protcolos defined");
+    HMSG( "NO PROTCOLOS DEFINED" );
+    WMSG( "no protcolos defined" );
     IEVAL( r, -1 );
   }
   if ( !ctrl.proto_descs )
   {
-    proto_descs = mas_calloc( opts.protos_num, sizeof( mas_transaction_protodesc_t ) );
-    for ( int ipr = 0; ipr < opts.protos_num; ipr++ )
+    int protos_cnt = 0;
+
+    proto_descs = mas_calloc( opts.protosv.c, sizeof( mas_transaction_protodesc_t ) );
+    for ( int ipr = 0; ipr < opts.protosv.c; ipr++ )
     {
       /* from one */
-      proto_descs[ipr].proto_id = protos_num + 1;
-      proto_descs[ipr].name = mas_strdup( opts.protos[ipr] );
-      proto_descs[ipr].function = mas_modules_load_proto_func( opts.protos[ipr], "mas_proto_main" );
+      proto_descs[ipr].proto_id = protos_cnt + 1;
+      proto_descs[ipr].name = mas_strdup( opts.protosv.v[ipr] );
+      proto_descs[ipr].function = mas_modules_load_proto_func( opts.protosv.v[ipr], "mas_proto_main" );
       if ( !proto_descs[ipr].function )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
         IEVAL( r, -1 );
-        WMSG( "INIT PROTOS - #%d: %s", ipr, opts.protos[ipr] );
+        WMSG( "INIT PROTOS - #%d: %s", ipr, opts.protosv.v[ipr] );
       }
       else
       {
-        WMSG( "INIT PROTOS + #%d: %s", ipr, opts.protos[ipr] );
+        WMSG( "INIT PROTOS + #%d: %s", ipr, opts.protosv.v[ipr] );
       }
-      protos_num++;
-      MAS_LOG( "(%d) init / load protos #%d", r, protos_num );
+      protos_cnt++;
+      MAS_LOG( "(%d) init / load protos #%d", r, protos_cnt );
     }
-    ctrl.protos_num = protos_num;
+    ctrl.protos_num = protos_cnt;
     ctrl.proto_descs = proto_descs;
-    if ( opts.protos_num && !ctrl.protos_num )
+    if ( opts.protosv.c && !ctrl.protos_num )
     {
       IEVAL( r, -1 );
     }
+    HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_cnt, opts.protosv.c );
   }
   else
   {
@@ -114,7 +116,6 @@ mas_init_load_protos( void )
   /* r = ctrl.proto_descs ? 0 : -1; */
   IEVAL( r, ctrl.proto_descs ? 0 : -1 );
   MAS_LOG( "(%d) init / load protos done", r );
-  HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_num, opts.protos_num );
   return r;
 }
 
@@ -380,7 +381,7 @@ mas_destroy_server( void )
   /*   mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );                                                */
   /* if ( !ctrl.opts_saved_plus )                                                                                       */
   /*   mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
-  
+
   if ( ctrl.lcontrols_list )
   {
     MAS_LOG( "to cancel listeners" );

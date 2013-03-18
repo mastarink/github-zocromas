@@ -78,13 +78,13 @@ env_cmd( STD_CMD_ARGS )
   }
   else
   {
-    if ( ctrl.launchere )
+    if ( ctrl.launcherev.v )
     {
       char *const *pe;
       const char *notan;
 
       val = NULL;
-      pe = ctrl.launchere;
+      pe = ctrl.launcherev.v;
       while ( pe && *pe )
       {
         notan = mas_find_eq_value( *pe );
@@ -115,7 +115,7 @@ date_cmd( STD_CMD_ARGS )
 static char *
 args_cmd( STD_CMD_ARGS )
 {
-  return mas_argv_string( ctrl.launcherc, ctrl.launcherv, 1 );
+  return mas_argv_string( ctrl.launchervv.c, ctrl.launchervv.v, 1 );
 }
 
 #ifdef MAS_USE_VARIABLES

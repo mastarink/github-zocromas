@@ -1,5 +1,4 @@
 #include <mastar/wrap/mas_std_def.h>
-/* #include "mas_basic_def.h" */
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -222,8 +222,8 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
       docroot_var = mas_variables_find( ctrl.hostvars, http->host, "docroot" );
     if ( !docroot_var )
       docroot_var = mas_variables_find( ctrl.hostvars, "zocromas.mastar.lan", "docroot" );
-    if ( !docroot_var )
-      docroot_var = mas_variables_find( ctrl.hostvars, "zocromas.mastar.lan:5005", "docroot" );
+    /* if ( !docroot_var )                                                                        */
+    /*   docroot_var = mas_variables_find( ctrl.hostvars, "zocromas.mastar.lan:%u" , "docroot" ); */
     if ( docroot_var && docroot_var->value )
       http->docroot = mas_strdup( docroot_var->value );
     else

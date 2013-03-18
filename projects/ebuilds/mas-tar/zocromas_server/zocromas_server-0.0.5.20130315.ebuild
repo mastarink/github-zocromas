@@ -36,8 +36,9 @@ src_configure() {
 src_install() {
     emake DESTDIR="${D}" install
 
-	newinitd "${FILESDIR}"/zocromas_server.initd zocromas_server || die
-	newconfd "${FILESDIR}"/zocromas_server.confd zocromas_server || die
+	newinitd "${FILESDIR}"/zocromas_server.initd zocromas_server   || die
+	newconfd "${FILESDIR}"/zocromas_server.confd zocromas_server   || die
+	newenvd  "${FILESDIR}"/zocromas_server.envd  50zocromas_server || die
 
 #    dodoc FAQ NEWS README
 #    dohtml EXTENDING.html ctags.html

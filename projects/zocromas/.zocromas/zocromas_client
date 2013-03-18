@@ -8,9 +8,9 @@ logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
 log=1
 max_config_backup=5
 messages=1
-default_port=6006
-save_opts=0
-save_opts_plus=0
+# default_port=6006
+save_user_opts=0
+save_user_opts_plus=0
 restart_sleep=0.41
 # -
 # client
@@ -21,7 +21,7 @@ message=mas CLIENT config
 
 [hosts 2]
 host=/tmp/zocromas.socket
-host=zocromas.mastar.lan:5005
+host=zocromas.mastar.lan
 
 [commands 2]
 command=get server info

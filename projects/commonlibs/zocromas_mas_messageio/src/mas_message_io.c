@@ -153,6 +153,7 @@ mas_channel_write_message( mas_channel_t * pchannel, const char *cbuf, mas_heade
 #else
   IEVAL( w, mas_fwrite_message( mas_channel_stream( pchannel ), cbuf, pheader ) );
 #endif
+  HMSG( "WRITTEN MESSAGE [%u]", w );
 
   return w;
 }
@@ -170,83 +171,90 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
     *pbuf = NULL;
 
   HMSG( "READ MESSAGE (h:%lu)", sizeof( mas_header_t ) );
-  mas_channel_read_some( pchannel );
-  msg = ( mas_message_t * ) pchannel->buffer.buffer;
-
-  /* HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), prcontrol->h.pchannel->buffer.length, pheader->len ); */
-  HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
-
-  /* if ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length ) */
-  /*   mas_channel_read_remainder( pchannel );                            */
-  while ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length )
-    mas_channel_read_some( pchannel );
-  
-  msg = ( mas_message_t * ) pchannel->buffer.buffer;
-
-  r = pchannel->buffer.length;
-  if ( r > 0 )
-    rmsg += r;
-  if ( r > 0 && rmsg >= 0 )
+  /* mas_channel_read_some( pchannel ); */
+  /* IEVAL( r, mas_channel_read_some( pchannel ) ); */
+  msg = ( mas_message_t * ) mas_channel_buffer( pchannel, NULL );
+  if ( msg )
   {
-    if ( r > msghsz && msg->h.len > 0 )
+    /* HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), prcontrol->h.pchannel->buffer.length, pheader->len ); */
+    HMSG( "1 h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+
+    /* if ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length ) */
+    /*   mas_channel_read_remainder( pchannel );                            */
+    while ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length )
     {
-      if ( msg->h.vers != MSG_VERSION )
+      HMSG( "> h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+      /* mas_channel_read_some( pchannel ); */
+      IEVAL( r, mas_channel_read_some( pchannel ) );
+    }
+    HMSG( "2 h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+
+    msg = ( mas_message_t * ) pchannel->buffer.buffer;
+
+    r = pchannel->buffer.length;
+    if ( r > 0 )
+      rmsg += r;
+    if ( r > 0 && rmsg >= 0 )
+    {
+      if ( r > msghsz && msg->h.len > 0 )
       {
-        EMSG( "version not match: %x ? %x : %s", msg->h.vers, MSG_VERSION, ( char * ) &msg->h );
-        EMSG( "(sign)%lx : %lx", ( unsigned long ) msg->h.sign, ( unsigned long ) MSG_SIGNATURE );
-        IEVAL( r, -1 );
+        if ( msg->h.vers != MSG_VERSION )
+        {
+          EMSG( "version not match: %x ? %x : %s", msg->h.vers, MSG_VERSION, ( char * ) &msg->h );
+          EMSG( "(sign)%lx : %lx", ( unsigned long ) msg->h.sign, ( unsigned long ) MSG_SIGNATURE );
+          IEVAL( r, -1 );
+        }
+        else
+        {
+          ioMSG( "version OK" );
+        }
+        if ( msg->h.sign != MSG_SIGNATURE )
+        {
+          EMSG( "wrong signature: %lx", ( unsigned long ) msg->h.sign );
+          /* sleep (3); */
+          IEVAL( r, -1 );
+        }
+        else
+        {
+          HMSG( "signature OK" );
+          HMSG( "(vers)%x : %x", msg->h.vers, MSG_VERSION );
+          HMSG( "(sign)%lx : %lx", ( unsigned long ) msg->h.sign, ( unsigned long ) MSG_SIGNATURE );
+
+          if ( pheader )
+          {
+            mas_header_t *msgh = ( mas_header_t * ) msg;
+
+            *pheader = *msgh;
+            /*
+             *pheader->sender_pid = msgh->h.sender_pid;
+             *pheader->sender_vdate = msgh->h.sender_vdate;
+             *pheader->sender_vtime = msgh->h.sender_vtime;
+             */
+          }
+          if ( r > 0 )
+          {
+            if ( pbuf )
+            {
+              HMSG( "got; new opts:%d; size:%d / %d", msg->h.new_opts, msgsz, msg->h.len );
+              *pbuf = mas_malloc( msg->h.len );
+              HMSG( "buf: a.sz:%d", msg->h.len );
+              memcpy( *pbuf, msg->message, msg->h.len );
+            }
+            else
+            {
+              EMSG( "mas_read_message error can't pass msg" );
+            }
+          }
+        }
       }
       else
       {
-        ioMSG( "version OK" );
-      }
-      if ( msg->h.sign != MSG_SIGNATURE )
-      {
-        EMSG( "wrong signature: %lx", ( unsigned long ) msg->h.sign );
-        /* sleep (3); */
-        IEVAL( r, -1 );
-      }
-      else
-      {
-        HMSG( "signature OK" );
-        HMSG( "(vers)%x : %x", msg->h.vers, MSG_VERSION );
-        HMSG( "(sign)%lx : %lx", ( unsigned long ) msg->h.sign, ( unsigned long ) MSG_SIGNATURE );
-
-        if ( pheader )
-        {
-          mas_header_t *msgh = ( mas_header_t * ) msg;
-
-          *pheader = *msgh;
-          /*
-           *pheader->sender_pid = msgh->h.sender_pid;
-           *pheader->sender_vdate = msgh->h.sender_vdate;
-           *pheader->sender_vtime = msgh->h.sender_vtime;
-           */
-        }
-        if ( r > 0 )
-        {
-          if ( pbuf )
-          {
-            HMSG( "got; new opts:%d; size:%d / %d", msg->h.new_opts, msgsz, msg->h.len );
-            *pbuf = mas_malloc( msg->h.len );
-            HMSG( "buf: a.sz:%d", msg->h.len );
-            memcpy( *pbuf, msg->message, msg->h.len );
-          }
-          else
-          {
-            EMSG( "mas_read_message error can't pass msg" );
-          }
-        }
+        EMSG( "header size (got:%d : expected:%d)", r, msghsz );
+        IEVAL( rmsg, -1 );
       }
     }
-    else
-    {
-      EMSG( "header size (got:%d : expected:%d)", r, msghsz );
-      IEVAL( rmsg, -1 );
-    }
+    mas_channel_delete_buffer( pchannel );
   }
-  mas_channel_delete_buffer( pchannel );
-
-
+  HMSG( "READ ioMESSAGE [%u]", rmsg );
   return rmsg;
 }

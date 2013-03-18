@@ -10,20 +10,20 @@ max_config_backup=5
 daemon=0
 messages=1
 default_port=5000
-save_opts=0
-save_opts_plus=1
+save_user_opts=0
+save_user_opts_plus=1
 disconnect_prompt=1
 wait_server=0
 
 [listen 2]
-host=zocromas.mastar.lan:5005
+host=zocromas.mastar.lan:60006
 host=mastarink.net:8900
 
 [host mastarink.net:8900]
 docroot=/var/www/mastarink.net/mastarink.net/htdocs
 
-[host zocromas.mastar.lan:5005]
+[host zocromas.mastar.lan:60006]
 docroot=/var/www/mastarink.net/mastarink.net/htdocs
 
-[host 1.zocromas.mastar.lan5005]
+[host 1.zocromas.mastar.lan60006]
 docroot=/def

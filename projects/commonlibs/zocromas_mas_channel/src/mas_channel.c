@@ -39,7 +39,6 @@ more:
   mas_client.c
   
   mas_transaction_control.c
-  mas_basic_def.h
 */
 
 
@@ -195,7 +194,7 @@ mas_channel_read_some( mas_channel_t * pchannel )
 
   if ( !pchannel->buffer.maxread )
     pchannel->buffer.maxread = 1028;
-  /* WMSG( "READ SOME IPTR: %ld", ( unsigned long ) pchannel->buffer.iptr ); */
+  WMSG( "READ SOME maxread: %ld", ( unsigned long ) pchannel->buffer.maxread );
   /* WMSG( "(%d)SOME", r ); */
   IEVAL( r, mas_io_read_some( rfd, &pchannel->buffer.buffer, &pchannel->buffer.size, pchannel->buffer.maxread ) );
 #else
@@ -218,7 +217,9 @@ mas_channel_read_remainder( mas_channel_t * pchannel )
 
   while ( !( r < 0 ) && !mas_channel_buffer_endfile( pchannel ) )
   {
-    r = mas_channel_read_some( pchannel );
+    /* r = mas_channel_read_some( pchannel ); */
+    IEVAL( r, mas_channel_read_some( pchannel ) );
+
     WMSG( "(%d)SOME/REM %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
   }
   return r;

@@ -120,6 +120,9 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
   int r = -1;
   const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;
 
+/* short: mas_channel_read_message */
+
+  /* prcontrol->h.pchannel->buffer.maxread = 1028 * 4; */
   pheader_data = ( mas_header_t * ) mas_channel_buffer( prcontrol->h.pchannel, NULL );
 
   HMSG( "XCROMAS (%d) %lu", pheader_data ? 1 : 0, ( unsigned long ) prcontrol->h.pchannel->buffer.length );
@@ -138,8 +141,13 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
 
     /* if ( sizeof( mas_header_t ) + pheader_data->len < prcontrol->h.pchannel->buffer.length ) */
     /*   mas_channel_read_remainder( prcontrol->h.pchannel );                                   */
+
+
     while ( sizeof( mas_header_t ) + pheader_data->len < prcontrol->h.pchannel->buffer.length )
+    {
+      HMSG( "pheader_data->len:%u; buflen:%lu", pheader_data->len, prcontrol->h.pchannel->buffer.length );
       mas_channel_read_some( prcontrol->h.pchannel );
+    }
 
 
 

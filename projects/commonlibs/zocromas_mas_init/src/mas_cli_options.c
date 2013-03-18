@@ -227,12 +227,12 @@ mas_cli_make_option( int opt, const char *m_optarg )
       opts.msgfilename = mas_strdup( optarg );
     break;
   case MAS_CLI_OPT_HOST:
-    opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, optarg );
-    mMSG( "HOST %d: %s [%p]", opts.hosts_num, optarg, ( void * ) opts.hosts );
+    opts.hostsv.c = mas_add_argv_arg( opts.hostsv.c, &opts.hostsv.v, optarg );
+    mMSG( "HOST %d: %s [%p]", opts.hostsv.c, optarg, ( void * ) opts.hostsv.v );
     break;
   case MAS_CLI_OPT_PROTO:
-    opts.protos_num = mas_add_argv_arg( opts.protos_num, &opts.protos, optarg );
-    mMSG( "PROTO %d: %s [%p]", opts.protos_num, optarg, ( void * ) opts.protos );
+    opts.protosv.c = mas_add_argv_arg( opts.protosv.c, &opts.protosv.v, optarg );
+    mMSG( "PROTO %d: %s [%p]", opts.protosv.c, optarg, ( void * ) opts.protosv.v );
     break;
   case MAS_CLI_OPT_PORT:
     if ( optarg && *optarg )
@@ -379,8 +379,8 @@ mas_cli_make_option( int opt, const char *m_optarg )
       opts.f.bit.msg_mem = 1;
     break;
   case MAS_CLI_OPT_NOHOSTS:
-    opts.hosts_num = mas_del_argv( opts.hosts_num, opts.hosts, 0 );
-    opts.hosts = NULL;
+    opts.hostsv.c = mas_del_argv( opts.hostsv.c, opts.hostsv.v, 0 );
+    opts.hostsv.v = NULL;
     break;
   case MAS_CLI_OPT_EXITSLEEP:
     opts.exitsleep = ( unsigned ) ( optarg && *optarg ? strtol( optarg, NULL, 10 ) : 30 );

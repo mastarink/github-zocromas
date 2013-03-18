@@ -44,7 +44,6 @@ more:
   mas_client.c
   
   mas_transaction_control.c
-  mas_basic_def.h
 */
 
 void

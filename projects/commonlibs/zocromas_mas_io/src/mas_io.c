@@ -407,7 +407,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
   ssize_t rsz;
   size_t bufsz;
 
-  bufsz = 1024 * 4 + 4;
+  bufsz = 2048 * 4 + 4;
 
   /* MAS_LOG( "to read io (read some)" ); */
 #ifndef MAS_CHANNEL_STREAM_READ
@@ -437,7 +437,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
       if ( rsz <= 0 )
         break;
       {
-        WMSG( "TO READ 'SOME' %lu", rsz );
+        HMSG( "TO READ io 'SOME' %lu maxsz:%lu; totread:%lu", rsz, maxsz, totread );
         if ( rsz > bufsz )
         {
           HMSG( "WOOOOOOOOOOOOOO !TO READ 'SOME' %lu", rsz );
@@ -447,7 +447,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
 #else
         IEVAL( readsz, mas_fread( read_buf, 1, rsz, stream ) );
 #endif
-        WMSG( "READ 'SOME' %ld of %ld (e%d)", ( unsigned long ) readsz, ( unsigned long ) rsz, errno );
+        HMSG( "READ 'SOME' %ld of %ld (e%d)", ( unsigned long ) readsz, ( unsigned long ) rsz, errno );
       }
       if ( readsz > 0 )
       {
@@ -492,6 +492,6 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
     }
     mas_free( read_buf );
   }
-  WMSG( "READ '/SOME' %lu", totread );
+  HMSG( "READ '/SOME' %lu", totread );
   return totread;
 }

@@ -74,14 +74,16 @@ mas_control_t ctrl = {
   .lcontrols_list = NULL,
   /* .listening_controls_list = NULL, */
 
-  .launcherv = NULL,
-  .launcherc = 0,
-  .launchere = NULL,
+  .launchervv = {0, NULL},
+  .launcherev = {0, NULL},
+  /* .launcherv = NULL,   */
+  /* .launcherc = 0,      */
+  /* .launchere = NULL,   */
   .argv_nonoptind = 0,
 
   .stamp.vtsc = MAS_S_DATE,
-  
-  
+
+
   /* .stamp.vdate = ( uint64_t ) ( unsigned long long ) ( &__MAS_LINK_DATE__ ),    */
   /* .stamp.vtime = ( uint64_t ) ( unsigned long long ) ( &__MAS_LINK_TIME__ ),    */
   /* .stamp.vts = ( uint64_t ) ( unsigned long long ) ( &__MAS_LINK_TIMESTAMP__ ), */
@@ -128,8 +130,9 @@ mas_control_t ctrl = {
              .cnttr3_mutex = PTHREAD_MUTEX_INITIALIZER,
              .logger_mutex = PTHREAD_MUTEX_INITIALIZER,
              },
-  .commands_num = 0,
-  .commands = NULL,
+  /* .commands_num = 0, */
+  /* .commands = NULL,  */
+  .commandsv = {0, NULL},
   .error_handler = mas_error_handler,
 };
 

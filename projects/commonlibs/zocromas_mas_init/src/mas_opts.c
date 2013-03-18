@@ -45,17 +45,17 @@ related:
 int
 mas_opts_destroy( void )
 {
-  mas_del_argv( opts.hosts_num, opts.hosts, 0 );
-  opts.hosts_num = 0;
-  opts.hosts = NULL;
+  mas_del_argv( opts.hostsv.c, opts.hostsv.v, 0 );
+  opts.hostsv.c = 0;
+  opts.hostsv.v = NULL;
 
-  mas_del_argv( opts.protos_num, opts.protos, 0 );
-  opts.protos_num = 0;
-  opts.protos = NULL;
+  mas_del_argv( opts.protosv.c, opts.protosv.v, 0 );
+  opts.protosv.c = 0;
+  opts.protosv.v = NULL;
 
-  mas_del_argv( opts.commands_num, opts.commands, 0 );
-  opts.commands_num = 0;
-  opts.commands = NULL;
+  mas_del_argv( opts.commandsv.c, opts.commandsv.v, 0 );
+  opts.commandsv.c = 0;
+  opts.commandsv.v = NULL;
 
   if ( opts.uuid )
     mas_free( opts.uuid );
@@ -97,9 +97,9 @@ mas_opts_destroy( void )
     mas_free( opts.configfilename );
   opts.configfilename = NULL;
 
-  mas_del_argv( opts.argc, opts.argv, 0 );
-  opts.argc = 0;
-  opts.argv = NULL;
+  mas_del_argv( opts.argvv.c, opts.argvv.v, 0 );
+  opts.argvv.c = 0;
+  opts.argvv.v = NULL;
   return 0;
 }
 
@@ -261,9 +261,9 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
   int r = 0;
   int rtot = -1;
 
-  IEVAL( r, mas_opts_set_configdir( dirname ) );
-  IEVAL( r, mas_opts_set_configfilename( filename ) );
-  IEVAL( r, mas_opts_check_dir(  ) );
+  IEVALM( r, mas_opts_set_configdir( dirname ), "(%d)set config dir: '%s'", dirname );
+  IEVALM( r, mas_opts_set_configfilename( filename ), "(%d)opts file:'%s'", filename );
+  IEVALM( r, mas_opts_check_dir(  ), "(%d)config dir: '%s'", opts.configdir );
   if ( r == 0 )
   {
     char *fpath = NULL;
@@ -325,16 +325,16 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           }
           {
             {
-              IEVAL( r, fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hosts_num ) );
+              IEVAL( r, fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hostsv.c ) );
               if ( r > 0 )
                 rtot += r;
             }
 
-            if ( opts.hosts_num )
+            if ( opts.hostsv.c )
             {
-              for ( int ih = 0; ih < opts.hosts_num; ih++ )
+              for ( int ih = 0; ih < opts.hostsv.c; ih++ )
               {
-                IEVAL( r, fprintf( f, "host=%s\n", opts.hosts[ih] ) );
+                IEVAL( r, fprintf( f, "host=%s\n", opts.hostsv.v[ih] ) );
                 if ( r > 0 )
                   rtot += r;
               }
@@ -342,29 +342,29 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           }
           {
             {
-              IEVAL( r, fprintf( f, "\n[%s %d]\n", "protos", opts.protos_num ) );
+              IEVAL( r, fprintf( f, "\n[%s %d]\n", "protos", opts.protosv.c ) );
               if ( r > 0 )
                 rtot += r;
             }
 
-            if ( opts.protos_num )
+            if ( opts.protosv.c )
             {
-              for ( int ih = 0; ih < opts.protos_num; ih++ )
+              for ( int ih = 0; ih < opts.protosv.c; ih++ )
               {
-                IEVAL( r, fprintf( f, "proto=%s\n", opts.protos[ih] ) );
+                IEVAL( r, fprintf( f, "proto=%s\n", opts.protosv.v[ih] ) );
                 if ( r > 0 )
                   rtot += r;
               }
             }
           }
-          if ( opts.commands_num )
+          if ( opts.commandsv.c )
           {
-            IEVAL( r, fprintf( f, "\n[commands %d]\n", opts.commands_num ) );
+            IEVAL( r, fprintf( f, "\n[commands %d]\n", opts.commandsv.c ) );
             if ( r > 0 )
               rtot += r;
-            for ( int ih = 0; ih < opts.commands_num; ih++ )
+            for ( int ih = 0; ih < opts.commandsv.c; ih++ )
             {
-              IEVAL( r, fprintf( f, "command=%s\n", opts.commands[ih] ) );
+              IEVAL( r, fprintf( f, "command=%s\n", opts.commandsv.v[ih] ) );
               if ( r > 0 )
                 rtot += r;
             }
@@ -401,7 +401,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 }
 
 int
-mas_opts_save( const char *dirname, const char *filename )
+mas_opts_save_user( const char *dirname, const char *filename )
 {
   int r = -1;
 
@@ -410,10 +410,6 @@ mas_opts_save( const char *dirname, const char *filename )
     MAS_LOG( "to save opts %s", filename );
     IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.save_user_opts ) );
     MAS_LOG( "saved opts : %d", r );
-  }
-  else
-  {
-    MAS_LOG( "already saved opts" );
   }
   return r;
 }
@@ -448,7 +444,7 @@ _mas_opts_save_plus( const char *dirname, const char *filename, int backup, int 
 }
 
 int
-mas_opts_save_plus( const char *dirname, const char *filename, ... )
+mas_opts_save_user_plus( const char *dirname, const char *filename, ... )
 {
   int r = 0;
   va_list args;
@@ -567,7 +563,7 @@ mas_opts_add_command( const char *s )
   const char *se;
 
   se = mas_find_eq_value( s );
-  opts.commands_num = mas_add_argv_arg( opts.commands_num, &opts.commands, se );
+  opts.commandsv.c = mas_add_argv_arg( opts.commandsv.c, &opts.commandsv.v, se );
 }
 
 static unsigned
@@ -608,6 +604,7 @@ mas_opts_restore_nosection( const char *s )
   OPT_STR( env_optsname, s );
   OPT_STR( env_hostname, s );
   OPT_PSTR( uuid, s );
+  OPT_PSTR( msgfilename, s );
   OPT_PSTR( modsdir, s );
   OPT_PSTR( pidsdir, s );
   OPT_PSTR( protodir, s );
@@ -630,7 +627,7 @@ mas_opts_restore_nosection( const char *s )
   OPT_FLAG( wait_server, s );
   else
   {
-    IEVAL( r, -1 );
+    IEVALM( r, -1, "(%d)opts :'%s'", s );
   }
   /* HMSG( "RESTORE OPT restart_sleep: %lg", opts.restart_sleep ); */
   return r;
@@ -705,17 +702,17 @@ _mas_opts_restore( const char *dirname, const char *filename )
             }
             else if ( rbp )
               section = mas_strndup( s + 1, rbp - s - 1 );
-            if ( opts.protos && 0 == strcmp( section, "protos" ) )
+            if ( opts.protosv.v && 0 == strcmp( section, "protos" ) )
             {
-              mas_del_argv( opts.protos_num, opts.protos, 0 );
-              opts.protos_num = 0;
-              opts.protos = NULL;
+              mas_del_argv( opts.protosv.c, opts.protosv.v, 0 );
+              opts.protosv.c = 0;
+              opts.protosv.v = NULL;
             }
-            else if ( opts.commands && 0 == strcmp( section, "commands" ) )
+            else if ( opts.commandsv.v && 0 == strcmp( section, "commands" ) )
             {
-              mas_del_argv( opts.commands_num, opts.commands, 0 );
-              opts.commands_num = 0;
-              opts.commands = NULL;
+              mas_del_argv( opts.commandsv.c, opts.commandsv.v, 0 );
+              opts.commandsv.c = 0;
+              opts.commandsv.v = NULL;
             }
             /* mMSG( "SECTION :'%s'", section ); */
             continue;
@@ -728,37 +725,37 @@ _mas_opts_restore( const char *dirname, const char *filename )
           {
             if ( 0 == strcmp( section, ctrl.is_client ? "hosts" : "listen" ) )
             {
-              /* mMSG( "%d. +HOST :%s", opts.hosts_num, s ); */
-              IEVAL( r, mas_opts_set_argv( &opts.hosts_num, &opts.hosts, s ) );
+              /* mMSG( "%d. +HOST :%s", opts.hostsv.c, s ); */
+              IEVAL( r, mas_opts_set_argv( &opts.hostsv.c, &opts.hostsv.v, s ) );
             }
             else
             {
-              mMSG( "%d. HOST :%s @ [%s] %d", opts.hosts_num, s, section, ctrl.is_client );
+              mMSG( "%d. HOST :%s @ [%s] %d", opts.hostsv.c, s, section, ctrl.is_client );
             }
           }
           else if ( 0 == mas_strcmp2( s, "proto=" ) )
           {
             if ( 0 == strcmp( section, "protos" ) )
             {
-              /* mMSG( "%d. +PROTO :%s", opts.protos_num, s ); */
-              IEVAL( r, mas_opts_set_argv( &opts.protos_num, &opts.protos, s ) );
+              /* mMSG( "%d. +PROTO :%s", opts.protosv.c, s ); */
+              IEVAL( r, mas_opts_set_argv( &opts.protosv.c, &opts.protosv.v, s ) );
             }
             else
             {
-              mMSG( "%d. PROTO :%s @ [%s]", opts.protos_num, s, section );
+              mMSG( "%d. PROTO :%s @ [%s]", opts.protosv.c, s, section );
             }
           }
           else if ( 0 == mas_strcmp2( s, "command=" ) && 0 == strcmp( section, "commands" ) )
             mas_opts_add_command( s );
           else if ( 0 == mas_strcmpv( s, "docroot=", &vp ) && 0 == strcmp( section, "host" ) )
             ctrl.hostvars = mas_variable_create_text( ctrl.hostvars, MAS_THREAD_MASTER, sectvalue, "docroot", vp, 0 );
-          /* for ( int ih = 0; ih < opts.commands_num; ih++ ) */
+          /* for ( int ih = 0; ih < opts.commandsv.c; ih++ ) */
           /* {                                                */
-          /*   mMSG( "command:%s", opts.commands[ih] );       */
+          /*   mMSG( "command:%s", opts.commandsv.v[ih] );       */
           /* }                                                */
         }
 
-        /* mMSG( "HOSTS :%d", opts.hosts_num ); */
+        /* mMSG( "HOSTS :%d", opts.hostsv.c ); */
 
         /* mas_variables_writef( ctrl.hostvars, "docroot", "'%s' = '%s'\n", STDERR_FILENO ); */
 
@@ -766,6 +763,9 @@ _mas_opts_restore( const char *dirname, const char *filename )
           mas_free( section );
         if ( sectvalue )
           mas_free( sectvalue );
+
+	ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
+
         mas_fclose( f );
       }
       else
@@ -783,7 +783,7 @@ _mas_opts_restore( const char *dirname, const char *filename )
 }
 
 int
-mas_opts_restore( const char *dirname, const char *filename )
+mas_opts_restore_user( const char *dirname, const char *filename )
 {
   int r = 0;
 
@@ -836,7 +836,7 @@ _mas_opts_restore_plus( const char *dirname, const char *filename, va_list args 
 }
 
 int
-mas_opts_restore_plus( const char *dirname, const char *filename, ... )
+mas_opts_restore_user_plus( const char *dirname, const char *filename, ... )
 {
   int r = 0;
   va_list args;
@@ -879,10 +879,10 @@ int
 mas_pre_init_default_opts( void )
 {
 #ifdef MAS_SERVER_STRING
-  opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, MAS_SERVER_STRING );
+  opts.hostsv.c = mas_add_argv_arg( opts.hostsv.c, &opts.hostsv.v, MAS_SERVER_STRING );
 #endif
 #ifdef MAS_SERVER_DEF_PROTO
-  opts.protos_num = mas_add_argv_arg( opts.protos_num, &opts.protos, MAS_SERVER_DEF_PROTO );
+  opts.protosv.c = mas_add_argv_arg( opts.protosv.c, &opts.protosv.v, MAS_SERVER_DEF_PROTO );
 #endif
 #ifdef MAS_BASE_DIR
 #  ifdef MAS_LOG_DIR

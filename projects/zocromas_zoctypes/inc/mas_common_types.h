@@ -9,6 +9,19 @@
 typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int rcode, int ierrno, const char *fmt, const char *xmsg );
 typedef void ( *mas_voidp_fun_t ) ( void *arg );
 
+typedef struct mas_string_csetv_s
+{
+  int c;
+  char *const *v;
+} mas_string_csetv_t;
+
+typedef struct mas_string_setv_s
+{
+  int c;
+  char **v;
+} mas_string_setv_t;
+
+
 typedef enum
 {
   MAS_STATUS_NONE,
