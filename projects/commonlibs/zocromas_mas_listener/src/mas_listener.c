@@ -132,7 +132,7 @@ mas_listener_start( char *host_port, unsigned port )
     plcontrol = mas_lcontrol_make( host_port, port );
     {
       ( void ) pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
-      lMSG( "cr. listener th. stack:%lu @ %p", listener_stacksize, listener_stackaddr );
+      lMSG( "cr. listener th. stack:%lu @ %p", ( unsigned long ) listener_stacksize, listener_stackaddr );
     }
     if ( opts.listener_single )
     {
