@@ -177,17 +177,18 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
   if ( msg )
   {
     /* HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), prcontrol->h.pchannel->buffer.length, pheader->len ); */
-    HMSG( "1 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+    HMSG( "1 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
 
     /* if ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length ) */
     /*   mas_channel_read_remainder( pchannel );                            */
     while ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length )
     {
-      HMSG( "> h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+      HMSG( "> h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length,
+            msg->h.len );
       /* mas_channel_read_some( pchannel ); */
       IEVAL( r, mas_channel_read_some( pchannel ) );
     }
-    HMSG( "2 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), pchannel->buffer.length, msg->h.len );
+    HMSG( "2 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
 
     msg = ( mas_message_t * ) pchannel->buffer.buffer;
 
