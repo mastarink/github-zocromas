@@ -78,24 +78,25 @@ function setup_dirs ()
     updirr="$( realpath $indirr/.. )" || return 1
     projectsdir=$indirr
     admindir=$indirrr/admin
+    savedir="$admindir/saved/"
+    instdir="$admindir/install"
+    instshdir="$admindir/install.sh"
+    tmpdir="$admindir/tmp/"
+
+    savedirdist="$savedir/dist/"
+    savedirgentoo="$savedir/gentoo/"
+    savedirtar="$savedir/tar/"
+    savedirtarme="${savedirtar}/${stamp}"
+    
+    tmpbuild="$tmpdir/build/"
+    tmpunpack="$tmpdir/unpack/"
+    
     runconfigdirname=.zocromas
     runconfigdir=$HOME/$runconfigdirname/
     runconfigdir=$projectsdir/zocromas/$runconfigdirname/
     export    MAS_WORK_ROOT_DIR=$projectsdir
     export    MAS_WORK_IN_DIR=$projectsdir
 
-    savedir=$(realpath "$admindir/saved/" ) || return 1
-    instdir=$(realpath "$admindir/install" ) || return 1
-    instshdir=$(realpath "$admindir/install.sh" ) || return 1
-    tmpdir=$(realpath "$admindir/tmp/" ) || return 1
-    
-    savedirdist=$(realpath "$savedir/dist/" ) || return 1
-    savedirgentoo=$(realpath "$savedir/gentoo/" ) || return 1
-    savedirtar=$(realpath "$savedir/tar/" ) || return 1
-    savedirtarme=$(realpath "${savedirtar}/${stamp}" ) || return 1
-    
-    tmpbuild=$(realpath "$tmpdir/build/" ) || return 1
-    tmpunpack=$(realpath "$tmpdir/unpack/" ) || return 1
 
     debugdir="$indir/debug"
     testdir="$indir/test"
@@ -118,6 +119,8 @@ function setup_dirs ()
 
       export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
     fi
+    
+
     binprefix=zocromas_
   else
     echo "FATAL : '$me' bad SCRIPT call ($0)" >&2
