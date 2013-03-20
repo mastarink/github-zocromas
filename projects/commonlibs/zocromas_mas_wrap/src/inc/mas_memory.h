@@ -8,7 +8,7 @@ struct mas_mem_head_s
 {
   const char *func;
   int line;
-  unsigned long sig;
+  unsigned long long sig;
   unsigned long id;
   size_t size;
 };
