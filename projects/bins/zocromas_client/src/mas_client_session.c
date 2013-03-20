@@ -94,7 +94,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 
 
 
-    HMSG( "GOT MESSAGE(%d:%u) [hdr:%lu]", r, pheader->len, sizeof( mas_header_t ) );
+    HMSG( "GOT MESSAGE(%d:%u) [hdr:%lu]", r, pheader->len, ( unsigned long ) sizeof( mas_header_t ) );
     if ( r <= 0 )
     {
 /* #ifdef EMSG                 */
