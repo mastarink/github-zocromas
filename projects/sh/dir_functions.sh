@@ -53,14 +53,14 @@ function setup_dirs ()
     if [[ "$MAS_DOALL_STAMP" ]] ; then
       stamp=$MAS_DOALL_STAMP
     else
-      stamp=`datem`
+      stamp=`/bin/date '+%Y%m%d'`
     fi
   fi
   if ! [[ "$now_stamp" ]] ; then
     if [[ "$MAS_DOALL_NOW_STAMP" ]] ; then
       now_stamp=$MAS_DOALL_NOW_STAMP
     else
-      now_stamp=`datemt`
+      now_stamp=`/bin/date '+%Y%m%d.%H%M%S'`
     fi
   fi  
   wd=`pwd`
