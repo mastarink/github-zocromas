@@ -1,8 +1,8 @@
 #ifndef MAS_ARG_TOOLS_H
 #  define MAS_ARG_TOOLS_H
 
-#    define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
-#    define mas_strncat_x(...)  mas_strncat_xt (__VA_ARGS__)
+#  define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
+#  define mas_strncat_x(...)  mas_strncat_xt (__VA_ARGS__)
 
 size_t mas_wordlen( const char *s );
 char *mas_chomp( char *s );
@@ -17,6 +17,7 @@ const char *mas_skip_space( const char *args );
 int mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset );
 int mas_add_argv_argv( int targc, char ***ptargv, int argc, char *argv[], int ia_offset );
 int mas_add_argv_arg( int targc, char ***ptargv, const char *arg );
+int mas_add_argv_arg_nodup( int targc, char ***ptargv, char *arg );
 
 int mas_del_argv( int argc, char **argv, int from_a );
 

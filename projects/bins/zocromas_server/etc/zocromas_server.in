@@ -24,7 +24,20 @@ single_instance=1
 single_child=1
 logger=1
 modsdir=@prefix@/lib/zocmds/
-pidsdir=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
+# PACKAGE: @PACKAGE@
+# PACKAGE_VERSION: @PACKAGE_VERSION@
+# CFLAGS: @CFLAGS@
+# AM_CFLAGS: @AM_CFLAGS@
+# AM_LDFLAGS: @AM_LDFLAGS@
+# abs_srcdir: @abs_srcdir@
+# abs_top_srcdir: @abs_top_srcdir@
+# abs_builddir: @abs_builddir@
+# build: @build@
+# build_cpu: @build_cpu@
+# build_os: @build_os@
+# abs_top_builddir: @abs_top_builddir@
+# pidsdir=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
+pidsdir=/run/@PACKAGE@/
 # prefix=@prefix@
 # exec_prefix=@exec_prefix@
 protodir=@prefix@/lib/zocromas_zocprotos/

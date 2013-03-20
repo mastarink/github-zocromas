@@ -148,6 +148,8 @@ struct mas_control_s
   /* char *const *loaded_optsv; */
   /* int loaded_optsc;          */
   mas_string_setv_t loaded_optsv;
+  
+  mas_string_setv_t pidfilesv;
 
   size_t protos_num;
   mas_transaction_protodesc_t *proto_descs;

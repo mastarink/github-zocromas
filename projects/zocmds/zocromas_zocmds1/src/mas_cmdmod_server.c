@@ -200,6 +200,7 @@ info_cmd( STD_CMD_ARGS )
                       "\tprotodir:\t%s\n"
                       "\tmodsdir:\t%s\n"
                       "\tpidsdir:\t%s\n\n"
+                      "\thistorydir:\t%s\n\n"
                       "\tlogdir: \t%s;\n" "\tlogpath:\t%s;\n"
                       "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
                       level, this_command ? this_command->only_level : 0, opts.uuid,
@@ -210,7 +211,7 @@ info_cmd( STD_CMD_ARGS )
                       ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts,
                       ctrl.exepath,
                       opts.msgfilename,
-                      opts.protodir, opts.modsdir, opts.pidsdir, opts.logdir, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone,
+                      opts.protodir, opts.modsdir, opts.pidsdir, opts.historydir, opts.logdir, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone,
                       mas_tracemem_flag );
       cp += len;
       bufsz -= len;

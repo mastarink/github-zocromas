@@ -437,7 +437,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
       if ( rsz <= 0 )
         break;
       {
-        HMSG( "TO READ io 'SOME' %lu maxsz:%lu; totread:%lu", rsz, maxsz, totread );
+        HMSG( "TO READ io 'SOME' %lu maxsz:%lu; totread:%lu", ( unsigned long ) rsz, ( unsigned long ) maxsz, ( unsigned long ) totread );
         if ( rsz > bufsz )
         {
           HMSG( "WOOOOOOOOOOOOOO !TO READ 'SOME' %lu", rsz );
@@ -492,6 +492,6 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
     }
     mas_free( read_buf );
   }
-  HMSG( "READ '/SOME' %lu", totread );
+  HMSG( "READ '/SOME' %lu", ( unsigned long ) totread );
   return totread;
 }

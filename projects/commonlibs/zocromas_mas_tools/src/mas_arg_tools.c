@@ -305,7 +305,7 @@ mas_add_argv_argv( int targc, char ***ptargv, int argc, char *argv[], int ia_off
 }
 
 int
-mas_add_argv_arg( int targc, char ***ptargv, const char *arg )
+mas_add_argv_arg_nodup( int targc, char ***ptargv, char *arg )
 {
   if ( ptargv && arg )
   {
@@ -317,11 +317,17 @@ mas_add_argv_arg( int targc, char ***ptargv, const char *arg )
       targv = mas_realloc( targv, ( targc + 1 ) * sizeof( char * ) );
     else
       targv = mas_calloc( ( targc + 1 ), sizeof( char * ) );
-    targv[targc - 1] = mas_strdup( arg );
+    targv[targc - 1] = arg;
     targv[targc] = NULL;
     *ptargv = targv;
   }
   return targc;
+}
+
+int
+mas_add_argv_arg( int targc, char ***ptargv, const char *arg )
+{
+  return arg ? mas_add_argv_arg_nodup( targc, ptargv, mas_strdup( arg ) ) : targc;
 }
 
 int

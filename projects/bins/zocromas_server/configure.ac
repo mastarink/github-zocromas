@@ -35,7 +35,7 @@ AC_CONFIG_MACRO_DIR([.auxdir/m4])
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
-
+# AM_EXTRA_RECURSIVE_TARGETS([foo])
 AM_SILENT_RULES([yes])
 
 

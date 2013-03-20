@@ -1,6 +1,8 @@
 #include <mastar/wrap/mas_std_def.h>
 
 #include <stdlib.h>
+#include <unistd.h>
+
 #include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -10,6 +12,9 @@
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
 extern mas_options_t opts;
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include "mas_control.h"
 
@@ -81,6 +86,16 @@ mas_ctrl_destroy( void )
   ctrl.loaded_optsv.c = 0;
   ctrl.loaded_optsv.v = NULL;
 
+  if ( ctrl.threads.n.child.pid && ctrl.threads.n.child.pid == getpid(  ) )
+    for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )
+    {
+      HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] );
+      unlink( ctrl.pidfilesv.v[ifil] );
+    }
+
+  mas_del_argv( ctrl.pidfilesv.c, ctrl.pidfilesv.v, 0 );
+  ctrl.pidfilesv.c = 0;
+  ctrl.pidfilesv.v = NULL;
 
   for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
     if ( ctrl.proto_descs[ipd].name )

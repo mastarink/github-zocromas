@@ -7,3 +7,9 @@ SUBDIRS= src etc
 
 # pkgsysconfdir = ${sysconfdir}/@PACKAGE@
 # pkgsysconf_DATA = @PACKAGE@
+
+#test.booo: 
+#	echo @PACKAGE@ > test.booo
+#	echo ${libdir} >> test.booo
+#
+#all-local: test.booo

@@ -144,13 +144,13 @@ mas_init_pid( int indx, const char *name )
 
     pidpath = mas_strdup( opts.pidsdir );
     pidpath = mas_strcat_x( pidpath, name );
-    WMSG( "PIDPATH: %s", pidpath );
+    HMSG( "PIDPATH: %s", pidpath );
     IEVAL( r, open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ) );
     if ( r > 0 )
     {
       ctrl.pidfd[indx] = r;
       IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
-      WMSG( "PIDLCK: %d (%d)", r, ctrl.pidfd[indx] );
+      HMSG( "PIDLCK: %d (%d) %s", r, ctrl.pidfd[indx], pidpath );
       IEVAL( r, write( ctrl.pidfd[indx], &ctrl.threads.n.main.pid, sizeof( ctrl.threads.n.main.pid ) ) );
       WMSG( "PIDW: %d", r );
       if ( r < 0 )
@@ -158,6 +158,8 @@ mas_init_pid( int indx, const char *name )
         close( ctrl.pidfd[indx] );
         ctrl.pidfd[indx] = -1;
       }
+      else
+        ctrl.pidfilesv.c = mas_add_argv_arg( ctrl.pidfilesv.c, &ctrl.pidfilesv.v, pidpath );
     }
     mas_free( pidpath );
   }
@@ -421,7 +423,13 @@ mas_destroy_server( void )
     {
       if ( ctrl.pidfd[i] > 0 )
       {
+        /* char *pidpath;                           */
+        /*                                          */
+        /* pidpath = mas_strdup( opts.pidsdir );    */
+        /* pidpath = mas_strcat_x( pidpath, name ); */
+
         close( ctrl.pidfd[i] );
+        /* unlink( pidpath ); */
       }
       ctrl.pidfd[i] = 0;
     }
