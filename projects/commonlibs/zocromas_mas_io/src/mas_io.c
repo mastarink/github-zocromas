@@ -440,7 +440,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
         HMSG( "TO READ io 'SOME' %lu maxsz:%lu; totread:%lu", ( unsigned long ) rsz, ( unsigned long ) maxsz, ( unsigned long ) totread );
         if ( rsz > bufsz )
         {
-          HMSG( "WOOOOOOOOOOOOOO !TO READ 'SOME' %lu", rsz );
+          HMSG( "WOOOOOOOOOOOOOO !TO READ 'SOME' %lu", ( unsigned long ) rsz );
         }
 #ifndef MAS_CHANNEL_STREAM_READ
         IEVAL( readsz, read( fd, read_buf, rsz ) );
