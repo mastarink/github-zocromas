@@ -18,6 +18,7 @@ sfind make.sh
 
 tab sfind doprj.sh
 sfind doall.sh
+sfind dofrom.sh
 sfind prjname.sh
 
 tab sfind tarme.sh

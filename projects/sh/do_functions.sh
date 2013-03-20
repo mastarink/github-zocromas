@@ -97,7 +97,7 @@ function doprj ()
 }
 function doall ()
 {  
-  local prj nn
+  local prj nn doit
   if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] && cd $projectsdir ; then
     if [[ -f $projectsfile ]] ; then
       list=`cat $projectsfile`
@@ -107,15 +107,23 @@ function doall ()
       return 1
     fi
     nn=0
+    if ! [[ "$MAS_DO_FROM_PROJECT" ]] ; then
+      doit='yes'
+    fi
     for prj in $list ; do
-      cd $projectsdir || return 1
-      echo "-- prj:$prj" >&2
-      dir=$( realpath $prj )  || return 1
-      if [[ "$prj" ]] && [[ -d "$prj" ]] ; then
-	cd $dir                 || return 1
-	doprj $@ || return 1
-      else
-	echo "${nn}.	>>>> skipping dir [$dir]" >&2
+      if [[ "$MAS_DO_FROM_PROJECT" ]] && [[ "$prj" =~ $MAS_DO_FROM_PROJECT ]] ; then
+        doit='yes'
+      fi
+      if [[ "$doit" ]] ; then
+	cd "$projectsdir" || return 1
+	echo "-- prj:$prj" >&2
+	dir=$( realpath $prj )  || return 1
+	if [[ "$prj" ]] && [[ -d "$prj" ]] ; then
+	  cd "$dir"                 || return 1
+	  doprj $@ || return 1
+	else
+	  echo "${nn}.	>>>> skipping dir [$dir]" >&2
+	fi
       fi
       nn=$(( $nn + 1 ))
     done
