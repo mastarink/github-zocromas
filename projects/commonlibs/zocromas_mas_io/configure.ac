@@ -5,7 +5,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.68])
 
 # m4_define([R_VERSION],
 #           m4_bpatsubst(m4_esyscmd([cat VERSION]),
