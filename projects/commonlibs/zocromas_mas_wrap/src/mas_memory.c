@@ -72,7 +72,7 @@ int mas_tracemem_flag = 0;
 static void
 memerror( mas_mem_head_t * m )
 {
-  fprintf( stderr, "\nMEMORY ERROR 0x%lx > [0x%lx : id:0x%lx]\n", ( unsigned long ) m, m->sig, m->id );
+  fprintf( stderr, "\nMEMORY ERROR 0x%lx > [0x%llx : id:0x%lx]\n", ( unsigned long ) m, m->sig, m->id );
   /* sleep( 98 ); */
   exit( 11 );
 }
