@@ -194,6 +194,6 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   if ( pstring )
     mas_free( pstring );
   pstring = NULL;
-  HMSG( "L:%lu ; B: %s", mas_fileinfo_data_size( http->request_content ), http->boundary );
+  HMSG( "L:%lu ; B: %s", ( unsigned long ) mas_fileinfo_data_size( http->request_content ), http->boundary );
   return http;
 }
