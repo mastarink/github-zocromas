@@ -104,7 +104,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [libtcmalloc zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel_nooc zocromas_mas_msg_nooc])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel_nooc zocromas_mas_msg_nooc])
 
 # Configure options: --enable-debug[=no].
 
