@@ -701,7 +701,7 @@ mas_msg_set_file( const char *path )
     }
     else
     {
-      IEVAL( r, -1 );
+      YEVALM( r, -1, "(%d) file:%s", path );
     }
   }
   return r;
@@ -731,7 +731,7 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
   else
 #endif
   {
-    if ( /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix )
+    if (  /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_PREFIX );
       MFP( prefix_fmt ? prefix_fmt : "-- %-5s", qprefix );
@@ -1129,7 +1129,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
 }
 
 static int
-mas_verror( const char *func, int line,  int merrno, const char *fmt, va_list args )
+mas_verror( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
   int r = 0;
   mas_msg_type_t msgt = MAS_MSG_ERR;
@@ -1185,7 +1185,7 @@ mas_error( const char *func, int line, int merrno, const char *fmt, ... )
   va_list args;
 
   va_start( args, fmt );
-  r = mas_verror( func, line,  merrno, fmt, args );
+  r = mas_verror( func, line, merrno, fmt, args );
   va_end( args );
   return r;
 }
