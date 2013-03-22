@@ -33,7 +33,7 @@ function run_installed ()
 #      echo "bash:to run  $builddir/$rname" >&2
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
      if type nanosleep >/dev/null 2>&1 ; then
-       make_any && nanosleep 50000 && exec $binary "$@"
+       make_any && nanosleep 0.5 && exec $binary "$@"
      elif type usleep >/dev/null 2>&1 ; then
        make_any && usleep 50000 && exec $binary "$@"
      else
@@ -51,12 +51,18 @@ function run_any ()
   #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
   if [[ "$made" ]] ||  make_any ; then
-   if type nanosleep >/dev/null 2>&1 ; then
-     nanosleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+   if false && type nanosleep >/dev/null 2>&1 ; then
+     echo "1 To run rbinary: $rbinary_preset" >&2
+     nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
    elif type usleep >/dev/null 2>&1 ; then
+     echo "2 To run rbinary: $rbinary_preset" >&2
      usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
-   else
+   elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
+     echo "3 To run rbinary: $rbinary_preset" >&2
      LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+   else
+     echo "4 To run rbinary: $rbinary_preset" >&2
+     exec $rbinary_preset "$@"
    fi
   else
    echo "make error" >&2

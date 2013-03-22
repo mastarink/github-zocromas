@@ -145,7 +145,7 @@ mas_init_pid( int indx, const char *name )
     pidpath = mas_strdup( opts.pidsdir );
     pidpath = mas_strcat_x( pidpath, name );
     HMSG( "PIDPATH: %s", pidpath );
-    YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "file:%s", pidpath );
+    YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
     if ( r > 0 )
     {
       ctrl.pidfd[indx] = r;
