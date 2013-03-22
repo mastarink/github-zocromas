@@ -125,7 +125,9 @@ function setup_vers ()
 #   echo "$rname_preset ::: ${binprefix} :: ---" >&2
   fi
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
-    if ! rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) ; then
+    if [[ $(realpath --version 2>&1 | head -1 | awk '{print $4}') > 8 ]] && rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) ; then
+      :
+    else
       rbinary_preset=$( realpath $binary_preset ) || return 1
     fi
   fi
