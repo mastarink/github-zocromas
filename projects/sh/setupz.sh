@@ -125,7 +125,9 @@ function setup_vers ()
 #   echo "$rname_preset ::: ${binprefix} :: ---" >&2
   fi
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
-    rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) || return 1
+    if ! rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) ; then
+      rbinary_preset=$( realpath $binary_preset ) || return 1
+    fi
   fi
 # echo "build_at: $build_at" >&2
 # echo "bsrcdir: $bsrcdir" >&2
