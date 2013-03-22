@@ -34,6 +34,8 @@ function run_installed ()
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
      if type nanosleep >/dev/null 2>&1 ; then
        make_any && nanosleep 50000 && exec $binary "$@"
+     elif type usleep >/dev/null 2>&1 ; then
+       make_any && usleep 50000 && exec $binary "$@"
      else
        make_any && exec $binary "$@"
      fi
@@ -49,7 +51,13 @@ function run_any ()
   #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
   if [[ "$made" ]] ||  make_any ; then
-   usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+   if type nanosleep >/dev/null 2>&1 ; then
+     nanosleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+   elif type usleep >/dev/null 2>&1 ; then
+     usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+   else
+     LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
+   fi
   else
    echo "make error" >&2
   fi
