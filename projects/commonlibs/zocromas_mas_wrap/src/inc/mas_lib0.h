@@ -11,5 +11,7 @@ pid_t mas_wait( int *status );
 pid_t mas_waitpid( pid_t pid, int *status, int options );
 int mas_pipe( int pipefd[2] );
 
+int mas_open2( const char *pathname, int flags );
+int mas_open3( const char *pathname, int flags, mode_t mode );
 
 #endif

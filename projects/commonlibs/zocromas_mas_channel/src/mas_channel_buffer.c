@@ -12,7 +12,9 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
+
 #include <mastar/tools/mas_tools.h>
 
 #include <mastar/log/mas_log.h>
@@ -173,7 +175,7 @@ mas_channel_set_buffer_copy( mas_channel_t * pchannel, const char *path )
   }
   if ( path )
   {
-    pchannel->buffer.fd_copy = open( path, O_CREAT | O_TRUNC | O_WRONLY, 0644 );
+    pchannel->buffer.fd_copy = mas_open( path, O_CREAT | O_TRUNC | O_WRONLY, 0644 );
     HMSG( "(%d)OPEN COPY '%s'", pchannel->buffer.fd_copy, path );
     if ( pchannel->buffer.fd_copy < 0 )
     {

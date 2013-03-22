@@ -1,10 +1,12 @@
 #include "mas_std_def.h"
 
 #include <unistd.h>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <sys/wait.h>
 
 #include "mas_lib0.h"
@@ -23,6 +25,18 @@ related:
 /* {                                                        */
 /*   return open( pathname, flags, mode );                  */
 /* }                                                        */
+
+int
+mas_open2( const char *pathname, int flags )
+{
+  return open( pathname, flags );
+}
+
+int
+mas_open3( const char *pathname, int flags, mode_t mode )
+{
+  return open( pathname, flags, mode );
+}
 
 int
 mas_close( int fd )

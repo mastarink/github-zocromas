@@ -47,11 +47,11 @@ _mas_channel_open_rfile( mas_channel_t * pchannel )
 
   if ( pchannel->is_server )
   {
-    fd_io = open( pchannel->host, O_RDONLY );
+    fd_io = mas_open( pchannel->host, O_RDONLY );
   }
   else
   {
-    fd_io = open( pchannel->host, O_RDONLY );
+    fd_io = mas_open( pchannel->host, O_RDONLY );
   }
   if ( fd_io > 0 )
   {

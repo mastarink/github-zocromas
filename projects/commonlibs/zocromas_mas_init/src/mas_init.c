@@ -142,7 +142,7 @@ mas_init_message( void )
 }
 
 static int
-error_handler_at_init( const char *func, int line, int rcode, int ierrno, const char *fmt, const char *msg )
+error_handler_at_init( const char *func, int line, int issys, int rcode, int ierrno, const char *fmt, const char *msg )
 {
   if ( !fmt )
     fmt = " r #%d [%s]";

@@ -15,6 +15,14 @@
     _rv = ( _code ); \
   } \
 }
+#  define YEVALM(_rv, _code, fmt, msg) \
+{ \
+  if (!(_rv<0)) \
+  { \
+    _rv = ( _code ); \
+  } \
+}
+
 
 #  define EEVALM(_rv, _code, fmt, msg) \
 { \
@@ -29,27 +37,41 @@ extern mas_control_t ctrl;
 #define MAS_CTRL_IN_CLIENT ctrl.in_client
 #define MAS_CTRL_MESSAGES ctrl.messages
 #define MAS_CTRL_STATUS ctrl.status
+
+#define _ERRHAN(sys,rv,merrno,fmt,msg) { if (ctrl.error_handler) { rv=(ctrl.error_handler)(FL, sys, rv, merrno, fmt, msg); } }
 #  define IEVALM(_rv, _code, fmt, msg) \
 { \
   if (!(_rv<0)) \
   { \
     _rv = ( _code ); \
-    if (_rv<0) { if (ctrl.error_handler) { _rv=(ctrl.error_handler)(FL, _rv, errno, fmt, msg); } } \
+    if (_rv<0) { _ERRHAN(0,_rv,errno,fmt,msg) } \
   } \
 }
+#  define YEVALM(_rv, _code, fmt, msg) \
+{ \
+  if (!(_rv<0)) \
+  { \
+    _rv = ( _code ); \
+    if (_rv<0) { _ERRHAN(1,_rv,errno,fmt,msg) } \
+  } \
+}
+
 
 #  define EEVALM(_rv, _code, fmt, msg) \
 { \
   _rv = ( _code ); \
-  if (_rv) { if (ctrl.error_handler) { _rv=(ctrl.error_handler)(FL, -1, _rv, fmt, msg); } } \
+  if (_rv) { int merr=_rv;_rv=-1;_ERRHAN(0,_rv,merr,fmt,msg) } \
 }
 
 #endif
 
 
+#  define EEVAL(_rv, _code) {EEVALM(_rv, _code, NULL, NULL); }
 
 #  define IEVAL_OPT(_rv, _code) { if (!(_rv<0)) { _rv = ( _code ); } }
 #  define IEVAL(_rv, _code) {IEVALM(_rv, _code, NULL, NULL); }
-#  define EEVAL(_rv, _code) {EEVALM(_rv, _code, NULL, NULL); }
+
+#  define YEVAL_OPT(_rv, _code) { if (!(_rv<0)) { _rv = ( _code ); } }
+#  define YEVAL(_rv, _code) {YEVALM(_rv, _code, NULL, NULL); }
 
 #endif
