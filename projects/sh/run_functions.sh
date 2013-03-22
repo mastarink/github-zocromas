@@ -32,7 +32,11 @@ function run_installed ()
 #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
 #      echo "bash:to run  $builddir/$rname" >&2
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
-     make_any && usleep 50000 && exec $binary "$@"
+     if type nanosleep >/dev/null 2>&1 ; then
+       make_any && nanosleep 50000 && exec $binary "$@"
+     else
+       make_any && exec $binary "$@"
+     fi
      echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
   fi
 }
