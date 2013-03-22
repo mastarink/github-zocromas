@@ -35,10 +35,11 @@ AC_CONFIG_SRCDIR([src/minitest.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
 
-AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign  -Wall -Werror dist-bzip2])
 AM_MAINTAINER_MODE([enable])
 
-AM_SILENT_RULES([yes])
+# AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -103,7 +104,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel_nooc zocromas_mas_msg_nooc])
+PKG_CHECK_MODULES([DEPS], [libtcmalloc zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel_nooc zocromas_mas_msg_nooc])
 
 # Configure options: --enable-debug[=no].
 
@@ -187,7 +188,7 @@ AC_SUBST(AM_LDFLAGS)
 # MAS_LIBDIR="\${libdir}"
 # AC_SUBST(MAS_LIBDIR)
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -ltcmalloc ${DEPS_CFLAGS} -DMAS_SYSCONFDIR='${sysconfdir}'"
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe  ${DEPS_CFLAGS} -DMAS_SYSCONFDIR='${sysconfdir}'"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
