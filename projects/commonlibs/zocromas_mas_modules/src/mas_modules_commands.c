@@ -75,7 +75,7 @@ mas_modules_lookup_question( const char *ownerlib, mas_cmd_t * cmdtable, const c
 #endif
       {
         MAS_LOG( "located #%d: cmd '%s'", cmd->id, question );
-        tMSG( "located #%d: cmd '%s'", cmd->id, question );
+        HMSG( "located #%d: cmd '%s'", cmd->id, question );
         found = cmd;
         if ( pargs )
           ( *pargs ) = args;

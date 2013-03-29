@@ -176,7 +176,7 @@ mas_channel_set_buffer_copy( mas_channel_t * pchannel, const char *path )
   if ( path )
   {
     pchannel->buffer.fd_copy = mas_open( path, O_CREAT | O_TRUNC | O_WRONLY, 0644 );
-    HMSG( "(%d)OPEN COPY '%s'", pchannel->buffer.fd_copy, path );
+    WMSG( "(%d)OPEN COPY '%s'", pchannel->buffer.fd_copy, path );
     if ( pchannel->buffer.fd_copy < 0 )
     {
       perror( "OPEN COPY : " );
@@ -205,7 +205,7 @@ mas_channel_delete_buffer( mas_channel_t * pchannel )
     int r;
 
     r = write( pchannel->buffer.fd_copy, pchannel->buffer.buffer, pchannel->buffer.length );
-    HMSG( "DEL/COPY %d", r );
+    WMSG( "DEL/COPY %d", r );
   }
 
   buffer = pchannel->buffer.buffer;
@@ -214,7 +214,7 @@ mas_channel_delete_buffer( mas_channel_t * pchannel )
   _mas_channel_set_buffer( pchannel, NULL, 0 );
   if ( buffer )
   {
-    HMSG( "DELETE BUFFER" );
+    WMSG( "DELETE BUFFER" );
     mas_free( buffer );
   }
 }

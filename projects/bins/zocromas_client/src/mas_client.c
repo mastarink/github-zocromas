@@ -60,16 +60,16 @@ mas_client_transaction( mas_channel_t * pchannel )
   do
   {
     cnt++;
-    /* HMSG( "(%u:%u) client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host ); */
+    /* WMSG( "(%u:%u) client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host ); */
     IEVAL( r, mas_exchange_with_readline( pchannel ) );
-    HMSG( "(%d)C/T DONE i/c:%d", r, ctrl.in_client );
+    WMSG( "(%d)C/T DONE i/c:%d", r, ctrl.in_client );
 #ifdef MAS_CLIENT_LOG
     mas_logger_flush(  );
 #endif
-    /* HMSG( "(%u:%u) / client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host ); */
+    /* WMSG( "(%u:%u) / client internal loop %s", ctrl.in_client, ctrl.in_pipe, pchannel->host ); */
   }
   while ( r >= 0 && ctrl.in_client && ctrl.in_pipe );
-  HMSG( "CLIENT TR END" );
+  WMSG( "CLIENT TR END" );
   ctrl.status = MAS_STATUS_CLOSE;
   tMSG( "after exchange cnt:%d; %d / %d", cnt, ctrl.in_pipe, ctrl.in_client );
   return 0;
@@ -99,7 +99,7 @@ mas_client_zerocommands( mas_channel_t * pchannel )
     args = mas_argv_string( ctrl.launchervv.c, ctrl.launchervv.v, ctrl.argv_nonoptind );
     cmd = mas_strcat_x( cmd, args );
     mas_free( args );
-    /* HMSG( MAS_SEPARATION_LINE ); */
+    /* WMSG( MAS_SEPARATION_LINE ); */
     IEVAL( r, mas_client_exchange( pchannel, cmd, "%s\n" ) );
     mas_free( cmd );
   }
@@ -111,16 +111,16 @@ mas_client_autocommands( mas_channel_t * pchannel )
 {
   int r = 0;
 
-  HMSG( "(%d) OPTS COMMANDS[%u]:", r, opts.commandsv.c );
+  WMSG( "(%d) OPTS COMMANDS[%u]:", r, opts.commandsv.c );
   for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < opts.commandsv.c; ic++ )
   {
-    HMSG( "(opts) command to execute : '%s'", opts.commandsv.v[ic] );
+    WMSG( "(opts) command to execute : '%s'", opts.commandsv.v[ic] );
     IEVAL( r, mas_client_exchange( pchannel, opts.commandsv.v[ic], "%s\n" ) );
   }
-  HMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commandsv.c );
+  WMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commandsv.c );
   for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < ctrl.commandsv.c; ic++ )
   {
-    HMSG( "(ctrl) command to execute : '%s'", ctrl.commandsv.v[ic] );
+    WMSG( "(ctrl) command to execute : '%s'", ctrl.commandsv.v[ic] );
     IEVAL( r, mas_client_exchange( pchannel, ctrl.commandsv.v[ic], "%s\n" ) );
   }
   return r;
@@ -138,7 +138,7 @@ mas_client( const char *host_port )
   /*   P_ERR;                                                      */
   /* }                                                             */
   IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclient" ) );
-  HMSG( "CLIENT" );
+  WMSG( "CLIENT" );
   pchannel = mas_channel_create(  );
   while ( r >= 0 && ctrl.in_client && !ctrl.fatal )
   {
@@ -148,7 +148,7 @@ mas_client( const char *host_port )
     /* mMSG( "host_port:%s", host_port ); */
     WMSG( "(i/c:%u; i/p:%d) client external loop %s", ctrl.in_client, ctrl.in_pipe, host_port );
     WMSG( "to init '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
-    HMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, opts.default_port );
+    WMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, opts.default_port );
     hostlen = mas_parse_host_port( host_port, &hport, opts.default_port );
     /* r = mas_channel_init( pchannel, 0  , CHN_SOCKET, host_port, hostlen, hport ); */
     IEVAL( r, mas_channel_init( pchannel, 0, CHN_SOCKET, host_port, hostlen, hport ) );
@@ -166,7 +166,7 @@ mas_client( const char *host_port )
     {
       IEVAL( r, mas_client_zerocommands( pchannel ) );
     }
-    HMSG( "(%d) CONNECTED TO %s [%d]", r, pchannel->host, ctrl.argv_nonoptind );
+    WMSG( "(%d) CONNECTED TO %s [%d]", r, pchannel->host, ctrl.argv_nonoptind );
 
     IEVAL( r, mas_client_autocommands( pchannel ) );
     WMSG( "(%d)AUTO DONE i/c:%d", r, ctrl.in_client );
@@ -185,7 +185,7 @@ mas_client( const char *host_port )
       {
         /* if ( ctrl.try_cnt % 100 == 0 ) */
         {
-          HMSG( "waiting for server (%d:%d:%d)...\x1b[K\r", ctrl.term_cnt, ctrl.int_cnt, ctrl.try_cnt );
+          WMSG( "waiting for server (%d:%d:%d)...\x1b[K\r", ctrl.term_cnt, ctrl.int_cnt, ctrl.try_cnt );
           usleep( 300 );
         }
         ctrl.try_cnt++;
@@ -199,13 +199,13 @@ mas_client( const char *host_port )
       IEVAL( r, mas_channel_close( pchannel ) );
       rop = -1;
     }
-    HMSG( "(i/c:%u;fatal:%u) %s / external loop", ctrl.in_client, ctrl.fatal, pchannel->host );
+    WMSG( "(i/c:%u;fatal:%u) %s / external loop", ctrl.in_client, ctrl.fatal, pchannel->host );
     cnt++;
   }
   mas_channel_delete( pchannel, 0, 0 );
   pchannel = NULL;
   ctrl.status = MAS_STATUS_STOP;
-  HMSG( "exiting client (%d)", ctrl.try_cnt );
+  WMSG( "exiting client (%d)", ctrl.try_cnt );
   return r;
 }
 

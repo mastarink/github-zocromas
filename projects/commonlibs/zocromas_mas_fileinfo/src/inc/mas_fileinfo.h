@@ -42,5 +42,6 @@ void mas_fileinfo_set_icontent_size( mas_fileinfo_t * fileinfo, size_t size );
 unsigned long mas_fileinfo_content_size( mas_fileinfo_t * fileinfo );
 void mas_fileinfo_set_content_size( mas_fileinfo_t * fileinfo, const char *ssize );
 
+mas_unidata_t *mas_fileinfo_unidata( mas_fileinfo_t * fileinfo );
 
 #endif

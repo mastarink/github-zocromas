@@ -95,6 +95,11 @@ mas_fileinfo_icontent_type( mas_fileinfo_t * fileinfo )
   return ict;
 }
 
+mas_unidata_t *
+mas_fileinfo_unidata( mas_fileinfo_t * fileinfo )
+{
+  return fileinfo ? fileinfo->udata : NULL;
+}
 
 char *
 mas_fileinfo_data( mas_fileinfo_t * fileinfo )

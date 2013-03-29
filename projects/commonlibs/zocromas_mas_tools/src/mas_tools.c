@@ -6,8 +6,12 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <time.h>
 #include <string.h>
+
+
+
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_lib.h>
@@ -149,27 +153,50 @@ mas_parse_host_port( const char *host, unsigned *phport, unsigned default_port )
 }
 
 char *
-mas_load_file( const char *root, const char *tail, size_t size, size_t * ptruesize, const void *arg )
+mas_load_file( FILE * file, size_t size, size_t * ptruesize, const void *arg )
 {
   char *filedata = NULL;
-  FILE *file = NULL;
-  char *filepath;
 
-  filepath = mas_strdup( root );
-  filepath = mas_strcat_x( filepath, tail );
-
-  file = fopen( filepath, "r" );
   /* rMSG( "TO load %s : %s", filepath, file ? "OPENED" : "NOT opened" ); */
   if ( file )
   {
     ssize_t r;
 
-    filedata = mas_malloc( size );
-    r = fread( filedata, 1, size, file );
-    /* rMSG( "LOADED %ld of %lu", r, size ); */
-    /* MAS_LOG( "loaded %ld of %lu from %s", r, size, filepath ); */
-    if ( r >= 0 && ptruesize )
-      *ptruesize = r;
+    if ( !size )
+    {
+      struct stat st;
+
+      r = fstat( fileno( file ), &st );
+      if ( r >= 0 && S_ISREG( st.st_mode ) )
+        size = st.st_size;
+    }
+    if ( size > 0 )
+    {
+      filedata = mas_malloc( size );
+      r = fread( filedata, 1, size, file );
+      if ( r >= 0 && ptruesize )
+        *ptruesize = r;
+    }
+  }
+  else
+  {
+    /* MAS_LOGERR( errno, "file %s not loaded", filepath ); */
+    /* errno = 0; */
+  }
+  return filedata;
+}
+
+char *
+mas_load_filename( const char *filepath, size_t size, size_t * ptruesize, const void *arg )
+{
+  char *filedata = NULL;
+  FILE *file = NULL;
+
+  file = fopen( filepath, "r" );
+  /* rMSG( "TO load %s : %s", filepath, file ? "OPENED" : "NOT opened" ); */
+  if ( file )
+  {
+    filedata = mas_load_file( file, size, ptruesize, arg );
     fclose( file );
   }
   else
@@ -177,6 +204,18 @@ mas_load_file( const char *root, const char *tail, size_t size, size_t * ptruesi
     /* MAS_LOGERR( errno, "file %s not loaded", filepath ); */
     /* errno = 0; */
   }
+  return filedata;
+}
+
+char *
+mas_load_filename_at( const char *root, const char *tail, size_t size, size_t * ptruesize, const void *arg )
+{
+  char *filedata = NULL;
+  char *filepath;
+
+  filepath = mas_strdup( root );
+  filepath = mas_strcat_x( filepath, tail );
+  filedata = mas_load_filename( filepath, size, ptruesize, arg );
   if ( filepath )
     mas_free( filepath );
   return filedata;

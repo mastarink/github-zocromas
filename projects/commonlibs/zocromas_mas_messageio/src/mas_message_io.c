@@ -153,7 +153,7 @@ mas_channel_write_message( mas_channel_t * pchannel, const char *cbuf, mas_heade
 #else
   IEVAL( w, mas_fwrite_message( mas_channel_stream( pchannel ), cbuf, pheader ) );
 #endif
-  HMSG( "WRITTEN MESSAGE [%u]", w );
+  WMSG( "WRITTEN MESSAGE [%u]", w );
 
   return w;
 }
@@ -170,25 +170,25 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
   if ( pbuf )
     *pbuf = NULL;
 
-  HMSG( "READ MESSAGE (h:%lu)", ( unsigned long ) sizeof( mas_header_t ) );
+  WMSG( "READ MESSAGE (h:%lu)", ( unsigned long ) sizeof( mas_header_t ) );
   /* mas_channel_read_some( pchannel ); */
   /* IEVAL( r, mas_channel_read_some( pchannel ) ); */
   msg = ( mas_message_t * ) mas_channel_buffer( pchannel, NULL );
   if ( msg )
   {
     /* HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), prcontrol->h.pchannel->buffer.length, pheader->len ); */
-    HMSG( "1 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
+    WMSG( "1 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
 
     /* if ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length ) */
     /*   mas_channel_read_remainder( pchannel );                            */
     while ( sizeof( mas_header_t ) + msg->h.len < pchannel->buffer.length )
     {
-      HMSG( "> h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length,
+      WMSG( "> h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length,
             msg->h.len );
       /* mas_channel_read_some( pchannel ); */
       IEVAL( r, mas_channel_read_some( pchannel ) );
     }
-    HMSG( "2 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
+    WMSG( "2 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
 
     msg = ( mas_message_t * ) pchannel->buffer.buffer;
 
@@ -217,9 +217,9 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
         }
         else
         {
-          HMSG( "signature OK" );
-          HMSG( "(vers)%x : %x", msg->h.vers, MSG_VERSION );
-          HMSG( "(sign)%lx : %lx", ( unsigned long ) msg->h.sign, ( unsigned long ) MSG_SIGNATURE );
+          WMSG( "signature OK" );
+          WMSG( "(vers)%x : %x", msg->h.vers, MSG_VERSION );
+          WMSG( "(sign)%lx : %lx", ( unsigned long ) msg->h.sign, ( unsigned long ) MSG_SIGNATURE );
 
           if ( pheader )
           {
@@ -236,9 +236,9 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
           {
             if ( pbuf )
             {
-              HMSG( "got; new opts:%d; size:%d / %d", msg->h.new_opts, msgsz, msg->h.len );
+              WMSG( "got; new opts:%d; size:%d / %d", msg->h.new_opts, msgsz, msg->h.len );
               *pbuf = mas_malloc( msg->h.len );
-              HMSG( "buf: a.sz:%d", msg->h.len );
+              WMSG( "buf: a.sz:%d", msg->h.len );
               memcpy( *pbuf, msg->message, msg->h.len );
             }
             else
@@ -256,6 +256,6 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
     }
     mas_channel_delete_buffer( pchannel );
   }
-  HMSG( "READ ioMESSAGE [%u]", rmsg );
+  WMSG( "READ ioMESSAGE [%u]", rmsg );
   return rmsg;
 }

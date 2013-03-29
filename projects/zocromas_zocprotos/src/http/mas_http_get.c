@@ -4,9 +4,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <mastar/wrap/mas_memory.h>
-#include <mastar/modules/mas_modules_commands_eval.h>
-
 #include <mastar/log/mas_log.h>
 
 #include <mastar/variables/mas_variables.h>

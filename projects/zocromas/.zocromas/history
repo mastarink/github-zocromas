@@ -13,32 +13,83 @@ restart
 get client info
 get server info
 server listener remove zocromas.mastar.lan 5003
-server exit
 get server info
+get client info
 server exit
-get server info
-bye
-pwd
+test
+test1
+test2
+test3
+test4
+test
+test test1
+test test4
 server exit
-q
-server exit
-get server info
-server exit
+test test1
+test test7
+test1
+test
+test1
+test
+restart
 server restart
-! cal
-! date
-tty
-! tty
-! /usr/sbin/lspci
+test
+server restart
+test
+test test1
+test test
+test
+server restart
+test
+test test1
+test1
+test test1
+server restart
+test test1
+test test
+test
+server restart
+test
+test test1
+server restart
+test 1
+test 2
+test 3
+test 4
+test 5
+server restart
+test 5
+test 4
+test 3
 server exit
-tty
-! tty
-ttyddddddddd
-! tty
-! cal
-bye
-get server info
-bye
+test 3
+test 5
+test 4
 server exit
-bye
+test 2
+test 3
+test 4
+test 5
+server exit
+test 4
+server exit
+test 4
+test 3
+server exit
+test 3
+test 1
+test 2
+test 4
+server exit
+test 1
+test 2
+server exit
+test 1
+test 2
+test 3
+test 2
+test 3
+server exit
+test 3
+test 5
 server exit

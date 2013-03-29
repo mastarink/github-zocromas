@@ -94,7 +94,7 @@ mas_channel_delete( mas_channel_t * pchannel, int toclose, int todeaf )
     if ( pchannel->host )
       mas_free( pchannel->host );
     pchannel->host = NULL;
-    HMSG("CHANNEL DELETE");
+    WMSG("CHANNEL DELETE");
     mas_channel_delete_buffer( pchannel );
     mas_free( pchannel );
   }

@@ -12,7 +12,13 @@
 #  define STD_CMD_PASS nesting, this_table, this_command, prcontrol, STD_CMD_PASS_BASE
 
 #  include <mastar/types/mas_transaction_control_types.h>
-
+typedef enum mas_cmdtype_e
+{
+  MAS_CMD_PCHAR,
+  MAS_CMD_CONST_PCHAR,
+  MAS_CMD_FILE_LOAD,
+  MAS_CMD_CONST_FNAME_LOAD,
+} mas_cmdtype_t;
 typedef struct mas_cmd_s mas_cmd_t;
 
 typedef char *( *mas_cmd_fun_t ) ( STD_CMD_ARGS );
@@ -28,6 +34,8 @@ struct mas_cmd_s
   unsigned min_args;
   unsigned max_args;
   mas_cmd_t *subtable;
+  mas_cmdtype_t result_type;
+  void *vid;
 };
 
 #  undef MAS_WEAK

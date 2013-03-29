@@ -46,7 +46,7 @@ main( int argc, char *argv[], char *env[] )
 {
   int r = 0;
 
-  HMSG( "MAIN" );
+  WMSG( "MAIN" );
 #ifndef MAS_CLIENT_LOG
   if ( ctrl.is_client )
     ctrl.log_disabled = 1;

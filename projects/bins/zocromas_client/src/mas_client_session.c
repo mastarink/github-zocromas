@@ -57,7 +57,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
   tMSG( "to write data string %s", question );
   /* r = mas_channel_write_message( pchannel, question, NULL ); */
   IEVAL( r, mas_channel_write_message( pchannel, question, NULL ) );
-  HMSG( "(%d) written data string %s", r, question );
+  WMSG( "(%d) written data string %s", r, question );
 /*   if ( r <= 0 )            */
 /*   {                        */
 /* #ifdef EMSG                */
@@ -67,7 +67,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 /*   }                        */
 /*   else                     */
   {
-    HMSG( "TO READ MESSAGE" );
+    WMSG( "TO READ MESSAGE" );
     /* r = mas_channel_read_message( pchannel, &answer, pheader ); */
 
 #if 0
@@ -79,7 +79,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
       {
         while ( sizeof( mas_header_t ) + pheader_data->len < pchannel->buffer.length )
         {
-          HMSG( "pheader_data->len:%u; buflen:%lu", pheader_data->len, pchannel->buffer.length );
+          WMSG( "pheader_data->len:%u; buflen:%lu", pheader_data->len, pchannel->buffer.length );
           mas_channel_read_some( pchannel );
         }
         *pheader = *pheader_data;
@@ -94,7 +94,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 
 
 
-    HMSG( "GOT MESSAGE(%d:%u) [hdr:%lu]", r, pheader->len, ( unsigned long ) sizeof( mas_header_t ) );
+    WMSG( "GOT MESSAGE(%d:%u) [hdr:%lu]", r, pheader->len, ( unsigned long ) sizeof( mas_header_t ) );
     if ( r <= 0 )
     {
 /* #ifdef EMSG                 */
@@ -184,8 +184,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
     }
     else
     {
-      HMSG( "nothing (r:%d) from %lx - %lx\n", r, ( unsigned long ) ( pheader ? pheader->pid : 0 ),
-            ( unsigned long ) ( pheader ? pheader->pth : 0 ) );
+      HMSG( "(%d) no answer", r );
     }
     mas_free( answer );
   }
@@ -198,7 +197,7 @@ mas_client_exchange( mas_channel_t * pchannel, const char *question, const char 
   int r = 0;
   mas_header_t header;
 
-  HMSG( "CLIENT EXCHANGE" );
+  WMSG( "CLIENT EXCHANGE" );
   memset( &header, 0, sizeof( header ) );
   IEVAL( r, _mas_client_exchange( pchannel, question, &header, answer_format ) );
   if ( ( !( r < 0 ) ) && header.new_opts )

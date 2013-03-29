@@ -51,7 +51,7 @@ function run_any ()
   #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
   if [[ "$made" ]] ||  make_any ; then
-   if false && type nanosleep >/dev/null 2>&1 ; then
+   if type nanosleep >/dev/null 2>&1 ; then
      echo "1 To run rbinary: $rbinary_preset" >&2
      nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
    elif type usleep >/dev/null 2>&1 ; then

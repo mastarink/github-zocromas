@@ -217,6 +217,9 @@ AC_SUBST([MAS_S_DATE])
 #OBJDIR=masobj
 
 AC_CONFIG_HEADERS([config.h])
+
+AC_CONFIG_FILES([etc/zocromas_client])
+
 AC_CONFIG_FILES([Makefile
 		etc/Makefile
 		src/Makefile

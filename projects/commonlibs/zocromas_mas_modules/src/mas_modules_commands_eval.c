@@ -4,12 +4,15 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/types/mas_modules_types.h>
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
-extern mas_options_t opts;
+
+/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -291,17 +294,48 @@ mas_evaluate_cmd( STD_CMD_ARGS )
       tMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol ? prcontrol->qbin : 0,
             ctrl.do_exit );
       HMSG( "QUIT (%s) %u", this_command->name, ctrl.do_exit );
+    }
+    {
+      FILE *file = NULL;
+      size_t sz = 0;
+
+      switch ( this_command->result_type )
+      {
+      case MAS_CMD_PCHAR:
+        break;
+      case MAS_CMD_CONST_PCHAR:
+        if ( !( MAS_VALID_ANSWER( answer ) ) )
+          answer = mas_strdup( answer );
+        break;
+      case MAS_CMD_CONST_FNAME_LOAD:
+        {
+          char *fname;
+
+          fname = answer ? answer : mas_strdup( ( char * ) this_command->vid );
+          answer = mas_load_filename( fname, 0, &sz, NULL );
+          mas_free( fname );
+        }
+        break;
+      case MAS_CMD_FILE_LOAD:
+        file = ( FILE * ) args;
+        if ( file )
+          answer = mas_load_file( file, 0, &sz, NULL );
+        break;
+      }
+      if ( file )
+        fclose( file );
+
       if ( MAS_VALID_ANSWER( answer ) )
       {
         /* cMSG( "answer for %s : %s", this_command->name, level == 1 ? answer : "SKIPPED" ); */
         MAS_LOG( "(lev.%d) evaluated: %s(%s); answer: '%s'", level, this_command->name, args, level == 1 ? answer : "SKIPPED" );
       }
-    }
-    else
-    {
-      EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
-      MAS_LOG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
-      answer = MAS_INVALID_ANSWER;
+      else if ( !this_command->function )
+      {
+        EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
+        MAS_LOG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
+        answer = MAS_INVALID_ANSWER;
+      }
     }
   }
   return answer;

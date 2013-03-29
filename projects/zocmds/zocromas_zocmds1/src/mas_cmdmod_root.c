@@ -9,17 +9,8 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-
-/* #include "mas_common.h" */
-
-#include <mastar/log/mas_log.h>
 
 #ifdef MAS_USE_CURSES
 #include <mastar/msg/mas_curses.h>
@@ -208,11 +199,13 @@ mas_cmd_t subcmdtable[] = {
   {0, NULL, list_commands_cmd, NULL} /*  */
   ,
 /*==========================================================================================*/
+  {.name = "test",.function = NULL,.libname = "test"} /* server ... */
+  ,
   {.name = "server",.function = NULL,.libname = "server"} /* server ... */
   ,
   {.name = "server_old",.function = NULL,.libname = "server_old"} /* server_old ... */
   ,
-  {.name = "test",.function = test_cmd,.libname = NULL} /* test ... */
+  {.name = "tcmd",.function = test_cmd,.libname = NULL} /* test ... */
   ,
 /*==========================================================================================*/
   {3,.name = "system",.function = system_cmd,.libname = NULL} /* system ... */

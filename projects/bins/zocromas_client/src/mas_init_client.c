@@ -47,7 +47,7 @@ mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **ar
 {
   int r = 0;
 
-  HMSG( "INIT CLIENT" );
+  WMSG( "INIT CLIENT" );
   ctrl.status = MAS_STATUS_START;
   ctrl.start_time = mas_double_time(  );
 #  ifndef MAS_CLIENT_LOG

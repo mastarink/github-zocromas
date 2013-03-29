@@ -5,19 +5,23 @@ SUBDIRS= inc
 
 moduledir=$(libdir)/zocmds
 module_LTLIBRARIES = \
+	test.la \
 	check.la \
 	client.la \
-	ctrl.la \
-	do.la \
-	get.la \
-	listener.la \
-	mem.la \
-	readline.la \
-	server.la \
-	set.la \
-	show.la \
+	ctrl.la    \
+	do.la       \
+	get.la       \
+	listener.la   \
+	mem.la         \
+	readline.la     \
+	server.la        \
+	set.la            \
+	show.la            \
 	root.la
 
+test_la_LDFLAGS          =    -module -avoid-version -no-undefined @AM_LDFLAGS@
+test_la_SOURCES          = mas_cmdmod_test.c
+                       
 check_la_LDFLAGS         =    -module -avoid-version -no-undefined @AM_LDFLAGS@
 check_la_SOURCES         = mas_cmdmod_check.c
                        

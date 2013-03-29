@@ -176,7 +176,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
       mas_fileinfo_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT );
     }
     else
-      http->reply_content = mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_file, ( const void * ) NULL /* prcontrol */  );
+      http->reply_content = mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at, ( const void * ) NULL /* prcontrol */  );
   }
   MAS_LOG( "http: protocol-specific" );
   if ( http )

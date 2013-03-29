@@ -88,7 +88,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
         }
         else
         {
-          HMSG( "HISTORY NOT ADDED:%s {%s}", he ? he->line : NULL, mas_readline_buffer );
+          WMSG( "HISTORY NOT ADDED:%s {%s}", he ? he->line : NULL, mas_readline_buffer );
         }
       }
 #endif
@@ -257,7 +257,7 @@ mas_client_init_readline( void )
 
   snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
   /* rl_event_hook = mas_client_readline_event; */
-  HMSG( "HISTORY to LOAD from %s", opts.historydir );
+  WMSG( "HISTORY to LOAD from %s", opts.historydir );
   if ( opts.historydir )
   {
     char *fpath = NULL;
@@ -267,7 +267,7 @@ mas_client_init_readline( void )
     fpath = mas_strcat_x( fpath, "history" );
 
     rh = read_history( fpath );
-    HMSG( "(%d) HISTORY LOAD: %s", rh, fpath );
+    WMSG( "(%d) HISTORY LOAD: %s", rh, fpath );
     mas_free( fpath );
   }
   else
@@ -300,7 +300,7 @@ mas_client_init_readline( void )
 void
 mas_client_destroy_readline( void )
 {
-  HMSG( "HISTORY to SAVE" );
+  WMSG( "HISTORY to SAVE" );
   if ( opts.historydir )
   {
     int rh = 0;
@@ -311,7 +311,7 @@ mas_client_destroy_readline( void )
     fpath = mas_strcat_x( fpath, "history" );
 
     rh = write_history( fpath );
-    HMSG( "(%d) HISTORY SAVE: %s", rh, fpath );
+    WMSG( "(%d) HISTORY SAVE: %s", rh, fpath );
     mas_free( fpath );
   }
 }
