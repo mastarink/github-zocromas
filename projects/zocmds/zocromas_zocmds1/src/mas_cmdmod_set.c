@@ -178,7 +178,7 @@ var_cmd( STD_CMD_ARGS )
 #endif
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, list_commands_cmd, NULL}
+  {0, NULL, mas_evaluate_list_cmd, NULL}
   ,
   {1, "msg", msg_cmd, NULL}
   ,

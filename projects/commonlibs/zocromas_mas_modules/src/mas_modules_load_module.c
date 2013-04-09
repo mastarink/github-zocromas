@@ -8,16 +8,11 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
+#include "mas_modules_ctrl_module.h"
 
 #include "mas_modules_load_module.h"
 
@@ -39,10 +34,8 @@ more:
 
 */
 
-
-
 static void *
-__mas_modules_load_module( const char *fullname, const char *name, int noerr )
+_mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr )
 {
   void *module_handle;
 
@@ -70,35 +63,13 @@ __mas_modules_load_module( const char *fullname, const char *name, int noerr )
         mas_free( dler );
     }
     MAS_LOG( "module load: '%s' (%p)", fullname, ( void * ) module_handle );
-    if ( module_handle )
-    {
-      unsigned cnt, size;
-      void **array;
-
-      pthread_rwlock_wrlock( &ctrl.thglob.modules_list_rwlock );
-      array = ctrl.loaded_modules;
-      /* ctrl.loaded_modules = NULL;  */
-      /* ctrl.loaded_modules_cnt = 0; */
-      cnt = ctrl.loaded_modules_cnt;
-      size = cnt + 1;
-
-      if ( array )
-        array = mas_realloc( array, sizeof( void * ) * size );
-      else
-        array = mas_malloc( sizeof( void * ) * size );
-      array[cnt] = module_handle;
-
-      ctrl.loaded_modules = array;
-      ctrl.loaded_modules_cnt = size;
-      pthread_rwlock_unlock( &ctrl.thglob.modules_list_rwlock );
-      WMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, name );
-    }
+    mas_modules_register_module( name, module_handle );
   }
   return module_handle;
 }
 
 void *
-_mas_load_module( const char *libname, const char *path, int noerr )
+mas_modules_load_module_from( const char *libname, const char *path, int noerr )
 {
   void *module_handle;
   char *fullname = NULL;
@@ -108,7 +79,7 @@ _mas_load_module( const char *libname, const char *path, int noerr )
   fullname = mas_strcat_x( fullname, "/" );
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
-  module_handle = __mas_modules_load_module( fullname, libname, noerr );
+  module_handle = _mas_modules_load_fullmodule( fullname, libname, noerr );
   WMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
   tMSG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   MAS_LOG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
@@ -116,110 +87,66 @@ _mas_load_module( const char *libname, const char *path, int noerr )
   return module_handle;
 }
 
-void *
-mas_modules_load_module( const char *libname )
+/* static void *                                                                 */
+/* _mas_modules_load_module( const char *libname )                               */
+/* {                                                                             */
+/*   void *module_handle = NULL;                                                 */
+/*                                                                               */
+/*   MAS_LOG( "load module %s @ %s", libname, opts.modsdir );                    */
+/*   if ( opts.modsdir )                                                         */
+/*     module_handle = mas_modules_load_module_from( libname, opts.modsdir, 1 ); */
+/*   return module_handle;                                                       */
+/* }                                                                             */
+
+/* void *                                                                                    */
+/* mas_modules_load_proto( const char *libname )                                             */
+/* {                                                                                         */
+/*   void *module_handle = NULL;                                                             */
+/*                                                                                           */
+/*   MAS_LOG( "load proto %s @ %s", libname, opts.protodir );                                */
+/*   if ( opts.protodir )                                                                    */
+/*     module_handle = mas_modules_load_module_from( libname, opts.protodir, 1 );            */
+/*   WMSG( "PROTO LOAD %s @ %s %s", libname, opts.protodir, module_handle ? "OK" : "FAIL" ); */
+/*   return module_handle;                                                                   */
+/* }                                                                                         */
+
+mas_any_fun_t
+mas_modules_load_func_from( const char *libname, const char *funname, const char *path )
 {
-  void *module_handle = NULL;
+  mas_any_fun_t any_fun = NULL;
 
-  MAS_LOG( "load module %s @ %s", libname, opts.modsdir );
-  if ( opts.modsdir )
-    module_handle = _mas_load_module( libname, opts.modsdir, 1 );
-  return module_handle;
-}
+  /* void *module_handle; */
 
-void *
-mas_modules_load_proto( const char *libname )
-{
-  void *module_handle = NULL;
-
-  MAS_LOG( "load proto %s @ %s", libname, opts.protodir );
-  if ( opts.protodir )
-    module_handle = _mas_load_module( libname, opts.protodir, 1 );
-  WMSG( "PROTO LOAD %s @ %s %s", libname, opts.protodir, module_handle ? "OK" : "FAIL" );
-  return module_handle;
-}
-
-mas_cmd_fun_t
-mas_modules_load_cmd_func( const char *libname, const char *funname )
-{
-  mas_cmd_fun_t cmd_fun = NULL;
-  void *module_handle;
-
-  module_handle = mas_modules_load_module( libname );
-  if ( module_handle )
+  /* module_handle = mas_modules_load_module_from( libname, path, 1 ); */
+  /* if ( module_handle ) */
   {
-    cmd_fun = ( mas_cmd_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
-    tMSG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
-    WMSG( "LOAD CMD FUNC %s.%s %s", libname, funname, cmd_fun ? "OK" : "FAIL" );
-    MAS_LOG( "load cmd func %s %s", funname, cmd_fun ? "OK" : "FAIL" );
-    if ( !cmd_fun )
+    /* any_fun = ( mas_any_fun_t ) ( unsigned long ) dlsym( module_handle, funname ); */
+    any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, path );
+    if ( !any_fun )
     {
       EMSG( "%s", dlerror(  ) );
       MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
     }
   }
-  return cmd_fun;
+  /* else                                                             */
+  /* {                                                                */
+  /*   EMSG( "NO module_handle passed for %s.%s", libname, funname ); */
+  /* }                                                                */
+  tMSG( "load transaction func %s %s", funname, any_fun ? "OK" : "FAIL" );
+  MAS_LOG( "load transaction func %s %s", funname, any_fun ? "OK" : "FAIL" );
+  return any_fun;
 }
 
-mas_transaction_fun_t
-mas_modules_load_proto_func( const char *libname, const char *funname )
+void *
+mas_modules_load_symbol_from( const char *libname, const char *symname, const char *path )
 {
-  mas_transaction_fun_t transaction_fun = NULL;
+  void *msymb = NULL;
   void *module_handle;
 
-  module_handle = mas_modules_load_proto( libname );
+  /* module_handle = _mas_modules_load_module( libname ); */
+  module_handle = mas_modules_load_module_from( libname, path, 1 );
   if ( module_handle )
-  {
-    transaction_fun = ( mas_transaction_fun_t ) ( unsigned long ) dlsym( module_handle, funname );
-    if ( !transaction_fun )
-    {
-      EMSG( "%s", dlerror(  ) );
-      MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
-    }
-  }
-  else
-  {
-    EMSG( "NO module_handle passed for %s.%s", libname, funname );
-  }
-  tMSG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
-  MAS_LOG( "load transaction func %s %s", funname, transaction_fun ? "OK" : "FAIL" );
-  return transaction_fun;
-}
-
-mas_cmd_t *
-mas_modules_load_subtable( const char *libname )
-{
-  mas_cmd_t *cmd_tab = NULL;
-  void *module_handle;
-
-  module_handle = mas_modules_load_module( libname );
-  if ( module_handle )
-    cmd_tab = ( mas_cmd_t * ) ( unsigned long ) dlsym( module_handle, "subcmdtable" );
-  MAS_LOG( "load subtable from %s => %p", libname, ( void * ) cmd_tab );
-  return cmd_tab;
-}
-
-typedef int ( *mas_v_fun_t ) ( void );
-void
-mas_modules_destroy( void )
-{
-  if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )
-  {
-    for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )
-    {
-      int unload = 1;
-      mas_v_fun_t fun;
-
-      fun = ( mas_v_fun_t ) ( unsigned long ) dlsym( ctrl.loaded_modules[im], "module_before_close" );
-      WMSG( "MODULE DESTROY %u. %p [%d] %s", im, ( void * ) ctrl.loaded_modules[im], fun ? 1 : 0, dlerror(  ) );
-      if ( fun )
-        unload = ( fun ) (  );
-      if ( unload && ctrl.loaded_modules[im] )
-        dlclose( ctrl.loaded_modules[im] );
-      ctrl.loaded_modules[im] = NULL;
-    }
-    ctrl.loaded_modules_cnt = 0;
-    mas_free( ctrl.loaded_modules );
-    ctrl.loaded_modules = NULL;
-  }
+    msymb = ( void * ) ( unsigned long ) dlsym( module_handle, symname );
+  MAS_LOG( "load subtable from %s => %p", libname, ( void * ) msymb );
+  return msymb;
 }

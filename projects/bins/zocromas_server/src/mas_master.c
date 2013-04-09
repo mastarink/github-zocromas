@@ -19,7 +19,9 @@ extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-#include <mastar/modules/mas_modules_load_module.h>
+
+#include <mastar/modules/mas_modules_ctrl_module.h>
+/* #include <mastar/modules/mas_modules_load_module.h> */
 
 #include "mas_ticker.h"
 #include "mas_watcher.h"
@@ -320,7 +322,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
      */
   }
   WMSG( "TO DESTROY MODULES" );
-  mas_modules_destroy(  );
+  mas_modules_unregister(  );
   /* MAS_LOG( "bunch end : %d", r ); */
   for ( int ith = 0; ith < sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ); ith++ )
   {

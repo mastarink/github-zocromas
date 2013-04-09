@@ -93,7 +93,7 @@ listener_add_cmd( STD_CMD_ARGS )
 
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, list_commands_cmd, NULL}
+  {0, NULL, mas_evaluate_list_cmd, NULL}
   ,
   {1, "add", listener_add_cmd, NULL,.min_args = 2,.max_args = 2} /* server listener add */
   ,

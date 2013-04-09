@@ -172,7 +172,7 @@ version_cmd( STD_CMD_ARGS )
 }
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, list_commands_cmd, NULL}
+  {0, NULL, mas_evaluate_list_cmd, NULL}
   ,
   {1, "opts", opts_cmd, NULL}   /* get opts */// in this module, name: opts_cmd
   ,

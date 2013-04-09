@@ -12,6 +12,7 @@
 #  define STD_CMD_PASS nesting, this_table, this_command, prcontrol, STD_CMD_PASS_BASE
 
 #  include <mastar/types/mas_transaction_control_types.h>
+typedef void( *mas_any_fun_t ) ( void );
 typedef enum mas_cmdtype_e
 {
   MAS_CMD_PCHAR,

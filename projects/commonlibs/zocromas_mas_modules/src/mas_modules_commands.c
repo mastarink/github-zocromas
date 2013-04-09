@@ -17,11 +17,6 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
@@ -40,19 +35,21 @@ related:
 */
 
 
-
+/* table-search command; allowed NULL for name; pargs to set command args/subcommands */
 static mas_cmd_t *
-mas_modules_lookup_question( const char *ownerlib, mas_cmd_t * cmdtable, const char *question, const char **pargs )
+mas_modules_lookup_question( const char *ownerlib_name, mas_cmd_t * cmdtable, const char *question, const char **pargs )
 {
   const char *args = NULL;
   const char *q = NULL;
   size_t len;
   mas_cmd_t *found = NULL;
 
+  /* question: space-separated textual cmd with optional args */
+
   if ( question )
   {
     int quo = 0;
-
+    /* mas_find_next_arg  returns next arg address, pthis to set this, plen to set this length */
     args = mas_find_next_arg( question, &q, &len, &quo );
   }
   MAS_LOG( "looking for q:'%s' args:'%s'", q, args );
@@ -61,11 +58,12 @@ mas_modules_lookup_question( const char *ownerlib, mas_cmd_t * cmdtable, const c
 
     cmd = cmdtable;
     WMSG( "LOOKUP : '%s'", question );
+    /* simple linear table search by name */
     while ( cmd && !found && ( cmd->name || cmd->function || cmd->libname /* || cp->subtable */  ) )
     {
       size_t l = 0;
 
-      /* HMSG( "TEST %s.%s for %s", ownerlib, cmd->name, question ); */
+      /* HMSG( "TEST %s.%s for %s", ownerlib_name, cmd->name, question ); */
       if ( cmd->name )
         l = strlen( cmd->name );
 #if 0
@@ -87,11 +85,11 @@ mas_modules_lookup_question( const char *ownerlib, mas_cmd_t * cmdtable, const c
   tMSG( "cmd %s : %s (%s)", question, found ? "FOUND" : "NOT found", found ? found->name : "" );
   if ( found )
   {
-    WMSG( "FOUND %s.%s", ownerlib, found->name );
+    WMSG( "FOUND %s.%s", ownerlib_name, found->name );
   }
   else
   {
-    WMSG( "NOT FOUND %s.%s", ownerlib, question );
+    WMSG( "NOT FOUND %s.%s", ownerlib_name, question );
   }
   return found;
 }
@@ -106,11 +104,13 @@ mas_modules_commands( STD_CMD_ARGS )
 
   if ( this_command )
   {
+/* mas_modules_lookup_question : table-search command; allowed NULL for name; pargs to set command args/subcommands */
     WMSG( "LOOKUP ... from %s.%s sub", "...", this_command->name );
     found = mas_modules_lookup_question( this_command->libname, this_command->subtable, question, &args );
     MAS_LOG( "(L%u) command %s (%s) %s [%s]", level, found ? found->name : NULL, question, found ? "FOUND" : "NOT FOUND", args );
     if ( !found )
     {
+      /* look for default command? */
       found = mas_modules_lookup_question( this_command->libname, this_command->subtable, "*", &args );
       if ( found )
         args = question;

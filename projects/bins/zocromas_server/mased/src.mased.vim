@@ -2,9 +2,10 @@
 find mas_master.c
 sfind mas_init_server.c
 sfind mas_init_threads.c
-sfind mas_server_main.c
+
+tab sfind mas_server_main.c
 sfind mas_server_sig.c
-sfind mas_server_tools.c
+tab sfind mas_server_tools.c
 sfind mas_ticker.c
 sfind mas_watcher.c
 

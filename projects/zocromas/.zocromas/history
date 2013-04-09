@@ -93,3 +93,10 @@ server exit
 test 3
 test 5
 server exit
+test 5
+server exit
+*
+server *
+server exit
+bye
+server exit

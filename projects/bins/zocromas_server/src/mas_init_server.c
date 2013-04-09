@@ -32,6 +32,7 @@ extern mas_options_t opts;
 #  include <mastar/log/mas_log.h>
 #endif
 
+#include <mastar/modules/mas_modules_ctrl_module.h>
 #include <mastar/modules/mas_modules_load_module.h>
 
 #include <mastar/listener/mas_listener_control_list.h>
@@ -87,7 +88,8 @@ mas_init_load_protos( void )
       /* from one */
       proto_descs[ipr].proto_id = protos_cnt + 1;
       proto_descs[ipr].name = mas_strdup( opts.protosv.v[ipr] );
-      proto_descs[ipr].function = mas_modules_load_proto_func( opts.protosv.v[ipr], "mas_proto_main" );
+      proto_descs[ipr].function =
+            ( mas_transaction_fun_t ) mas_modules_load_func_from( opts.protosv.v[ipr], "mas_proto_main", opts.protodir );
       if ( !proto_descs[ipr].function )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
@@ -417,7 +419,7 @@ mas_destroy_server( void )
     mas_ticker_stop(  );
   }
   WMSG( "TO DESTROY MODULES" );
-  mas_modules_destroy(  );
+  mas_modules_unregister(  );
   {
     for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
     {

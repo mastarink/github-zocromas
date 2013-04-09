@@ -8,11 +8,6 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_modules_types.h>
-#include <mastar/types/mas_control_types.h>
-/* #include <mastar/types/mas_opts_types.h> */
-extern mas_control_t ctrl;
-
-/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -47,32 +42,8 @@ more:
 
 
 
-
-char *
-list_commands_cmd( STD_CMD_ARGS )
-{
-  char *ans = NULL;
-
-  mas_cmd_t *cmd = this_table;
-
-  /* cMSG( "(%s)HELP_CMD %p", cmd ? cmd->name : "?", ( void * ) cmd ); */
-  while ( cmd && ( cmd->name || cmd->function || cmd->libname /* || cmd->subtable */  ) )
-  {
-    if ( cmd->name )
-    {
-      char str[1024];
-
-      snprintf( str, sizeof( str ), "%d> %3d. %4s %s (%d)\n", level, ( int ) ( cmd - this_table ), cmd->subtable ? " @ " : "", cmd->name,
-                cmd->only_level );
-      ans = mas_strcat_x( ans, str );
-    }
-    cmd++;
-  }
-  return ans;
-}
-
 static char *
-universal_complex_cmd( STD_CMD_ARGS )
+_universal_complex_cmd( STD_CMD_ARGS )
 {
   char *answer = NULL;
 
@@ -95,8 +66,27 @@ universal_complex_cmd( STD_CMD_ARGS )
   return answer;
 }
 
+static mas_cmd_fun_t
+_load_cmd_func( const char *libname, const char *funname )
+{
+  mas_cmd_fun_t cmd_fun = NULL;
+
+  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, opts.modsdir );
+  return cmd_fun;
+}
+
+static mas_cmd_t *
+_load_subtable_from( const char *libname, const char *path )
+{
+  mas_cmd_t *cmd_tab = NULL;
+
+  cmd_tab = ( mas_cmd_t * ) mas_modules_load_symbol_from( libname, "subcmdtable", path );
+  MAS_LOG( "load subtable from %s => %p", libname, ( void * ) cmd_tab );
+  return cmd_tab;
+}
+
 static int
-mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
+_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
 {
   int r = -1;
 
@@ -137,15 +127,15 @@ mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           char *full_fun_name = NULL;
 
           MAS_LOG( "loading  func. %s:%s", full_libname, full_fun_name );
-          cmd_fun = mas_modules_load_cmd_func( full_libname, full_fun_name );
+          cmd_fun = _load_cmd_func( full_libname, full_fun_name );
           mas_free( full_fun_name );
         }
         if ( !cmd_fun )
         {
-          loaded_subtable = mas_modules_load_subtable( full_libname );
+          loaded_subtable = _load_subtable_from( full_libname, opts.modsdir );
           if ( loaded_subtable )
           {
-            cmd_fun = universal_complex_cmd;
+            cmd_fun = _universal_complex_cmd;
             WMSG( "SET UNI for %s", name );
             MAS_LOG( "universal command for %s {%p}", libname, ( void * ) ( unsigned long ) cmd_fun );
             tMSG( "universal command for %s.%s", libname, name );
@@ -181,6 +171,9 @@ mas_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
   return r;
 }
 
+mas_cmd_t root_cmdtable[] = {
+  {.name = "root",.libname = "root",.only_level = 0}
+};
 static mas_cmd_t root_command = {.name = "root",.libname = "root",.only_level = 0 };
 
 char *
@@ -192,6 +185,7 @@ mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size,
 
   prcontrol = ( mas_rcontrol_t * ) arg;
   p = uri;
+  /* find first non-separator */
   if ( p && p )
     do
       p++;
@@ -219,6 +213,8 @@ mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *
   /* bin_type_t bin = 0; */
   question = mas_strdup( uri );
   p = question;
+
+  /* replace all separators with std. separators */
   while ( ( p = strchr( p, '/' ) ) )
     *p = ' ';
   MAS_LOG( "to make out XCROMAS %s", question );
@@ -280,20 +276,19 @@ mas_evaluate_cmd( STD_CMD_ARGS )
     {
       MAS_LOG( "{%p} must set fun/sbt for module %s.%s : %d : %p", ( void * ) this_command, this_command->libname,
                this_command->name, this_command->function ? 1 : 0, ( void * ) this_command->subtable );
-      r = mas_missing_funsetup( this_command, level );
+      r = _missing_funsetup( this_command, level );
       MAS_LOG( "evaluate : missing function - '%s' args: '%s'", this_command->name, args );
     }
     tMSG( "(%d) function:%d", r, this_command->function ? 1 : 0 );
     if ( r >= 0 && this_command->function )
     {
       tMSG( "eval %d. %s : %d : %d", this_command->id, this_command->name,
-            this_command->function ? 1 : 0, this_command->function == universal_complex_cmd );
+            this_command->function ? 1 : 0, this_command->function == _universal_complex_cmd );
       /* EVALUATING COMMAND */
       HMSG( "EVAL %s", this_command->name );
       answer = ( this_command->function ) ( STD_CMD_PASS );
-      tMSG( "eval'd A(%s) B(%d) Q(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol ? prcontrol->qbin : 0,
-            ctrl.do_exit );
-      HMSG( "QUIT (%s) %u", this_command->name, ctrl.do_exit );
+      tMSG( "eval'd A(%s) B(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol ? prcontrol->qbin : 0 );
+      HMSG( "QUIT (%s)", this_command->name );
     }
     {
       FILE *file = NULL;
@@ -339,4 +334,29 @@ mas_evaluate_cmd( STD_CMD_ARGS )
     }
   }
   return answer;
+}
+
+
+
+char *
+mas_evaluate_list_cmd( STD_CMD_ARGS )
+{
+  char *ans = NULL;
+
+  mas_cmd_t *cmd = this_table;
+
+  /* cMSG( "(%s)HELP_CMD %p", cmd ? cmd->name : "?", ( void * ) cmd ); */
+  while ( cmd && ( cmd->name || cmd->function || cmd->libname /* || cmd->subtable */  ) )
+  {
+    if ( cmd->name )
+    {
+      char str[1024];
+
+      snprintf( str, sizeof( str ), "%d> %3d. %4s %s (%d)\n", level, ( int ) ( cmd - this_table ), cmd->subtable ? " @ " : "", cmd->name,
+                cmd->only_level );
+      ans = mas_strcat_x( ans, str );
+    }
+    cmd++;
+  }
+  return ans;
 }

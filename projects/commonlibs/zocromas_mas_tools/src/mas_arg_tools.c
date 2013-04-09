@@ -131,7 +131,9 @@ mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot )
 
   return p;
 }
-
+/* 
+ * returns next arg address, pthis to set this, plen to set this length
+ * */
 const char *
 mas_find_next_arg( const char *args, const char **pthis, size_t * plen, int *quot )
 {
