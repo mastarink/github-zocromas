@@ -100,3 +100,5 @@ server *
 server exit
 bye
 server exit
+server info
+server exit

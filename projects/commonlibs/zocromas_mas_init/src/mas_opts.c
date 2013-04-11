@@ -26,7 +26,7 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/variables/mas_variables.h>
+/* #include <mastar/variables/mas_variables.h> */
 
 #include "mas_opts.h"
 
@@ -369,6 +369,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
                 rtot += r;
             }
           }
+#ifdef MAS_GLOBAL_HOSTVARS
           {
             mas_variable_t *var = NULL;
             char *vclass = NULL;
@@ -386,6 +387,7 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
               /* name = ...;   */
             }
           }
+#endif
         }
         if ( f )
         {
@@ -674,7 +676,6 @@ _mas_opts_restore( const char *dirname, const char *filename )
         {
           char *s, *rbp, *spp;
           size_t len;
-          char *vp = NULL;
 
           s = fgets( buf, sizeof( buf ), f );
           /* mMSG( "read :'%s'", s ); */
@@ -749,8 +750,15 @@ _mas_opts_restore( const char *dirname, const char *filename )
           }
           else if ( 0 == mas_strcmp2( s, "command=" ) && 0 == strcmp( section, "commands" ) )
             mas_opts_add_command( s );
-          else if ( 0 == mas_strcmpv( s, "docroot=", &vp ) && 0 == strcmp( section, "host" ) )
-            ctrl.hostvars = mas_variable_create_text( ctrl.hostvars, MAS_THREAD_MASTER, sectvalue, "docroot", vp, 0 );
+#ifdef MAS_GLOBAL_HOSTVARS
+          else
+          {
+            char *vp = NULL;
+
+            if ( 0 == mas_strcmpv( s, "docroot=", &vp ) && 0 == strcmp( section, "host" ) )
+              ctrl.hostvars = mas_variable_create_text( ctrl.hostvars, MAS_THREAD_MASTER, sectvalue, "docroot", vp, 0 );
+          }
+#endif
           /* for ( int ih = 0; ih < opts.commandsv.c; ih++ ) */
           /* {                                                */
           /*   mMSG( "command:%s", opts.commandsv.v[ih] );       */
@@ -766,7 +774,7 @@ _mas_opts_restore( const char *dirname, const char *filename )
         if ( sectvalue )
           mas_free( sectvalue );
 
-	ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
+        ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
 
         mas_fclose( f );
       }

@@ -142,7 +142,7 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           }
           else
           {
-            EMSG( "No subtable at %s.%s", libname, name );
+            EMSG( "No subtable at %s.%s ( opts.modsdir: '%s' )", libname, name,  opts.modsdir );
           }
         }
         mas_free( full_libname );

@@ -526,8 +526,10 @@ mas_destroy( void )
   }
   mas_opts_destroy(  );
 
+#ifdef MAS_GLOBAL_HOSTVARS
   mas_variables_delete( ctrl.hostvars );
   ctrl.hostvars = NULL;
+#endif
 
   ctrl.log_disabled = 1;
 

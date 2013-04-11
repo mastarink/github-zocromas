@@ -159,7 +159,7 @@ info_cmd( STD_CMD_ARGS )
   {
     char *cp;
     size_t len;
-    mas_lcontrol_t *plcontrol;
+    mas_lcontrol_t *plcontrol = NULL;
     ssize_t bufsz;
     char s1lts[64];
     char slts[64];
@@ -268,6 +268,7 @@ info_cmd( STD_CMD_ARGS )
     /*     name = ( char * ) dlsym( ctrl.loaded_modules[im], "module_name" ); */
     /*   }                                                                    */
     /* }                                                                      */
+    if ( plcontrol )
     {
       int z = 0;
 

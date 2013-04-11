@@ -104,7 +104,7 @@ AC_CHECK_LIB(uuid,  uuid_generate)
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control zocromas_mas_variables zocromas_mas_msg zocromas_mas_log zocromas_mas_variables])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control zocromas_mas_msg zocromas_mas_log])
 
 # Configure options: --enable-debug[=no].
 

@@ -218,6 +218,8 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     }
     mas_variable_t *docroot_var = NULL;
 
+    /* TODO remove from ctrl */
+
     if ( !docroot_var && http->host )
       docroot_var = mas_variables_find( ctrl.hostvars, http->host, "docroot" );
     if ( !docroot_var )

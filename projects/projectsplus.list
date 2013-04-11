@@ -19,4 +19,5 @@ zocmds/zocromas_zocmds2                       zocromas_zocmds2
 zocromas_zocprotos                            zocromas_zocprotos
 bins/zocromas_client                          zocromas_client
 bins/zocromas_server                          zocromas_server
+bins/zocromas_direct                          zocromas_direct
 zocromas                                      zocromas
