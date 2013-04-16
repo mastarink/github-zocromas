@@ -8,22 +8,22 @@ env_hostname=MAS_ZOCROMAS_DEFHOST
 read_user_opts=0
 read_user_opts_plus=0
 
-postdir=/var/spool/zocromas_server
-logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
+dir.post=/var/spool/zocromas_server
+dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log/
 log=1
 max_config_backup=5
 messages=1
 # default_port=50005
 save_user_opts=0
 save_user_opts_plus=0
-restart_sleep=0.25
+restart_sleep=0.27
 # -
 # server
 daemon=1
 single_instance=1
 single_child=1
 logger=1
-modsdir=@prefix@/lib/zocmds/
+dir.mods=@prefix@/lib/zocmds/
 # PACKAGE: @PACKAGE@
 # PACKAGE_VERSION: @PACKAGE_VERSION@
 # CFLAGS: @CFLAGS@
@@ -37,10 +37,10 @@ modsdir=@prefix@/lib/zocmds/
 # build_os: @build_os@
 # abs_top_builddir: @abs_top_builddir@
 # pidsdir=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
-pidsdir=/run/@PACKAGE@/
+dir.pids=/run/@PACKAGE@/
 # prefix=@prefix@
 # exec_prefix=@exec_prefix@
-protodir=@prefix@/lib/zocromas_zocprotos/
+dir.proto=@prefix@/lib/zocromas_zocprotos/
 msgfilename=/dev/tty11
 # redirect-messages=/dev/tty11
 # -

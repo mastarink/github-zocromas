@@ -4,14 +4,15 @@
 #define MAS_MSG_BIT(bit) 1
 #else
 #include <mastar/types/mas_opts_types.h>
-extern mas_options_t opts;
+/* extern mas_options_t opts; */
+extern mas_msg_options_t *pmsg_opts;
 
-#define MAS_MSG_BIT(testbit) opts.f.bit.testbit
+#define MAS_MSG_BIT(testbit) pmsg_opts->bit.testbit
 #endif
 
 #  define memMSG(...) if (MAS_MSG_BIT(msg_mem)){MFP("%s:%u:", FL);MFP(__VA_ARGS__);MFP("\n");}
 // *INDENT-OFF*
-// #    define memMSG(...) MAS_MSGFL( ( opts.f.bit.msg_mem ),               1, "<|    %5s   |>", "MEM",       NULL, __VA_ARGS__)
+// #    define memMSG(...) MAS_MSGFL( ( pmsg_opts->bit.msg_mem ),               1, "<|    %5s   |>", "MEM",       NULL, __VA_ARGS__)
 //						allow				details		pref_fmt	pref	suff	fmt,...
 #define MSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( MAS_MSG_BIT(msg_notice	)),	1, "%-15s"      , "?"PACKAGE,  NULL,		__VA_ARGS__)
 #define HMSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( MAS_MSG_BIT(msg_notice	)),	0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)

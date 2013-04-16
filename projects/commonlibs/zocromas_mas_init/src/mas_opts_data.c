@@ -6,6 +6,8 @@
 /* extern mas_control_t ctrl; */
 /* extern mas_options_t opts; */
 
+#include "mas_opts.h"
+#include "mas_opts_restore.h"
 
 
 /*
@@ -97,25 +99,40 @@ mas_options_t opts = {
 #  endif
   .env_optsname = "MAS_ZOCROMAS_DEFOPTS",
   .env_hostname = "MAS_ZOCROMAS_DEFHOST",
-  .argvv={0,NULL},
+  .argvv = {0, NULL}
+  ,
   /* .argc = 0,    */
   /* .argv = NULL, */
-  .hostsv={0,NULL},
+  .hostsv = {0, NULL}
+  ,
   /* .hosts_num = 0, */
   /* .hosts = NULL,  */
-  .protosv={0,NULL},
+  .protosv = {0, NULL}
+  ,
   /* .protos_num = 0, */
   /* .protos = NULL,  */
-  .commandsv={0,NULL},
+  .commandsv = {0, NULL}
+  ,
   /* .commands_num = 0, */
   /* .commands = NULL,  */
   .client_attempts = 1,
-  .modsdir = NULL,
-  .protodir = NULL,
-  .logdir = NULL,
-  .configdir = NULL,
+  .dir = {
+          .mods = NULL,
+          .proto = NULL,
+          .log = NULL,
+          .config = NULL,
+          .pids = NULL,
+          .history = NULL,
+          .post = NULL,
+          }
+  ,
   .configfilename = NULL,
   .max_config_backup = 5,
   .restart_sleep = 0.25,
+  .new_section_func = mas_opts_restore_new_section,
+  .at_section_func = mas_opts_restore_at_section,
+  .unknown_opt_func = mas_opts_restore_flags,
 };
+
+mas_msg_options_t *pmsg_opts = &opts.f;
 #endif

@@ -14,11 +14,13 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
 
-/* #include <mastar/log/mas_log.h> */
 
-/* #include <mastar/types/mas_control_types.h> */
+#ifndef MAS_NO_CTRL
+#include <mastar/types/mas_control_types.h>
+extern mas_control_t ctrl;
+#endif
+
 /* #include <mastar/types/mas_opts_types.h>    */
-/* extern mas_control_t ctrl;                  */
 /* extern mas_options_t opts;                  */
 
 #ifndef MAS_NO_THTOOLS

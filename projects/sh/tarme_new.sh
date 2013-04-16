@@ -5,7 +5,7 @@ if [[ -f "sh/setup.sh" ]] ; then
   # show_setup
   function tarme ()
   {
-    if [[ "$savedirtarme" ]] &&  [[ -d "$savedirtarme" ]] && [[ "$updir" ]] && [[ -d "$updir" ]] && [[ "$indir" ]] && [[ -d "$indir" ]] ; then
+    if [[ "$savedirtarme" ]] &&  [[ -d "$savedirtarme" ]] && [[ "$topdir" ]] && [[ -d "$topdir" ]] && [[ "$indir" ]] && [[ -d "$indir" ]] ; then
       if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
 	cd $indir || return 1
 	touch {tmp,boxes,$inbuilddir,autom4te.cache,$m4dir,$make_errdir}/mas-tar-exclude

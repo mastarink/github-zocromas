@@ -134,7 +134,6 @@ struct mas_control_s
   /* unsigned listening_max; */
   mas_lcontrol_list_head_t *lcontrols_list;
   /* mas_loginfo_list_head_t *log_list; */
-  mas_variables_list_head_t *hostvars;
 
   /* int launcherc;          */
   /* char *const *launcherv; */

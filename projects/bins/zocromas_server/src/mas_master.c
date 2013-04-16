@@ -282,10 +282,6 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   /* }                                                             */
   IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
 
-#ifdef MAS_INIT_SEPARATE
-  /* r = mas_init_server( argc, argv, env ); */
-  IEVAL( r, mas_init_server( argc, argv, env ) );
-#else
   MAS_LOG( "(%d) bunch: to init +", r );
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
@@ -293,7 +289,6 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
          mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
                         NULL ) );
   MAS_LOG( "(%d) bunch: init + done", r );
-#endif
   if ( ctrl.is_parent )
   {
     HMSG( "PARENT to exit" );

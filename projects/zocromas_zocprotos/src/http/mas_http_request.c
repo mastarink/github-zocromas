@@ -7,6 +7,9 @@
 
 #include <mastar/types/mas_control_types.h>
 extern mas_control_t ctrl;
+/* dir.post, uuid */
+#include <mastar/types/mas_opts_types.h>
+extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -91,7 +94,7 @@ mas_proto_http_parse_multipart( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
 
     f1 = NULL;
-    snprintf( cname, sizeof( cname ), "%s/%s.%lu-%u.part%u.post-%lu", opts.postdir ? opts.postdir : "/tmp",
+    snprintf( cname, sizeof( cname ), "%s/%s.%lu-%u.part%u.post-%lu", opts.dir.post ? opts.dir.post : "/tmp",
               opts.uuid, prcontrol->h.serial, ctrl.pserver_thread->pid, ++np, time( NULL ) );
 
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, cname );
@@ -142,11 +145,11 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
   {
     char bcpath[512];
 
-    snprintf( bcpath, sizeof( bcpath ), "%s/%s.%lu-%u.part%u.post-%lu", opts.postdir ? opts.postdir : "/tmp",
+    snprintf( bcpath, sizeof( bcpath ), "%s/%s.%lu-%u.part%u.post-%lu", opts.dir.post ? opts.dir.post : "/tmp",
               opts.uuid, prcontrol->h.serial, ctrl.pserver_thread->pid, 0, time( NULL ) );
     /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
-    HMSG( "ANY BODY %s ? [%s]", bcpath, opts.postdir );
+    HMSG( "ANY BODY %s ? [%s]", bcpath, opts.dir.post );
   }
   HMSG( "HTTP REQUEST (parse)" );
   pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
@@ -227,7 +230,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
               {
                 char bcpath[512];
 
-                snprintf( bcpath, sizeof( bcpath ), "%s/%u-%lu-%lu-%u.post", opts.postdir ? opts.postdir : "/tmp", ctrl.pserver_thread->pid,
+                snprintf( bcpath, sizeof( bcpath ), "%s/%u-%lu-%lu-%u.post", opts.dir.post ? opts.dir.post : "/tmp", ctrl.pserver_thread->pid,
                           prcontrol->h.serial, time( NULL ), __LINE__ );
                 /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
                 mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );

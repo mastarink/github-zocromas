@@ -52,13 +52,8 @@ main( int argc, char *argv[], char *env[] )
     ctrl.log_disabled = 1;
 #endif
 
-#ifdef MAS_INIT_SEPARATE
-  /* r = mas_init_client( argc, argv, env ); */
-  IEVAL( r, mas_init_client( argc, argv, env ) );
-#else
   /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
   IEVAL( r, mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ) );
-#endif
   for ( int ia = opts.hostsv.c; r >= 0 && ia > 0; ia-- )
   {
       int maxit = 0;

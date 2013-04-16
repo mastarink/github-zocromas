@@ -16,11 +16,11 @@ function configure_m ()
   else
     cfgdir=$configuredir
   fi
-  echo "$cfgdir/configure $configure_opts" >&2
+  echo "$cfgdir/configure $prj_configure_opts" >&2
   if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] \
   		&& [[ "$build_at" ]] ; then
     if pushd "$build_at"  >/dev/null ; then 
-      if $cfgdir/configure $configure_opts $@ ; then
+      if $cfgdir/configure $prj_configure_opts $@ ; then
 	popd >/dev/null || return 1
 	return 0
       fi
@@ -164,7 +164,7 @@ if [[ -d "$tmpunpack" ]] ; then
   tar -jxf $distfile
   if [[ -d "$unpackdir" ]] ; then
     if mkdir $ibuilddir && cd $ibuilddir ; then
-      $unpackdir/configure $configure_opts
+      $unpackdir/configure $prj_configure_opts
       make -s
       make -s install
     fi
@@ -179,7 +179,7 @@ SC
 #       echo "if [[ -d \"$unpackdir\" ]] ; then" >> $instshname
 #       echo "  mkdir $ibuilddir"		>> $instshname
 #       echo "  cd $ibuilddir"		>> $instshname
-#       echo "  ./configure $configure_opts"	>> $instshname
+#       echo "  ./configure $prj_configure_opts"	>> $instshname
 #       echo "  make -s"			>> $instshname
 #       echo "  make install"			>> $instshname
 #       echo "fi"				>> $instshname

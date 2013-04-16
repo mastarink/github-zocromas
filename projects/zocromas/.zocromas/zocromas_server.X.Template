@@ -3,7 +3,7 @@
 uuid=38645b37-a691-4bd4-bbbd-687088295aa9
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
-logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
+dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log/
 logger=1
 log=1
 max_config_backup=5

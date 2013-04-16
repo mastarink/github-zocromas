@@ -72,36 +72,48 @@ function setup_dirs ()
     fi
   fi  
   wd=`pwd`
-  me="$wd/$0"
-  mer="$(realpath $0)" || return 1
+  if [[ "$0" == `which bash` ]] ; then
+    if [[ "${BASH_SOURCE[3]}" ]] ; then
+#    me="$wd/${BASH_SOURCE[2]}"
+      me=${BASH_SOURCE[3]}
+    else
+      echo "ERROR ${BASH_SOURCE[*]}" >&2
+    fi
+    MAS_SOURCED=$me
+  else
+    me="$wd/$0"
+    unset MAS_SOURCED
+  fi
+  mer="$(realpath $me)" || return 1
   if [[ -f "$me" ]] && [[ -x "$me" ]] ; then
+    if [[ "$me" =~ \/([^\/]+)\/([^\/]+)\/([^\/]+)\.sh$ ]] ; then
+      shdir=${BASH_REMATCH[1]}/${BASH_REMATCH[2]}
+      prjname=${BASH_REMATCH[1]}
+    fi
     shdir=$( dirname "$me" )
     shdirr=$( dirname "$mer" )
     shdirup=$( dirname $shdir )
     shdirupr=$( dirname $shdirr )
+    projectsdir="$( realpath "$shdirupr" )" || return 1
     indir="$( realpath "$shdirup" )" || return 1
-    indirr="$( realpath "$shdirupr" )" || return 1
-    indirrr="$( realpath "$shdirupr/.." )" || return 1
-    updir="$( realpath $indir/.. )" || return 1
-    updirr="$( realpath $indirr/.. )" || return 1
-    projectsdir=$indirr
-    admindir=$indirrr/admin
-    savedir="$admindir/saved/"
+    topdir="$( realpath "$shdirupr/.." )" || return 1
+    admindir="$topdir/admin"
+    savedir="$admindir/saved"
     instdir="$admindir/install"
     instshdir="$admindir/install.sh"
     tmpdir="$admindir/tmp/"
 
-    savedirdist="$savedir/dist/"
-    savedirgentoo="$savedir/gentoo/"
-    savedirtar="$savedir/tar/"
+    savedirdist="$savedir/dist"
+    savedirgentoo="$savedir/gentoo"
+    savedirtar="$savedir/tar"
     savedirtarme="${savedirtar}/${stamp}"
     
     tmpbuild="$tmpdir/build/"
     tmpunpack="$tmpdir/unpack/"
     
     runconfigdirname=.zocromas
-    runconfigdir=$HOME/$runconfigdirname/
-    runconfigdir=$projectsdir/zocromas/$runconfigdirname/
+    runconfigdir="$HOME/$runconfigdirname/"
+    runconfigdir="$projectsdir/zocromas/$runconfigdirname/"
     export    MAS_WORK_ROOT_DIR=$projectsdir
     export    MAS_WORK_IN_DIR=$projectsdir
 
@@ -133,6 +145,12 @@ function setup_dirs ()
   else
     echo "FATAL : '$me' bad SCRIPT call ($0)" >&2
   fi
+# if [[ $indir =~ \/([^\/]+)$ ]] ; then
+#   prjname=${BASH_REMATCH[1]}
+# else
+#   prjname=$( basename $indir )
+# fi
+
   setup_vers || return 1
   return 0
 }

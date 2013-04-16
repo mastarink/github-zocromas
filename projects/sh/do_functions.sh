@@ -20,12 +20,13 @@ function mas_enabled_doprj ()
 
 function doprj ()
 {
-  local prj act
+  local prj act shfile shfun
   local list
   local cnt
   cnt=0
   setup_dirs || return 1
-  setup_vers || return 1
+  echo "$prjname $act ..." >&2
+# setup_vers || return 1
   if [[ "$1" == 'full' ]] ; then
     list='autoreconf configure make install'
   else
@@ -58,6 +59,7 @@ function doprj ()
 	;;
       esac
       shfile="sh/${act}.sh"
+      shfun="dosh_${act}"
 
     # echo "$act at $dir" >&2
       if ! mas_enabled_doprj $act ; then
@@ -83,7 +85,14 @@ function doprj ()
       elif [[ "$act" == 'ebuild'     ]] ; then
 	ebuild_m update || return 1
         cnt=$(( $cnt + 1 ))
-      elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && ! eval $shfile ; then
+      elif [[ "$shfun" ]] && type -t $shfun >/dev/null 2>&1 ; then
+#	echo "shfun:`type $shfun`"
+        $shfun
+      elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && . $shfile ; then
+        :
+      elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && eval $shfile ; then
+        :
+      else
 	echo "$LINENO FAIL action:$act prj:$prj mas_name:$mas_name ($shfile)" >&2
 	return 1
       fi
@@ -91,38 +100,32 @@ function doprj ()
       echo "${nn}.	>>>> skipping act [$act]" >&2
       return 1
     fi
+    echo "$prjname $act OK" >&2
   done
-  echo "DONE $cnt actions for ${mas_name}-${mas_vers}" >&2
+# echo "DONE $cnt actions for ${mas_name}-${mas_vers}" >&2
   return 0
 }
 function doall ()
 {  
-  local prj nn doit
-  if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ -d "$projectsdir" ]] && cd $projectsdir ; then
-    if [[ -f $projectsfile ]] ; then
-      list=`cat $projectsfile`
-#	echo "pwd: {$( pwd )}" >&2
-    else
-      echo "not exists $projectsfile" >&2
-      return 1
-    fi
+  local prj nn doit dir
+  if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ "$projects_list" ]] && [[ -d "$projectsdir" ]] ; then
     nn=0
     if ! [[ "$MAS_DO_FROM_PROJECT" ]] ; then
       doit='yes'
     fi
-    for prj in $list ; do
+    for prj in $projects_list ; do
       if [[ "$MAS_DO_FROM_PROJECT" ]] && [[ "$prj" =~ $MAS_DO_FROM_PROJECT ]] ; then
         doit='yes'
       fi
       if [[ "$doit" ]] ; then
 	cd "$projectsdir" || return 1
-	echo "-- prj:$prj" >&2
-	dir=$( realpath $prj )  || return 1
+# 	echo "-- prj:$prj" >&2
+#	dir=$( realpath $prj )  || return 1
 	if [[ "$prj" ]] && [[ -d "$prj" ]] ; then
-	  cd "$dir"                 || return 1
+	  cd "$prj"                 || return 1
 	  doprj $@ || return 1
 	else
-	  echo "${nn}.	>>>> skipping dir [$dir]" >&2
+	  echo "${nn}.	>>>> skipping dir [$prj]" >&2
 	fi
       fi
       nn=$(( $nn + 1 ))
@@ -132,4 +135,3 @@ function doall ()
   fi
   return 0
 }
-

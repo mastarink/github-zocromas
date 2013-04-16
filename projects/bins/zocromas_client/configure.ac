@@ -33,10 +33,11 @@ AC_CONFIG_SRCDIR([src/mas_client.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
 
-AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+AM_INIT_AUTOMAKE([foreign   -Wall -Werror dist-bzip2])
 
 
-AM_SILENT_RULES([yes])
+# AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])

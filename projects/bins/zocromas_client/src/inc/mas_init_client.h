@@ -2,10 +2,6 @@
 #  define MAS_INIT_CLIENT_H
 
 
-#ifdef MAS_INIT_SEPARATE
-int mas_init_client( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env );
-#endif
-
 void mas_destroy_client( void );
 
 #endif

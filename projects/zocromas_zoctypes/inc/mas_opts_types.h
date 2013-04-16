@@ -2,41 +2,55 @@
 #  define MAS_OPTS_TYPES_H
 
 #  include <stdio.h>
-
 #  include <mastar/types/mas_common_types.h>
 
+
+typedef int ( *mas_new_section_func_t ) ( const char *section );
+typedef int ( *mas_at_section_func_t ) ( const char *section, const char *s );
+typedef int ( *mas_unknown_opt_func_t ) ( const char *s );
+typedef union mas_msg_options_u
+{
+  unsigned long word;
+  struct mas_optflags_s
+  {
+    unsigned msg_notice:1;
+    unsigned msg_watch:1;
+    /* main */
+    unsigned msg_main:1;
+    /* communication */
+    unsigned msg_io:1;
+    /* listener */
+    unsigned msg_listen:1;
+    /* transaction */
+    unsigned msg_transaction:1;
+    /* waiter */
+    unsigned msg_wait:1;
+    unsigned msg_thread:1;
+    /* signal */
+    unsigned msg_signal:1;
+    /* trace */
+    unsigned msg_trace:1;
+    unsigned msg_trace_main:1;
+    unsigned msg_trace_listener:1;
+    unsigned msg_trace_transaction:1;
+    unsigned msg_cmd:1;
+    unsigned msg_mem:1;
+    unsigned msg_funline:1;
+  } bit;
+} mas_msg_options_t;
+typedef struct mas_dirs_s
+{
+  char *pids;
+  char *mods;
+  char *proto;
+  char *log;
+  char *history;
+  char *post;
+  char *config;
+} mas_dirs_t;
 struct mas_options_s
 {
-  union mas_options_u
-  {
-    unsigned long word;
-    struct mas_optflags_s
-    {
-      unsigned msg_notice:1;
-      unsigned msg_watch:1;
-      /* main */
-      unsigned msg_main:1;
-      /* communication */
-      unsigned msg_io:1;
-      /* listener */
-      unsigned msg_listen:1;
-      /* transaction */
-      unsigned msg_transaction:1;
-      /* waiter */
-      unsigned msg_wait:1;
-      unsigned msg_thread:1;
-      /* signal */
-      unsigned msg_signal:1;
-      /* trace */
-      unsigned msg_trace:1;
-      unsigned msg_trace_main:1;
-      unsigned msg_trace_listener:1;
-      unsigned msg_trace_transaction:1;
-      unsigned msg_cmd:1;
-      unsigned msg_mem:1;
-      unsigned msg_funline:1;
-    } bit;
-  } f;
+  mas_msg_options_t f;
   unsigned single_instance:1;
   unsigned single_child:1;
   unsigned listener_single:1;
@@ -87,21 +101,38 @@ struct mas_options_s
 
   unsigned client_attempts;
   char *uuid;
+
+
+  mas_dirs_t dir;
   char *msgfilename;
-  char *pidsdir;
-  char *modsdir;
-  char *protodir;
-  char *logdir;
-  char *historydir;
-  char *postdir;
-  char *configdir;
   char *configfilename;
   char *saved_configfilename;
   unsigned max_config_backup;
   double restart_sleep;
+  mas_new_section_func_t new_section_func;
+  mas_at_section_func_t at_section_func;
+  mas_unknown_opt_func_t unknown_opt_func;
 };
 typedef struct mas_options_s mas_options_t;
 
+
+typedef enum mas_optiov_value_type_e
+{
+  MAS_OPT_TYPE_NONE,
+  MAS_OPT_TYPE_INT,
+  MAS_OPT_TYPE_DOUBLE,
+  MAS_OPT_TYPE_STR,
+  MAS_OPT_TYPE_PSTR,
+} mas_optiov_value_type_t;
+
+struct mas_option_parse_s
+{
+  const char *name;
+  mas_optiov_value_type_t type;
+  size_t offset;
+  size_t size;
+};
+typedef struct mas_option_parse_s mas_option_parse_t;
 
 
 #endif

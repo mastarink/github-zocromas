@@ -257,12 +257,12 @@ mas_client_init_readline( void )
 
   snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
   /* rl_event_hook = mas_client_readline_event; */
-  WMSG( "HISTORY to LOAD from %s", opts.historydir );
-  if ( opts.historydir )
+  WMSG( "HISTORY to LOAD from %s", opts.dir.history );
+  if ( opts.dir.history )
   {
     char *fpath = NULL;
 
-    fpath = mas_strdup( opts.historydir );
+    fpath = mas_strdup( opts.dir.history );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, "history" );
 
@@ -272,7 +272,7 @@ mas_client_init_readline( void )
   }
   else
   {
-    EMSG( "historydir not set" );
+    EMSG( "dir.history not set" );
   }
   if ( rh != 0 )
   {
@@ -301,12 +301,12 @@ void
 mas_client_destroy_readline( void )
 {
   WMSG( "HISTORY to SAVE" );
-  if ( opts.historydir )
+  if ( opts.dir.history )
   {
     int rh = 0;
     char *fpath = NULL;
 
-    fpath = mas_strdup( opts.historydir );
+    fpath = mas_strdup( opts.dir.history );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, "history" );
 

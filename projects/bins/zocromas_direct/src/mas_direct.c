@@ -16,8 +16,8 @@ main( int argc, char *argv[] )
 {
   char *infos = NULL;
 
-  opts.modsdir = "/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/";
-  infos = mas_evaluate_command( "server info" );
+  opts.dir.mods = "/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/";
+  infos = mas_evaluate_command( "get version" );
   if ( MAS_VALID_ANSWER( infos ) )
   {
     /* fprintf( stdout, "[%p]\n", infos ); */

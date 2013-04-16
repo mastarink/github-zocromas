@@ -243,32 +243,32 @@ mas_cli_make_option( int opt, const char *m_optarg )
     }
     break;
   case MAS_CLI_OPT_MODSDIR:
-    if ( opts.modsdir )
-      mas_free( opts.modsdir );
-    opts.modsdir = NULL;
+    if ( opts.dir.mods )
+      mas_free( opts.dir.mods );
+    opts.dir.mods = NULL;
     if ( optarg && *optarg )
-      opts.modsdir = mas_strdup( optarg );
+      opts.dir.mods = mas_strdup( optarg );
     break;
   case MAS_CLI_OPT_PROTODIR:
-    if ( opts.protodir )
-      mas_free( opts.protodir );
-    opts.protodir = NULL;
+    if ( opts.dir.proto )
+      mas_free( opts.dir.proto );
+    opts.dir.proto = NULL;
     if ( optarg && *optarg )
-      opts.protodir = mas_strdup( optarg );
+      opts.dir.proto = mas_strdup( optarg );
     break;
   case MAS_CLI_OPT_LOGDIR:
-    if ( opts.logdir )
-      mas_free( opts.logdir );
-    opts.logdir = NULL;
+    if ( opts.dir.log )
+      mas_free( opts.dir.log );
+    opts.dir.log = NULL;
     if ( optarg && *optarg )
-      opts.logdir = mas_strdup( optarg );
+      opts.dir.log = mas_strdup( optarg );
     break;
   case MAS_CLI_OPT_HISTORYDIR:
-    if ( opts.historydir )
-      mas_free( opts.historydir );
-    opts.historydir = NULL;
+    if ( opts.dir.history )
+      mas_free( opts.dir.history );
+    opts.dir.history = NULL;
     if ( optarg && *optarg )
-      opts.historydir = mas_strdup( optarg );
+      opts.dir.history = mas_strdup( optarg );
     break;    
   case MAS_CLI_OPT_LISTENER_SINGLE:
     opts.listener_single = 1;

@@ -25,6 +25,11 @@ extern mas_control_t ctrl;
 #include <mastar/types/mas_message_types.h>
 
 
+__attribute__ ( ( constructor ) )
+     static void http_constructor( void )
+{
+  HMSG( "CONSTRUCTOR proto xcromas" );
+}
 
 /*
 this:

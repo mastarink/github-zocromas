@@ -1,5 +1,6 @@
 function run_installed ()
 {
+  local cmd_exec
   local binary builddir bname rname mcaller
   mcaller=$1
   shift
@@ -22,6 +23,12 @@ function run_installed ()
 # echo "binary:$binary" >&2
 # echo "MAS_ZOCROMAS_HERE:$MAS_ZOCROMAS_HERE" >&2
 
+  if [[ "$MAS_SOURCED" ]] ; then
+    echo "MAS_SOURCED: $MAS_SOURCED" >&2
+    cmd_exec=eval
+  else
+    cmd_exec=exec
+  fi
   if [[ "$rname" ]] ; then
      echo "<<< $rname >>>" >&2
 #      env | grep MAS_ZOCROMAS >&2
@@ -29,43 +36,50 @@ function run_installed ()
   # for core dump:
      ulimit -c unlimited
 
-#     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
+#     make_any && usleep 500000 && clear && $cmd_exec $builddir/$rname "$@"
 #      echo "bash:to run  $builddir/$rname" >&2
      echo "bash:starting $MAS_ZOCROMAS_HERE : $binary" >&2
      if type nanosleep >/dev/null 2>&1 ; then
-       make_any && nanosleep 0.5 && exec $binary "$@"
+       make_any && nanosleep 0.5 && $cmd_exec $binary "$@"
      elif type usleep >/dev/null 2>&1 ; then
-       make_any && usleep 50000 && exec $binary "$@"
+       make_any && usleep 50000 && $cmd_exec $binary "$@"
      else
-       make_any && exec $binary "$@"
+       make_any && $cmd_exec $binary "$@"
      fi
      echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
   fi
 }
 function run_any ()
 {
+  local cmd_exec
   echo "To RUN rbinary: $rbinary_preset" >&2
   # for core dump:
   ulimit -c unlimited
-
-  #     make_any && usleep 500000 && clear && exec $builddir/$rname "$@"
+  
+  #     make_any && usleep 500000 && clear && $cmd_exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
-  if [[ "$made" ]] ||  make_any ; then
-   if type nanosleep >/dev/null 2>&1 ; then
-     echo "1 To run rbinary: $rbinary_preset" >&2
-     nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
-   elif type usleep >/dev/null 2>&1 ; then
-     echo "2 To run rbinary: $rbinary_preset" >&2
-     usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
-   elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-     echo "3 To run rbinary: $rbinary_preset" >&2
-     LD_PRELOAD="/usr/lib/libtcmalloc.so"  exec $rbinary_preset "$@"
-   else
-     echo "4 To run rbinary: $rbinary_preset" >&2
-     exec $rbinary_preset "$@"
-   fi
+  if [[ "$MAS_SOURCED" ]] ; then
+    echo "MAS_SOURCED: $MAS_SOURCED" >&2
+    cmd_exec=eval
   else
-   echo "make error" >&2
+    cmd_exec=exec
+  fi
+  if [[ "$made" ]] ||  make_any ; then
+     if type nanosleep >/dev/null 2>&1 ; then
+       echo "1 To run rbinary: $rbinary_preset" >&2
+       nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+     elif type usleep >/dev/null 2>&1 ; then
+       echo "2 To run rbinary: $rbinary_preset" >&2
+       usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+     elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
+       echo "3 To run rbinary: $rbinary_preset" >&2
+       LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+     else
+       echo "4 To run rbinary: $rbinary_preset" >&2
+       $cmd_exec $rbinary_preset "$@"
+     fi
+    else
+     echo "make error" >&2
   fi
   echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
 }
@@ -87,7 +101,11 @@ function psshow ()
 {
   export PS_FORMAT=tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
 # bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
-  /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-150 | sed -ne 's/$/  .../p'
+  if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
+    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-$COLUMNS
+  else
+    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-150 | sed -ne 's/$/  .../p'
+  fi
 }
 function server_pid ()
 {

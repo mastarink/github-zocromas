@@ -92,9 +92,9 @@ mas_modules_load_module_from( const char *libname, const char *path, int noerr )
 /* {                                                                             */
 /*   void *module_handle = NULL;                                                 */
 /*                                                                               */
-/*   MAS_LOG( "load module %s @ %s", libname, opts.modsdir );                    */
-/*   if ( opts.modsdir )                                                         */
-/*     module_handle = mas_modules_load_module_from( libname, opts.modsdir, 1 ); */
+/*   MAS_LOG( "load module %s @ %s", libname, opts.dir.mods );                    */
+/*   if ( opts.dir.mods )                                                         */
+/*     module_handle = mas_modules_load_module_from( libname, opts.dir.mods, 1 ); */
 /*   return module_handle;                                                       */
 /* }                                                                             */
 
@@ -103,10 +103,10 @@ mas_modules_load_module_from( const char *libname, const char *path, int noerr )
 /* {                                                                                         */
 /*   void *module_handle = NULL;                                                             */
 /*                                                                                           */
-/*   MAS_LOG( "load proto %s @ %s", libname, opts.protodir );                                */
-/*   if ( opts.protodir )                                                                    */
-/*     module_handle = mas_modules_load_module_from( libname, opts.protodir, 1 );            */
-/*   WMSG( "PROTO LOAD %s @ %s %s", libname, opts.protodir, module_handle ? "OK" : "FAIL" ); */
+/*   MAS_LOG( "load proto %s @ %s", libname, opts.dir.proto );                                */
+/*   if ( opts.dir.proto )                                                                    */
+/*     module_handle = mas_modules_load_module_from( libname, opts.dir.proto, 1 );            */
+/*   WMSG( "PROTO LOAD %s @ %s %s", libname, opts.dir.proto, module_handle ? "OK" : "FAIL" ); */
 /*   return module_handle;                                                                   */
 /* }                                                                                         */
 

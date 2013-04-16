@@ -234,7 +234,8 @@ info_cmd( STD_CMD_ARGS )
                       "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
                       ctrl.exepath,
                       opts.msgfilename,
-                      opts.protodir, opts.modsdir, opts.pidsdir, opts.historydir, opts.logdir, ctrl.logpath, ctrl.log_q_came,
+                      opts.dir.proto, opts.dir.mods, opts.dir.pids, opts.dir.history, opts.dir.log,
+		      ctrl.logpath, ctrl.log_q_came,
                       ctrl.log_q_gone, mas_tracemem_flag );
       cp += len;
       bufsz -= len;

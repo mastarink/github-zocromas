@@ -7,6 +7,11 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/types/mas_opts_types.h>
+/* for dir.mods only */
+extern mas_options_t opts;
+
+
 #include <mastar/types/mas_modules_types.h>
 
 #include <mastar/msg/mas_msg_def.h>
@@ -71,7 +76,7 @@ _load_cmd_func( const char *libname, const char *funname )
 {
   mas_cmd_fun_t cmd_fun = NULL;
 
-  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, opts.modsdir );
+  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, opts.dir.mods );
   return cmd_fun;
 }
 
@@ -132,7 +137,7 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level )
         }
         if ( !cmd_fun )
         {
-          loaded_subtable = _load_subtable_from( full_libname, opts.modsdir );
+          loaded_subtable = _load_subtable_from( full_libname, opts.dir.mods );
           if ( loaded_subtable )
           {
             cmd_fun = _universal_complex_cmd;
@@ -142,7 +147,7 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           }
           else
           {
-            EMSG( "No subtable at %s.%s ( opts.modsdir: '%s' )", libname, name,  opts.modsdir );
+            EMSG( "No subtable at %s.%s ( opts.dir.mods: '%s' )", libname, name,  opts.dir.mods );
           }
         }
         mas_free( full_libname );

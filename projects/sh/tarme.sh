@@ -5,11 +5,11 @@ if [[ -f "sh/setup.sh" ]] ; then
   # show_setup
   function tarme ()
   {
-    if [[ "$savedirtarme" ]] &&  [[ -d "$savedirtarme" ]] && [[ "$updir" ]] && [[ -d "$updir" ]] && [[ "$indir" ]] && [[ -d "$indir" ]] ; then
+    if [[ "$savedirtarme" ]] &&  [[ -d "$savedirtarme" ]] && [[ "$topdir" ]] && [[ -d "$topdir" ]] && [[ "$indir" ]] && [[ -d "$indir" ]] ; then
       if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
 	cd $indir || return 1
 	make -s distclean     || return 1  
-	cd $updir  || return 1
+	cd $topdir  || return 1
 	if [[ -d "$mas_logdir" ]] ; then
 	  echo "rm $mas_logdir/server.*.log" >&2
 	  echo "rm $mas_logdir/client.*.log" >&2
@@ -19,7 +19,7 @@ if [[ -f "sh/setup.sh" ]] ; then
 	fi     
     #   echo "Saving $indir/*.{bz2,gz} to $savedirtar" >&2
     #   mv $indir/*.{bz2,gz} "$savedirtar"
-	cd $updir  || return 1
+	cd $topdir  || return 1
 	if [[ "$mas_name" ]] && [[ -d "$mas_name" ]] ; then
 	  echo "Saving *.tar.{bz2,gz} to $savedirtarme" >&2
 	  tar --wildcards --exclude '.*.sw*' --exclude-caches --exclude-tag mas-tar-exclude -jvcf "$savedirtarme/${mas_name}.${mas_vers}.`datemt`.tar.bz2" $mas_name/  || return 1

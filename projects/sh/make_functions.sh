@@ -12,7 +12,7 @@ function make_m ()
       fi
     fi
     if [[ "$ername" ]] && ! [[ -f "$ername" ]] ; then
-      echo ">>>>>>>>>>>>>> $( realpath $ername )" >&2
+#     echo ">>>>>>>>>>>>>> $( realpath $ername )" >&2
       if make -s $@  >$ername 2>&1 ; then
         setup_vers || return 1
 #	rm $ername
@@ -93,9 +93,7 @@ function make_target ()
   ilog="/tmp/$target-$prjname.log"
   if [[ "$build_at" ]] ; then
     if pushd "$build_at" >/dev/null ; then
-      if make -s $target > $ilog ; then
-	echo "$prjname $target OK : $ilog" >&2
-      else
+      if ! make -s $target > $ilog ; then
 	zoc_error "$LINENO" "${BASH_SOURCE[0]}" "$prjname $target FAIL : $ilog"
 #	cat "$ilog" >&2
 	popd  >/dev/null

@@ -89,7 +89,7 @@ mas_init_load_protos( void )
       proto_descs[ipr].proto_id = protos_cnt + 1;
       proto_descs[ipr].name = mas_strdup( opts.protosv.v[ipr] );
       proto_descs[ipr].function =
-            ( mas_transaction_fun_t ) mas_modules_load_func_from( opts.protosv.v[ipr], "mas_proto_main", opts.protodir );
+            ( mas_transaction_fun_t ) mas_modules_load_func_from( opts.protosv.v[ipr], "mas_proto_main", opts.dir.proto );
       if ( !proto_descs[ipr].function )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
@@ -134,20 +134,42 @@ Creating a daemon
    9 Let the main logic of daemon process run.
 */
 
+#define XSTR(s) STR(s)
+#define STR(s) #s
 
 static int
-mas_init_pid( int indx, const char *name )
+mas_init_pid( int indx, const char *shash_name )
 {
   int r = 0;
 
-  if ( name && *name && indx < MAS_MAX_PIDFD )
+  if ( shash_name && *shash_name && indx < MAS_MAX_PIDFD )
   {
     char *pidpath;
 
-    pidpath = mas_strdup( opts.pidsdir );
-    pidpath = mas_strcat_x( pidpath, name );
+    pidpath = mas_strdup( opts.dir.pids );
+    pidpath = mas_strcat_x( pidpath, shash_name );
     HMSG( "PIDPATH: %s", pidpath );
     YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
+    if ( r < 0 )
+    {
+      const char *pp = XSTR( MAS_SYSCONFDIR ) "/../run";
+
+      mas_free( pidpath );
+
+      pidpath = mas_strdup( pp );
+      pidpath = mas_strcat_x( pidpath, shash_name );
+      r = 0;
+      YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
+      HMSG( "(%d)PIDPATH 2a : [%s] %s", r, shash_name, pidpath );
+      if ( r < 0 )
+      {
+        mkdir( pp, S_IRUSR | S_IWUSR | S_IXUSR );
+        r = 0;
+        YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
+        HMSG( "(%d)PIDPATH 2b : %s", r, pidpath );
+      }
+      HMSG( "(%d)PIDPATH 2c : %s", r, pidpath );
+    }
     if ( r > 0 )
     {
       ctrl.pidfd[indx] = r;
@@ -176,36 +198,36 @@ int
 mas_init_pids( void )
 {
   int r = 0;
-  char *namebuf = NULL;
+  char *shash_namebuf = NULL;
 
   ctrl.threads.n.main.tid = mas_gettid(  );
   ctrl.threads.n.main.pid = getpid(  );
   ctrl.threads.n.main.thread = mas_pthread_self(  );
   ctrl.pserver_thread = &ctrl.threads.n.main;
 
-  namebuf = mas_malloc( 512 );
+  shash_namebuf = mas_malloc( 512 );
   MAS_LOG( "(%d) init pids", r );
-  if ( namebuf )
+  if ( shash_namebuf )
   {
     int indx = -1;
 
-    *namebuf = 0;
-    WMSG( "PIDSDIR: %s", opts.pidsdir );
-    if ( opts.single_instance && opts.pidsdir )
+    *shash_namebuf = 0;
+    WMSG( "PIDSDIR: %s", opts.dir.pids );
+    if ( opts.single_instance && opts.dir.pids )
     {
-      snprintf( namebuf, sizeof( namebuf ), "/%s.pid", ctrl.is_client ? "client" : "server" );
+      snprintf( shash_namebuf, sizeof( shash_namebuf ), "/%s.pid", ctrl.is_client ? "client" : "server" );
       indx = 0;
     }
-    else if ( opts.single_child && opts.pidsdir )
+    else if ( opts.single_child && opts.dir.pids )
     {
-      snprintf( namebuf, sizeof( namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
+      snprintf( shash_namebuf, sizeof( shash_namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
       indx = 1;
     }
     if ( indx >= 0 )
     {
-      IEVAL( r, *namebuf ? mas_init_pid( indx, namebuf ) : -1 );
+      IEVAL( r, *shash_namebuf ? mas_init_pid( indx, shash_namebuf ) : -1 );
     }
-    mas_free( namebuf );
+    mas_free( shash_namebuf );
   }
   MAS_LOG( "(%d) init pids done", r );
   return r;
@@ -317,64 +339,64 @@ mas_init_daemon( void )
   return r;
 }
 
-#ifdef MAS_INIT_SEPARATE
-int
-mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )
-{
-  int r = 0;
-
-  ctrl.status = MAS_STATUS_START;
-  ctrl.start_time = mas_double_time(  );
-
-
-#  ifdef MAS_SERVER_NOLOG
-  ctrl.log_disabled = 1;
-#  endif
-  /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
-  ctrl.is_client = 0;
-  ctrl.is_server = 1;
-  /* r = mas_pre_init( argc, argv, env ); */
-  IEVAL( r, mas_pre_init( argc, argv, env ) );
-
-  MAS_LOG( "init server" );
-#  ifdef MAS_USE_CURSES
-  /* if ( r >= 0 )              */
-  /*   r = mas_init_curses(  ); */
-#  endif
-  /* if ( r >= 0 )                                           */
-  /*   r = mas_init( atexit_fun, initsig, argc, argv, env ); */
-  IEVAL( r, mas_init( atexit_fun, initsig, argc, argv, env ) );
-  /* if ( r >= 0 )              */
-  /*   r = mas_init_daemon(  ); */
-  IEVAL( r, mas_init_daemon(  ) );
-  /* malloc_trim( 0 ); */
-  /* if ( ctrl.is_parent )       */
-  /* {                           */
-  /*   HMSG( "PARENT to exit" ); */
-  /* }                           */
-  /* else                        */
-  {
-    MAS_LOG( "(%d) init server: to init threads", r );
-    /* if ( r >= 0 )               */
-    /*   r = mas_threads_init(  ); */
-    IEVAL( r, mas_threads_init(  ) );
-    MAS_LOG( "(%d) init server: to load protos", r );
-    /* if ( r >= 0 )                   */
-    /*   r = mas_init_load_protos(  ); */
-    IEVAL( r, mas_init_load_protos(  ) );
-    MAS_LOG( "(%d) init server: to create lcontrols", r );
-    if ( r >= 0 )
-      mas_lcontrols_list_create(  );
-    MAS_LOG( "init server done" );
-    MAS_LOG( "(%d) init server: to post-init", r );
-    /* if ( r >= 0 )            */
-    /*   r = mas_post_init(  ); */
-    IEVAL( r, mas_post_init(  ) );
-    MAS_LOG( "(%d) end init server", r );
-  }
-  return r;
-}
-#endif
+/* #ifdef MAS_INIT_SEPARATE                                                                          */
+/* int                                                                                               */
+/* mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )  */
+/* {                                                                                                 */
+/*   int r = 0;                                                                                      */
+/*                                                                                                   */
+/*   ctrl.status = MAS_STATUS_START;                                                                 */
+/*   ctrl.start_time = mas_double_time(  );                                                          */
+/*                                                                                                   */
+/*                                                                                                   */
+/* #  ifdef MAS_SERVER_NOLOG                                                                         */
+/*   ctrl.log_disabled = 1;                                                                          */
+/* #  endif                                                                                          */
+/*   (* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server *) */
+/*   ctrl.is_client = 0;                                                                             */
+/*   ctrl.is_server = 1;                                                                             */
+/*   (* r = mas_pre_init( argc, argv, env ); *)                                                      */
+/*   IEVAL( r, mas_pre_init( argc, argv, env ) );                                                    */
+/*                                                                                                   */
+/*   MAS_LOG( "init server" );                                                                       */
+/* #  ifdef MAS_USE_CURSES                                                                           */
+/*   (* if ( r >= 0 )              *)                                                                */
+/*   (*   r = mas_init_curses(  ); *)                                                                */
+/* #  endif                                                                                          */
+/*   (* if ( r >= 0 )                                           *)                                   */
+/*   (*   r = mas_init( atexit_fun, initsig, argc, argv, env ); *)                                   */
+/*   IEVAL( r, mas_init( atexit_fun, initsig, argc, argv, env ) );                                   */
+/*   (* if ( r >= 0 )              *)                                                                */
+/*   (*   r = mas_init_daemon(  ); *)                                                                */
+/*   IEVAL( r, mas_init_daemon(  ) );                                                                */
+/*   (* malloc_trim( 0 ); *)                                                                         */
+/*   (* if ( ctrl.is_parent )       *)                                                               */
+/*   (* {                           *)                                                               */
+/*   (*   HMSG( "PARENT to exit" ); *)                                                               */
+/*   (* }                           *)                                                               */
+/*   (* else                        *)                                                               */
+/*   {                                                                                               */
+/*     MAS_LOG( "(%d) init server: to init threads", r );                                            */
+/*     (* if ( r >= 0 )               *)                                                             */
+/*     (*   r = mas_threads_init(  ); *)                                                             */
+/*     IEVAL( r, mas_threads_init(  ) );                                                             */
+/*     MAS_LOG( "(%d) init server: to load protos", r );                                             */
+/*     (* if ( r >= 0 )                   *)                                                         */
+/*     (*   r = mas_init_load_protos(  ); *)                                                         */
+/*     IEVAL( r, mas_init_load_protos(  ) );                                                         */
+/*     MAS_LOG( "(%d) init server: to create lcontrols", r );                                        */
+/*     if ( r >= 0 )                                                                                 */
+/*       mas_lcontrols_list_create(  );                                                              */
+/*     MAS_LOG( "init server done" );                                                                */
+/*     MAS_LOG( "(%d) init server: to post-init", r );                                               */
+/*     (* if ( r >= 0 )            *)                                                                */
+/*     (*   r = mas_post_init(  ); *)                                                                */
+/*     IEVAL( r, mas_post_init(  ) );                                                                */
+/*     MAS_LOG( "(%d) end init server", r );                                                         */
+/*   }                                                                                               */
+/*   return r;                                                                                       */
+/* }                                                                                                 */
+/* #endif                                                                                            */
 void
 mas_destroy_server( void )
 {
@@ -427,7 +449,7 @@ mas_destroy_server( void )
       {
         /* char *pidpath;                           */
         /*                                          */
-        /* pidpath = mas_strdup( opts.pidsdir );    */
+        /* pidpath = mas_strdup( opts.dir.pids );    */
         /* pidpath = mas_strcat_x( pidpath, name ); */
 
         mas_close( ctrl.pidfd[i] );

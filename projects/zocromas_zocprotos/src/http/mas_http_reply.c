@@ -8,10 +8,9 @@
 /* mas_xvstrftime */
 #include <mastar/tools/mas_tools.h>
 
-#include <mastar/types/mas_control_types.h>
+/* #include <mastar/types/mas_control_types.h> */
+/* extern mas_control_t ctrl; */
 /* #include <mastar/types/mas_opts_types.h> */
-extern mas_control_t ctrl;
-
 /* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
@@ -216,20 +215,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     else
     {
     }
-    mas_variable_t *docroot_var = NULL;
-
-    /* TODO remove from ctrl */
-
-    if ( !docroot_var && http->host )
-      docroot_var = mas_variables_find( ctrl.hostvars, http->host, "docroot" );
-    if ( !docroot_var )
-      docroot_var = mas_variables_find( ctrl.hostvars, "zocromas.mastar.lan", "docroot" );
-    /* if ( !docroot_var )                                                                        */
-    /*   docroot_var = mas_variables_find( ctrl.hostvars, "zocromas.mastar.lan:%u" , "docroot" ); */
-    if ( docroot_var && docroot_var->value )
-      http->docroot = mas_strdup( docroot_var->value );
-    else
-      http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/htdocs" );
+    http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/htdocs" );
   }
   if ( http->docroot )
   {

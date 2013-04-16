@@ -4,7 +4,7 @@
 # common
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
-logdir=/mnt/new_misc/develop/autotools/zoc/admin/log/
+dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log/
 log=1
 max_config_backup=5
 messages=1
@@ -18,9 +18,9 @@ daemon=1
 single_instance=1
 single_child=1
 logger=1
-modsdir=/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/
-pidsdir=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
-protodir=/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocromas_zocprotos/
+dir.mods=/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/
+dir.pids=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
+dir.proto=/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocromas_zocprotos/
 # -
 
 [listen 3]

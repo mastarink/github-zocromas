@@ -122,9 +122,9 @@ mas_logger_write( mas_loginfo_t * li )
           serial++;
           ltime = mas_double_time(  );
           fromlastlog = ( li->logtime - prevlilogtime ) * 1.E6;
-          /* if ( opts.logdir )                                                              */
+          /* if ( opts.dir.log )                                                              */
           /* {                                                                               */
-          /*   MFP( "%s : (%10.5f) logdir='%s'\n", __func__, ( ltime - logger_start_time ), opts.logdir );     */
+          /*   MFP( "%s : (%10.5f) logdir='%s'\n", __func__, ( ltime - logger_start_time ), opts.dir.log );     */
           /* }                                                                               */
           /* MFP( "%s : %20.5f (%10.5f) : '%s'\n", __func__, ltime, ( ltime - logger_start_time ), li->message ); */
 
@@ -250,7 +250,7 @@ mas_logger_start( void )
     r = pthread_create( &ctrl.threads.n.logger.thread, &ctrl.thglob.logger_attr, mas_logger_th, NULL );
     /* thMSG( "(%d) created(?) logger thread [%lx]", r, ctrl.threads.n.logger.thread ); */
     MAS_LOG( "(%d) created(?) logger thread [%lx]", r, ctrl.threads.n.logger.thread );
-    if ( opts.logdir && ctrl.logpath )
+    if ( opts.dir.log && ctrl.logpath )
     {
       ctrl.keep_logging = 1;
     }

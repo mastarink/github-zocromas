@@ -34,7 +34,8 @@ function prjconfversion ()
 }  
 function setup_vers ()
 {
-  local n v rprefix rname_case configure_opts1 configure_opts2 configure_opts3 c
+  local n v rprefix rname_case prj_configure_opts1 prj_configure_opts2 prj_configure_opts3 c
+# echo "setup_vers" >&2
   n=$1
   shift
   v=$1
@@ -42,6 +43,14 @@ function setup_vers ()
   if ! [[ "$n" ]] ; then n=`prjconfname`    ; fi
   if ! [[ "$v" ]] ; then v=`prjconfversion` ; fi
 # echo "`pwd` SV>> $n . $v" >&2
+  projectsfile=$projectsdir/projects.list
+  if [[ -f $projectsfile ]] ; then
+    projects_list=`cat $projectsfile`
+  else
+    echo "not exists projectsfile: '$projectsfile'" >&2
+    return 1
+  fi
+
   if [[ "$n" ]] && [[ "$v" ]] ; then
 #   echo "[$( basename $0 )] SET name:$n; version:$v" >&2
     if [[ -f "$indir/configure" ]] ; then
@@ -61,29 +70,30 @@ function setup_vers ()
 #     echo "`pwd`>> [$mas_name] [$mas_vers]" >&2
       mas_base_vers='0.0.5.20130219'
     fi
-    configure_opts1="--prefix=$instdir"
-#   configure_opts2=" --silent --enable-silent-rules --enable-tracemem --enable-debug"
-#   configure_opts2="$configure_opts2 --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
-#   configure_opts2="$configure_opts2 --with-pids-dir=zocromas/pid"
-#   configure_opts2="$configure_opts2 --with-mods-dir=zocmds"
-#   configure_opts2="$configure_opts2 --with-proto-dir=zocromas_zocprotos"
-#   configure_opts2="$configure_opts2 --with-log-dir=log"
-#   configure_opts2="$configure_opts2 --with-server=/tmp/zocromas.socket"
-#   configure_opts2="$configure_opts2 --with-def-proto=xcromas"
-    while read c ; do 
-      configure_opts2="$configure_opts2 $c"
-    done < $projectsdir/configure_opts
-    if [[ -f $indir/configure_opts ]] ; then
+    if ! [[ "$prj_configure_opts" ]] || [[ -f $indir/configure_opts ]] ; then
+      prj_configure_opts1="--prefix=$instdir"
+  #   prj_configure_opts2=" --silent --enable-silent-rules --enable-tracemem --enable-debug"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-pids-dir=zocromas/pid"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-mods-dir=zocmds"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-proto-dir=zocromas_zocprotos"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-log-dir=log"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-server=/tmp/zocromas.socket"
+  #   prj_configure_opts2="$prj_configure_opts2 --with-def-proto=xcromas"
       while read c ; do 
-        configure_opts3="$configure_opts3 $c"
-      done < $indir/configure_opts 
+	prj_configure_opts2="$prj_configure_opts2 $c"
+      done < $projectsdir/configure_opts
+      if [[ -f $indir/configure_opts ]] ; then
+	while read c ; do 
+	  prj_configure_opts3="$prj_configure_opts3 $c"
+	done < $indir/configure_opts 
+      fi
+      prj_configure_opts="$prj_configure_opts1 $prj_configure_opts2 $prj_configure_opts3"
     fi
-    configure_opts="$configure_opts1 $configure_opts2 $configure_opts3"
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
   fi
 # echo "[$mas_name] [$mas_vers]" >&2
-  prjname=$( basename $indir )
 # ebuild_prefix=zocromas_
   ebuild_dir=$projectsdir/ebuilds/mas-tar/${ebuild_prefix}${mas_name}
 
@@ -139,7 +149,6 @@ function setup_vers ()
 # echo "rname_preset: $rname_preset" >&2
 # echo "binprefix: $binprefix" >&2
 # echo "short_name: $short_name" >&2
-  projectsfile=$projectsdir/projects.list
   return 0
 }
 function show_setup ()
@@ -151,7 +160,6 @@ function show_setup ()
   echo "shdir:		$shdir" >&2
   echo "shdirup:	$shdirup" >&2
   echo "indir:		$indir" >&2
-  echo "updir:		$updir" >&2
   echo "configuredir:	$configuredir" >&2
   echo "wbuilddir:	$wbuilddir" >&2
   
@@ -186,6 +194,9 @@ export MAS_MAKE_CNT=0
 # echo "SETUPZ" >&2
 if ! setup_dirs ; then
   echo "setup error" >&2
-  exit 
+  if ! [[ "$0" == `which bash` ]] ; then
+    echo "@@@@ $0 @@@@" >&2
+#   exit
+  fi
 fi
 # echo "/SETUPZ" >&2

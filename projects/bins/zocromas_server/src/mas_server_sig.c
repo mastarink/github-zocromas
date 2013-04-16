@@ -92,7 +92,7 @@ sigterm_han( int s )
 /*   fprintf( ftinfo,                                                                                                                         */
 /*            "Server info:\n\tclients: {%lu - %lu = %lu}\n" "\tlogdir: %s;\tlogpath: %s;\n"                                                  */
 /*            "\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", ctrl.clients_came, ctrl.clients_gone,                                             */
-/*            ctrl.clients_came - ctrl.clients_gone, opts.logdir, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
+/*            ctrl.clients_came - ctrl.clients_gone, opts.dir.log, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
 /*            ctrl.threads.n.main.thread );                                                                                                             */
 /*   ith = 0;                                                                                                                                 */
 /*   (* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); *)                                                                           */

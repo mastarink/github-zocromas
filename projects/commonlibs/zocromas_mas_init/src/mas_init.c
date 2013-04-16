@@ -37,6 +37,9 @@ extern mas_options_t opts;
 #include <mastar/variables/mas_variables.h>
 
 #include "mas_opts.h"
+#include "mas_opts_save.h"
+#include "mas_opts_restore.h"
+
 #include "mas_cli_options.h"
 
 #include "mas_sig.h"
@@ -277,6 +280,28 @@ mas_pre_init_runpath( char *runpath )
 }
 
 static int
+mas_init_set_msg_file( void )
+{
+  int r = 0;
+
+  if ( !ctrl.is_parent )
+  {
+    if ( opts.msgfilename )
+    {
+      HMSG( "MESSAGES to %s", opts.msgfilename );
+      MAS_LOG( "(%d) init msg to set file e%d", r, errno );
+      IEVAL( r, mas_msg_set_file( opts.msgfilename ) );
+      MAS_LOG( "(%d) init msg set file done e%d", r, errno );
+
+      /* TODO if console: */
+      MFP( "\x1b[H\x1b[2J" );
+    }
+    IEVAL( r, mas_init_message(  ) );
+  }
+  return r;
+}
+
+static int
 mas_post_init( void )
 {
   int r = 0;
@@ -299,36 +324,22 @@ mas_post_init( void )
   }
 #endif
 /*  
-  if ( !opts.logdir )
-    opts.logdir = mas_strdup( ".........." );
+  if ( !opts.dir.log )
+    opts.dir.log = mas_strdup( ".........." );
 */
-  if ( r >= 0 && opts.logdir )
+  if ( r >= 0 && opts.dir.log )
   {
     char namebuf[512];
 
     snprintf( namebuf, sizeof( namebuf ), "/%s.%s.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent ? "parent" : "child",
               ( unsigned long ) ctrl.stamp.first_lts, getpid(  ) );
-    ctrl.logpath = mas_strdup( opts.logdir );
+    ctrl.logpath = mas_strdup( opts.dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
   }
   else
   {
-    EMSG( "logdir not set" );
-  }
-  if ( !ctrl.is_parent )
-  {
-    if ( opts.msgfilename )
-    {
-      HMSG( "MESSAGES to %s", opts.msgfilename );
-      MAS_LOG( "(%d) init msg to set file e%d", r, errno );
-      IEVAL( r, mas_msg_set_file( opts.msgfilename ) );
-      MAS_LOG( "(%d) init msg set file done e%d", r, errno );
-
-      /* TODO if console: */
-      MFP( "\x1b[H\x1b[2J" );
-    }
-    IEVAL( r, mas_init_message(  ) );
+    EMSG( "dir.log not set" );
   }
   MAS_LOG( "(%d) init done e%d", r, errno );
   WMSG( "(%d) POST INIT DONE", r );
@@ -467,6 +478,7 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   /* IEVAL( r, mas_init_curses(  ) ); */
 #endif
   IEVAL( r, mas_init( argc, argv, env ) );
+  mas_init_set_msg_file();
   {
     va_start( args, env );
     IEVAL( r, mas_init_vplus( args ) );
@@ -526,11 +538,6 @@ mas_destroy( void )
   }
   mas_opts_destroy(  );
 
-#ifdef MAS_GLOBAL_HOSTVARS
-  mas_variables_delete( ctrl.hostvars );
-  ctrl.hostvars = NULL;
-#endif
-
   ctrl.log_disabled = 1;
 
   if ( ctrl.logpath )
@@ -587,7 +594,7 @@ __attribute__ ( ( constructor ) )
 
   snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid );
   value = getenv( name );
-  if ( ctrl.stderrfile && value )
+  if ( ctrl.stderrfile )
     fprintf( ctrl.stderrfile, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );
   /* ctrl.is_server = 0; */
   /* ctrl.is_client = 0; */
