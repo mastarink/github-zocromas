@@ -214,10 +214,12 @@ AC_SUBST([MAS_S_DATE])
 #OBJDIR=masobj
 
 AC_CONFIG_HEADERS([config.h])
+
 AC_CONFIG_FILES([Makefile
 		src/xcromas/Makefile
 		src/xcromas/inc/Makefile
 		src/http/Makefile
+		src/http/etc/Makefile
 		src/http/inc/Makefile
 
 		])

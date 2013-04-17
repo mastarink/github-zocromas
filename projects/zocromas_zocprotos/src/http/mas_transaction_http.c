@@ -25,8 +25,10 @@
 #include <mastar/fileinfo/mas_fileinfo_object.h>
 
 #include <mastar/variables/mas_variables.h>
+#include <mastar/init/mas_opts_common.h>
 
-#  include <mastar/types/mas_transaction_control_types.h>
+
+#include <mastar/types/mas_transaction_control_types.h>
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"
@@ -92,12 +94,40 @@ more:
   }
 */
 
+
+
+static mas_variables_list_head_t *vhosts = NULL;
+
+
+
+void
+mas_proto_add_host( void *env, const char *section, const char *sectvalue, const char *name, const char *value )
+{
+  HMSG( "WOW '%s:%s'.'%s' : '%s'", section, sectvalue, name, value );
+  vhosts = mas_variable_create_text( vhosts, MAS_THREAD_NONE, "hosts", name, value, 0 );
+}
+
+
 __attribute__ ( ( constructor ) )
      static void http_constructor( void )
 {
   HMSG( "CONSTRUCTOR proto http" );
+  mas_option_parse_t opt_table[] = {
+    {.section = "host",.name = "docroot",.type = MAS_OPT_TYPE_FUNC,.func = mas_proto_add_host}
+    ,
+  };
+  ( void ) _mas_opts_restore_relative( "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
+                                       NULL,
+                                       NULL, NULL /* arg */  );
 }
 
+__attribute__ ( ( destructor ) )
+     static void http_destructor( void )
+{
+  HMSG( "DESTRUCTOR proto http" );
+  if ( vhosts )
+    mas_variables_delete( vhosts );
+}
 
 /*
       OPTIONS
@@ -182,7 +212,9 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
       mas_fileinfo_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT );
     }
     else
-      http->reply_content = mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at, ( const void * ) NULL /* prcontrol */  );
+      http->reply_content =
+            mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at,
+                               ( const void * ) NULL /* prcontrol */  );
   }
   MAS_LOG( "http: protocol-specific" );
   if ( http )
@@ -240,6 +272,6 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
   /* {                      */
   /*   EMSG( "BAD %d", w ); */
   /* }                      */
-  HMSG ("HTTP W: %d",w);
+  HMSG( "HTTP W: %d", w );
   return http ? w : 0;
 }

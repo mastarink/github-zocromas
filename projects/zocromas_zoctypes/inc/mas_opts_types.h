@@ -8,6 +8,8 @@
 typedef int ( *mas_new_section_func_t ) ( const char *section );
 typedef int ( *mas_at_section_func_t ) ( const char *section, const char *s );
 typedef int ( *mas_unknown_opt_func_t ) ( const char *s );
+typedef void ( *mas_opts_func_t ) ( void *env, const char *section, const char *sectval, const char *name, const char *value );
+
 typedef union mas_msg_options_u
 {
   unsigned long word;
@@ -123,14 +125,17 @@ typedef enum mas_optiov_value_type_e
   MAS_OPT_TYPE_DOUBLE,
   MAS_OPT_TYPE_STR,
   MAS_OPT_TYPE_PSTR,
+  MAS_OPT_TYPE_FUNC,
 } mas_optiov_value_type_t;
 
 struct mas_option_parse_s
 {
+  const char *section;
   const char *name;
   mas_optiov_value_type_t type;
   size_t offset;
   size_t size;
+  mas_opts_func_t func;
 };
 typedef struct mas_option_parse_s mas_option_parse_t;
 

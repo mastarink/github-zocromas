@@ -3,18 +3,8 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-/* #include <sys/types.h> */
-/* #include <sys/stat.h>  */
-/* #include <unistd.h>    */
-/* #include <string.h>    */
-/* #include <time.h>      */
-#ifdef HAVE_LIBUUID
-#  include <uuid/uuid.h>
-#endif
+
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/wrap/mas_lib.h>
-/* #include <mastar/wrap/mas_lib_thread.h> */
-#include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
@@ -24,10 +14,10 @@ extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-#include <mastar/log/mas_log.h>
+/* #include <mastar/log/mas_log.h> */
 
 #include "mas_opts_common.h"
-#include "mas_opts.h"
+#include "mas_opts_storage.h"
 
 #include "mas_opts_restore.h"
 
@@ -217,7 +207,7 @@ mas_opts_restore_path( const char *fpath )
 {
   int r = 0;
 
-  r = _mas_opts_restore_path( fpath, &opts, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), opts.new_section_func,
+  r = _mas_opts_restore_path( fpath, &opts, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL, opts.new_section_func,
                               opts.at_section_func, opts.unknown_opt_func );
   ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
   return r;

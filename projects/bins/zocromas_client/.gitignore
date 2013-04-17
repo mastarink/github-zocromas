@@ -1,2 +1,4 @@
 .zocromas
-
+test
+*.core.gz
+make-timing.*.result

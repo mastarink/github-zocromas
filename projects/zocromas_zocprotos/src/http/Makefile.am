@@ -1,4 +1,4 @@
-SUBDIRS= inc
+SUBDIRS= inc etc
 pkglib_LTLIBRARIES = http.la
 
 http_la_SOURCES         = mas_transaction_http.c mas_http_request.c mas_http_request_headers.c mas_http_reply.c mas_http_utils.c mas_http_get.c
