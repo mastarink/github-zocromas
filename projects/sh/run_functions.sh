@@ -29,7 +29,7 @@ function run_installed ()
   else
     cmd_exec=exec
   fi
-  if [[ "$rname" ]] ; then
+  if [[ "$binary" ]]; then
      echo "<<< $rname >>>" >&2
 #      env | grep MAS_ZOCROMAS >&2
 
@@ -65,21 +65,25 @@ function run_any ()
     cmd_exec=exec
   fi
   if [[ "$made" ]] ||  make_any ; then
-     if type nanosleep >/dev/null 2>&1 ; then
-       echo "1 To run rbinary: $rbinary_preset" >&2
-       nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
-     elif type usleep >/dev/null 2>&1 ; then
-       echo "2 To run rbinary: $rbinary_preset" >&2
-       usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
-     elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-       echo "3 To run rbinary: $rbinary_preset" >&2
-       LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
-     else
-       echo "4 To run rbinary: $rbinary_preset" >&2
-       $cmd_exec $rbinary_preset "$@"
-     fi
+    if [[ "$rbinary_preset" ]] ; then
+      if type nanosleep >/dev/null 2>&1 ; then
+        echo "1 To run rbinary: $rbinary_preset" >&2
+        nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+      elif type usleep >/dev/null 2>&1 ; then
+        echo "2 To run rbinary: $rbinary_preset" >&2
+        usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+      elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
+        echo "3 To run rbinary: $rbinary_preset" >&2
+        LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+      else
+        echo "4 To run rbinary: $rbinary_preset" >&2
+        $cmd_exec $rbinary_preset "$@"
+      fi
     else
-     echo "make error" >&2
+      echo "run error" >&2
+    fi
+  else
+   echo "make error" >&2
   fi
   echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
 }

@@ -190,7 +190,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  HMSG( "HTTP make DOCROOT" );
+  HMSG( "HTTP make DOCROOT [%s]", http->docroot );
   if ( !http->docroot )
   {
     mas_variable_t *host_var;
@@ -201,6 +201,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
       char *p;
 
       http->host = mas_strdup( host_var->value );
+      HMSG( "Host: %s", http->host );
       p = strchr( http->host, ':' );
       if ( p )
       {
@@ -214,11 +215,22 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     }
     else
     {
+      HMSG( "NO 'Host'" );
     }
-    http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/htdocs" );
+    if ( !http->docroot && http->host )
+    {
+      mas_variable_t *tv;
+
+      tv = mas_variables_find( prcontrol->proto_desc->variables, "docroot", http->host );
+      if ( tv && tv->value )
+        http->docroot = mas_strdup( tv->value );
+    }
+    if ( !http->docroot )
+      http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/htdocs" );
   }
   if ( http->docroot )
   {
+    HMSG( "HTTP made DOCROOT [%s]", http->docroot );
     MAS_LOG( "DOCROOT: %s", http->docroot );
   }
   else

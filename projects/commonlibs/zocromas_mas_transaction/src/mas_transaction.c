@@ -95,10 +95,11 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       {
         if (  /* r == 0 || */ !prcontrol->proto_desc || prcontrol->proto_desc == &ctrl.proto_descs[np] )
         {
-          HMSG( "PROTO %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
+          HMSG( "PROTO %s %d.%s: v%d", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", np, ctrl.proto_descs[np].name,
+                ctrl.proto_descs[np].variables ? 1 : 0 );
           /* calling proto_main(...) */
-          if ( ctrl.proto_descs[np].function )
-            r = ( ctrl.proto_descs[np].function ) ( prcontrol, &ctrl.proto_descs[np], NULL /* data */  );
+          if ( ctrl.proto_descs[np].func )
+            r = ( ctrl.proto_descs[np].func ) ( prcontrol, &ctrl.proto_descs[np], NULL /* data */  );
           else
             r = -1;
           if ( r > 0 )

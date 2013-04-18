@@ -34,7 +34,6 @@ extern mas_options_t opts;
 #ifdef MAS_USE_CURSES
 #  include <mastar/msg/mas_curses.h>
 #endif
-#include <mastar/variables/mas_variables.h>
 
 #include "mas_opts.h"
 #include "mas_opts_save.h"

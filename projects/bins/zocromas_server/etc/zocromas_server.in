@@ -54,8 +54,4 @@ host=/tmp/zocromas.socket
 proto=xcromas
 proto=http
 
-[host mastarink.net:8900]
-docroot=/var/www/mastarink.net/mastarink.net/htdocs
 
-[host zocromas.mastar.lan]
-docroot=/var/www/mastarink.net/mastarink.net/htdocs

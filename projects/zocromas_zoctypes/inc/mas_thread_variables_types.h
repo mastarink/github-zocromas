@@ -3,6 +3,7 @@
 
 #  include <mastar/types/mas_th_types.h>
 #  include <mastar/types/mas_listener_control_types.h>
+#  include <mastar/types/mas_variables_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>
 
 struct mas_thdata_s

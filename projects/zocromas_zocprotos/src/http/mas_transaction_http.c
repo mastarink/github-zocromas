@@ -25,7 +25,6 @@
 #include <mastar/fileinfo/mas_fileinfo_object.h>
 
 #include <mastar/variables/mas_variables.h>
-#include <mastar/init/mas_opts_common.h>
 
 
 #include <mastar/types/mas_transaction_control_types.h>
@@ -96,38 +95,27 @@ more:
 
 
 
-static mas_variables_list_head_t *vhosts = NULL;
+/* static mas_variables_list_head_t *proto_variables = NULL; */
 
 
 
-void
-mas_proto_add_host( void *env, const char *section, const char *sectvalue, const char *name, const char *value )
-{
-  HMSG( "WOW '%s:%s'.'%s' : '%s'", section, sectvalue, name, value );
-  vhosts = mas_variable_create_text( vhosts, MAS_THREAD_NONE, "hosts", name, value, 0 );
-}
-
-
+#if 0
 __attribute__ ( ( constructor ) )
      static void http_constructor( void )
 {
   HMSG( "CONSTRUCTOR proto http" );
-  mas_option_parse_t opt_table[] = {
-    {.section = "host",.name = "docroot",.type = MAS_OPT_TYPE_FUNC,.func = mas_proto_add_host}
-    ,
-  };
   ( void ) _mas_opts_restore_relative( "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
-                                       NULL,
-                                       NULL, NULL /* arg */  );
+                                       NULL, NULL, NULL /* arg */  );
 }
 
 __attribute__ ( ( destructor ) )
      static void http_destructor( void )
 {
   HMSG( "DESTRUCTOR proto http" );
-  if ( vhosts )
-    mas_variables_delete( vhosts );
+  if ( proto_variables )
+    mas_variables_delete( proto_variables );
 }
+#endif
 
 /*
       OPTIONS
@@ -182,19 +170,20 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
  * The Do Not Track (DNT) header
 */
   HMSG( "HTTP main" );
-  /* MAS_LOG( "http?: to create rq :(%lu) %s", strlen( string ), string ); */
+ /* MAS_LOG( "http?: to create rq :(%lu) %s", strlen( string ), string ); */
   MAS_LOG( "http?: to create rq" );
   http = mas_proto_http_create_request( prcontrol );
   MAS_LOG( "http?: to parse rq" );
   if ( http )
     http = mas_proto_http_parse_request( prcontrol, proto_desc, http );
-  MAS_LOG( "http?: parsed rq : %s", prcontrol && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
+  MAS_LOG( "http?: parsed rq : %s", prcontrol && proto_desc ? proto_desc->name : "?" );
 
   MAS_LOG( "http: to make docroot" );
   if ( http )
     mas_http_make_docroot( prcontrol, http );
   if ( http )
   {
+    HMSG( "HTTP make URL %s", http->URI );
     if ( http->URI && 0 == strncmp( http->URI, "/xcromas/", 9 ) )
     {
       HMSG( "HTTP make /xcromas" );

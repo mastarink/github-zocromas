@@ -8,7 +8,7 @@
 typedef int ( *mas_new_section_func_t ) ( const char *section );
 typedef int ( *mas_at_section_func_t ) ( const char *section, const char *s );
 typedef int ( *mas_unknown_opt_func_t ) ( const char *s );
-typedef void ( *mas_opts_func_t ) ( void *env, const char *section, const char *sectval, const char *name, const char *value );
+typedef void ( *mas_opts_func_t ) ( const void *env, const char *section, const char *sectval, const char *name, const char *value );
 
 typedef union mas_msg_options_u
 {

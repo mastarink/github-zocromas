@@ -27,7 +27,7 @@ related:
 
 int
 mas_opts_restore_nosection( void *popts, const char *section, const char *sectvalue, const char *s, mas_option_parse_t * opt_table,
-                            size_t opt_table_size, void *arg )
+                            size_t opt_table_size, const void *arg )
 {
   int r = -1;
 
@@ -45,8 +45,8 @@ mas_opts_restore_nosection( void *popts, const char *section, const char *sectva
       const char *se;
 
       r = 0;
-      HMSG( "%d. %s(%s).%s (%lu:%lu) : %s", io, opt_table[io].section, section, opt_table[io].name, ( unsigned long ) opt_table[io].type,
-            ( unsigned long ) opt_table[io].offset, s );
+      /* HMSG( "%d. %s(%s).%s (%lu:%lu) : %s", io, opt_table[io].section, section, opt_table[io].name, ( unsigned long ) opt_table[io].type, */
+      /*       ( unsigned long ) opt_table[io].offset, s );                                                                                  */
       se = mas_find_eq_value( s );
       switch ( opt_table[io].type )
       {
@@ -103,7 +103,7 @@ mas_opts_restore_nosection( void *popts, const char *section, const char *sectva
 }
 
 int
-_mas_opts_restore_relative( const char *filename, void *popts, mas_option_parse_t * opt_table, size_t opt_table_size, void *arg,
+_mas_opts_restore_relative( const char *filename, void *popts, mas_option_parse_t * opt_table, size_t opt_table_size, const void *arg,
                             mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
                             mas_unknown_opt_func_t unknown_opt_func )
 {
@@ -122,7 +122,7 @@ _mas_opts_restore_relative( const char *filename, void *popts, mas_option_parse_
 }
 
 int
-_mas_opts_restore_path( const char *fpath, void *popts, mas_option_parse_t * opt_table, size_t opt_table_size, void *arg,
+_mas_opts_restore_path( const char *fpath, void *popts, mas_option_parse_t * opt_table, size_t opt_table_size, const void *arg,
                         mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
                         mas_unknown_opt_func_t unknown_opt_func )
 {

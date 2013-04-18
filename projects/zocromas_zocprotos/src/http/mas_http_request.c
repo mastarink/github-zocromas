@@ -7,6 +7,7 @@
 
 #include <mastar/types/mas_control_types.h>
 extern mas_control_t ctrl;
+
 /* dir.post, uuid */
 #include <mastar/types/mas_opts_types.h>
 extern mas_options_t opts;
@@ -14,6 +15,8 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
+
+#include <mastar/init/mas_opts_common.h>
 
 /* #include "server/inc/mas_server_tools.h" */
 #include <mastar/thtools/mas_ocontrol_tools.h>
@@ -49,6 +52,28 @@ more:
   mas_log.c
 
 */
+
+
+
+static void
+mas_proto_add_host( const void *env, const char *section, const char *sectvalue, const char *name, const char *value )
+{
+  mas_transaction_protodesc_t *proto_desc;
+
+  proto_desc = ( mas_transaction_protodesc_t * ) env;
+  HMSG( "WOW '%s:%s'.'%s' : '%s'", section, sectvalue, name, value );
+  proto_desc->variables = mas_variable_create_text( proto_desc->variables, MAS_THREAD_NONE, "docroot", sectvalue, value, 0 );
+}
+
+static mas_option_parse_t opt_table[] = {
+  {.section = "host",.name = "docroot",.type = MAS_OPT_TYPE_FUNC,.func = mas_proto_add_host}
+  ,
+};
+
+
+
+
+
 
 mas_http_t *
 mas_proto_http_create_request( mas_rcontrol_t * prcontrol )
@@ -179,6 +204,13 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
       if ( good )
       {
         prcontrol->proto_desc = proto_desc;
+        if ( !prcontrol->proto_desc->variables )
+        {
+          HMSG( "HTTP proto vars" );
+          ( void ) _mas_opts_restore_relative( "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ),
+                                               ( const void * ) prcontrol->proto_desc /* arg */ , NULL, NULL, NULL );
+        }
+
         MAS_LOG( "good (1), http parsed protocol: %s === %s", prcontrol && proto_desc ? proto_desc->name : "?", http->protocol_name );
         MAS_LOG( "good (2), http parsed protocol: %s === %s", prcontrol
                  && prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );
@@ -230,8 +262,8 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
               {
                 char bcpath[512];
 
-                snprintf( bcpath, sizeof( bcpath ), "%s/%u-%lu-%lu-%u.post", opts.dir.post ? opts.dir.post : "/tmp", ctrl.pserver_thread->pid,
-                          prcontrol->h.serial, time( NULL ), __LINE__ );
+                snprintf( bcpath, sizeof( bcpath ), "%s/%u-%lu-%lu-%u.post", opts.dir.post ? opts.dir.post : "/tmp",
+                          ctrl.pserver_thread->pid, prcontrol->h.serial, time( NULL ), __LINE__ );
                 /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
                 mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
                 HMSG( "ANY BODY %s ?", bcpath );
@@ -278,6 +310,11 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, const mas_transaction_
       }
     }
     mas_free( pstring );
+  }
+  else
+  {
+    mas_proto_http_delete_request( http );
+    http = NULL;
   }
   if ( http && http->indata )
     mas_variables_log_pairs( http->indata, "inheader" );

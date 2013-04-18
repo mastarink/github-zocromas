@@ -3,6 +3,7 @@
 
 #  include <mastar/types/mas_common_types.h>
 #  include <mastar/types/mas_list_def.h>
+#  include <mastar/types/mas_variables_types.h>
 #  include <mastar/types/mas_channel_types.h>
 
 /*
@@ -21,7 +22,8 @@ struct mas_transaction_protodesc_s
 {
   char *name;
   unsigned proto_id;
-  mas_transaction_fun_t function;
+  mas_transaction_fun_t func;
+  mas_variables_list_head_t *variables;
 };
 
 

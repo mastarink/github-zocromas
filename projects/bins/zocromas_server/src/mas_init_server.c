@@ -18,6 +18,8 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/variables/mas_variables.h>
+
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
@@ -80,17 +82,17 @@ mas_init_load_protos( void )
   }
   if ( !ctrl.proto_descs )
   {
-    int protos_cnt = 0;
+    int protos_num = 0;
 
     proto_descs = mas_calloc( opts.protosv.c, sizeof( mas_transaction_protodesc_t ) );
+    memset( proto_descs, 0, opts.protosv.c * sizeof( mas_transaction_protodesc_t ) );
     for ( int ipr = 0; ipr < opts.protosv.c; ipr++ )
     {
       /* from one */
-      proto_descs[ipr].proto_id = protos_cnt + 1;
+      proto_descs[ipr].proto_id = protos_num + 1;
       proto_descs[ipr].name = mas_strdup( opts.protosv.v[ipr] );
-      proto_descs[ipr].function =
-            ( mas_transaction_fun_t ) mas_modules_load_func_from( opts.protosv.v[ipr], "mas_proto_main", opts.dir.proto );
-      if ( !proto_descs[ipr].function )
+      proto_descs[ipr].func = ( mas_transaction_fun_t ) mas_modules_load_func_from( opts.protosv.v[ipr], "mas_proto_main", opts.dir.proto );
+      if ( !proto_descs[ipr].func )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
         IEVAL( r, -1 );
@@ -100,16 +102,16 @@ mas_init_load_protos( void )
       {
         WMSG( "INIT PROTOS + #%d: %s", ipr, opts.protosv.v[ipr] );
       }
-      protos_cnt++;
-      MAS_LOG( "(%d) init / load protos #%d", r, protos_cnt );
+      protos_num++;
+      MAS_LOG( "(%d) init / load protos #%d", r, protos_num );
     }
-    ctrl.protos_num = protos_cnt;
+    ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
     if ( opts.protosv.c && !ctrl.protos_num )
     {
       IEVAL( r, -1 );
     }
-    HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_cnt, opts.protosv.c );
+    HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_num, opts.protosv.c );
   }
   else
   {
@@ -118,6 +120,23 @@ mas_init_load_protos( void )
   /* r = ctrl.proto_descs ? 0 : -1; */
   IEVAL( r, ctrl.proto_descs ? 0 : -1 );
   MAS_LOG( "(%d) init / load protos done", r );
+  return r;
+}
+
+int
+mas_protos_destroy(  )
+{
+  int r = 0;
+
+  for ( int ipr = 0; ipr < ctrl.protos_num; ipr++ )
+  {
+    mas_variables_list_head_t *vars;
+
+    vars = ctrl.proto_descs[ipr].variables;
+    ctrl.proto_descs[ipr].variables = NULL;
+    if ( vars )
+      mas_variables_delete( vars );
+  }
   return r;
 }
 
@@ -421,12 +440,12 @@ mas_destroy_server( void )
     sleep( 1 );
   mas_close_curses(  );
 #endif
-  WMSG( "1 DESTROY SERVER" );
   mas_lcontrols_delete_list(  );
-  WMSG( "2 DESTROY SERVER" );
   mas_in_thread_end(  );
-  WMSG( "3 DESTROY SERVER" );
   mas_threads_destroy(  );
+  mas_protos_destroy(  );
+
+
   mas_destroy(  );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );

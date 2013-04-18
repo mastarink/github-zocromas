@@ -14,14 +14,14 @@ AC_PREREQ([2.67])
 
 
 # If your `configure.in' has:
-#         
+#
 
 # AC_INIT
 # AC_CONFIG_SRCDIR([src/foo.c])
 # AM_INIT_AUTOMAKE(mumble, 1.5)
 
 # you can modernize it as follow:
-#         
+#
 
 # AC_CONFIG_SRCDIR(src/foo.c)
 # AM_INIT_AUTOMAKE
@@ -48,7 +48,7 @@ AM_SILENT_RULES([yes])
 # Checks for programs.
 # AC_PROG_GCC_DEFAULT_FLAGS([-O0 -Wall])
 
-# To turn off '-g -O2' :  
+# To turn off '-g -O2' :
 # ${CFLAGS="-O2"}
 # # CFLAGS="-Os"
 # AC_SUBST([CFLAGS])
@@ -200,7 +200,7 @@ if test x$enable_tracemem = xyes ; then
 fi
 
 # AC_REQUIRE([AM_MAINTAINER_MODE])
-# 
+#
 # if test $USE_MAINTAINER_MODE = yes; then
 # ..........
 # fi
