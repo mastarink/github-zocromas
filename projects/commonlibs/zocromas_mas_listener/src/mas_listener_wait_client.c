@@ -106,7 +106,8 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     {
       MAS_LOG( "(%d) NOT opened? channel; opened : %d", r, plcontrol->h.pchannel->opened );
     }
-    else if ( 0 && ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
+#if 0
+    else if (  ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
     {
       /* int rcond; */
 
@@ -116,6 +117,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       MAS_LOG( "cond signal to R%lu", prcontrol->h.serial );
       ( void ) /*rcond = */ pthread_cond_signal( &prcontrol->waitchan_cond );
     }
+#endif
     else
     {
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
