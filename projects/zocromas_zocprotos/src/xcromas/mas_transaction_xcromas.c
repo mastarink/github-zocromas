@@ -119,6 +119,17 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
   return r;
 }
 
+/* int                                                                                                              */
+/* mas_proto_test( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *pheader_void ) */
+/* {                                                                                                                */
+/*   int r = -1;                                                                                                    */
+/*   const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;                                            */
+/*                                                                                                                  */
+/*   if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )                                        */
+/*     r = 0;                                                                                                       */
+/*   return r;                                                                                                      */
+/* }                                                                                                                */
+
 int
 mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *pheader_void )
 {
@@ -157,7 +168,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
 
 
 
-    prcontrol->proto_desc = proto_desc;
+    /* prcontrol->proto_desc = proto_desc; */
 
     memset( &header_copy, 0, sizeof( header_copy ) );
     MAS_LOG( "xcromas session" );

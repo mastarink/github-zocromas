@@ -148,35 +148,9 @@ __attribute__ ( ( destructor ) )
 */
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * proto_desc, const void *string_void )
+mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  int w = 0;
-  mas_http_t *http = NULL;
-
-  /* const char *string = ( const char * ) string_void; */
-
-//  GET / HTTP/1.1
-//  Host: mastarink.net:5002
-//  User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.11) Gecko/20100101 Firefox/10.0.11
-//  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-//  Accept-Language: uk,ru;q=0.8,en-us;q=0.5,en;q=0.3
-//  Accept-Encoding: gzip, deflate
-//  DNT: 1
-//  Connection: keep-alive
-//  Referer: http://mastarink.net:5003/
-//  If-None-Match: 26555b-fd-4aaaaa685c746
-//  
-/*
- * The Do Not Track (DNT) header
-*/
-  HMSG( "HTTP main" );
- /* MAS_LOG( "http?: to create rq :(%lu) %s", strlen( string ), string ); */
-  MAS_LOG( "http?: to create rq" );
-  http = mas_proto_http_create_request( prcontrol );
-  MAS_LOG( "http?: to parse rq" );
-  if ( http )
-    http = mas_proto_http_parse_request( prcontrol, proto_desc, http );
-  MAS_LOG( "http?: parsed rq : %s", prcontrol && proto_desc ? proto_desc->name : "?" );
+  int r = -1;
 
   MAS_LOG( "http: to make docroot" );
   if ( http )
@@ -187,6 +161,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
     if ( http->URI && 0 == strncmp( http->URI, "/xcromas/", 9 ) )
     {
       HMSG( "HTTP make /xcromas" );
+      MAS_LOG( "HTTP make /xcromas" );
       /* char *answer = NULL;                                                                                                  */
       /*                                                                                                                       */
       /* answer = mas_evaluate_command_slash( http->URI + 9 );                                                                 */
@@ -198,12 +173,18 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
       /* }                                                                                                                     */
       http->reply_content =
             mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_evaluate_command_slash_plus, ( const void * ) prcontrol );
+      MAS_LOG( "HTTP 1 make /xcromas" );
       mas_fileinfo_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT );
+      MAS_LOG( "HTTP / make /xcromas" );
     }
     else
+    {
+      MAS_LOG( "HTTP make at docroot" );
       http->reply_content =
             mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at,
                                ( const void * ) NULL /* prcontrol */  );
+      MAS_LOG( "HTTP / make at docroot" );
+    }
   }
   MAS_LOG( "http: protocol-specific" );
   if ( http )
@@ -254,13 +235,45 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * 
     http = mas_http_reply( prcontrol, http );
   HMSG( "WRITTEN %lu", http ? http->written : 0 );
   MAS_LOG( "WRITTEN %lu", http ? http->written : 0 );
+  r = http ? 1 : 0;
   if ( http )
     mas_proto_http_delete_request( http );
+  return r;
+}
 
-  /* if ( w < 0 )           */
-  /* {                      */
-  /*   EMSG( "BAD %d", w ); */
-  /* }                      */
-  HMSG( "HTTP W: %d", w );
-  return http ? w : 0;
+int
+mas_proto_main( mas_rcontrol_t * prcontrol, const void *place_holder )
+{
+  int r = 0;
+  mas_http_t *http = NULL;
+
+  /* const char *string = ( const char * ) place_holder; */
+
+//  GET / HTTP/1.1
+//  Host: mastarink.net:5002
+//  User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.11) Gecko/20100101 Firefox/10.0.11
+//  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+//  Accept-Language: uk,ru;q=0.8,en-us;q=0.5,en;q=0.3
+//  Accept-Encoding: gzip, deflate
+//  DNT: 1
+//  Connection: keep-alive
+//  Referer: http://mastarink.net:5003/
+//  If-None-Match: 26555b-fd-4aaaaa685c746
+//  
+/*
+ * The Do Not Track (DNT) header
+*/
+  HMSG( "HTTP main" );
+  /* MAS_LOG( "http?: to create rq :(%lu) %s", strlen( string ), string ); */
+  MAS_LOG( "http?: to create rq" );
+  http = mas_proto_http_create_request( prcontrol );
+  MAS_LOG( "http?: to parse rq" );
+  if ( http )
+    http = mas_proto_http_parse_request( prcontrol, http );
+  MAS_LOG( "http?: parsed rq : %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
+
+  if ( http )
+    r = mas_proto_make( prcontrol, http );
+  HMSG( "HTTP r:%d", r );
+  return r;
 }

@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -102,12 +103,20 @@ related:
 /* R  - Transaction    */
 /* ZBIDMGTWLR          */
 
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  errno=0;
+}
+
+
 int
 main( int argc, char *argv[], char *env[] )
 {
   int r = 0;
 
-  HMSG("MAIN");
+  HMSG( "MAIN e:%d", errno );
   r = mas_master_bunch( argc, argv, env );
   return r;
 }

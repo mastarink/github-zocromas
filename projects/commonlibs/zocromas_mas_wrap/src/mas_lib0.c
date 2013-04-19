@@ -1,6 +1,8 @@
 #include "mas_std_def.h"
 
 #include <unistd.h>
+#  include <stdio.h>
+#  include <errno.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -19,6 +21,12 @@ related:
   mas_memory.c
 
 */
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
 
 /* int                                                      */
 /* mas_open( const char *pathname, int flags, mode_t mode ) */

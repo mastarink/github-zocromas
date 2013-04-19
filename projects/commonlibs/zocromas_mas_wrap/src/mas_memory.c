@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#  include <stdio.h>
+#  include <errno.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -33,6 +35,12 @@ related:
   mas_load_module.c
 
 */
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
 
 #ifndef MAS_NO_THREADS
 pthread_mutex_t malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -44,8 +52,9 @@ int mas_tracemem_flag = 1;
 int mas_tracemem_flag = 0;
 #endif
 #ifdef MAS_TRACEMEM
-      char *
-      _mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t maxs2 ) {
+char *
+_mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t maxs2 )
+{
   char *r = NULL;
   int l, l1, l2;
 

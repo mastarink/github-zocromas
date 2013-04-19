@@ -16,7 +16,7 @@ related:
 
 typedef struct mas_rcontrol_s mas_rcontrol_t;
 typedef struct mas_transaction_protodesc_s mas_transaction_protodesc_t;
-typedef int ( *mas_transaction_fun_t ) ( mas_rcontrol_t * prcontrol, const mas_transaction_protodesc_t * proto_desc, const void *pvoid );
+typedef int ( *mas_transaction_fun_t ) ( mas_rcontrol_t * prcontrol, const void *pvoid );
 
 struct mas_transaction_protodesc_s
 {

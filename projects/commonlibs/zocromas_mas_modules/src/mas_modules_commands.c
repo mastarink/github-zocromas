@@ -34,6 +34,12 @@ related:
   mas_modules_load_module.c
 */
 
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+ extern int errno;
+ fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
 
 /* table-search command; allowed NULL for name; pargs to set command args/subcommands */
 static mas_cmd_t *

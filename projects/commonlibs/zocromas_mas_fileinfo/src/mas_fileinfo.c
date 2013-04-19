@@ -3,13 +3,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
-
-/* #include "mas_common.h" */
-/* #include "log/inc/mas_log.h" */
 
 #include <mastar/variables/mas_variables.h>
 
@@ -301,7 +299,7 @@ mas_fileinfo_stat( mas_fileinfo_t * fileinfo )
     else
     {
       /* MAS_LOGERR( errno, "file %s stat", filepath ); */
-      /* errno = 0; */
+      errno = 0;
     }
 #endif
     mas_free( filepath );

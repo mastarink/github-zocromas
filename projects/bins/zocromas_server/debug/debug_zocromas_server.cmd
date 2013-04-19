@@ -6,6 +6,6 @@ handle SIGPIPE nostop noprint
 # break mas_io.c:346
 # break mas_io.c:299
 # break mas_io.c:327
-run
+run --nodaemon
 bt
 # vi: ft=gdb

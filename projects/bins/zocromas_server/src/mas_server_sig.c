@@ -20,6 +20,7 @@
 #include <mastar/types/mas_control_types.h>
 /* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
+
 /* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
@@ -218,8 +219,9 @@ sigint_han( int s )
         if ( !ctrl.old_stderrfile
              || fprintf( ctrl.old_stderrfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ),
                          ctrl.threads.n.main.thread ) < 0 )
-          fprintf( ctrl.msgfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ), ctrl.threads.n.main.thread );
-      errno = 0;
+          fprintf( ctrl.msgfile, "INT %d of %d [%lx] [%lx]\x1b[K\r", int_cnt, MAS_MAX_INT_2, mas_pthread_self(  ),
+                   ctrl.threads.n.main.thread );
+      /* errno = 0; */
     }
   }
   ctrl.sigint_time = ( unsigned long ) time( NULL );
@@ -314,18 +316,17 @@ mas_atexit( void )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
   ctrl.is_client = 0;
   ctrl.is_server = 1;
   atexit( mas_atexit );
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** /CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }

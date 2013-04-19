@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <errno.h>
 #include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -13,8 +14,8 @@
 extern mas_control_t ctrl;
 extern mas_options_t opts;
 
-#include <mastar/msg/mas_msg_def.h>
-#include <mastar/msg/mas_msg_tools.h>
+/* #include <mastar/msg/mas_msg_def.h> */
+/* #include <mastar/msg/mas_msg_tools.h> */
 
 #include "mas_control.h"
 
@@ -40,15 +41,13 @@ __attribute__ ( ( constructor ) )
     ctrl.stderrfile = stderr;
   if ( !ctrl.msgfile )
     ctrl.msgfile = ctrl.stderrfile;
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }
 
 /*
@@ -89,7 +88,7 @@ mas_ctrl_destroy( void )
   if ( ctrl.threads.n.child.pid && ctrl.threads.n.child.pid == getpid(  ) )
     for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )
     {
-      HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] );
+      /* HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] ); */
       unlink( ctrl.pidfilesv.v[ifil] );
     }
 

@@ -2,7 +2,7 @@
 if [[ -f "sh/setup.sh" ]] ; then
   . sh/setup.sh
 
-  port=50005
+  port=5005
   if [[ "$1" ]] ; then
     port=$1
     shift

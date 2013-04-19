@@ -67,6 +67,14 @@ more:
   mas_init_threads.h
 */
 
+  __attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  if ( ctrl.stderrfile )
+    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
+
 int
 mas_init_load_protos( void )
 {
@@ -187,6 +195,13 @@ mas_init_pid( int indx, const char *shash_name )
         YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
         HMSG( "(%d)PIDPATH 2b : %s", r, pidpath );
       }
+      MAS_LOG("Test 1");
+      MAS_LOG("Test 2");
+      MAS_LOG("Test 3");
+      MAS_LOG("Test 4");
+      MAS_LOG("Test 5");
+      MAS_LOG("Test 6");
+      MAS_LOG("Test 7");
       HMSG( "(%d)PIDPATH 2c : %s", r, pidpath );
     }
     if ( r > 0 )

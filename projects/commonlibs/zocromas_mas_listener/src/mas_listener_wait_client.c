@@ -106,7 +106,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     {
       MAS_LOG( "(%d) NOT opened? channel; opened : %d", r, plcontrol->h.pchannel->opened );
     }
-    else if ( ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
+    else if ( 0 && ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
     {
       /* int rcond; */
 
@@ -118,7 +118,6 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     }
     else
     {
-
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
       plcontrol->h.status = MAS_STATUS_WORK;
 #ifdef MAS_TR_PERSIST

@@ -45,6 +45,13 @@ more:
 */
 
 
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  extern int errno;
+
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
 
 
 static char *
@@ -147,7 +154,7 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           }
           else
           {
-            EMSG( "No subtable at %s.%s ( opts.dir.mods: '%s' )", libname, name,  opts.dir.mods );
+            EMSG( "No subtable at %s.%s ( opts.dir.mods: '%s' )", libname, name, opts.dir.mods );
           }
         }
         mas_free( full_libname );

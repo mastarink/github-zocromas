@@ -58,23 +58,30 @@ function run_any ()
   
   #     make_any && usleep 500000 && clear && $cmd_exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
+
+  if false ; then
+    straceit='strace -fr -C -o strace.tmp'
+  fi
+
+
   if [[ "$MAS_SOURCED" ]] ; then
     echo "MAS_SOURCED: $MAS_SOURCED" >&2
-    cmd_exec=eval
+    cmd_exec="eval $straceit"
   else
-    cmd_exec=exec
+#   cmd_exec="exec strace -e open  -o strace.tmp"
+    cmd_exec="exec $straceit"
   fi
   if [[ "$made" ]] ||  make_any ; then
     if [[ "$rbinary_preset" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
-        echo "1 To run rbinary: $rbinary_preset" >&2
-        nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+        echo "1 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
+        nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $rbinary_preset "$@"
       elif type usleep >/dev/null 2>&1 ; then
-        echo "2 To run rbinary: $rbinary_preset" >&2
-        usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+        echo "2 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
+        usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $rbinary_preset "$@"
       elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-        echo "3 To run rbinary: $rbinary_preset" >&2
-        LD_PRELOAD="/usr/lib/libtcmalloc.so"  $cmd_exec $rbinary_preset "$@"
+        echo "3 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
+        LD_PRELOAD="/usr/lib/libtcmalloc.so" $cmd_exec $rbinary_preset "$@"
       else
         echo "4 To run rbinary: $rbinary_preset" >&2
         $cmd_exec $rbinary_preset "$@"

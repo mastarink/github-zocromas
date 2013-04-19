@@ -25,6 +25,8 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/log/mas_log.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -155,6 +157,8 @@ info_cmd( STD_CMD_ARGS )
   /*   pheader->no_len = 1;        */
   /*   pheader->direct_output = 1; */
   /* }                            */
+  MAS_LOG( "info cmd" );
+
   buf = mas_malloc( bufsz0 );
   {
     char *cp;
@@ -171,7 +175,7 @@ info_cmd( STD_CMD_ARGS )
     *buf = 0;
     cp = buf;
     bufsz = bufsz0;
-
+    plcontrol = prcontrol->plcontrol;
     {
       s1lts[0] = '-';
       s1lts[1] = '\0';
@@ -235,8 +239,7 @@ info_cmd( STD_CMD_ARGS )
                       ctrl.exepath,
                       opts.msgfilename,
                       opts.dir.proto, opts.dir.mods, opts.dir.pids, opts.dir.history, opts.dir.log,
-		      ctrl.logpath, ctrl.log_q_came,
-                      ctrl.log_q_gone, mas_tracemem_flag );
+                      ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
       cp += len;
       bufsz -= len;
     }
@@ -275,6 +278,7 @@ info_cmd( STD_CMD_ARGS )
 
       /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
       pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
+      len = snprintf( cp, bufsz, "\t[plcontrol %d]\n", ctrl.lcontrols_list ? 1 : 0 );
       MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
       {
         if ( !z )
@@ -290,6 +294,12 @@ info_cmd( STD_CMD_ARGS )
         ith++;
       }
       pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
+    }
+    else
+    {
+      len = snprintf( cp, bufsz, "****** NO plcontrol\n" );
+      cp += len;
+      bufsz -= len;
     }
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }

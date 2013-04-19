@@ -10,8 +10,8 @@ int mas_msg_set_file( const char *path );
 int mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details, const char *prefix_fmt, const char *prefix,
              const char *suffix, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 9, 10 ) ) ) __attribute__ ( ( weak ) );
 void *mas_fatal( void );
-int mas_error( const char *func, int line, int merrno, const char *fmt, ... )
-      __attribute__ ( ( format( __printf__, 4, 5 ) ) ) __attribute__ ( ( weak ) );
-void mas_perr( const char *func, int line ) __attribute__ ( ( weak ) );
+int mas_error( const char *func, int line, int merrno, int *perrno, const char *fmt, ... )
+      __attribute__ ( ( format( __printf__, 5, 6 ) ) ) __attribute__ ( ( weak ) );
+void _mas_perr( const char *func, int line, int merrno, int *perrno ) __attribute__ ( ( weak ) );
 
 #endif

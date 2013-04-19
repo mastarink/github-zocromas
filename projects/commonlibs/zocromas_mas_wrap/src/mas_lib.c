@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
+#  include <stdio.h>
+#  include <errno.h>
 
 #include <time.h>
 
@@ -17,6 +19,12 @@ related:
   mas_memory.c
 
 */
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
 
 int
 mas_connect( int sockfd, const struct sockaddr *addr, socklen_t addrlen )

@@ -12,6 +12,7 @@ function mas_debug ()
 
   tmpcmd="${cmdfile}.tmp"
   sed -e "$sedex" "$cmdfile" > $tmpcmd
+  cat $tmpcmd
 # echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
 
 # exit

@@ -82,17 +82,17 @@ typedef enum mas_msg_color_e mas_msg_color_t;
 /* #include <mastar/types/mas_control_types.h> */
 /* extern mas_control_t ctrl;                  */
 
-#include "mas_msg_msgfl_def.h"
-#include "mas_msg_mfp_def.h"
-#include "mas_msg_misc_def.h"
+#  include "mas_msg_msgfl_def.h"
+#  include "mas_msg_mfp_def.h"
+#  include "mas_msg_misc_def.h"
 
-#  define EMSG(...) { MAS_ERRFL( errno, __VA_ARGS__); }
+#  define EMSG(...) { MAS_ERRFL( errno, &errno, __VA_ARGS__); }
 /* #  define EHMSG(cnd, ...) { if(cnd){EMSG(__VA_ARGS__);}else{HMSG(__VA_ARGS__);} } */
 /* #  define HEMSG(...) EHMSG(__VA_ARGS__) */
-#  define EMSG_ONCE(...) { static int shown=0; if (!shown) { MAS_ERRFL( errno, __VA_ARGS__); shown=1; } }
+#  define EMSG_ONCE(...) { static int shown=0; if (!shown) { MAS_ERRFL( errno, &errno, __VA_ARGS__); shown=1; } }
 #  define EEMSG(...) {    EMSG(__VA_ARGS__) ; }
-/* #  define FEMSG(...) { ctrl.fatal=1 ; MAS_ERRFL( errno, __VA_ARGS__); } */
-#  define P_ERR { if (&mas_perr) mas_perr(FL); }
+/* #  define FEMSG(...) { ctrl.fatal=1 ; MAS_ERRFL( errno, &errno, __VA_ARGS__); } */
+#  define P_ERR { extern int errno; if (&_mas_perr) _mas_perr(FL, errno, &errno); }
 #  define RP_ERR(arg) { r = arg;if ( r < 0 ) { P_ERR; } }
 /* #  include "mas_msg_tools.h" */
 #endif

@@ -60,7 +60,7 @@ related:
 more:
   mas_init_threads.c
   mas_log.c
-  
+
   mas_opts.c
 
 */
@@ -144,24 +144,25 @@ mas_init_message( void )
 }
 
 static int
-error_handler_at_init( const char *func, int line, int issys, int rcode, int ierrno, const char *fmt, const char *msg )
+error_handler_at_init( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, const char *fmt, const char *msg )
 {
   if ( !fmt )
     fmt = " r #%d [%s]";
 
-  /* va_list args; */
-  /* int masierrno; */
-
   /* HMSG( "ERROR HANDLER >>>>>>>>>>>> %d:%s ; r:%d e:%d; msg : %s", line, func, rcode, ierrno, msg ? msg : "-" ); */
   /* mas_set_error( func, line, ierrno, rcode, msg ? msg : "-" ); */
-  mas_error( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
+  mas_error( func, line, ierrno, perrno, fmt, rcode, msg ? msg : "-" );
   mas_log( func, line, ierrno, fmt, rcode, msg ? msg : "-" );
-  /* va_start( args, rcode );                  */
-  /* while ( masierrno = va_arg( args, int ) ) */
-  /* {                                         */
-  /*   const char *fmt;                        */
-  /* }                                         */
-  /* va_end( args );                           */
+/********************************************************************************
+ *         va_start( args, rcode );                                             *
+ *         while ( masierrno = va_arg( args, int ) )                            *
+ *         {                                                                    *
+ *         const char *fmt;                                                     *
+ *         }                                                                    *
+ *         va_end( args );                                                      *
+ ********************************************************************************/
+  if ( perrno )
+    *perrno = 0;
   return rcode;
 }
 
@@ -322,7 +323,7 @@ mas_post_init( void )
     /* }                                                                  */
   }
 #endif
-/*  
+/*
   if ( !opts.dir.log )
     opts.dir.log = mas_strdup( ".........." );
 */
@@ -477,7 +478,7 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   /* IEVAL( r, mas_init_curses(  ) ); */
 #endif
   IEVAL( r, mas_init( argc, argv, env ) );
-  mas_init_set_msg_file();
+  mas_init_set_msg_file(  );
   {
     va_start( args, env );
     IEVAL( r, mas_init_vplus( args ) );
@@ -588,13 +589,13 @@ __attribute__ ( ( constructor ) )
   char name[512];
   char *value = NULL;
 
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
 
   snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid );
   value = getenv( name );
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** [%s='%s'] CONSTRUCTOR %s\n", name, value, __FILE__ );
+  fprintf( stderr, "******************** [%s='%s'] /CONSTRUCTOR %s e%d\n", name, value, __FILE__, errno );
   /* ctrl.is_server = 0; */
   /* ctrl.is_client = 0; */
 }
@@ -602,6 +603,5 @@ __attribute__ ( ( constructor ) )
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }

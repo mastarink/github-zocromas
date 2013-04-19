@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <errno.h>
 
 #ifndef MAS_NO_THREADS
 #  include <pthread.h>

@@ -1,11 +1,13 @@
 #include "mas_std_def.h"
 
-#  ifndef MAS_NO_THREADS
-#include <pthread.h>
+#ifndef MAS_NO_THREADS
+#  include <pthread.h>
+#  include <stdio.h>
+#  include <errno.h>
 
 /* #include "mas_common.h" */
 
-#include "mas_lib_thread.h"
+#  include "mas_lib_thread.h"
 
 /*
 this:
@@ -14,6 +16,12 @@ related:
   mas_tools.c
 
 */
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
 
 
 int
@@ -89,7 +97,7 @@ mas_pthread_timedjoin_np( pthread_t thread, void **retval, const struct timespec
 }
 
 int
-mas_xpthread_timedjoin_np( pthread_t thread,  const struct timespec *abstime )
+mas_xpthread_timedjoin_np( pthread_t thread, const struct timespec *abstime )
 {
   return pthread_timedjoin_np( thread, NULL, abstime );
 }

@@ -16,7 +16,7 @@
 
 
 #ifndef MAS_NO_CTRL
-#include <mastar/types/mas_control_types.h>
+#  include <mastar/types/mas_control_types.h>
 extern mas_control_t ctrl;
 #endif
 
@@ -698,7 +698,7 @@ mas_msg_set_file( const char *path )
     if ( ctrl.msgfile )
     {
       /* for /dev/pts/... : ERROR{29:Illegal seek} */
-      errno = 0;
+      /* errno = 0; */
       IEVAL( r, setvbuf( ctrl.msgfile, NULL, _IONBF, 0 ) );
     }
     else
@@ -1131,7 +1131,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
 }
 
 static int
-mas_verror( const char *func, int line, int merrno, const char *fmt, va_list args )
+mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt, va_list args )
 {
   int r = 0;
   mas_msg_type_t msgt = MAS_MSG_ERR;
@@ -1177,25 +1177,27 @@ mas_verror( const char *func, int line, int merrno, const char *fmt, va_list arg
     /* OR ???? : ctrl.fatal = 1; */
     break;
   }
+  if ( perrno )
+    *perrno = 0;
   return r;
 }
 
 int
-mas_error( const char *func, int line, int merrno, const char *fmt, ... )
+mas_error( const char *func, int line, int merrno, int *perrno, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = mas_verror( func, line, merrno, fmt, args );
+  r = mas_verror( func, line, merrno, perrno, fmt, args );
   va_end( args );
   return r;
 }
 
 void
-mas_perr( const char *func, int line )
+_mas_perr( const char *func, int line, int merrno, int *perrno )
 {
-  if ( errno )
+  if ( merrno )
   {
     static int errcnt = 0;
     char errbuf[1024];
@@ -1203,12 +1205,12 @@ mas_perr( const char *func, int line )
 
     /* MAS_MSG_BIT(msg_tr) = 1; */
     errcnt++;
-    se = strerror_r( errno, errbuf, sizeof( errbuf ) );
+    se = strerror_r( merrno, errbuf, sizeof( errbuf ) );
 #ifndef MAS_NO_CTRL
-    mas_error( func, line, errno, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", errno, se, MAS_CTRL_IN_CLIENT, ctrl.keep_listening,
+    mas_error( func, line, merrno, perrno, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT, ctrl.keep_listening,
                ctrl.fatal );
 #else
-    mas_error( func, line, errno, "[error %d] %s", errno, se );
+    mas_error( func, line, merrno, perrno, "[error %d] %s", merrno, se );
 #endif
     if ( errcnt < 10 )
     {

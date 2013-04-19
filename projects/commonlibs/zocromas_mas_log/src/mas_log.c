@@ -45,6 +45,12 @@ more:
 
 */
 
+__attribute__ ( ( constructor ) )
+     static void master_constructor( void )
+{
+  extern int errno;
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
 
 void
 mas_log_delete_loginfo( mas_loginfo_t * li )
@@ -138,7 +144,7 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
     li->logtime = mas_double_time(  );
     li->lerrno = merrno;
     li->serial = ctrl.log_q_came;
-    /* errno = 0; */
+    /* NO: errno = 0; */
 
 #ifndef MAS_NO_THREADS
     /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */

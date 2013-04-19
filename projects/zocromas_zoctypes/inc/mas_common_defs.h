@@ -38,13 +38,13 @@ extern mas_control_t ctrl;
 #define MAS_CTRL_MESSAGES ctrl.messages
 #define MAS_CTRL_STATUS ctrl.status
 
-#define _ERRHAN(sys,rv,merrno,fmt,msg) { if (ctrl.error_handler) { rv=(ctrl.error_handler)(FL, sys, rv, merrno, fmt, msg); } }
+#define _ERRHAN(sys,rv,merrno,perrno,fmt,msg) { if (ctrl.error_handler) { rv=(ctrl.error_handler)(FL, sys, rv, merrno, perrno, fmt, msg); } }
 #  define IEVALM(_rv, _code, fmt, msg) \
 { \
   if (!(_rv<0)) \
   { \
     _rv = ( _code ); \
-    if (_rv<0) { _ERRHAN(0,_rv,errno,fmt,msg) } \
+    if (_rv<0) { _ERRHAN(0,_rv,errno,&errno,fmt,msg) } \
   } \
 }
 #  define YEVALM(_rv, _code, fmt, msg) \
@@ -52,7 +52,7 @@ extern mas_control_t ctrl;
   if (!(_rv<0)) \
   { \
     _rv = ( _code ); \
-    if (_rv<0) { _ERRHAN(1,_rv,errno,fmt,msg) } \
+    if (_rv<0) { _ERRHAN(1,_rv,errno,&errno,fmt,msg) } \
   } \
 }
 
@@ -60,7 +60,7 @@ extern mas_control_t ctrl;
 #  define EEVALM(_rv, _code, fmt, msg) \
 { \
   _rv = ( _code ); \
-  if (_rv) { int merr=_rv;_rv=-1;_ERRHAN(0,_rv,merr,fmt,msg) } \
+  if (_rv) { int merr=_rv;_rv=-1;_ERRHAN(0,_rv,merr,NULL,fmt,msg) } \
 }
 
 #endif
