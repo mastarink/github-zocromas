@@ -1,7 +1,7 @@
 #ifndef MAS_HTTP_REQUEST_H
 #  define MAS_HTTP_REQUEST_H
 
-#  define MAS_HTTP_MULTIPART
+/* #  define MAS_HTTP_MULTIPART */
 
 #  include "mas_http_types.h"
 

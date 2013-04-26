@@ -4,8 +4,8 @@
 #  include <mastar/types/mas_listener_control_types.h>
 
 
-unsigned mas_lcontrols_cleaning_transactions( int removeit, long jwait );
-unsigned mas_lcontrol_cleaning_transactions( mas_lcontrol_t * plcontrol, int removeit, long jwait );
+unsigned mas_lcontrols_cleaning_transactions__( int removeit, long jwait );
+unsigned mas_lcontrol_cleaning_transactions__( mas_lcontrol_t * plcontrol, int removeit, long jwait );
 /* unsigned mas_lcontrol_cleaning_transactions_count( mas_lcontrol_t * plcontrol, int removeit, long jwait ); */
 
 

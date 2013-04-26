@@ -96,9 +96,11 @@ mas_listeners_start( void )
 int
 mas_listeners_stop( void )
 {
-  mas_listeners_cancel(  );
-  mas_listeners_wait(  );
-  WMSG( "l's STOPPED" );
+  if ( ctrl.lcontrols_list )
+  {
+    mas_listeners_cancel(  );
+  }
+    mas_listeners_wait(  );
   return 0;
 }
 
@@ -136,7 +138,7 @@ mas_listeners_wait( void )
     mas_lcontrols_clean_list( 0 );
   }
   ctrl.status = MAS_STATUS_STOP;
-  WMSG( "l's STOPPED" );
+  EMSG( "l's STOPPED" );
   /* ??????????? */
   /* mas_lcontrols_clean_list( 0 ); */
 

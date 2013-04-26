@@ -19,7 +19,7 @@ related:
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 

@@ -65,7 +65,7 @@ to_exit( void )
   }
   ctrl.keep_listening = 0;
   ctrl.watcher_stop = 1;
-  /* mas_listeners_stop(  ); */
+  mas_listeners_stop(  );
   ctrl.stop_listeners = 1;
 }
 
@@ -159,12 +159,15 @@ pinfo( void )
   char *infos = NULL;
 
   infos = mas_evaluate_command( "server info" );
-  if ( !ctrl.stderrfile || fputs( infos, ctrl.stderrfile ) < 0 )
-    if ( !ctrl.old_stderrfile || fputs( infos, ctrl.old_stderrfile ) < 0 )
-      fputs( infos, ctrl.msgfile );
+  if ( infos )
+  {
+    if ( !ctrl.stderrfile || ( fputs( infos, ctrl.stderrfile ) < 0 ) )
+      if ( !ctrl.old_stderrfile || ( fputs( infos, ctrl.old_stderrfile ) < 0 ) )
+        fputs( infos, ctrl.msgfile );
 
-  /* show_info( ctrl.old_stderrfile ); */
-  mas_free( infos );
+    /* show_info( ctrl.old_stderrfile ); */
+    mas_free( infos );
+  }
 }
 
 void
@@ -316,17 +319,16 @@ mas_atexit( void )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
   ctrl.is_client = 0;
   ctrl.is_server = 1;
   atexit( mas_atexit );
-  fprintf( stderr, "******************** /CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
 }

@@ -190,7 +190,7 @@ mas_in_thread_end( void )
 mas_thdata_t *
 mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * prcontrol /* , mas_channel_t * pchannel */  )
 {
-  mas_thdata_t *thd=NULL;
+  mas_thdata_t *thd = NULL;
 
   pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
   if ( ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) == NULL )
@@ -248,6 +248,34 @@ mas_thself_plcontrol( void )
     plcontrol = thd->plcontrol;
   }
   return plcontrol;
+}
+
+double
+mas_thself_double_time( void )
+{
+  double double_time;
+  mas_thdata_t *thd;
+
+  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+  thd = pthread_getspecific( ctrl.mas_thread_key );
+  if ( thd )
+  {
+    double_time = thd->double_time;
+  }
+  return double_time;
+}
+
+void
+mas_thself_set_double_time( double double_time )
+{
+  mas_thdata_t *thd;
+
+  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+  thd = pthread_getspecific( ctrl.mas_thread_key );
+  if ( thd )
+  {
+    thd->double_time = double_time;
+  }
 }
 
 mas_rcontrol_t *

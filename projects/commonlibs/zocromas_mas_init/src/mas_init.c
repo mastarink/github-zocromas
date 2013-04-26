@@ -587,15 +587,15 @@ __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
   char name[512];
-  char *value = NULL;
+  /* char *value = NULL; */
 
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
 
   snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid );
-  value = getenv( name );
-  fprintf( stderr, "******************** [%s='%s'] /CONSTRUCTOR %s e%d\n", name, value, __FILE__, errno );
+  /* value = getenv( name ); */
+  /* fprintf( stderr, "******************** [%s='%s'] /CONSTRUCTOR %s e%d\n", name, value, __FILE__, errno ); */
   /* ctrl.is_server = 0; */
   /* ctrl.is_client = 0; */
 }
@@ -603,5 +603,5 @@ __attribute__ ( ( constructor ) )
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
 }

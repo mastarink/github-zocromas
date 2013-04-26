@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
@@ -48,9 +49,7 @@ more:
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  extern int errno;
-
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 

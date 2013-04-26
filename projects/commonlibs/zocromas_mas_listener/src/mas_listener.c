@@ -92,25 +92,25 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
   return r;
 }
 
-static int
-mas_listener_join_transactions( mas_lcontrol_t * plcontrol, int removeit )
-{
-  /* mas_lcontrol_t *plcontrol = NULL; */
-
-  MAS_LOG( "to join tr.th" );
-  /* plcontrol = mas_find_listener_control( mas_pthread_self(  ), NULL ); */
-  /* FIXME  jwait + lock => deadlock ?! 
-   *           TODO need cancel transactions before this
-   *         or while + sleep ... ( and not jwait )
-   * */
-/* mas_lcontrol_cleaning_transactions returns not-joined-count */
-  while ( mas_lcontrol_cleaning_transactions( plcontrol, removeit, 700000000 /* jwait */  ) > 0 )
-  {
-    /* thMSG( "WAIT MORE" ); */
-  }
-  plcontrol->h.status = MAS_STATUS_STOP;
-  return 0;
-}
+/* static int                                                                                          */
+/* mas_listener_join_transactions__( mas_lcontrol_t * plcontrol, int removeit )                        */
+/* {                                                                                                   */
+/*   (* mas_lcontrol_t *plcontrol = NULL; *)                                                           */
+/*                                                                                                     */
+/*   MAS_LOG( "to join tr.th" );                                                                       */
+/*   (* plcontrol = mas_find_listener_control( mas_pthread_self(  ), NULL ); *)                        */
+/*   (* FIXME  jwait + lock => deadlock ?!                                                             */
+/*    *           TODO need cancel transactions before this                                            */
+/*    *         or while + sleep ... ( and not jwait )                                                 */
+/*    * *)                                                                                             */
+/* (* mas_lcontrol_cleaning_transactions__ returns not-joined-count *)                                 */
+/*   while ( mas_lcontrol_cleaning_transactions__( plcontrol, removeit, 700000000 (* jwait *)  ) > 0 ) */
+/*   {                                                                                                 */
+/*     (* thMSG( "WAIT MORE" ); *)                                                                     */
+/*   }                                                                                                 */
+/*   plcontrol->h.status = MAS_STATUS_STOP;                                                            */
+/*   return 0;                                                                                         */
+/* }                                                                                                   */
 
 static size_t listener_stacksize = 0;
 static void *listener_stackaddr = NULL;
@@ -168,15 +168,15 @@ int
 mas_listener_cancel( mas_lcontrol_t * plcontrol )
 {
 #ifdef MAS_TR_PERSIST
-  mas_rcontrol_t *prc;
+  mas_rcontrol_t *prcontrol;
 
   pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
-  MAS_LIST_FOREACH( prc, plcontrol->transaction_controls_list, next )
+  MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
   {
     int rcond;
 
-    prc->persistent_transaction = 0;
-    rcond = pthread_cond_signal( &prc->waitchan_cond );
+    prcontrol->persistent_transaction = 0;
+    rcond = pthread_cond_signal( &prcontrol->waitchan_cond );
     /* thMSG( "COND_SIGNAL :%d", rcond ); */
   }
   pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
@@ -205,7 +205,7 @@ mas_listener_cleanup( void *arg )
 
     MAS_LOG( "listener cleanup : to end transactons" );
     /* TODO : move to another pthread ??? - NO */
-    mas_listener_join_transactions( plcontrol, 1 /* removeit */  );
+    /* mas_listener_join_transactions__( plcontrol, 1 (* removeit *)  ); */
     MAS_LOG( "listener cleanup : transactons closed" );
   }
   else
@@ -242,14 +242,13 @@ mas_listener( mas_lcontrol_t * plcontrol )
 
 /* naming : pthread_create argument = th */
 void *
-mas_listener_th( void *arg )
+mas_listener_th( void *tlcontrol )
 {
+  int r = -1;
   mas_lcontrol_t *plcontrol = NULL;
 
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) < 0 )
-  {
-    P_ERR;
-  }
+  plcontrol = ( mas_lcontrol_t * ) tlcontrol;
+  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) );
 
   /* {                                                                       */
   /*   int rs;                                                               */
@@ -259,7 +258,6 @@ mas_listener_th( void *arg )
   /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
   /*   MAS_LOG( "sched %d", rs );                                            */
   /* }                                                                       */
-  plcontrol = ( mas_lcontrol_t * ) arg;
   if ( opts.nolisten )
   {
     MAS_LOG( "listener th. -> sleep started %s:%u", plcontrol->host, plcontrol->port );
@@ -271,7 +269,6 @@ mas_listener_th( void *arg )
     mas_in_thread( MAS_THREAD_LISTENER, plcontrol, NULL );
     /* thMSG( "mas_listener_th %s:%u", plcontrol->host, plcontrol->port ); */
     plcontrol->h.tid = mas_gettid(  );
-    /* host = ( char * ) arg ? arg : "localhost"; */
     if ( !plcontrol->host )
     {
       EMSG( "host not set" );
@@ -302,7 +299,7 @@ mas_listener_th( void *arg )
 
   /* mas_lcontrols_delete( plcontrol );  ---> done at mas_listener_cleanup ?!?! */
 
-  WMSG( "LISTENER STOP" );
+  EMSG( "LISTENER STOP" );
   mas_pthread_exit( NULL );
   return NULL;
 }

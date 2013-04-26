@@ -20,6 +20,8 @@ void mas_in_thread_end( void );
 th_type_t mas_thself_type( void );
 const char *mas_thread_self_type_name( void );
 
+double mas_thself_double_time( void );
+void mas_thself_set_double_time( double double_time );
 
 mas_lcontrol_t *mas_thself_plcontrol( void );
 mas_rcontrol_t *mas_thself_prcontrol( void );

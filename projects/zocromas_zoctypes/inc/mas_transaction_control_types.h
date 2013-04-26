@@ -49,6 +49,7 @@ typedef MAS_LIST_ENTRY( mas_rcontrol_s ) mas_rcontrol_list_entry_t;
 
 struct mas_rcontrol_s
 {
+  char signature[2];
   mas_rcontrol_list_entry_t next;
   struct mas_ocontrol_s h;
 

@@ -40,7 +40,6 @@ char *_mas_strdup( const char *func, int line, const char *str );
 char *_mas_strndup( const char *func, int line, const char *s, size_t n );
 
 int print_memlist( FILE * f, const char *func, int line );
-int _print_memlist( FILE * f, const char *func, int line, int s_f );
 
 #    define mas_calloc(...)  _mas_calloc(FL, __VA_ARGS__)
 #    define mas_malloc(...)  _mas_malloc(FL, __VA_ARGS__)

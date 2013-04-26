@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <dlfcn.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -23,8 +24,7 @@ extern mas_control_t ctrl;
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  extern int errno;
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 static void

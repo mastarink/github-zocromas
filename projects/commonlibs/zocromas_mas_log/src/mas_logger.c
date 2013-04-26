@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -116,11 +118,12 @@ mas_logger_write( mas_loginfo_t * li )
         {
           static unsigned long serial = 0;
           static double prevlilogtime = 0.;
-          double fromlastlog;
+          double fromlastlog, last_th;
 
           serial++;
           ltime = mas_double_time(  );
           fromlastlog = ( li->logtime - prevlilogtime ) * 1.E6;
+          last_th = ( li->delta_thread ) * 1.E6;
           /* if ( opts.dir.log )                                                              */
           /* {                                                                               */
           /*   MFP( "%s : (%10.5f) logdir='%s'\n", __func__, ( ltime - logger_start_time ), opts.dir.log );     */
@@ -130,14 +133,14 @@ mas_logger_write( mas_loginfo_t * li )
           /* fprintf( ctrl.logfile, "%16.5f + %7.5f : %16.5f (%7.5f) : %-25s:%03d %s:R%lu:%u @ L%lu:%u: {%s}\n", li->logtime, */
           /* mas_pthread_mutex_lock( &logger_write_mutex ); */
 #ifndef MAS_NO_THREADS
-          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s:%u %s:R%lu:%u @ L%lu:%u: {%s}\n", serial,
-                   li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ( ltime - li->logtime ) * 1E3,
-                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
+          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u %s:R%lu:%u @ L%lu:%u: {%s}\n",
+                   serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
+                   ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
                    mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #else
-          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f D%7.2f (%8.2f) :%03d:%-25s:%u *:R%lu:%u @ L%lu:%u: {%s}\n", serial,
-                   li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, ( ltime - li->logtime ) * 1E3,
-                   ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
+          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u *:R%lu:%u @ L%lu:%u: {%s}\n", serial,
+                   li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
+                   ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
                    li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #endif
           /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
@@ -204,13 +207,11 @@ mas_logger_cleanup( void *arg )
 static void *
 mas_logger_th( void *arg )
 {
-  int lf = -1;
+  int r = -1;
 
   ctrl.threads.n.logger.tid = mas_gettid(  );
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) < 0 )
-  {
-    P_ERR;
-  }
+  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) );
+
 
   MAS_LOG( "logger start" );
   mas_in_thread( MAS_THREAD_LOGGER, NULL, NULL );
@@ -219,7 +220,7 @@ mas_logger_th( void *arg )
   ctrl.keep_logging = 1;
   MAS_LOG( "logger start [%lx]", ctrl.threads.n.logger.thread );
   pthread_cleanup_push( mas_logger_cleanup, NULL );
-  while ( ( lf = mas_logger_flush(  ) ) == 0 || ctrl.keep_logging )
+  while ( ( r = mas_logger_flush(  ) ) == 0 || ctrl.keep_logging )
   {
     mas_nanosleep( 0.1 );
   }
@@ -242,7 +243,7 @@ mas_logger_start( void )
     pthread_setconcurrency( 4 );
     MAS_LOG( "starting logger th. [concurrency:%u]", pthread_getconcurrency(  ) );
     {
-      (void) pthread_attr_getstack( &ctrl.thglob.logger_attr, &logger_stackaddr, &logger_stacksize );
+      ( void ) pthread_attr_getstack( &ctrl.thglob.logger_attr, &logger_stackaddr, &logger_stacksize );
       /* thMSG( "creating logger thread stack:%lu @ %p", logger_stacksize, logger_stackaddr ); */
     }
     /* r = mas_xpthread_create( &ctrl.threads.n.logger.thread, mas_logger_th, MAS_THREAD_LOGGER, NULL ); */
@@ -266,7 +267,12 @@ mas_logger_stop( void )
 {
   int r = 0;
 
-  if ( ctrl.threads.n.logger.thread )
+  if ( 0 )
+  {
+    /* for detached ?! */
+    mas_logger_cleanup( NULL );
+  }
+  else if ( ctrl.threads.n.logger.thread )
   {
     MAS_LOG( "cancelling logger" );
     /* mMSG( "cancelling logger [%lx]", ctrl.threads.n.logger.thread ); */
@@ -294,11 +300,15 @@ int
 mas_logger_flush( void )
 {
   int r = -1;
+  int once = 0;
 
   while ( logger_list && !MAS_LIST_EMPTY( logger_list ) )
   {
     mas_loginfo_t *li;
 
+    if ( !once && ctrl.logfile )
+      fprintf( ctrl.logfile, "LOG FLUSH\n" );
+    once = 1;
 #ifndef MAS_NO_THREADS
     /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
 

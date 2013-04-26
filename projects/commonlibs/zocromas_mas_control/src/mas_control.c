@@ -41,13 +41,13 @@ __attribute__ ( ( constructor ) )
     ctrl.stderrfile = stderr;
   if ( !ctrl.msgfile )
     ctrl.msgfile = ctrl.stderrfile;
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 /*

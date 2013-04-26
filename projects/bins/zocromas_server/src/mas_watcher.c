@@ -71,8 +71,10 @@ mas_watcher_cleanup( void *arg )
 {
 /* mas_lcontrols_cleaning_transactions returns not-joined-count */
   MAS_LOG( "by the way (watcher ending): cleaning transactions" );
+#if 0
   mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
-  WMSG( "WATCHER CLEANUP" );
+#endif
+  EMSG( "WATCHER CLEANUP" );
   MAS_LOG( "watcher cleanup" );
   /* mas_in_thread_end(  ); */
 }
@@ -87,13 +89,14 @@ mas_watcher( void )
   int stop = 0;
   int nlisteners_ever_open = 0;
 
-  while ( !ctrl.fatal && !stop )
+  while ( !ctrl.fatal && !stop && ctrl.clients_created > ctrl.clients_removed )
   {
     /* unsigned long cur_time = ( unsigned long ) time( NULL ); */
     int out;
 
     if ( !ctrl.stamp.start_time )
       ctrl.stamp.start_time = ( unsigned long ) time( NULL );
+    ctrl.watch_cnt++;
     out = itick % MUL == 0 && !ctrl.watcher_hide;
     {
       unsigned nlistener = 0;
@@ -198,7 +201,7 @@ mas_watcher( void )
             if ( prcontrol->proto_desc && 0 == strcmp( prcontrol->proto_desc->name, "http" ) )
               if ( rinactive_time.tv_sec > 10 )
               {
-               HMSG( "WATCHER : http tr. inactive %lus!!", rinactive_time.tv_sec  );
+                HMSG( "WATCHER : http tr. inactive %lus!!", rinactive_time.tv_sec );
                 mas_transaction_cancel( prcontrol );
               }
           }
@@ -210,14 +213,14 @@ mas_watcher( void )
         MAS_LOG( "WATCH ==========================================================================================" );
       if ( ctrl.watcher_stop )
       {
-        WMSG( "WATCHER STOP : %d %d %d", nlistener_open, ntransaction, nlisteners_ever_open );
+        EMSG( "WATCHER STOP : %d %d %d", nlistener_open, ntransaction, nlisteners_ever_open );
         if ( nlistener_open == 0 && ntransaction == 0 /* && nlisteners_ever_open */  )
           stop = 1;
       }
       else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && opts.make_master_thread )
                 || !ctrl.threads.n.watcher.thread || !ctrl.threads.n.logger.thread || !ctrl.threads.n.ticker.thread )
       {
-        WMSG( "WATCHER main:%d; master:%d", ctrl.threads.n.main.thread ? 1 : 0, ctrl.threads.n.master.thread ? 1 : 0 );
+        HMSG( "WATCHER main:%d; master:%d", ctrl.threads.n.main.thread ? 1 : 0, ctrl.threads.n.master.thread ? 1 : 0 );
       }
       /* fprintf( stderr, "WATCHER %u %u %u\n", nlistener_open, ntransaction, nlisteners_ever_open ); */
     }
@@ -227,13 +230,15 @@ mas_watcher( void )
       mas_listeners_cancel(  );
       ctrl.watcher_stop = 1;
       /* ctrl.stop_listeners = 0; */
-      WMSG( "WATCHER - STOP LISTENERS" );
+      EMSG( "WATCHER - STOP LISTENERS" );
     }
     /* WMSG( "WATCHER SL %d", ctrl.stop_listeners ); */
 
     mas_nanosleep( interval );
 
+#if 0
     mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
+#endif
     itick++;
   }
 }
@@ -256,7 +261,7 @@ mas_watcher_th( void *arg )
   pthread_cleanup_pop( 1 );
 
   MAS_LOG( "watcher stop" );
-  WMSG( "WATCHER STOP" );
+  EMSG( "WATCHER STOP" );
   mas_pthread_exit( NULL );
   return ( NULL );
 }

@@ -288,3 +288,9 @@ mas_channel_close2( mas_channel_t * pchannel )
   }
   return r;
 }
+
+int
+mas_channel_opened( mas_channel_t * pchannel )
+{
+  return ( mas_channel_test( pchannel ) && pchannel->opened );
+}

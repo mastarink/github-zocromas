@@ -1,4 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -218,13 +219,12 @@ mas_transaction( mas_rcontrol_t * prcontrol )
 static void *
 mas_transaction_th( void *trcontrol )
 {
-  void *r = NULL;
+  void *rp = NULL;
+  int r = -1;
   mas_rcontrol_t *prcontrol = NULL;
 
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoctrans" ) < 0 )
-  {
-    P_ERR;
-  }
+  prcontrol = ( mas_rcontrol_t * ) trcontrol;
+  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoctrans" ) );
 
   MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
   /* struct sched_param sched;                                               */
@@ -238,7 +238,6 @@ mas_transaction_th( void *trcontrol )
   /*                                                                         */
   /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
   /* }                                                                       */
-  prcontrol = ( mas_rcontrol_t * ) trcontrol;
   prcontrol->start_time = mas_double_time(  );
   MAS_LOG( "tr. th. started (%20.5f)", prcontrol->start_time );
   if ( prcontrol && prcontrol->plcontrol )
@@ -257,8 +256,6 @@ mas_transaction_th( void *trcontrol )
       MAS_LOG( "start tr.th 1" );
       if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) )
       {
-        int r = -1;
-
         /* rMSG( "COND 1" ); */
         MAS_LOG( "cond to lock" );
         pthread_mutex_lock( &prcontrol->waitchan_mutex );
@@ -306,7 +303,7 @@ mas_transaction_th( void *trcontrol )
         MAS_LOG( "tr. push" );
         pthread_cleanup_push( mas_transaction_cleanup, prcontrol );
         MAS_LOG( "tr. itself" );
-        r = mas_transaction( prcontrol );
+        rp = mas_transaction( prcontrol );
         pthread_cleanup_pop( 1 );
         /* tend = mas_double_time(  );   */
         /* tdiff = tend - tstart;        */
@@ -328,8 +325,14 @@ mas_transaction_th( void *trcontrol )
     /* ??? mas_lcontrol_cleaning_transactions( ... ); */
   }
   MAS_LOG( "tr. th. end" );
+
+  if ( 1 )
+  {
+    mas_rcontrol_delete( prcontrol, 1 );
+  }
+
   mas_pthread_exit( NULL );
-  return r;
+  return rp;
 }
 
 /* naming : setup + pthread_create = start */
@@ -438,15 +441,27 @@ mas_transaction_cleanup( void *arg )
     {
       mas_lcontrol_t *plcontrol;
 
-      plcontrol = prcontrol ? prcontrol->plcontrol : NULL;
-      mas_pthread_mutex_lock( &ctrl.thglob.cnttr1_mutex );
-      plcontrol->clients_gone++;
-      ctrl.clients_gone++;
-      ctrl.transactions_time += mas_double_time(  ) - prcontrol->start_time;
-      mas_pthread_mutex_unlock( &ctrl.thglob.cnttr1_mutex );
+      plcontrol = prcontrol->plcontrol;
+      if ( plcontrol )
+      {
+        mas_pthread_mutex_lock( &ctrl.thglob.cnttr1_mutex );
+        plcontrol->clients_gone++;
+        ctrl.clients_gone++;
+        ctrl.transactions_time += mas_double_time(  ) - prcontrol->start_time;
+        mas_pthread_mutex_unlock( &ctrl.thglob.cnttr1_mutex );
+      }
+      else
+      {
+        /* IEVAL( r, -1 ); */
+        ERRRG( "no plcontrol" );
+      }
     }
     prcontrol->complete = 1;
     /* mas_rcontrol_delete( prcontrol, 0 ); */
+  }
+  else
+  {
+    ERRRG( "no prcontrol" );
   }
 }
 

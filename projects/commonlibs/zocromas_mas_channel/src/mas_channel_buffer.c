@@ -247,6 +247,7 @@ mas_channel_buffer_nl_dup( mas_channel_t * pchannel )
   char *ps = NULL;
   size_t sz = 0;
 
+  MAS_LOG( "b_nld 1" );
   cs = mas_channel_buffer_nl( pchannel, &sz );
   if ( cs && sz )
     ps = mas_strndup( cs, sz );
@@ -261,12 +262,16 @@ mas_channel_buffer_nl( mas_channel_t * pchannel, size_t * psz )
   size_t iptr0 = 0;
   size_t sz = 0;
 
+  /* MAS_LOG( "b_nl 0" ); */
+
   iptr0 = pchannel->buffer.iptr;
   if ( !mas_channel_buffer_eof( pchannel ) )
   {
+    /* MAS_LOG( "b_nl 1" ); */
     /* begline = mas_channel_buffer_ptr( pchannel ); */
     {
       mas_channel_buffer_find_eol( pchannel );
+      /* MAS_LOG( "b_nl 2" ); */
       if ( pchannel->buffer.buffer[pchannel->buffer.iptr] == '\r' || pchannel->buffer.buffer[pchannel->buffer.iptr] == '\n' )
       {
         char c;
@@ -286,6 +291,7 @@ mas_channel_buffer_nl( mas_channel_t * pchannel, size_t * psz )
   }
   if ( psz )
     *psz = sz;
+  /* MAS_LOG( "b_nl e" ); */
   return begline;
 }
 

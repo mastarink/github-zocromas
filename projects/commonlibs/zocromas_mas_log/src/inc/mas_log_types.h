@@ -19,11 +19,11 @@ struct mas_loginfo_s
   th_type_t thtype;
   pid_t pid;
   pthread_t pth;
-#ifdef MS_DUP_FUNC_NAME
+#  ifdef MS_DUP_FUNC_NAME
   char *func;
-#else
+#  else
   const char *func;
-#endif
+#  endif
   int line;
   char *message;
   mas_loginfo_list_entry_t next;
@@ -37,6 +37,7 @@ struct mas_loginfo_s
   unsigned rstatus;
   double logtime;
   int lerrno;
+  double delta_thread;
 };
 typedef struct mas_loginfo_s mas_loginfo_t;
 

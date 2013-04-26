@@ -201,10 +201,6 @@ mas_master_th( void *arg )
 
   ctrl.pserver_thread = &ctrl.threads.n.master;
 
-  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) < 0 ) */
-  /* {                                                              */
-  /*   P_ERR;                                                       */
-  /* }                                                              */
   IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) );
 
   /* mas_malloc(1234); */
@@ -232,19 +228,17 @@ mas_master_th( void *arg )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* if ( stderr )                                                                      */
+  /*   fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** /CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* if ( stderr )                                                                     */
+  /*   fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 static int
@@ -278,10 +272,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
 
   HMSG( "BUNCH START e:%d", errno );
   MAS_LOG( "bunch start e:%d", errno );
-  /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) < 0 ) */
-  /* {                                                             */
-  /*   P_ERR;                                                      */
-  /* }                                                             */
+
   IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
 
   MAS_LOG( "(%d) bunch: to init +", r );

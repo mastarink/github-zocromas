@@ -11,6 +11,7 @@ int mas_channel_close( mas_channel_t * pchannel );
 int mas_channel_close2( mas_channel_t * pchannel );
 
 /* int mas_channel_close_tcp( mas_channel_t * pchannel );  */
+int mas_channel_opened( mas_channel_t * pchannel );
 
 
 #endif

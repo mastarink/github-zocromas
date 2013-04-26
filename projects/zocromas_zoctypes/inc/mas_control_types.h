@@ -80,6 +80,8 @@ struct mas_control_s
 
   double start_time;
   double transactions_time;
+  unsigned long watch_cnt;
+  unsigned long tick_cnt;
 
   int old_stderr;
   FILE *old_stderrfile;
@@ -159,6 +161,8 @@ struct mas_control_s
   unsigned long log_q_came;
   unsigned long log_q_gone;
   unsigned long log_q_mem;
+  unsigned long clients_created;
+  unsigned long clients_removed;
   unsigned long clients_came0;
   unsigned long clients_came;
   unsigned long clients_gone;

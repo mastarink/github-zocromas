@@ -120,49 +120,53 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
 {
   char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
 
-  name = pstring;
-  ename = pstring;
-  while ( ename && *ename > ' ' && *ename != ':' )
-    ename++;
-  value = ename;
-  if ( value && *value == ':' )
-    value++;
-  while ( value && *value == ' ' )
-    value++;
-  evalue = value;
-  while ( evalue && *evalue && *evalue >= ' ' )
-    evalue++;
+  if ( pstring )
+  {
+    name = pstring;
+    ename = pstring;
+    while ( ename && *ename > ' ' && *ename != ':' )
+      ename++;
+    value = ename;
+    if ( value && *value == ':' )
+      value++;
+    while ( value && *value == ' ' )
+      value++;
+    evalue = value;
+    while ( evalue && *evalue && *evalue >= ' ' )
+      evalue++;
 
-  name = mas_strndup( name, ename - name );
-  value = mas_strndup( value, evalue - value );
-  MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
-  HMSG( "HTTP H: '%s' = '%s'", name, value );
+    HMSG( "HTTP H: '%s' = '%s'", name, value );
+    name = mas_strndup( name, ename - name );
+    value = mas_strndup( value, evalue - value );
+    MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
+    HMSG( "HTTP H: '%s' = '%s'", name, value );
 
-  http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
-  HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
+    http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
+    HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
 
 #if 0
-  if ( 0 == strcasecmp( name, "User-Agent" ) )
-  {
-    if ( 0 == strncmp( value, "httperf", 7 ) )
+    if ( 0 == strcasecmp( name, "User-Agent" ) )
     {
-      ctrl.messages = 0;
+      if ( 0 == strncmp( value, "httperf", 7 ) )
+      {
+        ctrl.messages = 0;
+      }
+      else
+      {
+      }
     }
     else
     {
     }
-  }
-  else
-  {
-  }
 #endif
-  HMSG( "HTTP HEADER (known) %s='%s'", name, value );
-  http = mas_proto_http_parse_known_header( prcontrol, http, name, value );
-  if ( name )
-    mas_free( name );
-  if ( value )
-    mas_free( value );
-  MAS_LOG( "http parse headers 4" );
+    HMSG( "HTTP HEADER (known) %s='%s'", name, value );
+    http = mas_proto_http_parse_known_header( prcontrol, http, name, value );
+    if ( name )
+      mas_free( name );
+    if ( value )
+      mas_free( value );
+    MAS_LOG( "http parse headers 4" );
+  }
   return http;
 }
 

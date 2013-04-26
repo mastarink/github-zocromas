@@ -112,8 +112,10 @@ mas_proto_http_writef( mas_http_t * http, const char *fmt, ... )
   va_start( args, fmt );
   if ( http )
   {
+    MAS_LOG( "a" );
     if ( http->prcontrol )
       w = mas_channel_vwritef( http->prcontrol->h.pchannel, fmt, args );
+    MAS_LOG( "b" );
     if ( w > 0 )
       http->written += w;
   }

@@ -13,9 +13,9 @@
 #include <mastar/channel/mas_channel.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
-extern mas_options_t opts;
+/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -50,7 +50,13 @@ mas_rcontrol_create( void )
   mas_rcontrol_t *prcontrol;
 
   prcontrol = mas_malloc( sizeof( mas_rcontrol_t ) );
-  memset( prcontrol, 0, sizeof( mas_rcontrol_t ) );
+  if ( prcontrol )
+  {
+    memset( prcontrol, 0, sizeof( mas_rcontrol_t ) );
+    prcontrol->signature[0] = 'T';
+    prcontrol->signature[1] = 'R';
+    ctrl.clients_created++;
+  }
   return prcontrol;
 }
 
@@ -99,16 +105,22 @@ mas_rcontrol_register( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol )
 {
   if ( plcontrol->transaction_controls_list )
   {
+
     /* thMSG( "ADD %lu %lx", prcontrol->h.serial, prcontrol->h.thread ); */
-    /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
-    pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
     {
-      MAS_LIST_ADD( plcontrol->transaction_controls_list, prcontrol, next );
-      prcontrol->h.serial = ++plcontrol->transaction_serial;
-      MAS_LOG( "registering transaction; serial:%lu", prcontrol->h.serial );
+      unsigned long ser = 0;
+
+      /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
+      pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
+      {
+        MAS_LIST_ADD( plcontrol->transaction_controls_list, prcontrol, next );
+        prcontrol->h.serial = ++plcontrol->transaction_serial;
+        ser = prcontrol->h.serial;
+      }
+      pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
+      /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
+      MAS_LOG( "registering transaction; serial:%lu", ser );
     }
-    pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
-    /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
   }
   return 0;
 }
@@ -148,8 +160,8 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
   plcontrol = prcontrol->plcontrol;
   if ( !prcontrol->complete )
   {
-    /* EMSG( "!!!!!!!! FATAL: R%lu:%u @ L%lu:%u NOT complete", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial, */
-    /*       plcontrol->h.status );                                                                                       */
+    EMSG( "!!!!!!!! FATAL: R%lu:%u @ L%lu:%u NOT complete", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial,
+          plcontrol->h.status );
     prcontrol->nc++;
   }
   else
@@ -179,14 +191,17 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
       mas_channel_delete( pchannel, toclose /* close */ , 0 );
     }
 
-    /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
-    pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
     {
-      MAS_LIST_REMOVE( plcontrol->transaction_controls_list, prcontrol, mas_rcontrol_s, next );
+      /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
+      pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
+      {
+        MAS_LIST_REMOVE( plcontrol->transaction_controls_list, prcontrol, mas_rcontrol_s, next );
+        ctrl.clients_removed++;
+      }
+      pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
       MAS_LOG( "removed transaction from list" );
+      /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
     }
-    pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
-    /* pthread_mutex_unlock( &plcontrol->transaction_mutex ); */
     /* thMSG( "RM %lu %lx", prcontrol->h.serial, prcontrol->h.thread ); */
     mas_free( prcontrol );
   }

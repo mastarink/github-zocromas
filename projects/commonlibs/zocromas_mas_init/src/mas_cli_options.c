@@ -212,7 +212,10 @@ mas_cli_make_option( int opt, const char *m_optarg )
     HMSG( "Test" );
     break;
   case MAS_CLI_OPT_HELP:
-    HMSG( "Help" );
+    for ( int io = 0; io < sizeof( cli_longopts ) / sizeof( cli_longopts[0] ); io++ )
+    {
+      HMSG( "%s", cli_longopts[io].name );
+    }
     break;
   case MAS_CLI_OPT_COMMAND:
     HMSG( "COMMAND %s", optarg );
@@ -269,7 +272,7 @@ mas_cli_make_option( int opt, const char *m_optarg )
     opts.dir.history = NULL;
     if ( optarg && *optarg )
       opts.dir.history = mas_strdup( optarg );
-    break;    
+    break;
   case MAS_CLI_OPT_LISTENER_SINGLE:
     opts.listener_single = 1;
     break;

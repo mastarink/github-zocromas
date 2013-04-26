@@ -67,11 +67,11 @@ more:
   mas_init_threads.h
 */
 
-  __attribute__ ( ( constructor ) )
+__attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* if ( stderr )                                                                      */
+  /*   fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 
@@ -195,13 +195,13 @@ mas_init_pid( int indx, const char *shash_name )
         YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
         HMSG( "(%d)PIDPATH 2b : %s", r, pidpath );
       }
-      MAS_LOG("Test 1");
-      MAS_LOG("Test 2");
-      MAS_LOG("Test 3");
-      MAS_LOG("Test 4");
-      MAS_LOG("Test 5");
-      MAS_LOG("Test 6");
-      MAS_LOG("Test 7");
+      MAS_LOG( "Test 1" );
+      MAS_LOG( "Test 2" );
+      MAS_LOG( "Test 3" );
+      MAS_LOG( "Test 4" );
+      MAS_LOG( "Test 5" );
+      MAS_LOG( "Test 6" );
+      MAS_LOG( "Test 7" );
       HMSG( "(%d)PIDPATH 2c : %s", r, pidpath );
     }
     if ( r > 0 )
@@ -435,19 +435,14 @@ void
 mas_destroy_server( void )
 {
   MAS_LOG( "destroy server" );
-  WMSG( "DESTROY SERVER" );
+  EMSG( "DESTROY SERVER" );
   MAS_LOG( "to save opts" );
   /* if ( !ctrl.opts_saved )                                                                                            */
   /*   mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );                                                */
   /* if ( !ctrl.opts_saved_plus )                                                                                       */
   /*   mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
 
-  if ( ctrl.lcontrols_list )
-  {
-    MAS_LOG( "to cancel listeners" );
-    WMSG( "TO CANCEL LISTENERS" );
-    mas_listeners_cancel(  );
-  }
+  mas_listeners_stop(  );
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
 
 #ifdef MAS_USE_CURSES
@@ -466,12 +461,12 @@ mas_destroy_server( void )
   MAS_LOG( "to cancel logger" );
   if ( ctrl.threads.n.logger.thread )
   {
-    WMSG( "TO STOP LOGGER" );
+    EMSG( "TO STOP LOGGER" );
     mas_logger_stop(  );
   }
   if ( ctrl.threads.n.ticker.thread )
   {
-    WMSG( "TO STOP TICKER" );
+    EMSG( "TO STOP TICKER" );
     mas_ticker_stop(  );
   }
   WMSG( "TO DESTROY MODULES" );

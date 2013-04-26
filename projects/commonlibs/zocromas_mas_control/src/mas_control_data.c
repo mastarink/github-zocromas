@@ -25,7 +25,7 @@ related:
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 
@@ -103,6 +103,8 @@ mas_control_t ctrl = {
   .stamp.start_time = 0,
 
   .status = MAS_STATUS_NONE,
+  .clients_created = 0,
+  .clients_removed = 0,
   .clients_came0 = 0,
   .clients_came = 0,
   .clients_gone = 0,
@@ -124,6 +126,8 @@ mas_control_t ctrl = {
   .mas_thread_key_once = PTHREAD_ONCE_INIT,
   .ticker_hide = 0,
   .ticker_mode = 0,
+  .tick_cnt = 0,
+  .watch_cnt = 0,
   .watcher_hide = 0,
   .watcher_stop = 0,
   /* .pthread_custom_attr = ..., */

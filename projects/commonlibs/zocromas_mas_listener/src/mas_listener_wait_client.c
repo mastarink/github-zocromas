@@ -4,6 +4,7 @@
 #include <sys/time.h>
 
 #include <pthread.h>
+#include <sys/prctl.h>
 
 #include <mastar/channel/mas_channel_open.h>
 
@@ -11,9 +12,10 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
-extern mas_options_t opts;
+
+/* extern mas_options_t opts; */
 
 #include <mastar/log/mas_log.h>
 
@@ -47,9 +49,29 @@ threads created:
  * create transaction thread;
  * server -> transaction
 */
-
 mas_rcontrol_t *
 mas_listener_find_free_transaction( mas_lcontrol_t * plcontrol )
+{
+  mas_rcontrol_t *prcontrol = NULL;
+  int cnt = 0;
+
+  pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
+
+  MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
+  {
+    cnt++;
+    if ( mas_channel_opened( prcontrol->h.pchannel ) )
+      continue;
+    if ( prcontrol->waitchan_waiting )
+      break;
+  }
+  pthread_rwlock_unlock( &plcontrol->transaction_rwlock );
+
+  return prcontrol;
+}
+
+mas_rcontrol_t *
+mas_listener_find_free_transaction__( mas_lcontrol_t * plcontrol )
 {
   mas_rcontrol_t *prcontrol = NULL;
 
@@ -76,6 +98,8 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   MAS_LOG( "waiting client" );
   if ( plcontrol )
   {
+    IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclistenw" ) );
+
     if ( plcontrol->h.pchannel->opened )
     {
       MAS_LOG( "why OPENED before open?" );
@@ -88,6 +112,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
 /* ?????? fcntl(fd, F_SETFD, FD_CLOEXEC) */
       MAS_LOG( "(%d) opened channel ========", r );
     }
+    IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclisteni" ) );
     OMSG( "INCOMING CONNECTION" );
     {
       struct timeval td;
@@ -106,8 +131,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     {
       MAS_LOG( "(%d) NOT opened? channel; opened : %d", r, plcontrol->h.pchannel->opened );
     }
-#if 0
-    else if (  ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
+    else if ( 0 && ( prcontrol = mas_listener_find_free_transaction( plcontrol ) ) )
     {
       /* int rcond; */
 
@@ -117,9 +141,10 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       MAS_LOG( "cond signal to R%lu", prcontrol->h.serial );
       ( void ) /*rcond = */ pthread_cond_signal( &prcontrol->waitchan_cond );
     }
-#endif
     else
     {
+      IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclistent" ) );
+
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
       plcontrol->h.status = MAS_STATUS_WORK;
 #ifdef MAS_TR_PERSIST
@@ -145,9 +170,9 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
 //  }
 
     /* mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 ); */
-/* mas_lcontrol_cleaning_transactions returns not-joined-count - poh here */
+/* mas_lcontrol_cleaning_transactions__ returns not-joined-count - poh here */
     MAS_LOG( "by the way: cleaning transactions" );
-    /* mas_lcontrol_cleaning_transactions( plcontrol, ctrl.forget_transactions, 0 (* don't wait *)  ); */
+    /* mas_lcontrol_cleaning_transactions__( plcontrol, ctrl.forget_transactions, 0 (* don't wait *)  ); */
   }
   else
   {

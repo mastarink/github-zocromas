@@ -105,6 +105,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
   char *pstring;
   const char *cstring;
 
+  MAS_LOG( "http parse rq 1" );
 #ifdef MAS_HTTP_MULTIPART
   {
     char bcpath[512];
@@ -112,17 +113,20 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
     snprintf( bcpath, sizeof( bcpath ), "%s/%s.%lu-%u.part%u.post-%lu", opts.dir.post ? opts.dir.post : "/tmp",
               opts.uuid, prcontrol->h.serial, ctrl.pserver_thread->pid, 0, time( NULL ) );
     /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
+    MAS_LOG( "to make ... multipart at %s",bcpath );
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
     HMSG( "ANY BODY %s ? [%s]", bcpath, opts.dir.post );
   }
 #endif
+  MAS_LOG( "http parse rq 2" );
   HMSG( "HTTP REQUEST (parse)" );
+  MAS_LOG( "http parse rq 2a" );
   pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
   HMSG( "HTTP REQUEST (parse) '%s'", pstring );
   if ( pstring )
   {
     cstring = ( const char * ) pstring;
-    MAS_LOG( "http parse 1" );
+    MAS_LOG( "http parse rq 3" );
     if ( http )
     {
       int good = 0;

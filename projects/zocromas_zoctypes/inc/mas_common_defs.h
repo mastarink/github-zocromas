@@ -38,6 +38,8 @@ extern mas_control_t ctrl;
 #define MAS_CTRL_MESSAGES ctrl.messages
 #define MAS_CTRL_STATUS ctrl.status
 
+#define ERRREG(fmt,msg) (ctrl.error_handler)(FL, 0, -1, 0, NULL, fmt, msg)
+#define ERRRG(msg) (ctrl.error_handler)(FL, 0, -1, 0, NULL, "%s", msg)
 #define _ERRHAN(sys,rv,merrno,perrno,fmt,msg) { if (ctrl.error_handler) { rv=(ctrl.error_handler)(FL, sys, rv, merrno, perrno, fmt, msg); } }
 #  define IEVALM(_rv, _code, fmt, msg) \
 { \
@@ -73,5 +75,6 @@ extern mas_control_t ctrl;
 
 #  define YEVAL_OPT(_rv, _code) { if (!(_rv<0)) { _rv = ( _code ); } }
 #  define YEVAL(_rv, _code) {YEVALM(_rv, _code, NULL, NULL); }
+
 
 #endif

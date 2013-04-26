@@ -80,6 +80,8 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   /* extern unsigned long __MAS_LINK_DATE__; */
   extern unsigned long __MAS_LINK_TIME__;
 
+  MAS_LOG( "to make std headers" );
+
   /* extern unsigned long __MAS_LINK_TIMESTAMP__; */
   HMSG( "HTTP make OUT STD HEADERS" );
 
@@ -159,6 +161,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
   HMSG( "HTTP REPLY status %d", http->status_code );
   HMSG( "HTTP HTTP" );
   http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
+  MAS_LOG( "to make ... headers" );
   if ( http )
     http = mas_http_make_out_std_headers( prcontrol, http );
   if ( http )

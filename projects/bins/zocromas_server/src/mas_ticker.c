@@ -16,6 +16,7 @@
 #include <mastar/types/mas_control_types.h>
 /* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
+
 /* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
@@ -27,8 +28,6 @@ extern mas_control_t ctrl;
 #endif
 
 #include <mastar/thtools/mas_thread_tools.h>
-
-#include <mastar/listener/mas_listener_control.h>
 
 #include "mas_ticker.h"
 
@@ -67,12 +66,11 @@ static void *ticker_stackaddr = NULL;
 static void
 mas_ticker_cleanup( void *arg )
 {
-/* mas_lcontrols_cleaning_transactions returns not-joined-count */
   MAS_LOG( "by the way (ticker ending): cleaning transactions" );
-  mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
-  WMSG( "TICKER CLEANUP" );
+  EMSG( "TICKER CLEANUP" );
   MAS_LOG( "ticker cleanup" );
   /* mas_in_thread_end(  ); */
+  ctrl.threads.n.ticker.thread = ( pthread_t ) 0;
 }
 
 static void
@@ -143,17 +141,17 @@ mas_ticker( void )
         /*   peak = a1;     */
         if ( ctrl.ticker_mode & 1 )
         {
-          MFP( "\x1b]2;+%05lus(m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] "
-               "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x7", elapsed_time, memory_balance, outstr, itick,
+          MFP( "\x1b]2;+%05lus(m%5lu) [%s] %d; [%lu-%lu=%ld;%lu] "
+               "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu } %lu\x7", elapsed_time, memory_balance, outstr, itick,
                ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
-               ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
+               ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem, ctrl.watch_cnt );
         }
         if ( ctrl.ticker_mode & 2 )
         {
-          MFP( "\r\x1b[33;41;1m+%05lus\x1b[0m\x1b[37;44;1m(m%5lu\x1b[0m) [\x1b[33;42;1m%s\x1b[0m] %d; [%lu:%lu:%ld:%lu] "
-               "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu }\x1b[K", elapsed_time, memory_balance, outstr, itick,
+          MFP( "\r\x1b[33;41;1m+%05lus\x1b[0m\x1b[37;44;1m(m%5lu\x1b[0m) [\x1b[33;42;1m%s\x1b[0m] %d; [%lu-%lu=%ld;%lu]"
+               "(lock:%d:%d) i/p:%d;" " mxc:%lu log { %lu-%lu=%lu m%lu } %lu\x1b[K", elapsed_time, memory_balance, outstr, itick,
                ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, ctrl.xch_cnt, l1, l2, ctrl.in_pipe,
-               ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem );
+               ctrl.maxclients, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone, ctrl.log_q_mem, ctrl.watch_cnt );
         }
         /* MFP( "(%3lus:m%5lu) [%s] %d; [%lu:%lu:%ld:%lu] " "(lock:%d:%d) i/p:%d;"                                                    */
         /*      " {%lu:%8.2f(%6.4g):%6.2f} {%6.2f:%6.2f:%6.2f} log %lu-%lu=%lu\x1b[K\r", elapsed_time, memory_balance, outstr, itick, */
@@ -167,7 +165,6 @@ mas_ticker( void )
     mas_nanosleep( interval );
 
     /* MAS_LOG( "by the way (ticker): cleaning transactions" ); */
-//  mas_lcontrols_cleaning_transactions( ctrl.forget_transactions, 0 /* don't wait */  );
     itick++;
   }
 }
@@ -193,7 +190,7 @@ mas_ticker_th( void *arg )
   pthread_cleanup_pop( 1 );
 
   MAS_LOG( "ticker stop" );
-  WMSG( "TICKER STOP" );
+  EMSG( "TICKER STOP" );
   mas_pthread_exit( NULL );
   return ( NULL );
 }
@@ -261,7 +258,7 @@ mas_ticker_stop( void )
     MAS_LOG( "stopped ticker" );
     ctrl.threads.n.ticker.thread = ( pthread_t ) 0;
     HMSG( "- TICKER" );
-    WMSG( "TICKER STOPPED" );
+    EMSG( "TICKER STOPPED" );
     MFP( "\x1b]2;stopped ticker; mode:%d\x7", ctrl.ticker_mode );
   }
   else

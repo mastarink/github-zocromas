@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#  include <stdio.h>
-#  include <errno.h>
+#include <stdio.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -38,7 +38,7 @@ related:
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 
@@ -124,8 +124,8 @@ mas_other_free( void *p )
 int imemar = 0;
 mas_mem_head_t *memar[4096];
 
-int
-_print_memlist( FILE * f, const char *func, int line, int s_f )
+static int
+_print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
 {
   int h = 0;
   int r = -1;
@@ -157,8 +157,10 @@ _print_memlist( FILE * f, const char *func, int line, int s_f )
           _size = _mhp->size;
           _func = _mhp->func;
           _line = _mhp->line;
-          /* fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", _id, _size, _func, _line, s_f ? ( char * ) real_ptr : "-" ); */
-          fprintf( f, "id: %lx; sz:%lu; fun#%lx:%u [%s]\n", _id, _size, ( unsigned long ) _func, _line, s_f ? ( char * ) real_ptr : "-" );
+          if ( fn_f )
+            fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", _id, _size, _func, _line, s_f ? ( char * ) real_ptr : "-" );
+          else
+            fprintf( f, "id: %lx; sz:%lu; fun#%lx:%u [%s]\n", _id, _size, ( unsigned long ) _func, _line, s_f ? ( char * ) real_ptr : "-" );
         }
       }
     }
@@ -171,7 +173,12 @@ _print_memlist( FILE * f, const char *func, int line, int s_f )
 int
 print_memlist( FILE * f, const char *func, int line )
 {
-  return _print_memlist( f, func, line, 0 );
+  int r;
+
+  r = _print_memlist( f, func, line, 0, 0 );
+  _print_memlist( f, func, line, 1, 0 );
+  _print_memlist( f, func, line, 1, 1 );
+  return r;
 }
 
 void *
@@ -267,7 +274,7 @@ _mas_free( const char *func, int line, void *ptr )
           memory_balance -= size;
           memory_balance_cnt--;
           real_ptr->sig = 0;
-          real_ptr->size = 0;
+          /* real_ptr->size = 0; */
 #  ifndef MAS_NO_THREADS
           pthread_mutex_unlock( &malloc_mutex );
 #  endif

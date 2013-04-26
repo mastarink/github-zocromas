@@ -1,9 +1,11 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <signal.h>
 
 #include <stdarg.h>
@@ -115,9 +117,10 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
           aip = mas_ip_string( &plchannel->serv_instance.addr.sin_addr );
       }
       {
-        len = snprintf( cp, bufsz, "\t%u(s%lu). %s:%u * %s; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu}\n", ith,
+        len = snprintf( cp, bufsz, "\t%u(s%lu). %s:%u * %s; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu} {%lu - %lu = %lu}\n", ith,
                         plcontrol->h.serial, plcontrol->host, port, aip, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread,
-                        plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone );
+                        plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone,
+                        ctrl.clients_created, ctrl.clients_removed, ctrl.clients_created - ctrl.clients_removed );
         cp += len;
         bufsz -= len;
       }
@@ -132,7 +135,19 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
       pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
       MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
       {
-        len = info_transaction( prcontrol, itr, cp, bufsz );
+        if ( prcontrol->signature[0] != 'T' || prcontrol->signature[1] != 'R' )
+        {
+          ERRRG( "Woooooooooooooooooo" );
+          sleep( 100 );
+        }
+        if ( itr > 20 )
+        {
+          len = 0;
+        }
+        else
+        {
+          len = info_transaction( prcontrol, itr, cp, bufsz );
+        }
         cp += len;
         bufsz -= len;
         itr++;
@@ -150,7 +165,7 @@ static char *
 info_cmd( STD_CMD_ARGS )
 {
   char *buf = NULL;
-  size_t bufsz0 = 1024 * 30;
+  size_t bufsz0 = 1024 * 1000;
 
   /* if ( pheader )                */
   /* {                            */
@@ -159,151 +174,155 @@ info_cmd( STD_CMD_ARGS )
   /* }                            */
   MAS_LOG( "info cmd" );
 
-  buf = mas_malloc( bufsz0 );
   {
-    char *cp;
-    size_t len;
-    mas_lcontrol_t *plcontrol = NULL;
-    ssize_t bufsz;
-    char s1lts[64];
-    char slts[64];
-    char splts[64];
-    unsigned ith;
+    buf = mas_malloc( bufsz0 );
+    {
+      char *cp;
+      size_t len;
+      ssize_t bufsz;
+      char s1lts[64];
+      char slts[64];
+      char splts[64];
+      unsigned ith;
 
-    ith = 0;
+      ith = 0;
 
-    *buf = 0;
-    cp = buf;
-    bufsz = bufsz0;
-    plcontrol = prcontrol->plcontrol;
-    {
-      s1lts[0] = '-';
-      s1lts[1] = '\0';
-      if ( ctrl.stamp.first_lts && ctrl.stamp.first_lts != ctrl.stamp.lts )
-        mas_tstrftime( s1lts, sizeof( s1lts ), "first lts: %Y%m%d %T", ctrl.stamp.first_lts );
-      slts[0] = '-';
-      slts[1] = '\0';
-      if ( ctrl.stamp.lts )
-        mas_tstrftime( slts, sizeof( slts ), "lts: %Y%m%d %T", ctrl.stamp.lts );
-      splts[0] = '-';
-      splts[1] = '\0';
-      if ( ctrl.stamp.prev_lts )
-        mas_tstrftime( splts, sizeof( splts ), "prev.lts:%Y%m%d %T", ctrl.stamp.prev_lts );
-    }
-    {
-      len = snprintf( cp, bufsz,
-                      "\n- (%u/%u)\tuuid:\t%s\n"
-                      "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
-                      "- #%u Server info:" "\t[%u:%s]\n"
-                      "\tclients: {%lu - %lu = %lu}\n"
-                      "\t%s; %s; %s\n\n",
-                      level, this_command ? this_command->only_level : 0, opts.uuid,
-                      ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.child.pid,
-                      ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
-                      ctrl.restart_cnt,
-                      mas_gettid(  ), mas_thread_self_type_name(  ),
-                      ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts );
-      cp += len;
-      bufsz -= len;
-    }
-    {
-      len = snprintf( cp, bufsz, "- config read:\n" );
-      cp += len;
-      bufsz -= len;
-    }
-    {
-      for ( int ic = 0; ic < ctrl.loaded_optsv.c; ic++ )
+      *buf = 0;
+      cp = buf;
+      bufsz = bufsz0;
       {
-        len = snprintf( cp, bufsz, "\tconfig %d:\t%s\n", ic, ctrl.loaded_optsv.v[ic] );
+        s1lts[0] = '-';
+        s1lts[1] = '\0';
+        if ( ctrl.stamp.first_lts && ctrl.stamp.first_lts != ctrl.stamp.lts )
+          mas_tstrftime( s1lts, sizeof( s1lts ), "first lts: %Y%m%d %T", ctrl.stamp.first_lts );
+        slts[0] = '-';
+        slts[1] = '\0';
+        if ( ctrl.stamp.lts )
+          mas_tstrftime( slts, sizeof( slts ), "lts: %Y%m%d %T", ctrl.stamp.lts );
+        splts[0] = '-';
+        splts[1] = '\0';
+        if ( ctrl.stamp.prev_lts )
+          mas_tstrftime( splts, sizeof( splts ), "prev.lts:%Y%m%d %T", ctrl.stamp.prev_lts );
+      }
+      {
+        extern unsigned long memory_balance;
+
+        len = snprintf( cp, bufsz,
+                        "\n[%lu]"
+                        "- (%u/%u)\tuuid:\t%s\n"
+                        "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
+                        "- #%u Server info:" "\t[%u:%s]\n"
+                        "\tclients: {%lu - %lu = %lu}\n"
+                        "\t%s; %s; %s\n"
+                        "- ticker : 0x%lx :: %d;%lu;\n"
+                        "- watcher: 0x%lx :: stop:%1d;cnt:%lu;\n\n", memory_balance,
+                        level, this_command ? this_command->only_level : 0, opts.uuid,
+                        ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.child.pid,
+                        ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
+                        ctrl.restart_cnt,
+                        mas_gettid(  ), mas_thread_self_type_name(  ),
+                        ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts,
+                        ctrl.threads.n.ticker.thread, ctrl.ticker_hide, ctrl.tick_cnt, ctrl.threads.n.watcher.thread, ctrl.watcher_stop,
+                        ctrl.watch_cnt );
         cp += len;
         bufsz -= len;
       }
-    }
-    {
-      len = snprintf( cp, bufsz, "- paths:\n" );
-      cp += len;
-      bufsz -= len;
-    }
-    {
-      extern int mas_tracemem_flag;
-
-      len = snprintf( cp, bufsz,
-                      "\texepath:\t%s\n"
-                      "\tmsgfilename:\t%s\n"
-                      "\tprotodir:\t%s\n"
-                      "\tmodsdir:\t%s\n"
-                      "\tpidsdir:\t%s\n\n"
-                      "\thistorydir:\t%s\n\n"
-                      "\tlogdir: \t%s;\n" "\tlogpath:\t%s\n"
-                      "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
-                      ctrl.exepath,
-                      opts.msgfilename,
-                      opts.dir.proto, opts.dir.mods, opts.dir.pids, opts.dir.history, opts.dir.log,
-                      ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
-      cp += len;
-      bufsz -= len;
-    }
-    {
-      int z = 0;
-
-      for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
       {
-        if ( ctrl.proto_descs[ipd].name )
+        len = snprintf( cp, bufsz, "- config read:\n" );
+        cp += len;
+        bufsz -= len;
+      }
+      {
+        for ( int ic = 0; ic < ctrl.loaded_optsv.c; ic++ )
+        {
+          len = snprintf( cp, bufsz, "\tconfig %d:\t%s\n", ic, ctrl.loaded_optsv.v[ic] );
+          cp += len;
+          bufsz -= len;
+        }
+      }
+      {
+        len = snprintf( cp, bufsz, "- paths:\n" );
+        cp += len;
+        bufsz -= len;
+      }
+      {
+        extern int mas_tracemem_flag;
+
+        len = snprintf( cp, bufsz,
+                        "\texepath:\t%s\n"
+                        "\tmsgfilename:\t%s\n"
+                        "\tprotodir:\t%s\n"
+                        "\tmodsdir:\t%s\n"
+                        "\tpidsdir:\t%s\n\n"
+                        "\thistorydir:\t%s\n\n"
+                        "\tlogdir: \t%s;\n" "\tlogpath:\t%s\n"
+                        "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
+                        ctrl.exepath,
+                        opts.msgfilename,
+                        opts.dir.proto, opts.dir.mods, opts.dir.pids, opts.dir.history, opts.dir.log,
+                        ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
+        cp += len;
+        bufsz -= len;
+      }
+      {
+        int z = 0;
+
+        for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
+        {
+          if ( ctrl.proto_descs[ipd].name )
+          {
+            if ( !z )
+            {
+              len = snprintf( cp, bufsz, "- loaded protocols:\n" );
+              cp += len;
+              bufsz -= len;
+              z = 1;
+            }
+            len = snprintf( cp, bufsz, "\t%u. %s\n", ipd, ctrl.proto_descs[ipd].name );
+            cp += len;
+            bufsz -= len;
+          }
+        }
+      }
+      /* if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )                  */
+      /* {                                                                      */
+      /*   for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )               */
+      /*   {                                                                    */
+      /*     const char *name;                                                  */
+      /*                                                                        */
+      /*     name = ( char * ) dlsym( ctrl.loaded_modules[im], "module_name" ); */
+      /*   }                                                                    */
+      /* }                                                                      */
+      {
+        mas_lcontrol_t *plcontrol = NULL;
+        int z = 0;
+
+        /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
+        pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
+        len = snprintf( cp, bufsz, "[lcontrols_list %d]\n", ctrl.lcontrols_list ? 1 : 0 );
+        cp += len;
+        bufsz -= len;
+        MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
         {
           if ( !z )
           {
-            len = snprintf( cp, bufsz, "- loaded protocols:\n" );
+            len = snprintf( cp, bufsz, "- servers:\n" );
             cp += len;
             bufsz -= len;
             z = 1;
           }
-          len = snprintf( cp, bufsz, "\t%u. %s\n", ipd, ctrl.proto_descs[ipd].name );
+          len = info_listener( plcontrol, ith, cp, bufsz );
           cp += len;
           bufsz -= len;
+          ith++;
         }
+        pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
       }
+      /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
     }
-    /* if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )                  */
-    /* {                                                                      */
-    /*   for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )               */
-    /*   {                                                                    */
-    /*     const char *name;                                                  */
-    /*                                                                        */
-    /*     name = ( char * ) dlsym( ctrl.loaded_modules[im], "module_name" ); */
-    /*   }                                                                    */
-    /* }                                                                      */
-    if ( plcontrol )
-    {
-      int z = 0;
-
-      /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
-      pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
-      len = snprintf( cp, bufsz, "\t[plcontrol %d]\n", ctrl.lcontrols_list ? 1 : 0 );
-      MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
-      {
-        if ( !z )
-        {
-          len = snprintf( cp, bufsz, "- connections:\n" );
-          cp += len;
-          bufsz -= len;
-          z = 1;
-        }
-        len = info_listener( plcontrol, ith, cp, bufsz );
-        cp += len;
-        bufsz -= len;
-        ith++;
-      }
-      pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
-    }
-    else
-    {
-      len = snprintf( cp, bufsz, "****** NO plcontrol\n" );
-      cp += len;
-      bufsz -= len;
-    }
-    /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
+    if ( buf )
+      buf = mas_realloc( buf, strlen( buf ) + 1 );
   }
-  buf = mas_realloc( buf, strlen( buf ) + 1 );
   return buf;
 }
 

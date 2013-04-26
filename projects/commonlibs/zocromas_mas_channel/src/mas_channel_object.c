@@ -279,7 +279,7 @@ mas_channel_test( const mas_channel_t * pchannel )
   if ( !r )
   {
     MAS_LOG( "pchannel not set" );
-    IEVAL( r, -1 );
+    /* IEVAL( r, -1 ); */
   }
   return r;
 }

@@ -161,3 +161,15 @@ server exit
 set msg off
 set log off
 server info
+set msg off
+set log off
+server info
+set msg off
+set log off
+server exit
+bye
+server info
+server exit
+server info
+server exit
+bye

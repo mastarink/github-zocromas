@@ -11,6 +11,7 @@ struct mas_thdata_s
   th_type_t type;
   mas_lcontrol_t *plcontrol;
   mas_rcontrol_t *prcontrol;
+  double double_time;
   /* mas_channel_t *pchannel; */
   mas_variables_list_head_t *variables;
 };

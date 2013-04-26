@@ -72,7 +72,7 @@ mas_threads_init( void )
   pthread_attr_init( &ctrl.thglob.watcher_attr );
   pthread_attr_init( &ctrl.thglob.listener_attr );
   pthread_attr_init( &ctrl.thglob.transaction_attr );
-
+  pthread_attr_setdetachstate( &ctrl.thglob.transaction_attr, PTHREAD_CREATE_DETACHED );
   {
     int r;
 
