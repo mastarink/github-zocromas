@@ -18,6 +18,8 @@ struct mas_loginfo_s
 {
   th_type_t thtype;
   pid_t pid;
+  pid_t tid;
+
   pthread_t pth;
 #  ifdef MS_DUP_FUNC_NAME
   char *func;

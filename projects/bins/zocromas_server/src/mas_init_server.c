@@ -270,14 +270,14 @@ mas_init_pids( void )
 int
 mas_init_daemon( void )
 {
-  int r = 0;
+  int r = 0, rn = 0;
   pid_t pid_child;
 
-  MAS_LOG( "(%d) init daemon", r );
+  MAS_LOG( "init daemon" );
   if ( ctrl.daemon )
   {
     WMSG( "DAEMONIZE" );
-    MAS_LOG( "(%d) init daemonize", r );
+    MAS_LOG( "init daemonize" );
     IEVAL( r, mas_fork(  ) );
     pid_child = r;
     MAS_LOG( "(%d) init fork", r );
@@ -288,12 +288,7 @@ mas_init_daemon( void )
       ctrl.threads.n.child.thread = mas_pthread_self(  );
       ctrl.pserver_thread = &ctrl.threads.n.child;
 
-      /* if ( prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) < 0 ) */
-      /* {                                                             */
-      /*   P_ERR;                                                      */
-      /* }                                                             */
-
-      IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) );
 
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
       {

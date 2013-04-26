@@ -1,4 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <stdlib.h>
 #include <sys/time.h>
@@ -247,11 +248,10 @@ mas_watcher( void )
 static void *
 mas_watcher_th( void *arg )
 {
+  int rn = 0;
+
   ctrl.threads.n.watcher.tid = mas_gettid(  );
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zocwatch" ) < 0 )
-  {
-    P_ERR;
-  }
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocwatch" ) );
 
   MAS_LOG( "watcher start" );
   mas_in_thread( MAS_THREAD_WATCHER, NULL, NULL );

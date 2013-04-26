@@ -220,11 +220,11 @@ static void *
 mas_transaction_th( void *trcontrol )
 {
   void *rp = NULL;
-  int r = -1;
+  int r = -1, rn = 0;
   mas_rcontrol_t *prcontrol = NULL;
 
   prcontrol = ( mas_rcontrol_t * ) trcontrol;
-  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoctrans" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoctrans" ) );
 
   MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
   /* struct sched_param sched;                                               */

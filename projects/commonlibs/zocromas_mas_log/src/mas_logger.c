@@ -133,15 +133,15 @@ mas_logger_write( mas_loginfo_t * li )
           /* fprintf( ctrl.logfile, "%16.5f + %7.5f : %16.5f (%7.5f) : %-25s:%03d %s:R%lu:%u @ L%lu:%u: {%s}\n", li->logtime, */
           /* mas_pthread_mutex_lock( &logger_write_mutex ); */
 #ifndef MAS_NO_THREADS
-          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u %s:R%lu:%u @ L%lu:%u: {%s}\n",
+          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u:%u %s:R%lu:%u @ L%lu:%u: {%s}\n",
                    serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
                    ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
-                   mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
+                   li->tid, mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #else
-          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u *:R%lu:%u @ L%lu:%u: {%s}\n", serial,
-                   li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
+          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u:%u *:R%lu:%u @ L%lu:%u: {%s}\n",
+                   serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
                    ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
-                   li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
+                   li->tid, li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #endif
           /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
           if ( li->lerrno )
@@ -207,13 +207,13 @@ mas_logger_cleanup( void *arg )
 static void *
 mas_logger_th( void *arg )
 {
-  int r = -1;
+  int r = -1, rn = 0;
 
   ctrl.threads.n.logger.tid = mas_gettid(  );
-  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) );
 
 
-  MAS_LOG( "logger start" );
+  MAS_LOG( "logger start %d", rn );
   mas_in_thread( MAS_THREAD_LOGGER, NULL, NULL );
 
   /* WMSG( "(!) logger %d\x1b[K", ctrl.keep_logging ); */

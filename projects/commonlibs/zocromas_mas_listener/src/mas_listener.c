@@ -244,11 +244,11 @@ mas_listener( mas_lcontrol_t * plcontrol )
 void *
 mas_listener_th( void *tlcontrol )
 {
-  int r = -1;
+  int rn = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
   plcontrol = ( mas_lcontrol_t * ) tlcontrol;
-  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) );
 
   /* {                                                                       */
   /*   int rs;                                                               */

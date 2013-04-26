@@ -1,4 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -173,13 +174,10 @@ mas_ticker( void )
 static void *
 mas_ticker_th( void *arg )
 {
-  int old_cancelability = 0;
+  int old_cancelability = 0, rn = 0;
 
   ctrl.threads.n.ticker.tid = mas_gettid(  );
-  if ( prctl( PR_SET_NAME, ( unsigned long ) "zoctick" ) < 0 )
-  {
-    P_ERR;
-  }
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoctick" ) );
 
   MAS_LOG( "ticker start" );
   pthread_setcanceltype( PTHREAD_CANCEL_ASYNCHRONOUS, &old_cancelability );

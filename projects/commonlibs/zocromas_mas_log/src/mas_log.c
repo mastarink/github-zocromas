@@ -13,6 +13,7 @@
 #endif
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 #include <mastar/msg/mas_msg_def.h>
@@ -136,6 +137,7 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
     li->prcontrol = mas_thself_prcontrol(  );
 #endif
     li->pid = getpid(  );
+    li->tid = mas_gettid(  );
     li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
     li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
     li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;

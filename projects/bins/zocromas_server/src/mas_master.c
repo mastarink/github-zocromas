@@ -191,7 +191,7 @@ mas_master( void )
 static void *
 mas_master_th( void *arg )
 {
-  int r = 0;
+  int rn = 0;
 
   HMSG( "MASTER_TH START" );
   ctrl.threads.n.master.tid = mas_gettid(  );
@@ -201,7 +201,7 @@ mas_master_th( void *arg )
 
   ctrl.pserver_thread = &ctrl.threads.n.master;
 
-  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) );
 
   /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
@@ -268,12 +268,12 @@ mas_master_optional_thread( void )
 int
 mas_master_bunch( int argc, char *argv[], char *env[] )
 {
-  int r = 0;
+  int r = 0, rn = 0;
 
   HMSG( "BUNCH START e:%d", errno );
   MAS_LOG( "bunch start e:%d", errno );
 
-  IEVAL( r, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
 
   MAS_LOG( "(%d) bunch: to init +", r );
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
