@@ -71,7 +71,7 @@ mas_channel_accept( mas_channel_t * pchannel )
   struct sockaddr *sac = NULL;
   struct sockaddr *saa = NULL;
   socklen_t lc;
-      socklen_t la;
+  socklen_t la;
 
   if ( mas_channel_test( pchannel ) )
   {

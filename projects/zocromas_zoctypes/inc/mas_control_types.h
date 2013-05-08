@@ -34,11 +34,14 @@ struct mas_pthread_globals_s
   pthread_mutex_t logger_mutex;
 
   pthread_attr_t custom_attr;
+  cpu_set_t *master_set;
   pthread_attr_t master_attr;
   pthread_attr_t ticker_attr;
   pthread_attr_t watcher_attr;
   pthread_attr_t logger_attr;
+  cpu_set_t *listener_set;
   pthread_attr_t listener_attr;
+  cpu_set_t *transaction_set;
   pthread_attr_t transaction_attr;
 };
 
@@ -149,7 +152,7 @@ struct mas_control_s
   /* char *const *loaded_optsv; */
   /* int loaded_optsc;          */
   mas_string_setv_t loaded_optsv;
-  
+
   mas_string_setv_t pidfilesv;
 
   size_t protos_num;

@@ -70,9 +70,44 @@ mas_threads_init( void )
   pthread_attr_init( &ctrl.thglob.master_attr );
   pthread_attr_init( &ctrl.thglob.ticker_attr );
   pthread_attr_init( &ctrl.thglob.watcher_attr );
+  ctrl.thglob.master_set = CPU_ALLOC( 4 );
+  {
+    size_t size;
+
+    size = CPU_ALLOC_SIZE( 4 );
+    CPU_ZERO_S( size, ctrl.thglob.master_set );
+    CPU_SET_S( 0, size, ctrl.thglob.master_set );
+    /* pthread_attr_setaffinity_np( &ctrl.thglob.logger_attr, size, ctrl.thglob.master_set );  */
+    /* pthread_attr_setaffinity_np( &ctrl.thglob.master_attr, size, ctrl.thglob.master_set );  */
+    /* pthread_attr_setaffinity_np( &ctrl.thglob.ticker_attr, size, ctrl.thglob.master_set );  */
+    /* pthread_attr_setaffinity_np( &ctrl.thglob.watcher_attr, size, ctrl.thglob.master_set ); */
+  }
+
   pthread_attr_init( &ctrl.thglob.listener_attr );
+  ctrl.thglob.listener_set = CPU_ALLOC( 4 );
+  {
+    size_t size;
+
+    size = CPU_ALLOC_SIZE( 4 );
+    CPU_ZERO_S( size, ctrl.thglob.listener_set );
+    CPU_SET_S( 1, size, ctrl.thglob.listener_set );
+    /* pthread_attr_setaffinity_np( &ctrl.thglob.listener_attr, size, ctrl.thglob.listener_set ); */
+  }
+
   pthread_attr_init( &ctrl.thglob.transaction_attr );
+  ctrl.thglob.transaction_set = CPU_ALLOC( 4 );
+  {
+    size_t size;
+
+    size = CPU_ALLOC_SIZE( 4 );
+    CPU_ZERO_S( size, ctrl.thglob.transaction_set );
+    CPU_SET_S( 2, size, ctrl.thglob.transaction_set );
+    CPU_SET_S( 3, size, ctrl.thglob.transaction_set );
+    /* pthread_attr_setaffinity_np( &ctrl.thglob.transaction_attr, size, ctrl.thglob.transaction_set ); */
+  }
   pthread_attr_setdetachstate( &ctrl.thglob.transaction_attr, PTHREAD_CREATE_DETACHED );
+
+
   {
     int r;
 
@@ -135,8 +170,16 @@ mas_threads_destroy( void )
   pthread_attr_destroy( &ctrl.thglob.master_attr );
   pthread_attr_destroy( &ctrl.thglob.ticker_attr );
   pthread_attr_destroy( &ctrl.thglob.watcher_attr );
+  CPU_FREE( ctrl.thglob.master_set );
+  ctrl.thglob.master_set = NULL;
+
   pthread_attr_destroy( &ctrl.thglob.listener_attr );
+  CPU_FREE( ctrl.thglob.listener_set );
+  ctrl.thglob.listener_set = NULL;
+
   pthread_attr_destroy( &ctrl.thglob.transaction_attr );
+  CPU_FREE( ctrl.thglob.transaction_set );
+  ctrl.thglob.transaction_set = NULL;
 
   pthread_rwlock_destroy( &ctrl.thglob.modules_list_rwlock );
   pthread_rwlock_destroy( &ctrl.thglob.lcontrols_list_rwlock );

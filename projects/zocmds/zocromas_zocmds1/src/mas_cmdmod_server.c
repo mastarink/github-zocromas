@@ -208,7 +208,7 @@ info_cmd( STD_CMD_ARGS )
         extern unsigned long memory_balance;
 
         len = snprintf( cp, bufsz,
-                        "\n[%lu]"
+                        "\n[mem:%lu]"
                         "- (%u/%u)\tuuid:\t%s\n"
                         "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
                         "- #%u Server info:" "\t[%u:%s]\n"

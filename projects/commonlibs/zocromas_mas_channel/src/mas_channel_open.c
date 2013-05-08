@@ -56,7 +56,9 @@ _mas_channel_open_rfile( mas_channel_t * pchannel )
   if ( fd_io > 0 )
   {
     pchannel->fd_io = fd_io;
+#ifdef MAS_CHANNEL_STREAM_WRITE
     pchannel->stream_io = fdopen( fd_io, "r+" );
+#endif
     pchannel->opened = 1;
   }
   else
@@ -89,7 +91,9 @@ _mas_channel_open_tcp( mas_channel_t * pchannel )
   if ( fd_io > 0 )
   {
     pchannel->fd_io = fd_io;
+#ifdef MAS_CHANNEL_STREAM_WRITE
     pchannel->stream_io = fdopen( fd_io, "r+" );
+#endif
     pchannel->opened = 1;
   }
   else

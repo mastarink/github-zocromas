@@ -69,6 +69,7 @@ mas_channel_fd( const mas_channel_t * pchannel )
   return r;
 }
 
+#ifdef MAS_CHANNEL_STREAM_WRITE
 FILE *
 mas_channel_stream( const mas_channel_t * pchannel )
 {
@@ -78,6 +79,7 @@ mas_channel_stream( const mas_channel_t * pchannel )
     f = pchannel->stream_io;
   return f;
 }
+#endif
 
 mas_channel_t *
 mas_channel_clone( mas_channel_t * pchannel_src )

@@ -45,7 +45,9 @@ struct mas_channel_s
   chn_type_t type;
   int fd_socket;
   int fd_io;
+#  ifdef MAS_CHANNEL_STREAM_WRITE
   FILE *stream_io;
+#  endif
   mas_serv_addr_t serv;
   mas_serv_addr_t serv_instance;
   mas_serv_addr_t cli;

@@ -60,7 +60,7 @@ function run_any ()
   #      echo "bash:to run  $builddir/$rname" >&2
 
   if false ; then
-    straceit='strace -fr -C -o strace.tmp'
+    straceit='strace -q -fr -C -o strace.tmp'
   fi
 
 
@@ -123,12 +123,13 @@ function eddiffconfig ()
 }
 function psshow ()
 {
-  export PS_FORMAT=tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
+  export PS_FORMAT=pcpu,wchan,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
 # bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
   if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
     /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-$COLUMNS
   else
-    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-150 | sed -ne 's/$/  .../p'
+    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster
+#    | cut -b-150 | sed -ne 's/$/  .../p'
   fi
 }
 function server_pid ()

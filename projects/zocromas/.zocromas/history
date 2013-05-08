@@ -173,3 +173,10 @@ server exit
 server info
 server exit
 bye
+server exit
+set nolog
+server set nolog
+set log off
+set log on
+server exit
+bye

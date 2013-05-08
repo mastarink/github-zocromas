@@ -4,7 +4,10 @@
 #  include <mastar/types/mas_channel_types.h>
 
 int mas_channel_fd( const mas_channel_t * pchannel );
+
+#ifdef MAS_CHANNEL_STREAM_WRITE
 FILE *mas_channel_stream( const mas_channel_t * pchannel );
+#endif
 
 mas_channel_t *mas_channel_clone( mas_channel_t * pchannel_src );
 

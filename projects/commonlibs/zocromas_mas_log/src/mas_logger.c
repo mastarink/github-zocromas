@@ -169,7 +169,8 @@ mas_logger_write( mas_loginfo_t * li )
 
           prevlilogtime = li->logtime;
           /* mas_pthread_mutex_lock( &logger_write_mutex ); */
-          fflush( ctrl.logfile );
+          if ( 0 )
+            fflush( ctrl.logfile );
           /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
         }
       }
@@ -222,7 +223,7 @@ mas_logger_th( void *arg )
   pthread_cleanup_push( mas_logger_cleanup, NULL );
   while ( ( r = mas_logger_flush(  ) ) == 0 || ctrl.keep_logging )
   {
-    mas_nanosleep( 0.1 );
+    /* mas_nanosleep( 1 ); */
   }
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
