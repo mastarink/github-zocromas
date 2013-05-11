@@ -66,7 +66,12 @@ mas_threads_init( void )
 //pthread_mutex_init( &ctrl.thglob.log_mutex, NULL );
 
   pthread_attr_init( &ctrl.thglob.custom_attr );
+
   pthread_attr_init( &ctrl.thglob.logger_attr );
+  pthread_cond_init( &ctrl.thglob.logger_wait_cond, NULL );
+  pthread_mutex_init( &ctrl.thglob.logger_wait_mutex, NULL );
+
+
   pthread_attr_init( &ctrl.thglob.master_attr );
   pthread_attr_init( &ctrl.thglob.ticker_attr );
   pthread_attr_init( &ctrl.thglob.watcher_attr );
@@ -77,10 +82,10 @@ mas_threads_init( void )
     size = CPU_ALLOC_SIZE( 4 );
     CPU_ZERO_S( size, ctrl.thglob.master_set );
     CPU_SET_S( 0, size, ctrl.thglob.master_set );
-    /* pthread_attr_setaffinity_np( &ctrl.thglob.logger_attr, size, ctrl.thglob.master_set );  */
-    /* pthread_attr_setaffinity_np( &ctrl.thglob.master_attr, size, ctrl.thglob.master_set );  */
-    /* pthread_attr_setaffinity_np( &ctrl.thglob.ticker_attr, size, ctrl.thglob.master_set );  */
-    /* pthread_attr_setaffinity_np( &ctrl.thglob.watcher_attr, size, ctrl.thglob.master_set ); */
+    pthread_attr_setaffinity_np( &ctrl.thglob.logger_attr, size, ctrl.thglob.master_set );
+    pthread_attr_setaffinity_np( &ctrl.thglob.master_attr, size, ctrl.thglob.master_set );
+    pthread_attr_setaffinity_np( &ctrl.thglob.ticker_attr, size, ctrl.thglob.master_set );
+    pthread_attr_setaffinity_np( &ctrl.thglob.watcher_attr, size, ctrl.thglob.master_set );
   }
 
   pthread_attr_init( &ctrl.thglob.listener_attr );
@@ -91,7 +96,7 @@ mas_threads_init( void )
     size = CPU_ALLOC_SIZE( 4 );
     CPU_ZERO_S( size, ctrl.thglob.listener_set );
     CPU_SET_S( 1, size, ctrl.thglob.listener_set );
-    /* pthread_attr_setaffinity_np( &ctrl.thglob.listener_attr, size, ctrl.thglob.listener_set ); */
+    pthread_attr_setaffinity_np( &ctrl.thglob.listener_attr, size, ctrl.thglob.listener_set );
   }
 
   pthread_attr_init( &ctrl.thglob.transaction_attr );
@@ -103,7 +108,7 @@ mas_threads_init( void )
     CPU_ZERO_S( size, ctrl.thglob.transaction_set );
     CPU_SET_S( 2, size, ctrl.thglob.transaction_set );
     CPU_SET_S( 3, size, ctrl.thglob.transaction_set );
-    /* pthread_attr_setaffinity_np( &ctrl.thglob.transaction_attr, size, ctrl.thglob.transaction_set ); */
+    pthread_attr_setaffinity_np( &ctrl.thglob.transaction_attr, size, ctrl.thglob.transaction_set );
   }
   pthread_attr_setdetachstate( &ctrl.thglob.transaction_attr, PTHREAD_CREATE_DETACHED );
 
@@ -166,7 +171,11 @@ void
 mas_threads_destroy( void )
 {
   pthread_attr_destroy( &ctrl.thglob.custom_attr );
+
   pthread_attr_destroy( &ctrl.thglob.logger_attr );
+  pthread_cond_destroy( &ctrl.thglob.logger_wait_cond );
+  pthread_mutex_destroy( &ctrl.thglob.logger_wait_mutex );
+
   pthread_attr_destroy( &ctrl.thglob.master_attr );
   pthread_attr_destroy( &ctrl.thglob.ticker_attr );
   pthread_attr_destroy( &ctrl.thglob.watcher_attr );

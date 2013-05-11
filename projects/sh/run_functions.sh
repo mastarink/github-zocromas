@@ -123,24 +123,24 @@ function eddiffconfig ()
 }
 function psshow ()
 {
-  export PS_FORMAT=pcpu,wchan,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
+  export PS_FORMAT=pcpu,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
 # bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
   if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
-    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster | cut -b-$COLUMNS
+    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocdaemon,zocdaemon_init,zocmaster,zocmain,zocmain_exit,zocchild | cut -b-$COLUMNS
   else
-    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocchild,zocmaster
+    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocdaemon,zocdaemon_init,zocmaster,zocmain,zocmain_exit,zocchild | cut -b-170 
 #    | cut -b-150 | sed -ne 's/$/  .../p'
   fi
 }
 function server_pid ()
 {
   local spid name
-  for name in zocromas_server zocchild zocbunch ; do
+  for name in zocromas_server zocbunch zocdaemon zocdaemon_init zocmain zocmain_exit zocchild zocmaster ; do
     if spid=$( ps -C $name -o pid= ) ; then
-      break
+      echo $spid ; return 0
     fi
   done
-  echo $spid
+  return 1
 }
 
 

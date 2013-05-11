@@ -214,15 +214,15 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
       mas_channel_delete( plcontrol->h.pchannel, 0, 0 );
       plcontrol->h.pchannel = NULL;
     }
-    if ( !MAS_LIST_EMPTY( plcontrol->transaction_controls_list ) )
-    {
-      EMSG( "A transaction_controls_list!!!" );
-      sleep( 2 );
-    }
-    if ( !MAS_LIST_EMPTY( plcontrol->transaction_controls_list ) )
-    {
-      EMSG( "B transaction_controls_list!!!" );
-    }
+    /* if ( plcontrol->transaction_controls_list && !MAS_LIST_EMPTY( plcontrol->transaction_controls_list ) ) */
+    /* {                                                                                                      */
+    /*   EMSG( "A transaction_controls_list!!!" );                                                            */
+    /*   sleep( 2 );                                                                                          */
+    /* }                                                                                                      */
+    /* if ( plcontrol->transaction_controls_list && !MAS_LIST_EMPTY( plcontrol->transaction_controls_list ) ) */
+    /* {                                                                                                      */
+    /*   EMSG( "B transaction_controls_list!!!" );                                                            */
+    /* }                                                                                                      */
 
     if ( plcontrol->transaction_controls_list )
     {

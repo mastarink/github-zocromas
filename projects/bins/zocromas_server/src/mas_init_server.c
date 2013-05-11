@@ -271,24 +271,25 @@ int
 mas_init_daemon( void )
 {
   int r = 0, rn = 0;
-  pid_t pid_child;
+  pid_t pid_daemon;
 
   MAS_LOG( "init daemon" );
   if ( ctrl.daemon )
   {
+    HMSG( "INIT DAEMON" );
     WMSG( "DAEMONIZE" );
     MAS_LOG( "init daemonize" );
     IEVAL( r, mas_fork(  ) );
-    pid_child = r;
+    pid_daemon = r;
     MAS_LOG( "(%d) init fork", r );
-    if ( pid_child == 0 )
+    if ( pid_daemon == 0 )
     {
-      ctrl.threads.n.child.pid = getpid(  );
-      ctrl.threads.n.child.tid = mas_gettid(  );
-      ctrl.threads.n.child.thread = mas_pthread_self(  );
-      ctrl.pserver_thread = &ctrl.threads.n.child;
+      ctrl.threads.n.daemon.pid = getpid(  );
+      ctrl.threads.n.daemon.tid = mas_gettid(  );
+      ctrl.threads.n.daemon.thread = mas_pthread_self(  );
+      ctrl.pserver_thread = &ctrl.threads.n.daemon;
 
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocchild" ) );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocdaemon_init" ) );
 
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
       {
@@ -301,7 +302,7 @@ mas_init_daemon( void )
           WMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
         }
       }
-      HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_child, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
+      HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_daemon, getpid(  ), getppid(  ), opts.msgfilename, ctrl.msgfile ? 1 : 0 );
       /* sleep(200); */
       if ( ctrl.redirect_std )
       {
@@ -355,13 +356,19 @@ mas_init_daemon( void )
       }
       /* mas_destroy_server(  ); */
       setsid(  );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocdaemon" ) );
     }
-    else if ( pid_child > 0 )
+    else if ( pid_daemon > 0 )
     {
-      ctrl.threads.n.child.pid = pid_child;
-      HMSG( "PARENT : %u @ %u @ %u", pid_child, getpid(  ), getppid(  ) );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch_parent" ) );
+      ctrl.threads.n.daemon.pid = pid_daemon;
+      HMSG( "PARENT : %u @ %u @ %u", pid_daemon, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
     }
+  }
+  else
+  {
+    HMSG( "INIT NO DAEMON" );
   }
   MAS_LOG( "(%d) init daemon almost done", r );
   MAS_LOG( "(%d) init daemon done", r );
@@ -429,15 +436,25 @@ mas_init_daemon( void )
 void
 mas_destroy_server( void )
 {
-  MAS_LOG( "destroy server" );
-  EMSG( "DESTROY SERVER" );
+  EMSG( "D" );
+  {
+    int rn = 0;
+    char name_buffer[32] = "?";
+
+    IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
+    /* IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocserver_destroy" ) ); */
+    MAS_LOG( "destroy server" );
+    EMSG( "DESTROY SERVER %s", name_buffer );
+  }
   MAS_LOG( "to save opts" );
   /* if ( !ctrl.opts_saved )                                                                                            */
   /*   mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );                                                */
   /* if ( !ctrl.opts_saved_plus )                                                                                       */
   /*   mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
 
+  EMSG( "L" );
   mas_listeners_stop(  );
+  EMSG( "/L" );
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
 
 #ifdef MAS_USE_CURSES
@@ -485,4 +502,5 @@ mas_destroy_server( void )
 
   MAS_LOG( "destroy server done" );
   WMSG( "DESTROY SERVER DONE" );
+  EMSG( "/D" );
 }

@@ -38,7 +38,7 @@ mas_control_t ctrl = {
   .threads = {.n = {
                     .main = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
                     .master = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
-                    .child = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
+                    .daemon = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
                     .ticker = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
                     .logger = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
                     .watcher = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0}}

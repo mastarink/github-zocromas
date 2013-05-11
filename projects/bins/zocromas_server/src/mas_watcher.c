@@ -262,6 +262,7 @@ mas_watcher_th( void *arg )
 
   MAS_LOG( "watcher stop" );
   EMSG( "WATCHER STOP" );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocwatch_exit" ) );
   mas_pthread_exit( NULL );
   return ( NULL );
 }

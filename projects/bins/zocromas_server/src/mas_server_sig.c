@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <sys/prctl.h>
 
 #include <pthread.h>
 #include <signal.h>
@@ -293,6 +294,15 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
+  {
+    int rn = 0;
+    char name_buffer[32] = "?";
+
+    IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
+    /* IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain_atexit" ) ); */
+    EMSG( "AT EXIT %s", name_buffer );
+  }
+
   mas_destroy_server(  );
 #ifdef MAS_TRACEMEM
   {
@@ -313,6 +323,14 @@ mas_atexit( void )
   {
     fclose( ctrl.msgfile );
     ctrl.msgfile = NULL;
+  }
+  {
+    int rn = 0;
+    char name_buffer[32] = "?";
+
+    IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
+    /* IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain_atexit" ) ); */
+    EMSG( "AT EXIT %s", name_buffer );
   }
   _exit( 0 );
 }

@@ -133,10 +133,11 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
 
     buf = mas_malloc( bufsize );
 
+
+/* TODO !! writev : mas_variables_iovec_pairs */
     if ( buf )
     {
       int wm = -1;
-
       wm = mas_variables_memory_write_pairs( http->outdata, set, buf, bufsize );
       if ( wm > 0 )
       {

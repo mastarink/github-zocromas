@@ -210,14 +210,14 @@ info_cmd( STD_CMD_ARGS )
         len = snprintf( cp, bufsz,
                         "\n[mem:%lu]"
                         "- (%u/%u)\tuuid:\t%s\n"
-                        "\tmain pid:%u; master pid:%u; child pid:%u; server pid:%u; \t\t [%lx]\n"
+                        "\tmain pid:%u; master pid:%u; daemon pid:%u; server pid:%u; \t\t [%lx]\n"
                         "- #%u Server info:" "\t[%u:%s]\n"
                         "\tclients: {%lu - %lu = %lu}\n"
                         "\t%s; %s; %s\n"
                         "- ticker : 0x%lx :: %d;%lu;\n"
                         "- watcher: 0x%lx :: stop:%1d;cnt:%lu;\n\n", memory_balance,
                         level, this_command ? this_command->only_level : 0, opts.uuid,
-                        ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.child.pid,
+                        ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.daemon.pid,
                         ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
                         ctrl.restart_cnt,
                         mas_gettid(  ), mas_thread_self_type_name(  ),

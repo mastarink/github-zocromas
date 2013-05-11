@@ -174,7 +174,7 @@ mas_pre_init_proc( void )
   struct stat sb;
   char *linkname;
 
-  WMSG( "PRE-INIT" );
+  HMSG( "PRE-INIT" );
   sprintf( lexe, "/proc/%u/exe", getpid(  ) );
   /* if ( lstat( lexe, &sb ) >= 0 ) */
   IEVAL( r, lstat( lexe, &sb ) );
@@ -203,7 +203,7 @@ mas_pre_init_opt_files( void )
   int r = 0;
   char sppid[64] = "";
 
-  WMSG( "INIT OPT FILES" );
+  HMSG( "INIT OPT FILES" );
   HMSG( "PPID: %u; BASH VAR: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   MAS_LOG( "PPID: %u BASH VAR: %s", getppid(  ), getenv( "MAS_PID_AT_BASHRC" ) );
   {
@@ -343,6 +343,7 @@ mas_post_init( void )
   }
   MAS_LOG( "(%d) init done e%d", r, errno );
   WMSG( "(%d) POST INIT DONE", r );
+  ctrl.inited = 1;
   return r;
 }
 
@@ -404,7 +405,7 @@ mas_init( int argc, char **argv, char **env )
   /* mas_init_message(  ); */
   /* atexit( atexit_fun ); */
   IEVAL( r, mas_init_sig(  ) );
-  WMSG( "(%d) INIT %d", r, __LINE__ );
+  HMSG( "(%d) INIT CLI", r );
 
   IEVAL( r, mas_cli_options( opts.argvv.c, opts.argvv.v ) );
   ctrl.argv_nonoptind = r;
@@ -427,6 +428,7 @@ mas_init_vplus( va_list args )
   {
     IEVAL( r, ( fun ) (  ) );
     MAS_LOG( "(%d) init + #%d", r, pos );
+    WMSG( "INIT V #%d", pos );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
     pos++;
   }
@@ -587,6 +589,7 @@ __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
   char name[512];
+
   /* char *value = NULL; */
 
   /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */

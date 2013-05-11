@@ -35,7 +35,7 @@ extern mas_control_t ctrl;
 #define MAS_CTRL_IS_CLIENT ctrl.is_client
 #define MAS_CTRL_IN_SERVER ctrl.in_server
 #define MAS_CTRL_IN_CLIENT ctrl.in_client
-#define MAS_CTRL_MESSAGES ctrl.messages
+#define MAS_CTRL_MESSAGES ( ctrl.messages || !ctrl.inited )
 #define MAS_CTRL_STATUS ctrl.status
 
 #define ERRREG(fmt,msg) (ctrl.error_handler)(FL, 0, -1, 0, NULL, fmt, msg)

@@ -85,7 +85,7 @@ mas_ctrl_destroy( void )
   ctrl.loaded_optsv.c = 0;
   ctrl.loaded_optsv.v = NULL;
 
-  if ( ctrl.threads.n.child.pid && ctrl.threads.n.child.pid == getpid(  ) )
+  if ( ctrl.threads.n.daemon.pid && ctrl.threads.n.daemon.pid == getpid(  ) )
     for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )
     {
       /* HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] ); */

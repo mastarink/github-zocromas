@@ -9,10 +9,6 @@
 
 #include <mastar/channel/mas_channel.h>
 
-/* #include "mas_common.h" */
-/* #include "log/inc/mas_log.h" */
-
-
 #include "mas_variables.h"
 
 /*
@@ -122,7 +118,7 @@ mas_variable_create_typed( mas_variables_list_head_t * variables, th_type_t thty
   if ( ( variables = mas_variables_setup( variables ) ) )
   {
     mas_variable_t *var = NULL;
-
+/* TODO : find/create class, attach variable as 2 elements of struct iovec */
     var = mas_variable_create( thtype, vclass, name, vtype, data, datasize, nomem );
     variables = mas_variable_attach( variables, var );
   }
@@ -134,13 +130,6 @@ mas_variable_create_binary( mas_variables_list_head_t * variables, th_type_t tht
                             const void *data, size_t datasize )
 {
   variables = mas_variable_create_typed( variables, thtype, vclass, name, MAS_VARTYPE_BINARY, data, datasize, 0 );
-  /* if ( ( variables = mas_variables_setup( variables ) ) )                                       */
-  /* {                                                                                             */
-  /*   mas_variable_t *var = NULL;                                                                 */
-  /*                                                                                               */
-  /*   var = mas_variable_create( thtype, vclass, name, MAS_VARTYPE_BINARY, data, datasize ); */
-  /*   variables = mas_variable_attach( variables, var );                                          */
-  /* }                                                                                             */
   return variables;
 }
 
@@ -149,13 +138,6 @@ mas_variable_create_text( mas_variables_list_head_t * variables, th_type_t thtyp
                           const void *txt, int nomem )
 {
   variables = mas_variable_create_typed( variables, thtype, vclass, name, MAS_VARTYPE_TEXT, txt, strlen( txt ) + 1, nomem );
-  /* if ( ( variables = mas_variables_setup( variables ) ) )                                             */
-  /* {                                                                                                   */
-  /*   mas_variable_t *var = NULL;                                                                       */
-  /*                                                                                                     */
-  /*   var = mas_variable_create( thtype, vclass, name, MAS_VARTYPE_TEXT, txt, strlen( txt ) + 1 ); */
-  /*   variables = mas_variable_attach( variables, var );                                                */
-  /* }                                                                                                   */
   return variables;
 }
 
@@ -176,8 +158,6 @@ mas_variable_vcreate_x( mas_variables_list_head_t * variables, th_type_t thtype,
 #ifdef MAS_LOG
     MAS_LOG( "V %s.%s=[%s]", vclass, name, text );
 #endif
-    /* var = mas_variable_create( thtype, vclass, name, MAS_VARTYPE_TEXT, text, strlen( text ) + 1 ); */
-    /* variables = mas_variable_attach( variables, var );                                                    */
     mas_free( text );
   }
 
@@ -280,8 +260,7 @@ mas_variable_first( mas_variables_list_head_t * variables, const char *vclass, c
 
 
 mas_variables_list_head_t *
-mas_variable_set_text( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name,
-                       const void *txt )
+mas_variable_set_text( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name, const void *txt )
 {
   if ( ( variables = mas_variables_setup( variables ) ) )
   {
@@ -304,15 +283,8 @@ mas_variable_set_text( mas_variables_list_head_t * variables, th_type_t thtype, 
   return variables;
 }
 
-
-
-
-
-
-
 int
-_mas_variables_writef( mas_variables_list_head_t * variables, const char *vclass, int fname, int fvalue, const char *fmt,
-                       int wfd )
+_mas_variables_writef( mas_variables_list_head_t * variables, const char *vclass, int fname, int fvalue, const char *fmt, int wfd )
 {
   int w = 0;
   mas_variable_t *var;
@@ -346,8 +318,7 @@ mas_variables_writef( mas_variables_list_head_t * variables, const char *vclass,
 }
 
 int
-_mas_variables_fwritef( mas_variables_list_head_t * variables, const char *vclass, int fname, int fvalue, const char *fmt,
-                        FILE * f )
+_mas_variables_fwritef( mas_variables_list_head_t * variables, const char *vclass, int fname, int fvalue, const char *fmt, FILE * f )
 {
   int w = 0;
   mas_variable_t *var;
@@ -425,8 +396,7 @@ _mas_variables_channel_writef( mas_variables_list_head_t * variables, const char
 
 
 int
-mas_variables_chwritef( mas_variables_list_head_t * variables, const char *vclass, const char *fmt,
-                        const mas_channel_t * pchannel )
+mas_variables_chwritef( mas_variables_list_head_t * variables, const char *vclass, const char *fmt, const mas_channel_t * pchannel )
 {
   return _mas_variables_channel_writef( variables, vclass, 1, 1, fmt, pchannel );
 }

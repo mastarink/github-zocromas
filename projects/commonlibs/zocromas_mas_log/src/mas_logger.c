@@ -133,15 +133,18 @@ mas_logger_write( mas_loginfo_t * li )
           /* fprintf( ctrl.logfile, "%16.5f + %7.5f : %16.5f (%7.5f) : %-25s:%03d %s:R%lu:%u @ L%lu:%u: {%s}\n", li->logtime, */
           /* mas_pthread_mutex_lock( &logger_write_mutex ); */
 #ifndef MAS_NO_THREADS
-          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u:%u %s:R%lu:%u @ L%lu:%u: {%s}\n",
-                   serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
-                   ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
-                   li->tid, mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
+          fprintf( ctrl.logfile,
+                   "%03lu/%03lu %03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u:%u %s:R%lu:%u @ L%lu:%u: {%s}\n",
+                   ctrl.log_q_came, ctrl.log_q_gone, serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog,
+                   last_th > 1.E14 ? 0 : last_th, ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line,
+                   li->func ? li->func : "-", li->pid, li->tid, mas_thread_type_name( li->thtype ), li->rserial, li->rstatus, li->lserial,
+                   li->lstatus, li->message );
 #else
-          fprintf( ctrl.logfile, "%03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u:%u *:R%lu:%u @ L%lu:%u: {%s}\n",
-                   serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog, last_th > 1.E14 ? 0 : last_th,
-                   ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line, li->func ? li->func : "-", li->pid,
-                   li->tid, li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
+          fprintf( ctrl.logfile,
+                   "%03lu/%03lu %03lu/%03lu. %18.7f + %12.2f/%12.2f D q%7.2f (S%8.2f) :%03d:%-25s:%u:%u *:R%lu:%u @ L%lu:%u: {%s}\n",
+                   ctrl.log_q_came, ctrl.log_q_gone, serial, li->serial, li->logtime, fromlastlog > 1.E14 ? 0 : fromlastlog,
+                   last_th > 1.E14 ? 0 : last_th, ( ltime - li->logtime ) * 1E3, ( li->logtime - ctrl.start_time ) * 1E3, li->line,
+                   li->func ? li->func : "-", li->pid, li->tid, li->rserial, li->rstatus, li->lserial, li->lstatus, li->message );
 #endif
           /* mas_pthread_mutex_unlock( &logger_write_mutex ); */
           if ( li->lerrno )
@@ -195,23 +198,23 @@ void
 mas_logger_cleanup( void *arg )
 {
   ctrl.keep_logging = 0;
-  WMSG( "TO FLUSH LOGGER" );
+  EMSG( "TO FLUSH LOGGER" );
   ctrl.log_disabled = 1;
   mas_logger_flush(  );
   mas_log_clean_queue(  );
   mas_logger_close(  );
   MAS_LOG( "logger cleanup" );
-  WMSG( "LOGGER CLEANUP DONE" );
+  EMSG( "LOGGER CLEANUP DONE" );
 }
 
 #ifndef MAS_NO_THREADS
 static void *
 mas_logger_th( void *arg )
 {
-  int r = -1, rn = 0;
+  int rn = 0;
 
   ctrl.threads.n.logger.tid = mas_gettid(  );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclog" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclogger" ) );
 
 
   MAS_LOG( "logger start %d", rn );
@@ -221,13 +224,23 @@ mas_logger_th( void *arg )
   ctrl.keep_logging = 1;
   MAS_LOG( "logger start [%lx]", ctrl.threads.n.logger.thread );
   pthread_cleanup_push( mas_logger_cleanup, NULL );
-  while ( ( r = mas_logger_flush(  ) ) == 0 || ctrl.keep_logging )
+
   {
-    /* mas_nanosleep( 1 ); */
+    int rwait = 0;
+
+    pthread_mutex_lock( &ctrl.thglob.logger_wait_mutex );
+    while ( rwait != ETIMEDOUT )
+    {
+      ( void ) mas_logger_flush(  );
+      rwait = pthread_cond_wait( &ctrl.thglob.logger_wait_cond, &ctrl.thglob.logger_wait_mutex );
+    }
+    pthread_mutex_unlock( &ctrl.thglob.logger_wait_mutex );
   }
+
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
   WMSG( "LOGGER STOP" );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclogger_exit" ) );
   mas_pthread_exit( NULL );
   return NULL;
 }

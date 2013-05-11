@@ -86,8 +86,9 @@ threads created:
 static int
 mas_master( void )
 {
-  int r = 0;
+  int r = 0, rn = 0;
 
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) );
   HMSG( "MASTER START %c%c%c", !opts.nologger ? 'L' : 'l', !opts.noticker ? 'T' : 't', !opts.nowatcher ? 'W' : 'w' );
   /* ??????? */
   /* r=0; */
@@ -185,6 +186,7 @@ mas_master( void )
   }
 #endif
   HMSG( "MASTER_TH TO END : %d", r );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster_exit" ) );
   return r;
 }
 
@@ -201,7 +203,7 @@ mas_master_th( void *arg )
 
   ctrl.pserver_thread = &ctrl.threads.n.master;
 
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmaster" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmasth" ) );
 
   /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
@@ -209,6 +211,7 @@ mas_master_th( void *arg )
 
   if ( ctrl.main_exit && ctrl.threads.n.main.thread )
   {
+    /* FIXME ????? */
     mas_pthread_detach( ctrl.threads.n.main.thread );
     mas_xpthread_join( ctrl.threads.n.main.thread );
     ctrl.threads.n.main.thread = 0;
@@ -221,6 +224,7 @@ mas_master_th( void *arg )
   MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
 #endif
   HMSG( "MASTER_TH TO END" );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmasth_exit" ) );
   mas_pthread_exit( NULL );
   return NULL;
 }
@@ -273,7 +277,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   HMSG( "BUNCH START e:%d", errno );
   MAS_LOG( "bunch start e:%d", errno );
 
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch_init" ) );
 
   MAS_LOG( "(%d) bunch: to init +", r );
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
@@ -281,6 +285,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   IEVAL( r,
          mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
                         NULL ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch" ) );
   MAS_LOG( "(%d) bunch: init + done", r );
   if ( ctrl.is_parent )
   {
@@ -309,6 +314,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
        mas_pthread_exit( &r ); 
      */
   }
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch_exit" ) );
   WMSG( "TO DESTROY MODULES" );
   mas_modules_unregister(  );
   /* MAS_LOG( "bunch end : %d", r ); */

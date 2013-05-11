@@ -31,7 +31,10 @@ struct mas_pthread_globals_s
   pthread_mutex_t cnttr1_mutex;
   pthread_mutex_t cnttr2_mutex;
   pthread_mutex_t cnttr3_mutex;
+  
   pthread_mutex_t logger_mutex;
+  pthread_mutex_t logger_wait_mutex;
+  pthread_cond_t logger_wait_cond;
 
   pthread_attr_t custom_attr;
   cpu_set_t *master_set;
@@ -58,7 +61,7 @@ typedef struct mas_std_threads_set_s
   mas_thread_info_t watcher;
   mas_thread_info_t logger;
   mas_thread_info_t master;
-  mas_thread_info_t child;
+  mas_thread_info_t daemon;
   mas_thread_info_t main;
 } mas_std_threads_set_t;
 struct mas_control_s
@@ -106,6 +109,7 @@ struct mas_control_s
 
   /* from opts: */
   unsigned messages:1;
+  unsigned inited:1;
 
   unsigned daemon:1;
   unsigned close_std:1;

@@ -180,6 +180,8 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
     else
     {
       MAS_LOG( "HTTP make at docroot" );
+
+      /* TODO : sendfile */
       http->reply_content =
             mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at,
                                ( const void * ) NULL /* prcontrol */  );

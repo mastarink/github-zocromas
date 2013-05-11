@@ -25,6 +25,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/prctl.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -108,16 +111,18 @@ __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
   /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-  errno=0;
+  errno = 0;
 }
 
 
 int
 main( int argc, char *argv[], char *env[] )
 {
-  int r = 0;
+  int r = 0, rn = 0;
 
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain" ) );
   HMSG( "MAIN e:%d", errno );
   r = mas_master_bunch( argc, argv, env );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain_exit" ) );
   return r;
 }

@@ -784,8 +784,8 @@ __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
 #ifndef MAS_NO_CTRL
   if ( pid == ctrl.threads.n.main.pid )
     pidname = "Main";
-  else if ( pid == ctrl.threads.n.child.pid )
-    pidname = "Child";
+  else if ( pid == ctrl.threads.n.daemon.pid )
+    pidname = "Daemon";
   else
 #endif
     pidname = "-";

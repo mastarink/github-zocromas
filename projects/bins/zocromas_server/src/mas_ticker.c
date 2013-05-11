@@ -189,6 +189,7 @@ mas_ticker_th( void *arg )
 
   MAS_LOG( "ticker stop" );
   EMSG( "TICKER STOP" );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoctick_exit" ) );
   mas_pthread_exit( NULL );
   return ( NULL );
 }

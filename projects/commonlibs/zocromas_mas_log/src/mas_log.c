@@ -163,6 +163,8 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
     /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
     /* mas_pthread_mutex_unlock( &ctrl.thglob.log_mutex ); */
 #endif
+    if ( ctrl.log_q_came - ctrl.log_q_gone > 10 && ctrl.threads.n.logger.thread )
+      pthread_cond_broadcast( &ctrl.thglob.logger_wait_cond );
   }
   /* HMSG( "logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
   /*       ctrl.log_q_came - ctrl.log_q_gone );                                                               */
