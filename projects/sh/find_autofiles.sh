@@ -1,7 +1,7 @@
 #!/bin/sh
 if [[ -f "sh/setup.sh" ]] ; then
   . sh/setup.sh
-  . sh/run_functions.sh
+  . sh/librun_functions.bash
 find . src src/inc inc \
 	 -maxdepth 1 \
      \( \

@@ -120,9 +120,9 @@ main( int argc, char *argv[], char *env[] )
 {
   int r = 0, rn = 0;
 
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
   HMSG( "MAIN e:%d", errno );
   r = mas_master_bunch( argc, argv, env );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain_exit" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
   return r;
 }

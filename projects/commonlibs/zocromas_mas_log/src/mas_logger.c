@@ -214,7 +214,7 @@ mas_logger_th( void *arg )
   int rn = 0;
 
   ctrl.threads.n.logger.tid = mas_gettid(  );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclogger" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocLogger" ) );
 
 
   MAS_LOG( "logger start %d", rn );
@@ -240,7 +240,7 @@ mas_logger_th( void *arg )
   pthread_cleanup_pop( 1 );
   MAS_LOG( "logger stop" );
   WMSG( "LOGGER STOP" );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclogger_exit" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocLoggerXit" ) );
   mas_pthread_exit( NULL );
   return NULL;
 }

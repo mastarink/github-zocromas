@@ -8,7 +8,7 @@ function zoc_error ()
   shift
   echo "$ln $fn ERROR $@" >&2
 }
-. sh/dir_functions.sh
+. sh/libdir_functions.bash
 . sh/make_functions.sh
 function prjconfV ()
 {

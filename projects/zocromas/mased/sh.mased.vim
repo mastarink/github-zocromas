@@ -56,10 +56,10 @@ sfind diff.sh
 tab sfind setupz.sh
 sfind setup.sh
 sfind do_functions.sh
-sfind dir_functions.sh
+sfind libdir_functions.bash
 sfind make_functions.sh
 sfind build_functions.sh
-sfind run_functions.sh
+sfind librun_functions.bash
 sfind debug_functions.sh
 
 tab sfind run_duf.sh

@@ -1,7 +1,7 @@
 #!/bin/sh
-if [[ -f "sh/run_functions.sh" ]] ; then
+if [[ -f "sh/librun_functions.bash" ]] ; then
   . sh/setup.sh
-  . sh/run_functions.sh
+  . sh/librun_functions.bash
 
   if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
     run_installed ${MAS_ZOCROMAS_HERE} "$@"

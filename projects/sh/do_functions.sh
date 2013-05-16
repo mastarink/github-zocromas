@@ -1,3 +1,4 @@
+! type -t setup_vers || . sh/setupz.sh
 . sh/build_functions.sh
 . sh/make_functions.sh
 

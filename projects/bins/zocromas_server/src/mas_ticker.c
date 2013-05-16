@@ -177,7 +177,7 @@ mas_ticker_th( void *arg )
   int old_cancelability = 0, rn = 0;
 
   ctrl.threads.n.ticker.tid = mas_gettid(  );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoctick" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTick" ) );
 
   MAS_LOG( "ticker start" );
   pthread_setcanceltype( PTHREAD_CANCEL_ASYNCHRONOUS, &old_cancelability );
@@ -189,7 +189,7 @@ mas_ticker_th( void *arg )
 
   MAS_LOG( "ticker stop" );
   EMSG( "TICKER STOP" );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoctick_exit" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTickXit" ) );
   mas_pthread_exit( NULL );
   return ( NULL );
 }

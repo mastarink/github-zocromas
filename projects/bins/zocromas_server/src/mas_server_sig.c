@@ -299,7 +299,7 @@ mas_atexit( void )
     char name_buffer[32] = "?";
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
-    /* IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain_atexit" ) ); */
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainAtexit" ) );
     EMSG( "AT EXIT %s", name_buffer );
   }
 
@@ -329,7 +329,7 @@ mas_atexit( void )
     char name_buffer[32] = "?";
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
-    /* IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocmain_atexit" ) ); */
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainAtexit" ) );
     EMSG( "AT EXIT %s", name_buffer );
   }
   _exit( 0 );

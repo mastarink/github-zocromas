@@ -148,19 +148,6 @@ mas_protos_destroy(  )
   return r;
 }
 
-/*
-Creating a daemon
-   1 Create a normal process (Parent process)
-   2 Create a child process from within the above parent process
-   3 The process hierarchy at this stage looks like :  TERMINAL -> PARENT PROCESS -> CHILD PROCESS
-   4 Terminate the the parent process.
-   5 The child process now becomes orphan and is taken over by the init process.
-   6 Call setsid() function to run the process in new session and have a new group.
-   7 After the above step we can say that now this process becomes a daemon process without having a controlling terminal.
-   8 Change the working directory of the daemon process to root and close stdin, stdout and stderr file descriptors.
-   9 Let the main logic of daemon process run.
-*/
-
 #define XSTR(s) STR(s)
 #define STR(s) #s
 
@@ -267,6 +254,19 @@ mas_init_pids( void )
   return r;
 }
 
+/*
+Creating a daemon
+   1 Create a normal process (Parent process)
+   2 Create a child process from within the above parent process
+   3 The process hierarchy at this stage looks like :  TERMINAL -> PARENT PROCESS -> CHILD PROCESS
+   4 Terminate the the parent process.
+   5 The child process now becomes orphan and is taken over by the init process.
+   6 Call setsid() function to run the process in new session and have a new group.
+   7 After the above step we can say that now this process becomes a daemon process without having a controlling terminal.
+   8 Change the working directory of the daemon process to root 
+   9 close stdin, stdout and stderr file descriptors.
+   = Let the main logic of daemon process run.
+*/
 int
 mas_init_daemon( void )
 {
@@ -276,7 +276,7 @@ mas_init_daemon( void )
   MAS_LOG( "init daemon" );
   if ( ctrl.daemon )
   {
-    HMSG( "INIT DAEMON" );
+    HMSG( "INIT DAEMON @ %u", getpid(  ) );
     WMSG( "DAEMONIZE" );
     MAS_LOG( "init daemonize" );
     IEVAL( r, mas_fork(  ) );
@@ -289,7 +289,8 @@ mas_init_daemon( void )
       ctrl.threads.n.daemon.thread = mas_pthread_self(  );
       ctrl.pserver_thread = &ctrl.threads.n.daemon;
 
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocdaemon_init" ) );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemonI" ) );
+      HMSG( "INIT DAEMON:%u rn:%u", ctrl.threads.n.daemon.pid, rn );
 
       for ( int i = 0; i < MAS_MAX_PIDFD; i++ )
       {
@@ -356,11 +357,12 @@ mas_init_daemon( void )
       }
       /* mas_destroy_server(  ); */
       setsid(  );
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocdaemon" ) );
+      chdir( "/" );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
     }
     else if ( pid_daemon > 0 )
     {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocbunch_parent" ) );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParent" ) );
       ctrl.threads.n.daemon.pid = pid_daemon;
       HMSG( "PARENT : %u @ %u @ %u", pid_daemon, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
@@ -442,7 +444,14 @@ mas_destroy_server( void )
     char name_buffer[32] = "?";
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
-    /* IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocserver_destroy" ) ); */
+    if ( ctrl.is_parent )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParServerD" ) );
+    }
+    else
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeServerD" ) );
+    }
     MAS_LOG( "destroy server" );
     EMSG( "DESTROY SERVER %s", name_buffer );
   }

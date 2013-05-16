@@ -251,7 +251,7 @@ mas_watcher_th( void *arg )
   int rn = 0;
 
   ctrl.threads.n.watcher.tid = mas_gettid(  );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocwatch" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatch" ) );
 
   MAS_LOG( "watcher start" );
   mas_in_thread( MAS_THREAD_WATCHER, NULL, NULL );
@@ -262,7 +262,7 @@ mas_watcher_th( void *arg )
 
   MAS_LOG( "watcher stop" );
   EMSG( "WATCHER STOP" );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocwatch_exit" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatchXit" ) );
   mas_pthread_exit( NULL );
   return ( NULL );
 }

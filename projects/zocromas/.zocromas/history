@@ -180,3 +180,8 @@ set log off
 set log on
 server exit
 bye
+server exit
+bye
+server exit
+bye
+server exit

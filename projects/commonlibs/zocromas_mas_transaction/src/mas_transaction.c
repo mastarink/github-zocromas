@@ -224,7 +224,7 @@ mas_transaction_th( void *trcontrol )
   mas_rcontrol_t *prcontrol = NULL;
 
   prcontrol = ( mas_rcontrol_t * ) trcontrol;
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoctrans" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransTh" ) );
 
   MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
   /* struct sched_param sched;                                               */
@@ -330,6 +330,7 @@ mas_transaction_th( void *trcontrol )
   {
     mas_rcontrol_delete( prcontrol, 1 );
   }
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransThXit" ) );
 
   mas_pthread_exit( NULL );
   return rp;

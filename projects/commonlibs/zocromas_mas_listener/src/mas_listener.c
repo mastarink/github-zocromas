@@ -248,7 +248,7 @@ mas_listener_th( void *tlcontrol )
   mas_lcontrol_t *plcontrol = NULL;
 
   plcontrol = ( mas_lcontrol_t * ) tlcontrol;
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zoclisten" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocListen" ) );
 
   /* {                                                                       */
   /*   int rs;                                                               */
@@ -300,6 +300,7 @@ mas_listener_th( void *tlcontrol )
   /* mas_lcontrols_delete( plcontrol );  ---> done at mas_listener_cleanup ?!?! */
 
   EMSG( "LISTENER STOP" );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocListenXit" ) );
   mas_pthread_exit( NULL );
   return NULL;
 }

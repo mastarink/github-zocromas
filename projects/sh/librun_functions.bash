@@ -121,26 +121,34 @@ function eddiffconfig ()
     echo "  export MAS_ZOCROMAS_HERE=client" >&2
   fi
 }
+function psshowzz ()
+{
+  local names='zocDaeBunch,zocDaeBunchI,zocDaeBunchX,zocDaeMaster,zocDaeMasterTh,zocDaeMasterThX,zocDaeMasterX,zocDaemon,zocDaemonI,zocDaeServerD,zoclient,zocListen,zocListenIn,zocListenT,zocListenW,zocListenXit,zocLogger,zocLoggerXit,zocMain,zocMainAtexit,zocMainXit,zocParBunch,zocParBunchI,zocParBunchX,zocParent,zocParMaster,zocParMasterTh,zocParMasterThX,zocParMasterX,zocParServerD,zocTick,zocTickXit,zocTransTh,zocTransThXit,zocWatch,zocWatchXit'
+# bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
+  /bin/ps --sort -pcpu,pid -C$names $@
+}
+function psshowz ()
+{
+  psshowzz -L $@
+}
+function pslist () 
+{
+  local sep=${1:-,}
+  psshowz -ocomm= | tr '\n' "$sep" | sed -e "s/$sep$//"
+}
 function psshow ()
 {
-  export PS_FORMAT=pcpu,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
-# bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
+  local PS_FORMAT=pcpu,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
   if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
-    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocdaemon,zocdaemon_init,zocmaster,zocmain,zocmain_exit,zocchild | cut -b-$COLUMNS
+    psshowz | cut -b-$COLUMNS
   else
-    /bin/ps ww  -L --sort -pcpu,pid -Czoclient,zocromas_server,zocbunch,zocdaemon,zocdaemon_init,zocmaster,zocmain,zocmain_exit,zocchild | cut -b-170 
+    psshowz
 #    | cut -b-150 | sed -ne 's/$/  .../p'
   fi
 }
 function server_pid ()
 {
-  local spid name
-  for name in zocromas_server zocbunch zocdaemon zocdaemon_init zocmain zocmain_exit zocchild zocmaster ; do
-    if spid=$( ps -C $name -o pid= ) ; then
-      echo $spid ; return 0
-    fi
-  done
-  return 1
+  psshowzz -opid=
 }
 
 

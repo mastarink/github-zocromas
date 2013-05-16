@@ -1,5 +1,5 @@
 #!/bin/sh
-if [[ -f "sh/run_functions.sh" ]] ; then
+if [[ -f "sh/librun_functions.bash" ]] ; then
   . sh/setup.sh
 
   show_setup

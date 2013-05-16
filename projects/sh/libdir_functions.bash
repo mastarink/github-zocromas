@@ -1,3 +1,4 @@
+! type -t setup_vers || . sh/setupz.sh
 function datem () 
 { 
     /bin/date '+%Y%m%d'
@@ -57,6 +58,7 @@ function make_dirs ()
 }
 function setup_dirs ()
 {
+  local me=${1:-${BASH_SOURCE[3]}}
   if ! [[ "$stamp" ]] ; then
     if [[ "$MAS_DOALL_STAMP" ]] ; then
       stamp=$MAS_DOALL_STAMP
@@ -73,17 +75,20 @@ function setup_dirs ()
   fi  
   wd=`pwd`
   if [[ "$0" == `which bash` ]] ; then
-    if [[ "${BASH_SOURCE[3]}" ]] ; then
-#    me="$wd/${BASH_SOURCE[2]}"
-      me=${BASH_SOURCE[3]}
-    else
-      echo "ERROR ${BASH_SOURCE[*]}" >&2
+    if ! [[ "$me" ]] ; then
+      if [[ "${BASH_SOURCE[3]}" ]] ; then
+  #    me="$wd/${BASH_SOURCE[2]}"
+	me=${BASH_SOURCE[3]}
+      else
+	echo "ERROR BASH_SOURCE[3] -- ${BASH_SOURCE[*]}" >&2
+      fi
     fi
     MAS_SOURCED=$me
   else
     me="$wd/$0"
     unset MAS_SOURCED
   fi
+  [[ "$me" ]] || return 1
   mer="$(realpath $me)" || return 1
   if [[ -f "$me" ]] && [[ -x "$me" ]] ; then
     if [[ "$me" =~ \/([^\/]+)\/([^\/]+)\/([^\/]+)\.sh$ ]] ; then
@@ -154,3 +159,43 @@ function setup_dirs ()
   setup_vers || return 1
   return 0
 }
+function cdproj ()
+{
+  export MAS_PROJECTS_LIST MAS_CD_PROJECT_NAME MAS_CD_PROJECT_DIR
+  local project="$1" project_name
+  shift
+  local prefix="${1:-zocromas}"
+  shift
+# if [[ "$project" ]] ; then 
+#   project="${prefix}_${project}" 
+# else
+#   project="${prefix}" 
+# fi
+  local projectsdir projectsfile projects_list prj
+  if [[ "$project" ]] ; then
+    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}`}}" ]] ; then
+      for prj in $projects_list ; do
+        unset project_name
+	if [[ "${project_name:=$( basename ${MAS_PROJECTS_DIR}/$prj )}" ]] \
+			&& [[ "$project_name" =~ ^.*$project ]] ; then
+          unset MAS_CD_PROJECT_NAME MAS_CD_PROJECT_DIR
+	  MAS_CD_PROJECT_NAME=$project_name
+	  cd ${MAS_CD_PROJECT_DIR:=${MAS_PROJECTS_DIR}/${prj}}
+#	  echo "CD ${MAS_CD_PROJECT_DIR} [$prj : $project_name]" >&2
+	  break
+	fi
+        unset project_name
+      done
+#     echo "$MAS_CD_PROJECT_NAME :: $MAS_CD_PROJECT_DIR" >&2
+      if ! [[ "$project_name" ]] ; then
+	for prj in $projects_list ; do
+	  basename "$prj"
+	done  | sed -e 's/zocromas_//' | sort >&2
+      fi      
+    else
+      echo "ERROR '$projectsdir' : '$projects_list' : '$projectsdir'" >&2
+      unset MAS_PROJECTS_LIST
+    fi
+  fi
+}
+alias j='cdproj'
