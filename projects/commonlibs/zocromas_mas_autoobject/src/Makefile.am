@@ -7,4 +7,4 @@ mtest_LDFLAGS=@AM_LDFLAGS@  @DEPS_LIBS@ libzocromas_mas_autoobject.la
 mtest_CFLAGS=@AM_CFLAGS@  -pthread
 
 bin_PROGRAMS=mtest
-mtest_SOURCES=mtest.c
+mtest_SOURCES=mas_autoobject_mtest.c

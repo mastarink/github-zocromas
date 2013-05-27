@@ -32,7 +32,7 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 AC_CONFIG_SRCDIR([src/mas_maslibtemplate.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
-
+AM_PROG_AR
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
 
