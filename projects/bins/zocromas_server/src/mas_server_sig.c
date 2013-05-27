@@ -300,7 +300,7 @@ mas_atexit( void )
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainAtexit" ) );
-    EMSG( "AT EXIT %s", name_buffer );
+    EMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
 
   mas_destroy_server(  );
@@ -309,6 +309,8 @@ mas_atexit( void )
     extern unsigned long memory_balance;
 
     IMSG( "AT EXIT, memory_balance:%ld", memory_balance );
+    EMSG( "AT EXIT, memory_balance:%ld : logQ: %lu - %lu = %lu", memory_balance, ctrl.log_q_came, ctrl.log_q_gone,
+          ctrl.log_q_came - ctrl.log_q_gone );
     if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
       if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
         if ( print_memlist( ctrl.msgfile, FL ) < 0 )
@@ -330,9 +332,10 @@ mas_atexit( void )
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainAtexit" ) );
-    EMSG( "AT EXIT %s", name_buffer );
+    EMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
   _exit( 0 );
+  /* exit_group( 0 ); */
 }
 
 __attribute__ ( ( constructor ) )

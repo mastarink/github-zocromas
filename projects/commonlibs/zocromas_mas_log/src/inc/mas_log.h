@@ -6,7 +6,6 @@
 
 #  include "mas_log_types.h"
 
-void mas_log_delete_loginfo( mas_loginfo_t * li );
 
 /* int mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args );     */
 /* int mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list args ); */
@@ -14,7 +13,6 @@ int mas_log( const char *func, int line, int merrno, const char *fmt, ... ) __at
       __attribute__ ( ( weak ) );
 int mas_log_unlim( const char *func, int line, int merrno, const char *fmt, ... );
 
-void mas_log_clean_queue( void );
 
 #  ifdef MAS_NO_LOG
 #    define MAS_LOG(...)

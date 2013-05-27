@@ -1,6 +1,5 @@
-! type -t setup_vers || . sh/setupz.sh
 . sh/build_functions.sh
-. sh/make_functions.sh
+. sh/libmake_functions.bash
 
 function mas_enabled_doprj ()
 {
@@ -86,7 +85,7 @@ function doprj ()
       elif [[ "$act" == 'ebuild'     ]] ; then
 	ebuild_m update || return 1
         cnt=$(( $cnt + 1 ))
-      elif [[ "$shfun" ]] && type -t $shfun >/dev/null 2>&1 ; then
+      elif [[ "$shfun" ]] && type -t $shfun &>/dev/null ; then
 #	echo "shfun:`type $shfun`"
         $shfun
       elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && . $shfile ; then

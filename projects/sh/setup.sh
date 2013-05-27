@@ -1,5 +1,5 @@
 #!/bin/sh
-if type -t zoc_error >/dev/null 2>&1 ; then
+if type -t zoc_error &>/dev/null ; then
   :
 elif [[ -f "configure.ac" ]] || [[ -f "config.status" ]] ; then
   . sh/setupz.sh

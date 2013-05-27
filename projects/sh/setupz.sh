@@ -9,7 +9,7 @@ function zoc_error ()
   echo "$ln $fn ERROR $@" >&2
 }
 . sh/libdir_functions.bash
-. sh/make_functions.sh
+. sh/libmake_functions.bash
 function prjconfV ()
 {
   if [[ -f "./configure" ]] ; then
@@ -123,9 +123,15 @@ function setup_vers ()
     rname_preset=$mas_name
     rname_case=6
     rprefix=''
+  elif binary_preset="$bsrcdir/mtest"           && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
+    rname_preset=mtest
+    rname_case=7
+    rprefix=''
 # else
 #   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
 #   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
+  else
+    echo "can't set binary_preset @ $bsrcdir" >&2
   fi
 # echo "($rname_case)::: $rname_preset" >&2
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
@@ -141,6 +147,8 @@ function setup_vers ()
       rbinary_preset=$( realpath $binary_preset ) || return 1
     fi
   fi
+# echo "binary_preset: $binary_preset" >&2
+# echo "rbinary_preset: $rbinary_preset" >&2
 # echo "build_at: $build_at" >&2
 # echo "bsrcdir: $bsrcdir" >&2
 # echo "binary_preset: $binary_preset" >&2

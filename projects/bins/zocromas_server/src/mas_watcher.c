@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #include <pthread.h>
 #include <sys/prctl.h>
@@ -83,6 +84,8 @@ mas_watcher_cleanup( void *arg )
 static void
 mas_watcher( void )
 {
+  int rn = 0;
+
 #define MUL 10
   int itick = 0;
   double zinterval = 2.;
@@ -90,7 +93,8 @@ mas_watcher( void )
   int stop = 0;
   int nlisteners_ever_open = 0;
 
-  while ( !ctrl.fatal && !stop && ctrl.clients_created > ctrl.clients_removed )
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatchLS" ) );
+  while ( ( !ctrl.fatal && !stop ) || ( ctrl.clients_created > ctrl.clients_removed ) )
   {
     /* unsigned long cur_time = ( unsigned long ) time( NULL ); */
     int out;
@@ -242,6 +246,9 @@ mas_watcher( void )
 #endif
     itick++;
   }
+  EMSG( "WATCH LOOP END : %u %u : %lu - %lu [%d]", ctrl.fatal, stop, ctrl.clients_created, ctrl.clients_removed,
+        ( !ctrl.fatal && !stop && ctrl.clients_created > ctrl.clients_removed ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatchLSXit" ) );
 }
 
 /* naming : pthread_create argument = th */
@@ -251,7 +258,7 @@ mas_watcher_th( void *arg )
   int rn = 0;
 
   ctrl.threads.n.watcher.tid = mas_gettid(  );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatch" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatchTh" ) );
 
   MAS_LOG( "watcher start" );
   mas_in_thread( MAS_THREAD_WATCHER, NULL, NULL );
@@ -262,7 +269,7 @@ mas_watcher_th( void *arg )
 
   MAS_LOG( "watcher stop" );
   EMSG( "WATCHER STOP" );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatchXit" ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocWatchThXit" ) );
   mas_pthread_exit( NULL );
   return ( NULL );
 }

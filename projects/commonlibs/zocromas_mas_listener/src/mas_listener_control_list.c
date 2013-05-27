@@ -6,6 +6,8 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/msg/mas_msg_def.h>
+#include <mastar/wrap/mas_lib.h>
+
 #include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
@@ -66,6 +68,8 @@ mas_lcontrols_clean_list( int force )
 
     /* mas_lcontrol_t *plcontrol_tmp; */
 
+    /* mas_nanosleep( 2.5 ); */
+    /* EMSG( "@@@@@@@@@" );  */
     MAS_LOG( "to clean listeners list" );
     for ( plcontrol = MAS_LIST_FIRST( ctrl.lcontrols_list ); plcontrol; plcontrol = plcontrol_next )
       /* MAS_LIST_FOREACH_SAFE( plcontrol, ctrl.lcontrols_list, next, plcontrol_next ) */

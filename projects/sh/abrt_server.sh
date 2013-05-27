@@ -12,5 +12,6 @@ if [[ -f "sh/setup.sh" ]] ; then
   else
     echo "No server pid" >&2
   fi
+  sleep 0.5
   psshow
 fi

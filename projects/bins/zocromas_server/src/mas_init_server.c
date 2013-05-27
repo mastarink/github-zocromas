@@ -511,5 +511,5 @@ mas_destroy_server( void )
 
   MAS_LOG( "destroy server done" );
   WMSG( "DESTROY SERVER DONE" );
-  EMSG( "/D" );
+  EMSG( "/D logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone ,ctrl.log_q_came - ctrl.log_q_gone );
 }

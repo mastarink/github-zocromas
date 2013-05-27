@@ -100,7 +100,8 @@ mas_listeners_stop( void )
   {
     mas_listeners_cancel(  );
   }
-    mas_listeners_wait(  );
+  mas_listeners_wait(  );
+  HMSG( "* STOP" );
   return 0;
 }
 
@@ -122,6 +123,7 @@ mas_listeners_cancel( void )
     pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }
+  HMSG( "* l's CANCEL" );
   return 0;
 }
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-if [[ -f "sh/make_functions.sh" ]] ; then
+if [[ -f "sh/libmake_functions.bash" ]] ; then
   . sh/setup.sh
   . sh/build_functions.sh
   

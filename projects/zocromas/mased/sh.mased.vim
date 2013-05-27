@@ -57,7 +57,7 @@ tab sfind setupz.sh
 sfind setup.sh
 sfind do_functions.sh
 sfind libdir_functions.bash
-sfind make_functions.sh
+sfind libmake_functions.bash
 sfind build_functions.sh
 sfind librun_functions.bash
 sfind debug_functions.sh

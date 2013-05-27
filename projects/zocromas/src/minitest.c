@@ -456,9 +456,9 @@ main( int argc, char *argv[], char *env[] )
 
 
   /* test_readline( "/tmp/wss.tmp", "/tmp/wss1a.tmp" ); */
-  test_readline( "/mnt/new_misc/develop/autotools/zoc/projects/zocromas/test/13984-2-1362637472-143.dat", "/tmp/fdcopy143.tmp" );
+  /* test_readline( "/mnt/new_misc/develop/autotools/zoc/projects/zocromas/test/13984-2-1362637472-143.dat", "/tmp/fdcopy143.tmp" ); */
   /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test1.txt", "/tmp/fdcopy1a.tmp" ); */
-  /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" ); */
+  test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" );
 #ifdef MAS_TRACEMEM
   print_memlist( stderr, FL );
 #endif

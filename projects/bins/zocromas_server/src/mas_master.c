@@ -105,6 +105,10 @@ mas_master( void )
     HMSG( "LOGGER TO START" );
     mas_logger_start(  );
   }
+  else
+  {
+    HMSG( "NO LOGGER" );
+  }
   if ( !opts.noticker )
   {
     HMSG( "TICKER TO START" );
@@ -113,6 +117,7 @@ mas_master( void )
   else
   {
     MAS_LOG( "running w/o ticker" );
+    HMSG( "NO TICKER" );
   }
   if ( !opts.nowatcher )
   {
@@ -122,6 +127,7 @@ mas_master( void )
   else
   {
     MAS_LOG( "running w/o watcher" );
+    HMSG( "NO WATCHER" );
   }
   if ( opts.nomaster )
   {
@@ -198,7 +204,7 @@ mas_master( void )
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMasterX" ) );
   }
   else
-  {							 
+  {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeMasterX" ) );
   }
   return r;
@@ -244,7 +250,7 @@ mas_master_th( void *arg )
 #endif
   HMSG( "MASTER_TH TO END" );
   if ( ctrl.is_parent )
-  {						      
+  {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMasterThX" ) );
   }
   else
@@ -308,7 +314,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParBunchI" ) );
   }
   else
-  {						     
+  {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeBunchI" ) );
   }
   MAS_LOG( "(%d) bunch: to init +", r );

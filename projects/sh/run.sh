@@ -4,9 +4,9 @@ if [[ -f "sh/librun_functions.bash" ]] ; then
   . sh/librun_functions.bash
 
 # if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
-    echo "RUN START" >&2
+#    echo "RUN START" >&2
     run_any ${MAS_ZOCROMAS_HERE:-.} "$@"
-    echo "RUN END" >&2
+#    echo "RUN END" >&2
 # else
 #   echo "Please set " >&2
 #   echo "  export MAS_ZOCROMAS_HERE=server" >&2

@@ -8,6 +8,7 @@ commonlibs/zocromas_mas_io
 commonlibs/zocromas_mas_log
 commonlibs/zocromas_mas_channel
 commonlibs/zocromas_mas_variables
+commonlibs/zocromas_mas_autoobject
 commonlibs/zocromas_mas_fileinfo
 commonlibs/zocromas_mas_modules
 commonlibs/zocromas_mas_messageio

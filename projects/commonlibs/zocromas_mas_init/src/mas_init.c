@@ -27,6 +27,7 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
+#include <mastar/log/mas_logger.h>
 
 
 #include <mastar/control/mas_control.h>
@@ -565,7 +566,7 @@ mas_destroy( void )
   mas_ctrl_destroy(  );
 
   MAS_LOG( "destroy done" );
-  mas_log_clean_queue(  );
+  mas_logger_delete( 1 );
   HMSG( "DESTROY DONE" );
 #ifdef MAS_TRACEMEM
   {

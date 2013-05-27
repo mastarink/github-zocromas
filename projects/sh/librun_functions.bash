@@ -52,14 +52,14 @@ function run_installed ()
 function run_any ()
 {
   local cmd_exec
-  echo "To RUN rbinary: $rbinary_preset" >&2
+# echo "To RUN rbinary: $rbinary_preset" >&2
   # for core dump:
   ulimit -c unlimited
   
   #     make_any && usleep 500000 && clear && $cmd_exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
 
-  if false ; then
+  if true ; then
     straceit='strace -q -fr -C -o strace.tmp'
   fi
 
@@ -72,18 +72,19 @@ function run_any ()
     cmd_exec="exec $straceit"
   fi
   if [[ "$made" ]] ||  make_any ; then
+#   echo "......... $rbinary_preset" >&2
     if [[ "$rbinary_preset" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
-        echo "1 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
+#        echo "1 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
         nanosleep 0.5 &&  $cmd_exec $rbinary_preset "$@"
       elif type usleep >/dev/null 2>&1 ; then
-        echo "2 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
+#        echo "2 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
         usleep 50000 &&  $cmd_exec $rbinary_preset "$@"
       elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-        echo "3 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
+#        echo "3 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
         $rbinary_preset "$@"
       else
-        echo "4 To run rbinary: $rbinary_preset" >&2
+#        echo "4 To run rbinary: $rbinary_preset" >&2
         $cmd_exec $rbinary_preset "$@"
       fi
 ###   if type nanosleep >/dev/null 2>&1 ; then
@@ -123,9 +124,13 @@ function eddiffconfig ()
 }
 function psshowzz ()
 {
-  local names='zocDaeBunch,zocDaeBunchI,zocDaeBunchX,zocDaeMaster,zocDaeMasterTh,zocDaeMasterThX,zocDaeMasterX,zocDaemon,zocDaemonI,zocDaeServerD,zoclient,zocListen,zocListenIn,zocListenT,zocListenW,zocListenXit,zocLogger,zocLoggerXit,zocMain,zocMainAtexit,zocMainXit,zocParBunch,zocParBunchI,zocParBunchX,zocParent,zocParMaster,zocParMasterTh,zocParMasterThX,zocParMasterX,zocParServerD,zocTick,zocTickXit,zocTransTh,zocTransThXit,zocWatch,zocWatchXit'
+  local names='zocDaeBunch,zocDaeBunchI,zocDaeBunchX,zocDaeMaster,zocDaeMasterTh,zocDaeMasterThX,zocDaeMasterX,zocDaemon,zocDaemonI,zocDaeServerD,zoclient,zocListen,zocListenIn,zocListenT,zocListenW,zocListenXit,zocLogger,zocLoggerXit,zocMain,zocMainAtexit,zocMainXit,zocParBunch,zocParBunchI,zocParBunchX,zocParent,zocParMaster,zocParMasterTh,zocParMasterThX,zocParMasterX,zocParServerD,zocTick,zocTickXit,zocTransTh,zocTransThXit,zocWatchLS,zocWatchLSXit,zocWatchTh,zocWatchThXit'
 # bsdstart,tty,ni,user,ppid,pid,lwp,%cpu,%mem,stat,rss,vsz,s,sz,thcount,fname,cmd
-  /bin/ps --sort -pcpu,pid -C$names $@
+  if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
+    /bin/ps --cols="$COLUMNS" --sort -pcpu,pid -C$names $@
+  else
+    /bin/ps --sort -pcpu,pid -C$names $@
+  fi
 }
 function psshowz ()
 {
@@ -139,12 +144,17 @@ function pslist ()
 function psshow ()
 {
   local PS_FORMAT=pcpu,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
-  if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
-    psshowz | cut -b-$COLUMNS
-  else
-    psshowz
-#    | cut -b-150 | sed -ne 's/$/  .../p'
-  fi
+# if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
+#   psshowz | cut -b-$COLUMNS
+# else
+#   psshowz
+# ##    | cut -b-150 | sed -ne 's/$/  .../p'
+# fi
+  psshowz >/dev/null && psshowz || echo "No" >&2
+}
+function psshowc ()
+{
+  psshow | grep '\(No\| \<zoc\S\+\)'
 }
 function server_pid ()
 {

@@ -1,4 +1,3 @@
-! type -t setup_vers || . sh/setupz.sh
 function datem () 
 { 
     /bin/date '+%Y%m%d'
@@ -55,6 +54,13 @@ function make_dirs ()
   if [[ "$make_errdir" ]] && ! [[ -d "$make_errdir" ]]; then
     mkdir "$make_errdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
+}
+function setup_global_dirs ()
+{
+ export MAS_ADMIN_DIR MAS_PROJECT_AUXDIR MAS_PROJECT_BUILDDIR MAS_PROJECT_MAKE_ERRDIR MAS_PROJECT_MAKE_LOGNAME
+ MAS_ADMIN_DIR=${MAS_ADMIN_DIR:=`realpath $MAS_PROJECTS_DIR/../admin`}
+ MAS_PROJECT_MAKE_LOGNAME=${MAS_PROJECT_MAKE_ERRDIR:=${MAS_PROJECT_BUILDDIR:=${MAS_PROJECT_AUXDIR:=$MAS_PROJECT_DIR/.auxdir}/.build}/.errors}/makes.log
+ echo ">> $MAS_PROJECT_MAKE_LOGNAME" >&2
 }
 function setup_dirs ()
 {
@@ -156,16 +162,104 @@ function setup_dirs ()
 #   prjname=$( basename $indir )
 # fi
 
-  setup_vers || return 1
+  if type -t setup_vers &>/dev/null ; then setup_vers || return 1 ; fi
   return 0
+}
+function grepch ()
+{
+  local project projects_list 
+  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} || return 1
+      arg="$@"
+#     find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color $@ \{\} \; || return 1
+      if find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color "$arg" \{\} \+ ; then
+        popd >/dev/null
+        return 0
+      else
+        popd >/dev/null
+        return 1
+      fi
+#   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
+#   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \; | sed -ne 's@^\.\/@@p'
+#     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \+
+  else
+    echo "ERROR" >&2
+    return 1
+  fi
+  return 0
+}
+function grepau ()
+{
+  local project projects_list 
+  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} || return 1
+      arg="$@"
+#      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' || return 1
+#      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -okdir grep -H --color $@ \{\} \; || return 1
+      if find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color "$arg" \{\} \+ ; then
+        popd >/dev/null
+        return 0
+      else
+        popd >/dev/null
+        return 1
+      fi
+#   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
+#   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \; | sed -ne 's@^\.\/@@p'
+#     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \+
+  else
+    echo "ERROR" >&2
+    return 1
+  fi
+  return 0
+}
+
+function cdproj_scan_project_1 ()
+{
+  local prj=$1
+  shift
+  local project=$1
+  shift
+  [[ "$project_name" =~ ^zocromas_.*$project ]]
+}
+function cdproj_scan_project_2 ()
+{
+  local prj=$1
+  shift
+  local project=$1
+  shift
+# echo "$prj :: $project_name ? $project" >&2
+  [[ "$project_name" == "$project" ]]
+}
+function cdproj_scan ()
+{
+  local project_name
+  local scanner=$1
+  shift
+  local project=$1
+  shift
+  for prj in $projects_list ; do
+    if [[ "${project_name:=$( basename ${MAS_PROJECTS_DIR}/$prj )}" ]] ; then
+      if "$scanner" "$prj" "$project" ; then
+	unset MAS_PROJECT_DIR
+	MAS_PROJECT_NAME=$project_name
+	cd ${MAS_PROJECT_DIR:=${MAS_PROJECTS_DIR}/${prj}}
+    #	  echo "CD ${MAS_PROJECT_DIR} [$prj : $project_name]" >&2
+	return 0
+      fi
+    fi
+    unset project_name
+  done
+  return 1
 }
 function cdproj ()
 {
-  export MAS_PROJECTS_LIST MAS_CD_PROJECT_NAME MAS_CD_PROJECT_DIR
-  local project="$1" project_name
+  export MAS_PROJECTS_LIST MAS_PROJECT_NAME MAS_PROJECT_DIR
+  unset export MAS_ADMIN_DIR MAS_PROJECT_AUXDIR MAS_PROJECT_BUILDDIR MAS_PROJECT_MAKE_ERRDIR MAS_PROJECT_MAKE_LOGNAME
+  local project="$1" 
   shift
   local prefix="${1:-zocromas}"
   shift
+  local meth
 # if [[ "$project" ]] ; then 
 #   project="${prefix}_${project}" 
 # else
@@ -173,29 +267,22 @@ function cdproj ()
 # fi
   local projectsdir projectsfile projects_list prj
   if [[ "$project" ]] ; then
-    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}`}}" ]] ; then
-      for prj in $projects_list ; do
-        unset project_name
-	if [[ "${project_name:=$( basename ${MAS_PROJECTS_DIR}/$prj )}" ]] \
-			&& [[ "$project_name" =~ ^.*$project ]] ; then
-          unset MAS_CD_PROJECT_NAME MAS_CD_PROJECT_DIR
-	  MAS_CD_PROJECT_NAME=$project_name
-	  cd ${MAS_CD_PROJECT_DIR:=${MAS_PROJECTS_DIR}/${prj}}
-#	  echo "CD ${MAS_CD_PROJECT_DIR} [$prj : $project_name]" >&2
-	  break
-	fi
-        unset project_name
+    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      for meth in cdproj_scan_project_1 cdproj_scan_project_2 ; do
+        cdproj_scan $meth "$project" "$projects_list" && return 0
       done
-#     echo "$MAS_CD_PROJECT_NAME :: $MAS_CD_PROJECT_DIR" >&2
-      if ! [[ "$project_name" ]] ; then
-	for prj in $projects_list ; do
-	  basename "$prj"
-	done  | sed -e 's/zocromas_//' | sort >&2
-      fi      
+#     echo "$MAS_PROJECT_NAME :: $MAS_PROJECT_DIR" >&2
+      for prj in $projects_list ; do
+	basename "$prj"
+      done  | sed -e 's/zocromas_//' | sort | cat -n >&2
     else
       echo "ERROR '$projectsdir' : '$projects_list' : '$projectsdir'" >&2
       unset MAS_PROJECTS_LIST
     fi
+  elif [[ "${MAS_WORK_DIR}" ]] ; then
+    cd ${MAS_WORK_DIR}
+    return 0
   fi
+  return 1
 }
 alias j='cdproj'

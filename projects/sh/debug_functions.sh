@@ -1,11 +1,16 @@
 function mas_debug ()
 {
-  local sedex cmdfile tmpcmd lt dname binsdir bin
+  local sedex cmdfile tmpcmd lt dname binsdir bin libsdirs
 
-# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
   ulimit -c
 
-  binsdir="${build_at}/src"
+  if [[ -f "${build_at}/src/.libs/${rname_preset}" ]] ; then
+    binsdir="${build_at}/src/.libs"
+  else
+    binsdir="${build_at}/src"
+  fi
+  libsdirs=$binsdir
+  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
   bin=${binsdir}/${rname_preset}
   cmdfile="$debugdir/debug_${rname_preset}.cmd"
   sedex="s@^\(run\)@\1 $@@"
@@ -13,7 +18,7 @@ function mas_debug ()
   tmpcmd="${cmdfile}.tmp"
   sed -e "$sedex" "$cmdfile" > $tmpcmd
   cat $tmpcmd
-# echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
+  echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
 
 # exit
   if [[ "$lt" ]] ; then

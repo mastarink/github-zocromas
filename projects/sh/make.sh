@@ -1,7 +1,7 @@
 #!/bin/sh
-if [[ -f "sh/make_functions.sh" ]] ; then
+if [[ -f "sh/libmake_functions.bash" ]] ; then
   . sh/setup.sh
-  . sh/make_functions.sh
+  . sh/libmake_functions.bash
   
 # echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2
   make_any_tilme $@

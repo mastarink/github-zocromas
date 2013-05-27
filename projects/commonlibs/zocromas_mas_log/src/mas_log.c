@@ -52,52 +52,6 @@ __attribute__ ( ( constructor ) )
   /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
-void
-mas_log_delete_loginfo( mas_loginfo_t * li )
-{
-  if ( li )
-  {
-    if ( li->message )
-      mas_free( li->message );
-    li->message = NULL;
-#ifdef MS_DUP_FUNC_NAME
-    if ( li->func )
-      mas_free( li->func );
-#endif
-    mas_free( li );
-  }
-}
-
-void
-mas_log_clean_queue( void )
-{
-  mas_loginfo_t *li = NULL;
-  mas_loginfo_list_head_t *log_list;
-
-  log_list = mas_logger_list( 0 );
-  ctrl.keep_logging = 0;
-  while ( log_list && !MAS_LIST_EMPTY( log_list ) && ( li = MAS_LIST_FIRST( log_list ) ) )
-  {
-#ifndef MAS_NO_THREADS
-    /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
-    pthread_rwlock_wrlock( &logger_queue_rwlock );
-#endif
-    MAS_LIST_REMOVE_HEAD( log_list, next );
-    ctrl.log_q_gone++;
-#ifndef MAS_NO_THREADS
-    pthread_rwlock_unlock( &logger_queue_rwlock );
-    /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
-#endif
-    mas_log_delete_loginfo( li );
-  }
-  mas_delete_logger_list(  );
-  /* HMSG( "CLEARED logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
-  /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
-
-  /* HMSG( "cleaned logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
-  /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
-}
-
 static int
 mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
@@ -105,69 +59,79 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
   char buffer[1024 * 8];
   mas_loginfo_t *li = NULL;
 
-  log_list = mas_logger_list( 1 );
-  /* pthread_t pth;                           */
-  /* th_type_t thtype;                        */
-  /* const mas_channel_t *pchannel = NULL;    */
-  /* const mas_lcontrol_t *plcontrol = NULL; */
-  /* const mas_rcontrol_t *prcontrol = NULL;  */
-
-  /* pthread_mutex_lock( &ctrl.thglob.logger_mutex );   */
-  /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
-  if ( log_list )
+  if ( !ctrl.log_offmem && !opts.nolog && !ctrl.log_disabled )
   {
-    vsnprintf( buffer, sizeof( buffer ), fmt, args );
+    if ( ctrl.log_stopped )
+    {
+      EMSG( "LOG STOPPED" );
+    }
+    else
+    {
+      log_list = mas_logger_queue( 1 );
+      /* pthread_t pth;                           */
+      /* th_type_t thtype;                        */
+      /* const mas_channel_t *pchannel = NULL;    */
+      /* const mas_lcontrol_t *plcontrol = NULL; */
+      /* const mas_rcontrol_t *prcontrol = NULL;  */
 
-    /* WMSG( "loginfo size : %lu", sizeof( mas_loginfo_t ) ); */
+      /* pthread_mutex_lock( &ctrl.thglob.logger_mutex );   */
+      /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
+      if ( log_list )
+      {
+        vsnprintf( buffer, sizeof( buffer ), fmt, args );
 
-    li = mas_malloc( sizeof( mas_loginfo_t ) );
-    memset( li, 0, sizeof( mas_loginfo_t ) );
-    li->message = mas_strdup( buffer );
-    li->line = line;
+        /* WMSG( "loginfo size : %lu", sizeof( mas_loginfo_t ) ); */
+
+        li = mas_malloc( sizeof( mas_loginfo_t ) );
+        memset( li, 0, sizeof( mas_loginfo_t ) );
+        li->message = mas_strdup( buffer );
+        li->line = line;
 #ifdef MS_DUP_FUNC_NAME
-    li->func = mas_strdup( func );
+        li->func = mas_strdup( func );
 #else
-    li->func = ( func );
+        li->func = ( func );
 #endif
 #ifndef MAS_NO_THREADS
-    li->pth = mas_pthread_self(  );
-    li->thtype = mas_thself_type(  );
-    li->pchannel = mas_thself_pchannel(  );
-    li->plcontrol = mas_thself_plcontrol(  );
-    li->prcontrol = mas_thself_prcontrol(  );
+        li->pth = mas_pthread_self(  );
+        li->thtype = mas_thself_type(  );
+        li->pchannel = mas_thself_pchannel(  );
+        li->plcontrol = mas_thself_plcontrol(  );
+        li->prcontrol = mas_thself_prcontrol(  );
 #endif
-    li->pid = getpid(  );
-    li->tid = mas_gettid(  );
-    li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
-    li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
-    li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;
-    li->rstatus = li->prcontrol ? li->prcontrol->h.status : 0;
-    li->logtime = mas_double_time(  );
-    li->delta_thread = li->logtime - mas_thself_double_time(  );
-    mas_thself_set_double_time( li->logtime );
-    li->lerrno = merrno;
-    li->serial = ctrl.log_q_came;
-    /* NO: errno = 0; */
+        li->pid = getpid(  );
+        li->tid = mas_gettid(  );
+        li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
+        li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
+        li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;
+        li->rstatus = li->prcontrol ? li->prcontrol->h.status : 0;
+        li->logtime = mas_double_time(  );
+        li->delta_thread = li->logtime - mas_thself_double_time(  );
+        mas_thself_set_double_time( li->logtime );
+        li->lerrno = merrno;
+        li->serial = ctrl.log_q_came;
+        /* NO: errno = 0; */
 
 #ifndef MAS_NO_THREADS
-    /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */
-    /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
-    pthread_rwlock_wrlock( &logger_queue_rwlock );
+        /* mas_pthread_mutex_lock( &ctrl.thglob.log_mutex ); */
+        /* mas_pthread_mutex_lock( &logger_queue_mutex ); */
+        pthread_rwlock_wrlock( &logger_queue_rwlock );
 #endif
-    MAS_LIST_ADD( log_list, li, next );
-    ctrl.log_q_came++;
-    ctrl.log_q_mem += strlen( li->message );
+        MAS_LIST_ADD( log_list, li, next );
+        ctrl.log_q_came++;
+        ctrl.log_q_mem += strlen( li->message );
 
 #ifndef MAS_NO_THREADS
-    pthread_rwlock_unlock( &logger_queue_rwlock );
-    /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
-    /* mas_pthread_mutex_unlock( &ctrl.thglob.log_mutex ); */
+        pthread_rwlock_unlock( &logger_queue_rwlock );
+        /* mas_pthread_mutex_unlock( &logger_queue_mutex ); */
+        /* mas_pthread_mutex_unlock( &ctrl.thglob.log_mutex ); */
 #endif
-    if ( ctrl.log_q_came - ctrl.log_q_gone > 10 && ctrl.threads.n.logger.thread )
-      pthread_cond_broadcast( &ctrl.thglob.logger_wait_cond );
+        if ( ctrl.log_q_came - ctrl.log_q_gone > 10 && ctrl.threads.n.logger.thread )
+          pthread_cond_broadcast( &ctrl.thglob.logger_wait_cond );
+      }
+      /* HMSG( "logger queue : %d [%lu-%lu=%ld]", mas_logger_queue( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
+      /*       ctrl.log_q_came - ctrl.log_q_gone );                                                               */
+    }
   }
-  /* HMSG( "logger queue : %d [%lu-%lu=%ld]", mas_logger_list( 0 ) ? 1 : 0, ctrl.log_q_came, ctrl.log_q_gone, */
-  /*       ctrl.log_q_came - ctrl.log_q_gone );                                                               */
   return 0;
 }
 
@@ -184,8 +148,7 @@ mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list a
     ctrl.log_offmem = 0;
     mas_log_unlim( FL, 0, "... memory" );
   }
-  if ( !ctrl.log_disabled && !ctrl.log_offmem && !opts.nolog )
-    mas_vlog( func, line, merrno, fmt, args );
+  mas_vlog( func, line, merrno, fmt, args );
   return 0;
 }
 

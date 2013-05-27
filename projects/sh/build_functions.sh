@@ -55,7 +55,7 @@ function install_z ()
   version=$1
   shift
   if [[ $mas_name ]] && [[ "$version" ]] ; then
-    setup_vers "$mas_name" "$version" || return 1
+    if type -t setup_vers &>/dev/null ; then setup_vers "$mas_name" "$version" || return 1 ; fi
   fi
 # show_setup
   if [[ $mas_name ]] && [[ "$mas_vers" ]] ; then

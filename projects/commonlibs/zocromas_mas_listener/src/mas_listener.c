@@ -224,7 +224,7 @@ mas_listener_cleanup( void *arg )
 int
 mas_listener( mas_lcontrol_t * plcontrol )
 {
-  int r = -1;
+  int r = -1, rn = 0;
 
   plcontrol->h.status = MAS_STATUS_INIT;
 
@@ -233,6 +233,7 @@ mas_listener( mas_lcontrol_t * plcontrol )
   {
     MAS_LOG( "listener next client ..." );
   }
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocListenClose" ) );
   plcontrol->h.status = MAS_STATUS_CLOSE;
   /* thMSG( "stopped listening r:%d", r ); */
   MAS_LOG( "exiting listening (stopped listening) r:%d", r );

@@ -70,13 +70,14 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
   tMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_exit, ctrl.stop_listeners );
   if ( ctrl.do_exit )
   {
+    HMSG( "DO_EXIT" );
     MAS_LOG( "qbin => %u", prcontrol->qbin );
     tMSG( "qbin => %u; ctrl.stop_listeners:%u", prcontrol->qbin, ctrl.stop_listeners );
     do_exit_server( prcontrol );
     tMSG( "qbin => %u; ctrl.stop_listeners:%u", prcontrol->qbin, ctrl.stop_listeners );
   }
   pheader->binary = prcontrol->qbin;
-  HMSG( "ANSWERING" );
+  HMSG( "ANSWERING [do_exit:%d; ctrl.stop_listeners:%d]", ctrl.do_exit, ctrl.stop_listeners );
   /* if ( ( answer = mas_evaluate_cmd( 0 (* only_level *) , question, question (* args *) , 1 (*level *) , pheader, NULL, */
   /*                                   prcontrol, NULL ) ) )                                                              */
   if ( MAS_VALID_ANSWER( answer ) )

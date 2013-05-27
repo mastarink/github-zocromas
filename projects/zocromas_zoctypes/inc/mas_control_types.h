@@ -132,6 +132,7 @@ struct mas_control_s
   unsigned watcher_stop:1;
 
   unsigned log_disabled:1;
+  unsigned log_stopped:1;
   unsigned log_offmem:1;
   unsigned ticker_hide:1;
   unsigned ticker_mode;
