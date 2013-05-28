@@ -51,7 +51,7 @@ mas_variable_attach( mas_variables_list_head_t * variables, mas_variable_t * var
 }
 
 static mas_variable_t *
-mas_variable_create( th_type_t thtype, const char *vclass, const char *name, mas_vartype_t vtype,
+mas_variable_create( /* th_type_t thtype, */const char *vclass, const char *name, mas_vartype_t vtype,
                      const char *value, size_t valsize, int nomem )
 {
   mas_variable_t *var = NULL;
@@ -86,63 +86,63 @@ mas_variable_create( th_type_t thtype, const char *vclass, const char *name, mas
         else
           var->vclass = mas_strdup( vclass );
       }
-      var->thtype = thtype;
-      switch ( thtype )
-      {
-      case MAS_THREAD_NONE:
-        break;
-      case MAS_THREAD_MAIN:
-        break;
-      case MAS_THREAD_MASTER:
-        break;
-      case MAS_THREAD_LISTENER:
-        break;
-      case MAS_THREAD_TRANSACTION:
-        break;
-      case MAS_THREAD_TICKER:
-        break;
-      case MAS_THREAD_WATCHER:
-        break;
-      case MAS_THREAD_LOGGER:
-        break;
-      }
+      /* var->thtype = thtype; */
+      /* switch ( thtype )            */
+      /* {                            */
+      /* case MAS_THREAD_NONE:        */
+      /*   break;                     */
+      /* case MAS_THREAD_MAIN:        */
+      /*   break;                     */
+      /* case MAS_THREAD_MASTER:      */
+      /*   break;                     */
+      /* case MAS_THREAD_LISTENER:    */
+      /*   break;                     */
+      /* case MAS_THREAD_TRANSACTION: */
+      /*   break;                     */
+      /* case MAS_THREAD_TICKER:      */
+      /*   break;                     */
+      /* case MAS_THREAD_WATCHER:     */
+      /*   break;                     */
+      /* case MAS_THREAD_LOGGER:      */
+      /*   break;                     */
+      /* }                            */
     }
   }
   return var;
 }
 
 mas_variables_list_head_t *
-mas_variable_create_typed( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name,
+mas_variable_create_typed( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass, const char *name,
                            mas_vartype_t vtype, const void *data, size_t datasize, int nomem )
 {
   if ( ( variables = mas_variables_setup( variables ) ) )
   {
     mas_variable_t *var = NULL;
 /* TODO : find/create class, attach variable as 2 elements of struct iovec */
-    var = mas_variable_create( thtype, vclass, name, vtype, data, datasize, nomem );
+    var = mas_variable_create( /* thtype, */vclass, name, vtype, data, datasize, nomem );
     variables = mas_variable_attach( variables, var );
   }
   return variables;
 }
 
 mas_variables_list_head_t *
-mas_variable_create_binary( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name,
+mas_variable_create_binary( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass, const char *name,
                             const void *data, size_t datasize )
 {
-  variables = mas_variable_create_typed( variables, thtype, vclass, name, MAS_VARTYPE_BINARY, data, datasize, 0 );
+  variables = mas_variable_create_typed( variables, /* thtype, */ vclass, name, MAS_VARTYPE_BINARY, data, datasize, 0 );
   return variables;
 }
 
 mas_variables_list_head_t *
-mas_variable_create_text( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name,
+mas_variable_create_text( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass, const char *name,
                           const void *txt, int nomem )
 {
-  variables = mas_variable_create_typed( variables, thtype, vclass, name, MAS_VARTYPE_TEXT, txt, strlen( txt ) + 1, nomem );
+  variables = mas_variable_create_typed( variables, /* thtype, */  vclass, name, MAS_VARTYPE_TEXT, txt, strlen( txt ) + 1, nomem );
   return variables;
 }
 
 mas_variables_list_head_t *
-mas_variable_vcreate_x( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name,
+mas_variable_vcreate_x( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass, const char *name,
                         mas_xvsnprintf_t func, const char *fmt, va_list args, int nomem )
 {
   if ( ( variables = mas_variables_setup( variables ) ) )
@@ -154,7 +154,7 @@ mas_variable_vcreate_x( mas_variables_list_head_t * variables, th_type_t thtype,
     if ( !func )
       func = mas_xvsnprintf;
     ( *func ) ( text, txsize, fmt, args );
-    variables = mas_variable_create_text( variables, thtype, vclass, name, text, nomem );
+    variables = mas_variable_create_text( variables, /* thtype, */  vclass, name, text, nomem );
 #ifdef MAS_LOG
     MAS_LOG( "V %s.%s=[%s]", vclass, name, text );
 #endif
@@ -165,13 +165,13 @@ mas_variable_vcreate_x( mas_variables_list_head_t * variables, th_type_t thtype,
 }
 
 mas_variables_list_head_t *
-mas_variable_create_x( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name,
+mas_variable_create_x( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass, const char *name,
                        mas_xvsnprintf_t func, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  variables = mas_variable_vcreate_x( variables, thtype, vclass, name, func, fmt, args, 0 );
+  variables = mas_variable_vcreate_x( variables, /* thtype, */  vclass, name, func, fmt, args, 0 );
   va_end( args );
   return variables;
 }
@@ -260,7 +260,7 @@ mas_variable_first( mas_variables_list_head_t * variables, const char *vclass, c
 
 
 mas_variables_list_head_t *
-mas_variable_set_text( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass, const char *name, const void *txt )
+mas_variable_set_text( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass, const char *name, const void *txt )
 {
   if ( ( variables = mas_variables_setup( variables ) ) )
   {
@@ -276,7 +276,7 @@ mas_variable_set_text( mas_variables_list_head_t * variables, th_type_t thtype, 
     }
     else
     {
-      var = mas_variable_create( thtype, vclass, name, MAS_VARTYPE_TEXT, txt, strlen( txt ) + 1, 0 );
+      var = mas_variable_create( /* thtype, */ vclass, name, MAS_VARTYPE_TEXT, txt, strlen( txt ) + 1, 0 );
       variables = mas_variable_attach( variables, var );
     }
   }

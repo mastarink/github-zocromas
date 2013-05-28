@@ -176,7 +176,7 @@ mas_thread_vvariable_create_x( th_type_t thtype, const char *vclass, const char 
   ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
   if ( name && ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) )
   {
-    thd->variables = mas_variable_vcreate_x( thd->variables, thtype, vclass, name, func, fmt, args, 0 );
+    thd->variables = mas_variable_vcreate_x( thd->variables, /* thtype, */ vclass, name, func, fmt, args, 0 );
   }
   return r;
 }
@@ -203,7 +203,7 @@ mas_thread_variable_create_text( th_type_t thtype, const char *vclass, const cha
   ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
   if ( name && ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) )
   {
-    thd->variables = mas_variable_create_text( thd->variables, thtype, vclass, name, txt, 0 );
+    thd->variables = mas_variable_create_text( thd->variables, /* thtype, */ vclass, name, txt, 0 );
   }
   return r;
 }
@@ -234,7 +234,7 @@ mas_thread_variable_set_text( th_type_t thtype, const char *vclass, const char *
   if ( name && ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) )
   {
     /* lock */
-    thd->variables = mas_variable_set_text( thd->variables, thtype, vclass, name, txt );
+    thd->variables = mas_variable_set_text( thd->variables, /* thtype, */ vclass, name, txt );
   }
   return r;
 }

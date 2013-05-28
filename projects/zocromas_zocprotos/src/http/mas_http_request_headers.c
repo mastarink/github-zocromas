@@ -141,7 +141,7 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
     MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
     HMSG( "HTTP H: '%s' = '%s'", name, value );
 
-    http->indata = mas_variable_create_x( http->indata, MAS_THREAD_TRANSACTION, "inheader", name, NULL, "%s", value, 0 );
+    http->indata = mas_variable_create_x( http->indata, /* MAS_THREAD_TRANSACTION, */ "inheader", name, NULL, "%s", value, 0 );
     HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
 
 #if 0

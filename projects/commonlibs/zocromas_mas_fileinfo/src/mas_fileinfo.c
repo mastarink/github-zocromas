@@ -224,7 +224,7 @@ mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t *
   }
   if ( 1 || dsz )
   {
-    mas_variable_create_x( outdata, MAS_THREAD_TRANSACTION, "header", "Content-Length", NULL, "%d", dsz );
+    mas_variable_create_x( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Length", NULL, "%d", dsz );
   }
   /* if ( mas_udata_icontent_type( fileinfo->udata ) ) */
   {
@@ -233,15 +233,15 @@ mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t *
     content_type = mas_fileinfo_content_type_string( fileinfo );
     if ( content_type )
     {
-      outdata = mas_variable_create_text( outdata, MAS_THREAD_TRANSACTION, "header", "Content-Type", content_type, 0 );
+      outdata = mas_variable_create_text( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Type", content_type, 0 );
       mas_free( content_type );
     }
   }
   if ( fileinfo && fileinfo->etag )
-    outdata = mas_variable_create_text( outdata, MAS_THREAD_TRANSACTION, "header", "ETag", fileinfo->etag, 0 );
+    outdata = mas_variable_create_text( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "ETag", fileinfo->etag, 0 );
   if ( fileinfo && fileinfo->filetime )
     outdata =
-          mas_variable_create_x( outdata, MAS_THREAD_TRANSACTION, "header", "Last-Modified", mas_xvstrftime_time,
+          mas_variable_create_x( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Last-Modified", mas_xvstrftime_time,
                                  "%a, %d %b %Y %T GMT", fileinfo->filetime );
   return outdata;
 }

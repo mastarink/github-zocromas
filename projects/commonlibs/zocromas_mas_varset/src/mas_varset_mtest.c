@@ -64,11 +64,11 @@ main( void )
     vs = mas_varset_create(  );
     vs = mas_varset_search_variable( vs, "tclass4", "varnameX", "varvalueX" );
     vs = mas_varset_search_variable( vs, "tclass1", "varname1", "varvalue1" );
-    vs = mas_varset_search_variable( vs, "tclass1", "varname2", "varvalue2" );
-    vs = mas_varset_search_variable( vs, "tclass1", "Content-type", "text/html" );
+    vs = mas_varset_search_variable( vs, "tclass1", "Content-Length", "77777" );
+    vs = mas_varset_search_variable( vs, "tclass1", "Content-Type", "text/html" );
     /* vs = mas_varset_search_variable( vs, "tclass4", "varname7", "varvalue7" ); */
     vs = mas_varset_search_variable( vs, "tclass4", "varname7a", "varvalue7" );
-    vs = mas_varset_search_variable( vs, "tclass1", "Content-type", "text/plain" );
+    vs = mas_varset_search_variable( vs, "tclass1", "Content-Type", "text/plain" );
 
     mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
 

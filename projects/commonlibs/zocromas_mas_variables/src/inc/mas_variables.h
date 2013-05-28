@@ -5,21 +5,21 @@
 #  include  <mastar/types/mas_channel_types.h>
 #  include  <mastar/types/mas_variables_types.h>
 
-mas_variables_list_head_t *mas_variable_vcreate_x( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass,
+mas_variables_list_head_t *mas_variable_vcreate_x( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass,
                                                    const char *name, mas_xvsnprintf_t func, const char *fmt, va_list args,
                                                    int nomem );
 
 
-mas_variables_list_head_t *mas_variable_create_x( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass,
+mas_variables_list_head_t *mas_variable_create_x( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass,
                                                   const char *name, mas_xvsnprintf_t func, const char *fmt, ... );
-mas_variables_list_head_t *mas_variable_create_typed( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass,
+mas_variables_list_head_t *mas_variable_create_typed( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass,
                                                       const char *name, mas_vartype_t vtype, const void *data, size_t datasize,
                                                       int nomem );
-mas_variables_list_head_t *mas_variable_create_text( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass,
+mas_variables_list_head_t *mas_variable_create_text( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass,
                                                      const char *name, const void *txt, int nomem );
-mas_variables_list_head_t *mas_variable_create_binary( mas_variables_list_head_t * variables, th_type_t thtype,
+mas_variables_list_head_t *mas_variable_create_binary( mas_variables_list_head_t * variables, /* th_type_t thtype, */
                                                        const char *vclass, const char *name, const void *data, size_t datasize );
-mas_variables_list_head_t *mas_variable_set_text( mas_variables_list_head_t * variables, th_type_t thtype, const char *vclass,
+mas_variables_list_head_t *mas_variable_set_text( mas_variables_list_head_t * variables, /* th_type_t thtype, */ const char *vclass,
                                                   const char *name, const void *txt );
 
 

@@ -234,28 +234,28 @@ mas_lcontrol_cleaning_transactions__( mas_lcontrol_t * plcontrol, int removeit, 
 
 
 int
-mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, th_type_t thtype, const char *vclass, const char *name, const char *txt )
+mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass, const char *name, const char *txt )
 {
   int r = 0;
 
   if ( plcontrol && name )
   {
     pthread_rwlock_wrlock( &plcontrol->variables_rwlock );
-    plcontrol->variables = mas_variable_create_text( plcontrol->variables, thtype, vclass, name, txt, 0 );
+    plcontrol->variables = mas_variable_create_text( plcontrol->variables, /* thtype, */ vclass, name, txt, 0 );
     pthread_rwlock_unlock( &plcontrol->variables_rwlock );
   }
   return r;
 }
 
 int
-mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, th_type_t thtype, const char *vclass, const char *name, const char *txt )
+mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass, const char *name, const char *txt )
 {
   int r = 0;
 
   if ( plcontrol && name )
   {
     pthread_rwlock_wrlock( &plcontrol->variables_rwlock );
-    plcontrol->variables = mas_variable_set_text( plcontrol->variables, thtype, vclass, name, txt );
+    plcontrol->variables = mas_variable_set_text( plcontrol->variables, /* thtype, */ vclass, name, txt );
     pthread_rwlock_unlock( &plcontrol->variables_rwlock );
   }
   return r;

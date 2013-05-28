@@ -59,7 +59,7 @@ mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_make_out_header_simple( mas_http_t * http, const char *name, const char *value )
 {
-  http->outdata = mas_variable_create_text( http->outdata, MAS_THREAD_TRANSACTION, "header", name, value, 0 );
+  http->outdata = mas_variable_create_text( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, value, 0 );
   return http;
 }
 
@@ -69,7 +69,7 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
   va_list args;
 
   va_start( args, fmt );
-  http->outdata = mas_variable_vcreate_x( http->outdata, MAS_THREAD_TRANSACTION, "header", name, NULL, fmt, args, 0 );
+  http->outdata = mas_variable_vcreate_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, NULL, fmt, args, 0 );
   va_end( args );
   return http;
 }
@@ -89,10 +89,10 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   {
     MAS_LOG( "to make date" );
     http->outdata =
-          mas_variable_create_x( http->outdata, MAS_THREAD_TRANSACTION, "header", "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT",
+          mas_variable_create_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT",
                                  mas_xgmtime(  ), 0 );
     http->outdata =
-          mas_variable_create_x( http->outdata, MAS_THREAD_TRANSACTION, "header", "Server", mas_xvsnprintf, "mas-%lu",
+          mas_variable_create_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Server", mas_xvsnprintf, "mas-%lu",
                                  ( unsigned long ) ( &__MAS_LINK_TIME__ ), 0 );
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
     http = mas_http_make_out_header_simple( http, "Connection", prcontrol->keep_alive ? "Keep-Alive" : "close" );

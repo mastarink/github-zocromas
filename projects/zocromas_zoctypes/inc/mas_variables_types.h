@@ -25,7 +25,7 @@ typedef enum mas_vartype_e
 
 struct mas_variable_s
 {
-  th_type_t thtype;
+  /* th_type_t thtype; */
   mas_vartype_t vtype;
   char *vclass;
   char *name;

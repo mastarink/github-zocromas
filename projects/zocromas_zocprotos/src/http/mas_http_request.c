@@ -62,7 +62,7 @@ mas_proto_add_host( const void *env, const char *section, const char *sectvalue,
 
   proto_desc = ( mas_transaction_protodesc_t * ) env;
   HMSG( "WOW '%s:%s'.'%s' : '%s'", section, sectvalue, name, value );
-  proto_desc->variables = mas_variable_create_text( proto_desc->variables, MAS_THREAD_NONE, "docroot", sectvalue, value, 0 );
+  proto_desc->variables = mas_variable_create_text( proto_desc->variables, /* MAS_THREAD_NONE, */ "docroot", sectvalue, value, 0 );
 }
 
 static mas_option_parse_t opt_table[] = {
