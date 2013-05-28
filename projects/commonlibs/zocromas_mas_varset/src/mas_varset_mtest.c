@@ -58,23 +58,29 @@ main( void )
 {
   mas_varset_t *vs = NULL;
 
-  for ( int iter = 0; iter < 20; iter++ )
+  for ( int iter = 0; iter < 1; iter++ )
   {
+    fprintf( stderr, "===========================\n" );
     vs = mas_varset_create(  );
     vs = mas_varset_search_variable( vs, "tclass4", "varnameX", "varvalueX" );
     vs = mas_varset_search_variable( vs, "tclass1", "varname1", "varvalue1" );
     vs = mas_varset_search_variable( vs, "tclass1", "varname2", "varvalue2" );
-    vs = mas_varset_search_variable( vs, "tclass4", "varname7", "varvalue7" );
+    vs = mas_varset_search_variable( vs, "tclass1", "Content-type", "text/html" );
+    /* vs = mas_varset_search_variable( vs, "tclass4", "varname7", "varvalue7" ); */
     vs = mas_varset_search_variable( vs, "tclass4", "varname7a", "varvalue7" );
+    vs = mas_varset_search_variable( vs, "tclass1", "Content-type", "text/plain" );
 
-    mas_varset_walk_classes( vs, w_action );
+    mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
 
+    if ( 0 )
+      mas_varset_walk_classes( vs, w_action );
 
     /* mas_varset_delete_vclass( vs, "tclass1" ); */
     /* mas_varset_delete_vclass( vs, "tclass2" ); */
     mas_varset_delete( vs );
 
     vs = NULL;
+    fprintf( stderr, "===========================\n" );
   }
 #ifdef MAS_TRACEMEM
   print_memlist( stderr, FL );

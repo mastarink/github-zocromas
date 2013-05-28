@@ -12,6 +12,7 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "mas_varset_types.h"
 #include "mas_varset_vclass.h"
@@ -189,7 +190,7 @@ mas_varset_vclass_find_variable( mas_varset_class_t * vclass, const char *name )
 
       j = i * 2;
       len = strlen( name );
-      if ( vclass->vec[j].iov_len != len )
+      if ( vclass->vec[j].iov_len != len + 2 )
         continue;
       if ( 0 == memcmp( vclass->vec[j].iov_base, name, len ) )
       {
@@ -247,16 +248,21 @@ mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *name
         c++;
         vclass->veccnt = c;
       }
-      else
-      {
-      }
     }
   }
-  if ( found )
-  {
+  if ( found && !mas_varset_vclass_variable_get_name_ref( found ) )
     mas_varset_vclass_variable_set_name( found, name );
-  }
   return found;
+}
+
+const char *
+mas_varset_vclass_variable_get_name_ref( mas_var_t * var )
+{
+  char *v = NULL;
+
+  if ( var && var[0].iov_len )
+    v = var[0].iov_base;
+  return v;
 }
 
 char *
@@ -266,7 +272,19 @@ mas_varset_vclass_variable_get_name( mas_var_t * var )
 
   if ( var && var[0].iov_len )
   {
-    v = mas_strndup( var[0].iov_base, var[0].iov_len );
+    v = mas_strndup( var[0].iov_base, var[0].iov_len - 2 );
+  }
+  return v;
+}
+
+const char *
+mas_varset_vclass_variable_get_value_ref( mas_var_t * var )
+{
+  char *v = NULL;
+
+  if ( var && var[1].iov_len )
+  {
+    v = var[1].iov_base;
   }
   return v;
 }
@@ -277,29 +295,27 @@ mas_varset_vclass_variable_get_value( mas_var_t * var )
   char *v = NULL;
 
   if ( var && var[1].iov_len )
-  {
     v = mas_strndup( var[1].iov_base, var[1].iov_len );
-  }
   return v;
 }
 
 void
 mas_varset_vclass_variable_set_name( mas_var_t * var, const char *name )
 {
-  if ( var )
+  if ( var && name )
   {
-    /* if ( var[0].iov_base )         */
-    /*   mas_free( var[0].iov_base ); */
+    size_t l;
+    char *s;
+
+    if ( var[0].iov_base )
+      mas_free( var[0].iov_base );
     var[0].iov_base = NULL;
     var[0].iov_len = 0;
-    if ( name )
-    {
-      size_t l;
-
-      l = strlen( name );
-      var[0].iov_base = mas_strndup( name, l );
-      var[0].iov_len = l;
-    }
+    l = strlen( name );
+    s = mas_strndup( name, l );
+    s = mas_strcat_x( s, ": " );
+    var[0].iov_len = l + 2;
+    var[0].iov_base = s;
   }
 }
 
@@ -309,18 +325,26 @@ mas_varset_vclass_variable_set_value( mas_var_t * var, const char *value )
   if ( var )
   {
     if ( var[1].iov_base )
-    {
       mas_free( var[1].iov_base );
-    }
     var[1].iov_base = NULL;
     var[1].iov_len = 0;
     if ( value )
     {
       size_t l;
+      char *s;
 
       l = strlen( value );
-      var[1].iov_base = mas_strndup( value, l );
-      var[1].iov_len = l;
+      s = mas_strndup( value, l );
+      s = mas_strcat_x( s, "\r\n" );
+      var[1].iov_len = l + 2;
+      var[1].iov_base = s;
     }
   }
+}
+
+void
+mas_varset_vclass_write( int fd, mas_varset_class_t * vclass )
+{
+  if ( fd > 0 && vclass )
+    writev( fd, vclass->vec, vclass->veccnt * 2 );
 }

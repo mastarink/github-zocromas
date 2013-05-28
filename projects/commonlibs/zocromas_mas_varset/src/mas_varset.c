@@ -62,7 +62,7 @@ mas_varset_search_variable( mas_varset_t * varset, const char *vclass_name, cons
     varset = mas_varset_create(  );
   if ( varset )
   {
-    mas_varset_class_t *vclass __attribute__ ( ( unused ) ) = NULL;
+    mas_varset_class_t *vclass = NULL;
 
     vclass = mas_varset_search_vclass( varset, vclass_name );
     if ( vclass )
@@ -77,4 +77,19 @@ mas_varset_search_variable( mas_varset_t * varset, const char *vclass_name, cons
     }
   }
   return varset;
+}
+
+void
+mas_varset_write( int fd, mas_varset_t * varset, const char *vclass_name )
+{
+  if ( varset )
+  {
+    mas_varset_class_t *vclass = NULL;
+
+    vclass = mas_varset_find_vclass( varset, vclass_name );
+    if ( vclass )
+    {
+      mas_varset_vclass_write( fd, vclass );
+    }
+  }
 }

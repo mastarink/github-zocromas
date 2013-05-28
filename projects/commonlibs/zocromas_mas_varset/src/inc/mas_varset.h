@@ -11,4 +11,8 @@ mas_varset_t *mas_varset_search_variable( mas_varset_t * obj, const char *vclass
 
 void mas_varset_walk_classes( mas_varset_t * varset, void ( *action ) ( const void *nodep, const VISIT which, const int depth ) );
 
+void mas_varset_write( int fs, mas_varset_t * varset, const char *vclass_name );
+
+
+
 #endif

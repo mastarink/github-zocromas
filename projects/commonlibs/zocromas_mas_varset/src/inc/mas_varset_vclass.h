@@ -15,9 +15,14 @@ mas_var_t *mas_varset_vclass_find_variable( mas_varset_class_t * vclass, const c
 mas_var_t *mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *name );
 
 char *mas_varset_vclass_variable_get_name( mas_var_t * var );
+const char *mas_varset_vclass_variable_get_name_ref( mas_var_t * var );
+
 char *mas_varset_vclass_variable_get_value( mas_var_t * var );
+const char *mas_varset_vclass_variable_get_value_ref( mas_var_t * var );
+
 void mas_varset_vclass_variable_set_name( mas_var_t * var, const char *name );
 void mas_varset_vclass_variable_set_value( mas_var_t * var, const char *value );
 
+void mas_varset_vclass_write( int fd, mas_varset_class_t * vclass );
 
 #endif
