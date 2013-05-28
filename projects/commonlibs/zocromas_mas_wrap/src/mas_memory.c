@@ -81,7 +81,7 @@ _mas_strncat_xt( const char *func, int line, char *s1, const char *s2, size_t ma
 static void
 memerror( mas_mem_head_t * m )
 {
-  fprintf( stderr, "\nMEMORY ERROR 0x%lx > [0x%llx : id:0x%lx]\n", ( unsigned long ) m, m->sig, m->id );
+  fprintf( stderr, "\nMEMORY ERROR 0x%lx > [sig:0x%llx : id:0x%lx]\n", ( unsigned long ) ( m + 1 ), m->sig, m->id );
   /* sleep( 98 ); */
   exit( 11 );
 }
@@ -273,7 +273,7 @@ _mas_free( const char *func, int line, void *ptr )
           memory_freed_cnt++;
           memory_balance -= size;
           memory_balance_cnt--;
-          real_ptr->sig = 0;
+          real_ptr->sig = 0xa6cdb7c9c89c7ad3;
           /* real_ptr->size = 0; */
 #  ifndef MAS_NO_THREADS
           pthread_mutex_unlock( &malloc_mutex );
