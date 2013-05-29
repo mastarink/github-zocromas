@@ -26,7 +26,13 @@ extern mas_options_t opts;
 #include <mastar/channel/mas_channel_object.h>
 
 #include <mastar/log/mas_log.h>
-#include <mastar/variables/mas_variables.h>
+
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
 
 #include "mas_lcontrol_object.h"
 
@@ -202,11 +208,18 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
       mas_free( plcontrol->host );
     plcontrol->host = NULL;
     {
+#ifdef MAS_OLD_VARIABLES_HTTP
       mas_variables_list_head_t *vars;
-
+#else
+      mas_varset_t *vars;
+#endif
       vars = plcontrol->variables;
       plcontrol->variables = NULL;
+#ifdef MAS_OLD_VARIABLES_HTTP
       mas_variables_delete( vars );
+#else
+      mas_varset_delete( vars );
+#endif
     }
 
     if ( plcontrol->h.pchannel )

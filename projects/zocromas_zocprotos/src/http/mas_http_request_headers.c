@@ -15,7 +15,13 @@
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
 
-#include <mastar/variables/mas_variables.h>
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
+
 #include <mastar/channel/mas_channel_buffer.h>
 
 #include "mas_http_request_headers.h"
@@ -141,7 +147,11 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
     MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
     HMSG( "HTTP H: '%s' = '%s'", name, value );
 
+#ifdef MAS_OLD_VARIABLES_HTTP
     http->indata = mas_variable_create_x( http->indata, /* MAS_THREAD_TRANSACTION, */ "inheader", name, NULL, "%s", value, 0 );
+#else
+    http->outdata = mas_varset_search_variablef( http->indata, "inheader", name, NULL, "%s", value );
+#endif
     HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
 
 #if 0

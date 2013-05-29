@@ -11,9 +11,15 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-/* #include "mas_common.h" */
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset_vclass.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
 
-#  include <mastar/variables/mas_thread_variables.h>
+#include <mastar/thvariables/mas_thread_variables.h>
 
 /*
 this:
@@ -41,13 +47,22 @@ static char *
 args_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
+
+#ifdef MAS_OLD_VARIABLES_HTTP
   mas_variable_t *var;
+#else
+  mas_var_t *var;
+#endif
 
   var = mas_thread_variables_find( "client", "args" );
   if ( var )
   {
     /* cMSG( "CHECK ARGS: %s ::: %s", args, var->value ); */
+#ifdef MAS_OLD_VARIABLES_HTTP
     result = mas_strdup( var->value );
+#else
+    result = mas_varset_vclass_variable_get_value( var );
+#endif
   }
   else if ( args )
   {

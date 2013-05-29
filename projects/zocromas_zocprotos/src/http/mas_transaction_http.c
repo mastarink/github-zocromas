@@ -24,8 +24,12 @@
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
 
-#include <mastar/variables/mas_variables.h>
-
+/* #ifdef MAS_OLD_VARIABLES_HTTP                 */
+/* #  include <mastar/variables/mas_variables.h> */
+/* #else                                         */
+/* #  include <mastar/types/mas_varset_types.h>  */
+/* #  include <mastar/varset/mas_varset.h>       */
+/* #endif                                        */
 
 #include <mastar/types/mas_transaction_control_types.h>
 

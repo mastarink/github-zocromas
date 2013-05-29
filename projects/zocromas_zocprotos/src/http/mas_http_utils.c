@@ -14,7 +14,13 @@
 
 #include <mastar/log/mas_log.h>
 #include <mastar/channel/mas_channel.h>
-#include <mastar/variables/mas_variables.h>
+
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
 
 #include "mas_http_utils.h"
 
@@ -128,16 +134,18 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
 {
   if ( http )
   {
+/* TODO !! writev : mas_variables_iovec_pairs */
+#ifdef MAS_OLD_VARIABLES_HTTP
     char *buf;
     int bufsize = 1024 * 6;
 
     buf = mas_malloc( bufsize );
 
 
-/* TODO !! writev : mas_variables_iovec_pairs */
     if ( buf )
     {
       int wm = -1;
+
       wm = mas_variables_memory_write_pairs( http->outdata, set, buf, bufsize );
       if ( wm > 0 )
       {
@@ -149,6 +157,12 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
       }
       mas_free( buf );
     }
+#else
+    /* mas_channel_write( http->prcontrol->h.pchannel ... */
+    mas_varset_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata, set );
+    write( mas_channel_fd( http->prcontrol->h.pchannel ), "\r\n", 2 );
+    mas_varset_write( STDERR_FILENO, http->outdata, set );
+#endif
   }
   return http;
 }

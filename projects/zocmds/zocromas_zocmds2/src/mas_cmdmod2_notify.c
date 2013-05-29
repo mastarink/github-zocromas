@@ -26,15 +26,12 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-/* #include "mas_common.h" */
-/* #include "server/inc/mas_ticker.h" */
-
 #include <mastar/log/mas_logger.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/variables/mas_thread_variables.h>
+#include <mastar/thvariables/mas_thread_variables.h>
 #ifdef MAS_USE_LISTENER
-#  include "listener/inc/mas_listener_control.h"
+#  include <mastar/listener/mas_listener_control.h>
 #endif
 
 #include <mastar/modules/mas_modules_commands_eval.h>

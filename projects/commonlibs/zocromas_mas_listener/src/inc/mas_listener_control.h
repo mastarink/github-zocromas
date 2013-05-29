@@ -10,11 +10,14 @@ unsigned mas_lcontrol_cleaning_transactions__( mas_lcontrol_t * plcontrol, int r
 /* unsigned mas_lcontrol_cleaning_transactions_count( mas_lcontrol_t * plcontrol, int removeit, long jwait ); */
 
 
-int mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass, const char *name,
+int mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass_name, const char *name,
                                        const char *txt );
-int mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass, const char *name,
+int mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass_name, const char *name,
                                     const char *txt );
-mas_variable_t *mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass, const char *name );
-
+#ifdef MAS_OLD_VARIABLES_HTTP
+mas_variable_t *mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name );
+#else
+mas_var_t *mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name );
+#endif
 
 #endif

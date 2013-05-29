@@ -11,9 +11,7 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-/* #include "mas_common.h" */
-
-#include <mastar/variables/mas_thread_variables.h>
+#include <mastar/thvariables/mas_thread_variables.h>
 
 /*
 this:

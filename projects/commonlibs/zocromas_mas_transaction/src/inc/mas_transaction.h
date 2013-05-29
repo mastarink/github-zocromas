@@ -35,6 +35,13 @@ void mas_transaction_cleanup( void *arg );
 
 int mas_transaction_write( const mas_rcontrol_t * prcontrol, char *cbuf, size_t sz );
 int mas_transaction_vwritef( const mas_rcontrol_t * prcontrol, const char *fmt, va_list args );
+
+#ifdef MAS_OLD_VARIABLES_HTTP
 int mas_transaction_write_values( mas_variables_list_head_t * variables, const char *vclass, const mas_rcontrol_t * prcontrol );
+/* #else                                                                                                               */
+/* int mas_transaction_write_values( mas_varset_t * variables, const char *vclass, const mas_rcontrol_t * prcontrol ); */
+#endif
+
+
 
 #endif

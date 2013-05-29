@@ -30,9 +30,17 @@ extern mas_options_t opts;
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
-#include <mastar/variables/mas_thread_variables.h>
 
-#include <mastar/variables/mas_variables.h>
+
+/* #include <mastar/variables/mas_thread_variables.h> */
+
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
+#include <mastar/thvariables/mas_thread_variables.h>
 
 #include "mas_rcontrol_object.h"
 #include "mas_transaction_control.h"
@@ -487,6 +495,8 @@ mas_transaction_vwritef( const mas_rcontrol_t * prcontrol, const char *fmt, va_l
   return w;
 }
 
+
+#ifdef MAS_OLD_VARIABLES_HTTP
 int
 mas_transaction_write_values( mas_variables_list_head_t * variables, const char *vclass, const mas_rcontrol_t * prcontrol )
 {
@@ -497,3 +507,4 @@ mas_transaction_write_values( mas_variables_list_head_t * variables, const char 
     w = mas_variables_chwrite_bin( variables, vclass, 0, 1, prcontrol->h.pchannel );
   return w;
 }
+#endif

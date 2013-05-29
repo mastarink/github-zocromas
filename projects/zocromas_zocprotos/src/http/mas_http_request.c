@@ -20,7 +20,14 @@ extern mas_options_t opts;
 
 /* #include "server/inc/mas_server_tools.h" */
 #include <mastar/thtools/mas_ocontrol_tools.h>
-#include <mastar/variables/mas_variables.h>
+
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
+
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
 
@@ -62,7 +69,11 @@ mas_proto_add_host( const void *env, const char *section, const char *sectvalue,
 
   proto_desc = ( mas_transaction_protodesc_t * ) env;
   HMSG( "WOW '%s:%s'.'%s' : '%s'", section, sectvalue, name, value );
+#ifdef MAS_OLD_VARIABLES_HTTP
   proto_desc->variables = mas_variable_create_text( proto_desc->variables, /* MAS_THREAD_NONE, */ "docroot", sectvalue, value, 0 );
+#else
+  proto_desc->variables = mas_varset_search_variable( proto_desc->variables, "docroot", sectvalue, value );
+#endif
 }
 
 static mas_option_parse_t opt_table[] = {
@@ -113,7 +124,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
     snprintf( bcpath, sizeof( bcpath ), "%s/%s.%lu-%u.part%u.post-%lu", opts.dir.post ? opts.dir.post : "/tmp",
               opts.uuid, prcontrol->h.serial, ctrl.pserver_thread->pid, 0, time( NULL ) );
     /* mas_channel_buffer_strip( prcontrol->h.pchannel, 0 ); */
-    MAS_LOG( "to make ... multipart at %s",bcpath );
+    MAS_LOG( "to make ... multipart at %s", bcpath );
     mas_channel_set_buffer_copy( prcontrol->h.pchannel, bcpath );
     HMSG( "ANY BODY %s ? [%s]", bcpath, opts.dir.post );
   }
@@ -156,7 +167,6 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
           ( void ) _mas_opts_restore_relative( "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ),
                                                ( const void * ) prcontrol->proto_desc /* arg */ , NULL, NULL, NULL );
         }
-
         MAS_LOG( "good, http parsed protocol: %s === %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );
         if ( cstring && *cstring == '/' )
           cstring++;
@@ -238,7 +248,13 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
     http = NULL;
   }
   if ( http && http->indata )
+  {
+#ifdef MAS_OLD_VARIABLES_HTTP
     mas_variables_log_pairs( http->indata, "inheader" );
+#else
+
+#endif
+  }
 #ifdef MAS_HTTP_MULTIPART
   mas_channel_set_buffer_copy( prcontrol->h.pchannel, NULL );
 #endif
@@ -287,11 +303,23 @@ mas_proto_http_delete_request( mas_http_t * http )
     http->request_content = NULL;
 
     if ( http->indata )
+    {
+#ifdef MAS_OLD_VARIABLES_HTTP
       mas_variables_delete( http->indata );
+#else
+      mas_varset_delete( http->indata );
+#endif
+    }
     http->indata = NULL;
 
     if ( http->outdata )
+    {
+#ifdef MAS_OLD_VARIABLES_HTTP
       mas_variables_delete( http->outdata );
+#else
+      mas_varset_delete( http->outdata );
+#endif
+    }
     http->outdata = NULL;
 
     mas_free( http );

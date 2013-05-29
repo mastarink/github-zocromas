@@ -1,7 +1,11 @@
 #ifndef MAS_HTTP_TYPES_H
 #  define MAS_HTTP_TYPES_H
 
-#  include <mastar/types/mas_variables_types.h>
+#  ifdef MAS_OLD_VARIABLES_HTTP
+#    include <mastar/types/mas_variables_types.h>
+#  else
+#    include <mastar/types/mas_varset_types.h>
+#  endif
 #  include <mastar/types/mas_fileinfo_types.h>
 
 typedef enum
@@ -82,8 +86,13 @@ struct mas_http_s
   mas_fileinfo_t *request_content;
   mas_fileinfo_t *reply_content;
   /* char *rest; */
+#  ifdef MAS_OLD_VARIABLES_HTTP
   mas_variables_list_head_t *indata;
   mas_variables_list_head_t *outdata;
+#  else
+  mas_varset_t *indata;
+  mas_varset_t *outdata;
+#  endif
   char *sversion;
   float fversion;
   unsigned long written;

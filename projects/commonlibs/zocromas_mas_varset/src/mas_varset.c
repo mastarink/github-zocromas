@@ -12,7 +12,7 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
 
-#include "mas_varset_types.h"
+#include <mastar/types/mas_varset_types.h>
 #include "mas_varset_vclass.h"
 #include "mas_varset.h"
 
@@ -55,6 +55,18 @@ mas_varset_walk_classes( mas_varset_t * varset, void ( *action ) ( const void *n
   }
 }
 
+mas_var_t *
+mas_varset_find_variable( mas_varset_t * varset, const char *vclass_name, const char *name )
+{
+  mas_varset_class_t *vclass;
+  mas_var_t *found = NULL;
+
+  vclass = mas_varset_find_vclass( varset, vclass_name );
+  if ( vclass )
+    found = mas_varset_vclass_find_variable( vclass, name );
+  return found;
+}
+
 mas_varset_t *
 mas_varset_search_variable( mas_varset_t * varset, const char *vclass_name, const char *name, const char *value )
 {
@@ -76,6 +88,37 @@ mas_varset_search_variable( mas_varset_t * varset, const char *vclass_name, cons
       }
     }
   }
+  return varset;
+}
+
+mas_varset_t *
+mas_varset_search_variablef( mas_varset_t * varset, const char *vclass, const char *name, mas_xvsnprintf_t func, const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  varset = mas_varset_search_variable_va( varset, vclass, name, func, fmt, args );
+  va_end( args );
+  return varset;
+}
+
+mas_varset_t *
+mas_varset_search_variable_va( mas_varset_t * varset, const char *vclass, const char *name,
+                               mas_xvsnprintf_t func, const char *fmt, va_list args )
+{
+  if ( varset )
+  {
+    char *text = NULL;
+    size_t txsize = 1024 * 10;
+
+    text = mas_malloc( txsize );
+    if ( !func )
+      func = mas_xvsnprintf;
+    ( *func ) ( text, txsize, fmt, args );
+    varset = mas_varset_search_variable( varset, vclass, name, text );
+    mas_free( text );
+  }
+
   return varset;
 }
 

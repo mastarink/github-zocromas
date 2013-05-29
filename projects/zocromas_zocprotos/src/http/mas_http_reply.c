@@ -18,7 +18,13 @@
 
 #include <mastar/log/mas_log.h>
 
-#include <mastar/variables/mas_variables.h>
+#ifdef MAS_OLD_VARIABLES_HTTP
+#  include <mastar/variables/mas_variables.h>
+#else
+#  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset_vclass.h>
+#  include <mastar/varset/mas_varset.h>
+#endif
 
 #include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/fileinfo/mas_fileinfo.h>
@@ -59,7 +65,11 @@ mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_make_out_header_simple( mas_http_t * http, const char *name, const char *value )
 {
+#ifdef MAS_OLD_VARIABLES_HTTP
   http->outdata = mas_variable_create_text( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, value, 0 );
+#else
+  http->outdata = mas_varset_search_variable( http->outdata, "header", name, value );
+#endif
   return http;
 }
 
@@ -69,7 +79,11 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
   va_list args;
 
   va_start( args, fmt );
+#ifdef MAS_OLD_VARIABLES_HTTP
   http->outdata = mas_variable_vcreate_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, NULL, fmt, args, 0 );
+#else
+  http->outdata = mas_varset_search_variable_va( http->outdata, "header", name, NULL, fmt, args );
+#endif
   va_end( args );
   return http;
 }
@@ -88,12 +102,18 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   if ( http )
   {
     MAS_LOG( "to make date" );
+#ifdef MAS_OLD_VARIABLES_HTTP
     http->outdata =
           mas_variable_create_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT",
                                  mas_xgmtime(  ), 0 );
+    http->outdata = mas_variable_create_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Server", mas_xvsnprintf, "mas-%lu",
+                                           ( unsigned long ) ( &__MAS_LINK_TIME__ ), 0 );
+#else
+    http->outdata = mas_varset_search_variablef( http->outdata, "header", "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT", mas_xgmtime(  ) );
     http->outdata =
-          mas_variable_create_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Server", mas_xvsnprintf, "mas-%lu",
-                                 ( unsigned long ) ( &__MAS_LINK_TIME__ ), 0 );
+          mas_varset_search_variablef( http->outdata, "header", "Server", mas_xvsnprintf, "mas-%lu",
+                                       ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
+#endif
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
     http = mas_http_make_out_header_simple( http, "Connection", prcontrol->keep_alive ? "Keep-Alive" : "close" );
   }
@@ -196,14 +216,24 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
   HMSG( "HTTP make DOCROOT [%s]", http->docroot );
   if ( !http->docroot )
   {
+#ifdef MAS_OLD_VARIABLES_HTTP
     mas_variable_t *host_var;
 
     host_var = mas_variables_find( http->indata, "inheader", "Host" );
+#else
+    mas_var_t *host_var;
+
+    host_var = mas_varset_find_variable( http->indata, "inheader", "Host" );
+#endif
     if ( host_var )
     {
       char *p;
 
+#ifdef MAS_OLD_VARIABLES_HTTP
       http->host = mas_strdup( host_var->value );
+#else
+      http->host = mas_varset_vclass_variable_get_value( host_var );
+#endif
       HMSG( "Host: %s", http->host );
       p = strchr( http->host, ':' );
       if ( p )
@@ -222,11 +252,19 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     }
     if ( !http->docroot && http->host )
     {
+#ifdef MAS_OLD_VARIABLES_HTTP
       mas_variable_t *tv;
 
       tv = mas_variables_find( prcontrol->proto_desc->variables, "docroot", http->host );
       if ( tv && tv->value )
         http->docroot = mas_strdup( tv->value );
+#else
+      mas_var_t *tv;
+
+      tv = mas_varset_find_variable( prcontrol->proto_desc->variables, "docroot", http->host );
+      if ( tv )
+        http->docroot = mas_varset_vclass_variable_get_value( tv );
+#endif
     }
     if ( !http->docroot )
       http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/htdocs" );

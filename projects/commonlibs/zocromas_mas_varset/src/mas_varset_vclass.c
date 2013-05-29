@@ -14,7 +14,7 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "mas_varset_types.h"
+#include <mastar/types/mas_varset_types.h>
 #include "mas_varset_vclass.h"
 
 mas_varset_class_t *

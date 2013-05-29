@@ -5,7 +5,11 @@
 
 #  include <mastar/types/mas_common_types.h>
 /* #  include <mastar/types/mas_log_types.h> */
-#  include <mastar/types/mas_variables_types.h>
+#  ifdef MAS_OLD_VARIABLES_HTTP
+#    include <mastar/types/mas_variables_types.h>
+#  else
+#    include <mastar/types/mas_varset_types.h>
+#  endif
 
 #  include <mastar/types/mas_listener_control_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>

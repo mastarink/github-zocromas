@@ -17,6 +17,8 @@ tab sfind     mas_message_types.h
 sfind mas_transaction_control_types.h
 sfind mas_opts_types.h
 
+tab sfind mas_varset_types.h 
+
 tab sfind  mas_control_types.h
 
 tab sfind mas_listener_control_types.h

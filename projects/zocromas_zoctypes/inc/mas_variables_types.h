@@ -1,6 +1,7 @@
 #ifndef MAS_VARIABLES_TYPES_H
 #  define MAS_VARIABLES_TYPES_H
 
+#  ifdef MAS_OLD_VARIABLES_HTTP
 #  include <stdarg.h>
 #  include <string.h>
 
@@ -34,5 +35,7 @@ struct mas_variable_s
   mas_variables_list_entry_t next;
 };
 typedef struct mas_variable_s mas_variable_t;
+
+#endif
 
 #endif

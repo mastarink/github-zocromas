@@ -26,12 +26,13 @@ AC_PREREQ([2.67])
 # AC_CONFIG_SRCDIR(src/foo.c)
 # AM_INIT_AUTOMAKE
 
-# AC_INIT([mas_variables],[1.0.1.3],[bug-report@mastarink.net])
+# AC_INIT([mas_thvariables],[1.0.1.3],[bug-report@mastarink.net])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_SRCDIR([src/mas_variables.c])
+AC_CONFIG_SRCDIR([src/mas_thread_variables.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
+AM_PROG_AR
 
 AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
 
@@ -104,7 +105,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log zocromas_mas_channel zocromas_mas_control])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log zocromas_mas_channel zocromas_mas_control zocromas_mas_varset])
 
 # Configure options: --enable-debug[=no].
 
@@ -121,6 +122,7 @@ AC_ARG_ENABLE([old_variables],
 if test x$enable_old_variables = xyes ; then
     AC_DEFINE(MAS_OLD_VARIABLES_HTTP, 1,
 	[Enable old variables lib])
+   PKG_CHECK_MODULES([DEPS], [zocromas_mas_variables])
 fi
 
 AC_ARG_ENABLE([debug],

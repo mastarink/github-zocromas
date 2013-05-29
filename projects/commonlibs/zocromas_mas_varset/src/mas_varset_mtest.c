@@ -8,7 +8,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "mas_varset_types.h"
+#include <mastar/types/mas_varset_types.h>
 #include "mas_varset_vclass.h"
 #include "mas_varset.h"
 
