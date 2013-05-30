@@ -160,8 +160,10 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
 #else
     /* mas_channel_write( http->prcontrol->h.pchannel ... */
     mas_varset_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata, set );
+    /* TODO join write in one - modify varset */
+    /* TODO http->indata and http->outdata etc shoild be vclass, not varset */
     write( mas_channel_fd( http->prcontrol->h.pchannel ), "\r\n", 2 );
-    mas_varset_write( STDERR_FILENO, http->outdata, set );
+    /* mas_varset_write( STDERR_FILENO, http->outdata, set ); */
 #endif
   }
   return http;

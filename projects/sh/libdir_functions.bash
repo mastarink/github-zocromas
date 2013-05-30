@@ -27,6 +27,9 @@ function make_dirs ()
   if [[ -d "$projectsdir" ]] && ! [[ -d "$instdir" ]]; then
     mkdir "$instdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
+  if [[ -d "$projectsdir" ]] && ! [[ -d "$flavourdir" ]]; then
+    mkdir "$flavourdir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
   if [[ -d "$projectsdir" ]] && ! [[ -d "$tmpdir" ]]; then
     mkdir "$tmpdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -106,11 +109,14 @@ function setup_dirs ()
     shdirup=$( dirname $shdir )
     shdirupr=$( dirname $shdirr )
     projectsdir="$( realpath "$shdirupr" )" || return 1
+    mas_flavour=${mas_flavour:-`cat $projectsdir/projects.flavour`}
     indir="$( realpath "$shdirup" )" || return 1
     topdir="$( realpath "$shdirupr/.." )" || return 1
     admindir="$topdir/admin"
     savedir="$admindir/saved"
     instdir="$admindir/install"
+    flavourdir="$instdir/${mas_flavour:-default}"
+    echo "FLAVOUR: [${mas_flavour:-default}] -- $flavourdir" >&2
     instshdir="$admindir/install.sh"
     tmpdir="$admindir/tmp/"
 
@@ -148,7 +154,7 @@ function setup_dirs ()
       make_dirs || return 1
   #   export LD_LIBRARY_PATH=/usr/local/lib
 
-      export PKG_CONFIG_PATH=$instdir/lib/pkgconfig
+      export PKG_CONFIG_PATH=$flavourdir/lib/pkgconfig
     fi
     
 

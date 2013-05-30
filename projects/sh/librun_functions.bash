@@ -14,12 +14,12 @@ function run_installed ()
     rname="${binprefix}$bname"
   fi
 
-  binary="$instdir/bin/$rname"
+  binary="$flavourdir/bin/$rname"
 
 # echo "mcaller:$mcaller" >&2
 # echo "rname:$rname" >&2
 # echo "bname:$bname" >&2
-# echo "instdir:$instdir" >&2
+# echo "flavourdir:$flavourdir" >&2
 # echo "binary:$binary" >&2
 # echo "MAS_ZOCROMAS_HERE:$MAS_ZOCROMAS_HERE" >&2
 
@@ -51,15 +51,23 @@ function run_installed ()
 }
 function run_any ()
 {
-  local cmd_exec
-# echo "To RUN rbinary: $rbinary_preset" >&2
+  local cmd_exec binary
   # for core dump:
   ulimit -c unlimited
   
+  
+  if [[ "$MAS_RUN_INSTALLED" ]] ; then
+    binary="$ibinary_preset"
+  else
+    binary=$rbinary_preset
+  fi
+  echo "To run $binary" >&2
+
+# echo "To RUN rbinary: $binary" >&2
   #     make_any && usleep 500000 && clear && $cmd_exec $builddir/$rname "$@"
   #      echo "bash:to run  $builddir/$rname" >&2
 
-  if true ; then
+  if [[ "$MAS_USE_RUN_STRACE" ]] ; then
     straceit='strace -q -fr -C -o strace.tmp'
   fi
 
@@ -72,33 +80,33 @@ function run_any ()
     cmd_exec="exec $straceit"
   fi
   if [[ "$made" ]] ||  make_any ; then
-#   echo "......... $rbinary_preset" >&2
-    if [[ "$rbinary_preset" ]] ; then
+#   echo "......... $binary" >&2
+    if [[ "$binary" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
-#        echo "1 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
-        nanosleep 0.5 &&  $cmd_exec $rbinary_preset "$@"
+#        echo "1 To run rbinary: $cmd_exec $binary $@" >&2
+        nanosleep 0.5 &&  $cmd_exec $binary "$@"
       elif type usleep >/dev/null 2>&1 ; then
-#        echo "2 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
-        usleep 50000 &&  $cmd_exec $rbinary_preset "$@"
+#        echo "2 To run rbinary: $cmd_exec $binary $@" >&2
+        usleep 50000 &&  $cmd_exec $binary "$@"
       elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-#        echo "3 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
-        $rbinary_preset "$@"
+#        echo "3 To run rbinary: $cmd_exec $binary $@" >&2
+        $binary "$@"
       else
-#        echo "4 To run rbinary: $rbinary_preset" >&2
-        $cmd_exec $rbinary_preset "$@"
+#        echo "4 To run rbinary: $binary" >&2
+        $cmd_exec $binary "$@"
       fi
 ###   if type nanosleep >/dev/null 2>&1 ; then
-###     echo "1 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
-###     nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $rbinary_preset "$@"
+###     echo "1 To run rbinary: $cmd_exec $binary $@" >&2
+###     nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $binary "$@"
 ###   elif type usleep >/dev/null 2>&1 ; then
-###     echo "2 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
-###     usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $rbinary_preset "$@"
+###     echo "2 To run rbinary: $cmd_exec $binary $@" >&2
+###     usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $binary "$@"
 ###   elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-###     echo "3 To run rbinary: $cmd_exec $rbinary_preset $@" >&2
-###     LD_PRELOAD="/usr/lib/libtcmalloc.so" $cmd_exec $rbinary_preset "$@"
+###     echo "3 To run rbinary: $cmd_exec $binary $@" >&2
+###     LD_PRELOAD="/usr/lib/libtcmalloc.so" $cmd_exec $binary "$@"
 ###   else
-###     echo "4 To run rbinary: $rbinary_preset" >&2
-###     $cmd_exec $rbinary_preset "$@"
+###     echo "4 To run rbinary: $binary" >&2
+###     $cmd_exec $binary "$@"
 ###   fi
     else
       echo "run error" >&2

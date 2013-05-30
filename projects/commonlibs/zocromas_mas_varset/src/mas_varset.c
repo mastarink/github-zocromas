@@ -51,6 +51,7 @@ mas_varset_walk_classes( mas_varset_t * varset, void ( *action ) ( const void *n
 {
   if ( varset )
   {
+    fprintf( stderr, "Wiiiiiiiiiiiiiiiiz %d\n", varset->classes ? 1 : 0 );
     twalk( varset->classes, action );
   }
 }
@@ -106,18 +107,15 @@ mas_varset_t *
 mas_varset_search_variable_va( mas_varset_t * varset, const char *vclass, const char *name,
                                mas_xvsnprintf_t func, const char *fmt, va_list args )
 {
-  if ( varset )
-  {
-    char *text = NULL;
-    size_t txsize = 1024 * 10;
+  char *text = NULL;
+  size_t txsize = 1024 * 10;
 
-    text = mas_malloc( txsize );
-    if ( !func )
-      func = mas_xvsnprintf;
-    ( *func ) ( text, txsize, fmt, args );
-    varset = mas_varset_search_variable( varset, vclass, name, text );
-    mas_free( text );
-  }
+  text = mas_malloc( txsize );
+  if ( !func )
+    func = mas_xvsnprintf;
+  ( *func ) ( text, txsize, fmt, args );
+  varset = mas_varset_search_variable( varset, vclass, name, text );
+  mas_free( text );
 
   return varset;
 }

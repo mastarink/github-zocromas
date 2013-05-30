@@ -60,6 +60,7 @@ main( void )
 
   for ( int iter = 0; iter < 1; iter++ )
   {
+    const char *name="User-Agent";
     fprintf( stderr, "===========================\n" );
     vs = mas_varset_create(  );
     vs = mas_varset_search_variable( vs, "tclass4", "varnameX", "varvalueX" );
@@ -69,8 +70,28 @@ main( void )
     /* vs = mas_varset_search_variable( vs, "tclass4", "varname7", "varvalue7" ); */
     vs = mas_varset_search_variable( vs, "tclass4", "varname7a", "varvalue7" );
     vs = mas_varset_search_variable( vs, "tclass1", "Content-Type", "text/plain" );
+/* 'User-Agent' = 'lwp-request/6.03 libwww-perl/6.03' */
+    vs = mas_varset_search_variablef( vs, "inheader", name, NULL, "%s", "lwp-request/6.03 libwww-perl/6.03" );
+    vs = mas_varset_search_variablef( vs, "inheader", name, NULL, "[%s]", "lwp-request/6.03 libwww-perl/6.03" );
 
     mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
+    mas_varset_write( STDOUT_FILENO, vs, "inheader" );
+
+
+
+    {
+      mas_var_t *tv;
+
+      tv = mas_varset_find_variable( vs, "inheader", name );
+      if ( tv )
+      {
+        fprintf( stderr, "TO SET inheader '%s'='%s'\n", name, mas_varset_vclass_variable_get_value_ref( tv ) );
+      }
+      else
+      {
+        fprintf( stderr, "DIDN'T APPEAR VAR %s\n", name );
+      }
+    }
 
     if ( 0 )
       mas_varset_walk_classes( vs, w_action );

@@ -1,0 +1,907 @@
+29648      0.000000 execve(".auxdir/.build/src/zocromas_client", [".auxdir/.build/src/zocromas_clie"..., ".", "--nohosts", "-Hzocromas.mastar.lan:5005"], [/* 336 vars */]) = 0
+29648      0.000474 brk(0)              = 0x1486000
+29648      0.000026 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446fd000
+29648      0.000023 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+29648      0.000031 open("/usr/local/lib/tls/x86_64/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000021 stat("/usr/local/lib/tls/x86_64", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/usr/local/lib/tls/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 stat("/usr/local/lib/tls", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/usr/local/lib/x86_64/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 stat("/usr/local/lib/x86_64", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/usr/local/lib/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000020 stat("/usr/local/lib", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+29648      0.000019 open("/usr/lib/mysql/tls/x86_64/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 stat("/usr/lib/mysql/tls/x86_64", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000015 open("/usr/lib/mysql/tls/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 stat("/usr/lib/mysql/tls", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/usr/lib/mysql/x86_64/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 stat("/usr/lib/mysql/x86_64", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000015 open("/usr/lib/mysql/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 stat("/usr/lib/mysql", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/tls/x86_64/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000019 stat("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/tls/x86_64", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/tls/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 stat("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/tls", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/x86_64/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 stat("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/x86_64", 0x7fffea5c6b30) = -1 ENOENT (No such file or directory)
+29648      0.000015 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_wrapc.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000023 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\320\31\0\0\0\0\0\0"..., 832) = 832
+29648      0.000017 fstat(3, {st_mode=S_IFREG|0755, st_size=37970, ...}) = 0
+29648      0.000019 mmap(NULL, 2146720, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe442d0000
+29648      0.000018 mprotect(0x7fbe442d3000, 2097152, PROT_NONE) = 0
+29648      0.000016 mmap(0x7fbe444d3000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7fbe444d3000
+29648      0.000019 mmap(0x7fbe444d5000, 29088, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbe444d5000
+29648      0.000019 close(3)            = 0
+29648      0.000023 open("/usr/local/lib/libzocromas_mas_channel.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000019 open("/usr/lib/mysql/libzocromas_mas_channel.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_channel.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0p \0\0\0\0\0\0"..., 832) = 832
+29648      0.000016 fstat(3, {st_mode=S_IFREG|0755, st_size=104469, ...}) = 0
+29648      0.000015 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446fc000
+29648      0.000017 mmap(NULL, 2130424, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe440c7000
+29648      0.000016 mprotect(0x7fbe440cf000, 2093056, PROT_NONE) = 0
+29648      0.000015 mmap(0x7fbe442ce000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x7000) = 0x7fbe442ce000
+29648      0.000020 close(3)            = 0
+29648      0.000016 open("/usr/local/lib/libzocromas_mas_io.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/usr/lib/mysql/libzocromas_mas_io.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_io.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\16\0\0\0\0\0\0"..., 832) = 832
+29648      0.000016 fstat(3, {st_mode=S_IFREG|0755, st_size=34413, ...}) = 0
+29648      0.000015 mmap(NULL, 2109624, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe43ec3000
+29648      0.000015 mprotect(0x7fbe43ec6000, 2093056, PROT_NONE) = 0
+29648      0.000014 mmap(0x7fbe440c5000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbe440c5000
+29648      0.000020 close(3)            = 0
+29648      0.000014 open("/usr/local/lib/libzocromas_mas_init.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/usr/lib/mysql/libzocromas_mas_init.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_init.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000016 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 0\0\0\0\0\0\0"..., 832) = 832
+29648      0.000015 fstat(3, {st_mode=S_IFREG|0755, st_size=159449, ...}) = 0
+29648      0.000015 mmap(NULL, 2159176, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe43cb3000
+29648      0.000015 mprotect(0x7fbe43cc1000, 2093056, PROT_NONE) = 0
+29648      0.000014 mmap(0x7fbe43ec0000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xd000) = 0x7fbe43ec0000
+29648      0.000019 close(3)            = 0
+29648      0.000015 open("/usr/local/lib/libzocromas_mas_wrap.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/usr/lib/mysql/libzocromas_mas_wrap.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_wrap.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000016 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 \"\0\0\0\0\0\0"..., 832) = 832
+29648      0.000014 fstat(3, {st_mode=S_IFREG|0755, st_size=44208, ...}) = 0
+29648      0.000015 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446fb000
+29648      0.000015 mmap(NULL, 2146848, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe43aa6000
+29648      0.000014 mprotect(0x7fbe43aaa000, 2093056, PROT_NONE) = 0
+29648      0.000014 mmap(0x7fbe43ca9000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7fbe43ca9000
+29648      0.000018 mmap(0x7fbe43cab000, 29216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbe43cab000
+29648      0.000017 close(3)            = 0
+29648      0.000019 open("/usr/local/lib/libzocromas_mas_tools.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/usr/lib/mysql/libzocromas_mas_tools.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_tools.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0 \16\0\0\0\0\0\0"..., 832) = 832
+29648      0.000014 fstat(3, {st_mode=S_IFREG|0755, st_size=20012, ...}) = 0
+29648      0.000015 mmap(NULL, 2105536, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe438a3000
+29648      0.000021 mprotect(0x7fbe438a5000, 2093056, PROT_NONE) = 0
+29648      0.000027 mmap(0x7fbe43aa4000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7fbe43aa4000
+29648      0.000035 close(3)            = 0
+29648      0.000022 open("/usr/local/lib/libzocromas_mas_arg_tools.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000031 open("/usr/lib/mysql/libzocromas_mas_arg_tools.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000032 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_arg_tools.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000034 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\320\r\0\0\0\0\0\0"..., 832) = 832
+29648      0.000024 fstat(3, {st_mode=S_IFREG|0755, st_size=24780, ...}) = 0
+29648      0.000020 mmap(NULL, 2109600, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe4369f000
+29648      0.000020 mprotect(0x7fbe436a1000, 2097152, PROT_NONE) = 0
+29648      0.000020 mmap(0x7fbe438a1000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbe438a1000
+29648      0.000030 close(3)            = 0
+29648      0.000020 open("/usr/local/lib/libzocromas_mas_log.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000022 open("/usr/lib/mysql/libzocromas_mas_log.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_log.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000019 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\31\0\0\0\0\0\0"..., 832) = 832
+29648      0.000016 fstat(3, {st_mode=S_IFREG|0755, st_size=54158, ...}) = 0
+29648      0.000017 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446fa000
+29648      0.000019 mmap(NULL, 2114168, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe4349a000
+29648      0.000016 mprotect(0x7fbe4349e000, 2093056, PROT_NONE) = 0
+29648      0.000016 mmap(0x7fbe4369d000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7fbe4369d000
+29648      0.000021 close(3)            = 0
+29648      0.000016 open("/usr/local/lib/libzocromas_mas_logc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000021 open("/usr/lib/mysql/libzocromas_mas_logc.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000019 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_logc.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000024 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360\16\0\0\0\0\0\0"..., 832) = 832
+29648      0.000016 fstat(3, {st_mode=S_IFREG|0755, st_size=45864, ...}) = 0
+29648      0.000016 mmap(NULL, 2109704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe43296000
+29648      0.000015 mprotect(0x7fbe43299000, 2093056, PROT_NONE) = 0
+29648      0.000016 mmap(0x7fbe43498000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbe43498000
+29648      0.000020 close(3)            = 0
+29648      0.000016 open("/usr/local/lib/libzocromas_mas_msg.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/usr/lib/mysql/libzocromas_mas_msg.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000022 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_msg.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\300\24\0\0\0\0\0\0"..., 832) = 832
+29648      0.000015 fstat(3, {st_mode=S_IFREG|0755, st_size=53719, ...}) = 0
+29648      0.000015 mmap(NULL, 2121416, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe43090000
+29648      0.000015 mprotect(0x7fbe43095000, 2093056, PROT_NONE) = 0
+29648      0.000014 mmap(0x7fbe43294000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000) = 0x7fbe43294000
+29648      0.000019 close(3)            = 0
+29648      0.000015 open("/usr/local/lib/libzocromas_mas_thtools.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/usr/lib/mysql/libzocromas_mas_thtools.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_thtools.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`\16\0\0\0\0\0\0"..., 832) = 832
+29648      0.000015 fstat(3, {st_mode=S_IFREG|0755, st_size=29612, ...}) = 0
+29648      0.000015 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f9000
+29648      0.000015 mmap(NULL, 2105504, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe42e8d000
+29648      0.000015 mprotect(0x7fbe42e8f000, 2093056, PROT_NONE) = 0
+29648      0.000014 mmap(0x7fbe4308e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7fbe4308e000
+29648      0.000019 close(3)            = 0
+29648      0.000015 open("/usr/local/lib/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000022 open("/usr/lib/mysql/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000024 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000021 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000020 fstat(3, {st_mode=S_IFREG|0644, st_size=250268, ...}) = 0
+29648      0.000017 mmap(NULL, 250268, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fbe446bb000
+29648      0.000018 close(3)            = 0
+29648      0.000024 open("/lib64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000021 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\300l\0\0\0\0\0\0"..., 832) = 832
+29648      0.000020 fstat(3, {st_mode=S_IFREG|0755, st_size=135075, ...}) = 0
+29648      0.000025 mmap(NULL, 2212784, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe42c70000
+29648      0.000021 mprotect(0x7fbe42c88000, 2093056, PROT_NONE) = 0
+29648      0.000020 mmap(0x7fbe42e87000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17000) = 0x7fbe42e87000
+29648      0.000028 mmap(0x7fbe42e89000, 13232, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbe42e89000
+29648      0.000020 close(3)            = 0
+29648      0.000017 open("/usr/local/lib/libzocromas_mas_messageio.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000021 open("/usr/lib/mysql/libzocromas_mas_messageio.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_messageio.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\f\0\0\0\0\0\0"..., 832) = 832
+29648      0.000016 fstat(3, {st_mode=S_IFREG|0755, st_size=31777, ...}) = 0
+29648      0.000016 mmap(NULL, 2109600, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe42a6c000
+29648      0.000016 mprotect(0x7fbe42a6f000, 2093056, PROT_NONE) = 0
+29648      0.000015 mmap(0x7fbe42c6e000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbe42c6e000
+29648      0.000020 close(3)            = 0
+29648      0.000021 open("/usr/local/lib/libzocromas_mas_control.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000019 open("/usr/lib/mysql/libzocromas_mas_control.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libzocromas_mas_control.so.0", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\340\10\0\0\0\0\0\0"..., 832) = 832
+29648      0.000015 fstat(3, {st_mode=S_IFREG|0755, st_size=36704, ...}) = 0
+29648      0.000015 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446ba000
+29648      0.000017 mmap(NULL, 2107056, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe42869000
+29648      0.000014 mprotect(0x7fbe4286b000, 2093056, PROT_NONE) = 0
+29648      0.000015 mmap(0x7fbe42a6a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7fbe42a6a000
+29648      0.000020 close(3)            = 0
+29648      0.000015 open("/usr/local/lib/libuuid.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/usr/lib/mysql/libuuid.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libuuid.so.1", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000021 open("/lib64/libuuid.so.1", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000016 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\26\0\0\0\0\0\0"..., 832) = 832
+29648      0.000015 fstat(3, {st_mode=S_IFREG|0755, st_size=18728, ...}) = 0
+29648      0.000016 mmap(NULL, 2113904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe42664000
+29648      0.000016 mprotect(0x7fbe42668000, 2093056, PROT_NONE) = 0
+29648      0.000015 mmap(0x7fbe42867000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7fbe42867000
+29648      0.000020 close(3)            = 0
+29648      0.000018 open("/usr/local/lib/libreadline.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000022 open("/usr/lib/mysql/libreadline.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libreadline.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000023 open("/lib64/libreadline.so.6", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000015 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\300o\1\0\0\0\0\0"..., 832) = 832
+29648      0.000015 fstat(3, {st_mode=S_IFREG|0555, st_size=287992, ...}) = 0
+29648      0.000015 mmap(NULL, 2388936, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe4241c000
+29648      0.000015 mprotect(0x7fbe4245a000, 2097152, PROT_NONE) = 0
+29648      0.000015 mmap(0x7fbe4265a000, 32768, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3e000) = 0x7fbe4265a000
+29648      0.000018 mmap(0x7fbe42662000, 5064, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbe42662000
+29648      0.000017 close(3)            = 0
+29648      0.000015 open("/usr/local/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000017 open("/usr/lib/mysql/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000016 open("/mnt/new_misc/develop/autotools/zoc/admin/install/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000029 open("/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000029 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\320%\2\0\0\0\0\0"..., 832) = 832
+29648      0.000019 fstat(3, {st_mode=S_IFREG|0755, st_size=1728728, ...}) = 0
+29648      0.000026 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446b9000
+29648      0.000019 mmap(NULL, 3841312, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe42072000
+29648      0.000022 mprotect(0x7fbe42213000, 2093056, PROT_NONE) = 0
+29648      0.000022 mmap(0x7fbe42412000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1a0000) = 0x7fbe42412000
+29648      0.000026 mmap(0x7fbe42418000, 15648, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbe42418000
+29648      0.000022 close(3)            = 0
+29648      0.000044 open("/usr/local/lib/libncurses.so.5", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000033 open("/usr/lib/mysql/libncurses.so.5", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000026 open("/lib64/libncurses.so.5", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000021 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0PT\1\0\0\0\0\0"..., 832) = 832
+29648      0.000019 fstat(3, {st_mode=S_IFREG|0755, st_size=345968, ...}) = 0
+29648      0.000020 mmap(NULL, 2443296, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe41e1d000
+29648      0.000020 mprotect(0x7fbe41e6c000, 2097152, PROT_NONE) = 0
+29648      0.000020 mmap(0x7fbe4206c000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4f000) = 0x7fbe4206c000
+29648      0.000026 close(3)            = 0
+29648      0.000023 open("/usr/local/lib/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000023 open("/usr/lib/mysql/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000025 open("/lib64/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000021 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\17\0\0\0\0\0\0"..., 832) = 832
+29648      0.000019 fstat(3, {st_mode=S_IFREG|0755, st_size=14592, ...}) = 0
+29648      0.000018 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446b8000
+29648      0.000021 mmap(NULL, 2109704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe41c19000
+29648      0.000019 mprotect(0x7fbe41c1b000, 2097152, PROT_NONE) = 0
+29648      0.000020 mmap(0x7fbe41e1b000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fbe41e1b000
+29648      0.000025 close(3)            = 0
+29648      0.000040 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446b7000
+29648      0.000024 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446b5000
+29648      0.000020 arch_prctl(ARCH_SET_FS, 0x7fbe446b5740) = 0
+29648      0.000093 mprotect(0x7fbe42412000, 16384, PROT_READ) = 0
+29648      0.000027 mprotect(0x7fbe41e1b000, 4096, PROT_READ) = 0
+29648      0.000061 mprotect(0x7fbe4206c000, 16384, PROT_READ) = 0
+29648      0.000140 mprotect(0x7fbe4265a000, 8192, PROT_READ) = 0
+29648      0.000023 mprotect(0x7fbe42867000, 4096, PROT_READ) = 0
+29648      0.000020 mprotect(0x7fbe42a6a000, 4096, PROT_READ) = 0
+29648      0.000020 mprotect(0x7fbe42c6e000, 4096, PROT_READ) = 0
+29648      0.000025 mprotect(0x7fbe42e87000, 4096, PROT_READ) = 0
+29648      0.000027 mprotect(0x7fbe4308e000, 4096, PROT_READ) = 0
+29648      0.000023 mprotect(0x7fbe43294000, 4096, PROT_READ) = 0
+29648      0.000021 mprotect(0x7fbe43498000, 4096, PROT_READ) = 0
+29648      0.000020 mprotect(0x7fbe4369d000, 4096, PROT_READ) = 0
+29648      0.000020 mprotect(0x7fbe438a1000, 4096, PROT_READ) = 0
+29648      0.000019 mprotect(0x7fbe43aa4000, 4096, PROT_READ) = 0
+29648      0.000021 mprotect(0x7fbe43ca9000, 4096, PROT_READ) = 0
+29648      0.000029 mprotect(0x7fbe43ec0000, 4096, PROT_READ) = 0
+29648      0.000020 mprotect(0x7fbe440c5000, 4096, PROT_READ) = 0
+29648      0.000021 mprotect(0x7fbe442ce000, 4096, PROT_READ) = 0
+29648      0.000021 mprotect(0x7fbe444d3000, 4096, PROT_READ) = 0
+29648      0.000021 mprotect(0x606000, 4096, PROT_READ) = 0
+29648      0.000022 mprotect(0x7fbe446fe000, 4096, PROT_READ) = 0
+29648      0.000019 munmap(0x7fbe446bb000, 250268) = 0
+29648      0.000027 set_tid_address(0x7fbe446b5a10) = 29648
+29648      0.000016 set_robust_list(0x7fbe446b5a20, 24) = 0
+29648      0.000015 futex(0x7fffea5c73ac, FUTEX_WAKE_PRIVATE, 1) = 0
+29648      0.000024 futex(0x7fffea5c73ac, FUTEX_WAIT_BITSET_PRIVATE|FUTEX_CLOCK_REALTIME, 1, NULL, 7fbe446b5740) = -1 EAGAIN (Resource temporarily unavailable)
+29648      0.000024 rt_sigaction(SIGRTMIN, {0x7fbe42c76730, [], SA_RESTORER|SA_SIGINFO, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000030 rt_sigaction(SIGRT_1, {0x7fbe42c767c0, [], SA_RESTORER|SA_RESTART|SA_SIGINFO, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000018 rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+29648      0.000022 getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+29648      0.000093 write(2, "******************** CONSTRUCTOR"..., 120) = 120
+29648      0.000041 gettid()            = 29648
+29648      0.000062 brk(0)              = 0x1486000
+29648      0.000016 brk(0x14a7000)      = 0x14a7000
+29648      0.000032 futex(0x7fbe42a6b69c, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+29648      0.000021 write(2, "\r", 1)   = 1
+29648      0.000030 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000022 write(2, "+    0s ", 8) = 8
+29648      0.000023 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000020 write(2, "mas_init       ", 15) = 15
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000025 write(2, "\33[K", 3) = 3
+29648      0.000022 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000021 write(2, " PRE-INIT                       "..., 51) = 51
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "   ", 3)  = 3
+29648      0.000027 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000025 write(2, "          ", 10) = 10
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\n", 1)   = 1
+29648      0.000027 lstat("/proc/29648/exe", {st_mode=S_IFLNK|0777, st_size=0, ...}) = 0
+29648      0.000036 readlink("/proc/29648/exe", "/mnt/new_misc/develop/autotools/"..., 513) = 100
+29648      0.000025 stat("/dev/random", {st_mode=S_IFCHR|0666, st_rdev=makedev(1, 8), ...}) = 0
+29648      0.000022 open("/dev/urandom", O_RDONLY) = 3
+29648      0.000019 fcntl(3, F_GETFD)   = 0
+29648      0.000015 fcntl(3, F_SETFD, FD_CLOEXEC) = 0
+29648      0.000015 getuid()            = 1000
+29648      0.000018 getppid()           = 29393
+29648      0.000015 read(3, "\365_z\265Z\352\272\317\223\344\321\231p\343c\305", 16) = 16
+29648      0.000019 close(3)            = 0
+29648      0.000015 gettid()            = 29648
+29648      0.000020 write(2, "\r", 1)   = 1
+29648      0.000024 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000023 write(2, "+    0s ", 8) = 8
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000022 write(2, "mas_init       ", 15) = 15
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000021 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000021 write(2, " UUID ea916992-ed5d-42b2-b6e3-f1"..., 51) = 51
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "   ", 3)  = 3
+29648      0.000020 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000020 write(2, "          ", 10) = 10
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000020 write(2, "\r", 1)   = 1
+29648      0.000021 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000020 write(2, "+    0s ", 8) = 8
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000020 write(2, "mas_init       ", 15) = 15
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[K", 3) = 3
+29648      0.000020 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000021 write(2, " INIT OPT FILES                 "..., 51) = 51
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "   ", 3)  = 3
+29648      0.000020 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000020 write(2, "          ", 10) = 10
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000032 getppid()           = 29393
+29648      0.000018 write(2, "\r", 1)   = 1
+29648      0.000030 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000021 write(2, "+    0s ", 8) = 8
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000021 write(2, "mas_init       ", 15) = 15
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[K", 3) = 3
+29648      0.000025 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000022 write(2, " PPID: 29393; BASH VAR: 22010   "..., 51) = 51
+29648      0.000036 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "   ", 3)  = 3
+29648      0.000021 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000021 write(2, "          ", 10) = 10
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\n", 1)   = 1
+29648      0.000031 getppid()           = 29393
+29648      0.000021 getppid()           = 29393
+29648      0.000030 stat("/mnt/new_misc/develop/autotools/zoc/admin/install/etc/zocromas_client", {st_mode=S_IFDIR|0700, st_size=4096, ...}) = 0
+29648      0.000036 write(2, "\r", 1)   = 1
+29648      0.000024 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000022 write(2, "+    0s ", 8) = 8
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000021 write(2, "mas_init       ", 15) = 15
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[K", 3) = 3
+29648      0.000021 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000021 write(2, " OPTS from /mnt/new_misc/develop"..., 96) = 96
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000023 open("/mnt/new_misc/develop/autotools/zoc/admin/install/etc/zocromas_client/zocromas_client", O_RDONLY) = 3
+29648      0.000027 fstat(3, {st_mode=S_IFREG|0644, st_size=1650, ...}) = 0
+29648      0.000016 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000018 read(3, "# Sat, 02 Feb 2013 21:13:57 +020"..., 4096) = 1650
+29648      0.000059 write(2, "\r", 1)   = 1
+29648      0.000023 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000022 write(2, "+    0s ", 8) = 8
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000021 write(2, "mas_init       ", 15) = 15
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000027 write(2, "\33[K", 3) = 3
+29648      0.000022 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000023 write(2, " RESTORE OPTS: mas CLIENT config"..., 51) = 51
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "   ", 3)  = 3
+29648      0.000022 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000022 write(2, "          ", 10) = 10
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\n", 1)   = 1
+29648      0.000033 read(3, "", 4096)   = 0
+29648      0.000018 close(3)            = 0
+29648      0.000015 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000021 write(2, "\r", 1)   = 1
+29648      0.000024 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000023 write(2, "+    0s ", 8) = 8
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000022 write(2, "mas_init       ", 15) = 15
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000022 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000022 write(2, " RESTORE OPT nomessages: 0      "..., 51) = 51
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "   ", 3)  = 3
+29648      0.000020 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000020 write(2, "          ", 10) = 10
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000027 stat("/home/mastar/.zocromas/", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+29648      0.048456 write(2, "\r", 1)   = 1
+29648      0.000052 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000035 write(2, "+    0s ", 8) = 8
+29648      0.000040 write(2, "\33[0m", 4) = 4
+29648      0.000047 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000028 write(2, "mas_init       ", 15) = 15
+29648      0.000025 write(2, "\33[0m", 4) = 4
+29648      0.000028 write(2, "\33[K", 3) = 3
+29648      0.000024 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000025 write(2, " OPTS from /home/mastar/.zocroma"..., 51) = 51
+29648      0.000024 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "   ", 3)  = 3
+29648      0.000024 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000023 write(2, "          ", 10) = 10
+29648      0.000024 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\n", 1)   = 1
+29648      0.000024 open("/home/mastar/.zocromas//zocromas_client", O_RDONLY) = 3
+29648      0.000041 fstat(3, {st_mode=S_IFREG|0644, st_size=558, ...}) = 0
+29648      0.000018 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000019 read(3, "# Sat, 02 Feb 2013 21:13:57 +020"..., 4096) = 558
+29648      0.002654 write(2, "\r", 1)   = 1
+29648      0.000032 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000043 write(2, "+    0s ", 8) = 8
+29648      0.000023 write(2, "\33[0m", 4) = 4
+29648      0.000024 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000023 write(2, "mas_init       ", 15) = 15
+29648      0.000023 write(2, "\33[0m", 4) = 4
+29648      0.000024 write(2, "\33[K", 3) = 3
+29648      0.000023 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000023 write(2, " RESTORE OPTS: mas CLIENT config"..., 51) = 51
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "   ", 3)  = 3
+29648      0.000023 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000031 write(2, "          ", 10) = 10
+29648      0.000026 write(2, "\33[0m", 4) = 4
+29648      0.000033 write(2, "\n", 1)   = 1
+29648      0.000059 read(3, "", 4096)   = 0
+29648      0.000022 close(3)            = 0
+29648      0.000018 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000024 write(2, "\r", 1)   = 1
+29648      0.000029 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000031 write(2, "+    0s ", 8) = 8
+29648      0.000027 write(2, "\33[0m", 4) = 4
+29648      0.000029 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000027 write(2, "mas_init       ", 15) = 15
+29648      0.000027 write(2, "\33[0m", 4) = 4
+29648      0.000037 write(2, "\33[K", 3) = 3
+29648      0.000034 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000030 write(2, " RESTORE OPT nomessages: 0      "..., 51) = 51
+29648      0.000027 write(2, "\33[0m", 4) = 4
+29648      0.000033 write(2, "   ", 3)  = 3
+29648      0.000026 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000023 write(2, "          ", 10) = 10
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\n", 1)   = 1
+29648      0.000024 write(2, "\r", 1)   = 1
+29648      0.000023 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000021 write(2, "+    0s ", 8) = 8
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000022 write(2, "mas_init       ", 15) = 15
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000022 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000022 write(2, " UUID ea916992-ed5d-42b2-b6e3-f1"..., 51) = 51
+29648      0.000023 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "   ", 3)  = 3
+29648      0.000021 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000021 write(2, "          ", 10) = 10
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000023 write(2, "\r", 1)   = 1
+29648      0.000021 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000020 write(2, "+    0s ", 8) = 8
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000021 write(2, "mas_init       ", 15) = 15
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[K", 3) = 3
+29648      0.000021 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000020 write(2, " INIT                           "..., 51) = 51
+29648      0.000028 write(2, "\33[0m", 4) = 4
+29648      0.000024 write(2, "   ", 3)  = 3
+29648      0.000021 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000020 write(2, "          ", 10) = 10
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000021 write(2, "\r", 1)   = 1
+29648      0.000021 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000021 write(2, "+    0s ", 8) = 8
+29648      0.000031 write(2, "\33[0m", 4) = 4
+29648      0.000031 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000032 write(2, "mas_init       ", 15) = 15
+29648      0.000029 write(2, "\33[0m", 4) = 4
+29648      0.000030 write(2, "\33[K", 3) = 3
+29648      0.000032 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000029 write(2, " INIT RESTART COUNT 0           "..., 51) = 51
+29648      0.000028 write(2, "\33[0m", 4) = 4
+29648      0.000028 write(2, "   ", 3)  = 3
+29648      0.000027 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000027 write(2, "          ", 10) = 10
+29648      0.000026 write(2, "\33[0m", 4) = 4
+29648      0.000028 write(2, "\n", 1)   = 1
+29648      0.000044 rt_sigaction(SIGINT, {0x401fe8, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000024 rt_sigaction(SIGHUP, {0x4022de, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000020 rt_sigaction(SIGTERM, {0x402211, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000019 rt_sigaction(SIGPIPE, {0x402345, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000019 rt_sigaction(SIGUSR1, {0x7fbe43cbe4d6, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000019 rt_sigaction(SIGUSR2, {0x7fbe43cbe538, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000018 rt_sigaction(SIGQUIT, {0x40216f, [], SA_RESTORER, 0x7fbe42c80410}, NULL, 8) = 0
+29648      0.000018 write(2, "\r", 1)   = 1
+29648      0.000028 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000028 write(2, "+    0s ", 8) = 8
+29648      0.000027 write(2, "\33[0m", 4) = 4
+29648      0.000028 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000025 write(2, "mas_init       ", 15) = 15
+29648      0.000023 write(2, "\33[0m", 4) = 4
+29648      0.000027 write(2, "\33[K", 3) = 3
+29648      0.000026 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000027 write(2, " (0) INIT CLI                   "..., 51) = 51
+29648      0.000026 write(2, "\33[0m", 4) = 4
+29648      0.000026 write(2, "   ", 3)  = 3
+29648      0.000026 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000030 write(2, "          ", 10) = 10
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000035 write(2, "\r", 1)   = 1
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000027 write(2, "\33[22;46;34m", 11) = 11
+29648      0.000023 write(2, " -                              "..., 51) = 51
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[22;46;97m", 11) = 11
+29648      0.000021 write(2, "\33[K", 3) = 3
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000021 write(2, "\r", 1)   = 1
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000023 write(2, "\33[22;46;34m", 11) = 11
+29648      0.000022 write(2, "  [client] zocromas_mas_init V.0"..., 120) = 120
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[22;46;97m", 11) = 11
+29648      0.000022 write(2, "\33[K", 3) = 3
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\n", 1)   = 1
+29648      0.000023 write(2, "\r", 1)   = 1
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000023 write(2, "\33[22;46;34m", 11) = 11
+29648      0.000020 write(2, "  [client] pid=[ 29648 ](73d0) ;"..., 51) = 51
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[22;46;97m", 11) = 11
+29648      0.000022 write(2, "\33[K", 3) = 3
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000021 write(2, "\r", 1)   = 1
+29648      0.000020 write(2, "\33[K", 3) = 3
+29648      0.000022 write(2, "\33[22;46;34m", 11) = 11
+29648      0.000030 write(2, " -                              "..., 51) = 51
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\33[22;46;97m", 11) = 11
+29648      0.000022 write(2, "\33[K", 3) = 3
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000078 open("/mnt/new_misc/develop/autotools/zoc/projects/zocromas/.zocromas/history", O_RDONLY) = 3
+29648      0.000049 fstat(3, {st_mode=S_IFREG|0600, st_size=1925, ...}) = 0
+29648      0.000021 read(3, "pwd\nsystem date\nsystem cal\nset m"..., 1925) = 1925
+29648      0.005551 close(3)            = 0
+29648      0.000095 write(2, "\r", 1)   = 1
+29648      0.000039 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000026 write(2, "+    0s ", 8) = 8
+29648      0.000023 write(2, "\33[0m", 4) = 4
+29648      0.000028 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000024 write(2, "mas_init       ", 15) = 15
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000025 write(2, "\33[K", 3) = 3
+29648      0.000023 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000023 write(2, " INIT OK                        "..., 51) = 51
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "   ", 3)  = 3
+29648      0.000022 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000022 write(2, "          ", 10) = 10
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\n", 1)   = 1
+29648      0.000026 prctl(PR_SET_NAME, 0x4056f1, 0, 0xffffffffffffffff, 0xa) = 0
+29648      0.000061 open("/etc/resolv.conf", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000025 fcntl(3, F_GETFD)   = 0x1 (flags FD_CLOEXEC)
+29648      0.000025 fstat(3, {st_mode=S_IFREG|0644, st_size=84, ...}) = 0
+29648      0.000017 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000021 read(3, "# Generated by net-scripts for i"..., 4096) = 84
+29648      0.000019 read(3, "", 4096)   = 0
+29648      0.000016 close(3)            = 0
+29648      0.000016 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000027 socket(PF_FILE, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 3
+29648      0.000025 connect(3, {sa_family=AF_FILE, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+29648      0.000029 close(3)            = 0
+29648      0.000017 socket(PF_FILE, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 3
+29648      0.000016 connect(3, {sa_family=AF_FILE, sun_path="/var/run/nscd/socket"}, 110) = -1 ENOENT (No such file or directory)
+29648      0.000019 close(3)            = 0
+29648      0.000017 open("/etc/nsswitch.conf", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000019 fstat(3, {st_mode=S_IFREG|0644, st_size=508, ...}) = 0
+29648      0.000016 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000017 read(3, "# /etc/nsswitch.conf:\n# $Header:"..., 4096) = 508
+29648      0.000022 read(3, "", 4096)   = 0
+29648      0.000015 close(3)            = 0
+29648      0.000014 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000026 open("/usr/local/lib/libnss_files.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000020 open("/usr/lib/mysql/libnss_files.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000019 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 fstat(3, {st_mode=S_IFREG|0644, st_size=250268, ...}) = 0
+29648      0.000016 mmap(NULL, 250268, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fbe446bb000
+29648      0.000017 close(3)            = 0
+29648      0.000022 open("/lib64/libnss_files.so.2", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20'\0\0\0\0\0\0"..., 832) = 832
+29648      0.000018 fstat(3, {st_mode=S_IFREG|0755, st_size=51968, ...}) = 0
+29648      0.000017 mmap(NULL, 2148184, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe41a0c000
+29648      0.000017 mprotect(0x7fbe41a18000, 2093056, PROT_NONE) = 0
+29648      0.000019 mmap(0x7fbe41c17000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xb000) = 0x7fbe41c17000
+29648      0.000032 close(3)            = 0
+29648      0.000029 mprotect(0x7fbe41c17000, 4096, PROT_READ) = 0
+29648      0.000017 munmap(0x7fbe446bb000, 250268) = 0
+29648      0.000024 open("/etc/host.conf", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 fstat(3, {st_mode=S_IFREG|0644, st_size=935, ...}) = 0
+29648      0.000015 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000016 read(3, "# /etc/host.conf:\n# $Header: /va"..., 4096) = 935
+29648      0.000022 read(3, "", 4096)   = 0
+29648      0.000015 close(3)            = 0
+29648      0.000014 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000017 futex(0x7fbe4241a684, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+29648      0.000019 open("/etc/hosts", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 fcntl(3, F_GETFD)   = 0x1 (flags FD_CLOEXEC)
+29648      0.000016 fstat(3, {st_mode=S_IFREG|0644, st_size=1260, ...}) = 0
+29648      0.000014 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000015 read(3, "# /etc/hosts: Local Host Databas"..., 4096) = 1260
+29648      0.000027 read(3, "", 4096)   = 0
+29648      0.000016 close(3)            = 0
+29648      0.000014 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000019 open("/usr/local/lib/libnss_dns.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/usr/lib/mysql/libnss_dns.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 fstat(3, {st_mode=S_IFREG|0644, st_size=250268, ...}) = 0
+29648      0.000016 mmap(NULL, 250268, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fbe446bb000
+29648      0.000016 close(3)            = 0
+29648      0.000019 open("/lib64/libnss_dns.so.2", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000018 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\22\0\0\0\0\0\0"..., 832) = 832
+29648      0.000017 fstat(3, {st_mode=S_IFREG|0755, st_size=22728, ...}) = 0
+29648      0.000017 mmap(NULL, 2117872, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe41806000
+29648      0.000016 mprotect(0x7fbe4180b000, 2093056, PROT_NONE) = 0
+29648      0.000017 mmap(0x7fbe41a0a000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x4000) = 0x7fbe41a0a000
+29648      0.000022 close(3)            = 0
+29648      0.000018 open("/usr/local/lib/libresolv.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000018 open("/usr/lib/mysql/libresolv.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+29648      0.000023 open("/lib64/libresolv.so.2", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260@\0\0\0\0\0\0"..., 832) = 832
+29648      0.000017 fstat(3, {st_mode=S_IFREG|0755, st_size=84624, ...}) = 0
+29648      0.000018 mmap(NULL, 2189960, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fbe415ef000
+29648      0.000017 mprotect(0x7fbe41602000, 2097152, PROT_NONE) = 0
+29648      0.000018 mmap(0x7fbe41802000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x13000) = 0x7fbe41802000
+29648      0.000019 mmap(0x7fbe41804000, 6792, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fbe41804000
+29648      0.000020 close(3)            = 0
+29648      0.000028 mprotect(0x7fbe41802000, 4096, PROT_READ) = 0
+29648      0.000021 mprotect(0x7fbe41a0a000, 4096, PROT_READ) = 0
+29648      0.000018 munmap(0x7fbe446bb000, 250268) = 0
+29648      0.000025 stat("/etc/resolv.conf", {st_mode=S_IFREG|0644, st_size=84, ...}) = 0
+29648      0.000020 open("/etc/resolv.conf", O_RDONLY|O_CLOEXEC) = 3
+29648      0.000017 fstat(3, {st_mode=S_IFREG|0644, st_size=84, ...}) = 0
+29648      0.000014 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000016 read(3, "# Generated by net-scripts for i"..., 4096) = 84
+29648      0.000017 read(3, "", 4096)   = 0
+29648      0.000022 close(3)            = 0
+29648      0.000014 munmap(0x7fbe446f8000, 4096) = 0
+29648      0.000030 socket(PF_INET, SOCK_DGRAM|SOCK_NONBLOCK, IPPROTO_IP) = 3
+29648      0.000020 connect(3, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("192.168.71.10")}, 16) = 0
+29648      0.000032 poll([{fd=3, events=POLLOUT}], 1, 0) = 1 ([{fd=3, revents=POLLOUT}])
+29648      0.000019 sendto(3, "\26\376\1\0\0\1\0\0\0\0\0\0\10zocromas\6mastar\3lan"..., 37, MSG_NOSIGNAL, NULL, 0) = 37
+29648      0.000064 poll([{fd=3, events=POLLIN}], 1, 5000) = 1 ([{fd=3, revents=POLLIN}])
+29648      0.000172 ioctl(3, FIONREAD, [100]) = 0
+29648      0.000030 recvfrom(3, "\26\376\205\200\0\1\0\1\0\1\0\1\10zocromas\6mastar\3lan"..., 1024, 0, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr("192.168.71.10")}, [16]) = 100
+29648      0.000028 close(3)            = 0
+29648      0.000041 socket(PF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+29648      0.000022 connect(3, {sa_family=AF_INET, sin_port=htons(5005), sin_addr=inet_addr("192.168.71.27")}, 16) = 0
+29648      0.000090 write(3, "(\2\23 \257\276\255\336\0\0\0\0\0\0\0\0\0\0\0\0\320s\0\0@WkD\276\177\0\0"..., 104) = 104
+29648      0.000053 read(3, "(\2\23 \257\276\255\336\0\0\0\0\0\0\0\0\0\0\0\0\tr\0\0\0\247Vf\244\177\0\0"..., 4112) = 1310
+29648      0.014378 fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 33), ...}) = 0
+29648      0.000029 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f8000
+29648      0.000028 write(1, "\n[mem:1028774]- (4/0)\tuuid:\t8904"..., 1024) = 1024
+29648      0.000058 write(1, "servers:\n", 9) = 9
+29648      0.000028 write(1, "\t0(s1). zocromas.mastar.lan:5005"..., 108) = 108
+29648      0.000030 write(1, "\t\t0(s1). 192.168.71.2 [<xcromas>"..., 80) = 80
+29648      0.000029 write(1, "\n", 1)   = 1
+29648      0.000034 write(3, "(\2\23 \257\276\255\336\0\0\0\0\0\0\0\0\0\0\0\0\320s\0\0@WkD\276\177\0\0"..., 92) = 92
+29648      0.000044 read(3, "(\2\23 \257\276\255\336\0\0\0\0\0\0\0\0\0\0\0\0\tr\0\0\0\247Vf\244\177\0\0"..., 4112) = 154
+29648      0.005155 write(1, "/mnt/new_misc/develop/autotools/"..., 66) = 66
+29648      0.000070 ioctl(1, SNDCTL_TMR_TIMEBASE or SNDRV_TIMER_IOCTL_NEXT_DEVICE or TCGETS, {B38400 opost isig icanon echo ...}) = 0
+29648      0.000063 stat("/home/mastar/.terminfo", 0x7fffea5c5f80) = -1 ENOENT (No such file or directory)
+29648      0.000034 stat("/etc/terminfo", {st_mode=S_IFDIR|0755, st_size=4096, ...}) = 0
+29648      0.000030 access("/etc/terminfo/x/xterm", R_OK) = 0
+29648      0.000033 open("/etc/terminfo/x/xterm", O_RDONLY) = 4
+29648      0.000027 fstat(4, {st_mode=S_IFREG|0644, st_size=3270, ...}) = 0
+29648      0.000021 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fbe446f7000
+29648      0.000021 read(4, "\32\0010\0&\0\17\0\235\1l\5xterm|xterm terminal"..., 4096) = 3270
+29648      0.000021 read(4, "", 4096)   = 0
+29648      0.000036 close(4)            = 0
+29648      0.000019 munmap(0x7fbe446f7000, 4096) = 0
+29648      0.000030 ioctl(1, SNDCTL_TMR_TIMEBASE or SNDRV_TIMER_IOCTL_NEXT_DEVICE or TCGETS, {B38400 opost isig icanon echo ...}) = 0
+29648      0.000027 ioctl(1, SNDCTL_TMR_TIMEBASE or SNDRV_TIMER_IOCTL_NEXT_DEVICE or TCGETS, {B38400 opost isig icanon echo ...}) = 0
+29648      0.000023 ioctl(1, TIOCGWINSZ, {ws_row=87, ws_col=156, ws_xpixel=0, ws_ypixel=0}) = 0
+29648      0.000054 ioctl(0, TIOCGWINSZ, {ws_row=87, ws_col=156, ws_xpixel=0, ws_ypixel=0}) = 0
+29648      0.000053 ioctl(0, TIOCGWINSZ, {ws_row=87, ws_col=156, ws_xpixel=0, ws_ypixel=0}) = 0
+29648      0.000020 ioctl(0, SNDRV_TIMER_IOCTL_STATUS or TIOCSWINSZ, {ws_row=87, ws_col=156, ws_xpixel=0, ws_ypixel=0}) = 0
+29648      0.000022 ioctl(0, SNDCTL_TMR_TIMEBASE or SNDRV_TIMER_IOCTL_NEXT_DEVICE or TCGETS, {B38400 opost isig icanon echo ...}) = 0
+29648      0.000038 open("/usr/lib64/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 4
+29648      0.000023 fstat(4, {st_mode=S_IFREG|0644, st_size=4345296, ...}) = 0
+29648      0.000020 mmap(NULL, 4345296, PROT_READ, MAP_PRIVATE, 4, 0) = 0x7fbe411ca000
+29648      0.000029 close(4)            = 0
+29648      0.000042 stat("/home/mastar/.mas/config/term_new/input/rc", {st_mode=S_IFREG|0600, st_size=4273, ...}) = 0
+29648      0.000026 open("/home/mastar/.mas/config/term_new/input/rc", O_RDONLY) = 4
+29648      0.000023 read(4, "# <mastar-made>\n# set horizontal"..., 4273) = 4273
+29648      0.000020 close(4)            = 0
+29648      0.000027 stat("/etc/inputrc", {st_mode=S_IFREG|0644, st_size=1855, ...}) = 0
+29648      0.000023 open("/etc/inputrc", O_RDONLY) = 4
+29648      0.000022 read(4, "# /etc/inputrc: initialization f"..., 1855) = 1855
+29648      0.000020 close(4)            = 0
+29648      0.000033 brk(0x14c8000)      = 0x14c8000
+29648      0.000044 stat("/home/mastar/.inputrc", {st_mode=S_IFREG|0600, st_size=421, ...}) = 0
+29648      0.000032 open("/home/mastar/.inputrc", O_RDONLY) = 4
+29648      0.000026 read(4, "# <mastar-made>\n# set horizontal"..., 421) = 421
+29648      0.000020 close(4)            = 0
+29648      0.000022 stat("/etc/inputrc", {st_mode=S_IFREG|0644, st_size=1855, ...}) = 0
+29648      0.000022 open("/etc/inputrc", O_RDONLY) = 4
+29648      0.000020 read(4, "# /etc/inputrc: initialization f"..., 1855) = 1855
+29648      0.000019 close(4)            = 0
+29648      0.000080 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000023 ioctl(0, TIOCGWINSZ, {ws_row=87, ws_col=156, ws_xpixel=0, ws_ypixel=0}) = 0
+29648      0.000019 ioctl(0, SNDRV_TIMER_IOCTL_STATUS or TIOCSWINSZ, {ws_row=87, ws_col=156, ws_xpixel=0, ws_ypixel=0}) = 0
+29648      0.000018 ioctl(0, SNDCTL_TMR_TIMEBASE or SNDRV_TIMER_IOCTL_NEXT_DEVICE or TCGETS, {B38400 opost isig icanon echo ...}) = 0
+29648      0.000023 ioctl(0, SNDCTL_TMR_STOP or SNDRV_TIMER_IOCTL_GINFO or TCSETSW, {B38400 opost isig -icanon -echo ...}) = 0
+29648      0.000022 write(1, "\33[?1034h", 8) = 8
+29648      0.000022 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000021 rt_sigprocmask(SIG_BLOCK, [INT QUIT ALRM TERM TSTP TTIN TTOU], [], 8) = 0
+29648      0.000022 rt_sigaction(SIGINT, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {0x401fe8, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000023 rt_sigaction(SIGTERM, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {0x402211, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000020 rt_sigaction(SIGQUIT, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {0x40216f, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000021 rt_sigaction(SIGALRM, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {SIG_DFL, [], 0}, 8) = 0
+29648      0.000020 rt_sigaction(SIGTSTP, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {SIG_DFL, [], 0}, 8) = 0
+29648      0.000020 rt_sigaction(SIGTTOU, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {SIG_DFL, [], 0}, 8) = 0
+29648      0.000019 rt_sigaction(SIGTTIN, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, {SIG_DFL, [], 0}, 8) = 0
+29648      0.000019 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000017 rt_sigaction(SIGWINCH, {0x7fbe42445f20, [], SA_RESTORER|SA_RESTART, 0x7fbe42c80410}, {SIG_DFL, [], 0}, 8) = 0
+29648      0.000021 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000029 open("/usr/lib64/gconv/gconv-modules.cache", O_RDONLY) = 4
+29648      0.000021 fstat(4, {st_mode=S_IFREG|0644, st_size=26244, ...}) = 0
+29648      0.000019 mmap(NULL, 26244, PROT_READ, MAP_SHARED, 4, 0) = 0x7fbe446f1000
+29648      0.000019 close(4)            = 0
+29648      0.000016 futex(0x7fbe42417900, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+29648      0.000035 write(1, "(bye to force exit) (0) % ", 26) = 26
+29648      0.000021 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000020 rt_sigprocmask(SIG_BLOCK, NULL, [], 8) = 0
+29648      0.000021 read(0, "\33", 1)   = 1
+29648      1.032569 read(0, "[", 1)     = 1
+29648      0.000026 read(0, "A", 1)     = 1
+29648      0.000037 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000065 write(1, "server exit", 11) = 11
+29648      0.000039 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000024 rt_sigprocmask(SIG_BLOCK, NULL, [], 8) = 0
+29648      0.000033 read(0, "\33", 1)   = 1
+29648      1.287800 read(0, "[", 1)     = 1
+29648      0.000027 read(0, "B", 1)     = 1
+29648      0.000037 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000051 write(1, "\10\10\10\10\10\10\10\10\10\10\10\33[K", 14) = 14
+29648      0.000035 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000028 rt_sigprocmask(SIG_BLOCK, NULL, [], 8) = 0
+29648      0.000024 read(0, "\33", 1)   = 1
+29648      1.111813 read(0, "[", 1)     = 1
+29648      0.000030 read(0, "A", 1)     = 1
+29648      0.000028 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000067 write(1, "server exit", 11) = 11
+29648      0.000092 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000024 rt_sigprocmask(SIG_BLOCK, NULL, [], 8) = 0
+29648      0.000022 read(0, "\33", 1)   = 1
+29648      1.551823 read(0, "[", 1)     = 1
+29648      0.000029 read(0, "A", 1)     = 1
+29648      0.000026 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000090 write(1, "\10\10\10\10\10\10\10\10\10\10\10bye\33[K", 17) = 17
+29648      0.000038 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000025 rt_sigprocmask(SIG_BLOCK, NULL, [], 8) = 0
+29648      0.000022 read(0, "\r", 1)    = 1
+29648      0.863697 write(1, "\n", 1)   = 1
+29648      0.000041 rt_sigprocmask(SIG_BLOCK, [INT], [], 8) = 0
+29648      0.000027 ioctl(0, SNDCTL_TMR_STOP or SNDRV_TIMER_IOCTL_GINFO or TCSETSW, {B38400 opost isig icanon echo ...}) = 0
+29648      0.000031 rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+29648      0.000023 rt_sigaction(SIGINT, {0x401fe8, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000025 rt_sigaction(SIGTERM, {0x402211, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000022 rt_sigaction(SIGQUIT, {0x40216f, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000033 rt_sigaction(SIGALRM, {SIG_DFL, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000020 rt_sigaction(SIGTSTP, {SIG_DFL, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000018 rt_sigaction(SIGTTOU, {SIG_DFL, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000018 rt_sigaction(SIGTTIN, {SIG_DFL, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe424466b0, [], SA_RESTORER, 0x7fbe42c80410}, 8) = 0
+29648      0.000017 rt_sigaction(SIGWINCH, {SIG_DFL, [], SA_RESTORER, 0x7fbe42c80410}, {0x7fbe42445f20, [], SA_RESTORER|SA_RESTART, 0x7fbe42c80410}, 8) = 0
+29648      0.000033 close(3)            = 0
+29648      0.000076 open("/mnt/new_misc/develop/autotools/zoc/projects/zocromas/.zocromas/history", O_WRONLY|O_CREAT|O_TRUNC, 0600) = 3
+29648      0.000060 write(3, "pwd\nsystem date\nsystem cal\nset m"..., 1929) = 1929
+29648      0.000031 close(3)            = 0
+29648      0.000045 getppid()           = 29393
+29648      0.000029 write(2, "\r", 1)   = 1
+29648      0.000025 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000021 write(2, "+    6s ", 8) = 8
+29648      0.000027 write(2, "\33[0m", 4) = 4
+29648      0.000022 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000021 write(2, "mas_log        ", 15) = 15
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000023 write(2, "\33[K", 3) = 3
+29648      0.000032 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000021 write(2, " CLEARED logger queue : 0 [0-0=0"..., 51) = 51
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "   ", 3)  = 3
+29648      0.000021 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000019 write(2, "          ", 10) = 10
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000019 write(2, "\n", 1)   = 1
+29648      0.000021 write(2, "\r", 1)   = 1
+29648      0.000021 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000020 write(2, "+    6s ", 8) = 8
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000028 write(2, "mas_init       ", 15) = 15
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\33[K", 3) = 3
+29648      0.000021 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000020 write(2, " DESTROY DONE                   "..., 51) = 51
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000044 write(2, "   ", 3)  = 3
+29648      0.000025 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000022 write(2, "          ", 10) = 10
+29648      0.000022 write(2, "\33[0m", 4) = 4
+29648      0.000024 write(2, "\n", 1)   = 1
+29648      0.000024 write(2, "\r", 1)   = 1
+29648      0.000025 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000021 write(2, "+    6s ", 8) = 8
+29648      0.000018 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000020 write(2, "mas_init       ", 15) = 15
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[K", 3) = 3
+29648      0.000019 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000020 write(2, " destroy, memory_balance:0;     "..., 51) = 51
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000019 write(2, "   ", 3)  = 3
+29648      0.000020 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000018 write(2, "          ", 10) = 10
+29648      0.000018 write(2, "\33[0m", 4) = 4
+29648      0.000019 write(2, "\n", 1)   = 1
+29648      0.000033 write(2, "** EMPTY MEMORY TABLE ** mas_des"..., 41) = 41
+29648      0.000051 write(2, "** EMPTY MEMORY TABLE ** mas_des"..., 41) = 41
+29648      0.000032 write(2, "** EMPTY MEMORY TABLE ** mas_des"..., 41) = 41
+29648      0.000024 write(2, "\r", 1)   = 1
+29648      0.000021 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000022 write(2, "+    6s ", 8) = 8
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000021 write(2, "client         ", 15) = 15
+29648      0.000021 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\33[K", 3) = 3
+29648      0.000022 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000021 write(2, " AT EXIT, memory_balance:0      "..., 51) = 51
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "   ", 3)  = 3
+29648      0.000021 write(2, "\33[1;42;33m", 10) = 10
+29648      0.000020 write(2, "          ", 10) = 10
+29648      0.000020 write(2, "\33[0m", 4) = 4
+29648      0.000021 write(2, "\n", 1)   = 1
+29648      0.000032 write(2, "** EMPTY MEMORY TABLE ** mas_ate"..., 40) = 40
+29648      0.000031 write(2, "** EMPTY MEMORY TABLE ** mas_ate"..., 40) = 40
+29648      0.000031 write(2, "** EMPTY MEMORY TABLE ** mas_ate"..., 40) = 40
+29648      0.000020 write(2, "\r", 1)   = 1
+29648      0.000020 write(2, "\33[1;104;33m", 11) = 11
+29648      0.000019 write(2, "+    6s ", 8) = 8
+29648      0.000019 write(2, "\33[0m", 4) = 4
+29648      0.000019 write(2, "\33[1;43;33m", 10) = 10
+29648      0.000019 write(2, "client         ", 15) = 15
+29648      0.000018 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\33[K", 3) = 3
+29648      0.000019 write(2, "\33[22;40;97m", 11) = 11
+29648      0.000020 write(2, " ==============================="..., 71) = 71
+29648      0.000018 write(2, "\33[0m", 4) = 4
+29648      0.000020 write(2, "\n", 1)   = 1
+29648      0.000024 write(2, "******************** DESTRUCTOR "..., 119) = 119
+29648      0.000047 exit_group(0)       = ?
+29648      0.000158 +++ exited with 0 +++
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 78.12    0.000025           0       372           write
+ 21.88    0.000007           0        74           mmap
+  0.00    0.000000           0        59           read
+  0.00    0.000000           0        99        57 open
+  0.00    0.000000           0        46           close
+  0.00    0.000000           0        21        10 stat
+  0.00    0.000000           0        37           fstat
+  0.00    0.000000           0         1           lstat
+  0.00    0.000000           0         2           poll
+  0.00    0.000000           0        46           mprotect
+  0.00    0.000000           0        11           munmap
+  0.00    0.000000           0         4           brk
+  0.00    0.000000           0        25           rt_sigaction
+  0.00    0.000000           0        22           rt_sigprocmask
+  0.00    0.000000           0        14           ioctl
+  0.00    0.000000           0         2         1 access
+  0.00    0.000000           0         4           socket
+  0.00    0.000000           0         4         2 connect
+  0.00    0.000000           0         1           sendto
+  0.00    0.000000           0         1           recvfrom
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         4           fcntl
+  0.00    0.000000           0         1           readlink
+  0.00    0.000000           0         1           getrlimit
+  0.00    0.000000           0         1           getuid
+  0.00    0.000000           0         5           getppid
+  0.00    0.000000           0         1           prctl
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         2           gettid
+  0.00    0.000000           0         5         1 futex
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         1           set_robust_list
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000032                   869        71 total

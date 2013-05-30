@@ -1,0 +1,5 @@
+--silent
+--enable-silent-rules
+--enable-tracemem
+--enable-debug
+--enable-old-variables

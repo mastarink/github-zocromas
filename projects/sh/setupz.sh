@@ -34,7 +34,8 @@ function prjconfversion ()
 }  
 function setup_vers ()
 {
-  local n v rprefix rname_case prj_configure_opts1 prj_configure_opts2 prj_configure_opts3 c
+  local n v rprefix rname_case c
+  local global_flavour_opts_file indir_flavour_opts_file
 # echo "setup_vers" >&2
   n=$1
   shift
@@ -70,25 +71,47 @@ function setup_vers ()
 #     echo "`pwd`>> [$mas_name] [$mas_vers]" >&2
       mas_base_vers='0.0.5.20130219'
     fi
-    if ! [[ "$prj_configure_opts" ]] || [[ -f $indir/configure_opts ]] ; then
-      prj_configure_opts1="--prefix=$instdir"
-  #   prj_configure_opts2=" --silent --enable-silent-rules --enable-tracemem --enable-debug"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-pids-dir=zocromas/pid"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-mods-dir=zocmds"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-proto-dir=zocromas_zocprotos"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-log-dir=log"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-server=/tmp/zocromas.socket"
-  #   prj_configure_opts2="$prj_configure_opts2 --with-def-proto=xcromas"
+    global_flavour_opts_file=$projectsdir/configure_opts.${mas_flavour:-default}
+    if ! [[ -f $global_flavour_opts_file ]] ; then
+      echo "no file $global_flavour_opts_file" >&2
+      echo "          using $projectsdir/configure_opts.default" >&2
+      global_flavour_opts_file=$projectsdir/configure_opts.default
+    fi
+    indir_flavour_opts_file=$indir/configure_opts.${mas_flavour:-default}
+    if ! [[ -f $indir_flavour_opts_file ]] && [[ -f $indir/configure_opts.default ]]; then
+      echo "no file $indir_flavour_opts_file" >&2
+      echo "          using $indir/configure_opts.default" >&2
+      indir_flavour_opts_file=$indir/configure_opts.default
+    fi
+
+    if ! [[ "$prj_configure_opts" ]] || [[ -f "$indir_flavour_opts_file" ]] ; then
+      prj_configure_opts="--prefix=$flavourdir"
+  #   prj_configure_opts=" --silent --enable-silent-rules --enable-tracemem --enable-debug"
+  #   prj_configure_opts="$prj_configure_opts --with-base-dir=/mnt/new_misc/develop/autotools/zoc"
+  #   prj_configure_opts="$prj_configure_opts --with-pids-dir=zocromas/pid"
+  #   prj_configure_opts="$prj_configure_opts --with-mods-dir=zocmds"
+  #   prj_configure_opts="$prj_configure_opts --with-proto-dir=zocromas_zocprotos"
+  #   prj_configure_opts="$prj_configure_opts --with-log-dir=log"
+  #   prj_configure_opts="$prj_configure_opts --with-server=/tmp/zocromas.socket"
+  #   prj_configure_opts="$prj_configure_opts --with-def-proto=xcromas"
+      echo "to read '$global_flavour_opts_file'" >&2
       while read c ; do 
-	prj_configure_opts2="$prj_configure_opts2 $c"
-      done < $projectsdir/configure_opts
-      if [[ -f $indir/configure_opts ]] ; then
-	while read c ; do 
-	  prj_configure_opts3="$prj_configure_opts3 $c"
-	done < $indir/configure_opts 
+	if ! [[ "$c" =~ ^--prefix= ]] ; then
+	  prj_configure_opts="$prj_configure_opts $c"
+	fi
+      done < $global_flavour_opts_file
+      if [[ -f $indir_flavour_opts_file ]] ; then
+        echo "to read '$indir_flavour_opts_file'" >&2
+	while read c ; do
+	  if ! [[ "$c" =~ ^--prefix= ]] ; then
+	    prj_configure_opts="$prj_configure_opts $c"
+	  fi
+	done < $indir_flavour_opts_file
+      else
+        echo "did not read $indir_flavour_opts_file" >&2
       fi
-      prj_configure_opts="$prj_configure_opts1 $prj_configure_opts2 $prj_configure_opts3"
+    else
+      echo "preset opts" >&2
     fi
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
@@ -135,6 +158,7 @@ function setup_vers ()
   fi
 # echo "($rname_case)::: $rname_preset" >&2
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
+  ibinary_preset="$flavourdir/bin/$rname_preset"
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
     short_name=${BASH_REMATCH[1]}
 # else
@@ -184,6 +208,7 @@ function show_setup ()
   
   echo "= INSTALL:" >&2
   echo "instdir:	$instdir" >&2
+  echo "flavourdir:	$flavourdir" >&2
   echo "unpackdir:	$unpackdir" >&2
   echo "ibuilddir:	$ibuilddir" >&2
   echo "distname:	$distname" >&2
@@ -197,7 +222,6 @@ function show_setup ()
   echo "projectsdir:	$projectsdir" >&2
   
 }
-
 export MAS_MAKE_CNT=0
 # echo "SETUPZ" >&2
 if ! setup_dirs ; then

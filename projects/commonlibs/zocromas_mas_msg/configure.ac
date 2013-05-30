@@ -112,6 +112,17 @@ PKG_CHECK_MODULES([DEPSX], [zocromas_mas_thtools])
 #     [enable debug code (default is no)])],
 #   [debug="$withval"], [debug=no])
 
+AC_ARG_ENABLE([old_variables],
+	      AC_HELP_STRING([--enable-old-variables],
+			     [turn on old variables]),,
+	      [enable_old_variables=no])
+
+if test x$enable_old_variables = xyes ; then
+    AC_DEFINE(MAS_OLD_VARIABLES_HTTP, 1,
+	[Enable old variables lib])
+fi
+
+
 ########### debug   ########################################################################
 AC_ARG_ENABLE([debug],
 	      AC_HELP_STRING([--enable-debug],

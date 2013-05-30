@@ -1,0 +1,4 @@
+--silent
+--enable-silent-rules
+--enable-tracemem
+--enable-debug

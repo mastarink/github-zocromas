@@ -113,10 +113,11 @@ AC_ARG_ENABLE([old_variables],
 if test x$enable_old_variables = xyes ; then
     AC_DEFINE(MAS_OLD_VARIABLES_HTTP, 1,
 	[Enable old variables lib])
-  PKG_CHECK_MODULES([HTTP_DEPS], [ zocromas_mas_variables ])
+  PKG_CHECK_MODULES([HTTP_DEPS], [ zocromas_mas_variables zocromas_mas_fileinfo zocromas_mas_varset ])
+else
+  PKG_CHECK_MODULES([HTTP_DEPS], [zocromas_mas_fileinfo zocromas_mas_varset])
 fi
 
-PKG_CHECK_MODULES([HTTP_DEPS], [zocromas_mas_fileinfo zocromas_mas_variables zocromas_mas_varset])
 
 # Configure options: --enable-debug[=no].
 

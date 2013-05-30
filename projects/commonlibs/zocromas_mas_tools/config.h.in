@@ -138,6 +138,9 @@
 /* */
 #undef MAS_MALLOC
 
+/* Enable old variables lib */
+#undef MAS_OLD_VARIABLES_HTTP
+
 /* os version */
 #undef MAS_OSVER
 

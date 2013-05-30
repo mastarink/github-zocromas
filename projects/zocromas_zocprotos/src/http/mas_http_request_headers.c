@@ -19,6 +19,7 @@
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset_vclass.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -121,6 +122,47 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
   return http;
 }
 
+/* static void                                                                                                                      */
+/* w_action( const void *nodep, const VISIT which, const int depth )                                                                */
+/* {                                                                                                                                */
+/*   if ( which == endorder || which == leaf )                                                                                      */
+/*   {                                                                                                                              */
+/*     const char *name = NULL;                                                                                                     */
+/*                                                                                                                                  */
+/*     if ( nodep )                                                                                                                 */
+/*     {                                                                                                                            */
+/*       mas_varset_class_t *vclass;                                                                                                */
+/*       unsigned long id;                                                                                                          */
+/*                                                                                                                                  */
+/*       vclass = *( ( mas_varset_class_t ** ) nodep );                                                                             */
+/*       id = mas_varset_vclass_id( vclass );                                                                                       */
+/*       name = mas_varset_vclass_name( vclass );                                                                                   */
+/*       (* fprintf( stderr, "nodep:%p; which:%lu; depth:%lu --- %s\n", nodep, ( unsigned long ) which, ( unsigned long ) depth, *) */
+/*       (*          name ? name : "-" );                                                                                        *) */
+/*       EMSG( "[%lu] %lu. %s\n", ( unsigned long ) depth, id, name ? name : "-" );                                                 */
+/*       if ( vclass->veccnt )                                                                                                      */
+/*       {                                                                                                                          */
+/*         mas_var_t *vec;                                                                                                          */
+/*                                                                                                                                  */
+/*         vec = vclass->vec;                                                                                                       */
+/*         for ( int i = 0; i < vclass->veccnt; i++ )                                                                               */
+/*         {                                                                                                                        */
+/*           int j;                                                                                                                 */
+/*           char *name;                                                                                                            */
+/*           char *val;                                                                                                             */
+/*                                                                                                                                  */
+/*           j = i * 2;                                                                                                             */
+/*           name = mas_varset_vclass_variable_get_name( &vec[j] );                                                                 */
+/*           val = mas_varset_vclass_variable_get_value( &vec[j] );                                                                 */
+/*           EMSG( "\t\t\t-- %s='%s'\n", name, val );                                                                               */
+/*           mas_free( val );                                                                                                       */
+/*           mas_free( name );                                                                                                      */
+/*         }                                                                                                                        */
+/*       }                                                                                                                          */
+/*     }                                                                                                                            */
+/*   }                                                                                                                              */
+/* }                                                                                                                                */
+
 static mas_http_t *
 mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char *pstring )
 {
@@ -150,7 +192,26 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
 #ifdef MAS_OLD_VARIABLES_HTTP
     http->indata = mas_variable_create_x( http->indata, /* MAS_THREAD_TRANSACTION, */ "inheader", name, NULL, "%s", value, 0 );
 #else
-    http->outdata = mas_varset_search_variablef( http->indata, "inheader", name, NULL, "%s", value );
+    /* http->indata = mas_varset_search_variablef( http->indata, "inheader", name, NULL, "%s", value ); */
+    http->indata = mas_varset_search_variable( http->indata, "inheader", name, value );
+    /* {                                                                                                         */
+    /*   mas_var_t *tv;                                                                                          */
+    /*                                                                                                           */
+    /*   tv = mas_varset_find_variable( http->indata, "inheader", name );                                        */
+    /*   if ( tv )                                                                                               */
+    /*   {                                                                                                       */
+    /*     char *s;                                                                                              */
+    /*                                                                                                           */
+    /*     s = mas_varset_vclass_variable_get_value( tv );                                                       */
+    /*     HMSG( "TO SET inheader '%s'='%s' -- '%s'", name, mas_varset_vclass_variable_get_value_ref( tv ), s ); */
+    /*     mas_free( s );                                                                                        */
+    /*   }                                                                                                       */
+    /*   else                                                                                                    */
+    /*   {                                                                                                       */
+    /*     EMSG( "DIDN'T APPEAR VAR %s %d", name, http->indata ? 1 : 0 );                                        */
+    /*     mas_varset_walk_classes( http->indata, w_action );                                                    */
+    /*   }                                                                                                       */
+    /* }                                                                                                         */
 #endif
     HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
 

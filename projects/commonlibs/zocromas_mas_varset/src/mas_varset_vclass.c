@@ -295,7 +295,7 @@ mas_varset_vclass_variable_get_value( mas_var_t * var )
   char *v = NULL;
 
   if ( var && var[1].iov_len )
-    v = mas_strndup( var[1].iov_base, var[1].iov_len );
+    v = mas_strndup( var[1].iov_base, var[1].iov_len - 2 );
   return v;
 }
 

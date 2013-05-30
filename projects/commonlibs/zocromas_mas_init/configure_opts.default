@@ -5,5 +5,3 @@
 --with-log-dir=log
 --with-server=/tmp/zocromas.socket
 --with-def-proto=xcromas
-
-

@@ -25,6 +25,7 @@ extern mas_options_t opts;
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset_vclass.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -73,7 +74,15 @@ mas_proto_add_host( const void *env, const char *section, const char *sectvalue,
   proto_desc->variables = mas_variable_create_text( proto_desc->variables, /* MAS_THREAD_NONE, */ "docroot", sectvalue, value, 0 );
 #else
   proto_desc->variables = mas_varset_search_variable( proto_desc->variables, "docroot", sectvalue, value );
+  /* {                                                                               */
+  /*   mas_var_t *tv;                                                                */
+  /*                                                                                 */
+  /*   tv = mas_varset_find_variable( proto_desc->variables, "docroot", sectvalue ); */
+  /*   if ( tv )                                                                     */
+  /*     HMSG( "WAW %s", mas_varset_vclass_variable_get_value_ref( tv ) );           */
+  /* }                                                                               */
 #endif
+
 }
 
 static mas_option_parse_t opt_table[] = {

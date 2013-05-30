@@ -12,6 +12,6 @@ if [[ -f "sh/librun_functions.bash" ]] ; then
 #   echo "  export MAS_ZOCROMAS_HERE=server" >&2
 #   echo "    or" >&2
 #   echo "  export MAS_ZOCROMAS_HERE=client" >&2
-#   # ls -l $instdir
+#   # ls -l $flavourdir
 # fi
 fi

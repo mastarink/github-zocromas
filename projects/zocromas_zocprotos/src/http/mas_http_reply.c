@@ -225,6 +225,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
     host_var = mas_varset_find_variable( http->indata, "inheader", "Host" );
 #endif
+    HMSG( "host_var %s", host_var ? "present" : "absent" );
     if ( host_var )
     {
       char *p;
@@ -248,7 +249,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     }
     else
     {
-      HMSG( "NO 'Host'" );
+      EMSG( "NO 'Host'" );
     }
     if ( !http->docroot && http->host )
     {
@@ -267,7 +268,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 #endif
     }
     if ( !http->docroot )
-      http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/htdocs" );
+      http->docroot = mas_strdup( "/var/www/mastarink.net/mastarink.net/1/htdocs" );
   }
   if ( http->docroot )
   {
@@ -276,6 +277,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
   }
   else
   {
+    EMSG( "NO DOCROOT" );
     MAS_LOG( "NO DOCROOT" );
   }
   return http;

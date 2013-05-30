@@ -236,7 +236,7 @@ mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
   if ( 1 || dsz )
   {
 #ifdef MAS_OLD_VARIABLES_HTTP
-    mas_variable_create_x( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Length", NULL, "%d", dsz );
+    outdata = mas_variable_create_x( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Length", NULL, "%d", dsz );
 #else
     outdata = mas_varset_search_variablef( outdata, "header", "Content-Length", NULL, "%d", dsz );
 #endif
@@ -271,8 +271,7 @@ mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
                                      "%a, %d %b %Y %T GMT", fileinfo->filetime );
 #else
     outdata =
-          mas_varset_search_variablef( outdata, "header", "Content-Length", mas_xvstrftime_time, "%a, %d %b %Y %T GMT",
-                                       fileinfo->filetime );
+          mas_varset_search_variablef( outdata, "header", "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", fileinfo->filetime );
 #endif
   }
   return outdata;
