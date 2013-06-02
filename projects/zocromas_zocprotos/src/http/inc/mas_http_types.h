@@ -89,9 +89,12 @@ struct mas_http_s
 #  ifdef MAS_OLD_VARIABLES_HTTP
   mas_variables_list_head_t *indata;
   mas_variables_list_head_t *outdata;
-#  else
+#  elif defined(MAS_VARSET_VARIABLES_HTTP)
   mas_varset_t *indata;
   mas_varset_t *outdata;
+#  else
+  mas_varset_class_t *indata;
+  mas_varset_class_t *outdata;
 #  endif
   char *sversion;
   float fversion;

@@ -67,8 +67,10 @@ mas_http_make_out_header_simple( mas_http_t * http, const char *name, const char
 {
 #ifdef MAS_OLD_VARIABLES_HTTP
   http->outdata = mas_variable_create_text( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, value, 0 );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
   http->outdata = mas_varset_search_variable( http->outdata, "header", name, value );
+#else
+  http->outdata = mas_varset_vclass_search_variable( http->outdata, NULL, name, value );
 #endif
   return http;
 }
@@ -81,8 +83,10 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
   va_start( args, fmt );
 #ifdef MAS_OLD_VARIABLES_HTTP
   http->outdata = mas_variable_vcreate_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, NULL, fmt, args, 0 );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
   http->outdata = mas_varset_search_variable_va( http->outdata, "header", name, NULL, fmt, args );
+#else
+  http->outdata = mas_varset_vclass_search_variable_va( http->outdata, NULL, name, NULL, fmt, args );
 #endif
   va_end( args );
   return http;
@@ -108,11 +112,20 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
                                  mas_xgmtime(  ), 0 );
     http->outdata = mas_variable_create_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Server", mas_xvsnprintf, "mas-%lu",
                                            ( unsigned long ) ( &__MAS_LINK_TIME__ ), 0 );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
     http->outdata = mas_varset_search_variablef( http->outdata, "header", "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT", mas_xgmtime(  ) );
+    /* TODO http->indata and http->outdata etc should be vclass, not varset */
+    /* TODO instead if prev line : mas_varset_vclass_search_variable + mas_varset_vclass_variable_set_valuef */
+
     http->outdata =
           mas_varset_search_variablef( http->outdata, "header", "Server", mas_xvsnprintf, "mas-%lu",
                                        ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
+#else
+    http->outdata =
+          mas_varset_vclass_search_variablef( http->outdata, NULL, "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT", mas_xgmtime(  ) );
+    http->outdata =
+          mas_varset_vclass_search_variablef( http->outdata, NULL, "Server", mas_xvsnprintf, "mas-%lu",
+                                              ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
 #endif
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
     http = mas_http_make_out_header_simple( http, "Connection", prcontrol->keep_alive ? "Keep-Alive" : "close" );
@@ -220,10 +233,14 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     mas_variable_t *host_var;
 
     host_var = mas_variables_find( http->indata, "inheader", "Host" );
-#else
-    mas_var_t *host_var;
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
+    mas_vclass_element_t *host_var;
 
     host_var = mas_varset_find_variable( http->indata, "inheader", "Host" );
+#else
+    mas_vclass_element_t *host_var;
+
+    host_var = mas_varset_vclass_find_variable( http->indata, "Host" );
 #endif
     HMSG( "host_var %s", host_var ? "present" : "absent" );
     if ( host_var )
@@ -232,6 +249,8 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
 #ifdef MAS_OLD_VARIABLES_HTTP
       http->host = mas_strdup( host_var->value );
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
+      http->host = mas_varset_vclass_variable_get_value( host_var );
 #else
       http->host = mas_varset_vclass_variable_get_value( host_var );
 #endif
@@ -259,8 +278,14 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
       tv = mas_variables_find( prcontrol->proto_desc->variables, "docroot", http->host );
       if ( tv && tv->value )
         http->docroot = mas_strdup( tv->value );
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
+      mas_vclass_element_t *tv;
+
+      tv = mas_varset_find_variable( prcontrol->proto_desc->variables, "docroot", http->host );
+      if ( tv )
+        http->docroot = mas_varset_vclass_variable_get_value( tv );
 #else
-      mas_var_t *tv;
+      mas_vclass_element_t *tv;
 
       tv = mas_varset_find_variable( prcontrol->proto_desc->variables, "docroot", http->host );
       if ( tv )

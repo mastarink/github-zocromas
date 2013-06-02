@@ -17,7 +17,7 @@ int mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t tht
 #ifdef MAS_OLD_VARIABLES_HTTP
 mas_variable_t *mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name );
 #else
-mas_var_t *mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name );
+mas_vclass_element_t *mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name );
 #endif
 
 #endif

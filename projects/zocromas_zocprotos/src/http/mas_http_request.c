@@ -75,7 +75,7 @@ mas_proto_add_host( const void *env, const char *section, const char *sectvalue,
 #else
   proto_desc->variables = mas_varset_search_variable( proto_desc->variables, "docroot", sectvalue, value );
   /* {                                                                               */
-  /*   mas_var_t *tv;                                                                */
+  /*   mas_vclass_element_t *tv;                                                                */
   /*                                                                                 */
   /*   tv = mas_varset_find_variable( proto_desc->variables, "docroot", sectvalue ); */
   /*   if ( tv )                                                                     */
@@ -315,8 +315,10 @@ mas_proto_http_delete_request( mas_http_t * http )
     {
 #ifdef MAS_OLD_VARIABLES_HTTP
       mas_variables_delete( http->indata );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
       mas_varset_delete( http->indata );
+#else
+      mas_varset_vclass_delete( http->indata );
 #endif
     }
     http->indata = NULL;
@@ -325,8 +327,10 @@ mas_proto_http_delete_request( mas_http_t * http )
     {
 #ifdef MAS_OLD_VARIABLES_HTTP
       mas_variables_delete( http->outdata );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
       mas_varset_delete( http->outdata );
+#else
+      mas_varset_vclass_delete( http->outdata );
 #endif
     }
     http->outdata = NULL;

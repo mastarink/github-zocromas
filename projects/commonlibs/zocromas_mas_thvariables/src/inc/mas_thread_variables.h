@@ -12,7 +12,7 @@ int mas_thread_variable_set_text( th_type_t thtype, const char *vclass, const ch
 #ifdef MAS_OLD_VARIABLES_HTTP
 mas_variable_t *mas_thread_variables_find( const char *vclass, const char *name );
 #else
-mas_var_t *mas_thread_variables_find( const char *vclass, const char *name );
+mas_vclass_element_t *mas_thread_variables_find( const char *vclass, const char *name );
 #endif
 /* int mas_thread_variables_msg( const char *vclass ); */
 

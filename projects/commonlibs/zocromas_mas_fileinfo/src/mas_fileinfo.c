@@ -14,6 +14,7 @@
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset_vclass.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -221,9 +222,12 @@ mas_fileinfo_make_etag( mas_fileinfo_t * fileinfo )
 #ifdef MAS_OLD_VARIABLES_HTTP
 mas_variables_list_head_t *
 mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t * fileinfo )
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
 mas_varset_t *
 mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
+#else
+mas_varset_class_t *
+mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * fileinfo )
 #endif
 {
   size_t dsz;
@@ -237,8 +241,10 @@ mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
   {
 #ifdef MAS_OLD_VARIABLES_HTTP
     outdata = mas_variable_create_x( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Length", NULL, "%d", dsz );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
     outdata = mas_varset_search_variablef( outdata, "header", "Content-Length", NULL, "%d", dsz );
+#else
+    outdata = mas_varset_vclass_search_variablef( outdata, NULL, "Content-Length", NULL, "%d", dsz );
 #endif
   }
   /* if ( mas_udata_icontent_type( fileinfo->udata ) ) */
@@ -250,8 +256,10 @@ mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
     {
 #ifdef MAS_OLD_VARIABLES_HTTP
       outdata = mas_variable_create_text( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Type", content_type, 0 );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
       outdata = mas_varset_search_variable( outdata, "header", "Content-Type", content_type );
+#else
+    outdata = mas_varset_vclass_search_variable( outdata, NULL, "Content-Type", content_type );
 #endif
       mas_free( content_type );
     }
@@ -260,8 +268,10 @@ mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
   {
 #ifdef MAS_OLD_VARIABLES_HTTP
     outdata = mas_variable_create_text( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "ETag", fileinfo->etag, 0 );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
     outdata = mas_varset_search_variable( outdata, "header", "ETag", fileinfo->etag );
+#else
+    outdata = mas_varset_vclass_search_variable( outdata, NULL, "ETag", fileinfo->etag );
 #endif
   }
   if ( fileinfo && fileinfo->filetime )
@@ -269,9 +279,12 @@ mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
 #ifdef MAS_OLD_VARIABLES_HTTP
     outdata = mas_variable_create_x( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Last-Modified", mas_xvstrftime_time,
                                      "%a, %d %b %Y %T GMT", fileinfo->filetime );
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
     outdata =
           mas_varset_search_variablef( outdata, "header", "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", fileinfo->filetime );
+#else
+    outdata =
+          mas_varset_vclass_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", fileinfo->filetime );
 #endif
   }
   return outdata;

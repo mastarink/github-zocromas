@@ -218,14 +218,14 @@ mas_thread_variables_delete( void )
 mas_variable_t *
 mas_thread_variables_find( const char *vclass_name, const char *name )
 #else
-mas_var_t *
+mas_vclass_element_t *
 mas_thread_variables_find( const char *vclass_name, const char *name )
 #endif
 {
 #ifdef MAS_OLD_VARIABLES_HTTP
   mas_variable_t *found = NULL;
 #else
-  mas_var_t *found = NULL;
+  mas_vclass_element_t *found = NULL;
 #endif
   mas_thdata_t *thd;
 

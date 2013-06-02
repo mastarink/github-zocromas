@@ -51,7 +51,7 @@ args_cmd( STD_CMD_ARGS )
 #ifdef MAS_OLD_VARIABLES_HTTP
   mas_variable_t *var;
 #else
-  mas_var_t *var;
+  mas_vclass_element_t *var;
 #endif
 
   var = mas_thread_variables_find( "client", "args" );

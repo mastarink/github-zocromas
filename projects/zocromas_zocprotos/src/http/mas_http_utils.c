@@ -19,6 +19,7 @@
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
+#  include <mastar/varset/mas_varset_vclass.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -157,13 +158,15 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
       }
       mas_free( buf );
     }
-#else
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
     /* mas_channel_write( http->prcontrol->h.pchannel ... */
     mas_varset_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata, set );
     /* TODO join write in one - modify varset */
-    /* TODO http->indata and http->outdata etc shoild be vclass, not varset */
+    /* TODO http->indata and http->outdata etc should be vclass, not varset */
     write( mas_channel_fd( http->prcontrol->h.pchannel ), "\r\n", 2 );
     /* mas_varset_write( STDERR_FILENO, http->outdata, set ); */
+#else
+    mas_varset_vclass_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
 #endif
   }
   return http;
