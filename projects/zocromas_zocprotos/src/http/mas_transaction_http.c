@@ -185,9 +185,9 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
     {
       MAS_LOG( "HTTP make at docroot" );
 
-      /* TODO : sendfile */
+      /* TODO : sendfile ; replace fileinfo  with autoobject lib */
       http->reply_content =
-            mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at,
+            mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at_fd,
                                ( const void * ) NULL /* prcontrol */  );
       MAS_LOG( "HTTP / make at docroot" );
     }
@@ -218,14 +218,10 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
     case MAS_HTTP_METHOD_HEAD:
     case MAS_HTTP_METHOD_POST:
       MAS_LOG( "http: get/head/post" );
-      HMSG( "HTTP make OUT HEADERS" );
-      http = mas_http_make_out_head_get( prcontrol, http );
       break;
     }
 
 
-  if ( http )
-    http = mas_http_make_etag( prcontrol, http );
 
   /* if ( http )                                                */
   /*   http = mas_http_make_out_std_headers( prcontrol, http ); */

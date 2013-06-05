@@ -52,15 +52,16 @@ more:
 
 */
 
-mas_http_t *
-mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )
-{
-  HMSG( "HTTP make ETAG" );
-  if ( http )
-    ( void ) /* r = */ mas_fileinfo_make_etag( http->reply_content );
-  /* rMSG( "(%d) CHECK ETAG %s : %s", r, http->reply_content->filepath, http->reply_content->etag ); */
-  return http;
-}
+/* moved to fileinfo */
+/* mas_http_t *                                                                                            */
+/* mas_http_make_etag( mas_rcontrol_t * prcontrol, mas_http_t * http )                                     */
+/* {                                                                                                       */
+/*   HMSG( "HTTP make ETAG" );                                                                             */
+/*   if ( http )                                                                                           */
+/*     ( void ) (* r = *) mas_fileinfo_make_etag( http->reply_content );                                   */
+/*   (* rMSG( "(%d) CHECK ETAG %s : %s", r, http->reply_content->filepath, http->reply_content->etag ); *) */
+/*   return http;                                                                                          */
+/* }                                                                                                       */
 
 mas_http_t *
 mas_http_make_out_header_simple( mas_http_t * http, const char *name, const char *value )
@@ -98,6 +99,18 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   /* extern unsigned long __MAS_LINK_DATE__; */
   extern unsigned long __MAS_LINK_TIME__;
 
+#ifdef MAS_OLD_VARIABLES_HTTP
+  http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
+  http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
+#else
+  /* http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) ); */
+  http->outdata = mas_varset_vclass_set_headf( http->outdata, "header", NULL, "HTTP/1.1 %d %s", http->status_code,
+                                               mas_http_status_code_message( prcontrol, http ) );
+  /* mas_varset_vclass_write( STDERR_FILENO, http->outdata ); */
+#endif
+
+  http = mas_http_make_out_header_simple( http, "Accept-Ranges", "bytes" );
   MAS_LOG( "to make std headers" );
 
   /* extern unsigned long __MAS_LINK_TIMESTAMP__; */
@@ -121,14 +134,31 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
           mas_varset_search_variablef( http->outdata, "header", "Server", mas_xvsnprintf, "mas-%lu",
                                        ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
 #else
+    {
+      struct tm *t;
+      char buf[512];
+
+      t = mas_xgmtime(  );
+      strftime( buf, sizeof( buf ), "%a, %d %b %Y %T GMT", t );
+      HMSG( "Time: %s\n", buf );
+    }
+
     http->outdata =
           mas_varset_vclass_search_variablef( http->outdata, NULL, "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT", mas_xgmtime(  ) );
     http->outdata =
           mas_varset_vclass_search_variablef( http->outdata, NULL, "Server", mas_xvsnprintf, "mas-%lu",
                                               ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
+    http->outdata = mas_varset_vclass_search_variablef( http->outdata, NULL, "MasV", mas_xvsnprintf, "%3.1f", http->fversion );
 #endif
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
-    http = mas_http_make_out_header_simple( http, "Connection", prcontrol->keep_alive ? "Keep-Alive" : "close" );
+    if ( http->connection_keep_alive )
+    {
+      http = mas_http_make_out_header_simple( http, "Connection", "Keep-Alive" );
+      http = mas_http_make_out_header_simple( http, "Keep-Alive", "timeout=15, max=100" );
+    }
+    else if ( http->connection_close )
+      http = mas_http_make_out_header_simple( http, "Connection", "close" );
+    http->outdata = mas_varset_vclass_add_tail( http->outdata, "header", "" );
   }
   return http;
 }
@@ -176,13 +206,36 @@ mas_http_status_code_message( mas_rcontrol_t * prcontrol, mas_http_t * http )
 }
 
 mas_http_t *
+mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http )
+{
+  const char data[] =
+        "HTTP/1.1 200 OK\n"
+        "Accept-Ranges: bytes\n"
+        "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"
+        "Server: mas-1251337\n"
+        "Content-Length: 358\n"
+        "Content-Type: text/html\n"
+        "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n";
+  size_t datasz = sizeof( data );
+
+  http = mas_proto_http_write( http, data, datasz );
+  return http;
+}
+
+mas_http_t *
 mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   char *data;
 
   HMSG( "HTTP REPLY" );
   MAS_LOG( "to write protocol name/version" );
-  data = mas_fileinfo_data( http->reply_content );
+
+  if ( http )
+    data = mas_fileinfo_data( http->reply_content );
+
+/* moved to fileinfo */
+  /* if ( http )                                     */
+  /*   http = mas_http_make_etag( prcontrol, http ); */
 
   if ( http && http->status_code == MAS_HTTP_CODE_NONE )
   {
@@ -191,10 +244,11 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     else
       http->status_code = MAS_HTTP_CODE_NOT_FOUND;
   }
-  HMSG( "HTTP REPLY status %d", http->status_code );
+  if ( http )
+  {
+    HMSG( "HTTP REPLY status %d", http->status_code );
+  }
   HMSG( "HTTP HTTP" );
-  http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
-  MAS_LOG( "to make ... headers" );
   if ( http )
     http = mas_http_make_out_std_headers( prcontrol, http );
   if ( http )
@@ -203,7 +257,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     http = mas_proto_http_write_pairs( http, "header" );
     MAS_LOG( "written %lu", http ? http->written : 0 );
   }
-  if ( http /* && http->imethod == MAS_HTTP_METHOD_GET */  )
+  if ( http && http->imethod == MAS_HTTP_METHOD_GET )
   {
     size_t datasz;
 

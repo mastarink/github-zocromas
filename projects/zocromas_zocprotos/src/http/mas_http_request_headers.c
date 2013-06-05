@@ -37,20 +37,19 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
   {
     HMSG( "HTTP (known) HEADER (parse) %s", name );
     MAS_LOG( "HTTP HEADER: %s:%s", name, value );
-    if ( 0 == strcasecmp( value, "keep-alive" ) )
+    if ( 0 == strncasecmp( value, "keep-alive,", 11 ) || 0 == strcasecmp( value, "keep-alive" ) )
     {
-      rMSG( ">>>>>> HTTP HEADER: Connection is Keep-Alive" );
-      MAS_LOG( "HTTP HEADER: Connection is Keep-Alive" );
-      prcontrol->keep_alive = 1;
-      MAS_LOG( "KA => %u", prcontrol->keep_alive );
+      rMSG( ">>>>>> HTTP HEADER: Connection: Keep-Alive" );
+      MAS_LOG( "HTTP HEADER: Connection: Keep-Alive" );
+      http->connection_keep_alive = 1;
     }
-    else if ( 0 == strcasecmp( value, "close" ) )
+    else if ( 0 == strncasecmp( value, "close,", 6 ) || 0 == strcasecmp( value, "close" ) )
     {
-      rMSG( ">>>>>> HTTP HEADER: Connection is Keep-Alive" );
-      MAS_LOG( "HTTP HEADER: Connection is Keep-Alive" );
-      prcontrol->keep_alive = 0;
-      MAS_LOG( "KA => %u", prcontrol->keep_alive );
+      rMSG( ">>>>>> HTTP HEADER: Connection: close" );
+      MAS_LOG( "HTTP HEADER: Connection: close" );
+      http->connection_close = 1;
     }
+    MAS_LOG( "KA : %u (%u:%u)", prcontrol->connection_keep_alive, http->connection_keep_alive, http->connection_close );
   }
   else if ( 0 == strcmp( name, "Content-Length" ) )
   {
@@ -166,7 +165,7 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
 static mas_http_t *
 mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char *pstring )
 {
-  char *name = NULL, *ename = NULL, *value = NULL, *evalue = NULL;
+  char *name = NULL, *ename = NULL, *values = NULL, *evalue = NULL;
 
   if ( pstring )
   {
@@ -174,34 +173,34 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
     ename = pstring;
     while ( ename && *ename > ' ' && *ename != ':' )
       ename++;
-    value = ename;
-    if ( value && *value == ':' )
-      value++;
-    while ( value && *value == ' ' )
-      value++;
-    evalue = value;
+    values = ename;
+    if ( values && *values == ':' )
+      values++;
+    while ( values && *values == ' ' )
+      values++;
+    evalue = values;
     while ( evalue && *evalue && *evalue >= ' ' )
       evalue++;
 
-    HMSG( "HTTP H: '%s' = '%s'", name, value );
+    HMSG( "HTTP H: '%s' = '%s'", name, values );
     name = mas_strndup( name, ename - name );
-    value = mas_strndup( value, evalue - value );
-    MAS_LOG( "http parse headers name:'%s' value:'%s'", name, value );
-    HMSG( "HTTP H: '%s' = '%s'", name, value );
+    values = mas_strndup( values, evalue - values );
+    MAS_LOG( "http parse headers name:'%s' values:'%s'", name, values );
+    HMSG( "HTTP H: '%s' = '%s'", name, values );
 
 #ifdef MAS_OLD_VARIABLES_HTTP
-    http->indata = mas_variable_create_x( http->indata, /* MAS_THREAD_TRANSACTION, */ "inheader", name, NULL, "%s", value, 0 );
+    http->indata = mas_variable_create_x( http->indata, /* MAS_THREAD_TRANSACTION, */ "inheader", name, NULL, "%s", values, 0 );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
-    http->indata = mas_varset_search_variable( http->indata, "inheader", name, value );
+    http->indata = mas_varset_search_variable( http->indata, "inheader", name, values );
 #else
-    http->indata = mas_varset_vclass_search_variable( http->indata, NULL, name, value );
+    http->indata = mas_varset_vclass_search_variable( http->indata, NULL, name, values );
 #endif
-    HMSG( "HTTP HEADER (parse) %s='%s'", name, value );
+    HMSG( "HTTP HEADER (parse) %s='%s'", name, values );
 
 #if 0
     if ( 0 == strcasecmp( name, "User-Agent" ) )
     {
-      if ( 0 == strncmp( value, "httperf", 7 ) )
+      if ( 0 == strncmp( values, "httperf", 7 ) )
       {
         ctrl.messages = 0;
       }
@@ -213,12 +212,12 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
     {
     }
 #endif
-    HMSG( "HTTP HEADER (known) %s='%s'", name, value );
-    http = mas_proto_http_parse_known_header( prcontrol, http, name, value );
+    HMSG( "HTTP HEADER (known) %s='%s'", name, values );
+    http = mas_proto_http_parse_known_header( prcontrol, http, name, values );
     if ( name )
       mas_free( name );
-    if ( value )
-      mas_free( value );
+    if ( values )
+      mas_free( values );
     MAS_LOG( "http parse headers 4" );
   }
   return http;
@@ -230,8 +229,6 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   char *pstring = NULL;
 
   HMSG( "HTTP HEADERS (parse)" );
-  prcontrol->keep_alive = ( http->fversion >= 1.1 );
-  MAS_LOG( "KA => %u", prcontrol->keep_alive );
   MAS_LOG( "http parse headers 1" );
   do
   {
@@ -249,6 +246,14 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   /*     mas_free( pstring );                                                                                 */
   /*   pstring = NULL;                                                                                        */
   /* }                                                                                                        */
+
+  if ( !http->connection_keep_alive && !http->connection_close )
+    prcontrol->connection_keep_alive = ( http->fversion >= 1.1 );
+  else if ( http->connection_close )
+    prcontrol->connection_keep_alive = 0;
+  else if ( http->connection_keep_alive )
+    prcontrol->connection_keep_alive = 1;
+  MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
   if ( pstring )
     mas_free( pstring );
   pstring = NULL;

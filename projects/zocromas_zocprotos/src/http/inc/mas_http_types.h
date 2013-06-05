@@ -99,7 +99,8 @@ struct mas_http_s
   char *sversion;
   float fversion;
   unsigned long written;
-  /* unsigned keep_alive:1; */
+  unsigned connection_keep_alive:1;
+  unsigned connection_close:1;
 };
 typedef struct mas_http_s mas_http_t;
 

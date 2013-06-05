@@ -142,9 +142,20 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
   HMSG( "HTTP REQUEST (parse)" );
   MAS_LOG( "http parse rq 2a" );
   pstring = mas_channel_buffer_nl_dup( prcontrol->h.pchannel );
-  HMSG( "HTTP REQUEST (parse) '%s'", pstring );
   if ( pstring )
   {
+    {
+      size_t l;
+      char c1, c2;
+
+      l = strlen( pstring );
+      if ( l > 2 )
+      {
+        c1 = pstring[l - 1];
+        c2 = pstring[l - 2];
+        HMSG( "HTTP REQUEST (parse) '%s' [%02x:%02x]", pstring, c1, c2 );
+      }
+    }
     cstring = ( const char * ) pstring;
     MAS_LOG( "http parse rq 3" );
     if ( http )
@@ -200,8 +211,8 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
             /* Title: 501 Method Not Implemented */
             /* mas_proto_http_delete_request( http ); */
             /* http = NULL;                           */
-            prcontrol->keep_alive = 0;
-            MAS_LOG( "KA => %u", prcontrol->keep_alive );
+            prcontrol->connection_keep_alive = 0;
+            MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
             break;
           case MAS_HTTP_METHOD_GET:
           case MAS_HTTP_METHOD_HEAD:
@@ -229,16 +240,16 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
               http = NULL;
 #endif
             }
-            /* prcontrol->keep_alive = 0;                    */
-            /* MAS_LOG( "KA => %u", prcontrol->keep_alive ); */
+            /* prcontrol->connection_keep_alive = 0;                    */
+            /* MAS_LOG( "KA => %u", prcontrol->connection_keep_alive ); */
             break;
           case MAS_HTTP_METHOD_PUT:
-            prcontrol->keep_alive = 0;
-            MAS_LOG( "KA => %u", prcontrol->keep_alive );
+            prcontrol->connection_keep_alive = 0;
+            MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
             break;
           case MAS_HTTP_METHOD_OPTIONS:
-            prcontrol->keep_alive = 0;
-            MAS_LOG( "KA => %u", prcontrol->keep_alive );
+            prcontrol->connection_keep_alive = 0;
+            MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
             break;
           }
         }

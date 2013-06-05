@@ -20,8 +20,14 @@ char *mas_ip_string( void *sin_addr );
 
 size_t mas_parse_host_port( const char *host, unsigned *phport, unsigned default_port );
 
-char *mas_load_filename_at( const char *root, const char *tail, size_t size, size_t * ptruesize, const void *arg );
-char *mas_load_filename( const char *tail, size_t size, size_t * ptruesize, const void *arg );
-char *mas_load_file( FILE * file, size_t size, size_t * ptruesize, const void *arg );
+char *mas_load_filename_at_file( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
+char *mas_load_filename_at_fd( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
+char *mas_load_filename_file( const char *tail, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
+char *mas_load_filename_fd( const char *filepath, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
+char *mas_load_file( FILE *file, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
+char *mas_load_fd( int fd, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
+
+char *mas_dump1( const char *data, size_t len, size_t perline );
+char *mas_dump2( const char *data, size_t len, size_t perline );
 
 #endif

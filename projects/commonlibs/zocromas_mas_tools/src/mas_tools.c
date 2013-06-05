@@ -10,7 +10,13 @@
 #include <time.h>
 #include <string.h>
 
+#include <fcntl.h>
 
+/*                                       */
+/* #include <mastar/msg/mas_msg_def.h>   */
+/* #include <mastar/msg/mas_msg_tools.h> */
+/*                                       */
+/*                                       */
 
 
 #include <mastar/wrap/mas_std_def.h>
@@ -116,6 +122,132 @@ mas_xvstrftime_time( char *str, size_t size, const char *format, va_list args )
 }
 
 char *
+mas_dump1( const char *data, size_t len, size_t perline )
+{
+  char *buffer = NULL;
+  char *pbuf;
+  ssize_t dsz;
+
+  if ( !perline )
+    perline = 16;
+
+  if ( data )
+  {
+    size_t lines;
+
+    lines = len / perline + 1;
+    dsz = lines * ( perline + 1 ) * 5 + 1;
+    pbuf = buffer = mas_malloc( dsz );
+    for ( size_t icg = 0; icg < len; icg += perline )
+    {
+      /* size_t llen;                                           */
+      /*                                                        */
+      /* llen = ( len - icg >= perline ? perline : len - icg ); */
+      for ( size_t ic = 0; ic < perline; ic++ )
+      {
+        char b;
+
+        if ( icg + ic >= len )
+        {
+          snprintf( pbuf, dsz + buffer - pbuf, "   " );
+        }
+        else
+        {
+          b = data[icg + ic];
+          snprintf( pbuf, dsz + buffer - pbuf, " %02x", b );
+        }
+        pbuf += 3;
+      }
+      snprintf( pbuf, dsz + buffer - pbuf, " : " );
+      pbuf += 3;
+      for ( size_t ic = 0; ic < perline; ic++ )
+      {
+        char b;
+
+        if ( icg + ic >= len )
+        {
+          b = 0;
+          snprintf( pbuf, dsz + buffer - pbuf, "  " );
+        }
+        else
+        {
+          b = data[icg + ic];
+          snprintf( pbuf, dsz + buffer - pbuf, " %c", b >= ' ' && b <= 'z' ? b : '.' );
+        }
+        pbuf += 2;
+      }
+      if ( icg + perline < len )
+        snprintf( pbuf, dsz + buffer - pbuf, "\n" );
+      pbuf += 1;
+    }
+  }
+  return buffer;
+}
+
+char *
+mas_dump2( const char *data, size_t len, size_t perline )
+{
+  char *buffer = NULL;
+  char *pbuf;
+  ssize_t dsz;
+
+  if ( !perline )
+    perline = 16;
+
+  if ( data )
+  {
+    size_t lines;
+
+    lines = len / perline + 1;
+    dsz = lines * ( perline + 1 ) * 6 + 1;
+    pbuf = buffer = mas_malloc( dsz );
+    for ( size_t icg = 0; icg < len; icg += perline )
+    {
+      /* size_t llen;                                           */
+      /*                                                        */
+      /* llen = ( len - icg >= perline ? perline : len - icg ); */
+      for ( size_t ic = 0; ic < perline; ic++ )
+      {
+        char b;
+
+        if ( icg + ic >= len )
+        {
+          snprintf( pbuf, dsz + buffer - pbuf, "   " );
+        }
+        else
+        {
+          b = data[icg + ic];
+          snprintf( pbuf, dsz + buffer - pbuf, " %02x", b );
+        }
+        pbuf += 3;
+      }
+      snprintf( pbuf, dsz + buffer - pbuf, "\n" );
+      pbuf += 1;
+      for ( size_t ic = 0; ic < perline; ic++ )
+      {
+        char b;
+
+        if ( icg + ic >= len )
+        {
+          b = 0;
+          snprintf( pbuf, dsz + buffer - pbuf, "   " );
+        }
+        else
+        {
+          b = data[icg + ic];
+          snprintf( pbuf, dsz + buffer - pbuf, "  %c", b >= ' ' && b <= 'z' ? b : '.' );
+        }
+        pbuf += 3;
+      }
+      if ( icg + perline < len )
+        snprintf( pbuf, dsz + buffer - pbuf, "\n" );
+      pbuf += 1;
+    }
+  }
+  return buffer;
+}
+
+char *
 mas_ip_string( void *sin_addr )
 {
   char ip[128];
@@ -152,8 +284,37 @@ mas_parse_host_port( const char *host, unsigned *phport, unsigned default_port )
   return len;
 }
 
+ssize_t
+mas_load_stat( int fd, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime )
+{
+  struct stat st;
+  size_t size = 0;
+  int r = -1;
+
+  if ( fd > 0 )
+  {
+    r = fstat( fd, &st );
+    if ( r >= 0 )
+    {
+      if ( S_ISREG( st.st_mode ) )
+      {
+        size = st.st_size;
+        if ( ptruesize )
+          *ptruesize = size;
+      }
+      if ( ptrueinode )
+        *ptrueinode = st.st_ino;
+      if ( ptruefiletime )
+        *ptruefiletime = st.st_mtime;
+    }
+  }
+  if ( r < 0 )
+    size = -1;
+  return size;
+}
+
 char *
-mas_load_file( FILE * file, size_t size, size_t * ptruesize, const void *arg )
+mas_load_file( FILE * file, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
 {
   char *filedata = NULL;
 
@@ -164,11 +325,21 @@ mas_load_file( FILE * file, size_t size, size_t * ptruesize, const void *arg )
 
     if ( !size )
     {
-      struct stat st;
-
-      r = fstat( fileno( file ), &st );
-      if ( r >= 0 && S_ISREG( st.st_mode ) )
-        size = st.st_size;
+      size = mas_load_stat( fileno( file ), ptruesize, ptrueinode, ptruefiletime );
+      /* struct stat st;                   */
+      /*                                   */
+      /* r = fstat( fileno( file ), &st ); */
+      /* if ( r >= 0 )                     */
+      /* {                                 */
+      /*   if ( S_ISREG( st.st_mode ) )    */
+      /*     size = st.st_size;            */
+      /*   if ( ptruesize )                */
+      /*     *ptruesize = size;            */
+      /*   if ( ptrueinode )               */
+      /*     *ptrueinode = st.st_ino;      */
+      /*   if ( ptruefiletime )            */
+      /*     *ptruefiletime = st.st_mtime; */
+      /* }                                 */
     }
     if ( size > 0 )
     {
@@ -187,7 +358,41 @@ mas_load_file( FILE * file, size_t size, size_t * ptruesize, const void *arg )
 }
 
 char *
-mas_load_filename( const char *filepath, size_t size, size_t * ptruesize, const void *arg )
+mas_load_fd( int fd, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
+{
+  char *filedata = NULL;
+
+  if ( fd )
+  {
+    ssize_t r;
+
+    if ( !size )
+    {
+      size = mas_load_stat( fd, ptruesize, ptrueinode, ptruefiletime );
+      /* struct stat st;                        */
+      /*                                        */
+      /* r = fstat( fd, &st );                  */
+      /* if ( r >= 0 && S_ISREG( st.st_mode ) ) */
+      /*   size = st.st_size;                   */
+    }
+    if ( size > 0 )
+    {
+      filedata = mas_malloc( size );
+      r = read( fd, filedata, size );
+      if ( r >= 0 && ptruesize )
+        *ptruesize = r;
+    }
+  }
+  else
+  {
+    /* MAS_LOGERR( errno, "file %s not loaded", filepath ); */
+    /* errno = 0; */
+  }
+  return filedata;
+}
+
+char *
+mas_load_filename_file( const char *filepath, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
 {
   char *filedata = NULL;
   FILE *file = NULL;
@@ -196,7 +401,7 @@ mas_load_filename( const char *filepath, size_t size, size_t * ptruesize, const 
   /* rMSG( "TO load %s : %s", filepath, file ? "OPENED" : "NOT opened" ); */
   if ( file )
   {
-    filedata = mas_load_file( file, size, ptruesize, arg );
+    filedata = mas_load_file( file, size, ptruesize, ptrueinode, ptruefiletime, arg );
     fclose( file );
   }
   else
@@ -208,14 +413,51 @@ mas_load_filename( const char *filepath, size_t size, size_t * ptruesize, const 
 }
 
 char *
-mas_load_filename_at( const char *root, const char *tail, size_t size, size_t * ptruesize, const void *arg )
+mas_load_filename_fd( const char *filepath, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
+{
+  char *filedata = NULL;
+  int fd;
+
+  fd = open( filepath, O_RDONLY );
+  /* rMSG( "TO load %s : %s", filepath, fd > 0 ? "OPENED" : "NOT opened" ); */
+  if ( fd )
+  {
+    filedata = mas_load_fd( fd, size, ptruesize, ptrueinode, ptruefiletime, arg );
+    close( fd );
+  }
+  else
+  {
+    /* MAS_LOGERR( errno, "file %s not loaded", filepath ); */
+    /* errno = 0; */
+  }
+  return filedata;
+}
+
+char *
+mas_load_filename_at_file( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime,
+                           const void *arg )
 {
   char *filedata = NULL;
   char *filepath;
 
   filepath = mas_strdup( root );
   filepath = mas_strcat_x( filepath, tail );
-  filedata = mas_load_filename( filepath, size, ptruesize, arg );
+  filedata = mas_load_filename_file( filepath, size, ptruesize, ptrueinode, ptruefiletime, arg );
+  if ( filepath )
+    mas_free( filepath );
+  return filedata;
+}
+
+char *
+mas_load_filename_at_fd( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime,
+                         const void *arg )
+{
+  char *filedata = NULL;
+  char *filepath;
+
+  filepath = mas_strdup( root );
+  filepath = mas_strcat_x( filepath, tail );
+  filedata = mas_load_filename_fd( filepath, size, ptruesize, ptrueinode, ptruefiletime, arg );
   if ( filepath )
     mas_free( filepath );
   return filedata;

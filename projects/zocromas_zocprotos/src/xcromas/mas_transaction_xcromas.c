@@ -12,6 +12,7 @@ extern mas_control_t ctrl;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
+#include <mastar/tools/mas_tools.h>
 #include <mastar/log/mas_log.h>
 
 /* #include <mastar/channel/mas_channel_object.h> */
@@ -53,7 +54,7 @@ do_exit_server( mas_rcontrol_t * prcontrol )
       prcontrol->qbin = MSG_BIN_QUIT;
     else
       prcontrol->qbin = MSG_BIN_DISCONNECT;
-    prcontrol->keep_alive = 0;
+    prcontrol->connection_keep_alive = 0;
   }
   ctrl.stop_listeners = 1;
   /* ctrl.watcher_stop = 1; */
@@ -121,10 +122,10 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 }
 
 /* int                                                                                                              */
-/* mas_proto_test( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *pheader_void ) */
+/* mas_proto_test( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *buffer_void ) */
 /* {                                                                                                                */
 /*   int r = -1;                                                                                                    */
-/*   const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;                                            */
+/*   const mas_header_t *pheader_data = ( mas_header_t * ) buffer_void;                                            */
 /*                                                                                                                  */
 /*   if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )                                        */
 /*     r = 0;                                                                                                       */
@@ -132,86 +133,95 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 /* }                                                                                                                */
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *pheader_void )
+mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *buffer_void )
 {
   int r = -1;
-  const mas_header_t *pheader_data = ( mas_header_t * ) pheader_void;
 
 /* short: mas_channel_read_message */
 
   /* prcontrol->h.pchannel->buffer.maxread = 1028 * 4; */
-  pheader_data = ( mas_header_t * ) mas_channel_buffer( prcontrol->h.pchannel, NULL );
-
-  HMSG( "XCROMAS (%d) %lu", pheader_data ? 1 : 0, ( unsigned long ) prcontrol->h.pchannel->buffer.length );
-
-  HMSG( "h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) prcontrol->h.pchannel->buffer.length,
-        pheader_data ? pheader_data->len : 0 );
-
-  /* if ( !pheader_data ) */
-  /*   sleep( 2 );        */
+  buffer_void = mas_channel_buffer( prcontrol->h.pchannel, NULL );
 
 
-
-  if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )
   {
-    mas_header_t header_copy;
-    const char *question = NULL;
+    char *dump;
 
-    /* if ( sizeof( mas_header_t ) + pheader_data->len < prcontrol->h.pchannel->buffer.length ) */
-    /*   mas_channel_read_remainder( prcontrol->h.pchannel );                                   */
-
-
-    while ( sizeof( mas_header_t ) + pheader_data->len < prcontrol->h.pchannel->buffer.length )
+    dump = mas_dump2( ( void * ) buffer_void, prcontrol->h.pchannel->buffer.length, 64 );
+    if ( dump )
     {
-      HMSG( "pheader_data->len:%u; buflen:%lu", pheader_data->len, ( unsigned long ) prcontrol->h.pchannel->buffer.length );
-      mas_channel_read_some( prcontrol->h.pchannel );
+      HMSG( "got:%lu; [%s]", ( unsigned long ) prcontrol->h.pchannel->buffer.length, dump );
+      mas_free( dump );
     }
-
-
-
-    /* prcontrol->proto_desc = proto_desc; */
-
-    memset( &header_copy, 0, sizeof( header_copy ) );
-    MAS_LOG( "xcromas session" );
-    /* prcontrol->proto = MAS_TRANSACTION_PROTOCOL_XCROMAS; */
-    if ( pheader_data )
-    {
-      header_copy = *pheader_data;
-      question = ( char * ) ( pheader_data + 1 );
-    }
-    tMSG( "Q:%s", question && *question ? question : "-" );
-    tMSG( "cl. q:%s from pid %lu", question && *question ? question : "-EMPTY-", ( unsigned long ) header_copy.pid );
-
-
-    tMSG( "got msg from pid=%lu", ( unsigned long ) header_copy.pid );
-    MAS_LOG( "xc (pid:%lu) Q: %s", ( unsigned long ) header_copy.pid, question && *question ? question : "-" );
-
-    header_copy.new_opts = 0;
-    if ( header_copy.sign != MSG_SIGNATURE )
-    {
-      EMSG( "header_copy sig : %lx", ( unsigned long ) header_copy.sign );
-      header_copy.bad = 1;
-    }
-    {
-      header_copy.done_cmd = 0;
-      if ( header_copy.bad )
-      {
-        r = -2;
-        EMSG( "r:%d", r );
-      }
-      else
-      {
-        tMSG( "q for e & a :%s", question );
-        r = mas_proto_xcromas_evaluate_and_answer( prcontrol, question, &header_copy );
-        tMSG( "e & a :%d", r );
-      }
-    }
-
-    question = NULL;
   }
-  else
+
   {
-    r = 0;
+    const mas_header_t *pheader_data = ( mas_header_t * ) buffer_void;
+
+    if ( prcontrol && pheader_data && pheader_data->sign == MSG_SIGNATURE )
+    {
+      mas_header_t header_copy;
+      const char *question = NULL;
+
+      HMSG( "XCROMAS (%d) %lu", buffer_void ? 1 : 0, ( unsigned long ) prcontrol->h.pchannel->buffer.length );
+      pheader_data = ( mas_header_t * ) buffer_void;
+      HMSG( "h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ),
+            ( unsigned long ) prcontrol->h.pchannel->buffer.length, pheader_data ? pheader_data->len : 0 );
+      /* if ( sizeof( mas_header_t ) + pheader_data->len < prcontrol->h.pchannel->buffer.length ) */
+      /*   mas_channel_read_remainder( prcontrol->h.pchannel );                                   */
+
+
+      while ( sizeof( mas_header_t ) + pheader_data->len < prcontrol->h.pchannel->buffer.length )
+      {
+        HMSG( "pheader_data->len:%u; buflen:%lu", pheader_data->len, ( unsigned long ) prcontrol->h.pchannel->buffer.length );
+        mas_channel_read_some( prcontrol->h.pchannel );
+      }
+
+
+
+      /* prcontrol->proto_desc = proto_desc; */
+
+      memset( &header_copy, 0, sizeof( header_copy ) );
+      MAS_LOG( "xcromas session" );
+      /* prcontrol->proto = MAS_TRANSACTION_PROTOCOL_XCROMAS; */
+      if ( pheader_data )
+      {
+        header_copy = *pheader_data;
+        question = ( char * ) ( pheader_data + 1 );
+      }
+      tMSG( "Q:%s", question && *question ? question : "-" );
+      tMSG( "cl. q:%s from pid %lu", question && *question ? question : "-EMPTY-", ( unsigned long ) header_copy.pid );
+
+
+      tMSG( "got msg from pid=%lu", ( unsigned long ) header_copy.pid );
+      MAS_LOG( "xc (pid:%lu) Q: %s", ( unsigned long ) header_copy.pid, question && *question ? question : "-" );
+
+      header_copy.new_opts = 0;
+      if ( header_copy.sign != MSG_SIGNATURE )
+      {
+        EMSG( "header_copy sig : %lx", ( unsigned long ) header_copy.sign );
+        header_copy.bad = 1;
+      }
+      {
+        header_copy.done_cmd = 0;
+        if ( header_copy.bad )
+        {
+          r = -2;
+          EMSG( "r:%d", r );
+        }
+        else
+        {
+          tMSG( "q for e & a :%s", question );
+          r = mas_proto_xcromas_evaluate_and_answer( prcontrol, question, &header_copy );
+          tMSG( "e & a :%d", r );
+        }
+      }
+
+      question = NULL;
+    }
+    else
+    {
+      r = 0;
+    }
   }
   return r;
 }

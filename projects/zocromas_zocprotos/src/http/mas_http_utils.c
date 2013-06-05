@@ -95,7 +95,7 @@ mas_proto_http_nonc( const char *smessage, const char **ppsn, char *delim )
 
 
 mas_http_t *
-mas_proto_http_write( mas_http_t * http, char *cbuf, size_t sz )
+mas_proto_http_write( mas_http_t * http, const char *cbuf, size_t sz )
 {
   int w = -1;
 
@@ -167,6 +167,7 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
     /* mas_varset_write( STDERR_FILENO, http->outdata, set ); */
 #else
     mas_varset_vclass_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
+    /* mas_varset_vclass_write( STDERR_FILENO, http->outdata ); */
 #endif
   }
   return http;
