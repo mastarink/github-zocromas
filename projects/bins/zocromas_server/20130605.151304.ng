@@ -1,0 +1,17 @@
+4864  1370434384.469642 write(4, "2013/06/05 15:13:04 [info] 4864#"..., 84) = 84
+4864  1370434384.469711 epoll_wait(12, {?} 0x19f3ed0, 512, -1) = 1
+4864  1370434388.522513 accept4(10, {sa_family=AF_INET, sin_port=htons(47993), sin_addr=inet_addr("192.168.71.2")}, [16], SOCK_NONBLOCK) = 3
+4864  1370434388.522556 epoll_ctl(12, EPOLL_CTL_ADD, 3, {...}) = 0
+4864  1370434388.522575 epoll_wait(12, {?} 0x19f3ed0, 512, 600000) = 1
+4864  1370434388.541199 recvfrom(3, "HEAD /index.html HTTP/1.1\r\nTE: d"..., 1024, 0, NULL, NULL) = 155
+4864  1370434388.541259 open("/var/www/mastarink.net/mastarink.net/1/htdocs/index.html", O_RDONLY|O_NONBLOCK) = 13
+4864  1370434388.541316 fstat(13, {st_mode=S_IFREG|0644, st_size=358, ...}) = 0
+4864  1370434388.541348 writev(3, [{"HTTP/1.1 200 OK\r\nServer: nginx/1"..., 232}], 1) = 232
+4864  1370434388.541392 shutdown(3, SHUT_WR) = 0
+4864  1370434388.541430 recvfrom(3, 0x7fffa856dbb0, 4096, 0, 0, 0) = -1 EAGAIN (Resource temporarily unavailable)
+4864  1370434388.541463 epoll_wait(12, {?} 0x19f3ed0, 512, 5000) = 1
+4864  1370434388.544720 recvfrom(3, "", 4096, 0, NULL, NULL) = 0
+4864  1370434388.544771 write(7, "192.168.71.2 - - [05/Jun/2013:15"..., 126) = 126
+4864  1370434388.544825 close(13)       = 0
+4864  1370434388.544855 close(3)        = 0
+4864  1370434388.544884 epoll_wait(12,  <detached ...>
