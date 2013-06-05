@@ -55,7 +55,7 @@ mas_fwrite_string( FILE * f, char *cbuf, int z )
 }
 
 int
-mas_write_string( int fd, char *cbuf, int z )
+mas_write_string( int fd, const char *cbuf, int z )
 {
   int w = -1;
   int msgsz;

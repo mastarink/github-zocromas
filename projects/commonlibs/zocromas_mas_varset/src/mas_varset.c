@@ -82,7 +82,7 @@ mas_varset_search_variable( mas_varset_t * varset, const char *vclass_name, cons
     {
       mas_vclass_element_t *v;
 
-      v = _mas_varset_vclass_search_variable( vclass, name );
+      v = __mas_varset_vclass_search_variable( vclass, name );
       if ( v )
         mas_varset_vclass_variable_set_value( v, value );
     }
@@ -137,20 +137,22 @@ mas_varset_write( int fd, mas_varset_t * varset, const char *vclass_name )
   }
 }
 
-void
-_mas_varset_set_head( mas_varset_t * varset, const char *vclass_name, const char *head )
+mas_varset_t * 
+mas_varset_set_head( mas_varset_t * varset, const char *vclass_name, const char *head )
 {
   mas_varset_class_t *vclass = NULL;
 
   vclass = mas_varset_search_vclass( varset, vclass_name );
   _mas_varset_vclass_set_head( vclass, head );
+  return varset;
 }
 
-void
-_mas_varset_add_tail( mas_varset_t * varset, const char *vclass_name, const char *tail )
+mas_varset_t *
+mas_varset_add_tail( mas_varset_t * varset, const char *vclass_name, const char *tail )
 {
   mas_varset_class_t *vclass = NULL;
 
   vclass = mas_varset_search_vclass( varset, vclass_name );
   _mas_varset_vclass_add_tail( vclass, tail );
+  return varset;
 }

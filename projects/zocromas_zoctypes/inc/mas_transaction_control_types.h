@@ -76,7 +76,7 @@ struct mas_rcontrol_s
   pthread_cond_t waitchan_cond;
   pthread_mutex_t waitchan_mutex;
   unsigned complete:1;
-  unsigned keep_alive:1;
+  unsigned connection_keep_alive:1;
 #  ifdef MAS_TR_PERSIST
   unsigned persistent_transaction:1;
 #  endif

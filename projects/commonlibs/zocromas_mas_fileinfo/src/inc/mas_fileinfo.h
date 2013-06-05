@@ -25,7 +25,7 @@ mas_varset_class_t *mas_fileinfo_make_body( mas_varset_class_t * outdata, mas_fi
 #endif
 
 int mas_fileinfo_make_etag( mas_fileinfo_t * fileinfo );
-int mas_fileinfo_stat( mas_fileinfo_t * fileinfo );
+/* int mas_fileinfo_stat( mas_fileinfo_t * fileinfo ); */
 char *mas_fileinfo_content_type_string( mas_fileinfo_t * fileinfo );
 
 /* char *mas_fileinfo_load_data( mas_fileinfo_t * fileinfo ); */

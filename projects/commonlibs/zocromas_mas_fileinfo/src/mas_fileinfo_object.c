@@ -75,7 +75,9 @@ mas_fileinfo_init( mas_fileinfo_t * fileinfo, const char *root, const char *path
     fileinfo->root = mas_strdup( root );
     fileinfo->tail = mas_strdup( path );
     fileinfo->data_loader = loader;
-    mas_fileinfo_stat( fileinfo );
+    /* OFF 20130605.151602
+     * mas_fileinfo_stat( fileinfo );
+     * */
     /* if ( fileinfo->content_type )         */
     /*   mas_free( fileinfo->content_type ); */
   }

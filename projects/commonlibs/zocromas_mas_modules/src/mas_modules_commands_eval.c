@@ -188,7 +188,8 @@ mas_cmd_t root_cmdtable[] = {
 static mas_cmd_t root_command = {.name = "root",.libname = "root",.only_level = 0 };
 
 char *
-mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size, size_t * ptruesize, const void *arg )
+mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size, size_t * ptruesize, ino_t * ptrueinode,
+                                 time_t * ptruefiletime, const void *arg )
 {
   const char *p;
   char *answer;
@@ -318,14 +319,14 @@ mas_evaluate_cmd( STD_CMD_ARGS )
           char *fname;
 
           fname = answer ? answer : mas_strdup( ( char * ) this_command->vid );
-          answer = mas_load_filename( fname, 0, &sz, NULL );
+          answer = mas_load_filename_fd( fname, 0, &sz, NULL, NULL, NULL );
           mas_free( fname );
         }
         break;
       case MAS_CMD_FILE_LOAD:
         file = ( FILE * ) args;
         if ( file )
-          answer = mas_load_file( file, 0, &sz, NULL );
+          answer = mas_load_file( file, 0, &sz, NULL, NULL, NULL );
         break;
       }
       if ( file )

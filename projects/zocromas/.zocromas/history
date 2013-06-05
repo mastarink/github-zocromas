@@ -188,3 +188,10 @@ server exit
 bye
 server exit
 bye
+server info
+q
+bye
+exit
+quit
+server quit
+server exit

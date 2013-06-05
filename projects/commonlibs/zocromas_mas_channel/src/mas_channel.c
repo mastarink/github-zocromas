@@ -131,7 +131,7 @@ mas_channel_vwritef( const mas_channel_t * pchannel, const char *fmt, va_list ar
  * z : to write z-byte if NZ
  * */
 int
-mas_channel_write_string( const mas_channel_t * pchannel, char *cbuf, int z )
+mas_channel_write_string( const mas_channel_t * pchannel, const char *cbuf, int z )
 {
   int r = 0;
 
@@ -148,7 +148,7 @@ mas_channel_write_string( const mas_channel_t * pchannel, char *cbuf, int z )
 }
 
 int
-mas_channel_write( const mas_channel_t * pchannel, char *cbuf, size_t sz )
+mas_channel_write( const mas_channel_t * pchannel, const char *cbuf, size_t sz )
 {
   int r = 0;
 

@@ -55,75 +55,72 @@ w_action( const void *nodep, const VISIT which, const int depth )
     }
   }
 }
-#if 0
 
-int
-main( void )
+void
+test00( void )
 {
-  mas_varset_t *vs = NULL;
+  mas_varset_t *vs1 = NULL;
 
   for ( int iter = 0; iter < 1; iter++ )
   {
     const char *name = "User-Agent";
 
-    fprintf( stderr, "===========================\n" );
-    vs = mas_varset_create(  );
+    vs1 = mas_varset_create(  );
     if ( 1 )
     {
       if ( 1 )
       {
         mas_varset_class_t *vc;
 
-        vc = mas_varset_search_vclass( vs, "tclass1" );
+        vc = mas_varset_search_vclass( vs1, "tclass1" );
 
-        /* mas_varset_vclass_set_element( vc, "HTTP 7.0", 0, "\r\n", 2 ); */
         fprintf( stderr, "[********** vc: [%p]]\n", ( void * ) vc );
 
-        /* mas_varset_vclass_variable_set_element( vc->vec, "HTTP 7.0", 0, "\r\n", 2 ); */
+        /* mas_varset_vclass_variable_set_element( vc->vec, 0, "\r\n", 2, "HTTP 7.0" ); */
       }
-      vs = mas_varset_search_variable( vs, "tclass4", "tc4-varnameX", "varvalueX" );
-      fprintf( stderr, "[********** vs: [%p]]\n", ( void * ) vs );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-varname1", "varvalue1" );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-Content-Length", "77777" );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-Content-Type", "text/html" );
-      /* vs = mas_varset_search_variable( vs, "tclass4", "varname7", "varvalue7" ); */
-      vs = mas_varset_search_variable( vs, "tclass4", "varname7a", "varvalue7" );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-Content-Type", "text/plain" );
+      vs1 = mas_varset_search_variable( vs1, "tclass4", "tc4-varnameX", "varvalueX" );
+      fprintf( stderr, "[********** vs1: [%p]]\n", ( void * ) vs1 );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "tc1-varname1", "varvalue1" );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "tc1-Content-Length", "77777" );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "tc1-Content-Type", "text/html" );
+      /* vs1 = mas_varset_search_variable( vs1, "tclass4", "varname7", "varvalue7" ); */
+      vs1 = mas_varset_search_variable( vs1, "tclass4", "varname7a", "varvalue7" );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "tc1-Content-Type", "text/plain" );
 /* 'User-Agent' = 'lwp-request/6.03 libwww-perl/6.03' */
 
       if ( 1 )
       {
-        vs = mas_varset_search_variablef( vs, "inheader", name, NULL, "%s", "lwp-request/6.03 libwww-perl/6.03" );
-        vs = mas_varset_search_variablef( vs, "inheader", name, NULL, "[%s]", "lwp-request/6.03 libwww-perl/6.03" );
+        vs1 = mas_varset_search_variablef( vs1, "inheader", name, NULL, "%s", "lwp-request/6.03 libwww-perl/6.03" );
+        vs1 = mas_varset_search_variablef( vs1, "inheader", name, NULL, "[%s]", "lwp-request/6.03 libwww-perl/6.03" );
       }
       else if ( 0 )
       {
         mas_varset_class_t *vc;
 
-        vc = mas_varset_search_vclass( vs, "tclass1" );
+        vc = mas_varset_search_vclass( vs1, "tclass1" );
         mas_varset_vclass_search_variablef( vc, "inheader", name, NULL, "%s", "lwp-request/6.03 libwww-perl/6.03" );
         mas_varset_vclass_search_variablef( vc, "inheader", name, NULL, "[%s]", "lwp-request/6.03 libwww-perl/6.03" );
       }
       else
       {
-        vs = mas_varset_search_variable( vs, "inheader", name, "lwp-request/6.03 libwww-perl/6.03" );
-        vs = mas_varset_search_variable( vs, "inheader", name, "[lwp-request/6.03 libwww-perl/6.03]" );
+        vs1 = mas_varset_search_variable( vs1, "inheader", name, "lwp-request/6.03 libwww-perl/6.03" );
+        vs1 = mas_varset_search_variable( vs1, "inheader", name, "[lwp-request/6.03 libwww-perl/6.03]" );
       }
 
 
-      fprintf( stderr, "[********** vs: [%p]]\n", ( void * ) vs );
+      fprintf( stderr, "[********** vs1: [%p]]\n", ( void * ) vs1 );
 
       fprintf( stderr, "\n@@@ tclass1: [" );
-      mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
+      mas_varset_write( STDOUT_FILENO, vs1, "tclass1" );
       fprintf( stderr, "] @@@\n" );
       /* fprintf( stderr, "\n@@@ inheader: [" );            */
-      /* mas_varset_write( STDOUT_FILENO, vs, "inheader" ); */
+      /* mas_varset_write( STDOUT_FILENO, vs1, "inheader" ); */
       /* fprintf( stderr, "] @@@\n" );                      */
 
       {
         mas_varset_class_t *vc;
 
-        vc = mas_varset_search_vclass( vs, "tclass1" );
+        vc = mas_varset_search_vclass( vs1, "tclass1" );
         if ( vc )
         {
           fprintf( stderr, "\n@@@ [" );
@@ -132,7 +129,7 @@ main( void )
             fprintf( stderr, "[%p] '%s'\n", vc->vec[j].iov_base, ( const char * ) vc->vec[j].iov_base );
           }
           fprintf( stderr, "] @@@\n" );
-          /* mas_varset_vclass_variable_set_element( vc->vec, "HTTP ...", 0, "\r\n", 2 ); */
+          /* mas_varset_vclass_variable_set_element( vc->vec, 0, "\r\n", 2, "HTTP ..." ); */
           fprintf( stderr, "\n@@@ [" );
           for ( int j = 0; j < vc->el_cnt + vc->has_head; j++ )
           {
@@ -142,13 +139,13 @@ main( void )
         }
       }
       fprintf( stderr, "\n@@@ [" );
-      mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
+      mas_varset_write( STDOUT_FILENO, vs1, "tclass1" );
       fprintf( stderr, "] @@@\n" );
 
       {
         mas_vclass_element_t *tv;
 
-        tv = mas_varset_find_variable( vs, "inheader", name );
+        tv = mas_varset_find_variable( vs1, "inheader", name );
         if ( tv )
         {
           fprintf( stderr, "TO SET inheader '%s'='%s'\n", name, mas_varset_vclass_variable_get_value_ref( tv ) );
@@ -161,30 +158,23 @@ main( void )
     }
     else
     {
-      vs = mas_varset_search_variable( vs, "tclass1", "varname1", "varvalue1" );
-      vs = mas_varset_search_variable( vs, "tclass1", "Content-Type", "text/html" );
-      vs = mas_varset_search_variable( vs, "tclass1", "Content-type", "text/plain" );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "varname1", "varvalue1" );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "Content-Type", "text/html" );
+      vs1 = mas_varset_search_variable( vs1, "tclass1", "Content-type", "text/plain" );
     }
 
 
     if ( 0 )
-      mas_varset_walk_classes( vs, w_action );
+      mas_varset_walk_classes( vs1, w_action );
 
-    /* mas_varset_delete_vclass( vs, "tclass1" ); */
-    /* mas_varset_delete_vclass( vs, "tclass2" ); */
-    mas_varset_delete( vs );
+    /* mas_varset_delete_vclass( vs1, "tclass1" ); */
+    /* mas_varset_delete_vclass( vs1, "tclass2" ); */
+    mas_varset_delete( vs1 );
 
-    vs = NULL;
+    vs1 = NULL;
     fprintf( stderr, "===========================\n" );
   }
-#  ifdef MAS_TRACEMEM
-  print_memlist( stderr, FL );
-#  endif
-
-  return 0;
 }
-#else
-
 
 void
 test10( void )
@@ -243,21 +233,21 @@ test30( void )
 
 
   vc1 = mas_varset_search_vclass( vs1, "tclass1" );
-  fprintf( stderr, "\t %s %d :: %p\t- %s\n", __func__, __LINE__, ( void * ) vc1, vc1 ? ok_message : error_message );
+  fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, vc1 ? ok_message : error_message );
   vc2 = mas_varset_find_vclass( vs1, "tclass1" );
-  fprintf( stderr, "\t %s %d :: %p\t- %s\n", __func__, __LINE__, ( void * ) vc2, vc2 && vc1 == vc2 ? ok_message : error_message );
+  fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, vc2 && vc1 == vc2 ? ok_message : error_message );
 
   {
     mas_vclass_element_t *v1;
 
     v1 = _mas_varset_vclass_add_elements( vc2, 2 );
-    fprintf( stderr, "\t %s %d :: %p\t- %s\n", __func__, __LINE__, ( void * ) v1, v1 ? ok_message : error_message );
-    mas_varset_vclass_variable_set_element( v1, "Wow", 0, NULL, 0 );
-    fprintf( stderr, "\t %s %d :: %p '%s'\t- %s\n", __func__, __LINE__, ( void * ) v1, ( char * ) v1->iov_base, v1
+    fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 ? ok_message : error_message );
+    mas_varset_vclass_variable_set_element( v1, 0, NULL, 0, "Wow" );
+    fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v1->iov_base, v1
              && 0 == strcmp( v1->iov_base, "Wow" ) ? ok_message : error_message );
 
-    mas_varset_vclass_variable_set_element( v1, "Wow", 0, ": ", 2 );
-    fprintf( stderr, "\t %s %d :: %p '%s'\t- %s\n", __func__, __LINE__, ( void * ) v1, ( char * ) v1->iov_base, v1
+    mas_varset_vclass_variable_set_element( v1, 0, ": ", 2, "Wow" );
+    fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v1->iov_base, v1
              && 0 == strcmp( v1->iov_base, "Wow: " ) ? ok_message : error_message );
   }
 
@@ -295,7 +285,7 @@ test31( void )
 
     v1 = _mas_varset_vclass_add_elements( vc2, 1 );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 ? ok_message : error_message );
-    mas_varset_vclass_variable_set_element( v1, "Wow", 0, NULL, 0 );
+    mas_varset_vclass_variable_set_element( v1, 0, NULL, 0, "Wow" );
     fprintf( stderr, "\t %s %d [%lu]\t- %s\n", __func__, __LINE__, ( v1 - vc1->vec ), v1
              && ( v1 - vc1->vec ) == 1 ? ok_message : error_message );
     fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v1->iov_base, v1
@@ -311,7 +301,7 @@ test31( void )
              && ( v2 - vc1->vec ) == 2 ? ok_message : error_message );
     fprintf( stderr, "\t %s %d v1 [%lu]\t- %s\n", __func__, __LINE__, ( v1 - vc1->vec ), v1
              && ( v1 - vc1->vec ) == 1 ? ok_message : error_message );
-    mas_varset_vclass_variable_set_element( v2, "Hoh", 0, NULL, 2 );
+    mas_varset_vclass_variable_set_element( v2, 0, NULL, 2, "Hoh" );
     fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v2->iov_base, v2
              && 0 == strcmp( v2->iov_base, "Hoh" ) ? ok_message : error_message );
 
@@ -331,8 +321,8 @@ test31( void )
              && ( v2 - vc1->vec ) == 1 + vc1->has_head ? ok_message : error_message );
     fprintf( stderr, "\t %s %d v1 [%lu]\t- %s\n", __func__, __LINE__, ( v1 - vc1->vec ), v1
              && ( v1 - vc1->vec ) == 0 + vc1->has_head ? ok_message : error_message );
-    mas_varset_vclass_variable_set_element( v3, "Hih", 0, NULL, 2 );
-    fprintf( stderr, "\t %s %d :: %p '%s'\t- %s\n", __func__, __LINE__, ( void * ) v3, ( char * ) v3->iov_base, v3
+    mas_varset_vclass_variable_set_element( v3, 0, NULL, 2, "Hih" );
+    fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v3->iov_base, v3
              && 0 == strcmp( v3->iov_base, "Hih" ) ? ok_message : error_message );
 
 
@@ -392,18 +382,18 @@ test32( void )
 
     v1 = _mas_varset_vclass_add_elements( vc2, 2 );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 ? ok_message : error_message );
-    mas_varset_vclass_variable_set_element( v1, "Wow", 0, NULL, 0 );
+    mas_varset_vclass_variable_set_element( v1, 0, NULL, 0, "Wow" );
     fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v1->iov_base, v1
              && 0 == strcmp( v1->iov_base, "Wow" ) ? ok_message : error_message );
 
-    mas_varset_vclass_variable_set_element( v1, "Wow", 0, ": ", 2 );
+    mas_varset_vclass_variable_set_element( v1, 0, ": ", 2, "Wow" );
     fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v1->iov_base, v1
              && 0 == strcmp( v1->iov_base, "Wow: " ) ? ok_message : error_message );
 
     v2 = _mas_varset_vclass_add_elements( vc2, 2 );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v2 ? ok_message : error_message );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 && v2 && v2 != v1 ? ok_message : error_message );
-    mas_varset_vclass_variable_set_element( v2, "Hoh", 0, ": ", 2 );
+    mas_varset_vclass_variable_set_element( v2, 0, ": ", 2, "Hoh" );
     fprintf( stderr, "\t %s %d '%s'\t- %s\n", __func__, __LINE__, ( char * ) v2->iov_base, v2
              && 0 == strcmp( v2->iov_base, "Hoh: " ) ? ok_message : error_message );
 
@@ -441,14 +431,14 @@ test40( void )
   {
     mas_vclass_element_t *v1;
 
-    v1 = _mas_varset_vclass_search_variable( vc1, "var1" );
+    v1 = __mas_varset_vclass_search_variable( vc1, "var1" );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 ? ok_message : error_message );
   }
   if ( 1 )
   {
     mas_vclass_element_t *v1;
 
-    v1 = _mas_varset_vclass_search_variable( vc1, "var1" );
+    v1 = __mas_varset_vclass_search_variable( vc1, "var1" );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 ? ok_message : error_message );
   }
   fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, 1 ? ok_message : error_message );
@@ -475,7 +465,7 @@ test50( void )
   {
     mas_vclass_element_t *v1, *v2, *v3, *v4;
 
-    v1 = _mas_varset_vclass_search_variable( vc1, "var1" );
+    v1 = __mas_varset_vclass_search_variable( vc1, "var1" );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v1 ? ok_message : error_message );
     v2 = mas_varset_vclass_find_variable( vc1, "var1" );
     fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, v2 && v2 == v1 ? ok_message : error_message );
@@ -490,7 +480,6 @@ test50( void )
   mas_varset_delete( vs1 );
   vs1 = NULL;
   fprintf( stderr, "\t-%s %d\t- %s\n", __func__, __LINE__, 1 ? ok_message : error_message );
-
 }
 
 void
@@ -501,13 +490,14 @@ test60( void )
   mas_varset_t *vs3 __attribute__ ( ( unused ) ) = NULL;
   mas_varset_t *vs4 __attribute__ ( ( unused ) ) = NULL;
   mas_varset_t *vs5 __attribute__ ( ( unused ) ) = NULL;
+  mas_varset_t *vs6 __attribute__ ( ( unused ) ) = NULL;
   mas_varset_class_t *vc1 = NULL;
 
 
   fprintf( stderr, "\t+%s %d\t- %s\n", __func__, __LINE__, 1 ? ok_message : error_message );
   vs1 = mas_varset_create(  );
 
-  _mas_varset_set_head( vs1, "tclass1", "HTTP 7.0" );
+  vs1 = mas_varset_set_head( vs1, "tclass1", "HTTP 7.0" );
 
 
   vc1 = mas_varset_search_vclass( vs1, "tclass1" );
@@ -528,7 +518,7 @@ test60( void )
   fprintf( stderr, "\t %s %d [%u]\t- %s\n", __func__, __LINE__, vc1->el_cnt, ( vc1->el_cnt == 9 ) ? ok_message : error_message );
   fprintf( stderr, "\t %s %d\t- %s\n", __func__, __LINE__, vs1 == vs5 ? ok_message : error_message );
 
-  _mas_varset_add_tail( vs5, "tclass1", "KHVOST\r\n" );
+  vs6 = mas_varset_add_tail( vs5, "tclass1", "KHVOST" );
   fprintf( stderr, "\n### [" );
   mas_varset_write( STDERR_FILENO, vs5, "tclass1" );
   fprintf( stderr, "] ###\n" );
@@ -542,132 +532,12 @@ test60( void )
   fprintf( stderr, "\t-%s %d\t- %s\n", __func__, __LINE__, 1 ? ok_message : error_message );
 }
 
-void
-test70( void )
-{
-  mas_varset_t *vs = NULL;
-
-  for ( int iter = 0; iter < 1; iter++ )
-  {
-    const char *name = "User-Agent";
-
-    fprintf( stderr, "===========================\n" );
-    vs = mas_varset_create(  );
-    if ( 1 )
-    {
-      if ( 1 )
-      {
-        mas_varset_class_t *vc;
-
-        vc = mas_varset_search_vclass( vs, "tclass1" );
-
-        /* mas_varset_vclass_set_element( vc, "HTTP 7.0", 0, "\r\n", 2 ); */
-        fprintf( stderr, "[********** vc: [%p]]\n", ( void * ) vc );
-
-        /* mas_varset_vclass_variable_set_element( vc->vec, "HTTP 7.0", 0, "\r\n", 2 ); */
-      }
-      vs = mas_varset_search_variable( vs, "tclass4", "tc4-varnameX", "varvalueX" );
-      fprintf( stderr, "[********** vs: [%p]]\n", ( void * ) vs );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-varname1", "varvalue1" );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-Content-Length", "77777" );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-Content-Type", "text/html" );
-      /* vs = mas_varset_search_variable( vs, "tclass4", "varname7", "varvalue7" ); */
-      vs = mas_varset_search_variable( vs, "tclass4", "varname7a", "varvalue7" );
-      vs = mas_varset_search_variable( vs, "tclass1", "tc1-Content-Type", "text/plain" );
-/* 'User-Agent' = 'lwp-request/6.03 libwww-perl/6.03' */
-
-      if ( 1 )
-      {
-        vs = mas_varset_search_variablef( vs, "inheader", name, NULL, "%s", "lwp-request/6.03 libwww-perl/6.03" );
-        vs = mas_varset_search_variablef( vs, "inheader", name, NULL, "[%s]", "lwp-request/6.03 libwww-perl/6.03" );
-      }
-      else if ( 0 )
-      {
-        mas_varset_class_t *vc;
-
-        vc = mas_varset_search_vclass( vs, "tclass1" );
-        mas_varset_vclass_search_variablef( vc, "inheader", name, NULL, "%s", "lwp-request/6.03 libwww-perl/6.03" );
-        mas_varset_vclass_search_variablef( vc, "inheader", name, NULL, "[%s]", "lwp-request/6.03 libwww-perl/6.03" );
-      }
-      else
-      {
-        vs = mas_varset_search_variable( vs, "inheader", name, "lwp-request/6.03 libwww-perl/6.03" );
-        vs = mas_varset_search_variable( vs, "inheader", name, "[lwp-request/6.03 libwww-perl/6.03]" );
-      }
-
-
-      fprintf( stderr, "[********** vs: [%p]]\n", ( void * ) vs );
-
-      fprintf( stderr, "\n@@@ tclass1: [" );
-      mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
-      fprintf( stderr, "] @@@\n" );
-      /* fprintf( stderr, "\n@@@ inheader: [" );            */
-      /* mas_varset_write( STDOUT_FILENO, vs, "inheader" ); */
-      /* fprintf( stderr, "] @@@\n" );                      */
-
-      {
-        mas_varset_class_t *vc;
-
-        vc = mas_varset_search_vclass( vs, "tclass1" );
-        if ( vc )
-        {
-          fprintf( stderr, "\n@@@ [" );
-          for ( int j = 0; j < vc->el_cnt + vc->has_head; j++ )
-          {
-            fprintf( stderr, "[%p] '%s'\n", vc->vec[j].iov_base, ( const char * ) vc->vec[j].iov_base );
-          }
-          fprintf( stderr, "] @@@\n" );
-          /* mas_varset_vclass_variable_set_element( vc->vec, "HTTP ...", 0, "\r\n", 2 ); */
-          fprintf( stderr, "\n@@@ [" );
-          for ( int j = 0; j < vc->el_cnt + vc->has_head; j++ )
-          {
-            fprintf( stderr, "[%p] '%s'\n", vc->vec[j].iov_base, ( const char * ) vc->vec[j].iov_base );
-          }
-          fprintf( stderr, "] @@@\n" );
-        }
-      }
-      fprintf( stderr, "\n@@@ [" );
-      mas_varset_write( STDOUT_FILENO, vs, "tclass1" );
-      fprintf( stderr, "] @@@\n" );
-
-      {
-        mas_vclass_element_t *tv;
-
-        tv = mas_varset_find_variable( vs, "inheader", name );
-        if ( tv )
-        {
-          fprintf( stderr, "TO SET inheader '%s'='%s'\n", name, mas_varset_vclass_variable_get_value_ref( tv ) );
-        }
-        else
-        {
-          fprintf( stderr, "DIDN'T APPEAR VAR %s\n", name );
-        }
-      }
-    }
-    else
-    {
-      vs = mas_varset_search_variable( vs, "tclass1", "varname1", "varvalue1" );
-      vs = mas_varset_search_variable( vs, "tclass1", "Content-Type", "text/html" );
-      vs = mas_varset_search_variable( vs, "tclass1", "Content-type", "text/plain" );
-    }
-
-
-    if ( 0 )
-      mas_varset_walk_classes( vs, w_action );
-
-    /* mas_varset_delete_vclass( vs, "tclass1" ); */
-    /* mas_varset_delete_vclass( vs, "tclass2" ); */
-    mas_varset_delete( vs );
-
-    vs = NULL;
-    fprintf( stderr, "===========================\n" );
-  }
-}
 
 int
 main( void )
 {
   /* mas_strdup( "Hohoho" ); */
+  test00(  );
   test10(  );
   test20(  );
   test30(  );
@@ -676,12 +546,10 @@ main( void )
   test40(  );
   test50(  );
   test60(  );
-  test70(  );
   /* test70(  ); */
-#  ifdef MAS_TRACEMEM
+#ifdef MAS_TRACEMEM
   print_memlist( stderr, FL );
-#  endif
+#endif
 
   return 0;
 }
-#endif

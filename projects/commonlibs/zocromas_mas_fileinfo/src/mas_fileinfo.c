@@ -10,6 +10,10 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
+
 #ifdef MAS_OLD_VARIABLES_HTTP
 #  include <mastar/variables/mas_variables.h>
 #else
@@ -146,12 +150,14 @@ mas_fileinfo_load_data( mas_fileinfo_t * fileinfo )
 
   if ( !_mas_fileinfo_data( fileinfo ) )
   {
-    size_t size = 0, lsize = 0;
+    size_t size = 0;
 
     /* MAS_LOG( "to load data" ); */
     size = fileinfo->filesize;
-    data = ( fileinfo->data_loader ) ( fileinfo->root, fileinfo->tail, size, &lsize, fileinfo->userdata );
-    _mas_fileinfo_link_data( fileinfo, data, lsize );
+    data = ( fileinfo->data_loader ) ( fileinfo->root, fileinfo->tail, size, &fileinfo->filesize, &fileinfo->inode, &fileinfo->filetime,
+                                       fileinfo->userdata );
+    /* EMSG( "loader passed %lu %lu %lu", fileinfo->filesize, fileinfo->inode, fileinfo->filetime ); */
+    _mas_fileinfo_link_data( fileinfo, data, fileinfo->filesize );
 
     if ( fileinfo->filesize && fileinfo->root && mas_fileinfo_icontent_type( fileinfo ) <= 0 )
     {
@@ -162,7 +168,7 @@ mas_fileinfo_load_data( mas_fileinfo_t * fileinfo )
         mas_fileinfo_set_icontent_type( fileinfo, ict );
     }
 
-    /* MAS_LOG( "loaded data [%lu]", lsize ); */
+    /* MAS_LOG( "loaded data [%lu]", fileinfo->filesize ); */
   }
   return _mas_fileinfo_data( fileinfo );
 }
@@ -215,6 +221,10 @@ mas_fileinfo_make_etag( mas_fileinfo_t * fileinfo )
       fileinfo->etag = mas_strcat_x( fileinfo->etag, "\"" );
       r = 0;
     }
+    else
+    {
+      EMSG( "ETAG error %d %d %d", fileinfo->inode ? 1 : 0, fileinfo->filetime ? 1 : 0, fileinfo->filesize ? 1 : 0 );
+    }
   }
   return r;
 }
@@ -237,6 +247,7 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
   {
     dsz = fileinfo->filesize;
   }
+  /* EMSG( "? error [%lu] %d %d %d", dsz, fileinfo->inode ? 1 : 0, fileinfo->filetime ? 1 : 0, fileinfo->filesize ? 1 : 0 ); */
   if ( 1 || dsz )
   {
 #ifdef MAS_OLD_VARIABLES_HTTP
@@ -245,6 +256,10 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
     outdata = mas_varset_search_variablef( outdata, "header", "Content-Length", NULL, "%d", dsz );
 #else
     outdata = mas_varset_vclass_search_variablef( outdata, NULL, "Content-Length", NULL, "%d", dsz );
+    if ( !dsz )
+    {
+      EMSG( "Length error %d %d %d", fileinfo->inode ? 1 : 0, fileinfo->filetime ? 1 : 0, fileinfo->filesize ? 1 : 0 );
+    }
 #endif
   }
   /* if ( mas_udata_icontent_type( fileinfo->udata ) ) */
@@ -259,11 +274,12 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
       outdata = mas_varset_search_variable( outdata, "header", "Content-Type", content_type );
 #else
-    outdata = mas_varset_vclass_search_variable( outdata, NULL, "Content-Type", content_type );
+      outdata = mas_varset_vclass_search_variable( outdata, NULL, "Content-Type", content_type );
 #endif
       mas_free( content_type );
     }
   }
+  mas_fileinfo_make_etag( fileinfo );
   if ( fileinfo && fileinfo->etag )
   {
 #ifdef MAS_OLD_VARIABLES_HTTP
@@ -284,7 +300,8 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
           mas_varset_search_variablef( outdata, "header", "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", fileinfo->filetime );
 #else
     outdata =
-          mas_varset_vclass_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", fileinfo->filetime );
+          mas_varset_vclass_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT",
+                                              fileinfo->filetime );
 #endif
   }
   return outdata;
@@ -312,44 +329,44 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
 /*   return outdata;                                                                                                                  */
 /* }                                                                                                                                  */
 
-int
-mas_fileinfo_stat( mas_fileinfo_t * fileinfo )
-{
-  int r = -1;
-  char *filepath;
-
-  filepath = mas_strdup( fileinfo->root );
-  filepath = mas_strcat_x( filepath, fileinfo->tail );
-
-  if ( filepath )
-  {
-#ifdef MAS_TEST_HTTP_FILE
-    fileinfo->filesize = 30942;
-    fileinfo->filetime = 1357909287;
-    fileinfo->inode = 2222222;
-#else
-    struct stat est;
-
-    r = stat( filepath, &est );
-    if ( r >= 0 )
-    {
-      /* inode number : st_ino                        */
-      /* size         : st_size                       */
-      /* time of last modification         : st_mtime */
-      fileinfo->filesize = est.st_size;
-      fileinfo->filetime = est.st_mtime;
-      fileinfo->inode = est.st_ino;
-    }
-    else
-    {
-      /* MAS_LOGERR( errno, "file %s stat", filepath ); */
-      errno = 0;
-    }
-#endif
-    mas_free( filepath );
-  }
-  return r;
-}
+/* int                                                        */
+/* mas_fileinfo_stat( mas_fileinfo_t * fileinfo )             */
+/* {                                                          */
+/*   int r = -1;                                              */
+/*   char *filepath;                                          */
+/*                                                            */
+/*   filepath = mas_strdup( fileinfo->root );                 */
+/*   filepath = mas_strcat_x( filepath, fileinfo->tail );     */
+/*                                                            */
+/*   if ( filepath )                                          */
+/*   {                                                        */
+/* #ifdef MAS_TEST_HTTP_FILE                                  */
+/*     fileinfo->filesize = 30942;                            */
+/*     fileinfo->filetime = 1357909287;                       */
+/*     fileinfo->inode = 2222222;                             */
+/* #else                                                      */
+/*     struct stat est;                                       */
+/*                                                            */
+/*     r = stat( filepath, &est );                            */
+/*     if ( r >= 0 )                                          */
+/*     {                                                      */
+/*       (* inode number : st_ino                        *)   */
+/*       (* size         : st_size                       *)   */
+/*       (* time of last modification         : st_mtime *)   */
+/*       fileinfo->filesize = est.st_size;                    */
+/*       fileinfo->filetime = est.st_mtime;                   */
+/*       fileinfo->inode = est.st_ino;                        */
+/*     }                                                      */
+/*     else                                                   */
+/*     {                                                      */
+/*       (* MAS_LOGERR( errno, "file %s stat", filepath ); *) */
+/*       errno = 0;                                           */
+/*     }                                                      */
+/* #endif                                                     */
+/*     mas_free( filepath );                                  */
+/*   }                                                        */
+/*   return r;                                                */
+/* }                                                          */
 
 content_type_ext_t content_exts[] = {
   {MAS_CONTENT_HTML, ":html:htm:"}

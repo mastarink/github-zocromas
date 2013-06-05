@@ -58,12 +58,54 @@ _mas_varset_vclass_set_head( mas_varset_class_t * vclass, const char *head )
 {
   if ( vclass && !vclass->el_cnt )
   {
-    mas_vclass_element_t *v1 = NULL;
+    mas_vclass_element_t *el = NULL;
 
-    v1 = _mas_varset_vclass_add_elements( vclass, 1 );
-    mas_varset_vclass_variable_set_element( v1, head, 0, "\r\n", 2 );
+    el = _mas_varset_vclass_add_elements( vclass, 1 );
+    mas_varset_vclass_variable_set_element( el, 0, "\r\n", 2, head );
     vclass->has_head = 1;
   }
+  else
+  {
+    /* ERROR head ::: vclass->el_cnt ; head ); */
+  }
+}
+
+mas_varset_class_t *
+mas_varset_vclass_set_head( mas_varset_class_t * vclass, const char *vclass_name, const char *head )
+{
+  if ( !vclass )
+    vclass = mas_varset_vclass_create( vclass_name );
+  _mas_varset_vclass_set_head( vclass, head );
+  return vclass;
+}
+
+mas_varset_class_t *
+mas_varset_vclass_set_head_va( mas_varset_class_t * vclass, const char *vclass_name, mas_xvsnprintf_t func, const char *fmt, va_list args )
+{
+  char *text = NULL;
+  size_t txsize = 1024 * 10;
+
+  text = mas_malloc( txsize );
+  if ( text )
+  {
+    if ( !func )
+      func = mas_xvsnprintf;
+    ( *func ) ( text, txsize, fmt, args );
+    vclass = mas_varset_vclass_set_head( vclass, vclass_name, text );
+    mas_free( text );
+  }
+  return vclass;
+}
+
+mas_varset_class_t *
+mas_varset_vclass_set_headf( mas_varset_class_t * vclass, const char *vclass_name, mas_xvsnprintf_t func, const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  vclass = mas_varset_vclass_set_head_va( vclass, vclass_name, func, fmt, args );
+  va_end( args );
+  return vclass;
 }
 
 void
@@ -284,19 +326,31 @@ _mas_varset_vclass_add_elements( mas_varset_class_t * vclass, size_t num )
   return el;
 }
 
-mas_vclass_element_t *
+void
 _mas_varset_vclass_add_tail( mas_varset_class_t * vclass, const char *tail )
 {
   mas_vclass_element_t *el = NULL;
 
   el = _mas_varset_vclass_add_elements( vclass, 1 );
-  mas_varset_vclass_variable_set_element( el, tail, 0, NULL, 0 );
-  vclass->has_tail = 1;
-  return el;
+  if ( el )
+  {
+    /* mas_varset_vclass_variable_set_element( el, 0, NULL, 0, tail ); */
+    mas_varset_vclass_variable_set_element( el, 0, "\r\n", 2, tail );
+    vclass->has_tail = 1;
+  }
+}
+
+mas_varset_class_t *
+mas_varset_vclass_add_tail( mas_varset_class_t * vclass, const char *vclass_name, const char *tail )
+{
+  if ( !vclass )
+    vclass = mas_varset_vclass_create( vclass_name );
+  _mas_varset_vclass_add_tail( vclass, tail );
+  return vclass;
 }
 
 mas_vclass_element_t *
-_mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *name )
+__mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *name )
 {
   mas_vclass_element_t *found = NULL;
 
@@ -317,23 +371,29 @@ _mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *nam
   return found;
 }
 
-mas_varset_class_t *
-mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *vclass_name, const char *name, const char *value )
+void
+_mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *name, const char *value )
 {
-  mas_vclass_element_t *var = NULL;
-
-  if ( !vclass )
-    vclass = mas_varset_vclass_create( vclass_name );
   if ( vclass )
   {
+    mas_vclass_element_t *var = NULL;
+
     if ( name )
     {
-      var = _mas_varset_vclass_search_variable( vclass, name );
+      var = __mas_varset_vclass_search_variable( vclass, name );
       if ( var )
         mas_varset_vclass_variable_set_value( var, value );
     }
     vclass->use_var = var;
   }
+}
+
+mas_varset_class_t *
+mas_varset_vclass_search_variable( mas_varset_class_t * vclass, const char *vclass_name, const char *name, const char *value )
+{
+  if ( !vclass )
+    vclass = mas_varset_vclass_create( vclass_name );
+  _mas_varset_vclass_search_variable( vclass, name, value );
   return vclass;
 }
 
@@ -408,18 +468,51 @@ mas_varset_vclass_variable_get_value( mas_vclass_element_t * var )
   return v;
 }
 
-mas_vclass_element_t *
-mas_varset_vclass_set_element( mas_varset_class_t * vclass, const char *str, size_t offset, const char *suffix, size_t suffix_len )
-{
-  mas_vclass_element_t *var = NULL;
-
-  if ( vclass )
-    var = _mas_varset_vclass_search_variable( vclass, NULL );
-  return var;
-}
+/* mas_vclass_element_t *                                                                                                                      */
+/* mas_varset_vclass_set_element( mas_varset_class_t * vclass, size_t offset, const char *suffix, size_t suffix_len, const char *str )         */
+/* {                                                                                                                                           */
+/*   mas_vclass_element_t *var = NULL;                                                                                                         */
+/*                                                                                                                                             */
+/*   if ( vclass )                                                                                                                             */
+/*     var = __mas_varset_vclass_search_variable( vclass, NULL );                                                                              */
+/*   return var;                                                                                                                               */
+/* }                                                                                                                                           */
+/*                                                                                                                                             */
+/* mas_vclass_element_t *                                                                                                                      */
+/* mas_varset_vclass_set_element_va( mas_varset_class_t * vclass, size_t offset, const char *suffix, size_t suffix_len, mas_xvsnprintf_t func, */
+/*                                   const char *fmt, va_list args )                                                                           */
+/* {                                                                                                                                           */
+/*   mas_vclass_element_t *var = NULL;                                                                                                         */
+/*   char *text = NULL;                                                                                                                        */
+/*   size_t txsize = 1024 * 10;                                                                                                                */
+/*                                                                                                                                             */
+/*   text = mas_malloc( txsize );                                                                                                              */
+/*   if ( text )                                                                                                                               */
+/*   {                                                                                                                                         */
+/*     if ( !func )                                                                                                                            */
+/*       func = mas_xvsnprintf;                                                                                                                */
+/*     ( *func ) ( text, txsize, fmt, args );                                                                                                  */
+/*     var = mas_varset_vclass_set_element( vclass, offset, suffix, suffix_len, text );                                                        */
+/*     mas_free( text );                                                                                                                       */
+/*   }                                                                                                                                         */
+/*   return var;                                                                                                                               */
+/* }                                                                                                                                           */
+/*                                                                                                                                             */
+/* mas_vclass_element_t *                                                                                                                      */
+/* mas_varset_vclass_set_elementf( mas_varset_class_t * vclass, size_t offset, const char *suffix, size_t suffix_len, mas_xvsnprintf_t func,   */
+/*                                 const char *fmt, ... )                                                                                      */
+/* {                                                                                                                                           */
+/*   mas_vclass_element_t *var = NULL;                                                                                                         */
+/*   va_list args;                                                                                                                             */
+/*                                                                                                                                             */
+/*   va_start( args, fmt );                                                                                                                    */
+/*   var = mas_varset_vclass_set_element_va( vclass, offset, suffix, suffix_len, func, fmt, args );                                            */
+/*   va_end( args );                                                                                                                           */
+/*   return var;                                                                                                                               */
+/* }                                                                                                                                           */
 
 void
-mas_varset_vclass_variable_set_element( mas_vclass_element_t * var, const char *str, size_t offset, const char *suffix, size_t suffix_len )
+mas_varset_vclass_variable_set_element( mas_vclass_element_t * var, size_t offset, const char *suffix, size_t suffix_len, const char *str )
 {
   if ( var && str )
   {
@@ -440,15 +533,20 @@ mas_varset_vclass_variable_set_element( mas_vclass_element_t * var, const char *
 }
 
 void
+mas_varset_vclass_variable_set_elementf( mas_vclass_element_t * var, const char *str, size_t offset, const char *suffix, size_t suffix_len )
+{
+}
+
+void
 mas_varset_vclass_variable_set_name( mas_vclass_element_t * var, const char *name )
 {
-  mas_varset_vclass_variable_set_element( var, name, 0, ": ", 2 );
+  mas_varset_vclass_variable_set_element( var, 0, ": ", 2, name );
 }
 
 void
 mas_varset_vclass_variable_set_value( mas_vclass_element_t * var, const char *value )
 {
-  mas_varset_vclass_variable_set_element( var, value, 1, MAS_TAIL_STR, MAS_TAIL_LEN );
+  mas_varset_vclass_variable_set_element( var, 1, MAS_TAIL_STR, MAS_TAIL_LEN, value );
 }
 
 void
@@ -464,7 +562,6 @@ mas_varset_vclass_variable_set_value_va( mas_vclass_element_t * var, mas_xvsnpri
       func = mas_xvsnprintf;
     ( *func ) ( text, txsize, fmt, args );
     mas_varset_vclass_variable_set_value( var, text );
-    fprintf( stderr, ">>>>>>>>>>> VSET %p '%s'\n", ( void * ) var[1].iov_base, ( char * ) var[1].iov_base );
     mas_free( text );
   }
 }
@@ -484,11 +581,11 @@ mas_varset_vclass_write( int fd, mas_varset_class_t * vclass )
 {
   if ( fd > 0 && vclass && vclass->vec )
   {
-    fprintf( stderr, "\t %s %d\t- %u\n", __func__, __LINE__, vclass->el_cnt );
-    fprintf( stderr, "\n@@@ [" );
-    for ( int j = 0; j < vclass->el_cnt; j++ )
-      fprintf( stderr, "[%p] '%s'\n", vclass->vec[j].iov_base, ( const char * ) vclass->vec[j].iov_base );
-    fprintf( stderr, "] @@@\n" );
+    /* fprintf( stderr, "\t %s %d\t- %u\n", __func__, __LINE__, vclass->el_cnt );                             */
+    /* fprintf( stderr, "\n@@@ [" );                                                                          */
+    /* for ( int j = 0; j < vclass->el_cnt; j++ )                                                             */
+    /*   fprintf( stderr, "[%p] '%s'\n", vclass->vec[j].iov_base, ( const char * ) vclass->vec[j].iov_base ); */
+    /* fprintf( stderr, "] @@@\n" );                                                                          */
 
     writev( fd, vclass->vec, vclass->el_cnt );
   }

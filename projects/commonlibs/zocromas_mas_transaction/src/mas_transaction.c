@@ -138,8 +138,8 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     }
     if ( prcontrol && ( !prcontrol->proto_desc || prcontrol->proto_desc->proto_id == 0 ) )
     {
-      prcontrol->keep_alive = 0;
-      MAS_LOG( "KA => %u", prcontrol->keep_alive );
+      prcontrol->connection_keep_alive = 0;
+      MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
       r = -1;
     }
     MAS_LOG( "end transaction xch" );
@@ -175,16 +175,16 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       ctrl.in_pipe++;
       /* rMSG( MAS_SEPARATION_LINE ); */
       prcontrol->h.status = MAS_STATUS_INIT;
-      prcontrol->keep_alive = 1;
-      MAS_LOG( "KA => %u", prcontrol->keep_alive );
-      while ( r >= 0 && prcontrol && prcontrol->keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened
+      prcontrol->connection_keep_alive = 1;
+      MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
+      while ( r >= 0 && prcontrol && prcontrol->connection_keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened
               && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
         rMSG( "+ keep alive loop" );
         MAS_LOG( "starting transaction keep-alive block" );
         prcontrol->h.status = MAS_STATUS_WAIT;
         /* rMSG( "waiting cl.data; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
-        /* rMSG( "keep_alive %d", prcontrol->keep_alive ); */
+        /* rMSG( "connection_keep_alive %d", prcontrol->connection_keep_alive ); */
         prcontrol->h.status = MAS_STATUS_OPEN;
         prcontrol->qbin = MSG_BIN_NONE;
         r = mas_transaction_xch( prcontrol );
@@ -200,20 +200,20 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         }
         prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
-        MAS_LOG( "end tr. keep-alive (%d) block, %s opened:%d; bufeof:%d;", prcontrol->keep_alive,
+        MAS_LOG( "end tr. keep-alive (%d) block, %s opened:%d; bufeof:%d;", prcontrol->connection_keep_alive,
                  prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", prcontrol->h.pchannel->opened,
                  mas_channel_buffer_eof( prcontrol->h.pchannel ) );
-        rMSG( "- keep alive loop %d %d %d %d %d", prcontrol->keep_alive, !prcontrol->stop, prcontrol->h.pchannel ? 1 : 0,
+        rMSG( "- keep alive loop %d %d %d %d %d", prcontrol->connection_keep_alive, !prcontrol->stop, prcontrol->h.pchannel ? 1 : 0,
               prcontrol->h.pchannel->opened, !mas_channel_buffer_eof( prcontrol->h.pchannel ) );
         /* if ( mas_channel_buffer_eof( prcontrol->h.pchannel ) ) */
         /*   mas_channel_close( prcontrol->h.pchannel );          */
       }
       prcontrol->h.status = MAS_STATUS_STOP;
     }
-    if ( !prcontrol->keep_alive )
+    if ( !prcontrol->connection_keep_alive )
       mas_channel_close( prcontrol->h.pchannel );
   }
-  MAS_LOG( "end transaction. (k/a:%d) , %s opened:%d; bufeof:%d;", prcontrol->keep_alive,
+  MAS_LOG( "end transaction. (k/a:%d) , %s opened:%d; bufeof:%d;", prcontrol->connection_keep_alive,
            prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", prcontrol->h.pchannel->opened,
            mas_channel_buffer_eof( prcontrol->h.pchannel ) );
   tMSG( "end transaction" );

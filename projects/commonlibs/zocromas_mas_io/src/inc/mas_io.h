@@ -4,7 +4,7 @@
 #  include <stdio.h>
 #  include <stdarg.h>
 
-int mas_write_string( int fd, char *cbuf, int z );
+int mas_write_string( int fd, const char *cbuf, int z );
 
 int mas_vwritef( int fd, const char *fmt, va_list args );
 int mas_vfprintf( FILE * f, const char *fmt, va_list args );

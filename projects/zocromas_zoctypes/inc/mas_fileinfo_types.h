@@ -5,7 +5,7 @@
 
 #  include <mastar/types/mas_unidata_types.h>
 
-typedef char *( *data_loader_t ) ( const char *root, const char *tail, size_t size, size_t * ptruesize, const void *arg );
+typedef char *( *data_loader_t ) ( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t *ptrueinode, time_t *ptruefiletime, const void *arg );
 
 
 typedef struct mas_fileinfo_s mas_fileinfo_t;
@@ -17,7 +17,7 @@ struct mas_fileinfo_s
   /*  */
   char *root;
   char *tail;
-  off_t filesize;
+  size_t filesize;
   ino_t inode;
   const void *userdata;
   data_loader_t data_loader;
