@@ -10,8 +10,18 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/types/mas_varset_types.h>
+
+#include "mas_varset_vclass_object.h"
+#include "mas_varset_vclass_element.h"
 #include "mas_varset_vclass.h"
+#include "mas_varset_vclass_search.h"
+#include "mas_varset_vclass_namevalue.h"
+#include "mas_varset_vclass_headtail.h"
+
+#include "mas_varset_object.h"
 #include "mas_varset.h"
+#include "mas_varset_search.h"
+#include "mas_varset_headtail.h"
 
 const char *error_message = "\t\t\t\t@@@@@@@@@@@ Error";
 const char *ok_message = " OK";
