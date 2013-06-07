@@ -1,3 +1,4 @@
 .zocromas
 log
 *.tmp
+.auxdir

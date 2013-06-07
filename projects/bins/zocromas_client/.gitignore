@@ -1,3 +1,4 @@
 .zocromas
 *.core.gz
 make-timing.*.result
+.auxdir

@@ -34,7 +34,7 @@ function prjconfversion ()
 }  
 function setup_vers ()
 {
-  local n v rprefix rname_case c
+  local n v rprefix rname_case c tmprex
   local global_flavour_opts_file indir_flavour_opts_file
 # echo "setup_vers" >&2
   n=$1
@@ -95,15 +95,16 @@ function setup_vers ()
   #   prj_configure_opts="$prj_configure_opts --with-server=/tmp/zocromas.socket"
   #   prj_configure_opts="$prj_configure_opts --with-def-proto=xcromas"
       echo "to read '$global_flavour_opts_file'" >&2
+      tmprex='^#'
       while read c ; do 
-	if ! [[ "$c" =~ ^--prefix= ]] ; then
+	if ! [[ "$c" =~ ^--prefix= ]] &&  ! [[ "$c" =~ $tmprex ]] ; then
 	  prj_configure_opts="$prj_configure_opts $c"
 	fi
       done < $global_flavour_opts_file
       if [[ -f $indir_flavour_opts_file ]] ; then
         echo "to read '$indir_flavour_opts_file'" >&2
 	while read c ; do
-	  if ! [[ "$c" =~ ^--prefix= ]] ; then
+	  if ! [[ "$c" =~ ^--prefix= ]] && ! [[ "$c" =~ $tmprex ]] ; then
 	    prj_configure_opts="$prj_configure_opts $c"
 	  fi
 	done < $indir_flavour_opts_file

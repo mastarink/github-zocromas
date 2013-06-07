@@ -1,5 +1,5 @@
 #( cd /.... ; rm -Rf build ; mkdir build ; rm -Rf mascliser-* ; tar -jxf ../piptest/mascliser-1.0.1.tar.bz2 ; cd build ; ../mascliser-*/configure ; make ; l src ) ; cd .
-
+# find $MAS_PROJECTS_DIR -name 'configure.ac' -exec gvim -fd \{} ./commonlibs/zocromas_mas_maslibtemplate/configure.ac  \;
 
 
 #                                               -*- Autoconf -*-
@@ -14,19 +14,17 @@ AC_PREREQ([2.67])
 
 
 # If your `configure.in' has:
-#         
+#
 
 # AC_INIT
 # AC_CONFIG_SRCDIR([src/foo.c])
 # AM_INIT_AUTOMAKE(mumble, 1.5)
 
 # you can modernize it as follow:
-#         
+#
 
 # AC_CONFIG_SRCDIR(src/foo.c)
 # AM_INIT_AUTOMAKE
-
-# AM_INIT_AUTOMAKE([1.11 silent-rules])
 
 # AC_INIT([zocromas],[1.0.1.3],[bug-report@mastarink.net])
 AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
@@ -34,12 +32,12 @@ AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@m
 AC_CONFIG_SRCDIR([src/minitest.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
+AM_PROG_AR
+AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
+# AM_MAINTAINER_MODE([enable])
 
-# AM_INIT_AUTOMAKE([foreign  silent-rules -Wall -Werror dist-bzip2])
-AM_INIT_AUTOMAKE([foreign  -Wall -Werror dist-bzip2])
-AM_MAINTAINER_MODE([enable])
-
-# AM_SILENT_RULES([yes])
+# AM_EXTRA_RECURSIVE_TARGETS([foo])
+AM_SILENT_RULES([yes])
 
 
 # ?? AM_MAINTAINER_MODE([enable])
@@ -51,14 +49,17 @@ AM_MAINTAINER_MODE([enable])
 # Checks for programs.
 # AC_PROG_GCC_DEFAULT_FLAGS([-O0 -Wall])
 
-# To turn off '-g -O2' :  
+# To turn off '-g -O2' :
 # ${CFLAGS="-O2"}
 # # CFLAGS="-Os"
 # AC_SUBST([CFLAGS])
 
 # ${CFLAGS="-O0 -g -ggdb"}
-CFLAGS="-O0 -g -ggdb"
+CFLAGS=""
 AC_SUBST([CFLAGS])
+####################### tmp ? off 20130606.094428
+############ CFLAGS="-O0 -g -ggdb"
+###########  AC_SUBST([CFLAGS])
 
 
 AC_PROG_CC
@@ -90,13 +91,14 @@ AC_TYPE_UID_T
 
 
 # Checks for libraries.
+# AC_CHECK_LIB([pthread], [pthread_create])
 # GLADE_LIBS="`pkg-config --libs libglade-2.0`"
 # AC_SUBST(GLADE_LIBS)
 # GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
 # AC_SUBST(GLADE_CFLAGS)
+
 # PKG_CHECK_MODULES([GLADE], [libglade-2.0])
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
-
 
 # Checks for header files.
 
@@ -106,12 +108,6 @@ AC_TYPE_UID_T
 
 PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel_nooc zocromas_mas_msg_nooc])
 
-# Configure options: --enable-debug[=no].
-
-# AC_ARG_ENABLE([debug],
-#   [AS_HELP_STRING([--enable-debug],
-#     [enable debug code (default is no)])],
-#   [debug="$withval"], [debug=no])
 
 AC_ARG_ENABLE([old_variables],
 	      AC_HELP_STRING([--enable-old-variables],
@@ -124,17 +120,7 @@ if test x$enable_old_variables = xyes ; then
 fi
 
 
-########### debug   ########################################################################
-AC_ARG_ENABLE([debug],
-	      AC_HELP_STRING([--enable-debug],
-			     [turn on debugging]),,
-	      [enable_debug=no])
 
-if test x$enable_debug = xyes ; then
-    AC_DEFINE(MAS_DEBUG, 1,
-	[Enable additional debugging at the expense of performance and size])
-fi
-########## tracemem #########################################################################
 AC_ARG_ENABLE([tracemem],
 	      AC_HELP_STRING([--enable-tracemem],
 			     [turn on tracememing]),,
@@ -174,13 +160,24 @@ if test x$enable_noopts = xyes ; then
     AC_DEFINE(MAS_NO_OPTS, 1,
 	[Enable opts-less prog.])
 fi
+########### thtools   ########################################################################
+AC_ARG_ENABLE([nothtools],
+	      AC_HELP_STRING([--enable-nothtools],
+			     [turn off thtools]),,
+	      [enable_nothtools=no])
+
+if test x$enable_nothtools = xyes ; then
+    AC_DEFINE(MAS_NO_THTOOLS, 1,
+	[Enable thtools-less prog.])
+fi
 #############################################################################################
 
 # AC_REQUIRE([AM_MAINTAINER_MODE])
-# 
+#
 # if test $USE_MAINTAINER_MODE = yes; then
 # ..........
 # fi
+
 
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
@@ -190,16 +187,47 @@ AM_LDFLAGS="-Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LIN
 AC_SUBST(AM_LDFLAGS)
 
 
+# Configure options: --enable-debug[=no].
+
+AC_ARG_ENABLE([debug],
+  [AS_HELP_STRING([--enable-debug],
+    [enable debug code (default is no)])],
+  [debug="$withval"], [debug=no])
+
+AC_ARG_ENABLE([debug],
+	      AC_HELP_STRING([--enable-debug],
+			     [turn on debugging]),,
+	      [enable_debug=no])
+
+AC_ARG_ENABLE([gprof],
+	      AC_HELP_STRING([--enable-grof],
+			     [turn on gprof flags]),
+  [enable_gprof="$withval"], [enable_gprof=no])
+
+if test x$enable_gprof = xyes ; then
+  AM_CFLAGS="${AM_CFLAGS} -pg -O0 -g -ggdb"
+else
+  if test x$enable_debug = xyes ; then
+    AM_CFLAGS="${AM_CFLAGS} -O0 -g -ggdb"
+  fi
+fi
+
+if test x$enable_debug = xyes ; then
+    AC_DEFINE(MAS_DEBUG, 1,
+	[Enable additional debugging at the expense of performance and size])
+fi
+
+
 
 # AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
 # MAS_MODULESDIR="\${pkglibdir}"
 # AC_SUBST(MAS_MODULESDIR)
-#
+
 # AH_TEMPLATE([MAS_LIBDIR],[mas_libdir])
 # MAS_LIBDIR="\${libdir}"
 # AC_SUBST(MAS_LIBDIR)
 
-AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe  ${DEPS_CFLAGS} -DMAS_SYSCONFDIR='${sysconfdir}'"
+AM_CFLAGS="${AM_CFLAGS} -pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe  ${DEPS_CFLAGS} -DMAS_SYSCONFDIR='${sysconfdir}'"
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -pipe -DMAS_MODULESDIR=\\\"${MAS_MODULESDIR}\\\" -DMAS_LIBDIR=\\\"${MAS_LIBDIR}\\\""
 # AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Wall -Werror -include config.h -pipe"
 AC_SUBST(AM_CFLAGS)
@@ -272,6 +300,9 @@ AC_MSG_NOTICE([@@@@@@@@@ DEPS_CFLAGS: ${DEPS_CFLAGS} @@@@@@@@@])
 
 
 AC_CONFIG_HEADERS([config.h])
+# AC_CONFIG_COMMANDS([zocrromas_etc], [date > zzzz])
+# AC_CONFIG_FILES([etc/.........])
+
 AC_CONFIG_FILES([
 		masconfig.h
 		Makefile

@@ -141,6 +141,15 @@
 /* */
 #undef MAS_MALLOC
 
+/* Enable ctrl-less prog. */
+#undef MAS_NO_CTRL
+
+/* Enable opts-less prog. */
+#undef MAS_NO_OPTS
+
+/* Enable thtools-less prog. */
+#undef MAS_NO_THTOOLS
+
 /* Enable old variables lib */
 #undef MAS_OLD_VARIABLES_HTTP
 
@@ -153,7 +162,7 @@
 /* sdate */
 #undef MAS_S_DATE
 
-/* Enable additional tracememing at the expense of performance and size */
+/* Enable tracememing at the expense of performance and size */
 #undef MAS_TRACEMEM
 
 /* uname */

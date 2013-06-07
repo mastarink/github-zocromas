@@ -10,3 +10,4 @@ build/
 configure.ac.2*
 pid/
 *.tmp
+.auxdir
