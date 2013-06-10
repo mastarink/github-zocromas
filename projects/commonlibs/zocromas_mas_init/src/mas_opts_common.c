@@ -112,18 +112,20 @@ _mas_opts_restore_relative( MAS_PASS_OPTS_DECLARE const char *filename, void *pt
                             const void *arg, mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
                             mas_unknown_opt_func_t unknown_opt_func )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
-  char *fpath = NULL;
 
-  /* for .dir.config only! */
+  {
+    MAS_PASS_OPTS_DECL_PREF;
+    char *fpath = NULL;
 
-  fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.config );
-  fpath = mas_strcat_x( fpath, "/" );
-  fpath = mas_strcat_x( fpath, filename );
-  r = _mas_opts_restore_path( MAS_PASS_OPTS_PASS fpath, ptopts, opt_table, opt_table_size, arg, new_section_func, at_section_func,
-                              unknown_opt_func );
-  mas_free( fpath );
+    /* MAS_PASS_OPTS_PREF -- for .dir.config only! */
+    fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.config );
+    fpath = mas_strcat_x( fpath, "/" );
+    fpath = mas_strcat_x( fpath, filename );
+    r = _mas_opts_restore_path( MAS_PASS_OPTS_PASS fpath, ptopts, opt_table, opt_table_size, arg, new_section_func, at_section_func,
+                                unknown_opt_func );
+    mas_free( fpath );
+  }
   return r;
 }
 

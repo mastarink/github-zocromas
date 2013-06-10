@@ -103,7 +103,7 @@ mas_watcher( void )
     ctrl.watch_cnt++;
     out = itick % MUL == 0 && !ctrl.watcher_hide;
     {
-      extern mas_options_t gopts;
+      MAS_PASS_OPTS_DECL_GREF;
       unsigned nlistener = 0;
       unsigned ntransaction = 0;
       unsigned nlistener_open = 0;

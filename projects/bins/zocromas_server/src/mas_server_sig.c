@@ -294,7 +294,7 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
-  extern mas_options_t gopts;
+  MAS_PASS_OPTS_DECL_GREF;
 
   {
     int rn = 0;

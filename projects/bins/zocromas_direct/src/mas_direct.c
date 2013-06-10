@@ -8,8 +8,6 @@
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
 
-/* extern mas_options_t gopts; */
-
 #include <mastar/modules/mas_modules_commands_eval.h>
 
 
@@ -18,7 +16,7 @@ extern mas_control_t ctrl;
 int
 main( int argc, char *argv[] )
 {
-  extern mas_options_t gopts;
+  MAS_PASS_OPTS_DECL_GREF;
   char *infos = NULL;
 
   gopts.dir.mods = "/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/";
