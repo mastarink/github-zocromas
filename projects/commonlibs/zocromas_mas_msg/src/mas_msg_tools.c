@@ -20,9 +20,6 @@
 extern mas_control_t ctrl;
 #endif
 
-/* #include <mastar/types/mas_opts_types.h>    */
-/* extern mas_options_t opts;                  */
-
 #ifndef MAS_NO_THTOOLS
 #  include <mastar/thtools/mas_thread_tools.h>
 #endif

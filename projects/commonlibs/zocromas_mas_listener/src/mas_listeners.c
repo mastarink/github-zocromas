@@ -17,7 +17,6 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 
 /* #include "mas_common.h" */
@@ -56,28 +55,29 @@ more:
 
 
 int
-mas_listeners_start( void )
+mas_listeners_start( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
-  if ( opts.nolistener )
+  if ( MAS_PASS_OPTS_PREF nolistener )
   {
     MAS_LOG( "stopped run w/o listeners" );
-    sleep( opts.nolistener );
+    sleep( MAS_PASS_OPTS_PREF nolistener );
   }
   else
   {
     MAS_LOG( "to start listeners" );
     lMSG( "to start listeners" );
     HMSG( "LISTENERS START" );
-    for ( unsigned ith = 0; ith < opts.hostsv.c; ith++ )
+    for ( unsigned ith = 0; ith < MAS_PASS_OPTS_PREF hostsv.c; ith++ )
     {
-      if ( opts.hostsv.v[ith] )
+      if ( MAS_PASS_OPTS_PREF hostsv.v[ith] )
       {
-        lMSG( "host %d: '%s'", ith, opts.hostsv.v[ith] );
-        HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, opts.hostsv.v[ith], opts.default_port );
-        MAS_LOG( "to start listener #%d %s", ith + 1, opts.hostsv.v[ith] );
-        r = mas_listener_start( opts.hostsv.v[ith], opts.default_port );
+        lMSG( "host %d: '%s'", ith, MAS_PASS_OPTS_PREF hostsv.v[ith] );
+        HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, MAS_PASS_OPTS_PREF hostsv.v[ith], MAS_PASS_OPTS_PREF default_port );
+        MAS_LOG( "to start listener #%d %s", ith + 1, MAS_PASS_OPTS_PREF hostsv.v[ith] );
+        r = mas_listener_start( MAS_PASS_OPTS_PASS MAS_PASS_OPTS_PREF hostsv.v[ith], MAS_PASS_OPTS_PREF default_port );
       }
       else
       {

@@ -11,7 +11,6 @@
 /* #include <mastar/types/mas_control_types.h> */
 /* extern mas_control_t ctrl; */
 /* #include <mastar/types/mas_opts_types.h> */
-/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -23,6 +22,10 @@
 #else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_vclass.h>
+#  include <mastar/varset/mas_varset_search.h>
+#  include <mastar/varset/mas_varset_vclass_search.h>
+#  include <mastar/varset/mas_varset_vclass_headtail.h>
+#  include <mastar/varset/mas_varset_vclass_namevalue.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -223,7 +226,7 @@ mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http )
 }
 
 mas_http_t *
-mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_http_reply( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   char *data;
 
@@ -231,7 +234,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
   MAS_LOG( "to write protocol name/version" );
 
   if ( http )
-    data = mas_fileinfo_data( http->reply_content );
+    data = mas_fileinfo_data( MAS_PASS_OPTS_PASS http->reply_content );
 
 /* moved to fileinfo */
   /* if ( http )                                     */
@@ -363,7 +366,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 }
 
 mas_http_t *
-mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_http_make_data_auto( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   const char *fmt = NULL;
 
@@ -400,7 +403,7 @@ mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http )
         http->reply_content->filetime = 0;
         /* http->reply_content->icontent_type = MAS_CONTENT_NONE; */
       }
-      _mas_fileinfo_link_dataz( http->reply_content, text );
+      _mas_fileinfo_link_dataz( MAS_PASS_OPTS_PASS http->reply_content, text );
       /* mas_free( text ); */
     }
     /* http = mas_http_make_body( prcontrol, http, fmt, http->status_code, sm, sm, mas_proto_http_method_name( http ), http->URI ); */

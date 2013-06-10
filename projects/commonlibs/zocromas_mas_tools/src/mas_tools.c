@@ -24,6 +24,10 @@
 #include <mastar/wrap/mas_memory.h>
 #include "mas_arg_tools.h"
 
+#include <mastar/types/mas_opts_types.h>
+
+
+
 #include "mas_tools.h"
 
 
@@ -430,35 +434,5 @@ mas_load_filename_fd( const char *filepath, size_t size, size_t * ptruesize, ino
     /* MAS_LOGERR( errno, "file %s not loaded", filepath ); */
     /* errno = 0; */
   }
-  return filedata;
-}
-
-char *
-mas_load_filename_at_file( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime,
-                           const void *arg )
-{
-  char *filedata = NULL;
-  char *filepath;
-
-  filepath = mas_strdup( root );
-  filepath = mas_strcat_x( filepath, tail );
-  filedata = mas_load_filename_file( filepath, size, ptruesize, ptrueinode, ptruefiletime, arg );
-  if ( filepath )
-    mas_free( filepath );
-  return filedata;
-}
-
-char *
-mas_load_filename_at_fd( const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime,
-                         const void *arg )
-{
-  char *filedata = NULL;
-  char *filepath;
-
-  filepath = mas_strdup( root );
-  filepath = mas_strcat_x( filepath, tail );
-  filedata = mas_load_filename_fd( filepath, size, ptruesize, ptrueinode, ptruefiletime, arg );
-  if ( filepath )
-    mas_free( filepath );
   return filedata;
 }

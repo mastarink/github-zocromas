@@ -20,6 +20,7 @@
 #else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_vclass.h>
+#  include <mastar/varset/mas_varset_vclass_search.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 

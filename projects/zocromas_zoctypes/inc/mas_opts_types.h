@@ -5,9 +5,9 @@
 #  include <mastar/types/mas_common_types.h>
 
 
-typedef int ( *mas_new_section_func_t ) ( const char *section );
-typedef int ( *mas_at_section_func_t ) ( const char *section, const char *s );
-typedef int ( *mas_unknown_opt_func_t ) ( const char *s );
+/* typedef int ( *mas_new_section_func_t ) ( const char *section );               */
+/* typedef int ( *mas_at_section_func_t ) ( const char *section, const char *s ); */
+/* typedef int ( *mas_unknown_opt_func_t ) ( const char *s );                     */
 typedef void ( *mas_opts_func_t ) ( const void *env, const char *section, const char *sectval, const char *name, const char *value );
 
 typedef union mas_msg_options_u
@@ -111,9 +111,9 @@ struct mas_options_s
   char *saved_configfilename;
   unsigned max_config_backup;
   double restart_sleep;
-  mas_new_section_func_t new_section_func;
-  mas_at_section_func_t at_section_func;
-  mas_unknown_opt_func_t unknown_opt_func;
+  /* mas_new_section_func_t new_section_func; */
+  /* mas_at_section_func_t at_section_func;   */
+  /* mas_unknown_opt_func_t unknown_opt_func; */
 };
 typedef struct mas_options_s mas_options_t;
 
@@ -139,5 +139,33 @@ struct mas_option_parse_s
 };
 typedef struct mas_option_parse_s mas_option_parse_t;
 
+/* #  define MAS_NOPASS_OPTS */
+
+
+#  ifdef MAS_NOPASS_OPTS
+#    define  MAS_PASS_OPTS_DECLARE mas_options_t * _popts,
+#    define  MAS_PASS_OPTS_DECLARE1 mas_options_t * _popts
+#    define MAS_PASS_OPTS_DCLOFF 1
+#    define MAS_PASS_OPTS_PASS NULL,
+#    define MAS_PASS_OPTS_PASS1 NULL
+#    define MAS_PASS_OPTS_DECL_PREF extern mas_options_t gopts __attribute__ ( ( unused ) )
+#    define MAS_PASS_OPTS_PREF gopts.
+#    define MAS_PASS_OPTS_REF &gopts
+#    define MAS_PASS_OPTS_DECL_GREF
+#    define MAS_PASS_OPTS_GREF NULL,
+#    define MAS_PASS_OPTS_GREF1 NULL
+#  else
+#    define  MAS_PASS_OPTS_DECLARE mas_options_t * popts,
+#    define  MAS_PASS_OPTS_DECLARE1 mas_options_t * popts
+#    define MAS_PASS_OPTS_DCLOFF 1
+#    define MAS_PASS_OPTS_PASS popts,
+#    define MAS_PASS_OPTS_PASS1 popts
+#    define MAS_PASS_OPTS_DECL_PREF
+#    define MAS_PASS_OPTS_PREF popts->
+#    define MAS_PASS_OPTS_REF popts
+#    define MAS_PASS_OPTS_DECL_GREF extern mas_options_t gopts __attribute__ ( ( unused ) )
+#    define MAS_PASS_OPTS_GREF &gopts,
+#    define MAS_PASS_OPTS_GREF1 &gopts
+#  endif
 
 #endif

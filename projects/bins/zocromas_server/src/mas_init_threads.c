@@ -10,11 +10,9 @@
 #include <mastar/wrap/mas_lib.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -24,6 +22,7 @@ extern mas_options_t opts;
 #endif
 
 #include <mastar/thtools/mas_thread_tools.h>
+
 
 #include "mas_init_threads.h"
 
@@ -46,7 +45,7 @@ more:
 
 
 int
-mas_threads_init( void )
+mas_threads_init( MAS_PASS_OPTS_DECLARE1 )
 {
   int r = 0;
 
@@ -168,7 +167,7 @@ mas_threads_init( void )
 }
 
 void
-mas_threads_destroy( void )
+mas_threads_destroy( MAS_PASS_OPTS_DECLARE1 )
 {
   pthread_attr_destroy( &ctrl.thglob.custom_attr );
 

@@ -10,14 +10,11 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-/* #include <mastar/types/mas_opts_types.h> */
+#include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-
-/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-/* #include <mastar/log/mas_log.h> */
 
 #include "mas_modules_ctrl_module.h"
 

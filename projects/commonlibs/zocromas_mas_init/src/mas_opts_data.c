@@ -1,13 +1,19 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 #include <stdlib.h>
 
 /* #include <mastar/types/mas_control_types.h> */
 #include <mastar/types/mas_opts_types.h>
-/* extern mas_control_t ctrl; */
-/* extern mas_options_t opts; */
+
+
+
 
 #include "mas_opts.h"
-#include "mas_opts_restore.h"
+/* #ifdef  MAS_PASS_OPTS          */
+/* #  include "mas_opts_global.h" */
+/* #endif                         */
+/* #include "mas_opts_restore.h"  */
 
 
 /*
@@ -26,7 +32,7 @@ related:
 
 
 #if 0
-mas_options_t opts = {
+mas_options_t gopts = {
   .msg_notice = 1,
   .msg_io = 0,
 
@@ -47,7 +53,7 @@ mas_options_t opts = {
   .msg_funline = 0,
 };
 #else
-mas_options_t opts = {
+mas_options_t gopts = {
   .f = {
         .bit = {
                 .msg_notice = 1,
@@ -129,10 +135,16 @@ mas_options_t opts = {
   .configfilename = NULL,
   .max_config_backup = 5,
   .restart_sleep = 0.25,
-  .new_section_func = mas_opts_restore_new_section,
-  .at_section_func = mas_opts_restore_at_section,
-  .unknown_opt_func = mas_opts_restore_flags,
+/* #  ifdef  MAS_PASS_OPTS                              */
+/*   .new_section_func = mas_gopts_restore_new_section, */
+/*   .at_section_func = mas_gopts_restore_at_section,   */
+/*   .unknown_opt_func = mas_gopts_restore_flags,       */
+/* #  else                                              */
+/*   .new_section_func = mas_opts_restore_new_section,  */
+/*   .at_section_func = mas_opts_restore_at_section,    */
+/*   .unknown_opt_func = mas_opts_restore_flags,        */
+/* #  endif                                             */
 };
 
-mas_msg_options_t *pmsg_opts = &opts.f;
+mas_msg_options_t *pmsg_opts = &gopts.f;
 #endif

@@ -26,8 +26,8 @@ related:
 */
 
 int
-mas_opts_restore_nosection( void *popts, const char *section, const char *sectvalue, const char *s, mas_option_parse_t * opt_table,
-                            size_t opt_table_size, const void *arg )
+mas_opts_restore_nosection( MAS_PASS_OPTS_DECLARE void *ptopts, const char *section, const char *sectvalue, const char *s,
+                            mas_option_parse_t * opt_table, size_t opt_table_size, const void *arg )
 {
   int r = -1;
 
@@ -59,17 +59,17 @@ mas_opts_restore_nosection( void *popts, const char *section, const char *sectva
         {
           double *pdoub;
 
-          pdoub = ( double * ) ( ( ( char * ) popts ) + opt_table[io].offset );
+          pdoub = ( double * ) ( ( ( char * ) ptopts ) + opt_table[io].offset );
           sscanf( se, "%lg", pdoub );
         }
         break;
       case MAS_OPT_TYPE_STR:
-        ptr = ( ( ( char * ) popts ) + opt_table[io].offset );
+        ptr = ( ( ( char * ) ptopts ) + opt_table[io].offset );
         if ( se && ( strlen( se ) < opt_table[io].size ) )
           strcpy( ptr, se );
         break;
       case MAS_OPT_TYPE_PSTR:
-        pptr = ( ( char ** ) ( ( ( char * ) popts ) + opt_table[io].offset ) );
+        pptr = ( ( char ** ) ( ( ( char * ) ptopts ) + opt_table[io].offset ) );
         if ( se )
         {
           /* HMSG( "to set '%s' < '%s'", *pptr, se ); */
@@ -103,27 +103,28 @@ mas_opts_restore_nosection( void *popts, const char *section, const char *sectva
 }
 
 int
-_mas_opts_restore_relative( const char *filename, void *popts, mas_option_parse_t * opt_table, size_t opt_table_size, const void *arg,
-                            mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
+_mas_opts_restore_relative( MAS_PASS_OPTS_DECLARE const char *filename, void *ptopts, mas_option_parse_t * opt_table, size_t opt_table_size,
+                            const void *arg, mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
                             mas_unknown_opt_func_t unknown_opt_func )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   char *fpath = NULL;
 
   /* for .dir.config only! */
-  extern mas_options_t opts;
 
-  fpath = mas_strdup( opts.dir.config );
+  fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.config );
   fpath = mas_strcat_x( fpath, "/" );
   fpath = mas_strcat_x( fpath, filename );
-  r = _mas_opts_restore_path( fpath, popts, opt_table, opt_table_size, arg, new_section_func, at_section_func, unknown_opt_func );
+  r = _mas_opts_restore_path( MAS_PASS_OPTS_PASS fpath, ptopts, opt_table, opt_table_size, arg, new_section_func, at_section_func,
+                              unknown_opt_func );
   mas_free( fpath );
   return r;
 }
 
 int
-_mas_opts_restore_path( const char *fpath, void *popts, mas_option_parse_t * opt_table, size_t opt_table_size, const void *arg,
-                        mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
+_mas_opts_restore_path( MAS_PASS_OPTS_DECLARE const char *fpath, void *ptopts, mas_option_parse_t * opt_table, size_t opt_table_size,
+                        const void *arg, mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
                         mas_unknown_opt_func_t unknown_opt_func )
 {
   int r = 0;
@@ -179,23 +180,23 @@ _mas_opts_restore_path( const char *fpath, void *popts, mas_option_parse_t * opt
           /* mMSG( "SECTION :'%s'", section ); */
           if ( new_section_func )
           {
-            IEVAL( r, new_section_func( section ) );
+            IEVAL( r, new_section_func( MAS_PASS_OPTS_PASS section ) );
             /* r=mas_opts_restore_new_section( section ); */
           }
           continue;
         }
         if ( section && at_section_func )
         {
-          IEVAL( r, at_section_func( section, s ) );
+          IEVAL( r, at_section_func( MAS_PASS_OPTS_PASS section, s ) );
         }
         else
         {
-          r = mas_opts_restore_nosection( popts, section, sectvalue, s, opt_table, opt_table_size, arg );
+          r = mas_opts_restore_nosection( MAS_PASS_OPTS_PASS ptopts, section, sectvalue, s, opt_table, opt_table_size, arg );
           if ( r < 0 )
           {
             if ( unknown_opt_func )
             {
-              r = unknown_opt_func( s );
+              r = unknown_opt_func( MAS_PASS_OPTS_PASS s );
             }
             else
             {

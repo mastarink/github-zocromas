@@ -8,7 +8,7 @@ mas_loginfo_list_head_t *mas_logger_queue( int create );
 void mas_logger_delete( int stopever );
 
 #  ifndef MAS_NO_THREADS
-int mas_logger_start( void );
+int mas_logger_start( MAS_PASS_OPTS_DECLARE1 );
 int mas_logger_stop( void );
 #  endif
 

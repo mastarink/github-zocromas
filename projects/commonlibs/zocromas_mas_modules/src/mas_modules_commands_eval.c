@@ -8,16 +8,16 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/types/mas_common_defs.h>
 #include <mastar/types/mas_opts_types.h>
-/* for dir.mods only */
-extern mas_options_t opts;
-
 
 #include <mastar/types/mas_modules_types.h>
+
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
+
 
 
 #include "mas_modules_load_module.h"
@@ -78,11 +78,12 @@ _universal_complex_cmd( STD_CMD_ARGS )
 }
 
 static mas_cmd_fun_t
-_load_cmd_func( const char *libname, const char *funname )
+_load_cmd_func( MAS_PASS_OPTS_DECLARE const char *libname, const char *funname )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   mas_cmd_fun_t cmd_fun = NULL;
 
-  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, opts.dir.mods );
+  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, MAS_PASS_OPTS_PREF dir.mods );
   return cmd_fun;
 }
 
@@ -97,7 +98,7 @@ _load_subtable_from( const char *libname, const char *path )
 }
 
 static int
-_missing_funsetup( mas_cmd_t * pcommand, unsigned level )
+_missing_funsetup( MAS_PASS_OPTS_DECLARE mas_cmd_t * pcommand, unsigned level )
 {
   int r = -1;
 
@@ -138,12 +139,13 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           char *full_fun_name = NULL;
 
           MAS_LOG( "loading  func. %s:%s", full_libname, full_fun_name );
-          cmd_fun = _load_cmd_func( full_libname, full_fun_name );
+          cmd_fun = _load_cmd_func( MAS_PASS_OPTS_PASS full_libname, full_fun_name );
           mas_free( full_fun_name );
         }
         if ( !cmd_fun )
         {
-          loaded_subtable = _load_subtable_from( full_libname, opts.dir.mods );
+          MAS_PASS_OPTS_DECL_PREF;
+          loaded_subtable = _load_subtable_from( full_libname, MAS_PASS_OPTS_PREF dir.mods );
           if ( loaded_subtable )
           {
             cmd_fun = _universal_complex_cmd;
@@ -153,7 +155,7 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level )
           }
           else
           {
-            EMSG( "No subtable at %s.%s ( opts.dir.mods: '%s' )", libname, name, opts.dir.mods );
+            EMSG( "No subtable at %s.%s ( opts.dir.mods: '%s' )", libname, name, MAS_PASS_OPTS_PREF dir.mods );
           }
         }
         mas_free( full_libname );
@@ -188,8 +190,8 @@ mas_cmd_t root_cmdtable[] = {
 static mas_cmd_t root_command = {.name = "root",.libname = "root",.only_level = 0 };
 
 char *
-mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size, size_t * ptruesize, ino_t * ptrueinode,
-                                 time_t * ptruefiletime, const void *arg )
+mas_evaluate_command_slash_plus( MAS_PASS_OPTS_DECLARE const char *root, const char *uri, size_t size, size_t * ptruesize,
+                                 ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
 {
   const char *p;
   char *answer;
@@ -204,7 +206,7 @@ mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size,
     while ( *p != '/' );
   if ( p && *p )
     p++;
-  answer = mas_evaluate_transaction_command_slash( prcontrol, p );
+  answer = mas_evaluate_transaction_command_slash( MAS_PASS_OPTS_PASS prcontrol, p );
   if ( ptruesize )
   {
     if ( answer )
@@ -216,7 +218,7 @@ mas_evaluate_command_slash_plus( const char *root, const char *uri, size_t size,
 }
 
 char *
-mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *uri )
+mas_evaluate_transaction_command_slash( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const char *uri )
 {
   char *p;
   char *question = NULL;
@@ -230,7 +232,7 @@ mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *
   while ( ( p = strchr( p, '/' ) ) )
     *p = ' ';
   MAS_LOG( "to make out XCROMAS %s", question );
-  answer = mas_evaluate_transaction_command( prcontrol, question );
+  answer = mas_evaluate_transaction_command( MAS_PASS_OPTS_PASS prcontrol, question );
   if ( answer == ( char * ) -1L )
     answer = NULL;
   else if ( prcontrol && prcontrol->qbin )
@@ -247,17 +249,17 @@ mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *
 }
 
 char *
-mas_evaluate_command( const char *question )
+mas_evaluate_command( MAS_PASS_OPTS_DECLARE const char *question )
 {
   WMSG( "EVAL CMD %s", question );
-  return mas_evaluate_transaction_command( NULL, question );
+  return mas_evaluate_transaction_command( MAS_PASS_OPTS_PASS NULL, question );
 }
 
 char *
-mas_evaluate_transaction_command( mas_rcontrol_t * prcontrol, const char *question )
+mas_evaluate_transaction_command( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const char *question )
 {
   WMSG( "EVAL TR '%s'", question );
-  return mas_evaluate_cmd( 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
+  return mas_evaluate_cmd( MAS_PASS_OPTS_PASS 0, NULL, NULL, prcontrol, question, question /* args */ , 1 /*level */  );
 }
 
 char *
@@ -288,7 +290,7 @@ mas_evaluate_cmd( STD_CMD_ARGS )
     {
       MAS_LOG( "{%p} must set fun/sbt for module %s.%s : %d : %p", ( void * ) this_command, this_command->libname,
                this_command->name, this_command->function ? 1 : 0, ( void * ) this_command->subtable );
-      r = _missing_funsetup( this_command, level );
+      r = _missing_funsetup( MAS_PASS_OPTS_PASS this_command, level );
       MAS_LOG( "evaluate : missing function - '%s' args: '%s'", this_command->name, args );
     }
     tMSG( "(%d) function:%d", r, this_command->function ? 1 : 0 );

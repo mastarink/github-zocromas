@@ -5,6 +5,8 @@
 
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/types/mas_opts_types.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -15,11 +17,14 @@
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_vclass.h>
-#  include <mastar/varset/mas_varset.h>
+/* #  include <mastar/varset/mas_varset_vclass.h> */
+#  include <mastar/varset/mas_varset_vclass_namevalue.h>
+/* #  include <mastar/varset/mas_varset.h> */
 #endif
 
 #include <mastar/thvariables/mas_thread_variables.h>
+
+
 
 /*
 this:

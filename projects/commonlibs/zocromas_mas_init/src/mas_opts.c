@@ -9,8 +9,7 @@
 
 /* #include <mastar/types/mas_control_types.h> */
 #include <mastar/types/mas_opts_types.h>
-/* extern mas_control_t ctrl; */
-extern mas_options_t opts;
+
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -32,89 +31,91 @@ related:
 */
 
 int
-mas_opts_destroy( void )
+mas_opts_destroy( MAS_PASS_OPTS_DECLARE1 )
 {
-  mas_del_argv( opts.hostsv.c, opts.hostsv.v, 0 );
-  opts.hostsv.c = 0;
-  opts.hostsv.v = NULL;
+  MAS_PASS_OPTS_DECL_PREF;
+  mas_del_argv( MAS_PASS_OPTS_PREF hostsv.c, MAS_PASS_OPTS_PREF hostsv.v, 0 );
+  MAS_PASS_OPTS_PREF hostsv.c = 0;
+  MAS_PASS_OPTS_PREF hostsv.v = NULL;
 
-  mas_del_argv( opts.protosv.c, opts.protosv.v, 0 );
-  opts.protosv.c = 0;
-  opts.protosv.v = NULL;
+  mas_del_argv( MAS_PASS_OPTS_PREF protosv.c, MAS_PASS_OPTS_PREF protosv.v, 0 );
+  MAS_PASS_OPTS_PREF protosv.c = 0;
+  MAS_PASS_OPTS_PREF protosv.v = NULL;
 
-  mas_del_argv( opts.commandsv.c, opts.commandsv.v, 0 );
-  opts.commandsv.c = 0;
-  opts.commandsv.v = NULL;
+  mas_del_argv( MAS_PASS_OPTS_PREF commandsv.c, MAS_PASS_OPTS_PREF commandsv.v, 0 );
+  MAS_PASS_OPTS_PREF commandsv.c = 0;
+  MAS_PASS_OPTS_PREF commandsv.v = NULL;
 
-  if ( opts.uuid )
-    mas_free( opts.uuid );
-  opts.uuid = NULL;
+  if ( MAS_PASS_OPTS_PREF uuid )
+    mas_free( MAS_PASS_OPTS_PREF uuid );
+  MAS_PASS_OPTS_PREF uuid = NULL;
 
-  if ( opts.dir.mods )
-    mas_free( opts.dir.mods );
-  opts.dir.mods = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.mods )
+    mas_free( MAS_PASS_OPTS_PREF dir.mods );
+  MAS_PASS_OPTS_PREF dir.mods = NULL;
 
-  if ( opts.dir.pids )
-    mas_free( opts.dir.pids );
-  opts.dir.pids = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.pids )
+    mas_free( MAS_PASS_OPTS_PREF dir.pids );
+  MAS_PASS_OPTS_PREF dir.pids = NULL;
 
-  if ( opts.msgfilename )
-    mas_free( opts.msgfilename );
-  opts.msgfilename = NULL;
+  if ( MAS_PASS_OPTS_PREF msgfilename )
+    mas_free( MAS_PASS_OPTS_PREF msgfilename );
+  MAS_PASS_OPTS_PREF msgfilename = NULL;
 
-  if ( opts.dir.proto )
-    mas_free( opts.dir.proto );
-  opts.dir.proto = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.proto )
+    mas_free( MAS_PASS_OPTS_PREF dir.proto );
+  MAS_PASS_OPTS_PREF dir.proto = NULL;
 
-  if ( opts.dir.log )
-    mas_free( opts.dir.log );
-  opts.dir.log = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.log )
+    mas_free( MAS_PASS_OPTS_PREF dir.log );
+  MAS_PASS_OPTS_PREF dir.log = NULL;
 
-  if ( opts.dir.history )
-    mas_free( opts.dir.history );
-  opts.dir.history = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.history )
+    mas_free( MAS_PASS_OPTS_PREF dir.history );
+  MAS_PASS_OPTS_PREF dir.history = NULL;
 
-  if ( opts.dir.post )
-    mas_free( opts.dir.post );
-  opts.dir.post = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.post )
+    mas_free( MAS_PASS_OPTS_PREF dir.post );
+  MAS_PASS_OPTS_PREF dir.post = NULL;
 
-  if ( opts.dir.config )
-    mas_free( opts.dir.config );
-  opts.dir.config = NULL;
+  if ( MAS_PASS_OPTS_PREF dir.config )
+    mas_free( MAS_PASS_OPTS_PREF dir.config );
+  MAS_PASS_OPTS_PREF dir.config = NULL;
 
-  if ( opts.configfilename )
-    mas_free( opts.configfilename );
-  opts.configfilename = NULL;
+  if ( MAS_PASS_OPTS_PREF configfilename )
+    mas_free( MAS_PASS_OPTS_PREF configfilename );
+  MAS_PASS_OPTS_PREF configfilename = NULL;
 
-  mas_del_argv( opts.argvv.c, opts.argvv.v, 0 );
-  opts.argvv.c = 0;
-  opts.argvv.v = NULL;
+  mas_del_argv( MAS_PASS_OPTS_PREF argvv.c, MAS_PASS_OPTS_PREF argvv.v, 0 );
+  MAS_PASS_OPTS_PREF argvv.c = 0;
+  MAS_PASS_OPTS_PREF argvv.v = NULL;
   return 0;
 }
 
 int
-mas_pre_init_default_opts( void )
+mas_pre_init_default_opts( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
 #ifdef MAS_SERVER_STRING
-  opts.hostsv.c = mas_add_argv_arg( opts.hostsv.c, &opts.hostsv.v, MAS_SERVER_STRING );
+  MAS_PASS_OPTS_PREF hostsv.c = mas_add_argv_arg( MAS_PASS_OPTS_PREF hostsv.c, &MAS_PASS_OPTS_PREF hostsv.v, MAS_SERVER_STRING );
 #endif
 #ifdef MAS_SERVER_DEF_PROTO
-  opts.protosv.c = mas_add_argv_arg( opts.protosv.c, &opts.protosv.v, MAS_SERVER_DEF_PROTO );
+  MAS_PASS_OPTS_PREF protosv.c = mas_add_argv_arg( MAS_PASS_OPTS_PREF protosv.c, &MAS_PASS_OPTS_PREF protosv.v, MAS_SERVER_DEF_PROTO );
 #endif
 #ifdef MAS_BASE_DIR
 #  ifdef MAS_LOG_DIR
-  if ( !opts.dir.log )
+  if ( !MAS_PASS_OPTS_PREF dir.log )
   {
-    opts.dir.log = mas_strdup( MAS_BASE_DIR "/" MAS_LOG_DIR );
-    HMSG( "DEF.LOGDIR: %s < '%s'", opts.dir.log, MAS_BASE_DIR "/" MAS_LOG_DIR );
+    MAS_PASS_OPTS_PREF dir.log = mas_strdup( MAS_BASE_DIR "/" MAS_LOG_DIR );
+    HMSG( "DEF.LOGDIR: %s < '%s'", MAS_PASS_OPTS_PREF dir.log, MAS_BASE_DIR "/" MAS_LOG_DIR );
   }
 #  endif
 #endif
 #ifdef MAS_PIDS_DIR
-  if ( !opts.dir.pids )
+  if ( !MAS_PASS_OPTS_PREF dir.pids )
   {
-    opts.dir.pids = mas_strdup( MAS_BASE_DIR "/" MAS_PIDS_DIR );
-    HMSG( "DEF.PIDSDIR: %s", opts.dir.pids );
+    MAS_PASS_OPTS_PREF dir.pids = mas_strdup( MAS_BASE_DIR "/" MAS_PIDS_DIR );
+    HMSG( "DEF.PIDSDIR: %s", MAS_PASS_OPTS_PREF dir.pids );
   }
 #endif
 
@@ -123,17 +124,17 @@ mas_pre_init_default_opts( void )
 #define STR(s) #s
 #ifdef MAS_LIBDIR
 #  ifdef MAS_MODS_DIR
-  if ( !opts.dir.mods )
+  if ( !MAS_PASS_OPTS_PREF dir.mods )
   {
-    opts.dir.mods = mas_strdup( XSTR( MAS_LIBDIR ) "/" MAS_MODS_DIR );
-    HMSG( "DEF.MODSDIR: %s", opts.dir.mods );
+    MAS_PASS_OPTS_PREF dir.mods = mas_strdup( XSTR( MAS_LIBDIR ) "/" MAS_MODS_DIR );
+    HMSG( "DEF.MODSDIR: %s", MAS_PASS_OPTS_PREF dir.mods );
   }
 #  endif
 #  ifdef MAS_PROTO_DIR
-  if ( !opts.dir.proto )
+  if ( !MAS_PASS_OPTS_PREF dir.proto )
   {
-    opts.dir.proto = mas_strdup( XSTR( MAS_LIBDIR ) "/" MAS_PROTO_DIR );
-    HMSG( "DEF.PROTODIR: %s", opts.dir.proto );
+    MAS_PASS_OPTS_PREF dir.proto = mas_strdup( XSTR( MAS_LIBDIR ) "/" MAS_PROTO_DIR );
+    HMSG( "DEF.PROTODIR: %s", MAS_PASS_OPTS_PREF dir.proto );
   }
 #  endif
 #endif

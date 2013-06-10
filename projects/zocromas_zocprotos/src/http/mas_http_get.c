@@ -6,6 +6,8 @@
 
 #include <mastar/log/mas_log.h>
 
+#include <mastar/types/mas_opts_types.h>
+
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include "mas_http_utils.h"
 #include "mas_http_reply.h"

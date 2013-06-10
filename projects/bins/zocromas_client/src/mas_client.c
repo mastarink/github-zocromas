@@ -1,3 +1,4 @@
+#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -17,17 +18,17 @@
 #include <mastar/channel/mas_channel_object.h>
 #include <mastar/channel/mas_channel_open.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #ifdef MAS_CLIENT_LOG
 #  include <mastar/log/mas_logger.h>
 #endif
 
 #include "mas_client_session.h"
 #include "mas_client_readline.h"
+
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
 
 #include "mas_client.h"
 
@@ -82,10 +83,11 @@ mas_client_zerocommands( mas_channel_t * pchannel )
 
   if ( ctrl.in_client )
   {
+    MAS_PASS_OPTS_DECL_PREF;
     char *cmd;
 
     cmd = mas_strdup( "check uuid " );
-    cmd = mas_strcat_x( cmd, opts.uuid );
+    cmd = mas_strcat_x( cmd, MAS_PASS_OPTS_PREF uuid );
     /* r = mas_client_exchange( pchannel, cmd, "%s\n" ); */
     IEVAL( r, mas_client_exchange( pchannel, cmd, "%s\n" ) );
     mas_free( cmd );
@@ -109,13 +111,14 @@ mas_client_zerocommands( mas_channel_t * pchannel )
 int
 mas_client_autocommands( mas_channel_t * pchannel )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
-  WMSG( "(%d) OPTS COMMANDS[%u]:", r, opts.commandsv.c );
-  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < opts.commandsv.c; ic++ )
+  WMSG( "(%d) OPTS COMMANDS[%u]:", r, MAS_PASS_OPTS_PREF commandsv.c );
+  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < MAS_PASS_OPTS_PREF commandsv.c; ic++ )
   {
-    WMSG( "(opts) command to execute : '%s'", opts.commandsv.v[ic] );
-    IEVAL( r, mas_client_exchange( pchannel, opts.commandsv.v[ic], "%s\n" ) );
+    WMSG( "(opts) command to execute : '%s'", MAS_PASS_OPTS_PREF commandsv.v[ic] );
+    IEVAL( r, mas_client_exchange( pchannel, MAS_PASS_OPTS_PREF commandsv.v[ic], "%s\n" ) );
   }
   WMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commandsv.c );
   for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < ctrl.commandsv.c; ic++ )
@@ -142,14 +145,15 @@ mas_client( const char *host_port )
   pchannel = mas_channel_create(  );
   while ( r >= 0 && ctrl.in_client && !ctrl.fatal )
   {
+    MAS_PASS_OPTS_DECL_PREF;
     size_t hostlen = 0;
     unsigned hport = 0;
 
     /* mMSG( "host_port:%s", host_port ); */
     WMSG( "(i/c:%u; i/p:%d) client external loop %s", ctrl.in_client, ctrl.in_pipe, host_port );
     WMSG( "to init '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
-    WMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, opts.default_port );
-    hostlen = mas_parse_host_port( host_port, &hport, opts.default_port );
+    WMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, MAS_PASS_OPTS_PREF default_port );
+    hostlen = mas_parse_host_port( host_port, &hport, MAS_PASS_OPTS_PREF default_port );
     /* r = mas_channel_init( pchannel, 0  , CHN_SOCKET, host_port, hostlen, hport ); */
     IEVAL( r, mas_channel_init( pchannel, 0, CHN_SOCKET, host_port, hostlen, hport ) );
     WMSG( "to open '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
@@ -173,15 +177,15 @@ mas_client( const char *host_port )
     if ( ctrl.in_client )
     {
 #if 1
-      if ( opts.disconnect_prompt )
+      if ( MAS_PASS_OPTS_PREF disconnect_prompt )
         r = 0;
       IEVAL( r, mas_client_transaction( pchannel ) );
 #else
-      if ( opts.disconnect_prompt || r > 0 )
+      if ( MAS_PASS_OPTS_PREF disconnect_prompt || r > 0 )
       {
         IEVAL( r, mas_client_transaction( pchannel ) );
       }
-      else if ( opts.wait_server )
+      else if ( MAS_PASS_OPTS_PREF wait_server )
       {
         /* if ( ctrl.try_cnt % 100 == 0 ) */
         {

@@ -19,15 +19,17 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 #include <mastar/log/mas_logger.h>
+
+
+
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
 
 
 #include <mastar/control/mas_control.h>
@@ -67,8 +69,9 @@ more:
 */
 
 static int
-mas_init_argv( int argc, char **argv, char **env )
+mas_init_argv( MAS_PASS_OPTS_DECLARE int argc, char **argv, char **env )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   WMSG( "INIT ARGV" );
   ctrl.launchervv.v = argv;
   ctrl.launchervv.c = argc;
@@ -77,32 +80,34 @@ mas_init_argv( int argc, char **argv, char **env )
   {
     for ( int ia = 0; ia < argc; ia++ )
     {
-      opts.argvv.c = mas_add_argv_arg( opts.argvv.c, &opts.argvv.v, argv[ia] );
+      MAS_PASS_OPTS_PREF argvv.c = mas_add_argv_arg( MAS_PASS_OPTS_PREF argvv.c, &MAS_PASS_OPTS_PREF argvv.v, argv[ia] );
     }
     /* for ( int ia = 0; ia < argc; ia++ )                              */
     /* {                                                                */
-    /*   mMSG( "A: %d of %d. arg:'%s'", ia, opts.argvv.c, opts.argvv.v[ia] ); */
+    /*   mMSG( "A: %d of %d. arg:'%s'", ia, MAS_PASS_OPTS_PREF argvv.c, MAS_PASS_OPTS_PREF argvv.v[ia] ); */
     /* }                                                                */
   }
-  return opts.argvv.c;
+  return MAS_PASS_OPTS_PREF argvv.c;
 }
 
 int
-mas_init_env(  )
+mas_init_env( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   char *seopts = NULL;
 
-  if ( opts.env_optsname && ( seopts = getenv( opts.env_optsname ) ) )
+  if ( MAS_PASS_OPTS_PREF env_optsname && ( seopts = getenv( MAS_PASS_OPTS_PREF env_optsname ) ) )
   {
-    mMSG( "E: %s='%s'", opts.env_optsname, seopts );
-    /* opts.argvv.c = mas_make_argv( seopts, opts.argvv.c, &opts.argvv.v, 0 ); */
-    opts.argvv.c = mas_add_argv_args( opts.argvv.c, &opts.argvv.v, seopts, 0 );
-    /* for ( int ia = 0; ia < opts.argvv.c; ia++ )                         */
+    mMSG( "E: %s='%s'", MAS_PASS_OPTS_PREF env_optsname, seopts );
+    /* MAS_PASS_OPTS_PREF argvv.c = mas_make_argv( seopts, MAS_PASS_OPTS_PREF argvv.c, &MAS_PASS_OPTS_PREF argvv.v, 0 ); */
+    MAS_PASS_OPTS_PREF argvv.c = mas_add_argv_args( MAS_PASS_OPTS_PREF argvv.c, &MAS_PASS_OPTS_PREF argvv.v, seopts, 0 );
+
+    /* for ( int ia = 0; ia < MAS_PASS_OPTS_PREF argvv.c; ia++ )                         */
     /* {                                                                */
-    /*   mMSG( "E: %d of %d. arg:'%s'", ia, opts.argvv.c, opts.argvv.v[ia] ); */
+    /*   mMSG( "E: %d of %d. arg:'%s'", ia, MAS_PASS_OPTS_PREF argvv.c, MAS_PASS_OPTS_PREF argvv.v[ia] ); */
     /* }                                                                */
   }
-  /* opts.argvv.c = mas_make_argv( "-P5001 -H192.168.71.2 -H192.168.71.2:5002 -H192.168.71.2:5003", opts.argvv.c, &opts.argvv.v, 0 ); */
+  /* MAS_PASS_OPTS_PREF argvv.c = mas_make_argv( "-P5001 -H192.168.71.2 -H192.168.71.2:5002 -H192.168.71.2:5003", MAS_PASS_OPTS_PREF argvv.c, &MAS_PASS_OPTS_PREF argvv.v, 0 ); */
   return 0;
 }
 
@@ -168,7 +173,7 @@ error_handler_at_init( const char *func, int line, int issys, int rcode, int ier
 }
 
 static int
-mas_pre_init_proc( void )
+mas_pre_init_proc( MAS_PASS_OPTS_DECLARE1 )
 {
   int r = 0;
   char lexe[256];
@@ -199,7 +204,7 @@ mas_pre_init_proc( void )
 }
 
 static int
-mas_pre_init_opt_files( void )
+mas_pre_init_opt_files( MAS_PASS_OPTS_DECLARE1 )
 {
   int r = 0;
   char sppid[64] = "";
@@ -217,16 +222,17 @@ mas_pre_init_opt_files( void )
 
     /* const char *name = ctrl.progname; */
 
-    IEVAL_OPT( rzero, mas_opts_restore_zero( name ) );
+    IEVAL_OPT( rzero, mas_opts_restore_zero( MAS_PASS_OPTS_PASS name ) );
     {
+      MAS_PASS_OPTS_DECL_PREF;
       int rone = 0;
 
 #ifdef MAS_ONE_OF_CONFIGS
 
-      if ( opts.read_user_opts )
+      if ( MAS_PASS_OPTS_PREF read_user_opts )
       {
         /* IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
-        if ( opts.read_user_opts_plus )
+        if ( MAS_PASS_OPTS_PREF read_user_opts_plus )
         {
           IEVAL_OPT( rone, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
         }
@@ -238,10 +244,10 @@ mas_pre_init_opt_files( void )
 #else
       int rtwo = 0;
 
-      if ( opts.read_user_opts )
+      if ( MAS_PASS_OPTS_PREF read_user_opts )
       {
-        IEVAL_OPT( rone, mas_opts_restore_user( NULL, name ) );
-        if ( opts.read_user_opts_plus )
+        IEVAL_OPT( rone, mas_opts_restore_user( MAS_PASS_OPTS_PASS NULL, name ) );
+        if ( MAS_PASS_OPTS_PREF read_user_opts_plus )
         {
           /* IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
           IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
@@ -281,17 +287,18 @@ mas_pre_init_runpath( char *runpath )
 }
 
 static int
-mas_init_set_msg_file( void )
+mas_init_set_msg_file( MAS_PASS_OPTS_DECLARE1 )
 {
   int r = 0;
 
   if ( !ctrl.is_parent )
   {
-    if ( opts.msgfilename )
+    MAS_PASS_OPTS_DECL_PREF;
+    if ( MAS_PASS_OPTS_PREF msgfilename )
     {
-      HMSG( "MESSAGES to %s", opts.msgfilename );
+      HMSG( "MESSAGES to %s", MAS_PASS_OPTS_PREF msgfilename );
       MAS_LOG( "(%d) init msg to set file e%d", r, errno );
-      IEVAL( r, mas_msg_set_file( opts.msgfilename ) );
+      IEVAL( r, mas_msg_set_file( MAS_PASS_OPTS_PREF msgfilename ) );
       MAS_LOG( "(%d) init msg set file done e%d", r, errno );
 
       /* TODO if console: */
@@ -303,38 +310,40 @@ mas_init_set_msg_file( void )
 }
 
 static int
-mas_post_init( void )
+mas_post_init( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
   WMSG( "POST-INIT" );
 #if 0
-  if ( r >= 0 && !opts.hosts_num )
+  if ( r >= 0 && !MAS_PASS_OPTS_PREF hosts_num )
   {
     char *defhost = NULL;
 
-    if ( opts.env_hostname )
-      defhost = getenv( opts.env_hostname );
+    if ( MAS_PASS_OPTS_PREF env_hostname )
+      defhost = getenv( MAS_PASS_OPTS_PREF env_hostname );
     if ( !defhost )
       defhost = "localhost";
-    opts.hosts_num = mas_add_argv_arg( opts.hosts_num, &opts.hosts, defhost );
-    /* for ( int ih = 0; ih <= opts.hosts_num; ih++ )                     */
+    MAS_PASS_OPTS_PREF hosts_num = mas_add_argv_arg( MAS_PASS_OPTS_PREF hosts_num, &MAS_PASS_OPTS_PREF hosts, defhost );
+
+    /* for ( int ih = 0; ih <= MAS_PASS_OPTS_PREF hosts_num; ih++ )                     */
     /* {                                                                  */
-    /*   thMSG( "@@@@@@ %d. host %s (%s)", ih, opts.hosts[ih], defhost ); */
+    /*   thMSG( "@@@@@@ %d. host %s (%s)", ih, MAS_PASS_OPTS_PREF hosts[ih], defhost ); */
     /* }                                                                  */
   }
 #endif
 /*
-  if ( !opts.dir.log )
-    opts.dir.log = mas_strdup( ".........." );
+  if ( !MAS_PASS_OPTS_PREF dir.log )
+    MAS_PASS_OPTS_PREF dir.log = mas_strdup( ".........." );
 */
-  if ( r >= 0 && opts.dir.log )
+  if ( r >= 0 && MAS_PASS_OPTS_PREF dir.log )
   {
     char namebuf[512];
 
     snprintf( namebuf, sizeof( namebuf ), "/%s.%s.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent ? "parent" : "child",
               ( unsigned long ) ctrl.stamp.first_lts, getpid(  ) );
-    ctrl.logpath = mas_strdup( opts.dir.log );
+    ctrl.logpath = mas_strdup( MAS_PASS_OPTS_PREF dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
   }
@@ -349,7 +358,7 @@ mas_post_init( void )
 }
 
 int
-mas_init_restart_count( void )
+mas_init_restart_count( MAS_PASS_OPTS_DECLARE1 )
 {
   char name[512];
   char *ren = NULL, *ren0;
@@ -387,47 +396,49 @@ mas_init_restart_count( void )
 }
 
 int
-mas_init( int argc, char **argv, char **env )
+mas_init( MAS_PASS_OPTS_DECLARE int argc, char **argv, char **env )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
   HMSG( "INIT" );
+
   ctrl.stamp.lts = ( unsigned long ) time( NULL );
   ctrl.stamp.first_lts = ctrl.stamp.lts;
-  IEVAL( r, mas_init_restart_count(  ) );
+  IEVAL( r, mas_init_restart_count( MAS_PASS_OPTS_PASS1 ) );
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts, ( unsigned long ) ctrl.stamp.lts,
            ( unsigned long ) ctrl.stamp.prev_lts );
   /* if ( ctrl.is_server ) */
 
-  if ( !( mas_init_argv( argc, argv, env ) > 1 ) )
-    IEVAL( r, mas_init_env(  ) );
+  if ( !( mas_init_argv( MAS_PASS_OPTS_PASS argc, argv, env ) > 1 ) )
+    IEVAL( r, mas_init_env( MAS_PASS_OPTS_PASS1 ) );
 
-  /* HMSG( "opts.argvv.v[0]: %s", opts.argvv.v[0] ); */
+  /* HMSG( "MAS_PASS_OPTS_PREF argvv.v[0]: %s", MAS_PASS_OPTS_PREF argvv.v[0] ); */
   /* mas_init_message(  ); */
   /* atexit( atexit_fun ); */
   IEVAL( r, mas_init_sig(  ) );
   HMSG( "(%d) INIT CLI", r );
 
-  IEVAL( r, mas_cli_options( opts.argvv.c, opts.argvv.v ) );
+  IEVAL( r, mas_cli_options( MAS_PASS_OPTS_PASS MAS_PASS_OPTS_PREF argvv.c, MAS_PASS_OPTS_PREF argvv.v ) );
   ctrl.argv_nonoptind = r;
-  IEVAL( r, mas_ctrl_init( &opts ) );
+  IEVAL( r, mas_ctrl_init( MAS_PASS_OPTS_REF ) );
 
   return r;
 }
 
 static int
-mas_init_vplus( va_list args )
+mas_init_vplus( MAS_PASS_OPTS_DECLARE va_list args )
 {
   int r = 0;
   int pos = 0;
-  typedef int ( *v_t ) ( void );
+  typedef int ( *v_t ) ( MAS_PASS_OPTS_DECLARE1 );
   v_t fun;
 
   WMSG( "INIT V+" );
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
   while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
   {
-    IEVAL( r, ( fun ) (  ) );
+    IEVAL( r, ( fun ) ( MAS_PASS_OPTS_PASS1 ) );
     MAS_LOG( "(%d) init + #%d", r, pos );
     WMSG( "INIT V #%d", pos );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
@@ -437,11 +448,12 @@ mas_init_vplus( va_list args )
   return r;
 }
 
-int
-mas_init_uuid( void )
+static int
+mas_init_uuid( MAS_PASS_OPTS_DECLARE1 )
 {
 #ifdef HAVE_LIBUUID
-  if ( !opts.uuid )
+  MAS_PASS_OPTS_DECL_PREF;
+  if ( !MAS_PASS_OPTS_PREF uuid )
   {
     uuid_t uuid;
     char buffer[256];
@@ -449,30 +461,31 @@ mas_init_uuid( void )
     memset( uuid, 0, sizeof( uuid ) );
     uuid_generate( uuid );
     uuid_unparse_lower( uuid, buffer );
-    opts.uuid = mas_strdup( buffer );
+    MAS_PASS_OPTS_PREF uuid = mas_strdup( buffer );
   }
 #endif
   return 0;
 }
 
 int
-mas_init_plus( int argc, char **argv, char **env, ... )
+mas_init_plus( MAS_PASS_OPTS_DECLARE int argc, char **argv, char **env, ... )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   va_list args;
 
   WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
   IEVAL( r, mas_pre_init_runpath( argv[0] ) );
-  IEVAL( r, mas_pre_init_proc(  ) );
+  IEVAL( r, mas_pre_init_proc( MAS_PASS_OPTS_PASS1 ) );
   /* uuid BEFORE opt_files !! */
-  IEVAL( r, mas_init_uuid(  ) );
-  HMSG( "UUID %s", opts.uuid );
-  IEVAL( r, mas_pre_init_opt_files(  ) );
-  HMSG( "UUID %s", opts.uuid );
+  IEVAL( r, mas_init_uuid( MAS_PASS_OPTS_PASS1 ) );
+  HMSG( "UUID %s", MAS_PASS_OPTS_PREF uuid );
+  IEVAL( r, mas_pre_init_opt_files( MAS_PASS_OPTS_PASS1 ) );
+  HMSG( "UUID %s", MAS_PASS_OPTS_PREF uuid );
   if ( r < 0 )
   {
     r = 0;
-    IEVAL( r, mas_pre_init_default_opts(  ) );
+    IEVAL( r, mas_pre_init_default_opts( MAS_PASS_OPTS_PASS1 ) );
     WMSG( "(%d) PRE-INIT-DEF", r );
   }
   WMSG( "(%d) PRE-INIT", r );
@@ -480,30 +493,31 @@ mas_init_plus( int argc, char **argv, char **env, ... )
   /* // r = mas_init_curses(  ); */
   /* IEVAL( r, mas_init_curses(  ) ); */
 #endif
-  IEVAL( r, mas_init( argc, argv, env ) );
-  mas_init_set_msg_file(  );
+  IEVAL( r, mas_init( MAS_PASS_OPTS_PASS argc, argv, env ) );
+  mas_init_set_msg_file( MAS_PASS_OPTS_PASS1 );
   {
     va_start( args, env );
-    IEVAL( r, mas_init_vplus( args ) );
+    IEVAL( r, mas_init_vplus( MAS_PASS_OPTS_PASS args ) );
     va_end( args );
   }
-  IEVAL( r, mas_post_init(  ) );
+  IEVAL( r, mas_post_init( MAS_PASS_OPTS_PASS1 ) );
   HMSG( "INIT %s", r < 0 ? "FAIL" : "OK" );
   return r;
 }
 
 void
-mas_destroy( void )
+mas_destroy( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   char sppid[64] = "";
 
   snprintf( sppid, sizeof( sppid ), "%lu", ( unsigned long ) getppid(  ) );
   if ( *sppid )
   {
     if ( !ctrl.opts_saved )
-      mas_opts_save_user( NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+      mas_opts_save_user( MAS_PASS_OPTS_PASS NULL, ctrl.progname ? ctrl.progname : "Unknown" );
     if ( !ctrl.opts_saved_plus )
-      mas_opts_save_user_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL );
+      mas_opts_save_user_plus( MAS_PASS_OPTS_PASS NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL );
   }
   WMSG( "DESTROY" );
   MAS_LOG( "destroy server" );
@@ -512,17 +526,17 @@ mas_destroy( void )
   if ( ctrl.is_client )
     mas_close_curses(  );
 #endif
-  if ( opts.argvv.v )
+  if ( MAS_PASS_OPTS_PREF argvv.v )
   {
-    /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, opts.argvv.v[0] ); */
-    tMSG( ">>>>> %s %s", opts.argvv.v[0], *( &opts.argvv.v[1] ) );
+    /* HMSG( "destroy, restart:%d [%s]", ctrl.restart, MAS_PASS_OPTS_PREF argvv.v[0] ); */
+    tMSG( ">>>>> %s %s", MAS_PASS_OPTS_PREF argvv.v[0], *( &MAS_PASS_OPTS_PREF argvv.v[1] ) );
     if ( ctrl.restart )
     {
       int r = 0;
 
       HMSG( "DESTROY, RESTART" );
 /* see mas_control_data.c mas_control_types.h etc. */
-      WMSG( "execvp %s %s", opts.argvv.v[0], opts.argvv.v[1] );
+      WMSG( "execvp %s %s", MAS_PASS_OPTS_PREF argvv.v[0], MAS_PASS_OPTS_PREF argvv.v[1] );
       ctrl.restart_cnt++;
       {
         char val[512];
@@ -534,12 +548,12 @@ mas_destroy( void )
         HMSG( "RESTART : %s='%s'", name, val );
         setenv( name, val, 1 );
       }
-      IEVAL( r, execvp( opts.argvv.v[0], &opts.argvv.v[0] ) );
-      HMSG( "FAIL restart %d %s", r, opts.argvv.v[0] );
+      IEVAL( r, execvp( MAS_PASS_OPTS_PREF argvv.v[0], &MAS_PASS_OPTS_PREF argvv.v[0] ) );
+      HMSG( "FAIL restart %d %s", r, MAS_PASS_OPTS_PREF argvv.v[0] );
       P_ERR;
     }
   }
-  mas_opts_destroy(  );
+  mas_opts_destroy( MAS_PASS_OPTS_PASS1 );
 
   ctrl.log_disabled = 1;
 

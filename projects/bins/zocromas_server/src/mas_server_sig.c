@@ -20,10 +20,9 @@
 #include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-/* #include <mastar/types/mas_opts_types.h> */
+#include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
 
-/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -31,7 +30,7 @@ extern mas_control_t ctrl;
 #include <mastar/thtools/mas_thread_tools.h>
 #include <mastar/modules/mas_modules_commands_eval.h>
 
-/* mas_destroy */
+/* mas_destroy_server */
 #include "mas_init_server.h"
 
 #include <mastar/listener/mas_listeners.h>
@@ -95,7 +94,7 @@ sigterm_han( int s )
 /*   fprintf( ftinfo,                                                                                                                         */
 /*            "Server info:\n\tclients: {%lu - %lu = %lu}\n" "\tlogdir: %s;\tlogpath: %s;\n"                                                  */
 /*            "\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", ctrl.clients_came, ctrl.clients_gone,                                             */
-/*            ctrl.clients_came - ctrl.clients_gone, opts.dir.log, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
+/*            ctrl.clients_came - ctrl.clients_gone, gopts.dir.log, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
 /*            ctrl.threads.n.main.thread );                                                                                                             */
 /*   ith = 0;                                                                                                                                 */
 /*   (* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); *)                                                                           */
@@ -158,9 +157,10 @@ sigterm_han( int s )
 void
 pinfo( void )
 {
+  MAS_PASS_OPTS_DECL_GREF;
   char *infos = NULL;
 
-  infos = mas_evaluate_command( "server info" );
+  infos = mas_evaluate_command( MAS_PASS_OPTS_GREF "server info" );
   if ( infos )
   {
     if ( !ctrl.stderrfile || ( fputs( infos, ctrl.stderrfile ) < 0 ) )
@@ -206,13 +206,13 @@ sigint_han( int s )
       /* sleep( 10 ); */
       /* exit( 3 ); */
     }
-    /* HMSG( "DAEMON -%d +%d", opts.nodaemon, ctrl.daemon ); */
+    /* HMSG( "DAEMON -%d +%d", gopts.nodaemon, ctrl.daemon ); */
     if ( ctrl.daemon && ctrl.old_stderrfile )
     {
       if ( int_cnt < 2 )
         pinfo(  );
       fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
-      /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, opts.nodaemon, ctrl.daemon, fr ); */
+      /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, gopts.nodaemon, ctrl.daemon, fr ); */
     }
     else
     {
@@ -294,6 +294,8 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
+  extern mas_options_t gopts;
+
   {
     int rn = 0;
     char name_buffer[32] = "?";
@@ -303,7 +305,7 @@ mas_atexit( void )
     EMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
 
-  mas_destroy_server(  );
+  mas_destroy_server( &gopts );
 #ifdef MAS_TRACEMEM
   {
     extern unsigned long memory_balance;

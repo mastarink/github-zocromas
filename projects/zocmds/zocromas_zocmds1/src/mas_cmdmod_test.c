@@ -1,15 +1,19 @@
 #include <mastar/wrap/mas_std_def.h>
 
+
 #include <stdio.h>
 #include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
+
+#include <mastar/types/mas_opts_types.h>
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
+
 
 #include <mastar/thvariables/mas_thread_variables.h>
 

@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 /* #define MS_DUP_FUNC_NAME */
 
@@ -19,14 +21,14 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/thtools/mas_thread_tools.h>
+
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
-/* #include "mas_common.h" */
 
-#include <mastar/thtools/mas_thread_tools.h>
+
 
 #include "mas_logger.h"
 #include "mas_log.h"
@@ -53,13 +55,14 @@ __attribute__ ( ( constructor ) )
 }
 
 static int
-mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args )
+mas_vlog( MAS_PASS_OPTS_DECLARE const char *func, int line, int merrno, const char *fmt, va_list args )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   mas_loginfo_list_head_t *log_list = NULL;
   char buffer[1024 * 8];
   mas_loginfo_t *li = NULL;
 
-  if ( !ctrl.log_offmem && !opts.nolog && !ctrl.log_disabled )
+  if ( !ctrl.log_offmem && !MAS_PASS_OPTS_PREF nolog && !ctrl.log_disabled )
   {
     if ( ctrl.log_stopped )
     {
@@ -136,42 +139,43 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
 }
 
 static int
-mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list args )
+mas_log_unlim( MAS_PASS_OPTS_DECLARE const char *func, int line, int merrno, const char *fmt, ... )
+{
+  int r = 0;
+  va_list args;
+
+  va_start( args, fmt );
+  r = mas_vlog( MAS_PASS_OPTS_PASS func, line, merrno, fmt, args );
+  va_end( args );
+  return r;
+}
+
+static int
+mas_vlog_lim( MAS_PASS_OPTS_DECLARE const char *func, int line, int merrno, const char *fmt, va_list args )
 {
   if ( !ctrl.log_offmem && ctrl.log_q_mem > 200000000 )
   {
     ctrl.log_offmem = 1;
-    mas_log_unlim( FL, 0, "memory ....." );
+    mas_log_unlim( MAS_PASS_OPTS_PASS FL, 0, "memory ....." );
   }
   else if ( ctrl.log_offmem && ctrl.log_q_mem < 150000000 )
   {
     ctrl.log_offmem = 0;
-    mas_log_unlim( FL, 0, "... memory" );
+    mas_log_unlim( MAS_PASS_OPTS_PASS FL, 0, "... memory" );
   }
-  mas_vlog( func, line, merrno, fmt, args );
+  mas_vlog( MAS_PASS_OPTS_PASS func, line, merrno, fmt, args );
   return 0;
 }
 
 int
 mas_log( const char *func, int line, int merrno, const char *fmt, ... )
 {
+  MAS_PASS_OPTS_DECL_GREF;
   int r = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = mas_vlog_lim( func, line, merrno, fmt, args );
-  va_end( args );
-  return r;
-}
-
-int
-mas_log_unlim( const char *func, int line, int merrno, const char *fmt, ... )
-{
-  int r = 0;
-  va_list args;
-
-  va_start( args, fmt );
-  r = mas_vlog( func, line, merrno, fmt, args );
+  r = mas_vlog_lim( MAS_PASS_OPTS_GREF func, line, merrno, fmt, args );
   va_end( args );
   return r;
 }

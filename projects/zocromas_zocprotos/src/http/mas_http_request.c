@@ -10,7 +10,6 @@ extern mas_control_t ctrl;
 
 /* dir.post, uuid */
 #include <mastar/types/mas_opts_types.h>
-extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -26,6 +25,9 @@ extern mas_options_t opts;
 #else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_vclass.h>
+#  include <mastar/varset/mas_varset_vclass_object.h>
+
+#  include <mastar/varset/mas_varset_search.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -184,7 +186,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
         if ( !prcontrol->proto_desc->variables )
         {
           HMSG( "HTTP proto vars" );
-          ( void ) _mas_opts_restore_relative( "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ),
+          ( void ) _mas_opts_restore_relative( NULL, "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ),
                                                ( const void * ) prcontrol->proto_desc /* arg */ , NULL, NULL, NULL );
         }
         MAS_LOG( "good, http parsed protocol: %s === %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );

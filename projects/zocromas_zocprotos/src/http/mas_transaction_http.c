@@ -9,15 +9,14 @@
 #include <mastar/tools/mas_tools.h>
 
 /* #include <mastar/types/mas_control_types.h> */
-/* #include <mastar/types/mas_opts_types.h> */
-/* extern mas_control_t ctrl; */
-/* extern mas_options_t opts; */
+#include <mastar/types/mas_opts_types.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/log/mas_log.h>
 #include <mastar/thtools/mas_ocontrol_tools.h>
+
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 
@@ -152,7 +151,7 @@ __attribute__ ( ( destructor ) )
 */
 
 int
-mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   int r = -1;
 
@@ -207,7 +206,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
       http->status_code = MAS_HTTP_CODE_NOT_IMPLEMENTED;
       http = mas_http_make_out_header( http, "Title", "%d %s", http->status_code, mas_http_status_code_message( prcontrol, http ) );
       http = mas_http_make_out_header_simple( http, "Allow", "GET,HEAD,OPTIONS" );
-      http = mas_http_make_data_auto( prcontrol, http );
+      http = mas_http_make_data_auto(  MAS_PASS_OPTS_PASS prcontrol, http );
       /* http = mas_http_make_body_simple( prcontrol, http ); */
       break;
     case MAS_HTTP_METHOD_OPTIONS:
@@ -234,7 +233,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
   /* }                                                      */
 
   if ( http )
-    http = mas_http_reply( prcontrol, http );
+    http = mas_http_reply( MAS_PASS_OPTS_PASS prcontrol, http );
   HMSG( "WRITTEN %lu", http ? http->written : 0 );
   MAS_LOG( "WRITTEN %lu", http ? http->written : 0 );
   r = http ? 1 : 0;
@@ -244,7 +243,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
 }
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, const void *place_holder )
+mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const void *place_holder )
 {
   int r = 0;
   mas_http_t *http = NULL;
@@ -275,7 +274,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const void *place_holder )
   MAS_LOG( "http?: parsed rq : %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
 
   if ( http )
-    r = mas_proto_make( prcontrol, http );
+    r = mas_proto_make( MAS_PASS_OPTS_PASS prcontrol, http );
   HMSG( "HTTP r:%d", r );
   return r;
 }

@@ -14,7 +14,7 @@
 /* #include <mastar/types/mas_control_types.h> */
 /* #include <mastar/types/mas_opts_types.h>    */
 /* extern mas_control_t ctrl;                  */
-/* extern mas_options_t opts;                  */
+/* extern mas_options_t gopts;                 */
 /*                                             */
 
 #include <mastar/channel/mas_channel_object.h>

@@ -1,10 +1,10 @@
 #ifndef MAS_INIT_SERVER_H
 #  define MAS_INIT_SERVER_H
 
-int mas_init_daemon( void );
-int mas_init_pids( void );
-int mas_init_load_protos( void );
+int mas_init_daemon( MAS_PASS_OPTS_DECLARE1 );
+int mas_init_pids( MAS_PASS_OPTS_DECLARE1 );
+int mas_init_load_protos( MAS_PASS_OPTS_DECLARE1 );
 
-void mas_destroy_server( void );
+void mas_destroy_server( MAS_PASS_OPTS_DECLARE1 );
 
 #endif

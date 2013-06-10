@@ -10,11 +10,6 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -26,6 +21,11 @@ extern mas_options_t opts;
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 /*
 this:
@@ -46,6 +46,7 @@ related:
 static char *
 opts_cmd( STD_CMD_ARGS )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   mas_options_t *result = NULL;
 
 #ifdef cMSG
@@ -53,8 +54,8 @@ opts_cmd( STD_CMD_ARGS )
 #endif
   if ( prcontrol )
     prcontrol->qbin = MSG_BIN_OPTS;
-  result = mas_malloc( sizeof( opts ) );
-  *result = opts;
+  result = mas_malloc( sizeof( *( MAS_PASS_OPTS_REF ) ) );
+  *result = *( MAS_PASS_OPTS_REF );
 #ifdef cMSG
   cMSG( "opts:%x", ( *( unsigned int * ) result ) );
 #endif

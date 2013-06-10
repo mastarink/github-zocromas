@@ -13,28 +13,29 @@ related:
   mas_fileinfo_object.c
 */
 
-#ifdef MAS_OLD_VARIABLES_HTTP
+#  ifdef MAS_OLD_VARIABLES_HTTP
 mas_variables_list_head_t *mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t * fileinfo );
 mas_variables_list_head_t *mas_fileinfo_make_body( mas_variables_list_head_t * outdata, mas_fileinfo_t * fileinfo );
-#elif defined(MAS_VARSET_VARIABLES_HTTP)
+#  elif defined(MAS_VARSET_VARIABLES_HTTP)
 mas_varset_t *mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo );
 mas_varset_t *mas_fileinfo_make_body( mas_varset_t * outdata, mas_fileinfo_t * fileinfo );
-#else
+#  else
 mas_varset_class_t *mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * fileinfo );
 mas_varset_class_t *mas_fileinfo_make_body( mas_varset_class_t * outdata, mas_fileinfo_t * fileinfo );
-#endif
+#  endif
 
 int mas_fileinfo_make_etag( mas_fileinfo_t * fileinfo );
+
 /* int mas_fileinfo_stat( mas_fileinfo_t * fileinfo ); */
 char *mas_fileinfo_content_type_string( mas_fileinfo_t * fileinfo );
 
 /* char *mas_fileinfo_load_data( mas_fileinfo_t * fileinfo ); */
-char *_mas_fileinfo_data( mas_fileinfo_t * fileinfo );
+char *_mas_fileinfo_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo );
 
-char *mas_fileinfo_data( mas_fileinfo_t * fileinfo );
+char *mas_fileinfo_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo );
 
-/* char *_mas_fileinfo_link_data( mas_fileinfo_t * fileinfo, char *data, size_t size ); */
-char *_mas_fileinfo_link_dataz( mas_fileinfo_t * fileinfo, char *data );
+/* char *_mas_fileinfo_link_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *data, size_t size ); */
+char *_mas_fileinfo_link_dataz( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *data );
 
 /* char *mas_fileinfo_set_dataz( mas_fileinfo_t * fileinfo, char *data ); */
 /* char *mas_fileinfo_set_data( mas_fileinfo_t * fileinfo, char *data, size_t size ); */
@@ -51,5 +52,11 @@ unsigned long mas_fileinfo_content_size( mas_fileinfo_t * fileinfo );
 void mas_fileinfo_set_content_size( mas_fileinfo_t * fileinfo, const char *ssize );
 
 mas_unidata_t *mas_fileinfo_unidata( mas_fileinfo_t * fileinfo );
+
+
+char *mas_load_filename_at_file( MAS_PASS_OPTS_DECLARE const char *root, const char *tail, size_t size, size_t * ptruesize,
+                                 ino_t * ptrueinode, time_t * ptruefiletime, const void *arg );
+char *mas_load_filename_at_fd( MAS_PASS_OPTS_DECLARE const char *root, const char *tail, size_t size, size_t * ptruesize,
+                               ino_t * ptrueinode, time_t * ptruefiletime, const void *arg );
 
 #endif

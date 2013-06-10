@@ -8,8 +8,6 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-/* #include "mas_common.h" */
-
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 

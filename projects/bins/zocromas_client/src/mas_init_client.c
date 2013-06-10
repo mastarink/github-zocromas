@@ -1,3 +1,4 @@
+#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 
 #include <unistd.h>
@@ -5,12 +6,6 @@
 #include <sys/types.h>
 
 #include <mastar/tools/mas_tools.h>
-
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -20,9 +15,15 @@ extern mas_options_t opts;
 #  include <mastar/log/mas_log.h>
 #endif
 
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 #include <mastar/init/mas_init.h>
 #include <mastar/init/mas_opts.h>
 #include "mas_client_readline.h"
+
 
 #include "mas_init_client.h"
 
@@ -43,7 +44,7 @@ more:
 
 
 void
-mas_destroy_client( void )
+mas_destroy_client( MAS_PASS_OPTS_DECLARE1 )
 {
 #ifdef MAS_CLIENT_LOG
   /* {                          */
@@ -59,11 +60,11 @@ mas_destroy_client( void )
   /*     mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
   /* }                                                                                                                    */
 
-  mas_client_destroy_readline(  );
+  mas_client_destroy_readline( MAS_PASS_OPTS_PASS1 );
   /* if ( ctrl.restart )                                                                  */
   /* {                                                                                    */
   /*   HMSG( "restart sleep %10.5f sec and run %s", ctrl.restart_sleep, opts.argv[0] ); */
   /*   mas_nanosleep( ctrl.restart_sleep );                                               */
   /* }                                                                                    */
-  mas_destroy(  );
+  mas_destroy( MAS_PASS_OPTS_PASS1 );
 }

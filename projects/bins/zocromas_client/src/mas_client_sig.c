@@ -1,3 +1,4 @@
+#define MAS_NOPASS_OPTS
 #define MAS_MAX_INT_1 2
 #define MAS_MAX_INT_2 10
 #include <mastar/wrap/mas_std_def.h>
@@ -14,14 +15,15 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/msg/mas_curses.h>
+
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 #include "mas_init_client.h"
 
@@ -90,7 +92,7 @@ sigint_han( int s )
   }
   /* rl_done = 1;             */
   /* rl_reset_after_signal(); */
-  rl_forced_update_display ();
+  rl_forced_update_display(  );
   /* rl_reset_line_state(  ); */
 }
 
@@ -150,7 +152,8 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
-  mas_destroy_client(  );
+  MAS_PASS_OPTS_DECL_PREF;
+  mas_destroy_client( MAS_PASS_OPTS_REF );
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 

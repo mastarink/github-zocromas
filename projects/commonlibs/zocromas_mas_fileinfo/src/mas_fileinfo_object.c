@@ -6,11 +6,6 @@
 #include <sys/stat.h>
 
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/tools/mas_tools.h> */
-/* #include <mastar/tools/mas_arg_tools.h> */
-
-/* #include "mas_common.h" */
-/* #include "log/inc/mas_log.h" */
 
 #ifdef MAS_OLD_VARIABLES_HTTP
 #  include <mastar/variables/mas_variables.h>
@@ -18,6 +13,8 @@
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
+
+#include <mastar/types/mas_opts_types.h>
 
 #include "mas_unidata.h"
 #include "mas_fileinfo.h"

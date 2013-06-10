@@ -1,3 +1,4 @@
+#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -14,11 +15,6 @@
 #include <mastar/channel/mas_channel_buffer.h>
 #include <mastar/channel/mas_channel_open.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #ifdef MAS_CLIENT_LOG
 #  include <mastar/log/mas_log.h>
 #endif
@@ -28,6 +24,12 @@ extern mas_options_t opts;
 #include <mastar/msg/mas_curses.h>
 
 #include <mastar/messageio/mas_message_io.h>
+
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 #include "mas_client_session.h"
 
@@ -112,13 +114,15 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
       case MSG_BIN_OPTS:
         MSG( "it's OPTS" );
         {
+          MAS_PASS_OPTS_DECL_PREF;
           mas_options_t *new_opts;
 
           new_opts = ( mas_options_t * ) answer;
           /* MSG( "opts:%x", ( *( unsigned int * ) new_opts ) ); */
           /* MSG( "msg:%d / %d", new_opts->msg_c, new_opts->msg_s ); */
           /* MSG( "msg:%d / %d", opts.f.bit.msg_c, opts.f.bit.msg_s ); */
-          opts = *new_opts;
+          /* gopts = *new_opts; */
+          *( MAS_PASS_OPTS_REF ) = *new_opts;
           /* HMSG( "opts msg_c:%d", opts.f.bit.msg_c );     */
           /* HMSG( "opts msg_s:%d", opts.f.bit.msg_s );     */
           /* HMSG( "opts msg_tr:%d", opts.f.bit.msg_tr );   */

@@ -23,7 +23,6 @@
 #include <mastar/thtools/mas_ocontrol_tools.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -347,9 +346,9 @@ mas_transaction_th( void *trcontrol )
 /* naming : setup + pthread_create = start */
 int
 #ifdef MAS_TR_PERSIST
-mas_transaction_start( mas_lcontrol_t * plcontrol, unsigned persistent_transaction )
+mas_transaction_start( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol, unsigned persistent_transaction )
 #else
-mas_transaction_start( mas_lcontrol_t * plcontrol )
+mas_transaction_start( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
 #endif
 {
   int r = 0;
@@ -374,8 +373,9 @@ mas_transaction_start( mas_lcontrol_t * plcontrol )
 #endif
       if ( prcontrol )
       {
+	MAS_PASS_OPTS_DECL_PREF;
         ctrl.clients_came0++;
-        if ( opts.transaction_single )
+        if ( MAS_PASS_OPTS_PREF transaction_single )
         {
           mas_transaction( prcontrol );
           mas_transaction_cleanup( prcontrol );

@@ -19,7 +19,6 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 
 #include <mastar/channel/mas_channel.h>
@@ -31,7 +30,7 @@ extern mas_options_t opts;
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset.h>
+#  include <mastar/varset/mas_varset_object.h>
 #endif
 
 #include "mas_lcontrol_object.h"

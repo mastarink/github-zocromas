@@ -6,11 +6,6 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -26,8 +21,14 @@ extern mas_options_t opts;
 #  include "listener/inc/mas_listener_control.h"
 #endif
 
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 /*
 this:
@@ -49,30 +50,30 @@ msg_cmd( STD_CMD_ARGS )
   if ( ( 0 == strcmp( args, "on" ) ) || ( 0 == strcmp( args, "yes" ) ) || ( 0 == strcmp( args, "1" ) ) )
   {
     ctrl.messages = 1;
-    /* opts.f.bit.msg_s = 1;  */
-    /* opts.f.bit.msg_c = 1;  */
-    /* opts.f.bit.msg_tr = 1; */
-    /* opts.f.bit.msg_m = 1;  */
+    /* gopts.f.bit.msg_s = 1;  */
+    /* gopts.f.bit.msg_c = 1;  */
+    /* gopts.f.bit.msg_tr = 1; */
+    /* gopts.f.bit.msg_m = 1;  */
   }
   else if ( ( 0 == strcmp( args, "off" ) ) || ( 0 == strcmp( args, "no" ) ) || ( 0 == strcmp( args, "0" ) ) )
   {
     ctrl.messages = 0;
-    /* opts.f.bit.msg_c = 0;                 */
-    /* opts.f.bit.msg_cmd = 0;               */
-    /* opts.f.bit.msg_funline = 1;           */
-    /* opts.f.bit.msg_io = 0;                */
-    /* opts.f.bit.msg_l = 0;                 */
-    /* opts.f.bit.msg_m = 0;                 */
-    /* opts.f.bit.msg_mem = 0;               */
-    /* opts.f.bit.msg_r = 0;                 */
-    /* opts.f.bit.msg_s = 0;                 */
-    /* opts.f.bit.msg_sg = 0;                */
-    /* opts.f.bit.msg_th = 0;                */
-    /* opts.f.bit.msg_tr = 0;                */
-    /* opts.f.bit.msg_trace_listener = 0;    */
-    /* opts.f.bit.msg_trace_main = 0;        */
-    /* opts.f.bit.msg_trace_transaction = 0; */
-    /* opts.f.bit.msg_w = 0;                 */
+    /* gopts.f.bit.msg_c = 0;                 */
+    /* gopts.f.bit.msg_cmd = 0;               */
+    /* gopts.f.bit.msg_funline = 1;           */
+    /* gopts.f.bit.msg_io = 0;                */
+    /* gopts.f.bit.msg_l = 0;                 */
+    /* gopts.f.bit.msg_m = 0;                 */
+    /* gopts.f.bit.msg_mem = 0;               */
+    /* gopts.f.bit.msg_r = 0;                 */
+    /* gopts.f.bit.msg_s = 0;                 */
+    /* gopts.f.bit.msg_sg = 0;                */
+    /* gopts.f.bit.msg_th = 0;                */
+    /* gopts.f.bit.msg_tr = 0;                */
+    /* gopts.f.bit.msg_trace_listener = 0;    */
+    /* gopts.f.bit.msg_trace_main = 0;        */
+    /* gopts.f.bit.msg_trace_transaction = 0; */
+    /* gopts.f.bit.msg_w = 0;                 */
   }
   return NULL;
 }
@@ -90,7 +91,7 @@ log_cmd( STD_CMD_ARGS )
   }
   else if ( ( 0 == strcmp( args, "start" ) ) )
   {
-    mas_logger_start(  );
+    mas_logger_start( MAS_PASS_OPTS_PASS1 );
   }
   else if ( ( 0 == strcmp( args, "stop" ) ) )
   {
@@ -155,8 +156,7 @@ var_cmd( STD_CMD_ARGS )
       cvalue = mas_find_next_arg( args, &cname, &len, &quot );
       name = mas_strndup( cname, len );
       value = mas_strdup( cvalue );
-      cMSG( "CHECK V: args=%s ::: name=%s :: cname=%s :: cvalue=%s :: value=%s :: len=%lu", args, name, cname, cvalue, value,
-            len );
+      cMSG( "CHECK V: args=%s ::: name=%s :: cname=%s :: cvalue=%s :: value=%s :: len=%lu", args, name, cname, cvalue, value, len );
 
       if ( args )
       {

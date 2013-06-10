@@ -12,11 +12,6 @@
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -31,12 +26,21 @@ extern mas_options_t opts;
 
 #include <mastar/thtools/mas_thread_tools.h>
 
+
+
 #include <mastar/init/mas_init.h>
+
+
 #include <mastar/listener/mas_listeners.h>
 #include <mastar/listener/mas_listener_control_list.h>
 
 #include "mas_init_threads.h"
 #include "mas_init_server.h"
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 #include "mas_master.h"
 
@@ -84,11 +88,13 @@ threads created:
 
 
 static int
-mas_master( void )
+mas_master( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0, rn = 0;
 
-  HMSG( "MASTER START:%u %c%c%c", getpid(  ), !opts.nologger ? 'L' : 'l', !opts.noticker ? 'T' : 't', !opts.nowatcher ? 'W' : 'w' );
+  HMSG( "MASTER START:%u %c%c%c", getpid(  ), !MAS_PASS_OPTS_PREF nologger ? 'L' : 'l', !MAS_PASS_OPTS_PREF noticker ? 'T' : 't',
+        !MAS_PASS_OPTS_PREF nowatcher ? 'W' : 'w' );
   if ( ctrl.is_parent )
   {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMaster" ) );
@@ -100,63 +106,63 @@ mas_master( void )
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
-  if ( !opts.nologger )
+  if ( !MAS_PASS_OPTS_PREF nologger )
   {
     HMSG( "LOGGER TO START" );
-    mas_logger_start(  );
+    mas_logger_start( MAS_PASS_OPTS_PASS1 );
   }
   else
   {
     HMSG( "NO LOGGER" );
   }
-  if ( !opts.noticker )
+  if ( !MAS_PASS_OPTS_PREF noticker )
   {
     HMSG( "TICKER TO START" );
-    mas_ticker_start(  );
+    mas_ticker_start( MAS_PASS_OPTS_PASS1 );
   }
   else
   {
     MAS_LOG( "running w/o ticker" );
     HMSG( "NO TICKER" );
   }
-  if ( !opts.nowatcher )
+  if ( !MAS_PASS_OPTS_PREF nowatcher )
   {
     HMSG( "WATCHER TO START" );
-    mas_watcher_start(  );
+    mas_watcher_start( MAS_PASS_OPTS_PASS1 );
   }
   else
   {
     MAS_LOG( "running w/o watcher" );
     HMSG( "NO WATCHER" );
   }
-  if ( opts.nomaster )
+  if ( MAS_PASS_OPTS_PREF nomaster )
   {
-    sleep( opts.nomaster );
+    sleep( MAS_PASS_OPTS_PREF nomaster );
   }
-  else if ( opts.hostsv.c > 0 && opts.hostsv.v )
+  else if ( MAS_PASS_OPTS_PREF hostsv.c > 0 && MAS_PASS_OPTS_PREF hostsv.v )
   {
-    /* for ( int ih = 0; ih < opts.hostsv.c; ih++ ) */
+    /* for ( int ih = 0; ih < MAS_PASS_OPTS_PREF hostsv.c; ih++ ) */
     /* {                                             */
-    /*   thMSG( "%d. host %s", ih, opts.hostsv.v[ih] ); */
+    /*   thMSG( "%d. host %s", ih, MAS_PASS_OPTS_PREF hostsv.v[ih] ); */
     /* }                                             */
     while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal )
     {
-      MAS_LOG( "master loop for %d hosts", opts.hostsv.c );
-      tMSG( "master loop for %d hosts", opts.hostsv.c );
-      HMSG( "MASTER LOOP %dh", opts.hostsv.c );
+      MAS_LOG( "master loop for %d hosts", MAS_PASS_OPTS_PREF hostsv.c );
+      tMSG( "master loop for %d hosts", MAS_PASS_OPTS_PREF hostsv.c );
+      HMSG( "MASTER LOOP %dh", MAS_PASS_OPTS_PREF hostsv.c );
       /* mas_listeners.c */
-      r = mas_listeners_start(  );
+      r = mas_listeners_start( MAS_PASS_OPTS_PASS1 );
 
       OMSG( "WAITING..." );
       r = mas_listeners_wait(  );
 
-      tMSG( "(%d) master loop for %d hosts", r, opts.hostsv.c );
+      tMSG( "(%d) master loop for %d hosts", r, MAS_PASS_OPTS_PREF hostsv.c );
 
       {
         /* ???????? All listeners closed, what shall I do ?
          * 1. exit ( what is to be done with 'ctrl.keep_listening = 0' )
          * 2. re-run default listener(s)
-         * 3. re-run defined ( opts.hostsv.v ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
+         * 3. re-run defined ( MAS_PASS_OPTS_PREF hostsv.v ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
          * */
         if ( MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
         {
@@ -177,8 +183,8 @@ mas_master( void )
     EMSG( "hosts not defined" );
     MAS_LOG( "hosts not defined" );
   }
-  if ( opts.exitsleep )
-    sleep( opts.exitsleep );
+  if ( MAS_PASS_OPTS_PREF exitsleep )
+    sleep( MAS_PASS_OPTS_PREF exitsleep );
   MAS_LOG( "to stop spec. threads" );
   WMSG( "TO STOP LOGGER" );
   mas_logger_stop(  );
@@ -241,7 +247,11 @@ mas_master_th( void *arg )
     mas_xpthread_join( ctrl.threads.n.main.thread );
     ctrl.threads.n.main.thread = 0;
   }
-  ( void ) /* r= */ mas_master(  );
+  {
+    extern mas_options_t gopts;
+
+    ( void ) /* r= */ mas_master( MAS_PASS_OPTS_GREF1 );
+  }
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 
@@ -278,12 +288,13 @@ __attribute__ ( ( destructor ) )
 }
 
 static int
-mas_master_optional_thread( void )
+mas_master_optional_thread( MAS_PASS_OPTS_DECLARE1 )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
-  if ( opts.make_master_thread )
+  if ( MAS_PASS_OPTS_PREF make_master_thread )
   {
     /* r = pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
     IEVAL( r, pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ) );
@@ -296,13 +307,13 @@ mas_master_optional_thread( void )
   else
   {
     /* r = mas_master(  ); */
-    IEVAL( r, mas_master(  ) );
+    IEVAL( r, mas_master( MAS_PASS_OPTS_PASS1 ) );
   }
   return r;
 }
 
 int
-mas_master_bunch( int argc, char *argv[], char *env[] )
+mas_master_bunch( MAS_PASS_OPTS_DECLARE int argc, char *argv[], char *env[] )
 {
   int r = 0, rn = 0;
 
@@ -321,8 +332,8 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
   IEVAL( r,
-         mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
-                        NULL ) );
+         mas_init_plus( MAS_PASS_OPTS_PASS argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos,
+                        mas_lcontrols_init, NULL ) );
   if ( ctrl.is_parent )
   {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParBunch" ) );
@@ -338,7 +349,7 @@ mas_master_bunch( int argc, char *argv[], char *env[] )
   }
   else                          /* if ( r >= 0 ) */
   {
-    IEVAL( r, mas_master_optional_thread(  ) );
+    IEVAL( r, mas_master_optional_thread( MAS_PASS_OPTS_PASS1 ) );
 #ifdef MAS_TRACEMEM
     {
       extern unsigned long memory_balance;

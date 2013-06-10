@@ -17,7 +17,6 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 #include <mastar/log/mas_log.h>
 
@@ -27,7 +26,7 @@ extern mas_options_t opts;
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset.h>
+#  include <mastar/varset/mas_varset_search.h>
 #endif
 
 #include <mastar/transaction/mas_rcontrol_object.h>

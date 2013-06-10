@@ -19,11 +19,6 @@
 
 #include <mastar/channel/mas_channel.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -31,6 +26,11 @@ extern mas_options_t opts;
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 /*
 this:
@@ -205,6 +205,7 @@ info_cmd( STD_CMD_ARGS )
           mas_tstrftime( splts, sizeof( splts ), "prev.lts:%Y%m%d %T", ctrl.stamp.prev_lts );
       }
       {
+        MAS_PASS_OPTS_DECL_PREF;
         extern unsigned long memory_balance;
 
         len = snprintf( cp, bufsz,
@@ -216,7 +217,7 @@ info_cmd( STD_CMD_ARGS )
                         "\t%s; %s; %s\n"
                         "- ticker : 0x%lx :: %d;%lu;\n"
                         "- watcher: 0x%lx :: stop:%1d;cnt:%lu;\n\n", memory_balance,
-                        level, this_command ? this_command->only_level : 0, opts.uuid,
+                        level, this_command ? this_command->only_level : 0, MAS_PASS_OPTS_PREF uuid,
                         ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.daemon.pid,
                         ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
                         ctrl.restart_cnt,
@@ -246,6 +247,7 @@ info_cmd( STD_CMD_ARGS )
         bufsz -= len;
       }
       {
+        MAS_PASS_OPTS_DECL_PREF;
         extern int mas_tracemem_flag;
 
         len = snprintf( cp, bufsz,
@@ -258,9 +260,10 @@ info_cmd( STD_CMD_ARGS )
                         "\tlogdir: \t%s;\n" "\tlogpath:\t%s\n"
                         "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
                         ctrl.exepath,
-                        opts.msgfilename,
-                        opts.dir.proto, opts.dir.mods, opts.dir.pids, opts.dir.history, opts.dir.log,
-                        ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
+                        MAS_PASS_OPTS_PREF msgfilename,
+                        MAS_PASS_OPTS_PREF dir.proto, MAS_PASS_OPTS_PREF dir.mods, MAS_PASS_OPTS_PREF dir.pids,
+                        MAS_PASS_OPTS_PREF dir.history, MAS_PASS_OPTS_PREF dir.log, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone,
+                        mas_tracemem_flag );
         cp += len;
         bufsz -= len;
       }

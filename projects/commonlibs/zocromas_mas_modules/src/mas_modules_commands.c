@@ -17,6 +17,8 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/types/mas_common_defs.h>
+
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
@@ -37,7 +39,7 @@ related:
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
- /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
+  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
 /* table-search command; allowed NULL for name; pargs to set command args/subcommands */
@@ -54,6 +56,7 @@ mas_modules_lookup_question( const char *ownerlib_name, mas_cmd_t * cmdtable, co
   if ( question )
   {
     int quo = 0;
+
     /* mas_find_next_arg  returns next arg address, pthis to set this, plen to set this length */
     args = mas_find_next_arg( question, &q, &len, &quo );
   }
@@ -157,7 +160,7 @@ mas_modules_commands( STD_CMD_ARGS )
       tMSG( "evaluating %s ( %s )", question, args );
       MAS_LOG( "evaluating %s ( %s )", question, args );
       WMSG( "EVAL FOUND %s.%s", this_command->libname, found->name );
-      answer = mas_evaluate_cmd( 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
+      answer = mas_evaluate_cmd( MAS_PASS_OPTS_PASS 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
     }
   }
   else

@@ -4,7 +4,6 @@
 #define MAS_MSG_BIT(bit) 1
 #else
 #include <mastar/types/mas_opts_types.h>
-/* extern mas_options_t opts; */
 extern mas_msg_options_t *pmsg_opts;
 
 #define MAS_MSG_BIT(testbit) pmsg_opts->bit.testbit

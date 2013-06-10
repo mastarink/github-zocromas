@@ -10,16 +10,18 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
 #include <mastar/control/mas_control.h>
+
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
+
 
 #include "mas_opts.h"
 #include "mas_cli_options.h"
@@ -67,6 +69,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_NODAEMON,
   MAS_CLI_OPT_MSG,
   MAS_CLI_OPT_NOMSG,
+  MAS_CLI_OPT_READ_HOME_OPTS,
+  MAS_CLI_OPT_NOREAD_HOME_OPTS,
   MAS_CLI_OPT_NOHOSTS,
   MAS_CLI_OPT_REDIRECT_STD,
   MAS_CLI_OPT_NOREDIRECT_STD,
@@ -141,6 +145,9 @@ static struct option cli_longopts[] = {
   {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
   {"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR},
 
+  {"noread-home-config", no_argument, NULL, MAS_CLI_OPT_NOREAD_HOME_OPTS},
+  {"read-home-config", no_argument, NULL, MAS_CLI_OPT_READ_HOME_OPTS},
+
   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER},
   {"watcher", no_argument, NULL, MAS_CLI_OPT_WATCHER},
 
@@ -200,8 +207,9 @@ mas_cli_optval( const char *arg, long def, int *pr )
 }
 
 int
-mas_cli_make_option( int opt, const char *m_optarg )
+mas_cli_make_option( MAS_PASS_OPTS_DECLARE int opt, const char *m_optarg )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   int v = 0;
 
@@ -223,170 +231,191 @@ mas_cli_make_option( int opt, const char *m_optarg )
     break;
   case MAS_CLI_OPT_MSGTO:
     HMSG( "MSG>%s", optarg );
-    if ( opts.msgfilename )
-      mas_free( opts.msgfilename );
-    opts.msgfilename = NULL;
+    if ( MAS_PASS_OPTS_PREF msgfilename )
+      mas_free( MAS_PASS_OPTS_PREF msgfilename );
+    MAS_PASS_OPTS_PREF msgfilename = NULL;
+
     if ( optarg && *optarg )
-      opts.msgfilename = mas_strdup( optarg );
+      MAS_PASS_OPTS_PREF msgfilename = mas_strdup( optarg );
+
     break;
   case MAS_CLI_OPT_HOST:
-    opts.hostsv.c = mas_add_argv_arg( opts.hostsv.c, &opts.hostsv.v, optarg );
-    mMSG( "HOST %d: %s [%p]", opts.hostsv.c, optarg, ( void * ) opts.hostsv.v );
+    MAS_PASS_OPTS_PREF hostsv.c = mas_add_argv_arg( MAS_PASS_OPTS_PREF hostsv.c, &MAS_PASS_OPTS_PREF hostsv.v, optarg );
+    mMSG( "HOST %d: %s [%p]", MAS_PASS_OPTS_PREF hostsv.c, optarg, ( void * ) MAS_PASS_OPTS_PREF hostsv.v );
     break;
   case MAS_CLI_OPT_PROTO:
-    opts.protosv.c = mas_add_argv_arg( opts.protosv.c, &opts.protosv.v, optarg );
-    mMSG( "PROTO %d: %s [%p]", opts.protosv.c, optarg, ( void * ) opts.protosv.v );
+    MAS_PASS_OPTS_PREF protosv.c = mas_add_argv_arg( MAS_PASS_OPTS_PREF protosv.c, &MAS_PASS_OPTS_PREF protosv.v, optarg );
+    mMSG( "PROTO %d: %s [%p]", MAS_PASS_OPTS_PREF protosv.c, optarg, ( void * ) MAS_PASS_OPTS_PREF protosv.v );
     break;
   case MAS_CLI_OPT_PORT:
     if ( optarg && *optarg )
     {
-      opts.default_port = 0;
-      sscanf( optarg, "%u", &opts.default_port );
-      /* HMSG( "PORT: %u", opts.default_port ); */
+      MAS_PASS_OPTS_PREF default_port = 0;
+
+      sscanf( optarg, "%u", &MAS_PASS_OPTS_PREF default_port );
+      /* HMSG( "PORT: %u", MAS_PASS_OPTS_PREF default_port ); */
     }
     break;
   case MAS_CLI_OPT_MODSDIR:
-    if ( opts.dir.mods )
-      mas_free( opts.dir.mods );
-    opts.dir.mods = NULL;
+    if ( MAS_PASS_OPTS_PREF dir.mods )
+      mas_free( MAS_PASS_OPTS_PREF dir.mods );
+    MAS_PASS_OPTS_PREF dir.mods = NULL;
+
     if ( optarg && *optarg )
-      opts.dir.mods = mas_strdup( optarg );
+      MAS_PASS_OPTS_PREF dir.mods = mas_strdup( optarg );
+
     break;
   case MAS_CLI_OPT_PROTODIR:
-    if ( opts.dir.proto )
-      mas_free( opts.dir.proto );
-    opts.dir.proto = NULL;
+    if ( MAS_PASS_OPTS_PREF dir.proto )
+      mas_free( MAS_PASS_OPTS_PREF dir.proto );
+    MAS_PASS_OPTS_PREF dir.proto = NULL;
+
     if ( optarg && *optarg )
-      opts.dir.proto = mas_strdup( optarg );
+      MAS_PASS_OPTS_PREF dir.proto = mas_strdup( optarg );
+
     break;
   case MAS_CLI_OPT_LOGDIR:
-    if ( opts.dir.log )
-      mas_free( opts.dir.log );
-    opts.dir.log = NULL;
+    if ( MAS_PASS_OPTS_PREF dir.log )
+      mas_free( MAS_PASS_OPTS_PREF dir.log );
+    MAS_PASS_OPTS_PREF dir.log = NULL;
+
     if ( optarg && *optarg )
-      opts.dir.log = mas_strdup( optarg );
+      MAS_PASS_OPTS_PREF dir.log = mas_strdup( optarg );
+
     break;
   case MAS_CLI_OPT_HISTORYDIR:
-    if ( opts.dir.history )
-      mas_free( opts.dir.history );
-    opts.dir.history = NULL;
+    if ( MAS_PASS_OPTS_PREF dir.history )
+      mas_free( MAS_PASS_OPTS_PREF dir.history );
+    MAS_PASS_OPTS_PREF dir.history = NULL;
+
     if ( optarg && *optarg )
-      opts.dir.history = mas_strdup( optarg );
+      MAS_PASS_OPTS_PREF dir.history = mas_strdup( optarg );
+
     break;
   case MAS_CLI_OPT_LISTENER_SINGLE:
-    opts.listener_single = 1;
+    MAS_PASS_OPTS_PREF listener_single = 1;
     break;
   case MAS_CLI_OPT_TRANSACTION_SINGLE:
-    opts.transaction_single = 1;
+    MAS_PASS_OPTS_PREF transaction_single = 1;
     break;
   case MAS_CLI_OPT_NODAEMON:
-    opts.nodaemon = 1;
+    MAS_PASS_OPTS_PREF nodaemon = 1;
     break;
   case MAS_CLI_OPT_DAEMON:
-    opts.nodaemon = 0;
+    MAS_PASS_OPTS_PREF nodaemon = 0;
     break;
   case MAS_CLI_OPT_NOSINGLE_CHILD:
-    opts.single_child = 0;
+    MAS_PASS_OPTS_PREF single_child = 0;
     break;
   case MAS_CLI_OPT_SINGLE_CHILD:
-    opts.single_child = 1;
+    MAS_PASS_OPTS_PREF single_child = 1;
     break;
   case MAS_CLI_OPT_NOSINGLE_INSTANCE:
-    opts.single_instance = 0;
+    MAS_PASS_OPTS_PREF single_instance = 0;
     break;
   case MAS_CLI_OPT_SINGLE_INSTANCE:
-    opts.single_instance = 1;
+    MAS_PASS_OPTS_PREF single_instance = 1;
     break;
   case MAS_CLI_OPT_NOLOGGER:
-    opts.nologger = 1;
+    MAS_PASS_OPTS_PREF nologger = 1;
     break;
   case MAS_CLI_OPT_LOGGER:
-    opts.nologger = 0;
+    MAS_PASS_OPTS_PREF nologger = 0;
     break;
   case MAS_CLI_OPT_NOLOG:
-    opts.nolog = 1;
+    MAS_PASS_OPTS_PREF nolog = 1;
     break;
   case MAS_CLI_OPT_LOG:
-    opts.nolog = 0;
+    MAS_PASS_OPTS_PREF nolog = 0;
     break;
   case MAS_CLI_OPT_NOTICKER:
-    opts.noticker = 1;
+    MAS_PASS_OPTS_PREF noticker = 1;
     break;
   case MAS_CLI_OPT_TICKER:
-    opts.noticker = 0;
+    MAS_PASS_OPTS_PREF noticker = 0;
     break;
   case MAS_CLI_OPT_TICKER_MODE:
     if ( optarg && *optarg )
     {
-      opts.ticker_mode = 0;
-      sscanf( optarg, "%u", &opts.ticker_mode );
+      MAS_PASS_OPTS_PREF ticker_mode = 0;
+
+      sscanf( optarg, "%u", &MAS_PASS_OPTS_PREF ticker_mode );
     }
     break;
+  case MAS_CLI_OPT_NOREAD_HOME_OPTS:
+    MAS_PASS_OPTS_PREF read_user_opts = 0;
+    break;
+  case MAS_CLI_OPT_READ_HOME_OPTS:
+    MAS_PASS_OPTS_PREF read_user_opts = 1;
+    break;
   case MAS_CLI_OPT_NOWATCHER:
-    opts.nowatcher = 1;
+    MAS_PASS_OPTS_PREF nowatcher = 1;
     break;
   case MAS_CLI_OPT_WATCHER:
-    opts.nowatcher = 0;
+    MAS_PASS_OPTS_PREF nowatcher = 0;
     break;
   case MAS_CLI_OPT_NOLISTENER:
-    opts.nolistener = mas_cli_optval( optarg, 30, &v );
+    MAS_PASS_OPTS_PREF nolistener = mas_cli_optval( optarg, 30, &v );
     break;
   case MAS_CLI_OPT_LISTENER:
-    opts.nolistener = 0;
+    MAS_PASS_OPTS_PREF nolistener = 0;
     break;
   case MAS_CLI_OPT_NOLISTEN:
-    opts.nolisten = mas_cli_optval( optarg, 30, &v );
+    MAS_PASS_OPTS_PREF nolisten = mas_cli_optval( optarg, 30, &v );
     break;
   case MAS_CLI_OPT_LISTEN:
-    opts.nolisten = 0;
+    MAS_PASS_OPTS_PREF nolisten = 0;
     break;
   case MAS_CLI_OPT_NOMASTER:
-    opts.nomaster = mas_cli_optval( optarg, 30, &v );
+    MAS_PASS_OPTS_PREF nomaster = mas_cli_optval( optarg, 30, &v );
     break;
   case MAS_CLI_OPT_MASTER_THREAD:
-    opts.make_master_thread = 1;
+    MAS_PASS_OPTS_PREF make_master_thread = 1;
     break;
   case MAS_CLI_OPT_NOMASTER_THREAD:
-    opts.make_master_thread = 0;
+    MAS_PASS_OPTS_PREF make_master_thread = 0;
     break;
   case MAS_CLI_OPT_MASTER:
-    opts.nomaster = 0;
+    MAS_PASS_OPTS_PREF nomaster = 0;
     break;
   case MAS_CLI_OPT_NOREDIRECT_STD:
-    opts.noredirect_std = 1;
+    MAS_PASS_OPTS_PREF noredirect_std = 1;
     break;
   case MAS_CLI_OPT_REDIRECT_STD:
-    opts.noredirect_std = 0;
+    MAS_PASS_OPTS_PREF noredirect_std = 0;
     break;
   case MAS_CLI_OPT_NOCLOSE_STD:
-    opts.noclose_std = 1;
+    MAS_PASS_OPTS_PREF noclose_std = 1;
     break;
   case MAS_CLI_OPT_CLOSE_STD:
-    opts.noclose_std = 0;
+    MAS_PASS_OPTS_PREF noclose_std = 0;
     break;
   case MAS_CLI_OPT_NOMESSAGES:
-    opts.nomessages = 1;
+    MAS_PASS_OPTS_PREF nomessages = 1;
     break;
   case MAS_CLI_OPT_MESSAGES:
-    opts.nomessages = 0;
+    MAS_PASS_OPTS_PREF nomessages = 0;
     break;
   case MAS_CLI_OPT_NOMSG:
-    /* HMSG( "flags: %lo", opts.f.word ); */
-    opts.f.word = 0;
-    /* HMSG( "flags: %lo", opts.f.word ); */
-    opts.f.bit.msg_trace = 0;
-    /* HMSG( "flags: %lo", opts.f.word ); */
+    /* HMSG( "flags: %lo", MAS_PASS_OPTS_PREF f.word ); */
+    MAS_PASS_OPTS_PREF f.word = 0;
+    /* HMSG( "flags: %lo", MAS_PASS_OPTS_PREF f.word ); */
+    MAS_PASS_OPTS_PREF f.bit.msg_trace = 0;
+
+    /* HMSG( "flags: %lo", MAS_PASS_OPTS_PREF f.word ); */
     break;
   case MAS_CLI_OPT_MSG:
     if ( 0 == strcmp( "mem", optarg ) )
-      opts.f.bit.msg_mem = 1;
+      MAS_PASS_OPTS_PREF f.bit.msg_mem = 1;
+
     break;
   case MAS_CLI_OPT_NOHOSTS:
-    opts.hostsv.c = mas_del_argv( opts.hostsv.c, opts.hostsv.v, 0 );
-    opts.hostsv.v = NULL;
+    MAS_PASS_OPTS_PREF hostsv.c = mas_del_argv( MAS_PASS_OPTS_PREF hostsv.c, MAS_PASS_OPTS_PREF hostsv.v, 0 );
+    MAS_PASS_OPTS_PREF hostsv.v = NULL;
+
     break;
   case MAS_CLI_OPT_EXITSLEEP:
-    opts.exitsleep = ( unsigned ) ( optarg && *optarg ? strtol( optarg, NULL, 10 ) : 30 );
+    MAS_PASS_OPTS_PREF exitsleep = ( unsigned ) ( optarg && *optarg ? strtol( optarg, NULL, 10 ) : 30 );
     break;
 
   default:                     /* '?' ; ':' */
@@ -409,7 +438,7 @@ mas_cli_make_option( int opt, const char *m_optarg )
 }
 
 int
-mas_cli_options( int argc, char *const argv[] )
+mas_cli_options( MAS_PASS_OPTS_DECLARE int argc, char *const argv[] )
 {
   int r = 0;
   int opt;
@@ -420,7 +449,7 @@ mas_cli_options( int argc, char *const argv[] )
   while ( r >= 0 && !ctrl.fatal && ( opt = getopt_long( argc, argv, cli_enabled_options, cli_longopts, &indx ) ) >= 0 )
   {
     /* HMSG( "CLI opt:%d: optind:%d err:%d / %d", opt, optind, opt == '?', opt == ':' ); */
-    IEVAL( r, mas_cli_make_option( opt, optarg ) );
+    IEVAL( r, mas_cli_make_option( MAS_PASS_OPTS_PASS opt, optarg ) );
     afterlast = optind;
     /* HMSG( "(%d) CLI %d: %d", r, opt, optind ); */
   }

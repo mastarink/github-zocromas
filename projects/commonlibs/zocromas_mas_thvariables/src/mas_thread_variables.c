@@ -19,6 +19,8 @@
 #else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_vclass.h>
+#  include <mastar/varset/mas_varset_object.h>
+#  include <mastar/varset/mas_varset_search.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -26,7 +28,6 @@
 #include "mas_thread_variables.h"
 
 extern mas_control_t ctrl;
-extern mas_options_t opts;
 
 
 /*

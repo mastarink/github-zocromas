@@ -13,12 +13,6 @@
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/tools/mas_tools.h>
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-extern mas_options_t opts;
-
-/* #include "mas_common.h" */
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -32,6 +26,11 @@ extern mas_options_t opts;
 
 #include <mastar/listener/mas_listener_control.h>
 #include <mastar/listener/mas_listeners.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+extern mas_control_t ctrl;
+
 
 #include "mas_server_tools.h"
 
@@ -104,6 +103,7 @@ mas_watcher( void )
     ctrl.watch_cnt++;
     out = itick % MUL == 0 && !ctrl.watcher_hide;
     {
+      extern mas_options_t gopts;
       unsigned nlistener = 0;
       unsigned ntransaction = 0;
       unsigned nlistener_open = 0;
@@ -222,7 +222,7 @@ mas_watcher( void )
         if ( nlistener_open == 0 && ntransaction == 0 /* && nlisteners_ever_open */  )
           stop = 1;
       }
-      else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && opts.make_master_thread )
+      else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && gopts.make_master_thread )
                 || !ctrl.threads.n.watcher.thread || !ctrl.threads.n.logger.thread || !ctrl.threads.n.ticker.thread )
       {
         HMSG( "WATCHER main:%d; master:%d", ctrl.threads.n.main.thread ? 1 : 0, ctrl.threads.n.master.thread ? 1 : 0 );
@@ -276,7 +276,7 @@ mas_watcher_th( void *arg )
 
 /* naming : pthread_create = start */
 int
-mas_watcher_start( void )
+mas_watcher_start( MAS_PASS_OPTS_DECLARE1 )
 {
   int r = 0;
 

@@ -10,10 +10,12 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+
+
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
-extern mas_options_t opts;
+
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -42,7 +44,7 @@ related:
 
 
 static int
-mas_opts_check_old_file( const char *fpath, int deep, int remove_ext, int backup, int overwrite )
+mas_opts_check_old_file( MAS_PASS_OPTS_DECLARE const char *fpath, int deep, int remove_ext, int backup, int overwrite )
 {
   int r = 0;
   FILE *f = NULL;
@@ -59,6 +61,7 @@ mas_opts_check_old_file( const char *fpath, int deep, int remove_ext, int backup
         mas_fclose( f );
       if ( backup )
       {
+        MAS_PASS_OPTS_DECL_PREF;
         char *fpath_bak;
 
         fpath_bak = mas_strdup( fpath );
@@ -79,9 +82,9 @@ mas_opts_check_old_file( const char *fpath, int deep, int remove_ext, int backup
           sprintf( ext, ".%03d", deep );
           fpath_bak = mas_strcat_x( fpath_bak, ext );
         }
-        if ( deep < opts.max_config_backup )
+        if ( deep < MAS_PASS_OPTS_PREF max_config_backup )
         {
-          r = mas_opts_check_old_file( fpath_bak, deep, 1, backup, overwrite );
+          r = mas_opts_check_old_file( MAS_PASS_OPTS_PASS fpath_bak, deep, 1, backup, overwrite );
         }
         if ( r >= 0 )
         {
@@ -103,24 +106,25 @@ mas_opts_check_old_file( const char *fpath, int deep, int remove_ext, int backup
 }
 
 int
-_mas_opts_save( const char *dirname, const char *filename, int backup, int overwrite )
+_mas_opts_save( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename, int backup, int overwrite )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   int rtot = -1;
 
-  IEVALM( r, mas_opts_set_configdir( dirname ), "(%d)set config dir: '%s'", dirname );
-  IEVALM( r, mas_opts_set_configfilename( filename ), "(%d)opts file:'%s'", filename );
-  IEVALM( r, mas_opts_check_dir(  ), "(%d)config dir: '%s'", opts.dir.config );
+  IEVALM( r, mas_opts_set_configdir( MAS_PASS_OPTS_PASS dirname ), "(%d)set config dir: '%s'", dirname );
+  IEVALM( r, mas_opts_set_configfilename( MAS_PASS_OPTS_PASS filename ), "(%d)opts file:'%s'", filename );
+  IEVALM( r, mas_opts_check_dir( MAS_PASS_OPTS_PASS1 ), "(%d)config dir: '%s'", MAS_PASS_OPTS_PREF dir.config );
   if ( r == 0 )
   {
     char *fpath = NULL;
 
-    fpath = mas_strdup( opts.dir.config );
+    fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.config );
     fpath = mas_strcat_x( fpath, "/" );
-    fpath = mas_strcat_x( fpath, opts.configfilename );
+    fpath = mas_strcat_x( fpath, MAS_PASS_OPTS_PREF configfilename );
     if ( fpath )
     {
-      if ( mas_opts_check_old_file( fpath, 0, 0, backup, overwrite ) == 0 )
+      if ( mas_opts_check_old_file( MAS_PASS_OPTS_PASS fpath, 0, 0, backup, overwrite ) == 0 )
       {
         FILE *f;
 
@@ -136,9 +140,9 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
             if ( r > 0 )
               rtot += r;
           }
-          if ( opts.uuid )
+          if ( MAS_PASS_OPTS_PREF uuid )
           {
-            IEVAL( r, fprintf( f, "uuid=%s\n", opts.uuid ) );
+            IEVAL( r, fprintf( f, "uuid=%s\n", MAS_PASS_OPTS_PREF uuid ) );
             if ( r > 0 )
               rtot += r;
           }
@@ -148,9 +152,11 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
                                "# common\nenv_optsname=%s\nenv_hostname=%s\nhistorydir=%s\npostdir=%s\nlogdir=%s\nlog=%d\n"
                                "max_config_backup=%u\nmessages=%u\n"
                                "default_port=%u\nsave_user_opts=%u\nsave_user_opts_plus=%u\n" "restart_sleep=%lg\n"
-                               "# -\n", opts.env_optsname, opts.env_hostname, opts.dir.history, opts.dir.post, opts.dir.log,
-                               !opts.nolog, opts.max_config_backup, !opts.nomessages, opts.default_port, opts.save_user_opts,
-                               opts.save_user_opts_plus, opts.restart_sleep ) );
+                               "# -\n", MAS_PASS_OPTS_PREF env_optsname, MAS_PASS_OPTS_PREF env_hostname, MAS_PASS_OPTS_PREF dir.history,
+                               MAS_PASS_OPTS_PREF dir.post, MAS_PASS_OPTS_PREF dir.log, !MAS_PASS_OPTS_PREF nolog,
+                               MAS_PASS_OPTS_PREF max_config_backup, !MAS_PASS_OPTS_PREF nomessages, MAS_PASS_OPTS_PREF default_port,
+                               MAS_PASS_OPTS_PREF save_user_opts, MAS_PASS_OPTS_PREF save_user_opts_plus,
+                               MAS_PASS_OPTS_PREF restart_sleep ) );
             if ( r > 0 )
               rtot += r;
           }
@@ -159,29 +165,32 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
             IEVAL( r, fprintf( f,
                                "# server\ndaemon=%u\nread_user_opts=%u\nread_user_opts_plus=%u\n"
                                "single_instance=%u\nsingle_child=%u\nlogger=%d\nmodsdir=%s\n" "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon,
-                               opts.read_user_opts, opts.read_user_opts_plus, opts.single_instance, opts.single_child, !opts.nologger,
-                               opts.dir.mods, opts.dir.pids, opts.dir.proto ) );
+                               MAS_PASS_OPTS_PREF read_user_opts, MAS_PASS_OPTS_PREF read_user_opts_plus,
+                               MAS_PASS_OPTS_PREF single_instance, MAS_PASS_OPTS_PREF single_child, !MAS_PASS_OPTS_PREF nologger,
+                               MAS_PASS_OPTS_PREF dir.mods, MAS_PASS_OPTS_PREF dir.pids, MAS_PASS_OPTS_PREF dir.proto ) );
             if ( r > 0 )
               rtot += r;
           }
           else if ( ctrl.is_client )
           {
-            IEVAL( r, fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", opts.disconnect_prompt, opts.wait_server ) );
+            IEVAL( r,
+                   fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", MAS_PASS_OPTS_PREF disconnect_prompt,
+                            MAS_PASS_OPTS_PREF wait_server ) );
             if ( r > 0 )
               rtot += r;
           }
           {
             {
-              IEVAL( r, fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", opts.hostsv.c ) );
+              IEVAL( r, fprintf( f, "\n[%s %d]\n", ctrl.is_client ? "hosts" : "listen", MAS_PASS_OPTS_PREF hostsv.c ) );
               if ( r > 0 )
                 rtot += r;
             }
 
-            if ( opts.hostsv.c )
+            if ( MAS_PASS_OPTS_PREF hostsv.c )
             {
-              for ( int ih = 0; ih < opts.hostsv.c; ih++ )
+              for ( int ih = 0; ih < MAS_PASS_OPTS_PREF hostsv.c; ih++ )
               {
-                IEVAL( r, fprintf( f, "host=%s\n", opts.hostsv.v[ih] ) );
+                IEVAL( r, fprintf( f, "host=%s\n", MAS_PASS_OPTS_PREF hostsv.v[ih] ) );
                 if ( r > 0 )
                   rtot += r;
               }
@@ -189,29 +198,29 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
           }
           {
             {
-              IEVAL( r, fprintf( f, "\n[%s %d]\n", "protos", opts.protosv.c ) );
+              IEVAL( r, fprintf( f, "\n[%s %d]\n", "protos", MAS_PASS_OPTS_PREF protosv.c ) );
               if ( r > 0 )
                 rtot += r;
             }
 
-            if ( opts.protosv.c )
+            if ( MAS_PASS_OPTS_PREF protosv.c )
             {
-              for ( int ih = 0; ih < opts.protosv.c; ih++ )
+              for ( int ih = 0; ih < MAS_PASS_OPTS_PREF protosv.c; ih++ )
               {
-                IEVAL( r, fprintf( f, "proto=%s\n", opts.protosv.v[ih] ) );
+                IEVAL( r, fprintf( f, "proto=%s\n", MAS_PASS_OPTS_PREF protosv.v[ih] ) );
                 if ( r > 0 )
                   rtot += r;
               }
             }
           }
-          if ( opts.commandsv.c )
+          if ( MAS_PASS_OPTS_PREF commandsv.c )
           {
-            IEVAL( r, fprintf( f, "\n[commands %d]\n", opts.commandsv.c ) );
+            IEVAL( r, fprintf( f, "\n[commands %d]\n", MAS_PASS_OPTS_PREF commandsv.c ) );
             if ( r > 0 )
               rtot += r;
-            for ( int ih = 0; ih < opts.commandsv.c; ih++ )
+            for ( int ih = 0; ih < MAS_PASS_OPTS_PREF commandsv.c; ih++ )
             {
-              IEVAL( r, fprintf( f, "command=%s\n", opts.commandsv.v[ih] ) );
+              IEVAL( r, fprintf( f, "command=%s\n", MAS_PASS_OPTS_PREF commandsv.v[ih] ) );
               if ( r > 0 )
                 rtot += r;
             }
@@ -231,21 +240,22 @@ _mas_opts_save( const char *dirname, const char *filename, int backup, int overw
 }
 
 int
-mas_opts_save_user( const char *dirname, const char *filename )
+mas_opts_save_user( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = -1;
 
-  if ( opts.save_user_opts )
+  if ( MAS_PASS_OPTS_PREF save_user_opts )
   {
     MAS_LOG( "to save opts %s", filename );
-    IEVAL( r, _mas_opts_save( dirname, filename, 1, opts.overwrite_user_opts ) );
+    IEVAL( r, _mas_opts_save( MAS_PASS_OPTS_PASS dirname, filename, 1, MAS_PASS_OPTS_PREF overwrite_user_opts ) );
     MAS_LOG( "saved opts : %d", r );
   }
   return r;
 }
 
 int
-_mas_opts_save_plus( const char *dirname, const char *filename, int backup, int overwrite, va_list args )
+_mas_opts_save_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename, int backup, int overwrite, va_list args )
 {
   int r = 0;
   char *s = NULL;
@@ -263,7 +273,7 @@ _mas_opts_save_plus( const char *dirname, const char *filename, int backup, int 
   }
   if ( x )
   {
-    IEVAL( r, _mas_opts_save( dirname, fn, backup, overwrite ) );
+    IEVAL( r, _mas_opts_save( MAS_PASS_OPTS_PASS dirname, fn, backup, overwrite ) );
   }
   else
   {
@@ -274,16 +284,17 @@ _mas_opts_save_plus( const char *dirname, const char *filename, int backup, int 
 }
 
 int
-mas_opts_save_user_plus( const char *dirname, const char *filename, ... )
+mas_opts_save_user_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename, ... )
 {
+  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   va_list args;
 
   va_start( args, filename );
-  if ( opts.save_user_opts_plus )
+  if ( MAS_PASS_OPTS_PREF save_user_opts_plus )
   {
     MAS_LOG( "to save opts plus %s", filename );
-    IEVAL( r, _mas_opts_save_plus( dirname, filename, 1, opts.overwrite_user_opts_plus, args ) );
+    IEVAL( r, _mas_opts_save_plus( MAS_PASS_OPTS_PASS dirname, filename, 1, MAS_PASS_OPTS_PREF overwrite_user_opts_plus, args ) );
     MAS_LOG( "saved opts plus : %d", r );
   }
   /* else                                    */

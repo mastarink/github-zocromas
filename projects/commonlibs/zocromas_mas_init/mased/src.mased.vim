@@ -23,5 +23,3 @@ sfind mas_init.h
 
 tab sfind mas_sig.c
 sfind mas_sig.h
-
-

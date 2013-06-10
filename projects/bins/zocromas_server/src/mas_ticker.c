@@ -18,7 +18,6 @@
 /* #include <mastar/types/mas_opts_types.h> */
 extern mas_control_t ctrl;
 
-/* extern mas_options_t opts; */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -196,7 +195,7 @@ mas_ticker_th( void *arg )
 
 /* naming : pthread_create = start */
 int
-mas_ticker_start( void )
+mas_ticker_start( MAS_PASS_OPTS_DECLARE1 )
 {
   int r = 0;
 

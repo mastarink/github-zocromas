@@ -12,6 +12,8 @@
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
+#include <mastar/types/mas_common_defs.h>
+
 #include "mas_modules_ctrl_module.h"
 
 #include "mas_modules_load_module.h"

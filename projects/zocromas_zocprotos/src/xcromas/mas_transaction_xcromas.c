@@ -5,10 +5,13 @@
 #include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/modules/mas_modules_commands_eval.h>
 
 #include <mastar/types/mas_control_types.h>
 extern mas_control_t ctrl;
+
+#include <mastar/types/mas_opts_types.h>
+
+#include <mastar/modules/mas_modules_commands_eval.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -61,13 +64,13 @@ do_exit_server( mas_rcontrol_t * prcontrol )
 }
 
 static int
-mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *question, mas_header_t * pheader )
+mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const char *question, mas_header_t * pheader )
 {
   int r = -1;
   char *answer = NULL;
 
   prcontrol->qbin = MSG_BIN_NONE;
-  answer = mas_evaluate_transaction_command( prcontrol, question );
+  answer = mas_evaluate_transaction_command( MAS_PASS_OPTS_PASS prcontrol, question );
   tMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_exit, ctrl.stop_listeners );
   if ( ctrl.do_exit )
   {
@@ -133,7 +136,7 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
 /* }                                                                                                                */
 
 int
-mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *buffer_void )
+mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *buffer_void )
 {
   int r = -1;
 
@@ -211,7 +214,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
         else
         {
           tMSG( "q for e & a :%s", question );
-          r = mas_proto_xcromas_evaluate_and_answer( prcontrol, question, &header_copy );
+          r = mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_PASS prcontrol, question, &header_copy );
           tMSG( "e & a :%d", r );
         }
       }
