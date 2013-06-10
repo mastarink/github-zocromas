@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include "mas_thread_tools.h"
 #include "mas_ocontrol_tools.h"

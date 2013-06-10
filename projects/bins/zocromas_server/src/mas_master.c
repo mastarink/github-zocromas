@@ -109,7 +109,7 @@ mas_master( MAS_PASS_OPTS_DECLARE1 )
   if ( !MAS_PASS_OPTS_PREF nologger )
   {
     HMSG( "LOGGER TO START" );
-    mas_logger_start( MAS_PASS_OPTS_PASS1 );
+    mas_logger_start(  );
   }
   else
   {
@@ -248,8 +248,7 @@ mas_master_th( void *arg )
     ctrl.threads.n.main.thread = 0;
   }
   {
-    extern mas_options_t gopts;
-
+    MAS_PASS_OPTS_DECL_GREF;
     ( void ) /* r= */ mas_master( MAS_PASS_OPTS_GREF1 );
   }
 #ifdef MAS_TRACEMEM

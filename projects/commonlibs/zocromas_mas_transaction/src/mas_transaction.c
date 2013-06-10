@@ -64,15 +64,20 @@ related:
   mas_variables.c
   mas_thread_variables.c
 */
+typedef struct mas_orc_s
+{
+  mas_options_t *opts;
+  mas_rcontrol_t *prcontrol;
+} mas_orc_t;
 
 static int
-_mas_transaction_xch_eval( mas_rcontrol_t * prcontrol )
+_mas_transaction_xch_eval( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol )
 {
   int r = -1;
 
   if ( prcontrol->proto_desc->func )
   {
-    r = ( prcontrol->proto_desc->func ) ( prcontrol, NULL /* data */  );
+    r = ( prcontrol->proto_desc->func ) ( MAS_PASS_OPTS_PASS prcontrol, NULL /* data */  );
     if ( !( r > 0 ) )
       prcontrol->proto_desc = NULL;
   }
@@ -80,13 +85,13 @@ _mas_transaction_xch_eval( mas_rcontrol_t * prcontrol )
 }
 
 static int
-_mas_transaction_xch( mas_rcontrol_t * prcontrol )
+_mas_transaction_xch( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol )
 {
   int r = 0;
 
   prcontrol->h.status = MAS_STATUS_WORK;
   if ( prcontrol->proto_desc )
-    r = _mas_transaction_xch_eval( prcontrol );
+    r = _mas_transaction_xch_eval( MAS_PASS_OPTS_PASS prcontrol );
   else
     for ( int np = 0; r == 0 && np < ctrl.protos_num; np++ )
     {
@@ -96,7 +101,7 @@ _mas_transaction_xch( mas_rcontrol_t * prcontrol )
               ctrl.proto_descs[np].variables ? 1 : 0 );
         /* calling proto_main(...) */
         prcontrol->proto_desc = &ctrl.proto_descs[np];
-        r = _mas_transaction_xch_eval( prcontrol );
+        r = _mas_transaction_xch_eval( MAS_PASS_OPTS_PASS prcontrol );
       }
     }
   return r;
@@ -106,7 +111,7 @@ _mas_transaction_xch( mas_rcontrol_t * prcontrol )
  * prcontrol is valid
  * */
 static int
-mas_transaction_xch( mas_rcontrol_t * prcontrol )
+mas_transaction_xch( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol )
 {
   int r = -1;
 
@@ -132,7 +137,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
         prcontrol->h.activity_time = td;
         OMSG( "WAITING DATA..." );
       }
-      r = _mas_transaction_xch( prcontrol );
+      r = _mas_transaction_xch( MAS_PASS_OPTS_PASS prcontrol );
       mas_channel_delete_buffer( prcontrol->h.pchannel );
     }
     if ( prcontrol && ( !prcontrol->proto_desc || prcontrol->proto_desc->proto_id == 0 ) )
@@ -151,7 +156,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 /* return 0 to end transaction */
 /* return >0 to continue       */
 static void *
-mas_transaction( mas_rcontrol_t * prcontrol )
+mas_transaction( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol )
 {
   int r = 1;
 
@@ -176,8 +181,8 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       prcontrol->h.status = MAS_STATUS_INIT;
       prcontrol->connection_keep_alive = 1;
       MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
-      while ( r >= 0 && prcontrol && prcontrol->connection_keep_alive && !prcontrol->stop && prcontrol->h.pchannel && prcontrol->h.pchannel->opened
-              && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
+      while ( r >= 0 && prcontrol && prcontrol->connection_keep_alive && !prcontrol->stop && prcontrol->h.pchannel
+              && prcontrol->h.pchannel->opened && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
         rMSG( "+ keep alive loop" );
         MAS_LOG( "starting transaction keep-alive block" );
@@ -186,7 +191,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         /* rMSG( "connection_keep_alive %d", prcontrol->connection_keep_alive ); */
         prcontrol->h.status = MAS_STATUS_OPEN;
         prcontrol->qbin = MSG_BIN_NONE;
-        r = mas_transaction_xch( prcontrol );
+        r = mas_transaction_xch( MAS_PASS_OPTS_PASS prcontrol );
         /* if ( prcontrol->stop_listeners ) */
         /* {                                */
         /*   mas_listeners_cancel(  );      */
@@ -224,13 +229,24 @@ mas_transaction( mas_rcontrol_t * prcontrol )
 /* working with client */
 /* naming : pthread_create argument = th */
 static void *
-mas_transaction_th( void *trcontrol )
+mas_transaction_th( void *torc )
 {
   void *rp = NULL;
   int r = -1, rn = 0;
-  mas_rcontrol_t *prcontrol = NULL;
 
-  prcontrol = ( mas_rcontrol_t * ) trcontrol;
+  mas_orc_t *porc;
+  mas_rcontrol_t *prcontrol = NULL;
+  mas_options_t *popts __attribute__ ( ( unused ) );
+
+  /* prcontrol = ( mas_rcontrol_t * ) trcontrol; */
+  {
+    porc = ( mas_orc_t * ) torc;
+    torc = NULL;
+    prcontrol = porc->prcontrol;
+    popts = porc->opts;
+    mas_free( porc );
+    porc = NULL;
+  }
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransTh" ) );
 
   MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
@@ -310,7 +326,7 @@ mas_transaction_th( void *trcontrol )
         MAS_LOG( "tr. push" );
         pthread_cleanup_push( mas_transaction_cleanup, prcontrol );
         MAS_LOG( "tr. itself" );
-        rp = mas_transaction( prcontrol );
+        rp = mas_transaction( MAS_PASS_OPTS_PASS prcontrol );
         pthread_cleanup_pop( 1 );
         /* tend = mas_double_time(  );   */
         /* tdiff = tend - tstart;        */
@@ -373,21 +389,26 @@ mas_transaction_start( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
 #endif
       if ( prcontrol )
       {
-	MAS_PASS_OPTS_DECL_PREF;
+        MAS_PASS_OPTS_DECL_PREF;
         ctrl.clients_came0++;
         if ( MAS_PASS_OPTS_PREF transaction_single )
         {
-          mas_transaction( prcontrol );
+          mas_transaction( MAS_PASS_OPTS_PASS prcontrol );
           mas_transaction_cleanup( prcontrol );
           mas_rcontrol_delete( prcontrol, 1 );
         }
         else
         {
+          mas_orc_t *porc;
+
+          porc = mas_malloc( sizeof( mas_orc_t ) );
+          porc->prcontrol = prcontrol;
+          porc->opts = MAS_PASS_OPTS_REF;
           MAS_LOG( "cr'ing tr. th; prc=%p #%lu", ( void * ) prcontrol, prcontrol->h.serial );
           /* r = mas_xpthread_create( &prcontrol->h.thread, mas_transaction_th, MAS_THREAD_TRANSACTION, ( void * ) prcontrol ); */
           /* pthread_mutex_lock( &ctrl.thglob.logger_mutex );   */
           /* pthread_mutex_unlock( &ctrl.thglob.logger_mutex ); */
-          r = pthread_create( &prcontrol->h.thread, &ctrl.thglob.transaction_attr, mas_transaction_th, ( void * ) prcontrol );
+          r = pthread_create( &prcontrol->h.thread, &ctrl.thglob.transaction_attr, mas_transaction_th, ( void * ) porc );
           if ( prcontrol->h.thread )
           {
             MAS_LOG( "cr'ed tr. th; prc=%p [%lx] #%lu", ( void * ) prcontrol, prcontrol->h.thread, prcontrol->h.serial );

@@ -9,6 +9,7 @@
 #    include <mastar/types/mas_varset_types.h>
 #  endif
 #  include <mastar/types/mas_channel_types.h>
+#  include <mastar/types/mas_opts_types.h>
 
 /*
 this:
@@ -20,7 +21,7 @@ related:
 
 typedef struct mas_rcontrol_s mas_rcontrol_t;
 typedef struct mas_transaction_protodesc_s mas_transaction_protodesc_t;
-typedef int ( *mas_transaction_fun_t ) ( mas_rcontrol_t * prcontrol, const void *pvoid );
+typedef int ( *mas_transaction_fun_t ) ( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const void *pvoid );
 
 struct mas_transaction_protodesc_s
 {
@@ -63,6 +64,8 @@ struct mas_rcontrol_s
 
   double start_time;
   struct mas_lcontrol_s *plcontrol;
+  
+  /* const struct mas_options_s *popts; */
 
   bin_type_t qbin;
   /* struct sockaddr_in addr; */

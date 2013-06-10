@@ -1,4 +1,6 @@
-#  include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,8 +71,7 @@ do_cmd( STD_CMD_ARGS )
 /*==========================================================================================*/
 
 mas_cmd_t subcmdtable[] = {
-  {0, NULL, do_cmd, NULL} /* do ... */
+  {0, NULL, do_cmd, NULL}       /* do ... */
   ,
   {999, NULL, NULL, NULL}
 };
-

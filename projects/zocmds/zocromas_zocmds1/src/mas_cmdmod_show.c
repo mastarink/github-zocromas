@@ -1,4 +1,6 @@
-#  include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdlib.h>
 
@@ -45,7 +47,7 @@ msg_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, mas_evaluate_list_cmd, NULL}
   ,
-  {1, "msg", msg_cmd, "show"} /* show msg ... */
+  {1, "msg", msg_cmd, "show"}   /* show msg ... */
   ,
   {999, NULL, NULL, NULL}
 };

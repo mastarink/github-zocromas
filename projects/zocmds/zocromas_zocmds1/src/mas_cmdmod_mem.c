@@ -1,4 +1,6 @@
-#  include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <string.h>
 #include <stdlib.h>
@@ -55,7 +57,7 @@ info_cmd( STD_CMD_ARGS )
 mas_cmd_t subcmdtable[] = {
   {0, NULL, mas_evaluate_list_cmd, NULL}
   ,
-  {1, "info", info_cmd, NULL} /* get mem info */
+  {1, "info", info_cmd, NULL}   /* get mem info */
   ,
   {999, NULL, NULL, NULL}
 };

@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <string.h>
 #include <stdlib.h>
@@ -91,7 +93,7 @@ log_cmd( STD_CMD_ARGS )
   }
   else if ( ( 0 == strcmp( args, "start" ) ) )
   {
-    mas_logger_start( MAS_PASS_OPTS_PASS1 );
+    mas_logger_start(  );
   }
   else if ( ( 0 == strcmp( args, "stop" ) ) )
   {

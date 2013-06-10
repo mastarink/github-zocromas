@@ -1,4 +1,7 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
+
 
 #include <string.h>
 #include <stdlib.h>
@@ -107,7 +110,8 @@ __attribute__ ( ( constructor ) )
      static void http_constructor( void )
 {
   HMSG( "CONSTRUCTOR proto http" );
-  ( void ) _mas_opts_restore_relative( "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
+  ( void ) _mas_opts_restore_relative( MAS_PASS_OPTS_DECLARE "proto/http.conf", NULL /*popts */ , opt_table,
+                                       sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
                                        NULL, NULL, NULL /* arg */  );
 }
 
@@ -206,7 +210,7 @@ mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * h
       http->status_code = MAS_HTTP_CODE_NOT_IMPLEMENTED;
       http = mas_http_make_out_header( http, "Title", "%d %s", http->status_code, mas_http_status_code_message( prcontrol, http ) );
       http = mas_http_make_out_header_simple( http, "Allow", "GET,HEAD,OPTIONS" );
-      http = mas_http_make_data_auto(  MAS_PASS_OPTS_PASS prcontrol, http );
+      http = mas_http_make_data_auto( MAS_PASS_OPTS_PASS prcontrol, http );
       /* http = mas_http_make_body_simple( prcontrol, http ); */
       break;
     case MAS_HTTP_METHOD_OPTIONS:
@@ -270,7 +274,7 @@ mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const void *pl
   http = mas_proto_http_create_request( prcontrol );
   MAS_LOG( "http?: to parse rq" );
   if ( http )
-    http = mas_proto_http_parse_request( prcontrol, http );
+    http = mas_proto_http_parse_request( MAS_PASS_OPTS_PASS prcontrol, http );
   MAS_LOG( "http?: parsed rq : %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
 
   if ( http )

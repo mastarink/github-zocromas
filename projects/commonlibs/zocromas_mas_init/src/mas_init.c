@@ -346,6 +346,7 @@ mas_post_init( MAS_PASS_OPTS_DECLARE1 )
     ctrl.logpath = mas_strdup( MAS_PASS_OPTS_PREF dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
+    ctrl.do_log = MAS_PASS_OPTS_PREF nolog ? 1 : 0;
   }
   else
   {

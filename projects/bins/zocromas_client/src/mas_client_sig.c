@@ -2,6 +2,8 @@
 #define MAS_MAX_INT_1 2
 #define MAS_MAX_INT_2 10
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>

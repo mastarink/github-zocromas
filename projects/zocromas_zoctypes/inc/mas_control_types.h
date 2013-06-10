@@ -135,6 +135,7 @@ struct mas_control_s
   unsigned watcher_hide:1;
   unsigned watcher_stop:1;
 
+  unsigned do_log:1;
   unsigned log_disabled:1;
   unsigned log_stopped:1;
   unsigned log_offmem:1;

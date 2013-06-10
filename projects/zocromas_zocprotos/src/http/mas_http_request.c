@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <stdlib.h>
 
@@ -122,7 +124,7 @@ cb( void *arg )
 
 
 mas_http_t *
-mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_proto_http_parse_request( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   char *pstring;
   const char *cstring;
@@ -186,7 +188,8 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
         if ( !prcontrol->proto_desc->variables )
         {
           HMSG( "HTTP proto vars" );
-          ( void ) _mas_opts_restore_relative( NULL, "proto/http.conf", NULL /*popts */ , opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ),
+          ( void ) _mas_opts_restore_relative( MAS_PASS_OPTS_PASS "proto/http.conf", NULL /*ptopts */ , opt_table,
+                                               sizeof( opt_table ) / sizeof( opt_table[0] ),
                                                ( const void * ) prcontrol->proto_desc /* arg */ , NULL, NULL, NULL );
         }
         MAS_LOG( "good, http parsed protocol: %s === %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", http->protocol_name );

@@ -173,10 +173,6 @@ mas_logger_write( mas_loginfo_t * li )
           ltime = mas_double_time(  );
           fromlastlog = ( li->logtime - prevlilogtime ) * 1.E6;
           last_th = ( li->delta_thread ) * 1.E6;
-          /* if ( MAS_PASS_OPTS_PREF dir.log )                                                              */
-          /* {                                                                               */
-          /*   MFP( "%s : (%10.5f) logdir='%s'\n", __func__, ( ltime - logger_start_time ), MAS_PASS_OPTS_PREF dir.log );     */
-          /* }                                                                               */
           /* MFP( "%s : %20.5f (%10.5f) : '%s'\n", __func__, ltime, ( ltime - logger_start_time ), li->message ); */
 
           /* fprintf( ctrl.logfile, "%16.5f + %7.5f : %16.5f (%7.5f) : %-25s:%03d %s:R%lu:%u @ L%lu:%u: {%s}\n", li->logtime, */
@@ -297,14 +293,12 @@ mas_logger_th( void *arg )
 static size_t logger_stacksize = 0;
 static void *logger_stackaddr = NULL;
 int
-mas_logger_start( MAS_PASS_OPTS_DECLARE1 )
+mas_logger_start( void )
 {
   int r = 0;
 
   if ( !ctrl.threads.n.logger.thread )
   {
-    MAS_PASS_OPTS_DECL_PREF;
-
     pthread_setconcurrency( 4 );
     MAS_LOG( "starting logger th. [concurrency:%u]", pthread_getconcurrency(  ) );
     {
@@ -315,7 +309,7 @@ mas_logger_start( MAS_PASS_OPTS_DECLARE1 )
     r = pthread_create( &ctrl.threads.n.logger.thread, &ctrl.thglob.logger_attr, mas_logger_th, NULL );
     /* thMSG( "(%d) created(?) logger thread [%lx]", r, ctrl.threads.n.logger.thread ); */
     MAS_LOG( "(%d) created(?) logger thread [%lx]", r, ctrl.threads.n.logger.thread );
-    if ( MAS_PASS_OPTS_PREF dir.log && ctrl.logpath )
+    if ( ctrl.logpath && ctrl.logpath )
     {
       ctrl.keep_logging = 1;
     }

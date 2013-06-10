@@ -1,4 +1,6 @@
 #include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 /* #include <stdio.h> */
 #include <stdlib.h>
@@ -13,7 +15,7 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 #ifdef MAS_USE_CURSES
-#include <mastar/msg/mas_curses.h>
+#  include <mastar/msg/mas_curses.h>
 #endif
 
 #include <mastar/modules/mas_modules_commands_eval.h>

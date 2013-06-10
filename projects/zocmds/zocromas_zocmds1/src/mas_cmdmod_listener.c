@@ -1,4 +1,6 @@
-#  include <mastar/wrap/mas_std_def.h>
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <string.h>
 
@@ -8,8 +10,8 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 #ifdef MAS_USE_LISTENER
-#include "listener/inc/mas_listener_control_list.h"
-#include "listener/inc/mas_listener.h"
+#  include "listener/inc/mas_listener_control_list.h"
+#  include "listener/inc/mas_listener.h"
 #endif
 
 #include <mastar/modules/mas_modules_commands_eval.h>

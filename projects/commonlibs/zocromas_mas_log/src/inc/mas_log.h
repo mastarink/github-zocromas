@@ -7,8 +7,8 @@
 #  include "mas_log_types.h"
 
 
-/* int mas_vlog(MAS_PASS_OPTS_DECLARE const char *func, int line, int merrno, const char *fmt, va_list args );     */
-/* int mas_vlog_lim(MAS_PASS_OPTS_DECLARE const char *func, int line, int merrno, const char *fmt, va_list args ); */
+/* int mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args );     */
+/* int mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list args ); */
 int mas_log( const char *func, int line, int merrno, const char *fmt, ... )
       __attribute__ ( ( format( __printf__, 4, 5 ) ) ) __attribute__ ( ( weak ) );
 

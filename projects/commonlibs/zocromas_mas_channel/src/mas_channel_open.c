@@ -1,3 +1,6 @@
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 #include <string.h>
 #include <unistd.h>
 
@@ -7,8 +10,6 @@
 
 #include <errno.h>
 
-#include <mastar/types/mas_common_defs.h>
-#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 

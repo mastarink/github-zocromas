@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -11,13 +12,13 @@
 
 
 
-#include <mastar/types/mas_opts_types.h>
-
 
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 /* #include <mastar/log/mas_log.h> */
+
+#include <mastar/types/mas_opts_types.h>
 
 #include "mas_opts_common.h"
 #include "mas_opts_storage.h"

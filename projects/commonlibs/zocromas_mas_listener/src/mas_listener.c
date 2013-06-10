@@ -144,6 +144,7 @@ mas_listener_start( MAS_PASS_OPTS_DECLARE char *host_port, unsigned port )
     {
       MAS_LOG( "cr'ing ls. th; plc=%p #%lu", ( void * ) plcontrol, plcontrol->h.serial );
       /* r = mas_xpthread_create( &( plcontrol->h.thread ), mas_listener_th, MAS_THREAD_LISTENER, ( void * ) plcontrol ); */
+      /* plcontrol->popts = MAS_PASS_OPTS_REF; */
       EEVAL( r, pthread_create( &plcontrol->h.thread, &ctrl.thglob.listener_attr, mas_listener_th, ( void * ) plcontrol ) );
       if ( plcontrol->h.thread )
       {
@@ -246,7 +247,7 @@ mas_listener( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
 void *
 mas_listener_th( void *tlcontrol )
 {
-  extern mas_options_t gopts;
+  MAS_PASS_OPTS_DECL_GPREF;
   int rn = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
@@ -261,7 +262,7 @@ mas_listener_th( void *tlcontrol )
   /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
   /*   MAS_LOG( "sched %d", rs );                                            */
   /* }                                                                       */
-  if ( gopts.nolisten )
+  if ( MAS_PASS_OPTS_GPREF nolisten )
   {
     MAS_LOG( "listener th. -> sleep started %s:%u", plcontrol->host, plcontrol->port );
     sleep( gopts.nolisten );
@@ -293,7 +294,6 @@ mas_listener_th( void *tlcontrol )
       /* thMSG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port ); */
       MAS_LOG( "setting cleanup for L %s:%u", plcontrol->host, plcontrol->port );
       pthread_cleanup_push( mas_listener_cleanup, plcontrol );
-      extern mas_options_t gopts;
 
 #ifdef MAS_NOPASS_OPTS
       ( void ) /*r = */ mas_listener( MAS_PASS_OPTS_GREF plcontrol );
