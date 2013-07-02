@@ -1,0 +1,92 @@
+20130702.173201.813490582 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+20130702.173201.814239602@@@ nginx.mastar.lan:8102
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:8102 --port=8102 --uri=/HarryHarrison.jpeg --http-version=1.0 --rate=1000 --send-buffer=4096 --recv-buffer=16384 --wsess=100,50,10.000 --burst-length=5
+Maximum connect burst length: 5
+
+Total: connections 4000 requests 4000 replies 4000 test-duration 78.244 s
+
+Connection rate: 51.1 conn/s (19.6 ms/conn, <=10 concurrent connections)
+Connection time [ms]: min 0.1 avg 0.2 max 2.2 median 0.5 stddev 0.1
+Connection time [ms]: connect 0.1
+Connection length [replies/conn]: 1.000
+
+Request rate: 51.1 req/s (19.6 ms/req)
+Request size [B]: 119.0
+
+Reply rate [replies/s]: min 0.0 avg 53.3 max 100.0 stddev 51.6 (15 samples)
+Reply time [ms]: response 0.1 transfer 0.0
+Reply size [B]: header 265.0 content 30942.0 footer 0.0 (total 31207.0)
+Reply status: 1xx=0 2xx=4000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 18.96 system 59.04 (user 24.2% system 75.5% total 99.7%)
+Net I/O: 1563.9 KB/s (12.8*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+Session rate [sess/s]: min 0.00 avg 0.00 max 0.00 stddev 0.00 (0/0)
+Session: avg 0.00 connections/session
+Session lifetime [s]: 0.0
+Session failtime [s]: 0.0
+Session length histogram: 0
+20130702.173320.060950535@@@ mastarink.net:80
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:80 --port=80 --uri=/HarryHarrison.jpeg --http-version=1.0 --rate=1000 --send-buffer=4096 --recv-buffer=16384 --wsess=100,50,10.000 --burst-length=5
+Maximum connect burst length: 5
+
+Total: connections 500 requests 500 replies 500 test-duration 0.557 s
+
+Connection rate: 897.2 conn/s (1.1 ms/conn, <=12 concurrent connections)
+Connection time [ms]: min 0.2 avg 0.5 max 3.7 median 0.5 stddev 0.4
+Connection time [ms]: connect 0.1
+Connection length [replies/conn]: 1.000
+
+Request rate: 897.2 req/s (1.1 ms/req)
+Request size [B]: 117.0
+
+Reply rate [replies/s]: min 0.0 avg 0.0 max 0.0 stddev 0.0 (0 samples)
+Reply time [ms]: response 0.3 transfer 0.1
+Reply size [B]: header 281.0 content 30942.0 footer 0.0 (total 31223.0)
+Reply status: 1xx=0 2xx=500 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.13 system 0.42 (user 23.3% system 75.7% total 99.1%)
+Net I/O: 27460.2 KB/s (225.0*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+Session rate [sess/s]: min 0.00 avg 0.00 max 0.00 stddev 0.00 (0/0)
+Session: avg 0.00 connections/session
+Session lifetime [s]: 0.0
+Session failtime [s]: 0.0
+Session length histogram: 0
+20130702.173320.620960459@@@ zocromas.mastar.lan:5005
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:5005 --port=5005 --uri=/HarryHarrison.jpeg --http-version=1.0 --rate=1000 --send-buffer=4096 --recv-buffer=16384 --wsess=100,50,10.000 --burst-length=5
+Maximum connect burst length: 8
+
+Total: connections 500 requests 500 replies 500 test-duration 0.365 s
+
+Connection rate: 1369.1 conn/s (0.7 ms/conn, <=18 concurrent connections)
+Connection time [ms]: min 0.2 avg 0.7 max 3.3 median 0.5 stddev 0.6
+Connection time [ms]: connect 0.1
+Connection length [replies/conn]: 1.000
+
+Request rate: 1369.1 req/s (0.7 ms/req)
+Request size [B]: 119.0
+
+Reply rate [replies/s]: min 0.0 avg 0.0 max 0.0 stddev 0.0 (0 samples)
+Reply time [ms]: response 0.4 transfer 0.1
+Reply size [B]: header 297.0 content 30942.0 footer 0.0 (total 31239.0)
+Reply status: 1xx=0 2xx=500 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.09 system 0.26 (user 24.4% system 70.9% total 95.3%)
+Net I/O: 41924.8 KB/s (343.4*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+
+Session rate [sess/s]: min 0.00 avg 0.00 max 0.00 stddev 0.00 (0/0)
+Session: avg 0.00 connections/session
+Session lifetime [s]: 0.0
+Session failtime [s]: 0.0
+Session length histogram: 0
+20130702.173320.988917574@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

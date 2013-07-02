@@ -1,0 +1,74 @@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@ nginx.mastar.lan:8102
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:8102 --port=8102 --uri=/HarryHarrison.jpeg --http-version=1.0 --rate=10 --send-buffer=4096 --recv-buffer=16384 --num-conns=5 --num-calls=1000
+Maximum connect burst length: 1
+
+Total: connections 5 requests 505 replies 500 test-duration 0.405 s
+
+Connection rate: 12.3 conn/s (81.0 ms/conn, <=1 concurrent connections)
+Connection time [ms]: min 4.4 avg 4.5 max 4.7 median 4.5 stddev 0.1
+Connection time [ms]: connect 0.0
+Connection length [replies/conn]: 100.000
+
+Request rate: 1247.2 req/s (0.8 ms/req)
+Request size [B]: 119.0
+
+Reply rate [replies/s]: min 0.0 avg 0.0 max 0.0 stddev 0.0 (0 samples)
+Reply time [ms]: response 0.0 transfer 0.0
+Reply size [B]: header 264.0 content 30942.0 footer 0.0 (total 31206.0)
+Reply status: 1xx=0 2xx=500 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.08 system 0.32 (user 20.7% system 78.8% total 99.5%)
+Net I/O: 37778.1 KB/s (309.5*10^6 bps)
+
+Errors: total 5 client-timo 0 socket-timo 0 connrefused 0 connreset 5
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+@@@ mastarink.net:80
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:80 --port=80 --uri=/HarryHarrison.jpeg --http-version=1.0 --rate=10 --send-buffer=4096 --recv-buffer=16384 --num-conns=5 --num-calls=1000
+Maximum connect burst length: 1
+
+Total: connections 5 requests 510 replies 505 test-duration 0.407 s
+
+Connection rate: 12.3 conn/s (81.4 ms/conn, <=1 concurrent connections)
+Connection time [ms]: min 6.7 avg 7.4 max 10.1 median 6.5 stddev 1.5
+Connection time [ms]: connect 0.0
+Connection length [replies/conn]: 101.000
+
+Request rate: 1252.8 req/s (0.8 ms/req)
+Request size [B]: 117.0
+
+Reply rate [replies/s]: min 0.0 avg 0.0 max 0.0 stddev 0.0 (0 samples)
+Reply time [ms]: response 0.1 transfer 0.0
+Reply size [B]: header 279.0 content 30942.0 footer 0.0 (total 31221.0)
+Reply status: 1xx=0 2xx=505 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.10 system 0.31 (user 23.3% system 76.4% total 99.7%)
+Net I/O: 37967.0 KB/s (311.0*10^6 bps)
+
+Errors: total 5 client-timo 0 socket-timo 0 connrefused 0 connreset 5
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+@@@ zocromas.mastar.lan:5005
+httperf --client=0/1 --server=zocromas.mastar.lan --server_name=zocromas.mastar.lan:5005 --port=5005 --uri=/HarryHarrison.jpeg --http-version=1.0 --rate=10 --send-buffer=4096 --recv-buffer=16384 --num-conns=5 --num-calls=1000
+Maximum connect burst length: 1
+
+Total: connections 5 requests 5000 replies 5000 test-duration 0.488 s
+
+Connection rate: 10.2 conn/s (97.6 ms/conn, <=1 concurrent connections)
+Connection time [ms]: min 81.0 avg 83.1 max 87.7 median 81.5 stddev 2.9
+Connection time [ms]: connect 0.0
+Connection length [replies/conn]: 1000.000
+
+Request rate: 10243.0 req/s (0.1 ms/req)
+Request size [B]: 119.0
+
+Reply rate [replies/s]: min 0.0 avg 0.0 max 0.0 stddev 0.0 (0 samples)
+Reply time [ms]: response 0.1 transfer 0.0
+Reply size [B]: header 297.0 content 30942.0 footer 0.0 (total 31239.0)
+Reply status: 1xx=0 2xx=5000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.08 system 0.40 (user 16.2% system 82.1% total 98.3%)
+Net I/O: 313672.7 KB/s (2569.6*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
