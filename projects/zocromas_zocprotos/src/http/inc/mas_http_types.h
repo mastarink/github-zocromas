@@ -92,7 +92,10 @@ struct mas_http_s
 #  elif defined(MAS_VARSET_VARIABLES_HTTP)
   mas_varset_t *indata;
   mas_varset_t *outdata;
-#  else
+#  elif defined(MAS_USE_VARVEC)
+  mas_varvec_t *indata;
+  mas_varvec_t *outdata;
+#else
   mas_varset_class_t *indata;
   mas_varset_class_t *outdata;
 #  endif

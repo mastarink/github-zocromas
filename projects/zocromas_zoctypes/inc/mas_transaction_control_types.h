@@ -5,6 +5,8 @@
 #  include <mastar/types/mas_list_def.h>
 #  ifdef MAS_OLD_VARIABLES_HTTP
 #    include <mastar/types/mas_variables_types.h>
+#  elif defined(MAS_USE_VARVEC)
+#    include <mastar/types/mas_varvec_types.h>
 #  else
 #    include <mastar/types/mas_varset_types.h>
 #  endif
@@ -30,6 +32,8 @@ struct mas_transaction_protodesc_s
   mas_transaction_fun_t func;
 #  ifdef MAS_OLD_VARIABLES_HTTP
   mas_variables_list_head_t *variables;
+/* #  elif defined(MAS_USE_VARVEC) */
+/*   mas_varvec_t *variables;      */
 #  else
   mas_varset_t *variables;
 #  endif

@@ -8,7 +8,6 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
-#include <mastar/types/mas_varvec_types.h>
 #include "mas_varvec_object.h"
 #include "mas_varvec_element.h"
 #include "mas_varvec_namevalue.h"

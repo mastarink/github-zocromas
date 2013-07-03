@@ -5,7 +5,6 @@
 
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/types/mas_varvec_types.h>
 
 #include "mas_varvec_object.h"
 

@@ -1,3 +1,5 @@
+#define MAS_USE_VARVEC
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -21,13 +23,22 @@
 
 #ifdef MAS_OLD_VARIABLES_HTTP
 #  include <mastar/variables/mas_variables.h>
+#elif defined(MAS_USE_VARVEC)
+#  include <mastar/types/mas_varvec_types.h>
+#  include <mastar/varvec/mas_varvec.h>
+#  include <mastar/varvec/mas_varvec_search.h>
+#  include <mastar/varvec/mas_varvec_search.h>
+#  include <mastar/varvec/mas_varvec_headtail.h>
+#  include <mastar/varvec/mas_varvec_namevalue.h>
+#  include <mastar/varset/mas_varset_search.h>
+#  include <mastar/varset/mas_varset.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_vclass.h>
-#  include <mastar/varset/mas_varset_search.h>
 #  include <mastar/varset/mas_varset_vclass_search.h>
 #  include <mastar/varset/mas_varset_vclass_headtail.h>
 #  include <mastar/varset/mas_varset_vclass_namevalue.h>
+#  include <mastar/varset/mas_varset_search.h>
 #  include <mastar/varset/mas_varset.h>
 #endif
 
@@ -75,6 +86,8 @@ mas_http_make_out_header_simple( mas_http_t * http, const char *name, const char
   http->outdata = mas_variable_create_text( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, value, 0 );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
   http->outdata = mas_varset_search_variable( http->outdata, "header", name, value );
+#elif defined(MAS_USE_VARVEC)
+  http->outdata = mas_varvec_search_variable( http->outdata, NULL, name, value );
 #else
   http->outdata = mas_varset_vclass_search_variable( http->outdata, NULL, name, value );
 #endif
@@ -91,6 +104,8 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
   http->outdata = mas_variable_vcreate_x( http->outdata, /* MAS_THREAD_TRANSACTION, */ "header", name, NULL, fmt, args, 0 );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
   http->outdata = mas_varset_search_variable_va( http->outdata, "header", name, NULL, fmt, args );
+#elif defined(MAS_USE_VARVEC)
+  http->outdata = mas_varvec_search_variable_va( http->outdata, NULL, name, NULL, fmt, args );
 #else
   http->outdata = mas_varset_vclass_search_variable_va( http->outdata, NULL, name, NULL, fmt, args );
 #endif
@@ -108,6 +123,9 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
   http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) );
+#elif defined(MAS_USE_VARVEC)
+  http->outdata = mas_varvec_set_headf( http->outdata, "header", NULL, "HTTP/1.1 %d %s", http->status_code,
+                                        mas_http_status_code_message( prcontrol, http ) );
 #else
   /* http = mas_proto_http_writef( http, "HTTP/1.1 %d %s\r\n", http->status_code, mas_http_status_code_message( prcontrol, http ) ); */
   http->outdata = mas_varset_vclass_set_headf( http->outdata, "header", NULL, "HTTP/1.1 %d %s", http->status_code,
@@ -138,6 +156,17 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     http->outdata =
           mas_varset_search_variablef( http->outdata, "header", "Server", mas_xvsnprintf, "mas-%lu",
                                        ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
+#elif defined(MAS_USE_VARVEC)
+    http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT", mas_xgmtime(  ) );
+    http->outdata =
+          mas_varvec_search_variablef( http->outdata, NULL, "Server", mas_xvsnprintf, "mas-%lu", ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
+    http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Version", mas_xvsnprintf, "%3.1f", http->fversion );
+    {
+      char buf[128];
+
+      mas_tstrftime( buf, sizeof( buf ), "%Y%m%d %T", ctrl.stamp.first_lts );
+      http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Launched", mas_xvsnprintf, "%s", buf );
+    }
 #else
     {
       struct tm *t;
@@ -163,7 +192,11 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     }
     else if ( http->connection_close )
       http = mas_http_make_out_header_simple( http, "Connection", "close" );
+#if defined(MAS_USE_VARVEC)
+    http->outdata = mas_varvec_add_tail( http->outdata, "header", "" );
+#elif defined(MAS_VARSET_VARIABLES_HTTP)
     http->outdata = mas_varset_vclass_add_tail( http->outdata, "header", "" );
+#endif
   }
   return http;
 }
@@ -307,6 +340,10 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
     mas_vclass_element_t *host_var;
 
     host_var = mas_varset_find_variable( http->indata, "inheader", "Host" );
+#elif defined(MAS_USE_VARVEC)
+    mas_varvec_element_t *host_var;
+
+    host_var = mas_varvec_find_variable( http->indata, "Host" );
 #else
     mas_vclass_element_t *host_var;
 
@@ -321,6 +358,8 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
       http->host = mas_strdup( host_var->value );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
       http->host = mas_varset_vclass_variable_get_value( host_var );
+#elif defined(MAS_USE_VARVEC)
+      http->host = mas_varvec_variable_get_value( host_var );
 #else
       http->host = mas_varset_vclass_variable_get_value( host_var );
 #endif
@@ -354,6 +393,12 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
       tv = mas_varset_find_variable( prcontrol->proto_desc->variables, "docroot", http->host );
       if ( tv )
         http->docroot = mas_varset_vclass_variable_get_value( tv );
+#elif defined(MAS_USE_VARVEC)
+      mas_varvec_element_t *tv;
+
+      tv = mas_varset_find_variable( prcontrol->proto_desc->variables, "docroot", http->host );
+      if ( tv )
+        http->docroot = mas_varvec_variable_get_value( tv );
 #else
       mas_vclass_element_t *tv;
 

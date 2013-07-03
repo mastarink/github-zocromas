@@ -1,5 +1,5 @@
 
-tab sfind mas_varvec_object.c
+find mas_varvec_object.c
 sfind mas_varvec_object.h
 
 tab sfind mas_varvec.c

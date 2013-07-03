@@ -1,6 +1,7 @@
 #ifndef MAS_VARVEC_HEADTAIL_H
 #  define MAS_VARVEC_HEADTAIL_H
 
+#include <mastar/types/mas_varvec_types.h>
 
 void _mas_varvec_add_tail( mas_varvec_t * vclass, const char *tail );
 mas_varvec_t *mas_varvec_add_tail( mas_varvec_t * vclass, const char *vclass_name, const char *tail );

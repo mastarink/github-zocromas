@@ -1,6 +1,8 @@
 #ifndef MAS_VARVEC_NAMEVALUE_H
 #  define MAS_VARVEC_NAMEVALUE_H
 
+#include <mastar/types/mas_varvec_types.h>
+
 const char *mas_varvec_name( mas_varvec_t * vclass );
 
 char *mas_varvec_variable_get_name( mas_varvec_element_t * var );

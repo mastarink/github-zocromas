@@ -1,3 +1,5 @@
+#define MAS_USE_VARVEC
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -19,6 +21,10 @@
 
 #ifdef MAS_OLD_VARIABLES_HTTP
 #  include <mastar/variables/mas_variables.h>
+#elif defined(MAS_USE_VARVEC)
+#  include <mastar/types/mas_varvec_types.h>
+#  include <mastar/varvec/mas_varvec.h>
+#  include <mastar/varset/mas_varset.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_vclass.h>
@@ -167,6 +173,8 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
     /* TODO http->indata and http->outdata etc should be vclass, not varset */
     write( mas_channel_fd( http->prcontrol->h.pchannel ), "\r\n", 2 );
     /* mas_varset_write( STDERR_FILENO, http->outdata, set ); */
+#elif defined(MAS_USE_VARVEC)
+    mas_varvec_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
 #else
     mas_varset_vclass_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
     /* mas_varset_vclass_write( STDERR_FILENO, http->outdata ); */

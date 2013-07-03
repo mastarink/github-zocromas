@@ -1,3 +1,5 @@
+#define MAS_USE_VARVEC
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 

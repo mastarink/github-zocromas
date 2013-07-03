@@ -1,6 +1,8 @@
 #ifndef MAS_VARVEC_SEARCH_H
 #  define MAS_VARVEC_SEARCH_H
 
+#include <mastar/types/mas_varvec_types.h>
+
 int _mas_varvec_compare( const void *a, const void *b );
 
 mas_varvec_element_t *_mas_varvec_find_variable( mas_varvec_t * vclass, const char *name );

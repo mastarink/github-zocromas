@@ -1,3 +1,6 @@
+#define MAS_USE_VARVEC
+#ifndef MAS_USE_VARVEC
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -150,3 +153,5 @@ mas_varset_vclass_search_variablef( mas_varset_class_t * vclass, const char *vcl
   va_end( args );
   return vclass;
 }
+
+#endif

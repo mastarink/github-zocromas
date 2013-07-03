@@ -1,3 +1,5 @@
+#define MAS_USE_VARVEC
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -13,12 +15,18 @@
 #include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_varset_types.h>
-#include "mas_varset_vclass_object.h"
-/* #include "mas_varset_vclass.h" */
-#include "mas_varset_vclass_search.h"
-#include "mas_varset_vclass_namevalue.h"
-/* #include "mas_varset_vclass_headtail.h" */
 
+#ifdef MAS_USE_VARVEC
+#  include <mastar/varvec/mas_varvec_object.h>
+#  include <mastar/varvec/mas_varvec_search.h>
+#  include <mastar/varvec/mas_varvec_namevalue.h>
+#else
+#  include "mas_varset_vclass_object.h"
+/* #include "mas_varset_vclass.h" */
+#  include "mas_varset_vclass_search.h"
+#  include "mas_varset_vclass_namevalue.h"
+/* #include "mas_varset_vclass_headtail.h" */
+#endif
 
 #include "mas_varset_object.h"
 
@@ -34,15 +42,27 @@ mas_varset_walk_classes( mas_varset_t * varset, void ( *action ) ( const void *n
   }
 }
 
+#ifdef MAS_USE_VARVEC
 mas_vclass_element_t *
+#else
+mas_varvec_element_t *
+#endif
 mas_varset_find_variable( mas_varset_t * varset, const char *vclass_name, const char *name )
 {
+#ifdef MAS_USE_VARVEC
+  mas_varvec_t *vclass;
+  mas_varvec_element_t *found = NULL;
+#else
   mas_varset_class_t *vclass;
   mas_vclass_element_t *found = NULL;
-
+#endif
   vclass = mas_varset_find_vclass( varset, vclass_name );
   if ( vclass )
+#ifdef MAS_USE_VARVEC
+    found = _mas_varvec_find_variable( vclass, name );
+#else
     found = _mas_varset_vclass_find_variable( vclass, name );
+#endif
   return found;
 }
 
@@ -53,16 +73,30 @@ mas_varset_search_variable( mas_varset_t * varset, const char *vclass_name, cons
     varset = mas_varset_create(  );
   if ( varset )
   {
+#ifdef MAS_USE_VARVEC
+    mas_varvec_t *vclass = NULL;
+#else
     mas_varset_class_t *vclass = NULL;
+#endif
 
     vclass = mas_varset_search_vclass( varset, vclass_name );
     if ( vclass )
     {
+#ifdef MAS_USE_VARVEC
+      mas_varvec_element_t *v;
+#else
       mas_vclass_element_t *v;
+#endif
 
+#ifdef MAS_USE_VARVEC
+      v = __mas_varvec_search_variable( vclass, name );
+      if ( v )
+        mas_varvec_variable_set_value( v, value );
+#else
       v = __mas_varset_vclass_search_variable( vclass, name );
       if ( v )
         mas_varset_vclass_variable_set_value( v, value );
+#endif
     }
   }
   return varset;
@@ -100,20 +134,41 @@ mas_varset_search_variable_va( mas_varset_t * varset, const char *vclass_name, c
   return varset;
 }
 
+#ifdef MAS_USE_VARVEC
+mas_varvec_t *
+#else
 mas_varset_class_t *
+#endif
 mas_varset_search_vclass( mas_varset_t * varset, const char *vclass_name )
 {
+#ifdef MAS_USE_VARVEC
+  mas_varvec_t *vclass = NULL;
+  mas_varvec_t *found = NULL;
+#else
   mas_varset_class_t *vclass = NULL;
   mas_varset_class_t *found = NULL;
+#endif
 
   if ( varset )
   {
+#ifdef MAS_USE_VARVEC
+    mas_varvec_t **pfound = NULL;
+#else
     mas_varset_class_t **pfound = NULL;
+#endif
 
+#ifdef MAS_USE_VARVEC
+    vclass = mas_varvec_create( vclass_name );
+#else
     vclass = mas_varset_vclass_create( vclass_name );
+#endif
     if ( vclass )
     {
+#ifdef MAS_USE_VARVEC
+      pfound = tsearch( vclass, &varset->classes, _mas_varvec_compare );
+#else
       pfound = tsearch( vclass, &varset->classes, _mas_varset_compare_vclass );
+#endif
       if ( pfound )
         found = *pfound;
       if ( found == vclass )
@@ -122,7 +177,11 @@ mas_varset_search_vclass( mas_varset_t * varset, const char *vclass_name )
       }
       else
       {
+#ifdef MAS_USE_VARVEC
+        mas_varvec_delete( vclass );
+#else
         mas_varset_vclass_delete( vclass );
+#endif
         vclass = NULL;
       }
     }
@@ -130,23 +189,49 @@ mas_varset_search_vclass( mas_varset_t * varset, const char *vclass_name )
   return found;
 }
 
+#ifdef MAS_USE_VARVEC
+mas_varvec_t *
+mas_varset_find_vclass( mas_varset_t * varset, const char *vclass_name )
+#else
 mas_varset_class_t *
 mas_varset_find_vclass( mas_varset_t * varset, const char *vclass_name )
+#endif
 {
+#ifdef MAS_USE_VARVEC
+  mas_varvec_t *vclass = NULL;
+  mas_varvec_t *found = NULL;
+#else
   mas_varset_class_t *vclass = NULL;
   mas_varset_class_t *found = NULL;
+#endif
 
   if ( varset )
   {
+#ifdef MAS_USE_VARVEC
+    mas_varvec_t **pfound = NULL;
+#else
     mas_varset_class_t **pfound = NULL;
+#endif
 
+#ifdef MAS_USE_VARVEC
+    vclass = mas_varvec_create( vclass_name );
+#else
     vclass = mas_varset_vclass_create( vclass_name );
+#endif
     if ( vclass )
     {
+#ifdef MAS_USE_VARVEC
+      pfound = tfind( vclass, &varset->classes, _mas_varvec_compare );
+#else
       pfound = tfind( vclass, &varset->classes, _mas_varset_compare_vclass );
+#endif
       if ( pfound )
         found = *pfound;
+#ifdef MAS_USE_VARVEC
+      mas_varvec_delete( vclass );
+#else
       mas_varset_vclass_delete( vclass );
+#endif
     }
   }
   return found;

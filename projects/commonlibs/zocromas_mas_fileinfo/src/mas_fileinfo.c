@@ -1,3 +1,5 @@
+#define MAS_USE_VARVEC
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -23,8 +25,13 @@
 #  include <mastar/variables/mas_variables.h>
 #else
 #  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_vclass.h>
-#  include <mastar/varset/mas_varset_vclass_search.h>
+#  ifdef MAS_USE_VARVEC
+#    include <mastar/varvec/mas_varvec.h>
+#    include <mastar/varvec/mas_varvec_search.h>
+#  else
+#    include <mastar/varset/mas_varset_vclass.h>
+#    include <mastar/varset/mas_varset_vclass_search.h>
+#  endif
 #endif
 
 #include "mas_unidata.h"
@@ -240,6 +247,9 @@ mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t *
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
 mas_varset_t *
 mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo )
+#elif defined(MAS_USE_VARVEC)
+mas_varvec_t *
+mas_fileinfo_make_headers( mas_varvec_t * outdata, mas_fileinfo_t * fileinfo )
 #else
 mas_varset_class_t *
 mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * fileinfo )
@@ -260,7 +270,11 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
     outdata = mas_varset_search_variablef( outdata, "header", "Content-Length", NULL, "%d", dsz );
 #else
+#  ifdef MAS_USE_VARVEC
+    outdata = mas_varvec_search_variablef( outdata, NULL, "Content-Length", NULL, "%d", dsz );
+#  else
     outdata = mas_varset_vclass_search_variablef( outdata, NULL, "Content-Length", NULL, "%d", dsz );
+#  endif
     if ( !dsz )
     {
       EMSG( "Length error %d %d %d", fileinfo->inode ? 1 : 0, fileinfo->filetime ? 1 : 0, fileinfo->filesize ? 1 : 0 );
@@ -278,6 +292,8 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
       outdata = mas_variable_create_text( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "Content-Type", content_type, 0 );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
       outdata = mas_varset_search_variable( outdata, "header", "Content-Type", content_type );
+#elif defined(MAS_USE_VARVEC)
+      outdata = mas_varvec_search_variable( outdata, NULL, "Content-Type", content_type );
 #else
       outdata = mas_varset_vclass_search_variable( outdata, NULL, "Content-Type", content_type );
 #endif
@@ -291,6 +307,8 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
     outdata = mas_variable_create_text( outdata, /* MAS_THREAD_TRANSACTION, */ "header", "ETag", fileinfo->etag, 0 );
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
     outdata = mas_varset_search_variable( outdata, "header", "ETag", fileinfo->etag );
+#elif defined(MAS_USE_VARVEC)
+    outdata = mas_varvec_search_variable( outdata, NULL, "ETag", fileinfo->etag );
 #else
     outdata = mas_varset_vclass_search_variable( outdata, NULL, "ETag", fileinfo->etag );
 #endif
@@ -303,6 +321,9 @@ mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * filein
 #elif defined(MAS_VARSET_VARIABLES_HTTP)
     outdata =
           mas_varset_search_variablef( outdata, "header", "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", fileinfo->filetime );
+#elif defined(MAS_USE_VARVEC)
+    outdata = mas_varvec_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT",
+                                                  fileinfo->filetime );
 #else
     outdata =
           mas_varset_vclass_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT",

@@ -1,6 +1,7 @@
 #ifndef MAS_COMMON_DEFS_H
 #  define MAS_COMMON_DEFS_H
 
+
 /* #define MAS_NOPASS_OPTS */
 
 /* #  ifdef MAS_NOPASS_OPTS                                                                     */

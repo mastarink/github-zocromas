@@ -21,6 +21,7 @@
 #ifdef MAS_OLD_VARIABLES_HTTP
 #  include <mastar/variables/mas_variables.h>
 #else
+#  include <mastar/types/mas_varvec_types.h>
 #  include <mastar/types/mas_varset_types.h>
 /* #  include <mastar/varset/mas_varset_vclass.h> */
 #  include <mastar/varset/mas_varset_vclass_namevalue.h>

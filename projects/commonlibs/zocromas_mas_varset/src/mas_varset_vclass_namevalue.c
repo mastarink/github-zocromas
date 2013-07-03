@@ -1,30 +1,34 @@
-#include <stdlib.h>
-#include <string.h>
+#define MAS_USE_VARVEC
+#ifndef MAS_USE_VARVEC
 
-#include <mastar/wrap/mas_std_def.h>
+#  include <stdlib.h>
+#  include <string.h>
 
-#include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_tools.h>
+#  include <mastar/wrap/mas_std_def.h>
 
-#include <mastar/types/mas_varset_types.h>
-#include "mas_varset_vclass_element.h"
+#  include <mastar/wrap/mas_memory.h>
+#  include <mastar/tools/mas_tools.h>
+
+#  include <mastar/types/mas_varset_types.h>
+#  include "mas_varset_vclass_element.h"
 
 
-#include "mas_varset_vclass_namevalue.h"
+#  include "mas_varset_vclass_namevalue.h"
 
 
 
 static const char *tail_str = "\r\n";
 static size_t tail_len = 2;
 
-#define MAS_TAIL_STR tail_str
-#define MAS_TAIL_LEN tail_len
+#  define MAS_TAIL_STR tail_str
+#  define MAS_TAIL_LEN tail_len
 
 const char *
 mas_varset_vclass_name( mas_varset_class_t * vclass )
 {
   return vclass ? vclass->name : NULL;
 }
+
 const char *
 mas_varset_vclass_variable_get_name_ref( mas_vclass_element_t * var )
 {
@@ -103,3 +107,5 @@ mas_varset_vclass_variable_set_valuef( mas_vclass_element_t * var, mas_xvsnprint
   mas_varset_vclass_variable_set_value_va( var, func, fmt, args );
   va_end( args );
 }
+
+#endif

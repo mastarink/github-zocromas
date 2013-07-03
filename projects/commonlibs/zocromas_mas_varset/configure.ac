@@ -106,7 +106,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_tools zocromas_mas_wrap])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_tools zocromas_mas_wrap zocromas_mas_varvec])
 
 AC_ARG_ENABLE([old_variables],
 	      AC_HELP_STRING([--enable-old-variables],

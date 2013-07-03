@@ -3,8 +3,6 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include <mastar/types/mas_varvec_types.h>
-
 #include "mas_varvec.h"
 
 unsigned long

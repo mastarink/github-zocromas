@@ -1,3 +1,6 @@
+#define MAS_USE_VARVEC
+#ifndef MAS_USE_VARVEC
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -98,3 +101,5 @@ mas_varset_vclass_add_tail( mas_varset_class_t * vclass, const char *vclass_name
   _mas_varset_vclass_add_tail( vclass, tail );
   return vclass;
 }
+
+#endif

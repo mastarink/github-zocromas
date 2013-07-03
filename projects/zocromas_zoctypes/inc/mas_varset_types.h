@@ -22,8 +22,6 @@ typedef struct mas_varset_s
   unsigned long nclasses;
 } mas_varset_t;
 
-typedef size_t( *mas_xvsnprintf_t ) ( char *str, size_t size, const char *format, va_list args );
-
 
 
 #endif

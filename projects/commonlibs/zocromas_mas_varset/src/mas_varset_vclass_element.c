@@ -1,3 +1,6 @@
+#define MAS_USE_VARVEC
+#ifndef MAS_USE_VARVEC
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -88,3 +91,5 @@ mas_varset_vclass_variable_set_element( mas_vclass_element_t * var, size_t offse
     var[offset].iov_base = s;
   }
 }
+
+#endif
