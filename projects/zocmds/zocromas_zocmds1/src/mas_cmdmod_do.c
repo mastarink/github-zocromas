@@ -17,6 +17,9 @@
 
 /* #include "server/inc/mas_server_tools.h" */
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -41,7 +44,7 @@ related:
 /* TODO : 
  FILE *popen(const char *command, const char *mode);
 */
-char *
+static mas_evaluated_t *
 do_cmd( STD_CMD_ARGS )
 {
   int rtot = -1;
@@ -64,7 +67,7 @@ do_cmd( STD_CMD_ARGS )
     }
   }
   mas_free( buf );
-  return s;
+  return mas_evaluated_wrap_pchar( s );
 }
 
 

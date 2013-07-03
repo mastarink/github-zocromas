@@ -40,21 +40,20 @@ related:
 
 
 int
-mas_opts_set_configdir( MAS_PASS_OPTS_DECLARE const char *dirname )
+mas_opts_set_configdir( mas_options_t * popts, const char *dirname )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   char *wdirname = NULL;
 
-  if ( MAS_PASS_OPTS_PREF dir.config )
+  if ( popts->dir.config )
   {
-    mas_free( MAS_PASS_OPTS_PREF dir.config );
-    MAS_PASS_OPTS_PREF dir.config = NULL;
+    mas_free( popts->dir.config );
+    popts->dir.config = NULL;
   }
-  wdirname = MAS_PASS_OPTS_PREF dir.config;
+  wdirname = popts->dir.config;
   if ( !wdirname )
     wdirname = dirname ? mas_strdup( dirname ) : NULL;
   if ( !wdirname )
-    wdirname = MAS_PASS_OPTS_PREF dir.config ? mas_strdup( MAS_PASS_OPTS_PREF dir.config ) : NULL;
+    wdirname = popts->dir.config ? mas_strdup( popts->dir.config ) : NULL;
   if ( !wdirname )
   {
     char *t;
@@ -68,26 +67,24 @@ mas_opts_set_configdir( MAS_PASS_OPTS_DECLARE const char *dirname )
     wdirname = mas_strdup( getenv( "HOME" ) );
     wdirname = mas_strcat_x( wdirname, "/.zocromas/" );
   }
-  if ( MAS_PASS_OPTS_PREF dir.config && *MAS_PASS_OPTS_PREF dir.config
-       && *( MAS_PASS_OPTS_PREF dir.config + strlen( MAS_PASS_OPTS_PREF dir.config ) - 1 ) != '/' )
+  if ( popts->dir.config && *popts->dir.config && *( popts->dir.config + strlen( popts->dir.config ) - 1 ) != '/' )
   {
     wdirname = mas_strcat_x( wdirname, "/" );
   }
-  MAS_PASS_OPTS_PREF dir.config = wdirname;
+  popts->dir.config = wdirname;
 
-  /* FMSG( "setting MAS_PASS_OPTS_PREF dir.config:%s", MAS_PASS_OPTS_PREF dir.config ); */
+  /* FMSG( "setting popts-> dir.config:%s", popts-> dir.config ); */
   return 0;
 }
 
 int
-mas_opts_set_configfilename( MAS_PASS_OPTS_DECLARE const char *filename )
+mas_opts_set_configfilename( mas_options_t * popts, const char *filename )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   char *wfilename = NULL;
 
-  if ( MAS_PASS_OPTS_PREF configfilename )
-    mas_free( MAS_PASS_OPTS_PREF configfilename );
-  MAS_PASS_OPTS_PREF configfilename = NULL;
+  if ( popts->configfilename )
+    mas_free( popts->configfilename );
+  popts->configfilename = NULL;
 
   wfilename = filename ? mas_strdup( filename ) : NULL;
   if ( !wfilename )
@@ -102,32 +99,31 @@ mas_opts_set_configfilename( MAS_PASS_OPTS_DECLARE const char *filename )
   {
     wfilename = mas_strdup( "zocromasrc" );
   }
-  MAS_PASS_OPTS_PREF configfilename = wfilename;
+  popts->configfilename = wfilename;
 
-  /* FMSG( "setting MAS_PASS_OPTS_PREF configfilename:%s", MAS_PASS_OPTS_PREF configfilename ); */
+  /* FMSG( "setting popts-> configfilename:%s", popts-> configfilename ); */
   return 0;
 }
 
 int
-mas_opts_check_dir( MAS_PASS_OPTS_DECLARE1 )
+mas_opts_check_dir( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   struct stat dir_stat;
 
-  if ( !MAS_PASS_OPTS_PREF dir.config || !*MAS_PASS_OPTS_PREF dir.config )
+  if ( !popts->dir.config || !*popts->dir.config )
     IEVALM( r, -1, "(%d)config dir not set", NULL );
-  /* r = stat( MAS_PASS_OPTS_PREF dir.config, &dir_stat ); */
-  IEVALM( r, stat( MAS_PASS_OPTS_PREF dir.config, &dir_stat ), "(%d)no configdir: '%s'", MAS_PASS_OPTS_PREF dir.config );
+  /* r = stat( popts-> dir.config, &dir_stat ); */
+  IEVALM( r, stat( popts->dir.config, &dir_stat ), "(%d)no configdir: '%s'", popts->dir.config );
   /* if ( r < 0 )                                     */
   /* {                                                */
   /*   if ( errno == ENOENT )                         */
   /*   {                                              */
-  /*     EMSG( "no configdir : %s", MAS_PASS_OPTS_PREF dir.config ); */
+  /*     EMSG( "no configdir : %s", popts-> dir.config ); */
   /*   }                                              */
   /*   else                                           */
   /*   {                                              */
-  /*     EMSG( "why? : %s", MAS_PASS_OPTS_PREF dir.config );         */
+  /*     EMSG( "why? : %s", popts-> dir.config );         */
   /*   }                                              */
   /* }                                                */
   /* else                                             */

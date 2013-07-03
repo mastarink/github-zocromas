@@ -11,13 +11,14 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-/* #include "mas_common.h" */
-
 
 /* mas_clients_count */
 #ifdef MAS_USE_SERVER_TOOLS
 #  include "server/inc/mas_server_tools.h"
 #endif
+
+
+#include <mastar/fileinfo/mas_unidata.h>
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>

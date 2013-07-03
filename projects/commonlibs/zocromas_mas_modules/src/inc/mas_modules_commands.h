@@ -3,7 +3,7 @@
 
 #  include <mastar/types/mas_modules_types.h>
 
-char *mas_modules_commands( STD_CMD_ARGS );
+mas_evaluated_t *mas_modules_commands( STD_CMD_ARGS );
 
 #  undef MAS_WEAK
 #endif

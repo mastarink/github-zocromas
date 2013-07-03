@@ -18,6 +18,9 @@
 #  include <mastar/msg/mas_curses.h>
 #endif
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -43,13 +46,13 @@ more:
 
 
 
-char *
+static mas_evaluated_t *
 test_cmd( STD_CMD_ARGS )
 {
-  return mas_strdup( args );
+  return mas_evaluated_wrap_pchar( mas_strdup( args ) );
 }
 
-char *
+static mas_evaluated_t *
 exec_cmd( STD_CMD_ARGS )
 {
   pid_t pid;
@@ -72,10 +75,10 @@ exec_cmd( STD_CMD_ARGS )
   {
     P_ERR;
   }
-  return s;
+  return mas_evaluated_wrap_pchar( s );
 }
 
-char *
+static mas_evaluated_t *
 system_cmd( STD_CMD_ARGS )
 {
   int r = -2;
@@ -158,11 +161,11 @@ system_cmd( STD_CMD_ARGS )
   {
     P_ERR;
   }
-  return s;
+  return mas_evaluated_wrap_pchar( s );
 }
 
 /*==========================================================================================*/
-char *
+static mas_evaluated_t *
 getpwd_cmd( STD_CMD_ARGS )
 {
   char *p = NULL;
@@ -171,10 +174,10 @@ getpwd_cmd( STD_CMD_ARGS )
   p = get_current_dir_name(  );
   r = mas_strdup( p );
   mas_other_free( p );
-  return r;
+  return mas_evaluated_wrap_pchar( r );
 }
 
-char *
+static mas_evaluated_t *
 getcd_cmd( STD_CMD_ARGS )
 {
   char *p = NULL;
@@ -192,7 +195,7 @@ getcd_cmd( STD_CMD_ARGS )
     if ( prcontrol )
       prcontrol->qbin = MSG_BIN_ERROR_IN_COMMAND;
   }
-  return r;
+  return mas_evaluated_wrap_pchar( r );
 }
 
 /*==========================================================================================*/

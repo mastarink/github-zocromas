@@ -55,29 +55,28 @@ more:
 
 
 int
-mas_listeners_start( MAS_PASS_OPTS_DECLARE1 )
+mas_listeners_start( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
-  if ( MAS_PASS_OPTS_PREF nolistener )
+  if ( popts->nolistener )
   {
     MAS_LOG( "stopped run w/o listeners" );
-    sleep( MAS_PASS_OPTS_PREF nolistener );
+    sleep( popts->nolistener );
   }
   else
   {
     MAS_LOG( "to start listeners" );
     lMSG( "to start listeners" );
     HMSG( "LISTENERS START" );
-    for ( unsigned ith = 0; ith < MAS_PASS_OPTS_PREF hostsv.c; ith++ )
+    for ( unsigned ith = 0; ith < popts->hostsv.c; ith++ )
     {
-      if ( MAS_PASS_OPTS_PREF hostsv.v[ith] )
+      if ( popts->hostsv.v[ith] )
       {
-        lMSG( "host %d: '%s'", ith, MAS_PASS_OPTS_PREF hostsv.v[ith] );
-        HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, MAS_PASS_OPTS_PREF hostsv.v[ith], MAS_PASS_OPTS_PREF default_port );
-        MAS_LOG( "to start listener #%d %s", ith + 1, MAS_PASS_OPTS_PREF hostsv.v[ith] );
-        r = mas_listener_start( MAS_PASS_OPTS_PASS MAS_PASS_OPTS_PREF hostsv.v[ith], MAS_PASS_OPTS_PREF default_port );
+        lMSG( "host %d: '%s'", ith, popts->hostsv.v[ith] );
+        HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, popts->hostsv.v[ith], popts->default_port );
+        MAS_LOG( "to start listener #%d %s", ith + 1, popts->hostsv.v[ith] );
+        r = mas_listener_start( popts, popts->hostsv.v[ith], popts->default_port );
       }
       else
       {

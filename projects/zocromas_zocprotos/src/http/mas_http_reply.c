@@ -213,70 +213,81 @@ mas_http_status_code_message( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  const char data[] =
-        "HTTP/1.1 200 OK\n"
-        "Accept-Ranges: bytes\n"
-        "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"
-        "Server: mas-1251337\n"
-        "Content-Length: 358\n"
-        "Content-Type: text/html\n"
-        "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n";
-  size_t datasz = sizeof( data );
+  const mas_evaluated_t data = {.data = "HTTP/1.1 200 OK\n"
+          "Accept-Ranges: bytes\n"
+          "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"
+          "Server: mas-1251337\n"
+          "Content-Length: 358\n"
+          "Content-Type: text/html\n"
+          "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n"
+  };
+  /* const char data[] =                                                                                                            */
+  /*       "HTTP/1.1 200 OK\n"                                                                                                      */
+  /*       "Accept-Ranges: bytes\n"                                                                                                 */
+  /*       "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"                                                                                  */
+  /*       "Server: mas-1251337\n"                                                                                                  */
+  /*       "Content-Length: 358\n"                                                                                                  */
+  /*       "Content-Type: text/html\n"                                                                                              */
+  /*       "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n"; */
+  /* size_t datasz = sizeof( data ); */
 
-  http = mas_proto_http_write( http, data, datasz );
+  http = mas_proto_http_write( http, data.data, strlen( data.data ) + 1 );
   return http;
 }
 
 mas_http_t *
-mas_http_reply( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  char *data;
+  mas_evaluated_t *data;
 
   HMSG( "HTTP REPLY" );
   MAS_LOG( "to write protocol name/version" );
 
-  if ( http )
-    data = mas_fileinfo_data( MAS_PASS_OPTS_PASS http->reply_content );
+  if ( prcontrol && prcontrol->plcontrol )
+  {
+    if ( http )
+      data = mas_fileinfo_data( prcontrol->plcontrol->popts, http->reply_content );
 
 /* moved to fileinfo */
-  /* if ( http )                                     */
-  /*   http = mas_http_make_etag( prcontrol, http ); */
+    /* if ( http )                                     */
+    /*   http = mas_http_make_etag( prcontrol, http ); */
 
-  if ( http && http->status_code == MAS_HTTP_CODE_NONE )
-  {
-    if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
-      http->status_code = MAS_HTTP_CODE_OK;
-    else
-      http->status_code = MAS_HTTP_CODE_NOT_FOUND;
-  }
-  if ( http )
-  {
-    HMSG( "HTTP REPLY status %d", http->status_code );
-  }
-  HMSG( "HTTP HTTP" );
-  if ( http )
-    http = mas_http_make_out_std_headers( prcontrol, http );
-  if ( http )
-  {
-    MAS_LOG( "to write header" );
-    http = mas_proto_http_write_pairs( http, "header" );
-    MAS_LOG( "written %lu", http ? http->written : 0 );
-  }
-  if ( http && http->imethod == MAS_HTTP_METHOD_GET )
-  {
-    size_t datasz;
+    if ( http && http->status_code == MAS_HTTP_CODE_NONE )
+    {
+      if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
+        http->status_code = MAS_HTTP_CODE_OK;
+      else
+        http->status_code = MAS_HTTP_CODE_NOT_FOUND;
+    }
+    if ( http )
+    {
+      HMSG( "HTTP REPLY status %d", http->status_code );
+    }
+    HMSG( "HTTP HTTP" );
+    if ( http )
+      http = mas_http_make_out_std_headers( prcontrol, http );
+    if ( http )
+    {
+      MAS_LOG( "to write header" );
+      http = mas_proto_http_write_pairs( http, "header" );
+      MAS_LOG( "written %lu", http ? http->written : 0 );
+    }
+    if ( http && http->imethod == MAS_HTTP_METHOD_GET )
+    {
+      size_t datasz;
 
-    datasz = mas_fileinfo_data_size( http->reply_content );
-    HMSG( "HTTP write DATA (%lu)", ( unsigned long ) datasz );
+      datasz = mas_fileinfo_data_size( http->reply_content );
+      HMSG( "HTTP write DATA (%lu)", ( unsigned long ) datasz );
 
 
-    MAS_LOG( "to write body %lu [%s]", ( unsigned long ) datasz, datasz < 100 ? data : "..." );
-    /* http = mas_proto_http_write_values( http, "body" ); */
-    /* mas_transaction_write( prcontrol, _mas_fileinfo_data( fileinfo ), mas_fileinfo_data_size( fileinfo ) ); */
+      MAS_LOG( "to write body %lu [%s]", ( unsigned long ) datasz, datasz < 100 ? ( char * ) data->data : "..." );
+      /* http = mas_proto_http_write_values( http, "body" ); */
+      /* mas_transaction_write( prcontrol, _mas_fileinfo_data( fileinfo ), mas_fileinfo_data_size( fileinfo ) ); */
 
-    http = mas_proto_http_write( http, data, datasz );
-    MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
-    HMSG( "HTTP written DATA (%lu)", ( unsigned long ) http ? http->written : 0 );
+      http = mas_proto_http_write( http, data->data, datasz );
+      MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
+      HMSG( "HTTP written DATA (%lu)", ( unsigned long ) http ? http->written : 0 );
+    }
   }
   /* to close connection */
   return http;
@@ -368,7 +379,7 @@ mas_http_make_docroot( mas_rcontrol_t * prcontrol, mas_http_t * http )
 }
 
 mas_http_t *
-mas_http_make_data_auto( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
+mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   const char *fmt = NULL;
 
@@ -405,7 +416,9 @@ mas_http_make_data_auto( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_h
         http->reply_content->filetime = 0;
         /* http->reply_content->icontent_type = MAS_CONTENT_NONE; */
       }
-      _mas_fileinfo_link_dataz( MAS_PASS_OPTS_PASS http->reply_content, text );
+      _mas_fileinfo_link_dataz( prcontrol
+                                && prcontrol->plcontrol ? prcontrol->plcontrol->popts : NULL, http->reply_content,
+                                mas_evaluated_wrap_pchar( text ) );
       /* mas_free( text ); */
     }
     /* http = mas_http_make_body( prcontrol, http, fmt, http->status_code, sm, sm, mas_proto_http_method_name( http ), http->URI ); */

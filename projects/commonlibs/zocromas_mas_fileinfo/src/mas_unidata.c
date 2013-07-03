@@ -21,7 +21,58 @@ related:
   mas_fileinfo_object.c
 */
 
-char *
+
+mas_evaluated_t *
+mas_evaluated_create( void )
+{
+  mas_evaluated_t *evd = NULL;
+
+  evd = mas_malloc( sizeof( mas_evaluated_t ) );
+  memset( evd, 0, sizeof( mas_evaluated_t ) );
+  return evd;
+}
+
+void
+mas_evaluated_delete( mas_evaluated_t * evd )
+{
+  if ( evd )
+  {
+    if ( evd->data )
+    {
+      switch ( evd->type )
+      {
+      case MAS_CMD_CONST_PCHAR:
+        break;
+      default:
+        mas_free( evd->data );
+        break;
+      }
+    }
+    mas_free( evd );
+  }
+}
+mas_evaluated_t *
+mas_evaluated_wrap_pchar( const char *sanswer )
+{
+  return mas_evaluated_wrap_typed( ( void * ) sanswer, MAS_CMD_PCHAR );
+}
+
+mas_evaluated_t *
+mas_evaluated_wrap_typed( void *sanswer, mas_cmdtype_t cmdtype )
+{
+  mas_evaluated_t *answer = NULL;
+
+  if ( sanswer )
+  {
+    answer = mas_evaluated_create(  );
+    answer->data = sanswer;
+    answer->type = cmdtype;
+  }
+  return answer;
+}
+
+
+mas_evaluated_t *
 mas_unidata_data( mas_unidata_t * ud )
 {
   return ud ? ud->data : NULL;
@@ -68,15 +119,17 @@ mas_unidata_delete( mas_unidata_t * ud )
 {
   if ( ud )
   {
-    if ( ud->data )
-      mas_free( ud->data );
+    /* if ( ud->data )         */
+    /*   mas_free( ud->data ); */
+    mas_evaluated_delete( ud->data );
+
     ud->data = NULL;
     mas_free( ud );
   }
 }
 
 void
-mas_unidata_link_data( mas_unidata_t * udata, char *data, size_t size )
+mas_unidata_link_data( mas_unidata_t * udata, mas_evaluated_t * data, size_t size )
 {
   udata->size = size;
   udata->data = data;

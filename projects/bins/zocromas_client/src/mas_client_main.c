@@ -1,4 +1,3 @@
-#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -12,6 +11,7 @@
 #include <mastar/types/mas_opts_types.h>
 
 extern mas_control_t ctrl;
+
 /* #include <mastar/init/mas_opts_common.h> */
 
 #include <mastar/init/mas_init.h>
@@ -46,7 +46,7 @@ more:
 int
 main( int argc, char *argv[], char *env[] )
 {
-  MAS_PASS_OPTS_DECL_PREF;
+  extern mas_options_t gopts;
   int r = 0;
 
   WMSG( "MAIN" );
@@ -56,23 +56,25 @@ main( int argc, char *argv[], char *env[] )
 #endif
 
   /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
-  IEVAL( r, mas_init_plus( MAS_PASS_OPTS_PASS argc, argv, env, mas_client_init_readline, NULL ) );
-  for ( int ia = MAS_PASS_OPTS_PREF hostsv.c; r >= 0 && ia > 0; ia-- )
+  IEVAL( r, mas_init_plus( &gopts, argc, argv, env, mas_client_init_readline, NULL ) );
+  for ( int ia = gopts.hostsv.c; r >= 0 && ia > 0; ia-- )
   {
-      int maxit = 0;
-    /* mas_client( MAS_PASS_OPTS_PREF hostsv.v[ia - 1] ); */
-    if (!(r<0))do
-    {
-      r = 0;
-      IEVAL( r, mas_client( MAS_PASS_OPTS_PREF hostsv.v[ia - 1] ) );
-      if ( r < 0 && ctrl.restart_cnt > 0 )
+    int maxit = 0;
+
+    /* mas_client( gopts. hostsv.v[ia - 1] ); */
+    if ( !( r < 0 ) )
+      do
       {
-        HMSG( "RESTART %s DELAY %10.5fs", MAS_PASS_OPTS_PREF argvv.v[0], MAS_PASS_OPTS_PREF restart_sleep );
-        mas_nanosleep( MAS_PASS_OPTS_PREF restart_sleep );
+        r = 0;
+        IEVAL( r, mas_client( gopts.hostsv.v[ia - 1] ) );
+        if ( r < 0 && ctrl.restart_cnt > 0 )
+        {
+          HMSG( "RESTART %s DELAY %10.5fs", gopts.argvv.v[0], gopts.restart_sleep );
+          mas_nanosleep( gopts.restart_sleep );
+        }
+        maxit++;
       }
-      maxit++;
-    }
-    while ( r < 0 && ctrl.restart_cnt && maxit < 25 );
+      while ( r < 0 && ctrl.restart_cnt && maxit < 25 );
 
     break;
   }

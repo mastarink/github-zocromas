@@ -3,35 +3,35 @@
 
 /* #define MAS_NOPASS_OPTS */
 
-#  ifdef MAS_NOPASS_OPTS
-#    define  MAS_PASS_OPTS_DECLARE mas_options_t * _popts,
-#    define  MAS_PASS_OPTS_DECLARE1 mas_options_t * _popts
-#    define MAS_PASS_OPTS_DCLOFF 1
-#    define MAS_PASS_OPTS_PASS NULL,
-#    define MAS_PASS_OPTS_PASS1 NULL
-#    define MAS_PASS_OPTS_DECL_PREF extern mas_options_t gopts __attribute__ ( ( unused ) )
-#    define MAS_PASS_OPTS_DECL_GPREF extern mas_options_t gopts __attribute__ ( ( unused ) )
-#    define MAS_PASS_OPTS_REF &gopts
-#    define MAS_PASS_OPTS_PREF gopts.
-#    define MAS_PASS_OPTS_GPREF gopts.
-#    define MAS_PASS_OPTS_DECL_GREF
-#    define MAS_PASS_OPTS_GREF NULL,
-#    define MAS_PASS_OPTS_GREF1 NULL
-#  else
-#    define  MAS_PASS_OPTS_DECLARE mas_options_t * popts,
-#    define  MAS_PASS_OPTS_DECLARE1 mas_options_t * popts
-#    define MAS_PASS_OPTS_DCLOFF 1
-#    define MAS_PASS_OPTS_PASS popts,
-#    define MAS_PASS_OPTS_PASS1 popts
-#    define MAS_PASS_OPTS_DECL_PREF
-#    define MAS_PASS_OPTS_DECL_GPREF extern mas_options_t gopts __attribute__ ( ( unused ) )
-#    define MAS_PASS_OPTS_REF popts
-#    define MAS_PASS_OPTS_PREF popts->
-#    define MAS_PASS_OPTS_GPREF gopts.
-#    define MAS_PASS_OPTS_DECL_GREF extern mas_options_t gopts __attribute__ ( ( unused ) )
-#    define MAS_PASS_OPTS_GREF &gopts,
-#    define MAS_PASS_OPTS_GREF1 &gopts
-#  endif
+/* #  ifdef MAS_NOPASS_OPTS                                                                     */
+/* #    define  MAS_PASS_OPTS_DECLARE mas_options_t * _popts,                                   */
+/* #    define  MAS_PASS_OPTS_DECLARE1 mas_options_t * _popts                                   */
+/* #    define MAS_PASS_OPTS_DCLOFF 1                                                           */
+/* #    define MAS_PASS_OPTS_PASS NULL,                                                         */
+/* #    define MAS_PASS_OPTS_PASS1 NULL                                                         */
+/* #    define MAS_PASS_OPTS_DECL_PREF extern mas_options_t gopts __attribute__ ( ( unused ) )  */
+/* #    define MAS_PASS_OPTS_DECL_GPREF extern mas_options_t gopts __attribute__ ( ( unused ) ) */
+/* #    define MAS_PASS_OPTS_REF &gopts                                                         */
+/* #    define MAS_PASS_OPTS_PREF gopts.                                                        */
+/* #    define MAS_PASS_OPTS_GPREF gopts.                                                       */
+/* #    define MAS_PASS_OPTS_DECL_GREF                                                          */
+/* #    define MAS_PASS_OPTS_GREF NULL,                                                         */
+/* #    define MAS_PASS_OPTS_GREF1 NULL                                                         */
+/* #  else                                                                                      */
+/* #    define  MAS_PASS_OPTS_DECLARE mas_options_t * popts,                                    */
+/* #    define  MAS_PASS_OPTS_DECLARE1 mas_options_t * popts                                    */
+/* #    define MAS_PASS_OPTS_DCLOFF 1                                                           */
+/* #    define MAS_PASS_OPTS_PASS popts,                                                        */
+/* #    define MAS_PASS_OPTS_PASS1 popts                                                        */
+/* #    define MAS_PASS_OPTS_DECL_PREF                                                          */
+/* #    define MAS_PASS_OPTS_DECL_GPREF extern mas_options_t gopts __attribute__ ( ( unused ) ) */
+/* #    define MAS_PASS_OPTS_REF popts                                                          */
+/* #    define MAS_PASS_OPTS_PREF popts->                                                       */
+/* #    define MAS_PASS_OPTS_GPREF gopts.                                                       */
+/* #    define MAS_PASS_OPTS_DECL_GREF extern mas_options_t gopts __attribute__ ( ( unused ) )  */
+/* #    define MAS_PASS_OPTS_GREF &gopts,                                                       */
+/* #    define MAS_PASS_OPTS_GREF1 &gopts                                                       */
+/* #  endif                                                                                     */
 
 
 

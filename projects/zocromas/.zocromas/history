@@ -195,3 +195,16 @@ exit
 quit
 server quit
 server exit
+server info
+bye
+server info
+bye
+server info
+bye
+server quit
+server exit
+restart
+server restart
+server info
+server restart
+reconnect

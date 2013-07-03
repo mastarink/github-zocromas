@@ -10,6 +10,9 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -36,7 +39,7 @@ related:
 */
 
 
-static char *
+static mas_evaluated_t *
 info_cmd( STD_CMD_ARGS )
 {
   char *rs;
@@ -51,7 +54,7 @@ info_cmd( STD_CMD_ARGS )
             ( memory_allocated_cnt - memory_freed_cnt ), memory_balance, memory_balance_cnt );
   rs = mas_strdup( buf );
   mas_free( buf );
-  return rs;
+  return mas_evaluated_wrap_pchar( rs );
 }
 
 mas_cmd_t subcmdtable[] = {

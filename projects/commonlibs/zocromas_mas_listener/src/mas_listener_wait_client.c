@@ -86,7 +86,7 @@ mas_listener_find_free_transaction__( mas_lcontrol_t * plcontrol )
 }
 
 int
-mas_listener_wait_client( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
+mas_listener_wait_client( mas_lcontrol_t * plcontrol )
 {
   int r = 0, ro = 0, rn = 0;
   mas_rcontrol_t *prcontrol = NULL;
@@ -146,9 +146,9 @@ mas_listener_wait_client( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
       plcontrol->h.status = MAS_STATUS_WORK;
 #ifdef MAS_TR_PERSIST
-      r = mas_transaction_start( MAS_PASS_OPTS_PASS plcontrol, 0 /* persistent tr. */  );
+      r = mas_transaction_start( plcontrol, 0 /* persistent tr. */  );
 #else
-      r = mas_transaction_start( MAS_PASS_OPTS_PASS plcontrol );
+      r = mas_transaction_start( plcontrol );
 #endif
       MAS_LOG( "transaction started r:%d", r );
     }

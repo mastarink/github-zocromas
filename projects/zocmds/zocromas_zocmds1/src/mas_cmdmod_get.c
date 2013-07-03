@@ -21,6 +21,9 @@
 #  include "listener/inc/mas_listener_control.h"
 #endif
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -45,10 +48,9 @@ related:
 
 
 
-static char *
+static mas_evaluated_t *
 opts_cmd( STD_CMD_ARGS )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   mas_options_t *result = NULL;
 
 #ifdef cMSG
@@ -56,15 +58,15 @@ opts_cmd( STD_CMD_ARGS )
 #endif
   if ( prcontrol )
     prcontrol->qbin = MSG_BIN_OPTS;
-  result = mas_malloc( sizeof( *( MAS_PASS_OPTS_REF ) ) );
-  *result = *( MAS_PASS_OPTS_REF );
+  result = mas_malloc( sizeof( *( popts ) ) );
+  *result = *( popts );
 #ifdef cMSG
   cMSG( "opts:%x", ( *( unsigned int * ) result ) );
 #endif
-  return ( char * ) result;
+  return mas_evaluated_wrap_pchar( ( char * ) result );
 }
 
-static char *
+static mas_evaluated_t *
 env_cmd( STD_CMD_ARGS )
 {
   char *val = NULL;
@@ -102,26 +104,26 @@ env_cmd( STD_CMD_ARGS )
       }
     }
   }
-  return val;
+  return mas_evaluated_wrap_pchar( val );
 }
 
-static char *
+static mas_evaluated_t *
 date_cmd( STD_CMD_ARGS )
 {
   char outstr[64];
 
   strftime( outstr, sizeof( outstr ), "%a, %d %b %Y %T %z", mas_xlocaltime(  ) );
-  return mas_strdup( outstr );
+  return mas_evaluated_wrap_pchar( mas_strdup( outstr ) );
 }
 
-static char *
+static mas_evaluated_t *
 args_cmd( STD_CMD_ARGS )
 {
-  return mas_argv_string( ctrl.launchervv.c, ctrl.launchervv.v, 1 );
+  return mas_evaluated_wrap_pchar( mas_argv_string( ctrl.launchervv.c, ctrl.launchervv.v, 1 ) );
 }
 
 #ifdef MAS_USE_VARIABLES
-static char *
+static mas_evaluated_t *
 var_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
@@ -148,21 +150,21 @@ var_cmd( STD_CMD_ARGS )
         result = mas_strdup( var->value );
     }
   }
-  return result;
+  return mas_evaluated_wrap_pchar( result );
 }
 #endif
 
-static char *
+static mas_evaluated_t *
 uuid_cmd( STD_CMD_ARGS )
 {
   char *uuid = NULL;
 
   if ( prcontrol && prcontrol->uuid )
     uuid = mas_strdup( prcontrol->uuid );
-  return uuid;
+  return mas_evaluated_wrap_pchar( uuid );
 }
 
-static char *
+static mas_evaluated_t *
 version_cmd( STD_CMD_ARGS )
 {
   char *s;
@@ -170,7 +172,7 @@ version_cmd( STD_CMD_ARGS )
   s = mas_strdup( MAS_C_DATE );
   s = mas_strcat_x( s, " / " );
   s = mas_strcat_x( s, PACKAGE_VERSION );
-  return s;
+  return mas_evaluated_wrap_pchar( s );
 }
 
 mas_cmd_t subcmdtable[] = {

@@ -61,13 +61,12 @@ mas_opts_set_argv( int *pargc, char ***pargv, const char *s )
 }
 
 static void
-mas_opts_add_command( MAS_PASS_OPTS_DECLARE const char *s )
+mas_opts_add_command( mas_options_t * popts, const char *s )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   const char *se;
 
   se = mas_find_eq_value( s );
-  MAS_PASS_OPTS_PREF commandsv.c = mas_add_argv_arg( MAS_PASS_OPTS_PREF commandsv.c, &MAS_PASS_OPTS_PREF commandsv.v, se );
+  popts->commandsv.c = mas_add_argv_arg( popts->commandsv.c, &popts->commandsv.v, se );
 }
 
 static unsigned
@@ -84,11 +83,11 @@ mas_opts_atou( const char *s )
 
 
 
-static mas_options_t ___opts;
 
 
 mas_option_parse_t opt_table[] = {
-  {.name = "env_optsname",.type = MAS_OPT_TYPE_STR,.offset = offsetof( mas_options_t, env_optsname ),.size = sizeof( ___opts.env_optsname )}
+  {.name = "env_optsname",.type = MAS_OPT_TYPE_STR,.offset = offsetof( mas_options_t, env_optsname ),.size =
+   sizeof( ( ( mas_options_t * ) NULL )->env_optsname )}
   ,
   {.name = "env_hostname",.type = MAS_OPT_TYPE_STR,.offset = offsetof( mas_options_t, env_hostname )}
   ,
@@ -113,11 +112,10 @@ mas_option_parse_t opt_table[] = {
 };
 
 int
-mas_opts_restore_flags( MAS_PASS_OPTS_DECLARE const char *s )
+mas_opts_restore_flags( mas_options_t * popts, const char *s )
 {
-  MAS_PASS_OPTS_DECL_PREF;
-#define OPT_FLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) MAS_PASS_OPTS_PREF name = ( mas_opts_atou(val) )
-#define OPT_NOFLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) MAS_PASS_OPTS_PREF no##name = !( mas_opts_atou(val) )
+#define OPT_FLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) popts-> name = ( mas_opts_atou(val) )
+#define OPT_NOFLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) popts-> no##name = !( mas_opts_atou(val) )
 
   /* don't remove this 'if' */
   if ( 0 /* 0 == mas_strcmp2( s, "message=" ) */  )
@@ -144,114 +142,109 @@ mas_opts_restore_flags( MAS_PASS_OPTS_DECLARE const char *s )
 }
 
 int
-mas_opts_restore_new_section( MAS_PASS_OPTS_DECLARE const char *section )
+mas_opts_restore_new_section( mas_options_t * popts, const char *section )
 {
-  MAS_PASS_OPTS_DECL_PREF;
-  if ( MAS_PASS_OPTS_PREF protosv.v && 0 == strcmp( section, "protos" ) )
+  if ( popts->protosv.v && 0 == strcmp( section, "protos" ) )
   {
-    mas_del_argv( MAS_PASS_OPTS_PREF protosv.c, MAS_PASS_OPTS_PREF protosv.v, 0 );
-    MAS_PASS_OPTS_PREF protosv.c = 0;
-    MAS_PASS_OPTS_PREF protosv.v = NULL;
+    mas_del_argv( popts->protosv.c, popts->protosv.v, 0 );
+    popts->protosv.c = 0;
+    popts->protosv.v = NULL;
   }
-  else if ( MAS_PASS_OPTS_PREF commandsv.v && 0 == strcmp( section, "commands" ) )
+  else if ( popts->commandsv.v && 0 == strcmp( section, "commands" ) )
   {
-    mas_del_argv( MAS_PASS_OPTS_PREF commandsv.c, MAS_PASS_OPTS_PREF commandsv.v, 0 );
-    MAS_PASS_OPTS_PREF commandsv.c = 0;
-    MAS_PASS_OPTS_PREF commandsv.v = NULL;
+    mas_del_argv( popts->commandsv.c, popts->commandsv.v, 0 );
+    popts->commandsv.c = 0;
+    popts->commandsv.v = NULL;
   }
   return 0;
 }
 
 int
-mas_opts_restore_at_section( MAS_PASS_OPTS_DECLARE const char *section, const char *s )
+mas_opts_restore_at_section( mas_options_t * popts, const char *section, const char *s )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
   if ( 0 == mas_strcmp2( s, "host=" ) )
   {
     if ( 0 == strcmp( section, ctrl.is_client ? "hosts" : "listen" ) )
     {
-      /* mMSG( "%d. +HOST :%s", MAS_PASS_OPTS_PREF hostsv.c, s ); */
-      IEVAL( r, mas_opts_set_argv( &MAS_PASS_OPTS_PREF hostsv.c, &MAS_PASS_OPTS_PREF hostsv.v, s ) );
+      /* mMSG( "%d. +HOST :%s", popts-> hostsv.c, s ); */
+      IEVAL( r, mas_opts_set_argv( &popts->hostsv.c, &popts->hostsv.v, s ) );
     }
     else
     {
-      mMSG( "%d. HOST :%s @ [%s] %d", MAS_PASS_OPTS_PREF hostsv.c, s, section, ctrl.is_client );
+      mMSG( "%d. HOST :%s @ [%s] %d", popts->hostsv.c, s, section, ctrl.is_client );
     }
   }
   else if ( 0 == mas_strcmp2( s, "proto=" ) )
   {
     if ( 0 == strcmp( section, "protos" ) )
     {
-      /* mMSG( "%d. +PROTO :%s", MAS_PASS_OPTS_PREF protosv.c, s ); */
-      IEVAL( r, mas_opts_set_argv( &MAS_PASS_OPTS_PREF protosv.c, &MAS_PASS_OPTS_PREF protosv.v, s ) );
+      /* mMSG( "%d. +PROTO :%s", popts-> protosv.c, s ); */
+      IEVAL( r, mas_opts_set_argv( &popts->protosv.c, &popts->protosv.v, s ) );
     }
     else
     {
-      mMSG( "%d. PROTO :%s @ [%s]", MAS_PASS_OPTS_PREF protosv.c, s, section );
+      mMSG( "%d. PROTO :%s @ [%s]", popts->protosv.c, s, section );
     }
   }
   else if ( 0 == mas_strcmp2( s, "command=" ) && 0 == strcmp( section, "commands" ) )
-    mas_opts_add_command( MAS_PASS_OPTS_PASS s );
-  /* for ( int ih = 0; ih < MAS_PASS_OPTS_PREF commandsv.c; ih++ ) */
+    mas_opts_add_command( popts, s );
+  /* for ( int ih = 0; ih < popts-> commandsv.c; ih++ ) */
   /* {                                                */
-  /*   mMSG( "command:%s", MAS_PASS_OPTS_PREF commandsv.v[ih] );       */
+  /*   mMSG( "command:%s", popts-> commandsv.v[ih] );       */
   /* }                                                */
   return r;
 }
 
 int
-mas_opts_restore_relative( MAS_PASS_OPTS_DECLARE const char *filename )
+mas_opts_restore_relative( mas_options_t * popts, const char *filename )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   char *fpath = NULL;
 
-  fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.config );
+  fpath = mas_strdup( popts->dir.config );
   fpath = mas_strcat_x( fpath, "/" );
   fpath = mas_strcat_x( fpath, filename );
-  r = mas_opts_restore_path( MAS_PASS_OPTS_PASS fpath );
+  r = mas_opts_restore_path( popts, fpath );
   mas_free( fpath );
   return r;
 }
 
 int
-mas_opts_restore_path( MAS_PASS_OPTS_DECLARE const char *fpath )
+mas_opts_restore_path( mas_options_t * popts, const char *fpath )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
-  r = _mas_opts_restore_path( MAS_PASS_OPTS_PASS fpath, MAS_PASS_OPTS_REF, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
+  r = _mas_opts_restore_path( popts, fpath, popts, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
                               __new_section_func, __at_section_func, __unknown_opt_func );
   ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
   return r;
 }
 
 int
-_mas_opts_restore( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename )
+_mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filename )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
-  if ( MAS_PASS_OPTS_PREF dir.config )
+  if ( popts->dir.config )
   {
-    mas_free( MAS_PASS_OPTS_PREF dir.config );
-    MAS_PASS_OPTS_PREF dir.config = NULL;
+    mas_free( popts->dir.config );
+    popts->dir.config = NULL;
   }
-  IEVALM( r, mas_opts_set_configdir( MAS_PASS_OPTS_PASS dirname ), "(%d)set config dir: '%s'", dirname );
-  IEVALM( r, mas_opts_set_configfilename( MAS_PASS_OPTS_PASS filename ), "(%d)opts file:'%s'", filename );
-  IEVALM( r, mas_opts_check_dir( MAS_PASS_OPTS_PASS1 ), "(%d)config dir: '%s'", MAS_PASS_OPTS_PREF dir.config );
+  IEVALM( r, mas_opts_set_configdir( popts, dirname ), "(%d)set config dir: '%s'", dirname );
+  IEVALM( r, mas_opts_set_configfilename( popts, filename ), "(%d)opts file:'%s'", filename );
+  IEVALM( r, mas_opts_check_dir( popts ), "(%d)config dir: '%s'", popts->dir.config );
   if ( r == 0 )
   {
-    mas_opts_restore_relative( MAS_PASS_OPTS_PASS MAS_PASS_OPTS_PREF configfilename );
-    HMSG( "RESTORE OPT nomessages: %d", MAS_PASS_OPTS_PREF nomessages );
+    mas_opts_restore_relative( popts, popts->configfilename );
+    HMSG( "RESTORE OPT nomessages: %d", popts->nomessages );
   }
   return r;
 }
 
 int
-mas_opts_restore_user( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename )
+mas_opts_restore_user( mas_options_t * popts, const char *dirname, const char *filename )
 {
   int r = 0;
 
@@ -261,7 +254,7 @@ mas_opts_restore_user( MAS_PASS_OPTS_DECLARE const char *dirname, const char *fi
 
     /* mMSG( "FILENAME: %s", filename ); */
     fn = mas_strdup( filename );
-    IEVAL( r, _mas_opts_restore( MAS_PASS_OPTS_PASS dirname, fn ) );
+    IEVAL( r, _mas_opts_restore( popts, dirname, fn ) );
     /* mMSG( "BBB: %s - %d", getenv( "MAS_PID_AT_BASHRC" ), r ); */
     mas_free( fn );
   }
@@ -269,7 +262,7 @@ mas_opts_restore_user( MAS_PASS_OPTS_DECLARE const char *dirname, const char *fi
 }
 
 int
-_mas_opts_restore_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename, va_list args )
+_mas_opts_restore_plus( mas_options_t * popts, const char *dirname, const char *filename, va_list args )
 {
   int r = 0;
   char *s = NULL;
@@ -292,7 +285,7 @@ _mas_opts_restore_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const char *f
     if ( x )
     {
       /* HMSG( "OPTS from:%s", fn ); */
-      IEVAL( r, _mas_opts_restore( MAS_PASS_OPTS_PASS dirname, fn ) );
+      IEVAL( r, _mas_opts_restore( popts, dirname, fn ) );
     }
     mas_free( fn );
   }
@@ -304,13 +297,13 @@ _mas_opts_restore_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const char *f
 }
 
 int
-mas_opts_restore_user_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const char *filename, ... )
+mas_opts_restore_user_plus( mas_options_t * popts, const char *dirname, const char *filename, ... )
 {
   int r = 0;
   va_list args;
 
   va_start( args, filename );
-  IEVAL( r, _mas_opts_restore_plus( MAS_PASS_OPTS_PASS dirname, filename, args ) );
+  IEVAL( r, _mas_opts_restore_plus( popts, dirname, filename, args ) );
   va_end( args );
   return r;
 }
@@ -318,7 +311,7 @@ mas_opts_restore_user_plus( MAS_PASS_OPTS_DECLARE const char *dirname, const cha
 #define XSTR(s) STR(s)
 #define STR(s) #s
 int
-mas_opts_restore_zero( MAS_PASS_OPTS_DECLARE const char *filename )
+mas_opts_restore_zero( mas_options_t * popts, const char *filename )
 {
   int r = 0;
   char *dir;
@@ -337,7 +330,7 @@ mas_opts_restore_zero( MAS_PASS_OPTS_DECLARE const char *filename )
   /*   while ( ( p = strchr( dir + l, '_' ) ) ) */
   /*     *p = '/';                              */
   /* }                                          */
-  IEVAL( r, _mas_opts_restore( MAS_PASS_OPTS_PASS dir, filename ) );
+  IEVAL( r, _mas_opts_restore( popts, dir, filename ) );
   mas_free( dir );
   return r;
 }

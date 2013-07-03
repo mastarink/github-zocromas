@@ -29,7 +29,7 @@ typedef struct mas_lcontrol_s
 
   mas_rcontrol_list_head_t *transaction_controls_list;
 
-  /* const struct mas_options_s *popts; */
+  const struct mas_options_s *popts;
 
   char *host;
   size_t hostlen;

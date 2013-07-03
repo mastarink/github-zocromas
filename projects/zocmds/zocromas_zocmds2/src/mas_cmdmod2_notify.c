@@ -67,7 +67,7 @@ __attribute__ ( ( destructor ) )
   /* HMSG( "NOTIFY UNINIT done" ); */
 }
 
-static char *
+static mas_evaluated_t *
 msg_cmd( STD_CMD_ARGS )
 {
   cMSG( ">>[%s]<<\n", args );
@@ -87,7 +87,7 @@ static NotifyNotification *notif = NULL;
 /*   notif = NULL;                               */
 /* }                                             */
 
-static char *
+static mas_evaluated_t *
 msg_nt( STD_CMD_ARGS )
 {
   GError *error = NULL;
@@ -146,7 +146,7 @@ msg_nt( STD_CMD_ARGS )
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 msg_test( STD_CMD_ARGS )
 {
   NotifyNotification *notify;

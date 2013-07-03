@@ -21,9 +21,9 @@ related:
 */
 
 #  ifdef MAS_TR_PERSIST
-int mas_transaction_start( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol, unsigned persistent_transaction );
+int mas_transaction_start( mas_lcontrol_t * plcontrol, unsigned persistent_transaction );
 #  else
-int mas_transaction_start( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol );
+int mas_transaction_start( mas_lcontrol_t * plcontrol );
 #  endif
 int mas_transaction_cancel( mas_rcontrol_t * prcontrol );
 

@@ -13,6 +13,7 @@ extern mas_control_t ctrl;
 
 #include <mastar/types/mas_opts_types.h>
 
+#include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/modules/mas_modules_commands_eval.h>
 
 #include <mastar/msg/mas_msg_def.h>
@@ -20,12 +21,11 @@ extern mas_control_t ctrl;
 #include <mastar/tools/mas_tools.h>
 #include <mastar/log/mas_log.h>
 
-/* #include <mastar/channel/mas_channel_object.h> */
-/* #include <mastar/channel/mas_channel_open.h> */
 #include <mastar/channel/mas_channel_buffer.h>
 #include <mastar/channel/mas_channel.h>
 
 #include <mastar/messageio/mas_message_io.h>
+
 
 
 #include <mastar/types/mas_message_types.h>
@@ -66,13 +66,13 @@ do_exit_server( mas_rcontrol_t * prcontrol )
 }
 
 static int
-mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const char *question, mas_header_t * pheader )
+mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *question, mas_header_t * pheader )
 {
   int r = -1;
-  char *answer = NULL;
+  mas_evaluated_t *answer = NULL;
 
   prcontrol->qbin = MSG_BIN_NONE;
-  answer = mas_evaluate_transaction_command( MAS_PASS_OPTS_PASS prcontrol, question );
+  answer = mas_evaluate_transaction_command( prcontrol, question );
   tMSG( "B(%d) Q(%d) SL(%d)", prcontrol->qbin, ctrl.do_exit, ctrl.stop_listeners );
   if ( ctrl.do_exit )
   {
@@ -88,9 +88,9 @@ mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * pr
   /*                                   prcontrol, NULL ) ) )                                                              */
   if ( MAS_VALID_ANSWER( answer ) )
   {
-    HMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer );
+    HMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer ? ( char * ) answer->data : NULL );
     tMSG( "%s%ssign %s;answer is %s (%s)", pheader->binary ? "bin;" : "", pheader->new_opts ? "new opts;" : "",
-          pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer ? "+" : "-" );
+          pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer && answer->data ? "+" : "-" );
     if ( pheader->bad )
     {
       r = -2;
@@ -99,8 +99,8 @@ mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * pr
     else
     {
       if ( pheader && MAS_VALID_ANSWER( answer ) && !pheader->binary )
-        pheader->len = strlen( answer ) + 1;
-      r = mas_channel_write_message( prcontrol->h.pchannel, answer, pheader );
+        pheader->len = strlen( ( char * ) answer->data ) + 1;
+      r = mas_channel_write_message( prcontrol->h.pchannel, answer->data, pheader );
       /* EMSG( "ANSWER: %d => %s", r, answer ); */
       if ( r < 0 )
       {
@@ -108,12 +108,13 @@ mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * pr
         EMSG( "r:%d", r );
       }
     }
-    mas_free( answer );
+    /* mas_free( answer ); */
+    mas_evaluated_delete( answer );
     answer = NULL;
   }
   else
   {
-    if ( answer && pheader )
+    if ( answer && answer->data && pheader )
       pheader->binary = MSG_BIN_UNKNOWN_COMMAND;
     r = mas_channel_write_message( prcontrol->h.pchannel, NULL, pheader );
     HMSG( "WRITTEN %d", r );
@@ -138,7 +139,7 @@ mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * pr
 /* }                                                                                                                */
 
 int
-mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *buffer_void )
+mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_desc, const void *buffer_void )
 {
   int r = -1;
 
@@ -216,7 +217,7 @@ mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_transactio
         else
         {
           tMSG( "q for e & a :%s", question );
-          r = mas_proto_xcromas_evaluate_and_answer( MAS_PASS_OPTS_PASS prcontrol, question, &header_copy );
+          r = mas_proto_xcromas_evaluate_and_answer( prcontrol, question, &header_copy );
           tMSG( "e & a :%d", r );
         }
       }

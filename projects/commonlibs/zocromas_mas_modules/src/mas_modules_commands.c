@@ -25,6 +25,7 @@
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
+#include <mastar/fileinfo/mas_unidata.h>
 
 #include "mas_modules_commands_eval.h"
 #include "mas_modules_commands.h"
@@ -105,10 +106,12 @@ mas_modules_lookup_question( const char *ownerlib_name, mas_cmd_t * cmdtable, co
 }
 
 
-char *
+mas_evaluated_t *
 mas_modules_commands( STD_CMD_ARGS )
 {
-  char *answer = NULL;
+  /* char *sanswer = NULL; */
+  mas_evaluated_t *answer = NULL;
+
   static mas_cmd_t def_cmd = { 1, "unknown", NULL, NULL, 1 };
   mas_cmd_t *found = NULL;
 
@@ -147,7 +150,9 @@ mas_modules_commands( STD_CMD_ARGS )
         prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
       EMSG( "NOT found cmd '%s'", question );
       MAS_LOG( "NOT found cmd '%s'", question );
-      answer = mas_strdup( question );
+
+      answer = mas_evaluated_create(  );
+      answer->data = mas_strdup( question );
     }
     else if ( found->only_level && found->only_level != level )
     {
@@ -155,14 +160,16 @@ mas_modules_commands( STD_CMD_ARGS )
         prcontrol->qbin = MSG_BIN_UNKNOWN_COMMAND;
       EMSG( "NOT found @ level %u / %u cmd '%s'", level, found->only_level, question );
       MAS_LOG( "NOT found @ level %u / %u cmd '%s'", level, found->only_level, question );
-      answer = mas_strdup( question );
+
+      answer = mas_evaluated_create(  );
+      answer->data = mas_strdup( question );
     }
     else
     {
       tMSG( "evaluating %s ( %s )", question, args );
       MAS_LOG( "evaluating %s ( %s )", question, args );
       WMSG( "EVAL FOUND %s.%s", this_command->libname, found->name );
-      answer = mas_evaluate_cmd( MAS_PASS_OPTS_PASS 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
+      answer = mas_evaluate_cmd( popts, 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
     }
   }
   else

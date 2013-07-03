@@ -1,4 +1,3 @@
-#define MAS_NOPASS_OPTS
 #define MAS_MAX_INT_1 2
 #define MAS_MAX_INT_2 10
 #include <mastar/wrap/mas_std_def.h>
@@ -154,8 +153,9 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
-  MAS_PASS_OPTS_DECL_PREF;
-  mas_destroy_client( MAS_PASS_OPTS_REF );
+  extern mas_options_t gopts;
+
+  mas_destroy_client( &gopts );
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 

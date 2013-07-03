@@ -120,31 +120,30 @@ static void *listener_stackaddr = NULL;
  * */
 /* naming : setup + pthread_create = start */
 int
-mas_listener_start( MAS_PASS_OPTS_DECLARE char *host_port, unsigned port )
+mas_listener_start( mas_options_t * popts, char *host_port, unsigned port )
 {
   int r = 0;
 
 /* ~64M per listener -- why?? */
   if ( host_port )
   {
-    MAS_PASS_OPTS_DECL_PREF;
     mas_lcontrol_t *plcontrol;
 
-    plcontrol = mas_lcontrol_make( host_port, port );
+    plcontrol = mas_lcontrol_make( popts, host_port, port );
     {
       ( void ) pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
       lMSG( "cr. listener th. stack:%lu @ %p", ( unsigned long ) listener_stacksize, listener_stackaddr );
     }
-    if ( MAS_PASS_OPTS_PREF listener_single )
+    if ( popts->listener_single )
     {
       /* while ( ctrl.keep_listening ) */
-      mas_listener( MAS_PASS_OPTS_PASS plcontrol );
+      mas_listener( plcontrol );
     }
     else
     {
       MAS_LOG( "cr'ing ls. th; plc=%p #%lu", ( void * ) plcontrol, plcontrol->h.serial );
       /* r = mas_xpthread_create( &( plcontrol->h.thread ), mas_listener_th, MAS_THREAD_LISTENER, ( void * ) plcontrol ); */
-      /* plcontrol->popts = MAS_PASS_OPTS_REF; */
+      /* plcontrol->popts = popts; */
       EEVAL( r, pthread_create( &plcontrol->h.thread, &ctrl.thglob.listener_attr, mas_listener_th, ( void * ) plcontrol ) );
       if ( plcontrol->h.thread )
       {
@@ -224,14 +223,14 @@ mas_listener_cleanup( void *arg )
 }
 
 int
-mas_listener( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
+mas_listener( mas_lcontrol_t * plcontrol )
 {
   int r = -1, rn = 0;
 
   plcontrol->h.status = MAS_STATUS_INIT;
 
   MAS_LOG( "l/th loop" );
-  while ( !ctrl.fatal && 0 == ( r = mas_listener_wait_client( MAS_PASS_OPTS_PASS plcontrol ) ) )
+  while ( !ctrl.fatal && 0 == ( r = mas_listener_wait_client( plcontrol ) ) )
   {
     MAS_LOG( "listener next client ..." );
   }
@@ -247,7 +246,6 @@ mas_listener( MAS_PASS_OPTS_DECLARE mas_lcontrol_t * plcontrol )
 void *
 mas_listener_th( void *tlcontrol )
 {
-  MAS_PASS_OPTS_DECL_GPREF;
   int rn = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
@@ -262,10 +260,10 @@ mas_listener_th( void *tlcontrol )
   /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
   /*   MAS_LOG( "sched %d", rs );                                            */
   /* }                                                                       */
-  if ( MAS_PASS_OPTS_GPREF nolisten )
+  if ( plcontrol->popts->nolisten )
   {
     MAS_LOG( "listener th. -> sleep started %s:%u", plcontrol->host, plcontrol->port );
-    sleep( gopts.nolisten );
+    sleep( plcontrol->popts->nolisten );
   }
   else if ( plcontrol )
   {
@@ -296,9 +294,9 @@ mas_listener_th( void *tlcontrol )
       pthread_cleanup_push( mas_listener_cleanup, plcontrol );
 
 #ifdef MAS_NOPASS_OPTS
-      ( void ) /*r = */ mas_listener( MAS_PASS_OPTS_GREF plcontrol );
+      ( void ) /*r = */ mas_listener( plcontrol );
 #else
-      ( void ) /*r = */ mas_listener( MAS_PASS_OPTS_GREF plcontrol );
+      ( void ) /*r = */ mas_listener( plcontrol );
 #endif
       pthread_cleanup_pop( 1 );
     }

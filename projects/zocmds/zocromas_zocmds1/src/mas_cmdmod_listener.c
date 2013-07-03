@@ -14,6 +14,9 @@
 #  include "listener/inc/mas_listener.h"
 #endif
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -31,7 +34,7 @@ related:
 */
 
 #ifdef MAS_USE_LISTENER
-static char *
+static mas_evaluated_t *
 listener_remove_cmd( STD_CMD_ARGS )
 {
   mas_lcontrol_t *plcontrol = NULL;
@@ -68,7 +71,7 @@ listener_remove_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 listener_add_cmd( STD_CMD_ARGS )
 {
   mas_lcontrol_t *plcontrol = NULL;

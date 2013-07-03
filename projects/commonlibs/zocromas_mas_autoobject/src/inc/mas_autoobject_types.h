@@ -27,6 +27,7 @@ typedef struct mas_autoobject_s
 {
   mas_icontent_type_t icontent_type;
   mas_iaccess_type_t iaccess_type;
+  char *name;
   size_t size;
   union
   {

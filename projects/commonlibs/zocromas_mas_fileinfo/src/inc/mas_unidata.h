@@ -12,12 +12,18 @@ related:
   mas_fileinfo.c
   mas_fileinfo_object.c
 */
+mas_evaluated_t *mas_evaluated_create( void );
+void mas_evaluated_delete( mas_evaluated_t * answer );
+
+mas_evaluated_t *mas_evaluated_wrap_pchar( const char *sanswer );
+mas_evaluated_t *mas_evaluated_wrap_typed( void *sanswer, mas_cmdtype_t cmdtype );
+
 
 mas_unidata_t *mas_unidata_create( void );
 void mas_unidata_delete( mas_unidata_t * ud );
-void mas_unidata_link_data( mas_unidata_t * udata, char *data, size_t size );
+void mas_unidata_link_data( mas_unidata_t * udata, mas_evaluated_t *data, size_t size );
 
-char *mas_unidata_data( mas_unidata_t * ud );
+mas_evaluated_t *mas_unidata_data( mas_unidata_t * ud );
 
 size_t mas_unidata_data_size( mas_unidata_t * ud );
 

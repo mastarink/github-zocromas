@@ -2,24 +2,16 @@
 #include <mastar/types/mas_common_defs.h>
 
 
-
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-/* #include <time.h> */
 
-#include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_tools.h>
-
-/* #include <mastar/types/mas_control_types.h> */
-#include <mastar/types/mas_opts_types.h>
+/* #include <mastar/wrap/mas_memory.h> */
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/log/mas_log.h>
-#include <mastar/thtools/mas_ocontrol_tools.h>
-
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 
@@ -32,8 +24,6 @@
 /* #  include <mastar/types/mas_varset_types.h>  */
 /* #  include <mastar/varset/mas_varset.h>       */
 /* #endif                                        */
-
-#include <mastar/types/mas_transaction_control_types.h>
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"
@@ -110,9 +100,8 @@ __attribute__ ( ( constructor ) )
      static void http_constructor( void )
 {
   HMSG( "CONSTRUCTOR proto http" );
-  ( void ) _mas_opts_restore_relative( MAS_PASS_OPTS_DECLARE "proto/http.conf", NULL /*popts */ , opt_table,
-                                       sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
-                                       NULL, NULL, NULL /* arg */  );
+  ( void ) _mas_opts_restore_relative( mas_options_t * popts, "proto/http.conf", NULL /*popts */ , opt_table,
+                                       sizeof( opt_table ) / sizeof( opt_table[0] ), NULL, NULL, NULL, NULL /* arg */  );
 }
 
 __attribute__ ( ( destructor ) )
@@ -154,8 +143,8 @@ __attribute__ ( ( destructor ) )
       MKACTIVITY
 */
 
-int
-mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http )
+static int
+mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   int r = -1;
 
@@ -165,34 +154,29 @@ mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * h
   if ( http )
   {
     HMSG( "HTTP make URL %s", http->URI );
-    if ( http->URI && 0 == strncmp( http->URI, "/xcromas/", 9 ) )
+    if ( http->URI )
     {
-      HMSG( "HTTP make /xcromas" );
-      MAS_LOG( "HTTP make /xcromas" );
-      /* char *answer = NULL;                                                                                                  */
-      /*                                                                                                                       */
-      /* answer = mas_evaluate_command_slash( http->URI + 9 );                                                                 */
-      /* if ( answer )                                                                                                         */
-      /* {                                                                                                                     */
-      /*   _mas_fileinfo_link_dataz( http->reply_content, answer );                                                                  */
-      /*   http->outdata =                                                                                                     */
-      /*         mas_variable_create_text( http->outdata, MAS_THREAD_TRANSACTION, "header", "Content-Type", "text/plain", 0 ); */
-      /* }                                                                                                                     */
-      http->reply_content =
-            mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_evaluate_command_slash_plus, ( const void * ) prcontrol );
-      MAS_LOG( "HTTP 1 make /xcromas" );
-      mas_fileinfo_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT );
-      MAS_LOG( "HTTP / make /xcromas" );
-    }
-    else
-    {
-      MAS_LOG( "HTTP make at docroot" );
+      if ( 0 == strncmp( http->URI, "/xcromas/", 9 ) )
+      {
+        HMSG( "HTTP make /xcromas" );
+        MAS_LOG( "HTTP make /xcromas" );
+        http->reply_content =
+              mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_evaluate_command_slash_plus,
+                                 ( const void * ) prcontrol );
+        MAS_LOG( "HTTP 1 make /xcromas" );
+        mas_fileinfo_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT );
+        MAS_LOG( "HTTP / make /xcromas" );
+      }
+      else
+      {
+        MAS_LOG( "HTTP make at docroot" );
 
-      /* TODO : sendfile ; replace fileinfo  with autoobject lib */
-      http->reply_content =
-            mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at_fd,
-                               ( const void * ) NULL /* prcontrol */  );
-      MAS_LOG( "HTTP / make at docroot" );
+        /* TODO : sendfile ; replace fileinfo  with autoobject lib */
+        http->reply_content =
+              mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at_fd,
+                                 ( const void * ) NULL /* prcontrol */  );
+        MAS_LOG( "HTTP / make at docroot" );
+      }
     }
   }
   MAS_LOG( "http: protocol-specific" );
@@ -210,7 +194,7 @@ mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * h
       http->status_code = MAS_HTTP_CODE_NOT_IMPLEMENTED;
       http = mas_http_make_out_header( http, "Title", "%d %s", http->status_code, mas_http_status_code_message( prcontrol, http ) );
       http = mas_http_make_out_header_simple( http, "Allow", "GET,HEAD,OPTIONS" );
-      http = mas_http_make_data_auto( MAS_PASS_OPTS_PASS prcontrol, http );
+      http = mas_http_make_data_auto( prcontrol, http );
       /* http = mas_http_make_body_simple( prcontrol, http ); */
       break;
     case MAS_HTTP_METHOD_OPTIONS:
@@ -237,7 +221,7 @@ mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * h
   /* }                                                      */
 
   if ( http )
-    http = mas_http_reply( MAS_PASS_OPTS_PASS prcontrol, http );
+    http = mas_http_reply( prcontrol, http );
   HMSG( "WRITTEN %lu", http ? http->written : 0 );
   MAS_LOG( "WRITTEN %lu", http ? http->written : 0 );
   r = http ? 1 : 0;
@@ -247,7 +231,7 @@ mas_proto_make( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * h
 }
 
 int
-mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const void *place_holder )
+mas_proto_main( mas_rcontrol_t * prcontrol, const void *place_holder )
 {
   int r = 0;
   mas_http_t *http = NULL;
@@ -274,11 +258,11 @@ mas_proto_main( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, const void *pl
   http = mas_proto_http_create_request( prcontrol );
   MAS_LOG( "http?: to parse rq" );
   if ( http )
-    http = mas_proto_http_parse_request( MAS_PASS_OPTS_PASS prcontrol, http );
+    http = mas_proto_http_parse_request( prcontrol, http );
   MAS_LOG( "http?: parsed rq : %s", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?" );
 
   if ( http )
-    r = mas_proto_make( MAS_PASS_OPTS_PASS prcontrol, http );
+    r = mas_proto_make( prcontrol, http );
   HMSG( "HTTP r:%d", r );
   return r;
 }

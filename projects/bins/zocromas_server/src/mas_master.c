@@ -88,13 +88,11 @@ threads created:
 
 
 static int
-mas_master( MAS_PASS_OPTS_DECLARE1 )
+mas_master( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0, rn = 0;
 
-  HMSG( "MASTER START:%u %c%c%c", getpid(  ), !MAS_PASS_OPTS_PREF nologger ? 'L' : 'l', !MAS_PASS_OPTS_PREF noticker ? 'T' : 't',
-        !MAS_PASS_OPTS_PREF nowatcher ? 'W' : 'w' );
+  HMSG( "MASTER START:%u %c%c%c", getpid(  ), !popts->nologger ? 'L' : 'l', !popts->noticker ? 'T' : 't', !popts->nowatcher ? 'W' : 'w' );
   if ( ctrl.is_parent )
   {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMaster" ) );
@@ -106,7 +104,7 @@ mas_master( MAS_PASS_OPTS_DECLARE1 )
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
-  if ( !MAS_PASS_OPTS_PREF nologger )
+  if ( !popts->nologger )
   {
     HMSG( "LOGGER TO START" );
     mas_logger_start(  );
@@ -115,54 +113,54 @@ mas_master( MAS_PASS_OPTS_DECLARE1 )
   {
     HMSG( "NO LOGGER" );
   }
-  if ( !MAS_PASS_OPTS_PREF noticker )
+  if ( !popts->noticker )
   {
     HMSG( "TICKER TO START" );
-    mas_ticker_start( MAS_PASS_OPTS_PASS1 );
+    mas_ticker_start( popts );
   }
   else
   {
     MAS_LOG( "running w/o ticker" );
     HMSG( "NO TICKER" );
   }
-  if ( !MAS_PASS_OPTS_PREF nowatcher )
+  if ( !popts->nowatcher )
   {
     HMSG( "WATCHER TO START" );
-    mas_watcher_start( MAS_PASS_OPTS_PASS1 );
+    mas_watcher_start( popts );
   }
   else
   {
     MAS_LOG( "running w/o watcher" );
     HMSG( "NO WATCHER" );
   }
-  if ( MAS_PASS_OPTS_PREF nomaster )
+  if ( popts->nomaster )
   {
-    sleep( MAS_PASS_OPTS_PREF nomaster );
+    sleep( popts->nomaster );
   }
-  else if ( MAS_PASS_OPTS_PREF hostsv.c > 0 && MAS_PASS_OPTS_PREF hostsv.v )
+  else if ( popts->hostsv.c > 0 && popts->hostsv.v )
   {
-    /* for ( int ih = 0; ih < MAS_PASS_OPTS_PREF hostsv.c; ih++ ) */
+    /* for ( int ih = 0; ih < popts->  hostsv.c; ih++ ) */
     /* {                                             */
-    /*   thMSG( "%d. host %s", ih, MAS_PASS_OPTS_PREF hostsv.v[ih] ); */
+    /*   thMSG( "%d. host %s", ih, popts->  hostsv.v[ih] ); */
     /* }                                             */
     while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal )
     {
-      MAS_LOG( "master loop for %d hosts", MAS_PASS_OPTS_PREF hostsv.c );
-      tMSG( "master loop for %d hosts", MAS_PASS_OPTS_PREF hostsv.c );
-      HMSG( "MASTER LOOP %dh", MAS_PASS_OPTS_PREF hostsv.c );
+      MAS_LOG( "master loop for %d hosts", popts->hostsv.c );
+      tMSG( "master loop for %d hosts", popts->hostsv.c );
+      HMSG( "MASTER LOOP %dh", popts->hostsv.c );
       /* mas_listeners.c */
-      r = mas_listeners_start( MAS_PASS_OPTS_PASS1 );
+      r = mas_listeners_start( popts );
 
       OMSG( "WAITING..." );
       r = mas_listeners_wait(  );
 
-      tMSG( "(%d) master loop for %d hosts", r, MAS_PASS_OPTS_PREF hostsv.c );
+      tMSG( "(%d) master loop for %d hosts", r, popts->hostsv.c );
 
       {
         /* ???????? All listeners closed, what shall I do ?
          * 1. exit ( what is to be done with 'ctrl.keep_listening = 0' )
          * 2. re-run default listener(s)
-         * 3. re-run defined ( MAS_PASS_OPTS_PREF hostsv.v ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
+         * 3. re-run defined ( popts->  hostsv.v ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
          * */
         if ( MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
         {
@@ -183,8 +181,8 @@ mas_master( MAS_PASS_OPTS_DECLARE1 )
     EMSG( "hosts not defined" );
     MAS_LOG( "hosts not defined" );
   }
-  if ( MAS_PASS_OPTS_PREF exitsleep )
-    sleep( MAS_PASS_OPTS_PREF exitsleep );
+  if ( popts->exitsleep )
+    sleep( popts->exitsleep );
   MAS_LOG( "to stop spec. threads" );
   WMSG( "TO STOP LOGGER" );
   mas_logger_stop(  );
@@ -248,8 +246,9 @@ mas_master_th( void *arg )
     ctrl.threads.n.main.thread = 0;
   }
   {
-    MAS_PASS_OPTS_DECL_GREF;
-    ( void ) /* r= */ mas_master( MAS_PASS_OPTS_GREF1 );
+    extern mas_options_t gopts;
+
+    ( void ) /* r= */ mas_master( &gopts );
   }
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
@@ -287,13 +286,12 @@ __attribute__ ( ( destructor ) )
 }
 
 static int
-mas_master_optional_thread( MAS_PASS_OPTS_DECLARE1 )
+mas_master_optional_thread( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
 
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
-  if ( MAS_PASS_OPTS_PREF make_master_thread )
+  if ( popts->make_master_thread )
   {
     /* r = pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
     IEVAL( r, pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ) );
@@ -306,13 +304,13 @@ mas_master_optional_thread( MAS_PASS_OPTS_DECLARE1 )
   else
   {
     /* r = mas_master(  ); */
-    IEVAL( r, mas_master( MAS_PASS_OPTS_PASS1 ) );
+    IEVAL( r, mas_master( popts ) );
   }
   return r;
 }
 
 int
-mas_master_bunch( MAS_PASS_OPTS_DECLARE int argc, char *argv[], char *env[] )
+mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   int r = 0, rn = 0;
 
@@ -331,7 +329,7 @@ mas_master_bunch( MAS_PASS_OPTS_DECLARE int argc, char *argv[], char *env[] )
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
   IEVAL( r,
-         mas_init_plus( MAS_PASS_OPTS_PASS argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos,
+         mas_init_plus( popts, argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos,
                         mas_lcontrols_init, NULL ) );
   if ( ctrl.is_parent )
   {
@@ -348,7 +346,7 @@ mas_master_bunch( MAS_PASS_OPTS_DECLARE int argc, char *argv[], char *env[] )
   }
   else                          /* if ( r >= 0 ) */
   {
-    IEVAL( r, mas_master_optional_thread( MAS_PASS_OPTS_PASS1 ) );
+    IEVAL( r, mas_master_optional_thread( popts ) );
 #ifdef MAS_TRACEMEM
     {
       extern unsigned long memory_balance;

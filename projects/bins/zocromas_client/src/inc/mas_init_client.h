@@ -2,6 +2,6 @@
 #  define MAS_INIT_CLIENT_H
 
 
-void mas_destroy_client( MAS_PASS_OPTS_DECLARE1 );
+void mas_destroy_client( mas_options_t * popts );
 
 #endif

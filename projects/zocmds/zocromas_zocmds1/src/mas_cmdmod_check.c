@@ -9,6 +9,9 @@
 
 #include <mastar/types/mas_opts_types.h>
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -23,6 +26,8 @@
 #  include <mastar/varset/mas_varset_vclass_namevalue.h>
 /* #  include <mastar/varset/mas_varset.h> */
 #endif
+
+
 
 #include <mastar/thvariables/mas_thread_variables.h>
 
@@ -44,13 +49,13 @@ related:
 
 
 
-static char *
+static mas_evaluated_t *
 version_cmd( STD_CMD_ARGS )
 {
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 args_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
@@ -77,10 +82,10 @@ args_cmd( STD_CMD_ARGS )
     mas_thread_variable_set_text( MAS_THREAD_TRANSACTION, "client", "args", args );
     result = mas_strdup( args );
   }
-  return result;
+  return mas_evaluated_wrap_pchar (result);
 }
 
-static char *
+static mas_evaluated_t *
 uuid_cmd( STD_CMD_ARGS )
 {
   char *uuid = NULL;
@@ -117,7 +122,7 @@ uuid_cmd( STD_CMD_ARGS )
     /*   }                                                                           */
     /* }                                                                             */
   }
-  return uuid;
+  return mas_evaluated_wrap_pchar (uuid);
 }
 
 

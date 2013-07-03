@@ -10,6 +10,9 @@
 
 #include <mastar/types/mas_opts_types.h>
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -34,25 +37,25 @@ related:
 */
 
 
-static char *
+static mas_evaluated_t *
 cmd_1( STD_CMD_ARGS )
 {
-  return mas_strdup( "T1" );
+  return mas_evaluated_wrap_pchar( mas_strdup( "T1" ) );
 }
 
-static char *
+static mas_evaluated_t *
 cmd_2( STD_CMD_ARGS )
 {
-  return mas_strdup( "T2" );
+  return mas_evaluated_wrap_pchar( mas_strdup( "T2" ) );
 }
 
-static char *
+static mas_evaluated_t *
 cmd_3( STD_CMD_ARGS )
 {
-  return "T3";
+  return mas_evaluated_wrap_typed( "T3", this_command->evaluate_type );
 }
 
-static char *
+static mas_evaluated_t *
 cmd_4( STD_CMD_ARGS )
 {
   return NULL;
@@ -64,25 +67,25 @@ cmd_4( STD_CMD_ARGS )
 /*   return NULL;        */
 /* }                     */
 
-static char *
+static mas_evaluated_t *
 cmd_6( STD_CMD_ARGS )
 {
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 cmd_7( STD_CMD_ARGS )
 {
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 cmd_8( STD_CMD_ARGS )
 {
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 cmd_9( STD_CMD_ARGS )
 {
   return NULL;
@@ -95,11 +98,12 @@ mas_cmd_t subcmdtable[] = {
   ,
   {2, "2", cmd_2, NULL}
   ,
-  {3, "3", cmd_3, NULL,.result_type = MAS_CMD_CONST_PCHAR}
+  {3, "3", cmd_3, NULL,.evaluate_type = MAS_CMD_CONST_PCHAR}
   ,
   {4, "4", cmd_4, NULL}
   ,
-  {5, "5", NULL, NULL,.result_type = MAS_CMD_CONST_FNAME_LOAD,.vid = ( void * ) "/mnt/new_misc/develop/autotools/zoc/projects/projects.list"}
+  {5, "5", NULL, NULL,.evaluate_type = MAS_CMD_CONST_FNAME_LOAD,.vid =
+   ( void * ) "/mnt/new_misc/develop/autotools/zoc/projects/projects.list"}
   ,
   {6, "6", cmd_6, NULL}
   ,

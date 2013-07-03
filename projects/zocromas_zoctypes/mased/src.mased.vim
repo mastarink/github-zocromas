@@ -18,6 +18,7 @@ sfind mas_transaction_control_types.h
 sfind mas_opts_types.h
 
 tab sfind mas_varset_types.h 
+tab sfind mas_varvec_types.h 
 
 tab sfind  mas_control_types.h
 

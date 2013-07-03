@@ -19,6 +19,9 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -41,7 +44,7 @@ related:
   mas_modules_commands_eval.c
 */
 
-static char *
+static mas_evaluated_t *
 readline_cmd( STD_CMD_ARGS )
 {
   char *buf;
@@ -54,7 +57,7 @@ readline_cmd( STD_CMD_ARGS )
   mas_other_free( mas_readline_buffer );
   mas_readline_buffer = NULL;
 
-  return buf;
+  return mas_evaluated_wrap_pchar(buf);
 }
 
 mas_cmd_t subcmdtable[] = {

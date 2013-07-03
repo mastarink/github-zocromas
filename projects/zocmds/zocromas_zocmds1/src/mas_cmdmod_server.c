@@ -24,6 +24,9 @@
 
 #include <mastar/log/mas_log.h>
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -161,7 +164,7 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
   return cp - cp0;
 }
 
-static char *
+static mas_evaluated_t *
 info_cmd( STD_CMD_ARGS )
 {
   char *buf = NULL;
@@ -180,9 +183,9 @@ info_cmd( STD_CMD_ARGS )
       char *cp;
       size_t len;
       ssize_t bufsz;
-      char s1lts[64];
-      char slts[64];
-      char splts[64];
+      char s1lts[64] = "";
+      char slts[64] = "";
+      char splts[64] = "";
       unsigned ith;
 
       ith = 0;
@@ -191,21 +194,14 @@ info_cmd( STD_CMD_ARGS )
       cp = buf;
       bufsz = bufsz0;
       {
-        s1lts[0] = '-';
-        s1lts[1] = '\0';
         if ( ctrl.stamp.first_lts && ctrl.stamp.first_lts != ctrl.stamp.lts )
-          mas_tstrftime( s1lts, sizeof( s1lts ), "first lts: %Y%m%d %T", ctrl.stamp.first_lts );
-        slts[0] = '-';
-        slts[1] = '\0';
+          mas_tstrftime( s1lts, sizeof( s1lts ), "%Y%m%d %T", ctrl.stamp.first_lts );
         if ( ctrl.stamp.lts )
-          mas_tstrftime( slts, sizeof( slts ), "lts: %Y%m%d %T", ctrl.stamp.lts );
-        splts[0] = '-';
-        splts[1] = '\0';
+          mas_tstrftime( slts, sizeof( slts ), "%Y%m%d %T", ctrl.stamp.lts );
         if ( ctrl.stamp.prev_lts )
-          mas_tstrftime( splts, sizeof( splts ), "prev.lts:%Y%m%d %T", ctrl.stamp.prev_lts );
+          mas_tstrftime( splts, sizeof( splts ), "%Y%m%d %T", ctrl.stamp.prev_lts );
       }
       {
-        MAS_PASS_OPTS_DECL_PREF;
         extern unsigned long memory_balance;
 
         len = snprintf( cp, bufsz,
@@ -214,17 +210,17 @@ info_cmd( STD_CMD_ARGS )
                         "\tmain pid:%u; master pid:%u; daemon pid:%u; server pid:%u; \t\t [%lx]\n"
                         "- #%u Server info:" "\t[%u:%s]\n"
                         "\tclients: {%lu - %lu = %lu}\n"
-                        "\t%s; %s; %s\n"
+                        "\tfirst lts: %s; lts: %s; prev.lts: %s\n"
                         "- ticker : 0x%lx :: %d;%lu;\n"
                         "- watcher: 0x%lx :: stop:%1d;cnt:%lu;\n\n", memory_balance,
-                        level, this_command ? this_command->only_level : 0, MAS_PASS_OPTS_PREF uuid,
+                        level, this_command ? this_command->only_level : 0, popts->uuid,
                         ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.daemon.pid,
                         ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
                         ctrl.restart_cnt,
                         mas_gettid(  ), mas_thread_self_type_name(  ),
-                        ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, s1lts, slts, splts,
-                        ctrl.threads.n.ticker.thread, ctrl.ticker_hide, ctrl.tick_cnt, ctrl.threads.n.watcher.thread, ctrl.watcher_stop,
-                        ctrl.watch_cnt );
+                        ctrl.clients_came, ctrl.clients_gone, ctrl.clients_came - ctrl.clients_gone, *s1lts ? s1lts : "-",
+                        *slts ? slts : "-", *splts ? splts : "-", ctrl.threads.n.ticker.thread, ctrl.ticker_hide, ctrl.tick_cnt,
+                        ctrl.threads.n.watcher.thread, ctrl.watcher_stop, ctrl.watch_cnt );
         cp += len;
         bufsz -= len;
       }
@@ -247,7 +243,6 @@ info_cmd( STD_CMD_ARGS )
         bufsz -= len;
       }
       {
-        MAS_PASS_OPTS_DECL_PREF;
         extern int mas_tracemem_flag;
 
         len = snprintf( cp, bufsz,
@@ -260,10 +255,9 @@ info_cmd( STD_CMD_ARGS )
                         "\tlogdir: \t%s;\n" "\tlogpath:\t%s\n"
                         "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
                         ctrl.exepath,
-                        MAS_PASS_OPTS_PREF msgfilename,
-                        MAS_PASS_OPTS_PREF dir.proto, MAS_PASS_OPTS_PREF dir.mods, MAS_PASS_OPTS_PREF dir.pids,
-                        MAS_PASS_OPTS_PREF dir.history, MAS_PASS_OPTS_PREF dir.log, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone,
-                        mas_tracemem_flag );
+                        popts->msgfilename,
+                        popts->dir.proto, popts->dir.mods, popts->dir.pids,
+                        popts->dir.history, popts->dir.log, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
         cp += len;
         bufsz -= len;
       }
@@ -326,17 +320,17 @@ info_cmd( STD_CMD_ARGS )
     if ( buf )
       buf = mas_realloc( buf, strlen( buf ) + 1 );
   }
-  return buf;
+  return mas_evaluated_wrap_pchar( buf );
 }
 
-static char *
+static mas_evaluated_t *
 stop_cmd( STD_CMD_ARGS )
 {
   ctrl.do_exit = 1;
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 cls_cmd( STD_CMD_ARGS )
 {
 /* echo -en "\e[H\e[2J" >&2 */
@@ -344,7 +338,7 @@ cls_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 restart_cmd( STD_CMD_ARGS )
 {
   ctrl.restart = 1;
@@ -352,7 +346,7 @@ restart_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-char *
+static mas_evaluated_t *
 exit_cmd( STD_CMD_ARGS )
 {
   ctrl.exit = 1;
@@ -360,7 +354,7 @@ exit_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-char *
+static mas_evaluated_t *
 sigquit_cmd( STD_CMD_ARGS )
 {
   int r = 0;
@@ -372,7 +366,7 @@ sigquit_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 segv_cmd( STD_CMD_ARGS )
 {
   char *p = NULL;

@@ -32,7 +32,7 @@
 #include "mas_fileinfo.h"
 
 
-static char *mas_fileinfo_load_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo );
+static mas_evaluated_t *mas_fileinfo_load_data( const mas_options_t * popts, mas_fileinfo_t * fileinfo );
 
 
 /*
@@ -51,8 +51,8 @@ more:
 */
 
 
-char *
-_mas_fileinfo_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo )
+mas_evaluated_t *
+_mas_fileinfo_data( const mas_options_t * popts, mas_fileinfo_t * fileinfo )
 {
   return fileinfo ? mas_unidata_data( fileinfo->udata ) : NULL;
 }
@@ -115,10 +115,10 @@ mas_fileinfo_unidata( mas_fileinfo_t * fileinfo )
   return fileinfo ? fileinfo->udata : NULL;
 }
 
-char *
-mas_fileinfo_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo )
+mas_evaluated_t *
+mas_fileinfo_data( const mas_options_t * popts, mas_fileinfo_t * fileinfo )
 {
-  return fileinfo ? mas_fileinfo_load_data( MAS_PASS_OPTS_PASS fileinfo ) : NULL;
+  return fileinfo ? mas_fileinfo_load_data( popts, fileinfo ) : NULL;
 }
 
 char *
@@ -128,8 +128,8 @@ mas_fileinfo_content_type_string( mas_fileinfo_t * fileinfo )
 }
 
 /********************************************************************************************/
-static char *
-_mas_fileinfo_link_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *data, size_t size )
+static mas_evaluated_t *
+_mas_fileinfo_link_data( const mas_options_t * popts, mas_fileinfo_t * fileinfo, mas_evaluated_t * data, size_t size )
 {
   if ( fileinfo )
   {
@@ -139,30 +139,30 @@ _mas_fileinfo_link_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *
       fileinfo->filesize = mas_unidata_data_size( fileinfo->udata );
     mas_unidata_link_data( fileinfo->udata, data, size );
   }
-  return _mas_fileinfo_data( MAS_PASS_OPTS_PASS fileinfo );
+  return _mas_fileinfo_data( popts, fileinfo );
 }
 
-char *
-_mas_fileinfo_link_dataz( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *data )
+mas_evaluated_t *
+_mas_fileinfo_link_dataz( const mas_options_t * popts, mas_fileinfo_t * fileinfo, mas_evaluated_t * data )
 {
-  return _mas_fileinfo_link_data( MAS_PASS_OPTS_PASS fileinfo, data, strlen( data ) );
+  return _mas_fileinfo_link_data( popts, fileinfo, data, strlen( ( char * ) data->data ) );
 }
 
-static char *
-mas_fileinfo_load_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo )
+static mas_evaluated_t *
+mas_fileinfo_load_data( const mas_options_t * popts, mas_fileinfo_t * fileinfo )
 {
-  char *data = NULL;
+  mas_evaluated_t *data = NULL;
 
-  if ( !_mas_fileinfo_data( MAS_PASS_OPTS_PASS fileinfo ) )
+  if ( !_mas_fileinfo_data( popts, fileinfo ) )
   {
     size_t size = 0;
 
     /* MAS_LOG( "to load data" ); */
     size = fileinfo->filesize;
-    data = ( fileinfo->data_loader ) ( MAS_PASS_OPTS_PASS fileinfo->root, fileinfo->tail, size, &fileinfo->filesize, &fileinfo->inode,
+    data = ( fileinfo->data_loader ) ( popts, fileinfo->root, fileinfo->tail, size, &fileinfo->filesize, &fileinfo->inode,
                                        &fileinfo->filetime, fileinfo->userdata );
     /* EMSG( "loader passed %lu %lu %lu", fileinfo->filesize, fileinfo->inode, fileinfo->filetime ); */
-    _mas_fileinfo_link_data( MAS_PASS_OPTS_PASS fileinfo, data, fileinfo->filesize );
+    _mas_fileinfo_link_data( popts, fileinfo, data, fileinfo->filesize );
 
     if ( fileinfo->filesize && fileinfo->root && mas_fileinfo_icontent_type( fileinfo ) <= 0 )
     {
@@ -175,7 +175,7 @@ mas_fileinfo_load_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo )
 
     /* MAS_LOG( "loaded data [%lu]", fileinfo->filesize ); */
   }
-  return _mas_fileinfo_data( MAS_PASS_OPTS_PASS fileinfo );
+  return _mas_fileinfo_data( popts, fileinfo );
 }
 
 
@@ -444,9 +444,9 @@ mas_fileinfo_content_type_by_ext( mas_fileinfo_t * fileinfo )
 }
 
 
-char *
-mas_load_filename_at_file( MAS_PASS_OPTS_DECLARE const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t * ptrueinode,
-                           time_t * ptruefiletime, const void *arg )
+mas_evaluated_t *
+mas_load_filename_at_file( const mas_options_t * popts, const char *root, const char *tail, size_t size, size_t * ptruesize,
+                           ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
 {
   char *filedata = NULL;
   char *filepath;
@@ -456,12 +456,12 @@ mas_load_filename_at_file( MAS_PASS_OPTS_DECLARE const char *root, const char *t
   filedata = mas_load_filename_file( filepath, size, ptruesize, ptrueinode, ptruefiletime, arg );
   if ( filepath )
     mas_free( filepath );
-  return filedata;
+  return mas_evaluated_wrap_pchar( filedata );
 }
 
-char *
-mas_load_filename_at_fd( MAS_PASS_OPTS_DECLARE const char *root, const char *tail, size_t size, size_t * ptruesize, ino_t * ptrueinode,
-                         time_t * ptruefiletime, const void *arg )
+mas_evaluated_t *
+mas_load_filename_at_fd( const mas_options_t * popts, const char *root, const char *tail, size_t size, size_t * ptruesize,
+                         ino_t * ptrueinode, time_t * ptruefiletime, const void *arg )
 {
   char *filedata = NULL;
   char *filepath;
@@ -471,5 +471,5 @@ mas_load_filename_at_fd( MAS_PASS_OPTS_DECLARE const char *root, const char *tai
   filedata = mas_load_filename_fd( filepath, size, ptruesize, ptrueinode, ptruefiletime, arg );
   if ( filepath )
     mas_free( filepath );
-  return filedata;
+  return mas_evaluated_wrap_pchar( filedata );
 }

@@ -1,4 +1,3 @@
-#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -46,7 +45,7 @@ more:
 
 
 void
-mas_destroy_client( MAS_PASS_OPTS_DECLARE1 )
+mas_destroy_client( mas_options_t * popts )
 {
 #ifdef MAS_CLIENT_LOG
   /* {                          */
@@ -62,11 +61,11 @@ mas_destroy_client( MAS_PASS_OPTS_DECLARE1 )
   /*     mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
   /* }                                                                                                                    */
 
-  mas_client_destroy_readline( MAS_PASS_OPTS_PASS1 );
+  mas_client_destroy_readline( popts );
   /* if ( ctrl.restart )                                                                  */
   /* {                                                                                    */
   /*   HMSG( "restart sleep %10.5f sec and run %s", ctrl.restart_sleep, opts.argv[0] ); */
   /*   mas_nanosleep( ctrl.restart_sleep );                                               */
   /* }                                                                                    */
-  mas_destroy( MAS_PASS_OPTS_PASS1 );
+  mas_destroy( popts );
 }

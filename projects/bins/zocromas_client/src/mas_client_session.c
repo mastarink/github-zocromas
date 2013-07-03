@@ -1,4 +1,3 @@
-#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -114,7 +113,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
       case MSG_BIN_OPTS:
         MSG( "it's OPTS" );
         {
-          MAS_PASS_OPTS_DECL_PREF;
+          extern mas_options_t gopts;
           mas_options_t *new_opts;
 
           new_opts = ( mas_options_t * ) answer;
@@ -122,7 +121,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
           /* MSG( "msg:%d / %d", new_opts->msg_c, new_opts->msg_s ); */
           /* MSG( "msg:%d / %d", opts.f.bit.msg_c, opts.f.bit.msg_s ); */
           /* gopts = *new_opts; */
-          *( MAS_PASS_OPTS_REF ) = *new_opts;
+          gopts = *new_opts;
           /* HMSG( "opts msg_c:%d", opts.f.bit.msg_c );     */
           /* HMSG( "opts msg_s:%d", opts.f.bit.msg_s );     */
           /* HMSG( "opts msg_tr:%d", opts.f.bit.msg_tr );   */

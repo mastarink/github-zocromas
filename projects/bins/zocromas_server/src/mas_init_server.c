@@ -85,14 +85,13 @@ __attribute__ ( ( constructor ) )
 
 
 int
-mas_init_load_protos( MAS_PASS_OPTS_DECLARE1 )
+mas_init_load_protos( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int r = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
 
   MAS_LOG( "(%d) init / load protos", r );
-  if ( !MAS_PASS_OPTS_PREF protosv.c )
+  if ( !popts->protosv.c )
   {
     HMSG( "NO PROTCOLOS DEFINED" );
     WMSG( "no protcolos defined" );
@@ -102,36 +101,35 @@ mas_init_load_protos( MAS_PASS_OPTS_DECLARE1 )
   {
     int protos_num = 0;
 
-    proto_descs = mas_calloc( MAS_PASS_OPTS_PREF protosv.c, sizeof( mas_transaction_protodesc_t ) );
-    memset( proto_descs, 0, MAS_PASS_OPTS_PREF protosv.c * sizeof( mas_transaction_protodesc_t ) );
-    for ( int ipr = 0; ipr < MAS_PASS_OPTS_PREF protosv.c; ipr++ )
+    proto_descs = mas_calloc( popts->protosv.c, sizeof( mas_transaction_protodesc_t ) );
+    memset( proto_descs, 0, popts->protosv.c * sizeof( mas_transaction_protodesc_t ) );
+    for ( int ipr = 0; ipr < popts->protosv.c; ipr++ )
     {
       /* from one */
       proto_descs[ipr].proto_id = protos_num + 1;
-      proto_descs[ipr].name = mas_strdup( MAS_PASS_OPTS_PREF protosv.v[ipr] );
+      proto_descs[ipr].name = mas_strdup( popts->protosv.v[ipr] );
       proto_descs[ipr].func =
-            ( mas_transaction_fun_t ) mas_modules_load_func_from( MAS_PASS_OPTS_PREF protosv.v[ipr], "mas_proto_main",
-                                                                  MAS_PASS_OPTS_PREF dir.proto );
+            ( mas_transaction_fun_t ) mas_modules_load_func_from( popts->protosv.v[ipr], "mas_proto_main", popts->dir.proto );
       if ( !proto_descs[ipr].func )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
         IEVAL( r, -1 );
-        WMSG( "INIT PROTOS - #%d: %s", ipr, MAS_PASS_OPTS_PREF protosv.v[ipr] );
+        WMSG( "INIT PROTOS - #%d: %s", ipr, popts->protosv.v[ipr] );
       }
       else
       {
-        WMSG( "INIT PROTOS + #%d: %s", ipr, MAS_PASS_OPTS_PREF protosv.v[ipr] );
+        WMSG( "INIT PROTOS + #%d: %s", ipr, popts->protosv.v[ipr] );
       }
       protos_num++;
       MAS_LOG( "(%d) init / load protos #%d", r, protos_num );
     }
     ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
-    if ( MAS_PASS_OPTS_PREF protosv.c && !ctrl.protos_num )
+    if ( popts->protosv.c && !ctrl.protos_num )
     {
       IEVAL( r, -1 );
     }
-    HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_num, MAS_PASS_OPTS_PREF protosv.c );
+    HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_num, popts->protosv.c );
   }
   else
   {
@@ -173,16 +171,15 @@ mas_protos_destroy(  )
 #define STR(s) #s
 
 static int
-mas_init_pid( MAS_PASS_OPTS_DECLARE int indx, const char *shash_name )
+mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
 {
   int r = 0;
 
   if ( shash_name && *shash_name && indx < MAS_MAX_PIDFD )
   {
-    MAS_PASS_OPTS_DECL_PREF;
     char *pidpath;
 
-    pidpath = mas_strdup( MAS_PASS_OPTS_PREF dir.pids );
+    pidpath = mas_strdup( popts->dir.pids );
     pidpath = mas_strcat_x( pidpath, shash_name );
     HMSG( "PIDPATH: %s", pidpath );
     YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
@@ -238,7 +235,7 @@ mas_init_pid( MAS_PASS_OPTS_DECLARE int indx, const char *shash_name )
 }
 
 int
-mas_init_pids( MAS_PASS_OPTS_DECLARE1 )
+mas_init_pids( mas_options_t * popts )
 {
   int r = 0;
   char *shash_namebuf = NULL;
@@ -252,24 +249,23 @@ mas_init_pids( MAS_PASS_OPTS_DECLARE1 )
   MAS_LOG( "(%d) init pids", r );
   if ( shash_namebuf )
   {
-    MAS_PASS_OPTS_DECL_PREF;
     int indx = -1;
 
     *shash_namebuf = 0;
-    WMSG( "PIDSDIR: %s", MAS_PASS_OPTS_PREF dir.pids );
-    if ( MAS_PASS_OPTS_PREF single_instance && MAS_PASS_OPTS_PREF dir.pids )
+    WMSG( "PIDSDIR: %s", popts->dir.pids );
+    if ( popts->single_instance && popts->dir.pids )
     {
       snprintf( shash_namebuf, sizeof( shash_namebuf ), "/%s.pid", ctrl.is_client ? "client" : "server" );
       indx = 0;
     }
-    else if ( MAS_PASS_OPTS_PREF single_child && MAS_PASS_OPTS_PREF dir.pids )
+    else if ( popts->single_child && popts->dir.pids )
     {
       snprintf( shash_namebuf, sizeof( shash_namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
       indx = 1;
     }
     if ( indx >= 0 )
     {
-      IEVAL( r, *shash_namebuf ? mas_init_pid( MAS_PASS_OPTS_PASS indx, shash_namebuf ) : -1 );
+      IEVAL( r, *shash_namebuf ? mas_init_pid( popts, indx, shash_namebuf ) : -1 );
     }
     mas_free( shash_namebuf );
   }
@@ -291,7 +287,7 @@ Creating a daemon
    = Let the main logic of daemon process run.
 */
 int
-mas_init_daemon( MAS_PASS_OPTS_DECLARE1 )
+mas_init_daemon( mas_options_t * popts )
 {
   int r = 0, rn = 0;
   pid_t pid_daemon;
@@ -307,7 +303,6 @@ mas_init_daemon( MAS_PASS_OPTS_DECLARE1 )
     MAS_LOG( "(%d) init fork", r );
     if ( pid_daemon == 0 )
     {
-      MAS_PASS_OPTS_DECL_PREF;
       ctrl.threads.n.daemon.pid = getpid(  );
       ctrl.threads.n.daemon.tid = mas_gettid(  );
       ctrl.threads.n.daemon.thread = mas_pthread_self(  );
@@ -327,7 +322,7 @@ mas_init_daemon( MAS_PASS_OPTS_DECLARE1 )
           WMSG( "PIDLCK+: %d (%d)", lck, ctrl.pidfd[i] );
         }
       }
-      HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_daemon, getpid(  ), getppid(  ), MAS_PASS_OPTS_PREF msgfilename, ctrl.msgfile ? 1 : 0 );
+      HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_daemon, getpid(  ), getppid(  ), popts->msgfilename, ctrl.msgfile ? 1 : 0 );
       /* sleep(200); */
       if ( ctrl.redirect_std )
       {
@@ -444,8 +439,8 @@ mas_init_daemon( MAS_PASS_OPTS_DECLARE1 )
 /*     IEVAL( r, mas_threads_init(  ) );                                                             */
 /*     MAS_LOG( "(%d) init server: to load protos", r );                                             */
 /*     (* if ( r >= 0 )                   *)                                                         */
-/*     (*   r = mas_init_load_protos( MAS_PASS_OPTS_DECLARE1 ); *)                                   */
-/*     IEVAL( r, mas_init_load_protos( MAS_PASS_OPTS_DECLARE1 ) );                                   */
+/*     (*   r = mas_init_load_protos( mas_options_t * popts ); *)                                   */
+/*     IEVAL( r, mas_init_load_protos( mas_options_t * popts ) );                                   */
 /*     MAS_LOG( "(%d) init server: to create lcontrols", r );                                        */
 /*     if ( r >= 0 )                                                                                 */
 /*       mas_lcontrols_list_create(  );                                                              */
@@ -460,7 +455,7 @@ mas_init_daemon( MAS_PASS_OPTS_DECLARE1 )
 /* }                                                                                                 */
 /* #endif                                                                                            */
 void
-mas_destroy_server( MAS_PASS_OPTS_DECLARE1 )
+mas_destroy_server( mas_options_t * popts )
 {
   EMSG( "D" );
   {
@@ -497,11 +492,14 @@ mas_destroy_server( MAS_PASS_OPTS_DECLARE1 )
 #endif
   mas_lcontrols_delete_list(  );
   mas_in_thread_end(  );
-  mas_threads_destroy( MAS_PASS_OPTS_PASS1 );
+
+  mas_threads_destroy(  );
+  /* mas_threads_destroy( popts ); */
+
   mas_protos_destroy(  );
 
 
-  mas_destroy( MAS_PASS_OPTS_PASS1 );
+  mas_destroy( popts );
   MAS_LOG( "to cancel ticker" );
   MAS_LOG( "to cancel logger" );
   if ( ctrl.threads.n.logger.thread )
@@ -523,7 +521,7 @@ mas_destroy_server( MAS_PASS_OPTS_DECLARE1 )
       {
         /* char *pidpath;                           */
         /*                                          */
-        /* pidpath = mas_strdup( MAS_PASS_OPTS_PREF dir.pids );    */
+        /* pidpath = mas_strdup( popts-> dir.pids );    */
         /* pidpath = mas_strcat_x( pidpath, name ); */
 
         mas_close( ctrl.pidfd[i] );

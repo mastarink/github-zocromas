@@ -46,7 +46,7 @@ more:
 
 
 int
-mas_threads_init( MAS_PASS_OPTS_DECLARE1 )
+mas_threads_init( mas_options_t * popts )
 {
   int r = 0;
 
@@ -168,7 +168,7 @@ mas_threads_init( MAS_PASS_OPTS_DECLARE1 )
 }
 
 void
-mas_threads_destroy( MAS_PASS_OPTS_DECLARE1 )
+mas_threads_destroy( void )
 {
   pthread_attr_destroy( &ctrl.thglob.custom_attr );
 

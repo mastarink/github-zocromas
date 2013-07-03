@@ -118,12 +118,12 @@ __attribute__ ( ( constructor ) )
 int
 main( int argc, char *argv[], char *env[] )
 {
-  MAS_PASS_OPTS_DECL_GREF;
+  extern mas_options_t gopts;
   int r = 0, rn = 0;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
   HMSG( "MAIN e:%d", errno );
-  r = mas_master_bunch( MAS_PASS_OPTS_GREF argc, argv, env );
+  r = mas_master_bunch( &gopts, argc, argv, env );
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
   return r;
 }

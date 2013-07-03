@@ -28,6 +28,9 @@ extern mas_control_t ctrl;
 #include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
+
+
+#include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/modules/mas_modules_commands_eval.h>
 
 /* mas_destroy_server */
@@ -157,18 +160,21 @@ sigterm_han( int s )
 void
 pinfo( void )
 {
-  MAS_PASS_OPTS_DECL_GREF;
-  char *infos = NULL;
+  extern mas_options_t gopts;
+  mas_evaluated_t *infos = NULL;
 
-  infos = mas_evaluate_command( MAS_PASS_OPTS_GREF "server info" );
+  infos = mas_evaluate_command( &gopts, "server info" );
   if ( infos )
   {
-    if ( !ctrl.stderrfile || ( fputs( infos, ctrl.stderrfile ) < 0 ) )
-      if ( !ctrl.old_stderrfile || ( fputs( infos, ctrl.old_stderrfile ) < 0 ) )
-        fputs( infos, ctrl.msgfile );
+    if ( !ctrl.stderrfile || ( fputs( ( char * ) infos->data, ctrl.stderrfile ) < 0 ) )
+      if ( !ctrl.old_stderrfile || ( fputs( ( char * ) infos->data, ctrl.old_stderrfile ) < 0 ) )
+        fputs( ( char * ) infos->data, ctrl.msgfile );
 
     /* show_info( ctrl.old_stderrfile ); */
-    mas_free( infos );
+
+
+    /* mas_free( infos ); */
+    mas_evaluated_delete( infos );
   }
 }
 
@@ -294,7 +300,7 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
-  MAS_PASS_OPTS_DECL_GREF;
+  extern mas_options_t gopts;
 
   {
     int rn = 0;
@@ -306,6 +312,7 @@ mas_atexit( void )
   }
 
   mas_destroy_server( &gopts );
+  /* mas_destroy_server( MAS_PASS_OPTS_REF ); */
 #ifdef MAS_TRACEMEM
   {
     extern unsigned long memory_balance;

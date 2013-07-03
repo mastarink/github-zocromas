@@ -3,6 +3,22 @@
 
 #include <unistd.h>
 
+typedef enum mas_cmdtype_e
+{
+  MAS_CMD_PCHAR,
+  MAS_CMD_CONST_PCHAR,
+  MAS_CMD_FILE_LOAD,
+  MAS_CMD_CONST_FNAME_LOAD,
+} mas_cmdtype_t;
+
+typedef struct mas_evaluated_s mas_evaluated_t;
+struct mas_evaluated_s
+{
+  mas_cmdtype_t type;
+  void *data;
+};
+
+
 
 typedef enum mas_content_type_e
 {
@@ -38,7 +54,7 @@ struct mas_unidata_s
 {
   mas_content_type_t icontent_type;
   size_t size;
-  char *data;
+  mas_evaluated_t *data;
 };
 
 

@@ -14,10 +14,10 @@ mas_http_t *mas_http_make_out_header( mas_http_t * http, const char *name, const
 
 mas_http_t *mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http );
 
-mas_http_t *mas_http_reply( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http );
+mas_http_t *mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http );
 mas_http_t *mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http );
 const char *mas_http_status_code_message( mas_rcontrol_t * prcontrol, mas_http_t * http );
 
-mas_http_t *mas_http_make_data_auto( MAS_PASS_OPTS_DECLARE mas_rcontrol_t * prcontrol, mas_http_t * http );
+mas_http_t *mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http );
 
 #endif

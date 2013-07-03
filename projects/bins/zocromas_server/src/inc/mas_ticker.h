@@ -2,7 +2,7 @@
 #  define MAS_TICKER_H
 
 
-int mas_ticker_start( MAS_PASS_OPTS_DECLARE1 );
+int mas_ticker_start( mas_options_t * popts );
 int mas_ticker_stop( void );
 
 

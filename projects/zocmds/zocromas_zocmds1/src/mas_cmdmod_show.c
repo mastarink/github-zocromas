@@ -5,19 +5,12 @@
 #include <stdlib.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
 
 
-#include <mastar/msg/mas_msg_def.h>
-#include <mastar/msg/mas_msg_tools.h>
-
+#include <mastar/fileinfo/mas_unidata.h>
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 /*
@@ -35,13 +28,13 @@ related:
 
 
 
-static char *
+static mas_evaluated_t *
 msg_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
 
   result = mas_strdup( "smth" );
-  return ( char * ) result;
+  return mas_evaluated_wrap_pchar( result );
 }
 
 mas_cmd_t subcmdtable[] = {

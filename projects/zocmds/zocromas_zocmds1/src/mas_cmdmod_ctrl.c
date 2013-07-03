@@ -14,6 +14,9 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
@@ -39,24 +42,25 @@ related:
  * if there is f-n non-static <libname>_cmd than subtable ignored ! - is it FIXME ?
 */
 
-char *
+static mas_evaluated_t *
 ctrl_cmd( STD_CMD_ARGS )
 {
   char *r = NULL;
 
-  return r;
+  return mas_evaluated_wrap_pchar( r );
 }
 
-static char *
+static mas_evaluated_t *
 sleep_cmd( STD_CMD_ARGS )
 {
   char *r = NULL;
-  int secs = 0;
+  int secs = 2;
 
-  sscanf( args, "%d", &secs );
+  if ( args )
+    sscanf( args, "%d", &secs );
   sleep( secs );
   r = mas_strdup( "Ha-ha-ha" );
-  return r;
+  return mas_evaluated_wrap_pchar( r );
 }
 
 mas_cmd_t subcmdtable[] = {

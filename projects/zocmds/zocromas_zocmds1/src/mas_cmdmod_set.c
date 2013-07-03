@@ -24,11 +24,13 @@
 #endif
 
 
+
+#include <mastar/fileinfo/mas_unidata.h>
+
 #include <mastar/modules/mas_modules_commands_eval.h>
 #include <mastar/modules/mas_modules_commands.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
 
 
@@ -45,7 +47,7 @@ related:
 */
 
 
-static char *
+static mas_evaluated_t *
 msg_cmd( STD_CMD_ARGS )
 {
   cMSG( "set msg args:%s", args );
@@ -80,7 +82,7 @@ msg_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-static char *
+static mas_evaluated_t *
 log_cmd( STD_CMD_ARGS )
 {
   if ( ( 0 == strcmp( args, "on" ) ) || ( 0 == strcmp( args, "yes" ) ) || ( 0 == strcmp( args, "1" ) ) )
@@ -103,7 +105,7 @@ log_cmd( STD_CMD_ARGS )
 }
 
 #ifdef MAS_USE_TICKER
-static char *
+static mas_evaluated_t *
 ticker_cmd( STD_CMD_ARGS )
 {
   if ( ( 0 == strcmp( args, "on" ) ) || ( 0 == strcmp( args, "yes" ) ) || ( 0 == strcmp( args, "1" ) ) )
@@ -127,7 +129,7 @@ ticker_cmd( STD_CMD_ARGS )
 #endif
 
 #ifdef MAS_USE_LISTENER
-static char *
+static mas_evaluated_t *
 var_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
@@ -175,7 +177,7 @@ var_cmd( STD_CMD_ARGS )
       mas_free( name );
     }
   }
-  return result;
+  return mas_evaluated_wrap_pchar( result );
 }
 #endif
 

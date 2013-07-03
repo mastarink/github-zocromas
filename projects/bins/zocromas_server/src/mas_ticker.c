@@ -195,7 +195,7 @@ mas_ticker_th( void *arg )
 
 /* naming : pthread_create = start */
 int
-mas_ticker_start( MAS_PASS_OPTS_DECLARE1 )
+mas_ticker_start( mas_options_t * popts )
 {
   int r = 0;
 

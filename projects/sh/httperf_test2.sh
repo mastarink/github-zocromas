@@ -12,5 +12,7 @@ if [[ -f "sh/setup.sh" ]] ; then
   fi
   if [[ -f $testdir/${now_stamp}.httperf_test2 ]] ; then
     cat $testdir/${now_stamp}.httperf_test2
+    echo "@ $testdir/${now_stamp}.httperf_test2" >&2
+    e $testdir/${now_stamp}.httperf_test2
   fi
 fi

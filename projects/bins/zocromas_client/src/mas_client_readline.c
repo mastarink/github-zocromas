@@ -1,4 +1,3 @@
-#define MAS_NOPASS_OPTS
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -19,6 +18,7 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 extern mas_control_t ctrl;
+
 #include <mastar/init/mas_opts_common.h>
 
 
@@ -246,9 +246,8 @@ mas_client_readline_event( void )
 /*                                            */
 /*                                            */
 int
-mas_client_init_readline( MAS_PASS_OPTS_DECLARE1 )
+mas_client_init_readline( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   int rh = 0;
 
   /* rl_add_defun( "quit", mas_client_readline_quit, CTRL( 'q' ) ); */
@@ -260,12 +259,12 @@ mas_client_init_readline( MAS_PASS_OPTS_DECLARE1 )
 
   snprintf( prompt, sizeof( prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt );
   /* rl_event_hook = mas_client_readline_event; */
-  WMSG( "HISTORY to LOAD from %s", MAS_PASS_OPTS_PREF dir.history );
-  if ( MAS_PASS_OPTS_PREF dir.history )
+  WMSG( "HISTORY to LOAD from %s", popts->dir.history );
+  if ( popts->dir.history )
   {
     char *fpath = NULL;
 
-    fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.history );
+    fpath = mas_strdup( popts->dir.history );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, "history" );
 
@@ -301,16 +300,15 @@ mas_client_init_readline( MAS_PASS_OPTS_DECLARE1 )
 }
 
 void
-mas_client_destroy_readline( MAS_PASS_OPTS_DECLARE1 )
+mas_client_destroy_readline( mas_options_t * popts )
 {
-  MAS_PASS_OPTS_DECL_PREF;
   WMSG( "HISTORY to SAVE" );
-  if ( MAS_PASS_OPTS_PREF dir.history )
+  if ( popts->dir.history )
   {
     int rh = 0;
     char *fpath = NULL;
 
-    fpath = mas_strdup( MAS_PASS_OPTS_PREF dir.history );
+    fpath = mas_strdup( popts->dir.history );
     fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, "history" );
 

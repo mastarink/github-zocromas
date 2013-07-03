@@ -30,12 +30,12 @@ int mas_fileinfo_make_etag( mas_fileinfo_t * fileinfo );
 char *mas_fileinfo_content_type_string( mas_fileinfo_t * fileinfo );
 
 /* char *mas_fileinfo_load_data( mas_fileinfo_t * fileinfo ); */
-char *_mas_fileinfo_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo );
+mas_evaluated_t *_mas_fileinfo_data( const  mas_options_t * popts, mas_fileinfo_t * fileinfo );
 
-char *mas_fileinfo_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo );
+mas_evaluated_t *mas_fileinfo_data( const  mas_options_t * popts, mas_fileinfo_t * fileinfo );
 
-/* char *_mas_fileinfo_link_data( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *data, size_t size ); */
-char *_mas_fileinfo_link_dataz( MAS_PASS_OPTS_DECLARE mas_fileinfo_t * fileinfo, char *data );
+/* char *_mas_fileinfo_link_data( mas_options_t * popts, mas_fileinfo_t * fileinfo, char *data, size_t size ); */
+mas_evaluated_t *_mas_fileinfo_link_dataz( const  mas_options_t * popts, mas_fileinfo_t * fileinfo, mas_evaluated_t *data );
 
 /* char *mas_fileinfo_set_dataz( mas_fileinfo_t * fileinfo, char *data ); */
 /* char *mas_fileinfo_set_data( mas_fileinfo_t * fileinfo, char *data, size_t size ); */
@@ -54,9 +54,9 @@ void mas_fileinfo_set_content_size( mas_fileinfo_t * fileinfo, const char *ssize
 mas_unidata_t *mas_fileinfo_unidata( mas_fileinfo_t * fileinfo );
 
 
-char *mas_load_filename_at_file( MAS_PASS_OPTS_DECLARE const char *root, const char *tail, size_t size, size_t * ptruesize,
+mas_evaluated_t *mas_load_filename_at_file(const  mas_options_t * popts, const char *root, const char *tail, size_t size, size_t * ptruesize,
                                  ino_t * ptrueinode, time_t * ptruefiletime, const void *arg );
-char *mas_load_filename_at_fd( MAS_PASS_OPTS_DECLARE const char *root, const char *tail, size_t size, size_t * ptruesize,
+mas_evaluated_t *mas_load_filename_at_fd(const  mas_options_t * popts, const char *root, const char *tail, size_t size, size_t * ptruesize,
                                ino_t * ptrueinode, time_t * ptruefiletime, const void *arg );
 
 #endif
