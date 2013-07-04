@@ -68,7 +68,7 @@ function run_any ()
   #      echo "bash:to run  $builddir/$rname" >&2
 
   if [[ "$MAS_USE_RUN_STRACE" ]] ; then
-    straceit='strace -q -fr -C -o strace.tmp'
+    straceit="strace -q -fr -C -o /tmp/strace.$MAS_USE_RUN_STRACE.`datemt`.tmp"
   fi
 
 

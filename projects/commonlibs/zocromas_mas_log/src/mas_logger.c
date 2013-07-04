@@ -125,8 +125,8 @@ mas_logger_delete( int stopever )
   mas_logger_clean_queue(  );
   mas_free( log_list );
   logger_list = NULL;
-  if ( stopever )
-    ctrl.log_stopped = 1;
+  /* if ( stopever )         */
+  /*   ctrl.log_stopped = 1; */
 }
 
 static void

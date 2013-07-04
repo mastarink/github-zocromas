@@ -95,7 +95,8 @@ mas_threads_init( mas_options_t * popts )
 
     size = CPU_ALLOC_SIZE( 4 );
     CPU_ZERO_S( size, ctrl.thglob.listener_set );
-    CPU_SET_S( 1, size, ctrl.thglob.listener_set );
+    CPU_SET_S( 0, size, ctrl.thglob.listener_set );
+    /* CPU_SET_S( 1, size, ctrl.thglob.listener_set ); */
     pthread_attr_setaffinity_np( &ctrl.thglob.listener_attr, size, ctrl.thglob.listener_set );
   }
 
@@ -106,6 +107,8 @@ mas_threads_init( mas_options_t * popts )
 
     size = CPU_ALLOC_SIZE( 4 );
     CPU_ZERO_S( size, ctrl.thglob.transaction_set );
+    CPU_SET_S( 0, size, ctrl.thglob.transaction_set );
+    CPU_SET_S( 1, size, ctrl.thglob.transaction_set );
     CPU_SET_S( 2, size, ctrl.thglob.transaction_set );
     CPU_SET_S( 3, size, ctrl.thglob.transaction_set );
     pthread_attr_setaffinity_np( &ctrl.thglob.transaction_attr, size, ctrl.thglob.transaction_set );

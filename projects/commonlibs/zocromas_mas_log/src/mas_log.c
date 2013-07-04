@@ -61,13 +61,13 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
   char buffer[1024 * 8];
   mas_loginfo_t *li = NULL;
 
-  if ( !ctrl.log_offmem && ctrl.do_log && !ctrl.log_disabled )
+  if ( !ctrl.log_offmem && ctrl.log && !ctrl.log_disabled )
   {
-    if ( ctrl.log_stopped )
-    {
-      EMSG( "LOG STOPPED" );
-    }
-    else
+    /* if ( ctrl.log_stopped )  */
+    /* {                        */
+    /*   EMSG( "LOG STOPPED" ); */
+    /* }                        */
+    /* else                     */
     {
       log_list = mas_logger_queue( 1 );
       /* pthread_t pth;                           */
@@ -138,7 +138,7 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
 }
 
 static int
-mas_log_unlim(  const char *func, int line, int merrno, const char *fmt, ... )
+mas_log_unlim( const char *func, int line, int merrno, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
@@ -155,12 +155,12 @@ mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list a
   if ( !ctrl.log_offmem && ctrl.log_q_mem > 200000000 )
   {
     ctrl.log_offmem = 1;
-    mas_log_unlim(  FL, 0, "memory ....." );
+    mas_log_unlim( FL, 0, "memory ....." );
   }
   else if ( ctrl.log_offmem && ctrl.log_q_mem < 150000000 )
   {
     ctrl.log_offmem = 0;
-    mas_log_unlim(  FL, 0, "... memory" );
+    mas_log_unlim( FL, 0, "... memory" );
   }
   mas_vlog( func, line, merrno, fmt, args );
   return 0;

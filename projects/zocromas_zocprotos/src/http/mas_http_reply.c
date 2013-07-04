@@ -318,6 +318,11 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
       /* mas_transaction_write( prcontrol, _mas_fileinfo_data( fileinfo ), mas_fileinfo_data_size( fileinfo ) ); */
 
       http = mas_proto_http_write( http, data->data, datasz );
+
+/* ????????? */
+      pthread_yield(  );
+/* ????????? */
+
       MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
       HMSG( "HTTP written DATA (%lu)", ( unsigned long ) http ? http->written : 0 );
     }

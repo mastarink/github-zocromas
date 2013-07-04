@@ -1,2 +1,3 @@
 #!/bin/sh
-netstat -p $@|grep mas_
+netstat -4p $@
+# | grep '.auxd'

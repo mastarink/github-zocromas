@@ -341,7 +341,7 @@ mas_post_init( mas_options_t * popts )
     ctrl.logpath = mas_strdup( popts->dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
-    ctrl.do_log = popts->nolog ? 1 : 0;
+    ctrl.log = popts->nolog ? 0 : 1;
   }
   else
   {
