@@ -94,7 +94,7 @@ function setup_vers ()
   #   prj_configure_opts="$prj_configure_opts --with-log-dir=log"
   #   prj_configure_opts="$prj_configure_opts --with-server=/tmp/zocromas.socket"
   #   prj_configure_opts="$prj_configure_opts --with-def-proto=xcromas"
-      echo "to read '$global_flavour_opts_file'" >&2
+      if [[ "$MAS_SH_VERBOSE" ]] ; then echo "to read '$global_flavour_opts_file'" >&2 ; fi
       tmprex='^#'
       while read c ; do 
 	if ! [[ "$c" =~ ^--prefix= ]] &&  ! [[ "$c" =~ $tmprex ]] ; then
@@ -102,17 +102,17 @@ function setup_vers ()
 	fi
       done < $global_flavour_opts_file
       if [[ -f $indir_flavour_opts_file ]] ; then
-        echo "to read '$indir_flavour_opts_file'" >&2
+        if [[ "$MAS_SH_VERBOSE" ]] ; then echo "to read '$indir_flavour_opts_file'" >&2 ; fi
 	while read c ; do
 	  if ! [[ "$c" =~ ^--prefix= ]] && ! [[ "$c" =~ $tmprex ]] ; then
 	    prj_configure_opts="$prj_configure_opts $c"
 	  fi
 	done < $indir_flavour_opts_file
       else
-        echo "did not read $indir_flavour_opts_file" >&2
+        if [[ "$MAS_SH_VERBOSE" ]] ; then  echo "did not read $indir_flavour_opts_file" >&2 ; fi
       fi
     else
-      echo "preset opts" >&2
+      if [[ "$MAS_SH_VERBOSE" ]] ; then echo "preset opts" >&2 ; fi
     fi
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
@@ -155,7 +155,7 @@ function setup_vers ()
 #   echo "ERROR : prjname=$prjname ; no x: $build_at/src/[${rprefix}]${prjname}" >&2
 #   echo "ERROR : mas_name=$mas_name ; no x: $build_at/src/[${rprefix}]${mas_name}" >&2
   else
-    echo "can't set binary_preset @ $bsrcdir" >&2
+    if [[ "$MAS_SH_VERBOSE" ]] ; then echo "can't set binary_preset @ $bsrcdir" >&2 ; fi
   fi
 # echo "($rname_case)::: $rname_preset" >&2
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2

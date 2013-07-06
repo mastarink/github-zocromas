@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+  <body style="">
+    <div>
+      <div>
+        <h1>Harry Harrison 1925-2012</h1>
+        <img src="HarryHarrisonG.jpeg"/>
+        <img src="HarryHarrison.jpeg"/>
+      </div>
+    </div>
+  </body>
+</html>

@@ -72,7 +72,6 @@ mas_rcontrol_init( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol )
   MAS_LOG( "init transaction" );
   if ( plcontrol )
   {
-    OMSG( "RC.I 1" );
     if ( plcontrol->h.pchannel && plcontrol->h.pchannel->opened )
     {
       mas_rcontrol_set_channel( prcontrol, plcontrol->h.pchannel );
@@ -92,7 +91,6 @@ mas_rcontrol_init( mas_rcontrol_t * prcontrol, mas_lcontrol_t * plcontrol )
       gettimeofday( &td, NULL );
       prcontrol->h.activity_time = td;
     }
-    OMSG( "RC.I 1" );
   }
   else
   {

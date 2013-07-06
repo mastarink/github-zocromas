@@ -16,16 +16,17 @@
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#else
-#  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_vclass.h>
-#  include <mastar/varset/mas_varset_object.h>
-#  include <mastar/varset/mas_varset_search.h>
-#  include <mastar/varset/mas_varset.h>
-#endif
 
+#include <mastar/types/mas_varvec_types.h>
+#include <mastar/varvec/mas_varvec.h>
+#include <mastar/varvec/mas_varvec_object.h>
+#include <mastar/varvec/mas_varvec_search.h>
+#include <mastar/varvec/mas_varvec.h>
+
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/varset/mas_varset_object.h>
+#include <mastar/varset/mas_varset_search.h>
+#include <mastar/varset/mas_varset.h>
 
 #include "mas_thread_variables.h"
 
@@ -59,11 +60,7 @@ mas_thread_variables_delete( void )
   ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
   if ( ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) && thd->variables )
   {
-#ifdef MAS_OLD_VARIABLES_HTTP
-    mas_variables_delete( thd->variables );
-#else
     mas_varset_delete( thd->variables );
-#endif
     thd->variables = NULL;
   }
   return 0;
@@ -217,19 +214,10 @@ mas_thread_variables_delete( void )
 /*   return r;                                                                                                     */
 /* }                                                                                                               */
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-mas_variable_t *
+mas_varvec_element_t *
 mas_thread_variables_find( const char *vclass_name, const char *name )
-#else
-mas_vclass_element_t *
-mas_thread_variables_find( const char *vclass_name, const char *name )
-#endif
 {
-#ifdef MAS_OLD_VARIABLES_HTTP
-  mas_variable_t *found = NULL;
-#else
-  mas_vclass_element_t *found = NULL;
-#endif
+  mas_varvec_element_t *found = NULL;
   mas_thdata_t *thd;
 
   ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
@@ -238,11 +226,7 @@ mas_thread_variables_find( const char *vclass_name, const char *name )
     /* lock */
     if ( thd->variables )
     {
-#ifdef MAS_OLD_VARIABLES_HTTP
-      found = mas_variables_find( thd->variables, vclass_name, name );
-#else
       found = mas_varset_find_variable( thd->variables, vclass_name, name );
-#endif
     }
   }
   return found;
@@ -258,10 +242,8 @@ mas_thread_variable_set_text( th_type_t thtype, const char *vclass_name, const c
   if ( name && ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) )
   {
     /* lock */
-#ifdef MAS_OLD_VARIABLES_HTTP
-    thd->variables = mas_variable_set_text( thd->variables, /* thtype, */ vclass_name, name, txt );
-#else
-#endif
+
+    thd->variables = mas_varset_search_variable( thd->variables, vclass_name, name, txt );
   }
   return r;
 }

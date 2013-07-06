@@ -41,8 +41,9 @@ _mas_varvec_compare( const void *a, const void *b )
     return aclass->name ? 1 : 0;
   return strcmp( aclass->name, bclass->name );
 }
+
 mas_varvec_element_t *
-_mas_varvec_find_variable( mas_varvec_t * vclass, const char *name )
+mas_varvec_find_variable( mas_varvec_t * vclass, const char *name )
 {
   mas_varvec_element_t *found = NULL;
 
@@ -66,19 +67,13 @@ _mas_varvec_find_variable( mas_varvec_t * vclass, const char *name )
 }
 
 mas_varvec_element_t *
-mas_varvec_find_variable( mas_varvec_t * vclass, const char *name )
-{
-  return _mas_varvec_find_variable( vclass, name );
-}
-
-mas_varvec_element_t *
 __mas_varvec_search_variable( mas_varvec_t * vclass, const char *name )
 {
   mas_varvec_element_t *found = NULL;
 
   if ( vclass )
   {
-    found = _mas_varvec_find_variable( vclass, name );
+    found = mas_varvec_find_variable( vclass, name );
     if ( !found )
     {
       found = _mas_varvec_add_elements( vclass, 2 );
@@ -121,7 +116,7 @@ mas_varvec_search_variable( mas_varvec_t * vclass, const char *vclass_name, cons
 
 mas_varvec_t *
 mas_varvec_search_variable_va( mas_varvec_t * vclass, const char *vclass_name, const char *name,
-                                      mas_xvsnprintf_t func, const char *fmt, va_list args )
+                               mas_xvsnprintf_t func, const char *fmt, va_list args )
 {
   char *text = NULL;
   size_t txsize = 1024 * 10;
@@ -139,8 +134,7 @@ mas_varvec_search_variable_va( mas_varvec_t * vclass, const char *vclass_name, c
 }
 
 mas_varvec_t *
-mas_varvec_search_variablef( mas_varvec_t * vclass, const char *vclass_name, const char *name,
-                                    mas_xvsnprintf_t func, const char *fmt, ... )
+mas_varvec_search_variablef( mas_varvec_t * vclass, const char *vclass_name, const char *name, mas_xvsnprintf_t func, const char *fmt, ... )
 {
   va_list args;
 

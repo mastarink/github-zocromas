@@ -106,17 +106,7 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_channel zocromas_mas_transaction zocromas_mas_variables])
-
-AC_ARG_ENABLE([old_variables],
-	      AC_HELP_STRING([--enable-old-variables],
-			     [turn on old variables]),,
-	      [enable_old_variables=no])
-
-if test x$enable_old_variables = xyes ; then
-    AC_DEFINE(MAS_OLD_VARIABLES_HTTP, 1,
-	[Enable old variables lib])
-fi
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_channel zocromas_mas_transaction ])
 
 
 

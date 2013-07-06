@@ -101,7 +101,7 @@ AC_TYPE_UID_T
 # PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 PKG_CHECK_MODULES([LIBNOTIFY], [libnotify])
 PKG_CHECK_MODULES([GTK], [gtk+-2.0])
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_control zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log zocromas_mas_variables])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_control zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log ])
 
 # Checks for header files.
 
@@ -111,15 +111,6 @@ PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_cont
 
 # PKG_CHECK_MODULES([DEPS], [...........])
 
-AC_ARG_ENABLE([old_variables],
-	      AC_HELP_STRING([--enable-old-variables],
-			     [turn on old variables]),,
-	      [enable_old_variables=no])
-
-if test x$enable_old_variables = xyes ; then
-    AC_DEFINE(MAS_OLD_VARIABLES_HTTP, 1,
-	[Enable old variables lib])
-fi
 
 
 

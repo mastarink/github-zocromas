@@ -1,5 +1,3 @@
-#define MAS_USE_VARVEC
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -8,27 +6,15 @@
 
 #include <mastar/wrap/mas_memory.h>
 
-/* #include <mastar/types/mas_control_types.h> */
-/* extern mas_control_t ctrl; */
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#else
-#  include <mastar/types/mas_varset_types.h>
-#  ifdef MAS_USE_VARVEC
-#    include <mastar/types/mas_varvec_types.h>
-#    include <mastar/varvec/mas_varvec.h>
-#    include <mastar/varvec/mas_varvec_search.h>
-#  else
-#    include <mastar/varset/mas_varset_vclass.h>
-#    include <mastar/varset/mas_varset_vclass_search.h>
-#  endif
-#  include <mastar/varset/mas_varset.h>
-#endif
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/types/mas_varvec_types.h>
+#include <mastar/varvec/mas_varvec.h>
+#include <mastar/varvec/mas_varvec_search.h>
+#include <mastar/varset/mas_varset.h>
 
 #include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/fileinfo/mas_fileinfo.h>
@@ -152,7 +138,7 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
 /*       EMSG( "[%lu] %lu. %s\n", ( unsigned long ) depth, id, name ? name : "-" );                                                 */
 /*       if ( vclass->veccnt )                                                                                                      */
 /*       {                                                                                                                          */
-/*         mas_vclass_element_t *vec;                                                                                                          */
+/*         mas_varvec_element_t *vec;                                                                                               */
 /*                                                                                                                                  */
 /*         vec = vclass->vec;                                                                                                       */
 /*         for ( int i = 0; i < vclass->veccnt; i++ )                                                                               */
@@ -199,15 +185,7 @@ mas_proto_http_parse_header( mas_rcontrol_t * prcontrol, mas_http_t * http, char
     MAS_LOG( "http parse headers name:'%s' values:'%s'", name, values );
     HMSG( "HTTP H: '%s' = '%s'", name, values );
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-    http->indata = mas_variable_create_x( http->indata, /* MAS_THREAD_TRANSACTION, */ "inheader", name, NULL, "%s", values, 0 );
-#elif defined(MAS_VARSET_VARIABLES_HTTP)
-    http->indata = mas_varset_search_variable( http->indata, "inheader", name, values );
-#elif defined(MAS_USE_VARVEC)
     http->indata = mas_varvec_search_variable( http->indata, NULL, name, values );
-#else
-    http->indata = mas_varset_vclass_search_variable( http->indata, NULL, name, values );
-#endif
     HMSG( "HTTP HEADER (parse) %s='%s'", name, values );
 
 #if 0

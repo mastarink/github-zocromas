@@ -1,5 +1,3 @@
-#define MAS_USE_VARVEC
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -24,23 +22,15 @@ extern mas_control_t ctrl;
 /* #include "server/inc/mas_server_tools.h" */
 #include <mastar/thtools/mas_ocontrol_tools.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#elif defined(MAS_USE_VARVEC)
-#  include <mastar/types/mas_varvec_types.h>
-#  include <mastar/varvec/mas_varvec.h>
-#  include <mastar/varvec/mas_varvec_object.h>
+#include <mastar/types/mas_varvec_types.h>
+#include <mastar/varvec/mas_varvec.h>
+#include <mastar/varvec/mas_varvec_object.h>
 
-#  include <mastar/varvec/mas_varvec_search.h>
-#  include <mastar/varvec/mas_varvec.h>
-#else
-#  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_vclass.h>
-#  include <mastar/varset/mas_varset_vclass_object.h>
+#include <mastar/varvec/mas_varvec_search.h>
+#include <mastar/varvec/mas_varvec.h>
 
-#endif
-#  include <mastar/varset/mas_varset_search.h>
-#  include <mastar/varset/mas_varset.h>
+#include <mastar/varset/mas_varset_search.h>
+#include <mastar/varset/mas_varset.h>
 
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
@@ -83,20 +73,7 @@ mas_proto_add_host( const void *env, const char *section, const char *sectvalue,
 
   proto_desc = ( mas_transaction_protodesc_t * ) env;
   HMSG( "WOW '%s:%s'.'%s' : '%s'", section, sectvalue, name, value );
-#ifdef MAS_OLD_VARIABLES_HTTP
-  proto_desc->variables = mas_variable_create_text( proto_desc->variables, /* MAS_THREAD_NONE, */ "docroot", sectvalue, value, 0 );
-/* #elif defined(MAS_USE_VARVEC)                                                                               */
-/*   proto_desc->variables = mas_varvec_search_variable( proto_desc->variables, "docroot", sectvalue, value ); */
-#else
   proto_desc->variables = mas_varset_search_variable( proto_desc->variables, "docroot", sectvalue, value );
-  /* {                                                                               */
-  /*   mas_vclass_element_t *tv;                                                                */
-  /*                                                                                 */
-  /*   tv = mas_varset_find_variable( proto_desc->variables, "docroot", sectvalue ); */
-  /*   if ( tv )                                                                     */
-  /*     HMSG( "WAW %s", mas_varset_vclass_variable_get_value_ref( tv ) );           */
-  /* }                                                                               */
-#endif
 }
 
 static mas_option_parse_t opt_table[] = {
@@ -283,14 +260,10 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
     mas_proto_http_delete_request( http );
     http = NULL;
   }
-  if ( http && http->indata )
-  {
-#ifdef MAS_OLD_VARIABLES_HTTP
-    mas_variables_log_pairs( http->indata, "inheader" );
-#else
-
-#endif
-  }
+  /* if ( http && http->indata )                            */
+  /* {                                                      */
+  /*   mas_variables_log_pairs( http->indata, "inheader" ); */
+  /* }                                                      */
 #ifdef MAS_HTTP_MULTIPART
   mas_channel_set_buffer_copy( prcontrol->h.pchannel, NULL );
 #endif
@@ -340,29 +313,13 @@ mas_proto_http_delete_request( mas_http_t * http )
 
     if ( http->indata )
     {
-#ifdef MAS_OLD_VARIABLES_HTTP
-      mas_variables_delete( http->indata );
-#elif defined(MAS_VARSET_VARIABLES_HTTP)
-      mas_varset_delete( http->indata );
-#elif defined(MAS_USE_VARVEC)
       mas_varvec_delete( http->indata );
-#else
-      mas_varset_vclass_delete( http->indata );
-#endif
     }
     http->indata = NULL;
 
     if ( http->outdata )
     {
-#ifdef MAS_OLD_VARIABLES_HTTP
-      mas_variables_delete( http->outdata );
-#elif defined(MAS_VARSET_VARIABLES_HTTP)
-      mas_varset_delete( http->outdata );
-#elif defined(MAS_USE_VARVEC)
       mas_varvec_delete( http->outdata );
-#else
-      mas_varset_vclass_delete( http->outdata );
-#endif
     }
     http->outdata = NULL;
 

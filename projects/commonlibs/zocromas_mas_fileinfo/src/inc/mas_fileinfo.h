@@ -15,19 +15,8 @@ related:
   mas_fileinfo_object.c
 */
 
-#  ifdef MAS_OLD_VARIABLES_HTTP
-mas_variables_list_head_t *mas_fileinfo_make_headers( mas_variables_list_head_t * outdata, mas_fileinfo_t * fileinfo );
-mas_variables_list_head_t *mas_fileinfo_make_body( mas_variables_list_head_t * outdata, mas_fileinfo_t * fileinfo );
-#  elif defined(MAS_VARSET_VARIABLES_HTTP)
-mas_varset_t *mas_fileinfo_make_headers( mas_varset_t * outdata, mas_fileinfo_t * fileinfo );
-mas_varset_t *mas_fileinfo_make_body( mas_varset_t * outdata, mas_fileinfo_t * fileinfo );
-#  elif defined(MAS_USE_VARVEC)
 mas_varvec_t *mas_fileinfo_make_headers( mas_varvec_t * outdata, mas_fileinfo_t * fileinfo );
 mas_varvec_t *mas_fileinfo_make_body( mas_varvec_t * outdata, mas_fileinfo_t * fileinfo );
-#  else
-mas_varset_class_t *mas_fileinfo_make_headers( mas_varset_class_t * outdata, mas_fileinfo_t * fileinfo );
-mas_varset_class_t *mas_fileinfo_make_body( mas_varset_class_t * outdata, mas_fileinfo_t * fileinfo );
-#  endif
 
 int mas_fileinfo_make_etag( mas_fileinfo_t * fileinfo );
 

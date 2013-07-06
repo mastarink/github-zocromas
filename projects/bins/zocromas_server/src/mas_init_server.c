@@ -18,13 +18,9 @@
 #include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#else
-#  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_object.h>
-#  include <mastar/varset/mas_varset.h>
-#endif
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/varset/mas_varset_object.h>
+#include <mastar/varset/mas_varset.h>
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -148,21 +144,12 @@ mas_protos_destroy(  )
 
   for ( int ipr = 0; ipr < ctrl.protos_num; ipr++ )
   {
-#ifdef MAS_OLD_VARIABLES_HTTP
-    mas_variables_list_head_t *vars;
-
-    vars = ctrl.proto_descs[ipr].variables;
-    ctrl.proto_descs[ipr].variables = NULL;
-    if ( vars )
-      mas_variables_delete( vars );
-#else
     mas_varset_t *vars;
 
     vars = ctrl.proto_descs[ipr].variables;
     ctrl.proto_descs[ipr].variables = NULL;
     if ( vars )
       mas_varset_delete( vars );
-#endif
   }
   return r;
 }

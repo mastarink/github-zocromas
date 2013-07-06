@@ -75,12 +75,17 @@ _mas_channel_tune_socket( mas_channel_t * pchannel )
 
   if ( pchannel->serv.addr.sin_family == AF_INET )
   {
+#ifdef TCP_DEFER_ACCEPT
     /* r = mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_DEFER_ACCEPT, &yes, sizeof( yes ) ); */
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_DEFER_ACCEPT, &yes, sizeof( yes ) ) );
+#endif
+#ifdef TCP_QUICKACK
+    IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_QUICKACK, &yes, sizeof( yes ) ) );
+#endif
+#ifdef TCP_CORK
+    IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_CORK, &yes, sizeof( yes ) ) );
+#endif
   }
-  /* tMSG( "(%d) TCP_DEFER_ACCEPT", r ); */
-  /* if ( r >= 0 && pchannel->serv.addr.sin_family == AF_INET )                               */
-  /*   r = mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_CORK, &yes, sizeof( yes ) ); */
   if ( pchannel->serv.addr.sin_family == AF_INET )
   {
     /* r = mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof( yes ) ); */

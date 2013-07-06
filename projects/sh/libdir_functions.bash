@@ -116,7 +116,7 @@ function setup_dirs ()
     savedir="$admindir/saved"
     instdir="$admindir/install"
     flavourdir="$instdir/${mas_flavour:-default}"
-    echo "FLAVOUR: [${mas_flavour:-default}] -- $flavourdir" >&2
+    if [[ "$MAS_SH_VERBOSE" ]] ; then echo "FLAVOUR: [${mas_flavour:-default}] -- $flavourdir" >&2 ; fi
     instshdir="$admindir/install.sh"
     tmpdir="$admindir/tmp/"
 

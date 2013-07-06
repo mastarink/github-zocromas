@@ -22,12 +22,8 @@ extern mas_control_t ctrl;
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#else
 #  include <mastar/types/mas_varset_types.h>
 #  include <mastar/varset/mas_varset_search.h>
-#endif
 
 #include <mastar/transaction/mas_rcontrol_object.h>
 
@@ -247,11 +243,7 @@ mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, /* th_type_t thty
   if ( plcontrol && name )
   {
     pthread_rwlock_wrlock( &plcontrol->variables_rwlock );
-#ifdef MAS_OLD_VARIABLES_HTTP
-    plcontrol->variables = mas_variable_create_text( plcontrol->variables, /* thtype, */ vclass_name, name, txt, 0 );
-#else
     plcontrol->variables = mas_varset_search_variable( plcontrol->variables, vclass_name, name, txt );
-#endif
     pthread_rwlock_unlock( &plcontrol->variables_rwlock );
   }
   return r;
@@ -265,38 +257,21 @@ mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype,
   if ( plcontrol && name )
   {
     pthread_rwlock_wrlock( &plcontrol->variables_rwlock );
-#ifdef MAS_OLD_VARIABLES_HTTP
-    plcontrol->variables = mas_variable_set_text( plcontrol->variables, /* thtype, */ vclass_name, name, txt );
-#else
     plcontrol->variables = mas_varset_search_variable( plcontrol->variables, vclass_name, name, txt );
-#endif
     pthread_rwlock_unlock( &plcontrol->variables_rwlock );
   }
   return r;
 }
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-mas_variable_t *
+mas_varvec_element_t *
 mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name )
-#else
-mas_vclass_element_t *
-mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name, const char *name )
-#endif
 {
-#ifdef MAS_OLD_VARIABLES_HTTP
-  mas_variable_t *found = NULL;
-#else
-  mas_vclass_element_t *found = NULL;
-#endif
+  mas_varvec_element_t *found = NULL;
 
   if ( plcontrol && name )
   {
     pthread_rwlock_rdlock( &plcontrol->variables_rwlock );
-#ifdef MAS_OLD_VARIABLES_HTTP
-    found = mas_variables_find( plcontrol->variables, vclass_name, name );
-#else
     found = mas_varset_find_variable( plcontrol->variables, vclass_name, name );
-#endif
 
     pthread_rwlock_unlock( &plcontrol->variables_rwlock );
   }

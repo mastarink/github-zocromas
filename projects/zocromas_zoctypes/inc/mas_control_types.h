@@ -4,12 +4,7 @@
 #  include <stdio.h>
 
 #  include <mastar/types/mas_common_types.h>
-/* #  include <mastar/types/mas_log_types.h> */
-#  ifdef MAS_OLD_VARIABLES_HTTP
-#    include <mastar/types/mas_variables_types.h>
-#  else
-#    include <mastar/types/mas_varset_types.h>
-#  endif
+#  include <mastar/types/mas_varset_types.h>
 
 #  include <mastar/types/mas_listener_control_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>
@@ -35,7 +30,7 @@ struct mas_pthread_globals_s
   pthread_mutex_t cnttr1_mutex;
   pthread_mutex_t cnttr2_mutex;
   pthread_mutex_t cnttr3_mutex;
-  
+
   pthread_mutex_t logger_mutex;
   pthread_mutex_t logger_wait_mutex;
   pthread_cond_t logger_wait_cond;

@@ -18,15 +18,9 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#else
-#  include <mastar/types/mas_varvec_types.h>
-#  include <mastar/types/mas_varset_types.h>
-/* #  include <mastar/varset/mas_varset_vclass.h> */
-#  include <mastar/varset/mas_varset_vclass_namevalue.h>
-/* #  include <mastar/varset/mas_varset.h> */
-#endif
+#include <mastar/types/mas_varvec_types.h>
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/varvec/mas_varvec_namevalue.h>
 
 
 
@@ -61,21 +55,13 @@ args_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-  mas_variable_t *var;
-#else
-  mas_vclass_element_t *var;
-#endif
+  mas_varvec_element_t *var;
 
   var = mas_thread_variables_find( "client", "args" );
   if ( var )
   {
     /* cMSG( "CHECK ARGS: %s ::: %s", args, var->value ); */
-#ifdef MAS_OLD_VARIABLES_HTTP
-    result = mas_strdup( var->value );
-#else
-    result = mas_varset_vclass_variable_get_value( var );
-#endif
+    result = mas_varvec_variable_get_value( var );
   }
   else if ( args )
   {
@@ -83,7 +69,7 @@ args_cmd( STD_CMD_ARGS )
     mas_thread_variable_set_text( MAS_THREAD_TRANSACTION, "client", "args", args );
     result = mas_strdup( args );
   }
-  return mas_evaluated_wrap_pchar (result);
+  return mas_evaluated_wrap_pchar( result );
 }
 
 static mas_evaluated_t *
@@ -123,7 +109,7 @@ uuid_cmd( STD_CMD_ARGS )
     /*   }                                                                           */
     /* }                                                                             */
   }
-  return mas_evaluated_wrap_pchar (uuid);
+  return mas_evaluated_wrap_pchar( uuid );
 }
 
 

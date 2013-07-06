@@ -25,7 +25,7 @@ function doprj ()
   local cnt
   cnt=0
   setup_dirs || return 1
-  echo "$prjname $act ..." >&2
+  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "$prjname $act ..." >&2 ; fi
 # setup_vers || return 1
   if [[ "$1" == 'full' ]] ; then
     list='autoreconf configure make install'

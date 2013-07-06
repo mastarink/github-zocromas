@@ -1,5 +1,3 @@
-#define MAS_USE_VARVEC
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -19,13 +17,6 @@
 
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
-
-/* #ifdef MAS_OLD_VARIABLES_HTTP                 */
-/* #  include <mastar/variables/mas_variables.h> */
-/* #else                                         */
-/* #  include <mastar/types/mas_varset_types.h>  */
-/* #  include <mastar/varset/mas_varset.h>       */
-/* #endif                                        */
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"

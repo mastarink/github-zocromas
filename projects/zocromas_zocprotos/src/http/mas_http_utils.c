@@ -1,5 +1,3 @@
-#define MAS_USE_VARVEC
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -7,7 +5,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
-/* #include <time.h> */
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -19,17 +16,9 @@
 #include <mastar/log/mas_log.h>
 #include <mastar/channel/mas_channel.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#elif defined(MAS_USE_VARVEC)
-#  include <mastar/types/mas_varvec_types.h>
-#  include <mastar/varvec/mas_varvec.h>
-#  include <mastar/varset/mas_varset.h>
-#else
-#  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_vclass.h>
-#  include <mastar/varset/mas_varset.h>
-#endif
+#include <mastar/types/mas_varvec_types.h>
+#include <mastar/varvec/mas_varvec.h>
+#include <mastar/varset/mas_varset.h>
 
 #include "mas_http_utils.h"
 
@@ -143,42 +132,7 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
 {
   if ( http )
   {
-/* TODO !! writev : mas_variables_iovec_pairs */
-#ifdef MAS_OLD_VARIABLES_HTTP
-    char *buf;
-    int bufsize = 1024 * 6;
-
-    buf = mas_malloc( bufsize );
-
-
-    if ( buf )
-    {
-      int wm = -1;
-
-      wm = mas_variables_memory_write_pairs( http->outdata, set, buf, bufsize );
-      if ( wm > 0 )
-      {
-        strcpy( buf + wm, "\r\n" );
-        wm += 2;
-        MAS_LOG( "w.pairs:[%s]", buf );
-        HMSG( "HTTP write OUT HEADERS" );
-        http = mas_proto_http_write( http, buf, wm );
-      }
-      mas_free( buf );
-    }
-#elif defined(MAS_VARSET_VARIABLES_HTTP)
-    /* mas_channel_write( http->prcontrol->h.pchannel ... */
-    mas_varset_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata, set );
-    /* TODO join write in one - modify varset */
-    /* TODO http->indata and http->outdata etc should be vclass, not varset */
-    write( mas_channel_fd( http->prcontrol->h.pchannel ), "\r\n", 2 );
-    /* mas_varset_write( STDERR_FILENO, http->outdata, set ); */
-#elif defined(MAS_USE_VARVEC)
     mas_varvec_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
-#else
-    mas_varset_vclass_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
-    /* mas_varset_vclass_write( STDERR_FILENO, http->outdata ); */
-#endif
   }
   return http;
 }

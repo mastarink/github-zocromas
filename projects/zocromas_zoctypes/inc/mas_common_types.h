@@ -94,5 +94,6 @@ typedef struct mas_ucontrol_s
 } mas_ucontrol_t;
 
  /* \(serial\|thread\|tid\|pchannel\|status\|activity_time\) */
+typedef size_t( *mas_xvsnprintf_t ) ( char *str, size_t size, const char *format, va_list args );
 
 #endif

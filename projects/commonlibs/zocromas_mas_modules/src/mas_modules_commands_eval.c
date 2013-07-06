@@ -216,6 +216,7 @@ mas_evaluate_command_slash_plus( const mas_options_t * _popts, const char *root,
     else
       *ptruesize = 0;
   }
+  EMSG( "ANSWER: %p : %p", ( void * ) answer, ( void * ) answer ? answer->data : NULL );
   return answer;
 }
 

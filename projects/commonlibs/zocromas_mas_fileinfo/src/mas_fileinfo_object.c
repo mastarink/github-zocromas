@@ -8,12 +8,8 @@
 
 #include <mastar/wrap/mas_memory.h>
 
-#ifdef MAS_OLD_VARIABLES_HTTP
-#  include <mastar/variables/mas_variables.h>
-#else
-#  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset.h>
-#endif
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/varset/mas_varset.h>
 
 #include <mastar/types/mas_opts_types.h>
 

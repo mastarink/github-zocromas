@@ -1,0 +1,8 @@
+sh
+vimrc-mastar
+gvimrc-mastar
+gvim-funcs.vim
+gvim-vimenter.vim
+zocversion.txt
+.auxdir
+*.tmp

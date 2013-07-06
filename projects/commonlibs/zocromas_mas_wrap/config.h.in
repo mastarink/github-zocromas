@@ -150,9 +150,6 @@
 /* Enable thtools-less prog. */
 #undef MAS_NO_THTOOLS
 
-/* Enable old variables lib */
-#undef MAS_OLD_VARIABLES_HTTP
-
 /* os version */
 #undef MAS_OSVER
 

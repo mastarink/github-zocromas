@@ -1,12 +1,8 @@
 #ifndef MAS_LISTENER_CONTROL_TYPES_H
 #  define MAS_LISTENER_CONTROL_TYPES_H
 
+#  include <mastar/types/mas_varset_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>
-#  ifdef MAS_OLD_VARIABLES_HTTP
-#    include <mastar/types/mas_variables_types.h>
-#  else
-#    include <mastar/types/mas_varset_types.h>
-#  endif
 
 /*
 this:
@@ -41,11 +37,7 @@ typedef struct mas_lcontrol_s
   unsigned long transaction_serial;
   unsigned long clients_came;
   unsigned long clients_gone;
-#  ifdef MAS_OLD_VARIABLES_HTTP
-  mas_variables_list_head_t *variables;
-#else
   mas_varset_t *variables;
-#endif
   unsigned in_list:1;
 } mas_lcontrol_t;
 
