@@ -14,7 +14,7 @@ struct tm *mas_xgmtime( void );
 
 size_t mas_xvstrftime( char *str, size_t size, const char *format, va_list args );
 size_t mas_xvstrftime_time( char *str, size_t size, const char *format, va_list args );
-size_t mas_tstrftime( char *s, size_t max, const char *format, time_t t );
+size_t mas_tstrflocaltime( char *s, size_t max, const char *format, time_t t );
 
 char *mas_ip_string( void *sin_addr );
 

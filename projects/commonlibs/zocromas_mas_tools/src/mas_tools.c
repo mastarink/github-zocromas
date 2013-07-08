@@ -47,7 +47,7 @@ related:
 */
 
 size_t
-mas_tstrftime( char *s, size_t max, const char *format, time_t t )
+mas_tstrflocaltime( char *s, size_t max, const char *format, time_t t )
 {
   struct tm *tmp;
 

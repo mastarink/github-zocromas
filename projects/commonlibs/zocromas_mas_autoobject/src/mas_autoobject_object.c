@@ -34,6 +34,10 @@ _mas_autoobject_set_name( mas_autoobject_t * obj, const char *docroot, const cha
 
     if ( obj->name )
       mas_free( obj->name );
+    if ( obj->gtime )
+      mas_free( obj->gtime );
+    if ( obj->etag )
+      mas_free( obj->etag );
     obj->name = NULL;
     if ( name )
       obj->name = mas_strdup( name );

@@ -11,9 +11,9 @@ int _mas_autoobject_compare( const void *a, const void *b );
 int mas_autoobject_fd( mas_autoobject_t * obj );
 FILE *mas_autoobject_file( mas_autoobject_t * obj );
 
-int mas_autoobject_open( mas_autoobject_t * obj, const char *docroot,const char *name );
+int mas_autoobject_open( mas_autoobject_t * obj, const char *docroot, const char *name );
 int mas_autoobject_reopen( mas_autoobject_t * obj );
-int mas_autoobject_qopen( mas_autoobject_t * obj,const char *docroot, const char *name );
+int mas_autoobject_qopen( mas_autoobject_t * obj, const char *docroot, const char *name );
 
 /* int mas_autoobject_qopen_data( mas_autoobject_t * obj ); */
 
@@ -41,5 +41,6 @@ void mas_autoobject_set_icontent_type( mas_autoobject_t * obj, mas_content_type_
 char *mas_autoobject_content_type_string( mas_autoobject_t * autoobject );
 const char *mas_autoobject_etag( mas_autoobject_t * obj );
 time_t mas_autoobject_time( mas_autoobject_t * obj );
+const char *mas_autoobject_gtime( mas_autoobject_t * obj );
 
 #endif

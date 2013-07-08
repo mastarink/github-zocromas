@@ -98,10 +98,10 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocListenW" ) );
 
-    if ( plcontrol->h.pchannel->opened )
-    {
-      MAS_LOG( "why OPENED before open?" );
-    }
+    /* if ( plcontrol->h.pchannel->opened )    */
+    /* {                                       */
+    /*   MAS_LOG( "why OPENED before open?" ); */
+    /* }                                       */
     /* wMSG( "to open channel opened : %d", plcontrol->h.pchannel->opened ); */
     {
       plcontrol->h.pchannel->cloned = 0;

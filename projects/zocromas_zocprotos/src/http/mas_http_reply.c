@@ -106,9 +106,10 @@ mas_http_make_data_headers( mas_varvec_t * outdata, mas_autoobject_t * ao )
     }
   }
   outdata = mas_varvec_search_variable( outdata, NULL, "ETag", mas_autoobject_etag( ao ) );
-  outdata =
-        mas_varvec_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT",
-                                     mas_autoobject_time( ao ) );
+  /* outdata =                                                                                                      */
+  /*       mas_varvec_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT", */
+  /*                                    mas_autoobject_time( ao ) );                                                */
+  outdata = mas_varvec_search_variable( outdata, NULL, "Last-Modified", mas_autoobject_gtime( ao ) );
   return outdata;
 }
 #endif
@@ -136,12 +137,12 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     http->outdata =
           mas_varvec_search_variablef( http->outdata, NULL, "Server", mas_xvsnprintf, "mas-%lu", ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
     http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Version", mas_xvsnprintf, "%3.1f", http->fversion );
-    {
-      char buf[128];
-
-      mas_tstrftime( buf, sizeof( buf ), "%Y%m%d %T", ctrl.stamp.first_lts );
-      http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Launched", mas_xvsnprintf, "%s", buf );
-    }
+    /* {                                                                                                                */
+    /*   char buf[128];                                                                                                 */
+    /*                                                                                                                  */
+    /*   mas_tstrftime( buf, sizeof( buf ), "%Y%m%d %T", ctrl.stamp.first_lts );                                        */
+    /*   http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Launched", mas_xvsnprintf, "%s", buf ); */
+    /* }                                                                                                                */
 #ifdef MAS_HTTP_USE_FILEINFO
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )

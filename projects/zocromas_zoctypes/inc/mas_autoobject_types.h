@@ -12,6 +12,7 @@ typedef enum mas_iaccess_type_e
   MAS_IACCESS_CHAR = 0,
   MAS_IACCESS_FCHAR,
   MAS_IACCESS_SENDFILE,
+  MAS_IACCESS_SENDFILEL,
   MAS_IACCESS_SPLICE,
   MAS_IACCESS_FILE,
 } mas_iaccess_type_t;
@@ -45,6 +46,7 @@ typedef struct mas_autoobject_s
   mas_content_type_t icontent_type;
   ino_t inode;
   time_t time;
+  char *gtime;
   char *etag;
 } mas_autoobject_t;
 

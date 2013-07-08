@@ -69,6 +69,7 @@ mas_autoobject_fd( mas_autoobject_t * obj )
     case MAS_IACCESS_FCHAR:
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
       fd = obj->handler.i;
       break;
     case MAS_IACCESS_FILE:
@@ -94,6 +95,7 @@ mas_autoobject_file( mas_autoobject_t * obj )
     case MAS_IACCESS_FCHAR:
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
       break;
     case MAS_IACCESS_FILE:
       f = obj->handler.f;
@@ -150,6 +152,7 @@ mas_autoobject_delete_data( mas_autoobject_t * obj )
       break;
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
     case MAS_IACCESS_BAD:
       break;
     }
@@ -183,6 +186,7 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
     case MAS_IACCESS_FCHAR:
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
       obj->reopen_cnt++;
       {
         char *fname = NULL;
@@ -269,6 +273,7 @@ mas_autoobject_opened( mas_autoobject_t * obj )
     case MAS_IACCESS_FCHAR:
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
       opened = ( mas_autoobject_fd( obj ) ) ? 1 : 0;
       break;
     case MAS_IACCESS_FILE:
@@ -292,6 +297,7 @@ _mas_autoobject_close( mas_autoobject_t * obj )
     case MAS_IACCESS_FCHAR:
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
       obj->close_cnt++;
       close( mas_autoobject_fd( obj ) );
       break;
@@ -339,6 +345,7 @@ mas_autoobject_set_data( mas_autoobject_t * obj, const void *ptr )
         break;
       case MAS_IACCESS_SPLICE:
       case MAS_IACCESS_SENDFILE:
+      case MAS_IACCESS_SENDFILEL:
         break;
       case MAS_IACCESS_BAD:
         break;
@@ -371,6 +378,7 @@ mas_autoobject_load_data( mas_autoobject_t * obj, int use_new )
     {
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
     case MAS_IACCESS_CHAR:
       break;
     case MAS_IACCESS_FILE:
@@ -454,7 +462,7 @@ mas_autoobject_rewind( mas_autoobject_t * obj )
       break;
     case MAS_IACCESS_FCHAR:
     case MAS_IACCESS_SPLICE:
-    case MAS_IACCESS_SENDFILE:
+    case MAS_IACCESS_SENDFILEL:
       if ( obj->handler.v && obj->size )
       {
         int fd;
@@ -468,6 +476,7 @@ mas_autoobject_rewind( mas_autoobject_t * obj )
         }
       }
       break;
+    case MAS_IACCESS_SENDFILE:
     case MAS_IACCESS_FILE:
     case MAS_IACCESS_BAD:
       break;
@@ -510,12 +519,25 @@ mas_autoobject_cat( int han, mas_autoobject_t * obj, int use_new )
         if ( han && obj->handler.v && obj->size )
         {
           int fd;
+          off_t start = 0;
 
           fd = mas_autoobject_fd( obj );
           obj->sendfile_cnt++;
           obj->pass = 1;
-          r = sendfile( han, fd, 0, obj->size );
+          r = sendfile( han, fd, &start, obj->size );
         }
+        break;
+      case MAS_IACCESS_SENDFILEL:
+        if ( han && obj->handler.v && obj->size )
+        {
+          int fd;
+
+          fd = mas_autoobject_fd( obj );
+          obj->sendfile_cnt++;
+          obj->pass = 1;
+          r = sendfile( han, fd, NULL, obj->size );
+        }
+        break;
       case MAS_IACCESS_BAD:
         break;
       }
@@ -653,6 +675,26 @@ mas_autoobject_time( mas_autoobject_t * obj )
   if ( obj )
     mas_autoobject_reopen( obj );
   return obj ? obj->time : 0;
+}
+
+const char *
+mas_autoobject_gtime( mas_autoobject_t * obj )
+{
+  if ( obj )
+  {
+    char stime[64];
+
+    /* Mon, 01 Oct 2012 20:49:57 GMT */
+    if ( !obj->gtime )
+    {
+      time_t t;
+
+      t = mas_autoobject_time( obj );
+      strftime( stime, sizeof( stime ), "%a, %d %b %Y %T GMT", gmtime( &t ) );
+      obj->gtime = mas_strdup( stime );
+    }
+  }
+  return obj->gtime;
 }
 
 const char *

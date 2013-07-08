@@ -92,6 +92,7 @@ mas_channel_accept( mas_channel_t * pchannel )
       saa = ( struct sockaddr * ) &pchannel->serv_instance.addr;
     }
     fd_io = mas_accept( pchannel->fd_socket, sac, &lc );
+    if ( 0 )
     {
       char *ip = NULL;
 
