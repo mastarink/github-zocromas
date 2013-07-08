@@ -3,7 +3,7 @@ ACLOCAL_AMFLAGS = -I .auxdir/m4
 SUBDIRS= src
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = @PACKAGE_NAME@.pc @PACKAGE_NAME@_nooc.pc
+pkgconfig_DATA = @PACKAGE_NAME@.pc 
 
 
 foo:

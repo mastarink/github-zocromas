@@ -27,7 +27,7 @@ testfile( const char *fname, mas_iaccess_type_t atype, int mode )
   if ( ( fd = open( "/dev/null", O_WRONLY ) ) )
   {
     mas_autoobject_set_iaccess_type( ao, atype );
-    mas_autoobject_set_name( ao, fname );
+    mas_autoobject_set_name( ao, NULL, fname );
     /* mas_autoobject_cat( STDOUT_FILENO, ao, 0 ); */
     for ( unsigned long ig = 0; ig < 100; ig++ )
     {
@@ -110,7 +110,7 @@ main( void )
   {
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_FCHAR );
-      mas_autoobject_set_name( ao, "hwif3.txt" );
+      mas_autoobject_set_name( ao, NULL,"hwif3.txt" );
     }
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
   }
@@ -118,21 +118,21 @@ main( void )
   {
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_SENDFILE );
-      mas_autoobject_set_name( ao, "hwif3.txt" );
+      mas_autoobject_set_name( ao, NULL, "hwif3.txt" );
     }
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
   }
   printf( "=== SENDFILE (SPLICE ? ?) ===\n" );
   {
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
-    mas_autoobject_set_name( ao, "hwif2.txt" );
+    mas_autoobject_set_name( ao, NULL, "hwif2.txt" );
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
-    mas_autoobject_set_name( ao, "hwif1.txt" );
+    mas_autoobject_set_name( ao, NULL, "hwif1.txt" );
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_SENDFILE );
-      mas_autoobject_set_name( ao, "hwif3.txt" );
+      mas_autoobject_set_name( ao, NULL, "hwif3.txt" );
     }
   }
   mas_autoobject_delete( ao );

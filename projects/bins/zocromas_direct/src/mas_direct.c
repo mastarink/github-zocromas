@@ -6,7 +6,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/modules/mas_modules_commands_eval.h>

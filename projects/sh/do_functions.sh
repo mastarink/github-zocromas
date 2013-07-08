@@ -13,8 +13,17 @@ function mas_enabled_doprj ()
       grep "^${act}$" $disfile && return 1
       grep "^${act}:${mas_name}$" $disfile && return 1
       grep "^${act}:${mas_name}-${mas_vers}$" $disfile && return 1
+    else
+      echo "NO file $disfile" >&2
     fi
+  elif ! [[ "$mas_name" ]] ; then
+    return 0
+  else
+    echo "ERROR enabled $act for ${mas_name}: $@ (place '${act}:${mas_name}' into $disfile to disable)" >&2
+    return 1
   fi
+#  echo "enabled $act for ${mas_name}: $@ (place '${act}:${mas_name}' into $disfile to disable)" >&2
+  grep "^${act}:${mas_name}$" $disfile && echo WHY
   return 0
 }
 
@@ -114,6 +123,7 @@ function doall ()
       doit='yes'
     fi
     for prj in $projects_list ; do
+      unset prj_configure_opts
       if [[ "$MAS_DO_FROM_PROJECT" ]] && [[ "$prj" =~ $MAS_DO_FROM_PROJECT ]] ; then
         doit='yes'
       fi

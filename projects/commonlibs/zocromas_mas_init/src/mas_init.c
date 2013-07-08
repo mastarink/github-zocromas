@@ -290,9 +290,9 @@ mas_init_set_msg_file( mas_options_t * popts )
 
   if ( !ctrl.is_parent )
   {
+    HMSG( "MESSAGES (%d) to %s", popts?1:0, popts ? popts->msgfilename : NULL );
     if ( popts->msgfilename )
     {
-      HMSG( "MESSAGES to %s", popts->msgfilename );
       MAS_LOG( "(%d) init msg to set file e%d", r, errno );
       IEVAL( r, mas_msg_set_file( popts->msgfilename ) );
       MAS_LOG( "(%d) init msg set file done e%d", r, errno );

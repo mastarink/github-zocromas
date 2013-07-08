@@ -15,10 +15,8 @@
 #include <mastar/wrap/mas_lib_thread.h>
 
 
-#ifndef MAS_NO_CTRL
-#  include <mastar/types/mas_control_types.h>
-extern mas_control_t ctrl;
-#endif
+#include <mastar/types/mas_control_types.h>
+extern mas_control_t ctrl __attribute__ ( ( weak ) );
 
 #ifndef MAS_NO_THTOOLS
 #  include <mastar/thtools/mas_thread_tools.h>
@@ -673,39 +671,43 @@ mas_reset_color( void )
   MFP( "\x1b[0m" );
 }
 
-#ifndef MAS_NO_CTRL
 int
 mas_msg_set_file( const char *path )
 {
   int r = 0;
 
-  if ( ctrl.msgfile )
+  if ( &ctrl )
   {
-    if ( ctrl.msgfile != ctrl.stderrfile && EOF == fclose( ctrl.msgfile ) )
-    {
-      IEVAL( r, -1 );
-    }
-    ctrl.msgfile = NULL;
-  }
-  r = 0;
-  if ( path )
-  {
-    ctrl.msgfile = fopen( path, "a" );
-    /* ffcntl( ctrl.msgfile, F_SETFL, O_SYNC ); */
     if ( ctrl.msgfile )
     {
-      /* for /dev/pts/... : ERROR{29:Illegal seek} */
-      /* errno = 0; */
-      IEVAL( r, setvbuf( ctrl.msgfile, NULL, _IONBF, 0 ) );
+      if ( ctrl.msgfile != ctrl.stderrfile && EOF == fclose( ctrl.msgfile ) )
+      {
+        IEVAL( r, -1 );
+      }
+      ctrl.msgfile = NULL;
     }
-    else
+    r = 0;
+    HMSG( "MSG SET TO %p : %s", ( void * ) ctrl.msgfile, path );
+    if ( path )
     {
-      YEVALM( r, -1, "(%d) file:%s", path );
+      ctrl.msgfile = fopen( path, "a" );
+      /* ffcntl( ctrl.msgfile, F_SETFL, O_SYNC ); */
+      if ( ctrl.msgfile )
+      {
+        /* for /dev/pts/... : ERROR{29:Illegal seek} */
+        /* errno = 0; */
+        IEVAL( r, setvbuf( ctrl.msgfile, NULL, _IONBF, 0 ) );
+      }
+      else
+      {
+        YEVALM( r, -1, "(%d) file:%s", path );
+      }
     }
+    HMSG( "MSG SET TO %p : %s", ( void * ) ctrl.msgfile, path );
   }
   return r;
 }
-#endif
+
 static int
 __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, const char *prefix )
 {
@@ -733,7 +735,7 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
     if (  /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_PREFIX );
-      MFP( prefix_fmt ? prefix_fmt : "-- %-5s", qprefix );
+      MFP( "-c- %-5s > %p < ", qprefix, ( void * ) ( &ctrl ? ctrl.msgfile : NULL ) );
       mas_reset_color(  );
     }
   }
@@ -746,8 +748,7 @@ __mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
-#  ifndef MAS_NO_CTRL
-    if ( pid == ctrl.main.pid )
+    if ( &ctrl && pid == ctrl.main.pid )
     {
       wattron( w_win, A_BOLD );
       MFP( "+" );
@@ -757,7 +758,6 @@ __mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
       wcolor_set( w_win, 1, NULL );
     }
     else
-#  endif
     {
       MFP( ">%5u:", pid );
     }
@@ -778,14 +778,12 @@ __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
 {
   const char *pidname;
 
-#ifndef MAS_NO_CTRL
-  if ( pid == ctrl.threads.n.main.pid )
+  if ( !&ctrl )
+    pidname = "-";
+  else if ( pid == ctrl.threads.n.main.pid )
     pidname = "Main";
   else if ( pid == ctrl.threads.n.daemon.pid )
     pidname = "Daemon";
-  else
-#endif
-    pidname = "-";
   mas_set_color( msgt, MAS_MSG_FIELD_PIDNAME );
   MFP( "%-5s", pidname );
   mas_reset_color(  );
@@ -962,8 +960,7 @@ __mas_msg_suffix( mas_msg_type_t msgt, int fdetails, const char *suffix )
 int
 __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 {
-#ifndef MAS_NO_CTRL
-  if ( ctrl.stamp.start_time )
+  if ( &ctrl && ctrl.stamp.start_time )
   {
     unsigned long elapsed_time;
     unsigned long cur_time = ( unsigned long ) time( NULL );
@@ -974,9 +971,8 @@ __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
     mas_reset_color(  );
   }
   else
-#endif
   {
-    MFP( " %5s  ", "--" );
+    MFP( " %5s  ", "-e-" );
   }
   return 0;
 }
@@ -1018,6 +1014,7 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     pid_t pid;
 
     pid = getpid(  );
+
     if ( mas_show( msgt, details, MAS_MSG_FIELD_ELAPSED ) )
       r = __mas_msg_elapsed( msgt, details );
 
@@ -1080,47 +1077,43 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
   va_start( args, fmt );
   if ( allow )
   {
+    int can = 0;
+
+    can = MAS_CTRL_MESSAGES;
+    if ( can )
     {
-      int can = 0;
-
-      can = MAS_CTRL_MESSAGES;
-      if ( can )
-      {
 #ifndef MAS_NO_THTOOLS
-        th_type_t thtype;
+      th_type_t thtype;
 
-        thtype = mas_thself_type(  );
-        switch ( thtype )
-        {
-        case MAS_THREAD_MASTER:
-          can = MAS_MSG_BIT( msg_trace_main );
-          break;
-        case MAS_THREAD_LISTENER:
-          can = MAS_MSG_BIT( msg_trace_listener );
-          break;
-        case MAS_THREAD_TRANSACTION:
-          can = MAS_MSG_BIT( msg_trace_transaction );
-          break;
-        default:
-          can = 1;
-          break;
-        }
-#else
-        can = 1;
-#endif
-      }
-      if ( allow == 777 )
-        can = 1;
-      if ( can )
+      thtype = mas_thself_type(  );
+      switch ( thtype )
       {
-#ifndef MAS_NO_CTRL
-        pthread_mutex_lock( &ctrl.thglob.msg_mutex );
-#endif
-        r = __mas_vmsg( func, line, msgt, details, prefix_fmt, prefix, suffix, fmt, args );
-#ifndef MAS_NO_CTRL
-        pthread_mutex_unlock( &ctrl.thglob.msg_mutex );
-#endif
+      case MAS_THREAD_MASTER:
+        can = MAS_MSG_BIT( msg_trace_main );
+        break;
+      case MAS_THREAD_LISTENER:
+        can = MAS_MSG_BIT( msg_trace_listener );
+        break;
+      case MAS_THREAD_TRANSACTION:
+        can = MAS_MSG_BIT( msg_trace_transaction );
+        break;
+      default:
+        can = 1;
+        break;
       }
+#else
+      can = 1;
+#endif
+    }
+    if ( allow == 777 )
+      can = 1;
+    if ( can )
+    {
+      if ( &ctrl )
+        pthread_mutex_lock( &ctrl.thglob.msg_mutex );
+      r = __mas_vmsg( func, line, msgt, details, prefix_fmt, prefix, suffix, fmt, args );
+      if ( &ctrl )
+        pthread_mutex_unlock( &ctrl.thglob.msg_mutex );
     }
   }
   va_end( args );
@@ -1140,9 +1133,8 @@ mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt
 #endif
 
 
-#ifndef MAS_NO_CTRL
-  pthread_mutex_lock( &ctrl.thglob.emsg_mutex );
-#endif
+  if ( &ctrl )
+    pthread_mutex_lock( &ctrl.thglob.emsg_mutex );
   if ( merrno )
   {
     char pref[512];
@@ -1150,20 +1142,18 @@ mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt
     char *se = NULL;
 
     se = strerror_r( merrno, errbuf, sizeof( errbuf ) );
-#ifndef MAS_NO_CTRL
-    snprintf( pref, sizeof( pref ), "(%u:%s) i/s:%u:i/c:%u", merrno, se ? se : NULL, ctrl.keep_listening, MAS_CTRL_IN_CLIENT );
-#else
-    snprintf( pref, sizeof( pref ), "(%u:%s)", merrno, se ? se : NULL );
-#endif
+    if ( &ctrl )
+      snprintf( pref, sizeof( pref ), "(%u:%s) i/s:%u:i/c:%u", merrno, se ? se : NULL, ctrl.keep_listening, MAS_CTRL_IN_CLIENT );
+    else
+      snprintf( pref, sizeof( pref ), "(%u:%s)", merrno, se ? se : NULL );
     r = __mas_vmsg( func, line, msgt, 1, "{  %4s   }", pref, NULL, fmt, args );
   }
   else
   {
     r = __mas_vmsg( func, line, msgt, 1, "{  %4s  }", "E-R-R-O-R", NULL, fmt, args );
   }
-#ifndef MAS_NO_CTRL
-  pthread_mutex_unlock( &ctrl.thglob.emsg_mutex );
-#endif
+  if ( &ctrl )
+    pthread_mutex_unlock( &ctrl.thglob.emsg_mutex );
   switch ( merrno )
   {
   case EINTR:
@@ -1203,12 +1193,8 @@ _mas_perr( const char *func, int line, int merrno, int *perrno )
     /* MAS_MSG_BIT(msg_tr) = 1; */
     errcnt++;
     se = strerror_r( merrno, errbuf, sizeof( errbuf ) );
-#ifndef MAS_NO_CTRL
-    mas_error( func, line, merrno, perrno, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT, ctrl.keep_listening,
-               ctrl.fatal );
-#else
-    mas_error( func, line, merrno, perrno, "[error %d] %s", merrno, se );
-#endif
+    mas_error( func, line, merrno, perrno, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT,
+               &ctrl ? ctrl.keep_listening : 0, &ctrl ? ctrl.fatal : 0 );
     if ( errcnt < 10 )
     {
     }

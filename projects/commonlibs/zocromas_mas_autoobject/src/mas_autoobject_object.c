@@ -22,10 +22,16 @@
 #include "mas_autoobject_object.h"
 
 void
-_mas_autoobject_set_name( mas_autoobject_t * obj, const char *name )
+_mas_autoobject_set_name( mas_autoobject_t * obj, const char *docroot, const char *name )
 {
   if ( obj )
   {
+    if ( obj->docroot )
+      mas_free( obj->docroot );
+    obj->docroot = NULL;
+    if ( docroot )
+      obj->docroot = mas_strdup( docroot );
+
     if ( obj->name )
       mas_free( obj->name );
     obj->name = NULL;
@@ -49,7 +55,7 @@ mas_autoobject_delete( mas_autoobject_t * obj )
 {
   if ( obj )
   {
-    _mas_autoobject_set_name( obj, NULL );
+    _mas_autoobject_set_name( obj, NULL, NULL );
     mas_free( obj );
   }
 }

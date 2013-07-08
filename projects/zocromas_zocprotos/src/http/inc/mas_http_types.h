@@ -2,7 +2,14 @@
 #  define MAS_HTTP_TYPES_H
 
 #  include <mastar/types/mas_varset_types.h>
+#ifdef MAS_HTTP_USE_FILEINFO
 #  include <mastar/types/mas_fileinfo_types.h>
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#  include <mastar/types/mas_autoobject_types.h>
+#endif
+
+#include <mastar/types/mas_evaluate_types.h>
+/* #include <mastar/types/mas_varvec_types.h> */
 
 typedef enum
 {
@@ -79,8 +86,13 @@ struct mas_http_s
   char *URI;
   char *protocol_name;
   char *boundary;
+#ifdef MAS_HTTP_USE_FILEINFO
   mas_fileinfo_t *request_content;
   mas_fileinfo_t *reply_content;
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+  mas_autoobject_t *request_content;
+  mas_autoobject_t *reply_content;
+#endif
   /* char *rest; */
   mas_varvec_t *indata;
   mas_varvec_t *outdata;

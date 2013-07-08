@@ -15,8 +15,15 @@
 
 #include <mastar/modules/mas_modules_commands_eval.h>
 
-#include <mastar/fileinfo/mas_fileinfo.h>
-#include <mastar/fileinfo/mas_fileinfo_object.h>
+#ifdef MAS_HTTP_USE_FILEINFO
+#  include <mastar/fileinfo/mas_fileinfo.h>
+#  include <mastar/fileinfo/mas_fileinfo_object.h>
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#  include <mastar/autoobject/mas_autoobject_object.h>
+#  include <mastar/autoobject/mas_autoobject.h>
+#endif
+
+#include <mastar/listener/mas_listener_control.h>
 
 #include "mas_http_request.h"
 #include "mas_http_reply.h"
@@ -149,6 +156,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
     HMSG( "HTTP make URL %s", http->URI );
     if ( http->URI )
     {
+#ifdef MAS_HTTP_USE_FILEINFO
       if ( 0 == strncmp( http->URI, "/xcromas/", 9 ) )
       {
         HMSG( "HTTP make /xcromas" );
@@ -161,13 +169,19 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
         MAS_LOG( "HTTP / make /xcromas" );
       }
       else
+#endif
       {
         MAS_LOG( "HTTP make at docroot" );
 
         /* TODO : sendfile ; replace fileinfo  with autoobject lib */
+#ifdef MAS_HTTP_USE_FILEINFO
         http->reply_content =
               mas_fileinfo_init( http->reply_content, http->docroot, http->URI, mas_load_filename_at_fd,
                                  ( const void * ) NULL /* prcontrol */  );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+        /* mas_autoobject_set_icontent_type( http->reply_content, MAS_CONTENT_TEXT ); */
+        http->reply_content = mas_lcontrol_get_autoobject( prcontrol->plcontrol, http->docroot, http->URI );
+#endif
         MAS_LOG( "HTTP / make at docroot" );
       }
     }

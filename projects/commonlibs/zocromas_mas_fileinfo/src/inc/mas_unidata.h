@@ -2,6 +2,7 @@
 #  define MAS_UNIDATA_H
 
 #  include <mastar/types/mas_unidata_types.h>
+#  include <mastar/types/mas_modules_types.h>
 
 /*
 this:
@@ -21,7 +22,7 @@ mas_evaluated_t *mas_evaluated_wrap_typed( void *sanswer, mas_cmdtype_t cmdtype 
 
 mas_unidata_t *mas_unidata_create( void );
 void mas_unidata_delete( mas_unidata_t * ud );
-void mas_unidata_link_data( mas_unidata_t * udata, mas_evaluated_t *data, size_t size );
+void mas_unidata_link_data( mas_unidata_t * udata, mas_evaluated_t * data, size_t size );
 
 mas_evaluated_t *mas_unidata_data( mas_unidata_t * ud );
 

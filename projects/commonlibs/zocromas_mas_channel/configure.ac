@@ -106,9 +106,8 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_io zocromas_mas_msg zocromas_mas_log])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_io])
 PKG_CHECK_MODULES([DEPSL], [zocromas_mas_io])
-PKG_CHECK_MODULES([DEPSNOOCL], [zocromas_mas_io_nooc])
 
 
 
@@ -273,7 +272,6 @@ AC_CONFIG_HEADERS([config.h])
 # AC_CONFIG_FILES([etc/.........])
 
 AC_CONFIG_FILES([${PACKAGE_NAME}.pc
-		${PACKAGE_NAME}_nooc.pc
 		Makefile
 		src/Makefile
 		src/inc/Makefile

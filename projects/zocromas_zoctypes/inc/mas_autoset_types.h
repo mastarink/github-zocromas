@@ -10,6 +10,7 @@ typedef struct mas_autoset_s
 {
   void *instances;
   unsigned long ninstances;
+  char *docroot;
 } mas_autoset_t;
 
 

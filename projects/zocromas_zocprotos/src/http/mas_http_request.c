@@ -94,7 +94,10 @@ mas_proto_http_create_request( mas_rcontrol_t * prcontrol )
   http = mas_malloc( sizeof( mas_http_t ) );
   memset( http, 0, sizeof( mas_http_t ) );
   http->prcontrol = prcontrol;
+#ifdef MAS_HTTP_USE_FILEINFO
   http->reply_content = mas_fileinfo_create(  );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
   return http;
 }
 
@@ -304,13 +307,14 @@ mas_proto_http_delete_request( mas_http_t * http )
     if ( http->host )
       mas_free( http->host );
     http->host = NULL;
-
+#ifdef MAS_HTTP_USE_FILEINFO
     mas_fileinfo_delete( http->reply_content );
     http->reply_content = NULL;
 
     mas_fileinfo_delete( http->request_content );
     http->request_content = NULL;
-
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
     if ( http->indata )
     {
       mas_varvec_delete( http->indata );

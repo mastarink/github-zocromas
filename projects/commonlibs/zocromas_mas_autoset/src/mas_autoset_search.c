@@ -22,7 +22,7 @@
 #include "mas_autoset_search.h"
 
 mas_autoobject_t *
-mas_autoset_search_autoobject( mas_autoset_t * autoset, const char *autoobject_name )
+mas_autoset_search_autoobject( mas_autoset_t * autoset, const char *docroot, const char *autoobject_name )
 {
   mas_autoobject_t *autoobject = NULL;
   mas_autoobject_t *found = NULL;
@@ -32,7 +32,7 @@ mas_autoset_search_autoobject( mas_autoset_t * autoset, const char *autoobject_n
     mas_autoobject_t **pfound = NULL;
 
     autoobject = mas_autoobject_create(  );
-    mas_autoobject_set_name( autoobject, autoobject_name );
+    mas_autoobject_set_name( autoobject, docroot, autoobject_name );
     if ( autoobject )
     {
       pfound = tsearch( autoobject, &autoset->instances, _mas_autoobject_compare );
@@ -53,7 +53,7 @@ mas_autoset_search_autoobject( mas_autoset_t * autoset, const char *autoobject_n
 }
 
 mas_autoobject_t *
-mas_autoset_find_autoobject( mas_autoset_t * autoset, const char *autoobject_name )
+mas_autoset_find_autoobject( mas_autoset_t * autoset, const char *docroot, const char *autoobject_name )
 {
   mas_autoobject_t *autoobject = NULL;
   mas_autoobject_t *found = NULL;
@@ -63,7 +63,7 @@ mas_autoset_find_autoobject( mas_autoset_t * autoset, const char *autoobject_nam
     mas_autoobject_t **pfound = NULL;
 
     autoobject = mas_autoobject_create(  );
-    mas_autoobject_set_name( autoobject, autoobject_name );
+    mas_autoobject_set_name( autoobject, docroot, autoobject_name );
     if ( autoobject )
     {
       pfound = tfind( autoobject, &autoset->instances, _mas_autoobject_compare );

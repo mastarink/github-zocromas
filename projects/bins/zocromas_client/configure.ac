@@ -108,17 +108,7 @@ AC_CHECK_LIB([uuid], [uuid_generate])
 # Checks for library functions.
 
 PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel zocromas_mas_init zocromas_mas_logc zocromas_mas_msg zocromas_mas_messageio])
-# PKG_CHECK_MODULES([DEPSX], [zocromas_mas_control zocromas_mas_variables zocromas_mas_io])
 PKG_CHECK_MODULES([DEPSX], [zocromas_mas_control])
-AC_ARG_ENABLE([old_variables],
-	      AC_HELP_STRING([--enable-old-variables],
-			     [turn on old variables]),,
-	      [enable_old_variables=no])
-
-if test x$enable_old_variables = xyes ; then
-    AC_DEFINE(MAS_OLD_VARIABLES_HTTP, 1,
-	[Enable old variables lib])
-fi
 
 
 

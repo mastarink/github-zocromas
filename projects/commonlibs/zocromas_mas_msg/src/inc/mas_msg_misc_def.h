@@ -4,9 +4,9 @@
 #define MAS_MSG_BIT(bit) 1
 #else
 #include <mastar/types/mas_opts_types.h>
-extern mas_msg_options_t *pmsg_opts;
+extern mas_options_t gopts __attribute__((  weak ));
 
-#define MAS_MSG_BIT(testbit) pmsg_opts->bit.testbit
+#define MAS_MSG_BIT(testbit) ( &gopts ? gopts.f.bit.testbit : 0 )
 #endif
 
 #  define memMSG(...) if (MAS_MSG_BIT(msg_mem)){MFP("%s:%u:", FL);MFP(__VA_ARGS__);MFP("\n");}

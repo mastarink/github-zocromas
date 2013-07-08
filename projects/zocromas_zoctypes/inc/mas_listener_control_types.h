@@ -2,6 +2,7 @@
 #  define MAS_LISTENER_CONTROL_TYPES_H
 
 #  include <mastar/types/mas_varset_types.h>
+#  include <mastar/types/mas_autoset_types.h>
 #  include <mastar/types/mas_transaction_control_types.h>
 
 /*
@@ -32,6 +33,8 @@ typedef struct mas_lcontrol_s
   unsigned port;
   /* unsigned transactions_max; */
   /* pthread_mutex_t transaction_mutex; */
+  mas_autoset_t *autoset;
+  pthread_mutex_t autoset_mutex;
   pthread_rwlock_t transaction_rwlock;
   pthread_rwlock_t variables_rwlock;
   unsigned long transaction_serial;

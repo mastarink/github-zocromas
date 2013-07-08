@@ -50,14 +50,20 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
   }
   else if ( 0 == strcmp( name, "Content-Length" ) )
   {
+#ifdef MAS_HTTP_USE_FILEINFO
     if ( !http->request_content )
       http->request_content = mas_fileinfo_create(  );
     mas_fileinfo_set_content_size( http->request_content, value );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
   }
   else if ( 0 == strcmp( name, "Content-Type" ) )
   {
+#ifdef MAS_HTTP_USE_FILEINFO
     if ( !http->request_content )
       http->request_content = mas_fileinfo_create(  );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
     {
       mas_content_type_t ict = -1;
       const char *p;
@@ -72,7 +78,10 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
           ict = mas_unidata_parse_content_type( cct );
           mas_free( cct );
         }
+#ifdef MAS_HTTP_USE_FILEINFO
         mas_fileinfo_set_icontent_type( http->request_content, ict );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
         /* {                                                                    */
         /*   char *ctest;                                                       */
         /*                                                                      */
@@ -248,6 +257,9 @@ mas_proto_http_parse_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   if ( pstring )
     mas_free( pstring );
   pstring = NULL;
+#ifdef MAS_HTTP_USE_FILEINFO
   HMSG( "L:%lu ; B: %s", ( unsigned long ) mas_fileinfo_data_size( http->request_content ), http->boundary );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
   return http;
 }

@@ -16,7 +16,7 @@
 #include <mastar/log/mas_log.h>
 
 
-#include <mastar/types/mas_varvec_types.h>
+
 #include <mastar/varvec/mas_varvec.h>
 #include <mastar/varvec/mas_varvec_search.h>
 #include <mastar/varvec/mas_varvec_search.h>
@@ -25,9 +25,19 @@
 #include <mastar/varset/mas_varset_search.h>
 #include <mastar/varset/mas_varset.h>
 
-#include <mastar/fileinfo/mas_unidata.h>
-#include <mastar/fileinfo/mas_fileinfo.h>
-#include <mastar/fileinfo/mas_fileinfo_object.h>
+#ifdef MAS_HTTP_USE_FILEINFO
+#  include <mastar/fileinfo/mas_unidata.h>
+#  include <mastar/fileinfo/mas_fileinfo.h>
+#  include <mastar/fileinfo/mas_fileinfo_object.h>
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#  include <mastar/autoobject/mas_autoobject_object.h>
+#  include <mastar/autoobject/mas_autoobject.h>
+#endif
+
+/* mas_channel_fd */
+#include <mastar/channel/mas_channel.h>
+
+#include "mas_http_types.h"
 
 #include "mas_http_utils.h"
 #include "mas_http_request.h"
@@ -80,6 +90,29 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
   return http;
 }
 
+#if defined( MAS_HTTP_USE_AUTOOBJECT )
+mas_varvec_t *
+mas_http_make_data_headers( mas_varvec_t * outdata, mas_autoobject_t * ao )
+{
+  outdata = mas_varvec_search_variablef( outdata, NULL, "Content-Length", NULL, "%d", mas_autoobject_size( ao ) );
+  {
+    char *content_type;
+
+    content_type = mas_autoobject_content_type_string( ao );
+    if ( content_type )
+    {
+      outdata = mas_varvec_search_variable( outdata, NULL, "Content-Type", content_type );
+      mas_free( content_type );
+    }
+  }
+  outdata = mas_varvec_search_variable( outdata, NULL, "ETag", mas_autoobject_etag( ao ) );
+  outdata =
+        mas_varvec_search_variablef( outdata, NULL, "Last-Modified", mas_xvstrftime_time, "%a, %d %b %Y %T GMT",
+                                     mas_autoobject_time( ao ) );
+  return outdata;
+}
+#endif
+
 mas_http_t *
 mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
@@ -109,7 +142,11 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
       mas_tstrftime( buf, sizeof( buf ), "%Y%m%d %T", ctrl.stamp.first_lts );
       http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Launched", mas_xvsnprintf, "%s", buf );
     }
+#ifdef MAS_HTTP_USE_FILEINFO
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+    http->outdata = mas_http_make_data_headers( http->outdata, http->reply_content );
+#endif
     if ( http->connection_keep_alive )
     {
       http = mas_http_make_out_header_simple( http, "Connection", "Keep-Alive" );
@@ -167,25 +204,22 @@ mas_http_status_code_message( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
-  const mas_evaluated_t data = {.data = "HTTP/1.1 200 OK\n"
-          "Accept-Ranges: bytes\n"
-          "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"
-          "Server: mas-1251337\n"
-          "Content-Length: 358\n"
-          "Content-Type: text/html\n"
-          "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n"
-  };
-  /* const char data[] =                                                                                                            */
-  /*       "HTTP/1.1 200 OK\n"                                                                                                      */
-  /*       "Accept-Ranges: bytes\n"                                                                                                 */
-  /*       "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"                                                                                  */
-  /*       "Server: mas-1251337\n"                                                                                                  */
-  /*       "Content-Length: 358\n"                                                                                                  */
-  /*       "Content-Type: text/html\n"                                                                                              */
-  /*       "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n"; */
-  /* size_t datasz = sizeof( data ); */
+  const char *text = "HTTP/1.1 200 OK\n"
+        "Accept-Ranges: bytes\n"
+        "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"
+        "Server: mas-1251337\n"
+        "Content-Length: 358\n"
+        "Content-Type: text/html\n"
+        "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n";
 
+#ifdef MAS_HTTP_USE_FILEINFO
+  const mas_evaluated_t data = {.data = ( char * ) text };
   http = mas_proto_http_write( http, data.data, strlen( data.data ) + 1 );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+  mas_autoobject_set_iaccess_type( http->reply_content, MAS_IACCESS_CHAR );
+  mas_autoobject_set_data( http->reply_content, text );
+  mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
+#endif
   return http;
 }
 
@@ -197,10 +231,13 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
   if ( prcontrol && prcontrol->plcontrol )
   {
+#ifdef MAS_HTTP_USE_FILEINFO
     mas_evaluated_t *data = NULL;
 
     if ( http )
       data = mas_fileinfo_data( prcontrol->plcontrol->popts, http->reply_content );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#endif
 
 /* moved to fileinfo */
     /* if ( http )                                     */
@@ -211,7 +248,11 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     {
       if ( http && http->status_code == MAS_HTTP_CODE_NONE )
       {
+#ifdef MAS_HTTP_USE_FILEINFO
         if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+        if ( http->reply_content && mas_autoobject_size( http->reply_content ) )
+#endif
           http->status_code = MAS_HTTP_CODE_OK;
         else
           http->status_code = MAS_HTTP_CODE_NOT_FOUND;
@@ -233,15 +274,22 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
       {
         size_t datasz;
 
+#ifdef MAS_HTTP_USE_FILEINFO
         datasz = mas_fileinfo_data_size( http->reply_content );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+        datasz = mas_autoobject_size( http->reply_content );
+#endif
         HMSG( "HTTP write DATA (%lu)", ( unsigned long ) datasz );
 
 
-        MAS_LOG( "to write body %lu [%s]", ( unsigned long ) datasz, datasz < 100 ? ( char * ) data->data : "..." );
         /* http = mas_proto_http_write_values( http, "body" ); */
         /* mas_transaction_write( prcontrol, _mas_fileinfo_data( fileinfo ), mas_fileinfo_data_size( fileinfo ) ); */
 
+#ifdef MAS_HTTP_USE_FILEINFO
         http = mas_proto_http_write( http, data->data, datasz );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+        http->written = mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
+#endif
 /* #ifdef TCP_CORK                                                                                               */
 /*     IEVAL( r, mas_setsockopt( prcontrol->h.pchannel->fd_socket, IPPROTO_TCP, TCP_CORK, &no, sizeof( no ) ) ); */
 /* #endif                                                                                                        */
@@ -345,6 +393,9 @@ mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http )
       text = mas_malloc( txsize );
       /* snprintf( text, txsize, fmt, http->status_code, sm, sm, mas_proto_http_method_name( http ), http->URI ); */
       snprintf( text, txsize, fmt, http->status_code, sm, sm, http->smethod, http->URI, http->host, http->port );
+
+      /* set data from text as content */
+#ifdef MAS_HTTP_USE_FILEINFO
       if ( http->reply_content )
       {
         mas_free( http->reply_content->etag );
@@ -355,6 +406,10 @@ mas_http_make_data_auto( mas_rcontrol_t * prcontrol, mas_http_t * http )
       _mas_fileinfo_link_dataz( prcontrol
                                 && prcontrol->plcontrol ? prcontrol->plcontrol->popts : NULL, http->reply_content,
                                 mas_evaluated_wrap_pchar( text ) );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+      mas_autoobject_set_iaccess_type( http->reply_content, MAS_IACCESS_CHAR );
+      mas_autoobject_set_data( http->reply_content, text );
+#endif
       /* mas_free( text ); */
     }
     /* http = mas_http_make_body( prcontrol, http, fmt, http->status_code, sm, sm, mas_proto_http_method_name( http ), http->URI ); */

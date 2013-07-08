@@ -3,6 +3,7 @@
 
 #  include <sys/time.h>
 #  include <stdint.h>
+#  include <stdarg.h>
 #  include <pthread.h>
 #  include <mastar/types/mas_list_def.h>
 

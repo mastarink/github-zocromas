@@ -29,6 +29,9 @@ extern mas_control_t ctrl;
 #include <mastar/types/mas_varset_types.h>
 #include <mastar/varset/mas_varset_object.h>
 
+#include <mastar/autoset/mas_autoset_object.h>
+#include <mastar/autoset/mas_autoset.h>
+
 #include "mas_lcontrol_object.h"
 
 /*
@@ -170,6 +173,7 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, mas_options_t * popts, const char
   /* thMSG( "HOST: %s; PORT:%u", plcontrol->host, plcontrol->port ); */
   plcontrol->h.thread = ( pthread_t ) 0;
   /* pthread_mutex_init( &plcontrol->transaction_mutex, NULL ); */
+  pthread_mutex_init( &plcontrol->autoset_mutex, NULL );
   pthread_rwlock_init( &plcontrol->transaction_rwlock, NULL );
   pthread_rwlock_init( &plcontrol->variables_rwlock, NULL );
   plcontrol->h.status = MAS_STATUS_NONE;
@@ -229,6 +233,7 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
     if ( plcontrol->transaction_controls_list )
     {
       /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
+      pthread_mutex_destroy( &plcontrol->autoset_mutex );
       pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
       mas_free( plcontrol->transaction_controls_list );
       plcontrol->transaction_controls_list = NULL;
@@ -242,6 +247,9 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
 
     pthread_rwlock_destroy( &plcontrol->transaction_rwlock );
     memset( &plcontrol->transaction_rwlock, 0, sizeof( plcontrol->transaction_rwlock ) );
+
+    mas_autoset_delete( plcontrol->autoset );
+    plcontrol->autoset = NULL;
 
     /* memset( &plcontrol->transaction_mutex, 0, sizeof( plcontrol->transaction_mutex ) ); */
 

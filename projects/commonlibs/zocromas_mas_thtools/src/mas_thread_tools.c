@@ -15,7 +15,6 @@
 #include <mastar/wrap/mas_lib_thread.h>
 
 #include <mastar/types/mas_control_types.h>
-extern mas_control_t ctrl;
 
 
 #include "mas_thread_tools.h"
@@ -175,7 +174,12 @@ mas_delete_thread_specific( void *ptr )
 void
 mas_thread_make_key( void )
 {
-  ( void ) pthread_key_create( &ctrl.mas_thread_key, mas_delete_thread_specific );
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
+  {
+    ( void ) pthread_key_create( &ctrl.mas_thread_key, mas_delete_thread_specific );
+  }
 }
 
 void
@@ -183,10 +187,15 @@ mas_in_thread_end( void )
 {
   mas_thdata_t *thd;
 
-  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  thd = pthread_getspecific( ctrl.mas_thread_key );
-  mas_delete_thread_specific( thd );
-  ( void ) pthread_setspecific( ctrl.mas_thread_key, NULL );
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
+  {
+    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    thd = pthread_getspecific( ctrl.mas_thread_key );
+    mas_delete_thread_specific( thd );
+    ( void ) pthread_setspecific( ctrl.mas_thread_key, NULL );
+  }
 }
 
 mas_thdata_t *
@@ -194,22 +203,27 @@ mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * pr
 {
   mas_thdata_t *thd = NULL;
 
-  pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  if ( ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) == NULL )
-  {
-    thd = mas_malloc( sizeof( mas_thdata_t ) );
-    memset( thd, 0, sizeof( mas_thdata_t ) );
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
 
-    thd->type = thtype;
-    /* thd->pchannel = pchannel; */
-    thd->plcontrol = plcontrol;
-    thd->prcontrol = prcontrol;
-    ( void ) pthread_setspecific( ctrl.mas_thread_key, thd );
-    /* HMSG( "IN THREAD [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) ); */
-  }
-  else
+  if ( &ctrl )
   {
-    /* HMSG( "IN THREAD NO [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) ); */
+    pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    if ( ( thd = pthread_getspecific( ctrl.mas_thread_key ) ) == NULL )
+    {
+      thd = mas_malloc( sizeof( mas_thdata_t ) );
+      memset( thd, 0, sizeof( mas_thdata_t ) );
+
+      thd->type = thtype;
+      /* thd->pchannel = pchannel; */
+      thd->plcontrol = plcontrol;
+      thd->prcontrol = prcontrol;
+      ( void ) pthread_setspecific( ctrl.mas_thread_key, thd );
+      /* HMSG( "IN THREAD [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) ); */
+    }
+    else
+    {
+      /* HMSG( "IN THREAD NO [%lx] (self) %s", pthread_self(  ), mas_thread_self_type_name(  ) ); */
+    }
   }
   return thd;
 }
@@ -220,18 +234,23 @@ mas_thself_type( void )
   mas_thdata_t *thd;
   th_type_t thtype = MAS_THREAD_NONE;
 
-  if ( ctrl.threads.n.main.thread && pthread_equal( ctrl.threads.n.main.thread, pthread_self(  ) ) )
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
   {
-    thtype = MAS_THREAD_MAIN;
-  }
-  else
-  {
-    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-    thd = pthread_getspecific( ctrl.mas_thread_key );
-    if ( thd )
+    if ( ctrl.threads.n.main.thread && pthread_equal( ctrl.threads.n.main.thread, pthread_self(  ) ) )
     {
-      thtype = thd->type;
-      /* thMSG( "%u : [%lx]", thtype, pthread_self(  ) ); */
+      thtype = MAS_THREAD_MAIN;
+    }
+    else
+    {
+      ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+      thd = pthread_getspecific( ctrl.mas_thread_key );
+      if ( thd )
+      {
+        thtype = thd->type;
+        /* thMSG( "%u : [%lx]", thtype, pthread_self(  ) ); */
+      }
     }
   }
   return thtype;
@@ -258,11 +277,16 @@ mas_thself_double_time( void )
   double double_time;
   mas_thdata_t *thd;
 
-  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  thd = pthread_getspecific( ctrl.mas_thread_key );
-  if ( thd )
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
   {
-    double_time = thd->double_time;
+    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    thd = pthread_getspecific( ctrl.mas_thread_key );
+    if ( thd )
+    {
+      double_time = thd->double_time;
+    }
   }
   return double_time;
 }
@@ -272,11 +296,16 @@ mas_thself_set_double_time( double double_time )
 {
   mas_thdata_t *thd;
 
-  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  thd = pthread_getspecific( ctrl.mas_thread_key );
-  if ( thd )
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
   {
-    thd->double_time = double_time;
+    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    thd = pthread_getspecific( ctrl.mas_thread_key );
+    if ( thd )
+    {
+      thd->double_time = double_time;
+    }
   }
 }
 
@@ -286,11 +315,16 @@ mas_thself_prcontrol( void )
   mas_thdata_t *thd;
   mas_rcontrol_t *prcontrol = NULL;
 
-  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  thd = pthread_getspecific( ctrl.mas_thread_key );
-  if ( thd )
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
   {
-    prcontrol = thd->prcontrol;
+    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    thd = pthread_getspecific( ctrl.mas_thread_key );
+    if ( thd )
+    {
+      prcontrol = thd->prcontrol;
+    }
   }
   return prcontrol;
 }
@@ -301,14 +335,19 @@ mas_thself_pchannel( void )
   mas_thdata_t *thd;
   mas_channel_t *pchannel = NULL;
 
-  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  thd = pthread_getspecific( ctrl.mas_thread_key );
-  if ( thd )
+  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+
+  if ( &ctrl )
   {
-    if ( thd->prcontrol )
-      pchannel = thd->prcontrol->h.pchannel;
-    else if ( thd->plcontrol )
-      pchannel = thd->plcontrol->h.pchannel;
+    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    thd = pthread_getspecific( ctrl.mas_thread_key );
+    if ( thd )
+    {
+      if ( thd->prcontrol )
+        pchannel = thd->prcontrol->h.pchannel;
+      else if ( thd->plcontrol )
+        pchannel = thd->plcontrol->h.pchannel;
+    }
   }
   return pchannel;
 }

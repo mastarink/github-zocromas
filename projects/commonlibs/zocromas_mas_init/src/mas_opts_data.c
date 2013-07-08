@@ -146,5 +146,4 @@ mas_options_t gopts = {
 /* #  endif                                             */
 };
 
-mas_msg_options_t *pmsg_opts = &gopts.f;
 #endif

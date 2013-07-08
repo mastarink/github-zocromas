@@ -5,9 +5,6 @@
 
 #  include <mastar/types/mas_unidata_types.h>
 
-typedef mas_evaluated_t *( *data_loader_t ) ( const mas_options_t * popts, const char *root, const char *tail, size_t size,
-                                              size_t * ptruesize, ino_t * ptrueinode, time_t * ptruefiletime, const void *arg );
-
 
 typedef struct mas_fileinfo_s mas_fileinfo_t;
 struct mas_fileinfo_s

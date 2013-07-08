@@ -10,7 +10,12 @@
 
 #include <mastar/types/mas_opts_types.h>
 
+#ifdef MAS_HTTP_USE_FILEINFO
 #include <mastar/fileinfo/mas_fileinfo.h>
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+#include <mastar/autoobject/mas_autoobject.h>
+#endif
+
 #include "mas_http_utils.h"
 #include "mas_http_reply.h"
 
@@ -42,7 +47,11 @@ mas_http_make_out_head_get( mas_rcontrol_t * prcontrol, mas_http_t * http )
   if ( http && http->reply_content )
   {
     MAS_LOG( "to make out" );
+#ifdef MAS_HTTP_USE_FILEINFO
     MAS_LOG( "SIZE %lu", ( unsigned long ) mas_fileinfo_data_size( http->reply_content ) );
+#elif defined( MAS_HTTP_USE_AUTOOBJECT )
+    MAS_LOG( "SIZE %lu", ( unsigned long ) mas_autoobject_size( http->reply_content ) );
+#endif
 
     http = mas_http_make_out_header_simple( http, "Accept-Ranges", "bytes" );
     /* {                                                        */

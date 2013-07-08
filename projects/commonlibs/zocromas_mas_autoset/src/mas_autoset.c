@@ -3,7 +3,11 @@
 
 #include <mastar/wrap/mas_std_def.h>
 
-#include <mastar/types/mas_autoset_types.h>
+#include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_tools.h>
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/autoobject/mas_autoobject_object.h>
 #include <mastar/autoobject/mas_autoobject.h>
@@ -22,7 +26,7 @@ mas_autoset_delete_autoobject( mas_autoset_t * autoset, const char *instance_nam
     mas_autoobject_t **pfound = NULL;
 
     autoobject = mas_autoobject_create(  );
-    mas_autoobject_set_name( autoobject, instance_name );
+    mas_autoobject_set_name( autoobject, autoset->docroot, instance_name );
     if ( autoobject )
     {
       pfound = tfind( autoobject, &autoset->instances, _mas_autoobject_compare );
@@ -40,4 +44,15 @@ mas_autoset_delete_autoobject( mas_autoset_t * autoset, const char *instance_nam
     }
   }
   return found ? 1 : 0;
+}
+
+void
+mas_autoset_set_docroot( mas_autoset_t * autoset, const char *docroot )
+{
+  if ( autoset )
+  {
+    if ( autoset->docroot )
+      mas_free( autoset->docroot );
+    autoset->docroot = mas_strdup( docroot );
+  }
 }

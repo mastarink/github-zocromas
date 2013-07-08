@@ -1,0 +1,6 @@
+testdist:zocromas
+ebuild:zocromas
+make:zocromas_mas_variables
+install:zocromas_mas_variables
+make:zocromas
+install:zocromas

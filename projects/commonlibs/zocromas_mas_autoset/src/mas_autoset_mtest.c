@@ -112,19 +112,19 @@ main( void )
 /* "configure", MAS_IACCESS_FCHAR, 0 */
 
 
-    ao11 = mas_autoset_search_autoobject( as1, "configure" );
+    ao11 = mas_autoset_search_autoobject( as1, ".", "configure" );
     fprintf( stderr, "[********** ao11: [%p]] {reopen_cnt:%lu;load_cnt:%lu;close_cnt:%lu;lseek_cnt:%lu;sendfile_cnt:%lu;}\n",
              ( void * ) ao11, ao11->reopen_cnt, ao11->load_cnt, ao11->close_cnt, ao11->lseek_cnt, ao11->sendfile_cnt );
     testfile( ao11, MAS_IACCESS_SENDFILE, 0, 3 );
 
     fprintf( stderr, "[********** ao11: [%p]] {reopen_cnt:%lu;load_cnt:%lu;close_cnt:%lu;lseek_cnt:%lu;sendfile_cnt:%lu;}\n",
              ( void * ) ao11, ao11->reopen_cnt, ao11->load_cnt, ao11->close_cnt, ao11->lseek_cnt, ao11->sendfile_cnt );
-    ao21 = mas_autoset_search_autoobject( as1, "tclass2" );
+    ao21 = mas_autoset_search_autoobject( as1, ".", "tclass2" );
     fprintf( stderr, "[********** ao21: [%p]]\n", ( void * ) ao21 );
 
-    ao12 = mas_autoset_find_autoobject( as1, "configure" );
+    ao12 = mas_autoset_find_autoobject( as1, ".", "configure" );
     fprintf( stderr, "[********** ao12: [%p]]\n", ( void * ) ao12 );
-    ao22 = mas_autoset_find_autoobject( as1, "tclass2" );
+    ao22 = mas_autoset_find_autoobject( as1, ".", "tclass2" );
     fprintf( stderr, "[********** ao21: [%p]]\n", ( void * ) ao22 );
 
     fprintf( stderr, "[********** ao11: [%p]] {reopen_cnt:%lu;load_cnt:%lu;close_cnt:%lu;lseek_cnt:%lu;sendfile_cnt:%lu;}\n",

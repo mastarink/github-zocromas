@@ -17,6 +17,11 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
+#include <mastar/tools/mas_arg_tools.h>
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
+
 
 
 #include "mas_autoobject_object.h"
@@ -37,6 +42,7 @@ int
 _mas_autoobject_compare( const void *a, const void *b )
 {
   mas_autoobject_t *aao, *bao;
+  int rdr = 0;
 
   aao = ( mas_autoobject_t * ) a;
   bao = ( mas_autoobject_t * ) b;
@@ -46,7 +52,9 @@ _mas_autoobject_compare( const void *a, const void *b )
     return bao->name ? -1 : 0;
   if ( !bao->name )
     return aao->name ? 1 : 0;
-  return strcmp( aao->name, bao->name );
+  if ( aao->docroot )
+    rdr = strcmp( aao->docroot, bao->docroot );
+  return rdr ? rdr : strcmp( aao->name, bao->name );
 }
 
 int
@@ -131,6 +139,8 @@ mas_autoobject_delete_data( mas_autoobject_t * obj )
 {
   if ( obj && obj->data )
   {
+    if ( obj->etag )
+      mas_free( obj->etag );
     switch ( obj->iaccess_type )
     {
     case MAS_IACCESS_FILE:
@@ -149,9 +159,9 @@ mas_autoobject_delete_data( mas_autoobject_t * obj )
 }
 
 int
-mas_autoobject_qopen( mas_autoobject_t * obj, const char *name )
+mas_autoobject_qopen( mas_autoobject_t * obj, const char *docroot, const char *name )
 {
-  _mas_autoobject_set_name( obj, name );
+  _mas_autoobject_set_name( obj, docroot, name );
   return mas_autoobject_reopen( obj );
 }
 
@@ -165,7 +175,7 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
     /* int hbefore; */
     struct stat st;
 
-    fprintf( stderr, "TO OPEN %s\n", obj->name );
+    /* HMSG( "TO OPEN (%d) %s :: %s", obj->iaccess_type, obj->docroot, obj->name ); */
     memset( &st, 0, sizeof( st ) );
     /* hbefore = obj->handler.i; */
     switch ( obj->iaccess_type )
@@ -174,13 +184,34 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
       obj->reopen_cnt++;
-      obj->handler.i = mas_open( ( char * ) obj->name, O_RDONLY );
+      {
+        char *fname = NULL;
+
+        if ( obj->docroot )
+          fname = mas_strdup( obj->docroot );
+        fname = mas_strcat_x( fname, obj->name );
+        obj->handler.i = mas_open( fname, O_RDONLY );
+        /* HMSG( "OPEN (%d) %s", obj->handler.i, fname ); */
+        mas_free( fname );
+      }
       obj->stat_cnt++;
       rst = fstat( mas_autoobject_fd( obj ), &st );
+      obj->inode = st.st_ino;
+      obj->time = st.st_mtime;
+
       break;
     case MAS_IACCESS_FILE:
       obj->reopen_cnt++;
-      obj->handler.f = fopen( ( char * ) obj->name, "r" );
+      {
+        char *fname = NULL;
+
+        if ( obj->docroot )
+          fname = mas_strdup( obj->docroot );
+        fname = mas_strcat_x( fname, obj->name );
+        obj->handler.f = fopen( fname, "r" );
+        /* HMSG( "OPEN %s", fname ); */
+        mas_free( fname );
+      }
       obj->stat_cnt++;
       rst = fstat( mas_autoobject_fd( obj ), &st );
       break;
@@ -198,7 +229,7 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
 }
 
 void
-mas_autoobject_set_name( mas_autoobject_t * obj, const char *name )
+mas_autoobject_set_name( mas_autoobject_t * obj, const char *docroot, const char *name )
 {
   if ( obj && name && ( !obj->name || 0 != strcmp( name, obj->name ) ) )
   {
@@ -206,18 +237,18 @@ mas_autoobject_set_name( mas_autoobject_t * obj, const char *name )
 
     o = mas_autoobject_opened( obj );
     mas_autoobject_close( obj );
-    _mas_autoobject_set_name( obj, name );
+    _mas_autoobject_set_name( obj, docroot, name );
     if ( o )
       mas_autoobject_reopen( obj );
   }
 }
 
 int
-mas_autoobject_open( mas_autoobject_t * obj, const char *name )
+mas_autoobject_open( mas_autoobject_t * obj, const char *docroot, const char *name )
 {
   if ( obj )
     mas_autoobject_close( obj );
-  return mas_autoobject_qopen( obj, name );
+  return mas_autoobject_qopen( obj, docroot, name );
 }
 
 /* int                                                                          */
@@ -287,7 +318,7 @@ mas_autoobject_close( mas_autoobject_t * obj )
 }
 
 int
-mas_autoobject_set_data( mas_autoobject_t * obj, void *ptr )
+mas_autoobject_set_data( mas_autoobject_t * obj, const void *ptr )
 {
   int r = 0;
 
@@ -314,6 +345,14 @@ mas_autoobject_set_data( mas_autoobject_t * obj, void *ptr )
       }
   }
   return r;
+}
+
+size_t
+mas_autoobject_size( mas_autoobject_t * obj )
+{
+  if ( obj )
+    mas_autoobject_reopen( obj );
+  return obj ? obj->size : 0;
 }
 
 int
@@ -487,4 +526,157 @@ mas_autoobject_cat( int han, mas_autoobject_t * obj, int use_new )
     }
   }
   return r;
+}
+
+content_type_ext_t content_exts[] = {
+  {MAS_CONTENT_HTML, ":html:htm:"}
+  ,
+  {MAS_CONTENT_GIF, ":gif:GIF:"}
+  ,
+  {MAS_CONTENT_JPEG, ":jpg:JPG:jpeg:JPEG"}
+  ,
+  {MAS_CONTENT_TEXT, ":txt:"}
+};
+
+content_type_details_t content_types[] = {
+  {MAS_CONTENT_HTML, "text", "html"}
+  ,
+  {MAS_CONTENT_TEXT, "text", "plain"}
+  ,
+  {MAS_CONTENT_GIF, "image", "gif"}
+  ,
+  {MAS_CONTENT_JPEG, "image", "jpeg"}
+  ,
+  {MAS_CONTENT_FORM_DATA, "multipart", "form-data"}
+};
+
+static mas_content_type_t
+mas_content_type_by_ext( mas_autoobject_t * obj )
+{
+  mas_content_type_t t = MAS_CONTENT_BAD;
+  const char *epath;
+  const char *ext = NULL;
+  char extbuf[256];
+
+  char *fname = NULL;
+
+  if ( obj->docroot )
+    fname = mas_strdup( obj->docroot );
+  fname = mas_strcat_x( fname, obj->name );
+  obj->handler.i = mas_open( fname, O_RDONLY );
+
+
+  epath = fname + strlen( fname );
+  while ( epath > fname )
+  {
+    epath--;
+    if ( *epath == '.' )
+      ext = epath + 1;
+    else if ( *epath == '/' )
+      break;
+  }
+  if ( ext )
+  {
+    int len;
+
+    strcpy( extbuf + 1, ext );
+    extbuf[0] = ':';
+    len = strlen( ext );
+    extbuf[0] = ':';
+    extbuf[len + 1] = ':';
+    extbuf[len + 2] = '\0';
+  }
+
+  /* rMSG( "CHECK EXT %s", extbuf ); */
+  for ( int it = 0; it < sizeof( content_exts ) / sizeof( content_exts[0] ); it++ )
+  {
+    /* MAS_LOG( "CHECK EXT '%s' ? '%s'", content_exts[it].extset, extbuf ); */
+    if ( strstr( content_exts[it].extset, extbuf ) )
+    {
+      t = content_exts[it].ctype;
+      /* MAS_LOG( "CHECK EXT = %d", t ); */
+      break;
+    }
+  }
+  if ( fname )
+    mas_free( fname );
+  return t;
+}
+
+mas_content_type_t
+mas_autoobject_content_type_by_ext( mas_autoobject_t * obj )
+{
+  mas_content_type_t t = MAS_CONTENT_BAD;
+
+  if ( obj )
+    t = mas_content_type_by_ext( obj );
+  return t;
+}
+
+mas_content_type_t
+mas_autoobject_icontent_type( mas_autoobject_t * obj )
+{
+  return obj ? obj->icontent_type : MAS_CONTENT_BAD;
+}
+
+void
+mas_autoobject_set_icontent_type( mas_autoobject_t * obj, mas_content_type_t ict )
+{
+  if ( obj )
+    obj->icontent_type = ict;
+}
+
+char *
+mas_autoobject_content_type_string( mas_autoobject_t * obj )
+{
+  char *s = NULL;
+
+  if ( obj )
+  {
+    for ( int it = 0; it < sizeof( content_types ) / sizeof( content_types[0] ); it++ )
+    {
+      /* MAS_LOG( "CT: %d", mas_udata_icontent_type( ud ) ); */
+      if ( mas_autoobject_icontent_type( obj ) == content_types[it].ctype )
+      {
+        s = mas_strdup( content_types[it].mtype );
+        s = mas_strcat_x( s, "/" );
+        s = mas_strcat_x( s, content_types[it].dtype );
+      }
+    }
+  }
+  return s;
+}
+
+time_t
+mas_autoobject_time( mas_autoobject_t * obj )
+{
+  if ( obj )
+    mas_autoobject_reopen( obj );
+  return obj ? obj->time : 0;
+}
+
+const char *
+mas_autoobject_etag( mas_autoobject_t * obj )
+{
+  const char *etag = NULL;
+
+  if ( obj )
+  {
+    if ( !obj->etag )
+    {
+      mas_autoobject_reopen( obj );
+      if ( obj->inode && obj->time && obj->size )
+      {
+        char etag_buf[256];
+
+        snprintf( etag_buf, sizeof( etag_buf ), "%lx-%lx-%lx", obj->inode, obj->size, obj->time * 1000000 );
+
+        obj->etag = mas_strdup( "\"" );
+        obj->etag = mas_strcat_x( obj->etag, etag_buf );
+        obj->etag = mas_strcat_x( obj->etag, "\"" );
+      }
+    }
+    etag = obj->etag;
+  }
+  return etag;
 }

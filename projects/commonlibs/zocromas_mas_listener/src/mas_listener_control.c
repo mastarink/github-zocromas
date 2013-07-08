@@ -22,8 +22,12 @@ extern mas_control_t ctrl;
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-#  include <mastar/types/mas_varset_types.h>
-#  include <mastar/varset/mas_varset_search.h>
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/varset/mas_varset_search.h>
+
+#include <mastar/autoset/mas_autoset_object.h>
+#include <mastar/autoset/mas_autoset_search.h>
+#include <mastar/autoobject/mas_autoobject.h>
 
 #include <mastar/transaction/mas_rcontrol_object.h>
 
@@ -250,7 +254,8 @@ mas_lcontrol_variable_create_text( mas_lcontrol_t * plcontrol, /* th_type_t thty
 }
 
 int
-mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass_name, const char *name, const char *txt )
+mas_lcontrol_variable_set_text( mas_lcontrol_t * plcontrol, /* th_type_t thtype, */ const char *vclass_name, const char *name,
+                                const char *txt )
 {
   int r = 0;
 
@@ -276,4 +281,22 @@ mas_lcontrol_variables_find( mas_lcontrol_t * plcontrol, const char *vclass_name
     pthread_rwlock_unlock( &plcontrol->variables_rwlock );
   }
   return found;
+}
+
+mas_autoobject_t *
+mas_lcontrol_get_autoobject( mas_lcontrol_t * plcontrol, const char *docroot, const char *uri )
+{
+  mas_autoobject_t *ao = NULL;
+
+  pthread_mutex_lock( &plcontrol->autoset_mutex );
+  if ( !plcontrol->autoset )
+    plcontrol->autoset = mas_autoset_create(  );
+  if ( plcontrol->autoset )
+  {
+    ao = mas_autoset_search_autoobject( plcontrol->autoset, docroot, uri );
+    mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_SENDFILE );
+  }
+  pthread_mutex_unlock( &plcontrol->autoset_mutex );
+
+  return ao;
 }

@@ -37,9 +37,9 @@ mas_autoset_create( void )
 }
 
 static void
-_mas_autoobject_delete( void *vclass )
+_mas_autoobject_delete( void *tautoset )
 {
-  mas_autoobject_delete( ( mas_autoobject_t * ) vclass );
+  mas_autoobject_delete( ( mas_autoobject_t * ) tautoset );
 }
 
 void
@@ -48,6 +48,8 @@ mas_autoset_delete( mas_autoset_t * autoset )
   if ( autoset )
   {
     tdestroy( autoset->instances, _mas_autoobject_delete );
+    if ( autoset->docroot )
+      mas_free( autoset->docroot );
     mas_free( autoset );
     autoset = NULL;
   }

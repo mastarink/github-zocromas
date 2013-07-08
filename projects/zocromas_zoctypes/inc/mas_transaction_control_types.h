@@ -4,7 +4,8 @@
 #  include <mastar/types/mas_common_types.h>
 #  include <mastar/types/mas_list_def.h>
 
-#  include <mastar/types/mas_varvec_types.h>
+/* #  include <mastar/types/mas_varvec_types.h> */
+#  include <mastar/types/mas_varset_types.h>
 
 #  include <mastar/types/mas_channel_types.h>
 #  include <mastar/types/mas_opts_types.h>
