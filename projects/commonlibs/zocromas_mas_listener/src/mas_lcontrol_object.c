@@ -194,6 +194,8 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, mas_options_t * popts, const char
 int
 mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
 {
+  int r = -1;
+
   if ( plcontrol )
   {
     /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
@@ -257,6 +259,8 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
     plcontrol->h.thread = ( pthread_t ) 0;
     /* FIXME : double free or corruption (!prev) --- sometimes, on final destroy */
     mas_free( plcontrol );
+    HMSG( "FREE plcontrol" );
+    r = 0;
   }
-  return 0;
+  return r;
 }

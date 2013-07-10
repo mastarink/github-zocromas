@@ -32,6 +32,8 @@ extern mas_control_t ctrl __attribute__ ( ( weak ) );
 
 #define MAS_DROP_PREFIX "?zocromas_"
 
+#define MFPB(...) _mfpb(__VA_ARGS__)
+#define MFPE(...) _mfpe(__VA_ARGS__)
 /*
 this:
   mas_msg_tools.c
@@ -377,6 +379,49 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .def_field = {.bold = 1,.bg = MAS_MSG_COLOR_MAGENTA,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 1},
    },
 };
+#define MAS_MSG_BUF_SZ 1024 * 4
+static size_t msg_index = 0;
+static size_t msg_bufsz = MAS_MSG_BUF_SZ;
+static char msg_buffer[MAS_MSG_BUF_SZ] = "";
+
+static void
+_mfpbv( const char *fmt, va_list args )
+{
+  size_t l;
+
+  if ( msg_index < msg_bufsz )
+    l = vsnprintf( &msg_buffer[msg_index], msg_bufsz - msg_index, fmt, args );
+  msg_index += l;
+}
+
+static void
+_mfpev( const char *fmt, va_list args )
+{
+  _mfpbv( fmt, args );
+  MFPL( msg_buffer );
+  msg_index = 0;
+}
+
+static void
+_mfpb( const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  _mfpbv( fmt, args );
+  va_end( args );
+}
+
+static void
+_mfpe( const char *fmt, ... )
+{
+  va_list args;
+
+  va_start( args, fmt );
+  _mfpev( fmt, args );
+  va_end( args );
+}
+
 
 unsigned
 mas_bg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
@@ -662,13 +707,13 @@ mas_show( mas_msg_type_t msgt, int fdetails, mas_msg_field_type_t field )
 void
 mas_set_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
 {
-  MFP( "\x1b[%u;%u;%um", mas_bold( msgt, field ) ? 1 : 22, mas_bg_color( msgt, field ), mas_fg_color( msgt, field ) );
+  MFPB( "\x1b[%u;%u;%um", mas_bold( msgt, field ) ? 1 : 22, mas_bg_color( msgt, field ), mas_fg_color( msgt, field ) );
 }
 
 void
 mas_reset_color( void )
 {
-  MFP( "\x1b[0m" );
+  MFPB( "\x1b[0m" );
 }
 
 int
@@ -690,7 +735,8 @@ mas_msg_set_file( const char *path )
     HMSG( "MSG SET TO %p : %s", ( void * ) ctrl.msgfile, path );
     if ( path )
     {
-      ctrl.msgfile = fopen( path, "a" );
+      /* ctrl.msgfile = fopen( path, "a" ); */
+      ctrl.msgfile = fopen( path, "w" );
       /* ffcntl( ctrl.msgfile, F_SETFL, O_SYNC ); */
       if ( ctrl.msgfile )
       {
@@ -726,7 +772,7 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
   {
     if ( MAS_CTRL_IS_SERVER && prefix && *prefix )
     {
-      /* MFP( prefix_fmt ? prefix_fmt : " %-6s ", prefix ); */
+      /* MFPB( prefix_fmt ? prefix_fmt : " %-6s ", prefix ); */
     }
   }
   else
@@ -735,7 +781,8 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
     if (  /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_PREFIX );
-      MFP( "-c- %-5s > %p < ", qprefix, ( void * ) ( &ctrl ? ctrl.msgfile : NULL ) );
+      /* MFPB( "-c- %-12s > %p < ", qprefix, ( void * ) ( &ctrl ? ctrl.msgfile : NULL ) ); */
+      MFPB( prefix_fmt ? prefix_fmt : "-c- %-12s", qprefix );
       mas_reset_color(  );
     }
   }
@@ -751,23 +798,23 @@ __mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
     if ( &ctrl && pid == ctrl.main.pid )
     {
       wattron( w_win, A_BOLD );
-      MFP( "+" );
+      MFPB( "+" );
       wattroff( w_win, A_BOLD );
       /* wcolor_set( w_win, 2, NULL ); */
-      /* MFP( ":%5u", pid );           */
+      /* MFPB( ":%5u", pid );           */
       wcolor_set( w_win, 1, NULL );
     }
     else
     {
-      MFP( ">%5u:", pid );
+      MFPB( ">%5u:", pid );
     }
   }
   else
 #endif
   {
-    MFP( ":" );
+    MFPB( ":" );
     mas_set_color( msgt, MAS_MSG_FIELD_PID );
-    MFP( "%5u ", pid );
+    MFPB( "%5u ", pid );
     mas_reset_color(  );
   }
   return 0;
@@ -785,7 +832,7 @@ __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
   else if ( pid == ctrl.threads.n.daemon.pid )
     pidname = "Daemon";
   mas_set_color( msgt, MAS_MSG_FIELD_PIDNAME );
-  MFP( "%-5s", pidname );
+  MFPB( "%-5s", pidname );
   mas_reset_color(  );
   return 0;
 }
@@ -811,32 +858,32 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
     unsigned color = 0;
 
     wattron( w_win, A_BOLD );
-    /* MFP( "pth:" ); */
+    /* MFPB( "pth:" ); */
     wcolor_set( w_win, color, NULL );
     switch ( thtype )
     {
     case MAS_THREAD_MASTER:
-      MFP( "M0:%u ", MAS_CTRL_STATUS );
+      MFPB( "M0:%u ", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_LISTENER:
-      MFP( "L%lu:%u ", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+      MFPB( "L%lu:%u ", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
       break;
     case MAS_THREAD_TRANSACTION:
-      MFP( "R%lu:%u @ L%lu:%u ", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
-           prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
-           prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
+      MFPB( "R%lu:%u @ L%lu:%u ", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
+            prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
+            prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
       break;
     case MAS_THREAD_LOGGER:
     case MAS_THREAD_WATCHER:
     case MAS_THREAD_TICKER:
-      MFP( "%s[%lx]", mas_thread_type_name( thtype ), pth );
+      MFPB( "%s[%lx]", mas_thread_type_name( thtype ), pth );
       break;
     default:
-      MFP( "[%lx]", pth );
+      MFPB( "[%lx]", pth );
       break;
     }
     wcolor_set( w_win, 1, NULL );
-    MFP( ":" );
+    MFPB( ":" );
     wattroff( w_win, A_BOLD );
   }
   else
@@ -844,45 +891,45 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
   {
     /* mas_set_color( msgt, MAS_MSG_FIELD_THREAD_INFO ); */
     mas_set_color( msgt, MAS_MSG_FIELD_THREAD_TYPE_NAME + thtype );
-    MFP( "(%s)", mas_thread_type_name( thtype ) );
+    MFPB( "(%s)", mas_thread_type_name( thtype ) );
     mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
     switch ( thtype )
     {
     case MAS_THREAD_MASTER:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFP( " M-:%u:", MAS_CTRL_STATUS );
+      MFPB( " M-:%u:", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_MAIN:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFP( " Z-:%u:", MAS_CTRL_STATUS );
+      MFPB( " Z-:%u:", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_TICKER:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFP( " T-:%u:", MAS_CTRL_STATUS );
+      MFPB( " T-:%u:", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_WATCHER:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFP( " W-:%u:", MAS_CTRL_STATUS );
+      MFPB( " W-:%u:", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_LOGGER:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFP( " G-:%u:", MAS_CTRL_STATUS );
+      MFPB( " G-:%u:", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_LISTENER:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFP( " L%lu:%u:", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+      MFPB( " L%lu:%u:", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
       break;
     case MAS_THREAD_TRANSACTION:
-      MFP( " R%lu:%u @ L%lu:%u:", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
-           prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
-           prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
-      /* MFP( "pth:\x1b[1;%dm(%s) R%lu:%u @ L%lu:%u\x1b[0m:", 35, mas_thread_type_name( thtype ),  */
+      MFPB( " R%lu:%u @ L%lu:%u:", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
+            prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
+            prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
+      /* MFPB( "pth:\x1b[1;%dm(%s) R%lu:%u @ L%lu:%u\x1b[0m:", 35, mas_thread_type_name( thtype ),  */
       /*      prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999, */
       /*      prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,                  */
       /*      prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );                       */
       break;
     default:
-      MFP( "[%lx]\x1b[0m:", pth );
+      MFPB( "[%lx]\x1b[0m:", pth );
       break;
     }
     mas_reset_color(  );
@@ -897,13 +944,13 @@ __mas_msg_code_position( mas_msg_type_t msgt, int fdetails, const char *func, in
   if ( MAS_MSG_BIT( msg_funline ) )
   {
     mas_set_color( msgt, MAS_MSG_FIELD_CODEPOS );
-    MFP( " L%03d:%-25s:", line, func );
+    MFPB( " L%03d:%-25s:", line, func );
     mas_reset_color(  );
-    /* MFP( "\t" ); */
+    /* MFPB( "\t" ); */
   }
   else
   {
-    MFP( "<>" );
+    MFPB( "<>" );
   }
   return 0;
 }
@@ -922,14 +969,14 @@ __mas_msg_message( mas_msg_type_t msgt, int fdetails, const char *fmt, va_list a
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
-    MFP( fdetails ? " %-15s" : " %-50s", message );
+    MFPB( fdetails ? " %-15s" : " %-50s", message );
   }
   else
 #endif
   {
-    MFP( "\x1b[K" );
+    MFPB( "\x1b[K" );
     mas_set_color( msgt, MAS_MSG_FIELD_MESSAGE );
-    MFP( fdetails ? " %-15s" : " %-50s", message );
+    MFPB( fdetails ? " %-15s" : " %-50s", message );
     mas_reset_color(  );
   }
   if ( message )
@@ -944,14 +991,14 @@ __mas_msg_suffix( mas_msg_type_t msgt, int fdetails, const char *suffix )
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
-    MFP( "   %s", suffix ? suffix : "" );
+    MFPB( "   %s", suffix ? suffix : "" );
   }
   else
 #endif
   {
-    MFP( "   " );
+    MFPB( "   " );
     mas_set_color( msgt, MAS_MSG_FIELD_SUFFIX );
-    MFP( "%s", suffix ? suffix : "" );
+    MFPB( "%s", suffix ? suffix : "" );
     mas_reset_color(  );
   }
   return 0;
@@ -967,12 +1014,12 @@ __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 
     elapsed_time = cur_time - ctrl.stamp.start_time;
     mas_set_color( msgt, MAS_MSG_FIELD_ELAPSED );
-    MFP( "+%5lus ", elapsed_time );
+    MFPB( "+%5lus ", elapsed_time );
     mas_reset_color(  );
   }
   else
   {
-    MFP( " %5s  ", "-e-" );
+    MFPB( " %5s  ", "-e-" );
   }
   return 0;
 }
@@ -980,7 +1027,8 @@ __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 int
 __mas_msg_errcode( mas_msg_type_t msgt, int fdetails )
 {
-  MFP( "{e%03d}", errno );
+  if (errno){MFPB( " En%-03d ", errno );}
+  else{MFPB( "       ");}
   return 0;
 }
 
@@ -989,7 +1037,7 @@ __mas_msg_consume( mas_msg_type_t msgt, int fdetails )
 {
   extern unsigned long memory_balance;
 
-  MFP( " (m%5lu) ", memory_balance );
+  MFPB( " (m%5lu) ", memory_balance );
   return 0;
 }
 
@@ -1003,12 +1051,12 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
-    MFP( "\n*" );
+    MFPB( "\n*" );
   }
   else
 #endif
   {
-    MFP( "\r" );
+    MFPB( "\r" );
   }
   {
     pid_t pid;
@@ -1018,11 +1066,11 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_ELAPSED ) )
       r = __mas_msg_elapsed( msgt, details );
 
-    if ( mas_show( msgt, details, MAS_MSG_FIELD_ERRCODE ) )
-      r = __mas_msg_errcode( msgt, details );
-
     if ( mas_show( msgt, details, MAS_MSG_FIELD_CONSUME ) )
       r = __mas_msg_consume( msgt, details );
+
+    if ( mas_show( msgt, details, MAS_MSG_FIELD_ERRCODE ) )
+      r = __mas_msg_errcode( msgt, details );
 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_PREFIX ) )
       r = __mas_msg_prefix( msgt, details, prefix_fmt, prefix );
@@ -1049,7 +1097,7 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_EOL ) )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_EOL );
-      MFP( "\x1b[K" );
+      MFPB( "\x1b[K" );
       mas_reset_color(  );
     }
 
@@ -1060,7 +1108,7 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     else
 #endif
     {
-      MFP( "\n" );
+      MFPE( "\n" );
     }
   }
   return r;
@@ -1073,7 +1121,6 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
   int r = 0;
   va_list args;
 
-  /* mas_channel_t *pchannel = NULL; */
   va_start( args, fmt );
   if ( allow )
   {
@@ -1134,7 +1181,7 @@ mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt
 
 
   if ( &ctrl )
-    pthread_mutex_lock( &ctrl.thglob.emsg_mutex );
+    pthread_mutex_lock( &ctrl.thglob.msg_mutex );
   if ( merrno )
   {
     char pref[512];
@@ -1150,10 +1197,10 @@ mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt
   }
   else
   {
-    r = __mas_vmsg( func, line, msgt, 1, "{  %4s  }", "E-R-R-O-R", NULL, fmt, args );
+    r = __mas_vmsg( func, line, msgt, 1, "{  %3s  }", "ERR", NULL, fmt, args );
   }
   if ( &ctrl )
-    pthread_mutex_unlock( &ctrl.thglob.emsg_mutex );
+    pthread_mutex_unlock( &ctrl.thglob.msg_mutex );
   switch ( merrno )
   {
   case EINTR:

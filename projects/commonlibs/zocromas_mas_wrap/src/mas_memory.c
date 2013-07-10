@@ -137,13 +137,13 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
     {
       if ( memar[im] )
       {
-        mas_mem_head_t *real_ptr;
+        mas_mem_head_t *data_ptr;
 
         if ( !h++ )
           r = fprintf( f, "%s:%d MEMORY TABLE\n", func, line );
 
-        real_ptr = ( mas_mem_head_t * ) memar[im];
-        real_ptr--;
+        data_ptr = ( mas_mem_head_t * ) memar[im];
+        data_ptr++;
         if ( r >= 0 )
         {
           mas_mem_head_t *_mhp;
@@ -158,9 +158,9 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
           _func = _mhp->func;
           _line = _mhp->line;
           if ( fn_f )
-            fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", _id, _size, _func, _line, s_f ? ( char * ) real_ptr : "-" );
+            fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", _id, _size, _func, _line, s_f ? ( char * ) data_ptr : "-" );
           else
-            fprintf( f, "id: %lx; sz:%lu; fun#%lx:%u [%s]\n", _id, _size, ( unsigned long ) _func, _line, s_f ? ( char * ) real_ptr : "-" );
+            fprintf( f, "id: %lx; sz:%lu; fun#%lx:%u [%s]\n", _id, _size, ( unsigned long ) _func, _line, s_f ? ( char * ) data_ptr : "-" );
         }
       }
     }

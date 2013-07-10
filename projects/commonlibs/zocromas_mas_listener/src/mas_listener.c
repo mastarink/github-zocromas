@@ -67,10 +67,11 @@ more:
 
 
 /* (w/o stop) join */
+/* returns 0 : stopped */
 int
 mas_listener_wait( mas_lcontrol_t * plcontrol )
 {
-  int r = 0;
+  int r = -1;
   pthread_t pth;
 
   /* thMSG( "waiting at M0:%u for L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->h.status ); */
@@ -80,12 +81,9 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
   }
   if ( plcontrol && ( pth = plcontrol->h.thread ) && 0 == mas_xpthread_join( pth ) )
   {
-    r = -1;
     MAS_LOG( "stopped listener [%lx]", pth );
     plcontrol->h.thread = ( pthread_t ) 0;
-    ctrl.status = MAS_STATUS_CLOSE;
-    /* tMSG( "joined th %lx to %lx", ( unsigned long ) mas_pthread_self(  ), ( unsigned long ) plcontrol->h.thread ); */
-    /* thMSG( "joined M0:%u & L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->h.status ); */
+    /* ctrl.status = MAS_STATUS_CLOSE; */
     r = 0;
     WMSG( "LISTENER %lu STOPPED", plcontrol->h.serial );
   }
@@ -153,7 +151,7 @@ mas_listener_start( mas_options_t * popts, char *host_port, unsigned port )
     if ( r == 0 )
     {
       lMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->h.serial, plcontrol->h.status, plcontrol->host, plcontrol->port );
-      ctrl.status = MAS_STATUS_OPEN;
+      /* ctrl.status = MAS_STATUS_OPEN; */
     }
   }
   else
@@ -168,6 +166,8 @@ mas_listener_start( mas_options_t * popts, char *host_port, unsigned port )
 int
 mas_listener_cancel( mas_lcontrol_t * plcontrol )
 {
+  int r = -1;
+
 #ifdef MAS_TR_PERSIST
   mas_rcontrol_t *prcontrol;
 
@@ -187,8 +187,11 @@ mas_listener_cancel( mas_lcontrol_t * plcontrol )
   WMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->h.serial, plcontrol->h.status, ( void * ) plcontrol, plcontrol->h.thread );
   MAS_LOG( "cancelling L%lu:%u", plcontrol->h.serial, plcontrol->h.status );
   if ( plcontrol->h.thread )
+  {
     mas_pthread_cancel( plcontrol->h.thread );
-  return 0;
+    r = 0;
+  }
+  return r;
 }
 
 static void

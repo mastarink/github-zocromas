@@ -210,6 +210,7 @@ mas_channel_read_some( mas_channel_t * pchannel )
   WMSG( "(%d)SOME %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
   if ( r > 0 )
     pchannel->buffer.length += r;
+  MAS_LOG( "read ch (read all) %d => %lu", r,  pchannel->buffer.length);
   return r;
 }
 

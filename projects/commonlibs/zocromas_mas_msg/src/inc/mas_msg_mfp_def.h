@@ -4,6 +4,12 @@
 
 #ifndef MAS_NO_CTRL
 
+#  define MFPL(s) { \
+    if ( ctrl.msgfile ) \
+      fputs( s, ctrl.msgfile ); \
+    else if ( ctrl.stderrfile ) \
+      fputs( s, ctrl.stderrfile ); \
+   }
 
 #  define MFPZ(...) { \
     if ( ctrl.msgfile ) \

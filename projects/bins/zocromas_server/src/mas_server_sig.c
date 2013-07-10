@@ -308,7 +308,7 @@ mas_atexit( void )
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainAtexit" ) );
-    EMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
+    HMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
 
   mas_destroy_server( &gopts );

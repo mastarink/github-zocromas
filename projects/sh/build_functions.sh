@@ -1,10 +1,10 @@
 function autoreconf_m ()
 {
   if [[ "$build_at" ]] && pushd "$build_at"  >/dev/null ; then
-    make -s maintainer-clean >/dev/null
+    make -s maintainer-clean &>/dev/null
   fi
   popd  >/dev/null || return 1 
-  autoreconf -i
+  autoreconf -i &>/dev/null || return 1
   return 0
 }
 function configure_m ()
@@ -16,7 +16,7 @@ function configure_m ()
   else
     cfgdir=$configuredir
   fi
-  echo "$cfgdir/configure $prj_configure_opts" >&2
+# echo "$cfgdir/configure $prj_configure_opts" >&2
   if [[ "$cfgdir" ]] && [[ -d "$cfgdir" ]] && [[ -f $cfgdir/configure ]] && [[ -x $cfgdir/configure ]] \
   		&& [[ "$build_at" ]] ; then
     if pushd "$build_at"  >/dev/null ; then 

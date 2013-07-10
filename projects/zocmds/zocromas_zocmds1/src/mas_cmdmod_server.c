@@ -195,11 +195,11 @@ info_cmd( STD_CMD_ARGS )
       bufsz = bufsz0;
       {
         if ( ctrl.stamp.first_lts && ctrl.stamp.first_lts != ctrl.stamp.lts )
-          mas_tstrftime( s1lts, sizeof( s1lts ), "%Y%m%d %T", ctrl.stamp.first_lts );
+          mas_tstrflocaltime( s1lts, sizeof( s1lts ), "%Y%m%d %T", ctrl.stamp.first_lts );
         if ( ctrl.stamp.lts )
-          mas_tstrftime( slts, sizeof( slts ), "%Y%m%d %T", ctrl.stamp.lts );
+          mas_tstrflocaltime( slts, sizeof( slts ), "%Y%m%d %T", ctrl.stamp.lts );
         if ( ctrl.stamp.prev_lts )
-          mas_tstrftime( splts, sizeof( splts ), "%Y%m%d %T", ctrl.stamp.prev_lts );
+          mas_tstrflocaltime( splts, sizeof( splts ), "%Y%m%d %T", ctrl.stamp.prev_lts );
       }
       {
         extern unsigned long memory_balance;

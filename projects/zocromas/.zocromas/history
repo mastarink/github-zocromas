@@ -208,3 +208,4 @@ server restart
 server info
 server restart
 reconnect
+bye

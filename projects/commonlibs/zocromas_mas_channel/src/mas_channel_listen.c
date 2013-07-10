@@ -76,20 +76,22 @@ _mas_channel_tune_socket( mas_channel_t * pchannel )
   if ( pchannel->serv.addr.sin_family == AF_INET )
   {
 #ifdef TCP_DEFER_ACCEPT
-    /* r = mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_DEFER_ACCEPT, &yes, sizeof( yes ) ); */
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_DEFER_ACCEPT, &yes, sizeof( yes ) ) );
 #endif
 #ifdef TCP_QUICKACK
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_QUICKACK, &yes, sizeof( yes ) ) );
 #endif
+
+/* the TCP_CORK and TCP_NODELAY are mutually exclusive */
 #ifdef TCP_CORK
+#  if 0
+    /* with 'foolish use' : makes keep-alive very slow ..... */
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_CORK, &yes, sizeof( yes ) ) );
+#  endif
 #endif
-  }
-  if ( pchannel->serv.addr.sin_family == AF_INET )
-  {
-    /* r = mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof( yes ) ); */
+#ifdef TCP_NODELAY
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof( yes ) ) );
+#endif
   }
 /* #ifdef EMSG                              */
 /*   if ( r < 0 )                           */
@@ -108,7 +110,6 @@ mas_channel_listen_tcp( mas_channel_t * pchannel )
 
   if ( mas_channel_test( pchannel ) )
   {
-    /* r = _mas_channel_tune_socket( pchannel ); */
     IEVAL( r, _mas_channel_tune_socket( pchannel ) );
     /* if ( r >= 0 )                       */
     /*   r = mas_channel_bind( pchannel ); */

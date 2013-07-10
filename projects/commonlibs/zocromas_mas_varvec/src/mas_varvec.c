@@ -11,9 +11,12 @@ mas_varvec_id( mas_varvec_t * vclass )
   return vclass ? vclass->id : 0;
 }
 
-void
+ssize_t
 mas_varvec_write( int fd, mas_varvec_t * vclass )
 {
+  ssize_t r = -1;
+
   if ( fd > 0 && vclass && vclass->vec )
-    ( void ) writev( fd, vclass->vec, vclass->el_cnt );
+    r = writev( fd, vclass->vec, vclass->el_cnt );
+  return r;
 }

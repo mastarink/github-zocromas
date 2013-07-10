@@ -83,7 +83,7 @@ mas_init_argv( mas_options_t * popts, int argc, char **argv, char **env )
     }
     /* for ( int ia = 0; ia < argc; ia++ )                              */
     /* {                                                                */
-    /*   mMSG( "A: %d of %d. arg:'%s'", ia, popts-> argvv.c, popts-> argvv.v[ia] ); */
+    /*   mMSG( "@: %d of %d. arg:'%s'", ia, popts-> argvv.c, popts-> argvv.v[ia] ); */
     /* }                                                                */
   }
   return popts->argvv.c;
@@ -290,7 +290,7 @@ mas_init_set_msg_file( mas_options_t * popts )
 
   if ( !ctrl.is_parent )
   {
-    HMSG( "MESSAGES (%d) to %s", popts?1:0, popts ? popts->msgfilename : NULL );
+    HMSG( "MESSAGES (%d) to %s", popts ? 1 : 0, popts ? popts->msgfilename : NULL );
     if ( popts->msgfilename )
     {
       MAS_LOG( "(%d) init msg to set file e%d", r, errno );
@@ -431,11 +431,11 @@ mas_init_vplus( mas_options_t * popts, va_list args )
 
   WMSG( "INIT V+" );
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
-  while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) )
+  while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) && !ctrl.is_parent )
   {
     IEVAL( r, ( fun ) ( popts ) );
     MAS_LOG( "(%d) init + #%d", r, pos );
-    WMSG( "INIT V #%d", pos );
+    HMSG( "INIT V #%d", pos );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
     pos++;
   }
@@ -502,6 +502,7 @@ void
 mas_destroy( mas_options_t * popts )
 {
   char sppid[64] = "";
+
 
   snprintf( sppid, sizeof( sppid ), "%lu", ( unsigned long ) getppid(  ) );
   if ( *sppid )
@@ -582,10 +583,12 @@ mas_destroy( mas_options_t * popts )
     /* k = print_memlist( ctrl.msgfile, FL ); */
     FMSG( "destroy, memory_balance:%ld;", memory_balance );
     /* k = print_memlist( ctrl.msgfile, FL ); */
+    EMSG( "WHY >>>" );
     if ( !ctrl.stderrfile || print_memlist( ctrl.stderrfile, FL ) < 0 )
       if ( !ctrl.old_stderrfile || print_memlist( ctrl.old_stderrfile, FL ) < 0 )
         if ( print_memlist( ctrl.msgfile, FL ) < 0 )
           print_memlist( stderr, FL );
+    EMSG( "<<< WHY" );
     /* k = print_memlist( ctrl.msgfile, FL ); */
     fflush( ctrl.msgfile );
   }

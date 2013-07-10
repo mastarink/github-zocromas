@@ -132,7 +132,7 @@ mas_proto_http_write_pairs( mas_http_t * http, const char *set )
 {
   if ( http )
   {
-    mas_varvec_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
+    http->written += mas_varvec_write( mas_channel_fd( http->prcontrol->h.pchannel ), http->outdata );
   }
   return http;
 }

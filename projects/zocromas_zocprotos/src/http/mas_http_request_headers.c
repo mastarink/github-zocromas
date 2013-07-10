@@ -33,18 +33,21 @@ mas_proto_http_parse_known_header( mas_rcontrol_t * prcontrol, mas_http_t * http
   if ( 0 == strcmp( name, "Connection" ) )
   {
     HMSG( "HTTP (known) HEADER (parse) %s", name );
-    MAS_LOG( "HTTP HEADER: %s:%s", name, value );
+    MAS_LOG( "HTTP connection HEADER: %s:%s", name, value );
     if ( 0 == strncasecmp( value, "keep-alive,", 11 ) || 0 == strcasecmp( value, "keep-alive" ) )
     {
       rMSG( ">>>>>> HTTP HEADER: Connection: Keep-Alive" );
-      MAS_LOG( "HTTP HEADER: Connection: Keep-Alive" );
+      MAS_LOG( "HTTP keepalive HEADER" );
       http->connection_keep_alive = 1;
     }
     else if ( 0 == strncasecmp( value, "close,", 6 ) || 0 == strcasecmp( value, "close" ) )
     {
-      rMSG( ">>>>>> HTTP HEADER: Connection: close" );
-      MAS_LOG( "HTTP HEADER: Connection: close" );
+      rMSG( ">>>>>> HTTP known HEADER: Connection: close" );
+      MAS_LOG( "HTTP close HEADER" );
       http->connection_close = 1;
+    }
+    else
+    {
     }
     MAS_LOG( "KA : %u (%u:%u)", prcontrol->connection_keep_alive, http->connection_keep_alive, http->connection_close );
   }

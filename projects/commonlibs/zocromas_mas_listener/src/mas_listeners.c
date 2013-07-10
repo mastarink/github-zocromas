@@ -92,21 +92,29 @@ mas_listeners_start( mas_options_t * popts )
   return r;
 }
 
+/* returns stopped counter */
 int
 mas_listeners_stop( void )
 {
+  int stopped = 0;
+
   if ( ctrl.lcontrols_list )
   {
-    mas_listeners_cancel(  );
+    int cancelled;
+
+    cancelled = mas_listeners_cancel(  );
+    HMSG( "STOP : cancelled %d", cancelled );
   }
-  mas_listeners_wait(  );
-  HMSG( "* STOP" );
-  return 0;
+  stopped = mas_listeners_wait(  );
+  return stopped;
 }
 
+/* returns cancelled counter */
 int
 mas_listeners_cancel( void )
 {
+  int cancelled = 0;
+
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
     mas_lcontrol_t *plcontrol = NULL;
@@ -117,35 +125,40 @@ mas_listeners_cancel( void )
     pthread_rwlock_rdlock( &ctrl.thglob.lcontrols_list_rwlock );
     MAS_LIST_FOREACH( plcontrol, ctrl.lcontrols_list, next )
     {
-      mas_listener_cancel( plcontrol );
+      if ( mas_listener_cancel( plcontrol ) == 0 )
+        cancelled++;
     }
     pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }
-  HMSG( "* l's CANCEL" );
-  return 0;
+  return cancelled;
 }
 
+/* returns stopped counter */
 int
 mas_listeners_wait( void )
 {
+  int stopped = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
   MAS_LOG( "to wait for listeners to stop ..." );
   lMSG( "to wait for listeners to stop ..." );
-  while ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) && ( plcontrol = MAS_LIST_FIRST( ctrl.lcontrols_list ) )
-          && mas_listener_wait( plcontrol ) == 0 )
+  while ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) && ( plcontrol = MAS_LIST_FIRST( ctrl.lcontrols_list ) ) )
   {
+    stopped += ( mas_listener_wait( plcontrol ) == 0 );
     mas_lcontrols_clean_list( 0 );
   }
   ctrl.status = MAS_STATUS_STOP;
-  EMSG( "l's STOPPED" );
   /* ??????????? */
-  /* mas_lcontrols_clean_list( 0 ); */
+  mas_lcontrols_clean_list( 0 );
 
   ctrl.status = MAS_STATUS_END;
-  thMSG( "joined l/th's" );
-  thMSG( "finished waiters" );
-  MAS_LOG( "stopped listeners" );
-  return 0;
+  if ( stopped )
+  {
+    thMSG( "joined l/th's" );
+    thMSG( "finished waiters" );
+    HMSG( "STOPPED listeners (%d)", stopped );
+    MAS_LOG( "stopped listeners (%d)", stopped );
+  }
+  return stopped;
 }

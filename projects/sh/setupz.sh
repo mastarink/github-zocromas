@@ -26,36 +26,44 @@ function prjconffullversion ()
 }
 function prjconfname ()
 {
-  prjconffullversion |awk '{print $1}'
+  prjconffullversion | awk '{print $1}'
 }
 function prjconfversion ()
 {
-  prjconffullversion |awk '{print $3}'
+  prjconffullversion | awk '{print $3}'
 }  
 function setup_vers ()
 {
   local n v rprefix rname_case c tmprex
   local global_flavour_opts_file indir_flavour_opts_file
-# echo "setup_vers" >&2
   n=$1
   shift
   v=$1
   shift
-  if ! [[ "$n" ]] ; then n=`prjconfname`    ; fi
-  if ! [[ "$v" ]] ; then v=`prjconfversion` ; fi
-# echo "`pwd` SV>> $n . $v" >&2
   projectsfile=$projectsdir/projects.list
   if [[ -f $projectsfile ]] ; then
     projects_list=`cat $projectsfile`
+#   readarray projects_list_array < $projectsfile
+#   echo "[>>>> ${projects_list_array[2]} <<<<]" >&2
   else
     echo "not exists projectsfile: '$projectsfile'" >&2
     return 1
   fi
-
+  if ! [[ "$n" ]] ; then n=`prjconfname`    ; fi
+  if ! [[ "$n" ]] ; then
+    n=`basename $(pwd)`
+    if ! [[ "$n" ]] || ! { echo $projects_list | grep -sc "\<$n\>" &>/dev/null ; } ; then
+      echo "ERROR (SV)>> [$n] . [$v] {$projects_list}" >&2
+      unset n
+      return 1
+    fi
+  fi
+  if ! [[ "$v" ]] ; then v=`prjconfversion` ; fi
+  if ! [[ "$v" ]] ; then v='unknown' ; fi
   if [[ "$n" ]] && [[ "$v" ]] ; then
 #   echo "[$( basename $0 )] SET name:$n; version:$v" >&2
-    if [[ -f "$indir/configure" ]] ; then
-      if [[ "$n" ]] && [[ "$v" ]] && [[ "$tmpunpack" ]] && [[ -d "$tmpunpack" ]] && [[ "$tmpbuild" ]] && [[ -d "$tmpbuild" ]] \
+    if [[ -f "$indir/configure.ac" ]] ; then
+      if [[ "$tmpunpack" ]] && [[ -d "$tmpunpack" ]] && [[ "$tmpbuild" ]] && [[ -d "$tmpbuild" ]] \
       			&& [[ "$savedirdist" ]] && [[ -d "$savedirdist" ]] ; then
 	unpackdir="$tmpunpack/${n}-${v}"
 	ibuilddir="$tmpbuild/${n}"
@@ -116,6 +124,10 @@ function setup_vers ()
     fi
     instshname="$instshdir/${mas_name}-${mas_vers}.sh"
     mas_fullname="${mas_name}-${mas_vers}"
+  else
+    echo "n:$n v:$v" >&2
+    echo "ERROR $LINENO setup_vers : '$mas_name'" >&2
+    return 1
   fi
 # echo "[$mas_name] [$mas_vers]" >&2
 # ebuild_prefix=zocromas_
@@ -157,7 +169,7 @@ function setup_vers ()
   else
     if [[ "$MAS_SH_VERBOSE" ]] ; then echo "can't set binary_preset @ $bsrcdir" >&2 ; fi
   fi
-# echo "($rname_case)::: $rname_preset" >&2
+  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "($rname_case)::: $rname_preset" >&2 ; fi
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
   ibinary_preset="$flavourdir/bin/$rname_preset"
   if [[ "${binprefix}" ]] && [[ "$rname_preset" =~ ^${binprefix}(.+)$ ]] ; then
@@ -171,6 +183,8 @@ function setup_vers ()
     else
       rbinary_preset=$( realpath $binary_preset ) || return 1
     fi
+  else
+    if [[ "$MAS_SH_VERBOSE" ]] ; then echo "no binary_preset: $binary_preset [rname_preset: $rname_preset]" >&2 ; fi
   fi
 # echo "binary_preset: $binary_preset" >&2
 # echo "rbinary_preset: $rbinary_preset" >&2
@@ -182,6 +196,7 @@ function setup_vers ()
 # echo "rname_preset: $rname_preset" >&2
 # echo "binprefix: $binprefix" >&2
 # echo "short_name: $short_name" >&2
+  if ! [[ "$mas_name" ]] ; then return 1 ; fi
   return 0
 }
 function show_setup ()
@@ -223,12 +238,48 @@ function show_setup ()
   echo "projectsdir:	$projectsdir" >&2
   
 }
+function virgin_clean ()
+{
+  echo "virgin" >&2
+  for f in aclocal.m4 configure vrb.tmp ; do
+    if [[ -f "$f" ]] ; then
+      rm $f
+    fi
+  done
+  find -name Makefile.in -exec rm \{} \;
+  find -name '*.viminfo' -exec rm \{} \;
+  for f in autom4te.cache .auxdir ; do
+    if [[ -d "$f" ]] ; then
+      rm -Rf $f
+    fi
+  done
+# for f in zocversion.txt vimrc-mastar sh gvim-vimenter.vim gvimrc-mastar gvim-funcs.vim ; do
+#   if [[ -L "$f" ]] ; then
+#     echo "rm $f"
+#   fi
+# done
+  for f in zocversion.txt vimrc-mastar gvim-vimenter.vim gvimrc-mastar gvim-funcs.vim ; do
+    if [[ "$projectsdir" ]] && ! [[ -L "$f" ]]  ; then
+      if [[ -f "$projectsdir/files/$f" ]] ; then
+        ln -s `realpath --relative-to=. $projectsdir/files/$f`
+      fi
+    fi
+  done
+  for f in sh ; do
+    if [[ "$projectsdir" ]] &&  ! [[ -L "$f" ]]  ; then
+      if [[ -d "$projectsdir/$f" ]] ; then
+        ln -s `realpath --relative-to=. $projectsdir/files/$f`
+      fi
+    fi
+  done  
+}
+
 export MAS_MAKE_CNT=0
 # echo "SETUPZ" >&2
 if ! setup_dirs ; then
-  echo "setup error" >&2
+  echo "setup_dirs error" >&2
   if ! [[ "$0" == `which bash` ]] ; then
-    echo "@@@@ $0 @@@@" >&2
+    echo "@@@@ $0 != `which bash` @@@@" >&2
 #   exit
   fi
 fi

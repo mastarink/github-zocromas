@@ -61,6 +61,10 @@ function run_any ()
   else
     binary=$rbinary_preset
   fi
+  if ! [[ "$binary" ]] ; then
+    echo "binary not set to run [ibinary_preset: $ibinary_preset ; rbinary_preset: $rbinary_preset]" >&2
+    return 1
+  fi
   echo "To run $binary" >&2
 
 # echo "To RUN rbinary: $binary" >&2
@@ -68,6 +72,7 @@ function run_any ()
   #      echo "bash:to run  $builddir/$rname" >&2
 
   if [[ "$MAS_USE_RUN_STRACE" ]] ; then
+#   straceit='strace -q -fr -C -o strace.tmp'
     straceit="strace -q -fr -C -o /tmp/strace.$MAS_USE_RUN_STRACE.`datemt`.tmp"
   fi
 

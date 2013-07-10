@@ -120,11 +120,12 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
   /* extern unsigned long __MAS_LINK_DATE__; */
   extern unsigned long __MAS_LINK_TIME__;
 
+  MAS_LOG( "to make http version/status header (keepalive:%d;close:%d)", http->connection_keep_alive, http->connection_close );
   http->outdata = mas_varvec_set_headf( http->outdata, "header", NULL, "HTTP/1.1 %d %s", http->status_code,
                                         mas_http_status_code_message( prcontrol, http ) );
 
   http = mas_http_make_out_header_simple( http, "Accept-Ranges", "bytes" );
-  MAS_LOG( "to make std headers" );
+  MAS_LOG( "to make misc headers" );
 
   /* extern unsigned long __MAS_LINK_TIMESTAMP__; */
   HMSG( "HTTP make OUT STD HEADERS" );
@@ -134,6 +135,7 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     MAS_LOG( "to make date" );
 
     http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Date", mas_xvstrftime, "%a, %d %b %Y %T GMT", mas_xgmtime(  ) );
+    MAS_LOG( "to make server" );
     http->outdata =
           mas_varvec_search_variablef( http->outdata, NULL, "Server", mas_xvsnprintf, "mas-%lu", ( unsigned long ) ( &__MAS_LINK_TIME__ ) );
     http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Version", mas_xvsnprintf, "%3.1f", http->fversion );
@@ -143,11 +145,13 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     /*   mas_tstrftime( buf, sizeof( buf ), "%Y%m%d %T", ctrl.stamp.first_lts );                                        */
     /*   http->outdata = mas_varvec_search_variablef( http->outdata, NULL, "Mas-Launched", mas_xvsnprintf, "%s", buf ); */
     /* }                                                                                                                */
+    MAS_LOG( "to make data headers" );
 #ifdef MAS_HTTP_USE_FILEINFO
     http->outdata = mas_fileinfo_make_headers( http->outdata, http->reply_content );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
     http->outdata = mas_http_make_data_headers( http->outdata, http->reply_content );
 #endif
+    MAS_LOG( "to make connection headers" );
     if ( http->connection_keep_alive )
     {
       http = mas_http_make_out_header_simple( http, "Connection", "Keep-Alive" );
@@ -155,7 +159,9 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     }
     else if ( http->connection_close )
       http = mas_http_make_out_header_simple( http, "Connection", "close" );
+    MAS_LOG( "to make headers tail" );
     http->outdata = mas_varvec_add_tail( http->outdata, "header", "" );
+    MAS_LOG( "made headers" );
   }
   return http;
 }
@@ -228,7 +234,6 @@ mas_http_t *
 mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   HMSG( "HTTP REPLY" );
-  MAS_LOG( "to write protocol name/version" );
 
   if ( prcontrol && prcontrol->plcontrol )
   {
@@ -249,6 +254,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     {
       if ( http && http->status_code == MAS_HTTP_CODE_NONE )
       {
+        MAS_LOG( "to make http status" );
 #ifdef MAS_HTTP_USE_FILEINFO
         if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
@@ -263,8 +269,10 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         HMSG( "HTTP REPLY status %d", http->status_code );
       }
       HMSG( "HTTP HTTP" );
+      MAS_LOG( "to make std headers" );
       if ( http )
         http = mas_http_make_out_std_headers( prcontrol, http );
+      /* CORK */
       if ( http )
       {
         MAS_LOG( "to write header" );
@@ -289,11 +297,8 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
 #ifdef MAS_HTTP_USE_FILEINFO
         http = mas_proto_http_write( http, data->data, datasz );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
-        http->written = mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
+        http->written += mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
 #endif
-/* #ifdef TCP_CORK                                                                                               */
-/*     IEVAL( r, mas_setsockopt( prcontrol->h.pchannel->fd_socket, IPPROTO_TCP, TCP_CORK, &no, sizeof( no ) ) ); */
-/* #endif                                                                                                        */
 
 /* ????????? */
         /* pthread_yield(  ); */
@@ -302,6 +307,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
         HMSG( "HTTP written DATA (%lu)", ( unsigned long ) http ? http->written : 0 );
       }
+      /* unCORK */
     }
   }
   /* to close connection */

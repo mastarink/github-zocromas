@@ -7,23 +7,15 @@ function mas_enabled_doprj ()
   act=$1
   shift
   disfile=$projectsdir/disabled_do.txt
+##    echo ">>>>>>>> [$act:$mas_name-$mas_vers] $disfile" >&2
+##    echo ">>>>>>>> `pwd`" >&2
   if [[ "$act" ]] && [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
     if [[ -f "$disfile" ]] ; then
-  #    echo ">>>>>>>> [$act:$mas_name-$mas_vers] $disfile" >&2
       grep "^${act}$" $disfile && return 1
       grep "^${act}:${mas_name}$" $disfile && return 1
       grep "^${act}:${mas_name}-${mas_vers}$" $disfile && return 1
-    else
-      echo "NO file $disfile" >&2
     fi
-  elif ! [[ "$mas_name" ]] ; then
-    return 0
-  else
-    echo "ERROR enabled $act for ${mas_name}: $@ (place '${act}:${mas_name}' into $disfile to disable)" >&2
-    return 1
   fi
-#  echo "enabled $act for ${mas_name}: $@ (place '${act}:${mas_name}' into $disfile to disable)" >&2
-  grep "^${act}:${mas_name}$" $disfile && echo WHY
   return 0
 }
 
@@ -35,7 +27,7 @@ function doprj ()
   cnt=0
   setup_dirs || return 1
   if [[ "$MAS_SH_VERBOSE" ]] ; then echo "$prjname $act ..." >&2 ; fi
-# setup_vers || return 1
+  setup_vers || return 1
   if [[ "$1" == 'full' ]] ; then
     list='autoreconf configure make install'
   else
@@ -66,6 +58,9 @@ function doprj ()
         e)
 	  act=ebuild
 	;;
+        Z)
+	  act=virgin-clean
+	;;
       esac
       shfile="sh/${act}.sh"
       shfun="dosh_${act}"
@@ -93,6 +88,9 @@ function doprj ()
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'ebuild'     ]] ; then
 	ebuild_m update || return 1
+        cnt=$(( $cnt + 1 ))
+      elif [[ "$act" == 'virgin-clean'     ]] ; then
+	virgin_clean || return 1
         cnt=$(( $cnt + 1 ))
       elif [[ "$shfun" ]] && type -t $shfun &>/dev/null ; then
 #	echo "shfun:`type $shfun`"
@@ -122,7 +120,9 @@ function doall ()
     if ! [[ "$MAS_DO_FROM_PROJECT" ]] ; then
       doit='yes'
     fi
+    MAS_PROJECT_POS=0
     for prj in $projects_list ; do
+      MAS_PROJECT_POS=$(( $MAS_PROJECT_POS + 1 ))
       unset prj_configure_opts
       if [[ "$MAS_DO_FROM_PROJECT" ]] && [[ "$prj" =~ $MAS_DO_FROM_PROJECT ]] ; then
         doit='yes'

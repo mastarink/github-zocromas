@@ -5,6 +5,6 @@
 
 unsigned long mas_varvec_id( mas_varvec_t * vclass );
 
-void mas_varvec_write( int fd, mas_varvec_t * vclass );
+ssize_t mas_varvec_write( int fd, mas_varvec_t * vclass );
 
 #endif

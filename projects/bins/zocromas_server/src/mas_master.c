@@ -92,15 +92,16 @@ mas_master( mas_options_t * popts )
 {
   int r = 0, rn = 0;
 
-  HMSG( "MASTER START:%u %c%c%c", getpid(  ), !popts->nologger ? 'L' : 'l', !popts->noticker ? 'T' : 't', !popts->nowatcher ? 'W' : 'w' );
-  if ( ctrl.is_parent )
-  {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMaster" ) );
-  }
-  else
-  {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeMaster" ) );
-  }
+  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), !popts->nologger ? 'L' : 'l', !popts->noticker ? 'T' : 't',
+        !popts->nowatcher ? 'W' : 'w' );
+  /* if ( ctrl.is_parent )                                                  */
+  /* {                                                                      */
+  /*   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMaster" ) ); */
+  /* }                                                                      */
+  /* else                                                                   */
+  /* {                                                                      */
+  /*   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeMaster" ) ); */
+  /* }                                                                      */
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
@@ -145,14 +146,17 @@ mas_master( mas_options_t * popts )
     /* }                                             */
     while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal )
     {
+      int qstopped = 0;
+
       MAS_LOG( "master loop for %d hosts", popts->hostsv.c );
       tMSG( "master loop for %d hosts", popts->hostsv.c );
-      HMSG( "MASTER LOOP %dh", popts->hostsv.c );
+      HMSG( "MASTER LOOP %d host; parent:%d", popts->hostsv.c, ctrl.is_parent );
       /* mas_listeners.c */
       r = mas_listeners_start( popts );
 
-      OMSG( "WAITING..." );
-      r = mas_listeners_wait(  );
+      HMSG( "WAITING..." );
+      qstopped = mas_listeners_wait(  );
+      HMSG( "STOPPED lsn's (%d)", qstopped );
 
       tMSG( "(%d) master loop for %d hosts", r, popts->hostsv.c );
 
@@ -202,7 +206,7 @@ mas_master( mas_options_t * popts )
     MAS_LOG( "master end, m/b:%lu", memory_balance );
   }
 #endif
-  HMSG( "MASTER_TH TO END : %d", r );
+  HMSG( "MASTER TO END : %d", r );
   if ( ctrl.is_parent )
   {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMasterX" ) );
@@ -329,8 +333,8 @@ mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
   IEVAL( r,
-         mas_init_plus( popts, argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos,
-                        mas_lcontrols_init, NULL ) );
+         mas_init_plus( popts, argc, argv, env, mas_init_daemon, mas_init_pids, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
+                        NULL ) );
   if ( ctrl.is_parent )
   {
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParBunch" ) );

@@ -168,8 +168,8 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
 
     pidpath = mas_strdup( popts->dir.pids );
     pidpath = mas_strcat_x( pidpath, shash_name );
-    HMSG( "PIDPATH: %s", pidpath );
     YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
+    HMSG( "(%d)PIDPATH 1 : %s", r, pidpath );
     if ( r < 0 )
     {
       const char *pp = XSTR( MAS_SYSCONFDIR ) "/../run";
@@ -180,13 +180,13 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
       pidpath = mas_strcat_x( pidpath, shash_name );
       r = 0;
       YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
-      HMSG( "(%d)PIDPATH 2a : [%s] %s", r, shash_name, pidpath );
+      HMSG( "(%d)PIDPATH 2 : [%s] %s", r, shash_name, pidpath );
       if ( r < 0 )
       {
         mkdir( pp, S_IRUSR | S_IWUSR | S_IXUSR );
         r = 0;
         YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
-        HMSG( "(%d)PIDPATH 2b : %s", r, pidpath );
+        HMSG( "(%d)PIDPATH 3 : %s", r, pidpath );
       }
       MAS_LOG( "Test 1" );
       MAS_LOG( "Test 2" );
@@ -195,15 +195,15 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
       MAS_LOG( "Test 5" );
       MAS_LOG( "Test 6" );
       MAS_LOG( "Test 7" );
-      HMSG( "(%d)PIDPATH 2c : %s", r, pidpath );
+      /* HMSG( "(%d)PIDPATH 2c : %s", r, pidpath ); */
     }
     if ( r > 0 )
     {
       ctrl.pidfd[indx] = r;
       IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
-      HMSG( "PIDLCK: %d (%d) %s", r, ctrl.pidfd[indx], pidpath );
+      HMSG( "(%d)PIDLCK : %s", r, pidpath );
       IEVAL( r, write( ctrl.pidfd[indx], &ctrl.threads.n.main.pid, sizeof( ctrl.threads.n.main.pid ) ) );
-      WMSG( "PIDW: %d", r );
+      WMSG( "PIDWRT: %d pid:%u", r, ctrl.threads.n.main.pid );
       if ( r < 0 )
       {
         mas_close( ctrl.pidfd[indx] );
@@ -282,7 +282,7 @@ mas_init_daemon( mas_options_t * popts )
   MAS_LOG( "init daemon" );
   if ( ctrl.daemon )
   {
-    HMSG( "INIT DAEMON @ %u", getpid(  ) );
+    HMSG( "INIT DAEMON pid:%u", getpid(  ) );
     WMSG( "DAEMONIZE" );
     MAS_LOG( "init daemonize" );
     IEVAL( r, mas_fork(  ) );
@@ -370,13 +370,13 @@ mas_init_daemon( mas_options_t * popts )
     {
       IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParent" ) );
       ctrl.threads.n.daemon.pid = pid_daemon;
-      HMSG( "PARENT : %u @ %u @ %u", pid_daemon, getpid(  ), getppid(  ) );
+      HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", pid_daemon, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
     }
   }
   else
   {
-    HMSG( "INIT NO DAEMON" );
+    HMSG( "INIT NO DAEMON pid:%u", getpid(  ) );
   }
   MAS_LOG( "(%d) init daemon almost done", r );
   MAS_LOG( "(%d) init daemon done", r );
@@ -444,12 +444,17 @@ mas_init_daemon( mas_options_t * popts )
 void
 mas_destroy_server( mas_options_t * popts )
 {
-  EMSG( "D" );
   {
     int rn = 0;
     char name_buffer[32] = "?";
 
     IEVAL( rn, prctl( PR_GET_NAME, ( unsigned long ) name_buffer ) );
+    MAS_LOG( "destroy server" );
+    HMSG( "DESTROY SERVER %s; parent:%d - %lx : %lx", name_buffer, ctrl.is_parent, ctrl.threads.n.master.thread, mas_pthread_self(  ) );
+  }
+  {
+    int rn = 0;
+
     if ( ctrl.is_parent )
     {
       IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParServerD" ) );
@@ -458,18 +463,21 @@ mas_destroy_server( mas_options_t * popts )
     {
       IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeServerD" ) );
     }
-    MAS_LOG( "destroy server" );
-    EMSG( "DESTROY SERVER %s", name_buffer );
   }
   MAS_LOG( "to save opts" );
   /* if ( !ctrl.opts_saved )                                                                                            */
   /*   mas_opts_save( NULL, ctrl.progname ? ctrl.progname : "Unknown" );                                                */
   /* if ( !ctrl.opts_saved_plus )                                                                                       */
   /*   mas_opts_save_plus( NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ); */
+  {
+    int lstopped;
 
-  EMSG( "L" );
-  mas_listeners_stop(  );
-  EMSG( "/L" );
+    lstopped = mas_listeners_stop(  );
+    /* if ( lstopped ) */
+    {
+      HMSG( "STOPPED %d lsn's", lstopped );
+    }
+  }
   /* mas_channel_deaf( &ctrl, ctrl.pchannel ); */
 
 #ifdef MAS_USE_CURSES
@@ -520,5 +528,5 @@ mas_destroy_server( mas_options_t * popts )
 
   MAS_LOG( "destroy server done" );
   WMSG( "DESTROY SERVER DONE" );
-  EMSG( "/D logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
+  EMSG( "logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
 }

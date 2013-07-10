@@ -5,7 +5,7 @@
 
 int mas_lcontrols_init( void );
 void mas_lcontrols_list_create( void );
-void mas_lcontrols_clean_list( int force );
+int mas_lcontrols_clean_list( int force );
 void mas_lcontrols_delete_list( void );
 
 /* find by host + port */

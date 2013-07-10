@@ -60,9 +60,11 @@ mas_lcontrols_list_create( void )
   MAS_LIST_INIT( ctrl.lcontrols_list );
 }
 
-void
+int
 mas_lcontrols_clean_list( int force )
 {
+  int cleaned = 0;
+
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
     mas_lcontrol_t *plcontrol = NULL, *plcontrol_next = NULL;
@@ -90,18 +92,29 @@ mas_lcontrols_clean_list( int force )
         /* naming : free members + free = delete */
 
         /* FIXME : double free or corruption (!prev) */
-        mas_lcontrol_remove_delete( plcontrol );
+        if ( mas_lcontrol_remove_delete( plcontrol ) == 0 )
+          cleaned++;
         plcontrol = NULL;
       }
     }
   }
+  if ( cleaned )
+  {
+    HMSG( "CLEANED %d lcontrols", cleaned );
+  }
+  return cleaned;
 }
 
 void
 mas_lcontrols_delete_list( void )
 {
-  mas_lcontrols_clean_list( 1 );
-  WMSG( "1 LCONTROLS DELETE LIST" );
+  int cleaned;
+
+  cleaned = mas_lcontrols_clean_list( 1 );
+  if ( cleaned )
+  {
+    HMSG( "DEL.LIST : CLEANED %d lcontrols", cleaned );
+  }
   if ( ctrl.lcontrols_list && MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
   {
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
@@ -111,10 +124,8 @@ mas_lcontrols_delete_list( void )
     ctrl.lcontrols_list = NULL;
 
     pthread_rwlock_unlock( &ctrl.thglob.lcontrols_list_rwlock );
-    WMSG( "2 LCONTROLS DELETE LIST" );
     /* pthread_mutex_unlock( &ctrl.thglob.lcontrols_list_mutex ); */
   }
-  WMSG( "3 LCONTROLS DELETE LIST" );
 }
 
 /* find by host + port */

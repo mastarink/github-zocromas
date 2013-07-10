@@ -122,8 +122,24 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     HMSG( "+ TRANS EXCHANGE" );
     if ( prcontrol->h.pchannel )
     {
-      mas_channel_read_some_new( prcontrol->h.pchannel );
-      MAS_LOG( "to read rq (read some)" );
+      size_t sz;
+      const void *buffer_void;
+
+      /* r = mas_channel_read_some_new( prcontrol->h.pchannel ); */
+      buffer_void = mas_channel_buffer( prcontrol->h.pchannel, &sz );
+      MAS_LOG( "to read rq (read some:%lu)", sz );
+      {
+        char *dump;
+
+        dump = mas_dump2( ( void * ) buffer_void, prcontrol->h.pchannel->buffer.length, 64 );
+        if ( dump )
+        {
+          /* HMSG( "got:%lu; [%s]", ( unsigned long ) prcontrol->h.pchannel->buffer.length, dump ); */
+          MAS_LOG( "tr.got:%lu; [%s]", ( unsigned long ) prcontrol->h.pchannel->buffer.length, dump );
+          mas_free( dump );
+        }
+      }
+
       {
         struct timeval td;
 
@@ -137,7 +153,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     if ( prcontrol && ( !prcontrol->proto_desc || prcontrol->proto_desc->proto_id == 0 ) )
     {
       prcontrol->connection_keep_alive = 0;
-      MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
+      MAS_LOG( "tr.KA => %u", prcontrol->connection_keep_alive );
       r = -1;
     }
     MAS_LOG( "end transaction xch" );
@@ -174,7 +190,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       /* rMSG( MAS_SEPARATION_LINE ); */
       prcontrol->h.status = MAS_STATUS_INIT;
       prcontrol->connection_keep_alive = 1;
-      MAS_LOG( "KA => %u", prcontrol->connection_keep_alive );
+      MAS_LOG( "tr.KA => %u", prcontrol->connection_keep_alive );
       while ( r >= 0 && prcontrol && prcontrol->connection_keep_alive && !prcontrol->stop && prcontrol->h.pchannel
               && prcontrol->h.pchannel->opened && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
@@ -208,8 +224,15 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       }
       prcontrol->h.status = MAS_STATUS_STOP;
     }
-    if ( !prcontrol->connection_keep_alive )
+    if ( prcontrol->connection_keep_alive )
+    {
+      MAS_LOG("tr.keeping alive");
+    }
+    else
+    {
+      MAS_LOG("tr.closing");
       mas_channel_close( prcontrol->h.pchannel );
+    }
   }
   MAS_LOG( "end transaction. (k/a:%d) , %s opened:%d; bufeof:%d;", prcontrol->connection_keep_alive,
            prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", prcontrol->h.pchannel->opened,
