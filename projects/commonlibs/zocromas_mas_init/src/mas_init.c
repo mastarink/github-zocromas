@@ -264,14 +264,19 @@ mas_pre_init_runpath( char *runpath )
 
   ctrl.status = MAS_STATUS_START;
   ctrl.error_handler = error_handler_at_init;
-  ctrl.threads.n.main.tid = mas_gettid(  );
 
   ctrl.start_time = mas_double_time(  );
   ctrl.stamp.start_time = ( unsigned long ) time( NULL );
   /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
   ctrl.stamp.first_lts = 0;
   ctrl.status = MAS_STATUS_INIT;
+
+
+  ctrl.threads.n.main.tid = mas_gettid(  );
   ctrl.threads.n.main.pid = getpid(  );
+  ctrl.threads.n.main.thread = mas_pthread_self(  );
+  ctrl.pserver_thread = &ctrl.threads.n.main;
+
 
   ctrl.binname = mas_strdup( basename( runpath ) );
   pn = strchr( ctrl.binname, '_' );
@@ -350,6 +355,7 @@ mas_post_init( mas_options_t * popts )
   MAS_LOG( "(%d) init done e%d", r, errno );
   WMSG( "(%d) POST INIT DONE", r );
   ctrl.inited = 1;
+  HMSG( "(%d) postINIT done", r );
   return r;
 }
 
@@ -426,19 +432,22 @@ mas_init_vplus( mas_options_t * popts, va_list args )
 {
   int r = 0;
   int pos = 0;
-  typedef int ( *v_t ) ( mas_options_t * popts );
+  typedef int ( *v_t ) ( mas_options_t * popts, const char * *msg );
   v_t fun;
 
   WMSG( "INIT V+" );
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
   while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) && !ctrl.is_parent )
   {
-    IEVAL( r, ( fun ) ( popts ) );
-    MAS_LOG( "(%d) init + #%d", r, pos );
-    HMSG( "INIT V #%d", pos );
+    const char *msg = NULL;
+
+    IEVAL( r, ( fun ) ( popts, &msg ) );
+    MAS_LOG( "(%d) init + #%d - %s", r, pos, msg ? msg : "-" );
+    HMSG( "(%d) INIT V #%d - %s", r, pos, msg ? msg : "-" );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
     pos++;
   }
+  HMSG( "(%d) INIT V done (#%d) is_parent:%d", r, pos, ctrl.is_parent );
   MAS_LOG( "(%d) init + done", r );
   return r;
 }

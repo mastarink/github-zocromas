@@ -246,7 +246,7 @@ mas_client_readline_event( void )
 /*                                            */
 /*                                            */
 int
-mas_client_init_readline( mas_options_t * popts )
+mas_client_init_readline( mas_options_t * popts, const char * *message )
 {
   int rh = 0;
 

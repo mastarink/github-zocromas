@@ -21,6 +21,11 @@
 
 #include "mas_channel_listen.h"
 
+
+/* #define MAS_CHANNEL_LISTEN_TUNE */
+
+
+
 /*
 this:
   mas_channel_listen.c
@@ -61,7 +66,7 @@ mas_listen(s, 5);
 /*   mas_free( pip );                                  */
 /*   return 0;                                         */
 /* }                                                   */
-
+#ifdef MAS_CHANNEL_LISTEN_TUNE
 static int
 _mas_channel_tune_socket( mas_channel_t * pchannel )
 {
@@ -102,7 +107,7 @@ _mas_channel_tune_socket( mas_channel_t * pchannel )
 /* #endif                                   */
   return r;
 }
-
+#endif
 static int
 mas_channel_listen_tcp( mas_channel_t * pchannel )
 {
@@ -110,7 +115,9 @@ mas_channel_listen_tcp( mas_channel_t * pchannel )
 
   if ( mas_channel_test( pchannel ) )
   {
+#ifdef MAS_CHANNEL_LISTEN_TUNE
     IEVAL( r, _mas_channel_tune_socket( pchannel ) );
+#endif
     /* if ( r >= 0 )                       */
     /*   r = mas_channel_bind( pchannel ); */
     IEVAL( r, mas_channel_bind( pchannel ) );

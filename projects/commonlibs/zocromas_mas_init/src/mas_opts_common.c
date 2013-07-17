@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>

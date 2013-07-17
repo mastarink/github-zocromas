@@ -45,9 +45,11 @@ more:
 */
 
 int
-mas_lcontrols_init( void )
+mas_lcontrols_init( mas_options_t * popts, const char * *message )
 {
   mas_lcontrols_list_create(  );
+  if ( message )
+    *message = __func__;
   return 0;
 }
 

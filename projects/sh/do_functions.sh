@@ -11,9 +11,9 @@ function mas_enabled_doprj ()
 ##    echo ">>>>>>>> `pwd`" >&2
   if [[ "$act" ]] && [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
     if [[ -f "$disfile" ]] ; then
-      grep "^${act}$" $disfile && return 1
-      grep "^${act}:${mas_name}$" $disfile && return 1
-      grep "^${act}:${mas_name}-${mas_vers}$" $disfile && return 1
+      grep "^${act}$" $disfile &>/dev/null && return 1
+      grep "^${act}:${mas_name}$" $disfile &>/dev/null && return 1
+      grep "^${act}:${mas_name}-${mas_vers}$" $disfile &>/dev/null && return 1
     fi
   fi
   return 0
@@ -67,7 +67,8 @@ function doprj ()
 
     # echo "$act at $dir" >&2
       if ! mas_enabled_doprj $act ; then
-	echo "SKIP ${act}:${mas_name}-${mas_vers}" >&2
+#	echo "SKIPped ${act}:${mas_name}-${mas_vers}" >&2
+        echo -e "$prjname action $act \t SKIPped" >&2
       elif [[ "$act" == 'make'       ]] ; then
 	make_m || return 1
         cnt=$(( $cnt + 1 ))
@@ -107,7 +108,7 @@ function doprj ()
       echo "${nn}.	>>>> skipping act [$act]" >&2
       return 1
     fi
-    echo "$prjname $act OK" >&2
+    echo -e "$prjname action $act \t done" >&2
   done
 # echo "DONE $cnt actions for ${mas_name}-${mas_vers}" >&2
   return 0

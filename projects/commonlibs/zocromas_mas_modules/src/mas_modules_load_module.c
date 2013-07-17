@@ -56,13 +56,11 @@ _mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr 
   else
   {
     module_handle = dlopen( fullname, RTLD_LAZY | RTLD_LOCAL );
-    WMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
     if ( !module_handle )
     {
       char *dler;
 
-      dler = dlerror(  );
-      dler = mas_strdup( dler );
+      dler = mas_strdup( dlerror(  ) );
       if ( !noerr )
       {
         EMSG( "%s", dler );
@@ -71,6 +69,7 @@ _mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr 
       if ( dler )
         mas_free( dler );
     }
+    WMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
     MAS_LOG( "module load: '%s' (%p)", fullname, ( void * ) module_handle );
     mas_modules_register_module( name, module_handle );
   }
@@ -133,8 +132,13 @@ mas_modules_load_func_from( const char *libname, const char *funname, const char
     any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, path );
     if ( !any_fun )
     {
-      EMSG( "%s", dlerror(  ) );
-      MAS_LOG( "NOT loaded %s : %s", funname, dlerror(  ) );
+      char *dler;
+
+      dler = mas_strdup( dlerror(  ) );
+      MAS_LOG( "NOT loaded %s : %s", funname, dler );
+      EMSG( "NOT loaded %s : %s", funname, dler );
+      if ( dler )
+        mas_free( dler );
     }
   }
   /* else                                                             */
@@ -153,9 +157,20 @@ mas_modules_load_symbol_from( const char *libname, const char *symname, const ch
   void *module_handle;
 
   /* module_handle = _mas_modules_load_module( libname ); */
-  module_handle = mas_modules_load_module_from( libname, path, 1 );
+  module_handle = mas_modules_load_module_from( libname, path, 0 );
   if ( module_handle )
+  {
     msymb = ( void * ) ( unsigned long ) dlsym( module_handle, symname );
+    if ( !msymb )
+    {
+      char *dler;
+
+      dler = mas_strdup( dlerror(  ) );
+      EMSG( "NOT loaded symbol %s; %s", symname, dler );
+      if ( dler )
+        mas_free( dler );
+    }
+  }
   MAS_LOG( "load subtable from %s => %p", libname, ( void * ) msymb );
   return msymb;
 }

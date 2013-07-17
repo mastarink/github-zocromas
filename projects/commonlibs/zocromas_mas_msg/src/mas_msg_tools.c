@@ -12,6 +12,7 @@
 #include <errno.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
 
 
@@ -71,6 +72,8 @@ typedef struct msg_options_s
   mas_msg_field_t suffix;
   mas_msg_field_t pid;
   mas_msg_field_t pidname;
+  mas_msg_field_t tid;
+  mas_msg_field_t tidname;
   mas_msg_field_t thread_info;
   mas_msg_field_t thread_type_name;
   mas_msg_field_t thread_type_name_main;
@@ -97,6 +100,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -119,6 +124,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -141,6 +148,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_BLACK,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 0},
@@ -163,6 +172,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -184,7 +195,9 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .message = {.bold = 0,.bg = MAS_MSG_COLOR_BLACK,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 1},
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
-   .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -207,6 +220,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -231,6 +246,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .eol = {.bold = 0,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 0,.hide_with_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -253,6 +270,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -275,6 +294,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -299,6 +320,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .eol = {.bold = 0,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 0,.hide_with_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -321,6 +344,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -343,6 +368,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -365,6 +392,8 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .suffix = {.bold = 1,.bg = MAS_MSG_COLOR_GREEN,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .pid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .pidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
+   .tid = {.bold = 1,.bg = MAS_MSG_COLOR_RED,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
+   .tidname = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .thread_info = {.bold = 1,.bg = MAS_MSG_COLOR_BLUE,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .thread_type_name = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
    .thread_type_name_main = {.bold = 0,.bg = MAS_MSG_COLOR_GREENP,.fg = MAS_MSG_COLOR_BLACK,.show_no_details = 0},
@@ -379,6 +408,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    .def_field = {.bold = 1,.bg = MAS_MSG_COLOR_MAGENTA,.fg = MAS_MSG_COLOR_WHITEP,.show_no_details = 1},
    },
 };
+
 #define MAS_MSG_BUF_SZ 1024 * 4
 static size_t msg_index = 0;
 static size_t msg_bufsz = MAS_MSG_BUF_SZ;
@@ -457,6 +487,12 @@ mas_bg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_PIDNAME:
     index = msg_options[msgt].pidname.bg;
     break;
+  case MAS_MSG_FIELD_TID:
+    index = msg_options[msgt].tid.bg;
+    break;
+  case MAS_MSG_FIELD_TIDNAME:
+    index = msg_options[msgt].tidname.bg;
+    break;
   case MAS_MSG_FIELD_THREAD_INFO:
     index = msg_options[msgt].thread_info.bg;
     break;
@@ -490,9 +526,9 @@ mas_bg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_EOL:
     index = msg_options[msgt].eol.bg;
     break;
-  default:
-    index = msg_options[msgt].def_field.bg;
-    break;
+    /* default:                                  */
+    /*   index = msg_options[msgt].def_field.bg; */
+    /*   break;                                  */
   }
   if ( index == MAS_MSG_COLOR_NONE )
     index = msg_options[msgt].def_field.bg;
@@ -535,6 +571,12 @@ mas_fg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_PIDNAME:
     index = msg_options[msgt].pidname.fg;
     break;
+  case MAS_MSG_FIELD_TID:
+    index = msg_options[msgt].tid.fg;
+    break;
+  case MAS_MSG_FIELD_TIDNAME:
+    index = msg_options[msgt].tidname.fg;
+    break;
   case MAS_MSG_FIELD_THREAD_INFO:
     index = msg_options[msgt].thread_info.fg;
     break;
@@ -568,9 +610,9 @@ mas_fg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_EOL:
     index = msg_options[msgt].eol.fg;
     break;
-  default:
-    index = msg_options[msgt].def_field.fg;
-    break;
+    /* default:                                  */
+    /*   index = msg_options[msgt].def_field.fg; */
+    /*   break;                                  */
   }
   if ( index == MAS_MSG_COLOR_NONE )
     index = msg_options[msgt].def_field.fg;
@@ -602,6 +644,10 @@ mas_bold( mas_msg_type_t msgt, mas_msg_field_type_t field )
     return msg_options[msgt].pid.bold;
   case MAS_MSG_FIELD_PIDNAME:
     return msg_options[msgt].pidname.bold;
+  case MAS_MSG_FIELD_TID:
+    return msg_options[msgt].tid.bold;
+  case MAS_MSG_FIELD_TIDNAME:
+    return msg_options[msgt].tidname.bold;
   case MAS_MSG_FIELD_THREAD_INFO:
     return msg_options[msgt].thread_info.bold;
   case MAS_MSG_FIELD_THREAD_TYPE_NAME:
@@ -624,9 +670,10 @@ mas_bold( mas_msg_type_t msgt, mas_msg_field_type_t field )
     return msg_options[msgt].thread_status.bold;
   case MAS_MSG_FIELD_EOL:
     return msg_options[msgt].eol.bold;
-  default:
-    return msg_options[msgt].def_field.bold;
+    /* default:                                   */
+    /*   return msg_options[msgt].def_field.bold; */
   }
+  return msg_options[msgt].def_field.bold;
 }
 
 unsigned
@@ -673,6 +720,14 @@ mas_show( mas_msg_type_t msgt, int fdetails, mas_msg_field_type_t field )
     hide_with_details = msg_options[msgt].pidname.hide_with_details;
     show_no_details = msg_options[msgt].pidname.show_no_details;
     break;
+  case MAS_MSG_FIELD_TID:
+    hide_with_details = msg_options[msgt].tid.hide_with_details;
+    show_no_details = msg_options[msgt].tid.show_no_details;
+    break;
+  case MAS_MSG_FIELD_TIDNAME:
+    hide_with_details = msg_options[msgt].tidname.hide_with_details;
+    show_no_details = msg_options[msgt].tidname.show_no_details;
+    break;
   case MAS_MSG_FIELD_THREAD_INFO:
     hide_with_details = msg_options[msgt].thread_info.hide_with_details;
     show_no_details = msg_options[msgt].thread_info.show_no_details;
@@ -696,10 +751,10 @@ mas_show( mas_msg_type_t msgt, int fdetails, mas_msg_field_type_t field )
     hide_with_details = msg_options[msgt].eol.hide_with_details;
     show_no_details = msg_options[msgt].eol.show_no_details;
     break;
-  default:
-    hide_with_details = msg_options[msgt].def_field.hide_with_details;
-    show_no_details = msg_options[msgt].def_field.show_no_details;
-    break;
+    /* default:                                                             */
+    /*   hide_with_details = msg_options[msgt].def_field.hide_with_details; */
+    /*   show_no_details = msg_options[msgt].def_field.show_no_details;     */
+    /*   break;                                                             */
   }
   return fdetails ? !hide_with_details : show_no_details;
 }
@@ -821,34 +876,110 @@ __mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
 }
 
 static int
+__mas_msg_tid( mas_msg_type_t msgt, int fdetails, pid_t tid )
+{
+#ifdef MAS_USE_CURSES
+  if ( use_curses )
+  {
+    if ( &ctrl && tid == ctrl.main.tid )
+    {
+      wattron( w_win, A_BOLD );
+      MFPB( "+" );
+      wattroff( w_win, A_BOLD );
+      /* wcolor_set( w_win, 2, NULL ); */
+      /* MFPB( ":%5u", tid );           */
+      wcolor_set( w_win, 1, NULL );
+    }
+    else
+    {
+      MFPB( ">%5u:", tid );
+    }
+  }
+  else
+#endif
+  {
+    MFPB( "%%" );
+    mas_set_color( msgt, MAS_MSG_FIELD_TID );
+    MFPB( "%5u ", tid );
+    mas_reset_color(  );
+  }
+  return 0;
+}
+
+static int
 __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
 {
-  const char *pidname;
+  const char *pidname = NULL;
 
   if ( !&ctrl )
-    pidname = "-";
+    pidname = "----";
   else if ( pid == ctrl.threads.n.main.pid )
     pidname = "Main";
   else if ( pid == ctrl.threads.n.daemon.pid )
-    pidname = "Daemon";
+    pidname = "Demn";
+  else if ( pid == ctrl.threads.n.master.pid )
+    pidname = "Mstr";
+  else if ( pid == ctrl.threads.n.ticker.pid )
+    pidname = "Tckr";
+  else if ( pid == ctrl.threads.n.watcher.pid )
+    pidname = "Wchr";
+  else if ( pid == ctrl.threads.n.logger.pid )
+    pidname = "Lggr";
   mas_set_color( msgt, MAS_MSG_FIELD_PIDNAME );
-  MFPB( "%-5s", pidname );
+  if ( pidname )
+  {
+    MFPB( "%-5s", pidname );
+  }
+  else
+  {
+    MFPB( "%-5u", pid );
+  }
   mas_reset_color(  );
   return 0;
 }
+
+static int
+__mas_msg_tidname( mas_msg_type_t msgt, int fdetails, pid_t tid )
+{
+  const char *tidname = NULL;
+
+  if ( !&ctrl )
+    tidname = "----";
+  else if ( tid == ctrl.threads.n.main.tid )
+    tidname = "Main";
+  else if ( tid == ctrl.threads.n.daemon.tid )
+    tidname = "Demn";
+  else if ( tid == ctrl.threads.n.master.tid )
+    tidname = "Master";
+  else if ( tid == ctrl.threads.n.ticker.tid )
+    tidname = "Tckr";
+  else if ( tid == ctrl.threads.n.watcher.tid )
+    tidname = "Wchr";
+  else if ( tid == ctrl.threads.n.logger.tid )
+    tidname = "Lggr";
+  mas_set_color( msgt, MAS_MSG_FIELD_TIDNAME );
+  if ( tidname )
+  {
+    MFPB( "%-5s", tidname );
+  }
+  else
+  {
+    MFPB( "%-5u", tid );
+  }
+  mas_reset_color(  );
+  return 0;
+}
+
 
 #ifndef MAS_NO_THTOOLS
 static int
 __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
 {
   th_type_t thtype;
-
-  thtype = mas_thself_type(  );
-  pthread_t pth = 0;
-
-  pth = pthread_self(  );
   mas_lcontrol_t *plcontrol = NULL;
   mas_rcontrol_t *prcontrol = NULL;
+
+  thtype = mas_thself_type(  );
 
   plcontrol = mas_thself_plcontrol(  );
   prcontrol = mas_thself_prcontrol(  );
@@ -878,8 +1009,13 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
     case MAS_THREAD_TICKER:
       MFPB( "%s[%lx]", mas_thread_type_name( thtype ), pth );
       break;
-    default:
-      MFPB( "[%lx]", pth );
+      /* default:                    */
+      /*   {                         */
+      /*     pthread_t pth = 0;      */
+      /*                             */
+      /*     pth = pthread_self(  ); */
+      /*     MFPB( "[%lx]", pth );   */
+      /*   }                         */
       break;
     }
     wcolor_set( w_win, 1, NULL );
@@ -928,8 +1064,9 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
       /*      prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,                  */
       /*      prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );                       */
       break;
-    default:
-      MFPB( "[%lx]\x1b[0m:", pth );
+    case MAS_THREAD_NONE:
+      /* default:                        */
+      /*   MFPB( "[%lx]\x1b[0m:", pth ); */
       break;
     }
     mas_reset_color(  );
@@ -1027,8 +1164,14 @@ __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 int
 __mas_msg_errcode( mas_msg_type_t msgt, int fdetails )
 {
-  if (errno){MFPB( " En%-03d ", errno );}
-  else{MFPB( "       ");}
+  if ( errno )
+  {
+    MFPB( " En%-03d ", errno );
+  }
+  else
+  {
+    MFPB( "       " );
+  }
   return 0;
 }
 
@@ -1060,8 +1203,10 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
   }
   {
     pid_t pid;
+    pid_t tid;
 
     pid = getpid(  );
+    tid = mas_gettid(  );
 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_ELAPSED ) )
       r = __mas_msg_elapsed( msgt, details );
@@ -1078,8 +1223,14 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_PIDNAME ) )
       r = __mas_msg_pidname( msgt, details, pid );
 
+    if ( mas_show( msgt, details, MAS_MSG_FIELD_TIDNAME ) )
+      r = __mas_msg_tidname( msgt, details, tid );
+
     if ( mas_show( msgt, details, MAS_MSG_FIELD_PID ) )
       r = __mas_msg_pid( msgt, details, pid );
+
+    if ( mas_show( msgt, details, MAS_MSG_FIELD_TID ) )
+      r = __mas_msg_tid( msgt, details, tid );
 
 #ifndef MAS_NO_THTOOLS
     if ( MAS_CTRL_IS_SERVER && mas_show( msgt, details, MAS_MSG_FIELD_THREAD_INFO ) )
@@ -1135,6 +1286,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
       thtype = mas_thself_type(  );
       switch ( thtype )
       {
+      case MAS_THREAD_MAIN:
       case MAS_THREAD_MASTER:
         can = MAS_MSG_BIT( msg_trace_main );
         break;
@@ -1144,7 +1296,11 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
       case MAS_THREAD_TRANSACTION:
         can = MAS_MSG_BIT( msg_trace_transaction );
         break;
-      default:
+      case MAS_THREAD_NONE:
+      case MAS_THREAD_TICKER:
+      case MAS_THREAD_WATCHER:
+      case MAS_THREAD_LOGGER:
+        /* default:   */
         can = 1;
         break;
       }
@@ -1193,11 +1349,11 @@ mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt
       snprintf( pref, sizeof( pref ), "(%u:%s) i/s:%u:i/c:%u", merrno, se ? se : NULL, ctrl.keep_listening, MAS_CTRL_IN_CLIENT );
     else
       snprintf( pref, sizeof( pref ), "(%u:%s)", merrno, se ? se : NULL );
-    r = __mas_vmsg( func, line, msgt, 1, "{  %4s   }", pref, NULL, fmt, args );
+    r = __mas_vmsg( func, line, msgt, 1, "{ %3s  }", pref, NULL, fmt, args );
   }
   else
   {
-    r = __mas_vmsg( func, line, msgt, 1, "{  %3s  }", "ERR", NULL, fmt, args );
+    r = __mas_vmsg( func, line, msgt, 1, "{ %3s  }", "ERR", NULL, fmt, args );
   }
   if ( &ctrl )
     pthread_mutex_unlock( &ctrl.thglob.msg_mutex );

@@ -10,6 +10,8 @@
 
 #include <errno.h>
 
+#include <netinet/tcp.h>
+
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
 
@@ -23,6 +25,9 @@
 #include "mas_channel_buffer.h"
 
 #include "mas_channel_open.h"
+
+
+#define MAS_CHANNEL_OPEN_TUNE
 
 /*
 this:
@@ -73,6 +78,64 @@ _mas_channel_open_rfile( mas_channel_t * pchannel )
   return pchannel->opened ? 1 : ( pchannel->error ? -1 : 0 );
 }
 
+int
+mas_channel_cork( mas_channel_t * pchannel, int val )
+{
+  int r = -1;
+  int q = val;
+
+  if ( pchannel )
+  {
+#ifdef TCP_CORK
+    IEVAL( r, mas_setsockopt( pchannel->fd_io, IPPROTO_TCP, TCP_CORK, &q, sizeof( q ) ) );
+#endif
+  }
+  return r;
+}
+
+#ifdef MAS_CHANNEL_OPEN_TUNE
+static int
+_mas_channel_open_tune( mas_channel_t * pchannel )
+{
+  int r = 0;
+  int yes = 1;
+
+  /* r = mas_setsockopt( pchannel->fd_io, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof( yes ) ); */
+  IEVAL( r, mas_setsockopt( pchannel->fd_io, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof( yes ) ) );
+  /* tMSG( "(%d) SO_REUSEADDR", r ); */
+
+
+  if ( pchannel->serv.addr.sin_family == AF_INET )
+  {
+#  ifdef TCP_DEFER_ACCEPT
+    IEVAL( r, mas_setsockopt( pchannel->fd_io, IPPROTO_TCP, TCP_DEFER_ACCEPT, &yes, sizeof( yes ) ) );
+#  endif
+#  ifdef TCP_QUICKACK
+    IEVAL( r, mas_setsockopt( pchannel->fd_io, IPPROTO_TCP, TCP_QUICKACK, &yes, sizeof( yes ) ) );
+#  endif
+
+/* the TCP_CORK and TCP_NODELAY are mutually exclusive */
+#  ifdef TCP_CORK
+#    if 0
+    /* with 'foolish use' : makes keep-alive very slow ..... */
+    IEVAL( r, mas_setsockopt( pchannel->fd_io, IPPROTO_TCP, TCP_CORK, &yes, sizeof( yes ) ) );
+#    endif
+#  endif
+#  ifdef TCP_NODELAY
+    IEVAL( r, mas_setsockopt( pchannel->fd_io, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof( yes ) ) );
+#  endif
+  }
+/* #ifdef EMSG                              */
+/*   if ( r < 0 )                           */
+/*   {                                      */
+/*     EMSG( "(%d) can't tune socket", r ); */
+/*     P_ERR;                               */
+/*   }                                      */
+/* #endif                                   */
+  return r;
+}
+#endif
+
 static int
 _mas_channel_open_tcp( mas_channel_t * pchannel )
 {
@@ -95,6 +158,11 @@ _mas_channel_open_tcp( mas_channel_t * pchannel )
 #ifdef MAS_CHANNEL_STREAM_WRITE
     pchannel->stream_io = fdopen( fd_io, "r+" );
 #endif
+
+#ifdef MAS_CHANNEL_OPEN_TUNE
+    _mas_channel_open_tune( pchannel );
+#endif
+
     pchannel->opened = 1;
   }
   else

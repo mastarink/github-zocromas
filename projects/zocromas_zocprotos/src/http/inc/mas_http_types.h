@@ -92,6 +92,9 @@ struct mas_http_s
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
   mas_autoobject_t *request_content;
   mas_autoobject_t *reply_content;
+#else
+  void *request_content;
+  void *reply_content;
 #endif
   /* char *rest; */
   mas_varvec_t *indata;

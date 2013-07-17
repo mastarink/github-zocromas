@@ -107,7 +107,6 @@ AC_TYPE_UID_T
 # Checks for library functions.
 
 PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_io])
-PKG_CHECK_MODULES([DEPSL], [zocromas_mas_io])
 
 
 
@@ -162,6 +161,7 @@ fi
 
 # AM_LDFLAGS="-Wl,--export-dynamic"
 # AM_LDFLAGS="-ldl -Wl,--wrap=strdup,--wrap=malloc,--wrap=free,--wrap=realloc,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
+### 64bit:  ,--defsym,__MAS_LINK_DATET__=\`date +0x%Y%m%d%H%M%S\`
 AM_LDFLAGS="-Wl,--defsym,__MAS_LINK_DATE__=\`date +0x%Y%m%d\`,--defsym,__MAS_LINK_TIME__=\`date +0x%H%M%S\`,--defsym,__MAS_LINK_TIMESTAMP__=\`date +%s\`"
 # __MAS_LINK_DATE__=\`date +0x%Y%m%d\`
 AC_SUBST(AM_LDFLAGS)

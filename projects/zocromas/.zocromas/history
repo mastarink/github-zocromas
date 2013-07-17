@@ -209,3 +209,5 @@ server info
 server restart
 reconnect
 bye
+server info
+bye

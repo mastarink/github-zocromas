@@ -46,7 +46,7 @@ more:
 
 
 int
-mas_threads_init( mas_options_t * popts )
+mas_threads_init( mas_options_t * popts, const char * *message )
 {
   int r = 0;
 
@@ -164,9 +164,12 @@ mas_threads_init( mas_options_t * popts )
       EMSG( "setting transaction stack %lu (min:%lu)?", ( unsigned long ) transaction_stacksize, ( unsigned long ) PTHREAD_STACK_MIN );
     }
   }
-  ctrl.threads.n.main.thread = pthread_self(  );
-  ctrl.threads.n.main.tid = mas_gettid(  );
+  /* ctrl.threads.n.main.thread = pthread_self(  ); */
+  /* ctrl.threads.n.main.tid = mas_gettid(  );      */
   MAS_LOG( "(%d) init threads done", r );
+
+  if ( message )
+    *message = __func__;
   return r;
 }
 

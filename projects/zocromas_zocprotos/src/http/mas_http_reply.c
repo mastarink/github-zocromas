@@ -36,6 +36,7 @@
 
 /* mas_channel_fd */
 #include <mastar/channel/mas_channel.h>
+#include <mastar/channel/mas_channel_open.h>
 
 #include "mas_http_types.h"
 
@@ -155,7 +156,7 @@ mas_http_make_out_std_headers( mas_rcontrol_t * prcontrol, mas_http_t * http )
     if ( http->connection_keep_alive )
     {
       http = mas_http_make_out_header_simple( http, "Connection", "Keep-Alive" );
-      http = mas_http_make_out_header_simple( http, "Keep-Alive", "timeout=15, max=100" );
+      /* http = mas_http_make_out_header_simple( http, "Keep-Alive", "timeout=15, max=100" ); */
     }
     else if ( http->connection_close )
       http = mas_http_make_out_header_simple( http, "Connection", "close" );
@@ -211,6 +212,7 @@ mas_http_status_code_message( mas_rcontrol_t * prcontrol, mas_http_t * http )
 mas_http_t *
 mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
+#if defined( MAS_HTTP_USE_FILEINFO ) || defined( MAS_HTTP_USE_AUTOOBJECT )
   const char *text = "HTTP/1.1 200 OK\n"
         "Accept-Ranges: bytes\n"
         "Date: Wed, 05 Jun 2013 01:01:01 GMT\n"
@@ -218,6 +220,7 @@ mas_http_reply_test( mas_rcontrol_t * prcontrol, mas_http_t * http )
         "Content-Length: 358\n"
         "Content-Type: text/html\n"
         "ETag: \"2c47af-166-4cb058c5ca740\"\n" "Last-Modified: Mon, 01 Oct 2012 20:49:57 GMT\n" "Connection: Keep-Alive\n" "\n";
+#endif
 
 #ifdef MAS_HTTP_USE_FILEINFO
   const mas_evaluated_t data = {.data = ( char * ) text };
@@ -259,6 +262,8 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
         if ( http->reply_content && mas_autoobject_size( http->reply_content ) )
+#else
+        if ( 0 )
 #endif
           http->status_code = MAS_HTTP_CODE_OK;
         else
@@ -273,6 +278,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
       if ( http )
         http = mas_http_make_out_std_headers( prcontrol, http );
       /* CORK */
+      /* mas_channel_cork( http->prcontrol->h.pchannel, 1 ); */
       if ( http )
       {
         MAS_LOG( "to write header" );
@@ -287,6 +293,8 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         datasz = mas_fileinfo_data_size( http->reply_content );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
         datasz = mas_autoobject_size( http->reply_content );
+#else
+        datasz = 0;
 #endif
         HMSG( "HTTP write DATA (%lu)", ( unsigned long ) datasz );
 
@@ -298,6 +306,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         http = mas_proto_http_write( http, data->data, datasz );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
         http->written += mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
+#else
 #endif
 
 /* ????????? */
@@ -307,6 +316,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         MAS_LOG( "written %lu of %lu", http ? http->written : 0, ( unsigned long ) datasz );
         HMSG( "HTTP written DATA (%lu)", ( unsigned long ) http ? http->written : 0 );
       }
+      /* mas_channel_cork( http->prcontrol->h.pchannel, 0 ); */
       /* unCORK */
     }
   }

@@ -81,7 +81,7 @@ __attribute__ ( ( constructor ) )
 
 
 int
-mas_init_load_protos( mas_options_t * popts )
+mas_init_load_protos( mas_options_t * popts, const char **message )
 {
   int r = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
@@ -134,6 +134,8 @@ mas_init_load_protos( mas_options_t * popts )
   /* r = ctrl.proto_descs ? 0 : -1; */
   IEVAL( r, ctrl.proto_descs ? 0 : -1 );
   MAS_LOG( "(%d) init / load protos done", r );
+  if ( message )
+    *message = __func__;
   return r;
 }
 
@@ -166,6 +168,7 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
   {
     char *pidpath;
 
+    r = 0;
     pidpath = mas_strdup( popts->dir.pids );
     pidpath = mas_strcat_x( pidpath, shash_name );
     YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
@@ -174,17 +177,17 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
     {
       const char *pp = XSTR( MAS_SYSCONFDIR ) "/../run";
 
+      r = 0;
       mas_free( pidpath );
 
       pidpath = mas_strdup( pp );
       pidpath = mas_strcat_x( pidpath, shash_name );
-      r = 0;
       YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
       HMSG( "(%d)PIDPATH 2 : [%s] %s", r, shash_name, pidpath );
       if ( r < 0 )
       {
-        mkdir( pp, S_IRUSR | S_IWUSR | S_IXUSR );
         r = 0;
+        mkdir( pp, S_IRUSR | S_IWUSR | S_IXUSR );
         YEVALM( r, mas_open( pidpath, O_CREAT | O_WRONLY | O_TRUNC /* | O_EXCL */ , S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
         HMSG( "(%d)PIDPATH 3 : %s", r, pidpath );
       }
@@ -197,21 +200,28 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
       MAS_LOG( "Test 7" );
       /* HMSG( "(%d)PIDPATH 2c : %s", r, pidpath ); */
     }
-    if ( r > 0 )
+    HMSG( "(%d)PIDPATH 1a : %s", r, pidpath );
+    if ( r >= 0 )
     {
+      char buf[64];
+      ssize_t lb;
+
       ctrl.pidfd[indx] = r;
       IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
       HMSG( "(%d)PIDLCK : %s", r, pidpath );
-      IEVAL( r, write( ctrl.pidfd[indx], &ctrl.threads.n.main.pid, sizeof( ctrl.threads.n.main.pid ) ) );
+      lb = snprintf( buf, sizeof( buf ), "%u", ctrl.threads.n.main.pid );
+      IEVAL( r, write( ctrl.pidfd[indx], buf, lb ) );
       WMSG( "PIDWRT: %d pid:%u", r, ctrl.threads.n.main.pid );
       if ( r < 0 )
       {
+        r = 0;
         mas_close( ctrl.pidfd[indx] );
         ctrl.pidfd[indx] = -1;
       }
       else
         ctrl.pidfilesv.c = mas_add_argv_arg( ctrl.pidfilesv.c, &ctrl.pidfilesv.v, pidpath );
     }
+    HMSG( "(%d)PIDPATH 1b : %s", r, pidpath );
     mas_free( pidpath );
   }
   else
@@ -222,17 +232,18 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
 }
 
 int
-mas_init_pids( mas_options_t * popts )
+mas_init_pids( mas_options_t * popts, const char **message )
 {
   int r = 0;
+  size_t shash_namebuf_size = 512;
   char *shash_namebuf = NULL;
 
-  ctrl.threads.n.main.tid = mas_gettid(  );
-  ctrl.threads.n.main.pid = getpid(  );
-  ctrl.threads.n.main.thread = mas_pthread_self(  );
-  ctrl.pserver_thread = &ctrl.threads.n.main;
+  /* ctrl.threads.n.main.tid = mas_gettid(  );          */
+  /* ctrl.threads.n.main.pid = getpid(  );              */
+  /* ctrl.threads.n.main.thread = mas_pthread_self(  ); */
+  /* ctrl.pserver_thread = &ctrl.threads.n.main;        */
 
-  shash_namebuf = mas_malloc( 512 );
+  shash_namebuf = mas_malloc( shash_namebuf_size );
   MAS_LOG( "(%d) init pids", r );
   if ( shash_namebuf )
   {
@@ -242,12 +253,12 @@ mas_init_pids( mas_options_t * popts )
     WMSG( "PIDSDIR: %s", popts->dir.pids );
     if ( popts->single_instance && popts->dir.pids )
     {
-      snprintf( shash_namebuf, sizeof( shash_namebuf ), "/%s.pid", ctrl.is_client ? "client" : "server" );
+      snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.pid", ctrl.is_client ? "client" : "server" );
       indx = 0;
     }
     else if ( popts->single_child && popts->dir.pids )
     {
-      snprintf( shash_namebuf, sizeof( shash_namebuf ), "/%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
+      snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
       indx = 1;
     }
     if ( indx >= 0 )
@@ -257,6 +268,9 @@ mas_init_pids( mas_options_t * popts )
     mas_free( shash_namebuf );
   }
   MAS_LOG( "(%d) init pids done", r );
+
+  if ( message )
+    *message = __func__;
   return r;
 }
 
@@ -274,7 +288,7 @@ Creating a daemon
    = Let the main logic of daemon process run.
 */
 int
-mas_init_daemon( mas_options_t * popts )
+mas_init_daemon( mas_options_t * popts, const char **message )
 {
   int r = 0, rn = 0;
   pid_t pid_daemon;
@@ -287,7 +301,9 @@ mas_init_daemon( mas_options_t * popts )
     MAS_LOG( "init daemonize" );
     IEVAL( r, mas_fork(  ) );
     pid_daemon = r;
-    MAS_LOG( "(%d) init fork", r );
+    if ( r >= 0 )
+      r = 0;
+    MAS_LOG( "(%d) init fork", pid_daemon );
     if ( pid_daemon == 0 )
     {
       ctrl.threads.n.daemon.pid = getpid(  );
@@ -365,6 +381,7 @@ mas_init_daemon( mas_options_t * popts )
       setsid(  );
       chdir( "/" );
       IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
+      r = 0;
     }
     else if ( pid_daemon > 0 )
     {
@@ -372,6 +389,7 @@ mas_init_daemon( mas_options_t * popts )
       ctrl.threads.n.daemon.pid = pid_daemon;
       HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", pid_daemon, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
+      r = -2;
     }
   }
   else
@@ -380,6 +398,8 @@ mas_init_daemon( mas_options_t * popts )
   }
   MAS_LOG( "(%d) init daemon almost done", r );
   MAS_LOG( "(%d) init daemon done", r );
+  if ( message )
+    *message = __func__;
   return r;
 }
 

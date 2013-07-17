@@ -178,7 +178,7 @@ function grepch ()
       pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} || return 1
       arg="$@"
 #     find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color $@ \{\} \; || return 1
-      if find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color "$arg" \{\} \+ ; then
+      if find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color $arg \{\} \+ ; then
         popd >/dev/null
         return 0
       else
@@ -200,9 +200,10 @@ function grepau ()
   if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
       pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} || return 1
       arg="$@"
+      echo "arg: '$arg'" >&2
 #      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' || return 1
 #      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -okdir grep -H --color $@ \{\} \; || return 1
-      if find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color "$arg" \{\} \+ ; then
+      if find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color $arg \{\} \+ ; then
         popd >/dev/null
         return 0
       else

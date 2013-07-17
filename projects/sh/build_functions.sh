@@ -197,7 +197,7 @@ function ebuild_m ()
 {
   local cmd ebname ebname_base
   cmd=$1
-  echo "[$ebuild_dir]" >&2
+  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "[ebuild: $ebuild_dir]" >&2 ; fi
   if [[ "$ebuild_dir" ]] && [[ -d "$ebuild_dir" ]] ; then
     pushd $ebuild_dir >/dev/null
          ebname="${ebuild_prefix}${mas_name}-${mas_vers}.ebuild"
@@ -216,9 +216,9 @@ function ebuild_m ()
       update)
         if ! [[ -f "$ebname" ]] ; then 
 	  ebname_base="${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild"
-	  echo "creating $ebname ebuild from $ebname_base (${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild)" >&2
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "creating $ebname ebuild from $ebname_base (${ebuild_prefix}${mas_name}-${mas_base_vers}.ebuild)" >&2 ; fi
 	  ebname_base=$( ls -1tr *.ebuild | tail -1 )
-	  echo "creating $ebname ebuild from $ebname_base" >&2
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "creating $ebname ebuild from $ebname_base" >&2 ; fi
 	  if [[ "$ebname_base" ]] && [[ -f "$ebname_base" ]] ; then
 	    cp $ebname_base $ebname
 	    echo "created $ebname" >&2
@@ -226,7 +226,7 @@ function ebuild_m ()
 	    zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't create ebuild - no template"
 	  fi
 	else
-	  echo "$ebname OK" >&2
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "$ebname made" >&2 ; fi
 	fi
 	chmod a+r $ebname
 	if [[ "$distfile" ]] && [[ -f "$distfile" ]] && [[ -f $ebname ]] \
@@ -239,24 +239,24 @@ function ebuild_m ()
 ########  fi
 #	  echo "---saved dist---" >&2
 #	  ls -l $savedirdist/${mas_name}-*.tar.bz2 >&2
-          echo "1. $savedirdist/${mas_name}-*.tar.bz2" >&2
+          if [[ "$MAS_SH_VERBOSE" ]] ; then echo "1. $savedirdist/${mas_name}-*.tar.bz2" >&2 ; fi
  	  cp -a  $savedirdist/${mas_name}-*.tar.bz2 $savedirgentoo/ || return 1
-          echo "2. $savedirgentoo/${mas_name}-*" >&2
+          if [[ "$MAS_SH_VERBOSE" ]] ; then echo "2. $savedirgentoo/${mas_name}-*" >&2 ; fi
  	  /usr/bin/rename "$mas_name" "${ebuild_prefix}${mas_name}" $savedirgentoo/${mas_name}-*.tar.bz2 || return 1
-          echo "3. $savedirgentoo/${ebuild_prefix}${mas_name}-${mas_vers}.tar.bz2" >&2
+          if [[ "$MAS_SH_VERBOSE" ]] ; then echo "3. $savedirgentoo/${ebuild_prefix}${mas_name}-${mas_vers}.tar.bz2" >&2 ; fi
 	  /bin/cp -a $savedirgentoo/${ebuild_prefix}${mas_name}-${mas_vers}.tar.bz2 /usr/portage/distfiles/ || return 1
-	  echo "4." >&2
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "4." >&2 ; fi
 	  if [[ -f Manifest ]] ; then
 	    rm Manifest || return 1
 	  fi
-	  echo "5." >&2
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "5." >&2 ; fi
 #	  echo "---portage dist---" >&2
 #	  ls -l /usr/portage/distfiles/${mas_name}-*.tar.bz2 >&2
 #	  echo "---ebuilds etc.---" >&2
 #	  ls -l >&2
-	  echo "6. $mas_vers : updating Manifest" >&2
-	  ebuild $ebname manifest || return 1
-	  echo "7." >&2
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "6. $mas_vers : updating Manifest" >&2 ; fi
+	  ebuild $ebname manifest &>/dev/null || return 1
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "7." >&2 ; fi
 	  return 0
 #	  ls -l Manifest || return 1
 	else
@@ -274,7 +274,7 @@ function ebuild_m ()
       echo "skipping '$ebuild_dir'" >&2
       return 0
     else
-      echo "error: [$mas_name] no dir '$ebuild_dir'" >&2
+      echo "ERROR: [$mas_name] no dir '$ebuild_dir'" >&2
     fi
   fi
   return 1
