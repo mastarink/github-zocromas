@@ -60,7 +60,9 @@ _mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr 
     {
       char *dler;
 
-      dler = mas_strdup( dlerror(  ) );
+      dler = dlerror(  );
+      if ( dler )
+        dler = mas_strdup( dler );
       if ( !noerr )
       {
         EMSG( "%s", dler );
@@ -71,7 +73,8 @@ _mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr 
     }
     WMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
     MAS_LOG( "module load: '%s' (%p)", fullname, ( void * ) module_handle );
-    mas_modules_register_module( name, module_handle );
+    if ( module_handle )
+      mas_modules_register_module( name, module_handle );
   }
   return module_handle;
 }
@@ -88,7 +91,7 @@ mas_modules_load_module_from( const char *libname, const char *path, int noerr )
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
   module_handle = _mas_modules_load_fullmodule( fullname, libname, noerr );
-  WMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
+  HMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
   tMSG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   MAS_LOG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   mas_free( fullname );
@@ -123,30 +126,28 @@ mas_modules_load_func_from( const char *libname, const char *funname, const char
 {
   mas_any_fun_t any_fun = NULL;
 
-  /* void *module_handle; */
-
-  /* module_handle = mas_modules_load_module_from( libname, path, 1 ); */
-  /* if ( module_handle ) */
+  /* any_fun = ( mas_any_fun_t ) ( unsigned long ) dlsym( module_handle, funname ); */
+  any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, path );
+  if ( !any_fun )
   {
-    /* any_fun = ( mas_any_fun_t ) ( unsigned long ) dlsym( module_handle, funname ); */
-    any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, path );
-    if ( !any_fun )
-    {
-      char *dler;
+    char *dler;
 
-      dler = mas_strdup( dlerror(  ) );
-      MAS_LOG( "NOT loaded %s : %s", funname, dler );
-      EMSG( "NOT loaded %s : %s", funname, dler );
-      if ( dler )
-        mas_free( dler );
-    }
+    dler = dlerror(  );
+    if ( dler )
+      dler = mas_strdup( dler );
+    MAS_LOG( "NOT loaded %s : %s", funname, dler );
+    EMSG( "NOT loaded %s : %s", funname, dler );
+    if ( dler )
+      mas_free( dler );
   }
+
   /* else                                                             */
   /* {                                                                */
   /*   EMSG( "NO module_handle passed for %s.%s", libname, funname ); */
   /* }                                                                */
   tMSG( "load transaction func %s %s", funname, any_fun ? "OK" : "FAIL" );
   MAS_LOG( "load transaction func %s %s", funname, any_fun ? "OK" : "FAIL" );
+  HMSG( "LOAD FUNC %s %s %s", libname, funname, any_fun ? "OK" : "FAIL" );
   return any_fun;
 }
 
@@ -165,12 +166,15 @@ mas_modules_load_symbol_from( const char *libname, const char *symname, const ch
     {
       char *dler;
 
-      dler = mas_strdup( dlerror(  ) );
+      dler = dlerror(  );
+      if ( dler )
+        dler = mas_strdup( dler );
       EMSG( "NOT loaded symbol %s; %s", symname, dler );
       if ( dler )
         mas_free( dler );
     }
   }
   MAS_LOG( "load subtable from %s => %p", libname, ( void * ) msymb );
+  HMSG( "LOAD SYM %s %s %s", libname, symname, msymb ? "OK" : "FAIL" );
   return msymb;
 }

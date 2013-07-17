@@ -389,7 +389,7 @@ mas_init_daemon( mas_options_t * popts, const char **message )
       ctrl.threads.n.daemon.pid = pid_daemon;
       HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", pid_daemon, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
-      r = -2;
+      r = -71;
     }
   }
   else

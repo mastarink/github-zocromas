@@ -772,15 +772,15 @@ mas_reset_color( void )
 }
 
 int
-mas_msg_set_file( const char *path )
+mas_msg_set_file( const char *path, int force )
 {
   int r = 0;
 
   if ( &ctrl )
   {
-    if ( ctrl.msgfile )
+    if ( ctrl.msgfile && ( ctrl.msgfile != ctrl.stderrfile || force ) )
     {
-      if ( ctrl.msgfile != ctrl.stderrfile && EOF == fclose( ctrl.msgfile ) )
+      if ( fclose( ctrl.msgfile ) == EOF )
       {
         IEVAL( r, -1 );
       }

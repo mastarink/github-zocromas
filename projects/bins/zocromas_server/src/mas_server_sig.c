@@ -332,6 +332,7 @@ mas_atexit( void )
   IMSG( "=====[%u @ %u]=================================================================", getpid(  ), getppid(  ) );
   if ( ctrl.msgfile )
   {
+    IMSG( "CLOSE MSG" );
     fclose( ctrl.msgfile );
     ctrl.msgfile = NULL;
   }
@@ -343,6 +344,8 @@ mas_atexit( void )
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainAtexit" ) );
     EMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
+  sync(  );
+  /* sleep( 3 ); */
   _exit( 0 );
   /* exit_group( 0 ); */
 }

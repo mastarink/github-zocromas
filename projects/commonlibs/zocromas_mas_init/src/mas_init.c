@@ -299,7 +299,7 @@ mas_init_set_msg_file( mas_options_t * popts )
     if ( popts->msgfilename )
     {
       MAS_LOG( "(%d) init msg to set file e%d", r, errno );
-      IEVAL( r, mas_msg_set_file( popts->msgfilename ) );
+      IEVAL( r, mas_msg_set_file( popts->msgfilename, 0 ) );
       MAS_LOG( "(%d) init msg set file done e%d", r, errno );
 
       /* TODO if console: */
@@ -441,6 +441,7 @@ mas_init_vplus( mas_options_t * popts, va_list args )
   {
     const char *msg = NULL;
 
+    HMSG( "(%d) INIT V #%d +", r, pos );
     IEVAL( r, ( fun ) ( popts, &msg ) );
     MAS_LOG( "(%d) init + #%d - %s", r, pos, msg ? msg : "-" );
     HMSG( "(%d) INIT V #%d - %s", r, pos, msg ? msg : "-" );

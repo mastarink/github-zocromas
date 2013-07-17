@@ -3,7 +3,7 @@
 
 # the zocromas_server executable
 ZOCROMAS_SERVER_EXEC=/usr/bin/zocromas_server
-
+ZOCROMAS_DAEMON_NAME=zocDaeBunch
 # various options to pass to the daemon
 ZOCROMAS_SERVER_OPTS=""
 

@@ -19,6 +19,7 @@ DEPEND="dev-libs/glib:2
 	mas-tar/zocromas_zoctypes
 	mas-tar/zocromas_mas_wrap
 	mas-tar/zocromas_mas_tools
+	mas-tar/zocromas_mas_msg
 "
 
 RDEPEND="${DEPEND}"

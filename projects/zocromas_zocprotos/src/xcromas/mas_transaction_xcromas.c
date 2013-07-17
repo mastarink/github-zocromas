@@ -93,7 +93,7 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
           pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer && answer->data ? "+" : "-" );
     if ( pheader->bad )
     {
-      r = -2;
+      r = -35;
       EMSG( "r:%d", r );
     }
     else
@@ -211,7 +211,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, mas_transaction_protodesc_t * proto_
         header_copy.done_cmd = 0;
         if ( header_copy.bad )
         {
-          r = -2;
+          r = -36;
           EMSG( "r:%d", r );
         }
         else
