@@ -149,8 +149,8 @@ function server_pid ()
 {
   if [[ -f "$flavourdir/run/zocromas_server.pid" ]] ; then
     cat $flavourdir/run/zocromas_server.pid
-# elif [[ -f "/run/zocromas_server/zocromas_server.pid" ]] ; then
-#   cat /run/zocromas_server/zocromas_server.pid
+  elif [[ -f "/run/zocromas_server/zocromas_server.pid" ]] ; then
+    cat /run/zocromas_server/zocromas_server.pid
   else
     psshowzz -opid=
   fi

@@ -66,6 +66,9 @@ typedef struct mas_thnames_s
   char *daemon_bunchx;
   char *parent_bunchi;
   char *daemon_bunchi;
+  char *listenin;
+  char *listenw;
+  char *listent;
 } mas_thnames_t;
 
 struct mas_options_s

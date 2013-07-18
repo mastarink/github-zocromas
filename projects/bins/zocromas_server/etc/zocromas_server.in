@@ -10,9 +10,9 @@ read_user_opts_plus=0
 
 dir.post=/var/spool/zocromas_server
 dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log/
-log=1
+log=0
 max_config_backup=5
-messages=1
+messages=0
 # default_port=50005
 save_user_opts=0
 save_user_opts_plus=0
@@ -22,7 +22,9 @@ restart_sleep=0.27
 daemon=1
 single_instance=1
 single_child=1
-logger=1
+logger=0
+ticker=0
+watcher=0
 dir.mods=@prefix@/lib/zocmds/
 # PACKAGE: @PACKAGE@
 # PACKAGE_VERSION: @PACKAGE_VERSION@
@@ -59,12 +61,15 @@ thname.parent_masterth=zocParMasterTH
 thname.daemon_masterth=zocDaeMasterTH
 thname.parent_masterthx=zocParMasterTHX
 thname.daemon_masterthx=zocDaeMasterTHX
+thname.listenin=zocListenIn
+thname.listenw=zocListenW
+thname.listent=zocListenT
 
 
 [listen 3]
-host=zocromas.mastar.lan
-host=mastarink.net:8900
-host=/tmp/zocromas.socket
+host=zocromas.mastar.lan:5015
+# host=mastarink.net:8900
+# host=/tmp/zocromas.socket
 
 [protos 2]
 proto=xcromas

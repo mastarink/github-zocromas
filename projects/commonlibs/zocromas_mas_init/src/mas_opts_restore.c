@@ -262,8 +262,6 @@ mas_opts_restore_path( mas_options_t * popts, const char *fpath )
 
   r = _mas_opts_restore_path( popts, fpath, popts, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
                               __new_section_func, __at_section_func, __unknown_opt_func );
-  HMSG( "******* thname.parent_bunchi:'%s'", popts->thname.parent_bunchi );
-  HMSG( "******* thname.parent_bunchm:'%s'", popts->thname.parent_bunchm );
   ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
   return r;
 }

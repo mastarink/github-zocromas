@@ -26,6 +26,7 @@ DEPEND="dev-libs/glib:2
 	mas-tar/zocromas_mas_msg
 	mas-tar/zocromas_mas_thtools
 	mas-tar/zocromas_mas_tools
+	mas-tar/zocromas_mas_listener
 "
 
 RDEPEND="${DEPEND}"
