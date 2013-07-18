@@ -363,7 +363,8 @@ mas_evaluate_cmd( STD_CMD_ARGS )
       {
         EMSG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
         MAS_LOG( "no function (cmd id=%d; cmdname='%s') libname:'%s'", this_command->id, this_command->name, this_command->libname );
-        answer->data = MAS_INVALID_ANSWER;
+        if ( answer )
+          answer->data = MAS_INVALID_ANSWER;
       }
     }
   }
@@ -394,7 +395,8 @@ mas_evaluate_list_cmd( STD_CMD_ARGS )
   if ( sanswer )
   {
     answer = mas_evaluated_create(  );
-    answer->data = ( void * ) sanswer;
+    if ( answer )
+      answer->data = ( void * ) sanswer;
   }
   return answer;
 }

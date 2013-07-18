@@ -17,9 +17,6 @@
 
 
 #include <mastar/thvariables/mas_thread_variables.h>
-#ifdef MAS_USE_LISTENER
-#  include "listener/inc/mas_listener_control.h"
-#endif
 
 
 #include <mastar/fileinfo/mas_unidata.h>

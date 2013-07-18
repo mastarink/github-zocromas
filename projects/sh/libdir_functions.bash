@@ -220,68 +220,103 @@ function grepau ()
   return 0
 }
 
-function cdproj_scan_project_1 ()
+function wdproj_scan_project_1 ()
 {
   local prj=$1
   shift
   local project=$1
   shift
-  [[ "$project_name" =~ ^zocromas_.*$project ]]
+  local match=$1
+  shift
+# echo "1 : $prj :: $match ? $project" >&2
+  [[ "$match" =~ ^zocromas_.*$project ]]
 }
-function cdproj_scan_project_2 ()
+function wdproj_scan_project_2 ()
 {
   local prj=$1
   shift
   local project=$1
   shift
-# echo "$prj :: $project_name ? $project" >&2
-  [[ "$project_name" == "$project" ]]
+  local match=$1
+  shift
+# echo "2 : $prj :: $match ? $project" >&2
+  [[ "$match" == "$project" ]]
 }
-function cdproj_scan ()
+function proj_scan ()
 {
-  local project_name
+  local project=$1
+  shift
   local scanner=$1
   shift
-  local project=$1
-  shift
-  for prj in $projects_list ; do
-    if [[ "${project_name:=$( basename ${MAS_PROJECTS_DIR}/$prj )}" ]] ; then
-      if "$scanner" "$prj" "$project" ; then
-	unset MAS_PROJECT_DIR
-	MAS_PROJECT_NAME=$project_name
-	cd ${MAS_PROJECT_DIR:=${MAS_PROJECTS_DIR}/${prj}}
-    #	  echo "CD ${MAS_PROJECT_DIR} [$prj : $project_name]" >&2
+  if [[ "${MAS_PROJECTS_DIR}" ]] ; then
+    for prj in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`} ; do
+      tmp_wd=${MAS_PROJECTS_DIR}/${prj}
+      tmp_name=$( basename $tmp_wd )
+      if [[ "$tmp_wd" ]] && [[ "$tmp_name" ]] && "$scanner" "$prj" "$project" "$tmp_name" ; then
 	return 0
       fi
-    fi
-    unset project_name
-  done
+      unset tmp_name tmp_wd
+    done
+  fi
   return 1
 }
-function cdproj ()
+function wdproj_scan ()
+{
+  local tmp_wd tmp_name
+  local project=$1
+  shift
+  local scanner=$1
+  shift
+  local docd=$1
+  shift
+  if proj_scan $project $scanner ; then
+    case "$docd" in
+     cd|set)
+      export MAS_PROJECT_NAME=$tmp_name
+      export MAS_PROJECT_DIR=$tmp_wd
+      cd $tmp_wd && return 0
+     ;;
+     wd)
+      echo "$tmp_wd"
+      return 0
+     ;;
+     name)
+      echo "$tmp_name"
+      return 0
+     ;;
+     *)
+      return 0
+     ;;
+    esac
+  fi
+  return 1
+}
+function wdproj ()
 {
   export MAS_PROJECTS_LIST MAS_PROJECT_NAME MAS_PROJECT_DIR
-  unset export MAS_ADMIN_DIR MAS_PROJECT_AUXDIR MAS_PROJECT_BUILDDIR MAS_PROJECT_MAKE_ERRDIR MAS_PROJECT_MAKE_LOGNAME
+  unset MAS_ADMIN_DIR MAS_PROJECT_AUXDIR MAS_PROJECT_BUILDDIR MAS_PROJECT_MAKE_ERRDIR MAS_PROJECT_MAKE_LOGNAME
   local project="$1" 
   shift
-  local prefix="${1:-zocromas}"
+  local docd=${1:-cd}
   shift
   local meth
-# if [[ "$project" ]] ; then 
-#   project="${prefix}_${project}" 
-# else
-#   project="${prefix}" 
-# fi
   local projectsdir projectsfile projects_list prj
   if [[ "$project" ]] ; then
+    if [[ "$project" == '.' ]] ; then
+      echo "DOT : '$MAS_PROJECT_NAME'" >&2
+      project=$MAS_PROJECT_NAME
+    fi
     if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
-      for meth in cdproj_scan_project_1 cdproj_scan_project_2 ; do
-        cdproj_scan $meth "$project" "$projects_list" && return 0
+      for meth in wdproj_scan_project_1 wdproj_scan_project_2 ; do
+#        echo "meth: $meth" >&2
+        wdproj_scan "$project" $meth ${docd:-cd} && return 0
       done
 #     echo "$MAS_PROJECT_NAME :: $MAS_PROJECT_DIR" >&2
-      for prj in $projects_list ; do
-	basename "$prj"
-      done  | sed -e 's/zocromas_//' | sort | cat -n >&2
+      if [[ "$docd" == 'cd' ]] ; then
+        for prj in $projects_list ; do
+	  basename "$prj"
+        done  | sed -e 's/zocromas_//' | sort | cat -n >&2
+      fi
     else
       echo "ERROR '$projectsdir' : '$projects_list' : '$projectsdir'" >&2
       unset MAS_PROJECTS_LIST
@@ -292,4 +327,12 @@ function cdproj ()
   fi
   return 1
 }
-alias j='cdproj'
+function is_in_project ()
+{
+  for p in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`} ; do
+    echo PRoject:$p >&2
+  done
+}
+# export wdproj_scan wdproj
+unset cdproj cdproj_scan
+alias j='wdproj'

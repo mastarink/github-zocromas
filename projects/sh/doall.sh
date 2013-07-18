@@ -1,7 +1,7 @@
 #!/bin/sh
-if [[ -f "sh/do_functions.sh" ]] ; then
-  . sh/setup.sh
-  . sh/do_functions.sh
+if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/do_functions.sh" ]] ; then
+  . ${MAS_PROJECTS_DIR:-.}/sh/setup.sh
+  . ${MAS_PROJECTS_DIR:-.}/sh/do_functions.sh
   export MAS_DOALL_NOW_STAMP=`datemt`
   export MAS_DOALL_STAMP=`datem`
   doall $@

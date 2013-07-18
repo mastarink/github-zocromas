@@ -8,8 +8,8 @@ function zoc_error ()
   shift
   echo "$ln $fn ERROR $@" >&2
 }
-. sh/libdir_functions.bash
-. sh/libmake_functions.bash
+. ${MAS_PROJECTS_DIR:-.}/sh/libdir_functions.bash
+. ${MAS_PROJECTS_DIR:-.}/sh/libmake_functions.bash
 function prjconfV ()
 {
   if [[ -f "./configure" ]] ; then
@@ -273,7 +273,7 @@ function virgin_clean ()
     fi
   done  
 }
-
+# if [[ "${MAS_PROJECTS_DIR}" ]] ; then cd "${MAS_PROJECTS_DIR}" ; fi
 export MAS_MAKE_CNT=0
 # echo "SETUPZ" >&2
 if ! setup_dirs ; then

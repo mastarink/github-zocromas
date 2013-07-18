@@ -4,7 +4,7 @@
 int mas_listener( mas_lcontrol_t * plcontrol );
 void *mas_listener_th( void *arg );
 
-int mas_listener_start( mas_options_t * popts, char *host, unsigned port );
+int mas_listener_start( const mas_options_t * popts, char *host, unsigned port );
 int mas_listener_cancel( mas_lcontrol_t * plcontrol );
 int mas_listener_wait( mas_lcontrol_t * plcontrol );
 

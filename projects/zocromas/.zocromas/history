@@ -211,3 +211,83 @@ reconnect
 bye
 server info
 bye
+server info
+server listener
+server listener remove 2
+server info
+server listener remove 1
+server info
+server listener remove 1
+server info
+bye
+server info
+server listener add zocromas.mastar.lan 5025
+server info
+server listener add zocromas.mastar.lan 5025
+server listener add zocromas.mastar.lan:5025
+server info
+quit
+server quit
+bye
+server info
+server listener add zocromas.mastar.lan:5025
+server listeners add zocromas.mastar.lan:5025
+server listener remove zocromas.mastar.lan:5025
+bye
+server listeners add zocromas.mastar.lan:5025
+server listener add zocromas.mastar.lan:5025
+server listener add zocromas.mastar.lan 5025
+server info
+server listener add zocromas.mastar.lan 5035
+server info
+server listener remove zocromas.mastar.lan 5035
+server info
+server listener remove zocromas.mastar.lan 5035
+server info
+server listener remove zocromas.mastar.lan 5035
+server info
+server listener remove zocromas.mastar.lan 5025
+server info
+server listener remove zocromas.mastar.lan 5005
+server info
+server check
+server check uuid
+server uuid
+check uuid
+check
+check uuid
+bye
+check uuid
+bye
+check uuid
+bye
+check uuid
+bye
+check uuid
+check uuid aaaaaaaaaaaaaaa
+check uuid aaaaaaaaaaaaaaadddddddddddddddddddd
+check uuid
+check args
+check args aaaaaaaaaaaaaaaa
+check args aaaaaaaaaaaaaaaa bbbbbbbbbbbbbbb
+check args xxxxxxxxxxx bbbbbbbbbbbbbbb bbbbbbbbbbbbbb
+bye
+check args xxxxxxxxxxx bbbbbbbbbbbbbbb bbbbbbbbbbbbbb
+bye
+check args
+check args xxxxxxxxxxx bbbbbbbbbbbbbbb bbbbbbbbbbbbbb
+check args
+bye
+check tvar aaaaaaaaaaaaaa
+check tvar 
+check lvar lllllllllllllllll
+check lvar 
+bye
+check tvar aaaaaaaaaaaaaa
+check tvar 
+check lvar lllllllllllllllll
+check lvar 
+bye
+check tvar 
+check lvar 
+bye

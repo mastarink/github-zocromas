@@ -1,7 +1,7 @@
 #!/bin/sh
-if [[ -f "sh/debug_functions.sh" ]] ; then
-  . sh/setup.sh
-  . sh/debug_functions.sh
+if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/debug_functions.sh" ]] ; then
+  . ${MAS_PROJECTS_DIR:-.}/sh/setup.sh
+  . ${MAS_PROJECTS_DIR:-.}/sh/debug_functions.sh
 
   debug_any $@
 fi

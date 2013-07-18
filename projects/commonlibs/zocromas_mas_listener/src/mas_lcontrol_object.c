@@ -122,7 +122,7 @@ mas_lcontrol_register( mas_lcontrol_t * plcontrol )
 
 /* naming : create + init + register = make */
 mas_lcontrol_t *
-mas_lcontrol_make( mas_options_t * popts, const char *host, unsigned port )
+mas_lcontrol_make( const mas_options_t * popts, const char *host, unsigned port )
 {
   mas_lcontrol_t *plcontrol = NULL;
 
@@ -162,7 +162,7 @@ mas_lcontrol_create_transaction_controls_list( mas_lcontrol_t * plcontrol )
 
 /* naming : set members = init */
 int
-mas_lcontrol_init( mas_lcontrol_t * plcontrol, mas_options_t * popts, const char *host, unsigned port )
+mas_lcontrol_init( mas_lcontrol_t * plcontrol, const mas_options_t * popts, const char *host, unsigned port )
 {
   unsigned hport;
 

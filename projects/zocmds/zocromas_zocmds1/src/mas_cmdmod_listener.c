@@ -1,3 +1,5 @@
+#define MAS_USE_LISTENER
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
@@ -10,8 +12,8 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 #ifdef MAS_USE_LISTENER
-#  include "listener/inc/mas_listener_control_list.h"
-#  include "listener/inc/mas_listener.h"
+#  include <mastar/listener/mas_listener_control_list.h>
+#  include <mastar/listener/mas_listener.h>
 #endif
 
 
@@ -81,17 +83,19 @@ listener_add_cmd( STD_CMD_ARGS )
 
   targc = mas_add_argv_args( targc, &targv, args, 0 );
 
-  /* cMSG( "Listener add 0:'%s'", targv[0] ); */
-  /* cMSG( "Listener add 1:'%s'", targv[1] ); */
-  /* cMSG( "Listener add 2:'%s'", targv[2] ); */
-  sscanf( targv[1], "%u", &port );
-  plcontrol = mas_lcontrol_find( targv[0], port );
-
+  if ( targc > 0 && targv[0] )
   {
-    mas_listener_start( targv[0], port );
-  }
+    if ( targc > 1 && targv[1] )
+      sscanf( targv[1], "%u", &port );
+    plcontrol = mas_lcontrol_find( targv[0], port );
 
-  cMSG( "Listener add %s:%u", targv[0], port );
+    if ( !plcontrol )
+    {
+      mas_listener_start( popts, targv[0], port );
+    }
+
+    cMSG( "Listener add %s:%u", targv[0], port );
+  }
   mas_del_argv( targc, targv, 0 );
   return NULL;
 }

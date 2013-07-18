@@ -1,7 +1,7 @@
 #!/bin/sh
-. sh/debug_functions.sh
-if [[ -f "sh/setup.sh" ]] ; then
-  . sh/setup.sh
+. ${MAS_PROJECTS_DIR:-.}/sh/debug_functions.sh
+if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/setup.sh" ]] ; then
+  . ${MAS_PROJECTS_DIR:-.}/sh/setup.sh
 
   gdb_core_any $@ 
 fi

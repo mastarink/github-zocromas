@@ -1,5 +1,5 @@
-. sh/build_functions.sh
-. sh/libmake_functions.bash
+. ${MAS_PROJECTS_DIR:-.}/sh/build_functions.sh
+. ${MAS_PROJECTS_DIR:-.}/sh/libmake_functions.bash
 
 function mas_enabled_doprj ()
 {

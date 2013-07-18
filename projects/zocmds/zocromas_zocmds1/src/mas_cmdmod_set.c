@@ -19,9 +19,6 @@
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thvariables/mas_thread_variables.h>
-#ifdef MAS_USE_LISTENER
-#  include "listener/inc/mas_listener_control.h"
-#endif
 
 
 
@@ -128,7 +125,7 @@ ticker_cmd( STD_CMD_ARGS )
 }
 #endif
 
-#ifdef MAS_USE_LISTENER
+#ifdef MAS_USE_VARIABLES
 static mas_evaluated_t *
 var_cmd( STD_CMD_ARGS )
 {
@@ -192,7 +189,7 @@ mas_cmd_t subcmdtable[] = {
   {3, "ticker", ticker_cmd, NULL} /* set ticker ... */
   ,
 #endif
-#ifdef MAS_USE_LISTENER
+#ifdef MAS_USE_VARIABLES
   {4, "var", var_cmd, NULL}     /* set var ... */
   ,
 #endif

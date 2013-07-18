@@ -109,9 +109,9 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       ro = r;
 /* ?????? fcntl(fd, F_SETFD, FD_CLOEXEC) */
       MAS_LOG( "(%d) opened channel ========", r );
+      OMSG( "INCOMING CONNECTION (%d)", ro );
     }
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocListenIn" ) );
-    OMSG( "INCOMING CONNECTION" );
     {
       struct timeval td;
 

@@ -159,12 +159,13 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
           }
           if ( ctrl.is_server )
           {
-            IEVAL( r, fprintf( f,
-                               "# server\ndaemon=%u\nread_user_opts=%u\nread_user_opts_plus=%u\n"
-                               "single_instance=%u\nsingle_child=%u\nlogger=%d\nmodsdir=%s\n" "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon,
-                               popts->read_user_opts, popts->read_user_opts_plus,
-                               popts->single_instance, popts->single_child, !popts->nologger,
-                               popts->dir.mods, popts->dir.pids, popts->dir.proto ) );
+            IEVAL( r,
+                   fprintf( f,
+                            "# server\ndaemon=%u\nread_user_opts=%u\nread_user_opts_plus=%u\n"
+                            "single_instance=%u\nsingle_child=%u\nlogger=%d\nticker=%d\nwatcher=%d\nmodsdir=%s\n"
+                            "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, popts->read_user_opts, popts->read_user_opts_plus,
+                            popts->single_instance, popts->single_child, !popts->nologger, !popts->noticker, !popts->nowatcher,
+                            popts->dir.mods, popts->dir.pids, popts->dir.proto ) );
             if ( r > 0 )
               rtot += r;
           }

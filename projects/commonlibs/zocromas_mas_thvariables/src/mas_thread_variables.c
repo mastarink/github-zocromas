@@ -233,7 +233,7 @@ mas_thread_variables_find( const char *vclass_name, const char *name )
 }
 
 int
-mas_thread_variable_set_text( th_type_t thtype, const char *vclass_name, const char *name, const char *txt )
+mas_thread_variable_set_text( const char *vclass_name, const char *name, const char *txt )
 {
   int r = 0;
   mas_thdata_t *thd;

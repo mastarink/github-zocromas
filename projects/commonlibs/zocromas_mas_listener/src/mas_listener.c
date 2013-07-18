@@ -118,7 +118,7 @@ static void *listener_stackaddr = NULL;
  * */
 /* naming : setup + pthread_create = start */
 int
-mas_listener_start( mas_options_t * popts, char *host_port, unsigned port )
+mas_listener_start( const mas_options_t * popts, char *host_port, unsigned port )
 {
   int r = 0;
 

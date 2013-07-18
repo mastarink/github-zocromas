@@ -4,7 +4,7 @@
 #  include <mastar/types/mas_thread_variables_types.h>
 
 
-int mas_thread_variable_set_text( th_type_t thtype, const char *vclass, const char *name, const char *txt );
+int mas_thread_variable_set_text( const char *vclass, const char *name, const char *txt );
 
 mas_varvec_element_t *mas_thread_variables_find( const char *vclass, const char *name );
 

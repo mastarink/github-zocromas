@@ -1,6 +1,6 @@
 #!/bin/sh
-if [[ -f "sh/librun_functions.bash" ]] ; then
-  . sh/setup.sh
+if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/librun_functions.bash" ]] ; then
+  . ${MAS_PROJECTS_DIR:-.}/sh/setup.sh
 
   show_setup
 fi

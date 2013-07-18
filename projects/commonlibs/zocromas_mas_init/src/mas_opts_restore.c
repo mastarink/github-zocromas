@@ -124,6 +124,8 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
   }
   OPT_NOFLAG( log, s );
   OPT_NOFLAG( logger, s );
+  OPT_NOFLAG( ticker, s );
+  OPT_NOFLAG( watcher, s );
   OPT_FLAG( max_config_backup, s );
   OPT_FLAG( default_port, s );
   OPT_NOFLAG( daemon, s );

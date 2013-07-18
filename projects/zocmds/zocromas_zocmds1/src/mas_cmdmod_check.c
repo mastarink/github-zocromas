@@ -18,6 +18,8 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/listener/mas_listener_control.h>
+
 #include <mastar/types/mas_varvec_types.h>
 #include <mastar/types/mas_varset_types.h>
 #include <mastar/varvec/mas_varvec_namevalue.h>
@@ -51,7 +53,7 @@ version_cmd( STD_CMD_ARGS )
 }
 
 static mas_evaluated_t *
-args_cmd( STD_CMD_ARGS )
+tvar_cmd( STD_CMD_ARGS )
 {
   char *result = NULL;
 
@@ -61,17 +63,46 @@ args_cmd( STD_CMD_ARGS )
   if ( var )
   {
     /* cMSG( "CHECK ARGS: %s ::: %s", args, var->value ); */
-    result = mas_varvec_variable_get_value( var );
+    if ( !result )
+      result = mas_varvec_variable_get_value( var );
   }
-  else if ( args )
+  if ( args )
   {
     /* cMSG( "CHECK ARGS: %s", args ); */
-    mas_thread_variable_set_text( MAS_THREAD_TRANSACTION, "client", "args", args );
-    result = mas_strdup( args );
+    mas_thread_variable_set_text( "client", "args", args );
   }
   return mas_evaluated_wrap_pchar( result );
 }
 
+static mas_evaluated_t *
+lvar_cmd( STD_CMD_ARGS )
+{
+  char *result = NULL;
+
+  mas_varvec_element_t *var;
+
+  if ( prcontrol )
+  {
+    mas_lcontrol_t *plcontrol;
+
+    plcontrol = prcontrol->plcontrol;
+
+    var = mas_lcontrol_variables_find( plcontrol, "client", "args" );
+    if ( var )
+    {
+      /* cMSG( "CHECK ARGS: %s ::: %s", args, var->value ); */
+      if ( !result )
+        result = mas_varvec_variable_get_value( var );
+    }
+    if ( args )
+    {
+      /* cMSG( "CHECK ARGS: %s", args ); */
+      mas_lcontrol_variable_set_text( plcontrol, "client", "args", args );
+    }
+  }
+  return mas_evaluated_wrap_pchar( result );
+}
+#if 0
 static mas_evaluated_t *
 uuid_cmd( STD_CMD_ARGS )
 {
@@ -109,8 +140,10 @@ uuid_cmd( STD_CMD_ARGS )
     /*   }                                                                           */
     /* }                                                                             */
   }
+  HMSG( "prcontrol:%d; prcontrol:%d; uuid: %s", prcontrol ? 1 : 0, args ? 1 : 0, uuid );
   return mas_evaluated_wrap_pchar( uuid );
 }
+#endif
 
 
 mas_cmd_t subcmdtable[] = {
@@ -118,9 +151,9 @@ mas_cmd_t subcmdtable[] = {
   ,
   {1, "version", version_cmd, NULL} /* check version */
   ,
-  {2, "args", args_cmd, NULL}   /* check args */
+  {2, "tvar", tvar_cmd, NULL}   /* check tvar */
   ,
-  {3, "uuid", uuid_cmd, NULL}   /* check uuid */
+  {3, "lvar", lvar_cmd, NULL}   /* check lvar */
   ,
   {999, NULL, NULL, NULL}
 };

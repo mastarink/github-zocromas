@@ -295,7 +295,7 @@ mas_init_set_msg_file( mas_options_t * popts )
 
   if ( !ctrl.is_parent )
   {
-    HMSG( "MESSAGES (%d) to %s", popts ? 1 : 0, popts ? popts->msgfilename : NULL );
+    HMSG( "MESSAGES (%d) to %s", ctrl.messages ? 1 : 0, popts ? popts->msgfilename : NULL );
     if ( popts->msgfilename )
     {
       MAS_LOG( "(%d) init msg to set file e%d", r, errno );
@@ -484,7 +484,7 @@ mas_init_plus( mas_options_t * popts, int argc, char **argv, char **env, ... )
   IEVAL( r, mas_init_uuid( popts ) );
   HMSG( "UUID %s", popts->uuid );
   IEVAL( r, mas_pre_init_opt_files( popts ) );
-  HMSG( "UUID %s", popts->uuid );
+  /* HMSG( "UUID %s", popts->uuid ); */
   if ( r < 0 )
   {
     r = 0;
