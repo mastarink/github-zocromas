@@ -45,6 +45,22 @@ msgfilename=/dev/tty11
 # redirect-messages=/dev/tty11
 # -
 
+thname.parent_bunchm=zocParBunch
+thname.daemon_bunchm=zocDaeBunch
+thname.parent_bunchx=zocParBunchX
+thname.daemon_bunchx=zocDaeBunchX
+thname.parent_bunchi=zocParBunchI
+thname.daemon_bunchi=zocDaeBunchI
+thname.parent_masterm=zocParMaster
+thname.daemon_masterm=zocDaeMaster
+thname.parent_masterx=zocParMasterX
+thname.daemon_masterx=zocDaeMasterX
+thname.parent_masterth=zocParMasterTH
+thname.daemon_masterth=zocDaeMasterTH
+thname.parent_masterthx=zocParMasterTHX
+thname.daemon_masterthx=zocDaeMasterTHX
+
+
 [listen 3]
 host=zocromas.mastar.lan
 host=mastarink.net:8900

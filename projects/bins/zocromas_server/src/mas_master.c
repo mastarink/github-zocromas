@@ -209,11 +209,17 @@ mas_master( mas_options_t * popts )
   HMSG( "MASTER TO END : %d", r );
   if ( ctrl.is_parent )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMasterX" ) );
+    if ( popts->thname.parent_masterx )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_masterx /* "zocParMasterX" */  ) );
+    }
   }
   else
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeMasterX" ) );
+    if ( popts->thname.daemon_masterx )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_masterx /* "zocDaeMasterX" */  ) );
+    }
   }
   return r;
 }
@@ -230,13 +236,23 @@ mas_master_th( void *arg )
   ctrl.pserver_thread = &ctrl.threads.n.master;
 
   ctrl.pserver_thread = &ctrl.threads.n.master;
-  if ( ctrl.is_parent )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMasterTh" ) );
-  }
-  else
-  {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeMasterTh" ) );
+    extern mas_options_t gopts;
+
+    if ( ctrl.is_parent )
+    {
+      if ( gopts.thname.parent_masterth )
+      {
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.parent_masterth /* "zocParMasterTh" */  ) );
+      }
+    }
+    else
+    {
+      if ( gopts.thname.daemon_masterth )
+      {
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.daemon_masterth /* "zocDaeMasterTh" */  ) );
+      }
+    }
   }
   /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
@@ -261,13 +277,23 @@ mas_master_th( void *arg )
   MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
 #endif
   HMSG( "MASTER_TH TO END" );
-  if ( ctrl.is_parent )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMasterThX" ) );
-  }
-  else
-  {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeMasterThX" ) );
+    extern mas_options_t gopts;
+
+    if ( ctrl.is_parent )
+    {
+      if ( gopts.thname.parent_masterthx )
+      {
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.parent_masterthx /* "zocParMasterThX" */  ) );
+      }
+    }
+    else
+    {
+      if ( gopts.thname.daemon_masterthx )
+      {
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.daemon_masterthx /* "zocDaeMasterThX" */  ) );
+      }
+    }
   }
   mas_pthread_exit( NULL );
   return NULL;
@@ -323,11 +349,17 @@ mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
 
   if ( ctrl.is_parent )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParBunchI" ) );
+    if ( popts->thname.parent_bunchi )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_bunchi /*  "zocParBunchI" */  ) );
+    }
   }
   else
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeBunchI" ) );
+    if ( popts->thname.daemon_bunchi )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_bunchi /*  "zocDaeBunchI" */  ) );
+    }
   }
   MAS_LOG( "(%d) bunch: to init +", r );
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
@@ -335,14 +367,28 @@ mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
   IEVAL( r,
          mas_init_plus( popts, argc, argv, env, mas_init_daemon, mas_init_pids, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
                         NULL ) );
+  HMSG( "BUNCH CONT %d", __LINE__ );
   if ( ctrl.is_parent )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParBunch" ) );
+    HMSG( "BUNCH CONT %d", __LINE__ );
+    if ( popts->thname.parent_bunchm )
+    {
+      HMSG( "BUNCH CONT %d", __LINE__ );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_bunchm /*  "zocParBunch" */  ) );
+      HMSG( "BUNCH CONT %d", __LINE__ );
+    }
   }
   else
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeBunch" ) );
+    HMSG( "BUNCH CONT %d", __LINE__ );
+    if ( popts->thname.daemon_bunchm )
+    {
+      HMSG( "BUNCH CONT %d", __LINE__ );
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_bunchm /*  "zocDaeBunch" */  ) );
+      HMSG( "BUNCH CONT %d", __LINE__ );
+    }
   }
+  HMSG( "BUNCH CONT %d", __LINE__ );
   MAS_LOG( "(%d) bunch: init + done", r );
   if ( ctrl.is_parent )
   {
@@ -373,11 +419,17 @@ mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
   }
   if ( ctrl.is_parent )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParBunchX" ) );
+    if ( popts->thname.parent_bunchx )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_bunchx /* "zocParBunchX" */  ) );
+    }
   }
   else
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaeBunchX" ) );
+    if ( popts->thname.daemon_bunchx )
+    {
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_bunchx /* "zocDaeBunchX" */  ) );
+    }
   }
   WMSG( "TO DESTROY MODULES" );
   mas_modules_unregister(  );

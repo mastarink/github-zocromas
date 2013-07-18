@@ -49,6 +49,10 @@ mas_opts_destroy( mas_options_t * popts )
     mas_free( popts->uuid );
   popts->uuid = NULL;
 
+  if ( popts->msgfilename )
+    mas_free( popts->msgfilename );
+  popts->msgfilename = NULL;
+
   if ( popts->dir.mods )
     mas_free( popts->dir.mods );
   popts->dir.mods = NULL;
@@ -56,10 +60,6 @@ mas_opts_destroy( mas_options_t * popts )
   if ( popts->dir.pids )
     mas_free( popts->dir.pids );
   popts->dir.pids = NULL;
-
-  if ( popts->msgfilename )
-    mas_free( popts->msgfilename );
-  popts->msgfilename = NULL;
 
   if ( popts->dir.proto )
     mas_free( popts->dir.proto );
@@ -80,7 +80,63 @@ mas_opts_destroy( mas_options_t * popts )
   if ( popts->dir.config )
     mas_free( popts->dir.config );
   popts->dir.config = NULL;
+  {
+    if ( popts->thname.parent_bunchm )
+      mas_free( popts->thname.parent_bunchm );
+    popts->thname.parent_bunchm = NULL;
 
+    if ( popts->thname.daemon_bunchm )
+      mas_free( popts->thname.daemon_bunchm );
+    popts->thname.daemon_bunchm = NULL;
+
+    if ( popts->thname.parent_bunchx )
+      mas_free( popts->thname.parent_bunchx );
+    popts->thname.parent_bunchx = NULL;
+
+    if ( popts->thname.daemon_bunchx )
+      mas_free( popts->thname.daemon_bunchx );
+    popts->thname.daemon_bunchx = NULL;
+
+    if ( popts->thname.parent_bunchi )
+      mas_free( popts->thname.parent_bunchi );
+    popts->thname.parent_bunchi = NULL;
+
+    if ( popts->thname.daemon_bunchi )
+      mas_free( popts->thname.daemon_bunchi );
+    popts->thname.daemon_bunchi = NULL;
+
+    if ( popts->thname.parent_masterm )
+      mas_free( popts->thname.parent_masterm );
+    popts->thname.parent_masterm = NULL;
+
+    if ( popts->thname.daemon_masterm )
+      mas_free( popts->thname.daemon_masterm );
+    popts->thname.daemon_masterm = NULL;
+
+    if ( popts->thname.parent_masterx )
+      mas_free( popts->thname.parent_masterx );
+    popts->thname.parent_masterx = NULL;
+
+    if ( popts->thname.daemon_masterx )
+      mas_free( popts->thname.daemon_masterx );
+    popts->thname.daemon_masterx = NULL;
+
+    if ( popts->thname.parent_masterth )
+      mas_free( popts->thname.parent_masterth );
+    popts->thname.parent_masterth = NULL;
+
+    if ( popts->thname.daemon_masterth )
+      mas_free( popts->thname.daemon_masterth );
+    popts->thname.daemon_masterth = NULL;
+
+    if ( popts->thname.parent_masterthx )
+      mas_free( popts->thname.parent_masterthx );
+    popts->thname.parent_masterthx = NULL;
+
+    if ( popts->thname.daemon_masterthx )
+      mas_free( popts->thname.daemon_masterthx );
+    popts->thname.daemon_masterthx = NULL;
+  }
   if ( popts->configfilename )
     mas_free( popts->configfilename );
   popts->configfilename = NULL;

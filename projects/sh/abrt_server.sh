@@ -6,8 +6,8 @@ if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/setup.sh" ]] ; then
   sig=$1
   shift
   if ! [[ "$sig" ]] ; then sig=QUIT ; fi
-  if spid=$( server_pid ) && [[ "$spid" ]] ; then
-    echo "killing $spid with $sig" >&2
+  if spid=$( server_pid ) && [[ "$spid" ]] && [[ "$sig" ]] ; then
+    echo "[[ killing $spid with $sig ]]" >&2
     kill -$sig $spid
   else
     echo "No server pid" >&2

@@ -50,6 +50,24 @@ typedef struct mas_dirs_s
   char *post;
   char *config;
 } mas_dirs_t;
+typedef struct mas_thnames_s
+{
+  char *parent_masterm;
+  char *daemon_masterm;
+  char *parent_masterx;
+  char *daemon_masterx;
+  char *parent_masterth;
+  char *daemon_masterth;
+  char *parent_masterthx;
+  char *daemon_masterthx;
+  char *parent_bunchm;
+  char *daemon_bunchm;
+  char *parent_bunchx;
+  char *daemon_bunchx;
+  char *parent_bunchi;
+  char *daemon_bunchi;
+} mas_thnames_t;
+
 struct mas_options_s
 {
   mas_msg_options_t f;
@@ -106,6 +124,7 @@ struct mas_options_s
 
 
   mas_dirs_t dir;
+  mas_thnames_t thname;
   char *msgfilename;
   char *configfilename;
   char *saved_configfilename;
@@ -136,6 +155,7 @@ struct mas_option_parse_s
   size_t offset;
   size_t size;
   mas_opts_func_t func;
+  const char *dv;
 };
 typedef struct mas_option_parse_s mas_option_parse_t;
 

@@ -5,7 +5,8 @@ if [[ -f "sh/librun_functions.bash" ]] ; then
 
 # if [[ "$MAS_ZOCROMAS_HERE" ]] ; then
 #    echo "RUN START" >&2
-    run_any ${MAS_ZOCROMAS_HERE:-.} "$@"
+#???    run_any ${MAS_ZOCROMAS_HERE:-.} "$@"
+    run_any "$@"
 #    echo "RUN END" >&2
 # else
 #   echo "Please set " >&2

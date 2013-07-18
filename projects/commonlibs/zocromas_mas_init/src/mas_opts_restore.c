@@ -105,6 +105,48 @@ mas_option_parse_t opt_table[] = {
   ,
   {.name = "dir.post",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, dir ) + offsetof( mas_dirs_t, post )}
   ,
+  {.name = "thname.parent_bunchm",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_bunchm ),.dv = "zocParBunch"}
+  ,
+  {.name = "thname.daemon_bunchm",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_bunchm ),.dv = "zocDaeBunch"}
+  ,
+  {.name = "thname.parent_bunchx",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_bunchx ),.dv = "zocParBunchX"}
+  ,
+  {.name = "thname.daemon_bunchx",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_bunchx ),.dv = "zocDaeBunchX"}
+  ,
+  {.name = "thname.parent_bunchi",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_bunchi ),.dv = "zocParBunchI"}
+  ,
+  {.name = "thname.daemon_bunchi",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_bunchi ),.dv = "zocDaeBunchI"}
+  ,
+  {.name = "thname.parent_masterm",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_masterm ),.dv = "zocParMaster"}
+  ,
+  {.name = "thname.daemon_masterm",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_masterm ),.dv = "zocDaeMaster"}
+  ,
+  {.name = "thname.parent_masterx",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_masterx ),.dv = "zocParMasterX"}
+  ,
+  {.name = "thname.daemon_masterx",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_masterx ),.dv = "zocDaeMasterX"}
+  ,
+  {.name = "thname.parent_masterth",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_masterth ),.dv = "zocParMasterTH"}
+  ,
+  {.name = "thname.daemon_masterth",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_masterth ),.dv = "zocDaeMasterTH"}
+  ,
+  {.name = "thname.parent_masterthx",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, parent_masterthx ),.dv = "zocParMasterTHX"}
+  ,
+  {.name = "thname.daemon_masterthx",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_masterthx ),.dv = "zocDaeMasterTHX"}
+  ,
   {.name = "msgfilename",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, msgfilename )}
   ,
   {.name = "restart_sleep",.type = MAS_OPT_TYPE_DOUBLE,.offset = offsetof( mas_options_t, restart_sleep )}
@@ -220,6 +262,8 @@ mas_opts_restore_path( mas_options_t * popts, const char *fpath )
 
   r = _mas_opts_restore_path( popts, fpath, popts, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
                               __new_section_func, __at_section_func, __unknown_opt_func );
+  HMSG( "******* thname.parent_bunchi:'%s'", popts->thname.parent_bunchi );
+  HMSG( "******* thname.parent_bunchm:'%s'", popts->thname.parent_bunchm );
   ctrl.loaded_optsv.c = mas_add_argv_args( ctrl.loaded_optsv.c, &ctrl.loaded_optsv.v, fpath, 0 );
   return r;
 }

@@ -88,16 +88,16 @@ function run_any ()
 #   echo "......... $binary" >&2
     if [[ "$binary" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
-#        echo "1 To run rbinary: $cmd_exec $binary $@" >&2
+        echo "1 To run rbinary: $cmd_exec $binary $@" >&2
         nanosleep 0.5 &&  $cmd_exec $binary "$@"
       elif type usleep >/dev/null 2>&1 ; then
-#        echo "2 To run rbinary: $cmd_exec $binary $@" >&2
+        echo "2 To run rbinary: $cmd_exec $binary $@" >&2
         usleep 50000 &&  $cmd_exec $binary "$@"
       elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-#        echo "3 To run rbinary: $cmd_exec $binary $@" >&2
+        echo "3 To run rbinary: $cmd_exec $binary $@" >&2
         $binary "$@"
       else
-#        echo "4 To run rbinary: $binary" >&2
+        echo "4 To run rbinary: $cmd_exec $binary $@" >&2
         $cmd_exec $binary "$@"
       fi
 ###   if type nanosleep >/dev/null 2>&1 ; then
@@ -145,9 +145,19 @@ function psshowzz ()
     /bin/ps --sort -pcpu,pid -C$names $@
   fi
 }
+function server_pid ()
+{
+  if [[ -f "$flavourdir/run/zocromas_server.pid" ]] ; then
+    cat $flavourdir/run/zocromas_server.pid
+# elif [[ -f "/run/zocromas_server/zocromas_server.pid" ]] ; then
+#   cat /run/zocromas_server/zocromas_server.pid
+  else
+    psshowzz -opid=
+  fi
+}
 function psshowz ()
 {
-  psshowzz -L $@
+  ps -Lp`server_pid` || psshowzz -L $@
 }
 function pslist () 
 {
@@ -168,10 +178,6 @@ function psshow ()
 function psshowc ()
 {
   psshow | grep '\(No\| \<zoc\S\+\)'
-}
-function server_pid ()
-{
-  psshowzz -opid=
 }
 
 

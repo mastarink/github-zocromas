@@ -209,7 +209,7 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
       ctrl.pidfd[indx] = r;
       IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
       HMSG( "(%d)PIDLCK : %s", r, pidpath );
-      lb = snprintf( buf, sizeof( buf ), "%u", ctrl.threads.n.main.pid );
+      lb = snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
       IEVAL( r, write( ctrl.pidfd[indx], buf, lb ) );
       WMSG( "PIDWRT: %d pid:%u", r, ctrl.threads.n.main.pid );
       if ( r < 0 )
