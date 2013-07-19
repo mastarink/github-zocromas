@@ -157,7 +157,10 @@ function server_pid ()
 }
 function psshowz ()
 {
-  ps -Lp`server_pid` || psshowzz -L $@
+  local sp=`server_pid`
+  if ! [[ "$sp" ]] || ! ps -Lp $sp ; then
+    psshowzz -L $@
+  fi
 }
 function pslist () 
 {

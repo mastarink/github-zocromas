@@ -1,6 +1,12 @@
 set path=sh
 
-find run.sh
+find libdo_functions.bash
+sfind libdir_functions.bash
+sfind libmake_functions.bash
+sfind librun_functions.bash
+
+
+tab sfind run.sh
 sfind run_any.sh
 sfind run-installed.sh
 sfind debug_any.sh
@@ -55,11 +61,7 @@ sfind diff.sh
 
 tab sfind setupz.sh
 sfind setup.sh
-sfind do_functions.sh
-sfind libdir_functions.bash
-sfind libmake_functions.bash
 sfind build_functions.sh
-sfind librun_functions.bash
 sfind debug_functions.sh
 
 tab sfind run_duf.sh

@@ -294,3 +294,5 @@ bye
 server listener 
 server
 bye
+server info
+bye

@@ -47,16 +47,17 @@ more:
 int
 mas_lcontrols_init( mas_options_t * popts, const char * *message )
 {
+  HMSG( "INIT LCONTROLS" );
   mas_lcontrols_list_create(  );
   if ( message )
     *message = __func__;
-  return 0;
+  return ctrl.lcontrols_list ? 0 : -1;
 }
 
 void
 mas_lcontrols_list_create( void )
 {
-  WMSG( "INIT LCONTROLS_LIST" );
+  HMSG( "INIT LCONTROLS_LIST" );
   ctrl.lcontrols_list = mas_malloc( sizeof( mas_lcontrol_list_head_t ) );
   memset( ctrl.lcontrols_list, 0, sizeof( mas_lcontrol_list_head_t ) );
   MAS_LIST_INIT( ctrl.lcontrols_list );

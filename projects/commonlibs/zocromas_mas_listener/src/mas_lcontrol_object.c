@@ -113,7 +113,7 @@ mas_lcontrol_register( mas_lcontrol_t * plcontrol )
   {
     /* ........... */
 #ifdef EMSG
-    EMSG( "+C l/th %p ['%s':%u]", ( void * ) plcontrol, plcontrol->host, plcontrol->port );
+    EMSG( "no lcntrl list ['%s':%u]", plcontrol->host, plcontrol->port );
 #endif
     sleep( 10 );
   }

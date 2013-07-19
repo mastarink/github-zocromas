@@ -166,11 +166,12 @@ mas_threads_init( mas_options_t * popts, const char * *message )
   }
   /* ctrl.threads.n.main.thread = pthread_self(  ); */
   /* ctrl.threads.n.main.tid = mas_gettid(  );      */
+  HMSG( "(%d) INIT THREADS done", r );
   MAS_LOG( "(%d) init threads done", r );
 
   if ( message )
     *message = __func__;
-  return r;
+  return r < 0 ? r : 0;
 }
 
 void

@@ -1,7 +1,7 @@
 #!/bin/sh
-if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/do_functions.sh" ]] ; then
+if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/libdo_functions.bash" ]] ; then
   . ${MAS_PROJECTS_DIR:-.}/sh/setup.sh
-  . ${MAS_PROJECTS_DIR:-.}/sh/do_functions.sh
+  . ${MAS_PROJECTS_DIR:-.}/sh/libdo_functions.bash
   export MAS_DOALL_NOW_STAMP=`datemt`
   export MAS_DOALL_STAMP=`datem`
   export MAS_DO_FROM_PROJECT=$1

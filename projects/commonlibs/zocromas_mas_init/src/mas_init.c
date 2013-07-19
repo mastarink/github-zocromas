@@ -437,7 +437,7 @@ mas_init_vplus( mas_options_t * popts, va_list args )
 
   WMSG( "INIT V+" );
   /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
-  while ( r >= 0 && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) && !ctrl.is_parent )
+  while ( !r && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) && !ctrl.is_parent )
   {
     const char *msg = NULL;
 
@@ -504,7 +504,7 @@ mas_init_plus( mas_options_t * popts, int argc, char **argv, char **env, ... )
     va_end( args );
   }
   IEVAL( r, mas_post_init( popts ) );
-  HMSG( "INIT %s", r < 0 ? "FAIL" : "OK" );
+  HMSG( "(%d)INIT %s", r, r < 0 ? "FAIL" : "OK" );
   return r;
 }
 

@@ -136,7 +136,7 @@ mas_init_load_protos( mas_options_t * popts, const char **message )
   MAS_LOG( "(%d) init / load protos done", r );
   if ( message )
     *message = __func__;
-  return r;
+  return r < 0 ? r : 0;
 }
 
 int
@@ -200,34 +200,37 @@ mas_init_pid( mas_options_t * popts, int indx, const char *shash_name )
       MAS_LOG( "Test 7" );
       /* HMSG( "(%d)PIDPATH 2c : %s", r, pidpath ); */
     }
-    HMSG( "(%d)PIDPATH 1a : %s", r, pidpath );
     if ( r >= 0 )
     {
-      char buf[64];
-      ssize_t lb;
-
       ctrl.pidfd[indx] = r;
       IEVAL( r, lockf( ctrl.pidfd[indx], F_TLOCK, 0 ) );
       HMSG( "(%d)PIDLCK : %s", r, pidpath );
-      lb = snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
-      IEVAL( r, write( ctrl.pidfd[indx], buf, lb ) );
-      WMSG( "PIDWRT: %d pid:%u", r, ctrl.threads.n.main.pid );
       if ( r < 0 )
       {
-        r = 0;
-        mas_close( ctrl.pidfd[indx] );
-        ctrl.pidfd[indx] = -1;
+        if ( ctrl.pidfd[indx] >= 0 )
+          mas_close( ctrl.pidfd[indx] );
+        ctrl.pidfd[indx] = r;
       }
       else
+      {
         ctrl.pidfilesv.c = mas_add_argv_arg( ctrl.pidfilesv.c, &ctrl.pidfilesv.v, pidpath );
+        {
+          ssize_t lb;
+          char buf[64];
+
+          lb = snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
+          IEVAL( r, write( ctrl.pidfd[indx], buf, lb ) );
+          WMSG( "PIDWRT: %d pid:%u", r, ctrl.threads.n.main.pid );
+        }
+      }
     }
-    HMSG( "(%d)PIDPATH 1b : %s", r, pidpath );
     mas_free( pidpath );
   }
   else
   {
     IEVAL( r, -1 );
   }
+  HMSG( "(%d)INIT PID", r );
   return r;
 }
 
@@ -263,15 +266,17 @@ mas_init_pids( mas_options_t * popts, const char **message )
     }
     if ( indx >= 0 )
     {
-      IEVAL( r, *shash_namebuf ? mas_init_pid( popts, indx, shash_namebuf ) : -1 );
+      IEVAL( r, ( *shash_namebuf ? mas_init_pid( popts, indx, shash_namebuf ) : -1 ) );
+      HMSG( "(%d) INIT PID done", r );
     }
     mas_free( shash_namebuf );
   }
   MAS_LOG( "(%d) init pids done", r );
 
+  HMSG( "(%d) INIT PIDs done", r );
   if ( message )
     *message = __func__;
-  return r;
+  return r < 0 ? r : 0;
 }
 
 /*
@@ -389,7 +394,7 @@ mas_init_daemon( mas_options_t * popts, const char **message )
       ctrl.threads.n.daemon.pid = pid_daemon;
       HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", pid_daemon, getpid(  ), getppid(  ) );
       ctrl.is_parent = 1;
-      r = -71;
+      r = 7777;
     }
   }
   else
