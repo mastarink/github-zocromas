@@ -69,6 +69,9 @@ typedef struct mas_thnames_s
   char *listenin;
   char *listenw;
   char *listent;
+  char *listenm;
+  char *listen_close;
+  char *listen_exit;
 } mas_thnames_t;
 
 struct mas_options_s

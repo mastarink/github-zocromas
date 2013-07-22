@@ -136,6 +136,30 @@ mas_opts_destroy( mas_options_t * popts )
     if ( popts->thname.daemon_masterthx )
       mas_free( popts->thname.daemon_masterthx );
     popts->thname.daemon_masterthx = NULL;
+
+    if ( popts->thname.listenw )
+      mas_free( popts->thname.listenw );
+    popts->thname.listenw = NULL;
+
+    if ( popts->thname.listenin )
+      mas_free( popts->thname.listenin );
+    popts->thname.listenin = NULL;
+
+    if ( popts->thname.listent )
+      mas_free( popts->thname.listent );
+    popts->thname.listent = NULL;
+
+    if ( popts->thname.listenm )
+      mas_free( popts->thname.listenm );
+    popts->thname.listenm = NULL;
+
+    if ( popts->thname.listen_close )
+      mas_free( popts->thname.listen_close );
+    popts->thname.listen_close = NULL;
+
+    if ( popts->thname.listen_exit )
+      mas_free( popts->thname.listen_exit );
+    popts->thname.listen_exit = NULL;
   }
   if ( popts->configfilename )
     mas_free( popts->configfilename );

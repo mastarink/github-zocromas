@@ -96,7 +96,8 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   MAS_LOG( "waiting client" );
   if ( plcontrol )
   {
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listenw /* "zocListenW" */  ) );
+    if ( plcontrol->popts->thname.listenw )
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listenw /* "zocListenW" */  ) );
 
     /* if ( plcontrol->h.pchannel->opened )    */
     /* {                                       */
@@ -112,7 +113,8 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       MAS_LOG( "(%d) opened channel ========", r );
       OMSG( "INCOMING CONNECTION (%d)", ro );
     }
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listenin /* "zocListenIn" */  ) );
+    if ( plcontrol->popts->thname.listenin )
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listenin /* "zocListenIn" */  ) );
     {
       struct timeval td;
 
@@ -142,7 +144,8 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     }
     else
     {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listent /* "zocListenT" */  ) );
+      if ( plcontrol->popts->thname.listent )
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listent /* "zocListenT" */  ) );
 
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
       plcontrol->h.status = MAS_STATUS_START;

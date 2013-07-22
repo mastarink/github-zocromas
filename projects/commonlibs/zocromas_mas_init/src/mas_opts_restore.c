@@ -147,6 +147,24 @@ mas_option_parse_t opt_table[] = {
   {.name = "thname.daemon_masterthx",.type = MAS_OPT_TYPE_PSTR,.offset =
    offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, daemon_masterthx ),.dv = "zocDaeMasterTHX"}
   ,
+  {.name = "thname.listenw",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listenw ),.dv = "zocListenW"}
+  ,
+  {.name = "thname.listenin",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listenin ),.dv = "zocListenIn"}
+  ,
+  {.name = "thname.listent",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listent ),.dv = "zocListenT"}
+  ,
+  {.name = "thname.listenm",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listenm ),.dv = "zocListenM"}
+  ,
+  {.name = "thname.listen_close",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listen_close ),.dv = "zocListenClo"}
+  ,
+  {.name = "thname.listen_exit",.type = MAS_OPT_TYPE_PSTR,.offset =
+   offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listen_exit ),.dv = "zocListenXit"}
+  ,
   {.name = "msgfilename",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, msgfilename )}
   ,
   {.name = "restart_sleep",.type = MAS_OPT_TYPE_DOUBLE,.offset = offsetof( mas_options_t, restart_sleep )}
