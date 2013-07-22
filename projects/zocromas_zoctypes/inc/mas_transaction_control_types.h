@@ -61,12 +61,10 @@ struct mas_rcontrol_s
   struct mas_lcontrol_s *plcontrol;
 
   /* const struct mas_options_s *popts; */
-
   bin_type_t qbin;
   /* struct sockaddr_in addr; */
   /* mas_serv_addr_t serv; */
   /* int port;             */
-  /* mas_status_t status; */
   unsigned nc;
   unsigned xch_cnt;
   char *uuid;

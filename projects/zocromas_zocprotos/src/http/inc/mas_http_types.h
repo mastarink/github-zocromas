@@ -102,6 +102,8 @@ struct mas_http_s
   char *sversion;
   float fversion;
   unsigned long written;
+  signed long written_header;
+  signed long written_body;
   unsigned connection_keep_alive:1;
   unsigned connection_close:1;
 };

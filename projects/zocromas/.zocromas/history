@@ -295,4 +295,63 @@ server listener
 server
 bye
 server info
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+log on
+server log on
+?
+log
+logger
+set
+set log on
+server info
+set log on
+! ls
+! ls -l
+! pwd
+cd /tmp
+! pwd
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
+bye
+server info
 bye

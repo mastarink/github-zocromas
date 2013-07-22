@@ -27,15 +27,37 @@ typedef struct mas_string_setv_s
 typedef enum
 {
   MAS_STATUS_NONE,
+  /* status of process to run another */
   MAS_STATUS_START,
+  /* status of just launched process */
+  MAS_STATUS_BIRTH,
   MAS_STATUS_INIT,
+  /* start serving iteration */
+  MAS_STATUS_SERV_LOOP,
+  /* main loop just started */
   MAS_STATUS_OPEN,
-  MAS_STATUS_WAIT,
+  MAS_STATUS_NEED_DATA,
+  MAS_STATUS_OPENB,
+  /* protocol negotiation */
+  MAS_STATUS_PROTO,
+  /* processing */
   MAS_STATUS_WORK,
+  /* main loop to end */
   MAS_STATUS_CLOSE,
   MAS_STATUS_STOP,
   MAS_STATUS_END,
+  MAS_STATUS_DEATH,
 } mas_status_t;
+typedef enum
+{
+  MAS_SUBSTATUS_NONE,
+  MAS_SUBSTATUS_INIT,
+  MAS_SUBSTATUS_PARSE,
+  MAS_SUBSTATUS_MAKE,
+  MAS_SUBSTATUS_MAKEA,
+  MAS_SUBSTATUS_END,
+} mas_substatus_t;
+
 
 struct mas_stamp_s
 {
@@ -81,6 +103,10 @@ typedef struct mas_ocontrol_s
   struct mas_channel_s *pchannel;
   mas_status_t status;
   struct timeval activity_time;
+  mas_substatus_t substatus;
+  unsigned subpoint;
+  unsigned long subresult1;
+  unsigned long subresult2;
 } mas_ocontrol_t;
 
 // *INDENT-OFF*

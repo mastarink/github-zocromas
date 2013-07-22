@@ -1,7 +1,6 @@
 
 find mas_autoobject.c
 sfind mas_autoobject.h
-sfind mas_autoobject_types.h
 
 tab sfind mas_autoobject_object.c
 sfind mas_autoobject_object.h

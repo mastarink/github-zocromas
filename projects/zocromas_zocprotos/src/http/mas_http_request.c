@@ -119,6 +119,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
   char *pstring;
   const char *cstring;
 
+  prcontrol->h.substatus = MAS_SUBSTATUS_PARSE;
   MAS_LOG( "http parse rq 1" );
 #ifdef MAS_HTTP_MULTIPART
   {

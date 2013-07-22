@@ -91,7 +91,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
   int r = 0, ro = 0, rn = 0;
   mas_rcontrol_t *prcontrol = NULL;
 
-  plcontrol->h.status = MAS_STATUS_WAIT;
+  plcontrol->h.status = MAS_STATUS_SERV_LOOP;
   OMSG( "WAITING CLIENT" );
   MAS_LOG( "waiting client" );
   if ( plcontrol )
@@ -106,6 +106,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
     {
       plcontrol->h.pchannel->cloned = 0;
       IEVAL( r, mas_channel_open( plcontrol->h.pchannel ) );
+      plcontrol->h.status = MAS_STATUS_OPEN;
       ro = r;
 /* ?????? fcntl(fd, F_SETFD, FD_CLOEXEC) */
       MAS_LOG( "(%d) opened channel ========", r );
@@ -144,7 +145,7 @@ mas_listener_wait_client( mas_lcontrol_t * plcontrol )
       IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listent /* "zocListenT" */  ) );
 
       /* plcontrol->h.status = MAS_STATUS_OPEN; */
-      plcontrol->h.status = MAS_STATUS_WORK;
+      plcontrol->h.status = MAS_STATUS_START;
 #ifdef MAS_TR_PERSIST
       r = mas_transaction_start( plcontrol, 0 /* persistent tr. */  );
 #else

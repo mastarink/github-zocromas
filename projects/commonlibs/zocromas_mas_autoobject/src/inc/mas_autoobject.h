@@ -13,6 +13,7 @@ FILE *mas_autoobject_file( mas_autoobject_t * obj );
 
 int mas_autoobject_open( mas_autoobject_t * obj, const char *docroot, const char *name );
 int mas_autoobject_reopen( mas_autoobject_t * obj );
+int mas_autoobject_is_regular( mas_autoobject_t * obj );
 int mas_autoobject_qopen( mas_autoobject_t * obj, const char *docroot, const char *name );
 
 /* int mas_autoobject_qopen_data( mas_autoobject_t * obj ); */

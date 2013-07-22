@@ -95,7 +95,8 @@ mas_http_make_out_header( mas_http_t * http, const char *name, const char *fmt, 
 mas_varvec_t *
 mas_http_make_data_headers( mas_varvec_t * outdata, mas_autoobject_t * ao )
 {
-  outdata = mas_varvec_search_variablef( outdata, NULL, "Content-Length", NULL, "%d", mas_autoobject_size( ao ) );
+  outdata = mas_varvec_search_variablef( outdata, NULL, "Content-Length", NULL, "%d",
+                                         mas_autoobject_is_regular( ao ) ? mas_autoobject_size( ao ) : 0 );
   {
     char *content_type;
 
@@ -247,6 +248,8 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
       data = mas_fileinfo_data( prcontrol->plcontrol->popts, http->reply_content );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
 #endif
+    prcontrol->h.substatus = MAS_SUBSTATUS_MAKEA;
+    prcontrol->h.subpoint = __LINE__;
 
 /* moved to fileinfo */
     /* if ( http )                                     */
@@ -257,17 +260,21 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     {
       if ( http && http->status_code == MAS_HTTP_CODE_NONE )
       {
+        ssize_t test_size = -1;
+
         MAS_LOG( "to make http status" );
 #ifdef MAS_HTTP_USE_FILEINFO
-        if ( http->reply_content && mas_unidata_data_size( http->reply_content->udata ) )
+        if ( http->reply_content && ( test_size = mas_unidata_data_size( http->reply_content->udata ) ) )
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
-        if ( http->reply_content && mas_autoobject_size( http->reply_content ) )
+        if ( http->reply_content && mas_autoobject_is_regular( http->reply_content )
+             && ( test_size = mas_autoobject_size( http->reply_content ) ) > 0 )
 #else
         if ( 0 )
 #endif
           http->status_code = MAS_HTTP_CODE_OK;
         else
           http->status_code = MAS_HTTP_CODE_NOT_FOUND;
+        prcontrol->h.subpoint = __LINE__;
       }
       if ( http )
       {
@@ -275,24 +282,30 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
       }
       HMSG( "HTTP HTTP" );
       MAS_LOG( "to make std headers" );
+      prcontrol->h.subpoint = __LINE__;
       if ( http )
         http = mas_http_make_out_std_headers( prcontrol, http );
+      prcontrol->h.subpoint = __LINE__;
       /* CORK */
       /* mas_channel_cork( http->prcontrol->h.pchannel, 1 ); */
       if ( http )
       {
+        prcontrol->h.subpoint = __LINE__;
         MAS_LOG( "to write header" );
         http = mas_proto_http_write_pairs( http, "header" );
+        http->written_header = http->written;
         MAS_LOG( "written %lu", http ? http->written : 0 );
       }
+      prcontrol->h.subpoint = __LINE__;
       if ( http && http->imethod == MAS_HTTP_METHOD_GET )
       {
         size_t datasz;
 
+        prcontrol->h.subpoint = __LINE__;
 #ifdef MAS_HTTP_USE_FILEINFO
         datasz = mas_fileinfo_data_size( http->reply_content );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
-        datasz = mas_autoobject_size( http->reply_content );
+        datasz = mas_autoobject_is_regular( http->reply_content ) ? mas_autoobject_size( http->reply_content ) : 0;
 #else
         datasz = 0;
 #endif
@@ -302,12 +315,18 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
         /* http = mas_proto_http_write_values( http, "body" ); */
         /* mas_transaction_write( prcontrol, _mas_fileinfo_data( fileinfo ), mas_fileinfo_data_size( fileinfo ) ); */
 
+        prcontrol->h.subpoint = __LINE__;
+        http->written_body = 0;
 #ifdef MAS_HTTP_USE_FILEINFO
         http = mas_proto_http_write( http, data->data, datasz );
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
-        http->written += mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
+        if ( datasz > 0 )
+          http->written_body = mas_autoobject_cat( mas_channel_fd( http->prcontrol->h.pchannel ), http->reply_content, 0 );
+        if ( http->written_body >= 0 )
+          http->written += http->written_body;
 #else
 #endif
+        prcontrol->h.subpoint = __LINE__;
 
 /* ????????? */
         /* pthread_yield(  ); */
@@ -320,6 +339,7 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
       /* unCORK */
     }
   }
+  prcontrol->h.subpoint = __LINE__;
   /* to close connection */
   return http;
 }

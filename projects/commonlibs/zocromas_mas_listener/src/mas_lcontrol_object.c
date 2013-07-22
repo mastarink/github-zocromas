@@ -166,6 +166,7 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const mas_options_t * popts, cons
 {
   unsigned hport;
 
+  plcontrol->h.status = MAS_STATUS_INIT;
   plcontrol->popts = popts;
   plcontrol->hostlen = mas_parse_host_port( host, &hport, port );
   plcontrol->host = mas_strndup( host, plcontrol->hostlen );
@@ -176,7 +177,6 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const mas_options_t * popts, cons
   pthread_mutex_init( &plcontrol->autoset_mutex, NULL );
   pthread_rwlock_init( &plcontrol->transaction_rwlock, NULL );
   pthread_rwlock_init( &plcontrol->variables_rwlock, NULL );
-  plcontrol->h.status = MAS_STATUS_NONE;
 
   plcontrol->h.pchannel = mas_channel_create(  );
   mas_channel_init( plcontrol->h.pchannel, ctrl.is_server, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );

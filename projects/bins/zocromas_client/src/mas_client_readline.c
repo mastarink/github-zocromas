@@ -59,8 +59,7 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 
   while ( !mas_readline_buffer )
   {
-
-    ctrl.status = MAS_STATUS_WAIT;
+    ctrl.status = MAS_STATUS_SERV_LOOP;
     /* mas_readline_buffer = readline( " % \x1b[K" ); */
     /* rl_catch_signals = 0; */
     mas_readline_buffer = readline( prompt );

@@ -169,6 +169,12 @@ mas_autoobject_qopen( mas_autoobject_t * obj, const char *docroot, const char *n
 }
 
 int
+mas_autoobject_is_regular( mas_autoobject_t * obj )
+{
+  return obj ? ( S_ISREG( obj->mode ) ) : 0;
+}
+
+int
 mas_autoobject_reopen( mas_autoobject_t * obj )
 {
   if ( obj && !obj->handler.v )
@@ -194,15 +200,18 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
         if ( obj->docroot )
           fname = mas_strdup( obj->docroot );
         fname = mas_strcat_x( fname, obj->name );
+        /* HMSG( "AO name: %s", fname ); */
         obj->handler.i = mas_open( fname, O_RDONLY );
         /* HMSG( "OPEN (%d) %s", obj->handler.i, fname ); */
         mas_free( fname );
       }
       obj->stat_cnt++;
       rst = fstat( mas_autoobject_fd( obj ), &st );
-      obj->inode = st.st_ino;
-      obj->time = st.st_mtime;
-
+      {
+        obj->mode = st.st_mode;
+        obj->inode = st.st_ino;
+        obj->time = st.st_mtime;
+      }
       break;
     case MAS_IACCESS_FILE:
       obj->reopen_cnt++;
@@ -224,7 +233,10 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
       break;
     }
     if ( rst >= 0 )
+    {
       obj->size = st.st_size;
+      /* HMSG( "AO size: %ld", obj->size ); */
+    }
   }
   else
   {

@@ -45,6 +45,7 @@ typedef struct mas_autoobject_s
 
   mas_content_type_t icontent_type;
   ino_t inode;
+  mode_t mode;
   time_t time;
   char *gtime;
   char *etag;

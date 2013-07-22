@@ -71,6 +71,7 @@ _mas_transaction_xch_eval( mas_rcontrol_t * prcontrol )
 
   if ( prcontrol->proto_desc->func )
   {
+    prcontrol->h.status = MAS_STATUS_WORK;
     r = ( prcontrol->proto_desc->func ) ( prcontrol, NULL /* data */  );
     if ( !( r > 0 ) )
       prcontrol->proto_desc = NULL;
@@ -83,7 +84,7 @@ _mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
   int r = 0;
 
-  prcontrol->h.status = MAS_STATUS_WORK;
+  prcontrol->h.status = MAS_STATUS_PROTO;
   if ( prcontrol->proto_desc )
     r = _mas_transaction_xch_eval( prcontrol );
   else
@@ -109,6 +110,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
   int r = -1;
 
+  prcontrol->h.status = MAS_STATUS_OPEN;
   /* int buffer_unlink = 0; */
   if ( !ctrl.protos_num )
   {
@@ -126,7 +128,9 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       const void *buffer_void;
 
       /* r = mas_channel_read_some_new( prcontrol->h.pchannel ); */
+      prcontrol->h.status = MAS_STATUS_NEED_DATA;
       buffer_void = mas_channel_buffer( prcontrol->h.pchannel, &sz );
+      prcontrol->h.status = MAS_STATUS_OPENB;
       MAS_LOG( "to read rq (read some:%lu)", sz );
       {
         char *dump;
@@ -160,6 +164,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     tMSG( "end transaction xch" );
     HMSG( "- TRANS EXCHANGE" );
   }
+  prcontrol->h.status = MAS_STATUS_CLOSE;
   return r;
 }
 
@@ -176,6 +181,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
 
   if ( prcontrol )
   {
+    prcontrol->h.status = MAS_STATUS_INIT;
     if ( !prcontrol->h.pchannel )
     {
       /* rMSG( "no open channel in tr." ); */
@@ -187,19 +193,14 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       /* rMSG( "start transaction" ); */
       MAS_LOG( "starting transaction 2" );
       ctrl.in_pipe++;
-      /* rMSG( MAS_SEPARATION_LINE ); */
-      prcontrol->h.status = MAS_STATUS_INIT;
       prcontrol->connection_keep_alive = 1;
       MAS_LOG( "tr.KA => %u", prcontrol->connection_keep_alive );
       while ( r >= 0 && prcontrol && prcontrol->connection_keep_alive && !prcontrol->stop && prcontrol->h.pchannel
               && prcontrol->h.pchannel->opened && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
+        prcontrol->h.status = MAS_STATUS_SERV_LOOP;
         rMSG( "+ keep alive loop" );
         MAS_LOG( "starting transaction keep-alive block" );
-        prcontrol->h.status = MAS_STATUS_WAIT;
-        /* rMSG( "waiting cl.data; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
-        /* rMSG( "connection_keep_alive %d", prcontrol->connection_keep_alive ); */
-        prcontrol->h.status = MAS_STATUS_OPEN;
         prcontrol->qbin = MSG_BIN_NONE;
         r = mas_transaction_xch( prcontrol );
         /* if ( prcontrol->stop_listeners ) */
@@ -212,7 +213,6 @@ mas_transaction( mas_rcontrol_t * prcontrol )
           ctrl.xch_cnt++;
           mas_pthread_mutex_unlock( &ctrl.thglob.cnttr3_mutex );
         }
-        prcontrol->h.status = MAS_STATUS_CLOSE;
         /* rMSG( "end handling (r:%d) i/s:%d; i/c:%d", r, ctrl.keep_listening, ctrl.in_client ); */
         MAS_LOG( "end tr. keep-alive (%d) block, %s opened:%d; bufeof:%d;", prcontrol->connection_keep_alive,
                  prcontrol->proto_desc ? prcontrol->proto_desc->name : "?", prcontrol->h.pchannel->opened,
@@ -226,11 +226,11 @@ mas_transaction( mas_rcontrol_t * prcontrol )
     }
     if ( prcontrol->connection_keep_alive )
     {
-      MAS_LOG("tr.keeping alive");
+      MAS_LOG( "tr.keeping alive" );
     }
     else
     {
-      MAS_LOG("tr.closing");
+      MAS_LOG( "tr.closing" );
       mas_channel_close( prcontrol->h.pchannel );
     }
   }
@@ -265,114 +265,117 @@ mas_transaction_th( void *trcontrol )
     /* mas_free( porc ); */
     /* porc = NULL; */
   }
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransTh" ) );
-
-  MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
-  /* struct sched_param sched;                                               */
-  /*                                                                         */
-  /* sched.sched_priority = 10;                                              */
-  /* rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_IDLE, &sched ); */
-
-  /* {                                                                       */
-  /*   int rs;                                                               */
-  /*   struct sched_param sched;                                             */
-  /*                                                                         */
-  /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
-  /* }                                                                       */
-  prcontrol->start_time = mas_double_time(  );
-  MAS_LOG( "tr. th. started (%20.5f)", prcontrol->start_time );
-  if ( prcontrol && prcontrol->plcontrol )
+  if ( prcontrol )
   {
-    prcontrol->h.tid = mas_gettid(  );
-    mas_in_thread( MAS_THREAD_TRANSACTION, prcontrol->plcontrol, prcontrol );
-#ifdef MAS_TR_PERSIST
-    do
-#endif
+    prcontrol->h.status = MAS_STATUS_BIRTH;
+    prcontrol->start_time = mas_double_time(  );
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransTh" ) );
+
+    MAS_LOG( "tr. th. started [%lx]", mas_pthread_self(  ) );
+    /* struct sched_param sched;                                               */
+    /*                                                                         */
+    /* sched.sched_priority = 10;                                              */
+    /* rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_IDLE, &sched ); */
+
+    /* {                                                                       */
+    /*   int rs;                                                               */
+    /*   struct sched_param sched;                                             */
+    /*                                                                         */
+    /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
+    /* }                                                                       */
+    MAS_LOG( "tr. th. started (%20.5f)", prcontrol->start_time );
+    if ( prcontrol->plcontrol )
     {
-      MAS_LOG( "start tr.th" );
-      /* rMSG( "start tr.th R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, prcontrol->plcontrol->h.serial, */
-      /*       prcontrol->plcontrol->h.status );                                                                          */
-      prcontrol->h.status = MAS_STATUS_START;
-      /* Wait for prcontrol->h.pchannel if pre-launched thread */
-      MAS_LOG( "start tr.th 1" );
-      if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) )
-      {
-        /* rMSG( "COND 1" ); */
-        MAS_LOG( "cond to lock" );
-        pthread_mutex_lock( &prcontrol->waitchan_mutex );
-        /* rMSG( "COND 2" ); */
-        while ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) && r != ETIMEDOUT && !prcontrol->complete )
-        {
-          /* rMSG( "COND 3" ); */
-          prcontrol->waitchan_waiting = 1;
-          r = pthread_cond_wait( &prcontrol->waitchan_cond, &prcontrol->waitchan_mutex );
-          prcontrol->waitchan_waiting = 0;
-          MAS_LOG( "cond came" );
-          /* rMSG( "COND 4" ); */
-        }
-        if ( r == ETIMEDOUT )
-        {
-          /* timeout occurred */
-        }
-        else
-        {
-          /* rMSG( "COND 5" ); */
-          /* ........ */
-        }
-        pthread_mutex_unlock( &prcontrol->waitchan_mutex );
-        MAS_LOG( "cond came - processing" );
-      }
-      {
-        unsigned long nclients;
-
-        MAS_LOG( "start tr.th 2" );
-        mas_pthread_mutex_lock( &ctrl.thglob.cnttr2_mutex );
-        ctrl.clients_came++;
-
-        nclients = ctrl.clients_came - ctrl.clients_gone;
-        if ( nclients > ctrl.maxclients )
-          ctrl.maxclients = nclients;
-
-        prcontrol->plcontrol->clients_came++;
-        mas_pthread_mutex_unlock( &ctrl.thglob.cnttr2_mutex );
-        MAS_LOG( "start tr.th 3" );
-      }
-      {
-        /* double tstart, tend, tdiff;   */
-        /*                               */
-        /* tstart = mas_double_time(  ); */
-        MAS_LOG( "tr. push" );
-        pthread_cleanup_push( mas_transaction_cleanup, prcontrol );
-        MAS_LOG( "tr. itself" );
-        rp = mas_transaction( prcontrol );
-        pthread_cleanup_pop( 1 );
-        /* tend = mas_double_time(  );   */
-        /* tdiff = tend - tstart;        */
-        /* if ( ctrl.maxtrtime < tdiff ) */
-        /*   ctrl.maxtrtime = tdiff;     */
-      }
-      ctrl.clients_gone2++;
-
-      /* rMSG( "end r/th; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
-      MAS_LOG( "end r/th; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client );
-    }
+      prcontrol->h.tid = mas_gettid(  );
+      mas_in_thread( MAS_THREAD_TRANSACTION, prcontrol->plcontrol, prcontrol );
 #ifdef MAS_TR_PERSIST
-    while ( prcontrol->persistent_transaction );
+      do
 #endif
-    prcontrol->complete = 1;
-    /* NO?! : mas_rcontrol_delete( prcontrol, prcontrol->plcontrol ); */
+      {
+        MAS_LOG( "start tr.th" );
+        /* rMSG( "start tr.th R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, prcontrol->plcontrol->h.serial, */
+        /*       prcontrol->plcontrol->h.status );                                                                          */
+        /* Wait for prcontrol->h.pchannel if pre-launched thread */
+        MAS_LOG( "start tr.th 1" );
+        if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) )
+        {
+          /* rMSG( "COND 1" ); */
+          MAS_LOG( "cond to lock" );
+          pthread_mutex_lock( &prcontrol->waitchan_mutex );
+          /* rMSG( "COND 2" ); */
+          while ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) && r != ETIMEDOUT && !prcontrol->complete )
+          {
+            /* rMSG( "COND 3" ); */
+            prcontrol->waitchan_waiting = 1;
+            r = pthread_cond_wait( &prcontrol->waitchan_cond, &prcontrol->waitchan_mutex );
+            prcontrol->waitchan_waiting = 0;
+            MAS_LOG( "cond came" );
+            /* rMSG( "COND 4" ); */
+          }
+          if ( r == ETIMEDOUT )
+          {
+            /* timeout occurred */
+          }
+          else
+          {
+            /* rMSG( "COND 5" ); */
+            /* ........ */
+          }
+          pthread_mutex_unlock( &prcontrol->waitchan_mutex );
+          MAS_LOG( "cond came - processing" );
+        }
+        {
+          unsigned long nclients;
 
-    /* rMSG( MAS_SEPARATION_LINE ); */
-    /* ??? mas_lcontrol_cleaning_transactions( ... ); */
+          MAS_LOG( "start tr.th 2" );
+          mas_pthread_mutex_lock( &ctrl.thglob.cnttr2_mutex );
+          ctrl.clients_came++;
+
+          nclients = ctrl.clients_came - ctrl.clients_gone;
+          if ( nclients > ctrl.maxclients )
+            ctrl.maxclients = nclients;
+
+          prcontrol->plcontrol->clients_came++;
+          mas_pthread_mutex_unlock( &ctrl.thglob.cnttr2_mutex );
+          MAS_LOG( "start tr.th 3" );
+        }
+        {
+          /* double tstart, tend, tdiff;   */
+          /*                               */
+          /* tstart = mas_double_time(  ); */
+          MAS_LOG( "tr. push" );
+          pthread_cleanup_push( mas_transaction_cleanup, prcontrol );
+          MAS_LOG( "tr. itself" );
+          rp = mas_transaction( prcontrol );
+          pthread_cleanup_pop( 1 );
+          /* tend = mas_double_time(  );   */
+          /* tdiff = tend - tstart;        */
+          /* if ( ctrl.maxtrtime < tdiff ) */
+          /*   ctrl.maxtrtime = tdiff;     */
+        }
+        ctrl.clients_gone2++;
+
+        /* rMSG( "end r/th; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
+        MAS_LOG( "end r/th; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client );
+      }
+#ifdef MAS_TR_PERSIST
+      while ( prcontrol->persistent_transaction );
+#endif
+      prcontrol->complete = 1;
+      /* NO?! : mas_rcontrol_delete( prcontrol, prcontrol->plcontrol ); */
+
+      /* rMSG( MAS_SEPARATION_LINE ); */
+      /* ??? mas_lcontrol_cleaning_transactions( ... ); */
+    }
+    MAS_LOG( "tr. th. end" );
+
+    if ( 1 )
+    {
+      mas_rcontrol_delete( prcontrol, 1 );
+    }
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransThXit" ) );
   }
-  MAS_LOG( "tr. th. end" );
-
-  if ( 1 )
-  {
-    mas_rcontrol_delete( prcontrol, 1 );
-  }
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransThXit" ) );
-
+  prcontrol->h.status = MAS_STATUS_DEATH;
   mas_pthread_exit( NULL );
   return rp;
 }
@@ -396,7 +399,7 @@ mas_transaction_start( mas_lcontrol_t * plcontrol )
 
     /* wMSG( "cl. come in" ); */
     MAS_LOG( "client came prc:%p", ( void * ) plcontrol );
-    plcontrol->h.status = MAS_STATUS_WORK;
+    plcontrol->h.status = MAS_STATUS_START;
     {
       mas_rcontrol_t *prcontrol = NULL;
 

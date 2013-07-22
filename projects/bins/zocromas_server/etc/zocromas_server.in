@@ -8,7 +8,8 @@ env_hostname=MAS_ZOCROMAS_DEFHOST
 read_user_opts=0
 read_user_opts_plus=0
 
-dir.post=/var/spool/zocromas_server
+dir.chroot=/var/spool/zocromas_server/root
+dir.post=/var/spool/zocromas_server/post
 dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log/
 log=0
 max_config_backup=5

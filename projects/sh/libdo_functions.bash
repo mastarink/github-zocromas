@@ -21,12 +21,14 @@ function mas_enabled_doprj ()
 
 function doprj ()
 {
-  local prj act shfile shfun
+  local prj act shfile shfun wprjname done
   local list
   local cnt
   cnt=0
+  done=''
   setup_dirs || return 1
   if [[ "$MAS_SH_VERBOSE" ]] ; then echo "$prjname $act ..." >&2 ; fi
+  wprjname=`printf '%-30s' $prjname`
   setup_vers || return 1
   if [[ "$1" == 'full' ]] ; then
     list='autoreconf configure make install'
@@ -68,38 +70,49 @@ function doprj ()
     # echo "$act at $dir" >&2
       if ! mas_enabled_doprj $act ; then
 #	echo "SKIPped ${act}:${mas_name}-${mas_vers}" >&2
-        echo -e "$prjname action $act \t SKIPped" >&2
+        echo -e "\t$wprjname\t(-$act)\t -" >&2
       elif [[ "$act" == 'make'       ]] ; then
 	make_m || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'autoreconf' ]] ; then
 	autoreconf_m || return 1
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'configure'  ]] ; then
 	configure_m || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'testdist'   ]] ; then
 	testdist_m || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'install'    ]] ; then
 	make_m && make_target install || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'uninstall'  ]] ; then
 	make_target uninstall || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'ebuild'     ]] ; then
 	ebuild_m update || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$act" == 'virgin-clean'     ]] ; then
 	virgin_clean || return 1
+	done=yes
         cnt=$(( $cnt + 1 ))
       elif [[ "$shfun" ]] && type -t $shfun &>/dev/null ; then
 #	echo "shfun:`type $shfun`"
         $shfun
+	done=yes
+        cnt=$(( $cnt + 1 ))
       elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && . $shfile ; then
-        :
+	done=yes
+        cnt=$(( $cnt + 1 ))
       elif [[ -L "sh" ]] && [[ -d sh ]] && [[ -x $shfile ]] && eval $shfile ; then
-        :
+	done=yes
+        cnt=$(( $cnt + 1 ))
       else
 	echo "$LINENO FAIL action:$act prj:$prj mas_name:$mas_name ($shfile)" >&2
 	return 1
@@ -108,22 +121,22 @@ function doprj ()
       echo "${nn}.	>>>> skipping act [$act]" >&2
       return 1
     fi
-    echo -e "$prjname action $act \t done" >&2
+    if [[ "$done" ]] ; then echo -e "${MAS_PROJECT_POS:-}.\t${wprjname}\t  ${act}\tdone\t${mas_name}-${mas_vers}" >&2 ; fi
   done
 # echo "DONE $cnt actions for ${mas_name}-${mas_vers}" >&2
   return 0
 }
 function doall ()
 {  
-  local prj nn doit dir
+  local prj doit dir
+  local cntall
   if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ "$projects_list" ]] && [[ -d "$projectsdir" ]] ; then
-    nn=0
+    cntall=0
     if ! [[ "$MAS_DO_FROM_PROJECT" ]] ; then
       doit='yes'
     fi
-    MAS_PROJECT_POS=0
     for prj in $projects_list ; do
-      MAS_PROJECT_POS=$(( $MAS_PROJECT_POS + 1 ))
+      MAS_PROJECT_POS=$cntall
       unset prj_configure_opts
       if [[ "$MAS_DO_FROM_PROJECT" ]] && [[ "$prj" =~ $MAS_DO_FROM_PROJECT ]] ; then
         doit='yes'
@@ -135,11 +148,11 @@ function doall ()
 	if [[ "$prj" ]] && [[ -d "$prj" ]] ; then
 	  cd "$prj"                 || return 1
 	  doprj $@ || return 1
+          cntall=$(( $cntall + 1 ))
 	else
-	  echo "${nn}.	>>>> skipping dir [$prj]" >&2
+	  echo "${cntall}.	>>>> skipping dir [$prj]" >&2
 	fi
       fi
-      nn=$(( $nn + 1 ))
     done
   else
     return 1

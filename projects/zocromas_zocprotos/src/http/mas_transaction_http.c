@@ -148,9 +148,12 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
 {
   int r = -1;
 
+  prcontrol->h.substatus = MAS_SUBSTATUS_MAKE;
+  prcontrol->h.subpoint = __LINE__;
   MAS_LOG( "http: to make docroot" );
   if ( http )
     mas_http_make_docroot( prcontrol, http );
+  prcontrol->h.subpoint = __LINE__;
   if ( http )
   {
     HMSG( "HTTP make URL %s", http->URI );
@@ -159,6 +162,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
 #ifdef MAS_HTTP_USE_FILEINFO
       if ( 0 == strncmp( http->URI, "/xcromas/", 9 ) )
       {
+        prcontrol->h.subpoint = __LINE__;
         HMSG( "HTTP make /xcromas" );
         MAS_LOG( "HTTP make /xcromas" );
         http->reply_content =
@@ -171,6 +175,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
       else
 #endif
       {
+        prcontrol->h.subpoint = __LINE__;
         MAS_LOG( "HTTP make at docroot" );
 
         /* TODO : sendfile ; replace fileinfo  with autoobject lib */
@@ -186,6 +191,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
       }
     }
   }
+  prcontrol->h.subpoint = __LINE__;
   MAS_LOG( "http: protocol-specific" );
   if ( http )
     switch ( http->imethod )
@@ -214,6 +220,7 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
       MAS_LOG( "http: get/head/post" );
       break;
     }
+  prcontrol->h.subpoint = __LINE__;
 
 
 
@@ -229,11 +236,16 @@ mas_proto_make( mas_rcontrol_t * prcontrol, mas_http_t * http )
 
   if ( http )
     http = mas_http_reply( prcontrol, http );
+  prcontrol->h.substatus = MAS_SUBSTATUS_MAKE;
+  prcontrol->h.subpoint = __LINE__;
   HMSG( "WRITTEN %lu", http ? http->written : 0 );
   MAS_LOG( "WRITTEN %lu", http ? http->written : 0 );
   r = http ? 1 : 0;
   if ( http )
     mas_proto_http_delete_request( http );
+  prcontrol->h.subpoint = __LINE__;
+  prcontrol->h.subresult1 = http->written_header;
+  prcontrol->h.subresult2 = http->written_body;
   return r;
 }
 
@@ -263,6 +275,7 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const void *place_holder )
   /* MAS_LOG( "http?: to create rq :(%lu) %s", strlen( string ), string ); */
   MAS_LOG( "http?: to create rq" );
   http = mas_proto_http_create_request( prcontrol );
+  prcontrol->h.substatus = MAS_SUBSTATUS_INIT;
   MAS_LOG( "http?: to parse rq" );
   if ( http )
     http = mas_proto_http_parse_request( prcontrol, http );
@@ -271,5 +284,6 @@ mas_proto_main( mas_rcontrol_t * prcontrol, const void *place_holder )
   if ( http )
     r = mas_proto_make( prcontrol, http );
   HMSG( "HTTP r:%d", r );
+  prcontrol->h.substatus = MAS_SUBSTATUS_END;
   return r;
 }

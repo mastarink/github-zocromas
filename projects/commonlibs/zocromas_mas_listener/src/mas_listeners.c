@@ -87,7 +87,7 @@ mas_listeners_start( mas_options_t * popts )
       if ( r < 0 )
         break;
     }
-    ctrl.status = MAS_STATUS_WAIT;
+    ctrl.status = MAS_STATUS_OPEN;
   }
   return r;
 }
@@ -148,7 +148,7 @@ mas_listeners_wait( void )
     stopped += ( mas_listener_wait( plcontrol ) == 0 );
     mas_lcontrols_clean_list( 0 );
   }
-  ctrl.status = MAS_STATUS_STOP;
+  ctrl.status = MAS_STATUS_CLOSE;
   /* ??????????? */
   mas_lcontrols_clean_list( 0 );
 
