@@ -20,7 +20,9 @@ sfind distclean.sh
 sfind maiclean.sh
 sfind dinstall.sh
 sfind testdist.sh
-sfind make.sh
+
+tab sfind make.sh
+sfind cpp.sh
 
 tab sfind doprj.sh
 sfind doall.sh

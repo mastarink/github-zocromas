@@ -237,7 +237,8 @@ mas_listener( mas_lcontrol_t * plcontrol )
   {
     MAS_LOG( "listener next client ..." );
   }
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_close /* "zocListenClose" */  ) );
+  if ( plcontrol->popts->thname.listen_close )
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_close /* "zocListenClose" */  ) );
   plcontrol->h.status = MAS_STATUS_CLOSE;
   /* thMSG( "stopped listening r:%d", r ); */
   MAS_LOG( "exiting listening (stopped listening) r:%d", r );
@@ -253,7 +254,8 @@ mas_listener_th( void *tlcontrol )
   mas_lcontrol_t *plcontrol = NULL;
 
   plcontrol = ( mas_lcontrol_t * ) tlcontrol;
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listenm /*  "zocListen" */  ) );
+  if ( plcontrol->popts->thname.listenm )
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listenm /*  "zocListen" */  ) );
 
   /* {                                                                       */
   /*   int rs;                                                               */
@@ -310,7 +312,8 @@ mas_listener_th( void *tlcontrol )
   /* mas_lcontrols_delete( plcontrol );  ---> done at mas_listener_cleanup ?!?! */
 
   EMSG( "LISTENER STOP" );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_exit /* "zocListenXit" */ ) );
+  if ( plcontrol->popts->thname.listen_exit )
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_exit /* "zocListenXit" */  ) );
   mas_pthread_exit( NULL );
   return NULL;
 }
