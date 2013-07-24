@@ -34,6 +34,7 @@ sigusr1_han( int s )
 {
   GDMSG( "USR1" );
 }
+
 void
 sigusr2_han( int s )
 {
@@ -46,8 +47,9 @@ sigusr2_han( int s )
 
 
 int
-mas_init_sig( void )
+mas_init_sig( mas_options_t * popts, const char **message )
 {
+  HMSG("INIT SIG");
 #if 0
   signal( SIGPIPE, sigpipe_han );
   signal( SIGHUP, sighup_han );
@@ -118,6 +120,7 @@ mas_init_sig( void )
   /* sigaction( SIGHUP, SIG_DFL, NULL ); */
   /* sigaction( SIGTERM, SIG_DFL, NULL ); */
 #endif
+  HMSG("INIT SIG");
   return 0;
 }
 

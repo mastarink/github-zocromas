@@ -51,7 +51,7 @@ __attribute__ ( ( destructor ) )
 /*
  * */
 int
-mas_ctrl_init( mas_options_t * popts )
+mas_ctrl_init( mas_options_t * popts, const char **message )
 {
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.in_client = 0;
@@ -69,6 +69,9 @@ mas_ctrl_init( mas_options_t * popts )
   ctrl.ticker_mode = popts->ticker_mode;
   ctrl.redirect_std = !popts->noredirect_std;
   ctrl.close_std = !popts->noclose_std;
+  if ( message )
+    *message = __func__;
+
   return 0;
 }
 

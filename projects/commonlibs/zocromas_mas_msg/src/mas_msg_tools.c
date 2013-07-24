@@ -1324,7 +1324,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
 }
 
 static int
-mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt, va_list args )
+mas_verror( const char *func, int line, int merrno, int *perrno, int *psaveerrno, const char *fmt, va_list args )
 {
   int r = 0;
   mas_msg_type_t msgt = MAS_MSG_ERR;
@@ -1367,19 +1367,21 @@ mas_verror( const char *func, int line, int merrno, int *perrno, const char *fmt
     /* OR ???? : ctrl.fatal = 1; */
     break;
   }
+  if ( psaveerrno )
+    *psaveerrno = merrno;
   if ( perrno )
     *perrno = 0;
   return r;
 }
 
 int
-mas_error( const char *func, int line, int merrno, int *perrno, const char *fmt, ... )
+mas_error( const char *func, int line, int merrno, int *perrno, int *psaveerrno, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = mas_verror( func, line, merrno, perrno, fmt, args );
+  r = mas_verror( func, line, merrno, perrno, psaveerrno, fmt, args );
   va_end( args );
   return r;
 }
@@ -1396,7 +1398,7 @@ _mas_perr( const char *func, int line, int merrno, int *perrno )
     /* MAS_MSG_BIT(msg_tr) = 1; */
     errcnt++;
     se = strerror_r( merrno, errbuf, sizeof( errbuf ) );
-    mas_error( func, line, merrno, perrno, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT,
+    mas_error( func, line, merrno, perrno, NULL, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT,
                &ctrl ? ctrl.keep_listening : 0, &ctrl ? ctrl.fatal : 0 );
     if ( errcnt < 10 )
     {

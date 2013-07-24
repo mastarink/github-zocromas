@@ -64,14 +64,14 @@ test20130100( int argc, char *argv[], char *env[] )
     testprint( targc, targv );
     targc = mas_add_argv_args( targc, &targv, "asta maniana x y	-r \"  \" \"u v w\"", 0 );
 #ifdef MAS_TRACEMEM
-    /* print_memlist( stderr, FL ); */
+    /* print_memlist( FL, stderr ); */
 #endif
     testprint( targc, targv );
 
     fprintf( stderr, "\ntargc:%u; targv:%p\n", targc, ( void * ) targv );
     mas_del_argv( targc, targv, 0 );
 #ifdef MAS_TRACEMEM
-    print_memlist( stderr, __func__, __LINE__ );
+    print_memlist( __func__, __LINE__, stderr );
 #endif
   }
   fprintf( stderr, "\n== B =====================\n" );
@@ -85,7 +85,7 @@ test20130100( int argc, char *argv[], char *env[] )
     mas_del_argv( targc, targv, 0 );
 
 #ifdef MAS_TRACEMEM
-    print_memlist( stderr, __func__, __LINE__ );
+    print_memlist( __func__, __LINE__, stderr );
 #endif
   }
 }
@@ -458,6 +458,6 @@ main( int argc, char *argv[], char *env[] )
   /* test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test1.txt", "/tmp/fdcopy1a.tmp" ); */
   test_readline( "/mnt/new_misc/develop/autotools/zoc/zocromas/test2.txt", "/tmp/fdcopy2a.tmp" );
 #ifdef MAS_TRACEMEM
-  print_memlist( stderr, FL );
+  print_memlist( FL, stderr );
 #endif
 }

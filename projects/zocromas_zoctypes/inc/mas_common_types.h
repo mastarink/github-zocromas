@@ -7,7 +7,7 @@
 #  include <pthread.h>
 #  include <mastar/types/mas_list_def.h>
 
-typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, const char *fmt,
+typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
                                            const char *xmsg );
 typedef void ( *mas_voidp_fun_t ) ( void *arg );
 

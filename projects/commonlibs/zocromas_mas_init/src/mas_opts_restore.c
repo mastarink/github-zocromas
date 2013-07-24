@@ -82,7 +82,57 @@ mas_opts_atou( const char *s )
 }
 
 
-
+/*
+  daemon				:: --[no]daemon
+  default_port				:: --port
+  dir.history  				:: --historydir
+  dir.log     				:: --logdir
+  dir.mods				:: --modsdir
+  dir.pids
+  dir.post
+  dir.proto
+  disconnect_prompt
+  env_hostname
+  env_optsname
+  log					:: --[no]log
+  logger				:: --[no]logger
+  max_config_backup
+  messages  				:: --[no]messages
+  msgfilename				:: --redirect-messages
+  overwrite_user_opts
+  overwrite_user_opts_plus
+  read_user_opts			:: --[no]read-home-config
+  read_user_opts_plus
+  restart_sleep
+  save_user_opts
+  save_user_opts_plus
+  single_child				:! --[no]multi-child
+  single_instance			:! --[no]multi-instance
+  thname.daemon_bunchi
+  thname.daemon_bunchm
+  thname.daemon_bunchx
+  thname.daemon_masterm
+  thname.daemon_masterth
+  thname.daemon_masterthx
+  thname.daemon_masterx
+  thname.listen_close
+  thname.listen_exit
+  thname.listenin
+  thname.listenm
+  thname.listent
+  thname.listenw
+  thname.parent_bunchi
+  thname.parent_bunchm
+  thname.parent_bunchx
+  thname.parent_masterm
+  thname.parent_masterth
+  thname.parent_masterthx
+  thname.parent_masterx
+  ticker				:: --[no]ticker
+  uuid
+  wait_server
+  watcher				:: --[no]watcher
+*/
 
 
 mas_option_parse_t opt_table[] = {
@@ -165,7 +215,11 @@ mas_option_parse_t opt_table[] = {
   {.name = "thname.listen_exit",.type = MAS_OPT_TYPE_PSTR,.offset =
    offsetof( mas_options_t, thname ) + offsetof( mas_thnames_t, listen_exit ),.dv = "zocListenXit"}
   ,
-  {.name = "msgfilename",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, msgfilename )}
+  {.name = "filename.message",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, msgfilename )}
+  ,
+  {.name = "filename.stderr",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, stderr_filename )}
+  ,
+  {.name = "filename.stdout",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, stdout_filename )}
   ,
   {.name = "restart_sleep",.type = MAS_OPT_TYPE_DOUBLE,.offset = offsetof( mas_options_t, restart_sleep )}
   ,

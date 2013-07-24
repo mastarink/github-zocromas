@@ -39,7 +39,9 @@ void *_mas_realloc( const char *func, int line, void *ptr, size_t size );
 char *_mas_strdup( const char *func, int line, const char *str );
 char *_mas_strndup( const char *func, int line, const char *s, size_t n );
 
-int print_memlist( FILE * f, const char *func, int line );
+int print_memlist_vany( const char *func, int line, int cnt, va_list args );
+int print_memlist_any( const char *func, int line, int cnt, ... );
+int print_memlist( const char *func, int line, FILE * f );
 
 #    define mas_calloc(...)  _mas_calloc(FL, __VA_ARGS__)
 #    define mas_malloc(...)  _mas_malloc(FL, __VA_ARGS__)

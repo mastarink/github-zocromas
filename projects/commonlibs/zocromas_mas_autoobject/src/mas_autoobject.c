@@ -171,7 +171,7 @@ mas_autoobject_qopen( mas_autoobject_t * obj, const char *docroot, const char *n
 int
 mas_autoobject_is_regular( mas_autoobject_t * obj )
 {
-  return obj ? ( S_ISREG( obj->mode ) ) : 0;
+  return obj && mas_autoobject_reopen( obj ) >= 0 ? ( S_ISREG( obj->mode ) ) : 0;
 }
 
 int

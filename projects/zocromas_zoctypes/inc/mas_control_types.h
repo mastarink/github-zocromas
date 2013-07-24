@@ -180,7 +180,7 @@ struct mas_control_s
   double maxtrtime;
   unsigned long sigint_time;
   FILE *pidfile;
-  int pidfd[MAS_MAX_PIDFD];
+  int pidfd;
   char *logpath;
   FILE *logfile;
 

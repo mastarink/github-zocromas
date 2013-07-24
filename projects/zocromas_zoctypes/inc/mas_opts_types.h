@@ -77,6 +77,9 @@ typedef struct mas_thnames_s
 struct mas_options_s
 {
   mas_msg_options_t f;
+  unsigned test:1;
+  unsigned quit:1;
+  unsigned info:1;
   unsigned single_instance:1;
   unsigned single_child:1;
   unsigned listener_single:1;
@@ -132,6 +135,8 @@ struct mas_options_s
   mas_dirs_t dir;
   mas_thnames_t thname;
   char *msgfilename;
+  char *stderr_filename;
+  char *stdout_filename;
   char *configfilename;
   char *saved_configfilename;
   unsigned max_config_backup;

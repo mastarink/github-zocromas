@@ -10,10 +10,6 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 
-#include <mastar/types/mas_control_types.h>
-/* #include <mastar/types/mas_opts_types.h> */
-extern mas_control_t ctrl;
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -48,6 +44,7 @@ more:
 int
 mas_threads_init( mas_options_t * popts, const char * *message )
 {
+  extern mas_control_t ctrl;
   int r = 0;
 
   MAS_LOG( "(%d) init threads", r );
@@ -177,6 +174,8 @@ mas_threads_init( mas_options_t * popts, const char * *message )
 void
 mas_threads_destroy( void )
 {
+  extern mas_control_t ctrl;
+
   pthread_attr_destroy( &ctrl.thglob.custom_attr );
 
   pthread_attr_destroy( &ctrl.thglob.logger_attr );

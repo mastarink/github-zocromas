@@ -570,7 +570,7 @@ main( void )
   test60(  );
   test70(  );
 #ifdef MAS_TRACEMEM
-  print_memlist( stderr, FL );
+  print_memlist( FL, stderr );
 #endif
 
   return 0;

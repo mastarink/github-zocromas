@@ -60,9 +60,9 @@ main( int argc, char *argv[] )
     fprintf( stderr, ">>>>>[\n%s\n]<<<<<<<\n", d );
     mas_free( d );
   }
-  
+
 #ifdef MAS_TRACEMEM
-  print_memlist( stderr, FL );
+  print_memlist( FL, stderr );
 #endif
 
 

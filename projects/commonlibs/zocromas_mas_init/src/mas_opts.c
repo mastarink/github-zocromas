@@ -53,6 +53,14 @@ mas_opts_destroy( mas_options_t * popts )
     mas_free( popts->msgfilename );
   popts->msgfilename = NULL;
 
+  if ( popts->stderr_filename )
+    mas_free( popts->stderr_filename );
+  popts->stderr_filename = NULL;
+
+  if ( popts->stdout_filename )
+    mas_free( popts->stdout_filename );
+  popts->stdout_filename = NULL;
+
   if ( popts->dir.mods )
     mas_free( popts->dir.mods );
   popts->dir.mods = NULL;

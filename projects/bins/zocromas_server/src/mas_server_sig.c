@@ -320,10 +320,11 @@ mas_atexit( void )
     IMSG( "AT EXIT, memory_balance:%ld", memory_balance );
     EMSG( "AT EXIT, memory_balance:%ld : logQ: %lu - %lu = %lu", memory_balance, ctrl.log_q_came, ctrl.log_q_gone,
           ctrl.log_q_came - ctrl.log_q_gone );
-    if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
-      if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
-        if ( print_memlist( ctrl.msgfile, FL ) < 0 )
-          print_memlist( stderr, FL );
+    /* if ( print_memlist( ctrl.stderrfile, FL ) < 0 )       */
+    /*   if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 ) */
+    /*     if ( print_memlist( ctrl.msgfile, FL ) < 0 )      */
+    /*       print_memlist( stderr, FL );                    */
+    print_memlist_any( FL, 4, ctrl.stderrfile, ctrl.old_stderrfile, ctrl.msgfile, stderr );
     IMSG( "AT EXIT, memory_balance:%ld", memory_balance );
   }
 #else

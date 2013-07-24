@@ -29,17 +29,25 @@
 
 
 #include <mastar/init/mas_init.h>
+#include <mastar/init/mas_init_modules.h>
 
+#include <mastar/init/mas_cli_options.h>
+#include <mastar/init/mas_sig.h>
+
+#include <mastar/control/mas_control.h>
 
 #include <mastar/listener/mas_listeners.h>
 #include <mastar/listener/mas_listener_control_list.h>
 
 #include "mas_init_threads.h"
+#include "mas_init_protos.h"
+#include "mas_init_pid.h"
+
+#include "mas_init_daemon.h"
 #include "mas_init_server.h"
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
+/* #include <mastar/types/mas_control_types.h> */
+/* #include <mastar/types/mas_opts_types.h> */
 
 
 #include "mas_master.h"
@@ -144,7 +152,7 @@ mas_master( mas_options_t * popts )
     /* {                                             */
     /*   thMSG( "%d. host %s", ih, popts->  hostsv.v[ih] ); */
     /* }                                             */
-    while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal )
+    while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !popts->quit )
     {
       int qstopped = 0;
 
@@ -364,9 +372,11 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
   MAS_LOG( "(%d) bunch: to init +", r );
   /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
+  /* uuid BEFORE opt_files !! */
   IEVAL( r,
-         mas_init_plus( popts, argc, argv, env, mas_init_daemon, mas_init_pids, mas_threads_init, mas_init_load_protos, mas_lcontrols_init,
-                        NULL ) );
+         mas_init_plus( popts, argc, argv, env, mas_init_proc, mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init,
+                        mas_ctrl_init, mas_init_set_msg_file, mas_init_message, mas_init_daemon, mas_init_pids, mas_threads_init, mas_init_load_protos,
+                        mas_lcontrols_init, mas_post_init, NULL ) );
   if ( r >= 0 )
   {
     if ( ctrl.is_parent )
@@ -403,16 +413,17 @@ mas_master_bunch_do_daemon( mas_options_t * popts, int argc, char *argv[], char 
   IEVAL( r, mas_master_do( popts ) );
 #ifdef MAS_TRACEMEM
   {
+    extern mas_control_t ctrl;
     extern unsigned long memory_balance;
 
     mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.threads.n.ticker.thread,
           ctrl.threads.n.logger.thread );
     MAS_LOG( "bunch end, m/b:%lu", memory_balance );
 #  if 0
-    if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
-      if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
-        if ( print_memlist( ctrl.msgfile, FL ) < 0 )
-          print_memlist( stderr, FL );
+    if ( print_memlist( FL, ctrl.stderrfile ) < 0 )
+      if ( print_memlist( FL, ctrl.old_stderrfile ) < 0 )
+        if ( print_memlist( FL, ctrl.msgfile ) < 0 )
+          print_memlist( FL, stderr );
 #  endif
   }
 #endif
@@ -422,6 +433,7 @@ mas_master_bunch_do_daemon( mas_options_t * popts, int argc, char *argv[], char 
 static int
 mas_master_bunch_do( mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
+  extern mas_control_t ctrl;
   int r = 0, rn = 0;
 
   if ( ctrl.is_parent )

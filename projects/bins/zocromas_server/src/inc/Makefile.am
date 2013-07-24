@@ -4,5 +4,8 @@ noinst_HEADERS = \
 	mas_init_server.h \
 	mas_master.h \
 	mas_init_threads.h \
+	mas_init_protos.h \
+	mas_init_pid.h \
+	mas_init_daemon.h \
 	mas_ticker.h \
 	mas_watcher.h

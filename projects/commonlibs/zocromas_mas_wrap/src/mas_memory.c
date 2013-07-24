@@ -158,25 +158,53 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
           _func = _mhp->func;
           _line = _mhp->line;
           if ( fn_f )
-            fprintf( f, "id: %lx; sz:%lu; %s:%u [%s]\n", _id, _size, _func, _line, s_f ? ( char * ) data_ptr : "-" );
+            fprintf( f, "id: %lx; sz:%lu(%lX); %s:%u [%s]\n", _id, _size,_size, _func, _line, s_f ? ( char * ) data_ptr : "-" );
           else
-            fprintf( f, "id: %lx; sz:%lu; fun#%lx:%u [%s]\n", _id, _size, ( unsigned long ) _func, _line, s_f ? ( char * ) data_ptr : "-" );
+            fprintf( f, "id: %lx; sz:%lu(%lX); fun#%lx:%u [%s]\n", _id, _size,_size, ( unsigned long ) _func, _line, s_f ? ( char * ) data_ptr : "-" );
         }
       }
     }
     if ( !h && r >= 0 )
-      r = fprintf( stderr, "** EMPTY MEMORY TABLE ** %s:%u\n", func, line );
+      r = fprintf( f, "** EMPTY MEMORY TABLE ** %s:%u\n", func, line );
   }
   return r;
 }
 
 int
-print_memlist( FILE * f, const char *func, int line )
+print_memlist_vany( const char *func, int line, int cnt, va_list args )
+{
+
+  for ( int i = 0; i < cnt; i++ )
+  {
+    int r = -1;
+    FILE *f = NULL;
+
+    f = va_arg( args, FILE * );
+    if ( f && ( r = print_memlist( func, line, f ) ) >= 0 )
+      return r;
+  }
+  return -1;
+}
+
+int
+print_memlist_any( const char *func, int line, int cnt, ... )
+{
+  int r = -1;
+  va_list args;
+
+  va_start( args, cnt );
+  r = print_memlist_vany( func, line, cnt, args );
+  va_end( args );
+  return r;
+}
+
+int
+print_memlist( const char *func, int line, FILE * f )
 {
   int r;
 
   r = _print_memlist( f, func, line, 0, 0 );
-  _print_memlist( f, func, line, 1, 0 );
+  /* _print_memlist( f, func, line, 1, 0 ); */
   _print_memlist( f, func, line, 1, 1 );
   return r;
 }

@@ -160,11 +160,11 @@ mas_atexit( void )
   extern unsigned long memory_balance;
 
   FMSG( "AT EXIT, memory_balance:%ld", memory_balance );
-  if ( print_memlist( ctrl.stderrfile, FL ) < 0 )
-    if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 )
-      if ( print_memlist( ctrl.msgfile, FL ) < 0 )
-        print_memlist( stderr, FL );
-
+  /* if ( print_memlist( ctrl.stderrfile, FL ) < 0 )       */
+  /*   if ( print_memlist( ctrl.old_stderrfile, FL ) < 0 ) */
+  /*     if ( print_memlist( ctrl.msgfile, FL ) < 0 )      */
+  /*       print_memlist( stderr, FL );                    */
+  print_memlist_any( FL, 4, ctrl.stderrfile, ctrl.old_stderrfile, ctrl.msgfile, stderr );
 #else
   FMSG( "AT EXIT" );
 #endif

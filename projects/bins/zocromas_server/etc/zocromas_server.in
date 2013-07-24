@@ -39,12 +39,17 @@ dir.mods=@prefix@/lib/zocmds/
 # build_cpu: @build_cpu@
 # build_os: @build_os@
 # abs_top_builddir: @abs_top_builddir@
-# pidsdir=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
-dir.pids=/run/@PACKAGE@/
+
+# dir.pids=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
+dir.pids=/mnt/new_misc/develop/autotools/zoc/admin/install/default/run/
+# dir.pids=/run/@PACKAGE@/
+
 # prefix=@prefix@
 # exec_prefix=@exec_prefix@
 dir.proto=@prefix@/lib/zocromas_zocprotos/
-msgfilename=/dev/tty11
+filename.message=/dev/tty11
+filename.stderr=/tmp/daemon_stderr.tmp
+filename.stdout=/tmp/daemon_stdout.tmp
 # redirect-messages=/dev/tty11
 # -
 

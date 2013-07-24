@@ -110,7 +110,7 @@ main( void )
   {
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_FCHAR );
-      mas_autoobject_set_name( ao, NULL,"hwif3.txt" );
+      mas_autoobject_set_name( ao, NULL, "hwif3.txt" );
     }
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
   }
@@ -149,7 +149,7 @@ main( void )
 
 
 #ifdef MAS_TRACEMEM
-  print_memlist( stderr, FL );
+  print_memlist( FL, stderr );
 #endif
 
   return 0;

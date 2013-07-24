@@ -136,7 +136,7 @@ main( void )
   mas_autoset_delete( as1 );
 
 #ifdef MAS_TRACEMEM
-  print_memlist( stderr, FL );
+  print_memlist( FL, stderr );
 #endif
   return 0;
 }

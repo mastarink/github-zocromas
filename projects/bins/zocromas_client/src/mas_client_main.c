@@ -10,11 +10,18 @@
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 
+#include <mastar/init/mas_sig.h>
+#include <mastar/init/mas_cli_options.h>
+
+#include <mastar/control/mas_control.h>
+
 extern mas_control_t ctrl;
 
 /* #include <mastar/init/mas_opts_common.h> */
 
 #include <mastar/init/mas_init.h>
+#include <mastar/init/mas_init_modules.h>
+
 #include "mas_init_client.h"
 #include "mas_client_readline.h"
 
@@ -56,7 +63,13 @@ main( int argc, char *argv[], char *env[] )
 #endif
 
   /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
-  IEVAL( r, mas_init_plus( &gopts, argc, argv, env, mas_client_init_readline, NULL ) );
+  HMSG( "INIT CLIENT (%p:%p:%p)", ( void * ) ( unsigned long ) mas_init_sig,
+        ( void * ) ( unsigned long ) mas_ctrl_init, ( void * ) ( unsigned long ) mas_client_init_readline );
+
+  /* uuid BEFORE opt_files !! */
+  IEVAL( r,
+         mas_init_plus( &gopts, argc, argv, env, mas_init_proc, mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init, mas_ctrl_init,
+                        mas_client_init_readline, mas_post_init, NULL ) );
   for ( int ia = gopts.hostsv.c; r >= 0 && ia > 0; ia-- )
   {
     int maxit = 0;

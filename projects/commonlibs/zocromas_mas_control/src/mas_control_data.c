@@ -31,7 +31,8 @@ __attribute__ ( ( constructor ) )
 
 
 
-static int mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, const char *fmt, const char *msg );
+static int mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
+                              const char *msg );
 
 
 mas_control_t ctrl = {
@@ -150,7 +151,7 @@ mas_control_t ctrl = {
 };
 
 static int
-mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, const char *fmt, const char *msg )
+mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt, const char *msg )
 {
   if ( !ctrl.stderrfile
        || fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" ) < 0 )
@@ -168,6 +169,8 @@ mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno,
     if ( ctrl.msgfile )
       fprintf( ctrl.msgfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" );
   }
+  if ( pserrno )
+    *pserrno = ierrno;
   if ( perrno )
     *perrno = 0;
   return rcode;
