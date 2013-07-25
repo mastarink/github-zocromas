@@ -118,23 +118,23 @@ function install_z ()
 function testdist_m ()
 {
   local zips errfile
-  echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2
+  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2 ; fi
   if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
     errfile="/tmp/distcheck.${mas_name}-${mas_vers}.tmp"
     # make -d dist
     # make -s dist
 #       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2
-    if ! make_target distcheck ; then
+    if ! make_target distcheck &>>$errfile ; then
       zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't make testdist"
 #     echo "$LINENO ERROR testdist" >&2
       return 1
     fi
     zips=$( echo $build_at/${mas_fullname}.tar.{bz2,gz} )
-    echo "saving $zips to $savedirdist" >&2
+    if [[ "$MAS_SH_VERBOSE" ]] ; then echo "saving $zips to $savedirdist" >&2 ; fi
     mv $zips $savedirdist || return 1
     if [[ -f $savedirdist/${mas_fullname}.tar.bz2 ]] && [[ -d /mnt/new_misc/vboxshared/zoc/ ]] ; then
       cp $savedirdist/${mas_fullname}.tar.bz2  /mnt/new_misc/vboxshared/zoc/
-      ls -l /mnt/new_misc/vboxshared/zoc/${mas_fullname}.tar.bz2
+      if [[ "$MAS_SH_VERBOSE" ]] ; then ls -l /mnt/new_misc/vboxshared/zoc/${mas_fullname}.tar.bz2 ; fi
       chmod a+r /mnt/new_misc/vboxshared/zoc/${mas_fullname}.tar.bz2
     fi
     return 0
@@ -221,7 +221,7 @@ function ebuild_m ()
 	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "creating $ebname ebuild from $ebname_base" >&2 ; fi
 	  if [[ "$ebname_base" ]] && [[ -f "$ebname_base" ]] ; then
 	    cp $ebname_base $ebname
-	    echo "created $ebname" >&2
+	    if [[ "$MAS_SH_VERBOSE" ]] ; then echo "created $ebname" >&2 ; fi
 	  else
 	    zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't create ebuild - no template"
 	  fi

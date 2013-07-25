@@ -334,5 +334,5 @@ function is_in_project ()
   done
 }
 # export wdproj_scan wdproj
-unset cdproj cdproj_scan
+unset cdproj cdproj_scan MAS_PROJECTS_LIST
 alias j='wdproj'

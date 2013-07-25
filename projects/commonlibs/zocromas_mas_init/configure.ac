@@ -106,7 +106,8 @@ AC_CHECK_LIB([uuid],  [uuid_generate])
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control zocromas_mas_msg zocromas_mas_log])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control
+	zocromas_mas_options zocromas_mas_msg zocromas_mas_log])
 
 AC_ARG_WITH([base-dir], [ AC_HELP_STRING([--with-base-dir=DIR], [base dir])  ],
   [with_base_dir=$withval],[with_base_dir="/tmp"])

@@ -24,6 +24,7 @@
 #endif
 
 
+#include "mas_init_daemon.h"
 
 
 /*
@@ -120,15 +121,59 @@ mas_init_daemon_stdio( mas_options_t * popts, const char **message )
 }
 
 int
+mas_init_child_process( mas_options_t * popts, const char **message )
+{
+  int r = 0, rn = 0;
+
+  ctrl.threads.n.daemon.pid = getpid(  );
+  ctrl.threads.n.daemon.tid = mas_gettid(  );
+  ctrl.threads.n.daemon.thread = mas_pthread_self(  );
+  ctrl.pserver_thread = &ctrl.threads.n.daemon;
+
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemonI" ) );
+  HMSG( "INIT DAEMON:%u rn:%u", ctrl.threads.n.daemon.pid, rn );
+
+  HMSG( "CHILD : %u @ %u - %s : %d", getpid(  ), getppid(  ), popts->msgfilename, ctrl.msgfile ? 1 : 0 );
+  /* sleep(200); */
+  /* mas_destroy_server(  ); */
+  IEVAL( r, setsid(  ) );
+  IEVAL( r, chdir( "/" ) );
+  IEVAL( r, mas_init_daemon_stdio( popts, NULL ) );
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
+  ctrl.is_child = 1;
+
+  if ( message )
+    *message = __func__;
+  return r;
+}
+
+int
+mas_init_parent_process( mas_options_t * popts, const char **message )
+{
+  int r = 0, rn = 0;
+
+  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParent" ) );
+  HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", ctrl.threads.n.daemon.pid, getpid(  ), getppid(  ) );
+  ctrl.is_parent = 1;
+  r = 7777;
+  if ( message )
+    *message = __func__;
+
+  return r;
+}
+
+int
 mas_init_daemon( mas_options_t * popts, const char **message )
 {
   extern mas_control_t ctrl;
-  int r = 0, rn = 0;
-  pid_t pid_daemon;
+  int r = -1;
 
   MAS_LOG( "init daemon" );
-  if ( ctrl.daemon )
+  if ( ctrl.daemon /* && !ctrl.is_child && !ctrl.is_parent */ )
   {
+    pid_t pid_daemon;
+
+    r = 0;
     HMSG( "INIT DAEMON pid:%u", getpid(  ) );
     WMSG( "DAEMONIZE" );
     MAS_LOG( "init daemonize" );
@@ -139,29 +184,12 @@ mas_init_daemon( mas_options_t * popts, const char **message )
     MAS_LOG( "(%d) init fork", pid_daemon );
     if ( pid_daemon == 0 )
     {
-      ctrl.threads.n.daemon.pid = getpid(  );
-      ctrl.threads.n.daemon.tid = mas_gettid(  );
-      ctrl.threads.n.daemon.thread = mas_pthread_self(  );
-      ctrl.pserver_thread = &ctrl.threads.n.daemon;
-
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemonI" ) );
-      HMSG( "INIT DAEMON:%u rn:%u", ctrl.threads.n.daemon.pid, rn );
-
-      HMSG( "CHILD : %u @ %u @ %u - %s : %d", pid_daemon, getpid(  ), getppid(  ), popts->msgfilename, ctrl.msgfile ? 1 : 0 );
-      /* sleep(200); */
-      /* mas_destroy_server(  ); */
-      IEVAL( r, setsid(  ) );
-      IEVAL( r, chdir( "/" ) );
-      IEVAL( r, mas_init_daemon_stdio( popts, NULL ) );
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
+      IEVAL( r, mas_init_child_process( popts, NULL ) );
     }
     else if ( pid_daemon > 0 )
     {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParent" ) );
       ctrl.threads.n.daemon.pid = pid_daemon;
-      HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", pid_daemon, getpid(  ), getppid(  ) );
-      ctrl.is_parent = 1;
-      r = 7777;
+      IEVAL( r, mas_init_parent_process( popts, NULL ) );
     }
   }
   else
@@ -172,5 +200,5 @@ mas_init_daemon( mas_options_t * popts, const char **message )
   MAS_LOG( "(%d) init daemon done", r );
   if ( message )
     *message = __func__;
-  return r;
+  return r > 0 ? 0 : r;
 }

@@ -195,7 +195,7 @@ mas_ticker_th( void *arg )
 
 /* naming : pthread_create = start */
 int
-mas_ticker_start( mas_options_t * popts )
+mas_ticker_start( const mas_options_t * popts )
 {
   int r = 0;
 

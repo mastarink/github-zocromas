@@ -17,6 +17,7 @@ sfind autoreconf.sh
 sfind uninstall.sh
 sfind install.sh
 sfind distclean.sh
+sfind mclean.sh
 sfind maiclean.sh
 sfind dinstall.sh
 sfind testdist.sh

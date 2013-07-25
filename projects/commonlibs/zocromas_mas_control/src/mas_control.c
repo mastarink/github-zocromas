@@ -86,24 +86,24 @@ mas_ctrl_destroy( void )
   ctrl.loaded_optsv.c = 0;
   ctrl.loaded_optsv.v = NULL;
 
-  if ( ctrl.threads.n.daemon.pid && ctrl.threads.n.daemon.pid == getpid(  ) )
-    for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )
-    {
-      /* HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] ); */
-      unlink( ctrl.pidfilesv.v[ifil] );
-    }
+  /* if ( ctrl.threads.n.daemon.pid && ctrl.threads.n.daemon.pid == getpid(  ) ) */
+  /*   for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )                     */
+  /*   {                                                                         */
+  /*     (* HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] ); *)          */
+  /*     unlink( ctrl.pidfilesv.v[ifil] );                                       */
+  /*   }                                                                         */
+  /*                                                                             */
+  /* mas_del_argv( ctrl.pidfilesv.c, ctrl.pidfilesv.v, 0 );                      */
+  /* ctrl.pidfilesv.c = 0;                                                       */
+  /* ctrl.pidfilesv.v = NULL;                                                    */
 
-  mas_del_argv( ctrl.pidfilesv.c, ctrl.pidfilesv.v, 0 );
-  ctrl.pidfilesv.c = 0;
-  ctrl.pidfilesv.v = NULL;
-
-  for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ )
-    if ( ctrl.proto_descs[ipd].name )
-      mas_free( ctrl.proto_descs[ipd].name );
-  if ( ctrl.proto_descs )
-    mas_free( ctrl.proto_descs );
-  ctrl.protos_num = 0;
-  ctrl.proto_descs = NULL;
+  /* for ( int ipd = 0; ipd < ctrl.protos_num; ipd++ ) */
+  /*   if ( ctrl.proto_descs[ipd].name )               */
+  /*     mas_free( ctrl.proto_descs[ipd].name );       */
+  /* if ( ctrl.proto_descs )                           */
+  /*   mas_free( ctrl.proto_descs );                   */
+  /* ctrl.protos_num = 0;                              */
+  /* ctrl.proto_descs = NULL;                          */
 }
 
 void

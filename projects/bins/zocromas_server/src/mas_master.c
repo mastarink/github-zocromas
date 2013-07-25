@@ -31,7 +31,7 @@
 #include <mastar/init/mas_init.h>
 #include <mastar/init/mas_init_modules.h>
 
-#include <mastar/init/mas_cli_options.h>
+#include <mastar/options/mas_cli_opts.h>
 #include <mastar/init/mas_sig.h>
 
 #include <mastar/control/mas_control.h>
@@ -88,15 +88,15 @@ threads created:
 /* static void                                   */
 /* mas_server_cleanup( void *arg )               */
 /* {                                             */
-/*   tMSG( "%s in", __func__ );                */
-/*   thMSG( "%s MAIN TH. CLEANUP", __func__ ); */
-/*   tMSG( "%s out", __func__ );               */
+/*   tMSG( "%s in", __func__ );                  */
+/*   thMSG( "%s MAIN TH. CLEANUP", __func__ );   */
+/*   tMSG( "%s out", __func__ );                 */
 /* }                                             */
 
 
 
 static int
-mas_master( mas_options_t * popts )
+mas_master( const mas_options_t * popts )
 {
   int r = 0, rn = 0;
 
@@ -206,14 +206,6 @@ mas_master( mas_options_t * popts )
   ctrl.watcher_stop = 1;
 
   MAS_LOG( "exiting master server" );
-#ifdef MAS_TRACEMEM
-  {
-    extern unsigned long memory_balance;
-
-    /* mMSG( "exiting master server, memory_balance:%lu", memory_balance ); */
-    MAS_LOG( "master end, m/b:%lu", memory_balance );
-  }
-#endif
   HMSG( "MASTER TO END : %d", r );
   if ( ctrl.is_parent )
   {
@@ -233,10 +225,12 @@ mas_master( mas_options_t * popts )
 }
 
 static void *
-mas_master_th( void *arg )
+mas_master_th( void *topts )
 {
   int rn = 0;
+  const mas_options_t *popts;
 
+  popts = ( mas_options_t * ) topts;
   HMSG( "MASTER_TH START" );
   ctrl.threads.n.master.tid = mas_gettid(  );
   ctrl.threads.n.master.pid = getpid(  );
@@ -245,24 +239,21 @@ mas_master_th( void *arg )
 
   ctrl.pserver_thread = &ctrl.threads.n.master;
   {
-    extern mas_options_t gopts;
-
     if ( ctrl.is_parent )
     {
-      if ( gopts.thname.parent_masterth )
+      if ( popts->thname.parent_masterth )
       {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.parent_masterth /* "zocParMasterTh" */  ) );
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_masterth /* "zocParMasterTh" */  ) );
       }
     }
     else
     {
-      if ( gopts.thname.daemon_masterth )
+      if ( popts->thname.daemon_masterth )
       {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.daemon_masterth /* "zocDaeMasterTh" */  ) );
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_masterth /* "zocDaeMasterTh" */  ) );
       }
     }
   }
-  /* mas_malloc(1234); */
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
   mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );
 
@@ -274,32 +265,22 @@ mas_master_th( void *arg )
     ctrl.threads.n.main.thread = 0;
   }
   {
-    extern mas_options_t gopts;
-
-    ( void ) /* r= */ mas_master( &gopts );
+    ( void ) /* r= */ mas_master( popts );
   }
-#ifdef MAS_TRACEMEM
-  extern unsigned long memory_balance;
-
-  /* mMSG( "mas_master_th end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.threads.n.ticker.thread, ctrl.threads.n.logger.thread ); */
-  MAS_LOG( "mas_master_th end, m/b:%lu", memory_balance );
-#endif
   HMSG( "MASTER_TH TO END" );
   {
-    extern mas_options_t gopts;
-
     if ( ctrl.is_parent )
     {
-      if ( gopts.thname.parent_masterthx )
+      if ( popts->thname.parent_masterthx )
       {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.parent_masterthx /* "zocParMasterThX" */  ) );
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_masterthx /* "zocParMasterThX" */  ) );
       }
     }
     else
     {
-      if ( gopts.thname.daemon_masterthx )
+      if ( popts->thname.daemon_masterthx )
       {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) gopts.thname.daemon_masterthx /* "zocDaeMasterThX" */  ) );
+        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_masterthx /* "zocDaeMasterThX" */  ) );
       }
     }
   }
@@ -324,7 +305,7 @@ __attribute__ ( ( destructor ) )
 }
 
 static int
-mas_master_do( mas_options_t * popts )
+mas_master_do( const mas_options_t * popts )
 {
   int r = 0;
 
@@ -332,7 +313,7 @@ mas_master_do( mas_options_t * popts )
   if ( popts->make_master_thread )
   {
     /* r = pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
-    IEVAL( r, pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ) );
+    IEVAL( r, pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) popts ) );
     if ( !ctrl.main_exit && ctrl.threads.n.master.thread )
     {
       mas_xpthread_join( ctrl.threads.n.master.thread );
@@ -375,8 +356,8 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
   /* uuid BEFORE opt_files !! */
   IEVAL( r,
          mas_init_plus( popts, argc, argv, env, mas_init_proc, mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init,
-                        mas_ctrl_init, mas_init_set_msg_file, mas_init_message, mas_init_daemon, mas_init_pids, mas_threads_init, mas_init_load_protos,
-                        mas_lcontrols_init, mas_post_init, NULL ) );
+                        mas_ctrl_init, mas_init_set_msg_file, mas_init_message, mas_init_daemon, mas_init_pids, mas_threads_init,
+                        mas_init_load_protos, mas_lcontrols_init, mas_post_init, NULL ) );
   if ( r >= 0 )
   {
     if ( ctrl.is_parent )
@@ -399,14 +380,14 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
 }
 
 static int
-mas_master_bunch_do_parent( mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_bunch_do_parent( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   HMSG( "PARENT to exit" );
   return 0;
 }
 
 static int
-mas_master_bunch_do_daemon( mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_bunch_do_daemon( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   int r = 0;
 
@@ -431,7 +412,7 @@ mas_master_bunch_do_daemon( mas_options_t * popts, int argc, char *argv[], char 
 }
 
 static int
-mas_master_bunch_do( mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_bunch_do( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   extern mas_control_t ctrl;
   int r = 0, rn = 0;

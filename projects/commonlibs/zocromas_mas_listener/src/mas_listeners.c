@@ -55,7 +55,7 @@ more:
 
 
 int
-mas_listeners_start( mas_options_t * popts )
+mas_listeners_start( const mas_options_t * popts )
 {
   int r = 0;
 

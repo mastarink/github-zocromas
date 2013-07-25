@@ -107,7 +107,7 @@ AC_CHECK_LIB([uuid], [uuid_generate])
 
 # Checks for library functions.
 
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel zocromas_mas_init zocromas_mas_logc zocromas_mas_msg zocromas_mas_messageio])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrapc zocromas_mas_tools zocromas_mas_channel zocromas_mas_options zocromas_mas_init zocromas_mas_logc zocromas_mas_msg zocromas_mas_messageio])
 PKG_CHECK_MODULES([DEPSX], [zocromas_mas_control])
 
 

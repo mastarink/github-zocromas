@@ -6,21 +6,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <sys/prctl.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/wrap/mas_lib.h>
-#include <mastar/wrap/mas_lib_thread.h>
-#include <mastar/tools/mas_tools.h>
-#include <mastar/tools/mas_arg_tools.h>
 
-#include <mastar/types/mas_varset_types.h>
 #include <mastar/varset/mas_varset_object.h>
-#include <mastar/varset/mas_varset.h>
-
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -32,9 +24,7 @@
 
 #include <mastar/modules/mas_modules_load_module.h>
 
-
-#include "mas_init_threads.h"
-
+#include "mas_init_protos.h"
 
 int
 mas_init_load_protos( mas_options_t * popts, const char **message )
@@ -111,5 +101,13 @@ mas_protos_destroy( void )
     if ( vars )
       mas_varset_delete( vars );
   }
+  for ( int ipr = 0; ipr < ctrl.protos_num; ipr++ )
+    if ( ctrl.proto_descs[ipr].name )
+      mas_free( ctrl.proto_descs[ipr].name );
+  if ( ctrl.proto_descs )
+    mas_free( ctrl.proto_descs );
+  ctrl.protos_num = 0;
+  ctrl.proto_descs = NULL;
+
   return r;
 }

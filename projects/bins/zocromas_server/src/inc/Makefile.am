@@ -1,5 +1,6 @@
 noinst_HEADERS = \
 	mas_server_sig.h \
+	mas_server_exit.h \
 	mas_server_tools.h \
 	mas_init_server.h \
 	mas_master.h \

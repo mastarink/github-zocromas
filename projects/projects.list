@@ -18,6 +18,7 @@ commonlibs/zocromas_mas_modules
 commonlibs/zocromas_mas_messageio
 commonlibs/zocromas_mas_transaction
 commonlibs/zocromas_mas_listener
+commonlibs/zocromas_mas_options
 commonlibs/zocromas_mas_init
 zocmds/zocromas_zocmds1
 zocmds/zocromas_zocmds2

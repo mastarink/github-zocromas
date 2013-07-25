@@ -22,7 +22,7 @@
 #  include <mastar/log/mas_log.h>
 #endif
 
-#include "mas_init_server.h"
+#include "mas_init_pid.h"
 
 
 static int
@@ -114,4 +114,32 @@ mas_init_pids( mas_options_t * popts, const char **message )
   if ( message )
     *message = __func__;
   return r < 0 ? r : 0;
+}
+
+void
+mas_destroy_pids( mas_options_t * popts )
+{
+  {
+    if ( ctrl.pidfd > 0 )
+    {
+      /* char *pidpath;                           */
+      /*                                          */
+      /* pidpath = mas_strdup( popts-> dir.pids );    */
+      /* pidpath = mas_strcat_x( pidpath, name ); */
+
+      mas_close( ctrl.pidfd );
+      /* unlink( pidpath ); */
+    }
+    ctrl.pidfd = 0;
+  }
+  if ( ctrl.threads.n.daemon.pid && ctrl.threads.n.daemon.pid == getpid(  ) )
+    for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )
+    {
+      /* HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] ); */
+      unlink( ctrl.pidfilesv.v[ifil] );
+    }
+
+  mas_del_argv( ctrl.pidfilesv.c, ctrl.pidfilesv.v, 0 );
+  ctrl.pidfilesv.c = 0;
+  ctrl.pidfilesv.v = NULL;
 }

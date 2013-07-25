@@ -98,13 +98,15 @@ struct mas_control_s
   unsigned term_cnt;
   unsigned try_cnt;
   unsigned restart_cnt;
+  unsigned in_pipe;
   unsigned fatal:1;
   unsigned main_exit:1;
+  unsigned dead_beaf:1;
   unsigned in_client:1;
-  unsigned in_pipe;
   unsigned is_client:1;
   unsigned is_server:1;
   unsigned is_parent:1;
+  unsigned is_child:1;
 
   /* from opts: */
   unsigned messages:1;

@@ -21,28 +21,19 @@
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
+
 #include <mastar/log/mas_log.h>
 #include <mastar/log/mas_logger.h>
-
-
-
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-
-
-#include <mastar/control/mas_control.h>
 
 #ifdef MAS_USE_CURSES
 #  include <mastar/msg/mas_curses.h>
 #endif
 
-#include "mas_opts.h"
-#include "mas_opts_save.h"
-#include "mas_opts_restore.h"
+#include <mastar/options/mas_opts.h>
+#include <mastar/options/mas_opts_save.h>
+#include <mastar/options/mas_opts_restore.h>
 
-#include "mas_cli_options.h"
+#include <mastar/options/mas_cli_opts.h>
 
 #include "mas_sig.h"
 #include "mas_init.h"
@@ -65,6 +56,7 @@ more:
 int
 mas_init_message( mas_options_t * popts, const char **message )
 {
+  extern mas_control_t ctrl;
   extern unsigned long __MAS_LINK_DATE__;
   extern unsigned long __MAS_LINK_TIME__;
   extern unsigned long __MAS_LINK_TIMESTAMP__;
@@ -124,8 +116,12 @@ mas_init_proc( mas_options_t * popts, const char **message )
       linkname[sz] = '\0';
       WMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
     }
-    ctrl.exepath = linkname;
-    ctrl.exename = mas_strdup( basename( ctrl.exepath ) );
+    {
+      extern mas_control_t ctrl;
+
+      ctrl.exepath = linkname;
+      ctrl.exename = mas_strdup( basename( ctrl.exepath ) );
+    }
   }
   if ( message )
     *message = __func__;
@@ -147,6 +143,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
   }
   if ( *sppid )
   {
+    extern mas_control_t ctrl;
     int rzero = 0;
     const char *name = ctrl.exename;
 
@@ -201,6 +198,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
 int
 mas_init_set_msg_file( mas_options_t * popts, const char **message )
 {
+  extern mas_control_t ctrl;
   int r = 0;
 
   if ( !ctrl.is_parent )

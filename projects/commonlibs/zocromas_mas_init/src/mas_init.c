@@ -37,11 +37,10 @@
 #  include <mastar/msg/mas_curses.h>
 #endif
 
-#include "mas_opts.h"
-#include "mas_opts_save.h"
-#include "mas_opts_restore.h"
-
-#include "mas_cli_options.h"
+#include <mastar/options/mas_opts.h>
+#include <mastar/options/mas_opts_save.h>
+#include <mastar/options/mas_opts_restore.h>
+#include <mastar/options/mas_cli_opts.h>
 
 #include "mas_sig.h"
 #include "mas_init.h"
@@ -383,7 +382,7 @@ mas_destroy( mas_options_t * popts )
     extern unsigned long memory_balance;
 
     /* k = print_memlist( ctrl.msgfile, FL ); */
-    if ( 0 )
+    if ( ctrl.dead_beaf )
     {
       char *bad_mem;
 
@@ -392,7 +391,8 @@ mas_destroy( mas_options_t * popts )
         strcpy( bad_mem, "DEAD BEAF" );
     }
     FMSG( "destroy, memory_balance:%ld (%lX);", memory_balance, memory_balance );
-    print_memlist_any( FL, 4, ctrl.stderrfile, ctrl.old_stderrfile, ctrl.msgfile, stderr );
+    if ( 0 )
+      print_memlist_any( FL, 4, ctrl.stderrfile, ctrl.old_stderrfile, ctrl.msgfile, stderr );
     fflush( ctrl.msgfile );
   }
 #endif

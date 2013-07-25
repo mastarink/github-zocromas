@@ -276,7 +276,7 @@ mas_watcher_th( void *arg )
 
 /* naming : pthread_create = start */
 int
-mas_watcher_start( mas_options_t * popts )
+mas_watcher_start( const mas_options_t * popts )
 {
   int r = 0;
 

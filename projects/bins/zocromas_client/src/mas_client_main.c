@@ -11,7 +11,7 @@
 #include <mastar/types/mas_opts_types.h>
 
 #include <mastar/init/mas_sig.h>
-#include <mastar/init/mas_cli_options.h>
+#include <mastar/options/mas_cli_opts.h>
 
 #include <mastar/control/mas_control.h>
 

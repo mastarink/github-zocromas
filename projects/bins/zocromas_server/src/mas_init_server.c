@@ -38,12 +38,11 @@
 #include "mas_init_threads.h"
 #include "mas_init_protos.h"
 
-
 #include <mastar/init/mas_init.h>
-/* #include <mastar/init/mas_opts.h> */
 
 #include "mas_ticker.h"
 
+#include "mas_init_pid.h"
 #include "mas_init_server.h"
 
 /*
@@ -196,23 +195,25 @@ mas_destroy_server( mas_options_t * popts )
     EMSG( "TO STOP TICKER" );
     mas_ticker_stop(  );
   }
-  WMSG( "TO DESTROY MODULES" );
+  HMSG( "TO DESTROY MODULES" );
   mas_modules_unregister(  );
-  {
-    if ( ctrl.pidfd > 0 )
-    {
-      /* char *pidpath;                           */
-      /*                                          */
-      /* pidpath = mas_strdup( popts-> dir.pids );    */
-      /* pidpath = mas_strcat_x( pidpath, name ); */
 
-      mas_close( ctrl.pidfd );
-      /* unlink( pidpath ); */
-    }
-    ctrl.pidfd = 0;
-  }
+  mas_destroy_pids( popts );
+  /* {                                                      */
+  /*   if ( ctrl.pidfd > 0 )                                */
+  /*   {                                                    */
+  /*     (* char *pidpath;                           *)     */
+  /*     (*                                          *)     */
+  /*     (* pidpath = mas_strdup( popts-> dir.pids );    *) */
+  /*     (* pidpath = mas_strcat_x( pidpath, name ); *)     */
+  /*                                                        */
+  /*     mas_close( ctrl.pidfd );                           */
+  /*     (* unlink( pidpath ); *)                           */
+  /*   }                                                    */
+  /*   ctrl.pidfd = 0;                                      */
+  /* }                                                      */
 
   MAS_LOG( "destroy server done" );
-  WMSG( "DESTROY SERVER DONE" );
-  EMSG( "logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
+  HMSG( "DESTROY SERVER DONE" );
+  IMSG( "logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
 }
