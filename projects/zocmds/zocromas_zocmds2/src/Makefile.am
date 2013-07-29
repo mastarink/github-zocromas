@@ -6,7 +6,7 @@ SUBDIRS= inc
 # pkglibdir=$(libdir)/zocmds
 # pkglib_LTLIBRARIES = notify.la
 
-moduledir = $(libdir)/zocmds
+moduledir = $(libdir)/zocromod/zocmds
 module_LTLIBRARIES = notify.la
 
 

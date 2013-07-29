@@ -355,3 +355,11 @@ server info
 bye
 server info
 bye
+! gvim
+! gvim -f
+! date
+! ps
+! pstree -ph
+! ps
+! date
+bye

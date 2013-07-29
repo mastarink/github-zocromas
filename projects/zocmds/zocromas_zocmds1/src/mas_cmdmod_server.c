@@ -32,7 +32,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 /*
@@ -83,7 +82,8 @@ info_transaction( mas_rcontrol_t * prcontrol, unsigned itr, char *cp, size_t buf
                     prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
                     prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
                     pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
-                    mas_ssubstatus( prcontrol->h.substatus ), prcontrol->h.subpoint, prcontrol->h.subresult1, prcontrol->h.subresult2, prcontrol->xch_cnt );
+                    mas_ssubstatus( prcontrol->h.substatus ), prcontrol->h.subpoint, prcontrol->h.subresult1, prcontrol->h.subresult2,
+                    prcontrol->xch_cnt );
     cp += len;
     bufsz -= len;
   }
@@ -120,6 +120,7 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
           aip = mas_ip_string( &plchannel->serv_instance.addr.sin_addr );
       }
       {
+        CTRL_PREPARE;
         len = snprintf( cp, bufsz, "\t%u(s%lu). %s:%u * %s; \t\t\ttid:%5u/%4x; [%lx] {%lu - %lu = %lu} {%lu - %lu = %lu}\n", ith,
                         plcontrol->h.serial, plcontrol->host, port, aip, plcontrol->h.tid, plcontrol->h.tid, plcontrol->h.thread,
                         plcontrol->clients_came, plcontrol->clients_gone, plcontrol->clients_came - plcontrol->clients_gone,
@@ -140,6 +141,7 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
       {
         if ( prcontrol->signature[0] != 'T' || prcontrol->signature[1] != 'R' )
         {
+          EVAL_PREPARE;
           ERRRG( "Woooooooooooooooooo" );
           sleep( 100 );
         }
@@ -178,6 +180,7 @@ info_cmd( STD_CMD_ARGS )
   MAS_LOG( "info cmd" );
 
   {
+    CTRL_PREPARE;
     buf = mas_malloc( bufsz0 );
     {
       char *cp;
@@ -326,6 +329,7 @@ info_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 stop_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   ctrl.do_exit = 1;
   return NULL;
 }
@@ -341,6 +345,7 @@ cls_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 restart_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   ctrl.restart = 1;
   ctrl.do_exit = 1;
   return NULL;
@@ -349,6 +354,7 @@ restart_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 exit_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   ctrl.exit = 1;
   ctrl.do_exit = 1;
   return NULL;
@@ -357,6 +363,7 @@ exit_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 sigquit_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   HMSG( "KILL -QUIT %u", ctrl.pserver_thread->pid );

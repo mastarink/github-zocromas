@@ -260,14 +260,11 @@ mas_http_reply( mas_rcontrol_t * prcontrol, mas_http_t * http )
     {
       if ( http && http->status_code == MAS_HTTP_CODE_NONE )
       {
-        ssize_t test_size = -1;
-
         MAS_LOG( "to make http status" );
 #ifdef MAS_HTTP_USE_FILEINFO
-        if ( http->reply_content && ( test_size = mas_unidata_data_size( http->reply_content->udata ) ) )
+        if ( http->reply_content && ( mas_unidata_data_size( http->reply_content->udata ) ) )
 #elif defined( MAS_HTTP_USE_AUTOOBJECT )
-        if ( http->reply_content && mas_autoobject_is_regular( http->reply_content )
-             && ( test_size = mas_autoobject_size( http->reply_content ) ) > 0 )
+        if ( http->reply_content && mas_autoobject_is_regular( http->reply_content ) && ( mas_autoobject_size( http->reply_content ) ) > 0 )
 #else
         if ( 0 )
 #endif

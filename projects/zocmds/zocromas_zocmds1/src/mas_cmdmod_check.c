@@ -26,7 +26,7 @@
 
 
 
-#include <mastar/thvariables/mas_thread_variables.h>
+/* #include <mastar/thvariables/mas_thread_variables.h> */
 
 
 
@@ -52,27 +52,27 @@ version_cmd( STD_CMD_ARGS )
   return NULL;
 }
 
-static mas_evaluated_t *
-tvar_cmd( STD_CMD_ARGS )
-{
-  char *result = NULL;
-
-  mas_varvec_element_t *var;
-
-  var = mas_thread_variables_find( "client", "args" );
-  if ( var )
-  {
-    /* cMSG( "CHECK ARGS: %s ::: %s", args, var->value ); */
-    if ( !result )
-      result = mas_varvec_variable_get_value( var );
-  }
-  if ( args )
-  {
-    /* cMSG( "CHECK ARGS: %s", args ); */
-    mas_thread_variable_set_text( "client", "args", args );
-  }
-  return mas_evaluated_wrap_pchar( result );
-}
+/* static mas_evaluated_t *                                     */
+/* tvar_cmd( STD_CMD_ARGS )                                     */
+/* {                                                            */
+/*   char *result = NULL;                                       */
+/*                                                              */
+/*   mas_varvec_element_t *var;                                 */
+/*                                                              */
+/*   var = mas_thread_variables_find( "client", "args" );       */
+/*   if ( var )                                                 */
+/*   {                                                          */
+/*     (* cMSG( "CHECK ARGS: %s ::: %s", args, var->value ); *) */
+/*     if ( !result )                                           */
+/*       result = mas_varvec_variable_get_value( var );         */
+/*   }                                                          */
+/*   if ( args )                                                */
+/*   {                                                          */
+/*     (* cMSG( "CHECK ARGS: %s", args ); *)                    */
+/*     mas_thread_variable_set_text( "client", "args", args );  */
+/*   }                                                          */
+/*   return mas_evaluated_wrap_pchar( result );                 */
+/* }                                                            */
 
 static mas_evaluated_t *
 lvar_cmd( STD_CMD_ARGS )
@@ -151,8 +151,8 @@ mas_cmd_t subcmdtable[] = {
   ,
   {1, "version", version_cmd, NULL} /* check version */
   ,
-  {2, "tvar", tvar_cmd, NULL}   /* check tvar */
-  ,
+  /* {2, "tvar", tvar_cmd, NULL}   (* check tvar *) */
+  /* ,                                              */
   {3, "lvar", lvar_cmd, NULL}   /* check lvar */
   ,
   {999, NULL, NULL, NULL}

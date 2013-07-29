@@ -1,5 +1,5 @@
-zocromas_zoctypes                             zocromas_zoctypes
 commonlibs/zocromas_mas_wrap                  zocromas_mas_wrap
+zocromas_zoctypes                             zocromas_zoctypes
 commonlibs/zocromas_mas_tools                 zocromas_mas_tools
 commonlibs/zocromas_mas_io                    zocromas_mas_io
 commonlibs/zocromas_mas_control               zocromas_mas_control
@@ -18,6 +18,8 @@ commonlibs/zocromas_mas_init                  zocromas_mas_init
 zocmds/zocromas_zocmds1                       zocromas_zocmds1
 zocmds/zocromas_zocmds2                       zocromas_zocmds2
 zocromas_zocprotos                            zocromas_zocprotos
+protos/xcromas                                xcromas
+protos/http                                   http
 bins/zocromas_client                          zocromas_client
 bins/zocromas_server                          zocromas_server
 bins/zocromas_direct                          zocromas_direct

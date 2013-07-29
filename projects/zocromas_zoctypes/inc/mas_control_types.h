@@ -36,13 +36,22 @@ struct mas_pthread_globals_s
   pthread_cond_t logger_wait_cond;
 
   pthread_attr_t custom_attr;
+
   cpu_set_t *master_set;
   pthread_attr_t master_attr;
+  
+  cpu_set_t *ticker_set;
   pthread_attr_t ticker_attr;
+  
+  cpu_set_t *watcher_set;
   pthread_attr_t watcher_attr;
+  
+  cpu_set_t *logger_set;
   pthread_attr_t logger_attr;
+
   cpu_set_t *listener_set;
   pthread_attr_t listener_attr;
+
   cpu_set_t *transaction_set;
   pthread_attr_t transaction_attr;
 };
@@ -110,6 +119,9 @@ struct mas_control_s
 
   /* from opts: */
   unsigned messages:1;
+  unsigned messages_set:1;
+  unsigned messages_child:1;
+  unsigned messages_parent:1;
   unsigned inited:1;
 
   unsigned daemon:1;

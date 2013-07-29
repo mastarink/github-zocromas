@@ -1,5 +1,5 @@
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
+/* #include <mastar/types/mas_common_defs.h> */
 
 
 
@@ -18,11 +18,8 @@
 
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
+/* #include <mastar/tools/mas_arg_tools.h> */
 
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -31,7 +28,7 @@ extern mas_control_t ctrl;
 #include <mastar/log/mas_logger.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/thvariables/mas_thread_variables.h>
+/* #include <mastar/thvariables/mas_thread_variables.h> */
 #ifdef MAS_USE_LISTENER
 #  include <mastar/listener/mas_listener_control.h>
 #endif

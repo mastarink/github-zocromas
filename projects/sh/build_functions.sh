@@ -255,7 +255,11 @@ function ebuild_m ()
 #	  echo "---ebuilds etc.---" >&2
 #	  ls -l >&2
 	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "6. $mas_vers : updating Manifest" >&2 ; fi
-	  ebuild $ebname manifest &>/dev/null || return 1
+	  if [[ "$MAS_SH_VERBOSE" ]] ; then
+	    ebuild $ebname manifest || return 1
+	  else
+	    ebuild $ebname manifest &>/dev/null || return 1
+	  fi
 	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "7." >&2 ; fi
 	  return 0
 #	  ls -l Manifest || return 1

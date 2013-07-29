@@ -51,7 +51,7 @@ function run_installed ()
 }
 function run_any ()
 {
-  local cmd_exec binary
+  local cmd_exec binary bin_dir bin_name
   # for core dump:
   ulimit -c unlimited
   
@@ -65,6 +65,9 @@ function run_any ()
     echo "binary not set to run [ibinary_preset: $ibinary_preset ; rbinary_preset: $rbinary_preset]" >&2
     return 1
   fi
+  bin_dir=`dirname $binary`
+  bin_name=`basename $binary`
+  bin_run="./$bin_name"
   echo "To run $binary" >&2
 
 # echo "To RUN rbinary: $binary" >&2
@@ -86,32 +89,32 @@ function run_any ()
   fi
   if [[ "$made" ]] ||  make_any ; then
 #   echo "......... $binary" >&2
-    if [[ "$binary" ]] ; then
+    if cd $bin_dir && [[ "$bin_run" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
-        echo "1 To run rbinary: $cmd_exec $binary $@" >&2
-        nanosleep 0.5 &&  $cmd_exec $binary "$@"
+        echo "1 To run rbinary: $cmd_exec $bin_run $@" >&2
+        nanosleep 0.5 &&  $cmd_exec $bin_run "$@"
       elif type usleep >/dev/null 2>&1 ; then
-        echo "2 To run rbinary: $cmd_exec $binary $@" >&2
-        usleep 50000 &&  $cmd_exec $binary "$@"
+        echo "2 To run rbinary: $cmd_exec $bin_run $@" >&2
+        usleep 50000 &&  $cmd_exec $bin_run "$@"
       elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-        echo "3 To run rbinary: $cmd_exec $binary $@" >&2
-        $binary "$@"
+        echo "3 To run rbinary: $cmd_exec $bin_run $@" >&2
+        $bin_run "$@"
       else
-        echo "4 To run rbinary: $cmd_exec $binary $@" >&2
-        $cmd_exec $binary "$@"
+        echo "4 To run rbinary: $cmd_exec $bin_run $@" >&2
+        $cmd_exec $bin_run "$@"
       fi
 ###   if type nanosleep >/dev/null 2>&1 ; then
-###     echo "1 To run rbinary: $cmd_exec $binary $@" >&2
-###     nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $binary "$@"
+###     echo "1 To run rbinary: $cmd_exec $bin_run $@" >&2
+###     nanosleep 0.5 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $bin_run "$@"
 ###   elif type usleep >/dev/null 2>&1 ; then
-###     echo "2 To run rbinary: $cmd_exec $binary $@" >&2
-###     usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $binary "$@"
+###     echo "2 To run rbinary: $cmd_exec $bin_run $@" >&2
+###     usleep 50000 && LD_PRELOAD="/usr/lib/libtcmalloc.so"   $cmd_exec $bin_run "$@"
 ###   elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-###     echo "3 To run rbinary: $cmd_exec $binary $@" >&2
-###     LD_PRELOAD="/usr/lib/libtcmalloc.so" $cmd_exec $binary "$@"
+###     echo "3 To run rbinary: $cmd_exec $bin_run $@" >&2
+###     LD_PRELOAD="/usr/lib/libtcmalloc.so" $cmd_exec $bin_run "$@"
 ###   else
-###     echo "4 To run rbinary: $binary" >&2
-###     $cmd_exec $binary "$@"
+###     echo "4 To run rbinary: $bin_run" >&2
+###     $cmd_exec $bin_run "$@"
 ###   fi
     else
       echo "run error" >&2

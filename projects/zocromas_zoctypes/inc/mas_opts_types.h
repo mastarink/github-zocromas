@@ -74,6 +74,24 @@ typedef struct mas_thnames_s
   char *listen_exit;
 } mas_thnames_t;
 
+struct mas_options_daemon_s
+{
+  unsigned disable:1;
+  unsigned sys:1;
+  unsigned disable_redirect_std:1;
+  unsigned disable_close_std:1;
+  unsigned disable_setsid:1;
+  unsigned disable_chdir:1;
+};
+typedef struct mas_options_daemon_s mas_options_daemon_t;
+
+struct mas_options_log_s
+{
+  unsigned enable:1;
+  unsigned run:1;
+};
+typedef struct mas_options_log_s mas_options_log_t;
+
 struct mas_options_s
 {
   mas_msg_options_t f;
@@ -84,14 +102,10 @@ struct mas_options_s
   unsigned single_child:1;
   unsigned listener_single:1;
   unsigned transaction_single:1;
+  unsigned nomessages_parent:1;
+  unsigned nomessages_child:1;
   unsigned nomessages:1;
 
-  unsigned nodaemon:1;
-  unsigned noclose_std:1;
-  unsigned noredirect_std:1;
-
-  unsigned nologger:1;
-  unsigned nolog:1;
   unsigned nowatcher:1;
   unsigned disconnect_prompt:1;
   unsigned wait_server:1;
@@ -103,6 +117,10 @@ struct mas_options_s
   unsigned save_user_opts_plus:1;
   unsigned overwrite_user_opts:1;
   unsigned overwrite_user_opts_plus:1;
+
+  mas_options_daemon_t daemon;
+  mas_options_log_t log;
+
   unsigned ticker_mode;
   unsigned nomaster;
   unsigned nolistener;
@@ -134,6 +152,7 @@ struct mas_options_s
 
   mas_dirs_t dir;
   mas_thnames_t thname;
+  char *save_user_opts_filename;
   char *msgfilename;
   char *stderr_filename;
   char *stdout_filename;
@@ -169,6 +188,7 @@ struct mas_option_parse_s
   const char *dv;
 };
 typedef struct mas_option_parse_s mas_option_parse_t;
+typedef int ( *mas_init_fun_t ) ( mas_options_t * popts, const char **message );
 
 /* #  define MAS_NOPASS_OPTS */
 

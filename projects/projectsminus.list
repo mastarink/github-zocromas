@@ -1,5 +1,5 @@
-zocromas_zoctypes
 zocromas_mas_wrap
+zocromas_zoctypes
 zocromas_mas_tools
 zocromas_mas_io
 zocromas_mas_control
@@ -18,6 +18,8 @@ zocromas_mas_init
 zocromas_zocmds1
 zocromas_zocmds2
 zocromas_zocprotos
+xcromas
+http
 zocromas_client
 zocromas_server
 zocromas

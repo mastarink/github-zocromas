@@ -3,7 +3,7 @@ SUBDIRS= inc
 ######### modules ########################################################################
 ##########################################################################################
 
-moduledir=$(libdir)/zocmds
+moduledir=$(libdir)/zocromod/zocmds
 module_LTLIBRARIES = \
 	test.la \
 	check.la \

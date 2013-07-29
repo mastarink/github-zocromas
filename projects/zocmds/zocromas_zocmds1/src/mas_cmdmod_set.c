@@ -18,7 +18,7 @@
 #include <mastar/log/mas_logger.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/thvariables/mas_thread_variables.h>
+/* #include <mastar/thvariables/mas_thread_variables.h> */
 
 
 

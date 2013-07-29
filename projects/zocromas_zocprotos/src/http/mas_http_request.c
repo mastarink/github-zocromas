@@ -17,7 +17,7 @@ extern mas_control_t ctrl;
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/init/mas_opts_common.h>
+#include <mastar/options/mas_opts_common.h>
 
 /* #include "server/inc/mas_server_tools.h" */
 #include <mastar/thtools/mas_ocontrol_tools.h>
