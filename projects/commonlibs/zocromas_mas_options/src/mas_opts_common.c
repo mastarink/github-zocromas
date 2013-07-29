@@ -1,8 +1,8 @@
-#include <stdlib.h>
-#include <string.h>
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
+
+#include <stdlib.h>
+#include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -14,7 +14,6 @@
 /* #include <mastar/log/mas_log.h> */
 
 #include <mastar/types/mas_control_types.h>
-extern mas_control_t ctrl;
 
 #include "mas_opts_common.h"
 
@@ -87,6 +86,7 @@ mas_opts_restore_nosection( mas_options_t * popts, void *ptopts, const char *sec
         break;
       case MAS_OPT_TYPE_FUNC:
         {
+          EVAL_PREPARE;
           mas_opts_func_t func;
 
           func = opt_table[io].func;
@@ -133,6 +133,7 @@ _mas_opts_restore_path( mas_options_t * popts, const char *fpath, void *ptopts, 
                         const void *arg, mas_new_section_func_t new_section_func, mas_at_section_func_t at_section_func,
                         mas_unknown_opt_func_t unknown_opt_func )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   if ( fpath )

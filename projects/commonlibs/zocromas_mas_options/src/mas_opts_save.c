@@ -14,7 +14,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -107,6 +106,7 @@ mas_opts_check_old_file( mas_options_t * popts, const char *fpath, int deep, int
 int
 _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename, int backup, int overwrite )
 {
+  EVAL_PREPARE;
   int r = 0;
   int rtot = -1;
 
@@ -127,6 +127,7 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
         FILE *f;
 
         f = mas_fopen( fpath, "w" );
+        HMSG( "WRITING OPTS %s", fpath );
         if ( f )
         {
           char outstr[128] = "#   ";
@@ -151,7 +152,7 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                                "max_config_backup=%u\nmessages=%u\n"
                                "default_port=%u\nsave_user_opts=%u\nsave_user_opts_plus=%u\n" "restart_sleep=%lg\n"
                                "# -\n", popts->env_optsname, popts->env_hostname, popts->dir.history,
-                               popts->dir.post, popts->dir.log, !popts->nolog,
+                               popts->dir.post, popts->dir.log, popts->log.enable,
                                popts->max_config_backup, !popts->nomessages, popts->default_port,
                                popts->save_user_opts, popts->save_user_opts_plus, popts->restart_sleep ) );
             if ( r > 0 )
@@ -164,7 +165,7 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                             "# server\ndaemon=%u\nread_user_opts=%u\nread_user_opts_plus=%u\n"
                             "single_instance=%u\nsingle_child=%u\nlogger=%d\nticker=%d\nwatcher=%d\nmodsdir=%s\n"
                             "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, popts->read_user_opts, popts->read_user_opts_plus,
-                            popts->single_instance, popts->single_child, !popts->nologger, !popts->noticker, !popts->nowatcher,
+                            popts->single_instance, popts->single_child, popts->log.run, !popts->noticker, !popts->nowatcher,
                             popts->dir.mods, popts->dir.pids, popts->dir.proto ) );
             if ( r > 0 )
               rtot += r;
@@ -229,30 +230,45 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
           ctrl.opts_saved = 1;
         }
       }
+      else
+      {
+        HMSG( "UNABLE TO WRITE OPTS %s", fpath );
+      }
       mas_free( fpath );
     }
   }
+  HMSG( "(%d)_SAVE PLUS", rtot );
   return rtot;
 }
 
 int
 mas_opts_save_user( mas_options_t * popts, const char *dirname, const char *filename )
 {
-  int r = -1;
+  int r = -__LINE__;
 
   if ( popts->save_user_opts )
   {
+    r = 0;
+    EVAL_PREPARE;
     MAS_LOG( "to save opts %s", filename );
     IEVAL( r, _mas_opts_save( popts, dirname, filename, 1, popts->overwrite_user_opts ) );
     MAS_LOG( "saved opts : %d", r );
   }
+  else
+  {
+    r = 0;
+    MAS_LOG( "disabled save opts" );
+    HMSG( "disabled save opts" );
+  }
+  HMSG( "(%d)SAVED OPTS", r );
   return r;
 }
 
 int
 _mas_opts_save_plus( mas_options_t * popts, const char *dirname, const char *filename, int backup, int overwrite, va_list args )
 {
-  int r = 0;
+  EVAL_PREPARE;
+  int r = -1;
   char *s = NULL;
   int x = 0;
   char *fn = NULL;
@@ -268,12 +284,10 @@ _mas_opts_save_plus( mas_options_t * popts, const char *dirname, const char *fil
   }
   if ( x )
   {
+    r = 0;
     IEVAL( r, _mas_opts_save( popts, dirname, fn, backup, overwrite ) );
   }
-  else
-  {
-    IEVAL( r, -1 );
-  }
+  HMSG( "(%d)_SAVE PLUS", r );
   mas_free( fn );
   return r;
 }
@@ -281,6 +295,7 @@ _mas_opts_save_plus( mas_options_t * popts, const char *dirname, const char *fil
 int
 mas_opts_save_user_plus( mas_options_t * popts, const char *dirname, const char *filename, ... )
 {
+  EVAL_PREPARE;
   int r = 0;
   va_list args;
 
@@ -291,10 +306,13 @@ mas_opts_save_user_plus( mas_options_t * popts, const char *dirname, const char 
     IEVAL( r, _mas_opts_save_plus( popts, dirname, filename, 1, popts->overwrite_user_opts_plus, args ) );
     MAS_LOG( "saved opts plus : %d", r );
   }
-  /* else                                    */
-  /* {                                       */
-  MAS_LOG( "already saved opts plus" );
-  /* }                                       */
+  else
+  {
+    r = 0;
+    MAS_LOG( "disabled save opts plus" );
+    HMSG( "disabled save opts plus" );
+  }
   va_end( args );
+  HMSG( "(%d)SAVED OPTS PLUS", r );
   return r;
 }

@@ -25,8 +25,6 @@
 #include <mastar/log/mas_logger.h>
 
 
-
-
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
 
@@ -69,8 +67,7 @@ more:
 static int
 mas_init_argv( mas_options_t * popts, int argc, char **argv, char **env )
 {
-  extern mas_control_t ctrl;
-
+  CTRL_PREPARE;
   ctrl.launchervv.v = argv;
   ctrl.launchervv.c = argc;
   ctrl.launcherev.v = env;
@@ -140,7 +137,7 @@ error_handler_at_init( const char *func, int line, int issys, int rcode, int ier
 static int
 mas_pre_init_runpath( char *runpath )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
   int r = 0;
   const char *pn;
 
@@ -172,7 +169,7 @@ mas_pre_init_runpath( char *runpath )
 int
 mas_init_restart_count( mas_options_t * popts )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
   char name[512];
   char *ren = NULL, *ren0;
 
@@ -211,7 +208,8 @@ mas_init_restart_count( mas_options_t * popts )
 int
 mas_init( mas_options_t * popts, int argc, char **argv, char **env )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = 0;
 
   HMSG( "INIT" );
@@ -235,6 +233,7 @@ mas_init( mas_options_t * popts, int argc, char **argv, char **env )
 
   if ( !( mas_init_argv( popts, argc, argv, env ) > 1 ) )
     IEVAL( r, mas_init_env( popts ) );
+  /* *argv[0]='Z'; */
 
   /* HMSG( "popts-> argvv.v[0]: %s", popts-> argvv.v[0] ); */
   /* mas_init_message(  ); */
@@ -250,35 +249,72 @@ mas_init( mas_options_t * popts, int argc, char **argv, char **env )
 static int
 mas_init_vplus( mas_options_t * popts, va_list args )
 {
+  CTRL_PREPARE;
   int r = 0;
-  int pos = 0;
-  typedef int ( *v_t ) ( mas_options_t * popts, const char * *msg );
-  v_t fun;
+  int ifu = 0;
+  mas_init_fun_t fun;
 
   WMSG( "INIT V+" );
-  /* for ( v_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, v_t ) ) */
-  while ( !r && !ctrl.is_parent && ( fun = va_arg( args, v_t ) ) && !ctrl.is_parent )
+  /* for ( mas_init_fun_t fun = NULL; r >= 0 && !ctrl.is_parent; fun = va_arg( args, mas_init_fun_t ) ) */
+  while ( !r && !ctrl.is_parent && ( fun = va_arg( args, mas_init_fun_t ) ) && !ctrl.is_parent )
   {
+    EVAL_PREPARE;
     const char *msg = NULL;
 
-    HMSG( "(%d) INIT V #%d + %p", r, pos, ( void * ) ( unsigned long ) fun );
+    HMSG( "(%d) + INIT V #%d", r, ifu );
     IEVAL( r, ( fun ) ( popts, &msg ) );
-    MAS_LOG( "(%d) init + #%d - %s", r, pos, msg ? msg : "-" );
-    HMSG( "(%d) INIT V #%d - %s", r, pos, msg ? msg : "-" );
+    MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
+    HMSG( "(%d) - INIT V #%d %s", r, ifu, msg ? msg : "-" );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
-    pos++;
+    ifu++;
   }
-  HMSG( "(%d) INIT V done (#%d) is_parent:%d", r, pos, ctrl.is_parent );
+  HMSG( "(%d) INIT V done (#%d) is_parent:%d", r, ifu, ctrl.is_parent );
   MAS_LOG( "(%d) init + done", r );
   return r;
 }
 
+int
+mas_init_set( mas_options_t * popts, int argc, char **argv, char **env, int funcnt, mas_init_fun_t * init_funcs )
+{
+  CTRL_PREPARE;
+  EVAL_PREPARE;
+  int r = 0;
+  int ifu = 0;
 
+  WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
+  IEVAL( r, mas_init( popts, argc, argv, env ) );
+
+  WMSG( "INIT S+" );
+  for ( ifu = 0; ifu < funcnt && !r && !ctrl.is_parent && !ctrl.is_parent; ifu++ )
+  {
+    mas_init_fun_t fun;
+
+    fun = init_funcs[ifu];
+    if ( fun )
+    {
+      const char *msg = NULL;
+
+      HMSG( "(%d) + INIT S #%d", r, ifu );
+      IEVAL( r, ( fun ) ( popts, &msg ) );
+      MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
+      HMSG( "(%d) - INIT S #%d %s", r, ifu, msg ? msg : "-" );
+      /* ( ctrl.error_handler ) ( FL, 77 ); */
+    }
+  }
+  HMSG( "(%d) INIT V done (#%d) is_parent:%d", r, ifu, ctrl.is_parent );
+  MAS_LOG( "(%d) init + done", r );
+
+  MAS_LOG( "(%d) init done e%d", r, errno );
+  HMSG( "(%d)INIT %s", r, r < 0 ? "FAIL" : "OK" );
+  ctrl.inited = 1;
+  return r;
+}
 
 int
 mas_init_plus( mas_options_t * popts, int argc, char **argv, char **env, ... )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = 0;
 
   WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
@@ -301,7 +337,10 @@ mas_init_plus( mas_options_t * popts, int argc, char **argv, char **env, ... )
 void
 mas_destroy( mas_options_t * popts )
 {
-  extern mas_control_t ctrl;
+  int r = 0;
+
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   char sppid[64] = "";
 
 
@@ -309,9 +348,15 @@ mas_destroy( mas_options_t * popts )
   if ( *sppid )
   {
     if ( !ctrl.opts_saved )
-      mas_opts_save_user( popts, NULL, ctrl.progname ? ctrl.progname : "Unknown" );
+      IEVAL( r,
+             mas_opts_save_user( popts, NULL,
+                                 popts->save_user_opts_filename ? popts->save_user_opts_filename : ( ctrl.progname ? ctrl.progname : "Unknown" ) ) );
+    HMSG( "(%d)SAVE USER", r );
+    r = 0;
     if ( !ctrl.opts_saved_plus )
-      mas_opts_save_user_plus( popts, NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL );
+      IEVAL( r, mas_opts_save_user_plus( popts, NULL, ctrl.progname ? ctrl.progname : "Unknown", ".", sppid, NULL ) );
+    HMSG( "(%d)SAVE", r );
+    r = 0;
   }
   WMSG( "DESTROY" );
   MAS_LOG( "destroy server" );
@@ -347,7 +392,8 @@ mas_destroy( mas_options_t * popts )
       P_ERR;
     }
   }
-  mas_opts_destroy( popts );
+  IEVAL( r, mas_opts_destroy( popts ) );
+  r = 0;
 
   ctrl.log_disabled = 1;
 
@@ -371,10 +417,12 @@ mas_destroy( mas_options_t * popts )
     mas_free( ctrl.exename );
   ctrl.exename = NULL;
 
-  mas_ctrl_destroy(  );
+  IEVAL( r, mas_ctrl_destroy(  ) );
+  r = 0;
 
   MAS_LOG( "destroy done" );
-  mas_logger_delete( 1 );
+  IEVAL( r, mas_logger_delete( 1 ) );
+  r = 0;
   HMSG( "DESTROY DONE" );
 #ifdef MAS_TRACEMEM
   {
@@ -401,6 +449,7 @@ mas_destroy( mas_options_t * popts )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  CTRL_PREPARE;
   char name[512];
 
   /* char *value = NULL; */

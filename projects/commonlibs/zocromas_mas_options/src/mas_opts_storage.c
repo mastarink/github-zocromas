@@ -11,14 +11,12 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 
-
-
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 /* #include <mastar/log/mas_log.h> */
 
 #include <mastar/types/mas_opts_types.h>
+#include <mastar/types/mas_control_types.h>
 
 #include "mas_opts_common.h"
 #include "mas_opts_storage.h"
@@ -108,6 +106,7 @@ mas_opts_set_configfilename( mas_options_t * popts, const char *filename )
 int
 mas_opts_check_dir( mas_options_t * popts )
 {
+  EVAL_PREPARE;
   int r = 0;
   struct stat dir_stat;
 

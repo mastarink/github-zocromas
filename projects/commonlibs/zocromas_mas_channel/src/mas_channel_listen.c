@@ -15,6 +15,8 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
 #include "mas_channel.h"
 #include "mas_channel_socket.h"
 #include "mas_channel_object.h"
@@ -70,6 +72,7 @@ mas_listen(s, 5);
 static int
 _mas_channel_tune_socket( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
   int yes = 1;
 
@@ -80,23 +83,23 @@ _mas_channel_tune_socket( mas_channel_t * pchannel )
 
   if ( pchannel->serv.addr.sin_family == AF_INET )
   {
-#ifdef TCP_DEFER_ACCEPT
+#  ifdef TCP_DEFER_ACCEPT
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_DEFER_ACCEPT, &yes, sizeof( yes ) ) );
-#endif
-#ifdef TCP_QUICKACK
+#  endif
+#  ifdef TCP_QUICKACK
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_QUICKACK, &yes, sizeof( yes ) ) );
-#endif
+#  endif
 
 /* the TCP_CORK and TCP_NODELAY are mutually exclusive */
-#ifdef TCP_CORK
-#  if 0
+#  ifdef TCP_CORK
+#    if 0
     /* with 'foolish use' : makes keep-alive very slow ..... */
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_CORK, &yes, sizeof( yes ) ) );
+#    endif
 #  endif
-#endif
-#ifdef TCP_NODELAY
+#  ifdef TCP_NODELAY
     IEVAL( r, mas_setsockopt( pchannel->fd_socket, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof( yes ) ) );
-#endif
+#  endif
   }
 /* #ifdef EMSG                              */
 /*   if ( r < 0 )                           */
@@ -111,6 +114,7 @@ _mas_channel_tune_socket( mas_channel_t * pchannel )
 static int
 mas_channel_listen_tcp( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   if ( mas_channel_test( pchannel ) )
@@ -139,6 +143,7 @@ mas_channel_listen_tcp( mas_channel_t * pchannel )
 int
 _mas_channel_listen( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   switch ( pchannel->type )
@@ -172,6 +177,7 @@ mas_channel_listen( mas_channel_t * pchannel )
   {
     if ( pchannel->is_server && !pchannel->listening )
     {
+      EVAL_PREPARE;
       /* r = _mas_channel_listen( pchannel ); */
       IEVAL( r, _mas_channel_listen( pchannel ) );
     }
@@ -194,6 +200,7 @@ mas_channel_deaf( mas_channel_t * pchannel )
   {
     if ( pchannel->is_server && pchannel->listening )
     {
+      EVAL_PREPARE;
       switch ( pchannel->type )
       {
       case CHN_SOCKET:

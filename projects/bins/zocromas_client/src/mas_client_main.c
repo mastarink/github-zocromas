@@ -15,7 +15,6 @@
 
 #include <mastar/control/mas_control.h>
 
-extern mas_control_t ctrl;
 
 /* #include <mastar/init/mas_opts_common.h> */
 
@@ -53,6 +52,7 @@ more:
 int
 main( int argc, char *argv[], char *env[] )
 {
+  CTRL_PREPARE;
   extern mas_options_t gopts;
   int r = 0;
 

@@ -18,6 +18,8 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
 #ifndef MAS_SERVER_NOLOG
 #  include <mastar/log/mas_logger.h>
 #  include <mastar/log/mas_log.h>
@@ -43,7 +45,8 @@ Creating a daemon
 int
 mas_init_daemon_stdio( mas_options_t * popts, const char **message )
 {
-  extern mas_control_t ctrl;
+  EVAL_PREPARE;
+  CTRL_PREPARE;
   int r = 0;
 
   if ( ctrl.redirect_std )
@@ -123,6 +126,8 @@ mas_init_daemon_stdio( mas_options_t * popts, const char **message )
 int
 mas_init_child_process( mas_options_t * popts, const char **message )
 {
+  EVAL_PREPARE;
+  CTRL_PREPARE;
   int r = 0, rn = 0;
 
   ctrl.threads.n.daemon.pid = getpid(  );
@@ -131,13 +136,14 @@ mas_init_child_process( mas_options_t * popts, const char **message )
   ctrl.pserver_thread = &ctrl.threads.n.daemon;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemonI" ) );
-  HMSG( "INIT DAEMON:%u rn:%u", ctrl.threads.n.daemon.pid, rn );
+  HMSG( "INIT CHILD pid:%u(%u)@%u", getpid(  ), ctrl.threads.n.daemon.pid, getppid(  ) );
 
-  HMSG( "CHILD : %u @ %u - %s : %d", getpid(  ), getppid(  ), popts->msgfilename, ctrl.msgfile ? 1 : 0 );
   /* sleep(200); */
   /* mas_destroy_server(  ); */
-  IEVAL( r, setsid(  ) );
-  IEVAL( r, chdir( "/" ) );
+  if ( !popts->daemon.disable_setsid )
+    IEVAL( r, setsid(  ) );
+  if ( !popts->daemon.disable_chdir )
+    IEVAL( r, chdir( "/" ) );
   IEVAL( r, mas_init_daemon_stdio( popts, NULL ) );
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
   ctrl.is_child = 1;
@@ -150,10 +156,13 @@ mas_init_child_process( mas_options_t * popts, const char **message )
 int
 mas_init_parent_process( mas_options_t * popts, const char **message )
 {
+  EVAL_PREPARE;
+  CTRL_PREPARE;
   int r = 0, rn = 0;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParent" ) );
-  HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", ctrl.threads.n.daemon.pid, getpid(  ), getppid(  ) );
+  HMSG( "INIT PARENT pid:%u@%u ; child:%u ", getpid(  ), getppid(  ), ctrl.threads.n.daemon.pid );
+  /* HMSG( "PARENT : daemon pid:%u ; pid:%u ; ppid:%u", ctrl.threads.n.daemon.pid, getpid(  ), getppid(  ) ); */
   ctrl.is_parent = 1;
   r = 7777;
   if ( message )
@@ -165,40 +174,55 @@ mas_init_parent_process( mas_options_t * popts, const char **message )
 int
 mas_init_daemon( mas_options_t * popts, const char **message )
 {
-  extern mas_control_t ctrl;
+  EVAL_PREPARE;
+  CTRL_PREPARE;
   int r = -1;
 
   MAS_LOG( "init daemon" );
-  if ( ctrl.daemon /* && !ctrl.is_child && !ctrl.is_parent */ )
+  if ( ctrl.daemon /* && !ctrl.is_child && !ctrl.is_parent */  )
   {
-    pid_t pid_daemon;
-
     r = 0;
-    HMSG( "INIT DAEMON pid:%u", getpid(  ) );
-    WMSG( "DAEMONIZE" );
+    HMSG( "INIT DAEMON >" );
     MAS_LOG( "init daemonize" );
-    IEVAL( r, mas_fork(  ) );
-    pid_daemon = r;
-    if ( r >= 0 )
-      r = 0;
-    MAS_LOG( "(%d) init fork", pid_daemon );
-    if ( pid_daemon == 0 )
+    if ( popts->daemon.sys )
     {
+      popts->daemon.disable_setsid = 1;
+      popts->daemon.disable_chdir = 1;
+      IEVAL( r, daemon( 0, 0 ) );
+      HMSG( "INIT DAEMON SYS" );
       IEVAL( r, mas_init_child_process( popts, NULL ) );
     }
-    else if ( pid_daemon > 0 )
+    else
     {
-      ctrl.threads.n.daemon.pid = pid_daemon;
-      IEVAL( r, mas_init_parent_process( popts, NULL ) );
+      pid_t pid_daemon;
+
+      IEVAL( r, mas_fork(  ) );
+      pid_daemon = r;
+      if ( r >= 0 )
+        r = 0;
+      MAS_LOG( "(%d) init fork", pid_daemon );
+      if ( pid_daemon == 0 )
+      {
+        IEVAL( r, mas_init_child_process( popts, NULL ) );
+      }
+      else if ( pid_daemon > 0 )
+      {
+        ctrl.threads.n.daemon.pid = pid_daemon;
+        IEVAL( r, mas_init_parent_process( popts, NULL ) );
+      }
     }
   }
   else
   {
-    HMSG( "INIT NO DAEMON pid:%u", getpid(  ) );
+    ctrl.threads.n.daemon.pid = getpid(  );
+    HMSG( "INIT NO DAEMON pid:%u", ctrl.threads.n.daemon.pid );
+    r = 0;
   }
   MAS_LOG( "(%d) init daemon almost done", r );
   MAS_LOG( "(%d) init daemon done", r );
+  HMSG( "INIT DAEMON" );
   if ( message )
     *message = __func__;
+
   return r > 0 ? 0 : r;
 }

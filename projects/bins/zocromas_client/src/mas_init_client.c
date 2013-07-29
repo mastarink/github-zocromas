@@ -22,7 +22,7 @@
 extern mas_control_t ctrl;
 
 #include <mastar/init/mas_init.h>
-#include <mastar/init/mas_opts.h>
+#include <mastar/options/mas_opts.h>
 #include "mas_client_readline.h"
 
 

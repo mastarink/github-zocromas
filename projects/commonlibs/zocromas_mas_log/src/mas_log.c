@@ -24,8 +24,7 @@
 #include <mastar/thtools/mas_thread_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
+/* #include <mastar/types/mas_opts_types.h> */
 
 
 
@@ -57,6 +56,7 @@ __attribute__ ( ( constructor ) )
 static int
 mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
+  CTRL_PREPARE;
   mas_loginfo_list_head_t *log_list = NULL;
   char buffer[1024 * 8];
   mas_loginfo_t *li = NULL;
@@ -152,6 +152,7 @@ mas_log_unlim( const char *func, int line, int merrno, const char *fmt, ... )
 static int
 mas_vlog_lim( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
+  CTRL_PREPARE;
   if ( !ctrl.log_offmem && ctrl.log_q_mem > 200000000 )
   {
     ctrl.log_offmem = 1;

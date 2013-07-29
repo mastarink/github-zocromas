@@ -1,6 +1,8 @@
 #ifndef MAS_MSG_TOOLS_H
 #  define MAS_MSG_TOOLS_H
 
+#include <errno.h>
+
 int mas_msg_set_file( const char *path, int force );
 
 /* int mas_msg( const char *func, int line, int allow, int is_trace, int details, int msgcolor, const char *prefix_fmt,           */

@@ -33,7 +33,9 @@
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include "mas_master.h"
+#include <mastar/types/mas_control_types.h>
+
+#include "mas_bunch.h"
 
 
 /*
@@ -118,12 +120,13 @@ __attribute__ ( ( constructor ) )
 int
 main( int argc, char *argv[], char *env[] )
 {
+  EVAL_PREPARE;
   extern mas_options_t gopts;
   int r = 0, rn = 0;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
   HMSG( "MAIN e:%d", errno );
-  r = mas_master_bunch( &gopts, argc, argv, env );
+  IEVAL( r, mas_master_bunch( &gopts, argc, argv, env ) );
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
   return r;
 }

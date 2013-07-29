@@ -19,6 +19,8 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
 #include "mas_channel_socket.h"
 #include "mas_channel_object.h"
 #include "mas_channel_listen.h"
@@ -86,6 +88,7 @@ mas_channel_cork( mas_channel_t * pchannel, int val )
 
   if ( pchannel )
   {
+    EVAL_PREPARE;
 #ifdef TCP_CORK
     IEVAL( r, mas_setsockopt( pchannel->fd_io, IPPROTO_TCP, TCP_CORK, &q, sizeof( q ) ) );
 #endif
@@ -97,6 +100,7 @@ mas_channel_cork( mas_channel_t * pchannel, int val )
 static int
 _mas_channel_open_tune( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
   int yes = 1;
 
@@ -180,6 +184,7 @@ _mas_channel_open_tcp( mas_channel_t * pchannel )
 int
 mas_channel_open( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   /* MAS_LOG( "to open chn." ); */
@@ -315,6 +320,7 @@ mas_channel_close( mas_channel_t * pchannel )
 
   if ( mas_channel_test( pchannel ) && pchannel->opened )
   {
+    EVAL_PREPARE;
     switch ( pchannel->type )
     {
     case CHN_NONE:
@@ -343,6 +349,7 @@ mas_channel_close2( mas_channel_t * pchannel )
 
   if ( mas_channel_test( pchannel ) && pchannel->opened )
   {
+    EVAL_PREPARE;
     switch ( pchannel->type )
     {
     case CHN_NONE:

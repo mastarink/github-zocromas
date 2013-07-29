@@ -16,7 +16,6 @@
 
 #include <mastar/types/mas_control_types.h>
 /* #include <mastar/types/mas_opts_types.h> */
-extern mas_control_t ctrl;
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -66,6 +65,7 @@ static void *ticker_stackaddr = NULL;
 static void
 mas_ticker_cleanup( void *arg )
 {
+  CTRL_PREPARE;
   MAS_LOG( "by the way (ticker ending): cleaning transactions" );
   EMSG( "TICKER CLEANUP" );
   MAS_LOG( "ticker cleanup" );
@@ -77,6 +77,7 @@ static void
 mas_ticker( void )
 {
 #define MUL 5
+  CTRL_PREPARE;
   int itick = 0;
   double zinterval = 2.;
   double interval = zinterval / MUL;
@@ -173,6 +174,7 @@ mas_ticker( void )
 static void *
 mas_ticker_th( void *arg )
 {
+  CTRL_PREPARE;
   int old_cancelability = 0, rn = 0;
 
   ctrl.threads.n.ticker.tid = mas_gettid(  );
@@ -197,6 +199,8 @@ mas_ticker_th( void *arg )
 int
 mas_ticker_start( const mas_options_t * popts )
 {
+  CTRL_PREPARE;
+  /* EVAL_PREPARE; */
   int r = 0;
 
   MFP( "\x1b]2;starting ticker; mode:%d\x7", ctrl.ticker_mode );
@@ -241,6 +245,7 @@ mas_ticker_start( const mas_options_t * popts )
 int
 mas_ticker_stop( void )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( ctrl.threads.n.ticker.thread )

@@ -26,7 +26,7 @@ single_child=1
 logger=0
 ticker=0
 watcher=0
-dir.mods=@prefix@/lib/zocmds/
+dir.mods=@prefix@/lib/zocromod/zocmds/
 # PACKAGE: @PACKAGE@
 # PACKAGE_VERSION: @PACKAGE_VERSION@
 # CFLAGS: @CFLAGS@
@@ -41,12 +41,13 @@ dir.mods=@prefix@/lib/zocmds/
 # abs_top_builddir: @abs_top_builddir@
 
 # dir.pids=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
-dir.pids=/mnt/new_misc/develop/autotools/zoc/admin/install/default/run/
+# dir.pids=/mnt/new_misc/develop/autotools/zoc/admin/install/default/run/
+dir.pids=/mnt/new_misc/develop/autotools/zoc/admin/run
 # dir.pids=/run/@PACKAGE@/
 
 # prefix=@prefix@
 # exec_prefix=@exec_prefix@
-dir.proto=@prefix@/lib/zocromas_zocprotos/
+dir.proto=@prefix@/lib/zocromod/protos/
 filename.message=/dev/tty11
 filename.stderr=/tmp/daemon_stderr.tmp
 filename.stdout=/tmp/daemon_stdout.tmp

@@ -20,7 +20,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -43,6 +42,7 @@ extern mas_control_t ctrl;
 void
 mas_atexit( void )
 {
+  CTRL_PREPARE;
   extern mas_options_t gopts;
 
   {
@@ -98,6 +98,7 @@ mas_atexit( void )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  CTRL_PREPARE;
   /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;

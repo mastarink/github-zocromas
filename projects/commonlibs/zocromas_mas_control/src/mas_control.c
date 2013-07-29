@@ -62,20 +62,23 @@ mas_ctrl_init( mas_options_t * popts, const char **message )
     ctrl.keep_listening = 1;
 
   ctrl.messages = !popts->nomessages;
+  ctrl.messages_child = !popts->nomessages_child && ctrl.messages;
+  ctrl.messages_parent = !popts->nomessages_parent && ctrl.messages;
+  ctrl.messages_set = 1;
   if ( !ctrl.msgfile )
     ctrl.msgfile = ctrl.stderrfile;
 
-  ctrl.daemon = !popts->nodaemon;
+  ctrl.daemon = !popts->daemon.disable;
   ctrl.ticker_mode = popts->ticker_mode;
-  ctrl.redirect_std = !popts->noredirect_std;
-  ctrl.close_std = !popts->noclose_std;
+  ctrl.redirect_std = !popts->daemon.disable_redirect_std;
+  ctrl.close_std = !popts->daemon.disable_close_std;
   if ( message )
     *message = __func__;
 
   return 0;
 }
 
-void
+int
 mas_ctrl_destroy( void )
 {
   mas_del_argv( ctrl.commandsv.c, ctrl.commandsv.v, 0 );
@@ -104,6 +107,7 @@ mas_ctrl_destroy( void )
   /*   mas_free( ctrl.proto_descs );                   */
   /* ctrl.protos_num = 0;                              */
   /* ctrl.proto_descs = NULL;                          */
+  return 0;
 }
 
 void

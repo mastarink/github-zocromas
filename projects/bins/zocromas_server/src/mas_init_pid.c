@@ -22,12 +22,15 @@
 #  include <mastar/log/mas_log.h>
 #endif
 
+#include <mastar/types/mas_control_types.h>
+
 #include "mas_init_pid.h"
 
 
 static int
 _mas_init_pid( mas_options_t * popts, const char *shash_name )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   char *pidpath = NULL;
@@ -40,7 +43,7 @@ _mas_init_pid( mas_options_t * popts, const char *shash_name )
   HMSG( "(%d)PIDPATH 1 : %s", r, pidpath );
   if ( r >= 0 )
   {
-    extern mas_control_t ctrl;
+  CTRL_PREPARE;
 
     ctrl.pidfd = r;
     {
@@ -89,7 +92,7 @@ mas_init_pids( mas_options_t * popts, const char **message )
   MAS_LOG( "(%d) init pids", r );
   if ( shash_namebuf )
   {
-    extern mas_control_t ctrl;
+  CTRL_PREPARE;
 
     *shash_namebuf = 0;
     WMSG( "PIDSDIR: %s", popts->dir.pids );
@@ -119,6 +122,7 @@ mas_init_pids( mas_options_t * popts, const char **message )
 void
 mas_destroy_pids( mas_options_t * popts )
 {
+  CTRL_PREPARE;
   {
     if ( ctrl.pidfd > 0 )
     {

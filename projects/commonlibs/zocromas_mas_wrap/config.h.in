@@ -141,15 +141,6 @@
 /* */
 #undef MAS_MALLOC
 
-/* Enable ctrl-less prog. */
-#undef MAS_NO_CTRL
-
-/* Enable opts-less prog. */
-#undef MAS_NO_OPTS
-
-/* Enable thtools-less prog. */
-#undef MAS_NO_THTOOLS
-
 /* os version */
 #undef MAS_OSVER
 

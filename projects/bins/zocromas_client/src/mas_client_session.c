@@ -27,7 +27,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include "mas_client_session.h"
@@ -47,6 +46,7 @@ related:
 static int
 _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header_t * pheader, const char *answer_format )
 {
+  EVAL_PREPARE;
   int r = 0;
   char *answer = NULL;
 
@@ -107,6 +107,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
     }
     else if ( pheader && pheader->binary )
     {
+  CTRL_PREPARE;
       tMSG( "(%d) BINARY from %lx : %lx", r, ( unsigned long ) pheader->pid, ( unsigned long ) pheader->pth );
       switch ( pheader->binary )
       {
@@ -197,6 +198,7 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
 int
 mas_client_exchange( mas_channel_t * pchannel, const char *question, const char *answer_format )
 {
+  EVAL_PREPARE;
   int r = 0;
   mas_header_t header;
 

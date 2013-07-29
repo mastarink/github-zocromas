@@ -22,7 +22,6 @@
 
 #include <mastar/thtools/mas_ocontrol_tools.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -33,7 +32,7 @@ extern mas_control_t ctrl;
 #include <mastar/types/mas_varset_types.h>
 #include <mastar/varset/mas_varset.h>
 
-#include <mastar/thvariables/mas_thread_variables.h>
+/* #include <mastar/thvariables/mas_thread_variables.h> */
 
 #include "mas_rcontrol_object.h"
 #include "mas_transaction_control.h"
@@ -82,6 +81,7 @@ _mas_transaction_xch_eval( mas_rcontrol_t * prcontrol )
 static int
 _mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   prcontrol->h.status = MAS_STATUS_PROTO;
@@ -108,6 +108,7 @@ _mas_transaction_xch( mas_rcontrol_t * prcontrol )
 static int
 mas_transaction_xch( mas_rcontrol_t * prcontrol )
 {
+  CTRL_PREPARE;
   int r = -1;
 
   prcontrol->h.status = MAS_STATUS_OPEN;
@@ -189,6 +190,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
     }
     if ( prcontrol->h.pchannel )
     {
+      CTRL_PREPARE;
       MAS_LOG( "starting transaction 1" );
       /* rMSG( "start transaction" ); */
       MAS_LOG( "starting transaction 2" );
@@ -267,6 +269,7 @@ mas_transaction_th( void *trcontrol )
   }
   if ( prcontrol )
   {
+    EVAL_PREPARE;
     prcontrol->h.status = MAS_STATUS_BIRTH;
     prcontrol->start_time = mas_double_time(  );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransTh" ) );
@@ -388,6 +391,7 @@ mas_transaction_start( mas_lcontrol_t * plcontrol, unsigned persistent_transacti
 mas_transaction_start( mas_lcontrol_t * plcontrol )
 #endif
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( plcontrol )
@@ -469,6 +473,7 @@ mas_transaction_cleanup( void *arg )
   prcontrol = ( mas_rcontrol_t * ) arg;
   if ( prcontrol )
   {
+    CTRL_PREPARE;
     MAS_LOG( "tr. th cleanup prc:%p #%lu", ( void * ) prcontrol, prcontrol->h.serial );
     /* usleep( 1000000 ); */
     if ( prcontrol->h.pchannel )
@@ -486,7 +491,7 @@ mas_transaction_cleanup( void *arg )
     prcontrol->h.status = MAS_STATUS_END;
     /* rMSG( "end transaction; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
 
-    mas_thread_variables_delete(  );
+    /* mas_thread_variables_delete(  ); */
 
     {
       mas_lcontrol_t *plcontrol;
@@ -502,6 +507,7 @@ mas_transaction_cleanup( void *arg )
       }
       else
       {
+        EVAL_PREPARE;
         /* IEVAL( r, -1 ); */
         ERRRG( "no plcontrol" );
       }
@@ -511,6 +517,7 @@ mas_transaction_cleanup( void *arg )
   }
   else
   {
+    EVAL_PREPARE;
     ERRRG( "no prcontrol" );
   }
 }

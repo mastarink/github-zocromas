@@ -45,6 +45,7 @@ mas_unknown_opt_func_t __unknown_opt_func = mas_opts_restore_flags;
 static int
 mas_opts_set_argv( int *pargc, char ***pargv, const char *s )
 {
+  EVAL_PREPARE;
   int r = 0;
   const char *se;
 
@@ -83,7 +84,7 @@ mas_opts_atou( const char *s )
 
 
 /*
-  daemon				:: --[no]daemon
+  daemon.disable			:: --[no]daemon
   default_port				:: --port
   dir.history  				:: --historydir
   dir.log     				:: --logdir
@@ -228,21 +229,33 @@ mas_option_parse_t opt_table[] = {
 int
 mas_opts_restore_flags( mas_options_t * popts, const char *s )
 {
-#define OPT_FLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) popts-> name = ( mas_opts_atou(val) )
-#define OPT_NOFLAG(name,val) else if ( 0 == mas_strcmp2( val, #name "=" ) ) popts-> no##name = !( mas_opts_atou(val) )
+#define OPT_MATCH(name,val) ( 0 == mas_strcmp2( val, #name "=" ) )
+#define OPT_XFLAGD(name,fld,val)   else if ( OPT_MATCH( name,val ) ) popts-> fld = ( mas_opts_atou(val) )
+#define OPT_NOXFLAGD(name,fld,val) else if ( OPT_MATCH( name,val ) ) popts-> fld = !( mas_opts_atou(val) )
+#define OPT_XFLAG(name,val)        OPT_XFLAGD( name, name, val )
+#define OPT_NOXFLAG(name,val)  OPT_NOXFLAGD(name, name, val)
+#define OPT_FLAG(name,val)         OPT_XFLAG( name, val )
+#define OPT_NOFLAG(name,val)       OPT_NOXFLAG( no##name, val )
 
   /* don't remove this 'if' */
   if ( 0 /* 0 == mas_strcmp2( s, "message=" ) */  )
   {
     HMSG( "RESTORE OPTS: %s", mas_find_eq_value( s ) );
   }
-  OPT_NOFLAG( log, s );
-  OPT_NOFLAG( logger, s );
+
+  OPT_XFLAG( log.enable, s );
+  OPT_XFLAG( log.run, s );
   OPT_NOFLAG( ticker, s );
   OPT_NOFLAG( watcher, s );
   OPT_FLAG( max_config_backup, s );
   OPT_FLAG( default_port, s );
-  OPT_NOFLAG( daemon, s );
+  /* OPT_NOFLAG( daemon.disable, s ); */
+  OPT_XFLAG( daemon.disable, s );
+  OPT_XFLAG( daemon.sys, s );
+  OPT_XFLAG( daemon.disable_redirect_std, s );
+  OPT_XFLAG( daemon.disable_close_std, s );
+  OPT_XFLAG( daemon.disable_setsid, s );
+  OPT_XFLAG( daemon.disable_chdir, s );
   OPT_FLAG( read_user_opts, s );
   OPT_FLAG( read_user_opts_plus, s );
   OPT_FLAG( single_instance, s );
@@ -278,6 +291,7 @@ mas_opts_restore_new_section( mas_options_t * popts, const char *section )
 int
 mas_opts_restore_at_section( mas_options_t * popts, const char *section, const char *s )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   if ( 0 == mas_strcmp2( s, "host=" ) )
@@ -341,6 +355,7 @@ mas_opts_restore_path( mas_options_t * popts, const char *fpath )
 int
 _mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filename )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   if ( popts->dir.config )
@@ -380,6 +395,7 @@ mas_opts_restore_user( mas_options_t * popts, const char *dirname, const char *f
 int
 _mas_opts_restore_plus( mas_options_t * popts, const char *dirname, const char *filename, va_list args )
 {
+  EVAL_PREPARE;
   int r = 0;
   char *s = NULL;
   int x = 0;
@@ -415,6 +431,7 @@ _mas_opts_restore_plus( mas_options_t * popts, const char *dirname, const char *
 int
 mas_opts_restore_user_plus( mas_options_t * popts, const char *dirname, const char *filename, ... )
 {
+  EVAL_PREPARE;
   int r = 0;
   va_list args;
 

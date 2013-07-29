@@ -15,9 +15,9 @@
 #include <mastar/log/mas_log.h>
 
 #include <mastar/control/mas_control.h>
+#include <mastar/types/mas_control_types.h>
 
 
-extern mas_control_t ctrl;
 
 #include "mas_cli_opts.h"
 
@@ -64,6 +64,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_PROTODIR,
   MAS_CLI_OPT_PROTO,
   MAS_CLI_OPT_NODAEMON,
+  MAS_CLI_OPT_SYSDAEMON,
+  MAS_CLI_OPT_NOSYSDAEMON,
   MAS_CLI_OPT_MSG,
   MAS_CLI_OPT_NOMSG,
   MAS_CLI_OPT_READ_HOME_OPTS,
@@ -74,7 +76,11 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_NOREDIRECT_STD,
   MAS_CLI_OPT_CLOSE_STD,
   MAS_CLI_OPT_NOCLOSE_STD,
+  MAS_CLI_OPT_MESSAGES_PARENT,
+  MAS_CLI_OPT_MESSAGES_CHILD,
   MAS_CLI_OPT_MESSAGES,
+  MAS_CLI_OPT_NOMESSAGES_PARENT,
+  MAS_CLI_OPT_NOMESSAGES_CHILD,
   MAS_CLI_OPT_NOMESSAGES,
   MAS_CLI_OPT_NOLOGGER,
   MAS_CLI_OPT_LOGGER,
@@ -104,6 +110,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_NOSINGLE_INSTANCE,
   MAS_CLI_OPT_SINGLE_CHILD,
   MAS_CLI_OPT_NOSINGLE_CHILD,
+  MAS_CLI_OPT_SAVE_USER_OPTS,
+  MAS_CLI_OPT_NOSAVE_USER_OPTS,
 } mas_cli_opts_t;
 
 /* thM:L:dH:P: */
@@ -123,12 +131,21 @@ static struct option cli_longopts[] = {
   {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},
   {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},
 
+  {"save-user-opts", optional_argument, NULL, MAS_CLI_OPT_SAVE_USER_OPTS},
+  {"nosave-user-opts", no_argument, NULL, MAS_CLI_OPT_NOSAVE_USER_OPTS},
+
   {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},
   {"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO},
   {"redirect-stderr", required_argument, NULL, MAS_CLI_OPT_STDERRTO},
   {"redirect-stdout", required_argument, NULL, MAS_CLI_OPT_STDOUTTO},
   {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},
   {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},
+
+  {"parent-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_PARENT},
+  {"noparent-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_PARENT},
+
+  {"child-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_CHILD},
+  {"nochild-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_CHILD},
 
   {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},
   {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},
@@ -175,6 +192,12 @@ static struct option cli_longopts[] = {
   {"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON},
   {"daemon", no_argument, NULL, MAS_CLI_OPT_DAEMON},
 
+  {"nosysdaemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},
+  {"sysdaemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},
+
+  {"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},
+  {"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},
+
   {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},
   {"noprotos", no_argument, NULL, MAS_CLI_OPT_NOPROTOS},
   {"host", required_argument, NULL, MAS_CLI_OPT_HOST},
@@ -215,6 +238,7 @@ mas_cli_optval( const char *arg, long def, int *pr )
 int
 mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
 {
+  EVAL_PREPARE;
   int r = 0;
   int v = 0;
 
@@ -329,11 +353,28 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
   case MAS_CLI_OPT_TRANSACTION_SINGLE:
     popts->transaction_single = 1;
     break;
+  case MAS_CLI_OPT_NOSYSDAEMON:
+    popts->daemon.sys = 0;
+    break;
+  case MAS_CLI_OPT_SYSDAEMON:
+    popts->daemon.sys = 1;
+    break;
   case MAS_CLI_OPT_NODAEMON:
-    popts->nodaemon = 1;
+    popts->daemon.disable = 1;
     break;
   case MAS_CLI_OPT_DAEMON:
-    popts->nodaemon = 0;
+    popts->daemon.disable = 0;
+    break;
+  case MAS_CLI_OPT_NOSAVE_USER_OPTS:
+    popts->save_user_opts = 0;
+    break;
+  case MAS_CLI_OPT_SAVE_USER_OPTS:
+    if ( popts->save_user_opts_filename )
+      mas_free( popts->save_user_opts_filename );
+    popts->save_user_opts_filename = NULL;
+    if ( m_optarg && *m_optarg )
+      popts->save_user_opts_filename = mas_strdup( m_optarg );
+    popts->save_user_opts = 1;
     break;
   case MAS_CLI_OPT_NOSINGLE_CHILD:
     popts->single_child = 0;
@@ -348,16 +389,16 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
     popts->single_instance = 1;
     break;
   case MAS_CLI_OPT_NOLOGGER:
-    popts->nologger = 1;
+    popts->log.run = 0;
     break;
   case MAS_CLI_OPT_LOGGER:
-    popts->nologger = 0;
+    popts->log.run = 1;
     break;
   case MAS_CLI_OPT_NOLOG:
-    popts->nolog = 1;
+    popts->log.enable = 0;
     break;
   case MAS_CLI_OPT_LOG:
-    popts->nolog = 0;
+    popts->log.enable = 1;
     break;
   case MAS_CLI_OPT_NOTICKER:
     popts->noticker = 1;
@@ -410,16 +451,28 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
     popts->nomaster = 0;
     break;
   case MAS_CLI_OPT_NOREDIRECT_STD:
-    popts->noredirect_std = 1;
+    popts->daemon.disable_redirect_std = 1;
     break;
   case MAS_CLI_OPT_REDIRECT_STD:
-    popts->noredirect_std = 0;
+    popts->daemon.disable_redirect_std = 0;
     break;
   case MAS_CLI_OPT_NOCLOSE_STD:
-    popts->noclose_std = 1;
+    popts->daemon.disable_close_std = 1;
     break;
   case MAS_CLI_OPT_CLOSE_STD:
-    popts->noclose_std = 0;
+    popts->daemon.disable_close_std = 0;
+    break;
+  case MAS_CLI_OPT_NOMESSAGES_PARENT:
+    popts->nomessages_parent = 1;
+    break;
+  case MAS_CLI_OPT_MESSAGES_PARENT:
+    popts->nomessages_parent = 0;
+    break;
+  case MAS_CLI_OPT_NOMESSAGES_CHILD:
+    popts->nomessages_child = 1;
+    break;
+  case MAS_CLI_OPT_MESSAGES_CHILD:
+    popts->nomessages_child = 0;
     break;
   case MAS_CLI_OPT_NOMESSAGES:
     popts->nomessages = 1;
@@ -455,13 +508,16 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
     break;
 
   default:                     /* '?' ; ':' */
-    /* fprintf( ctrl.stderrfile, "Usage: %s [-t nsecs] [-n] name\n", argv[0] ); */
+    {
+      CTRL_PREPARE;
+      /* fprintf( ctrl.stderrfile, "Usage: %s [-t nsecs] [-n] name\n", argv[0] ); */
 
-    /* ctrl.in_client = 0; */
-    ctrl.fatal = 1;
-    ctrl.keep_listening = 0;
-    HMSG( "CLI unknown opt:%d [%c]", opt, opt > ' ' && opt <= 'z' ? opt : '-' );
-    IEVAL( r, -1 );
+      /* ctrl.in_client = 0; */
+      ctrl.fatal = 1;
+      ctrl.keep_listening = 0;
+      HMSG( "CLI unknown opt:%d [%c]", opt, opt > ' ' && opt <= 'z' ? opt : '-' );
+      IEVAL( r, -1 );
+    }
     break;
   }
   if ( v < 0 )
@@ -509,9 +565,9 @@ mas_cli_options_init( mas_options_t * popts, const char **message )
   int argc;
   char *const *argv;
 
-  HMSG( "(%d) INIT CLI", r );
   if ( popts )
   {
+    CTRL_PREPARE;
     argc = popts->argvv.c;
     argv = popts->argvv.v;
     r = _mas_cli_options( popts, argc, argv );
@@ -520,12 +576,14 @@ mas_cli_options_init( mas_options_t * popts, const char **message )
   if ( message )
     *message = __func__;
 
+  HMSG( "(%d) INIT CLI", r );
   return r >= 0 ? 0 : r;
 }
 
 int
 _mas_cli_options( mas_options_t * popts, int argc, char *const *argv )
 {
+  CTRL_PREPARE;
   int r = 0;
   int opt;
   int indx = 0;

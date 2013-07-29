@@ -26,6 +26,8 @@
 #  include <mastar/log/mas_log.h>
 #endif
 
+#include <mastar/types/mas_control_types.h>
+
 #include <mastar/modules/mas_modules_ctrl_module.h>
 
 /* mas_listeners_stop */
@@ -130,7 +132,8 @@ more:
 void
 mas_destroy_server( mas_options_t * popts )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
+  EVAL_PREPARE;
 
   {
     int rn = 0;
@@ -215,5 +218,5 @@ mas_destroy_server( mas_options_t * popts )
 
   MAS_LOG( "destroy server done" );
   HMSG( "DESTROY SERVER DONE" );
-  IMSG( "logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
+  /* IMSG( "logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
 }

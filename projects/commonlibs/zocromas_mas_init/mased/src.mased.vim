@@ -1,6 +1,6 @@
 
 
-tab sfind mas_init.c
+find mas_init.c
 sfind mas_init.h
 
 tab sfind mas_init_modules.c

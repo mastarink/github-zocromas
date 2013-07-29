@@ -2,11 +2,8 @@
 #include <mastar/types/mas_common_defs.h>
 
 #include <unistd.h>
-#include <fcntl.h>
 
 #include <pthread.h>
-#include <sys/prctl.h>
-
 
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -15,11 +12,7 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-#include <mastar/modules/mas_modules_ctrl_module.h>
-/* #include <mastar/modules/mas_modules_load_module.h> */
-
-#include "mas_ticker.h"
-#include "mas_watcher.h"
+#include <mastar/types/mas_control_types.h>
 
 #include <mastar/log/mas_log.h>
 #include <mastar/log/mas_logger.h>
@@ -27,28 +20,10 @@
 #include <mastar/thtools/mas_thread_tools.h>
 
 
-
-#include <mastar/init/mas_init.h>
-#include <mastar/init/mas_init_modules.h>
-
-#include <mastar/options/mas_cli_opts.h>
-#include <mastar/init/mas_sig.h>
-
-#include <mastar/control/mas_control.h>
-
 #include <mastar/listener/mas_listeners.h>
-#include <mastar/listener/mas_listener_control_list.h>
 
-#include "mas_init_threads.h"
-#include "mas_init_protos.h"
-#include "mas_init_pid.h"
-
-#include "mas_init_daemon.h"
-#include "mas_init_server.h"
-
-/* #include <mastar/types/mas_control_types.h> */
-/* #include <mastar/types/mas_opts_types.h> */
-
+#include "mas_ticker.h"
+#include "mas_watcher.h"
 
 #include "mas_master.h"
 
@@ -98,9 +73,10 @@ threads created:
 static int
 mas_master( const mas_options_t * popts )
 {
+  CTRL_PREPARE;
   int r = 0, rn = 0;
 
-  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), !popts->nologger ? 'L' : 'l', !popts->noticker ? 'T' : 't',
+  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), popts->log.run ? 'L' : 'l', !popts->noticker ? 'T' : 't',
         !popts->nowatcher ? 'W' : 'w' );
   /* if ( ctrl.is_parent )                                                  */
   /* {                                                                      */
@@ -113,7 +89,7 @@ mas_master( const mas_options_t * popts )
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
-  if ( !popts->nologger )
+  if ( popts->log.run )
   {
     HMSG( "LOGGER TO START" );
     mas_logger_start(  );
@@ -207,19 +183,10 @@ mas_master( const mas_options_t * popts )
 
   MAS_LOG( "exiting master server" );
   HMSG( "MASTER TO END : %d", r );
-  if ( ctrl.is_parent )
   {
-    if ( popts->thname.parent_masterx )
-    {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_masterx /* "zocParMasterX" */  ) );
-    }
-  }
-  else
-  {
-    if ( popts->thname.daemon_masterx )
-    {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_masterx /* "zocDaeMasterX" */  ) );
-    }
+    EVAL_PREPARE;
+/* Set the name of the calling thread, using the value in the location pointed to by (char *) arg2. The name can be up to 16 bytes long, and should be null-terminated if it contains fewer bytes. This is the same attribute that can be set via pthread_setname_np(3) and retrieved using pthread_getname_np(3). The attribute is likewise accessible via /proc/self/task/[tid]/comm, where tid is the name of the calling thread. */
+    IEVAL( rn, mas_thself_set_name( ctrl.is_parent ? popts->thname.parent_masterx : popts->thname.daemon_masterx, "zocMasterX" ) );
   }
   return r;
 }
@@ -227,6 +194,7 @@ mas_master( const mas_options_t * popts )
 static void *
 mas_master_th( void *topts )
 {
+  CTRL_PREPARE;
   int rn = 0;
   const mas_options_t *popts;
 
@@ -239,20 +207,8 @@ mas_master_th( void *topts )
 
   ctrl.pserver_thread = &ctrl.threads.n.master;
   {
-    if ( ctrl.is_parent )
-    {
-      if ( popts->thname.parent_masterth )
-      {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_masterth /* "zocParMasterTh" */  ) );
-      }
-    }
-    else
-    {
-      if ( popts->thname.daemon_masterth )
-      {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_masterth /* "zocDaeMasterTh" */  ) );
-      }
-    }
+    EVAL_PREPARE;
+    IEVAL( rn, mas_thself_set_name( ctrl.is_parent ? popts->thname.parent_masterth : popts->thname.daemon_masterth, "zocMasterTh" ) );
   }
   MAS_LOG( "master starting @ %8.4f", ctrl.start_time );
   mas_in_thread( MAS_THREAD_MASTER, NULL, NULL );
@@ -269,20 +225,8 @@ mas_master_th( void *topts )
   }
   HMSG( "MASTER_TH TO END" );
   {
-    if ( ctrl.is_parent )
-    {
-      if ( popts->thname.parent_masterthx )
-      {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_masterthx /* "zocParMasterThX" */  ) );
-      }
-    }
-    else
-    {
-      if ( popts->thname.daemon_masterthx )
-      {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_masterthx /* "zocDaeMasterThX" */  ) );
-      }
-    }
+    EVAL_PREPARE;
+    IEVAL( rn, mas_thself_set_name( ctrl.is_parent ? popts->thname.parent_masterthx : popts->thname.daemon_masterthx, "zocMasterThX" ) );
   }
   mas_pthread_exit( NULL );
   return NULL;
@@ -291,6 +235,7 @@ mas_master_th( void *topts )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  CTRL_PREPARE;
   /* if ( stderr )                                                                      */
   /*   fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
   if ( !ctrl.stderrfile )
@@ -304,9 +249,10 @@ __attribute__ ( ( destructor ) )
   /*   fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
 }
 
-static int
+int
 mas_master_do( const mas_options_t * popts )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
@@ -325,142 +271,5 @@ mas_master_do( const mas_options_t * popts )
     /* r = mas_master(  ); */
     IEVAL( r, mas_master( popts ) );
   }
-  return r;
-}
-
-static int
-mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[] )
-{
-  int r = 0, rn = 0;
-
-  HMSG( "BUNCH START e:%d", errno );
-  MAS_LOG( "bunch start e:%d", errno );
-
-  if ( ctrl.is_parent )
-  {
-    if ( popts->thname.parent_bunchi )
-    {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_bunchi /*  "zocParBunchI" */  ) );
-    }
-  }
-  else
-  {
-    if ( popts->thname.daemon_bunchi )
-    {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_bunchi /*  "zocDaeBunchI" */  ) );
-    }
-  }
-  MAS_LOG( "(%d) bunch: to init +", r );
-  /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
-  /*                    NULL );                                                                                                             */
-  /* uuid BEFORE opt_files !! */
-  IEVAL( r,
-         mas_init_plus( popts, argc, argv, env, mas_init_proc, mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init,
-                        mas_ctrl_init, mas_init_set_msg_file, mas_init_message, mas_init_daemon, mas_init_pids, mas_threads_init,
-                        mas_init_load_protos, mas_lcontrols_init, mas_post_init, NULL ) );
-  if ( r >= 0 )
-  {
-    if ( ctrl.is_parent )
-    {
-      if ( popts->thname.parent_bunchm )
-      {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_bunchm /*  "zocParBunch" */  ) );
-      }
-    }
-    else
-    {
-      if ( popts->thname.daemon_bunchm )
-      {
-        IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_bunchm /*  "zocDaeBunch" */  ) );
-      }
-    }
-  }
-  MAS_LOG( "(%d) bunch: init + done", r );
-  return r;
-}
-
-static int
-mas_master_bunch_do_parent( const mas_options_t * popts, int argc, char *argv[], char *env[] )
-{
-  HMSG( "PARENT to exit" );
-  return 0;
-}
-
-static int
-mas_master_bunch_do_daemon( const mas_options_t * popts, int argc, char *argv[], char *env[] )
-{
-  int r = 0;
-
-  IEVAL( r, mas_master_do( popts ) );
-#ifdef MAS_TRACEMEM
-  {
-    extern mas_control_t ctrl;
-    extern unsigned long memory_balance;
-
-    mMSG( "bunch end, memory_balance:%lu - Ticker:%lx;Logger:%lx;", memory_balance, ctrl.threads.n.ticker.thread,
-          ctrl.threads.n.logger.thread );
-    MAS_LOG( "bunch end, m/b:%lu", memory_balance );
-#  if 0
-    if ( print_memlist( FL, ctrl.stderrfile ) < 0 )
-      if ( print_memlist( FL, ctrl.old_stderrfile ) < 0 )
-        if ( print_memlist( FL, ctrl.msgfile ) < 0 )
-          print_memlist( FL, stderr );
-#  endif
-  }
-#endif
-  return r;
-}
-
-static int
-mas_master_bunch_do( const mas_options_t * popts, int argc, char *argv[], char *env[] )
-{
-  extern mas_control_t ctrl;
-  int r = 0, rn = 0;
-
-  if ( ctrl.is_parent )
-  {
-    r = mas_master_bunch_do_parent( popts, argc, argv, env );
-    if ( popts->thname.parent_bunchx )
-    {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.parent_bunchx /* "zocParBunchX" */  ) );
-    }
-  }
-  else
-  {
-    r = mas_master_bunch_do_daemon( popts, argc, argv, env );
-    if ( popts->thname.daemon_bunchx )
-    {
-      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) popts->thname.daemon_bunchx /* "zocDaeBunchX" */  ) );
-    }
-    HMSG( "BUNCH TO END" );
-    /* XXX XXX XXX [ if use mas_pthread_exit - forever wait 'foreign' threads ] XXX XXX XXX
-       mas_pthread_exit( &r ); 
-     */
-  }
-  WMSG( "TO DESTROY MODULES" );
-  mas_modules_unregister(  );
-  /* MAS_LOG( "bunch end : %d", r ); */
-  for ( int ith = 0; ith < sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ); ith++ )
-  {
-    WMSG( "TO JOIN #%d of %u", ith, ( unsigned ) ( sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ) ) );
-    if ( ctrl.threads.a[ith].thread )
-      mas_xpthread_join( ctrl.threads.a[ith].thread );
-    ctrl.threads.a[ith].thread = 0;
-  }
-  WMSG( "/ JOIN" );
-  WMSG( "BUNCH END DATA master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.threads.n.master.thread,
-        ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
-  HMSG( "BUNCH %s END", ctrl.is_parent ? "(parent)" : "" );
-  return r;
-}
-
-int
-mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
-{
-  int r;
-
-  r = mas_master_bunch_init( popts, argc, argv, env );
-  if ( r >= 0 )
-    r = mas_master_bunch_do( popts, argc, argv, env );
   return r;
 }

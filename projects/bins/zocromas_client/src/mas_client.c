@@ -53,6 +53,7 @@ related:
 static int
 mas_client_transaction( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
   unsigned cnt = 0;
 

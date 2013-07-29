@@ -22,6 +22,8 @@
 #  include <mastar/log/mas_log.h>
 #endif
 
+#include <mastar/types/mas_control_types.h>
+
 #include <mastar/modules/mas_modules_load_module.h>
 
 #include "mas_init_protos.h"
@@ -29,7 +31,8 @@
 int
 mas_init_load_protos( mas_options_t * popts, const char **message )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = 0;
   mas_transaction_protodesc_t *proto_descs = NULL;
 
@@ -89,7 +92,7 @@ mas_init_load_protos( mas_options_t * popts, const char **message )
 int
 mas_protos_destroy( void )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
   int r = 0;
 
   for ( int ipr = 0; ipr < ctrl.protos_num; ipr++ )

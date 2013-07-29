@@ -18,6 +18,8 @@
 #  include <mastar/log/mas_log.h>
 #endif
 
+#include <mastar/types/mas_control_types.h>
+
 #include <mastar/thtools/mas_thread_tools.h>
 
 
@@ -44,7 +46,7 @@ more:
 int
 mas_threads_init( mas_options_t * popts, const char * *message )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
   int r = 0;
 
   MAS_LOG( "(%d) init threads", r );
@@ -174,7 +176,7 @@ mas_threads_init( mas_options_t * popts, const char * *message )
 void
 mas_threads_destroy( void )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
 
   pthread_attr_destroy( &ctrl.thglob.custom_attr );
 

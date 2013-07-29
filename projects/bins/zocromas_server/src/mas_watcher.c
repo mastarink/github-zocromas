@@ -29,7 +29,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include "mas_server_tools.h"
@@ -83,6 +82,8 @@ mas_watcher_cleanup( void *arg )
 static void
 mas_watcher( void )
 {
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int rn = 0;
 
 #define MUL 10
@@ -255,6 +256,8 @@ mas_watcher( void )
 static void *
 mas_watcher_th( void *arg )
 {
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int rn = 0;
 
   ctrl.threads.n.watcher.tid = mas_gettid(  );
@@ -278,6 +281,8 @@ mas_watcher_th( void *arg )
 int
 mas_watcher_start( const mas_options_t * popts )
 {
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = 0;
 
   if ( !ctrl.threads.n.watcher.thread )
@@ -305,6 +310,8 @@ mas_watcher_start( const mas_options_t * popts )
 int
 mas_watcher_stop( void )
 {
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = 0;
 
   if ( ctrl.threads.n.watcher.thread )

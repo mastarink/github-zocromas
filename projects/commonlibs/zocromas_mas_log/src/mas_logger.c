@@ -25,7 +25,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include "mas_log.h"
@@ -90,6 +89,7 @@ mas_logger_delete_loginfo( mas_loginfo_t * li )
 static void
 mas_logger_clean_queue( void )
 {
+  CTRL_PREPARE;
   mas_loginfo_t *li = NULL;
   mas_loginfo_list_head_t *log_list;
 
@@ -116,7 +116,7 @@ mas_logger_clean_queue( void )
   /*       ctrl.log_q_came - ctrl.log_q_gone );                                                                       */
 }
 
-void
+int
 mas_logger_delete( int stopever )
 {
   mas_loginfo_list_head_t *log_list = NULL;
@@ -127,6 +127,7 @@ mas_logger_delete( int stopever )
   logger_list = NULL;
   /* if ( stopever )         */
   /*   ctrl.log_stopped = 1; */
+  return 0;
 }
 
 static void
@@ -142,6 +143,7 @@ mas_logger_write( mas_loginfo_t * li )
 
     if ( li->message )
     {
+      CTRL_PREPARE;
       if ( ctrl.logpath )
       {
         /* mas_pthread_mutex_lock( &logger_write_mutex ); */
@@ -242,6 +244,7 @@ mas_logger_write( mas_loginfo_t * li )
 void
 mas_logger_cleanup( void *arg )
 {
+  CTRL_PREPARE;
   ctrl.keep_logging = 0;
   EMSG( "TO FLUSH LOGGER" );
   ctrl.log_disabled = 1;
@@ -256,6 +259,7 @@ mas_logger_cleanup( void *arg )
 static void *
 mas_logger_th( void *arg )
 {
+  CTRL_PREPARE;
   int rn = 0;
 
   ctrl.threads.n.logger.tid = mas_gettid(  );
@@ -295,6 +299,7 @@ static void *logger_stackaddr = NULL;
 int
 mas_logger_start( void )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( !ctrl.threads.n.logger.thread )
@@ -324,6 +329,7 @@ mas_logger_start( void )
 int
 mas_logger_stop( void )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( 0 )
@@ -358,6 +364,7 @@ mas_logger_stop( void )
 int
 mas_logger_flush( void )
 {
+  CTRL_PREPARE;
   int r = -1;
   int once = 0;
 
@@ -400,6 +407,7 @@ mas_logger_flush( void )
 int
 mas_logger_close( void )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( ctrl.logfile )

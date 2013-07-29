@@ -7,13 +7,11 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
-/* #include <mastar/types/mas_control_types.h> */
 #include <mastar/types/mas_opts_types.h>
 
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-/* #include <mastar/log/mas_log.h> */
 
 #include "mas_opts.h"
 
@@ -48,6 +46,10 @@ mas_opts_destroy( mas_options_t * popts )
   if ( popts->uuid )
     mas_free( popts->uuid );
   popts->uuid = NULL;
+
+  if ( popts->save_user_opts_filename )
+    mas_free( popts->save_user_opts_filename );
+  popts->save_user_opts_filename = NULL;
 
   if ( popts->msgfilename )
     mas_free( popts->msgfilename );

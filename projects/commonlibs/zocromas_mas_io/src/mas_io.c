@@ -14,7 +14,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -436,6 +435,7 @@ mas_io_fread_some( FILE * stream, char **px_buffer, size_t * pxbuffer_size, size
       if ( rsz <= 0 )
         break;
       {
+	EVAL_PREPARE;
         WMSG( "TO READ io 'SOME' %lu maxsz:%lu; totread:%lu", ( unsigned long ) rsz, ( unsigned long ) maxsz, ( unsigned long ) totread );
         if ( rsz > bufsz )
         {

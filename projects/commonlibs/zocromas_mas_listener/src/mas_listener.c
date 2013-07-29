@@ -32,7 +32,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include "mas_listener.h"
@@ -120,6 +119,7 @@ static void *listener_stackaddr = NULL;
 int
 mas_listener_start( const mas_options_t * popts, char *host_port, unsigned port )
 {
+  EVAL_PREPARE;
   int r = 0;
 
 /* ~64M per listener -- why?? */
@@ -128,30 +128,36 @@ mas_listener_start( const mas_options_t * popts, char *host_port, unsigned port 
     mas_lcontrol_t *plcontrol;
 
     plcontrol = mas_lcontrol_make( popts, host_port, port );
+    if ( plcontrol )
     {
-      ( void ) pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
-      lMSG( "cr. listener th. stack:%lu @ %p", ( unsigned long ) listener_stacksize, listener_stackaddr );
-    }
-    if ( popts->listener_single )
-    {
-      /* while ( ctrl.keep_listening ) */
-      mas_listener( plcontrol );
-    }
-    else
-    {
-      MAS_LOG( "cr'ing ls. th; plc=%p #%lu", ( void * ) plcontrol, plcontrol->h.serial );
-      /* r = mas_xpthread_create( &( plcontrol->h.thread ), mas_listener_th, MAS_THREAD_LISTENER, ( void * ) plcontrol ); */
-      /* plcontrol->popts = popts; */
-      EEVAL( r, pthread_create( &plcontrol->h.thread, &ctrl.thglob.listener_attr, mas_listener_th, ( void * ) plcontrol ) );
-      if ( plcontrol->h.thread )
       {
-        MAS_LOG( "cr'ed ls. th; plc=%p [%lx] #%lu", ( void * ) plcontrol, plcontrol->h.thread, plcontrol->h.serial );
+        CTRL_PREPARE;
+
+        ( void ) pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
+        lMSG( "cr. listener th. stack:%lu @ %p", ( unsigned long ) listener_stacksize, listener_stackaddr );
       }
-    }
-    if ( r == 0 )
-    {
-      lMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->h.serial, plcontrol->h.status, plcontrol->host, plcontrol->port );
-      /* ctrl.status = MAS_STATUS_OPEN; */
+      if ( popts->listener_single )
+      {
+        /* while ( ctrl.keep_listening ) */
+        mas_listener( plcontrol );
+      }
+      else
+      {
+        CTRL_PREPARE;
+        MAS_LOG( "cr'ing ls. th; plc=%p #%lu", ( void * ) plcontrol, plcontrol->h.serial );
+        /* r = mas_xpthread_create( &( plcontrol->h.thread ), mas_listener_th, MAS_THREAD_LISTENER, ( void * ) plcontrol ); */
+        /* plcontrol->popts = popts; */
+        IEVAL( r, pthread_create( &plcontrol->h.thread, &ctrl.thglob.listener_attr, mas_listener_th, ( void * ) plcontrol ) );
+        if ( plcontrol->h.thread )
+        {
+          MAS_LOG( "cr'ed ls. th; plc=%p [%lx] #%lu", ( void * ) plcontrol, plcontrol->h.thread, plcontrol->h.serial );
+        }
+      }
+      if ( r == 0 )
+      {
+        lMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->h.serial, plcontrol->h.status, plcontrol->host, plcontrol->port );
+        /* ctrl.status = MAS_STATUS_OPEN; */
+      }
     }
   }
   else
@@ -228,21 +234,27 @@ mas_listener_cleanup( void *arg )
 int
 mas_listener( mas_lcontrol_t * plcontrol )
 {
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = -1, rn = 0;
 
-  plcontrol->h.status = MAS_STATUS_INIT;
-
-  MAS_LOG( "l/th loop" );
-  while ( !ctrl.fatal && 0 == ( r = mas_listener_wait_client( plcontrol ) ) )
+  if ( plcontrol )
   {
-    MAS_LOG( "listener next client ..." );
+    plcontrol->h.status = MAS_STATUS_INIT;
+
+    MAS_LOG( "l/th loop" );
+    while ( !ctrl.fatal && 0 == ( r = mas_listener_wait_client( plcontrol ) ) )
+    {
+      MAS_LOG( "listener next client ..." );
+      HMSG( "LISTENER next client ..." );
+    }
+    if ( plcontrol->popts->thname.listen_close )
+      IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_close /* "zocListenClose" */  ) );
+    plcontrol->h.status = MAS_STATUS_CLOSE;
+    /* thMSG( "stopped listening r:%d", r ); */
+    MAS_LOG( "exiting listening (stopped listening) r:%d", r );
+    /* mas_listener_join_transactions( &channel.transaction_threads ); */
   }
-  if ( plcontrol->popts->thname.listen_close )
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_close /* "zocListenClose" */  ) );
-  plcontrol->h.status = MAS_STATUS_CLOSE;
-  /* thMSG( "stopped listening r:%d", r ); */
-  MAS_LOG( "exiting listening (stopped listening) r:%d", r );
-  /* mas_listener_join_transactions( &channel.transaction_threads ); */
   return r;
 }
 
@@ -250,6 +262,7 @@ mas_listener( mas_lcontrol_t * plcontrol )
 void *
 mas_listener_th( void *tlcontrol )
 {
+  EVAL_PREPARE;
   int rn = 0;
   mas_lcontrol_t *plcontrol = NULL;
 

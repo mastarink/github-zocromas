@@ -19,6 +19,8 @@
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -35,7 +37,7 @@
 
 #include <mastar/options/mas_cli_opts.h>
 
-#include "mas_sig.h"
+/* #include "mas_sig.h" */
 #include "mas_init.h"
 
 
@@ -75,6 +77,7 @@ mas_init_message( mas_options_t * popts, const char **message )
   else
 #endif
   {
+    /* IMSG( "\x1b""c" ); */
     IMSG( "-" );
     IMSG( " [%s] %s V.%s built at %s : %lx : %lx : %lu; #%u (%s) ", ctrl.progname, PACKAGE_NAME,
           PACKAGE_VERSION, MAS_C_DATE, ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ),
@@ -88,12 +91,16 @@ mas_init_message( mas_options_t * popts, const char **message )
     /* IMSG( "\x1b[100;27;1;32m [%s] pid=[\x1b[47;31m %u \x1b[100;32m](%x) ; tid:%u [%lx] \x1b[0m", ctrl.progname, ctrl.threads.n.main.pid, */
     /*       ctrl.threads.n.main.pid, ( unsigned ) ctrl.threads.n.main.tid, ( unsigned long ) ctrl.threads.n.main.thread );                 */
   }
+  if ( message )
+    *message = __func__;
+
   return 0;
 }
 
 int
 mas_init_proc( mas_options_t * popts, const char **message )
 {
+  EVAL_PREPARE;
   int r = 0;
   char lexe[256];
   struct stat sb;
@@ -143,7 +150,8 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
   }
   if ( *sppid )
   {
-    extern mas_control_t ctrl;
+    CTRL_PREPARE;
+    EVAL_PREPARE;
     int rzero = 0;
     const char *name = ctrl.exename;
 
@@ -185,6 +193,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
   /* HMSG( "UUID %s", popts->uuid ); */
   if ( r < 0 )
   {
+    EVAL_PREPARE;
     r = 0;
     IEVAL( r, mas_pre_init_default_opts( popts ) );
     WMSG( "(%d) PRE-INIT-DEF", r );
@@ -198,7 +207,8 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
 int
 mas_init_set_msg_file( mas_options_t * popts, const char **message )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
+  EVAL_PREPARE;
   int r = 0;
 
   if ( !ctrl.is_parent )
@@ -246,10 +256,10 @@ mas_init_uuid( mas_options_t * popts, const char **message )
 int
 mas_post_init( mas_options_t * popts, const char **message )
 {
-  extern mas_control_t ctrl;
+  CTRL_PREPARE;
   int r = 0;
 
-  EMSG( "POST-INIT" );
+  HMSG( "POST-INIT >" );
 #if 0
   if ( r >= 0 && !popts->hosts_num )
   {
@@ -280,15 +290,13 @@ mas_post_init( mas_options_t * popts, const char **message )
     ctrl.logpath = mas_strdup( popts->dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
-    ctrl.log = popts->nolog ? 0 : 1;
+    ctrl.log = popts->log.enable ? 1 : 0;
   }
   else
   {
     EMSG( "dir.log not set" );
   }
-  WMSG( "(%d) POST INIT DONE", r );
-  HMSG( "(%d) postINIT done", r );
-
+  HMSG( "(%d) POST INIT", r );
   if ( message )
     *message = __func__;
 

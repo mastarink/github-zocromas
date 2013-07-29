@@ -17,9 +17,8 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
-#include <mastar/init/mas_opts_common.h>
+#include <mastar/options/mas_opts_common.h>
 
 
 #include "mas_client_session.h"
@@ -59,6 +58,8 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 
   while ( !mas_readline_buffer )
   {
+  CTRL_PREPARE;
+  EVAL_PREPARE;
     ctrl.status = MAS_STATUS_SERV_LOOP;
     /* mas_readline_buffer = readline( " % \x1b[K" ); */
     /* rl_catch_signals = 0; */
@@ -247,6 +248,7 @@ mas_client_readline_event( void )
 int
 mas_client_init_readline( mas_options_t * popts, const char * *message )
 {
+  CTRL_PREPARE;
   int rh = 0;
 
   /* rl_add_defun( "quit", mas_client_readline_quit, CTRL( 'q' ) ); */

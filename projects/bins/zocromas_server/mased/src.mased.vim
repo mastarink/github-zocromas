@@ -6,6 +6,9 @@ sfind mas_init_protos.c
 sfind mas_init_pid.c
 sfind mas_init_daemon.c
 
+tab sfind mas_bunch.c
+sfind mas_bunch.h
+
 tab sfind mas_server_main.c
 sfind mas_server_exit.c
 sfind mas_server_sig.c

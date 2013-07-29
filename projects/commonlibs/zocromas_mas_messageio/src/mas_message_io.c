@@ -17,7 +17,6 @@
 
 #include <mastar/types/mas_control_types.h>
 /* #include <mastar/types/mas_opts_types.h> */
-extern mas_control_t ctrl;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -42,6 +41,7 @@ int
 mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
 #endif
 {
+  EVAL_PREPARE;
   int r = 0;
 
   /* int rf=0; */
@@ -87,6 +87,8 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
     memset( msg, 0, msgsz );
     ioMSG( "w. memset'd msg" );
     {
+      EVAL_PREPARE;
+      CTRL_PREPARE;
       if ( header )
         msg->h = *header;
       if ( cbuf )
@@ -143,6 +145,7 @@ mas_fwrite_message( FILE * stream, const char *cbuf, mas_header_t * header )
 int
 mas_channel_write_message( mas_channel_t * pchannel, const char *cbuf, mas_header_t * pheader )
 {
+  EVAL_PREPARE;
   int w = 0;
 
   /* HMSG( "to write message" ); */
@@ -174,6 +177,7 @@ mas_channel_read_message( mas_channel_t * pchannel, char **pbuf, mas_header_t * 
   msg = ( mas_message_t * ) mas_channel_buffer( pchannel, NULL );
   if ( msg )
   {
+    EVAL_PREPARE;
     /* HMSG( "h:(%lu) got:%lu; h.len:%u", sizeof( mas_header_t ), prcontrol->h.pchannel->buffer.length, pheader->len ); */
     WMSG( "1 h:(%lu) got:%lu; h.len:%u", ( unsigned long ) sizeof( mas_header_t ), ( unsigned long ) pchannel->buffer.length, msg->h.len );
 

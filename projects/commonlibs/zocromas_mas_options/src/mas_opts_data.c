@@ -10,11 +10,6 @@
 
 
 #include "mas_opts.h"
-/* #ifdef  MAS_PASS_OPTS          */
-/* #  include "mas_opts_global.h" */
-/* #endif                         */
-/* #include "mas_opts_restore.h"  */
-
 
 /*
 this:
@@ -86,8 +81,10 @@ mas_options_t gopts = {
   .wait_server = 0,
   .listener_single = 0,
   .transaction_single = 0,
-  .nologger = 0,
-  .nolog = 0,
+  .log = {.enable = 0,.run = 0,}
+  ,
+  /* .nologger = 0, */
+  /* .nolog = 0,    */
   .noticker = 0,
   .nowatcher = 0,
   .nomaster = 0,
@@ -96,9 +93,18 @@ mas_options_t gopts = {
   .nomessages = 0,
   .exitsleep = 0,
 
-  .nodaemon = 0,
-  .noredirect_std = 0,
-  .noclose_std = 0,
+  .daemon = {
+             .disable = 0,
+             .disable_redirect_std = 0,
+             .disable_close_std = 0,
+             .disable_setsid = 0,
+             .disable_chdir = 0,
+             .sys = 0,
+             }
+  ,
+  /* .nodaemon = 0,       */
+  /* .noredirect_std = 0, */
+  /* .noclose_std = 0,    */
 
 #  ifdef MAS_DEFAULT_PORT
   .default_port = MAS_DEFAULT_PORT,

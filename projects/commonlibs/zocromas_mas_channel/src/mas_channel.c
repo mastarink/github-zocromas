@@ -11,6 +11,8 @@
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
 #include <mastar/log/mas_log.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -102,6 +104,7 @@ mas_channel_clone( mas_channel_t * pchannel_src )
 int
 mas_channel_writef( const mas_channel_t * pchannel, const char *fmt, ... )
 {
+  EVAL_PREPARE;
   int r = 0;
   va_list args;
 
@@ -114,6 +117,7 @@ mas_channel_writef( const mas_channel_t * pchannel, const char *fmt, ... )
 int
 mas_channel_vwritef( const mas_channel_t * pchannel, const char *fmt, va_list args )
 {
+  EVAL_PREPARE;
   int r = 0;
 
 #ifndef MAS_CHANNEL_STREAM_WRITE
@@ -134,6 +138,7 @@ mas_channel_vwritef( const mas_channel_t * pchannel, const char *fmt, va_list ar
 int
 mas_channel_write_string( const mas_channel_t * pchannel, const char *cbuf, int z )
 {
+  EVAL_PREPARE;
   int r = 0;
 
 #ifndef MAS_CHANNEL_STREAM_WRITE
@@ -151,6 +156,7 @@ mas_channel_write_string( const mas_channel_t * pchannel, const char *cbuf, int 
 int
 mas_channel_write( const mas_channel_t * pchannel, const char *cbuf, size_t sz )
 {
+  EVAL_PREPARE;
   int r = 0;
 
 #ifndef MAS_CHANNEL_STREAM_WRITE
@@ -189,6 +195,7 @@ mas_channel_read_some_new( mas_channel_t * pchannel )
 int
 mas_channel_read_some( mas_channel_t * pchannel )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   MAS_LOG( "to read ch (read all)" );
@@ -210,7 +217,7 @@ mas_channel_read_some( mas_channel_t * pchannel )
   WMSG( "(%d)SOME %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
   if ( r > 0 )
     pchannel->buffer.length += r;
-  MAS_LOG( "read ch (read all) %d => %lu", r,  pchannel->buffer.length);
+  MAS_LOG( "read ch (read all) %d => %lu", r, pchannel->buffer.length );
   return r;
 }
 
@@ -221,6 +228,7 @@ mas_channel_read_remainder( mas_channel_t * pchannel )
 
   while ( !( r < 0 ) && !mas_channel_buffer_endfile( pchannel ) )
   {
+    EVAL_PREPARE;
     /* r = mas_channel_read_some( pchannel ); */
     IEVAL( r, mas_channel_read_some( pchannel ) );
 

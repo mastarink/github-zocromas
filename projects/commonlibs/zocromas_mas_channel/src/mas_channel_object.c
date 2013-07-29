@@ -18,6 +18,9 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
+
 #include "mas_channel_open.h"
 #include "mas_channel_listen.h"
 #include "mas_channel_buffer.h"
@@ -93,7 +96,7 @@ mas_channel_delete( mas_channel_t * pchannel, int toclose, int todeaf )
     if ( pchannel->host )
       mas_free( pchannel->host );
     pchannel->host = NULL;
-    WMSG("CHANNEL DELETE");
+    WMSG( "CHANNEL DELETE" );
     mas_channel_delete_buffer( pchannel );
     mas_free( pchannel );
   }
@@ -137,6 +140,7 @@ mas_set_address( const char *host, unsigned port, mas_serv_addr_t * sa )
   }
   else
   {
+    EVAL_PREPARE;
     struct addrinfo *result = NULL, *rp = NULL;
 
     /* r = getaddrinfo( host, NULL, &hints, &result ); */
@@ -202,6 +206,7 @@ __mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, co
   }
   if ( type == CHN_SOCKET )
   {
+    EVAL_PREPARE;
     /* r = mas_set_address( pchannel->host, port, &pchannel->serv ); */
     IEVAL( r, mas_set_address( pchannel->host, port, &pchannel->serv ) );
     if ( pchannel->serv.addr.sin_family == AF_INET )
@@ -244,6 +249,7 @@ _mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, con
 
   if ( mas_channel_test( pchannel ) && !pchannel->opened )
   {
+    EVAL_PREPARE;
     /* r = __mas_channel_init( pchannel, is_server, type, host, hostlen, port ); */
     IEVAL( r, __mas_channel_init( pchannel, is_server, type, host, hostlen, port ) );
   }
@@ -257,6 +263,7 @@ mas_channel_init( mas_channel_t * pchannel, int is_server, chn_type_t type, cons
 
   if ( host )
   {
+    EVAL_PREPARE;
     /* r = _mas_channel_init( pchannel, is_server, type, host, hostlen, port ); */
     IEVAL( r, _mas_channel_init( pchannel, is_server, type, host, hostlen, port ) );
   }
@@ -277,6 +284,7 @@ mas_channel_test( const mas_channel_t * pchannel )
   r = pchannel ? 1 : 0;
   if ( !r )
   {
+    /* EVAL_PREPARE; */
     MAS_LOG( "pchannel not set" );
     /* IEVAL( r, -1 ); */
   }

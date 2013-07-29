@@ -7,12 +7,16 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 #include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
+
+#include <mastar/msg/mas_msg_def.h>
+#include <mastar/msg/mas_msg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
 
@@ -174,12 +178,10 @@ mas_delete_thread_specific( void *ptr )
 void
 mas_thread_make_key( void )
 {
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
-  {
     ( void ) pthread_key_create( &ctrl.mas_thread_key, mas_delete_thread_specific );
-  }
 }
 
 void
@@ -187,7 +189,7 @@ mas_in_thread_end( void )
 {
   mas_thdata_t *thd;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
   {
@@ -203,7 +205,7 @@ mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * pr
 {
   mas_thdata_t *thd = NULL;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
   {
@@ -228,13 +230,29 @@ mas_in_thread( th_type_t thtype, mas_lcontrol_t * plcontrol, mas_rcontrol_t * pr
   return thd;
 }
 
+int
+mas_thself_set_name( const char *name, const char *defname )
+{
+  int r = -__LINE__;
+
+  if ( !name )
+    name = defname;
+  if ( name )
+  {
+    EVAL_PREPARE;
+    r = 0;
+    IEVAL( r, pthread_setname_np( mas_pthread_self(  ), name ) );
+  }
+  return r;
+}
+
 th_type_t
 mas_thself_type( void )
 {
+  CTRL_PREPARE;
   mas_thdata_t *thd;
   th_type_t thtype = MAS_THREAD_NONE;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
 
   if ( &ctrl )
   {
@@ -259,14 +277,19 @@ mas_thself_type( void )
 mas_lcontrol_t *
 mas_thself_plcontrol( void )
 {
+  CTRL_PREPARE;
   mas_thdata_t *thd;
   mas_lcontrol_t *plcontrol = NULL;
 
-  ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
-  thd = pthread_getspecific( ctrl.mas_thread_key );
-  if ( thd )
+
+  if ( &ctrl )
   {
-    plcontrol = thd->plcontrol;
+    ( void ) pthread_once( &ctrl.mas_thread_key_once, mas_thread_make_key );
+    thd = pthread_getspecific( ctrl.mas_thread_key );
+    if ( thd )
+    {
+      plcontrol = thd->plcontrol;
+    }
   }
   return plcontrol;
 }
@@ -277,7 +300,7 @@ mas_thself_double_time( void )
   double double_time;
   mas_thdata_t *thd;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
   {
@@ -296,7 +319,7 @@ mas_thself_set_double_time( double double_time )
 {
   mas_thdata_t *thd;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
   {
@@ -315,7 +338,7 @@ mas_thself_prcontrol( void )
   mas_thdata_t *thd;
   mas_rcontrol_t *prcontrol = NULL;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
   {
@@ -335,7 +358,7 @@ mas_thself_pchannel( void )
   mas_thdata_t *thd;
   mas_channel_t *pchannel = NULL;
 
-  extern mas_control_t ctrl __attribute__ ( ( weak ) );
+  CTRL_PREPARE;
 
   if ( &ctrl )
   {

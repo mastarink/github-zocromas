@@ -17,6 +17,9 @@
 
 #include <mastar/tools/mas_tools.h>
 
+#include <mastar/types/mas_control_types.h>
+
+
 #include <mastar/log/mas_log.h>
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -228,6 +231,7 @@ mas_channel_buffer_find_eol( mas_channel_t * pchannel )
   {
     if ( mas_channel_buffer_eob( pchannel ) )
     {
+      EVAL_PREPARE;
       /* mas_channel_buffer_strip_to( pchannel, 0, 0 ); */
       IEVAL( r, mas_channel_read_some( pchannel ) );
       WMSG( "(%d)SOME/EOL %lu L%lu", r, ( unsigned long ) pchannel->buffer.size, ( unsigned long ) pchannel->buffer.length );
@@ -308,6 +312,7 @@ mas_channel_search( mas_channel_t * pchannel, const char *needle, size_t len, ma
     {
       if ( mas_channel_buffer_eob( pchannel ) /* || !pchannel->buffer.buffer */  )
       {
+        EVAL_PREPARE;
         int r;
 
         mas_channel_buffer_strip_to( pchannel, 0, 0 );

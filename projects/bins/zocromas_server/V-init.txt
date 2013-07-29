@@ -1,0 +1,110 @@
+V
+To run .auxdir/.build/src/zocromas_server
+
+1 To run rbinary: exec  .auxdir/.build/src/zocromas_server --nohosts -Hzocromas.mastar.lan:5005 --redirect-messages= --daemon --set-ticker-mode=1 --nomessage --nologger --nolog --noticker --message
+   -e-  server         XXXXXXXXXX MAIN e:0
+   -e-  server         XXXXXXXXXX BUNCH START e:0
+   -e-  mas_init       XXXXXXXXXX INIT
++    0s mas_init       Main Main  INIT RESTART COUNT 0
++    0s mas_init       Main Main  INIT ARGV 11
++    0s mas_init       Main Main  (0) + INIT . #0
++    0s mas_init       Main Main  PRE-INIT
++    0s mas_init       Main Main  (0) - INIT . #0 mas_init_proc
++    0s mas_init       Main Main  (0) + INIT . #1
++    0s mas_init       Main Main  UUID b296ff38-61ce-4e0d-baf3-ca80b1f3ca76
++    0s mas_init       Main Main  (0) - INIT . #1 mas_init_uuid
++    0s mas_init       Main Main  (0) + INIT . #2
++    0s mas_init       Main Main  INIT OPT FILES
++    0s mas_init       Main Main  PPID: 22582; BASH VAR: 22582
++    0s mas_options    Main Main  OPTS from /mnt/new_misc/develop/autotools/zoc/admin/install/default/etc/zocromas_server/zocromas_server
++    0s mas_options    Main Main  RESTORE OPT nomessages: 1
++    0s mas_init       Main Main  (0) - INIT . #2 mas_init_opt_files
++    0s mas_init       Main Main  (0) + INIT . #3
++    0s mas_init       Main Main  INIT SIG
++    0s mas_init       Main Main  (0) - INIT . #3 mas_init_sig
++    0s mas_init       Main Main  (0) + INIT . #4
++    0s mas_options    Main Main  MSG>
++    0s mas_options    Main Main  (11) INIT CLI
++    0s mas_init       Main Main  (0) - INIT . #4 mas_cli_options_init
++    0s mas_init       Main Main  (0) + INIT . #5
++    0s mas_init       Main Main  (0) - INIT . #5 mas_ctrl_init
++    0s mas_init       Main Main  (0) + INIT . #6
++    0s mas_init       Main Main  MESSAGES (1) to (null)
++    0s mas_init       Main Main  (0) - INIT . #6 mas_init_set_msg_file
++    0s mas_init       Main Main  (0) + INIT . #7
+ -
+  [server] zocromas_mas_init V.0.0.5.20130725 built at 20130725122435 : 20130725 : 152420 : 1374755060; #0 (1374744657)
+  [server] pid=[ 25783 ](64b7) ; tid:25783 [7f3bcf4bc740]
+ -
++    0s mas_init       Main Main  (0) - INIT . #7 mas_init_message
++    0s mas_init       Main Main  (0) + INIT . #8
++    0s server         Main Main  INIT DAEMON pid:25783
++    0s server         Main Main  PARENT : daemon pid:26040 ; pid:25783 ; ppid:22582
++    0s mas_init       Main Main  (0) - INIT . #8 mas_init_daemon
++    0s mas_init       Main Main  (0) INIT . done (#9) is_parent:1
++    0s mas_init       Main Main  (0)INIT OK
++    0s server         Main Main  PARENT to exit
++    0s server         Main Main  BUNCH (parent) END
++    0s server         Main Main  AT EXIT zocMainXit: logQ: 0 - 0 = 0
++    0s server         Demn Demn  INIT DAEMON:26040 rn:0
++    0s server         Main Main  DESTROY SERVER zocMainAtexit; parent:1 - 0 : 7f3bcf4bc740
++    0s server         Demn Demn  CHILD : 26040 @ 25783 - (null) : 1
++    0s server         Main Main  STOPPED 0 lsn's
++    0s mas_log        Main Main  CLEARED logger queue : 0 [0-0=0]
++    0s mas_init       Main Main  DESTROY DONE
++    0s mas_init       Main Main  destroy, memory_balance:0 (0);
++    0s server         Main Main  TO DESTROY MODULES
++    0s server         Main Main  DESTROY SERVER DONE
+ logQsize:0 - 0 = 0
+** EMPTY MEMORY TABLE ** mas_atexit:67
+** EMPTY MEMORY TABLE ** mas_atexit:67
++    0s mas_init       Demn Demn  (0) - INIT . #8 mas_init_daemon
+ (1)AT EXIT, memory_balance:0 : logQ: 0 - 0 = 0
++    0s mas_init       Demn Demn  (0) + INIT . #9
+ =====[25783 @ 22582]=================================================================
+ CLOSE MSG
++    0s server         Demn Demn  (0)PIDPATH 1 : /mnt/new_misc/develop/autotools/zoc/admin/install/default/run//zocromas_server.pid
++    0s server         Demn Demn  (0:0)PIDLCK : /mnt/new_misc/develop/autotools/zoc/admin/install/default/run//zocromas_server.pid - UNLOCKED before
++    0s server         Demn Demn  (5)INIT PID
++    0s server         Demn Demn  (5) INIT PID done
++    0s server         Demn Demn  (5) INIT PIDs done
++    0s mas_init       Demn Demn  (0) - INIT . #9 mas_init_pids
++    0s mas_init       Demn Demn  (0) + INIT . #10
++    0s server         Demn Demn  (0) INIT THREADS done
++    0s mas_init       Demn Demn  (0) - INIT . #10 mas_threads_init
++    0s mas_init       Demn Demn  (0) + INIT . #11
++    0s zocprotos      Demn Demn  CONSTRUCTOR proto xcromas
++    0s mas_modules    Demn Demn  LOAD MOD xcromas OK
++    0s mas_modules    Demn Demn  LOAD SYM xcromas mas_proto_main OK
++    0s mas_modules    Demn Demn  LOAD FUNC xcromas mas_proto_main OK
++    0s mas_modules    Demn Demn  LOAD MOD http OK
++    0s mas_modules    Demn Demn  LOAD SYM http mas_proto_main OK
++    0s mas_modules    Demn Demn  LOAD FUNC http mas_proto_main OK
++    0s server         Demn Demn  (0) INIT . PROTOS 2 of 2
++    0s mas_init       Demn Demn  (0) - INIT . #11 mas_init_load_protos
++    0s mas_init       Demn Demn  (0) + INIT . #12
++    0s mas_listener   Demn Demn  INIT LCONTROLS
++    0s mas_listener   Demn Demn  INIT LCONTROLS_LIST
++    0s mas_init       Demn Demn  (0) - INIT . #12 mas_lcontrols_init
++    0s mas_init       Demn Demn  (0) + INIT . #13
++    0s        { ERR  }Demn Demn :26040 %26040 (MAIN) Z-:3: L256:mas_post_init            : POST-INIT
++    0s mas_init       Demn Demn  (0) postINIT done
++    0s mas_init       Demn Demn  (0) - INIT . #13 mas_post_init
++    0s mas_init       Demn Demn  (0) INIT . done (#14) is_parent:0
++    0s mas_init       Demn Demn  (0)INIT OK
++    0s server         Demn Demn  MASTER START : pid:26040 ltw
++    0s server         Demn Demn  NO LOGGER
++    0s server         Demn Demn  NO TICKER
++    0s server         Demn Demn  NO WATCHER
++    0s server         Demn Demn  MASTER LOOP 1 host; parent:0
++    0s mas_listener   Demn Demn  LISTENERS START
++    0s mas_listener   Demn Demn  LISTEN AT (#1) zocromas.mastar.lan:5005 (def.port:50005)
++    0s server         Demn Demn  WAITING...
+Demn 26041(LIST) L1:4: WAITING CLIENT
+⊂╋⊃
+
+158x85  ==(xterm)=(/dev/pts/16) 12582916
+[mastar@mastar Thu 25 15:24:28] [] [devel]
+#286[ {47s} {3d 5:39:23} ~22582] ◇
+[ .../zoc/projects/bins/zocromas_server ] :) 2$
+

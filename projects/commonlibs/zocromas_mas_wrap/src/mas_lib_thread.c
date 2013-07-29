@@ -5,8 +5,6 @@
 #  include <stdio.h>
 #  include <errno.h>
 
-/* #include "mas_common.h" */
-
 #  include "mas_lib_thread.h"
 
 /*

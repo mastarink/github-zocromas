@@ -17,7 +17,6 @@
 
 
 #include <mastar/types/mas_control_types.h>
-extern mas_control_t ctrl __attribute__ ( ( weak ) );
 
 #ifndef MAS_NO_THTOOLS
 #  include <mastar/thtools/mas_thread_tools.h>
@@ -428,6 +427,7 @@ static void
 _mfpev( const char *fmt, va_list args )
 {
   _mfpbv( fmt, args );
+  CTRL_PREPARE;
   MFPL( msg_buffer );
   msg_index = 0;
 }
@@ -774,20 +774,17 @@ mas_reset_color( void )
 int
 mas_msg_set_file( const char *path, int force )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( &ctrl )
   {
     if ( ctrl.msgfile && ( ctrl.msgfile != ctrl.stderrfile || force ) )
     {
-      if ( fclose( ctrl.msgfile ) == EOF )
-      {
-        IEVAL( r, -1 );
-      }
+      IEVAL( r, fclose( ctrl.msgfile ) == EOF ? -1 : 0 );
       ctrl.msgfile = NULL;
     }
     r = 0;
-    HMSG( "MSG SET TO %p : %s", ( void * ) ctrl.msgfile, path );
     if ( path )
     {
       /* ctrl.msgfile = fopen( path, "a" ); */
@@ -850,6 +847,7 @@ __mas_msg_pid( mas_msg_type_t msgt, int fdetails, pid_t pid )
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
+    CTRL_PREPARE;
     if ( &ctrl && pid == ctrl.main.pid )
     {
       wattron( w_win, A_BOLD );
@@ -881,6 +879,7 @@ __mas_msg_tid( mas_msg_type_t msgt, int fdetails, pid_t tid )
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
+    CTRL_PREPARE;
     if ( &ctrl && tid == ctrl.main.tid )
     {
       wattron( w_win, A_BOLD );
@@ -909,6 +908,7 @@ __mas_msg_tid( mas_msg_type_t msgt, int fdetails, pid_t tid )
 static int
 __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
 {
+  CTRL_PREPARE;
   const char *pidname = NULL;
 
   if ( !&ctrl )
@@ -941,6 +941,7 @@ __mas_msg_pidname( mas_msg_type_t msgt, int fdetails, pid_t pid )
 static int
 __mas_msg_tidname( mas_msg_type_t msgt, int fdetails, pid_t tid )
 {
+  CTRL_PREPARE;
   const char *tidname = NULL;
 
   if ( !&ctrl )
@@ -986,6 +987,7 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
 #  ifdef MAS_USE_CURSES
   if ( use_curses )
   {
+    CTRL_PREPARE;               /* for MFP* */
     unsigned color = 0;
 
     wattron( w_win, A_BOLD );
@@ -1025,6 +1027,7 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
   else
 #  endif
   {
+    CTRL_PREPARE;               /* for MFP* */
     /* mas_set_color( msgt, MAS_MSG_FIELD_THREAD_INFO ); */
     mas_set_color( msgt, MAS_MSG_FIELD_THREAD_TYPE_NAME + thtype );
     MFPB( "(%s)", mas_thread_type_name( thtype ) );
@@ -1144,6 +1147,7 @@ __mas_msg_suffix( mas_msg_type_t msgt, int fdetails, const char *suffix )
 int
 __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 {
+  CTRL_PREPARE;
   if ( &ctrl && ctrl.stamp.start_time )
   {
     unsigned long elapsed_time;
@@ -1194,11 +1198,13 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
+    CTRL_PREPARE;               /* for MFP* */
     MFPB( "\n*" );
   }
   else
 #endif
   {
+    CTRL_PREPARE;               /* for MFP* */
     MFPB( "\r" );
   }
   {
@@ -1233,8 +1239,11 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
       r = __mas_msg_tid( msgt, details, tid );
 
 #ifndef MAS_NO_THTOOLS
-    if ( MAS_CTRL_IS_SERVER && mas_show( msgt, details, MAS_MSG_FIELD_THREAD_INFO ) )
-      r = __mas_msg_thread_info( msgt, details );
+    {
+      CTRL_PREPARE;
+      if ( MAS_CTRL_IS_SERVER && mas_show( msgt, details, MAS_MSG_FIELD_THREAD_INFO ) )
+        r = __mas_msg_thread_info( msgt, details );
+    }
 #endif
     if ( mas_show( msgt, details, MAS_MSG_FIELD_CODEPOS ) )
       r = __mas_msg_code_position( msgt, details, func, line );
@@ -1248,6 +1257,7 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_EOL ) )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_EOL );
+      CTRL_PREPARE;             /* for MFP* */
       MFPB( "\x1b[K" );
       mas_reset_color(  );
     }
@@ -1259,6 +1269,7 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
     else
 #endif
     {
+      CTRL_PREPARE;             /* for MFP* */
       MFPE( "\n" );
     }
   }
@@ -1275,6 +1286,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
   va_start( args, fmt );
   if ( allow )
   {
+    CTRL_PREPARE;               /* for MFP* */
     int can = 0;
 
     can = MAS_CTRL_MESSAGES;
@@ -1312,6 +1324,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
       can = 1;
     if ( can )
     {
+      CTRL_PREPARE;
       if ( &ctrl )
         pthread_mutex_lock( &ctrl.thglob.msg_mutex );
       r = __mas_vmsg( func, line, msgt, details, prefix_fmt, prefix, suffix, fmt, args );
@@ -1326,6 +1339,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
 static int
 mas_verror( const char *func, int line, int merrno, int *perrno, int *psaveerrno, const char *fmt, va_list args )
 {
+  CTRL_PREPARE;
   int r = 0;
   mas_msg_type_t msgt = MAS_MSG_ERR;
 
@@ -1398,8 +1412,11 @@ _mas_perr( const char *func, int line, int merrno, int *perrno )
     /* MAS_MSG_BIT(msg_tr) = 1; */
     errcnt++;
     se = strerror_r( merrno, errbuf, sizeof( errbuf ) );
-    mas_error( func, line, merrno, perrno, NULL, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT,
-               &ctrl ? ctrl.keep_listening : 0, &ctrl ? ctrl.fatal : 0 );
+    {
+      CTRL_PREPARE;
+      mas_error( func, line, merrno, perrno, NULL, "[error %d] %s (i/c:%d; i/s:%d; fatal:%d)", merrno, se, MAS_CTRL_IN_CLIENT,
+                 &ctrl ? ctrl.keep_listening : 0, &ctrl ? ctrl.fatal : 0 );
+    }
     if ( errcnt < 10 )
     {
     }
@@ -1417,6 +1434,7 @@ _mas_perr( const char *func, int line, int merrno, int *perrno )
 void *
 mas_fatal( void )
 {
+  CTRL_PREPARE;                 /* for MFP* */
   MFPZ( "pointer error" );
   exit( 11 );
 }
