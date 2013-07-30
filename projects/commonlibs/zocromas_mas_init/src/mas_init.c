@@ -214,10 +214,6 @@ mas_init( mas_options_t * popts, int argc, char **argv, char **env )
 
   HMSG( "INIT" );
   IEVAL( r, mas_pre_init_runpath( argv[0] ) );
-  /* IEVAL( r, mas_init_proc( popts ) ); */
-  /* uuid BEFORE opt_files !! */
-  /* IEVAL( r, mas_init_uuid( popts, NULL ) );      */
-  /* IEVAL( r, mas_init_opt_files( popts, NULL ) ); */
   WMSG( "(%d) PRE-INIT", r );
 #ifdef MAS_USE_CURSES
   /* // r = mas_init_curses(  ); */

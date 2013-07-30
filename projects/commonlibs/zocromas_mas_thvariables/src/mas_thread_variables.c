@@ -30,7 +30,6 @@
 
 #include "mas_thread_variables.h"
 
-extern mas_control_t ctrl;
 
 
 /*

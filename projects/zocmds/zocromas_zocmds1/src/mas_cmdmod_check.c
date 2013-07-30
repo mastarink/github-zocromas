@@ -102,7 +102,7 @@ lvar_cmd( STD_CMD_ARGS )
   }
   return mas_evaluated_wrap_pchar( result );
 }
-#if 0
+
 static mas_evaluated_t *
 uuid_cmd( STD_CMD_ARGS )
 {
@@ -117,9 +117,7 @@ uuid_cmd( STD_CMD_ARGS )
     if ( prcontrol )
     {
       if ( !prcontrol->uuid && args )
-      {
         prcontrol->uuid = mas_strdup( args );
-      }
       if ( prcontrol->uuid )
         uuid = mas_strdup( prcontrol->uuid );
     }
@@ -143,7 +141,6 @@ uuid_cmd( STD_CMD_ARGS )
   HMSG( "prcontrol:%d; prcontrol:%d; uuid: %s", prcontrol ? 1 : 0, args ? 1 : 0, uuid );
   return mas_evaluated_wrap_pchar( uuid );
 }
-#endif
 
 
 mas_cmd_t subcmdtable[] = {
@@ -154,6 +151,8 @@ mas_cmd_t subcmdtable[] = {
   /* {2, "tvar", tvar_cmd, NULL}   (* check tvar *) */
   /* ,                                              */
   {3, "lvar", lvar_cmd, NULL}   /* check lvar */
+  ,
+  {4, "uuid", uuid_cmd, NULL}   /* check uuid */
   ,
   {999, NULL, NULL, NULL}
 };

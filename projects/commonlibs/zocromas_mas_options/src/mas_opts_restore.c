@@ -17,9 +17,6 @@
 #include <mastar/types/mas_opts_types.h>
 
 
-extern mas_control_t ctrl;
-
-
 #include "mas_opts_common.h"
 #include "mas_opts_storage.h"
 
@@ -218,6 +215,8 @@ mas_option_parse_t opt_table[] = {
   ,
   {.name = "filename.message",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, msgfilename )}
   ,
+  {.name = "init-message-string",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, init_message )}
+  ,
   {.name = "filename.stderr",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, stderr_filename )}
   ,
   {.name = "filename.stdout",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, stdout_filename )}
@@ -261,6 +260,7 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
   OPT_FLAG( single_instance, s );
   OPT_FLAG( single_child, s );
   OPT_NOFLAG( messages, s );
+  OPT_FLAG( has_init_message, s );
   OPT_FLAG( save_user_opts, s );
   OPT_FLAG( save_user_opts_plus, s );
   OPT_FLAG( overwrite_user_opts, s );
@@ -292,6 +292,7 @@ int
 mas_opts_restore_at_section( mas_options_t * popts, const char *section, const char *s )
 {
   EVAL_PREPARE;
+  CTRL_PREPARE;
   int r = 0;
 
   if ( 0 == mas_strcmp2( s, "host=" ) )
@@ -344,6 +345,7 @@ mas_opts_restore_relative( mas_options_t * popts, const char *filename )
 int
 mas_opts_restore_path( mas_options_t * popts, const char *fpath )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   r = _mas_opts_restore_path( popts, fpath, popts, opt_table, sizeof( opt_table ) / sizeof( opt_table[0] ), NULL,
@@ -377,6 +379,7 @@ _mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filen
 int
 mas_opts_restore_user( mas_options_t * popts, const char *dirname, const char *filename )
 {
+  EVAL_PREPARE;
   int r = 0;
 
   if ( filename )
@@ -441,14 +444,15 @@ mas_opts_restore_user_plus( mas_options_t * popts, const char *dirname, const ch
   return r;
 }
 
-#define XSTR(s) STR(s)
-#define STR(s) #s
 int
 mas_opts_restore_zero( mas_options_t * popts, const char *filename )
 {
+  CTRL_PREPARE;
   int r = 0;
   char *dir;
 
+#define XSTR(s) STR(s)
+#define STR(s) #s
   dir = mas_strdup( XSTR( MAS_SYSCONFDIR ) );
   dir = mas_strcat_x( dir, "/" );
   if ( ctrl.binname )

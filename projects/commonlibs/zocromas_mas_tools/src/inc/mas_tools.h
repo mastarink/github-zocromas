@@ -29,5 +29,6 @@ char *mas_load_fd( int fd, size_t size, size_t * ptruesize, ino_t * ptrueinode, 
 
 char *mas_dump1( const char *data, size_t len, size_t perline );
 char *mas_dump2( const char *data, size_t len, size_t perline );
+char *mas_escape( char *str );
 
 #endif

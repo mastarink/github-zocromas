@@ -9,7 +9,6 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/types/mas_control_types.h>
-/* extern mas_control_t ctrl; */
 
 #include <mastar/types/mas_opts_types.h>
 

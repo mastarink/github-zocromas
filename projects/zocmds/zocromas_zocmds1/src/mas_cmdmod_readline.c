@@ -27,7 +27,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 /*
@@ -47,6 +46,7 @@ related:
 static mas_evaluated_t *
 readline_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   char *buf;
   char *mas_readline_buffer;
 

@@ -26,8 +26,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
-
 
 /*
 this:
@@ -79,6 +77,7 @@ env_cmd( STD_CMD_ARGS )
   }
   else
   {
+  CTRL_PREPARE;
     if ( ctrl.launcherev.v )
     {
       char *const *pe;
@@ -116,6 +115,7 @@ date_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 args_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   return mas_evaluated_wrap_pchar( mas_argv_string( ctrl.launchervv.c, ctrl.launchervv.v, 1 ) );
 }
 
@@ -158,6 +158,7 @@ uuid_cmd( STD_CMD_ARGS )
 
   if ( prcontrol && prcontrol->uuid )
     uuid = mas_strdup( prcontrol->uuid );
+  HMSG( "uuid:%s", uuid );
   return mas_evaluated_wrap_pchar( uuid );
 }
 

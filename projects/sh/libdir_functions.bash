@@ -171,20 +171,15 @@ function setup_dirs ()
   if type -t setup_vers &>/dev/null ; then setup_vers || return 1 ; fi
   return 0
 }
-function grepch ()
-{
-  local project projects_list 
+function grepch0 ()
+{  
+  local project projects_list res
   if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
-      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} || return 1
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} >/dev/null || return 1
       arg="$@"
 #     find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color $@ \{\} \; || return 1
-      if find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color $arg \{\} \+ ; then
-        popd >/dev/null
-        return 0
-      else
-        popd >/dev/null
-        return 1
-      fi
+      find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color $arg \{\} \+
+      popd >/dev/null
 #   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
 #   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \; | sed -ne 's@^\.\/@@p'
 #     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \+
@@ -193,6 +188,10 @@ function grepch ()
     return 1
   fi
   return 0
+}
+function grepch ()
+{
+  grepch0 $@ | sed  's/^\(.*\)\.\/\([^:]*\)\s*:\s*\(.*\)$/\1\2\t\3/' | cat -n
 }
 function grepau ()
 {

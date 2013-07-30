@@ -13,7 +13,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include "mas_control.h"
 
@@ -35,6 +34,7 @@ more:
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  CTRL_PREPARE;
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
   if ( !ctrl.msgfile )
@@ -53,6 +53,7 @@ __attribute__ ( ( destructor ) )
 int
 mas_ctrl_init( mas_options_t * popts, const char **message )
 {
+  CTRL_PREPARE;
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.in_client = 0;
   ctrl.keep_listening = 0;
@@ -81,6 +82,7 @@ mas_ctrl_init( mas_options_t * popts, const char **message )
 int
 mas_ctrl_destroy( void )
 {
+  CTRL_PREPARE;
   mas_del_argv( ctrl.commandsv.c, ctrl.commandsv.v, 0 );
   ctrl.commandsv.c = 0;
   ctrl.commandsv.v = NULL;
@@ -113,6 +115,7 @@ mas_ctrl_destroy( void )
 void
 mas_ctrl_add_command( const char *s )
 {
+  CTRL_PREPARE;
   /* const char *se;              */
   /*                              */
   /* se = mas_find_eq_value( s ); */

@@ -1276,6 +1276,62 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
   return r;
 }
 
+static int
+mas_msg_can( int allow, int can )
+{
+  if ( allow == 777 )
+    can = 1;
+  else if ( can )
+  {
+#ifndef MAS_NO_THTOOLS
+    th_type_t thtype;
+
+    thtype = mas_thself_type(  );
+    switch ( thtype )
+    {
+    case MAS_THREAD_MAIN:
+    case MAS_THREAD_MASTER:
+      can = MAS_MSG_BIT( msg_trace_main );
+      break;
+    case MAS_THREAD_LISTENER:
+      can = MAS_MSG_BIT( msg_trace_listener );
+      break;
+    case MAS_THREAD_TRANSACTION:
+      can = MAS_MSG_BIT( msg_trace_transaction );
+      break;
+    case MAS_THREAD_NONE:
+    case MAS_THREAD_TICKER:
+    case MAS_THREAD_WATCHER:
+    case MAS_THREAD_LOGGER:
+      /* default:   */
+      can = 1;
+      break;
+    }
+#else
+    can = 1;
+#endif
+  }
+  return can;
+}
+
+int
+mas_msgv( const char *func, int line, mas_msg_type_t msgt, int allow, int details,
+          const char *prefix_fmt, const char *prefix, const char *suffix, const char *fmt, va_list args )
+{
+  CTRL_PREPARE;
+  int r = 0;
+
+  if ( mas_msg_can( allow, MAS_CTRL_MESSAGES ) )
+  {
+    if ( &ctrl )
+      pthread_mutex_lock( &ctrl.thglob.msg_mutex );
+    r = __mas_vmsg( func, line, msgt, details, prefix_fmt, prefix, suffix, fmt, args );
+    if ( &ctrl )
+      pthread_mutex_unlock( &ctrl.thglob.msg_mutex );
+  }
+  return r;
+}
+
 int
 mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details,
          const char *prefix_fmt, const char *prefix, const char *suffix, const char *fmt, ... )
@@ -1284,54 +1340,7 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
   va_list args;
 
   va_start( args, fmt );
-  if ( allow )
-  {
-    CTRL_PREPARE;               /* for MFP* */
-    int can = 0;
-
-    can = MAS_CTRL_MESSAGES;
-    if ( can )
-    {
-#ifndef MAS_NO_THTOOLS
-      th_type_t thtype;
-
-      thtype = mas_thself_type(  );
-      switch ( thtype )
-      {
-      case MAS_THREAD_MAIN:
-      case MAS_THREAD_MASTER:
-        can = MAS_MSG_BIT( msg_trace_main );
-        break;
-      case MAS_THREAD_LISTENER:
-        can = MAS_MSG_BIT( msg_trace_listener );
-        break;
-      case MAS_THREAD_TRANSACTION:
-        can = MAS_MSG_BIT( msg_trace_transaction );
-        break;
-      case MAS_THREAD_NONE:
-      case MAS_THREAD_TICKER:
-      case MAS_THREAD_WATCHER:
-      case MAS_THREAD_LOGGER:
-        /* default:   */
-        can = 1;
-        break;
-      }
-#else
-      can = 1;
-#endif
-    }
-    if ( allow == 777 )
-      can = 1;
-    if ( can )
-    {
-      CTRL_PREPARE;
-      if ( &ctrl )
-        pthread_mutex_lock( &ctrl.thglob.msg_mutex );
-      r = __mas_vmsg( func, line, msgt, details, prefix_fmt, prefix, suffix, fmt, args );
-      if ( &ctrl )
-        pthread_mutex_unlock( &ctrl.thglob.msg_mutex );
-    }
-  }
+  r = mas_msgv( func, line, msgt, allow, details, prefix_fmt, prefix, suffix, fmt, args );
   va_end( args );
   return r;
 }

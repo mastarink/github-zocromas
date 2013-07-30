@@ -274,8 +274,6 @@ AC_CONFIG_HEADERS([config.h])
 # AC_CONFIG_FILES([etc/.........])
 
 AC_CONFIG_FILES([${PACKAGE_NAME}.pc
-		${PACKAGE_NAME}c.pc
-		${PACKAGE_NAME}s.pc
 		Makefile
 		src/Makefile
 		src/inc/Makefile

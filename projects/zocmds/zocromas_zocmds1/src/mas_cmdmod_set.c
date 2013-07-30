@@ -28,7 +28,6 @@
 #include <mastar/modules/mas_modules_commands.h>
 
 #include <mastar/types/mas_control_types.h>
-extern mas_control_t ctrl;
 
 
 /*
@@ -47,6 +46,8 @@ related:
 static mas_evaluated_t *
 msg_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
+
   cMSG( "set msg args:%s", args );
   if ( ( 0 == strcmp( args, "on" ) ) || ( 0 == strcmp( args, "yes" ) ) || ( 0 == strcmp( args, "1" ) ) )
   {
@@ -82,6 +83,7 @@ msg_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 log_cmd( STD_CMD_ARGS )
 {
+  CTRL_PREPARE;
   if ( ( 0 == strcmp( args, "on" ) ) || ( 0 == strcmp( args, "yes" ) ) || ( 0 == strcmp( args, "1" ) ) )
   {
     ctrl.log_disabled = 0;

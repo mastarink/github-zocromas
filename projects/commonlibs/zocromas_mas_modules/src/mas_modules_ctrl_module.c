@@ -13,7 +13,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -29,6 +28,7 @@ __attribute__ ( ( constructor ) )
 static void
 __register_module( const char *name, void *module_handle )
 {
+  CTRL_PREPARE;
   pthread_rwlock_wrlock( &ctrl.thglob.modules_list_rwlock );
   {
     unsigned cnt, size;
@@ -64,6 +64,7 @@ typedef int ( *mas_v_fun_t ) ( void );
 void
 mas_modules_unregister( void )
 {
+  CTRL_PREPARE;
   if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )
   {
     for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )

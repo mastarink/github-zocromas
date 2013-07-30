@@ -147,7 +147,8 @@ function setup_vers ()
     rname_preset=$MAS_ZOCROMAS_HERE
     rname_case=2
   fi
-  if binary_preset="$bsrcdir/$rname_preset"           && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
+# echo "mcaller_fname:$mcaller_fname; rname_preset:$rname_preset; mas_name:$mas_name; rname_case:$rname_case; binary_preset:$binary_preset;">&2
+  if [[ "$rname_preset" ]] && binary_preset="$bsrcdir/$rname_preset"           && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
     rname_case=3
   elif binary_preset="$bsrcdir/${rprefix}${prjname}"  && [[ -f $binary_preset ]] && [[ -x $binary_preset ]] ; then
     rname_preset=$prjname
@@ -169,6 +170,7 @@ function setup_vers ()
   else
     if [[ "$MAS_SH_VERBOSE" ]] ; then echo "can't set binary_preset @ $bsrcdir" >&2 ; fi
   fi
+# echo "mcaller_fname:$mcaller_fname; rname_preset:$rname_preset; mas_name:$mas_name; rname_case:$rname_case; binary_preset:$binary_preset;">&2
   if [[ "$MAS_SH_VERBOSE" ]] ; then echo "($rname_case)::: $rname_preset" >&2 ; fi
 # echo "[: $mas_name : $rprefix : $mcaller_fname : $rname_preset :]" >&2
   ibinary_preset="$flavourdir/bin/$rname_preset"
@@ -177,6 +179,7 @@ function setup_vers ()
 # else
 #   echo "$rname_preset ::: ${binprefix} :: ---" >&2
   fi
+# echo "binary_preset:$binary_preset" >&2
   if [[ "$binary_preset" ]] && [[ -f "$binary_preset" ]] ; then
     if [[ $(realpath --version 2>&1 | head -1 | awk '{print $4}') > 8 ]] && rbinary_preset=$( realpath --relative-to=$indir $binary_preset ) ; then
       :

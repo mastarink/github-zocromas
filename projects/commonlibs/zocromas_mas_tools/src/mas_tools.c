@@ -252,6 +252,65 @@ mas_dump2( const char *data, size_t len, size_t perline )
 }
 
 char *
+mas_escape( char *str )
+{
+  size_t len;
+  char *ns = NULL;
+  char *ip = NULL;
+  char *op = NULL;
+
+  len = strlen( str ) + 1;
+  ns = mas_malloc( len );
+  ip = str;
+  op = ns;
+  while ( str && *str && op - ns < len )
+  {
+    if ( *ip == '\\' )
+    {
+      ip++;
+      if ( *ip == 'x' )
+      {
+        unsigned c;
+
+        ip++;
+        sscanf( ip, "%2x", &c );
+        *op++ = ( char ) c;
+        ip += 2;
+      }
+      else if ( *ip == 'd' )
+      {
+        unsigned c;
+
+        ip++;
+        sscanf( ip, "%2u", &c );
+        *op++ = ( char ) c;
+        ip += 2;
+      }
+      else if ( *ip == 'n' )
+      {
+        *op++ = '\n';
+        ip++;
+      }
+      else if ( *ip == 'r' )
+      {
+        *op++ = '\r';
+        ip++;
+      }
+      else if ( *ip == 't' )
+      {
+        *op++ = '\t';
+        ip++;
+      }
+    }
+    else
+    {
+      *op++ = *ip++;
+    }
+  }
+  return ns;
+}
+
+char *
 mas_ip_string( void *sin_addr )
 {
   char ip[128];

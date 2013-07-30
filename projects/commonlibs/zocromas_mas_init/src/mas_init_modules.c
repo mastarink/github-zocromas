@@ -58,16 +58,53 @@ more:
 int
 mas_init_message( mas_options_t * popts, const char **message )
 {
-  extern mas_control_t ctrl;
-  extern unsigned long __MAS_LINK_DATE__;
-  extern unsigned long __MAS_LINK_TIME__;
-  extern unsigned long __MAS_LINK_TIMESTAMP__;
 
+  if ( popts->has_init_message )
+  {
+    CTRL_PREPARE;               /* MFP... */
+    if ( popts->init_message )
+    {
+/* #pragma GCC diagnostic push                                */
+/*           (* HMSG( popts->init_message ); *)               */
+/* (* #pragma message "Compiling " __FILE__ "..." *)          */
+/* #pragma GCC diagnostic ignored "-Wformat-security"         */
+/* (* #pragma GCC diagnostic ignored "-Wformat-nonliteral" *) */
+/* (* #pragma GCC diagnostic ignored "-Wformat" *)            */
+/* (* #pragma GCC diagnostic ignored "-Wall" *)               */
+/*           MFP( popts->init_message );                      */
+/* #pragma GCC diagnostic pop                                 */
+      char *esc = NULL;
+
+      esc = mas_escape( popts->init_message );
+      if ( esc )
+      {
+        /* char *d; */
+
+        /* d = mas_dump2( esc, strlen( esc ), 64 ); */
+        MFPL( esc );
+        /* HMSG( "DUMP ESC:%s", d ); */
+        /* mas_free( d ); */
+        mas_free( esc );
+      }
+      /* HMSG( "INIT_MESSAGE [%s]", popts->init_message ); */
+    }
+    else
+    {
+      /* (* MFP( "\x1b[H\x1b[2J" ); *) */
+      /* (* MFP( "\x1b" "c" ); *)      */
+      MFPL( "\x1b" "c" );
+    }
+  }
   WMSG( "INIT MESSAGE" );
 
 #ifdef MAS_USE_CURSES
   if ( use_curses )
   {
+    CTRL_PREPARE;
+    extern unsigned long __MAS_LINK_DATE__;
+    extern unsigned long __MAS_LINK_TIME__;
+    extern unsigned long __MAS_LINK_TIMESTAMP__;
+
     IMSG( "[%s] %s V.%s built at %s : %lx : %lx : %lu; #%u (%s)", ctrl.progname, PACKAGE_NAME, PACKAGE_VERSION, MAS_C_DATE,
           ( unsigned long ) ( &__MAS_LINK_DATE__ ), ( unsigned long ) ( &__MAS_LINK_TIME__ ), ( unsigned long ) ( &__MAS_LINK_TIMESTAMP__ ),
           ctrl.restart_cnt, ctrl.stamp.vtsc );
@@ -77,6 +114,11 @@ mas_init_message( mas_options_t * popts, const char **message )
   else
 #endif
   {
+    CTRL_PREPARE;
+    extern unsigned long __MAS_LINK_DATE__;
+    extern unsigned long __MAS_LINK_TIME__;
+    extern unsigned long __MAS_LINK_TIMESTAMP__;
+
     /* IMSG( "\x1b""c" ); */
     IMSG( "-" );
     IMSG( " [%s] %s V.%s built at %s : %lx : %lx : %lu; #%u (%s) ", ctrl.progname, PACKAGE_NAME,
@@ -124,7 +166,7 @@ mas_init_proc( mas_options_t * popts, const char **message )
       WMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
     }
     {
-      extern mas_control_t ctrl;
+      CTRL_PREPARE;
 
       ctrl.exepath = linkname;
       ctrl.exename = mas_strdup( basename( ctrl.exepath ) );
@@ -221,7 +263,6 @@ mas_init_set_msg_file( mas_options_t * popts, const char **message )
       MAS_LOG( "(%d) init msg set file done e%d", r, errno );
 
       /* TODO if console: */
-      MFP( "\x1b[H\x1b[2J" );
     }
     /* IEVAL( r, mas_init_message(  ) ); */
   }
@@ -256,7 +297,6 @@ mas_init_uuid( mas_options_t * popts, const char **message )
 int
 mas_post_init( mas_options_t * popts, const char **message )
 {
-  CTRL_PREPARE;
   int r = 0;
 
   HMSG( "POST-INIT >" );
@@ -283,6 +323,7 @@ mas_post_init( mas_options_t * popts, const char **message )
 */
   if ( r >= 0 && popts->dir.log )
   {
+    CTRL_PREPARE;
     char namebuf[512];
 
     snprintf( namebuf, sizeof( namebuf ), "/%s.%s.%lu.%u.log", ctrl.is_client ? "client" : "server", ctrl.is_parent ? "parent" : "child",

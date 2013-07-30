@@ -117,6 +117,7 @@ struct mas_options_s
   unsigned save_user_opts_plus:1;
   unsigned overwrite_user_opts:1;
   unsigned overwrite_user_opts_plus:1;
+  unsigned has_init_message:1;
 
   mas_options_daemon_t daemon;
   mas_options_log_t log;
@@ -154,6 +155,7 @@ struct mas_options_s
   mas_thnames_t thname;
   char *save_user_opts_filename;
   char *msgfilename;
+  char *init_message;
   char *stderr_filename;
   char *stdout_filename;
   char *configfilename;

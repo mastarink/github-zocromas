@@ -81,8 +81,6 @@ typedef enum mas_msg_color_e mas_msg_color_t;
 
 /* #  define PTR(typ,p) (p?p:(typ)mas_fatal()) */
 
-/* #include <mastar/types/mas_control_types.h> */
-/* extern mas_control_t ctrl;                  */
 
 #  include "mas_msg_msgfl_def.h"
 #  include "mas_msg_mfp_def.h"

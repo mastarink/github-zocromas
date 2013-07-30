@@ -18,7 +18,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include <mastar/channel/mas_channel.h>
@@ -95,6 +94,7 @@ mas_lcontrol_create( void )
 int
 mas_lcontrol_register( mas_lcontrol_t * plcontrol )
 {
+  CTRL_PREPARE;
   if ( ctrl.lcontrols_list )
   {
     /* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); */
@@ -179,7 +179,10 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const mas_options_t * popts, cons
   pthread_rwlock_init( &plcontrol->variables_rwlock, NULL );
 
   plcontrol->h.pchannel = mas_channel_create(  );
-  mas_channel_init( plcontrol->h.pchannel, ctrl.is_server, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );
+  {
+    CTRL_PREPARE;
+    mas_channel_init( plcontrol->h.pchannel, ctrl.is_server, CHN_SOCKET, plcontrol->host, plcontrol->hostlen, plcontrol->port );
+  }
   {
     struct timeval td;
 
@@ -198,6 +201,7 @@ mas_lcontrol_remove_delete( mas_lcontrol_t * plcontrol )
 
   if ( plcontrol )
   {
+    CTRL_PREPARE;
     /* thMSG( "REMOVE %d %p", __LINE__, ( void * ) plcontrol ); */
     pthread_rwlock_wrlock( &ctrl.thglob.lcontrols_list_rwlock );
     if ( plcontrol->in_list && ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )

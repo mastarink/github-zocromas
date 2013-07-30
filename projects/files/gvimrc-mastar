@@ -18,6 +18,10 @@ if filereadable(sfile)
 " autocmd! VimEnter * source gvim-vimenter.vim
   au GUIEnter * winsize 156 50
   au GUIEnter * source gvim-vimenter.vim
+  map <F3> :wa<CR>:!sh/doprj.sh i<CR>
+  map <C-F3> :wa<CR>:!sh/doprj.sh c i<CR>
+  map <F4> :wa<CR>:!sh/doall.sh i<CR>
+  map <C-F4> :wa<CR>:!sh/doall.sh c i<CR>
 
   " echo 'later: gvim-vimenter.vim'
 endif

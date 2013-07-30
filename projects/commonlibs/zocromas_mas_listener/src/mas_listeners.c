@@ -16,7 +16,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 /* #include "mas_common.h" */
@@ -66,6 +65,7 @@ mas_listeners_start( const mas_options_t * popts )
   }
   else
   {
+    CTRL_PREPARE;
     MAS_LOG( "to start listeners" );
     lMSG( "to start listeners" );
     HMSG( "LISTENERS START" );
@@ -96,6 +96,7 @@ mas_listeners_start( const mas_options_t * popts )
 int
 mas_listeners_stop( void )
 {
+  CTRL_PREPARE;
   int stopped = 0;
 
   if ( ctrl.lcontrols_list )
@@ -113,6 +114,7 @@ mas_listeners_stop( void )
 int
 mas_listeners_cancel( void )
 {
+  CTRL_PREPARE;
   int cancelled = 0;
 
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
@@ -138,6 +140,7 @@ mas_listeners_cancel( void )
 int
 mas_listeners_wait( void )
 {
+  CTRL_PREPARE;
   int stopped = 0;
   mas_lcontrol_t *plcontrol = NULL;
 

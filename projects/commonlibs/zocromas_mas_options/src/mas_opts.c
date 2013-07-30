@@ -51,6 +51,10 @@ mas_opts_destroy( mas_options_t * popts )
     mas_free( popts->save_user_opts_filename );
   popts->save_user_opts_filename = NULL;
 
+  if ( popts->init_message )
+    mas_free( popts->init_message );
+  popts->init_message = NULL;
+
   if ( popts->msgfilename )
     mas_free( popts->msgfilename );
   popts->msgfilename = NULL;

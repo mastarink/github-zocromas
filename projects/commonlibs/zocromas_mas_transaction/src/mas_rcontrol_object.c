@@ -16,7 +16,6 @@
 
 #include <mastar/types/mas_control_types.h>
 /* #include <mastar/types/mas_opts_types.h> */
-extern mas_control_t ctrl;
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -53,6 +52,7 @@ mas_rcontrol_create( void )
   prcontrol = mas_malloc( sizeof( mas_rcontrol_t ) );
   if ( prcontrol )
   {
+    CTRL_PREPARE;
     memset( prcontrol, 0, sizeof( mas_rcontrol_t ) );
     prcontrol->signature[0] = 'T';
     prcontrol->signature[1] = 'R';
@@ -196,6 +196,7 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
       /* pthread_mutex_lock( &plcontrol->transaction_mutex ); */
       pthread_rwlock_wrlock( &plcontrol->transaction_rwlock );
       {
+        CTRL_PREPARE;
         MAS_LIST_REMOVE( plcontrol->transaction_controls_list, prcontrol, mas_rcontrol_s, next );
         ctrl.clients_removed++;
       }

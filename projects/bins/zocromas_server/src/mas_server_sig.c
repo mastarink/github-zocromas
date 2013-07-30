@@ -21,7 +21,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include <mastar/msg/mas_msg_def.h>
@@ -63,6 +62,7 @@ static int term_cnt = 0;
 static void
 to_exit( void )
 {
+  CTRL_PREPARE;
   if ( ctrl.keep_listening )
   {
     GDMSG( "unset keep_listening" );
@@ -76,6 +76,7 @@ to_exit( void )
 void
 sigterm_han( int s )
 {
+  CTRL_PREPARE;
   GDMSG( "TERM %d", term_cnt );
   term_cnt++;
   to_exit(  );
@@ -166,6 +167,7 @@ pinfo( void )
   infos = mas_evaluate_command( &gopts, "server info" );
   if ( infos )
   {
+  CTRL_PREPARE;
     if ( !ctrl.stderrfile || ( fputs( ( char * ) infos->data, ctrl.stderrfile ) < 0 ) )
       if ( !ctrl.old_stderrfile || ( fputs( ( char * ) infos->data, ctrl.old_stderrfile ) < 0 ) )
         fputs( ( char * ) infos->data, ctrl.msgfile );
@@ -181,6 +183,7 @@ pinfo( void )
 void
 sigint_han( int s )
 {
+  CTRL_PREPARE;
   static int int_cnt = 0;
 
   if ( !ctrl.sigint_time || ( unsigned long ) time( NULL ) - ctrl.sigint_time > 2 )
@@ -241,6 +244,7 @@ sigint_han( int s )
 void
 sighup_han( int s )
 {
+  CTRL_PREPARE;
   ctrl.restart = 1;
   to_exit(  );
   thMSG( "waiting at %lx", mas_pthread_self(  ) );

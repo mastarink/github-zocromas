@@ -8,7 +8,6 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
-extern mas_control_t ctrl;
 
 /* dir.post, uuid */
 #include <mastar/types/mas_opts_types.h>
@@ -19,24 +18,15 @@ extern mas_control_t ctrl;
 
 #include <mastar/options/mas_opts_common.h>
 
-/* #include "server/inc/mas_server_tools.h" */
-#include <mastar/thtools/mas_ocontrol_tools.h>
-
-#include <mastar/types/mas_varvec_types.h>
-#include <mastar/varvec/mas_varvec.h>
 #include <mastar/varvec/mas_varvec_object.h>
-
-#include <mastar/varvec/mas_varvec_search.h>
-#include <mastar/varvec/mas_varvec.h>
-
 #include <mastar/varset/mas_varset_search.h>
-#include <mastar/varset/mas_varset.h>
 
+#ifdef MAS_HTTP_USE_FILEINFO
 #include <mastar/fileinfo/mas_fileinfo.h>
 #include <mastar/fileinfo/mas_fileinfo_object.h>
+#endif
 
 #include <mastar/channel/mas_channel_buffer.h>
-#include <mastar/channel/mas_channel.h>
 
 #include "mas_http_utils.h"
 
@@ -123,6 +113,7 @@ mas_proto_http_parse_request( mas_rcontrol_t * prcontrol, mas_http_t * http )
   MAS_LOG( "http parse rq 1" );
 #ifdef MAS_HTTP_MULTIPART
   {
+    CTRL_PREPARE;
     char bcpath[512];
 
     snprintf( bcpath, sizeof( bcpath ), "%s/%s.%lu-%u.part%u.post-%lu", opts.dir.post ? opts.dir.post : "/tmp",

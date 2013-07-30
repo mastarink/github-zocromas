@@ -27,7 +27,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include "mas_client.h"
 
@@ -54,6 +53,7 @@ static int
 mas_client_transaction( mas_channel_t * pchannel )
 {
   EVAL_PREPARE;
+  CTRL_PREPARE;
   int r = 0;
   unsigned cnt = 0;
 
@@ -79,6 +79,7 @@ mas_client_transaction( mas_channel_t * pchannel )
 int
 mas_client_zerocommands( mas_channel_t * pchannel )
 {
+  CTRL_PREPARE;
   int r = 0;
 
   if ( ctrl.in_client )
@@ -92,7 +93,7 @@ mas_client_zerocommands( mas_channel_t * pchannel )
     IEVAL( r, mas_client_exchange( pchannel, cmd, "%s\n" ) );
     mas_free( cmd );
   }
-  if ( ctrl.in_client )
+  if ( 0 && ctrl.in_client )
   {
     char *cmd;
     char *args;
@@ -111,6 +112,7 @@ mas_client_zerocommands( mas_channel_t * pchannel )
 int
 mas_client_autocommands( mas_channel_t * pchannel )
 {
+  CTRL_PREPARE;
   extern mas_options_t gopts;
   int r = 0;
 
@@ -132,6 +134,7 @@ mas_client_autocommands( mas_channel_t * pchannel )
 int
 mas_client( const char *host_port )
 {
+  CTRL_PREPARE;
   mas_channel_t *pchannel;
   int r = 0, rop = -1;
   unsigned cnt = 0;
@@ -166,7 +169,6 @@ mas_client( const char *host_port )
 
     WMSG( "(%d : %d) AFTER OPEN", r, errno );
     ctrl.status = MAS_STATUS_OPEN;
-    if ( 0 )
     {
       IEVAL( r, mas_client_zerocommands( pchannel ) );
     }

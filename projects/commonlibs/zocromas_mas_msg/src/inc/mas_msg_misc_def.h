@@ -15,6 +15,7 @@ extern mas_options_t gopts __attribute__((  weak ));
 //						allow				details		pref_fmt	pref	suff	fmt,...
 #define MSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( MAS_MSG_BIT(msg_notice	)),	1, "%-15s"      , "?"PACKAGE,  NULL,		__VA_ARGS__)
 #define HMSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( MAS_MSG_BIT(msg_notice	)),	0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
+#define HMSGV(...)	MAS_MSGFL( MAS_MSG_NOTICE,  ( MAS_MSG_BIT(msg_notice	)),	0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
 #define FMSG(...)	MAS_MSGFL( MAS_MSG_NOTICE,   1,					0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
 #define WMSG(...)	MAS_MSGFL( MAS_MSG_WATCH,   ( MAS_MSG_BIT(msg_watch	)),	0, "%-15s"      , "?"PACKAGE,  "          ",	__VA_ARGS__)
 #define tMSG(...)	MAS_MSGFL( MAS_MSG_DEBUG,   ( MAS_MSG_BIT(msg_trace	)),	1, "<|   %-8s|>", "TRACE",	NULL,		__VA_ARGS__)

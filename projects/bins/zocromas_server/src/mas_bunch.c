@@ -116,26 +116,28 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
 #else
   static mas_init_fun_t init_funcs[] = {
     mas_init_proc,
-    mas_init_uuid,
     mas_init_opt_files,
-    mas_init_sig,
     mas_cli_options_init,
     mas_ctrl_init,
     mas_init_set_msg_file,
     mas_init_message,
+    mas_init_sig,
     mas_init_daemon,
     mas_init_pids,
     mas_threads_init,
     mas_init_load_protos,
     mas_lcontrols_init,
+    mas_init_uuid,
     mas_post_init
   };
+#if 0
   {
     for ( int i = 0; i < argc; i++ )
     {
       HMSG( "argv[%d]='%s'", i, argv[i] );
     }
   }
+#endif
   IEVAL( r, mas_init_set( popts, argc, argv, env, sizeof( init_funcs ) / sizeof( init_funcs[0] ), init_funcs ) );
 #endif
   if ( r >= 0 )

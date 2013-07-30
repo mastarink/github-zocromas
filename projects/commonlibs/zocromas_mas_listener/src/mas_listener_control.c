@@ -16,7 +16,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include <mastar/log/mas_log.h>
 
@@ -73,6 +72,7 @@ more:
 unsigned
 mas_lcontrols_cleaning_transactions__( int removeit, long nanos )
 {
+  CTRL_PREPARE;
   int join_result = 0;
   mas_lcontrol_t *plcontrol = NULL;
 
@@ -106,6 +106,7 @@ mas_lcontrols_cleaning_transactions__( int removeit, long nanos )
 static void
 mas_u_cleanup( void *arg )
 {
+  CTRL_PREPARE;
   pthread_mutex_unlock( &ctrl.thglob.cleanup_transactions_mutex );
 }
 
@@ -117,6 +118,7 @@ mas_lcontrol_cleaning_transactions__( mas_lcontrol_t * plcontrol, int removeit, 
 
   if ( plcontrol )
   {
+    CTRL_PREPARE;
     unsigned rmcnt = 0;
 
     MAS_LOG( "cleanup transactions; to lock" );

@@ -17,7 +17,6 @@ commonlibs/zocromas_mas_options               zocromas_mas_options
 commonlibs/zocromas_mas_init                  zocromas_mas_init
 zocmds/zocromas_zocmds1                       zocromas_zocmds1
 zocmds/zocromas_zocmds2                       zocromas_zocmds2
-zocromas_zocprotos                            zocromas_zocprotos
 protos/xcromas                                xcromas
 protos/http                                   http
 bins/zocromas_client                          zocromas_client

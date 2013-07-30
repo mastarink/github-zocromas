@@ -14,7 +14,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 #include <mastar/log/mas_log.h>
 
@@ -47,6 +46,7 @@ more:
 int
 mas_lcontrols_init( mas_options_t * popts, const char * *message )
 {
+  CTRL_PREPARE;
   HMSG( "INIT LCONTROLS" );
   mas_lcontrols_list_create(  );
   if ( message )
@@ -57,6 +57,7 @@ mas_lcontrols_init( mas_options_t * popts, const char * *message )
 void
 mas_lcontrols_list_create( void )
 {
+  CTRL_PREPARE;
   HMSG( "INIT LCONTROLS_LIST" );
   ctrl.lcontrols_list = mas_malloc( sizeof( mas_lcontrol_list_head_t ) );
   memset( ctrl.lcontrols_list, 0, sizeof( mas_lcontrol_list_head_t ) );
@@ -66,6 +67,7 @@ mas_lcontrols_list_create( void )
 int
 mas_lcontrols_clean_list( int force )
 {
+  CTRL_PREPARE;
   int cleaned = 0;
 
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
@@ -111,6 +113,7 @@ mas_lcontrols_clean_list( int force )
 void
 mas_lcontrols_delete_list( void )
 {
+  CTRL_PREPARE;
   int cleaned;
 
   cleaned = mas_lcontrols_clean_list( 1 );
@@ -135,6 +138,7 @@ mas_lcontrols_delete_list( void )
 mas_lcontrol_t *
 mas_lcontrol_find( const char *host, int port )
 {
+  CTRL_PREPARE;
   mas_lcontrol_t *plcontrol = NULL, *pl;
 
   if ( ctrl.lcontrols_list && !MAS_LIST_EMPTY( ctrl.lcontrols_list ) )

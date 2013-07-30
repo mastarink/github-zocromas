@@ -67,6 +67,7 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_SYSDAEMON,
   MAS_CLI_OPT_NOSYSDAEMON,
   MAS_CLI_OPT_MSG,
+  MAS_CLI_OPT_INIT_MSG,
   MAS_CLI_OPT_NOMSG,
   MAS_CLI_OPT_READ_HOME_OPTS,
   MAS_CLI_OPT_NOREAD_HOME_OPTS,
@@ -206,6 +207,8 @@ static struct option cli_longopts[] = {
 
   {"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG},
   {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},
+  {"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG},
+  {"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG},
 
   {NULL, 0, NULL, 0},
 };
@@ -246,29 +249,29 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
   switch ( opt )
   {
   case MAS_CLI_OPT_TEST:
-    HMSG( "Test" );
+    HMSG( "O:Test" );
     popts->test = 1;
     break;
   case MAS_CLI_OPT_HELP:
     for ( int io = 0; io < sizeof( cli_longopts ) / sizeof( cli_longopts[0] ); io++ )
     {
-      HMSG( "%s", cli_longopts[io].name );
+      HMSG( "O:%s", cli_longopts[io].name );
     }
     break;
   case MAS_CLI_OPT_INFO:
-    HMSG( "INFO" );
+    HMSG( "O:INFO" );
     popts->info = 1;
     break;
   case MAS_CLI_OPT_QUIT:
-    HMSG( "QUIT" );
+    HMSG( "O:QUIT" );
     popts->quit = 1;
     break;
   case MAS_CLI_OPT_COMMAND:
-    HMSG( "COMMAND %s", m_optarg );
+    HMSG( "O:COMMAND %s", m_optarg );
     mas_ctrl_add_command( m_optarg );
     break;
   case MAS_CLI_OPT_MSGTO:
-    HMSG( "MSG>%s", m_optarg );
+    HMSG( "O:MSG>%s", m_optarg );
     if ( popts->msgfilename )
       mas_free( popts->msgfilename );
     popts->msgfilename = NULL;
@@ -277,7 +280,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
       popts->msgfilename = mas_strdup( m_optarg );
     break;
   case MAS_CLI_OPT_STDERRTO:
-    HMSG( "STDERR>%s", m_optarg );
+    HMSG( "O:STDERR>%s", m_optarg );
     if ( popts->stderr_filename )
       mas_free( popts->stderr_filename );
     popts->stderr_filename = NULL;
@@ -286,7 +289,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
       popts->stderr_filename = mas_strdup( m_optarg );
     break;
   case MAS_CLI_OPT_STDOUTTO:
-    HMSG( "MSG>%s", m_optarg );
+    HMSG( "O:MSG>%s", m_optarg );
     if ( popts->stdout_filename )
       mas_free( popts->stdout_filename );
     popts->stdout_filename = NULL;
@@ -308,7 +311,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
       popts->default_port = 0;
 
       sscanf( m_optarg, "%u", &popts->default_port );
-      /* HMSG( "PORT: %u", popts-> default_port ); */
+      /* HMSG( "O:PORT: %u", popts-> default_port ); */
     }
     break;
   case MAS_CLI_OPT_MODSDIR:
@@ -481,16 +484,26 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
     popts->nomessages = 0;
     break;
   case MAS_CLI_OPT_NOMSG:
-    /* HMSG( "flags: %lo", popts-> f.word ); */
+    /* HMSG( "O:flags: %lo", popts-> f.word ); */
     popts->f.word = 0;
-    /* HMSG( "flags: %lo", popts-> f.word ); */
+    /* HMSG( "O:flags: %lo", popts-> f.word ); */
     popts->f.bit.msg_trace = 0;
 
-    /* HMSG( "flags: %lo", popts-> f.word ); */
+    /* HMSG( "O:flags: %lo", popts-> f.word ); */
     break;
   case MAS_CLI_OPT_MSG:
     if ( 0 == strcmp( "mem", m_optarg ) )
       popts->f.bit.msg_mem = 1;
+
+    break;
+  case MAS_CLI_OPT_INIT_MSG:
+    popts->has_init_message = 1;
+    if ( popts->init_message )
+      mas_free( popts->init_message );
+    popts->init_message = NULL;
+
+    if ( m_optarg && *m_optarg )
+      popts->init_message = mas_strdup( m_optarg );
 
     break;
   case MAS_CLI_OPT_NOHOSTS:
@@ -515,17 +528,17 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
       /* ctrl.in_client = 0; */
       ctrl.fatal = 1;
       ctrl.keep_listening = 0;
-      HMSG( "CLI unknown opt:%d [%c]", opt, opt > ' ' && opt <= 'z' ? opt : '-' );
+      HMSG( "O:CLI unknown opt:%d [%c]", opt, opt > ' ' && opt <= 'z' ? opt : '-' );
       IEVAL( r, -1 );
     }
     break;
   }
   if ( v < 0 )
   {
-    HMSG( "CLI wrong value '%s'", m_optarg );
+    HMSG( "O:CLI wrong value '%s'", m_optarg );
     IEVAL( r, -1 );
   }
-  /* HMSG( "getopt_long:%d Usage: %s [--help -h]", argv[0] ); */
+  /* HMSG( "O:getopt_long:%d Usage: %s [--help -h]", argv[0] ); */
   return r;
 }
 

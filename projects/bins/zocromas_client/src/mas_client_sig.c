@@ -23,7 +23,6 @@
 
 #include <mastar/types/mas_control_types.h>
 #include <mastar/types/mas_opts_types.h>
-extern mas_control_t ctrl;
 
 
 #include "mas_init_client.h"
@@ -53,6 +52,7 @@ related:
 void
 sigint_han( int s )
 {
+  CTRL_PREPARE;
   /* extern int rl_done; */
   static unsigned long start_time = 0;
   unsigned long cur_time = ( unsigned long ) time( NULL );
@@ -100,6 +100,7 @@ sigint_han( int s )
 void
 sigquit_han( int s )
 {
+  CTRL_PREPARE;
   ctrl.in_client = 0;
   ctrl.keep_listening = 0;
   ctrl.in_pipe--;
@@ -122,6 +123,7 @@ sigquit_han( int s )
 void
 sigterm_han( int s )
 {
+  CTRL_PREPARE;
 #ifdef EMSG
   EMSG( "TERM %d", ctrl.term_cnt );
 #endif
@@ -134,6 +136,7 @@ sigterm_han( int s )
 void
 sighup_han( int s )
 {
+  CTRL_PREPARE;
 #ifdef EMSG
   EMSG( "HUP" );
 #endif
@@ -143,6 +146,7 @@ sighup_han( int s )
 void
 sigpipe_han( int s )
 {
+  CTRL_PREPARE;
 #ifdef EMSG
   EMSG( "PIPE" );
 #endif
@@ -153,6 +157,7 @@ sigpipe_han( int s )
 void
 mas_atexit( void )
 {
+  CTRL_PREPARE;
   extern mas_options_t gopts;
 
   mas_destroy_client( &gopts );
@@ -179,6 +184,7 @@ mas_atexit( void )
 __attribute__ ( ( constructor ) )
      static void master_constructor( void )
 {
+  CTRL_PREPARE;
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
   atexit( mas_atexit );
@@ -191,6 +197,7 @@ __attribute__ ( ( constructor ) )
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
+  CTRL_PREPARE;
   if ( ctrl.stderrfile )
     fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
 }

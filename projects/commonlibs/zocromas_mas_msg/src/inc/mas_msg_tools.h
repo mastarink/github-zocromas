@@ -11,6 +11,11 @@ int mas_msg_set_file( const char *path, int force );
 
 int mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details, const char *prefix_fmt, const char *prefix,
              const char *suffix, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 9, 10 ) ) ) __attribute__ ( ( weak ) );
+int
+mas_msgv( const char *func, int line, mas_msg_type_t msgt, int allow, int details,
+                 const char *prefix_fmt, const char *prefix, const char *suffix, const char *fmt, va_list args );
+
+
 void *mas_fatal( void );
 int mas_error( const char *func, int line, int merrno, int *perrno, int *psaveerrno, const char *fmt, ... )
       __attribute__ ( ( format( __printf__, 6, 7 ) ) ) __attribute__ ( ( weak ) );
