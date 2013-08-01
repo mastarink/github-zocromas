@@ -37,7 +37,7 @@ function gdb_core_any ()
 {
   local  dname bname builddir binsdir libsdirs corename
 
-    if corename=$( ls -1tr /tmp/*${rname_preset}.core.$UID.$UID.* | tail -1 ) && [[ -f "$corename" ]] ; then
+    if corename=$( ls -1tr $coredir/*${rname_preset}.core.$UID.$UID.* | tail -1 ) && [[ -f "$corename" ]] ; then
       echo "$LINENO $corename" >&2
     else
       echo "$LINENO $corename" >&2

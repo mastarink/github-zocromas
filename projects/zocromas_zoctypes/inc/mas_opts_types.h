@@ -153,6 +153,8 @@ struct mas_options_s
 
   mas_dirs_t dir;
   mas_thnames_t thname;
+  char *user;
+  char *group;
   char *save_user_opts_filename;
   char *msgfilename;
   char *init_message;

@@ -9,6 +9,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/prctl.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib0.h>
@@ -144,6 +146,43 @@ mas_init_child_process( mas_options_t * popts, const char **message )
     IEVAL( r, setsid(  ) );
   if ( !popts->daemon.disable_chdir )
     IEVAL( r, chdir( "/" ) );
+  if ( popts->group )
+  {
+    gid_t rgid, egid, sgid;
+    struct group grp, *pgrp;
+    char grbuf[512];
+
+    getresgid( &rgid, &egid, &sgid );
+    /* int getgrnam_r( const char *name, struct group *grp, char *buf, size_t buflen, struct group **result );   */
+    getgrnam_r( popts->group, &grp, grbuf, sizeof( grbuf ), &pgrp );
+    HMSG( "rgid:%u; egid:%u; sgid:%u; %u", rgid, egid, sgid, pgrp ? pgrp->gr_gid : 0 );
+    if ( pgrp )
+    {
+      IEVAL( r, setgid( pgrp->gr_gid ) );
+      getresgid( &rgid, &egid, &sgid );
+      HMSG( "(%d)rgid:%u; egid:%u; sgid:%u; %u", r, rgid, egid, sgid, pgrp ? pgrp->gr_gid : 0 );
+      if ( rgid )
+        r = 0;
+    }
+  }
+  if ( popts->user )
+  {
+    uid_t ruid, euid, suid;
+    struct passwd pwd, *ppwd;
+    char pwbuf[512];
+
+    getresuid( &ruid, &euid, &suid );
+    /* int getpwnam_r( const char *name, struct passwd *pwd, char *buf, size_t buflen, struct passwd **result ); */
+    getpwnam_r( popts->user, &pwd, pwbuf, sizeof( pwbuf ), &ppwd );
+    HMSG( "ruid:%u; euid:%u; suid:%u; %u:%u", ruid, euid, suid, ppwd ? ppwd->pw_uid : 0, ppwd ? ppwd->pw_gid : 0 );
+    if ( ppwd )
+    {
+      IEVAL( r, setuid( ppwd->pw_uid ) );
+      if ( ruid )
+        r = 0;
+    }
+  }
+
   IEVAL( r, mas_init_daemon_stdio( popts, NULL ) );
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
   ctrl.is_child = 1;
@@ -225,4 +264,11 @@ mas_init_daemon( mas_options_t * popts, const char **message )
     *message = __func__;
 
   return r > 0 ? 0 : r;
+}
+
+__attribute__ ( ( constructor ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

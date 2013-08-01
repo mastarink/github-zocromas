@@ -59,7 +59,7 @@ mas_init_load_protos( mas_options_t * popts, const char **message )
       if ( !proto_descs[ipr].func )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );
-        IEVAL( r, -1 );
+        /* IEVAL( 20130731 --- r, -1 ); */
         WMSG( "INIT PROTOS - #%d: %s", ipr, popts->protosv.v[ipr] );
       }
       else
@@ -71,10 +71,11 @@ mas_init_load_protos( mas_options_t * popts, const char **message )
     }
     ctrl.protos_num = protos_num;
     ctrl.proto_descs = proto_descs;
-    if ( popts->protosv.c && !ctrl.protos_num )
-    {
-      IEVAL( r, -1 );
-    }
+    /* 20130731 ---                                */
+    /* if ( popts->protosv.c && !ctrl.protos_num ) */
+    /* {                                           */
+    /*   IEVAL( r, -1 );                           */
+    /* }                                           */
     HMSG( "(%d) INIT S PROTOS %d of %d", r, protos_num, popts->protosv.c );
   }
   else
@@ -82,7 +83,9 @@ mas_init_load_protos( mas_options_t * popts, const char **message )
     IEVAL( r, -1 );
   }
   /* r = ctrl.proto_descs ? 0 : -1; */
-  IEVAL( r, ctrl.proto_descs ? 0 : -1 );
+
+  /*  20130731 --- IEVAL( r, ctrl.proto_descs ? 0 : -1 ); */
+
   MAS_LOG( "(%d) init / load protos done", r );
   if ( message )
     *message = __func__;
@@ -113,4 +116,11 @@ mas_protos_destroy( void )
   ctrl.proto_descs = NULL;
 
   return r;
+}
+
+__attribute__ ( ( constructor( 1001 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

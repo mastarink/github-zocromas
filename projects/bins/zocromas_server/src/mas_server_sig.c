@@ -167,7 +167,7 @@ pinfo( void )
   infos = mas_evaluate_command( &gopts, "server info" );
   if ( infos )
   {
-  CTRL_PREPARE;
+    CTRL_PREPARE;
     if ( !ctrl.stderrfile || ( fputs( ( char * ) infos->data, ctrl.stderrfile ) < 0 ) )
       if ( !ctrl.old_stderrfile || ( fputs( ( char * ) infos->data, ctrl.old_stderrfile ) < 0 ) )
         fputs( ( char * ) infos->data, ctrl.msgfile );
@@ -299,4 +299,11 @@ sigpipe_han( int s )
      }
      }
    */
+}
+
+__attribute__ ( ( constructor( 1000 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

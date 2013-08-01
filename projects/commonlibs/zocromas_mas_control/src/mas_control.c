@@ -3,7 +3,9 @@
 
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
+#include <sys/prctl.h>
 
 #include <errno.h>
 #include <pthread.h>
@@ -31,22 +33,6 @@ more:
   mas_rcontrol_object.c
 */
 
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
-{
-  CTRL_PREPARE;
-  if ( !ctrl.stderrfile )
-    ctrl.stderrfile = stderr;
-  if ( !ctrl.msgfile )
-    ctrl.msgfile = ctrl.stderrfile;
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-}
-
-__attribute__ ( ( destructor ) )
-     static void master_destructor( void )
-{
-  /* fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
-}
 
 /*
  * */
@@ -120,4 +106,98 @@ mas_ctrl_add_command( const char *s )
   /*                              */
   /* se = mas_find_eq_value( s ); */
   ctrl.commandsv.c = mas_add_argv_arg( ctrl.commandsv.c, &ctrl.commandsv.v, s );
+}
+
+static int
+mas_control_construct_proc( void )
+{
+  EVAL_PREPARE;
+  int r = 0;
+
+  /* char lexe[256]; */
+
+  /* struct stat sb; */
+
+  /* sprintf( lexe, "/proc/%u/exe", getpid(  ) ); */
+  /* if ( lstat( lexe, &sb ) >= 0 ) */
+  /* IEVAL( r, lstat( lexe, &sb ) ); */
+  if ( !( r < 0 ) && !( ctrl.exepath && ctrl.exename ) )
+  {
+    char linkname[512];
+    ssize_t cmdsize = 0;
+
+    {
+      FILE *f = NULL;
+      char buf[1024 * 4];
+
+      f = fopen( "/proc/self/cmdline", "r" );
+      if ( f )
+      {
+        cmdsize = fread( buf, 1, sizeof( buf ), f );
+        fclose( f );
+      }
+    }
+    /* size_t sz; */
+
+    /* sz = ( sb.st_size ? sb.st_size : 512 ) + 1; */
+    /* linkname = mas_malloc( sz ); */
+    /* r = readlink( lexe, linkname, sz ); */
+    IEVAL( r, readlink( "/proc/self/exe", linkname, sizeof( linkname ) ) );
+    if ( !( r < 0 ) )
+    {
+      linkname[r] = '\0';
+      fprintf( stderr, "\n(%d) [%ld] LINKNAME '%s'\n", r, cmdsize, linkname );
+    }
+    {
+      CTRL_PREPARE;
+      if ( ctrl.exepath )
+        mas_free( ctrl.exepath );
+      ctrl.exepath = NULL;
+      ctrl.exepath = mas_strdup( linkname );
+      if ( ctrl.exename )
+        mas_free( ctrl.exename );
+      ctrl.exename = NULL;
+      if ( ctrl.exepath )
+        ctrl.exename = mas_strdup( basename( ctrl.exepath ) );
+    }
+  }
+
+  return r >= 0 ? 0 : r;
+}
+
+__attribute__ ( ( constructor( 10000 ) ) )
+     static void master_constructor( void )
+{
+  CTRL_PREPARE;
+  char name_buffer[2048] = "Unknown";
+  extern char *program_invocation_short_name;
+
+  if ( !ctrl.stderrfile )
+    ctrl.stderrfile = stderr;
+  if ( !ctrl.msgfile )
+    ctrl.msgfile = ctrl.stderrfile;
+  mas_control_construct_proc(  );
+  prctl( PR_GET_NAME, ( unsigned long ) name_buffer );
+  fprintf( stderr, "******************** CONSTRUCTOR %s : %s : %s : %s\n", __FILE__, name_buffer, program_invocation_name,
+           program_invocation_short_name );
+  if ( 0 != strcmp( program_invocation_short_name, "ZOCSer" ) )
+  {
+  }
+  else
+  {
+  }
+}
+
+__attribute__ ( ( destructor ) )
+     static void master_destructor( void )
+{
+  CTRL_PREPARE;
+  if ( ctrl.exepath )
+    mas_free( ctrl.exepath );
+  ctrl.exepath = NULL;
+  if ( ctrl.exename )
+    mas_free( ctrl.exename );
+  ctrl.exename = NULL;
+
+  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }

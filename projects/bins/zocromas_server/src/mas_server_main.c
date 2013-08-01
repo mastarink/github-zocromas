@@ -109,13 +109,6 @@ related:
 /* R  - Transaction    */
 /* ZBIDMGTWLR          */
 
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
-{
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-  errno = 0;
-}
-
 
 int
 main( int argc, char *argv[], char *env[] )
@@ -125,8 +118,25 @@ main( int argc, char *argv[], char *env[] )
   int r = 0, rn = 0;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
-  HMSG( "MAIN e:%d", errno );
-  IEVAL( r, mas_master_bunch( &gopts, argc, argv, env ) );
-  IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
+  HMSG( "(e:%d)MAIN %s", errno, argv[0] );
+  if ( 0 == strcmp( argv[0], "ZOCSer" ) )
+  {
+    HMSG( "(e:%d)TO BUNCH %s", errno, argv[0] );
+    IEVAL( r, mas_master_bunch( &gopts, argc, argv, env ) );
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
+  }
+  else
+  {
+    HMSG( "RERUN %s as ZOCSer", ctrl.exepath );
+    argv[0] = "ZOCSer";
+    execve( ctrl.exepath, argv, env );
+  }
   return r;
+}
+
+__attribute__ ( ( constructor( 1200 ) ) )
+     static void f_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  errno = 0;
 }

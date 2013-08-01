@@ -2,6 +2,8 @@
 #
 # uuid=663595d1-dc09-4135-bf3c-62543e534ba0
 # common
+user=mastar-zocromas
+group=mastar-zocromas
 env_optsname=MAS_ZOCROMAS_DEFOPTS
 env_hostname=MAS_ZOCROMAS_DEFHOST
 
@@ -10,7 +12,7 @@ read_user_opts_plus=0
 
 dir.chroot=/var/spool/zocromas_server/root
 dir.post=/var/spool/zocromas_server/post
-dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log/
+dir.log=/mnt/new_misc/develop/autotools/zoc/admin/log
 log=0
 max_config_backup=5
 messages=0
@@ -27,11 +29,29 @@ logger=0
 ticker=0
 watcher=0
 dir.mods=@prefix@/lib/zocromod/zocmds/
+# MAS_UUID=@MAS_UUID@
+# MAS_OSVER=@MAS_OSVER@
+# prefix=@prefix@
+# exec_prefix=@exec_prefix@
+# DEPDIR @DEPDIR@
+# DEFS @DEFS@
+# INSTALL @INSTALL@
+# INSTALL_DATA @INSTALL_DATA@
+# SHELL: @SHELL@
 # PACKAGE: @PACKAGE@
+# VERSION: @VERSION@
 # PACKAGE_VERSION: @PACKAGE_VERSION@
 # CFLAGS: @CFLAGS@
 # AM_CFLAGS: @AM_CFLAGS@
 # AM_LDFLAGS: @AM_LDFLAGS@
+# program_transform_name: @program_transform_name@
+# psdir: @psdir@
+# sbindir: @sbindir@
+# sysconfdir: @sysconfdir@
+# sharedstatedir: @sharedstatedir@
+# build: @build@
+# host: @host@
+# srcdir: @srcdir@
 # abs_srcdir: @abs_srcdir@
 # abs_top_srcdir: @abs_top_srcdir@
 # abs_builddir: @abs_builddir@
@@ -43,10 +63,11 @@ dir.mods=@prefix@/lib/zocromod/zocmds/
 # dir.pids=/mnt/new_misc/develop/autotools/zoc/projects/zocromas/pid/
 # dir.pids=/mnt/new_misc/develop/autotools/zoc/admin/install/default/run/
 dir.pids=/mnt/new_misc/develop/autotools/zoc/admin/run
+dir.pids=/tmp/run
+
+
 # dir.pids=/run/@PACKAGE@/
 
-# prefix=@prefix@
-# exec_prefix=@exec_prefix@
 dir.proto=@prefix@/lib/zocromod/protos/
 has_init_message=1
 init-message-string=\x1bcSTART\n===================\n

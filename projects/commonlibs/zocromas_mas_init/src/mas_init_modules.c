@@ -55,10 +55,57 @@ more:
 
 */
 
+/* Moved to mas_control.c constructor */
+/* int                                                                    */
+/* mas_init_proc( mas_options_t * popts, const char **message )           */
+/* {                                                                      */
+/*   EVAL_PREPARE;                                                        */
+/*   int r = 0;                                                           */
+/*   char lexe[256];                                                      */
+/*                                                                        */
+/*   (* struct stat sb; *)                                                */
+/*                                                                        */
+/*   HMSG( "PRE-INIT LINKNAME '%s' / '%s'", ctrl.exepath, ctrl.exename ); */
+/*   sprintf( lexe, "/proc/%u/exe", getpid(  ) );                         */
+/*   (* if ( lstat( lexe, &sb ) >= 0 ) *)                                 */
+/*   (* IEVAL( r, lstat( lexe, &sb ) ); *)                                */
+/*   if ( !( r < 0 ) && !( ctrl.exepath && ctrl.exename ) )               */
+/*   {                                                                    */
+/*     char linkname[512];                                                */
+/*                                                                        */
+/*     (* size_t sz; *)                                                   */
+/*                                                                        */
+/*     (* sz = ( sb.st_size ? sb.st_size : 512 ) + 1; *)                  */
+/*     (* linkname = mas_malloc( sz ); *)                                 */
+/*     (* r = readlink( lexe, linkname, sz ); *)                          */
+/*     IEVAL( r, readlink( lexe, linkname, sizeof( linkname ) ) );        */
+/*     if ( !( r < 0 ) )                                                  */
+/*     {                                                                  */
+/*       linkname[r] = '\0';                                              */
+/*       HMSG( "(%d) LINKNAME '%s'=>'%s'", r, lexe, linkname );           */
+/*     }                                                                  */
+/*     {                                                                  */
+/*       CTRL_PREPARE;                                                    */
+/*       if ( ctrl.exepath )                                              */
+/*         mas_free( ctrl.exepath );                                      */
+/*       ctrl.exepath = NULL;                                             */
+/*       ctrl.exepath = mas_strdup( linkname );                           */
+/*       if ( ctrl.exename )                                              */
+/*         mas_free( ctrl.exename );                                      */
+/*       ctrl.exename = NULL;                                             */
+/*       if ( ctrl.exepath )                                              */
+/*         ctrl.exename = mas_strdup( basename( ctrl.exepath ) );         */
+/*     }                                                                  */
+/*   }                                                                    */
+/*   if ( message )                                                       */
+/*     *message = __func__;                                               */
+/*                                                                        */
+/*   return r >= 0 ? 0 : r;                                               */
+/* }                                                                      */
+
 int
 mas_init_message( mas_options_t * popts, const char **message )
 {
-
   if ( popts->has_init_message )
   {
     CTRL_PREPARE;               /* MFP... */
@@ -140,45 +187,6 @@ mas_init_message( mas_options_t * popts, const char **message )
 }
 
 int
-mas_init_proc( mas_options_t * popts, const char **message )
-{
-  EVAL_PREPARE;
-  int r = 0;
-  char lexe[256];
-  struct stat sb;
-  char *linkname;
-
-  HMSG( "PRE-INIT" );
-  sprintf( lexe, "/proc/%u/exe", getpid(  ) );
-  /* if ( lstat( lexe, &sb ) >= 0 ) */
-  IEVAL( r, lstat( lexe, &sb ) );
-  if ( !( r < 0 ) )
-  {
-    size_t sz;
-
-    sz = ( sb.st_size ? sb.st_size : 512 ) + 1;
-    linkname = mas_malloc( sz );
-    /* r = readlink( lexe, linkname, sz ); */
-    IEVAL( r, readlink( lexe, linkname, sz ) );
-    if ( !( r < 0 ) )
-    {
-      linkname[sz] = '\0';
-      WMSG( "(%s) [%u] LINKNAME [%d]: '%s'", lexe, ( unsigned ) sz, r, linkname );
-    }
-    {
-      CTRL_PREPARE;
-
-      ctrl.exepath = linkname;
-      ctrl.exename = mas_strdup( basename( ctrl.exepath ) );
-    }
-  }
-  if ( message )
-    *message = __func__;
-
-  return r >= 0 ? 0 : r;
-}
-
-int
 mas_init_opt_files( mas_options_t * popts, const char **message )
 {
   int r = 0;
@@ -198,7 +206,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
     const char *name = ctrl.exename;
 
     /* const char *name = ctrl.progname; */
-
+    HMSG( "REST.ZERO:%s", name );
     IEVAL_OPT( rzero, mas_opts_restore_zero( popts, name ) );
     {
       int rone = 0;
@@ -214,6 +222,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
         }
         if ( !( rone > 0 ) )
         {
+          HMSG( "REST.USER:%s", name );
           IEVALM( r, mas_opts_restore_user( NULL, name ), "(%d) no opt file(s) for prog: '%s'", name );
         }
       }
@@ -226,6 +235,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
         if ( popts->read_user_opts_plus )
         {
           /* IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
+          HMSG( "REST.USER +:%s", name );
           IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", sppid, NULL ) );
         }
       }
@@ -342,4 +352,10 @@ mas_post_init( mas_options_t * popts, const char **message )
     *message = __func__;
 
   return r >= 0 ? 0 : r;
+}
+
+__attribute__ ( ( constructor( 2001 ) ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

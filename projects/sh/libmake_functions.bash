@@ -90,7 +90,7 @@ function make_target ()
   target=$1
   shift
 # echo "install [$prjname]" >&2
-  ilog="/tmp/$target-$prjname.log"
+  ilog="${TMPdir:-/tmp}/$target-$prjname.log"
   if [[ "${build_at:=$MAS_PROJECT_BUILDDIR}" ]] ; then
     if pushd "${build_at:=$MAS_PROJECT_BUILDDIR}" >/dev/null ; then
       if ! make -s $target > $ilog ; then

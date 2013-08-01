@@ -96,10 +96,11 @@ mas_atexit( void )
 }
 
 __attribute__ ( ( constructor ) )
-     static void master_constructor( void )
+     static void f_constructor( void )
 {
   CTRL_PREPARE;
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
   ctrl.is_client = 0;
@@ -108,7 +109,8 @@ __attribute__ ( ( constructor ) )
 }
 
 __attribute__ ( ( destructor ) )
-     static void master_destructor( void )
+     static void f_destructor( void )
 {
-  /* fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
+  if ( stderr )
+    fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }

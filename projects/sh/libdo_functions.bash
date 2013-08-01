@@ -154,7 +154,7 @@ function doall ()
 {  
   local prj doit dir
   local cntall
-  if [[ -d "$tmpdir" ]] && [[ "$projectsdir" ]] && [[ "$projects_list" ]] && [[ -d "$projectsdir" ]] ; then
+  if [[ -d "$tworkdir" ]] && [[ "$projectsdir" ]] && [[ "$projects_list" ]] && [[ -d "$projectsdir" ]] ; then
     cntall=0
     if ! [[ "$MAS_DO_FROM_PROJECT" ]] ; then
       doit='yes'
@@ -179,6 +179,7 @@ function doall ()
       fi
     done
   else
+    echo "ERROR $prjname $act ..." >&2
     return 1
   fi
   return 0

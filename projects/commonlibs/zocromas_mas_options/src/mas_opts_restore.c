@@ -221,6 +221,10 @@ mas_option_parse_t opt_table[] = {
   ,
   {.name = "filename.stdout",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, stdout_filename )}
   ,
+  {.name = "user",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, user )}
+  ,
+  {.name = "group",.type = MAS_OPT_TYPE_PSTR,.offset = offsetof( mas_options_t, group )}
+  ,
   {.name = "restart_sleep",.type = MAS_OPT_TYPE_DOUBLE,.offset = offsetof( mas_options_t, restart_sleep )}
   ,
 };
@@ -360,18 +364,14 @@ _mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filen
   EVAL_PREPARE;
   int r = 0;
 
-  if ( popts->dir.config )
-  {
-    mas_free( popts->dir.config );
-    popts->dir.config = NULL;
-  }
   IEVALM( r, mas_opts_set_configdir( popts, dirname ), "(%d)set config dir: '%s'", dirname );
   IEVALM( r, mas_opts_set_configfilename( popts, filename ), "(%d)opts file:'%s'", filename );
   IEVALM( r, mas_opts_check_dir( popts ), "(%d)config dir: '%s'", popts->dir.config );
   if ( r == 0 )
   {
     mas_opts_restore_relative( popts, popts->configfilename );
-    HMSG( "RESTORE OPT nomessages: %d", popts->nomessages );
+    HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %lX", popts->nomessages, MAS_CTRL_MESSAGES,
+          MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->f.word );
   }
   return r;
 }
@@ -455,8 +455,10 @@ mas_opts_restore_zero( mas_options_t * popts, const char *filename )
 #define STR(s) #s
   dir = mas_strdup( XSTR( MAS_SYSCONFDIR ) );
   dir = mas_strcat_x( dir, "/" );
-  if ( ctrl.binname )
-    dir = mas_strcat_x( dir, ctrl.binname );
+  if ( ctrl.exename )
+    dir = mas_strcat_x( dir, ctrl.exename );
+  else if ( ctrl.argvname )     /* ? */
+    dir = mas_strcat_x( dir, ctrl.argvname );
   else
     dir = mas_strcat_x( dir, "zocromas_uni" );
   /* {                                          */
@@ -470,4 +472,11 @@ mas_opts_restore_zero( mas_options_t * popts, const char *filename )
   IEVAL( r, _mas_opts_restore( popts, dir, filename ) );
   mas_free( dir );
   return r;
+}
+
+__attribute__ ( ( constructor( 3004 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

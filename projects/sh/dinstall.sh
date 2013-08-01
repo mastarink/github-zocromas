@@ -7,7 +7,7 @@ if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/build_functions.sh" ]] ; then
 # echo "distname: $distname" >&2
 # echo "distfile: $distfile" >&2
 # echo "ibuilddir: $ibuilddir" >&2
-# echo "workdir: $workdir" >&2
+# echo "tworkdir: $tworkdir" >&2
 # echo "configuredir: $configuredir" >&2
 # echo "==================================================" >&2
 # echo ">>> $@ <<<" >&2
@@ -18,7 +18,7 @@ if [[ -f "${MAS_PROJECTS_DIR:-.}/sh/build_functions.sh" ]] ; then
 # echo "distname: $distname" >&2
 # echo "distfile: $distfile" >&2
 # echo "ibuilddir: $ibuilddir" >&2
-# echo "workdir: $workdir" >&2
+# echo "tworkdir: $tworkdir" >&2
 # echo "configuredir: $configuredir" >&2
 # echo "==================================================" >&2
 

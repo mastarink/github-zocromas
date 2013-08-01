@@ -62,14 +62,6 @@ more:
 */
 
 
-/* __attribute__ ( ( constructor ) )                                                    */
-/*      static void master_constructor( void )                                          */
-/* {                                                                                    */
-/*   if ( stderr )                                                                      */
-/*     fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-/* }                                                                                    */
-
-
 
 /* #ifdef MAS_INIT_SEPARATE                                                                          */
 /* int                                                                                               */
@@ -219,4 +211,11 @@ mas_destroy_server( mas_options_t * popts )
   MAS_LOG( "destroy server done" );
   HMSG( "DESTROY SERVER DONE" );
   /* IMSG( "logQsize:%lu - %lu = %lu", ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone ); */
+}
+
+__attribute__ ( ( constructor( 1001 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

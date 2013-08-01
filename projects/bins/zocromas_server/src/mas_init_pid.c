@@ -43,7 +43,7 @@ _mas_init_pid( mas_options_t * popts, const char *shash_name )
   HMSG( "(%d)PIDPATH 1 : %s", r, pidpath );
   if ( r >= 0 )
   {
-  CTRL_PREPARE;
+    CTRL_PREPARE;
 
     ctrl.pidfd = r;
     {
@@ -92,7 +92,7 @@ mas_init_pids( mas_options_t * popts, const char **message )
   MAS_LOG( "(%d) init pids", r );
   if ( shash_namebuf )
   {
-  CTRL_PREPARE;
+    CTRL_PREPARE;
 
     *shash_namebuf = 0;
     WMSG( "PIDSDIR: %s", popts->dir.pids );
@@ -146,4 +146,11 @@ mas_destroy_pids( mas_options_t * popts )
   mas_del_argv( ctrl.pidfilesv.c, ctrl.pidfilesv.v, 0 );
   ctrl.pidfilesv.c = 0;
   ctrl.pidfilesv.v = NULL;
+}
+
+__attribute__ ( ( constructor( 1001 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

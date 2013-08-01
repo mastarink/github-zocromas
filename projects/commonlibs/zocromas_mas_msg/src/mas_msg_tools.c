@@ -771,6 +771,49 @@ mas_reset_color( void )
   MFPB( "\x1b[0m" );
 }
 
+static int
+mas_msg_can( int allow, int can )
+{
+  if ( allow && can )
+  {
+    if ( allow == 777 )
+      can = 1;
+    else
+    {
+#ifndef MAS_NO_THTOOLS
+      th_type_t thtype;
+
+      thtype = mas_thself_type(  );
+      switch ( thtype )
+      {
+      case MAS_THREAD_MAIN:
+      case MAS_THREAD_MASTER:
+        can = MAS_MSG_BIT( msg_trace_main );
+        break;
+      case MAS_THREAD_LISTENER:
+        can = MAS_MSG_BIT( msg_trace_listener );
+        break;
+      case MAS_THREAD_TRANSACTION:
+        can = MAS_MSG_BIT( msg_trace_transaction );
+        break;
+      case MAS_THREAD_NONE:
+      case MAS_THREAD_TICKER:
+      case MAS_THREAD_WATCHER:
+      case MAS_THREAD_LOGGER:
+        /* default:   */
+        can = 1;
+        break;
+      }
+#else
+      can = 1;
+#endif
+    }
+  }
+  else
+    can = 0;
+  return can;
+}
+
 int
 mas_msg_set_file( const char *path, int force )
 {
@@ -830,11 +873,19 @@ __mas_msg_prefix( mas_msg_type_t msgt, int fdetails, const char *prefix_fmt, con
   else
 #endif
   {
-    if (  /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix )
+    CTRL_PREPARE;
+    if (  /* MAS_CTRL_IS_SERVER && */ qprefix && *qprefix && &ctrl )
     {
       mas_set_color( msgt, MAS_MSG_FIELD_PREFIX );
       /* MFPB( "-c- %-12s > %p < ", qprefix, ( void * ) ( &ctrl ? ctrl.msgfile : NULL ) ); */
       MFPB( prefix_fmt ? prefix_fmt : "-c- %-12s", qprefix );
+      /* {                                                                                                                                  */
+      /*   int can = 0;                                                                                                                     */
+      /*                                                                                                                                    */
+      /*   can = mas_msg_can( 0, MAS_CTRL_MESSAGES );                                                                                       */
+      /*   MFPB( "%c%c%c%c%c%c%c", ( ctrl.messages ? '+' : '-' ), ( ctrl.is_parent ? '+' : '-' ), ( ctrl.messages_parent ? '+' : '-' ),     */
+      /*         ( ctrl.is_child ? '+' : '-' ), ( ctrl.messages_child ? '+' : '-' ), ( !ctrl.messages_set ? '+' : '-' ), ( can ? 1 : 0 ) ); */
+      /* }                                                                                                                                  */
       mas_reset_color(  );
     }
   }
@@ -1276,52 +1327,17 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
   return r;
 }
 
-static int
-mas_msg_can( int allow, int can )
-{
-  if ( allow == 777 )
-    can = 1;
-  else if ( can )
-  {
-#ifndef MAS_NO_THTOOLS
-    th_type_t thtype;
-
-    thtype = mas_thself_type(  );
-    switch ( thtype )
-    {
-    case MAS_THREAD_MAIN:
-    case MAS_THREAD_MASTER:
-      can = MAS_MSG_BIT( msg_trace_main );
-      break;
-    case MAS_THREAD_LISTENER:
-      can = MAS_MSG_BIT( msg_trace_listener );
-      break;
-    case MAS_THREAD_TRANSACTION:
-      can = MAS_MSG_BIT( msg_trace_transaction );
-      break;
-    case MAS_THREAD_NONE:
-    case MAS_THREAD_TICKER:
-    case MAS_THREAD_WATCHER:
-    case MAS_THREAD_LOGGER:
-      /* default:   */
-      can = 1;
-      break;
-    }
-#else
-    can = 1;
-#endif
-  }
-  return can;
-}
-
 int
 mas_msgv( const char *func, int line, mas_msg_type_t msgt, int allow, int details,
           const char *prefix_fmt, const char *prefix, const char *suffix, const char *fmt, va_list args )
 {
   CTRL_PREPARE;
   int r = 0;
+  int can;
 
-  if ( mas_msg_can( allow, MAS_CTRL_MESSAGES ) )
+  can = mas_msg_can( allow, MAS_CTRL_MESSAGES );
+  /* MFP( "\nCAN:%d:%d:%d\n", allow, can, MAS_CTRL_MESSAGES ); */
+  if ( can )
   {
     if ( &ctrl )
       pthread_mutex_lock( &ctrl.thglob.msg_mutex );
@@ -1446,4 +1462,10 @@ mas_fatal( void )
   CTRL_PREPARE;                 /* for MFP* */
   MFPZ( "pointer error" );
   exit( 11 );
+}
+
+__attribute__ ( ( constructor( 10001 ) ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
 }

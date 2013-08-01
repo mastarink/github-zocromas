@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -66,6 +67,14 @@ mas_opts_destroy( mas_options_t * popts )
   if ( popts->stdout_filename )
     mas_free( popts->stdout_filename );
   popts->stdout_filename = NULL;
+
+  if ( popts->user )
+    mas_free( popts->user );
+  popts->user = NULL;
+
+  if ( popts->group )
+    mas_free( popts->group );
+  popts->group = NULL;
 
   if ( popts->dir.mods )
     mas_free( popts->dir.mods );
@@ -231,4 +240,11 @@ mas_pre_init_default_opts( mas_options_t * popts )
 #  endif
 #endif
   return 0;
+}
+
+__attribute__ ( ( constructor( 3001 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
 }

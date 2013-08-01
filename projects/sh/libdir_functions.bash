@@ -12,6 +12,10 @@ function make_dirs ()
 #   mkdir "$savedir" || echo "$LINENO ERROR make_dirs" >&2
 # fi
   if ! [[ -d "$projectsdir" ]] ; then return 1 ; fi
+  if ! [[ -d "$TMPdir" ]]; then
+    mkdir "$TMPdir" || echo "$LINENO ERROR make_dirs" >&2
+  fi
+  
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirdist" ]]; then
     mkdir "$savedirdist" || echo "$LINENO ERROR make_dirs" >&2
   fi
@@ -30,11 +34,11 @@ function make_dirs ()
   if [[ -d "$projectsdir" ]] && ! [[ -d "$flavourdir" ]]; then
     mkdir "$flavourdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
-  if [[ -d "$projectsdir" ]] && ! [[ -d "$tmpdir" ]]; then
-    mkdir "$tmpdir" || echo "$LINENO ERROR make_dirs" >&2
+  if [[ -d "$projectsdir" ]] && ! [[ -d "$tworkdir" ]]; then
+    mkdir "$tworkdir" || echo "$LINENO ERROR make_dirs" >&2
   fi
-  if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpbuild" ]]; then
-    mkdir "$tmpbuild" || echo "$LINENO ERROR make_dirs" >&2
+  if [[ -d "$tworkdir" ]] && ! [[ -d "$tworkbuild" ]]; then
+    mkdir "$tworkbuild" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ "$auxdir" ]] && ! [[ -d "$auxdir" ]]; then
     mkdir "$auxdir" || echo "$LINENO ERROR make_dirs" >&2
@@ -42,8 +46,8 @@ function make_dirs ()
   if [[ "$m4dir" ]] && ! [[ -d "$m4dir" ]]; then
     mkdir "$m4dir" || echo "$LINENO ERROR make_dirs" >&2
   fi
-  if [[ -d "$tmpdir" ]] && ! [[ -d "$tmpunpack" ]]; then
-    mkdir "$tmpunpack" || echo "$LINENO ERROR make_dirs" >&2
+  if [[ -d "$tworkdir" ]] && ! [[ -d "$tworkunpack" ]]; then
+    mkdir "$tworkunpack" || echo "$LINENO ERROR make_dirs" >&2
   fi
   if [[ "$debugdir" ]] && ! [[ -d "$debugdir" ]]; then
     mkdir "$debugdir" || echo "$LINENO ERROR make_dirs" >&2
@@ -118,15 +122,19 @@ function setup_dirs ()
     flavourdir="$instdir/${mas_flavour:-default}"
     if [[ "$MAS_SH_VERBOSE" ]] ; then echo "FLAVOUR: [${mas_flavour:-default}] -- $flavourdir" >&2 ; fi
     instshdir="$admindir/install.sh"
-    tmpdir="$admindir/tmp/"
+    tworkdir="$admindir/tmp"
+    TMPdir="/tmp/zoc"
+
+# see `sysctl kernel.core_pattern`
+    coredir="/tmp"
 
     savedirdist="$savedir/dist"
     savedirgentoo="$savedir/gentoo"
     savedirtar="$savedir/tar"
     savedirtarme="${savedirtar}/${stamp}"
     
-    tmpbuild="$tmpdir/build/"
-    tmpunpack="$tmpdir/unpack/"
+    tworkbuild="$tworkdir/build/"
+    tworkunpack="$tworkdir/unpack/"
     
     runconfigdirname=.zocromas
     runconfigdir="$HOME/$runconfigdirname/"
@@ -174,15 +182,15 @@ function setup_dirs ()
 function grepch0 ()
 {  
   local project projects_list res
-  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
-      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} >/dev/null || return 1
+  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}} >/dev/null || return 1
       arg="$@"
-#     find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color $@ \{\} \; || return 1
-      find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color $arg \{\} \+
+#     find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color=yes $@ \{\} \; || return 1
+      find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color=yes $arg \{\} \+
       popd >/dev/null
 #   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
-#   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \; | sed -ne 's@^\.\/@@p'
-#     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \+
+#   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color=yes $@ \{\} \; | sed -ne 's@^\.\/@@p'
+#     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color=yes $@ \{\} \+
   else
     echo "ERROR" >&2
     return 1
@@ -196,13 +204,13 @@ function grepch ()
 function grepau ()
 {
   local project projects_list 
-  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
-      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}} || return 1
+  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}} || return 1
       arg="$@"
       echo "arg: '$arg'" >&2
 #      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' || return 1
-#      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -okdir grep -H --color $@ \{\} \; || return 1
-      if find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color $arg \{\} \+ ; then
+#      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -okdir grep -H --color=yes $@ \{\} \; || return 1
+      if find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color=yes $arg \{\} \+ ; then
         popd >/dev/null
         return 0
       else
@@ -210,8 +218,8 @@ function grepau ()
         return 1
       fi
 #   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
-#   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \; | sed -ne 's@^\.\/@@p'
-#     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color $@ \{\} \+
+#   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color=yes $@ \{\} \; | sed -ne 's@^\.\/@@p'
+#     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color=yes $@ \{\} \+
   else
     echo "ERROR" >&2
     return 1
@@ -248,7 +256,7 @@ function proj_scan ()
   local scanner=$1
   shift
   if [[ "${MAS_PROJECTS_DIR}" ]] ; then
-    for prj in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`} ; do
+    for prj in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`} ; do
       tmp_wd=${MAS_PROJECTS_DIR}/${prj}
       tmp_name=$( basename $tmp_wd )
       if [[ "$tmp_wd" ]] && [[ "$tmp_name" ]] && "$scanner" "$prj" "$project" "$tmp_name" ; then
@@ -305,7 +313,7 @@ function wdproj ()
       echo "DOT : '$MAS_PROJECT_NAME'" >&2
       project=$MAS_PROJECT_NAME
     fi
-    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
       for meth in wdproj_scan_project_1 wdproj_scan_project_2 ; do
 #        echo "meth: $meth" >&2
         wdproj_scan "$project" $meth ${docd:-cd} && return 0
@@ -328,7 +336,7 @@ function wdproj ()
 }
 function is_in_project ()
 {
-  for p in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-/tmp}}/projects.list}|tr '\n' ' '`} ; do
+  for p in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`} ; do
     echo PRoject:$p >&2
   done
 }

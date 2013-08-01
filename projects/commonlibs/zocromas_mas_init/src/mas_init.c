@@ -157,8 +157,8 @@ mas_pre_init_runpath( char *runpath )
   ctrl.pserver_thread = &ctrl.threads.n.main;
 
 
-  ctrl.binname = mas_strdup( basename( runpath ) );
-  pn = strchr( ctrl.binname, '_' );
+  ctrl.argvname = mas_strdup( basename( runpath ) );
+  pn = strchr( ctrl.argvname, '_' );
   if ( pn && *pn++ && *pn )
     ctrl.progname = mas_strdup( pn );
 
@@ -346,7 +346,8 @@ mas_destroy( mas_options_t * popts )
     if ( !ctrl.opts_saved )
       IEVAL( r,
              mas_opts_save_user( popts, NULL,
-                                 popts->save_user_opts_filename ? popts->save_user_opts_filename : ( ctrl.progname ? ctrl.progname : "Unknown" ) ) );
+                                 popts->save_user_opts_filename ? popts->save_user_opts_filename : ( ctrl.progname ? ctrl.progname :
+                                                                                                     "Unknown" ) ) );
     HMSG( "(%d)SAVE USER", r );
     r = 0;
     if ( !ctrl.opts_saved_plus )
@@ -396,23 +397,23 @@ mas_destroy( mas_options_t * popts )
   if ( ctrl.logpath )
     mas_free( ctrl.logpath );
   ctrl.logpath = NULL;
+  {
+    if ( ctrl.argvname )
+      mas_free( ctrl.argvname );
+    ctrl.argvname = NULL;
 
-  if ( ctrl.binname )
-    mas_free( ctrl.binname );
-  ctrl.binname = NULL;
+    if ( ctrl.progname )
+      mas_free( ctrl.progname );
+    ctrl.progname = NULL;
 
-  if ( ctrl.progname )
-    mas_free( ctrl.progname );
-  ctrl.progname = NULL;
+    if ( ctrl.exepath )
+      mas_free( ctrl.exepath );
+    ctrl.exepath = NULL;
 
-  if ( ctrl.exepath )
-    mas_free( ctrl.exepath );
-  ctrl.exepath = NULL;
-
-  if ( ctrl.exename )
-    mas_free( ctrl.exename );
-  ctrl.exename = NULL;
-
+    if ( ctrl.exename )
+      mas_free( ctrl.exename );
+    ctrl.exename = NULL;
+  }
   IEVAL( r, mas_ctrl_destroy(  ) );
   r = 0;
 
@@ -442,7 +443,7 @@ mas_destroy( mas_options_t * popts )
 #endif
 }
 
-__attribute__ ( ( constructor ) )
+__attribute__ ( ( constructor( 2100 ) ) )
      static void master_constructor( void )
 {
   CTRL_PREPARE;
@@ -450,7 +451,7 @@ __attribute__ ( ( constructor ) )
 
   /* char *value = NULL; */
 
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
 

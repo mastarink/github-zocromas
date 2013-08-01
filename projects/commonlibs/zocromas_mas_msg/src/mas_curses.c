@@ -213,3 +213,9 @@ mas_close_curses( void )
 #endif
   return 0;
 }
+
+__attribute__ ( ( constructor( 10001 ) ) )
+     static void master_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+}

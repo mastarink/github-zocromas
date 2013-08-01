@@ -68,7 +68,7 @@ main( int argc, char *argv[], char *env[] )
 
   /* uuid BEFORE opt_files !! */
   IEVAL( r,
-         mas_init_plus( &gopts, argc, argv, env, mas_init_proc, mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init, mas_ctrl_init,
+         mas_init_plus( &gopts, argc, argv, env, /* mas_init_proc, */ mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init, mas_ctrl_init,
                         mas_client_init_readline, mas_post_init, NULL ) );
   for ( int ia = gopts.hostsv.c; r >= 0 && ia > 0; ia-- )
   {

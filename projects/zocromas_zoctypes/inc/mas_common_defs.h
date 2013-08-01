@@ -44,7 +44,6 @@
 #    define MAS_CTRL_IS_SERVER 0
 #    define MAS_CTRL_IN_CLIENT 1
 #    define MAS_CTRL_IN_SERVER 0
-#    define MAS_CTRL_MESSAGES  1
 #    define MAS_CTRL_STATUS    0
 #    define IEVALME(_rv, _code, pserrno, fmt, msg) IEVAL_STD(_rv, _code)
 #    define IEVALM(_rv, _code, fmt, msg) IEVALME(_rv, _code, NULL, fmt, msg)
@@ -58,10 +57,6 @@
 #    define MAS_CTRL_IS_CLIENT &ctrl && ctrl.is_client
 #    define MAS_CTRL_IN_SERVER &ctrl && ctrl.in_server
 #    define MAS_CTRL_IN_CLIENT &ctrl && ctrl.in_client
-#    define MAS_CTRL_MESSAGES (&ctrl && ( (ctrl.messages || \
-      	(ctrl.messages_parent && ctrl.is_parent) || \
-        (ctrl.messages_child && ctrl.is_child)) || \
-         !ctrl.messages_set ))
 #    define MAS_CTRL_STATUS &ctrl && ctrl.status
 
 #    define _ERRHAN(sys,_rv,_rvr,merrno,perrno,pserrno,fmt,msg) \

@@ -82,7 +82,7 @@ struct mas_control_s
   threads;
   mas_thread_info_t *pserver_thread;
 
-  char *binname;
+  char *argvname;
   char *progname;
   char *pkgname;
   char *exepath;

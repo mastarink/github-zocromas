@@ -376,3 +376,5 @@ get uuid
 bye
 get uuid
 bye
+get env
+bye

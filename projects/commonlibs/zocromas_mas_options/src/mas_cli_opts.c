@@ -616,3 +616,10 @@ _mas_cli_options( mas_options_t * popts, int argc, char *const *argv )
   mas_free( enabled_opts );
   return r < 0 ? r : afterlast;
 }
+
+__attribute__ ( ( constructor( 3010 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}

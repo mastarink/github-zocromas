@@ -23,13 +23,6 @@ related:
   mas_cs.h
 
 */
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
-{
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-}
-
-
 
 static int mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
                               const char *msg );
@@ -174,4 +167,11 @@ mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno,
   if ( perrno )
     *perrno = 0;
   return rcode;
+}
+
+__attribute__ ( ( constructor( 10000 ) ) )
+     static void f_constructor( void )
+{
+  /* if ( stderr )                                                           */
+  /*   fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ ); */
 }

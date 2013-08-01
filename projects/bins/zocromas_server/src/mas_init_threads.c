@@ -210,3 +210,10 @@ mas_threads_destroy( void )
   pthread_mutex_destroy( &ctrl.thglob.cnttr2_mutex );
 //pthread_mutex_destroy( &ctrl.thglob.log_mutex );
 }
+
+__attribute__ ( ( constructor( 1001 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}

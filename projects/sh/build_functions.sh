@@ -39,7 +39,7 @@ function remove_unpacked_z ()
 }
 function unpack_z ()
 {
-  if [[ "$tmpunpack" ]] && [[ -d "$tmpunpack" ]] && [[ "$distfile" ]] && [[ -f "$distfile" ]] && cd "$tmpunpack" ; then
+  if [[ "$tworkunpack" ]] && [[ -d "$tworkunpack" ]] && [[ "$distfile" ]] && [[ -f "$distfile" ]] && cd "$tworkunpack" ; then
     if [[ "$distfile" =~ \.tar\.gz ]] ; then
 #     echo "gz unpack $distfile (`pwd`)" >&2
       tar -zxf $distfile
@@ -120,7 +120,7 @@ function testdist_m ()
   local zips errfile
   if [[ "$MAS_SH_VERBOSE" ]] ; then echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2 ; fi
   if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
-    errfile="/tmp/distcheck.${mas_name}-${mas_vers}.tmp"
+    errfile="$TMPdir/distcheck.${mas_name}-${mas_vers}.tmp"
     # make -d dist
     # make -s dist
 #       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2
@@ -153,14 +153,14 @@ function makd_dinst_script ()
         cat <<SC > "$instshname"
 #!/bin/sh
 # $( date )
-if [[ -d "$tmpunpack" ]] ; then
+if [[ -d "$tworkunpack" ]] ; then
   if [[ "$unpackdir" ]] && [[ -d $unpackdir ]] ; then
     rm -Rf $unpackdir
   fi
   if [[ "$ibuilddir" ]] && [[ -d $ibuilddir ]] ; then
     rm -Rf $ibuilddir
   fi
-  cd $tmpunpack
+  cd $tworkunpack
   tar -jxf $distfile
   if [[ -d "$unpackdir" ]] ; then
     if mkdir $ibuilddir && cd $ibuilddir ; then
@@ -174,7 +174,7 @@ SC
 #       echo '#!/bin/sh'			>> $instshname
 #       echo "# $( date )"			>> $instshname
 #       echo "rm -Rf $unpackdir $ibuilddir"	>> $instshname
-#       echo "cd $tmpunpack"			>> $instshname
+#       echo "cd $tworkunpack"			>> $instshname
 #       echo "tar -jxf $distfile"		>> $instshname
 #       echo "if [[ -d \"$unpackdir\" ]] ; then" >> $instshname
 #       echo "  mkdir $ibuilddir"		>> $instshname

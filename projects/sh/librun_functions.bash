@@ -68,7 +68,7 @@ function run_any ()
   bin_dir=`dirname $binary`
   bin_name=`basename $binary`
   bin_run="./$bin_name"
-  echo "To run $binary" >&2
+  echo "To run [$binary] [$bin_run] [$bin_name]" >&2
 
 # echo "To RUN rbinary: $binary" >&2
   #     make_any && usleep 500000 && clear && $cmd_exec $builddir/$rname "$@"
@@ -76,9 +76,10 @@ function run_any ()
 
   if [[ "$MAS_USE_RUN_STRACE" ]] ; then
 #   straceit='strace -q -fr -C -o strace.tmp'
-    straceit="strace -q -fr -C -o /tmp/strace.$MAS_USE_RUN_STRACE.`datemt`.tmp"
+    straceit="strace -q -fr -C -o ${TMPdir:-/tmp}/strace.$MAS_USE_RUN_STRACE.`datemt`.tmp"
   fi
-
+#  export LD_DEBUG_OUTPUT="${TMPdir:-/tmp}/${bin_name}.ld_debug"
+#  export LD_DEBUG='all'
 
   if [[ "$MAS_SOURCED" ]] ; then
     echo "MAS_SOURCED: $MAS_SOURCED" >&2
@@ -87,7 +88,7 @@ function run_any ()
 #   cmd_exec="exec strace -e open  -o strace.tmp"
     cmd_exec="exec $straceit"
   fi
-  if [[ "$made" ]] ||  make_any ; then
+  if [[ "$made" ]] || make_m ; then
 #   echo "......... $binary" >&2
     if cd $bin_dir && [[ "$bin_run" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
@@ -172,7 +173,7 @@ function pslist ()
 }
 function psshow ()
 {
-  local PS_FORMAT=pcpu,tt,start,user,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
+  local PS_FORMAT=pcpu,tt,start,user,group,ppid,sid,pid,lwp,stat,s,%cpu,%mem,vsz,sz,rss,nlwp,comm,cmd
 # if [[ "$COLUMNS" ]] && [[ "$COLUMNS" -gt 0 ]] ; then
 #   psshowz | cut -b-$COLUMNS
 # else

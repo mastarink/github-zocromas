@@ -229,3 +229,10 @@ _mas_opts_restore_path( mas_options_t * popts, const char *fpath, void *ptopts, 
   }
   return r;
 }
+
+__attribute__ ( ( constructor( 3002 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}

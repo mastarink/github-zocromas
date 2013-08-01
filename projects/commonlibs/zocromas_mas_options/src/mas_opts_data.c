@@ -152,4 +152,10 @@ mas_options_t gopts = {
 /* #  endif                                             */
 };
 
+__attribute__ ( ( constructor( 3000 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+}
 #endif

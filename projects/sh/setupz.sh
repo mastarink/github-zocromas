@@ -63,10 +63,10 @@ function setup_vers ()
   if [[ "$n" ]] && [[ "$v" ]] ; then
 #   echo "[$( basename $0 )] SET name:$n; version:$v" >&2
     if [[ -f "$indir/configure.ac" ]] ; then
-      if [[ "$tmpunpack" ]] && [[ -d "$tmpunpack" ]] && [[ "$tmpbuild" ]] && [[ -d "$tmpbuild" ]] \
+      if [[ "$tworkunpack" ]] && [[ -d "$tworkunpack" ]] && [[ "$tworkbuild" ]] && [[ -d "$tworkbuild" ]] \
       			&& [[ "$savedirdist" ]] && [[ -d "$savedirdist" ]] ; then
-	unpackdir="$tmpunpack/${n}-${v}"
-	ibuilddir="$tmpbuild/${n}"
+	unpackdir="$tworkunpack/${n}-${v}"
+	ibuilddir="$tworkbuild/${n}"
 	distname="${n}-${v}.tar.bz2"
 	distfile="$savedirdist/$distname"
 	distfile_prefix="$savedirdist/${n}"
@@ -100,7 +100,7 @@ function setup_vers ()
   #   prj_configure_opts="$prj_configure_opts --with-mods-dir=zocmds"
   #   prj_configure_opts="$prj_configure_opts --with-proto-dir=zocromas_zocprotos"
   #   prj_configure_opts="$prj_configure_opts --with-log-dir=log"
-  #   prj_configure_opts="$prj_configure_opts --with-server=/tmp/zocromas.socket"
+  #   prj_configure_opts="$prj_configure_opts --with-server=$TMPdir/zocromas.socket"
   #   prj_configure_opts="$prj_configure_opts --with-def-proto=xcromas"
       if [[ "$MAS_SH_VERBOSE" ]] ; then echo "to read '$global_flavour_opts_file'" >&2 ; fi
       tmprex='^#'
@@ -221,9 +221,9 @@ function show_setup ()
   echo "savedirtarme:	$savedirtarme" >&2
   
   echo "= TMP:" >&2
-  echo "tmpdir:		$tmpdir" >&2
-  echo "tmpunpack:	$tmpunpack" >&2
-  echo "tmpbuild:	$tmpbuild" >&2
+  echo "tworkdir:	$tworkdir" >&2
+  echo "tworkunpack:	$tworkunpack" >&2
+  echo "tworkbuild:	$tworkbuild" >&2
   
   echo "= INSTALL:" >&2
   echo "instdir:	$instdir" >&2

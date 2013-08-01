@@ -130,3 +130,10 @@ mas_opts_check_dir( mas_options_t * popts )
   /* }                                                */
   return r;
 }
+
+__attribute__ ( ( constructor( 3003 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}

@@ -232,23 +232,6 @@ mas_master_th( void *topts )
   return NULL;
 }
 
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
-{
-  CTRL_PREPARE;
-  /* if ( stderr )                                                                      */
-  /*   fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-  if ( !ctrl.stderrfile )
-    ctrl.stderrfile = stderr;
-}
-
-__attribute__ ( ( destructor ) )
-     static void master_destructor( void )
-{
-  /* if ( stderr )                                                                     */
-  /*   fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
-}
-
 int
 mas_master_do( const mas_options_t * popts )
 {
@@ -272,4 +255,18 @@ mas_master_do( const mas_options_t * popts )
     IEVAL( r, mas_master( popts ) );
   }
   return r;
+}
+
+__attribute__ ( ( constructor( 1001 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
+__attribute__ ( ( destructor ) )
+     static void f_destructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }

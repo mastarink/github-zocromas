@@ -316,3 +316,10 @@ mas_opts_save_user_plus( mas_options_t * popts, const char *dirname, const char 
   HMSG( "(%d)SAVED OPTS PLUS", r );
   return r;
 }
+
+__attribute__ ( ( constructor( 3005 ) ) )
+     static void f_constructor( void )
+{
+  if ( stderr )
+    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
