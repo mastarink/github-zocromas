@@ -89,9 +89,9 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
   /*                                   prcontrol, NULL ) ) )                                                              */
   if ( MAS_VALID_ANSWER( answer ) )
   {
-    HMSG( "ANSWER: %lx:%s", ( unsigned long ) answer, answer ? ( char * ) answer->data : NULL );
+    HMSG( "ANSWER: %s", ( char * ) answer->data );
     tMSG( "%s%ssign %s;answer is %s (%s)", pheader->binary ? "bin;" : "", pheader->new_opts ? "new opts;" : "",
-          pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer && answer->data ? "+" : "-" );
+          pheader->bad ? "BAD;" : "", pheader->sign == MSG_SIGNATURE ? "ok" : "bad", answer->data ? "+" : "-" );
     if ( pheader->bad )
     {
       r = -35;
@@ -109,7 +109,6 @@ mas_proto_xcromas_evaluate_and_answer( mas_rcontrol_t * prcontrol, const char *q
         EMSG( "r:%d", r );
       }
     }
-    /* mas_free( answer ); */
     mas_evaluated_delete( answer );
     answer = NULL;
   }

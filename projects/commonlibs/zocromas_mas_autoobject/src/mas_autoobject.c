@@ -579,7 +579,6 @@ mas_autoobject_cat( int han, mas_autoobject_t * obj, int use_new )
         {
           mas_evaluated_t *answer = NULL;
 
-          fprintf( stderr, ">>>>>>>>'%s'\n", obj->name );
           mas_evaluate_set_std_modpath( "/mnt/new_misc/develop/autotools/zoc/admin/install/default/lib/zocromod/zocmds/" );
           answer = mas_evaluate_transaction_command( NULL /* prcontrol */ , obj->name );
           if ( answer )
@@ -600,7 +599,7 @@ mas_autoobject_cat( int han, mas_autoobject_t * obj, int use_new )
     }
     else
     {
-      fprintf( stderr, "ERROR load_data\n" );
+      /* fprintf( stderr, "ERROR load_data\n" ); */
     }
   }
   return r;

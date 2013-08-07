@@ -167,13 +167,9 @@ version_cmd( STD_CMD_ARGS )
 {
   char *s = NULL;
 
-  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   s = mas_strdup( MAS_C_DATE );
-  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   s = mas_strcat_x( s, " / " );
-  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   s = mas_strcat_x( s, PACKAGE_VERSION );
-  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   return mas_evaluated_wrap_pchar( s );
 }
 
