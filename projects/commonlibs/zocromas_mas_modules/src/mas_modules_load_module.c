@@ -80,13 +80,13 @@ _mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr 
 }
 
 void *
-mas_modules_load_module_from( const char *libname, const char *path, int noerr )
+mas_modules_load_module_from( const char *libname, const char *modpath, int noerr )
 {
   void *module_handle;
   char *fullname = NULL;
 
-  MAS_LOG( "make path %s", path );
-  fullname = mas_strdup( path );
+  MAS_LOG( "make modpath %s", modpath );
+  fullname = mas_strdup( modpath );
   fullname = mas_strcat_x( fullname, "/" );
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
@@ -122,12 +122,12 @@ mas_modules_load_module_from( const char *libname, const char *path, int noerr )
 /* }                                                                                         */
 
 mas_any_fun_t
-mas_modules_load_func_from( const char *libname, const char *funname, const char *path )
+mas_modules_load_func_from( const char *libname, const char *funname, const char *modpath )
 {
   mas_any_fun_t any_fun = NULL;
 
   /* any_fun = ( mas_any_fun_t ) ( unsigned long ) dlsym( module_handle, funname ); */
-  any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, path );
+  any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, modpath );
   if ( !any_fun )
   {
     char *dler;
@@ -152,13 +152,13 @@ mas_modules_load_func_from( const char *libname, const char *funname, const char
 }
 
 void *
-mas_modules_load_symbol_from( const char *libname, const char *symname, const char *path )
+mas_modules_load_symbol_from( const char *libname, const char *symname, const char *modpath )
 {
   void *msymb = NULL;
   void *module_handle;
 
   /* module_handle = _mas_modules_load_module( libname ); */
-  module_handle = mas_modules_load_module_from( libname, path, 0 );
+  module_handle = mas_modules_load_module_from( libname, modpath, 0 );
   if ( module_handle )
   {
     msymb = ( void * ) ( unsigned long ) dlsym( module_handle, symname );

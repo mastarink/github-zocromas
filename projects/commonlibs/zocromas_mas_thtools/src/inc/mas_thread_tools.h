@@ -4,9 +4,9 @@
 #  include <mastar/types/mas_listener_control_types.h>
 #  include <mastar/types/mas_thread_variables_types.h>
 
-void mas_thread_make_key( void );
-extern pthread_once_t mas_thread_key_once;
-extern pthread_key_t mas_thread_key;
+/* void mas_thread_make_key( void ); */
+/* extern pthread_once_t mas_thread_key_once; */
+/* extern pthread_key_t mas_thread_key;       */
 
 
 

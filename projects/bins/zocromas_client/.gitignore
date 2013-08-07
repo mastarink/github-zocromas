@@ -2,3 +2,4 @@
 *.core.gz
 make-timing.*.result
 .auxdir
+*.tmp

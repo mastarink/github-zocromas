@@ -62,10 +62,16 @@ mas_opts_set_configdir( mas_options_t * popts, const char *dirname )
   }
   if ( !wdirname )
   {
-    wdirname = mas_strdup( getenv( "HOME" ) );
-    wdirname = mas_strcat_x( wdirname, "/.zocromas/" );
+    char *h;
+
+    h = getenv( "HOME" );
+    if ( h )
+    {
+      wdirname = mas_strdup( h );
+      wdirname = mas_strcat_x( wdirname, "/.zocromas/" );
+    }
   }
-  if ( popts->dir.config && *popts->dir.config && *( popts->dir.config + strlen( popts->dir.config ) - 1 ) != '/' )
+  if ( wdirname && popts->dir.config && *popts->dir.config && *( popts->dir.config + strlen( popts->dir.config ) - 1 ) != '/' )
   {
     wdirname = mas_strcat_x( wdirname, "/" );
   }

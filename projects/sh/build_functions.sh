@@ -120,7 +120,7 @@ function testdist_m ()
   local zips errfile
   if [[ "$MAS_SH_VERBOSE" ]] ; then echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH" >&2 ; fi
   if [[ "$mas_name" ]] && [[ "$mas_vers" ]] ; then
-    errfile="$TMPdir/distcheck.${mas_name}-${mas_vers}.tmp"
+    errfile="$MAS_PROJECTS_TMPDIR/distcheck.${mas_name}-${mas_vers}.tmp"
     # make -d dist
     # make -s dist
 #       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2

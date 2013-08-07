@@ -170,7 +170,7 @@ mas_modules_commands( STD_CMD_ARGS )
       tMSG( "evaluating %s ( %s )", question, args );
       MAS_LOG( "evaluating %s ( %s )", question, args );
       WMSG( "EVAL FOUND %s.%s", this_command->libname, found->name );
-      answer = mas_evaluate_cmd( popts, 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
+      answer = mas_evaluate_cmd( pqopts, 0, this_command->subtable, found, prcontrol, question, args, level + 1 );
     }
   }
   else

@@ -72,8 +72,8 @@ dir.proto=@prefix@/lib/zocromod/protos/
 has_init_message=1
 init-message-string=\x1bcSTART\n===================\n
 filename.message=/dev/tty11
-filename.stderr=/tmp/daemon_stderr.tmp
-filename.stdout=/tmp/daemon_stdout.tmp
+filename.stderr=/tmp/zoc/daemon_stderr.tmp
+filename.stdout=/tmp/zoc/daemon_stdout.tmp
 # redirect-messages=/dev/tty11
 # -
 

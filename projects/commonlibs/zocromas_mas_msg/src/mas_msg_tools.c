@@ -1361,6 +1361,55 @@ mas_msg( const char *func, int line, mas_msg_type_t msgt, int allow, int details
   return r;
 }
 
+static void
+msg_delete_thread_specific( void *ptr )
+{
+  mas_free( ptr );
+}
+
+static void
+msg_make_thread_key( void )
+{
+  CTRL_PREPARE;
+
+  if ( &ctrl )
+    ( void ) pthread_key_create( &ctrl.thread_ctrl.key, msg_delete_thread_specific );
+}
+
+mas_std_error_t *
+_mas_get_last_error( void )
+{
+  CTRL_PREPARE;
+  mas_std_error_t *thd;
+
+  ( void ) pthread_once( &ctrl.thread_ctrl.key_once, msg_make_thread_key /* init_routine */  );
+  thd = pthread_getspecific( ctrl.thread_ctrl.key );
+  if ( !thd )
+  {
+    thd = mas_malloc( sizeof( mas_std_error_t ) );
+    memset( thd, 0, sizeof( mas_std_error_t ) );
+    ( void ) pthread_setspecific( ctrl.thread_ctrl.key, thd );
+  }
+  return thd;
+}
+
+const mas_std_error_t *
+mas_get_last_error( void )
+{
+  return _mas_get_last_error(  );
+}
+
+void
+mas_clear_last_error( void )
+{
+  mas_std_error_t *thd;
+
+  thd = _mas_get_last_error(  );
+  thd->merrno = 0;
+  thd->line = 0;
+  *( thd->funcname ) = 0;
+}
+
 static int
 mas_verror( const char *func, int line, int merrno, int *perrno, int *psaveerrno, const char *fmt, va_list args )
 {
@@ -1376,7 +1425,33 @@ mas_verror( const char *func, int line, int merrno, int *perrno, int *psaveerrno
 
 
   if ( &ctrl )
+  {
+    {
+      mas_std_error_t *thd;
+
+      ( void ) pthread_once( &ctrl.thread_ctrl.key_once, msg_make_thread_key /* init_routine */  );
+      thd = pthread_getspecific( ctrl.thread_ctrl.key );
+      if ( !thd )
+      {
+        thd = mas_malloc( sizeof( mas_std_error_t ) );
+        memset( thd, 0, sizeof( mas_std_error_t ) );
+        ( void ) pthread_setspecific( ctrl.thread_ctrl.key, thd );
+      }
+      if ( thd )
+      {
+        thd->line = line;
+        strncpy( thd->funcname, func, sizeof( thd->funcname ) );
+        thd->merrno = merrno;
+      }
+    }
+    /* pthread_rwlock_wrlock( &ctrl.thglob.control_rwlock );                          */
+    /* ctrl.last_error.line = line;                                                   */
+    /* strncpy( ctrl.last_error.funcname, func, sizeof( ctrl.last_error.funcname ) ); */
+    /* ctrl.last_error.merrno = merrno;                                               */
+    /* pthread_rwlock_unlock( &ctrl.thglob.control_rwlock );                          */
+
     pthread_mutex_lock( &ctrl.thglob.msg_mutex );
+  }
   if ( merrno )
   {
     char pref[512];

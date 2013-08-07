@@ -100,7 +100,7 @@ function setup_vers ()
   #   prj_configure_opts="$prj_configure_opts --with-mods-dir=zocmds"
   #   prj_configure_opts="$prj_configure_opts --with-proto-dir=zocromas_zocprotos"
   #   prj_configure_opts="$prj_configure_opts --with-log-dir=log"
-  #   prj_configure_opts="$prj_configure_opts --with-server=$TMPdir/zocromas.socket"
+  #   prj_configure_opts="$prj_configure_opts --with-server=$MAS_PROJECTS_TMPDIR/zocromas.socket"
   #   prj_configure_opts="$prj_configure_opts --with-def-proto=xcromas"
       if [[ "$MAS_SH_VERBOSE" ]] ; then echo "to read '$global_flavour_opts_file'" >&2 ; fi
       tmprex='^#'

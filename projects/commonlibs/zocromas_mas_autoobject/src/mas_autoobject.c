@@ -23,6 +23,9 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 
+#include <mastar/modules/mas_modules_commands_eval.h>
+#include <mastar/fileinfo/mas_unidata.h>
+
 
 #include "mas_autoobject_object.h"
 #include "mas_autoobject.h"
@@ -75,6 +78,8 @@ mas_autoobject_fd( mas_autoobject_t * obj )
     case MAS_IACCESS_FILE:
       fd = fileno( obj->handler.f );
       break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_CHAR:
     case MAS_IACCESS_BAD:
       break;
@@ -99,6 +104,8 @@ mas_autoobject_file( mas_autoobject_t * obj )
       break;
     case MAS_IACCESS_FILE:
       f = obj->handler.f;
+      break;
+    case MAS_IACCESS_MMODULE:
       break;
     case MAS_IACCESS_CHAR:
     case MAS_IACCESS_BAD:
@@ -153,6 +160,9 @@ mas_autoobject_delete_data( mas_autoobject_t * obj )
     case MAS_IACCESS_SPLICE:
     case MAS_IACCESS_SENDFILE:
     case MAS_IACCESS_SENDFILEL:
+      break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_BAD:
       break;
     }
@@ -228,6 +238,8 @@ mas_autoobject_reopen( mas_autoobject_t * obj )
       obj->stat_cnt++;
       rst = fstat( mas_autoobject_fd( obj ), &st );
       break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_CHAR:
     case MAS_IACCESS_BAD:
       break;
@@ -292,6 +304,9 @@ mas_autoobject_opened( mas_autoobject_t * obj )
       opened = ( ( FILE * ) obj->handler.f ) ? 1 : 0;
       break;
     case MAS_IACCESS_CHAR:
+      break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_BAD:
       break;
     }
@@ -318,6 +333,9 @@ _mas_autoobject_close( mas_autoobject_t * obj )
       fclose( mas_autoobject_file( obj ) );
       break;
     case MAS_IACCESS_CHAR:
+      break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_BAD:
       break;
     }
@@ -358,6 +376,8 @@ mas_autoobject_set_data( mas_autoobject_t * obj, const void *ptr )
       case MAS_IACCESS_SPLICE:
       case MAS_IACCESS_SENDFILE:
       case MAS_IACCESS_SENDFILEL:
+        break;
+      case MAS_IACCESS_MMODULE:
         break;
       case MAS_IACCESS_BAD:
         break;
@@ -452,6 +472,8 @@ mas_autoobject_load_data( mas_autoobject_t * obj, int use_new )
         }
       }
       break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_BAD:
       break;
     }
@@ -490,6 +512,9 @@ mas_autoobject_rewind( mas_autoobject_t * obj )
       break;
     case MAS_IACCESS_SENDFILE:
     case MAS_IACCESS_FILE:
+      break;
+    case MAS_IACCESS_MMODULE:
+      break;
     case MAS_IACCESS_BAD:
       break;
     }
@@ -548,6 +573,25 @@ mas_autoobject_cat( int han, mas_autoobject_t * obj, int use_new )
           obj->sendfile_cnt++;
           obj->pass = 1;
           r = sendfile( han, fd, NULL, obj->size );
+        }
+        break;
+      case MAS_IACCESS_MMODULE:
+        {
+          mas_evaluated_t *answer = NULL;
+
+          fprintf( stderr, ">>>>>>>>'%s'\n", obj->name );
+          mas_evaluate_set_std_modpath( "/mnt/new_misc/develop/autotools/zoc/admin/install/default/lib/zocromod/zocmds/" );
+          answer = mas_evaluate_transaction_command( NULL /* prcontrol */ , obj->name );
+          if ( answer )
+          {
+            size_t len;
+
+            len = strlen( ( char * ) answer->data );
+            r = write( han, answer->data, len );
+            mas_evaluated_delete( answer );
+          }
+          else
+            r = -1;
         }
         break;
       case MAS_IACCESS_BAD:

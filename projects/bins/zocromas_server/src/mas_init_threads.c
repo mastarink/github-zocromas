@@ -52,6 +52,7 @@ mas_threads_init( mas_options_t * popts, const char * *message )
   MAS_LOG( "(%d) init threads", r );
   mas_in_thread( MAS_THREAD_MAIN, NULL, NULL );
 
+  pthread_rwlock_init( &ctrl.thglob.control_rwlock, NULL );
   pthread_rwlock_init( &ctrl.thglob.lcontrols_list_rwlock, NULL );
   pthread_rwlock_init( &ctrl.thglob.modules_list_rwlock, NULL );
 
@@ -200,6 +201,7 @@ mas_threads_destroy( void )
 
   pthread_rwlock_destroy( &ctrl.thglob.modules_list_rwlock );
   pthread_rwlock_destroy( &ctrl.thglob.lcontrols_list_rwlock );
+  pthread_rwlock_destroy( &ctrl.thglob.control_rwlock );
 
   pthread_mutex_destroy( &ctrl.thglob.mfp_mutex );
   pthread_mutex_destroy( &ctrl.thglob.msg_mutex );

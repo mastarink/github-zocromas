@@ -53,8 +53,8 @@ opts_cmd( STD_CMD_ARGS )
 #endif
   if ( prcontrol )
     prcontrol->qbin = MSG_BIN_OPTS;
-  result = mas_malloc( sizeof( *( popts ) ) );
-  *result = *( popts );
+  result = mas_malloc( sizeof( *( pqopts ) ) );
+  *result = *( pqopts );
 #ifdef cMSG
   cMSG( "opts:%x", ( *( unsigned int * ) result ) );
 #endif
@@ -77,7 +77,7 @@ env_cmd( STD_CMD_ARGS )
   }
   else
   {
-  CTRL_PREPARE;
+    CTRL_PREPARE;
     if ( ctrl.launcherev.v )
     {
       char *const *pe;
@@ -165,11 +165,15 @@ uuid_cmd( STD_CMD_ARGS )
 static mas_evaluated_t *
 version_cmd( STD_CMD_ARGS )
 {
-  char *s;
+  char *s = NULL;
 
+  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   s = mas_strdup( MAS_C_DATE );
+  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   s = mas_strcat_x( s, " / " );
+  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   s = mas_strcat_x( s, PACKAGE_VERSION );
+  fprintf( stderr, "GETTING VERSION '%s'\n", s );
   return mas_evaluated_wrap_pchar( s );
 }
 

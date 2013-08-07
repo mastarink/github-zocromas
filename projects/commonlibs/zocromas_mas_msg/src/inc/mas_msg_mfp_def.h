@@ -10,22 +10,22 @@
          !ctrl.messages_set ))
 
 #    define MFPL(s) { \
-    if ( ctrl.msgfile ) \
+    if ( &ctrl ) { if ( ctrl.msgfile ) \
       fputs( s, ctrl.msgfile ); \
     else if ( ctrl.stderrfile ) \
       fputs( s, ctrl.stderrfile ); \
-   }
+   } }
 
 #    define MFPZ(...) { \
-    if ( ctrl.msgfile ) \
+    if ( &ctrl ) { if ( ctrl.msgfile ) \
       fprintf( ctrl.msgfile, __VA_ARGS__ ); \
     else if ( ctrl.stderrfile ) \
       fprintf( ctrl.stderrfile, __VA_ARGS__ ); \
-   }
+   } }
 
 
 #    ifdef MAS_USE_CURSES
-#      define MFP(...) { if (use_curses) \
+#      define MFP(...) { if (use_curses && &ctrl) \
      { mas_pthread_mutex_lock( &ctrl.mfp_mutex ); wprintw( w_win, __VA_ARGS__ );wrefresh(w_win); mas_pthread_mutex_unlock( &ctrl.mfp_mutex );} \
      else \
        MFPZ(__VA_ARGS__) \

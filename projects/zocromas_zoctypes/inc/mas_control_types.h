@@ -23,6 +23,7 @@ struct mas_pthread_globals_s
   /* pthread_mutex_t lcontrols_list_mutex; */
   pthread_rwlock_t lcontrols_list_rwlock;
   pthread_rwlock_t modules_list_rwlock;
+  pthread_rwlock_t control_rwlock;
   pthread_mutex_t cleanup_transactions_mutex;
   pthread_mutex_t msg_mutex;
   pthread_mutex_t emsg_mutex;
@@ -39,13 +40,13 @@ struct mas_pthread_globals_s
 
   cpu_set_t *master_set;
   pthread_attr_t master_attr;
-  
+
   cpu_set_t *ticker_set;
   pthread_attr_t ticker_attr;
-  
+
   cpu_set_t *watcher_set;
   pthread_attr_t watcher_attr;
-  
+
   cpu_set_t *logger_set;
   pthread_attr_t logger_attr;
 
@@ -72,6 +73,14 @@ typedef struct mas_std_threads_set_s
   mas_thread_info_t daemon;
   mas_thread_info_t main;
 } mas_std_threads_set_t;
+typedef struct mas_thread_ctrl_s
+{
+  pthread_key_t key;
+  pthread_once_t key_once;
+  pthread_key_t tools_key;
+  pthread_once_t tools_key_once;
+} mas_thread_ctrl_t;
+
 struct mas_control_s
 {
   union
@@ -81,12 +90,24 @@ struct mas_control_s
   }
   threads;
   mas_thread_info_t *pserver_thread;
-
+  /* mas_std_error_t last_error; */
+  mas_thread_ctrl_t thread_ctrl;
   char *argvname;
   char *progname;
   char *pkgname;
+
   char *exepath;
   char *exename;
+
+  char *cmdline;
+  size_t cmdline_size;
+  mas_string_setv_t cmdargv;
+
+  char rerun_name[16];
+  char *cmdenv;
+  size_t cmdenv_size;
+  mas_string_setv_t cmdenvv;
+
   mas_error_handler_fun_t error_handler;
 
   void **loaded_modules;
@@ -108,6 +129,12 @@ struct mas_control_s
   unsigned try_cnt;
   unsigned restart_cnt;
   unsigned in_pipe;
+  unsigned already_rerun:1;
+  unsigned tested_rerun:1;
+  unsigned rerun:1;
+  unsigned rerun_early:1;
+  unsigned get_cmdline:1;
+  unsigned get_cmdenv:1;
   unsigned fatal:1;
   unsigned main_exit:1;
   unsigned dead_beaf:1;
@@ -202,8 +229,6 @@ struct mas_control_s
   /* int commands_num; */
   mas_string_setv_t commandsv;
 
-  pthread_key_t mas_thread_key;
-  pthread_once_t mas_thread_key_once;
 };
 typedef struct mas_control_s mas_control_t;
 

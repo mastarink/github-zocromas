@@ -96,6 +96,8 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_MASTER,
   MAS_CLI_OPT_NOMASTER_THREAD,
   MAS_CLI_OPT_MASTER_THREAD,
+  MAS_CLI_OPT_PIDFILE,
+  MAS_CLI_OPT_NOPIDFILE,
   MAS_CLI_OPT_LISTEN,
   MAS_CLI_OPT_NOLISTEN,
   MAS_CLI_OPT_LISTENER,
@@ -177,6 +179,9 @@ static struct option cli_longopts[] = {
   {"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
   {"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER},
   {"set-ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE},
+
+  {"nopidfile", no_argument, NULL, MAS_CLI_OPT_NOPIDFILE},
+  {"pidfile", no_argument, NULL, MAS_CLI_OPT_PIDFILE},
 
   {"nomaster", required_argument, NULL, MAS_CLI_OPT_NOMASTER},
   {"master", no_argument, NULL, MAS_CLI_OPT_MASTER},
@@ -435,6 +440,12 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
   case MAS_CLI_OPT_LISTENER:
     popts->nolistener = 0;
     break;
+  case MAS_CLI_OPT_NOPIDFILE:
+    popts->nopidfile = 1;
+    break;
+  case MAS_CLI_OPT_PIDFILE:
+    popts->nopidfile = 0;
+    break;
   case MAS_CLI_OPT_NOLISTEN:
     popts->nolisten = mas_cli_optval( m_optarg, 30, &v );
     break;
@@ -529,7 +540,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
       ctrl.fatal = 1;
       ctrl.keep_listening = 0;
       HMSG( "O:CLI unknown opt:%d [%c]", opt, opt > ' ' && opt <= 'z' ? opt : '-' );
-      IEVAL( r, -1 );
+      IEVAL( r, -88 );
     }
     break;
   }

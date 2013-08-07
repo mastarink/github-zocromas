@@ -98,6 +98,7 @@ struct mas_options_s
   unsigned test:1;
   unsigned quit:1;
   unsigned info:1;
+  unsigned nopidfile:1;
   unsigned single_instance:1;
   unsigned single_child:1;
   unsigned listener_single:1;

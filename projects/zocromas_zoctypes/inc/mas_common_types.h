@@ -11,6 +11,13 @@ typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int issys
                                            const char *xmsg );
 typedef void ( *mas_voidp_fun_t ) ( void *arg );
 
+typedef struct mas_std_error_s
+{
+  int line;
+  char funcname[128];
+  int merrno;
+} mas_std_error_t;
+
 typedef struct mas_string_csetv_s
 {
   int c;

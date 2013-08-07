@@ -15,6 +15,7 @@ typedef enum mas_iaccess_type_e
   MAS_IACCESS_SENDFILEL,
   MAS_IACCESS_SPLICE,
   MAS_IACCESS_FILE,
+  MAS_IACCESS_MMODULE,
 } mas_iaccess_type_t;
 
 

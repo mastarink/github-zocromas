@@ -119,17 +119,17 @@ main( int argc, char *argv[], char *env[] )
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
   HMSG( "(e:%d)MAIN %s", errno, argv[0] );
-  if ( 0 == strcmp( argv[0], "ZOCSer" ) )
-  {
-    HMSG( "(e:%d)TO BUNCH %s", errno, argv[0] );
-    IEVAL( r, mas_master_bunch( &gopts, argc, argv, env ) );
-    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
-  }
-  else
+  if ( ctrl.rerun && 0 != strcmp( argv[0], "ZOCSer" ) )
   {
     HMSG( "RERUN %s as ZOCSer", ctrl.exepath );
     argv[0] = "ZOCSer";
     execve( ctrl.exepath, argv, env );
+  }
+  else
+  {
+    HMSG( "(e:%d)TO BUNCH %s", errno, argv[0] );
+    IEVAL( r, mas_master_bunch( &gopts, argc, argv, env ) );
+    IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
   }
   return r;
 }

@@ -49,13 +49,17 @@ more:
 
 */
 
+char *std_modpath = NULL;
 
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
+void
+mas_evaluate_set_std_modpath( const char *modpath )
 {
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
+  if ( std_modpath )
+    mas_free( std_modpath );
+  std_modpath = NULL;
+  if ( modpath )
+    std_modpath = mas_strdup( modpath );
 }
-
 
 static mas_evaluated_t *
 _universal_complex_cmd( STD_CMD_ARGS )
@@ -82,26 +86,35 @@ _universal_complex_cmd( STD_CMD_ARGS )
 }
 
 static mas_cmd_fun_t
-_load_cmd_func( const mas_options_t * popts, const char *libname, const char *funname )
+__load_cmd_func( const char *libname, const char *funname, const char *modpath )
 {
   mas_cmd_fun_t cmd_fun = NULL;
 
-  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, popts->dir.mods );
+  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, modpath );
   return cmd_fun;
 }
 
+/* static mas_cmd_fun_t                                                                                       */
+/* _load_cmd_func( const mas_options_t * pqopts, const char *libname, const char *funname, const char *modpath ) */
+/* {                                                                                                          */
+/*   mas_cmd_fun_t cmd_fun = NULL;                                                                            */
+/*                                                                                                            */
+/*   cmd_fun = __load_cmd_func( libname, funname, modpath ? modpath : ( pqopts ? pqopts->dir.mods : NULL ) );       */
+/*   return cmd_fun;                                                                                          */
+/* }                                                                                                          */
+
 static mas_cmd_t *
-_load_subtable_from( const char *libname, const char *path )
+_load_subtable_from( const char *libname, const char *modpath )
 {
   mas_cmd_t *cmd_tab = NULL;
 
-  cmd_tab = ( mas_cmd_t * ) mas_modules_load_symbol_from( libname, "subcmdtable", path );
+  cmd_tab = ( mas_cmd_t * ) mas_modules_load_symbol_from( libname, "subcmdtable", modpath );
   MAS_LOG( "load subtable from %s => %p", libname, ( void * ) cmd_tab );
   return cmd_tab;
 }
 
 static int
-_missing_funsetup( const mas_options_t * popts, mas_cmd_t * pcommand, unsigned level )
+_missing_funsetup( mas_cmd_t * pcommand, unsigned level, const char *modpath )
 {
   int r = -1;
 
@@ -131,23 +144,24 @@ _missing_funsetup( const mas_options_t * popts, mas_cmd_t * pcommand, unsigned l
       {
       }
       {
-        char *full_libname = NULL;
-
-        /* full_libname = mas_strdup( "mas_cmdmod_" ); */
-        tMSG( "lib %s + %s", full_libname, libname );
-        MAS_LOG( "lib %s + %s", full_libname, libname );
-        full_libname = mas_strcat_x( full_libname, libname );
+        /* char *full_libname = NULL;                            */
+        /*                                                       */
+        /* full_libname = mas_strdup( "mas_cmdmod_" );           */
+        /* tMSG( "lib %s + %s", full_libname, libname );         */
+        /* MAS_LOG( "lib %s + %s", full_libname, libname );      */
+        /* full_libname = mas_strcat_x( full_libname, libname ); */
         if ( 0 && name && *name )
         {
           char *full_fun_name = NULL;
 
-          MAS_LOG( "loading  func. %s:%s", full_libname, full_fun_name );
-          cmd_fun = _load_cmd_func( popts, full_libname, full_fun_name );
+          MAS_LOG( "loading  func. %s:%s (%s)", libname, full_fun_name, modpath );
+          /* cmd_fun = _load_cmd_func( pqopts, libname, full_fun_name, modpath ); */
+          cmd_fun = __load_cmd_func( libname, full_fun_name, modpath );
           mas_free( full_fun_name );
         }
         if ( !cmd_fun )
         {
-          loaded_subtable = _load_subtable_from( full_libname, popts->dir.mods );
+          loaded_subtable = _load_subtable_from( libname, modpath );
           if ( loaded_subtable )
           {
             cmd_fun = _universal_complex_cmd;
@@ -157,10 +171,10 @@ _missing_funsetup( const mas_options_t * popts, mas_cmd_t * pcommand, unsigned l
           }
           else
           {
-            EMSG( "No subtable at %s.%s ( opts.dir.mods: '%s' )", libname, name, popts->dir.mods );
+            EMSG( "No subtable at %s.%s ( modpath: '%s' )", libname, name, modpath );
           }
         }
-        mas_free( full_libname );
+        /* mas_free( full_libname ); */
       }
     }
     tMSG( "cmd_fun:%d", cmd_fun ? 1 : 0 );
@@ -257,10 +271,11 @@ mas_evaluate_transaction_command_slash( mas_rcontrol_t * prcontrol, const char *
 }
 
 mas_evaluated_t *
-mas_evaluate_command( const mas_options_t * popts, const char *question )
+mas_evaluate_command( const mas_options_t * pqopts, const char *question )
 {
   WMSG( "EVAL CMD %s", question );
-  return mas_evaluate_transaction_command( NULL, question );
+  /* return mas_evaluate_transaction_command( NULL, question ); */
+  return mas_evaluate_cmd( pqopts, 0, NULL, NULL, NULL, question, question /* args */ , 1 /*level */  );
 }
 
 mas_evaluated_t *
@@ -273,19 +288,20 @@ mas_evaluate_transaction_command( mas_rcontrol_t * prcontrol, const char *questi
 }
 
 mas_evaluated_t *
-mas_evaluate_cmd( STD_CMD_ARGS )
+_mas_evaluate_cmd( STD_CMD_ARGS, const char *modpath )
 {
   int r = 0;
   mas_evaluated_t *answer = NULL;
 
   /* char *sanswer = NULL; */
-
   if ( prcontrol )
   {
     prcontrol->qbin = MSG_BIN_NONE;
-    if ( !popts )
-      popts = prcontrol->plcontrol->popts;
+    if ( !pqopts )
+      pqopts = prcontrol->plcontrol->popts;
   }
+  /* if ( !modpath )                                   */
+  /*   modpath = ( pqopts ? pqopts->dir.mods : NULL ); */
   MAS_LOG( "evaluate: cmd %p", ( void * ) this_command );
   if ( this_command )
   {
@@ -302,13 +318,15 @@ mas_evaluate_cmd( STD_CMD_ARGS )
   {
     MAS_LOG( "evaluate: '%s' args: '%s' cmd:%p", this_command->name, args, ( void * ) ( unsigned long ) this_command );
     /* missing function ptr (this_command->function): */
+    fprintf( stderr, ">>>>>> %d:%s\n", __LINE__, __FILE__ );
     if ( !this_command->function && this_command->name && *( this_command->name ) )
     {
       MAS_LOG( "{%p} must set fun/sbt for module %s.%s : %d : %p", ( void * ) this_command, this_command->libname,
                this_command->name, this_command->function ? 1 : 0, ( void * ) this_command->subtable );
-      r = _missing_funsetup( popts, this_command, level );
+      r = _missing_funsetup( this_command, level, modpath );
       MAS_LOG( "evaluate : missing function - '%s' args: '%s'", this_command->name, args );
     }
+    fprintf( stderr, ">>>>>> %d:%s\n", __LINE__, __FILE__ );
     tMSG( "(%d) function:%d", r, this_command->function ? 1 : 0 );
     if ( r >= 0 && this_command->function )
     {
@@ -316,10 +334,15 @@ mas_evaluate_cmd( STD_CMD_ARGS )
             this_command->function ? 1 : 0, this_command->function == _universal_complex_cmd );
       /* EVALUATING COMMAND */
       HMSG( "EVAL %s", this_command->name );
+      fprintf( stderr, ">>>>>> %d:%s\n", __LINE__, __FILE__ );
       answer = ( this_command->function ) ( STD_CMD_PASS );
 
       /* tMSG( "eval'd A(%s) B(%d)", answer ? ( answer == ( char * ) -1L ? "-" : answer ) : NULL, prcontrol ? prcontrol->qbin : 0 ); */
       HMSG( "QUIT (%s)", this_command->name );
+    }
+    else
+    {
+      fprintf( stderr, ">>>>>> %d:%s - no function\n", __LINE__, __FILE__ );
     }
     {
       FILE *file = NULL;
@@ -368,7 +391,17 @@ mas_evaluate_cmd( STD_CMD_ARGS )
       }
     }
   }
+  else
+  {
+    fprintf( stderr, ">>>>>> %d:%s\n", __LINE__, __FILE__ );
+  }
   return answer;
+}
+
+mas_evaluated_t *
+mas_evaluate_cmd( STD_CMD_ARGS )
+{
+  return _mas_evaluate_cmd( STD_CMD_PASS, ( pqopts ? pqopts->dir.mods : std_modpath ) );
 }
 
 mas_evaluated_t *
@@ -399,4 +432,19 @@ mas_evaluate_list_cmd( STD_CMD_ARGS )
       answer->data = ( void * ) sanswer;
   }
   return answer;
+}
+
+__attribute__ ( ( constructor ) )
+     static void f_constructor( void )
+{
+  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+}
+
+__attribute__ ( ( destructor ) )
+     static void f_destructor( void )
+{
+  if ( std_modpath )
+    mas_free( std_modpath );
+  std_modpath = NULL;
+  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
 }

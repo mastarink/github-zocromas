@@ -36,8 +36,10 @@ function mas_debug ()
 function gdb_core_any ()
 {
   local  dname bname builddir binsdir libsdirs corename
-
-    if corename=$( ls -1tr $coredir/*${rname_preset}.core.$UID.$UID.* | tail -1 ) && [[ -f "$corename" ]] ; then
+  local gid
+  gid="`stat -c%g /proc/$$`"
+# echo "$UID:$gid" >&2
+    if corename=$( ls -1tr $coredir/*${rname_preset}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
       echo "$LINENO $corename" >&2
     else
       echo "$LINENO $corename" >&2

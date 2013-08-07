@@ -202,6 +202,7 @@ sigint_han( int s )
     }
   }
   */
+  /* if ( ctrl.threads.n.main.pid == mas_gettid(  ) ) */
   if ( ctrl.pserver_thread && ctrl.pserver_thread->pid == mas_gettid(  ) )
   {
     int_cnt++;

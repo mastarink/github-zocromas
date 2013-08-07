@@ -29,28 +29,31 @@ static void
 __register_module( const char *name, void *module_handle )
 {
   CTRL_PREPARE;
-  pthread_rwlock_wrlock( &ctrl.thglob.modules_list_rwlock );
+  if ( &ctrl )
   {
-    unsigned cnt, size;
-    void **array;
+    pthread_rwlock_wrlock( &ctrl.thglob.modules_list_rwlock );
+    {
+      unsigned cnt, size;
+      void **array;
 
-    array = ctrl.loaded_modules;
-    /* ctrl.loaded_modules = NULL;  */
-    /* ctrl.loaded_modules_cnt = 0; */
-    cnt = ctrl.loaded_modules_cnt;
-    size = cnt + 1;
+      array = ctrl.loaded_modules;
+      /* ctrl.loaded_modules = NULL;  */
+      /* ctrl.loaded_modules_cnt = 0; */
+      cnt = ctrl.loaded_modules_cnt;
+      size = cnt + 1;
 
-    if ( array )
-      array = mas_realloc( array, sizeof( void * ) * size );
-    else
-      array = mas_malloc( sizeof( void * ) * size );
-    array[cnt] = module_handle;
+      if ( array )
+        array = mas_realloc( array, sizeof( void * ) * size );
+      else
+        array = mas_malloc( sizeof( void * ) * size );
+      array[cnt] = module_handle;
 
-    ctrl.loaded_modules = array;
-    ctrl.loaded_modules_cnt = size;
+      ctrl.loaded_modules = array;
+      ctrl.loaded_modules_cnt = size;
+    }
+    pthread_rwlock_unlock( &ctrl.thglob.modules_list_rwlock );
+    WMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, name );
   }
-  pthread_rwlock_unlock( &ctrl.thglob.modules_list_rwlock );
-  WMSG( "REG.MODULE %u. %s", ctrl.loaded_modules_cnt, name );
 }
 
 void
@@ -65,7 +68,7 @@ void
 mas_modules_unregister( void )
 {
   CTRL_PREPARE;
-  if ( ctrl.loaded_modules_cnt && ctrl.loaded_modules )
+  if ( &ctrl && ctrl.loaded_modules_cnt && ctrl.loaded_modules )
   {
     for ( int im = 0; im < ctrl.loaded_modules_cnt; im++ )
     {

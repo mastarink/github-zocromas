@@ -16,11 +16,22 @@
 #include "mas_autoobject_object.h"
 
 
+static void
+mas_atexit( void )
+{
+  fprintf( stderr, "******************** AT EXIT %s\n", __FILE__ );
+#ifdef MAS_TRACEMEM
+  print_memlist( FL, stderr );
+#endif
+}
+
 void
 testfile( const char *fname, mas_iaccess_type_t atype, int mode )
 {
   int fd = 0;
   mas_autoobject_t *ao;
+
+  atexit( mas_atexit );
 
   ao = mas_autoobject_create(  );
   fprintf( stderr, "@@@@@@ TIMING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n" );
@@ -110,7 +121,7 @@ main( void )
   {
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_FCHAR );
-      mas_autoobject_set_name( ao, NULL, "hwif3.txt" );
+      mas_autoobject_set_name( ao, NULL, "/mnt/new_misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_autoobject/hwif3.txt" );
     }
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
   }
@@ -118,22 +129,31 @@ main( void )
   {
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_SENDFILE );
-      mas_autoobject_set_name( ao, NULL, "hwif3.txt" );
+      mas_autoobject_set_name( ao, NULL, "/mnt/new_misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_autoobject/hwif3.txt" );
     }
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
   }
   printf( "=== SENDFILE (SPLICE ? ?) ===\n" );
   {
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
-    mas_autoobject_set_name( ao, NULL, "hwif2.txt" );
+    mas_autoobject_set_name( ao, NULL, "/mnt/new_misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_autoobject/hwif2.txt" );
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
-    mas_autoobject_set_name( ao, NULL, "hwif1.txt" );
+    mas_autoobject_set_name( ao, NULL, "/mnt/new_misc/develop/autotools/zoc/projects/commonlibs/zocromas_mas_autoobject/hwif1.txt" );
     mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
     {
       mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_SENDFILE );
       mas_autoobject_set_name( ao, NULL, "hwif3.txt" );
     }
+  }
+  printf( "=== MMODULE ===\n" );
+  {
+    int r = 0;
+
+    mas_autoobject_set_iaccess_type( ao, MAS_IACCESS_MMODULE );
+    mas_autoobject_set_name( ao, NULL, "get version" );
+    r = mas_autoobject_cat( STDOUT_FILENO, ao, 0 );
+    fprintf( stderr, "r:%d\n", r );
   }
   mas_autoobject_delete( ao );
   /* testfile( "hwif3.txt", MAS_IACCESS_SENDFILE, 4 ); */
@@ -147,10 +167,18 @@ main( void )
 
 
 
-
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
 #endif
 
   return 0;
+}
+
+__attribute__ ( ( destructor( 10000 ) ) )
+     static void f_destructor( void )
+{
+  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+#ifdef MAS_TRACEMEM
+  print_memlist( FL, stderr );
+#endif
 }

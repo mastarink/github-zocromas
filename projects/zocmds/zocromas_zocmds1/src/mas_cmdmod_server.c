@@ -217,8 +217,9 @@ info_cmd( STD_CMD_ARGS )
                         "\tfirst lts: %s; lts: %s; prev.lts: %s\n"
                         "- ticker : 0x%lx :: %d;%lu;\n"
                         "- watcher: 0x%lx :: stop:%1d;cnt:%lu;\n\n", memory_balance,
-                        level, this_command ? this_command->only_level : 0, popts->uuid,
+                        level, this_command ? this_command->only_level : 0, pqopts->uuid,
                         ctrl.threads.n.main.pid, ctrl.threads.n.master.pid, ctrl.threads.n.daemon.pid,
+                        /* ctrl.threads.n.main.pid, ctrl.threads.n.main.thread, */
                         ctrl.pserver_thread ? ctrl.pserver_thread->pid : 0, ctrl.pserver_thread ? ctrl.pserver_thread->thread : 0,
                         ctrl.restart_cnt,
                         mas_gettid(  ), mas_thread_self_type_name(  ),
@@ -259,9 +260,9 @@ info_cmd( STD_CMD_ARGS )
                         "\tlogdir: \t%s;\n" "\tlogpath:\t%s\n"
                         "\tlog stat (%lu - %lu)\n\n" "\ttracemem:%d\n",
                         ctrl.exepath,
-                        popts->msgfilename,
-                        popts->dir.proto, popts->dir.mods, popts->dir.pids,
-                        popts->dir.history, popts->dir.log, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
+                        pqopts->msgfilename,
+                        pqopts->dir.proto, pqopts->dir.mods, pqopts->dir.pids,
+                        pqopts->dir.history, pqopts->dir.log, ctrl.logpath, ctrl.log_q_came, ctrl.log_q_gone, mas_tracemem_flag );
         cp += len;
         bufsz -= len;
       }
@@ -366,6 +367,11 @@ sigquit_cmd( STD_CMD_ARGS )
 {
   CTRL_PREPARE;
   int r = 0;
+
+  /* HMSG( "KILL -QUIT %u", ctrl.threads.n.main.pid );         */
+  /* if ( ctrl.threads.n.main.pid )                            */
+  /*   r = kill( ctrl.threads.n.main.pid, SIGQUIT );           */
+  /* HMSG( "(%d) KILL -QUIT %u", r, ctrl.threads.n.main.pid ); */
 
   HMSG( "KILL -QUIT %u", ctrl.pserver_thread->pid );
   if ( ctrl.pserver_thread && ctrl.pserver_thread->pid )

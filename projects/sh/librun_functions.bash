@@ -76,9 +76,9 @@ function run_any ()
 
   if [[ "$MAS_USE_RUN_STRACE" ]] ; then
 #   straceit='strace -q -fr -C -o strace.tmp'
-    straceit="strace -q -fr -C -o ${TMPdir:-/tmp}/strace.$MAS_USE_RUN_STRACE.`datemt`.tmp"
+    straceit="strace -q -fr -C -o ${MAS_PROJECTS_TMPDIR:-/tmp}/strace.$MAS_USE_RUN_STRACE.`datemt`.tmp"
   fi
-#  export LD_DEBUG_OUTPUT="${TMPdir:-/tmp}/${bin_name}.ld_debug"
+#  export LD_DEBUG_OUTPUT="${MAS_PROJECTS_TMPDIR:-/tmp}/${bin_name}.ld_debug"
 #  export LD_DEBUG='all'
 
   if [[ "$MAS_SOURCED" ]] ; then
@@ -123,6 +123,7 @@ function run_any ()
   else
    echo "make error" >&2
   fi
+  psshow
   echo "bash:$MAS_ZOCROMAS_HERE exited" >&2
 }
 function eddiffconfig ()
@@ -180,7 +181,12 @@ function psshow ()
 #   psshowz
 # ##    | cut -b-150 | sed -ne 's/$/  .../p'
 # fi
-  psshowz >/dev/null && psshowz || echo "No" >&2
+  if psshowz >/dev/null && psshowz ; then
+    return 0
+  else
+    echo "No" >&2
+    return 1
+  fi
 }
 function psshowc ()
 {

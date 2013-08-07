@@ -131,6 +131,7 @@ mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot )
 
   return p;
 }
+
 /* 
  * returns next arg address, pthis to set this, plen to set this length
  * */
@@ -335,12 +336,15 @@ mas_add_argv_arg( int targc, char ***ptargv, const char *arg )
 int
 mas_del_argv( int targc, char **targv, int from_a )
 {
-  for ( int ia = from_a; ia < targc; ia++ )
+  if ( targv && targc )
   {
-    mas_free( targv[ia] );
-    targv[ia] = NULL;
+    for ( int ia = from_a; ia < targc; ia++ )
+    {
+      mas_free( targv[ia] );
+      targv[ia] = NULL;
+    }
+    mas_free( targv );
   }
-  mas_free( targv );
   return 0;
 }
 

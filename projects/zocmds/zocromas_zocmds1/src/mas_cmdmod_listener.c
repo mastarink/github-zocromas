@@ -91,7 +91,7 @@ listener_add_cmd( STD_CMD_ARGS )
 
     if ( !plcontrol )
     {
-      mas_listener_start( popts, targv[0], port );
+      mas_listener_start( pqopts, targv[0], port );
     }
 
     cMSG( "Listener add %s:%u", targv[0], port );

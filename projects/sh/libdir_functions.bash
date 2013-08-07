@@ -1,3 +1,4 @@
+export MAS_PROJECTS_DIR MAS_PROJECTS_TMPDIR MAS_PROJECTS_LIST
 function datem () 
 { 
     /bin/date '+%Y%m%d'
@@ -12,8 +13,8 @@ function make_dirs ()
 #   mkdir "$savedir" || echo "$LINENO ERROR make_dirs" >&2
 # fi
   if ! [[ -d "$projectsdir" ]] ; then return 1 ; fi
-  if ! [[ -d "$TMPdir" ]]; then
-    mkdir "$TMPdir" || echo "$LINENO ERROR make_dirs" >&2
+  if ! [[ -d "$MAS_PROJECTS_TMPDIR" ]]; then
+    mkdir "$MAS_PROJECTS_TMPDIR" || echo "$LINENO ERROR make_dirs" >&2
   fi
   
   if [[ -d "$savedir" ]] && ! [[ -d "$savedirdist" ]]; then
@@ -123,7 +124,7 @@ function setup_dirs ()
     if [[ "$MAS_SH_VERBOSE" ]] ; then echo "FLAVOUR: [${mas_flavour:-default}] -- $flavourdir" >&2 ; fi
     instshdir="$admindir/install.sh"
     tworkdir="$admindir/tmp"
-    TMPdir="/tmp/zoc"
+    MAS_PROJECTS_TMPDIR="/tmp/zoc"
 
 # see `sysctl kernel.core_pattern`
     coredir="/tmp"
@@ -182,10 +183,11 @@ function setup_dirs ()
 function grepch0 ()
 {  
   local project projects_list res
-  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
-      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}} >/dev/null || return 1
+  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}} >/dev/null || return 1
       arg="$@"
 #     find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -okdir grep -H --color=yes $@ \{\} \; || return 1
+      echo "find..." >&2
       find $projects_list \( -name .build -prune \) -o -type f -name '*.[ch]' -execdir grep -H --color=yes $arg \{\} \+
       popd >/dev/null
 #   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
@@ -199,24 +201,36 @@ function grepch0 ()
 }
 function grepch ()
 {
-  grepch0 $@ | sed  's/^\(.*\)\.\/\([^:]*\)\s*:\s*\(.*\)$/\1\2\t\3/' | cat -n
+  local saveresult="${MAS_PROJECTS_DIR}/last_grepch_result.txt"
+  echo "# `date`" >$saveresult
+  echo "# grepau $@" >>$saveresult
+  grepch0 $@ | sed  's/^\(.*\)\.\/\([^:]*\)\s*:\s*\(.*\)$/\1\2\t\3/' | cat -n >>$saveresult
+  cat $saveresult
 }
-function grepau ()
+function egrepch ()
+{
+  local num
+  local gfile
+  local saveresult="${MAS_PROJECTS_DIR}/last_grepch_result.txt"
+  num=$(( 0 + $1 ))
+# grep  "^\s*$num\>" $saveresult >&2
+  gfile=$(sed -ne "s/^[[:space:]]*\($num\b\)[[:space:]]\+\x1b\[33m\x1b\[K\([^[:space:]\n\r\x1b]\+\)\(.*\)$/\2/p" $saveresult)
+  echo -n "[$gfile]" >&2
+  if [[ "$MAS_PERSONAL_EDITOR" ]] && [[ "$gfile" ]] ; then
+   "$MAS_PERSONAL_EDITOR" $gfile
+  fi
+}
+function grepau0 ()
 {
   local project projects_list 
-  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
-      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}} || return 1
+  if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+      pushd ${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}} || return 1
       arg="$@"
       echo "arg: '$arg'" >&2
 #      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' || return 1
 #      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -okdir grep -H --color=yes $@ \{\} \; || return 1
-      if find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color=yes $arg \{\} \+ ; then
-        popd >/dev/null
-        return 0
-      else
-        popd >/dev/null
-        return 1
-      fi
+      find $projects_list \( -name .build -prune \) -o -type f -name '*.a[mc]' -exec grep -H --color=yes $arg \{\} \+
+      popd >/dev/null
 #   grep --color=yes -r --inc='*.[ch]' "$@" {commonlibs,bins,zoc*}
 #   find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color=yes $@ \{\} \; | sed -ne 's@^\.\/@@p'
 #     find {commonlibs,bins,zoc*} -not -path '*/.build/*' -type f -name '*.[ch]' -execdir grep -H --color=yes $@ \{\} \+
@@ -225,6 +239,14 @@ function grepau ()
     return 1
   fi
   return 0
+}
+function grepau ()
+{
+  local saveresult="${MAS_PROJECTS_DIR}/last_grepau_result.txt"
+  echo "# `date`" >$saveresult
+  echo "# grepau $@" >>$saveresult
+  grepau0 $@ | sed  's/^\(.*\)\.\/\([^:]*\)\s*:\s*\(.*\)$/\1\2\t\3/' | cat -n  >$saveresult
+  cat $saveresult
 }
 
 function wdproj_scan_project_1 ()
@@ -256,7 +278,7 @@ function proj_scan ()
   local scanner=$1
   shift
   if [[ "${MAS_PROJECTS_DIR}" ]] ; then
-    for prj in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`} ; do
+    for prj in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`} ; do
       tmp_wd=${MAS_PROJECTS_DIR}/${prj}
       tmp_name=$( basename $tmp_wd )
       if [[ "$tmp_wd" ]] && [[ "$tmp_name" ]] && "$scanner" "$prj" "$project" "$tmp_name" ; then
@@ -300,8 +322,8 @@ function wdproj_scan ()
 }
 function wdproj ()
 {
-  export MAS_PROJECTS_LIST MAS_PROJECT_NAME MAS_PROJECT_DIR
-  unset MAS_ADMIN_DIR MAS_PROJECT_AUXDIR MAS_PROJECT_BUILDDIR MAS_PROJECT_MAKE_ERRDIR MAS_PROJECT_MAKE_LOGNAME
+  export MAS_PROJECT_NAME MAS_PROJECT_DIR
+  unset MAS_ADMIN_DIR MAS_PROJECT_AUXDIR MAS_PROJECT_BUILDDIR MAS_PROJECT_MAKE_ERRDIR MAS_PROJECT_MAKE_LOGNAME MAS_PROJECTS_TMPDIR
   local project="$1" 
   shift
   local docd=${1:-cd}
@@ -313,7 +335,7 @@ function wdproj ()
       echo "DOT : '$MAS_PROJECT_NAME'" >&2
       project=$MAS_PROJECT_NAME
     fi
-    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
       for meth in wdproj_scan_project_1 wdproj_scan_project_2 ; do
 #        echo "meth: $meth" >&2
         wdproj_scan "$project" $meth ${docd:-cd} && return 0
@@ -336,7 +358,7 @@ function wdproj ()
 }
 function is_in_project ()
 {
-  for p in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${TMPdir:-/tmp}}}/projects.list}|tr '\n' ' '`} ; do
+  for p in ${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`} ; do
     echo PRoject:$p >&2
   done
 }

@@ -6,10 +6,10 @@
 
 #  define STD_CMD_ARGS_BASE const char *question, const char *args, unsigned level
 /* #  define STD_CMD_ARGS mas_channel_t * pchannel, STD_CMD_ARGS_BASE */
-#  define STD_CMD_ARGS const mas_options_t * popts, unsigned nesting, mas_cmd_t * this_table, mas_cmd_t * this_command, mas_rcontrol_t * prcontrol, STD_CMD_ARGS_BASE
+#  define STD_CMD_ARGS const mas_options_t * pqopts, unsigned nesting, mas_cmd_t * this_table, mas_cmd_t * this_command, mas_rcontrol_t * prcontrol, STD_CMD_ARGS_BASE
 
 #  define STD_CMD_PASS_BASE question, args, level
-#  define STD_CMD_PASS popts, nesting, this_table, this_command, prcontrol, STD_CMD_PASS_BASE
+#  define STD_CMD_PASS pqopts, nesting, this_table, this_command, prcontrol, STD_CMD_PASS_BASE
 
 #  include <mastar/types/mas_transaction_control_types.h>
 

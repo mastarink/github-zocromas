@@ -30,6 +30,11 @@ static int mas_error_handler( const char *func, int line, int issys, int rcode, 
 
 mas_control_t ctrl = {
   .main_exit = 0,
+  .rerun = 1,
+  .rerun_early = 1,
+  .get_cmdline = 1,
+  .get_cmdenv = 0,
+  .rerun_name = "ZOCSer",
   .threads = {.n = {
                     .main = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
                     .master = {.pid = 0,.tid = 0,.thread = ( pthread_t ) 0},
@@ -118,7 +123,8 @@ mas_control_t ctrl = {
   .log_disabled = 0,
   .opts_saved = 0,
   .opts_saved_plus = 0,
-  .mas_thread_key_once = PTHREAD_ONCE_INIT,
+  /* .mas_thread_key_once = PTHREAD_ONCE_INIT, */
+  .thread_ctrl = {.key_once = PTHREAD_ONCE_INIT, .tools_key_once = PTHREAD_ONCE_INIT},
   .ticker_hide = 0,
   .ticker_mode = 0,
   .tick_cnt = 0,
@@ -144,7 +150,8 @@ mas_control_t ctrl = {
 };
 
 static int
-mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt, const char *msg )
+mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
+                   const char *msg )
 {
   if ( !ctrl.stderrfile
        || fprintf( ctrl.stderrfile, "[%d]************ (%d) ERROR %s:%d [%s]\n", __LINE__, rcode, func, line, msg ? msg : "-" ) < 0 )

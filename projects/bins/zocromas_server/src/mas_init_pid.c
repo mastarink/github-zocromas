@@ -26,6 +26,40 @@
 
 #include "mas_init_pid.h"
 
+static int
+cref( const char *pidpath, const char *dir )
+{
+  EVAL_PREPARE;
+  int r = 0;
+
+  /* mas_clear_last_error(  ); */
+  YEVALM( r, mas_open( pidpath, O_CREAT | O_RDWR | O_EXCL, S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
+  if ( r < 0 )
+  {
+    const mas_std_error_t *e;
+
+    /* char errbuf[1024]; */
+    /* char *se = NULL; */
+
+    e = mas_get_last_error(  );
+    if ( e )
+    {
+      switch ( e->merrno )
+      {
+      case ENOENT:
+        r = 0;
+        HMSG( "(%d)CREF - NO DIR : %s", r, pidpath );
+        IEVAL( r, mkdir( dir, S_IWUSR | S_IRUSR | S_IXUSR ) );
+        if ( r >= 0 )
+          r = -999;
+        break;
+      }
+      /* se = strerror_r( e->merrno, errbuf, sizeof( errbuf ) ); */
+      /* HMSG( "(%d)CREF 1 : %s [errno:%d] %s", r, pidpath, e->merrno, se ); */
+    }
+  }
+  return r;
+}
 
 static int
 _mas_init_pid( mas_options_t * popts, const char *shash_name )
@@ -39,8 +73,15 @@ _mas_init_pid( mas_options_t * popts, const char *shash_name )
   pidpath = mas_strdup( popts->dir.pids );
   pidpath = mas_strcat_x( pidpath, shash_name );
 
-  YEVALM( r, mas_open( pidpath, O_CREAT | O_RDWR | O_EXCL, S_IWUSR | S_IRUSR ), "(%d) file:%s", pidpath );
+  r = cref( pidpath, popts->dir.pids );
+  if ( r == -999 )
+    r = cref( pidpath, popts->dir.pids );
   HMSG( "(%d)PIDPATH 1 : %s", r, pidpath );
+  if ( r < 0 )
+  {
+    r = 0;
+    IEVAL( r, mas_open( pidpath, O_RDWR | O_EXCL, S_IWUSR | S_IRUSR ) );
+  }
   if ( r >= 0 )
   {
     CTRL_PREPARE;
@@ -58,8 +99,9 @@ _mas_init_pid( mas_options_t * popts, const char *shash_name )
       char buf[64];
 
       lb = snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
+      IEVAL( r, ftruncate( ctrl.pidfd, 0 ) );
       IEVAL( r, write( ctrl.pidfd, buf, lb ) );
-      WMSG( "PIDWRT: %d pid:%u", r, ctrl.threads.n.main.pid );
+      HMSG( "PIDWRT: %d pid:%u W:%ld", r, ctrl.threads.n.main.pid, lb );
       ctrl.pidfilesv.c = mas_add_argv_arg_nodup( ctrl.pidfilesv.c, &ctrl.pidfilesv.v, pidpath );
       pidpath = NULL;
     }
@@ -80,40 +122,44 @@ int
 mas_init_pids( mas_options_t * popts, const char **message )
 {
   int r = 0;
-  size_t shash_namebuf_size = 512;
-  char *shash_namebuf = NULL;
 
-  /* ctrl.threads.n.main.tid = mas_gettid(  );          */
-  /* ctrl.threads.n.main.pid = getpid(  );              */
-  /* ctrl.threads.n.main.thread = mas_pthread_self(  ); */
-  /* ctrl.pserver_thread = &ctrl.threads.n.main;        */
-
-  shash_namebuf = mas_malloc( shash_namebuf_size );
-  MAS_LOG( "(%d) init pids", r );
-  if ( shash_namebuf )
+  if ( !popts->nopidfile )
   {
-    CTRL_PREPARE;
+    size_t shash_namebuf_size = 512;
+    char *shash_namebuf = NULL;
 
-    *shash_namebuf = 0;
-    WMSG( "PIDSDIR: %s", popts->dir.pids );
-    if ( popts->single_instance && popts->dir.pids )
+    /* ctrl.threads.n.main.tid = mas_gettid(  );          */
+    /* ctrl.threads.n.main.pid = getpid(  );              */
+    /* ctrl.threads.n.main.thread = mas_pthread_self(  ); */
+    /* ctrl.pserver_thread = &ctrl.threads.n.main;        */
+
+    shash_namebuf = mas_malloc( shash_namebuf_size );
+    MAS_LOG( "(%d) init pids", r );
+    if ( shash_namebuf )
     {
-      snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.pid", ctrl.is_client ? "client" : "server" );
+      CTRL_PREPARE;
+
+      *shash_namebuf = 0;
+      WMSG( "PIDSDIR: %s", popts->dir.pids );
+      if ( popts->single_instance && popts->dir.pids )
+      {
+        snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.pid", ctrl.is_client ? "client" : "server" );
+      }
+      else if ( popts->single_child && popts->dir.pids )
+      {
+        snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
+      }
+      if ( *shash_namebuf )
+      {
+        r = _mas_init_pid( popts, shash_namebuf );
+      }
+      HMSG( "(%d) INIT PID done", r );
+      mas_free( shash_namebuf );
     }
-    else if ( popts->single_child && popts->dir.pids )
-    {
-      snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
-    }
-    if ( *shash_namebuf )
-    {
-      r = _mas_init_pid( popts, shash_namebuf );
-    }
-    HMSG( "(%d) INIT PID done", r );
-    mas_free( shash_namebuf );
+    MAS_LOG( "(%d) init pids done", r );
+
+    HMSG( "(%d) INIT PIDs done", r );
   }
-  MAS_LOG( "(%d) init pids done", r );
-
-  HMSG( "(%d) INIT PIDs done", r );
   if ( message )
     *message = __func__;
   return r < 0 ? r : 0;

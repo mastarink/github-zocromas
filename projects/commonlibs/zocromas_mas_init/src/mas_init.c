@@ -37,7 +37,7 @@
 
 #include <mastar/options/mas_opts.h>
 #include <mastar/options/mas_opts_save.h>
-#include <mastar/options/mas_opts_restore.h>
+/* #include <mastar/options/mas_opts_restore.h> */
 #include <mastar/options/mas_cli_opts.h>
 
 #include "mas_sig.h"
@@ -413,6 +413,28 @@ mas_destroy( mas_options_t * popts )
     if ( ctrl.exename )
       mas_free( ctrl.exename );
     ctrl.exename = NULL;
+    {
+      if ( ctrl.cmdline )
+        mas_free( ctrl.cmdline );
+      ctrl.cmdline = NULL;
+      if ( ctrl.cmdargv.c && ctrl.cmdargv.v )
+      {
+        mas_del_argv( ctrl.cmdargv.c, ctrl.cmdargv.v, 0 );
+      }
+      ctrl.cmdargv.c = 0;
+      ctrl.cmdargv.v = NULL;
+      if ( ctrl.cmdenv )
+        mas_free( ctrl.cmdenv );
+    }
+    {
+      ctrl.cmdenv = NULL;
+      if ( ctrl.cmdenvv.c && ctrl.cmdenvv.v )
+      {
+        mas_del_argv( ctrl.cmdenvv.c, ctrl.cmdenvv.v, 0 );
+      }
+      ctrl.cmdenvv.c = 0;
+      ctrl.cmdenvv.v = NULL;
+    }
   }
   IEVAL( r, mas_ctrl_destroy(  ) );
   r = 0;
