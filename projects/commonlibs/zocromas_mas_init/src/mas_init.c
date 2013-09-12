@@ -38,7 +38,7 @@
 #include <mastar/options/mas_opts.h>
 #include <mastar/options/mas_opts_save.h>
 /* #include <mastar/options/mas_opts_restore.h> */
-#include <mastar/options/mas_cli_opts.h>
+/* #include <mastar/options/mas_cli_opts.h> */
 
 #include "mas_sig.h"
 #include "mas_init.h"
@@ -270,15 +270,15 @@ mas_init_vplus( mas_options_t * popts, va_list args )
 }
 
 int
-mas_init_set( mas_options_t * popts, int argc, char **argv, char **env, int funcnt, mas_init_fun_t * init_funcs )
+mas_init_set_n( mas_options_t * popts, /* int argc, char **argv, char **env, */ int funcnt, mas_init_fun_t * init_funcs )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;
   int r = 0;
   int ifu = 0;
 
-  WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
-  IEVAL( r, mas_init( popts, argc, argv, env ) );
+  /* WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" ); */
+  /* IEVAL( r, mas_init( popts, argc, argv, env ) );                                                       */
 
   WMSG( "INIT S+" );
   for ( ifu = 0; ifu < funcnt && !r && !ctrl.is_parent && !ctrl.is_parent; ifu++ )
@@ -290,11 +290,50 @@ mas_init_set( mas_options_t * popts, int argc, char **argv, char **env, int func
     {
       const char *msg = NULL;
 
-      HMSG( "(%d) + INIT S #%d", r, ifu );
+      HMSG( "(%d) + INIT S #%d [%p] %d:[%p]", r, ifu, ( void * ) ( unsigned long long ) fun, ifu,
+            ( void * ) ( unsigned long long ) init_funcs[ifu] );
       IEVAL( r, ( fun ) ( popts, &msg ) );
       MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
       HMSG( "(%d) - INIT S #%d %s", r, ifu, msg ? msg : "-" );
       /* ( ctrl.error_handler ) ( FL, 77 ); */
+    }
+  }
+  HMSG( "(%d) INIT V done (#%d) is_parent:%d", r, ifu, ctrl.is_parent );
+  MAS_LOG( "(%d) init + done", r );
+
+  MAS_LOG( "(%d) init done e%d", r, errno );
+  HMSG( "(%d)INIT %s", r, r < 0 ? "FAIL" : "OK" );
+  ctrl.inited = 1;
+  return r;
+}
+
+int
+mas_init_set_z( mas_options_t * popts, /* int argc, char **argv, char **env, */ mas_init_fun_t * init_funcs )
+{
+  CTRL_PREPARE;
+  EVAL_PREPARE;
+  int r = 0;
+  int ifu = 0;
+  mas_init_fun_t *funcs = init_funcs;
+
+  /* WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" ); */
+  /* IEVAL( r, mas_init( popts, argc, argv, env ) );                                                       */
+
+  WMSG( "INIT S+" );
+  {
+    mas_init_fun_t fun;
+
+    while ( ( fun = *funcs++ ) && !r && !ctrl.is_parent && !ctrl.is_parent )
+    {
+      const char *msg = NULL;
+
+      HMSG( "(%d) + INIT S #%d [%p] %d:[%p]", r, ifu, ( void * ) ( unsigned long long ) fun, ifu,
+            ( void * ) ( unsigned long long ) init_funcs[ifu] );
+      IEVAL( r, ( fun ) ( popts, &msg ) );
+      MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
+      HMSG( "(%d) - INIT S #%d %s", r, ifu, msg ? msg : "-" );
+      /* ( ctrl.error_handler ) ( FL, 77 ); */
+      ifu++;
     }
   }
   HMSG( "(%d) INIT V done (#%d) is_parent:%d", r, ifu, ctrl.is_parent );
@@ -466,26 +505,29 @@ mas_destroy( mas_options_t * popts )
 }
 
 __attribute__ ( ( constructor( 2100 ) ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
   CTRL_PREPARE;
-  char name[512];
+  /* char name[512]; */
 
   /* char *value = NULL; */
 
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
+
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
 
-  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid );
+  /* snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", ctrl.threads.n.main.pid ); */
   /* value = getenv( name ); */
-  /* fprintf( stderr, "******************** [%s='%s'] /CONSTRUCTOR %s e%d\n", name, value, __FILE__, errno ); */
+  /* fprintf( stderr, "******************** [%s='%s'] /CONSTRUCTOr %s e%d\n", name, value, __FILE__, errno ); */
   /* ctrl.is_server = 0; */
   /* ctrl.is_client = 0; */
 }
 
 __attribute__ ( ( destructor ) )
-     static void master_destructor( void )
+     static void mas_destructor( void )
 {
-  /* fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno ); */
+  /* fprintf( stderr, "******************** DESTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_destructor( IL, 1 );
 }

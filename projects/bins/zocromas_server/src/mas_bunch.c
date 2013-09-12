@@ -10,6 +10,8 @@
 #include <mastar/wrap/mas_lib_thread.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_tools.h>
+
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
@@ -29,6 +31,8 @@
 #include <mastar/init/mas_init_modules.h>
 
 #include <mastar/options/mas_cli_opts.h>
+#include <mastar/options/mas_cli_opts_data.h>
+
 #include <mastar/init/mas_sig.h>
 
 #include <mastar/control/mas_control.h>
@@ -118,6 +122,7 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
     /* Moved to mas_control.c constructor */
     /* mas_init_proc, */
     mas_init_opt_files,
+    mas_cli_options_data_init,
     mas_cli_options_init,
     mas_ctrl_init,
     mas_init_set_msg_file,
@@ -129,7 +134,8 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
     mas_init_load_protos,
     mas_lcontrols_init,
     mas_init_uuid,
-    mas_post_init
+    mas_post_init,
+    NULL
   };
 #  if 0
   {
@@ -139,7 +145,10 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
     }
   }
 #  endif
-  IEVAL( r, mas_init_set( popts, argc, argv, env, sizeof( init_funcs ) / sizeof( init_funcs[0] ), init_funcs ) );
+  WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
+  IEVAL( r, mas_init( popts, argc, argv, env ) );
+//  IEVAL( r, mas_init_set_n( popts, /* argc, argv, env, */ sizeof( init_funcs ) / sizeof( init_funcs[0] ), init_funcs ) );
+  IEVAL( r, mas_init_set_z( popts, /* argc, argv, env, */ init_funcs ) );
 #endif
   if ( r >= 0 )
   {
@@ -229,8 +238,8 @@ mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
 }
 
 __attribute__ ( ( constructor( 1100 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
 }

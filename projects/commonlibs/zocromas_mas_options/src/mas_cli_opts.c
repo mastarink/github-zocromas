@@ -9,6 +9,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_tools.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -19,6 +20,7 @@
 
 
 
+#include "mas_cli_opts_def.h"
 #include "mas_cli_opts.h"
 
 
@@ -47,176 +49,11 @@ related:
 /*   return getopt_long_only( argc, argv, optstring, longopts, longindex );                                                   */
 /* }                                                                                                                          */
 
-typedef enum mas_cli_opts_e
-{
-  MAS_CLI_OPT_NONE,
-  MAS_CLI_OPT_TEST = 't',
-  MAS_CLI_OPT_HELP = 'h',
-  MAS_CLI_OPT_INFO = 'i',
-  MAS_CLI_OPT_QUIT = 'q',
-  MAS_CLI_OPT_DAEMON = 'd',
-  MAS_CLI_OPT_HOST = 'H',
-  MAS_CLI_OPT_PORT = 'P',
-  MAS_CLI_OPT_MODSDIR = 'M',
-  MAS_CLI_OPT_LOGDIR = 'L',
-  MAS_CLI_OPT_PLUS = 10000,
-  MAS_CLI_OPT_HISTORYDIR,
-  MAS_CLI_OPT_PROTODIR,
-  MAS_CLI_OPT_PROTO,
-  MAS_CLI_OPT_NODAEMON,
-  MAS_CLI_OPT_SYSDAEMON,
-  MAS_CLI_OPT_NOSYSDAEMON,
-  MAS_CLI_OPT_MSG,
-  MAS_CLI_OPT_INIT_MSG,
-  MAS_CLI_OPT_NOMSG,
-  MAS_CLI_OPT_READ_HOME_OPTS,
-  MAS_CLI_OPT_NOREAD_HOME_OPTS,
-  MAS_CLI_OPT_NOHOSTS,
-  MAS_CLI_OPT_NOPROTOS,
-  MAS_CLI_OPT_REDIRECT_STD,
-  MAS_CLI_OPT_NOREDIRECT_STD,
-  MAS_CLI_OPT_CLOSE_STD,
-  MAS_CLI_OPT_NOCLOSE_STD,
-  MAS_CLI_OPT_MESSAGES_PARENT,
-  MAS_CLI_OPT_MESSAGES_CHILD,
-  MAS_CLI_OPT_MESSAGES,
-  MAS_CLI_OPT_NOMESSAGES_PARENT,
-  MAS_CLI_OPT_NOMESSAGES_CHILD,
-  MAS_CLI_OPT_NOMESSAGES,
-  MAS_CLI_OPT_NOLOGGER,
-  MAS_CLI_OPT_LOGGER,
-  MAS_CLI_OPT_NOLOG,
-  MAS_CLI_OPT_LOG,
-  MAS_CLI_OPT_NOTICKER,
-  MAS_CLI_OPT_TICKER,
-  MAS_CLI_OPT_TICKER_MODE,
-  MAS_CLI_OPT_NOWATCHER,
-  MAS_CLI_OPT_WATCHER,
-  MAS_CLI_OPT_NOMASTER,
-  MAS_CLI_OPT_MASTER,
-  MAS_CLI_OPT_NOMASTER_THREAD,
-  MAS_CLI_OPT_MASTER_THREAD,
-  MAS_CLI_OPT_PIDFILE,
-  MAS_CLI_OPT_NOPIDFILE,
-  MAS_CLI_OPT_LISTEN,
-  MAS_CLI_OPT_NOLISTEN,
-  MAS_CLI_OPT_LISTENER,
-  MAS_CLI_OPT_NOLISTENER,
-  MAS_CLI_OPT_EXITSLEEP,
-  MAS_CLI_OPT_LISTENER_SINGLE,
-  MAS_CLI_OPT_TRANSACTION_SINGLE,
-  MAS_CLI_OPT_COMMAND,
-  MAS_CLI_OPT_MSGTO,
-  MAS_CLI_OPT_STDERRTO,
-  MAS_CLI_OPT_STDOUTTO,
-  MAS_CLI_OPT_SINGLE_INSTANCE,
-  MAS_CLI_OPT_NOSINGLE_INSTANCE,
-  MAS_CLI_OPT_SINGLE_CHILD,
-  MAS_CLI_OPT_NOSINGLE_CHILD,
-  MAS_CLI_OPT_SAVE_USER_OPTS,
-  MAS_CLI_OPT_NOSAVE_USER_OPTS,
-} mas_cli_opts_t;
+
 
 /* thM:L:dH:P: */
  /* static char cli_enabled_options[] = "thM:L:dH:P:"; */
 
-static struct option cli_longopts[] = {
-  {"test", no_argument, NULL, MAS_CLI_OPT_TEST},
-  {"help", no_argument, NULL, MAS_CLI_OPT_HELP},
-  {"info", no_argument, NULL, MAS_CLI_OPT_INFO},
-  {"quit", no_argument, NULL, MAS_CLI_OPT_QUIT},
-  {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},
-
-  {"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
-  {"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
-  {"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE},
-
-  {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},
-  {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},
-
-  {"save-user-opts", optional_argument, NULL, MAS_CLI_OPT_SAVE_USER_OPTS},
-  {"nosave-user-opts", no_argument, NULL, MAS_CLI_OPT_NOSAVE_USER_OPTS},
-
-  {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},
-  {"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO},
-  {"redirect-stderr", required_argument, NULL, MAS_CLI_OPT_STDERRTO},
-  {"redirect-stdout", required_argument, NULL, MAS_CLI_OPT_STDOUTTO},
-  {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},
-  {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},
-
-  {"parent-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_PARENT},
-  {"noparent-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_PARENT},
-
-  {"child-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_CHILD},
-  {"nochild-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_CHILD},
-
-  {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},
-  {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},
-
-  {"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD},
-  {"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD},
-
-  {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},
-  {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},
-
-  {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},
-  {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},
-
-  {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},
-  {"log", no_argument, NULL, MAS_CLI_OPT_LOG},
-
-  {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},
-  {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},
-  {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
-  {"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR},
-
-  {"noread-home-config", no_argument, NULL, MAS_CLI_OPT_NOREAD_HOME_OPTS},
-  {"read-home-config", no_argument, NULL, MAS_CLI_OPT_READ_HOME_OPTS},
-
-  {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER},
-  {"watcher", no_argument, NULL, MAS_CLI_OPT_WATCHER},
-
-  {"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
-  {"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER},
-  {"set-ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE},
-
-  {"nopidfile", no_argument, NULL, MAS_CLI_OPT_NOPIDFILE},
-  {"pidfile", no_argument, NULL, MAS_CLI_OPT_PIDFILE},
-
-  {"nomaster", required_argument, NULL, MAS_CLI_OPT_NOMASTER},
-  {"master", no_argument, NULL, MAS_CLI_OPT_MASTER},
-
-  {"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD},
-  {"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD},
-
-  {"nolistener", required_argument, NULL, MAS_CLI_OPT_NOLISTENER},
-  {"listener", no_argument, NULL, MAS_CLI_OPT_LISTENER},
-
-  {"nolisten", required_argument, NULL, MAS_CLI_OPT_NOLISTEN},
-  {"listen", no_argument, NULL, MAS_CLI_OPT_LISTEN},
-
-  {"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON},
-  {"daemon", no_argument, NULL, MAS_CLI_OPT_DAEMON},
-
-  {"nosysdaemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},
-  {"sysdaemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},
-
-  {"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},
-  {"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},
-
-  {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},
-  {"noprotos", no_argument, NULL, MAS_CLI_OPT_NOPROTOS},
-  {"host", required_argument, NULL, MAS_CLI_OPT_HOST},
-  {"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS},
-  {"port", required_argument, NULL, MAS_CLI_OPT_PORT},
-
-  {"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG},
-  {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},
-  {"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG},
-  {"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG},
-
-  {NULL, 0, NULL, 0},
-};
 
 long
 mas_cli_optval( const char *arg, long def, int *pr )
@@ -258,10 +95,13 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
     popts->test = 1;
     break;
   case MAS_CLI_OPT_HELP:
-    for ( int io = 0; io < sizeof( cli_longopts ) / sizeof( cli_longopts[0] ); io++ )
-    {
-      HMSG( "O:%s", cli_longopts[io].name );
-    }
+    /* for ( int io = 0; io < sizeof( cli_longopts ) / sizeof( cli_longopts[0] ); io++ ) */
+    if ( popts )
+      for ( int io = 0; io < popts->cli_longopts_num; io++ )
+      {
+        /* HMSG( "O:%s", cli_longopts[io].name ); */
+        HMSG( "O:%s", popts->cli_longopts[io].name );
+      }
     break;
   case MAS_CLI_OPT_INFO:
     HMSG( "O:INFO" );
@@ -553,8 +393,8 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *m_optarg )
   return r;
 }
 
-char *
-mas_cli_enabled_options( void )
+static char *
+mas_cli_enabled_options( mas_options_t * popts )
 {
   /* struct option       */
   /* {                   */
@@ -565,20 +405,22 @@ mas_cli_enabled_options( void )
   /* };                  */
   char *s = NULL;
 
-  for ( int io = 0; io < sizeof( cli_longopts ) / sizeof( cli_longopts[0] ); io++ )
-  {
-    char opt[10];
-
-    if ( cli_longopts[io].val < MAS_CLI_OPT_PLUS )
+  /* for ( int io = 0; io < sizeof( cli_longopts ) / sizeof( cli_longopts[0] ); io++ ) */
+  if ( popts && popts->cli_longopts )
+    for ( int io = 0; io < popts->cli_longopts_num; io++ )
     {
-      opt[0] = ( char ) cli_longopts[io].val;
-      opt[1] = 0;
-      opt[2] = 0;
-      if ( cli_longopts[io].has_arg == required_argument /* || cli_longopts[io].has_arg == optional_argument */  )
-        opt[1] = ':';
-      s = mas_strcat_x( s, opt );
+      char opt[10];
+
+      if ( popts->cli_longopts[io].val < MAS_CLI_OPT_PLUS )
+      {
+        opt[0] = ( char ) popts->cli_longopts[io].val;
+        opt[1] = 0;
+        opt[2] = 0;
+        if ( popts->cli_longopts[io].has_arg == required_argument /* || popts->cli_longopts[io].has_arg == optional_argument */  )
+          opt[1] = ':';
+        s = mas_strcat_x( s, opt );
+      }
     }
-  }
   return s;
 }
 
@@ -615,22 +457,23 @@ _mas_cli_options( mas_options_t * popts, int argc, char *const *argv )
   char *enabled_opts;
 
   optind = 1;
-  enabled_opts = mas_cli_enabled_options(  );
-  while ( r >= 0 && !ctrl.fatal && ( opt = getopt_long( argc, argv, enabled_opts, cli_longopts, &indx ) ) >= 0 )
-  {
-    /* HMSG( "CLI opt:%d: optind:%d err:%d / %d", opt, optind, opt == '?', opt == ':' ); */
-    IEVAL( r, mas_cli_make_option( popts, opt, optarg ) );
-    afterlast = optind;
-    /* HMSG( "(%d) CLI %d: %d", r, opt, optind ); */
-  }
+  enabled_opts = mas_cli_enabled_options( popts );
+  if ( popts && popts->cli_longopts )
+    while ( r >= 0 && !ctrl.fatal && ( opt = getopt_long( argc, argv, enabled_opts, popts->cli_longopts, &indx ) ) >= 0 )
+    {
+      /* HMSG( "CLI opt:%d: optind:%d err:%d / %d", opt, optind, opt == '?', opt == ':' ); */
+      IEVAL( r, mas_cli_make_option( popts, opt, optarg ) );
+      afterlast = optind;
+      /* HMSG( "(%d) CLI %d: %d", r, opt, optind ); */
+    }
   MAS_LOG( "(%d) cli options made", r );
   mas_free( enabled_opts );
   return r < 0 ? r : afterlast;
 }
 
-__attribute__ ( ( constructor( 3010 ) ) )
-     static void f_constructor( void )
+__attribute__ ( ( constructor( 3012 ) ) )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 1 );
 }

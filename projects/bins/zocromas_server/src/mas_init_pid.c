@@ -13,6 +13,8 @@
 #include <mastar/wrap/mas_lib0.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include <mastar/tools/mas_tools.h>
+
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -195,8 +197,8 @@ mas_destroy_pids( mas_options_t * popts )
 }
 
 __attribute__ ( ( constructor( 1001 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
 }

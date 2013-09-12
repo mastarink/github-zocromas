@@ -19,12 +19,6 @@
 
 #include "mas_modules_ctrl_module.h"
 
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
-{
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-}
-
 static void
 __register_module( const char *name, void *module_handle )
 {

@@ -14,6 +14,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
+#include <mastar/tools/mas_tools.h>
 
 
 #include <mastar/types/mas_control_types.h>
@@ -1540,7 +1541,8 @@ mas_fatal( void )
 }
 
 __attribute__ ( ( constructor( 10001 ) ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  /* fprintf( stderr, "-------------------- CONSTRUCTOr %s\n", __FILE__ ); */
+  mas_common_constructor( IL, 0 );
 }

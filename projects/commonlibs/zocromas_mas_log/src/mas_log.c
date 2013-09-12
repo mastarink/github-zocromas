@@ -47,12 +47,6 @@ more:
 
 */
 
-__attribute__ ( ( constructor ) )
-     static void master_constructor( void )
-{
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
-}
-
 static int
 mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args )
 {
@@ -177,4 +171,11 @@ mas_log( const char *func, int line, int merrno, const char *fmt, ... )
   r = mas_vlog_lim( func, line, merrno, fmt, args );
   va_end( args );
   return r;
+}
+
+__attribute__ ( ( constructor ) )
+     static void mas_constructor( void )
+{
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 1 );
 }

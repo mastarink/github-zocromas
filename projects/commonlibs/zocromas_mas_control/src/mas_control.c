@@ -15,6 +15,7 @@
 #include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_tools.h>
 #include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/types/mas_control_types.h>
@@ -291,7 +292,7 @@ mas_control_possibly_rerun( void )
 }
 
 __attribute__ ( ( constructor( 10000 ) ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
   CTRL_PREPARE;
   char name_buffer[2048] = "Unknown";
@@ -304,12 +305,12 @@ __attribute__ ( ( constructor( 10000 ) ) )
   mas_control_construct_proc(  );
   mas_control_possibly_rerun(  );
   prctl( PR_GET_NAME, ( unsigned long ) name_buffer );
-  fprintf( stderr, "******************** CONSTRUCTOR %s : %s : %s : %s\n", __FILE__, name_buffer, program_invocation_name,
-           program_invocation_short_name );
+  mas_common_constructor( IL, 0 );
+  fprintf( stderr, "+ %s : %s : %s\n", name_buffer, program_invocation_name, program_invocation_short_name );
 }
 
 __attribute__ ( ( destructor ) )
-     static void master_destructor( void )
+     static void mas_destructor( void )
 {
   CTRL_PREPARE;
   {
@@ -344,5 +345,6 @@ __attribute__ ( ( destructor ) )
       ctrl.cmdenvv.v = NULL;
     }
   }
-  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** DESTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_destructor( IL, 0 );
 }

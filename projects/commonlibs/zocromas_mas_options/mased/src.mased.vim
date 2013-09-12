@@ -18,4 +18,7 @@ sfind mas_opts_restore.h
 tab sfind mas_cli_opts.c
 sfind mas_cli_opts.h
 
+tab sfind mas_cli_opts_data.c
+sfind mas_cli_opts_def.h
+
 

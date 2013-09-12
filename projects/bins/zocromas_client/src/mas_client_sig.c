@@ -16,6 +16,9 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib_thread.h>
 
+#include <mastar/tools/mas_tools.h>
+
+
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/msg/mas_curses.h>
@@ -158,9 +161,10 @@ void
 mas_atexit( void )
 {
   CTRL_PREPARE;
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
 
-  mas_destroy_client( &gopts );
+  mas_destroy_client( gpopts );
 #ifdef MAS_TRACEMEM
   extern unsigned long memory_balance;
 
@@ -182,7 +186,7 @@ mas_atexit( void )
 }
 
 __attribute__ ( ( constructor ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
   CTRL_PREPARE;
   if ( !ctrl.stderrfile )
@@ -190,14 +194,16 @@ __attribute__ ( ( constructor ) )
   atexit( mas_atexit );
   ctrl.is_client = 1;
   ctrl.is_server = 0;
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  /* if ( ctrl.stderrfile )                                                           */
+  /*   fprintf( ctrl.stderrfile, "******************** CONSTRUCTOr %s\n", __FILE__ ); */
+  mas_common_constructor( IL, 0 );
 }
 
 __attribute__ ( ( destructor ) )
      static void master_destructor( void )
 {
   CTRL_PREPARE;
-  if ( ctrl.stderrfile )
-    fprintf( ctrl.stderrfile, "******************** DESTRUCTOR %s\n", __FILE__ );
+  /* if ( ctrl.stderrfile )                                                          */
+  /*   fprintf( ctrl.stderrfile, "******************** DESTRUCTOr %s\n", __FILE__ ); */
+  mas_common_destructor( IL, 0 );
 }

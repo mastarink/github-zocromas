@@ -175,9 +175,10 @@ main( void )
 }
 
 __attribute__ ( ( destructor( 10000 ) ) )
-     static void f_destructor( void )
+     static void mas_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+  /* fprintf( stderr, "******************** DESTRUCTOr %s\n", __FILE__ ); */
+  /* mas_common_constructor( IL, 1 ); */
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
 #endif

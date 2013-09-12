@@ -10,6 +10,7 @@
 #include <time.h>
 #include <string.h>
 
+#include <errno.h>
 #include <fcntl.h>
 
 /*                                       */
@@ -494,4 +495,17 @@ mas_load_filename_fd( const char *filepath, size_t size, size_t * ptruesize, ino
     /* errno = 0; */
   }
   return filedata;
+}
+
+void
+mas_common_constructor( const char *fname, int lin, int lev )
+{
+  fprintf( stderr, "\n%s CONstructor %s e%d @", lev == 0 ? "--------------------" : "********************", fname, errno );
+
+}
+
+void
+mas_common_destructor( const char *fname, int lin, int lev )
+{
+  fprintf( stderr, "\n%s DEstructor %s e%d @", lev == 0 ? "--------------------" : "********************", fname, errno );
 }

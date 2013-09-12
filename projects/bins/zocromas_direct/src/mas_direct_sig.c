@@ -88,14 +88,16 @@ mas_atexit( void )
 }
 
 __attribute__ ( ( constructor ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
   atexit( mas_atexit );
-  fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** CONSTRUCTOr %s\n", __FILE__ );
+  /* mas_common_destructor( IL, 0 ); */
 }
 
 __attribute__ ( ( destructor ) )
-     static void master_destructor( void )
+     static void mas_destructor( void )
 {
-  fprintf( stderr, "******************** DESTRUCTOR %s\n", __FILE__ );
+  fprintf( stderr, "******************** DESTRUCTOr %s\n", __FILE__ );
+  /* mas_common_destructor( IL, 0 ); */
 }

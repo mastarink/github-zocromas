@@ -29,6 +29,9 @@
 #include <sys/stat.h>
 #include <sys/prctl.h>
 
+#include <mastar/tools/mas_tools.h>
+
+
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
@@ -114,7 +117,8 @@ int
 main( int argc, char *argv[], char *env[] )
 {
   EVAL_PREPARE;
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
   int r = 0, rn = 0;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
@@ -128,15 +132,16 @@ main( int argc, char *argv[], char *env[] )
   else
   {
     HMSG( "(e:%d)TO BUNCH %s", errno, argv[0] );
-    IEVAL( r, mas_master_bunch( &gopts, argc, argv, env ) );
+    IEVAL( r, mas_master_bunch( gpopts, argc, argv, env ) );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
   }
   return r;
 }
 
 __attribute__ ( ( constructor( 1200 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
   errno = 0;
 }

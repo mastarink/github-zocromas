@@ -98,7 +98,7 @@ sigterm_han( int s )
 /*   fprintf( ftinfo,                                                                                                                         */
 /*            "Server info:\n\tclients: {%lu - %lu = %lu}\n" "\tlogdir: %s;\tlogpath: %s;\n"                                                  */
 /*            "\tserver; pid:%u; \t\ttid:%5u/%4x; [%lx]\n", ctrl.clients_came, ctrl.clients_gone,                                             */
-/*            ctrl.clients_came - ctrl.clients_gone, gopts.dir.log, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
+/*            ctrl.clients_came - ctrl.clients_gone, gpopts->dir.log, ctrl.logpath, ctrl.threads.n.main.pid, ctrl.threads.n.main.tid, ctrl.threads.n.main.tid,                  */
 /*            ctrl.threads.n.main.thread );                                                                                                             */
 /*   ith = 0;                                                                                                                                 */
 /*   (* pthread_mutex_lock( &ctrl.thglob.lcontrols_list_mutex ); *)                                                                           */
@@ -161,10 +161,11 @@ sigterm_han( int s )
 void
 pinfo( void )
 {
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
   mas_evaluated_t *infos = NULL;
 
-  infos = mas_evaluate_command( &gopts, "server info" );
+  infos = mas_evaluate_command( gpopts, "server info" );
   if ( infos )
   {
     CTRL_PREPARE;
@@ -216,13 +217,13 @@ sigint_han( int s )
       /* sleep( 10 ); */
       /* exit( 3 ); */
     }
-    /* HMSG( "DAEMON -%d +%d", gopts.nodaemon, ctrl.daemon ); */
+    /* HMSG( "DAEMON -%d +%d", gpopts->nodaemon, ctrl.daemon ); */
     if ( ctrl.daemon && ctrl.old_stderrfile )
     {
       if ( int_cnt < 2 )
         pinfo(  );
       fprintf( ctrl.old_stderrfile, "\n\nINT %d of %d", int_cnt, MAS_MAX_INT_2 );
-      /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, gopts.nodaemon, ctrl.daemon, fr ); */
+      /* HMSG( "(%d) DAEMON -%d +%d; fr:%d", int_cnt, gpopts->nodaemon, ctrl.daemon, fr ); */
     }
     else
     {
@@ -303,8 +304,8 @@ sigpipe_han( int s )
 }
 
 __attribute__ ( ( constructor( 1000 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
 }

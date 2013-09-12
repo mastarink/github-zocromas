@@ -43,7 +43,8 @@ void
 mas_atexit( void )
 {
   CTRL_PREPARE;
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
 
   {
     int rn = 0;
@@ -54,7 +55,7 @@ mas_atexit( void )
     HMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
 
-  mas_destroy_server( &gopts );
+  mas_destroy_server( gpopts );
   /* mas_destroy_server( MAS_PASS_OPTS_REF ); */
 #ifdef MAS_TRACEMEM
   {
@@ -96,11 +97,11 @@ mas_atexit( void )
 }
 
 __attribute__ ( ( constructor ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
   CTRL_PREPARE;
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
   if ( !ctrl.stderrfile )
     ctrl.stderrfile = stderr;
   ctrl.is_client = 0;
@@ -109,8 +110,8 @@ __attribute__ ( ( constructor ) )
 }
 
 __attribute__ ( ( destructor ) )
-     static void f_destructor( void )
+     static void mas_destructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** DESTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_destructor( IL, 0 );
 }

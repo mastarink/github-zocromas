@@ -84,11 +84,12 @@ mas_client_zerocommands( mas_channel_t * pchannel )
 
   if ( ctrl.in_client )
   {
-    extern mas_options_t gopts;
+    /* extern mas_options_t g_opts; */
+    extern mas_options_t *gpopts;
     char *cmd;
 
     cmd = mas_strdup( "check uuid " );
-    cmd = mas_strcat_x( cmd, gopts.uuid );
+    cmd = mas_strcat_x( cmd, gpopts->uuid );
     /* r = mas_client_exchange( pchannel, cmd, "%s\n" ); */
     IEVAL( r, mas_client_exchange( pchannel, cmd, "%s\n" ) );
     mas_free( cmd );
@@ -113,14 +114,15 @@ int
 mas_client_autocommands( mas_channel_t * pchannel )
 {
   CTRL_PREPARE;
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
   int r = 0;
 
-  WMSG( "(%d) OPTS COMMANDS[%u]:", r, gopts.commandsv.c );
-  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < gopts.commandsv.c; ic++ )
+  WMSG( "(%d) OPTS COMMANDS[%u]:", r, gpopts->commandsv.c );
+  for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < gpopts->commandsv.c; ic++ )
   {
-    WMSG( "(opts) command to execute : '%s'", gopts.commandsv.v[ic] );
-    IEVAL( r, mas_client_exchange( pchannel, gopts.commandsv.v[ic], "%s\n" ) );
+    WMSG( "(opts) command to execute : '%s'", gpopts->commandsv.v[ic] );
+    IEVAL( r, mas_client_exchange( pchannel, gpopts->commandsv.v[ic], "%s\n" ) );
   }
   WMSG( "(%d) CTRL COMMANDS[%u]:", r, ctrl.commandsv.c );
   for ( int ic = 0; !( r < 0 ) && ctrl.in_client && ic < ctrl.commandsv.c; ic++ )
@@ -148,15 +150,16 @@ mas_client( const char *host_port )
   pchannel = mas_channel_create(  );
   while ( r >= 0 && ctrl.in_client && !ctrl.fatal )
   {
-    extern mas_options_t gopts;
+    /* extern mas_options_t g_opts; */
+    extern mas_options_t *gpopts;
     size_t hostlen = 0;
     unsigned hport = 0;
 
     /* mMSG( "host_port:%s", host_port ); */
     WMSG( "(i/c:%u; i/p:%d) client external loop %s", ctrl.in_client, ctrl.in_pipe, host_port );
     WMSG( "to init '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
-    WMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, gopts.default_port );
-    hostlen = mas_parse_host_port( host_port, &hport, gopts.default_port );
+    WMSG( "R.CLIENT #%u host_port:%s (def.port: %u)", cnt, host_port, gpopts->default_port );
+    hostlen = mas_parse_host_port( host_port, &hport, gpopts->default_port );
     /* r = mas_channel_init( pchannel, 0  , CHN_SOCKET, host_port, hostlen, hport ); */
     IEVAL( r, mas_channel_init( pchannel, 0, CHN_SOCKET, host_port, hostlen, hport ) );
     WMSG( "to open '%s' ; fd_socket:%d", host_port, pchannel->fd_socket );
@@ -179,15 +182,15 @@ mas_client( const char *host_port )
     if ( ctrl.in_client )
     {
 #if 1
-      if ( gopts.disconnect_prompt )
+      if ( gpopts->disconnect_prompt )
         r = 0;
       IEVAL( r, mas_client_transaction( pchannel ) );
 #else
-      if ( gopts.disconnect_prompt || r > 0 )
+      if ( gpopts->disconnect_prompt || r > 0 )
       {
         IEVAL( r, mas_client_transaction( pchannel ) );
       }
-      else if ( gopts.wait_server )
+      else if ( gpopts->wait_server )
       {
         /* if ( ctrl.try_cnt % 100 == 0 ) */
         {

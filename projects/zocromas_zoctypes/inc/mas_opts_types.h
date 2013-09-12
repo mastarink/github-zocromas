@@ -168,6 +168,8 @@ struct mas_options_s
   /* mas_new_section_func_t new_section_func; */
   /* mas_at_section_func_t at_section_func;   */
   /* mas_unknown_opt_func_t unknown_opt_func; */
+  struct option *cli_longopts;
+  unsigned cli_longopts_num;
 };
 typedef struct mas_options_s mas_options_t;
 

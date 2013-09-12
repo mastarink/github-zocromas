@@ -11,7 +11,10 @@
 #include <mastar/types/mas_opts_types.h>
 
 #include <mastar/init/mas_sig.h>
+
 #include <mastar/options/mas_cli_opts.h>
+#include <mastar/options/mas_cli_opts_data.h>
+
 
 #include <mastar/control/mas_control.h>
 
@@ -53,7 +56,8 @@ int
 main( int argc, char *argv[], char *env[] )
 {
   CTRL_PREPARE;
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
   int r = 0;
 
   WMSG( "MAIN" );
@@ -67,23 +71,23 @@ main( int argc, char *argv[], char *env[] )
         ( void * ) ( unsigned long ) mas_ctrl_init, ( void * ) ( unsigned long ) mas_client_init_readline );
 
   /* uuid BEFORE opt_files !! */
-  IEVAL( r,
-         mas_init_plus( &gopts, argc, argv, env, /* mas_init_proc, */ mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init, mas_ctrl_init,
-                        mas_client_init_readline, mas_post_init, NULL ) );
-  for ( int ia = gopts.hostsv.c; r >= 0 && ia > 0; ia-- )
+  IEVAL( r, mas_init_plus( gpopts, argc, argv, env, /* mas_init_proc, */ mas_init_uuid, mas_init_opt_files, mas_init_sig,
+                           mas_cli_options_data_init, mas_cli_options_init, mas_ctrl_init,
+                           mas_client_init_readline, mas_post_init, NULL ) );
+  for ( int ia = gpopts->hostsv.c; r >= 0 && ia > 0; ia-- )
   {
     int maxit = 0;
 
-    /* mas_client( gopts. hostsv.v[ia - 1] ); */
+    /* mas_client( gpopts-> hostsv.v[ia - 1] ); */
     if ( !( r < 0 ) )
       do
       {
         r = 0;
-        IEVAL( r, mas_client( gopts.hostsv.v[ia - 1] ) );
+        IEVAL( r, mas_client( gpopts->hostsv.v[ia - 1] ) );
         if ( r < 0 && ctrl.restart_cnt > 0 )
         {
-          HMSG( "RESTART %s DELAY %10.5fs", gopts.argvv.v[0], gopts.restart_sleep );
-          mas_nanosleep( gopts.restart_sleep );
+          HMSG( "RESTART %s DELAY %10.5fs", gpopts->argvv.v[0], gpopts->restart_sleep );
+          mas_nanosleep( gpopts->restart_sleep );
         }
         maxit++;
       }

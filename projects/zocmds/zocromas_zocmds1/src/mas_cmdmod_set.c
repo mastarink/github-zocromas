@@ -52,30 +52,30 @@ msg_cmd( STD_CMD_ARGS )
   if ( ( 0 == strcmp( args, "on" ) ) || ( 0 == strcmp( args, "yes" ) ) || ( 0 == strcmp( args, "1" ) ) )
   {
     ctrl.messages = 1;
-    /* gopts.f.bit.msg_s = 1;  */
-    /* gopts.f.bit.msg_c = 1;  */
-    /* gopts.f.bit.msg_tr = 1; */
-    /* gopts.f.bit.msg_m = 1;  */
+    /* gpopts->f.bit.msg_s = 1;  */
+    /* gpopts->f.bit.msg_c = 1;  */
+    /* gpopts->f.bit.msg_tr = 1; */
+    /* gpopts->f.bit.msg_m = 1;  */
   }
   else if ( ( 0 == strcmp( args, "off" ) ) || ( 0 == strcmp( args, "no" ) ) || ( 0 == strcmp( args, "0" ) ) )
   {
     ctrl.messages = 0;
-    /* gopts.f.bit.msg_c = 0;                 */
-    /* gopts.f.bit.msg_cmd = 0;               */
-    /* gopts.f.bit.msg_funline = 1;           */
-    /* gopts.f.bit.msg_io = 0;                */
-    /* gopts.f.bit.msg_l = 0;                 */
-    /* gopts.f.bit.msg_m = 0;                 */
-    /* gopts.f.bit.msg_mem = 0;               */
-    /* gopts.f.bit.msg_r = 0;                 */
-    /* gopts.f.bit.msg_s = 0;                 */
-    /* gopts.f.bit.msg_sg = 0;                */
-    /* gopts.f.bit.msg_th = 0;                */
-    /* gopts.f.bit.msg_tr = 0;                */
-    /* gopts.f.bit.msg_trace_listener = 0;    */
-    /* gopts.f.bit.msg_trace_main = 0;        */
-    /* gopts.f.bit.msg_trace_transaction = 0; */
-    /* gopts.f.bit.msg_w = 0;                 */
+    /* gpopts->f.bit.msg_c = 0;                 */
+    /* gpopts->f.bit.msg_cmd = 0;               */
+    /* gpopts->f.bit.msg_funline = 1;           */
+    /* gpopts->f.bit.msg_io = 0;                */
+    /* gpopts->f.bit.msg_l = 0;                 */
+    /* gpopts->f.bit.msg_m = 0;                 */
+    /* gpopts->f.bit.msg_mem = 0;               */
+    /* gpopts->f.bit.msg_r = 0;                 */
+    /* gpopts->f.bit.msg_s = 0;                 */
+    /* gpopts->f.bit.msg_sg = 0;                */
+    /* gpopts->f.bit.msg_th = 0;                */
+    /* gpopts->f.bit.msg_tr = 0;                */
+    /* gpopts->f.bit.msg_trace_listener = 0;    */
+    /* gpopts->f.bit.msg_trace_main = 0;        */
+    /* gpopts->f.bit.msg_trace_transaction = 0; */
+    /* gpopts->f.bit.msg_w = 0;                 */
   }
   return NULL;
 }

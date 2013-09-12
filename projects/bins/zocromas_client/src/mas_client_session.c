@@ -114,15 +114,19 @@ _mas_client_exchange( mas_channel_t * pchannel, const char *question, mas_header
       case MSG_BIN_OPTS:
         MSG( "it's OPTS" );
         {
-          extern mas_options_t gopts;
+          /* extern mas_options_t g_opts; */
+          extern mas_options_t *gpopts;
           mas_options_t *new_opts;
 
           new_opts = ( mas_options_t * ) answer;
           /* MSG( "opts:%x", ( *( unsigned int * ) new_opts ) ); */
           /* MSG( "msg:%d / %d", new_opts->msg_c, new_opts->msg_s ); */
           /* MSG( "msg:%d / %d", opts.f.bit.msg_c, opts.f.bit.msg_s ); */
-          /* gopts = *new_opts; */
-          gopts = *new_opts;
+          /* g_opts = *new_opts; */
+          
+          /* g_opts = *new_opts; */
+          *gpopts = *new_opts;
+
           /* HMSG( "opts msg_c:%d", opts.f.bit.msg_c );     */
           /* HMSG( "opts msg_s:%d", opts.f.bit.msg_s );     */
           /* HMSG( "opts msg_tr:%d", opts.f.bit.msg_tr );   */

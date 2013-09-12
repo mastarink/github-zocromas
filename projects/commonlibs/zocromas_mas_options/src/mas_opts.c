@@ -7,6 +7,8 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_tools.h>
+
 
 #include <mastar/types/mas_opts_types.h>
 
@@ -243,8 +245,8 @@ mas_pre_init_default_opts( mas_options_t * popts )
 }
 
 __attribute__ ( ( constructor( 3001 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 1 );
 }

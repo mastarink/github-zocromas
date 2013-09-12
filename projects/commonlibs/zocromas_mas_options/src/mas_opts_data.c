@@ -6,6 +6,9 @@
 /* #include <mastar/types/mas_control_types.h> */
 #include <mastar/types/mas_opts_types.h>
 
+#include <mastar/tools/mas_tools.h>
+
+
 
 
 
@@ -27,7 +30,7 @@ related:
 
 
 #if 0
-mas_options_t gopts = {
+static mas_options_t g_opts = {
   .msg_notice = 1,
   .msg_io = 0,
 
@@ -48,7 +51,7 @@ mas_options_t gopts = {
   .msg_funline = 0,
 };
 #else
-mas_options_t gopts = {
+static mas_options_t g_opts = {
   .f = {
         .bit = {
                 .msg_notice = 1,
@@ -152,10 +155,12 @@ mas_options_t gopts = {
 /* #  endif                                             */
 };
 
+mas_options_t *gpopts = &g_opts;
+
 __attribute__ ( ( constructor( 3000 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s\n", __FILE__ ); */
+  mas_common_constructor( IL, 1 );
 }
 #endif

@@ -16,6 +16,7 @@
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
+
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_tools.h>
 
@@ -35,10 +36,10 @@
 #include <mastar/options/mas_opts_save.h>
 #include <mastar/options/mas_opts_restore.h>
 
-#include <mastar/options/mas_cli_opts.h>
+/* #include <mastar/options/mas_cli_opts.h> */
 
 /* #include "mas_sig.h" */
-#include "mas_init.h"
+/* #include "mas_init.h" */
 
 
 /*
@@ -355,7 +356,8 @@ mas_post_init( mas_options_t * popts, const char **message )
 }
 
 __attribute__ ( ( constructor( 2001 ) ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 1 );
 }

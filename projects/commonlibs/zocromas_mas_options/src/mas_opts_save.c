@@ -318,8 +318,8 @@ mas_opts_save_user_plus( mas_options_t * popts, const char *dirname, const char 
 }
 
 __attribute__ ( ( constructor( 3005 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  if ( stderr )
-    fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 1 );
 }

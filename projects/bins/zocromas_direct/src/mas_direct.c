@@ -18,12 +18,13 @@
 int
 main( int argc, char *argv[] )
 {
-  extern mas_options_t gopts;
+  /* extern mas_options_t g_opts; */
+  extern mas_options_t *gpopts;
   mas_evaluated_t *infos = NULL;
 
-  /* gopts.dir.mods = "/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/"; */
-  gopts.dir.mods = "/mnt/new_misc/develop/autotools/zoc/admin/install/default/lib/zocromod/zocmds/";
-  infos = mas_evaluate_command( &gopts, "get version" );
+  /* g_opts.dir.mods = "/mnt/new_misc/develop/autotools/zoc/admin/install/lib/zocmds/"; */
+  gpopts->dir.mods = "/mnt/new_misc/develop/autotools/zoc/admin/install/default/lib/zocromod/zocmds/";
+  infos = mas_evaluate_command( gpopts, "get version" );
   if ( MAS_VALID_ANSWER( infos ) )
   {
     /* fprintf( stdout, "[%p]\n", infos ); */

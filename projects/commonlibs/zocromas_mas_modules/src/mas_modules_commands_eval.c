@@ -435,16 +435,18 @@ mas_evaluate_list_cmd( STD_CMD_ARGS )
 }
 
 __attribute__ ( ( constructor ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "-------------------- CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
 }
 
 __attribute__ ( ( destructor ) )
-     static void f_destructor( void )
+     static void mas_destructor( void )
 {
   if ( std_modpath )
     mas_free( std_modpath );
   std_modpath = NULL;
-  fprintf( stderr, "******************** DESTRUCTOR %s e%d\n", __FILE__, errno );
+  /* fprintf( stderr, "-------------------- DESTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_destructor( IL, 0 );
 }

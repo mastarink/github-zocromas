@@ -5,6 +5,7 @@
 #  define MSG_SSIGNATURE "\xaf\xbe\xad\xde"
 
 #  define FL __func__, __LINE__
+#  define IL __FILE__, __LINE__
 
 #endif
 

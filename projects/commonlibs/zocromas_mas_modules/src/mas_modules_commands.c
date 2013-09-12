@@ -18,6 +18,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
+#include <mastar/tools/mas_tools.h>
 
 #include <mastar/types/mas_common_defs.h>
 
@@ -41,9 +42,10 @@ related:
 */
 
 __attribute__ ( ( constructor ) )
-     static void master_constructor( void )
+     static void mas_constructor( void )
 {
-  /* fprintf( stderr, "******************** CONSTRUCTOR %s e%d\n", __FILE__, errno ); */
+  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
+  mas_common_constructor( IL, 0 );
 }
 
 /* table-search command; allowed NULL for name; pargs to set command args/subcommands */

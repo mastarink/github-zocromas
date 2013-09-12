@@ -6,6 +6,7 @@
 #include <errno.h>
 
 #include <mastar/types/mas_control_types.h>
+#include <mastar/tools/mas_tools.h>
 
 extern unsigned long __MAS_LINK_DATE__;
 extern unsigned long __MAS_LINK_TIME__;
@@ -124,7 +125,7 @@ mas_control_t ctrl = {
   .opts_saved = 0,
   .opts_saved_plus = 0,
   /* .mas_thread_key_once = PTHREAD_ONCE_INIT, */
-  .thread_ctrl = {.key_once = PTHREAD_ONCE_INIT, .tools_key_once = PTHREAD_ONCE_INIT},
+  .thread_ctrl = {.key_once = PTHREAD_ONCE_INIT,.tools_key_once = PTHREAD_ONCE_INIT},
   .ticker_hide = 0,
   .ticker_mode = 0,
   .tick_cnt = 0,
@@ -177,8 +178,7 @@ mas_error_handler( const char *func, int line, int issys, int rcode, int ierrno,
 }
 
 __attribute__ ( ( constructor( 10000 ) ) )
-     static void f_constructor( void )
+     static void mas_constructor( void )
 {
-  /* if ( stderr )                                                           */
-  /*   fprintf( stderr, "******************** CONSTRUCTOR %s\n", __FILE__ ); */
+  mas_common_constructor( IL, 0 );
 }
