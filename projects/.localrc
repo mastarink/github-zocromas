@@ -1,0 +1,23 @@
+function localrc
+{
+  if [[ -L "sh" ]] ; then
+    declare -xg MAS_PROJECTS_DIR=$( realpath  sh/.. )
+  elif [[ -f "projects.list" ]] ; then
+    declare -xg MAS_PROJECTS_DIR=$( pwd )
+  fi
+  if [[ "$MAS_PROJECTS_DIR" ]] &&  [[ -d "$MAS_PROJECTS_DIR" ]] && [[ -f "$MAS_PROJECTS_DIR/projects.list" ]] ; then
+    for l in sh/lib*.bash ; do
+      . $l
+    done
+    declare -gx MAS_PROJECTS_LIST
+    MAS_PROJECTS_LIST=`cat ${MAS_PROJECTS_DIR}/projects.list|tr '\n' ' '`
+##  read MAS_PROJECTS_LIST2 < .........
+  else
+    unset MAS_PROJECTS_DIR
+  fi
+}
+
+localrc $@
+
+
+# vi: ft=sh

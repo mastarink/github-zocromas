@@ -1,0 +1,9 @@
+if [[ -f "projects.list" ]] ; then
+  declare -xg MAS_PROJECTS_DIR=`pwd`
+  for l in sh/lib*.bash ; do
+    . $l
+  done
+fi
+declare -gx MAS_PROJECTS_LIST=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`}
+
+# vi: ft=sh

@@ -1,4 +1,4 @@
-export MAS_PROJECTS_DIR MAS_PROJECTS_TMPDIR MAS_PROJECTS_LIST
+export MAS_PROJECTS_DIR MAS_PROJECTS_TMPDIR
 function datem () 
 { 
     /bin/date '+%Y%m%d'
@@ -329,25 +329,25 @@ function wdproj ()
   local docd=${1:-cd}
   shift
   local meth
-  local projectsdir projectsfile projects_list prj
+  local prj
   if [[ "$project" ]] ; then
-    if [[ "$project" == '.' ]] ; then
+    if [[ "$project" == '.' ]] && [[ "$MAS_PROJECT_NAME" ]] ; then
       echo "DOT : '$MAS_PROJECT_NAME'" >&2
       project=$MAS_PROJECT_NAME
     fi
-    if [[ "${projects_list:=${MAS_PROJECTS_LIST:=`cat ${projectsfile:=${projectsdir:=${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}}/projects.list}|tr '\n' ' '`}}" ]] ; then
+    if [[ "${MAS_PROJECTS_LIST:=`cat ${MAS_PROJECTS_DIR:-${MAS_PROJECTS_TMPDIR:-/tmp}}/projects.list|tr '\n' ' '`}" ]] ; then
       for meth in wdproj_scan_project_1 wdproj_scan_project_2 ; do
 #        echo "meth: $meth" >&2
         wdproj_scan "$project" $meth ${docd:-cd} && return 0
       done
 #     echo "$MAS_PROJECT_NAME :: $MAS_PROJECT_DIR" >&2
       if [[ "$docd" == 'cd' ]] ; then
-        for prj in $projects_list ; do
+        for prj in $MAS_PROJECTS_LIST ; do
 	  basename "$prj"
         done  | sed -e 's/zocromas_//' | sort | cat -n >&2
       fi
     else
-      echo "ERROR '$projectsdir' : '$projects_list' : '$projectsdir'" >&2
+      echo "ERROR '$MAS_PROJECTS_DIR' : '$MAS_PROJECTS_LIST' : '$MAS_PROJECTS_DIR'" >&2
       unset MAS_PROJECTS_LIST
     fi
   elif [[ "${MAS_WORK_DIR}" ]] ; then
