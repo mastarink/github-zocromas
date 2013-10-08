@@ -334,6 +334,23 @@ mas_add_argv_arg( int targc, char ***ptargv, const char *arg )
 }
 
 int
+mas_add_argv_cmdline( int targc, char ***ptargv, const char *cmdline, size_t len )
+{
+  const char *arg;
+
+  arg = cmdline;
+  while ( arg && *arg && arg < cmdline + len )
+  {
+    targc = mas_add_argv_arg( targc, ptargv, arg );
+    while ( arg && arg < cmdline + len && *arg )
+      arg++;
+    if ( arg && arg < cmdline + len )
+      arg++;
+  }
+  return targc;
+}
+
+int
 mas_del_argv( int targc, char **targv, int from_a )
 {
   if ( targv && targc )

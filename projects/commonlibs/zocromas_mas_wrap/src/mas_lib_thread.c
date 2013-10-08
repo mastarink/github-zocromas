@@ -55,13 +55,19 @@ mas_pthread_mutex_unlock( pthread_mutex_t * mutex )
 int
 mas_pthread_join( pthread_t thread, void **retval )
 {
-  return pthread_join( thread, retval );
+  int r = 0;
+
+  r = pthread_join( thread, retval );
+  return r;
 }
 
 int
 mas_xpthread_join( pthread_t thread )
 {
-  return pthread_join( thread, NULL );
+  int r = 0;
+
+  r = pthread_join( thread, NULL );
+  return r;
 }
 
 pthread_t

@@ -18,6 +18,7 @@ int mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offse
 int mas_add_argv_argv( int targc, char ***ptargv, int argc, char *argv[], int ia_offset );
 int mas_add_argv_arg( int targc, char ***ptargv, const char *arg );
 int mas_add_argv_arg_nodup( int targc, char ***ptargv, char *arg );
+int mas_add_argv_cmdline( int targc, char ***ptargv, const char *cmdline, size_t len );
 
 int mas_del_argv( int argc, char **argv, int from_a );
 

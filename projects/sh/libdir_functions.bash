@@ -72,7 +72,8 @@ function setup_global_dirs ()
 }
 function setup_dirs ()
 {
-  local me=${1:-${BASH_SOURCE[3]}}
+  local ind me=${1:-${BASH_SOURCE[3]}}
+  echo "setting dirs" >&2
   if ! [[ "$stamp" ]] ; then
     if [[ "$MAS_DOALL_STAMP" ]] ; then
       stamp=$MAS_DOALL_STAMP
@@ -90,18 +91,27 @@ function setup_dirs ()
   wd=`pwd`
   if [[ "$0" == `which bash` ]] ; then
     if ! [[ "$me" ]] ; then
-      if [[ "${BASH_SOURCE[3]}" ]] ; then
-  #    me="$wd/${BASH_SOURCE[2]}"
-	me=${BASH_SOURCE[3]}
+      ind=$(( ${#BASH_SOURCE[@]} - 1 ))
+      if [[ "$ind" -gt 0 ]] && [[ "${BASH_SOURCE[$ind]}" ]] ; then
+	me=${BASH_SOURCE[$ind]}
       else
-	echo "ERROR BASH_SOURCE[3] -- ${BASH_SOURCE[*]}" >&2
+	echo "ERROR BASH_SOURCE[3] (${BASH_SOURCE[$ind]}) -- ${BASH_SOURCE[*]}" >&2
       fi
     fi
+#   if ! [[ "$me" ]] ; then
+#     if [[ "${BASH_SOURCE[3]}" ]] ; then
+# #    me="$wd/${BASH_SOURCE[2]}"
+#       me=${BASH_SOURCE[3]}
+#     else
+#       echo "ERROR BASH_SOURCE[3] (${BASH_SOURCE[$ind]}) -- ${BASH_SOURCE[*]}" >&2
+#     fi
+#   fi
     MAS_SOURCED=$me
   else
     me="$wd/$0"
     unset MAS_SOURCED
   fi
+  
   [[ "$me" ]] || return 1
   mer="$(realpath $me)" || return 1
   if [[ -f "$me" ]] && [[ -x "$me" ]] ; then

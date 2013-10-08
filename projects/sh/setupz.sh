@@ -278,7 +278,7 @@ function virgin_clean ()
 }
 # if [[ "${MAS_PROJECTS_DIR}" ]] ; then cd "${MAS_PROJECTS_DIR}" ; fi
 export MAS_MAKE_CNT=0
-# echo "SETUPZ" >&2
+echo "loading setupz" >&2
 if ! setup_dirs ; then
   echo "setup_dirs error" >&2
   if ! [[ "$0" == `which bash` ]] ; then

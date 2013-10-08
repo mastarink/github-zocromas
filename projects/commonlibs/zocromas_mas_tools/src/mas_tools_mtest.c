@@ -60,7 +60,45 @@ main( int argc, char *argv[] )
     fprintf( stderr, ">>>>>[\n%s\n]<<<<<<<\n", d );
     mas_free( d );
   }
+  {
+    char cmdline[] = "abc\0def\0ghi";
+    char **targv = NULL;
+    int targc = 0;
 
+    targc = mas_add_argv_cmdline( targc, &targv, cmdline, sizeof( cmdline ) );
+    if ( targc )
+      for ( int i = 0; i < targc; i++ )
+      {
+        fprintf( stderr, "targv[%d]='%s'\n", i, targv[i] );
+      }
+    mas_del_argv( targc, targv, 0 );
+  }
+  {
+    char cmdline[] = "abc\0def\0ghi\0";
+    char **targv = NULL;
+    int targc = 0;
+
+    targc = mas_add_argv_cmdline( targc, &targv, cmdline, sizeof( cmdline ) );
+    if ( targc )
+      for ( int i = 0; i < targc; i++ )
+      {
+        fprintf( stderr, "targv[%d]='%s'\n", i, targv[i] );
+      }
+    mas_del_argv( targc, targv, 0 );
+  }
+  {
+    char cmdline[] = "abc\0def\0ghi\0\0";
+    char **targv = NULL;
+    int targc = 0;
+
+    targc = mas_add_argv_cmdline( targc, &targv, cmdline, sizeof( cmdline ) );
+    if ( targc )
+      for ( int i = 0; i < targc; i++ )
+      {
+        fprintf( stderr, "targv[%d]='%s'\n", i, targv[i] );
+      }
+    mas_del_argv( targc, targv, 0 );
+  }
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
 #endif

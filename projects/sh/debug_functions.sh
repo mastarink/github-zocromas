@@ -1,35 +1,41 @@
 function mas_debug ()
 {
   local sedex cmdfile tmpcmd lt dname binsdir bin libsdirs
-
-  ulimit -c
-
-  if [[ -f "${build_at}/src/.libs/${rname_preset}" ]] ; then
-    binsdir="${build_at}/src/.libs"
-  else
-    binsdir="${build_at}/src"
+  if ! [[ "$debugdir" ]] ;  then
+    echo "loading setupz" >&2
+    . ${MAS_PROJECTS_DIR:-.}/sh/setupz.sh
   fi
-  libsdirs=$binsdir
-  export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
-  bin=${binsdir}/${rname_preset}
-  cmdfile="$debugdir/debug_${rname_preset}.cmd"
-  sedex="s@^\(run\)@\1 $@@"
+  if [[ "$debugdir" ]] ;  then
+    ulimit -c
 
-  tmpcmd="${cmdfile}.tmp"
-  sed -e "$sedex" "$cmdfile" > $tmpcmd
-  cat $tmpcmd
-  echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
-
-# exit
-  if [[ "$lt" ]] ; then
-    if [[ -f "$tmpcmd" ]] && [[ -s "$tmpcmd" ]] ; then
-  # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpcmd
-      libtool --mode=execute gdb        $bin -x $tmpcmd
+    if [[ -f "${build_at}/src/.libs/${rname_preset}" ]] ; then
+      binsdir="${build_at}/src/.libs"
     else
-      echo "no file : $cmdfile" >&2
+      binsdir="${build_at}/src"
+    fi
+    libsdirs=$binsdir
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdirs"
+    bin=${binsdir}/${rname_preset}
+    cmdfile="$debugdir/debug_${rname_preset}.cmd"
+    sedex="s@^\(run\)@\1 $@@"
+
+    tmpcmd="${cmdfile}.tmp"
+    sed -e "$sedex" "$cmdfile" > $tmpcmd
+    cat $tmpcmd
+    echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >&2
+
+    if [[ "$lt" ]] ; then
+      if [[ -f "$tmpcmd" ]] && [[ -s "$tmpcmd" ]] ; then
+    # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpcmd
+	libtool --mode=execute gdb        $bin -x $tmpcmd
+      else
+	echo "no file : $cmdfile" >&2
+      fi
+    else
+      gdb        $bin -x $tmpcmd
     fi
   else
-    gdb        $bin -x $tmpcmd
+    echo "debugdir not set" >&2
   fi
 }
 
@@ -70,7 +76,7 @@ function debug_any ()
 }
 
 
-
+export -f mas_debug
 
 
 

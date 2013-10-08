@@ -78,7 +78,7 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
   {
     MAS_LOG( "to wait for listener [%lx] to stop", plcontrol->h.thread );
   }
-  if ( plcontrol && ( pth = plcontrol->h.thread ) && 0 == mas_xpthread_join( pth ) )
+  if ( plcontrol && ( pth = plcontrol->h.thread ) && 0 == ( r = mas_xpthread_join( pth ) ) )
   {
     MAS_LOG( "stopped listener [%lx]", pth );
     plcontrol->h.thread = ( pthread_t ) 0;

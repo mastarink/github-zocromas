@@ -25,4 +25,5 @@ protos/http
 bins/zocromas_client
 bins/zocromas_server
 bins/zocromas_direct
+bins/zocromas_runonce
 zocromas
