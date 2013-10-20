@@ -2,3 +2,4 @@
 --enable-silent-rules
 --enable-tracemem
 --enable-debug
+--enable-mas-test

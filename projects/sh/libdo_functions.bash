@@ -56,6 +56,7 @@ function doprj ()
         Z) act=virgin-clean ;;
 #	*) echo "unknown act [$act]" >&2
       esac
+      echo ">------------------ $prj : $act ---------------------" >&2
       if [[ "$MAS_SH_VERBOSE" ]] ; then echo "[$act]" >&2 ; fi
       shfile="sh/${act}.sh"
       shfun="dosh_${act}"
@@ -95,6 +96,7 @@ function doprj ()
 	    fi	  
         esac
       fi
+      echo "<------------------ $prj : $act ---------------------" >&2
 #     elif [[ "$act" == 'make'       ]] ; then
 #       make_m || return 1
 #       done=yes

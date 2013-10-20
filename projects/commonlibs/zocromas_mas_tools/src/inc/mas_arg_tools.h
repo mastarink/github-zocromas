@@ -10,7 +10,10 @@ int mas_strcmp2( const char *s1, const char *s2 );
 int mas_strcmpv( const char *s1, const char *s2, char **vval );
 const char *mas_find_eq_value( const char *s );
 
+const char *mas_skip_space_nz( const char *args );
 const char *mas_skip_space( const char *args );
+const char *mas_skip_argo( const char *args, const char **pthis, size_t * plen, int *quot );
+const char *mas_skip_arg( const char *args, const char **pthis, size_t * plen, int *quot );
 
 /* int __mas_make_argv( const char *args, int argc, char ***pargv, int from_a ); */
 
@@ -24,6 +27,7 @@ int mas_del_argv( int argc, char **argv, int from_a );
 
 char *mas_argv_string( int targc, char *const *targv, int from_a );
 
+const char *mas_find_next_argo( const char *args, const char **pthis, size_t * plen, int *quot );
 const char *mas_find_next_arg( const char *args, const char **pthis, size_t * plen, int *quot );
 
 char *mas_strcat_xt( char *s1, const char *s2 );

@@ -125,7 +125,7 @@ function testdist_m ()
     # make -s dist
 #       echo "INCLUDE_PATH: $INCLUDE_PATH" >&2
     if ! make_target distcheck &>>$errfile ; then
-      zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't make testdist"
+      zoc_error "$LINENO" "${BASH_SOURCE[0]}" "can't make testdist; see $errfile"
 #     echo "$LINENO ERROR testdist" >&2
       return 1
     fi
@@ -228,10 +228,10 @@ function ebuild_m ()
 	else
 	  if [[ "$MAS_SH_VERBOSE" ]] ; then echo "$ebname made" >&2 ; fi
 	fi
-	chmod a+r $ebname
 	if [[ "$distfile" ]] && [[ -f "$distfile" ]] && [[ -f $ebname ]] \
 			&& [[ "$savedirdist" ]] && [[ "$savedirgentoo" ]] \
 			&& [[ -d "$savedirdist" ]] && [[ -d "$savedirgentoo" ]] ; then
+	  chmod a+r $ebname $distfile
 #	  echo "Version:$mas_vers" >&2
 #	  echo "distfile:$distfile" >&2
 ########  if [[ -f "/usr/portage/distfiles/$distname" ]] ; then

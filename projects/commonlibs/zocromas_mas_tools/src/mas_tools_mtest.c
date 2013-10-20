@@ -99,6 +99,96 @@ main( int argc, char *argv[] )
       }
     mas_del_argv( targc, targv, 0 );
   }
+  fprintf( stderr, "()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n" );
+  {
+    char cmdline[] =
+          "xautolock -locker 'xlock -mode blank -resetsaver -startCmd /home/mastar/.mas/bin/xautolock/startcmd.sh -endCmd /home/mastar/.mas/bin/xautolock/endcmd.sh' -time 5 -notify 20 -cornerdelay 20 -notifier '/home/mastar/.mas/bin/xautolock/notify.sh' -corners '000+'";
+    char **targv = NULL;
+    int targc = 0;
+
+    targc = mas_add_argv_args( targc, &targv, cmdline, 0 );
+    if ( targc )
+      for ( int i = 0; i < targc; i++ )
+      {
+        fprintf( stderr, "targv[%d]='%s'\n", i, targv[i] );
+      }
+    mas_del_argv( targc, targv, 0 );
+  }
+  fprintf( stderr, "()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n" );
+  {
+    const char *a;
+    const char *this;
+    size_t len;
+    char cmdline[] =
+          "xautolock -locker 'xlock -mode blank -resetsaver -startCmd /home/mastar/.mas/bin/xautolock/startcmd.sh -endCmd /home/mastar/.mas/bin/xautolock/endcmd.sh' -time 5 -notify 20 -cornerdelay 20 -notifier '/home/mastar/.mas/bin/xautolock/notify.sh' -corners '000+'";
+    a = cmdline;
+    fprintf( stderr, "[%s]\n", cmdline );
+    while ( a )
+    {
+      char *t;
+
+      a = mas_find_next_arg( a, &this, &len, NULL );
+      t = mas_strndup( this, len );
+      fprintf( stderr, "[%2u] t=[%s]\n", ( unsigned ) len, t );
+      /* fprintf( stderr, "     a=[%s]\n", t ); */
+      mas_free( t );
+    }
+  }
+  fprintf( stderr, "()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n" );
+  {
+    const char *a;
+    const char *this;
+    size_t len;
+    char cmdline[] = "calibre-server --daemonize --thread-pool=10 --with-library='/mnt/miscn/mastar/Calibre Library/'";
+
+    a = cmdline;
+    fprintf( stderr, "[%s]\n", cmdline );
+    while ( a )
+    {
+      char *t;
+
+      a = mas_find_next_arg( a, &this, &len, NULL );
+      t = mas_strndup( this, len );
+      fprintf( stderr, "[%2u] t=[%s]\n", ( unsigned ) len, t );
+      /* fprintf( stderr, "     a=[%s]\n", t ); */
+      mas_free( t );
+    }
+  }
+  fprintf( stderr, "()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n" );
+  {
+    const char *a;
+    const char *this;
+    size_t len;
+    char cmdline[] = "calibre-server --daemonize --thread-pool=10 --with-library=/mnt/miscn/mastar/Calibre\\ Library/";
+
+    a = cmdline;
+    fprintf( stderr, "[%s]\n", cmdline );
+    while ( a )
+    {
+      char *t;
+
+      a = mas_find_next_arg( a, &this, &len, NULL );
+      t = mas_strndup( this, len );
+      fprintf( stderr, "[%2u] t=[%s]\n", ( unsigned ) len, t );
+      /* fprintf( stderr, "     a=[%s]\n", t ); */
+      mas_free( t );
+    }
+  }
+  fprintf( stderr, "()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n" );
+  {
+    char cmdline[] = "calibre-server --daemonize --thread-pool=10 --with-library=/mnt/miscn/mastar/Calibre\\ Library/";
+    char **targv = NULL;
+    int targc = 0;
+
+    targc = mas_add_argv_args( targc, &targv, cmdline, 0 );
+    if ( targc )
+      for ( int i = 0; i < targc; i++ )
+      {
+        fprintf( stderr, "targv[%d]='%s'\n", i, targv[i] );
+      }
+    mas_del_argv( targc, targv, 0 );
+  }
+
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
 #endif

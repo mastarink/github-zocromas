@@ -240,6 +240,18 @@ AC_ARG_ENABLE([debug],
 			     [turn on debugging]),,
 	      [enable_debug=no])
 
+
+
+# Configure options: --enable-mas-test[=no].
+
+AC_ARG_ENABLE([mas_test],
+	      AC_HELP_STRING([--enable-mas-test],
+			     [turn on testing]),,
+	      [enable_mas_test=no])
+AM_CONDITIONAL([MAS_TEST], [test x$enable_mas_test = xyes])
+
+
+
 AC_ARG_ENABLE([gprof],
 	      AC_HELP_STRING([--enable-grof],
 			     [turn on gprof flags]),
