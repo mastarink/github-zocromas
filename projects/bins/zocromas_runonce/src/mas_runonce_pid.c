@@ -1,23 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* #include <stdio.h> */
+/* #include <stdlib.h> */
 #include <sys/types.h>
 #include <dirent.h>
 #include <ctype.h>
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "mas_runonce_config_types.h"
 
-#include "mas_runonce_config.h"
-#include "mas_runonce_test.h"
-#include "mas_runonce_base.h"
-#include "mas_runonce.h"
+#include "mas_runonce_section_pid.h"
+#include "mas_runonce_pid.h"
 
 pids_t runonce_pids = {.size = 32767,.array = NULL };
 
@@ -182,7 +179,8 @@ runonce_pids_reset( void )
 }
 
 int
-runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, const char *path, int argc, char **argv )
+runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, const char *path, int argc, char **argv,
+               runonce_flags_t flags )
 {
   size_t cnt = 0;
 
@@ -197,13 +195,15 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
       /* speech-dispatch(er) */
       /* notification-da(emon) */
       /* 123456789012345 */
-      /* printf( "A %d [%s:%s:%s] %d\n", __LINE__, name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc ); */
+      if ( flags.verbose > 3 )
+        printf( "? PidOf [%s:%s:%s] %d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
       if ( 0 == strncmp( name, runonce_pids.array[pid].progname, 15 ) )
       {
-        /* printf( "B %d [%s:%s:%s] %d\n", __LINE__, name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc ); */
+        if ( flags.verbose > 2 )
+          printf( "+ PidOf [%s:%s:%s] %d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
         if ( subname )
         {
-          if ( runonce_pids.array[pid].argc > 0 )
+          if ( runonce_pids.array[pid].argc > 0 /* && runonce_pids.array[pid].argv */  )
           {
             char *s;
             size_t slen;
@@ -241,9 +241,9 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
           fpid = pid;
         }
         /* printf( "oooooooooooooooooo %s : %d\n", name, argc ); */
-        if ( argc && argv )
+        if ( argc && runonce_pids.array[pid].argc /* && argv && runonce_pids.array[pid].argv */  )
         {
-          for ( int i = 0; i < argc; i++ )
+          for ( int i = 0; i < argc && i < runonce_pids.array[pid].argc; i++ )
           {
             /* printf( "OOOO %s ? %s\n", argv[i], runonce_pids.array[pid].argv[i] ); */
             if ( 0 != strcmp( argv[i], runonce_pids.array[pid].argv[i] ) )
@@ -262,4 +262,56 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
     }
   }
   return cnt;
+}
+
+int
+runonce_get_pids( const char *grppatt, const char *sectpatt, runonce_flags_t flags )
+{
+  for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
+  {
+    config_group_t *grp = configuration.groups + ngr;
+
+    if ( flags.verbose > 3 )
+      printf( "? Group:%d [%s:%s]\n", ngr, grp->name, grppatt ? grppatt : "-" );
+    if ( !grppatt || strstr( grp->name, grppatt ) )
+    {
+      if ( flags.verbose > 2 )
+        printf( "+ Group:%d [%s:%s] (%d sects)\n", ngr, grp->name, grppatt ? grppatt : "-", grp->num_sections );
+      for ( int nsec = 0; nsec < grp->num_sections; nsec++ )
+      {
+        config_section_t *sect = grp->sections + nsec;
+
+        if ( flags.verbose > 3 )
+          printf( "? Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
+        if ( !sectpatt || ( flags.strict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
+             || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
+        {
+          if ( flags.verbose > 2 )
+            printf( "+ Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
+          if ( grp->sections && *sect->name != '@' )
+          {
+            int npids;
+
+            npids = runonce_section_get_pids( sect, flags );
+            if ( npids == 1 )
+            {
+              if ( flags.list_one )
+                printf( "Running      : %s : %s\n", grp->name, sect->name );
+            }
+            else if ( npids )
+            {
+              if ( flags.list_multiple )
+                printf( "Running [%2d] : %s : %s\n", npids, grp->name, sect->name );
+            }
+            else
+            {
+              if ( flags.list_zero )
+                printf( "- Not running: %s : %s\n", grp->name, sect->name );
+            }
+          }
+        }
+      }
+    }
+  }
+  return 0;
 }

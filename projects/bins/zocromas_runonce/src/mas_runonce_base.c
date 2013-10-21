@@ -1,26 +1,17 @@
-#include <stdio.h>
+/* #include <stdio.h>  */
 #include <stdlib.h>
-#include <sys/types.h>
-#include <dirent.h>
 #include <ctype.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/capability.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_lib.h>
-#include <mastar/wrap/mas_memory.h>
-
-#include <mastar/tools/mas_arg_tools.h>
 
 #include "mas_runonce_config_types.h"
 
 #include "mas_runonce_pid.h"
 
 #include "mas_runonce_config.h"
-#include "mas_runonce_config_group.h"
 #include "mas_runonce_config_section.h"
+
+
 
 #include "mas_runonce_base.h"
 

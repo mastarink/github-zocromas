@@ -1,18 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <ctype.h>
+/* #include <stdio.h>  */
+/* #include <stdlib.h> */
 #include <string.h>
-#include <unistd.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "mas_runonce_config_types.h"
+
+
 
 #include "mas_runonce_config_section.h"
 
@@ -60,6 +57,10 @@ runonce_config_section_delete( config_section_t * section )
   mas_del_argv( section->largc, section->largv, 0 );
   section->largc = 0;
   section->largv = NULL;
+
+  mas_del_argv( section->lenvc, section->lenvp, 0 );
+  section->lenvc = 0;
+  section->lenvp = NULL;
 
   mas_del_argv( section->qargc, section->qargv, 0 );
   section->qargc = 0;
@@ -131,7 +132,6 @@ runonce_config_section_fill_env( config_section_t * section, char *string )
       }
       /* printf( "B ENV REPL: %s\n", string ); */
     }
-    break;
   }
   return string;
 }
@@ -212,51 +212,24 @@ runonce_config_section_fill( config_group_t * group, config_section_t * section 
       if ( section->id )
       {
         if ( group->sections[0].values && group->sections[0].values[ivalue] && !section->values[ivalue] )
-        {
-          /* mas_free( section->values[ivalue] ); */
           section->values[ivalue] = mas_strdup( group->sections[0].values[ivalue] );
-        }
         section->values[ivalue] = runonce_config_section_fill_percented( section, section->values[ivalue] );
         if ( ivalue != RUNONCE_WINDOWRE )
-          /* if ( ivalue == RUNONCE_LAUNCHER || ivalue == RUNONCE_QUITTER || ivalue == RUNONCE_OPTIONS (* ... *)  ) */
           section->values[ivalue] = runonce_config_section_fill_env( section, section->values[ivalue] );
       }
     }
     if ( section->id )
     {
-      if ( section->largc )
+      if ( section->values[RUNONCE_LAUNCHER] )
       {
-        printf( "!!!!!!!! %d\n", section->largc );
+        section->largc = mas_add_argv_args( section->largc, &section->largv, section->values[RUNONCE_LAUNCHER], 0 );
+        if ( section->values[RUNONCE_OPTIONS] )
+          section->largc = mas_add_argv_args( section->largc, &section->largv, section->values[RUNONCE_OPTIONS], 0 );
       }
-      else
-      {
-        if ( section->values[RUNONCE_LAUNCHER] )
-        {
-          section->largc = mas_add_argv_args( section->largc, &section->largv, section->values[RUNONCE_LAUNCHER], 0 );
-          if ( section->values[RUNONCE_OPTIONS] )
-            section->largc = mas_add_argv_args( section->largc, &section->largv, section->values[RUNONCE_OPTIONS], 0 );
-          /* for ( int ia = 0; ia < section->largc; ia++ )   */
-          /* {                                              */
-          /*   printf( "%d: %s\n", ia, section->largv[ia] ); */
-          /* }                                              */
-        }
-      }
-      if ( section->qargc )
-      {
-        printf( "!!!!!!!! %d\n", section->qargc );
-      }
-      else
-      {
-        if ( section->values[RUNONCE_QUITTER] )
-        {
-          section->qargc = mas_add_argv_args( section->qargc, &section->qargv, section->values[RUNONCE_QUITTER], 0 );
-          /* if ( section->qargv ) */
-          /* for ( int ia = 0; ia < section->qargc; ia++ )                */
-          /* {                                                            */
-          /*   printf( "[][][][][][] %d: %s\n", ia, section->qargv[ia] ); */
-          /* }                                                            */
-        }
-      }
+      if ( section->values[RUNONCE_ENV] )
+        section->lenvc = mas_add_argv_args( section->lenvc, &section->lenvp, section->values[RUNONCE_ENV], 0 );
+      if ( section->values[RUNONCE_QUITTER] )
+        section->qargc = mas_add_argv_args( section->qargc, &section->qargv, section->values[RUNONCE_QUITTER], 0 );
     }
   }
   return 0;
@@ -288,6 +261,8 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
   }
   if ( 0 == strcmp( name, "launcher" ) )
     id = RUNONCE_LAUNCHER;
+  else if ( 0 == strcmp( name, "wrapper" ) )
+    id = RUNONCE_WRAPPER;
   else if ( 0 == strcmp( name, "nolaunch" ) )
     id = RUNONCE_NOLAUNCH;
   else if ( 0 == strcmp( name, "noexit" ) )
@@ -310,6 +285,8 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     id = RUNONCE_PATH;
   else if ( 0 == strcmp( name, "psname" ) )
     id = RUNONCE_PSNAME;
+  else if ( 0 == strcmp( name, "env" ) )
+    id = RUNONCE_ENV;
   else if ( 0 == strcmp( name, "options" ) )
     id = RUNONCE_OPTIONS;
   else if ( 0 == strcmp( name, "pfin" ) )
@@ -349,10 +326,32 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     section->values = mas_malloc( RUNONCE_MAX * sizeof( char * ) );
     memset( section->values, 0, RUNONCE_MAX * sizeof( char * ) );
   }
-  if ( id == RUNONCE_NONE )
-    mas_free( value );
-  else
-    section->values[id] = value;
+  if ( value )
+  {
+    switch ( id )
+    {
+    case RUNONCE_ENV:
+      section->values[id] = mas_strcat_x( section->values[id], " " );
+      section->values[id] = mas_strcat_x( section->values[id], value );
+      /*No: break; */
+    case RUNONCE_NONE:
+      mas_free( value );
+      break;
+    default:
+      section->values[id] = value;
+      break;
+    }
+  }
   mas_free( name );
+
+  switch ( id )
+  {
+  case RUNONCE_WRAPPER:
+    section->largc = mas_add_argv_args( section->largc, &section->largv, section->values[id], 0 );
+    break;
+  default:
+    break;
+  }
+
   return 0;
 }

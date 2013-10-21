@@ -3,6 +3,7 @@
 
 /* FILE */
 #  include <stdio.h>
+#  include <stdlib.h>
 
 struct mas_mem_head_s
 {

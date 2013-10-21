@@ -106,6 +106,9 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
+PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])
+AC_SUBST(GLIB_CFLAGS)
+
 PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools])
 
 

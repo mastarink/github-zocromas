@@ -92,16 +92,16 @@ function run_any ()
 #   echo "......... $binary" >&2
     if cd $bin_dir && [[ "$bin_run" ]] ; then
       if type nanosleep >/dev/null 2>&1 ; then
-        echo "1 To run rbinary: $cmd_exec $bin_run $@" >&2
+        echo -e "1 To run rbinary: $cmd_exec $bin_run $@\n\n" >&2
         nanosleep 0.5 &&  $cmd_exec $bin_run "$@"
       elif type usleep >/dev/null 2>&1 ; then
-        echo "2 To run rbinary: $cmd_exec $bin_run $@" >&2
+        echo -e "2 To run rbinary: $cmd_exec $bin_run $@\n\n" >&2
         usleep 50000 &&  $cmd_exec $bin_run "$@"
       elif [[ -f "/usr/lib/libtcmalloc.so" ]] ; then
-        echo "3 To run rbinary: $cmd_exec $bin_run $@" >&2
+        echo -e "3 To run rbinary: $cmd_exec $bin_run $@\n\n" >&2
         $bin_run "$@"
       else
-        echo "4 To run rbinary: $cmd_exec $bin_run $@" >&2
+        echo -e "4 To run rbinary: $cmd_exec $bin_run $@\n\n" >&2
         $cmd_exec $bin_run "$@"
       fi
 ###   if type nanosleep >/dev/null 2>&1 ; then

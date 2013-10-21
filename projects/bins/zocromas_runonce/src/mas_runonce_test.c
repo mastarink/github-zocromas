@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* #include <stdio.h>  */
+/* #include <stdlib.h> */
 #include <sys/types.h>
 #include <dirent.h>
 #include <ctype.h>
@@ -32,6 +32,7 @@ runonce_test( int argc, char *argv[] )
   /*     printf( "%u@%u: [%s(%s)]\n", i, pidarray[i].ppid, pidarray[i].progname, pidarray[i].cmdline ); */
   /*   }                                                                                                */
   /* }                                                                                                  */
+  runonce_flags_t flags;
 
   printf( "--------------------------------------------------------------------------------\n" );
   {
@@ -41,42 +42,42 @@ runonce_test( int argc, char *argv[] )
 
     {
       char *a[] = { "wmifinfo", "-i", "enp2s0" };
-      n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "wmifinfo", NULL, NULL, 3, a );
+      n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "wmifinfo", NULL, NULL, 3, a, flags );
       for ( int i = 0; i < n; i++ )
         printf( "%d: PID=%u\n", i, pids[i] );
       printf( "-wmifinfo -i enp2s0 %d pids -------------------------------------------------------------------------------\n", n );
     }
     {
       char *a[] = { "wmifinfo", "-i", "enp3s0" };
-      n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "wmifinfo", NULL, NULL, 3, a );
+      n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "wmifinfo", NULL, NULL, 3, a, flags );
       for ( int i = 0; i < n; i++ )
         printf( "%d: PID=%u\n", i, pids[i] );
       printf( "-wmifinfo -i enp3s0 %d pids -------------------------------------------------------------------------------\n", n );
     }
     {
       char *a[] = { "wmifinfo", "-i", "enp4s0" };
-      n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "wmifinfo", NULL, NULL, 3, a );
+      n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "wmifinfo", NULL, NULL, 3, a, flags );
       for ( int i = 0; i < n; i++ )
         printf( "%d: PID=%u\n", i, pids[i] );
       printf( "-wmifinfo -i enp4s0 %d pids -------------------------------------------------------------------------------\n", n );
     }
     return 0;
-    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "python2.7", "pamusb-agent", "/usr/bin/", 0, NULL );
+    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "python2.7", "pamusb-agent", "/usr/bin/", 0, NULL, flags );
     for ( int i = 0; i < n; i++ )
       printf( "%d: PID=%u\n", i, pids[i] );
     printf( "-speech-dispatcher %d pids -------------------------------------------------------------------------------\n", n );
 
-    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), NULL, "speech-dispatcher", "/usr/bin/", 0, NULL );
+    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), NULL, "speech-dispatcher", "/usr/bin/", 0, NULL, flags );
     for ( int i = 0; i < n; i++ )
       printf( "%d: PID=%u\n", i, pids[i] );
     printf( "-speech-dispatcher %d pids -------------------------------------------------------------------------------\n", n );
 
-    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "speech-dispatcher", NULL, "/usr/bin/", 0, NULL );
+    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "speech-dispatcher", NULL, "/usr/bin/", 0, NULL, flags );
     for ( int i = 0; i < n; i++ )
       printf( "%d: PID=%u\n", i, pids[i] );
     printf( "-speech-dispatcher %d pids -------------------------------------------------------------------------------\n", n );
 
-    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "python2.7", "rednotebook", NULL, 0, NULL );
+    n = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), "python2.7", "rednotebook", NULL, 0, NULL, flags );
     for ( int i = 0; i < n; i++ )
       printf( "%d: PID=%u\n", i, pids[i] );
     printf( "-rednotebook %d pids -------------------------------------------------------------------------------\n", n );

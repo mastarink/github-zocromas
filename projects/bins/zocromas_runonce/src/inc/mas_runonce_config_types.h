@@ -12,6 +12,8 @@ typedef struct
   char **largv;
   int qargc;
   char **qargv;
+  int lenvc;
+  char **lenvp;
   int sig;
   char **values;
 } config_section_t;
@@ -29,9 +31,12 @@ typedef struct
 {
   unsigned strict:1;
   unsigned dry:1;
+  unsigned noop:1;
+  unsigned nosetgid:1;
   unsigned list_zero:1;
   unsigned list_one:1;
   unsigned list_multiple:1;
+  unsigned verbose:8;
 } runonce_flags_t;
 
 typedef enum
@@ -39,6 +44,7 @@ typedef enum
   ROACTION_NONE,
   ROACTION_LAUNCH,
   ROACTION_STOP,
+  ROACTION_RESTART,
   ROACTION_EXIT,
   ROACTION_TERMINATE,
 } roaction_t;
@@ -80,6 +86,7 @@ typedef enum
   RUNONCE_NONE,
   /* + */
   RUNONCE_LAUNCHER,
+  RUNONCE_WRAPPER,
   /* + */
   RUNONCE_NOLAUNCH,
   /* + */
@@ -103,6 +110,7 @@ typedef enum
   RUNONCE_NICE,
   /* LAUNCHER < OPTIONS !!! */
   RUNONCE_OPTIONS,
+  RUNONCE_ENV,
   /* + */
   RUNONCE_PFIN,
   RUNONCE_PROCESS,
