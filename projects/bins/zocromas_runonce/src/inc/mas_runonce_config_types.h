@@ -4,6 +4,7 @@
 typedef struct
 {
   int id;
+  int npids;
   pid_t *pids;
   int instances;
   char *name;
@@ -47,12 +48,19 @@ typedef enum
   ROACTION_RESTART,
   ROACTION_EXIT,
   ROACTION_TERMINATE,
+  ROACTION_LIST,
+  ROACTION_SHOW,
+  ROACTION_CLOSE,
+  ROACTION_WINDOW,
 } roaction_t;
 typedef struct
 {
+  runonce_flags_t flags;
+  int argvfrom;
   roaction_t action;
   char *directory;
   int numgroups;
+  char *group_pattern;
   config_group_t *groups;
 } config_t;
 
@@ -62,6 +70,7 @@ typedef struct
   char *progname;
   int argc;
   char **argv;
+  unsigned long wid;
 } prec_t;
 
 typedef struct
@@ -99,6 +108,7 @@ typedef enum
   RUNONCE_NOGROUP,
   /* + */
   RUNONCE_NONICE,
+  RUNONCE_CLOSE,
   /* + */
   RUNONCE_PREFIX,
   RUNONCE_OPTS4PID,

@@ -1,7 +1,6 @@
 /* #include <stdlib.h> */
 #include <stdarg.h>
 #include <string.h>
-#include <getopt.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -15,96 +14,11 @@
 #include "mas_runonce_base.h"
 
 
+#include "mas_runonce_window.h"
+#include "mas_runonce_scan.h"
+#include "mas_runonce_cli.h"
+
 #include "mas_runonce.h"
-
-
-int
-runonce_scan( const char *grppatt, const char *sectpatt, runonce_flags_t flags, char *msg, ... )
-{
-  va_list args;
-
-  /* char *action = NULL; */
-
-  va_start( args, msg );
-  for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
-  {
-    config_group_t *grp = NULL;
-
-    grp = configuration.groups + ngr;
-    /* printf( "ngr:%d\n", ngr ); */
-    if ( !grppatt || strstr( grp->name, grppatt ) )
-    {
-      for ( int nsec = 0; nsec < grp->num_sections; nsec++ )
-      {
-        config_section_t *sect = grp->sections + nsec;
-
-        if ( sect->name && sect->name[0] != '@' )
-        {
-          if ( !sectpatt || ( flags.strict && 0 == strcmp( sectpatt, sect->name ) ) || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
-          {
-            int cnt = 0;
-            va_list ids;
-            int done = 0;
-
-            if ( flags.verbose > 4 )
-              printf( "(strict:%d) #sect:%d %s ? %s\n", flags.strict, nsec, sectpatt, sect->name );
-
-            va_copy( ids, args );
-            while ( !done )
-            {
-              roaction_t id;
-
-              id = va_arg( ids, roaction_t );
-
-              /* printf( "id:%d\n", id ); */
-
-              if ( id == ROACTION_NONE )
-                break;
-              /* if ( grp->sections && *sect->name != '@' ) */
-              {
-                switch ( id )
-                {
-                case ROACTION_LAUNCH:
-                  done = runonce_launch( grp, sect, flags );
-                  break;
-                case ROACTION_TERMINATE:
-                  done = runonce_terminate( grp, sect, flags );
-                  break;
-                case ROACTION_EXIT:
-                  done = runonce_exit( grp, sect, flags );
-                  break;
-                case ROACTION_STOP:
-                case ROACTION_RESTART:
-                case ROACTION_NONE:
-                  printf( "NONE %14s : %18s\n", grp->name, sect->name );
-                  break;
-                }
-              }
-              /* printf( "-------------------------------id:%d done:%d; cnt:%d\n", id, done, cnt ); */
-              cnt++;
-            }
-            if ( !done )
-            {
-              printf( "nothing can be done for %s\n", sect->name );
-            }
-            va_end( ids );
-          }
-          else
-          {
-            /* printf( "didn't match section %s (strict:%d; sectpatt:%s)\n", sect->name, flags.strict, sectpatt ); */
-          }
-        }
-      }
-    }
-    else
-    {
-      /* printf( "didn't match group %s (strict:%d; grppatt:%s)\n", grp->name, flags.strict, grppatt ); */
-    }
-  }
-  va_end( args );
-  /* return action; */
-  return 0;
-}
 
 
 int
@@ -113,6 +27,44 @@ runonce_roaction( char *group_patt, char *sect_patt, roaction_t roaction, runonc
   /* printf( "group_patt:%s; sect_patt:%s (strict:%d)\n", group_patt, sect_patt, flags.strict ); */
   switch ( roaction )
   {
+  case ROACTION_LIST:
+    runonce_list_pids( group_patt, NULL, flags );
+    break;
+  case ROACTION_WINDOW:
+    {
+      unsigned long client_list_size = 0;
+      Window *client_list = NULL;
+
+      client_list = get_client_list( &client_list_size );
+      for ( int i = 0; i < client_list_size / sizeof( Window ); i++ )
+      {
+        char *title;
+        char *class;
+        char *role;
+        char *icon_name;
+        pid_t wpid = 0;
+
+        wpid = get_window_pid( client_list[i] );
+        title = get_window_title( client_list[i] );
+        class = get_window_class( client_list[i] );
+        role = get_window_role( client_list[i] );
+        icon_name = get_window_icon_name( client_list[i] );
+
+
+        printf( "\n(%d)\n         [%lx]\n-        [%s]\n  class: [%s]\n  role:  [%s]\n  icon:  [%s]\n  w.pid  [%u]\n", i,
+                ( unsigned long ) client_list[i], title ? title : "-", class ? class : "-", role ? role : "-", icon_name ? icon_name : "-",
+                wpid );
+        mas_free( class );
+        mas_free( role );
+        mas_free( title );
+      }
+      mas_free( client_list );
+      /* .....
+       * client_msg( activate, "_NET_CLOSE_WINDOW", 0, 0, 0, 0, 0 );
+       * .....
+       * */
+    }
+    break;
   case ROACTION_STOP:
     runonce_scan( group_patt, sect_patt, flags, NULL, ROACTION_EXIT, ROACTION_TERMINATE, ROACTION_NONE );
     break;
@@ -133,92 +85,38 @@ int
 main( int argc, char *argv[] )
 {
   int errorcnt = 0;
-  char *group_patt = NULL;
-  roaction_t roaction;
-  runonce_flags_t flags;
 
+  if ( configuration.flags.verbose > 4 )
+    printf( "+ to create runonce\n" );
   runonce_create(  );
+  if ( configuration.flags.verbose > 4 )
+    printf( "+ to load config\n" );
   runonce_config_load(  );
+  if ( configuration.flags.verbose > 4 )
+    printf( "+ to cload config\n" );
 
   {
-    int opt;
+    roaction_t aroaction[512];
+    size_t rocnt = 0;
 
-    /* -K
-     * sawfish-client -e '(delete-window (get-window-by-name-re "..." ))'
-     * -I
-     * if 't' == sawfish-client -e '(if (get-window-by-name-re "...") t nil )'
-     * */
-
-    opterr = 0;
-    while ( ( opt = getopt_long( argc, argv, "NDLZMSG1srlvf:", NULL, NULL ) ) >= 0 )
-    {
-      /* printf( "OPT %c %s\n", opt, optarg ); */
-      switch ( opt )
-      {
-      case 'l':
-        roaction = ROACTION_LAUNCH;
-        break;
-      case 's':
-        roaction = ROACTION_STOP;
-        break;
-      case 'r':
-        roaction = ROACTION_RESTART;
-        break;
-      case 'G':
-        flags.nosetgid = 1;
-        break;
-      case 'S':
-        flags.strict = 1;
-        break;
-      case 'L':
-        flags.list_zero = 1;
-        flags.list_multiple = 1;
-        flags.list_one = 1;
-        break;
-      case '1':
-        flags.list_one = 1;
-        break;
-      case 'Z':
-        flags.list_zero = 1;
-        break;
-      case 'M':
-        flags.list_multiple = 1;
-        break;
-      case 'D':
-        flags.dry = 1;
-        break;
-      case 'v':
-        flags.verbose++;
-        break;
-      case 'N':
-        flags.noop = 1;
-        break;
-      case 'f':
-        if ( optarg )
-          group_patt = mas_strdup( optarg );
-        break;
-      case '?':
-        printf( "Invalid option -- '%c'\n", optopt );
-        errorcnt++;
-        break;
-      }
-    }
-    /* printf( "ZERO:%d ONE:%d MULT:%d\n", flags.list_zero, flags.list_one, flags.list_multiple ); */
+    rocnt = runonce_cli_options( argc, argv, &errorcnt, aroaction, sizeof( aroaction ) / sizeof( aroaction[0] ) );
     if ( !errorcnt )
     {
-      /* runonce_test( argc, argv ); */
-      /* printf( "[[ %s ]] %d:%d\n", argv[0], argc, optind ); */
-      runonce_get_pids( group_patt, NULL, flags );
-      if ( optind >= argc )
+      if ( configuration.flags.verbose > 1 )
+        printf( "+ rocnt:%u\n", ( unsigned ) rocnt );
+      for ( int roseq = 0; roseq < rocnt; roseq++ )
       {
-        runonce_roaction( group_patt, NULL, roaction, flags );
-      }
-      else
-      {
-        for ( int ia = optind; ia < argc; ia++ )
-        {
-          runonce_roaction( group_patt, argv[ia], roaction, flags );
-        }
+        if ( configuration.flags.verbose > 1 )
+          printf( "+ roseq:%u\n", ( unsigned ) roseq );
+        /* runonce_test( argc, argv ); */
+        if ( configuration.flags.verbose > 4 )
+          printf( "[[ %s ]] %d:%d\n", argv[0], argc, configuration.argvfrom );
+        runonce_get_pids( configuration.group_pattern, NULL, configuration.flags );
+        if ( configuration.argvfrom < argc )
+          for ( int ia = configuration.argvfrom; ia < argc; ia++ )
+            runonce_roaction( configuration.group_pattern, argv[ia], aroaction[roseq], configuration.flags );
+        else
+          runonce_roaction( configuration.group_pattern, NULL, aroaction[roseq], configuration.flags );
       }
     }
     else
@@ -226,12 +124,6 @@ main( int argc, char *argv[] )
       printf( "ERROR\n" );
     }
   }
-  mas_free( group_patt );
   runonce_delete(  );
-#ifdef MAS_TRACEMEM
-  print_memlist( FL, stderr );
-#endif
-
-  /* sleep( 600 ); */
   return 0;
 }

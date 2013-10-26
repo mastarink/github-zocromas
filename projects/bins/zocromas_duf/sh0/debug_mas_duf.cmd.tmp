@@ -1,0 +1,4 @@
+set print thread-events off
+handle SIGPIPE nostop noprint
+run  /mnt/new_media/media/Photo/ /mnt/new_media/media/Pictures.R.20120207.164339/ /mnt/miscn/video/Pictures/
+bt

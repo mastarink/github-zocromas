@@ -61,6 +61,12 @@ cbstatus( pid_t pid, const char *line, const char *etext )
   return eline;
 }
 
+prec_t *
+runonce_pids_precs( void )
+{
+  return runonce_pids.array;
+}
+
 static void
 read_pid_file( pid_t pid, const char *name, fun_t cb )
 {
@@ -153,20 +159,21 @@ runonce_pids_create( void )
 void
 runonce_pids_delete( void )
 {
-  for ( unsigned i = 0; i < runonce_pids.size; i++ )
-  {
-    if ( runonce_pids.array[i].progname )
+  if ( runonce_pids.array )
+    for ( unsigned i = 0; i < runonce_pids.size; i++ )
     {
-      mas_free( runonce_pids.array[i].progname );
-      runonce_pids.array[i].progname = NULL;
+      if ( runonce_pids.array[i].progname )
+      {
+        mas_free( runonce_pids.array[i].progname );
+        runonce_pids.array[i].progname = NULL;
+      }
+      if ( runonce_pids.array[i].argv )
+      {
+        mas_del_argv( runonce_pids.array[i].argc, runonce_pids.array[i].argv, 0 );
+        runonce_pids.array[i].argc = 0;
+        runonce_pids.array[i].argv = NULL;
+      }
     }
-    if ( runonce_pids.array[i].argv )
-    {
-      mas_del_argv( runonce_pids.array[i].argc, runonce_pids.array[i].argv, 0 );
-      runonce_pids.array[i].argc = 0;
-      runonce_pids.array[i].argv = NULL;
-    }
-  }
   mas_free( runonce_pids.array );
   runonce_pids.array = NULL;
 }
@@ -265,6 +272,66 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
 }
 
 int
+runonce_group_get_pids( config_group_t * grp, const char *sectpatt, runonce_flags_t flags )
+{
+  for ( int nsec = 0; nsec < grp->num_sections; nsec++ )
+  {
+    config_section_t *sect = grp->sections + nsec;
+
+    if ( flags.verbose > 3 )
+      printf( "? Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
+    if ( !sectpatt || ( flags.strict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
+         || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
+    {
+      if ( flags.verbose > 2 )
+        printf( "+ Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
+      if ( *sect->name != '@' )
+      {
+        runonce_section_get_pids( sect, flags );
+      }
+    }
+  }
+  return 0;
+}
+
+int
+runonce_group_list_pids( config_group_t * grp, const char *sectpatt, runonce_flags_t flags )
+{
+  for ( int nsec = 0; nsec < grp->num_sections; nsec++ )
+  {
+    config_section_t *sect = grp->sections + nsec;
+
+    if ( flags.verbose > 3 )
+      printf( "? Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
+    if ( !sectpatt || ( flags.strict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
+         || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
+    {
+      if ( flags.verbose > 2 )
+        printf( "+ Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
+      if ( *sect->name != '@' )
+      {
+        if ( sect->npids == 1 )
+        {
+          if ( flags.list_one )
+            printf( "Running      : %s : %s\n", grp->name, sect->name );
+        }
+        else if ( sect->npids )
+        {
+          if ( flags.list_multiple )
+            printf( "Running [%2d] : %s : %s\n", sect->npids, grp->name, sect->name );
+        }
+        else
+        {
+          if ( flags.list_zero )
+            printf( "- Not running: %s : %s\n", grp->name, sect->name );
+        }
+      }
+    }
+  }
+  return 0;
+}
+
+int
 runonce_get_pids( const char *grppatt, const char *sectpatt, runonce_flags_t flags )
 {
   for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
@@ -277,40 +344,26 @@ runonce_get_pids( const char *grppatt, const char *sectpatt, runonce_flags_t fla
     {
       if ( flags.verbose > 2 )
         printf( "+ Group:%d [%s:%s] (%d sects)\n", ngr, grp->name, grppatt ? grppatt : "-", grp->num_sections );
-      for ( int nsec = 0; nsec < grp->num_sections; nsec++ )
-      {
-        config_section_t *sect = grp->sections + nsec;
+      runonce_group_get_pids( grp, sectpatt, flags );
+    }
+  }
+  return 0;
+}
 
-        if ( flags.verbose > 3 )
-          printf( "? Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
-        if ( !sectpatt || ( flags.strict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
-             || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
-        {
-          if ( flags.verbose > 2 )
-            printf( "+ Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
-          if ( grp->sections && *sect->name != '@' )
-          {
-            int npids;
+int
+runonce_list_pids( const char *grppatt, const char *sectpatt, runonce_flags_t flags )
+{
+  for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
+  {
+    config_group_t *grp = configuration.groups + ngr;
 
-            npids = runonce_section_get_pids( sect, flags );
-            if ( npids == 1 )
-            {
-              if ( flags.list_one )
-                printf( "Running      : %s : %s\n", grp->name, sect->name );
-            }
-            else if ( npids )
-            {
-              if ( flags.list_multiple )
-                printf( "Running [%2d] : %s : %s\n", npids, grp->name, sect->name );
-            }
-            else
-            {
-              if ( flags.list_zero )
-                printf( "- Not running: %s : %s\n", grp->name, sect->name );
-            }
-          }
-        }
-      }
+    if ( flags.verbose > 3 )
+      printf( "? Group:%d [%s:%s]\n", ngr, grp->name, grppatt ? grppatt : "-" );
+    if ( !grppatt || strstr( grp->name, grppatt ) )
+    {
+      if ( flags.verbose > 2 )
+        printf( "+ Group:%d [%s:%s] (%d sects)\n", ngr, grp->name, grppatt ? grppatt : "-", grp->num_sections );
+      runonce_group_list_pids( grp, sectpatt, flags );
     }
   }
   return 0;

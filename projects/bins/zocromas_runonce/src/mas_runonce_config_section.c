@@ -48,32 +48,35 @@ runonce_config_section_create( char *name, config_group_t * cfg_group )
 void
 runonce_config_section_delete( config_section_t * section )
 {
-  if ( section->values )
-    for ( int ivalue = 0; ivalue < RUNONCE_MAX; ivalue++ )
-    {
-      mas_free( section->values[ivalue] );
-      section->values[ivalue] = NULL;
-    }
-  mas_del_argv( section->largc, section->largv, 0 );
-  section->largc = 0;
-  section->largv = NULL;
+  if ( section )
+  {
+    if ( section->values )
+      for ( int ivalue = 0; ivalue < RUNONCE_MAX; ivalue++ )
+      {
+        mas_free( section->values[ivalue] );
+        section->values[ivalue] = NULL;
+      }
+    mas_del_argv( section->largc, section->largv, 0 );
+    section->largc = 0;
+    section->largv = NULL;
 
-  mas_del_argv( section->lenvc, section->lenvp, 0 );
-  section->lenvc = 0;
-  section->lenvp = NULL;
+    mas_del_argv( section->lenvc, section->lenvp, 0 );
+    section->lenvc = 0;
+    section->lenvp = NULL;
 
-  mas_del_argv( section->qargc, section->qargv, 0 );
-  section->qargc = 0;
-  section->qargv = NULL;
+    mas_del_argv( section->qargc, section->qargv, 0 );
+    section->qargc = 0;
+    section->qargv = NULL;
 
-  mas_free( section->values );
-  section->values = NULL;
+    mas_free( section->values );
+    section->values = NULL;
 
-  mas_free( section->pids );
-  section->pids = NULL;
+    mas_free( section->pids );
+    section->pids = NULL;
 
-  mas_free( section->name );
-  section->name = NULL;
+    mas_free( section->name );
+    section->name = NULL;
+  }
 }
 
 const char *
@@ -92,10 +95,16 @@ runonce_config_section_fill_env( config_section_t * section, char *string )
 {
   char *pp = NULL;
 
+  if ( configuration.flags.verbose > 4 )
+    printf( "+ config section fill env %s '%s'\n", section->name, string );
   while ( string && ( pp = strchr( string, '$' ) ) )
   {
     char *vn, *vne, *vnext;
+    int changed;
 
+    changed = 0;
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ config 1 section fill env %s '%s'\n", section->name, string );
     /* char *vvalue; */
 
     /* printf( "A ENV REPL: %s\n", string ); */
@@ -113,6 +122,8 @@ runonce_config_section_fill_env( config_section_t * section, char *string )
         vne++;
       vnext = vne;
     }
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ config 2 section fill env %s '%s'\n", section->name, string );
     if ( vne > vn )
     {
       char *vname, *vvalue;
@@ -126,12 +137,37 @@ runonce_config_section_fill_env( config_section_t * section, char *string )
 
         s = mas_strndup( string, pp - string );
         s = mas_strcat_x( s, vvalue );
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ config 2.1 section fill env %s '%s' %s='%s'\n", section->name, string, vname, vvalue );
         s = mas_strcat_x( s, vnext );
         mas_free( string );
         string = s;
+        changed = 1;
+      }
+      else
+      {
+        char *s;
+
+        s = mas_strndup( string, pp - string );
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ config 2.1 section fill env %s '%s' %s=NIL\n", section->name, string, vname );
+        s = mas_strcat_x( s, vnext );
+        mas_free( string );
+        string = s;
+        changed = 1;
       }
       /* printf( "B ENV REPL: %s\n", string ); */
     }
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ config 3 (%d) section fill env %s '%s'\n", changed, section->name, string );
+    if ( !changed )
+    {
+      if ( configuration.flags.verbose > 4 )
+        printf( "+ --------------- section fill env %s '%s'\n", section->name, string );
+      break;
+    }
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ config 4 (%d) section fill env %s '%s'\n", changed, section->name, string );
   }
   return string;
 }
@@ -195,11 +231,15 @@ runonce_config_section_fill( config_group_t * group, config_section_t * section 
 {
   if ( group && section )
   {
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ config section fill [%s:%s]\n", group->name, section->name );
     if ( !section->values )
     {
       section->values = mas_malloc( RUNONCE_MAX * sizeof( char * ) );
       memset( section->values, 0, RUNONCE_MAX * sizeof( char * ) );
     }
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ 2 config section fill [%s:%s]\n", group->name, section->name );
     if ( !section->id )
     {
       if ( !section->values[RUNONCE_LAUNCHER] )
@@ -207,17 +247,33 @@ runonce_config_section_fill( config_group_t * group, config_section_t * section 
       if ( !section->values[RUNONCE_COMMAND] )
         section->values[RUNONCE_COMMAND] = mas_strdup( "%l%o" );
     }
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ 3 config section fill [%s:%s]\n", group->name, section->name );
     for ( int ivalue = 0; ivalue < RUNONCE_MAX; ivalue++ )
     {
+      if ( configuration.flags.verbose > 4 )
+        printf( "+ 3.1 config section fill [%s:%s] value %d of %d\n", group->name, section->name, ivalue, RUNONCE_MAX );
       if ( section->id )
       {
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ 3.1.1 config section fill [%s:%s] value %d of %d\n", group->name, section->name, ivalue, RUNONCE_MAX );
         if ( group->sections[0].values && group->sections[0].values[ivalue] && !section->values[ivalue] )
           section->values[ivalue] = mas_strdup( group->sections[0].values[ivalue] );
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ 3.1.2 config section fill [%s:%s] value %d of %d\n", group->name, section->name, ivalue, RUNONCE_MAX );
         section->values[ivalue] = runonce_config_section_fill_percented( section, section->values[ivalue] );
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ 3.1.3 config section fill [%s:%s] value %d of %d\n", group->name, section->name, ivalue, RUNONCE_MAX );
         if ( ivalue != RUNONCE_WINDOWRE )
           section->values[ivalue] = runonce_config_section_fill_env( section, section->values[ivalue] );
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ 3.1.4 config section fill [%s:%s] value %d of %d\n", group->name, section->name, ivalue, RUNONCE_MAX );
       }
+      if ( configuration.flags.verbose > 4 )
+        printf( "- 3.1 config section fill [%s:%s] value %d of %d\n", group->name, section->name, ivalue, RUNONCE_MAX );
     }
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ 4 config section fill [%s:%s]\n", group->name, section->name );
     if ( section->id )
     {
       if ( section->values[RUNONCE_LAUNCHER] )
@@ -231,6 +287,8 @@ runonce_config_section_fill( config_group_t * group, config_section_t * section 
       if ( section->values[RUNONCE_QUITTER] )
         section->qargc = mas_add_argv_args( section->qargc, &section->qargv, section->values[RUNONCE_QUITTER], 0 );
     }
+    if ( configuration.flags.verbose > 4 )
+      printf( "- config section fill [%s:%s]\n", group->name, section->name );
   }
   return 0;
 }
@@ -257,7 +315,7 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
 
   if ( !name )
   {
-    printf( "UNKNOWN %2d. %-15s::\t%-15s = '%s'\n", nl, section->name, name, value );
+    printf( "UNKNOWN (no name '%s') %2d. %-15s::\t%-15s = '%s'\n", string, nl, section->name, name, value );
   }
   if ( 0 == strcmp( name, "launcher" ) )
     id = RUNONCE_LAUNCHER;
@@ -273,6 +331,8 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     id = RUNONCE_NOTERMINATE;
   else if ( 0 == strcmp( name, "nonice" ) )
     id = RUNONCE_NONICE;
+  else if ( 0 == strcmp( name, "windowclose" ) )
+    id = RUNONCE_CLOSE;
   else if ( 0 == strcmp( name, "nogroup" ) )
     id = RUNONCE_NOGROUP;
   else if ( 0 == strcmp( name, "prefix" ) )
@@ -319,7 +379,7 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     id = RUNONCE_RWAIT;
   else
   {
-    printf( "UNKNOWN %2d. %-15s::\t%-15s = '%s'\n", nl, section->name, name, value );
+    printf( "UNKNOWN ('%s') %2d. %-15s::\t%-15s = '%s'\n", string, nl, section->name, name, value );
   }
   if ( !section->values )
   {

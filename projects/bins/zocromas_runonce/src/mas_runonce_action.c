@@ -16,6 +16,7 @@
 
 #include "mas_runonce_pid.h"
 #include "mas_runonce_section_pid.h"
+#include "mas_runonce_window.h"
 
 
 
@@ -23,7 +24,7 @@
 
 
 static int
-runonce_waiton( config_section_t * sect, runonce_flags_t flags, pid_t pid )
+runonce_waiton( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t pid )
 {
   int npids;
 
@@ -84,7 +85,7 @@ runonce_waiton( config_section_t * sect, runonce_flags_t flags, pid_t pid )
 }
 
 static int
-runonce_waitoff( config_section_t * sect, runonce_flags_t flags, pid_t pid )
+runonce_waitoff( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t pid )
 {
   int npids;
 
@@ -171,7 +172,121 @@ runonce_waitoff( config_section_t * sect, runonce_flags_t flags, pid_t pid )
 /* }                                                                       */
 
 int
-runonce_launch( config_group_t * grp, config_section_t * sect, runonce_flags_t flags )
+runonce_close( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
+{
+  int done = 0;
+  prec_t *pidinfo = runonce_pids_precs(  );
+
+  runonce_wids_set(  );
+
+  if ( sect->values[RUNONCE_CLOSE] )
+  {
+    for ( int ipid = 0; ipid < sect->instances; ipid++ )
+    {
+      pid_t pid;
+
+      pid = sect->pids[ipid];
+      if ( pid )
+      {
+        unsigned long wid;
+
+        wid = pidinfo[pid].wid;
+        if ( wid )
+        {
+          if ( flags.dry )
+            printf( "DRY close %s:%s\n", grp->name, sect->name );
+          mas_runonce_close_window( wid, flags );
+        }
+      }
+    }
+  }
+  done = __LINE__;
+  return done;
+}
+
+int
+runonce_show( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
+{
+  int done = 0;
+  char *command = mas_argv_string( sect->largc, sect->largv, 0 );
+  char *spids = NULL;
+  char *swids = NULL;
+  char *sdtids = NULL;
+  int maxcmdlen = 90;
+  prec_t *pidinfo = runonce_pids_precs(  );
+
+  runonce_wids_set(  );
+  if ( !nsec )
+    printf( "%2s %1s %5s %10s %3s  %14s  %18s    %s\n", "N", "I", "PID", "WID", "D", "GROUP", "SECT", "COMMAND" );
+
+  for ( int ipid = 0; ipid < sect->instances; ipid++ )
+  {
+    pid_t pid;
+
+    pid = sect->pids[ipid];
+    if ( pid )
+    {
+      {
+        char spid[16];
+
+        snprintf( spid, sizeof( spid ), "%u", pid );
+        if ( spids )
+          spids = mas_strcat_x( spids, "," );
+        spids = mas_strcat_x( spids, spid );
+      }
+      {
+        unsigned long wid;
+        int dtid;
+
+        wid = pidinfo[pid].wid;
+        if ( wid )
+        {
+          char swid[16];
+          char sdtid[16];
+
+          snprintf( swid, sizeof( swid ), "0x%lx", wid );
+          if ( swids )
+            swids = mas_strcat_x( swids, "," );
+          swids = mas_strcat_x( swids, swid );
+
+          dtid = get_window_desktop_num( wid );
+          if ( dtid >= 0 )
+          {
+            snprintf( sdtid, sizeof( sdtid ), "%d", dtid );
+            if ( sdtids )
+              sdtids = mas_strcat_x( sdtids, "," );
+            sdtids = mas_strcat_x( sdtids, sdtid );
+          }
+        }
+      }
+    }
+  }
+  if ( strlen( command ) > maxcmdlen && maxcmdlen > 5 )
+  {
+    char *cmd;
+
+    cmd = mas_strndup( command, maxcmdlen - 5 );
+    mas_free( command );
+    command = cmd;
+    command = mas_strcat_x( command, "..." );
+  }
+  {
+    char sinst[16];
+
+    snprintf( sinst, sizeof( sinst ), "%d", sect->instances );
+    done = __LINE__;
+    printf( "%2d:%1s:%5s:%10s:D%2s: %14s: %18s:   [%s]\n", nsec, sect->instances ? sinst : "-", spids ? spids : "-", swids ? swids : "-",
+            sdtids ? sdtids : "-", grp->name, sect->name, command );
+  }
+  mas_free( swids );
+  mas_free( sdtids );
+  mas_free( spids );
+  mas_free( command );
+  return done;
+}
+
+int
+runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
 {
   int done = 0;
 
@@ -200,7 +315,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, runonce_flags_t f
       {
         /* int status = 0; */
 
-        runonce_waiton( sect, flags, child );
+        runonce_waiton( sect, nsec, flags, child );
         /* printf( "A waitpid status: %d\n", status ); */
         /* sleep( 3 );                                 */
         /* waitpid( child, &status, WNOHANG );         */
@@ -261,7 +376,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, runonce_flags_t f
           char *command = mas_argv_string( sect->largc, sect->largv, 0 );
           char *env = mas_argv_string( sect->lenvc, sect->lenvp, 0 );
 
-          printf( "DRY {%s} execvp(%s, %s)\n", env, sect->name, command );
+          printf( "DRY {%s}\n", env );
+          printf( "DRY execvp(%s, %s)\n", sect->name, command );
           mas_free( env );
           mas_free( command );
         }
@@ -309,7 +425,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, runonce_flags_t f
             mas_free( command );
           }
         }
-        printf( "EXEC FAIL\n" );
+        if ( !flags.dry )
+          printf( "EXEC FAIL\n" );
         exit( 17 );
       }
     }
@@ -318,7 +435,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, runonce_flags_t f
 }
 
 int
-runonce_terminate( config_group_t * grp, config_section_t * sect, runonce_flags_t flags )
+runonce_terminate( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
 {
   int done = 0;
   int signal = 0;
@@ -347,7 +464,7 @@ runonce_terminate( config_group_t * grp, config_section_t * sect, runonce_flags_
         else
         {
           kill( sect->pids[ipid], signal );
-          runonce_waitoff( sect, flags, sect->pids[ipid] );
+          runonce_waitoff( sect, nsec, flags, sect->pids[ipid] );
         }
     }
     else
@@ -358,7 +475,7 @@ runonce_terminate( config_group_t * grp, config_section_t * sect, runonce_flags_
 }
 
 int
-runonce_exit( config_group_t * grp, config_section_t * sect, runonce_flags_t flags )
+runonce_exit( config_group_t * grp, config_section_t * sect, int nsec, runonce_flags_t flags )
 {
   int done = 0;
 
@@ -391,7 +508,7 @@ runonce_exit( config_group_t * grp, config_section_t * sect, runonce_flags_t fla
           int status = 0;
 
           printf( "To wait OFF Instances %d : %u\n", sect->instances, sect->pids ? sect->pids[0] : 0 );
-          runonce_waitoff( sect, flags, child );
+          runonce_waitoff( sect, nsec, flags, child );
           /* waitpid( child, &status, WNOHANG ); */
           waitpid( child, &status, 0 );
         }

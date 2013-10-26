@@ -186,7 +186,7 @@ Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
     fprintf(stderr, __VA_ARGS__); \
 }
 
-                                      /* declarations of static functions *//*{{{ */
+                                                                                                                  /* declarations of static functions *//*{{{ */
 static gboolean wm_supports( Display * disp, const gchar * prop );
 static Window *get_client_list( Display * disp, unsigned long *size );
 static int client_msg( Display * disp, Window win, char *msg,
@@ -469,6 +469,7 @@ client_msg( Display * disp, Window win, char *msg, /* {{{ */
 
   if ( XSendEvent( disp, DefaultRootWindow( disp ), False, mask, &event ) )
   {
+    fprintf( stderr, "%lx Sent %s event.\n", win, msg );
     return EXIT_SUCCESS;
   }
   else
@@ -808,6 +809,7 @@ activate_window( Display * disp, Window win, /* {{{ */
 static int
 close_window( Display * disp, Window win )
 {                               /*{{{ */
+  printf( "0x%lx\n", win );
   return client_msg( disp, win, "_NET_CLOSE_WINDOW", 0, 0, 0, 0, 0 );
 }                               /*}}} */
 

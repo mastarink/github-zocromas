@@ -27,7 +27,7 @@ AC_PREREQ([2.67])
 # AM_INIT_AUTOMAKE
 
 # AC_INIT([mas_wrap],[1.0.1.3],[bug-report@mastarink.net])
-AC_INIT(m4_esyscmd([sh/prjname.sh]),m4_esyscmd([sh/zocversion.sh]),[bug-report@mastarink.net])
+AC_INIT(m4_esyscmd([shn/prjname.sh]),m4_esyscmd([shn/zocversion.sh]),[bug-report@mastarink.net])
 #AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_SRCDIR([src/mas_lib.c])
 AC_CONFIG_AUX_DIR([.auxdir])

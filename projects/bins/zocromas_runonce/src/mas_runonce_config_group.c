@@ -20,12 +20,15 @@
 static void
 runonce_config_group_sections_delete( config_group_t * group )
 {
-  for ( int isect = 0; isect < group->num_sections; isect++ )
+  if ( group && group->sections )
   {
-    runonce_config_section_delete( &group->sections[isect] );
+    for ( int isect = 0; isect < group->num_sections; isect++ )
+    {
+      runonce_config_section_delete( &group->sections[isect] );
+    }
+    mas_free( group->sections );
+    group->sections = NULL;
   }
-  mas_free( group->sections );
-  group->sections = NULL;
 }
 
 config_group_t *
@@ -52,13 +55,16 @@ runonce_config_group_create( const char *name, size_t namelen )
 void
 runonce_config_group_delete( config_group_t * group )
 {
-  runonce_config_group_sections_delete( group );
+  if ( group )
+  {
+    runonce_config_group_sections_delete( group );
 
-  mas_free( group->name );
-  group->name = NULL;
+    mas_free( group->name );
+    group->name = NULL;
 
-  mas_free( group->filename );
-  group->filename = NULL;
+    mas_free( group->filename );
+    group->filename = NULL;
+  }
 }
 
 static int
@@ -74,6 +80,8 @@ runonce_config_group_load_stream( FILE * stream, config_group_t * group )
         stream && !feof( stream )
         && ( string = ( char * ) ( mas_skip_space_nz( mas_chomp( fgets( buf, sizeof( buf ), stream ) ) ) ) ); nl++ )
   {
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ load config group line %d feof:%d [%s]\n", nl, feof( stream ), string );
     if ( ( l = strlen( string ) ) && *string != '#' )
     {
       if ( string[0] == '[' && string[l - 1] == ']' )
@@ -81,6 +89,8 @@ runonce_config_group_load_stream( FILE * stream, config_group_t * group )
         string[0] = string[l - 1] = 0;
         if ( section )
           runonce_config_section_fill( group, section );
+        if ( configuration.flags.verbose > 4 )
+          printf( "+ load config group section [%s]\n", string + 1 );
         section = runonce_config_section_create( ++string, group );
         /* if ( section && !section->values )                                */
         /* {                                                                 */
@@ -97,6 +107,8 @@ runonce_config_group_load_stream( FILE * stream, config_group_t * group )
       }
     }
     /* printf( "----------------- %d. %s\n", nl, string ); */
+    if ( configuration.flags.verbose > 4 )
+      printf( "- load config group line %d feof:%d [%s]\n", nl, feof( stream ), string );
   }
   if ( section )
     runonce_config_section_fill( group, section );
@@ -110,6 +122,8 @@ runonce_config_group_load( const char *dir, config_group_t * group )
   size_t ln;
 
   ln = strlen( group->name );
+  if ( configuration.flags.verbose > 4 )
+    printf( "+ load config group name %s\n", group->name );
   if ( ln > 5 /* && 0 == strcmp( group->name + ln - 5, ".conf" ) */  )
   {
     FILE *f;
@@ -119,6 +133,8 @@ runonce_config_group_load( const char *dir, config_group_t * group )
     fpath = mas_strcat_x( fpath, group->filename );
     if ( ( f = fopen( fpath, "r" ) ) )
     {
+      if ( configuration.flags.verbose > 4 )
+        printf( "+ load config group %s\n", fpath );
       /* printf( "opened %s\n", fpath ); */
       runonce_config_group_load_stream( f, group );
       fclose( f );

@@ -38,7 +38,14 @@ runonce_config_delete( void )
     runonce_config_group_delete( &configuration.groups[id] );
   }
   mas_free( configuration.groups );
+  configuration.groups = NULL;
+  configuration.numgroups = 0;
+
   mas_free( configuration.directory );
+  configuration.directory = NULL;
+
+  mas_free( configuration.group_pattern );
+  configuration.group_pattern = NULL;
 }
 
 int
@@ -90,6 +97,8 @@ runonce_config_load( void )
 {
   for ( int id = 0; id < configuration.numgroups; id++ )
   {
+    if ( configuration.flags.verbose > 4 )
+      printf( "+ load config group id=%d\n", id );
     runonce_config_group_load( configuration.directory, &configuration.groups[id] );
   }
   return 0;

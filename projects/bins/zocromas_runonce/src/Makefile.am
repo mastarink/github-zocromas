@@ -5,7 +5,7 @@ suidperms = 4755
 sgidperms = 2755
 
 
-zocromas_runonce_SOURCES= mas_runonce.c mas_runonce_base.c mas_runonce_action.c mas_runonce_pid.c mas_runonce_section_pid.c mas_runonce_test.c mas_runonce_config.c mas_runonce_config_group.c mas_runonce_config_section.c mas_runonce_window.c
+zocromas_runonce_SOURCES= mas_runonce.c mas_runonce_base.c mas_runonce_cli.c mas_runonce_scan.c mas_runonce_action.c mas_runonce_pid.c mas_runonce_section_pid.c mas_runonce_test.c mas_runonce_config.c mas_runonce_config_group.c mas_runonce_config_section.c mas_runonce_window.c
 # zocromas_runonce_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ -lcap
 zocromas_runonce_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
 # zocromas_runonce_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@

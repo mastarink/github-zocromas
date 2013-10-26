@@ -26,4 +26,5 @@ bins/zocromas_client
 bins/zocromas_server
 bins/zocromas_direct
 bins/zocromas_runonce
+bins/zocromas_duf
 zocromas

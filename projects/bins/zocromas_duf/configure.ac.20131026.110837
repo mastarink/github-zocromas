@@ -1,0 +1,58 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.68])
+AC_INIT([zocromas_duf], [0.0.1], [bug-report@mastarink.net])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror dist-bzip2])
+
+CFLAGS="-O0 -g -ggdb"
+AC_SUBST([CFLAGS])
+
+
+# Checks for programs.
+AC_PROG_CC
+
+AM_PROG_CC_C_O
+AC_PROG_INSTALL
+AC_PROG_LIBTOOL
+
+# AM_PATH_GTK_2_0([2.10.0],,AC_MSG_ERROR([Gtk+ 2.10.0 or higher required.]))
+AC_CONFIG_MACRO_DIR([m4])
+# Checks for libraries.
+# GLADE_LIBS="`pkg-config --libs libglade-2.0`"
+# AC_SUBST(GLADE_LIBS)
+# GLADE_CFLAGS="`pkg-config --cflags libglade-2.0`"
+# AC_SUBST(GLADE_CFLAGS)
+
+AX_LIB_SQLITE3([3.7])
+AX_LIB_CRYPTO([yes])
+AX_CHECK_CRYPTO_LIB([MD5],[MD5])
+
+AC_SUBST(SQLITE3_CFLAGS)
+AC_SUBST(SQLITE3_LDFLAGS)
+AC_SUBST(SQLITE3_VERSION)
+# AC_SUBST(CRYPTO_LIBS)
+
+# PKG_CHECK_MODULES([GLADE], [libglade-2.0])
+# PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
+# AM_LDFLAGS="-Wl,--export-dynamic"
+# AC_SUBST(AM_LDFLAGS)
+AM_CFLAGS="-pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h ${SQLITE3_CFLAGS}"
+AC_SUBST(AM_CFLAGS)
+
+AM_LDFLAGS=""
+AC_SUBST(AM_LDFLAGS)
+
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_SRCDIR([config.h.in])
+AC_CONFIG_FILES([Makefile
+		src/Makefile])
+AC_OUTPUT
+

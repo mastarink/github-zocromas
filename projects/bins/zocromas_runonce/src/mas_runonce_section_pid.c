@@ -58,7 +58,8 @@ runonce_section_get_pids( config_section_t * sect, runonce_flags_t flags )
     sect->pids = NULL;
     sect->pids = mas_malloc( npids * sizeof( pid_t ) );
     memcpy( sect->pids, pids, npids * sizeof( pid_t ) );
+    sect->npids = npids;
     mas_del_argv( targc, targv, 0 );
   }
-  return npids;
+  return sect->npids;
 }
