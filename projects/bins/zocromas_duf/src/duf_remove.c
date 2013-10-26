@@ -10,7 +10,9 @@
 
 #include <sqlite3.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
 #include <mastar/tools/mas_arg_tools.h>
 
 
@@ -57,12 +59,12 @@ files_by_md5id( char *path_ids, int targc, char ***ptargv, sqlite3_int64 md5id )
     sqlite3_free_table( presult );
   }
   fprintf( stderr, "....................................\n" );
-  {
-    char buffer[2048];
-    char *s;
-
-    s = gets( buffer );
-  }
+  /* {                     */
+  /*   char buffer[2048];  */
+  /*   char *s;            */
+  /*                       */
+  /*   s = gets( buffer ); */
+  /* }                     */
   sqlite3_free( sql );
   return targc;
 }

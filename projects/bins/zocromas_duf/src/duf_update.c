@@ -8,6 +8,8 @@
 
 
 #include <sqlite3.h>
+
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_def.h"
@@ -19,7 +21,7 @@
 
 
 
-static void
+static sqlite3_int64
 update_file_ni( const char *path, const char *fname, ino_t file_inode, struct stat *pst_dir, sqlite3_int64 dir_id )
 {
   sqlite3_int64 resd = 0;
@@ -38,6 +40,7 @@ update_file_ni( const char *path, const char *fname, ino_t file_inode, struct st
   }
   resd = insert_filedata( file_inode, pst_dir, pst_file );
   resf = insert_filename( fname, dir_id, resd );
+  return resf;
 }
 
 static void

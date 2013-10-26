@@ -106,6 +106,10 @@ AC_TYPE_UID_T
 
 # Checks for library functions.
 
+AX_LIB_CRYPTO([yes])
+AX_CHECK_CRYPTO_LIB([MD5],[MD5])
+AX_LIB_SQLITE3([3.7])
+
 PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])
 AC_SUBST(GLIB_CFLAGS)
 

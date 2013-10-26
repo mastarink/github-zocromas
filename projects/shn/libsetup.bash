@@ -65,7 +65,7 @@ function shn_setup_global_dirs
 
     for id in admin save savedist savegentoo ebuilds ebuild install flavour error files ; do
       if [[ "${MAS_SHN_DIR[$id]}" ]] && ! [[ -d "${MAS_SHN_DIR[$id]}" ]] ; then
-	mkdir "${MAS_SHN_DIR[$id]}" || return 1
+	shn_mkdir "${MAS_SHN_DIR[$id]}" || return 1
 	shn_msg created ${MAS_SHN_DIR[$id]}
       fi
     done
@@ -86,6 +86,7 @@ function shn_setup_project_dirs
   if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
     MAS_SHN_DIR[configure]=$MAS_SHN_PROJECT_DIR
     MAS_SHN_DIR[aux]=$MAS_SHN_PROJECT_DIR/.auxdir
+    MAS_SHN_DIR[mased]=$MAS_SHN_PROJECT_DIR/mased
     MAS_SHN_DIR[build]="${MAS_SHN_DIR[aux]}/.build"
     MAS_SHN_DIR[m4]="${MAS_SHN_DIR[aux]}/m4"
     MAS_SHN_DIR[error]="/tmp"
@@ -93,9 +94,9 @@ function shn_setup_project_dirs
     shn_dbgmsg "aux:${MAS_SHN_DIR[aux]}"
     shn_dbgmsg "build:${MAS_SHN_DIR[build]}"
 
-    for id in aux build m4 ; do
+    for id in aux build m4 mased ; do
       if [[ "${MAS_SHN_DIR[$id]}" ]] && ! [[ -d "${MAS_SHN_DIR[$id]}" ]] ; then
-	mkdir "${MAS_SHN_DIR[$id]}" || return 1
+	shn_mkdir "${MAS_SHN_DIR[$id]}" || return 1
 	shn_msg created ${MAS_SHN_DIR[$id]}
       fi
     done
@@ -224,7 +225,7 @@ function shn_setup_projects ()
 }
 function shn_setup_additional ()
 {
-  local fn file link
+  local fn file link gs f fnn
   if ! [[ -f "configure.ac" ]] ; then 
     shn_errmsg setup additional - no configure.ac
     return 1
@@ -245,37 +246,77 @@ function shn_setup_additional ()
 	return 1
       fi
     done
-    for fn in sh shn ; do
-      if [[ -d "$MAS_SHN_PROJECTS_DIR/$fn" ]] ; then
-        file=`shn_realpath --relative-to=. ${MAS_SHN_PROJECTS_DIR}/$fn`
-	link=$( shn_basename $file )
-	if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
-	  shn_dbgmsg "$file -> $link"
-	  shn_ln -s $file $link || return 1
-	  shn_msg created link $link
-	fi
-      else
-        shn_errmsg ${MAS_SHN_PROJECTS_DIR}/$fn
-	return 1
-      fi
-    done
-    for fn in .localrc ; do
-      if [[ -f "$MAS_SHN_PROJECTS_DIR/$fn" ]] ; then
-        file=`shn_realpath --relative-to=. ${MAS_SHN_PROJECTS_DIR}/$fn`
-	link=$( shn_basename $file )
-	if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
-	  shn_dbgmsg "$file -> $link"
-	  shn_ln -s $file $link || return 1
-	  shn_msg created link $link
-	fi
-      else
-        shn_errmsg ${MAS_SHN_PROJECTS_DIR}/$fn
-	return 1
-      fi
-    done    
   else
     shn_errmsg "shn_setup_additional - ${MAS_SHN_DIR[files]}"
     return 1
+  fi
+  for fn in sh shn ; do
+    if [[ -d "$MAS_SHN_PROJECTS_DIR/$fn" ]] ; then
+      file=`shn_realpath --relative-to=. ${MAS_SHN_PROJECTS_DIR}/$fn`
+      link=$( shn_basename $file )
+      if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
+	shn_dbgmsg "$file -> $link"
+	shn_ln -s $file $link || return 1
+	shn_msg created link $link
+      fi
+    else
+      shn_errmsg ${MAS_SHN_PROJECTS_DIR}/$fn
+      return 1
+    fi
+  done
+  for fn in .localrc ; do
+    if [[ -f "$MAS_SHN_PROJECTS_DIR/$fn" ]] ; then
+      file=`shn_realpath --relative-to=. ${MAS_SHN_PROJECTS_DIR}/$fn`
+      link=$( shn_basename $file )
+      if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
+	shn_dbgmsg "$file -> $link"
+	shn_ln -s $file $link || return 1
+	shn_msg created link $link
+      fi
+    else
+      shn_errmsg ${MAS_SHN_PROJECTS_DIR}/$fn
+      return 1
+    fi
+  done    
+  if [[ -d mased ]] ; then
+    if pushd mased &>/dev/null ; then
+       for fn in sh.mased.vim ac.mased.vim ; do
+	if [[ -f "${MAS_SHN_DIR[files]}/mased/$fn" ]] ; then
+	  file=`shn_realpath --relative-to=. ${MAS_SHN_DIR[files]}/mased/$fn`
+	  link=$( shn_basename $file )
+	  if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
+	    shn_dbgmsg "$file -> $link"
+	    shn_ln -s $file $link || { popd &>/dev/null ; return 1 ; }
+	    shn_msg created link $link
+	  fi
+	else
+	  shn_errmsg ${MAS_SHN_DIR[files]}/mased/$fn
+	  popd &>/dev/null
+	  return 1
+	fi
+      done        
+      if ! [[ -f "src.mased.vim" ]] ; then
+        gs=`grep '^AC_CONFIG_SRCDIR' $MAS_SHN_PROJECT_DIR/configure.ac`
+        if [[ "$gs" ]] && [[ "$gs" =~ AC_CONFIG_SRCDIR\(\[src/(.*)\.c\]\) ]] ; then
+	  echo "find ${BASH_REMATCH[1]}.c" >> src.mased.vim
+	  echo "sfind ${BASH_REMATCH[1]}.h" >> src.mased.vim
+	  echo  >> src.mased.vim
+	  echo  >> src.mased.vim
+	  for f in $MAS_SHN_PROJECT_DIR/src/*.c ; do
+	    fn=$( shn_basename $f )
+	    if [[ "$fn" =~ ^(.*)\.c$ ]] ; then
+	      fnn=${BASH_REMATCH[1]}
+	      if [[ -f "$MAS_SHN_PROJECT_DIR/src/inc/${fnn}.h" ]] ; then
+	        echo "tab sfind ${fnn}.c" >> src.mased.vim
+	        echo "sfind ${fnn}.h" >> src.mased.vim
+	        echo  >> src.mased.vim
+	      fi
+	    fi
+	  done
+	fi
+      fi
+      popd &>/dev/null
+    fi
   fi
   return 0
 }

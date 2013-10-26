@@ -5,7 +5,9 @@
 
 #include <sqlite3.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_def.h"
@@ -175,9 +177,8 @@ file_to_path_id( const char *path, const char *name, sqlite3_int64 * pmd5id )
 
     sql = sqlite3_mprintf( "SELECT filenames.id, md5.id FROM filenames "
                            " LEFT JOIN filedatas on (filenames.dataid=filedatas.id) "
-                           " LEFT JOIN md5 on (md5.id=filedatas.md5id) " 
-			   " WHERE pathid='%llu' and name='%s'", pathid,
-                           qname ? qname : name );
+                           " LEFT JOIN md5 on (md5.id=filedatas.md5id) "
+                           " WHERE pathid='%llu' and name='%s'", pathid, qname ? qname : name );
     /* fprintf( stderr, ">>>>>{%s}<<<<<<<<\n", sql ); */
     r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &errmsg );
     if ( r == SQLITE_OK )
@@ -198,6 +199,7 @@ file_to_path_id( const char *path, const char *name, sqlite3_int64 * pmd5id )
   }
   return filenameid;
 }
+
 sqlite3_int64
 md5id_of_file( const char *path, const char *name )
 {
@@ -205,9 +207,9 @@ md5id_of_file( const char *path, const char *name )
 
   /* sqlite3_int64 pathid = 0;  */
   /* sqlite3_int64 pathid2 = 0; */
-  sqlite3_int64 filenameid = 0;
+  /* sqlite3_int64 filenameid = 0; */
 
-  filenameid = file_to_path_id( path, name, &md5id );
+  /* filenameid = */ ( void ) file_to_path_id( path, name, &md5id );
   /* pathid = path_to_path_id( path ); */
   /* SAME:  pathid = update_path( path, -1, 0, 0 ); */
   /* fprintf( stderr, "#%llu#%llu# : %s %s\n", pathid, pathid2, path, name ); */
@@ -215,5 +217,3 @@ md5id_of_file( const char *path, const char *name )
   /* fprintf( stderr, "#%llu#%llu# : %s %s\n", filenameid, md5id, path, name ); */
   return md5id;
 }
-
-

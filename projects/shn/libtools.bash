@@ -63,6 +63,10 @@ function shn_rm ()
 {
   /bin/rm $@
 }
+function shn_mkdir ()
+{
+  /bin/mkdir $@
+}
 function shn_cat ()
 {
   /bin/cat $@
@@ -121,12 +125,12 @@ function shn_unset_all
 }
 function shn_show_errors ()
 {
-  local ername=$1 size
+  local ername=$1 l
   if [[ "$ername" ]] && [[ -s "$ername" ]] && ! [[ "$shn_ignore_error" ]]; then
-    size=`stat --format='%s' $ername`
-    if [[ "$size" -lt 200 ]] ; then
+    l=`shn_cat $ername | /bin/wc -l`
+    if [[ "$l" && "$l" -gt 0 && "$l" -lt 12 ]] ; then
       shn_msg "--------------------------------------------------"
-      shn_cat "$ername" >&2
+      shn_cat -n "$ername" >&2
       shn_msg "--------------------------------------------------"
     fi
     shn_msg "-- see $ername" 

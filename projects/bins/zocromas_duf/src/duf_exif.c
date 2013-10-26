@@ -6,7 +6,9 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
 #include <mastar/tools/mas_arg_tools.h>
 
 
@@ -59,13 +61,14 @@ copy_jpeg_by_date( void )
         char *fname;
         char *path = NULL;
         sqlite3_int64 pathid;
-        sqlite3_int64 dataid;
+
+        /* sqlite3_int64 dataid; */
         char *datetime;
 
         /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", presult[ir], presult[ir + 1], presult[ir + 2], presult[ir + 3], */
         /*          presult[ir + 4] );                                                                                         */
 
-        dataid = strtoll( presult[ir + 0], NULL, 10 );
+        /* dataid = */ ( void ) strtoll( presult[ir + 0], NULL, 10 );
         pathid = strtoll( presult[ir + 3], NULL, 10 );
         path = path_id_to_path( pathid );
         datetime = presult[ir + 4];
@@ -150,8 +153,7 @@ update_exif( void )
   sql = sqlite3_mprintf( "SELECT filedatas.id, filedatas.dev, filedatas.inode, filenames.pathid, filenames.name "
                          " FROM filedatas " " LEFT JOIN filenames ON (filedatas.id=filenames.dataid) "
                          " LEFT JOIN exif ON (exif.dataid=filedatas.id) "
-                         " WHERE exif.datetime IS NULL "
-                         " AND ( filenames.name LIKE '%%.JPG' OR filenames.name LIKE '%%.JPEG' ) " );
+                         " WHERE exif.datetime IS NULL " " AND ( filenames.name LIKE '%%.JPG' OR filenames.name LIKE '%%.JPEG' ) " );
   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &errmsg );
   fprintf( stderr, "%ux%u : %s\n", row, column, sql );
   if ( r == SQLITE_OK )

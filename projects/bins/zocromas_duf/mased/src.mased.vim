@@ -1,0 +1,34 @@
+find duf.c
+sfind duf.h
+
+
+tab sfind duf.c
+sfind duf.h
+
+tab sfind duf_create.c
+sfind duf_create.h
+
+tab sfind duf_dirent.c
+sfind duf_dirent.h
+
+tab sfind duf_exif.c
+sfind duf_exif.h
+
+tab sfind duf_finddup.c
+sfind duf_finddup.h
+
+tab sfind duf_insert.c
+sfind duf_insert.h
+
+tab sfind duf_md5.c
+sfind duf_md5.h
+
+tab sfind duf_remove.c
+sfind duf_remove.h
+
+tab sfind duf_update.c
+sfind duf_update.h
+
+tab sfind duf_utils.c
+sfind duf_utils.h
+

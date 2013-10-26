@@ -1,6 +1,8 @@
 #include <stdio.h>
 
 #include <sqlite3.h>
+
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_def.h"
@@ -70,5 +72,5 @@ check_tables( void )
                     " exif (id INTEGER PRIMARY KEY autoincrement, dataid INTEGER, datetime INTEGER, d INTEGER, broken_date INTEGER, now REAL)", NULL, NULL,
                     &errmsg );
   SQL_EXECC( "CREATE UNIQUE INDEX IF NOT EXISTS exif_uniq ON exif (dataid)" );
-  return 0;
+  return r;
 }

@@ -298,7 +298,7 @@ function shn_build_ebuild_update ()
   local ebuild_dir=${MAS_SHN_DIR[ebuild]}/${ebuild_prefix}${MAS_SHN_PROJECT_NAME}
   shn_dbgmsg "ebuild_dir:$ebuild_dir"
   if ! [[ -d "$ebuild_dir" ]] ; then
-    mkdir "$ebuild_dir"
+    shn_mkdir "$ebuild_dir"
   fi
   if [[ "${MAS_SHN_DIR[savedist]}" ]] && [[ "${MAS_SHN_DIR[savegentoo]}" ]] \
   	&& [[ -d "${MAS_SHN_DIR[savedist]}" ]] && [[ -d "${MAS_SHN_DIR[savegentoo]}" ]] \

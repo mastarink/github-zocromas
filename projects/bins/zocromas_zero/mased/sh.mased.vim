@@ -1,1 +1,1 @@
-../../../zocromas/mased/sh.mased.vim
+../../../files/mased/sh.mased.vim

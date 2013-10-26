@@ -6,7 +6,9 @@
 
 #include <sqlite3.h>
 
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_def.h"
@@ -119,11 +121,11 @@ print_duplicates( void )
     if ( row )
       for ( int ir = column; ir <= column * row; ir += column )
       {
-        sqlite3_int64 cnt;
+        /* sqlite3_int64 cnt; */
         sqlite3_int64 md5id;
 
         md5id = strtoll( presult[ir], NULL, 10 );
-        cnt = strtoll( presult[ir + 1], NULL, 10 );
+        /* cnt = strtoll( presult[ir + 1], NULL, 10 ); */
         get_duplicates( md5id );
       }
   }
@@ -151,10 +153,10 @@ print_duplicate_dirs( void )
       for ( int ir = column; ir <= column * row; ir += column )
       {
         char *mdline;
-        sqlite3_int64 cnt;
+        /* sqlite3_int64 cnt; */
 
         mdline = presult[ir + 1];
-        cnt = strtoll( presult[ir + 2], NULL, 10 );
+        /* cnt = strtoll( presult[ir + 2], NULL, 10 ); */
         {
           int r2;
           char *sql2;
