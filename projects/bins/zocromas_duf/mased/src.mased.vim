@@ -2,8 +2,6 @@ find duf.c
 sfind duf.h
 
 
-tab sfind duf.c
-sfind duf.h
 
 tab sfind duf_create.c
 sfind duf_create.h

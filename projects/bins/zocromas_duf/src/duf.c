@@ -4,10 +4,12 @@
 #include <unistd.h>
 
 
+
 #include <sqlite3.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 
 #include "duf_def.h"
@@ -50,30 +52,60 @@
 int
 main( int argc, char **argv )
 {
-  SQL_ERR( sqlite3_initialize(  ) );
-  SQL_ERR( sqlite3_open( "db/duf-photo.sqlite3", &pDb ) );
+  char *dbdir;
 
-  SQL_EXECC( "PRAGMA synchronous = OFF" );
-  check_tables(  );
+  dbdir = getenv( "MAS_SHN_PROJECTS_DIR" );
+  printf( "Dir: %s\n", dbdir );
+  if ( dbdir )
+  {
+    int r = 0;
+    char *dbfile;
 
-  fprintf( stderr, "Scan\n" );
-  for ( int ia = 1; ia < argc; ia++ )
-    update_path( argv[ia], -1, 1, 1 );
+    dbfile = mas_strdup( dbdir );
+    dbfile = mas_strcat_x( dbfile, "/../duf_db/duf-photo.sqlite3" );
+    printf( "File: %s\n", dbfile );
+    /* printf( "File: %s\n", "/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3" ); */
+    r = sqlite3_initialize(  );
+    if ( r == SQLITE_OK )
+      printf( "Init OK\n" );
 
-  update_md5(  );
-  update_exif(  );
-  find_duplicates(  );
+    r = sqlite3_open( dbfile, &pDb );
+    if ( r == SQLITE_OK )
+      printf( "Open OK\n" );
+    /* SQL_ERR( sqlite3_open( "/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3", &pDb ) ); */
+    if ( 0 )
+    {
+      char *errmsg = NULL;
 
-  update_mdline(  );
+      r = sqlite3_exec( pDb, "PRAGMA synchronous = OFF", NULL, NULL, &errmsg );
+      check_tables(  );
+
+      fprintf( stderr, "Scan\n" );
+      for ( int ia = 1; ia < argc; ia++ )
+        update_path( argv[ia], -1, 1, 1 );
+
+      update_md5(  );
+      update_exif(  );
+      find_duplicates(  );
+
+      update_mdline(  );
 
 
-  /* print_hardlinks(  ); */
+      /* print_hardlinks(  ); */
 
-  copy_jpeg_by_date(  );
-  /* print_duplicate_dirs(  ); */
-  /* print_duplicates(  ); */
-  SQL_ERR( sqlite3_close( pDb ) );
+      copy_jpeg_by_date(  );
 
-  SQL_ERR( sqlite3_shutdown(  ) );
+      /* print_duplicate_dirs(  ); */
+      /* print_duplicates(  ); */
+    }
+    r = sqlite3_close( pDb );
+    if ( r == SQLITE_OK )
+      printf( "Close OK\n" );
+
+    r = sqlite3_shutdown(  );
+    if ( r == SQLITE_OK )
+      printf( "Shutdown OK\n" );
+    mas_free( dbfile );
+  }
   return 0;
 }

@@ -1,3 +1,4 @@
+#!/bin/sh
 function localrc
 {
   if [[ -L "sh" ]] ; then
@@ -17,7 +18,8 @@ function localrc
   fi
 }
 
-localrc $@
+# localrc $@
+~/.mas/bin/mas_projects.sh $@
 
 
 # vi: ft=sh

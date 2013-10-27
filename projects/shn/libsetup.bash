@@ -1,4 +1,4 @@
-declare MAS_SHN_PROJECTS_DIR MAS_SHN_PROJECT_NAME MAS_SHN_PROJECT_FULLNAME MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_RDIR
+declare MAS_SHN_PROJECTS_DIR MAS_SHN_PRJTOP_DIR MAS_SHN_PROJECT_NAME MAS_SHN_PROJECT_FULLNAME MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_RDIR
 declare -A MAS_SHN_DIR
 declare MAS_SHN_DEBUG
 declare MAS_SHN_FLAVOUR MAS_SHN_REAL_THIS
@@ -88,6 +88,7 @@ function shn_setup_project_dirs
     MAS_SHN_DIR[aux]=$MAS_SHN_PROJECT_DIR/.auxdir
     MAS_SHN_DIR[mased]=$MAS_SHN_PROJECT_DIR/mased
     MAS_SHN_DIR[build]="${MAS_SHN_DIR[aux]}/.build"
+    MAS_SHN_DIR[buildsrc]="${MAS_SHN_DIR[build]}/src"
     MAS_SHN_DIR[m4]="${MAS_SHN_DIR[aux]}/m4"
     MAS_SHN_DIR[error]="/tmp"
 
@@ -106,20 +107,34 @@ function shn_setup_project_dirs
   fi
   return 0
 }
+function shn_project_name ()
+{
+  if [[ -L shn ]] && [[ -f shn/libwork.bash ]] ; then
+    echo -n "$MAS_SHN_PROJECT_NAME"
+  else
+    return 1
+  fi
+}
 function shn_project_version ()
 {
-  if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
-    if pushd "$MAS_SHN_PROJECT_DIR" &>/dev/null && [[ -f "zocversion.txt" ]] ; then
-      vseq=$( cat zocversion.txt )
-      if type -t datem 2>&1 >/dev/null ; then
-	echo -n "${vseq}.$( datem )"
+  if [[ -L shn ]] && [[ -f shn/libwork.bash ]] ; then
+    if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
+      if pushd "$MAS_SHN_PROJECT_DIR" &>/dev/null && [[ -f "zocversion.txt" ]] ; then
+	vseq=$( cat zocversion.txt )
+	if type -t datem 2>&1 >/dev/null ; then
+	  echo -n "${vseq}.$( datem )"
+	else
+	  echo -n "$vseq"
+	fi
+	popd &>/dev/null
       else
-	echo -n "$vseq"
+	echo -n '0.0.1'
       fi
-      popd &>/dev/null
     else
-      echo -n '0.0.1'
+      return 1
     fi
+  else
+    return 1
   fi
   return 0
 }
@@ -145,12 +160,13 @@ function shn_setup_projects ()
       if [[ "$projects_dir" ]] && [[ -d "$projects_dir" ]] ; then
 	shn_dbgmsg "projects_dir:$projects_dir"
 	MAS_SHN_PROJECTS_DIR=$projects_dir
+	MAS_SHN_PRJTOP_DIR=`shn_realpath "$MAS_SHN_PROJECTS_DIR/.."`
 	shn_setup_global_dirs || return 1
 	local projects_file_name=projects.list
 	local projects_file=$projects_dir/$projects_file_name
 	if [[ "$projects_file" ]] && [[ -f "$projects_file" ]] ; then
 	  shn_dbgmsg "OK projects_file:$projects_file"
-	  readarray -t MAS_SHN_PROJECTS < $projects_file
+	  readarray -t MAS_SHN_PROJECTS < $projects_file || return 1
 	  for (( i=0 ; $i < ${#MAS_SHN_PROJECTS[@]} ; i++ )) ; do
 	    shn_dbgmsg "-${i}. [${MAS_SHN_PROJECTS[$i]}]"
 	    MAS_SHN_HASH_PROJECTS[${MAS_SHN_PROJECTS[$i]}]=1
@@ -163,7 +179,7 @@ function shn_setup_projects ()
         local projects_disables_file=$projects_dir/$projects_disabled_file_name
         if [[ "$projects_disables_file" ]] && [[ -f "$projects_disables_file" ]] ; then
           shn_dbgmsg "OK projects_disables_file:$projects_disables_file"
-          readarray -t MAS_SHN_DISABLED_PROJECTS < $projects_disables_file
+          readarray -t MAS_SHN_DISABLED_PROJECTS < $projects_disables_file || return 1
           for (( i=0 ; $i < ${#MAS_SHN_DISABLED_PROJECTS[@]} ; i++ )) ; do
             shn_dbgmsg "-${i}. DISABLED [${MAS_SHN_DISABLED_PROJECTS[$i]}]"
             if [[ "${MAS_SHN_DISABLED_PROJECTS[$i]}" ]] ; then
@@ -223,9 +239,60 @@ function shn_setup_projects ()
   shn_dbgmsg "S5 ($retcode) `pwd`" >&2
   return $retcode
 }
+function shn_initial_src_mased_vim  ()
+{
+  local gs fname fn fnn
+  gs=`grep '^AC_CONFIG_SRCDIR' $MAS_SHN_PROJECT_DIR/configure.ac` || return $?
+  if [[ "$gs" ]] && [[ "$gs" =~ AC_CONFIG_SRCDIR\(\[src/(.*)\.c\]\) ]] ; then
+    echo "find ${BASH_REMATCH[1]}.c" >> src.mased.vim || return $?
+    echo "sfind ${BASH_REMATCH[1]}.h" >> src.mased.vim || return $?
+    echo  >> src.mased.vim || return $?
+    echo  >> src.mased.vim || return $?
+    for fname in $MAS_SHN_PROJECT_DIR/src/*.c ; do
+      fn=$( shn_basename $fname )
+      if [[ "$fn" =~ ^(.*)\.c$ ]] ; then
+	fnn=${BASH_REMATCH[1]}
+	if [[ -f "$MAS_SHN_PROJECT_DIR/src/inc/${fnn}.h" ]] ; then
+	  echo "tab sfind ${fnn}.c" >> src.mased.vim || return $?
+	  echo "sfind ${fnn}.h" >> src.mased.vim || return $?
+	  echo  >> src.mased.vim || return $?
+	fi
+      fi
+    done
+  fi
+  return 0
+}
+function shn_initial_mased_vim
+{
+  local file link fn retval=0
+  if [[ -d mased ]] ; then
+    if pushd mased &>/dev/null ; then
+       for fn in sh.mased.vim ac.mased.vim ; do
+	if [[ -f "${MAS_SHN_DIR[files]}/mased/$fn" ]] ; then
+	  file=`shn_realpath --relative-to=. ${MAS_SHN_DIR[files]}/mased/$fn` || { retval=$? ; break ; }
+	  link=$( shn_basename $file ) || { retval=$? ; break ; }
+	  if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
+	    shn_dbgmsg "$file -> $link"
+	    shn_ln -s $file $link || { retval=$? ; break ; }
+	    shn_msg created link $link
+	  fi
+	else
+	  shn_errmsg ${MAS_SHN_DIR[files]}/mased/$fn
+	  retval=1
+	  break
+	fi
+      done        
+      if ! [[ -f "src.mased.vim" ]] ; then
+        shn_initial_src_mased_vim || { retval=$? ; break ; }
+      fi
+      popd &>/dev/null
+    fi
+  fi
+  return $retval
+}
 function shn_setup_additional ()
 {
-  local fn file link gs f fnn
+  local fn file link
   if ! [[ -f "configure.ac" ]] ; then 
     shn_errmsg setup additional - no configure.ac
     return 1
@@ -278,46 +345,7 @@ function shn_setup_additional ()
       return 1
     fi
   done    
-  if [[ -d mased ]] ; then
-    if pushd mased &>/dev/null ; then
-       for fn in sh.mased.vim ac.mased.vim ; do
-	if [[ -f "${MAS_SHN_DIR[files]}/mased/$fn" ]] ; then
-	  file=`shn_realpath --relative-to=. ${MAS_SHN_DIR[files]}/mased/$fn`
-	  link=$( shn_basename $file )
-	  if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
-	    shn_dbgmsg "$file -> $link"
-	    shn_ln -s $file $link || { popd &>/dev/null ; return 1 ; }
-	    shn_msg created link $link
-	  fi
-	else
-	  shn_errmsg ${MAS_SHN_DIR[files]}/mased/$fn
-	  popd &>/dev/null
-	  return 1
-	fi
-      done        
-      if ! [[ -f "src.mased.vim" ]] ; then
-        gs=`grep '^AC_CONFIG_SRCDIR' $MAS_SHN_PROJECT_DIR/configure.ac`
-        if [[ "$gs" ]] && [[ "$gs" =~ AC_CONFIG_SRCDIR\(\[src/(.*)\.c\]\) ]] ; then
-	  echo "find ${BASH_REMATCH[1]}.c" >> src.mased.vim
-	  echo "sfind ${BASH_REMATCH[1]}.h" >> src.mased.vim
-	  echo  >> src.mased.vim
-	  echo  >> src.mased.vim
-	  for f in $MAS_SHN_PROJECT_DIR/src/*.c ; do
-	    fn=$( shn_basename $f )
-	    if [[ "$fn" =~ ^(.*)\.c$ ]] ; then
-	      fnn=${BASH_REMATCH[1]}
-	      if [[ -f "$MAS_SHN_PROJECT_DIR/src/inc/${fnn}.h" ]] ; then
-	        echo "tab sfind ${fnn}.c" >> src.mased.vim
-	        echo "sfind ${fnn}.h" >> src.mased.vim
-	        echo  >> src.mased.vim
-	      fi
-	    fi
-	  done
-	fi
-      fi
-      popd &>/dev/null
-    fi
-  fi
+  shn_initial_mased_vim
   return 0
 }
 

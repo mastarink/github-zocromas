@@ -71,6 +71,10 @@ function shn_cat ()
 {
   /bin/cat $@
 }
+function shn_sed ()
+{
+  /bin/sed $@
+}
 function shn_dirname ()
 {
   shn_dbgmsg "dirname $@" >&2

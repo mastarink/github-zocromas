@@ -34,12 +34,12 @@ function shn_build_xcommand ()
 {
   local retcode=0
   local errname 
-  local cmd=`which $1` ; shift
-  local cmd_base=$( shn_basename $cmd )
+  local cmd=$1
+  shift
+  local cmd_base
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   shn_dbgmsg 1 $FUNCNAME
-  errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.`datemt`.result"
   if [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] ; then
     shn_dbgmsg 2 $FUNCNAME ${MAS_SHN_DIR[error]}
     if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] ; then
@@ -47,6 +47,10 @@ function shn_build_xcommand ()
       if pushd "${MAS_SHN_DIR[build]}" &>/dev/null ; then
   #     shn_pwd
 	shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIR[build]}
+	cmd=`which $cmd` || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
+	cmd_base=$( shn_basename $cmd ) || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
+	errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.`datemt`.result" \
+			|| { retcode=$? ; popd &>/dev/null ; return $retcode ; }
 	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] && [[ -x "$cmd" ]] ; then
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 	  if $cmd $@  >>$errname 2>&1 ; then
@@ -85,7 +89,8 @@ function shn_xcommand ()
 {
   local retcode=0
   local errname 
-  local cmd=`which $1` ; shift
+  local cmd=`which $1` || return $?
+  shift
   local cmd_base=$( shn_basename $cmd )
   shn_setup_projects || return $?
   local shn_dont_setup=yes
@@ -166,7 +171,7 @@ function shn_build_common_make ()
 {
   shn_build_xcommand make -s $@ && shn_msg common make $@ ok || return $?
 }
-function shn_build_autoconf ()
+function shn_build_autoreconf ()
 {
   local retcode=0
   shn_setup_projects || return $?
@@ -221,6 +226,19 @@ function shn_build_configure ()
 # shn_build_list . config.status config.log config.h
   return 0
 }
+function shn_build_recheck ()
+{
+  MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:recheck]=`datemt`
+  shn_msg $FUNCNAME 1
+  shn_setup_projects || return $?
+  shn_msg $FUNCNAME 2
+  local shn_dont_setup=yes
+  shn_dbgmsg "recheck [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
+  shn_msg $FUNCNAME 3
+  shn_build_xcommand ./config.status --recheck && shn_msg recheck ok || return $?
+  shn_msg $FUNCNAME 4
+  return 0
+}
 function shn_build_make ()
 {
   shn_dbgmsg "$FUNCNAME 1"
@@ -234,7 +252,9 @@ function shn_build_superclean ()
 {
   local f d l
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:superclean]=`datemt`
-  for f in configure Makefile.in src/inc/Makefile.in src/Makefile.in inc/Makefile.in aclocal.m4 ; do
+  for f in configure Makefile.in src/inc/Makefile.in src/Makefile.in inc/Makefile.in aclocal.m4 \
+  	vrb.tmp src.mased.viminfo ac.mased.viminfo sh.mased.viminfo config.status config.log
+  do
     if [[ "$f" ]] && [[ -f "$f" ]] ; then
       shn_msg removing file $f
       rm $f

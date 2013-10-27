@@ -1,4 +1,4 @@
-for lib in tools setup build ; do
+for lib in tools setup build run ; do
   if ! [[ -f ${MAS_SHN_DIR:-shn}/lib${lib}.bash ]] || ! . ${MAS_SHN_DIR:-shn}/lib${lib}.bash ; then
     shn_errmsg "loading environment ${MAS_SHN_DIR:-shn}/lib${lib}.bash"
     return 1
@@ -97,9 +97,17 @@ function shn_exit ()
 }
 function shn_load ()
 {
+  local retcode=0
+  pushd &>/dev/null
+  if ! [[ -L shn ]] && type -t shn_project_cd &>/dev/null ; then
+    shn_project_cd zoctypes
+  fi
   if [[ -f shn/libwork.bash ]] ; then
     . shn/libwork.bash
+    retcode=$?
   fi
+  popd &>/dev/null
+  return $retcode
 }
 function shn_last ()
 {
@@ -122,9 +130,140 @@ function shn_last ()
     fi
   done
 }
+function shn_code ()
+{
+  local code=${1:-h}
+  shift
+  shn_dbgmsg "shn 1 -- $code"
+  shn_dbgmsg "shn 2 -- $code"
+  case $code in
+    h)
+      shn_msg 'project' $MAS_SHN_PROJECT_NAME
+      shn_msg 'h = help'
+      shn_msg 'r = run'
+      shn_msg 'g = debug'
+      shn_msg 'G = core debug'
+      shn_msg 'l = list'
+      shn_msg 'c = configure'
+      shn_msg 'C = make clean'
+      shn_msg 'D = make distclean'
+      shn_msg 'U = "super" clean'
+      shn_msg 'a = autoreconf'
+      shn_msg 't = make distcheck and save tarballs to' ${MAS_SHN_DIR[savedist]}
+      shn_msg 'm = make'
+      shn_msg 'i = make install'
+      shn_msg 'E = check files for e'
+      shn_msg 'R = reload working shell libs (shn)'
+      shn_msg 'L = list build dir'
+      shn_msg "I = info for $MAS_SHN_PROJECT_NAME"
+      shn_msg 'x = command at build dir'
+      shn_msg 'e = ebuild - prepare distfiles and Manifest for Gentoo / emerge'
+    ;;
+    l)
+      # pwd >&2 || return $?
+      shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
+      MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:list]=`datemt`
+    ;;
+    r)
+      shn_run $@
+    ;;
+    g)
+      shn_debug $@
+    ;;
+    G)
+      shn_core_debug $@
+    ;;
+    c)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_configure || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    C)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_clean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    D)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_distclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    U)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_superclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    a)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_autoreconf || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;	  
+    e)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_ebuild_update    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    E)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_ebuild_check    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;	  
+    t)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_dist      || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    m)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_make      || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    I)
+      if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] && [[ -x "${MAS_SHN_DIR[build]}/config.status" ]] ; then
+        ${MAS_SHN_DIR[build]}/config.status -V
+      fi
+    ;;
+    i)
+      shn_dbgmsg "shn 2.${code}.1"
+#	  shn_build_make      || return $?
+#         shn_dbgmsg "shn 2.${code}.2"
+      shn_build_install || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.3"
+    ;;
+    R)
+      shn_load
+    ;;
+    L)
+      shn_msg List
+      shn_build_list $@
+    ;;
+    x)
+      shn_std_command build $@
+    ;;
+    *)
+      shn_errmsg "wrong code '$code'"
+      return 1
+    ;;
+  esac
+  shn_dbgmsg "shn 3 -- $code"
+  shn_dbgmsg "shn 4 -- $code ; next:$1"
+  return 0
+}
 function shn ()
 {
+  local code=$1
 # export MAS_SHN_DEBUG=yes  
+  shift
   shn_dbgmsg 1 shn
   shn_dbgmsg 2a shn
   local retcode=0
@@ -132,101 +271,36 @@ function shn ()
   shn_dbgmsg "project $MAS_SHN_PROJECT_NAME"
   shn_setup_projects || shn_project_cd "${MAS_SHN_PROJECT_NAME:-zocromas_zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_dbgmsg 3 shn
-  if [[ "$1" == each ]] ; then
-    shift
+  if [[ "$code" == each ]] ; then
     shn_msg "Will install to ${MAS_SHN_DIR[flavour]}"
     shn_project_each '' shn $@
-  else
-    local act_list="$@"
+  elif [[ "$code" == one ]] ; then
     local shn_dont_setup=yes
     
 #   local shn_ignore_error=yes
-    shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
-    while [[ "$1" ]] ; do
-      local code=$1
+    shn_code $@
+    retcode=$?
+  elif [[ "$code" ]] ; then
+    local shn_dont_setup=yes
+    
+#   local shn_ignore_error=yes
+    while [[ "$code" ]] ; do
+#     if [[ "$code" =~ ^(L|X|x|r)$ ]] ; then
+#       shn_warn "use '$FUNCNAME one $code'"
+#     else
+        shn_code $code
+#     fi
+      code=$1
       shift
-      shn_dbgmsg "shn 1 -- $code"
-      if [[ "$code" ]] ; then
-	shn_dbgmsg "shn 2 -- $code"
-	case $code in
-	  l)
-	    # pwd >&2 || return $?
-	    MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:list]=`datemt`
-	  ;;
-	  c)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_configure || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  C)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_clean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  D)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_distclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  U)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_superclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  a)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_autoconf || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;	  
-	  e)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_ebuild_update    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  E)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_ebuild_check    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;	  
-	  t)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_dist      || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  m)
-	    shn_dbgmsg "shn 2.${code}.1"
-	    shn_build_make      || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.2"
-	  ;;
-	  i)
-	    shn_dbgmsg "shn 2.${code}.1"
-  #	  shn_build_make      || return $?
-  #         shn_dbgmsg "shn 2.${code}.2"
-	    shn_build_install || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-	    shn_dbgmsg shn $code ok
-	    shn_dbgmsg "shn 2.${code}.3"
-	  ;;
-	  *)
-	    shn_errmsg "wrong code '$code'"
-	    return 1
-	  ;;
-	esac
-	shn_dbgmsg "shn 3 -- $code"
-      fi
-      shn_dbgmsg "shn 4 -- $code ; next:$1"
     done
+  else
+    local shn_dont_setup=yes
+    
+#   local shn_ignore_error=yes
+    shn_code h
   fi
   shn_dbgmsg "shn 5 -- $code"
-  shn_dbgmsg shn "  <`datemt`> end($retcode)" $act_list -- ${MAS_SHN_PROJECT_NAME}
+  shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MAS_SHN_PROJECT_NAME}
 # shn_pwd
   return $retcode
 }

@@ -1,11 +1,11 @@
 SUBDIRS= inc
-bin_PROGRAMS=mas_duf
+bin_PROGRAMS=zocromas_duf
 
 
-mas_duf_SOURCES=duf.c duf_create.c duf_update.c duf_utils.c duf_insert.c duf_dirent.c duf_md5.c duf_exif.c duf_finddup.c duf_remove.c
+zocromas_duf_SOURCES=duf.c duf_create.c duf_update.c duf_utils.c duf_insert.c duf_dirent.c duf_md5.c duf_exif.c duf_finddup.c duf_remove.c
 
-mas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
-mas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif
+zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
+zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif
 
 # bin_PROGRAMS = gui-program cli-program
 # gui_program_SOURCES = gui.c
