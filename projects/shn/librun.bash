@@ -27,6 +27,8 @@ function shn_run ()
       bindir="${bsrc}"
     fi
     bin=${bindir}/${rname}
+    # for core dump:
+    ulimit -c unlimited
     $bin
   fi
 }
@@ -79,14 +81,53 @@ function shn_debug ()
       fi
     fi
   else
-   shn_errmsg "rname:$rname"
-   shn_errmsg "bsrc:$bsrc"
-   shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
-   shn_errmsg "debugdir:$debugdir"
+    shn_errmsg "rname:$rname"
+    shn_errmsg "bsrc:$bsrc"
+    shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
+    shn_errmsg "debugdir:$debugdir"
   fi
   return 0
 }
 function shn_core_debug ()
 {
-  shn_msg "Not implemented '$FUNCNAME'"
+  local retcode=0 corename coredir="/tmp"
+  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bin cmdfile tmpcmd sedex lt rname
+  rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
+  local bindir libsdir debugdir
+  local gid
+  gid="`stat -c%g /proc/$$`"
+
+  debugdir="$MAS_SHN_PROJECT_DIR/debug"
+  libsdir="${bsrc}/.libs"
+  shn_msg "1 $FUNCNAME"
+  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
+    shn_msg "2 $FUNCNAME"
+    if [[ -d "$libsdir" ]] ; then
+      if [[ -f "${libsdir}/${rname}" ]] ; then
+        bindir="$libsdir"
+      else
+        bindir="$bsrc"
+      fi
+      export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdir"
+    fi
+    bin=${bindir}/${rname}
+
+    ulimit -c
+    if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
+      shn_msg ">>> $corename" >&2
+    else
+      shn_errmsg "not found $corename" >&2
+      unset corename
+      return 1
+    fi
+
+    libtool --mode=execute gdb $bin -c "$corename"
+  else
+    shn_errmsg "rname:$rname"
+    shn_errmsg "bsrc:$bsrc"
+    shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
+    shn_errmsg "debugdir:$debugdir"
+  fi
+  return 0
 }

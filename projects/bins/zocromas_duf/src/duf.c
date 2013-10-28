@@ -73,11 +73,12 @@ main( int argc, char **argv )
     if ( r == SQLITE_OK )
       printf( "Open OK\n" );
     /* SQL_ERR( sqlite3_open( "/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3", &pDb ) ); */
-    if ( 0 )
     {
       char *errmsg = NULL;
 
       r = sqlite3_exec( pDb, "PRAGMA synchronous = OFF", NULL, NULL, &errmsg );
+      if ( r == SQLITE_OK )
+        printf( "Pragma OK\n" );
       check_tables(  );
 
       fprintf( stderr, "Scan\n" );
@@ -92,11 +93,14 @@ main( int argc, char **argv )
 
 
       /* print_hardlinks(  ); */
+      if ( 0 )
+      {
 
-      copy_jpeg_by_date(  );
+        copy_jpeg_by_date(  );
 
-      /* print_duplicate_dirs(  ); */
-      /* print_duplicates(  ); */
+        /* print_duplicate_dirs(  ); */
+        /* print_duplicates(  ); */
+      }
     }
     r = sqlite3_close( pDb );
     if ( r == SQLITE_OK )

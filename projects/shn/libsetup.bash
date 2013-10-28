@@ -1,4 +1,5 @@
-declare MAS_SHN_PROJECTS_DIR MAS_SHN_PRJTOP_DIR MAS_SHN_PROJECT_NAME MAS_SHN_PROJECT_FULLNAME MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_RDIR
+declare MAS_SHN_PROJECTS_DIR MAS_SHN_PRJTOP_DIR MAS_SHN_PROJECT_NAME MAS_SHN_PREV_PROJECT_NAME 
+declare MAS_SHN_PROJECT_FULLNAME MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_RDIR
 declare -A MAS_SHN_DIR
 declare MAS_SHN_DEBUG
 declare MAS_SHN_FLAVOUR MAS_SHN_REAL_THIS
@@ -87,6 +88,7 @@ function shn_setup_project_dirs
     MAS_SHN_DIR[configure]=$MAS_SHN_PROJECT_DIR
     MAS_SHN_DIR[aux]=$MAS_SHN_PROJECT_DIR/.auxdir
     MAS_SHN_DIR[mased]=$MAS_SHN_PROJECT_DIR/mased
+    MAS_SHN_DIR[debug]=$MAS_SHN_PROJECT_DIR/debug
     MAS_SHN_DIR[build]="${MAS_SHN_DIR[aux]}/.build"
     MAS_SHN_DIR[buildsrc]="${MAS_SHN_DIR[build]}/src"
     MAS_SHN_DIR[m4]="${MAS_SHN_DIR[aux]}/m4"
@@ -95,7 +97,7 @@ function shn_setup_project_dirs
     shn_dbgmsg "aux:${MAS_SHN_DIR[aux]}"
     shn_dbgmsg "build:${MAS_SHN_DIR[build]}"
 
-    for id in aux build m4 mased ; do
+    for id in aux build m4 mased debug ; do
       if [[ "${MAS_SHN_DIR[$id]}" ]] && ! [[ -d "${MAS_SHN_DIR[$id]}" ]] ; then
 	shn_mkdir "${MAS_SHN_DIR[$id]}" || return 1
 	shn_msg created ${MAS_SHN_DIR[$id]}
@@ -264,10 +266,11 @@ function shn_initial_src_mased_vim  ()
 }
 function shn_initial_mased_vim
 {
-  local file link fn retval=0
+  local file link fn typf retval=0
   if [[ -d mased ]] ; then
     if pushd mased &>/dev/null ; then
-       for fn in sh.mased.vim ac.mased.vim ; do
+       for typf in sh shn ac ; do
+        fn="${typf}.mased.vim"
 	if [[ -f "${MAS_SHN_DIR[files]}/mased/$fn" ]] ; then
 	  file=`shn_realpath --relative-to=. ${MAS_SHN_DIR[files]}/mased/$fn` || { retval=$? ; break ; }
 	  link=$( shn_basename $file ) || { retval=$? ; break ; }
@@ -285,6 +288,25 @@ function shn_initial_mased_vim
       if ! [[ -f "src.mased.vim" ]] ; then
         shn_initial_src_mased_vim || { retval=$? ; break ; }
       fi
+      popd &>/dev/null
+    fi
+  fi
+  return $retval
+}
+function shn_initial_gitignore ()
+{
+  if ! [[ -f ".gitignore" ]] ; then
+    echo '*.tmp' >> .gitignore
+    shn_msg "created .gitignore"
+  fi
+  return 0
+}
+function shn_initial_debug
+{
+  local file link fn typf retval=0
+  if [[ -d debug ]] ; then
+    if pushd debug &>/dev/null ; then
+      shn_initial_gitignore || { retval=$? ; break ; }
       popd &>/dev/null
     fi
   fi
@@ -346,6 +368,7 @@ function shn_setup_additional ()
     fi
   done    
   shn_initial_mased_vim
+  shn_initial_debug
   return 0
 }
 

@@ -253,7 +253,7 @@ function shn_build_superclean ()
   local f d l
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:superclean]=`datemt`
   for f in configure Makefile.in src/inc/Makefile.in src/Makefile.in inc/Makefile.in aclocal.m4 \
-  	vrb.tmp src.mased.viminfo ac.mased.viminfo sh.mased.viminfo config.status config.log
+  	vrb.tmp src.mased.viminfo ac.mased.viminfo sh.mased.viminfo shn.mased.viminfo config.status config.log
   do
     if [[ "$f" ]] && [[ -f "$f" ]] ; then
       shn_msg removing file $f

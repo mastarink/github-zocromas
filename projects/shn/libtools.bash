@@ -142,7 +142,7 @@ function shn_show_errors ()
 }
 function command_not_found_handle ()
 {
-  if type -t shn_errmsg ; then
+  if type -t shn_errmsg &>/dev/null; then
     shn_errmsg "command NOT found '$@'"
   else
     echo "command NOT found '$@'" >&2

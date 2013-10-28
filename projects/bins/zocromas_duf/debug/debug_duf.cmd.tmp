@@ -1,4 +1,0 @@
-set print thread-events off
-handle SIGPIPE nostop noprint
-run  ../_duf.20130122.102951
-bt

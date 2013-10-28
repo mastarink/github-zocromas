@@ -14,7 +14,6 @@ function shn_project_match ()
   shift
   ! [[ "$match" ]] || [[ "$project" == *$match* ]]
 }
-
 function shn_project_path ()
 {
   local match=$1
@@ -52,19 +51,84 @@ function shn_project_path ()
       fi
     done
     if [[ "$match" ]] ; then
-      shn_errmsg "FAIL cdproject - not found $match"
+      shn_errmsg "FAIL $FUNCNAME - not found $match"
     fi
   else
-    shn_errmsg "FAIL cdproject - didn't setup"
+    shn_errmsg "FAIL $FUNCNAME - didn't setup"
   fi
   return 1
 }
+function shn_project_by_file ()
+{
+  local file=$1 ffile prj found prjdir
+  if [[ "$file" ]] ; then
+    for prj in ${MAS_SHN_PROJECTS[@]} ; do
+      prjdir="$MAS_SHN_PROJECTS_DIR/$prj"
+      if [[ -d "$prjdir" ]] ; then
+	if [[ -f "$prjdir/src/$file" ]] ; then
+	  found="$prjdir/src/$file"
+	elif [[ -f "$prjdir/src/inc/$file" ]] ; then
+	  found="$prjdir/src/inc/$file"
+	elif [[ -f "$prjdir/inc/$file" ]] ; then
+	  found="$prjdir/inc/$file"
+	fi
+	if [[ "$found" ]] \
+		  || ffile=`ls -1 $prjdir/src/*$file* 2>/dev/null` \
+		  || ffile=`ls -1 $prjdir/src/inc/*$file* 2>/dev/null` \
+		  || ffile=`ls -1 $prjdir/inc/*$file* 2>/dev/null`
+	then
+	  echo -n $prj
+	  return 0
+	fi
+      fi
+    done
+  else
+    return 1
+  fi
+  return 1
+}
+function shn_project_files ()
+{
+  local name=$1
+  local cmd='ls -l'
+  if [[ "$name" ]] ; then
+    shn_project_cd $name || shn_project_file_cd $name || return 1
+  fi
+  if [[ -f "configure.ac" ]] && [[ -d src ]] ; then
+    cmd="$cmd src/*.c"
+    if [[ -d src/inc ]] ; then
+      cmd="$cmd src/inc/*.h"
+    fi
+  fi
+  if [[ -d inc ]] ; then
+    cmd="$cmd inc/*.h"
+  fi
+  eval $cmd
+}
+function shn_project_file_cd ()
+{
+  local prj file=$1
+  prj=`shn_project_by_file $@` || return $?
+# shn_msg "$file => $prj"
+  shn_project_cd "$prj"
+}
+function shn_file_edit ()
+{
+  shn_project_file_cd $@
+  gvim_caller2 $@
+}
 function shn_project_cd ()
 {
-  local p
-  p=`shn_project_path $@` || return 1
+  local p prj
+  prj=$1
+  if [[ "$prj" == '-' ]] ; then
+    prj=$MAS_SHN_PREV_PROJECT_NAME
+  fi
+  p=`shn_project_path $prj` || return 1
   shn_dbgmsg "cd to '$p'"
-  cd $p >&2
+  MAS_SHN_PREV_PROJECT_NAME=$MAS_SHN_PROJECT_NAME
+  cd $p >&2 || return $?
+  shn_setup_projects
 }
 function shn_project_each ()
 {
@@ -130,180 +194,7 @@ function shn_last ()
     fi
   done
 }
-function shn_code ()
-{
-  local code=${1:-h}
-  shift
-  shn_dbgmsg "shn 1 -- $code"
-  shn_dbgmsg "shn 2 -- $code"
-  case $code in
-    h)
-      shn_msg 'project' $MAS_SHN_PROJECT_NAME
-      shn_msg 'h = help'
-      shn_msg 'r = run'
-      shn_msg 'g = debug'
-      shn_msg 'G = core debug'
-      shn_msg 'l = list'
-      shn_msg 'c = configure'
-      shn_msg 'C = make clean'
-      shn_msg 'D = make distclean'
-      shn_msg 'U = "super" clean'
-      shn_msg 'a = autoreconf'
-      shn_msg 't = make distcheck and save tarballs to' ${MAS_SHN_DIR[savedist]}
-      shn_msg 'm = make'
-      shn_msg 'i = make install'
-      shn_msg 'E = check files for e'
-      shn_msg 'R = reload working shell libs (shn)'
-      shn_msg 'L = list build dir'
-      shn_msg "I = info for $MAS_SHN_PROJECT_NAME"
-      shn_msg 'x = command at build dir'
-      shn_msg 'e = ebuild - prepare distfiles and Manifest for Gentoo / emerge'
-    ;;
-    l)
-      # pwd >&2 || return $?
-      shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
-      MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:list]=`datemt`
-    ;;
-    r)
-      shn_run $@
-    ;;
-    g)
-      shn_debug $@
-    ;;
-    G)
-      shn_core_debug $@
-    ;;
-    c)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_configure || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    C)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_clean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    D)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_distclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    U)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_superclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    a)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_autoreconf || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;	  
-    e)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_ebuild_update    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    E)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_ebuild_check    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;	  
-    t)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_dist      || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    m)
-      shn_dbgmsg "shn 2.${code}.1"
-      shn_build_make      || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.2"
-    ;;
-    I)
-      if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] && [[ -x "${MAS_SHN_DIR[build]}/config.status" ]] ; then
-        ${MAS_SHN_DIR[build]}/config.status -V
-      fi
-    ;;
-    i)
-      shn_dbgmsg "shn 2.${code}.1"
-#	  shn_build_make      || return $?
-#         shn_dbgmsg "shn 2.${code}.2"
-      shn_build_install || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
-      shn_dbgmsg shn $code ok
-      shn_dbgmsg "shn 2.${code}.3"
-    ;;
-    R)
-      shn_load
-    ;;
-    L)
-      shn_msg List
-      shn_build_list $@
-    ;;
-    x)
-      shn_std_command build $@
-    ;;
-    *)
-      shn_errmsg "wrong code '$code'"
-      return 1
-    ;;
-  esac
-  shn_dbgmsg "shn 3 -- $code"
-  shn_dbgmsg "shn 4 -- $code ; next:$1"
-  return 0
-}
-function shn ()
-{
-  local code=$1
-# export MAS_SHN_DEBUG=yes  
-  shift
-  shn_dbgmsg 1 shn
-  shn_dbgmsg 2a shn
-  local retcode=0
-#?trap shn_exit EXIT
-  shn_dbgmsg "project $MAS_SHN_PROJECT_NAME"
-  shn_setup_projects || shn_project_cd "${MAS_SHN_PROJECT_NAME:-zocromas_zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
-  shn_dbgmsg 3 shn
-  if [[ "$code" == each ]] ; then
-    shn_msg "Will install to ${MAS_SHN_DIR[flavour]}"
-    shn_project_each '' shn $@
-  elif [[ "$code" == one ]] ; then
-    local shn_dont_setup=yes
-    
-#   local shn_ignore_error=yes
-    shn_code $@
-    retcode=$?
-  elif [[ "$code" ]] ; then
-    local shn_dont_setup=yes
-    
-#   local shn_ignore_error=yes
-    while [[ "$code" ]] ; do
-#     if [[ "$code" =~ ^(L|X|x|r)$ ]] ; then
-#       shn_warn "use '$FUNCNAME one $code'"
-#     else
-        shn_code $code
-#     fi
-      code=$1
-      shift
-    done
-  else
-    local shn_dont_setup=yes
-    
-#   local shn_ignore_error=yes
-    shn_code h
-  fi
-  shn_dbgmsg "shn 5 -- $code"
-  shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MAS_SHN_PROJECT_NAME}
-# shn_pwd
-  return $retcode
-}
+
 MAS_SHN_PROJECT_FUNCTIONS="`shn_funlist shn_project`"
 [[ "$MAS_SHN_PROJECT_FUNCTIONS" ]] && export -f $MAS_SHN_PROJECT_FUNCTIONS
 

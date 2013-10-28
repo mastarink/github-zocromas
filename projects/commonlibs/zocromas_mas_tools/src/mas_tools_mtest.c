@@ -188,6 +188,12 @@ main( int argc, char *argv[] )
       }
     mas_del_argv( targc, targv, 0 );
   }
+  if ( 0 )
+  {
+    char *segfault = NULL;
+
+    printf( "%c\n", *segfault );
+  }
 
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
