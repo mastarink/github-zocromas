@@ -8,7 +8,7 @@
 #include <dirent.h>
 
 
-#include <sqlite3.h>
+/* #include <sqlite3.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -17,7 +17,8 @@
 
 
 
-#include "duf_def.h"
+/* #include "duf_def.h" */
+#include "duf_sql.h"
 #include "duf_create.h"
 #include "duf_utils.h"
 #include "duf_md5.h"
@@ -26,47 +27,67 @@
 
 #include "duf_remove.h"
 
-int
-files_by_md5id( char *path_ids, int targc, char ***ptargv, sqlite3_int64 md5id )
+static int
+duf_sql_files_by_md5id( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t  fun )
 {
-  char *sql;
+  int r = 0;
+  char *fpath;
 
-  sql = sqlite3_mprintf( "SELECT pathid, name FROM filenames "
-                         " LEFT JOIN filedatas on (filenames.dataid=filedatas.id) "
-                         " LEFT JOIN md5 on (md5.id=filedatas.md5id) "
-                         " WHERE md5.id='%llu' AND pathid in (%s)", md5id, path_ids );
-  {
-    int r;
-    int row, column;
-    char **presult = NULL;
+  fpath = path_id_to_path( strtoll( presult[0], NULL, 10 ) );
+  fpath = join_path( fpath, presult[1] );
+  fprintf( stderr, "%s\n", fpath );
+  return r;
+}
 
-    r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &errmsg );
-    if ( r == SQLITE_OK )
-    {
-      if ( row )
-        for ( int ir = column; ir <= column * row; ir += column )
-        {
+int
+files_by_md5id( char *path_ids, int targc, char ***ptargv, unsigned long long md5id )
+{
+  int r = 0;
 
-          char *fpath;
+  /* char *sql; */
 
-          fpath = path_id_to_path( strtoll( presult[ir + 0], NULL, 10 ) );
-          fpath = join_path( fpath, presult[ir + 1] );
-          fprintf( stderr, "%s\n", fpath );
-        }
-    }
-    else
-      SQL_ERR( r );
-    sqlite3_free_table( presult );
-  }
+  r = duf_sql_select( duf_sql_files_by_md5id, NULL, NULL, 0, "SELECT pathid, name FROM duf_filenames "
+                      " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+                      " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) "
+                      " WHERE duf_md5.id='%llu' AND pathid in (%s)", md5id, path_ids );
+  /* {                                                                                               */
+  /*   sql = sqlite3_mprintf( "SELECT pathid, name FROM duf_filenames "                              */
+  /*                          " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) " */
+  /*                          " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) "              */
+  /*                          " WHERE duf_md5.id='%llu' AND pathid in (%s)", md5id, path_ids );      */
+  /*   {                                                                                             */
+  /*     int r;                                                                                      */
+  /*     int row, column;                                                                            */
+  /*     char **presult = NULL;                                                                      */
+  /*                                                                                                 */
+  /*     r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &errmsg );                        */
+  /*     if ( r == SQLITE_OK )                                                                       */
+  /*     {                                                                                           */
+  /*       if ( row )                                                                                */
+  /*         for ( int ir = column; ir <= column * row; ir += column )                               */
+  /*         {                                                                                       */
+  /*                                                                                                 */
+  /*           char *fpath;                                                                          */
+  /*                                                                                                 */
+  /*           fpath = path_id_to_path( strtoll( presult[ir + 0], NULL, 10 ) );                      */
+  /*           fpath = join_path( fpath, presult[ir + 1] );                                          */
+  /*           fprintf( stderr, "%s\n", fpath );                                                     */
+  /*         }                                                                                       */
+  /*     }                                                                                           */
+  /*     else                                                                                        */
+  /*       SQL_ERR( r );                                                                             */
+  /*     sqlite3_free_table( presult );                                                              */
+  /*   }                                                                                             */
+  /*   (* {                     *)                                                                   */
+  /*   (*   char buffer[2048];  *)                                                                   */
+  /*   (*   char *s;            *)                                                                   */
+  /*   (*                       *)                                                                   */
+  /*   (*   s = gets( buffer ); *)                                                                   */
+  /*   (* }                     *)                                                                   */
+  /*   sqlite3_free( sql );                                                                          */
+  /* }                                                                                               */
   fprintf( stderr, "....................................\n" );
-  /* {                     */
-  /*   char buffer[2048];  */
-  /*   char *s;            */
-  /*                       */
-  /*   s = gets( buffer ); */
-  /* }                     */
-  sqlite3_free( sql );
-  return targc;
+  return r >= 0 ? targc : r;
 }
 
 void
@@ -110,7 +131,7 @@ remove_same_files_from_same_dirs( char *path_ids, int targc, char **targv )
               /* fprintf( stderr, "%s\n", fpath ); */
             }
           }
-          /* "SELECT * FROM keydata WHERE " */
+          /* "SELECT * FROM duf_keydata WHERE " */
         }
         mas_free( fpath );
       }

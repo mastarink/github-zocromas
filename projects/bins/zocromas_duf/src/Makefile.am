@@ -2,7 +2,7 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 
 
-zocromas_duf_SOURCES=duf.c duf_create.c duf_update.c duf_utils.c duf_insert.c duf_dirent.c duf_md5.c duf_exif.c duf_finddup.c duf_remove.c
+zocromas_duf_SOURCES=duf.c duf_create.c duf_update.c duf_utils.c duf_insert.c duf_dirent.c duf_md5.c duf_exif.c duf_finddup.c duf_remove.c duf_sql.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
 zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif

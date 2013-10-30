@@ -23,6 +23,7 @@ alias jf='shn_project_file_cd'
 alias lc='shn_project_files'
 alias qf='shn_project_by_file'
 alias ef='shn_file_edit'
+alias run='shn m i r'
 if [[ "$MAS_SHLIB" ]] && [[ -d "$MAS_SHLIB" ]] && [[ -f "$MAS_SHLIB/libed2.bash" ]] ; then
   . $MAS_SHLIB/libed2.bash
   alias e='gvim_caller2'

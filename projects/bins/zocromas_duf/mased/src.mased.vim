@@ -30,3 +30,7 @@ sfind duf_update.h
 tab sfind duf_utils.c
 sfind duf_utils.h
 
+tab sfind duf_sql.c
+sfind duf_sql.h
+
+tab sfind duf_def.h

@@ -132,10 +132,10 @@ function shn_show_errors ()
   local ername=$1 l
   if [[ "$ername" ]] && [[ -s "$ername" ]] && ! [[ "$shn_ignore_error" ]]; then
     l=`shn_cat $ername | /bin/wc -l`
-    if [[ "$l" && "$l" -gt 0 && "$l" -lt 12 ]] ; then
-      shn_msg "--------------------------------------------------"
-      shn_cat -n "$ername" >&2
-      shn_msg "--------------------------------------------------"
+    if [[ "$l" && "$l" -gt 0 && "$l" -lt 300 ]] ; then
+      shn_msg "-------------------------------------------------------"
+      shn_cat -n "$ername" | head -30 >&2
+      shn_msg "-- ... ------------------------------------------------"
     fi
     shn_msg "-- see $ername" 
   fi

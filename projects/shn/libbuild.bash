@@ -49,11 +49,11 @@ function shn_build_xcommand ()
 	shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIR[build]}
 	cmd=`which $cmd` || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
 	cmd_base=$( shn_basename $cmd ) || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
-	errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.`datemt`.result" \
+	errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.result" \
 			|| { retcode=$? ; popd &>/dev/null ; return $retcode ; }
 	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] && [[ -x "$cmd" ]] ; then
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
-	  if $cmd $@  >>$errname 2>&1 ; then
+	  if $cmd $@  >$errname 2>&1 ; then
 	    shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
 	    shn_dbgmsg "$cmd_base $@ # [$MAS_SHN_PROJECT_NAME] v.`shn_project_version` ok"
 	    shn_dbgmsg "cmd:" $cmd $@
@@ -95,7 +95,7 @@ function shn_xcommand ()
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   shn_dbgmsg 1 $FUNCNAME
-  errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.`datemt`.result"
+  errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.result"
   if [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] ; then
     shn_dbgmsg 2 $FUNCNAME ${MAS_SHN_DIR[error]}
     if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] ; then
@@ -104,7 +104,7 @@ function shn_xcommand ()
       shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIR[build]}
       if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] && [[ -x "$cmd" ]] ; then
 	shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
-	if $cmd $@  >>$errname 2>&1 ; then
+	if $cmd $@  >$errname 2>&1 ; then
 	  shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
 	  shn_dbgmsg "$cmd_base $@ # [$MAS_SHN_PROJECT_NAME] v.`shn_project_version` ok"
 	  shn_dbgmsg "cmd:" $cmd $@

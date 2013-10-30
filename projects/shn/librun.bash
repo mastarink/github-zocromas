@@ -29,7 +29,11 @@ function shn_run ()
     bin=${bindir}/${rname}
     # for core dump:
     ulimit -c unlimited
-    $bin
+    shn_msg "to run '$bin $@'"
+    shn_msg "--------------------"
+    shn_msg
+    shn_msg
+    $bin $@
   fi
 }
 function shn_debug ()

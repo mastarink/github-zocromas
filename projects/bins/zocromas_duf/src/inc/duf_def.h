@@ -1,8 +1,8 @@
 #ifndef MAS_DUF_DEF_H
 #  define MAS_DUF_DEF_H
 
-#  include <sqlite3.h>
-extern sqlite3 *pDb;
+/* #  include <sqlite3.h> */
+/* extern sqlite3 *pDb; */
 extern char *errmsg;
 
 #  define SQL_ERREQ(rsl,sql,errmsg) { if ( rsl != SQLITE_OK ) fprintf( stderr, "E<<%s:%d>> r=%d '%s' [%s]\n", __FILE__, __LINE__, rsl, errmsg ? errmsg : "-", sql?sql:"?" ); }
