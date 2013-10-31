@@ -38,8 +38,13 @@
 
 #include "duf_exif.h"
 
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *                int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   char *fname;
   char *path = NULL;
@@ -232,8 +237,13 @@ copy_jpeg_by_date( void )
   return r;
 }
 
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *          int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   int r = 0;
   char *fname;

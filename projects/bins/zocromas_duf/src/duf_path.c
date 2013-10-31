@@ -37,12 +37,17 @@ typedef struct
   char *name;
   unsigned long long parentid;
 } pathid_to_path_udata_t;
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *             int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_pathid_to_path( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+duf_sql_pathid_to_path( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   pathid_to_path_udata_t *pud;
 
-  pud = ( pathid_to_path_udata_t * ) udata;
+  pud = ( pathid_to_path_udata_t * ) sel_cb_udata;
   if ( nrow == 0 )
   {
     pud->parentid = strtoll( presult[0], NULL, 10 );
@@ -76,12 +81,17 @@ duf_pathid_to_path( unsigned long long pathid )
   return path;
 }
 
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *             int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_path_to_pathid( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+duf_sql_path_to_pathid( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long *ppathid;
 
-  ppathid = ( unsigned long long * ) udata;
+  ppathid = ( unsigned long long * ) sel_cb_udata;
   ( *ppathid ) = strtoll( presult[0], NULL, 10 );
   return 0;
 }
@@ -150,21 +160,24 @@ duf_path_to_pathid( const char *path, unsigned long long *pprevpathid, char **no
   return pathid_new;
 }
 
+/* 
+ * duf_str_cb_t:
+ *              int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata ); 
+ * */
 static int
-duf_sql_scan_print_path( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *udata )
+duf_sql_scan_print_path( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata )
 {
-  /* md5_std_data_t *mdata;              */
-  /* mdata = ( md5_std_data_t * ) udata; */
   printf( "%7llu: %s\n", pathid, path );
   return 0;
 }
 
 /* 
- * type: duf_sql_select_callback_t 
- * sql must select pathid ... (, filenameid, filename ... (, md5id, size))
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
  * */
 int
-duf_sql_scan_paths( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+duf_sql_scan_paths( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long pathid;
   char *path;
@@ -173,7 +186,11 @@ duf_sql_scan_paths( int nrow, int nrows, char *presult[], va_list args, void *ud
   path = duf_pathid_to_path( pathid );
   if ( fuscan )
   {
-    ( *fuscan ) ( pathid, path, 0 /* filenameid */ , NULL /* name */ , NULL /* udata */  );
+/* 
+ * duf_str_cb_t:
+ *       int fun( pathid, path, filenameid,          name,             str_cb_udata ); 
+ * */
+    ( *fuscan ) ( pathid, path, 0 /* filenameid */ , NULL /* name */ , NULL /* str_cb_udata */  );
   }
   mas_free( path );
 
@@ -181,7 +198,7 @@ duf_sql_scan_paths( int nrow, int nrows, char *presult[], va_list args, void *ud
 }
 
 int
-duf_scan_paths( duf_str_callback_t fun )
+duf_scan_paths( duf_str_cb_t fun )
 {
   int r = 0;
 

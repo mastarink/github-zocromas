@@ -17,12 +17,17 @@
 
 #include "duf_insert.h"
 
+/*
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *              int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_insert_filedata( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_insert_filedata( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long *presd;
 
-  presd = ( unsigned long long * ) udata;
+  presd = ( unsigned long long * ) sel_cb_udata;
   *presd = strtol( presult[0], NULL, 10 );
   return 0;
 }
@@ -45,24 +50,6 @@ duf_insert_filedata( unsigned long long file_inode, struct stat *pst_dir, struct
   {
     r = duf_sql_select( duf_sql_insert_filedata, &resd, NULL, 0, "SELECT id FROM duf_filedatas WHERE dev='%lu' and inode='%lu'",
                         pst_dir->st_dev, file_inode );
-    /* {                                                                                                                        */
-    /*   char *sqls;                                                                                                            */
-    /*   int row, column;                                                                                                       */
-    /*   char **presult = NULL;                                                                                                 */
-    /*                                                                                                                          */
-    /*   sqls = sqlite3_mprintf( "SELECT id FROM duf_filedatas WHERE dev='%lu' and inode='%lu'", pst_dir->st_dev, file_inode ); */
-    /*   r = sqlite3_get_table( pDb, sqls, &presult, &row, &column, &errmsg );                                                  */
-    /*   if ( r == SQLITE_OK )                                                                                                  */
-    /*   {                                                                                                                      */
-    /*     if ( row )                                                                                                           */
-    /*       for ( int ir = column; ir <= column * row; ir += column )                                                          */
-    /*         resd = strtoll( presult[ir], NULL, 10 );                                                                         */
-    /*   }                                                                                                                      */
-    /*   else                                                                                                                   */
-    /*     SQL_ERR( r );                                                                                                        */
-    /*   sqlite3_free_table( presult );                                                                                         */
-    /*   sqlite3_free( sqls );                                                                                                  */
-    /* }                                                                                                                        */
   }
   else if ( !r /* assume SQLITE_OK */  )
     resd = duf_last_insert_rowid(  );
@@ -70,14 +57,18 @@ duf_insert_filedata( unsigned long long file_inode, struct stat *pst_dir, struct
     fprintf( stderr, "error duf_insert_filedata %d\n", r );
   return resd;
 }
-
+/*
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *          int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_insert_path( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_insert_path( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long *pdir_id;
 
   /* fprintf( stderr, "Constraint selected %d\n", nrow ); */
-  pdir_id = ( unsigned long long * ) udata;
+  pdir_id = ( unsigned long long * ) sel_cb_udata;
   if ( nrow == 0 )
     *pdir_id = strtoll( presult[0], NULL, 10 );
   return 0;
@@ -170,12 +161,17 @@ duf_insert_filename( const char *fname, unsigned long long dir_id, unsigned long
   return resf;
 }
 
+/*
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_insert_md5( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_insert_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long *presmd;
 
-  presmd = ( unsigned long long * ) udata;
+  presmd = ( unsigned long long * ) sel_cb_udata;
   *presmd = strtoll( presult[0], NULL, 10 );
   duf_sql( "UPDATE duf_md5 SET ucnt=ucnt+1, now=datetime() WHERE id='%lld'", *presmd );
   return 0;

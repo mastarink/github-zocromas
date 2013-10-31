@@ -8,10 +8,8 @@ typedef struct
   unsigned long long dupcnt;
 } md5_std_data_t;
 
-typedef int ( *duf_str_callback_t ) ( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
-                                      void *udata
-                                      /* unsigned long long md5id, unsigned long long size */
-       );
-typedef int ( *duf_sql_select_callback_t ) ( int nrow, int rows, char **presult, va_list args, void *udata, duf_str_callback_t f );
+typedef int ( *duf_str_cb_t ) ( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
+                                      void *str_cb_udata );
+typedef int ( *duf_sql_select_cb_t ) ( int nrow, int nrows, char **presult, va_list args, void *sel_cb_udata, duf_str_cb_t fuscan );
 
 #endif

@@ -12,8 +12,8 @@ int duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore 
 int duf_sql_c( const char *fmt, int constraint_ignore, ... );
 int duf_sql( const char *fmt, ... );
 
-int duf_sql_vselect( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, va_list args );
-int duf_sql_select( duf_sql_select_callback_t func, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, ... );
+int duf_sql_vselect( duf_sql_select_cb_t cb, void *sel_cb_udata, duf_str_cb_t fuscan, int trace, const char *fmt, va_list args );
+int duf_sql_select( duf_sql_select_cb_t func, void *sel_cb_udata, duf_str_cb_t fuscan, int trace, const char *fmt, ... );
 
 unsigned long long duf_last_insert_rowid( void );
 

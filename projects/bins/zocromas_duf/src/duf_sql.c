@@ -134,7 +134,7 @@ duf_sql( const char *fmt, ... )
 }
 
 int
-duf_sql_vselect( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, va_list args )
+duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t fuscan, int trace, const char *fmt, va_list args )
 {
   int r = 0;
   int row, column;
@@ -148,12 +148,17 @@ duf_sql_vselect( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t f
   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
   if ( r == SQLITE_OK )
   {
+/* 
+ * sql must select pathid, filenameid, filename, md5id, size
+ * sel_cb is duf_sql_select_cb_t:
+ *             int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan );
+ * */
     if ( row )
       for ( int ir = 1; ir <= row; ir++ )
-        ( cb ) ( ir - 1, row, &presult[ir * column], args, udata, fuscan );
+        ( sel_cb ) ( ir - 1, row, &presult[ir * column], args, sel_cb_udata, fuscan );
     /* if ( row )                                                  */
     /*   for ( int ir = column; ir <= column * row; ir += column ) */
-    /*     ( cb ) ( ir / column - 1, &presult[ir], args );         */
+    /*     ( sel_cb ) ( ir / column - 1, &presult[ir], args );         */
   }
   else if ( r == SQLITE_CONSTRAINT )
   {
@@ -167,13 +172,13 @@ duf_sql_vselect( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t f
 }
 
 int
-duf_sql_select( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, ... )
+duf_sql_select( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t fuscan, int trace, const char *fmt, ... )
 {
   va_list args;
   int r;
 
   va_start( args, fmt );
-  r = duf_sql_vselect( cb, udata, fuscan, trace, fmt, args );
+  r = duf_sql_vselect( sel_cb, sel_cb_udata, fuscan, trace, fmt, args );
   va_end( args );
   return r;
 }

@@ -50,7 +50,7 @@ duf_update_file_ni( const char *path, const char *fname, ino_t file_inode, struc
 static unsigned long long
 duf_update_file_de( const char *path, const struct dirent *de, struct stat *pst_dir, unsigned long long dir_id )
 {
- return duf_update_file_ni( path, de->d_name, de->d_ino, pst_dir, dir_id );
+  return duf_update_file_ni( path, de->d_name, de->d_ino, pst_dir, dir_id );
 }
 
 static void
@@ -161,59 +161,13 @@ duf_update_path( const char *path, unsigned long long parentid, int recurse, int
   return dir_id;
 }
 
-/* void                                                                                                                */
-/* duf_update_mdline_path( unsigned long long pathid )                                                                     */
-/* {                                                                                                                   */
-/*   char *sql2;                                                                                                       */
-/*                                                                                                                     */
-/*   sql2 = sqlite3_mprintf( "SELECT md5id " " FROM duf_keydata " " WHERE pathid='%llu' " " ORDER BY md5id", pathid ); */
-/*   {                                                                                                                 */
-/*     int r;                                                                                                          */
-/*     int row, column;                                                                                                */
-/*     char **presult = NULL;                                                                                          */
-/*                                                                                                                     */
-/*     r = sqlite3_get_table( pDb, sql2, &presult, &row, &column, &errmsg );                                           */
-/*     if ( r == SQLITE_OK )                                                                                           */
-/*     {                                                                                                               */
-/*       (* fprintf( stderr, "pathid:%llu - #%u\n", pathid, row ); *)                                                  */
-/*       (* fprintf( stderr, "Calc mdline pathid:%llu [%s] : %u\n", pathid, sql2, row ); *)                            */
-/*       if ( row )                                                                                                    */
-/*       {                                                                                                             */
-/*         char *buf;                                                                                                  */
-/*         char *pbuf;                                                                                                 */
-/*         size_t len;                                                                                                 */
-/*                                                                                                                     */
-/*         len = row * 16 + 1;                                                                                         */
-/*         buf = mas_malloc( len );                                                                                    */
-/*         pbuf = buf;                                                                                                 */
-/*         for ( int ir = column; ir <= column * row; ir += column )                                                   */
-/*         {                                                                                                           */
-/*           unsigned long long md5id;                                                                                 */
-/*           size_t l;                                                                                                 */
-/*                                                                                                                     */
-/*           md5id = strtol( presult[ir], NULL, 10 );                                                                  */
-/*           (* fprintf( stderr, "Calc mdline %u - pathid:%llu; md5id:%llu\x1b[K\r", ir / column, pathid, md5id ); *)  */
-/*           snprintf( pbuf, len, "%llx;", md5id );                                                                    */
-/*           l = strlen( pbuf );                                                                                       */
-/*           pbuf += l;                                                                                                */
-/*           len -= l;                                                                                                 */
-/*         }                                                                                                           */
-/*         (* fprintf( stderr, ">> %s :: %llu\n", buf, pathid ); *)                                                    */
-/*         SQL_EXEC( "UPDATE duf_paths SET mdline='%s' WHERE id='%lu'", buf, pathid );                                 */
-/*         mas_free( buf );                                                                                            */
-/*       }                                                                                                             */
-/*       else                                                                                                          */
-/*       {                                                                                                             */
-/*         SQL_EXEC( "UPDATE duf_paths SET mdline='%s' WHERE id='%lu'", ";", pathid );                                 */
-/*       }                                                                                                             */
-/*       sqlite3_free_table( presult );                                                                                */
-/*     }                                                                                                               */
-/*   }                                                                                                                 */
-/*   sqlite3_free( sql2 );                                                                                             */
-/* }                                                                                                                   */
-
+/* 
+ * sql must select pathid, filenameid, filename, md5id, size
+ * duf_sql_select_cb_t:
+ *                  int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan );
+ * */
 static int
-duf_sql_update_mdpaths_path( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_update_mdpaths_path( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   MD5_CTX *pctx;
   unsigned long long md5s1, md5s2, pathid;
@@ -221,10 +175,9 @@ duf_sql_update_mdpaths_path( int nrow, int nrows, char *presult[], va_list args,
 
   pathid = va_arg( args, unsigned long long );
 
-  pctx = ( MD5_CTX * ) udata;
+  pctx = ( MD5_CTX * ) sel_cb_udata;
   if ( presult[0] && presult[1] )
   {
-    /* fprintf( stderr, "%s:%s\n", presult[ir + 0], presult[ 1] ); */
     md5s1 = strtoll( presult[0], NULL, 10 );
     md5s2 = strtoll( presult[1], NULL, 10 );
     MD5_Update( pctx, &md5s1, sizeof( md5s1 ) );
@@ -238,9 +191,7 @@ duf_sql_update_mdpaths_path( int nrow, int nrows, char *presult[], va_list args,
     MD5_Final( md, pctx );
     md64 = ( unsigned long long * ) md;
   }
-  /* fprintf( stderr, ">> [%llu]  %llu:%llu\n", pathid, md64[1], md64[0] ); */
   duf_sql( "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%lu'", md64[1], md64[0], pathid );
-  /* SQL_EXEC( "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%lu'", 0x7fffffffffffffff, 0xffffffffffffffff, pathid ); */
   return 0;
 }
 
@@ -248,75 +199,26 @@ int
 duf_update_mdpaths_path( unsigned long long pathid )
 {
   int r = 0;
+  MD5_CTX ctx;
 
-  {
-    MD5_CTX ctx;
-
-    r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, NULL, 0,
-                        "SELECT md5sum1, md5sum2 FROM duf_md5 LEFT JOIN duf_keydata on (duf_keydata.md5id=duf_md5.id) "
-                        " WHERE pathid='%llu' ORDER by md5sum1, md5sum2 ", pathid );
-  }
-  /* if ( 0 )                                                                                                                                          */
-  /* {                                                                                                                                                 */
-  /* char *sql2;                                                                                                                                       */
-  /*   sql2 = sqlite3_mprintf( "SELECT md5sum1, md5sum2 FROM duf_md5 LEFT JOIN duf_keydata on (duf_keydata.md5id=duf_md5.id) "                         */
-  /*                           " WHERE pathid='%llu' ORDER by md5sum1, md5sum2 ", pathid );                                                            */
-  /*   {                                                                                                                                               */
-  /*     int r;                                                                                                                                        */
-  /*     int row, column;                                                                                                                              */
-  /*     char **presult = NULL;                                                                                                                        */
-  /*                                                                                                                                                   */
-  /*     r = sqlite3_get_table( pDb, sql2, &presult, &row, &column, &errmsg );                                                                         */
-  /*     if ( r == SQLITE_OK )                                                                                                                         */
-  /*     {                                                                                                                                             */
-  /*       if ( row )                                                                                                                                  */
-  /*       {                                                                                                                                           */
-  /*         MD5_CTX ctx;                                                                                                                              */
-  /*         unsigned long long *md64;                                                                                                                 */
-  /*                                                                                                                                                   */
-  /*         fprintf( stderr, "duf_update_mdline_path2\n" );                                                                                               */
-  /*         MD5_Init( &ctx );                                                                                                                         */
-  /*         for ( int ir = column; ir <= column * row; ir += column )                                                                                 */
-  /*         {                                                                                                                                         */
-  /*           unsigned long long md5s1, md5s2;                                                                                                        */
-  /*                                                                                                                                                   */
-  /*           if ( presult[ir + 0] && presult[ir + 1] )                                                                                               */
-  /*           {                                                                                                                                       */
-  /*             (* fprintf( stderr, "%s:%s\n", presult[ir + 0], presult[ir + 1] ); *)                                                                 */
-  /*             md5s1 = strtoll( presult[ir + 0], NULL, 10 );                                                                                         */
-  /*             md5s2 = strtoll( presult[ir + 1], NULL, 10 );                                                                                         */
-  /*             MD5_Update( &ctx, &md5s1, sizeof( md5s1 ) );                                                                                          */
-  /*             MD5_Update( &ctx, &md5s2, sizeof( md5s2 ) );                                                                                          */
-  /*           }                                                                                                                                       */
-  /*                                                                                                                                                   */
-  /*           {                                                                                                                                       */
-  /*             unsigned char md[MD5_DIGEST_LENGTH];                                                                                                  */
-  /*                                                                                                                                                   */
-  /*             memset( &md, 0, sizeof( md ) );                                                                                                       */
-  /*             MD5_Final( md, &ctx );                                                                                                                */
-  /*             md64 = ( unsigned long long * ) md;                                                                                                   */
-  /*           }                                                                                                                                       */
-  /*           (* fprintf( stderr, ">> [%llu]  %llu:%llu\n", pathid, md64[1], md64[0] ); *)                                                            */
-  /*           SQL_EXEC( "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%lu'", md64[1], md64[0], pathid );                             */
-  /*           (* SQL_EXEC( "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%lu'", 0x7fffffffffffffff, 0xffffffffffffffff, pathid ); *) */
-  /*         }                                                                                                                                         */
-  /*       }                                                                                                                                           */
-  /*       sqlite3_free_table( presult );                                                                                                              */
-  /*     }                                                                                                                                             */
-  /*   }                                                                                                                                               */
-  /*   sqlite3_free( sql2 );                                                                                                                           */
-  /* }                                                                                                                                                 */
+  r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, NULL, 0,
+                      "SELECT md5sum1, md5sum2 FROM duf_md5 LEFT JOIN duf_keydata on (duf_keydata.md5id=duf_md5.id) "
+                      " WHERE pathid='%llu' ORDER by md5sum1, md5sum2 ", pathid );
   return r;
 }
 
+/* 
+ * sql must select pathid, filenameid, filename, md5id, size
+ * duf_sql_select_cb_t:
+ *             int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan );
+ * */
 static int
-duf_sql_update_mdpaths( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_update_mdpaths( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long pathid;
 
   pathid = strtol( presult[0], NULL, 10 );
-  /* duf_update_mdline_path( pathid ); */
-  fprintf( stderr, "duf_update_mdline %d\n", nrow );
+  fprintf( stderr, "duf_update_mdpaths %d\n", nrow );
   duf_update_mdpaths_path( pathid );
   return 0;
 }
@@ -328,32 +230,6 @@ duf_update_mdpaths( void )
 
   fprintf( stderr, "Start duf_update_mdpaths\n" );
   r = duf_sql_select( duf_sql_update_mdpaths, NULL, NULL, 0, "SELECT id " " FROM duf_paths " /* " WHERE ... IS NULL " */ " ORDER BY id" );
-  /* {                                                                                         */
-  /*   int row, column;                                                                        */
-  /*   char **presult = NULL;                                                                  */
-  /*   char *sql = "SELECT id " " FROM duf_paths " (* " WHERE ... IS NULL " *) " ORDER BY id"; */
-  /*                                                                                           */
-  /*   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &errmsg );                    */
-  /*   if ( r == SQLITE_OK )                                                                   */
-  /*   {                                                                                       */
-  /*     if ( row )                                                                            */
-  /*     {                                                                                     */
-  /*       (* fprintf( stderr, "Calc mdline's %u\n", row ); *)                                 */
-  /*       for ( int ir = column; ir <= column * row; ir += column )                           */
-  /*       {                                                                                   */
-  /*         unsigned long long pathid;                                                        */
-  /*                                                                                           */
-  /*         pathid = strtol( presult[ir], NULL, 10 );                                         */
-  /*         (* duf_update_mdline_path( pathid ); *)                                               */
-  /*         fprintf( stderr, "duf_update_mdline %d\n", ir );                                      */
-  /*         duf_update_mdline_path2( pathid );                                                    */
-  /*       }                                                                                   */
-  /*     }                                                                                     */
-  /*   }                                                                                       */
-  /*   else                                                                                    */
-  /*     fprintf( stderr, "+ mdline ERROR %d\n", __LINE__ );                                   */
-  /*   sqlite3_free_table( presult );                                                          */
-  /* }                                                                                         */
   fprintf( stderr, "End duf_update_mdpaths\n" );
   return r;
 }

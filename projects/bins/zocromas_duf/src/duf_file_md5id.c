@@ -22,12 +22,17 @@
 
 
 
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *               int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
 static int
-duf_sql_filenameid_md5id( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+duf_sql_filenameid_md5id( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   unsigned long long *pmd5id;
 
-  pmd5id = ( unsigned long long * ) udata;
+  pmd5id = ( unsigned long long * ) sel_cb_udata;
   if ( nrow == 0 )
     *pmd5id = strtoll( presult[0], NULL, 10 );
   return 0;
@@ -67,7 +72,7 @@ duf_filepath_md5id( const char *path )
  * sql must select pathid, filenameid, filename ... (, md5id)
  * */
 static int
-duf_scan_files_by_md5id( unsigned long long md5id, duf_str_callback_t fuscan )
+duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t fuscan )
 {
   int r = 0;
 

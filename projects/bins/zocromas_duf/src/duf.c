@@ -201,28 +201,6 @@ duf_action( int argc, char **argv )
     }
   }
   fprintf( stderr, "\n\n\n" );
-  /* if ( 1 )                                      */
-  /* {                                             */
-  /*   duf_check_tables(  );                           */
-  /*   fprintf( stderr, "Scan %d\x1b[K\n", argc ); */
-  /*   for ( int ia = 1; ia < argc; ia++ )         */
-  /*     update_path( argv[ia], -1, 1, 1 );        */
-  /*   duf_update_md5(  );                             */
-  /*   (* duf_update_exif(  ); *)                      */
-  /* }                                             */
-  /* duf_update_duplicates(  );                        */
-  /* duf_update_mdpaths(  );                       */
-  /*                                               */
-  /*                                               */
-  /* (* print_hardlinks(  ); *)                    */
-  /* if ( 0 )                                      */
-  /* {                                             */
-  /*                                               */
-  /*   copy_jpeg_by_date(  );                      */
-  /*                                               */
-  /*   (* print_duplicate_dirs(  ); *)             */
-  /*   print_duplicates(  );                       */
-  /* }                                             */
   return r;
 }
 

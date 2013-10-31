@@ -27,11 +27,16 @@ typedef struct
   unsigned long long filenameid;
 } file_to_filenameid_udata_t;
 static int
-duf_sql_file_to_filenameid( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *                 int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ * */
+duf_sql_file_to_filenameid( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   file_to_filenameid_udata_t *pud;
 
-  pud = ( file_to_filenameid_udata_t * ) udata;
+  pud = ( file_to_filenameid_udata_t * ) sel_cb_udata;
   pud->filenameid = strtoll( presult[0], NULL, 10 );
   pud->md5id = strtoll( presult[1], NULL, 10 );
   return 0;
@@ -68,11 +73,12 @@ file_at_path_to_filenameid( const char *path, const char *name, unsigned long lo
 }
 
 /* 
- * type: duf_sql_select_callback_t 
- * sql must select pathid, filenameid, filename ... (, md5id)
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
  * */
 int
-duf_sql_scan_files( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+duf_sql_scan_files( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
 {
   if ( fuscan )
   {
@@ -90,16 +96,16 @@ duf_sql_scan_files( int nrow, int nrows, char *presult[], va_list args, void *ud
 }
 
 int
-duf_scan_vfiles_sql( duf_str_callback_t fun, const char *sql, va_list args )
+duf_scan_vfiles_sql( duf_str_cb_t fun, const char *sql, va_list args )
 {
-  return duf_sql_vselect( duf_sql_scan_files, NULL /* udata */ , fun, 0, sql, args );
+  return duf_sql_vselect( duf_sql_scan_files, NULL /* sel_cb_udata */ , fun, 0, sql, args );
 }
 
 /* 
- * sql must select pathid, filenameid, filename
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt) ?
  * */
 int
-duf_scan_files_sql( duf_str_callback_t fun, const char *sql, ... )
+duf_scan_files_sql( duf_str_cb_t fun, const char *sql, ... )
 {
   int r = 0;
   va_list args;
@@ -110,9 +116,13 @@ duf_scan_files_sql( duf_str_callback_t fun, const char *sql, ... )
   return r;
 }
 
-/* type: duf_str_callback_t */
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_str_cb_t: 
+ *              int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata )
+ * */
 int
-duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *udata )
+duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata )
 {
   /* printf( "%7llu: %s/%s\n", pathid, path, name ); */
   printf( "%7llu: %-20s @ %s/%s\n", pathid, name, path, name );
