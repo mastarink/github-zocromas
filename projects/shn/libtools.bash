@@ -5,12 +5,35 @@ function shn_echo ()
   builtin echo "$*"
 # echo "$@"
 }
+function shn_echon ()
+{
+# echo $*
+# echo $@
+  builtin echo -n "$*"
+# echo "$@"
+}
 function shn_msg ()
 {
   shn_echo "$*"  >&2
 # shn_echo $@  >&2
 # shn_echo "$*"  >&2
 # shn_echo "$@"  >&2
+}
+function shn_msgn ()
+{
+  shn_echon "$*;"  >&2
+# shn_echon $@  >&2
+# shn_echon "$*"  >&2
+# shn_echon "$@"  >&2
+}
+function shn_msglist ()
+{
+  local i n
+  n=$#
+  for (( i=0 ; $i < $n ; i++ )) ; do
+    shn_echo "$i: $1"  >&2
+    shift
+  done
 }
 function shn_fmsg ()
 {

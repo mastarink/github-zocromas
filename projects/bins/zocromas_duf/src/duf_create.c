@@ -3,7 +3,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_sql.h"
 
 #include "duf_create.h"
@@ -18,7 +19,7 @@
  * */
 
 static int
-check_table_filedatas( void )
+duf_check_table_filedatas( void )
 {
   int r;
 
@@ -32,7 +33,7 @@ check_table_filedatas( void )
 }
 
 static int
-check_table_filenames( void )
+duf_check_table_filenames( void )
 {
   int r;
 
@@ -49,7 +50,7 @@ check_table_filenames( void )
 }
 
 static int
-check_table_paths( void )
+duf_check_table_paths( void )
 {
   int r;
 
@@ -66,7 +67,7 @@ check_table_paths( void )
 }
 
 static int
-check_table_md5( void )
+duf_check_table_md5( void )
 {
   int r;
 
@@ -82,7 +83,7 @@ check_table_md5( void )
 }
 
 int
-clear_tables( void )
+duf_clear_tables( void )
 {
   int r;
 
@@ -96,17 +97,14 @@ clear_tables( void )
 }
 
 int
-check_tables( void )
+duf_check_tables( void )
 {
   int r;
 
-  /* char *errmsg; */
-  /* clear_tables(  ); */
-
-  check_table_filedatas(  );
-  check_table_filenames(  );
-  check_table_paths(  );
-  check_table_md5(  );
+  duf_check_table_filedatas(  );
+  duf_check_table_filenames(  );
+  duf_check_table_paths(  );
+  duf_check_table_md5(  );
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
                         " duf_exif (id INTEGER PRIMARY KEY autoincrement, dataid INTEGER, datetime INTEGER,"
                         " d INTEGER, broken_date INTEGER, ucnt INTEGER, now REAL)", "Create duf_exif" );

@@ -5,12 +5,12 @@
 #include <unistd.h>
 #include <dirent.h>
 
-/* #include <sqlite3.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_sql.h"
 #include "duf_utils.h"
 
@@ -28,7 +28,7 @@ duf_sql_insert_filedata( int nrow, int nrows, char *presult[], va_list args, voi
 }
 
 unsigned long long
-insert_filedata( unsigned long long file_inode, struct stat *pst_dir, struct stat *pst_file )
+duf_insert_filedata( unsigned long long file_inode, struct stat *pst_dir, struct stat *pst_file )
 {
   int r;
   unsigned long long resd;
@@ -67,7 +67,7 @@ insert_filedata( unsigned long long file_inode, struct stat *pst_dir, struct sta
   else if ( !r /* assume SQLITE_OK */  )
     resd = duf_last_insert_rowid(  );
   else
-    fprintf( stderr, "error insert_filedata %d\n", r );
+    fprintf( stderr, "error duf_insert_filedata %d\n", r );
   return resd;
 }
 
@@ -76,14 +76,15 @@ duf_sql_insert_path( int nrow, int nrows, char *presult[], va_list args, void *u
 {
   unsigned long long *pdir_id;
 
+  /* fprintf( stderr, "Constraint selected %d\n", nrow ); */
   pdir_id = ( unsigned long long * ) udata;
-  if ( nrow == 1 )
+  if ( nrow == 0 )
     *pdir_id = strtoll( presult[0], NULL, 10 );
   return 0;
 }
 
 unsigned long long
-insert_path( const char *base_name, struct stat *pst_dir, unsigned long long parentid, int added )
+duf_insert_path( const char *base_name, struct stat *pst_dir, unsigned long long parentid, int added )
 {
   unsigned long long dir_id = 0;
   int r;
@@ -92,7 +93,7 @@ insert_path( const char *base_name, struct stat *pst_dir, unsigned long long par
   char *qbase_name;
 
   /* fprintf( stderr, "Insert path %s\n", base_name ); */
-  qbase_name = single_quotes_2( base_name );
+  qbase_name = duf_single_quotes_2( base_name );
   /* sql = sqlite3_mprintf( "INSERT INTO duf_paths (dev, inode, dirname, parentid, now) values ('%lu','%lu','%s','%lu',datetime())", */
   /*                        pst_dir->st_dev, pst_dir->st_ino, qbase_name ? qbase_name : base_name, parentid );                      */
   /* r = sqlite3_exec( pDb, sql, NULL, NULL, &errmsg );                                                                              */
@@ -106,6 +107,7 @@ insert_path( const char *base_name, struct stat *pst_dir, unsigned long long par
   {
     r = duf_sql_select( duf_sql_insert_path, &dir_id, NULL, 0, "SELECT id FROM duf_paths WHERE dev='%lu' and inode='%lu'", pst_dir->st_dev,
                         pst_dir->st_ino );
+    /* fprintf( stderr, "Constraint dir_id: %lld dev:%lu; inode:%lu\n", dir_id, pst_dir->st_dev, pst_dir->st_ino ); */
     /* {                                                                                                                        */
     /*   int row, column;                                                                                                       */
     /*   char **presult = NULL;                                                                                                 */
@@ -125,15 +127,18 @@ insert_path( const char *base_name, struct stat *pst_dir, unsigned long long par
     /* }                                                                                                                        */
   }
   else if ( !r /* assume SQLITE_OK */  )
+  {
     dir_id = duf_last_insert_rowid(  );
+    /* fprintf( stderr, "Inserted dir_id: %lld\n", dir_id ); */
+  }
   else
-    fprintf( stderr, "error insert_path %d\n", r );
+    fprintf( stderr, "error duf_insert_path %d\n", r );
   /* fprintf( stderr, "Insert path %s done\n", base_name ); */
   return dir_id;
 }
 
 unsigned long long
-insert_filename( const char *fname, unsigned long long dir_id, unsigned long long resd )
+duf_insert_filename( const char *fname, unsigned long long dir_id, unsigned long long resd )
 {
   unsigned long long resf = -1;
   int r;
@@ -141,11 +146,11 @@ insert_filename( const char *fname, unsigned long long dir_id, unsigned long lon
   /* char *sql; */
   char *fqname;
 
-  fqname = single_quotes_2( fname );
+  fqname = duf_single_quotes_2( fname );
   /* sql = sqlite3_mprintf( "INSERT INTO duf_filenames (pathid, dataid, name, ucnt, now) values ('%lu','%lu','%s',0,datetime())", */
   /*                        dir_id, resd, fqname ? fqname : fname );                                                      */
   /* r = sqlite3_exec( pDb, sql, NULL, NULL, &errmsg );                                                                   */
-  r = duf_sql( "INSERT INTO duf_filenames (pathid, dataid, name, ucnt, now) values ('%lu','%lu','%s',0,datetime())",
+  r = duf_sql_c( "INSERT INTO duf_filenames (pathid, dataid, name, ucnt, now) values ('%lu','%lu','%s',0,datetime())", 1,
                dir_id, resd, fqname ? fqname : fname );
   if ( !r /* assume SQLITE_OK */  )
   {
@@ -156,7 +161,7 @@ insert_filename( const char *fname, unsigned long long dir_id, unsigned long lon
   {
   }
   else
-    fprintf( stderr, "error insert_filename %d\n", r );
+    fprintf( stderr, "error duf_insert_filename %d\n", r );
 
   if ( fqname )
     mas_free( fqname );
@@ -177,7 +182,7 @@ duf_sql_insert_md5( int nrow, int nrows, char *presult[], va_list args, void *ud
 }
 
 unsigned long long
-insert_md5( unsigned long long *md64, size_t fsize )
+duf_insert_md5( unsigned long long *md64, size_t fsize )
 {
   unsigned long long resmd = -1;
 
@@ -214,7 +219,7 @@ insert_md5( unsigned long long *md64, size_t fsize )
   else if ( !r /* assume SQLITE_OK */  )
     resmd = duf_last_insert_rowid(  );
   else
-    fprintf( stderr, "error insert_md5 %d\n", r );
+    fprintf( stderr, "error duf_insert_md5 %d\n", r );
 
   /* sqlite3_free( sql1 ); */
   /* sqlite3_free( sql2 ); */
@@ -222,7 +227,7 @@ insert_md5( unsigned long long *md64, size_t fsize )
 }
 
 unsigned long long
-insert_keydata( unsigned long long pathid, unsigned long long nameid, ino_t inode, unsigned long long resmd )
+duf_insert_keydata( unsigned long long pathid, unsigned long long nameid, ino_t inode, unsigned long long resmd )
 {
   int r;
   unsigned long long resp = -1;
@@ -240,7 +245,7 @@ insert_keydata( unsigned long long pathid, unsigned long long nameid, ino_t inod
   else if ( !r /* assume SQLITE_OK */  )
     resp = duf_last_insert_rowid(  );
   else
-    fprintf( stderr, "error insert_keydata %d\n", r );
+    fprintf( stderr, "error duf_insert_keydata %d\n", r );
 
   /* sqlite3_free( sql ); */
   return resp;

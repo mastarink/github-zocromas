@@ -6,15 +6,16 @@ function shn_runname ()
     bin1="$bsrc/$MAS_SHN_PROJECT_NAME"
     bin2="$bsrc/mtest"
     if [[ -f "$bin1" ]] ; then
-      echo -n $( shn_basename $bin1 ) && return 0
+      shn_echon $( shn_basename $bin1 ) && return 0
     elif [[ -f "$bin2" ]] ; then
-      echo -n $( shn_basename $bin2 ) && return 0
+      shn_echon $( shn_basename $bin2 ) && return 0
     fi
   fi
   return 1
 }
 function shn_run ()
 { 
+  local retcode=0
   local bsrc="${MAS_SHN_DIR[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
@@ -29,12 +30,20 @@ function shn_run ()
     bin=${bindir}/${rname}
     # for core dump:
     ulimit -c unlimited
-    shn_msg "to run '$bin $@'"
-    shn_msg "--------------------"
-    shn_msg
-    shn_msg
-    $bin $@
+#   shn_msg "------ to run '$bin $1 ...' -------"
+    shn_msg "------ to run '$rname $1 ...' -------"
+    shn_msg "----------------------------------------"
+    shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
+    time $bin $@
+    retcode=$?
+    shn_msg "returned $retcode"
+  else
+    retcode=1
   fi
+  if [[ "$retcode" -eq $(( 128 + 11 ))  ]] ; then
+    shn G
+  fi
+  return $retcode
 }
 function shn_debug ()
 {
@@ -45,9 +54,9 @@ function shn_debug ()
   local bindir libsdir debugdir
   debugdir="$MAS_SHN_PROJECT_DIR/debug"
   libsdir="${bsrc}/.libs"
-  shn_msg "1 $FUNCNAME"
+  shn_dbgmsg "1 $FUNCNAME"
   if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
-    shn_msg "2 $FUNCNAME"
+    shn_dbgmsg "2 $FUNCNAME"
     if [[ -d "$libsdir" ]] ; then
       if [[ -f "${libsdir}/${rname}" ]] ; then
         bindir="$libsdir"
@@ -65,8 +74,8 @@ function shn_debug ()
       /bin/sed -e "$sedex" "$cmdfile" > $tmpcmd
       shn_cat $tmpcmd
     fi
-    shn_msg "3 cmdfile=$cmdfile"
-    shn_msg "3 tmpcmd=$tmpcmd"
+    shn_dbgmsg "3 cmdfile=$cmdfile"
+    shn_dbgmsg "3 tmpcmd=$tmpcmd"
 
     ulimit -c
 
@@ -104,9 +113,9 @@ function shn_core_debug ()
 
   debugdir="$MAS_SHN_PROJECT_DIR/debug"
   libsdir="${bsrc}/.libs"
-  shn_msg "1 $FUNCNAME"
+  shn_dbgmsg "1 $FUNCNAME"
   if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
-    shn_msg "2 $FUNCNAME"
+    shn_dbgmsg "2 $FUNCNAME"
     if [[ -d "$libsdir" ]] ; then
       if [[ -f "${libsdir}/${rname}" ]] ; then
         bindir="$libsdir"
@@ -119,7 +128,7 @@ function shn_core_debug ()
 
     ulimit -c
     if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
-      shn_msg ">>> $corename" >&2
+      shn_dbgmsg ">>> $corename" >&2
     else
       shn_errmsg "not found $corename" >&2
       unset corename

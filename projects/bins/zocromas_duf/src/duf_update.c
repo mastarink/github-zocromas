@@ -9,14 +9,15 @@
 
 
 #include <openssl/md5.h>
-/* #include <sqlite3.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_sql.h"
 #include "duf_utils.h"
+#include "duf_path.h"
 #include "duf_dirent.h"
 #include "duf_insert.h"
 
@@ -25,7 +26,7 @@
 
 
 static unsigned long long
-update_file_ni( const char *path, const char *fname, ino_t file_inode, struct stat *pst_dir, unsigned long long dir_id )
+duf_update_file_ni( const char *path, const char *fname, ino_t file_inode, struct stat *pst_dir, unsigned long long dir_id )
 {
   unsigned long long resd = 0;
   unsigned long long resf = 0;
@@ -35,55 +36,55 @@ update_file_ni( const char *path, const char *fname, ino_t file_inode, struct st
     int r;
     char *fpath;
 
-    fpath = join_path( path, fname );
+    fpath = duf_join_path( path, fname );
     r = stat( fpath, &st_file );
     if ( !r )
       pst_file = &st_file;
     mas_free( fpath );
   }
-  resd = insert_filedata( file_inode, pst_dir, pst_file );
-  resf = insert_filename( fname, dir_id, resd );
+  resd = duf_insert_filedata( file_inode, pst_dir, pst_file );
+  resf = duf_insert_filename( fname, dir_id, resd );
   return resf;
 }
 
-static void
-update_file_de( const char *path, const struct dirent *de, struct stat *pst_dir, unsigned long long dir_id )
+static unsigned long long
+duf_update_file_de( const char *path, const struct dirent *de, struct stat *pst_dir, unsigned long long dir_id )
 {
-  update_file_ni( path, de->d_name, de->d_ino, pst_dir, dir_id );
+ return duf_update_file_ni( path, de->d_name, de->d_ino, pst_dir, dir_id );
 }
 
 static void
-update_dirent( const char *wpath, struct dirent *de, struct stat *pst_dir, unsigned long long dir_id, int recurse, int dofiles )
+duf_update_dirent( const char *wpath, struct dirent *de, struct stat *pst_dir, unsigned long long dir_id, int recurse, int dofiles )
 {
   /* fprintf( stderr, "Update dirent %s\n", wpath ); */
   if ( recurse && de->d_type == DT_DIR && !( de->d_name[0] == '.' && ( de->d_name[1] == '.' || de->d_name[1] == 0 ) ) )
   {
     char *recpath;
 
-    recpath = join_path( wpath, de->d_name );
-    update_path( recpath, dir_id, recurse, dofiles, 0 /* added */  );
+    recpath = duf_join_path( wpath, de->d_name );
+    duf_update_path( recpath, dir_id, recurse, dofiles, 0 /* added */  );
     if ( recpath )
       mas_free( recpath );
   }
   else if ( dofiles && de->d_type == DT_REG )
-    update_file_de( wpath, de, pst_dir, dir_id );
+    duf_update_file_de( wpath, de, pst_dir, dir_id );
   /* fprintf( stderr, "Update dirent %s done\n", wpath ); */
 }
 
 static int
-update_path_entries( const char *wpath, struct stat *pst_dir, unsigned long long dir_id, int recurse, int dofiles )
+duf_update_path_entries( const char *wpath, struct stat *pst_dir, unsigned long long dir_id, int recurse, int dofiles )
 {
   struct dirent **list = NULL;
   int nlist;
 
   /* fprintf( stderr, "Update path entries %s\n", wpath ); */
-  nlist = scandir( wpath, &list, direntry_filter, alphasort );
+  nlist = scandir( wpath, &list, duf_direntry_filter, alphasort );
   if ( nlist < 0 )
     fprintf( stderr, "ERROR %s: nlist = %d\n", wpath, nlist );
   for ( int il = 0; il < nlist; il++ )
   {
     /* fprintf( stderr, "to update dirent %d @ %s\n", il, wpath ); */
-    update_dirent( wpath, list[il], pst_dir, dir_id, recurse, dofiles );
+    duf_update_dirent( wpath, list[il], pst_dir, dir_id, recurse, dofiles );
     /* fprintf( stderr, "to free list[%d] @ %s\n", il, wpath ); */
     free( list[il] );
     /* fprintf( stderr, "freed list[%d] @ %s\n", il, wpath ); */
@@ -94,7 +95,7 @@ update_path_entries( const char *wpath, struct stat *pst_dir, unsigned long long
 }
 
 unsigned long long
-update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles, const char *tail, int added )
+duf_update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles, const char *tail, int added )
 {
   unsigned long long dir_id = 0;
   char *dir_name;
@@ -111,7 +112,7 @@ update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles
     char *wpath = NULL;
 
     /* fprintf( stderr, " -- Update real path; to join %s and %s\n", dir_name, base_name ); */
-    wpath = join_path( dir_name, base_name );
+    wpath = duf_join_path( dir_name, base_name );
     /* fprintf( stderr, " -- Update wpath %s\n", wpath ); */
     {
       int r;
@@ -123,11 +124,13 @@ update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles
         int items = 0;
 
         if ( added )
-          parentid = update_path( dir_name, 0, 0, 0, 2 /* added */  );
-        dir_id = insert_path( base_name, &st_dir, parentid, added );
+          parentid = duf_update_path( dir_name, 0, 0, 0, 2 /* added */  );
+        dir_id = duf_insert_path( base_name, &st_dir, parentid, added );
 
         if ( dir_id > 0 && *dir_name && !( *dir_name == '.' && ( !dir_name[1] || dir_name[1] == '.' ) ) )
-          items = update_path_entries( wpath, &st_dir, dir_id, recurse, dofiles );
+          items = duf_update_path_entries( wpath, &st_dir, dir_id, recurse, dofiles );
+        else
+          fprintf( stderr, "didn't update path entries %llu\n", dir_id );
         duf_sql( "UPDATE duf_paths SET items='%u' WHERE id='%lu'", items, dir_id );
       }
     }
@@ -139,7 +142,7 @@ update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles
 }
 
 unsigned long long
-update_path( const char *path, unsigned long long parentid, int recurse, int dofiles, int added )
+duf_update_path( const char *path, unsigned long long parentid, int recurse, int dofiles, int added )
 {
   unsigned long long dir_id = 0;
   char *rpath;
@@ -151,7 +154,7 @@ update_path( const char *path, unsigned long long parentid, int recurse, int dof
   {
     ( void ) realpath( path, rpath );
     if ( strlen( rpath ) > 1 )
-      dir_id = update_rpath( rpath, parentid, recurse, dofiles, path + 1, added );
+      dir_id = duf_update_rpath( rpath, parentid, recurse, dofiles, path + 1, added );
 
     mas_free( rpath );
   }
@@ -159,7 +162,7 @@ update_path( const char *path, unsigned long long parentid, int recurse, int dof
 }
 
 /* void                                                                                                                */
-/* update_mdline_path( unsigned long long pathid )                                                                     */
+/* duf_update_mdline_path( unsigned long long pathid )                                                                     */
 /* {                                                                                                                   */
 /*   char *sql2;                                                                                                       */
 /*                                                                                                                     */
@@ -210,7 +213,7 @@ update_path( const char *path, unsigned long long parentid, int recurse, int dof
 /* }                                                                                                                   */
 
 static int
-duf_sql_update_mdline_path2( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_update_mdpaths_path( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
 {
   MD5_CTX *pctx;
   unsigned long long md5s1, md5s2, pathid;
@@ -242,14 +245,14 @@ duf_sql_update_mdline_path2( int nrow, int nrows, char *presult[], va_list args,
 }
 
 int
-update_mdline_path2( unsigned long long pathid )
+duf_update_mdpaths_path( unsigned long long pathid )
 {
   int r = 0;
 
   {
     MD5_CTX ctx;
 
-    r = duf_sql_select( duf_sql_update_mdline_path2, &ctx, NULL, 0,
+    r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, NULL, 0,
                         "SELECT md5sum1, md5sum2 FROM duf_md5 LEFT JOIN duf_keydata on (duf_keydata.md5id=duf_md5.id) "
                         " WHERE pathid='%llu' ORDER by md5sum1, md5sum2 ", pathid );
   }
@@ -271,7 +274,7 @@ update_mdline_path2( unsigned long long pathid )
   /*         MD5_CTX ctx;                                                                                                                              */
   /*         unsigned long long *md64;                                                                                                                 */
   /*                                                                                                                                                   */
-  /*         fprintf( stderr, "update_mdline_path2\n" );                                                                                               */
+  /*         fprintf( stderr, "duf_update_mdline_path2\n" );                                                                                               */
   /*         MD5_Init( &ctx );                                                                                                                         */
   /*         for ( int ir = column; ir <= column * row; ir += column )                                                                                 */
   /*         {                                                                                                                                         */
@@ -307,24 +310,24 @@ update_mdline_path2( unsigned long long pathid )
 }
 
 static int
-duf_sql_update_mdline( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_update_mdpaths( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
 {
   unsigned long long pathid;
 
   pathid = strtol( presult[0], NULL, 10 );
-  /* update_mdline_path( pathid ); */
-  fprintf( stderr, "update_mdline %d\n", nrow );
-  update_mdline_path2( pathid );
+  /* duf_update_mdline_path( pathid ); */
+  fprintf( stderr, "duf_update_mdline %d\n", nrow );
+  duf_update_mdpaths_path( pathid );
   return 0;
 }
 
 int
-update_mdline( void )
+duf_update_mdpaths( void )
 {
   int r;
 
-  fprintf( stderr, "Start update_mdline\n" );
-  r = duf_sql_select( duf_sql_update_mdline, NULL, NULL,  0, "SELECT id " " FROM duf_paths " /* " WHERE ... IS NULL " */ " ORDER BY id" );
+  fprintf( stderr, "Start duf_update_mdpaths\n" );
+  r = duf_sql_select( duf_sql_update_mdpaths, NULL, NULL, 0, "SELECT id " " FROM duf_paths " /* " WHERE ... IS NULL " */ " ORDER BY id" );
   /* {                                                                                         */
   /*   int row, column;                                                                        */
   /*   char **presult = NULL;                                                                  */
@@ -341,9 +344,9 @@ update_mdline( void )
   /*         unsigned long long pathid;                                                        */
   /*                                                                                           */
   /*         pathid = strtol( presult[ir], NULL, 10 );                                         */
-  /*         (* update_mdline_path( pathid ); *)                                               */
-  /*         fprintf( stderr, "update_mdline %d\n", ir );                                      */
-  /*         update_mdline_path2( pathid );                                                    */
+  /*         (* duf_update_mdline_path( pathid ); *)                                               */
+  /*         fprintf( stderr, "duf_update_mdline %d\n", ir );                                      */
+  /*         duf_update_mdline_path2( pathid );                                                    */
   /*       }                                                                                   */
   /*     }                                                                                     */
   /*   }                                                                                       */
@@ -351,6 +354,6 @@ update_mdline( void )
   /*     fprintf( stderr, "+ mdline ERROR %d\n", __LINE__ );                                   */
   /*   sqlite3_free_table( presult );                                                          */
   /* }                                                                                         */
-  fprintf( stderr, "End update_mdline\n" );
+  fprintf( stderr, "End duf_update_mdpaths\n" );
   return r;
 }

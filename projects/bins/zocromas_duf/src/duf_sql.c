@@ -11,7 +11,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
 
 #include "duf_sql.h"
 
@@ -26,14 +26,14 @@ duf_sql_open( const char *dbpath )
   r = sqlite3_initialize(  );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Initialize ERROR\n" );
-  else
-    fprintf( stderr, "SQL DB Initialize OK\n" );
+  /* else                                           */
+  /*   fprintf( stderr, "SQL DB Initialize OK\n" ); */
 
   r = sqlite3_open( dbpath, &pDb );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Open ERROR\n" );
-  else
-    fprintf( stderr, "SQL DB Open OK\n" );
+  /* else                                     */
+  /*   fprintf( stderr, "SQL DB Open OK\n" ); */
   return r;
 }
 
@@ -45,14 +45,14 @@ duf_sql_close( void )
   r = sqlite3_close( pDb );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Close ERROR\n" );
-  else
-    fprintf( stderr, "SQL DB Close OK\x1b[K\n" );
+  /* else                                            */
+  /*   fprintf( stderr, "SQL DB Close OK\x1b[K\n" ); */
 
   r = sqlite3_shutdown(  );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Shutdown ERROR\n" );
-  else
-    fprintf( stderr, "SQL DB Shutdown OK\x1b[K\n" );
+  /* else                                               */
+  /*   fprintf( stderr, "SQL DB Shutdown OK\x1b[K\n" ); */
 
   return 0;
 }
@@ -134,38 +134,46 @@ duf_sql( const char *fmt, ... )
 }
 
 int
-duf_sql_select( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, ... )
+duf_sql_vselect( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, va_list args )
 {
-  va_list args;
-  int r, row, column;
+  int r = 0;
+  int row, column;
   char *sql, **presult = NULL;
   char *emsg = NULL;
 
-  va_start( args, fmt );
+  /* sql = sqlite3_vsnprintf( sizeof( prepare_buf ), prepare_buf, fmt, args ); */
+  sql = sqlite3_vmprintf( fmt, args );
+  if ( trace )
+    fprintf( stderr, "trace:[%s]\n", sql );
+  r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
+  if ( r == SQLITE_OK )
   {
-    /* sql = sqlite3_vsnprintf( sizeof( prepare_buf ), prepare_buf, fmt, args ); */
-    sql = sqlite3_vmprintf( fmt, args );
-    if ( trace )
-      fprintf( stderr, "trace:[%s]\n", sql );
-    r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
-    if ( r == SQLITE_OK )
-    {
-      if ( row )
-        for ( int ir = 1; ir <= row; ir++ )
-          ( cb ) ( ir - 1, row, &presult[ir * column], args, udata, fuscan );
-      /* if ( row )                                                  */
-      /*   for ( int ir = column; ir <= column * row; ir += column ) */
-      /*     ( cb ) ( ir / column - 1, &presult[ir], args );         */
-    }
-    else if ( r == SQLITE_CONSTRAINT )
-    {
-      fprintf( stderr, "SQL CONSTRAINT\n" );
-    }
-    else
-      fprintf( stderr, "SQL error %d %s\n", r, emsg );
-    sqlite3_free_table( presult );
-    sqlite3_free( sql );
+    if ( row )
+      for ( int ir = 1; ir <= row; ir++ )
+        ( cb ) ( ir - 1, row, &presult[ir * column], args, udata, fuscan );
+    /* if ( row )                                                  */
+    /*   for ( int ir = column; ir <= column * row; ir += column ) */
+    /*     ( cb ) ( ir / column - 1, &presult[ir], args );         */
   }
+  else if ( r == SQLITE_CONSTRAINT )
+  {
+    fprintf( stderr, "SQL CONSTRAINT\n" );
+  }
+  else
+    fprintf( stderr, "SQL error %d %s\n", r, emsg );
+  sqlite3_free_table( presult );
+  sqlite3_free( sql );
+  return r;
+}
+
+int
+duf_sql_select( duf_sql_select_callback_t cb, void *udata, duf_str_callback_t fuscan, int trace, const char *fmt, ... )
+{
+  va_list args;
+  int r;
+
+  va_start( args, fmt );
+  r = duf_sql_vselect( cb, udata, fuscan, trace, fmt, args );
   va_end( args );
   return r;
 }

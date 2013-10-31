@@ -43,7 +43,7 @@ function shn_code ()
       shift
     ;;
     r)
-      shn_run $@
+      shn_run "$*"
     ;;
     g)
       shn_debug $@
@@ -128,6 +128,18 @@ function shn_code ()
     x)
       shn_std_command build $@
     ;;
+    q1)
+      shn_msglist $@
+    ;;
+    q2)
+      shn_msglist "$@"
+    ;;
+    q3)
+      shn_msglist $*
+    ;;
+    q4)
+      shn_msglist "$*"
+    ;;
     *)
       shn_errmsg "wrong code '$code'"
       return 1
@@ -186,5 +198,6 @@ function shn ()
   shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MAS_SHN_PROJECT_NAME}
 # shn_pwd
   shn_setup_projects || return $?
+  shn_msg
   return $retcode
 }

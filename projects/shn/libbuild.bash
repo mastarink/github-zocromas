@@ -169,7 +169,7 @@ function shn_installed_list ()
 }
 function shn_build_common_make ()
 {
-  shn_build_xcommand make -s $@ && shn_msg common make $@ ok || return $?
+  shn_build_xcommand make -s $@ && shn_msgn common make $@ ok || return $?
 }
 function shn_build_autoreconf ()
 {
@@ -184,7 +184,7 @@ function shn_build_autoreconf ()
   if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
     if pushd $MAS_SHN_PROJECT_DIR &>/dev/null ; then
       shn_dbgmsg start autoreconf -i
-      autoreconf -i && shn_msg autoconf ok || { retcode=$? ; }
+      autoreconf -i && shn_msgn autoconf ok || { retcode=$? ; }
       popd  &>/dev/null
       shn_dbgmsg end autoreconf -i
     fi
@@ -221,7 +221,7 @@ function shn_build_configure ()
   configure_opts="${MAS_SHN_GLOBAL_CONFIGURE_OPTS[*]} ${MAS_SHN_PROJECT_CONFIGURE_OPTS[*]} ${MAS_SHN_ADD_CONFIGURE_OPTS[*]}"
   shn_dbgmsg "configure_opts : $configure_opts"
   shn_dbgmsg "configure [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
-  shn_build_xcommand $configscript  $configure_opts && shn_msg configure ok || return $?
+  shn_build_xcommand $configscript  $configure_opts && shn_msgn configure ok || return $?
   shn_dbgmsg "C1 `pwd`" >&2
 # shn_build_list . config.status config.log config.h
   return 0
@@ -235,7 +235,7 @@ function shn_build_recheck ()
   local shn_dont_setup=yes
   shn_dbgmsg "recheck [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
   shn_msg $FUNCNAME 3
-  shn_build_xcommand ./config.status --recheck && shn_msg recheck ok || return $?
+  shn_build_xcommand ./config.status --recheck && shn_msgn recheck ok || return $?
   shn_msg $FUNCNAME 4
   return 0
 }
@@ -243,7 +243,7 @@ function shn_build_make ()
 {
   shn_dbgmsg "$FUNCNAME 1"
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:make]=`datemt`
-  shn_build_common_make && shn_msg make ok || return $?
+  shn_build_common_make && shn_msgn make ok || return $?
   shn_dbgmsg "$FUNCNAME 2"
 # shn_build_list src || shn_build_list inc
   return 0
@@ -276,12 +276,12 @@ function shn_build_superclean ()
 function shn_build_clean ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:clean]=`datemt`
-  shn_build_common_make clean && shn_msg make clean ok || return $?
+  shn_build_common_make clean && shn_msgn make clean ok || return $?
 }
 function shn_build_distclean ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:distclean]=`datemt`
-  shn_build_common_make distclean && shn_msg make distclean ok || return $?
+  shn_build_common_make distclean && shn_msgn make distclean ok || return $?
 # shn_build_list
 }
 function shn_build_install ()
@@ -296,7 +296,7 @@ function shn_build_dist ()
   local shn_dont_setup=yes
   if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] ; then
     shn_dbgmsg shn_build_dist ${MAS_SHN_DIR[build]}
-    shn_build_common_make distcheck && shn_msg make distcheck ok || return $?
+    shn_build_common_make distcheck && shn_msgn make distcheck ok || return $?
 #   shn_build_list
     if pushd "${MAS_SHN_DIR[build]}" &>/dev/null ; then
       # TODO for ....
@@ -356,7 +356,7 @@ function shn_build_ebuild_update ()
 	  shn_rm Manifest \
 	  		|| { retval=$? ; popd &>/dev/null ; shn_errmsg 5 $FUNCNAME ; return $retval ; }	  
 	fi
-	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msg enuild $ebname manifest - ok || retval=$?
+	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msgn enuild $ebname manifest - ok || retval=$?
       else
 	shn_errmsg $ebname
 	retval=1
@@ -389,12 +389,12 @@ function shn_build_ebuild_check ()
       distfile1="${short}.tar.gz"
       distfile2="${short}.tar.bz2"
 #     if [[ -f "$distdir/$distfile1" ]] ; then
-#       shn_msg $short gz ok 
+#       shn_msgn $short gz ok 
 #     else
 #       shn_msg $short gz absent : $distdir/$distfile1
 #     fi
       if [[ -f "$distdir/$distfile2" ]] ; then
-#       shn_msg $short bzip2 ok 
+#       shn_msgn $short bzip2 ok 
 	:
       else
         shn_msg "bz2 absent : $distdir/$distfile2"

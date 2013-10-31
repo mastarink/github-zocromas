@@ -9,6 +9,9 @@ sfind duf_create.h
 tab sfind duf_dirent.c
 sfind duf_dirent.h
 
+tab sfind duf_path.c
+sfind duf_path.h
+
 tab sfind duf_exif.c
 sfind duf_exif.h
 
@@ -33,4 +36,5 @@ sfind duf_utils.h
 tab sfind duf_sql.c
 sfind duf_sql.h
 
+tab sfind duf_types.h
 tab sfind duf_def.h

@@ -1,24 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
 #include <openssl/md5.h>
 
-/* #include <sqlite3.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_sql.h"
 #include "duf_utils.h"
+#include "duf_path.h"
+#include "duf_file_pathid.h"
+#include "duf_file_md5id.h"
 #include "duf_insert.h"
 
 
 #include "duf_md5.h"
 
 static unsigned long long
-update_md5_file( const char *fpath, unsigned long long filedataid, size_t fsize )
+duf_update_md5_file( const char *fpath, unsigned long long filedataid, size_t fsize )
 {
   unsigned long long resmd = -1;
   FILE *f;
@@ -47,13 +51,15 @@ update_md5_file( const char *fpath, unsigned long long filedataid, size_t fsize 
       mas_free( buffer );
       MD5_Final( md, &ctx );
       {
-        resmd = insert_md5( ( ( unsigned long long * ) &md[0] ), fsize );
-        fprintf( stderr, "resmd: %llu: %s\x1b[K\n", resmd, fpath );
+        resmd = duf_insert_md5( ( ( unsigned long long * ) &md[0] ), fsize );
+        if ( 1 )
+        {
+          fprintf( stderr, "resmd: %llu: %s\x1b[K\r", resmd, fpath );
+        }
         if ( resmd )
         {
           duf_sql( "UPDATE duf_filedatas SET md5id='%llu', ucnt=ucnt+1 WHERE id='%lld'", resmd, filedataid );
         }
-        fprintf( stderr, "F\n" );
       }
     }
     else
@@ -71,7 +77,7 @@ update_md5_file( const char *fpath, unsigned long long filedataid, size_t fsize 
 }
 
 static int
-duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
+duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
 {
   unsigned long long pathid = -1, old_pathid = -1, nameid = -1;
   char **ppath;
@@ -120,7 +126,7 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *ud
     {
       if ( *ppath )
         mas_free( *ppath );
-      *ppath = path_id_to_path( pathid );
+      *ppath = duf_pathid_to_path( pathid );
     }
     if ( *ppath && fsize )
     {
@@ -128,7 +134,7 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *ud
       char *fpath;
       struct stat st;
 
-      fpath = join_path( *ppath, fname );
+      fpath = duf_join_path( *ppath, fname );
       rs = stat( fpath, &st );
       if ( 0 && now )
       {
@@ -137,15 +143,15 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *ud
       }
       if ( fsize > 0 && ( !resmd || rs || !now || now < st.st_mtime || now < st.st_ctime ) )
       {
-        if ( 1 )
+        if ( 0 )
         {
           fprintf( stderr, "fsize>0:%d; !resmd:%d(%lld:%s); rs:%d; t1:%d; t2:%d all:%d  now:%lu; mtime:%lu %s\x1b[K\n", fsize > 0, !resmd,
                    resmd, presult[3], rs, now < st.st_mtime, now < st.st_ctime,
                    ( !resmd || rs || ( now < st.st_mtime || now < st.st_ctime ) ), now, st.st_mtime, fpath );
         }
-        resmd = update_md5_file( fpath, filedataid, fsize );
+        resmd = duf_update_md5_file( fpath, filedataid, fsize );
         if ( pathid && nameid && inode && resmd )
-          insert_keydata( pathid, nameid, inode, resmd );
+          duf_insert_keydata( pathid, nameid, inode, resmd );
       }
       mas_free( fpath );
     }
@@ -155,7 +161,7 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *ud
 }
 
 int
-update_md5( void )
+duf_update_md5( void )
 {
   int r = 0;
 
@@ -238,7 +244,7 @@ update_md5( void )
   /*           {                                                                                                                                */
   /*             if ( path )                                                                                                                    */
   /*               mas_free( path );                                                                                                            */
-  /*             path = path_id_to_path( pathid );                                                                                              */
+  /*             path = duf_pathid_to_path( pathid );                                                                                               */
   /*           }                                                                                                                                */
   /*           if ( path && fsize )                                                                                                             */
   /*           {                                                                                                                                */
@@ -246,7 +252,7 @@ update_md5( void )
   /*             char *fpath;                                                                                                                   */
   /*             struct stat st;                                                                                                                */
   /*                                                                                                                                            */
-  /*             fpath = join_path( path, fname );                                                                                              */
+  /*             fpath = duf_join_path( path, fname );                                                                                              */
   /*             rs = stat( fpath, &st );                                                                                                       */
   /*             if ( 0 && now )                                                                                                                */
   /*             {                                                                                                                              */
@@ -261,9 +267,9 @@ update_md5( void )
   /*                          resmd, presult[ir + 3], rs, now <= st.st_mtime, now <= st.st_ctime,                                               */
   /*                          ( !resmd || rs || ( now <= st.st_mtime || now <= st.st_ctime ) ), snow, now, st.st_mtime, fpath );                */
   /*               }                                                                                                                            */
-  /*               resmd = update_md5_file( fpath, filedataid, fsize );                                                                         */
+  /*               resmd = duf_update_md5_file( fpath, filedataid, fsize );                                                                         */
   /*               if ( pathid && nameid && inode && resmd )                                                                                    */
-  /*                 insert_keydata( pathid, nameid, inode, resmd );                                                                            */
+  /*                 duf_insert_keydata( pathid, nameid, inode, resmd );                                                                            */
   /*             }                                                                                                                              */
   /*             mas_free( fpath );                                                                                                             */
   /*           }                                                                                                                                */
@@ -282,5 +288,125 @@ update_md5( void )
   if ( path )
     mas_free( path );
   fprintf( stderr, "End calc md5\x1b[K\n" );
+  return r;
+}
+
+/* 
+ * type: duf_sql_select_callback_t 
+ * sql must select pathid, filenameid, filename, md5id, size
+ * */
+int
+duf_sql_scan_md5( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fuscan )
+{
+  if ( fuscan )
+  {
+    unsigned long long pathid;
+    unsigned long long filenameid;
+
+    /* unsigned long long md5id; */
+    /* unsigned long long size; */
+    char *path;
+    md5_std_data_t udata;
+
+    pathid = strtoll( presult[0], NULL, 10 );
+    filenameid = strtoll( presult[1], NULL, 10 );
+    udata.md5id = strtoll( presult[3], NULL, 10 );
+    udata.size = strtoll( presult[4], NULL, 10 );
+    udata.dupcnt = presult[5] ? strtoll( presult[5], NULL, 10 ) : 0;
+    path = duf_pathid_to_path( pathid );
+
+    ( *fuscan ) ( pathid, path, filenameid, presult[2], &udata );
+    mas_free( path );
+  }
+  return 0;
+}
+
+int
+duf_scan_vmd5_sql( duf_str_callback_t fuscan, const char *sql, va_list args )
+{
+  return duf_sql_vselect( duf_sql_scan_md5, NULL /* udata */ , fuscan, 1 /* trace */ , sql, args );
+}
+
+int
+duf_scan_md5_sql( duf_str_callback_t fuscan, const char *sql, ... )
+{
+  int r = 0;
+  va_list args;
+
+  va_start( args, sql );
+  r = duf_scan_vmd5_sql( fuscan, sql, args );
+  va_end( args );
+  return r;
+}
+
+/*
+ * sql must select pathid, filenameid, filename, md5id, size
+ * */
+static int
+duf_scan_md5id( duf_str_callback_t fuscan, unsigned long long dupcnt_min, unsigned long long limit )
+{
+  int r = 0;
+
+  if ( limit )
+  {
+    if ( dupcnt_min )
+      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 WHERE dupcnt>=%llu ORDER BY size DESC LIMIT %llu",
+                            dupcnt_min, limit );
+    else
+      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 ORDER BY size DESC LIMIT %llu", limit );
+  }
+  else
+  {
+    if ( dupcnt_min )
+      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 WHERE dupcnt>=%llu  ORDER BY size DESC", dupcnt_min );
+    else
+      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 ORDER BY size DESC", dupcnt_min );
+  }
+  return r;
+}
+
+/* 
+ * type: duf_str_callback_t
+ * */
+int
+duf_sql_scan_print_md5( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *udata )
+{
+  md5_std_data_t *mdata;
+
+  mdata = ( md5_std_data_t * ) udata;
+  printf( "-- %7llu - %lld\n", mdata->md5id, mdata->size );
+  /* printf( "%s ", name ); */
+  return 0;
+}
+
+int
+duf_print_md5( unsigned long long limit )
+{
+  int r = 0;
+
+  duf_scan_md5id( duf_sql_scan_print_md5, 0, limit );
+  return r;
+}
+
+/* 
+ * type: duf_str_callback_t
+ * */
+int
+duf_sql_scan_print_md5_same( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *udata )
+{
+  md5_std_data_t *mdata;
+
+  mdata = ( md5_std_data_t * ) udata;
+  printf( "-- size=%lld; %lld files (id:%llu) ----------\n", mdata->size, mdata->dupcnt, mdata->md5id );
+  duf_print_files_by_md5id( mdata->md5id );
+  return 0;
+}
+
+int
+duf_print_md5_same( unsigned long long dupcnt_min, unsigned long long limit )
+{
+  int r = 0;
+
+  duf_scan_md5id( duf_sql_scan_print_md5_same, dupcnt_min, limit );
   return r;
 }

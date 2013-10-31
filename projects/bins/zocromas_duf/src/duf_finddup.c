@@ -4,22 +4,23 @@
 #include <unistd.h>
 
 
-/* #include <sqlite3.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_utils.h"
+#include "duf_path.h"
 #include "duf_sql.h"
 #include "duf_remove.h"
 
 #include "duf_finddup.h"
 
 int
-zero_duplicates( void )
+duf_zero_duplicates( void )
 {
   int r;
 
@@ -29,7 +30,7 @@ zero_duplicates( void )
 }
 
 static int
-duf_sql_update_duplicates( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t  fun )
+duf_sql_update_duplicates( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
 {
   unsigned long long cnt;
   unsigned long long md5id;
@@ -41,7 +42,7 @@ duf_sql_update_duplicates( int nrow, int nrows, char *presult[], va_list args, v
 }
 
 int
-update_duplicates( void )
+duf_update_duplicates( void )
 {
   int r;
 
@@ -55,66 +56,74 @@ update_duplicates( void )
   return r;
 }
 
-static int
-duf_sql_get_duplicates( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t  fun )
-{
-  char *path;
-  char *fname;
-  size_t fsize;
+/* static int                                                                                                        */
+/* duf_sql_get_duplicates( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun ) */
+/* {                                                                                                                 */
+/*   char *path;                                                                                                     */
+/*   const char *fname;                                                                                              */
+/*   size_t fsize;                                                                                                   */
+/*   unsigned long long md5id;                                                                                       */
+/*   unsigned long long pathid;                                                                                      */
+/*   unsigned long long inode;                                                                                       */
+/*                                                                                                                   */
+/*   pathid = strtoll( presult[0], NULL, 10 );                                                                       */
+/*   inode = strtoll( presult[1], NULL, 10 );                                                                        */
+/*   md5id = strtoll( presult[2], NULL, 10 );                                                                        */
+/*   fsize = strtol( presult[3], NULL, 10 );                                                                         */
+/*   fname = presult[4];                                                                                             */
+/*                                                                                                                   */
+/*                                                                                                                   */
+/*   path = pathid_to_path( pathid );                                                                                */
+/*   if ( fname && path )                                                                                            */
+/*   {                                                                                                               */
+/*     char *fpath;                                                                                                  */
+/*                                                                                                                   */
+/*     fpath = join_path( path, fname );                                                                             */
+/*     if ( nrow == 0 )                                                                                              */
+/*     {                                                                                                             */
+/*       printf( "md5id: %5llu size:%lu\n", md5id, fsize );                                                          */
+/*     }                                                                                                             */
+/*     printf( "  %u. pathid: %5llu inode: %9llu %s\n", nrow, pathid, inode, fpath );                                */
+/*     mas_free( fpath );                                                                                            */
+/*   }                                                                                                               */
+/*   if ( path )                                                                                                     */
+/*     mas_free( path );                                                                                             */
+/*   return 0;                                                                                                       */
+/* }                                                                                                                 */
 
-  fname = presult[4];
-  fsize = strtol( presult[3], NULL, 10 );
-  path = path_id_to_path( strtoll( presult[0], NULL, 10 ) );
-  if ( fname && path )
-  {
-    char *fpath;
+/* static int                                                                                                                             */
+/* get_duplicates( unsigned long long md5id )                                                                                             */
+/* {                                                                                                                                      */
+/*   int r = 0;                                                                                                                           */
+/*                                                                                                                                        */
+/*   r = duf_sql_select( duf_sql_get_duplicates, NULL, NULL, 0,                                                                           */
+/*                       "SELECT duf_filenames.pathid, duf_filedatas.inode, duf_filedatas.md5id, duf_filedatas.size, duf_filenames.name " */
+/*                       " FROM duf_md5 " " LEFT JOIN duf_filedatas ON (duf_md5.id=duf_filedatas.md5id) "                                 */
+/*                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "                                           */
+/*                       " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id) " " WHERE " "duf_filedatas.md5id='%llu'", md5id );  */
+/*   return r;                                                                                                                            */
+/* }                                                                                                                                      */
 
-    fpath = join_path( path, fname );
-    if ( nrow == 0 )
-    {
-      fprintf( stderr, "md5id: %5s size:%lu\n", presult[2], fsize );
-    }
-    fprintf( stderr, "  %u. pathid: %5s inode: %9s fpath: %s\n", nrow, presult[0], presult[1], fpath );
-    mas_free( fpath );
-  }
-  if ( path )
-    mas_free( path );
-  return 0;
-}
+/* static int                                                                                                          */
+/* duf_sql_print_duplicates( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun ) */
+/* {                                                                                                                   */
+/*   unsigned long long md5id;                                                                                         */
+/*                                                                                                                     */
+/*   md5id = strtoll( presult[0], NULL, 10 );                                                                          */
+/*   get_duplicates( md5id );                                                                                          */
+/*   return 0;                                                                                                         */
+/* }                                                                                                                   */
 
-static int
-get_duplicates( unsigned long long md5id )
-{
-  int r = 0;
-
-  r = duf_sql_select( duf_sql_get_duplicates, NULL, NULL, 0,
-                      "SELECT duf_filenames.pathid, duf_filedatas.inode, duf_filedatas.md5id, duf_filedatas.size, duf_filenames.name "
-                      " FROM duf_md5 " " LEFT JOIN duf_filedatas ON (duf_md5.id=duf_filedatas.md5id) "
-                      " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
-                      " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id) " " WHERE " "duf_filedatas.md5id='%llu'", md5id );
-  return r;
-}
-
-static int
-duf_sql_print_duplicates( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t  fun )
-{
-  unsigned long long md5id;
-
-  md5id = strtoll( presult[0], NULL, 10 );
-  get_duplicates( md5id );
-  return 0;
-}
-
-int
-print_duplicates( unsigned long limit )
-{
-  int r;
-
-  r = duf_sql_select( duf_sql_print_duplicates, NULL, NULL, 0,
-                      "SELECT " " duf_md5.id, duf_md5.dupcnt " " FROM duf_md5 " " WHERE dupcnt IS NOT NULL"
-                      " ORDER BY (dupcnt * size) DESC LIMIT %lu", limit );
-  return r;
-}
+/* int                                                                                                         */
+/* print_duplicates( unsigned long limit )                                                                     */
+/* {                                                                                                           */
+/*   int r;                                                                                                    */
+/*                                                                                                             */
+/*   r = duf_sql_select( duf_sql_print_duplicates, NULL, NULL, 0,                                              */
+/*                       "SELECT " " duf_md5.id, duf_md5.dupcnt " " FROM duf_md5 " " WHERE dupcnt IS NOT NULL" */
+/*                       " ORDER BY (dupcnt * size) DESC LIMIT %lu", limit );                                  */
+/*   return r;                                                                                                 */
+/* }                                                                                                           */
 
 /* void                                                                                                                           */
 /* print_duplicate_dirs_old( void )                                                                                               */
@@ -162,7 +171,7 @@ print_duplicates( unsigned long limit )
 /*                 sqlite3_int64 pathid;                                                                                          */
 /*                                                                                                                                */
 /*                 pathid = strtoll( presult2[ir2], NULL, 10 );                                                                   */
-/*                 path = path_id_to_path( pathid );                                                                              */
+/*                 path = pathid_to_path( pathid );                                                                              */
 /*                 targc = mas_add_argv_arg( targc, &targv, path );                                                               */
 /*                 if ( path_ids )                                                                                                */
 /*                   path_ids = mas_strcat_x( path_ids, "," );                                                                    */
@@ -232,7 +241,7 @@ print_duplicates( unsigned long limit )
 /*                                                                                                                                                 */
 /*               pathid = strtoll( presult2[ir2 + 0], NULL, 10 );                                                                                  */
 /*               nameid = strtoll( presult2[ir2 + 1], NULL, 10 );                                                                                  */
-/*               fpath = path_id_to_path( pathid );                                                                                                */
+/*               fpath = pathid_to_path( pathid );                                                                                                */
 /*               fpath = mas_strcat_x( fpath, "/" );                                                                                               */
 /*               fpath = mas_strcat_x( fpath, presult2[ir2 + 2] );                                                                                 */
 /*               fprintf( stderr, "%llu : %llu : '%s'\n", inode, nameid, fpath );                                                                  */

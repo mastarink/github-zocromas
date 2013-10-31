@@ -26,19 +26,20 @@
 #include <libexif/exif-mem.h>
 
 
-/* #include <sqlite3.h> */
 
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_sql.h"
+#include "duf_path.h"
 #include "duf_utils.h"
 
 
 #include "duf_exif.h"
 
 static int
-duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t  fun )
+duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
 {
   char *fname;
   char *path = NULL;
@@ -52,7 +53,7 @@ duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, v
 
   /* dataid = */ ( void ) strtoll( presult[0], NULL, 10 );
   pathid = strtoll( presult[3], NULL, 10 );
-  path = path_id_to_path( pathid );
+  path = duf_pathid_to_path( pathid );
   datetime = presult[4];
   fname = presult[5];
   if ( fname && path )
@@ -107,7 +108,7 @@ duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, v
     /* new_fpath = mas_strcat_x( new_fpath, ".jpg" ); */
     new_fpath = mas_strcat_x( new_fpath, "." );
     new_fpath = mas_strcat_x( new_fpath, fname );
-    fpath = join_path( path, fname );
+    fpath = duf_join_path( path, fname );
     fprintf( stderr, "%u. %s\n  => %s\n", nrow, fpath, new_fpath );
     mas_free( new_fpath );
     mas_free( new_path );
@@ -158,7 +159,7 @@ copy_jpeg_by_date( void )
   /*                                                                                                                                           */
   /*         (* dataid = *) ( void ) strtoll( presult[ir + 0], NULL, 10 );                                                                     */
   /*         pathid = strtoll( presult[ir + 3], NULL, 10 );                                                                                    */
-  /*         path = path_id_to_path( pathid );                                                                                                 */
+  /*         path = pathid_to_path( pathid );                                                                                                 */
   /*         datetime = presult[ir + 4];                                                                                                       */
   /*         fname = presult[ir + 5];                                                                                                          */
   /*         if ( fname && path )                                                                                                              */
@@ -232,7 +233,7 @@ copy_jpeg_by_date( void )
 }
 
 static int
-duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t  fun )
+duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *udata, duf_str_callback_t fun )
 {
   int r = 0;
   char *fname;
@@ -245,13 +246,13 @@ duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *u
 
   dataid = strtoll( presult[0], NULL, 10 );
   pathid = strtoll( presult[3], NULL, 10 );
-  path = path_id_to_path( pathid );
+  path = duf_pathid_to_path( pathid );
   fname = presult[4];
   if ( fname && path )
   {
     char *fpath;
 
-    fpath = join_path( path, fname );
+    fpath = duf_join_path( path, fname );
     /* fprintf( stderr, "%s\x1b[K\r", fpath ); */
 
     /* fprintf( stderr, "fname:[%s]\n", fpath ); */
@@ -358,7 +359,7 @@ duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *u
 }
 
 int
-update_exif( void )
+duf_update_exif( void )
 {
   int r = 0;
 
@@ -397,13 +398,13 @@ update_exif( void )
 /*                                                                                                                                                       */
 /*           dataid = strtoll( presult[ir + 0], NULL, 10 );                                                                                              */
 /*           pathid = strtoll( presult[ir + 3], NULL, 10 );                                                                                              */
-/*           path = path_id_to_path( pathid );                                                                                                           */
+/*           path = duf_pathid_to_path( pathid );                                                                                                        */
 /*           fname = presult[ir + 4];                                                                                                                    */
 /*           if ( fname && path )                                                                                                                        */
 /*           {                                                                                                                                           */
 /*             char *fpath;                                                                                                                              */
 /*                                                                                                                                                       */
-/*             fpath = join_path( path, fname );                                                                                                         */
+/*             fpath = duf_join_path( path, fname );                                                                                                     */
 /*             (* fprintf( stderr, "%s\x1b[K\r", fpath ); *)                                                                                             */
 /*                                                                                                                                                       */
 /*             (* fprintf( stderr, "fname:[%s]\n", fpath ); *)                                                                                           */

@@ -6,7 +6,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_def.h" */
+#include "duf_types.h"
+
 #include "duf_utils.h"
 
 
@@ -14,7 +15,7 @@
 
 
 int
-direntry_filter( const struct dirent *de )
+duf_direntry_filter( const struct dirent *de )
 {
   int r = 0;
 
