@@ -62,7 +62,7 @@ duf_update_dirent( const char *wpath, struct dirent *de, struct stat *pst_dir, u
     char *recpath;
 
     recpath = duf_join_path( wpath, de->d_name );
-    duf_update_path( recpath, dir_id, recurse, dofiles, 0 /* added */  );
+    duf_update_path( recpath, dir_id, recurse, dofiles, NULL /* group */  );
     if ( recpath )
       mas_free( recpath );
   }
@@ -95,9 +95,9 @@ duf_update_path_entries( const char *wpath, struct stat *pst_dir, unsigned long 
 }
 
 unsigned long long
-duf_update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles, const char *tail, int added )
+duf_update_rpath( char *rpath, unsigned long long parentid, int recurse, int dofiles, const char *tail, const char *group )
 {
-  unsigned long long dir_id = 0;
+  unsigned long long pathid = 0;
   char *dir_name;
   const char *base_name = NULL;
 
@@ -123,28 +123,35 @@ duf_update_rpath( char *rpath, unsigned long long parentid, int recurse, int dof
       {
         int items = 0;
 
-        if ( added )
-          parentid = duf_update_path( dir_name, 0, 0, 0, 2 /* added */  );
-        dir_id = duf_insert_path( base_name, &st_dir, parentid, added );
+        if ( group && 0 == strcmp( group, "argument" ) )
+          parentid = duf_update_path( dir_name, 0, 0, 0, NULL /* group */  );
+        pathid = duf_insert_path( base_name, &st_dir, parentid );
 
-        if ( dir_id > 0 && *dir_name && !( *dir_name == '.' && ( !dir_name[1] || dir_name[1] == '.' ) ) )
-          items = duf_update_path_entries( wpath, &st_dir, dir_id, recurse, dofiles );
+        if ( group )
+          duf_pathid_group( group, pathid );
+
+        fprintf( stderr, "inserted pathid %llu\n", pathid );
+        if ( pathid > 0 && *dir_name && !( *dir_name == '.' && ( !dir_name[1] || dir_name[1] == '.' ) ) )
+        {
+          duf_pathid_group( "updated", pathid );
+          items = duf_update_path_entries( wpath, &st_dir, pathid, recurse, dofiles );
+          duf_sql( "UPDATE duf_paths SET items='%u', last_updated=datetime()  WHERE id='%lu'", items, pathid );
+        }
         else
-          fprintf( stderr, "didn't update path entries %llu\n", dir_id );
-        duf_sql( "UPDATE duf_paths SET items='%u' WHERE id='%lu'", items, dir_id );
+          fprintf( stderr, "didn't update path entries %llu\n", pathid );
       }
     }
     if ( wpath )
       mas_free( wpath );
   }
   /* fprintf( stderr, "Update real path %s done\n", rpath ); */
-  return dir_id;
+  return pathid;
 }
 
 unsigned long long
-duf_update_path( const char *path, unsigned long long parentid, int recurse, int dofiles, int added )
+duf_update_path( const char *path, unsigned long long parentid, int recurse, int dofiles, const char *group )
 {
-  unsigned long long dir_id = 0;
+  unsigned long long pathid = 0;
   char *rpath;
 
   /* fprintf( stderr, "Update path %s\n", path ); */
@@ -154,11 +161,11 @@ duf_update_path( const char *path, unsigned long long parentid, int recurse, int
   {
     ( void ) realpath( path, rpath );
     if ( strlen( rpath ) > 1 )
-      dir_id = duf_update_rpath( rpath, parentid, recurse, dofiles, path + 1, added );
+      pathid = duf_update_rpath( rpath, parentid, recurse, dofiles, path + 1, group );
 
     mas_free( rpath );
   }
-  return dir_id;
+  return pathid;
 }
 
 /* 
@@ -229,7 +236,7 @@ duf_update_mdpaths( void )
   int r;
 
   fprintf( stderr, "Start duf_update_mdpaths\n" );
-  r = duf_sql_select( duf_sql_update_mdpaths, NULL, NULL, 0, "SELECT id " " FROM duf_paths " /* " WHERE ... IS NULL " */ " ORDER BY id" );
+  r = duf_sql_select( duf_sql_update_mdpaths, NULL, NULL, 0, "SELECT id, dir FROM duf_paths " /* " WHERE ... IS NULL " */ " ORDER BY id" );
   fprintf( stderr, "End duf_update_mdpaths\n" );
   return r;
 }

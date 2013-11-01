@@ -125,7 +125,7 @@ int
 duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata )
 {
   /* printf( "%7llu: %s/%s\n", pathid, path, name ); */
-  printf( "%7llu: %-20s @ %s/%s\n", pathid, name, path, name );
+  printf( "%7llu: %-20s @ %7llu: %s/%s\n", filenameid, name, pathid, path, name );
   /* printf( "%s ", name ); */
   return 0;
 }

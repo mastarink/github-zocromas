@@ -30,7 +30,7 @@ duf_scan_files_by_pathid( unsigned long long pathid, duf_str_cb_t fuscan )
   int r = 0;
 
   r = duf_scan_files_sql( fuscan,
-                          "SELECT duf_filenames.pathid, duf_filenames.id, duf_filenames.name, duf_md5.md5id, duf_md5.size, duf_md5.dupcnt "
+                          "SELECT duf_filenames.pathid, duf_filenames.id, duf_filenames.name, duf_md5.id, duf_md5.size, duf_md5.dupcnt "
                           " FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
                           " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_filenames.pathid='%llu'", pathid );
   return r;

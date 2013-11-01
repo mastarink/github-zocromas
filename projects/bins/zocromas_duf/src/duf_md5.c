@@ -143,7 +143,6 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *se
       rs = stat( fpath, &st );
       if ( 0 && now )
       {
-
         fprintf( stderr, "%d. [%lu;%lu;now:%lu - %lu] (%lu) %s\x1b[K\n", rs, st.st_atime, st.st_mtime, st.st_ctime, now, fsize, fpath );
       }
       if ( fsize > 0 && ( !resmd || rs || !now || now < st.st_mtime || now < st.st_ctime ) )

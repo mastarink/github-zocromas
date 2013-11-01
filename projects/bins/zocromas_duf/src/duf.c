@@ -64,6 +64,22 @@
 /* mdline update     */
 /* duplicates  print */
 
+/*
+ * run tables drop
+ * run tables check
+ * run paths add <dir path>
+ * sqf "select * from duf_group;"
+ * -- groups argument,updated --
+ * run paths print [+-]<group>
+ * run paths id <dir path>
+ * TODO : run paths update <path> - to make "add" not updating
+ * TODO : run files print <pathgroup> - add pathgroup
+ * run md5 update
+ * run md5 same
+ * run md5 print
+ * run group <dir path>
+ * */
+
 int
 duf_action( int argc, char **argv )
 {
@@ -80,7 +96,7 @@ duf_action( int argc, char **argv )
       ia++;
       duf_check_tables(  );
       for ( ia = ia + 1; ia < argc; ia++ )
-        duf_update_path( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */ , 1 /* added */  );
+        duf_update_path( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */ , "argument"  );
       duf_update_md5(  );
       duf_update_duplicates(  );
       duf_update_mdpaths(  );
@@ -99,47 +115,15 @@ duf_action( int argc, char **argv )
     {
       ia++;
       for ( ia = ia + 1; ia < argc; ia++ )
-        duf_update_path( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */ , 1 /* added */  );
+        duf_update_path( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */ , "argument"  );
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "paths" ) && 0 == strcmp( argv[ia + 1], "print" ) )
     {
       ia++;
-      duf_print_paths(  );
-    }
-    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "files" ) && 0 == strcmp( argv[ia + 1], "print" ) )
-    {
-      ia++;
-      for ( ia = ia + 1; ia < argc; ia++ )
-      {
-        /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
-        duf_print_files( argv[ia] );
-      }
-    }
-    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "print" ) )
-    {
-      ia++;
-      duf_print_md5( 0 );
-    }
-    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "same" ) )
-    {
-      unsigned long long limit = 0;
-
-      ia++;
-      /* fprintf( stderr, "ia:%d of %d\n", ia, argc ); */
-      if ( ia + 1 >= argc || sscanf( argv[ia + 1], "%llu", &limit ) )
-        duf_print_md5_same( 1, limit );
-      ia++;
-    }
-    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "files" ) && 0 == strcmp( argv[ia + 1], "same" ) )
-    {
-      ia++;
-      if ( ia + 1 >= argc )
-        fprintf( stderr, "argument needed %d %d\n", ia, argc );
-      for ( ia = ia + 1; ia < argc; ia++ )
-      {
-        /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
-        duf_print_files_same( argv[ia] );
-      }
+      if ( ia + 1 < argc )
+        duf_print_paths( argv[++ia] );
+      else
+        duf_print_paths( NULL );
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "paths" ) && 0 == strcmp( argv[ia + 1], "id" ) )
     {
@@ -165,10 +149,61 @@ duf_action( int argc, char **argv )
         mas_free( lastpath );
       }
     }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "files" ) && 0 == strcmp( argv[ia + 1], "print" ) )
+    {
+      ia++;
+      for ( ia = ia + 1; ia < argc; ia++ )
+      {
+        /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
+        duf_print_files( argv[ia] );
+      }
+    }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "files" ) && 0 == strcmp( argv[ia + 1], "same" ) )
+    {
+      ia++;
+      if ( ia + 1 >= argc )
+        fprintf( stderr, "argument needed %d %d\n", ia, argc );
+      for ( ia = ia + 1; ia < argc; ia++ )
+      {
+        /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
+        duf_print_files_same( argv[ia] );
+      }
+    }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "print" ) )
+    {
+      ia++;
+      duf_print_md5( 0 );
+    }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "update" ) )
     {
       duf_update_md5(  );
       ia++;
+    }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "same" ) )
+    {
+      unsigned long long limit = 0;
+
+      ia++;
+      /* fprintf( stderr, "ia:%d of %d\n", ia, argc ); */
+      if ( ia + 1 >= argc || sscanf( argv[ia + 1], "%llu", &limit ) )
+        duf_print_md5_same( 1, limit );
+      ia++;
+    }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "group" ) )
+    {
+      ia += 1;
+      if ( ia < argc )
+      {
+        char *group;
+
+        group = argv[ia++];
+        for ( ia = ia; ia < argc; ia++ )
+        {
+          const char *path = argv[ia];
+
+          duf_paths_group( group, path );
+        }
+      }
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "exif" ) && 0 == strcmp( argv[ia + 1], "update" ) )
     {

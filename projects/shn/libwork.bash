@@ -6,9 +6,10 @@
 # export MAS_SHN_LIBWORK_LOADED=`datemt`
 
 
-for lib in tools project shn ; do
+for lib in tools project shn zocserver ; do
   if ! [[ -L shn ]] || ! [[ -f ${MAS_SHN_DIR:-shn}/lib${lib}.bash ]] || ! . ${MAS_SHN_DIR:-shn}/lib${lib}.bash ; then
     shn_errmsg "loading environment ${MAS_SHN_DIR:-shn}/lib${lib}.bash"
+    shn_errmsg lib not found $lib
     return 1
   fi
   shn_dbgmsg "loaded lib${lib}" >&2
