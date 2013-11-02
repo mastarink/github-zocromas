@@ -1,17 +1,17 @@
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 #include <dirent.h>
+/* #include <stdio.h> */
+#include <string.h>
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
 
-#include "duf_utils.h"
 
-
+/* ###################################################################### */
 #include "duf_dirent.h"
+/* ###################################################################### */
 
 
 int

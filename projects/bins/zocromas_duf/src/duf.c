@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
 
 #include "duf_sql.h"
 #include "duf_create.h"
-#include "duf_utils.h"
+/* #include "duf_utils.h" */
 #include "duf_path.h"
 #include "duf_file.h"
 #include "duf_file_md5id.h"
@@ -24,7 +24,11 @@
 #include "duf_exif.h"
 #include "duf_dir_scan.h"
 
+
+/* ###################################################################### */
 #include "duf.h"
+/* ###################################################################### */
+
 
 
 /* error codes */
@@ -100,9 +104,9 @@ duf_action( int argc, char **argv )
       for ( ia = ia + 1; ia < argc; ia++ )
       {
         duf_add_path( argv[ia], "argument" );
-        duf_update_path_down( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */  );
+        duf_update_path_down( argv[ia], 0 /* parentid */ , DUF_RECURSIVE_YES, DUF_TRUE /* dofiles */  );
       }
-      duf_update_md5(  );
+      duf_update_md5_path( NULL );
       duf_update_duplicates(  );
       duf_update_mdpaths(  );
     }
@@ -126,7 +130,7 @@ duf_action( int argc, char **argv )
     {
       ia++;
       for ( ia = ia + 1; ia < argc; ia++ )
-        duf_update_path_down( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */  );
+        duf_update_path_down( argv[ia], 0 /* parentid */ , DUF_RECURSIVE_YES, DUF_TRUE /* dofiles */  );
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "paths" ) && 0 == strcmp( argv[ia + 1], "print" ) )
     {
@@ -169,11 +173,11 @@ duf_action( int argc, char **argv )
 
         /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
         if ( *path == '+' )
-          duf_print_files( ++path, 1 );
+          duf_print_files( ++path, DUF_RECURSIVE_YES );
         else if ( *path == '-' )
-          duf_print_files( ++path, 0 );
+          duf_print_files( ++path, DUF_RECURSIVE_NO );
         else
-          duf_print_files( path, 0 );
+          duf_print_files( path, DUF_RECURSIVE_NO );
       }
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "dirs" ) && 0 == strcmp( argv[ia + 1], "print" ) )
@@ -185,11 +189,11 @@ duf_action( int argc, char **argv )
 
         /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
         if ( *path == '+' )
-          duf_print_dirs( ++path, 1 );
+          duf_print_dirs( ++path, DUF_RECURSIVE_YES );
         else if ( *path == '-' )
-          duf_print_dirs( ++path, 0 );
+          duf_print_dirs( ++path, DUF_RECURSIVE_NO );
         else
-          duf_print_dirs( path, 0 );
+          duf_print_dirs( path, DUF_RECURSIVE_NO );
       }
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "files" ) && 0 == strcmp( argv[ia + 1], "same" ) )
@@ -210,7 +214,13 @@ duf_action( int argc, char **argv )
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "update" ) )
     {
-      duf_update_md5(  );
+      ia++;
+      fprintf( stderr, "ia:%d argc:%d\n", ia, argc );
+      if ( ia + 1 >= argc )
+        duf_update_md5_path( NULL );
+      else
+        for ( ia = ia + 1; ia < argc; ia++ )
+          duf_update_md5_path( argv[ia] );
       ia++;
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "md5" ) && 0 == strcmp( argv[ia + 1], "same" ) )

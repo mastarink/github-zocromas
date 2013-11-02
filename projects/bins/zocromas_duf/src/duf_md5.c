@@ -1,10 +1,10 @@
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include <unistd.h>
 #include <string.h>
-#include <openssl/md5.h>
+/* #include <unistd.h> */
 
+#include <openssl/md5.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -12,19 +12,23 @@
 #include "duf_types.h"
 
 #include "duf_sql.h"
-#include "duf_utils.h"
 #include "duf_path.h"
-#include "duf_file_pathid.h"
+/* #include "duf_file_pathid.h" */
 #include "duf_file_md5id.h"
 #include "duf_insert.h"
 
 
+/* ###################################################################### */
 #include "duf_md5.h"
+/* ###################################################################### */
+
+
+
 
 static unsigned long long
 duf_update_md5_file( const char *fpath, unsigned long long filedataid, size_t fsize )
 {
-  unsigned long long resmd = -1;
+  unsigned long long resmd = 0;
   FILE *f;
 
   if ( fpath )
@@ -82,11 +86,12 @@ duf_update_md5_file( const char *fpath, unsigned long long filedataid, size_t fs
  *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
  * */
 static int
-duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+duf_sql_update_md5( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                    void *str_cb_udata )
 {
   unsigned long long pathid = -1, old_pathid = -1, nameid = -1;
   char **ppath;
-  char *fname;
+  const char *fname;
   unsigned long long filedataid;
   size_t fsize = 0;
   unsigned long long resmd = -1;
@@ -105,19 +110,17 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *se
   else
   {
     fprintf( stderr, "duf_filenames record absent for duf_filedatas.id=duf_filenames.dataid=%lld\n", filedataid );
-    exit( 11 );
   }
   if ( presult[6] )
     pathid = strtoll( presult[6], NULL, 10 );
   else
   {
     fprintf( stderr, "%s;%s;%s;%s;%s;%s;%s;\n", presult[0], presult[1], presult[2], presult[3], presult[4], presult[5], presult[6] );
-    exit( 11 );
   }
   fname = presult[7];
   if ( fname )
   {
-    char *snow;
+    const char *snow;
     double dnow = 0;
     time_t now = 0;
 
@@ -165,31 +168,47 @@ duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *se
 }
 
 int
-duf_update_md5( void )
+duf_update_md5_pathid( unsigned long long pathid )
 {
   int r = 0;
   char *path = NULL;
 
-  fprintf( stderr, "Calc md5\x1b[K\n" );
-  r = duf_sql_select( duf_sql_update_md5, &path, STR_CB_DEF, STR_CB_UDATA_DEF, 0,
-                      "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, duf_filedatas.md5id,"
-                      " duf_filedatas.size, duf_filenames.id, duf_filenames.pathid, duf_filenames.name,"
-                      " strftime('%%s',  duf_md5.now) as seconds, " " duf_md5.now " " FROM duf_filedatas "
-                      " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
-                      " LEFT JOIN duf_md5 ON (duf_filedatas.md5id=duf_md5.id) " );
+  fprintf( stderr, "%lld Calc md5\x1b[K\n", pathid );
+  if ( pathid )
+    r = duf_sql_select( duf_sql_update_md5, &path, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
+                        "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, duf_filedatas.md5id,"
+                        " duf_filedatas.size, duf_filenames.id, duf_filenames.pathid, duf_filenames.name,"
+                        " strftime('%%s',  duf_md5.now) as seconds, " " duf_md5.now " " FROM duf_filedatas "
+                        " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
+                        " LEFT JOIN duf_md5 ON (duf_filedatas.md5id=duf_md5.id) " " WHERE duf_filenames.pathid='%lld'", pathid );
+  else
+    r = duf_sql_select( duf_sql_update_md5, &path, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
+                        "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, duf_filedatas.md5id,"
+                        " duf_filedatas.size, duf_filenames.id, duf_filenames.pathid, duf_filenames.name,"
+                        " strftime('%%s',  duf_md5.now) as seconds, " " duf_md5.now " " FROM duf_filedatas "
+                        " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
+                        " LEFT JOIN duf_md5 ON (duf_filedatas.md5id=duf_md5.id) " );
   if ( path )
     mas_free( path );
   fprintf( stderr, "End calc md5\x1b[K\n" );
   return r;
 }
 
+int
+duf_update_md5_path( const char *path )
+{
+  return duf_update_md5_pathid( duf_path_to_pathid( path ) );
+}
+
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * duf_sql_select_cb_t:
- *       int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
+ *       int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+ *       	  void *str_cb_udata );
  * */
 int
-duf_sql_scan_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+duf_sql_scan_md5( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                  void *str_cb_udata )
 {
   int r = 0;
 
@@ -210,7 +229,7 @@ duf_sql_scan_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_
 
 /* duf_str_cb_t :
  *           int fun( pathid, path, filenameid, name,       str_cb_udata ); */
-    r = ( *str_cb ) ( pathid, path, filenameid, presult[2], &data );
+    r = ( *str_cb ) ( pathid, path, filenameid, presult[2], &data, presult );
     mas_free( path );
   }
   return r;
@@ -262,10 +281,12 @@ duf_scan_md5id( duf_str_cb_t str_cb, unsigned long long dupcnt_min, unsigned lon
 
 /* 
  * duf_str_cb_t:
- *             int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata ); 
+ *             int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
+ *                      const char *const *presult ); 
  * */
 int
-duf_sql_scan_print_md5( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata )
+duf_sql_scan_print_md5( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
+                        const char *const *presult )
 {
   md5_std_data_t *mdata;
 
@@ -280,17 +301,18 @@ duf_print_md5( unsigned long long limit )
 {
   int r = 0;
 
-  duf_scan_md5id( duf_sql_scan_print_md5, 0, limit );
+  duf_scan_md5id( duf_sql_scan_print_md5, 0 /* dupcnt_min */ , limit );
   return r;
 }
 
 /* 
  * duf_str_cb_t:
- *                  int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata ); 
+ *                  int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, 
+ *                           void *str_cb_udata, const char *const *presult ); 
  * */
 int
 duf_sql_scan_print_md5_same( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
-                             void *str_cb_udata )
+                             void *str_cb_udata, const char *const *presult )
 {
   md5_std_data_t *mdata;
 
@@ -306,5 +328,82 @@ duf_print_md5_same( unsigned long long dupcnt_min, unsigned long long limit )
   int r = 0;
 
   duf_scan_md5id( duf_sql_scan_print_md5_same, dupcnt_min, limit );
+  return r;
+}
+
+/* 
+ * sql must select pathid, filenameid, filename, md5id, size
+ * duf_sql_select_cb_t:
+ *                  int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+ *                           void *str_cb_udata );
+ * */
+static int
+duf_sql_update_mdpaths_path( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                             void *str_cb_udata )
+{
+  MD5_CTX *pctx;
+  unsigned long long md5s1, md5s2, pathid;
+  unsigned long long *md64;
+
+  pathid = va_arg( args, unsigned long long );
+
+  pctx = ( MD5_CTX * ) sel_cb_udata;
+  if ( presult[0] && presult[1] )
+  {
+    md5s1 = strtoll( presult[0], NULL, 10 );
+    md5s2 = strtoll( presult[1], NULL, 10 );
+    MD5_Update( pctx, &md5s1, sizeof( md5s1 ) );
+    MD5_Update( pctx, &md5s2, sizeof( md5s2 ) );
+  }
+
+  {
+    unsigned char md[MD5_DIGEST_LENGTH];
+
+    memset( &md, 0, sizeof( md ) );
+    MD5_Final( md, pctx );
+    md64 = ( unsigned long long * ) md;
+  }
+  duf_sql( "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%lu'", md64[1], md64[0], pathid );
+  return 0;
+}
+
+int
+duf_update_mdpaths_path( unsigned long long pathid )
+{
+  int r = 0;
+  MD5_CTX ctx;
+
+  r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
+                      "SELECT md5sum1, md5sum2 " " FROM duf_md5 LEFT " " JOIN duf_keydata on (duf_keydata.md5id=duf_md5.id) "
+                      " WHERE pathid='%llu' ORDER by md5sum1, md5sum2 ", pathid );
+  return r;
+}
+
+/* 
+ * sql must select pathid, filenameid, filename, md5id, size
+ * duf_sql_select_cb_t:
+ *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
+ * */
+static int
+duf_sql_update_mdpaths( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                        void *str_cb_udata )
+{
+  unsigned long long pathid;
+
+  pathid = strtol( presult[0], NULL, 10 );
+  fprintf( stderr, "duf_update_mdpaths %d\n", nrow );
+  duf_update_mdpaths_path( pathid );
+  return 0;
+}
+
+int
+duf_update_mdpaths( void )
+{
+  int r;
+
+  fprintf( stderr, "Start duf_update_mdpaths\n" );
+  r = duf_sql_select( duf_sql_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
+                      "SELECT id, dir FROM duf_paths " /* " WHERE ... IS NULL " */ " ORDER BY id" );
+  fprintf( stderr, "End duf_update_mdpaths\n" );
   return r;
 }

@@ -11,9 +11,9 @@ int duf_print_paths( const char *groupname );
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *             int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+ *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
-int duf_sql_scan_paths( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
+int duf_sql_scan_paths( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
 
 
 int duf_pathid_group( const char *group, unsigned long long pathid );

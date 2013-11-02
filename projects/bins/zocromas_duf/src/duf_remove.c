@@ -1,33 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <dirent.h>
-
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
 #include "duf_types.h"
 
 
-#include "duf_sql.h"
-#include "duf_create.h"
-#include "duf_path.h"
-#include "duf_file.h"
-#include "duf_file_md5id.h"
-#include "duf_file_pathid.h"
-#include "duf_utils.h"
-#include "duf_md5.h"
-#include "duf_finddup.h"
-#include "duf_update.h"
+/* #include "duf_sql.h" */
+/* #include "duf_create.h" */
+/* #include "duf_path.h" */
+/* #include "duf_file.h" */
+/* #include "duf_file_md5id.h" */
+/* #include "duf_file_pathid.h" */
+/* #include "duf_md5.h" */
+/* #include "duf_finddup.h" */
+/* #include "duf_update.h" */
 
+
+/* ###################################################################### */
 #include "duf_remove.h"
+/* ###################################################################### */
 
 
 /* void                                                                                                                             */

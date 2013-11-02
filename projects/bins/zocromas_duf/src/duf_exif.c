@@ -1,16 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <time.h>
 #include <sys/stat.h>
+#include <time.h>
+/* #include <unistd.h> */
+
 #include <errno.h>
-
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
-
-#include <mastar/tools/mas_arg_tools.h>
-
 
 #include <libexif/exif-data.h>
 #include <libexif/exif-loader.h>
@@ -26,32 +21,38 @@
 #include <libexif/exif-mem.h>
 
 
-
+#include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
 
 #include "duf_sql.h"
 #include "duf_path.h"
-#include "duf_utils.h"
 
 
+/* ###################################################################### */
 #include "duf_exif.h"
+/* ###################################################################### */
+
 
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *                int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+ *                int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, 
+ *                         void *str_cb_udata )
  * */
 static int
-duf_sql_copy_jpeg_by_date( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+duf_sql_copy_jpeg_by_date( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                           void *str_cb_udata )
 {
-  char *fname;
+  const char *fname;
   char *path = NULL;
   unsigned long long pathid;
 
   /* sqlite3_int64 dataid; */
-  char *datetime;
+  const char *datetime;
 
   /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", presult[0], presult[ 1], presult[ 2], presult[ 3], */
   /*          presult[ 4] );                                                                                         */
@@ -128,7 +129,7 @@ copy_jpeg_by_date( void )
 {
   int r = 0;
 
-  r = duf_sql_select( duf_sql_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, 0,
+  r = duf_sql_select( duf_sql_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
                       "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, "
                       " duf_filenames.pathid, duf_exif.datetime, duf_filenames.name " " FROM duf_filedatas "
                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
@@ -140,13 +141,15 @@ copy_jpeg_by_date( void )
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *          int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+ *          int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+ *                   void *str_cb_udata )
  * */
 static int
-duf_sql_update_exif( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+duf_sql_update_exif( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                     void *str_cb_udata )
 {
   int r = 0;
-  char *fname;
+  const char *fname;
   char *path = NULL;
   unsigned long long pathid;
   unsigned long long dataid;
@@ -273,7 +276,7 @@ duf_update_exif( void )
 {
   int r = 0;
 
-  r = duf_sql_select( duf_sql_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, 0,
+  r = duf_sql_select( duf_sql_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
                       "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, duf_filenames.pathid, duf_filenames.name "
                       " FROM duf_filedatas " " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
                       " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) " " WHERE duf_exif.datetime IS NULL "

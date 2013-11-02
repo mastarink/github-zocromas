@@ -1,24 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
-
-#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
 
 #include "duf_sql.h"
 
 #include "duf_utils.h"
-
 #include "duf_path.h"
 #include "duf_file_pathid.h"
-#include "duf_file_scan.h"
+/* #include "duf_file_scan.h" */
+
+
+/* ###################################################################### */
 #include "duf_file.h"
+/* ###################################################################### */
 
 
 
@@ -31,9 +31,9 @@ static int
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *                 int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+ *                 int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
-duf_sql_file_to_filenameid( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+duf_sql_file_to_filenameid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
                             void *str_cb_udata )
 {
   file_to_filenameid_udata_t *pud;

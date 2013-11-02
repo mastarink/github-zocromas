@@ -1,19 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 
 #include <sqlite3.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
 #include "duf_types.h"
 
+
+/* ###################################################################### */
 #include "duf_sql.h"
+/* ###################################################################### */
+
 
 int duf_constraint = SQLITE_CONSTRAINT;
 sqlite3 *pDb;
@@ -79,7 +80,7 @@ duf_sql_exec_c( const char *sql, int constraint_ignore )
 int
 duf_sql_exec( const char *sql )
 {
-  return duf_sql_exec_c( sql, 0 );
+  return duf_sql_exec_c( sql, DUF_CONSTRAINT_IGNORE_NO );
 }
 
 int
@@ -96,7 +97,7 @@ duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
 int
 duf_sql_exec_msg( const char *sql, const char *msg )
 {
-  return duf_sql_exec_c_msg( sql, msg, 0 );
+  return duf_sql_exec_c_msg( sql, msg, DUF_CONSTRAINT_IGNORE_NO );
 }
 
 int
@@ -140,6 +141,7 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t st
   int r = 0;
   int row, column;
   char *sql, **presult = NULL;
+  const char *const *pcresult;
   char *emsg = NULL;
 
   /* sql = sqlite3_vsnprintf( sizeof( prepare_buf ), prepare_buf, fmt, args ); */
@@ -147,16 +149,17 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t st
   if ( trace )
     fprintf( stderr, "trace:[%s]\n", sql );
   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
+  pcresult = ( const char *const * ) presult;
   if ( r == SQLITE_OK )
   {
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * sel_cb is duf_sql_select_cb_t:
- *             int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb );
+ *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb );
  * */
     if ( row )
       for ( int ir = 1; ir <= row; ir++ )
-        ( sel_cb ) ( ir - 1, row, &presult[ir * column], args, sel_cb_udata, str_cb, str_cb_udata );
+        ( sel_cb ) ( ir - 1, row, &pcresult[ir * column], args, sel_cb_udata, str_cb, str_cb_udata );
     /* if ( row )                                                  */
     /*   for ( int ir = column; ir <= column * row; ir += column ) */
     /*     ( sel_cb ) ( ir / column - 1, &presult[ir], args );         */

@@ -4,6 +4,5 @@
 unsigned long long duf_add_path( const char *path, const char *group );
 
 
-int duf_update_mdpaths( void );
 
 #endif

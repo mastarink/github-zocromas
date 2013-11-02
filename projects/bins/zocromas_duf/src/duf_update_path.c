@@ -1,29 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <libgen.h>
-#include <sys/stat.h>
-#include <unistd.h>
+/* #include <unistd.h> */
+
 #include <dirent.h>
-
-
-#include <openssl/md5.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
 
-#include "duf_sql.h"
-#include "duf_utils.h"
-#include "duf_path.h"
-#include "duf_dirent.h"
-#include "duf_insert.h"
-
+/* #include "duf_sql.h" */
+/* #include "duf_path.h" */
+/* #include "duf_insert.h" */
 #include "duf_update_realpath.h"
-#include "duf_update_pathid.h"
+/* #include "duf_update_pathid.h" */
+
+
+/* ###################################################################### */
 #include "duf_update_path.h"
+/* ###################################################################### */
 
 
 unsigned long long

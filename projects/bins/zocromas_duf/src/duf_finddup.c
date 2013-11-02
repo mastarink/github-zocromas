@@ -1,23 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-
-
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
 #include "duf_types.h"
 
-#include "duf_utils.h"
-#include "duf_path.h"
+/* #include "duf_path.h" */
 #include "duf_sql.h"
-#include "duf_remove.h"
+/* #include "duf_remove.h" */
 
+
+/* ###################################################################### */
 #include "duf_finddup.h"
+/* ###################################################################### */
+
 
 int
 duf_zero_duplicates( void )
@@ -32,10 +31,12 @@ duf_zero_duplicates( void )
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * duf_sql_select_cb_t:
- *                int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
+ *                int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+ *                         void *str_cb_udata );
  * */
 static int
-duf_sql_update_duplicates( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+duf_sql_update_duplicates( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                           void *str_cb_udata )
 {
   unsigned long long cnt;
   unsigned long long md5id;
@@ -52,7 +53,7 @@ duf_update_duplicates( void )
   int r;
 
   fprintf( stderr, "Find duplicates\x1b[K\n" );
-  r = duf_sql_select( duf_sql_update_duplicates, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, 0,
+  r = duf_sql_select( duf_sql_update_duplicates, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
                       "SELECT " " duf_md5.id, COUNT(*) as cnt " " FROM duf_md5 "
                       " LEFT JOIN duf_filedatas ON (duf_md5.id=duf_filedatas.md5id) "
                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
