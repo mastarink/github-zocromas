@@ -16,6 +16,7 @@
 
 #include "duf_path.h"
 #include "duf_file.h"
+#include "duf_file_scan.h"
 
 #include "duf_file_md5id.h"
 
@@ -25,10 +26,10 @@
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *               int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+ *               int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 static int
-duf_sql_filenameid_md5id( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+duf_sql_filenameid_md5id( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
 {
   unsigned long long *pmd5id;
 
@@ -44,8 +45,8 @@ duf_filenameid_md5id( unsigned long long filenameid )
   int r;
   unsigned long long md5id;
 
-  r = duf_sql_select( duf_sql_filenameid_md5id, &md5id, NULL, 0, "SELECT md5id FROM duf_filenames "
-                      " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) " " WHERE duf_filenames.id='%llu'", filenameid );
+  r = duf_sql_select( duf_sql_filenameid_md5id, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO, "SELECT md5id FROM duf_filenames "
+                      " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) " " WHERE duf_filenames.id='%llu'", filenameid );
   return r >= 0 ? md5id : r;
 }
 
@@ -58,10 +59,10 @@ duf_filepath_md5id( const char *path )
   unsigned long long md5id = 0;
   unsigned long long filenameid = 0;
 
-  pathid = duf_path_to_pathid( path, &prev_pathid, &notfound );
+  pathid = duf_path_to_pathid_x( path, &prev_pathid, &notfound );
   if ( !pathid && prev_pathid && notfound )
   {
-    filenameid = file_at_pathid_to_filenameid( prev_pathid, notfound, NULL );
+    filenameid = file_at_pathid_to_filenameid( prev_pathid, notfound );
     md5id = duf_filenameid_md5id( filenameid );
   }
   mas_free( notfound );
@@ -72,14 +73,14 @@ duf_filepath_md5id( const char *path )
  * sql must select pathid, filenameid, filename ... (, md5id)
  * */
 static int
-duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t fuscan )
+duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t str_cb, void *sel_cb_udata )
 {
   int r = 0;
 
 /* 
  * sql must select pathid, filenameid, filename
  * */
-  r = duf_scan_files_sql( fuscan, "SELECT duf_filenames.pathid, duf_filenames.id, name FROM duf_filenames "
+  r = duf_scan_files_sql( str_cb, sel_cb_udata, "SELECT duf_filenames.pathid, duf_filenames.id, name FROM duf_filenames "
                           " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
                           " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_md5.id='%llu'", md5id );
   return r;
@@ -90,7 +91,7 @@ duf_print_files_by_md5id( unsigned long long md5id )
 {
   int r = 0;
 
-  duf_scan_files_by_md5id( md5id, duf_sql_scan_print_file );
+  duf_scan_files_by_md5id( md5id, duf_sql_scan_print_file, NULL /* sel_cb_udata */  );
   return r;
 }
 

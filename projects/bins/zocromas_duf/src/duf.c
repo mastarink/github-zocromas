@@ -20,7 +20,9 @@
 #include "duf_md5.h"
 #include "duf_finddup.h"
 #include "duf_update.h"
+#include "duf_update_path.h"
 #include "duf_exif.h"
+#include "duf_dir_scan.h"
 
 #include "duf.h"
 
@@ -96,7 +98,10 @@ duf_action( int argc, char **argv )
       ia++;
       duf_check_tables(  );
       for ( ia = ia + 1; ia < argc; ia++ )
-        duf_update_path( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */ , "argument"  );
+      {
+        duf_add_path( argv[ia], "argument" );
+        duf_update_path_down( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */  );
+      }
       duf_update_md5(  );
       duf_update_duplicates(  );
       duf_update_mdpaths(  );
@@ -115,7 +120,13 @@ duf_action( int argc, char **argv )
     {
       ia++;
       for ( ia = ia + 1; ia < argc; ia++ )
-        duf_update_path( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */ , "argument"  );
+        duf_add_path( argv[ia], "argument" );
+    }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "paths" ) && 0 == strcmp( argv[ia + 1], "update" ) )
+    {
+      ia++;
+      for ( ia = ia + 1; ia < argc; ia++ )
+        duf_update_path_down( argv[ia], 0 /* parentid */ , 1 /* recurse */ , 1 /* dofiles */  );
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "paths" ) && 0 == strcmp( argv[ia + 1], "print" ) )
     {
@@ -133,7 +144,7 @@ duf_action( int argc, char **argv )
       ia++;
       for ( ia = ia + 1; ia < argc; ia++ )
       {
-        unsigned long long pathid = duf_path_to_pathid( argv[ia], &prev, &notfound );
+        unsigned long long pathid = duf_path_to_pathid_x( argv[ia], &prev, &notfound );
         char *path = duf_pathid_to_path( pathid );
         char *lastpath = duf_pathid_to_path( prev );
 
@@ -154,8 +165,31 @@ duf_action( int argc, char **argv )
       ia++;
       for ( ia = ia + 1; ia < argc; ia++ )
       {
+        const char *path = argv[ia];
+
         /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
-        duf_print_files( argv[ia] );
+        if ( *path == '+' )
+          duf_print_files( ++path, 1 );
+        else if ( *path == '-' )
+          duf_print_files( ++path, 0 );
+        else
+          duf_print_files( path, 0 );
+      }
+    }
+    else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "dirs" ) && 0 == strcmp( argv[ia + 1], "print" ) )
+    {
+      ia++;
+      for ( ia = ia + 1; ia < argc; ia++ )
+      {
+        const char *path = argv[ia];
+
+        /* fprintf( stderr, "argv[%d]='%s'\n", ia, argv[ia] ); */
+        if ( *path == '+' )
+          duf_print_dirs( ++path, 1 );
+        else if ( *path == '-' )
+          duf_print_dirs( ++path, 0 );
+        else
+          duf_print_dirs( path, 0 );
       }
     }
     else if ( ia < ( argc - 1 ) && 0 == strcmp( argv[ia], "files" ) && 0 == strcmp( argv[ia + 1], "same" ) )

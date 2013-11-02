@@ -79,10 +79,10 @@ duf_update_md5_file( const char *fpath, unsigned long long filedataid, size_t fs
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * duf_sql_select_cb_t:
- *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan );
+ *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
  * */
 static int
-duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+duf_sql_update_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
 {
   unsigned long long pathid = -1, old_pathid = -1, nameid = -1;
   char **ppath;
@@ -171,7 +171,7 @@ duf_update_md5( void )
   char *path = NULL;
 
   fprintf( stderr, "Calc md5\x1b[K\n" );
-  r = duf_sql_select( duf_sql_update_md5, &path, NULL, 0,
+  r = duf_sql_select( duf_sql_update_md5, &path, STR_CB_DEF, STR_CB_UDATA_DEF, 0,
                       "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, duf_filedatas.md5id,"
                       " duf_filedatas.size, duf_filenames.id, duf_filenames.pathid, duf_filenames.name,"
                       " strftime('%%s',  duf_md5.now) as seconds, " " duf_md5.now " " FROM duf_filedatas "
@@ -186,14 +186,14 @@ duf_update_md5( void )
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * duf_sql_select_cb_t:
- *       int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan );
+ *       int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
  * */
 int
-duf_sql_scan_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t fuscan )
+duf_sql_scan_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
 {
   int r = 0;
 
-  if ( fuscan )
+  if ( str_cb )
   {
     unsigned long long pathid;
     unsigned long long filenameid;
@@ -210,26 +210,26 @@ duf_sql_scan_md5( int nrow, int nrows, char *presult[], va_list args, void *sel_
 
 /* duf_str_cb_t :
  *           int fun( pathid, path, filenameid, name,       str_cb_udata ); */
-    r = ( *fuscan ) ( pathid, path, filenameid, presult[2], &data );
+    r = ( *str_cb ) ( pathid, path, filenameid, presult[2], &data );
     mas_free( path );
   }
   return r;
 }
 
 int
-duf_scan_vmd5_sql( duf_str_cb_t fuscan, const char *sql, va_list args )
+duf_scan_vmd5_sql( duf_str_cb_t str_cb, const char *sql, va_list args )
 {
-  return duf_sql_vselect( duf_sql_scan_md5, NULL /* sel_cb_udata */ , fuscan, 1 /* trace */ , sql, args );
+  return duf_sql_vselect( duf_sql_scan_md5, SEL_CB_UDATA_DEF, str_cb, STR_CB_UDATA_DEF, DUF_TRACE_YES, sql, args );
 }
 
 int
-duf_scan_md5_sql( duf_str_cb_t fuscan, const char *sql, ... )
+duf_scan_md5_sql( duf_str_cb_t str_cb, const char *sql, ... )
 {
   int r = 0;
   va_list args;
 
   va_start( args, sql );
-  r = duf_scan_vmd5_sql( fuscan, sql, args );
+  r = duf_scan_vmd5_sql( str_cb, sql, args );
   va_end( args );
   return r;
 }
@@ -238,24 +238,24 @@ duf_scan_md5_sql( duf_str_cb_t fuscan, const char *sql, ... )
  * sql must select pathid, filenameid, filename, md5id, size
  * */
 static int
-duf_scan_md5id( duf_str_cb_t fuscan, unsigned long long dupcnt_min, unsigned long long limit )
+duf_scan_md5id( duf_str_cb_t str_cb, unsigned long long dupcnt_min, unsigned long long limit )
 {
   int r = 0;
 
   if ( limit )
   {
     if ( dupcnt_min )
-      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 WHERE dupcnt>=%llu ORDER BY size DESC LIMIT %llu",
+      r = duf_scan_md5_sql( str_cb, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 WHERE dupcnt>=%llu ORDER BY size DESC LIMIT %llu",
                             dupcnt_min, limit );
     else
-      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 ORDER BY size DESC LIMIT %llu", limit );
+      r = duf_scan_md5_sql( str_cb, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 ORDER BY size DESC LIMIT %llu", limit );
   }
   else
   {
     if ( dupcnt_min )
-      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 WHERE dupcnt>=%llu  ORDER BY size DESC", dupcnt_min );
+      r = duf_scan_md5_sql( str_cb, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 WHERE dupcnt>=%llu  ORDER BY size DESC", dupcnt_min );
     else
-      r = duf_scan_md5_sql( fuscan, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 ORDER BY size DESC", dupcnt_min );
+      r = duf_scan_md5_sql( str_cb, "SELECT 0, 0, '', id, size, dupcnt FROM duf_md5 ORDER BY size DESC", dupcnt_min );
   }
   return r;
 }
@@ -289,7 +289,8 @@ duf_print_md5( unsigned long long limit )
  *                  int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata ); 
  * */
 int
-duf_sql_scan_print_md5_same( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata )
+duf_sql_scan_print_md5_same( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
+                             void *str_cb_udata )
 {
   md5_std_data_t *mdata;
 

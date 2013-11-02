@@ -97,6 +97,8 @@ duf_clear_tables( void )
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_md5", "Drop md5" );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_keydata", "Drop keydata" );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_exif", "Drop exif" );
+  r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_group", "Drop group" );
+  r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_path_group", "Drop path_group" );
   return r;
 }
 
