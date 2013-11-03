@@ -34,7 +34,7 @@ function shn_run ()
     shn_msg "------ to run '$rname $1 ...' -------"
     shn_msg "----------------------------------------"
     shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
-    time $bin $@
+    time eval "$bin $*"
     retcode=$?
     shn_msg "returned $retcode"
   else

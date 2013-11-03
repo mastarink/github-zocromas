@@ -140,6 +140,12 @@ function shn_code ()
     q4)
       shn_msglist "$*"
     ;;
+    q5)
+      echo "[$*]"
+      echo "[`cat /proc/$$/cmdline | tr '\0' '@'`]"
+      echo "$# args : '$1' '$2' '$3' '$4' '$5' '$6' '$7' '$8' '$9'"
+      return 1
+    ;;
     *)
       shn_errmsg "wrong code '$code'"
       return 1
