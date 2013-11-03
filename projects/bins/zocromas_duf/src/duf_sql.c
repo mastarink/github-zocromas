@@ -10,6 +10,8 @@
 
 #include "duf_types.h"
 
+#include "duf_config.h"
+
 
 /* ###################################################################### */
 #include "duf_sql.h"
@@ -27,14 +29,17 @@ duf_sql_open( const char *dbpath )
   r = sqlite3_initialize(  );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Initialize ERROR\n" );
-  /* else                                           */
-  /*   fprintf( stderr, "SQL DB Initialize OK\n" ); */
+  else
+  {
+    if ( duf_config->verbose )
+      fprintf( stderr, "SQL DB Initialize OK\n" );
 
-  r = sqlite3_open( dbpath, &pDb );
-  if ( r != SQLITE_OK )
-    fprintf( stderr, "SQL DB Open ERROR\n" );
-  /* else                                     */
-  /*   fprintf( stderr, "SQL DB Open OK\n" ); */
+    r = sqlite3_open( dbpath, &pDb );
+    if ( r != SQLITE_OK )
+      fprintf( stderr, "SQL DB Open ERROR\n" );
+    else if ( duf_config->verbose )
+      fprintf( stderr, "SQL DB Open OK\n" );
+  }
   return r;
 }
 
@@ -46,14 +51,14 @@ duf_sql_close( void )
   r = sqlite3_close( pDb );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Close ERROR\n" );
-  /* else                                            */
-  /*   fprintf( stderr, "SQL DB Close OK\x1b[K\n" ); */
+  else if ( duf_config->verbose )
+    fprintf( stderr, "SQL DB Close OK\x1b[K\n" );
 
   r = sqlite3_shutdown(  );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Shutdown ERROR\n" );
-  /* else                                               */
-  /*   fprintf( stderr, "SQL DB Shutdown OK\x1b[K\n" ); */
+  else if ( duf_config->verbose )
+    fprintf( stderr, "SQL DB Shutdown OK\x1b[K\n" );
 
   return 0;
 }
@@ -144,7 +149,10 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t st
   const char *const *pcresult;
   char *emsg = NULL;
 
-  /* sql = sqlite3_vsnprintf( sizeof( prepare_buf ), prepare_buf, fmt, args ); */
+  va_list qargs;
+
+  va_copy( qargs, args );
+
   sql = sqlite3_vmprintf( fmt, args );
   if ( trace )
     fprintf( stderr, "trace:[%s]\n", sql );
@@ -152,17 +160,19 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t st
   pcresult = ( const char *const * ) presult;
   if ( r == SQLITE_OK )
   {
+    if ( row )
+      for ( int ir = 1; ir <= row; ir++ )
+      {
+        va_list cargs;
+
+        va_copy( cargs, qargs );
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * sel_cb is duf_sql_select_cb_t:
  *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb );
  * */
-    if ( row )
-      for ( int ir = 1; ir <= row; ir++ )
-        ( sel_cb ) ( ir - 1, row, &pcresult[ir * column], args, sel_cb_udata, str_cb, str_cb_udata );
-    /* if ( row )                                                  */
-    /*   for ( int ir = column; ir <= column * row; ir += column ) */
-    /*     ( sel_cb ) ( ir / column - 1, &presult[ir], args );         */
+        ( sel_cb ) ( ir - 1, row, &pcresult[ir * column], cargs, sel_cb_udata, str_cb, str_cb_udata );
+      }
   }
   else if ( r == SQLITE_CONSTRAINT )
   {

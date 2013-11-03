@@ -66,7 +66,7 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
       /* fprintf( stderr, "Updated %s + %s; group:%s ==> %lld\n", dir_name, base_name, group, pathid ); */
 
       if ( group )
-        duf_pathid_group( group, pathid );
+        duf_pathid_group( group, pathid, +1 );
 
       /* fprintf( stderr, "inserted pathid %llu\n", pathid ); */
     }

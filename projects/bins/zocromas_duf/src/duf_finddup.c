@@ -31,8 +31,6 @@ duf_zero_duplicates( void )
 /* 
  * sql must select pathid, filenameid, filename, md5id, size
  * duf_sql_select_cb_t:
- *                int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                         void *str_cb_udata );
  * */
 static int
 duf_sql_update_duplicates( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,

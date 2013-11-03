@@ -31,7 +31,6 @@ static int
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *                 int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 duf_sql_file_to_filenameid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
                             void *str_cb_udata )
@@ -39,8 +38,12 @@ duf_sql_file_to_filenameid( int nrow, int nrows, const char *const *presult, va_
   file_to_filenameid_udata_t *pud;
 
   pud = ( file_to_filenameid_udata_t * ) sel_cb_udata;
-  pud->filenameid = strtoll( presult[0], NULL, 10 );
-  pud->md5id = strtoll( presult[1], NULL, 10 );
+  pud->filenameid = 0;
+  pud->md5id = 0;
+  if ( presult[0] )
+    pud->filenameid = strtoll( presult[0], NULL, 10 );
+  if ( presult[1] )
+    pud->md5id = strtoll( presult[1], NULL, 10 );
   return 0;
 }
 

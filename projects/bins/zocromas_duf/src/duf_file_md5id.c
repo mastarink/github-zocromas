@@ -25,10 +25,10 @@
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *               int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 static int
-duf_sql_filenameid_md5id( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
+duf_sql_filenameid_md5id( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                          void *str_cb_udata )
 {
   unsigned long long *pmd5id;
 
@@ -101,8 +101,6 @@ duf_print_files_same( const char *path )
 
   md5id = duf_filepath_md5id( path );
   if ( md5id )
-  {
     duf_print_files_by_md5id( md5id );
-  }
   return 0;
 }

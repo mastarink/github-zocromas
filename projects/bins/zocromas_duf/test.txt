@@ -1,0 +1,27 @@
+   9690: VIDEO0001.3gp        @    1330:                    /mnt/new_media/media/photo/Pictures/HTC_Legend/20110109/VIDEO0001.3gp
+   9967: VIDEO0001.3gp        @    1333:                    /mnt/new_media/media/photo/Pictures/HTC_Legend/20110427/VIDEO0001.3gp
+  10146: VIDEO0001.3gp        @    1334:                    /mnt/new_media/media/photo/Pictures/HTC_Legend/20110502/VIDEO0001.3gp
+  10431: VIDEO0001.3gp        @    1335:                    /mnt/new_media/media/photo/Pictures/HTC_Legend/20110528/VIDEO0001.3gp
+  10595: VIDEO0001.3gp        @    1336:                    /mnt/new_media/media/photo/Pictures/HTC_Legend/20110626/VIDEO0001.3gp
+  34439: VIDEO0001.3gp        @    1723:                    /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110109/VIDEO0001.3gp
+  34717: VIDEO0001.3gp        @    1726:                    /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110427/VIDEO0001.3gp
+  34985: VIDEO0001.3gp        @    1727:                    /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110502/VIDEO0001.3gp
+  35359: VIDEO0001.3gp        @    1728:                    /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110528/VIDEO0001.3gp
+  35612: VIDEO0001.3gp        @    1729:                    /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110626/VIDEO0001.3gp
+
+
+-rw-r--r-- 1 htclegend mastar 28440389 Jan 08 2011 09:56:02 /mnt/tall/htclegend/20110502/VIDEO0001.3gp
+-rwxr-x--- 1 mastarink mastar 28440389 Jan 08 2011 09:56:02 /mnt/old_home/mastar/.mas/HTC_Legend/20110824/VIDEO0001.3gp
+-rwxr-xr-x 1 mastarink mastar 28440389 Jan 08 2011 09:56:02 /mnt/old_home/mastar/.mas/HTC_Legend/20110528/sdb1/DCIM/100MEDIA/VIDEO0001.3gp
+
+-r-xr-xr-x 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110626/VIDEO0001.3gp
+-r-xr-xr-x 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110528/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110502/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110427/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 10:56:02 /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/HTC_Legend/20110109/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures/HTC_Legend/20110626/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures/HTC_Legend/20110528/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures/HTC_Legend/20110502/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 09:56:02 /mnt/new_media/media/photo/Pictures/HTC_Legend/20110427/VIDEO0001.3gp
+-r--r--r-- 1 mastar    mastar 28440389 Jan 08 2011 10:56:02 /mnt/new_media/media/photo/Pictures/HTC_Legend/20110109/VIDEO0001.3gp
+

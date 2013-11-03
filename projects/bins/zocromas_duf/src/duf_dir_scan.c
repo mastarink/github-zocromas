@@ -34,12 +34,10 @@ duf_scan_dirs_by_parentid( unsigned long long pathid, duf_str_cb_t str_cb, duf_d
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_str_cb_t: 
- *              int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
- *                      const char *const *presult )
  * */
 int
-duf_sql_scan_print_dir( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
-                        const char *const *presult )
+duf_sql_scan_print_dir( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, const struct stat *st,
+                        void *str_cb_udata, const char *const *presult )
 {
   duf_dirinfo_t *pdi;
   duf_dirinfo_t di;
@@ -52,8 +50,8 @@ duf_sql_scan_print_dir( unsigned long long pathid, const char *path, unsigned lo
 
     if ( 1 )
     {
-      snprintf( format, sizeof( format ), "%%4llu: (%%2s) %%-%ds %%s\n", pdi->level * 2 + 1 );
-      printf( format, pathid, presult[2], pdi->level?"":"-", presult[1] );
+      snprintf( format, sizeof( format ), "%%4llu: (%%3s) %%-%ds %%s : %%s\n", pdi->level * 2 + 1 );
+      printf( format, pathid, presult[2], pdi->level ? "" : "-", presult[1], path );
     }
     else
     {

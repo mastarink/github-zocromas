@@ -3,9 +3,12 @@
 #include <stdarg.h>
 #include <string.h>
 /* #include <unistd.h> */
+#include <sys/stat.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
 
@@ -24,8 +27,10 @@
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *         int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                  void *str_cb_udata )
+ *
+ *
+ * sql must select pathid, filenameid, filename ... (, md5id)
+ *
  * */
 int
 duf_sql_scan_files( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -35,12 +40,27 @@ duf_sql_scan_files( int nrow, int nrows, const char *const *presult, va_list arg
   {
     unsigned long long pathid;
     unsigned long long filenameid;
+    const char *filename;
+    char *filepath;
     char *path;
 
     pathid = strtoll( presult[0], NULL, 10 );
-    filenameid = strtoll( presult[1], NULL, 10 );
     path = duf_pathid_to_path( pathid );
-    ( *str_cb ) ( pathid, path, filenameid, presult[2], str_cb_udata, presult );
+    filenameid = strtoll( presult[1], NULL, 10 );
+    filename = presult[2];
+
+    filepath = mas_strdup( path );
+    filepath = mas_strcat_x( filepath, "/" );
+    filepath = mas_strcat_x( filepath, filename );
+
+    {
+      int r = 0;
+      struct stat st;
+
+      r = stat( filepath, &st );
+      ( *str_cb ) ( pathid, path, filenameid, filename, r == 0 ? &st : DUF_STAT_DEF, str_cb_udata, presult );
+    }
+    mas_free( filepath );
     mas_free( path );
   }
   return 0;
@@ -88,14 +108,11 @@ duf_scan_files_sql_trace( duf_str_cb_t str_cb, void *str_cb_udata, int trace, co
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_str_cb_t: 
- *              int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
- *                       const char *const *presult )
  * */
 int
-duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
-                         const char *const *presult )
+duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
+                         const struct stat *st, void *str_cb_udata, const char *const *presult )
 {
-  /* printf( "%7llu: %s/%s\n", pathid, path, name ); */
-  printf( "%7llu: %-20s @ %7llu: %s/%s\n", filenameid, name, pathid, path, name );
+  printf( "%c %7llu: %-20s @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, pathid, path, name );
   return 0;
 }

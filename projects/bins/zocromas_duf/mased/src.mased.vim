@@ -12,8 +12,20 @@ sfind duf_dirent.h
 tab sfind duf_path.c
 sfind duf_path.h
 
+tab sfind duf_file_md5id.c
+sfind duf_file_md5id.h
+
 tab sfind duf_file.c
 sfind duf_file.h
+
+tab sfind duf_file_scan.c
+sfind duf_file_scan.h
+
+tab sfind duf_file_pathid.c
+sfind duf_file_pathid.h
+
+tab sfind duf_dir_scan.c
+sfind duf_dir_scan.h
 
 tab sfind duf_exif.c
 sfind duf_exif.h
@@ -32,6 +44,18 @@ sfind duf_remove.h
 
 tab sfind duf_update.c
 sfind duf_update.h
+
+tab sfind duf_update_path.c
+sfind duf_update_path.h
+
+tab sfind duf_update_pathentries.c
+sfind duf_update_pathentries.h
+
+tab sfind duf_update_pathid.c
+sfind duf_update_pathid.h
+
+tab sfind duf_update_realpath.c
+sfind duf_update_realpath.h
 
 tab sfind duf_utils.c
 sfind duf_utils.h

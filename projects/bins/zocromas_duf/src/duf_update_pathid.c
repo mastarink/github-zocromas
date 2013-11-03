@@ -41,7 +41,7 @@ duf_update_pathid_down( unsigned long long parentid, int recursive, int dofiles,
     items = duf_update_realpath_entries( real_path, &st_dir, pathid, recursive, dofiles );
     /* fprintf( stderr, "Down %s  items:%lu\n", real_path, items ); */
     duf_sql( "UPDATE duf_paths SET items='%u', last_updated=datetime()  WHERE id='%lu'", items, pathid );
-    duf_pathid_group( "updated", pathid );
+    duf_pathid_group( "updated", pathid, +1 );
   }
   else
     fprintf( stderr, "Error down %s\n", real_path );

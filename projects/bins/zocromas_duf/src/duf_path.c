@@ -45,8 +45,6 @@ typedef struct
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                      void *str_cb_udata )
  * */
 static int
 duf_sql_pathid_to_path( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -92,8 +90,6 @@ duf_pathid_to_path( unsigned long long pathid )
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                      void *str_cb_udata )
  * */
 static int
 duf_sql_path_to_pathid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -200,8 +196,6 @@ duf_path_to_pathid( const char *path )
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *               int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                        void *str_cb_udata )
  * */
 static int
 duf_sql_group_to_groupid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -228,8 +222,6 @@ duf_group_to_groupid( const char *group )
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *                     int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                              void *str_cb_udata )
  * */
 static int
 duf_sql_delete_path_by_groupid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -249,7 +241,7 @@ duf_delete_path_by_groupid( unsigned long long groupid, unsigned long long pathi
 {
   int r = 0;
 
-  r = duf_sql_select( duf_sql_delete_path_by_groupid, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
+  r = duf_sql_select( duf_sql_delete_path_by_groupid, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
                       "SELECT duf_path_group.id " " FROM duf_paths " " LEFT JOIN duf_path_group ON (duf_paths.id=duf_path_group.pathid) "
                       " WHERE duf_path_group.groupid='%lld' AND duf_paths.id='%lld'", groupid, pathid );
   return r;
@@ -258,12 +250,10 @@ duf_delete_path_by_groupid( unsigned long long groupid, unsigned long long pathi
 
 /* 
  * duf_str_cb_t:
- *              int fun( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
- *                       const char *const *presult ); 
  * */
 static int
-duf_sql_scan_print_path( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name, void *str_cb_udata,
-                         const char *const *presult )
+duf_sql_scan_print_path( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
+                         const struct stat *st, void *str_cb_udata, const char *const *presult )
 {
   printf( "%7llu: %s\n", pathid, path );
   return 0;
@@ -272,8 +262,6 @@ duf_sql_scan_print_path( unsigned long long pathid, const char *path, unsigned l
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *         int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
- *                  void *str_cb_udata )
  * */
 int
 duf_sql_scan_paths( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -288,9 +276,8 @@ duf_sql_scan_paths( int nrow, int nrows, const char *const *presult, va_list arg
   {
 /* 
  * duf_str_cb_t:
- *       int fun( pathid, path, filenameid,          name,             str_cb_udata,     presult )
  * */
-    ( *str_cb ) ( pathid, path, 0 /* filenameid */ , NULL /* name */ , STR_CB_UDATA_DEF, presult );
+    ( *str_cb ) ( pathid, path, 0 /* filenameid */ , NULL /* name */ , DUF_STAT_DEF, STR_CB_UDATA_DEF, presult );
   }
   mas_free( path );
 
@@ -339,53 +326,37 @@ duf_print_paths( const char *groupname )
 }
 
 int
-duf_pathid_group( const char *group, unsigned long long pathid )
+duf_pathid_group( const char *group, unsigned long long pathid, int add_remove )
 {
-  int sign = 0;
   unsigned long long groupid;
-
-  /* unsigned long long gpid; */
 
   if ( group )
   {
-    if ( *group == '+' )
-    {
-      sign = +1;
-      group++;
-    }
-    else if ( *group == '-' )
-    {
-      sign = -1;
-      group++;
-    }
-    if ( sign >= 0 )
+    if ( add_remove > 0 )
     {
       groupid = duf_insert_group( group );
       /* gpid = */ duf_insert_path_group( groupid, pathid );
     }
-    else
+    else if ( add_remove < 0 )
     {
       groupid = duf_group_to_groupid( group );
-      fprintf( stderr, ">>>>>>> [%llu]\n", groupid );
       if ( groupid )
       {
+        fprintf( stderr, "G [%llu] group:%s; pathid:%llu {add_remove:%d}\n", groupid, group, pathid, add_remove );
         duf_delete_path_by_groupid( groupid, pathid );
       }
     }
-    /* fprintf( stderr, "G [%llu] %llu: group:%s; pathid:%llu\n", gpid, groupid, group, pathid ); */
   }
   return 0;
 }
 
 int
-duf_paths_group( const char *group, const char *path )
+duf_paths_group( const char *group, const char *path, int add_remove )
 {
   unsigned long long pathid;
 
   pathid = duf_path_to_pathid( path );
   if ( pathid )
-  {
-    duf_pathid_group( group, pathid );
-  }
+    duf_pathid_group( group, pathid, add_remove );
   return 0;
 }

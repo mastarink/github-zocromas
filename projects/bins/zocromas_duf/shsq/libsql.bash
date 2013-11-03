@@ -1,7 +1,40 @@
 #!/bin/sh
+function sqf_paths ()
+{
+  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  shift
+  sqlite3 "$db" <<SQL
+.header on
+.mode column
+.width 4 6 8 5 15 15 15 8 20 3 20
+  select * from duf_paths  $@;
+SQL
+}
+function sqf_group ()
+{
+  local db="/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3"
+  shift
+  sqlite3 "$db" <<SQL
+.header on
+.mode column
+  select * from duf_group  $@;
+SQL
+}
+function sqf_files ()
+{
+  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  shift
+  sqlite3 "$db" <<SQL
+.header on
+.mode column
+.width 4 4 40 4 4 20
+  select * from duf_filenames  $@;
+SQL
+}
 function sqf ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3
+  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  shift
   sqlite3 "$db" <<SQL
 .header on
 .separator "	"
@@ -10,7 +43,8 @@ SQL
 }
 function sqfiles ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3
+  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  shift
   sqlite3 "$db" <<SQL
 .header on
 .separator "	"
@@ -23,13 +57,15 @@ SQL
 }
 function sqfiledatas ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3
+  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  shift
   local sql='SELECT * FROM duf_filedatas'" $@"
   sqlite3 -header -column "$db" "$sql"
 }
 function sqfilenames ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3
+  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  shift
   sqlite3 "$db" << SQL
 .header on
 .separator "		"

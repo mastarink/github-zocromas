@@ -20,7 +20,6 @@
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *              int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 static int
 duf_sql_insert_filedata( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -54,7 +53,6 @@ duf_insert_filedata( unsigned long long file_inode, const struct stat *pst_dir, 
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *          int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 static int
 duf_sql_insert_path( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -128,7 +126,6 @@ duf_insert_filename( const char *fname, unsigned long long dir_id, unsigned long
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *         int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udat, void *str_cb_udata )
  * */
 static int
 duf_sql_insert_md5( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -166,7 +163,6 @@ duf_insert_md5( unsigned long long *md64, size_t fsize )
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *           int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 static int
 duf_sql_insert_group( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -202,7 +198,6 @@ duf_insert_group( const char *name )
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *                int fun( int nrow, int nrows, char *presult[], va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
 static int
 duf_sql_insert_path_group( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
@@ -234,13 +229,13 @@ duf_insert_path_group( unsigned long long groupid, unsigned long long pathid )
 }
 
 unsigned long long
-duf_insert_keydata( unsigned long long pathid, unsigned long long nameid, ino_t inode, unsigned long long resmd )
+duf_insert_keydata( unsigned long long pathid, unsigned long long filenameid, ino_t inode, unsigned long long resmd )
 {
   int r;
   unsigned long long resp = 0;
 
   r = duf_sql_c( "INSERT INTO duf_keydata (pathid, nameid, inode, md5id,ucnt,now) " " VALUES ('%llu', '%llu', '%llu', '%llu',0,datetime())",
-                 DUF_CONSTRAINT_IGNORE_YES, pathid, nameid, inode, resmd );
+                 DUF_CONSTRAINT_IGNORE_YES, pathid, filenameid, inode, resmd );
   if ( r == duf_constraint )
   {
   }

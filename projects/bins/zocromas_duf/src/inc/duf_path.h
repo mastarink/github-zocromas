@@ -13,11 +13,12 @@ int duf_print_paths( const char *groupname );
  * duf_sql_select_cb_t: 
  *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata )
  * */
-int duf_sql_scan_paths( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata );
+int duf_sql_scan_paths( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                        void *str_cb_udata );
 
 
-int duf_pathid_group( const char *group, unsigned long long pathid );
-int duf_paths_group( const char *group, const char *path );
+int duf_pathid_group( const char *group, unsigned long long pathid, int add_remove );
+int duf_paths_group( const char *group, const char *path, int add_remove  );
 
 unsigned long long duf_group_to_groupid( const char *group );
 
