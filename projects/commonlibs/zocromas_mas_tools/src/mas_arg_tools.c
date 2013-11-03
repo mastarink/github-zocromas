@@ -443,12 +443,15 @@ mas_add_argv_cmdline( int targc, char ***ptargv, const char *cmdline, size_t len
 int
 mas_del_argv( int targc, char **targv, int from_a )
 {
-  if ( targv && targc )
+  if ( targv )
   {
-    for ( int ia = from_a; ia < targc; ia++ )
+    if ( targc )
     {
-      mas_free( targv[ia] );
-      targv[ia] = NULL;
+      for ( int ia = from_a; ia < targc; ia++ )
+      {
+        mas_free( targv[ia] );
+        targv[ia] = NULL;
+      }
     }
     mas_free( targv );
   }
