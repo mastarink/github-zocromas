@@ -32,6 +32,8 @@ typedef struct
   unsigned update_md5:1;
   unsigned update_duplicates:1;
   unsigned update_mdpath:1;
+  unsigned update_filedata:1;
+  unsigned zero_filedata:1;
   unsigned update_exif:1;
   unsigned recursive:1;
   unsigned print_paths:1;
@@ -41,6 +43,7 @@ typedef struct
   unsigned zero_duplicates:1;
   unsigned same_files:1;
   unsigned same_md5:1;
+  unsigned same_exif:1;
   unsigned to_group:1;
   unsigned from_group:1;
   long limit;

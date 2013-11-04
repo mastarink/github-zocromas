@@ -79,8 +79,10 @@ duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t str_cb, void *se
 /* 
  * sql must select pathid, filenameid, filename
  * */
-  r = duf_scan_files_sql( str_cb, sel_cb_udata, "SELECT duf_filenames.pathid, duf_filenames.id, name FROM duf_filenames "
-                          " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+  r = duf_scan_files_sql( str_cb, sel_cb_udata,
+                          "SELECT duf_filenames.pathid, duf_filenames.id, name, duf_paths.mdpathid, duf_paths.md5dir1, duf_paths.md5dir2 "
+                          " FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+                          " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"
                           " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_md5.id='%llu'", md5id );
   return r;
 }
@@ -90,7 +92,7 @@ duf_print_files_by_md5id( unsigned long long md5id )
 {
   int r = 0;
 
-  duf_scan_files_by_md5id( md5id, duf_sql_scan_print_file, NULL /* sel_cb_udata */  );
+  r = duf_scan_files_by_md5id( md5id, duf_sql_scan_print_file, NULL /* sel_cb_udata */  );
   return r;
 }
 

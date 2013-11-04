@@ -28,15 +28,19 @@ typedef enum
   DUF_OPTION_ADD_PATH,
   DUF_OPTION_UPDATE_PATH,
   DUF_OPTION_UPDATE_MD5,
+  DUF_OPTION_ZERO_DUPLICATES,
   DUF_OPTION_UPDATE_DUPLICATES,
   DUF_OPTION_UPDATE_MDPATH,
+  DUF_OPTION_UPDATE_FILEDATA,
+  DUF_OPTION_ZERO_FILEDATA,
+  DUF_OPTION_UPDATE_EXIF,
   DUF_OPTION_RECURSIVE,
   DUF_OPTION_PRINT_PATHS,
   DUF_OPTION_PRINT_DIRS,
   DUF_OPTION_PRINT_FILES,
-  DUF_OPTION_PRINT_DUPLICATES,
-  DUF_OPTION_ZERO_DUPLICATES,
+  /* DUF_OPTION_PRINT_DUPLICATES, */
   DUF_OPTION_SAME_FILES,
+  DUF_OPTION_SAME_EXIF,
   DUF_OPTION_SAME_MD5,
   DUF_OPTION_GROUP,
   DUF_OPTION_LIMIT,
@@ -52,15 +56,19 @@ const struct option longopts[] = {
   {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
   {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH},
   {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5},
+  {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES},
   {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES},
   {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH},
+  {.name = "update-filedata",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_FILEDATA},
+  {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
+  {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
   {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS},
   {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},
   {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES},
-  {.name = "print-duplicates",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DUPLICATES},
-  {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES},
+  /* {.name = "print-duplicates",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DUPLICATES}, */
   {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES},
+  {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},
   {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
   {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
   {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
@@ -112,6 +120,15 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_UPDATE_MDPATH:
         duf_config->update_mdpath = 1;
         break;
+      case DUF_OPTION_ZERO_FILEDATA:
+        duf_config->zero_filedata = 1;
+        break;
+      case DUF_OPTION_UPDATE_FILEDATA:
+        duf_config->update_filedata = 1;
+        break;
+      case DUF_OPTION_UPDATE_EXIF:
+        duf_config->update_exif = 1;
+        break;
       case DUF_OPTION_RECURSIVE:
         duf_config->recursive = 1;
         break;
@@ -124,14 +141,17 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_PRINT_FILES:
         duf_config->print_files = 1;
         break;
-      case DUF_OPTION_PRINT_DUPLICATES:
-        duf_config->print_duplicates = 1;
-        break;
+      /* case DUF_OPTION_PRINT_DUPLICATES:   */
+      /*   duf_config->print_duplicates = 1; */
+      /*   break;                            */
       case DUF_OPTION_ZERO_DUPLICATES:
         duf_config->zero_duplicates = 1;
         break;
       case DUF_OPTION_SAME_FILES:
         duf_config->same_files = 1;
+        break;
+      case DUF_OPTION_SAME_EXIF:
+        duf_config->same_exif = 1;
         break;
       case DUF_OPTION_SAME_MD5:
         duf_config->same_md5 = 1;

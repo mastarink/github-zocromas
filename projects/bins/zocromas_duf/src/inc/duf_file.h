@@ -9,5 +9,6 @@ unsigned long long file_at_path_to_filenameid_x( const char *path, const char *n
 unsigned long long file_at_pathid_to_filenameid( unsigned long long pathid, const char *name );
 unsigned long long file_at_path_to_filenameid( const char *path, const char *name );
 
+char *filenameid_to_filepath( unsigned long long filenameid );
 
 #endif

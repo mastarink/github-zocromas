@@ -12,6 +12,8 @@
 
 /* #include "duf_sql.h" */
 #include "duf_path.h"
+#include "duf_filedata.h"
+#include "duf_filename.h"
 #include "duf_dirent.h"
 #include "duf_insert.h"
 #include "duf_update_realpath.h"

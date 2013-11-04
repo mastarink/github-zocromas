@@ -3,9 +3,10 @@
 
 int duf_update_md5_path( const char *path, int recursive );
 int duf_update_md5_pathid( unsigned long long pathid, int recursive );
-int duf_print_md5( unsigned long long limit );
+/* int duf_print_md5( unsigned long long limit ); */
 int duf_print_md5_same( unsigned long long dupcnt_min, unsigned long long limit );
 
-int duf_update_mdpaths( unsigned long long pathid );
+
+unsigned long long duf_insert_md5( unsigned long long *md64, size_t fsize );
 
 #endif

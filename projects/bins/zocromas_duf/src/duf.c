@@ -17,6 +17,7 @@
 #include "duf_create.h"
 /* #include "duf_utils.h" */
 #include "duf_path.h"
+#include "duf_mdpath.h"
 #include "duf_file.h"
 #include "duf_file_md5id.h"
 #include "duf_file_pathid.h"
@@ -24,6 +25,7 @@
 #include "duf_finddup.h"
 #include "duf_update.h"
 #include "duf_update_path.h"
+#include "duf_filedata.h"
 #include "duf_exif.h"
 #include "duf_dir_scan.h"
 
@@ -141,6 +143,7 @@ run --same-md5 --limit=5 --recursive
 run --same-md5 --recursive 
 run --same-md5  --recursive --limit=10
 
+run --update-exif
 
 lshn && run --update-mdpath "'/mnt/new_media/media/photo/Pictures/unsorted/kodak/Kodak Pictures/08-14-2007'"
 
@@ -166,6 +169,8 @@ duf_action_new( void )
                               DUF_TRUE /* dofiles */  );
     if ( duf_config->update_md5 )
       duf_update_md5_path( NULL, DUF_RECURSIVE_NO );
+    if ( duf_config->zero_duplicates )
+      duf_zero_duplicates(  );
     if ( duf_config->update_duplicates )
       duf_update_duplicates(  );
     if ( duf_config->update_mdpath )
@@ -182,6 +187,28 @@ duf_action_new( void )
           pathid = duf_path_to_pathid( path );
           if ( pathid )
             duf_update_mdpaths( pathid );
+          else
+            fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
+        }
+    }
+    if ( duf_config->zero_filedata )
+      duf_zero_filedatas(  );
+    if ( duf_config->update_filedata )
+      duf_update_filedatas(  );
+    if ( duf_config->update_exif )
+    {
+      if ( !duf_config->targc )
+        duf_update_exif( 0 );
+      else
+        for ( int ia = 0; ia < duf_config->targc; ia++ )
+        {
+          const char *path;
+          unsigned long long pathid;
+
+          path = duf_config->targv[ia];
+          pathid = duf_path_to_pathid( path );
+          if ( pathid )
+            duf_update_exif( pathid );
           else
             fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
         }
@@ -215,6 +242,9 @@ duf_action_new( void )
         for ( int ia = 0; ia < duf_config->targc; ia++ )
           duf_print_files_same( duf_config->targv[ia] );
     }
+    if ( duf_config->same_exif )
+      duf_print_exif_same( 1, duf_config->limit );
+
     if ( duf_config->to_group )
       for ( int ia = 0; ia < duf_config->targc; ia++ )
         duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );

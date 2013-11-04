@@ -106,35 +106,55 @@ duf_sql_exec_msg( const char *sql, const char *msg )
 }
 
 int
-duf_sql_c( const char *fmt, int constraint_ignore, ... )
+duf_vsql_c( int trace, const char *fmt, int constraint_ignore, va_list args )
+{
+  int r = 0;
+  char *sql;
+
+  sql = sqlite3_vmprintf( fmt, args );
+  r = duf_sql_exec_c( sql, constraint_ignore );
+  if ( trace )
+    fprintf( stderr, "(%d) trace:[%s]\x1b[K\n", r, sql );
+  sqlite3_free( sql );
+  return r;
+}
+
+int
+duf_sql_c( int trace, const char *fmt, int constraint_ignore, ... )
 {
   int r = 0;
   va_list args;
-  char *sql;
+
+  /* char *sql; */
 
   va_start( args, constraint_ignore );
-  {
-    sql = sqlite3_vmprintf( fmt, args );
-    r = duf_sql_exec_c( sql, constraint_ignore );
-    sqlite3_free( sql );
-  }
+  r = duf_vsql_c( trace, fmt, constraint_ignore, args );
+  /* {                                               */
+  /*   sql = sqlite3_vmprintf( fmt, args );          */
+  /*   r = duf_sql_exec_c( sql, constraint_ignore ); */
+  /*   sqlite3_free( sql );                          */
+  /* }                                               */
   va_end( args );
   return r;
 }
 
 int
-duf_sql( const char *fmt, ... )
+duf_sql( int trace, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
-  char *sql;
+
+  /* char *sql; */
 
   va_start( args, fmt );
-  {
-    sql = sqlite3_vmprintf( fmt, args );
-    r = duf_sql_exec( sql );
-    sqlite3_free( sql );
-  }
+  r = duf_vsql_c( trace, fmt, DUF_CONSTRAINT_IGNORE_NO, args );
+  /* {                                                 */
+  /*   sql = sqlite3_vmprintf( fmt, args );            */
+  /*   if ( trace )                                    */
+  /*     fprintf( stderr, "trace:[%s]\x1b[K\n", sql ); */
+  /*   r = duf_sql_exec( sql );                        */
+  /*   sqlite3_free( sql );                            */
+  /* }                                                 */
   va_end( args );
   return r;
 }
@@ -154,9 +174,9 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t st
   va_copy( qargs, args );
 
   sql = sqlite3_vmprintf( fmt, args );
-  if ( trace )
-    fprintf( stderr, "trace:[%s]\n", sql );
   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
+  if ( trace )
+    fprintf( stderr, "(%d) trace:[%s]\x1b[K\n", r, sql );
   pcresult = ( const char *const * ) presult;
   if ( r == SQLITE_OK )
   {

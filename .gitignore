@@ -17,3 +17,6 @@ libxml2-example.c
 admin/
 duf_db
 *.zip
+*.tmp
+*.jpg
+.comments/

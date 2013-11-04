@@ -20,6 +20,9 @@ int duf_sql_scan_paths( int nrow, int nrows, const char *const *presult, va_list
 int duf_pathid_group( const char *group, unsigned long long pathid, int add_remove );
 int duf_paths_group( const char *group, const char *path, int add_remove  );
 
-unsigned long long duf_group_to_groupid( const char *group );
+
+unsigned long long duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned long long rs_up );
+
+
 
 #endif

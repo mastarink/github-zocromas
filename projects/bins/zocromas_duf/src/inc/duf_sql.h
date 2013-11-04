@@ -9,8 +9,10 @@ int duf_sql_exec( const char *sql );
 int duf_sql_exec_msg( const char *sql, const char *msg );
 int duf_sql_exec_c( const char *sql, int constraint_ignore );
 int duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore );
-int duf_sql_c( const char *fmt, int constraint_ignore, ... );
-int duf_sql( const char *fmt, ... );
+
+int duf_vsql_c( int trace, const char *fmt, int constraint_ignore, va_list args );
+int duf_sql_c( int trace, const char *fmt, int constraint_ignore, ... );
+int duf_sql( int trace, const char *fmt, ... );
 
 int duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, int trace, const char *fmt,
                      va_list args );

@@ -6,6 +6,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "duf_types.h"
 
 #include "duf_sql.h"
@@ -27,11 +29,12 @@ typedef struct
   unsigned long long md5id;
   unsigned long long filenameid;
 } file_to_filenameid_udata_t;
-static int
+
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
  * */
+static int
 duf_sql_file_to_filenameid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
                             void *str_cb_udata )
 {
@@ -94,4 +97,59 @@ int
 duf_print_files( const char *path, int recursive )
 {
   return duf_print_files_by_pathid( duf_path_to_pathid( path ), recursive );
+}
+
+
+
+
+
+typedef struct
+{
+  unsigned long long pathid;
+  char *filename;
+} filenameid_to_filepath_udata_t;
+
+/* 
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ * */
+static int
+duf_sql_filenameid_to_filepath( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                                void *str_cb_udata )
+{
+  filenameid_to_filepath_udata_t *pud;
+
+  pud = ( filenameid_to_filepath_udata_t * ) sel_cb_udata;
+  pud->pathid = 0;
+  pud->filename = NULL;
+  if ( presult[0] )
+    pud->pathid = strtoll( presult[0], NULL, 10 );
+  if ( presult[2] )
+    pud->filename = mas_strdup( presult[2] );
+  /* fprintf( stderr, "presult[0]=%s; presult[2]=[%s]\n", presult[0], presult[2] ); */
+  return 0;
+}
+
+char *
+filenameid_to_filepath( unsigned long long filenameid )
+{
+  int r = 0;
+  char *filepath = NULL;
+  filenameid_to_filepath_udata_t ud;
+
+  r = duf_sql_select( duf_sql_filenameid_to_filepath, &ud, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
+                      "SELECT duf_filenames.pathid, duf_filenames.id, duf_filenames.name " " FROM duf_filenames "
+                      " WHERE duf_filenames.id='%llu'", filenameid );
+  if ( r >= 0 )
+  {
+    /* fprintf( stderr, "pathid: %lld; filename:%s\n", ud.pathid, ud.filename ); */
+    filepath = duf_pathid_to_path( ud.pathid );
+    if ( filepath )
+    {
+      filepath = mas_strcat_x( filepath, "/" );
+      filepath = mas_strcat_x( filepath, ud.filename );
+    }
+    mas_free( ud.filename );
+  }
+  return filepath;
 }

@@ -13,6 +13,7 @@
 
 #include "duf_sql.h"
 #include "duf_path.h"
+#include "duf_keydata.h"
 /* #include "duf_file_pathid.h" */
 #include "duf_file_md5id.h"
 #include "duf_insert.h"
@@ -62,7 +63,7 @@ duf_update_md5_file( const char *fpath, unsigned long long filedataid, size_t fs
         }
         if ( resmd )
         {
-          duf_sql( "UPDATE duf_filedatas SET md5id='%llu', ucnt=ucnt+1 WHERE id='%lld'", resmd, filedataid );
+          duf_sql( DUF_TRACE_NO, "UPDATE duf_filedatas SET md5id='%llu', ucnt=ucnt+1 WHERE id='%lld'", resmd, filedataid );
         }
       }
     }
@@ -293,14 +294,14 @@ duf_sql_scan_print_md5( unsigned long long pathid, const char *path, unsigned lo
   return 0;
 }
 
-int
-duf_print_md5( unsigned long long limit )
-{
-  int r = 0;
-
-  duf_scan_md5id( duf_sql_scan_print_md5, 0 /* dupcnt_min */ , limit );
-  return r;
-}
+/* int                                                                     */
+/* duf_print_md5( unsigned long long limit )                               */
+/* {                                                                       */
+/*   int r = 0;                                                            */
+/*                                                                         */
+/*   duf_scan_md5id( duf_sql_scan_print_md5, 0 (* dupcnt_min *) , limit ); */
+/*   return r;                                                             */
+/* }                                                                       */
 
 /* 
  * duf_str_cb_t:
@@ -326,89 +327,39 @@ duf_print_md5_same( unsigned long long dupcnt_min, unsigned long long limit )
   return r;
 }
 
-/* 
- * sql must select pathid, filenameid, filename, md5id, size
- * duf_sql_select_cb_t:
+/*
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_update_mdpaths_path( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                             void *str_cb_udata )
+duf_sql_insert_md5( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                    void *str_cb_udata )
 {
-  MD5_CTX *pctx;
-  unsigned long long md5s1, md5s2, pathid;
+  unsigned long long *presmd;
 
-  pathid = va_arg( args, unsigned long long );
-
-  fprintf( stderr, "(duf_sql_update_mdpaths_path) parthid:%lld / %s\n", pathid, presult[0] );
-  pctx = ( MD5_CTX * ) sel_cb_udata;
-  if ( presult[5] && presult[6] )
-  {
-    md5s1 = strtoll( presult[5], NULL, 10 );
-    md5s2 = strtoll( presult[6], NULL, 10 );
-    MD5_Update( pctx, &md5s1, sizeof( md5s1 ) );
-    MD5_Update( pctx, &md5s2, sizeof( md5s2 ) );
-  }
-
+  presmd = ( unsigned long long * ) sel_cb_udata;
+  *presmd = strtoll( presult[0], NULL, 10 );
+  duf_sql( DUF_TRACE_NO, "UPDATE duf_md5 SET ucnt=ucnt+1, now=datetime() WHERE id='%lld'", *presmd );
   return 0;
 }
 
-int
-duf_update_mdpaths_pathid( unsigned long long pathid )
+unsigned long long
+duf_insert_md5( unsigned long long *md64, size_t fsize )
 {
+  unsigned long long resmd = -1;
   int r = 0;
-  MD5_CTX ctx;
-  unsigned long long *md64;
 
-  MD5_Init( &ctx );
-  r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
-                      "SELECT duf_keydata.pathid, duf_keydata.nameid, duf_filenames.name, '', '', md5sum1, md5sum2 " " FROM duf_md5 "
-                      " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "
-                      " LEFT JOIN duf_filenames ON (duf_keydata.nameid=duf_filenames.id)"
-                      " WHERE duf_keydata.pathid='%llu' " " ORDER by md5sum1, md5sum2 ", ( unsigned long long ) pathid );
-
+  r = duf_sql_c( DUF_TRACE_NO, "INSERT INTO duf_md5 (md5sum1,md5sum2,size,ucnt,now) values ('%lld','%lld','%llu',0,datetime())",
+                 DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0], ( unsigned long long ) fsize );
+  if ( r == duf_constraint )
   {
-    unsigned char md[MD5_DIGEST_LENGTH];
-
-    memset( &md, 0, sizeof( md ) );
-    MD5_Final( md, &ctx );
-    md64 = ( unsigned long long * ) md;
+    r = duf_sql_select( duf_sql_insert_md5, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
+                        "SELECT id FROM duf_md5 WHERE md5sum1='%lld' and md5sum2='%lld'", md64[1], md64[0] );
   }
-  fprintf( stderr, "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%llu'\n", md64[1], md64[0], pathid );
-  duf_sql( "UPDATE duf_paths SET md5dir1='%lld', md5dir2='%lld' WHERE id='%lu'", md64[1], md64[0], pathid );
-
-  return r;
-}
-
-/* 
- * sql must select pathid, filenameid, filename, md5id, size
- * */
-static int
-duf_sql_update_mdpaths( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                        void *str_cb_udata )
-{
-  unsigned long long pathid;
-
-  pathid = strtol( presult[0], NULL, 10 );
-  fprintf( stderr, "duf_sql_update_mdpaths %d\n", nrow );
-  duf_update_mdpaths_pathid( pathid );
-  return 0;
-}
-
-/* Sampe same(?) dirs                                                                                         */
-/* 1439: /mnt/new_media/media/photo/Pictures/unsorted/kodak/Kodak Pictures/08-14-2007                         */
-/* 1676: /mnt/new_media/media/photo/Pictures.R.20120207.164339/Photo/unsorted/kodak/Kodak Pictures/08-14-2007 */
-int
-duf_update_mdpaths( unsigned long long pathid )
-{
-  int r;
-
-  fprintf( stderr, "Start duf_update_mdpaths\n" );
-  if ( pathid )
-    r = duf_sql_select( duf_sql_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
-                        "SELECT id, dirname FROM duf_paths " " WHERE id='%lld' " " ORDER BY id", pathid );
+  else if ( !r /* assume SQLITE_OK */  )
+    resmd = duf_last_insert_rowid(  );
   else
-    r = duf_sql_select( duf_sql_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
-                        "SELECT id, dirname FROM duf_paths " " ORDER BY id" );
-  fprintf( stderr, "End duf_update_mdpaths\n" );
-  return r;
+    fprintf( stderr, "error duf_insert_md5 %d\n", r );
+
+  return resmd;
 }

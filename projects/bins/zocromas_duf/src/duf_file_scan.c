@@ -14,6 +14,7 @@
 
 #include "duf_sql.h"
 
+#include "duf_file.h"
 #include "duf_path.h"
 /* #include "duf_file_pathid.h" */
 /* #include "duf_file.h" */
@@ -49,10 +50,10 @@ duf_sql_scan_files( int nrow, int nrows, const char *const *presult, va_list arg
     filenameid = strtoll( presult[1], NULL, 10 );
     filename = presult[2];
 
-    filepath = mas_strdup( path );
-    filepath = mas_strcat_x( filepath, "/" );
-    filepath = mas_strcat_x( filepath, filename );
-
+    /* filepath = mas_strdup( path );                 */
+    /* filepath = mas_strcat_x( filepath, "/" );      */
+    /* filepath = mas_strcat_x( filepath, filename ); */
+    filepath = filenameid_to_filepath( filenameid );
     {
       int r = 0;
       struct stat st;
@@ -113,6 +114,12 @@ int
 duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
                          const struct stat *st, void *str_cb_udata, const char *const *presult )
 {
-  printf( "%c %7llu: %-20s @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, pathid, path, name );
+  unsigned long long mdpathid = strtoll( presult[3], NULL, 10 );
+  /* unsigned long long mdpath1 = strtoll( presult[4], NULL, 10 ); */
+  /* unsigned long long mdpath2 = strtoll( presult[5], NULL, 10 ); */
+
+  /* printf( "%c %7llu: %-20s %lld:%016llx:%016llx @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, mdpath1, mdpath2, pathid, path, */
+  /*         name );                                                                                                                              */
+  printf( "%c %7llu: %-20s %lld @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, pathid, path, name );
   return 0;
 }

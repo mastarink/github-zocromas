@@ -12,6 +12,7 @@
 
 #include "duf_sql.h"
 #include "duf_insert.h"
+#include "duf_group.h"
 #include "duf_utils.h"
 
 
@@ -198,32 +199,6 @@ duf_path_to_pathid( const char *path )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_group_to_groupid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                          void *str_cb_udata )
-{
-  unsigned long long *pgroupid;
-
-  pgroupid = ( unsigned long long * ) sel_cb_udata;
-  ( *pgroupid ) = strtoll( presult[0], NULL, 10 );
-  return 0;
-}
-
-unsigned long long
-duf_group_to_groupid( const char *group )
-{
-  unsigned long long groupid = 0;
-
-  /* r = */
-  duf_sql_select( duf_sql_group_to_groupid, &groupid, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
-                  "SELECT id FROM duf_group WHERE name='%s'", group );
-  return groupid;
-}
-
-/* 
- * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
- * duf_sql_select_cb_t: 
- * */
-static int
 duf_sql_delete_path_by_groupid( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
                                 void *str_cb_udata )
 {
@@ -231,7 +206,7 @@ duf_sql_delete_path_by_groupid( int nrow, int nrows, const char *const *presult,
   unsigned long long pathid;
 
   pathid = strtoll( presult[0], NULL, 10 );
-  r = duf_sql( "DELETE FROM duf_path_group WHERE id='%lld'", pathid );
+  r = duf_sql( DUF_TRACE_NO, "DELETE FROM duf_path_group WHERE id='%lld'", pathid );
   /* fprintf( stderr, ">> DELETE FROM duf_path_group WHERE id='%lld' -- %d\n", pathid, r ); */
   return r;
 }
@@ -359,4 +334,52 @@ duf_paths_group( const char *group, const char *path, int add_remove )
   if ( pathid )
     duf_pathid_group( group, pathid, add_remove );
   return 0;
+}
+
+/*
+ * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
+ * duf_sql_select_cb_t: 
+ * */
+static int
+duf_sql_insert_path( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+                     void *str_cb_udata )
+{
+  unsigned long long *pdir_id;
+
+  /* fprintf( stderr, "Constraint selected %d\n", nrow ); */
+  pdir_id = ( unsigned long long * ) sel_cb_udata;
+  if ( nrow == 0 )
+    *pdir_id = strtoll( presult[0], NULL, 10 );
+  return 0;
+}
+
+unsigned long long
+duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned long long parentid )
+{
+  unsigned long long dir_id = 0;
+  int r;
+
+  char *qbase_name;
+
+  /* fprintf( stderr, "Insert path %s\n", base_name ); */
+  qbase_name = duf_single_quotes_2( base_name );
+  r = duf_sql_c( DUF_TRACE_NO,
+                 "INSERT INTO duf_paths (dev, inode, dirname, parentid, ucnt, now) " " VALUES ('%lu','%lu','%s','%lu',0,datetime())",
+                 DUF_CONSTRAINT_IGNORE_YES, pst_dir->st_dev, pst_dir->st_ino, qbase_name ? qbase_name : base_name, parentid );
+  mas_free( qbase_name );
+  /* sql = NULL; */
+  if ( r == duf_constraint )
+  {
+    r = duf_sql_select( duf_sql_insert_path, &dir_id, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
+                        "SELECT id FROM duf_paths " " WHERE dev='%lu' and inode='%lu'", pst_dir->st_dev, pst_dir->st_ino );
+  }
+  else if ( !r /* assume SQLITE_OK */  )
+  {
+    dir_id = duf_last_insert_rowid(  );
+    /* fprintf( stderr, "Inserted dir_id: %lld\n", dir_id ); */
+  }
+  else
+    fprintf( stderr, "error duf_insert_path %d\n", r );
+  /* fprintf( stderr, "Insert path %s done\n", base_name ); */
+  return dir_id;
 }
