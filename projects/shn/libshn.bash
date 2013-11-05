@@ -51,6 +51,9 @@ function shn_code ()
     G)
       shn_core_debug $@
     ;;
+    Y)
+      shn_core_debug_installed $@
+    ;;
     c)
       shn_dbgmsg "shn 2.${code}.1"
       shn_build_configure || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
@@ -72,6 +75,12 @@ function shn_code ()
     U)
       shn_dbgmsg "shn 2.${code}.1"
       shn_build_superclean || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.2"
+    ;;
+    UU)
+      shn_dbgmsg "shn 2.${code}.1"
+      shn_build_superclean wash || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;

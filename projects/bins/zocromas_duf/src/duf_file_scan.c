@@ -114,10 +114,12 @@ int
 duf_sql_scan_print_file( unsigned long long pathid, const char *path, unsigned long long filenameid, const char *name,
                          const struct stat *st, void *str_cb_udata, const char *const *presult )
 {
-  unsigned long long mdpathid = strtoll( presult[3], NULL, 10 );
+  unsigned long long mdpathid;
+
   /* unsigned long long mdpath1 = strtoll( presult[4], NULL, 10 ); */
   /* unsigned long long mdpath2 = strtoll( presult[5], NULL, 10 ); */
 
+  mdpathid = presult[3] ? strtoll( presult[3], NULL, 10 ) : 0;
   /* printf( "%c %7llu: %-20s %lld:%016llx:%016llx @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, mdpath1, mdpath2, pathid, path, */
   /*         name );                                                                                                                              */
   printf( "%c %7llu: %-20s %lld @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, pathid, path, name );

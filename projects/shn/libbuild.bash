@@ -182,12 +182,14 @@ function shn_build_autoreconf ()
   unset shn_no_error_message
   shn_dbgmsg end maintainer-clean
   if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
+    touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}.0
     if pushd $MAS_SHN_PROJECT_DIR &>/dev/null ; then
       shn_dbgmsg start autoreconf -i
       autoreconf -i && shn_msgn autoconf ok || { retcode=$? ; }
       popd  &>/dev/null
       shn_dbgmsg end autoreconf -i
     fi
+    touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   else
     shn_errmsg  "$MAS_SHN_PROJECT_DIR"
   fi
@@ -224,6 +226,7 @@ function shn_build_configure ()
   shn_build_xcommand $configscript  $configure_opts && shn_msgn configure ok || return $?
   shn_dbgmsg "C1 `pwd`" >&2
 # shn_build_list . config.status config.log config.h
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
 }
 function shn_build_recheck ()
@@ -237,6 +240,7 @@ function shn_build_recheck ()
   shn_msg $FUNCNAME 3
   shn_build_xcommand ./config.status --recheck && shn_msgn recheck ok || return $?
   shn_msg $FUNCNAME 4
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
 }
 function shn_build_make ()
@@ -246,14 +250,44 @@ function shn_build_make ()
   shn_build_common_make && shn_msgn make ok || return $?
   shn_dbgmsg "$FUNCNAME 2"
 # shn_build_list src || shn_build_list inc
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
 }
 function shn_build_superclean ()
 {
+  local wash=$1
+  shift
   local f d l
+# rm -Rf Makefile.in autom4te.cache configure aclocal.m4 vrb.tmp ltmain.sh ac.mased.viminfo src.mased.viminfo config.h Makefile config.h.in config.h.in~ config.log libtool stamp-h1
+#
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:superclean]=`datemt`
-  for f in configure Makefile.in src/inc/Makefile.in src/Makefile.in inc/Makefile.in aclocal.m4 \
-  	vrb.tmp src.mased.viminfo ac.mased.viminfo sh.mased.viminfo shn.mased.viminfo config.status config.log
+  shn_msg "for $MAS_SHN_PROJECT_NAME:"
+  for f in \
+	aclocal.m4 \
+	ac.mased.viminfo \
+	autom4te.cache \
+	config.h \
+	config.h.in \
+	config.h.in~ \
+	config.log \
+	config.status \
+	configure \
+	inc/Makefile.in \
+	inc/Makefile \
+	libtool \
+	ltmain.sh \
+	Makefile \
+	Makefile.in \
+	sh.mased.viminfo \
+	shn.mased.viminfo \
+	src/inc/Makefile.in \
+	src/inc/Makefile \
+	src/Makefile.in \
+	src/Makefile \
+	src.mased.viminfo \
+	stamp-h1 \
+	vrb.tmp \
+	"${MAS_SHN_PROJECT_NAME}.pc"
   do
     if [[ "$f" ]] && [[ -f "$f" ]] ; then
       shn_msg removing file $f
@@ -266,28 +300,40 @@ function shn_build_superclean ()
       rm -Rf $d
     fi
   done
-  for l in zocversion.txt vimrc-mastar sh gvim-vimenter.vim gvimrc-mastar gvim-funcs.vim .localrc ; do
+  for l in vimrc-mastar sh gvim-vimenter.vim gvimrc-mastar gvim-funcs.vim .localrc ; do
     if [[ "$l" ]] && [[ -L "$l" ]] ; then
       shn_msg removing link $l
       rm -Rf $l
     fi
   done
+  if [[ "$wash" == wash ]] ; then
+    for l in zocversion.txt m4zoc shn ; do
+      if [[ "$l" ]] && [[ -L "$l" ]] ; then
+	shn_msg removing link $l
+	rm -Rf $l
+      fi
+    done
+  fi
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_clean ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:clean]=`datemt`
   shn_build_common_make clean && shn_msgn make clean ok || return $?
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_distclean ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:distclean]=`datemt`
   shn_build_common_make distclean && shn_msgn make distclean ok || return $?
 # shn_build_list
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_install ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:install]=`datemt`
   shn_build_common_make install && shn_msg installed
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_dist ()
 {
@@ -309,6 +355,7 @@ function shn_build_dist ()
     fi
   fi
   shn_dbgmsg "$MAS_SHN_PROJECT_FULLNAME ==> ${MAS_SHN_DIR[savedist]}"
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
 }
 function shn_build_ebuild_update ()
@@ -374,6 +421,7 @@ function shn_build_ebuild_update ()
     [[ -d "$ebuild_dir" ]]                 || shn_errmsg "d '$ebuild_dir'"
     retval=1
   fi
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return $retval
 }
 function shn_build_ebuild_check ()
@@ -404,5 +452,6 @@ function shn_build_ebuild_check ()
   done
 # shn_msg "$ebuild_dir"
 # shn_msg "$distdir"
+  touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
 }

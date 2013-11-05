@@ -32,6 +32,7 @@ typedef struct
   unsigned update_md5:1;
   unsigned update_duplicates:1;
   unsigned update_mdpath:1;
+  unsigned update_mdpath_selective:1;
   unsigned update_filedata:1;
   unsigned zero_filedata:1;
   unsigned update_exif:1;
