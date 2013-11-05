@@ -1,5 +1,4 @@
 SUBDIRS= inc
-
 lib_LTLIBRARIES = libzocromas_mas_channel.la 
 
 libzocromas_mas_channel_la_SOURCES         = mas_channel.c mas_channel_buffer.c mas_channel_object.c \

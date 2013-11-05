@@ -1,4 +1,5 @@
 # ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I .auxdir/m4
 #? include_HEADERS = inc/stdio.h
 SUBDIRS= src
 

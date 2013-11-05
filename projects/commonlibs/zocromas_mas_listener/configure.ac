@@ -14,7 +14,6 @@ m4_include([m4zoc/vars0.m4])
 m4_include([m4zoc/varscheck.m4])
 
 # Checks for libraries.
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_thtools zocromas_mas_msg \
 PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_channel zocromas_mas_transaction zocromas_mas_autoset])
 
 

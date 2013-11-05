@@ -26,12 +26,15 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
 
   opterr = 0;
   /* printf( "@@ romax:%u\n", ( unsigned ) romax ); */
-  while ( ( opt = getopt_long( argc, argv, "NDLZMSGKO1srlvwf:", NULL, NULL ) ) >= 0 && roseq < romax )
+  while ( ( opt = getopt_long( argc, argv, "VNDLZMSGKO1srlvwf:", NULL, NULL ) ) >= 0 && roseq < romax )
   {
     /* printf( "-- roseq:%u; romax:%u\n", ( unsigned ) roseq, ( unsigned ) romax ); */
     /* printf( "OPT %c %s\n", opt, optarg ); */
     switch ( opt )
     {
+    case 'V':
+      break;
+      fprintf( stderr, "%s\n", MAS_CONFIG_ARGS );
     case 'l':
       roaction[roseq++] = ROACTION_LAUNCH;
       break;
