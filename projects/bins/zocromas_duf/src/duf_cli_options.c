@@ -31,6 +31,7 @@ typedef enum
   DUF_OPTION_ZERO_DUPLICATES,
   DUF_OPTION_UPDATE_DUPLICATES,
   DUF_OPTION_UPDATE_MDPATH,
+  DUF_OPTION_UPDATE_MDPATH_SELECTIVE,
   DUF_OPTION_UPDATE_FILEDATA,
   DUF_OPTION_ZERO_FILEDATA,
   DUF_OPTION_UPDATE_EXIF,
@@ -59,6 +60,7 @@ const struct option longopts[] = {
   {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES},
   {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES},
   {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH},
+  {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE},
   {.name = "update-filedata",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_FILEDATA},
   {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
@@ -120,6 +122,9 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_UPDATE_MDPATH:
         duf_config->update_mdpath = 1;
         break;
+      case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:
+        duf_config->update_mdpath_selective = 1;
+        break;
       case DUF_OPTION_ZERO_FILEDATA:
         duf_config->zero_filedata = 1;
         break;
@@ -141,9 +146,9 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_PRINT_FILES:
         duf_config->print_files = 1;
         break;
-      /* case DUF_OPTION_PRINT_DUPLICATES:   */
-      /*   duf_config->print_duplicates = 1; */
-      /*   break;                            */
+        /* case DUF_OPTION_PRINT_DUPLICATES:   */
+        /*   duf_config->print_duplicates = 1; */
+        /*   break;                            */
       case DUF_OPTION_ZERO_DUPLICATES:
         duf_config->zero_duplicates = 1;
         break;

@@ -128,7 +128,44 @@ function shn_core_debug ()
 
     ulimit -c
     if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
-      shn_dbgmsg ">>> $corename" >&2
+      shn_msg "core : $corename" >&2
+    else
+      shn_errmsg "not found $corename" >&2
+      unset corename
+      return 1
+    fi
+
+    libtool --mode=execute gdb $bin -c "$corename"
+  else
+    shn_errmsg "rname:$rname"
+    shn_errmsg "bsrc:$bsrc"
+    shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
+    shn_errmsg "debugdir:$debugdir"
+  fi
+  return 0
+}
+function shn_core_debug_installed ()
+{
+  local retcode=0 corename coredir="/tmp"
+  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bin cmdfile tmpcmd sedex lt rname
+  rname=$1
+  shift
+# rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
+  local bindir libsdir debugdir
+  local gid
+  gid="`stat -c%g /proc/$$`"
+  bindir="/usr/bin"
+
+  debugdir="$MAS_SHN_PROJECT_DIR/debug"
+  shn_dbgmsg "1 $FUNCNAME"
+  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
+    shn_dbgmsg "2 $FUNCNAME"
+    bin=${bindir}/${rname}
+
+    ulimit -c
+    if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
+      shn_msg "core : $corename" >&2
     else
       shn_errmsg "not found $corename" >&2
       unset corename

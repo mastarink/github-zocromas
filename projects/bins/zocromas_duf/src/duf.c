@@ -148,6 +148,13 @@ run --update-exif
 lshn && run --update-mdpath "'/mnt/new_media/media/photo/Pictures/unsorted/kodak/Kodak Pictures/08-14-2007'"
 
 
+run --drop-tables --create-tables --add-path --update-path --update-md5 --recursive /mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ 
+
+run --drop-tables --create-tables --add-path --update-path --update-md5 --update-duplicates --update-mdpath --update-filedata --update-exif
+		--recursive /mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ 
+		/mnt/new_media/media/photo/Pictures /mnt/new_media/media/photo/Pictures.R.20120207.164339/
+
+run 
 
 ***/
 
@@ -173,7 +180,13 @@ duf_action_new( void )
       duf_zero_duplicates(  );
     if ( duf_config->update_duplicates )
       duf_update_duplicates(  );
+    if ( duf_config->zero_filedata )
+      duf_zero_filedatas(  );
+    if ( duf_config->update_filedata )
+      duf_update_filedatas(  );
     if ( duf_config->update_mdpath )
+        duf_update_mdpaths( 0 );
+    if ( duf_config->update_mdpath_selective )
     {
       if ( !duf_config->targc )
         duf_update_mdpaths( 0 );
@@ -191,10 +204,6 @@ duf_action_new( void )
             fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
         }
     }
-    if ( duf_config->zero_filedata )
-      duf_zero_filedatas(  );
-    if ( duf_config->update_filedata )
-      duf_update_filedatas(  );
     if ( duf_config->update_exif )
     {
       if ( !duf_config->targc )
