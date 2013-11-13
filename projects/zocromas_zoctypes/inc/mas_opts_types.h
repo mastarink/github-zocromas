@@ -2,6 +2,7 @@
 #  define MAS_OPTS_TYPES_H
 
 #  include <stdio.h>
+#  include <getopt.h>
 #  include <mastar/types/mas_common_types.h>
 
 
@@ -10,9 +11,29 @@
 /* typedef int ( *mas_unknown_opt_func_t ) ( const char *s );                     */
 typedef void ( *mas_opts_func_t ) ( const void *env, const char *section, const char *sectval, const char *name, const char *value );
 
+typedef enum mas_msg_options_shift_e
+{
+  MAS_OPT_SHIFT_MSG_NOTICE,
+  MAS_OPT_SHIFT_MSG_WATCH,
+  MAS_OPT_SHIFT_MSG_MAIN,
+  MAS_OPT_SHIFT_MSG_IO,
+  MAS_OPT_SHIFT_MSG_LISTEN,
+  MAS_OPT_SHIFT_MSG_TRANSACTION,
+  MAS_OPT_SHIFT_MSG_WAIT,
+  MAS_OPT_SHIFT_MSG_THREAD,
+  MAS_OPT_SHIFT_MSG_SIGNAL,
+  MAS_OPT_SHIFT_MSG_TRACE,
+  MAS_OPT_SHIFT_MSG_TRACE_MAIN,
+  MAS_OPT_SHIFT_MSG_TRACE_LISTENER,
+  MAS_OPT_SHIFT_MSG_TRACE_TRANSACTION,
+  MAS_OPT_SHIFT_MSG_CMD,
+  MAS_OPT_SHIFT_MSG_MEM,
+  MAS_OPT_SHIFT_MSG_FUNLINE,
+} mas_msg_options_shift_t;
+
 typedef union mas_msg_options_u
 {
-  unsigned long word;
+  unsigned bits;
   struct mas_optflags_s
   {
     unsigned msg_notice:1;
@@ -38,8 +59,9 @@ typedef union mas_msg_options_u
     unsigned msg_cmd:1;
     unsigned msg_mem:1;
     unsigned msg_funline:1;
-  } bit;
-} mas_msg_options_t;
+  } name;
+} mas_options_msg_t;
+
 typedef struct mas_dirs_s
 {
   char *pids;
@@ -74,7 +96,7 @@ typedef struct mas_thnames_s
   char *listen_exit;
 } mas_thnames_t;
 
-struct mas_options_daemon_s
+typedef struct mas_options_daemon_s
 {
   unsigned disable:1;
   unsigned sys:1;
@@ -82,46 +104,96 @@ struct mas_options_daemon_s
   unsigned disable_close_std:1;
   unsigned disable_setsid:1;
   unsigned disable_chdir:1;
-};
-typedef struct mas_options_daemon_s mas_options_daemon_t;
+} mas_options_daemon_t;
 
-struct mas_options_log_s
+typedef struct mas_options_log_s
 {
   unsigned enable:1;
   unsigned run:1;
-};
-typedef struct mas_options_log_s mas_options_log_t;
+} mas_options_log_t;
+
+#  define OPT_QFLAG( o, x ) ( (o)->flag.name.x ? 1 : 0 )
+#  define OPT_SFLAG( o, x, v ) ( (o)->flag.name.x = ((v) ? 1 : 0 ))
+typedef enum mas_optionx_type_s
+{
+  OPTX_TYPE_NONE,
+  OPTX_TYPE_FLAG,
+  OPTX_TYPE_NOFLAG,
+  OPTX_TYPE_INT,
+  OPTX_TYPE_UNSIGNED,
+  OPTX_TYPE_STR,
+  OPTX_TYPE_SPECIAL,
+} mas_optionx_type_t;
+typedef struct mas_optionx_s
+{
+  struct option longopt;
+  mas_optionx_type_t optx_type;
+  mas_msg_options_shift_t flag_shift;
+} mas_optionx_t;
+typedef enum mas_options_shift_e
+{
+  MAS_OPT_SHIFT_TEST,
+  MAS_OPT_SHIFT_QUIT,
+  MAS_OPT_SHIFT_INFO,
+  MAS_OPT_SHIFT_NOPIDFILE,
+  MAS_OPT_SHIFT_SINGLE_INSTANCE,
+  MAS_OPT_SHIFT_SINGLE_CHILD,
+  MAS_OPT_SHIFT_LISTENER_SINGLE,
+  MAS_OPT_SHIFT_TRANSACTION_SINGLE,
+  MAS_OPT_SHIFT_NOMESSAGES_PARENT,
+  MAS_OPT_SHIFT_NOMESSAGES_CHILD,
+  MAS_OPT_SHIFT_NOMESSAGES,
+
+  MAS_OPT_SHIFT_NOWATCHER,
+  MAS_OPT_SHIFT_DISCONNECT_PROMPT,
+  MAS_OPT_SHIFT_WAIT_SERVER,
+  MAS_OPT_SHIFT_MAKE_MASTER_THREAD,
+  MAS_OPT_SHIFT_NOTICKER,
+  MAS_OPT_SHIFT_READ_USER_OPTS,
+  MAS_OPT_SHIFT_READ_USER_OPTS_PLUS,
+  MAS_OPT_SHIFT_SAVE_USER_OPTS,
+  MAS_OPT_SHIFT_SAVE_USER_OPTS_PLUS,
+  MAS_OPT_SHIFT_OVERWRITE_USER_OPTS,
+  MAS_OPT_SHIFT_OVERWRITE_USER_OPTS_PLUS,
+} mas_options_shift_t;
+
 
 struct mas_options_s
 {
-  mas_msg_options_t f;
-  unsigned test:1;
-  unsigned quit:1;
-  unsigned info:1;
-  unsigned nopidfile:1;
-  unsigned single_instance:1;
-  unsigned single_child:1;
-  unsigned listener_single:1;
-  unsigned transaction_single:1;
-  unsigned nomessages_parent:1;
-  unsigned nomessages_child:1;
-  unsigned nomessages:1;
+  union
+  {
+    unsigned long bits;
+    struct
+    {
+      unsigned test:1;
+      unsigned quit:1;
+      unsigned info:1;
+      unsigned nopidfile:1;
+      unsigned single_instance:1;
+      unsigned single_child:1;
+      unsigned listener_single:1;
+      unsigned transaction_single:1;
+      unsigned nomessages_parent:1;
+      unsigned nomessages_child:1;
+      unsigned nomessages:1;
 
-  unsigned nowatcher:1;
-  unsigned disconnect_prompt:1;
-  unsigned wait_server:1;
-  unsigned make_master_thread:1;
-  unsigned noticker:1;
-  unsigned read_user_opts:1;
-  unsigned read_user_opts_plus:1;
-  unsigned save_user_opts:1;
-  unsigned save_user_opts_plus:1;
-  unsigned overwrite_user_opts:1;
-  unsigned overwrite_user_opts_plus:1;
-  unsigned has_init_message:1;
-
-  mas_options_daemon_t daemon;
-  mas_options_log_t log;
+      unsigned nowatcher:1;
+      unsigned disconnect_prompt:1;
+      unsigned wait_server:1;
+      unsigned make_master_thread:1;
+      unsigned noticker:1;
+      unsigned read_user_opts:1;
+      unsigned read_user_opts_plus:1;
+      unsigned save_user_opts:1;
+      unsigned save_user_opts_plus:1;
+      unsigned overwrite_user_opts:1;
+      unsigned overwrite_user_opts_plus:1;
+      /* unsigned has_init_message:1; */
+      mas_options_daemon_t daemon;
+      mas_options_msg_t msg;
+      mas_options_log_t log;
+    } name;
+  } flag;
 
   unsigned ticker_mode;
   unsigned nomaster;

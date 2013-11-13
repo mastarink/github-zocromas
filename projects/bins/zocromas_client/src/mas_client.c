@@ -182,7 +182,8 @@ mas_client( const char *host_port )
     if ( ctrl.in_client )
     {
 #if 1
-      if ( gpopts->disconnect_prompt )
+      /* if ( gpopts->disconnect_prompt ) */
+      if ( OPT_QFLAG( gpopts, disconnect_prompt ) )
         r = 0;
       IEVAL( r, mas_client_transaction( pchannel ) );
 #else

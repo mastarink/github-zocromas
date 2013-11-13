@@ -21,10 +21,14 @@ function shn_msg ()
 }
 function shn_msgn ()
 {
-  shn_echon "$*;"  >&2
+  shn_echon "$*"  >&2
 # shn_echon $@  >&2
 # shn_echon "$*"  >&2
 # shn_echon "$@"  >&2
+}
+function shn_msgns ()
+{
+  shn_msgn "$*;"
 }
 function shn_msglist ()
 {

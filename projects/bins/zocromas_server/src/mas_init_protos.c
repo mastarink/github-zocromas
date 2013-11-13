@@ -32,7 +32,7 @@
 #include "mas_init_protos.h"
 
 int
-mas_init_load_protos( mas_options_t * popts, const char **message )
+mas_protos_load( mas_options_t * popts, const char **message )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;

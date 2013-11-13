@@ -121,11 +121,12 @@ _mas_init_pid( mas_options_t * popts, const char *shash_name )
 }
 
 int
-mas_init_pids( mas_options_t * popts, const char **message )
+mas_pids_init( mas_options_t * popts, const char **message )
 {
   int r = 0;
 
-  if ( !popts->nopidfile )
+  /* if ( !popts->nopidfile ) */
+  if ( !OPT_QFLAG( popts, nopidfile ) )
   {
     size_t shash_namebuf_size = 512;
     char *shash_namebuf = NULL;
@@ -143,11 +144,13 @@ mas_init_pids( mas_options_t * popts, const char **message )
 
       *shash_namebuf = 0;
       WMSG( "PIDSDIR: %s", popts->dir.pids );
-      if ( popts->single_instance && popts->dir.pids )
+      /* if ( popts->single_instance && popts->dir.pids ) */
+      if ( OPT_QFLAG( popts, single_instance ) && popts->dir.pids )
       {
         snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.pid", ctrl.is_client ? "client" : "server" );
       }
-      else if ( popts->single_child && popts->dir.pids )
+      /* else if ( popts->single_child && popts->dir.pids ) */
+      else if ( OPT_QFLAG( popts, single_child ) && popts->dir.pids )
       {
         snprintf( shash_namebuf, shash_namebuf_size, "/zocromas_%s.%u.pid", ctrl.is_client ? "client" : "server", getppid(  ) );
       }
@@ -168,7 +171,7 @@ mas_init_pids( mas_options_t * popts, const char **message )
 }
 
 void
-mas_destroy_pids( mas_options_t * popts )
+mas_pids_destroy( mas_options_t * popts )
 {
   CTRL_PREPARE;
   {

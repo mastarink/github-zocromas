@@ -41,51 +41,69 @@ function shn_project_path ()
     fi
     for (( i=0 ; $i < ${#MAS_SHN_PROJECTS[@]} ; i++ )) ; do
       if ! [[ "$match" ]] ; then
-	shn_msg "${i}. ${MAS_SHN_PROJECTS[$i]}"
+	shn_msgn "${i}. ${MAS_SHN_PROJECTS[$i]}"
+	if [[ "${MAS_SHN_PROJECTS_DIR}/${MAS_SHN_PROJECTS[$i]}" == "${MAS_SHN_PROJECT_DIR}" ]] ; then
+	  shn_msg "		* ${MAS_SHN_PROJECTS_DIR}/${MAS_SHN_PROJECTS[$i]} ? ${MAS_SHN_PROJECT_DIR}"
+	else
+	  shn_msg
+	fi
       elif shn_project_match ${MAS_SHN_PROJECTS[$i]} $match ; then
 	shn_dbgmsg "Match for ${MAS_SHN_PROJECTS[$i]}"
 	projects_realdir=`shn_project_dir2realpath ${MAS_SHN_PROJECTS[$i]}` || return 1
 	shn_dbgmsg "dir is '$projects_realdir'"
-	shn_echo $projects_realdir
+	shn_echo "$projects_realdir"
 	return 0
       fi
     done
     if [[ "$match" ]] ; then
       shn_errmsg "FAIL $FUNCNAME - not found $match"
     fi
+    shn_errmsg Why
   else
-    shn_errmsg "FAIL $FUNCNAME - didn't setup"
+    shn_errmsg "FAIL $FUNCNAME - didn't setup - MAS_SHN_PROJECTS not set"
   fi
   return 1
 }
 function shn_project_by_file ()
 {
+  local retcode=0
   local file=$1 ffile prj found prjdir
+  shn_dbgmsg "$file --- $rfile"
+  [[ -f "$file" ]] && rfile=`shn_realpath $file` && file=$rfile
+  shn_dbgmsg "$file --- $rfile"
   if [[ "$file" ]] ; then
-    for prj in ${MAS_SHN_PROJECTS[@]} ; do
-      prjdir="$MAS_SHN_PROJECTS_DIR/$prj"
-      if [[ -d "$prjdir" ]] ; then
-	if [[ -f "$prjdir/src/$file" ]] ; then
-	  found="$prjdir/src/$file"
-	elif [[ -f "$prjdir/src/inc/$file" ]] ; then
-	  found="$prjdir/src/inc/$file"
-	elif [[ -f "$prjdir/inc/$file" ]] ; then
-	  found="$prjdir/inc/$file"
+    if pushd $MAS_SHN_PROJECTS_DIR &>/dev/null ; then
+      [[ -f "$file" ]] && rfile=`shn_realpath $file` && file=$rfile
+      shn_dbgmsg "$file --- $rfile"
+      for prj in ${MAS_SHN_PROJECTS[@]} ; do
+	prjdir="$MAS_SHN_PROJECTS_DIR/$prj"
+	if [[ -d "$prjdir" ]] ; then
+	  if [[ -f "$file" ]] && [[ "$file" == $prjdir/* ]] ; then
+	    found="$file"
+	  elif [[ -f "$prjdir/src/$file" ]] ; then
+	    found="$prjdir/src/$file"
+	  elif [[ -f "$prjdir/src/inc/$file" ]] ; then
+	    found="$prjdir/src/inc/$file"
+	  elif [[ -f "$prjdir/inc/$file" ]] ; then
+	    found="$prjdir/inc/$file"
+	  fi
+	  if [[ "$found" ]]
+  #		  || ffile=`ls -1 $prjdir/src/*$file* 2>/dev/null` \
+  #		  || ffile=`ls -1 $prjdir/src/inc/*$file* 2>/dev/null` \
+  #		  || ffile=`ls -1 $prjdir/inc/*$file* 2>/dev/null`
+	  then
+	    echo -n $prj
+	    retcode=0
+	    break
+	  fi
 	fi
-	if [[ "$found" ]] \
-		  || ffile=`ls -1 $prjdir/src/*$file* 2>/dev/null` \
-		  || ffile=`ls -1 $prjdir/src/inc/*$file* 2>/dev/null` \
-		  || ffile=`ls -1 $prjdir/inc/*$file* 2>/dev/null`
-	then
-	  echo -n $prj
-	  return 0
-	fi
-      fi
-    done
+      done
+      popd &>/dev/null
+    fi
   else
-    return 1
+    retcode=1
   fi
-  return 1
+  return $retcode
 }
 function shn_project_files ()
 {
@@ -109,26 +127,33 @@ function shn_project_file_cd ()
 {
   local prj file=$1
   prj=`shn_project_by_file $@` || return $?
-# shn_msg "$file => $prj"
+  shn_dbgmsg "$file => $prj"
   shn_project_cd "$prj"
 }
 function shn_file_edit ()
 {
-  shn_project_file_cd $@
-  gvim_caller2 $@
+  if [[ "$@" ]] ; then
+    shn_project_file_cd $@
+    gvim_caller2 $@
+    shn_project_cd -
+  else
+    gvim_caller2
+  fi
 }
 function shn_project_cd ()
 {
   local p prj
-  prj=$1
+  prj=${1:-${MAS_SHN_PROJECT_NAME:-zoctypes}}
   if [[ "$prj" == '-' ]] ; then
     prj=$MAS_SHN_PREV_PROJECT_NAME
   fi
   p=`shn_project_path $prj` || return 1
+# p=`shn_project_path $prj` || { cd "${MAS_SHN_PROJECT_DIR}" ; return 1 ; }
   shn_dbgmsg "cd to '$p'"
   MAS_SHN_PREV_PROJECT_NAME=$MAS_SHN_PROJECT_NAME
   cd $p >&2 || return $?
   shn_setup_projects
+  return 0
 }
 function shn_project_each ()
 {
@@ -139,18 +164,21 @@ function shn_project_each ()
   if [[ "${MAS_SHN_ENABLED_PROJECTS[@]}" ]]  ; then
     shn_dbgmsg "1 At each `pwd`"
     for (( project_index=0 ; $project_index < ${#MAS_SHN_ENABLED_PROJECTS[@]} ; project_index++ )) ; do
-      shn_dbgmsg "2 At each `pwd`"
-      shn_dbgmsg "--- ${MAS_SHN_ENABLED_PROJECTS[$project_index]} ? $match"
-      if shn_project_match ${MAS_SHN_ENABLED_PROJECTS[$project_index]} $match ; then
-        projects_realdir=`shn_project_dir2realpath ${MAS_SHN_ENABLED_PROJECTS[$project_index]}` || return 1
-	pushd $projects_realdir &>/dev/null
-	 shn_dbgmsg "EACH `pwd` -- $@"
+    shn_dbgmsg "2 At each `pwd`"
+    shn_dbgmsg "--- ${MAS_SHN_ENABLED_PROJECTS[$project_index]} ? $match"
+    shn_msgn "--- ${MAS_SHN_ENABLED_PROJECTS[$project_index]}		"
+    if shn_project_match ${MAS_SHN_ENABLED_PROJECTS[$project_index]} $match ; then
+      projects_realdir=`shn_project_dir2realpath ${MAS_SHN_ENABLED_PROJECTS[$project_index]}` || return 1
+      pushd $projects_realdir &>/dev/null
+       shn_dbgmsg "EACH `pwd` -- $@"
+       if true ; then
 	 $@ || { retcode=$? ; popd &>/dev/null ; break ; }
-	 shn_dbgmsg "3 At each `pwd`"
-	popd &>/dev/null
-	shn_dbgmsg "4 At each `pwd`"
-      fi
-      shn_dbgmsg "5 At each `pwd`"
+       fi
+       shn_dbgmsg "3 At each `pwd`"
+      popd &>/dev/null
+      shn_dbgmsg "4 At each `pwd`"
+    fi
+    shn_dbgmsg "5 At each `pwd`"
     done
   fi
   return $retcode
@@ -164,7 +192,8 @@ function shn_load ()
   local retcode=0
   pushd &>/dev/null
   if ! [[ -L shn ]] && type -t shn_project_cd &>/dev/null ; then
-    shn_project_cd zoctypes
+    shn_project_cd
+#   "${MAS_SHN_PROJECT_NAME:-zoctypes}"
   fi
   if [[ -f shn/libwork.bash ]] ; then
     . shn/libwork.bash

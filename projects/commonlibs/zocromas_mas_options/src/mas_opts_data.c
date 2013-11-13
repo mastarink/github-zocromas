@@ -52,59 +52,61 @@ static mas_options_t g_opts = {
 };
 #else
 static mas_options_t g_opts = {
-  .f = {
-        .bit = {
-                .msg_notice = 1,
-                .msg_watch = 0,
-                .msg_io = 0,
+  .flag.name = {
+                .read_user_opts = 0,
+                .read_user_opts_plus = 0,
+                .save_user_opts = 0,
+                .save_user_opts_plus = 0,
+                .disconnect_prompt = 1,
+                .wait_server = 0,
+                .listener_single = 0,
+                .transaction_single = 0,
+                .log = {.enable = 0,.run = 0,}
+                ,
+                /* .nologger = 0, */
+                /* .nolog = 0,    */
+                .noticker = 0,
+                .nowatcher = 0,
+                .nomessages = 0,
 
-                .msg_trace = 0, /* tMSG */
-                .msg_trace_main = 1,
-                .msg_trace_listener = 1,
-                .msg_trace_transaction = 1,
+                .daemon = {
+                           .disable = 0,
+                           .disable_redirect_std = 0,
+                           .disable_close_std = 0,
+                           .disable_setsid = 0,
+                           .disable_chdir = 0,
+                           .sys = 0,
+                           },
+                .msg = {
+                        .name = {
+                                 .msg_notice = 1,
+                                 .msg_watch = 0,
+                                 .msg_io = 0,
 
-                .msg_main = 0,  /* mMSG */
+                                 .msg_trace = 0, /* tMSG */
+                                 .msg_trace_main = 1,
+                                 .msg_trace_listener = 1,
+                                 .msg_trace_transaction = 1,
+
+                                 .msg_main = 0, /* mMSG */
 /* respoder */
-                .msg_transaction = 1,
-                .msg_listen = 0,
-                .msg_wait = 1,
-                .msg_thread = 0,
-                .msg_signal = 1,
-                .msg_cmd = 1,
-                .msg_mem = 0,
-                .msg_funline = 1,
-                }
-        }
-  ,
-  .read_user_opts = 0,
-  .read_user_opts_plus = 0,
-  .save_user_opts = 0,
-  .save_user_opts_plus = 0,
-  .disconnect_prompt = 1,
-  .wait_server = 0,
-  .listener_single = 0,
-  .transaction_single = 0,
-  .log = {.enable = 0,.run = 0,}
-  ,
-  /* .nologger = 0, */
-  /* .nolog = 0,    */
-  .noticker = 0,
-  .nowatcher = 0,
+                                 .msg_transaction = 1,
+                                 .msg_listen = 0,
+                                 .msg_wait = 1,
+                                 .msg_thread = 0,
+                                 .msg_signal = 1,
+                                 .msg_cmd = 1,
+                                 .msg_mem = 0,
+                                 .msg_funline = 1,
+                                 }
+                        },
+
+                },
+  .exitsleep = 0,
   .nomaster = 0,
   .nolistener = 0,
   .nolisten = 0,
-  .nomessages = 0,
-  .exitsleep = 0,
 
-  .daemon = {
-             .disable = 0,
-             .disable_redirect_std = 0,
-             .disable_close_std = 0,
-             .disable_setsid = 0,
-             .disable_chdir = 0,
-             .sys = 0,
-             }
-  ,
   /* .nodaemon = 0,       */
   /* .noredirect_std = 0, */
   /* .noclose_std = 0,    */

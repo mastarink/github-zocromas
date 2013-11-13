@@ -224,7 +224,8 @@ mas_watcher( void )
         if ( nlistener_open == 0 && ntransaction == 0 /* && nlisteners_ever_open */  )
           stop = 1;
       }
-      else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && gpopts->make_master_thread )
+      /* else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && gpopts->make_master_thread ) */
+      else if ( !ctrl.threads.n.main.thread || ( !ctrl.threads.n.master.thread && OPT_QFLAG( gpopts, make_master_thread ) )
                 || !ctrl.threads.n.watcher.thread || !ctrl.threads.n.logger.thread || !ctrl.threads.n.ticker.thread )
       {
         HMSG( "WATCHER main:%d; master:%d", ctrl.threads.n.main.thread ? 1 : 0, ctrl.threads.n.master.thread ? 1 : 0 );

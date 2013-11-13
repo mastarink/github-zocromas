@@ -8,11 +8,11 @@ commonlibs/zocromas_mas_io
 commonlibs/zocromas_mas_log
 commonlibs/zocromas_mas_channel
 commonlibs/zocromas_mas_varvec
-commonlibs/zocromas_mas_autoobject
-commonlibs/zocromas_mas_autoset
 commonlibs/zocromas_mas_varset
 commonlibs/zocromas_mas_fileinfo
 commonlibs/zocromas_mas_modules
+commonlibs/zocromas_mas_autoobject
+commonlibs/zocromas_mas_autoset
 commonlibs/zocromas_mas_messageio
 commonlibs/zocromas_mas_transaction
 commonlibs/zocromas_mas_listener

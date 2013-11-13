@@ -143,10 +143,12 @@ mas_init_child_process( mas_options_t * popts, const char **message )
   HMSG( "INIT CHILD pid:%u(%u)@%u", getpid(  ), ctrl.threads.n.daemon.pid, getppid(  ) );
 
   /* sleep(200); */
-  /* mas_destroy_server(  ); */
-  if ( !popts->daemon.disable_setsid )
+  /* mas_server_destroy(  ); */
+  /* if ( !popts->daemon.disable_setsid ) */
+  if ( !OPT_QFLAG( popts, daemon.disable_setsid ) )
     IEVAL( r, setsid(  ) );
-  if ( !popts->daemon.disable_chdir )
+  /* if ( !popts->daemon.disable_chdir ) */
+  if ( !OPT_QFLAG( popts, daemon.disable_chdir ) )
     IEVAL( r, chdir( "/" ) );
   if ( popts->group )
   {
@@ -213,7 +215,7 @@ mas_init_parent_process( mas_options_t * popts, const char **message )
 }
 
 int
-mas_init_daemon( mas_options_t * popts, const char **message )
+mas_daemon_init( mas_options_t * popts, const char **message )
 {
   EVAL_PREPARE;
   CTRL_PREPARE;
@@ -225,10 +227,13 @@ mas_init_daemon( mas_options_t * popts, const char **message )
     r = 0;
     HMSG( "INIT DAEMON >" );
     MAS_LOG( "init daemonize" );
-    if ( popts->daemon.sys )
+    /* if ( popts->daemon.sys ) */
+    if ( OPT_QFLAG( popts, daemon.sys ) )
     {
-      popts->daemon.disable_setsid = 1;
-      popts->daemon.disable_chdir = 1;
+      /* popts->daemon.disable_setsid = 1; */
+      OPT_SFLAG( popts, daemon.disable_setsid, 1 );
+      /* popts->daemon.disable_chdir = 1; */
+      OPT_SFLAG( popts, daemon.disable_chdir, 1 );
       IEVAL( r, daemon( 0, 0 ) );
       HMSG( "INIT DAEMON SYS" );
       IEVAL( r, mas_init_child_process( popts, NULL ) );

@@ -415,7 +415,8 @@ mas_transaction_start( mas_lcontrol_t * plcontrol )
       if ( prcontrol )
       {
         ctrl.clients_came0++;
-        if ( plcontrol->popts->transaction_single )
+        /* if ( plcontrol->popts->flag.name.transaction_single ) */
+        if ( OPT_QFLAG( plcontrol->popts, transaction_single ) )
         {
           mas_transaction( prcontrol );
           mas_transaction_cleanup( prcontrol );

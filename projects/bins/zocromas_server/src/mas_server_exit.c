@@ -31,7 +31,7 @@
 #include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/modules/mas_modules_commands_eval.h>
 
-/* mas_destroy_server */
+/* mas_server_destroy */
 #include "mas_init_server.h"
 
 #include <mastar/listener/mas_listeners.h>
@@ -55,8 +55,8 @@ mas_atexit( void )
     HMSG( "AT EXIT %s: logQ: %lu - %lu = %lu", name_buffer, ctrl.log_q_came, ctrl.log_q_gone, ctrl.log_q_came - ctrl.log_q_gone );
   }
 
-  mas_destroy_server( gpopts );
-  /* mas_destroy_server( MAS_PASS_OPTS_REF ); */
+  mas_server_destroy( gpopts );
+  /* mas_server_destroy( MAS_PASS_OPTS_REF ); */
 #ifdef MAS_TRACEMEM
   {
     extern unsigned long memory_balance;

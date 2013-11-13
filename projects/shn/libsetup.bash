@@ -1,18 +1,13 @@
 declare -gx MAS_SHN_PROJECTS_DIR MAS_SHN_PRJTOP_DIR MAS_SHN_PROJECT_NAME MAS_SHN_PREV_PROJECT_NAME 
 declare -gx MAS_SHN_PROJECT_FULLNAME MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_RDIR
-declare -A MAS_SHN_DIR
 declare MAS_SHN_DEBUG
-declare -gx MAS_SHN_FLAVOUR MAS_SHN_REAL_THIS
-declare -a MAS_SHN_PROJECTS
-declare -a MAS_SHN_DISABLED_PROJECTS
-declare -a MAS_SHN_ENABLED_PROJECTS
-declare -A MAS_SHN_HASH_PROJECTS
-declare -A MAS_SHN_LAST_ACTION
+declare -gx MAS_SHN_FLAVOUR
 
 # MAS_SHN_DEBUG=yes
 
 function shn_setup_zero ()
 {
+  declare -gx MAS_SHN_REAL_THIS
   local here_dir=$PWD
   local this=${BASH_SOURCE[0]}
   local this_dir=$( shn_dirname $this )
@@ -52,30 +47,31 @@ fi
 function shn_setup_global_dirs
 {
   if [[ "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] ; then
-    MAS_SHN_DIR[top]=`shn_realpath "$MAS_SHN_PROJECTS_DIR/.."`
-    MAS_SHN_DIR[admin]="${MAS_SHN_DIR[top]}/admin"
-    MAS_SHN_DIR[save]="${MAS_SHN_DIR[admin]}/saved"
-    MAS_SHN_DIR[savedist]="${MAS_SHN_DIR[save]}/dist"
-    MAS_SHN_DIR[savegentoo]="${MAS_SHN_DIR[save]}/gentoo"
-    MAS_SHN_DIR[ebuilds]="$MAS_SHN_PROJECTS_DIR/ebuilds"
-    MAS_SHN_DIR[ebuild]="${MAS_SHN_DIR[ebuilds]}/mas-tar"
-    MAS_SHN_DIR[install]="${MAS_SHN_DIR[admin]}/install"
-    MAS_SHN_DIR[flavour]="${MAS_SHN_DIR[install]}/${MAS_SHN_FLAVOUR:-default}"
-    MAS_SHN_DIR[error]="/tmp"
-    MAS_SHN_DIR[files]=$MAS_SHN_PROJECTS_DIR/files
+# echo " B `declare -p MAS_SHN_DIRS`" >&2
+    MAS_SHN_DIRS[top]=`shn_realpath "$MAS_SHN_PROJECTS_DIR/.."`
+    MAS_SHN_DIRS[admin]="${MAS_SHN_DIRS[top]}/admin"
+    MAS_SHN_DIRS[save]="${MAS_SHN_DIRS[admin]}/saved"
+    MAS_SHN_DIRS[savedist]="${MAS_SHN_DIRS[save]}/dist"
+    MAS_SHN_DIRS[savegentoo]="${MAS_SHN_DIRS[save]}/gentoo"
+    MAS_SHN_DIRS[ebuilds]="$MAS_SHN_PROJECTS_DIR/ebuilds"
+    MAS_SHN_DIRS[ebuild]="${MAS_SHN_DIRS[ebuilds]}/mas-tar"
+    MAS_SHN_DIRS[install]="${MAS_SHN_DIRS[admin]}/install"
+    MAS_SHN_DIRS[flavour]="${MAS_SHN_DIRS[install]}/${MAS_SHN_FLAVOUR:-default}"
+    MAS_SHN_DIRS[error]="/tmp"
+    MAS_SHN_DIRS[files]="$MAS_SHN_PROJECTS_DIR/files"
 
     for id in admin save savedist savegentoo ebuilds ebuild install flavour error files ; do
-      if [[ "${MAS_SHN_DIR[$id]}" ]] && ! [[ -d "${MAS_SHN_DIR[$id]}" ]] ; then
-	shn_mkdir "${MAS_SHN_DIR[$id]}" || return 1
-	shn_msg created ${MAS_SHN_DIR[$id]}
+      if [[ "${MAS_SHN_DIRS[$id]}" ]] && ! [[ -d "${MAS_SHN_DIRS[$id]}" ]] ; then
+	shn_mkdir "${MAS_SHN_DIRS[$id]}" || return 1
+	shn_msg created ${MAS_SHN_DIRS[$id]}
       fi
     done
 
     shn_dbgmsg "MAS_SHN_PROJECTS_DIR:$MAS_SHN_PROJECTS_DIR"
     shn_dbgmsg "MAS_SHN_FLAVOUR:$MAS_SHN_FLAVOUR"
-    shn_dbgmsg "top dir:${MAS_SHN_DIR[top]}"
-    shn_dbgmsg "admin dir:${MAS_SHN_DIR[admin]}"
-    shn_dbgmsg "install dir:${MAS_SHN_DIR[install]}"
+    shn_dbgmsg "top dir:${MAS_SHN_DIRS[top]}"
+    shn_dbgmsg "admin dir:${MAS_SHN_DIRS[admin]}"
+    shn_dbgmsg "install dir:${MAS_SHN_DIRS[install]}"
   else
     shn_errmsg "can't set dir's"
     return 1
@@ -85,22 +81,23 @@ function shn_setup_global_dirs
 function shn_setup_project_dirs
 {
   if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
-    MAS_SHN_DIR[configure]=$MAS_SHN_PROJECT_DIR
-    MAS_SHN_DIR[aux]=$MAS_SHN_PROJECT_DIR/.auxdir
-    MAS_SHN_DIR[mased]=$MAS_SHN_PROJECT_DIR/mased
-    MAS_SHN_DIR[debug]=$MAS_SHN_PROJECT_DIR/debug
-    MAS_SHN_DIR[build]="${MAS_SHN_DIR[aux]}/.build"
-    MAS_SHN_DIR[buildsrc]="${MAS_SHN_DIR[build]}/src"
-    MAS_SHN_DIR[m4]="${MAS_SHN_DIR[aux]}/m4"
-    MAS_SHN_DIR[error]="/tmp"
+    MAS_SHN_DIRS[configure]=$MAS_SHN_PROJECT_DIR
+    MAS_SHN_DIRS[aux]=$MAS_SHN_PROJECT_DIR/.auxdir
+    MAS_SHN_DIRS[mased]=$MAS_SHN_PROJECT_DIR/mased
+    MAS_SHN_DIRS[debug]=$MAS_SHN_PROJECT_DIR/debug
+    MAS_SHN_DIRS[build]="${MAS_SHN_DIRS[aux]}/.build"
+    MAS_SHN_DIRS[buildsrc]="${MAS_SHN_DIRS[build]}/src"
+    MAS_SHN_DIRS[m4]="${MAS_SHN_DIRS[aux]}/m4"
+    MAS_SHN_DIRS[error]="/tmp"
+#  echo " C `declare -p MAS_SHN_DIRS`" >&2
 
-    shn_dbgmsg "aux:${MAS_SHN_DIR[aux]}"
-    shn_dbgmsg "build:${MAS_SHN_DIR[build]}"
+    shn_dbgmsg "aux:${MAS_SHN_DIRS[aux]}"
+    shn_dbgmsg "build:${MAS_SHN_DIRS[build]}"
 
     for id in aux build m4 mased debug ; do
-      if [[ "${MAS_SHN_DIR[$id]}" ]] && ! [[ -d "${MAS_SHN_DIR[$id]}" ]] ; then
-	shn_mkdir "${MAS_SHN_DIR[$id]}" || return 1
-	shn_msg created ${MAS_SHN_DIR[$id]}
+      if [[ "${MAS_SHN_DIRS[$id]}" ]] && ! [[ -d "${MAS_SHN_DIRS[$id]}" ]] ; then
+	shn_mkdir "${MAS_SHN_DIRS[$id]}" || return 1
+	shn_msg created ${MAS_SHN_DIRS[$id]}
       fi
     done
   else
@@ -144,6 +141,12 @@ function shn_setup_projects ()
 {
   local retcode=0
   local i
+# unset MAS_SHN_DIRS
+  declare -p MAS_SHN_DIRS &>/dev/null || declare -gx -A MAS_SHN_DIRS
+  declare -p MAS_SHN_ENABLED_PROJECTS &>/dev/null || declare -gx -a MAS_SHN_ENABLED_PROJECTS
+  declare -p MAS_SHN_DISABLED_PROJECTS &>/dev/null || declare -gx -a MAS_SHN_DISABLED_PROJECTS
+  declare -p MAS_SHN_HASH_PROJECTS &>/dev/null || declare -gx -A MAS_SHN_HASH_PROJECTS
+  declare -p MAS_SHN_PROJECTS &>/dev/null || declare -gx -a MAS_SHN_PROJECTS
   if [[ "$shn_dont_setup" ]]  ; then return 0 ; fi
   shn_dbgmsg "$FUNCNAME"
   shn_dbgmsg "S1 `pwd`" >&2
@@ -270,9 +273,10 @@ function shn_initial_mased_vim
   if [[ -d mased ]] ; then
     if pushd mased &>/dev/null ; then
        for typf in sh shn ac ; do
+# echo " D `declare -p MAS_SHN_DIRS`" >&2
         fn="${typf}.mased.vim"
-	if [[ -f "${MAS_SHN_DIR[files]}/mased/$fn" ]] ; then
-	  file=`shn_realpath --relative-to=. ${MAS_SHN_DIR[files]}/mased/$fn` || { retval=$? ; break ; }
+	if [[ -f "${MAS_SHN_DIRS[files]}/mased/$fn" ]] ; then
+	  file=`shn_realpath --relative-to=. ${MAS_SHN_DIRS[files]}/mased/$fn` || { retval=$? ; break ; }
 	  link=$( shn_basename $file ) || { retval=$? ; break ; }
 	  if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
 	    shn_dbgmsg "$file -> $link"
@@ -280,7 +284,7 @@ function shn_initial_mased_vim
 	    shn_msg created link $link
 	  fi
 	else
-	  shn_errmsg ${MAS_SHN_DIR[files]}/mased/$fn
+	  shn_errmsg ${MAS_SHN_DIRS[files]}/mased/$fn
 	  retval=1
 	  break
 	fi
@@ -319,11 +323,12 @@ function shn_setup_additional ()
     shn_errmsg setup additional - no configure.ac
     return 1
   fi
-  if [[ "${MAS_SHN_DIR[files]}" ]] && [[ -d "${MAS_SHN_DIR[files]}" ]] ; then 
+# echo " E `declare -p MAS_SHN_DIRS`" >&2
+  if [[ "${MAS_SHN_DIRS[files]}" ]] && [[ -d "${MAS_SHN_DIRS[files]}" ]] ; then 
   #  mased/sh.mased.vim
     for fn in gvim-funcs.vim  gvimrc-mastar  gvim-vimenter.vim  vimrc-mastar zocversion.txt ; do
-      if [[ -f "${MAS_SHN_DIR[files]}/$fn" ]] ; then
-        file=`shn_realpath --relative-to=. ${MAS_SHN_DIR[files]}/$fn` || return 1
+      if [[ -f "${MAS_SHN_DIRS[files]}/$fn" ]] ; then
+        file=`shn_realpath --relative-to=. ${MAS_SHN_DIRS[files]}/$fn` || return 1
 	link=$( shn_basename $file )
 	if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
 	  shn_dbgmsg "$file -> $link"
@@ -331,12 +336,12 @@ function shn_setup_additional ()
 	  shn_msg created link $link
 	fi
       else
-        shn_errmsg "no file '${MAS_SHN_DIR[files]}/$fn'"
+        shn_errmsg "no file '${MAS_SHN_DIRS[files]}/$fn'"
 	return 1
       fi
     done
   else
-    shn_errmsg "shn_setup_additional - ${MAS_SHN_DIR[files]}"
+    shn_errmsg "shn_setup_additional - ${MAS_SHN_DIRS[files]}"
     return 1
   fi
   for fn in sh shn m4zoc ; do

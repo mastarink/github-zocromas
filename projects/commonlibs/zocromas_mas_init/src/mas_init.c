@@ -39,6 +39,7 @@
 #include <mastar/options/mas_opts_save.h>
 /* #include <mastar/options/mas_opts_restore.h> */
 /* #include <mastar/options/mas_cli_opts.h> */
+#include <mastar/options/mas_cli_opts_init.h>
 
 #include "mas_sig.h"
 #include "mas_init.h"
@@ -64,30 +65,30 @@ more:
 
 */
 
-static int
-mas_init_argv( mas_options_t * popts, int argc, char **argv, char **env )
-{
-  CTRL_PREPARE;
-  ctrl.launchervv.v = argv;
-  ctrl.launchervv.c = argc;
-  ctrl.launcherev.v = env;
-  /* if ( argc > 1 ) */
-  {
-    for ( int ia = 0; ia < argc; ia++ )
-    {
-      popts->argvv.c = mas_add_argv_arg( popts->argvv.c, &popts->argvv.v, argv[ia] );
-    }
-    /* for ( int ia = 0; ia < argc; ia++ )                              */
-    /* {                                                                */
-    /*   mMSG( "@: %d of %d. arg:'%s'", ia, popts-> argvv.c, popts-> argvv.v[ia] ); */
-    /* }                                                                */
-  }
-  HMSG( "INIT ARGV %d", popts->argvv.c );
-  return popts->argvv.c;
-}
+/* static int                                                                             */
+/* mas_argv_init( mas_options_t * popts, int argc, char **argv, char **env )              */
+/* {                                                                                      */
+/*   CTRL_PREPARE;                                                                        */
+/*   ctrl.launchervv.v = argv;                                                            */
+/*   ctrl.launchervv.c = argc;                                                            */
+/*   ctrl.launcherev.v = env;                                                             */
+/*   (* if ( argc > 1 ) *)                                                                */
+/*   {                                                                                    */
+/*     for ( int ia = 0; ia < argc; ia++ )                                                */
+/*     {                                                                                  */
+/*       popts->argvv.c = mas_add_argv_arg( popts->argvv.c, &popts->argvv.v, argv[ia] );  */
+/*     }                                                                                  */
+/*     (* for ( int ia = 0; ia < argc; ia++ )                              *)             */
+/*     (* {                                                                *)             */
+/*     (*   mMSG( "@: %d of %d. arg:'%s'", ia, popts-> argvv.c, popts-> argvv.v[ia] ); *) */
+/*     (* }                                                                *)             */
+/*   }                                                                                    */
+/*   HMSG( "INIT ARGV %d", popts->argvv.c );                                              */
+/*   return popts->argvv.c;                                                               */
+/* }                                                                                      */
 
 int
-mas_init_env( mas_options_t * popts )
+mas_env_init( mas_options_t * popts )
 {
   char *seopts = NULL;
 
@@ -129,10 +130,6 @@ error_handler_at_init( const char *func, int line, int issys, int rcode, int ier
     *perrno = 0;
   return rcode;
 }
-
-
-
-
 
 static int
 mas_pre_init_runpath( char *runpath )
@@ -216,8 +213,8 @@ mas_init( mas_options_t * popts, int argc, char **argv, char **env )
   IEVAL( r, mas_pre_init_runpath( argv[0] ) );
   WMSG( "(%d) PRE-INIT", r );
 #ifdef MAS_USE_CURSES
-  /* // r = mas_init_curses(  ); */
-  /* IEVAL( r, mas_init_curses(  ) ); */
+  /* // r = mas_curses_init(  ); */
+  /* IEVAL( r, mas_curses_init(  ) ); */
 #endif
 
 
@@ -227,14 +224,14 @@ mas_init( mas_options_t * popts, int argc, char **argv, char **env )
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts, ( unsigned long ) ctrl.stamp.lts,
            ( unsigned long ) ctrl.stamp.prev_lts );
 
-  if ( !( mas_init_argv( popts, argc, argv, env ) > 1 ) )
-    IEVAL( r, mas_init_env( popts ) );
+  if ( !( mas_cli_options_argv_init( popts, argc, argv, env ) > 1 ) )
+    IEVAL( r, mas_env_init( popts ) );
   /* *argv[0]='Z'; */
 
   /* HMSG( "popts-> argvv.v[0]: %s", popts-> argvv.v[0] ); */
-  /* mas_init_message(  ); */
+  /* mas_message_init(  ); */
   /* atexit( atexit_fun ); */
-  /* IEVAL( r, mas_init_sig(  ) ); */
+  /* IEVAL( r, mas_sig_init(  ) ); */
 
   /* IEVAL( r, mas_cli_options_init( popts, NULL ) ); */
   /* IEVAL( r, mas_ctrl_init( popts, NULL ) );        */
@@ -433,48 +430,6 @@ mas_destroy( mas_options_t * popts )
 
   ctrl.log_disabled = 1;
 
-  if ( ctrl.logpath )
-    mas_free( ctrl.logpath );
-  ctrl.logpath = NULL;
-  {
-    if ( ctrl.argvname )
-      mas_free( ctrl.argvname );
-    ctrl.argvname = NULL;
-
-    if ( ctrl.progname )
-      mas_free( ctrl.progname );
-    ctrl.progname = NULL;
-
-    if ( ctrl.exepath )
-      mas_free( ctrl.exepath );
-    ctrl.exepath = NULL;
-
-    if ( ctrl.exename )
-      mas_free( ctrl.exename );
-    ctrl.exename = NULL;
-    {
-      if ( ctrl.cmdline )
-        mas_free( ctrl.cmdline );
-      ctrl.cmdline = NULL;
-      if ( ctrl.cmdargv.c && ctrl.cmdargv.v )
-      {
-        mas_del_argv( ctrl.cmdargv.c, ctrl.cmdargv.v, 0 );
-      }
-      ctrl.cmdargv.c = 0;
-      ctrl.cmdargv.v = NULL;
-      if ( ctrl.cmdenv )
-        mas_free( ctrl.cmdenv );
-    }
-    {
-      ctrl.cmdenv = NULL;
-      if ( ctrl.cmdenvv.c && ctrl.cmdenvv.v )
-      {
-        mas_del_argv( ctrl.cmdenvv.c, ctrl.cmdenvv.v, 0 );
-      }
-      ctrl.cmdenvv.c = 0;
-      ctrl.cmdenvv.v = NULL;
-    }
-  }
   IEVAL( r, mas_ctrl_destroy(  ) );
   r = 0;
 

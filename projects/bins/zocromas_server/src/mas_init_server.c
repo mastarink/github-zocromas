@@ -36,6 +36,7 @@
 
 /* mas_in_thread_end */
 #include <mastar/thtools/mas_thread_tools.h>
+#include <mastar/options/mas_cli_opts_data.h>
 
 #include "mas_init_threads.h"
 #include "mas_init_protos.h"
@@ -122,7 +123,7 @@ more:
 /* }                                                                                                 */
 /* #endif                                                                                            */
 void
-mas_destroy_server( mas_options_t * popts )
+mas_server_destroy( mas_options_t * popts )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;
@@ -193,7 +194,8 @@ mas_destroy_server( mas_options_t * popts )
   HMSG( "TO DESTROY MODULES" );
   mas_modules_unregister(  );
 
-  mas_destroy_pids( popts );
+  mas_pids_destroy( popts );
+  mas_cli_options_data_destroy( popts );
   /* {                                                      */
   /*   if ( ctrl.pidfd > 0 )                                */
   /*   {                                                    */

@@ -47,7 +47,7 @@ sigusr2_han( int s )
 
 
 int
-mas_init_sig( mas_options_t * popts, const char **message )
+mas_sig_init( mas_options_t * popts, const char **message )
 {
 #if 0
   signal( SIGPIPE, sigpipe_han );

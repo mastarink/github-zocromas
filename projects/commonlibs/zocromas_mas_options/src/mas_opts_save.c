@@ -152,9 +152,9 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                                "max_config_backup=%u\nmessages=%u\n"
                                "default_port=%u\nsave_user_opts=%u\nsave_user_opts_plus=%u\n" "restart_sleep=%lg\n"
                                "# -\n", popts->env_optsname, popts->env_hostname, popts->dir.history,
-                               popts->dir.post, popts->dir.log, popts->log.enable,
-                               popts->max_config_backup, !popts->nomessages, popts->default_port,
-                               popts->save_user_opts, popts->save_user_opts_plus, popts->restart_sleep ) );
+                               popts->dir.post, popts->dir.log, OPT_QFLAG( popts, log.enable ),
+                               popts->max_config_backup, !OPT_QFLAG( popts, nomessages ), popts->default_port,
+                               OPT_QFLAG( popts, save_user_opts ), OPT_QFLAG( popts, save_user_opts_plus ), popts->restart_sleep ) );
             if ( r > 0 )
               rtot += r;
           }
@@ -164,15 +164,18 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                    fprintf( f,
                             "# server\ndaemon=%u\nread_user_opts=%u\nread_user_opts_plus=%u\n"
                             "single_instance=%u\nsingle_child=%u\nlogger=%d\nticker=%d\nwatcher=%d\nmodsdir=%s\n"
-                            "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, popts->read_user_opts, popts->read_user_opts_plus,
-                            popts->single_instance, popts->single_child, popts->log.run, !popts->noticker, !popts->nowatcher,
-                            popts->dir.mods, popts->dir.pids, popts->dir.proto ) );
+                            "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, OPT_QFLAG( popts, read_user_opts ),
+                            OPT_QFLAG( popts, read_user_opts_plus ), OPT_QFLAG( popts, single_instance ), OPT_QFLAG( popts, single_child ),
+                            OPT_QFLAG( popts, log.run ), !OPT_QFLAG( popts, noticker ), !OPT_QFLAG( popts, nowatcher ), popts->dir.mods,
+                            popts->dir.pids, popts->dir.proto ) );
             if ( r > 0 )
               rtot += r;
           }
           else if ( ctrl.is_client )
           {
-            IEVAL( r, fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", popts->disconnect_prompt, popts->wait_server ) );
+            IEVAL( r,
+                   fprintf( f, "# client\ndisconnect_prompt=%u\nwait_server=%u\n# -\n", OPT_QFLAG( popts, disconnect_prompt ),
+                            OPT_QFLAG( popts, wait_server ) ) );
             if ( r > 0 )
               rtot += r;
           }
@@ -246,12 +249,12 @@ mas_opts_save_user( mas_options_t * popts, const char *dirname, const char *file
 {
   int r = -__LINE__;
 
-  if ( popts->save_user_opts )
+  if ( OPT_QFLAG( popts, save_user_opts ) )
   {
     r = 0;
     EVAL_PREPARE;
     MAS_LOG( "to save opts %s", filename );
-    IEVAL( r, _mas_opts_save( popts, dirname, filename, 1, popts->overwrite_user_opts ) );
+    IEVAL( r, _mas_opts_save( popts, dirname, filename, 1, OPT_QFLAG( popts, overwrite_user_opts ) ) );
     MAS_LOG( "saved opts : %d", r );
   }
   else
@@ -300,10 +303,10 @@ mas_opts_save_user_plus( mas_options_t * popts, const char *dirname, const char 
   va_list args;
 
   va_start( args, filename );
-  if ( popts->save_user_opts_plus )
+  if ( OPT_QFLAG( popts, save_user_opts_plus ) )
   {
     MAS_LOG( "to save opts plus %s", filename );
-    IEVAL( r, _mas_opts_save_plus( popts, dirname, filename, 1, popts->overwrite_user_opts_plus, args ) );
+    IEVAL( r, _mas_opts_save_plus( popts, dirname, filename, 1, OPT_QFLAG( popts, overwrite_user_opts_plus ), args ) );
     MAS_LOG( "saved opts plus : %d", r );
   }
   else

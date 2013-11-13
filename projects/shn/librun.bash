@@ -1,6 +1,6 @@
 function shn_runname ()
 {
-  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
   local bin1 bin2
   if [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_NAME" ]]; then
     bin1="$bsrc/$MAS_SHN_PROJECT_NAME"
@@ -16,7 +16,7 @@ function shn_runname ()
 function shn_run ()
 { 
   local retcode=0
-  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir
@@ -48,7 +48,7 @@ function shn_run ()
 function shn_debug ()
 {
   local retcode=0
-  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir debugdir
@@ -104,7 +104,7 @@ function shn_debug ()
 function shn_core_debug ()
 {
   local retcode=0 corename coredir="/tmp"
-  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir debugdir
@@ -147,7 +147,7 @@ function shn_core_debug ()
 function shn_core_debug_installed ()
 {
   local retcode=0 corename coredir="/tmp"
-  local bsrc="${MAS_SHN_DIR[buildsrc]}"
+  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=$1
   shift

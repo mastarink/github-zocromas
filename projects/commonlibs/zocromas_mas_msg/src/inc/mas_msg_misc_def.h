@@ -6,7 +6,7 @@
 #    include <mastar/types/mas_opts_types.h>
 extern mas_options_t *gpopts __attribute__ ( ( weak ) );
 
-#    define MAS_MSG_BIT(testbit) ( gpopts ? ( gpopts->f.bit.testbit ? 1 : 0 ) : 0 )
+#    define MAS_MSG_BIT(testbit) ( gpopts ? ( gpopts->flag.name.msg.name.testbit ? 1 : 0 ) : 0 )
 #  endif
 
 #  define memMSG(...) if (MAS_MSG_BIT(msg_mem)){MFP("%s:%u:", FL);MFP(__VA_ARGS__);MFP("\n");}

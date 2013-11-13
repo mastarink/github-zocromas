@@ -53,17 +53,23 @@ mas_ctrl_init( mas_options_t * popts, const char **message )
   else
     ctrl.keep_listening = 1;
 
-  ctrl.messages = !popts->nomessages;
-  ctrl.messages_child = !popts->nomessages_child && ctrl.messages;
-  ctrl.messages_parent = !popts->nomessages_parent && ctrl.messages;
+  /* ctrl.messages = !popts->flag.name.nomessages; */
+  ctrl.messages = !OPT_QFLAG( popts, nomessages );
+  /* ctrl.messages_child = !popts->flag.name.nomessages_child && ctrl.messages; */
+  ctrl.messages_child = !OPT_QFLAG( popts, nomessages_child ) && ctrl.messages;
+  /* ctrl.messages_parent = !popts->flag.name.nomessages_parent && ctrl.messages; */
+  ctrl.messages_parent = !OPT_QFLAG( popts, nomessages_parent ) && ctrl.messages;
   ctrl.messages_set = 1;
   if ( !ctrl.msgfile )
     ctrl.msgfile = ctrl.stderrfile;
 
-  ctrl.daemon = !popts->daemon.disable;
+  /* ctrl.daemon = !popts->flag.name.daemon.disable; */
+  ctrl.daemon = !OPT_QFLAG( popts, daemon.disable );
   ctrl.ticker_mode = popts->ticker_mode;
-  ctrl.redirect_std = !popts->daemon.disable_redirect_std;
-  ctrl.close_std = !popts->daemon.disable_close_std;
+  /* ctrl.redirect_std = !popts->flag.name.daemon.disable_redirect_std; */
+  ctrl.redirect_std = !OPT_QFLAG( popts, daemon.disable_redirect_std );
+  /* ctrl.close_std = !popts->flag.name.daemon.disable_close_std; */
+  ctrl.close_std = !OPT_QFLAG( popts, daemon.disable_close_std );
   if ( message )
     *message = __func__;
 
@@ -74,6 +80,50 @@ int
 mas_ctrl_destroy( void )
 {
   CTRL_PREPARE;
+  if ( ctrl.logpath )
+    mas_free( ctrl.logpath );
+  ctrl.logpath = NULL;
+  {
+    if ( ctrl.argvname )
+      mas_free( ctrl.argvname );
+    ctrl.argvname = NULL;
+
+    if ( ctrl.progname )
+      mas_free( ctrl.progname );
+    ctrl.progname = NULL;
+
+    if ( ctrl.exepath )
+      mas_free( ctrl.exepath );
+    ctrl.exepath = NULL;
+
+    if ( ctrl.exename )
+      mas_free( ctrl.exename );
+    ctrl.exename = NULL;
+  }
+
+  {
+    if ( ctrl.cmdline )
+      mas_free( ctrl.cmdline );
+    ctrl.cmdline = NULL;
+    if ( ctrl.cmdargv.c && ctrl.cmdargv.v )
+    {
+      mas_del_argv( ctrl.cmdargv.c, ctrl.cmdargv.v, 0 );
+    }
+    ctrl.cmdargv.c = 0;
+    ctrl.cmdargv.v = NULL;
+    if ( ctrl.cmdenv )
+      mas_free( ctrl.cmdenv );
+  }
+  {
+    ctrl.cmdenv = NULL;
+    if ( ctrl.cmdenvv.c && ctrl.cmdenvv.v )
+    {
+      mas_del_argv( ctrl.cmdenvv.c, ctrl.cmdenvv.v, 0 );
+    }
+    ctrl.cmdenvv.c = 0;
+    ctrl.cmdenvv.v = NULL;
+  }
+
   mas_del_argv( ctrl.commandsv.c, ctrl.commandsv.v, 0 );
   ctrl.commandsv.c = 0;
   ctrl.commandsv.v = NULL;

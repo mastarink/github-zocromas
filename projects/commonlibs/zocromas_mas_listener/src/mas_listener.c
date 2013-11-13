@@ -136,7 +136,8 @@ mas_listener_start( const mas_options_t * popts, char *host_port, unsigned port 
         ( void ) pthread_attr_getstack( &ctrl.thglob.listener_attr, &listener_stackaddr, &listener_stacksize );
         lMSG( "cr. listener th. stack:%lu @ %p", ( unsigned long ) listener_stacksize, listener_stackaddr );
       }
-      if ( popts->listener_single )
+      /* if ( popts->flag.name.listener_single ) */
+      if ( OPT_QFLAG( popts, listener_single ) )
       {
         /* while ( ctrl.keep_listening ) */
         mas_listener( plcontrol );

@@ -6,8 +6,8 @@ function shn_std_command ()
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   shn_dbgmsg "SC2 `pwd`" >&2
-  if [[ "${MAS_SHN_DIR[$std]}" ]] && [[ -d "${MAS_SHN_DIR[$std]}" ]] ; then
-    if pushd "${MAS_SHN_DIR[$std]}" &>/dev/null ; then
+  if [[ "${MAS_SHN_DIRS[$std]}" ]] && [[ -d "${MAS_SHN_DIRS[$std]}" ]] ; then
+    if pushd "${MAS_SHN_DIRS[$std]}" &>/dev/null ; then
       shn_dbgmsg "SC3 `pwd`" >&2
       "$@" || retcode=$?
     else
@@ -40,18 +40,19 @@ function shn_build_xcommand ()
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   shn_dbgmsg 1 $FUNCNAME
-  if [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] ; then
-    shn_dbgmsg 2 $FUNCNAME ${MAS_SHN_DIR[error]}
-    if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] ; then
-      shn_dbgmsg 3 $FUNCNAME ${MAS_SHN_DIR[build]}
-      if pushd "${MAS_SHN_DIR[build]}" &>/dev/null ; then
+# echo " A `declare -p MAS_SHN_DIRS`" >&2
+  if [[ "${MAS_SHN_DIRS[error]}" ]] && [[ -d "${MAS_SHN_DIRS[error]}" ]] ; then
+    shn_dbgmsg 2 $FUNCNAME ${MAS_SHN_DIRS[error]}
+    if [[ "${MAS_SHN_DIRS[build]}" ]] && [[ -d "${MAS_SHN_DIRS[build]}" ]] ; then
+      shn_dbgmsg 3 $FUNCNAME ${MAS_SHN_DIRS[build]}
+      if pushd "${MAS_SHN_DIRS[build]}" &>/dev/null ; then
   #     shn_pwd
-	shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIR[build]}
+	shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIRS[build]}
 	cmd=`which $cmd` || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
 	cmd_base=$( shn_basename $cmd ) || { retcode=$? ; popd &>/dev/null ; return $retcode ; }
-	errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.result" \
+	errname="${MAS_SHN_DIRS[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.result" \
 			|| { retcode=$? ; popd &>/dev/null ; return $retcode ; }
-	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] && [[ -x "$cmd" ]] ; then
+	if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIRS[error]}" ]] && [[ -d "${MAS_SHN_DIRS[error]}" ]] && [[ -x "$cmd" ]] ; then
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 	  if $cmd $@  >$errname 2>&1 ; then
 	    shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
@@ -68,20 +69,20 @@ function shn_build_xcommand ()
 	  shn_errmsg 2 "$cmd_base $@ # [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
 	  ! [[ "$cmd" ]]                      && shn_errmsg 2.1 $cmd
 	  ! [[ "$errname" ]]                  && shn_errmsg 2.2 $errname
-	  ! [[ "${MAS_SHN_DIR[error]}" ]]     && shn_errmsg 2.3 ${MAS_SHN_DIR[error]}
-	  ! [[ -d "${MAS_SHN_DIR[error]}" ]]  && shn_errmsg 2.4 ${MAS_SHN_DIR[error]}
+	  ! [[ "${MAS_SHN_DIRS[error]}" ]]     && shn_errmsg 2.3 ${MAS_SHN_DIRS[error]}
+	  ! [[ -d "${MAS_SHN_DIRS[error]}" ]]  && shn_errmsg 2.4 ${MAS_SHN_DIRS[error]}
 	  ! [[ -x "$cmd" ]]                   && shn_errmsg 2.5 $cmd
 	  retcode=1
 	fi
 	popd &>/dev/null
       else
-	shn_errmsg 3 "${MAS_SHN_DIR[build]}"
+	shn_errmsg 3 "${MAS_SHN_DIRS[build]}"
       fi
     else
-      shn_errmsg 4 "${MAS_SHN_DIR[build]}"
+      shn_errmsg 4 "${MAS_SHN_DIRS[build]}"
     fi
   else
-    shn_errmsg 5 "${MAS_SHN_DIR[error]}"
+    shn_errmsg 5 "error dir : ${MAS_SHN_DIRS[error]}"
   fi
   return $retcode
 }
@@ -95,14 +96,14 @@ function shn_xcommand ()
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   shn_dbgmsg 1 $FUNCNAME
-  errname="${MAS_SHN_DIR[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.result"
-  if [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] ; then
-    shn_dbgmsg 2 $FUNCNAME ${MAS_SHN_DIR[error]}
-    if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] ; then
-      shn_dbgmsg 3 $FUNCNAME ${MAS_SHN_DIR[build]}
+  errname="${MAS_SHN_DIRS[error]}/shn_build.${cmd_base}.${MAS_SHN_PROJECT_NAME}.result"
+  if [[ "${MAS_SHN_DIRS[error]}" ]] && [[ -d "${MAS_SHN_DIRS[error]}" ]] ; then
+    shn_dbgmsg 2 $FUNCNAME ${MAS_SHN_DIRS[error]}
+    if [[ "${MAS_SHN_DIRS[build]}" ]] && [[ -d "${MAS_SHN_DIRS[build]}" ]] ; then
+      shn_dbgmsg 3 $FUNCNAME ${MAS_SHN_DIRS[build]}
   #     shn_pwd
-      shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIR[build]}
-      if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIR[error]}" ]] && [[ -d "${MAS_SHN_DIR[error]}" ]] && [[ -x "$cmd" ]] ; then
+      shn_dbgmsg 4 $FUNCNAME ${MAS_SHN_DIRS[build]}
+      if [[ "$cmd" ]] && [[ "$errname" ]] && [[ "${MAS_SHN_DIRS[error]}" ]] && [[ -d "${MAS_SHN_DIRS[error]}" ]] && [[ -x "$cmd" ]] ; then
 	shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 	if $cmd $@  >$errname 2>&1 ; then
 	  shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
@@ -119,16 +120,16 @@ function shn_xcommand ()
 	shn_errmsg 2 "$cmd_base $@ # [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
 	! [[ "$cmd" ]]                      && shn_errmsg 2.1 $cmd
 	! [[ "$errname" ]]                  && shn_errmsg 2.2 $errname
-	! [[ "${MAS_SHN_DIR[error]}" ]]     && shn_errmsg 2.3 ${MAS_SHN_DIR[error]}
-	! [[ -d "${MAS_SHN_DIR[error]}" ]]  && shn_errmsg 2.4 ${MAS_SHN_DIR[error]}
+	! [[ "${MAS_SHN_DIRS[error]}" ]]     && shn_errmsg 2.3 ${MAS_SHN_DIRS[error]}
+	! [[ -d "${MAS_SHN_DIRS[error]}" ]]  && shn_errmsg 2.4 ${MAS_SHN_DIRS[error]}
 	! [[ -x "$cmd" ]]                   && shn_errmsg 2.5 $cmd
 	retcode=1
       fi
     else
-      shn_errmsg build "${MAS_SHN_DIR[build]}"
+      shn_errmsg build "${MAS_SHN_DIRS[build]}"
     fi
   else
-    shn_errmsg "${MAS_SHN_DIR[error]}"
+    shn_errmsg "${MAS_SHN_DIRS[error]}"
   fi
   return $retcode
 }
@@ -169,7 +170,7 @@ function shn_installed_list ()
 }
 function shn_build_common_make ()
 {
-  shn_build_xcommand make -s $@ && shn_msgn common make $@ ok || return $?
+  shn_build_xcommand make -s $@ && shn_msgns common make $@ ok || return $?
 }
 function shn_build_autoreconf ()
 {
@@ -185,7 +186,7 @@ function shn_build_autoreconf ()
     touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}.0
     if pushd $MAS_SHN_PROJECT_DIR &>/dev/null ; then
       shn_dbgmsg start autoreconf -i
-      autoreconf -i && shn_msgn autoconf ok || { retcode=$? ; }
+      autoreconf -i && shn_msgns autoconf ok || { retcode=$? ; }
       popd  &>/dev/null
       shn_dbgmsg end autoreconf -i
     fi
@@ -200,11 +201,11 @@ function shn_build_configure ()
 {
   local global_opts_file=$MAS_SHN_PROJECTS_DIR/configure_opts.${MAS_SHN_FLAVOUR:-default}
   local project_opts_file=$MAS_SHN_PROJECT_DIR/configure_opts.${MAS_SHN_FLAVOUR:-default}
-  local configscript=${MAS_SHN_DIR[configure]}/configure
+  local configscript=${MAS_SHN_DIRS[configure]}/configure
   declare -a MAS_SHN_GLOBAL_CONFIGURE_OPTS
   declare -a MAS_SHN_PROJECT_CONFIGURE_OPTS
   declare -a MAS_SHN_ADD_CONFIGURE_OPTS
-  export PKG_CONFIG_PATH="${MAS_SHN_DIR[flavour]}/lib/pkgconfig"
+  export PKG_CONFIG_PATH="${MAS_SHN_DIRS[flavour]}/lib/pkgconfig"
   local configure_opts
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:configure]=`datemt`
   shn_setup_projects || return $?
@@ -219,11 +220,11 @@ function shn_build_configure ()
     shn_dbgmsg "project opts from $project_opts_file"
     shn_dbgmsg "project opts : ${MAS_SHN_PROJECT_CONFIGURE_OPTS[*]}"
   fi
-  MAS_SHN_ADD_CONFIGURE_OPTS[${#MAS_SHN_ADD_CONFIGURE_OPTS[@]}]="--prefix=${MAS_SHN_DIR[flavour]}"
+  MAS_SHN_ADD_CONFIGURE_OPTS[${#MAS_SHN_ADD_CONFIGURE_OPTS[@]}]="--prefix=${MAS_SHN_DIRS[flavour]}"
   configure_opts="${MAS_SHN_GLOBAL_CONFIGURE_OPTS[*]} ${MAS_SHN_PROJECT_CONFIGURE_OPTS[*]} ${MAS_SHN_ADD_CONFIGURE_OPTS[*]}"
   shn_dbgmsg "configure_opts : $configure_opts"
   shn_dbgmsg "configure [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
-  shn_build_xcommand $configscript  $configure_opts && shn_msgn configure ok || return $?
+  shn_build_xcommand $configscript  $configure_opts && shn_msgns configure ok || return $?
   shn_dbgmsg "C1 `pwd`" >&2
 # shn_build_list . config.status config.log config.h
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
@@ -238,7 +239,7 @@ function shn_build_recheck ()
   local shn_dont_setup=yes
   shn_dbgmsg "recheck [$MAS_SHN_PROJECT_NAME] `shn_project_version`"
   shn_msg $FUNCNAME 3
-  shn_build_xcommand ./config.status --recheck && shn_msgn recheck ok || return $?
+  shn_build_xcommand ./config.status --recheck && shn_msgns recheck ok || return $?
   shn_msg $FUNCNAME 4
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
@@ -247,7 +248,7 @@ function shn_build_make ()
 {
   shn_dbgmsg "$FUNCNAME 1"
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:make]=`datemt`
-  shn_build_common_make && shn_msgn make ok || return $?
+  shn_build_common_make && shn_msgns make ok || return $?
   shn_dbgmsg "$FUNCNAME 2"
 # shn_build_list src || shn_build_list inc
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
@@ -319,20 +320,20 @@ function shn_build_superclean ()
 function shn_build_clean ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:clean]=`datemt`
-  shn_build_common_make clean && shn_msgn make clean ok || return $?
+  shn_build_common_make clean && shn_msgns make clean ok || return $?
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_distclean ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:distclean]=`datemt`
-  shn_build_common_make distclean && shn_msgn make distclean ok || return $?
+  shn_build_common_make distclean && shn_msgns make distclean ok || return $?
 # shn_build_list
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_install ()
 {
   MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:install]=`datemt`
-  shn_build_common_make install && shn_msg installed
+  shn_build_common_make install && shn_msgns installed
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
 }
 function shn_build_dist ()
@@ -340,21 +341,23 @@ function shn_build_dist ()
   local retcode=0
   shn_setup_projects || return $?
   local shn_dont_setup=yes
-  if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] ; then
-    shn_dbgmsg shn_build_dist ${MAS_SHN_DIR[build]}
-    shn_build_common_make distcheck && shn_msgn make distcheck ok || return $?
+  if [[ "${MAS_SHN_DIRS[build]}" ]] && [[ -d "${MAS_SHN_DIRS[build]}" ]] ; then
+    shn_dbgmsg shn_build_dist ${MAS_SHN_DIRS[build]}
+    shn_build_common_make distcheck && shn_msgns make distcheck ok || return $?
 #   shn_build_list
-    if pushd "${MAS_SHN_DIR[build]}" &>/dev/null ; then
+    if pushd "${MAS_SHN_DIRS[build]}" &>/dev/null ; then
       # TODO for ....
-      if [[ "${MAS_SHN_PROJECT_FULLNAME}" ]] && [[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.gz" ]] && [[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.bz2" ]] && [[ -d "${MAS_SHN_DIR[savedist]}" ]] ; then
-	shn_mv ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} "${MAS_SHN_DIR[savedist]}"  || { retcode=$? ; shn_errmsg "mv dist" ; return $retcode ; }
+      if [[ "${MAS_SHN_PROJECT_FULLNAME}" ]] && [[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.gz" ]] && \
+      			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.bz2" ]] && [[ -d "${MAS_SHN_DIRS[savedist]}" ]] ; then
+	shn_mv ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} "${MAS_SHN_DIRS[savedist]}"  || \
+			{ retcode=$? ; shn_errmsg "mv dist" ; return $retcode ; }
       else
-	shn_errmsg "${MAS_SHN_PROJECT_FULLNAME}.tar.gz ${MAS_SHN_PROJECT_FULLNAME}.tar.bz2 ${MAS_SHN_DIR[savedist]}"
+	shn_errmsg "${MAS_SHN_PROJECT_FULLNAME}.tar.gz ${MAS_SHN_PROJECT_FULLNAME}.tar.bz2 ${MAS_SHN_DIRS[savedist]}"
       fi
       popd &>/dev/null
     fi
   fi
-  shn_dbgmsg "$MAS_SHN_PROJECT_FULLNAME ==> ${MAS_SHN_DIR[savedist]}"
+  shn_dbgmsg "$MAS_SHN_PROJECT_FULLNAME ==> ${MAS_SHN_DIRS[savedist]}"
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return 0
 }
@@ -362,13 +365,13 @@ function shn_build_ebuild_update ()
 {
   local retval=0
   local ebuild_prefix='' distname ebname
-  local ebuild_dir=${MAS_SHN_DIR[ebuild]}/${ebuild_prefix}${MAS_SHN_PROJECT_NAME}
+  local ebuild_dir=${MAS_SHN_DIRS[ebuild]}/${ebuild_prefix}${MAS_SHN_PROJECT_NAME}
   shn_dbgmsg "ebuild_dir:$ebuild_dir"
   if ! [[ -d "$ebuild_dir" ]] ; then
     shn_mkdir "$ebuild_dir"
   fi
-  if [[ "${MAS_SHN_DIR[savedist]}" ]] && [[ "${MAS_SHN_DIR[savegentoo]}" ]] \
-  	&& [[ -d "${MAS_SHN_DIR[savedist]}" ]] && [[ -d "${MAS_SHN_DIR[savegentoo]}" ]] \
+  if [[ "${MAS_SHN_DIRS[savedist]}" ]] && [[ "${MAS_SHN_DIRS[savegentoo]}" ]] \
+  	&& [[ -d "${MAS_SHN_DIRS[savedist]}" ]] && [[ -d "${MAS_SHN_DIRS[savegentoo]}" ]] \
 	&& [[ -d "$ebuild_dir" ]] \
 	&& pushd $ebuild_dir >/dev/null ; then
     ebname_base=$( ls -1tr *.ebuild | tail -1 )
@@ -378,7 +381,7 @@ function shn_build_ebuild_update ()
 
     distname="${MAS_SHN_PROJECT_FULLNAME}.tar.bz2"
     shn_dbgmsg "distname:$distname"
-    distfile="${MAS_SHN_DIR[savedist]}/$distname"
+    distfile="${MAS_SHN_DIRS[savedist]}/$distname"
     shn_dbgmsg "distfile:$distfile"
 
     if [[ "$distfile" ]] && [[ -f "$distfile" ]] ; then
@@ -390,20 +393,20 @@ function shn_build_ebuild_update ()
       if [[ -f $ebname ]] ; then
         shn_chmod a+r $ebname $distfile
 	# all versions:
-	shn_cp -a  ${MAS_SHN_DIR[savedist]}/${MAS_SHN_PROJECT_NAME}-*.tar.bz2 ${MAS_SHN_DIR[savegentoo]} \
+	shn_cp -a  ${MAS_SHN_DIRS[savedist]}/${MAS_SHN_PROJECT_NAME}-*.tar.bz2 ${MAS_SHN_DIRS[savegentoo]} \
 			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 2 $FUNCNAME ; return $retval ; }
 	if [[ "${ebuild_prefix}" ]] ; then 
 	  shn_rename "${MAS_SHN_PROJECT_NAME}" "${ebuild_prefix}${MAS_SHN_PROJECT_NAME}" \
-	  	${MAS_SHN_DIR[savegentoo]}/${MAS_SHN_PROJECT_NAME}-*.tar.bz2 \
+	  	${MAS_SHN_DIRS[savegentoo]}/${MAS_SHN_PROJECT_NAME}-*.tar.bz2 \
 			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 3 $FUNCNAME ; return $retval ; }
 	fi
-	shn_cp -a ${MAS_SHN_DIR[savegentoo]}/${ebuild_prefix}$distname  /usr/portage/distfiles/ \
+	shn_cp -a ${MAS_SHN_DIRS[savegentoo]}/${ebuild_prefix}$distname  /usr/portage/distfiles/ \
 			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 4 $FUNCNAME ; return $retval ; }
 	if [[ -f Manifest ]] ; then
 	  shn_rm Manifest \
 	  		|| { retval=$? ; popd &>/dev/null ; shn_errmsg 5 $FUNCNAME ; return $retval ; }	  
 	fi
-	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msgn enuild $ebname manifest - ok || retval=$?
+	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msgns enuild $ebname manifest - ok || retval=$?
       else
 	shn_errmsg $ebname
 	retval=1
@@ -414,10 +417,10 @@ function shn_build_ebuild_update ()
     fi
     popd &>/dev/null
   else
-    [[ "${MAS_SHN_DIR[savedist]}" ]]       || shn_errmsg "savedist"
-    [[ "${MAS_SHN_DIR[savegentoo]}" ]]     || shn_errmsg "savegentoo"
-    [[ -d "${MAS_SHN_DIR[savedist]}" ]]    || shn_errmsg "d savedist"
-    [[ -d "${MAS_SHN_DIR[savegentoo]}" ]]  || shn_errmsg "d savegentoo"
+    [[ "${MAS_SHN_DIRS[savedist]}" ]]       || shn_errmsg "savedist"
+    [[ "${MAS_SHN_DIRS[savegentoo]}" ]]     || shn_errmsg "savegentoo"
+    [[ -d "${MAS_SHN_DIRS[savedist]}" ]]    || shn_errmsg "d savedist"
+    [[ -d "${MAS_SHN_DIRS[savegentoo]}" ]]  || shn_errmsg "d savegentoo"
     [[ -d "$ebuild_dir" ]]                 || shn_errmsg "d '$ebuild_dir'"
     retval=1
   fi
@@ -428,7 +431,7 @@ function shn_build_ebuild_check ()
 {
   local f name
   local ebuild_prefix='' distname ebname
-  local ebuild_dir=${MAS_SHN_DIR[ebuild]}/${ebuild_prefix}${MAS_SHN_PROJECT_NAME}
+  local ebuild_dir=${MAS_SHN_DIRS[ebuild]}/${ebuild_prefix}${MAS_SHN_PROJECT_NAME}
   local distdir=/usr/portage/distfiles/
   for f in $ebuild_dir/* ; do
     name=$( shn_basename $f )
@@ -437,12 +440,12 @@ function shn_build_ebuild_check ()
       distfile1="${short}.tar.gz"
       distfile2="${short}.tar.bz2"
 #     if [[ -f "$distdir/$distfile1" ]] ; then
-#       shn_msgn $short gz ok 
+#       shn_msgns $short gz ok 
 #     else
 #       shn_msg $short gz absent : $distdir/$distfile1
 #     fi
       if [[ -f "$distdir/$distfile2" ]] ; then
-#       shn_msgn $short bzip2 ok 
+#       shn_msgns $short bzip2 ok 
 	:
       else
         shn_msg "bz2 absent : $distdir/$distfile2"

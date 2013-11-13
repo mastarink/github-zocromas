@@ -164,7 +164,8 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
     }
     if ( !h && r >= 0 )
       r = fprintf( f, "** EMPTY MEMORY TABLE ** %s:%u", func, line );
-    fprintf( f, "\n" );
+    if ( r >= 0 )
+      r = fprintf( f, "[%d]\n", r );
   }
   return r;
 }
@@ -204,8 +205,9 @@ print_memlist( const char *func, int line, FILE * f )
 
   r = _print_memlist( f, func, line, 0, 0 );
   /* _print_memlist( f, func, line, 1, 0 ); */
-  if ( r <= 0 )
-    _print_memlist( f, func, line, 1, 1 );
+
+  /* if ( r <= 0 ) */
+  _print_memlist( f, func, line, 1, 1 );
   return r;
 }
 

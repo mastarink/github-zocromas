@@ -30,7 +30,7 @@
 #include <mastar/init/mas_init.h>
 #include <mastar/init/mas_init_modules.h>
 
-#include <mastar/options/mas_cli_opts.h>
+#include <mastar/options/mas_cli_opts_init.h>
 #include <mastar/options/mas_cli_opts_data.h>
 
 #include <mastar/init/mas_sig.h>
@@ -109,31 +109,31 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
 
   MAS_LOG( "(%d) bunch: to init +", r );
 #if 0
-  /* r = mas_init_plus( argc, argv, env, mas_init_pids, mas_init_daemon, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
+  /* r = mas_init_plus( argc, argv, env, mas_pids_init, mas_daemon_init, mas_threads_init, mas_init_load_protos, mas_lcontrols_list_create, */
   /*                    NULL );                                                                                                             */
   /* uuid BEFORE opt_files !! */
 
   IEVAL( r,
-         mas_init_plus( popts, argc, argv, env, mas_init_proc, mas_init_uuid, mas_init_opt_files, mas_init_sig, mas_cli_options_init,
-                        mas_ctrl_init, mas_init_set_msg_file, mas_init_message, mas_init_daemon, mas_init_pids,
+         mas_init_plus( popts, argc, argv, env, mas_proc_init, mas_uuid_init, mas_init_opt_files, mas_sig_init, mas_cli_options_init,
+                        mas_ctrl_init, mas_init_set_msg_file, mas_message_init, mas_daemon_init, mas_pids_init,
                         mas_threads_init, mas_init_load_protos, mas_lcontrols_init, mas_post_init, NULL ) );
 #else
   static mas_init_fun_t init_funcs[] = {
     /* Moved to mas_control.c constructor */
-    /* mas_init_proc, */
-    mas_init_opt_files,
+    /* mas_proc_init, */
+    mas_opt_files_init,
     mas_cli_options_data_init,
     mas_cli_options_init,
     mas_ctrl_init,
-    mas_init_set_msg_file,
-    mas_init_message,
-    mas_init_sig,
-    mas_init_daemon,
-    mas_init_pids,
+    mas_set_msg_file,
+    mas_message_init,
+    mas_sig_init,
+    mas_daemon_init,
+    mas_pids_init,
     mas_threads_init,
-    mas_init_load_protos,
+    mas_protos_load,
     mas_lcontrols_init,
-    mas_init_uuid,
+    mas_uuid_init,
     mas_post_init,
     NULL
   };

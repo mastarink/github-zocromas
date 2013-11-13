@@ -233,13 +233,21 @@ mas_option_parse_t opt_table[] = {
 int
 mas_opts_restore_flags( mas_options_t * popts, const char *s )
 {
-#define OPT_MATCH(name,val) ( 0 == mas_strcmp2( val, #name "=" ) )
-#define OPT_XFLAGD(name,fld,val)   else if ( OPT_MATCH( name,val ) ) popts-> fld = ( mas_opts_atou(val) )
-#define OPT_NOXFLAGD(name,fld,val) else if ( OPT_MATCH( name,val ) ) popts-> fld = !( mas_opts_atou(val) )
-#define OPT_XFLAG(name,val)        OPT_XFLAGD( name, name, val )
-#define OPT_NOXFLAG(name,val)  OPT_NOXFLAGD(name, name, val)
-#define OPT_FLAG(name,val)         OPT_XFLAG( name, val )
-#define OPT_NOFLAG(name,val)       OPT_NOXFLAG( no##name, val )
+#define OPT_MATCH(oname,val) ( 0 == mas_strcmp2( val, #oname "=" ) )
+
+/* #define OPT_XFLAGD(oname,fld,val)   else if ( OPT_MATCH( oname,val ) ) popts-> flag.name.fld = ( mas_opts_atou(val)?1:0 ) */
+#define OPT_XFLAGD(oname,fld,val)   else if ( OPT_MATCH( oname,val ) ) OPT_SFLAG(popts, fld, mas_opts_atou(val))
+#define OPT_XFLAG(oname,val)        OPT_XFLAGD( oname, oname, val )
+#define OPT_FLAG(oname,val)         OPT_XFLAG( oname, val )
+
+/* #define OPT_NOXFLAGD(oname,fld,val) else if ( OPT_MATCH( oname,val ) ) popts-> flag.name.fld = ( mas_opts_atou(val)?0:1 ) */
+#define OPT_NOXFLAGD(oname,fld,val) else if ( OPT_MATCH( oname,val ) ) OPT_SFLAG(popts, fld, !mas_opts_atou(val))
+#define OPT_NOXFLAG(oname,val)  OPT_NOXFLAGD(oname, oname, val)
+#define OPT_NOFLAG(oname,val)       OPT_NOXFLAG( no##oname, val )
+
+#define OPT_XNUMD(oname,fld,val)   else if ( OPT_MATCH( oname,val ) ) popts-> fld = ( mas_opts_atou(val) )
+#define OPT_XNUM(oname,val)        OPT_XNUMD( oname, oname, val )
+#define OPT_NUM(oname,val)         OPT_XNUM( oname, val )
 
   /* don't remove this 'if' */
   if ( 0 /* 0 == mas_strcmp2( s, "message=" ) */  )
@@ -251,8 +259,8 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
   OPT_XFLAG( log.run, s );
   OPT_NOFLAG( ticker, s );
   OPT_NOFLAG( watcher, s );
-  OPT_FLAG( max_config_backup, s );
-  OPT_FLAG( default_port, s );
+  OPT_NUM( max_config_backup, s );
+  OPT_NUM( default_port, s );
   /* OPT_NOFLAG( daemon.disable, s ); */
   OPT_XFLAG( daemon.disable, s );
   OPT_XFLAG( daemon.sys, s );
@@ -265,7 +273,7 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
   OPT_FLAG( single_instance, s );
   OPT_FLAG( single_child, s );
   OPT_NOFLAG( messages, s );
-  OPT_FLAG( has_init_message, s );
+  /* OPT_FLAG( has_init_message, s ); */
   OPT_FLAG( save_user_opts, s );
   OPT_FLAG( save_user_opts_plus, s );
   OPT_FLAG( overwrite_user_opts, s );
@@ -371,8 +379,10 @@ _mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filen
   if ( r == 0 )
   {
     mas_opts_restore_relative( popts, popts->configfilename );
-    HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %lX", popts->nomessages, MAS_CTRL_MESSAGES,
-          MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->f.word );
+    /* HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %lX", popts->flag.name.nomessages, MAS_CTRL_MESSAGES, */
+    /*       MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->msg_flag.bits );                                            */
+    HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %X", OPT_QFLAG( popts, nomessages ), MAS_CTRL_MESSAGES,
+          MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->flag.name.msg.bits );
   }
   return r;
 }

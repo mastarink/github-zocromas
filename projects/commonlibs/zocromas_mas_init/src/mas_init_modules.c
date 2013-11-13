@@ -105,13 +105,11 @@ more:
 /* }                                                                      */
 
 int
-mas_init_message( mas_options_t * popts, const char **message )
+mas_message_init( mas_options_t * popts, const char **message )
 {
-  if ( popts->has_init_message )
+  CTRL_PREPARE;                 /* MFP... */
+  if ( popts->init_message )
   {
-    CTRL_PREPARE;               /* MFP... */
-    if ( popts->init_message )
-    {
 /* #pragma GCC diagnostic push                                */
 /*           (* HMSG( popts->init_message ); *)               */
 /* (* #pragma message "Compiling " __FILE__ "..." *)          */
@@ -121,27 +119,26 @@ mas_init_message( mas_options_t * popts, const char **message )
 /* (* #pragma GCC diagnostic ignored "-Wall" *)               */
 /*           MFP( popts->init_message );                      */
 /* #pragma GCC diagnostic pop                                 */
-      char *esc = NULL;
+    char *esc = NULL;
 
-      esc = mas_escape( popts->init_message );
-      if ( esc )
-      {
-        /* char *d; */
-
-        /* d = mas_dump2( esc, strlen( esc ), 64 ); */
-        MFPL( esc );
-        /* HMSG( "DUMP ESC:%s", d ); */
-        /* mas_free( d ); */
-        mas_free( esc );
-      }
-      /* HMSG( "INIT_MESSAGE [%s]", popts->init_message ); */
-    }
-    else
+    esc = mas_escape( popts->init_message );
+    if ( esc )
     {
-      /* (* MFP( "\x1b[H\x1b[2J" ); *) */
-      /* (* MFP( "\x1b" "c" ); *)      */
-      MFPL( "\x1b" "c" );
+      /* char *d; */
+
+      /* d = mas_dump2( esc, strlen( esc ), 64 ); */
+      MFPL( esc );
+      /* HMSG( "DUMP ESC:%s", d ); */
+      /* mas_free( d ); */
+      mas_free( esc );
     }
+    /* HMSG( "INIT_MESSAGE [%s]", popts->init_message ); */
+  }
+  else
+  {
+    /* (* MFP( "\x1b[H\x1b[2J" ); *) */
+    /* (* MFP( "\x1b" "c" ); *)      */
+    MFPL( "\x1b" "c" );
   }
   WMSG( "INIT MESSAGE" );
 
@@ -188,7 +185,7 @@ mas_init_message( mas_options_t * popts, const char **message )
 }
 
 int
-mas_init_opt_files( mas_options_t * popts, const char **message )
+mas_opt_files_init( mas_options_t * popts, const char **message )
 {
   int r = 0;
   char sppid[64] = "";
@@ -230,10 +227,12 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
 #else
       int rtwo = 0;
 
-      if ( popts->read_user_opts )
+      /* if ( popts->flag.name.read_user_opts ) */
+      if ( OPT_QFLAG( popts, read_user_opts ) )
       {
         IEVAL_OPT( rone, mas_opts_restore_user( popts, NULL, name ) );
-        if ( popts->read_user_opts_plus )
+        /* if ( popts->flag.name.read_user_opts_plus ) */
+        if ( OPT_QFLAG( popts, read_user_opts_plus ) )
         {
           /* IEVAL_OPT( rtwo, mas_opts_restore_user_plus( NULL, name, ".", getenv( "MAS_PID_AT_BASHRC" ), NULL ) ); */
           HMSG( "REST.USER +:%s", name );
@@ -258,7 +257,7 @@ mas_init_opt_files( mas_options_t * popts, const char **message )
 }
 
 int
-mas_init_set_msg_file( mas_options_t * popts, const char **message )
+mas_set_msg_file( mas_options_t * popts, const char **message )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;
@@ -275,7 +274,7 @@ mas_init_set_msg_file( mas_options_t * popts, const char **message )
 
       /* TODO if console: */
     }
-    /* IEVAL( r, mas_init_message(  ) ); */
+    /* IEVAL( r, mas_message_init(  ) ); */
   }
   if ( message )
     *message = __func__;
@@ -284,7 +283,7 @@ mas_init_set_msg_file( mas_options_t * popts, const char **message )
 }
 
 int
-mas_init_uuid( mas_options_t * popts, const char **message )
+mas_uuid_init( mas_options_t * popts, const char **message )
 {
 #ifdef HAVE_LIBUUID
   if ( !popts->uuid )
@@ -342,7 +341,8 @@ mas_post_init( mas_options_t * popts, const char **message )
     ctrl.logpath = mas_strdup( popts->dir.log );
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
-    ctrl.log = popts->log.enable ? 1 : 0;
+    /* ctrl.log = popts->flag.name.log.enable ? 1 : 0; */
+    ctrl.log = OPT_QFLAG( popts, log.enable );
   }
   else
   {

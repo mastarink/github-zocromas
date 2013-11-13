@@ -5,8 +5,7 @@
 # unset command_not_found_handle 
 # export MAS_SHN_LIBWORK_LOADED=`datemt`
 
-
-for lib in tools project shn zocserver ; do
+for lib in tools project shn zocserver zocgrep ; do
   if ! [[ -L shn ]] || ! [[ -f ${MAS_SHN_DIR:-shn}/lib${lib}.bash ]] || ! . ${MAS_SHN_DIR:-shn}/lib${lib}.bash ; then
     shn_errmsg "loading environment ${MAS_SHN_DIR:-shn}/lib${lib}.bash"
     shn_errmsg lib not found $lib
@@ -23,11 +22,11 @@ alias j='shn_project_cd'
 alias jf='shn_project_file_cd'
 alias lc='shn_project_files'
 alias qf='shn_project_by_file'
-alias ef='shn_file_edit'
+alias e='shn_file_edit'
 alias run='shn m i r'
 if [[ "$MAS_SHLIB" ]] && [[ -d "$MAS_SHLIB" ]] && [[ -f "$MAS_SHLIB/libed2.bash" ]] ; then
   . $MAS_SHLIB/libed2.bash
-  alias e='gvim_caller2'
+  alias eu='gvim_caller2'
 fi
 
 # alias lshn='source shn/libwork.bash'

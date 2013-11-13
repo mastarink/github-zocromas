@@ -1,5 +1,6 @@
 function shn_code ()
 {
+  declare -gx -A MAS_SHN_LAST_ACTION
   local code=${1:-h}
   shift
   shn_dbgmsg "shn 1 -- $code"
@@ -23,7 +24,7 @@ function shn_code ()
       shn_msg 'D = make distclean'
       shn_msg 'U = "super" clean'
       shn_msg 'a = autoreconf'
-      shn_msg 't = make distcheck and save tarballs to' ${MAS_SHN_DIR[savedist]}
+      shn_msg 't = make distcheck and save tarballs to' ${MAS_SHN_DIRS[savedist]}
       shn_msg 'm = make'
       shn_msg 'i = make install'
       shn_msg 'E = check files for e'
@@ -36,6 +37,7 @@ function shn_code ()
     l)
       # pwd >&2 || return $?
       shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
+#     declare -p MAS_SHN_LAST_ACTION >&2
       MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:list]=`datemt`
     ;;
     j)
@@ -115,8 +117,8 @@ function shn_code ()
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     I)
-      if [[ "${MAS_SHN_DIR[build]}" ]] && [[ -d "${MAS_SHN_DIR[build]}" ]] && [[ -x "${MAS_SHN_DIR[build]}/config.status" ]] ; then
-        ${MAS_SHN_DIR[build]}/config.status -V
+      if [[ "${MAS_SHN_DIRS[build]}" ]] && [[ -d "${MAS_SHN_DIRS[build]}" ]] && [[ -x "${MAS_SHN_DIRS[build]}/config.status" ]] ; then
+        ${MAS_SHN_DIRS[build]}/config.status -V
       fi
     ;;
     i)
@@ -175,10 +177,11 @@ function shn ()
   local retcode=0
 #?trap shn_exit EXIT
   shn_dbgmsg "project $MAS_SHN_PROJECT_NAME"
-  shn_setup_projects || shn_project_cd "${MAS_SHN_PROJECT_NAME:-zocromas_zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
+# shn_setup_projects || shn_project_cd "${MAS_SHN_PROJECT_NAME:-zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
+  shn_setup_projects || shn_project_cd                                     || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_dbgmsg 3 shn
   if [[ "$code" == each ]] ; then
-    shn_msg "Will install to ${MAS_SHN_DIR[flavour]}"
+    shn_msg "Will install to ${MAS_SHN_DIRS[flavour]}"
     shn_project_each '' shn $@
   elif [[ "$code" == one ]] ; then
     local shn_dont_setup=yes
@@ -213,6 +216,6 @@ function shn ()
   shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MAS_SHN_PROJECT_NAME}
 # shn_pwd
   shn_setup_projects || return $?
-  shn_msg
+  shn_msg END of shn
   return $retcode
 }

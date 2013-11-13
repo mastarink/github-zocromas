@@ -12,7 +12,7 @@
 
 #include <mastar/init/mas_sig.h>
 
-#include <mastar/options/mas_cli_opts.h>
+#include <mastar/options/mas_cli_opts_init.h>
 #include <mastar/options/mas_cli_opts_data.h>
 
 
@@ -67,11 +67,11 @@ main( int argc, char *argv[], char *env[] )
 #endif
 
   /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
-  HMSG( "INIT CLIENT (%p:%p:%p)", ( void * ) ( unsigned long ) mas_init_sig,
+  HMSG( "INIT CLIENT (%p:%p:%p)", ( void * ) ( unsigned long ) mas_sig_init,
         ( void * ) ( unsigned long ) mas_ctrl_init, ( void * ) ( unsigned long ) mas_client_init_readline );
 
   /* uuid BEFORE opt_files !! */
-  IEVAL( r, mas_init_plus( gpopts, argc, argv, env, /* mas_init_proc, */ mas_init_uuid, mas_init_opt_files, mas_init_sig,
+  IEVAL( r, mas_init_plus( gpopts, argc, argv, env, /* mas_proc_init, */ mas_uuid_init, mas_opt_files_init, mas_sig_init,
                            mas_cli_options_data_init, mas_cli_options_init, mas_ctrl_init,
                            mas_client_init_readline, mas_post_init, NULL ) );
   for ( int ia = gpopts->hostsv.c; r >= 0 && ia > 0; ia-- )

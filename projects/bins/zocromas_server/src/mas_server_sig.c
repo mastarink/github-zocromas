@@ -32,7 +32,7 @@
 #include <mastar/fileinfo/mas_unidata.h>
 #include <mastar/modules/mas_modules_commands_eval.h>
 
-/* mas_destroy_server */
+/* mas_server_destroy */
 #include "mas_init_server.h"
 
 #include <mastar/listener/mas_listeners.h>

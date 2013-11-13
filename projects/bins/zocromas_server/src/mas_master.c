@@ -78,8 +78,8 @@ mas_master( const mas_options_t * popts )
   CTRL_PREPARE;
   int r = 0, rn = 0;
 
-  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), popts->log.run ? 'L' : 'l', !popts->noticker ? 'T' : 't',
-        !popts->nowatcher ? 'W' : 'w' );
+  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), OPT_QFLAG( popts, log.run ) ? 'L' : 'l', !OPT_QFLAG( popts, noticker ) ? 'T' : 't',
+        !OPT_QFLAG( popts, nowatcher ) ? 'W' : 'w' );
   /* if ( ctrl.is_parent )                                                  */
   /* {                                                                      */
   /*   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMaster" ) ); */
@@ -91,7 +91,8 @@ mas_master( const mas_options_t * popts )
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
-  if ( popts->log.run )
+  /* if ( popts->log.run ) */
+  if ( OPT_QFLAG( popts, log.run ) )
   {
     HMSG( "LOGGER TO START" );
     mas_logger_start(  );
@@ -100,7 +101,8 @@ mas_master( const mas_options_t * popts )
   {
     HMSG( "NO LOGGER" );
   }
-  if ( !popts->noticker )
+  /* if ( !popts->noticker ) */
+  if ( !OPT_QFLAG( popts, noticker ) )
   {
     HMSG( "TICKER TO START" );
     mas_ticker_start( popts );
@@ -110,7 +112,8 @@ mas_master( const mas_options_t * popts )
     MAS_LOG( "running w/o ticker" );
     HMSG( "NO TICKER" );
   }
-  if ( !popts->nowatcher )
+  /* if ( !popts->nowatcher ) */
+  if ( OPT_QFLAG( popts, nowatcher ) )
   {
     HMSG( "WATCHER TO START" );
     mas_watcher_start( popts );
@@ -130,7 +133,8 @@ mas_master( const mas_options_t * popts )
     /* {                                             */
     /*   thMSG( "%d. host %s", ih, popts->  hostsv.v[ih] ); */
     /* }                                             */
-    while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !popts->quit )
+    /* while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !popts->quit ) */
+    while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !OPT_QFLAG( popts, quit ) )
     {
       int qstopped = 0;
 
@@ -241,7 +245,8 @@ mas_master_do( const mas_options_t * popts )
   int r = 0;
 
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
-  if ( popts->make_master_thread )
+  /* if ( popts->make_master_thread ) */
+  if ( OPT_QFLAG( popts, make_master_thread ) )
   {
     /* r = pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */
     IEVAL( r, pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) popts ) );

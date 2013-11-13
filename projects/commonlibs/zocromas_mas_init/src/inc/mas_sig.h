@@ -12,7 +12,7 @@ void sighup_han( int s );
 void sigpipe_han( int s );
 void sigwinch_han( int s );
 
-int mas_init_sig( mas_options_t * popts, const char **message );
+int mas_sig_init( mas_options_t * popts, const char **message );
 void mas_dfl_sig( void );
 
 #endif
