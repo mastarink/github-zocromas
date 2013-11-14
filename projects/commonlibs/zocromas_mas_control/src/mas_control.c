@@ -52,24 +52,24 @@ mas_ctrl_init( mas_options_t * popts, const char **message )
     ctrl.in_client = 1;
   else
     ctrl.keep_listening = 1;
-
-  /* ctrl.messages = !popts->flag.name.nomessages; */
-  ctrl.messages = !OPT_QFLAG( popts, nomessages );
-  /* ctrl.messages_child = !popts->flag.name.nomessages_child && ctrl.messages; */
-  ctrl.messages_child = !OPT_QFLAG( popts, nomessages_child ) && ctrl.messages;
-  /* ctrl.messages_parent = !popts->flag.name.nomessages_parent && ctrl.messages; */
-  ctrl.messages_parent = !OPT_QFLAG( popts, nomessages_parent ) && ctrl.messages;
+  /* ctrl.messages = !popts->flag.name.womessages; */
+  ctrl.messages = !OPT_QFLAG( popts, womessages );
+  /* ctrl.messages_child = !popts->flag.name.womessages_child && ctrl.messages; */
+  ctrl.messages_child = !OPT_QFLAG( popts, womessages_child ) && ctrl.messages;
+  /* ctrl.messages_parent = !popts->flag.name.womessages_parent && ctrl.messages; */
+  ctrl.messages_parent = !OPT_QFLAG( popts, womessages_parent ) && ctrl.messages;
   ctrl.messages_set = 1;
   if ( !ctrl.msgfile )
     ctrl.msgfile = ctrl.stderrfile;
 
-  /* ctrl.daemon = !popts->flag.name.daemon.disable; */
-  ctrl.daemon = !OPT_QFLAG( popts, daemon.disable );
+  /* ctrl.daemon = !popts->flag.name.daemon_disable; */
+  ctrl.daemon = !OPT_QFLAG( popts, daemon_disable );
   ctrl.ticker_mode = popts->ticker_mode;
-  /* ctrl.redirect_std = !popts->flag.name.daemon.disable_redirect_std; */
-  ctrl.redirect_std = !OPT_QFLAG( popts, daemon.disable_redirect_std );
-  /* ctrl.close_std = !popts->flag.name.daemon.disable_close_std; */
-  ctrl.close_std = !OPT_QFLAG( popts, daemon.disable_close_std );
+  /* ctrl.redirect_std = !popts->flag.name.daemon_disable_redirect_std; */
+  ctrl.redirect_std = !OPT_QFLAG( popts, daemon_disable_redirect_std );
+  /* ctrl.close_std = !popts->flag.name.daemon_disable_close_std; */
+  ctrl.close_std = !OPT_QFLAG( popts, daemon_disable_close_std );
+  ctrl.fatal = 0;
   if ( message )
     *message = __func__;
 
@@ -132,7 +132,7 @@ mas_ctrl_destroy( void )
   ctrl.loaded_optsv.c = 0;
   ctrl.loaded_optsv.v = NULL;
 
-  /* if ( ctrl.threads.n.daemon.pid && ctrl.threads.n.daemon.pid == getpid(  ) ) */
+  /* if ( ctrl.threads.n.daemon_pid && ctrl.threads.n.daemon_pid == getpid(  ) ) */
   /*   for ( int ifil = 0; ifil < ctrl.pidfilesv.c; ifil++ )                     */
   /*   {                                                                         */
   /*     (* HMSG( "PID FILE %d. %s", ifil, ctrl.pidfilesv.v[ifil] ); *)          */

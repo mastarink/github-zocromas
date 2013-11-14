@@ -342,7 +342,7 @@ mas_post_init( mas_options_t * popts, const char **message )
     ctrl.logpath = mas_strcat_x( ctrl.logpath, namebuf );
     WMSG( "LOG: [%s]", ctrl.logpath );
     /* ctrl.log = popts->flag.name.log.enable ? 1 : 0; */
-    ctrl.log = OPT_QFLAG( popts, log.enable );
+    ctrl.log = OPT_QFLAG( popts, log_enable );
   }
   else
   {

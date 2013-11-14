@@ -279,10 +279,10 @@ mas_listener_th( void *tlcontrol )
   /*   rs = pthread_setschedparam( mas_pthread_self(  ), SCHED_RR, &sched ); */
   /*   MAS_LOG( "sched %d", rs );                                            */
   /* }                                                                       */
-  if ( plcontrol->popts->nolisten )
+  if ( plcontrol->popts->wolisten )
   {
     MAS_LOG( "listener th. -> sleep started %s:%u", plcontrol->host, plcontrol->port );
-    sleep( plcontrol->popts->nolisten );
+    sleep( plcontrol->popts->wolisten );
   }
   else if ( plcontrol )
   {

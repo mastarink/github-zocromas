@@ -316,7 +316,7 @@ mas_init_set_z( mas_options_t * popts, /* int argc, char **argv, char **env, */ 
   /* WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" ); */
   /* IEVAL( r, mas_init( popts, argc, argv, env ) );                                                       */
 
-  WMSG( "INIT S+" );
+  HMSG( "INIT SET+" );
   {
     mas_init_fun_t fun;
 
@@ -324,11 +324,11 @@ mas_init_set_z( mas_options_t * popts, /* int argc, char **argv, char **env, */ 
     {
       const char *msg = NULL;
 
-      HMSG( "(%d) + INIT S #%d [%p] %d:[%p]", r, ifu, ( void * ) ( unsigned long long ) fun, ifu,
+      HMSG( "(%d) + INIT SET #%d [%p] %d:[%p]", r, ifu, ( void * ) ( unsigned long long ) fun, ifu,
             ( void * ) ( unsigned long long ) init_funcs[ifu] );
       IEVAL( r, ( fun ) ( popts, &msg ) );
       MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
-      HMSG( "(%d) - INIT S #%d %s", r, ifu, msg ? msg : "-" );
+      HMSG( "(%d) - INIT SET #%d %s", r, ifu, msg ? msg : "-" );
       /* ( ctrl.error_handler ) ( FL, 77 ); */
       ifu++;
     }

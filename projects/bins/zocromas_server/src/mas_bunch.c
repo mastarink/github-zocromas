@@ -145,9 +145,10 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
     }
   }
 #  endif
-  WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
+  HMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" );
   IEVAL( r, mas_init( popts, argc, argv, env ) );
 //  IEVAL( r, mas_init_set_n( popts, /* argc, argv, env, */ sizeof( init_funcs ) / sizeof( init_funcs[0] ), init_funcs ) );
+  HMSG( "INIT SET Z" );
   IEVAL( r, mas_init_set_z( popts, /* argc, argv, env, */ init_funcs ) );
 #endif
   if ( r >= 0 )
@@ -173,6 +174,7 @@ mas_master_bunch_do_daemon( const mas_options_t * popts, int argc, char *argv[],
   EVAL_PREPARE;
   int r = 0;
 
+  HMSG( "BUNCH DO DAEMON" );
   IEVAL( r, mas_master_do( popts ) );
 #ifdef MAS_TRACEMEM
   {

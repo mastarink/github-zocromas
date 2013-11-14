@@ -78,8 +78,8 @@ mas_master( const mas_options_t * popts )
   CTRL_PREPARE;
   int r = 0, rn = 0;
 
-  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), OPT_QFLAG( popts, log.run ) ? 'L' : 'l', !OPT_QFLAG( popts, noticker ) ? 'T' : 't',
-        !OPT_QFLAG( popts, nowatcher ) ? 'W' : 'w' );
+  HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), OPT_QFLAG( popts, log_run ) ? 'L' : 'l', !OPT_QFLAG( popts, woticker ) ? 'T' : 't',
+        !OPT_QFLAG( popts, wowatcher ) ? 'W' : 'w' );
   /* if ( ctrl.is_parent )                                                  */
   /* {                                                                      */
   /*   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocParMaster" ) ); */
@@ -91,8 +91,8 @@ mas_master( const mas_options_t * popts )
   /* ??????? */
   /* r=0; */
   MAS_LOG( "to start spec. threads" );
-  /* if ( popts->log.run ) */
-  if ( OPT_QFLAG( popts, log.run ) )
+  /* if ( popts->log_run ) */
+  if ( OPT_QFLAG( popts, log_run ) )
   {
     HMSG( "LOGGER TO START" );
     mas_logger_start(  );
@@ -101,8 +101,9 @@ mas_master( const mas_options_t * popts )
   {
     HMSG( "NO LOGGER" );
   }
-  /* if ( !popts->noticker ) */
-  if ( !OPT_QFLAG( popts, noticker ) )
+  HMSG( "MASTER A" );
+  /* if ( !popts->woticker ) */
+  if ( !OPT_QFLAG( popts, woticker ) )
   {
     HMSG( "TICKER TO START" );
     mas_ticker_start( popts );
@@ -112,8 +113,9 @@ mas_master( const mas_options_t * popts )
     MAS_LOG( "running w/o ticker" );
     HMSG( "NO TICKER" );
   }
-  /* if ( !popts->nowatcher ) */
-  if ( OPT_QFLAG( popts, nowatcher ) )
+  HMSG( "MASTER B" );
+  /* if ( !popts->wowatcher ) */
+  if ( OPT_QFLAG( popts, wowatcher ) )
   {
     HMSG( "WATCHER TO START" );
     mas_watcher_start( popts );
@@ -123,17 +125,23 @@ mas_master( const mas_options_t * popts )
     MAS_LOG( "running w/o watcher" );
     HMSG( "NO WATCHER" );
   }
-  if ( popts->nomaster )
+  HMSG( "MASTER C" );
+  if ( popts->womaster )
   {
-    sleep( popts->nomaster );
+    HMSG( "MASTER C.1" );
+    HMSG( "NO MASTER" );
+    sleep( popts->womaster );
   }
   else if ( popts->hostsv.c > 0 && popts->hostsv.v )
   {
+    HMSG( "MASTER C.2" );
     /* for ( int ih = 0; ih < popts->  hostsv.c; ih++ ) */
     /* {                                             */
     /*   thMSG( "%d. host %s", ih, popts->  hostsv.v[ih] ); */
     /* }                                             */
     /* while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !popts->quit ) */
+    HMSG( "TO MASTER LOOP r:%d; ctrl.keep_listening:%d; ctrl.fatal:%d; flag-quit:%d", r, ctrl.keep_listening, ctrl.fatal,
+          OPT_QFLAG( popts, quit ) );
     while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !OPT_QFLAG( popts, quit ) )
     {
       int qstopped = 0;
@@ -172,9 +180,11 @@ mas_master( const mas_options_t * popts )
   }
   else
   {
+    HMSG( "MASTER C.3" );
     EMSG( "hosts not defined" );
     MAS_LOG( "hosts not defined" );
   }
+  HMSG( "MASTER D" );
   if ( popts->exitsleep )
     sleep( popts->exitsleep );
   MAS_LOG( "to stop spec. threads" );
@@ -246,6 +256,7 @@ mas_master_do( const mas_options_t * popts )
 
   /* r = mas_xpthread_create( &master_thread, mas_master_th, MAS_THREAD_MASTER, ( void * ) NULL ); */
   /* if ( popts->make_master_thread ) */
+  HMSG( "MASTER DO" );
   if ( OPT_QFLAG( popts, make_master_thread ) )
   {
     /* r = pthread_create( &ctrl.threads.n.master.thread, &ctrl.thglob.master_attr, mas_master_th, ( void * ) NULL ); */

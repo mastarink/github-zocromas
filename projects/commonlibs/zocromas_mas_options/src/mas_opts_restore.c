@@ -82,7 +82,7 @@ mas_opts_atou( const char *s )
 
 
 /*
-  daemon.disable			:: --[no]daemon
+  daemon_disable			:: --[no]daemon
   default_port				:: --port
   dir.history  				:: --historydir
   dir.log     				:: --logdir
@@ -241,9 +241,9 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
 #define OPT_FLAG(oname,val)         OPT_XFLAG( oname, val )
 
 /* #define OPT_NOXFLAGD(oname,fld,val) else if ( OPT_MATCH( oname,val ) ) popts-> flag.name.fld = ( mas_opts_atou(val)?0:1 ) */
-#define OPT_NOXFLAGD(oname,fld,val) else if ( OPT_MATCH( oname,val ) ) OPT_SFLAG(popts, fld, !mas_opts_atou(val))
-#define OPT_NOXFLAG(oname,val)  OPT_NOXFLAGD(oname, oname, val)
-#define OPT_NOFLAG(oname,val)       OPT_NOXFLAG( no##oname, val )
+#define OPT_WOXFLAGD(oname,fld,val) else if ( OPT_MATCH( oname,val ) ) OPT_SFLAG(popts, fld, !mas_opts_atou(val))
+#define OPT_WOXFLAG(oname,val)  OPT_WOXFLAGD(oname, oname, val)
+#define OPT_WOFLAG(oname,val)       OPT_WOXFLAG( wo##oname, val )
 
 #define OPT_XNUMD(oname,fld,val)   else if ( OPT_MATCH( oname,val ) ) popts-> fld = ( mas_opts_atou(val) )
 #define OPT_XNUM(oname,val)        OPT_XNUMD( oname, oname, val )
@@ -255,24 +255,24 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
     HMSG( "RESTORE OPTS: %s", mas_find_eq_value( s ) );
   }
 
-  OPT_XFLAG( log.enable, s );
-  OPT_XFLAG( log.run, s );
-  OPT_NOFLAG( ticker, s );
-  OPT_NOFLAG( watcher, s );
+  OPT_XFLAG( log_enable, s );
+  OPT_XFLAG( log_run, s );
+  OPT_WOFLAG( ticker, s );
+  OPT_WOFLAG( watcher, s );
   OPT_NUM( max_config_backup, s );
   OPT_NUM( default_port, s );
-  /* OPT_NOFLAG( daemon.disable, s ); */
-  OPT_XFLAG( daemon.disable, s );
-  OPT_XFLAG( daemon.sys, s );
-  OPT_XFLAG( daemon.disable_redirect_std, s );
-  OPT_XFLAG( daemon.disable_close_std, s );
-  OPT_XFLAG( daemon.disable_setsid, s );
-  OPT_XFLAG( daemon.disable_chdir, s );
+  /* OPT_NOFLAG( daemon_disable, s ); */
+  OPT_XFLAG( daemon_disable, s );
+  OPT_XFLAG( daemon_sys, s );
+  OPT_XFLAG( daemon_disable_redirect_std, s );
+  OPT_XFLAG( daemon_disable_close_std, s );
+  OPT_XFLAG( daemon_disable_setsid, s );
+  OPT_XFLAG( daemon_disable_chdir, s );
   OPT_FLAG( read_user_opts, s );
   OPT_FLAG( read_user_opts_plus, s );
   OPT_FLAG( single_instance, s );
   OPT_FLAG( single_child, s );
-  OPT_NOFLAG( messages, s );
+  OPT_WOFLAG( messages, s );
   /* OPT_FLAG( has_init_message, s ); */
   OPT_FLAG( save_user_opts, s );
   OPT_FLAG( save_user_opts_plus, s );
@@ -381,7 +381,7 @@ _mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filen
     mas_opts_restore_relative( popts, popts->configfilename );
     /* HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %lX", popts->flag.name.nomessages, MAS_CTRL_MESSAGES, */
     /*       MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->msg_flag.bits );                                            */
-    HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %X", OPT_QFLAG( popts, nomessages ), MAS_CTRL_MESSAGES,
+    HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %X", OPT_QFLAG( popts, womessages ), MAS_CTRL_MESSAGES,
           MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->flag.name.msg.bits );
   }
   return r;

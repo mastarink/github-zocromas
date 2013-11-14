@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
@@ -55,178 +56,188 @@ related:
 
 /* struct option *mas_cli_longopts_table = NULL; */
 
-struct option mas_cli_longopts_ctable[] = {
-  {"test", no_argument, NULL, MAS_CLI_OPT_TEST},
-  {"help", no_argument, NULL, MAS_CLI_OPT_HELP},
-  {"info", no_argument, NULL, MAS_CLI_OPT_INFO},
-  {"quit", no_argument, NULL, MAS_CLI_OPT_QUIT},
-  {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},
-
-  {"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
-  {"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},
-  {"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE},
-
-  {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},
-  {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},
-
-  {"save-user-opts", optional_argument, NULL, MAS_CLI_OPT_SAVE_USER_OPTS},
-  {"nosave-user-opts", no_argument, NULL, MAS_CLI_OPT_NOSAVE_USER_OPTS},
-
-  {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},
-  {"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO},
-  {"redirect-stderr", required_argument, NULL, MAS_CLI_OPT_STDERRTO},
-  {"redirect-stdout", required_argument, NULL, MAS_CLI_OPT_STDOUTTO},
-  {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},
-  {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},
-
-  {"parent-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_PARENT},
-  {"noparent-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_PARENT},
-
-  {"child-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_CHILD},
-  {"nochild-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_CHILD},
-
-  {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},
-  {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},
-
-  {"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD},
-  {"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD},
-
-  {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},
-  {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},
-
-  {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},
-  {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},
-
-  {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},
-  {"log", no_argument, NULL, MAS_CLI_OPT_LOG},
-
-  {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},
-  {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},
-  {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},
-  {"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR},
-
-  {"noread-user-config", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS},
-  {"read-user-config", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS},
-
-  {"noread-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS_PLUS},
-  {"read-user-config-plus", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS_PLUS},
-
-  {"nooverwrite-user-config", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS},
-  {"overwrite-user-config", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS},
-
-  {"nooverwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS_PLUS},
-  {"overwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS_PLUS},
-
-  {"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER},
-  {"watcher", no_argument, NULL, MAS_CLI_OPT_NONOWATCHER},
-
-  {"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER},
-  {"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER},
-  {"set-ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE},
-
-  {"nopidfile", no_argument, NULL, MAS_CLI_OPT_NOPIDFILE},
-  {"pidfile", no_argument, NULL, MAS_CLI_OPT_PIDFILE},
-
-  {"nomaster", required_argument, NULL, MAS_CLI_OPT_NOMASTER},
-  {"master", no_argument, NULL, MAS_CLI_OPT_MASTER},
-
-  {"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD},
-  {"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD},
-
-  {"nolistener", required_argument, NULL, MAS_CLI_OPT_NOLISTENER},
-  {"listener", no_argument, NULL, MAS_CLI_OPT_LISTENER},
-
-  {"nolisten", required_argument, NULL, MAS_CLI_OPT_NOLISTEN},
-  {"listen", no_argument, NULL, MAS_CLI_OPT_LISTEN},
-
-  {"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON},
-  {"daemon", no_argument, NULL, MAS_CLI_OPT_NONODAEMON},
-
-  {"nosysdaemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},
-  {"sysdaemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},
-
-  {"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},
-  {"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},
-
-  {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},
-  {"noprotos", no_argument, NULL, MAS_CLI_OPT_NOPROTOS},
-  {"host", required_argument, NULL, MAS_CLI_OPT_HOST},
-  {"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS},
-  {"port", required_argument, NULL, MAS_CLI_OPT_PORT},
-
-  {"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG},
-  {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},
-  {"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG},
-  {"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG},
-
-  {NULL, 0, NULL, 0},
-};
+#if 0
+/* struct option mas_cli_longopts_ctable[] = {                                                    */
+/*   {"test", no_argument, NULL, MAS_CLI_OPT_TEST},                                               */
+/*   {"help", no_argument, NULL, MAS_CLI_OPT_HELP},                                               */
+/*   {"info", no_argument, NULL, MAS_CLI_OPT_INFO},                                               */
+/*   {"quit", no_argument, NULL, MAS_CLI_OPT_QUIT},                                               */
+/*   {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},                               */
+/*                                                                                                */
+/*   {"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},                                  */
+/*   {"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},                         */
+/*   {"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE},                        */
+/*                                                                                                */
+/*   {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},                               */
+/*   {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},                              */
+/*                                                                                                */
+/*   {"save-user-opts", optional_argument, NULL, MAS_CLI_OPT_SAVE_USER_OPTS},                     */
+/*   {"nosave-user-opts", no_argument, NULL, MAS_CLI_OPT_NOSAVE_USER_OPTS},                       */
+/*                                                                                                */
+/*   {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},                                   */
+/*   {"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO},                           */
+/*   {"redirect-stderr", required_argument, NULL, MAS_CLI_OPT_STDERRTO},                          */
+/*   {"redirect-stdout", required_argument, NULL, MAS_CLI_OPT_STDOUTTO},                          */
+/*   {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},                         */
+/*   {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},                   */
+/*                                                                                                */
+/*   {"parent-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_PARENT},                         */
+/*   {"noparent-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_PARENT},                     */
+/*                                                                                                */
+/*   {"child-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_CHILD},                           */
+/*   {"nochild-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_CHILD},                       */
+/*                                                                                                */
+/*   {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},                                       */
+/*   {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},                                   */
+/*                                                                                                */
+/*   {"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD},                           */
+/*   {"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD},                               */
+/*                                                                                                */
+/*   {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},                                 */
+/*   {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},                                     */
+/*                                                                                                */
+/*   {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},                                       */
+/*   {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},                                           */
+/*                                                                                                */
+/*   {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},                                             */
+/*   {"log", no_argument, NULL, MAS_CLI_OPT_LOG},                                                 */
+/*                                                                                                */
+/*   {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},                                   */
+/*   {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},                                 */
+/*   {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},                                     */
+/*   {"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR},                             */
+/*                                                                                                */
+/*   {"noread-user-config", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS},                     */
+/*   {"read-user-config", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS},                         */
+/*                                                                                                */
+/*   {"noread-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS_PLUS},           */
+/*   {"read-user-config-plus", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS_PLUS},               */
+/*                                                                                                */
+/*   {"nooverwrite-user-config", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS},           */
+/*   {"overwrite-user-config", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS},               */
+/*                                                                                                */
+/*   {"nooverwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS_PLUS}, */
+/*   {"overwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS_PLUS},     */
+/*                                                                                                */
+/*   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_WOWATCHER},                                     */
+/*   {"watcher", no_argument, NULL, MAS_CLI_OPT_NOWOWATCHER},                                     */
+/*                                                                                                */
+/*   {"noticker", no_argument, NULL, MAS_CLI_OPT_WOTICKER},                                       */
+/*   {"ticker", no_argument, NULL, MAS_CLI_OPT_NOWOTICKER},                                       */
+/*   {"set-ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE},                       */
+/*                                                                                                */
+/*   {"nopidfile", no_argument, NULL, MAS_CLI_OPT_NOPIDFILE},                                     */
+/*   {"pidfile", no_argument, NULL, MAS_CLI_OPT_PIDFILE},                                         */
+/*                                                                                                */
+/*   {"nomaster", required_argument, NULL, MAS_CLI_OPT_WOMASTER},                                 */
+/*   {"master", no_argument, NULL, MAS_CLI_OPT_NOWOMASTER},                                       */
+/*                                                                                                */
+/*   {"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD},                               */
+/*   {"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD},                                   */
+/*                                                                                                */
+/*   {"nolistener", required_argument, NULL, MAS_CLI_OPT_WOLISTENER},                             */
+/*   {"listener", no_argument, NULL, MAS_CLI_OPT_NOWOLISTENER},                                   */
+/*                                                                                                */
+/*   {"nolisten", required_argument, NULL, MAS_CLI_OPT_WOLISTEN},                                 */
+/*   {"listen", no_argument, NULL, MAS_CLI_OPT_NOWOLISTEN},                                       */
+/*                                                                                                */
+/*   {"nodaemon", no_argument, NULL, MAS_CLI_OPT_WODAEMON},                                       */
+/*   {"daemon", no_argument, NULL, MAS_CLI_OPT_NOWODAEMON},                                       */
+/*                                                                                                */
+/*   {"nosysdaemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},                                 */
+/*   {"sysdaemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},                                     */
+/*                                                                                                */
+/*   {"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},                                */
+/*   {"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},                                    */
+/*                                                                                                */
+/*   {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},                                       */
+/*   {"noprotos", no_argument, NULL, MAS_CLI_OPT_NOPROTOS},                                       */
+/*   {"host", required_argument, NULL, MAS_CLI_OPT_HOST},                                         */
+/*   {"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS},                                         */
+/*   {"port", required_argument, NULL, MAS_CLI_OPT_PORT},                                         */
+/*                                                                                                */
+/*   {"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG},                                             */
+/*   {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},                                           */
+/*   {"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG},                                 */
+/*   {"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG},                             */
+/*                                                                                                */
+/*   {NULL, 0, NULL, 0},                                                                          */
+/* };                                                                                             */
+#endif
 
 mas_optionx_t mas_cli_optx_table[] = {
   {{"test", no_argument, NULL, MAS_CLI_OPT_TEST}
-   ,.optx_type = OPTX_TYPE_FLAG}
+   ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_TEST}
   , {{"help", no_argument, NULL, MAS_CLI_OPT_HELP}
      ,.optx_type = OPTX_TYPE_SPECIAL}
   , {{"info", no_argument, NULL, MAS_CLI_OPT_INFO}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_INFO}
   , {{"quit", no_argument, NULL, MAS_CLI_OPT_QUIT}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_QUIT}
   , {{"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP}
-     ,.optx_type = OPTX_TYPE_UNSIGNED}
+     ,.optx_type = OPTX_TYPE_UNSIGNED,.shift = offsetof( mas_options_t, exitsleep )}
   , {{"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SINGLE_INSTANCE}
   , {{"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SINGLE_INSTANCE}
   , {{"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_SINGLE_INSTANCE}
   , {{"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SINGLE_CHILD}
   , {{"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_SINGLE_CHILD}
   , {{"save-user-opts", optional_argument, NULL, MAS_CLI_OPT_SAVE_USER_OPTS}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SAVE_USER_OPTS}
   , {{"nosave-user-opts", no_argument, NULL, MAS_CLI_OPT_NOSAVE_USER_OPTS}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_SAVE_USER_OPTS}
   , {{"command", required_argument, NULL, MAS_CLI_OPT_COMMAND}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_SPECIAL}
   , {{"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, msgfilename )}
   , {{"redirect-stderr", required_argument, NULL, MAS_CLI_OPT_STDERRTO}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, stderr_filename )}
   , {{"redirect-stdout", required_argument, NULL, MAS_CLI_OPT_STDOUTTO}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, stdout_filename )}
   , {{"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_LISTENER_SINGLE}
   , {{"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"parent-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_PARENT}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"noparent-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_PARENT}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"child-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_CHILD}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"nochild-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_CHILD}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_TRANSACTION_SINGLE}
+
+  , {{"parent-messages", no_argument, NULL, MAS_CLI_OPT_NOWOMESSAGES_PARENT}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_MESSAGES_PARENT}
+  , {{"noparent-messages", no_argument, NULL, MAS_CLI_OPT_WOMESSAGES_PARENT}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_MESSAGES_PARENT}
+
+  , {{"child-messages", no_argument, NULL, MAS_CLI_OPT_NOWOMESSAGES_CHILD}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_MESSAGES_CHILD}
+  , {{"nochild-messages", no_argument, NULL, MAS_CLI_OPT_WOMESSAGES_CHILD}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_MESSAGES_CHILD}
+
+  , {{"messages", no_argument, NULL, MAS_CLI_OPT_NOWOMESSAGES}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_MESSAGES}
+  , {{"nomessages", no_argument, NULL, MAS_CLI_OPT_WOMESSAGES}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_MESSAGES}
+
+  , {{"redirect-std", no_argument, NULL, MAS_CLI_OPT_NOWOREDIRECT_STD}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE_REDIRECT_STD}
+  , {{"noredirect-std", no_argument, NULL, MAS_CLI_OPT_WOREDIRECT_STD}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE_REDIRECT_STD}
+
+  , {{"close-std", no_argument, NULL, MAS_CLI_OPT_NOWOCLOSE_STD}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE_CLOSE_STD}
+  , {{"noclose-std", no_argument, NULL, MAS_CLI_OPT_WOCLOSE_STD}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE_CLOSE_STD}
+
   , {{"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER}
      ,.optx_type = OPTX_TYPE_NOFLAG}
   , {{"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER}
      ,.optx_type = OPTX_TYPE_NOFLAG}
+
   , {{"log", no_argument, NULL, MAS_CLI_OPT_LOG}
      ,.optx_type = OPTX_TYPE_FLAG}
   , {{"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG}
      ,.optx_type = OPTX_TYPE_NOFLAG}
+
   , {{"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR}
      ,.optx_type = OPTX_TYPE_STR}
   , {{"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR}
@@ -235,94 +246,115 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_STR}
   , {{"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR}
      ,.optx_type = OPTX_TYPE_STR}
+
   , {{"read-user-config", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_READ_USER_OPTS}
   , {{"noread-user-config", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_READ_USER_OPTS}
+
   , {{"read-user-config-plus", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS_PLUS}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_READ_USER_OPTS_PLUS}
   , {{"noread-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS_PLUS}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_READ_USER_OPTS_PLUS}
+
   , {{"overwrite-user-config", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_OVERWRITE_USER_OPTS}
   , {{"nooverwrite-user-config", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_OVERWRITE_USER_OPTS}
+
   , {{"overwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS_PLUS}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_OVERWRITE_USER_OPTS_PLUS}
   , {{"nooverwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS_PLUS}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"watcher", no_argument, NULL, MAS_CLI_OPT_NONOWATCHER}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"nowatcher", no_argument, NULL, MAS_CLI_OPT_NOWATCHER}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"ticker", no_argument, NULL, MAS_CLI_OPT_TICKER}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"noticker", no_argument, NULL, MAS_CLI_OPT_NOTICKER}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_OVERWRITE_USER_OPTS_PLUS}
+
+  , {{"watcher", no_argument, NULL, MAS_CLI_OPT_NOWOWATCHER}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_WATCHER}
+  , {{"nowatcher", no_argument, NULL, MAS_CLI_OPT_WOWATCHER}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_WATCHER}
+
+  , {{"ticker", no_argument, NULL, MAS_CLI_OPT_NOWOTICKER}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_WOTICKER}
+  , {{"noticker", no_argument, NULL, MAS_CLI_OPT_WOTICKER}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_WOTICKER}
+
   , {{"set-ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_UNSIGNED,.shift = offsetof( mas_options_t, ticker_mode )}
+
   , {{"pidfile", no_argument, NULL, MAS_CLI_OPT_PIDFILE}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_PIDFILE}
   , {{"nopidfile", no_argument, NULL, MAS_CLI_OPT_NOPIDFILE}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"master", no_argument, NULL, MAS_CLI_OPT_MASTER}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"nomaster", required_argument, NULL, MAS_CLI_OPT_NOMASTER}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_PIDFILE}
+
+  , {{"master", no_argument, NULL, MAS_CLI_OPT_NOWOMASTER}
+     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, womaster )}
+  , {{"nomaster", required_argument, NULL, MAS_CLI_OPT_WOMASTER}
+     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, womaster )}
+
   , {{"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_MAKE_MASTER_THREAD}
   , {{"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"listener", no_argument, NULL, MAS_CLI_OPT_LISTENER}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"nolistener", required_argument, NULL, MAS_CLI_OPT_NOLISTENER}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"listen", no_argument, NULL, MAS_CLI_OPT_LISTEN}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"nolisten", required_argument, NULL, MAS_CLI_OPT_NOLISTEN}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
-  , {{"daemon", no_argument, NULL, MAS_CLI_OPT_NONODAEMON}
-     ,.optx_type = OPTX_TYPE_FLAG}
-  , {{"nodaemon", no_argument, NULL, MAS_CLI_OPT_NODAEMON}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_MAKE_MASTER_THREAD}
+
+  , {{"listener", no_argument, NULL, MAS_CLI_OPT_NOWOLISTENER}
+     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolistener )}
+  , {{"nolistener", required_argument, NULL, MAS_CLI_OPT_WOLISTENER}
+     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolistener )}
+
+  , {{"listen", no_argument, NULL, MAS_CLI_OPT_NOWOLISTEN}
+     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolisten )}
+  , {{"nolisten", required_argument, NULL, MAS_CLI_OPT_WOLISTEN}
+     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolisten )}
+
+  , {{"daemon", no_argument, NULL, MAS_CLI_OPT_NOWODAEMON}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE}
+  , {{"nodaemon", no_argument, NULL, MAS_CLI_OPT_WODAEMON}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE}
+
   , {{"sysdaemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
   , {{"nosysdaemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
+
   , {{"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
   , {{"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
+
   , {{"proto", required_argument, NULL, MAS_CLI_OPT_PROTO}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_ARGV,.shift = offsetof( mas_options_t, protosv )}
   , {{"noprotos", no_argument, NULL, MAS_CLI_OPT_NOPROTOS}
      ,.optx_type = OPTX_TYPE_SPECIAL}
+
   , {{"host", required_argument, NULL, MAS_CLI_OPT_HOST}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_ARGV,.shift = offsetof( mas_options_t, hostsv )}
   , {{"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS}
-     ,.optx_type = OPTX_TYPE_SPECIAL}
+     ,.optx_type = OPTX_TYPE_ARGV_CLEAR,.shift = offsetof( mas_options_t, hostsv )}
+
   , {{"port", required_argument, NULL, MAS_CLI_OPT_PORT}
-     ,.optx_type = OPTX_TYPE_UNSIGNED}
+     ,.optx_type = OPTX_TYPE_UNSIGNED,.shift = offsetof( mas_options_t, default_port )}
+
   , {{"msg", required_argument, NULL, MAS_CLI_OPT_MSG}
-     ,.optx_type = OPTX_TYPE_FLAG /* ?? */ }
+     ,.optx_type = OPTX_TYPE_MSGFLAG /* ?? */ }
   , {{"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOMSGFLAG}
+
   , {{"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, init_message )}
   , {{"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, init_message )}
+
   , {{NULL, 0, NULL, 0}
      ,.optx_type = OPTX_TYPE_NONE}
 };
 
 
-mas_optionx_t *
-mas_cli_find_optx( int opt )
-{
-  mas_optionx_t *optx = NULL;
-
-  return optx;
-}
+/* mas_optionx_t *               */
+/* mas_cli_find_optx( int opt )  */
+/* {                             */
+/*   mas_optionx_t *optx = NULL; */
+/*                               */
+/*   return optx;                */
+/* }                             */
 
 
 struct option *
@@ -346,7 +378,10 @@ mas_cli_options_data_init( mas_options_t * popts, const char **message )
   {
     popts->cli_longopts_num = sizeof( mas_cli_optx_table ) / sizeof( mas_cli_optx_table[0] );
     popts->cli_longopts = mas_cli_create_longopts_table( mas_cli_optx_table, popts->cli_longopts_num );
+    popts->cli_optxs = &mas_cli_optx_table[0];
   }
+  if ( message )
+    *message = __func__;
   return 0;
 }
 

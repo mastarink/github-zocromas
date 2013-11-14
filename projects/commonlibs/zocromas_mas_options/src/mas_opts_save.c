@@ -152,8 +152,8 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                                "max_config_backup=%u\nmessages=%u\n"
                                "default_port=%u\nsave_user_opts=%u\nsave_user_opts_plus=%u\n" "restart_sleep=%lg\n"
                                "# -\n", popts->env_optsname, popts->env_hostname, popts->dir.history,
-                               popts->dir.post, popts->dir.log, OPT_QFLAG( popts, log.enable ),
-                               popts->max_config_backup, !OPT_QFLAG( popts, nomessages ), popts->default_port,
+                               popts->dir.post, popts->dir.log, OPT_QFLAG( popts, log_enable ),
+                               popts->max_config_backup, !OPT_QFLAG( popts, womessages ), popts->default_port,
                                OPT_QFLAG( popts, save_user_opts ), OPT_QFLAG( popts, save_user_opts_plus ), popts->restart_sleep ) );
             if ( r > 0 )
               rtot += r;
@@ -166,7 +166,7 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                             "single_instance=%u\nsingle_child=%u\nlogger=%d\nticker=%d\nwatcher=%d\nmodsdir=%s\n"
                             "pidsdir=%s\nprotodir=%s\n# -\n", ctrl.daemon, OPT_QFLAG( popts, read_user_opts ),
                             OPT_QFLAG( popts, read_user_opts_plus ), OPT_QFLAG( popts, single_instance ), OPT_QFLAG( popts, single_child ),
-                            OPT_QFLAG( popts, log.run ), !OPT_QFLAG( popts, noticker ), !OPT_QFLAG( popts, nowatcher ), popts->dir.mods,
+                            OPT_QFLAG( popts, log_run ), !OPT_QFLAG( popts, woticker ), !OPT_QFLAG( popts, wowatcher ), popts->dir.mods,
                             popts->dir.pids, popts->dir.proto ) );
             if ( r > 0 )
               rtot += r;

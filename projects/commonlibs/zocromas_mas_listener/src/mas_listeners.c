@@ -58,10 +58,10 @@ mas_listeners_start( const mas_options_t * popts )
 {
   int r = 0;
 
-  if ( popts->nolistener )
+  if ( popts->wolistener )
   {
     MAS_LOG( "stopped run w/o listeners" );
-    sleep( popts->nolistener );
+    sleep( popts->wolistener );
   }
   else
   {

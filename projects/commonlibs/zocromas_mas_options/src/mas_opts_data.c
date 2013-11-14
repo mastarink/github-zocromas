@@ -61,22 +61,30 @@ static mas_options_t g_opts = {
                 .wait_server = 0,
                 .listener_single = 0,
                 .transaction_single = 0,
-                .log = {.enable = 0,.run = 0,}
-                ,
-                /* .nologger = 0, */
-                /* .nolog = 0,    */
-                .noticker = 0,
-                .nowatcher = 0,
-                .nomessages = 0,
+                /* .log = {.enable = 0,.run = 0,} */
+                .log_enable = 0,
+                .log_run = 0,
 
-                .daemon = {
-                           .disable = 0,
-                           .disable_redirect_std = 0,
-                           .disable_close_std = 0,
-                           .disable_setsid = 0,
-                           .disable_chdir = 0,
-                           .sys = 0,
-                           },
+                /* .wologger = 0, */
+                /* .wolog = 0,    */
+                .woticker = 0,
+                .wowatcher = 0,
+                .womessages = 0,
+
+                /* .daemon = {                           */
+                /*            .disable = 0,              */
+                /*            .disable_redirect_std = 0, */
+                /*            .disable_close_std = 0,    */
+                /*            .disable_setsid = 0,       */
+                /*            .disable_chdir = 0,        */
+                /*            .sys = 0,                  */
+                /*            },                         */
+                .daemon_disable = 0,
+                .daemon_disable_redirect_std = 0,
+                .daemon_disable_close_std = 0,
+                .daemon_disable_setsid = 0,
+                .daemon_disable_chdir = 0,
+                .daemon_sys = 0,
                 .msg = {
                         .name = {
                                  .msg_notice = 1,
@@ -103,13 +111,13 @@ static mas_options_t g_opts = {
 
                 },
   .exitsleep = 0,
-  .nomaster = 0,
-  .nolistener = 0,
-  .nolisten = 0,
+  .womaster = 0,
+  .wolistener = 0,
+  .wolisten = 0,
 
-  /* .nodaemon = 0,       */
-  /* .noredirect_std = 0, */
-  /* .noclose_std = 0,    */
+  /* .wodaemon = 0,       */
+  /* .woredirect_std = 0, */
+  /* .woclose_std = 0,    */
 
 #  ifdef MAS_DEFAULT_PORT
   .default_port = MAS_DEFAULT_PORT,

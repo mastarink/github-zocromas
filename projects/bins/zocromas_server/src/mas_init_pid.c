@@ -125,8 +125,8 @@ mas_pids_init( mas_options_t * popts, const char **message )
 {
   int r = 0;
 
-  /* if ( !popts->nopidfile ) */
-  if ( !OPT_QFLAG( popts, nopidfile ) )
+  /* if ( !popts->wopidfile ) */
+  if ( !OPT_QFLAG( popts, wopidfile ) )
   {
     size_t shash_namebuf_size = 512;
     char *shash_namebuf = NULL;
