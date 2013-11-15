@@ -153,7 +153,7 @@ _mas_opts_save( mas_options_t * popts, const char *dirname, const char *filename
                                "default_port=%u\nsave_user_opts=%u\nsave_user_opts_plus=%u\n" "restart_sleep=%lg\n"
                                "# -\n", popts->env_optsname, popts->env_hostname, popts->dir.history,
                                popts->dir.post, popts->dir.log, OPT_QFLAG( popts, log_enable ),
-                               popts->max_config_backup, !OPT_QFLAG( popts, womessages ), popts->default_port,
+                               popts->max_config_backup, OPT_QFLAG( popts, messages ), popts->default_port,
                                OPT_QFLAG( popts, save_user_opts ), OPT_QFLAG( popts, save_user_opts_plus ), popts->restart_sleep ) );
             if ( r > 0 )
               rtot += r;

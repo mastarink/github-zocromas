@@ -41,9 +41,12 @@ more:
 
 /*
  * */
-int
-mas_ctrl_init( mas_options_t * popts, const char **message )
+/* int                                                                                   */
+/* mas_ctrl_init( mas_options_t * popts, const char **message, unsigned force_messages ) */
+INIT_HANDLER( mas_ctrl_init )
 {
+  int force_messages = flags;
+
   CTRL_PREPARE;
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.in_client = 0;
@@ -53,11 +56,11 @@ mas_ctrl_init( mas_options_t * popts, const char **message )
   else
     ctrl.keep_listening = 1;
   /* ctrl.messages = !popts->flag.name.womessages; */
-  ctrl.messages = !OPT_QFLAG( popts, womessages );
+  ctrl.messages = force_messages || OPT_QFLAG( popts, messages );
   /* ctrl.messages_child = !popts->flag.name.womessages_child && ctrl.messages; */
-  ctrl.messages_child = !OPT_QFLAG( popts, womessages_child ) && ctrl.messages;
+  ctrl.messages_child = force_messages || ( OPT_QFLAG( popts, messages_child ) && ctrl.messages );
   /* ctrl.messages_parent = !popts->flag.name.womessages_parent && ctrl.messages; */
-  ctrl.messages_parent = !OPT_QFLAG( popts, womessages_parent ) && ctrl.messages;
+  ctrl.messages_parent = force_messages || ( OPT_QFLAG( popts, messages_parent ) && ctrl.messages );
   ctrl.messages_set = 1;
   if ( !ctrl.msgfile )
     ctrl.msgfile = ctrl.stderrfile;
@@ -69,6 +72,12 @@ mas_ctrl_init( mas_options_t * popts, const char **message )
   ctrl.redirect_std = !OPT_QFLAG( popts, daemon_disable_redirect_std );
   /* ctrl.close_std = !popts->flag.name.daemon_disable_close_std; */
   ctrl.close_std = !OPT_QFLAG( popts, daemon_disable_close_std );
+
+  ctrl.commandsv.c = popts->ctrl_commandsv.c;
+  popts->ctrl_commandsv.c = 0;
+  ctrl.commandsv.v = popts->ctrl_commandsv.v;
+  popts->ctrl_commandsv.v = NULL;
+
   ctrl.fatal = 0;
   if ( message )
     *message = __func__;

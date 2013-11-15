@@ -1,5 +1,5 @@
 #ifndef MAS_SIG_H
-#define MAS_SIG_H
+#  define MAS_SIG_H
 
 /* void sigabrt_han( int s ); */
 void sigterm_han( int s );
@@ -12,7 +12,8 @@ void sighup_han( int s );
 void sigpipe_han( int s );
 void sigwinch_han( int s );
 
-int mas_sig_init( mas_options_t * popts, const char **message );
+/* int mas_sig_init( mas_options_t * popts, const char **message ); */
+INIT_HANDLER( mas_sig_init );
 void mas_dfl_sig( void );
 
 #endif

@@ -69,7 +69,7 @@ static mas_options_t g_opts = {
                 /* .wolog = 0,    */
                 .woticker = 0,
                 .wowatcher = 0,
-                .womessages = 0,
+                .messages = 0,
 
                 /* .daemon = {                           */
                 /*            .disable = 0,              */

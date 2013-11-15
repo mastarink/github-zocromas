@@ -135,6 +135,7 @@ typedef struct mas_optionx_s
   mas_optionx_type_t optx_type;
   mas_msg_options_shift_t shift;
   unsigned long def;
+  unsigned set:1;
 } mas_optionx_t;
 typedef enum mas_options_shift_e
 {
@@ -190,14 +191,14 @@ typedef struct mas_options_s
       unsigned test:1;
       unsigned quit:1;
       unsigned info:1;
-      unsigned wopidfile:1;
+      unsigned pidfile:1;
       unsigned single_instance:1;
       unsigned single_child:1;
       unsigned listener_single:1;
       unsigned transaction_single:1;
-      unsigned womessages_parent:1;
-      unsigned womessages_child:1;
-      unsigned womessages:1;
+      unsigned messages_parent:1;
+      unsigned messages_child:1;
+      unsigned messages:1;
 
       unsigned wowatcher:1;
       unsigned disconnect_prompt:1;
@@ -250,6 +251,7 @@ typedef struct mas_options_s
   /* int commands_num; */
   /* char **commands;  */
   mas_string_setv_t commandsv;
+  mas_string_setv_t ctrl_commandsv;
 
   unsigned client_attempts;
   char *uuid;
@@ -298,8 +300,9 @@ struct mas_option_parse_s
   const char *dv;
 };
 typedef struct mas_option_parse_s mas_option_parse_t;
-typedef int ( *mas_init_fun_t ) ( mas_options_t * popts, const char **message );
-
+#define INIT_HANDLER( hfun ) int hfun( mas_options_t * popts, const char **message, unsigned flags  )
+/* typedef int ( *mas_init_fun_t ) ( mas_options_t * popts, const char **message, unsigned flags ); */
+typedef INIT_HANDLER(( *mas_init_fun_t ));
 /* #  define MAS_NOPASS_OPTS */
 
 #endif

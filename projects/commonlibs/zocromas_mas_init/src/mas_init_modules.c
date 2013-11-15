@@ -42,6 +42,9 @@
 /* #include "mas_init.h" */
 
 
+#include "mas_init_modules.h"
+
+
 /*
 this:
   mas_init.c
@@ -104,8 +107,9 @@ more:
 /*   return r >= 0 ? 0 : r;                                               */
 /* }                                                                      */
 
-int
-mas_message_init( mas_options_t * popts, const char **message )
+/* int                                                                            */
+/* mas_message_init( mas_options_t * popts, const char **message, unsigned flag ) */
+INIT_HANDLER( mas_message_init )
 {
   CTRL_PREPARE;                 /* MFP... */
   if ( popts->init_message )
@@ -184,8 +188,9 @@ mas_message_init( mas_options_t * popts, const char **message )
   return 0;
 }
 
-int
-mas_opt_files_init( mas_options_t * popts, const char **message )
+/* int                                                                              */
+/* mas_opt_files_init( mas_options_t * popts, const char **message, unsigned flag ) */
+INIT_HANDLER( mas_opt_files_init )
 {
   int r = 0;
   char sppid[64] = "";
@@ -256,8 +261,9 @@ mas_opt_files_init( mas_options_t * popts, const char **message )
   return r >= 0 ? 0 : r;
 }
 
-int
-mas_set_msg_file( mas_options_t * popts, const char **message )
+/* int                                                                            */
+/* mas_set_msg_file( mas_options_t * popts, const char **message, unsigned flag ) */
+INIT_HANDLER( mas_msg_file_init )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;
@@ -282,8 +288,9 @@ mas_set_msg_file( mas_options_t * popts, const char **message )
   return r > 0 ? 0 : r;
 }
 
-int
-mas_uuid_init( mas_options_t * popts, const char **message )
+/* int                                                                         */
+/* mas_uuid_init( mas_options_t * popts, const char **message, unsigned flag ) */
+INIT_HANDLER( mas_uuid_init )
 {
 #ifdef HAVE_LIBUUID
   if ( !popts->uuid )
@@ -304,8 +311,9 @@ mas_uuid_init( mas_options_t * popts, const char **message )
   return 0;
 }
 
-int
-mas_post_init( mas_options_t * popts, const char **message )
+/* int                                                                         */
+/* mas_post_init( mas_options_t * popts, const char **message, unsigned flag ) */
+INIT_HANDLER( mas_post_init )
 {
   int r = 0;
 

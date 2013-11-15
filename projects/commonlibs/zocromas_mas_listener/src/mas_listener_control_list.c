@@ -43,8 +43,9 @@ more:
   mas_cmdmod_listener.c
 */
 
-int
-mas_lcontrols_init( mas_options_t * popts, const char * *message )
+/* int                                                                */
+/* mas_lcontrols_init( mas_options_t * popts, const char * *message ) */
+INIT_HANDLER( mas_lcontrols_init )
 {
   CTRL_PREPARE;
   HMSG( "INIT LCONTROLS" );

@@ -255,7 +255,7 @@ mas_init_vplus( mas_options_t * popts, va_list args )
     const char *msg = NULL;
 
     HMSG( "(%d) + INIT V #%d", r, ifu );
-    IEVAL( r, ( fun ) ( popts, &msg ) );
+    IEVAL( r, ( fun ) ( popts, &msg, 0 ) );
     MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
     HMSG( "(%d) - INIT V #%d %s", r, ifu, msg ? msg : "-" );
     /* ( ctrl.error_handler ) ( FL, 77 ); */
@@ -289,7 +289,7 @@ mas_init_set_n( mas_options_t * popts, /* int argc, char **argv, char **env, */ 
 
       HMSG( "(%d) + INIT S #%d [%p] %d:[%p]", r, ifu, ( void * ) ( unsigned long long ) fun, ifu,
             ( void * ) ( unsigned long long ) init_funcs[ifu] );
-      IEVAL( r, ( fun ) ( popts, &msg ) );
+      IEVAL( r, ( fun ) ( popts, &msg, 0 ) );
       MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
       HMSG( "(%d) - INIT S #%d %s", r, ifu, msg ? msg : "-" );
       /* ( ctrl.error_handler ) ( FL, 77 ); */
@@ -326,7 +326,7 @@ mas_init_set_z( mas_options_t * popts, /* int argc, char **argv, char **env, */ 
 
       HMSG( "(%d) + INIT SET #%d [%p] %d:[%p]", r, ifu, ( void * ) ( unsigned long long ) fun, ifu,
             ( void * ) ( unsigned long long ) init_funcs[ifu] );
-      IEVAL( r, ( fun ) ( popts, &msg ) );
+      IEVAL( r, ( fun ) ( popts, &msg, 0 ) );
       MAS_LOG( "(%d) init + #%d - %s", r, ifu, msg ? msg : "-" );
       HMSG( "(%d) - INIT SET #%d %s", r, ifu, msg ? msg : "-" );
       /* ( ctrl.error_handler ) ( FL, 77 ); */

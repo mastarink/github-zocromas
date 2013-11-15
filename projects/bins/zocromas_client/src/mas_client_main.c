@@ -68,12 +68,12 @@ main( int argc, char *argv[], char *env[] )
 
   /* r = mas_init_plus( argc, argv, env, mas_client_init_readline, NULL ); */
   HMSG( "INIT CLIENT (%p:%p:%p)", ( void * ) ( unsigned long ) mas_sig_init,
-        ( void * ) ( unsigned long ) mas_ctrl_init, ( void * ) ( unsigned long ) mas_client_init_readline );
+        ( void * ) ( unsigned long ) mas_ctrl_init, ( void * ) ( unsigned long ) mas_client_readline_init );
 
   /* uuid BEFORE opt_files !! */
   IEVAL( r, mas_init_plus( gpopts, argc, argv, env, /* mas_proc_init, */ mas_uuid_init, mas_opt_files_init, mas_sig_init,
                            mas_cli_options_data_init, mas_cli_options_init, mas_ctrl_init,
-                           mas_client_init_readline, mas_post_init, NULL ) );
+                           mas_client_readline_init, mas_post_init, NULL ) );
   for ( int ia = gpopts->hostsv.c; r >= 0 && ia > 0; ia-- )
   {
     int maxit = 0;

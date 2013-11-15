@@ -98,19 +98,21 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
   /* mas_optionx_t *optx = NULL; */
   /* optx = mas_cli_find_optx( opt ); */
   /* HMSG( "CLI M/O %d [%c] optx:%d", opt, opt > ' ' && opt <= 'z' ? opt : '-', optx ? 1 : 0 ); */
-  if ( 0 && shift )
+  if ( shift )
   {
     if ( optyp == OPTX_TYPE_FLAG && shift )
     {
       HMSG( "@@@@@@@@@@@@@@@ FLAG %lX", popts->flag.bits );
       popts->flag.bits |= 1UL << ( shift - 1 );
       HMSG( "@@@@@@@@@@@@@@@ FLAG %lX", popts->flag.bits );
+      popts->cli_optxs[indx].set = 1;
     }
     else if ( optyp == OPTX_TYPE_NOFLAG && shift )
     {
       HMSG( "@@@@@@@@@@@@@@@ NOFLAG %lX", popts->flag.bits );
       popts->flag.bits &= ~( 1UL << ( shift - 1 ) );
       HMSG( "@@@@@@@@@@@@@@@ NOFLAG %lX -- %lX", popts->flag.bits, ~( 1UL << ( shift - 1 ) ) );
+      popts->cli_optxs[indx].set = 1;
     }
     else if ( optyp == OPTX_TYPE_UNSIGNED && shift )
     {
@@ -119,6 +121,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
       p = ( unsigned * ) ( ( ( char * ) popts ) + shift );
       *p = ( unsigned ) ( m_optarg && *m_optarg ? strtol( m_optarg, NULL, 10 ) : def );
       HMSG( "@@@@@@@@@@@@@@@ OPTX_TYPE_UNSIGNED %u", *p );
+      popts->cli_optxs[indx].set = 1;
     }
     else if ( optyp == OPTX_TYPE_INT && shift )
     {
@@ -127,6 +130,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
       p = ( int * ) ( ( ( char * ) popts ) + shift );
       *p = ( int ) ( m_optarg && *m_optarg ? strtol( m_optarg, NULL, 10 ) : def );
       HMSG( "@@@@@@@@@@@@@@@ OPTX_TYPE_INT %d bits:%lx", *p, popts->flag.bits );
+      popts->cli_optxs[indx].set = 1;
     }
     else if ( optyp == OPTX_TYPE_STR && shift )
     {
@@ -140,6 +144,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
       }
       *str = mas_strdup( m_optarg );
       HMSG( "@@@@@@@@@@@@@@@ OPTX_TYPE_STR %s bits:%lx", str ? ( *str ) : NULL, popts->flag.bits );
+      popts->cli_optxs[indx].set = 1;
     }
     else if ( optyp == OPTX_TYPE_ARGV && shift )
     {
@@ -148,9 +153,22 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
       setv = ( mas_string_setv_t * ) ( ( ( char * ) popts ) + shift );
       setv->c = mas_add_argv_arg( setv->c, &setv->v, m_optarg );
       HMSG( "@@@@@@@@@@@@@@@ OPTX_TYPE_ARGV %s bits:%lx", setv && setv->v ? ( setv->v[0] ) : NULL, popts->flag.bits );
+      popts->cli_optxs[indx].set = 1;
+    }
+    else if ( optyp == OPTX_TYPE_ARGV_CLEAR && shift )
+    {
+      mas_string_setv_t *setv = NULL;
+
+      setv = ( mas_string_setv_t * ) ( ( ( char * ) popts ) + shift );
+      setv->c = mas_del_argv( setv->c, setv->v, 0 );
+      setv->v = NULL;
+
+      HMSG( "@@@@@@@@@@@@@@@ OPTX_TYPE_ARGV %s bits:%lx", setv && setv->v ? ( setv->v[0] ) : NULL, popts->flag.bits );
+      popts->cli_optxs[indx].set = 1;
     }
   }
   else
+  {
     switch ( opt )
     {
     case MAS_CLI_OPT_TEST:
@@ -176,7 +194,8 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
       break;
     case MAS_CLI_OPT_COMMAND:
       HMSG( "O:COMMAND %s", m_optarg );
-      mas_ctrl_add_command( m_optarg );
+      /* mas_ctrl_add_command( m_optarg ); */
+      popts->ctrl_commandsv.c = mas_add_argv_arg( popts->ctrl_commandsv.c, &popts->ctrl_commandsv.v, m_optarg );
       break;
     case MAS_CLI_OPT_MSGTO:
       HMSG( "O:MSG>%s", m_optarg );
@@ -276,16 +295,18 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
     case MAS_CLI_OPT_NOWODAEMON:
       OPT_SFLAG( popts, daemon_disable, 0 );
       break;
+    case MAS_CLI_OPT_SAVE_USER_OPTS:
+      OPT_SFLAG( popts, save_user_opts, 1 );
+      break;
     case MAS_CLI_OPT_NOSAVE_USER_OPTS:
       OPT_SFLAG( popts, save_user_opts, 0 );
       break;
-    case MAS_CLI_OPT_SAVE_USER_OPTS:
+    case MAS_CLI_OPT_SAVE_USER_OPTS_FILE:
       if ( popts->save_user_opts_filename )
         mas_free( popts->save_user_opts_filename );
       popts->save_user_opts_filename = NULL;
       if ( m_optarg && *m_optarg )
         popts->save_user_opts_filename = mas_strdup( m_optarg );
-      OPT_SFLAG( popts, save_user_opts, 1 );
       break;
     case MAS_CLI_OPT_NOSINGLE_CHILD:
       OPT_SFLAG( popts, single_child, 0 );
@@ -364,11 +385,11 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
     case MAS_CLI_OPT_NOWOLISTENER:
       popts->wolistener = 0;
       break;
-    case MAS_CLI_OPT_NOPIDFILE:
-      OPT_SFLAG( popts, wopidfile, 1 );
-      break;
     case MAS_CLI_OPT_PIDFILE:
-      OPT_SFLAG( popts, wopidfile, 0 );
+      OPT_SFLAG( popts, pidfile, 1 );
+      break;
+    case MAS_CLI_OPT_NOPIDFILE:
+      OPT_SFLAG( popts, pidfile, 0 );
       break;
     case MAS_CLI_OPT_WOLISTEN:
       popts->wolisten = mas_cli_optval( m_optarg, 30, &v );
@@ -388,10 +409,10 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
     case MAS_CLI_OPT_NOMASTER_THREAD:
       OPT_SFLAG( popts, make_master_thread, 0 );
       break;
-    case MAS_CLI_OPT_NOWOREDIRECT_STD:
+    case MAS_CLI_OPT_WOREDIRECT_STD:
       OPT_SFLAG( popts, daemon_disable_redirect_std, 1 );
       break;
-    case MAS_CLI_OPT_WOREDIRECT_STD:
+    case MAS_CLI_OPT_NOWOREDIRECT_STD:
       OPT_SFLAG( popts, daemon_disable_redirect_std, 0 );
       break;
     case MAS_CLI_OPT_NOWOCLOSE_STD:
@@ -400,23 +421,23 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
     case MAS_CLI_OPT_WOCLOSE_STD:
       OPT_SFLAG( popts, daemon_disable_close_std, 0 );
       break;
-    case MAS_CLI_OPT_WOMESSAGES_PARENT:
-      OPT_SFLAG( popts, womessages_parent, 1 );
+    case MAS_CLI_OPT_MESSAGES_PARENT:
+      OPT_SFLAG( popts, messages_parent, 1 );
       break;
-    case MAS_CLI_OPT_NOWOMESSAGES_PARENT:
-      OPT_SFLAG( popts, womessages_parent, 0 );
+    case MAS_CLI_OPT_NOMESSAGES_PARENT:
+      OPT_SFLAG( popts, messages_parent, 0 );
       break;
-    case MAS_CLI_OPT_WOMESSAGES_CHILD:
-      OPT_SFLAG( popts, womessages_child, 1 );
+    case MAS_CLI_OPT_MESSAGES_CHILD:
+      OPT_SFLAG( popts, messages_child, 1 );
       break;
-    case MAS_CLI_OPT_NOWOMESSAGES_CHILD:
-      OPT_SFLAG( popts, womessages_child, 0 );
+    case MAS_CLI_OPT_NOMESSAGES_CHILD:
+      OPT_SFLAG( popts, messages_child, 0 );
       break;
-    case MAS_CLI_OPT_WOMESSAGES:
-      OPT_SFLAG( popts, womessages, 1 );
+    case MAS_CLI_OPT_NOMESSAGES:
+      OPT_SFLAG( popts, messages, 1 );
       break;
-    case MAS_CLI_OPT_NOWOMESSAGES:
-      OPT_SFLAG( popts, womessages, 0 );
+    case MAS_CLI_OPT_MESSAGES:
+      OPT_SFLAG( popts, messages, 0 );
       break;
     case MAS_CLI_OPT_NOMSG:
       /* HMSG( "O:flags: %lo", popts-> msg_flag.bits ); */
@@ -473,6 +494,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, mas_optionx_t * optx, int i
       }
       break;
     }
+  }
   if ( v < 0 )
   {
     HMSG( "O:CLI wrong value '%s'", m_optarg );
@@ -519,8 +541,9 @@ _mas_cli_options( mas_options_t * popts, int oargc, char *const *oargv )
   return r < 0 ? r : afterlast;
 }
 
-int
-_mas_cli_options_init( mas_options_t * popts, const char **message )
+/* int                                                                                  */
+/* _mas_cli_options_init( mas_options_t * popts, const char **message, unsigned flags ) */
+INIT_HANDLER( _mas_cli_options_init )
 {
   int r = -1;
   int oargc;
@@ -542,12 +565,13 @@ _mas_cli_options_init( mas_options_t * popts, const char **message )
   /* return r >= 0 ? 0 : r; */
 }
 
-int
-mas_cli_options_init( mas_options_t * popts, const char **message )
+/* int                                                                                 */
+/* mas_cli_options_init( mas_options_t * popts, const char **message, unsigned flags ) */
+INIT_HANDLER( mas_cli_options_init )
 {
   int r;
 
-  r = _mas_cli_options_init( popts, message );
+  r = _mas_cli_options_init( popts, message, flags );
   return r >= 0 ? 0 : r;
 }
 

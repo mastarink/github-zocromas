@@ -45,8 +45,9 @@ more:
 */
 
 
-int
-mas_threads_init( mas_options_t * popts, const char * *message )
+/* int                                                              */
+/* mas_threads_init( mas_options_t * popts, const char * *message ) */
+INIT_HANDLER( mas_threads_init )
 {
   CTRL_PREPARE;
   int r = 0;

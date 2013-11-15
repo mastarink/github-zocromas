@@ -46,8 +46,9 @@ Creating a daemon
    9 close stdin, stdout and stderr file descriptors.
    = Let the main logic of daemon process run.
 */
-int
-mas_init_daemon_stdio( mas_options_t * popts, const char **message )
+/* int                                                                  */
+/* mas_init_daemon_stdio( mas_options_t * popts, const char **message ) */
+INIT_HANDLER( mas_daemon_stdio_init )
 {
   EVAL_PREPARE;
   CTRL_PREPARE;
@@ -127,8 +128,9 @@ mas_init_daemon_stdio( mas_options_t * popts, const char **message )
   return r;
 }
 
-int
-mas_init_child_process( mas_options_t * popts, const char **message )
+/* int                                                                   */
+/* mas_init_child_process( mas_options_t * popts, const char **message ) */
+INIT_HANDLER( mas_child_process_init )
 {
   EVAL_PREPARE;
   CTRL_PREPARE;
@@ -187,7 +189,7 @@ mas_init_child_process( mas_options_t * popts, const char **message )
     }
   }
 
-  IEVAL( r, mas_init_daemon_stdio( popts, NULL ) );
+  IEVAL( r, mas_daemon_stdio_init( popts, NULL, flags ) );
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocDaemon" ) );
   ctrl.is_child = 1;
 
@@ -196,8 +198,9 @@ mas_init_child_process( mas_options_t * popts, const char **message )
   return r;
 }
 
-int
-mas_init_parent_process( mas_options_t * popts, const char **message )
+/* int                                                                    */
+/* mas_init_parent_process( mas_options_t * popts, const char **message ) */
+INIT_HANDLER( mas_parent_process_init )
 {
   EVAL_PREPARE;
   CTRL_PREPARE;
@@ -214,8 +217,9 @@ mas_init_parent_process( mas_options_t * popts, const char **message )
   return r;
 }
 
-int
-mas_daemon_init( mas_options_t * popts, const char **message )
+/* int                                                            */
+/* mas_daemon_init( mas_options_t * popts, const char **message ) */
+INIT_HANDLER( mas_daemon_init )
 {
   EVAL_PREPARE;
   CTRL_PREPARE;
@@ -236,7 +240,7 @@ mas_daemon_init( mas_options_t * popts, const char **message )
       OPT_SFLAG( popts, daemon_disable_chdir, 1 );
       IEVAL( r, daemon( 0, 0 ) );
       HMSG( "INIT DAEMON SYS" );
-      IEVAL( r, mas_init_child_process( popts, NULL ) );
+      IEVAL( r, mas_child_process_init( popts, NULL, flags ) );
     }
     else
     {
@@ -249,12 +253,12 @@ mas_daemon_init( mas_options_t * popts, const char **message )
       MAS_LOG( "(%d) init fork", pid_daemon );
       if ( pid_daemon == 0 )
       {
-        IEVAL( r, mas_init_child_process( popts, NULL ) );
+        IEVAL( r, mas_child_process_init( popts, NULL, flags ) );
       }
       else if ( pid_daemon > 0 )
       {
         ctrl.threads.n.daemon.pid = pid_daemon;
-        IEVAL( r, mas_init_parent_process( popts, NULL ) );
+        IEVAL( r, mas_parent_process_init( popts, NULL, flags ) );
       }
     }
   }

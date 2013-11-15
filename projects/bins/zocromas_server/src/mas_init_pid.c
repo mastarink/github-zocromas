@@ -120,13 +120,14 @@ _mas_init_pid( mas_options_t * popts, const char *shash_name )
   return r;
 }
 
-int
-mas_pids_init( mas_options_t * popts, const char **message )
+/* int                                                          */
+/* mas_pids_init( mas_options_t * popts, const char **message ) */
+INIT_HANDLER( mas_pids_init )
 {
   int r = 0;
 
   /* if ( !popts->wopidfile ) */
-  if ( !OPT_QFLAG( popts, wopidfile ) )
+  if ( OPT_QFLAG( popts, pidfile ) )
   {
     size_t shash_namebuf_size = 512;
     char *shash_namebuf = NULL;

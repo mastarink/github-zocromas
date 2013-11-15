@@ -272,7 +272,7 @@ mas_opts_restore_flags( mas_options_t * popts, const char *s )
   OPT_FLAG( read_user_opts_plus, s );
   OPT_FLAG( single_instance, s );
   OPT_FLAG( single_child, s );
-  OPT_WOFLAG( messages, s );
+  OPT_FLAG( messages, s );
   /* OPT_FLAG( has_init_message, s ); */
   OPT_FLAG( save_user_opts, s );
   OPT_FLAG( save_user_opts_plus, s );
@@ -379,9 +379,9 @@ _mas_opts_restore( mas_options_t * popts, const char *dirname, const char *filen
   if ( r == 0 )
   {
     mas_opts_restore_relative( popts, popts->configfilename );
-    /* HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %lX", popts->flag.name.nomessages, MAS_CTRL_MESSAGES, */
+    /* HMSG( "RESTORE OPT messages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %lX", popts->flag.name.messages, MAS_CTRL_MESSAGES, */
     /*       MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->msg_flag.bits );                                            */
-    HMSG( "RESTORE OPT nomessages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %X", OPT_QFLAG( popts, womessages ), MAS_CTRL_MESSAGES,
+    HMSG( "RESTORE OPT messages:%d; msg:%d; msg/main:%d;  msg/notice:%d; %X", OPT_QFLAG( popts, messages ), MAS_CTRL_MESSAGES,
           MAS_MSG_BIT( msg_main ), MAS_MSG_BIT( msg_notice ), popts->flag.name.msg.bits );
   }
   return r;

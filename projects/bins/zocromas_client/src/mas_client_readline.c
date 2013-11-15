@@ -58,8 +58,8 @@ mas_exchange_with_readline( mas_channel_t * pchannel )
 
   while ( !mas_readline_buffer )
   {
-  CTRL_PREPARE;
-  EVAL_PREPARE;
+    CTRL_PREPARE;
+    EVAL_PREPARE;
     ctrl.status = MAS_STATUS_SERV_LOOP;
     /* mas_readline_buffer = readline( " % \x1b[K" ); */
     /* rl_catch_signals = 0; */
@@ -245,8 +245,10 @@ mas_client_readline_event( void )
 /* #Meta-Control-u: "# MCU\n"                 */
 /*                                            */
 /*                                            */
-int
-mas_client_init_readline( mas_options_t * popts, const char * *message )
+
+/* int                                                                      */
+/* mas_client_init_readline( mas_options_t * popts, const char * *message ) */
+INIT_HANDLER( mas_client_readline_init )
 {
   CTRL_PREPARE;
   int rh = 0;

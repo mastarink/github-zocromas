@@ -31,8 +31,9 @@
 
 #include "mas_init_protos.h"
 
-int
-mas_protos_load( mas_options_t * popts, const char **message )
+/* int                                                            */
+/* mas_protos_load( mas_options_t * popts, const char **message ) */
+INIT_HANDLER( mas_protos_init )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;

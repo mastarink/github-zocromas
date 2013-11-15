@@ -46,8 +46,7 @@ sigusr2_han( int s )
 
 
 
-int
-mas_sig_init( mas_options_t * popts, const char **message )
+INIT_HANDLER( mas_sig_init )
 {
 #if 0
   signal( SIGPIPE, sigpipe_han );
@@ -119,7 +118,7 @@ mas_sig_init( mas_options_t * popts, const char **message )
   /* sigaction( SIGHUP, SIG_DFL, NULL ); */
   /* sigaction( SIGTERM, SIG_DFL, NULL ); */
 #endif
-  HMSG("INIT SIG");
+  HMSG( "INIT SIG" );
   if ( message )
     *message = __func__;
 
