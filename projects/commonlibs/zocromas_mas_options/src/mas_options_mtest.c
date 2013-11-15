@@ -223,13 +223,10 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
 { \
   mas_options_t *popts = testing_separate( sopt ); \
  \
-  if (popts) \
-  { \
-    HMSG( "testing separate [%s / " #field "]: %s : %s ? %s", sopt, \
+  HMSG( "testing separate [%s / " #field "]: %s : %s ? %s", sopt, \
       		tested( popts && ( !( popts->field || value ) || \
 		    		    ( popts->field && value && 0==strcmp( popts->field, value )) \
 		                 )) ? "OK" : "FAIL", popts?popts->field:NULL, value ); \
-  } \
   mas_opts_destroy( popts ); \
   mas_free(popts); \
 }
@@ -262,7 +259,18 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
   mas_free(popts); \
 }
 
+void
+justdo( int targc, char *targv[], char *tenv[] )
+{
+  mas_options_t opts;
 
+  memset( &opts, 0, sizeof( mas_options_t ) );
+  mas_cli_options_data_init( &opts, NULL, 1 );
+  mas_cli_options_argv_init( &opts, targc, targv, tenv );
+  _mas_cli_options_init( &opts, NULL, 1 );
+  mas_ctrl_init( &opts, NULL, 1 );
+  mas_opts_destroy( &opts );
+}
 
 mas_options_t *
 testing_separate( const char *sopt )
@@ -275,6 +283,7 @@ testing_separate( const char *sopt )
   char **targv = NULL;
   char **tenv = NULL;
   mas_options_t *popts = NULL;
+
 
   popts = mas_malloc( sizeof( mas_options_t ) );
   memset( popts, 0, sizeof( mas_options_t ) );
@@ -292,6 +301,18 @@ testing_separate( const char *sopt )
     mas_opts_destroy( popts );
     mas_free( popts );
     popts = NULL;
+  }
+  if ( popts )
+  {
+    char *enabled_opts = mas_cli_enabled_options( popts );
+    const char *value = "thiqM:L:dH:P:";
+
+    HMSG( "testing enabled_options: %s : '%s' ? '%s'", tested( 0 == strcmp( value, enabled_opts ) ) ? "OK" : "FAIL", value, enabled_opts );
+    mas_free( enabled_opts );
+  }
+  if ( 0 == strncmp( sopt, "-L", 2 ) )
+  {
+    HMSG( "<@><@><@><@><@><@><@><@><@><@><@><@><@> %d %d %d %d -- %d", r1, r2, r3, r4, popts?1:0 );
   }
   return popts;
 }
@@ -403,6 +424,7 @@ main( int argc, char *argv[], char *env[] )
   HMSG( "testing common: %s",
         tested( sizeof( expected_msg_flags ) / sizeof( expected_msg_flags[0] ) ==
                 sizeof( test_opts ) / sizeof( test_opts[0] ) ) ? "OK" : "FAIL" );
+
 /* <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> */
 /* <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> */
   /* test_opts1 = "cmd --logger        "; */
@@ -421,14 +443,17 @@ main( int argc, char *argv[], char *env[] )
     HMSG( "testing_general:%d %s", r, tested( r == expected_result[it] ) ? "OK" : "FAIL" );
   }
 
-  /* TEST_SEPARATE_F( "--test", test, 1 );                       */
-  /* TEST_SEPARATE_F( "", test, 0 );                             */
+  TEST_SEPARATE_F( "--test", test, 1 );
+  TEST_SEPARATE_F( "-t", test, 1 );
+  TEST_SEPARATE_F( "", test, 0 );
 
-  /* TEST_SEPARATE_F( "--info", info, 1 );                       */
-  /* TEST_SEPARATE_F( "", info, 0 );                             */
+  TEST_SEPARATE_F( "--info", info, 1 );
+  TEST_SEPARATE_F( "-i", info, 1 );
+  TEST_SEPARATE_F( "", info, 0 );
 
-  /* TEST_SEPARATE_F( "--quit", quit, 1 );                       */
-  /* TEST_SEPARATE_F( "", quit, 0 );                             */
+  TEST_SEPARATE_F( "--quit", quit, 1 );
+  TEST_SEPARATE_F( "-q", quit, 1 );
+  TEST_SEPARATE_F( "", quit, 0 );
 
   TEST_SEPARATE_N( "--exitsleep", exitsleep, 29 );
   TEST_SEPARATE_N( "--exitsleep=177", exitsleep, 177 );
@@ -494,8 +519,10 @@ main( int argc, char *argv[], char *env[] )
   TEST_SEPARATE_F( "", log_enable, 0 );
 
   TEST_SEPARATE_S( "--modsdir=/tmpx1", dir.mods, "/tmpx1" );
+  TEST_SEPARATE_S( "-M /tmpx1short", dir.mods, "/tmpx1short" );
   TEST_SEPARATE_S( "--protodir=/tmpx2", dir.proto, "/tmpx2" );
   TEST_SEPARATE_S( "--logdir=/tmpx3", dir.log, "/tmpx3" );
+  TEST_SEPARATE_S( "-L /tmpx3short", dir.log, "/tmpx3short" );
   TEST_SEPARATE_S( "--historydir=/tmpx4", dir.history, "/tmpx4" );
 
   TEST_SEPARATE_F( "--read-user-config", read_user_opts, 1 );
@@ -548,6 +575,7 @@ main( int argc, char *argv[], char *env[] )
 
   TEST_SEPARATE_F( "--daemon", daemon_disable, 0 );
   TEST_SEPARATE_F( "--nodaemon", daemon_disable, 1 );
+  TEST_SEPARATE_F( "--nodaemon -d", daemon_disable, 0 );
   TEST_SEPARATE_F( "", daemon_disable, 0 );
 
   TEST_SEPARATE_F( "--sysdaemon", daemon_sys, 1 );
@@ -559,17 +587,26 @@ main( int argc, char *argv[], char *env[] )
   TEST_SEPARATE_A( "--proto=xcromas --noprotos --proto=http", protosv, "http" );
 
   TEST_SEPARATE_A( "--host=a.mastar.lan", hostsv, "a.mastar.lan" );
+  TEST_SEPARATE_A( "-H a.mastar.lan", hostsv, "a.mastar.lan" );
   TEST_SEPARATE_A( "--host=a.mastar.lan --host=b.mastar.lan", hostsv, "a.mastar.lan b.mastar.lan" );
   TEST_SEPARATE_A( "--host=a.mastar.lan --nohosts --host=b.mastar.lan", hostsv, "b.mastar.lan" );
 
   TEST_SEPARATE_N( "--port=44 --port=", default_port, 0 );
   TEST_SEPARATE_N( "--port=79", default_port, 79 );
+  TEST_SEPARATE_N( "--port=79 -P 97", default_port, 97 );
   TEST_SEPARATE_N( "--port=33 --port=65", default_port, 65 );
 
   TEST_SEPARATE_S( "--init-msg=wowowow", init_message, "wowowow" );
   TEST_SEPARATE_S( "--init-message=wowowow", init_message, "wowowow" );
 
+  TEST_SEPARATE_F( "--help", help, 1 );
+  TEST_SEPARATE_F( "", help, 0 );
+  
+  TEST_SEPARATE_E( "-R", 0, 0 );
+  TEST_SEPARATE_E( "-z", 0, 0 );
+  TEST_SEPARATE_E( "-7", 0, 0 );
 
+  justdo( argc, argv, env );
   HMSG( "total passed %d of %d", tested_good, tested_total );
   mas_ctrl_destroy(  );
 #ifdef MAS_TRACEMEM

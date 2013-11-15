@@ -8,7 +8,6 @@
 #include <string.h>
 #include <limits.h>
 
-/* #include <getopt.h> */
 
 #include <mastar/wrap/mas_memory.h>
 
@@ -172,7 +171,7 @@ mas_optionx_t mas_cli_optx_table[] = {
   {{"test", no_argument, NULL, MAS_CLI_OPT_TEST}
    ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_TEST}
   , {{"help", no_argument, NULL, MAS_CLI_OPT_HELP}
-     ,.optx_type = OPTX_TYPE_SPECIAL}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_HELP}
   , {{"info", no_argument, NULL, MAS_CLI_OPT_INFO}
      ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_INFO}
   , {{"quit", no_argument, NULL, MAS_CLI_OPT_QUIT}
@@ -237,23 +236,23 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_DISABLE_CLOSE_STD}
 
   , {{"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_LOG_RUN}
   , {{"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_LOG_RUN}
 
   , {{"log", no_argument, NULL, MAS_CLI_OPT_LOG}
-     ,.optx_type = OPTX_TYPE_FLAG}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_LOG_ENABLE}
   , {{"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG}
-     ,.optx_type = OPTX_TYPE_NOFLAG}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_LOG_ENABLE}
 
   , {{"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, dir.mods )}
   , {{"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, dir.proto )}
   , {{"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, dir.log )}
   , {{"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR}
-     ,.optx_type = OPTX_TYPE_STR}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, dir.history )}
 
   , {{"read-user-config", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS}
      ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_READ_USER_OPTS}
@@ -342,9 +341,9 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_UNSIGNED,.shift = offsetof( mas_options_t, default_port )}
 
   , {{"msg", required_argument, NULL, MAS_CLI_OPT_MSG}
-     ,.optx_type = OPTX_TYPE_MSGFLAG /* ?? */ }
+     }
   , {{"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG}
-     ,.optx_type = OPTX_TYPE_NOMSGFLAG}
+     }
 
   , {{"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG}
      ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, init_message )}
@@ -442,12 +441,6 @@ mas_cli_print_optx_table( mas_options_t * popts )
           HMSG( "%c [%s]=%u", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name, val );
         }
         break;
-      case OPTX_TYPE_MSGFLAG:
-        HMSG( "%c-[%s]", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name );
-        break;
-      case OPTX_TYPE_NOMSGFLAG:
-        HMSG( "%c-[%s]", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name );
-        break;
       case OPTX_TYPE_INT:
         {
           int *p;
@@ -493,9 +486,6 @@ mas_cli_print_optx_table( mas_options_t * popts )
         }
         break;
       case OPTX_TYPE_ARGV_CLEAR:
-        HMSG( "%c-[%s]", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name );
-        break;
-      case OPTX_TYPE_SPECIAL:
         HMSG( "%c-[%s]", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name );
         break;
       case OPTX_TYPE_NONE:

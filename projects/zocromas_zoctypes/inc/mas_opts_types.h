@@ -120,14 +120,11 @@ typedef enum mas_optionx_type_s
   OPTX_TYPE_NONE,
   OPTX_TYPE_FLAG,
   OPTX_TYPE_NOFLAG,
-  OPTX_TYPE_MSGFLAG,
-  OPTX_TYPE_NOMSGFLAG,
   OPTX_TYPE_INT,
   OPTX_TYPE_UNSIGNED,
   OPTX_TYPE_STR,
   OPTX_TYPE_ARGV,
   OPTX_TYPE_ARGV_CLEAR,
-  OPTX_TYPE_SPECIAL,
 } mas_optionx_type_t;
 typedef struct mas_optionx_s
 {
@@ -144,40 +141,42 @@ typedef enum mas_options_shift_e
   MAS_OPT_BITNUM_TEST,
   MAS_OPT_BITNUM_QUIT,
   MAS_OPT_BITNUM_INFO,
-  MAS_OPT_BITNUM_PIDFILE,
+  MAS_OPT_BITNUM_HELP,
 /* 10 */
+  MAS_OPT_BITNUM_PIDFILE,
   MAS_OPT_BITNUM_SINGLE_INSTANCE,
   MAS_OPT_BITNUM_SINGLE_CHILD,
   MAS_OPT_BITNUM_LISTENER_SINGLE,
-  MAS_OPT_BITNUM_TRANSACTION_SINGLE,
 /* 100 */
+  MAS_OPT_BITNUM_TRANSACTION_SINGLE,
   MAS_OPT_BITNUM_MESSAGES_PARENT,
   MAS_OPT_BITNUM_MESSAGES_CHILD,
   MAS_OPT_BITNUM_MESSAGES,
-  MAS_OPT_BITNUM_WATCHER,
 /* 1000 */
+  MAS_OPT_BITNUM_WATCHER,
   MAS_OPT_BITNUM_DISCONNECT_PROMPT,
   MAS_OPT_BITNUM_WAIT_SERVER,
   MAS_OPT_BITNUM_MAKE_MASTER_THREAD,
-  MAS_OPT_BITNUM_WOTICKER,
 /* 10000 */
+  MAS_OPT_BITNUM_WOTICKER,
   MAS_OPT_BITNUM_READ_USER_OPTS,
   MAS_OPT_BITNUM_READ_USER_OPTS_PLUS,
   MAS_OPT_BITNUM_SAVE_USER_OPTS,
-  MAS_OPT_BITNUM_SAVE_USER_OPTS_PLUS,
 /* 100000 */
+  MAS_OPT_BITNUM_SAVE_USER_OPTS_PLUS,
   MAS_OPT_BITNUM_OVERWRITE_USER_OPTS,
   MAS_OPT_BITNUM_OVERWRITE_USER_OPTS_PLUS,
   MAS_OPT_BITNUM_DAEMON_DISABLE,
-  MAS_OPT_BITNUM_DAEMON_SYS,
 /* 1000000 */
+  MAS_OPT_BITNUM_DAEMON_SYS,
   MAS_OPT_BITNUM_DAEMON_DISABLE_REDIRECT_STD,
   MAS_OPT_BITNUM_DAEMON_DISABLE_CLOSE_STD,
   MAS_OPT_BITNUM_DAEMON_DISABLE_SETSID,
-  MAS_OPT_BITNUM_DAEMON_DISABLE_CHDIR,
 /* 10000000 */
+  MAS_OPT_BITNUM_DAEMON_DISABLE_CHDIR,
   MAS_OPT_BITNUM_LOG_ENABLE,
   MAS_OPT_BITNUM_LOG_RUN,
+  MAS_OPT_BITNUM_LOG_UNDEF1,
 } mas_options_shift_t;
 
 
@@ -191,6 +190,7 @@ typedef struct mas_options_s
       unsigned test:1;
       unsigned quit:1;
       unsigned info:1;
+      unsigned help:1;
       unsigned pidfile:1;
       unsigned single_instance:1;
       unsigned single_child:1;
@@ -300,9 +300,11 @@ struct mas_option_parse_s
   const char *dv;
 };
 typedef struct mas_option_parse_s mas_option_parse_t;
-#define INIT_HANDLER( hfun ) int hfun( mas_options_t * popts, const char **message, unsigned flags  )
+
+#  define INIT_HANDLER( hfun ) int hfun( mas_options_t * popts, const char **message, unsigned flags  )
 /* typedef int ( *mas_init_fun_t ) ( mas_options_t * popts, const char **message, unsigned flags ); */
-typedef INIT_HANDLER(( *mas_init_fun_t ));
+typedef INIT_HANDLER( ( *mas_init_fun_t ) );
+
 /* #  define MAS_NOPASS_OPTS */
 
 #endif
