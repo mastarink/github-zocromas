@@ -5,3 +5,4 @@ gvim-funcs.vim
 gvim-vimenter.vim
 zocversion.txt
 .auxdir
+tmp

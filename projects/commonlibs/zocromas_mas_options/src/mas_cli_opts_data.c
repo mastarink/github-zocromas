@@ -179,7 +179,7 @@ mas_optionx_t mas_cli_optx_table[] = {
   , {{"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP}
      ,.optx_type = OPTX_TYPE_UNSIGNED,.def = 29,.shift = offsetof( mas_options_t, exitsleep )}
   , {{"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE}
-     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SINGLE_INSTANCE}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SINGLE_INSTANCE,.synonym = 1}
   , {{"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE}
      ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_SINGLE_INSTANCE}
   , {{"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE}
@@ -245,6 +245,13 @@ mas_optionx_t mas_cli_optx_table[] = {
   , {{"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG}
      ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_LOG_ENABLE}
 
+  , {{"env-optsname", required_argument, NULL, MAS_CLI_OPT_ENV_OPTSNAME}
+     ,.optx_type = OPTX_TYPE_ISTR,.shift = offsetof( mas_options_t, env_optsname ),
+     .isize = sizeof( ( ( mas_options_t * ) NULL )->env_optsname )}
+  , {{"env-hostname", required_argument, NULL, MAS_CLI_OPT_ENV_HOSTNAME}
+     ,.optx_type = OPTX_TYPE_ISTR,.shift = offsetof( mas_options_t, env_hostname ),
+     .isize = sizeof( ( ( mas_options_t * ) NULL )->env_hostname )}
+
   , {{"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR}
      ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, dir.mods )}
   , {{"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR}
@@ -293,7 +300,7 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_PIDFILE}
 
   , {{"master", no_argument, NULL, MAS_CLI_OPT_NOWOMASTER}
-     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, womaster )}
+     ,.optx_type = OPTX_TYPE_ZINT,.shift = offsetof( mas_options_t, womaster )}
   , {{"nomaster", required_argument, NULL, MAS_CLI_OPT_WOMASTER}
      ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, womaster ),.def = 28}
 
@@ -303,12 +310,12 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_MAKE_MASTER_THREAD}
 
   , {{"listener", no_argument, NULL, MAS_CLI_OPT_NOWOLISTENER}
-     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolistener )}
+     ,.optx_type = OPTX_TYPE_ZINT,.shift = offsetof( mas_options_t, wolistener )}
   , {{"nolistener", required_argument, NULL, MAS_CLI_OPT_WOLISTENER}
      ,.optx_type = OPTX_TYPE_INT,.def = 31,.shift = offsetof( mas_options_t, wolistener ),.def = 27}
 
   , {{"listen", no_argument, NULL, MAS_CLI_OPT_NOWOLISTEN}
-     ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolisten )}
+     ,.optx_type = OPTX_TYPE_ZINT,.shift = offsetof( mas_options_t, wolisten )}
   , {{"nolisten", required_argument, NULL, MAS_CLI_OPT_WOLISTEN}
      ,.optx_type = OPTX_TYPE_INT,.shift = offsetof( mas_options_t, wolisten )}
 
@@ -323,9 +330,9 @@ mas_optionx_t mas_cli_optx_table[] = {
      ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
 
   , {{"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON}
-     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
+     ,.optx_type = OPTX_TYPE_FLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS,.synonym = 1}
   , {{"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON}
-     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS}
+     ,.optx_type = OPTX_TYPE_NOFLAG,.shift = MAS_OPT_BITNUM_DAEMON_SYS,.synonym = 1}
 
   , {{"proto", required_argument, NULL, MAS_CLI_OPT_PROTO}
      ,.optx_type = OPTX_TYPE_ARGV,.shift = offsetof( mas_options_t, protosv )}
@@ -345,8 +352,12 @@ mas_optionx_t mas_cli_optx_table[] = {
   , {{"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG}
      }
 
+  , {{"user", optional_argument, NULL, MAS_CLI_OPT_USER}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, user )}
+  , {{"uuid", optional_argument, NULL, MAS_CLI_OPT_UUID}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, uuid )}
   , {{"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG}
-     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, init_message )}
+     ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, init_message ),.synonym = 1}
   , {{"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG}
      ,.optx_type = OPTX_TYPE_STR,.shift = offsetof( mas_options_t, init_message )}
 
@@ -474,6 +485,15 @@ mas_cli_print_optx_table( mas_options_t * popts )
           HMSG( "%c [%s]='%s'", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name, val );
         }
         break;
+      case OPTX_TYPE_ISTR:
+        {
+          char *str = NULL;
+
+          str = ( ( char * ) popts ) + shift;
+          /* fprintf( stderr, "@@@@@@@@@@@@@@@@ [%s]='%s'\n", mas_cli_optx_table[indx].longopt.name, str ? *str : NULL ); */
+          HMSG( "%c [%s]='%s'", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name, str );
+        }
+        break;
       case OPTX_TYPE_ARGV:
         {
           char *val = NULL;
@@ -488,6 +508,7 @@ mas_cli_print_optx_table( mas_options_t * popts )
       case OPTX_TYPE_ARGV_CLEAR:
         HMSG( "%c-[%s]", mas_cli_optx_table[indx].set ? '*' : ' ', mas_cli_optx_table[indx].longopt.name );
         break;
+      case OPTX_TYPE_ZINT:
       case OPTX_TYPE_NONE:
         /* HMSG( "%c[%s]", mas_cli_optx_table[indx].set?'*':' ', mas_cli_optx_table[indx].longopt.name ); */
         break;

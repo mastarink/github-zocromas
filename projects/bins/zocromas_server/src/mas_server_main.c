@@ -141,7 +141,6 @@ main( int argc, char *argv[], char *env[] )
 __attribute__ ( ( constructor( 1200 ) ) )
      static void mas_constructor( void )
 {
-  /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
   mas_common_constructor( IL, 0 );
   errno = 0;
 }

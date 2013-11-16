@@ -41,7 +41,7 @@ related:
   mas_modules_load_module.c
 */
 
-__attribute__ ( ( constructor ) )
+__attribute__ ( ( constructor (1000) ) )
      static void mas_constructor( void )
 {
   /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */

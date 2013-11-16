@@ -1,11 +1,11 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -91,10 +91,13 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
   unsigned long def = 0;
   mas_optionx_type_t optyp = OPTX_TYPE_NONE;
   unsigned shift = 0;
+  size_t isize = 0;
 
-  optyp = indx >= 0 ? popts->cli_optxs[indx].optx_type : -1;
+  optyp = indx >= 0 ? popts->cli_optxs[indx].optx_type : OPTX_TYPE_NONE;
+  /* HMSG( "OPTYP=%d", optyp ); */
   shift = popts->cli_optxs[indx].shift;
   def = popts->cli_optxs[indx].def;
+  isize = popts->cli_optxs[indx].isize;
   /* mas_optionx_t *optx = NULL; */
   /* optx = mas_cli_find_optx( opt ); */
   /* HMSG( "CLI M/O %d [%c] optx:%d", opt, opt > ' ' && opt <= 'z' ? opt : '-', optx ? 1 : 0 ); */
@@ -123,12 +126,21 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
       *( ( int * ) p ) = ( int ) ml_optarg;
       popts->cli_optxs[indx].set = 1;
       break;
+    case OPTX_TYPE_ZINT:
+      *( ( int * ) p ) = 0;
+      popts->cli_optxs[indx].set = 1;
+      break;
     case OPTX_TYPE_STR:
       if ( *( ( char ** ) p ) )
         mas_free( *( ( char ** ) p ) );
       *( ( char ** ) p ) = NULL;
       if ( m_optarg )
         *( ( char ** ) p ) = mas_strdup( m_optarg );
+      popts->cli_optxs[indx].set = 1;
+      break;
+    case OPTX_TYPE_ISTR:
+      if ( m_optarg )
+        strncpy( p, m_optarg, isize );
       popts->cli_optxs[indx].set = 1;
       break;
     case OPTX_TYPE_ARGV:
@@ -141,6 +153,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
       popts->cli_optxs[indx].set = 1;
       break;
     case OPTX_TYPE_NONE:
+      r = -87;
       break;
     }
   }
@@ -223,17 +236,26 @@ _mas_cli_options( mas_options_t * popts, int oargc, char *const *oargv )
     while ( r >= 0 && !ctrl.fatal && ( indx = -1 )
             && ( opt = getopt_long( oargc, oargv, enabled_opts, /* mas_cli_longopts_ctable */ popts->cli_longopts, &indx ) ) >= 0 )
     {
-      HMSG( "CLI opt:%d:'%s' optind:%d err:%d / %d indx:%d; --%s --%s T(%d)", opt, oargv[optind - 1], optind, opt == '?', opt == ':', indx,
-            indx >= 0 ? popts->cli_longopts[indx].name : "?", indx >= 0 ? popts->cli_optxs[indx].longopt.name : "?",
-            indx >= 0 ? popts->cli_optxs[indx].optx_type : -1 );
+      if ( 0 )
+      {
+        HMSG( "CLI opt:%d:'%s' optind:%d err:%d / %d indx:%d; --%s --%s T(%d)", opt, oargv[optind - 1], optind, opt == '?', opt == ':',
+              indx, indx >= 0 ? popts->cli_longopts[indx].name : "?", indx >= 0 ? popts->cli_optxs[indx].longopt.name : "?",
+              indx >= 0 ? popts->cli_optxs[indx].optx_type : -1 );
+      }
       if ( indx < 0 )
         indx = _mas_cli_short_optx( popts, opt );
       IEVAL( r, mas_cli_make_option( popts, opt, oargv[optind - 1], indx >= 0 ? &popts->cli_optxs[indx] : NULL, indx, optarg ) );
       afterlast = optind;
-      /* HMSG( "(%d) CLI %d: %d", r, opt, optind ); */
+      if ( 0 )
+      {
+        HMSG( "(%d) CLI %d[%c]: %d", r, opt, opt, optind );
+      }
     }
   MAS_LOG( "(%d) cli options made", r );
-  HMSG( "CLI r=%d; opt=%d '%s' opterr=%d ctrl.fatal=%d", r, opt, oargv[optind - 1], opterr, ctrl.fatal );
+  if ( 0 )
+  {
+    HMSG( "CLI r=%d; opt=%d '%s' opterr=%d ctrl.fatal=%d", r, opt, oargv[optind - 1], opterr, ctrl.fatal );
+  }
   mas_free( enabled_opts );
   return r < 0 ? r : afterlast;
 }
@@ -287,16 +309,9 @@ mas_cli_options_argv_init( mas_options_t * popts, int oargc, char **oargv, char 
   ctrl.launchervv.v = oargv;
   ctrl.launchervv.c = oargc;
   ctrl.launcherev.v = env;
-  /* if ( oargc > 1 ) */
+  for ( int ia = 0; ia < oargc; ia++ )
   {
-    for ( int ia = 0; ia < oargc; ia++ )
-    {
-      popts->argvv.c = mas_add_argv_arg( popts->argvv.c, &popts->argvv.v, oargv[ia] );
-    }
-    /* for ( int ia = 0; ia < oargc; ia++ )                              */
-    /* {                                                                */
-    /*   mMSG( "@: %d of %d. arg:'%s'", ia, popts-> argvv.c, popts-> argvv.v[ia] ); */
-    /* }                                                                */
+    popts->argvv.c = mas_add_argv_arg( popts->argvv.c, &popts->argvv.v, oargv[ia] );
   }
   HMSG( "INIT ARGV argc:%d", popts->argvv.c );
   return popts->argvv.c;
@@ -314,4 +329,153 @@ void
 mas_cli_options_destroy( mas_options_t * popts )
 {
   mas_cli_options_argv_destroy( popts );
+}
+
+int
+mas_cli_opts_to_argv( mas_options_t * popts, char ***ptargv )
+{
+  int r = 0;
+  char buf[1024];
+  int targc = 0;
+  char **targv = NULL;
+
+  if ( popts )
+    for ( int indx = 0; indx < popts->cli_longopts_num; indx++ )
+    {
+      mas_optionx_type_t optyp = OPTX_TYPE_NONE;
+      unsigned shift = 0;
+      unsigned synonym = 0;
+      char *p = NULL;
+
+      /* EVAL_PREPARE; */
+      optyp = indx >= 0 ? popts->cli_optxs[indx].optx_type : OPTX_TYPE_NONE;
+      shift = popts->cli_optxs[indx].shift;
+      synonym = popts->cli_optxs[indx].synonym;
+      p = ( ( char * ) popts ) + shift;
+#if 0
+      int r = 0;
+      int v = 0;
+      unsigned long def = 0;
+      size_t isize = 0;
+
+      def = popts->cli_optxs[indx].def;
+      isize = popts->cli_optxs[indx].isize;
+#endif
+      if ( !popts->cli_optxs[indx].longopt.name )
+        break;
+      if ( shift && !synonym )
+      {
+        switch ( optyp )
+        {
+        case OPTX_TYPE_FLAG:
+          if ( popts->flag.bits & ( 1UL << ( shift - 1 ) ) )
+          {
+            r = snprintf( buf, sizeof( buf ), "--%s", popts->cli_optxs[indx].longopt.name );
+            if ( r >= 0 )
+              targc = mas_add_argv_arg( targc, &targv, buf );
+          }
+          /* popts->flag.bits |= 1UL << ( shift - 1 ); */
+          /* popts->cli_optxs[indx].set = 1;           */
+          break;
+        case OPTX_TYPE_NOFLAG:
+          /* popts->flag.bits &= ~( 1UL << ( shift - 1 ) ); */
+          /* popts->cli_optxs[indx].set = 1;                */
+          break;
+        case OPTX_TYPE_UNSIGNED:
+          if ( p && *p )
+          {
+            r = snprintf( buf, sizeof( buf ), "--%s=%u", popts->cli_optxs[indx].longopt.name, *( ( unsigned * ) p ) );
+            if ( r >= 0 )
+              targc = mas_add_argv_arg( targc, &targv, buf );
+          }
+          /* *( ( unsigned * ) p ) = ( unsigned ) ml_optarg; */
+          /* popts->cli_optxs[indx].set = 1;                 */
+          break;
+        case OPTX_TYPE_INT:
+          if ( p && *p )
+          {
+            r = snprintf( buf, sizeof( buf ), "--%s=%d", popts->cli_optxs[indx].longopt.name, *( ( int * ) p ) );
+            if ( r >= 0 )
+              targc = mas_add_argv_arg( targc, &targv, buf );
+          }
+          /* *( ( int * ) p ) = ( int ) ml_optarg; */
+          /* popts->cli_optxs[indx].set = 1;       */
+          break;
+        case OPTX_TYPE_STR:
+          if ( p && *p )
+          {
+            r = snprintf( buf, sizeof( buf ), "--%s=%s", popts->cli_optxs[indx].longopt.name, *( ( char ** ) p ) );
+            if ( r >= 0 )
+              targc = mas_add_argv_arg( targc, &targv, buf );
+          }
+          /* if ( *( ( char ** ) p ) )                      */
+          /*   mas_free( *( ( char ** ) p ) );              */
+          /* *( ( char ** ) p ) = NULL;                     */
+          /* if ( m_optarg )                                */
+          /*   *( ( char ** ) p ) = mas_strdup( m_optarg ); */
+          /* popts->cli_optxs[indx].set = 1;                */
+          break;
+        case OPTX_TYPE_ISTR:
+          if ( p && *p )
+          {
+            r = snprintf( buf, sizeof( buf ), "--%s=%s", popts->cli_optxs[indx].longopt.name, p );
+            if ( r >= 0 )
+              targc = mas_add_argv_arg( targc, &targv, buf );
+          }
+          /* if ( m_optarg )                  */
+          /*   strncpy( p, m_optarg, isize ); */
+          /* popts->cli_optxs[indx].set = 1;  */
+          break;
+        case OPTX_TYPE_ARGV:
+          if ( p && ( ( mas_string_setv_t * ) p ) )
+            for ( int i = 0; i < ( ( mas_string_setv_t * ) p )->c; i++ )
+            {
+              r = snprintf( buf, sizeof( buf ), "--%s=%s", popts->cli_optxs[indx].longopt.name, ( ( mas_string_setv_t * ) p )->v[i] );
+              if ( r >= 0 )
+                targc = mas_add_argv_arg( targc, &targv, buf );
+            }
+          /* ( ( mas_string_setv_t * ) p )->c =                                                                       */
+          /*       mas_add_argv_arg( ( ( mas_string_setv_t * ) p )->c, &( ( mas_string_setv_t * ) p )->v, m_optarg ); */
+          /* popts->cli_optxs[indx].set = 1;                                                                          */
+          break;
+        case OPTX_TYPE_ARGV_CLEAR:
+          /* ( ( mas_string_setv_t * ) p )->c = mas_del_argv( ( ( mas_string_setv_t * ) p )->c, ( ( mas_string_setv_t * ) p )->v, 0 ); */
+          /* ( ( mas_string_setv_t * ) p )->v = NULL;                                                                                  */
+          /* popts->cli_optxs[indx].set = 1;                                                                                           */
+          break;
+        case OPTX_TYPE_ZINT:
+        case OPTX_TYPE_NONE:
+          /* r = -86; */
+          break;
+        }
+      }
+    }
+  if ( targc && targv && ptargv )
+    *ptargv = targv;
+  return targc;
+}
+
+char *
+mas_cli_opts_to_str( mas_options_t * popts )
+{
+  int targc = 0;
+  char **targv = NULL;
+  char *args;
+
+  targc = mas_cli_opts_to_argv( popts, &targv );
+  args = mas_argv_string( targc, targv, 0 );
+  mas_del_argv( targc, targv, 0 );
+  return args;
+}
+
+int
+mas_cli_opts_save( mas_options_t * popts, FILE * f )
+{
+  int r;
+  char *args;
+
+  args = mas_cli_opts_to_str( popts );
+  r = fprintf( f, "%s", args );
+  mas_free( args );
+  return r;
 }

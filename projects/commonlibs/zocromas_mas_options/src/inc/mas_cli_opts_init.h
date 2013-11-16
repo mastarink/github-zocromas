@@ -14,4 +14,9 @@ int mas_cli_options_argv_init( mas_options_t * popts, int argc, char **argv, cha
 void mas_cli_options_destroy( mas_options_t * popts );
 void mas_cli_options_argv_destroy( mas_options_t * popts );
 
+int mas_cli_opts_to_argv( mas_options_t * popts, char ***ptargv );
+char *mas_cli_opts_to_str( mas_options_t * popts );
+
+int mas_cli_opts_save( mas_options_t * popts, FILE * f );
+
 #endif

@@ -3,6 +3,9 @@ find mas_opts.c
 sfind mas_opts.h
 sfind mas_opts_data.c
 
+tab sfind mas_cli_opts_init.c
+sfind mas_cli_opts_init.h
+
 tab sfind mas_opts_common.c
 sfind mas_opts_common.h
 

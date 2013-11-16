@@ -121,8 +121,10 @@ typedef enum mas_optionx_type_s
   OPTX_TYPE_FLAG,
   OPTX_TYPE_NOFLAG,
   OPTX_TYPE_INT,
+  OPTX_TYPE_ZINT,
   OPTX_TYPE_UNSIGNED,
   OPTX_TYPE_STR,
+  OPTX_TYPE_ISTR,
   OPTX_TYPE_ARGV,
   OPTX_TYPE_ARGV_CLEAR,
 } mas_optionx_type_t;
@@ -132,6 +134,8 @@ typedef struct mas_optionx_s
   mas_optionx_type_t optx_type;
   mas_msg_options_shift_t shift;
   unsigned long def;
+  size_t isize;
+  unsigned synonym:1;
   unsigned set:1;
 } mas_optionx_t;
 typedef enum mas_options_shift_e
