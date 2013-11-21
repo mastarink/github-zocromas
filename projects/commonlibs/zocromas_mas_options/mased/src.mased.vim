@@ -25,5 +25,7 @@ tab sfind mas_cli_opts_data.c
 sfind mas_cli_opts_data.h
 sfind mas_cli_opts_def.h
 
+tab sfind mas_longopts_table_object.c
+sfind mas_longopts_table_object.h
 
 tab sfind mas_options_mtest.c

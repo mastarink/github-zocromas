@@ -8,4 +8,5 @@ void mas_varvec_delete( mas_varvec_t * vclass );
 
 
 
+/* #  include <mastar/types/mas_common_cdefs.h> */
 #endif

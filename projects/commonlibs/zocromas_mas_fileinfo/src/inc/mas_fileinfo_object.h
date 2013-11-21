@@ -10,4 +10,5 @@ mas_fileinfo_t *mas_fileinfo_init( mas_fileinfo_t * fileinfo, const char *root, 
 
 void mas_fileinfo_delete_data( mas_fileinfo_t * fileinfo );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

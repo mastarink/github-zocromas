@@ -39,5 +39,5 @@ const char *mas_thread_type_name( th_type_t typ );
 
 
 
-
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

@@ -9,4 +9,5 @@ INIT_HANDLER(mas_ctrl_init);
 int mas_ctrl_destroy( void );
 void mas_ctrl_add_command( const char *s );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

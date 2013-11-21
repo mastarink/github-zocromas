@@ -14,11 +14,11 @@
 
 #include <mastar/types/mas_varset_types.h>
 
-#  include <mastar/varvec/mas_varvec_object.h>
-#  include <mastar/varvec/mas_varvec.h>
-#  include <mastar/varvec/mas_varvec_search.h>
-#  include <mastar/varvec/mas_varvec_namevalue.h>
-#  include <mastar/varvec/mas_varvec_headtail.h>
+#include <mastar/varvec/mas_varvec_object.h>
+#include <mastar/varvec/mas_varvec.h>
+#include <mastar/varvec/mas_varvec_search.h>
+#include <mastar/varvec/mas_varvec_namevalue.h>
+#include <mastar/varvec/mas_varvec_headtail.h>
 
 #include "mas_varset_object.h"
 #include "mas_varset.h"

@@ -345,6 +345,8 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     id = RUNONCE_PATH;
   else if ( 0 == strcmp( name, "psname" ) )
     id = RUNONCE_PSNAME;
+  else if ( 0 == strcmp( name, "globenv" ) )
+    id = RUNONCE_GLOBENV;
   else if ( 0 == strcmp( name, "env" ) )
     id = RUNONCE_ENV;
   else if ( 0 == strcmp( name, "options" ) )

@@ -16,4 +16,5 @@ void sigwinch_han( int s );
 INIT_HANDLER( mas_sig_init );
 void mas_dfl_sig( void );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

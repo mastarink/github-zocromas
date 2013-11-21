@@ -1,12 +1,17 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
 #include <pthread.h>
 #include <sys/prctl.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/thtools/mas_ocontrol_tools.h>
+#include <mastar/types/mas_opts_types.h>
+#include <mastar/types/mas_varset_types.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -18,18 +23,12 @@
 #include <mastar/channel/mas_channel_buffer.h>
 #include <mastar/channel/mas_channel.h>
 
-#include <mastar/types/mas_control_types.h>
-
-#include <mastar/thtools/mas_ocontrol_tools.h>
-#include <mastar/types/mas_opts_types.h>
-
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
 #include <mastar/thtools/mas_thread_tools.h>
 
-#include <mastar/types/mas_varset_types.h>
 #include <mastar/varset/mas_varset.h>
 
 /* #include <mastar/thvariables/mas_thread_variables.h> */

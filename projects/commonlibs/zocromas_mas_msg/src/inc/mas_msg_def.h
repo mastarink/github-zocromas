@@ -95,5 +95,7 @@ typedef enum mas_msg_color_e mas_msg_color_t;
 /* #  define FEMSG(...) { ctrl.fatal=1 ; MAS_ERRFL( errno, &errno, NULL, __VA_ARGS__); } */
 #  define P_ERR { extern int errno; if (&_mas_perr) _mas_perr(FL, errno, &errno); }
 #  define RP_ERR(arg) { r = arg;if ( r < 0 ) { P_ERR; } }
+
+
 /* #  include "mas_msg_tools.h" */
 #endif

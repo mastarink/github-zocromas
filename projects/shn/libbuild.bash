@@ -347,11 +347,14 @@ function shn_build_dist ()
 #   shn_build_list
     if pushd "${MAS_SHN_DIRS[build]}" &>/dev/null ; then
       # TODO for ....
-      if [[ "${MAS_SHN_PROJECT_FULLNAME}" ]] && [[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.gz" ]] && \
+      if [[ "${MAS_SHN_PROJECT_FULLNAME}" ]] && \
+      			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.gz"  ]] && \
       			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.bz2" ]] && [[ -d "${MAS_SHN_DIRS[savedist]}" ]] ; then
+#	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
 	shn_mv ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} "${MAS_SHN_DIRS[savedist]}"  || \
 			{ retcode=$? ; shn_errmsg "mv dist" ; return $retcode ; }
       else
+#	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
 	shn_errmsg "${MAS_SHN_PROJECT_FULLNAME}.tar.gz ${MAS_SHN_PROJECT_FULLNAME}.tar.bz2 ${MAS_SHN_DIRS[savedist]}"
       fi
       popd &>/dev/null

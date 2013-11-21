@@ -1,9 +1,12 @@
+#include <stdlib.h>
+#include <pthread.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
-
-#include <stdlib.h>
-#include <pthread.h>
 
 #include <mastar/wrap/mas_memory.h>
 
@@ -11,9 +14,6 @@
 #include <mastar/wrap/mas_lib.h>
 
 #include <mastar/msg/mas_msg_tools.h>
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 
 #include <mastar/log/mas_log.h>
 

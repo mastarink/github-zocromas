@@ -2,6 +2,7 @@
 #  define MAS_MODULES_COMMANDS_EVAL_H
 
 #  include <mastar/types/mas_modules_types.h>
+/* #  include <mastar/types/mas_modules_types.h> */
 void mas_evaluate_set_std_modpath( const char *modpath );
 
 mas_evaluated_t *mas_evaluate_cmd( STD_CMD_ARGS );
@@ -18,5 +19,5 @@ mas_evaluated_t *mas_evaluate_command_slash_plus( const mas_options_t * popts, c
 
 mas_evaluated_t *mas_evaluate_list_cmd( STD_CMD_ARGS );
 
-#  undef MAS_WEAK
+/* #  include <mastar/types/mas_common_cdefs.h> */
 #endif

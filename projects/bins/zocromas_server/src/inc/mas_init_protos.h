@@ -8,4 +8,5 @@ INIT_HANDLER( mas_protos_init );
 int mas_protos_destroy( void );
 
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

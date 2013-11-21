@@ -8,4 +8,5 @@ void mas_threads_destroy( void );
 
 
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

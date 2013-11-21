@@ -6,5 +6,5 @@
 
 /* unsigned mas_clients_count( mas_rcontrol_t * prcontrol ); */
 
-#  undef MAS_WEAK
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

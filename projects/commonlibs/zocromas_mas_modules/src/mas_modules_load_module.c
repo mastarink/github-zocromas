@@ -1,11 +1,11 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <dlfcn.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -14,7 +14,6 @@
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/types/mas_common_defs.h>
 
 #include "mas_modules_ctrl_module.h"
 

@@ -1,8 +1,11 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <stddef.h>
 #include <stdlib.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
@@ -13,9 +16,6 @@
 /* #include <mastar/log/mas_log.h> */
 
 
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 
 
 #include "mas_opts_common.h"

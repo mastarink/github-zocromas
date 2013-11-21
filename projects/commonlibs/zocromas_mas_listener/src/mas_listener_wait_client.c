@@ -1,18 +1,18 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <sys/time.h>
 
 #include <pthread.h>
 #include <sys/prctl.h>
 
+#include <mastar/types/mas_control_types.h>
+/* #include <mastar/types/mas_opts_types.h> */
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 #include <mastar/channel/mas_channel_open.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-
-#include <mastar/types/mas_control_types.h>
-/* #include <mastar/types/mas_opts_types.h> */
 
 #include <mastar/log/mas_log.h>
 

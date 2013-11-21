@@ -35,7 +35,7 @@ related:
 */
 
 int
-mas_opts_destroy( mas_options_t * popts )
+mas_opts_delete( mas_options_t * popts )
 {
   if ( popts )
   {
@@ -195,7 +195,7 @@ mas_opts_destroy( mas_options_t * popts )
       mas_free( popts->configfilename );
     popts->configfilename = NULL;
 
-    mas_cli_options_destroy( popts );
+    mas_cli_options_argv_destroy( popts );
     mas_cli_options_data_destroy( popts );
   }
   return 0;

@@ -18,4 +18,6 @@ mas_transaction_fun_t mas_modules_load_transaction_func( const char *libname, co
 /* mas_cmd_t *mas_modules_load_subtable_from( const char *libname, const char *modpath ); */
 void *mas_modules_load_symbol_from( const char *libname, const char *symname, const char *modpath );
 
+
+/* #  include <mastar/types/mas_common_cdefs.h> */
 #endif

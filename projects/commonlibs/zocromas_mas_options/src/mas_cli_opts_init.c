@@ -19,8 +19,6 @@
 #include <mastar/types/mas_control_types.h>
 
 
-#include "mas_cli_opts_data.h"
-
 #include "mas_cli_opts_def.h"
 
 #include "mas_cli_opts_init.h"
@@ -325,11 +323,11 @@ mas_cli_options_argv_destroy( mas_options_t * popts )
   popts->argvv.v = NULL;
 }
 
-void
-mas_cli_options_destroy( mas_options_t * popts )
-{
-  mas_cli_options_argv_destroy( popts );
-}
+/* void                                                  */
+/* mas_cli_options_destroy( mas_options_t * popts )      */
+/* {                                                     */
+/*   mas_cli_options_argv_destroy( popts );              */
+/* }                                                     */
 
 int
 mas_cli_opts_to_argv( mas_options_t * popts, char ***ptargv )

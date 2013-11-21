@@ -5,4 +5,5 @@
 INIT_HANDLER( mas_pids_init );
 void mas_pids_destroy( mas_options_t * popts );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

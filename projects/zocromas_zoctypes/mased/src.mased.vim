@@ -9,6 +9,7 @@ set path=inc/,src/inc/
 
 find mas_common_types.h
 sfind mas_common_defs.h
+sfind mas_common_cdefs.h
 
 tab sfind mas_evaluate_types.h
 

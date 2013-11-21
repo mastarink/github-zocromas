@@ -14,6 +14,7 @@
 #  include <mastar/types/mas_transaction_control_types.h>
 
 #  include <mastar/types/mas_unidata_types.h>
+#  include <mastar/types/mas_evaluate_types.h>
 
 typedef void ( *mas_any_fun_t ) ( void );
 

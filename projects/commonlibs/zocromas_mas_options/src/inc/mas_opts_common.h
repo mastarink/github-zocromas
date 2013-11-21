@@ -15,4 +15,5 @@ int _mas_opts_restore_relative( mas_options_t * popts, const char *filename, voi
                                 size_t opt_table_size, const void *arg, mas_new_section_func_t new_section_func,
                                 mas_at_section_func_t at_section_func, mas_unknown_opt_func_t unknown_opt_func );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

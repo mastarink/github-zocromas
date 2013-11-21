@@ -7,4 +7,6 @@ int mas_channel_bind( mas_channel_t * pchannel );
 int mas_channel_accept( mas_channel_t * pchannel );
 int mas_channel_connect( mas_channel_t * pchannel );
 
+
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

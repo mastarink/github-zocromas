@@ -377,7 +377,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
           char *env = mas_argv_string( sect->lenvc, sect->lenvp, 0 );
 
           printf( "DRY {%s}\n", env );
-          printf( "DRY execvp(%s, %s)\n", sect->name, command );
+          printf( "DRY execvpe(%s, %s)\n", sect->name, command );
           mas_free( env );
           mas_free( command );
         }
@@ -385,7 +385,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
         {
           char *command = mas_argv_string( sect->largc, sect->largv, 0 );
 
-          printf( "ERROR execvp(%s, %s)\n", sect->name, command );
+          printf( "ERROR execvpe(%s, %s)\n", sect->name, command );
           mas_free( command );
         }
         else
@@ -413,15 +413,16 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
             mas_close( ferrd );
             setvbuf( stderr, NULL, _IONBF, 0 );
           }
-
-          /* execvpe( sect->name, sect->largv, NULL ); */
+          /* if ( sect->values[RUNONCE_GLOBENV] )           */
+          /*   bad = execvp( sect->largv[0], sect->largv ); */
+          /* else                                           */
           bad = execvpe( sect->largv[0], sect->largv, sect->lenvp );
           if ( bad < 0 )
           {
             char *command = mas_argv_string( sect->largc, sect->largv, 0 );
             char buf[256];
 
-            printf( "ERROR 'execvp(%s, %s)' - %s\n", sect->largv[0], command, strerror_r( errno, buf, sizeof( buf ) ) );
+            printf( "ERROR 'execvpe(%s, %s)' - %s\n", sect->largv[0], command, strerror_r( errno, buf, sizeof( buf ) ) );
             mas_free( command );
           }
         }

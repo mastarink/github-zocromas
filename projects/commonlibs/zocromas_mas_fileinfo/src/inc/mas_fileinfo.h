@@ -53,4 +53,5 @@ mas_evaluated_t *mas_load_filename_at_file( const mas_options_t * popts, const c
 mas_evaluated_t *mas_load_filename_at_fd( const mas_options_t * popts, const char *root, const char *tail, size_t size, size_t * ptruesize,
                                           ino_t * ptrueinode, time_t * ptruefiletime, const void *arg );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

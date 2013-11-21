@@ -14,4 +14,5 @@ void mas_destroy( mas_options_t * popts );
 /* defined separately for client, server etc. */
 void mas_atexit( void );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

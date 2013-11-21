@@ -22,6 +22,7 @@
 
 #include "mas_cli_opts_def.h"
 
+#include "mas_longopts_table_object.h"
 
 #include "mas_cli_opts_data.h"
 
@@ -39,133 +40,6 @@ related:
 */
 
 
-/* int                                                                                                                        */
-/* mas_getopt_long( int argc, char *const argv[], const char *optstring, const struct option *longopts, int *longindex )      */
-/* {                                                                                                                          */
-/*   return getopt_long( argc, argv, optstring, longopts, longindex );                                                        */
-/* }                                                                                                                          */
-/*                                                                                                                            */
-/* int                                                                                                                        */
-/* mas_getopt_long_only( int argc, char *const argv[], const char *optstring, const struct option *longopts, int *longindex ) */
-/* {                                                                                                                          */
-/*   return getopt_long_only( argc, argv, optstring, longopts, longindex );                                                   */
-/* }                                                                                                                          */
-
-
-
-/* thM:L:dH:P: */
- /* static char cli_enabled_options[] = "thM:L:dH:P:"; */
-
-/* struct option *mas_cli_longopts_table = NULL; */
-
-#if 0
-/* struct option mas_cli_longopts_ctable[] = {                                                    */
-/*   {"test", no_argument, NULL, MAS_CLI_OPT_TEST},                                               */
-/*   {"help", no_argument, NULL, MAS_CLI_OPT_HELP},                                               */
-/*   {"info", no_argument, NULL, MAS_CLI_OPT_INFO},                                               */
-/*   {"quit", no_argument, NULL, MAS_CLI_OPT_QUIT},                                               */
-/*   {"exitsleep", optional_argument, NULL, MAS_CLI_OPT_EXITSLEEP},                               */
-/*                                                                                                */
-/*   {"single", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},                                  */
-/*   {"single-instance", no_argument, NULL, MAS_CLI_OPT_SINGLE_INSTANCE},                         */
-/*   {"multi-instance", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_INSTANCE},                        */
-/*                                                                                                */
-/*   {"single-child", no_argument, NULL, MAS_CLI_OPT_SINGLE_CHILD},                               */
-/*   {"multi-child", no_argument, NULL, MAS_CLI_OPT_NOSINGLE_CHILD},                              */
-/*                                                                                                */
-/*   {"save-user-opts", optional_argument, NULL, MAS_CLI_OPT_SAVE_USER_OPTS},                     */
-/*   {"nosave-user-opts", no_argument, NULL, MAS_CLI_OPT_NOSAVE_USER_OPTS},                       */
-/*                                                                                                */
-/*   {"command", required_argument, NULL, MAS_CLI_OPT_COMMAND},                                   */
-/*   {"redirect-messages", required_argument, NULL, MAS_CLI_OPT_MSGTO},                           */
-/*   {"redirect-stderr", required_argument, NULL, MAS_CLI_OPT_STDERRTO},                          */
-/*   {"redirect-stdout", required_argument, NULL, MAS_CLI_OPT_STDOUTTO},                          */
-/*   {"listener-single", no_argument, NULL, MAS_CLI_OPT_LISTENER_SINGLE},                         */
-/*   {"transaction-single", no_argument, NULL, MAS_CLI_OPT_TRANSACTION_SINGLE},                   */
-/*                                                                                                */
-/*   {"parent-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_PARENT},                         */
-/*   {"noparent-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_PARENT},                     */
-/*                                                                                                */
-/*   {"child-messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES_CHILD},                           */
-/*   {"nochild-messages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES_CHILD},                       */
-/*                                                                                                */
-/*   {"messages", no_argument, NULL, MAS_CLI_OPT_MESSAGES},                                       */
-/*   {"nomessages", no_argument, NULL, MAS_CLI_OPT_NOMESSAGES},                                   */
-/*                                                                                                */
-/*   {"noredirect-std", no_argument, NULL, MAS_CLI_OPT_NOREDIRECT_STD},                           */
-/*   {"redirect-std", no_argument, NULL, MAS_CLI_OPT_REDIRECT_STD},                               */
-/*                                                                                                */
-/*   {"noclose-std", no_argument, NULL, MAS_CLI_OPT_NOCLOSE_STD},                                 */
-/*   {"close-std", no_argument, NULL, MAS_CLI_OPT_CLOSE_STD},                                     */
-/*                                                                                                */
-/*   {"nologger", no_argument, NULL, MAS_CLI_OPT_NOLOGGER},                                       */
-/*   {"logger", no_argument, NULL, MAS_CLI_OPT_LOGGER},                                           */
-/*                                                                                                */
-/*   {"nolog", no_argument, NULL, MAS_CLI_OPT_NOLOG},                                             */
-/*   {"log", no_argument, NULL, MAS_CLI_OPT_LOG},                                                 */
-/*                                                                                                */
-/*   {"modsdir", required_argument, NULL, MAS_CLI_OPT_MODSDIR},                                   */
-/*   {"protodir", required_argument, NULL, MAS_CLI_OPT_PROTODIR},                                 */
-/*   {"logdir", required_argument, NULL, MAS_CLI_OPT_LOGDIR},                                     */
-/*   {"historydir", required_argument, NULL, MAS_CLI_OPT_HISTORYDIR},                             */
-/*                                                                                                */
-/*   {"noread-user-config", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS},                     */
-/*   {"read-user-config", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS},                         */
-/*                                                                                                */
-/*   {"noread-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOREAD_USER_OPTS_PLUS},           */
-/*   {"read-user-config-plus", no_argument, NULL, MAS_CLI_OPT_READ_USER_OPTS_PLUS},               */
-/*                                                                                                */
-/*   {"nooverwrite-user-config", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS},           */
-/*   {"overwrite-user-config", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS},               */
-/*                                                                                                */
-/*   {"nooverwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_NOOVERWRITE_USER_OPTS_PLUS}, */
-/*   {"overwrite-user-config-plus", no_argument, NULL, MAS_CLI_OPT_OVERWRITE_USER_OPTS_PLUS},     */
-/*                                                                                                */
-/*   {"nowatcher", no_argument, NULL, MAS_CLI_OPT_WOWATCHER},                                     */
-/*   {"watcher", no_argument, NULL, MAS_CLI_OPT_NOWOWATCHER},                                     */
-/*                                                                                                */
-/*   {"noticker", no_argument, NULL, MAS_CLI_OPT_WOTICKER},                                       */
-/*   {"ticker", no_argument, NULL, MAS_CLI_OPT_NOWOTICKER},                                       */
-/*   {"ticker-mode", required_argument, NULL, MAS_CLI_OPT_TICKER_MODE},                       */
-/*                                                                                                */
-/*   {"nopidfile", no_argument, NULL, MAS_CLI_OPT_NOPIDFILE},                                     */
-/*   {"pidfile", no_argument, NULL, MAS_CLI_OPT_PIDFILE},                                         */
-/*                                                                                                */
-/*   {"nomaster", required_argument, NULL, MAS_CLI_OPT_WOMASTER},                                 */
-/*   {"master", no_argument, NULL, MAS_CLI_OPT_NOWOMASTER},                                       */
-/*                                                                                                */
-/*   {"nomthread", no_argument, NULL, MAS_CLI_OPT_NOMASTER_THREAD},                               */
-/*   {"mthread", no_argument, NULL, MAS_CLI_OPT_MASTER_THREAD},                                   */
-/*                                                                                                */
-/*   {"nolistener", required_argument, NULL, MAS_CLI_OPT_WOLISTENER},                             */
-/*   {"listener", no_argument, NULL, MAS_CLI_OPT_NOWOLISTENER},                                   */
-/*                                                                                                */
-/*   {"nolisten", required_argument, NULL, MAS_CLI_OPT_WOLISTEN},                                 */
-/*   {"listen", no_argument, NULL, MAS_CLI_OPT_NOWOLISTEN},                                       */
-/*                                                                                                */
-/*   {"nodaemon", no_argument, NULL, MAS_CLI_OPT_WODAEMON},                                       */
-/*   {"daemon", no_argument, NULL, MAS_CLI_OPT_NOWODAEMON},                                       */
-/*                                                                                                */
-/*   {"nosysdaemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},                                 */
-/*   {"sysdaemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},                                     */
-/*                                                                                                */
-/*   {"nosys-daemon", no_argument, NULL, MAS_CLI_OPT_NOSYSDAEMON},                                */
-/*   {"sys-daemon", no_argument, NULL, MAS_CLI_OPT_SYSDAEMON},                                    */
-/*                                                                                                */
-/*   {"proto", required_argument, NULL, MAS_CLI_OPT_PROTO},                                       */
-/*   {"noprotos", no_argument, NULL, MAS_CLI_OPT_NOPROTOS},                                       */
-/*   {"host", required_argument, NULL, MAS_CLI_OPT_HOST},                                         */
-/*   {"nohosts", no_argument, NULL, MAS_CLI_OPT_NOHOSTS},                                         */
-/*   {"port", required_argument, NULL, MAS_CLI_OPT_PORT},                                         */
-/*                                                                                                */
-/*   {"nomsg", no_argument, NULL, MAS_CLI_OPT_NOMSG},                                             */
-/*   {"msg", required_argument, NULL, MAS_CLI_OPT_MSG},                                           */
-/*   {"init-msg", optional_argument, NULL, MAS_CLI_OPT_INIT_MSG},                                 */
-/*   {"init-message", required_argument, NULL, MAS_CLI_OPT_INIT_MSG},                             */
-/*                                                                                                */
-/*   {NULL, 0, NULL, 0},                                                                          */
-/* };                                                                                             */
-#endif
 
 mas_optionx_t mas_cli_optx_table[] = {
   {{"test", no_argument, NULL, MAS_CLI_OPT_TEST}
@@ -375,20 +249,6 @@ mas_optionx_t mas_cli_optx_table[] = {
 /* }                             */
 
 
-struct option *
-mas_cli_create_longopts_table( mas_optionx_t * table, size_t num )
-{
-  struct option *longtab = NULL;
-
-  longtab = mas_malloc( sizeof( struct option ) * num );
-  for ( int i = 0; i < num; i++ )
-  {
-    longtab[i] = table[i].longopt;
-    longtab[i].name = mas_strdup( table[i].longopt.name );
-  }
-  return longtab;
-}
-
 /* int                                                                                      */
 /* mas_cli_options_data_init( mas_options_t * popts, const char **message, unsigned flags ) */
 INIT_HANDLER( mas_cli_options_data_init )
@@ -396,7 +256,8 @@ INIT_HANDLER( mas_cli_options_data_init )
   if ( popts )
   {
     popts->cli_longopts_num = sizeof( mas_cli_optx_table ) / sizeof( mas_cli_optx_table[0] );
-    popts->cli_longopts = mas_cli_create_longopts_table( mas_cli_optx_table, popts->cli_longopts_num );
+    /* popts->cli_longopts = mas_cli_create_longopts_table_old( mas_cli_optx_table, popts->cli_longopts_num ); */
+    popts->cli_longopts = mas_cli_longopts_table_create( mas_cli_optx_table );
     popts->cli_optxs = &mas_cli_optx_table[0];
   }
   if ( message )
@@ -405,21 +266,11 @@ INIT_HANDLER( mas_cli_options_data_init )
 }
 
 void
-mas_cli_delete_longopts_table( struct option *longtab, size_t num )
-{
-  for ( int i = 0; i < num; i++ )
-  {
-    mas_free( ( char * ) longtab[i].name );
-  }
-  mas_free( longtab );
-}
-
-void
 mas_cli_options_data_destroy( mas_options_t * popts )
 {
   if ( popts )
   {
-    mas_cli_delete_longopts_table( popts->cli_longopts, popts->cli_longopts_num );
+    mas_cli_longopts_table_delete( popts->cli_longopts );
     popts->cli_longopts_num = 0;
     popts->cli_longopts = NULL;
   }

@@ -105,6 +105,8 @@ typedef enum
   /* + */
   RUNONCE_NOTERMINATE,
   /* + */
+  RUNONCE_GLOBENV,
+  /* + */
   RUNONCE_NOGROUP,
   /* + */
   RUNONCE_NONICE,

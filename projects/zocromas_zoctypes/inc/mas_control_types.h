@@ -16,6 +16,7 @@ this:
 more:
   mas_common_types.h
 */
+
 typedef struct mas_pthread_globals_s mas_pthread_globals_t;
 struct mas_pthread_globals_s
 {

@@ -1,5 +1,3 @@
-/* #include <stdio.h>  */
-/* #include <stdlib.h> */
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -141,7 +139,7 @@ runonce_config_group_load( const char *dir, config_group_t * group )
     }
     else
     {
-      printf( "can't open %s\n", fpath );
+      printf( "(%s) can't open %s\n", __func__, fpath );
     }
     mas_free( fpath );
   }

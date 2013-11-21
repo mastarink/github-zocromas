@@ -23,4 +23,7 @@ extern pthread_rwlock_t logger_queue_rwlock;
 /* extern pthread_mutex_t logger_mutex; */
 #  endif
 
+
+
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

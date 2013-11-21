@@ -1,7 +1,3 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -11,6 +7,13 @@
 
 #include <pthread.h>
 
+
+#include <mastar/types/mas_control_types.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
+
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -18,7 +21,6 @@
 /* #include <mastar/msg/mas_msg_def.h>   */
 /* #include <mastar/msg/mas_msg_tools.h> */
 
-#include <mastar/types/mas_control_types.h>
 
 
 #include "mas_thread_tools.h"

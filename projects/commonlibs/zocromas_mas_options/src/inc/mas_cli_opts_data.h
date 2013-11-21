@@ -9,4 +9,5 @@ void mas_cli_options_data_destroy( mas_options_t * popts );
 
 void mas_cli_print_optx_table( mas_options_t * popts );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

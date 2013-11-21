@@ -15,4 +15,6 @@ int mas_channel_opened( mas_channel_t * pchannel );
 
 int mas_channel_cork( mas_channel_t * pchannel, int val );
 
+
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

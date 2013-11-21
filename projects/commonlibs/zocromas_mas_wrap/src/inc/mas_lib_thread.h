@@ -35,6 +35,5 @@ void mas_pthread_exit( void *retval );
 /* int mas_xpthread_mutex_destroy( pthread_mutex_t * mutex );                                                 */
 /* int mas_xpthread_mutex_init( pthread_mutex_t * restrict mutex );                                           */
 
-#    undef MAS_WEAK
 #  endif
 #endif

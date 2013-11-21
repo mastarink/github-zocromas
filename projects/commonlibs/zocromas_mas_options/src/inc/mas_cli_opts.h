@@ -8,4 +8,5 @@
 /* int mas_cli_make_option( mas_options_t * _popts, int opt, const char *m_optarg ); */
 /* int _mas_cli_options( mas_options_t * popts, int argc, char *const *argv ); */
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

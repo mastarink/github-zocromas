@@ -26,4 +26,5 @@ int mas_fwrite_string( FILE * f, char *cbuf, int z );
 size_t mas_fread( void *ptr, size_t size, size_t nmemb, FILE * stream );
 size_t mas_fwrite( const void *ptr, size_t size, size_t nmemb, FILE * stream );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

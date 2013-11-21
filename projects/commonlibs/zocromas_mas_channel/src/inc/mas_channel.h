@@ -26,5 +26,5 @@ int mas_channel_read_some_new( mas_channel_t * pchannel );
 int mas_channel_read_remainder( mas_channel_t * pchannel );
 
 
-
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

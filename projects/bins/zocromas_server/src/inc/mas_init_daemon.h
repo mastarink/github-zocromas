@@ -5,4 +5,5 @@
 INIT_HANDLER( mas_daemon_init );
 
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

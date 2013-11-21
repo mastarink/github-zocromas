@@ -1,8 +1,11 @@
+#include <string.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
-
-#include <string.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -10,9 +13,6 @@
 /* #include <mastar/channel/mas_channel_object.h> */
 #include <mastar/channel/mas_channel_open.h>
 #include <mastar/channel/mas_channel.h>
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 
 #include <mastar/log/mas_log.h>
 

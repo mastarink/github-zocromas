@@ -57,11 +57,16 @@ runonce_config_create( void )
   /* printf( "dir=%s\n", dir ); */
   dir = getenv( "MAS_CONF_DIR" );
   /* printf( "dir=%s\n", dir ); */
-  configuration.directory = mas_strdup( dir );
-  configuration.directory = mas_strcat_x( configuration.directory, "/runonce" );
+  if ( !dir || !*dir )
+  {
+    printf( "(%s) MAS_CONF_DIR not defined\n", __func__ );
+  }
+  else
   {
     DIR *d;
 
+    configuration.directory = mas_strdup( dir );
+    configuration.directory = mas_strcat_x( configuration.directory, "/runonce" );
     d = opendir( configuration.directory );
     if ( d )
     {
@@ -85,7 +90,7 @@ runonce_config_create( void )
     }
     else
     {
-      printf( "can't open %s\n", configuration.directory );
+      printf( "(%s) can't open %s\n", __func__, configuration.directory );
     }
   }
   qsort( configuration.groups, configuration.numgroups, sizeof( config_group_t ), cmpcfg );

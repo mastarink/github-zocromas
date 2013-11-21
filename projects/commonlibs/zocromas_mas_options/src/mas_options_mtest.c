@@ -125,7 +125,7 @@ testing1( int id, int targc, char **targv, char **tenv, unsigned msgflags, unsig
           opts.flag.name.msg.bits, ( 1U << ( MAS_OPT_BITNUM_MSG_NOTICE - 1 ) | 1U << ( MAS_OPT_BITNUM_MSG_WATCH - 1 ) | msgflags ) );
     opts.flag.name.msg.name.msg_funline = 1;
   }
-  mas_opts_destroy( &opts );
+  mas_opts_delete( &opts );
   return r;
 }
 
@@ -172,7 +172,7 @@ testing2( int id, int targc, char **targv, char **tenv, unsigned msgflags, unsig
     mas_free( hosts );
   }
   mas_cli_print_optx_table( &opts );
-  mas_opts_destroy( &opts );
+  mas_opts_delete( &opts );
   return r;
 }
 
@@ -218,7 +218,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
  \
   HMSG( "testing separate popts [%s / " #field "]: %s", sopt, \
       		tested(popts, !popts ) ? "OK" : "FAIL" ); \
-  mas_opts_destroy( popts ); mas_free(popts); \
+  mas_opts_delete( popts ); mas_free(popts); \
 }
 #define TEST_SEPARATE_N(sopt, field, value, toget) \
 { \
@@ -226,7 +226,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
  \
   HMSG( "testing separate [%s / " #field "]: %s : %d ? %d", sopt, \
       		tested(popts, popts && ( popts->field == value )) ? "OK" : "FAIL", popts?popts->field:0, value ); \
-  mas_opts_destroy( popts ); mas_free(popts); \
+  mas_opts_delete( popts ); mas_free(popts); \
 }
 #define TEST_SEPARATE_F(sopt, field, value, toget) \
 { \
@@ -234,7 +234,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
  \
   HMSG( "testing separate [%s / " #field "]: %s : %d ? %d", sopt, \
       		tested(popts, popts && (( popts->flag.name.field?1:0 ) == value )) ? "OK" : "FAIL", popts?popts->flag.name.field:0, value ); \
-  mas_opts_destroy( popts ); \
+  mas_opts_delete( popts ); \
   mas_free(popts); \
 }
 #define TEST_SEPARATE_S(sopt, field, value, toget) \
@@ -245,7 +245,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
       		tested(popts, popts && ( !( popts->field || value ) || \
 		    		    ( popts->field && value && 0==strcmp( popts->field, value )) \
 		                 )) ? "OK" : "FAIL", popts?popts->field:NULL, value ); \
-  mas_opts_destroy( popts ); \
+  mas_opts_delete( popts ); \
   mas_free(popts); \
 }
 #define TEST_SEPARATE_I(sopt, field, value, toget) \
@@ -256,7 +256,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
       		tested(popts, popts && ( !( popts->field || value ) || \
 		    		    ( popts->field && value && 0==strcmp( popts->field, value )) \
 		                 )) ? "OK" : "FAIL", popts?popts->field:NULL, value ); \
-  mas_opts_destroy( popts ); \
+  mas_opts_delete( popts ); \
   mas_free(popts); \
 }
 
@@ -271,7 +271,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
       		tested(popts, popts && (!(fldvalue || value) || \
 		  	( fldvalue && value && 0==strcmp( fldvalue, value )))) ? "OK" : "FAIL", fldvalue, value ); \
   mas_free(fldvalue); \
-  mas_opts_destroy( popts ); \
+  mas_opts_delete( popts ); \
   mas_free(popts); \
 }
 #define TEST_SEPARATE_AC(sopt, field, value, toget) \
@@ -285,7 +285,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
       		tested(popts, popts && (!(fldvalue || value) || \
 		  	( fldvalue && value && 0==strcmp( fldvalue, value )))) ? "OK" : "FAIL", fldvalue, value ); \
   mas_free(fldvalue); \
-  mas_opts_destroy( popts ); \
+  mas_opts_delete( popts ); \
   mas_free(popts); \
 }
 
@@ -299,7 +299,7 @@ justdo( int targc, char *targv[], char *tenv[] )
   mas_cli_options_argv_init( &opts, targc, targv, tenv );
   _mas_cli_options_init( &opts, NULL, 1 );
   mas_ctrl_init( &opts, NULL, 1 );
-  mas_opts_destroy( &opts );
+  mas_opts_delete( &opts );
 }
 
 mas_options_t *
@@ -340,7 +340,7 @@ testing_separate( const char *sopt, const char *toget )
 
   if ( r1 < 0 || r2 < 0 || r3 < 0 || r4 < 0 )
   {
-    mas_opts_destroy( popts );
+    mas_opts_delete( popts );
     mas_free( popts );
     popts = NULL;
   }

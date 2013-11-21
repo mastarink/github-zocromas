@@ -13,4 +13,5 @@ int mas_opts_restore_at_section( mas_options_t * _popts, const char *section, co
 int mas_opts_restore_relative( mas_options_t * _popts, const char *filename );
 int mas_opts_restore_path( mas_options_t * _popts, const char *fpath );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

@@ -28,4 +28,5 @@ INIT_HANDLER( mas_post_init );
 /* int mas_proc_init( mas_options_t * popts, const char **message, unsigned flag ); */
 
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

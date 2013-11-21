@@ -7,4 +7,5 @@ void _mas_autoobject_set_name( mas_autoobject_t * obj, const char *docroot, cons
 mas_autoobject_t *mas_autoobject_create( void );
 void mas_autoobject_delete( mas_autoobject_t * obj );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

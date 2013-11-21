@@ -425,7 +425,8 @@ mas_destroy( mas_options_t * popts )
       P_ERR;
     }
   }
-  IEVAL( r, mas_opts_destroy( popts ) );
+  IEVAL( r, mas_opts_delete( popts ) );
+  popts = NULL;
   r = 0;
 
   ctrl.log_disabled = 1;

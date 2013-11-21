@@ -17,9 +17,78 @@ function localrc
     unset MAS_PROJECTS_DIR
   fi
 }
+function localrc_new
+{
+  local cfgline i od
+  od=`pwd`  || return 1
+  cd ~ || return 1
+  unset MAS_SHN_PROJECTS_DIR MAS_PROJECTS_GLOBAL_CONFIG
+  declare -A MAS_PROJECTS_GLOBAL_CONFIG
+  declare -a MAS_PROJECTS_GLOBAL_CONFIGA
+  if [[ "$MAS_CONF_DIR_TERM" ]] \
+  		&& [[ -d "$MAS_CONF_DIR_TERM" ]] \
+		&& [[ -f "$MAS_CONF_DIR_TERM/.mastar_work_projects" ]]
+  then
+    readarray MAS_PROJECTS_GLOBAL_CONFIGA < "$MAS_CONF_DIR_TERM/.mastar_work_projects"
+    for (( i=0 ; $i < ${#MAS_PROJECTS_GLOBAL_CONFIGA[@]} ; i++ )) ; do
+      if [[ "${MAS_PROJECTS_GLOBAL_CONFIGA[$i]}" =~ ^(projects_top)=(.*)$ ]] ; then
+	MAS_PROJECTS_GLOBAL_CONFIG[${BASH_REMATCH[1]}]=$( realpath ${BASH_REMATCH[2]} )
+	break
+      fi
+    done
 
+    if [[ "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}" ]] \
+    		&& [[ -d "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}" ]] \
+    		&& [[ "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects" ]] \
+    		&& [[ -d "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects" ]]
+    then
+      declare -xg MAS_SHN_PROJECTS_DIR=${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects
+    else
+      return 1
+    fi
+#   echo "projects dir set from config: $MAS_SHN_PROJECTS_DIR" >&2
+# else
+#   echo "projects dir not set ($MAS_CONF_DIR_TERM/.mastar_work_projects)" >&2
+  else
+    return 1
+  fi
+  if [[ -d "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] ; then
+    cd "$MAS_SHN_PROJECTS_DIR"
+  else
+    return 1
+  fi
+  if [[ -d "zocromas_zoctypes" ]] ; then
+    cd zocromas_zoctypes
+  else
+    return 1
+  fi
+  if [[ -L shn ]] && [[ -f shn/libwork.bash ]] ; then
+    . shn/libwork.bash
+  else
+    return 1
+  fi
+  if [[ -d "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] ; then
+    cd $MAS_SHN_PROJECTS_DIR
+  else
+    return 1
+  fi
+  cd $MAS_SHN_PROJECTS_DIR || return 1
+  cd `ls -d *type*` || return 1
+  source shn/libwork.bash || return 1
+  shn_project_cd type || return 1
+  if [[ "$MAS_SHN_PRJTOP_DIR" ]] && [[ -d "$MAS_SHN_PRJTOP_DIR" ]] \
+  	&& [[ "$od" ]] && [[ -d "$od" ]] && [[ "$od" =~ ^$MAS_SHN_PRJTOP_DIR(.*)$ ]] ; then
+    cd $od
+  fi
+}
 # localrc $@
-~/.mas/bin/mas_projects.sh $@
+
+if localrc_new $@ ; then
+  echo "localrc_new done" >&2
+# alias >&2
+else
+  echo "localrc_new error" >&2
+fi
 
 
 # vi: ft=sh

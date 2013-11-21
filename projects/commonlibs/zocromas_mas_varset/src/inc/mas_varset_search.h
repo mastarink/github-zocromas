@@ -19,4 +19,7 @@ mas_varset_t *mas_varset_search_variable_va( mas_varset_t * varset, const char *
 mas_varvec_t *mas_varset_find_vclass( mas_varset_t * varset, const char *vclass_name );
 mas_varvec_t *mas_varset_search_vclass( mas_varset_t * varset, const char *vclass_name );
 
+
+
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

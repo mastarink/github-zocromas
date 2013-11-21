@@ -25,4 +25,6 @@ void _mas_perr( const char *func, int line, int merrno, int *perrno ) __attribut
 void mas_clear_last_error( void );
 const mas_std_error_t *mas_get_last_error( void );
 
+
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

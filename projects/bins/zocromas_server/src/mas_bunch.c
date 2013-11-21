@@ -1,10 +1,12 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <unistd.h>
 #include <fcntl.h>
 
 #include <pthread.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
+#include <mastar/types/mas_control_types.h>
 
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -15,7 +17,6 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-#include <mastar/types/mas_control_types.h>
 
 #include <mastar/modules/mas_modules_ctrl_module.h>
 /* #include <mastar/modules/mas_modules_load_module.h> */

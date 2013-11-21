@@ -44,4 +44,5 @@ const char *mas_autoobject_etag( mas_autoobject_t * obj );
 time_t mas_autoobject_time( mas_autoobject_t * obj );
 const char *mas_autoobject_gtime( mas_autoobject_t * obj );
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

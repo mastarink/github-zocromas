@@ -1,12 +1,15 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <stdlib.h>
 #include <sys/time.h>
 #include <unistd.h>
 
 #include <pthread.h>
 #include <sys/prctl.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/wrap/mas_lib.h>
@@ -26,9 +29,6 @@
 
 #include <mastar/listener/mas_listener_control.h>
 #include <mastar/listener/mas_listeners.h>
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 
 
 #include "mas_server_tools.h"

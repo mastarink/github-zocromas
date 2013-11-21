@@ -14,4 +14,5 @@ int mas_init_curses( void );
 int mas_close_curses( void );
 #endif
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

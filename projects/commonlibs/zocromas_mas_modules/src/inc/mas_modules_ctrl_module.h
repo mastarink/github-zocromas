@@ -6,4 +6,6 @@
 void mas_modules_register_module( const char *name, void *module_handle );
 void mas_modules_unregister( void );
 
+
+/* #  include <mastar/types/mas_common_cdefs.h> */
 #endif

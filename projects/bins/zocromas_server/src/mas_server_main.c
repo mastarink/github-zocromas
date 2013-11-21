@@ -1,6 +1,3 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 /**
  * cd /home/mastar/.mas/develop/autotools/zocromas
  * export MAS_ZOCROMAS_DEFOPTS='-H193.222.140.165:5002 -H193.222.140.165:5003 -L/mnt/miscn/mastar/develop/autotools/zocromas/log'
@@ -29,6 +26,11 @@
 #include <sys/stat.h>
 #include <sys/prctl.h>
 
+#include <mastar/types/mas_control_types.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 #include <mastar/tools/mas_tools.h>
 
 
@@ -36,7 +38,6 @@
 #include <mastar/msg/mas_msg_tools.h>
 #include <mastar/log/mas_log.h>
 
-#include <mastar/types/mas_control_types.h>
 
 #include "mas_bunch.h"
 

@@ -1,6 +1,3 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 /* ميخائيل */
 #include <unistd.h>
 #include <stdlib.h>
@@ -10,6 +7,12 @@
 /* be used in matching pairs at the same nesting level of braces.          */
 #include <pthread.h>
 #include <sys/prctl.h>
+
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
 
 #include <mastar/wrap/mas_lib.h>
 #include <mastar/wrap/mas_lib_thread.h>
@@ -29,9 +32,6 @@
 #include "mas_listener_wait_client.h"
 #include "mas_lcontrol_object.h"
 #include "mas_listener_control.h"
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 
 
 #include "mas_listener.h"

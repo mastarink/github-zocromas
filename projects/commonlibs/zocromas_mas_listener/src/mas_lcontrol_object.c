@@ -1,6 +1,3 @@
-#include <mastar/wrap/mas_std_def.h>
-#include <mastar/types/mas_common_defs.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,14 +7,19 @@
 
 #include <sys/time.h>
 
+#include <mastar/types/mas_varset_types.h>
+#include <mastar/types/mas_control_types.h>
+#include <mastar/types/mas_opts_types.h>
+
+
+#include <mastar/wrap/mas_std_def.h>
+#include <mastar/types/mas_common_defs.h>
+
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_tools.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
-
-#include <mastar/types/mas_control_types.h>
-#include <mastar/types/mas_opts_types.h>
 
 
 #include <mastar/channel/mas_channel.h>
@@ -25,7 +27,6 @@
 
 #include <mastar/log/mas_log.h>
 
-#include <mastar/types/mas_varset_types.h>
 #include <mastar/varset/mas_varset_object.h>
 
 #include <mastar/autoset/mas_autoset_object.h>

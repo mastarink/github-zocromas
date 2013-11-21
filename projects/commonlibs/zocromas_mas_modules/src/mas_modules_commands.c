@@ -1,26 +1,13 @@
+#include <unistd.h>
+#include <string.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/types/mas_common_defs.h>
 
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/wait.h>
-
-#include <signal.h>
-#include <dlfcn.h>
-
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 #include <mastar/tools/mas_tools.h>
-
-#include <mastar/types/mas_common_defs.h>
 
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
@@ -30,6 +17,8 @@
 #include <mastar/fileinfo/mas_unidata.h>
 
 #include "mas_modules_commands_eval.h"
+
+
 #include "mas_modules_commands.h"
 
 /*

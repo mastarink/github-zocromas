@@ -32,4 +32,5 @@ char *mas_channel_buffer_nl_dup( mas_channel_t * pchannel );
 const char *mas_channel_buffer_find_eol( mas_channel_t * pchannel );
 
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

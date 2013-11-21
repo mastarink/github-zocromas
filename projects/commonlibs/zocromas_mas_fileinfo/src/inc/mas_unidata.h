@@ -38,4 +38,5 @@ char *mas_unidata_content_type_string( mas_unidata_t * ud );
 
 
 
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif

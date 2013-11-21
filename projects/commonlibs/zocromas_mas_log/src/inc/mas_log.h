@@ -22,5 +22,5 @@ int mas_log( const char *func, int line, int merrno, const char *fmt, ... )
 #  endif
 
 
-
+/* #include <mastar/types/mas_common_cdefs.h> */
 #endif
