@@ -36,7 +36,7 @@
 
 /* mas_in_thread_end */
 #include <mastar/thtools/mas_thread_tools.h>
-#include <mastar/options/mas_cli_opts_data.h>
+#include <mastar/cliopts/mas_cli_opts_data.h>
 
 #include "mas_init_threads.h"
 #include "mas_init_protos.h"

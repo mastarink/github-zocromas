@@ -63,6 +63,10 @@ function shn_project_dir2realpath ()
   if [[ "$1" ]] && [[ "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR/$1" ]] ; then
     shn_echo "$MAS_SHN_PROJECTS_DIR/$1"
     return 0
+  elif ! [[ -d "$MAS_SHN_PROJECTS_DIR/$1" ]] ; then
+    shn_errmsg "No directory : $MAS_SHN_PROJECTS_DIR/$1"
+  else
+    shn_errmsg "Why"
   fi
   return 1
 }

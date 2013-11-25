@@ -343,26 +343,38 @@ function shn_build_dist ()
   local shn_dont_setup=yes
   if [[ "${MAS_SHN_DIRS[build]}" ]] && [[ -d "${MAS_SHN_DIRS[build]}" ]] ; then
     shn_dbgmsg shn_build_dist ${MAS_SHN_DIRS[build]}
-    shn_build_common_make distcheck && shn_msgns make distcheck ok || return $?
+    if shn_build_common_make distcheck ; then
+      shn_msgns make distcheck ok
+    else
+      shn_errmsg "distcheck"
+      return $?
+    fi
+    shn_msg 'moving...'
 #   shn_build_list
     if pushd "${MAS_SHN_DIRS[build]}" &>/dev/null ; then
       # TODO for ....
       if [[ "${MAS_SHN_PROJECT_FULLNAME}" ]] && \
       			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.gz"  ]] && \
       			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.bz2" ]] && [[ -d "${MAS_SHN_DIRS[savedist]}" ]] ; then
-#	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
+ 	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
 	shn_mv ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} "${MAS_SHN_DIRS[savedist]}"  || \
-			{ retcode=$? ; shn_errmsg "mv dist" ; return $retcode ; }
+			{ retcode=$? ; shn_errmsg "mv dist" ; }
+	shn_msg "moved to ${MAS_SHN_DIRS[savedist]}"
       else
-#	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
+ 	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
 	shn_errmsg "${MAS_SHN_PROJECT_FULLNAME}.tar.gz ${MAS_SHN_PROJECT_FULLNAME}.tar.bz2 ${MAS_SHN_DIRS[savedist]}"
+	retcode=1
       fi
       popd &>/dev/null
+    else
+      retcode=1
     fi
+  else
+    retcode=1
   fi
   shn_dbgmsg "$MAS_SHN_PROJECT_FULLNAME ==> ${MAS_SHN_DIRS[savedist]}"
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
-  return 0
+  return $retcode
 }
 function shn_build_ebuild_update ()
 {

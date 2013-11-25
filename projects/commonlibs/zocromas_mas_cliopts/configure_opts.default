@@ -1,0 +1,7 @@
+--with-base-dir=/mnt/new_misc/develop/autotools/zoc
+--with-pids-dir=zocromas/pid
+--with-mods-dir=zocmds
+--with-proto-dir=zocromas_zocprotos
+--with-log-dir=log
+--with-server=/tmp/zocromas.socket
+--with-def-proto=xcromas

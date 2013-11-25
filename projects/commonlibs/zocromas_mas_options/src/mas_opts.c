@@ -16,8 +16,8 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-#include "mas_cli_opts_init.h"
-#include "mas_cli_opts_data.h"
+/* #include "mas_cli_opts_init.h" */
+/* #include "mas_cli_opts_data.h" */
 
 #include "mas_opts.h"
 
@@ -195,8 +195,8 @@ mas_opts_delete( mas_options_t * popts )
       mas_free( popts->configfilename );
     popts->configfilename = NULL;
 
-    mas_cli_options_argv_destroy( popts );
-    mas_cli_options_data_destroy( popts );
+    /* mas_cli_options_argv_destroy( popts ); */
+    /* mas_cli_options_data_destroy( popts ); */
   }
   return 0;
 }

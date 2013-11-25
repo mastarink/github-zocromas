@@ -38,8 +38,10 @@
 #include <mastar/options/mas_opts.h>
 #include <mastar/options/mas_opts_save.h>
 /* #include <mastar/options/mas_opts_restore.h> */
-/* #include <mastar/options/mas_cli_opts.h> */
-#include <mastar/options/mas_cli_opts_init.h>
+/* #include <mastar/cliopts/mas_cli_opts.h> */
+
+#include <mastar/cliopts/mas_cli_opts_data.h>
+#include <mastar/cliopts/mas_cli_opts_init.h>
 
 #include "mas_sig.h"
 #include "mas_init.h"
@@ -425,6 +427,9 @@ mas_destroy( mas_options_t * popts )
       P_ERR;
     }
   }
+  mas_cli_options_argv_destroy( popts );
+  mas_cli_options_data_destroy( popts );
+
   IEVAL( r, mas_opts_delete( popts ) );
   popts = NULL;
   r = 0;

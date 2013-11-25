@@ -94,6 +94,7 @@ function shn_code ()
     ;;	  
     e)
       shn_dbgmsg "shn 2.${code}.1"
+      shn_build_ebuild_check
       shn_build_ebuild_update    || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"

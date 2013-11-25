@@ -5,6 +5,7 @@ commonlibs/zocromas_mas_modules
 commonlibs/zocromas_mas_transaction
 commonlibs/zocromas_mas_listener
 commonlibs/zocromas_mas_options
+commonlibs/zocromas_mas_cliopts
 commonlibs/zocromas_mas_init
 bins/zocromas_server
 bins/zocromas_runonce

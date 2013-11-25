@@ -1,7 +1,7 @@
 AC_PREREQ([2.67])
 AC_INIT(m4_esyscmd([shn/prjname.sh]),m4_esyscmd([shn/zocversion.sh]),[bug-report@mastarink.net])
 
-AC_CONFIG_SRCDIR([src/mas_init.c])
+AC_CONFIG_SRCDIR([src/mas_cli_opts.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
 
@@ -14,9 +14,10 @@ m4_include([m4zoc/vars0.m4])
 m4_include([m4zoc/varscheck.m4])
 
 # Checks for libraries.
-AC_CHECK_LIB([uuid],  [uuid_generate])
-PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control
-	zocromas_mas_options zocromas_mas_cliopts zocromas_mas_msg zocromas_mas_log])
+PKG_CHECK_MODULES([DEPS], [zocromas_zoctypes zocromas_mas_wrap zocromas_mas_tools zocromas_mas_control zocromas_mas_msg zocromas_mas_log 
+				zocromas_mas_options])
+
+
 
 
 

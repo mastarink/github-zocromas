@@ -13,6 +13,7 @@ zocromas_mas_messageio
 zocromas_mas_transaction
 zocromas_mas_listener
 zocromas_mas_options
+zocromas_mas_cliopts
 zocromas_mas_init
 zocromas_zocmds1
 zocromas_zocmds2

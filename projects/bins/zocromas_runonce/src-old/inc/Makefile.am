@@ -1,2 +1,0 @@
-noinst_HEADERS = mas_runonce.h mas_runonce_base.h mas_runonce_action.h mas_runonce_pid.h mas_runonce_section_pid.h mas_runonce_test.h mas_runonce_config_types.h mas_runonce_config.h mas_runonce_config_group.h mas_runonce_config_section.h mas_runonce_window.h
-
