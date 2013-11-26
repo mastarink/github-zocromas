@@ -21,8 +21,8 @@
 
 #include <mastar/fileinfo/mas_unidata.h>
 
+#include <mastar/unimodule/mas_unimodule_load.h>
 
-#include "mas_modules_load_module.h"
 #include "mas_modules_commands.h"
 
 
@@ -35,9 +35,9 @@ related:
   mas_modules_commands.c
   mas_modules_commands_eval.h
   mas_modules_commands.h
-  mas_modules_load_module.c
-  mas_modules_load_module.h
   mas_modules_types.h
+  mas_unimodule_load.c
+  mas_unimodule_load.h
 more:
   mas_cmdmod_client.c
   mas_cmdmod_get.c
@@ -90,7 +90,7 @@ __load_cmd_func( const char *libname, const char *funname, const char *modpath )
 {
   mas_cmd_fun_t cmd_fun = NULL;
 
-  cmd_fun = ( mas_cmd_fun_t ) mas_modules_load_func_from( libname, funname, modpath );
+  cmd_fun = ( mas_cmd_fun_t ) mas_unimodule_load_func_from( libname, funname, modpath );
   return cmd_fun;
 }
 
@@ -108,7 +108,7 @@ _load_subtable_from( const char *libname, const char *modpath )
 {
   mas_cmd_t *cmd_tab = NULL;
 
-  cmd_tab = ( mas_cmd_t * ) mas_modules_load_symbol_from( libname, "subcmdtable", modpath );
+  cmd_tab = ( mas_cmd_t * ) mas_unimodule_load_symbol_from( libname, "subcmdtable", modpath );
   MAS_LOG( "load subtable from %s => %p", libname, ( void * ) cmd_tab );
   return cmd_tab;
 }

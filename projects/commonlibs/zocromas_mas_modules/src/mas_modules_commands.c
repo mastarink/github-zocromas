@@ -30,7 +30,7 @@ related:
   mas_modules_load_module.c
 */
 
-__attribute__ ( ( constructor (1000) ) )
+__attribute__ ( ( constructor( 1000 ) ) )
      static void mas_constructor( void )
 {
   /* fprintf( stderr, "******************** CONSTRUCTOr %s e%d\n", __FILE__, errno ); */
@@ -96,7 +96,6 @@ mas_modules_lookup_question( const char *ownerlib_name, mas_cmd_t * cmdtable, co
   }
   return found;
 }
-
 
 mas_evaluated_t *
 mas_modules_commands( STD_CMD_ARGS )

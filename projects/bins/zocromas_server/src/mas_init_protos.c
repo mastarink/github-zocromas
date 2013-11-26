@@ -27,7 +27,8 @@
 
 #include <mastar/types/mas_control_types.h>
 
-#include <mastar/modules/mas_modules_load_module.h>
+/* #include <mastar/modules/mas_modules_load_module.h> */
+#include <mastar/unimodule/mas_unimodule_load.h>
 
 #include "mas_init_protos.h"
 
@@ -59,7 +60,7 @@ INIT_HANDLER( mas_protos_init )
       proto_descs[ipr].proto_id = protos_num + 1;
       proto_descs[ipr].name = mas_strdup( popts->protosv.v[ipr] );
       proto_descs[ipr].func =
-            ( mas_transaction_fun_t ) mas_modules_load_func_from( popts->protosv.v[ipr], "mas_proto_main", popts->dir.proto );
+            ( mas_transaction_fun_t ) mas_unimodule_load_func_from( popts->protosv.v[ipr], "mas_proto_main", popts->dir.proto );
       if ( !proto_descs[ipr].func )
       {
         EMSG( "PROTO LOAD %s FAIL", proto_descs[ipr].name );

@@ -1,5 +1,5 @@
-#ifndef MAS_SERVER_CMD_TYPES_H
-#  define MAS_SERVER_CMD_TYPES_H
+#ifndef MAS_MODULES_TYPES_H
+#  define MAS_MODULES_TYPES_H
 
 #  define MAS_INVALID_ANSWER ((void *)-1L)
 #  define MAS_VALID_ANSWER(a) (a && a->data!=MAS_INVALID_ANSWER)
@@ -15,8 +15,6 @@
 
 #  include <mastar/types/mas_unidata_types.h>
 #  include <mastar/types/mas_evaluate_types.h>
-
-typedef void ( *mas_any_fun_t ) ( void );
 
 typedef struct mas_cmd_s mas_cmd_t;
 typedef mas_evaluated_t *( *mas_cmd_fun_t ) ( STD_CMD_ARGS );

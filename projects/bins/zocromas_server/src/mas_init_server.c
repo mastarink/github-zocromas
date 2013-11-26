@@ -28,7 +28,7 @@
 
 #include <mastar/types/mas_control_types.h>
 
-#include <mastar/modules/mas_modules_ctrl_module.h>
+#include <mastar/unimodule/mas_unimodule_ctrl.h>
 
 /* mas_listeners_stop */
 #include <mastar/listener/mas_listener_control_list.h>
@@ -36,7 +36,7 @@
 
 /* mas_in_thread_end */
 #include <mastar/thtools/mas_thread_tools.h>
-#include <mastar/cliopts/mas_cli_opts_data.h>
+#include <mastar/cliopts/mas_cliopts_data.h>
 
 #include "mas_init_threads.h"
 #include "mas_init_protos.h"
@@ -192,7 +192,7 @@ mas_server_destroy( mas_options_t * popts )
     mas_ticker_stop(  );
   }
   HMSG( "TO DESTROY MODULES" );
-  mas_modules_unregister(  );
+  mas_unimodule_unregister(  );
 
   mas_pids_destroy( popts );
   mas_cliopts_data_destroy( popts );

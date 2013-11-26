@@ -12,8 +12,8 @@
 
 #include <mastar/init/mas_sig.h>
 
-#include <mastar/cliopts/mas_cli_opts_init.h>
-#include <mastar/cliopts/mas_cli_opts_data.h>
+#include <mastar/cliopts/mas_cliopts_init.h>
+#include <mastar/cliopts/mas_cliopts_data.h>
 
 
 #include <mastar/control/mas_control.h>

@@ -1,6 +1,7 @@
 commonlibs/zocromas_mas_wrap
 zocromas_zoctypes
 commonlibs/zocromas_mas_tools
+commonlibs/zocromas_mas_unimodule
 commonlibs/zocromas_mas_modules
 commonlibs/zocromas_mas_transaction
 commonlibs/zocromas_mas_listener

@@ -38,10 +38,10 @@
 #include <mastar/options/mas_opts.h>
 #include <mastar/options/mas_opts_save.h>
 /* #include <mastar/options/mas_opts_restore.h> */
-/* #include <mastar/cliopts/mas_cli_opts.h> */
+/* #include <mastar/cliopts/mas_cliopts.h> */
 
-#include <mastar/cliopts/mas_cli_opts_data.h>
-#include <mastar/cliopts/mas_cli_opts_init.h>
+#include <mastar/cliopts/mas_cliopts_data.h>
+#include <mastar/cliopts/mas_cliopts_init.h>
 
 #include "mas_sig.h"
 #include "mas_init.h"

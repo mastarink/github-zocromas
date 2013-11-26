@@ -30,7 +30,10 @@ tab sfind  mas_control_types.h
 
 tab sfind mas_listener_control_types.h
 sfind mas_variables_types.h
+
+tab sfind mas_unimodule_types.h
 sfind mas_modules_types.h
+
 sfind mas_thread_variables_types.h
 sfind mas_th_types.h
 

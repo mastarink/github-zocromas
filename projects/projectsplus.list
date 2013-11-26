@@ -8,6 +8,7 @@ commonlibs/zocromas_mas_msg                   zocromas_mas_msg
 commonlibs/zocromas_mas_log                   zocromas_mas_log
 commonlibs/zocromas_mas_channel               zocromas_mas_channel
 commonlibs/zocromas_mas_fileinfo              zocromas_mas_fileinfo
+commonlibs/zocromas_mas_unimodule	      zocromas_mas_unimodule
 commonlibs/zocromas_mas_modules               zocromas_mas_modules
 commonlibs/zocromas_mas_messageio             zocromas_mas_messageio
 commonlibs/zocromas_mas_transaction           zocromas_mas_transaction

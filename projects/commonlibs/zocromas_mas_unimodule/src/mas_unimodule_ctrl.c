@@ -17,7 +17,8 @@
 #include <mastar/msg/mas_msg_def.h>
 #include <mastar/msg/mas_msg_tools.h>
 
-#include "mas_modules_ctrl_module.h"
+
+#include "mas_unimodule_ctrl.h"
 
 static void
 __register_module( const char *name, void *module_handle )
@@ -51,7 +52,7 @@ __register_module( const char *name, void *module_handle )
 }
 
 void
-mas_modules_register_module( const char *name, void *module_handle )
+mas_unimodule_register_module( const char *name, void *module_handle )
 {
   if ( module_handle )
     __register_module( name, module_handle );
@@ -59,7 +60,7 @@ mas_modules_register_module( const char *name, void *module_handle )
 
 typedef int ( *mas_v_fun_t ) ( void );
 void
-mas_modules_unregister( void )
+mas_unimodule_unregister( void )
 {
   CTRL_PREPARE;
   if ( &ctrl && ctrl.loaded_modules_cnt && ctrl.loaded_modules )

@@ -18,7 +18,7 @@
 #include <mastar/msg/mas_msg_tools.h>
 
 
-#include <mastar/modules/mas_modules_ctrl_module.h>
+#include <mastar/unimodule/mas_unimodule_ctrl.h>
 /* #include <mastar/modules/mas_modules_load_module.h> */
 
 #include <mastar/log/mas_log.h>
@@ -31,8 +31,8 @@
 #include <mastar/init/mas_init.h>
 #include <mastar/init/mas_init_modules.h>
 
-#include <mastar/cliopts/mas_cli_opts_init.h>
-#include <mastar/cliopts/mas_cli_opts_data.h>
+#include <mastar/cliopts/mas_cliopts_init.h>
+#include <mastar/cliopts/mas_cliopts_data.h>
 
 #include <mastar/init/mas_sig.h>
 

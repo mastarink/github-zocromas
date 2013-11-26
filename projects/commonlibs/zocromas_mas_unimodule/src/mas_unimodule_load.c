@@ -15,22 +15,23 @@
 #include <mastar/log/mas_log.h>
 
 
-#include "mas_modules_ctrl_module.h"
+#include "mas_unimodule_ctrl.h"
 
-#include "mas_modules_load_module.h"
+#include "mas_unimodule_load.h"
+
 
 /* #define MAS_MODULES_DIR "/tmp/zoc" */
 
 /*
 this:
-  mas_modules_load_module.c
+  mas_unimodule_load_module.c
 related:
   mas_modules_commands.c
   mas_modules_commands.h
   mas_modules_commands_eval.c
   mas_modules_commands_eval.h
-  mas_modules_load_module.h
-  mas_modules_types.h
+  mas_unimodule_load_module.h
+  mas_unimodule_types.h
 more:
   mas_control.c
   mas_opts.c
@@ -39,7 +40,7 @@ more:
 
 
 static void *
-_mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr )
+_mas_unimodule_load_fullmodule( const char *fullname, const char *name, int noerr )
 {
   void *module_handle;
 
@@ -69,13 +70,13 @@ _mas_modules_load_fullmodule( const char *fullname, const char *name, int noerr 
     WMSG( "_LOAD MOD %s %s", fullname, module_handle ? "OK" : "FAIL" );
     MAS_LOG( "module load: '%s' (%p)", fullname, ( void * ) module_handle );
     if ( module_handle )
-      mas_modules_register_module( name, module_handle );
+      mas_unimodule_register_module( name, module_handle );
   }
   return module_handle;
 }
 
 void *
-mas_modules_load_module_from( const char *libname, const char *modpath, int noerr )
+mas_unimodule_load_module_from( const char *libname, const char *modpath, int noerr )
 {
   void *module_handle;
   char *fullname = NULL;
@@ -85,7 +86,7 @@ mas_modules_load_module_from( const char *libname, const char *modpath, int noer
   fullname = mas_strcat_x( fullname, "/" );
   fullname = mas_strcat_x( fullname, libname );
   fullname = mas_strcat_x( fullname, ".so" );
-  module_handle = _mas_modules_load_fullmodule( fullname, libname, noerr );
+  module_handle = _mas_unimodule_load_fullmodule( fullname, libname, noerr );
   HMSG( "LOAD MOD %s %s", libname, module_handle ? "OK" : "FAIL" );
   tMSG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
   MAS_LOG( "load module %s %s", libname, module_handle ? "OK" : "FAIL" );
@@ -93,36 +94,13 @@ mas_modules_load_module_from( const char *libname, const char *modpath, int noer
   return module_handle;
 }
 
-/* static void *                                                                 */
-/* _mas_modules_load_module( const char *libname )                               */
-/* {                                                                             */
-/*   void *module_handle = NULL;                                                 */
-/*                                                                               */
-/*   MAS_LOG( "load module %s @ %s", libname, opts.dir.mods );                    */
-/*   if ( opts.dir.mods )                                                         */
-/*     module_handle = mas_modules_load_module_from( libname, opts.dir.mods, 1 ); */
-/*   return module_handle;                                                       */
-/* }                                                                             */
-
-/* void *                                                                                    */
-/* mas_modules_load_proto( const char *libname )                                             */
-/* {                                                                                         */
-/*   void *module_handle = NULL;                                                             */
-/*                                                                                           */
-/*   MAS_LOG( "load proto %s @ %s", libname, opts.dir.proto );                                */
-/*   if ( opts.dir.proto )                                                                    */
-/*     module_handle = mas_modules_load_module_from( libname, opts.dir.proto, 1 );            */
-/*   WMSG( "PROTO LOAD %s @ %s %s", libname, opts.dir.proto, module_handle ? "OK" : "FAIL" ); */
-/*   return module_handle;                                                                   */
-/* }                                                                                         */
-
 mas_any_fun_t
-mas_modules_load_func_from( const char *libname, const char *funname, const char *modpath )
+mas_unimodule_load_func_from( const char *libname, const char *funname, const char *modpath )
 {
   mas_any_fun_t any_fun = NULL;
 
   /* any_fun = ( mas_any_fun_t ) ( unsigned long ) dlsym( module_handle, funname ); */
-  any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_modules_load_symbol_from( libname, funname, modpath );
+  any_fun = ( mas_any_fun_t ) ( unsigned long long ) mas_unimodule_load_symbol_from( libname, funname, modpath );
   if ( !any_fun )
   {
     char *dler;
@@ -147,13 +125,13 @@ mas_modules_load_func_from( const char *libname, const char *funname, const char
 }
 
 void *
-mas_modules_load_symbol_from( const char *libname, const char *symname, const char *modpath )
+mas_unimodule_load_symbol_from( const char *libname, const char *symname, const char *modpath )
 {
   void *msymb = NULL;
   void *module_handle;
 
-  /* module_handle = _mas_modules_load_module( libname ); */
-  module_handle = mas_modules_load_module_from( libname, modpath, 0 );
+  /* module_handle = _mas_unimodule_load_module( libname ); */
+  module_handle = mas_unimodule_load_module_from( libname, modpath, 0 );
   if ( module_handle )
   {
     msymb = ( void * ) ( unsigned long ) dlsym( module_handle, symname );
