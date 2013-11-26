@@ -20,18 +20,18 @@
 
 
 
-#include "mas_cli_opts_def.h"
+#include "mas_cliopts_def.h"
 
 #include "mas_longopts_table_object.h"
 
-#include "mas_cli_opts_data.h"
+#include "mas_cliopts_data.h"
 
 
 /*
 this:
-  mas_cli_opts.c
+  mas_cliopts.c
 related:
-  mas_cli_opts.h
+  mas_cliopts.h
   mas_opts_types.h
   mas_opts_data.c
   mas_msg_tools.c
@@ -250,8 +250,8 @@ mas_optionx_t mas_cli_optx_table[] = {
 
 
 /* int                                                                                      */
-/* mas_cli_options_data_init( mas_options_t * popts, const char **message, unsigned flags ) */
-INIT_HANDLER( mas_cli_options_data_init )
+/* mas_cliopts_data_init( mas_options_t * popts, const char **message, unsigned flags ) */
+INIT_HANDLER( mas_cliopts_data_init )
 {
   if ( popts )
   {
@@ -266,7 +266,7 @@ INIT_HANDLER( mas_cli_options_data_init )
 }
 
 void
-mas_cli_options_data_destroy( mas_options_t * popts )
+mas_cliopts_data_destroy( mas_options_t * popts )
 {
   if ( popts )
   {

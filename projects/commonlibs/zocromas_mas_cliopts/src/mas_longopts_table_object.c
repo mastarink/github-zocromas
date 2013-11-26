@@ -71,15 +71,18 @@ mas_cli_longopts_table_delete( struct option *longtab )
   size_t indx = 0;
   int nz;
 
-  do
+  if ( ptable )
   {
-    nz = ptable->name ? 1 : 0;
-    mas_free( ( char * ) ptable->name );
-    ptable->name = NULL;
-    ptable++;
-    indx++;
-  }
-  while ( nz );
+    do
+    {
+      nz = ptable->name ? 1 : 0;
+      mas_free( ( char * ) ptable->name );
+      ptable->name = NULL;
+      ptable++;
+      indx++;
+    }
+    while ( nz );
 
-  mas_free( longtab );
+    mas_free( longtab );
+  }
 }

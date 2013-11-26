@@ -134,7 +134,7 @@ error_handler_at_init( const char *func, int line, int issys, int rcode, int ier
 }
 
 static int
-mas_pre_init_runpath( char *runpath )
+mas_setup_runpath( char *runpath )
 {
   CTRL_PREPARE;
   int r = 0;
@@ -165,44 +165,7 @@ mas_pre_init_runpath( char *runpath )
   return r;
 }
 
-int
-mas_init_restart_count( mas_options_t * popts )
-{
-  CTRL_PREPARE;
-  char name[512];
-  char *ren = NULL, *ren0;
 
-  HMSG( "INIT RESTART COUNT %u", ctrl.restart_cnt );
-  /* snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) ); */
-  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
-  ren0 = ren = getenv( name );
-  if ( ren )
-  {
-    sscanf( ren, "%u", &ctrl.restart_cnt );
-    HMSG( "INIT RESTART COUNT (%s) %u", ren, ctrl.restart_cnt );
-    ren = strchr( ren, ':' );
-    if ( ren )
-    {
-      unsigned long t;
-
-      ren++;
-      sscanf( ren, "%lu", &t );
-      ctrl.stamp.first_lts = t;
-    }
-    ren = strchr( ren, ':' );
-    ctrl.stamp.prev_lts = 0;
-    if ( ren )
-    {
-      unsigned long t;
-
-      ren++;
-      sscanf( ren, "%lu", &t );
-      ctrl.stamp.prev_lts = t;
-    }
-    MAS_LOG( "@ init [%s='%s']", name, ren0 );
-  }
-  return 0;
-}
 
 int
 mas_init( mas_options_t * popts, int argc, char **argv, char **env )
@@ -212,22 +175,20 @@ mas_init( mas_options_t * popts, int argc, char **argv, char **env )
   int r = 0;
 
   HMSG( "INIT" );
-  IEVAL( r, mas_pre_init_runpath( argv[0] ) );
+  IEVAL( r, mas_setup_runpath( argv[0] ) );
   WMSG( "(%d) PRE-INIT", r );
 #ifdef MAS_USE_CURSES
   /* // r = mas_curses_init(  ); */
   /* IEVAL( r, mas_curses_init(  ) ); */
 #endif
 
+  mas_ctrl_setup( argc, argv, env );
 
-  ctrl.stamp.lts = ( unsigned long ) time( NULL );
-  ctrl.stamp.first_lts = ctrl.stamp.lts;
-  IEVAL( r, mas_init_restart_count( popts ) );
   MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts, ( unsigned long ) ctrl.stamp.lts,
            ( unsigned long ) ctrl.stamp.prev_lts );
 
-  if ( !( mas_cli_options_argv_init( popts, argc, argv, env ) > 1 ) )
-    IEVAL( r, mas_env_init( popts ) );
+  /* if ( !( mas_cli_options_argv_init( popts, argc, argv, env ) > 1 ) ) */
+  /*   IEVAL( r, mas_env_init( popts ) );                                */
   /* *argv[0]='Z'; */
 
   /* HMSG( "popts-> argvv.v[0]: %s", popts-> argvv.v[0] ); */
@@ -427,8 +388,8 @@ mas_destroy( mas_options_t * popts )
       P_ERR;
     }
   }
-  mas_cli_options_argv_destroy( popts );
-  mas_cli_options_data_destroy( popts );
+  mas_cliopts_argv_destroy( popts );
+  mas_cliopts_data_destroy( popts );
 
   IEVAL( r, mas_opts_delete( popts ) );
   popts = NULL;

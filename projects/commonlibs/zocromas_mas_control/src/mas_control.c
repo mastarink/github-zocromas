@@ -39,6 +39,63 @@ more:
   mas_rcontrol_object.c
 */
 
+int
+mas_ctrl_setup_restart_count( void )
+{
+  CTRL_PREPARE;
+  char name[512];
+  char *ren = NULL;
+
+  /* snprintf( name, sizeof( name ), "MAS_%s_%u_RESTART", ctrl.is_client ? "CLIENT" : "SERVER", getpid(  ) ); */
+  snprintf( name, sizeof( name ), "MAS_ZOCROMAS_RESTART_%u", getpid(  ) );
+  ren = getenv( name );
+  if ( ren )
+  {
+    sscanf( ren, "%u", &ctrl.restart_cnt );
+    ren = strchr( ren, ':' );
+    if ( ren )
+    {
+      unsigned long t;
+
+      ren++;
+      sscanf( ren, "%lu", &t );
+      ctrl.stamp.first_lts = t;
+    }
+    ren = strchr( ren, ':' );
+    ctrl.stamp.prev_lts = 0;
+    if ( ren )
+    {
+      unsigned long t;
+
+      ren++;
+      sscanf( ren, "%lu", &t );
+      ctrl.stamp.prev_lts = t;
+    }
+  }
+  return 0;
+}
+
+int
+mas_ctrl_setup( int targc, char **targv, char **tenv )
+{
+  CTRL_PREPARE;
+  int r = 0;
+
+  ctrl.stamp.lts = ( unsigned long ) time( NULL );
+  ctrl.stamp.first_lts = ctrl.stamp.lts;
+
+  /* IEVAL( r, mas_init_restart_count( popts ) ); */
+  r = mas_ctrl_setup_restart_count(  );
+
+  /* MAS_LOG( "@ %u. init @ %lu -> %lu (%lu)", ctrl.restart_cnt, ( unsigned long ) ctrl.stamp.first_lts, ( unsigned long ) ctrl.stamp.lts, */
+  /*          ( unsigned long ) ctrl.stamp.prev_lts );                                                                                     */
+
+  ctrl.launchervv.v = targv;
+  ctrl.launchervv.c = targc;
+  ctrl.launcherev.v = tenv;
+
+  return r;
+}
 
 /*
  * */
@@ -46,9 +103,9 @@ more:
 /* mas_ctrl_init( mas_options_t * popts, const char **message, unsigned force_messages ) */
 INIT_HANDLER( mas_ctrl_init )
 {
+  CTRL_PREPARE;
   int force_messages = flags;
 
-  CTRL_PREPARE;
   /* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server */
   ctrl.in_client = 0;
   ctrl.keep_listening = 0;

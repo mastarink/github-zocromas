@@ -21,12 +21,36 @@
 #include <mastar/options/mas_opts.h>
 
 
-#include "mas_cli_opts.h"
-#include "mas_cli_opts_init.h"
-#include "mas_cli_opts_data.h"
+#include "mas_cliopts.h"
+#include "mas_cliopts_init.h"
+#include "mas_cliopts_data.h"
 
 int tested_total = 0;
 int tested_good = 0;
+
+static int
+testinit( mas_options_t * popts, int targc, char **targv, char **tenv )
+{
+  CTRL_PREPARE;
+  int r1 = 0;
+  int r2 = 0;
+  int r3 = 0;
+  int r4 = 0;
+
+  memset( popts, 0, sizeof( *popts ) );
+
+  ctrl.launchervv.v = targv;
+  ctrl.launchervv.c = targc;
+  ctrl.launcherev.v = tenv;
+
+
+  r1 = mas_cliopts_data_init( popts, NULL, 1 );
+  r2 = mas_cliopts_argv_init( popts, NULL, 1 );
+  r3 = _mas_cliopts_init( popts, NULL, 1 );
+  r4 = mas_ctrl_init( popts, NULL, 1 );
+  HMSG( "init: %d,%d,%d,%d opts", r1, r2, r3, r4 );
+  return ( r1 < 0 || r2 < 0 || r3 < 0 || r4 < 0 ) ? ( r3 < 0 ? r3 : -1 ) : r3;
+}
 
 /* run --test --info --quit --single --logger --msg=mem */
 int
@@ -46,7 +70,7 @@ tested( mas_options_t * popts, int condition )
     {
       int r;
 
-      r = mas_cli_opts_save( popts, tsave );
+      r = mas_cliopts_save( popts, tsave );
       fclose( tsave );
       if ( r <= 0 )
         unlink( fname );
@@ -62,23 +86,8 @@ testing1( int id, int targc, char **targv, char **tenv, unsigned msgflags, unsig
   int r = 0;
   mas_options_t opts;
 
-  memset( &opts, 0, sizeof( opts ) );
-  mas_cli_options_data_init( &opts, NULL, 1 );
-  mas_cli_options_argv_init( &opts, targc, targv, tenv );
-  /* for ( int i = 0; i < targc; i++ )             */
-  /*   HMSG( "%d. %s", i, targv[i] ); */
-  /* {                                                              */
-  /*   struct option *topt = opts.cli_longopts;                     */
-  /*                                                                */
-  /*   while ( topt && topt->name )                                 */
-  /*   {                                                            */
-  /*     HMSG( "%s : %d", topt->name, topt->has_arg ); */
-  /*     topt++;                                                    */
-  /*   }                                                            */
-  /* }                                                              */
-  r = _mas_cli_options_init( &opts, NULL, 1 );
-  mas_ctrl_init( &opts, NULL, 1 );
-  HMSG( "_mas_cli_options_init:%d opts", r );
+  r = testinit( &opts, targc, targv, tenv );
+
 
   if ( port )
   {
@@ -126,8 +135,8 @@ testing1( int id, int targc, char **targv, char **tenv, unsigned msgflags, unsig
           opts.flag.name.msg.bits, ( 1U << ( MAS_OPT_BITNUM_MSG_NOTICE - 1 ) | 1U << ( MAS_OPT_BITNUM_MSG_WATCH - 1 ) | msgflags ) );
     opts.flag.name.msg.name.msg_funline = 1;
   }
-  mas_cli_options_argv_destroy( &opts );
-  mas_cli_options_data_destroy( &opts );
+  mas_cliopts_argv_destroy( &opts );
+  mas_cliopts_data_destroy( &opts );
   mas_opts_delete( &opts );
   return r;
 }
@@ -139,13 +148,8 @@ testing2( int id, int targc, char **targv, char **tenv, unsigned msgflags, unsig
   int r = 0;
   mas_options_t opts;
 
-  memset( &opts, 0, sizeof( opts ) );
-  mas_cli_options_data_init( &opts, NULL, 1 );
-  mas_cli_options_argv_init( &opts, targc, targv, tenv );
-  /* for ( int i = 0; i < targc; i++ )             */
-  /*   HMSG( "%d. %s", i, targv[i] ); */
-  r = _mas_cli_options_init( &opts, NULL, 1 );
-  mas_ctrl_init( &opts, NULL, 1 );
+
+  r = testinit( &opts, targc, targv, tenv );
 
   /* OPT_SFLAG( &opts, test, 1 ); */
 
@@ -176,8 +180,8 @@ testing2( int id, int targc, char **targv, char **tenv, unsigned msgflags, unsig
   }
   mas_cli_print_optx_table( &opts );
 
-  mas_cli_options_argv_destroy( &opts );
-  mas_cli_options_data_destroy( &opts );
+  mas_cliopts_argv_destroy( &opts );
+  mas_cliopts_data_destroy( &opts );
   mas_opts_delete( &opts );
   return r;
 }
@@ -193,27 +197,27 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
   char **tenv = NULL;
 
   targc = mas_add_argv_args( targc, &targv, test_opts, 0 );
-  HMSG( "1 $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
+  HMSG( "1g $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
   {
     r = testing1( id, targc, targv, tenv, msgflags, port, exitsleep, womaster, wolisten, wolistener );
-    HMSG( "1 testing1:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
+    HMSG( "1g testing1:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
   }
-  HMSG( "2 $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
+  HMSG( "2g $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
   {
     r = testing1( id, targc, targv, tenv, msgflags, port, exitsleep, womaster, wolisten, wolistener );
-    HMSG( "2 testing1:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
+    HMSG( "2g testing1:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
   }
-  HMSG( "3 $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
+  HMSG( "3g $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
   {
     r = testing1( id, targc, targv, tenv, msgflags, port, exitsleep, womaster, wolisten, wolistener );
-    HMSG( "3 testing1:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
+    HMSG( "3g testing1:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
   }
-  HMSG( "4 $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
+  HMSG( "4g $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
   {
     r = testing2( id, targc, targv, tenv, msgflags, expected_flags, expected_init_msg, expected_jhosts, expected_nhosts );
-    HMSG( "4 testing2:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
+    HMSG( "4g testing2:%d %s %d ? %d", r, tested( NULL, r == expected_result ) ? "OK" : "FAIL", r, expected_result );
   }
-  HMSG( "5 $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
+  HMSG( "5g $$$$$$$$$$$$$$$$$$$[%d] %s", targc, test_opts );
   mas_del_argv( targc, targv, 0 );
   return r;
 }
@@ -223,7 +227,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
   mas_options_t *popts = testing_separate( sopt, toget ); \
  \
   HMSG( "testing separate popts [%s / " #field "]: %s", sopt, \
-      		tested(popts, !popts ) ? "OK" : "FAIL" ); \
+      		tested(popts, !popts ) ? "OK" : "FAIL (popts should be NULL)" ); \
   mas_opts_delete( popts ); mas_free(popts); \
 }
 #define TEST_SEPARATE_N(sopt, field, value, toget) \
@@ -291,7 +295,7 @@ testing_general( int id, const char *test_opts, int expected_result, unsigned lo
       		tested(popts, popts && (!(fldvalue || value) || \
 		  	( fldvalue && value && 0==strcmp( fldvalue, value )))) ? "OK" : "FAIL", fldvalue, value ); \
   mas_free(fldvalue); \
-  mas_cli_options_argv_destroy( popts ); mas_cli_options_data_destroy( popts );  mas_opts_delete( popts ); \
+  mas_cliopts_argv_destroy( popts ); mas_cliopts_data_destroy( popts );  mas_opts_delete( popts ); \
   mas_free( popts ); \
 }
 
@@ -300,46 +304,34 @@ justdo( int targc, char *targv[], char *tenv[] )
 {
   mas_options_t opts;
 
-  memset( &opts, 0, sizeof( mas_options_t ) );
-  mas_cli_options_data_init( &opts, NULL, 1 );
-  mas_cli_options_argv_init( &opts, targc, targv, tenv );
-  _mas_cli_options_init( &opts, NULL, 1 );
-  mas_ctrl_init( &opts, NULL, 1 );
+  testinit( &opts, targc, targv, tenv );
 
-  mas_cli_options_argv_destroy( &opts );
-  mas_cli_options_data_destroy( &opts );
+  mas_cliopts_argv_destroy( &opts );
+  mas_cliopts_data_destroy( &opts );
   mas_opts_delete( &opts );
 }
 
 mas_options_t *
 testing_separate( const char *sopt, const char *toget )
 {
-  int r1 = 0;
-  int r2 = 0;
-  int r3 = 0;
-  int r4 = 0;
+  int r = 0;
   int targc = 0;
   char **targv = NULL;
   char **tenv = NULL;
   mas_options_t *popts = NULL;
 
 
-  popts = mas_malloc( sizeof( mas_options_t ) );
-  memset( popts, 0, sizeof( mas_options_t ) );
   targc = mas_add_argv_args( targc, &targv, "cmd", 0 );
   targc = mas_add_argv_args( targc, &targv, sopt, 0 );
-  {
-    r1 = mas_cli_options_data_init( popts, NULL, 1 );
-    r2 = mas_cli_options_argv_init( popts, targc, targv, tenv );
-    r3 = _mas_cli_options_init( popts, NULL, 1 );
-    r4 = mas_ctrl_init( popts, NULL, 1 );
-  }
+
+  popts = mas_malloc( sizeof( mas_options_t ) );
+  r = testinit( popts, targc, targv, tenv );
   mas_del_argv( targc, targv, 0 );
 
   {
     char *args;
 
-    args = mas_cli_opts_to_str( popts );
+    args = mas_cliopts_to_str( popts );
     HMSG( "match rebuilt %s src:'%s' ? to get:'%s'",
           tested( popts, !( args || toget ) || ( args && toget && 0 == strcmp( args, toget ) ) ) ? "OK" : "FAIL", args, toget );
 
@@ -347,10 +339,10 @@ testing_separate( const char *sopt, const char *toget )
   }
 
 
-  if ( r1 < 0 || r2 < 0 || r3 < 0 || r4 < 0 )
+  if ( r < 0 )
   {
-    mas_cli_options_argv_destroy( popts );
-    mas_cli_options_data_destroy( popts );
+    mas_cliopts_argv_destroy( popts );
+    mas_cliopts_data_destroy( popts );
     mas_opts_delete( popts );
     mas_free( popts );
     popts = NULL;

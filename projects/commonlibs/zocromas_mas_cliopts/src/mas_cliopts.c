@@ -19,19 +19,17 @@
 #include <mastar/types/mas_control_types.h>
 
 
-#include "mas_cli_opts_data.h"
+#include "mas_cliopts_data.h"
+#include "mas_cliopts_def.h"
 
-#include "mas_cli_opts_def.h"
-
-
-#include "mas_cli_opts.h"
+#include "mas_cliopts.h"
 
 
 /*
 this:
-  mas_cli_opts.c
+  mas_cliopts.c
 related:
-  mas_cli_opts.h
+  mas_cliopts.h
   mas_opts_types.h
   mas_opts_data.c
   mas_msg_tools.c

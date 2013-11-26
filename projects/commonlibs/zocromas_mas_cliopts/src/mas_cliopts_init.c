@@ -19,9 +19,8 @@
 #include <mastar/types/mas_control_types.h>
 
 
-#include "mas_cli_opts_def.h"
-
-#include "mas_cli_opts_init.h"
+#include "mas_cliopts_def.h"
+#include "mas_cliopts_init.h"
 
 
 char *
@@ -55,6 +54,11 @@ mas_cli_enabled_options( mas_options_t * popts )
   return s;
 }
 
+/*  *pr:
+ *  	-1 : number out of range
+ *  	0  : OK
+ *  	1  : default (no arg)
+ * */
 static long
 mas_cli_optval( const char *arg, long def, int *pr )
 {
@@ -85,7 +89,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
 {
   EVAL_PREPARE;
   int r = 0;
-  int v = 0;
+  int ml_error = 0;
   unsigned long def = 0;
   mas_optionx_type_t optyp = OPTX_TYPE_NONE;
   unsigned shift = 0;
@@ -102,7 +106,7 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
   if ( shift )
   {
     char *p = ( ( char * ) popts ) + shift;
-    long ml_optarg = mas_cli_optval( m_optarg, def, &v );
+    long ml_optarg = mas_cli_optval( m_optarg, def, &ml_error );
 
     /* ( m_optarg && *m_optarg ? strtol( m_optarg, NULL, 10 ) : def ); */
 
@@ -119,10 +123,21 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
     case OPTX_TYPE_UNSIGNED:
       *( ( unsigned * ) p ) = ( unsigned ) ml_optarg;
       popts->cli_optxs[indx].set = 1;
+      if ( ml_error < 0 )
+      {
+        HMSG( "O:CLI --%s wrong value '%s'", popts->cli_optxs[indx].longopt.name, m_optarg );
+        IEVAL( r, -1 );
+      }
       break;
     case OPTX_TYPE_INT:
       *( ( int * ) p ) = ( int ) ml_optarg;
       popts->cli_optxs[indx].set = 1;
+      if ( ml_error < 0 )
+      {
+        HMSG( "O:CLI --%s wrong value '%s'", popts->cli_optxs[indx].longopt.name, m_optarg );
+        IEVAL( r, -1 );
+      }
+      break;
       break;
     case OPTX_TYPE_ZINT:
       *( ( int * ) p ) = 0;
@@ -182,11 +197,6 @@ mas_cli_make_option( mas_options_t * popts, int opt, const char *arg, mas_option
       break;
     }
   }
-  if ( v < 0 )
-  {
-    HMSG( "O:CLI wrong value '%s'", m_optarg );
-    IEVAL( r, -1 );
-  }
   /* HMSG( "O:getopt_long:%d Usage: %s [--help -h]", oargv[0] ); */
   return r;
 }
@@ -212,7 +222,7 @@ _mas_cli_short_optx( mas_options_t * popts, int opt )
 }
 
 static int
-_mas_cli_options( mas_options_t * popts, int oargc, char *const *oargv )
+_mas_cliopts( mas_options_t * popts, int oargc, char *const *oargv )
 {
   CTRL_PREPARE;
   int r = 0;
@@ -259,8 +269,8 @@ _mas_cli_options( mas_options_t * popts, int oargc, char *const *oargv )
 }
 
 /* int                                                                                  */
-/* _mas_cli_options_init( mas_options_t * popts, const char **message, unsigned flags ) */
-INIT_HANDLER( _mas_cli_options_init )
+/* _mas_cliopts_init( mas_options_t * popts, const char **message, unsigned flags ) */
+INIT_HANDLER( _mas_cliopts_init )
 {
   int r = -1;
   int oargc;
@@ -271,7 +281,7 @@ INIT_HANDLER( _mas_cli_options_init )
     CTRL_PREPARE;
     oargc = popts->argvv.c;
     oargv = popts->argvv.v;
-    r = _mas_cli_options( popts, oargc, oargv );
+    r = _mas_cliopts( popts, oargc, oargv );
     ctrl.argv_nonoptind = r;
     if ( popts && OPT_QFLAG( popts, help ) )
     {
@@ -288,35 +298,37 @@ INIT_HANDLER( _mas_cli_options_init )
   HMSG( "(%d) INIT CLI", r );
   return r;
   /* return r >= 0 ? 0 : r; */
+  /* return r < 0 ? r : 0; */
 }
 
 /* int                                                                                 */
-/* mas_cli_options_init( mas_options_t * popts, const char **message, unsigned flags ) */
-INIT_HANDLER( mas_cli_options_init )
+/* mas_cliopts_init( mas_options_t * popts, const char **message, unsigned flags ) */
+INIT_HANDLER( mas_cliopts_init )
 {
   int r;
 
-  r = _mas_cli_options_init( popts, message, flags );
-  return r >= 0 ? 0 : r;
+  r = _mas_cliopts_init( popts, message, flags );
+  return r < 0 ? r : 0;
 }
 
-int
-mas_cli_options_argv_init( mas_options_t * popts, int oargc, char **oargv, char **env )
+/* int                                                                                     */
+/* mas_cliopts_argv_init( mas_options_t * popts, int oargc, char **oargv, char **env ) */
+INIT_HANDLER( mas_cliopts_argv_init )
 {
   CTRL_PREPARE;
-  ctrl.launchervv.v = oargv;
-  ctrl.launchervv.c = oargc;
-  ctrl.launcherev.v = env;
-  for ( int ia = 0; ia < oargc; ia++ )
+  for ( int ia = 0; ia < ctrl.launchervv.c; ia++ )
   {
-    popts->argvv.c = mas_add_argv_arg( popts->argvv.c, &popts->argvv.v, oargv[ia] );
+    popts->argvv.c = mas_add_argv_arg( popts->argvv.c, &popts->argvv.v, ctrl.launchervv.v[ia] );
   }
   HMSG( "INIT ARGV argc:%d", popts->argvv.c );
-  return popts->argvv.c;
+  if ( message )
+    *message = __func__;
+
+  return popts->argvv.c < 0 ? popts->argvv.c : 0;
 }
 
 void
-mas_cli_options_argv_destroy( mas_options_t * popts )
+mas_cliopts_argv_destroy( mas_options_t * popts )
 {
   mas_del_argv( popts->argvv.c, popts->argvv.v, 0 );
   popts->argvv.c = 0;
@@ -324,13 +336,13 @@ mas_cli_options_argv_destroy( mas_options_t * popts )
 }
 
 /* void                                                  */
-/* mas_cli_options_destroy( mas_options_t * popts )      */
+/* mas_cliopts_destroy( mas_options_t * popts )      */
 /* {                                                     */
-/*   mas_cli_options_argv_destroy( popts );              */
+/*   mas_cliopts_argv_destroy( popts );              */
 /* }                                                     */
 
 int
-mas_cli_opts_to_argv( mas_options_t * popts, char ***ptargv )
+mas_cliopts_to_argv( mas_options_t * popts, char ***ptargv )
 {
   int r = 0;
   char buf[1024];
@@ -454,25 +466,25 @@ mas_cli_opts_to_argv( mas_options_t * popts, char ***ptargv )
 }
 
 char *
-mas_cli_opts_to_str( mas_options_t * popts )
+mas_cliopts_to_str( mas_options_t * popts )
 {
   int targc = 0;
   char **targv = NULL;
   char *args;
 
-  targc = mas_cli_opts_to_argv( popts, &targv );
+  targc = mas_cliopts_to_argv( popts, &targv );
   args = mas_argv_string( targc, targv, 0 );
   mas_del_argv( targc, targv, 0 );
   return args;
 }
 
 int
-mas_cli_opts_save( mas_options_t * popts, FILE * f )
+mas_cliopts_save( mas_options_t * popts, FILE * f )
 {
   int r;
   char *args;
 
-  args = mas_cli_opts_to_str( popts );
+  args = mas_cliopts_to_str( popts );
   r = fprintf( f, "%s", args );
   mas_free( args );
   return r;

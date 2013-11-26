@@ -10,6 +10,7 @@ function shn_code ()
   if shopt  nocasematch &>/dev/null ; then nocase=s ; else nocase=u ; fi
   shopt -u nocasematch &>/dev/null
 
+# shn_msg "shn pwd:`pwd`"
   case $code in
     h)
       shn_msg 'project' $MAS_SHN_PROJECT_NAME

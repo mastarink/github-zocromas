@@ -72,7 +72,7 @@ main( int argc, char *argv[], char *env[] )
 
   /* uuid BEFORE opt_files !! */
   IEVAL( r, mas_init_plus( gpopts, argc, argv, env, /* mas_proc_init, */ mas_uuid_init, mas_opt_files_init, mas_sig_init,
-                           mas_cli_options_data_init, mas_cli_options_init, mas_ctrl_init,
+                           mas_cliopts_data_init, mas_cliopts_argv_init, mas_cliopts_init, mas_ctrl_init,
                            mas_client_readline_init, mas_post_init, NULL ) );
   for ( int ia = gpopts->hostsv.c; r >= 0 && ia > 0; ia-- )
   {

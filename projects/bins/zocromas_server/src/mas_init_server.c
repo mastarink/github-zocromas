@@ -195,7 +195,7 @@ mas_server_destroy( mas_options_t * popts )
   mas_modules_unregister(  );
 
   mas_pids_destroy( popts );
-  mas_cli_options_data_destroy( popts );
+  mas_cliopts_data_destroy( popts );
   /* {                                                      */
   /*   if ( ctrl.pidfd > 0 )                                */
   /*   {                                                    */

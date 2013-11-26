@@ -1,7 +1,7 @@
 AC_PREREQ([2.67])
 AC_INIT(m4_esyscmd([shn/prjname.sh]),m4_esyscmd([shn/zocversion.sh]),[bug-report@mastarink.net])
 
-AC_CONFIG_SRCDIR([src/mas_cli_opts.c])
+AC_CONFIG_SRCDIR([src/mas_cliopts.c])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
 

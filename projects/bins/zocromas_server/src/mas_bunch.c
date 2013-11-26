@@ -124,8 +124,9 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
     /* Moved to mas_control.c constructor */
     /* mas_proc_init, */
     mas_opt_files_init,
-    mas_cli_options_data_init,
-    mas_cli_options_init,
+    mas_cliopts_data_init,
+    mas_cliopts_argv_init,
+    mas_cliopts_init,
     mas_ctrl_init,
     mas_msg_file_init,
     mas_message_init,

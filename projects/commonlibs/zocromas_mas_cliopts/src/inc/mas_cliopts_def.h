@@ -1,7 +1,7 @@
 #ifndef MAS_CLI_OPTS_DEF_H
 #  define MAS_CLI_OPTS_DEF_H
 
-typedef enum mas_cli_opts_e
+typedef enum mas_cliopts_e
 {
   MAS_CLI_OPT_NONE,
   MAS_CLI_OPT_TEST = 't',
@@ -110,7 +110,7 @@ typedef enum mas_cli_opts_e
   MAS_CLI_OPT_NOSAVE_USER_OPTS,
 
   MAS_CLI_OPT_SAVE_USER_OPTS_FILE,
-} mas_cli_opts_t;
+} mas_cliopts_t;
 
 
 #endif

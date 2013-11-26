@@ -2,7 +2,7 @@
 #  define MAS_COMMON_DEFS_H
 
 
-#  define CTRL_PREPARE extern mas_control_t ctrl __attribute__ ( ( weak ) )
+#  define CTRL_PREPARE extern mas_control_t ctrl __attribute__ ( ( unused ) ) __attribute__ ( ( weak ) )
 #  define EVAL_PREPARE CTRL_PREPARE
 
 #  define IEVAL_STD(_rv,_code) ( _rv = ( _rv >=0 ? ( _code ) : _rv ) )
