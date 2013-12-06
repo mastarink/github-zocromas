@@ -1,0 +1,10 @@
+1. main
+  1.1. bunch
+     mas_master_bunch
+       mas_master_bunch_init    ==> mas_master_bunch_create
+         init sequence ...
+       mas_master_bunch_main
+         mas_master_parent_main  OR  mas_master_daemon_main
+	 mas_xpthread_join etc. ==> mas_master_bunch_destroy
+
+

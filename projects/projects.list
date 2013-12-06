@@ -20,10 +20,10 @@ commonlibs/zocromas_mas_listener
 commonlibs/zocromas_mas_options
 commonlibs/zocromas_mas_cliopts
 commonlibs/zocromas_mas_init
-zocmds/zocromas_zocmds1
-zocmds/zocromas_zocmds2
-protos/xcromas
-protos/http
+modules/zocmds/zocromas_zocmds1
+modules/zocmds/zocromas_zocmds2
+modules/protos/xcromas
+modules/protos/http
 bins/zocromas_client
 bins/zocromas_server
 bins/zocromas_direct

@@ -31,7 +31,9 @@ char *mas_dump1( const char *data, size_t len, size_t perline );
 char *mas_dump2( const char *data, size_t len, size_t perline );
 char *mas_escape( char *str );
 
+
 void mas_common_constructor( const char *fname, int lin, int lev );
 void mas_common_destructor( const char *fname, int lin, int lev );
+
 
 #endif

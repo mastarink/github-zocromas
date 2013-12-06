@@ -123,18 +123,18 @@ main( int argc, char *argv[], char *env[] )
   int r = 0, rn = 0;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
-  HMSG( "(e:%d)MAIN %s", errno, argv[0] );
-  if ( ctrl.rerun && 0 != strcmp( argv[0], "ZOCSer" ) )
-  {
-    HMSG( "RERUN %s as ZOCSer", ctrl.exepath );
-    argv[0] = "ZOCSer";
-    execve( ctrl.exepath, argv, env );
-  }
-  else
+  HMSG( "(e:%d)MAIN %s [%u]", errno, argv[0], ctrl.rerun );
+  if ( !ctrl.rerun || 0 == strcmp( argv[0], "ZOCSer" ) )
   {
     HMSG( "(e:%d)TO BUNCH %s", errno, argv[0] );
     IEVAL( r, mas_master_bunch( gpopts, argc, argv, env ) );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
+  }
+  else
+  {
+    HMSG( "******* RERUN %s as ZOCSer **********", ctrl.exepath );
+    argv[0] = "ZOCSer";
+    execve( ctrl.exepath, argv, env );
   }
   return r;
 }
@@ -142,6 +142,10 @@ main( int argc, char *argv[], char *env[] )
 __attribute__ ( ( constructor( 1200 ) ) )
      static void mas_constructor( void )
 {
+#define XSTR(s) STR(s)
+#define STR(s) #s
+
+  fprintf( stderr, "\n\n\n\n\n[[%s]]\n", XSTR( MAS_LIBDIR ) );
   mas_common_constructor( IL, 0 );
   errno = 0;
 }

@@ -2,7 +2,7 @@ SUBDIRS= inc
 lib_LTLIBRARIES = libzocromas_mas_control.la
 
 
-libzocromas_mas_control_la_SOURCES      = mas_control_data.c mas_control.c 
+libzocromas_mas_control_la_SOURCES      = mas_control_data.c mas_control.c mas_control_constructor.c
 libzocromas_mas_control_la_LDFLAGS = @AM_LDFLAGS@ @DEPS_LIBS@
 
 # pkglib_LTLIBRARIES = mas_io.la

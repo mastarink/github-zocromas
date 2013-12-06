@@ -64,64 +64,6 @@ more:
 
 
 
-/* #ifdef MAS_INIT_SEPARATE                                                                          */
-/* int                                                                                               */
-/* mas_init_server( void ( *atexit_fun ) ( void ), int initsig, int argc, char **argv, char **env )  */
-/* {                                                                                                 */
-/*   int r = 0;                                                                                      */
-/*                                                                                                   */
-/*   ctrl.status = MAS_STATUS_START;                                                                 */
-/*   ctrl.start_time = mas_double_time(  );                                                          */
-/*                                                                                                   */
-/*                                                                                                   */
-/* #  ifdef MAS_SERVER_NOLOG                                                                         */
-/*   ctrl.log_disabled = 1;                                                                          */
-/* #  endif                                                                                          */
-/*   (* ctrl.is_client / ctrl.is_server set at the beginning of mas_init_client / mas_init_server *) */
-/*   ctrl.is_client = 0;                                                                             */
-/*   ctrl.is_server = 1;                                                                             */
-/*   (* r = mas_pre_init( argc, argv, env ); *)                                                      */
-/*   IEVAL( r, mas_pre_init( argc, argv, env ) );                                                    */
-/*                                                                                                   */
-/*   MAS_LOG( "init server" );                                                                       */
-/* #  ifdef MAS_USE_CURSES                                                                           */
-/*   (* if ( r >= 0 )              *)                                                                */
-/*   (*   r = mas_init_curses(  ); *)                                                                */
-/* #  endif                                                                                          */
-/*   (* if ( r >= 0 )                                           *)                                   */
-/*   (*   r = mas_init( atexit_fun, initsig, argc, argv, env ); *)                                   */
-/*   IEVAL( r, mas_init( atexit_fun, initsig, argc, argv, env ) );                                   */
-/*   (* if ( r >= 0 )              *)                                                                */
-/*   (*   r = mas_init_daemon(  ); *)                                                                */
-/*   IEVAL( r, mas_init_daemon(  ) );                                                                */
-/*   (* malloc_trim( 0 ); *)                                                                         */
-/*   (* if ( ctrl.is_parent )       *)                                                               */
-/*   (* {                           *)                                                               */
-/*   (*   HMSG( "PARENT to exit" ); *)                                                               */
-/*   (* }                           *)                                                               */
-/*   (* else                        *)                                                               */
-/*   {                                                                                               */
-/*     MAS_LOG( "(%d) init server: to init threads", r );                                            */
-/*     (* if ( r >= 0 )               *)                                                             */
-/*     (*   r = mas_threads_init(  ); *)                                                             */
-/*     IEVAL( r, mas_threads_init(  ) );                                                             */
-/*     MAS_LOG( "(%d) init server: to load protos", r );                                             */
-/*     (* if ( r >= 0 )                   *)                                                         */
-/*     (*   r = mas_init_load_protos( mas_options_t * popts ); *)                                   */
-/*     IEVAL( r, mas_init_load_protos( mas_options_t * popts ) );                                   */
-/*     MAS_LOG( "(%d) init server: to create lcontrols", r );                                        */
-/*     if ( r >= 0 )                                                                                 */
-/*       mas_lcontrols_list_create(  );                                                              */
-/*     MAS_LOG( "init server done" );                                                                */
-/*     MAS_LOG( "(%d) init server: to post-init", r );                                               */
-/*     (* if ( r >= 0 )            *)                                                                */
-/*     (*   r = mas_post_init(  ); *)                                                                */
-/*     IEVAL( r, mas_post_init(  ) );                                                                */
-/*     MAS_LOG( "(%d) end init server", r );                                                         */
-/*   }                                                                                               */
-/*   return r;                                                                                       */
-/* }                                                                                                 */
-/* #endif                                                                                            */
 void
 mas_server_destroy( mas_options_t * popts )
 {

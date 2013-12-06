@@ -391,7 +391,7 @@ mas_control_possibly_rerun( void )
   {
     if ( ctrl.rerun && ctrl.rerun_early && ctrl.tested_rerun && !ctrl.already_rerun )
     {
-      fprintf( stderr, "\nRERUNz %s as %s", ctrl.exepath, ctrl.rerun_name );
+      fprintf( stderr, "\n\n********** RERUNz %s as %s\n\n", ctrl.exepath, ctrl.rerun_name );
       if ( ctrl.cmdargv.c && ctrl.cmdargv.v )
         ctrl.cmdargv.v[0] = ctrl.rerun_name;
       else

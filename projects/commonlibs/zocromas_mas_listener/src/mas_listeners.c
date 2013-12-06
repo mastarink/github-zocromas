@@ -165,3 +165,41 @@ mas_listeners_wait( void )
   }
   return stopped;
 }
+
+int
+mas_listeners_main( const mas_options_t * popts )
+{
+  CTRL_PREPARE;
+
+  int r;
+  int qstopped = 0;
+
+  MAS_LOG( "master loop for %d hosts", popts->hostsv.c );
+  HMSG( "MASTER LOOP %d host; parent:%d", popts->hostsv.c, ctrl.is_parent );
+  /* mas_listeners.c */
+  r = mas_listeners_start( popts );
+
+  HMSG( "WAITING..." );
+  qstopped = mas_listeners_wait(  );
+  HMSG( "STOPPED lsn's (%d)", qstopped );
+
+  tMSG( "(%d) master loop for %d hosts", r, popts->hostsv.c );
+
+  {
+    /* ???????? All listeners closed, what shall I do ?
+     * 1. exit ( what is to be done with 'ctrl.keep_listening = 0' )
+     * 2. re-run default listener(s)
+     * 3. re-run defined ( popts->  hostsv.v ) listeners ( what is to be done without 'ctrl.keep_listening = 0' )
+     * */
+    if ( MAS_LIST_EMPTY( ctrl.lcontrols_list ) )
+    {
+      ctrl.keep_listening = 0;
+      MAS_LOG( "listeners list is empty" );
+    }
+    else
+    {
+      MAS_LOG( "listeners list NOT is empty" );
+    }
+  }
+  return r;
+}

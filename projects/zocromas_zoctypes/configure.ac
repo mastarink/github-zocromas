@@ -1,7 +1,7 @@
 AC_PREREQ([2.67])
 AC_INIT(m4_esyscmd([shn/prjname.sh]),m4_esyscmd([shn/zocversion.sh]),[bug-report@mastarink.net])
 
-AC_CONFIG_SRCDIR([inc/mas_common_types.h])
+AC_CONFIG_SRCDIR([src/inc/mas_common_types.h])
 AC_CONFIG_AUX_DIR([.auxdir])
 AC_CONFIG_MACRO_DIR([.auxdir/m4])
 
@@ -35,4 +35,4 @@ m4_include([m4zoc/am_cflags.m4])
 
 m4_include([m4zoc/vars3.m4])
 m4_include([m4zoc/msg.m4])
-m4_include([m4zoc/output_il.m4])
+m4_include([m4zoc/output_l.m4])

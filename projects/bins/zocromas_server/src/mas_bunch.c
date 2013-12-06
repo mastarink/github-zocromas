@@ -96,7 +96,7 @@ threads created:
 
 
 static int
-mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_bunch_create( mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   EVAL_PREPARE;
   int r = 0, rn = 0;
@@ -165,20 +165,22 @@ mas_master_bunch_init( mas_options_t * popts, int argc, char *argv[], char *env[
 }
 
 static int
-mas_master_bunch_do_parent( const mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_parent_main( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   HMSG( "PARENT to exit" );
+  mas_thself_set_name( popts->thname.parent_bunchx, "zocParBunchX" );
+
   return 0;
 }
 
 static int
-mas_master_bunch_do_daemon( const mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_daemon_main( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   EVAL_PREPARE;
   int r = 0;
 
   HMSG( "BUNCH DO DAEMON" );
-  IEVAL( r, mas_master_do( popts ) );
+  IEVAL( r, mas_master_main( popts ) );
 #ifdef MAS_TRACEMEM
   {
     extern unsigned long memory_balance;
@@ -194,27 +196,26 @@ mas_master_bunch_do_daemon( const mas_options_t * popts, int argc, char *argv[],
 #  endif
   }
 #endif
+  mas_thself_set_name( popts->thname.daemon_bunchx, "zocDaeBunchX" );
   return r;
 }
 
 static int
-mas_master_bunch_do( const mas_options_t * popts, int argc, char *argv[], char *env[] )
+mas_master_bunch_main( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
   EVAL_PREPARE;
-  int r = 0, rn = 0;
+  int r = 0;
 
-  if ( ctrl.is_parent )
-  {
-    r = mas_master_bunch_do_parent( popts, argc, argv, env );
-  }
-  else
-  {
-    r = mas_master_bunch_do_daemon( popts, argc, argv, env );
-    HMSG( "BUNCH TO END" );
-  }
-  IEVAL( rn,
-         mas_thself_set_name( ctrl.is_parent ? popts->thname.parent_bunchx : popts->thname.daemon_bunchx,
-                              ctrl.is_parent ? "zocParBunchX" : "zocDaeBunchX" ) );
+  r = ctrl.is_parent ? mas_master_parent_main( popts, argc, argv, env ) : mas_master_daemon_main( popts, argc, argv, env );
+
+  HMSG( "BUNCH (%s) TO END", ctrl.is_parent ? "parent" : "daemon" );
+  return r;
+}
+
+void
+mas_master_bunch_destroy(  )
+{
+  CTRL_PREPARE;
   WMSG( "TO DESTROY MODULES" );
   /* mas_modules_unregister(  ); */
   for ( int ith = 0; ith < sizeof( ctrl.threads.a ) / sizeof( ctrl.threads.a[0] ); ith++ )
@@ -225,10 +226,6 @@ mas_master_bunch_do( const mas_options_t * popts, int argc, char *argv[], char *
     ctrl.threads.a[ith].thread = 0;
   }
   WMSG( "/ JOIN" );
-  WMSG( "BUNCH END DATA master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.threads.n.master.thread,
-        ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
-  HMSG( "BUNCH %s END", ctrl.is_parent ? "(parent)" : "" );
-  return r;
 }
 
 int
@@ -237,8 +234,13 @@ mas_master_bunch( mas_options_t * popts, int argc, char *argv[], char *env[] )
   EVAL_PREPARE;
   int r = 0;
 
-  IEVAL( r, mas_master_bunch_init( popts, argc, argv, env ) );
-  IEVAL( r, mas_master_bunch_do( popts, argc, argv, env ) );
+  IEVAL( r, mas_master_bunch_create( popts, argc, argv, env ) );
+  IEVAL( r, mas_master_bunch_main( popts, argc, argv, env ) );
+  mas_master_bunch_destroy(  );
+  WMSG( "BUNCH END DATA master:[%lx] log:[%lx] t[%lx] w[%lx] %d", ctrl.threads.n.master.thread,
+        ctrl.threads.n.logger.thread, ctrl.threads.n.ticker.thread, ctrl.threads.n.watcher.thread, ctrl.lcontrols_list ? 1 : 0 );
+  HMSG( "BUNCH (%s) END", ctrl.is_parent ? "parent" : "daemon" );
+
   return r;
 }
 

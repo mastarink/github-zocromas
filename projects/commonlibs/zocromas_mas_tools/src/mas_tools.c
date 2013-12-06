@@ -501,7 +501,6 @@ void
 mas_common_constructor( const char *fname, int lin, int lev )
 {
   fprintf( stderr, "\n%s CONstructor %s e%d @", lev == 0 ? "--------------------" : "********************", fname, errno );
-
 }
 
 void
