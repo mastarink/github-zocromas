@@ -71,7 +71,7 @@ mas_client_transaction( mas_channel_t * pchannel )
   }
   while ( r >= 0 && ctrl.in_client && ctrl.in_pipe );
   WMSG( "CLIENT TR END" );
-  ctrl.status = MAS_STATUS_CLOSE;
+  ctrl.c.status = MAS_STATUS_CLOSE;
   tMSG( "after exchange cnt:%d; %d / %d", cnt, ctrl.in_pipe, ctrl.in_client );
   return 0;
 }
@@ -171,7 +171,7 @@ mas_client( const char *host_port )
     WMSG( "(%d) CHANNEL OPEN", r );
 
     WMSG( "(%d : %d) AFTER OPEN", r, errno );
-    ctrl.status = MAS_STATUS_OPEN;
+    ctrl.c.status = MAS_STATUS_OPEN;
     {
       IEVAL( r, mas_client_zerocommands( pchannel ) );
     }
@@ -214,7 +214,7 @@ mas_client( const char *host_port )
   }
   mas_channel_delete( pchannel, 0, 0 );
   pchannel = NULL;
-  ctrl.status = MAS_STATUS_STOP;
+  ctrl.c.status = MAS_STATUS_STOP;
   WMSG( "exiting client (%d)", ctrl.try_cnt );
   return r;
 }

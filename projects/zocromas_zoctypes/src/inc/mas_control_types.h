@@ -84,6 +84,7 @@ typedef struct mas_thread_ctrl_s
 
 struct mas_control_s
 {
+  mas_common_control_t c;
   union
   {
     mas_std_threads_set_t n;
@@ -207,7 +208,6 @@ struct mas_control_s
 
   mas_stamp_t stamp;
 
-  mas_status_t status;
   unsigned long log_q_came;
   unsigned long log_q_gone;
   unsigned long log_q_mem;

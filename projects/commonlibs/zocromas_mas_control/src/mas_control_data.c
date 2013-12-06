@@ -31,6 +31,7 @@ static int mas_error_handler( const char *func, int line, int issys, int rcode, 
 
 
 mas_control_t ctrl = {
+  .c = {.status = MAS_STATUS_NONE},
   .main_exit = 0,
   .rerun = 1,
   .rerun_early = 1,
@@ -104,7 +105,6 @@ mas_control_t ctrl = {
   .stamp.lts = 0,
   .stamp.start_time = 0,
 
-  .status = MAS_STATUS_NONE,
   .clients_created = 0,
   .clients_removed = 0,
   .clients_came0 = 0,

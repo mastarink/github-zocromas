@@ -7,29 +7,26 @@
 #  include <pthread.h>
 #  include <mastar/types/mas_list_def.h>
 
-typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno, const char *fmt,
-                                           const char *xmsg );
-typedef void ( *mas_voidp_fun_t ) ( void *arg );
-
-typedef struct mas_std_error_s
+typedef enum
 {
-  int line;
-  char funcname[128];
-  int merrno;
-} mas_std_error_t;
-
-typedef struct mas_string_csetv_s
-{
-  int c;
-  char *const *v;
-} mas_string_csetv_t;
-
-typedef struct mas_string_setv_s
-{
-  int c;
-  char **v;
-} mas_string_setv_t;
-
+  MAS_STAGE_NONE,
+  MAS_STAGE_LAUNCH,
+  MAS_STAGE_RERUN,
+  MAS_STAGE_MAIN,
+  MAS_STAGE_BUNCH_CREATE,
+  MAS_STAGE_INIT,
+  MAS_STAGE_BUNCH,
+  MAS_STAGE_PARENT,
+  MAS_STAGE_DAEMON,
+  MAS_STAGE_MASTER,
+  MAS_STAGE_CORE,
+  MAS_STAGE_LISTEN,
+  MAS_STAGE_WAIT_CLIENT,
+  MAS_STAGE_CONNECTION,
+  MAS_STAGE_TRANSACTION,
+  MAS_STAGE_EXCHANGE,
+  MAS_STAGE_DESTROY,
+} mas_stage_t;
 
 typedef enum
 {
@@ -55,6 +52,39 @@ typedef enum
   MAS_STATUS_END,
   MAS_STATUS_DEATH,
 } mas_status_t;
+
+typedef struct mas_common_control_t
+{
+  char signature[2];
+  mas_stage_t stage;
+  mas_status_t status;
+} mas_common_control_t;
+
+typedef int ( *mas_error_handler_fun_t ) ( const char *func, int line, int issys, int rcode, int ierrno, int *perrno, int *pserrno,
+                                           const char *fmt, const char *xmsg );
+typedef void ( *mas_voidp_fun_t ) ( void *arg );
+
+typedef struct mas_std_error_s
+{
+  int line;
+  char funcname[128];
+  int merrno;
+} mas_std_error_t;
+
+typedef struct mas_string_csetv_s
+{
+  int c;
+  char *const *v;
+} mas_string_csetv_t;
+
+typedef struct mas_string_setv_s
+{
+  int c;
+  char **v;
+} mas_string_setv_t;
+
+
+
 typedef enum
 {
   MAS_SUBSTATUS_NONE,
@@ -108,7 +138,6 @@ typedef struct mas_ocontrol_s
   pid_t tid;
 
   struct mas_channel_s *pchannel;
-  mas_status_t status;
   struct timeval activity_time;
   mas_substatus_t substatus;
   unsigned subpoint;

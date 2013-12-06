@@ -40,6 +40,9 @@ mas_master_core( const mas_options_t * popts )
 {
   CTRL_PREPARE;
   int r = 0, rn = 0;
+  mas_control_t *this = &ctrl;
+
+  MSTAGE( CORE );
 
   HMSG( "MASTER START : pid:%u %c%c%c", getpid(  ), OPT_QFLAG( popts, log_run ) ? 'L' : 'l', !OPT_QFLAG( popts, woticker ) ? 'T' : 't',
         !OPT_QFLAG( popts, wowatcher ) ? 'W' : 'w' );

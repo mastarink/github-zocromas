@@ -140,14 +140,14 @@ mas_setup_runpath( char *runpath )
   int r = 0;
   const char *pn;
 
-  ctrl.status = MAS_STATUS_START;
+  ctrl.c.status = MAS_STATUS_START;
   ctrl.error_handler = error_handler_at_init;
 
   ctrl.start_time = mas_double_time(  );
   ctrl.stamp.start_time = ( unsigned long ) time( NULL );
   /* ctrl.stamp.lts = ( unsigned long ) time( NULL ); */
   ctrl.stamp.first_lts = 0;
-  ctrl.status = MAS_STATUS_INIT;
+  ctrl.c.status = MAS_STATUS_INIT;
 
 
   ctrl.threads.n.main.tid = mas_gettid(  );
@@ -275,6 +275,10 @@ mas_init_set_z( mas_options_t * popts, /* int argc, char **argv, char **env, */ 
   int r = 0;
   int ifu = 0;
   mas_init_fun_t *funcs = init_funcs;
+
+  mas_control_t *this = &ctrl;
+
+  MSTAGE( INIT );
 
   /* WMSG( "INIT+ %s : %s", ctrl.is_server ? "SERVER" : "CLIENT", !ctrl.is_client ? "SERVER" : "CLIENT" ); */
   /* IEVAL( r, mas_init( popts, argc, argv, env ) );                                                       */

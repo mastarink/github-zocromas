@@ -69,7 +69,9 @@ mas_server_destroy( mas_options_t * popts )
 {
   CTRL_PREPARE;
   EVAL_PREPARE;
+  mas_control_t *this = &ctrl;
 
+  MSTAGE( DESTROY );
   {
     int rn = 0;
     char name_buffer[32] = "?";

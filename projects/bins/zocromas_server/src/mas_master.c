@@ -75,6 +75,9 @@ mas_master_main( const mas_options_t * popts )
 {
   EVAL_PREPARE;
   int r = 0;
+  mas_control_t *this = &ctrl;
+
+  MSTAGE( MASTER );
 
   HMSG( "MASTER DO" );
   IEVAL( r, OPT_QFLAG( popts, make_master_thread ) ? mas_master_threaded( popts ) : mas_master_core( popts ) );

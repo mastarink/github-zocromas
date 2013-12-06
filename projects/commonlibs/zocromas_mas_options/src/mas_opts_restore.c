@@ -462,8 +462,6 @@ mas_opts_restore_zero( mas_options_t * popts, const char *filename )
   int r = 0;
   char *dir;
 
-#define XSTR(s) STR(s)
-#define STR(s) #s
   dir = mas_strdup( XSTR( MAS_SYSCONFDIR ) );
   dir = mas_strcat_x( dir, "/" );
   if ( ctrl.exename )

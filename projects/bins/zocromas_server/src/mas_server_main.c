@@ -121,17 +121,21 @@ main( int argc, char *argv[], char *env[] )
   /* extern mas_options_t g_opts; */
   extern mas_options_t *gpopts;
   int r = 0, rn = 0;
+  mas_control_t *this = &ctrl;
 
   IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMain" ) );
-  HMSG( "(e:%d)MAIN %s [%u]", errno, argv[0], ctrl.rerun );
+  MSTAGE( LAUNCH );
+  HMSG( "MAIN %s [%u]", argv[0], ctrl.rerun );
   if ( !ctrl.rerun || 0 == strcmp( argv[0], "ZOCSer" ) )
   {
     HMSG( "(e:%d)TO BUNCH %s", errno, argv[0] );
+    MSTAGE( MAIN );
     IEVAL( r, mas_master_bunch( gpopts, argc, argv, env ) );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocMainXit" ) );
   }
   else
   {
+    MSTAGE( RERUN );
     HMSG( "******* RERUN %s as ZOCSer **********", ctrl.exepath );
     argv[0] = "ZOCSer";
     execve( ctrl.exepath, argv, env );
@@ -142,9 +146,6 @@ main( int argc, char *argv[], char *env[] )
 __attribute__ ( ( constructor( 1200 ) ) )
      static void mas_constructor( void )
 {
-#define XSTR(s) STR(s)
-#define STR(s) #s
-
   fprintf( stderr, "\n\n\n\n\n[[%s]]\n", XSTR( MAS_LIBDIR ) );
   mas_common_constructor( IL, 0 );
   errno = 0;

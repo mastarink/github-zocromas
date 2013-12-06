@@ -54,8 +54,8 @@ mas_rcontrol_create( void )
   {
     CTRL_PREPARE;
     memset( prcontrol, 0, sizeof( mas_rcontrol_t ) );
-    prcontrol->signature[0] = 'T';
-    prcontrol->signature[1] = 'R';
+    prcontrol->c.signature[0] = 'T';
+    prcontrol->c.signature[1] = 'R';
     ctrl.clients_created++;
   }
   return prcontrol;
@@ -161,8 +161,8 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
   plcontrol = prcontrol->plcontrol;
   if ( !prcontrol->complete )
   {
-    EMSG( "!!!!!!!! FATAL: R%lu:%u @ L%lu:%u NOT complete", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial,
-          plcontrol->h.status );
+    EMSG( "!!!!!!!! FATAL: R%lu:%u @ L%lu:%u NOT complete", prcontrol->h.serial, prcontrol->c.status, plcontrol->h.serial,
+          plcontrol->c.status );
     prcontrol->nc++;
   }
   else
@@ -171,13 +171,13 @@ mas_rcontrol_delete( mas_rcontrol_t * prcontrol, int toclose )
     pthread_cond_destroy( &prcontrol->waitchan_cond );
     if ( prcontrol->nc )
     {
-      MAS_LOG( "rm with nc=%u R%lu:%u @ L%lu:%u NOT complete", prcontrol->nc, prcontrol->h.serial, prcontrol->h.status,
-               plcontrol->h.serial, plcontrol->h.status );
+      MAS_LOG( "rm with nc=%u R%lu:%u @ L%lu:%u NOT complete", prcontrol->nc, prcontrol->h.serial, prcontrol->c.status,
+               plcontrol->h.serial, plcontrol->c.status );
     }
     else
     {
-      /* thMSG( "rm R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial, plcontrol->h.status ); */
-      MAS_LOG( "rm R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, plcontrol->h.serial, plcontrol->h.status );
+      /* thMSG( "rm R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->c.status, plcontrol->h.serial, plcontrol->c.status ); */
+      MAS_LOG( "rm R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->c.status, plcontrol->h.serial, plcontrol->c.status );
     }
     if ( prcontrol->uuid )
       mas_free( prcontrol->uuid );

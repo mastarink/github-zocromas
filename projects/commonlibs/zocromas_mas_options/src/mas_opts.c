@@ -228,8 +228,6 @@ mas_pre_init_default_opts( mas_options_t * popts )
 #endif
 
 
-#define XSTR(s) STR(s)
-#define STR(s) #s
 #ifdef MAS_LIBDIR
 #  ifdef MAS_MODS_DIR
   if ( !popts->dir.mods )

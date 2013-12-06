@@ -100,9 +100,11 @@ mas_master_bunch_create( mas_options_t * popts, int argc, char *argv[], char *en
 {
   EVAL_PREPARE;
   int r = 0, rn = 0;
+  mas_control_t *this = &ctrl;
 
-  HMSG( "BUNCH START e:%d", errno );
+  HMSG( "BUNCH CREATE e:%d", errno );
   MAS_LOG( "bunch start e:%d", errno );
+  MSTAGE( BUNCH_CREATE );
 
   IEVAL( rn,
          mas_thself_set_name( ctrl.is_parent ? popts->thname.parent_bunchi : popts->thname.daemon_bunchi,
@@ -167,6 +169,10 @@ mas_master_bunch_create( mas_options_t * popts, int argc, char *argv[], char *en
 static int
 mas_master_parent_main( const mas_options_t * popts, int argc, char *argv[], char *env[] )
 {
+  CTRL_PREPARE;
+  mas_control_t *this = &ctrl;
+  MSTAGE( PARENT );
+
   HMSG( "PARENT to exit" );
   mas_thself_set_name( popts->thname.parent_bunchx, "zocParBunchX" );
 
@@ -178,6 +184,9 @@ mas_master_daemon_main( const mas_options_t * popts, int argc, char *argv[], cha
 {
   EVAL_PREPARE;
   int r = 0;
+  mas_control_t *this = &ctrl;
+
+  MSTAGE( DAEMON );
 
   HMSG( "BUNCH DO DAEMON" );
   IEVAL( r, mas_master_main( popts ) );
@@ -205,7 +214,9 @@ mas_master_bunch_main( const mas_options_t * popts, int argc, char *argv[], char
 {
   EVAL_PREPARE;
   int r = 0;
+  mas_control_t *this = &ctrl;
 
+  MSTAGE( BUNCH );
   r = ctrl.is_parent ? mas_master_parent_main( popts, argc, argv, env ) : mas_master_daemon_main( popts, argc, argv, env );
 
   HMSG( "BUNCH (%s) TO END", ctrl.is_parent ? "parent" : "daemon" );

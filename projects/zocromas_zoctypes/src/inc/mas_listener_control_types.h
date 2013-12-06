@@ -20,9 +20,10 @@ typedef MAS_LIST_ENTRY( mas_lcontrol_s ) mas_lcontrol_list_entry_t;
 
 typedef struct mas_lcontrol_s
 {
-  char signature[2];
-  mas_lcontrol_list_entry_t next;
+  mas_common_control_t c;
   struct mas_ocontrol_s h;
+
+  mas_lcontrol_list_entry_t next;
 
   mas_rcontrol_list_head_t *transaction_controls_list;
 

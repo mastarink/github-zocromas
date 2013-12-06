@@ -63,6 +63,7 @@ typedef struct mas_msg_field_s
 typedef struct msg_options_s
 {
   mas_msg_field_t def_field;
+  mas_msg_field_t stage;
   mas_msg_field_t elapsed;
   mas_msg_field_t consume;
   mas_msg_field_t errcode;
@@ -93,6 +94,7 @@ typedef struct msg_options_s
 static msg_options_t msg_options[MAS_MSG_MAX] = {
   /* MAS_MSG_NONE,    */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -117,6 +119,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_TITLE,    */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
@@ -141,6 +144,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_SUBTITLE,    */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
@@ -165,6 +169,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_INFO,    */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -189,6 +194,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_NOTICE,  */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -213,6 +219,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_WATCH,   */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -237,6 +244,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_WARNING, */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.hide_with_details = 1},
    .errcode = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.hide_with_details = 1},
@@ -263,6 +271,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_TRAP,    */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -287,6 +296,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_DEBUG,   */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -311,6 +321,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_ERR,     */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.hide_with_details = 1},
    .errcode = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -337,6 +348,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_CRIT,    */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -361,6 +373,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_ALERT,   */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -385,6 +398,7 @@ static msg_options_t msg_options[MAS_MSG_MAX] = {
    },
   /* MAS_MSG_EMERG,   */
   {
+   .stage = {.bold = 1,.bg = MAS_MSG_COLOR_BLACKP,.fg = MAS_MSG_COLOR_GREEN,.show_no_details = 1},
    .elapsed = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
    .consume = {.bold = 1,.bg = MAS_MSG_COLOR_BLUEP,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 0},
    .prefix = {.bold = 1,.bg = MAS_MSG_COLOR_YELLOW,.fg = MAS_MSG_COLOR_YELLOW,.show_no_details = 1},
@@ -464,6 +478,9 @@ mas_bg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_ELAPSED:
     index = msg_options[msgt].elapsed.bg;
     break;
+  case MAS_MSG_FIELD_STAGE:
+    index = msg_options[msgt].stage.bg;
+    break;
   case MAS_MSG_FIELD_CONSUME:
     index = msg_options[msgt].consume.bg;
     break;
@@ -527,6 +544,8 @@ mas_bg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_EOL:
     index = msg_options[msgt].eol.bg;
     break;
+  case MAS_MSG_FIELD_NONE:
+    break;
     /* default:                                  */
     /*   index = msg_options[msgt].def_field.bg; */
     /*   break;                                  */
@@ -545,6 +564,9 @@ mas_fg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
 
   switch ( field )
   {
+  case MAS_MSG_FIELD_STAGE:
+    index = msg_options[msgt].stage.fg;
+    break;
   case MAS_MSG_FIELD_ELAPSED:
     index = msg_options[msgt].elapsed.fg;
     break;
@@ -611,6 +633,8 @@ mas_fg_color( mas_msg_type_t msgt, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_EOL:
     index = msg_options[msgt].eol.fg;
     break;
+  case MAS_MSG_FIELD_NONE:
+    break;
     /* default:                                  */
     /*   index = msg_options[msgt].def_field.fg; */
     /*   break;                                  */
@@ -627,6 +651,8 @@ mas_bold( mas_msg_type_t msgt, mas_msg_field_type_t field )
 {
   switch ( field )
   {
+  case MAS_MSG_FIELD_STAGE:
+    return msg_options[msgt].stage.bold;
   case MAS_MSG_FIELD_ELAPSED:
     return msg_options[msgt].elapsed.bold;
   case MAS_MSG_FIELD_CONSUME:
@@ -671,6 +697,8 @@ mas_bold( mas_msg_type_t msgt, mas_msg_field_type_t field )
     return msg_options[msgt].thread_status.bold;
   case MAS_MSG_FIELD_EOL:
     return msg_options[msgt].eol.bold;
+  case MAS_MSG_FIELD_NONE:
+    return 1;
     /* default:                                   */
     /*   return msg_options[msgt].def_field.bold; */
   }
@@ -685,6 +713,10 @@ mas_show( mas_msg_type_t msgt, int fdetails, mas_msg_field_type_t field )
 
   switch ( field )
   {
+  case MAS_MSG_FIELD_STAGE:
+    hide_with_details = msg_options[msgt].stage.hide_with_details;
+    show_no_details = msg_options[msgt].stage.show_no_details;
+    break;
   case MAS_MSG_FIELD_ELAPSED:
     hide_with_details = msg_options[msgt].elapsed.hide_with_details;
     show_no_details = msg_options[msgt].elapsed.show_no_details;
@@ -751,6 +783,8 @@ mas_show( mas_msg_type_t msgt, int fdetails, mas_msg_field_type_t field )
   case MAS_MSG_FIELD_EOL:
     hide_with_details = msg_options[msgt].eol.hide_with_details;
     show_no_details = msg_options[msgt].eol.show_no_details;
+    break;
+  case MAS_MSG_FIELD_NONE:
     break;
     /* default:                                                             */
     /*   hide_with_details = msg_options[msgt].def_field.hide_with_details; */
@@ -1051,12 +1085,12 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
       MFPB( "M0:%u ", MAS_CTRL_STATUS );
       break;
     case MAS_THREAD_LISTENER:
-      MFPB( "L%lu:%u ", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+      MFPB( "L%lu:%u ", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->c.status : 999 );
       break;
     case MAS_THREAD_TRANSACTION:
-      MFPB( "R%lu:%u @ L%lu:%u ", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
+      MFPB( "R%lu:%u @ L%lu:%u ", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->c.status : 999,
             prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
-            prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
+            prcontrol->plcontrol ? prcontrol->plcontrol->c.status : 999 );
       break;
     case MAS_THREAD_LOGGER:
     case MAS_THREAD_WATCHER:
@@ -1108,16 +1142,16 @@ __mas_msg_thread_info( mas_msg_type_t msgt, int fdetails )
       break;
     case MAS_THREAD_LISTENER:
       mas_set_color( msgt, MAS_MSG_FIELD_THREAD_STATUS );
-      MFPB( " L%lu:%u:", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->h.status : 999 );
+      MFPB( " L%lu:%u:", plcontrol ? plcontrol->h.serial : 0xffffffff, plcontrol ? plcontrol->c.status : 999 );
       break;
     case MAS_THREAD_TRANSACTION:
-      MFPB( " R%lu:%u @ L%lu:%u:", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999,
+      MFPB( " R%lu:%u @ L%lu:%u:", prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->c.status : 999,
             prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,
-            prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );
+            prcontrol->plcontrol ? prcontrol->plcontrol->c.status : 999 );
       /* MFPB( "pth:\x1b[1;%dm(%s) R%lu:%u @ L%lu:%u\x1b[0m:", 35, mas_thread_type_name( thtype ),  */
-      /*      prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->h.status : 999, */
+      /*      prcontrol ? prcontrol->h.serial : 0xffffffff, prcontrol ? prcontrol->c.status : 999, */
       /*      prcontrol->plcontrol ? prcontrol->plcontrol->h.serial : 0xffffffff,                  */
-      /*      prcontrol->plcontrol ? prcontrol->plcontrol->h.status : 999 );                       */
+      /*      prcontrol->plcontrol ? prcontrol->plcontrol->c.status : 999 );                       */
       break;
     case MAS_THREAD_NONE:
       /* default:                        */
@@ -1197,6 +1231,19 @@ __mas_msg_suffix( mas_msg_type_t msgt, int fdetails, const char *suffix )
 }
 
 int
+__mas_msg_stage( mas_msg_type_t msgt, int fdetails )
+{
+  CTRL_PREPARE;
+  if ( &ctrl )
+  {
+    mas_set_color( msgt, MAS_MSG_FIELD_STAGE );
+    MFPB( "%-3u", ctrl.c.stage );
+    mas_reset_color(  );
+  }
+  return 0;
+}
+
+int
 __mas_msg_elapsed( mas_msg_type_t msgt, int fdetails )
 {
   CTRL_PREPARE;
@@ -1265,6 +1312,9 @@ __mas_vmsg( const char *func, int line, mas_msg_type_t msgt, int details, const 
 
     pid = getpid(  );
     tid = mas_gettid(  );
+
+    if ( mas_show( msgt, details, MAS_MSG_FIELD_STAGE ) )
+      r = __mas_msg_stage( msgt, details );
 
     if ( mas_show( msgt, details, MAS_MSG_FIELD_ELAPSED ) )
       r = __mas_msg_elapsed( msgt, details );

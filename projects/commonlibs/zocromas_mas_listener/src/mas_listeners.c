@@ -56,7 +56,9 @@ more:
 int
 mas_listeners_start( const mas_options_t * popts )
 {
+  CTRL_PREPARE;
   int r = 0;
+  mas_control_t *this = &ctrl;
 
   if ( popts->wolistener )
   {
@@ -87,7 +89,7 @@ mas_listeners_start( const mas_options_t * popts )
       if ( r < 0 )
         break;
     }
-    ctrl.status = MAS_STATUS_OPEN;
+    this->c.status = MAS_STATUS_OPEN;
   }
   return r;
 }
@@ -142,6 +144,7 @@ mas_listeners_wait( void )
 {
   CTRL_PREPARE;
   int stopped = 0;
+  mas_control_t *this = &ctrl;
   mas_lcontrol_t *plcontrol = NULL;
 
   MAS_LOG( "to wait for listeners to stop ..." );
@@ -151,11 +154,11 @@ mas_listeners_wait( void )
     stopped += ( mas_listener_wait( plcontrol ) == 0 );
     mas_lcontrols_clean_list( 0 );
   }
-  ctrl.status = MAS_STATUS_CLOSE;
+  this->c.status = MAS_STATUS_CLOSE;
   /* ??????????? */
   mas_lcontrols_clean_list( 0 );
 
-  ctrl.status = MAS_STATUS_END;
+  this->c.status = MAS_STATUS_END;
   if ( stopped )
   {
     thMSG( "joined l/th's" );
@@ -173,6 +176,10 @@ mas_listeners_main( const mas_options_t * popts )
 
   int r;
   int qstopped = 0;
+
+  mas_control_t *this = &ctrl;
+
+  MSTAGE( LISTEN );
 
   MAS_LOG( "master loop for %d hosts", popts->hostsv.c );
   HMSG( "MASTER LOOP %d host; parent:%d", popts->hostsv.c, ctrl.is_parent );

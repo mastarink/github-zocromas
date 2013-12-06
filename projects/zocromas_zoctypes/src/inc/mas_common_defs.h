@@ -1,6 +1,9 @@
 #ifndef MAS_COMMON_DEFS_H
 #  define MAS_COMMON_DEFS_H
 
+#define XSTR(s) X0STR(s)
+#define X0STR(s) #s
+
 
 #  define CTRL_PREPARE extern mas_control_t ctrl __attribute__ ( ( unused ) ) __attribute__ ( ( weak ) )
 #  define EVAL_PREPARE CTRL_PREPARE
@@ -25,7 +28,7 @@
 #    define MAS_CTRL_IS_CLIENT &ctrl && ctrl.is_client
 #    define MAS_CTRL_IN_SERVER &ctrl && ctrl.in_server
 #    define MAS_CTRL_IN_CLIENT &ctrl && ctrl.in_client
-#    define MAS_CTRL_STATUS &ctrl && ctrl.status
+#    define MAS_CTRL_STATUS &ctrl && ctrl.c.status
 
 #    define _ERRHAN(sys,_rv,_rvr,merrno,perrno,pserrno,fmt,msg) \
               ( _rvr = (&ctrl ? (ctrl.error_handler)(FL, sys, _rv, merrno, perrno, pserrno, fmt, msg) : -1) )

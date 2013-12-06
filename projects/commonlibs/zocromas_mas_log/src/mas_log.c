@@ -97,9 +97,9 @@ mas_vlog( const char *func, int line, int merrno, const char *fmt, va_list args 
         li->pid = getpid(  );
         li->tid = mas_gettid(  );
         li->lserial = li->plcontrol ? li->plcontrol->h.serial : 0;
-        li->lstatus = li->plcontrol ? li->plcontrol->h.status : 0;
+        li->lstatus = li->plcontrol ? li->plcontrol->c.status : 0;
         li->rserial = li->prcontrol ? li->prcontrol->h.serial : 0;
-        li->rstatus = li->prcontrol ? li->prcontrol->h.status : 0;
+        li->rstatus = li->prcontrol ? li->prcontrol->c.status : 0;
         li->logtime = mas_double_time(  );
         li->delta_thread = li->logtime - mas_thself_double_time(  );
         mas_thself_set_double_time( li->logtime );

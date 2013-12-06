@@ -82,7 +82,7 @@ info_transaction( mas_rcontrol_t * prcontrol, unsigned itr, char *cp, size_t buf
     len = snprintf( cp, bufsz, "\t\t%u(s%lu). %s [<%s>] \ttid:%5u/%4x; [%lx] %s %s %s/%s.%u:%ld:%ld #%u\n", itr,
                     prcontrol->h.serial, sip ? sip : "?", prcontrol->proto_desc ? prcontrol->proto_desc->name : "?",
                     prcontrol->h.tid, prcontrol->h.tid, prcontrol->h.thread, prcontrol->uuid ? prcontrol->uuid : "-",
-                    pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->h.status ),
+                    pthread_equal( mas_pthread_self(  ), prcontrol->h.thread ) ? "*" : " ", mas_sstatus( prcontrol->c.status ),
                     mas_ssubstatus( prcontrol->h.substatus ), prcontrol->h.subpoint, prcontrol->h.subresult1, prcontrol->h.subresult2,
                     prcontrol->xch_cnt );
     cp += len;
@@ -140,20 +140,13 @@ info_listener( mas_lcontrol_t * plcontrol, unsigned ith, char *cp, size_t bufsz 
       pthread_rwlock_rdlock( &plcontrol->transaction_rwlock );
       MAS_LIST_FOREACH( prcontrol, plcontrol->transaction_controls_list, next )
       {
-        if ( prcontrol->signature[0] != 'T' || prcontrol->signature[1] != 'R' )
+        if ( prcontrol->c.signature[0] != 'T' || prcontrol->c.signature[1] != 'R' )
         {
           EVAL_PREPARE;
           ERRRG( "Woooooooooooooooooo" );
           sleep( 100 );
         }
-        if ( itr > 20 )
-        {
-          len = 0;
-        }
-        else
-        {
-          len = info_transaction( prcontrol, itr, cp, bufsz );
-        }
+        len = ( itr > 20 ) ? 0 : info_transaction( prcontrol, itr, cp, bufsz );
         cp += len;
         bufsz -= len;
         itr++;

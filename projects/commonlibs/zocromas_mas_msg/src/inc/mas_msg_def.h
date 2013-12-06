@@ -24,6 +24,8 @@ enum mas_msg_type_e
 typedef enum mas_msg_type_e mas_msg_type_t;
 enum mas_msg_field_type_e
 {
+  MAS_MSG_FIELD_NONE,
+  MAS_MSG_FIELD_STAGE,
   MAS_MSG_FIELD_ELAPSED,
   MAS_MSG_FIELD_ERRCODE,
   MAS_MSG_FIELD_CONSUME,

@@ -73,7 +73,7 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
   int r = -1;
   pthread_t pth;
 
-  /* thMSG( "waiting at M0:%u for L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->h.status ); */
+  /* thMSG( "waiting at M0:%u for L%lu:%u", ctrl.status, plcontrol->h.serial, plcontrol->c.status ); */
   if ( plcontrol && plcontrol->h.thread )
   {
     MAS_LOG( "to wait for listener [%lx] to stop", plcontrol->h.thread );
@@ -105,7 +105,7 @@ mas_listener_wait( mas_lcontrol_t * plcontrol )
 /*   {                                                                                                 */
 /*     (* thMSG( "WAIT MORE" ); *)                                                                     */
 /*   }                                                                                                 */
-/*   plcontrol->h.status = MAS_STATUS_STOP;                                                            */
+/*   plcontrol->c.status = MAS_STATUS_STOP;                                                            */
 /*   return 0;                                                                                         */
 /* }                                                                                                   */
 
@@ -156,7 +156,7 @@ mas_listener_start( const mas_options_t * popts, char *host_port, unsigned port 
       }
       if ( r == 0 )
       {
-        lMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->h.serial, plcontrol->h.status, plcontrol->host, plcontrol->port );
+        lMSG( "<C l/th L%lu:%u for %s:%u", plcontrol->h.serial, plcontrol->c.status, plcontrol->host, plcontrol->port );
         /* ctrl.status = MAS_STATUS_OPEN; */
       }
     }
@@ -191,8 +191,8 @@ mas_listener_cancel( mas_lcontrol_t * plcontrol )
 #endif
 
   /* thMSG( "CANCEL th %lx", ( unsigned long ) plcontrol->h.thread ); */
-  WMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->h.serial, plcontrol->h.status, ( void * ) plcontrol, plcontrol->h.thread );
-  MAS_LOG( "cancelling L%lu:%u", plcontrol->h.serial, plcontrol->h.status );
+  WMSG( "CANCEL L%lu:%u (plcontrol:%p) th:%lx", plcontrol->h.serial, plcontrol->c.status, ( void * ) plcontrol, plcontrol->h.thread );
+  MAS_LOG( "cancelling L%lu:%u", plcontrol->h.serial, plcontrol->c.status );
   if ( plcontrol->h.thread )
   {
     mas_pthread_cancel( plcontrol->h.thread );
@@ -209,7 +209,7 @@ mas_listener_cleanup( void *arg )
   if ( ( plcontrol = ( mas_lcontrol_t * ) arg ) )
   {
     MAS_LOG( "listener cleanup plc:%p", ( void * ) plcontrol );
-    plcontrol->h.status = MAS_STATUS_END;
+    plcontrol->c.status = MAS_STATUS_END;
     MAS_LOG( "listener cleanup : to delete channel" );
     mas_channel_delete( plcontrol->h.pchannel, 0, 1 );
     plcontrol->h.pchannel = NULL;
@@ -241,7 +241,7 @@ mas_listener( mas_lcontrol_t * plcontrol )
 
   if ( plcontrol )
   {
-    plcontrol->h.status = MAS_STATUS_INIT;
+    plcontrol->c.status = MAS_STATUS_INIT;
 
     MAS_LOG( "l/th loop" );
     while ( !ctrl.fatal && 0 == ( r = mas_listener_wait_client( plcontrol ) ) )
@@ -251,7 +251,7 @@ mas_listener( mas_lcontrol_t * plcontrol )
     }
     if ( plcontrol->popts->thname.listen_close )
       IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) plcontrol->popts->thname.listen_close /* "zocListenClose" */  ) );
-    plcontrol->h.status = MAS_STATUS_CLOSE;
+    plcontrol->c.status = MAS_STATUS_CLOSE;
     /* thMSG( "stopped listening r:%d", r ); */
     MAS_LOG( "exiting listening (stopped listening) r:%d", r );
     /* mas_listener_join_transactions( &channel.transaction_threads ); */
@@ -295,7 +295,7 @@ mas_listener_th( void *tlcontrol )
       EMSG( "host not set" );
       MAS_LOG( "listener: host not set" );
     }
-    plcontrol->h.status = MAS_STATUS_START;
+    plcontrol->c.status = MAS_STATUS_START;
 #ifdef MAS_TR_PERSIST
     {
       for ( int it = 0; it < 10; it++ )

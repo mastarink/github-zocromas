@@ -53,9 +53,9 @@ typedef MAS_LIST_ENTRY( mas_rcontrol_s ) mas_rcontrol_list_entry_t;
 
 struct mas_rcontrol_s
 {
-  char signature[2];
-  mas_rcontrol_list_entry_t next;
+  mas_common_control_t c;
   struct mas_ocontrol_s h;
+  mas_rcontrol_list_entry_t next;
 
   double start_time;
   struct mas_lcontrol_s *plcontrol;

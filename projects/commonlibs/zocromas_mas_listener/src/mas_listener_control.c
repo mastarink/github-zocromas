@@ -146,8 +146,8 @@ mas_lcontrol_cleaning_transactions__( mas_lcontrol_t * plcontrol, int removeit, 
           prcontrol_next = MAS_LIST_NEXT( prcontrol, next );
 //        if ( nanos >= 0 )
 //        {
-//          thMSG( "waiting (%lu) cl. R%lu:%u @ L%lu:%u to go (server quit)", nanos, prcontrol->h.serial, prcontrol->h.status,
-//                 plcontrol->h.serial, plcontrol->h.status );
+//          thMSG( "waiting (%lu) cl. R%lu:%u @ L%lu:%u to go (server quit)", nanos, prcontrol->h.serial, prcontrol->c.status,
+//                 plcontrol->h.serial, plcontrol->c.status );
 //        }
           {
             int j;
@@ -170,9 +170,9 @@ mas_lcontrol_cleaning_transactions__( mas_lcontrol_t * plcontrol, int removeit, 
               /* MAS_LOG( "stoped transaction [%lx]", prcontrol->h.thread ); */
               prcontrol->h.thread = ( pthread_t ) 0;
               rmcnt++;
-              /* thMSG( "joined L%lu:%u & R%lu:%u", plcontrol->h.serial, plcontrol->h.status, prcontrol->h.serial, prcontrol->h.status ); */
-              MAS_LOG( "stopped  R%lu:%u @ L%lu:%u; rmcnt:%u (to wait %lu) 0x%lx", prcontrol->h.serial, prcontrol->h.status,
-                       plcontrol->h.serial, plcontrol->h.status, rmcnt, nanos, prcontrol->h.thread );
+              /* thMSG( "joined L%lu:%u & R%lu:%u", plcontrol->h.serial, plcontrol->c.status, prcontrol->h.serial, prcontrol->c.status ); */
+              MAS_LOG( "stopped  R%lu:%u @ L%lu:%u; rmcnt:%u (to wait %lu) 0x%lx", prcontrol->h.serial, prcontrol->c.status,
+                       plcontrol->h.serial, plcontrol->c.status, rmcnt, nanos, prcontrol->h.thread );
             }
             else
             {

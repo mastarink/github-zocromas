@@ -80,8 +80,8 @@ mas_lcontrol_create( void )
   if ( plcontrol )
   {
     memset( plcontrol, 0, sizeof( mas_lcontrol_t ) );
-    plcontrol->signature[0] = 'L';
-    plcontrol->signature[1] = 'S';
+    plcontrol->c.signature[0] = 'L';
+    plcontrol->c.signature[1] = 'S';
   }
   else
   {
@@ -167,7 +167,7 @@ mas_lcontrol_init( mas_lcontrol_t * plcontrol, const mas_options_t * popts, cons
 {
   unsigned hport;
 
-  plcontrol->h.status = MAS_STATUS_INIT;
+  plcontrol->c.status = MAS_STATUS_INIT;
   plcontrol->popts = popts;
   plcontrol->hostlen = mas_parse_host_port( host, &hport, port );
   plcontrol->host = mas_strndup( host, plcontrol->hostlen );

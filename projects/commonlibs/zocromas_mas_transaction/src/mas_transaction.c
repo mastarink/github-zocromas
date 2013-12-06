@@ -69,7 +69,7 @@ _mas_transaction_xch_eval( mas_rcontrol_t * prcontrol )
 
   if ( prcontrol->proto_desc->func )
   {
-    prcontrol->h.status = MAS_STATUS_WORK;
+    prcontrol->c.status = MAS_STATUS_WORK;
     r = ( prcontrol->proto_desc->func ) ( prcontrol, NULL /* data */  );
     if ( !( r > 0 ) )
       prcontrol->proto_desc = NULL;
@@ -83,7 +83,7 @@ _mas_transaction_xch( mas_rcontrol_t * prcontrol )
   CTRL_PREPARE;
   int r = 0;
 
-  prcontrol->h.status = MAS_STATUS_PROTO;
+  prcontrol->c.status = MAS_STATUS_PROTO;
   if ( prcontrol->proto_desc )
     r = _mas_transaction_xch_eval( prcontrol );
   else
@@ -110,7 +110,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
   CTRL_PREPARE;
   int r = -1;
 
-  prcontrol->h.status = MAS_STATUS_OPEN;
+  prcontrol->c.status = MAS_STATUS_OPEN;
   /* int buffer_unlink = 0; */
   if ( !ctrl.protos_num )
   {
@@ -128,9 +128,9 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
       const void *buffer_void;
 
       /* r = mas_channel_read_some_new( prcontrol->h.pchannel ); */
-      prcontrol->h.status = MAS_STATUS_NEED_DATA;
+      prcontrol->c.status = MAS_STATUS_NEED_DATA;
       buffer_void = mas_channel_buffer( prcontrol->h.pchannel, &sz );
-      prcontrol->h.status = MAS_STATUS_OPENB;
+      prcontrol->c.status = MAS_STATUS_OPENB;
       MAS_LOG( "to read rq (read some:%lu)", sz );
       {
         char *dump;
@@ -164,7 +164,7 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
     tMSG( "end transaction xch" );
     HMSG( "- TRANS EXCHANGE" );
   }
-  prcontrol->h.status = MAS_STATUS_CLOSE;
+  prcontrol->c.status = MAS_STATUS_CLOSE;
   return r;
 }
 
@@ -173,15 +173,17 @@ mas_transaction_xch( mas_rcontrol_t * prcontrol )
 static void *
 mas_transaction( mas_rcontrol_t * prcontrol )
 {
+  CTRL_PREPARE;
   int r = 1;
+  mas_rcontrol_t *this = prcontrol;
 
   MAS_LOG( "starting transaction" );
   tMSG( "starting transaction" );
   HMSG( "+ TRANS" );
-
+  MSTAGE( TRANSACTION );
   if ( prcontrol )
   {
-    prcontrol->h.status = MAS_STATUS_INIT;
+    prcontrol->c.status = MAS_STATUS_INIT;
     if ( !prcontrol->h.pchannel )
     {
       /* rMSG( "no open channel in tr." ); */
@@ -189,7 +191,6 @@ mas_transaction( mas_rcontrol_t * prcontrol )
     }
     if ( prcontrol->h.pchannel )
     {
-      CTRL_PREPARE;
       MAS_LOG( "starting transaction 1" );
       /* rMSG( "start transaction" ); */
       MAS_LOG( "starting transaction 2" );
@@ -199,7 +200,8 @@ mas_transaction( mas_rcontrol_t * prcontrol )
       while ( r >= 0 && prcontrol && prcontrol->connection_keep_alive && !prcontrol->stop && prcontrol->h.pchannel
               && prcontrol->h.pchannel->opened && !mas_channel_buffer_eof( prcontrol->h.pchannel ) )
       {
-        prcontrol->h.status = MAS_STATUS_SERV_LOOP;
+        prcontrol->c.status = MAS_STATUS_SERV_LOOP;
+        MSTAGE( EXCHANGE );
         rMSG( "+ keep alive loop" );
         MAS_LOG( "starting transaction keep-alive block" );
         prcontrol->qbin = MSG_BIN_NONE;
@@ -223,7 +225,7 @@ mas_transaction( mas_rcontrol_t * prcontrol )
         /* if ( mas_channel_buffer_eof( prcontrol->h.pchannel ) ) */
         /*   mas_channel_close( prcontrol->h.pchannel );          */
       }
-      prcontrol->h.status = MAS_STATUS_STOP;
+      prcontrol->c.status = MAS_STATUS_STOP;
     }
     if ( prcontrol->connection_keep_alive )
     {
@@ -269,7 +271,7 @@ mas_transaction_th( void *trcontrol )
   if ( prcontrol )
   {
     EVAL_PREPARE;
-    prcontrol->h.status = MAS_STATUS_BIRTH;
+    prcontrol->c.status = MAS_STATUS_BIRTH;
     prcontrol->start_time = mas_double_time(  );
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransTh" ) );
 
@@ -295,8 +297,8 @@ mas_transaction_th( void *trcontrol )
 #endif
       {
         MAS_LOG( "start tr.th" );
-        /* rMSG( "start tr.th R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->h.status, prcontrol->plcontrol->h.serial, */
-        /*       prcontrol->plcontrol->h.status );                                                                          */
+        /* rMSG( "start tr.th R%lu:%u @ L%lu:%u", prcontrol->h.serial, prcontrol->c.status, prcontrol->plcontrol->h.serial, */
+        /*       prcontrol->plcontrol->c.status );                                                                          */
         /* Wait for prcontrol->h.pchannel if pre-launched thread */
         MAS_LOG( "start tr.th 1" );
         if ( !( prcontrol->h.pchannel && prcontrol->h.pchannel->opened ) )
@@ -377,7 +379,7 @@ mas_transaction_th( void *trcontrol )
     }
     IEVAL( rn, prctl( PR_SET_NAME, ( unsigned long ) "zocTransThXit" ) );
   }
-  prcontrol->h.status = MAS_STATUS_DEATH;
+  prcontrol->c.status = MAS_STATUS_DEATH;
   mas_pthread_exit( NULL );
   return rp;
 }
@@ -402,7 +404,7 @@ mas_transaction_start( mas_lcontrol_t * plcontrol )
 
     /* wMSG( "cl. come in" ); */
     MAS_LOG( "client came prc:%p", ( void * ) plcontrol );
-    plcontrol->h.status = MAS_STATUS_START;
+    plcontrol->c.status = MAS_STATUS_START;
     {
       mas_rcontrol_t *prcontrol = NULL;
 
@@ -454,8 +456,8 @@ mas_transaction_start( mas_lcontrol_t * plcontrol )
 int
 mas_transaction_cancel( mas_rcontrol_t * prcontrol )
 {
-  EMSG( "CANCEL R%lu:%u (prcontrol:%p) th:%lx", prcontrol->h.serial, prcontrol->h.status, ( void * ) prcontrol, prcontrol->h.thread );
-  MAS_LOG( "cancelling R%lu:%u", prcontrol->h.serial, prcontrol->h.status );
+  EMSG( "CANCEL R%lu:%u (prcontrol:%p) th:%lx", prcontrol->h.serial, prcontrol->c.status, ( void * ) prcontrol, prcontrol->h.thread );
+  MAS_LOG( "cancelling R%lu:%u", prcontrol->h.serial, prcontrol->c.status );
   if ( prcontrol->h.thread )
   {
     mas_pthread_cancel( prcontrol->h.thread );
@@ -488,7 +490,7 @@ mas_transaction_cleanup( void *arg )
     }
 
     ctrl.in_pipe--;
-    prcontrol->h.status = MAS_STATUS_END;
+    prcontrol->c.status = MAS_STATUS_END;
     /* rMSG( "end transaction; i/s:%d; i/c:%d", ctrl.keep_listening, ctrl.in_client ); */
 
     /* mas_thread_variables_delete(  ); */
