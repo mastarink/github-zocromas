@@ -170,7 +170,8 @@ function shn_installed_list ()
 }
 function shn_build_common_make ()
 {
-  shn_build_xcommand make -s $@ && shn_msgns common make $@ ok || return $?
+# shn_build_xcommand make -s $@ && shn_msgns common make $@ ok || return $?
+  shn_build_xcommand make -s $@ && shn_msgns . || return $?
 }
 function shn_build_autoreconf ()
 {
@@ -308,7 +309,7 @@ function shn_build_superclean ()
     fi
   done
   if [[ "$wash" == wash ]] ; then
-    for l in zocversion.txt m4zoc shn ; do
+    for l in zocversion.txt zocvdate.txt m4zoc shn ; do
       if [[ "$l" ]] && [[ -L "$l" ]] ; then
 	shn_msg removing link $l
 	rm -Rf $l
@@ -349,19 +350,19 @@ function shn_build_dist ()
       shn_errmsg "distcheck"
       return $?
     fi
-    shn_msg 'moving...'
+    shn_msgns '⇒ «dist»'
 #   shn_build_list
     if pushd "${MAS_SHN_DIRS[build]}" &>/dev/null ; then
       # TODO for ....
       if [[ "${MAS_SHN_PROJECT_FULLNAME}" ]] && \
       			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.gz"  ]] && \
       			[[ -f "${MAS_SHN_PROJECT_FULLNAME}.tar.bz2" ]] && [[ -d "${MAS_SHN_DIRS[savedist]}" ]] ; then
- 	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
+#	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
 	shn_mv ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} "${MAS_SHN_DIRS[savedist]}"  || \
 			{ retcode=$? ; shn_errmsg "mv dist" ; }
-	shn_msg "moved to ${MAS_SHN_DIRS[savedist]}"
+	shn_dbgmsg "moved to ${MAS_SHN_DIRS[savedist]}"
       else
- 	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
+#	ls -l ${MAS_SHN_PROJECT_FULLNAME}.tar.{gz,bz2} >&2
 	shn_errmsg "${MAS_SHN_PROJECT_FULLNAME}.tar.gz ${MAS_SHN_PROJECT_FULLNAME}.tar.bz2 ${MAS_SHN_DIRS[savedist]}"
 	retcode=1
       fi
@@ -376,6 +377,9 @@ function shn_build_dist ()
   touch $MAS_SHN_PROJECT_DIR/.${FUNCNAME}
   return $retcode
 }
+# function shn_build_ebuild_update_here ()
+# {
+# }
 function shn_build_ebuild_update ()
 {
   local retval=0
@@ -389,7 +393,11 @@ function shn_build_ebuild_update ()
   	&& [[ -d "${MAS_SHN_DIRS[savedist]}" ]] && [[ -d "${MAS_SHN_DIRS[savegentoo]}" ]] \
 	&& [[ -d "$ebuild_dir" ]] \
 	&& pushd $ebuild_dir >/dev/null ; then
-    ebname_base=$( ls -1tr *.ebuild | tail -1 )
+    ebname_base=$( ls -1tr *.ebuild 2>/dev/null | tail -1 )
+    if ! [[ "$ebname_base" ]] || ! [[ -f $ebname_base ]] ; then
+      shn_errmsg $LINENO $FUNCNAME E
+      return 1
+    fi
     shn_dbgmsg "ebname_base:$ebname_base"
     ebname="${ebuild_prefix}${MAS_SHN_PROJECT_FULLNAME}.ebuild"
     shn_dbgmsg "ebname:$ebname"
@@ -402,32 +410,33 @@ function shn_build_ebuild_update ()
     if [[ "$distfile" ]] && [[ -f "$distfile" ]] ; then
       if ! [[ -f "$ebname" ]] ; then
 	shn_cp $ebname_base $ebname \
-			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 1 $FUNCNAME ; return $retval ; }
+			|| { retval=$? ; popd &>/dev/null ; shn_errmsg $LINENO $FUNCNAME E ; return $retval ; }
       fi
 
       if [[ -f $ebname ]] ; then
         shn_chmod a+r $ebname $distfile
 	# all versions:
 	shn_cp -a  ${MAS_SHN_DIRS[savedist]}/${MAS_SHN_PROJECT_NAME}-*.tar.bz2 ${MAS_SHN_DIRS[savegentoo]} \
-			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 2 $FUNCNAME ; return $retval ; }
+			|| { retval=$? ; popd &>/dev/null ; shn_errmsg $LINENO $FUNCNAME E ; return $retval ; }
 	if [[ "${ebuild_prefix}" ]] ; then 
 	  shn_rename "${MAS_SHN_PROJECT_NAME}" "${ebuild_prefix}${MAS_SHN_PROJECT_NAME}" \
 	  	${MAS_SHN_DIRS[savegentoo]}/${MAS_SHN_PROJECT_NAME}-*.tar.bz2 \
-			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 3 $FUNCNAME ; return $retval ; }
+			|| { retval=$? ; popd &>/dev/null ; shn_errmsg $LINENO $FUNCNAME E ; return $retval ; }
 	fi
 	shn_cp -a ${MAS_SHN_DIRS[savegentoo]}/${ebuild_prefix}$distname  /usr/portage/distfiles/ \
-			|| { retval=$? ; popd &>/dev/null ; shn_errmsg 4 $FUNCNAME ; return $retval ; }
+			|| { retval=$? ; popd &>/dev/null ; shn_errmsg $LINENO $FUNCNAME E ; return $retval ; }
 	if [[ -f Manifest ]] ; then
 	  shn_rm Manifest \
-	  		|| { retval=$? ; popd &>/dev/null ; shn_errmsg 5 $FUNCNAME ; return $retval ; }	  
+	  		|| { retval=$? ; popd &>/dev/null ; shn_errmsg $LINENO $FUNCNAME E ; return $retval ; }	  
 	fi
-	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msgns enuild $ebname manifest - ok || retval=$?
+#	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msgns ebuild $ebname manifest - ok || retval=$?
+	shn_xcommand /usr/bin/ebuild $ebname manifest && shn_msgns «manifest $MAS_SHN_PROJECT_FULLNAME» || retval=$?
       else
-	shn_errmsg $ebname
+	shn_errmsg $LINENO $FUNCNAME $ebname E
 	retval=1
       fi
     else
-      shn_errmsg $distfile
+      shn_errmsg $LINENO $FUNCNAME $distfile E
       retval=1
     fi
     popd &>/dev/null
@@ -463,8 +472,7 @@ function shn_build_ebuild_check ()
 #       shn_msgns $short bzip2 ok 
 	:
       else
-        shn_msg "bz2 absent : $distdir/$distfile2"
-        shn_msg "for $f"
+        shn_errmsg "bz2 absent : $distdir/$distfile2 for $f"
       fi
     fi
   done

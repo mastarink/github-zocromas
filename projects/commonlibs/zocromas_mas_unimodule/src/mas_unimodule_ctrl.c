@@ -70,7 +70,10 @@ mas_unimodule_unregister( void )
       int unload = 1;
       mas_v_fun_t fun;
 
-      fun = ( mas_v_fun_t ) ( unsigned long ) dlsym( ctrl.loaded_modules[im], "module_before_close" );
+      /* fun = ( mas_v_fun_t ) ( unsigned long ) dlsym( ctrl.loaded_modules[im], "module_before_close" ); */
+      *( void ** ) ( &fun ) = dlsym( ctrl.loaded_modules[im], "module_before_close" );
+
+
       WMSG( "MODULE DESTROY %u. %p [%d] %s", im, ( void * ) ctrl.loaded_modules[im], fun ? 1 : 0, dlerror(  ) );
       if ( fun )
         unload = ( fun ) (  );

@@ -37,9 +37,10 @@ function shn_code ()
     ;;
     l)
       # pwd >&2 || return $?
-      shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
+####  shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
 #     declare -p MAS_SHN_LAST_ACTION >&2
       MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:list]=`datemt`
+      shn_fmsg  "	[ %-30s ]" $MAS_SHN_PROJECT_NAME
     ;;
     j)
       shn_project_cd $1
@@ -171,7 +172,7 @@ function shn_code ()
 }
 function shn ()
 {
-  local code=$1
+  local code=${1:-l}
 # export MAS_SHN_DEBUG=yes  
   shift
   shn_dbgmsg 1 shn
@@ -182,9 +183,24 @@ function shn ()
 # shn_setup_projects || shn_project_cd "${MAS_SHN_PROJECT_NAME:-zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_setup_projects || shn_project_cd                                     || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_dbgmsg 3 shn
-  if [[ "$code" == each ]] ; then
-    shn_msg "Will install to ${MAS_SHN_DIRS[flavour]}"
-    shn_project_each '' shn $@
+  if [[ "$code" == each ]] || [[ "$code" == '..' ]] ; then
+#   shn_msg "Will install to ${MAS_SHN_DIRS[flavour]}"
+    shn_project_each '' 0 shn $@
+  elif [[ "$code" =~ ^\?(.*)$ ]] ; then
+#   shn_msg "Will install to ${MAS_SHN_DIRS[flavour]}"
+    shn_project_each "${BASH_REMATCH[1]}" 0 shn $@
+  elif [[ "$code" == cont ]] ; then
+    if [[ "${MAS_SHN_DIRS[status]}" ]] && [[ -d "${MAS_SHN_DIRS[status]}" ]] ; then
+      shn_msg ">>>>>>>>>>>> $MAS_SHN_STATUS @"
+#     if [[ -f "${MAS_SHN_DIRS[status]}/last" ]] ; then
+#       read ifr dshn acts < "${MAS_SHN_DIRS[status]}/last"
+#       shn_msg "@@@@@@@@@@@ $ifr -- $dshn -- $acts"
+#       shn_project_each $ifr '' $dshn $acts
+#     fi
+      if [[ "$MAS_SHN_STATUS" ]] ; then
+        shn_project_each '' $MAS_SHN_STATUS
+      fi
+    fi   
   elif [[ "$code" == one ]] ; then
     local shn_dont_setup=yes
     
@@ -218,6 +234,6 @@ function shn ()
   shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MAS_SHN_PROJECT_NAME}
 # shn_pwd
   shn_setup_projects || return $?
-  shn_msg END of shn
+# shn_msg END of shn
   return $retcode
 }

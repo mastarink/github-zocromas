@@ -217,29 +217,39 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
             size_t sublen;
 
             s = runonce_pids.array[pid].argv[1];
-            slen = strlen( s );
-            sublen = strlen( subname );
-            /* printf( ">%d [%s:%s:%s] %d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname,                         */
-            /*         runonce_pids.array[pid].argc, runonce_pids.array[pid].argv[0], runonce_pids.array[pid].argv[1], s + slen - sublen ); */
-            if ( 0 == strcmp( subname, s + slen - sublen ) )
+            if ( s )
             {
-              if ( path )
+              slen = strlen( s );
+              if ( subname )
               {
-                size_t pathlen;
+                sublen = strlen( subname );
+                /* printf( ">%d [%s:%s:%s] %d [%s:%s:%s]\n", __LINE__, name, subname, runonce_pids.array[pid].progname,                         */
+                /*         runonce_pids.array[pid].argc, runonce_pids.array[pid].argv[0], runonce_pids.array[pid].argv[1], s + slen - sublen ); */
+                if ( 0 == strcmp( subname, s + slen - sublen ) )
+                {
+                  if ( path )
+                  {
+                    size_t pathlen;
 
-                pathlen = strlen( path );
-                if ( 0 == strncmp( path, s, pathlen ) )
-                {
-                  fpid = pid;
-                }
-                else
-                {
+                    pathlen = strlen( path );
+                    if ( 0 == strncmp( path, s, pathlen ) )
+                    {
+                      fpid = pid;
+                    }
+                    else
+                    {
+                    }
+                  }
+                  else
+                  {
+                    fpid = pid;
+                  }
                 }
               }
-              else
-              {
-                fpid = pid;
-              }
+            }
+            else
+            {
+              fprintf( stderr, ">>> runonce_pids.array[%u].argv[1] is empty !!<<<\n", pid );
             }
           }
         }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="treeline.xsl"?>
+<ROOT item="y" tlversion="1.4.1"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="DEFAULT">
+<Name type="Text" ref="y">main</Name>
+<DEFAULT item="y"
+line0="{*Name*}"
+line1="{*Name*}">
+<Name type="Text" ref="y">mas_master_bunch</Name>
+<DEFAULT item="y">
+<Name>mas_master_bunch_create</Name>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_master_bunch_main</Name>
+<DEFAULT item="y">
+<Name>mas_master_daemon_main</Name>
+<DEFAULT item="y">
+<Name>mas_master_main</Name>
+<DEFAULT item="y">
+<Name>mas_master_threaded</Name>
+<DEFAULT item="y">
+<Name>~ mas_master_th</Name>
+<DEFAULT item="y">
+<Name>mas_master_core</Name>
+</DEFAULT>
+</DEFAULT>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_master_core</Name>
+<DEFAULT item="y">
+<Name>mas_logger_start</Name>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_ticker_start</Name>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_watcher_start</Name>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_listeners_main</Name>
+</DEFAULT>
+</DEFAULT>
+</DEFAULT>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_master_parent_main</Name>
+</DEFAULT>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>mas_master_bunch_destroy</Name>
+</DEFAULT>
+</DEFAULT>
+</ROOT>

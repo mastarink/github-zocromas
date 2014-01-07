@@ -155,31 +155,65 @@ function shn_project_cd ()
   shn_setup_projects
   return 0
 }
+function shn_project_each_control_c ()
+{
+  interrupted=$(( $interrupted +1 ))
+  shn_msg " -----> Ctrl-C"
+# trap - INT
+}
 function shn_project_each ()
 {
-  local match=$1 retcode=0
+  local match=$1
   shift
-  local project_index=0
-  local projects_realdir
+  local index_from=$1
+  shift
+  local project_index=0 interrupted=0
+  local projects_realdir prj retcode=0
   if [[ "${MAS_SHN_ENABLED_PROJECTS[@]}" ]]  ; then
     shn_dbgmsg "1 At each `pwd`"
-    for (( project_index=0 ; $project_index < ${#MAS_SHN_ENABLED_PROJECTS[@]} ; project_index++ )) ; do
-    shn_dbgmsg "2 At each `pwd`"
-    shn_dbgmsg "--- ${MAS_SHN_ENABLED_PROJECTS[$project_index]} ? $match"
-    shn_msgn "--- ${MAS_SHN_ENABLED_PROJECTS[$project_index]}		"
-    if shn_project_match ${MAS_SHN_ENABLED_PROJECTS[$project_index]} $match ; then
-      projects_realdir=`shn_project_dir2realpath ${MAS_SHN_ENABLED_PROJECTS[$project_index]}` || return 1
-      pushd $projects_realdir &>/dev/null
-       shn_dbgmsg "EACH `pwd` -- $@"
-       if true ; then
-	 $@ || { retcode=$? ; popd &>/dev/null ; break ; }
-       fi
-       shn_dbgmsg "3 At each `pwd`"
-      popd &>/dev/null
-      shn_dbgmsg "4 At each `pwd`"
-    fi
-    shn_dbgmsg "5 At each `pwd`"
+    trap shn_project_each_control_c INT
+    for (( project_index=$index_from ; $project_index < ${#MAS_SHN_ENABLED_PROJECTS[@]} ; project_index++ )) ; do
+      prj=${MAS_SHN_ENABLED_PROJECTS[$project_index]}
+#     wsleep
+      shn_dbgmsg "--- $prj ? $match"
+#     shn_msgn "+-- ${MAS_SHN_ENABLED_PROJECTS[$project_index]}		"
+      if shn_project_match "$prj" "$match" ; then
+	projects_realdir=`shn_project_dir2realpath ${MAS_SHN_ENABLED_PROJECTS[$project_index]}` || return 1
+	pushd $projects_realdir &>/dev/null
+         shn_dbgmsg "1:$1 2:$2 3:$3 4:$4 index_from:$index_from prj:$prj --- $@"
+#        shn_fmsg  "--- %02d %s >> %s" $project_index ${MAS_SHN_ENABLED_PROJECTS[$project_index]} "`pwd`"
+         shn_fmsg  "--- %02d %-40s"       $project_index ${MAS_SHN_ENABLED_PROJECTS[$project_index]}
+	 shn_dbgmsg "EACH `pwd` -- $@"
+	 if true ; then
+	   $@ || { retcode=$? ; popd &>/dev/null ; break ; }
+	 fi
+	 shn_dbgmsg "3 At each `pwd`"
+	popd &>/dev/null
+	shn_dbgmsg "4 At each `pwd`"
+#     else
+#       shn_msg "-- NOT Match '$prj' ? '$match'"
+      fi
+#     shn_msgn " (+ $project_index)"
+      shn_dbgmsg "5 At each `pwd`"
+      if [[ "$interrupted" -gt 0 ]] ; then
+        break
+      fi
+#     shn_msg " . $project_index"
+      shn_msg
     done
+    trap - SIGINT
+    shn_msg " (Done $project_index of ${#MAS_SHN_ENABLED_PROJECTS[@]} ; last: $MAS_SHN_PROJECT_NAME : $MAS_SHN_PROJECT_DIR)"
+    if [[ "${MAS_SHN_DIRS[status]}" ]] && [[ -d "${MAS_SHN_DIRS[status]}" ]] ; then
+      if [[ $project_index -eq ${#MAS_SHN_ENABLED_PROJECTS[@]} ]] ; then
+        if [[ -f "${MAS_SHN_DIRS[status]}/last" ]] ; then
+	  rm "${MAS_SHN_DIRS[status]}/last"
+	  unset MAS_SHN_STATUS
+	fi
+      else
+	echo -n "$project_index $@" >> "${MAS_SHN_DIRS[status]}/last"
+	MAS_SHN_STATUS="$project_index $@"
+      fi
+    fi
   fi
   return $retcode
 }

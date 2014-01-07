@@ -89,7 +89,7 @@ msg_nt( STD_CMD_ARGS )
 {
   GError *error = NULL;
 
-  g_type_init(  );
+  /* g_type_init(  ); */
 
   /* g_set_prgname( argv[0] );                                           */
   g_log_set_always_fatal( G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL );
@@ -148,7 +148,7 @@ msg_test( STD_CMD_ARGS )
 {
   NotifyNotification *notify;
 
-  g_type_init(  );
+  /* g_type_init(  ); */
   g_set_prgname( "Test" );
   g_log_set_always_fatal( G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL );
   if ( !notify_init( "notify-send" ) )

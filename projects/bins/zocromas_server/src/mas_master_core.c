@@ -34,6 +34,17 @@ related:
   mas_listener_wait_client.c
 */
 
+/*
+ * 1. optionally start service threads
+ *   1.1. logger
+ *   1.2. ticker
+ *   1.3. watcher
+ * 2. run
+ * 3. stop service threads
+ *   3.1. logger
+ *   3.2. ticker
+ *   3.3. watcher
+ * */
 
 int
 mas_master_core( const mas_options_t * popts )
@@ -81,20 +92,28 @@ mas_master_core( const mas_options_t * popts )
     HMSG( "NO MASTER" );
     sleep( popts->womaster );
   }
-  else if ( popts->hostsv.c > 0 && popts->hostsv.v )
+  else if ( popts->wolistener )
   {
-    HMSG( "TO MASTER LOOP r:%d; ctrl.keep_listening:%d; ctrl.fatal:%d; flag-quit:%d", r, ctrl.keep_listening, ctrl.fatal,
-          OPT_QFLAG( popts, quit ) );
-    while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !OPT_QFLAG( popts, quit ) )
-      r = mas_listeners_main( popts );
-    thMSG( "just out of server main loop" );
-    MAS_LOG( "just out of server main loop" );
+    MAS_LOG( "stopped run w/o listeners" );
+    sleep( popts->wolistener );
   }
   else
   {
-    HMSG( "MASTER C.3" );
-    EMSG( "hosts not defined" );
-    MAS_LOG( "hosts not defined" );
+    if ( popts->hostsv.c > 0 && popts->hostsv.v )
+    {
+      HMSG( "TO MASTER LOOP r:%d; ctrl.keep_listening:%d; ctrl.fatal:%d; flag-quit:%d", r, ctrl.keep_listening, ctrl.fatal,
+            OPT_QFLAG( popts, quit ) );
+      while ( r >= 0 && ctrl.keep_listening && !ctrl.fatal && !OPT_QFLAG( popts, quit ) )
+        r = mas_listeners_main( popts );
+      thMSG( "just out of server main loop" );
+      MAS_LOG( "just out of server main loop" );
+    }
+    else
+    {
+      HMSG( "MASTER C.3" );
+      EMSG( "hosts not defined" );
+      MAS_LOG( "hosts not defined" );
+    }
   }
   HMSG( "MASTER D" );
   if ( popts->exitsleep )

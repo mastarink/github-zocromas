@@ -103,6 +103,9 @@ __load_cmd_func( const char *libname, const char *funname, const char *modpath )
 /*   return cmd_fun;                                                                                          */
 /* }                                                                                                          */
 
+/*
+ * load dl.symbol "subcmdtable" from library `libname`; look at `modpath`
+ * */
 static mas_cmd_t *
 _load_subtable_from( const char *libname, const char *modpath )
 {
@@ -161,6 +164,7 @@ _missing_funsetup( mas_cmd_t * pcommand, unsigned level, const char *modpath )
         }
         if ( !cmd_fun )
         {
+	  /* load dl.symbol "subcmdtable" from library `libname`; look at `modpath` */
           loaded_subtable = _load_subtable_from( libname, modpath );
           if ( loaded_subtable )
           {

@@ -2,6 +2,7 @@ declare -gx MAS_SHN_PROJECTS_DIR MAS_SHN_PRJTOP_DIR MAS_SHN_PROJECT_NAME MAS_SHN
 declare -gx MAS_SHN_PROJECT_FULLNAME MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_RDIR
 declare MAS_SHN_DEBUG
 declare -gx MAS_SHN_FLAVOUR
+declare -gx MAS_SHN_STATUS
 
 # MAS_SHN_DEBUG=yes
 
@@ -50,6 +51,7 @@ function shn_setup_global_dirs
 # echo " B `declare -p MAS_SHN_DIRS`" >&2
     MAS_SHN_DIRS[top]=`shn_realpath "$MAS_SHN_PROJECTS_DIR/.."`
     MAS_SHN_DIRS[admin]="${MAS_SHN_DIRS[top]}/admin"
+    MAS_SHN_DIRS[status]="${MAS_SHN_DIRS[admin]}/status"
     MAS_SHN_DIRS[save]="${MAS_SHN_DIRS[admin]}/saved"
     MAS_SHN_DIRS[savedist]="${MAS_SHN_DIRS[save]}/dist"
     MAS_SHN_DIRS[savegentoo]="${MAS_SHN_DIRS[save]}/gentoo"
@@ -60,7 +62,7 @@ function shn_setup_global_dirs
     MAS_SHN_DIRS[error]="/tmp"
     MAS_SHN_DIRS[files]="$MAS_SHN_PROJECTS_DIR/files"
 
-    for id in admin save savedist savegentoo ebuilds ebuild install flavour error files ; do
+    for id in admin 'status' save savedist savegentoo ebuilds ebuild install flavour error files ; do
       if [[ "${MAS_SHN_DIRS[$id]}" ]] && ! [[ -d "${MAS_SHN_DIRS[$id]}" ]] ; then
 	shn_mkdir "${MAS_SHN_DIRS[$id]}" || return 1
 	shn_msg created ${MAS_SHN_DIRS[$id]}
@@ -116,12 +118,18 @@ function shn_project_name ()
 }
 function shn_project_version ()
 {
+  local vseq vdate
   if [[ -L shn ]] && [[ -f shn/libwork.bash ]] ; then
     if [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] ; then
       if pushd "$MAS_SHN_PROJECT_DIR" &>/dev/null && [[ -f "zocversion.txt" ]] ; then
-	vseq=$( cat zocversion.txt )
+	read vseq < zocversion.txt
+	if [[ -f zocvdate.txt ]] ; then
+	  read vdate < zocvdate.txt
+	fi
 	if type -t datem 2>&1 >/dev/null ; then
-	  echo -n "${vseq}.$( datem )"
+	  echo -n "${vseq}.${vdate:-$( datem )}"
+	elif [[ "$vdate" ]] ; then
+	  echo -n "${vseq}.${vdate}"
 	else
 	  echo -n "$vseq"
 	fi
@@ -326,7 +334,7 @@ function shn_setup_additional ()
 # echo " E `declare -p MAS_SHN_DIRS`" >&2
   if [[ "${MAS_SHN_DIRS[files]}" ]] && [[ -d "${MAS_SHN_DIRS[files]}" ]] ; then 
   #  mased/sh.mased.vim
-    for fn in gvim-funcs.vim  gvimrc-mastar  gvim-vimenter.vim  vimrc-mastar zocversion.txt ; do
+    for fn in gvim-funcs.vim  gvimrc-mastar  gvim-vimenter.vim  vimrc-mastar zocversion.txt zocvdate.txt ; do
       if [[ -f "${MAS_SHN_DIRS[files]}/$fn" ]] ; then
         file=`shn_realpath --relative-to=. ${MAS_SHN_DIRS[files]}/$fn` || return 1
 	link=$( shn_basename $file )

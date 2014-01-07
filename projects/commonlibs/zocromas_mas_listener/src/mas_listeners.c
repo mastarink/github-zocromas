@@ -51,7 +51,8 @@ more:
   mas_cmdmod_listener.c
 */
 
-
+/* 1.
+ * */
 
 int
 mas_listeners_start( const mas_options_t * popts )
@@ -60,37 +61,28 @@ mas_listeners_start( const mas_options_t * popts )
   int r = 0;
   mas_control_t *this = &ctrl;
 
-  if ( popts->wolistener )
+  MAS_LOG( "to start listeners" );
+  lMSG( "to start listeners" );
+  HMSG( "LISTENERS START" );
+  for ( unsigned ith = 0; ith < popts->hostsv.c; ith++ )
   {
-    MAS_LOG( "stopped run w/o listeners" );
-    sleep( popts->wolistener );
-  }
-  else
-  {
-    CTRL_PREPARE;
-    MAS_LOG( "to start listeners" );
-    lMSG( "to start listeners" );
-    HMSG( "LISTENERS START" );
-    for ( unsigned ith = 0; ith < popts->hostsv.c; ith++ )
+    if ( popts->hostsv.v[ith] )
     {
-      if ( popts->hostsv.v[ith] )
-      {
-        lMSG( "host %d: '%s'", ith, popts->hostsv.v[ith] );
-        HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, popts->hostsv.v[ith], popts->default_port );
-        MAS_LOG( "to start listener #%d %s", ith + 1, popts->hostsv.v[ith] );
-        r = mas_listener_start( popts, popts->hostsv.v[ith], popts->default_port );
-      }
-      else
-      {
-        EMSG( "no host for %d", ith );
-        MAS_LOG( "no host for #%d", ith );
-        r = -1;
-      }
-      if ( r < 0 )
-        break;
+      lMSG( "host %d: '%s'", ith, popts->hostsv.v[ith] );
+      HMSG( "LISTEN AT (#%d) %s (def.port:%u)", ith + 1, popts->hostsv.v[ith], popts->default_port );
+      MAS_LOG( "to start listener #%d %s", ith + 1, popts->hostsv.v[ith] );
+      r = mas_listener_start( popts, popts->hostsv.v[ith], popts->default_port );
     }
-    this->c.status = MAS_STATUS_OPEN;
+    else
+    {
+      EMSG( "no host for %d", ith );
+      MAS_LOG( "no host for #%d", ith );
+      r = -1;
+    }
+    if ( r < 0 )
+      break;
   }
+  this->c.status = MAS_STATUS_OPEN;
   return r;
 }
 
@@ -169,6 +161,11 @@ mas_listeners_wait( void )
   return stopped;
 }
 
+/*
+ * 1. start listeners
+ * 2. wait listeners to end
+ * 3. check some things
+ * */
 int
 mas_listeners_main( const mas_options_t * popts )
 {

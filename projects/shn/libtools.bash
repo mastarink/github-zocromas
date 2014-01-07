@@ -1,3 +1,12 @@
+function wsleep ()
+{
+  local i s=$(( ${1:-1} * 10 ))
+  for (( n=0 ; $n < $s ; n++ )) ; do
+    for (( i=0 ; $i < 20000 ; i++ )) ; do
+      :
+    done
+  done
+}
 function shn_echo ()
 {
 # echo $*
@@ -28,7 +37,7 @@ function shn_msgn ()
 }
 function shn_msgns ()
 {
-  shn_msgn "$*;"
+  shn_msgn "$* ○ "
 }
 function shn_msglist ()
 {
@@ -43,7 +52,7 @@ function shn_fmsg ()
 {
   local fmt=$1
   shift
-  builtin printf "$fmt" $*  >&2
+  builtin printf -- "$fmt" $*  >&2
 }
 function shn_warn ()
 {
@@ -51,7 +60,7 @@ function shn_warn ()
 }
 function shn_dbgmsg ()
 {
-  [[ "$MAS_SHN_DEBUG" ]] && shn_msg "$*"
+  [[ "$MAS_SHN_DEBUG" ]] && shn_msg "dbg: $*"
 }
 function shn_errmsg ()
 {
@@ -92,15 +101,15 @@ function shn_chmod ()
 }
 function shn_rm ()
 {
-  /bin/rm $@
+  [[ "$1" ]] && /bin/rm $@
 }
 function shn_mkdir ()
 {
-  /bin/mkdir $@
+  [[ "$1" ]] && /bin/mkdir $@
 }
 function shn_cat ()
 {
-  /bin/cat $@
+  [[ "$1" ]] && /bin/cat $@
 }
 function shn_sed ()
 {
@@ -109,17 +118,17 @@ function shn_sed ()
 function shn_dirname ()
 {
   shn_dbgmsg "dirname $@" >&2
-  /bin/dirname "$@"
+  [[ "$1" ]] && /bin/dirname "$@"
 }
 function shn_basename ()
 {
   shn_dbgmsg "basename $@"
-  /bin/basename "$@"
+  [[ "$1" ]] && /bin/basename "$@"
 }
 function shn_realpath ()
 {
   shn_dbgmsg "realpath $@"
-  /usr/bin/realpath "$@"
+  [[ "$1" ]] && /usr/bin/realpath "$@"
 }
 function shn_pwd ()
 {
