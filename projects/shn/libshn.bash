@@ -1,6 +1,6 @@
 function shn_code ()
 {
-  declare -gx -A MAS_SHN_LAST_ACTION
+  declare -gx -A MSH_SHN_LAST_ACTION
   local code=${1:-h}
   shift
   shn_dbgmsg "shn 1 -- $code"
@@ -13,7 +13,7 @@ function shn_code ()
 # shn_msg "shn pwd:`pwd`"
   case $code in
     h)
-      shn_msg 'project' $MAS_SHN_PROJECT_NAME
+      shn_msg 'project' $MSH_SHN_PROJECT_NAME
       shn_msg 'h = help'
       shn_msg 'r = run'
       shn_msg 'g = debug'
@@ -25,22 +25,22 @@ function shn_code ()
       shn_msg 'D = make distclean'
       shn_msg 'U = "super" clean'
       shn_msg 'a = autoreconf'
-      shn_msg 't = make distcheck and save tarballs to' ${MAS_SHN_DIRS[savedist]}
+      shn_msg 't = make distcheck and save tarballs to' ${MSH_SHN_DIRS[savedist]}
       shn_msg 'm = make'
       shn_msg 'i = make install'
       shn_msg 'E = check files for e'
       shn_msg 'R = reload working shell libs (shn)'
       shn_msg 'L = list build dir'
-      shn_msg "I = info for $MAS_SHN_PROJECT_NAME"
+      shn_msg "I = info for $MSH_SHN_PROJECT_NAME"
       shn_msg 'x = command at build dir'
       shn_msg 'e = ebuild - prepare distfiles and Manifest for Gentoo / emerge'
     ;;
     l)
       # pwd >&2 || return $?
-####  shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MAS_SHN_PROJECT_NAME `datemt`
-#     declare -p MAS_SHN_LAST_ACTION >&2
-      MAS_SHN_LAST_ACTION[$MAS_SHN_PROJECT_NAME:list]=`datemt`
-      shn_fmsg  "	[ %-30s ]" $MAS_SHN_PROJECT_NAME
+####  shn_fmsg  "[--%02d----------- %30s ------------- %s]\n" ${project_index:-0} $MSH_SHN_PROJECT_NAME `datemt`
+#     declare -p MSH_SHN_LAST_ACTION >&2
+      MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:list]=`datemt`
+      shn_fmsg  "	[ %-30s ]" $MSH_SHN_PROJECT_NAME
     ;;
     j)
       shn_project_cd $1
@@ -120,8 +120,8 @@ function shn_code ()
       shn_dbgmsg "shn 2.${code}.2"
     ;;
     I)
-      if [[ "${MAS_SHN_DIRS[build]}" ]] && [[ -d "${MAS_SHN_DIRS[build]}" ]] && [[ -x "${MAS_SHN_DIRS[build]}/config.status" ]] ; then
-        ${MAS_SHN_DIRS[build]}/config.status -V
+      if [[ "${MSH_SHN_DIRS[build]}" ]] && [[ -d "${MSH_SHN_DIRS[build]}" ]] && [[ -x "${MSH_SHN_DIRS[build]}/config.status" ]] ; then
+        ${MSH_SHN_DIRS[build]}/config.status -V
       fi
     ;;
     i)
@@ -173,32 +173,32 @@ function shn_code ()
 function shn ()
 {
   local code=${1:-l}
-# export MAS_SHN_DEBUG=yes  
+# export MSH_SHN_DEBUG=yes  
   shift
   shn_dbgmsg 1 shn
   shn_dbgmsg 2a shn
   local retcode=0
 #?trap shn_exit EXIT
-  shn_dbgmsg "project $MAS_SHN_PROJECT_NAME"
-# shn_setup_projects || shn_project_cd "${MAS_SHN_PROJECT_NAME:-zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
+  shn_dbgmsg "project $MSH_SHN_PROJECT_NAME"
+# shn_setup_projects || shn_project_cd "${MSH_SHN_PROJECT_NAME:-zoctypes}" || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_setup_projects || shn_project_cd                                     || { retcode=$? ; shn_errmsg shn setup ; return $retcode ; }
   shn_dbgmsg 3 shn
   if [[ "$code" == each ]] || [[ "$code" == '..' ]] ; then
-#   shn_msg "Will install to ${MAS_SHN_DIRS[flavour]}"
+#   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
     shn_project_each '' 0 shn $@
   elif [[ "$code" =~ ^\?(.*)$ ]] ; then
-#   shn_msg "Will install to ${MAS_SHN_DIRS[flavour]}"
+#   shn_msg "Will install to ${MSH_SHN_DIRS[flavour]}"
     shn_project_each "${BASH_REMATCH[1]}" 0 shn $@
   elif [[ "$code" == cont ]] ; then
-    if [[ "${MAS_SHN_DIRS[status]}" ]] && [[ -d "${MAS_SHN_DIRS[status]}" ]] ; then
-      shn_msg ">>>>>>>>>>>> $MAS_SHN_STATUS @"
-#     if [[ -f "${MAS_SHN_DIRS[status]}/last" ]] ; then
-#       read ifr dshn acts < "${MAS_SHN_DIRS[status]}/last"
+    if [[ "${MSH_SHN_DIRS[status]}" ]] && [[ -d "${MSH_SHN_DIRS[status]}" ]] ; then
+      shn_msg ">>>>>>>>>>>> $MSH_SHN_STATUS @"
+#     if [[ -f "${MSH_SHN_DIRS[status]}/last" ]] ; then
+#       read ifr dshn acts < "${MSH_SHN_DIRS[status]}/last"
 #       shn_msg "@@@@@@@@@@@ $ifr -- $dshn -- $acts"
 #       shn_project_each $ifr '' $dshn $acts
 #     fi
-      if [[ "$MAS_SHN_STATUS" ]] ; then
-        shn_project_each '' $MAS_SHN_STATUS
+      if [[ "$MSH_SHN_STATUS" ]] ; then
+        shn_project_each '' $MSH_SHN_STATUS
       fi
     fi   
   elif [[ "$code" == one ]] ; then
@@ -231,7 +231,7 @@ function shn ()
     shn_code h
   fi
   shn_dbgmsg "shn 5 -- $code"
-  shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MAS_SHN_PROJECT_NAME}
+  shn_dbgmsg shn "  <`datemt`> end($retcode)" -- ${MSH_SHN_PROJECT_NAME}
 # shn_pwd
   shn_setup_projects || return $?
 # shn_msg END of shn

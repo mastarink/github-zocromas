@@ -60,7 +60,7 @@ function shn_warn ()
 }
 function shn_dbgmsg ()
 {
-  [[ "$MAS_SHN_DEBUG" ]] && shn_msg "dbg: $*"
+  [[ "$MSH_SHN_DEBUG" ]] && shn_msg "dbg: $*"
 }
 function shn_errmsg ()
 {
@@ -69,11 +69,11 @@ function shn_errmsg ()
 }
 function shn_project_dir2realpath ()
 {
-  if [[ "$1" ]] && [[ "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR/$1" ]] ; then
-    shn_echo "$MAS_SHN_PROJECTS_DIR/$1"
+  if [[ "$1" ]] && [[ "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR/$1" ]] ; then
+    shn_echo "$MSH_SHN_PROJECTS_DIR/$1"
     return 0
-  elif ! [[ -d "$MAS_SHN_PROJECTS_DIR/$1" ]] ; then
-    shn_errmsg "No directory : $MAS_SHN_PROJECTS_DIR/$1"
+  elif ! [[ -d "$MSH_SHN_PROJECTS_DIR/$1" ]] ; then
+    shn_errmsg "No directory : $MSH_SHN_PROJECTS_DIR/$1"
   else
     shn_errmsg "Why"
   fi
@@ -165,7 +165,7 @@ function shn_unset_all
 {
   shn_unset_functions shn
   unset command_not_found_handle
-  unset MAS_SHN_DIRS MAS_SHN_FLAVOUR MAS_SHN_PROJECTS MAS_SHN_PROJECTS_DIR MAS_SHN_PROJECT_DIR MAS_SHN_PROJECT_FUNCTIONS MAS_SHN_REAL_THIS MAS_SHN_SETUP_FUNCTIONS MAS_SHN_WORK_FUNCTIONS
+  unset MSH_SHN_DIRS MSH_SHN_FLAVOUR MSH_SHN_PROJECTS MSH_SHN_PROJECTS_DIR MSH_SHN_PROJECT_DIR MSH_SHN_PROJECT_FUNCTIONS MSH_SHN_REAL_THIS MSH_SHN_SETUP_FUNCTIONS MSH_SHN_WORK_FUNCTIONS
 }
 function shn_show_errors ()
 {

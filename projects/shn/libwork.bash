@@ -1,13 +1,13 @@
-# unset MAS_SHN_PROJECTS_DIR
-# unset MAS_SHN_PROJ_FUNCTIONS
-# unset MAS_SHN_DIR
+# unset MSH_SHN_PROJECTS_DIR
+# unset MSH_SHN_PROJ_FUNCTIONS
+# unset MSH_SHN_DIR
 # unalias j &>/dev/null
 # unset command_not_found_handle 
-# export MAS_SHN_LIBWORK_LOADED=`datemt`
+# export MSH_SHN_LIBWORK_LOADED=`datemt`
 
 for lib in tools project shn zocserver zocgrep ; do
-  if ! [[ -L shn ]] || ! [[ -f ${MAS_SHN_DIR:-shn}/lib${lib}.bash ]] || ! . ${MAS_SHN_DIR:-shn}/lib${lib}.bash ; then
-    shn_errmsg "loading environment ${MAS_SHN_DIR:-shn}/lib${lib}.bash"
+  if ! [[ -L shn ]] || ! [[ -f ${MSH_SHN_DIR:-shn}/lib${lib}.bash ]] || ! . ${MSH_SHN_DIR:-shn}/lib${lib}.bash ; then
+    shn_errmsg "loading environment ${MSH_SHN_DIR:-shn}/lib${lib}.bash"
     shn_errmsg lib not found $lib
     return 1
   fi
@@ -24,15 +24,15 @@ alias lc='shn_project_files'
 alias qf='shn_project_by_file'
 alias e='shn_file_edit'
 alias run='shn m i r'
-if [[ "$MAS_SHLIB" ]] && [[ -d "$MAS_SHLIB" ]] && [[ -f "$MAS_SHLIB/libed2.bash" ]] ; then
-  . $MAS_SHLIB/libed2.bash
+if [[ "$MSH_SHLIB" ]] && [[ -d "$MSH_SHLIB" ]] && [[ -f "$MSH_SHLIB/libed2.bash" ]] ; then
+  . $MSH_SHLIB/libed2.bash
   alias eu='gvim_caller2'
 fi
 
 # alias lshn='source shn/libwork.bash'
 alias lshn='shn_load'
 
-MAS_SHN_WORK_FUNCTIONS="`shn_funlist shn_work`" || return $?
-[[ "$MAS_SHN_WORK_FUNCTIONS" ]] && export -f $MAS_SHN_WORK_FUNCTIONS
+MSH_SHN_WORK_FUNCTIONS="`shn_funlist shn_work`" || return $?
+[[ "$MSH_SHN_WORK_FUNCTIONS" ]] && export -f $MSH_SHN_WORK_FUNCTIONS
 # shn_msg 'loaded working shell libs (shn)'
 return 0

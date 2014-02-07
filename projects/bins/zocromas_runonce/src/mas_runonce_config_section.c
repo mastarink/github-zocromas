@@ -130,6 +130,7 @@ runonce_config_section_fill_env( config_section_t * section, char *string )
 
       vname = mas_strndup( vn, vne - vn );
       vvalue = getenv( vname );
+      /* printf( "@@@@ %s=`%s`\n", vname, vvalue ); */
       mas_free( vname );
       if ( vvalue )
       {
@@ -283,7 +284,32 @@ runonce_config_section_fill( config_group_t * group, config_section_t * section 
           section->largc = mas_add_argv_args( section->largc, &section->largv, section->values[RUNONCE_OPTIONS], 0 );
       }
       if ( section->values[RUNONCE_ENV] )
-        section->lenvc = mas_add_argv_args( section->lenvc, &section->lenvp, section->values[RUNONCE_ENV], 0 );
+      {
+        const char *s0 = section->values[RUNONCE_ENV];
+
+        section->lenvc = mas_add_argv_args( section->lenvc, &section->lenvp, s0, 0 );
+        for ( int i = 0; i < section->lenvc; i++ )
+        {
+          char *eq = NULL, *qu1 = NULL, *qu2 = NULL, *a0 = NULL;
+          size_t l;
+
+          a0 = section->lenvp[i];
+          l = strlen( a0 );
+          eq = strchr( a0, '=' );
+          qu1 = strchr( a0, '"' );
+          if ( qu1 )
+            qu2 = strchr( qu1 + 1, '"' );
+          if ( qu1 && qu1 == ( eq + 1 ) && qu2 && ( qu2 - a0 ) == ( l - 1 ) )
+          {
+            char *s;
+
+            s = mas_strndup( a0, eq - a0 + 1 );
+            s = mas_strncat_x( s, qu1 + 1, qu2 - ( qu1 + 1 ) );
+            mas_free( section->lenvp[i] );
+            section->lenvp[i] = s;
+          }
+        }
+      }
       if ( section->values[RUNONCE_QUITTER] )
         section->qargc = mas_add_argv_args( section->qargc, &section->qargv, section->values[RUNONCE_QUITTER], 0 );
     }
@@ -323,6 +349,8 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     id = RUNONCE_WRAPPER;
   else if ( 0 == strcmp( name, "nolaunch" ) )
     id = RUNONCE_NOLAUNCH;
+  else if ( 0 == strcmp( name, "stdenv" ) )
+    id = RUNONCE_STDENV;
   else if ( 0 == strcmp( name, "noexit" ) )
     id = RUNONCE_NOEXIT;
   else if ( 0 == strcmp( name, "nostop" ) )
@@ -393,7 +421,8 @@ runonce_config_section_item_create( config_section_t * section, const char *stri
     switch ( id )
     {
     case RUNONCE_ENV:
-      section->values[id] = mas_strcat_x( section->values[id], " " );
+      if ( section->values[id] )
+        section->values[id] = mas_strcat_x( section->values[id], " " );
       section->values[id] = mas_strcat_x( section->values[id], value );
       /*No: break; */
     case RUNONCE_NONE:

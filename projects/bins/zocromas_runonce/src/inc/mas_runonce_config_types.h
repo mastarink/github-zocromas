@@ -98,6 +98,7 @@ typedef enum
   RUNONCE_WRAPPER,
   /* + */
   RUNONCE_NOLAUNCH,
+  RUNONCE_STDENV,
   /* + */
   RUNONCE_NOSTOP,
   /* + */

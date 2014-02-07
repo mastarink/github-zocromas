@@ -2,84 +2,85 @@
 function localrc
 {
   if [[ -L "sh" ]] ; then
-    declare -xg MAS_PROJECTS_DIR=$( realpath  sh/.. )
+    declare -xg MSH_PROJECTS_DIR=$( realpath  sh/.. )
   elif [[ -f "projects.list" ]] ; then
-    declare -xg MAS_PROJECTS_DIR=$( pwd )
+    declare -xg MSH_PROJECTS_DIR=$( pwd )
   fi
-  if [[ "$MAS_PROJECTS_DIR" ]] &&  [[ -d "$MAS_PROJECTS_DIR" ]] && [[ -f "$MAS_PROJECTS_DIR/projects.list" ]] ; then
+  if [[ "$MSH_PROJECTS_DIR" ]] &&  [[ -d "$MSH_PROJECTS_DIR" ]] && [[ -f "$MSH_PROJECTS_DIR/projects.list" ]] ; then
     for l in sh/lib*.bash ; do
       . $l
     done
-    declare -gx MAS_PROJECTS_LIST
-    MAS_PROJECTS_LIST=`cat ${MAS_PROJECTS_DIR}/projects.list|tr '\n' ' '`
-##  read MAS_PROJECTS_LIST2 < .........
+    declare -gx MSH_PROJECTS_LIST
+    MSH_PROJECTS_LIST=`cat ${MSH_PROJECTS_DIR}/projects.list|tr '\n' ' '`
+##  read MSH_PROJECTS_LIST2 < .........
   else
-    unset MAS_PROJECTS_DIR
+    unset MSH_PROJECTS_DIR
   fi
 }
 function localrc_new
 {
   local cfgline i od
   od=`pwd`  || return 1
-  cd ~ || return 1
-  unset MAS_SHN_PROJECTS_DIR MAS_PROJECTS_GLOBAL_CONFIG
-  declare -A MAS_PROJECTS_GLOBAL_CONFIG
-  declare -a MAS_PROJECTS_GLOBAL_CONFIGA
-  if [[ "$MAS_CONF_DIR_TERM" ]] \
-  		&& [[ -d "$MAS_CONF_DIR_TERM" ]] \
-		&& [[ -f "$MAS_CONF_DIR_TERM/.mastar_work_projects" ]]
+  cd ~ || return 2
+  unset MSH_SHN_PROJECTS_DIR MSH_PROJECTS_GLOBAL_CONFIG
+  declare -A MSH_PROJECTS_GLOBAL_CONFIG
+  declare -a MSH_PROJECTS_GLOBAL_CONFIGA
+  if [[ "$MSH_CONF_DIR_TERM" ]] \
+  		&& [[ -d "$MSH_CONF_DIR_TERM" ]] \
+		&& [[ -f "$MSH_CONF_DIR_TERM/.mastar_work_projects" ]]
   then
-    readarray MAS_PROJECTS_GLOBAL_CONFIGA < "$MAS_CONF_DIR_TERM/.mastar_work_projects"
-    for (( i=0 ; $i < ${#MAS_PROJECTS_GLOBAL_CONFIGA[@]} ; i++ )) ; do
-      if [[ "${MAS_PROJECTS_GLOBAL_CONFIGA[$i]}" =~ ^(projects_top)=(.*)$ ]] ; then
-	MAS_PROJECTS_GLOBAL_CONFIG[${BASH_REMATCH[1]}]=$( realpath ${BASH_REMATCH[2]} )
+    readarray MSH_PROJECTS_GLOBAL_CONFIGA < "$MSH_CONF_DIR_TERM/.mastar_work_projects"
+    for (( i=0 ; $i < ${#MSH_PROJECTS_GLOBAL_CONFIGA[@]} ; i++ )) ; do
+      if [[ "${MSH_PROJECTS_GLOBAL_CONFIGA[$i]}" =~ ^(projects_top)=(.*)$ ]] ; then
+	MSH_PROJECTS_GLOBAL_CONFIG[${BASH_REMATCH[1]}]=$( realpath ${BASH_REMATCH[2]} )
 	break
       fi
     done
 
-    if [[ "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}" ]] \
-    		&& [[ -d "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}" ]] \
-    		&& [[ "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects" ]] \
-    		&& [[ -d "${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects" ]]
+    if [[ "${MSH_PROJECTS_GLOBAL_CONFIG[projects_top]}" ]] \
+    		&& [[ -d "${MSH_PROJECTS_GLOBAL_CONFIG[projects_top]}" ]] \
+    		&& [[ "${MSH_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects" ]] \
+    		&& [[ -d "${MSH_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects" ]]
     then
-      declare -xg MAS_SHN_PROJECTS_DIR=${MAS_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects
+      declare -xg MSH_SHN_PROJECTS_DIR=${MSH_PROJECTS_GLOBAL_CONFIG[projects_top]}/projects
     else
-      return 1
+      return 3
     fi
-#   echo "projects dir set from config: $MAS_SHN_PROJECTS_DIR" >&2
+#   echo "projects dir set from config: $MSH_SHN_PROJECTS_DIR" >&2
 # else
-#   echo "projects dir not set ($MAS_CONF_DIR_TERM/.mastar_work_projects)" >&2
+#   echo "projects dir not set ($MSH_CONF_DIR_TERM/.mastar_work_projects)" >&2
   else
-    return 1
+    return 4
   fi
-  if [[ -d "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] ; then
-    cd "$MAS_SHN_PROJECTS_DIR"
+  if [[ -d "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR" ]] ; then
+    cd "$MSH_SHN_PROJECTS_DIR"
   else
-    return 1
+    return 5
   fi
   if [[ -d "zocromas_zoctypes" ]] ; then
     cd zocromas_zoctypes
   else
-    return 1
+    return 6
   fi
   if [[ -L shn ]] && [[ -f shn/libwork.bash ]] ; then
     . shn/libwork.bash
   else
-    return 1
+    return 7
   fi
-  if [[ -d "$MAS_SHN_PROJECTS_DIR" ]] && [[ -d "$MAS_SHN_PROJECTS_DIR" ]] ; then
-    cd $MAS_SHN_PROJECTS_DIR
+  if [[ -d "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR" ]] ; then
+    cd $MSH_SHN_PROJECTS_DIR
   else
-    return 1
+    return 8
   fi
-  cd $MAS_SHN_PROJECTS_DIR || return 1
-  cd `ls -d *type*` || return 1
-  source shn/libwork.bash || return 1
-  shn_project_cd type || return 1
-  if [[ "$MAS_SHN_PRJTOP_DIR" ]] && [[ -d "$MAS_SHN_PRJTOP_DIR" ]] \
-  	&& [[ "$od" ]] && [[ -d "$od" ]] && [[ "$od" =~ ^$MAS_SHN_PRJTOP_DIR(.*)$ ]] ; then
-    cd $od
+  cd $MSH_SHN_PROJECTS_DIR || return 9
+  cd `ls -d *type*` || return 10
+  source shn/libwork.bash || return 11
+  shn_project_cd type || return 12
+  if [[ "$MSH_SHN_PRJTOP_DIR" ]] && [[ -d "$MSH_SHN_PRJTOP_DIR" ]] \
+  	&& [[ "$od" ]] && [[ -d "$od" ]] && [[ "$od" =~ ^$MSH_SHN_PRJTOP_DIR(.*)$ ]] ; then
+    cd $od || return 13
   fi
+  return 0
 }
 # localrc $@
 
@@ -87,7 +88,7 @@ if localrc_new $@ ; then
   echo "localrc_new done" >&2
 # alias >&2
 else
-  echo "localrc_new error" >&2
+  echo "localrc_new error $?" >&2
 fi
 
 

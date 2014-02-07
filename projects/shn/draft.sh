@@ -1,6 +1,6 @@
 #!/bin/bash
-. ${MAS_SHN_DIR:-shn}/draft1.sh
-. ${MAS_SHN_DIR:-shn}/libsetup.bash
+. ${MSH_SHN_DIR:-shn}/draft1.sh
+. ${MSH_SHN_DIR:-shn}/libsetup.bash
 
 
 

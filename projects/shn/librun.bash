@@ -1,9 +1,9 @@
 function shn_runname ()
 {
-  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
+  local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin1 bin2
-  if [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_NAME" ]]; then
-    bin1="$bsrc/$MAS_SHN_PROJECT_NAME"
+  if [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_NAME" ]]; then
+    bin1="$bsrc/$MSH_SHN_PROJECT_NAME"
     bin2="$bsrc/mtest"
     if [[ -f "$bin1" ]] ; then
       shn_echon $( shn_basename $bin1 ) && return 0
@@ -16,7 +16,7 @@ function shn_runname ()
 function shn_run ()
 { 
   local retcode=0
-  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
+  local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir
@@ -48,14 +48,14 @@ function shn_run ()
 function shn_debug ()
 {
   local retcode=0
-  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
+  local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir debugdir
-  debugdir="$MAS_SHN_PROJECT_DIR/debug"
+  debugdir="$MSH_SHN_PROJECT_DIR/debug"
   libsdir="${bsrc}/.libs"
   shn_dbgmsg "1 $FUNCNAME"
-  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
+  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
     shn_dbgmsg "2 $FUNCNAME"
     if [[ -d "$libsdir" ]] ; then
       if [[ -f "${libsdir}/${rname}" ]] ; then
@@ -96,7 +96,7 @@ function shn_debug ()
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"
-    shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
+    shn_errmsg "MSH_SHN_PROJECT_DIR:$MSH_SHN_PROJECT_DIR"
     shn_errmsg "debugdir:$debugdir"
   fi
   return 0
@@ -104,17 +104,17 @@ function shn_debug ()
 function shn_core_debug ()
 {
   local retcode=0 corename coredir="/tmp"
-  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
+  local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=`shn_runname` || { retcode=$? ; shn_errmsg runname ; return $retcode ; }
   local bindir libsdir debugdir
   local gid
   gid="`stat -c%g /proc/$$`"
 
-  debugdir="$MAS_SHN_PROJECT_DIR/debug"
+  debugdir="$MSH_SHN_PROJECT_DIR/debug"
   libsdir="${bsrc}/.libs"
   shn_dbgmsg "1 $FUNCNAME"
-  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
+  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
     shn_dbgmsg "2 $FUNCNAME"
     if [[ -d "$libsdir" ]] ; then
       if [[ -f "${libsdir}/${rname}" ]] ; then
@@ -139,7 +139,7 @@ function shn_core_debug ()
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"
-    shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
+    shn_errmsg "MSH_SHN_PROJECT_DIR:$MSH_SHN_PROJECT_DIR"
     shn_errmsg "debugdir:$debugdir"
   fi
   return 0
@@ -147,7 +147,7 @@ function shn_core_debug ()
 function shn_core_debug_installed ()
 {
   local retcode=0 corename coredir="/tmp"
-  local bsrc="${MAS_SHN_DIRS[buildsrc]}"
+  local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
   rname=$1
   shift
@@ -157,9 +157,9 @@ function shn_core_debug_installed ()
   gid="`stat -c%g /proc/$$`"
   bindir="/usr/bin"
 
-  debugdir="$MAS_SHN_PROJECT_DIR/debug"
+  debugdir="$MSH_SHN_PROJECT_DIR/debug"
   shn_dbgmsg "1 $FUNCNAME"
-  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$MAS_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
+  if [[ "$rname" ]] && [[ "$bsrc" ]] && [[ -d "$bsrc" ]] && [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$debugdir" ]] ; then
     shn_dbgmsg "2 $FUNCNAME"
     bin=${bindir}/${rname}
 
@@ -176,7 +176,7 @@ function shn_core_debug_installed ()
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"
-    shn_errmsg "MAS_SHN_PROJECT_DIR:$MAS_SHN_PROJECT_DIR"
+    shn_errmsg "MSH_SHN_PROJECT_DIR:$MSH_SHN_PROJECT_DIR"
     shn_errmsg "debugdir:$debugdir"
   fi
   return 0
