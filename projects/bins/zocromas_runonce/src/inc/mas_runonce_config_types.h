@@ -32,6 +32,7 @@ typedef struct
 {
   unsigned strict:1;
   unsigned dry:1;
+  unsigned force:1;
   unsigned noop:1;
   unsigned nosetgid:1;
   unsigned list_zero:1;
@@ -48,6 +49,7 @@ typedef enum
   ROACTION_RESTART,
   ROACTION_EXIT,
   ROACTION_TERMINATE,
+  ROACTION_TOGGLE,
   ROACTION_LIST,
   ROACTION_SHOW,
   ROACTION_CLOSE,

@@ -1,6 +1,21 @@
 find duf.c
 sfind duf.h
 
+tab sfind duf_config.c
+sfind duf_config.h
+
+tab sfind duf_dbg.c
+sfind duf_dbg.h
+
+tab sfind duf_cli_options.c
+sfind duf_cli_options.h
+
+tab sfind duf_print_uni.c
+sfind duf_print_uni.h
+
+tab sfind duf_fill_uni.c
+sfind duf_fill_uni.h
+
 
 tab sfind duf_path.c
 sfind duf_path.h
@@ -14,16 +29,16 @@ sfind duf_file_scan.h
 tab sfind duf_file_pathid.c
 sfind duf_file_pathid.h
 
-tab sfind duf_filedata.h
+tab sfind duf_filedata.c
 sfind duf_filedata.h
 
-tab sfind duf_filename.h
+tab sfind duf_filename.c
 sfind duf_filename.h
 
-tab sfind duf_keydata.h
+tab sfind duf_keydata.c
 sfind duf_keydata.h
 
-tab sfind duf_mdpath.h
+tab sfind duf_mdpath.c
 sfind duf_mdpath.h
 
 
@@ -40,6 +55,12 @@ sfind duf_file_md5id.h
 
 tab sfind duf_dir_scan.c
 sfind duf_dir_scan.h
+
+tab sfind duf_dir_scan_uni.c
+sfind duf_dir_scan_uni.h
+
+tab sfind duf_test_scan.c
+sfind duf_test_scan.h
 
 tab sfind duf_exif.c
 sfind duf_exif.h
@@ -73,6 +94,9 @@ sfind duf_update_realpath.h
 
 tab sfind duf_utils.c
 sfind duf_utils.h
+
+tab sfind duf_group.c
+sfind duf_group.h
 
 tab sfind duf_sql.c
 sfind duf_sql.h

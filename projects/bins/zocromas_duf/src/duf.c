@@ -23,17 +23,33 @@
 #include "duf_file_pathid.h"
 #include "duf_md5.h"
 #include "duf_finddup.h"
+
 #include "duf_update.h"
 #include "duf_update_path.h"
+
 #include "duf_filedata.h"
 #include "duf_exif.h"
+
 #include "duf_dir_scan.h"
 
+#include "duf_uni_scan.h"
+
+#include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf.h"
 /* ###################################################################### */
 
+/**
+ 20140409: 
+run --recursive  --update-path /mnt/old_home/mastar/.mas --max-items=40 --max-depth=3 --min-size=10000000 -vvv
+
+run  --uni-scan /home/mastar/a/down/ -R --max-depth=4  --tree --files
+run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 --files --tree
+run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
+
+
+ **/
 
 
 /* error codes */
@@ -158,109 +174,151 @@ run
 
 ***/
 
+
+
+
 int
 duf_action_new( void )
 {
-  if ( duf_config )
+/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+/* --drop-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->drop_tables )
+    duf_clear_tables(  );
+/* --create-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->create_tables )
+    duf_check_tables(  );
+/* --add-path									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->add_path )
+    for ( int ia = 0; ia < duf_config->targc; ia++ )
+      duf_add_path( duf_config->targv[ia], "argument" );
+/*  --update-path								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->update_path )
+    for ( int ia = 0; ia < duf_config->targc; ia++ )
+      duf_update_path( duf_config->targv[ia], 0 /* parentid */ , duf_config->u,
+                       0 /* level */ , NULL /* pseq */ , DUF_TRUE /* dofiles */  );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+
+
+
+  if ( duf_config->update_md5 )
   {
-    if ( duf_config->drop_tables )
-      duf_clear_tables(  );
-    if ( duf_config->create_tables )
-      duf_check_tables(  );
-    if ( duf_config->add_path )
+    if ( duf_config->targc > 0 )
       for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_add_path( duf_config->targv[ia], "argument" );
-    if ( duf_config->update_path )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_update_path_down( duf_config->targv[ia], 0 /* parentid */ , ( duf_config->recursive ? DUF_RECURSIVE_YES : DUF_RECURSIVE_NO ),
-                              DUF_TRUE /* dofiles */  );
-    if ( duf_config->update_md5 )
-      duf_update_md5_path( NULL, DUF_RECURSIVE_NO );
-    if ( duf_config->zero_duplicates )
-      duf_zero_duplicates(  );
-    if ( duf_config->update_duplicates )
-      duf_update_duplicates(  );
-    if ( duf_config->zero_filedata )
-      duf_zero_filedatas(  );
-    if ( duf_config->update_filedata )
-      duf_update_filedatas(  );
-    if ( duf_config->update_mdpath )
-        duf_update_mdpaths( 0 );
-    if ( duf_config->update_mdpath_selective )
-    {
-      if ( !duf_config->targc )
-        duf_update_mdpaths( 0 );
-      else
-        for ( int ia = 0; ia < duf_config->targc; ia++ )
-        {
-          const char *path;
-          unsigned long long pathid;
-
-          path = duf_config->targv[ia];
-          pathid = duf_path_to_pathid( path );
-          if ( pathid )
-            duf_update_mdpaths( pathid );
-          else
-            fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
-        }
-    }
-    if ( duf_config->update_exif )
-    {
-      if ( !duf_config->targc )
-        duf_update_exif( 0 );
-      else
-        for ( int ia = 0; ia < duf_config->targc; ia++ )
-        {
-          const char *path;
-          unsigned long long pathid;
-
-          path = duf_config->targv[ia];
-          pathid = duf_path_to_pathid( path );
-          if ( pathid )
-            duf_update_exif( pathid );
-          else
-            fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
-        }
-    }
-    if ( duf_config->print_paths )
-      duf_print_paths( duf_config->group );
-    if ( duf_config->print_dirs )
-    {
-      if ( duf_config->targc > 0 )
-        for ( int ia = 0; ia < duf_config->targc; ia++ )
-          duf_print_dirs( duf_config->targv[ia], ( duf_config->recursive ? DUF_RECURSIVE_YES : DUF_RECURSIVE_NO ) );
-      else
-        duf_print_dirs( NULL, ( duf_config->recursive ? DUF_RECURSIVE_YES : DUF_RECURSIVE_NO ) );
-    }
-    if ( duf_config->print_files )
-    {
-      if ( duf_config->targc > 0 )
-        for ( int ia = 0; ia < duf_config->targc; ia++ )
-          duf_print_files( duf_config->targv[ia], ( duf_config->recursive ? DUF_RECURSIVE_YES : DUF_RECURSIVE_NO ) );
-      else
-        duf_print_files( NULL, ( duf_config->recursive ? DUF_RECURSIVE_YES : DUF_RECURSIVE_NO ) );
-    }
-    if ( duf_config->same_md5 )
-      duf_print_md5_same( 1, duf_config->limit );
-
-    if ( duf_config->same_files )
-    {
-      if ( !duf_config->targc )
-        fprintf( stderr, "argument needed\n" );
-      else
-        for ( int ia = 0; ia < duf_config->targc; ia++ )
-          duf_print_files_same( duf_config->targv[ia] );
-    }
-    if ( duf_config->same_exif )
-      duf_print_exif_same( 1, duf_config->limit );
-
-    if ( duf_config->to_group )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );
-    if ( duf_config->from_group )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
+        duf_update_md5_path( duf_config->targv[ia], duf_config->u );
+    else
+      duf_update_md5_path( NULL, duf_config->u );
   }
+
+
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->zero_duplicates )
+    duf_zero_duplicates(  );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->update_duplicates )
+    duf_update_duplicates(  );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->zero_filedata )
+    duf_zero_filedatas(  );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->update_filedata )
+    duf_update_filedatas(  );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->update_mdpath )
+    duf_update_mdpaths( 0 );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->update_mdpath_selective )
+  {
+    if ( !duf_config->targc )
+      duf_update_mdpaths( 0 );
+    else
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
+      {
+        const char *path;
+        unsigned long long pathid;
+
+        path = duf_config->targv[ia];
+        pathid = duf_path_to_pathid( path );
+        if ( pathid )
+          duf_update_mdpaths( pathid );
+        else
+          fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
+      }
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  }
+  if ( duf_config->update_exif )
+  {
+    if ( !duf_config->targc )
+      duf_update_exif( 0 );
+    else
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
+      {
+        const char *path;
+        unsigned long long pathid;
+
+        path = duf_config->targv[ia];
+        pathid = duf_path_to_pathid( path );
+        if ( pathid )
+          duf_update_exif( pathid );
+        else
+          fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
+      }
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  }
+  if ( duf_config->print_paths )
+    duf_print_paths( duf_config->group );
+/*  --print-dirs								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->print_dirs )
+  {
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+    if ( duf_config->targc > 0 )
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
+        duf_print_dirs( duf_config->targv[ia], duf_config->u, duf_config->tree );
+    else
+      duf_print_dirs( NULL, duf_config->u, duf_config->tree );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  }
+/*  --print-files								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->print_files )
+  {
+    if ( duf_config->targc > 0 )
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
+        duf_print_files( duf_config->targv[ia], duf_config->u );
+    else
+      duf_print_files( NULL, duf_config->u );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  }
+/*  --uni-scan									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->uni_scan )
+  {
+    duf_uni_scan_all( duf_config );
+  }
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->same_md5 )
+    duf_print_md5_same( 1, duf_config->limit );
+
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+
+  if ( duf_config->same_files )
+  {
+    if ( !duf_config->targc )
+      fprintf( stderr, "argument needed\n" );
+    else
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
+        duf_print_files_same( duf_config->targv[ia] );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  }
+  if ( duf_config->same_exif )
+    duf_print_exif_same( 1, duf_config->limit );
+
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->to_group )
+    for ( int ia = 0; ia < duf_config->targc; ia++ )
+      duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );
+/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  if ( duf_config->from_group )
+    for ( int ia = 0; ia < duf_config->targc; ia++ )
+      duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
+/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 
@@ -273,37 +331,48 @@ duf_action_new( void )
 
 /* file:///usr/share/doc/sqlite-3.7.15.2/html/docs.html */
 int
+main_db( int argc, char **argv )
+{
+  char *dbfile;
+
+/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  dbfile = mas_strdup( duf_config->db_dir );
+  dbfile = mas_strcat_x( dbfile, "/" );
+  dbfile = mas_strcat_x( dbfile, duf_config->db_name );
+  if ( duf_config->verbose )
+  {
+    for ( int ia = 0; ia < argc; ia++ )
+      fprintf( stderr, ">>>>>>>> argv[%d]: %s\n", ia, argv[ia] );
+    duf_config_show(  );
+    if ( duf_config->verbose > 1 )
+      fprintf( stderr, "dbfile: %s\n", dbfile );
+  }
+  if ( 0 == duf_sql_open( dbfile ) )
+  {
+    duf_sql_exec( "PRAGMA synchronous = OFF" );
+    duf_action_new(  );
+    /* duf_action( argc, argv ); */
+  }
+  duf_sql_close(  );
+
+  mas_free( dbfile );
+/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  return 0;
+}
+
+int
 main( int argc, char **argv )
 {
-  for ( int ia = 0; ia < argc; ia++ )
-  {
-    fprintf( stderr, ">>>>>>>> argv[%d]: %s\n", ia, argv[ia] );
-  }
   if ( 0 == duf_config_create(  ) )
   {
-    if ( 0 == duf_cli_options( argc, argv ) )
-    {
-      if ( duf_config && duf_config->db_dir )
-      {
-        char *dbfile;
+    /* duf_config->verbose = 4; */
+    int r = duf_cli_options( argc, argv );
+    extern int dbgfunc_enabled;
 
-        dbfile = mas_strdup( duf_config->db_dir );
-        dbfile = mas_strcat_x( dbfile, "/" );
-        dbfile = mas_strcat_x( dbfile, duf_config->db_name );
-        duf_config_show(  );
-        if ( duf_config->verbose )
-          fprintf( stderr, "dbfile: %s\n", dbfile );
-        if ( 0 == duf_sql_open( dbfile ) )
-        {
-          duf_sql_exec( "PRAGMA synchronous = OFF" );
-          duf_action_new(  );
-          /* duf_action( argc, argv ); */
-        }
-        duf_sql_close(  );
+    dbgfunc_enabled = 1;
+    if ( !r && duf_config && duf_config->db_dir )
+      main_db( argc, argv );
 
-        mas_free( dbfile );
-      }
-    }
     duf_config_delete(  );
   }
 #ifdef MAS_TRACEMEM

@@ -66,8 +66,8 @@ function shn_debug ()
       export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libsdir"
     fi
     bin=${bindir}/${rname}
-
     cmdfile="$debugdir/debug_${rname}.cmd"
+    echo "Using $cmdfile"
     sedex="s@^\(run\)@\1 $@@"
     if [[ -f "$cmdfile" ]] ; then
       tmpcmd="${cmdfile}.tmp"

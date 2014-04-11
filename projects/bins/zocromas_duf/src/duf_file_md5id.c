@@ -27,14 +27,14 @@
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_filenameid_md5id( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                          void *str_cb_udata )
+duf_sql_filenameid_md5id(  duf_record_t * precord, va_list args, void *sel_cb_udata,
+                          duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   unsigned long long *pmd5id;
 
   pmd5id = ( unsigned long long * ) sel_cb_udata;
-  if ( nrow == 0 )
-    *pmd5id = strtoll( presult[0], NULL, 10 );
+  if ( precord->nrow == 0 )
+    *pmd5id = strtoll( precord->presult[0], NULL, 10 );
   return 0;
 }
 
@@ -44,8 +44,10 @@ duf_filenameid_md5id( unsigned long long filenameid )
   int r;
   unsigned long long md5id;
 
-  r = duf_sql_select( duf_sql_filenameid_md5id, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO, "SELECT md5id FROM duf_filenames "
-                      " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) " " WHERE duf_filenames.id='%llu'", filenameid );
+  r = duf_sql_select( duf_sql_filenameid_md5id, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+                      "SELECT md5id FROM duf_filenames " " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
+                      " WHERE duf_filenames.id='%llu'", filenameid );
   return r >= 0 ? md5id : r;
 }
 
@@ -72,14 +74,15 @@ duf_filepath_md5id( const char *path )
  * sql must select pathid, filenameid, filename ... (, md5id)
  * */
 static int
-duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t str_cb, void *sel_cb_udata )
+duf_scan_files_by_md5id( unsigned long long md5id, duf_scan_callback_file_t str_cb, void *sel_cb_udata )
 {
   int r = 0;
 
 /* 
- * sql must select pathid, filenameid, filename
+ * str_cb + sel_cb_udata to be called for each record with given md5id
+ * sql must select pathid, ....
  * */
-  r = duf_scan_files_sql( str_cb, sel_cb_udata,
+  r = duf_scan_items_sql( str_cb, sel_cb_udata, ( duf_dirinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                           "SELECT duf_filenames.pathid, duf_filenames.id, name, duf_paths.mdpathid, duf_paths.md5dir1, duf_paths.md5dir2 "
                           " FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
                           " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"
@@ -87,12 +90,18 @@ duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t str_cb, void *se
   return r;
 }
 
+/* 
+ * duf_sql_scan_print_file to be called for each record with given md5id
+ * */
 int
 duf_print_files_by_md5id( unsigned long long md5id )
 {
   int r = 0;
 
-  r = duf_scan_files_by_md5id( md5id, duf_sql_scan_print_file, NULL /* sel_cb_udata */  );
+/* 
+ * duf_sql_scan_print_file to be called for each record with given md5id
+ * */
+  r = duf_scan_files_by_md5id( md5id, duf_sql_scan_print_file, STR_CB_UDATA_DEF );
   return r;
 }
 

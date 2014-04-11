@@ -23,7 +23,7 @@ duf_insert_keydata( unsigned long long pathid, unsigned long long filenameid, in
   int r;
   unsigned long long resp = 0;
 
-  r = duf_sql_c( DUF_TRACE_NO,"INSERT INTO duf_keydata (pathid, filenameid, md5id, ucnt, now) " " VALUES ('%llu', '%llu', '%llu',0,datetime())",
+  r = duf_sql_c( "INSERT INTO duf_keydata (pathid, filenameid, md5id, ucnt, now) " " VALUES ('%llu', '%llu', '%llu',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, pathid, filenameid, resmd );
   if ( r == duf_constraint )
   {

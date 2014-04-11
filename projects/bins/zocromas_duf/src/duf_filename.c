@@ -26,7 +26,7 @@ duf_insert_filename( const char *fname, unsigned long long dir_id, unsigned long
   char *fqname;
 
   fqname = duf_single_quotes_2( fname );
-  r = duf_sql_c( DUF_TRACE_NO,"INSERT INTO duf_filenames (pathid, dataid, name, ucnt, now) values ('%lu','%lu','%s',0,datetime())",
+  r = duf_sql_c( "INSERT INTO duf_filenames (pathid, dataid, name, ucnt, now) values ('%lu','%lu','%s',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, dir_id, resd, fqname ? fqname : fname );
   if ( !r /* assume SQLITE_OK */  )
   {

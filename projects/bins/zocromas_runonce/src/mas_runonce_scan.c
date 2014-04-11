@@ -29,6 +29,8 @@ runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, 
   va_list ids;
   int done = 0;
 
+  if ( flags.verbose )
+    printf( "function %s\n", __func__ );
 
   va_copy( ids, args );
   while ( !done )
@@ -56,6 +58,9 @@ runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, 
         break;
       case ROACTION_TERMINATE:
         done = runonce_terminate( grp, sect, nsec, flags );
+        break;
+      case ROACTION_TOGGLE:
+        done = runonce_toggle( grp, sect, nsec, flags );
         break;
       case ROACTION_EXIT:
         done = runonce_exit( grp, sect, nsec, flags );
@@ -85,6 +90,8 @@ runonce_group_vscan( config_group_t * grp, const char *sectpatt, int *pnsecg, ru
 {
   int nsec = 0;
 
+  if ( flags.verbose )
+    printf( "function %s\n", __func__ );
   for ( nsec = 0; nsec < grp->num_sections; nsec++ )
   {
     config_section_t *sect = grp->sections + nsec;
@@ -118,6 +125,8 @@ runonce_vscan( const char *grppatt, const char *sectpatt, runonce_flags_t flags,
 {
   int nsecg = 0;
 
+  if ( flags.verbose )
+    printf( "function %s\n", __func__ );
   for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
   {
     config_group_t *grp = NULL;
@@ -141,6 +150,8 @@ runonce_scan( const char *grppatt, const char *sectpatt, runonce_flags_t flags, 
 {
   va_list args;
 
+  if ( flags.verbose )
+    printf( "function %s\n", __func__ );
   va_start( args, msg );
   runonce_vscan( grppatt, sectpatt, flags, msg, args );
   va_end( args );

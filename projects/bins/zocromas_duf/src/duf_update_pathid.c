@@ -17,6 +17,7 @@
 /* #include "duf_update_path.h" */
 #include "duf_update_pathentries.h"
 
+#include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf_update_pathid.h"
@@ -26,26 +27,36 @@
 
 
 unsigned long long
-duf_update_pathid_down( unsigned long long parentid, int recursive, int dofiles, unsigned long long pathid )
+duf_update_pathid_down_filter( unsigned long long parentid, duf_filter_t * pfilter, unsigned long long pathid )
 {
-  int r;
-  struct stat st_dir;
-  char *real_path;
+  unsigned long items = 0;
 
-  real_path = duf_pathid_to_path( pathid );
-  r = stat( real_path, &st_dir );
-  if ( !r )
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  items = duf_update_realpath_entries_filter( pathid, pfilter );
+  if ( items >= 0 )
   {
-    unsigned long items = 0;
-
-    items = duf_update_realpath_entries( real_path, &st_dir, pathid, recursive, dofiles );
-    /* fprintf( stderr, "Down %s  items:%lu\n", real_path, items ); */
-    duf_sql( DUF_TRACE_NO,"UPDATE duf_paths SET items='%u', last_updated=datetime()  WHERE id='%lu'", items, pathid );
+    duf_sql( "UPDATE duf_paths " " SET items='%u', last_updated=datetime() " " WHERE id='%lu'", items, pathid );
+    /* TODO group is really TAG */
     duf_pathid_group( "updated", pathid, +1 );
   }
-  else
-    fprintf( stderr, "Error down %s\n", real_path );
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
+  return pathid;
+}
 
-  mas_free( real_path );
+/* to replace duf_update_pathid_down_filter */
+unsigned long long
+duf_fill_pathid_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
+{
+  unsigned long items = 0;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  items = duf_fill_entries_filter_uni( pathid, pdi );
+  if ( items >= 0 )
+  {
+    duf_sql( "UPDATE duf_paths " " SET items='%u', last_updated=datetime() " " WHERE id='%lu'", items, pathid );
+    /* TODO group is really TAG */
+    duf_pathid_group( "updated", pathid, +1 );
+  }
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
   return pathid;
 }

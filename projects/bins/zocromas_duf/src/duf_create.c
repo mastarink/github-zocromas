@@ -7,6 +7,7 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+#include "duf_dbg.h"
 
 #include "duf_sql.h"
 
@@ -127,6 +128,7 @@ duf_clear_tables( void )
 {
   int r;
 
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filedatas", "Drop filedatas" );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filenames", "Drop filenames" );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_paths", "Drop paths" );
@@ -136,6 +138,7 @@ duf_clear_tables( void )
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_exif", "Drop exif" );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_group", "Drop group" );
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_path_group", "Drop path_group" );
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
 

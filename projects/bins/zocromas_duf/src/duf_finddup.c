@@ -33,16 +33,16 @@ duf_zero_duplicates( void )
  * duf_sql_select_cb_t:
  * */
 static int
-duf_sql_update_duplicates( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                           void *str_cb_udata )
+duf_sql_update_duplicates( duf_record_t * precord, va_list args, void *sel_cb_udata,
+                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
 {
   unsigned long long cnt;
   unsigned long long md5id;
 
-  cnt = strtoll( presult[1], NULL, 10 );
-  md5id = strtoll( presult[0], NULL, 10 );
-  fprintf( stderr, "%u. %llu dupcnt:%llu\x1b[K\r", nrow, md5id, cnt );
-  return duf_sql( DUF_TRACE_YES, "UPDATE duf_md5 SET dupcnt='%llu' WHERE id='%llu'", cnt, md5id );
+  cnt = strtoll( precord->presult[1], NULL, 10 );
+  md5id = strtoll( precord->presult[0], NULL, 10 );
+  /* fprintf( stderr, "%u. %llu dupcnt:%llu\x1b[K\r", nrow, md5id, cnt ); */
+  return duf_sql( "UPDATE duf_md5 SET dupcnt='%llu' WHERE id='%llu'", cnt, md5id );
 }
 
 int
@@ -51,7 +51,8 @@ duf_update_duplicates( void )
   int r;
 
   fprintf( stderr, "Find duplicates\x1b[K\n" );
-  r = duf_sql_select( duf_sql_update_duplicates, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
+  r = duf_sql_select( duf_sql_update_duplicates, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                       "SELECT " " duf_md5.id, COUNT(*) as cnt " " FROM duf_md5 "
                       " LEFT JOIN duf_filedatas ON (duf_md5.id=duf_filedatas.md5id) "
                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "

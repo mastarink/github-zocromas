@@ -44,12 +44,12 @@
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *                int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb, 
+ *                int fun(  const char *const *presult, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, 
  *                         void *str_cb_udata )
  * */
 static int
-duf_sql_copy_jpeg_by_date( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                           void *str_cb_udata )
+duf_sql_copy_jpeg_by_date(  duf_record_t * precord, va_list args, void *sel_cb_udata,
+                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   const char *filename;
   char *path = NULL;
@@ -58,14 +58,16 @@ duf_sql_copy_jpeg_by_date( int nrow, int nrows, const char *const *presult, va_l
   /* sqlite3_int64 dataid; */
   const char *datetime;
 
-  /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", presult[0], presult[ 1], presult[ 2], presult[ 3], */
-  /*          presult[ 4] );                                                                                         */
+  /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[ 1], precord->presult[ 2], precord->presult[ 3], */
+  /*          precord->presult[ 4] );                                                                                         */
 
-  /* dataid = */ ( void ) strtoll( presult[0], NULL, 10 );
-  pathid = strtoll( presult[3], NULL, 10 );
+  /* dataid = */ ( void ) strtoll( precord->presult[0], NULL, 10 );
+  pathid = strtoll( precord->presult[3], NULL, 10 );
   path = duf_pathid_to_path( pathid );
-  datetime = presult[4];
-  filename = presult[5];
+  
+  datetime = precord->presult[4];
+  filename = precord->presult[5];
+
   if ( filename && path )
   {
     char *base = "/mnt/new_media/media/years";
@@ -119,7 +121,7 @@ duf_sql_copy_jpeg_by_date( int nrow, int nrows, const char *const *presult, va_l
     new_fpath = mas_strcat_x( new_fpath, "." );
     new_fpath = mas_strcat_x( new_fpath, filename );
     filepath = duf_join_path( path, filename );
-    fprintf( stderr, "%u. %s\n  => %s\n", nrow, filepath, new_fpath );
+    /* fprintf( stderr, "%u. %s\n  => %s\n", precord->nrow, filepath, new_fpath ); */
     mas_free( new_fpath );
     mas_free( new_path );
     mas_free( filepath );
@@ -133,9 +135,10 @@ copy_jpeg_by_date( void )
 {
   int r = 0;
 
-  r = duf_sql_select( duf_sql_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_NO,
-                      "SELECT duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode, "
-                      " duf_filenames.pathid, duf_exif.datetime, duf_filenames.name " " FROM duf_filedatas "
+  r = duf_sql_select( duf_sql_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+                      "SELECT duf_filedatas.id as dataid, duf_filedatas.dev, duf_filedatas.inode, "
+                      " duf_filenames.pathid, duf_exif.datetime, duf_filenames.name as filename " " FROM duf_filedatas "
                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
                       " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) " " WHERE duf_exif.datetime IS NOT NULL "
                       " AND ( duf_filenames.name LIKE '%%.JpG' OR duf_filenames.name LIKE '%%.jPeG' ) " " ORDER BY duf_exif.datetime" );
@@ -145,12 +148,12 @@ copy_jpeg_by_date( void )
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
- *          int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
+ *          int fun(  const char *const *presult, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
  *                   void *str_cb_udata )
  * */
 static int
-duf_sql_update_exif( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_str_cb_t str_cb,
-                     void *str_cb_udata )
+duf_sql_update_exif(  duf_record_t * precord, va_list args, void *sel_cb_udata,
+                     duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
@@ -161,15 +164,15 @@ duf_sql_update_exif( int nrow, int nrows, const char *const *presult, va_list ar
   unsigned long long dataid;
   char *filepath;
 
-  /* pathid = strtoll( presult[0], NULL, 10 ); */
-  filenameid = strtoll( presult[1], NULL, 10 );
+  /* pathid = strtoll( precord->presult[0], NULL, 10 ); */
+  filenameid = strtoll( precord->presult[1], NULL, 10 );
   /* path = duf_pathid_to_path( pathid ); */
-  /* filename = presult[2]; */
-  dataid = strtoll( presult[3], NULL, 10 );
+  /* filename = precord->presult[2]; */
+  dataid = strtoll( precord->presult[3], NULL, 10 );
 
   filepath = filenameid_to_filepath( filenameid );
 
-  /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", presult[0], presult[1], presult[2], presult[3], presult[4] ); */
+  /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[1], precord->presult[2], precord->presult[3], precord->presult[4] ); */
 
   /* if ( filename && path ) */
   if ( filepath )
@@ -256,7 +259,7 @@ duf_sql_update_exif( int nrow, int nrows, const char *const *presult, va_list ar
                   /* t = mktime( &times ); */
                   t = timelocal( &times );
                   /* fprintf( stderr, "%s\n", stime ); */
-                  r = duf_sql( DUF_TRACE_NO,"INSERT INTO duf_exif (dataid, model, datetime, d, broken_date, now) "
+                  r = duf_sql( "INSERT INTO duf_exif (dataid, model, datetime, d, broken_date, now) "
                                " VALUES ( '%llu', '%s', datetime('%lu', 'unixepoch'), '%lu', '%s', datetime() )", dataid, model, t, t,
                                changed ? stime_original : "" );
                   /* sleep(1); */
@@ -307,20 +310,22 @@ duf_update_exif( unsigned long long pathid )
   int r = 0;
 
   if ( pathid )
-    r = duf_sql_select( duf_sql_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
-                        "SELECT duf_filenames.pathid, duf_filenames.id, duf_filenames.name, duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode "
-                        " FROM duf_filedatas "
+    r = duf_sql_select( duf_sql_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+                        "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
+                        " duf_filedatas.id as dataid, duf_filedatas.dev, duf_filedatas.inode " " FROM duf_filedatas "
                         " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) "
-                        " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
-                        " WHERE duf_exif.datetime IS NULL " " AND duf_filedatas.filetype='jpeg' " " AND pathid='%lld' ", pathid );
+                        " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) " " WHERE duf_exif.datetime IS NULL "
+                        " AND duf_filedatas.filetype='jpeg' " " AND pathid='%lld' ", pathid );
 /* " AND ( duf_filenames.name LIKE '%%.JPG' OR duf_filenames.name LIKE '%%.JPEG' )" */
   else
-    r = duf_sql_select( duf_sql_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, DUF_TRACE_YES,
-                        "SELECT duf_filenames.pathid, duf_filenames.id, duf_filenames.name, duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode "
-                        " FROM duf_filedatas "
+    r = duf_sql_select( duf_sql_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+                        "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
+                        " duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode " " FROM duf_filedatas "
                         " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) "
-                        " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
-                        " WHERE duf_exif.datetime IS NULL " " AND duf_filedatas.filetype='jpeg' " );
+                        " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) " " WHERE duf_exif.datetime IS NULL "
+                        " AND duf_filedatas.filetype='jpeg' " );
 /* " AND ( duf_filenames.name LIKE '%%.JPG' OR duf_filenames.name LIKE '%%.JPEG' )" */
   return r;
 }

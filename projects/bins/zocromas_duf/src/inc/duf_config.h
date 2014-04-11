@@ -4,6 +4,7 @@
 #  include "duf_types.h"
 extern duf_config_t *duf_config;
 
+
 int duf_config_create( void );
 int duf_config_delete( void );
 

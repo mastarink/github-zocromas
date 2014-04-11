@@ -26,7 +26,7 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
 
   opterr = 0;
   /* printf( "@@ romax:%u\n", ( unsigned ) romax ); */
-  while ( ( opt = getopt_long( argc, argv, "VNDLZMSGKO1srlvwf:", NULL, NULL ) ) >= 0 && roseq < romax )
+  while ( ( opt = getopt_long( argc, argv, "FVNDLZMSGKO1strlvwf:", NULL, NULL ) ) >= 0 && roseq < romax )
   {
     /* printf( "-- roseq:%u; romax:%u\n", ( unsigned ) roseq, ( unsigned ) romax ); */
     /* printf( "OPT %c %s\n", opt, optarg ); */
@@ -40,6 +40,9 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
       break;
     case 's':
       roaction[roseq++] = ROACTION_STOP;
+      break;
+    case 't':
+      roaction[roseq++] = ROACTION_TOGGLE;
       break;
     case 'O':
       roaction[roseq++] = ROACTION_SHOW;
@@ -73,6 +76,9 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
     case 'M':
       configuration.flags.list_multiple = 1;
       roaction[roseq++] = ROACTION_LIST;
+      break;
+    case 'F':
+      configuration.flags.force = 1;
       break;
     case 'D':
       configuration.flags.dry = 1;

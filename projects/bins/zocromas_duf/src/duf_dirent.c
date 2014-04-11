@@ -8,6 +8,7 @@
 
 #include "duf_types.h"
 
+#include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf_dirent.h"
@@ -18,6 +19,8 @@ int
 duf_direntry_filter( const struct dirent *de )
 {
   int r = 0;
+
+/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   switch ( de->d_type )
   {
@@ -45,5 +48,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
+/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }

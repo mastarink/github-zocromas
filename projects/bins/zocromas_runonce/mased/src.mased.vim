@@ -5,6 +5,9 @@ sfind mas_runonce.h
 tab sfind mas_runonce_config.c
 sfind mas_runonce_config.h
 
+tab sfind mas_runonce_scan.c
+sfind mas_runonce_scan.h
+
 tab sfind mas_runonce_base.c
 sfind mas_runonce_base.h
 

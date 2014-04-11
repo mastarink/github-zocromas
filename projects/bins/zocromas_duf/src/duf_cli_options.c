@@ -15,39 +15,6 @@
 /* ###################################################################### */
 #include "duf_cli_options.h"
 /* ###################################################################### */
-typedef enum
-{
-  DUF_OPTION_NONE,
-  DUF_OPTION_HELP = 'h',
-  DUF_OPTION_VERBOSE = 'v',
-  DUF_OPTION_DB_DIRECTORY = 'D',
-  DUF_OPTION_DB_NAME = 'F',
-  DUF_OPTION_LONG = 1000,
-  DUF_OPTION_CREATE_TABLES,
-  DUF_OPTION_DROP_TABLES,
-  DUF_OPTION_ADD_PATH,
-  DUF_OPTION_UPDATE_PATH,
-  DUF_OPTION_UPDATE_MD5,
-  DUF_OPTION_ZERO_DUPLICATES,
-  DUF_OPTION_UPDATE_DUPLICATES,
-  DUF_OPTION_UPDATE_MDPATH,
-  DUF_OPTION_UPDATE_MDPATH_SELECTIVE,
-  DUF_OPTION_UPDATE_FILEDATA,
-  DUF_OPTION_ZERO_FILEDATA,
-  DUF_OPTION_UPDATE_EXIF,
-  DUF_OPTION_RECURSIVE,
-  DUF_OPTION_PRINT_PATHS,
-  DUF_OPTION_PRINT_DIRS,
-  DUF_OPTION_PRINT_FILES,
-  /* DUF_OPTION_PRINT_DUPLICATES, */
-  DUF_OPTION_SAME_FILES,
-  DUF_OPTION_SAME_EXIF,
-  DUF_OPTION_SAME_MD5,
-  DUF_OPTION_GROUP,
-  DUF_OPTION_LIMIT,
-  DUF_OPTION_ADD_TO_GROUP,
-  DUF_OPTION_REMOVE_FROM_GROUP,
-} duf_option_code_t;
 
 const struct option longopts[] = {
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
@@ -65,6 +32,15 @@ const struct option longopts[] = {
   {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
+  {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
+  {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
+  {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
+  {.name = "files",.has_arg = no_argument,.val = DUF_OPTION_FILES},
+  {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
+  {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
+  {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
+  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXSEQ},
+  {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
   {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS},
   {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},
   {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES},
@@ -74,6 +50,8 @@ const struct option longopts[] = {
   {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
   {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
   {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
+  {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
+  {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
   {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT},
   {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP},
   {.name = "remove-from-group",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_FROM_GROUP},
@@ -85,13 +63,17 @@ duf_cli_options( int argc, char *argv[] )
 {
   int r = 0;
 
+#if 0
+  /* Don't use it before all oprions got */
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+#endif
   if ( duf_config )
   {
     int opt;
     int longindex = 0;
 
     opterr = 0;
-    while ( r == 0 && ( opt = getopt_long( argc, argv, "hD:F:", longopts, &longindex ) ) >= 0 )
+    while ( r == 0 && ( opt = getopt_long( argc, argv, "RhvD:F:", longopts, &longindex ) ) >= 0 )
     {
       /* fprintf( stderr, "%d OPT:%d; LONGINDEX:%d\n", optind, opt, longindex ); */
       switch ( opt )
@@ -99,7 +81,18 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_HELP:
         break;
       case DUF_OPTION_VERBOSE:
-        duf_config->verbose = 1;
+        if ( optarg && *optarg )
+          duf_config->verbose = strtol( optarg, NULL, 10 );
+        else
+          duf_config->verbose++;
+        break;
+      case DUF_OPTION_MIN_DBGLINE:
+        if ( optarg && *optarg )
+          duf_config->min_dbgline = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MAX_DBGLINE:
+        if ( optarg && *optarg )
+          duf_config->max_dbgline = strtol( optarg, NULL, 10 );
         break;
       case DUF_OPTION_DROP_TABLES:
         duf_config->drop_tables = 1;
@@ -135,7 +128,38 @@ duf_cli_options( int argc, char *argv[] )
         duf_config->update_exif = 1;
         break;
       case DUF_OPTION_RECURSIVE:
-        duf_config->recursive = 1;
+        duf_config->u.recursive = 1;
+        break;
+      case DUF_OPTION_FILL:
+        duf_config->fill = 1;
+        break;
+      case DUF_OPTION_PRINT:
+        duf_config->print = 1;
+        break;
+      case DUF_OPTION_TREE:
+        duf_config->tree = 1;
+        break;
+      case DUF_OPTION_FILES:
+        duf_config->files = 1;
+        break;
+      case DUF_OPTION_MAXSIZE:
+        if ( optarg && *optarg )
+          duf_config->u.maxsize = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MINSIZE:
+        if ( optarg && *optarg )
+          duf_config->u.minsize = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MAXDEPTH:
+        if ( optarg && *optarg )
+          duf_config->u.maxdepth = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MAXSEQ:
+        if ( optarg && *optarg )
+          duf_config->u.maxseq = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_UNI_SCAN:
+        duf_config->uni_scan = 1;
         break;
       case DUF_OPTION_PRINT_PATHS:
         duf_config->print_paths = 1;
@@ -189,16 +213,12 @@ duf_cli_options( int argc, char *argv[] )
         }
         break;
       case DUF_OPTION_LIMIT:
-        {
-          long limit = 0;
-
-          if ( sscanf( optarg, "%ld", &limit ) > 0 )
-            duf_config->limit = limit;
-        }
+        if ( optarg && *optarg )
+          duf_config->limit = strtol( optarg, NULL, 10 );
         break;
       case '?':
-        printf( "Invalid option -- '%c'\n", optopt );
-        r = optopt;
+        printf( "Invalid option -- '%c' optind=%d/%s opt=%u/%c\n", optopt, optind, argv[optind - 1], opt, opt );
+        r = optopt ? optopt : opt;
         break;
       }
     }
@@ -216,5 +236,9 @@ duf_cli_options( int argc, char *argv[] )
       /* }                                                                                                 */
     }
   }
+#if 0
+  /* Don't use it before all options processed */
+  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+#endif
   return r;
 }
