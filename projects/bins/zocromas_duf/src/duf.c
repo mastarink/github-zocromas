@@ -24,7 +24,7 @@
 #include "duf_md5.h"
 #include "duf_finddup.h"
 
-#include "duf_update.h"
+#include "duf_add.h"
 #include "duf_update_path.h"
 
 #include "duf_filedata.h"
@@ -39,6 +39,16 @@
 /* ###################################################################### */
 #include "duf.h"
 /* ###################################################################### */
+
+/* 20140412                                                                                            */
+/* reset:                                                                                              */
+/*    run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/      */
+/* test:                                                                                               */
+/*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 .tables                      */
+/*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 'select * from duf_paths'    */
+/* fill:                                                                                               */
+/*    run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/  -R  --fill -v --trace-fill=1 */
+
 
 /**
  20140409: 
@@ -83,60 +93,58 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
 
 
 /***
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -F aaaaa a b c
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -F aaaaa --drop-tables a b c
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -F temp.sqlite3 --drop-tables --create-tables
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F aaaaa a b c
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables 
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path .
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -N aaaaa a b c
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -N aaaaa --drop-tables a b c
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -N temp.sqlite3 --drop-tables --create-tables
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa a b c
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path .
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path 
 				/mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures
 				/mnt/new_media/media/photo/Pictures.R.20120207.164339 
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path 
 				/mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures
 				/mnt/new_media/media/photo/Pictures.R.20120207.164339
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
 				/mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures
 				/mnt/new_media/media/photo/Pictures.R.20120207.164339 
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
 				--print-dirs 
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
 				--print-dirs --recursive .
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
 				--print-files --print-dirs --recursive .
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
 				--print-files --recursive .
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
 				--print-paths .
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
 				--print-paths . /mnt/new_media/media/photo/Pictures.R.20120207.164339 
-run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
 				--print-paths /mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures 
 				/mnt/new_media/media/photo/Pictures.R.20120207.164339 
 run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/
 run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo
-run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F 
-run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F aaaaa
-run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F aaaaa 
-run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F aaaaa a b c
-run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F aaaaa -N
+run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N 
 run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa
-run -F temp.sqlite3 --add-path --update-path --print-dirs --recursive .
-run -F temp.sqlite3 --add-to-group --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
-run -F temp.sqlite3 --add-to-group --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
-run -F temp.sqlite3 --group=aaaaaa mased/
-run -F temp.sqlite3 --group aaaaaa mased/
-run -F temp.sqlite3 --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
-run -F temp.sqlite3 --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
-run -F temp.sqlite3 --print-dirs --recursive .
-run -F temp.sqlite3 --remove-from-group --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
-run -F temp.sqlite3 --remove-from-group --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
-run -F temp.sqlite3 --update-mad5 --print-dirs --recursive .
-run -F temp.sqlite3 --update-mad5 --print-dirs --recursive a
-run -F temp.sqlite3 --update-md5 --print-dirs --recuarsive a
-run -F temp.sqlite3 --update-md5 --print-dirs --recursive .
-run -F temp.sqlite3 --update-md5 --print-dirs --recursive a
+run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa 
+run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa a b c
+run -N temp.sqlite3 --add-path --update-path --print-dirs --recursive .
+run -N temp.sqlite3 --add-to-group --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
+run -N temp.sqlite3 --add-to-group --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
+run -N temp.sqlite3 --group=aaaaaa mased/
+run -N temp.sqlite3 --group aaaaaa mased/
+run -N temp.sqlite3 --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
+run -N temp.sqlite3 --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
+run -N temp.sqlite3 --print-dirs --recursive .
+run -N temp.sqlite3 --remove-from-group --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
+run -N temp.sqlite3 --remove-from-group --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
+run -N temp.sqlite3 --update-mad5 --print-dirs --recursive .
+run -N temp.sqlite3 --update-mad5 --print-dirs --recursive a
+run -N temp.sqlite3 --update-md5 --print-dirs --recuarsive a
+run -N temp.sqlite3 --update-md5 --print-dirs --recursive .
+run -N temp.sqlite3 --update-md5 --print-dirs --recursive a
 run --limit=2 --same-md5  --recursive 
 run --print-dirs --recursive
 run --print-dirs --recursive 
@@ -192,10 +200,10 @@ duf_action_new( void )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_add_path( duf_config->targv[ia], "argument" );
 /*  --update-path								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->update_path )
-    for ( int ia = 0; ia < duf_config->targc; ia++ )
-      duf_update_path( duf_config->targv[ia], 0 /* parentid */ , duf_config->u,
-                       0 /* level */ , NULL /* pseq */ , DUF_TRUE /* dofiles */  );
+  /* if ( duf_config->update_path )                                                    */
+  /*   for ( int ia = 0; ia < duf_config->targc; ia++ )                                */
+  /*     duf_update_path( duf_config->targv[ia], 0 (* parentid *) , duf_config->u,     */
+  /*                      0 (* level *) , NULL (* pseq *) , DUF_TRUE (* dofiles *)  ); */
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
 
 
@@ -264,29 +272,29 @@ duf_action_new( void )
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
-  if ( duf_config->print_paths )
-    duf_print_paths( duf_config->group );
+  /* if ( duf_config->print_paths )          */
+  /*   duf_print_paths( duf_config->group ); */
 /*  --print-dirs								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->print_dirs )
-  {
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-    if ( duf_config->targc > 0 )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_print_dirs( duf_config->targv[ia], duf_config->u, duf_config->tree );
-    else
-      duf_print_dirs( NULL, duf_config->u, duf_config->tree );
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  }
+/*   if ( duf_config->print_dirs )                                                                                                 */
+/*   {                                                                                                                             */
+/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/*     if ( duf_config->targc > 0 )                                                                                                */
+/*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
+/*         duf_print_dirs( duf_config->targv[ia], duf_config->u, duf_config->tree );                                               */
+/*     else                                                                                                                        */
+/*       duf_print_dirs( NULL, duf_config->u, duf_config->tree );                                                                  */
+/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/*   }                                                                                                                             */
 /*  --print-files								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->print_files )
-  {
-    if ( duf_config->targc > 0 )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_print_files( duf_config->targv[ia], duf_config->u );
-    else
-      duf_print_files( NULL, duf_config->u );
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  }
+/*   if ( duf_config->print_files )                                                                                                */
+/*   {                                                                                                                             */
+/*     if ( duf_config->targc > 0 )                                                                                                */
+/*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
+/*         duf_print_files( duf_config->targv[ia], duf_config->u );                                                                */
+/*     else                                                                                                                        */
+/*       duf_print_files( NULL, duf_config->u );                                                                                   */
+/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/*   }                                                                                                                             */
 /*  --uni-scan									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->uni_scan )
   {
@@ -324,7 +332,7 @@ duf_action_new( void )
 
 /*
  *
- * $ run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -F temp.sqlite3 --drop-tables --create-tables --add-path --update-path --print-dirs --recursive .
+ * $ run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path --print-dirs --recursive .
  * $ run --print-dirs --recursive
  *
  * */

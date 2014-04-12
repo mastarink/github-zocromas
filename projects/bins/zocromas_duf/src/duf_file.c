@@ -104,18 +104,18 @@ file_at_path_to_filenameid( const char *path, const char *name )
 /*
  * call duf_print_files_by_pathid for pathid correspond tp path
  * */
-int
-duf_print_files( const char *path, duf_ufilter_t u )
-{
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  duf_dirinfo_t di = {.level = 0,
-    .seq = 0,
-    .levinfo = NULL,
-    .u = u
-  };
-  return duf_print_files_by_pathid( duf_path_to_pathid( path ), &di, ( duf_scan_callbacks_t * ) NULL /* sccb */ ,
-                                    0 /* items unknown ? */  );
-}
+/* int                                                                                                               */
+/* duf_print_files( const char *path, duf_ufilter_t u )                                                              */
+/* {                                                                                                                 */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                   */
+/*   duf_dirinfo_t di = {.level = 0,                                                                                 */
+/*     .seq = 0,                                                                                                     */
+/*     .levinfo = NULL,                                                                                              */
+/*     .u = u                                                                                                        */
+/*   };                                                                                                              */
+/*   return duf_print_files_by_pathid( duf_path_to_pathid( path ), &di, ( duf_scan_callbacks_t * ) NULL (* sccb *) , */
+/*                                     0 (* items unknown ? *)  );                                                   */
+/* }                                                                                                                 */
 
 
 

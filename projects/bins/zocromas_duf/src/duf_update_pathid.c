@@ -8,6 +8,7 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+#include "duf_config.h"
 
 #include "duf_sql.h"
 #include "duf_path.h"
@@ -26,37 +27,19 @@
 
 
 
-unsigned long long
-duf_update_pathid_down_filter( unsigned long long parentid, duf_filter_t * pfilter, unsigned long long pathid )
-{
-  unsigned long items = 0;
-
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  items = duf_update_realpath_entries_filter( pathid, pfilter );
-  if ( items >= 0 )
-  {
-    duf_sql( "UPDATE duf_paths " " SET items='%u', last_updated=datetime() " " WHERE id='%lu'", items, pathid );
-    /* TODO group is really TAG */
-    duf_pathid_group( "updated", pathid, +1 );
-  }
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
-  return pathid;
-}
-
-/* to replace duf_update_pathid_down_filter */
-unsigned long long
-duf_fill_pathid_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
-{
-  unsigned long items = 0;
-
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  items = duf_fill_entries_filter_uni( pathid, pdi );
-  if ( items >= 0 )
-  {
-    duf_sql( "UPDATE duf_paths " " SET items='%u', last_updated=datetime() " " WHERE id='%lu'", items, pathid );
-    /* TODO group is really TAG */
-    duf_pathid_group( "updated", pathid, +1 );
-  }
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
-  return pathid;
-}
+/* unsigned long long                                                                                               */
+/* duf_update_pathid_down_filter( unsigned long long parentid, duf_filter_t * pfilter, unsigned long long pathid )  */
+/* {                                                                                                                */
+/*   unsigned long items = 0;                                                                                       */
+/*                                                                                                                  */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                  */
+/*   items = duf_update_realpath_entries_filter( pathid, pfilter );                                                 */
+/*   if ( items >= 0 )                                                                                              */
+/*   {                                                                                                              */
+/*     duf_sql( "UPDATE duf_paths " " SET items='%u', last_updated=datetime() " " WHERE id='%lu'", items, pathid ); */
+/*     (* TODO group is really TAG *)                                                                               */
+/*     duf_pathid_group( "updated", pathid, +1 );                                                                   */
+/*   }                                                                                                              */
+/*   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );                                                         */
+/*   return pathid;                                                                                                 */
+/* }                                                                                                                */

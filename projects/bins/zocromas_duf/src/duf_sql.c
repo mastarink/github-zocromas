@@ -40,7 +40,7 @@ duf_sql_pos_by_name( const char *name, duf_record_t * precord, int optional )
       break;
     }
   }
-  if ( ! optional && pos < 0 )
+  if ( !optional && pos < 0 )
   {
     for ( int i = 0; i < precord->ncolumns; i++ )
     {
@@ -53,10 +53,10 @@ duf_sql_pos_by_name( const char *name, duf_record_t * precord, int optional )
 }
 
 const char *
-duf_sql_str_by_name( const char *name, duf_record_t * precord , int optional)
+duf_sql_str_by_name( const char *name, duf_record_t * precord, int optional )
 {
   const char *ptr = NULL;
-  int pos = duf_sql_pos_by_name( name, precord,  optional  );
+  int pos = duf_sql_pos_by_name( name, precord, optional );
 
   if ( pos >= 0 )
     ptr = precord->presult[pos];
@@ -68,7 +68,7 @@ const char *
 duf_sql_val_by_name( const char *name, duf_record_t * precord, int optional )
 {
   const char *ptr = NULL;
-  int pos = duf_sql_pos_by_name( name, precord,  optional  );
+  int pos = duf_sql_pos_by_name( name, precord, optional );
 
   if ( pos >= 0 )
     ptr = precord->presult[pos];
@@ -80,7 +80,7 @@ duf_sql_ull_by_name( const char *name, duf_record_t * precord, int optional )
 {
   const char *ptr = NULL;
 
-  ptr = duf_sql_val_by_name( name, precord,  optional );
+  ptr = duf_sql_val_by_name( name, precord, optional );
   return ptr ? strtoll( ptr, NULL, 10 ) : 0;
 }
 
@@ -95,14 +95,14 @@ duf_sql_open( const char *dbpath )
     fprintf( stderr, "SQL DB Initialize ERROR\n" );
   else
   {
-    if ( duf_config->verbose )
-      fprintf( stderr, "SQL DB Initialize OK\n" );
+    if ( duf_config->sql_trace )
+      fprintf( stderr, "[SQL  ] %20s: DB Initialize OK\n", __func__ );
 
     r = sqlite3_open( dbpath, &pDb );
     if ( r != SQLITE_OK )
       fprintf( stderr, "SQL DB Open ERROR\n" );
-    else if ( duf_config->verbose )
-      fprintf( stderr, "SQL DB Open OK\n" );
+    else if ( duf_config->sql_trace )
+      fprintf( stderr, "[SQL  ] %20s: DB Open OK\n", __func__ );
   }
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
@@ -117,14 +117,14 @@ duf_sql_close( void )
   r = sqlite3_close( pDb );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Close ERROR\n" );
-  else if ( duf_config->verbose )
-    fprintf( stderr, "SQL DB Close OK\x1b[K\n" );
+  else if ( duf_config->sql_trace )
+    fprintf( stderr, "[SQL  ] %20s: DB Close OK\n", __func__ );
 
   r = sqlite3_shutdown(  );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Shutdown ERROR\n" );
-  else if ( duf_config->verbose )
-    fprintf( stderr, "SQL DB Shutdown OK\x1b[K\n" );
+  else if ( duf_config->sql_trace )
+    fprintf( stderr, "[SQL  ] %20s: DB Shutdown OK\n", __func__ );
 
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
@@ -170,7 +170,7 @@ duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_c( sql, constraint_ignore );
-  if ( r == SQLITE_OK )
+  if ( r == SQLITE_OK && duf_config->verbose )
     fprintf( stderr, "SQL %s OK\x1b[K\n", msg );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -196,8 +196,8 @@ duf_vsql_c( const char *fmt, int constraint_ignore, va_list args )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   sql = sqlite3_vmprintf( fmt, args );
   r = duf_sql_exec_c( sql, constraint_ignore );
-  if ( duf_config->verbose )
-    fprintf( stderr, "%s : %d\n", sql, r );
+  if ( duf_config->sql_trace > 1 )
+    fprintf( stderr, "[SQL  ] %20s: %s : %d\n", __func__, sql, r );
   sqlite3_free( sql );
   duf_dbgfunc( DBG_ENDRS, __func__, __LINE__, r, sql );
   return r;
@@ -269,9 +269,10 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
 
   sql = sqlite3_vmprintf( fmt, args );
   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
-  if ( duf_config->verbose )
-    fprintf( stderr, "%s r=%d;nrows=%d\n", sql, r, row );
-
+  if ( duf_config->sql_trace > 1 )
+    fprintf( stderr, "[SQL  ] %20s: %s = %d; %u rows\n", __func__, sql, r, row );
+  else if ( duf_config->sql_trace )
+    fprintf( stderr, "[SQL  ] %20s:\n", __func__ );
   duf_dbgfunc( DBG_STEPS, __func__, __LINE__, sql );
   /* if ( trace )                                            */
   /*   fprintf( stderr, "(%d) trace:[%s]\x1b[K\n", r, sql ); */
@@ -280,6 +281,7 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
   {
     duf_dbgfunc( DBG_STEPIS, __func__, __LINE__, row, "rows SQLITE_OK" );
     if ( row )
+    {
       for ( int ir = 1; ir <= row; ir++ )
       {
         va_list cargs;
@@ -310,8 +312,19 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
         rrecord.ncolumns = column;
         rrecord.pnames = &pcresult[0 * column];
         rrecord.presult = &pcresult[ir * column];
-        ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb );
+        {
+          int rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb );
+
+          if ( duf_config->sql_trace )
+            fprintf( stderr, "[SQL  ] %20s: row %u; <sel_cb(%p) = %d\n", __func__, ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
+        }
       }
+    }
+    else
+    {
+      if ( duf_config->sql_trace )
+        fprintf( stderr, "[SQL  ] %20s: Nothing by '%s'\n", __func__, sql );
+    }
   }
   else if ( r == SQLITE_CONSTRAINT )
   {

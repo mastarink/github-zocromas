@@ -17,21 +17,33 @@
 /* ###################################################################### */
 
 const struct option longopts[] = {
+  {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
+  {.name = "trace-scan",.has_arg = required_argument,.val = DUF_OPTION_SCAN_TRACE},
+  {.name = "trace-fill",.has_arg = required_argument,.val = DUF_OPTION_FILL_TRACE},
+  {.name = "trace-sql",.has_arg = required_argument,.val = DUF_OPTION_SQL_TRACE},
+  {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
+
+  {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
+  {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
+
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
   {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
   {.name = "drop-tables",.has_arg = no_argument,.val = DUF_OPTION_DROP_TABLES},
   {.name = "create-tables",.has_arg = no_argument,.val = DUF_OPTION_CREATE_TABLES},
-  {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
-  {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH},
-  {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5},
+
   {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES},
+  {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
+
+  {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
+  /* {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH}, */
+  {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5},
   {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES},
   {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH},
   {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE},
   {.name = "update-filedata",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_FILEDATA},
-  {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
+  {.name = "sample",.has_arg = no_argument,.val = DUF_OPTION_SAMPLE},
   {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
   {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
   {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
@@ -41,17 +53,14 @@ const struct option longopts[] = {
   {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
   {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXSEQ},
   {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
-  {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS},
-  {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},
-  {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES},
+  /* {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS}, */
+  /* {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},   */
+  /* {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES}, */
   /* {.name = "print-duplicates",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DUPLICATES}, */
   {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES},
   {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},
   {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
   {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
-  {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
-  {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
-  {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
   {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT},
   {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP},
   {.name = "remove-from-group",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_FROM_GROUP},
@@ -73,7 +82,7 @@ duf_cli_options( int argc, char *argv[] )
     int longindex = 0;
 
     opterr = 0;
-    while ( r == 0 && ( opt = getopt_long( argc, argv, "RhvD:F:", longopts, &longindex ) ) >= 0 )
+    while ( r == 0 && ( opt = getopt_long( argc, argv, DUF_OPTIONS_SHORT, longopts, &longindex ) ) >= 0 )
     {
       /* fprintf( stderr, "%d OPT:%d; LONGINDEX:%d\n", optind, opt, longindex ); */
       switch ( opt )
@@ -85,6 +94,33 @@ duf_cli_options( int argc, char *argv[] )
           duf_config->verbose = strtol( optarg, NULL, 10 );
         else
           duf_config->verbose++;
+        break;
+      case DUF_OPTION_DEBUG:
+        duf_config->debug = 1;
+        break;
+      case DUF_OPTION_SCAN_TRACE:
+        if ( optarg && *optarg )
+          duf_config->scan_trace = strtol( optarg, NULL, 10 );
+        else
+          duf_config->scan_trace++;
+        break;
+      case DUF_OPTION_SAMPLE_TRACE:
+        if ( optarg && *optarg )
+          duf_config->sample_trace = strtol( optarg, NULL, 10 );
+        else
+          duf_config->sample_trace++;
+        break;
+      case DUF_OPTION_FILL_TRACE:
+        if ( optarg && *optarg )
+          duf_config->fill_trace = strtol( optarg, NULL, 10 );
+        else
+          duf_config->fill_trace++;
+        break;
+      case DUF_OPTION_SQL_TRACE:
+        if ( optarg && *optarg )
+          duf_config->sql_trace = strtol( optarg, NULL, 10 );
+        else
+          duf_config->sql_trace++;
         break;
       case DUF_OPTION_MIN_DBGLINE:
         if ( optarg && *optarg )
@@ -103,9 +139,9 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_ADD_PATH:
         duf_config->add_path = 1;
         break;
-      case DUF_OPTION_UPDATE_PATH:
-        duf_config->update_path = 1;
-        break;
+        /* case DUF_OPTION_UPDATE_PATH:   */
+        /*   duf_config->update_path = 1; */
+        /*   break;                       */
       case DUF_OPTION_UPDATE_MD5:
         duf_config->update_md5 = 1;
         break;
@@ -129,6 +165,9 @@ duf_cli_options( int argc, char *argv[] )
         break;
       case DUF_OPTION_RECURSIVE:
         duf_config->u.recursive = 1;
+        break;
+      case DUF_OPTION_SAMPLE:
+        duf_config->sample = 1;
         break;
       case DUF_OPTION_FILL:
         duf_config->fill = 1;
@@ -161,15 +200,15 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_UNI_SCAN:
         duf_config->uni_scan = 1;
         break;
-      case DUF_OPTION_PRINT_PATHS:
-        duf_config->print_paths = 1;
-        break;
-      case DUF_OPTION_PRINT_DIRS:
-        duf_config->print_dirs = 1;
-        break;
-      case DUF_OPTION_PRINT_FILES:
-        duf_config->print_files = 1;
-        break;
+        /* case DUF_OPTION_PRINT_PATHS:   */
+        /*   duf_config->print_paths = 1; */
+        /*   break;                       */
+        /* case DUF_OPTION_PRINT_DIRS:    */
+        /*   duf_config->print_dirs = 1;  */
+        /*   break;                       */
+        /* case DUF_OPTION_PRINT_FILES:   */
+        /*   duf_config->print_files = 1; */
+        /*   break;                       */
         /* case DUF_OPTION_PRINT_DUPLICATES:   */
         /*   duf_config->print_duplicates = 1; */
         /*   break;                            */

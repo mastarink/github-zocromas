@@ -10,11 +10,14 @@ sfind duf_dbg.h
 tab sfind duf_cli_options.c
 sfind duf_cli_options.h
 
-tab sfind duf_print_uni.c
-sfind duf_print_uni.h
+tab sfind duf_dir_print_uni.c
+sfind duf_dir_print_uni.h
 
 tab sfind duf_fill_uni.c
 sfind duf_fill_uni.h
+
+tab sfind duf_sample_uni.c
+sfind duf_sample_uni.h
 
 
 tab sfind duf_path.c
@@ -59,8 +62,8 @@ sfind duf_dir_scan.h
 tab sfind duf_dir_scan_uni.c
 sfind duf_dir_scan_uni.h
 
-tab sfind duf_test_scan.c
-sfind duf_test_scan.h
+tab sfind duf_uni_scan.c
+sfind duf_uni_scan.h
 
 tab sfind duf_exif.c
 sfind duf_exif.h
@@ -77,8 +80,8 @@ sfind duf_md5.h
 tab sfind duf_remove.c
 sfind duf_remove.h
 
-tab sfind duf_update.c
-sfind duf_update.h
+tab sfind duf_add.c
+sfind duf_add.h
 
 tab sfind duf_update_path.c
 sfind duf_update_path.h

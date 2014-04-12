@@ -87,31 +87,31 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
  * /a/b/c/d/e/f
  * '/a/b/c/d/e/f/...' -> db
  * */
-unsigned long long
-duf_update_realpath_down_filter( const char *real_path, unsigned long long parentid, duf_filter_t * pfilter )
-{
-  unsigned long long pathid = 0;
+/* unsigned long long                                                                                            */
+/* duf_update_realpath_down_filter( const char *real_path, unsigned long long parentid, duf_filter_t * pfilter ) */
+/* {                                                                                                             */
+/*   unsigned long long pathid = 0;                                                                              */
+/*                                                                                                               */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                               */
+/*   (* fprintf( stderr, "Update real_path UP %s\n", real_path ); *)                                             */
+/*                                                                                                               */
+/*   if ( !pfilter->u.noself_dir )                                                                               */
+/*   {                                                                                                           */
+/*     pathid = duf_update_realpath_self_up( real_path, NULL, !pfilter->u.noupper_dirs (* DUF_TRUE * up *)  );   */
+/*   }                                                                                                           */
+/*   pathid = duf_update_pathid_down_filter( parentid, pfilter, pathid );                                        */
+/*                                                                                                               */
+/*   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );                                                      */
+/*   return pathid;                                                                                              */
+/* }                                                                                                             */
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  /* fprintf( stderr, "Update real_path UP %s\n", real_path ); */
-
-  if ( !pfilter->u.noself_dir )
-  {
-    pathid = duf_update_realpath_self_up( real_path, NULL, !pfilter->u.noupper_dirs /* DUF_TRUE * up */  );
-  }
-  pathid = duf_update_pathid_down_filter( parentid, pfilter, pathid );
-
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
-  return pathid;
-}
-
-unsigned long long
-duf_update_realpath_down( const char *real_path, unsigned long long parentid, int recursive, int level, int maxdepth, int *pseq, int maxseq,
-                          int dofiles )
-{
-  duf_filter_t filter = {.level = level,
-    .c = {.pseq = pseq,.dofiles = dofiles},
-    .u = {.recursive = recursive,.maxdepth = maxdepth,.maxseq = maxseq}
-  };
-  return duf_update_realpath_down_filter( real_path, parentid, &filter );
-}
+/* unsigned long long                                                                                                                           */
+/* duf_update_realpath_down( const char *real_path, unsigned long long parentid, int recursive, int level, int maxdepth, int *pseq, int maxseq, */
+/*                           int dofiles )                                                                                                      */
+/* {                                                                                                                                            */
+/*   duf_filter_t filter = {.level = level,                                                                                                     */
+/*     .c = {.pseq = pseq,.dofiles = dofiles},                                                                                                  */
+/*     .u = {.recursive = recursive,.maxdepth = maxdepth,.maxseq = maxseq}                                                                      */
+/*   };                                                                                                                                         */
+/*   return duf_update_realpath_down_filter( real_path, parentid, &filter );                                                                    */
+/* }                                                                                                                                            */

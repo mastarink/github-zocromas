@@ -31,9 +31,12 @@ duf_direntry_filter( const struct dirent *de )
   case DT_CHR:
     break;
   case DT_DIR:
-    if ( 0 != strcmp( de->d_name, ".comments" ) && 0 != strcmp( de->d_name, ".thumbnails" )
-         && 0 != strcmp( de->d_name, ".xvpics" ) && 0 != strcmp( de->d_name, ".catalogimages" ) )
-      r = 1;
+    r = ( 1
+          && ( 0 != strcmp( de->d_name, "." ) )
+          && ( 0 != strcmp( de->d_name, ".." ) )
+          && ( 0 != strcmp( de->d_name, ".comments" ) )
+          && ( 0 != strcmp( de->d_name, ".thumbnails" ) )
+          && ( 0 != strcmp( de->d_name, ".xvpics" ) ) && ( 0 != strcmp( de->d_name, ".catalogimages" ) ) );
     break;
   case DT_BLK:
     break;

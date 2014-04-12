@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 /* #include <unistd.h> */
+#include <sys/stat.h>
+
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -39,7 +41,7 @@ duf_sql_print_tree_prefix_uni( duf_dirinfo_t * pdi, int file )
           printf( "%3d.", pdi->seq );
         if ( file && i >= pdi->level )
         {
-          printf( "   ◇ " );
+          printf( " ◇ " );
         }
         else if ( pdi->levinfo[i] == 1 && i == pdi->level )
         {
@@ -85,8 +87,65 @@ duf_sql_uni_scan_print_files_plain_uni( unsigned long long pathid, unsigned long
 
   /* SQL at duf_scan_files_by_pathid */
 
+  unsigned long long filesize = duf_sql_ull_by_name( "filesize", precord, 1 );
+  unsigned long long filemode = duf_sql_ull_by_name( "filemode", precord, 1 );
+  struct stat st;
+
+  st.st_mode = ( mode_t ) filemode;
+  char modebuf[] = "----------";
+  char *pmode = modebuf;
+
+  pmode++;
+  if ( S_IRUSR & st.st_mode )
+  {
+    *pmode = 'r';
+  }
+  pmode++;
+  if ( S_IWUSR & st.st_mode )
+  {
+    *pmode = 'w';
+  }
+  pmode++;
+  if ( S_IXUSR & st.st_mode )
+  {
+    *pmode = 'x';
+  }
+
+  pmode++;
+  if ( S_IRGRP & st.st_mode )
+  {
+    *pmode = 'r';
+  }
+  pmode++;
+  if ( S_IWGRP & st.st_mode )
+  {
+    *pmode = 'w';
+  }
+  pmode++;
+  if ( S_IXGRP & st.st_mode )
+  {
+    *pmode = 'x';
+  }
+
+  pmode++;
+  if ( S_IROTH & st.st_mode )
+  {
+    *pmode = 'r';
+  }
+  pmode++;
+  if ( S_IWOTH & st.st_mode )
+  {
+    *pmode = 'w';
+  }
+  pmode++;
+  if ( S_IXOTH & st.st_mode )
+  {
+    *pmode = 'x';
+  }
+
   /* printf( "> %s\n", duf_sql_str_by_name( "filename", precord ) ); */
-  printf( "> %s\n", name );
+  /* printf( "-rw-------  1 mastar mastar-firefox 106580068 Jan 27 2014 12:35:27 sample_video_hd.zip\n" ); */
+  printf( "%s> %9llu %s %llu\n", modebuf, filesize, name, filemode );
 
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;

@@ -33,13 +33,19 @@ duf_check_table_filedatas( void )
 
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
                         " duf_filedatas (id INTEGER PRIMARY KEY autoincrement, dev INTEGER NOT NULL, inode INTEGER NOT NULL,"
-                        " size INTEGER, md5id INTEGER, filetype TEXT, filestatus INTEGER, ucnt INTEGER, now REAL DEFAULT CURRENT_TIMESTAMP)",
+                        " mode INTEGER NOT NULL, nlink INTEGER NOT NULL, uid INTEGER NOT NULL,"
+                        " gid INTEGER NOT NULL, blksize INTEGER NOT NULL, blocks INTEGER NOT NULL,"
+                        " size INTEGER, md5id INTEGER, filetype TEXT, filestatus INTEGER,"
+			" atim INTEGER, atimn INTEGER, mtim INTEGER, mtimn INTEGER, ctim INTEGER, ctimn INTEGER,"
+			" ucnt INTEGER, now REAL DEFAULT CURRENT_TIMESTAMP)",
                         "Create duf_filedatas" );
   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_md5id ON duf_filedatas (md5id)", "Create duf_filedatas 1" );
   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_filestatus ON duf_filedatas (filestatus)", "Create duf_filedatas 2" );
   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_filetype ON duf_filedatas (filetype)", "Create duf_filedatas 3" );
   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_size ON duf_filedatas (size)", "Create duf_filedatas 4" );
-  r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS" " filedatas_uniq ON duf_filedatas (dev,inode)", "Create duf_filedatas 5" );
+  r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_uid ON duf_filedatas (uid)", "Create duf_filedatas 5" );
+  r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_gid ON duf_filedatas (gid)", "Create duf_filedatas 6" );
+  r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS" " filedatas_uniq ON duf_filedatas (dev,inode)", "Create duf_filedatas 7" );
   return r;
 }
 
