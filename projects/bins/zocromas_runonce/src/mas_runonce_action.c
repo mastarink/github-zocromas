@@ -293,9 +293,9 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
   int done = 0;
 
   if ( flags.verbose )
-    printf( "function %s\n", __func__ );
+    printf( "function %s n/l:%s\n", __func__, sect->values[RUNONCE_NOLAUNCH] );
   /* const char *command = sect->values[RUNONCE_COMMAND]; */
-  int canlaunch = ( sect->values[RUNONCE_NOLAUNCH] || flags.force ) ? 1 : 0;
+  int canlaunch = ( sect->values[RUNONCE_NOLAUNCH] && !flags.force ) ? 0 : 1;
   int stdenv = sect->values[RUNONCE_STDENV] ? 1 : 0;
 
   done = __LINE__;
@@ -308,6 +308,9 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
       printf( "LAUNCH %14s (%d) %18s - [%s] (%d)\n", grp->name, sect->instances, sect->name, command, sect->largc );
       mas_free( command );
     }
+    if ( flags.verbose )
+      printf( "LAUNCH WHY %d\n", __LINE__ );
+
     if ( flags.noop )
     {
     }
@@ -333,6 +336,9 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
         int gid = getgid(  );
         int uid = getuid(  );
 
+        if ( flags.verbose )
+          printf( "LAUNCH WHY %d\n", __LINE__ );
+
         if ( sect->values[RUNONCE_NICE] && !sect->values[RUNONCE_NONICE] )
         {
           int inice = 0;
@@ -348,6 +354,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
             /*   printf( "(%d) can't NICE %s : %s\n", bad, sect->values[RUNONCE_NICE], strerror_r( errno, buf, sizeof( buf ) ) ); */
           }
         }
+        if ( flags.verbose )
+          printf( "LAUNCH WHY %d\n", __LINE__ );
         if ( sect->values[RUNONCE_XGROUP] && !sect->values[RUNONCE_NOGROUP] )
         {
           struct group *gr;
@@ -376,6 +384,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
             }
           }
         }
+        if ( flags.verbose )
+          printf( "LAUNCH WHY %d\n", __LINE__ );
         if ( flags.dry )
         {
           char *command = mas_argv_string( sect->largc, sect->largv, 0 );
@@ -401,6 +411,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
         {
           setsid(  );
           /* chdir( "/" ); */
+          if ( flags.verbose )
+            printf( "LAUNCH WHY %d\n", __LINE__ );
           {
             int foutd = -1;
             char stdout_filename[64];
@@ -411,6 +423,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
             dup2( foutd, STDOUT_FILENO );
             mas_close( foutd );
           }
+          if ( flags.verbose )
+            printf( "LAUNCH WHY %d\n", __LINE__ );
           {
             int ferrd = -1;
             char stderr_filename[64];
@@ -425,18 +439,32 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
           /* if ( sect->values[RUNONCE_GLOBENV] )           */
           /*   bad = execvp( sect->largv[0], sect->largv ); */
           /* else                                           */
+          if ( flags.verbose )
+            printf( "LAUNCH WHY %d\n", __LINE__ );
           {
             char *fpath = NULL;
 
-            fpath = mas_strdup( sect->values[RUNONCE_PATH] );
-            fpath = mas_strcat_x( fpath, "/" );
-            fpath = mas_strcat_x( fpath, sect->largv[0] );
+            if ( sect->values && sect->values[RUNONCE_PATH] && *( sect->values[RUNONCE_PATH] ) )
+            {
+              char *tmp;
+
+              fpath = mas_strdup( sect->values[RUNONCE_PATH] );
+              fpath = mas_strcat_x( fpath, "/" );
+              fpath = mas_strcat_x( fpath, sect->largv[0] );
+              tmp = sect->largv[0];
+              sect->largv[0] = fpath;
+              mas_free( tmp );
+            }
+            if ( flags.verbose )
+              printf( "LAUNCH WHY %d\n", __LINE__ );
             if ( stdenv )
-              bad = execvp( fpath, sect->largv );
+              bad = execvp( sect->largv[0], sect->largv );
             else
-              bad = execvpe( fpath, sect->largv, sect->lenvp );
-            mas_free( fpath );
+              bad = execvpe( sect->largv[0], sect->largv, sect->lenvp );
+            /* mas_free( fpath ); */
           }
+          if ( flags.verbose )
+            printf( "LAUNCH WHY %d\n", __LINE__ );
           if ( bad < 0 )
           {
             char *command = mas_argv_string( sect->largc, sect->largv, 0 );
@@ -449,7 +477,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
         }
         if ( !flags.dry )
           printf( "EXEC FAIL\n" );
-        exit( 17 );
+        exit( 19 );
       }
     }
   }
@@ -459,7 +487,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
     {
       char *command = mas_argv_string( sect->largc, sect->largv, 0 );
 
-      printf( "Can't LAUNCH %14s (%d) %18s - [%s] (%d)\n", grp->name, sect->instances, sect->name, command, sect->largc );
+      printf( "(%d/%d)Can't LAUNCH %14s (%d) %18s - [%s] (%d)\n", canlaunch, sect->instances, grp->name, sect->instances, sect->name,
+              command, sect->largc );
       mas_free( command );
     }
   }
