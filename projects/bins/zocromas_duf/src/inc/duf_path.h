@@ -13,8 +13,8 @@ int duf_print_paths( const char *groupname );
  * duf_sql_select_cb_t: 
  *             int fun( int nrow, int nrows, duf_record_t *precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata )
  * */
-int duf_sql_scan_paths( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                        duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb );
+/* int duf_sql_scan_paths( duf_record_t * precord, va_list args, void *sel_cb_udata,                                                */
+/*                         duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb ); */
 
 
 void duf_pathid_group( const char *group, unsigned long long pathid, int add_remove );

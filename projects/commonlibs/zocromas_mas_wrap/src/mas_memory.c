@@ -127,7 +127,7 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
 
   if ( f )
   {
-    r = fprintf( f, "\n\nMWMWMWMWMWMWMWMWMWMWMWMOMWMWMWMWMWMWMWMWM" );
+    r = fprintf( f, "WMWMOMWMWM" );
     r = 0;
     for ( int im = 0; r >= 0 && im < ( sizeof( memar ) / sizeof( memar[0] ) ); im++ )
     {
@@ -163,9 +163,11 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
       }
     }
     if ( !h && r >= 0 )
-      r = fprintf( f, "** EMPTY MEMORY TABLE ** %s:%u", func, line );
-    if ( r >= 0 )
-      r = fprintf( f, "[%d]\n", r );
+      r = fprintf( f, "<<EMP MEMT>>" );
+    /* r = fprintf( f, "** EMPTY MEMORY TABLE ** %s:%u", func, line ); */
+    
+    /* if ( r >= 0 )                    */
+    /*   r = fprintf( f, "[%d]\n", r ); */
   }
   return r;
 }

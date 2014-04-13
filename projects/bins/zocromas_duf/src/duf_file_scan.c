@@ -53,7 +53,7 @@ duf_sql_call_str_cb( duf_record_t * precord, va_list args, void *sel_cb_udata,
     pathid = duf_sql_ull_by_name( "pathid", precord, 0 );
     filenameid = duf_sql_ull_by_name( "filenameid", precord, 1 );
 
-    if ( duf_config->verbose > 1 )
+    if ( duf_config->cli.dbg.verbose > 1 )
     {
       /* printf( "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord ), */
       /*         duf_sql_str_by_name( "parentid", precord ), duf_sql_ull_by_name( "parentid", precord ) );                                     */
@@ -64,7 +64,7 @@ duf_sql_call_str_cb( duf_record_t * precord, va_list args, void *sel_cb_udata,
       }
       fprintf( stderr, " [ pathid=%llu ]\n", pathid );
     }
-    if ( duf_config->scan_trace )
+    if ( duf_config->cli.trace.scan )
       fprintf( stderr, "[SCAN ] %20s: \n", __func__ );
 
     duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, pathid );
@@ -90,12 +90,12 @@ duf_sql_call_str_cb( duf_record_t * precord, va_list args, void *sel_cb_udata,
 
         if ( str_cb )
         {
-          if ( duf_config->verbose > 1 )
+          if ( duf_config->cli.dbg.verbose > 1 )
           {
             const char *name2 = NULL;
 
-            if ( str_cb == duf_sql_uni_scan_dir )
-              name2 = "duf_sql_uni_scan_dir";
+            if ( str_cb == duf_uni_scan_dir )
+              name2 = "duf_uni_scan_dir";
 
             fprintf( stderr, "call str_cb> %p:%s\n", ( void * ) ( unsigned long long ) str_cb, name2 ? name2 : "-" );
           }
@@ -104,18 +104,18 @@ duf_sql_call_str_cb( duf_record_t * precord, va_list args, void *sel_cb_udata,
  * */
           ( *str_cb ) ( pathid, filenameid, name, str_cb_udata, pdi, sccb, precord );
         }
-        else if ( duf_config->scan_trace > 1 )
+        else if ( duf_config->cli.trace.scan > 1 )
           fprintf( stderr, "[SCAN ] %20s: No str_cb for name='%s'\n", __func__, name );
         /* mas_free( path ); */
       }
       duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
     }
-    else if ( duf_config->verbose > 1 )
+    else if ( duf_config->cli.dbg.verbose > 1 )
       fprintf( stderr, " ?????????????????\n" );
   }
   else
   {
-    if ( duf_config->scan_trace > 1 )
+    if ( duf_config->cli.trace.scan > 1 )
       fprintf( stderr, "[SCAN ] %20s: No str_cb\n", __func__ );
     duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
@@ -139,11 +139,11 @@ duf_scan_vitems_sql( duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_di
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
  * */
-  if ( duf_config->scan_trace )
+  if ( duf_config->cli.trace.scan )
     fprintf( stderr, "[SCAN ] %20s: L%u >duf_sql_vselect with sel_cb=duf_sql_call_str_cb(%p); str_cb=%p\n", __func__, pdi->level,
              ( void * ) ( unsigned long long ) duf_sql_call_str_cb, ( void * ) ( unsigned long long ) str_cb );
   r = duf_sql_vselect( duf_sql_call_str_cb /* sel_cb */ , SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, sql, args );
-  if ( duf_config->scan_trace )
+  if ( duf_config->cli.trace.scan )
     fprintf( stderr, "[SCAN ] %20s: L%u <duf_sql_vselect\n", __func__, pdi->level );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -162,11 +162,11 @@ duf_scan_items_sql( duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dir
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   va_start( args, sql );
 
-  if ( duf_config->scan_trace )
+  if ( duf_config->cli.trace.scan )
     fprintf( stderr, "[SCAN ] %20s: L%u >duf_scan_vitems_sql str_cb=%p\n", __func__, pdi->level, ( void * ) ( unsigned long long ) str_cb );
   r = duf_scan_vitems_sql( str_cb, str_cb_udata, pdi, sccb, sql, args );
   /* r = duf_scan_vfiles_sql( str_cb, str_cb_udata, pdi, sccb, sql, args ); */
-  if ( duf_config->scan_trace )
+  if ( duf_config->cli.trace.scan )
     fprintf( stderr, "[SCAN ] %20s: L%u <duf_scan_vitems_sql\n", __func__, pdi->level );
 
   va_end( args );
@@ -203,8 +203,8 @@ duf_sql_scan_print_file( unsigned long long pathid, unsigned long long filenamei
         char *path;
 
         path = duf_pathid_to_path( pathid );
-        /* printf( "%c %7llu: %-20s %lld:%016llx:%016llx @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, mdpath1, mdpath2, pathid, path, */
-        /*         name );                                                                                                                              */
+        /* printf( "%c %7llu: %-20s %lld:%016llx:%016llx @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, mdpath1, mdpath2, */
+        /*         pathid, path, name );                                                                                                  */
 
         printf( "(%d) {%d} %c %7llu: %-20s %lld @ %7llu: %s/%s\n", pdi ? pdi->seq : 0, pdi ? pdi->level : 0, st ? '+' : '-', filenameid,
                 name, mdpathid, pathid, path, name );

@@ -50,18 +50,24 @@ duf_scan_fil_by_pi( unsigned long long pathid, duf_scan_callback_file_t str_cb, 
 {
   int r = 0;
 
-  if ( duf_config->scan_trace )
+  if ( duf_config->cli.trace.scan )
     fprintf( stderr, "[SCAN ] %20s: L%u >duf_scan_items_sql str_cb=%p\n", __func__, pdi->level, ( void * ) ( unsigned long long ) str_cb );
+  if ( duf_config->cli.trace.scan > 1 && sccb->fieldset )
+    fprintf( stderr, "FIELDSET %s\n", sccb->fieldset );
 /* duf_scan_items_sql:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
+  const char *fieldset;
+
+  fieldset =
+        ( sccb->fieldset ? ( sccb->fieldset ) : ( "duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename,"
+                                                  " duf_filedatas.id as filedataid, "
+                                                  " duf_filedatas.size as filesize, duf_filedatas.mode as filemode, "
+                                                  " duf_filedatas.uid as fileuid, duf_filedatas.gid as filegid," " duf_md5.id as md5id, "
+                                                  " duf_md5.size as md5size, duf_md5.dupcnt, duf_md5.md5sum1, duf_md5.md5sum2 " ) );
   r = duf_scan_items_sql( str_cb, pdi, pdi, sccb,
-                          "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename,"
-                          " duf_filedatas.size as filesize, duf_filedatas.mode as filemode, "
-                          " duf_filedatas.uid as fileuid, duf_filedatas.gid as filegid," " duf_md5.id as md5id, "
-                          " duf_md5.size as md5size, duf_md5.dupcnt " " FROM duf_filenames "
-                          " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-                          " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_filenames.pathid='%llu'", pathid );
+                          "SELECT %s FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+                          " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id)" " WHERE duf_filenames.pathid='%llu'", fieldset, pathid );
   return r;
 }
 

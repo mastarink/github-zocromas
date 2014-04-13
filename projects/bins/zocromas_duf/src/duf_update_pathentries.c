@@ -60,7 +60,7 @@
 /*   {                                                                                                                                 */
 /*     resd = duf_insert_filedata( file_inode, dev_id, pst_file );                                                                     */
 /*     resf = duf_insert_filename( fname, dir_id, resd );                                                                              */
-/*     if ( duf_config->verbose > 2 )                                                                                                  */
+/*     if ( duf_config->cli.dbg.verbose > 2 )                                                                                                  */
 /*     {                                                                                                                               */
 /*       (* fprintf( stderr, "\r%s\x1b[K", fname ); *)                                                                                 */
 /*       if ( pfilter->u.maxseq )                                                                                                      */
@@ -146,7 +146,7 @@
 /*     if ( nlist < 0 )                                                                                       */
 /*       fprintf( stderr, "ERROR %s: nlist = %d\n", real_path, nlist );                                       */
 /*                                                                                                            */
-/*     if ( duf_config->verbose > 3 )                                                                         */
+/*     if ( duf_config->cli.dbg.verbose > 3 )                                                                         */
 /*     {                                                                                                      */
 /*       (* fprintf( stderr, "\r%s\x1b[K", fname ); *)                                                        */
 /*       fprintf( stderr, "%s\n", real_path );                                                                */

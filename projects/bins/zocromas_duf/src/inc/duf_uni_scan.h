@@ -8,11 +8,11 @@ int duf_uni_scan_targ( duf_config_t * config, duf_scan_callbacks_t * sccb );
 int duf_uni_scan_all( duf_config_t * config );
 
 /*
- * if recursive, call duf_sql_uni_scan_dir + pdi (built from str_cb_udata)
+ * if recursive, call duf_uni_scan_dir + pdi (built from str_cb_udata)
  *       for each <dir> record by pathid (i.e. children of pathid) with corresponding args 
  * otherwise do nothing
  * */
-int duf_sql_uni_scan_dir( unsigned long long pathid, unsigned long long filenameid, const char *name, void *str_cb_udata,
+int duf_uni_scan_dir( unsigned long long pathid, unsigned long long filenameid, const char *name, void *str_cb_udata,
                           duf_dirinfo_t * pdi1, duf_scan_callbacks_t * sccb, duf_record_t * precord );
 
 #endif

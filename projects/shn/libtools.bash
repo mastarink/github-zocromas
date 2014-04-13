@@ -23,17 +23,21 @@ function shn_echon ()
 }
 function shn_msg ()
 {
-  shn_echo "$*"  >&2
+  if ! [[ $MSH_SHN_DISABLE_MSG ]] ; then
+    shn_echo "$*"  >&2
 # shn_echo $@  >&2
 # shn_echo "$*"  >&2
 # shn_echo "$@"  >&2
+  fi
 }
 function shn_msgn ()
 {
-  shn_echon "$*"  >&2
+  if ! [[ $MSH_SHN_DISABLE_MSG ]] ; then
+    shn_echon "$*"  >&2
 # shn_echon $@  >&2
 # shn_echon "$*"  >&2
 # shn_echon "$@"  >&2
+  fi
 }
 function shn_msgns ()
 {

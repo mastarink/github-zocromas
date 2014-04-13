@@ -8,6 +8,7 @@ function localrc
   fi
   if [[ "$MSH_PROJECTS_DIR" ]] &&  [[ -d "$MSH_PROJECTS_DIR" ]] && [[ -f "$MSH_PROJECTS_DIR/projects.list" ]] ; then
     for l in sh/lib*.bash ; do
+      echo "Loading $l" >&2
       . $l
     done
     declare -gx MSH_PROJECTS_LIST

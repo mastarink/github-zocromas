@@ -1,3 +1,4 @@
+" echo "+++++++++++++++++++++++++++++++++ : " . expand("<sfile>")
 function! MasCpr()
   call cursor(1,1)
   if ! search( "THE BEGINNING", "n", 1 )

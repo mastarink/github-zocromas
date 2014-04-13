@@ -1,3 +1,4 @@
+"echo "+++++++++++++++++++++++++++++++++ : " . expand("<sfile>")
 "
 " set viminfo='50,<1000,s100,:0,n~/vim/viminfo
 " set ttyfast
@@ -5,24 +6,40 @@
 " autocmd! VimEnter *.mased source %.vim
 " echo 'in ' . expand('<sfile>')
 let dfile=expand('%')
-let sfile='mased/' . expand('%') . '.vim'
-if filereadable(sfile)
+" dfile : src.mased
+if empty(dfile)
+  echo "Not set dfile "
+  if exists("masedfile")
+"    echo "masedfile = " . masedfile
+  elseif exists("$MSH_CURRENT_MASEDFILE")
+    echo "Not exists masedfile, set to " . $MSH_CURRENT_MASEDFILE
+    let masedfile=$MSH_CURRENT_MASEDFILE
+  else
+    echo "Not exists masedfile"
+  endif
+" echo "<sfile> = " . expand('<sfile>')  
+else
+" echo "+++++++++++++++++++++++++++++++++ <sfile>: " . expand("<sfile>") . " @ dfile:" . dfile
+  let masedfile='mased/' . dfile . '.vim'
+endif
+
+if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
+  echo "masedfile = " . masedfile . "---------\n"
 " set viminfo='50,<1000,s1000,.viminfo
   execute "set viminfo='50,<1000,s1000,n" . expand('%') . ".viminfo"
   set verbosefile=vrb.tmp
   set path=src,src/inc
-  tab new
-
-  sil so `=sfile`
-" au ColorScheme sil so `=sfile`
+" tab new
+  
+" echo "source " . masedfile
+  sil so `=masedfile`
+" au ColorScheme sil so `=masedfile`
 " autocmd! VimEnter * source gvim-vimenter.vim
   au GUIEnter * winsize 156 50
   au GUIEnter * source gvim-vimenter.vim
-  map <F3> :wa<CR>:!shn/doprj.sh i<CR>
-  map <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
-  map <F4> :wa<CR>:!shn/doall.sh i<CR>
-  map <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
-
+" echo "set mappings"
   " echo 'later: gvim-vimenter.vim'
+else
+  echo "No masedfile "
 endif
 " echo 'out ' . expand('<sfile>')

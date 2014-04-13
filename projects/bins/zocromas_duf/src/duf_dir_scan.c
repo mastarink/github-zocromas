@@ -55,7 +55,7 @@ duf_scan_dir_by_pi( unsigned long long pathid, duf_scan_callback_file_t str_cb, 
     sccb->directory_scan( pathid, pdi->name, 0 /* items */ , pdi, sccb );
   }
 
-  if ( duf_config->scan_trace )
+  if ( duf_config->cli.trace.scan )
   {
     char *path = duf_pathid_to_path( pathid );
 
@@ -64,7 +64,7 @@ duf_scan_dir_by_pi( unsigned long long pathid, duf_scan_callback_file_t str_cb, 
   }
 
   {
-    if ( duf_config->scan_trace )
+    if ( duf_config->cli.trace.scan )
       fprintf( stderr, "[SCAN ] %20s: L%u >duf_scan_items_sql by pathid=%llu; str_cb=%p\n", __func__, pdi->level, pathid,
                ( void * ) ( unsigned long long ) str_cb );
 /* duf_scan_items_sql:
@@ -73,21 +73,21 @@ duf_scan_dir_by_pi( unsigned long long pathid, duf_scan_callback_file_t str_cb, 
     r = duf_scan_items_sql( str_cb, pdi, pdi, sccb,
                             "SELECT duf_paths.id as pathid, duf_paths.dirname, items " " FROM duf_paths "
                             " WHERE duf_paths.parentid='%llu'", pathid );
-    if ( duf_config->scan_trace )
+    if ( duf_config->cli.trace.scan )
       fprintf( stderr, "[SCAN ] %20s: L%u <duf_scan_items_sql by pathid=%llu\n", __func__, pdi->level, pathid );
   }
 
   if ( sccb && !r )
   {
     pdi->level++;
-    if ( duf_config->scan_trace )
+    if ( duf_config->cli.trace.scan )
       fprintf( stderr, "[SCAN ] %20s: L%u >duf_scan_files_by_pathid by pathid=%llu; sccb->file_scan as str_cb=%p\n", __func__, pdi->level,
                pathid, ( void * ) ( unsigned long long ) sccb->file_scan );
 /* duf_scan_files_by_pathid:
  * call sccb->file_scan + pdi (also) as str_cb_udata for each <file> record by pathid with corresponding args
  * */
     r = duf_scan_files_by_pathid( pathid, sccb->file_scan /* str_cb */ , pdi, sccb );
-    if ( duf_config->scan_trace )
+    if ( duf_config->cli.trace.scan )
       fprintf( stderr, "[SCAN ] %20s: L%u <duf_scan_files_by_pathid by pathid=%llu; r=%d; sccb:%d\n", __func__, pdi->level, pathid, r,
                sccb ? 1 : 0 );
     pdi->level--;
@@ -97,6 +97,7 @@ duf_scan_dir_by_pi( unsigned long long pathid, duf_scan_callback_file_t str_cb, 
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
+
 /* duf_scan_dirs_by_parentid
  * 1. for <current> dir call sccb->directory_scan
  * 2. for each dir in <current> dir call str_cb + str_cb_udata

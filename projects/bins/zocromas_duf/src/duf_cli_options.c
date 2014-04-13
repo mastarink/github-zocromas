@@ -21,6 +21,7 @@ const struct option longopts[] = {
   {.name = "trace-scan",.has_arg = required_argument,.val = DUF_OPTION_SCAN_TRACE},
   {.name = "trace-fill",.has_arg = required_argument,.val = DUF_OPTION_FILL_TRACE},
   {.name = "trace-sql",.has_arg = required_argument,.val = DUF_OPTION_SQL_TRACE},
+  {.name = "trace-md5",.has_arg = required_argument,.val = DUF_OPTION_MD5_TRACE},
   {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
 
   {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
@@ -36,7 +37,7 @@ const struct option longopts[] = {
 
   {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
   /* {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH}, */
-  {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5},
+  /* {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5}, */
   {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES},
   {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH},
   {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE},
@@ -44,6 +45,7 @@ const struct option longopts[] = {
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
   {.name = "sample",.has_arg = no_argument,.val = DUF_OPTION_SAMPLE},
+  {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
   {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
   {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
   {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
@@ -91,95 +93,104 @@ duf_cli_options( int argc, char *argv[] )
         break;
       case DUF_OPTION_VERBOSE:
         if ( optarg && *optarg )
-          duf_config->verbose = strtol( optarg, NULL, 10 );
+          duf_config->cli.dbg.verbose = strtol( optarg, NULL, 10 );
         else
-          duf_config->verbose++;
+          duf_config->cli.dbg.verbose++;
         break;
       case DUF_OPTION_DEBUG:
-        duf_config->debug = 1;
+        duf_config->cli.dbg.debug = 1;
         break;
       case DUF_OPTION_SCAN_TRACE:
         if ( optarg && *optarg )
-          duf_config->scan_trace = strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.scan= strtol( optarg, NULL, 10 );
         else
-          duf_config->scan_trace++;
+          duf_config->cli.trace.scan++;
         break;
       case DUF_OPTION_SAMPLE_TRACE:
         if ( optarg && *optarg )
-          duf_config->sample_trace = strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.sample= strtol( optarg, NULL, 10 );
         else
-          duf_config->sample_trace++;
+          duf_config->cli.trace.sample++;
+        break;
+      case DUF_OPTION_MD5_TRACE:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.md5= strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.md5++;
         break;
       case DUF_OPTION_FILL_TRACE:
         if ( optarg && *optarg )
-          duf_config->fill_trace = strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.fill= strtol( optarg, NULL, 10 );
         else
-          duf_config->fill_trace++;
+          duf_config->cli.trace.fill++;
         break;
       case DUF_OPTION_SQL_TRACE:
         if ( optarg && *optarg )
-          duf_config->sql_trace = strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.sql= strtol( optarg, NULL, 10 );
         else
-          duf_config->sql_trace++;
+          duf_config->cli.trace.sql++;
         break;
       case DUF_OPTION_MIN_DBGLINE:
         if ( optarg && *optarg )
-          duf_config->min_dbgline = strtol( optarg, NULL, 10 );
+          duf_config->cli.dbg.min_line = strtol( optarg, NULL, 10 );
         break;
       case DUF_OPTION_MAX_DBGLINE:
         if ( optarg && *optarg )
-          duf_config->max_dbgline = strtol( optarg, NULL, 10 );
+          duf_config->cli.dbg.max_line = strtol( optarg, NULL, 10 );
         break;
       case DUF_OPTION_DROP_TABLES:
-        duf_config->drop_tables = 1;
+        duf_config->cli.act.drop_tables = 1;
         break;
       case DUF_OPTION_CREATE_TABLES:
-        duf_config->create_tables = 1;
+        duf_config->cli.act.create_tables = 1;
         break;
       case DUF_OPTION_ADD_PATH:
-        duf_config->add_path = 1;
+        duf_config->cli.act.add_path = 1;
         break;
         /* case DUF_OPTION_UPDATE_PATH:   */
-        /*   duf_config->update_path = 1; */
+        /*   duf_config->cli.act.update_path = 1; */
         /*   break;                       */
-      case DUF_OPTION_UPDATE_MD5:
-        duf_config->update_md5 = 1;
-        break;
+        /* case DUF_OPTION_UPDATE_MD5:   */
+        /*   duf_config->cli.act.update_md5 = 1; */
+        /*   break;                      */
       case DUF_OPTION_UPDATE_DUPLICATES:
-        duf_config->update_duplicates = 1;
+        duf_config->cli.act.update_duplicates = 1;
         break;
       case DUF_OPTION_UPDATE_MDPATH:
-        duf_config->update_mdpath = 1;
+        duf_config->cli.act.update_mdpath = 1;
         break;
       case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:
-        duf_config->update_mdpath_selective = 1;
+        duf_config->cli.act.update_mdpath_selective = 1;
         break;
       case DUF_OPTION_ZERO_FILEDATA:
-        duf_config->zero_filedata = 1;
+        duf_config->cli.act.zero_filedata = 1;
         break;
       case DUF_OPTION_UPDATE_FILEDATA:
-        duf_config->update_filedata = 1;
+        duf_config->cli.act.update_filedata = 1;
         break;
       case DUF_OPTION_UPDATE_EXIF:
-        duf_config->update_exif = 1;
+        duf_config->cli.act.update_exif = 1;
         break;
       case DUF_OPTION_RECURSIVE:
         duf_config->u.recursive = 1;
         break;
       case DUF_OPTION_SAMPLE:
-        duf_config->sample = 1;
+        duf_config->cli.act.sample = 1;
+        break;
+      case DUF_OPTION_MD5:
+        duf_config->cli.act.md5 = 1;
         break;
       case DUF_OPTION_FILL:
-        duf_config->fill = 1;
+        duf_config->cli.act.fill = 1;
         break;
       case DUF_OPTION_PRINT:
-        duf_config->print = 1;
+        duf_config->cli.act.print = 1;
         break;
       case DUF_OPTION_TREE:
-        duf_config->tree = 1;
+        duf_config->cli.act.tree = 1;
         break;
       case DUF_OPTION_FILES:
-        duf_config->files = 1;
+        duf_config->cli.act.files = 1;
         break;
       case DUF_OPTION_MAXSIZE:
         if ( optarg && *optarg )
@@ -198,37 +209,37 @@ duf_cli_options( int argc, char *argv[] )
           duf_config->u.maxseq = strtol( optarg, NULL, 10 );
         break;
       case DUF_OPTION_UNI_SCAN:
-        duf_config->uni_scan = 1;
+        duf_config->cli.act.uni_scan = 1;
         break;
         /* case DUF_OPTION_PRINT_PATHS:   */
-        /*   duf_config->print_paths = 1; */
+        /*   duf_config->cli.act.print_paths = 1; */
         /*   break;                       */
         /* case DUF_OPTION_PRINT_DIRS:    */
-        /*   duf_config->print_dirs = 1;  */
+        /*   duf_config->cli.act.print_dirs = 1;  */
         /*   break;                       */
         /* case DUF_OPTION_PRINT_FILES:   */
-        /*   duf_config->print_files = 1; */
+        /*   duf_config->cli.act.print_files = 1; */
         /*   break;                       */
         /* case DUF_OPTION_PRINT_DUPLICATES:   */
-        /*   duf_config->print_duplicates = 1; */
+        /*   duf_config->cli.act.print_duplicates = 1; */
         /*   break;                            */
       case DUF_OPTION_ZERO_DUPLICATES:
-        duf_config->zero_duplicates = 1;
+        duf_config->cli.act.zero_duplicates = 1;
         break;
       case DUF_OPTION_SAME_FILES:
-        duf_config->same_files = 1;
+        duf_config->cli.act.same_files = 1;
         break;
       case DUF_OPTION_SAME_EXIF:
-        duf_config->same_exif = 1;
+        duf_config->cli.act.same_exif = 1;
         break;
       case DUF_OPTION_SAME_MD5:
-        duf_config->same_md5 = 1;
+        duf_config->cli.act.same_md5 = 1;
         break;
       case DUF_OPTION_ADD_TO_GROUP:
-        duf_config->to_group = 1;
+        duf_config->cli.act.to_group = 1;
         break;
       case DUF_OPTION_REMOVE_FROM_GROUP:
-        duf_config->from_group = 1;
+        duf_config->cli.act.from_group = 1;
         break;
       case DUF_OPTION_GROUP:
         if ( optarg )
@@ -253,7 +264,7 @@ duf_cli_options( int argc, char *argv[] )
         break;
       case DUF_OPTION_LIMIT:
         if ( optarg && *optarg )
-          duf_config->limit = strtol( optarg, NULL, 10 );
+          duf_config->cli.limit = strtol( optarg, NULL, 10 );
         break;
       case '?':
         printf( "Invalid option -- '%c' optind=%d/%s opt=%u/%c\n", optopt, optind, argv[optind - 1], opt, opt );

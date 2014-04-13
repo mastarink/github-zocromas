@@ -5,16 +5,20 @@
 # unset command_not_found_handle 
 # export MSH_SHN_LIBWORK_LOADED=`datemt`
 
-for lib in tools project shn zocserver zocgrep ; do
-  if ! [[ -L shn ]] || ! [[ -f ${MSH_SHN_DIR:-shn}/lib${lib}.bash ]] || ! . ${MSH_SHN_DIR:-shn}/lib${lib}.bash ; then
-    shn_errmsg "loading environment ${MSH_SHN_DIR:-shn}/lib${lib}.bash"
+for lib in tools project shn zocserver zocgrep edit ; do
+# shn_msg "Loading lib $lib ..." >&2
+  if [[ -L shn ]] && [[ -f ${MSH_SHN_DIR:-shn}/lib${lib}.bash ]] && source ${MSH_SHN_DIR:-shn}/lib${lib}.bash
+  then
+    false && shn_msg "Loaded lib $lib" >&2
+  else
+    shn_errmsg "fail loading environment ${MSH_SHN_DIR:-shn}/lib${lib}.bash"
     shn_errmsg lib not found $lib
     return 1
   fi
   shn_dbgmsg "loaded lib${lib}" >&2
 done
 
-
+# shn_msg "Loading ..." >&2
 
 # type -t shn_unset_functions &>/dev/null && shn_unset_functions shn
 

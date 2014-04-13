@@ -95,13 +95,13 @@ duf_sql_open( const char *dbpath )
     fprintf( stderr, "SQL DB Initialize ERROR\n" );
   else
   {
-    if ( duf_config->sql_trace )
+    if ( duf_config->cli.trace.sql )
       fprintf( stderr, "[SQL  ] %20s: DB Initialize OK\n", __func__ );
 
     r = sqlite3_open( dbpath, &pDb );
     if ( r != SQLITE_OK )
       fprintf( stderr, "SQL DB Open ERROR\n" );
-    else if ( duf_config->sql_trace )
+    else if ( duf_config->cli.trace.sql )
       fprintf( stderr, "[SQL  ] %20s: DB Open OK\n", __func__ );
   }
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -117,13 +117,13 @@ duf_sql_close( void )
   r = sqlite3_close( pDb );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Close ERROR\n" );
-  else if ( duf_config->sql_trace )
+  else if ( duf_config->cli.trace.sql )
     fprintf( stderr, "[SQL  ] %20s: DB Close OK\n", __func__ );
 
   r = sqlite3_shutdown(  );
   if ( r != SQLITE_OK )
     fprintf( stderr, "SQL DB Shutdown ERROR\n" );
-  else if ( duf_config->sql_trace )
+  else if ( duf_config->cli.trace.sql )
     fprintf( stderr, "[SQL  ] %20s: DB Shutdown OK\n", __func__ );
 
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -170,7 +170,7 @@ duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_c( sql, constraint_ignore );
-  if ( r == SQLITE_OK && duf_config->verbose )
+  if ( r == SQLITE_OK && duf_config->cli.dbg.verbose )
     fprintf( stderr, "SQL %s OK\x1b[K\n", msg );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -196,7 +196,7 @@ duf_vsql_c( const char *fmt, int constraint_ignore, va_list args )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   sql = sqlite3_vmprintf( fmt, args );
   r = duf_sql_exec_c( sql, constraint_ignore );
-  if ( duf_config->sql_trace > 1 )
+  if ( duf_config->cli.trace.sql > 1 )
     fprintf( stderr, "[SQL  ] %20s: %s : %d\n", __func__, sql, r );
   sqlite3_free( sql );
   duf_dbgfunc( DBG_ENDRS, __func__, __LINE__, r, sql );
@@ -269,9 +269,9 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
 
   sql = sqlite3_vmprintf( fmt, args );
   r = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
-  if ( duf_config->sql_trace > 1 )
+  if ( duf_config->cli.trace.sql > 1 )
     fprintf( stderr, "[SQL  ] %20s: %s = %d; %u rows\n", __func__, sql, r, row );
-  else if ( duf_config->sql_trace )
+  else if ( duf_config->cli.trace.sql )
     fprintf( stderr, "[SQL  ] %20s:\n", __func__ );
   duf_dbgfunc( DBG_STEPS, __func__, __LINE__, sql );
   /* if ( trace )                                            */
@@ -292,15 +292,15 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
  * sel_cb is duf_sql_select_cb_t:
  *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb );
  * */
-        if ( duf_config->verbose > 1 )
+        if ( duf_config->cli.dbg.verbose > 1 )
         {
           const char *name = NULL;
           const char *name2 = NULL;
 
           if ( sel_cb == duf_sql_path_to_pathid )
             name = "duf_sql_path_to_pathid";
-          if ( str_cb == duf_sql_uni_scan_dir )
-            name2 = "duf_sql_uni_scan_dir";
+          if ( str_cb == duf_uni_scan_dir )
+            name2 = "duf_uni_scan_dir";
 
           fprintf( stderr, "call sel_cb> %p:%s; pass %p:%s\n", ( void * ) ( unsigned long long ) sel_cb, name ? name : "-",
                    ( void * ) ( unsigned long long ) str_cb, name2 ? name2 : "-" );
@@ -315,14 +315,14 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
         {
           int rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb );
 
-          if ( duf_config->sql_trace )
+          if ( duf_config->cli.trace.sql )
             fprintf( stderr, "[SQL  ] %20s: row %u; <sel_cb(%p) = %d\n", __func__, ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
         }
       }
     }
     else
     {
-      if ( duf_config->sql_trace )
+      if ( duf_config->cli.trace.sql )
         fprintf( stderr, "[SQL  ] %20s: Nothing by '%s'\n", __func__, sql );
     }
   }

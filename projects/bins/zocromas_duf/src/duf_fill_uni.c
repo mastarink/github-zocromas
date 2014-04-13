@@ -54,52 +54,10 @@ duf_fill_files_uni( unsigned long long pathid, unsigned long long filenameid,
    * */
 
 
-  if ( duf_config->fill_trace )
+  if ( duf_config->cli.trace.fill )
   {
     fprintf( stderr, "[FILL ] %20s: %s\n", __func__, name );
   }
-  return 0;
-}
-
-/* callback of type duf_scan_callback_dir_t */
-int
-duf_fill_dir_uni( unsigned long long pathid, const char *name, unsigned long long items, duf_dirinfo_t * pdi,
-                  struct duf_scan_callbacks_s *sccb )
-{
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
-  if ( duf_config->fill_trace > 1 )
-    fprintf( stderr, "[FILL ] %20s: pathid=%llu\n", __func__, pathid );
-
-  if ( pdi && ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) )
-  {
-    char *path = duf_pathid_to_path( pathid );
-
-    if ( duf_config->fill_trace > 1 )
-      fprintf( stderr, "[FILL ] %20s: path=%s\n", __func__, path );
-
-/* TODO additionally 
- * for each direntry:
- *  -- 
- * */
-
-/* stat */
-    if ( !pdi->u.noself_dir )
-    {
-      /* pathid = duf_update_realpath_self_up( real_path, NULL, !pfilter->u.noupper_dirs ); */
-    }
-/* duf_fill_pathid_filter_uni:
- * update (collected below) information for path
- * */
-    duf_fill_pathid_filter_uni( pathid, pdi );
-
-
-    if ( duf_config->fill_trace > 1 )
-      fprintf( stderr, "[FILL ] %20s: end path=%s\n", __func__, path );
-    mas_free( path );
-  }
-
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 
@@ -153,13 +111,13 @@ duf_sql_ctrnt_uni( duf_record_t * precord, va_list args, void *sel_cb_udata,
   pdir_id = ( unsigned long long * ) sel_cb_udata;
   if ( precord->nrow == 0 )
   {
-    if ( duf_config->verbose > 1 )
+    if ( duf_config->cli.dbg.verbose > 1 )
     {
       fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord, 0 ),
                duf_sql_str_by_name( "id", precord, 0 ), duf_sql_ull_by_name( "id", precord, 0 ) );
     }
     *pdir_id = strtoll( precord->presult[0], NULL, 10 );
-    if ( duf_config->fill_trace > 2 )
+    if ( duf_config->cli.trace.fill > 2 )
       fprintf( stderr, "[FILL ] %20s: %llu\n", __func__, *pdir_id );
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -181,7 +139,7 @@ duf_insert_path_uni( const char *name, dev_t dev_id, ino_t dir_ino, unsigned lon
   dirname = qbase_name ? qbase_name : name;
   r = duf_sql_c( "INSERT INTO duf_paths (dev, inode, dirname, parentid, ucnt, now) " " VALUES ('%lu','%lu','%s','%lu',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, dev_id, dir_ino, dirname, parentid );
-  if ( duf_config->fill_trace > 1 )
+  if ( duf_config->cli.trace.fill > 1 )
     fprintf( stderr, "[FILL ] %20s: INSERT: r=%d; dev_id=%lu; dir_ino=%lu; dirname=%s; parentid=%llu\n", __func__, r, dev_id, dir_ino,
              dirname, parentid );
   mas_free( qbase_name );
@@ -191,13 +149,13 @@ duf_insert_path_uni( const char *name, dev_t dev_id, ino_t dir_ino, unsigned lon
     r = duf_sql_select( duf_sql_ctrnt_uni, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT id as pathid " " FROM duf_paths " " WHERE dev='%lu' and inode='%lu'", dev_id, dir_ino );
-    if ( duf_config->fill_trace > 1 )
+    if ( duf_config->cli.trace.fill > 1 )
       fprintf( stderr, "[FILL ] %20s: insert (SQLITE_CONSTRAINT) r=%d; %llu:'%s'\n", __func__, r, pathid, name );
   }
   else if ( !r /* assume SQLITE_OK */  )
   {
     pathid = duf_last_insert_rowid(  );
-    if ( duf_config->fill_trace > 1 )
+    if ( duf_config->cli.trace.fill > 1 )
       fprintf( stderr, "[FILL ] %20s: inserted (SQLITE_OK) pathid=%llu:'%s'\n", __func__, pathid, name );
   }
   else
@@ -206,6 +164,7 @@ duf_insert_path_uni( const char *name, dev_t dev_id, ino_t dir_ino, unsigned lon
   return pathid;
 }
 
+/* ------------------------------------------------------------------- */
 static unsigned long long
 duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long long pathid, duf_dirinfo_t * pdi )
 {
@@ -217,7 +176,7 @@ duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long lo
   {
   case DT_REG:
     {
-      if ( duf_config->fill_trace > 1 )
+      if ( duf_config->cli.trace.fill > 1 )
       {
         fprintf( stderr, "[FILL ] %20s: regfile='%s/%s'\n", __func__, real_path, de->d_name );
       }
@@ -242,7 +201,7 @@ duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long lo
       }
 
 
-      if ( duf_config->fill_trace )
+      if ( duf_config->cli.trace.fill )
         fprintf( stderr, "[FILL ] %20s: >>> dir='%s/%s'\n", __func__, real_path, de->d_name );
 
       /* don't return itemid ??? */
@@ -267,7 +226,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
   char *real_path;
 
   real_path = duf_pathid_to_path( pathid );
-  if ( duf_config->fill_trace > 1 )
+  if ( duf_config->cli.trace.fill > 1 )
     fprintf( stderr, "[FILL ] %20s: pathid=%llu; real_path='%s'\n", __func__, pathid, real_path );
 
   r = stat( real_path, &st_dir );
@@ -285,14 +244,14 @@ duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
 
     duf_dbgfunc( DBG_START, __func__, __LINE__ );
     /* fprintf( stderr, "Update path entries %s\n", real_path ); */
-    if ( duf_config->fill_trace > 1 )
+    if ( duf_config->cli.trace.fill > 1 )
       fprintf( stderr, "[FILL ] %20s: pathid=%llu; scandir\n", __func__, pathid );
 
     nlist = scandir( real_path, &list, duf_direntry_filter, alphasort );
     if ( nlist < 0 )
       fprintf( stderr, "ERROR %s: nlist= %d\n", real_path, nlist );
 
-    if ( duf_config->fill_trace > 1 )
+    if ( duf_config->cli.trace.fill > 1 )
     {
       /* fprintf( stderr, "\r%s\x1b[K", fname ); */
       fprintf( stderr, "[FILL ] %20s: pathid=%llu; nlist=%d\n", __func__, pathid, nlist );
@@ -303,7 +262,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
       {
         unsigned long long itemid = 0;
 
-        if ( duf_config->fill_trace > 1 )
+        if ( duf_config->cli.trace.fill > 1 )
         {
           /* fprintf( stderr, "\r%s\x1b[K", fname ); */
           fprintf( stderr, "[FILL ] %20s: pathid=%llu; entry='%s'\n", __func__, pathid, list[il]->d_name );
@@ -326,14 +285,14 @@ duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
   return r;
 }
 
-int
+static int
 duf_fill_entries_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
 {
   return duf_fill_ent_flt_uni( pathid, pdi );
 }
 
 /* to replace duf_update_pathid_down_filter */
-/* duf_fill_pathid_filter_uni:
+/* duf_fill_pi_flt_uni:
  * update (collected below) information for path
  * */
 static unsigned long long
@@ -343,12 +302,12 @@ duf_fill_pi_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  if ( duf_config->fill_trace > 1 )
+  if ( duf_config->cli.trace.fill > 1 )
     fprintf( stderr, "[FILL ] %20s: pathid=%llu\n", __func__, pathid );
 
   items = duf_fill_entries_filter_uni( pathid, pdi );
 
-  if ( duf_config->fill_trace > 1 )
+  if ( duf_config->cli.trace.fill > 1 )
     fprintf( stderr, "[FILL ] %20s: end pathid=%llu; items=%lu\n", __func__, pathid, items );
 
   if ( items >= 0 )
@@ -361,8 +320,67 @@ duf_fill_pi_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
   return pathid;
 }
 
-unsigned long long
+/* to replace duf_update_pathid_down_filter */
+/* duf_fill_pi_flt_uni:
+ * update (collected below) information for path
+ * */
+
+static unsigned long long
 duf_fill_pathid_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
 {
   return duf_fill_pi_flt_uni( pathid, pdi );
 }
+
+
+/* callback of type duf_scan_callback_dir_t */
+int
+duf_fill_dir_uni( unsigned long long pathid, const char *name, unsigned long long items, duf_dirinfo_t * pdi,
+                  struct duf_scan_callbacks_s *sccb )
+{
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  if ( duf_config->cli.trace.fill > 1 )
+    fprintf( stderr, "[FILL ] %20s: pathid=%llu\n", __func__, pathid );
+
+  if ( pdi && ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) )
+  {
+    char *path = duf_pathid_to_path( pathid );
+
+    if ( duf_config->cli.trace.fill > 1 )
+      fprintf( stderr, "[FILL ] %20s: path=%s\n", __func__, path );
+
+/* TODO additionally 
+ * for each direntry:
+ *  -- 
+ * */
+
+/* stat */
+    if ( !pdi->u.noself_dir )
+    {
+      /* pathid = duf_update_realpath_self_up( real_path, NULL, !pfilter->u.noupper_dirs ); */
+    }
+/* duf_fill_pathid_filter_uni:
+ * update (collected below) information for path
+ * */
+    duf_fill_pathid_filter_uni( pathid, pdi );
+
+
+    if ( duf_config->cli.trace.fill > 1 )
+      fprintf( stderr, "[FILL ] %20s: end path=%s\n", __func__, path );
+    mas_free( path );
+  }
+
+  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  return 0;
+}
+
+
+
+
+
+duf_scan_callbacks_t duf_fill_callbacks = {
+  .fieldset = "duf_filenames.pathid",
+  .init_scan = NULL,
+  .directory_scan = duf_fill_dir_uni,
+  .file_scan = duf_fill_files_uni,
+};

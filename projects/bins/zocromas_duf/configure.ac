@@ -16,6 +16,7 @@ m4_include([m4zoc/varscheck.m4])
 # Checks for libraries.
 AX_LIB_CRYPTO([yes])
 AX_CHECK_CRYPTO_LIB([MD5],[MD5])
+# AX_CHECK_CRYPTO_LIB([BSD],[BSD])
 AX_LIB_SQLITE3([3.7])
 
 PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])

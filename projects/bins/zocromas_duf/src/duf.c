@@ -190,13 +190,13 @@ duf_action_new( void )
 {
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* --drop-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->drop_tables )
+  if ( duf_config->cli.act.drop_tables )
     duf_clear_tables(  );
 /* --create-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->create_tables )
+  if ( duf_config->cli.act.create_tables )
     duf_check_tables(  );
 /* --add-path									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->add_path )
+  if ( duf_config->cli.act.add_path )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_add_path( duf_config->targv[ia], "argument" );
 /*  --update-path								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
@@ -208,33 +208,33 @@ duf_action_new( void )
 
 
 
-  if ( duf_config->update_md5 )
-  {
-    if ( duf_config->targc > 0 )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_update_md5_path( duf_config->targv[ia], duf_config->u );
-    else
-      duf_update_md5_path( NULL, duf_config->u );
-  }
+  /* if ( duf_config->update_md5 )                                      */
+  /* {                                                                  */
+  /*   if ( duf_config->targc > 0 )                                     */
+  /*     for ( int ia = 0; ia < duf_config->targc; ia++ )               */
+  /*       duf_update_md5_path( duf_config->targv[ia], duf_config->u ); */
+  /*   else                                                             */
+  /*     duf_update_md5_path( NULL, duf_config->u );                    */
+  /* }                                                                  */
 
 
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->zero_duplicates )
+  if ( duf_config->cli.act.zero_duplicates )
     duf_zero_duplicates(  );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->update_duplicates )
+  if ( duf_config->cli.act.update_duplicates )
     duf_update_duplicates(  );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->zero_filedata )
+  if ( duf_config->cli.act.zero_filedata )
     duf_zero_filedatas(  );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->update_filedata )
+  if ( duf_config->cli.act.update_filedata )
     duf_update_filedatas(  );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->update_mdpath )
+  if ( duf_config->cli.act.update_mdpath )
     duf_update_mdpaths( 0 );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->update_mdpath_selective )
+  if ( duf_config->cli.act.update_mdpath_selective )
   {
     if ( !duf_config->targc )
       duf_update_mdpaths( 0 );
@@ -253,7 +253,7 @@ duf_action_new( void )
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
-  if ( duf_config->update_exif )
+  if ( duf_config->cli.act.update_exif )
   {
     if ( !duf_config->targc )
       duf_update_exif( 0 );
@@ -272,21 +272,21 @@ duf_action_new( void )
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
-  /* if ( duf_config->print_paths )          */
+  /* if ( duf_config->cli.act.print_paths )          */
   /*   duf_print_paths( duf_config->group ); */
 /*  --print-dirs								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-/*   if ( duf_config->print_dirs )                                                                                                 */
+/*   if ( duf_config->cli.act.print_dirs )                                                                                                 */
 /*   {                                                                                                                             */
 /* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*     if ( duf_config->targc > 0 )                                                                                                */
 /*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
-/*         duf_print_dirs( duf_config->targv[ia], duf_config->u, duf_config->tree );                                               */
+/*         duf_print_dirs( duf_config->targv[ia], duf_config->u, duf_config->cli.act.tree );                                               */
 /*     else                                                                                                                        */
-/*       duf_print_dirs( NULL, duf_config->u, duf_config->tree );                                                                  */
+/*       duf_print_dirs( NULL, duf_config->u, duf_config->cli.act.tree );                                                                  */
 /* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*   }                                                                                                                             */
 /*  --print-files								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-/*   if ( duf_config->print_files )                                                                                                */
+/*   if ( duf_config->cli.act.print_files )                                                                                                */
 /*   {                                                                                                                             */
 /*     if ( duf_config->targc > 0 )                                                                                                */
 /*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
@@ -296,17 +296,17 @@ duf_action_new( void )
 /* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*   }                                                                                                                             */
 /*  --uni-scan									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->uni_scan )
+  if ( duf_config->cli.act.uni_scan )
   {
     duf_uni_scan_all( duf_config );
   }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->same_md5 )
-    duf_print_md5_same( 1, duf_config->limit );
+  if ( duf_config->cli.act.same_md5 )
+    duf_print_md5_same( 1, duf_config->cli.limit );
 
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
 
-  if ( duf_config->same_files )
+  if ( duf_config->cli.act.same_files )
   {
     if ( !duf_config->targc )
       fprintf( stderr, "argument needed\n" );
@@ -315,15 +315,15 @@ duf_action_new( void )
         duf_print_files_same( duf_config->targv[ia] );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
-  if ( duf_config->same_exif )
-    duf_print_exif_same( 1, duf_config->limit );
+  if ( duf_config->cli.act.same_exif )
+    duf_print_exif_same( 1, duf_config->cli.limit );
 
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->to_group )
+  if ( duf_config->cli.act.to_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( duf_config->from_group )
+  if ( duf_config->cli.act.from_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -347,12 +347,12 @@ main_db( int argc, char **argv )
   dbfile = mas_strdup( duf_config->db_dir );
   dbfile = mas_strcat_x( dbfile, "/" );
   dbfile = mas_strcat_x( dbfile, duf_config->db_name );
-  if ( duf_config->verbose )
+  if ( duf_config->cli.dbg.verbose )
   {
     for ( int ia = 0; ia < argc; ia++ )
       fprintf( stderr, ">>>>>>>> argv[%d]: %s\n", ia, argv[ia] );
     duf_config_show(  );
-    if ( duf_config->verbose > 1 )
+    if ( duf_config->cli.dbg.verbose > 1 )
       fprintf( stderr, "dbfile: %s\n", dbfile );
   }
   if ( 0 == duf_sql_open( dbfile ) )
@@ -373,7 +373,7 @@ main( int argc, char **argv )
 {
   if ( 0 == duf_config_create(  ) )
   {
-    /* duf_config->verbose = 4; */
+    /* duf_config->cli.dbg.verbose = 4; */
     int r = duf_cli_options( argc, argv );
     extern int dbgfunc_enabled;
 

@@ -4,6 +4,7 @@
 /* #include <unistd.h> */
 #include <sys/stat.h>
 
+#include <openssl/md5.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -78,7 +79,7 @@ duf_sql_print_tree_prefix_uni( duf_dirinfo_t * pdi, int file )
 }
 
 /* callback of  duf_scan_callback_file_t */
-int
+static int
 duf_sql_uni_scan_print_files_plain_uni( unsigned long long pathid, unsigned long long filenameid, const char *name, void *str_cb_udata,
                                         duf_dirinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
 {
@@ -86,15 +87,22 @@ duf_sql_uni_scan_print_files_plain_uni( unsigned long long pathid, unsigned long
   /* duf_sql_print_tree_prefix_uni( pdi, 1 ); */
 
   /* SQL at duf_scan_files_by_pathid */
-
-  unsigned long long filesize = duf_sql_ull_by_name( "filesize", precord, 1 );
-  unsigned long long filemode = duf_sql_ull_by_name( "filemode", precord, 1 );
+  unsigned long long filesize = duf_sql_ull_by_name( "filesize", precord, 0 );
+  unsigned long long filemode = duf_sql_ull_by_name( "filemode", precord, 0 );
   struct stat st;
 
-  st.st_mode = ( mode_t ) filemode;
+  unsigned long long md5a;
+  unsigned long long md5b;
+
+
   char modebuf[] = "----------";
   char *pmode = modebuf;
 
+  md5a = duf_sql_ull_by_name( "md5sum1", precord, 0 );
+  md5b = duf_sql_ull_by_name( "md5sum2", precord, 0 );
+
+
+  st.st_mode = ( mode_t ) filemode;
   pmode++;
   if ( S_IRUSR & st.st_mode )
   {
@@ -145,14 +153,14 @@ duf_sql_uni_scan_print_files_plain_uni( unsigned long long pathid, unsigned long
 
   /* printf( "> %s\n", duf_sql_str_by_name( "filename", precord ) ); */
   /* printf( "-rw-------  1 mastar mastar-firefox 106580068 Jan 27 2014 12:35:27 sample_video_hd.zip\n" ); */
-  printf( "%s> %9llu %s %llu\n", modebuf, filesize, name, filemode );
+  printf( "%s> %9llu %016llx%016llx %s\n", modebuf, filesize, md5a, md5b, name );
 
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 
 /* callback of  duf_scan_callback_file_t */
-int
+static int
 duf_sql_uni_scan_print_files_tree_uni( unsigned long long pathid, unsigned long long filenameid, const char *name, void *str_cb_udata,
                                        duf_dirinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
 {
@@ -169,7 +177,7 @@ duf_sql_uni_scan_print_files_tree_uni( unsigned long long pathid, unsigned long 
 }
 
 
-int
+static int
 duf_sql_scan_print_dir_uni( unsigned long long pathid, const char *name, unsigned long long items,
                             duf_dirinfo_t * pdi, struct duf_scan_callbacks_s *sccb )
 {
@@ -190,7 +198,7 @@ duf_sql_scan_print_dir_uni( unsigned long long pathid, const char *name, unsigne
 /*
  * this is callback of type: duf_scan_callback_dir_t (second range):
  * */
-int
+static int
 duf_sql_scan_print_tree_uni( unsigned long long pathid, const char *name, unsigned long long items,
                              duf_dirinfo_t * pdi, struct duf_scan_callbacks_s *sccb )
 {
@@ -209,3 +217,19 @@ duf_sql_scan_print_tree_uni( unsigned long long pathid, const char *name, unsign
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
+
+duf_scan_callbacks_t duf_print_tree_callbacks = {
+  .fieldset = "duf_filenames.pathid, duf_filenames.name as filename",
+  .init_scan = NULL,
+  .directory_scan = duf_sql_scan_print_tree_uni,
+  .file_scan = duf_sql_uni_scan_print_files_tree_uni,
+};
+
+duf_scan_callbacks_t duf_print_dir_callbacks = {
+  .fieldset =
+        "duf_filenames.pathid, duf_filenames.name as filename, duf_filedatas.size as filesize, "
+        "duf_filedatas.mode as filemode, duf_md5.md5sum1, duf_md5.md5sum2",
+  .init_scan = NULL,
+  .directory_scan = duf_sql_scan_print_dir_uni,
+  .file_scan = duf_sql_uni_scan_print_files_plain_uni,
+};

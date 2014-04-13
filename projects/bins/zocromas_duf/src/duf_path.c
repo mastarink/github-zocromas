@@ -61,15 +61,14 @@ duf_sql_pathid_to_path( duf_record_t * precord, va_list args, void *sel_cb_udata
   pud = ( pathid_to_path_udata_t * ) sel_cb_udata;
   if ( precord->nrow == 0 )
   {
-    if ( duf_config->verbose > 1 )
+    if ( duf_config->cli.dbg.verbose > 1 )
     {
       fprintf( stderr, "%s:%s='%s' -- r[%d]='%s' / %llu ; '%s'\n", __func__, precord->pnames[0], precord->presult[0],
-               duf_sql_pos_by_name( "parentid", precord,0 ), duf_sql_str_by_name( "parentid", precord,0 ), duf_sql_ull_by_name( "parentid",
-                                                                                                                            precord,0 ),
-               duf_sql_str_by_name( "dirname", precord,0 ) );
+               duf_sql_pos_by_name( "parentid", precord, 0 ), duf_sql_str_by_name( "parentid", precord, 0 ),
+               duf_sql_ull_by_name( "parentid", precord, 0 ), duf_sql_str_by_name( "dirname", precord, 0 ) );
     }
-    pud->parentid = duf_sql_ull_by_name( "parentid", precord,0 );
-    pud->name = mas_strdup( duf_sql_str_by_name( "dirname", precord,0 ) );
+    pud->parentid = duf_sql_ull_by_name( "parentid", precord, 0 );
+    pud->name = mas_strdup( duf_sql_str_by_name( "dirname", precord, 0 ) );
     /* pud->parentid = strtoll( precord->presult[0], NULL, 10 ); */
     /* pud->name = mas_strdup( precord->presult[1] );            */
   }
@@ -118,12 +117,13 @@ duf_sql_path_to_pathid( duf_record_t * precord, va_list args, void *sel_cb_udata
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   ppathid = ( unsigned long long * ) sel_cb_udata;
-  if ( duf_config->verbose > 1 )
+  if ( duf_config->cli.dbg.verbose > 1 )
   {
     fprintf( stderr, "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0],
-             duf_sql_pos_by_name( "pathid", precord,0 ), duf_sql_str_by_name( "pathid", precord,0 ), duf_sql_ull_by_name( "pathid", precord,0 ) );
+             ( duf_sql_pos_by_name( "pathid", precord, 0 ) ), ( duf_sql_str_by_name( "pathid", precord, 0 ) ),
+             ( duf_sql_ull_by_name( "pathid", precord, 0 ) ) );
   }
-  ( *ppathid ) = duf_sql_ull_by_name( "pathid", precord,0 ); /* strtoll( precord->presult[0], NULL, 10 ); */
+  ( *ppathid ) = duf_sql_ull_by_name( "pathid", precord, 0 ); /* strtoll( precord->presult[0], NULL, 10 ); */
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, ( *ppathid ) );
   return 0;
 }
@@ -243,10 +243,10 @@ duf_sql_delete_path_by_groupid( duf_record_t * precord, va_list args,
   unsigned long long pathid;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( duf_config->verbose > 1 )
+  if ( duf_config->cli.dbg.verbose > 1 )
   {
-    fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord,0 ),
-             duf_sql_str_by_name( "id", precord,0 ), duf_sql_ull_by_name( "id", precord,0 ) );
+    fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord, 0 ),
+             duf_sql_str_by_name( "id", precord, 0 ), duf_sql_ull_by_name( "id", precord, 0 ) );
   }
   pathid = strtoll( precord->presult[0], NULL, 10 );
   r = duf_sql( "DELETE FROM duf_path_group WHERE id='%lld'", pathid );
@@ -276,8 +276,7 @@ duf_delete_path_by_groupid( unsigned long long groupid, unsigned long long pathi
  * */
 static int
 duf_sql_scan_print_path( unsigned long long pathid, unsigned long long filenameid,
-                         const char *name,  void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                         duf_record_t * precord )
+                         const char *name, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   char *path;
 
@@ -293,17 +292,17 @@ duf_sql_scan_print_path( unsigned long long pathid, unsigned long long filenamei
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
  * */
-int
+static int
 duf_sql_scan_paths( duf_record_t * precord, va_list args, void *sel_cb_udata,
                     duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   unsigned long long pathid;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( duf_config->verbose > 1 )
+  if ( duf_config->cli.dbg.verbose > 1 )
   {
-    fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord ,0),
-             duf_sql_str_by_name( "id", precord ,0), duf_sql_ull_by_name( "id", precord ,0) );
+    fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord, 0 ),
+             duf_sql_str_by_name( "id", precord, 0 ), duf_sql_ull_by_name( "id", precord, 0 ) );
   }
   pathid = strtoll( precord->presult[0], NULL, 10 );
   {
@@ -315,7 +314,7 @@ duf_sql_scan_paths( duf_record_t * precord, va_list args, void *sel_cb_udata,
 /* 
  * duf_scan_callback_file_t:
  * */
-      ( *str_cb ) ( pathid, 0 /* filenameid */ , NULL /* name */ ,  STR_CB_UDATA_DEF,
+      ( *str_cb ) ( pathid, 0 /* filenameid */ , NULL /* name */ , STR_CB_UDATA_DEF,
                     ( duf_dirinfo_t * ) NULL, sccb, precord );
     }
     mas_free( path );
@@ -427,10 +426,10 @@ duf_sql_insert_path( duf_record_t * precord, va_list args, void *sel_cb_udata,
   pdir_id = ( unsigned long long * ) sel_cb_udata;
   if ( precord->nrow == 0 )
   {
-    if ( duf_config->verbose > 1 )
+    if ( duf_config->cli.dbg.verbose > 1 )
     {
-      fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord,0 ),
-               duf_sql_str_by_name( "id", precord,0 ), duf_sql_ull_by_name( "id", precord,0 ) );
+      fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord, 0 ),
+               duf_sql_str_by_name( "id", precord, 0 ), duf_sql_ull_by_name( "id", precord, 0 ) );
     }
     *pdir_id = strtoll( precord->presult[0], NULL, 10 );
   }

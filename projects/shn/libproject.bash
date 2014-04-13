@@ -130,16 +130,16 @@ function shn_project_file_cd ()
   shn_dbgmsg "$file => $prj"
   shn_project_cd "$prj"
 }
-function shn_file_edit ()
-{
-  if [[ "$@" ]] ; then
-    shn_project_file_cd $@
-    gvim_caller2 $@
-    shn_project_cd -
-  else
-    gvim_caller2
-  fi
-}
+# function shn_file_edit ()
+# {
+#   if [[ "$@" ]] ; then
+#     shn_project_file_cd $@
+#     gvim_caller2 $@
+#     shn_project_cd -
+#   else
+#     gvim_caller2
+#   fi
+# }
 function shn_project_cd ()
 {
   local p prj

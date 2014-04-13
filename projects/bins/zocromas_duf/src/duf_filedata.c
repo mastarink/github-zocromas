@@ -200,7 +200,7 @@ duf_update_filedatas( void )
 {
   int r;
 
-  if ( duf_config->verbose )
+  if ( duf_config->cli.dbg.verbose )
     fprintf( stderr, "Start duf_update_filedatas\n" );
   for ( int it = 0; it < sizeof( ft_ext ) / sizeof( ft_ext[0] ); it++ )
   {
@@ -231,7 +231,7 @@ duf_update_filedatas( void )
                         ft_started[it].match );
   }
 
-  if ( duf_config->verbose )
+  if ( duf_config->cli.dbg.verbose )
     fprintf( stderr, "End duf_update_filedatas\n" );
   return r;
 }
@@ -256,7 +256,7 @@ duf_sql_on_insert_filedata( duf_record_t * precord, va_list args, void *sel_cb_u
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
   presd = ( unsigned long long * ) sel_cb_udata;
 
-  if ( duf_config->verbose > 1 )
+  if ( duf_config->cli.dbg.verbose > 1 )
   {
     fprintf( stderr, "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0],
              duf_sql_pos_by_name( "dataid", precord, 0 ), duf_sql_str_by_name( "dataid", precord, 0 ), duf_sql_ull_by_name( "dataid",
@@ -274,7 +274,7 @@ duf_sql_on_insert_filedata( duf_record_t * precord, va_list args, void *sel_cb_u
 /*   int r;                                                                                                                            */
 /*   unsigned long long resd;                                                                                                          */
 /*                                                                                                                                     */
-/*   if ( duf_config->fill_trace > 2 )                                                                                                 */
+/*   if ( duf_config->cli.trace.fill > 2 )                                                                                                 */
 /*     fprintf( stderr, "FILEDATA\n" );                                                                                                */
 /* (*                                                                              *) duf_dbgfunc( DBG_START, __func__, __LINE__ );    */
 /*   r = duf_sql_c( "INSERT INTO duf_filedatas (dev,inode,size,md5id,ucnt,now) values ('%lu','%lu','%lu','%lu',0,datetime())",         */
@@ -290,7 +290,7 @@ duf_sql_on_insert_filedata( duf_record_t * precord, va_list args, void *sel_cb_u
 /*     fprintf( stderr, "error duf_insert_filedata %d\n", r );                                                                         */
 /*   }                                                                                                                                 */
 /* (*                                                                              *) duf_dbgfunc( DBG_END, __func__, __LINE__ );      */
-/*   if ( duf_config->fill_trace > 2 )                                                                                                 */
+/*   if ( duf_config->cli.trace.fill > 2 )                                                                                                 */
 /*     fprintf( stderr, "/FILEDATA %llu\n", resd );                                                                                    */
 /*   return resd;                                                                                                                      */
 /* }                                                                                                                                   */
@@ -301,7 +301,7 @@ duf_insert_filedata_uni( const struct stat *pst_file )
   int r;
   unsigned long long resd;
 
-  if ( duf_config->fill_trace > 2 )
+  if ( duf_config->cli.trace.fill > 2 )
     fprintf( stderr, "FILEDATA\n" );
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( pst_file )
@@ -328,7 +328,7 @@ duf_insert_filedata_uni( const struct stat *pst_file )
     }
   }
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  if ( duf_config->fill_trace > 2 )
+  if ( duf_config->cli.trace.fill > 2 )
     fprintf( stderr, "/FILEDATA %llu\n", resd );
   return resd;
 }

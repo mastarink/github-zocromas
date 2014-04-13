@@ -21,7 +21,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
 {
   int minverbose = 4;
 
-  if ( dbgfunc_enabled && duf_config && ( duf_config->verbose >= minverbose ) )
+  if ( dbgfunc_enabled && duf_config && ( duf_config->cli.dbg.verbose >= minverbose ) )
   {
     static int inited = 0;
     static char pref[1024];
@@ -51,13 +51,13 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
     default:
       break;
     }
-    if ( ( !duf_config->max_dbgline || duf_config->dbglines < duf_config->max_dbgline )
-         && ( duf_config->dbglines >= duf_config->min_dbgline ) )
+    if ( ( !duf_config->cli.dbg.max_line || duf_config->cli.dbg.lines < duf_config->cli.dbg.max_line )
+         && ( duf_config->cli.dbg.lines >= duf_config->cli.dbg.min_line ) )
     {
 
-      /* fprintf( stderr, "%3d:%-28s .........\n", duf_config->dbglines, duf_dbgfunlevel, line, func ); */
-      /* fprintf( stderr, "%4lu of %4lu <<<<<<<<<<\n", duf_config->dbglines, duf_config->max_dbgline ); */
-      fprintf( stderr, "%4lu. ", duf_config->dbglines );
+      /* fprintf( stderr, "%3d:%-28s .........\n", duf_config->cli.dbg.lines, duf_dbgfunlevel, line, func ); */
+      /* fprintf( stderr, "%4lu of %4lu <<<<<<<<<<\n", duf_config->cli.dbg.lines, duf_config->cli.dbg.max_line ); */
+      fprintf( stderr, "%4lu. ", duf_config->cli.dbg.lines );
       /* fprintf( stderr, "L%2u", duf_dbgfunlevel ); */
       switch ( code )
       {
@@ -160,7 +160,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
         break;
       }
     }
-    duf_config->dbglines++;
+    duf_config->cli.dbg.lines++;
   }
   return 0;
 }

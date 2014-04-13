@@ -5,6 +5,8 @@ sfind libsetup.bash
 sfind libbuild.bash
 sfind libproject.bash
 
+tab sfind libedit.bash
+
 tab sfind librun.bash
 sfind libshn.bash
 sfind libtools.bash
