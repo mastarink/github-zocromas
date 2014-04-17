@@ -16,7 +16,10 @@
 #include "duf_file.h"
 #include "duf_path.h"
 
+#include "duf_sql_def.h"
 #include "duf_sql.h"
+#include "duf_sql_field.h"
+
 #include "duf_dbg.h"
 
 /* ###################################################################### */
@@ -46,14 +49,14 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize )
 
   r = duf_sql_c( "INSERT INTO duf_md5 (md5sum1,md5sum2,size,ucnt,now) values ('%lld','%lld','%llu',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0], ( unsigned long long ) fsize );
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sql_insert_md5_uni, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT id as md5id FROM duf_md5 WHERE md5sum1='%lld' and md5sum2='%lld'", md64[1], md64[0] );
   }
   else if ( !r /* assume SQLITE_OK */  )
-    resmd = duf_last_insert_rowid(  );
+    resmd = duf_sql_last_insert_rowid(  );
   else
     fprintf( stderr, "error duf_insert_md5_uni %d\n", r );
 
@@ -142,11 +145,11 @@ duf_insert_keydata_uni( unsigned long long pathid, unsigned long long filenameid
 
   r = duf_sql_c( "INSERT INTO duf_keydata (pathid, filenameid, md5id, ucnt, now) " " VALUES ('%llu', '%llu', '%llu',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, pathid, filenameid, resmd );
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
   }
   else if ( !r /* assume SQLITE_OK */  )
-    resp = duf_last_insert_rowid(  );
+    resp = duf_sql_last_insert_rowid(  );
   else
     fprintf( stderr, "ERROR %s %d\n", __func__, r );
   return resp;

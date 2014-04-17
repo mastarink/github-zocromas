@@ -26,8 +26,12 @@ duf_config_create( void )
   memset( duf_config, 0, sizeof( duf_config ) );
   duf_config->u.maxdepth = 100;
   duf_config->db_dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
-  duf_config->db_dir = mas_strcat_x( duf_config->db_dir, "/../duf_db" );
-  duf_config->db_name = mas_strdup( "duf-photo.sqlite3" );
+  if ( duf_config->db_dir )
+  {
+    duf_config->db_dir = mas_strcat_x( duf_config->db_dir, "/../duf_db" );
+  }
+  duf_config->db_name = mas_strdup( "duf-default.sqlite3" );
+  duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }

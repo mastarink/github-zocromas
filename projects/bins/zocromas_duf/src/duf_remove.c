@@ -15,7 +15,6 @@
 /* #include "duf_file.h" */
 /* #include "duf_file_md5id.h" */
 /* #include "duf_file_pathid.h" */
-/* #include "duf_md5.h" */
 /* #include "duf_finddup.h" */
 /* #include "duf_update.h" */
 

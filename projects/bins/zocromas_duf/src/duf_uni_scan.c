@@ -15,6 +15,7 @@
 #include "duf_config.h"
 
 #include "duf_sql.h"
+#include "duf_sql_field.h"
 
 #include "duf_file.h"
 #include "duf_path.h"
@@ -111,6 +112,13 @@ duf_uni_scan_dir( void *str_cb_udata, duf_dirinfo_t * xpdi, duf_scan_callbacks_t
  *     5. for <current> dir call sccb->directory_scan_after
  * */
         r = duf_scan_dirs_by_parentid( dirid, duf_uni_scan_dir, pdi, sccb, precord );
+        if ( r == DUF_ERROR_MAX_REACHED )
+        {
+          if ( pdi->depth == 0 )
+            DUF_TRACE( action, 0, "Maximum reached ...." );
+        }
+        else if ( r < 0 )
+          DUF_TRACE( action, 0, "r=%d", r );
 #if 0
         pdi->levinfo[pdi->depth + 1]--;
 #endif
@@ -233,7 +241,9 @@ int
 duf_uni_scan_all( void )
 {
   int r = 0;
-  duf_scan_callbacks_t *pscan_callbacks = NULL;
+  duf_scan_callbacks_t **ppscan_callbacks;
+  int max_steps = 100;
+  int steps = 0;
 
   extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;
@@ -245,27 +255,48 @@ duf_uni_scan_all( void )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  if ( duf_config->cli.act.fill )
-    pscan_callbacks = &duf_fill_callbacks;
+  DUF_TRACE( action, 0, "prep" );
+  ppscan_callbacks = mas_malloc( max_steps * sizeof( duf_scan_callbacks_t * ) );
+  if ( steps < max_steps && duf_config->cli.act.fill )
+  {
+    DUF_TRACE( action, 0, "prep fill ..." );
+    ppscan_callbacks[steps++] = &duf_fill_callbacks;
+  }
 
-  if ( duf_config->cli.act.mdpath && duf_config->cli.act.fill )
-    pscan_callbacks = &duf_fill_mdpath_callbacks;
-  if ( duf_config->cli.act.md5 && duf_config->cli.act.fill )
-    pscan_callbacks = &duf_fill_md5_callbacks;
+  if ( steps < max_steps && duf_config->cli.act.mdpath && duf_config->cli.act.fill )
+  {
+    DUF_TRACE( action, 0, "prep mdpath" );
+    ppscan_callbacks[steps++] = &duf_fill_mdpath_callbacks;
+  }
+  if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.fill )
+  {
+    DUF_TRACE( action, 0, "prep fill md5" );
+    ppscan_callbacks[steps++] = &duf_fill_md5_callbacks;
+  }
 
-  if ( duf_config->cli.act.md5 && duf_config->cli.act.print )
-    pscan_callbacks = &duf_print_md5_callbacks;
+  if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.print )
+  {
+    DUF_TRACE( action, 0, "prep print md5" );
+    ppscan_callbacks[steps++] = &duf_print_md5_callbacks;
+  }
 
-  if ( duf_config->cli.act.print && duf_config->cli.act.tree && !duf_config->cli.act.md5 )
-    pscan_callbacks = &duf_print_tree_callbacks;
+  if ( steps < max_steps && duf_config->cli.act.print && duf_config->cli.act.tree && !duf_config->cli.act.md5 )
+  {
+    DUF_TRACE( action, 0, "prep print tree" );
+    ppscan_callbacks[steps++] = &duf_print_tree_callbacks;
+  }
 
-  if ( duf_config->cli.act.print && !duf_config->cli.act.tree && !duf_config->cli.act.md5 )
-    pscan_callbacks = &duf_print_dir_callbacks;
+  if ( steps < max_steps && duf_config->cli.act.print && !duf_config->cli.act.tree && !duf_config->cli.act.md5 )
+    ppscan_callbacks[steps++] = &duf_print_dir_callbacks;
 
-  if ( duf_config->cli.act.sample )
-    pscan_callbacks = &duf_sample_callbacks;
+  if ( steps < max_steps && duf_config->cli.act.sample )
+    ppscan_callbacks[steps++] = &duf_sample_callbacks;
 
-  r = duf_uni_scan_targ( pscan_callbacks );
+  for ( int step = 0; step < steps; step++ )
+  {
+    DUF_TRACE( action, 0, "step %d", step );
+    r = duf_uni_scan_targ( ppscan_callbacks[step] );
+  }
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }

@@ -6,9 +6,6 @@
 #  define DUF_FALSE 0
 #  define DUF_TRUE 1
 
-/* #  define DUF_TRACE_NO DUF_FALSE */
-/* #  define DUF_TRACE_YES DUF_TRUE */
-
 #  define DUF_RECURSIVE_NO DUF_FALSE
 #  define DUF_RECURSIVE_YES DUF_TRUE
 
@@ -29,17 +26,18 @@
 #  define DUF_SFIELD_OPT(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 1 )
 #  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
 
-#  define DUF_IF_TRACE(name) (duf_config && duf_config->cli.trace.new && duf_config->cli.trace.name )
-#  define DUF_IF_TRACEN(name,min) (duf_config && duf_config->cli.trace.new && duf_config->cli.trace.name>min )
+#  define DUF_IF_TRACE(name) (duf_config && !duf_config->cli.trace.nonew && duf_config->cli.trace.name )
+#  define DUF_IF_TRACEN(name,min) (duf_config && !duf_config->cli.trace.nonew && duf_config->cli.trace.name>min )
 #  define DUF_TRACE( name, min, ...) \
-    duf_trace( #name, ((duf_config && duf_config->cli.trace.new) ? duf_config->cli.trace.name: 0), min, \
+    duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->cli.trace.name: 0), min, \
 		__func__,__LINE__, \
 			duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
 #  define DUF_TRACE_SCAN( min, ...) DUF_TRACE( scan, min, __VA_ARGS__)
 #  define DUF_TRACE_SAMPLE( min, ...) DUF_TRACE( sample, min, __VA_ARGS__)
+#  define DUF_ERROR(...) DUF_TRACE( error, 0, __VA_ARGS__ )
+
 
 #  include "duf_cli_types.h"
-
 
 typedef enum
 {
@@ -55,6 +53,22 @@ typedef enum
   DBG_ENDRS,
   DBG_END,
 } duf_dbgcode_t;
+
+typedef enum
+{
+  DUF_ERROR_ERROR_BASE=-30000,
+  DUF_ERROR_MAIN,
+  DUF_ERROR_CHECK_TABLES,
+  DUF_ERROR_CLEAR_TABLES,
+  DUF_ERROR_NO_DIRID,
+  DUF_ERROR_NO_STR_CB,
+  DUF_ERROR_MAX_REACHED,
+  DUF_ERROR_GET_FIELD,
+  DUF_ERROR_NO_FIELD,
+  DUF_ERROR_NO_FIELD_OPTIONAL,
+  DUF_ERROR_INSERT_MDPATH,
+  DUF_ERROR_STAT,
+} duf_error_code_t;
 
 typedef struct
 {
@@ -130,7 +144,7 @@ typedef struct
 {
   unsigned long long md5id;
   unsigned long long size;
-  unsigned long long dupcnt;
+  unsigned long long nduplicates;
 } md5_std_data_t;
 
 typedef struct

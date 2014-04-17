@@ -14,7 +14,6 @@
 /* #include "duf_path.h" */
 /* #include "duf_insert.h" */
 #include "duf_update_realpath.h"
-/* #include "duf_update_pathid.h" */
 
 #include "duf_dbg.h"
 

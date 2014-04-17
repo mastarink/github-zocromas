@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
-#  define DUF_OPTIONS_SHORT "hxD:N:RvSIQTCfd5iMt"
+#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTCfd5iMtZBPO"
 typedef enum
 {
   DUF_OPTION_NONE,
@@ -11,6 +11,8 @@ typedef enum
   DUF_OPTION_DB_NAME = 'N',
   DUF_OPTION_RECURSIVE = 'R',
   DUF_OPTION_VERBOSE = 'v',
+  DUF_OPTION_ACTION_TRACE = 'A',
+  DUF_OPTION_ERROR_TRACE = 'e',
   DUF_OPTION_SCAN_TRACE = 'S',
   DUF_OPTION_FILL_TRACE = 'I',
   DUF_OPTION_SQL_TRACE = 'Q',
@@ -21,7 +23,11 @@ typedef enum
   DUF_OPTION_MD5 = '5',
   DUF_OPTION_FILL = 'i',
   DUF_OPTION_MEMUSAGE = 'M',
-  DUF_OPTION_TOTALS='t',
+  DUF_OPTION_TOTALS = 't',
+  DUF_OPTION_ZERO_DB = 'Z',
+  DUF_OPTION_TREE_TO_DB = 'B',
+  DUF_OPTION_ADD_PATH = 'P',
+  DUF_OPTION_CREATE_TABLES = 'O',
 
   DUF_OPTION_LONG = 1000,
 
@@ -29,7 +35,7 @@ typedef enum
   DUF_OPTION_PATH_TRACE,
   DUF_OPTION_MD5_TRACE,
   DUF_OPTION_MDPATH_TRACE,
-  DUF_OPTION_TRACE_NEW,
+  DUF_OPTION_TRACE_NONEW,
   DUF_OPTION_TRACE_FILE,
   DUF_OPTION_TRACE_STDERR,
   DUF_OPTION_TRACE_STDOUT,
@@ -37,11 +43,9 @@ typedef enum
   DUF_OPTION_DEBUG,
   DUF_OPTION_MIN_DBGLINE,
   DUF_OPTION_MAX_DBGLINE,
-  
 
-  DUF_OPTION_CREATE_TABLES,
+
   DUF_OPTION_DROP_TABLES,
-  DUF_OPTION_ADD_PATH,
   DUF_OPTION_MDPATH,
   /* DUF_OPTION_UPDATE_PATH, */
   /* DUF_OPTION_UPDATE_MD5, */
@@ -123,7 +127,10 @@ typedef struct
 
 typedef struct
 {
+  unsigned error;
+  unsigned any;
   unsigned calls;
+  unsigned action;
   unsigned scan;
   unsigned sample;
   unsigned md5;
@@ -131,7 +138,7 @@ typedef struct
   unsigned fill;
   unsigned sql;
   unsigned statistics;
-  unsigned new;
+  unsigned nonew;
   unsigned path;
   FILE *out;
 } duf_config_cli_trace_t;

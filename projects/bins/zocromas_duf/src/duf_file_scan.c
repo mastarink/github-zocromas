@@ -15,6 +15,7 @@
 #include "duf_config.h"
 
 #include "duf_sql.h"
+#include "duf_sql_field.h"
 
 #include "duf_file.h"
 #include "duf_path.h"
@@ -120,17 +121,16 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
         /*   printf( "\t>>>>O> [%-30s] %5llu NDIRS[%u - 2]=%llu NDIRS[%u - 1]=%llu\n", __func__, pdi->levinfo[pdi->depth].dirid, pdi->depth, */
         /*           pdi->levinfo[pdi->depth - 2].ndirs, pdi->depth, pdi->levinfo[pdi->depth - 1].ndirs );                                   */
         /* }                                                                                                                                 */
-        if ( !pdi || ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq ) 
-	      && ( !pdi->u.maxitems.files || (pdi->items.files) < pdi->u.maxitems.files )
-	      && ( !pdi->u.maxitems.dirs || (pdi->items.dirs) < pdi->u.maxitems.dirs )
-	      && ( !pdi->u.maxitems.total || (pdi->items.total) < pdi->u.maxitems.total )
-	      ) )
+        if ( !pdi || ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )
+                       && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )
+                       && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )
+                       && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ) )
         {
           r = ( *str_cb ) ( str_cb_udata, pdi, sccb, precord );
         }
         else
         {
-          r = 1;
+          r = DUF_ERROR_MAX_REACHED;
           /* printf( "@ %llu of %llu :: %s (%d)\n", pdi->seq, pdi->u.maxseq, name, pdi->seq <= pdi->u.maxseq ); */
         }
       }
@@ -142,23 +142,17 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
     }
     else
     {
-      printf( "ERROR %s : %d\n", __func__, r );
-      if ( duf_config->cli.dbg.verbose > 1 )
-        fprintf( stderr, " ?????????????????\n" );
+      DUF_ERROR( "dirid missing" );
+      r = DUF_ERROR_NO_DIRID;
     }
   }
   else
   {
-    printf( "ERROR %s : %d\n", __func__, r );
+    DUF_ERROR( "str_cb missing" );
     duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+    r = DUF_ERROR_NO_STR_CB;
   }
-  /* printf( "\t>>>>Y> [%-30s] DEPTH=%u - 1 %llu - %llu\n", __func__, pdi->depth, pdi->levinfo[pdi->depth].ndirs, pdi->levinfo[pdi->depth-1].ndirs ); */
   pdi->depth--;
-  if ( pdi->depth < 0 )
-  {
-    fprintf( stderr, "@@@@@@@@@@@@@@@@@@@@@@@@@ Error\n" );
-    exit( 4 );
-  }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }

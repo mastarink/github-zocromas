@@ -25,7 +25,7 @@ const struct option longopts[] = {
   {.name = "trace-stdout",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDOUT},
   {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_ALL},
   {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
-  {.name = "trace-new",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NEW},
+  {.name = "trace-nonew",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NONEW},
   {.name = "trace-fill",.has_arg = optional_argument,.val = DUF_OPTION_FILL_TRACE},
   {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
   {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
@@ -33,6 +33,8 @@ const struct option longopts[] = {
   {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
   {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
   {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
+  {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
+  {.name = "trace-error",.has_arg = optional_argument,.val = DUF_OPTION_ERROR_TRACE},
   /* --------------- */
   {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
   {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
@@ -44,8 +46,11 @@ const struct option longopts[] = {
   /* --------------- */
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
   {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
+  {.name = "zero-db",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DB},
   {.name = "drop-tables",.has_arg = no_argument,.val = DUF_OPTION_DROP_TABLES},
   {.name = "create-tables",.has_arg = no_argument,.val = DUF_OPTION_CREATE_TABLES},
+  {.name = "tree2db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
+  {.name = "tree-to-db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
 
   {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES},
   {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
@@ -70,6 +75,7 @@ const struct option longopts[] = {
   {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
   {.name = "files",.has_arg = no_argument,.val = DUF_OPTION_FILES},
   {.name = "dirs",.has_arg = no_argument,.val = DUF_OPTION_DIRS},
+  {.name = "directories",.has_arg = no_argument,.val = DUF_OPTION_DIRS},
   /* --------------- */
   {.name = "min-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MINDIRFILES},
   {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
@@ -181,17 +187,29 @@ duf_cli_options( int argc, char *argv[] )
           duf_config->cli.trace.scan++;
         }
         break;
-      case DUF_OPTION_TRACE_NEW:
+      case DUF_OPTION_TRACE_NONEW:
         if ( optarg && *optarg )
-          duf_config->cli.trace.new = strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.nonew = strtol( optarg, NULL, 10 );
         else
-          duf_config->cli.trace.new++;
+          duf_config->cli.trace.nonew++;
         break;
       case DUF_OPTION_CALLS_TRACE:
         if ( optarg && *optarg )
           duf_config->cli.trace.calls = strtol( optarg, NULL, 10 );
         else
           duf_config->cli.trace.calls++;
+        break;
+      case DUF_OPTION_ACTION_TRACE:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.action = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.action++;
+        break;
+      case DUF_OPTION_ERROR_TRACE:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.error = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.error++;
         break;
       case DUF_OPTION_SCAN_TRACE:
         if ( optarg && *optarg )
@@ -249,6 +267,16 @@ duf_cli_options( int argc, char *argv[] )
         else
           duf_config->cli.totals++;
         break;
+      case DUF_OPTION_TREE_TO_DB:
+        /* -ORifd5 
+         * i.e.
+         *  --create-tables --uni-scan --recursive --fill --files --dirs --md5 */
+        duf_config->cli.act.create_tables = duf_config->cli.act.uni_scan = duf_config->u.recursive = duf_config->cli.act.fill =
+              duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.md5 = 1;
+        break;
+      case DUF_OPTION_ZERO_DB:
+        /* --drop-tables --create-tables */
+        duf_config->cli.act.create_tables = 1;
       case DUF_OPTION_DROP_TABLES:
         duf_config->cli.act.drop_tables = 1;
         break;

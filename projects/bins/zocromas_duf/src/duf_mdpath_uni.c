@@ -15,7 +15,10 @@
 #include "duf_path.h"
 #include "duf_file.h"
 
+#include "duf_sql_def.h"
 #include "duf_sql.h"
+#include "duf_sql_field.h"
+
 #include "duf_dbg.h"
 
 /* ###################################################################### */
@@ -107,19 +110,19 @@ duf_sql_insert_mdpath_uni( duf_record_t * precord, va_list args, void *sel_cb_ud
 static unsigned long long
 duf_insert_mdpath_uni( unsigned long long *md64 )
 {
-  unsigned long long resmd = -1;
+  unsigned long long resmd = DUF_ERROR_INSERT_MDPATH;
   int r = 0;
 
   r = duf_sql_c( "INSERT INTO duf_mdpath (mdpathsum1,mdpathsum2,ucnt,now) values ('%lld','%lld',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0] );
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sql_insert_mdpath_uni, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT id as md5id " " FROM duf_mdpath " " WHERE mdpathsum1='%lld' and mdpathsum2='%lld'", md64[1], md64[0] );
   }
   else if ( !r /* assume SQLITE_OK */  )
-    resmd = duf_last_insert_rowid(  );
+    resmd = duf_sql_last_insert_rowid(  );
   else
     fprintf( stderr, "error duf_insert_mdpath %d\n", r );
 

@@ -16,7 +16,10 @@
 #include "duf_path.h"
 #include "duf_file.h"
 
-#include "duf_sql.h"
+/* #include "duf_sql_def.h" */
+/* #include "duf_sql.h" */
+#include "duf_sql_field.h"
+
 #include "duf_dbg.h"
 
 /* ###################################################################### */

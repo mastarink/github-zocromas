@@ -11,7 +11,10 @@
 #include "duf_types.h"
 #include "duf_config.h"
 
+#include "duf_sql_def.h"
 #include "duf_sql.h"
+#include "duf_sql_field.h"
+
 #include "duf_insert.h"
 #include "duf_group.h"
 #include "duf_utils.h"
@@ -511,7 +514,7 @@ duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned lon
                  DUF_CONSTRAINT_IGNORE_YES, pst_dir->st_dev, pst_dir->st_ino, qbase_name ? qbase_name : base_name, parentid );
   mas_free( qbase_name );
   /* sql = NULL; */
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sql_insert_path */ , &dir_id, STR_CB_DEF, STR_CB_UDATA_DEF,
                         ( duf_dirinfo_t * ) NULL, &sccb,
@@ -519,7 +522,7 @@ duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned lon
   }
   else if ( !r /* assume SQLITE_OK */  )
   {
-    dir_id = duf_last_insert_rowid(  );
+    dir_id = duf_sql_last_insert_rowid(  );
     DUF_TRACE( path, 0, "Inserted dir_id: %lld", dir_id );
   }
   else

@@ -11,6 +11,7 @@
 #include "duf_types.h"
 
 #include "duf_config.h"
+#include "duf_utils.h"
 #include "duf_cli_options.h"
 
 #include "duf_sql.h"
@@ -18,19 +19,18 @@
 /* #include "duf_utils.h" */
 #include "duf_path.h"
 #include "duf_mdpath.h"
-#include "duf_file.h"
-#include "duf_file_md5id.h"
-#include "duf_file_pathid.h"
-#include "duf_md5.h"
+/* #include "duf_file.h" */
+/* #include "duf_file_md5id.h" */
+/* #include "duf_file_pathid.h" */
 #include "duf_finddup.h"
 
 #include "duf_add.h"
-#include "duf_update_path.h"
+/* #include "duf_update_path.h" */
 
 #include "duf_filedata.h"
 #include "duf_exif.h"
 
-#include "duf_dir_scan.h"
+/* #include "duf_dir_scan.h" */
 
 #include "duf_uni_scan.h"
 
@@ -185,17 +185,25 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
 int
 duf_action_new( void )
 {
+  int r = 0;
+
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* --drop-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.drop_tables )
-    duf_clear_tables(  );
+    r = duf_clear_tables(  );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --create-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.create_tables )
-    duf_check_tables(  );
+    r = duf_check_tables(  );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --add-path									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.add_path )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
-      duf_add_path( duf_config->targv[ia], "argument" );
+      r = duf_add_path( duf_config->targv[ia], "argument" );
+  DUF_TRACE( action, 0, "r=%d", r );
+
+
+
 /*  --update-path								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   /* if ( duf_config->update_path )                                                    */
   /*   for ( int ia = 0; ia < duf_config->targc; ia++ )                                */
@@ -217,19 +225,23 @@ duf_action_new( void )
 
 /* --zero-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.zero_duplicates )
-    duf_zero_duplicates(  );
+    r = duf_zero_duplicates(  );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --update-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.update_duplicates )
-    duf_update_duplicates(  );
+    r = duf_update_duplicates(  );
 /* --zero-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.zero_filedata )
     duf_zero_filedatas(  );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --update-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.update_filedata )
     duf_update_filedatas(  );
+  DUF_TRACE( action, 0, "r=%d", r );
 /*  --update-mdpaths								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.update_mdpath )
     duf_update_mdpaths( 0 );
+  DUF_TRACE( action, 0, "r=%d", r );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( duf_config->cli.act.update_mdpath_selective )
   {
@@ -250,6 +262,7 @@ duf_action_new( void )
       }
 /*  --update-exif								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
+  DUF_TRACE( action, 0, "r=%d", r );
   if ( duf_config->cli.act.update_exif )
   {
     if ( !duf_config->targc )
@@ -269,6 +282,7 @@ duf_action_new( void )
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
+  DUF_TRACE( action, 0, "r=%d", r );
   /* if ( duf_config->cli.act.print_paths )          */
   /*   duf_print_paths( duf_config->group ); */
 /*  --print-dirs								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
@@ -324,7 +338,7 @@ duf_action_new( void )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 /*
@@ -339,6 +353,7 @@ duf_action_new( void )
 int
 main_db( int argc, char **argv )
 {
+  int r = DUF_ERROR_MAIN;
   char *dbfile;
 
 
@@ -351,20 +366,29 @@ main_db( int argc, char **argv )
     if ( duf_config->cli.dbg.verbose )
     {
       for ( int ia = 0; ia < argc; ia++ )
-        fprintf( stderr, ">>>>>>>> argv[%d]: %s\n", ia, argv[ia] );
-      duf_config_show(  );
-      if ( duf_config->cli.dbg.verbose > 1 )
-        fprintf( stderr, "dbfile: %s\n", dbfile );
+        DUF_TRACE( any, 0, ">>>>>>>> argv[%d]: %s\n", ia, argv[ia] );
+      r = duf_config_show(  );
+      DUF_TRACE( any, 0, "dbfile: %s\n", dbfile );
     }
     if ( dbfile && 0 == duf_sql_open( dbfile ) )
     {
       duf_sql_exec( "PRAGMA synchronous = OFF" );
-      duf_action_new(  );
+      r = duf_action_new(  );
+      if ( r < 0 )
+        DUF_ERROR( "action FAIL" );
       /* duf_action( argc, argv ); */
-      duf_sql_close(  );
+      r = duf_sql_close(  );
     }
 
     mas_free( dbfile );
+  }
+  else if ( !duf_config->db_dir )
+  {
+    DUF_ERROR( "db_dir not set" );
+  }
+  else if ( !duf_config->db_name )
+  {
+    DUF_ERROR( "db_name not set" );
   }
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
@@ -452,6 +476,10 @@ main( int argc, char **argv )
         printf( "  run  --db-name=test`datem`.db  --uni-scan  --sample -d -R --trace-sample=2 /mnt/new_media/media/down/ --max-seq=10"
                 "\n" );
         printf( "  run  --db-name=test`datem`.db  --uni-scan -Ri5fd /home/mastar/a/down/ --trace-md5 --trace-new=0 --trace-stdout" "\n" );
+
+        printf( "===== Transition ============================" "\n" );
+        printf( "  run --update-duplicates --update-mdpath --update-filedata --update-exif" "\n" );
+        printf( "  run --db-name=test`datem`.db  --uni-scan  --mdpath --fill -dfR  /mnt/new_media/media/down/" "\n" );
         printf( "=============================================" "\n" );
         printf( "Collect basic file info recursively to db\n" );
         printf( "  run  --db-name=test`datem`.db   --uni-scan -R --fill --files   /home/mastar/a/down/" "\n" );
@@ -459,6 +487,16 @@ main( int argc, char **argv )
         printf( "  run  --db-name=test`datem`.db  --uni-scan -R --fill --md5 --files --dirs /home/mastar/a/down/" "\n" );
         printf( "List files recursively from db\n" );
         printf( "  run  --db-name=test`datem`.db  --uni-scan   --print -R -d  --files /home/mastar/a/down/google-chrome/ " "\n" );
+        printf( "=============================================" "\n" );
+        printf( "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --totals" "\n" );
+        printf( "    same as prev:" "\n" );
+        printf( "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --fill --files --dirs --md5 /mnt/new_media/media/down/ --totals" "\n" );
+
+        printf( "=============================================" "\n" );
+        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  --md5  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" "\n" );
+
+
+        printf( "=============================================" "\n" );
         break;
       default:
         fprintf( stderr, "Options error (%d)\n", r );

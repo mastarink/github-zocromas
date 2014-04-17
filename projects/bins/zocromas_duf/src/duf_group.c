@@ -8,7 +8,9 @@
 
 #include "duf_types.h"
 
+#include "duf_sql_def.h"
 #include "duf_sql.h"
+
 #include "duf_utils.h"
 
 #include "duf_dbg.h"
@@ -45,13 +47,13 @@ duf_insert_group( const char *name )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_c( "INSERT INTO duf_group (name,now) values ('%s',datetime())", DUF_CONSTRAINT_IGNORE_YES, name );
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sel_cb_insert_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /* sccb */ , "SELECT id as groupid FROM duf_group WHERE name='%s'", name );
   }
   else if ( !r /* assume SQLITE_OK */  )
-    id = duf_last_insert_rowid(  );
+    id = duf_sql_last_insert_rowid(  );
   else
     fprintf( stderr, "error duf_insert_md5 %d\n", r );
 
@@ -85,12 +87,12 @@ duf_insert_path_group( unsigned long long groupid, unsigned long long pathid )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_c( "INSERT INTO duf_path_group (groupid,pathid,now) " " VALUES ('%lld','%lld',datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, groupid, pathid );
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
     r = duf_sql_select( duf_sql_insert_path_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT id as groupid FROM duf_path_group " " WHERE groupid='%lld' and  pathid='%lld'", groupid, pathid );
   else if ( !r /* assume SQLITE_OK */  )
-    id = duf_last_insert_rowid(  );
+    id = duf_sql_last_insert_rowid(  );
   else
     fprintf( stderr, "error duf_insert_md5 %d\n", r );
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, id );

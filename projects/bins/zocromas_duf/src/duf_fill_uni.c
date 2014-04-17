@@ -13,6 +13,7 @@
 #include "duf_config.h"
 
 /* #include "duf_sql.h" */
+#include "duf_sql_field.h"
 /* #include "duf_utils.h" */
 #include "duf_path.h"
 /* #include "duf_file.h" */
@@ -22,8 +23,8 @@
 /* #include "duf_filename.h" */
 #include "duf_dirent.h"
 #include "duf_file_scan.h"
-#include "duf_update_pathid.h"
 
+#include "duf_sql_def.h"
 #include "duf_sql.h"
 #include "duf_dbg.h"
 
@@ -48,10 +49,10 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
                  DUF_CONSTRAINT_IGNORE_YES, dir_id, resd, qfname ? qfname : fname );
   if ( !r /* assume SQLITE_OK */  )
   {
-    resf = duf_last_insert_rowid(  );
+    resf = duf_sql_last_insert_rowid(  );
     /* fprintf( stderr, "INSERT INTO duf_filenames :: %llu. [%s]\x1b[K\n", resf, qfname ? qfname : fname ); */
   }
-  else if ( r != duf_constraint )
+  else if ( r != DUF_SQL_CONSTRAINT )
     fprintf( stderr, "ERROR %s %d\n", __func__, r );
 
   mas_free( qfname );
@@ -171,7 +172,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
             qdirname, parentid );
   mas_free( qbase_name );
   /* sql = NULL; */
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sql_ctrnt_uni, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
@@ -181,7 +182,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
   }
   else if ( !r /* assume SQLITE_OK */  )
   {
-    pathid = duf_last_insert_rowid(  );
+    pathid = duf_sql_last_insert_rowid(  );
     if ( duf_config->cli.trace.fill > 1 )
       printf( "[FILL ] %20s: inserted (SQLITE_OK) pathid=%llu:'%s'\n", __func__, pathid, dename );
   }

@@ -11,7 +11,9 @@
 
 #include "duf_types.h"
 
+#include "duf_sql_def.h"
 #include "duf_sql.h"
+
 #include "duf_utils.h"
 
 
@@ -44,14 +46,14 @@ duf_insert_mdpath( unsigned long long *md64 )
 
   r = duf_sql_c( "INSERT INTO duf_mdpath (mdpathsum1,mdpathsum2,ucnt,now) values ('%lld','%lld',0,datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0] );
-  if ( r == duf_constraint )
+  if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sql_insert_mdpath, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT id as md5id " " FROM duf_mdpath " " WHERE mdpathsum1='%lld' and mdpathsum2='%lld'", md64[1], md64[0] );
   }
   else if ( !r /* assume SQLITE_OK */  )
-    resmd = duf_last_insert_rowid(  );
+    resmd = duf_sql_last_insert_rowid(  );
   else
     fprintf( stderr, "error duf_insert_mdpath %d\n", r );
 
