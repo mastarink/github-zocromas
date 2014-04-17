@@ -50,7 +50,7 @@ duf_update_filedatas_filedataid( unsigned long long filedataid, unsigned long lo
     struct stat st;
 
     r = stat( filepath, &st );
-    filestatus = r >= 0 ? 1 : -1;
+    filestatus = r >= 0 ? 1 : -7;
   }
   fprintf( stderr, "UPDATE duf_filedatas SET filetype='%s', filestatus='%u' WHERE id='%llu'\n", filetype, filestatus, filedataid );
 
@@ -65,8 +65,8 @@ duf_update_filedatas_filedataid( unsigned long long filedataid, unsigned long lo
  * sql (must) select pathid, filenameid, filename, md5id, size
  * */
 static int
-duf_sql_update_filedatas( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                          duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sel_cb_update_filedatas( duf_record_t * precord, va_list args, void *sel_cb_udata,
+                             duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   unsigned long long filedataid;
   unsigned long long filenameid;
@@ -204,7 +204,7 @@ duf_update_filedatas( void )
     fprintf( stderr, "Start duf_update_filedatas\n" );
   for ( int it = 0; it < sizeof( ft_ext ) / sizeof( ft_ext[0] ); it++ )
   {
-    r = duf_sql_select( duf_sql_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT duf_filedatas.id as dataid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " 0, duf_filedatas.size as filesize, '%s'" " FROM duf_filedatas "
@@ -213,7 +213,7 @@ duf_update_filedatas( void )
   }
   for ( int it = 0; it < sizeof( ft_exact ) / sizeof( ft_exact[0] ); it++ )
   {
-    r = duf_sql_select( duf_sql_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT duf_filedatas.id as dataid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " 0, duf_filedatas.size as filesize, '%s'" " FROM duf_filedatas "
@@ -222,7 +222,7 @@ duf_update_filedatas( void )
   }
   for ( int it = 0; it < sizeof( ft_started ) / sizeof( ft_started[0] ); it++ )
   {
-    r = duf_sql_select( duf_sql_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT duf_filedatas.id as dataid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " 0, duf_filedatas.size as filesize, '%s'" " FROM duf_filedatas "
@@ -247,26 +247,26 @@ duf_zero_filedatas( void )
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
  * */
-static int
-duf_sql_on_insert_filedata( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                            duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  unsigned long long *presd;
-
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  presd = ( unsigned long long * ) sel_cb_udata;
-
-  if ( duf_config->cli.dbg.verbose > 1 )
-  {
-    fprintf( stderr, "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0],
-             duf_sql_pos_by_name( "dataid", precord, 0 ), duf_sql_str_by_name( "dataid", precord, 0 ), duf_sql_ull_by_name( "dataid",
-                                                                                                                            precord, 0 ) );
-  }
-  /* *presd = strtol( precord->presult[0], NULL, 10 ); */
-  *presd = duf_sql_ull_by_name( "dataid", precord, 0 );
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
-}
+/* static int                                                                                                                                  */
+/* duf_sel_cb_on_insert_filedata( duf_record_t * precord, va_list args, void *sel_cb_udata,                                                       */
+/*                             duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )         */
+/* {                                                                                                                                           */
+/*   unsigned long long *presd;                                                                                                                */
+/*                                                                                                                                             */
+/* (*                                                                              *) duf_dbgfunc( DBG_START, __func__, __LINE__ );            */
+/*   presd = ( unsigned long long * ) sel_cb_udata;                                                                                            */
+/*                                                                                                                                             */
+/*   if ( duf_config->cli.dbg.verbose > 1 )                                                                                                    */
+/*   {                                                                                                                                         */
+/*     fprintf( stderr, "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0],                                */
+/*              duf_sql_pos_by_name( "dataid", precord, 0 ), duf_sql_str_by_name( "dataid", precord, 0 ), duf_sql_ull_by_name( "dataid",       */
+/*                                                                                                                             precord, 0 ) ); */
+/*   }                                                                                                                                         */
+/*   (* *presd = strtol( precord->presult[0], NULL, 10 ); *)                                                                                   */
+/*   *presd = duf_sql_ull_by_name( "dataid", precord, 0 );                                                                                     */
+/* (*                                                                              *) duf_dbgfunc( DBG_END, __func__, __LINE__ );              */
+/*   return 0;                                                                                                                                 */
+/* }                                                                                                                                           */
 
 /* unsigned long long                                                                                                                  */
 /* duf_insert_filedata( unsigned long long file_inode, dev_t dev_id, const struct stat *pst_file )                                     */
@@ -280,7 +280,7 @@ duf_sql_on_insert_filedata( duf_record_t * precord, va_list args, void *sel_cb_u
 /*   r = duf_sql_c( "INSERT INTO duf_filedatas (dev,inode,size,md5id,ucnt,now) values ('%lu','%lu','%lu','%lu',0,datetime())",         */
 /*                  DUF_CONSTRAINT_IGNORE_YES, dev_id, file_inode, ( pst_file ? pst_file->st_size : 0 ) (* size *) , 0 (* md5id *)  ); */
 /*   if ( r == duf_constraint )                                                                                                        */
-/*     r = duf_sql_select( duf_sql_on_insert_filedata, &resd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,                  */
+/*     r = duf_sql_select( duf_sel_cb_on_insert_filedata, &resd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,                  */
 /*                         ( duf_scan_callbacks_t * ) NULL (*  sccb *) ,                                                               */
 /*                         "SELECT id as dataid FROM duf_filedatas WHERE dev='%lu' and inode='%lu'", dev_id, file_inode );             */
 /*   else if ( !r (* assume SQLITE_OK *)  )                                                                                            */
@@ -300,14 +300,18 @@ duf_insert_filedata_uni( const struct stat *pst_file )
 {
   int r;
   unsigned long long resd;
+  duf_scan_callbacks_t sccb;
+
+/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  memset( &sccb, 0, sizeof( sccb ) );
+  sccb.fieldset = "dataid";
 
   if ( duf_config->cli.trace.fill > 2 )
     fprintf( stderr, "FILEDATA\n" );
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( pst_file )
   {
     r = duf_sql_c( "INSERT INTO duf_filedatas " " (dev,  inode, size, mode, nlink, uid,  gid,  blksize, blocks, "
-                   " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id,ucnt,now) " "VALUES                    "
+                   " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id,ucnt,now) " "VALUES "
                    " ('%lu','%lu', '%lu','%lu','%lu', '%lu','%lu','%lu',   '%lu', "
                    "'%lu','%lu','%lu','%lu','%lu', '%lu',  0,    0,   datetime())", DUF_CONSTRAINT_IGNORE_YES,
                    ( unsigned long ) pst_file->st_dev, ( unsigned long ) pst_file->st_ino, ( unsigned long ) pst_file->st_size,
@@ -317,9 +321,10 @@ duf_insert_filedata_uni( const struct stat *pst_file )
                    ( unsigned long ) pst_file->st_mtim.tv_sec, ( unsigned long ) pst_file->st_mtim.tv_nsec,
                    ( unsigned long ) pst_file->st_ctim.tv_sec, ( unsigned long ) pst_file->st_ctim.tv_nsec );
     if ( r == duf_constraint )
-      r = duf_sql_select( duf_sql_on_insert_filedata, &resd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                          ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
-                          "SELECT id as dataid FROM duf_filedatas WHERE dev='%lu' and inode='%lu'", pst_file->st_dev, pst_file->st_ino );
+      r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sel_cb_on_insert_filedata */ , &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
+                          ( duf_dirinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+                          "SELECT id as dataid " " FROM duf_filedatas " " WHERE dev='%lu' and inode='%lu'", pst_file->st_dev,
+                          pst_file->st_ino );
     else if ( !r /* assume SQLITE_OK */  )
       resd = duf_last_insert_rowid(  );
     else

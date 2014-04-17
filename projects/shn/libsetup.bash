@@ -280,7 +280,7 @@ function shn_initial_mased_vim
   local file link fn typf retval=0
   if [[ -d mased ]] ; then
     if pushd mased &>/dev/null ; then
-       for typf in sh shn ac ; do
+       for typf in sh shn ac vimrc ; do
 # echo " D `declare -p MSH_SHN_DIRS`" >&2
         fn="${typf}.mased.vim"
 	if [[ -f "${MSH_SHN_DIRS[files]}/mased/$fn" ]] ; then
@@ -334,7 +334,7 @@ function shn_setup_additional ()
 # echo " E `declare -p MSH_SHN_DIRS`" >&2
   if [[ "${MSH_SHN_DIRS[files]}" ]] && [[ -d "${MSH_SHN_DIRS[files]}" ]] ; then 
   #  mased/sh.mased.vim
-    for fn in gvim-funcs.vim  gvimrc-mastar  gvim-vimenter.vim  vimrc-mastar zocversion.txt zocvdate.txt ; do
+    for fn in vimrc-mastar gvimrc-mastar gvim-vimenter.vim gvim-funcs.vim zocversion.txt zocvdate.txt ; do
       if [[ -f "${MSH_SHN_DIRS[files]}/$fn" ]] ; then
         file=`shn_realpath --relative-to=. ${MSH_SHN_DIRS[files]}/$fn` || return 1
 	link=$( shn_basename $file )

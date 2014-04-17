@@ -318,9 +318,13 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
     {
       pid_t child;
 
+      if ( flags.verbose )
+        printf( "LAUNCH FORK %d\n", __LINE__ );
       child = fork(  );
       if ( child )
       {
+        if ( flags.verbose )
+          printf( "LAUNCH PARENT %d\n", __LINE__ );
         /* int status = 0; */
 
         runonce_waiton( sect, nsec, flags, child );
@@ -337,7 +341,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
         int uid = getuid(  );
 
         if ( flags.verbose )
-          printf( "LAUNCH WHY %d\n", __LINE__ );
+          printf( "LAUNCH CHILD %d\n", __LINE__ );
 
         if ( sect->values[RUNONCE_NICE] && !sect->values[RUNONCE_NONICE] )
         {
@@ -355,7 +359,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
           }
         }
         if ( flags.verbose )
-          printf( "LAUNCH WHY %d\n", __LINE__ );
+          printf( "LAUNCH AFTER NICE %d\n", __LINE__ );
         if ( sect->values[RUNONCE_XGROUP] && !sect->values[RUNONCE_NOGROUP] )
         {
           struct group *gr;
@@ -364,6 +368,8 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
           if ( gr )
             gid = gr->gr_gid;
         }
+        if ( flags.verbose )
+          printf( "LAUNCH AFTER XGROUP %d\n", __LINE__ );
         if ( gid && !flags.nosetgid )
         {
           bad = setgid( gid );
@@ -385,7 +391,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
           }
         }
         if ( flags.verbose )
-          printf( "LAUNCH WHY %d\n", __LINE__ );
+          printf( "LAUNCH AFTER SETGID %d\n", __LINE__ );
         if ( flags.dry )
         {
           char *command = mas_argv_string( sect->largc, sect->largv, 0 );
@@ -410,9 +416,10 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
         else
         {
           setsid(  );
-          /* chdir( "/" ); */
           if ( flags.verbose )
-            printf( "LAUNCH WHY %d\n", __LINE__ );
+            printf( "LAUNCH SETSID %d\n", __LINE__ );
+          /* chdir( "/" ); */
+          if ( !flags.notclosestdout )
           {
             int foutd = -1;
             char stdout_filename[64];
@@ -425,6 +432,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
           }
           if ( flags.verbose )
             printf( "LAUNCH WHY %d\n", __LINE__ );
+          if ( !flags.notclosestderr )
           {
             int ferrd = -1;
             char stderr_filename[64];
@@ -456,7 +464,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
               mas_free( tmp );
             }
             if ( flags.verbose )
-              printf( "LAUNCH WHY %d\n", __LINE__ );
+              printf( "LAUNCH EXEC %d %s\n", __LINE__, sect->largv[0] );
             if ( stdenv )
               bad = execvp( sect->largv[0], sect->largv );
             else
@@ -464,7 +472,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
             /* mas_free( fpath ); */
           }
           if ( flags.verbose )
-            printf( "LAUNCH WHY %d\n", __LINE__ );
+            printf( "LAUNCH AFTER EXEC %d\n", __LINE__ );
           if ( bad < 0 )
           {
             char *command = mas_argv_string( sect->largc, sect->largv, 0 );

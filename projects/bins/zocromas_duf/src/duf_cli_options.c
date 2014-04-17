@@ -17,16 +17,31 @@
 /* ###################################################################### */
 
 const struct option longopts[] = {
-  {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
-  {.name = "trace-scan",.has_arg = required_argument,.val = DUF_OPTION_SCAN_TRACE},
-  {.name = "trace-fill",.has_arg = required_argument,.val = DUF_OPTION_FILL_TRACE},
-  {.name = "trace-sql",.has_arg = required_argument,.val = DUF_OPTION_SQL_TRACE},
-  {.name = "trace-md5",.has_arg = required_argument,.val = DUF_OPTION_MD5_TRACE},
+  {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_HELP},
+  {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_HELP_EXAMPLES},
+  /* --------------- */
+  {.name = "trace-file",.has_arg = required_argument,.val = DUF_OPTION_TRACE_FILE},
+  {.name = "trace-stderr",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDERR},
+  {.name = "trace-stdout",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDOUT},
+  {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_ALL},
+  {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
+  {.name = "trace-new",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NEW},
+  {.name = "trace-fill",.has_arg = optional_argument,.val = DUF_OPTION_FILL_TRACE},
+  {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
+  {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
+  {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
+  {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
+  {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
+  {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
+  /* --------------- */
   {.name = "verbose",.has_arg = required_argument,.val = DUF_OPTION_VERBOSE},
-
+  {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
+  {.name = "memusage",.has_arg = no_argument,.val = DUF_OPTION_MEMUSAGE},
   {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
   {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
-
+  /* --------------- */
+  {.name = "totals",.has_arg = optional_argument,.val = DUF_OPTION_TOTALS},
+  /* --------------- */
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
   {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
   {.name = "drop-tables",.has_arg = no_argument,.val = DUF_OPTION_DROP_TABLES},
@@ -44,17 +59,28 @@ const struct option longopts[] = {
   {.name = "update-filedata",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_FILEDATA},
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
-  {.name = "sample",.has_arg = no_argument,.val = DUF_OPTION_SAMPLE},
-  {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
+  /* --------------- */
+  {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
   {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
+  {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
+  {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
+  {.name = "sample",.has_arg = no_argument,.val = DUF_OPTION_SAMPLE},
+  /* --------------- */
   {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
   {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
   {.name = "files",.has_arg = no_argument,.val = DUF_OPTION_FILES},
+  {.name = "dirs",.has_arg = no_argument,.val = DUF_OPTION_DIRS},
+  /* --------------- */
+  {.name = "min-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MINDIRFILES},
+  {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
   {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
   {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
   {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
-  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXSEQ},
-  {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
+  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
+  {.name = "max-dirs",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_DIRS},
+  {.name = "max-files",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_FILES},
+  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
+  {.name = "max-seq",.has_arg = required_argument,.val = DUF_OPTION_MAXSEQ},
   /* {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS}, */
   /* {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},   */
   /* {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES}, */
@@ -90,6 +116,10 @@ duf_cli_options( int argc, char *argv[] )
       switch ( opt )
       {
       case DUF_OPTION_HELP:
+        r = opt;
+        break;
+      case DUF_OPTION_HELP_EXAMPLES:
+        r = opt;
         break;
       case DUF_OPTION_VERBOSE:
         if ( optarg && *optarg )
@@ -97,36 +127,112 @@ duf_cli_options( int argc, char *argv[] )
         else
           duf_config->cli.dbg.verbose++;
         break;
+      case DUF_OPTION_MEMUSAGE:
+        {
+          extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
+
+          if ( &mas_mem_disable_print_usage )
+          {
+            mas_mem_disable_print_usage = 0;
+          }
+        }
+        break;
       case DUF_OPTION_DEBUG:
         duf_config->cli.dbg.debug = 1;
         break;
+      case DUF_OPTION_TRACE_STDERR:
+        duf_config->cli.trace.out = stderr;
+        break;
+      case DUF_OPTION_TRACE_STDOUT:
+        duf_config->cli.trace.out = stdout;
+        break;
+      case DUF_OPTION_TRACE_FILE:
+        if ( optarg )
+        {
+          struct stat st;
+
+          if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
+          {
+            fprintf( stderr, "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
+                     ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
+            exit( 4 );
+          }
+          else
+          {
+            duf_config->cli.trace.out = fopen( optarg, "w" );
+            if ( !duf_config->cli.trace.out )
+            {
+              fprintf( stderr, "Can't open trace file %s\n", optarg );
+              exit( 4 );
+            }
+          }
+        }
+        break;
+      case DUF_OPTION_TRACE_ALL:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.sql = duf_config->cli.trace.fill = duf_config->cli.trace.md5 = duf_config->cli.trace.sample =
+                duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
+        else
+        {
+          duf_config->cli.trace.sql++;
+          duf_config->cli.trace.fill++;
+          duf_config->cli.trace.md5++;
+          duf_config->cli.trace.sample++;
+          duf_config->cli.trace.scan++;
+        }
+        break;
+      case DUF_OPTION_TRACE_NEW:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.new = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.new++;
+        break;
+      case DUF_OPTION_CALLS_TRACE:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.calls = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.calls++;
+        break;
       case DUF_OPTION_SCAN_TRACE:
         if ( optarg && *optarg )
-          duf_config->cli.trace.scan= strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
         else
           duf_config->cli.trace.scan++;
         break;
+      case DUF_OPTION_PATH_TRACE:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.path = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.path++;
+        fprintf( stderr, "###################### %d\n", duf_config->cli.trace.path );
+        break;
       case DUF_OPTION_SAMPLE_TRACE:
         if ( optarg && *optarg )
-          duf_config->cli.trace.sample= strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.sample = strtol( optarg, NULL, 10 );
         else
           duf_config->cli.trace.sample++;
         break;
+      case DUF_OPTION_MDPATH_TRACE:
+        if ( optarg && *optarg )
+          duf_config->cli.trace.mdpath = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.trace.mdpath++;
+        break;
       case DUF_OPTION_MD5_TRACE:
         if ( optarg && *optarg )
-          duf_config->cli.trace.md5= strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.md5 = strtol( optarg, NULL, 10 );
         else
           duf_config->cli.trace.md5++;
         break;
       case DUF_OPTION_FILL_TRACE:
         if ( optarg && *optarg )
-          duf_config->cli.trace.fill= strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.fill = strtol( optarg, NULL, 10 );
         else
           duf_config->cli.trace.fill++;
         break;
       case DUF_OPTION_SQL_TRACE:
         if ( optarg && *optarg )
-          duf_config->cli.trace.sql= strtol( optarg, NULL, 10 );
+          duf_config->cli.trace.sql = strtol( optarg, NULL, 10 );
         else
           duf_config->cli.trace.sql++;
         break;
@@ -137,6 +243,11 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_MAX_DBGLINE:
         if ( optarg && *optarg )
           duf_config->cli.dbg.max_line = strtol( optarg, NULL, 10 );
+      case DUF_OPTION_TOTALS:
+        if ( optarg && *optarg )
+          duf_config->cli.totals = strtol( optarg, NULL, 10 );
+        else
+          duf_config->cli.totals++;
         break;
       case DUF_OPTION_DROP_TABLES:
         duf_config->cli.act.drop_tables = 1;
@@ -177,6 +288,9 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_SAMPLE:
         duf_config->cli.act.sample = 1;
         break;
+      case DUF_OPTION_MDPATH:
+        duf_config->cli.act.mdpath = 1;
+        break;
       case DUF_OPTION_MD5:
         duf_config->cli.act.md5 = 1;
         break;
@@ -192,6 +306,9 @@ duf_cli_options( int argc, char *argv[] )
       case DUF_OPTION_FILES:
         duf_config->cli.act.files = 1;
         break;
+      case DUF_OPTION_DIRS:
+        duf_config->cli.act.dirs = 1;
+        break;
       case DUF_OPTION_MAXSIZE:
         if ( optarg && *optarg )
           duf_config->u.maxsize = strtol( optarg, NULL, 10 );
@@ -200,9 +317,29 @@ duf_cli_options( int argc, char *argv[] )
         if ( optarg && *optarg )
           duf_config->u.minsize = strtol( optarg, NULL, 10 );
         break;
+      case DUF_OPTION_MAXDIRFILES:
+        if ( optarg && *optarg )
+          duf_config->u.maxdirfiles = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MINDIRFILES:
+        if ( optarg && *optarg )
+          duf_config->u.mindirfiles = strtol( optarg, NULL, 10 );
+        break;
       case DUF_OPTION_MAXDEPTH:
         if ( optarg && *optarg )
           duf_config->u.maxdepth = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MAXITEMS:
+        if ( optarg && *optarg )
+          duf_config->u.maxitems.total = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MAXITEMS_FILES:
+        if ( optarg && *optarg )
+          duf_config->u.maxitems.files = strtol( optarg, NULL, 10 );
+        break;
+      case DUF_OPTION_MAXITEMS_DIRS:
+        if ( optarg && *optarg )
+          duf_config->u.maxitems.dirs = strtol( optarg, NULL, 10 );
         break;
       case DUF_OPTION_MAXSEQ:
         if ( optarg && *optarg )
@@ -267,7 +404,7 @@ duf_cli_options( int argc, char *argv[] )
           duf_config->cli.limit = strtol( optarg, NULL, 10 );
         break;
       case '?':
-        printf( "Invalid option -- '%c' optind=%d/%s opt=%u/%c\n", optopt, optind, argv[optind - 1], opt, opt );
+        fprintf( stderr, "Invalid option -- '%c' optind=%d/%s opt=%u/%c\n", optopt, optind, argv[optind - 1], opt, opt );
         r = optopt ? optopt : opt;
         break;
       }

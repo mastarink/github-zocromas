@@ -63,7 +63,7 @@ duf_insert_mdpath( unsigned long long *md64 )
  * duf_sql_select_cb_t:
  * */
 static int
-duf_sql_update_mdpaths_path( duf_record_t * precord, va_list args, void *sel_cb_udata,
+duf_sel_cb_update_mdpaths_path( duf_record_t * precord, va_list args, void *sel_cb_udata,
                              duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
 {
   MD5_CTX *pctx;
@@ -72,8 +72,9 @@ duf_sql_update_mdpaths_path( duf_record_t * precord, va_list args, void *sel_cb_
   /* unsigned long long pathid; */
 
   /* pathid = va_arg( args, unsigned long long );                                                */
-  /* fprintf( stderr, "(duf_sql_update_mdpaths_path) parthid:%lld / %s\n", pathid, precord->presult[0] ); */
+  /* fprintf( stderr, "(duf_sel_cb_update_mdpaths_path) parthid:%lld / %s\n", pathid, precord->presult[0] ); */
   pctx = ( MD5_CTX * ) sel_cb_udata;
+  fprintf( stderr, "TO EXPIRE %s\n", __func__ );
   if ( precord->presult[5] && precord->presult[6] )
   {
     md5s1 = strtoll( precord->presult[5], NULL, 10 );
@@ -96,7 +97,7 @@ duf_update_mdpaths_pathid( unsigned long long pathid )
 
   MD5_Init( &ctx );
   if ( 0 )
-    r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT duf_keydata.pathid as keyid, duf_keydata.filenameid, duf_filenames.name as filename, "
                         "'', '', duf_md5.md5sum1, duf_md5.md5sum2 " " FROM duf_md5 "
@@ -105,7 +106,7 @@ duf_update_mdpaths_pathid( unsigned long long pathid )
                         /* " LEFT JOIN duf_paths ON (duf_paths.id=duf_filenames.pathid)" */
                         " WHERE duf_keydata.pathid='%llu' " " ORDER by md5sum1, md5sum2 ", ( unsigned long long ) pathid );
   else if ( 1 )
-    r = duf_sql_select( duf_sql_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         "'', '', duf_md5.md5sum1, duf_md5.md5sum2 " " FROM duf_filenames "
@@ -132,7 +133,7 @@ duf_update_mdpaths_pathid( unsigned long long pathid )
  * sql must select pathid, filenameid, filename, md5id, size
  * */
 static int
-duf_sql_update_mdpaths( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
+duf_sel_cb_update_mdpaths( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
                         void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
 {
   unsigned long long pathid;
@@ -152,11 +153,11 @@ duf_update_mdpaths( unsigned long long pathid )
 
   fprintf( stderr, "Start duf_update_mdpaths\n" );
   if ( pathid )
-    r = duf_sql_select( duf_sql_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT id as pathid, dirname FROM duf_paths " " WHERE id='%lld' " " ORDER BY id", pathid );
   else
-    r = duf_sql_select( duf_sql_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ , "SELECT id as pathid, dirname FROM duf_paths " " ORDER BY id" );
   fprintf( stderr, "End duf_update_mdpaths\n" );
   return r;

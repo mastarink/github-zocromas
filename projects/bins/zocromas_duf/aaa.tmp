@@ -1,3 +1,0 @@
-Making all in src
-libtool: link: gcc -pedantic -std=gnu99 -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -fpic -Wall -Werror -include config.h -I/usr/include -O0 -g -ggdb -o mas_duf duf.o  -lcrypto -L/usr/lib -lsqlite3 -lexif
-[H[2J

@@ -10,6 +10,7 @@
 #include "duf_config.h"
 
 /* #include "duf_sql.h" */
+#include "duf_utils.h"
 
 #include "duf_path.h"
 /* #include "duf_file.h" */
@@ -32,7 +33,7 @@
 /*                                                                                                                           */
 /*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                           */
 /*   pdi = ( duf_dirinfo_t * ) str_cb_udata;                                                                                 */
-/*   if ( ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && pdi->level < pdi->u.maxdepth )                                   */
+/*   if ( ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && pdi->depth < pdi->u.maxdepth )                                   */
 /*   {                                                                                                                       */
 /*     unsigned long long items = 0;                                                                                         */
 /*                                                                                                                           */
@@ -42,42 +43,40 @@
 /*   return r;                                                                                                               */
 /* }                                                                                                                         */
 
-/* duf_scan_fil_by_pi:
+/* duf_scan_files_by_pi:
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by pathid (i.e. children of pathid) with corresponding args
  * */
 static int
-duf_scan_fil_by_pi( unsigned long long pathid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
-  if ( duf_config->cli.trace.scan )
-    fprintf( stderr, "[SCAN ] %20s: L%u >duf_scan_items_sql str_cb=%p\n", __func__, pdi->level, ( void * ) ( unsigned long long ) str_cb );
-  if ( duf_config->cli.trace.scan > 1 && sccb->fieldset )
-    fprintf( stderr, "FIELDSET %s\n", sccb->fieldset );
+  DUF_TRACE( scan, 0, "L%u >duf_scan_items_sql FIELDSET:%s; str_cb=%p", pdi->depth, sccb->fieldset ? sccb->fieldset : "-none-",
+             ( void * ) ( unsigned long long ) str_cb );
+
+  /* DUF_TRACE_SCAN( pdi->depth, ( void * ) ( unsigned long long ) str_cb ); */
 /* duf_scan_items_sql:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
-  const char *fieldset;
-
-  fieldset =
-        ( sccb->fieldset ? ( sccb->fieldset ) : ( "duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename,"
-                                                  " duf_filedatas.id as filedataid, "
-                                                  " duf_filedatas.size as filesize, duf_filedatas.mode as filemode, "
-                                                  " duf_filedatas.uid as fileuid, duf_filedatas.gid as filegid," " duf_md5.id as md5id, "
-                                                  " duf_md5.size as md5size, duf_md5.dupcnt, duf_md5.md5sum1, duf_md5.md5sum2 " ) );
-  r = duf_scan_items_sql( str_cb, pdi, pdi, sccb,
-                          "SELECT %s FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-                          " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id)" " WHERE duf_filenames.pathid='%llu'", fieldset, pathid );
+  {
+    if ( sccb && sccb->file_selector )
+      r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb, sccb->file_selector, /* ... */ sccb->fieldset, dirid );
+    else
+    {
+      fprintf( stderr, "sccb->file_selector must be set for %s\n", sccb->title );
+      exit( 4 );
+    }
+  }
   return r;
 }
 
-/* duf_scan_files_by_pathid:
- * call str_cb + pdi (also) as str_cb_udata for each <file> record by pathid with corresponding args
+/* duf_scan_files_by_dirid:
+ * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid with corresponding args
  * */
 int
-duf_scan_files_by_pathid( unsigned long long pathid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_dirid( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
-  return duf_scan_fil_by_pi( pathid, str_cb, pdi, sccb );
+  return ( duf_config->cli.act.files ) ? duf_scan_files_by_di( dirid, str_cb, pdi, sccb ) : 0;
 }
 
 /*
@@ -97,7 +96,7 @@ duf_scan_files_by_pathid( unsigned long long pathid, duf_scan_callback_file_t st
 /* {                                                                                                                                               */
 /*   int r = 0;                                                                                                                                    */
 /*                                                                                                                                                 */
-/*   if ( ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && ( pdi->level < pdi->u.maxdepth - 1 ) )                                                 */
+/*   if ( ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && ( pdi->depth < pdi->u.maxdepth - 1 ) )                                                 */
 /*   {                                                                                                                                             */
 /*     {                                                                                                                                           */
 /*       (* print directory *)                                                                                                                     */
@@ -105,18 +104,18 @@ duf_scan_files_by_pathid( unsigned long long pathid, duf_scan_callback_file_t st
 /*                                                                                                                                                 */
 /*       path = duf_pathid_to_path( pathid );                                                                                                      */
 /*       if ( items )                                                                                                                              */
-/*         printf( "   >%2d (%5llu) [%s]\n", pdi ? pdi->level : 0, items, path );                                                                  */
+/*         printf( "   >%2d (%5llu) [%s]\n", pdi ? pdi->depth : 0, items, path );                                                                  */
 /*       else                                                                                                                                      */
-/*         printf( "   >%2d         [%s]\n", pdi ? pdi->level : 0, path );                                                                         */
+/*         printf( "   >%2d         [%s]\n", pdi ? pdi->depth : 0, path );                                                                         */
 /*       mas_free( path );                                                                                                                         */
 /*     }                                                                                                                                           */
 /* (*                                                                                                                                              */
 /*  * duf_sql_scan_print_file + pdi to be called for each record                                                                                   */
 /*  * *)                                                                                                                                           */
 /*     r = duf_scan_files_by_pathid( pathid, duf_sql_scan_print_file, pdi, sccb );                                                                 */
-/*     if ( pdi && pdi->u.recursive (* && ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && ( pdi->level < pdi->u.maxdepth - 1 ) *)  )             */
+/*     if ( pdi && pdi->u.recursive (* && ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && ( pdi->depth < pdi->u.maxdepth - 1 ) *)  )             */
 /*     {                                                                                                                                           */
-/* (* duf_scan_fil_by_pi:                                                                                                                          */
+/* (* duf_scan_files_by_pi:                                                                                                                          */
 /*  * call duf_sql_scan_print_files + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args */
 /*  * *)                                                                                                                                           */
 /*       r = duf_scan_dirs_by_parentid( pathid, duf_sql_scan_print_files, pdi, NULL );                                                             */

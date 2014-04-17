@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_TYPES_H
 #  define MAS_DUF_TYPES_H
 #  include <sys/stat.h>
+#  include <stdarg.h>
 
 #  define DUF_FALSE 0
 #  define DUF_TRUE 1
@@ -22,7 +23,23 @@
 
 #  define DUF_STAT_DEF ((struct stat *) NULL)
 
-#include "duf_cli_types.h"
+#  define DUF_SFIELD(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 0 )
+#  define DUF_UFIELD(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 0 )
+
+#  define DUF_SFIELD_OPT(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 1 )
+#  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
+
+#  define DUF_IF_TRACE(name) (duf_config && duf_config->cli.trace.new && duf_config->cli.trace.name )
+#  define DUF_IF_TRACEN(name,min) (duf_config && duf_config->cli.trace.new && duf_config->cli.trace.name>min )
+#  define DUF_TRACE( name, min, ...) \
+    duf_trace( #name, ((duf_config && duf_config->cli.trace.new) ? duf_config->cli.trace.name: 0), min, \
+		__func__,__LINE__, \
+			duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
+#  define DUF_TRACE_SCAN( min, ...) DUF_TRACE( scan, min, __VA_ARGS__)
+#  define DUF_TRACE_SAMPLE( min, ...) DUF_TRACE( sample, min, __VA_ARGS__)
+
+#  include "duf_cli_types.h"
+
 
 typedef enum
 {
@@ -39,14 +56,23 @@ typedef enum
   DBG_END,
 } duf_dbgcode_t;
 
+typedef struct
+{
+  unsigned long long files;
+  unsigned long long dirs;
+  unsigned long long total;
+} duf_items_t;
 
 typedef struct
 {
   unsigned recursive:1;
   unsigned noself_dir:1;
   unsigned noupper_dirs:1;
-  int maxdepth;
-  unsigned maxseq;
+  unsigned maxdepth;
+  unsigned long long maxseq;
+  duf_items_t maxitems;
+  unsigned long long mindirfiles;
+  unsigned long long maxdirfiles;
   unsigned long long minsize;
   unsigned long long maxsize;
 } duf_ufilter_t;
@@ -61,19 +87,37 @@ typedef struct
   int targc;
   char **targv;
 } duf_config_t;
+typedef enum
+{
+  DUF_NODE_LEAF = 100,
+  DUF_NODE_NODE,
+} duf_node_type_t;
 
 typedef struct
 {
-  int level;
-  int seq;
-  int *levinfo;
-  const char *name;
+  unsigned eod:1;
+  unsigned long long dirid;
+  /* const char *name; */
+  unsigned long long items;
+  unsigned long long ndirs;
+  unsigned long long nfiles;
+  void *context;
+} duf_levinfo_t;
+typedef struct
+{
+  int depth;
+  duf_node_type_t node_type;
+  duf_levinfo_t *levinfo;
+  unsigned long long seq;
+  unsigned long long seq_leaf;
+  unsigned long long seq_node;
+  duf_items_t items;
   duf_ufilter_t u;
 } duf_dirinfo_t;
 
 typedef struct
 {
-  int level;
+  int depth;
   const struct
   {
     int *pseq;
@@ -100,27 +144,39 @@ typedef struct
 duf_record_t;
 
 struct duf_scan_callbacks_s;
-typedef int ( *duf_scan_callback_init_t ) ( struct duf_scan_callbacks_s * cb );
+typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
 
-typedef int ( *duf_scan_callback_dir_t ) ( unsigned long long pathid, const char *name, unsigned long long items,
-                                           duf_dirinfo_t * pdi, struct duf_scan_callbacks_s * cb );
 
-typedef int ( *duf_scan_callback_file_t ) ( unsigned long long pathid, unsigned long long filenameid,
-                                            const char *name, void *str_cb_udata, duf_dirinfo_t * pdi,
-                                            struct duf_scan_callbacks_s * cb, duf_record_t * precord );
+/* this is callback of type: duf_scan_hook_dir_t (second range; ; sel_cb): */
+typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, unsigned long long items, duf_dirinfo_t * pdi, duf_record_t * precord );
 
-/* typedef int ( *duf_str_cb_t ) ( int nrow, int nrows, unsigned long long pathid, const char *path, unsigned long long filenameid, */
-/*                                 const char *name, const struct stat * st, void *str_cb_udata, duf_scan_callbacks_t * cb,         */
-/*                                 const char *const *presult );                                                                    */
+/* this is callback of type: duf_scan_hook_file_t (first range; str_cb) */
+typedef int ( *duf_scan_hook_file_t ) ( void *str_cb_udata, duf_dirinfo_t * pdi, duf_record_t * precord );
+
+
+
+
+
+/* this is callback of type: duf_scan_callback_file_t (first range; str_cb) */
+typedef int ( *duf_scan_callback_file_t ) ( void *str_cb_udata, duf_dirinfo_t * pdi,
+                                            struct duf_scan_callbacks_s * sccb, duf_record_t * precord );
+
+
+
 typedef int ( *duf_sql_select_cb_t ) ( duf_record_t * precord, va_list args,
                                        void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi,
-                                       struct duf_scan_callbacks_s * cb );
+                                       struct duf_scan_callbacks_s * sccb );
 struct duf_scan_callbacks_s
 {
+  const char *title;
   const char *fieldset;
-  duf_scan_callback_init_t init_scan;
-  duf_scan_callback_dir_t directory_scan;
-  duf_scan_callback_file_t file_scan;
+  const char *dir_selector;
+  const char *file_selector;
+  duf_scan_hook_init_t init_scan;
+  duf_scan_hook_dir_t directory_scan_before;
+  duf_scan_hook_dir_t directory_scan_middle;
+  duf_scan_hook_dir_t directory_scan_after;
+  duf_scan_hook_file_t file_scan;
 };
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

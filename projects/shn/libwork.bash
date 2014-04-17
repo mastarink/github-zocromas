@@ -28,10 +28,13 @@ alias lc='shn_project_files'
 alias qf='shn_project_by_file'
 alias e='shn_file_edit'
 alias run='shn m i r'
-if [[ "$MSH_SHLIB" ]] && [[ -d "$MSH_SHLIB" ]] && [[ -f "$MSH_SHLIB/libed2.bash" ]] ; then
-  . $MSH_SHLIB/libed2.bash
-  alias eu='gvim_caller2'
-fi
+alias gnc="grepnc"
+alias g="grep --inc='*.[ch]' -r"
+
+# if [[ "$MSH_SHLIB" ]] && [[ -d "$MSH_SHLIB" ]] && [[ -f "$MSH_SHLIB/libed2.bash" ]] ; then
+#   . $MSH_SHLIB/libed2.bash
+#   alias eu='gvim_caller2'
+# fi
 
 # alias lshn='source shn/libwork.bash'
 alias lshn='shn_load'

@@ -6,6 +6,27 @@ set swb=usetab,newtab,split
 set undolevels=10000
 set virtualedit=block
 
+if exists('v:servername')
+  let vrbprefix='.gvimvrb/'
+  if !isdirectory(vrbprefix)
+    call mkdir(vrbprefix)
+  endif
+  if !isdirectory(vrbprefix)
+    let vrbprefix=''
+  endif
+  let vrbfile=vrbprefix . v:servername . ".vrb"
+  let redirfile=vrbprefix . v:servername . ".redir"
+  let viminfofile=vrbprefix . v:servername . ".viminfo"
+  execute 'set verbosefile=' . vrbfile
+  execute 'redir >> ' . redirfile
+  execute "set viminfo='50,<1000,s1000,n" . viminfofile
+endif
+
+if exists('g:maseddrop')
+  execute 'tab drop ' . g:maseddrop
+endif
+
+
 " if exists(dfile) && !empty(dfile)
 " tabfirst
 "   execute "sbuffer " . dfile
@@ -35,6 +56,8 @@ if filereadable(shn_doall)
   map <F4>   :wa<CR>:!shn/doall.sh i<CR>
   map <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
 endif
+
+nmap <C-]> :call MasGoTag()<CR>
 
 
 " winpos 0 35

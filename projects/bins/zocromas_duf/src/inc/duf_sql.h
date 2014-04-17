@@ -22,9 +22,16 @@ int duf_sql_select( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
 
 unsigned long long duf_last_insert_rowid( void );
 
-int duf_sql_pos_by_name( const char *name, duf_record_t * precord, int optional );
-const char *duf_sql_str_by_name( const char *name, duf_record_t * precord, int optional );
-unsigned long long duf_sql_ull_by_name( const char *name, duf_record_t * precord , int optional);
+int __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int optional );
+const char *__duf_sql_str_by_name( const char *name, duf_record_t * precord, int *phave, int optional );
+unsigned long long __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int optional );
 
+int
+duf_sel_cb_field_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_udata,
+                          duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb );
+/* int                                                                                                                                 */
+/* duf_sel_cb_record_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_udata,                                                */
+/*                            duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb ); */
+/*                                                                                                                                     */
 extern int duf_constraint;
 #endif

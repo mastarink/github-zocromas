@@ -1,3 +1,7 @@
 *.tmp
 *.jpg
+t.c
+pi.c
+pit
+tags
 .comments/

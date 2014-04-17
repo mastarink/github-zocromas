@@ -25,7 +25,7 @@
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_insert_group( duf_record_t * precord, va_list args, void *sel_cb_udata,
+duf_sel_cb_insert_group( duf_record_t * precord, va_list args, void *sel_cb_udata,
                       duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   unsigned long long *pid;
@@ -47,7 +47,7 @@ duf_insert_group( const char *name )
   r = duf_sql_c( "INSERT INTO duf_group (name,now) values ('%s',datetime())", DUF_CONSTRAINT_IGNORE_YES, name );
   if ( r == duf_constraint )
   {
-    r = duf_sql_select( duf_sql_insert_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
+    r = duf_sql_select( duf_sel_cb_insert_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /* sccb */ , "SELECT id as groupid FROM duf_group WHERE name='%s'", name );
   }
   else if ( !r /* assume SQLITE_OK */  )

@@ -55,7 +55,6 @@ shn_gvimer_plus_regfile_in ()
     shift;
     local filen=`basename $file`;
     local resident;
-    unset MSH_CURRENT_MASEDFILE
     local fpath=$(realpath $file)
 #   local bfil=$(shn_gvimer_plus_bin --servername "$fuuid" --remote-expr "bufnr(\"^${fpath}$\")" 2>/dev/null )
 #   [[ $bfil ]] && echo "buffer = $bfil" >&2
@@ -72,9 +71,14 @@ shn_gvimer_plus_regfile_in ()
         if [[ -n "$typf" ]] && [[ -f "$masedf" ]]; then
             if /bin/grep --colour=auto "$filen" "$masedf" &>/dev/null; then
 #	        echo "1 gvimer --servername $fuuid ${typf}.mased ($masedf)" 1>&2;
-		export MSH_CURRENT_MASEDFILE=$masedf
-		echo "masedf: $masedf" >&2
-                shn_gvimer_plus_bin --servername "$fuuid" -c "set path=$(shn_gvimer_plus_vpath $typf)" -c "source $masedf" -c "tab drop $rfile"
+#		echo "masedf: $masedf" >&2
+#               shn_gvimer_plus_bin --servername "$fuuid" --cmd "set path=$(shn_gvimer_plus_vpath $typf)" --cmd "source $masedf" -c "tab drop $rfile"
+		local edpath=$(shn_gvimer_plus_vpath $typf)
+                shn_gvimer_plus_bin \
+			--servername "$fuuid" \
+			${masedf:+--cmd "let masedfile=\"$masedf\""} \
+			${edpath:+--cmd "let masedpath=\"$edpath\""} \
+			${rfile:+--cmd "let maseddrop=\"$rfile\""}
 #		/bin/sleep 0.5;
 #	        echo "2 gvimer_resident $rfile $fuuid" 1>&2;
 #		shn_gvimer_plus_resident $rfile $fuuid;
@@ -161,20 +165,18 @@ shn_gvimer_plus_filtyp ()
     local dirn=$1;
     shift;
     if [[ "$filef" == *.c ]] || [[ "$filef" == *.h ]]; then
-        typf="src";
-    else
-        if ( [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ); then
-            typf="shn";
-        else
-            if [[ "$dirn" == shn ]] && ( [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ); then
-                typf="shn";
-            else
-                if [[ "$filef" == *.ac ]] || [[ "$filef" == *.am ]]; then
-                    typf="ac";
-                fi;
-            fi;
-        fi;
-    fi;
+       typf="src";
+    elif [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ; then
+       typf="shn";
+    elif [[ "$dirn" == shn ]] && ( [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ); then
+       typf="shn";
+    elif [[ "$filef" == *.ac ]] || [[ "$filef" == *.am ]]; then
+       typf="ac";
+    elif [[ "$filef" == *.mased.vim ]] ; then
+       typf="mased_vim";
+    elif [[ "$filef" == *.vim ]] || [[ "$filef" == gvim* ]] || [[ "$filef" == vim* ]] ; then
+       typf="vimstd";
+    fi
     echo $typf
 }
 shn_gvimer_plus_find () 
@@ -185,18 +187,12 @@ shn_gvimer_plus_find ()
     shift;
     local paths;
     case $typf in 
-        src)
-            paths='./src/ ./inc/'
-        ;;
-        ac)
-            paths='./'
-        ;;
-        shn)
-            paths='./shn/'
-        ;;
-        *)
-            paths='./'
-        ;;
+        src)		paths='./src/ ./inc/'	;;
+        ac)		paths='./'		;;
+        shn)		paths='./shn/'		;;
+        vimstd)		paths='.'		;;
+        mased_vim)	paths='./mased/'	;;
+        *)		paths='./'		;;
     esac;
 #   eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1
     filef=`eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1`;
@@ -208,18 +204,12 @@ shn_gvimer_plus_vpath ()
     shift;
     local paths;
     case $typf in 
-        src)
-            paths='src,src/inc,inc'
-        ;;
-        ac)
-            paths='.'
-        ;;
-        shn)
-            paths='shn'
-        ;;
-        *)
-            paths='.'
-        ;;
+        src)		paths='src/,src/inc/,inc/'	;;
+        ac)		paths='.'			;;
+        shn)		paths='shn/'			;;
+        vimstd)		paths='.'			;;
+        mased_vim)	paths='mased/'			;;
+        *)		paths='.'			;;
     esac;
     echo "${paths:-.}"
 }
@@ -229,7 +219,7 @@ shn_gvimer_plus_mased ()
     local file=$1 filef;
     local typf;
     typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`;
-#   echo "1 typf:$typf" >&2
+    echo "1 typf:$typf for ${file}" >&2
     if [[ "$file" == */* ]]; then
         filef=$1;
     else

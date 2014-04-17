@@ -1,10 +1,13 @@
 function shn_code ()
 {
+  local i
   declare -gx -A MSH_SHN_LAST_ACTION
   local code=${1:-h}
   shift
+
   shn_dbgmsg "shn 1 -- $code"
   shn_dbgmsg "shn 2 -- $code"
+# for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
 
   local nocase=u
   if shopt  nocasematch &>/dev/null ; then nocase=s ; else nocase=u ; fi
@@ -47,10 +50,10 @@ function shn_code ()
       shift
     ;;
     r)
-      shn_run "$*"
+      shn_run "$@"
     ;;
     g)
-      shn_debug $@
+      shn_debug "$@"
     ;;
     G)
       shn_core_debug $@
@@ -172,9 +175,10 @@ function shn_code ()
 }
 function shn ()
 {
-  local code=${1:-l}
+  local code=${1:-l} i
 # export MSH_SHN_DEBUG=yes  
   shift
+# for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
   shn_dbgmsg 1 shn
   shn_dbgmsg 2a shn
   local retcode=0
@@ -205,7 +209,7 @@ function shn ()
     local shn_dont_setup=yes
     
 #   local shn_ignore_error=yes
-    shn_code $@
+    shn_code "$@"
     retcode=$?
   elif [[ "$code" ]] ; then
     local shn_dont_setup=yes
@@ -216,7 +220,7 @@ function shn ()
 #     if [[ "$code" =~ ^(L|X|x|r)$ ]] ; then
 #       shn_warn "use '$FUNCNAME one $code'"
 #     else
-        shn_code $code $@
+        shn_code $code "$@"
 #     fi
       if [[ "$code" =~ ^[LXxrgGj]$ ]] ; then
         return 0

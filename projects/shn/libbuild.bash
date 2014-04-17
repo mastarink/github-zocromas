@@ -302,7 +302,7 @@ function shn_build_superclean ()
       rm -Rf $d
     fi
   done
-  for l in vimrc-mastar sh gvim-vimenter.vim gvimrc-mastar gvim-funcs.vim .localrc ; do
+  for l in sh vimrc-mastar gvimrc-mastar gvim-vimenter.vim gvim-funcs.vim .localrc ; do
     if [[ "$l" ]] && [[ -L "$l" ]] ; then
       shn_msg removing link $l
       rm -Rf $l

@@ -1,45 +1,51 @@
-"echo "+++++++++++++++++++++++++++++++++ : " . expand("<sfile>")
-"
-" set viminfo='50,<1000,s100,:0,n~/vim/viminfo
-" set ttyfast
+set ttyfast
 " set notbi
-" autocmd! VimEnter *.mased source %.vim
-" echo 'in ' . expand('<sfile>')
-let dfile=expand('%')
-" dfile : src.mased
-if empty(dfile)
-  echo "Not set dfile "
-  if exists("masedfile")
-"    echo "masedfile = " . masedfile
-  elseif exists("$MSH_CURRENT_MASEDFILE")
-    echo "Not exists masedfile, set to " . $MSH_CURRENT_MASEDFILE
-    let masedfile=$MSH_CURRENT_MASEDFILE
-  else
-    echo "Not exists masedfile"
-  endif
-" echo "<sfile> = " . expand('<sfile>')  
-else
-" echo "+++++++++++++++++++++++++++++++++ <sfile>: " . expand("<sfile>") . " @ dfile:" . dfile
-  let masedfile='mased/' . dfile . '.vim'
-endif
+set tbi
+
+" if !exists("masedfile")
+"   let dfile=expand('%')
+" " dfile : src.mased
+"   if empty(dfile)
+"     echo "Not set dfile "
+"     echo "Not exists masedfile"
+"   else
+"     let masedfile='mased/' . dfile . '.vim'
+"   endif
+" endif
+
 
 if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
-  echo "masedfile = " . masedfile . "---------\n"
+  
+" echo 'masedfile: ' . masedfile
+" if exists('v:servername')
+"   echo '(before) v:servername: ' . v:servername
+" endif
+" if exists('g:maseddrop')
+"   echo '(before) g:maseddrop: ' . g:maseddrop
+" endif
+" if exists('g:maseddrop')
+"   echo '(before) g:masedpath: ' . g:masedpath
+" endif
+
+
 " set viminfo='50,<1000,s1000,.viminfo
-  execute "set viminfo='50,<1000,s1000,n" . expand('%') . ".viminfo"
-  set verbosefile=vrb.tmp
-  set path=src,src/inc
+  
+" set path=src,src/inc
 " tab new
   
-" echo "source " . masedfile
-  sil so `=masedfile`
+
+  execute 'set path=' . g:masedpath
+  sil source `=masedfile`
+
 " au ColorScheme sil so `=masedfile`
 " autocmd! VimEnter * source gvim-vimenter.vim
-  au GUIEnter * winsize 156 50
-  au GUIEnter * source gvim-vimenter.vim
-" echo "set mappings"
-  " echo 'later: gvim-vimenter.vim'
-else
-  echo "No masedfile "
+
+" au GUIEnter * winsize 156 50
+  
+  if filereadable("gvim-guienter.vim")
+    au GUIEnter * source gvim-guienter.vim
+  endif
+  if filereadable("gvim-vimenter.vim")
+    au VimEnter * source gvim-vimenter.vim
+  endif
 endif
-" echo 'out ' . expand('<sfile>')

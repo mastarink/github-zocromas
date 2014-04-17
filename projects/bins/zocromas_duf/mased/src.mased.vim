@@ -21,12 +21,6 @@ sfind duf_file_pathid.h
 tab sfind duf_filedata.c
 sfind duf_filedata.h
 
-tab sfind duf_filename.c
-sfind duf_filename.h
-
-tab sfind duf_keydata.c
-sfind duf_keydata.h
-
 tab sfind duf_mdpath.c
 sfind duf_mdpath.h
 
@@ -44,9 +38,6 @@ sfind duf_exif.h
 
 tab sfind duf_finddup.c
 sfind duf_finddup.h
-
-tab sfind duf_md5.c
-sfind duf_md5.h
 
 tab sfind duf_add.c
 sfind duf_add.h

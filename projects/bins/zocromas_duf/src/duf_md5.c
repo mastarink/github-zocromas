@@ -19,7 +19,7 @@
 
 #include "duf_sql.h"
 #include "duf_path.h"
-#include "duf_keydata.h"
+/* #include "duf_keydata.h" */
 /* #include "duf_file_pathid.h" */
 #include "duf_file_md5id.h"
 #include "duf_insert.h"
@@ -241,111 +241,111 @@
  * */
 
   /* currently used for --same-md5 */
-int
-duf_sql_scan_md5( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                  duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  int r = 0;
+/* int                                                                                                                              */
+/* duf_sel_cb_scan_md5( duf_record_t * precord, va_list args, void *sel_cb_udata,                                                   */
+/*                   duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )        */
+/* {                                                                                                                                */
+/*   int r = 0;                                                                                                                     */
+/*                                                                                                                                  */
+/*   if ( str_cb )                                                                                                                  */
+/*   {                                                                                                                              */
+/*     char *path;                                                                                                                  */
+/*     md5_std_data_t data;                                                                                                         */
+/*                                                                                                                                  */
+/*     const char *filename = duf_sql_str_by_name( "filename", precord, 0 );                                                        */
+/*     unsigned long long pathid = duf_sql_ull_by_name( "pathid", precord, 0 );                                                     */
+/*     unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 );                                             */
+/*                                                                                                                                  */
+/*     (* unsigned long long filesize = duf_sql_ull_by_name( "filesize", precord, 0 ); *)                                           */
+/*                                                                                                                                  */
+/*                                                                                                                                  */
+/*                                                                                                                                  */
+/*     (* pathid = strtoll( precord->presult[0], NULL, 10 ); *)                                                                     */
+/*     (* filenameid = strtoll( precord->presult[1], NULL, 10 ); *)                                                                 */
+/*     (* filename = precord->presult[2]; *)                                                                                        */
+/*     (* data.md5id = strtoll( precord->presult[3], NULL, 10 ); *)                                                                 */
+/*     data.md5id = duf_sql_ull_by_name( "md5id", precord, 0 );                                                                     */
+/*     (* data.size = strtoll( precord->presult[4], NULL, 10 ); *)                                                                  */
+/*     data.size = duf_sql_ull_by_name( "md5size", precord, 0 );                                                                    */
+/*     (* data.dupcnt = precord->presult[5] ? strtoll( precord->presult[5], NULL, 10 ) : 0; *)                                      */
+/*     data.dupcnt = duf_sql_ull_by_name( "dupcnt", precord, 0 );                                                                   */
+/*     path = duf_pathid_to_path( pathid );                                                                                         */
+/*                                                                                                                                  */
+/*                                                                                                                                  */
+/* (* duf_scan_callback_file_t :                                                                                                    */
+/*  *           int fun( pathid, path, filenameid, filename, stat,         str_cb_udata, precord ); *)                              */
+/*     r = ( *str_cb ) ( pathid, filenameid, filename, &data, ( duf_dirinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL, precord ); */
+/*     mas_free( path );                                                                                                            */
+/*   }                                                                                                                              */
+/*   return r;                                                                                                                      */
+/* }                                                                                                                                */
 
-  if ( str_cb )
-  {
-    char *path;
-    md5_std_data_t data;
+/* int                                                                                                                  */
+/* duf_scan_vmd5_sql( duf_scan_callback_file_t str_cb, const char *sql, va_list args )                                  */
+/* {                                                                                                                    */
+/*   return duf_sql_vselect( duf_sel_cb_scan_md5, SEL_CB_UDATA_DEF, str_cb, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL, */
+/*                           ( duf_scan_callbacks_t * ) NULL (*  sccb *) , sql, args );                                 */
+/* }                                                                                                                    */
 
-    const char *filename = duf_sql_str_by_name( "filename", precord, 0 );
-    unsigned long long pathid = duf_sql_ull_by_name( "pathid", precord, 0 );
-    unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 );
-
-    /* unsigned long long filesize = duf_sql_ull_by_name( "filesize", precord, 0 ); */
-
-
-
-    /* pathid = strtoll( precord->presult[0], NULL, 10 ); */
-    /* filenameid = strtoll( precord->presult[1], NULL, 10 ); */
-    /* filename = precord->presult[2]; */
-    /* data.md5id = strtoll( precord->presult[3], NULL, 10 ); */
-    data.md5id = duf_sql_ull_by_name( "md5id", precord, 0 );
-    /* data.size = strtoll( precord->presult[4], NULL, 10 ); */
-    data.size = duf_sql_ull_by_name( "md5size", precord, 0 );
-    /* data.dupcnt = precord->presult[5] ? strtoll( precord->presult[5], NULL, 10 ) : 0; */
-    data.dupcnt = duf_sql_ull_by_name( "dupcnt", precord, 0 );
-    path = duf_pathid_to_path( pathid );
-
-
-/* duf_scan_callback_file_t :
- *           int fun( pathid, path, filenameid, filename, stat,         str_cb_udata, precord ); */
-    r = ( *str_cb ) ( pathid, filenameid, filename, &data, ( duf_dirinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL, precord );
-    mas_free( path );
-  }
-  return r;
-}
-
-int
-duf_scan_vmd5_sql( duf_scan_callback_file_t str_cb, const char *sql, va_list args )
-{
-  return duf_sql_vselect( duf_sql_scan_md5, SEL_CB_UDATA_DEF, str_cb, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                          ( duf_scan_callbacks_t * ) NULL /*  sccb */ , sql, args );
-}
-
-int
-duf_scan_md5_sql( duf_scan_callback_file_t str_cb, const char *sql, ... )
-{
-  int r = 0;
-  va_list args;
-
-  va_start( args, sql );
-  r = duf_scan_vmd5_sql( str_cb, sql, args );
-  va_end( args );
-  return r;
-}
+/* int                                                                       */
+/* duf_scan_md5_sql( duf_scan_callback_file_t str_cb, const char *sql, ... ) */
+/* {                                                                         */
+/*   int r = 0;                                                              */
+/*   va_list args;                                                           */
+/*                                                                           */
+/*   va_start( args, sql );                                                  */
+/*   r = duf_scan_vmd5_sql( str_cb, sql, args );                             */
+/*   va_end( args );                                                         */
+/*   return r;                                                               */
+/* }                                                                         */
 
 /*
  * sql must select pathid, filenameid, filename, md5id, size
  * */
-static int
-duf_scan_md5id( duf_scan_callback_file_t str_cb, unsigned long long dupcnt_min, unsigned long long limit )
-{
-  int r = 0;
-
-  if ( limit )
-  {
-    if ( dupcnt_min )
-      r = duf_scan_md5_sql( str_cb,
-                            "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
-                            " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "
-                            " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "
-                            " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)"
-                            " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"
-                            " WHERE dupcnt>=%llu ORDER BY size DESC LIMIT %llu", dupcnt_min, limit );
-    else
-      r = duf_scan_md5_sql( str_cb,
-                            "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
-                            " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "
-                            " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "
-                            " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)"
-                            " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)" " ORDER BY size DESC LIMIT %llu", limit );
-  }
-  else
-  {
-    if ( dupcnt_min )
-      r = duf_scan_md5_sql( str_cb,
-                            "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
-                            " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "
-                            " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "
-                            " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)"
-                            " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)" " WHERE dupcnt>=%llu " " ORDER BY size DESC",
-                            dupcnt_min );
-    else
-      r = duf_scan_md5_sql( str_cb,
-                            "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
-                            " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "
-                            " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "
-                            " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"
-                            " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)" " ORDER BY size DESC", dupcnt_min );
-  }
-  fprintf( stderr, "@@@@@@@@@@ %d\n", r );
-  return r;
-}
+/* static int                                                                                                                               */
+/* duf_scan_md5id( duf_scan_callback_file_t str_cb, unsigned long long dupcnt_min, unsigned long long limit )                               */
+/* {                                                                                                                                        */
+/*   int r = 0;                                                                                                                             */
+/*                                                                                                                                          */
+/*   if ( limit )                                                                                                                           */
+/*   {                                                                                                                                      */
+/*     if ( dupcnt_min )                                                                                                                    */
+/*       r = duf_scan_md5_sql( str_cb,                                                                                                      */
+/*                             "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "            */
+/*                             " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "                                            */
+/*                             " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "                                                  */
+/*                             " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)"                                      */
+/*                             " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"                                                */
+/*                             " WHERE dupcnt>=%llu ORDER BY size DESC LIMIT %llu", dupcnt_min, limit );                                    */
+/*     else                                                                                                                                 */
+/*       r = duf_scan_md5_sql( str_cb,                                                                                                      */
+/*                             "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "            */
+/*                             " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "                                            */
+/*                             " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "                                                  */
+/*                             " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)"                                      */
+/*                             " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)" " ORDER BY size DESC LIMIT %llu", limit );     */
+/*   }                                                                                                                                      */
+/*   else                                                                                                                                   */
+/*   {                                                                                                                                      */
+/*     if ( dupcnt_min )                                                                                                                    */
+/*       r = duf_scan_md5_sql( str_cb,                                                                                                      */
+/*                             "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "            */
+/*                             " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "                                            */
+/*                             " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "                                                  */
+/*                             " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)"                                      */
+/*                             " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)" " WHERE dupcnt>=%llu " " ORDER BY size DESC",  */
+/*                             dupcnt_min );                                                                                                */
+/*     else                                                                                                                                 */
+/*       r = duf_scan_md5_sql( str_cb,                                                                                                      */
+/*                             "SELECT duf_paths.id as pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "            */
+/*                             " duf_md5.id as md5id, size as md5size, dupcnt " " FROM duf_md5 "                                            */
+/*                             " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "                                                  */
+/*                             " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"                                                */
+/*                             " LEFT JOIN duf_filenames ON (duf_filenames.id=duf_keydata.filenameid)" " ORDER BY size DESC", dupcnt_min ); */
+/*   }                                                                                                                                      */
+/*   fprintf( stderr, "@@@@@@@@@@ %d\n", r );                                                                                               */
+/*   return r;                                                                                                                              */
+/* }                                                                                                                                        */
 
 /* 
  * duf_scan_callback_file_t:
@@ -374,27 +374,27 @@ duf_scan_md5id( duf_scan_callback_file_t str_cb, unsigned long long dupcnt_min, 
 /* 
  * duf_scan_callback_file_t:
  * */
-int
-duf_sql_scan_print_md5_same( unsigned long long pathid, unsigned long long filenameid,
-                             const char *name, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                             duf_record_t * precord )
-{
-  md5_std_data_t *mdata;
+/* int                                                                                                                  */
+/* duf_sql_scan_print_md5_same( unsigned long long pathid, unsigned long long filenameid,                               */
+/*                              const char *name, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb, */
+/*                              duf_record_t * precord )                                                                */
+/* {                                                                                                                    */
+/*   md5_std_data_t *mdata;                                                                                             */
+/*                                                                                                                      */
+/*   mdata = ( md5_std_data_t * ) str_cb_udata;                                                                         */
+/*   printf( "-- size=%lld; %lld files (id:%llu) ----------\n", mdata->size, mdata->dupcnt, mdata->md5id );             */
+/*   duf_print_files_by_md5id( mdata->md5id );                                                                          */
+/*   return 0;                                                                                                          */
+/* }                                                                                                                    */
 
-  mdata = ( md5_std_data_t * ) str_cb_udata;
-  printf( "-- size=%lld; %lld files (id:%llu) ----------\n", mdata->size, mdata->dupcnt, mdata->md5id );
-  duf_print_files_by_md5id( mdata->md5id );
-  return 0;
-}
-
-int
-duf_print_md5_same( unsigned long long dupcnt_min, unsigned long long limit )
-{
-  int r = 0;
-
-  duf_scan_md5id( duf_sql_scan_print_md5_same, dupcnt_min, limit );
-  return r;
-}
+/* int                                                                           */
+/* duf_print_md5_same( unsigned long long dupcnt_min, unsigned long long limit ) */
+/* {                                                                             */
+/*   int r = 0;                                                                  */
+/*                                                                               */
+/*   duf_scan_md5id( duf_sql_scan_print_md5_same, dupcnt_min, limit );           */
+/*   return r;                                                                   */
+/* }                                                                             */
 
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)

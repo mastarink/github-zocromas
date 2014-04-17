@@ -35,7 +35,6 @@ duf_config_create( void )
 int
 duf_config_delete( void )
 {
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
   mas_free( duf_config->db_dir );
   duf_config->db_dir = NULL;
 
@@ -53,7 +52,6 @@ duf_config_delete( void )
 
   mas_free( duf_config );
   duf_config = NULL;
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 

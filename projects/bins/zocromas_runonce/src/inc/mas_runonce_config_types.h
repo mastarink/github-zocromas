@@ -38,6 +38,8 @@ typedef struct
   unsigned list_zero:1;
   unsigned list_one:1;
   unsigned list_multiple:1;
+  unsigned notclosestdout:1;
+  unsigned notclosestderr:1;
   unsigned verbose:8;
 } runonce_flags_t;
 

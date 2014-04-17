@@ -11,6 +11,7 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
+#include "duf_utils.h"
 #include "duf_config.h"
 
 #include "duf_sql.h"
@@ -25,10 +26,10 @@
 
 #include "duf_dbg.h"
 
-#include "duf_dir_print_uni.h"
-#include "duf_fill_uni.h"
-#include "duf_sample_uni.h"
-#include "duf_md5_uni.h"
+/* #include "duf_dir_print_uni.h" */
+/* #include "duf_fill_uni.h" */
+/* #include "duf_sample_uni.h" */
+/* #include "duf_md5_uni.h" */
 
 /* ###################################################################### */
 #include "duf_uni_scan.h"
@@ -48,41 +49,52 @@
  * otherwise do nothing
  *
  *   i.e.
- *     1. for <current> dir call sccb->directory_scan
+ *     1. for <current> dir call sccb->directory_scan_before
+ *     2. for each file in <current> dir call sccb->file_scan
+ *     3. for <current> dir call sccb->directory_scan_middle
  *   recursively from <current> dir (if recursive flag set):
- *     2. for each dir in dir call duf_uni_scan_dir + str_cb_udata
- *     3. for each file in dir call sccb->file_scan
+ *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
+ *     5. for <current> dir call sccb->directory_scan_after
  * */
 int
-duf_uni_scan_dir( unsigned long long pathid, unsigned long long filenameid_needless, const char *name, void *str_cb_udata,
-                  duf_dirinfo_t * pdi1, duf_scan_callbacks_t * sccb, duf_record_t * precord )
+duf_uni_scan_dir( void *str_cb_udata, duf_dirinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   int r = 0;
 
+  DUF_UFIELD( dirid );
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( duf_config->cli.dbg.verbose > 1 )
-  {
-    fprintf( stderr, "%s:%s='%s' -- r[%d]='%s'\n", __func__, precord->pnames[2], precord->presult[2],
-             duf_sql_pos_by_name( "pathid", precord, 0 ), duf_sql_str_by_name( "pathid", precord, 0 ) );
-  }
-  if ( duf_config->cli.trace.scan )
-  {
-    char *path = duf_pathid_to_path( pathid );
 
-    fprintf( stderr, "[SCAN ] %20s: %llu:%s; %llu\n", __func__, pathid, path, filenameid_needless );
+  if ( DUF_IF_TRACE( scan ) )
+  {
+    /* unsigned long long dirid = duf_sql_ull_by_name( "dirid", precord, 0 ); */
+    /* DUF_UFIELD( filenameid ); */
+    /* unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 ); */
+    char *path = duf_pathid_to_path( dirid );
+
+    DUF_TRACE( scan, 0, "TOP B %llu:%s", dirid, path );
     mas_free( path );
   }
   {
     duf_dirinfo_t *pdi;
 
     pdi = ( duf_dirinfo_t * ) str_cb_udata;
-    if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->level < pdi->u.maxdepth ) )
+    if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
     {
       if ( pdi->levinfo )
       {
+#if 0
         if ( !precord->nrow )
-          pdi->levinfo[pdi->level + 1] = precord->nrows;
-        pdi->name = duf_sql_str_by_name( "dirname", precord, 0 );
+          pdi->levinfo[pdi->depth + 1] = precord->nrows;
+/* #else                                                                  */
+/*         pdi->levinfo[pdi->depth + 1] = precord->nrows - precord->nrow; */
+#endif
+
+        if ( !pdi->levinfo )
+        {
+          fprintf( stderr, "Error!!\n" );
+          exit( 5 );
+        }
+
 /* duf_scan_fil_by_pi:
  * call duf_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args
  *
@@ -91,13 +103,17 @@ duf_uni_scan_dir( unsigned long long pathid, unsigned long long filenameid_needl
  *         otherwise do nothing
  *
  *   i.e.
- *     1. for <current> dir call sccb->directory_scan
+ *     1. for <current> dir call sccb->directory_scan_before
+ *     2. for each file in <current> dir call sccb->file_scan
+ *     3. for <current> dir call sccb->directory_scan_middle
  *   recursively from <current> dir (if recursive flag set):
- *     2. for each dir in dir call duf_uni_scan_dir + str_cb_udata
- *     3. for each file in dir call sccb->file_scan
+ *     4. for each dir in <current> dir call str_cb + str_cb_udata
+ *     5. for <current> dir call sccb->directory_scan_after
  * */
-        r = duf_scan_dirs_by_parentid( pathid, duf_uni_scan_dir, pdi, sccb );
-        pdi->levinfo[pdi->level + 1]--;
+        r = duf_scan_dirs_by_parentid( dirid, duf_uni_scan_dir, pdi, sccb, precord );
+#if 0
+        pdi->levinfo[pdi->depth + 1]--;
+#endif
       }
     }
   }
@@ -108,10 +124,12 @@ duf_uni_scan_dir( unsigned long long pathid, unsigned long long filenameid_needl
 
 /*
  *   i.e. 
- *     1. for the path dir call sccb->directory_scan
- *   recursively from the path dir (if recursive flag set):
- *     2. for each dir in path call duf_uni_scan_dir
- *     3. for each file in the path call sccb->file_scan
+ *     1. for <current> dir call sccb->directory_scan_before
+ *     2. for each file in <current> dir call sccb->file_scan
+ *     3. for <current> dir call sccb->directory_scan_middle
+ *   recursively from <current> dir (if recursive flag set):
+ *     4. for each dir in <current> dir call str_cb + str_cb_udata
+ *     5. for <current> dir call sccb->directory_scan_after
  */
 int
 duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
@@ -121,31 +139,39 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( sccb )
   {
-    duf_dirinfo_t di = {.level = 0,
+    duf_dirinfo_t di = {.depth = 0,
       .seq = 0,
       .levinfo = NULL,
       .u = u,
-      .name = path,
+      /* .name = path, */
     };
+    duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+    if ( di.u.maxdepth && !di.levinfo )
+    {
+      size_t lsz = sizeof( di.levinfo[0] ) * ( di.u.maxdepth + 3 );
+
+      di.levinfo = mas_malloc( lsz );
+
+      memset( di.levinfo, 0, lsz );
+    }
+
     {
       unsigned long long pathid;
 
-      pathid = duf_path_to_pathid( path );
+      pathid = duf_path_to_pathid( path, &di );
+      if ( DUF_IF_TRACE( scan ) )
+      {
+        char *path = duf_pathid_to_path( pathid );
+
+        DUF_TRACE( scan, 0, "TOP A %llu:%s", pathid, path );
+        mas_free( path );
+      }
 
 
+      /* fprintf( stderr, "%s:PATH %s => %llu / %llu\n", __func__, path, pathid, di.levinfo[di.depth].dirid ); */
       if ( pathid || !path )
       {
-        if ( di.u.maxdepth && !di.levinfo )
-        {
-          size_t lsz = sizeof( di.levinfo[0] ) * ( di.u.maxdepth + 1 );
-
-          di.levinfo = mas_malloc( lsz );
-
-          memset( di.levinfo, 0, lsz );
-        }
-
-        if ( duf_config->cli.trace.scan )
-          fprintf( stderr, "[SCAN ] %20s: %llu:%s  duf_scan_dirs_by_parentid with str_cb=duf_uni_scan_dir(%p)\n", __func__, pathid,
+        DUF_TRACE( scan, 0, "%llu:%s  duf_scan_dirs_by_parentid with str_cb=duf_uni_scan_dir(%p)", pathid,
                    path, ( void * ) ( unsigned long long ) duf_uni_scan_dir );
 /* duf_uni_scan_dir:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
@@ -155,19 +181,30 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
  * call duf_uni_scan_dir with pdi for each dir at db by pathid (i.e. children of pathid) 
  *
  *   i.e.
- *     1. for <current> dir call sccb->directory_scan
+ *     1. for <current> dir call sccb->directory_scan_before
+ *     2. for each file in <current> dir call sccb->file_scan
+ *     3. for <current> dir call sccb->directory_scan_middle
  *   recursively from <current> dir (if recursive flag set):
- *     2. for each dir in dir call duf_uni_scan_dir + &di as str_cb_udata
- *     3. for each file in dir call sccb->file_scan
+ *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
+ *     5. for <current> dir call sccb->directory_scan_after
  * */
-        r = duf_scan_dirs_by_parentid( pathid, duf_uni_scan_dir, &di, sccb );
-        mas_free( di.levinfo );
+        r = duf_scan_dirs_by_parentid( pathid, duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
       }
       else
       {
-        if ( duf_config->cli.trace.scan )
-          fprintf( stderr, "[SCAN ] %20s: %llu:%s\n", __func__, pathid, path );
       }
+      mas_free( di.levinfo );
+    }
+    if ( duf_config->cli.totals )
+    {
+      FILE *f;
+
+      f = duf_config->cli.trace.out ? duf_config->cli.trace.out : stdout;
+      fprintf( f, "\n\n************************************************************\n" );
+      fprintf( f, " seq:%llu", di.seq );
+      if ( duf_config->u.maxseq )
+        fprintf( f, " of %llu", duf_config->u.maxseq );
+      fprintf( f, "\n" );
     }
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -175,52 +212,60 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 }
 
 int
-duf_uni_scan_targ( duf_config_t * config, duf_scan_callbacks_t * sccb )
+duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( sccb && sccb->init_scan )
     sccb->init_scan( sccb );
-  if ( config )
+  if ( duf_config )
   {
-    if ( config->targc > 0 )
-      for ( int ia = 0; ia < config->targc; ia++ )
-        duf_uni_scan( config->targv[ia], config->u, sccb );
+    if ( duf_config->targc > 0 )
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
+        duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
     else
-      duf_uni_scan( NULL, config->u, sccb );
+      duf_uni_scan( NULL, duf_config->u, sccb );
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 
 int
-duf_uni_scan_all( duf_config_t * config )
+duf_uni_scan_all( void )
 {
   int r = 0;
   duf_scan_callbacks_t *pscan_callbacks = NULL;
 
   extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_md5_callbacks /* __attribute( ( weak ) ) */ ;
+  extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;
+  extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
+  extern duf_scan_callbacks_t duf_fill_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  if ( config->cli.act.fill )
+  if ( duf_config->cli.act.fill )
     pscan_callbacks = &duf_fill_callbacks;
-  if ( config->cli.act.md5 )
-    pscan_callbacks = &duf_md5_callbacks;
-  if ( config->cli.act.print && config->cli.act.tree )
+
+  if ( duf_config->cli.act.mdpath && duf_config->cli.act.fill )
+    pscan_callbacks = &duf_fill_mdpath_callbacks;
+  if ( duf_config->cli.act.md5 && duf_config->cli.act.fill )
+    pscan_callbacks = &duf_fill_md5_callbacks;
+
+  if ( duf_config->cli.act.md5 && duf_config->cli.act.print )
+    pscan_callbacks = &duf_print_md5_callbacks;
+
+  if ( duf_config->cli.act.print && duf_config->cli.act.tree && !duf_config->cli.act.md5 )
     pscan_callbacks = &duf_print_tree_callbacks;
-  if ( config->cli.act.print && !config->cli.act.tree )
+
+  if ( duf_config->cli.act.print && !duf_config->cli.act.tree && !duf_config->cli.act.md5 )
     pscan_callbacks = &duf_print_dir_callbacks;
-  if ( config->cli.act.sample )
+
+  if ( duf_config->cli.act.sample )
     pscan_callbacks = &duf_sample_callbacks;
 
-  if ( pscan_callbacks && !config->cli.act.files )
-    pscan_callbacks->file_scan = NULL;
-
-  r = duf_uni_scan_targ( config, pscan_callbacks );
+  r = duf_uni_scan_targ( pscan_callbacks );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }

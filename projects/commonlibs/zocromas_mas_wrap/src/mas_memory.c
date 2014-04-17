@@ -116,8 +116,9 @@ mas_other_free( void *p )
 }
 
 #ifdef MAS_TRACEMEM
-int imemar = 0;
-mas_mem_head_t *memar[4096];
+static int imemar = 0;
+static mas_mem_head_t *memar[4096];
+int mas_mem_disable_print_usage = 0;
 
 static int
 _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
@@ -125,7 +126,7 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
   int h = 0;
   int r = -1;
 
-  if ( f )
+  if ( f && !mas_mem_disable_print_usage )
   {
     r = fprintf( f, "WMWMOMWMWM" );
     r = 0;
@@ -165,7 +166,7 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
     if ( !h && r >= 0 )
       r = fprintf( f, "<<EMP MEMT>>" );
     /* r = fprintf( f, "** EMPTY MEMORY TABLE ** %s:%u", func, line ); */
-    
+
     /* if ( r >= 0 )                    */
     /*   r = fprintf( f, "[%d]\n", r ); */
   }
