@@ -153,6 +153,7 @@ function shn_project_cd ()
   MSH_SHN_PREV_PROJECT_NAME=$MSH_SHN_PROJECT_NAME
   cd $p >&2 || return $?
   shn_setup_projects
+  git status .
   return 0
 }
 function shn_project_each_control_c ()
