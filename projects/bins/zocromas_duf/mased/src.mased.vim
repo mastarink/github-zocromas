@@ -9,6 +9,9 @@ sfind duf_sqlite.h
 tab sfind duf_sql_field.c
 sfind duf_sql_field.h
 
+tab sfind duf_option.c
+sfind duf_option.h
+
 tab sfind duf_cli_options.c
 sfind duf_cli_options.h
 

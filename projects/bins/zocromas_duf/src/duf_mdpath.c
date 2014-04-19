@@ -28,7 +28,7 @@
  * */
 static int
 duf_sql_insert_mdpath( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
-                       void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
+                       void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   unsigned long long *presmd;
 
@@ -48,8 +48,8 @@ duf_insert_mdpath( unsigned long long *md64 )
                  DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0] );
   if ( r == DUF_SQL_CONSTRAINT )
   {
-    r = duf_sql_select( duf_sql_insert_mdpath, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sql_insert_mdpath, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                         "SELECT id as md5id " " FROM duf_mdpath " " WHERE mdpathsum1='%lld' and mdpathsum2='%lld'", md64[1], md64[0] );
   }
   else if ( !r /* assume SQLITE_OK */  )
@@ -65,8 +65,8 @@ duf_insert_mdpath( unsigned long long *md64 )
  * duf_sql_select_cb_t:
  * */
 static int
-duf_sel_cb_update_mdpaths_path( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                             duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
+duf_sel_cb_update_mdpaths_path( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
+                                void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   MD5_CTX *pctx;
   unsigned long long md5s1, md5s2;
@@ -99,8 +99,8 @@ duf_update_mdpaths_pathid( unsigned long long pathid )
 
   MD5_Init( &ctx );
   if ( 0 )
-    r = duf_sql_select( duf_sel_cb_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                         "SELECT duf_keydata.pathid as keyid, duf_keydata.filenameid, duf_filenames.name as filename, "
                         "'', '', duf_md5.md5sum1, duf_md5.md5sum2 " " FROM duf_md5 "
                         " LEFT JOIN duf_keydata ON (duf_keydata.md5id=duf_md5.id) "
@@ -108,8 +108,8 @@ duf_update_mdpaths_pathid( unsigned long long pathid )
                         /* " LEFT JOIN duf_paths ON (duf_paths.id=duf_filenames.pathid)" */
                         " WHERE duf_keydata.pathid='%llu' " " ORDER by md5sum1, md5sum2 ", ( unsigned long long ) pathid );
   else if ( 1 )
-    r = duf_sql_select( duf_sel_cb_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths_path, &ctx, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                         "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         "'', '', duf_md5.md5sum1, duf_md5.md5sum2 " " FROM duf_filenames "
                         " LEFT JOIN duf_keydata ON (duf_keydata.filenameid=duf_filenames.id) "
@@ -135,8 +135,8 @@ duf_update_mdpaths_pathid( unsigned long long pathid )
  * sql must select pathid, filenameid, filename, md5id, size
  * */
 static int
-duf_sel_cb_update_mdpaths( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
-                        void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
+duf_sel_cb_update_mdpaths( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   unsigned long long pathid;
 
@@ -155,12 +155,13 @@ duf_update_mdpaths( unsigned long long pathid )
 
   fprintf( stderr, "Start duf_update_mdpaths\n" );
   if ( pathid )
-    r = duf_sql_select( duf_sel_cb_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                         "SELECT id as pathid, dirname FROM duf_paths " " WHERE id='%lld' " " ORDER BY id", pathid );
   else
-    r = duf_sql_select( duf_sel_cb_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , "SELECT id as pathid, dirname FROM duf_paths " " ORDER BY id" );
+    r = duf_sql_select( duf_sel_cb_update_mdpaths, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
+                        "SELECT id as pathid, dirname FROM duf_paths " " ORDER BY id" );
   fprintf( stderr, "End duf_update_mdpaths\n" );
   return r;
 }

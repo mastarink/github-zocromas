@@ -7,8 +7,11 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
-#include "duf_config.h"
+
 #include "duf_utils.h"
+#include "duf_service.h"
+#include "duf_config.h"
+
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
@@ -29,7 +32,8 @@
 
 
 static int
-duf_scan_file( void *str_cb_udata, duf_dirinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
+duf_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord,
+               duf_dirhandle_t * pdhu )
 {
   int r;
 
@@ -61,31 +65,36 @@ duf_scan_file( void *str_cb_udata, duf_dirinfo_t * pdi, struct duf_scan_callback
  *
  * i.e.
  *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <current> dir call sccb->file_scan
+ *     2. for each file in <rrent> dir call sccb->file_scan
  *     3. for <current> dir call sccb->directory_scan_middle
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->directory_scan_after
  * */
 static int
-duf_scan_dir_by_pi( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                    duf_record_t * precord )
+duf_scan_dir_by_pi( unsigned long long dirid, duf_dirhandle_t * pdh, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi,
+                    duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
+  DUF_TRACE( current, 0, "+dirid: %llu : %d", dirid, pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
   if ( sccb && !r && sccb->directory_scan_before && duf_config->cli.act.dirs )
   {
     pdi->items.total++;
     pdi->items.dirs++;
-    r = sccb->directory_scan_before( dirid, 0 /* items */ , pdi, precord );
+    DUF_TRACE( current, 0, "+dirid: %llu : %d; sccb->directory_scan_before:%s", dirid, pdh ? ( pdh->dfd ? 2 : 1 ) : 0,
+               duf_dbg_funname( ( duf_anyhook_t ) sccb->directory_scan_before ) );
+    r = sccb->directory_scan_before( dirid, pdh, pdi, precord );
+    DUF_TRACE( current, 0, "+dirid: %llu : %d; / sccb->directory_scan_before:%s", dirid, pdh ? ( pdh->dfd ? 2 : 1 ) : 0,
+               duf_dbg_funname( ( duf_anyhook_t ) sccb->directory_scan_before ) );
     if ( r == DUF_ERROR_MAX_REACHED )
     {
       if ( pdi->depth == 0 )
         DUF_TRACE( action, 0, "Maximum reached ........" );
     }
     else if ( r < 0 )
-      DUF_TRACE( error, 0, "code: %d", r );
+      DUF_ERROR( "code: %d", r );
   }
   if ( !pdi->levinfo[pdi->depth - 1].ndirs )
     pdi->levinfo[pdi->depth - 1].eod = 1;
@@ -95,10 +104,13 @@ duf_scan_dir_by_pi( unsigned long long dirid, duf_scan_callback_file_t str_cb, d
 /* duf_scan_files_by_pathid:
  * call sccb->file_scan (or sccb->file_scan wrapped by duf_scan_file) + pdi (also) as str_cb_udata
  * 			for each <file> record by dirid with corresponding args
+ *
+ * duf_scan_file is called from  duf_file_scan.c:duf_sel_cb_items()
  * */
       if ( r >= 0 )
       {
-        r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb );
+        DUF_TRACE( current, 0, "+dirid: %llu : %d", dirid, pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
+        r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb, pdh );
         /* r = duf_scan_files_by_dirid( dirid, sccb->file_scan (* str_cb *) , pdi, sccb ); */
       }
       if ( r == DUF_ERROR_MAX_REACHED )
@@ -107,28 +119,32 @@ duf_scan_dir_by_pi( unsigned long long dirid, duf_scan_callback_file_t str_cb, d
           DUF_TRACE( action, 0, "Maximum reached ........" );
       }
       else if ( r < 0 )
-        DUF_TRACE( error, 0, "code: %d", r );
+        DUF_ERROR( "code: %d", r );
     }
-    if ( sccb && !r && sccb->directory_scan_middle && duf_config->cli.act.dirs )
-      r = sccb->directory_scan_middle( dirid, 0 /* items */ , pdi, precord );
+    if ( sccb && r >= 0 && sccb->directory_scan_middle && duf_config->cli.act.dirs )
+      r = sccb->directory_scan_middle( dirid, pdh, pdi, precord );
 
     {
 /* duf_scan_items_sql:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
       if ( r >= 0 )
-        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, sccb->dir_selector, dirid );
+        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->dir_selector, dirid );
       if ( r == DUF_ERROR_MAX_REACHED )
       {
         if ( pdi->depth == 0 )
           DUF_TRACE( action, 0, "Maximum reached ...." );
       }
       else if ( r < 0 )
-        DUF_TRACE( error, 0, "code: %d", r );
+        DUF_ERROR( "code: %d", r );
     }
+    if ( sccb && r >= 0 && sccb->directory_scan_after && duf_config->cli.act.dirs )
+      r = sccb->directory_scan_after( dirid, pdh, pdi, precord );
   }
-  if ( sccb && r >= 0 && sccb->directory_scan_after && duf_config->cli.act.dirs )
-    r = sccb->directory_scan_after( dirid, 0 /* items */ , pdi, precord );
+  else
+    DUF_ERROR( "no sccb - is it an error? r: %d", r );
+  /* if ( r < 0 )                  */
+  /*   DUF_ERROR( "code: %d", r ); */
 
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -143,20 +159,20 @@ duf_scan_dir_by_pi( unsigned long long dirid, duf_scan_callback_file_t str_cb, d
  * see duf_scan_dir_by_pi
  * */
 int
-duf_scan_dirs_by_parentid( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                           duf_record_t * precord )
+duf_scan_dirs_by_parentid( unsigned long long dirid, duf_dirhandle_t * pdh, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi,
+                           duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   int r = 0;
 
-  DUF_UFIELD( nfiles );
-  DUF_UFIELD( minsize );
-  DUF_UFIELD( maxsize );
+  DUF_UFIELD_OPT( nfiles );
+  DUF_UFIELD_OPT( minsize );
+  DUF_UFIELD_OPT( maxsize );
   if (  /* !nfiles || */ !dirid
        || ( ( ( nfiles >= duf_config->u.mindirfiles ) && ( !duf_config->u.maxdirfiles || nfiles < duf_config->u.maxdirfiles ) )
             && ( ( minsize >= duf_config->u.minsize ) && ( !duf_config->u.maxsize || maxsize < duf_config->u.maxsize ) ) ) )
   {
-    /* fprintf( stderr, "+dirid: %llu : %llu : %llu\n", dirid, nfiles, duf_config->u.mindirfiles ); */
-    r = duf_scan_dir_by_pi( dirid, str_cb, pdi, sccb, precord );
+    DUF_TRACE( current, 0, "+dirid: %llu : %d", dirid, pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
+    r = duf_scan_dir_by_pi( dirid, pdh, str_cb, pdi, sccb, precord );
     if ( r < 0 && !r == DUF_ERROR_MAX_REACHED )
       DUF_TRACE( action, 0, "r=%d", r );
   }

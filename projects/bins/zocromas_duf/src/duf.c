@@ -254,7 +254,7 @@ duf_action_new( void )
         unsigned long long pathid;
 
         path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_dirinfo_t * ) NULL );
+        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
         if ( pathid )
           duf_update_mdpaths( pathid );
         else
@@ -274,7 +274,7 @@ duf_action_new( void )
         unsigned long long pathid;
 
         path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_dirinfo_t * ) NULL );
+        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
         if ( pathid )
           duf_update_exif( pathid );
         else
@@ -356,6 +356,8 @@ main_db( int argc, char **argv )
   int r = DUF_ERROR_MAIN;
   char *dbfile;
 
+  DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
+  DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( duf_config->db_dir && duf_config->db_name )
@@ -366,9 +368,9 @@ main_db( int argc, char **argv )
     if ( duf_config->cli.dbg.verbose )
     {
       for ( int ia = 0; ia < argc; ia++ )
-        DUF_TRACE( any, 0, ">>>>>>>> argv[%d]: %s\n", ia, argv[ia] );
+        DUF_TRACE( any, 0, ">>>>>>>> argv[%d]: %s", ia, argv[ia] );
       r = duf_config_show(  );
-      DUF_TRACE( any, 0, "dbfile: %s\n", dbfile );
+      DUF_TRACE( any, 0, "dbfile: %s", dbfile );
     }
     if ( dbfile && 0 == duf_sql_open( dbfile ) )
     {
@@ -490,11 +492,20 @@ main( int argc, char **argv )
         printf( "=============================================" "\n" );
         printf( "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --totals" "\n" );
         printf( "    same as prev:" "\n" );
-        printf( "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --fill --files --dirs --md5 /mnt/new_media/media/down/ --totals" "\n" );
+        printf( "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --fill"
+                " --files --dirs --md5 /mnt/new_media/media/down/ --totals" "\n" );
 
         printf( "=============================================" "\n" );
         printf( "  run  --db-name=test20140416.db  --uni-scan   --print  --md5  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" "\n" );
+        printf( "=============================================" "\n" );
 
+        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --totals"
+                " --format=filesize,seq,filename,md5" "\n" );
+        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6"
+                " --totals --format=filesize,seq,filename,md5 --tree" "\n" );
+
+        printf( "  run  --trace-any=0  --db-name=test20140416.db  --uni-scan   --print  -df --max-seq=76 --max-depth=6 --totals"
+                " --format=filesize,seq,filename,nlink,mtime,mode,gid,uid /mnt/new_media/media/down" "\n" );
 
         printf( "=============================================" "\n" );
         break;

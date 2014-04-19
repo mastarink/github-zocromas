@@ -1,5 +1,3 @@
-set path=
-
 e configure.ac
 sp Makefile.am
 sp src/Makefile.am

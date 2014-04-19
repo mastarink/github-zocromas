@@ -7,8 +7,8 @@
  * 3. for each file in <current> dir call sccb->file_scan
  * see duf_scan_dir_by_pi
  * */
-int duf_scan_dirs_by_parentid( unsigned long long pathid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                               duf_record_t * precord );
+int duf_scan_dirs_by_parentid( unsigned long long pathid, duf_dirhandle_t *pdh, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi,
+                               duf_scan_callbacks_t * sccb, duf_record_t * precord );
 
 
 

@@ -1,4 +1,4 @@
-tab sfind duf_dirent.c
+find duf_dirent.c
 sfind duf_dirent.h
 
 tab sfind duf_utils.c

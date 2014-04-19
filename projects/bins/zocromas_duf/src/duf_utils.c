@@ -72,15 +72,30 @@ duf_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
   if ( level > minlevel )
   {
     char uname[10], *puname;
+    char rf = 0;
 
-    puname = uname;
-    for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
-      *puname++ = toupper( name[i] );
-    *puname = 0;
-    fprintf( out, "%d:%d [%-6s] %3u:%-23s: ", level, minlevel, uname, linid, funcid );
+    rf = *fmt;
+    /* ; - no prfefix, cr   */
+    /* . - no prefix, no cr */
+    /* : - prefix, no cr    */
+    if ( rf == '.' || rf == ':' || rf == ';' )
+      fmt++;
 
-    r = vfprintf( out, fmt, args );
-    fprintf( out, ".\n" );
+    if ( rf != '.' && rf != ';' )
+    {
+      puname = uname;
+      for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
+        *puname++ = toupper( name[i] );
+      *puname = 0;
+      fprintf( out, "%d:%d [%-7s] %3u:%-23s: ", level, minlevel, uname, linid, funcid );
+    }
+    {
+      r = vfprintf( out, fmt, args );
+    }
+    if ( rf != '.' && rf != ':' )
+    {
+      fprintf( out, ".\n" );
+    }
   }
   return r;
 }

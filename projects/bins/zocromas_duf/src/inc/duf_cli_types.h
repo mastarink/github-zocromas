@@ -16,8 +16,9 @@ typedef enum
   DUF_OPTION_SCAN_TRACE = 'S',
   DUF_OPTION_FILL_TRACE = 'I',
   DUF_OPTION_SQL_TRACE = 'Q',
+  DUF_OPTION_ANY_TRACE = 'Y',
+  DUF_OPTION_CURRENT_TRACE = 'C',
   DUF_OPTION_TRACE_ALL = 'T',
-  DUF_OPTION_CALLS_TRACE = 'C',
   DUF_OPTION_FILES = 'f',
   DUF_OPTION_DIRS = 'd',
   DUF_OPTION_MD5 = '5',
@@ -31,7 +32,11 @@ typedef enum
 
   DUF_OPTION_LONG = 1000,
 
+  DUF_OPTION_FORMAT,
+
   DUF_OPTION_SAMPLE_TRACE,
+  DUF_OPTION_CALLS_TRACE,
+  DUF_OPTION_SAMPUPD_TRACE,
   DUF_OPTION_PATH_TRACE,
   DUF_OPTION_MD5_TRACE,
   DUF_OPTION_MDPATH_TRACE,
@@ -66,6 +71,7 @@ typedef enum
   DUF_OPTION_MAXITEMS_FILES,
   DUF_OPTION_MAXITEMS_DIRS,
   DUF_OPTION_SAMPLE,
+  DUF_OPTION_SAMPUPD,
   DUF_OPTION_PRINT,
   DUF_OPTION_TREE,
   DUF_OPTION_UNI_SCAN,
@@ -82,6 +88,38 @@ typedef enum
   DUF_OPTION_REMOVE_FROM_GROUP,
 } duf_option_code_t;
 
+typedef enum
+{
+  DUF_FORMAT_SEQ,
+  DUF_FORMAT_DIRID,
+  DUF_FORMAT_INODE,
+  DUF_FORMAT_MODE,
+  DUF_FORMAT_NLINK,
+  DUF_FORMAT_UID,
+  DUF_FORMAT_GID,
+  DUF_FORMAT_FILESIZE,
+  DUF_FORMAT_MTIME,
+  DUF_FORMAT_FILENAME,
+  DUF_FORMAT_MD5,
+  DUF_FORMAT_OFFSET,
+  DUF_FORMAT_MAX,
+} duf_format_index_t;
+typedef struct
+{
+  unsigned seq:1;
+  unsigned dirid:1;
+  unsigned inode:1;
+  unsigned mode:1;
+  unsigned nlink:1;
+  unsigned uid:1;
+  unsigned gid:1;
+  unsigned filesize:1;
+  unsigned filename:1;
+  unsigned md5:1;
+  unsigned mtime:1;
+  unsigned offset;
+} duf_format_t;
+
 typedef struct
 {
   unsigned drop_tables:1;
@@ -96,6 +134,7 @@ typedef struct
   unsigned zero_filedata:1;
   unsigned update_exif:1;
   unsigned sample:1;
+  unsigned sampupd:1;
   unsigned mdpath:1;
   unsigned md5:1;
   unsigned fill:1;
@@ -129,10 +168,12 @@ typedef struct
 {
   unsigned error;
   unsigned any;
+  unsigned current;
   unsigned calls;
   unsigned action;
   unsigned scan;
   unsigned sample;
+  unsigned sampupd;
   unsigned md5;
   unsigned mdpath;
   unsigned fill;
@@ -148,7 +189,7 @@ typedef struct
   duf_config_cli_actions_t act;
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
-
+  duf_format_t format;
   unsigned totals;
   long limit;
 } duf_config_cli_t;

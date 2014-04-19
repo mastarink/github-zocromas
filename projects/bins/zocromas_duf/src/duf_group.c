@@ -28,7 +28,8 @@
  * */
 static int
 duf_sel_cb_insert_group( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                      duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+                         duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                         duf_dirhandle_t * pdhu )
 {
   unsigned long long *pid;
 
@@ -49,8 +50,9 @@ duf_insert_group( const char *name )
   r = duf_sql_c( "INSERT INTO duf_group (name,now) values ('%s',datetime())", DUF_CONSTRAINT_IGNORE_YES, name );
   if ( r == DUF_SQL_CONSTRAINT )
   {
-    r = duf_sql_select( duf_sel_cb_insert_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /* sccb */ , "SELECT id as groupid FROM duf_group WHERE name='%s'", name );
+    r = duf_sql_select( duf_sel_cb_insert_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /* sccb */ , ( duf_dirhandle_t * ) NULL,
+                        "SELECT id as groupid FROM duf_group WHERE name='%s'", name );
   }
   else if ( !r /* assume SQLITE_OK */  )
     id = duf_sql_last_insert_rowid(  );
@@ -66,8 +68,8 @@ duf_insert_group( const char *name )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_insert_path_group( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sql_insert_path_group( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   unsigned long long *pid;
 
@@ -88,8 +90,8 @@ duf_insert_path_group( unsigned long long groupid, unsigned long long pathid )
   r = duf_sql_c( "INSERT INTO duf_path_group (groupid,pathid,now) " " VALUES ('%lld','%lld',datetime())",
                  DUF_CONSTRAINT_IGNORE_YES, groupid, pathid );
   if ( r == DUF_SQL_CONSTRAINT )
-    r = duf_sql_select( duf_sql_insert_path_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sql_insert_path_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                         "SELECT id as groupid FROM duf_path_group " " WHERE groupid='%lld' and  pathid='%lld'", groupid, pathid );
   else if ( !r /* assume SQLITE_OK */  )
     id = duf_sql_last_insert_rowid(  );
@@ -104,8 +106,8 @@ duf_insert_path_group( unsigned long long groupid, unsigned long long pathid )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_group_to_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                          duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sql_group_to_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+                          duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   unsigned long long *pgroupid;
 
@@ -123,8 +125,8 @@ duf_group_to_groupid( const char *group )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   /* r = */
-  duf_sql_select( duf_sql_group_to_groupid, &groupid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                  ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+  duf_sql_select( duf_sql_group_to_groupid, &groupid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                  ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                   "SELECT id as groupid FROM duf_group WHERE name='%s'", group );
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, groupid );
   return groupid;

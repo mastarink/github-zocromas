@@ -15,7 +15,7 @@ int duf_sqlite_exec_c( const char *sql, int constraint_ignore );
 int duf_vsqlite_c( const char *sqlfmt, int constraint_ignore, va_list args );
 
 int duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                        duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, va_list args );
+                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu, const char *sqlfmt, va_list args );
 
 unsigned long long duf_sqlite_last_insert_rowid( void );
 
@@ -52,7 +52,7 @@ unsigned long long duf_sqlite_last_insert_rowid( void );
 /* #define SQLITE_WARNING     28   (* Warnings from sqlite3_log() *)                */
 /* #define SQLITE_ROW         100  (* sqlite3_step() has another row ready *)       */
 /* #define SQLITE_DONE        101  (* sqlite3_step() has finished executing *)      */
-#define DUF_SQLITE_CODE_CHAR(arr,name) arr[name]=#name
+#  define DUF_SQLITE_CODE_CHAR(arr,name) arr[name]=#name
 
 
 #endif

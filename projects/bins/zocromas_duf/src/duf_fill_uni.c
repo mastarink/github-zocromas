@@ -9,8 +9,12 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+
 #include "duf_utils.h"
+#include "duf_service.h"
 #include "duf_config.h"
+
+
 
 /* #include "duf_sql.h" */
 #include "duf_sql_field.h"
@@ -62,7 +66,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_fill_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record_t * precord )
+duf_file_scan_fill_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* stat */
@@ -70,7 +74,7 @@ duf_file_scan_fill_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record_t *
 
 /* static int                                                                                                                        */
 /* duf_sql_update_filedatas(  duf_record_t * precord, va_list args, void *sel_cb_udata,                          */
-/*                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb ) */
+/*                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb ) */
 
 
   /* 
@@ -84,7 +88,8 @@ duf_file_scan_fill_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record_t *
     DUF_SFIELD( filename );
     DUF_UFIELD( dirid );
     /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
-    char *path = duf_pathid_to_path( dirid );
+    duf_dirhandle_t dh;
+    char *path = duf_pathid_to_path_dh( dirid, &dh );
 
 
     printf( "[FILL ] %20s: %s/%s\n", __func__, path, filename );
@@ -95,7 +100,7 @@ duf_file_scan_fill_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record_t *
 }
 
 static unsigned long long
-duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const char *fname, unsigned long long pathid, duf_dirinfo_t * pdi )
+duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const char *fname, unsigned long long pathid, duf_depthinfo_t * pdi )
 {
   unsigned long long resd = 0;
   unsigned long long resf = 0;
@@ -131,11 +136,13 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
 
 /*
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
- * duf_sql_select_cb_t: 
+ *
+ * this is callback of type: duf_scan_hook_dir_t (second range; ; sel_cb):
  * */
 static int
-duf_sql_ctrnt_uni( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                   duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
+duf_sel_cb_ctrnt_uni( duf_record_t * precord, va_list args, void *sel_cb_udata,
+                      duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                      duf_dirhandle_t * pdhu )
 {
   unsigned long long *pdir_id;
 
@@ -174,8 +181,8 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
   /* sql = NULL; */
   if ( r == DUF_SQL_CONSTRAINT )
   {
-    r = duf_sql_select( duf_sql_ctrnt_uni, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_ctrnt_uni, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                         "SELECT id as pathid " " FROM duf_paths " " WHERE dev='%lu' and inode='%lu'", dev_id, dir_ino );
     if ( duf_config->cli.trace.fill > 1 )
       printf( "[FILL ] %20s: insert (SQLITE_CONSTRAINT) r=%d; %llu:'%s'\n", __func__, r, pathid, dename );
@@ -194,7 +201,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
 
 /* ------------------------------------------------------------------- */
 static unsigned long long
-duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long long pathid, duf_dirinfo_t * pdi )
+duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi )
 {
   unsigned long long itemid = 0;
 
@@ -245,7 +252,7 @@ duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long lo
 /* to replace duf_update_realpath_entries_filter */
 /* TODO scan for removed files; mark as absent or remove from db */
 static int
-duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
+duf_fill_ent_flt_uni( unsigned long long pathid, duf_depthinfo_t * pdi )
 {
   int r = 0;
   int items = 0;
@@ -253,7 +260,9 @@ duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
   struct stat st_dir;
   char *real_path;
 
-  real_path = duf_pathid_to_path( pathid );
+  duf_dirhandle_t dh;
+
+  real_path = duf_pathid_to_path_dh( pathid, &dh );
   if ( duf_config->cli.trace.fill > 1 )
     printf( "[FILL ] %20s: pathid=%llu; real_path='%s'\n", __func__, pathid, real_path );
 
@@ -322,7 +331,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
 }
 
 static int
-duf_fill_entries_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
+duf_fill_entries_filter_uni( unsigned long long pathid, duf_depthinfo_t * pdi )
 {
   return duf_fill_ent_flt_uni( pathid, pdi );
 }
@@ -332,7 +341,7 @@ duf_fill_entries_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
  * update (collected below) information for path
  * */
 static unsigned long long
-duf_fill_pi_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
+duf_fill_pi_flt_uni( unsigned long long pathid, duf_depthinfo_t * pdi )
 {
   unsigned long items = 0;
 
@@ -362,7 +371,7 @@ duf_fill_pi_flt_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
  * */
 
 static unsigned long long
-duf_fill_pathid_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
+duf_fill_pathid_filter_uni( unsigned long long pathid, duf_depthinfo_t * pdi )
 {
   return duf_fill_pi_flt_uni( pathid, pdi );
 }
@@ -370,16 +379,21 @@ duf_fill_pathid_filter_uni( unsigned long long pathid, duf_dirinfo_t * pdi )
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_fill_uni( unsigned long long pathid, unsigned long long items, duf_dirinfo_t * pdi,
-                   duf_record_t * precord )
+duf_directory_scan_fill_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   if ( duf_config->cli.trace.fill > 1 )
     printf( "[FILL ] %20s: pathid=%llu\n", __func__, pathid );
 
+  if ( pathid != pdi->levinfo[pdi->depth].dirid )
   {
-    char *path = duf_pathid_to_path( pathid );
+    DUF_ERROR( "@@@@@@@@@@@@@@ %llu -- %llu", pathid, pdi->levinfo[pdi->depth].dirid );
+  }
+
+  {
+    duf_dirhandle_t dh;
+    char *path = duf_pathid_to_path_dh( pathid, &dh );
 
     if ( duf_config->cli.trace.fill > 1 )
       printf( "[FILL ] %20s: path=%s\n", __func__, path );
@@ -424,10 +438,8 @@ duf_scan_callbacks_t duf_fill_callbacks = {
         "SELECT %s FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
         " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_filenames.pathid='%llu' ",
   .dir_selector =
-        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.items, duf_paths.parentid "
+        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
         " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
         " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles "
-        " FROM duf_paths "
-        " WHERE duf_paths.parentid='%llu' "
-        ,
+        " FROM duf_paths " " WHERE duf_paths.parentid='%llu' ",
 };

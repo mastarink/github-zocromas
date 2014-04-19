@@ -28,7 +28,8 @@
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by pathid (i.e. children of pathid) with corresponding args
  * */
 static int
-duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                      duf_dirhandle_t * pdhu )
 {
   int r = 0;
 
@@ -40,8 +41,9 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
   {
+    DUF_TRACE( current, 0, "+dirid: %llu : %d", dirid, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
     if ( sccb && sccb->file_selector )
-      r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb, sccb->file_selector, /* ... */ sccb->fieldset, dirid );
+      r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb, pdhu, sccb->file_selector, /* ... */ sccb->fieldset, dirid );
     else
     {
       fprintf( stderr, "sccb->file_selector must be set for %s\n", sccb->title );
@@ -55,7 +57,8 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid with corresponding args
  * */
 int
-duf_scan_files_by_dirid( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_dirid( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                         duf_dirhandle_t * pdhu )
 {
-  return ( duf_config->cli.act.files ) ? duf_scan_files_by_di( dirid, str_cb, pdi, sccb ) : 0;
+  return ( duf_config->cli.act.files ) ? duf_scan_files_by_di( dirid, str_cb, pdi, sccb, pdhu ) : 0;
 }

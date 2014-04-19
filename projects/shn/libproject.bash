@@ -142,7 +142,7 @@ function shn_project_file_cd ()
 # }
 function shn_project_cd ()
 {
-  local p prj
+  local p pp prj
   prj=${1:-${MSH_SHN_PROJECT_NAME:-zoctypes}}
   if [[ "$prj" == '-' ]] ; then
     prj=$MSH_SHN_PREV_PROJECT_NAME
@@ -151,9 +151,12 @@ function shn_project_cd ()
 # p=`shn_project_path $prj` || { cd "${MSH_SHN_PROJECT_DIR}" ; return 1 ; }
   shn_dbgmsg "cd to '$p'"
   MSH_SHN_PREV_PROJECT_NAME=$MSH_SHN_PROJECT_NAME
+  pp=$PWD
   cd $p >&2 || return $?
   shn_setup_projects
-  git status .
+  if ! [[ $p == $pp ]] ; then
+    git status .
+  fi
   return 0
 }
 function shn_project_each_control_c ()

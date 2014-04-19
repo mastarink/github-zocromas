@@ -9,6 +9,9 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
+
+#include "duf_utils.h"
+#include "duf_service.h"
 #include "duf_config.h"
 
 #include "duf_sql_def.h"
@@ -17,7 +20,6 @@
 
 #include "duf_insert.h"
 #include "duf_group.h"
-#include "duf_utils.h"
 
 #include "duf_dbg.h"
 
@@ -54,9 +56,11 @@ typedef struct
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
  * duf_sql_select_cb_t: 
  * */
-static int
+/* will be static! */
+int
 duf_sel_cb_name_parid( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                       duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )
+                       duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                       duf_dirhandle_t * pdhu )
 {
   name_parid_udata_t *pud;
 
@@ -83,23 +87,46 @@ duf_sel_cb_name_parid( duf_record_t * precord, va_list args, void *sel_cb_udata,
 }
 
 char *
-duf_pathid_to_path( unsigned long long pathid )
+duf_pathid_to_path_dh( unsigned long long pathid, duf_dirhandle_t * pdh )
 {
   int r;
   char *path = NULL;
   name_parid_udata_t pathdef = {.name = NULL,.parentid = 0 };
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  r = duf_sql_select( duf_sel_cb_name_parid, &pathdef, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+
+  r = duf_sql_select( duf_sel_cb_name_parid, &pathdef, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                       "SELECT parentid, dirname " " FROM duf_paths WHERE id=%llu", pathid );
+
   if ( r >= 0 && pathdef.name && pathdef.parentid >= 0 )
   {
     char *parent = NULL;
+    duf_dirhandle_t dh;
+
 
     /* fprintf( stderr, "parentid:%lld - %s\n", pathdef.parentid, pathdef.name ); */
-    parent = duf_pathid_to_path( pathdef.parentid );
+    parent = duf_pathid_to_path_dh( pathdef.parentid, &dh );
     path = duf_join_path( parent, pathdef.name );
+
+    /* duf_dirhandle_t dh;                                                    */
+    /* {                                                                      */
+    /*   dh.dirid = 0;                                                        */
+    /*   dh.dfd = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY ); */
+    /*   if ( dh.dfd )                                                        */
+    /*   {                                                                    */
+    /*     int rs = stat( path, &dh.st );                                     */
+    /*                                                                        */
+    /*     if ( !rs )                                                         */
+    /*     {                                                                  */
+    /*       if ( pdh )                                                       */
+    /*       {                                                                */
+    /*         pdh->up = dh;                                                  */
+    /*       }                                                                */
+    /*     }                                                                  */
+    /*   }                                                                    */
+    /* }                                                                      */
+
     if ( parent )
       mas_free( parent );
   }
@@ -115,7 +142,7 @@ duf_pathid_to_path( unsigned long long pathid )
  * */
 /* static int                                                                                                                    */
 /* duf_sql_path_to_pathid( duf_record_t * precord, va_list args, void *sel_cb_udata,                                             */
-/*                         duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb ) */
+/*                         duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * cb ) */
 /* {                                                                                                                             */
 /*   unsigned long long *ppathid;                                                                                                */
 /*                                                                                                                               */
@@ -132,12 +159,14 @@ duf_pathid_to_path( unsigned long long pathid )
 /*   return 0;                                                                                                                   */
 /* }                                                                                                                             */
 
-static int
+/* will be static! */
+int
 duf_sel_cb_dirid( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                  duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * xpdi, duf_scan_callbacks_t * sccb )
+                  duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb,
+                  duf_dirhandle_t * pdhu )
 {
   int r = 0;
-  duf_dirinfo_t *pdi = ( duf_dirinfo_t * ) sel_cb_udata;
+  duf_depthinfo_t *pdi = ( duf_depthinfo_t * ) sel_cb_udata;
 
   if ( pdi )
   {
@@ -150,8 +179,6 @@ duf_sel_cb_dirid( duf_record_t * precord, va_list args, void *sel_cb_udata,
     pdi->levinfo[pdi->depth].dirid = dirid;
     pdi->levinfo[pdi->depth].ndirs = ndirs;
     pdi->levinfo[pdi->depth].nfiles = nfiles;
-    /* fprintf( stderr, ">>>>A> [%-30s] NDIRS[%u]=%llu\n", __func__, pdi->depth, ndirs ); */
-    /* fprintf(stderr, "========================================%llu : %llu : %llu\n", dirid, pdi->ndirs, pdi->nfiles ); */
 
     /* unsigned depth;              */
     /* unsigned long long *levinfo; */
@@ -169,7 +196,7 @@ duf_sel_cb_dirid( duf_record_t * precord, va_list args, void *sel_cb_udata,
 }
 
 static unsigned long long
-duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **notfound, duf_dirinfo_t * pdi )
+duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned long long pathid_new = 0;
@@ -207,10 +234,10 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
       qbd = qname ? qname : bd;
       pathid_new = 0;
       {
-        /* duf_dirinfo_t di = {.dirid = 0 }; */
+        /* duf_depthinfo_t di = {.dirid = 0 }; */
         /* fprintf( stderr, "%s: pathid_new: %llu; qbd: %s\n", __func__, pathid, qbd ); */
-        r = duf_sql_select( duf_sel_cb_dirid /* duf_sql_path_to_pathid */ , pdi, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                            ( duf_scan_callbacks_t * ) NULL /* sccb */ ,
+        r = duf_sql_select( duf_sel_cb_dirid /* duf_sql_path_to_pathid */ , pdi, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                            ( duf_scan_callbacks_t * ) NULL /* sccb */ , ( duf_dirhandle_t * ) NULL,
                             "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.items, duf_paths.parentid "
                             " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
                             " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles "
@@ -230,7 +257,8 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
     }
     if ( 0 )
     {
-      char *tpath = duf_pathid_to_path( pathid_new );
+      duf_dirhandle_t dh;
+      char *tpath = duf_pathid_to_path_dh( pathid_new, &dh );
 
       DUF_TRACE( path, 0, "%lld => %lld : %s : ed='%s'", pathid, pathid_new, tpath, ed );
       mas_free( tpath );
@@ -252,7 +280,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
 }
 
 unsigned long long
-duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **notfound, duf_dirinfo_t * pdi )
+duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi )
 {
   unsigned long long pathid_new = 0;
 
@@ -275,7 +303,7 @@ duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **
 }
 
 unsigned long long
-duf_path_to_pathid( const char *path, duf_dirinfo_t * pdi )
+duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi )
 {
   unsigned long long pathid = 0;
 
@@ -291,9 +319,8 @@ duf_path_to_pathid( const char *path, duf_dirinfo_t * pdi )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sel_cb_delete_path_by_groupid( duf_record_t * precord, va_list args,
-                                   void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi,
-                                   duf_scan_callbacks_t * cb )
+duf_sel_cb_delete_path_by_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
+                                   void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   int r = 0;
   unsigned long long pathid;
@@ -319,116 +346,13 @@ duf_delete_path_by_groupid( unsigned long long groupid, unsigned long long pathi
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_select( duf_sel_cb_delete_path_by_groupid, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF,
-                      ( duf_dirinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+                      ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
                       "SELECT duf_path_group.id as groupid " " FROM duf_paths "
                       " LEFT JOIN duf_path_group ON (duf_paths.id=duf_path_group.pathid) "
                       " WHERE duf_path_group.groupid='%lld' AND duf_paths.id='%lld'", groupid, pathid );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
-
-
-/* 
- * duf_scan_callback_file_t:
- * */
-/* static int                                                                                                                                */
-/* duf_sql_scan_print_path( unsigned long long pathid, unsigned long long filenameid,                                                        */
-/*                          const char *name, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord ) */
-/* {                                                                                                                                         */
-/*   char *path;                                                                                                                             */
-/*                                                                                                                                           */
-/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                                           */
-/*   path = duf_pathid_to_path( pathid );                                                                                                    */
-/*   printf( "%7llu: %s\n", pathid, path );                                                                                                  */
-/*   mas_free( path );                                                                                                                       */
-/*   duf_dbgfunc( DBG_END, __func__, __LINE__ );                                                                                             */
-/*   return 0;                                                                                                                               */
-/* }                                                                                                                                         */
-
-/* 
- * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
- * duf_sql_select_cb_t: 
- * */
-/* static int                                                                                                                               */
-/* duf_sql_scan_paths( duf_record_t * precord, va_list args, void *sel_cb_udata,                                                            */
-/*                     duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )              */
-/* {                                                                                                                                        */
-/*   unsigned long long pathid;                                                                                                             */
-/*                                                                                                                                          */
-/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                                          */
-/*   if ( duf_config->cli.dbg.verbose > 1 )                                                                                                 */
-/*   {                                                                                                                                      */
-/*     fprintf( stderr, "%s='%s' -- r[%d]='%s' / %llu\n", precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord, 0 ), */
-/*              duf_sql_str_by_name( "id", precord, 0 ), duf_sql_ull_by_name( "id", precord, 0 ) );                                         */
-/*   }                                                                                                                                      */
-/*   pathid = strtoll( precord->presult[0], NULL, 10 );                                                                                     */
-/*   {                                                                                                                                      */
-/*     char *path;                                                                                                                          */
-/*                                                                                                                                          */
-/*     path = duf_pathid_to_path( pathid );                                                                                                 */
-/*     if ( str_cb )                                                                                                                        */
-/*     {                                                                                                                                    */
-/* (*                                                                                                                                       */
-/*  * duf_scan_callback_file_t:                                                                                                             */
-/*  * *)                                                                                                                                    */
-/*       ( *str_cb ) ( pathid, 0 (* filenameid *) , NULL (* name *) , STR_CB_UDATA_DEF,                                                     */
-/*                     ( duf_dirinfo_t * ) NULL, sccb, precord );                                                                           */
-/*     }                                                                                                                                    */
-/*     mas_free( path );                                                                                                                    */
-/*   }                                                                                                                                      */
-/*   duf_dbgfunc( DBG_END, __func__, __LINE__ );                                                                                            */
-/*   return 0;                                                                                                                              */
-/* }                                                                                                                                        */
-
-/* static int                                                                                                                       */
-/* duf_scan_paths( duf_scan_callback_file_t str_cb, void *str_cb_udata, const char *groupname )                                     */
-/* {                                                                                                                                */
-/*   int r = 0;                                                                                                                     */
-/*                                                                                                                                  */
-/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                                  */
-/*   if ( groupname )                                                                                                               */
-/*   {                                                                                                                              */
-/*     if ( *groupname == '-' )                                                                                                     */
-/*     {                                                                                                                            */
-/*       groupname++;                                                                                                               */
-/*       r = duf_sql_select( duf_sql_scan_paths, str_cb_udata, str_cb, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,                  */
-/*                           ( duf_scan_callbacks_t * ) NULL (*  sccb *) ,                                                          */
-/*                           "SELECT duf_paths.id as pathid FROM duf_paths "                                                        */
-/*                           " LEFT JOIN duf_path_group ON(duf_paths.id=duf_path_group.pathid) "                                    */
-/*                           " LEFT JOIN duf_group ON (duf_path_group.groupid=duf_group.id) " " WHERE ( duf_group.name IS NULL OR " */
-/*                           " duf_group.name!='%s' ) " " ORDER BY duf_paths.id", groupname );                                      */
-/*     }                                                                                                                            */
-/*     else                                                                                                                         */
-/*     {                                                                                                                            */
-/*       if ( *groupname == '+' )                                                                                                   */
-/*         groupname++;                                                                                                             */
-/*       r = duf_sql_select( duf_sql_scan_paths, str_cb_udata, str_cb, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,                  */
-/*                           ( duf_scan_callbacks_t * ) NULL (*  sccb *) ,                                                          */
-/*                           "SELECT duf_paths.id as pathid FROM duf_paths "                                                        */
-/*                           " LEFT JOIN duf_path_group ON(duf_paths.id=duf_path_group.pathid) "                                    */
-/*                           " LEFT JOIN duf_group ON (duf_path_group.groupid=duf_group.id) " " WHERE ( duf_group.name='%s' ) "     */
-/*                           " ORDER BY duf_paths.id", groupname );                                                                 */
-/*     }                                                                                                                            */
-/*   }                                                                                                                              */
-/*   else                                                                                                                           */
-/*     r = duf_sql_select( duf_sql_scan_paths, str_cb_udata, str_cb, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,                    */
-/*                         ( duf_scan_callbacks_t * ) NULL (*  sccb *) ,                                                            */
-/*                         "SELECT  duf_paths.id as pathid FROM duf_paths " " ORDER BY duf_paths.id" );                             */
-/*   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );                                                                                */
-/*   return r;                                                                                                                      */
-/* }                                                                                                                                */
-
-/* int                                                                           */
-/* duf_print_paths( const char *groupname )                                      */
-/* {                                                                             */
-/*   int r = 0;                                                                  */
-/*                                                                               */
-/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                               */
-/*   fprintf( stderr, "Group %s\n", groupname );                                 */
-/*   r = duf_scan_paths( duf_sql_scan_print_path, STR_CB_UDATA_DEF, groupname ); */
-/*   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );                             */
-/*   return r;                                                                   */
-/* }                                                                             */
 
 void
 duf_pathid_group( const char *group, unsigned long long pathid, int add_remove )
@@ -462,7 +386,7 @@ duf_paths_group( const char *group, const char *path, int add_remove )
   unsigned long long pathid;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  pathid = duf_path_to_pathid( path, ( duf_dirinfo_t * ) NULL );
+  pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
   if ( pathid )
     duf_pathid_group( group, pathid, add_remove );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -474,7 +398,7 @@ duf_paths_group( const char *group, const char *path, int add_remove )
  * */
 /* static int                                                                                                                                 */
 /* duf_sql_insert_path( duf_record_t * precord, va_list args, void *sel_cb_udata,                                                             */
-/*                      duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * cb )                 */
+/*                      duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * cb )                 */
 /* {                                                                                                                                          */
 /*   unsigned long long *pdir_id;                                                                                                             */
 /*                                                                                                                                            */
@@ -517,7 +441,7 @@ duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned lon
   if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sql_insert_path */ , &dir_id, STR_CB_DEF, STR_CB_UDATA_DEF,
-                        ( duf_dirinfo_t * ) NULL, &sccb,
+                        ( duf_depthinfo_t * ) NULL, &sccb, ( duf_dirhandle_t * ) NULL,
                         "SELECT id as pathid " " FROM duf_paths " " WHERE dev='%lu' and inode='%lu'", pst_dir->st_dev, pst_dir->st_ino );
   }
   else if ( !r /* assume SQLITE_OK */  )

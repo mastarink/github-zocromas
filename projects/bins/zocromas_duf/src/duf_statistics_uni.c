@@ -9,8 +9,9 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+
 #include "duf_utils.h"
-#include "duf_utils.h"
+#include "duf_service.h"
 #include "duf_config.h"
 
 #include "duf_path.h"
@@ -30,7 +31,7 @@
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_statistics_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record_t * precord )
+duf_file_scan_statistics_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
@@ -64,12 +65,12 @@ duf_file_scan_statistics_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_reco
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_statistics_uni( unsigned long long pathid, unsigned long long items, duf_dirinfo_t * pdi,
-                     duf_record_t * precord )
+duf_directory_scan_statistics_uni( unsigned long long pathid, duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   {
-    char *path = duf_pathid_to_path( pathid );
+    duf_dirhandle_t dh;
+    char *path = duf_pathid_to_path_dh( pathid, &dh );
 
     printf( "#%4llu: statistics dPATH %s\n", pdi->seq, path );
     DUF_TRACE( statistics, 1, "path=%s", path );
@@ -84,15 +85,15 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
   .init_scan = NULL,
   .directory_scan_before = duf_directory_scan_statistics_uni,
   .file_scan = duf_file_scan_statistics_uni,
-  .fieldset = "duf_filenames.pathid as dirid " " ,duf_filenames.name as filename, duf_filedatas.size as filesize" " ,duf_filenames.id as filenameid",
+  .fieldset =
+        "duf_filenames.pathid as dirid " " ,duf_filenames.name as filename, duf_filedatas.size as filesize"
+        " ,duf_filenames.id as filenameid",
   .file_selector =
         "SELECT %s FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
         " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_filenames.pathid='%llu' ",
   .dir_selector =
-        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.items, duf_paths.parentid "
+        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
         " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
-        " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles "
-        " FROM duf_paths "
-        " WHERE duf_paths.parentid='%llu' "
-        ,
+        " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles " " FROM duf_paths "
+        " WHERE duf_paths.parentid='%llu' ",
 };

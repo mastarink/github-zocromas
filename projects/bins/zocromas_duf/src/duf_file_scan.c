@@ -11,8 +11,11 @@
 /* #include <mastar/tools/mas_arg_tools.h> */
 
 #include "duf_types.h"
+
 #include "duf_utils.h"
+#include "duf_service.h"
 #include "duf_config.h"
+
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
@@ -38,13 +41,16 @@
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
  * */
+/* will be static! */
 int
 duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                  duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+                  duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                  duf_dirhandle_t * pdhu )
 {
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DUF_TRACE( current, 0, "pdhu : %d", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
   if ( 1 || str_cb )
   {
     pdi->depth++;
@@ -61,18 +67,19 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
       pdi->levinfo[pdi->depth].nfiles = nfiles;
       /* fprintf( stderr, "\t>>>>B> [%-30s] %5llu NDIRS[%u]=%llu\n", __func__, pdi->levinfo[pdi->depth].dirid, pdi->depth, ndirs ); */
     }
-    if ( duf_config->cli.dbg.verbose > 1 )
+    if ( DUF_IF_VERBOSEN( 1 ) )
     {
       /* printf( "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord ), */
       /*         duf_sql_str_by_name( "parentid", precord ), duf_sql_ull_by_name( "parentid", precord ) );                                     */
-      fprintf( stderr, "        _____ %s::", __func__ );
+      DUF_VERBOSE( 1, ":_____ %s::", __func__ );
       for ( int i = 0; i < precord->ncolumns; i++ )
       {
-        fprintf( stderr, "%s;", precord->pnames[i] );
+        DUF_VERBOSE( 1, ".%s;", precord->pnames[i] );
       }
-      fprintf( stderr, " [ dirid=%llu ]\n", pdi->levinfo[pdi->depth].dirid );
+      DUF_VERBOSE( 1, "; [ dirid=%llu ]", pdi->levinfo[pdi->depth].dirid );
     }
-    DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
+    else
+      DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
 
     duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, pdi->levinfo[pdi->depth].dirid );
     if ( 1 || pdi->levinfo[pdi->depth].dirid )
@@ -85,17 +92,9 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
 
       /* rs = stat( path, &st_dir ); */
 
-      if ( str_cb )
+      /* if ( str_cb ) */
       {
-        if ( duf_config->cli.dbg.verbose > 1 )
-        {
-          const char *name2 = NULL;
-
-          if ( str_cb == duf_uni_scan_dir )
-            name2 = "duf_uni_scan_dir";
-
-          fprintf( stderr, "call str_cb> %p:%s\n", ( void * ) ( unsigned long long ) str_cb, name2 ? name2 : "-" );
-        }
+        DUF_VERBOSE( 1, "call str_cb> %p", ( void * ) ( unsigned long long ) str_cb );
 /*
  * 4. call function str_cb
  * */
@@ -121,22 +120,29 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
         /*   printf( "\t>>>>O> [%-30s] %5llu NDIRS[%u - 2]=%llu NDIRS[%u - 1]=%llu\n", __func__, pdi->levinfo[pdi->depth].dirid, pdi->depth, */
         /*           pdi->levinfo[pdi->depth - 2].ndirs, pdi->depth, pdi->levinfo[pdi->depth - 1].ndirs );                                   */
         /* }                                                                                                                                 */
-        if ( !pdi || ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )
-                       && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )
-                       && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )
-                       && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ) )
+        if ( str_cb )
         {
-          r = ( *str_cb ) ( str_cb_udata, pdi, sccb, precord );
+          if ( !pdi || ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )
+                         && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )
+                         && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )
+                         && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ) )
+          {
+            DUF_TRACE( current, 0, "> pdhu : %d; CALL str_cb:%s", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0,
+                       duf_dbg_funname( ( duf_anyhook_t ) str_cb ) );
+            r = ( *str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
+            DUF_TRACE( current, 0, "<pdhu : %d", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
+          }
+          else
+          {
+            r = DUF_ERROR_MAX_REACHED;
+            /* printf( "@ %llu of %llu :: %s (%d)\n", pdi->seq, pdi->u.maxseq, name, pdi->seq <= pdi->u.maxseq ); */
+          }
         }
         else
         {
-          r = DUF_ERROR_MAX_REACHED;
-          /* printf( "@ %llu of %llu :: %s (%d)\n", pdi->seq, pdi->u.maxseq, name, pdi->seq <= pdi->u.maxseq ); */
+          DUF_TRACE( error, 0, "str_cb not set" );
+          r = 0;
         }
-      }
-      else
-      {
-        r = 0;
       }
       /* mas_free( path ); */
     }
@@ -161,8 +167,8 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
  * call str_cb + str_cb_udata for each record by sql with corresponding args
  * */
 static int
-duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi,
-                     duf_scan_callbacks_t * sccb, const char *sql, va_list args )
+duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                     duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu, const char *sql, va_list args )
 {
   int r = 0;
 
@@ -177,7 +183,9 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
              ( void * ) ( unsigned long long ) duf_sel_cb_items, ( void * ) ( unsigned long long ) str_cb );
 
   pdi->node_type = node_type;
-  r = duf_sql_vselect( duf_sel_cb_items /* sel_cb */ , SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, sql, args );
+  DUF_TRACE( current, 0, "pdhu : %d", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
+  r = duf_sql_vselect( duf_sel_cb_items /* sel_cb */ , SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql,
+                       args );
 
   DUF_TRACE( scan, 0, "L%u <duf_sql_vselect", pdi ? pdi->depth : 0 );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
@@ -188,8 +196,8 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
  * call str_cb + str_cb_udata for each record by sql with corresponding args
  * */
 int
-duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi,
-                    duf_scan_callbacks_t * sccb, const char *sql, ... )
+duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                    duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu, const char *sql, ... )
 {
   int r = 0;
   va_list args;
@@ -201,7 +209,7 @@ duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, 
              ( node_type == DUF_NODE_LEAF ? "LEAF" : ( node_type == DUF_NODE_NODE ? "NODE" : "?" ) ), pdi ? pdi->depth : 0,
              ( void * ) ( unsigned long long ) str_cb );
 
-  r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, sql, args );
+  r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
   /* r = duf_scan_vfiles_sql( str_cb, str_cb_udata, pdi, sccb, sql, args ); */
 
 
@@ -213,63 +221,3 @@ duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, 
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
-
-/* 
- * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
- * this is callback of type: duf_scan_callback_file_t (second range): 
- * */
-/* int                                                                                                                                          */
-/* duf_str_cb_scan_print_file( unsigned long long pathid, unsigned long long filenameid, const char *name,                                      */
-/*                             void *str_cb_udata, duf_dirinfo_t * pdi1, duf_scan_callbacks_t * cb, duf_record_t * precord )                    */
-/* {                                                                                                                                            */
-/*   duf_dirinfo_t *pdi;                                                                                                                        */
-/*                                                                                                                                              */
-/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                                              */
-/*   pdi = ( duf_dirinfo_t * ) str_cb_udata;                                                                                                    */
-/*                                                                                                                                              */
-/*   if ( pdi )                                                                                                                                 */
-/*   {                                                                                                                                          */
-/*     if ( ( !pdi->u.maxseq || pdi->seq < pdi->u.maxseq ) && ( pdi->depth < pdi->u.maxdepth ) )                                                */
-/*     {                                                                                                                                        */
-/*       unsigned long long mdpathid;                                                                                                           */
-/*                                                                                                                                              */
-/*       mdpathid = precord->presult[3] ? strtoll( precord->presult[3], NULL, 10 ) : 0;                                                         */
-/*                                                                                                                                              */
-/*       (* unsigned long long mdpath1 = strtoll( precord->presult[4], NULL, 10 ); *)                                                           */
-/*       (* unsigned long long mdpath2 = strtoll( precord->presult[5], NULL, 10 ); *)                                                           */
-/*                                                                                                                                              */
-/* #if  0                                                                                                                                       */
-/*       {                                                                                                                                      */
-/*         char *path;                                                                                                                          */
-/*                                                                                                                                              */
-/*         path = duf_pathid_to_path( pathid );                                                                                                 */
-/*         (* printf( "%c %7llu: %-20s %lld:%016llx:%016llx @ %7llu: %s/%s\n", st ? '+' : '-', filenameid, name, mdpathid, mdpath1, mdpath2, *) */
-/*         (*         pathid, path, name );                                                                                                  *) */
-/*                                                                                                                                              */
-/*         printf( "(%d) {%d} %c %7llu: %-20s %lld @ %7llu: %s/%s\n", pdi ? pdi->seq : 0, pdi ? pdi->depth : 0, st ? '+' : '-', filenameid,     */
-/*                 name, mdpathid, pathid, path, name );                                                                                        */
-/*         mas_free( path );                                                                                                                    */
-/*       }                                                                                                                                      */
-/* #endif                                                                                                                                       */
-/*       {                                                                                                                                      */
-/*         int r = 0;                                                                                                                           */
-/*                                                                                                                                              */
-/*         {                                                                                                                                    */
-/*           char *filepath = NULL;                                                                                                             */
-/*           struct stat st;                                                                                                                    */
-/*                                                                                                                                              */
-/*           filepath = filenameid_to_filepath( filenameid );                                                                                   */
-/*                                                                                                                                              */
-/*           (* fprintf( stderr, "************************* >>> [%llu:%llu] %s\n", pathid, filenameid, filepath ); *)                           */
-/*           if ( filepath )                                                                                                                    */
-/*             r = stat( filepath, &st );                                                                                                       */
-/*           mas_free( filepath );                                                                                                              */
-/*         }                                                                                                                                    */
-/*         printf( "%-5llu>%2d %c %7llu: %2s %20s\n", pdi ? pdi->seq : 0, pdi ? pdi->depth : 0, r == 0 ? ' ' : '-', filenameid,                 */
-/*                 mdpathid ? "md" : "", name );                                                                                                */
-/*       }                                                                                                                                      */
-/*     }                                                                                                                                        */
-/*   }                                                                                                                                          */
-/*   duf_dbgfunc( DBG_END, __func__, __LINE__ );                                                                                                */
-/*   return 0;                                                                                                                                  */
-/* }                                                                                                                                            */

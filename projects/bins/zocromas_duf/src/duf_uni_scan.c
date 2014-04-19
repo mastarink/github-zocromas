@@ -5,14 +5,21 @@
 /* #include <unistd.h> */
 #include <sys/stat.h>
 
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
+
 #include "duf_utils.h"
+#include "duf_service.h"
 #include "duf_config.h"
+
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
@@ -58,27 +65,53 @@
  *     5. for <current> dir call sccb->directory_scan_after
  * */
 int
-duf_uni_scan_dir( void *str_cb_udata, duf_dirinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
+duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord, duf_dirhandle_t * pdhu )
 {
   int r = 0;
 
+  duf_dirhandle_t *pdh = NULL;
+  duf_dirhandle_t dh = {.dfd = 0 };
+
   DUF_UFIELD( dirid );
+  DUF_SFIELD( dfname );
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  DUF_TRACE( current, 0, "(%llu) pdhu : %d", pdhu ? ( pdhu->dirid ) : 0, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
+
+  if ( pdhu )
+  {
+    dh.dirid = dirid;
+    dh.dfd = openat( pdhu->dfd, dfname, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+    if ( dh.dfd )
+    {
+      int rs = fstatat( pdhu->dfd, dfname, &dh.st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+
+      if ( !rs )
+      {
+        pdh = &dh;
+      }
+    }
+    DUF_TRACE( current, 0, "%llu :: (%llu)pdhu : %d; (%llu)pdh : %d {%s}", dirid, pdhu ? pdhu->dirid : 0, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0,
+               pdh ? pdh->dirid : 0, pdh ? ( pdh->dfd ? 2 : 1 ) : 0, dfname );
+  }
 
   if ( DUF_IF_TRACE( scan ) )
   {
+    duf_config->cli.trace.current--;
+
     /* unsigned long long dirid = duf_sql_ull_by_name( "dirid", precord, 0 ); */
     /* DUF_UFIELD( filenameid ); */
     /* unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 ); */
-    char *path = duf_pathid_to_path( dirid );
+    char *path = duf_pathid_to_path_dh( dirid, ( duf_dirhandle_t * ) NULL );
 
     DUF_TRACE( scan, 0, "TOP B %llu:%s", dirid, path );
     mas_free( path );
+    duf_config->cli.trace.current++;
   }
   {
-    duf_dirinfo_t *pdi;
+    duf_depthinfo_t *pdi;
 
-    pdi = ( duf_dirinfo_t * ) str_cb_udata;
+    pdi = ( duf_depthinfo_t * ) str_cb_udata;
     if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
     {
       if ( pdi->levinfo )
@@ -111,7 +144,9 @@ duf_uni_scan_dir( void *str_cb_udata, duf_dirinfo_t * xpdi, duf_scan_callbacks_t
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->directory_scan_after
  * */
-        r = duf_scan_dirs_by_parentid( dirid, duf_uni_scan_dir, pdi, sccb, precord );
+        DUF_TRACE( current, 0, "%llu :: (%llu)pdhu : %d; (%llu)pdh : %d", dirid, pdhu ? pdhu->dirid : 0, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0,
+                   pdh ? pdh->dirid : 0, pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
+        r = duf_scan_dirs_by_parentid( dirid, pdh, duf_uni_scan_dir, pdi, sccb, precord );
         if ( r == DUF_ERROR_MAX_REACHED )
         {
           if ( pdi->depth == 0 )
@@ -125,7 +160,9 @@ duf_uni_scan_dir( void *str_cb_udata, duf_dirinfo_t * xpdi, duf_scan_callbacks_t
       }
     }
   }
-
+  if ( dh.dfd )
+    close( dh.dfd );
+  dh.dfd = 0;
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -143,11 +180,13 @@ int
 duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 {
   int r;
+  duf_dirhandle_t *pdh = NULL;
+  duf_dirhandle_t dh = {.dfd = 0 };
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( sccb )
   {
-    duf_dirinfo_t di = {.depth = 0,
+    duf_depthinfo_t di = {.depth = 0,
       .seq = 0,
       .levinfo = NULL,
       .u = u,
@@ -162,14 +201,26 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 
       memset( di.levinfo, 0, lsz );
     }
-
     {
       unsigned long long pathid;
 
       pathid = duf_path_to_pathid( path, &di );
+      {
+        dh.dirid = pathid;
+        dh.dfd = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+        if ( dh.dfd )
+        {
+          int rs = stat( path, &dh.st );
+
+          if ( !rs )
+          {
+            pdh = &dh;
+          }
+        }
+      }
       if ( DUF_IF_TRACE( scan ) )
       {
-        char *path = duf_pathid_to_path( pathid );
+        char *path = duf_pathid_to_path_dh( pathid, ( duf_dirhandle_t * ) NULL );
 
         DUF_TRACE( scan, 0, "TOP A %llu:%s", pathid, path );
         mas_free( path );
@@ -196,7 +247,8 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
  *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->directory_scan_after
  * */
-        r = duf_scan_dirs_by_parentid( pathid, duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+        DUF_TRACE( current, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ pdhu : %d", pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
+        r = duf_scan_dirs_by_parentid( pathid, pdh, duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
       }
       else
       {
@@ -208,12 +260,15 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       FILE *f;
 
       f = duf_config->cli.trace.out ? duf_config->cli.trace.out : stdout;
-      fprintf( f, "\n\n************************************************************\n" );
       fprintf( f, " seq:%llu", di.seq );
       if ( duf_config->u.maxseq )
         fprintf( f, " of %llu", duf_config->u.maxseq );
       fprintf( f, "\n" );
     }
+    if ( dh.dfd )
+      close( dh.dfd );
+    dh.dfd = 0;
+    printf( "\n\n********************************************************** %d **\n", duf_config->cli.totals );
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
@@ -251,6 +306,7 @@ duf_uni_scan_all( void )
   extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
+  extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_fill_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
@@ -291,6 +347,9 @@ duf_uni_scan_all( void )
 
   if ( steps < max_steps && duf_config->cli.act.sample )
     ppscan_callbacks[steps++] = &duf_sample_callbacks;
+
+  if ( steps < max_steps && duf_config->cli.act.sampupd )
+    ppscan_callbacks[steps++] = &duf_sampupd_callbacks;
 
   for ( int step = 0; step < steps; step++ )
   {

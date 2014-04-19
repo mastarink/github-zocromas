@@ -35,7 +35,8 @@ duf_filenameid_md5id( unsigned long long filenameid )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   fprintf( stderr, "BY FILENAMEID %llu\n", filenameid );
-  r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL, &sccb,
+  r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL, &sccb,
+                      ( duf_dirhandle_t * ) NULL,
                       "SELECT md5id FROM duf_filenames " " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
                       " WHERE duf_filenames.id='%llu'", filenameid );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -52,7 +53,7 @@ duf_filepath_md5id( const char *path )
   unsigned long long md5id = 0;
   unsigned long long filenameid = 0;
 
-  pathid = duf_path_to_pathid_x( path, &prev_pathid, &notfound, ( duf_dirinfo_t * ) NULL );
+  pathid = duf_path_to_pathid_x( path, &prev_pathid, &notfound, ( duf_depthinfo_t * ) NULL );
   fprintf( stderr, "PATH %s => %llu / %llu\n", path, pathid, prev_pathid );
   if ( !pathid && prev_pathid && notfound )
   {
@@ -77,7 +78,7 @@ duf_filepath_md5id( const char *path )
 /* (*                                                                                                                                         */
 /*  * str_cb + str_cb_udata to be called for each record with given md5id                                                                     */
 /*  * *)                                                                                                                                      */
-/*   r = duf_scan_items_sql( str_cb, str_cb_udata, ( duf_dirinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL (*  sccb *) ,                    */
+/*   r = duf_scan_items_sql( str_cb, str_cb_udata, ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL (*  sccb *) ,                    */
 /*                           "SELECT duf_filenames.pathid, duf_filenames.id, name, duf_paths.mdpathid, duf_paths.md5dir1, duf_paths.md5dir2 " */
 /*                           " FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "                    */
 /*                           " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id)"                                                    */

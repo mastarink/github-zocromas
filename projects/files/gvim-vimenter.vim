@@ -49,12 +49,14 @@ if filereadable(shn_doprj)
 " echo "has doprj:" . shn_doprj
   map <F3>   :wa<CR>:!shn/doprj.sh i<CR>
   map <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
+  inoremap <F5> <C-R>=expand("%:t")<CR>
 endif
 let shn_doall="shn/doall.sh"
 if filereadable(shn_doall)
 " echo "has doall:" . shn_doall
   map <F4>   :wa<CR>:!shn/doall.sh i<CR>
   map <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
+  inoremap <F5> <C-R>=expand("%:t")<CR>
 endif
 
 nmap <C-]> :call MasGoTag()<CR>

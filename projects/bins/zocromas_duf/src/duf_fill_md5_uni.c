@@ -10,7 +10,9 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+
 #include "duf_utils.h"
+#include "duf_service.h"
 #include "duf_config.h"
 
 #include "duf_file.h"
@@ -27,8 +29,8 @@
 /* ###################################################################### */
 
 static int
-duf_sql_insert_md5_uni( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                        duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sel_cb_insert_md5_uni( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   unsigned long long *presmd;
 
@@ -51,8 +53,8 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize )
                  DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0], ( unsigned long long ) fsize );
   if ( r == DUF_SQL_CONSTRAINT )
   {
-    r = duf_sql_select( duf_sql_insert_md5_uni, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_insert_md5_uni, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL ,
                         "SELECT id as md5id FROM duf_md5 WHERE md5sum1='%lld' and md5sum2='%lld'", md64[1], md64[0] );
   }
   else if ( !r /* assume SQLITE_OK */  )
@@ -157,7 +159,7 @@ duf_insert_keydata_uni( unsigned long long pathid, unsigned long long filenameid
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record_t * precord )
+duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   DUF_SFIELD( filename );
 
@@ -200,8 +202,7 @@ duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_dirinfo_t * pdi,  duf_record
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_fill_md5_uni( unsigned long long pathid, unsigned long long items, duf_dirinfo_t * pdi,
-                                  duf_record_t * precord )
+duf_directory_scan_fill_md5_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
@@ -209,7 +210,8 @@ duf_directory_scan_fill_md5_uni( unsigned long long pathid, unsigned long long i
   if ( duf_config->cli.trace.md5 > 1 )
     printf( "[MD5  ] %20s: pathid=%llu\n", __func__, pathid );
   {
-    char *path = duf_pathid_to_path( pathid );
+    duf_dirhandle_t dh;
+    char *path = duf_pathid_to_path_dh( pathid, &dh );
 
     DUF_TRACE( md5, 1, "path=%s", path );
     if ( duf_config->cli.trace.md5 > 1 )
@@ -236,10 +238,8 @@ duf_scan_callbacks_t duf_fill_md5_callbacks = {
         "SELECT %s FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
         " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_filenames.pathid='%llu' ",
   .dir_selector =
-        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.items, duf_paths.parentid "
+        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
         " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
         " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles "
-        " FROM duf_paths "
-        " WHERE duf_paths.parentid='%llu' "
-        ,
+        " FROM duf_paths " " WHERE duf_paths.parentid='%llu' ",
 };

@@ -48,8 +48,8 @@
  *                         void *str_cb_udata )
  * */
 static int
-duf_sel_cb_copy_jpeg_by_date(  duf_record_t * precord, va_list args, void *sel_cb_udata,
-                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+                              duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   const char *filename;
   char *path = NULL;
@@ -63,8 +63,8 @@ duf_sel_cb_copy_jpeg_by_date(  duf_record_t * precord, va_list args, void *sel_c
 
   /* dataid = */ ( void ) strtoll( precord->presult[0], NULL, 10 );
   pathid = strtoll( precord->presult[3], NULL, 10 );
-  path = duf_pathid_to_path( pathid );
-  
+  path = duf_pathid_to_path_dh( pathid, ( duf_dirhandle_t * ) NULL );
+
   fprintf( stderr, "PRESULT %s\n", __func__ );
   datetime = precord->presult[4];
   filename = precord->presult[5];
@@ -136,8 +136,8 @@ copy_jpeg_by_date( void )
 {
   int r = 0;
 
-  r = duf_sql_select( duf_sel_cb_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+  r = duf_sql_select( duf_sel_cb_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                      ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( duf_dirhandle_t * ) NULL ,
                       "SELECT duf_filedatas.id as dataid, duf_filedatas.dev, duf_filedatas.inode, "
                       " duf_filenames.pathid, duf_exif.datetime, duf_filenames.name as filename " " FROM duf_filedatas "
                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
@@ -153,8 +153,8 @@ copy_jpeg_by_date( void )
  *                   void *str_cb_udata )
  * */
 static int
-duf_sel_cb_update_exif(  duf_record_t * precord, va_list args, void *sel_cb_udata,
-                     duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_dirinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sel_cb_update_exif( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
 {
   int r = 0;
 
@@ -167,7 +167,7 @@ duf_sel_cb_update_exif(  duf_record_t * precord, va_list args, void *sel_cb_udat
 
   /* pathid = strtoll( precord->presult[0], NULL, 10 ); */
   filenameid = strtoll( precord->presult[1], NULL, 10 );
-  /* path = duf_pathid_to_path( pathid ); */
+  /* path = duf_pathid_to_path_dh( pathid, ( duf_dirhandle_t * ) NULL ); */
   /* filename = precord->presult[2]; */
   dataid = strtoll( precord->presult[3], NULL, 10 );
 
@@ -311,8 +311,8 @@ duf_update_exif( unsigned long long pathid )
   int r = 0;
 
   if ( pathid )
-    r = duf_sql_select( duf_sel_cb_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( duf_dirhandle_t * ) NULL ,
                         "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " duf_filedatas.id as dataid, duf_filedatas.dev, duf_filedatas.inode " " FROM duf_filedatas "
                         " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) "
@@ -320,8 +320,8 @@ duf_update_exif( unsigned long long pathid )
                         " AND duf_filedatas.filetype='jpeg' " " AND pathid='%lld' ", pathid );
 /* " AND ( duf_filenames.name LIKE '%%.JPG' OR duf_filenames.name LIKE '%%.JPEG' )" */
   else
-    r = duf_sql_select( duf_sel_cb_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_dirinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
+    r = duf_sql_select( duf_sel_cb_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( duf_dirhandle_t * ) NULL ,
                         "SELECT duf_filenames.pathid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode " " FROM duf_filedatas "
                         " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) "

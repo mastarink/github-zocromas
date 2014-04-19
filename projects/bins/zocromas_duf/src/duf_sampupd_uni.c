@@ -24,14 +24,14 @@
 #include "duf_dbg.h"
 
 /* ###################################################################### */
-/* #include "duf_sample_uni.h" */
+/* #include "duf_sampupd_uni.h" */
 /* ###################################################################### */
 
 
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_sample_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_file_scan_sampupd_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
@@ -42,7 +42,7 @@ duf_file_scan_sample_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_
   /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
 
   /* 
-   * --uni-scan   -R   --sample   --files   -FF
+   * --uni-scan   -R   --sampupd   --files   -FF
    *                   ^^^^^^^^   ^^^^^^^
    * */
 
@@ -52,42 +52,35 @@ duf_file_scan_sample_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_
     DUF_UFIELD( filenameid );
     char *fpath = filenameid_to_filepath( filenameid );
 
-    printf( "#%4llu: sample fpath %s\n", pdi->seq, fpath );
+    printf( "#%4llu: sampupd fpath %s\n", pdi->seq, fpath );
 
-    DUF_TRACE( sample, 1, "fpath=%s", fpath );
+    DUF_TRACE( sampupd, 1, "fpath=%s", fpath );
     DUF_TRACE_SAMPLE( 1, "fpath=%s", fpath );
 
     mas_free( fpath );
   }
-  DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
+  DUF_TRACE( sampupd, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
 
-  DUF_TRACE( sample, 1, "filename=%s", filename );
+  DUF_TRACE( sampupd, 1, "filename=%s", filename );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 
 /* callback of type duf_scan_callback_dir_t */
-/* will be static! */
-int
-duf_directory_scan_sample_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+static int
+duf_directory_scan_sampupd_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
-
-
-
 
   DUF_TRACE_SAMPLE( 1, "T1 pathid=%llu", pathid );
   /* DUF_TRACE_SAMPLE( 0, "T0 pathid=%llu", pathid ); */
   {
-    duf_config->cli.trace.current--;
     duf_dirhandle_t dh;
     char *path = duf_pathid_to_path_dh( pathid, &dh );
 
-    printf( "#%4llu: sample BEFORE dPATH %s\n", pdi->seq, path );
+    printf( "#%4llu: sampupd BEFORE dPATH %s\n", pdi->seq, path );
     DUF_TRACE_SAMPLE( 1, "path=%s", path );
     mas_free( path );
-    duf_config->cli.trace.current++;
   }
 
   {
@@ -95,30 +88,28 @@ duf_directory_scan_sample_uni( unsigned long long pathid, duf_dirhandle_t * pdh,
 
     pdi->levinfo[pdi->depth].context = ( void * ) test;
   }
-  DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
+  DUF_TRACE( sampupd, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
 
 static int
-duf_directory_scan_sample_uni_after( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_sampupd_uni_after( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@ %llu -- %llu", pathid, pdi->levinfo[pdi->depth].dirid );
+  DUF_TRACE( sampupd, 0, "@@@@@@@@@@@@@@ %llu -- %llu", pathid, pdi->levinfo[pdi->depth].dirid );
   DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
   {
-    duf_config->cli.trace.current--;
     duf_dirhandle_t dh;
     char *path = duf_pathid_to_path_dh( pathid, &dh );
 
-    printf( "#%4llu: sample AFTER  dPATH %s\n", pdi->seq, path );
+    printf( "#%4llu: sampupd AFTER  dPATH %s\n", pdi->seq, path );
     DUF_TRACE_SAMPLE( 1, "path=%s", path );
     mas_free( path );
-    duf_config->cli.trace.current++;
   }
 
-  DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
+  DUF_TRACE( sampupd, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
   mas_free( pdi->levinfo[pdi->depth].context );
   pdi->levinfo[pdi->depth].context = NULL;
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -126,23 +117,21 @@ duf_directory_scan_sample_uni_after( unsigned long long pathid, duf_dirhandle_t 
 }
 
 static int
-duf_directory_scan_sample_uni_middle( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_sampupd_uni_middle( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
   {
-    duf_config->cli.trace.current--;
     duf_dirhandle_t dh;
     char *path = duf_pathid_to_path_dh( pathid, &dh );
 
-    printf( "#%4llu: sample MIDDLE dPATH %s\n", pdi->seq, path );
+    printf( "#%4llu: sampupd MIDDLE dPATH %s\n", pdi->seq, path );
     DUF_TRACE_SAMPLE( 1, "path=%s", path );
     mas_free( path );
-    duf_config->cli.trace.current++;
   }
 
-  DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
+  DUF_TRACE( sampupd, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
   mas_free( pdi->levinfo[pdi->depth].context );
   pdi->levinfo[pdi->depth].context = NULL;
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -151,13 +140,13 @@ duf_directory_scan_sample_uni_middle( unsigned long long pathid, duf_dirhandle_t
 
 
 
-duf_scan_callbacks_t duf_sample_callbacks = {
+duf_scan_callbacks_t duf_sampupd_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .directory_scan_before = duf_directory_scan_sample_uni,
-  .directory_scan_after = duf_directory_scan_sample_uni_after,
-  .directory_scan_middle = duf_directory_scan_sample_uni_middle,
-  .file_scan = duf_file_scan_sample_uni,
+  .directory_scan_before = duf_directory_scan_sampupd_uni,
+  .directory_scan_after = duf_directory_scan_sampupd_uni_after,
+  .directory_scan_middle = duf_directory_scan_sampupd_uni_middle,
+  .file_scan = duf_file_scan_sampupd_uni,
   .fieldset =
         "duf_filenames.pathid as dirid " " ,duf_filenames.name as filename, duf_filedatas.size as filesize"
         " ,duf_filenames.id as filenameid",
