@@ -8,6 +8,7 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
+#include "duf_utils.h"
 
 #include "duf_config.h"
 
@@ -28,7 +29,7 @@ const struct option longopts[] = {
   /* --------------- */
   {.name = "trace-nonew",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NONEW},
   /* --------------- */
-  {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_ALL},
+  {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_ALL_TRACE},
   /* --------------- */
   {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
   {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
@@ -42,6 +43,7 @@ const struct option longopts[] = {
   {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
   {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
   {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
+  {.name = "trace-fs",.has_arg = optional_argument,.val = DUF_OPTION_FS_TRACE},
   /* --------------- */
   {.name = "verbose",.has_arg = optional_argument,.val = DUF_OPTION_VERBOSE},
   {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
@@ -49,6 +51,7 @@ const struct option longopts[] = {
   {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
   {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
   /* --------------- */
+  {.name = "noopenat",.has_arg = optional_argument,.val = DUF_OPTION_NOOPENAT},
   {.name = "totals",.has_arg = no_argument,.val = DUF_OPTION_TOTALS},
   /* --------------- */
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
@@ -76,7 +79,8 @@ const struct option longopts[] = {
   {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
   {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
   {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
-  {.name = "sample",.has_arg = no_argument,.val = DUF_OPTION_SAMPLE},
+  {.name = "sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE},
+  {.name = "vacuum",.has_arg = no_argument,.val = DUF_OPTION_VACUUM},
   /* --------------- */
   {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
   {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
@@ -109,6 +113,107 @@ const struct option longopts[] = {
 };
 
 
+int
+duf_cli_option_by_string( const char *string )
+{
+  int r = DUF_ERROR_OPTION;
+  char *eq;
+  char *name = NULL;
+  char *arg = NULL;
+
+  eq = strchr( string, '=' );
+  if ( eq )
+  {
+    name = mas_strndup( string, eq - string );
+    arg = mas_strdup( eq + 1 );
+  }
+  else
+  {
+    name = mas_strdup( string );
+  }
+  if ( name )
+  {
+    for ( int i = 0; longopts[i].name && i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+    {
+      if ( 0 == strcmp( name, longopts[i].name ) )
+      {
+        r = duf_parse_option( longopts[i].val, arg, i );
+        DUF_TEST_R( r );
+        if ( r == DUF_ERROR_OPTION )
+        {
+          DUF_ERROR( "Invalid option -- '%s'", string );
+        }
+        break;
+      }
+    }
+    DUF_TEST_R( r );
+  }
+  mas_free( name );
+  mas_free( arg );
+  DUF_TEST_R( r );
+  return r;
+}
+
+static FILE *
+duf_infile( int dot, const char *at )
+{
+  FILE *f = NULL;
+  char *cfgpath = NULL;
+
+  cfgpath = mas_strdup( at );
+  cfgpath = mas_strcat_x( cfgpath, "/" );
+  if ( dot )
+    cfgpath = mas_strcat_x( cfgpath, "." );
+  cfgpath = mas_strcat_x( cfgpath, "zocromas_duf.conf" );
+  DUF_TRACE( any, 0, "cfg:[%s]", cfgpath );
+  if ( cfgpath )
+  {
+    f = fopen( cfgpath, "r" );
+  }
+  mas_free( cfgpath );
+  return f;
+}
+
+int
+duf_infile_options( int argc, char *argv[] )
+{
+  int r = 0;
+  const char *h = NULL;
+  FILE *f = NULL;
+
+  h = getenv( "MSH_CONF_DIR" );
+  DUF_TRACE( any, 0, "MSH_CONF_DIR:[%s]", h );
+  if ( h )
+  {
+    f = duf_infile( 0, h );
+  }
+  if ( !f )
+  {
+    h = getenv( "HOME" );
+    DUF_TRACE( any, 0, "HOME:[%s]", h );
+    f = duf_infile( 1, h );
+  }
+  while ( r >= 0 && f && !feof( f ) )
+  {
+    char buffer[1024];
+    char *s;
+
+    s = fgets( buffer, sizeof( buffer ), f );
+    if ( s )
+    {
+      s = mas_chomp( s );
+      if ( s && ( ( *s == '#' ) || !*s ) )
+        continue;
+      DUF_TRACE( any, 0, "buffer:[%s]", buffer );
+      r = duf_cli_option_by_string( s );
+    }
+  }
+  if ( f )
+    fclose( f );
+
+  DUF_TEST_R( r );
+  return r;
+}
 
 int
 duf_cli_options( int argc, char *argv[] )
@@ -127,12 +232,11 @@ duf_cli_options( int argc, char *argv[] )
     opterr = 0;
     while ( r == 0 && ( opt = getopt_long( argc, argv, DUF_OPTIONS_SHORT, longopts, &longindex ) ) >= 0 )
     {
-      /* fprintf( stderr, "%d OPT:%d; LONGINDEX:%d\n", optind, opt, longindex ); */
-      r = duf_parse_option( opt, optarg );
+      r = duf_parse_option( opt, optarg, longindex );
       if ( r == DUF_ERROR_OPTION )
       {
-        fprintf( stderr, "Invalid option -- '%c' optind=%d/%s opt=%u/%c\n", optopt, optind, argv[optind - 1], opt, opt );
-        r = optopt ? optopt : opt;
+        DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], opt, opt );
+        /* r = optopt ? optopt : opt; */
       }
     }
     if ( optind < argc )
@@ -142,16 +246,192 @@ duf_cli_options( int argc, char *argv[] )
       duf_config->targv = NULL;
 
       duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, argc, argv, optind );
-      /* fprintf( stderr, ">>>>>>>> targc: %d; argc: %d; optind: %d\n", duf_config->targc, argc, optind ); */
-      /* for ( int ia = 0; ia < duf_config->targc; ia++ )                                                  */
-      /* {                                                                                                 */
-      /*   fprintf( stderr, ">>>>>>>> targv[%d]: %s\n", ia, duf_config->targv[ia] );                       */
-      /* }                                                                                                 */
     }
   }
 #if 0
   /* Don't use it before all options processed */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
 #endif
+  return r;
+}
+
+  /* if ( code==DUF_OPTION_ ## up  ) \                                                                                                          */
+  /*   printf("[%d : %c] %s %d :: %d\n", code, code>' ' && code <= 'z' ? code : '-', #up, duf_config->pref.lo, duf_config->cli.trace.sample); \ */
+
+#define DUF_RESTORE_OPTIONTV(ptr, typ, up, lo, pref, value) \
+  if ( code==DUF_OPTION_ ## up && value ) \
+  { \
+    _duf_restore_option_ ## typ(ptr, code, value ); \
+  }
+#define DUF_RESTORE_OPTIONV_B(ptr,  up, lo, pref, value) \
+  DUF_RESTORE_OPTIONTV(ptr, b, up, lo, pref, value)
+#define DUF_RESTORE_OPTIONT(ptr, typ, up, lo, pref) \
+  DUF_RESTORE_OPTIONTV(ptr, typ, up, lo, pref, duf_config->pref.lo)
+
+#define DUF_RESTORE_OPTION(ptr, up, lo, pref) \
+    DUF_RESTORE_OPTIONT(ptr, i, up, lo, pref)
+#define DUF_RESTORE_OPTION_S(ptr, up, lo, pref) \
+    DUF_RESTORE_OPTIONT(ptr, s, up, lo, pref)
+#define DUF_RESTORE_OPTION_B(ptr, up, lo, pref) \
+    DUF_RESTORE_OPTIONT(ptr, b, up, lo, pref)
+
+#define DUF_RESTORE_OPTION_TRACE(ptr, up, lo) \
+  DUF_RESTORE_OPTION(ptr,  up ## _TRACE, lo, cli.trace)
+
+
+static int
+_duf_restore_option_i( char *ptr, duf_option_code_t code, int val )
+{
+  for ( int i = 0; i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+  {
+    if ( longopts[i].val == code )
+    {
+      sprintf( ptr, " --%s='%d'", longopts[i].name, val );
+      break;
+    }
+  }
+  return 0;
+}
+
+static int
+_duf_restore_option_s( char *ptr, duf_option_code_t code, const char *val )
+{
+  if ( val )
+    for ( int i = 0; i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+    {
+      if ( longopts[i].val == code )
+      {
+        sprintf( ptr, " --%s='%s'", longopts[i].name, val );
+        break;
+      }
+    }
+  return 0;
+}
+
+static int
+_duf_restore_option_b( char *ptr, duf_option_code_t code, int val )
+{
+  if ( val )
+    for ( int i = 0; i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+    {
+      if ( longopts[i].val == code )
+      {
+        sprintf( ptr, " --%s", longopts[i].name );
+        break;
+      }
+    }
+  return 0;
+}
+
+void
+duf_restore_option( char *ptr, duf_option_code_t code )
+{
+  DUF_RESTORE_OPTION( ptr, VERBOSE, verbose, cli.dbg );
+  DUF_RESTORE_OPTION( ptr, DEBUG, debug, cli.dbg );
+  /* DUF_RESTORE_OPTION_TRACE(ptr, ALL, all ); */
+  DUF_RESTORE_OPTION( ptr, TRACE_NONEW, nonew, cli.trace );
+  DUF_RESTORE_OPTION( ptr, NOOPENAT, noopenat, cli );
+
+  DUF_RESTORE_OPTION_TRACE( ptr, CALLS, calls );
+  DUF_RESTORE_OPTION_TRACE( ptr, ANY, any );
+  DUF_RESTORE_OPTION_TRACE( ptr, CURRENT, current );
+  DUF_RESTORE_OPTION_TRACE( ptr, ACTION, action );
+  DUF_RESTORE_OPTION_TRACE( ptr, ERROR, error );
+  DUF_RESTORE_OPTION_TRACE( ptr, SCAN, scan );
+  DUF_RESTORE_OPTION_TRACE( ptr, PATH, path );
+  DUF_RESTORE_OPTION_TRACE( ptr, FS, fs );
+  DUF_RESTORE_OPTION_TRACE( ptr, SAMPUPD, sampupd );
+  DUF_RESTORE_OPTION_TRACE( ptr, SAMPLE, sample );
+  DUF_RESTORE_OPTION_TRACE( ptr, MDPATH, mdpath );
+  DUF_RESTORE_OPTION_TRACE( ptr, MD5, md5 );
+  DUF_RESTORE_OPTION_TRACE( ptr, FILL, fill );
+  DUF_RESTORE_OPTION_TRACE( ptr, SQL, sql );
+
+  DUF_RESTORE_OPTION( ptr, MIN_DBGLINE, min_line, cli.dbg );
+  DUF_RESTORE_OPTION( ptr, MAX_DBGLINE, max_line, cli.dbg );
+  DUF_RESTORE_OPTION_B( ptr, TOTALS, totals, cli.act );
+  /* DUF_OPTION_TREE_TO_DB: */
+  /* DUF_OPTION_ZERO_DB: */
+
+  DUF_RESTORE_OPTION_B( ptr, DROP_TABLES, drop_tables, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, CREATE_TABLES, create_tables, cli.act );
+
+  DUF_RESTORE_OPTION_B( ptr, ADD_PATH, add_path, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, UNI_SCAN, uni_scan, cli.act );
+
+  DUF_RESTORE_OPTION( ptr, RECURSIVE, recursive, u );
+
+  DUF_RESTORE_OPTION_B( ptr, SAMPLE, sample, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, SAMPUPD, sampupd, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, MDPATH, mdpath, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, MD5, md5, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, FILL, fill, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, PRINT, print, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, TREE, tree, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, FILES, files, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, DIRS, dirs, cli.act );
+
+  DUF_RESTORE_OPTION( ptr, MAXSEQ, maxseq, u );
+
+  DUF_RESTORE_OPTION( ptr, MINSIZE, minsize, u );
+  DUF_RESTORE_OPTION( ptr, MAXSIZE, maxsize, u );
+  DUF_RESTORE_OPTION( ptr, MINDIRFILES, mindirfiles, u );
+  DUF_RESTORE_OPTION( ptr, MAXDIRFILES, maxdirfiles, u );
+
+  DUF_RESTORE_OPTION( ptr, MAXITEMS, maxitems.total, u );
+  DUF_RESTORE_OPTION( ptr, MAXITEMS_FILES, maxitems.files, u );
+  DUF_RESTORE_OPTION( ptr, MAXITEMS_DIRS, maxitems.dirs, u );
+
+
+
+  /* DUF_RESTORE_OPTION_TRACE(ptr, TRACE_STDERR, nonew, cli.trace ); */
+  /* DUF_RESTORE_OPTION_TRACE(ptr, TRACE_STDOUT, nonew, cli.trace ); */
+
+  DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr );
+  DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout );
+  DUF_RESTORE_OPTION_S( ptr, TRACE_FILE, file, cli.trace );
+  DUF_RESTORE_OPTION_S( ptr, DB_DIRECTORY, dir, db );
+  DUF_RESTORE_OPTION_S( ptr, DB_NAME, name, db );
+
+  /* DUF_RESTORE_OPTION_S( FILE, file, cli.trace ); */
+}
+
+char *
+duf_restore_options( const char *a0 )
+{
+  char *str;
+
+  str = mas_strdup( a0 );
+  for ( int i = 0; i < DUF_OPTION_MAX_LONG; i++ )
+  {
+    char buf[1024] = "";
+
+    duf_restore_option( buf, i );
+    if ( *buf )
+    {
+      /* str = mas_strcat_x( str, " @[ " ); */
+      str = mas_strcat_x( str, buf );
+      /* str = mas_strcat_x( str, " ]@ " ); */
+    }
+  }
+  str = mas_strcat_x( str, " --" );
+  return str;
+}
+
+int
+duf_show_options( const char *a0 )
+{
+  int r = 0;
+
+  DUF_TRACE( action, 0, "%s", a0 );
+  for ( int i = 0; i < DUF_OPTION_MAX_LONG; i++ )
+  {
+    char buffer[1024] = "";
+
+    duf_restore_option( buffer, i );
+    if ( *buffer )
+      DUF_TRACE( action, 0, "%s", buffer );
+  }
+  DUF_TRACE( action, 0, " --\n" );
   return r;
 }

@@ -106,15 +106,15 @@ duf_file_scan_print_plain_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_re
 }
 
 static int
-duf_directory_scan_print_plain_uni( unsigned long long pathid, duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_print_plain_uni( unsigned long long pathid, const duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   {
-    duf_dirhandle_t dh;
-    char *path = duf_pathid_to_path_dh( pathid, &dh );
+     char *path = duf_pathid_to_path_s( pathid );
+
 
     {
       /* optimizing makes puts, segfault by NULL, therefore printf( "%s\n", path  ); is not good */

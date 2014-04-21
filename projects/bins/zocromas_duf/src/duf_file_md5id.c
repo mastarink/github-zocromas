@@ -25,7 +25,7 @@
 
 
 /* get md5id for file by pathid and filenameid */
-unsigned long long
+static unsigned long long
 duf_filenameid_md5id( unsigned long long filenameid )
 {
   int r;
@@ -36,7 +36,7 @@ duf_filenameid_md5id( unsigned long long filenameid )
 
   fprintf( stderr, "BY FILENAMEID %llu\n", filenameid );
   r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL, &sccb,
-                      ( duf_dirhandle_t * ) NULL,
+                      ( const duf_dirhandle_t * ) NULL,
                       "SELECT md5id FROM duf_filenames " " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
                       " WHERE duf_filenames.id='%llu'", filenameid );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );

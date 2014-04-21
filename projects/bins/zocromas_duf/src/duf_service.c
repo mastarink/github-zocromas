@@ -3,6 +3,12 @@
 #include <getopt.h>
 #include <time.h>
 
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -141,4 +147,128 @@ duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_
   if ( duf_config->cli.format.md5 && ( !format || format->md5 ) )
     printf( "\t:  %016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
   return 0;
+}
+
+int
+duf_openat_dh( duf_dirhandle_t * pdh, const duf_dirhandle_t * pdhu, const char *name )
+{
+  int r = DUF_ERROR_PTR;
+
+  if ( duf_config->cli.noopenat )
+    return 0;
+  if ( pdh && pdhu && name && pdhu->dfd )
+  {
+    r = openat( pdhu->dfd, name, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+    if ( r > 0 )
+    {
+      pdh->dfd = r;
+      pdh->rs = fstatat( pdhu->dfd, name, &pdh->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+
+      DUF_TRACE( fs, 0, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
+                 duf_config->nopen - duf_config->nclose, pdh->dfd );
+      duf_config->nopen++;
+    }
+    else
+    {
+      char serr[1024] = "";
+      char *s;
+
+      s = strerror_r( errno, serr, sizeof( serr ) );
+      DUF_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhu ? pdhu->dfd : 555 );
+      r = DUF_ERROR_OPENAT;
+    }
+  }
+  else
+  {
+    DUF_ERROR( "parameter error pdh:%d; pdhu:%d; name:%d; pdhu->dfd:%d", pdh ? 1 : 0, pdhu ? 1 : 0, name ? 1 : 0, pdhu
+               && pdhu->dfd ? 1 : 0 );
+    r = DUF_ERROR_OPENAT;
+  }
+  return r;
+}
+
+int
+duf_open_dh( duf_dirhandle_t * pdh, const char *path )
+{
+  int r = DUF_ERROR_PTR;
+
+  if ( duf_config->cli.noopenat )
+    return 0;
+  if ( pdh && path )
+  {
+    r = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+    if ( r > 0 )
+    {
+      pdh->dfd = r;
+      pdh->rs = stat( path, &pdh->st );
+
+      DUF_TRACE( fs, 0, "opened %s (%u - %u = %u)  h%u", path, duf_config->nopen, duf_config->nclose,
+                 duf_config->nopen - duf_config->nclose, pdh->dfd );
+      duf_config->nopen++;
+    }
+    else
+    {
+      char serr[512] = "";
+      char *s;
+
+      s = strerror_r( errno, serr, sizeof( serr ) );
+      DUF_ERROR( "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path );
+      r = DUF_ERROR_OPEN;
+    }
+  }
+  else if ( path )
+  {
+    r = 0;
+  }
+  else
+  {
+    DUF_ERROR( "parameter error pdh:%d; path:%d;", pdh ? 1 : 0, path ? 1 : 0 );
+  }
+  return r;
+}
+
+int
+duf_close_dh( duf_dirhandle_t * pdh )
+{
+  int r = DUF_ERROR_PTR;
+
+  if ( duf_config->cli.noopenat )
+    return 0;
+  if ( pdh )
+  {
+    r = DUF_ERROR_NOT_OPEN;
+    if ( pdh->dfd )
+    {
+      r = close( pdh->dfd );
+      if ( r )
+      {
+        DUF_ERROR( "close %d", pdh->dfd );
+        r = DUF_ERROR_CLOSE;
+      }
+      duf_config->nclose++;
+      DUF_TRACE( fs, 1, "close (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose,
+                 pdh->dfd );
+    }
+    else
+    {
+      DUF_ERROR( "parameter error pdhu->dfd:%d", pdh && pdh->dfd ? 1 : 0 );
+      r = 0;
+    }
+
+    pdh->dfd = 0;
+  }
+  else
+    r = 0;
+  return r;
+}
+
+int
+duf_check_dh( const char *msg )
+{
+  int r = 0;
+
+  if ( duf_config->cli.noopenat )
+    return 0;
+  DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose );
+  return r;
 }

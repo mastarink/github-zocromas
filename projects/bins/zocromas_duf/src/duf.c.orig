@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -39,53 +39,6 @@
 /* ###################################################################### */
 #include "duf.h"
 /* ###################################################################### */
-
-/* 20140420
- SEGFAULT:
-A. -good
-run    --db-name=test$$.db  --uni-scan -Z
-run    --db-name=test$$.db  --uni-scan -OP /home/mastar/a/down/
-run    --db-name=test$$.db  --uni-scan -Rid /home/mastar/a/down/
-
-B. -segfault
-run    --db-name=test$$.db  --uni-scan -Z
-run    --db-name=test$$.db  --uni-scan -OPRid /home/mastar/a/down/
-
-*********************
-sqlite with uflag: debug :::
-
-
-mastar@mastar .../bins/zocromas_duf $ run    --db-name=test$$.db  --uni-scan -OPRid5 /home/mastar/a/down/ 
-. ○ make ok ○ . ○ installed ○ ------ to run 'zocromas_duf --db-name=test19639.db ...' -------
-------------------------------------20140420.102643----
-
-qargs: '--db-name=test19639.db' '--uni-scan' '-OPRid5' '/home/mastar/a/down/'
-zocromas_duf: sqlite3.c:44875: sqlite3PagerAcquire: Assertion `(*ppPage)->pPager==pPager || (*ppPage)->pPager==0' failed.
-Aborted (core dumped)
-
-real	0m0.083s
-user	0m0.014s
-sys	0m0.006s
-returned 134
-
-◀  ●  ▶
-#50  ▷[2430s]◁ /bin/bash;/bin/bash #19639 
-₍Sun₎ ◆ 53.335s ▷ 20140420.102550 ▷ 20140420.102500 ▷ 20140417.145442
-Apr 20 2014 ◆ 10:26:44 $19639 [xterm/25]  L1 /bind:roxterm@devel.0 (1/2/2/1)
-mastar@mastar .../bins/zocromas_duf $
-
-
-
-*********************
- */
-
-
-
-
-
-
-
-
 
 /* 20140412                                                                                            */
 /* reset:                                                                                              */
@@ -229,62 +182,25 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
  * */
 
 
-static int
-duf_action_new( int argc, char **argv )
+int
+duf_action_new( void )
 {
   int r = 0;
 
-  DUF_TEST_R( r );
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* --drop-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.drop_tables )
+  if ( duf_config->cli.act.drop_tables )
     r = duf_clear_tables(  );
-  DUF_TEST_R( r );
-  if ( r >= 0 && duf_config->cli.act.vacuum )
-    r = duf_sql_exec( "VACUUM", ( int * ) NULL );
-  DUF_TEST_R( r );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --create-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.create_tables )
+  if ( duf_config->cli.act.create_tables )
     r = duf_check_tables(  );
-  DUF_TEST_R( r );
-
-  if ( 1 )
-  {
-    char *sargv1, *sargv2;
-    char *qsargv1, *qsargv2;
-    int changes = 0;
-
-    sargv1 = mas_argv_string( argc, argv, 1 );
-    sargv2 = duf_restore_options( argv[0] );
-    DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
-    qsargv1 = duf_single_quotes_2( sargv1 );
-    qsargv2 = duf_single_quotes_2( sargv2 );
-
-
-    /* r = duf_sql_c( "INSERT INTO duf_log (args, restored_args, msg, now) " " VALUES ('%s', '%s', '%s', datetime())", 0, ); */
-    r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg, now) " " VALUES ('%s', '%s', '%s', datetime())", &changes,
-                 qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );
-    DUF_TRACE( current, 0, "log inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
-    mas_free( qsargv1 );
-    mas_free( qsargv2 );
-    mas_free( sargv1 );
-    mas_free( sargv2 );
-  }
-  DUF_TEST_R( r );
-
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --add-path									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.add_path )
-  {
-    for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      r = duf_add_path_uni( duf_config->targv[ia], "argument", &r );
-    DUF_TEST_R( r );
-  }
-  /* ????????? */
-  /*  r = duf_sql_close(  );                   */
-  /*  r = duf_sql_open( duf_config->db.fpath ); */
-  /* (* ????????? *)                           */
-
-  DUF_TEST_R( r );
+  if ( duf_config->cli.act.add_path )
+    for ( int ia = 0; ia < duf_config->targc; ia++ )
+      r = duf_add_path( duf_config->targv[ia], "argument" );
+  DUF_TRACE( action, 0, "r=%d", r );
 
 
 
@@ -308,46 +224,46 @@ duf_action_new( int argc, char **argv )
 
 
 /* --zero-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.zero_duplicates )
+  if ( duf_config->cli.act.zero_duplicates )
     r = duf_zero_duplicates(  );
-  DUF_TEST_R( r );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --update-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_duplicates )
+  if ( duf_config->cli.act.update_duplicates )
     r = duf_update_duplicates(  );
 /* --zero-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.zero_filedata )
+  if ( duf_config->cli.act.zero_filedata )
     duf_zero_filedatas(  );
-  DUF_TEST_R( r );
+  DUF_TRACE( action, 0, "r=%d", r );
 /* --update-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_filedata )
+  if ( duf_config->cli.act.update_filedata )
     duf_update_filedatas(  );
-  DUF_TEST_R( r );
+  DUF_TRACE( action, 0, "r=%d", r );
 /*  --update-mdpaths								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_mdpath )
+  if ( duf_config->cli.act.update_mdpath )
     duf_update_mdpaths( 0 );
-  DUF_TEST_R( r );
+  DUF_TRACE( action, 0, "r=%d", r );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_mdpath_selective )
+  if ( duf_config->cli.act.update_mdpath_selective )
   {
     if ( !duf_config->targc )
       duf_update_mdpaths( 0 );
     else
-      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+      for ( int ia = 0; ia < duf_config->targc; ia++ )
       {
         const char *path;
         unsigned long long pathid;
 
         path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
+        pathid = duf_path_to_pathid( path, ( duf_dirinfo_t * ) NULL );
         if ( pathid )
-          r = duf_update_mdpaths( pathid );
+          duf_update_mdpaths( pathid );
         else
           fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
       }
 /*  --update-exif								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
-  DUF_TEST_R( r );
-  if ( r >= 0 && duf_config->cli.act.update_exif )
+  DUF_TRACE( action, 0, "r=%d", r );
+  if ( duf_config->cli.act.update_exif )
   {
     if ( !duf_config->targc )
       duf_update_exif( 0 );
@@ -358,7 +274,7 @@ duf_action_new( int argc, char **argv )
         unsigned long long pathid;
 
         path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
+        pathid = duf_path_to_pathid( path, ( duf_dirinfo_t * ) NULL );
         if ( pathid )
           duf_update_exif( pathid );
         else
@@ -366,7 +282,7 @@ duf_action_new( int argc, char **argv )
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
-  DUF_TEST_R( r );
+  DUF_TRACE( action, 0, "r=%d", r );
   /* if ( duf_config->cli.act.print_paths )          */
   /*   duf_print_paths( duf_config->group ); */
 /*  --print-dirs								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
@@ -391,13 +307,9 @@ duf_action_new( int argc, char **argv )
 /* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*   }                                                                                                                             */
 /*  --uni-scan									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.uni_scan )
+  if ( duf_config->cli.act.uni_scan )
   {
-    r = duf_uni_scan_all(  );
-    /* if ( r == DUF_ERROR_MAX_REACHED )                 */
-    /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
-    /* else if ( r < 0 )                                 */
-    /*   DUF_ERROR( "code: %d", r );                     */
+    duf_uni_scan_all(  );
   }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   /* if ( duf_config->cli.act.same_md5 )               */
@@ -414,22 +326,18 @@ duf_action_new( int argc, char **argv )
 /*         duf_print_files_same( duf_config->targv[ia] );                                                                          */
 /* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*   }                                                                                                                             */
-  if ( r >= 0 && duf_config->cli.act.same_exif )
+  if ( duf_config->cli.act.same_exif )
     duf_print_exif_same( 1, duf_config->cli.limit );
 
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.to_group )
+  if ( duf_config->cli.act.to_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.from_group )
+  if ( duf_config->cli.act.from_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  /* if ( r < 0 && !r == DUF_ERROR_MAX_REACHED ) */
-  /*   DUF_TEST_R(r);        */
-  /* else if ( r < 0 )                           */
-  /*   DUF_ERROR( "r=%d", r );                   */
   return r;
 }
 
@@ -446,74 +354,51 @@ int
 main_db( int argc, char **argv )
 {
   int r = DUF_ERROR_MAIN;
+  char *dbfile;
 
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( duf_config->db.dir && duf_config->db.name )
+  if ( duf_config->db_dir && duf_config->db_name )
   {
-    r = 0;
-    DUF_TRACE( action, 0, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.name );
-    duf_config->db.fpath = mas_strdup( duf_config->db.dir );
-    duf_config->db.fpath = mas_strcat_x( duf_config->db.fpath, "/" );
-    duf_config->db.fpath = mas_strcat_x( duf_config->db.fpath, duf_config->db.name );
-
-    /* if ( r >= 0 )                                      */
-    /*   r = duf_cli_option_by_string( "trace-maction=2" ); */
-    DUF_TRACE( current, 0, "r:%d", r );
-    if ( r >= 0 && duf_config->cli.dbg.verbose )
+    dbfile = mas_strdup( duf_config->db_dir );
+    dbfile = mas_strcat_x( dbfile, "/" );
+    dbfile = mas_strcat_x( dbfile, duf_config->db_name );
+    if ( duf_config->cli.dbg.verbose )
     {
       for ( int ia = 0; ia < argc; ia++ )
         DUF_TRACE( any, 0, ">>>>>>>> argv[%d]: %s", ia, argv[ia] );
       r = duf_config_show(  );
-      DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.fpath );
+      DUF_TRACE( any, 0, "dbfile: %s", dbfile );
     }
-    /* DUF_TRACE( any, 0, "r=%d", r ); */
-    if ( r >= 0 )
+    if ( dbfile && 0 == duf_sql_open( dbfile ) )
     {
-      r = DUF_ERROR_PTR;
-      if ( duf_config->db.fpath )
-        r = duf_sql_open( duf_config->db.fpath );
-    }
-    /* DUF_TRACE( any, 0, "r=%d", r ); */
-    if ( r >= 0 )
-    {
-      r = duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL );
-      if ( r >= 0 )
-        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL );
-
-      DUF_TEST_R( r );
-      if ( r >= 0 )
-        r = duf_action_new( argc, argv );
-
-      if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
-        DUF_ERROR( "action FAIL ; r=%d", r );
+      duf_sql_exec( "PRAGMA synchronous = OFF" );
+      r = duf_action_new(  );
+      if ( r < 0 )
+        DUF_ERROR( "action FAIL" );
       /* duf_action( argc, argv ); */
       r = duf_sql_close(  );
     }
+
+    mas_free( dbfile );
   }
-  else if ( !duf_config->db.dir )
+  else if ( !duf_config->db_dir )
   {
-    r = DUF_ERROR_PTR;
-    DUF_ERROR( "db.dir not set" );
+    DUF_ERROR( "db_dir not set" );
   }
-  else if ( !duf_config->db.name )
+  else if ( !duf_config->db_name )
   {
-    r = DUF_ERROR_PTR;
-    DUF_ERROR( "db.name not set" );
+    DUF_ERROR( "db_name not set" );
   }
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return r;
+  return 0;
 }
 
 int
 main( int argc, char **argv )
 {
-  int r = 0;
-
-  /* DUF_TRACE( any, 0, "r=%d", r ); */
-
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
@@ -522,45 +407,25 @@ main( int argc, char **argv )
       mas_mem_disable_print_usage = 7;
     }
   }
-  r = duf_config_create(  );
-  /* DUF_TRACE( any, 0, "r=%d", r ); */
-  if ( r >= 0 )
+  if ( 0 == duf_config_create(  ) )
   {
-    extern int dbgfunc_enabled;
-    int or;
-
-    DUF_TRACE( any, 0, "X" );
-    if ( r >= 0 )
-      r = duf_infile_options( argc, argv );
     /* duf_config->cli.dbg.verbose = 4; */
-    if ( r >= 0 )
-      or = r = duf_cli_options( argc, argv );
-    if ( r >= 0 )
-      r = duf_show_options( argv[0] );
-    /* {                                 */
-    /*   char c;                         */
-    /*   char *s = NULL;                 */
-    /*                                   */
-    /*   c = *s;                         */
-    /*   fprintf( stderr, "%c\n", c );   */
-    /*   DUF_TRACE( any, 0, "r=%d", r ); */
-    /* }                                 */
+    int r = duf_cli_options( argc, argv );
+    extern int dbgfunc_enabled;
+
     dbgfunc_enabled = 1;
-    DUF_TEST_R( r );
-    if ( r == 0 && duf_config && duf_config->db.dir )
+    if ( !r && duf_config && duf_config->db_dir )
+      main_db( argc, argv );
+    else
     {
-      r = main_db( argc, argv );
-      DUF_TEST_R( r );
-    }
-    {
-      switch ( or )
+      switch ( r )
       {
       case DUF_OPTION_HELP:
         printf( "Usage: %s [OPTION]... [PATH]...\n", argv[0] );
         printf( "  -h, --help			help\n" );
         printf( "Database ----------" "\n" );
-        printf( "  -N, --db-name=%s\n", duf_config->db.name );
-        printf( "  -D, --db-directory=%s\n", duf_config->db.dir );
+        printf( "  -N, --db-name=test20140412\n" );
+        printf( "  -D, --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db\n" );
         printf( "  --drop-tables" "\n" );
         printf( "  --create-tables" "\n" );
         printf( "Manipulations --------------" "\n" );
@@ -592,7 +457,6 @@ main( int argc, char **argv )
         printf( "  --trace-sample=level" "\n" );
         printf( "  -F, --trace-fill=level" "\n" );
         printf( "----------------" "\n" );
-        r = 0;
         break;
       case DUF_OPTION_HELP_EXAMPLES:
         printf( "Examples" "\n" );
@@ -632,7 +496,7 @@ main( int argc, char **argv )
                 " --files --dirs --md5 /mnt/new_media/media/down/ --totals" "\n" );
 
         printf( "=============================================" "\n" );
-        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  --md5 --noopenat  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" "\n" );
+        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  --md5  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" "\n" );
         printf( "=============================================" "\n" );
 
         printf( "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --totals"
@@ -644,25 +508,13 @@ main( int argc, char **argv )
                 " --format=filesize,seq,filename,nlink,mtime,mode,gid,uid /mnt/new_media/media/down" "\n" );
 
         printf( "=============================================" "\n" );
-        printf( "  run  --db-name=test$$.db  --uni-scan --print  --md5 --noopenat  -Rdf --max-dirs=300 --max-items=200 "
-                " --min-dirfiles=5 --min-size=10 --noopenat" "\n" );
-
-
-        printf( "=============================================" "\n" );
-        r = 0;
         break;
       default:
+        fprintf( stderr, "Options error (%d)\n", r );
         break;
       }
     }
-    if ( r < 0 )
-      DUF_ERROR( "(%d) %s", r, argv[0] );
-
     duf_config_delete(  );
-  }
-  else
-  {
-    DUF_ERROR( "(%d) %s", r, argv[0] );
   }
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );

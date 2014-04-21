@@ -30,7 +30,7 @@
 
 static int
 duf_sel_cb_insert_md5_uni( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
+                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   unsigned long long *presmd;
 
@@ -39,7 +39,7 @@ duf_sel_cb_insert_md5_uni( duf_record_t * precord, va_list args, void *sel_cb_ud
   presmd = ( unsigned long long * ) sel_cb_udata;
   if ( presmd )
     *presmd = md5id;
-  duf_sql( "UPDATE duf_md5 SET ucnt=ucnt+1, now=datetime() WHERE id='%lld'", *presmd );
+  duf_sql( "UPDATE duf_md5 SET ucnt=ucnt+1, now=datetime() WHERE id='%lld'", ( int * ) NULL, *presmd );
   return 0;
 }
 
@@ -50,11 +50,11 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize )
   int r = 0;
 
   r = duf_sql_c( "INSERT INTO duf_md5 (md5sum1,md5sum2,size,ucnt,now) values ('%lld','%lld','%llu',0,datetime())",
-                 DUF_CONSTRAINT_IGNORE_YES, md64[1], md64[0], ( unsigned long long ) fsize );
+                 DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, md64[1], md64[0], ( unsigned long long ) fsize );
   if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sel_cb_insert_md5_uni, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL ,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT id as md5id FROM duf_md5 WHERE md5sum1='%lld' and md5sum2='%lld'", md64[1], md64[0] );
   }
   else if ( !r /* assume SQLITE_OK */  )
@@ -114,7 +114,7 @@ duf_upd_md5_f_uni( const char *fpath, unsigned long long filedataid )
           DUF_TRACE( md5, 0, "%016llx%016llx : resmd: %llu: %s", pmd[1], pmd[0], resmd, fpath );
           if ( resmd )
           {
-            duf_sql( "UPDATE duf_filedatas SET md5id='%llu', ucnt=ucnt+1 WHERE id='%lld'", resmd, filedataid );
+            duf_sql( "UPDATE duf_filedatas SET md5id='%llu', ucnt=ucnt+1 WHERE id='%lld'", ( int * ) NULL, resmd, filedataid );
           }
         }
       }
@@ -146,7 +146,7 @@ duf_insert_keydata_uni( unsigned long long pathid, unsigned long long filenameid
   unsigned long long resp = 0;
 
   r = duf_sql_c( "INSERT INTO duf_keydata (pathid, filenameid, md5id, ucnt, now) " " VALUES ('%llu', '%llu', '%llu',0,datetime())",
-                 DUF_CONSTRAINT_IGNORE_YES, pathid, filenameid, resmd );
+                 DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, pathid, filenameid, resmd );
   if ( r == DUF_SQL_CONSTRAINT )
   {
   }
@@ -202,7 +202,7 @@ duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_recor
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_fill_md5_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_fill_md5_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
@@ -210,8 +210,8 @@ duf_directory_scan_fill_md5_uni( unsigned long long pathid, duf_dirhandle_t * pd
   if ( duf_config->cli.trace.md5 > 1 )
     printf( "[MD5  ] %20s: pathid=%llu\n", __func__, pathid );
   {
-    duf_dirhandle_t dh;
-    char *path = duf_pathid_to_path_dh( pathid, &dh );
+    char *path = duf_pathid_to_path_s( pathid );
+
 
     DUF_TRACE( md5, 1, "path=%s", path );
     if ( duf_config->cli.trace.md5 > 1 )

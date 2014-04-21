@@ -46,20 +46,38 @@ duf_file_scan_sample_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_
    *                   ^^^^^^^^   ^^^^^^^
    * */
 
+  DUF_TRACE( sample, 1, "sample" );
 
 
+  if ( pdi->depth <= 0 )
+    DUF_ERROR( "depth shold not be %d at this point", pdi->depth );
+  if ( 1 )
   {
-    DUF_UFIELD( filenameid );
-    char *fpath = filenameid_to_filepath( filenameid );
+    DUF_SFIELD( filename );
 
-    printf( "#%4llu: sample fpath %s\n", pdi->seq, fpath );
+    printf( "#%4llu: sample filename %s\n", pdi->seq, filename );
 
-    DUF_TRACE( sample, 1, "fpath=%s", fpath );
-    DUF_TRACE_SAMPLE( 1, "fpath=%s", fpath );
+    DUF_TRACE_SAMPLE( 1, "fpath=%s", filename );
 
-    mas_free( fpath );
+    DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
   }
-  DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
+  else
+  {
+    if ( pdi->depth > 0 )
+    {
+      DUF_UFIELD( filenameid );
+      char *fpath = filenameid_to_filepath( filenameid );
+
+      printf( "#%4llu: sample fpath %s\n", pdi->seq, fpath );
+
+      DUF_TRACE_SAMPLE( 1, "fpath=%s", fpath );
+
+      mas_free( fpath );
+      DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
+    }
+    /* duf_config->cli.trace.sql--; */
+    /* duf_config->cli.trace.sql++; */
+  }
 
   DUF_TRACE( sample, 1, "filename=%s", filename );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -69,26 +87,25 @@ duf_file_scan_sample_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_
 /* callback of type duf_scan_callback_dir_t */
 /* will be static! */
 int
-duf_directory_scan_sample_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_sample_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
-
-
-
 
   DUF_TRACE_SAMPLE( 1, "T1 pathid=%llu", pathid );
   /* DUF_TRACE_SAMPLE( 0, "T0 pathid=%llu", pathid ); */
   {
-    duf_config->cli.trace.current--;
-    duf_dirhandle_t dh;
-    char *path = duf_pathid_to_path_dh( pathid, &dh );
+    duf_config->cli.trace.sql--;
+    {
+      char *path = duf_pathid_to_path_s( pathid );
 
-    printf( "#%4llu: sample BEFORE dPATH %s\n", pdi->seq, path );
-    DUF_TRACE_SAMPLE( 1, "path=%s", path );
-    mas_free( path );
-    duf_config->cli.trace.current++;
+
+      printf( "#%4llu: sample BEFORE dPATH %s (%d)\n", pdi->seq, path, pdh ? pdh->dfd : -77 );
+      DUF_TRACE_SAMPLE( 1, "path=%s", path );
+      mas_free( path );
+    }
+    duf_config->cli.trace.sql++;
   }
+  DUF_TRACE_SAMPLE( 1, "T1 pathid=%llu", pathid );
 
   {
     char *test = mas_strdup( "HELLO" );
@@ -101,22 +118,25 @@ duf_directory_scan_sample_uni( unsigned long long pathid, duf_dirhandle_t * pdh,
 }
 
 static int
-duf_directory_scan_sample_uni_after( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_sample_uni_after( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@ %llu -- %llu", pathid, pdi->levinfo[pdi->depth].dirid );
   DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
   {
-    duf_config->cli.trace.current--;
-    duf_dirhandle_t dh;
-    char *path = duf_pathid_to_path_dh( pathid, &dh );
+    duf_config->cli.trace.sql--;
+    {
+      char *path = duf_pathid_to_path_s( pathid );
 
-    printf( "#%4llu: sample AFTER  dPATH %s\n", pdi->seq, path );
-    DUF_TRACE_SAMPLE( 1, "path=%s", path );
-    mas_free( path );
-    duf_config->cli.trace.current++;
+
+      printf( "#%4llu: sample AFTER  dPATH %s (%d)\n", pdi->seq, path, pdh ? pdh->dfd : -77 );
+      DUF_TRACE_SAMPLE( 1, "path=%s", path );
+      mas_free( path );
+    }
+    duf_config->cli.trace.sql++;
   }
+  DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
 
   DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
   mas_free( pdi->levinfo[pdi->depth].context );
@@ -126,21 +146,25 @@ duf_directory_scan_sample_uni_after( unsigned long long pathid, duf_dirhandle_t 
 }
 
 static int
-duf_directory_scan_sample_uni_middle( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_sample_uni_middle( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi,
+                                      duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
   {
-    duf_config->cli.trace.current--;
-    duf_dirhandle_t dh;
-    char *path = duf_pathid_to_path_dh( pathid, &dh );
+    duf_config->cli.trace.sql--;
+    {
+      char *path = duf_pathid_to_path_s( pathid );
 
-    printf( "#%4llu: sample MIDDLE dPATH %s\n", pdi->seq, path );
-    DUF_TRACE_SAMPLE( 1, "path=%s", path );
-    mas_free( path );
-    duf_config->cli.trace.current++;
+
+      printf( "#%4llu: sample MIDDLE dPATH %s (%d)\n", pdi->seq, path, pdh ? pdh->dfd : -77 );
+      DUF_TRACE_SAMPLE( 1, "path=%s", path );
+      mas_free( path );
+    }
+    duf_config->cli.trace.sql++;
   }
+  DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
 
   DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
   mas_free( pdi->levinfo[pdi->depth].context );

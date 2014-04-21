@@ -22,7 +22,7 @@ duf_single_quotes_2( const char *s )
   char *r = NULL;
 
 #ifdef DUF_SINGLE_QUOTES_2_NOQ_ZERO
-  if ( strchr( s, '\'' ) )
+  if ( s && strchr( s, '\'' ) )
 #endif
   {
     size_t len;

@@ -9,6 +9,10 @@
 
 #include "duf_types.h"
 
+#include "duf_utils.h"
+#include "duf_service.h"
+#include "duf_config.h"
+
 /* #include "duf_sql.h" */
 #include "duf_path.h"
 #include "duf_insert.h"
@@ -35,6 +39,9 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
   char *rpath = mas_strdup( real_path );
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  DUF_TRACE( action, 0, "!!" );
+
   base_name = basename( rpath );
   dir_name = dirname( rpath );
   if ( !base_name || !*base_name )

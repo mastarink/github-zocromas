@@ -42,59 +42,63 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
   int r = 0;
   int max = pdi->depth - 1;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( pdi )
-
-    for ( int i = 0; i <= max; i++ )
-    {
-      if ( pdi->levinfo )
+  if ( pdi->depth <= 0 )
+    DUF_ERROR( "depth shold not be %d at this point", pdi->depth );
+  if ( pdi->depth > 0 )
+  {
+    duf_dbgfunc( DBG_START, __func__, __LINE__ );
+    if ( pdi )
+      for ( int i = 0; i <= max; i++ )
       {
-        if ( pdi->levinfo[i].ndirs > 0 )
+        if ( pdi->levinfo )
         {
-          if ( i == max )
+          if ( pdi->levinfo[i].ndirs > 0 )
           {
-            if ( is_file )
-              printf( "│ ◇ " );
-            else if ( !pdi->levinfo[i].eod )
-              printf( "├─── " );
+            if ( i == max )
+            {
+              if ( is_file )
+                printf( "│ ◇ " );
+              else if ( !pdi->levinfo[i].eod )
+                printf( "├─── " );
+            }
+            else
+            {
+              if ( is_file )
+                printf( "│    " );
+              else if ( !pdi->levinfo[i].eod )
+                printf( "│    " );
+            }
+          }
+          else if ( pdi->levinfo[i].ndirs == 0 )
+          {
+            if ( i == max )
+            {
+              if ( is_file )
+                printf( "  ◇ " );
+              else if ( !pdi->levinfo[i].eod )
+                printf( "└─── " );
+            }
+            else
+            {
+              printf( "     " );
+            }
           }
           else
           {
             if ( is_file )
-              printf( "│    " );
-            else if ( !pdi->levinfo[i].eod )
-              printf( "│    " );
-          }
-        }
-        else if ( pdi->levinfo[i].ndirs == 0 )
-        {
-          if ( i == max )
-          {
-            if ( is_file )
-              printf( "  ◇ " );
-            else if ( !pdi->levinfo[i].eod )
-              printf( "└─── " );
-          }
-          else
-          {
-            printf( "     " );
+              printf( " %3d", __LINE__ );
+            else if ( pdi->levinfo[i].eod )
+              printf( " %3d", __LINE__ );
+            else
+              printf( " %3d", __LINE__ );
           }
         }
         else
         {
-          if ( is_file )
-            printf( " %3d", __LINE__ );
-          else if ( pdi->levinfo[i].eod )
-            printf( " %3d", __LINE__ );
-          else
-            printf( " %3d", __LINE__ );
+          printf( "??? " );
         }
       }
-      else
-      {
-        printf( "??? " );
-      }
-    }
+  }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -141,7 +145,7 @@ duf_file_scan_print_tree_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_rec
  * this is callback of type: duf_scan_callback_dir_t (second range;):
  * */
 static int
-duf_directory_scan_print_tree_uni( unsigned long long pathid, duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_print_tree_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   DUF_SFIELD( dirname );
   /* const char *dirname = duf_sql_str_by_name( "dirname", precord, 0 ); */

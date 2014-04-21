@@ -20,8 +20,11 @@
 
 #  define DUF_STAT_DEF ((struct stat *) NULL)
 
-#  define DUF_SFIELD(name) const char* name = __duf_sql_str_by_name( #name, precord, NULL, 0 );
-#  define DUF_UFIELD(name) unsigned long long name = __duf_sql_ull_by_name( #name, precord, NULL, 0 );
+#  define DUF_SET_SFIELD(name) name = __duf_sql_str_by_name( #name, precord, NULL, 0 )
+#  define DUF_SET_UFIELD(name) name = __duf_sql_ull_by_name( #name, precord, NULL, 0 )
+
+#  define DUF_SFIELD(name) const char*  DUF_SET_SFIELD(name)
+#  define DUF_UFIELD(name) unsigned long long  DUF_SET_UFIELD(name)
 
 #  define DUF_SFIELD_CHECK(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 0 ); \
   	duf_check_field(#name, duf_have_field_##name)
@@ -32,20 +35,21 @@
 #  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
 
 
-#  define DUF_IF_WHAT(what,name) (duf_config && !duf_config->what.nonew && duf_config->cli.trace.name )
-#  define DUF_IF_TRACE(name)           DUF_IF_WHAT(cli.trace,name)
+#  define DUF_IF_WHAT(what,name) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name )
+#  define DUF_IF_TRACE(name)           DUF_IF_WHAT(cli.trace, name)
 #  define DUF_IF_WHATN(what,name,min) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name>min )
 #  define DUF_IF_TRACEN(name,min)      DUF_IF_WHATN(cli.trace, name)
 
 #  define DUF_WHAT( what, name, min, ...) \
-    duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 0), min, \
+    duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
 		__func__,__LINE__, \
-			duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
+			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
 #  define DUF_TRACE(name, ...)           DUF_WHAT(cli.trace, name, __VA_ARGS__)
 
 #  define DUF_TRACE_SCAN( min, ...)    DUF_TRACE( scan, min, __VA_ARGS__)
 #  define DUF_TRACE_SAMPLE( min, ...)  DUF_TRACE( sample, min, __VA_ARGS__)
 #  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
+#  define DUF_TEST_R(val)              if (val<0) DUF_ERROR( "rv=%d", val )
 
 #  define DUF_VERBOSE(lev,...)           DUF_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
 #  define DUF_IF_VERBOSE()               DUF_IF_WHAT(cli.dbg,verbose)
@@ -71,8 +75,16 @@ typedef enum
 typedef enum
 {
   DUF_ERROR_ERROR_BASE = -30000,
+  DUF_ERROR_UNKNOWN,
   DUF_ERROR_MAIN,
+  DUF_ERROR_PTR,
+  DUF_ERROR_DATA,
+  DUF_ERROR_NOT_OPEN,
+  DUF_ERROR_OPENAT,
+  DUF_ERROR_OPEN,
+  DUF_ERROR_CLOSE,
   DUF_ERROR_OPTION,
+  DUF_ERROR_SCANDIR,
   DUF_ERROR_CHECK_TABLES,
   DUF_ERROR_CLEAR_TABLES,
   DUF_ERROR_NO_DIRID,
@@ -105,22 +117,42 @@ typedef struct
   unsigned long long minsize;
   unsigned long long maxsize;
 } duf_ufilter_t;
-
+typedef struct
+{
+  char *dir;
+  char *name;
+  char *fpath;
+} duf_db_config_t;
 typedef struct
 {
   duf_ufilter_t u;
   duf_config_cli_t cli;
-  char *db_dir;
-  char *db_name;
+  duf_db_config_t db;
   char *group;
   int targc;
   char **targv;
+  
+
+  unsigned nopen;
+  unsigned nclose;
+
 } duf_config_t;
 typedef enum
 {
   DUF_NODE_LEAF = 100,
   DUF_NODE_NODE,
 } duf_node_type_t;
+
+typedef struct stat duf_stat_t;
+typedef struct duf_dirhandle_s
+{
+  unsigned long long dirid;
+
+  int dfd;
+  int rs;
+  struct stat st;
+} duf_dirhandle_t;
+
 
 typedef struct
 {
@@ -131,6 +163,7 @@ typedef struct
   unsigned long long ndirs;
   unsigned long long nfiles;
   void *context;
+  duf_dirhandle_t dh;
 } duf_levinfo_t;
 
 typedef struct
@@ -182,20 +215,13 @@ typedef struct
 }
 duf_record_t;
 
-typedef struct stat duf_stat_t;
-typedef struct duf_dirhandle_s
-{
-  unsigned long long dirid;
-  int dfd;
-  struct stat st;
-} duf_dirhandle_t;
-
 struct duf_scan_callbacks_s;
 typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
 
 
 /* this is callback of type: duf_scan_hook_dir_t (second range; ; sel_cb): */
-typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord );
+typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi,
+                                       duf_record_t * precord );
 
 /* this is callback of type: duf_scan_hook_file_t (first range; str_cb) */
 typedef int ( *duf_scan_hook_file_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord );
@@ -207,13 +233,13 @@ typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_scan_callback_file_t (first range; str_cb) */
 typedef int ( *duf_scan_callback_file_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi,
-                                            struct duf_scan_callbacks_s * sccb, duf_record_t * precord, duf_dirhandle_t *pdhu );
+                                            struct duf_scan_callbacks_s * sccb, duf_record_t * precord, const duf_dirhandle_t * pdhu );
 
 
 
 typedef int ( *duf_sql_select_cb_t ) ( duf_record_t * precord, va_list args,
                                        void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                                       struct duf_scan_callbacks_s * sccb, duf_dirhandle_t *pdhu );
+                                       struct duf_scan_callbacks_s * sccb, const duf_dirhandle_t * pdhu );
 struct duf_scan_callbacks_s
 {
   const char *title;

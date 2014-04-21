@@ -17,7 +17,7 @@ int duf_str_cb_scan_print_file( unsigned long long pathid, unsigned long long fi
 
 
 int duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                        duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu, const char *sql, ... );
+                        duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sql, ... );
 
 /* int duf_scan_items_sql_trace( duf_scan_callback_file_t str_cb, void *str_cb_udata, int trace, const char *sql, ... ); */
 
@@ -25,7 +25,7 @@ int duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_
 
 /* will be static! */
 int duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                      duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu );
+                      duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu );
 
 
 

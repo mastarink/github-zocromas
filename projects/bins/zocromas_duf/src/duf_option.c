@@ -37,7 +37,7 @@
 
 
 int
-duf_parse_option( int opt, const char *optarg )
+duf_parse_option( int opt, const char *optarg, int longindex )
 {
   int r = 0;
 
@@ -53,8 +53,8 @@ duf_parse_option( int opt, const char *optarg )
     {
       int r = 0;
       char *coptarg, *poptarg;
-      char *hlp, *value;
       unsigned nvalue;
+      char *value;
 
       char *const tokens[] = {
         [DUF_FORMAT_SEQ] = "seq",
@@ -74,13 +74,15 @@ duf_parse_option( int opt, const char *optarg )
       poptarg = coptarg = mas_strdup( optarg );
       /* coptarg = mas_strdup( optarg ); */
       value = NULL;
-      DUF_TRACE( any, 0, "--- format ---- %s", coptarg );
+      DUF_TRACE( action, 0, "--format=%s", coptarg );
       while ( poptarg && *poptarg )
       {
-        hlp = poptarg;
-        DUF_TRACE( any, 0, "hlp:%s\n", hlp );
+        /* char *hlp;                          */
+        /*                                     */
+        /* hlp = poptarg;                      */
+        /* DUF_TRACE( any, 0, "hlp:%s", hlp ); */
         r = getsubopt( &poptarg, tokens, &value );
-        DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" );
+        /* DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" ); */
         nvalue = value ? strtol( value, NULL, 10 ) : 0;
         switch ( r )
         {
@@ -121,7 +123,7 @@ duf_parse_option( int opt, const char *optarg )
           duf_config->cli.format.offset = nvalue;
           break;
         }
-        DUF_TRACE( any, 0, "r:%d\n", r );
+        /* DUF_TRACE( any, 0, "r:%d", r ); */
         if ( r < 0 )
           break;
       }
@@ -149,9 +151,31 @@ duf_parse_option( int opt, const char *optarg )
     duf_config->cli.dbg.debug = 1;
     break;
   case DUF_OPTION_TRACE_STDERR:
+    if ( duf_config->cli.trace.out )
+    {
+      if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
+        fclose( duf_config->cli.trace.out );
+      duf_config->cli.trace.out = NULL;
+    }
+    if ( duf_config->cli.trace.file )
+    {
+      mas_free( duf_config->cli.trace.file );
+      duf_config->cli.trace.file = NULL;
+    }
     duf_config->cli.trace.out = stderr;
     break;
   case DUF_OPTION_TRACE_STDOUT:
+    if ( duf_config->cli.trace.out )
+    {
+      if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
+        fclose( duf_config->cli.trace.out );
+      duf_config->cli.trace.out = NULL;
+    }
+    if ( duf_config->cli.trace.file )
+    {
+      mas_free( duf_config->cli.trace.file );
+      duf_config->cli.trace.file = NULL;
+    }
     duf_config->cli.trace.out = stdout;
     break;
   case DUF_OPTION_TRACE_FILE:
@@ -159,6 +183,7 @@ duf_parse_option( int opt, const char *optarg )
     {
       struct stat st;
 
+      duf_config->cli.trace.file = mas_strdup( optarg );
       if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
       {
         fprintf( stderr, "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
@@ -167,16 +192,27 @@ duf_parse_option( int opt, const char *optarg )
       }
       else
       {
-        duf_config->cli.trace.out = fopen( optarg, "w" );
-        if ( !duf_config->cli.trace.out )
+        FILE *out;
+
+        if ( duf_config->cli.trace.out )
+        {
+          if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
+            fclose( duf_config->cli.trace.out );
+          duf_config->cli.trace.out = NULL;
+        }
+
+        out = fopen( optarg, "w" );
+        if ( !out )
         {
           fprintf( stderr, "Can't open trace file %s\n", optarg );
           exit( 4 );
         }
+        else
+          duf_config->cli.trace.out = out;
       }
     }
     break;
-  case DUF_OPTION_TRACE_ALL:
+  case DUF_OPTION_ALL_TRACE:
     if ( optarg && *optarg )
       duf_config->cli.trace.sql = duf_config->cli.trace.fill = duf_config->cli.trace.md5 = duf_config->cli.trace.sample =
             duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
@@ -195,6 +231,9 @@ duf_parse_option( int opt, const char *optarg )
     /*   duf_config->cli.trace.nonew = strtol( optarg, NULL, 10 ); */
     /* else                                                        */
     /*   duf_config->cli.trace.nonew++;                            */
+    break;
+  case DUF_OPTION_NOOPENAT:
+    DUF_OPT_FLAG( cli.noopenat );
     break;
   case DUF_OPTION_CALLS_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.calls );
@@ -237,6 +276,9 @@ duf_parse_option( int opt, const char *optarg )
     /* else                                                       */
     /*   duf_config->cli.trace.path++;                            */
     fprintf( stderr, "###################### %d\n", duf_config->cli.trace.path );
+    break;
+  case DUF_OPTION_FS_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.fs );
     break;
   case DUF_OPTION_SAMPUPD_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.sampupd );
@@ -286,7 +328,7 @@ duf_parse_option( int opt, const char *optarg )
     /* if ( optarg && *optarg )                                     */
     /*   duf_config->cli.dbg.max_line = strtol( optarg, NULL, 10 ); */
   case DUF_OPTION_TOTALS:
-    DUF_OPT_FLAG( cli.totals );
+    DUF_OPT_FLAG( cli.act.totals );
     /* if ( optarg && *optarg )                               */
     /*   duf_config->cli.totals = strtol( optarg, NULL, 10 ); */
     /* else                                                   */
@@ -296,8 +338,8 @@ duf_parse_option( int opt, const char *optarg )
     /* -ORifd5 
      * i.e.
      *  --create-tables --uni-scan --recursive --fill --files --dirs --md5 */
-    duf_config->cli.act.create_tables = duf_config->cli.act.uni_scan = duf_config->u.recursive = duf_config->cli.act.fill =
-          duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.md5 = 1;
+    duf_config->cli.act.create_tables = duf_config->cli.act.add_path = duf_config->cli.act.uni_scan = duf_config->u.recursive =
+          duf_config->cli.act.fill = duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.md5 = 1;
     break;
   case DUF_OPTION_ZERO_DB:
     DUF_OPT_FLAG( cli.act.create_tables );
@@ -349,11 +391,14 @@ duf_parse_option( int opt, const char *optarg )
     DUF_OPT_FLAG( u.recursive );
     /* duf_config->u.recursive = 1; */
     break;
-  case DUF_OPTION_SAMPLE:
-    DUF_OPT_FLAG( cli.act.sample );
-    /* duf_config->cli.act.sample = 1; */
+  case DUF_OPTION_VACUUM:
+    DUF_OPT_FLAG( cli.act.vacuum );
     break;
-     case DUF_OPTION_SAMPUPD:
+  case DUF_OPTION_SAMPLE:
+    /* DUF_OPT_FLAG( cli.act.sample ); */
+    DUF_OPT_NUM_PLUS( cli.act.sample );
+    break;
+  case DUF_OPTION_SAMPUPD:
     DUF_OPT_FLAG( cli.act.sampupd );
     break;
   case DUF_OPTION_MDPATH:
@@ -478,19 +523,19 @@ duf_parse_option( int opt, const char *optarg )
     /* }                                           */
     break;
   case DUF_OPTION_DB_DIRECTORY:
-    DUF_OPT_STR( db_dir );
+    DUF_OPT_STR( db.dir );
     /* if ( optarg )                                */
     /* {                                            */
-    /*   mas_free( duf_config->db_dir );            */
-    /*   duf_config->db_dir = mas_strdup( optarg ); */
+    /*   mas_free( duf_config->db.dir );            */
+    /*   duf_config->db.dir = mas_strdup( optarg ); */
     /* }                                            */
     break;
   case DUF_OPTION_DB_NAME:
-    DUF_OPT_STR( db_name );
+    DUF_OPT_STR( db.name );
     /* if ( optarg )                                 */
     /* {                                             */
-    /*   mas_free( duf_config->db_name );            */
-    /*   duf_config->db_name = mas_strdup( optarg ); */
+    /*   mas_free( duf_config->db.name );            */
+    /*   duf_config->db.name = mas_strdup( optarg ); */
     /* }                                             */
     break;
   case DUF_OPTION_LIMIT:

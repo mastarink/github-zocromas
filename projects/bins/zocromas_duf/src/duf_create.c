@@ -29,12 +29,27 @@
  * */
 
 static int
+duf_check_table_log( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS "
+                        " duf_log (id INTEGER PRIMARY KEY autoincrement " ", args  TEXT" ", restored_args  TEXT" ", msg  TEXT"
+                        ", now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_log" );
+
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int
 duf_check_table_filedatas( void )
 {
   int r = DUF_ERROR_CHECK_TABLES;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS "
                         " duf_filedatas (id INTEGER PRIMARY KEY autoincrement, dev INTEGER NOT NULL, inode INTEGER NOT NULL,"
                         " mode INTEGER NOT NULL, nlink INTEGER NOT NULL, uid INTEGER NOT NULL,"
                         " gid INTEGER NOT NULL, blksize INTEGER NOT NULL, blocks INTEGER NOT NULL,"
@@ -170,13 +185,86 @@ duf_check_table_mdpath( void )
   return r;
 }
 
+static int
+duf_check_table_exif( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
+                        " duf_exif (id INTEGER PRIMARY KEY autoincrement, dataid INTEGER NOT NULL, model TEXT, datetime INTEGER,"
+                        " d INTEGER, broken_date TEXT, ucnt INTEGER, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_exif" );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS exif_uniq ON duf_exif (dataid)", "Create duf_exif" );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS exif_model ON duf_exif (model)", "Create duf_exif" );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS exif_broken_date ON duf_exif (broken_date)", "Create duf_exif" );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS exif_datetime ON duf_exif (datetime)", "Create duf_exif" );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
+
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int
+duf_check_table_group( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
+                        " duf_group (id INTEGER PRIMARY KEY autoincrement, name TEXT NOT NULL, now INTEGER DEFAULT CURRENT_TIMESTAMP)",
+                        "Create duf_group" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS group_uniq ON duf_group (name)", "Create duf_group" );
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int
+duf_check_table_path_group( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS" " duf_path_group (id INTEGER PRIMARY KEY autoincrement, groupid INTEGER NOT NULL, "
+                        " pathid INTEGER NOT NULL, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_path_group" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS path_group_uniq ON duf_path_group (groupid, pathid)",
+                          "Create duf_path_group" );
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+
+
+
 int
 duf_clear_tables( void )
 {
   int r = DUF_ERROR_CLEAR_TABLES;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
   r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filedatas", "Drop filedatas" );
+
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filenames", "Drop filenames" );
   if ( r >= 0 )
@@ -193,6 +281,8 @@ duf_clear_tables( void )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_group", "Drop group" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_path_group", "Drop path_group" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "VACUUM", "vacuum" );
   DUF_TRACE( action, 0, "Drop all tables from DB %s (%d)", r < 0 ? "FAIL" : "OK", r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -204,44 +294,47 @@ duf_check_tables( void )
   int r = DUF_ERROR_CHECK_TABLES;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  r = duf_check_table_filedatas(  );
+
+  r = duf_check_table_log(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
+  if ( r >= 0 )
+    r = duf_check_table_filedatas(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
     r = duf_check_table_filenames(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
     r = duf_check_table_paths(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
     r = duf_check_table_md5(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
     r = duf_check_table_keydata(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
     r = duf_check_table_mdpath(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
-                          " duf_exif (id INTEGER PRIMARY KEY autoincrement, dataid INTEGER NOT NULL, model TEXT, datetime INTEGER,"
-                          " d INTEGER, broken_date TEXT, ucnt INTEGER, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_exif" );
+    r = duf_check_table_exif(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS exif_uniq ON duf_exif (dataid)", "Create duf_exif" );
+    r = duf_check_table_group(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS exif_model ON duf_exif (model)", "Create duf_exif" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS exif_broken_date ON duf_exif (broken_date)", "Create duf_exif" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS exif_datetime ON duf_exif (datetime)", "Create duf_exif" );
+    r = duf_check_table_path_group(  );
+  if ( r )
+    DUF_ERROR( "r:%d", r );
 
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
-                          " duf_group (id INTEGER PRIMARY KEY autoincrement, name TEXT NOT NULL, now INTEGER DEFAULT CURRENT_TIMESTAMP)",
-                          "Create duf_group" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS group_uniq ON duf_group (name)", "Create duf_group" );
-
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
-                          " duf_path_group (id INTEGER PRIMARY KEY autoincrement, groupid INTEGER NOT NULL, "
-                          " pathid INTEGER NOT NULL, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_path_group" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS path_group_uniq ON duf_path_group (groupid, pathid)",
-                          "Create duf_path_group" );
   DUF_TRACE( action, 0, "Create all tables for DB %s (%d)", r < 0 ? "FAIL" : "OK", r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;

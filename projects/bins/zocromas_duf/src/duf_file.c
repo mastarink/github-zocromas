@@ -40,7 +40,7 @@ typedef struct
  * */
 static int
 duf_sel_cb_md5id_fnid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                       duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
+                       duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   md5id_fnid_udata_t *pud;
 
@@ -78,7 +78,7 @@ file_at_pathid_to_filenameid_x( unsigned long long pathid, const char *name, uns
   ud.filenameid = 0;
   fprintf( stderr, "%s:PATHID_TO_FILENAMEID %llu : %s\n", __func__, pathid, qname ? qname : name );
   r = duf_sql_select( duf_sel_cb_md5id_fnid, &ud, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL ,
+                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                       "SELECT duf_filenames.id as filenameid, duf_md5.id as md5id " " FROM duf_filenames "
                       " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
                       " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) "
@@ -145,7 +145,7 @@ typedef struct
  * */
 static int
 duf_sel_cb_pi_fname( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                     duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
+                     duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   pi_fname_udata_t *pud;
 
@@ -179,7 +179,7 @@ filenameid_to_filepath( unsigned long long filenameid )
     pi_fname_udata_t pifn = {.pathid = 0,.filename = NULL };
 
     r = duf_sql_select( duf_sel_cb_pi_fname, &pifn, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL ,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT duf_filenames.pathid as dirid, duf_filenames.id as filenameid, duf_filenames.name as filename "
                         " FROM duf_filenames " " WHERE duf_filenames.id='%llu'", filenameid );
     /* fprintf( stderr, "%s:FILENAMEID_TO_FILEPATH %llu => %llu:%s\n", __func__, filenameid, pifn.pathid, pifn.filename ); */
@@ -188,7 +188,7 @@ filenameid_to_filepath( unsigned long long filenameid )
     {
       /* fprintf( stderr, "pathid: %lld; filename:%s\n", pifn.pathid, pifn.filename ); */
       duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-      filepath = duf_pathid_to_path_dh( pifn.pathid , ( duf_dirhandle_t *) NULL );
+      filepath = duf_pathid_to_path_s( pifn.pathid );
       if ( filepath )
       {
         filepath = mas_strcat_x( filepath, "/" );

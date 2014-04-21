@@ -65,53 +65,34 @@
  *     5. for <current> dir call sccb->directory_scan_after
  * */
 int
-duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord, duf_dirhandle_t * pdhu )
+duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord,
+                  const duf_dirhandle_t * pdhu )
 {
   int r = 0;
+  duf_depthinfo_t *pdi;
 
-  duf_dirhandle_t *pdh = NULL;
-  duf_dirhandle_t dh = {.dfd = 0 };
+  pdi = ( duf_depthinfo_t * ) str_cb_udata;
+
+  /* duf_dirhandle_t dh = {.dfd = 0 }; */
 
   DUF_UFIELD( dirid );
-  DUF_SFIELD( dfname );
+  /* DUF_SFIELD( dfname ); */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  DUF_TRACE( current, 0, "(%llu) pdhu : %d", pdhu ? ( pdhu->dirid ) : 0, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
 
-  if ( pdhu )
-  {
-    dh.dirid = dirid;
-    dh.dfd = openat( pdhu->dfd, dfname, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-    if ( dh.dfd )
-    {
-      int rs = fstatat( pdhu->dfd, dfname, &dh.st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
-
-      if ( !rs )
-      {
-        pdh = &dh;
-      }
-    }
-    DUF_TRACE( current, 0, "%llu :: (%llu)pdhu : %d; (%llu)pdh : %d {%s}", dirid, pdhu ? pdhu->dirid : 0, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0,
-               pdh ? pdh->dirid : 0, pdh ? ( pdh->dfd ? 2 : 1 ) : 0, dfname );
-  }
 
   if ( DUF_IF_TRACE( scan ) )
   {
-    duf_config->cli.trace.current--;
-
     /* unsigned long long dirid = duf_sql_ull_by_name( "dirid", precord, 0 ); */
     /* DUF_UFIELD( filenameid ); */
     /* unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 ); */
-    char *path = duf_pathid_to_path_dh( dirid, ( duf_dirhandle_t * ) NULL );
+    char *path = duf_pathid_to_path_s( dirid );
+
 
     DUF_TRACE( scan, 0, "TOP B %llu:%s", dirid, path );
     mas_free( path );
-    duf_config->cli.trace.current++;
   }
   {
-    duf_depthinfo_t *pdi;
-
-    pdi = ( duf_depthinfo_t * ) str_cb_udata;
     if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
     {
       if ( pdi->levinfo )
@@ -144,25 +125,23 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->directory_scan_after
  * */
-        DUF_TRACE( current, 0, "%llu :: (%llu)pdhu : %d; (%llu)pdh : %d", dirid, pdhu ? pdhu->dirid : 0, pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0,
-                   pdh ? pdh->dirid : 0, pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
-        r = duf_scan_dirs_by_parentid( dirid, pdh, duf_uni_scan_dir, pdi, sccb, precord );
-        if ( r == DUF_ERROR_MAX_REACHED )
-        {
-          if ( pdi->depth == 0 )
-            DUF_TRACE( action, 0, "Maximum reached ...." );
-        }
-        else if ( r < 0 )
-          DUF_TRACE( action, 0, "r=%d", r );
+
+        r = duf_scan_dirs_by_parentid( dirid, pdhu, duf_uni_scan_dir, pdi, sccb, precord );
+        /* if ( r == DUF_ERROR_MAX_REACHED )                   */
+        /* {                                                   */
+        /*   if ( pdi->depth == 0 )                            */
+        /*     DUF_TRACE( action, 0, "Maximum reached ...." ); */
+        /* }                                                   */
+        /* else if ( r < 0 )                                   */
+        /* {                                                   */
+        /*   DUF_ERROR( "r=%d", r );                           */
+        /* }                                                   */
 #if 0
         pdi->levinfo[pdi->depth + 1]--;
 #endif
       }
     }
   }
-  if ( dh.dfd )
-    close( dh.dfd );
-  dh.dfd = 0;
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -180,10 +159,10 @@ int
 duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 {
   int r;
-  duf_dirhandle_t *pdh = NULL;
-  duf_dirhandle_t dh = {.dfd = 0 };
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  DUF_TRACE( action, 0, "sccb %d", sccb ? 1 : 0 );
   if ( sccb )
   {
     duf_depthinfo_t di = {.depth = 0,
@@ -201,26 +180,22 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 
       memset( di.levinfo, 0, lsz );
     }
+    duf_dirhandle_t *pdh;
+
+    pdh = &di.levinfo[0].dh;
+
+    if ( !duf_config->cli.noopenat )
+      r = duf_open_dh( pdh, path );
+
     {
       unsigned long long pathid;
 
       pathid = duf_path_to_pathid( path, &di );
-      {
-        dh.dirid = pathid;
-        dh.dfd = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-        if ( dh.dfd )
-        {
-          int rs = stat( path, &dh.st );
+      DUF_TRACE( action, 0, "pathid %llu for %s", pathid, path );
 
-          if ( !rs )
-          {
-            pdh = &dh;
-          }
-        }
-      }
       if ( DUF_IF_TRACE( scan ) )
       {
-        char *path = duf_pathid_to_path_dh( pathid, ( duf_dirhandle_t * ) NULL );
+        char *path = duf_pathid_to_path_s( pathid );
 
         DUF_TRACE( scan, 0, "TOP A %llu:%s", pathid, path );
         mas_free( path );
@@ -247,15 +222,25 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
  *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->directory_scan_after
  * */
-        DUF_TRACE( current, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ pdhu : %d", pdh ? ( pdh->dfd ? 2 : 1 ) : 0 );
+
         r = duf_scan_dirs_by_parentid( pathid, pdh, duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+
+        /* if ( r == DUF_ERROR_MAX_REACHED )                 */
+        /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
+        /* else if ( r < 0 )                                 */
+        /*   DUF_ERROR( "code: %d", r );                     */
       }
       else
       {
       }
       mas_free( di.levinfo );
+      /* if ( r == DUF_ERROR_MAX_REACHED )                 */
+      /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
+      /* else if ( r < 0 )                                 */
+      /*   DUF_ERROR( "code: %d", r );                     */
     }
-    if ( duf_config->cli.totals )
+
+    if ( duf_config->cli.act.totals )
     {
       FILE *f;
 
@@ -265,11 +250,16 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
         fprintf( f, " of %llu", duf_config->u.maxseq );
       fprintf( f, "\n" );
     }
-    if ( dh.dfd )
-      close( dh.dfd );
-    dh.dfd = 0;
-    printf( "\n\n********************************************************** %d **\n", duf_config->cli.totals );
+
+    if ( !duf_config->cli.noopenat )
+      duf_close_dh( pdh );
+    pdh->dfd = 0;
+    printf( "\n\n********************************************************** %d **\n", duf_config->cli.act.totals );
   }
+  /* if ( r == DUF_ERROR_MAX_REACHED )                 */
+  /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
+  /* else if ( r < 0 )                                 */
+  /*   DUF_ERROR( "code: %d", r );                     */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -277,19 +267,21 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 int
 duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
 {
+  int r = 0;
+
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( sccb && sccb->init_scan )
     sccb->init_scan( sccb );
   if ( duf_config )
   {
     if ( duf_config->targc > 0 )
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-        duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
+      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+        r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
     else
-      duf_uni_scan( NULL, duf_config->u, sccb );
+      r = duf_uni_scan( NULL, duf_config->u, sccb );
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 int
@@ -346,16 +338,24 @@ duf_uni_scan_all( void )
     ppscan_callbacks[steps++] = &duf_print_dir_callbacks;
 
   if ( steps < max_steps && duf_config->cli.act.sample )
-    ppscan_callbacks[steps++] = &duf_sample_callbacks;
+  {
+    for ( int i = 0; i < duf_config->cli.act.sample && steps < max_steps; i++ )
+      ppscan_callbacks[steps++] = &duf_sample_callbacks;
+  }
 
   if ( steps < max_steps && duf_config->cli.act.sampupd )
     ppscan_callbacks[steps++] = &duf_sampupd_callbacks;
 
-  for ( int step = 0; step < steps; step++ )
+  for ( int step = 0; r >= 0 && step < steps; step++ )
   {
     DUF_TRACE( action, 0, "step %d", step );
     r = duf_uni_scan_targ( ppscan_callbacks[step] );
   }
+  /* if ( r == DUF_ERROR_MAX_REACHED )                 */
+  /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
+  /* else if ( r < 0 )                                 */
+  /*   DUF_ERROR( "code: %d", r );                     */
+
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }

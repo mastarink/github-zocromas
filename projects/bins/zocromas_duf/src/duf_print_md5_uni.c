@@ -56,7 +56,7 @@ duf_file_scan_print_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_reco
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_print_md5_uni( unsigned long long pathid, duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_print_md5_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   DUF_SFIELD( dirname );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
@@ -64,8 +64,8 @@ duf_directory_scan_print_md5_uni( unsigned long long pathid, duf_dirhandle_t *pd
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   {
-    /* duf_dirhandle_t dh; */
-    /* char *path = duf_pathid_to_path_dh( pathid, &dh ); */
+    /* char *path = duf_pathid_to_path_s( pathid ); */
+
 
     /* fprintf( stderr, "print_md5 path: %s\n", path ); */
     printf( "------------------------------------- md5: %s\n", dirname );
@@ -108,12 +108,12 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         /* " AND duf_filedatas.size>%llu" */
         ,
   .dir_selector =
-        "SELECT md5.id as dirid, printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dirname, duf_paths.dirname as dfname "
-        " ,0 as ndirs" " ,(SELECT count(*) FROM duf_filenames as subfn "
+        "SELECT md5.id as dirid " ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dirname"
+        ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dfname " " ,0 as ndirs" " ,(SELECT count(*) FROM duf_filenames as subfn "
         /* "                 LEFT "  toooooooo slow with LEFT */
         "                           JOIN duf_filedatas as fd ON (fd.id=subfn.dataid) "
         "                                 WHERE fd.md5id=md5.id) as nfiles "
         " ,(SELECT min(fd.size) FROM duf_filedatas as fd WHERE fd.md5id=md5.id) as minsize "
-        " ,(SELECT max(fd.size) FROM duf_filedatas as fd WHERE fd.md5id=md5.id) as maxsize "
-        " FROM duf_md5 as md5" " WHERE %llu<1 " " ORDER BY md5sum1,md5sum2 ",
+        " ,(SELECT max(fd.size) FROM duf_filedatas as fd WHERE fd.md5id=md5.id) as maxsize " " FROM duf_md5 as md5" " WHERE %llu<1 "
+        " ORDER BY md5sum1,md5sum2 ",
 };

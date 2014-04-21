@@ -10,7 +10,12 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+
 #include "duf_config.h"
+#include "duf_utils.h"
+
+
+
 
 #include "duf_sql_def.h"
 #include "duf_sql.h"
@@ -59,7 +64,7 @@ duf_update_filedatas_filedataid( unsigned long long filedataid, unsigned long lo
 
   fprintf( stderr, "%lld  : %s\x1b[K\r", filenameid, filepath );
 
-  duf_sql( "UPDATE duf_filedatas SET filetype='%s', filestatus='%u' WHERE id='%llu'", filetype, filestatus, filedataid );
+  duf_sql( "UPDATE duf_filedatas SET filetype='%s', filestatus='%u' WHERE id='%llu'", ( int * ) NULL, filetype, filestatus, filedataid );
   mas_free( filepath );
   return r;
 }
@@ -69,7 +74,7 @@ duf_update_filedatas_filedataid( unsigned long long filedataid, unsigned long lo
  * */
 static int
 duf_sel_cb_update_filedatas( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                             duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu )
+                             duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   unsigned long long filedataid;
   unsigned long long filenameid;
@@ -208,7 +213,7 @@ duf_update_filedatas( void )
   for ( int it = 0; it < sizeof( ft_ext ) / sizeof( ft_ext[0] ); it++ )
   {
     r = duf_sql_select( duf_sel_cb_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT duf_filedatas.id as dataid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " 0, duf_filedatas.size as filesize, '%s'" " FROM duf_filedatas "
                         " LEFT JOIN duf_filenames ON (duf_filenames.dataid=duf_filedatas.id) " " WHERE duf_filedatas.filetype IS NULL "
@@ -217,7 +222,7 @@ duf_update_filedatas( void )
   for ( int it = 0; it < sizeof( ft_exact ) / sizeof( ft_exact[0] ); it++ )
   {
     r = duf_sql_select( duf_sel_cb_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT duf_filedatas.id as dataid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " 0, duf_filedatas.size as filesize, '%s'" " FROM duf_filedatas "
                         " LEFT JOIN duf_filenames ON (duf_filenames.dataid=duf_filedatas.id) " " WHERE duf_filedatas.filetype IS NULL "
@@ -226,7 +231,7 @@ duf_update_filedatas( void )
   for ( int it = 0; it < sizeof( ft_started ) / sizeof( ft_started[0] ); it++ )
   {
     r = duf_sql_select( duf_sel_cb_update_filedatas, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( duf_dirhandle_t * ) NULL ,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT duf_filedatas.id as dataid, duf_filenames.id as filenameid, duf_filenames.name as filename, "
                         " 0, duf_filedatas.size as filesize, '%s'" " FROM duf_filedatas "
                         " LEFT JOIN duf_filenames ON (duf_filenames.dataid=duf_filedatas.id) " " WHERE duf_filedatas.filetype IS NULL "
@@ -242,7 +247,7 @@ duf_update_filedatas( void )
 int
 duf_zero_filedatas( void )
 {
-  duf_sql( "UPDATE duf_filedatas SET filetype=NULL, filestatus='99999'" );
+  duf_sql( "UPDATE duf_filedatas SET filetype=NULL, filestatus='99999'", ( int * ) NULL );
   return 0;
 }
 
@@ -299,7 +304,7 @@ duf_zero_filedatas( void )
 /* }                                                                                                                                   */
 
 unsigned long long
-duf_insert_filedata_uni( const struct stat *pst_file )
+duf_insert_filedata_uni( const struct stat *pst_file, int *pr )
 {
   int r;
   unsigned long long resd;
@@ -316,7 +321,7 @@ duf_insert_filedata_uni( const struct stat *pst_file )
     r = duf_sql_c( "INSERT INTO duf_filedatas " " (dev,  inode, size, mode, nlink, uid,  gid,  blksize, blocks, "
                    " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id,ucnt,now) " "VALUES "
                    " ('%lu','%lu', '%lu','%lu','%lu', '%lu','%lu','%lu',   '%lu', "
-                   "'%lu','%lu','%lu','%lu','%lu', '%lu',  0,    0,   datetime())", DUF_CONSTRAINT_IGNORE_YES,
+                   "'%lu','%lu','%lu','%lu','%lu', '%lu',  0,    0,   datetime())", DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL,
                    ( unsigned long ) pst_file->st_dev, ( unsigned long ) pst_file->st_ino, ( unsigned long ) pst_file->st_size,
                    ( unsigned long ) pst_file->st_mode, ( unsigned long ) pst_file->st_nlink, ( unsigned long ) pst_file->st_uid,
                    ( unsigned long ) pst_file->st_gid, ( unsigned long ) pst_file->st_blksize, ( unsigned long ) pst_file->st_blocks,
@@ -325,16 +330,16 @@ duf_insert_filedata_uni( const struct stat *pst_file )
                    ( unsigned long ) pst_file->st_ctim.tv_sec, ( unsigned long ) pst_file->st_ctim.tv_nsec );
     if ( r == DUF_SQL_CONSTRAINT )
       r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sel_cb_on_insert_filedata */ , &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
-                          ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( duf_dirhandle_t * ) NULL,
+                          ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                           "SELECT id as dataid " " FROM duf_filedatas " " WHERE dev='%lu' and inode='%lu'", pst_file->st_dev,
                           pst_file->st_ino );
     else if ( !r /* assume SQLITE_OK */  )
       resd = duf_sql_last_insert_rowid(  );
     else
-    {
-      fprintf( stderr, "error duf_insert_filedata %d\n", r );
-    }
+      DUF_ERROR( "insert filedata %d", r );
   }
+  if ( pr )
+    *pr = r;
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   if ( duf_config->cli.trace.fill > 2 )
     fprintf( stderr, "/FILEDATA %llu\n", resd );

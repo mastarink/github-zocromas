@@ -45,12 +45,14 @@
 int
 duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
                   duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                  duf_dirhandle_t * pdhu )
+                  const duf_dirhandle_t * pdhu )
 {
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  DUF_TRACE( current, 0, "pdhu : %d", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
+
+  /* pdi->levinfo[pdi->depth - 1].dh=*pdhu; */
+
   if ( 1 || str_cb )
   {
     pdi->depth++;
@@ -60,8 +62,14 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
       DUF_UFIELD( ndirs );
       DUF_UFIELD( nfiles );
 
+      /* duf_dirhandle_t dh;                     */
+      /* dh.dirid = dirid;                       */
+      /* r = duf_openat_dh( &dh, pdhu, dfname ); */
+
       /* fprintf( stderr, "\t>>>>X> [%-30s] DEPTH=%u + 1\n", __func__, pdi->depth ); */
       memset( &pdi->levinfo[pdi->depth], 0, sizeof( pdi->levinfo[pdi->depth] ) );
+      pdi->levinfo[pdi->depth].dh.dirid = dirid;
+
       pdi->levinfo[pdi->depth].dirid = dirid;
       pdi->levinfo[pdi->depth].ndirs = ndirs;
       pdi->levinfo[pdi->depth].nfiles = nfiles;
@@ -127,10 +135,27 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
                          && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )
                          && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ) )
           {
-            DUF_TRACE( current, 0, "> pdhu : %d; CALL str_cb:%s", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0,
-                       duf_dbg_funname( ( duf_anyhook_t ) str_cb ) );
-            r = ( *str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
-            DUF_TRACE( current, 0, "<pdhu : %d", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
+            const char *dfname = NULL;
+
+
+            if ( pdhu && pdi->node_type == DUF_NODE_NODE )
+            {
+              DUF_SET_SFIELD( dfname );
+              if ( !duf_config->cli.noopenat )
+              {
+                if ( pdi->depth > 0 )
+                  r = duf_openat_dh( &pdi->levinfo[pdi->depth].dh, &pdi->levinfo[pdi->depth - 1].dh, dfname );
+                else
+                  r = duf_openat_dh( &pdi->levinfo[pdi->depth].dh, NULL, dfname );
+              }
+            }
+            if ( r >= 0 )
+              r = ( *str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
+            if ( pdhu && pdi->node_type == DUF_NODE_NODE && !duf_config->cli.noopenat  )
+            {
+              if (  r >= 0 )
+                r = duf_close_dh( &pdi->levinfo[pdi->depth].dh );
+            }
           }
           else
           {
@@ -168,7 +193,7 @@ duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
  * */
 static int
 duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                     duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu, const char *sql, va_list args )
+                     duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sql, va_list args )
 {
   int r = 0;
 
@@ -183,7 +208,6 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
              ( void * ) ( unsigned long long ) duf_sel_cb_items, ( void * ) ( unsigned long long ) str_cb );
 
   pdi->node_type = node_type;
-  DUF_TRACE( current, 0, "pdhu : %d", pdhu ? ( pdhu->dfd ? 2 : 1 ) : 0 );
   r = duf_sql_vselect( duf_sel_cb_items /* sel_cb */ , SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql,
                        args );
 
@@ -197,13 +221,14 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
  * */
 int
 duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                    duf_scan_callbacks_t * sccb, duf_dirhandle_t * pdhu, const char *sql, ... )
+                    duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sql, ... )
 {
   int r = 0;
   va_list args;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   va_start( args, sql );
+
 
   DUF_TRACE( scan, 0, "%s L%u >duf_scan_vitems_sql str_cb=%p",
              ( node_type == DUF_NODE_LEAF ? "LEAF" : ( node_type == DUF_NODE_NODE ? "NODE" : "?" ) ), pdi ? pdi->depth : 0,

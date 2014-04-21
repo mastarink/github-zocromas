@@ -13,6 +13,6 @@ int duf_uni_scan_all( void );
  * otherwise do nothing
  * */
 int duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * pdi1, duf_scan_callbacks_t * sccb, duf_record_t * precord,
-                      duf_dirhandle_t * pdhu );
+                      const duf_dirhandle_t * pdhu );
 
 #endif

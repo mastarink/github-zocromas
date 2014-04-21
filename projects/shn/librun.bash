@@ -14,7 +14,7 @@ function shn_runname ()
   return 1
 }
 function shn_run ()
-{ 
+{
   local retcode=0
   local bsrc="${MSH_SHN_DIRS[buildsrc]}"
   local bin cmdfile tmpcmd sedex lt rname
@@ -32,24 +32,35 @@ function shn_run ()
     bin=${bindir}/${rname}
     # for core dump:
     ulimit -c unlimited
+    MSH_SHN_MSG_PREFIX='shn: '
+    shn_msg ; shn_msg
 #   shn_msg "------ to run '$bin $1 ...' -------"
     shn_msg "------ to run '$rname $1 ...' -------"
-    shn_msg "----------------------------------------"
-    shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
+    shn_msg "------------------------------------`datemt`----"
     for (( i=1; i <= $# ; i++ )) ; do
 #     echo "$FUNCNAME $i : ${!i}" >&2
       qargs+=" '${!i}'"
     done
-    echo "qargs:$qargs" >&2
+    shn_msg "qargs:$qargs" >&2
+    shn_msg "------------------------------------`datemt`----"
+    shn_msg "------ to run '$bin $1 ...' -------"
+#   shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
     time eval "$bin $qargs"
     retcode=$?
-    shn_msg "returned $retcode"
+    shn_msg "returned $retcode ---------------------------------------------"
   else
     retcode=1
   fi
   if [[ "$retcode" -eq $(( 128 + 11 ))  ]] ; then
+    shn_msg "gdb by exitcode= $retcode"
+    
+    shn G
+  elif [[ "$retcode" -eq $(( 128 + 6 ))  ]] ; then
+    shn_msg "gdb by exitcode= $retcode"
+    
     shn G
   fi
+# shn_msg "Returned $retcode"
   return $retcode
 }
 function shn_debug ()
@@ -135,13 +146,13 @@ function shn_core_debug ()
 
     ulimit -c
     if corename=$( ls -1tr $coredir/*${rname}.core.$UID.$gid.* | tail -1 ) && [[ -f "$corename" ]] ; then
-      shn_msg "core : $corename" >&2
+      shn_msg "core : $corename"
     else
-      shn_errmsg "not found $corename" >&2
+      shn_errmsg "not found $corename"
       unset corename
       return 1
     fi
-
+    shn_msg "-=<>=--=<>=--=<>=--=<>=--=<>=--=<>=--=<>=--=<$bin>=--=<>=--=<>=--=<>=--=<>=--=<>=--=<>=--=<>=--=<>=-"
     libtool --mode=execute gdb $bin -c "$corename"
   else
     shn_errmsg "rname:$rname"

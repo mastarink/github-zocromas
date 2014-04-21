@@ -43,19 +43,20 @@ endif
 "   nmap <C-\> <ESC>:execute "sbuffer " . expand('<cWORD>')<CR>
 " endif
 
-
+nmap <A-1> :tabfirst<CR>
+nmap <A-2> :tablast<CR>
 let shn_doprj="shn/doprj.sh"
 if filereadable(shn_doprj)
 " echo "has doprj:" . shn_doprj
-  map <F3>   :wa<CR>:!shn/doprj.sh i<CR>
-  map <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
+  nmap <F3>   :wa<CR>:!shn/doprj.sh i<CR>
+  nmap <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
   inoremap <F5> <C-R>=expand("%:t")<CR>
 endif
 let shn_doall="shn/doall.sh"
 if filereadable(shn_doall)
 " echo "has doall:" . shn_doall
-  map <F4>   :wa<CR>:!shn/doall.sh i<CR>
-  map <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
+  nmap <F4>   :wa<CR>:!shn/doall.sh i<CR>
+  nmap <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
   inoremap <F5> <C-R>=expand("%:t")<CR>
 endif
 

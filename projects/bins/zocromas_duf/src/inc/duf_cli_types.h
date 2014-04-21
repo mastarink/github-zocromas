@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
-#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTCfd5iMtZBPO"
+#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5iMtZBPO"
 typedef enum
 {
   DUF_OPTION_NONE,
@@ -11,6 +11,7 @@ typedef enum
   DUF_OPTION_DB_NAME = 'N',
   DUF_OPTION_RECURSIVE = 'R',
   DUF_OPTION_VERBOSE = 'v',
+  
   DUF_OPTION_ACTION_TRACE = 'A',
   DUF_OPTION_ERROR_TRACE = 'e',
   DUF_OPTION_SCAN_TRACE = 'S',
@@ -18,7 +19,9 @@ typedef enum
   DUF_OPTION_SQL_TRACE = 'Q',
   DUF_OPTION_ANY_TRACE = 'Y',
   DUF_OPTION_CURRENT_TRACE = 'C',
-  DUF_OPTION_TRACE_ALL = 'T',
+  DUF_OPTION_ALL_TRACE = 'T',
+
+  DUF_OPTION_VACUUM = 'V',
   DUF_OPTION_FILES = 'f',
   DUF_OPTION_DIRS = 'd',
   DUF_OPTION_MD5 = '5',
@@ -34,6 +37,7 @@ typedef enum
 
   DUF_OPTION_FORMAT,
 
+  DUF_OPTION_FS_TRACE,
   DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_CALLS_TRACE,
   DUF_OPTION_SAMPUPD_TRACE,
@@ -48,6 +52,8 @@ typedef enum
   DUF_OPTION_DEBUG,
   DUF_OPTION_MIN_DBGLINE,
   DUF_OPTION_MAX_DBGLINE,
+
+  DUF_OPTION_NOOPENAT,
 
 
   DUF_OPTION_DROP_TABLES,
@@ -86,6 +92,7 @@ typedef enum
   DUF_OPTION_LIMIT,
   DUF_OPTION_ADD_TO_GROUP,
   DUF_OPTION_REMOVE_FROM_GROUP,
+  DUF_OPTION_MAX_LONG,
 } duf_option_code_t;
 
 typedef enum
@@ -133,9 +140,8 @@ typedef struct
   unsigned update_filedata:1;
   unsigned zero_filedata:1;
   unsigned update_exif:1;
-  unsigned sample:1;
-  unsigned sampupd:1;
   unsigned mdpath:1;
+  unsigned vacuum:1;
   unsigned md5:1;
   unsigned fill:1;
   unsigned print:1;
@@ -153,11 +159,15 @@ typedef struct
   unsigned same_exif:1;
   unsigned to_group:1;
   unsigned from_group:1;
+  unsigned totals;
+  unsigned sample;
+  unsigned sampupd;
 } duf_config_cli_actions_t;
 
 typedef struct
 {
   unsigned debug:1;
+  unsigned nosqlite;
   unsigned verbose;
   unsigned long min_line;
   unsigned long max_line;
@@ -168,6 +178,7 @@ typedef struct
 {
   unsigned error;
   unsigned any;
+  unsigned fs;
   unsigned current;
   unsigned calls;
   unsigned action;
@@ -181,6 +192,7 @@ typedef struct
   unsigned statistics;
   unsigned nonew;
   unsigned path;
+  char *file;
   FILE *out;
 } duf_config_cli_trace_t;
 
@@ -190,8 +202,8 @@ typedef struct
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
   duf_format_t format;
-  unsigned totals;
   long limit;
+  unsigned noopenat:1;
 } duf_config_cli_t;
 
 #endif

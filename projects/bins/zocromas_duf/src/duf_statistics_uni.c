@@ -65,12 +65,12 @@ duf_file_scan_statistics_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_rec
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_statistics_uni( unsigned long long pathid, duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_statistics_uni( unsigned long long pathid, const duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   {
-    duf_dirhandle_t dh;
-    char *path = duf_pathid_to_path_dh( pathid, &dh );
+     char *path = duf_pathid_to_path_s( pathid );
+
 
     printf( "#%4llu: statistics dPATH %s\n", pdi->seq, path );
     DUF_TRACE( statistics, 1, "path=%s", path );

@@ -24,7 +24,11 @@ function shn_echon ()
 function shn_msg ()
 {
   if ! [[ $MSH_SHN_DISABLE_MSG ]] ; then
-    shn_echo "$*"  >&2
+    if [[ $# -gt 0 ]] ; then
+      shn_echo "${MSHPR_FBGREEN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSHPR_BYELLOWONBLUE}$*${MSHPR_ATTROFF}"  >&2
+    else
+      shn_echo >&2
+    fi
 # shn_echo $@  >&2
 # shn_echo "$*"  >&2
 # shn_echo "$@"  >&2

@@ -7,6 +7,6 @@
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by pathid with corresponding args
  * */
 int duf_scan_files_by_dirid( unsigned long long pathid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                             duf_dirhandle_t * pdhu );
+                             const duf_dirhandle_t * pdhu );
 
 #endif

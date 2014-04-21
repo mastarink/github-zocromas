@@ -25,13 +25,18 @@ duf_config_create( void )
   duf_config = mas_malloc( sizeof( duf_config_t ) );
   memset( duf_config, 0, sizeof( duf_config ) );
   duf_config->u.maxdepth = 100;
-  duf_config->db_dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
-  if ( duf_config->db_dir )
+
+  if ( 0 )
   {
-    duf_config->db_dir = mas_strcat_x( duf_config->db_dir, "/../duf_db" );
+    duf_config->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
+    if ( duf_config->db.dir )
+    {
+      duf_config->db.dir = mas_strcat_x( duf_config->db.dir, "/../duf_db" );
+    }
   }
-  duf_config->db_name = mas_strdup( "duf-default.sqlite3" );
+  duf_config->db.name = mas_strdup( "duf-default.sqlite3" );
   duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
+  /* duf_config->cli.trace.fs = 1; */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
@@ -39,11 +44,14 @@ duf_config_create( void )
 int
 duf_config_delete( void )
 {
-  mas_free( duf_config->db_dir );
-  duf_config->db_dir = NULL;
+  mas_free( duf_config->db.dir );
+  duf_config->db.dir = NULL;
 
-  mas_free( duf_config->db_name );
-  duf_config->db_name = NULL;
+  mas_free( duf_config->db.name );
+  duf_config->db.name = NULL;
+
+  mas_free( duf_config->db.fpath );
+  duf_config->db.fpath = NULL;
 
   mas_free( duf_config->group );
   duf_config->group = NULL;
@@ -52,7 +60,7 @@ duf_config_delete( void )
   duf_config->targc = 0;
   duf_config->targv = NULL;
 
-
+  mas_free( duf_config->cli.trace.file );
 
   mas_free( duf_config );
   duf_config = NULL;
@@ -65,7 +73,7 @@ duf_config_show( void )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( duf_config )
   {
-    fprintf( stderr, "db_dir: %s\n", duf_config->db_dir );
+    fprintf( stderr, "db.dir: %s\n", duf_config->db.dir );
   }
   for ( int ia = 0; ia < duf_config->targc; ia++ )
   {
