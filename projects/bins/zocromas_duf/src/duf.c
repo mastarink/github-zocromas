@@ -465,7 +465,7 @@ main_db( int argc, char **argv )
     if ( r >= 0 && duf_config->cli.dbg.verbose )
     {
       for ( int ia = 0; ia < argc; ia++ )
-        DUF_TRACE( any, 0, ">>>>>>>> argv[%d]: %s", ia, argv[ia] );
+        DUF_TRACE( any, 0, "######### argv[%d]: %s", ia, argv[ia] );
       r = duf_config_show(  );
       DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.fpath );
     }

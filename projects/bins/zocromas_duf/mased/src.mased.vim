@@ -43,6 +43,12 @@ sfind duf_dir_scan.h
 tab sfind duf_uni_scan.c
 sfind duf_uni_scan.h
 
+tab sfind duf_levinfo.c
+sfind duf_levinfo.h
+
+tab sfind duf_pdi.c
+sfind duf_pdi.h
+
 tab sfind duf_exif.c
 sfind duf_exif.h
 

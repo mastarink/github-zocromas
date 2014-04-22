@@ -32,11 +32,8 @@ duf_check_field( const char *name, int have )
 {
   if ( !have )
   {
-    char *p = NULL;
-
-    DUF_ERROR( ">>>>>>>>>>>>>>>>>>>> No such field: %s", name );
-    /* force segfault */
-    DUF_ERROR( ">>>>>>>>>>>>>>>>>>>>  %c", *p );
+    DUF_ERROR( "No such field: %s", name );
+    /* assert(have); */
     return DUF_ERROR_NO_FIELD;
   }
   return 0;
@@ -60,7 +57,9 @@ duf_dbg_funname( duf_anyhook_t p )
   static duf_fundesc_t table[] = {
     DUF_FUN( duf_uni_scan_dir ),
     DUF_FUN( duf_sel_cb_name_parid ),
-    DUF_FUN( duf_sel_cb_items ),
+    /* DUF_FUN( duf_sel_cb_items ), */
+    DUF_FUN( duf_sel_cb_node ),
+    DUF_FUN( duf_sel_cb_leaf ),
     DUF_FUN( duf_sel_cb_dirid ),
     DUF_FUN( duf_directory_scan_sample_uni ),
   };
@@ -84,7 +83,7 @@ int
 duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t * format )
 {
   if ( duf_config->cli.format.seq && ( !format || format->seq ) )
-    printf( "%6llu ", pdi->seq );
+    printf( "%8llu ", pdi->seq );
   if ( duf_config->cli.format.dirid && ( !format || format->dirid ) )
     printf( "[%8llu] ", pdi->levinfo[pdi->depth].dirid );
   if ( duf_config->cli.format.inode && ( !format || format->inode ) )
@@ -130,7 +129,10 @@ duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_
   if ( duf_config->cli.format.gid && ( !format || format->gid ) )
     printf( "%9llu ", ( unsigned long long ) pfi->st.st_gid );
   if ( duf_config->cli.format.filesize && ( !format || format->filesize ) )
-    printf( "%9llu ", ( unsigned long long ) pfi->st.st_size );
+    printf( "%12llu ", ( unsigned long long ) pfi->st.st_size );
+  if ( duf_config->cli.format.nsame && ( !format || format->nsame ) )
+    printf( "=%-2llu ", ( unsigned long long ) pfi->nsame );
+
   if ( duf_config->cli.format.mtime && ( !format || format->mtime ) )
   {
     time_t mtimet;
@@ -143,7 +145,7 @@ duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_
     printf( "%s ", mtimes );
   }
   if ( duf_config->cli.format.filename && ( !format || format->filename ) )
-    printf( "%-30s ", pfi->name );
+    printf( " :: %-30s ", pfi->name );
   if ( duf_config->cli.format.md5 && ( !format || format->md5 ) )
     printf( "\t:  %016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
   return 0;

@@ -3,7 +3,8 @@
 #include <string.h>
 /* #include <unistd.h> */
 
-#include <dirent.h>
+/* #include <dirent.h> */
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -65,11 +66,11 @@ duf_file_scan_statistics_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_rec
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_statistics_uni( unsigned long long pathid, const duf_dirhandle_t *pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_statistics_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   {
-     char *path = duf_pathid_to_path_s( pathid );
+    char *path = duf_pathid_to_path_s( pathid );
 
 
     printf( "#%4llu: statistics dPATH %s\n", pdi->seq, path );
@@ -86,14 +87,31 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
   .directory_scan_before = duf_directory_scan_statistics_uni,
   .file_scan = duf_file_scan_statistics_uni,
   .fieldset =
-        "duf_filenames.pathid as dirid " " ,duf_filenames.name as filename, duf_filedatas.size as filesize"
-        " ,duf_filenames.id as filenameid",
+        " duf_filenames.pathid as dirid "
+        " , duf_filenames.name as filename, duf_filedatas.size as filesize"
+        " , uid, gid, nlink, inode, mtim as mtime " " , dupcnt as nsame"
+        " , duf_filenames.id as filenameid" " , duf_filedatas.mode as filemode",
   .file_selector =
-        "SELECT %s FROM duf_filenames " " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) " " WHERE duf_filenames.pathid='%llu' ",
+        "SELECT %s FROM duf_filenames "
+	" JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+        " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
+	"    WHERE "
+	"           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
+	"       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) "
+	"       AND duf_filenames.pathid='%llu' ",
   .dir_selector =
         "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
         " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
-        " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles " " FROM duf_paths "
-        " WHERE duf_paths.parentid='%llu' ",
+        " ,(SELECT count(*) FROM duf_filenames as sfn "
+        "          JOIN duf_filedatas as sfd ON (sfn.dataid=sfd.id) "
+        "          JOIN duf_md5 as smd ON (sfd.md5id=smd.id) "
+        "          WHERE sfn.pathid=duf_paths.id "
+        "              AND   sfd.size >= %llu AND sfd.size < %llu "
+	"              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
+        " ) as nfiles "
+        " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) "
+        "           WHERE sfn.pathid=duf_paths.id) as minsize "
+        " ,(SELECT max(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) "
+        "           WHERE sfn.pathid=duf_paths.id) as maxsize " " FROM duf_paths " " WHERE duf_paths.parentid='%llu' ",
+  /* .final_sql_argv = final_sql, */
 };

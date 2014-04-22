@@ -71,6 +71,8 @@ typedef enum
   DUF_OPTION_MAXDIRFILES,
   DUF_OPTION_MINSIZE,
   DUF_OPTION_MAXSIZE,
+  DUF_OPTION_MINSAME,
+  DUF_OPTION_MAXSAME,
   DUF_OPTION_MAXDEPTH,
   DUF_OPTION_MAXSEQ,
   DUF_OPTION_MAXITEMS,
@@ -99,6 +101,7 @@ typedef enum
 {
   DUF_FORMAT_SEQ,
   DUF_FORMAT_DIRID,
+  DUF_FORMAT_NSAME,
   DUF_FORMAT_INODE,
   DUF_FORMAT_MODE,
   DUF_FORMAT_NLINK,
@@ -124,6 +127,7 @@ typedef struct
   unsigned filename:1;
   unsigned md5:1;
   unsigned mtime:1;
+  unsigned nsame;
   unsigned offset;
 } duf_format_t;
 

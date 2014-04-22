@@ -4,6 +4,7 @@
 #include <string.h>
 /* #include <unistd.h> */
 #include <sys/stat.h>
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -15,6 +16,8 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 #include "duf_config.h"
+#include "duf_levinfo.h"
+#include "duf_pdi.h"
 
 
 #include "duf_sql.h"
@@ -35,156 +38,106 @@
 
 
 
-/* duf_sel_cb_items:
+
+/* duf_sel_cb_leaves:
  * this is callback of type: duf_sql_select_cb_t (first range): 
  *
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
+ *
+ * called both for leaves (files) and nodes (dirs)
  * */
 /* will be static! */
 int
-duf_sel_cb_items( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                  duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                  const duf_dirhandle_t * pdhu )
+duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata,
+                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                 const duf_dirhandle_t * pdhu )
 {
   int r = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
-  /* pdi->levinfo[pdi->depth - 1].dh=*pdhu; */
-
-  if ( 1 || str_cb )
+  DEBUG_START(  );
+  assert( pdi );
+  duf_levinfo_down( pdi, 0, NULL, 0, 0 );
   {
-    pdi->depth++;
-    if ( pdi->node_type == DUF_NODE_NODE )
-    {
-      DUF_UFIELD( dirid );
-      DUF_UFIELD( ndirs );
-      DUF_UFIELD( nfiles );
+    DEBUG_STEPULL( pdi->levinfo[pdi->depth].dirid );
 
-      /* duf_dirhandle_t dh;                     */
-      /* dh.dirid = dirid;                       */
-      /* r = duf_openat_dh( &dh, pdhu, dfname ); */
-
-      /* fprintf( stderr, "\t>>>>X> [%-30s] DEPTH=%u + 1\n", __func__, pdi->depth ); */
-      memset( &pdi->levinfo[pdi->depth], 0, sizeof( pdi->levinfo[pdi->depth] ) );
-      pdi->levinfo[pdi->depth].dh.dirid = dirid;
-
-      pdi->levinfo[pdi->depth].dirid = dirid;
-      pdi->levinfo[pdi->depth].ndirs = ndirs;
-      pdi->levinfo[pdi->depth].nfiles = nfiles;
-      /* fprintf( stderr, "\t>>>>B> [%-30s] %5llu NDIRS[%u]=%llu\n", __func__, pdi->levinfo[pdi->depth].dirid, pdi->depth, ndirs ); */
-    }
-    if ( DUF_IF_VERBOSEN( 1 ) )
-    {
-      /* printf( "%s:%s='%s' -- r[%d]='%s' / %llu\n", __func__, precord->pnames[0], precord->presult[0], duf_sql_pos_by_name( "id", precord ), */
-      /*         duf_sql_str_by_name( "parentid", precord ), duf_sql_ull_by_name( "parentid", precord ) );                                     */
-      DUF_VERBOSE( 1, ":_____ %s::", __func__ );
-      for ( int i = 0; i < precord->ncolumns; i++ )
-      {
-        DUF_VERBOSE( 1, ".%s;", precord->pnames[i] );
-      }
-      DUF_VERBOSE( 1, "; [ dirid=%llu ]", pdi->levinfo[pdi->depth].dirid );
-    }
-    else
-      DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
-
-    duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, pdi->levinfo[pdi->depth].dirid );
-    if ( 1 || pdi->levinfo[pdi->depth].dirid )
-    {
-      /* int rs = 0; */
-      /* struct stat st_dir; */
-      /* char *path; */
-
-      /* path = duf_pathid_to_path( dirid ); */
-
-      /* rs = stat( path, &st_dir ); */
-
-      /* if ( str_cb ) */
-      {
-        DUF_VERBOSE( 1, "call str_cb> %p", ( void * ) ( unsigned long long ) str_cb );
 /*
  * 4. call function str_cb
  * */
-        if ( pdi )
-        {
-          if ( pdi->node_type == DUF_NODE_LEAF )
-            pdi->seq_leaf++;
-          else if ( pdi->node_type == DUF_NODE_NODE )
-          {
-            pdi->seq_node++;
-            if ( pdi->depth > 0 )
-            {
-              /* printf( "\t>>>>U> [%-30s] %5llu NDIRS[%u - 1]=%llu - 1\n", __func__, pdi->levinfo[pdi->depth].dirid, pdi->depth, */
-              /*         pdi->levinfo[pdi->depth - 1].ndirs );                                                                    */
-              pdi->levinfo[pdi->depth - 1].ndirs--;
-            }
-          }
-          pdi->seq++;
-        }
-        /* printf( "@ %llu of %llu :: %s L %u of %u\n", pdi->seq, pdi->u.maxseq, name, pdi->depth, pdi->u.maxdepth ); */
-        /* called both for leaves (files) and nodes (dirs) */
-        /* {                                                                                                                                 */
-        /*   printf( "\t>>>>O> [%-30s] %5llu NDIRS[%u - 2]=%llu NDIRS[%u - 1]=%llu\n", __func__, pdi->levinfo[pdi->depth].dirid, pdi->depth, */
-        /*           pdi->levinfo[pdi->depth - 2].ndirs, pdi->depth, pdi->levinfo[pdi->depth - 1].ndirs );                                   */
-        /* }                                                                                                                                 */
-        if ( str_cb )
-        {
-          if ( !pdi || ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )
-                         && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )
-                         && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )
-                         && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ) )
-          {
-            const char *dfname = NULL;
-
-
-            if ( pdhu && pdi->node_type == DUF_NODE_NODE )
-            {
-              DUF_SET_SFIELD( dfname );
-              if ( !duf_config->cli.noopenat )
-              {
-                if ( pdi->depth > 0 )
-                  r = duf_openat_dh( &pdi->levinfo[pdi->depth].dh, &pdi->levinfo[pdi->depth - 1].dh, dfname );
-                else
-                  r = duf_openat_dh( &pdi->levinfo[pdi->depth].dh, NULL, dfname );
-              }
-            }
-            if ( r >= 0 )
-              r = ( *str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
-            if ( pdhu && pdi->node_type == DUF_NODE_NODE && !duf_config->cli.noopenat  )
-            {
-              if (  r >= 0 )
-                r = duf_close_dh( &pdi->levinfo[pdi->depth].dh );
-            }
-          }
-          else
-          {
-            r = DUF_ERROR_MAX_REACHED;
-            /* printf( "@ %llu of %llu :: %s (%d)\n", pdi->seq, pdi->u.maxseq, name, pdi->seq <= pdi->u.maxseq ); */
-          }
-        }
-        else
-        {
-          DUF_TRACE( error, 0, "str_cb not set" );
-          r = 0;
-        }
-      }
-      /* mas_free( path ); */
+    pdi->seq++;
+    pdi->seq_leaf++;
+    if ( !duf_pdi_filter( pdi ) )
+      r = DUF_ERROR_MAX_REACHED;
+    /* called both for leaves (files) and nodes (dirs) */
+    if ( str_cb )
+    {
+      if ( r >= 0 )
+        r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
     }
     else
-    {
-      DUF_ERROR( "dirid missing" );
-      r = DUF_ERROR_NO_DIRID;
-    }
+      DUF_TRACE( error, 0, "str_cb not set" );
   }
-  else
+  duf_levinfo_up( pdi );
+  DEBUG_ENDR( r );
+  return r;
+}
+
+/* duf_sel_cb_leaves:
+ * this is callback of type: duf_sql_select_cb_t (first range): 
+ *
+ * called with precord
+ * str_cb + str_cb_udata to be called for precord with correspondig args
+ *
+ * called both for leaves (files) and nodes (dirs)
+ * */
+/* will be static! */
+int
+duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
+                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                 const duf_dirhandle_t * pdhu )
+{
+  int r = 0;
+
+  DUF_UFIELD( dirid );
+  DUF_UFIELD( ndirs );
+  DUF_UFIELD( nfiles );
+  DUF_SFIELD( dfname );
+
+  DEBUG_START(  );
+  assert( pdi );
+
+  duf_levinfo_down( pdi, dirid, dfname, ndirs, nfiles );
   {
-    DUF_ERROR( "str_cb missing" );
-    duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-    r = DUF_ERROR_NO_STR_CB;
+    DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
+
+    DEBUG_STEPULL( pdi->levinfo[pdi->depth].dirid );
+    DUF_VERBOSE( 1, "call str_cb> %p", ( void * ) ( unsigned long long ) str_cb );
+/*
+ * 4. call function str_cb
+ * */
+    pdi->seq++;
+    pdi->seq_node++;
+    duf_levinfo_countdown_dirs( pdi );
+    if ( !duf_pdi_filter( pdi ) )
+      r = DUF_ERROR_MAX_REACHED;
+
+    /* called both for leaves (files) and nodes (dirs) */
+    if ( str_cb )
+    {
+      if ( r >= 0 )
+      {
+        r = duf_levinfo_openat_dh( pdi );
+        if ( r >= 0 )
+          r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
+        if ( r >= 0 )
+          r = duf_levinfo_closeat_dh( pdi );
+      }
+    }
+    else
+      DUF_TRACE( error, 0, "str_cb not set" );
   }
-  pdi->depth--;
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  duf_levinfo_up( pdi );
+  DEBUG_END(  );
   return r;
 }
 
@@ -195,24 +148,23 @@ static int
 duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
                      duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sql, va_list args )
 {
-  int r = 0;
+  int r = DUF_ERROR_UNKNOWN_NODE;
+  duf_sql_select_cb_t sel_cb = NULL;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-/* duf_sel_cb_items:
+  DEBUG_START(  );
+/* duf_sel_cb_(node|leaf):
  * this is callback of type: duf_sql_select_cb_t (first range): 
  *
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
  * */
-  DUF_TRACE( scan, 0, "L%u >duf_sql_vselect with sel_cb=duf_sel_cb_items(%p); str_cb=%p", pdi ? pdi->depth : 0,
-             ( void * ) ( unsigned long long ) duf_sel_cb_items, ( void * ) ( unsigned long long ) str_cb );
-
-  pdi->node_type = node_type;
-  r = duf_sql_vselect( duf_sel_cb_items /* sel_cb */ , SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql,
-                       args );
-
-  DUF_TRACE( scan, 0, "L%u <duf_sql_vselect", pdi ? pdi->depth : 0 );
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  if ( node_type == DUF_NODE_LEAF )
+    sel_cb = duf_sel_cb_leaf;
+  else if ( node_type == DUF_NODE_NODE )
+    sel_cb = duf_sel_cb_node;
+  if ( sel_cb )
+    r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -226,23 +178,14 @@ duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, 
   int r = 0;
   va_list args;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  va_start( args, sql );
-
-
-  DUF_TRACE( scan, 0, "%s L%u >duf_scan_vitems_sql str_cb=%p",
-             ( node_type == DUF_NODE_LEAF ? "LEAF" : ( node_type == DUF_NODE_NODE ? "NODE" : "?" ) ), pdi ? pdi->depth : 0,
-             ( void * ) ( unsigned long long ) str_cb );
-
-  r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
-  /* r = duf_scan_vfiles_sql( str_cb, str_cb_udata, pdi, sccb, sql, args ); */
-
-
-
-  DUF_TRACE( scan, 0, "%s L%u <duf_scan_vitems_sql",
-             ( node_type == DUF_NODE_LEAF ? "LEAF" : ( node_type == DUF_NODE_NODE ? "NODE" : "?" ) ), pdi ? pdi->depth : 0 );
-
-  va_end( args );
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  DEBUG_START(  );
+  {
+    va_start( args, sql );
+    {
+      r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
+    }
+    va_end( args );
+  }
+  DEBUG_ENDR( r );
   return r;
 }

@@ -58,7 +58,7 @@ duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb
   /* sqlite3_int64 dataid; */
   const char *datetime;
 
-  /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[ 1], precord->presult[ 2], precord->presult[ 3], */
+  /* fprintf( stderr, "!!!!!! %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[ 1], precord->presult[ 2], precord->presult[ 3], */
   /*          precord->presult[ 4] );                                                                                         */
 
   /* dataid = */ ( void ) strtoll( precord->presult[0], NULL, 10 );
@@ -173,7 +173,7 @@ duf_sel_cb_update_exif( duf_record_t * precord, va_list args, void *sel_cb_udata
 
   filepath = filenameid_to_filepath( filenameid );
 
-  /* fprintf( stderr, ">>>>>> %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[1], precord->presult[2], precord->presult[3], precord->presult[4] ); */
+  /* fprintf( stderr, "!!!!!! %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[1], precord->presult[2], precord->presult[3], precord->presult[4] ); */
 
   /* if ( filename && path ) */
   if ( filepath )
@@ -250,7 +250,7 @@ duf_sel_cb_update_exif( duf_record_t * precord, va_list args, void *sel_cb_udata
               {
                 strptime( stime, "%Y:%m:%d %H:%M:%S", &times );
                 /* strftime( buf1, sizeof( buf1 ), "%Y-%m-%d %H:%M:%S", &times ); */
-                /* fprintf( stderr, ">>>>> %lu : %lu\n", t, time(NULL) ); */
+                /* fprintf( stderr, "!!!!! %lu : %lu\n", t, time(NULL) ); */
                 /* Don't bother printing it if it's entirely blank */
                 /* trim_spaces( stime ); */
                 if ( *stime )

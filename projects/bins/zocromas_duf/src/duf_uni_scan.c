@@ -23,6 +23,7 @@
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
+#include "duf_levinfo.h"
 
 #include "duf_file.h"
 #include "duf_path.h"
@@ -95,21 +96,6 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
   {
     if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
     {
-      if ( pdi->levinfo )
-      {
-#if 0
-        if ( !precord->nrow )
-          pdi->levinfo[pdi->depth + 1] = precord->nrows;
-/* #else                                                                  */
-/*         pdi->levinfo[pdi->depth + 1] = precord->nrows - precord->nrow; */
-#endif
-
-        if ( !pdi->levinfo )
-        {
-          fprintf( stderr, "Error!!\n" );
-          exit( 5 );
-        }
-
 /* duf_scan_fil_by_pi:
  * call duf_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args
  *
@@ -126,20 +112,16 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  *     5. for <current> dir call sccb->directory_scan_after
  * */
 
-        r = duf_scan_dirs_by_parentid( dirid, pdhu, duf_uni_scan_dir, pdi, sccb, precord );
-        /* if ( r == DUF_ERROR_MAX_REACHED )                   */
-        /* {                                                   */
-        /*   if ( pdi->depth == 0 )                            */
-        /*     DUF_TRACE( action, 0, "Maximum reached ...." ); */
-        /* }                                                   */
-        /* else if ( r < 0 )                                   */
-        /* {                                                   */
-        /*   DUF_ERROR( "r=%d", r );                           */
-        /* }                                                   */
-#if 0
-        pdi->levinfo[pdi->depth + 1]--;
-#endif
-      }
+      r = duf_scan_dirs_by_parentid( dirid, pdhu, duf_uni_scan_dir, pdi, sccb, precord );
+      /* if ( r == DUF_ERROR_MAX_REACHED )                   */
+      /* {                                                   */
+      /*   if ( pdi->depth == 0 )                            */
+      /*     DUF_TRACE( action, 0, "Maximum reached ...." ); */
+      /* }                                                   */
+      /* else if ( r < 0 )                                   */
+      /* {                                                   */
+      /*   DUF_ERROR( "r=%d", r );                           */
+      /* }                                                   */
     }
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -158,7 +140,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 int
 duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 {
-  int r;
+  int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
@@ -171,16 +153,11 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       .u = u,
       /* .name = path, */
     };
-    duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-    if ( di.u.maxdepth && !di.levinfo )
-    {
-      size_t lsz = sizeof( di.levinfo[0] ) * ( di.u.maxdepth + 3 );
-
-      di.levinfo = mas_malloc( lsz );
-
-      memset( di.levinfo, 0, lsz );
-    }
     duf_dirhandle_t *pdh;
+
+    duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+
+    r = duf_levinfo_create( &di );
 
     pdh = &di.levinfo[0].dh;
 
@@ -201,8 +178,6 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
         mas_free( path );
       }
 
-
-      /* fprintf( stderr, "%s:PATH %s => %llu / %llu\n", __func__, path, pathid, di.levinfo[di.depth].dirid ); */
       if ( pathid || !path )
       {
         DUF_TRACE( scan, 0, "%llu:%s  duf_scan_dirs_by_parentid with str_cb=duf_uni_scan_dir(%p)", pathid,
@@ -233,7 +208,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       else
       {
       }
-      mas_free( di.levinfo );
+      duf_levinfo_delete( &di );
       /* if ( r == DUF_ERROR_MAX_REACHED )                 */
       /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
       /* else if ( r < 0 )                                 */
@@ -270,15 +245,30 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( sccb && sccb->init_scan )
-    sccb->init_scan( sccb );
   if ( duf_config )
   {
-    if ( duf_config->targc > 0 )
-      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-        r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
-    else
-      r = duf_uni_scan( NULL, duf_config->u, sccb );
+    if ( r >= 0 && sccb && sccb->init_scan )
+      r = sccb->init_scan( sccb );
+    if ( r >= 0 )
+    {
+      if ( duf_config->targc > 0 )
+        for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+          r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
+      else
+        r = duf_uni_scan( NULL, duf_config->u, sccb );
+    }
+    if ( r >= 0 && sccb && sccb->final_sql_argv )
+    {
+      char **p = sccb->final_sql_argv;
+
+      while ( r >= 0 && p && *p )
+      {
+        int changes = 0;
+
+        r = duf_sql( *p, &changes );
+        p++;
+      }
+    }
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
@@ -355,7 +345,7 @@ duf_uni_scan_all( void )
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */
   /*   DUF_ERROR( "code: %d", r );                     */
-
+  mas_free( ppscan_callbacks );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }

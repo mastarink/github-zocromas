@@ -44,7 +44,7 @@
 /* (*                                                                              *) duf_dbgfunc( DBG_START, __func__, __LINE__ ); */
 /*   char *path = duf_pathid_to_path( pathid );                                                                                     */
 /*                                                                                                                                  */
-/*   printf( ">>>> %s %s\n", path, name );                                                                                          */
+/*   printf( "*** %s %s\n", path, name );                                                                                          */
 /*   mas_free( path );                                                                                                              */
 /* (*                                                                              *) duf_dbgfunc( DBG_END, __func__, __LINE__ );   */
 /*   return 0;                                                                                                                      */

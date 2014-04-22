@@ -72,10 +72,16 @@ typedef enum
   DBG_END,
 } duf_dbgcode_t;
 
+#  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ );
+#  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ );
+#  define  DEBUG_ENDR(r) duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+#  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, l );
+
 typedef enum
 {
   DUF_ERROR_ERROR_BASE = -30000,
   DUF_ERROR_UNKNOWN,
+  DUF_ERROR_UNKNOWN_NODE,
   DUF_ERROR_MAIN,
   DUF_ERROR_PTR,
   DUF_ERROR_DATA,
@@ -87,6 +93,7 @@ typedef enum
   DUF_ERROR_SCANDIR,
   DUF_ERROR_CHECK_TABLES,
   DUF_ERROR_CLEAR_TABLES,
+  DUF_ERROR_NO_FILE_SELECTOR,
   DUF_ERROR_NO_DIRID,
   DUF_ERROR_NO_STR_CB,
   DUF_ERROR_MAX_REACHED,
@@ -116,6 +123,8 @@ typedef struct
   unsigned long long maxdirfiles;
   unsigned long long minsize;
   unsigned long long maxsize;
+  unsigned long long minsame;
+  unsigned long long maxsame;
 } duf_ufilter_t;
 typedef struct
 {
@@ -131,7 +140,7 @@ typedef struct
   char *group;
   int targc;
   char **targv;
-  
+
 
   unsigned nopen;
   unsigned nclose;
@@ -162,6 +171,7 @@ typedef struct
   unsigned long long items;
   unsigned long long ndirs;
   unsigned long long nfiles;
+  char *dirname;
   void *context;
   duf_dirhandle_t dh;
 } duf_levinfo_t;
@@ -169,7 +179,7 @@ typedef struct
 typedef struct
 {
   int depth;
-  duf_node_type_t node_type;
+  /* duf_node_type_t node_type; */
   duf_levinfo_t *levinfo;
   unsigned long long seq;
   unsigned long long seq_leaf;
@@ -182,6 +192,7 @@ typedef struct
 {
   const char *name;
   struct stat st;
+  unsigned long long nsame;
   unsigned long long md5sum1;
   unsigned long long md5sum2;
 } duf_fileinfo_t;
@@ -251,6 +262,7 @@ struct duf_scan_callbacks_s
   duf_scan_hook_dir_t directory_scan_middle;
   duf_scan_hook_dir_t directory_scan_after;
   duf_scan_hook_file_t file_scan;
+  char **final_sql_argv;
 };
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

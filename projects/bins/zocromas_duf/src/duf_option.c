@@ -69,6 +69,7 @@ duf_parse_option( int opt, const char *optarg, int longindex )
         [DUF_FORMAT_MTIME] = "mtime",
         [DUF_FORMAT_FILENAME] = "filename",
         [DUF_FORMAT_MD5] = "md5",
+        [DUF_FORMAT_NSAME] = "nsame",
         [DUF_FORMAT_MAX] = NULL,
       };
       poptarg = coptarg = mas_strdup( optarg );
@@ -118,6 +119,9 @@ duf_parse_option( int opt, const char *optarg, int longindex )
           break;
         case DUF_FORMAT_MD5:
           duf_config->cli.format.md5 = 1;
+          break;
+        case DUF_FORMAT_NSAME:
+          duf_config->cli.format.nsame = 1;
           break;
         case DUF_FORMAT_OFFSET:
           duf_config->cli.format.offset = nvalue;
@@ -431,13 +435,15 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_MAXSIZE:
     DUF_OPT_NUM( u.maxsize );
-    /* if ( optarg && *optarg )                              */
-    /*   duf_config->u.maxsize = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MINSIZE:
     DUF_OPT_NUM( u.minsize );
-    /* if ( optarg && *optarg )                              */
-    /*   duf_config->u.minsize = strtol( optarg, NULL, 10 ); */
+    break;
+  case DUF_OPTION_MAXSAME:
+    DUF_OPT_NUM( u.maxsame );
+    break;
+  case DUF_OPTION_MINSAME:
+    DUF_OPT_NUM( u.minsame );
     break;
   case DUF_OPTION_MAXDIRFILES:
     DUF_OPT_NUM( u.maxdirfiles );

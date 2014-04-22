@@ -126,7 +126,12 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
       if ( r >= 0 && sccb )
-        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->dir_selector, dirid );
+      {
+        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->dir_selector, pdi->u.minsize,
+                                pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame,
+                                pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1, dirid );
+      }
+
       if ( r == DUF_ERROR_MAX_REACHED )
       {
         if ( pdi->depth == 0 )
@@ -163,19 +168,20 @@ duf_scan_dirs_by_parentid( unsigned long long dirid, const duf_dirhandle_t * pdh
   DUF_UFIELD_OPT( nfiles );
   DUF_UFIELD_OPT( minsize );
   DUF_UFIELD_OPT( maxsize );
+  DUF_TRACE( scan, 0, "by parentid %llu : %llu : %llu : %llu", dirid, nfiles, minsize, maxsize );
   if (  /* !nfiles || */ !dirid
        || ( ( ( nfiles >= duf_config->u.mindirfiles ) && ( !duf_config->u.maxdirfiles || nfiles < duf_config->u.maxdirfiles ) )
-            && ( ( minsize >= duf_config->u.minsize ) && ( !duf_config->u.maxsize || maxsize < duf_config->u.maxsize ) ) ) )
+            /* && ( nfiles == 0
+               || ( ( maxsize >= duf_config->u.minsize ) && ( !duf_config->u.maxsize || minsize <= duf_config->u.maxsize ) ) ) */
+        ) )
   {
     r = duf_scan_dir_by_pi( dirid, pdh, str_cb, pdi, sccb, precord );
-    /* if ( r < 0 && !r == DUF_ERROR_MAX_REACHED ) */
-    /*   DUF_TRACE( action, 0, "r=%d", r );        */
-    /* else if ( r < 0 )                           */
-    /*   DUF_ERROR( "r=%d", r );                   */
   }
   else
   {
-    /* fprintf( stderr, "-dirid: %llu : %llu : %llu\n", dirid, nfiles, duf_config->u.mindirfiles ); */
+    /* fprintf( stderr, "----dirid: %llu : ( N=%llu : %llu ) : ( %llu : %llu ) : ( %llu : %llu )\n", dirid, nfiles, duf_config->u.mindirfiles, */
+    /*          minsize, duf_config->u.minsize, maxsize, duf_config->u.maxsize );                                                              */
   }
+  DUF_TRACE( scan, 0, "by parentid %llu", dirid );
   return r;
 }

@@ -59,7 +59,7 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
     if ( r )
     {
 /* no such entry */
-      fprintf( stderr, ">>>>>>>>>>>>>%s No such entry %s\n", __func__, real_path );
+      DUF_ERROR( "No such entry %s", real_path );
     }
     else
     {

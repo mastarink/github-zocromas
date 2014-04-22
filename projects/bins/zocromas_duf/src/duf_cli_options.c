@@ -92,6 +92,8 @@ const struct option longopts[] = {
   {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
   {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
   {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
+  {.name = "min-same",.has_arg = required_argument,.val = DUF_OPTION_MINSAME},
+  {.name = "max-same",.has_arg = required_argument,.val = DUF_OPTION_MAXSAME},
   {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
   {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
   {.name = "max-dirs",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_DIRS},

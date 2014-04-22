@@ -272,8 +272,20 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
                             ( duf_scan_callbacks_t * ) NULL /* sccb */ , ( const duf_dirhandle_t * ) NULL,
                             "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.items, duf_paths.parentid "
                             " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
-                            " ,(SELECT count(*) FROM duf_filenames as subfilenames WHERE subfilenames.pathid=duf_paths.id) as nfiles "
-                            " FROM duf_paths " " WHERE duf_paths.parentid='%llu' and dirname='%s' ", pathid, qbd );
+                            " ,(SELECT count(*) FROM duf_filenames as fn "
+                            "          JOIN duf_filedatas as fd ON (fn.dataid=fd.id) "
+                            "          JOIN duf_md5 as md ON (fd.md5id=md.id) "
+                            "          WHERE fn.pathid=duf_paths.id "
+                            "              AND   fd.size >= %llu AND fd.size < %llu "
+                            "              AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) "
+                            " ) as nfiles "
+                            " ,(SELECT min(fd.size) FROM duf_filedatas as fd JOIN duf_filenames as fn ON (fn.dataid=fd.id) "
+                            "           WHERE fn.pathid=duf_paths.id) as minsize "
+                            " ,(SELECT max(fd.size) FROM duf_filedatas as fd JOIN duf_filenames as fn ON (fn.dataid=fd.id) "
+                            "           WHERE fn.pathid=duf_paths.id) as maxsize " " FROM duf_paths "
+                            " WHERE duf_paths.parentid='%llu' and dirname='%s' ", pdi->u.minsize,
+                            pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame,
+                            pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1, pathid, qbd );
         if ( r >= 0 && pdi )
           pathid_new = pdi->levinfo[pdi->depth].dirid;
       }

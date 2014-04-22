@@ -41,7 +41,7 @@ duf_direntry_filter( const struct dirent *de )
   case DT_BLK:
     break;
   case DT_REG:
-    /* fprintf( stderr, ">>>> %u : %lu : %s\n", de->d_type, de->d_ino, de->d_name ); */
+    /* fprintf( stderr, "!!!! %u : %lu : %s\n", de->d_type, de->d_ino, de->d_name ); */
     r = 1;
     break;
   case DT_LNK:
