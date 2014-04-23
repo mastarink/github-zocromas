@@ -6,6 +6,7 @@
 
 size_t mas_wordlen( const char *s );
 char *mas_chomp( char *s );
+char *mas_expand_string( const char *str );
 int mas_strcmp2( const char *s1, const char *s2 );
 int mas_strcmpv( const char *s1, const char *s2, char **vval );
 const char *mas_find_eq_value( const char *s );

@@ -79,6 +79,92 @@ mas_find_eq_value( const char *s )
   return s;
 }
 
+char *
+mas_expand_string( const char *str )
+{
+  const char *doll = NULL;
+  const char *beg = NULL;
+  const char *start = NULL;
+  const char *end = NULL;
+  const const char *cstr;
+  const const char *scstr;
+  char *snew = NULL;
+  const char *nxt = NULL;
+
+  cstr = str;
+  scstr = cstr;
+
+  while ( cstr && ( doll = strchr( scstr, '$' ) ) )
+  {
+    char lc = 0;
+
+    start = doll;
+    start++;
+    beg = start;
+    end = start;
+    snew = mas_strncat_x( snew, scstr, doll - scstr );
+    if ( *start == '{' )
+    {
+      const char *ts;
+      const char *te;
+
+      ts = start;
+      te = ts;
+      ts++;
+      while ( *te && *te != '}' )
+        te++;
+      lc = *te;
+      if ( lc == '}' )
+      {
+        start = ts;
+        end = te++;
+        nxt = te;
+      }
+      else
+        nxt = scstr;
+    }
+    else
+    {
+      while ( *end
+              && ( ( *end >= 'A' && *end <= 'Z' ) || ( *end >= 'a' && *end <= 'z' ) || ( *end == '_' )
+                   || ( end > start && *end >= '0' && *end <= '9' ) ) )
+        end++;
+      nxt = end;
+    }
+    if ( end > start )
+    {
+      char *vn;
+      char *vv;
+
+      vn = mas_strndup( start, end - start );
+      vv = getenv( vn );
+      if ( vv && *vv )
+      {
+        snew = mas_strcat_x( snew, vv );
+        scstr = nxt;
+      }
+      else
+      {
+        snew = mas_strncat_x( snew, doll, 1 );
+        nxt = scstr = beg;
+      }
+      mas_free( vn );
+    }
+    else
+    {
+      snew = mas_strncat_x( snew, doll, 1 );
+      nxt = scstr = start;
+    }
+  }
+  if ( !snew )
+    snew = mas_strdup( cstr );
+  else if ( nxt && *nxt )
+    snew = mas_strcat_x( snew, nxt );
+  /* fprintf( stderr, "@@@@@@@@@@ [%s] => [%s] ; start:[%s] ; end:[%s]\n", cstr, snew, start, end ); */
+
+  return snew;
+}
+
 const char *
 mas_skip_space_nz( const char *args )
 {

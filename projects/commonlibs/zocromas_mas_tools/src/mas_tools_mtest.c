@@ -188,6 +188,111 @@ main( int argc, char *argv[] )
       }
     mas_del_argv( targc, targv, 0 );
   }
+  {
+    char *s;
+    const char *s0 = "this is a test$MSH_SHN_BASHPID.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a test$$MSH_SHN_BASHPID.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a test$.MSH_SHN_BASHPID.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a testMSH_SHN_BASHPID.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a test${MSH_SHN_BASHPID}.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a test$${MSH_SHN_BASHPID}.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a $HOMEtest${MSH_SHN_BASHPID}.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a $HOME/test${MSH_SHN_BASHPID}.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+{
+    char *s;
+    const char *s0 = "this is a ${HOME}test${MSH_SHN_BASHPID}.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a test$MSH_XY_BASHPID.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+{
+    char *s;
+    const char *s0 = "this is a test$$MSH_XY_BASHPID.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+{
+    char *s;
+    const char *s0 = "this is a test$HOME.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+    const char *s0 = "this is a test${MSH_XY_BASHPID}.db";
+
+    s = mas_expand_string( s0 );
+    fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
+    mas_free( s );
+  }
+
   if ( 0 )
   {
     char *segfault = NULL;
