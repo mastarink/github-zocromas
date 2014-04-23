@@ -3,5 +3,4 @@ define hook-quit
     set confirm off
 end
 handle SIGPIPE nostop noprint
-run
 bt
