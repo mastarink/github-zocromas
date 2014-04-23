@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -13,6 +14,7 @@
 #include "duf_config.h"
 #include "duf_utils.h"
 #include "duf_cli_options.h"
+#include "duf_service.h"
 
 #include "duf_sql.h"
 #include "duf_create.h"
@@ -234,6 +236,7 @@ duf_action_new( int argc, char **argv )
 {
   int r = 0;
 
+
   DUF_TEST_R( r );
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* --drop-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
@@ -276,7 +279,7 @@ duf_action_new( int argc, char **argv )
   if ( r >= 0 && duf_config->cli.act.add_path )
   {
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      r = duf_add_path_uni( duf_config->targv[ia], "argument", &r );
+      ( void ) duf_add_path_uni( duf_config->targv[ia], "argument", &r );
     DUF_TEST_R( r );
   }
   /* ????????? */
@@ -312,8 +315,8 @@ duf_action_new( int argc, char **argv )
     r = duf_zero_duplicates(  );
   DUF_TEST_R( r );
 /* --update-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_duplicates )
-    r = duf_update_duplicates(  );
+  /* if ( r >= 0 && duf_config->cli.act.update_duplicates ) */
+  /*   r = duf_update_duplicates(  );                       */
 /* --zero-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( r >= 0 && duf_config->cli.act.zero_filedata )
     duf_zero_filedatas(  );
@@ -323,14 +326,34 @@ duf_action_new( int argc, char **argv )
     duf_update_filedatas(  );
   DUF_TEST_R( r );
 /*  --update-mdpaths								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_mdpath )
-    duf_update_mdpaths( 0 );
-  DUF_TEST_R( r );
+  /* if ( r >= 0 && duf_config->cli.act.update_mdpath ) */
+  /*   duf_update_mdpaths( 0 );                         */
+  /* DUF_TEST_R( r ); */
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_mdpath_selective )
+/*   if ( r >= 0 && duf_config->cli.act.update_mdpath_selective )                                                                  */
+/*   {                                                                                                                             */
+/*     if ( !duf_config->targc )                                                                                                   */
+/*       duf_update_mdpaths( 0 );                                                                                                  */
+/*     else                                                                                                                        */
+/*       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )                                                                */
+/*       {                                                                                                                         */
+/*         const char *path;                                                                                                       */
+/*         unsigned long long pathid;                                                                                              */
+/*                                                                                                                                 */
+/*         path = duf_config->targv[ia];                                                                                           */
+/*         pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );                                                        */
+/*         if ( pathid )                                                                                                           */
+/*           r = duf_update_mdpaths( pathid );                                                                                     */
+/*         else                                                                                                                    */
+/*           fprintf( stderr, "not found %lld : '%s'\n", pathid, path );                                                           */
+/*       }                                                                                                                         */
+/* (*  --update-exif                                                               *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/*   }                                                                                                                             */
+  DUF_TEST_R( r );
+  if ( r >= 0 && duf_config->cli.act.update_exif )
   {
     if ( !duf_config->targc )
-      duf_update_mdpaths( 0 );
+      r = duf_update_exif( 0 );
     else
       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
       {
@@ -338,29 +361,9 @@ duf_action_new( int argc, char **argv )
         unsigned long long pathid;
 
         path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
-        if ( pathid )
-          r = duf_update_mdpaths( pathid );
-        else
-          fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
-      }
-/*  --update-exif								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  }
-  DUF_TEST_R( r );
-  if ( r >= 0 && duf_config->cli.act.update_exif )
-  {
-    if ( !duf_config->targc )
-      duf_update_exif( 0 );
-    else
-      for ( int ia = 0; ia < duf_config->targc; ia++ )
-      {
-        const char *path;
-        unsigned long long pathid;
-
-        path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
-        if ( pathid )
-          duf_update_exif( pathid );
+        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL, &r );
+        if ( r >= 0 && pathid )
+          r = duf_update_exif( pathid );
         else
           fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
       }
@@ -414,8 +417,8 @@ duf_action_new( int argc, char **argv )
 /*         duf_print_files_same( duf_config->targv[ia] );                                                                          */
 /* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*   }                                                                                                                             */
-  if ( r >= 0 && duf_config->cli.act.same_exif )
-    duf_print_exif_same( 1, duf_config->cli.limit );
+  /* if ( r >= 0 && duf_config->cli.act.same_exif )     */
+  /*   duf_print_exif_same( 1, duf_config->cli.limit ); */
 
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( r >= 0 && duf_config->cli.act.to_group )
@@ -469,6 +472,31 @@ main_db( int argc, char **argv )
       r = duf_config_show(  );
       DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.fpath );
     }
+    if ( r >= 0 )
+    {
+      if ( duf_config->db.fpath )
+      {
+        if ( duf_config->cli.act.remove_database )
+        {
+          DUF_TRACE( any, 0, "removing %s ...", duf_config->db.fpath );
+          r = unlink( duf_config->db.fpath );
+          if ( r < 0 )
+          {
+            char *s;
+            char serr[1024];
+
+            s = strerror_r( errno, serr, sizeof( serr ) );
+
+            DUF_ERROR( "unlink %s: [%s]", duf_config->db.fpath, s );
+            if ( errno == ENOENT )
+              r = 0;
+	    else
+              r = DUF_ERROR_UNLINK;
+
+          }
+        }
+      }
+    }
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
@@ -513,6 +541,7 @@ main( int argc, char **argv )
   int r = 0;
 
   /* DUF_TRACE( any, 0, "r=%d", r ); */
+
 
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -561,7 +590,8 @@ main( int argc, char **argv )
         printf( "Database ----------" "\n" );
         printf( "  -N, --db-name=%s\n", duf_config->db.name );
         printf( "  -D, --db-directory=%s\n", duf_config->db.dir );
-        printf( "  --drop-tables" "\n" );
+        printf( "  --drop-tables		DANGEROUS!" "\n" );
+        printf( "  --remove-database		DANGEROUS!" "\n" );
         printf( "  --create-tables" "\n" );
         printf( "Manipulations --------------" "\n" );
         printf( "  --add-path\n" );
@@ -575,7 +605,7 @@ main( int argc, char **argv )
         printf( "    --fill" "\n" );
         printf( "Old options" "\n" );
         printf( "  --zero-duplicates" "\n" );
-        printf( "  --update-duplicates" "\n" );
+        /* printf( "  --update-duplicates" "\n" ); */
         printf( "  --zero-filedatas" "\n" );
         printf( "  --update-filedatas" "\n" );
         printf( "  --update-mdpaths" "\n" );
@@ -583,14 +613,16 @@ main( int argc, char **argv )
         printf( "  --same-md5" "\n" );
         printf( "Debug ----------" "\n" );
         printf( "  --debug" "\n" );
-        printf( "  -v, --verbose=level" "\n" );
-        printf( "  --min-dbg-lines" "\n" );
-        printf( "  --max-dbg-lines" "\n" );
+        printf( "  -v, --verbose=%d" "\n", duf_config->cli.dbg.verbose );
+        printf( "  --min-dbg-lines=%lu" "\n", duf_config->cli.dbg.max_line );
+        printf( "  --max-dbg-lines=%lu" "\n", duf_config->cli.dbg.min_line );
         printf( "Trace ----------" "\n" );
-        printf( "  -S, --trace-scan=level" "\n" );
-        printf( "  -Q, --trace-sql=level" "\n" );
-        printf( "  --trace-sample=level" "\n" );
-        printf( "  -F, --trace-fill=level" "\n" );
+        printf( "  -A, --trace-action=%d" "\n", duf_config->cli.trace.action );
+        printf( "  -S, --trace-scan=%d" "\n", duf_config->cli.trace.scan );
+        printf( "  -Q, --trace-sql=%d" "\n", duf_config->cli.trace.sql );
+        printf( "  --trace-sample=%d" "\n", duf_config->cli.trace.sample );
+        printf( "  --trace-path=%d" "\n", duf_config->cli.trace.path );
+        printf( "  -F, --trace-fill=%d" "\n", duf_config->cli.trace.fill );
         printf( "----------------" "\n" );
         r = 0;
         break;

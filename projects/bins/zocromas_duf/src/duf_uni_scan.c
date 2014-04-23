@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -74,25 +75,27 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
   pdi = ( duf_depthinfo_t * ) str_cb_udata;
 
-  /* duf_dirhandle_t dh = {.dfd = 0 }; */
-
   DUF_UFIELD( dirid );
   /* DUF_SFIELD( dfname ); */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
 
+  DUF_OINV_OPENED( pdi-> );
 
   if ( DUF_IF_TRACE( scan ) )
   {
     /* unsigned long long dirid = duf_sql_ull_by_name( "dirid", precord, 0 ); */
     /* DUF_UFIELD( filenameid ); */
     /* unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 ); */
-    char *path = duf_pathid_to_path_s( dirid );
+    char *path = duf_pathid_to_path_s( dirid, pdi, &r );
+
+  DUF_OINV_OPENED( pdi-> );
 
 
     DUF_TRACE( scan, 0, "TOP B %llu:%s", dirid, path );
     mas_free( path );
   }
+  if ( r >= 0 )
   {
     if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
     {
@@ -112,7 +115,9 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  *     5. for <current> dir call sccb->directory_scan_after
  * */
 
+  DUF_OINV_OPENED( pdi-> );
       r = duf_scan_dirs_by_parentid( dirid, pdhu, duf_uni_scan_dir, pdi, sccb, precord );
+  DUF_OINV_OPENED( pdi-> );
       /* if ( r == DUF_ERROR_MAX_REACHED )                   */
       /* {                                                   */
       /*   if ( pdi->depth == 0 )                            */
@@ -124,6 +129,8 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
       /* }                                                   */
     }
   }
+  DUF_TEST_R( r );
+  DUF_OINV_OPENED( pdi-> );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -144,7 +151,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  DUF_TRACE( action, 0, "sccb %d", sccb ? 1 : 0 );
+  DUF_TRACE( action, 0, "sccb %c", sccb ? '+' : '-' );
   if ( sccb )
   {
     duf_depthinfo_t di = {.depth = 0,
@@ -153,32 +160,37 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       .u = u,
       /* .name = path, */
     };
-    duf_dirhandle_t *pdh;
 
     duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+      
+    DUF_OINV( di. );
 
-    r = duf_levinfo_create( &di );
-
-    pdh = &di.levinfo[0].dh;
-
-    if ( !duf_config->cli.noopenat )
-      r = duf_open_dh( pdh, path );
+/* create level-control array, open 0 level */
+    r = duf_levinfo_create( &di, path );
+    /* if ( !duf_config->cli.noopenat ) */
+    /*   r = duf_open_dh( pdh, path );  */
+    DUF_TRACE( action, 0, "di.levinfo %c", di.levinfo ? '+' : '-' );
+    DUF_OINV( di. );
 
     {
       unsigned long long pathid;
 
-      pathid = duf_path_to_pathid( path, &di );
+      pathid = duf_path_to_pathid( path, &di, &r );
+      DUF_TEST_R( r );
       DUF_TRACE( action, 0, "pathid %llu for %s", pathid, path );
 
       if ( DUF_IF_TRACE( scan ) )
       {
-        char *path = duf_pathid_to_path_s( pathid );
+        int tr = 0;
+        char *path = duf_pathid_to_path_s( pathid, &di, &tr );
 
-        DUF_TRACE( scan, 0, "TOP A %llu:%s", pathid, path );
+        DUF_TRACE( scan, 0, "TOP %llu:%s", pathid, path );
         mas_free( path );
       }
+      DUF_OINV( di. );
+      DUF_TEST_R( r );
 
-      if ( pathid || !path )
+      if ( r >= 0 && ( pathid || !path ) )
       {
         DUF_TRACE( scan, 0, "%llu:%s  duf_scan_dirs_by_parentid with str_cb=duf_uni_scan_dir(%p)", pathid,
                    path, ( void * ) ( unsigned long long ) duf_uni_scan_dir );
@@ -197,18 +209,21 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
  *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->directory_scan_after
  * */
-
-        r = duf_scan_dirs_by_parentid( pathid, pdh, duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+        DUF_OINV( di. );
+        if ( r >= 0 )
+          r = duf_scan_dirs_by_parentid( pathid, NULL /* pdh */ , duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+        DUF_OINV( di. );
+        DUF_TEST_R( r );
 
         /* if ( r == DUF_ERROR_MAX_REACHED )                 */
         /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
         /* else if ( r < 0 )                                 */
         /*   DUF_ERROR( "code: %d", r );                     */
       }
-      else
-      {
-      }
+/* delete level-control array, close 0 level */
+      DUF_OINV( di. );
       duf_levinfo_delete( &di );
+      DUF_OINV( di. );
       /* if ( r == DUF_ERROR_MAX_REACHED )                 */
       /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
       /* else if ( r < 0 )                                 */
@@ -226,15 +241,16 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       fprintf( f, "\n" );
     }
 
-    if ( !duf_config->cli.noopenat )
-      duf_close_dh( pdh );
-    pdh->dfd = 0;
+    /* if ( !duf_config->cli.noopenat ) */
+    /*   duf_close_dh( pdh );           */
+    /* pdh->dfd = 0;                    */
     printf( "\n\n********************************************************** %d **\n", duf_config->cli.act.totals );
   }
   /* if ( r == DUF_ERROR_MAX_REACHED )                 */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */
   /*   DUF_ERROR( "code: %d", r );                     */
+  DUF_TEST_R( r );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -251,6 +267,9 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
       r = sccb->init_scan( sccb );
     if ( r >= 0 )
     {
+      DUF_TRACE( action, 0, "%u", duf_config->targc );
+      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+        DUF_TRACE( action, 0, "%s", duf_config->targv[ia] );
       if ( duf_config->targc > 0 )
         for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
           r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );

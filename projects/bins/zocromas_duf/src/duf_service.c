@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <assert.h>
 #include <errno.h>
 
 
@@ -19,13 +20,60 @@
 
 #include "duf_config.h"
 #include "duf_uni_scan.h"
+#include "duf_dir_scan.h"
 #include "duf_file_scan.h"
 #include "duf_path.h"
 
 /* ###################################################################### */
 #include "duf_service.h"
 /* ###################################################################### */
+typedef struct
+{
+  const char *name;
+  duf_error_code_t code;
+} duf_errdesc_t;
 
+
+#define DUF_ERROR_NAME(ername) {.name=#ername, .code=ername}
+const char *
+duf_error_name( duf_error_code_t c )
+{
+  static char buf[512];
+
+  const duf_errdesc_t table[] = {
+    DUF_ERROR_NAME( DUF_ERROR_UNKNOWN ),
+    DUF_ERROR_NAME( DUF_ERROR_UNKNOWN_NODE ),
+    DUF_ERROR_NAME( DUF_ERROR_MAIN ),
+    DUF_ERROR_NAME( DUF_ERROR_PTR ),
+    DUF_ERROR_NAME( DUF_ERROR_DATA ),
+    DUF_ERROR_NAME( DUF_ERROR_NOT_OPEN ),
+    DUF_ERROR_NAME( DUF_ERROR_OPENAT ),
+    DUF_ERROR_NAME( DUF_ERROR_OPEN ),
+    DUF_ERROR_NAME( DUF_ERROR_CLOSE ),
+    DUF_ERROR_NAME( DUF_ERROR_OPTION ),
+    DUF_ERROR_NAME( DUF_ERROR_SCANDIR ),
+    DUF_ERROR_NAME( DUF_ERROR_CHECK_TABLES ),
+    DUF_ERROR_NAME( DUF_ERROR_CLEAR_TABLES ),
+    DUF_ERROR_NAME( DUF_ERROR_NO_FILE_SELECTOR ),
+    DUF_ERROR_NAME( DUF_ERROR_DB_NO_PATH ),
+    DUF_ERROR_NAME( DUF_ERROR_NO_STR_CB ),
+    DUF_ERROR_NAME( DUF_ERROR_MAX_DEPTH ),
+    DUF_ERROR_NAME( DUF_ERROR_MAX_REACHED ),
+    DUF_ERROR_NAME( DUF_ERROR_GET_FIELD ),
+    DUF_ERROR_NAME( DUF_ERROR_NO_FIELD ),
+    DUF_ERROR_NAME( DUF_ERROR_NO_FIELD_OPTIONAL ),
+    DUF_ERROR_NAME( DUF_ERROR_INSERT_MDPATH ),
+    DUF_ERROR_NAME( DUF_ERROR_STAT ),
+  };
+  for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )
+  {
+    if ( c == table[i].code )
+    {
+      snprintf( buf, sizeof( buf ), "%s", table[i].name );
+    }
+  }
+  return buf;
+}
 
 int
 duf_check_field( const char *name, int have )
@@ -62,12 +110,13 @@ duf_dbg_funname( duf_anyhook_t p )
     DUF_FUN( duf_sel_cb_leaf ),
     DUF_FUN( duf_sel_cb_dirid ),
     DUF_FUN( duf_directory_scan_sample_uni ),
+    DUF_FUN( duf_scan_file ),
   };
   for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )
   {
     if ( p == table[i].fun )
     {
-      snprintf( buf, sizeof( buf ), "%s()", table[i].name );
+      snprintf( buf, sizeof( buf ), "%p:%s()", ( void * ) ( unsigned long long ) p, table[i].name );
       found = 1;
     }
   }
@@ -152,7 +201,7 @@ duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_
 }
 
 int
-duf_openat_dh( duf_dirhandle_t * pdh, const duf_dirhandle_t * pdhu, const char *name )
+duf_statat_dh( duf_dirhandle_t * pdh, const duf_dirhandle_t * pdhu, const char *name )
 {
   int r = DUF_ERROR_PTR;
 
@@ -160,17 +209,55 @@ duf_openat_dh( duf_dirhandle_t * pdh, const duf_dirhandle_t * pdhu, const char *
     return 0;
   if ( pdh && pdhu && name && pdhu->dfd )
   {
+    r = fstatat( pdhu->dfd, name, &pdh->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+    if ( r > 0 )
+    {
+      pdh->rs = r;
+    }
+    else if ( r == -1 )
+    {
+      char serr[1024] = "";
+      char *s;
+
+      s = strerror_r( errno, serr, sizeof( serr ) );
+      DUF_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhu ? pdhu->dfd : 555 );
+      r = DUF_ERROR_OPENAT;
+    }
+  }
+  else
+  {
+    DUF_ERROR( "parameter error pdh:%d; pdhu:%d; name:%d; pdhu->dfd:%d", pdh ? 1 : 0, pdhu ? 1 : 0, name ? 1 : 0, pdhu
+               && pdhu->dfd ? 1 : 0 );
+    r = DUF_ERROR_OPENAT;
+  }
+  return r;
+}
+
+int
+duf_openat_dh( duf_dirhandle_t * pdh, const duf_dirhandle_t * pdhu, const char *name )
+{
+  int r = DUF_ERROR_PTR;
+
+  if ( duf_config->cli.noopenat )
+    return 0;
+  assert( pdh );
+  assert( pdhu );
+  assert( pdhu->dfd );
+  assert( name );
+  if ( pdh && pdhu && name && pdhu->dfd )
+  {
     r = openat( pdhu->dfd, name, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
     if ( r > 0 )
     {
       pdh->dfd = r;
+      r = 0;
       pdh->rs = fstatat( pdhu->dfd, name, &pdh->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
 
+      duf_config->nopen++;
       DUF_TRACE( fs, 0, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
                  duf_config->nopen - duf_config->nclose, pdh->dfd );
-      duf_config->nopen++;
     }
-    else
+    else if ( r == -1 )
     {
       char serr[1024] = "";
       char *s;
@@ -202,11 +289,13 @@ duf_open_dh( duf_dirhandle_t * pdh, const char *path )
     if ( r > 0 )
     {
       pdh->dfd = r;
+      r = 0;
       pdh->rs = stat( path, &pdh->st );
 
+      duf_config->nopen++;
       DUF_TRACE( fs, 0, "opened %s (%u - %u = %u)  h%u", path, duf_config->nopen, duf_config->nclose,
                  duf_config->nopen - duf_config->nclose, pdh->dfd );
-      duf_config->nopen++;
+      assert( pdh->dfd );
     }
     else
     {
@@ -221,6 +310,7 @@ duf_open_dh( duf_dirhandle_t * pdh, const char *path )
   else if ( path )
   {
     r = 0;
+    assert( pdh->dfd );
   }
   else
   {
@@ -236,25 +326,31 @@ duf_close_dh( duf_dirhandle_t * pdh )
 
   if ( duf_config->cli.noopenat )
     return 0;
+  assert( pdh );
   if ( pdh )
   {
     r = DUF_ERROR_NOT_OPEN;
+    assert( pdh->dfd );
     if ( pdh->dfd )
     {
       r = close( pdh->dfd );
       if ( r )
       {
-        DUF_ERROR( "close %d", pdh->dfd );
+        {
+          /* for debug only!!! */
+          /* assert( pdh->dfd < 1000 ); */
+        }
+
+        DUF_ERROR( "close dfd:%d", pdh->dfd );
         r = DUF_ERROR_CLOSE;
       }
-      duf_config->nclose++;
-      DUF_TRACE( fs, 1, "close (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose,
+      DUF_TRACE( fs, 0, "closed (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose,
                  pdh->dfd );
+      duf_config->nclose++;
     }
     else
     {
       DUF_ERROR( "parameter error pdhu->dfd:%d", pdh && pdh->dfd ? 1 : 0 );
-      r = 0;
     }
 
     pdh->dfd = 0;

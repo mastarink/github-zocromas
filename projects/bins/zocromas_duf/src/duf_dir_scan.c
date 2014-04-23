@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -33,7 +34,8 @@
 /* ###################################################################### */
 
 
-static int
+/* will be static! */
+int
 duf_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord,
                const duf_dirhandle_t * pdhu )
 {
@@ -46,12 +48,16 @@ duf_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callba
     pdi->items.total++;
     pdi->items.files++;
     r = sccb->file_scan( str_cb_udata, pdi, precord );
+    DUF_TEST_R( r );
+    DUF_TRACE( fill, 0, "r:%d; sccb->file_scan:%s", r, DUF_FUNN( sccb->file_scan ) );
+
     DUF_TRACE( action, 0, "r=%d", r );
   }
   else
   {
     /* fprintf( stderr, "-FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
   }
+  DUF_TEST_R( r );
   return r;
 }
 
@@ -84,7 +90,11 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
   {
     pdi->items.total++;
     pdi->items.dirs++;
-    r = sccb->directory_scan_before( dirid, &pdi->levinfo[pdi->depth].dh, pdi, precord );
+
+  DUF_OINV_OPENED( pdi-> );
+    r = sccb->directory_scan_before( dirid, &pdi->levinfo[pdi->depth].lev_dh, pdi, precord );
+  DUF_OINV_OPENED( pdi-> );
+    DUF_TEST_R( r );
     if ( r == DUF_ERROR_MAX_REACHED )
     {
       if ( pdi->depth == 0 )
@@ -106,8 +116,11 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
  * */
       if ( r >= 0 && sccb && sccb->file_scan )
       {
+  DUF_OINV_OPENED( pdi-> );
         r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb, pdh );
+  DUF_OINV_OPENED( pdi-> );
         /* r = duf_scan_files_by_dirid( dirid, sccb->file_scan (* str_cb *) , pdi, sccb ); */
+        DUF_TEST_R( r );
       }
       if ( r == DUF_ERROR_MAX_REACHED )
       {
@@ -117,8 +130,11 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       /* else if ( r < 0 )             */
       /*   DUF_ERROR( "code: %d", r ); */
     }
+  DUF_OINV_OPENED( pdi-> );
     if ( sccb && r >= 0 && sccb->directory_scan_middle && duf_config->cli.act.dirs )
       r = sccb->directory_scan_middle( dirid, pdh, pdi, precord );
+  DUF_OINV_OPENED( pdi-> );
+    DUF_TEST_R( r );
 
     if ( r >= 0 && sccb )
     {
@@ -127,9 +143,13 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
  * */
       if ( r >= 0 && sccb )
       {
+        DUF_OINV( pdi-> );
+  DUF_OINV_OPENED( pdi-> );
         r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->dir_selector, pdi->u.minsize,
                                 pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame,
                                 pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1, dirid );
+  DUF_OINV_OPENED( pdi-> );
+        DUF_TEST_R( r );
       }
 
       if ( r == DUF_ERROR_MAX_REACHED )
@@ -140,13 +160,18 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       /* else if ( r < 0 )             */
       /*   DUF_ERROR( "code: %d", r ); */
     }
+  DUF_OINV_OPENED( pdi-> );
     if ( sccb && r >= 0 && sccb->directory_scan_after && duf_config->cli.act.dirs )
       r = sccb->directory_scan_after( dirid, pdh, pdi, precord );
+  DUF_OINV_OPENED( pdi-> );
+    DUF_TEST_R( r );
   }
   else if ( r >= 0 )
     DUF_ERROR( "no sccb - is it an error? r: %d", r );
   /* if ( r < 0 )                  */
   /*   DUF_ERROR( "code: %d", r ); */
+  DUF_OINV_OPENED( pdi-> );
+  DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
@@ -169,19 +194,38 @@ duf_scan_dirs_by_parentid( unsigned long long dirid, const duf_dirhandle_t * pdh
   DUF_UFIELD_OPT( minsize );
   DUF_UFIELD_OPT( maxsize );
   DUF_TRACE( scan, 0, "by parentid %llu : %llu : %llu : %llu", dirid, nfiles, minsize, maxsize );
+
+  DUF_OINV( pdi-> );
+  DUF_OINV_OPENED( pdi-> );
+  {
+    struct stat stt;
+
+    if ( pdh && pdh->dfd && 0 == fstat( pdh->dfd, &stt ) )
+    {
+      DUF_ERROR( "@@@@@@@@@@@@@@ X %d: %ld ", pdi->depth, stt.st_ino );
+    }
+  }
+  DUF_OINV_OPENED( pdi-> );
+
   if (  /* !nfiles || */ !dirid
        || ( ( ( nfiles >= duf_config->u.mindirfiles ) && ( !duf_config->u.maxdirfiles || nfiles < duf_config->u.maxdirfiles ) )
             /* && ( nfiles == 0
                || ( ( maxsize >= duf_config->u.minsize ) && ( !duf_config->u.maxsize || minsize <= duf_config->u.maxsize ) ) ) */
         ) )
   {
+  DUF_OINV_OPENED( pdi-> );
     r = duf_scan_dir_by_pi( dirid, pdh, str_cb, pdi, sccb, precord );
+  DUF_OINV_OPENED( pdi-> );
+    DUF_TEST_R( r );
   }
   else
   {
     /* fprintf( stderr, "----dirid: %llu : ( N=%llu : %llu ) : ( %llu : %llu ) : ( %llu : %llu )\n", dirid, nfiles, duf_config->u.mindirfiles, */
     /*          minsize, duf_config->u.minsize, maxsize, duf_config->u.maxsize );                                                              */
   }
+  DUF_TEST_R( r );
+  DUF_OINV( pdi-> );
+  DUF_OINV_OPENED( pdi-> );
   DUF_TRACE( scan, 0, "by parentid %llu", dirid );
   return r;
 }

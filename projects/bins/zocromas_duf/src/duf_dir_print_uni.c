@@ -66,7 +66,7 @@ duf_file_scan_print_plain_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_re
   /* DUF_SFIELD( dowmtime ); */
   /* DUF_SFIELD( monthmtime ); */
 
-  /* if (nsame<2) return 0; */
+  /* if (nsame<2) return r; */
 
   /* printf( "> %s\n", duf_sql_str_by_name( "filename", precord ) ); */
   /* printf( "-rw-------  1 mastar mastar-firefox 106580068 Jan 27 2014 12:35:27 sample_video_hd.zip\n" ); */
@@ -116,7 +116,7 @@ duf_directory_scan_print_plain_uni( unsigned long long pathid, const duf_dirhand
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   {
-    char *path = duf_pathid_to_path_s( pathid );
+    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
     DUF_UFIELD( nfiles );
     DUF_UFIELD( minsize );
@@ -161,10 +161,9 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         "SELECT %s FROM duf_filenames "
         " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
         " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
-	"    WHERE "
-	"           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
-	"       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) "
-	"       AND duf_filenames.pathid='%llu' ",
+        "    WHERE "
+        "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
+        "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) " "       AND duf_filenames.pathid='%llu' ",
   .dir_selector =
         "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
         " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
@@ -173,7 +172,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         "          JOIN duf_md5 as smd ON (sfd.md5id=smd.id) "
         "          WHERE sfn.pathid=duf_paths.id "
         "              AND   sfd.size >= %llu AND sfd.size < %llu "
-	"              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
+        "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
         " ) as nfiles "
         " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) "
         "           WHERE sfn.pathid=duf_paths.id) as minsize "

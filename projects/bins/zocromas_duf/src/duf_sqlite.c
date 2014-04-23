@@ -222,6 +222,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
           {
             rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu );
 
+            DUF_TEST_R( rcb );
             DUF_TRACE( sql, 1, "row %u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
           }
         }
@@ -236,7 +237,11 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
             /* DUF_ERROR( "rcb:%d", rcb ); */
           }
         }
+        DUF_TEST_R( rcb );
+        DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+        DUF_TRACE( fill, 0, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
         r3 = rcb ? rcb : r3;
+        DUF_TEST_R( duf_sqlite_error_code( r3 ) );
       }
       else
       {
@@ -246,6 +251,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     else if ( r3 == SQLITE_CONSTRAINT )
     {
       fprintf( stderr, "SQL CONSTRAINT\n" );
+      DUF_TEST_R( duf_sqlite_error_code( r3 ) );
     }
     else
       fprintf( stderr, "SQL error %d %s; sql:[%s]\n", r3, emsg, sql );
@@ -256,6 +262,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     /* DUF_ERROR( "r3:%d", r3 ); */
   }
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
+  DUF_TEST_R( duf_sqlite_error_code( r3 ) );
   return ( r3 );
 }
 

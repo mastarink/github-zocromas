@@ -49,11 +49,21 @@
 #  define DUF_TRACE_SCAN( min, ...)    DUF_TRACE( scan, min, __VA_ARGS__)
 #  define DUF_TRACE_SAMPLE( min, ...)  DUF_TRACE( sample, min, __VA_ARGS__)
 #  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
-#  define DUF_TEST_R(val)              if (val<0) DUF_ERROR( "rv=%d", val )
+#  define DUF_TEST_R(val)              if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
 
 #  define DUF_VERBOSE(lev,...)           DUF_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
 #  define DUF_IF_VERBOSE()               DUF_IF_WHAT(cli.dbg,verbose)
 #  define DUF_IF_VERBOSEN(lev)           DUF_IF_WHATN(cli.dbg,verbose,lev)
+
+#define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
+
+#define DUF_OINV(pref) assert( duf_config->cli.noopenat || ( \
+    		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
+    			- ( (int) ( pref  levinfo && pref levinfo[pref  depth].lev_dh.dfd )) \
+	    		- pref  depth  == 0 ) \
+    		)
+#define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
+#define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
 #  include "duf_cli_types.h"
 
@@ -75,6 +85,7 @@ typedef enum
 #  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ );
 #  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ );
 #  define  DEBUG_ENDR(r) duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+#  define  DEBUG_ENDULL(l) duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, l );
 #  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, l );
 
 typedef enum
@@ -89,19 +100,22 @@ typedef enum
   DUF_ERROR_OPENAT,
   DUF_ERROR_OPEN,
   DUF_ERROR_CLOSE,
+  DUF_ERROR_UNLINK,
   DUF_ERROR_OPTION,
   DUF_ERROR_SCANDIR,
   DUF_ERROR_CHECK_TABLES,
   DUF_ERROR_CLEAR_TABLES,
   DUF_ERROR_NO_FILE_SELECTOR,
-  DUF_ERROR_NO_DIRID,
+  DUF_ERROR_DB_NO_PATH,
   DUF_ERROR_NO_STR_CB,
+  DUF_ERROR_MAX_DEPTH,
   DUF_ERROR_MAX_REACHED,
   DUF_ERROR_GET_FIELD,
   DUF_ERROR_NO_FIELD,
   DUF_ERROR_NO_FIELD_OPTIONAL,
   DUF_ERROR_INSERT_MDPATH,
   DUF_ERROR_STAT,
+  DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
 
 typedef struct
@@ -166,6 +180,7 @@ typedef struct duf_dirhandle_s
 typedef struct
 {
   unsigned eod:1;
+  unsigned is_leaf:1;
   unsigned long long dirid;
   /* const char *name; */
   unsigned long long items;
@@ -173,7 +188,7 @@ typedef struct
   unsigned long long nfiles;
   char *dirname;
   void *context;
-  duf_dirhandle_t dh;
+  duf_dirhandle_t lev_dh;
 } duf_levinfo_t;
 
 typedef struct

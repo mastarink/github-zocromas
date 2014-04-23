@@ -16,7 +16,7 @@
 
 
 int
-duf_pdi_filter( duf_depthinfo_t * pdi )
+duf_pdi_max_filter( duf_depthinfo_t * pdi )
 {
   return ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )
            && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )

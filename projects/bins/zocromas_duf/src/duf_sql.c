@@ -8,6 +8,7 @@
 
 #include "duf_types.h"
 #include "duf_utils.h"
+#include "duf_service.h"
 
 #include "duf_dbg.h"
 
@@ -68,6 +69,7 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
   int r;
 
   r = duf_sqlite_error_code( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu, sqlfmt, args ) );
+      DUF_TEST_R( r );
   return r;
 }
 

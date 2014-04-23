@@ -39,30 +39,36 @@ duf_filenameid_md5id( unsigned long long filenameid )
                       ( const duf_dirhandle_t * ) NULL,
                       "SELECT md5id FROM duf_filenames " " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
                       " WHERE duf_filenames.id='%llu'", filenameid );
+
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r >= 0 ? md5id : r;
 }
 
 /* get md5id for file by full path */
 unsigned long long
-duf_filepath_md5id( const char *path )
+duf_filepath_md5id( const char *path, int *pr )
 {
+  int r = 0;
   unsigned long long prev_pathid = 0;
   char *notfound = NULL;
   unsigned long long pathid = 0;
   unsigned long long md5id = 0;
   unsigned long long filenameid = 0;
 
-  pathid = duf_path_to_pathid_x( path, &prev_pathid, &notfound, ( duf_depthinfo_t * ) NULL );
+  DEBUG_START(  );
+  pathid = duf_path_to_pathid_x( path, &prev_pathid, &notfound, ( duf_depthinfo_t * ) NULL, &r );
   fprintf( stderr, "PATH %s => %llu / %llu\n", path, pathid, prev_pathid );
   if ( !pathid && prev_pathid && notfound )
   {
-    filenameid = file_at_pathid_to_filenameid( prev_pathid, notfound );
+    filenameid = file_at_pathid_to_filenameid( prev_pathid, notfound, &r );
     fprintf( stderr, "FILENAMEID %llu (%s) => %llu\n", prev_pathid, notfound, filenameid );
 /* get md5id for file by pathid and filenameid */
     md5id = duf_filenameid_md5id( filenameid );
   }
+  if ( pr )
+    *pr = r;
   mas_free( notfound );
+  DEBUG_ENDULL( md5id );
   return md5id;
 }
 

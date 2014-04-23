@@ -9,6 +9,7 @@
 
 #include "duf_types.h"
 #include "duf_utils.h"
+#include "duf_service.h"
 
 #include "duf_config.h"
 
@@ -58,6 +59,7 @@ const struct option longopts[] = {
   {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
   {.name = "zero-db",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DB},
   {.name = "drop-tables",.has_arg = no_argument,.val = DUF_OPTION_DROP_TABLES},
+  {.name = "remove-database",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_DATABASE},
   {.name = "create-tables",.has_arg = no_argument,.val = DUF_OPTION_CREATE_TABLES},
   {.name = "tree2db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
   {.name = "tree-to-db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
@@ -68,9 +70,9 @@ const struct option longopts[] = {
   {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
   /* {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH}, */
   /* {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5}, */
-  {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES},
-  {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH},
-  {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE},
+  /* {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES}, */
+  /* {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH}, */
+  /* {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE}, */
   {.name = "update-filedata",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_FILEDATA},
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
@@ -108,7 +110,7 @@ const struct option longopts[] = {
   {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},
   {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
   {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
-  {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT},
+  /* {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT}, */
   {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP},
   {.name = "remove-from-group",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_FROM_GROUP},
   {.name = NULL,.has_arg = no_argument,.val = DUF_OPTION_NONE},
@@ -207,7 +209,14 @@ duf_infile_options( int argc, char *argv[] )
       if ( s && ( ( *s == '#' ) || !*s ) )
         continue;
       DUF_TRACE( any, 0, "buffer:[%s]", buffer );
-      r = duf_cli_option_by_string( s );
+      {
+        char *xs;
+
+        xs = mas_expand_string( s );
+
+        r = duf_cli_option_by_string( xs );
+        mas_free( xs );
+      }
     }
   }
   if ( f )

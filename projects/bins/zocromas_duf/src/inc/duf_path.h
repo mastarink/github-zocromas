@@ -3,11 +3,11 @@
 
 char *duf_join_path( const char *path, const char *fname );
 
-char *duf_pathid_to_path_dh( unsigned long long pathid, duf_dirhandle_t * pdh );
-char *duf_pathid_to_path_s( unsigned long long pathid );
-unsigned long long duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi );
-unsigned long long duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi );
-int duf_print_paths( const char *groupname );
+char *duf_pathid_to_path_dh( unsigned long long pathid, duf_dirhandle_t * pdh, const duf_depthinfo_t * pdi, int *pr );
+char *duf_pathid_to_path_s( unsigned long long pathid, const duf_depthinfo_t * pdi, int *pr );
+unsigned long long duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi , int *pr);
+unsigned long long duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr );
+/* int duf_print_paths( const char *groupname ); */
 
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)

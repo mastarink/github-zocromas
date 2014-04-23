@@ -33,6 +33,7 @@
 static int
 duf_file_scan_print_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
+  int r=0;
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
   DUF_UFIELD( filesize );
@@ -52,13 +53,14 @@ duf_file_scan_print_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_reco
   printf( "%6llu:%6llu:%6llu [%10llu] file: %s\n", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
 
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 /* callback of type duf_scan_callback_dir_t */
 static int
 duf_directory_scan_print_md5_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
+  int r=0;
   DUF_SFIELD( dirname );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
@@ -75,7 +77,7 @@ duf_directory_scan_print_md5_uni( unsigned long long pathid, const duf_dirhandle
     /* mas_free( path ); */
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 /* #### duf_sql( "UPDATE duf_md5 SET dupcnt='%llu' WHERE id='%llu'", cnt, md5id ); */

@@ -133,7 +133,7 @@ duf_add_real_path_uni( const char *real_path, const char *group, int up, int *pr
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  DUF_TRACE( action, 0, "!!" );
+  DUF_TRACE( action, 0, "add real path %s", real_path);
 
   base_name = basename( rpath );
   dir_name = dirname( rpath );

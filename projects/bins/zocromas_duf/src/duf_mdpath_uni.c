@@ -34,6 +34,8 @@
 static int
 duf_file_scan_mdpath_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
+  int r = 0;
+
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( pdi->depth <= 0 )
   {
@@ -44,7 +46,7 @@ duf_file_scan_mdpath_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_
   {
     {
       DUF_UFIELD( filenameid );
-      char *fpath = filenameid_to_filepath( filenameid );
+      char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
 
       DUF_TRACE( mdpath, 2, "#%4llu: mdpath fpath=%s", pdi->seq, fpath );
 
@@ -73,7 +75,7 @@ duf_file_scan_mdpath_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_
     DUF_TRACE( mdpath, 1, "(%p) L%u context=%p", ( void * ) pdi, pdi->depth, pdi->levinfo[pdi->depth].context );
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 /* callback of type duf_scan_callback_dir_t */
@@ -81,10 +83,12 @@ static int
 duf_directory_scan_mdpath_uni_before( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi,
                                       duf_record_t * precord )
 {
+  int r = 0;
+
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   {
-    char *path = duf_pathid_to_path_s( pathid );
+    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
 
     DUF_TRACE( mdpath, 1, "#%4llu: BEFORE dPATH=%s", pdi->seq, path );
@@ -101,7 +105,7 @@ duf_directory_scan_mdpath_uni_before( unsigned long long pathid, const duf_dirha
 
   DUF_TRACE( mdpath, 1, "(%p) L%u context=%p", ( void * ) pdi, pdi->depth, pdi->levinfo[pdi->depth].context );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 /*
@@ -111,12 +115,13 @@ static int
 duf_sel_cb_insert_mdpath_uni( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
                               void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
+  int r = 0;
   unsigned long long *presmd;
 
   presmd = ( unsigned long long * ) sel_cb_udata;
   *presmd = strtoll( precord->presult[0], NULL, 10 );
-  duf_sql( "UPDATE duf_mdpath SET ucnt=ucnt+1, now=datetime() WHERE id='%lld'", ( int * ) NULL, *presmd );
-  return 0;
+  r = duf_sql( "UPDATE duf_mdpath SET ucnt=ucnt+1, now=datetime() WHERE id='%lld'", ( int * ) NULL, *presmd );
+  return r;
 }
 
 static unsigned long long
@@ -144,10 +149,12 @@ duf_insert_mdpath_uni( unsigned long long *md64 )
 static int
 duf_directory_scan_mdpath_uni_after( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
+  int r = 0;
+
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   {
-    char *path = duf_pathid_to_path_s( pathid );
+    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
 
     DUF_TRACE( mdpath, 1, "#%4llu: mdpath AFTER dPATH=%s", pdi->seq, path );
@@ -181,7 +188,7 @@ duf_directory_scan_mdpath_uni_after( unsigned long long pathid, const duf_dirhan
   mas_free( pdi->levinfo[pdi->depth].context );
   pdi->levinfo[pdi->depth].context = NULL;
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  return r;
 }
 
 
@@ -197,13 +204,12 @@ duf_scan_callbacks_t duf_fill_mdpath_callbacks = {
         " , duf_filenames.id as filenameid" " , duf_filedatas.mode as filemode, md.md5sum1, md.md5sum2",
   .file_selector =
         "SELECT %s FROM duf_filenames "
-	" JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+        " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
         " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
-	"    WHERE "
-	"           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
-	"       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) "
-	"       AND duf_filenames.pathid='%llu' "
-	" ORDER BY duf_filenames.name ",
+        "    WHERE "
+        "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
+        "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) "
+        "       AND duf_filenames.pathid='%llu' " " ORDER BY duf_filenames.name ",
   .dir_selector =
         "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
         " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
@@ -212,7 +218,7 @@ duf_scan_callbacks_t duf_fill_mdpath_callbacks = {
         "          JOIN duf_md5 as smd ON (sfd.md5id=smd.id) "
         "          WHERE sfn.pathid=duf_paths.id "
         "              AND   sfd.size >= %llu AND sfd.size < %llu "
-	"              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
+        "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
         " ) as nfiles "
         " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) "
         "           WHERE sfn.pathid=duf_paths.id) as minsize "

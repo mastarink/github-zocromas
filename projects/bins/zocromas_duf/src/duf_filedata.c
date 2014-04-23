@@ -47,7 +47,7 @@ duf_update_filedatas_filedataid( unsigned long long filedataid, unsigned long lo
 
   /* size_t filepathlen = 0; */
 
-  filepath = filenameid_to_filepath( filenameid );
+  filepath = filenameid_to_filepath( filenameid, NULL, &r );
   /* filepathlen = strlen( filepath ); */
   /* if ( 0 == strcmp( filepath + filepathlen - 4, ".jpg" ) || 0 == strcmp( filepath + filepathlen - 4, ".jpeg" )      */
   /*      || 0 == strcmp( filepath + filepathlen - 4, ".JPG" ) || 0 == strcmp( filepath + filepathlen - 4, ".JPEG" ) ) */

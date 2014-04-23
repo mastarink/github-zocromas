@@ -51,6 +51,7 @@ static int
 duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
                               duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
+  int r=0;
   const char *filename;
   char *path = NULL;
   unsigned long long pathid;
@@ -63,7 +64,7 @@ duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb
 
   /* dataid = */ ( void ) strtoll( precord->presult[0], NULL, 10 );
   pathid = strtoll( precord->presult[3], NULL, 10 );
-  path = duf_pathid_to_path_s( pathid );
+  path = duf_pathid_to_path_s( pathid, pdi, &r );
 
   fprintf( stderr, "PRESULT %s\n", __func__ );
   datetime = precord->presult[4];
@@ -128,7 +129,7 @@ duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb
     mas_free( filepath );
   }
   mas_free( path );
-  return 0;
+  return r;
 }
 
 int
@@ -171,7 +172,7 @@ duf_sel_cb_update_exif( duf_record_t * precord, va_list args, void *sel_cb_udata
   /* filename = precord->presult[2]; */
   dataid = strtoll( precord->presult[3], NULL, 10 );
 
-  filepath = filenameid_to_filepath( filenameid );
+  filepath = filenameid_to_filepath( filenameid, pdi, &r );
 
   /* fprintf( stderr, "!!!!!! %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[1], precord->presult[2], precord->presult[3], precord->presult[4] ); */
 

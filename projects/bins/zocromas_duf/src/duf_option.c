@@ -349,9 +349,11 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     DUF_OPT_FLAG( cli.act.create_tables );
     /* --drop-tables --create-tables */
     duf_config->cli.act.create_tables = 1;
+  case DUF_OPTION_REMOVE_DATABASE:
+    DUF_OPT_FLAG( cli.act.remove_database );
+    break;
   case DUF_OPTION_DROP_TABLES:
     DUF_OPT_FLAG( cli.act.drop_tables );
-    /* duf_config->cli.act.drop_tables = 1; */
     break;
   case DUF_OPTION_CREATE_TABLES:
     DUF_OPT_FLAG( cli.act.create_tables );
@@ -367,18 +369,15 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /* case DUF_OPTION_UPDATE_MD5:   */
     /*   duf_config->cli.act.update_md5 = 1; */
     /*   break;                      */
-  case DUF_OPTION_UPDATE_DUPLICATES:
-    DUF_OPT_FLAG( cli.act.update_duplicates );
-    /* duf_config->cli.act.update_duplicates = 1; */
-    break;
-  case DUF_OPTION_UPDATE_MDPATH:
-    DUF_OPT_FLAG( cli.act.update_mdpath );
-    /* duf_config->cli.act.update_mdpath = 1; */
-    break;
-  case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:
-    DUF_OPT_FLAG( cli.act.update_mdpath_selective );
-    /* duf_config->cli.act.update_mdpath_selective = 1; */
-    break;
+  /* case DUF_OPTION_UPDATE_DUPLICATES:                 */
+  /*   DUF_OPT_FLAG( cli.act.update_duplicates );       */
+  /*   break;                                           */
+  /* case DUF_OPTION_UPDATE_MDPATH:                     */
+  /*   DUF_OPT_FLAG( cli.act.update_mdpath );           */
+  /*   break;                                           */
+  /* case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:           */
+  /*   DUF_OPT_FLAG( cli.act.update_mdpath_selective ); */
+  /*   break;                                           */
   case DUF_OPTION_ZERO_FILEDATA:
     DUF_OPT_FLAG( cli.act.zero_filedata );
     /* duf_config->cli.act.zero_filedata = 1; */
@@ -544,11 +543,9 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /*   duf_config->db.name = mas_strdup( optarg ); */
     /* }                                             */
     break;
-  case DUF_OPTION_LIMIT:
-    DUF_OPT_NUM( cli.limit );
-    /* if ( optarg && *optarg )                              */
-    /*   duf_config->cli.limit = strtol( optarg, NULL, 10 ); */
-    break;
+  /* case DUF_OPTION_LIMIT:      */
+  /*   DUF_OPT_NUM( cli.limit ); */
+  /*   break;                    */
   case '?':
     r = DUF_ERROR_OPTION;
     break;

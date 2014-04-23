@@ -56,14 +56,15 @@ typedef enum
   DUF_OPTION_NOOPENAT,
 
 
+  DUF_OPTION_REMOVE_DATABASE,
   DUF_OPTION_DROP_TABLES,
   DUF_OPTION_MDPATH,
   /* DUF_OPTION_UPDATE_PATH, */
   /* DUF_OPTION_UPDATE_MD5, */
   DUF_OPTION_ZERO_DUPLICATES,
-  DUF_OPTION_UPDATE_DUPLICATES,
-  DUF_OPTION_UPDATE_MDPATH,
-  DUF_OPTION_UPDATE_MDPATH_SELECTIVE,
+  /* DUF_OPTION_UPDATE_DUPLICATES, */
+  /* DUF_OPTION_UPDATE_MDPATH, */
+  /* DUF_OPTION_UPDATE_MDPATH_SELECTIVE, */
   DUF_OPTION_UPDATE_FILEDATA,
   DUF_OPTION_ZERO_FILEDATA,
   DUF_OPTION_UPDATE_EXIF,
@@ -91,7 +92,7 @@ typedef enum
   DUF_OPTION_SAME_EXIF,
   DUF_OPTION_SAME_MD5,
   DUF_OPTION_GROUP,
-  DUF_OPTION_LIMIT,
+  /* DUF_OPTION_LIMIT, */
   DUF_OPTION_ADD_TO_GROUP,
   DUF_OPTION_REMOVE_FROM_GROUP,
   DUF_OPTION_MAX_LONG,
@@ -133,14 +134,15 @@ typedef struct
 
 typedef struct
 {
+  unsigned remove_database:1;
   unsigned drop_tables:1;
   unsigned create_tables:1;
   unsigned add_path:1;
   /* unsigned update_path:1; */
   /* unsigned update_md5:1; */
   unsigned update_duplicates:1;
-  unsigned update_mdpath:1;
-  unsigned update_mdpath_selective:1;
+  /* unsigned update_mdpath:1; */
+  /* unsigned update_mdpath_selective:1; */
   unsigned update_filedata:1;
   unsigned zero_filedata:1;
   unsigned update_exif:1;
@@ -206,7 +208,7 @@ typedef struct
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
   duf_format_t format;
-  long limit;
+  /* long limit; */
   unsigned noopenat:1;
 } duf_config_cli_t;
 
