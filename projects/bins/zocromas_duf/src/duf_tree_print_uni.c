@@ -17,15 +17,9 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
-/* #include "duf_sql_def.h" */
-/* #include "duf_sql.h" */
 #include "duf_sql_field.h"
 
-/* #include "duf_utils.h" */
-#include "duf_path.h"
-/* #include "duf_file.h" */
-/* #include "duf_file_pathid.h" */
-#include "duf_file_scan.h"
+/* #include "duf_path.h" */
 
 #include "duf_sql.h"
 

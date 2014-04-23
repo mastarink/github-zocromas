@@ -19,11 +19,8 @@
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
-/* #include "duf_utils.h" */
 #include "duf_path.h"
-/* #include "duf_file.h" */
-/* #include "duf_file_pathid.h" */
-#include "duf_file_scan.h"
+#include "duf_item_scan.h"
 
 #include "duf_dbg.h"
 
@@ -91,9 +88,9 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
     pdi->items.total++;
     pdi->items.dirs++;
 
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     r = sccb->directory_scan_before( dirid, &pdi->levinfo[pdi->depth].lev_dh, pdi, precord );
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
     if ( r == DUF_ERROR_MAX_REACHED )
     {
@@ -116,9 +113,9 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
  * */
       if ( r >= 0 && sccb && sccb->file_scan )
       {
-  DUF_OINV_OPENED( pdi-> );
+        DUF_OINV_OPENED( pdi-> );
         r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb, pdh );
-  DUF_OINV_OPENED( pdi-> );
+        DUF_OINV_OPENED( pdi-> );
         /* r = duf_scan_files_by_dirid( dirid, sccb->file_scan (* str_cb *) , pdi, sccb ); */
         DUF_TEST_R( r );
       }
@@ -130,10 +127,10 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       /* else if ( r < 0 )             */
       /*   DUF_ERROR( "code: %d", r ); */
     }
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     if ( sccb && r >= 0 && sccb->directory_scan_middle && duf_config->cli.act.dirs )
       r = sccb->directory_scan_middle( dirid, pdh, pdi, precord );
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
 
     if ( r >= 0 && sccb )
@@ -144,11 +141,11 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       if ( r >= 0 && sccb )
       {
         DUF_OINV( pdi-> );
-  DUF_OINV_OPENED( pdi-> );
+        DUF_OINV_OPENED( pdi-> );
         r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->dir_selector, pdi->u.minsize,
                                 pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame,
                                 pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1, dirid );
-  DUF_OINV_OPENED( pdi-> );
+        DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
 
@@ -160,10 +157,10 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       /* else if ( r < 0 )             */
       /*   DUF_ERROR( "code: %d", r ); */
     }
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     if ( sccb && r >= 0 && sccb->directory_scan_after && duf_config->cli.act.dirs )
       r = sccb->directory_scan_after( dirid, pdh, pdi, precord );
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
   else if ( r >= 0 )
@@ -213,9 +210,9 @@ duf_scan_dirs_by_parentid( unsigned long long dirid, const duf_dirhandle_t * pdh
                || ( ( maxsize >= duf_config->u.minsize ) && ( !duf_config->u.maxsize || minsize <= duf_config->u.maxsize ) ) ) */
         ) )
   {
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     r = duf_scan_dir_by_pi( dirid, pdh, str_cb, pdi, sccb, precord );
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
   else

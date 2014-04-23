@@ -31,7 +31,7 @@ typedef enum
   DUF_SQL_NOLFS = DUF_SQLITE_ERROR_BASE + SQLITE_NOLFS, /* #  define SQLITE_NOLFS       22 (* Uses OS features not supported on host *)      */
   DUF_SQL_AUTH = DUF_SQLITE_ERROR_BASE + SQLITE_AUTH, /* #  define SQLITE_AUTH        23 (* Authorization denied *)                        */
   DUF_SQL_FORMAT = DUF_SQLITE_ERROR_BASE + SQLITE_FORMAT, /* #  define SQLITE_FORMAT      24 (* Auxiliary database format error *)             */
-  DUF_SQLITE_RANGE = DUF_SQLITE_ERROR_BASE + SQLITE_RANGE, /* #  define SQLITE_RANGE       25 (* 2nd parameter to sqlite3_bind out of range *)  */
+  DUF_SQL_RANGE = DUF_SQLITE_ERROR_BASE + SQLITE_RANGE, /* #  define SQLITE_RANGE       25 (* 2nd parameter to sqlite3_bind out of range *)  */
   DUF_SQL_NOTADB = DUF_SQLITE_ERROR_BASE + SQLITE_NOTADB, /* #  define SQLITE_NOTADB      26 (* File opened that is not a database file *)     */
   DUF_SQL_NOTICE = DUF_SQLITE_ERROR_BASE + SQLITE_NOTICE, /* #  define SQLITE_NOTICE      27 (* Notifications from sqlite3_log() *)            */
   DUF_SQL_WARNING = DUF_SQLITE_ERROR_BASE + SQLITE_WARNING, /* #  define SQLITE_WARNING     28 (* Warnings from sqlite3_log() *)                 */

@@ -14,7 +14,7 @@
 #include "duf_service.h"
 
 #include "duf_path.h"
-#include "duf_file_scan.h"
+#include "duf_item_scan.h"
 
 #include "duf_dbg.h"
 

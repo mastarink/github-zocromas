@@ -6,6 +6,6 @@
 /*                                              int *pseq, int maxseq, int dofiles );                                                       */
 
 
-unsigned long long duf_update_realpath_self_up( const char *real_path, const char *group, int notup );
+unsigned long long duf_update_realpath_self_up( const char *real_path, const char *group, int notup, int need_id, int *pr );
 
 #endif

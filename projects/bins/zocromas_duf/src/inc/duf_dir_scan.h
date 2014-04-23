@@ -16,9 +16,8 @@ int duf_print_dirs( const char *path, duf_ufilter_t u, int tree );
 
 
 /* will be static! */
-int
-duf_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord,
-               const duf_dirhandle_t * pdhu );
+int duf_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord,
+                   const duf_dirhandle_t * pdhu );
 
 
 #endif

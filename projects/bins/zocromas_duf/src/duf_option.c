@@ -384,7 +384,6 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_UPDATE_FILEDATA:
     DUF_OPT_FLAG( cli.act.update_filedata );
-    /* duf_config->cli.act.update_filedata = 1; */
     break;
   case DUF_OPTION_UPDATE_EXIF:
     DUF_OPT_FLAG( cli.act.update_exif );

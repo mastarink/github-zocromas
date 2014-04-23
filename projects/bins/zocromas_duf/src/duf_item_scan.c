@@ -33,7 +33,7 @@
 #include "duf_dbg.h"
 
 /* ###################################################################### */
-#include "duf_file_scan.h"
+#include "duf_item_scan.h"
 /* ###################################################################### */
 
 
@@ -133,7 +133,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
   /* DUF_ERROR( "r:%d;", r ); */
   if ( r >= 0 )
   {
-  DUF_OINV_NOT_OPENED( pdi-> );
+    DUF_OINV_NOT_OPENED( pdi-> );
     DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
 
     DEBUG_STEPULL( pdi->levinfo[pdi->depth].dirid );
@@ -154,10 +154,10 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
     {
       if ( r >= 0 )
       {
-  DUF_OINV_NOT_OPENED( pdi-> );
+        DUF_OINV_NOT_OPENED( pdi-> );
         r = duf_levinfo_openat_dh( pdi );
         {
-  DUF_OINV_OPENED( pdi-> );
+          DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
           /* {                                                                                                         */
           /*   struct stat stt;                                                                                        */
@@ -174,7 +174,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
             r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
           DUF_TEST_R( r );
           /* DUF_ERROR( "F:%s", DUF_FUNN( str_cb ) ); */
-  DUF_OINV_OPENED( pdi-> );
+          DUF_OINV_OPENED( pdi-> );
         }
         DUF_OINV( pdi-> );
         {
@@ -184,15 +184,15 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
           if ( r >= 0 )
             r = rc;
         }
-  DUF_OINV_NOT_OPENED( pdi-> );
+        DUF_OINV_NOT_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
     }
     else
       DUF_TRACE( error, 0, "str_cb not set" );
-  DUF_OINV_NOT_OPENED( pdi-> );
+    DUF_OINV_NOT_OPENED( pdi-> );
     duf_levinfo_up( pdi );
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
   }
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );

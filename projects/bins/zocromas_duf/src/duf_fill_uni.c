@@ -18,20 +18,14 @@
 
 
 
-/* #include "duf_sql.h" */
 #include "duf_sql_field.h"
-/* #include "duf_utils.h" */
 #include "duf_path.h"
-/* #include "duf_file.h" */
-/* #include "duf_file_pathid.h" */
 
 #include "duf_add.h"
 
 
 #include "duf_filedata.h"
-/* #include "duf_filename.h" */
 #include "duf_dirent.h"
-#include "duf_file_scan.h"
 
 #include "duf_sql_def.h"
 #include "duf_sql.h"
@@ -47,7 +41,7 @@
 
 
 /* static unsigned long long                                                                                                            */
-/* duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned long long resd )                                     */
+/* duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned long long dataid )                                     */
 /* {                                                                                                                                    */
 /*   unsigned long long resf = 0;                                                                                                       */
 /*   int r;                                                                                                                             */
@@ -56,7 +50,7 @@
 /*                                                                                                                                      */
 /*   qfname = duf_single_quotes_2( fname );                                                                                             */
 /*   r = duf_sql_c( "INSERT OR IGNORE INTO duf_filenames (pathid, dataid, name, ucnt, now) " " VALUES ('%lu','%lu','%s',0,datetime())", */
-/*                  DUF_CONSTRAINT_IGNORE_YES, &changes, dir_id, resd, qfname ? qfname : fname );                                       */
+/*                  DUF_CONSTRAINT_IGNORE_YES, &changes, dir_id, dataid, qfname ? qfname : fname );                                       */
 /*                                                                                                                                      */
 /*   DUF_TRACE( current, 0, "<changes> : %d", changes );                                                                                */
 /*   (* if ( !r (* assume SQLITE_OK *)  ) *)                                                                                            */
@@ -72,7 +66,7 @@
 /* }                                                                                                                                    */
 
 static unsigned long long
-duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned long long resd, int *pr )
+duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned long long dataid, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long resf = 0;
@@ -89,22 +83,30 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
     qfname = qbase_name ? qbase_name : fname;
     {
       /* r = duf_sql_c( "INSERT OR IGNORE INTO duf_filenames (pathid, dataid, name, ucnt, now) " " VALUES ('%lu','%lu','%s',0,datetime())", */
-      /*                DUF_CONSTRAINT_IGNORE_YES, &changes, dir_id, resd, qfname );                                                        */
+      /*                DUF_CONSTRAINT_IGNORE_YES, &changes, dir_id, dataid, qfname );                                                        */
       r = duf_sql( "INSERT OR IGNORE INTO duf_filenames (pathid, dataid, name, ucnt, now) " " VALUES ('%lu','%lu','%s',0,datetime())",
-                   &changes, dir_id, resd, qfname );
+                   &changes, dir_id, dataid, qfname );
+      DUF_TEST_R( r );
     }
     DUF_TRACE( current, 0, "<changes> : %d", changes );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
-      duf_scan_callbacks_t sccb = {.fieldset = "resf" };
-      r = duf_sql_select( duf_sel_cb_field_by_sccb, &resf, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                          &sccb, ( const duf_dirhandle_t * ) NULL,
-                          "SELECT id as resf " " FROM duf_filenames " " WHERE pathid='%lu' and name='%lu'", dir_id, qfname );
+      if ( need_id )
+      {
+        duf_scan_callbacks_t sccb = {.fieldset = "resf" };
+        r = duf_sql_select( duf_sel_cb_field_by_sccb, &resf, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                            &sccb, ( const duf_dirhandle_t * ) NULL,
+                            "SELECT id as resf " " FROM duf_filenames " " WHERE pathid='%lu' and name='%lu'", dir_id, qfname );
+        DUF_TEST_R( r );
+      }
     }
     else if ( !r /* assume SQLITE_OK */  )
     {
-      resf = duf_sql_last_insert_rowid(  );
-      DUF_TRACE( fill, 1, "inserted (SQLITE_OK) pathid=%llu:'%s'", dir_id, fname );
+      if ( need_id )
+      {
+        resf = duf_sql_last_insert_rowid(  );
+        DUF_TRACE( fill, 1, "inserted (SQLITE_OK) pathid=%llu:'%s'", dir_id, fname );
+      }
     }
     else
     {
@@ -116,6 +118,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
   {
     DUF_ERROR( "Wrong data" );
     r = DUF_ERROR_DATA;
+    DUF_TEST_R( r );
   }
   if ( pr )
     *pr = r;
@@ -166,11 +169,11 @@ duf_file_scan_fill_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t 
 
 static unsigned long long
 duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const char *fname, unsigned long long pathid, duf_depthinfo_t * pdi,
-                                                int *pr )
+                                                int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long resd = 0;
-  unsigned long long resf = 0;
+  unsigned long long dataid = 0;
+  unsigned long long fnid = 0;
   struct stat st_file, *pst_file = NULL;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
@@ -194,22 +197,22 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
   if ( st_file.st_size >= pdi->u.minsize && ( !pdi->u.maxsize || st_file.st_size < pdi->u.maxsize ) )
   {
     /* fprintf( stderr, "duf_insert_filedata %lu %lu\n", file_inode, pst_file->st_dev ); */
-    resd = duf_insert_filedata_uni( pst_file, &r );
-    resf = duf_insert_filename_uni( fname, pathid, resd, &r );
+    dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );
+    fnid = duf_insert_filename_uni( fname, pathid, dataid, need_id /*need_id */ , &r );
   }
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, resf );
-  return resf;
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, fnid );
+  return fnid;
 }
 
 static unsigned long long
-duf_update_dfd_file_name_inode_filter_uni( const duf_dirhandle_t * pdh, const char *fname, unsigned long long pathid, duf_depthinfo_t * pdi,
-                                           int *pr )
+duf_fill_file_info_by_pdh_and_name_and_pathid( const duf_dirhandle_t * pdh, const char *fname, unsigned long long dirid,
+                                               duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long resd = 0;
-  unsigned long long resf = 0;
+  unsigned long long dataid = 0;
+  unsigned long long fnid = 0;
   struct stat st_file;
   const struct stat *pst_file = NULL;
 
@@ -224,18 +227,19 @@ duf_update_dfd_file_name_inode_filter_uni( const duf_dirhandle_t * pdh, const ch
   if ( pst_file && st_file.st_size >= pdi->u.minsize && ( !pdi->u.maxsize || st_file.st_size < pdi->u.maxsize ) )
   {
     /* fprintf( stderr, "duf_insert_filedata %lu %lu\n", file_inode, pst_file->st_dev ); */
-    resd = duf_insert_filedata_uni( pst_file, &r );
-    resf = duf_insert_filename_uni( fname, pathid, resd, &r );
+    dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );
+    fnid = duf_insert_filename_uni( fname, dirid, dataid, need_id, &r );
   }
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, resf );
-  return resf;
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, fnid );
+  return fnid;
 }
 
 /* ------------------------------------------------------------------- */
 static unsigned long long
-duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi, int *pr )
+duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path, struct dirent *de, unsigned long long pathid,
+                                                           duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
@@ -247,7 +251,7 @@ duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long lo
   case DT_REG:
     {
       DUF_TRACE( fill, 1, "regfile='%s/%s'", real_path, de->d_name );
-      itemid = duf_update_realpath_file_name_inode_filter_uni( real_path, de->d_name, pathid, pdi, &r );
+      itemid = duf_update_realpath_file_name_inode_filter_uni( real_path, de->d_name, pathid, pdi, need_id, &r );
     }
     break;
   case DT_DIR:
@@ -266,7 +270,7 @@ duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long lo
       else
       {
         pst = &st;
-        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, &r );
+        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, 0 /*need_id */ , &r );
       }
       mas_free( fpath );
 
@@ -284,7 +288,8 @@ duf_fill_rfl_flt_uni( const char *real_path, struct dirent *de, unsigned long lo
 }
 
 static unsigned long long
-duf_fill_dfl_flt_uni( const duf_dirhandle_t * pdh, struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi, int *pr )
+duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid( const duf_dirhandle_t * pdh, struct dirent *de, unsigned long long pathid,
+                                                      duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
@@ -296,7 +301,7 @@ duf_fill_dfl_flt_uni( const duf_dirhandle_t * pdh, struct dirent *de, unsigned l
   case DT_REG:
     {
       DUF_TRACE( fill, 1, "regfile='.../%s'", de->d_name );
-      itemid = duf_update_dfd_file_name_inode_filter_uni( pdh, de->d_name, pathid, pdi, &r );
+      itemid = duf_fill_file_info_by_pdh_and_name_and_pathid( pdh, de->d_name, pathid, pdi, 1 /*need_id */ , &r );
     }
     break;
   case DT_DIR:
@@ -315,7 +320,7 @@ duf_fill_dfl_flt_uni( const duf_dirhandle_t * pdh, struct dirent *de, unsigned l
       else
       {
         pst = &st;
-        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, &r );
+        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, 0 /*need_id */ , &r );
       }
 
       DUF_TRACE( fill, 1, "dir='.../%s'", de->d_name );
@@ -420,12 +425,11 @@ duf_fill_ent_flt_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, du
         {
           unsigned long long itemid = 0;
 
-
           DUF_TRACE( fill, 1, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
           if ( noopenat )
-            itemid = duf_fill_rfl_flt_uni( real_path, list[il], pathid, pdi, &r );
+            itemid = duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( real_path, list[il], pathid, pdi, 1 /*need_id */ , &r );
           else
-            itemid = duf_fill_dfl_flt_uni( pdh, list[il], pathid, pdi, &r );
+            itemid = duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid( pdh, list[il], pathid, pdi, 1 /*need_id */ , &r );
           DUF_TEST_R( r );
           if ( itemid )
             items++;
@@ -518,12 +522,15 @@ duf_directory_scan_fill_uni( unsigned long long pathid, const duf_dirhandle_t * 
     DUF_ERROR( "@@@@@@@@@@@@@@ %llu -- %llu", pathid, pdi->levinfo[pdi->depth].dirid );
   }
 
-
   {
-    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
+    char *path = NULL;
 
-    DUF_TRACE( fill, 1, "path=%s", path );
+    if ( DUF_IF_TRACE( fill ) )
+    {
+      path = duf_pathid_to_path_s( pathid, pdi, &r );
 
+      DUF_TRACE( fill, 1, "path=%s", path );
+    }
 /* TODO additionally 
  * for each direntry:
  *  -- 
@@ -546,11 +553,12 @@ duf_directory_scan_fill_uni( unsigned long long pathid, const duf_dirhandle_t * 
       r = duf_fill_ent_flt_uni( pathid, pdh, pdi, dfname );
     }
 
-
-    DUF_TRACE( fill, 1, "path=%s", path );
+    if ( DUF_IF_TRACE( fill ) )
+    {
+      DUF_TRACE( fill, 1, "path=%s", path );
+    }
     mas_free( path );
   }
-
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }

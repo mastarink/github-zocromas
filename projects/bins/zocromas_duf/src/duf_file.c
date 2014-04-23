@@ -19,7 +19,6 @@
 
 #include "duf_path.h"
 #include "duf_file_pathid.h"
-/* #include "duf_file_scan.h" */
 
 #include "duf_dbg.h"
 

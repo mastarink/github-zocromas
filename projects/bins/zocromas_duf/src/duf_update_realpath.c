@@ -21,6 +21,8 @@
 
 #include "duf_dbg.h"
 
+#include "duf_group.h"
+
 /* ###################################################################### */
 #include "duf_update_realpath.h"
 /* ###################################################################### */
@@ -31,8 +33,9 @@
  * '/a/b/c/d/e/f' -> db
  * */
 unsigned long long
-duf_update_realpath_self_up( const char *real_path, const char *group, int up )
+duf_update_realpath_self_up( const char *real_path, const char *group, int up, int need_id, int *pr )
 {
+  int r=0;
   unsigned long long pathid = 0;
   char *dir_name;
   const char *base_name = NULL;
@@ -51,7 +54,6 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
   }
   if ( base_name && *base_name )
   {
-    int r;
     struct stat st_dir;
 
     /* stat needless here ? */
@@ -60,6 +62,7 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
     {
 /* no such entry */
       DUF_ERROR( "No such entry %s", real_path );
+      r = DUF_ERROR_STAT;
     }
     else
     {
@@ -71,20 +74,23 @@ duf_update_realpath_self_up( const char *real_path, const char *group, int up )
        * '/a/b/c/d/e' -> db
        * */
       if ( ( dir_name && *dir_name ) && up )
-        parentid = duf_update_realpath_self_up( dir_name, NULL /* group */ , DUF_TRUE /* up */  );
+        parentid = duf_update_realpath_self_up( dir_name, NULL /* group */ , DUF_TRUE /* up */ , 1 /*need_id */ , &r );
 
       /* 
        * insert name into db; return id 
        * /a/b/c/d/e/f
        * 'f' -> db
        * */
-      pathid = duf_insert_path( base_name, &st_dir, parentid );
+      if ( r >= 0 )
+        pathid = duf_insert_path( base_name, &st_dir, parentid, 1 /*need_id */ , &r );
 
-      if ( group )
+      if ( r >= 0 && group )
         duf_pathid_group( group, pathid, +1 );
     }
   }
   mas_free( rpath );
+  if ( pr )
+    *pr = r;
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
   return pathid;
 }

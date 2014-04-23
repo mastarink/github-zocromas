@@ -14,7 +14,6 @@
 #include "duf_config.h"
 
 #include "duf_sql_def.h"
-#include "duf_file_scan.h"
 #include "duf_uni_scan.h"
 #include "duf_path.h"
 

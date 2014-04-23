@@ -13,7 +13,7 @@
 
 #include "duf_config.h"
 #include "duf_utils.h"
-
+#include "duf_service.h"
 
 
 
@@ -303,45 +303,115 @@ duf_zero_filedatas( void )
 /*   return resd;                                                                                                                      */
 /* }                                                                                                                                   */
 
+/* unsigned long long                                                                                                                      */
+/* duf_insert_filedata_uni0( const struct stat *pst_file, int need_id, int *pr )                                                           */
+/* {                                                                                                                                       */
+/*   int r;                                                                                                                                */
+/*   unsigned long long resd;                                                                                                              */
+/*   duf_scan_callbacks_t sccb;                                                                                                            */
+/*                                                                                                                                         */
+/* (*                                                                              *) duf_dbgfunc( DBG_START, __func__, __LINE__ );        */
+/*   memset( &sccb, 0, sizeof( sccb ) );                                                                                                   */
+/*   sccb.fieldset = "dataid";                                                                                                             */
+/*                                                                                                                                         */
+/*   if ( duf_config->cli.trace.fill > 2 )                                                                                                 */
+/*     fprintf( stderr, "FILEDATA\n" );                                                                                                    */
+/*   if ( pst_file )                                                                                                                       */
+/*   {                                                                                                                                     */
+/*     r = duf_sql_c( "INSERT INTO duf_filedatas " " (dev,  inode, size, mode, nlink, uid,  gid,  blksize, blocks, "                       */
+/*                    " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id,ucnt,now) " "VALUES "                                                  */
+/*                    " ('%lu','%lu', '%lu','%lu','%lu', '%lu','%lu','%lu',   '%lu', "                                                     */
+/*                    "'%lu','%lu','%lu','%lu','%lu', '%lu',  0,    0,   datetime())", DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL,          */
+/*                    ( unsigned long ) pst_file->st_dev, ( unsigned long ) pst_file->st_ino, ( unsigned long ) pst_file->st_size,         */
+/*                    ( unsigned long ) pst_file->st_mode, ( unsigned long ) pst_file->st_nlink, ( unsigned long ) pst_file->st_uid,       */
+/*                    ( unsigned long ) pst_file->st_gid, ( unsigned long ) pst_file->st_blksize, ( unsigned long ) pst_file->st_blocks,   */
+/*                    ( unsigned long ) pst_file->st_atim.tv_sec, ( unsigned long ) pst_file->st_atim.tv_nsec,                             */
+/*                    ( unsigned long ) pst_file->st_mtim.tv_sec, ( unsigned long ) pst_file->st_mtim.tv_nsec,                             */
+/*                    ( unsigned long ) pst_file->st_ctim.tv_sec, ( unsigned long ) pst_file->st_ctim.tv_nsec );                           */
+/*     if ( r == DUF_SQL_CONSTRAINT )                                                                                                      */
+/*     {                                                                                                                                   */
+/*       if ( need_id )                                                                                                                    */
+/*       {                                                                                                                                 */
+/*         r = duf_sql_select( duf_sel_cb_field_by_sccb (* duf_sel_cb_on_insert_filedata *) , &resd, STR_CB_DEF, STR_CB_UDATA_DEF,         */
+/*                             ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL (*  sccb *) , ( const duf_dirhandle_t * ) NULL, */
+/*                             "SELECT id as dataid " " FROM duf_filedatas " " WHERE dev='%lu' and inode='%lu'", pst_file->st_dev,         */
+/*                             pst_file->st_ino );                                                                                         */
+/*       }                                                                                                                                 */
+/*     }                                                                                                                                   */
+/*     else if ( !r (* assume SQLITE_OK *)  )                                                                                              */
+/*     {                                                                                                                                   */
+/*       if ( need_id )                                                                                                                    */
+/*         resd = duf_sql_last_insert_rowid(  );                                                                                           */
+/*     }                                                                                                                                   */
+/*     else                                                                                                                                */
+/*       DUF_ERROR( "insert filedata %d", r );                                                                                             */
+/*   }                                                                                                                                     */
+/*   if ( pr )                                                                                                                             */
+/*     *pr = r;                                                                                                                            */
+/* (*                                                                              *) duf_dbgfunc( DBG_END, __func__, __LINE__ );          */
+/*   if ( duf_config->cli.trace.fill > 2 )                                                                                                 */
+/*     fprintf( stderr, "/FILEDATA %llu\n", resd );                                                                                        */
+/*   return resd;                                                                                                                          */
+/* }                                                                                                                                       */
+
+
 unsigned long long
-duf_insert_filedata_uni( const struct stat *pst_file, int *pr )
+duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
 {
-  int r;
-  unsigned long long resd;
-  duf_scan_callbacks_t sccb;
+  int r = 0;
+  unsigned long long resd = 0;
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  memset( &sccb, 0, sizeof( sccb ) );
-  sccb.fieldset = "dataid";
-
-  if ( duf_config->cli.trace.fill > 2 )
-    fprintf( stderr, "FILEDATA\n" );
   if ( pst_file )
   {
-    r = duf_sql_c( "INSERT INTO duf_filedatas " " (dev,  inode, size, mode, nlink, uid,  gid,  blksize, blocks, "
+    int r;
+    int changes = 0;
+
+    duf_dbgfunc( DBG_START, __func__, __LINE__ );
+    {
+      r = duf_sql( "INSERT OR IGNORE INTO duf_filedatas " " (dev,  inode, size, mode, nlink, uid,  gid,  blksize, blocks, "
                    " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id,ucnt,now) " "VALUES "
                    " ('%lu','%lu', '%lu','%lu','%lu', '%lu','%lu','%lu',   '%lu', "
-                   "'%lu','%lu','%lu','%lu','%lu', '%lu',  0,    0,   datetime())", DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL,
+                   "'%lu','%lu','%lu','%lu','%lu', '%lu',  0,    0,   datetime())", &changes,
                    ( unsigned long ) pst_file->st_dev, ( unsigned long ) pst_file->st_ino, ( unsigned long ) pst_file->st_size,
                    ( unsigned long ) pst_file->st_mode, ( unsigned long ) pst_file->st_nlink, ( unsigned long ) pst_file->st_uid,
                    ( unsigned long ) pst_file->st_gid, ( unsigned long ) pst_file->st_blksize, ( unsigned long ) pst_file->st_blocks,
                    ( unsigned long ) pst_file->st_atim.tv_sec, ( unsigned long ) pst_file->st_atim.tv_nsec,
                    ( unsigned long ) pst_file->st_mtim.tv_sec, ( unsigned long ) pst_file->st_mtim.tv_nsec,
                    ( unsigned long ) pst_file->st_ctim.tv_sec, ( unsigned long ) pst_file->st_ctim.tv_nsec );
-    if ( r == DUF_SQL_CONSTRAINT )
-      r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sel_cb_on_insert_filedata */ , &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
-                          ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                          "SELECT id as dataid " " FROM duf_filedatas " " WHERE dev='%lu' and inode='%lu'", pst_file->st_dev,
-                          pst_file->st_ino );
+    }
+    DUF_TRACE( current, 0, "<changes> : %d", changes );
+    if ( r == DUF_SQL_CONSTRAINT && !changes )
+    {
+      if ( need_id )
+      {
+        duf_scan_callbacks_t sccb = {.fieldset = "dataid" };
+        r = duf_sql_select( duf_sel_cb_field_by_sccb, &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
+                            ( duf_depthinfo_t * ) NULL, &sccb, ( const duf_dirhandle_t * ) NULL,
+                            "SELECT id as dataid " " FROM duf_filedatas " " WHERE dev='%lu' and inode='%lu'", pst_file->st_dev,
+                            pst_file->st_ino );
+      }
+    }
     else if ( !r /* assume SQLITE_OK */  )
-      resd = duf_sql_last_insert_rowid(  );
+    {
+      if ( need_id )
+      {
+        resd = duf_sql_last_insert_rowid(  );
+        DUF_TRACE( fill, 1, "inserted (SQLITE_OK) dataid=%llu", resd );
+      }
+    }
     else
-      DUF_ERROR( "insert filedata %d", r );
+    {
+      DUF_ERROR( "insert filedata %d [%s]", r, duf_error_name( r ) );
+    }
+  }
+  else
+  {
+    DUF_ERROR( "Wrong data" );
+    r = DUF_ERROR_DATA;
   }
   if ( pr )
     *pr = r;
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  if ( duf_config->cli.trace.fill > 2 )
-    fprintf( stderr, "/FILEDATA %llu\n", resd );
+  DUF_TRACE( current, 0, "%llu", resd );
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, resd );
   return resd;
 }
