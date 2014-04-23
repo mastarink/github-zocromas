@@ -15,7 +15,7 @@
 
 /* #include "duf_sql.h" */
 #include "duf_path.h"
-#include "duf_insert.h"
+/* #include "duf_insert.h" */
 
 /* #include "duf_update_path.h" */
 

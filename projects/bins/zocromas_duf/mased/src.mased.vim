@@ -22,8 +22,8 @@ sfind duf_path.h
 tab sfind duf_file.c
 sfind duf_file.h
 
-tab sfind duf_file_scan.c
-sfind duf_file_scan.h
+tab sfind duf_item_scan.c
+sfind duf_item_scan.h
 
 tab sfind duf_file_pathid.c
 sfind duf_file_pathid.h
@@ -67,6 +67,12 @@ sfind duf_group.h
 
 tab sfind duf.c
 sfind duf.h
+
+tab sfind duf_maindb.c
+sfind duf_action.h
+
+tab sfind duf_maindb.c
+sfind duf_action.h
 
 tab sfind duf_config.c
 sfind duf_config.h

@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <assert.h>
+#include <limits.h>
 
 
 #include <mastar/wrap/mas_std_def.h>
@@ -23,7 +24,7 @@
 #include "duf_sql.h"
 #include "duf_sql_field.h"
 
-#include "duf_insert.h"
+/* #include "duf_insert.h" */
 
 #include "duf_dbg.h"
 
