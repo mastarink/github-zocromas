@@ -42,28 +42,40 @@
 
 #  define DUF_WHAT( what, name, min, ...) \
     duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
-		__func__,__LINE__, \
+		__func__,__LINE__, 0, 0, \
 			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
+#  define DUF_WHATSYSE( ern, what, name, min, ...) \
+    duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
+		__func__,__LINE__, DUF_TRACE_FLAG_SYSTEM, ern, \
+			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
+#  define DUF_WHATSYS(  what, name, min, ...) DUF_WHATSYSE(errno,  what, name, min, __VA_ARGS__)
+
 #  define DUF_TRACE(name, ...)           DUF_WHAT(cli.trace, name, __VA_ARGS__)
+#  define DUF_TRACESYS(name, ...)        DUF_WHATSYS(cli.trace, name, __VA_ARGS__)
+#  define DUF_TRACESYSE(ern, name, ...)        DUF_WHATSYSE(ern, cli.trace, name, __VA_ARGS__)
 
 #  define DUF_TRACE_SCAN( min, ...)    DUF_TRACE( scan, min, __VA_ARGS__)
 #  define DUF_TRACE_SAMPLE( min, ...)  DUF_TRACE( sample, min, __VA_ARGS__)
+
+#  define DUF_ERRSYS(...)              DUF_TRACESYS( error, 0, __VA_ARGS__ )
+#  define DUF_ERRSYSE(ern,...)         DUF_TRACESYSE( ern, error, 0, __VA_ARGS__ )
 #  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
+
 #  define DUF_TEST_R(val)              if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
 
 #  define DUF_VERBOSE(lev,...)           DUF_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
 #  define DUF_IF_VERBOSE()               DUF_IF_WHAT(cli.dbg,verbose)
 #  define DUF_IF_VERBOSEN(lev)           DUF_IF_WHATN(cli.dbg,verbose,lev)
 
-#define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
+#  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
 
-#define DUF_OINV(pref) assert( duf_config->cli.noopenat || ( \
+#  define DUF_OINV(pref) assert( duf_config->cli.noopenat || ( \
     		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
     			- ( (int) ( pref  levinfo && pref levinfo[pref  depth].lev_dh.dfd )) \
 	    		- pref  depth  == 0 ) \
     		)
-#define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
-#define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
+#  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
+#  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
 #  include "duf_cli_types.h"
 
@@ -246,11 +258,12 @@ typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
 
 
 /* this is callback of type: duf_scan_hook_dir_t (second range; ; sel_cb): */
-typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi,
+typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, /* const duf_dirhandle_t * pdh, */ duf_depthinfo_t * pdi,
                                        duf_record_t * precord );
 
 /* this is callback of type: duf_scan_hook_file_t (first range; str_cb) */
-typedef int ( *duf_scan_hook_file_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord );
+typedef int ( *duf_scan_hook_file_t ) ( /* void *str_cb_udata, */duf_depthinfo_t * pdi,
+                                        duf_record_t * precord /*, const duf_dirhandle_t * pdhu */  );
 
 
 typedef int ( *duf_anyhook_t ) ( void );

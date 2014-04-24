@@ -264,5 +264,5 @@ function shn_last ()
 
 MSH_SHN_PROJECT_FUNCTIONS="`shn_funlist shn_project`"
 [[ "$MSH_SHN_PROJECT_FUNCTIONS" ]] && export -f $MSH_SHN_PROJECT_FUNCTIONS
-
+# shn_msg "$(datemt) v.`shn_project_version`"
 return 0

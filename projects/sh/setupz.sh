@@ -261,7 +261,7 @@ function virgin_clean ()
 #     echo "rm $f"
 #   fi
 # done
-  for f in zocversion.txt vimrc-mastar gvim-vimenter.vim gvimrc-mastar gvim-funcs.vim ; do
+  for f in zocversion.txt vimrc-mastar.vim gvim-vimenter.vim gvimrc-mastar.vim gvim-funcs.vim ; do
     if [[ "$projectsdir" ]] && ! [[ -L "$f" ]]  ; then
       if [[ -f "$projectsdir/files/$f" ]] ; then
         ln -s `realpath --relative-to=. $projectsdir/files/$f`

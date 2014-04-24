@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -9,14 +7,12 @@
 #include "duf_types.h"
 #include "duf_utils.h"
 
-#include "duf_dbg.h"
 
 #include "duf_config.h"
 
 #include "duf_sql_def.h"
-#include "duf_uni_scan.h"
-#include "duf_path.h"
 
+#include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf_sql_field.h"
@@ -52,13 +48,8 @@ __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int
           fprintf( stderr, "  Have '%s'\n", precord->pnames[i] );
         }
         fprintf( stderr, "Error - no such field '%s' {%p} (%u)\n", name, ( void * ) precord, precord->ncolumns );
-        {
-          /* force SEGFAULT */
-          char *p = NULL;
-          char c __attribute__ ( ( unused ) ) = *p;
-        }
-        exit( 4 );
       }
+      assert( pos >= 0 || optional );
     }
   }
   return pos;

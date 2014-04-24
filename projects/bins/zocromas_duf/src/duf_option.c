@@ -310,10 +310,9 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_FILL_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.fill );
-    /* if ( optarg && *optarg )                                   */
-    /*   duf_config->cli.trace.fill = strtol( optarg, NULL, 10 ); */
-    /* else                                                       */
-    /*   duf_config->cli.trace.fill++;                            */
+    break;
+  case DUF_OPTION_INTEGRITY_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.integrity );
     break;
   case DUF_OPTION_SQL_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.sql );
@@ -369,15 +368,15 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /* case DUF_OPTION_UPDATE_MD5:   */
     /*   duf_config->cli.act.update_md5 = 1; */
     /*   break;                      */
-  /* case DUF_OPTION_UPDATE_DUPLICATES:                 */
-  /*   DUF_OPT_FLAG( cli.act.update_duplicates );       */
-  /*   break;                                           */
-  /* case DUF_OPTION_UPDATE_MDPATH:                     */
-  /*   DUF_OPT_FLAG( cli.act.update_mdpath );           */
-  /*   break;                                           */
-  /* case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:           */
-  /*   DUF_OPT_FLAG( cli.act.update_mdpath_selective ); */
-  /*   break;                                           */
+    /* case DUF_OPTION_UPDATE_DUPLICATES:                 */
+    /*   DUF_OPT_FLAG( cli.act.update_duplicates );       */
+    /*   break;                                           */
+    /* case DUF_OPTION_UPDATE_MDPATH:                     */
+    /*   DUF_OPT_FLAG( cli.act.update_mdpath );           */
+    /*   break;                                           */
+    /* case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:           */
+    /*   DUF_OPT_FLAG( cli.act.update_mdpath_selective ); */
+    /*   break;                                           */
   case DUF_OPTION_ZERO_FILEDATA:
     DUF_OPT_FLAG( cli.act.zero_filedata );
     /* duf_config->cli.act.zero_filedata = 1; */
@@ -397,7 +396,6 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     DUF_OPT_FLAG( cli.act.vacuum );
     break;
   case DUF_OPTION_SAMPLE:
-    /* DUF_OPT_FLAG( cli.act.sample ); */
     DUF_OPT_NUM_PLUS( cli.act.sample );
     break;
   case DUF_OPTION_SAMPUPD:
@@ -405,31 +403,30 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_MDPATH:
     DUF_OPT_FLAG( cli.act.mdpath );
-    /* duf_config->cli.act.mdpath = 1; */
+    DUF_OPT_FLAG( cli.act.integrity );
     break;
   case DUF_OPTION_MD5:
     DUF_OPT_FLAG( cli.act.md5 );
-    /* duf_config->cli.act.md5 = 1; */
+    DUF_OPT_FLAG( cli.act.integrity );
     break;
   case DUF_OPTION_FILL:
     DUF_OPT_FLAG( cli.act.fill );
-    /* duf_config->cli.act.fill = 1; */
+    DUF_OPT_FLAG( cli.act.integrity );
+    break;
+  case DUF_OPTION_INTEGRITY:
+    DUF_OPT_FLAG( cli.act.integrity );
     break;
   case DUF_OPTION_PRINT:
     DUF_OPT_FLAG( cli.act.print );
-    /* duf_config->cli.act.print = 1; */
     break;
   case DUF_OPTION_TREE:
     DUF_OPT_FLAG( cli.act.tree );
-    /* duf_config->cli.act.tree = 1; */
     break;
   case DUF_OPTION_FILES:
     DUF_OPT_FLAG( cli.act.files );
-    /* duf_config->cli.act.files = 1; */
     break;
   case DUF_OPTION_DIRS:
     DUF_OPT_FLAG( cli.act.dirs );
-    /* duf_config->cli.act.dirs = 1; */
     break;
   case DUF_OPTION_MAXSIZE:
     DUF_OPT_NUM( u.maxsize );
@@ -445,8 +442,6 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_MAXDIRFILES:
     DUF_OPT_NUM( u.maxdirfiles );
-    /* if ( optarg && *optarg )                                  */
-    /*   duf_config->u.maxdirfiles = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MINDIRFILES:
     DUF_OPT_NUM( u.mindirfiles );
@@ -542,9 +537,9 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /*   duf_config->db.name = mas_strdup( optarg ); */
     /* }                                             */
     break;
-  /* case DUF_OPTION_LIMIT:      */
-  /*   DUF_OPT_NUM( cli.limit ); */
-  /*   break;                    */
+    /* case DUF_OPTION_LIMIT:      */
+    /*   DUF_OPT_NUM( cli.limit ); */
+    /*   break;                    */
   case '?':
     r = DUF_ERROR_OPTION;
     break;

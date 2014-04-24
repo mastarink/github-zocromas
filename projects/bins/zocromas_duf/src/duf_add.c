@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
 
 /* dirname, basename */
 #include <libgen.h>
@@ -18,12 +17,6 @@
 #include "duf_sql_def.h"
 #include "duf_sql_field.h"
 #include "duf_sql.h"
-
-#include "duf_path.h"
-/* #include "duf_insert.h" */
-
-#include "duf_update_realpath.h"
-/* #include "duf_update_path.h" */
 
 #include "duf_dbg.h"
 

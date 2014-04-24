@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+/* #include <stdio.h> */
+/* #include <stdlib.h> */
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
@@ -82,25 +82,33 @@ main_db( int argc, char **argv )
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
-      r = DUF_ERROR_PTR;
       if ( duf_config->db.fpath )
         r = duf_sql_open( duf_config->db.fpath );
+      else
+        r = DUF_ERROR_PTR;
+      DUF_TEST_R( r );
     }
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
       r = duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL );
+      DUF_TEST_R( r );
       if ( r >= 0 )
         r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL );
-
       DUF_TEST_R( r );
       if ( r >= 0 )
         r = duf_action_new( argc, argv );
+      DUF_TEST_R( r );
 
       if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
         DUF_ERROR( "action FAIL ; r=%d", r );
       /* duf_action( argc, argv ); */
-      r = duf_sql_close(  );
+      {
+        int rc = duf_sql_close(  );
+
+        if ( r == 0 )
+          r = rc;
+      }
     }
   }
   else if ( !duf_config->db.dir )
@@ -114,7 +122,6 @@ main_db( int argc, char **argv )
     DUF_ERROR( "db.name not set" );
   }
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DUF_TEST_R( r );
   return r;
 }
-
-

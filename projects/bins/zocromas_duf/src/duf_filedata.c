@@ -1,31 +1,17 @@
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
-
-#include <openssl/md5.h>
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
-
 #include "duf_config.h"
 #include "duf_utils.h"
 #include "duf_service.h"
-
 
 
 #include "duf_sql_def.h"
 #include "duf_sql.h"
 #include "duf_sql_field.h"
 
-#include "duf_path.h"
-/* #include "duf_file_pathid.h" */
 #include "duf_file.h"
-#include "duf_file_md5id.h"
-/* #include "duf_insert.h" */
 
 #include "duf_dbg.h"
 
@@ -379,7 +365,7 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
                    ( unsigned long ) pst_file->st_mtim.tv_sec, ( unsigned long ) pst_file->st_mtim.tv_nsec,
                    ( unsigned long ) pst_file->st_ctim.tv_sec, ( unsigned long ) pst_file->st_ctim.tv_nsec );
     }
-    DUF_TRACE( current, 0, "<changes> : %d", changes );
+    /* DUF_TRACE( current, 0, "<changes> : %d", changes ); */
     if ( r == DUF_SQL_CONSTRAINT && !changes )
     {
       if ( need_id )
@@ -411,7 +397,7 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
   }
   if ( pr )
     *pr = r;
-  DUF_TRACE( current, 0, "%llu", resd );
+  /* DUF_TRACE( current, 0, "%llu", resd ); */
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, resd );
   return resd;
 }

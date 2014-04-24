@@ -145,6 +145,7 @@ function shn_project_version ()
   fi
   return 0
 }
+export shn_project_version
 function shn_setup_projects ()
 {
   local retcode=0
@@ -334,7 +335,7 @@ function shn_setup_additional ()
 # echo " E `declare -p MSH_SHN_DIRS`" >&2
   if [[ "${MSH_SHN_DIRS[files]}" ]] && [[ -d "${MSH_SHN_DIRS[files]}" ]] ; then 
   #  mased/sh.mased.vim
-    for fn in vimrc-mastar gvimrc-mastar gvim-vimenter.vim gvim-funcs.vim zocversion.txt zocvdate.txt ; do
+    for fn in vimrc-mastar.vim gvimrc-mastar.vim gvim-vimenter.vim gvim-funcs.vim zocversion.txt zocvdate.txt ; do
       if [[ -f "${MSH_SHN_DIRS[files]}/$fn" ]] ; then
         file=`shn_realpath --relative-to=. ${MSH_SHN_DIRS[files]}/$fn` || return 1
 	link=$( shn_basename $file )

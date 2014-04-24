@@ -38,6 +38,7 @@ const struct option longopts[] = {
   {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
   {.name = "trace-error",.has_arg = optional_argument,.val = DUF_OPTION_ERROR_TRACE},
   {.name = "trace-fill",.has_arg = optional_argument,.val = DUF_OPTION_FILL_TRACE},
+  {.name = "trace-integrity",.has_arg = optional_argument,.val = DUF_OPTION_INTEGRITY_TRACE},
   {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
   {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
   {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
@@ -79,6 +80,7 @@ const struct option longopts[] = {
   /* --------------- */
   {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
   {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
+  {.name = "integrity",.has_arg = no_argument,.val = DUF_OPTION_INTEGRITY},
   {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
   {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
   {.name = "sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE},
@@ -208,7 +210,7 @@ duf_infile_options( int argc, char *argv[] )
       s = mas_chomp( s );
       if ( s && ( ( *s == '#' ) || !*s ) )
         continue;
-      DUF_TRACE( any, 0, "buffer:[%s]", buffer );
+      /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
       {
         char *xs;
 
@@ -356,6 +358,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_TRACE( ptr, MDPATH, mdpath );
   DUF_RESTORE_OPTION_TRACE( ptr, MD5, md5 );
   DUF_RESTORE_OPTION_TRACE( ptr, FILL, fill );
+  DUF_RESTORE_OPTION_TRACE( ptr, INTEGRITY, integrity );
   DUF_RESTORE_OPTION_TRACE( ptr, SQL, sql );
 
   DUF_RESTORE_OPTION( ptr, MIN_DBGLINE, min_line, cli.dbg );
@@ -377,6 +380,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_B( ptr, MDPATH, mdpath, cli.act );
   DUF_RESTORE_OPTION_B( ptr, MD5, md5, cli.act );
   DUF_RESTORE_OPTION_B( ptr, FILL, fill, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, INTEGRITY, integrity, cli.act );
   DUF_RESTORE_OPTION_B( ptr, PRINT, print, cli.act );
   DUF_RESTORE_OPTION_B( ptr, TREE, tree, cli.act );
   DUF_RESTORE_OPTION_B( ptr, FILES, files, cli.act );
@@ -443,6 +447,6 @@ duf_show_options( const char *a0 )
     if ( *buffer )
       DUF_TRACE( action, 0, "%s", buffer );
   }
-  DUF_TRACE( action, 0, " --\n" );
+  DUF_TRACE( action, 0, " --" );
   return r;
 }

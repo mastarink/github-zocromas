@@ -34,8 +34,8 @@
  * */
 static int
 duf_sel_cb_insert_group( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                         duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                         const duf_dirhandle_t * pdhu )
+                         duf_scan_callback_file_t str_cb_notused, void *str_cb_udata_notused, duf_depthinfo_t * pdi,
+                         duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   unsigned long long *pid;
 
@@ -74,8 +74,8 @@ duf_insert_group( const char *name )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_insert_path_group( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+duf_sql_insert_path_group( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
+                           void *str_cb_udata_notused, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   unsigned long long *pid;
 
@@ -112,8 +112,8 @@ duf_insert_path_group( unsigned long long groupid, unsigned long long pathid )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sql_group_to_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                          duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+duf_sql_group_to_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
+                          void *str_cb_udata_notused, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   unsigned long long *pgroupid;
 
@@ -145,8 +145,9 @@ duf_group_to_groupid( const char *group )
  * duf_sql_select_cb_t: 
  * */
 static int
-duf_sel_cb_delete_path_by_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
-                                   void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+duf_sel_cb_delete_path_by_groupid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
+                                   void *str_cb_udata_notused, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
+                                   const duf_dirhandle_t * pdhu )
 {
   int r = 0;
   unsigned long long pathid;
@@ -219,4 +220,3 @@ duf_paths_group( const char *group, const char *path, int add_remove )
     duf_pathid_group( group, pathid, add_remove );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
 }
-

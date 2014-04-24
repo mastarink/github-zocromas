@@ -13,11 +13,7 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
-/* #include "duf_sql.h" */
 #include "duf_path.h"
-/* #include "duf_insert.h" */
-
-/* #include "duf_update_path.h" */
 
 #include "duf_dbg.h"
 

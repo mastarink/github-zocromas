@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -18,7 +15,6 @@
 #include "duf_sql_field.h"
 
 #include "duf_path.h"
-#include "duf_file_pathid.h"
 
 #include "duf_dbg.h"
 

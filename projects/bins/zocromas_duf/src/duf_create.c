@@ -105,15 +105,11 @@ duf_check_table_paths( void )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
-                        " duf_paths (id INTEGER PRIMARY KEY autoincrement, dev INTEGER NOT NULL, inode INTEGER NOT NULL, items INTEGER,"
-                        " md5dir1 INTEGER, md5dir2 INTEGER, mdpathid INTEGER, dirname TEXT, parentid INTEGER, "
-                        " last_updated REAL, ucnt INTEGER, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_paths" );
+                        " duf_paths (id INTEGER PRIMARY KEY autoincrement, dev INTEGER NOT NULL, inode INTEGER NOT NULL "
+                        " , dirname TEXT, parentid INTEGER "
+                        " , last_updated REAL, ucnt INTEGER, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_paths" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS paths_dirname ON duf_paths (dirname)", "Create duf_paths" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS paths_md5sum ON duf_paths (md5dir1,md5dir2)", "Create duf_paths" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS paths_mdpathid ON duf_paths (mdpathid)", "Create duf_paths" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS paths_dev_uniq ON duf_paths (dev,inode)", "Create duf_paths" );
   if ( r >= 0 )
@@ -125,9 +121,53 @@ duf_check_table_paths( void )
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS paths_inode ON duf_paths (inode)", "Create duf_paths" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS paths_items ON duf_paths (items)", "Create duf_paths" );
-  if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS paths_parentid ON duf_paths (parentid)", "Create duf_paths" );
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int
+duf_check_table_pathtot_files( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
+                        " duf_pathtot_files (id INTEGER PRIMARY KEY autoincrement, pathid INTEGER NOT NULL "
+                        " , numfiles INTEGER, minsize INTEGER, maxsize INTEGER "
+                        " , last_updated REAL, ucnt INTEGER, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_pathtot_files" );
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS pathtot_files_pathid ON duf_pathtot_files (pathid)", "Create duf_pathtot_files" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS pathtot_files_numfiles ON duf_pathtot_files (numfiles)", "Create duf_pathtot_files" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS pathtot_files_minsize ON duf_pathtot_files (minsize)", "Create duf_pathtot_files" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS pathtot_files_maxsize ON duf_pathtot_files (maxsize)", "Create duf_pathtot_files" );
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+static int
+duf_check_table_pathtot_dirs( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS"
+                        " duf_pathtot_dirs (id INTEGER PRIMARY KEY autoincrement, pathid INTEGER NOT NULL "
+                        " , numdirs INTEGER "
+                        " , md5dir1 INTEGER, md5dir2 INTEGER, mdpathid INTEGER "
+                        " , last_updated REAL, ucnt INTEGER, now INTEGER DEFAULT CURRENT_TIMESTAMP)", "Create duf_pathtot_dirs" );
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS pathtot_dirs_pathid ON duf_pathtot_dirs (pathid)", "Create duf_pathtot_dirs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS pathtot_dirs_md5sum ON duf_pathtot_dirs (md5dir1,md5dir2)", "Create duf_pathtot_dirs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS pathtot_dirs_mdpathid ON duf_pathtot_dirs (mdpathid)", "Create duf_pathtot_dirs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS pathtot_dirs_numdirs ON duf_pathtot_dirs (numdirs)", "Create duf_pathtot_dirs" );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
@@ -308,6 +348,10 @@ duf_check_tables( void )
     DUF_ERROR( "r:%d", r );
   if ( r >= 0 )
     r = duf_check_table_paths(  );
+  if ( r >= 0 )
+    r = duf_check_table_pathtot_dirs(  );
+  if ( r >= 0 )
+    r = duf_check_table_pathtot_files(  );
   if ( r )
     DUF_ERROR( "r:%d", r );
   if ( r >= 0 )

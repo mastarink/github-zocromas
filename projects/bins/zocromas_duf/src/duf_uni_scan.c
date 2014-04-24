@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
+/* #include <stdio.h> */
+/* #include <stdlib.h> */
+/* #include <stdarg.h> */
 #include <string.h>
 /* #include <unistd.h> */
-#include <sys/stat.h>
+/* #include <sys/stat.h> */
 
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
+/* #include <sys/types.h> */
+/* #include <fcntl.h> */
+/* #include <unistd.h> */
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -26,20 +26,12 @@
 #include "duf_sql_field.h"
 #include "duf_levinfo.h"
 
-#include "duf_file.h"
 #include "duf_path.h"
-/* #include "duf_file_pathid.h" */
-/* #include "duf_file.h" */
 
-#include "duf_file_pathid.h"
 #include "duf_dir_scan.h"
 
 #include "duf_dbg.h"
 
-/* #include "duf_dir_print_uni.h" */
-/* #include "duf_fill_uni.h" */
-/* #include "duf_sample_uni.h" */
-/* #include "duf_md5_uni.h" */
 
 /* ###################################################################### */
 #include "duf_uni_scan.h"
@@ -89,7 +81,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
     /* unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 ); */
     char *path = duf_pathid_to_path_s( dirid, pdi, &r );
 
-  DUF_OINV_OPENED( pdi-> );
+    DUF_OINV_OPENED( pdi-> );
 
 
     DUF_TRACE( scan, 0, "TOP B %llu:%s", dirid, path );
@@ -115,9 +107,9 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  *     5. for <current> dir call sccb->directory_scan_after
  * */
 
-  DUF_OINV_OPENED( pdi-> );
+      DUF_OINV_OPENED( pdi-> );
       r = duf_scan_dirs_by_parentid( dirid, pdhu, duf_uni_scan_dir, pdi, sccb, precord );
-  DUF_OINV_OPENED( pdi-> );
+      DUF_OINV_OPENED( pdi-> );
       /* if ( r == DUF_ERROR_MAX_REACHED )                   */
       /* {                                                   */
       /*   if ( pdi->depth == 0 )                            */
@@ -151,7 +143,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  DUF_TRACE( action, 0, "sccb %c", sccb ? '+' : '-' );
+  DUF_TRACE( scan, 0, "sccb %c", sccb ? '+' : '-' );
   if ( sccb )
   {
     duf_depthinfo_t di = {.depth = 0,
@@ -162,14 +154,14 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
     };
 
     duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-      
+
     DUF_OINV( di. );
 
 /* create level-control array, open 0 level */
     r = duf_levinfo_create( &di, path );
     /* if ( !duf_config->cli.noopenat ) */
     /*   r = duf_open_dh( pdh, path );  */
-    DUF_TRACE( action, 0, "di.levinfo %c", di.levinfo ? '+' : '-' );
+    DUF_TRACE( scan, 0, "di.levinfo %c", di.levinfo ? '+' : '-' );
     DUF_OINV( di. );
 
     {
@@ -265,11 +257,12 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
   {
     if ( r >= 0 && sccb && sccb->init_scan )
       r = sccb->init_scan( sccb );
-    if ( r >= 0 )
+    DUF_TRACE( action, 0, "inited scan" );
+    if ( r >= 0 && ( sccb->directory_scan_before || sccb->directory_scan_middle || sccb->directory_scan_after || sccb->file_scan ) )
     {
-      DUF_TRACE( action, 0, "%u", duf_config->targc );
+      DUF_TRACE( action, 0, "targc:%u", duf_config->targc );
       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-        DUF_TRACE( action, 0, "%s", duf_config->targv[ia] );
+        DUF_TRACE( action, 0, "targv[%d]='%s'", ia, duf_config->targv[ia] );
       if ( duf_config->targc > 0 )
         for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
           r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
@@ -284,6 +277,8 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
       {
         int changes = 0;
 
+        /* DUF_TRACE( action, 0, "final sql : %s", *p ); */
+        DUF_TRACE( action, 0, "final sql" );
         r = duf_sql( *p, &changes );
         p++;
       }
@@ -301,6 +296,7 @@ duf_uni_scan_all( void )
   int max_steps = 100;
   int steps = 0;
 
+  extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
@@ -330,6 +326,11 @@ duf_uni_scan_all( void )
     DUF_TRACE( action, 0, "prep fill md5" );
     ppscan_callbacks[steps++] = &duf_fill_md5_callbacks;
   }
+  if ( steps < max_steps && duf_config->cli.act.integrity )
+  {
+    DUF_TRACE( action, 0, "prep integrity ..." );
+    ppscan_callbacks[steps++] = &duf_integrity_callbacks;
+  }
 
   if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.print )
   {
@@ -357,8 +358,13 @@ duf_uni_scan_all( void )
 
   for ( int step = 0; r >= 0 && step < steps; step++ )
   {
-    DUF_TRACE( action, 0, "step %d", step );
-    r = duf_uni_scan_targ( ppscan_callbacks[step] );
+    if ( ppscan_callbacks[step] )
+    {
+      const char *title = ppscan_callbacks[step]->title;
+
+      DUF_TRACE( action, 0, "step %d [%s]", step, title );
+      r = duf_uni_scan_targ( ppscan_callbacks[step] );
+    }
   }
   /* if ( r == DUF_ERROR_MAX_REACHED )                 */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */

@@ -11,7 +11,7 @@ shn_gvimer_plus_fuuid ()
     shift;
     local fuuid=$1;
     shift;
-    shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent "$file"
+    shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
 shn_gvimer_plus_resident () 
 { 
@@ -19,7 +19,7 @@ shn_gvimer_plus_resident ()
     shift;
     local fuuid=$1;
     shift;
-    shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent "$file"
+    shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file" 
 }
 shn_gvimer_plus_uuid () 
 { 
@@ -64,7 +64,7 @@ shn_gvimer_plus_regfile_in ()
         do
             if [[ "$resident" == $fuuid ]]; then
 #	        echo "regfile_in resident:$resident for $fpath" 1>&2;
-                shn_gvimer_plus_resident $fpath $fuuid;
+                shn_gvimer_plus_resident $fpath $fuuid ${fline:++$fline}
                 return $?;
             fi;
         done;
@@ -216,12 +216,29 @@ shn_gvimer_plus_vpath ()
 
 shn_gvimer_plus_mased () 
 { 
-    local file=$1 filef;
+    local file=$1 filef 
     local typf;
+    local fileq a b fline
+    if [[ $file =~ ^(.*):(.*)$ ]] ; then
+      a=${BASH_REMATCH[1]}
+      b=${BASH_REMATCH[2]}
+      if [[ $a =~ ^[[:digit:]]+$ ]] ; then
+	file=$b
+	fline=$a
+      elif [[ $b =~ ^[[:digit:]]+$ ]] ; then
+	file=$a
+	fline=$b
+      fi
+    fi
+    if ! [[ $file == *.* ]] ; then
+      fileq=$( grep -rl --inc='*.c' "^$file\>(" )
+      if [[ $fileq ]] ; then
+        file=$fileq
+      fi
+    fi
     typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`;
-    echo "1 typf:$typf for ${file}" >&2
     if [[ "$file" == */* ]]; then
-        filef=$1;
+        filef=$file
     else
         filef=`shn_gvimer_plus_find $file $typf`;
         if ! [[ -n "$filef" ]]; then
@@ -231,6 +248,7 @@ shn_gvimer_plus_mased ()
 	    echo "libedit found $filef" 1>&2;
         fi;
     fi
+#   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
     local rfile=`/usr/bin/realpath $filef`;
 #   echo "rfile:$rfile" >&2
     filef=`/bin/basename $rfile`;
@@ -241,7 +259,7 @@ shn_gvimer_plus_mased ()
     local masedf;
 #   grep "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" mased/*.mased.vim | head -1 >&2
     masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" mased/*.mased.vim | head -1)
-#   echo "masedf:[$masedf] for $file" >&2
+#   echo "masedf:[$masedf] for $filef ($file)" >&2
 ####[[ ${masedf:=mased/${typf}.mased.vim} ]] # off 20140413
     [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=
     if [[ $masedf ]] ; then
@@ -254,7 +272,7 @@ shn_gvimer_plus_mased ()
       if [[ -f "$masedf" ]]; then
 #	  echo "mased fuuid: $fuuid" 1>&2;
 #	  echo "mased masedf: $masedf" 1>&2;
-	  shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf;
+	  shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf
 	  return $?;
       else
 	  echo "$FUNCNAME: not found masedf '$masedf'" 1>&2;

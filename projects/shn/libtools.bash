@@ -23,9 +23,17 @@ function shn_echon ()
 }
 function shn_msg ()
 {
+  local nocolor
   if ! [[ $MSH_SHN_DISABLE_MSG ]] ; then
     if [[ $# -gt 0 ]] ; then
-      shn_echo "${MSHPR_FBGREEN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSHPR_BYELLOWONBLUE}$*${MSHPR_ATTROFF}"  >&2
+      if [[ $TERM == dumb ]] ; then
+	nocolor=yes
+      fi
+      if [[ $nocolor ]] || [[ $MSH_SHN_MSG_NOCOLOR ]]; then
+        shn_echo "$*"  >&2
+      else
+        shn_echo "${MSHPR_FBGREEN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-$MSHPR_BYELLOWONMAGENTA}$*${MSHPR_ATTROFF}"  >&2
+      fi
     else
       shn_echo >&2
     fi
@@ -72,7 +80,17 @@ function shn_dbgmsg ()
 }
 function shn_errmsg ()
 {
-  shn_msg ERROR "$*"
+  local MSH_SHN_MSG_COLOR=$MSHPR_BYELLOWONRED
+  local MSH_SHN_MSG_NOCOLOR
+  if [[ $TERM == dumb ]] ; then
+    MSH_SHN_MSG_NOCOLOR=yes
+    shn_msg ERROR "$*"
+  else
+    shn_msg "---------------------------------"
+    shn_msg ERROR "$*"
+    shn_msg "---------------------------------"
+  fi
+
   return 1
 }
 function shn_project_dir2realpath ()
@@ -175,15 +193,26 @@ function shn_unset_all
   unset command_not_found_handle
   unset MSH_SHN_DIRS MSH_SHN_FLAVOUR MSH_SHN_PROJECTS MSH_SHN_PROJECTS_DIR MSH_SHN_PROJECT_DIR MSH_SHN_PROJECT_FUNCTIONS MSH_SHN_REAL_THIS MSH_SHN_SETUP_FUNCTIONS MSH_SHN_WORK_FUNCTIONS
 }
+function shn_filter_errors ()
+{
+  grep -v '^\(\s*CC\|cc1\|Making\s\+\(install\s\+in\s\+\(inc\|src\)\)\)\>' $* | sed -e "s@^$MSH_SHN_PROJECT_DIR/*@@"  | head -30 | cat -n >&2
+}
 function shn_show_errors ()
 {
+  local MSH_SHN_MSG_NOCOLOR
   local ername=$1 l
   if [[ "$ername" ]] && [[ -s "$ername" ]] && ! [[ "$shn_ignore_error" ]]; then
-    l=`shn_cat $ername | /bin/wc -l`
+    l=`shn_filter_errors $ername 2>&1 | /bin/wc -l`
     if [[ "$l" && "$l" -gt 0 && "$l" -lt 300 ]] ; then
-      shn_msg "-------------------------------------------------------"
-      shn_cat -n "$ername" | head -30 >&2
-      shn_msg "-- ... ------------------------------------------------"
+      if [[ $TERM == dumb ]] ; then
+        shn_msg "---------- $l lines -----------------------------------------$MSH_SHN_PROJECT_FULLNAME"
+        MSH_SHN_MSG_NOCOLOR=yes
+	shn_filter_errors "$ername"
+      else
+        shn_msg "----------------------------------------------------------"
+	shn_filter_errors "$ername"
+	shn_msg "----- ... ------------------------------------------------"
+      fi
     fi
     shn_msg "-- see $ername" 
   fi

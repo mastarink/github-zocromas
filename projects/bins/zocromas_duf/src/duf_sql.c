@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -14,9 +9,7 @@
 
 #include "duf_config.h"
 
-#include "duf_uni_scan.h"
-#include "duf_path.h"
-
+#include "duf_sql_def.h"
 #include "duf_sqlite.h"
 
 /* ###################################################################### */
@@ -40,13 +33,19 @@ duf_sql_close( void )
 int
 duf_sql_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 {
-  return duf_sqlite_error_code( duf_sqlite_exec_c( sql, constraint_ignore, pchanges ) );
+  int r = duf_sqlite_error_code( duf_sqlite_exec_c( sql, constraint_ignore, pchanges ) );
+
+  DUF_TEST_R( r );
+  return r;
 }
 
 int
 duf_sql_exec( const char *sql, int *pchanges )
 {
-  return duf_sqlite_error_code( duf_sqlite_exec_c( sql, DUF_CONSTRAINT_IGNORE_NO, pchanges ) );
+  int r = duf_sqlite_error_code( duf_sqlite_exec_c( sql, DUF_CONSTRAINT_IGNORE_NO, pchanges ) );
+
+  DUF_TEST_R( r );
+  return r;
 }
 
 static int
@@ -68,7 +67,7 @@ duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callba
   int r;
 
   r = duf_sqlite_error_code( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu, sqlfmt, args ) );
-      DUF_TEST_R( r );
+  DUF_TEST_R( r );
   return r;
 }
 
@@ -90,7 +89,7 @@ duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_c( sql, constraint_ignore, ( int * ) NULL );
   DUF_TRACE( sql, 1, "[%-40s] %s (%d)", msg, r != SQLITE_OK ? "FAIL" : "OK", r );
-
+  DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
@@ -105,6 +104,7 @@ duf_sql_exec_msg( const char *sql, const char *msg )
   if ( r )
     DUF_ERROR( "SQL EXEC ERROR in [%s]", sql );
 
+  DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
@@ -121,6 +121,8 @@ duf_sql_c( const char *fmt, int constraint_ignore, int *pchanges, ... )
   r = duf_vsql_c( fmt, constraint_ignore, pchanges, args );
   DUF_TRACE( sql, 1, "[%s] : %d", fmt, r );
   va_end( args );
+  if ( !constraint_ignore || r != DUF_SQL_CONSTRAINT )
+    DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return ( r );
 }
@@ -136,6 +138,7 @@ duf_sql( const char *fmt, int *pchanges, ... )
   r = duf_vsql_c( fmt, DUF_CONSTRAINT_IGNORE_NO, pchanges, args );
   DUF_TRACE( sql, 1, "[%s] : %d", fmt, r );
   va_end( args );
+  DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return ( r );
 }
@@ -159,6 +162,7 @@ duf_sql_select( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callbac
   va_start( args, sqlfmt );
   r = duf_sql_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu, sqlfmt, args );
   va_end( args );
+  DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return ( r );
 }

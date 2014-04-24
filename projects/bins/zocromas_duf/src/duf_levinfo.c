@@ -121,6 +121,46 @@ duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi )
     pdi->levinfo[pdi->depth - 1].ndirs--;
 }
 
+duf_dirhandle_t *
+duf_levinfo_pdh( duf_depthinfo_t * pdi )
+{
+  duf_dirhandle_t *pdh = NULL;
+
+  assert( pdi );
+  if ( !duf_config->cli.noopenat )
+  {
+    int d = pdi->depth;
+
+    assert( pdi->levinfo );
+    DUF_OINV( pdi-> );
+    /* DUF_ERROR( "IS_LEAF:%d", pdi->levinfo[d].is_leaf ); */
+
+    pdh = &pdi->levinfo[d].lev_dh;
+  }
+  return pdh;
+}
+
+int
+duf_levinfo_udfd( duf_depthinfo_t * pdi )
+{
+  int r = 0;
+
+  assert( pdi );
+  if ( !duf_config->cli.noopenat )
+  {
+    int d = pdi->depth;
+
+    assert( pdi->levinfo );
+    DUF_OINV( pdi-> );
+    /* DUF_ERROR( "IS_LEAF:%d", pdi->levinfo[d].is_leaf ); */
+    duf_dirhandle_t *pdhu = &pdi->levinfo[d - 1].lev_dh;
+
+    DUF_TEST_R( r );
+    r = pdhu->dfd;
+  }
+  return r;
+}
+
 int
 duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
 {

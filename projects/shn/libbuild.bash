@@ -56,11 +56,11 @@ function shn_build_xcommand ()
 	  shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 	  if $cmd $@  >$errname 2>&1 ; then
 	    shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
-	    shn_dbgmsg "$cmd_base $@ # [$MSH_SHN_PROJECT_NAME] v.`shn_project_version` ok"
+	    shn_dbgmsg "$cmd_base $@ # [$MSH_SHN_PROJECT_FULLNAME] ok"
 	    shn_dbgmsg "cmd:" $cmd $@
 #	  elif ! [[ "$shn_ignore_error" ]] ; then
 	  elif ! [[ "$shn_no_error_message" ]] ; then
-	    shn_errmsg 1 "$cmd_base $@ # [$MSH_SHN_PROJECT_NAME] v.`shn_project_version`"
+	    shn_errmsg "$cmd_base $@ ------"
 	    shn_show_errors $errname
 #    shn_msg "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 	    retcode=1
@@ -107,11 +107,11 @@ function shn_xcommand ()
 	shn_dbgmsg 5 $FUNCNAME -- "cmd:$cmd"
 	if $cmd $@  >$errname 2>&1 ; then
 	  shn_dbgmsg 6 $FUNCNAME -- "cmd:$cmd"
-	  shn_dbgmsg "$cmd_base $@ # [$MSH_SHN_PROJECT_NAME] v.`shn_project_version` ok"
+	  shn_dbgmsg "$cmd_base $@ # [$MSH_SHN_PROJECT_FULLNAME] ok"
 	  shn_dbgmsg "cmd:" $cmd $@
 #	  elif ! [[ "$shn_ignore_error" ]] ; then
 	elif ! [[ "$shn_no_error_message" ]] ; then
-	  shn_errmsg 1 "$cmd_base $@ # [$MSH_SHN_PROJECT_NAME] v.`shn_project_version`"
+	  shn_errmsg 1 "$cmd_base $@ # [$MSH_SHN_PROJECT_FULLNAME]"
 	  shn_show_errors $errname
 #    shn_msg "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 	  retcode=1
@@ -302,7 +302,7 @@ function shn_build_superclean ()
       rm -Rf $d
     fi
   done
-  for l in sh vimrc-mastar gvimrc-mastar gvim-vimenter.vim gvim-funcs.vim .localrc ; do
+  for l in sh vimrc-mastar.vim gvimrc-mastar.vim gvim-vimenter.vim gvim-funcs.vim .localrc ; do
     if [[ "$l" ]] && [[ -L "$l" ]] ; then
       shn_msg removing link $l
       rm -Rf $l

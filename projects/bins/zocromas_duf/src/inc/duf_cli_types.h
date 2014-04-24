@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
-#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5iMtZBPO"
+#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5iMtZBPOG"
 typedef enum
 {
   DUF_OPTION_NONE,
@@ -32,11 +32,13 @@ typedef enum
   DUF_OPTION_TREE_TO_DB = 'B',
   DUF_OPTION_ADD_PATH = 'P',
   DUF_OPTION_CREATE_TABLES = 'O',
+  DUF_OPTION_INTEGRITY = 'G',
 
   DUF_OPTION_LONG = 1000,
 
   DUF_OPTION_FORMAT,
 
+  DUF_OPTION_INTEGRITY_TRACE ,
   DUF_OPTION_FS_TRACE,
   DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_CALLS_TRACE,
@@ -149,6 +151,7 @@ typedef struct
   unsigned mdpath:1;
   unsigned vacuum:1;
   unsigned md5:1;
+  unsigned integrity:1;
   unsigned fill:1;
   unsigned print:1;
   unsigned tree:1;
@@ -193,6 +196,7 @@ typedef struct
   unsigned sampupd;
   unsigned md5;
   unsigned mdpath;
+  unsigned integrity:1;
   unsigned fill;
   unsigned sql;
   unsigned statistics;

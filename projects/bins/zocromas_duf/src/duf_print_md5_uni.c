@@ -31,9 +31,11 @@
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_print_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_file_scan_print_md5_uni(  duf_depthinfo_t * pdi,
+                             duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
-  int r=0;
+  int r = 0;
+
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
   DUF_UFIELD( filesize );
@@ -57,10 +59,13 @@ duf_file_scan_print_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_reco
 }
 
 /* callback of type duf_scan_callback_dir_t */
+/* __attribute__ ( ( unused ) ) */
 static int
-duf_directory_scan_print_md5_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_print_md5_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                                  duf_record_t * precord )
 {
-  int r=0;
+  int r = 0;
+
   DUF_SFIELD( dirname );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
@@ -109,19 +114,18 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         " , duf_filenames.id as filenameid" " , duf_filedatas.mode as filemode",
   .file_selector = "SELECT %s FROM duf_filenames "
         " JOIN duf_filedatas ON (duf_filedatas.id=duf_filenames.dataid) "
-        " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
-	"    WHERE "
-	"           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
-	"       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) "
-	"       AND duf_filedatas.md5id='%llu' ",
+        " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)" "    WHERE "
+        /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
+        /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
+        " duf_filedatas.md5id='%llu' ",
   .dir_selector =
         "SELECT md5.id as dirid " ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dirname"
         ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dfname " " ,0 as ndirs" " ,(SELECT count(*) FROM duf_filenames as subfn "
         /* "                 LEFT "  toooooooo slow with LEFT */
         "                           JOIN duf_filedatas as sfd ON (sfd.id=subfn.dataid) "
         "                                 WHERE sfd.md5id=md5.id) as nfiles "
-        " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd WHERE sfd.md5id=md5.id) as minsize "
-        " ,(SELECT max(sfd.size) FROM duf_filedatas as sfd WHERE sfd.md5id=md5.id) as maxsize "
+        /* " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd WHERE sfd.md5id=md5.id) as minsize " */
+        /* " ,(SELECT max(sfd.size) FROM duf_filedatas as sfd WHERE sfd.md5id=md5.id) as maxsize " */
         " FROM duf_md5 as md5" " WHERE %llu<1 " " ORDER BY md5sum1,md5sum2 ",
   /* .final_sql_argv = final_sql, */
 };

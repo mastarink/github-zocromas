@@ -1,11 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
-/* #include <mastar/wrap/mas_memory.h> */
 
 #include "duf_types.h"
 #include "duf_config.h"
@@ -42,9 +38,11 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
     {
   assert( duf_config->cli.noopenat
           || ( duf_config->nopen - ( pdi->levinfo[pdi->depth].lev_dh.dfd ? 1 : 0 ) - duf_config->nclose == pdi->depth ) );
-      r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb, pdhu, sccb->file_selector, /* ... */ sccb->fieldset, pdi->u.minsize,
-                              pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame,
-                              pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1, dirid );
+      r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb, pdhu, sccb->file_selector, /* ... */ sccb->fieldset, 
+                              /*   pdi->u.minsize,                                                            */
+                              /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
+                              /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
+			      dirid );
   assert( duf_config->cli.noopenat
           || ( duf_config->nopen - ( pdi->levinfo[pdi->depth].lev_dh.dfd ? 1 : 0 ) - duf_config->nclose == pdi->depth ) );
       DUF_TEST_R( r );

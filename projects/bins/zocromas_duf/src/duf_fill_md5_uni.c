@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-/* #include <dirent.h> */
+
 #include <assert.h>
 #include <openssl/md5.h>
 
@@ -15,6 +19,8 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 #include "duf_config.h"
+
+#include "duf_levinfo.h"
 
 #include "duf_file.h"
 #include "duf_path.h"
@@ -30,8 +36,8 @@
 /* ###################################################################### */
 
 static int
-duf_sel_cb_insert_md5_uni( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+duf_sel_cb_insert_md5_uni( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb,
+                           void *str_cb_udata_notused, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
 {
   int r = 0;
   unsigned long long *presmd;
@@ -68,7 +74,7 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize )
 }
 
 static unsigned long long
-duf_upd_md5_f_uni( const char *fpath, unsigned long long filedataid )
+duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid )
 {
   unsigned long long resmd = 0;
 
@@ -123,21 +129,112 @@ duf_upd_md5_f_uni( const char *fpath, unsigned long long filedataid )
       else
       {
         /* TODO : file deleted ... */
-        fprintf( stderr, "ERROR open file : %s\n", fpath );
+        DUF_ERRSYS( "open to read file : %s", fpath );
       }
     }
     else
     {
       /* TODO : file deleted ... */
-      fprintf( stderr, "ERROR open file : %s\n", fpath );
+      DUF_ERRSYS( "stat file : %s", fpath );
     }
-
   }
   else
   {
-    fprintf( stderr, "ERROR file not set\n" );
+    DUF_ERRSYS( "file not set" );
   }
-  /* fprintf( stderr, "\n" ); */
+  return resmd;
+}
+
+static unsigned long long
+duf_upd_md5_pdh_uni( int dfd, const char *fname, unsigned long long filedataid )
+{
+  unsigned long long resmd = 0;
+
+  int r = 0;
+  struct stat st_file;
+
+  r = fstatat( dfd, fname, &st_file, 0 );
+  DUF_TRACE( md5, 0, "fstatat:%d", r );
+  DUF_TEST_R( r );
+  if ( r < 0 )
+  {
+    char *fpath = NULL;
+
+    /* filenameid_to_filepath( filenameid, pdi, &r ); */
+
+    /* DUF_TRACE( md5, 0, "filedataid:%lld; filesize:%lld; fpath:'%s'", filedataid, filesize, fpath ); */
+    /* TODO : file deleted ... */
+    DUF_ERRSYS( "stat file %s - %s", fpath ? fpath : "..", fname );
+    /* mas_free( fpath ); */
+  }
+  DUF_TEST_R( r );
+  if ( !r )
+  {
+    int fd;
+
+    fd = openat( dfd, fname, O_NOFOLLOW | O_RDONLY );
+    if ( fd >= 0 )
+    {
+      FILE *f;
+
+      DUF_TRACE( md5, 0, "openat:%d", fd );
+      f = fdopen( fd, "r" );
+
+      if ( f )
+      {
+        MD5_CTX ctx;
+        unsigned char md[MD5_DIGEST_LENGTH];
+        unsigned char mdr[MD5_DIGEST_LENGTH];
+        unsigned long long *pmd;
+        char *buffer;
+        size_t bufsz = 1024 * 1024 * 10;
+
+        memset( &md, 0, sizeof( md ) );
+        buffer = mas_malloc( bufsz );
+        MD5_Init( &ctx );
+        while ( !feof( f ) )
+        {
+          int r;
+
+          r = fread( buffer, 1, bufsz, f );
+          MD5_Update( &ctx, buffer, r );
+        }
+        fclose( f );
+        mas_free( buffer );
+        MD5_Final( md, &ctx );
+        for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
+        {
+          mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];
+        }
+        pmd = ( unsigned long long * ) &mdr;
+        {
+          resmd = duf_insert_md5_uni( ( ( unsigned long long * ) &mdr[0] ), st_file.st_size );
+          DUF_TRACE( md5, 0, "%016llx%016llx : resmd: %llu: %s", pmd[1], pmd[0], resmd, fname );
+          if ( resmd )
+          {
+            duf_sql( "UPDATE duf_filedatas SET md5id='%llu', ucnt=ucnt+1 WHERE id='%lld'", ( int * ) NULL, resmd, filedataid );
+          }
+        }
+      }
+      else
+      {
+        /* TODO : file deleted ... */
+        DUF_ERRSYS( "fdopen to read file : %s", fname );
+      }
+      close( fd );
+    }
+    else
+    {
+      DUF_ERRSYS( "open to read file : %s", fname );
+      r = fd;
+    }
+
+  }
+  DUF_TEST_R( r );
+  /* else                            */
+  /* {                               */
+  /*   DUF_ERRSYS( "file not set" ); */
+  /* }                               */
   return resmd;
 }
 
@@ -162,17 +259,17 @@ duf_insert_keydata_uni( unsigned long long pathid, unsigned long long filenameid
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_file_scan_fill_md5_uni( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
+  int udfd = duf_levinfo_udfd( pdi );
 
   DUF_SFIELD( filename );
-
+  DUF_TRACE( md5, 0, "start" );
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* stat */
 
   /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
-
 
 /* run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file */
 
@@ -187,16 +284,26 @@ duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_recor
     DUF_UFIELD( filesize );
     DUF_UFIELD( dirid );
     DUF_UFIELD( inode );
-    char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
-
-    DUF_TRACE( md5, 0, "filedataid:%lld; filesize:%lld; fpath:'%s'", filedataid, filesize, fpath );
     {
-      unsigned long long resmd = duf_upd_md5_f_uni( fpath, filedataid );
+      unsigned long long resmd;
 
+      DUF_TRACE( md5, 0, "udfd:%d", udfd );
+      if ( udfd )
+      {
+        resmd = duf_upd_md5_pdh_uni( udfd, filename, filedataid );
+      }
+      else
+      {
+        char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
+
+        DUF_TRACE( md5, 0, "filedataid:%lld; filesize:%lld; fpath:'%s'", filedataid, filesize, fpath );
+        resmd = duf_upd_md5_fpath_uni( fpath, filedataid );
+        mas_free( fpath );
+      }
       if ( dirid && filenameid && inode && resmd )
         duf_insert_keydata_uni( dirid, filenameid, inode, resmd, &r );
+      DUF_TRACE( md5, 0, "md5id:%llu", resmd );
     }
-    mas_free( fpath );
   }
   DUF_TRACE( md5, 1, "filename:'%s'", filename );
   if ( duf_config->cli.trace.md5 > 1 )
@@ -207,7 +314,8 @@ duf_file_scan_fill_md5_uni( void *str_cb_udata, duf_depthinfo_t * pdi, duf_recor
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_fill_md5_uni( unsigned long long pathid, const duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_directory_scan_fill_md5_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                                 duf_record_t * precord )
 {
   int r = 0;
 
@@ -254,23 +362,27 @@ duf_scan_callbacks_t duf_fill_md5_callbacks = {
   .file_selector =
         "SELECT %s FROM duf_filenames "
         " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
-        "    WHERE "
-        "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "
-        "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) " "       AND duf_filenames.pathid='%llu' ",
+        " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)" "    WHERE "
+        /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
+        /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
+        " duf_filenames.pathid='%llu' ",
   .dir_selector =
-        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname, duf_paths.items, duf_paths.parentid "
-        " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "
-        " ,(SELECT count(*) FROM duf_filenames as sfn "
-        "          JOIN duf_filedatas as sfd ON (sfn.dataid=sfd.id) "
-        "          JOIN duf_md5 as smd ON (sfd.md5id=smd.id) "
-        "          WHERE sfn.pathid=duf_paths.id "
-        "              AND   sfd.size >= %llu AND sfd.size < %llu "
-        "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
-        " ) as nfiles "
-        " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) "
-        "           WHERE sfn.pathid=duf_paths.id) as minsize "
-        " ,(SELECT max(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) "
-        "           WHERE sfn.pathid=duf_paths.id) as maxsize " " FROM duf_paths " " WHERE duf_paths.parentid='%llu' ",
+        "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname,  duf_paths.parentid "
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
+        /* " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "       */
+        /* " ,(SELECT count(*) FROM duf_filenames as sfn "                                                       */
+        /* "          JOIN duf_filedatas as sfd ON (sfn.dataid=sfd.id) "                                         */
+        /* "          JOIN duf_md5 as smd ON (sfd.md5id=smd.id) "                                                */
+        /* "          WHERE sfn.pathid=duf_paths.id "                                                            */
+        /* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           */
+        /* "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "               */
+        /* " ) as nfiles "                                                                                       */
+        /* " ,(SELECT min(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) " */
+        /* "           WHERE sfn.pathid=duf_paths.id) as minsize "                                               */
+        /* " ,(SELECT max(sfd.size) FROM duf_filedatas as sfd JOIN duf_filenames as sfn ON (sfn.dataid=sfd.id) " */
+        /* "           WHERE sfn.pathid=duf_paths.id) as maxsize "                                               */
+        " FROM duf_paths "
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
   .final_sql_argv = final_sql,
 };

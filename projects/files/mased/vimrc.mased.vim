@@ -1,5 +1,5 @@
-find gvimrc-mastar
-sfind vimrc-mastar
+e gvimrc-mastar.vim
+sp vimrc-mastar.vim
 
-tab sfind gvim-vimenter.vim
-sfind gvim-funcs.vim
+tab sp gvim-vimenter.vim
+sp gvim-funcs.vim

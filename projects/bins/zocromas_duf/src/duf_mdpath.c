@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
 
 #include <openssl/md5.h>
 
@@ -12,9 +8,7 @@
 #include "duf_types.h"
 
 #include "duf_sql_def.h"
-#include "duf_sql.h"
 
-#include "duf_utils.h"
 
 
 /* ###################################################################### */

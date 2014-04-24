@@ -97,6 +97,7 @@ main( int argc, char **argv )
         printf( "  --max-dbg-lines=%lu" "\n", duf_config->cli.dbg.min_line );
         printf( "Trace ----------" "\n" );
         printf( "  -A, --trace-action=%d" "\n", duf_config->cli.trace.action );
+        printf( "  -C, --trace-current=%d" "\n", duf_config->cli.trace.current );
         printf( "  -S, --trace-scan=%d" "\n", duf_config->cli.trace.scan );
         printf( "  -Q, --trace-sql=%d" "\n", duf_config->cli.trace.sql );
         printf( "  --trace-sample=%d" "\n", duf_config->cli.trace.sample );
@@ -178,6 +179,6 @@ main( int argc, char **argv )
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
 #endif
-
-  return 0;
+  DUF_TEST_R( r );
+  return r < 0 ? 31 : 0;
 }

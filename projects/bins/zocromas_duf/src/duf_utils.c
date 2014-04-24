@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <errno.h>
 /* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
@@ -65,7 +66,8 @@ duf_single_quotes_2( const char *s )
 }
 
 int
-duf_vtrace( const char *name, int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
+duf_vtrace( const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags, int nerr, FILE * out, const char *fmt,
+            va_list args )
 {
   int r = -1;
 
@@ -92,22 +94,31 @@ duf_vtrace( const char *name, int level, int minlevel, const char *funcid, int l
     {
       r = vfprintf( out, fmt, args );
     }
+    if ( flags & DUF_TRACE_FLAG_SYSTEM )
+    {
+      char serr[1024] = "Why?";
+      char *s;
+
+      s = strerror_r( nerr, serr, sizeof( serr ) - 1 );
+      fprintf( out, "; errno:(%d) [%s]", nerr, s );
+    }
     if ( rf != '.' && rf != ':' )
     {
-      fprintf( out, ".\n" );
+      fprintf( out, "\n" );
     }
   }
   return r;
 }
 
 int
-duf_trace( const char *name, int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, ... )
+duf_trace( const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags, int nerr, FILE * out, const char *fmt,
+           ... )
 {
   int r;
   va_list args;
 
   va_start( args, fmt );
-  r = duf_vtrace( name, level, minlevel, funcid, linid, out, fmt, args );
+  r = duf_vtrace( name, level, minlevel, funcid, linid, flags, nerr, out, fmt, args );
   va_end( args );
   return r;
 }

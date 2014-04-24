@@ -2,6 +2,7 @@ set path=src,src/inc
 "tab new
 
 find  duf_fill_uni.c
+tab sfind  duf_integrity_uni.c
 
 tab sfind duf_sample_uni.c
 tab sfind duf_sampupd_uni.c

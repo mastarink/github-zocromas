@@ -1,9 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
-
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -15,9 +9,6 @@
 #include "duf_dbg.h"
 
 #include "duf_config.h"
-
-#include "duf_uni_scan.h"
-#include "duf_path.h"
 
 #include "duf_sql_def.h"
 
@@ -177,7 +168,6 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     r3 = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
 
     DUF_TRACE( sql, 0, "[%s] r3=%d;  %u rows", sql, r3, row );
-
     duf_dbgfunc( DBG_STEPS, __func__, __LINE__, sql );
     /* if ( trace )                                            */
     /*   printf(  "(%d) trace:[%s]\x1b[K\n", r3, sql ); */
@@ -249,23 +239,27 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     }
     else if ( r3 == SQLITE_CONSTRAINT )
     {
-      fprintf( stderr, "SQL CONSTRAINT\n" );
       DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+      DUF_ERROR( "SQL : %s [%s]", emsg, sql );
     }
     else
-      fprintf( stderr, "SQL error %d %s; sql:[%s]\n", r3, emsg, sql );
+    {
+      DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+      DUF_ERROR( "SQL : %s [%s]", emsg, sql );
+    }
     if ( emsg )
       sqlite3_free( emsg );
+    emsg = NULL;
     sqlite3_free_table( presult );
+    presult = NULL;
     sqlite3_free( sql );
+    sql = NULL;
     /* DUF_ERROR( "r3:%d", r3 ); */
   }
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
   DUF_TEST_R( duf_sqlite_error_code( r3 ) );
   return ( r3 );
 }
-
-
 
 unsigned long long
 duf_sqlite_last_insert_rowid( void )
