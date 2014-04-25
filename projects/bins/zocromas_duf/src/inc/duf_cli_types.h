@@ -63,7 +63,7 @@ typedef enum
   DUF_OPTION_MDPATH,
   /* DUF_OPTION_UPDATE_PATH, */
   /* DUF_OPTION_UPDATE_MD5, */
-  DUF_OPTION_ZERO_DUPLICATES,
+  /* DUF_OPTION_ZERO_DUPLICATES, */
   /* DUF_OPTION_UPDATE_DUPLICATES, */
   /* DUF_OPTION_UPDATE_MDPATH, */
   /* DUF_OPTION_UPDATE_MDPATH_SELECTIVE, */
@@ -184,7 +184,7 @@ typedef struct
   /* unsigned print_dirs:1; */
   /* unsigned print_files:1; */
   unsigned print_duplicates:1;
-  unsigned zero_duplicates:1;
+  /* (* unsigned zero_duplicates:1; *) */
   unsigned same_files:1;
   unsigned same_md5:1;
   unsigned same_exif:1;

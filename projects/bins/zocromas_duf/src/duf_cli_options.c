@@ -65,7 +65,7 @@ const struct option longopts[] = {
   {.name = "tree2db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
   {.name = "tree-to-db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
 
-  {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES},
+  /* {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES}, */
   {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
 
   {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},

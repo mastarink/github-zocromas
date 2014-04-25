@@ -51,12 +51,12 @@
  * otherwise do nothing
  *
  *   i.e.
- *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <current> dir call sccb->file_scan
- *     3. for <current> dir call sccb->directory_scan_middle
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each leaf in <current> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
  *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
- *     5. for <current> dir call sccb->directory_scan_after
+ *     5. for <current> dir call sccb->node_scan_after
  * */
 int
 duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord,
@@ -76,9 +76,6 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
   if ( DUF_IF_TRACE( scan ) )
   {
-    /* unsigned long long dirid = duf_sql_ull_by_name( "dirid", precord, 0 ); */
-    /* DUF_UFIELD( filenameid ); */
-    /* unsigned long long filenameid = duf_sql_ull_by_name( "filenameid", precord, 0 ); */
     char *path = duf_pathid_to_path_s( dirid, pdi, &r );
 
     DUF_OINV_OPENED( pdi-> );
@@ -99,12 +96,12 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  *         otherwise do nothing
  *
  *   i.e.
- *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <current> dir call sccb->file_scan
- *     3. for <current> dir call sccb->directory_scan_middle
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each leaf in <current> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->directory_scan_after
+ *     5. for <current> dir call sccb->node_scan_after
  * */
 
       DUF_OINV_OPENED( pdi-> );
@@ -129,12 +126,12 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
 /*
  *   i.e. 
- *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <current> dir call sccb->file_scan
- *     3. for <current> dir call sccb->directory_scan_middle
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each leaf in <current> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->directory_scan_after
+ *     5. for <current> dir call sccb->node_scan_after
  */
 int
 duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
@@ -194,12 +191,12 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
  * call duf_uni_scan_dir with pdi for each dir at db by pathid (i.e. children of pathid) 
  *
  *   i.e.
- *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <current> dir call sccb->file_scan
- *     3. for <current> dir call sccb->directory_scan_middle
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each leaf in <current> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
  *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
- *     5. for <current> dir call sccb->directory_scan_after
+ *     5. for <current> dir call sccb->node_scan_after
  * */
         DUF_OINV( di. );
         if ( r >= 0 )
@@ -258,7 +255,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     if ( r >= 0 && sccb && sccb->init_scan )
       r = sccb->init_scan( sccb );
     DUF_TRACE( action, 0, "inited scan" );
-    if ( r >= 0 && ( sccb->directory_scan_before || sccb->directory_scan_middle || sccb->directory_scan_after || sccb->file_scan ) )
+    if ( r >= 0 && ( sccb->node_scan_before || sccb->node_scan_middle || sccb->node_scan_after || sccb->leaf_scan ) )
     {
       DUF_TRACE( action, 0, "targc:%u", duf_config->targc );
       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )

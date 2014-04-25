@@ -8,6 +8,5 @@ sfind srcdb.mased.vim
 sfind srclow.mased.vim
 sfind src.mased.vim
 sfind srcmod.mased.vim
-sfind srcold.mased.vim
 sfind srctoexpire.mased.vim
 sfind vimrc.mased.vim

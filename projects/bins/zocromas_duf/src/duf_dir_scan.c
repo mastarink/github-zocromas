@@ -39,9 +39,9 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
     /* fprintf( stderr, "+FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
     pdi->items.total++;
     pdi->items.files++;
-    r = sccb->file_scan( /*str_cb_udata,*/ pdi, precord /*, pdhu */);
+    r = sccb->leaf_scan( /*str_cb_udata,*/ pdi, precord /*, pdhu */);
     DUF_TEST_R( r );
-    DUF_TRACE( fill, 0, "r:%d; sccb->file_scan:%s", r, DUF_FUNN( sccb->file_scan ) );
+    DUF_TRACE( fill, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
 
     /* DUF_TRACE( action, 0, "r=%d", r ); */
   }
@@ -59,16 +59,16 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
  *        for each record by standard <path> sql by pathid (i.e. children of pathid) with  corresponding args
  *
  *
- * also call duf_scan_files_by_pathid wirh sccb->file_scan
- *   i.e. call sccb->file_scan + pdi (also) as str_cb_udata 
+ * also call duf_scan_files_by_pathid wirh sccb->leaf_scan
+ *   i.e. call sccb->leaf_scan + pdi (also) as str_cb_udata 
  *        for each <file> record by pathid (i.e. children of pathid) with corresponding args
  *
  * i.e.
- *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <rrent> dir call sccb->file_scan
- *     3. for <current> dir call sccb->directory_scan_middle
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each file in <rrent> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->directory_scan_after
+ *     5. for <current> dir call sccb->node_scan_after
  * */
 static int
 duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi,
@@ -78,13 +78,13 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  if ( sccb && !r && sccb->directory_scan_before && duf_config->cli.act.dirs )
+  if ( sccb && !r && sccb->node_scan_before && duf_config->cli.act.dirs )
   {
     pdi->items.total++;
     pdi->items.dirs++;
 
     DUF_OINV_OPENED( pdi-> );
-    r = sccb->directory_scan_before( dirid, /*&pdi->levinfo[pdi->depth].lev_dh,*/ pdi, precord );
+    r = sccb->node_scan_before( dirid, /*&pdi->levinfo[pdi->depth].lev_dh,*/ pdi, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
     if ( r == DUF_ERROR_MAX_REACHED )
@@ -101,16 +101,16 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
   {
     {
 /* duf_scan_files_by_pathid:
- * call sccb->file_scan (or sccb->file_scan wrapped by duf_scan_file) + pdi (also) as str_cb_udata
+ * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_scan_file) + pdi (also) as str_cb_udata
  * 			for each <file> record by dirid with corresponding args
  *
- * duf_scan_file is called from  duf_file_scan.c:duf_sel_cb_items()
+ * duf_scan_file is called from  duf_leaf_scan.c:duf_sel_cb_items()
  * */
-      if ( r >= 0 && sccb && sccb->file_scan )
+      if ( r >= 0 && sccb && sccb->leaf_scan )
       {
         DUF_OINV_OPENED( pdi-> );
         r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb, pdh );
-        /* r = duf_scan_files_by_dirid( dirid, sccb->file_scan (* str_cb *) , pdi, sccb ); */
+        /* r = duf_scan_files_by_dirid( dirid, sccb->leaf_scan (* str_cb *) , pdi, sccb ); */
         DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
@@ -123,8 +123,8 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       /*   DUF_ERROR( "code: %d", r ); */
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( sccb && r >= 0 && sccb->directory_scan_middle && duf_config->cli.act.dirs )
-      r = sccb->directory_scan_middle( dirid, /* pdh, */ pdi, precord );
+    if ( sccb && r >= 0 && sccb->node_scan_middle && duf_config->cli.act.dirs )
+      r = sccb->node_scan_middle( dirid, /* pdh, */ pdi, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
 
@@ -137,7 +137,7 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       {
         DUF_OINV( pdi-> );
         DUF_OINV_OPENED( pdi-> );
-        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->dir_selector,
+        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, pdh, sccb->node_selector,
                                 /* pdi->u.minsize,                                                              */
                                 /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
                                 /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
@@ -155,8 +155,8 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       /*   DUF_ERROR( "code: %d", r ); */
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( sccb && r >= 0 && sccb->directory_scan_after && duf_config->cli.act.dirs )
-      r = sccb->directory_scan_after( dirid/*, pdh*/, pdi, precord );
+    if ( sccb && r >= 0 && sccb->node_scan_after && duf_config->cli.act.dirs )
+      r = sccb->node_scan_after( dirid/*, pdh*/, pdi, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
@@ -171,11 +171,11 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
 }
 
 /* duf_scan_dirs_by_parentid
- *     1. for <current> dir call sccb->directory_scan_before
- *     2. for each file in <current> dir call sccb->file_scan
- *     3. for <current> dir call sccb->directory_scan_middle
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each leaf in <current> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->directory_scan_after
+ *     5. for <current> dir call sccb->node_scan_after
  * see duf_scan_dir_by_pi
  * */
 int

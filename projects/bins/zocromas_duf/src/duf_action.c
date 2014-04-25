@@ -12,7 +12,7 @@
 #include "duf_sql.h"
 #include "duf_create.h"
 #include "duf_path.h"
-#include "duf_finddup.h"
+/* #include "duf_finddup.h" */
 
 #include "duf_add.h"
 
@@ -110,8 +110,8 @@ duf_action_new( int argc, char **argv )
 
 
 /* --zero-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.zero_duplicates )
-    r = duf_zero_duplicates(  );
+  /* if ( r >= 0 && duf_config->cli.act.zero_duplicates ) */
+  /*   r = duf_zero_duplicates(  );                       */
   DUF_TEST_R( r );
 /* --update-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   /* if ( r >= 0 && duf_config->cli.act.update_duplicates ) */

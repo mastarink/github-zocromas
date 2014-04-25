@@ -284,13 +284,13 @@ struct duf_scan_callbacks_s
 {
   const char *title;
   const char *fieldset;
-  const char *dir_selector;
-  const char *file_selector;
+  const char *node_selector;
+  const char *leaf_selector;
   duf_scan_hook_init_t init_scan;
-  duf_scan_hook_dir_t directory_scan_before;
-  duf_scan_hook_dir_t directory_scan_middle;
-  duf_scan_hook_dir_t directory_scan_after;
-  duf_scan_hook_file_t file_scan;
+  duf_scan_hook_dir_t node_scan_before;
+  duf_scan_hook_dir_t node_scan_middle;
+  duf_scan_hook_dir_t node_scan_after;
+  duf_scan_hook_file_t leaf_scan;
   char **final_sql_argv;
 };
 

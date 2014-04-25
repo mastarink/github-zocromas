@@ -31,7 +31,7 @@
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_print_md5_uni( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -60,7 +60,7 @@ duf_file_scan_print_md5_uni( duf_depthinfo_t * pdi, duf_record_t * precord /*, c
 /* callback of type duf_scan_callback_dir_t */
 /* __attribute__ ( ( unused ) ) */
 static int
-duf_directory_scan_print_md5_uni( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
                                   duf_record_t * precord )
 {
   int r = 0;
@@ -86,7 +86,7 @@ duf_directory_scan_print_md5_uni( unsigned long long pathid_unused, /* const duf
 
 /* #### duf_sql( "UPDATE duf_md5 SET dupcnt='%llu' WHERE id='%llu'", cnt, md5id ); */
 
-  /* .dir_selector =                                                                                             */
+  /* .node_selector =                                                                                             */
   /*       "SELECT duf_md5.id as dirid, printf('%%016x%%016x',md5sum1,md5sum2) as dirname "                      */
   /*       " ,0 as ndirs" " ,(SELECT count(*) FROM duf_filenames as subfilenames "                               */
   /*       (* " LEFT "  toooooooo slow with LEFT *)                                                              */
@@ -103,19 +103,19 @@ duf_directory_scan_print_md5_uni( unsigned long long pathid_unused, /* const duf
 duf_scan_callbacks_t duf_print_md5_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .directory_scan_before = duf_directory_scan_print_md5_uni,
-  .file_scan = duf_file_scan_print_md5_uni,
+  .node_scan_before = scan_node_before,
+  .leaf_scan = scan_leaf,
   .fieldset = " md.id as dirid "
         " , duf_filenames.name as filename, duf_filedatas.size as filesize "
         " , uid, gid, nlink, inode, mtim as mtime "
         " , dupcnt as nsame "
         " , printf('%016x%016x',md5sum1,md5sum2) as dirname, duf_filedatas.size as filesize " " , duf_filenames.pathid as hid "
         " , duf_filenames.id as filenameid" " , duf_filedatas.mode as filemode",
-  .file_selector = "SELECT %s FROM duf_filenames "
+  .leaf_selector = "SELECT %s FROM duf_filenames "
         "              JOIN duf_filedatas ON (duf_filedatas.id=duf_filenames.dataid) "
         "              LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
         "                           WHERE duf_filedatas.md5id='%llu' ",
-  .dir_selector =
+  .node_selector =
         "SELECT md5.id as dirid " ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dirname"
         ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dfname " " ,0 as ndirs"
         ", (SELECT COUNT(*) FROM md5 AS smd WHERE md5.md5sum1=smd.md5.md5sum1 AND md5.md5sum2=smd.md5.md5sum2 ) AS nfiles"

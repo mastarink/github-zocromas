@@ -14,15 +14,15 @@
 /* ###################################################################### */
 
 
-int
-duf_zero_duplicates( void )
-{
-  int r;
-
-  fprintf( stderr, "Zero duplicates\x1b[K\n" );
-  r = duf_sql_exec( "UPDATE duf_md5 SET dupcnt=null", ( int * ) NULL );
-  return r;
-}
+/* int                                                                     */
+/* duf_zero_duplicates( void )                                             */
+/* {                                                                       */
+/*   int r;                                                                */
+/*                                                                         */
+/*   fprintf( stderr, "Zero duplicates\x1b[K\n" );                         */
+/*   r = duf_sql_exec( "UPDATE duf_md5 SET dupcnt=null", ( int * ) NULL ); */
+/*   return r;                                                             */
+/* }                                                                       */
 
 /* 
  * sql must select pathid, filenameid, filename, md5id, size

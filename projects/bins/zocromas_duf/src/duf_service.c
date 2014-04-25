@@ -54,7 +54,6 @@ duf_dbg_funname( duf_anyhook_t p )
   static char buf[512];
   int found = 0;
 
-  int duf_directory_scan_sample_uni( unsigned long long pathid, duf_dirhandle_t * pdh, duf_depthinfo_t * pdi, duf_record_t * precord );
 
   static duf_fundesc_t table[] = {
     DUF_FUN( duf_uni_scan_dir ),
@@ -63,7 +62,6 @@ duf_dbg_funname( duf_anyhook_t p )
     DUF_FUN( duf_sel_cb_node ),
     DUF_FUN( duf_sel_cb_leaf ),
     DUF_FUN( duf_sel_cb_dirid ),
-    DUF_FUN( duf_directory_scan_sample_uni ),
     DUF_FUN( duf_scan_file ),
   };
   for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )

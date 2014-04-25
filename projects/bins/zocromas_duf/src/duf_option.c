@@ -489,10 +489,9 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /* case DUF_OPTION_PRINT_DUPLICATES:   */
     /*   duf_config->cli.act.print_duplicates = 1; */
     /*   break;                            */
-  case DUF_OPTION_ZERO_DUPLICATES:
-    DUF_OPT_FLAG( cli.act.zero_duplicates );
-    /* duf_config->cli.act.zero_duplicates = 1; */
-    break;
+  /* case DUF_OPTION_ZERO_DUPLICATES:           */
+  /*   DUF_OPT_FLAG( cli.act.zero_duplicates ); */
+  /*   break;                                   */
   case DUF_OPTION_SAME_FILES:
     DUF_OPT_FLAG( cli.act.same_files );
     /* duf_config->cli.act.same_files = 1; */

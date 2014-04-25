@@ -187,7 +187,7 @@ shn_gvimer_plus_find ()
     shift;
     local paths;
     case $typf in 
-        src)		paths='./src/ ./inc/'	;;
+        src)		paths='./src/ ./inc/ ./settling/src ./settling/src/inc'	;;
         ac)		paths='./'		;;
         shn)		paths='./shn/'		;;
         vimstd)		paths='.'		;;
@@ -204,7 +204,7 @@ shn_gvimer_plus_vpath ()
     shift;
     local paths;
     case $typf in 
-        src)		paths='src/,src/inc/,inc/'	;;
+        src)		paths='src/,src/inc/,inc/,settling/src/,settling/src/inc'	;;
         ac)		paths='.'			;;
         shn)		paths='shn/'			;;
         vimstd)		paths='.'			;;

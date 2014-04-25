@@ -72,6 +72,8 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
   int r = 0;
   unsigned long long resf = 0;
 
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
   if ( fname && dir_id )
   {
     int r;
@@ -79,7 +81,6 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
     char *qbase_name = NULL;
     const char *qfname;
 
-    duf_dbgfunc( DBG_START, __func__, __LINE__ );
     qbase_name = duf_single_quotes_2( fname );
     qfname = qbase_name ? qbase_name : fname;
     {
@@ -131,8 +132,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
 
 /* callback of type duf_scan_callback_file_t */
 static int
-duf_file_scan_fill_uni(  duf_depthinfo_t * pdi,
-                        duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -294,8 +294,7 @@ duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path
 
 static unsigned long long
 duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ struct dirent *de,
-                                                      unsigned long long pathid,
-                                                      duf_depthinfo_t * pdi, int need_id, int *pr )
+                                                      unsigned long long pathid, duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
@@ -484,7 +483,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-duf_directory_scan_fill_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
                              duf_record_t * precord )
 {
   int r = 0;
@@ -558,20 +557,20 @@ static char *final_sql[] = {
 
 duf_scan_callbacks_t duf_fill_callbacks = {
   .title = __FILE__,.init_scan = NULL,
-  .directory_scan_before = duf_directory_scan_fill_uni,
-  .file_scan = duf_file_scan_fill_uni,
+  .node_scan_before = scan_node_before,
+  .leaf_scan = scan_leaf,
   /* filename for debug only */
   .fieldset = " duf_filenames.pathid as dirid, " " duf_filenames.name as filename, duf_filedatas.size as filesize "
         ", uid, gid, nlink, inode, mtim as mtime "
         ", duf_filedatas.mode as filemode " ", duf_filenames.id as filenameid " ", md.dupcnt as nsame, md.md5sum1, md.md5sum2 ",
-  .file_selector =
+  .leaf_selector =
         " SELECT % s FROM duf_filenames "
         " JOIN duf_filedatas on( duf_filenames.dataid = duf_filedatas.id ) "
         " LEFT JOIN duf_md5 as md on( md.id = duf_filedatas.md5id ) " " WHERE "
         /* " duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "                      */
         /* " AND( md.dupcnt IS NULL OR( md.dupcnt >= %llu AND md.dupcnt < %llu ) ) AND " */
         " duf_filenames.pathid = '%llu' ",
-  .dir_selector =
+  .node_selector =
         " SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
         /* ", ( SELECT count( * )FROM duf_paths as subpaths WHERE subpaths.parentid = duf_paths.id ) as ndirs "        */

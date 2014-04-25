@@ -36,8 +36,7 @@
 
 /* callback of  duf_scan_callback_file_t */
 static int
-duf_file_scan_print_plain_uni(  duf_depthinfo_t * pdi,
-                               duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -107,7 +106,7 @@ duf_file_scan_print_plain_uni(  duf_depthinfo_t * pdi,
 }
 
 static int
-duf_directory_scan_print_plain_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
                                     duf_record_t * precord )
 {
   int r = 0;
@@ -141,8 +140,8 @@ duf_directory_scan_print_plain_uni( unsigned long long pathid, /* const duf_dirh
 duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = __FILE__ ".dir",
   .init_scan = NULL,
-  .directory_scan_before = duf_directory_scan_print_plain_uni,
-  .file_scan = duf_file_scan_print_plain_uni,
+  .node_scan_before = scan_node_before,
+  .leaf_scan = scan_leaf,
   .fieldset =
         "duf_filenames.pathid as dirid "
         " , duf_filenames.name as filename, duf_filedatas.size as filesize " ", duf_filedatas.size as filesize "
@@ -156,14 +155,14 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
   /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
   /* " else 'Wow' end as monthmtime "                                                                                               */
-  .file_selector =
+  .leaf_selector =
         "SELECT %s FROM duf_filenames "
         " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
         " LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)" "    WHERE "
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
         " duf_filenames.pathid='%llu' ",
-  .dir_selector =
+  .node_selector =
         "SELECT duf_paths.id as dirid, duf_paths.dirname, duf_paths.dirname as dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
         /* " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs "       */
