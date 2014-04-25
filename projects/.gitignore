@@ -1,4 +1,5 @@
 *.strace
 last_grep*.txt
-.auxdir
-.gvimvrb
+.auxdir/
+.gvimvrb/
+.marks/

@@ -86,9 +86,9 @@ function shn_errmsg ()
     MSH_SHN_MSG_NOCOLOR=yes
     shn_msg ERROR "$*"
   else
-    shn_msg "---------------------------------"
+#   shn_msg "---------------------------------"
     shn_msg ERROR "$*"
-    shn_msg "---------------------------------"
+#   shn_msg "---------------------------------"
   fi
 
   return 1

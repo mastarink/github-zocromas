@@ -42,7 +42,7 @@ duf_sql_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 int
 duf_sql_exec( const char *sql, int *pchanges )
 {
-  int r = duf_sqlite_error_code( duf_sqlite_exec_c( sql, DUF_CONSTRAINT_IGNORE_NO, pchanges ) );
+  int r = duf_sqlite_error_code( duf_sqlite_exec_e( sql, pchanges ) );
 
   DUF_TEST_R( r );
   return r;

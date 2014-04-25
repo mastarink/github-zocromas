@@ -39,12 +39,15 @@ duf_sqlite_open( const char *dbpath )
   int r3 = 0;
 
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  r3 = sqlite3_initialize(  );
-  DUF_TRACE( action, 0, "DB Initialize %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
-  if ( r3 == SQLITE_OK )
+  if ( !pDb )
   {
-    r3 = sqlite3_open( dbpath, &pDb );
-    DUF_TRACE( action, 0, "DB Open %s %s (%d)", dbpath, r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
+    r3 = sqlite3_initialize(  );
+    DUF_TRACE( action, 0, "DB Initialize %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
+    if ( r3 == SQLITE_OK )
+    {
+      r3 = sqlite3_open( dbpath, &pDb );
+      DUF_TRACE( action, 0, "DB Open %s %s (%d)", dbpath, r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
+    }
   }
   /*          */ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return ( r3 );
@@ -69,7 +72,7 @@ duf_sqlite_close( void )
 }
 
 int
-duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
+duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
 {
   int r3 = SQLITE_OK;
   char *emsg = ( char * ) NULL;
@@ -91,27 +94,49 @@ duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
     }
     if ( r3 == SQLITE_OK && pchanges )
       *pchanges = sqlite3_changes( pDb );
-
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-    if ( r3 == SQLITE_CONSTRAINT )
-    {
-      if ( !constraint_ignore )
-        DUF_ERROR( "SQL CONSTRAINT '%s' [%s]", emsg ? emsg : "-", sql ? sql : "?" );
-    }
-    else if ( r3 != SQLITE_OK )
-      DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
-    /* else                                  */
-    /*   fprintf( stderr, "SQL exec OK\x1b[K\n" ); */
   }
-  else
-  {
-  }
-  if ( emsg )
+  if ( pemsg )
+    *pemsg = emsg;
+  else if ( emsg )
     sqlite3_free( emsg );
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   DUF_TRACE( sql, 3, "[%s] : %d", sql, r3 );
   return ( r3 );
 }
+
+int
+duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
+{
+  int r3;
+  char *emsg = NULL;
+
+  r3 = duf_sqlite_exec( sql, pchanges, &emsg );
+  if ( r3 != SQLITE_OK && !( r3 == SQLITE_CONSTRAINT && constraint_ignore ) )
+    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+
+  if ( emsg )
+    sqlite3_free( emsg );
+  emsg = NULL;
+  return r3;
+}
+
+int
+duf_sqlite_exec_e( const char *sql, int *pchanges )
+{
+  int r3;
+  char *emsg = NULL;
+
+  r3 = duf_sqlite_exec( sql, pchanges, &emsg );
+  if ( r3 != SQLITE_OK )
+    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+  if ( emsg )
+    sqlite3_free( emsg );
+  emsg = NULL;
+
+  return r3;
+}
+
 
 int
 duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args )
@@ -135,6 +160,58 @@ duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list ar
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
   return ( r3 );
 }
+
+int
+duf_vsqlite_e( const char *fmt, int *pchanges, va_list args )
+{
+  int r3 = 0;
+  char *sql;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  DUF_TRACE( sql, 2, "[%s] ", fmt );
+  sql = sqlite3_vmprintf( fmt, args );
+  DUF_TRACE( sql, 2, "[%s] ", sql );
+  r3 = duf_sqlite_exec_e( sql, pchanges );
+
+  DUF_TRACE( sql, 3, "[%s] : %d", sql, r3 );
+  sqlite3_free( sql );
+  sql = NULL;
+  DUF_TRACE( sql, 3, "r3: %d", r3 );
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
+  return ( r3 );
+}
+
+
+int
+duf_vsqlite( const char *fmt, int *pchanges, va_list args )
+{
+  int r3 = 0;
+  char *sql;
+  char *emsg = NULL;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+  DUF_TRACE( sql, 2, "[%s] ", fmt );
+  sql = sqlite3_vmprintf( fmt, args );
+  DUF_TRACE( sql, 2, "[%s] ", sql );
+  r3 = duf_sqlite_exec( sql, pchanges, &emsg );
+  if ( r3 != SQLITE_OK )
+    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+
+  DUF_TRACE( sql, 3, "(%d) SQL '%s' [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+  if ( emsg )
+    sqlite3_free( emsg );
+
+  sqlite3_free( sql );
+  sql = NULL;
+  DUF_TRACE( sql, 3, "r3: %d", r3 );
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
+  return ( r3 );
+}
+
 
 
 
