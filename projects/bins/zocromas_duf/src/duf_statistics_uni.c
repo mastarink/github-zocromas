@@ -78,7 +78,6 @@ duf_directory_scan_statistics_uni( unsigned long long pathid, /* const duf_dirha
   {
     char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
-
     printf( "#%4llu: statistics dPATH %s\n", pdi->seq, path );
     DUF_TRACE( statistics, 1, "path=%s", path );
     mas_free( path );
@@ -86,7 +85,7 @@ duf_directory_scan_statistics_uni( unsigned long long pathid, /* const duf_dirha
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
-
+/* *INDENT-OFF*  */
 duf_scan_callbacks_t duf_statistics_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
@@ -124,3 +123,4 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
   /* .final_sql_argv = final_sql, */
 };
+/* *INDENT-ON*  */

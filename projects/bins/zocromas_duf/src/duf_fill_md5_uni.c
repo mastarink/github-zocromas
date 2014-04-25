@@ -57,8 +57,8 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize )
   unsigned long long resmd = -1;
   int r = 0;
 
-  r = duf_sql_c( "INSERT INTO duf_md5 (md5sum1,md5sum2,size,ucnt,now) values ('%lld','%lld','%llu',0,datetime())",
-                 DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, md64[1], md64[0], ( unsigned long long ) fsize );
+  r = duf_sql_c( "INSERT INTO duf_md5 (md5sum1,md5sum2,ucnt,now) values ('%lld','%lld','%llu',0,datetime())",
+                 DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, md64[1], md64[0] );
   if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sel_cb_insert_md5_uni, &resmd, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,

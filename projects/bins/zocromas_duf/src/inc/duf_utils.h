@@ -4,10 +4,14 @@
 
 char *duf_single_quotes_2( const char *s );
 
-int duf_vtrace( const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags, int nerr, FILE * out,
-                const char *fmt, va_list args );
-int duf_trace( const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags, int nerr, FILE * out,
-               const char *fmt, ... ) __attribute__ ( ( format( __printf__, 9, 10 ) ) );
+int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags,
+                int nerr, FILE * out, const char *fmt, va_list args );
+int duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags,
+               int nerr, FILE * out, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 10, 11 ) ) );
+
+const char *duf_error_name( duf_error_code_t c );
+
+
 
 typedef enum
 {

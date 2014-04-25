@@ -6,7 +6,7 @@
 typedef enum
 {
 
-  DUF_SQLITE_ERROR_BASE = -12999,
+  DUF_SQLITE_ERROR_BASE = -59999,
   DUF_SQL_ERROR = DUF_SQLITE_ERROR_BASE + SQLITE_ERROR, /* #  define SQLITE_ERROR        1 (* SQL error or missing database *)               */
   DUF_SQL_INTERNAL = DUF_SQLITE_ERROR_BASE + SQLITE_INTERNAL, /* #  define SQLITE_INTERNAL     2 (* Internal logic error in SQLite *)              */
   DUF_SQL_PERM = DUF_SQLITE_ERROR_BASE + SQLITE_PERM, /* #  define SQLITE_PERM         3 (* Access permission denied *)                    */

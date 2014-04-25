@@ -31,6 +31,7 @@ function shn_code ()
       shn_msg 't = make distcheck and save tarballs to' ${MSH_SHN_DIRS[savedist]}
       shn_msg 'm = make'
       shn_msg 'i = make install'
+      shn_msg 'u = make uninstall'
       shn_msg 'E = check files for e'
       shn_msg 'R = reload working shell libs (shn)'
       shn_msg 'L = list build dir'
@@ -135,6 +136,14 @@ function shn_code ()
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.3"
     ;;
+    u)
+      shn_dbgmsg "shn 2.${code}.1"
+#	  shn_build_make      || return $?
+#         shn_dbgmsg "shn 2.${code}.2"
+      shn_build_uninstall || { retcode=$? ; shn_errmsg 2.${code} shn ; break ; }
+      shn_dbgmsg shn $code ok
+      shn_dbgmsg "shn 2.${code}.3"
+    ;;    
     R)
       shn_load
     ;;

@@ -11,7 +11,7 @@ typedef enum
   DUF_OPTION_DB_NAME = 'N',
   DUF_OPTION_RECURSIVE = 'R',
   DUF_OPTION_VERBOSE = 'v',
-  
+
   DUF_OPTION_ACTION_TRACE = 'A',
   DUF_OPTION_ERROR_TRACE = 'e',
   DUF_OPTION_SCAN_TRACE = 'S',
@@ -38,7 +38,7 @@ typedef enum
 
   DUF_OPTION_FORMAT,
 
-  DUF_OPTION_INTEGRITY_TRACE ,
+  DUF_OPTION_INTEGRITY_TRACE,
   DUF_OPTION_FS_TRACE,
   DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_CALLS_TRACE,
@@ -99,6 +99,28 @@ typedef enum
   DUF_OPTION_REMOVE_FROM_GROUP,
   DUF_OPTION_MAX_LONG,
 } duf_option_code_t;
+
+typedef enum
+{
+  DUF_TRACE_MODE_NONE,
+  DUF_TRACE_MODE_error,
+  DUF_TRACE_MODE_errorr,
+  DUF_TRACE_MODE_any,
+  DUF_TRACE_MODE_verbose,
+  DUF_TRACE_MODE_action,
+  DUF_TRACE_MODE_current,
+  DUF_TRACE_MODE_MAX,
+  DUF_TRACE_MODE_fill,
+  DUF_TRACE_MODE_path,
+  DUF_TRACE_MODE_scan,
+  DUF_TRACE_MODE_fs,
+  DUF_TRACE_MODE_sample,
+  DUF_TRACE_MODE_sampupd,
+  DUF_TRACE_MODE_statistics,
+  DUF_TRACE_MODE_mdpath,
+  DUF_TRACE_MODE_md5,
+  DUF_TRACE_MODE_sql,
+} duf_trace_mode_t;
 
 typedef enum
 {
@@ -186,6 +208,7 @@ typedef struct
 typedef struct
 {
   unsigned error;
+  unsigned errorr;
   unsigned any;
   unsigned fs;
   unsigned current;

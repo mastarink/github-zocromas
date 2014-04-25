@@ -337,6 +337,13 @@ function shn_build_install ()
   shn_build_common_make install && shn_msgns installed
   touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
 }
+function shn_build_uninstall ()
+{
+  MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:uninstall]=`datemt`
+  shn_build_common_make uninstall && shn_msgns uninstalled
+  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+}
+
 function shn_build_dist ()
 {
   local retcode=0

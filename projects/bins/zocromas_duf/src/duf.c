@@ -167,8 +167,7 @@ main( int argc, char **argv )
         break;
       }
     }
-    if ( r < 0 )
-      DUF_ERROR( "(%d) %s", r, argv[0] );
+    DUF_TEST_R( r );
 
     duf_config_delete(  );
   }
@@ -179,6 +178,6 @@ main( int argc, char **argv )
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
 #endif
-  DUF_TEST_R( r );
-  return r < 0 ? 31 : 0;
+  DUF_ERRORR( r, "-" );
+  return r < 0 && r != DUF_ERROR_MAX_REACHED ? 31 : 0;
 }

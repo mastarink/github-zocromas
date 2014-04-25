@@ -41,11 +41,11 @@
 #  define DUF_IF_TRACEN(name,min)      DUF_IF_WHATN(cli.trace, name)
 
 #  define DUF_WHAT( what, name, min, ...) \
-    duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
+    duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
 		__func__,__LINE__, 0, 0, \
 			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
 #  define DUF_WHATSYSE( ern, what, name, min, ...) \
-    duf_trace( #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
+    duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
 		__func__,__LINE__, DUF_TRACE_FLAG_SYSTEM, ern, \
 			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
 #  define DUF_WHATSYS(  what, name, min, ...) DUF_WHATSYSE(errno,  what, name, min, __VA_ARGS__)
@@ -60,12 +60,13 @@
 #  define DUF_ERRSYS(...)              DUF_TRACESYS( error, 0, __VA_ARGS__ )
 #  define DUF_ERRSYSE(ern,...)         DUF_TRACESYSE( ern, error, 0, __VA_ARGS__ )
 #  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
+#  define DUF_ERRORR(r, ...)              DUF_TRACE( errorr, r, __VA_ARGS__ )
 
-#  define DUF_TEST_R(val)              if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+#  define DUF_TEST_R(val)       if (val && val!=DUF_ERROR_MAX_REACHED) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
 
-#  define DUF_VERBOSE(lev,...)           DUF_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
-#  define DUF_IF_VERBOSE()               DUF_IF_WHAT(cli.dbg,verbose)
-#  define DUF_IF_VERBOSEN(lev)           DUF_IF_WHATN(cli.dbg,verbose,lev)
+#  define DUF_VERBOSE(lev,...)         DUF_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
+#  define DUF_IF_VERBOSE()             DUF_IF_WHAT(cli.dbg,verbose)
+#  define DUF_IF_VERBOSEN(lev)         DUF_IF_WHATN(cli.dbg,verbose,lev)
 
 #  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
 
