@@ -1,3 +1,16 @@
+function shn_mark_touch ()
+{
+  local name=$1
+  local marksdir=${MSH_SHN_DIRS[marks]}
+  if [[ $name ]] && [[ $MSH_SHN_PROJECT_DIR ]] && [[ -d $MSH_SHN_PROJECT_DIR ]] ; then
+    if ! [[ -d $marksdir ]] ; then
+      mkdir $marksdir
+    fi
+    if [[ -d $marksdir ]] ; then
+      touch $marksdir/${name}
+    fi
+  fi
+}
 function shn_std_command ()
 {
   local std=$1 retcode=0
@@ -66,7 +79,7 @@ function shn_build_xcommand ()
 	    retcode=1
 	  fi
 	else
-	  shn_errmsg 2 "$cmd_base $@ # [$MSH_SHN_PROJECT_NAME] `shn_project_version`"
+	  shn_errmsg 2 "cmd_base:$cmd_base; cmt:$cmd; errname:$errname; $@ # [$MSH_SHN_PROJECT_NAME] `shn_project_version`"
 	  ! [[ "$cmd" ]]                      && shn_errmsg 2.1 $cmd
 	  ! [[ "$errname" ]]                  && shn_errmsg 2.2 $errname
 	  ! [[ "${MSH_SHN_DIRS[error]}" ]]     && shn_errmsg 2.3 ${MSH_SHN_DIRS[error]}
@@ -76,10 +89,10 @@ function shn_build_xcommand ()
 	fi
 	popd &>/dev/null
       else
-	shn_errmsg 3 "${MSH_SHN_DIRS[build]}"
+	shn_errmsg 3 "Can't cd build dir: ${MSH_SHN_DIRS[build]}"
       fi
     else
-      shn_errmsg 4 "${MSH_SHN_DIRS[build]}"
+      shn_errmsg 4 "No build dir: ${MSH_SHN_DIRS[build]}"
     fi
   else
     shn_errmsg 5 "error dir : ${MSH_SHN_DIRS[error]}"
@@ -175,7 +188,7 @@ function shn_build_common_make ()
 }
 function shn_build_autoreconf ()
 {
-  local retcode=0
+  local retcode=0 errname
   shn_setup_projects || return $?
   local shn_dont_setup=yes
   shn_dbgmsg start maintainer-clean -- $MSH_SHN_PROJECT_NAME -- $MSH_SHN_PROJECT_DIR
@@ -184,14 +197,17 @@ function shn_build_autoreconf ()
   unset shn_no_error_message
   shn_dbgmsg end maintainer-clean
   if [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] ; then
-    touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}.0
+    shn_mark_touch ${FUNCNAME}.0
     if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
-      shn_dbgmsg start autoreconf -i
-      autoreconf -i && shn_msgns autoconf ok || { retcode=$? ; }
-      popd  &>/dev/null
+      shn_dbgmsg start autoreconf -i $MSH_SHN_PROJECT_DIR
+      errname="${MSH_SHN_DIRS[error]}/shn_build_autoreconf.${MSH_SHN_PROJECT_NAME}.result"
+      shn_msg "see $errname"
+      autoreconf -i $MSH_SHN_PROJECT_DIR &>$errname && shn_msgns autoconf ok || { retcode=$? ; }
+      shn_msg "see $errname"
       shn_dbgmsg end autoreconf -i
+      popd &>/dev/null
     fi
-    touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+    shn_mark_touch ${FUNCNAME}
   else
     shn_errmsg  "$MSH_SHN_PROJECT_DIR"
   fi
@@ -228,7 +244,7 @@ function shn_build_configure ()
   shn_build_xcommand $configscript  $configure_opts && shn_msgns configure ok || return $?
   shn_dbgmsg "C1 `pwd`" >&2
 # shn_build_list . config.status config.log config.h
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
   return 0
 }
 function shn_build_recheck ()
@@ -242,7 +258,7 @@ function shn_build_recheck ()
   shn_msg $FUNCNAME 3
   shn_build_xcommand ./config.status --recheck && shn_msgns recheck ok || return $?
   shn_msg $FUNCNAME 4
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
   return 0
 }
 function shn_build_make ()
@@ -252,7 +268,7 @@ function shn_build_make ()
   shn_build_common_make && shn_msgns make ok || return $?
   shn_dbgmsg "$FUNCNAME 2"
 # shn_build_list src || shn_build_list inc
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
   return 0
 }
 function shn_build_superclean ()
@@ -316,32 +332,37 @@ function shn_build_superclean ()
       fi
     done
   fi
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
+  return 0
 }
 function shn_build_clean ()
 {
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:clean]=`datemt`
   shn_build_common_make clean && shn_msgns make clean ok || return $?
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
+  return 0
 }
 function shn_build_distclean ()
 {
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:distclean]=`datemt`
   shn_build_common_make distclean && shn_msgns make distclean ok || return $?
 # shn_build_list
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
+  return 0
 }
 function shn_build_install ()
 {
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:install]=`datemt`
   shn_build_common_make install && shn_msgns installed
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
+  return 0
 }
 function shn_build_uninstall ()
 {
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:uninstall]=`datemt`
   shn_build_common_make uninstall && shn_msgns uninstalled
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
+  return 0
 }
 
 function shn_build_dist ()
@@ -381,7 +402,7 @@ function shn_build_dist ()
     retcode=1
   fi
   shn_dbgmsg "$MSH_SHN_PROJECT_FULLNAME ==> ${MSH_SHN_DIRS[savedist]}"
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
   return $retcode
 }
 # function shn_build_ebuild_update_here ()
@@ -455,7 +476,7 @@ function shn_build_ebuild_update ()
     [[ -d "$ebuild_dir" ]]                 || shn_errmsg "d '$ebuild_dir'"
     retval=1
   fi
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
   return $retval
 }
 function shn_build_ebuild_check ()
@@ -485,6 +506,6 @@ function shn_build_ebuild_check ()
   done
 # shn_msg "$ebuild_dir"
 # shn_msg "$distdir"
-  touch $MSH_SHN_PROJECT_DIR/.${FUNCNAME}
+  shn_mark_touch ${FUNCNAME}
   return 0
 }

@@ -1,9 +1,0 @@
-PRAGMA foreign_keys=OFF;
-BEGIN TRANSACTION;
-CREATE TABLE files (pathindex NUMERIC, name TEXT, inode INTEGER PRIMARY KEY, mdindex INTEGER);
-INSERT INTO "files" VALUES(0,'aaa',0,0);
-CREATE TABLE paths (name TEXT, inode INTEGER PRIMARY KEY, parentindex NUMERIC);
-CREATE TABLE md5 (id INTEGER PRIMARY KEY, md5sum TEXT);
-CREATE INDEX "filename" on files (name ASC);
-CREATE INDEX "dirname" on paths (name ASC);
-COMMIT;

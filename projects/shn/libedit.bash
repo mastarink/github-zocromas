@@ -1,3 +1,4 @@
+MSH_SHN_LIBEDIT_LOADED=$(datemt)
 shn_gvimer_plus_bin () 
 { 
     local a c='-o'
@@ -78,7 +79,8 @@ shn_gvimer_plus_regfile_in ()
 			--servername "$fuuid" \
 			${masedf:+--cmd "let masedfile=\"$masedf\""} \
 			${edpath:+--cmd "let masedpath=\"$edpath\""} \
-			${rfile:+--cmd "let maseddrop=\"$rfile\""}
+			${rfile:+--cmd "let maseddrop=\"$rfile\""} \
+			${localvim_dir:+--cmd "let mas_localvimdir=\"$localvim_dir\""}
 #		/bin/sleep 0.5;
 #	        echo "2 gvimer_resident $rfile $fuuid" 1>&2;
 #		shn_gvimer_plus_resident $rfile $fuuid;
@@ -190,8 +192,8 @@ shn_gvimer_plus_find ()
         src)		paths='./src/ ./inc/ ./settling/src ./settling/src/inc'	;;
         ac)		paths='./'		;;
         shn)		paths='./shn/'		;;
-        vimstd)		paths='.'		;;
-        mased_vim)	paths='./mased/'	;;
+        vimstd)		paths="$localvim_dir/"		;;
+        mased_vim)	paths="./$mased_dir/"	;;
         *)		paths='./'		;;
     esac;
 #   eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1
@@ -207,8 +209,8 @@ shn_gvimer_plus_vpath ()
         src)		paths='src/,src/inc/,inc/,settling/src/,settling/src/inc'	;;
         ac)		paths='.'			;;
         shn)		paths='shn/'			;;
-        vimstd)		paths='.'			;;
-        mased_vim)	paths='mased/'			;;
+        vimstd)		paths="$localvim_dir"			;;
+        mased_vim)	paths="$mased_dir"	;;
         *)		paths='.'			;;
     esac;
     echo "${paths:-.}"
@@ -245,7 +247,7 @@ shn_gvimer_plus_mased ()
             echo "libedit $FUNCNAME: not found '$file' as [$typf] " 1>&2;
             return 1;
 	else
-	    echo "libedit found $filef" 1>&2;
+	    echo "($MSH_SHN_LIBEDIT_LOADED) libedit found $filef" 1>&2;
         fi;
     fi
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
@@ -257,10 +259,10 @@ shn_gvimer_plus_mased ()
     typf=`shn_gvimer_plus_filtyp "${filef:-*.c}" $dirn`;
 #   echo "2 typf:$typf" >&2
     local masedf;
-#   grep "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" mased/*.mased.vim | head -1 >&2
-    masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" mased/*.mased.vim | head -1)
+#   grep "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1 >&2
+    masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1)
 #   echo "masedf:[$masedf] for $filef ($file)" >&2
-####[[ ${masedf:=mased/${typf}.mased.vim} ]] # off 20140413
+####[[ ${masedf:=$mased_dir/${typf}.mased.vim} ]] # off 20140413
     [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=
     if [[ $masedf ]] ; then
       local fuuid="$( shn_gvimer_plus_uuid $masedf )";
@@ -283,12 +285,12 @@ shn_gvimer_plus_mased ()
 }
 shn_gvimer_plus () 
 { 
-    local file deffile
-    if [[ -d mased ]]; then
+    local file deffile mased_dir=${MSH_SHN_DIRS[relmased]} localvim_dir=${MSH_SHN_DIRS[relvimid]}
+    if [[ $mased_dir ]] && [[ -d $mased_dir ]] && [[ $localvim_dir ]] && [[ -d $localvim_dir ]] ; then
         if [[ -n "$@" ]]; then
             shn_gvimer_plus_mased $@ && return $?;
             shn_gvimer_plus_nomased   $@ && return $?;
-            echo "error editing $@ ; no <mased> for $@; try direct path" 1>&2;
+            echo "error editing $@ ; no <mased> for $@ at $mased_dir; try direct path" 1>&2;
             return 1;
         else
 	    local dn=${PWD##+(*([^/])/)zocromas_}.c

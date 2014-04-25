@@ -1,1 +1,0 @@
-../../../zocromas/mased/sh.mased.vim

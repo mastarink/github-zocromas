@@ -1,0 +1,40 @@
+[color]
+	status = true
+	grep = auto
+	diff = auto
+[color "status"]
+	header = bold blue
+	changed = bold red
+	untracked = bold magenta
+	added = bold green
+	updated = bold green
+[color "grep"]
+	context = bold blue
+	filename = bold green
+	linenumber = bold magenta
+	match = bold yellow
+	selected = bold blue
+[pager]
+	grep = false
+	diff = false
+	log = true
+[advice]
+	statusHints = false
+[color "diff"]
+	plain = cyan
+	meta = white
+	old = bold red
+	new = bold green
+	frag = bold magenta
+[color "decorate"]
+	branch = bold magenta
+	remoteBranch = bold yellow
+	tag = bold white
+	HEAD = bold green
+	stash =  green
+[log]
+	decorate = true
+	date = rfc
+[help]
+	format = web
+# vi: ft=gitconfig

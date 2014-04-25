@@ -1,13 +1,17 @@
 " echo 'in ' . expand('<sfile>')
 
-source gvim-funcs.vim
+if filereadable("gvim-vimenter.vim")
+  source gvim-funcs.vim
+else
+  echo 'gvim-funcs.vim'
+endif
 
 set swb=usetab,newtab,split
 set undolevels=10000
 set virtualedit=block
 
 if exists('v:servername')
-  let vrbprefix='.gvimvrb/'
+  let vrbprefix=mas_localvimdirs . '.gvimvrb/'
   if !isdirectory(vrbprefix)
     call mkdir(vrbprefix)
   endif

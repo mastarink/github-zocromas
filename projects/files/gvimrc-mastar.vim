@@ -15,8 +15,8 @@ set tbi
 
 
 if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
-  
-" echo 'masedfile: ' . masedfile
+   
+  echo 'masedfile ok: ' . masedfile
 " if exists('v:servername')
 "   echo '(before) v:servername: ' . v:servername
 " endif
@@ -32,20 +32,38 @@ if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
   
 " set path=src,src/inc
 " tab new
-  
-
-  execute 'set path=' . g:masedpath
-  sil source `=masedfile`
+  if exists("masedpath") && !empty(masedpath)
+"   echo "set path=" . masedpath
+    execute 'set path=' . masedpath
+  endif
+  sil so `=masedfile`
 
 " au ColorScheme sil so `=masedfile`
 " autocmd! VimEnter * source gvim-vimenter.vim
 
 " au GUIEnter * winsize 156 50
-  
-  if filereadable("gvim-guienter.vim")
-    au GUIEnter * source gvim-guienter.vim
+  if !exists("mas_localvimdir") || empty(mas_localvimdir)
+"   let mas_localvimdir='./'
+    let mas_localvimdir=getcwd()
   endif
-  if filereadable("gvim-vimenter.vim")
-    au VimEnter * source gvim-vimenter.vim
+  if !empty(mas_localvimdir)
+    let mas_localvimdirs=mas_localvimdir . '/'
   endif
+  let  guienter=mas_localvimdirs . 'gvim-guienter.vim'
+  if filereadable(guienter)
+    au GUIEnter * sil so `=guienter`
+"   else
+"     echo 'guienter not found: ' . guienter
+  endif
+
+  let  vimenter=mas_localvimdirs . 'gvim-vimenter.vim'
+  if filereadable(vimenter)
+    au VimEnter * sil so `=vimenter`
+"   else
+"     echo 'vimenter not found: ' . vimenter
+  endif
+elseif exists("masedfile")
+  echo 'masedfile not found: ' . masedfile
+else
+  echo 'masedfile not defined'
 endif

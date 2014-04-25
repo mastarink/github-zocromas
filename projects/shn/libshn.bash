@@ -182,7 +182,7 @@ function shn_code ()
   shopt -$nocase nocasematch &>/dev/null
   return 0
 }
-function shn ()
+function shn_i ()
 {
   local code=${1:-l} i
 # export MSH_SHN_DEBUG=yes  
@@ -249,4 +249,8 @@ function shn ()
   shn_setup_projects || return $?
 # shn_msg END of shn
   return $retcode
+}
+function shn ()
+{
+  time shn_i $*
 }

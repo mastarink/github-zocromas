@@ -85,22 +85,51 @@ function shn_setup_project_dirs
   if [[ "$MSH_SHN_PROJECT_DIR" ]] && [[ -d "$MSH_SHN_PROJECT_DIR" ]] ; then
     MSH_SHN_DIRS[configure]=$MSH_SHN_PROJECT_DIR
     MSH_SHN_DIRS[aux]=$MSH_SHN_PROJECT_DIR/.auxdir
-    MSH_SHN_DIRS[mased]=$MSH_SHN_PROJECT_DIR/mased
+    MSH_SHN_DIRS[marks]=$MSH_SHN_PROJECT_DIR/.marks
+    MSH_SHN_DIRS[zocvid]=$MSH_SHN_PROJECT_DIR
+    MSH_SHN_DIRS[relediting]=editing
+    MSH_SHN_DIRS[editing]=$MSH_SHN_PROJECT_DIR/${MSH_SHN_DIRS[relediting]}
+    
+    MSH_SHN_DIRS[old__relmased]=mased
+    MSH_SHN_DIRS[old__masedid]=$MSH_SHN_PROJECT_DIR/${MSH_SHN_DIRS[old__relmased]}
+    MSH_SHN_DIRS[oldlinks__vimid]=$MSH_SHN_PROJECT_DIR
+#   MSH_SHN_DIRS[oldlinks__zocvid]=$MSH_SHN_PROJECT_DIR
+
+    MSH_SHN_DIRS[relmased]=${MSH_SHN_DIRS[relediting]}/mased
+    MSH_SHN_DIRS[masedid]=$MSH_SHN_PROJECT_DIR/${MSH_SHN_DIRS[relmased]}
+    
+    MSH_SHN_DIRS[relvimid]=${MSH_SHN_DIRS[relediting]}
+    MSH_SHN_DIRS[vimid]=$MSH_SHN_PROJECT_DIR/${MSH_SHN_DIRS[relvimid]}
+
+
     MSH_SHN_DIRS[debug]=$MSH_SHN_PROJECT_DIR/debug
     MSH_SHN_DIRS[build]="${MSH_SHN_DIRS[aux]}/.build"
     MSH_SHN_DIRS[buildsrc]="${MSH_SHN_DIRS[build]}/src"
     MSH_SHN_DIRS[m4]="${MSH_SHN_DIRS[aux]}/m4"
     MSH_SHN_DIRS[error]="/tmp"
 #  echo " C `declare -p MSH_SHN_DIRS`" >&2
-
+    
+    # $( find ${MSH_SHN_DIRS[files]}/*.vim -printf '%f' )
+    MSH_SHN_FILES[vimid]="vimrc-mastar.vim gvimrc-mastar.vim gvim-vimenter.vim gvim-funcs.vim"
+    MSH_SHN_FILES[zocvid]="zocversion.txt zocvdate.txt"
     shn_dbgmsg "aux:${MSH_SHN_DIRS[aux]}"
     shn_dbgmsg "build:${MSH_SHN_DIRS[build]}"
 
-    for id in aux build m4 mased debug ; do
-      if [[ "${MSH_SHN_DIRS[$id]}" ]] && ! [[ -d "${MSH_SHN_DIRS[$id]}" ]] ; then
+ 
+    for id in aux build m4 editing vimid masedid debug ; do
+      if [[ "${MSH_SHN_DIRS[$id]}" ]] &&
+      		  [[ "${MSH_SHN_DIRS[old__$id]}" ]] &&
+      		! [[ "${MSH_SHN_DIRS[$id]}" == "${MSH_SHN_DIRS[old__$id]}" ]] &&
+		  [[ -d ${MSH_SHN_DIRS[old__$id]} ]] &&
+		! [[ -d ${MSH_SHN_DIRS[$id]} ]]
+      then
+	shn_msg moving ${MSH_SHN_DIRS[old__$id]}  ${MSH_SHN_DIRS[$id]}
+        git mv ${MSH_SHN_DIRS[old__$id]} ${MSH_SHN_DIRS[$id]} || mv ${MSH_SHN_DIRS[old__$id]} ${MSH_SHN_DIRS[$id]} || return 1
+	shn_msg moved ${MSH_SHN_DIRS[old__$id]}  ${MSH_SHN_DIRS[$id]}
+      elif [[ "${MSH_SHN_DIRS[$id]}" ]] && ! [[ -d "${MSH_SHN_DIRS[$id]}" ]] ; then
 	shn_mkdir "${MSH_SHN_DIRS[$id]}" || return 1
 	shn_msg created ${MSH_SHN_DIRS[$id]}
-      fi
+      fi      
     done
   else
     shn_errmsg "can't set dir's"
@@ -152,6 +181,7 @@ function shn_setup_projects ()
   local i
 # unset MSH_SHN_DIRS
   declare -p MSH_SHN_DIRS &>/dev/null || declare -gx -A MSH_SHN_DIRS
+  declare -p MSH_SHN_FILES &>/dev/null || declare -gx -A MSH_SHN_FILES
   declare -p MSH_SHN_ENABLED_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_ENABLED_PROJECTS
   declare -p MSH_SHN_DISABLED_PROJECTS &>/dev/null || declare -gx -a MSH_SHN_DISABLED_PROJECTS
   declare -p MSH_SHN_HASH_PROJECTS &>/dev/null || declare -gx -A MSH_SHN_HASH_PROJECTS
@@ -279,30 +309,36 @@ function shn_initial_src_mased_vim  ()
 function shn_initial_mased_vim
 {
   local file link fn typf retval=0
-  if [[ -d mased ]] ; then
-    if pushd mased &>/dev/null ; then
-       for typf in sh shn ac vimrc ; do
+  if pushd ${MSH_SHN_DIRS[masedid]} &>/dev/null ; then
+     for typf in sh shn ac vimrc ; do
 # echo " D `declare -p MSH_SHN_DIRS`" >&2
-        fn="${typf}.mased.vim"
-	if [[ -f "${MSH_SHN_DIRS[files]}/mased/$fn" ]] ; then
-	  file=`shn_realpath --relative-to=. ${MSH_SHN_DIRS[files]}/mased/$fn` || { retval=$? ; break ; }
-	  link=$( shn_basename $file ) || { retval=$? ; break ; }
-	  if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
+      fn="${typf}.mased.vim"
+      if [[ -f "${MSH_SHN_DIRS[files]}/mased/$fn" ]] ; then
+	file=`shn_realpath --relative-to=. ${MSH_SHN_DIRS[files]}/mased/$fn` || { retval=$? ; break ; }
+	link=$( shn_basename $file ) || { retval=$? ; break ; }
+	if [[ -f $file ]] && ! [[ -f $link ]] ; then
+          shn_msg "updating mased for typf='$typf'"
+	  if [[ -L  $link ]] && ! [[ -r  $link ]] ; then
+	    shn_rm $link || return 1
+	  fi
+	  if ! [[ -e $link ]] ; then
 	    shn_dbgmsg "$file -> $link"
 	    shn_ln -s $file $link || { retval=$? ; break ; }
 	    shn_msg created link $link
 	  fi
-	else
-	  shn_errmsg ${MSH_SHN_DIRS[files]}/mased/$fn
-	  retval=1
-	  break
 	fi
-      done        
-      if ! [[ -f "src.mased.vim" ]] ; then
-        shn_initial_src_mased_vim || { retval=$? ; break ; }
+      else
+	shn_errmsg ${MSH_SHN_DIRS[files]}/mased/$fn
+	retval=1
+	break
       fi
-      popd &>/dev/null
+    done        
+    if ! [[ -f "src.mased.vim" ]] ; then
+      shn_initial_src_mased_vim || { retval=$? ; break ; }
     fi
+    popd &>/dev/null
+  else
+    shn_errmsg "not exists mased dir : ${MSH_SHN_DIRS[masedid]}"
   fi
   return $retval
 }
@@ -327,30 +363,55 @@ function shn_initial_debug
 }
 function shn_setup_additional ()
 {
-  local fn file link
+  local fn fnf file  link oldlink dir olddir srcf srcdir
   if ! [[ -f "configure.ac" ]] ; then 
     shn_errmsg setup additional - no configure.ac
     return 1
   fi
 # echo " E `declare -p MSH_SHN_DIRS`" >&2
-  if [[ "${MSH_SHN_DIRS[files]}" ]] && [[ -d "${MSH_SHN_DIRS[files]}" ]] ; then 
+  srcdir=${MSH_SHN_DIRS[files]}
+  if [[ $srcdir ]] && [[ -d $srcdir ]] ; then 
   #  mased/sh.mased.vim
-    for fn in vimrc-mastar.vim gvimrc-mastar.vim gvim-vimenter.vim gvim-funcs.vim zocversion.txt zocvdate.txt ; do
-      if [[ -f "${MSH_SHN_DIRS[files]}/$fn" ]] ; then
-        file=`shn_realpath --relative-to=. ${MSH_SHN_DIRS[files]}/$fn` || return 1
-	link=$( shn_basename $file )
-	if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
-	  shn_dbgmsg "$file -> $link"
-	  shn_ln -s $file $link || return 1
-	  shn_msg created link $link
-	fi
-      else
-        shn_errmsg "no file '${MSH_SHN_DIRS[files]}/$fn'"
-	return 1
+    for dirid in vimid zocvid ; do
+      dir=${MSH_SHN_DIRS[$dirid]}
+      olddir=${MSH_SHN_DIRS[oldlinks__$dirid]}
+      if [[ $dir ]] && pushd $dir &>/dev/null ; then
+	for fn in ${MSH_SHN_FILES[$dirid]} ; do
+	  srcf="$srcdir/$fn"
+	  if [[ -f $srcf ]] ; then
+	    file=$( shn_realpath --relative-to=. $srcf ) || return 1
+	    link=$fn
+	    if [[ $olddir ]] && ! [[ $olddir == $dir ]] ; then
+	      if [[ -d $olddir ]] ; then
+		oldlink="$olddir/$fn"
+		if [[ -L $oldlink ]] ; then
+		  shn_msg "removing $oldlink"
+		  shn_rm $oldlink
+		fi
+	      else
+		shn_errmsg "no olddir '$olddir' for $dirid"
+	      fi
+	    fi
+	    if [[ -L $link ]] && ! [[ -r $link ]] ; then
+	      shn_rm $link
+	    fi
+	    if ! [[ -e $link ]] ; then
+	      shn_msg "making $fn from $srcf at $PWD"
+#	      shn_msg "making $fn from $srcf"
+	      shn_dbgmsg "$file -> $link"
+	      shn_ln -s $file $link || return 1
+	      shn_msg created link $link
+	    fi
+	  else
+	    shn_errmsg "no file '$srcf'"
+	    return 1
+	  fi	
+	done
+	popd &>/dev/null
       fi
     done
   else
-    shn_errmsg "shn_setup_additional - ${MSH_SHN_DIRS[files]}"
+    shn_errmsg "shn_setup_additional - $srcdir"
     return 1
   fi
   for fn in sh shn m4zoc ; do
@@ -371,7 +432,7 @@ function shn_setup_additional ()
     if [[ -f "$MSH_SHN_PROJECTS_DIR/$fn" ]] ; then
       file=`shn_realpath --relative-to=. ${MSH_SHN_PROJECTS_DIR}/$fn`
       link=$( shn_basename $file )
-      if ! [[ -L $link ]] && ! [[ -f $link ]] ; then
+      if ! [[ -e $link ]] ; then
 	shn_dbgmsg "$file -> $link"
 	shn_ln -s $file $link || return 1
 	shn_msg created link $link

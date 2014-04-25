@@ -32,7 +32,7 @@ function shn_msg ()
       if [[ $nocolor ]] || [[ $MSH_SHN_MSG_NOCOLOR ]]; then
         shn_echo "$*"  >&2
       else
-        shn_echo "${MSHPR_FBGREEN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-$MSHPR_BYELLOWONMAGENTA}$*${MSHPR_ATTROFF}"  >&2
+        shn_echo "${MSHPR_FBGREEN}${MSH_SHN_MSG_PREFIX}${MSHPR_ATTROFF}${MSH_SHN_MSG_COLOR:-${MSHPR_FBWHITE}${MSHPR_REVERSE}}$*${MSHPR_ATTROFF}"  >&2
       fi
     else
       shn_echo >&2

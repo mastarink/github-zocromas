@@ -12,7 +12,6 @@
 #include "duf_sql.h"
 #include "duf_create.h"
 #include "duf_path.h"
-/* #include "duf_finddup.h" */
 
 #include "duf_add.h"
 
