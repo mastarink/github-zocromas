@@ -35,24 +35,33 @@
 #  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
 
 
-#  define DUF_IF_WHAT(what,name) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name )
-#  define DUF_IF_TRACE(name)           DUF_IF_WHAT(cli.trace, name)
-#  define DUF_IF_WHATN(what,name,min) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name>min )
-#  define DUF_IF_TRACEN(name,min)      DUF_IF_WHATN(cli.trace, name)
 
-#  define DUF_WHAT( what, name, min, ...) \
+#  define DUF_PRINTF( min, ...) \
+    duf_printf( duf_config ? duf_config->cli.printf.level:1, min, \
+		__func__,__LINE__, \
+			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, __VA_ARGS__ )
+
+
+
+#  define DUF_IF_TRACE_WHAT(what,name) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name )
+#  define DUF_IF_TRACE(name)           DUF_IF_TRACE_WHAT(cli.trace, name)
+#  define DUF_IF_TRACE_WHATN(what,name,min) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name>min )
+#  define DUF_IF_TRACEN(name,min)      DUF_IF_TRACE_WHATN(cli.trace, name)
+
+#  define DUF_TRACE_WHAT( what, name, min, ...) \
     duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
 		__func__,__LINE__, 0, 0, \
 			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
-#  define DUF_WHATSYSE( ern, what, name, min, ...) \
+#  define DUF_TRACE_WHATSYSE( ern, what, name, min, ...) \
     duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
 		__func__,__LINE__, DUF_TRACE_FLAG_SYSTEM, ern, \
 			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
-#  define DUF_WHATSYS(  what, name, min, ...) DUF_WHATSYSE(errno,  what, name, min, __VA_ARGS__)
+#  define DUF_TRACE_WHATSYS(  what, name, min, ...) DUF_TRACE_WHATSYSE(errno,  what, name, min, __VA_ARGS__)
 
-#  define DUF_TRACE(name, ...)           DUF_WHAT(cli.trace, name, __VA_ARGS__)
-#  define DUF_TRACESYS(name, ...)        DUF_WHATSYS(cli.trace, name, __VA_ARGS__)
-#  define DUF_TRACESYSE(ern, name, ...)        DUF_WHATSYSE(ern, cli.trace, name, __VA_ARGS__)
+#  define DUF_TRACE(name, ...)           DUF_TRACE_WHAT(cli.trace, name, __VA_ARGS__)
+
+#  define DUF_TRACESYS(name, ...)        DUF_TRACE_WHATSYS(cli.trace, name, __VA_ARGS__)
+#  define DUF_TRACESYSE(ern, name, ...)        DUF_TRACE_WHATSYSE(ern, cli.trace, name, __VA_ARGS__)
 
 #  define DUF_TRACE_SCAN( min, ...)    DUF_TRACE( scan, min, __VA_ARGS__)
 #  define DUF_TRACE_SAMPLE( min, ...)  DUF_TRACE( sample, min, __VA_ARGS__)
@@ -64,9 +73,9 @@
 
 #  define DUF_TEST_R(val)       if (val && val!=DUF_ERROR_MAX_REACHED) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
 
-#  define DUF_VERBOSE(lev,...)         DUF_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
-#  define DUF_IF_VERBOSE()             DUF_IF_WHAT(cli.dbg,verbose)
-#  define DUF_IF_VERBOSEN(lev)         DUF_IF_WHATN(cli.dbg,verbose,lev)
+#  define DUF_VERBOSE(lev,...)         DUF_TRACE_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
+#  define DUF_IF_VERBOSE()             DUF_IF_TRACE_WHAT(cli.dbg,verbose)
+#  define DUF_IF_VERBOSEN(lev)         DUF_IF_TRACE_WHATN(cli.dbg,verbose,lev)
 
 #  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
 
@@ -208,6 +217,7 @@ typedef struct
 {
   int depth;
   /* duf_node_type_t node_type; */
+  char *path;
   duf_levinfo_t *levinfo;
   unsigned long long seq;
   unsigned long long seq_leaf;
@@ -263,7 +273,7 @@ typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, /* const duf_d
                                        duf_record_t * precord );
 
 /* this is callback of type: duf_scan_hook_file_t (first range; str_cb) */
-typedef int ( *duf_scan_hook_file_t ) ( /* void *str_cb_udata, */duf_depthinfo_t * pdi,
+typedef int ( *duf_scan_hook_file_t ) (  /* void *str_cb_udata, */ duf_depthinfo_t * pdi,
                                         duf_record_t * precord /*, const duf_dirhandle_t * pdhu */  );
 
 

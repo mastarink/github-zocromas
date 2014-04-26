@@ -23,6 +23,7 @@ const struct option longopts[] = {
   {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_HELP},
   {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_HELP_EXAMPLES},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
+  {.name = "printf",.has_arg = optional_argument,.val = DUF_OPTION_PRINTF},
   /* --------------- */
   {.name = "trace-file",.has_arg = required_argument,.val = DUF_OPTION_TRACE_FILE},
   {.name = "trace-stderr",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDERR},
@@ -343,6 +344,13 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION( ptr, DEBUG, debug, cli.dbg );
   /* DUF_RESTORE_OPTION_TRACE(ptr, ALL, all ); */
   DUF_RESTORE_OPTION( ptr, TRACE_NONEW, nonew, cli.trace );
+
+
+
+  DUF_RESTORE_OPTION( ptr, PRINTF, level, cli.printf );
+
+
+
   DUF_RESTORE_OPTION( ptr, NOOPENAT, noopenat, cli );
 
   DUF_RESTORE_OPTION_TRACE( ptr, CALLS, calls );
@@ -404,6 +412,8 @@ duf_restore_option( char *ptr, duf_option_code_t code )
 
   DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr );
   DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout );
+
+  DUF_RESTORE_OPTION_S( ptr, PRINTF_FILE, file, cli.printf );
   DUF_RESTORE_OPTION_S( ptr, TRACE_FILE, file, cli.trace );
   DUF_RESTORE_OPTION_S( ptr, DB_DIRECTORY, dir, db );
   DUF_RESTORE_OPTION_S( ptr, DB_NAME, name, db );

@@ -15,6 +15,8 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_levinfo.h"
+
 #include "duf_path.h"
 #include "duf_file.h"
 
@@ -32,13 +34,11 @@
 
 /* callback of type duf_scan_callback_file_t */
 static int
-scan_leaf(  duf_depthinfo_t * pdi,
-                          duf_record_t * precord /* , const duf_dirhandle_t * pdh_notused */  )
+sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
   DUF_SFIELD( filename );
-  /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 /* stat */
@@ -50,8 +50,10 @@ scan_leaf(  duf_depthinfo_t * pdi,
    *                   ^^^^^^^^   ^^^^^^^
    * */
 
-  DUF_TRACE( sample, 1, "sample" );
 
+
+
+  DUF_TRACE( sample, 2, "sample" );
 
   if ( pdi->depth <= 0 )
   {
@@ -60,13 +62,14 @@ scan_leaf(  duf_depthinfo_t * pdi,
   }
   if ( 1 )
   {
+     char *fpath;
     DUF_SFIELD( filename );
 
-    printf( "#%4llu: sample filename %s\n", pdi->seq, filename );
-
-    DUF_TRACE_SAMPLE( 1, "fpath=%s", filename );
-
-    DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
+    fpath = duf_levinfo_path( pdi, filename );
+    DUF_TRACE( sample, 0, "@@@@@@@@@ (F%d) %s / ", pdi->depth, fpath );
+    DUF_PRINTF( 1, "#%4llu: sample fpath %s", pdi->seq, fpath );
+    DUF_TRACE( sample, 1, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
+    mas_free( fpath );
   }
   else
   {
@@ -75,9 +78,9 @@ scan_leaf(  duf_depthinfo_t * pdi,
       DUF_UFIELD( filenameid );
       char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
 
-      printf( "#%4llu: sample fpath %s\n", pdi->seq, fpath );
+      DUF_PRINTF( 1, "#%4llu: sample fpath %s", pdi->seq, fpath );
 
-      DUF_TRACE_SAMPLE( 1, "fpath=%s", fpath );
+      DUF_TRACE_SAMPLE( 2, "fpath=%s", fpath );
 
       mas_free( fpath );
       DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth - 1].context );
@@ -86,7 +89,7 @@ scan_leaf(  duf_depthinfo_t * pdi,
     /* duf_config->cli.trace.sql++; */
   }
 
-  DUF_TRACE( sample, 1, "filename=%s", filename );
+  DUF_TRACE( sample, 2, "filename=%s", filename );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -94,8 +97,8 @@ scan_leaf(  duf_depthinfo_t * pdi,
 /* callback of type duf_scan_callback_dir_t */
 /* will be static! */
 int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                               duf_record_t * precord )
+sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                         duf_record_t * precord )
 {
   int r = 0;
 
@@ -103,13 +106,22 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 
   DUF_TRACE_SAMPLE( 1, "T1 pathid=%llu", pathid );
   /* DUF_TRACE_SAMPLE( 0, "T0 pathid=%llu", pathid ); */
+
+  /* for ( int i = 0; i < pdi->depth; i++ )                                                       */
+  /* {                                                                                            */
+  /*   DUF_TRACE( sample, 0, "@@@@@@@@@ (%d/%d) %s / ", i, pdi->depth, pdi->levinfo[i].dirname ); */
+  /* }                                                                                            */
+
+
+
+
   {
     duf_config->cli.trace.sql--;
     {
       char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
 
-      printf( "#%4llu: sample BEFORE dPATH %s\n", pdi->seq, path );
+      DUF_PRINTF( 2, "#%4llu: sample BEFORE dPATH %s", pdi->seq, path );
       DUF_TRACE_SAMPLE( 1, "path=%s", path );
       mas_free( path );
     }
@@ -128,23 +140,21 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 }
 
 static int
-scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                     duf_record_t * precord )
+sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                        duf_record_t * precord )
 {
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@ %llu -- %llu", pathid, pdi->levinfo[pdi->depth].dirid );
-  DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
   {
     duf_config->cli.trace.sql--;
     {
       char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
 
-      printf( "#%4llu: sample AFTER  dPATH %s\n", pdi->seq, path );
-      DUF_TRACE_SAMPLE( 1, "path=%s", path );
+      DUF_PRINTF( 4, "#%4llu: sample AFTER  dPATH %s", pdi->seq, path );
       mas_free( path );
     }
     duf_config->cli.trace.sql++;
@@ -159,8 +169,8 @@ scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notus
 }
 
 static int
-scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                      duf_record_t * precord )
+sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                         duf_record_t * precord )
 {
   int r = 0;
 
@@ -172,7 +182,7 @@ scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
     {
       char *path = duf_pathid_to_path_s( pathid, pdi, &r );
 
-      printf( "#%4llu: sample MIDDLE dPATH %s\n", pdi->seq, path );
+      DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, path );
       DUF_TRACE_SAMPLE( 1, "path=%s", path );
       mas_free( path );
     }
@@ -192,10 +202,10 @@ scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 duf_scan_callbacks_t duf_sample_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .node_scan_before = scan_node_before,
-  .node_scan_after = scan_node_after,
-  .node_scan_middle = scan_node_middle,
-  .leaf_scan = scan_leaf,
+  .node_scan_before = sample_scan_node_before,
+  .node_scan_after = sample_scan_node_after,
+  .node_scan_middle = sample_scan_node_middle,
+  .leaf_scan = sample_scan_leaf,
   .fieldset =
         " duf_filenames.pathid as dirid " " ,duf_filenames.name as filename, duf_filedatas.size as filesize"
         " , uid, gid, nlink, inode, mtim as mtime " " , dupcnt as nsame "

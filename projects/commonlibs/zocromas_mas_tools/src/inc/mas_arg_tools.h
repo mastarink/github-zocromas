@@ -26,6 +26,7 @@ int mas_add_argv_cmdline( int targc, char ***ptargv, const char *cmdline, size_t
 
 int mas_del_argv( int argc, char **argv, int from_a );
 
+char *mas_argv_join( int targc, char *const *targv, int from_a, char delim );
 char *mas_argv_string( int targc, char *const *targv, int from_a );
 
 const char *mas_find_next_argo( const char *args, const char **pthis, size_t * plen, int *quot );

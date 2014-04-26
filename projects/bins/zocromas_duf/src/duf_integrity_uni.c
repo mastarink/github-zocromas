@@ -16,7 +16,7 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
-
+#include "duf_levinfo.h"
 
 #include "duf_sql_field.h"
 #include "duf_path.h"

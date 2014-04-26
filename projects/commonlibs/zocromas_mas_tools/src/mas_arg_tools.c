@@ -545,17 +545,27 @@ mas_del_argv( int targc, char **targv, int from_a )
 }
 
 char *
-mas_argv_string( int targc, char *const *targv, int from_a )
+mas_argv_join( int targc, char *const *targv, int from_a, char delim )
 {
   char *value = NULL;
 
   for ( int ia = from_a; ia < targc; ia++ )
   {
+    char sdelim[2];
+
+    sdelim[0] = delim ? delim : ' ';
+    sdelim[1] = 0;
     value = mas_strcat_xt( value, targv[ia] );
     if ( ia < targc - 1 )
-      value = mas_strcat_xt( value, " " );
+      value = mas_strcat_xt( value, sdelim );
   }
   return value;
+}
+
+char *
+mas_argv_string( int targc, char *const *targv, int from_a )
+{
+  return mas_argv_join( targc, targv, from_a, ' ' );
 }
 
 char *

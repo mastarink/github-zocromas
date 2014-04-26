@@ -382,15 +382,12 @@ duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned lon
   int r;
 
   char *qbase_name;
-  duf_scan_callbacks_t sccb;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   DUF_TRACE( action, 0, "!!" );
   /* duf_config->cli.dbg.nosqlite++; */
 
-  memset( &sccb, 0, sizeof( sccb ) );
-  sccb.fieldset = "pathid";
 
   {
     DUF_TRACE( path, 0, "Insert path %s", base_name );
@@ -408,6 +405,7 @@ duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned lon
           {
             if ( need_id )
             {
+              duf_scan_callbacks_t sccb = {.fieldset = "pathid" };
               r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sql_insert_path */ , &dir_id, STR_CB_DEF, STR_CB_UDATA_DEF,
                                   ( duf_depthinfo_t * ) NULL, &sccb, ( const duf_dirhandle_t * ) NULL,
                                   "SELECT id as pathid " " FROM duf_paths " " WHERE dev='%lu' and inode='%lu'", pst_dir->st_dev,

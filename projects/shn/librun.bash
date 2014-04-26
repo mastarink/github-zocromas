@@ -42,6 +42,7 @@ function shn_run ()
       qargs+=" '${!i}'"
     done
     export MSH_SHN_BASHPID=$BASHPID
+    export MSH_SHN_LAUNCHPID=$$
     shn_msg "qargs:$qargs" >&2
     shn_msg "------------------------------------`datemt`--- $$ : $BASHPID -"
     shn_msg "------ to run '$bin $1 ...' -------"

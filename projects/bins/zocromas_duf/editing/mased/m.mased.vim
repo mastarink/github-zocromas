@@ -1,5 +1,3 @@
-set path=mased/
-
 find m.mased.vim
 sfind ac.mased.vim
 sfind sh.mased.vim

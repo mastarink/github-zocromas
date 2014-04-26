@@ -9,6 +9,11 @@ int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int mi
 int duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags,
                int nerr, FILE * out, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 10, 11 ) ) );
 
+int duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, va_list args );
+int duf_printf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, ... )
+      __attribute__ ( ( format( __printf__, 6,7 ) ) );
+
+
 const char *duf_error_name( duf_error_code_t c );
 
 

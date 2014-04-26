@@ -15,6 +15,21 @@ main( int argc, char *argv[] )
   char *d;
   const char *s = "0123456789abcdefabcdefghijkl\r\nmnopqzABCDEF\tX";
 
+  if ( argc )
+  {
+    char *s;
+
+    s = mas_argv_string( argc, argv, 1 );
+    fprintf( stderr, ">>>>>[\n%d:%s\n]<<<<<<<\n", argc, s );
+    mas_free( s );
+  }
+  {
+    char *s;
+
+    s = mas_argv_join( argc, argv, 1, ';' );
+    fprintf( stderr, ">>>>>[\n%d:%s\n]<<<<<<<\n", argc, s );
+    mas_free( s );
+  }
   {
     struct tm *t;
     char buf[512];
@@ -252,7 +267,7 @@ main( int argc, char *argv[] )
     fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
     mas_free( s );
   }
-{
+  {
     char *s;
     const char *s0 = "this is a ${HOME}test${MSH_SHN_BASHPID}.db";
 
@@ -268,7 +283,7 @@ main( int argc, char *argv[] )
     fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
     mas_free( s );
   }
-{
+  {
     char *s;
     const char *s0 = "this is a test$$MSH_XY_BASHPID.db";
 
@@ -276,7 +291,7 @@ main( int argc, char *argv[] )
     fprintf( stderr, "@@@@@@@@@@@@@@@@ %s\t=> %s\n", s0, s );
     mas_free( s );
   }
-{
+  {
     char *s;
     const char *s0 = "this is a test$HOME.db";
 

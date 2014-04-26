@@ -144,7 +144,7 @@ duf_error_name( duf_error_code_t c )
   {
     if ( c == table[i].code )
     {
-      snprintf( buf, sizeof( buf ), "%s", table[i].name+4 );
+      snprintf( buf, sizeof( buf ), "%s", table[i].name + 4 );
       found = 1;
       break;
     }
@@ -188,7 +188,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
     char rf = 0;
 
     rf = *fmt;
-    /* ; - no prfefix, cr   */
+    /* ; - no prefix, cr   */
     /* . - no prefix, no cr */
     /* : - prefix, no cr    */
     if ( rf == '.' || rf == ':' || rf == ';' )
@@ -230,6 +230,50 @@ duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minleve
 
   va_start( args, fmt );
   r = duf_vtrace( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, fmt, args );
+  va_end( args );
+  return r;
+}
+
+
+int
+duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
+{
+  int r = -1;
+
+  if ( level > minlevel )
+  {
+    char rf = 0;
+
+    rf = *fmt;
+    /* ; - no prefix, cr   */
+    /* . - no prefix, no cr */
+    /* : - prefix, no cr    */
+    if ( rf == '.' || rf == ':' || rf == ';' || rf == '+' )
+      fmt++;
+
+    if ( rf == '+' )
+    {
+      fprintf( out, "%d:%d %3u:%-23s: ", level, minlevel, linid, funcid );
+    }
+    {
+      r = vfprintf( out, fmt, args );
+    }
+    if ( rf != '.' && rf != ':' )
+    {
+      fprintf( out, "\n" );
+    }
+  }
+  return r;
+}
+
+int
+duf_printf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, ... )
+{
+  int r;
+  va_list args;
+
+  va_start( args, fmt );
+  r = duf_vprintf( level, minlevel, funcid, linid, out, fmt, args );
   va_end( args );
   return r;
 }

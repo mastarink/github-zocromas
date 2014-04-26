@@ -64,26 +64,27 @@ file_at_pathid_to_filenameid_x( unsigned long long pathid, const char *name, uns
 {
   int r = 0;
 
-  /* unsigned long long filenameid; */
-  md5id_fnid_udata_t ud;
+  md5id_fnid_udata_t ud = {.md5id = 0,.filenameid = 0 };
   char *qname;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   qname = duf_single_quotes_2( name );
-  ud.md5id = 0;
-  ud.filenameid = 0;
   fprintf( stderr, "%s:PATHID_TO_FILENAMEID %llu : %s\n", __func__, pathid, qname ? qname : name );
-  r = duf_sql_select( duf_sel_cb_md5id_fnid, &ud, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                      ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                      "SELECT duf_filenames.id as filenameid, duf_md5.id as md5id " " FROM duf_filenames "
-                      " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-                      " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) "
-                      " WHERE duf_filenames.pathid='%llu' and duf_filenames.name='%s'", pathid, qname ? qname : name );
-  if ( r >= 0 && pmd5id )
   {
-    *pmd5id = ud.md5id;
+    r = duf_sql_select( duf_sel_cb_md5id_fnid, &ud, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
+                        "SELECT duf_filenames.id as filenameid, duf_md5.id as md5id " " FROM duf_filenames "
+                        " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+                        " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) "
+                        " WHERE duf_filenames.pathid='%llu' AND duf_filenames.name='%s'", pathid, qname ? qname : name );
+    if ( r >= 0 && pmd5id )
+    {
+      *pmd5id = ud.md5id;
+    }
   }
   mas_free( qname );
+  if ( pr )
+    *pr = r;
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, ud.filenameid );
   return ud.filenameid;
 }
@@ -91,32 +92,36 @@ file_at_pathid_to_filenameid_x( unsigned long long pathid, const char *name, uns
 unsigned long long
 file_at_pathid_to_filenameid( unsigned long long pathid, const char *name, int *pr )
 {
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  return file_at_pathid_to_filenameid_x( pathid, name, NULL, pr );
-}
-
-unsigned long long
-file_at_path_to_filenameid_x( const char *path, const char *name, unsigned long long *pmd5id, int *pr )
-{
-  int r = 0;
-  unsigned long long filenameid = 0;
-  unsigned long long dirid = 0;
+  unsigned long long fnid = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  dirid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL /* pdi */ , &r );
-  if ( r >= 0 )
-    filenameid = file_at_pathid_to_filenameid_x( dirid, name, pmd5id, &r );
-  if ( pr )
-    *pr = r;
-  return filenameid;
+  fnid = file_at_pathid_to_filenameid_x( pathid, name, NULL, pr );
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, fnid );
+  return fnid;
 }
 
-unsigned long long
-file_at_path_to_filenameid( const char *path, const char *name, int *pr )
-{
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  return file_at_path_to_filenameid_x( path, name, NULL, pr );
-}
+/* unsigned long long                                                                                      */
+/* file_at_path_to_filenameid_x( const char *path, const char *name, unsigned long long *pmd5id, int *pr ) */
+/* {                                                                                                       */
+/*   int r = 0;                                                                                            */
+/*   unsigned long long filenameid = 0;                                                                    */
+/*   unsigned long long dirid = 0;                                                                         */
+/*                                                                                                         */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                         */
+/*   dirid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL (* pdi *) , &r );                        */
+/*   if ( r >= 0 )                                                                                         */
+/*     filenameid = file_at_pathid_to_filenameid_x( dirid, name, pmd5id, &r );                             */
+/*   if ( pr )                                                                                             */
+/*     *pr = r;                                                                                            */
+/*   return filenameid;                                                                                    */
+/* }                                                                                                       */
+/*                                                                                                         */
+/* unsigned long long                                                                                      */
+/* file_at_path_to_filenameid( const char *path, const char *name, int *pr )                               */
+/* {                                                                                                       */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                         */
+/*   return file_at_path_to_filenameid_x( path, name, NULL, pr );                                          */
+/* }                                                                                                       */
 
 /*
  * call duf_print_files_by_pathid for pathid correspond tp path

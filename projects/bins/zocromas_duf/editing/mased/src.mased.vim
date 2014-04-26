@@ -59,9 +59,9 @@ tab sfind duf.c
 sfind duf.h
 
 tab sfind duf_maindb.c
-sfind duf_action.h
+sfind duf_maindb.h
 
-tab sfind duf_maindb.c
+tab sfind duf_action.c
 sfind duf_action.h
 
 tab sfind duf_config.c

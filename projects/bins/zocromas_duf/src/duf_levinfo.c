@@ -31,6 +31,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, const char *path )
     assert( pdi->levinfo );
     memset( pdi->levinfo, 0, lsz );
     assert( pdi->depth == 0 );
+    pdi->path = mas_strdup( path );
     duf_levinfo_open_dh( pdi, path );
   }
   DUF_TEST_R( r );
@@ -45,14 +46,58 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
 
   assert( pdi );
 
-  if ( pdi->levinfo[0].dirname )
-    mas_free( pdi->levinfo[0].dirname );
-  pdi->levinfo[0].dirname = NULL;
-  assert( pdi->depth == 0 );
-  duf_levinfo_closeat_dh( pdi );
-  mas_free( pdi->levinfo );
+  if ( pdi->levinfo )
+  {
+    mas_free( pdi->path );
+    pdi->path = NULL;
+
+    if ( pdi->levinfo[0].dirname )
+      mas_free( pdi->levinfo[0].dirname );
+    pdi->levinfo[0].dirname = NULL;
+
+    assert( pdi->depth == 0 );
+    duf_levinfo_closeat_dh( pdi );
+
+    mas_free( pdi->levinfo );
+    pdi->levinfo = NULL;
+  }
   DUF_TEST_R( r );
   return r;
+}
+
+char *
+duf_levinfo_path( const duf_depthinfo_t * pdi, const char *tail )
+{
+  char *path = NULL;
+
+  assert( pdi );
+  if ( pdi->levinfo && pdi->path )
+  {
+    size_t len = strlen( pdi->path ) + 2;
+    char *p;
+
+    if ( tail )
+      len += strlen( tail );
+
+    for ( int i = 1; i < pdi->depth; i++ )
+    {
+      len += strlen( pdi->levinfo[i].dirname ) + 1;
+    }
+    path = mas_malloc( len );
+    strcpy( path, pdi->path );
+    p = path + strlen( path );
+    *p++ = '/';
+
+    for ( int i = 1; i < pdi->depth; i++ )
+    {
+      strcpy( p, pdi->levinfo[i].dirname );
+      p = path + strlen( path );
+      *p++ = '/';
+    }
+    if ( tail )
+      strcpy( p, tail );
+  }
+  return path;
 }
 
 int

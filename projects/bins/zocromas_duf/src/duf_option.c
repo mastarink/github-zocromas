@@ -151,6 +151,43 @@ duf_parse_option( int opt, const char *optarg, int longindex )
       }
     }
     break;
+  case DUF_OPTION_PRINTF:
+    DUF_OPT_NUM_PLUS( cli.printf.level );
+    break;
+  case DUF_OPTION_PRINTF_FILE:
+    if ( optarg )
+    {
+      struct stat st;
+
+      duf_config->cli.printf.file = mas_strdup( optarg );
+      if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
+      {
+        fprintf( stderr, "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
+                 ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
+        exit( 4 );
+      }
+      else
+      {
+        FILE *out;
+
+        if ( duf_config->cli.printf.out )
+        {
+          if ( duf_config->cli.printf.out != stderr && duf_config->cli.printf.out != stdout )
+            fclose( duf_config->cli.printf.out );
+          duf_config->cli.printf.out = NULL;
+        }
+
+        out = fopen( optarg, "w" );
+        if ( !out )
+        {
+          fprintf( stderr, "Can't open trace file %s\n", optarg );
+          exit( 4 );
+        }
+        else
+          duf_config->cli.printf.out = out;
+      }
+    }
+    break;
   case DUF_OPTION_DEBUG:
     duf_config->cli.dbg.debug = 1;
     break;
@@ -241,10 +278,6 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_CALLS_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.calls );
-    /* if ( optarg && *optarg )                                    */
-    /*   duf_config->cli.trace.calls = strtol( optarg, NULL, 10 ); */
-    /* else                                                        */
-    /*   duf_config->cli.trace.calls++;                            */
     break;
   case DUF_OPTION_ANY_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.any );
@@ -489,9 +522,9 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /* case DUF_OPTION_PRINT_DUPLICATES:   */
     /*   duf_config->cli.act.print_duplicates = 1; */
     /*   break;                            */
-  /* case DUF_OPTION_ZERO_DUPLICATES:           */
-  /*   DUF_OPT_FLAG( cli.act.zero_duplicates ); */
-  /*   break;                                   */
+    /* case DUF_OPTION_ZERO_DUPLICATES:           */
+    /*   DUF_OPT_FLAG( cli.act.zero_duplicates ); */
+    /*   break;                                   */
   case DUF_OPTION_SAME_FILES:
     DUF_OPT_FLAG( cli.act.same_files );
     /* duf_config->cli.act.same_files = 1; */
