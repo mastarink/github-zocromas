@@ -73,7 +73,7 @@ file_at_pathid_to_filenameid_x( unsigned long long pathid, const char *name, uns
   {
     r = duf_sql_select( duf_sel_cb_md5id_fnid, &ud, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                        "SELECT duf_filenames.id as filenameid, duf_md5.id as md5id " " FROM duf_filenames "
+                        "SELECT duf_filenames.id AS filenameid, duf_md5.id AS md5id " " FROM duf_filenames "
                         " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
                         " LEFT JOIN duf_md5 on (duf_md5.id=duf_filedatas.md5id) "
                         " WHERE duf_filenames.pathid='%llu' AND duf_filenames.name='%s'", pathid, qname ? qname : name );
@@ -192,7 +192,7 @@ filenameid_to_filepath( unsigned long long filenameid, duf_depthinfo_t * pdi, in
 
     r = duf_sql_select( duf_sel_cb_pi_fname, &pifn, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                        "SELECT duf_filenames.pathid as dirid, duf_filenames.id as filenameid, duf_filenames.name as filename "
+                        "SELECT duf_filenames.pathid AS dirid, duf_filenames.id AS filenameid, duf_filenames.name AS filename "
                         " FROM duf_filenames " " WHERE duf_filenames.id='%llu'", filenameid );
     /* fprintf( stderr, "%s:FILENAMEID_TO_FILEPATH %llu => %llu:%s\n", __func__, filenameid, pifn.pathid, pifn.filename ); */
     duf_dbgfunc( DBG_STEP, __func__, __LINE__ );

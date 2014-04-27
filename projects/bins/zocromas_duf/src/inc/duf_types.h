@@ -208,6 +208,7 @@ typedef struct
   unsigned long long items;
   unsigned long long ndirs;
   unsigned long long nfiles;
+  char *fullpath;
   char *dirname;
   void *context;
   duf_dirhandle_t lev_dh;

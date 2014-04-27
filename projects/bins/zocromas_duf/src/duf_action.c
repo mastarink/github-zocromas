@@ -62,8 +62,7 @@ duf_action_new( int argc, char **argv )
     qsargv2 = duf_single_quotes_2( sargv2 );
 
 
-    /* r = duf_sql_c( "INSERT INTO duf_log (args, restored_args, msg, now) " " VALUES ('%s', '%s', '%s', datetime())", 0, ); */
-    r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg, now) " " VALUES ('%s', '%s', '%s', datetime())", &changes,
+    r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) " " VALUES ('%s', '%s', '%s')", &changes,
                  qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );
     DUF_TRACE( current, 0, "log inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
     mas_free( qsargv1 );

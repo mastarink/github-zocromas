@@ -263,24 +263,24 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
         /* fprintf( stderr, "%s: pathid_new: %llu; qbd: %s\n", __func__, pathid, qbd ); */
         r = duf_sql_select( duf_sel_cb_dirid /* duf_sql_path_to_pathid */ , pdi, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                             ( duf_scan_callbacks_t * ) NULL /* sccb */ , ( const duf_dirhandle_t * ) NULL,
-                            "SELECT duf_paths.id as dirid, duf_paths.dirname,  duf_paths.parentid "
+                            "SELECT duf_paths.id AS dirid, duf_paths.dirname,  duf_paths.parentid "
                             ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
-                            /* " ,(SELECT count(*) FROM duf_paths as subpaths WHERE subpaths.parentid=duf_paths.id) as ndirs " */
-                            /* " ,(SELECT count(*) FROM duf_filenames as fn "                                                  */
-                            /* "          JOIN duf_filedatas as fd ON (fn.dataid=fd.id) "                                      */
-                            /* "          JOIN duf_md5 as md ON (fd.md5id=md.id) "                                             */
+                            /* " ,(SELECT count(*) FROM duf_paths AS subpaths WHERE subpaths.parentid=duf_paths.id) AS ndirs " */
+                            /* " ,(SELECT count(*) FROM duf_filenames AS fn "                                                  */
+                            /* "          JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "                                      */
+                            /* "          JOIN duf_md5 AS md ON (fd.md5id=md.id) "                                             */
                             /* "          WHERE fn.pathid=duf_paths.id "                                                       */
                             /* "              AND   fd.size >= %llu AND fd.size < %llu "                            */
                             /* "              AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) " */
-                            /* " ) as nfiles " */
-                            /* " ,(SELECT min(fd.size) FROM duf_filedatas as fd JOIN duf_filenames as fn ON (fn.dataid=fd.id) " */
-                            /* "           WHERE fn.pathid=duf_paths.id) as minsize "                                           */
-                            /* " ,(SELECT max(fd.size) FROM duf_filedatas as fd JOIN duf_filenames as fn ON (fn.dataid=fd.id) " */
-                            /* "           WHERE fn.pathid=duf_paths.id) as maxsize "                                           */
+                            /* " ) AS nfiles " */
+                            /* " ,(SELECT min(fd.size) FROM duf_filedatas AS fd JOIN duf_filenames AS fn ON (fn.dataid=fd.id) " */
+                            /* "           WHERE fn.pathid=duf_paths.id) AS minsize "                                           */
+                            /* " ,(SELECT max(fd.size) FROM duf_filedatas AS fd JOIN duf_filenames AS fn ON (fn.dataid=fd.id) " */
+                            /* "           WHERE fn.pathid=duf_paths.id) AS maxsize "                                           */
                             " FROM duf_paths "
                             " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
                             " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "
-                            " WHERE duf_paths.parentid='%llu' and dirname='%s' ",
+                            " WHERE duf_paths.parentid='%llu' AND dirname='%s' ",
                             /* pdi->u.minsize,                                                              */
                             /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
                             /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
@@ -293,7 +293,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
           r = DUF_ERROR_DB_NO_PATH;
           DUF_ERROR( "no pathid at %llu : %s; use -Q to see sql", pathid, qbd );
         }
-        DUF_TRACE( path, 0, "(%d)SELECT PATHID %s => %llu; WHERE duf_paths.parentid='%llu' and dirname='%s'", r, bd, pathid_new, pathid,
+        DUF_TRACE( path, 0, "(%d)SELECT PATHID %s => %llu; WHERE duf_paths.parentid='%llu' AND dirname='%s'", r, bd, pathid_new, pathid,
                    qbd );
       }
       DUF_TRACE( path, 0, "%s: pathid_new: %llu; qbd: %s", __func__, pathid_new, qbd );
@@ -374,64 +374,3 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
   return pathid;
 }
 
-/* insert path into db; return id */
-unsigned long long
-duf_insert_path( const char *base_name, const struct stat *pst_dir, unsigned long long parentid, int need_id, int *pr )
-{
-  unsigned long long dir_id = 0;
-  int r;
-
-  char *qbase_name;
-
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
-  DUF_TRACE( action, 0, "!!" );
-  /* duf_config->cli.dbg.nosqlite++; */
-
-
-  {
-    DUF_TRACE( path, 0, "Insert path %s", base_name );
-    qbase_name = duf_single_quotes_2( base_name );
-    {
-      DUF_TRACE( action, 0, "name:%s", qbase_name ? qbase_name : base_name );
-      if ( pst_dir )
-      {
-        r = duf_sql_c( "INSERT INTO duf_paths (dev, inode, dirname, parentid, ucnt, now) " " VALUES ('%lu','%lu','%s','%lu',0,datetime())",
-                       DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, pst_dir->st_dev, pst_dir->st_ino, qbase_name ? qbase_name : base_name,
-                       parentid );
-        /* sql = NULL; */
-        {
-          if ( r == DUF_SQL_CONSTRAINT )
-          {
-            if ( need_id )
-            {
-              duf_scan_callbacks_t sccb = {.fieldset = "pathid" };
-              r = duf_sql_select( duf_sel_cb_field_by_sccb /* duf_sql_insert_path */ , &dir_id, STR_CB_DEF, STR_CB_UDATA_DEF,
-                                  ( duf_depthinfo_t * ) NULL, &sccb, ( const duf_dirhandle_t * ) NULL,
-                                  "SELECT id as pathid " " FROM duf_paths " " WHERE dev='%lu' and inode='%lu'", pst_dir->st_dev,
-                                  pst_dir->st_ino );
-            }
-          }
-          else if ( !r /* assume SQLITE_OK */  )
-          {
-            if ( need_id )
-            {
-              dir_id = duf_sql_last_insert_rowid(  );
-              DUF_TRACE( path, 0, "Inserted dir_id: %lld", dir_id );
-            }
-          }
-          else
-            fprintf( stderr, "error duf_insert_path %d\n", r );
-        }
-      }
-    }
-    mas_free( qbase_name );
-  }
-
-  /* duf_config->cli.dbg.nosqlite--; */
-  DUF_TRACE( path, 0, "Insert path %s done", base_name );
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, dir_id );
-  if ( pr )
-    *pr = r;
-  return dir_id;
-}

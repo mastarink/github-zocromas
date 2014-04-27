@@ -87,14 +87,14 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
 /* #### duf_sql( "UPDATE duf_md5 SET dupcnt='%llu' WHERE id='%llu'", cnt, md5id ); */
 
   /* .node_selector =                                                                                             */
-  /*       "SELECT duf_md5.id as dirid, printf('%%016x%%016x',md5sum1,md5sum2) as dirname "                      */
-  /*       " ,0 as ndirs" " ,(SELECT count(*) FROM duf_filenames as subfilenames "                               */
+  /*       "SELECT duf_md5.id AS dirid, printf('%%016x%%016x',md5sum1,md5sum2) AS dirname "                      */
+  /*       " ,0 AS ndirs" " ,(SELECT count(*) FROM duf_filenames AS subfilenames "                               */
   /*       (* " LEFT "  toooooooo slow with LEFT *)                                                              */
   /*       "            JOIN duf_filedatas ON (duf_filedatas.id=subfilenames.dataid) "                           */
-  /*       "                            WHERE duf_filedatas.md5id=duf_md5.id) as nfiles "                        */
+  /*       "                            WHERE duf_filedatas.md5id=duf_md5.id) AS nfiles "                        */
   /*       (* ", (SELECT count(*) FROM duf_filedatas "                                                        *) */
-  /*       (* "           LEFT JOIN duf_filenames as subfilenames ON (duf_filedatas.id=subfilenames.dataid) " *) */
-  /*       (* "                             WHERE duf_filedatas.md5id=duf_md5.id) as nfiles"                  *) */
+  /*       (* "           LEFT JOIN duf_filenames AS subfilenames ON (duf_filedatas.id=subfilenames.dataid) " *) */
+  /*       (* "                             WHERE duf_filedatas.md5id=duf_md5.id) AS nfiles"                  *) */
   /*       " FROM duf_md5 " " WHERE %llu<1 "                                                                     */
   /*       (* " AND nfiles>1 " *)                                                                                */
   /*       " ORDER BY md5sum1,md5sum2 ",                                                                         */
@@ -105,20 +105,20 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
   .init_scan = NULL,
   .node_scan_before = scan_node_before,
   .leaf_scan = scan_leaf,
-  .fieldset = " md.id as dirid "
-        " , duf_filenames.name as filename, duf_filedatas.size as filesize "
-        " , uid, gid, nlink, inode, mtim as mtime "
-        " , dupcnt as nsame "
-        " , printf('%016x%016x',md5sum1,md5sum2) as dirname, duf_filedatas.size as filesize " " , duf_filenames.pathid as hid "
-        " , duf_filenames.id as filenameid" " , duf_filedatas.mode as filemode",
+  .fieldset = " md.id AS dirid "
+        " , duf_filenames.name AS filename, duf_filedatas.size AS filesize "
+        " , uid, gid, nlink, inode, mtim AS mtime "
+        " , dupcnt AS nsame "
+        " , printf('%016x%016x',md5sum1,md5sum2) AS dirname, duf_filedatas.size AS filesize " " , duf_filenames.pathid AS hid "
+        " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode",
   .leaf_selector = "SELECT %s FROM duf_filenames "
         "              JOIN duf_filedatas ON (duf_filedatas.id=duf_filenames.dataid) "
-        "              LEFT JOIN duf_md5 as md on (md.id=duf_filedatas.md5id)"
+        "              LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)"
         "                           WHERE duf_filedatas.md5id='%llu' ",
   .node_selector =
-        "SELECT md5.id as dirid " ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dirname"
-        ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) as dfname " " ,0 as ndirs"
+        "SELECT md5.id AS dirid " ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) AS dirname"
+        ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) AS dfname " " ,0 AS ndirs"
         ", (SELECT COUNT(*) FROM md5 AS smd WHERE md5.md5sum1=smd.md5.md5sum1 AND md5.md5sum2=smd.md5.md5sum2 ) AS nfiles"
-        ", 0 AS maxsize, 0 AS minsize" " FROM duf_md5 as md5" " WHERE %llu<1 " " ORDER BY md5sum1,md5sum2 ",
+        ", 0 AS maxsize, 0 AS minsize" " FROM duf_md5 AS md5" " WHERE %llu<1 " " ORDER BY md5sum1,md5sum2 ",
   /* .final_sql_argv = final_sql, */
 };

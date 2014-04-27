@@ -3,7 +3,7 @@ shn_gvimer_plus_bin ()
 { 
     local a c='-o'
     for a in "$@" ; do c+=" '$a'" ; done
-#   echo ${MSHCMD_GVIMC:=/usr/bin/gvim} $c >&2
+    echo ${MSHCMD_GVIMC:=/usr/bin/gvim} $c >&2
     eval ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
 }
 shn_gvimer_plus_fuuid () 
@@ -60,11 +60,11 @@ shn_gvimer_plus_regfile_in ()
 #   local bfil=$(shn_gvimer_plus_bin --servername "$fuuid" --remote-expr "bufnr(\"^${fpath}$\")" 2>/dev/null )
 #   [[ $bfil ]] && echo "buffer = $bfil" >&2
 #   echo "regfile_in fuuid: $fuuid for $fpath" 1>&2;
-    if [[ -f "$fpath" ]]; then
+    if [[ -f "$fpath" ]] && [[ ${fuuid} ]] ; then
         for resident in $( shn_gvimer_plus_bin --serverlist );
         do
-            if [[ "$resident" == $fuuid ]]; then
-#	        echo "regfile_in resident:$resident for $fpath" 1>&2;
+            if [[ "$resident" == ${fuuid}* ]]; then
+ 	        echo "regfile_in resident:$resident for $fpath" 1>&2;
                 shn_gvimer_plus_resident $fpath $fuuid ${fline:++$fline}
                 return $?;
             fi;

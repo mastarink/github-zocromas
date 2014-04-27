@@ -53,12 +53,12 @@ duf_insert_group( const char *name )
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  r = duf_sql_c( "INSERT INTO duf_group (name,now) values ('%s',datetime())", DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, name );
+  r = duf_sql_c( "INSERT INTO duf_group (name) VALUES ('%s')", DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, name );
   if ( r == DUF_SQL_CONSTRAINT )
   {
     r = duf_sql_select( duf_sel_cb_insert_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /* sccb */ , ( const duf_dirhandle_t * ) NULL,
-                        "SELECT id as groupid FROM duf_group WHERE name='%s'", name );
+                        "SELECT id AS groupid FROM duf_group WHERE name='%s'", name );
   }
   else if ( !r /* assume SQLITE_OK */  )
     id = duf_sql_last_insert_rowid(  );
@@ -93,12 +93,12 @@ duf_insert_path_group( unsigned long long groupid, unsigned long long pathid )
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  r = duf_sql_c( "INSERT INTO duf_path_group (groupid,pathid,now) " " VALUES ('%lld','%lld',datetime())",
+  r = duf_sql_c( "INSERT INTO duf_path_group (groupid,pathid) VALUES ('%lld','%lld')",
                  DUF_CONSTRAINT_IGNORE_YES, ( int * ) NULL, groupid, pathid );
   if ( r == DUF_SQL_CONSTRAINT )
     r = duf_sql_select( duf_sql_insert_path_group, &id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                         ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                        "SELECT id as groupid FROM duf_path_group " " WHERE groupid='%lld' and  pathid='%lld'", groupid, pathid );
+                        "SELECT id AS groupid FROM duf_path_group WHERE groupid='%lld' AND  pathid='%lld'", groupid, pathid );
   else if ( !r /* assume SQLITE_OK */  )
     id = duf_sql_last_insert_rowid(  );
   else
@@ -133,7 +133,7 @@ duf_group_to_groupid( const char *group )
   /* r = */
   duf_sql_select( duf_sql_group_to_groupid, &groupid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                   ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                  "SELECT id as groupid FROM duf_group WHERE name='%s'", group );
+                  "SELECT id AS groupid FROM duf_group WHERE name='%s'", group );
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, groupid );
   return groupid;
 }
@@ -175,7 +175,7 @@ duf_delete_path_by_groupid( unsigned long long groupid, unsigned long long pathi
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_select( duf_sel_cb_delete_path_by_groupid, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF,
                       ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
-                      "SELECT duf_path_group.id as groupid " " FROM duf_paths "
+                      "SELECT duf_path_group.id AS groupid " " FROM duf_paths "
                       " LEFT JOIN duf_path_group ON (duf_paths.id=duf_path_group.pathid) "
                       " WHERE duf_path_group.groupid='%lld' AND duf_paths.id='%lld'", groupid, pathid );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );

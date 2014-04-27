@@ -266,18 +266,22 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
       else
         r = duf_uni_scan( NULL, duf_config->u, sccb );
     }
-    if ( r >= 0 && sccb && sccb->final_sql_argv )
+    if ( sccb )
     {
-      char **p = sccb->final_sql_argv;
+      char **psql = sccb->final_sql_argv;
 
-      while ( r >= 0 && p && *p )
+      if ( psql )
       {
-        int changes = 0;
+        while ( r >= 0 && psql && *psql )
+        {
+          int changes = 0;
 
-        /* DUF_TRACE( action, 0, "final sql : %s", *p ); */
-        DUF_TRACE( action, 0, "final sql" );
-        r = duf_sql( *p, &changes );
-        p++;
+          /* DUF_TRACE( action, 0, "final psql : %s", *p ); */
+          /* r = duf_sql( *p, &changes ); */
+          r = duf_sql_exec( *psql, &changes );
+          DUF_TRACE( action, 0, "(%d) final psql %s; changes:%d", r, *psql, changes );
+          psql++;
+        }
       }
     }
   }
@@ -307,28 +311,26 @@ duf_uni_scan_all( void )
 
   DUF_TRACE( action, 0, "prep" );
   ppscan_callbacks = mas_malloc( max_steps * sizeof( duf_scan_callbacks_t * ) );
+  if ( steps < max_steps && duf_config->cli.act.integrity )
+  {
+    DUF_TRACE( action, 0, "prep integrity ..." );
+    ppscan_callbacks[steps++] = &duf_integrity_callbacks;
+  }
   if ( steps < max_steps && duf_config->cli.act.fill )
   {
     DUF_TRACE( action, 0, "prep fill ..." );
     ppscan_callbacks[steps++] = &duf_fill_callbacks;
-  }
-
-  if ( steps < max_steps && duf_config->cli.act.mdpath && duf_config->cli.act.fill )
-  {
-    DUF_TRACE( action, 0, "prep mdpath" );
-    ppscan_callbacks[steps++] = &duf_fill_mdpath_callbacks;
   }
   if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.fill )
   {
     DUF_TRACE( action, 0, "prep fill md5" );
     ppscan_callbacks[steps++] = &duf_fill_md5_callbacks;
   }
-  if ( steps < max_steps && duf_config->cli.act.integrity )
+  if ( steps < max_steps && duf_config->cli.act.mdpath && duf_config->cli.act.fill )
   {
-    DUF_TRACE( action, 0, "prep integrity ..." );
-    ppscan_callbacks[steps++] = &duf_integrity_callbacks;
+    DUF_TRACE( action, 0, "prep mdpath" );
+    ppscan_callbacks[steps++] = &duf_fill_mdpath_callbacks;
   }
-
   if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.print )
   {
     DUF_TRACE( action, 0, "prep print md5" );

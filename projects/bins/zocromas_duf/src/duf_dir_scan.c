@@ -157,6 +157,8 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
     DUF_OINV_OPENED( pdi-> );
     if ( sccb && r >= 0 && sccb->node_scan_after && duf_config->cli.act.dirs )
       r = sccb->node_scan_after( dirid/*, pdh*/, pdi, precord );
+    
+    
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
