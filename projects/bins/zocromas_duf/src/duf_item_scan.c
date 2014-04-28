@@ -48,6 +48,7 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata,
   assert( pdi );
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
+  DUF_TRACE( scan, 0, "scan node" );
   r = duf_levinfo_down( pdi, 0, NULL, 0, 0, 1 );
   DUF_OINV( pdi-> );
   if ( r >= 0 )
@@ -63,6 +64,7 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata,
       r = DUF_ERROR_MAX_REACHED;
     DUF_TEST_R( r );
 
+    DUF_TRACE( scan, 0, "scan leaf" );
     /* called both for leaves (files) and nodes (dirs) */
     if ( str_cb )
     {
@@ -109,6 +111,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
   DEBUG_START(  );
   assert( pdi );
   DUF_OINV_OPENED( pdi-> );
+  DUF_TRACE( scan, 0, "scan node" );
 
   if ( 0 == strcmp( dfname, "platforms" ) )
   {
@@ -158,6 +161,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
           /*   }                                                                                                       */
           /* }                                                                                                         */
 
+          DUF_TRACE( scan, 0, "scan node" );
 
           if ( r >= 0 )
             r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
@@ -216,8 +220,13 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
     sel_cb = duf_sel_cb_node;
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
+  DUF_TRACE( scan, 0, "scan items [%s] sel_cb%c; str_cb%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb ? '+' : '-',
+             str_cb ? '+' : '-' );
+  
   if ( sel_cb )
     r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
+
+  DUF_TRACE( scan, 0, "(%d) end scan items str_cb%c",r, str_cb ? '+' : '-' );
   DUF_OINV( pdi-> );
 
   /* DUF_ERROR( "r:%d; sel_cb:%s", r, DUF_FUNN( sel_cb ) ); */

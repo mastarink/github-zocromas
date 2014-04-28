@@ -278,7 +278,7 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
       if ( need_id )
       {
         resd = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( fill, 1, "inserted (SQLITE_OK) dataid=%llu", resd );
+        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", resd );
       }
     }
     else

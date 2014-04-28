@@ -45,8 +45,7 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( md64 && md64[1] && md64[0] )
   {
-    r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1],
-                 md64[0] );
+    r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
       if ( need_id )
@@ -87,7 +86,7 @@ static unsigned long long
 duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid, int *pr )
 {
   int r = 0;
-  unsigned long long resmd = 0;
+  unsigned long long md5id = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( fpath )
@@ -105,35 +104,57 @@ duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid, int *pr
         MD5_CTX ctx;
         unsigned char md[MD5_DIGEST_LENGTH];
         unsigned char mdr[MD5_DIGEST_LENGTH];
-        unsigned long long *pmd;
         char *buffer;
         size_t bufsz = 1024 * 1024 * 10;
 
         DUF_TRACE( md5, 0, "opened fpath:'%s'", fpath );
+        memset( &ctx, 0, sizeof( ctx ) );
         memset( &md, 0, sizeof( md ) );
         buffer = mas_malloc( bufsz );
-        MD5_Init( &ctx );
+        if ( MD5_Init( &ctx ) != 1 )
+          r = DUF_ERROR_MD5;
+        DUF_TEST_R( r );
         while ( r >= 0 && !feof( f ) )
         {
-          r = fread( buffer, 1, bufsz, f );
-          MD5_Update( &ctx, buffer, r );
+          size_t rr;
+
+          rr = fread( buffer, 1, bufsz, f );
+          DUF_ERROR( "fread:%lu", rr );
+          if ( ferror( f ) )
+          {
+            r = DUF_ERROR_READ;
+            break;
+          }
+          if ( MD5_Update( &ctx, buffer, rr ) != 1 )
+          {
+            r = DUF_ERROR_MD5;
+            break;
+          }
         }
+        DUF_TEST_R( r );
         fclose( f );
         mas_free( buffer );
-        MD5_Final( md, &ctx );
+        if ( MD5_Final( md, &ctx ) != 1 )
+        {
+          r = DUF_ERROR_MD5;
+        }
+        DUF_TEST_R( r );
         if ( r >= 0 )
           for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
           {
             mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];
           }
-        pmd = ( unsigned long long * ) &mdr;
         if ( r >= 0 )
         {
-          resmd = duf_insert_md5_uni( ( ( unsigned long long * ) &mdr[0] ), st.st_size, 1 /*need_id */ , &r );
-          DUF_TRACE( md5, 0, "%016llx%016llx : resmd: %llu: %s", pmd[1], pmd[0], resmd, fpath );
-          if ( resmd )
+          unsigned long long *pmd;
+
+          pmd = ( unsigned long long * ) &mdr;
+          md5id = duf_insert_md5_uni( ( ( unsigned long long * ) &mdr[0] ), st.st_size, 1 /*need_id */ , &r );
+          DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu: %s", pmd[1], pmd[0], md5id, fpath );
+          DUF_TEST_R( r );
+          if ( r >= 0 && md5id )
           {
-            duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, resmd, filedataid );
+            duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, md5id, filedataid );
           }
         }
       }
@@ -157,8 +178,8 @@ duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid, int *pr
   if ( pr )
     *pr = r;
 
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, resmd );
-  return resmd;
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, md5id );
+  return md5id;
 }
 
 static unsigned long long
@@ -191,53 +212,98 @@ duf_upd_md5_pdh_uni( int dfd, const char *fname, unsigned long long filedataid )
     fd = openat( dfd, fname, O_NOFOLLOW | O_RDONLY );
     if ( fd >= 0 )
     {
-      FILE *f;
+      /* FILE *f; */
+      unsigned char mdr[MD5_DIGEST_LENGTH];
 
-      DUF_TRACE( md5, 0, "openat:%d", fd );
-      f = fdopen( fd, "r" );
-
-      if ( f )
       {
-        MD5_CTX ctx;
-        unsigned char md[MD5_DIGEST_LENGTH];
-        unsigned char mdr[MD5_DIGEST_LENGTH];
-        unsigned long long *pmd;
-        char *buffer;
-        size_t bufsz = 1024 * 1024 * 10;
+        DUF_TRACE( md5, 0, "openat:%d", fd );
+        /* f = fdopen( fd, "r" ); */
 
-        memset( &md, 0, sizeof( md ) );
-        buffer = mas_malloc( bufsz );
-        MD5_Init( &ctx );
-        while ( !feof( f ) )
+        /* if ( f ) */
         {
-          int r;
+          MD5_CTX ctx;
+          unsigned char md[MD5_DIGEST_LENGTH];
+          size_t bufsz = 1024 * 1024 * 10;
 
-          r = fread( buffer, 1, bufsz, f );
-          MD5_Update( &ctx, buffer, r );
-        }
-        fclose( f );
-        mas_free( buffer );
-        MD5_Final( md, &ctx );
-        for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
-        {
-          mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];
-        }
-        pmd = ( unsigned long long * ) &mdr;
-        {
-          md5id = duf_insert_md5_uni( ( ( unsigned long long * ) &mdr[0] ), st_file.st_size, 1 /*need_id */ , &r );
-          DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu: %s", pmd[1], pmd[0], md5id, fname );
-          if ( md5id )
+          memset( &ctx, 0, sizeof( ctx ) );
+          memset( &md, 0, sizeof( md ) );
           {
-            duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, md5id, filedataid );
+            char *buffer;
+
+            buffer = mas_malloc( bufsz );
+            if ( buffer )
+            {
+              if ( MD5_Init( &ctx ) != 1 )
+                r = DUF_ERROR_MD5;
+              DUF_TEST_R( r );
+              if ( r >= 0 )
+              {
+                /* while ( r >= 0 && !feof( f ) ) */
+                while ( r >= 0 )
+                {
+                  size_t rr;
+
+                  /* rr = fread( buffer, 1, bufsz, f ); */
+
+                  rr = read( fd, buffer, bufsz );
+                  DUF_ERROR( "fread:%lu", rr );
+                  /* if ( ferror( f ) ) */
+                  if ( rr < 0 )
+                  {
+                    r = DUF_ERROR_READ;
+                    DUF_TEST_R( r );
+                    break;
+                  }
+                  if ( rr > 0 )
+                  {
+                    if ( MD5_Update( &ctx, buffer, rr ) != 1 )
+                      r = DUF_ERROR_MD5;
+                  }
+                  else
+                    break;
+                  DUF_TEST_R( r );
+                }
+              }
+              mas_free( buffer );
+            }
+            else
+            {
+              r = DUF_ERROR_MEMORY;
+            }
+          }
+          if ( MD5_Final( md, &ctx ) != 1 )
+            r = DUF_ERROR_MD5;
+          DUF_TEST_R( r );
+          /* reverse */
+          for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
+          {
+            mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];
           }
         }
-      }
-      else
-      {
+        {
+          unsigned long long *pmd;
+
+          pmd = ( unsigned long long * ) &mdr;
+          if ( r >= 0 )
+          {
+            md5id = duf_insert_md5_uni( ( ( unsigned long long * ) &mdr[0] ), st_file.st_size, 1 /*need_id */ , &r );
+            DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu: %s", pmd[1], pmd[0], md5id, fname );
+            if ( r >= 0 && md5id )
+            {
+              r = duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, md5id, filedataid );
+              DUF_TEST_R( r );
+            }
+          }
+        }
+        /* fclose( f ); */
         /* TODO : file deleted ... */
-        DUF_ERRSYS( "fdopen to read file : %s", fname );
-        r = DUF_ERROR_OPEN;
       }
+      /* else                                               */
+      /* {                                                  */
+      /*   DUF_ERRSYS( "fdopen to read file : %s", fname ); */
+      /*   r = DUF_ERROR_OPEN;                              */
+      /*   DUF_TEST_R( r );                                 */
+      /* }                                                  */
       close( fd );
     }
     else
@@ -246,7 +312,7 @@ duf_upd_md5_pdh_uni( int dfd, const char *fname, unsigned long long filedataid )
       r = fd;
       r = DUF_ERROR_OPEN;
     }
-
+    DUF_TEST_R( r );
   }
   DUF_TEST_R( r );
   /* else                            */
@@ -258,7 +324,7 @@ duf_upd_md5_pdh_uni( int dfd, const char *fname, unsigned long long filedataid )
 
 /* callback of type duf_scan_callback_file_t */
 static int
-scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+fill_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
   int udfd = duf_levinfo_udfd( pdi );
@@ -284,7 +350,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
     /* DUF_UFIELD( dirid ); */
     /* DUF_UFIELD( inode ); */
     {
-      unsigned long long md5id;
+      unsigned long long md5id = 0;
 
       DUF_TRACE( md5, 0, "udfd:%d", udfd );
       if ( udfd )
@@ -313,8 +379,8 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                 duf_record_t * precord )
+fill_md5_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                           duf_record_t * precord )
 {
   int r = 0;
 
@@ -333,6 +399,7 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 
     mas_free( path );
   }
+
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return r;
 }
@@ -372,11 +439,12 @@ NULL,};
 
 
 
-duf_scan_callbacks_t duf_fill_md5_callbacks = {
+duf_scan_callbacks_t duf_collect_md5_callbacks = {
   .title = __FILE__,
+  .opendir = 1,
   .init_scan = NULL,
-  .node_scan_before = scan_node_before,
-  .leaf_scan = scan_leaf,
+  .node_scan_before = fill_md5_scan_node_before,
+  .leaf_scan = fill_md5_scan_leaf,
   .fieldset =
         " duf_filenames.pathid AS dirid "
         " , duf_filedatas.id AS filedataid, duf_filedatas.inode AS inode "

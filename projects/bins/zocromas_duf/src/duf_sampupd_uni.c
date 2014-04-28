@@ -31,6 +31,7 @@ static int
 sampupd_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
+
   /* DUF_SFIELD( filename ); */
 
   DEBUG_START(  );
@@ -45,6 +46,7 @@ sampupd_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * 
                           duf_record_t * precord )
 {
   int r = 0;
+
   /* DUF_SFIELD( filename ); */
 
   DEBUG_START(  );
@@ -58,6 +60,7 @@ sampupd_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * p
                          duf_record_t * precord )
 {
   int r = 0;
+
   /* DUF_SFIELD( filename ); */
 
   DEBUG_START(  );
@@ -87,44 +90,36 @@ sampupd_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * 
 static char *final_sql[] = {
   "UPDATE duf_md5 SET dupcnt=(SELECT COUNT(*) "
         " FROM duf_filedatas AS fd "
-	  " JOIN duf_md5 AS md ON (fd.md5id=md.id) "
-        " WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
+        " JOIN duf_md5 AS md ON (fd.md5id=md.id) " " WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
   /* "DELETE FROM duf_pathtot_files", */
   "INSERT OR IGNORE INTO duf_pathtot_files (pathid, numfiles, minsize, maxsize) "
         " SELECT fn.id AS pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
-	  " FROM duf_filenames AS fn "
-	      " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	" GROUP BY fn.pathid",
+        " FROM duf_filenames AS fn " " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " " GROUP BY fn.pathid",
   "UPDATE duf_pathtot_files SET "
-      " minsize=(SELECT min(size) AS minsize "
-          " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid) "
-     ", maxsize=(SELECT max(size) AS maxsize "
-          " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid) "
-     ", numfiles=(SELECT COUNT(*) AS numfiles "
-          " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid)",
+        " minsize=(SELECT min(size) AS minsize "
+        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
+        " WHERE duf_pathtot_files.pathid=fn.pathid) "
+        ", maxsize=(SELECT max(size) AS maxsize "
+        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
+        " WHERE duf_pathtot_files.pathid=fn.pathid) "
+        ", numfiles=(SELECT COUNT(*) AS numfiles "
+        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " " WHERE duf_pathtot_files.pathid=fn.pathid)",
   "INSERT OR IGNORE INTO duf_pathtot_dirs (pathid, numdirs) "
         " SELECT p.id AS pathid, COUNT(*) AS numdirs "
-	  " FROM duf_paths AS p "
-            " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) "
-	" GROUP BY sp.parentid",
+        " FROM duf_paths AS p " " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) " " GROUP BY sp.parentid",
   "UPDATE duf_pathtot_dirs SET "
-      " numdirs=(SELECT COUNT(*) AS numdirs "
-                  " FROM duf_paths AS p "
-                      " WHERE p.parentid=duf_pathtot_dirs.pathid )",
+        " numdirs=(SELECT COUNT(*) AS numdirs " " FROM duf_paths AS p " " WHERE p.parentid=duf_pathtot_dirs.pathid )",
   /* "DELETE FROM duf_keydata", */
   "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, pathid) "
-      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS pathid "
-	  " FROM duf_filenames AS fn "
-	    " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)"
-	      " JOIN duf_paths AS p ON (fn.pathid=p.id)"
-	        " JOIN duf_md5 AS md ON (fd.md5id=md.id)",
+        "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS pathid "
+        " FROM duf_filenames AS fn "
+        " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)"
+        " JOIN duf_paths AS p ON (fn.pathid=p.id)" " JOIN duf_md5 AS md ON (fd.md5id=md.id)",
 
- /* *INDENT-ON*  */
+  /* *INDENT-ON*  */
 
-NULL,};
+  NULL,
+};
 
 
 

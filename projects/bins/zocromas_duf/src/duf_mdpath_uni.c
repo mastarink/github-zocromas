@@ -29,12 +29,12 @@
 /* #include "duf_mdpath_uni.h" */
 /* ###################################################################### */
 
-/* run  --db-name=test`datem`.db  --uni-scan --fill --mdpath -dfR  /mnt/new_media/media/down/  --trace-mdpath=1 --trace-new=1 --trace-stdout */
+/* run  --db-name=test`datem`.db  --uni-scan --collect --mdpath -dfR  /mnt/new_media/media/down/  --trace-mdpath=1 --trace-new=1 --trace-stdout */
 
 
 /* callback of type duf_scan_callback_file_t */
 static int
-scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+mdpath_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -65,16 +65,21 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
       /* DUF_TRACE( mdpath, 1, "(%p) L%u context=%p", ( void * ) pdi, pdi->depth, pdi->levinfo[pdi->depth].context ); */
       pctx = duf_levinfo_context_up( pdi );
       assert( pctx );
-      if ( precord->presult[5] && precord->presult[6] )
       {
-        DUF_UFIELD( md5sum1 );
-        DUF_UFIELD( md5sum2 );
+        if ( precord->presult[5] && precord->presult[6] )
+        {
+          DUF_UFIELD( md5sum1 );
+          DUF_UFIELD( md5sum2 );
 
-        /* fprintf( stderr, "%lld:%lld\n", md5s1, md5s2 ); */
-        MD5_Update( pctx, &md5sum1, sizeof( md5sum1 ) );
-        MD5_Update( pctx, &md5sum2, sizeof( md5sum2 ) );
+          /* fprintf( stderr, "%lld:%lld\n", md5s1, md5s2 ); */
+          if ( r >= 0 && MD5_Update( pctx, &md5sum1, sizeof( md5sum1 ) ) != 1 )
+            r = DUF_ERROR_MD5;
+    DUF_TEST_R(r);
+          if ( r >= 0 && MD5_Update( pctx, &md5sum2, sizeof( md5sum2 ) ) != 1 )
+            r = DUF_ERROR_MD5;
+    DUF_TEST_R(r);
+        }
       }
-
     }
   }
   DEBUG_ENDR( r );
@@ -83,8 +88,8 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                  duf_record_t * precord )
+mdpath_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                         duf_record_t * precord )
 {
   int r = 0;
 
@@ -97,14 +102,14 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
     DUF_TRACE( mdpath, 1, "#%4llu: BEFORE dPATH=%s", pdi->seq, path );
     mas_free( path );
   }
-
   {
     MD5_CTX *pctx;
 
     pctx = mas_malloc( sizeof( MD5_CTX ) );
-    memset( pctx, 0, sizeof( MD5_CTX ) );
-    MD5_Init( pctx );
-
+    memset( pctx, 0, sizeof( *pctx ) );
+    if ( MD5_Init( pctx ) != 1 )
+      r = DUF_ERROR_MD5;
+    DUF_TEST_R(r);
     assert( !duf_levinfo_context( pdi ) );
     duf_levinfo_set_context( pdi, pctx );
     assert( duf_levinfo_context( pdi ) );
@@ -124,8 +129,7 @@ duf_insert_mdpath_uni( unsigned long long *md64, int *pr )
   int r = 0;
   int changes = 0;
 
-  r = duf_sql( "INSERT OR IGNORE INTO duf_mdpath (mdpathsum1,mdpathsum2) VALUES ('%lld','%lld')",
-               &changes, md64[1], md64[0] );
+  r = duf_sql( "INSERT OR IGNORE INTO duf_mdpath (mdpathsum1,mdpathsum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
   if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
   {
     duf_scan_callbacks_t sccb = {.fieldset = "mppathid" };
@@ -148,8 +152,8 @@ duf_insert_mdpath_uni( unsigned long long *md64, int *pr )
 }
 
 static int
-scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                 duf_record_t * precord )
+mdpath_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                        duf_record_t * precord )
 {
   int r = 0;
 
@@ -164,8 +168,9 @@ scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notus
   /* }                                                                          */
   /* if ( r >= 0 ) */
   {
-    unsigned long long *md64 = NULL;
+    unsigned char md[MD5_DIGEST_LENGTH];
 
+    memset( &md, 0, sizeof( md ) );
     if ( r >= 0 )
     {
       MD5_CTX *pctx;
@@ -174,18 +179,18 @@ scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notus
       assert( pctx );
 
       if ( pctx )
-      {
-        unsigned char md[MD5_DIGEST_LENGTH];
-
-        memset( &md, 0, sizeof( md ) );
-        MD5_Final( md, pctx );
-        md64 = ( unsigned long long * ) md;
-      }
+        if ( MD5_Final( md, pctx ) != 1 )
+          r = DUF_ERROR_MD5;
+    DUF_TEST_R(r);
     }
     DUF_TEST_R( r );
     if ( r >= 0 )
     {
-      unsigned long long mdpathid = duf_insert_mdpath_uni( md64, &r );
+      unsigned long long mdpathid;
+      unsigned long long *md64 = NULL;
+
+      md64 = ( unsigned long long * ) md;
+      mdpathid = duf_insert_mdpath_uni( md64, &r );
 
       /* DUF_TRACE( mdpath, 0, "[%016llx%016llx] UPDATE duf_paths " " SET md5dir1='%lld', md5dir2='%lld', mdpathid='%lld' " " WHERE id='%llu'", */
       /*            md64[1], md64[0], md64[1], md64[0], mdpathid, pathid );                                                                     */
@@ -197,7 +202,7 @@ scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notus
         /* r = duf_sql( "UPDATE duf_paths " " SET md5dir1='%lld', md5dir2='%lld', mdpathid='%lld' " " WHERE id='%llu'", ( int * ) NULL, */
         /*              md64[1], md64[0], mdpathid, pathid );                                                                           */
         r = duf_sql( "UPDATE duf_pathtot_dirs SET mdpathid='%lld' WHERE pathid=='%lld'", &changes, mdpathid, pathid );
-        if ( !changes )
+        if ( r >= 0 && !changes )
         {
           r = duf_sql( "INSERT INTO duf_pathtot_dirs (mdpathid,pathid) VALUES ('%lld','%lld')", &changes, mdpathid, pathid );
           if ( !changes )
@@ -222,12 +227,12 @@ static char *final_sql[] = {
   NULL,
 };
 
-duf_scan_callbacks_t duf_fill_mdpath_callbacks = {
+duf_scan_callbacks_t duf_collect_mdpath_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .node_scan_before = scan_node_before,
-  .node_scan_after = scan_node_after,
-  .leaf_scan = scan_leaf,
+  .node_scan_before = mdpath_scan_node_before,
+  .node_scan_after = mdpath_scan_node_after,
+  .leaf_scan = mdpath_scan_leaf,
   .fieldset =
         " duf_filenames.pathid AS dirid " " ,duf_filenames.name AS filename, duf_filedatas.size AS filesize"
         " , uid, gid, nlink, inode, mtim AS mtime " " , dupcnt AS nsame"

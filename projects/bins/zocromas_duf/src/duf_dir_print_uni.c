@@ -107,7 +107,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
 static int
 scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                    duf_record_t * precord )
+                  duf_record_t * precord )
 {
   int r = 0;
 

@@ -90,10 +90,10 @@ duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
     else
     {
       r3 = sqlite3_exec( pDb, sql, NULL, NULL, &emsg );
-      DUF_TRACE( sql, 0, "[%s]   r3:%d", sql, r3 );
     }
     if ( r3 == SQLITE_OK && pchanges )
       *pchanges = sqlite3_changes( pDb );
+    DUF_TRACE( sql, 0, "[%s]   r3:%d; changes:%d", sql, r3, pchanges ? *pchanges : -1 );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
   if ( pemsg )
@@ -242,6 +242,10 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     DUF_TRACE( sql, 2, "in for %s", fmt );
 
     sql = sqlite3_vmprintf( fmt, args );
+    if ( !sql )
+    {
+      DUF_ERROR( "what happenrd to sql? [%s] => [%s]", fmt, sql );
+    }
     r3 = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
 
     DUF_TRACE( sql, 0, "[%s] r3=%d;  %u rows", sql, r3, row );
@@ -289,7 +293,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
             rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu );
 
             DUF_TEST_R( rcb );
-            DUF_TRACE( sql, 1, "row %u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
+            DUF_TRACE( sql, 1, "row #%u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
           }
         }
         if ( rcb )
@@ -305,7 +309,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
         }
         DUF_TEST_R( rcb );
         DUF_TEST_R( duf_sqlite_error_code( r3 ) );
-        DUF_TRACE( fill, 0, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
+        DUF_TRACE( collect, 0, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
         r3 = rcb ? rcb : r3;
         DUF_TEST_R( duf_sqlite_error_code( r3 ) );
       }
@@ -317,12 +321,12 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     else if ( r3 == SQLITE_CONSTRAINT )
     {
       DUF_TEST_R( duf_sqlite_error_code( r3 ) );
-      DUF_ERROR( "SQL : %s [%s]", emsg, sql );
+      DUF_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
     }
     else
     {
       DUF_TEST_R( duf_sqlite_error_code( r3 ) );
-      DUF_ERROR( "SQL : %s [%s]", emsg, sql );
+      DUF_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
     }
     if ( emsg )
       sqlite3_free( emsg );
@@ -331,7 +335,6 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     presult = NULL;
     sqlite3_free( sql );
     sql = NULL;
-    /* DUF_ERROR( "r3:%d", r3 ); */
   }
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
   DUF_TEST_R( duf_sqlite_error_code( r3 ) );

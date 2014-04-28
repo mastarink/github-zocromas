@@ -39,9 +39,9 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
     /* fprintf( stderr, "+FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
     pdi->items.total++;
     pdi->items.files++;
-    r = sccb->leaf_scan( /*str_cb_udata,*/ pdi, precord /*, pdhu */);
+    r = sccb->leaf_scan(  /*str_cb_udata, */ pdi, precord /*, pdhu */  );
     DUF_TEST_R( r );
-    DUF_TRACE( fill, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
+    DUF_TRACE( collect, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
 
     /* DUF_TRACE( action, 0, "r=%d", r ); */
   }
@@ -78,13 +78,17 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
+
+
+
   if ( sccb && !r && sccb->node_scan_before && duf_config->cli.act.dirs )
   {
     pdi->items.total++;
     pdi->items.dirs++;
 
     DUF_OINV_OPENED( pdi-> );
-    r = sccb->node_scan_before( dirid, /*&pdi->levinfo[pdi->depth].lev_dh,*/ pdi, precord );
+    DUF_TRACE( scan, 0, "scan node before:%llu", dirid );
+    r = sccb->node_scan_before( dirid, /*&pdi->levinfo[pdi->depth].lev_dh, */ pdi, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
     if ( r == DUF_ERROR_MAX_REACHED )
@@ -97,6 +101,10 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
   }
   if ( pdi->depth > 0 && !pdi->levinfo[pdi->depth - 1].ndirs )
     pdi->levinfo[pdi->depth - 1].eod = 1;
+
+
+
+
   if ( r >= 0 && sccb )
   {
     {
@@ -109,7 +117,14 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
       if ( r >= 0 && sccb && sccb->leaf_scan )
       {
         DUF_OINV_OPENED( pdi-> );
+        DUF_TRACE( scan, 0, "scan files by:%llu", dirid );
+
+
+
         r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb, pdh );
+
+
+
         /* r = duf_scan_files_by_dirid( dirid, sccb->leaf_scan (* str_cb *) , pdi, sccb ); */
         DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
@@ -141,7 +156,7 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
                                 /* pdi->u.minsize,                                                              */
                                 /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
                                 /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
-				dirid );
+                                dirid );
         DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
@@ -156,9 +171,9 @@ duf_scan_dir_by_pi( unsigned long long dirid, const duf_dirhandle_t * pdh, duf_s
     }
     DUF_OINV_OPENED( pdi-> );
     if ( sccb && r >= 0 && sccb->node_scan_after && duf_config->cli.act.dirs )
-      r = sccb->node_scan_after( dirid/*, pdh*/, pdi, precord );
-    
-    
+      r = sccb->node_scan_after( dirid /*, pdh */ , pdi, precord );
+
+
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
@@ -198,7 +213,7 @@ duf_scan_dirs_by_parentid( unsigned long long dirid, const duf_dirhandle_t * pdh
 
     if ( pdh && pdh->dfd && 0 == fstat( pdh->dfd, &stt ) )
     {
-      DUF_ERROR( "@@@@@@@@@@@@@@ X %d: %ld ", pdi->depth, stt.st_ino );
+      DUF_TRACE( fs, 0, "fstat OK %d: %ld ", pdi->depth, stt.st_ino );
     }
   }
   DUF_OINV_OPENED( pdi-> );
@@ -210,18 +225,20 @@ duf_scan_dirs_by_parentid( unsigned long long dirid, const duf_dirhandle_t * pdh
         ) )
   {
     DUF_OINV_OPENED( pdi-> );
+    DUF_TRACE( scan, 0, "scan dirid:%llu", dirid );
     r = duf_scan_dir_by_pi( dirid, pdh, str_cb, pdi, sccb, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
   else
   {
+    DUF_TRACE( scan, 0, "off; dirid:%llu", dirid );
     /* fprintf( stderr, "----dirid: %llu : ( N=%llu : %llu ) : ( %llu : %llu ) : ( %llu : %llu )\n", dirid, nfiles, duf_config->u.mindirfiles, */
     /*          minsize, duf_config->u.minsize, maxsize, duf_config->u.maxsize );                                                              */
   }
   DUF_TEST_R( r );
   DUF_OINV( pdi-> );
   DUF_OINV_OPENED( pdi-> );
-  DUF_TRACE( scan, 0, "by parentid %llu", dirid );
+  DUF_TRACE( scan, 0, "end scan dirid %llu", dirid );
   return r;
 }

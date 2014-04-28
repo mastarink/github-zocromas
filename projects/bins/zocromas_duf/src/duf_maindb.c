@@ -52,8 +52,8 @@ main_db( int argc, char **argv )
       for ( int ia = 0; ia < argc; ia++ )
         DUF_TRACE( any, 0, "######### argv[%d]: %s", ia, argv[ia] );
       r = duf_config_show(  );
-      DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.fpath );
     }
+    DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.fpath );
     if ( r >= 0 )
     {
       if ( duf_config->db.fpath )

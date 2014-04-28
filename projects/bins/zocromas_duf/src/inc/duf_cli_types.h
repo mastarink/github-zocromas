@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
-#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5iMtZBPOG"
+#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5EiMtZBPOG"
 typedef enum
 {
   DUF_OPTION_NONE,
@@ -15,7 +15,7 @@ typedef enum
   DUF_OPTION_ACTION_TRACE = 'A',
   DUF_OPTION_ERROR_TRACE = 'e',
   DUF_OPTION_SCAN_TRACE = 'S',
-  DUF_OPTION_FILL_TRACE = 'I',
+  DUF_OPTION_COLLECT_TRACE = 'I',
   DUF_OPTION_SQL_TRACE = 'Q',
   DUF_OPTION_ANY_TRACE = 'Y',
   DUF_OPTION_CURRENT_TRACE = 'C',
@@ -25,7 +25,8 @@ typedef enum
   DUF_OPTION_FILES = 'f',
   DUF_OPTION_DIRS = 'd',
   DUF_OPTION_MD5 = '5',
-  DUF_OPTION_FILL = 'i',
+  DUF_OPTION_DIRENT = 'E',
+  DUF_OPTION_COLLECT = 'i',
   DUF_OPTION_MEMUSAGE = 'M',
   DUF_OPTION_TOTALS = 't',
   DUF_OPTION_ZERO_DB = 'Z',
@@ -35,6 +36,8 @@ typedef enum
   DUF_OPTION_INTEGRITY = 'G',
 
   DUF_OPTION_LONG = 1000,
+
+  DUF_OPTION_FILL,
 
   DUF_OPTION_PRINTF,
   DUF_OPTION_PRINTF_FILE,
@@ -47,6 +50,7 @@ typedef enum
   DUF_OPTION_SAMPUPD_TRACE,
   DUF_OPTION_PATH_TRACE,
   DUF_OPTION_MD5_TRACE,
+  DUF_OPTION_DIRENT_TRACE,
   DUF_OPTION_MDPATH_TRACE,
   DUF_OPTION_TRACE_NONEW,
   DUF_OPTION_TRACE_FILE,
@@ -113,6 +117,7 @@ typedef enum
   DUF_TRACE_MODE_current,
   DUF_TRACE_MODE_MAX,
   DUF_TRACE_MODE_fill,
+  DUF_TRACE_MODE_collect,
   DUF_TRACE_MODE_path,
   DUF_TRACE_MODE_scan,
   DUF_TRACE_MODE_fs,
@@ -120,6 +125,7 @@ typedef enum
   DUF_TRACE_MODE_sampupd,
   DUF_TRACE_MODE_statistics,
   DUF_TRACE_MODE_mdpath,
+  DUF_TRACE_MODE_dirent,
   DUF_TRACE_MODE_md5,
   DUF_TRACE_MODE_sql,
 } duf_trace_mode_t;
@@ -174,9 +180,10 @@ typedef struct
   unsigned update_exif:1;
   unsigned mdpath:1;
   unsigned vacuum:1;
+  unsigned dirent:1;
   unsigned md5:1;
   unsigned integrity:1;
-  unsigned fill:1;
+  unsigned collect:1;
   unsigned print:1;
   unsigned tree:1;
   unsigned files:1;
@@ -219,10 +226,12 @@ typedef struct
   unsigned scan;
   unsigned sample;
   unsigned sampupd;
+  unsigned dirent;
   unsigned md5;
   unsigned mdpath;
-  unsigned integrity:1;
+  unsigned integrity;
   unsigned fill;
+  unsigned collect;
   unsigned sql;
   unsigned statistics;
   unsigned nonew;

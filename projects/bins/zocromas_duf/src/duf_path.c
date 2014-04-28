@@ -339,6 +339,7 @@ duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   DUF_TRACE( action, 0, "PATH > ID" );
+
   if ( path )
   {
     char *real_path;
@@ -347,11 +348,14 @@ duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **
     if ( real_path )
     {
       ( void ) realpath( path, real_path );
+
       pathid_new = duf_realpath_to_pathid_x( real_path, pprevpathid, notfound, pdi, &r );
+
       DUF_TRACE( path, 0, "(%d)REAL PATH %s => %llu", r, real_path, pathid_new );
       mas_free( real_path );
     }
   }
+
   if ( pr )
     *pr = r;
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid_new );
@@ -365,7 +369,14 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
   unsigned long long pathid = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+
   pathid = duf_path_to_pathid_x( path, NULL, NULL, pdi, &r );
+
+
+
+
+
   DUF_TRACE( path, 0, "PATH TO PATHID '%s' => %llu", path, pathid );
   DUF_TEST_R( r );
   if ( pr )
@@ -373,4 +384,3 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
   duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
   return pathid;
 }
-

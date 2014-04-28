@@ -10,6 +10,9 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_sql.h"
+#include "duf_sql_field.h"
+
 #include "duf_dbg.h"
 
 /* ###################################################################### */
@@ -32,7 +35,14 @@ duf_levinfo_create( duf_depthinfo_t * pdi, const char *path )
     memset( pdi->levinfo, 0, lsz );
     assert( pdi->depth == 0 );
     pdi->path = mas_strdup( path );
-    duf_levinfo_open_dh( pdi, path );
+
+    /* assert( pdi->depth > 0 ); */
+    /* assert( pdi->levinfo[pdi->depth - 1].lev_dh.dfd == 0 ); */
+    r = duf_levinfo_open_dh( pdi, path );
+
+
+
+
   }
   DUF_TEST_R( r );
   return r;
@@ -54,6 +64,10 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
     if ( pdi->levinfo[0].dirname )
       mas_free( pdi->levinfo[0].dirname );
     pdi->levinfo[0].dirname = NULL;
+
+    if ( pdi->levinfo[0].context )
+      mas_free( pdi->levinfo[0].context );
+    pdi->levinfo[0].context = NULL;
 
     assert( pdi->depth == 0 );
     duf_levinfo_closeat_dh( pdi );
@@ -211,9 +225,10 @@ duf_levinfo_up( duf_depthinfo_t * pdi )
       if ( pdi->levinfo[d].fullpath )
         mas_free( pdi->levinfo[d].fullpath );
       pdi->levinfo[d].fullpath = NULL;
-
       if ( pdi->levinfo[d].context )
+      {
         mas_free( pdi->levinfo[d].context );
+      }
       pdi->levinfo[d].context = NULL;
 
       memset( &pdi->levinfo[d], 0, sizeof( pdi->levinfo[d] ) );
@@ -236,7 +251,7 @@ duf_levinfo_pdh( duf_depthinfo_t * pdi )
   duf_dirhandle_t *pdh = NULL;
 
   assert( pdi );
-  if ( !duf_config->cli.noopenat )
+  if ( !duf_config->cli.noopenat && pdi->opendir )
   {
     int d = pdi->depth;
 
@@ -255,7 +270,7 @@ duf_levinfo_udfd( duf_depthinfo_t * pdi )
   int r = 0;
 
   assert( pdi );
-  if ( !duf_config->cli.noopenat )
+  if ( !duf_config->cli.noopenat && pdi->opendir )
   {
     int d = pdi->depth;
 
@@ -290,7 +305,7 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
        if(d>0)
        pdi->levinfo[d - 1].lev_dh.dfd = 0;
      */
-    if ( !duf_config->cli.noopenat )
+    if ( !duf_config->cli.noopenat && pdi->opendir )
     {
       duf_dirhandle_t *pdh = &pli->lev_dh;
       duf_dirhandle_t *pdhu = pliu ? &pliu->lev_dh : NULL;
@@ -320,18 +335,27 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
     assert( pdi->levinfo );
     DUF_OINV( pdi-> );
 
-    duf_dirhandle_t *pdhu = &pdi->levinfo[d - 1].lev_dh;
+    /* duf_dirhandle_t *pdhu = &pdi->levinfo[d - 1].lev_dh; */
 
-    pdhu->dfd = 0;
-    if ( !duf_config->cli.noopenat )
+    /* assert( d > 0 ); */
+    /* assert( pdhu->dfd == 0 ); */
+
+    /* Why???? :FIXME: pdhu->dfd = 0; */
+
+    if ( !duf_config->cli.noopenat && pdi->opendir )
     {
       duf_dirhandle_t *pdh = &pdi->levinfo[d].lev_dh;
+
 
       /* if ( S_ISBLK( stX.st_mode ) ) */
       /* {                             */
       /* }                             */
       DUF_OINV( pdi-> );
+
+
       r = duf_open_dh( pdh, path );
+
+
       DUF_OINV( pdi-> );
       if ( r >= 0 )
         assert( pdh->dfd );
@@ -350,7 +374,7 @@ duf_levinfo_closeat_dh( duf_depthinfo_t * pdi )
     int d = pdi->depth;
 
     DUF_OINV( pdi-> );
-    if ( !duf_config->cli.noopenat )
+    if ( !duf_config->cli.noopenat && pdi->opendir )
       r = duf_close_dh( &pdi->levinfo[d].lev_dh );
     DUF_OINV( pdi-> );
     DUF_TEST_R( r );

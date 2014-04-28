@@ -3,7 +3,7 @@ shn_gvimer_plus_bin ()
 { 
     local a c='-o'
     for a in "$@" ; do c+=" '$a'" ; done
-    echo ${MSHCMD_GVIMC:=/usr/bin/gvim} $c >&2
+    shn_msg ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
     eval ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
 }
 shn_gvimer_plus_fuuid () 
@@ -64,7 +64,7 @@ shn_gvimer_plus_regfile_in ()
         for resident in $( shn_gvimer_plus_bin --serverlist );
         do
             if [[ "$resident" == ${fuuid}* ]]; then
- 	        echo "regfile_in resident:$resident for $fpath" 1>&2;
+ 	        shn_msg "regfile_in resident:$resident for $fpath" 1>&2;
                 shn_gvimer_plus_resident $fpath $fuuid ${fline:++$fline}
                 return $?;
             fi;
@@ -157,7 +157,7 @@ shn_gvimer_plus_nomased ()
     return 0
 }
 shn_gvimer_plus_filtyp () 
-{ 
+{
     local typf;
     local filef=$1;
     shift;
@@ -178,6 +178,7 @@ shn_gvimer_plus_filtyp ()
     else
       shn_errmsg "can't set typf for '$filef'${dirn:+ at '$dirn'}"
     fi
+    shn_msg "typf: $typf">&2
     echo $typf
 }
 shn_gvimer_plus_find () 
@@ -197,6 +198,7 @@ shn_gvimer_plus_find ()
     esac;
 #   eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1
     filef=`eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1`;
+    shn_msg "found: '$filef'" >&2
     echo $filef
 }
 shn_gvimer_plus_vpath () 
@@ -262,9 +264,12 @@ shn_gvimer_plus_mased ()
     masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1)
 #   echo "masedf:[$masedf] for $filef ($file)" >&2
 ####[[ ${masedf:=$mased_dir/${typf}.mased.vim} ]] # off 20140413
+    shn_msg "1 masedf: '$masedf' by '$filef' at $mased_dir/">&2
     [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=
+    shn_msg "2 masedf: $masedf">&2
     if [[ $masedf ]] ; then
       local fuuid="$( shn_gvimer_plus_uuid $masedf )";
+      shn_msg "fuuid: $fuuid">&2
       if ! [[ -f "$masedf" ]]; then
 	  if [[ "$typf" == shn ]] && [[ -d "$typf" ]]; then
 	      /bin/ls --color=auto -1 shn/ | /bin/sed -e 's/^/:sfind /' > $masedf;
@@ -272,7 +277,7 @@ shn_gvimer_plus_mased ()
       fi;
       if [[ -f "$masedf" ]]; then
 #	  echo "mased fuuid: $fuuid" 1>&2;
-#	  echo "mased masedf: $masedf" 1>&2;
+	  shn_msg "found masedf: $masedf" 1>&2;
 	  shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
       else
 	  shn_errmsg "not found masedf '$masedf'"
@@ -299,6 +304,7 @@ shn_gvimer_plus ()
             fi
         fi
     else
+      echo "no mased mode: check '$mased_dir' and '$localvim_dir'"
         shn_gvimer_plus_nomased $@ || return $?;
     fi
     return 1;

@@ -47,7 +47,10 @@ function shn_run ()
     shn_msg "------------------------------------`datemt`--- $$ : $BASHPID -"
     shn_msg "------ to run '$bin $1 ...' -------"
 #   shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
-    time eval "$bin $qargs"
+
+#   time eval "$bin $qargs"
+    eval "$bin $qargs"
+
     retcode=$?
     shn_msg "returned $retcode ---------------------------------------------"
   else

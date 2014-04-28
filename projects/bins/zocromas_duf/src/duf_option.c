@@ -255,13 +255,14 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_ALL_TRACE:
     if ( optarg && *optarg )
-      duf_config->cli.trace.sql = duf_config->cli.trace.fill = duf_config->cli.trace.md5 = duf_config->cli.trace.sample =
-            duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
+      duf_config->cli.trace.sql = duf_config->cli.trace.collect = duf_config->cli.trace.dirent =
+            duf_config->cli.trace.md5 = duf_config->cli.trace.sample = duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
     else
     {
       duf_config->cli.trace.sql++;
-      duf_config->cli.trace.fill++;
+      duf_config->cli.trace.collect++;
       duf_config->cli.trace.md5++;
+      duf_config->cli.trace.dirent++;
       duf_config->cli.trace.sample++;
       duf_config->cli.trace.scan++;
     }
@@ -334,15 +335,14 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     /* else                                                         */
     /*   duf_config->cli.trace.mdpath++;                            */
     break;
+  case DUF_OPTION_DIRENT_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.dirent );
+    break;
   case DUF_OPTION_MD5_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.md5 );
-    /* if ( optarg && *optarg )                                  */
-    /*   duf_config->cli.trace.md5 = strtol( optarg, NULL, 10 ); */
-    /* else                                                      */
-    /*   duf_config->cli.trace.md5++;                            */
     break;
-  case DUF_OPTION_FILL_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.fill );
+  case DUF_OPTION_COLLECT_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.collect );
     break;
   case DUF_OPTION_INTEGRITY_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.integrity );
@@ -373,9 +373,10 @@ duf_parse_option( int opt, const char *optarg, int longindex )
   case DUF_OPTION_TREE_TO_DB:
     /* -ORifd5 
      * i.e.
-     *  --create-tables --uni-scan --recursive --fill --files --dirs --md5 */
+     *  --create-tables --uni-scan --recursive --collect --dirent --files --dirs --md5 */
     duf_config->cli.act.create_tables = duf_config->cli.act.add_path = duf_config->cli.act.uni_scan = duf_config->u.recursive =
-          duf_config->cli.act.fill = duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.md5 = 1;
+           duf_config->cli.act.collect = duf_config->cli.act.files = duf_config->cli.act.dirs =
+          duf_config->cli.act.dirent = duf_config->cli.act.md5 = 1;
     break;
   case DUF_OPTION_ZERO_DB:
     DUF_OPT_FLAG( cli.act.create_tables );
@@ -395,21 +396,6 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     DUF_OPT_FLAG( cli.act.add_path );
     /* duf_config->cli.act.add_path = 1; */
     break;
-    /* case DUF_OPTION_UPDATE_PATH:   */
-    /*   duf_config->cli.act.update_path = 1; */
-    /*   break;                       */
-    /* case DUF_OPTION_UPDATE_MD5:   */
-    /*   duf_config->cli.act.update_md5 = 1; */
-    /*   break;                      */
-    /* case DUF_OPTION_UPDATE_DUPLICATES:                 */
-    /*   DUF_OPT_FLAG( cli.act.update_duplicates );       */
-    /*   break;                                           */
-    /* case DUF_OPTION_UPDATE_MDPATH:                     */
-    /*   DUF_OPT_FLAG( cli.act.update_mdpath );           */
-    /*   break;                                           */
-    /* case DUF_OPTION_UPDATE_MDPATH_SELECTIVE:           */
-    /*   DUF_OPT_FLAG( cli.act.update_mdpath_selective ); */
-    /*   break;                                           */
   case DUF_OPTION_ZERO_FILEDATA:
     DUF_OPT_FLAG( cli.act.zero_filedata );
     /* duf_config->cli.act.zero_filedata = 1; */
@@ -436,15 +422,20 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_MDPATH:
     DUF_OPT_FLAG( cli.act.mdpath );
-    DUF_OPT_FLAG( cli.act.integrity );
+    /* DUF_OPT_FLAG( cli.act.integrity ); */
+    break;
+  case DUF_OPTION_DIRENT:
+    DUF_OPT_FLAG( cli.act.dirent );
     break;
   case DUF_OPTION_MD5:
     DUF_OPT_FLAG( cli.act.md5 );
-    DUF_OPT_FLAG( cli.act.integrity );
     break;
   case DUF_OPTION_FILL:
-    DUF_OPT_FLAG( cli.act.fill );
-    DUF_OPT_FLAG( cli.act.integrity );
+    DUF_OPT_FLAG( cli.act.dirent );
+    DUF_OPT_FLAG( cli.act.collect );
+    break;
+  case DUF_OPTION_COLLECT:
+    DUF_OPT_FLAG( cli.act.collect );
     break;
   case DUF_OPTION_INTEGRITY:
     DUF_OPT_FLAG( cli.act.integrity );
@@ -535,7 +526,6 @@ duf_parse_option( int opt, const char *optarg, int longindex )
     break;
   case DUF_OPTION_SAME_MD5:
     DUF_OPT_FLAG( cli.act.same_md5 );
-    /* duf_config->cli.act.same_md5 = 1; */
     break;
   case DUF_OPTION_ADD_TO_GROUP:
     DUF_OPT_FLAG( cli.act.to_group );

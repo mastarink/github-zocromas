@@ -32,8 +32,7 @@
 
 /* callback of type duf_scan_callback_file_t */
 static int
-scan_leaf(  duf_depthinfo_t * pdi,
-                              duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -70,7 +69,7 @@ scan_leaf(  duf_depthinfo_t * pdi,
 /* callback of type duf_scan_callback_dir_t */
 static int
 scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                   duf_record_t * precord )
+                  duf_record_t * precord )
 {
   int r = 0;
 

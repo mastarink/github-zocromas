@@ -147,12 +147,15 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       .seq = 0,
       .levinfo = NULL,
       .u = u,
+      .opendir = sccb ? sccb->opendir : 0,
       /* .name = path, */
     };
 
     duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
 
     DUF_OINV( di. );
+
+
 
 /* create level-control array, open 0 level */
     r = duf_levinfo_create( &di, path );
@@ -165,8 +168,11 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       unsigned long long pathid;
 
       pathid = duf_path_to_pathid( path, &di, &r );
+
       DUF_TEST_R( r );
+      DUF_OINV_OPENED( di. );
       DUF_TRACE( action, 0, "pathid %llu for %s", pathid, path );
+
 
       if ( DUF_IF_TRACE( scan ) )
       {
@@ -199,6 +205,8 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
  *     5. for <current> dir call sccb->node_scan_after
  * */
         DUF_OINV( di. );
+        DUF_OINV_OPENED( di. );
+
         if ( r >= 0 )
           r = duf_scan_dirs_by_parentid( pathid, NULL /* pdh */ , duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
         DUF_OINV( di. );
@@ -233,7 +241,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
     /* if ( !duf_config->cli.noopenat ) */
     /*   duf_close_dh( pdh );           */
     /* pdh->dfd = 0;                    */
-    printf( "\n\n********************************************************** %d **\n", duf_config->cli.act.totals );
+    DUF_TRACE( action, 0, "end scan %s ; totals:%d", sccb->title, duf_config->cli.act.totals );
   }
   /* if ( r == DUF_ERROR_MAX_REACHED )                 */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
@@ -250,6 +258,9 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+
+
+
   if ( duf_config )
   {
     if ( r >= 0 && sccb && sccb->init_scan )
@@ -279,7 +290,8 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
           /* DUF_TRACE( action, 0, "final psql : %s", *p ); */
           /* r = duf_sql( *p, &changes ); */
           r = duf_sql_exec( *psql, &changes );
-          DUF_TRACE( action, 0, "(%d) final psql %s; changes:%d", r, *psql, changes );
+          /* DUF_TRACE( action, 0, "(%d) final psql %s; changes:%d", r, *psql, changes ); */
+          DUF_TRACE( action, 0, "(%d) final SQL %lu; changes:%d", r, psql - sccb->final_sql_argv, changes );
           psql++;
         }
       }
@@ -299,62 +311,93 @@ duf_uni_scan_all( void )
 
   extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;
+  extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
+  extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) );
+  extern duf_scan_callbacks_t duf_collect_md5_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
   extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_fill_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
+  extern duf_scan_callbacks_t duf_collect_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   DUF_TRACE( action, 0, "prep" );
   ppscan_callbacks = mas_malloc( max_steps * sizeof( duf_scan_callbacks_t * ) );
-  if ( steps < max_steps && duf_config->cli.act.integrity )
+
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.integrity )
   {
     DUF_TRACE( action, 0, "prep integrity ..." );
     ppscan_callbacks[steps++] = &duf_integrity_callbacks;
   }
-  if ( steps < max_steps && duf_config->cli.act.fill )
+  DUF_TRACE( action, 0, "prep collect %d/%d/%d", &duf_collect_openat_callbacks ? 1 : 0, !duf_config->cli.noopenat ? 1 : 0,
+             duf_config->cli.act.collect ? 1 : 0 );
+  assert( steps < max_steps );
   {
-    DUF_TRACE( action, 0, "prep fill ..." );
-    ppscan_callbacks[steps++] = &duf_fill_callbacks;
+    if ( &duf_collect_openat_callbacks && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
+    {
+      DUF_TRACE( action, 0, "prep collect ..." );
+      ppscan_callbacks[steps++] = &duf_collect_openat_callbacks;
+    }
+    else if ( &duf_collect_noopenat_callbacks && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
+    {
+      DUF_TRACE( action, 0, "prep collect ..." );
+      ppscan_callbacks[steps++] = &duf_collect_noopenat_callbacks;
+    }
+    else if ( ( ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) ) )
+    {
+      DUF_TRACE( action, 0, "prep fill ..." );
+      ppscan_callbacks[steps++] = &duf_fill_callbacks;
+    }
   }
-  if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.fill )
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.md5 && ( duf_config->cli.act.collect ) )
   {
     DUF_TRACE( action, 0, "prep fill md5" );
-    ppscan_callbacks[steps++] = &duf_fill_md5_callbacks;
+    ppscan_callbacks[steps++] = &duf_collect_md5_callbacks;
   }
-  if ( steps < max_steps && duf_config->cli.act.mdpath && duf_config->cli.act.fill )
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.mdpath && ( duf_config->cli.act.collect ) )
   {
     DUF_TRACE( action, 0, "prep mdpath" );
-    ppscan_callbacks[steps++] = &duf_fill_mdpath_callbacks;
+    ppscan_callbacks[steps++] = &duf_collect_mdpath_callbacks;
   }
-  if ( steps < max_steps && duf_config->cli.act.md5 && duf_config->cli.act.print )
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.md5 && duf_config->cli.act.print )
   {
     DUF_TRACE( action, 0, "prep print md5" );
     ppscan_callbacks[steps++] = &duf_print_md5_callbacks;
   }
 
-  if ( steps < max_steps && duf_config->cli.act.print && duf_config->cli.act.tree && !duf_config->cli.act.md5 )
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.print && duf_config->cli.act.tree && !duf_config->cli.act.md5 )
   {
     DUF_TRACE( action, 0, "prep print tree" );
     ppscan_callbacks[steps++] = &duf_print_tree_callbacks;
   }
 
-  if ( steps < max_steps && duf_config->cli.act.print && !duf_config->cli.act.tree && !duf_config->cli.act.md5 )
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.print && !duf_config->cli.act.tree && !duf_config->cli.act.md5 )
     ppscan_callbacks[steps++] = &duf_print_dir_callbacks;
 
-  if ( steps < max_steps && duf_config->cli.act.sample )
+  if ( duf_config->cli.act.sample )
   {
+    assert( steps + duf_config->cli.act.sample < max_steps );
     for ( int i = 0; i < duf_config->cli.act.sample && steps < max_steps; i++ )
+    {
       ppscan_callbacks[steps++] = &duf_sample_callbacks;
+    }
   }
 
-  if ( steps < max_steps && duf_config->cli.act.sampupd )
+  assert( steps < max_steps );
+  if ( duf_config->cli.act.sampupd )
     ppscan_callbacks[steps++] = &duf_sampupd_callbacks;
-
+  if ( steps )
+    DUF_TRACE( action, 0, "(%d) %d actions set", r, steps );
+  else
+    DUF_TRACE( action, 0, "(%d) no actions set", r );
   for ( int step = 0; r >= 0 && step < steps; step++ )
   {
     if ( ppscan_callbacks[step] )

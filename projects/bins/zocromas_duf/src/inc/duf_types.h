@@ -79,13 +79,13 @@
 
 #  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
 
-#  define DUF_OINV(pref) assert( duf_config->cli.noopenat || ( \
+#  define DUF_OINV(pref) assert( duf_config->cli.noopenat || !pref opendir || ( \
     		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
     			- ( (int) ( pref  levinfo && pref levinfo[pref  depth].lev_dh.dfd )) \
 	    		- pref  depth  == 0 ) \
     		)
-#  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
-#  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
+#  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
+#  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
 #  include "duf_cli_types.h"
 
@@ -104,11 +104,11 @@ typedef enum
   DBG_END,
 } duf_dbgcode_t;
 
-#  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ );
-#  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ );
-#  define  DEBUG_ENDR(r) duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
-#  define  DEBUG_ENDULL(l) duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, l );
-#  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, l );
+#  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ )
+#  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ )
+#  define  DEBUG_ENDR(r)  DUF_TEST_R( r ); duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r )
+#  define  DEBUG_ENDULL(l) duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, l )
+#  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, l )
 
 typedef enum
 {
@@ -118,9 +118,11 @@ typedef enum
   DUF_ERROR_MAIN,
   DUF_ERROR_PTR,
   DUF_ERROR_DATA,
+  DUF_ERROR_MD5,
   DUF_ERROR_NOT_OPEN,
   DUF_ERROR_OPENAT,
   DUF_ERROR_OPEN,
+  DUF_ERROR_READ,
   DUF_ERROR_CLOSE,
   DUF_ERROR_UNLINK,
   DUF_ERROR_OPTION,
@@ -137,6 +139,7 @@ typedef enum
   DUF_ERROR_NO_FIELD_OPTIONAL,
   DUF_ERROR_INSERT_MDPATH,
   DUF_ERROR_STAT,
+  DUF_ERROR_MEMORY,
   DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
 
@@ -216,6 +219,7 @@ typedef struct
 
 typedef struct
 {
+  unsigned opendir:1;
   int depth;
   /* duf_node_type_t node_type; */
   char *path;
@@ -293,6 +297,7 @@ typedef int ( *duf_sql_select_cb_t ) ( duf_record_t * precord, va_list args,
                                        struct duf_scan_callbacks_s * sccb, const duf_dirhandle_t * pdhu );
 struct duf_scan_callbacks_s
 {
+  unsigned opendir:1;
   const char *title;
   const char *fieldset;
   const char *node_selector;

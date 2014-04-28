@@ -61,7 +61,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 /* __attribute__ ( ( unused ) ) */
 static int
 scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                  duf_record_t * precord )
+                  duf_record_t * precord )
 {
   int r = 0;
 
@@ -102,6 +102,7 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
 
 duf_scan_callbacks_t duf_print_md5_callbacks = {
   .title = __FILE__,
+  /* .opendir = 1, */
   .init_scan = NULL,
   .node_scan_before = scan_node_before,
   .leaf_scan = scan_leaf,
@@ -114,11 +115,12 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
   .leaf_selector = "SELECT %s FROM duf_filenames "
         "              JOIN duf_filedatas ON (duf_filedatas.id=duf_filenames.dataid) "
         "              LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)"
-        "                           WHERE duf_filedatas.md5id='%llu' ",
+        "                           WHERE duf_filedatas.md5id='%llu' ORDER BY duf_filedatas.size ",
   .node_selector =
         "SELECT md5.id AS dirid " ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) AS dirname"
         ", printf('%%016x%%016x',md5.md5sum1,md5.md5sum2) AS dfname " " ,0 AS ndirs"
-        ", (SELECT COUNT(*) FROM md5 AS smd WHERE md5.md5sum1=smd.md5.md5sum1 AND md5.md5sum2=smd.md5.md5sum2 ) AS nfiles"
-        ", 0 AS maxsize, 0 AS minsize" " FROM duf_md5 AS md5" " WHERE %llu<1 " " ORDER BY md5sum1,md5sum2 ",
+        ", (SELECT COUNT(*) FROM duf_md5 AS md WHERE md5.md5sum1=md.md5sum1 AND md5.md5sum2=md.md5sum2 ) AS nfiles"
+        ", (SELECT size FROM duf_filedatas AS fd WHERE md5.id=fd.md5id ) AS filesize"
+        ", 0 AS maxsize, 0 AS minsize" " FROM duf_md5 AS md5" " WHERE %llu<1 " " ORDER BY filesize,md5sum1,md5sum2 ",
   /* .final_sql_argv = final_sql, */
 };

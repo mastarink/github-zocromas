@@ -38,9 +38,10 @@ const struct option longopts[] = {
   {.name = "trace-current",.has_arg = optional_argument,.val = DUF_OPTION_CURRENT_TRACE},
   {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
   {.name = "trace-error",.has_arg = optional_argument,.val = DUF_OPTION_ERROR_TRACE},
-  {.name = "trace-fill",.has_arg = optional_argument,.val = DUF_OPTION_FILL_TRACE},
+  {.name = "trace-collect",.has_arg = optional_argument,.val = DUF_OPTION_COLLECT_TRACE},
   {.name = "trace-integrity",.has_arg = optional_argument,.val = DUF_OPTION_INTEGRITY_TRACE},
   {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
+  {.name = "trace-dirent",.has_arg = optional_argument,.val = DUF_OPTION_DIRENT_TRACE},
   {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
   {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
   {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
@@ -80,8 +81,9 @@ const struct option longopts[] = {
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
   /* --------------- */
   {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
-  {.name = "fill",.has_arg = no_argument,.val = DUF_OPTION_FILL},
+  {.name = "collect",.has_arg = no_argument,.val = DUF_OPTION_COLLECT},
   {.name = "integrity",.has_arg = no_argument,.val = DUF_OPTION_INTEGRITY},
+  {.name = "dirent",.has_arg = no_argument,.val = DUF_OPTION_DIRENT},
   {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
   {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
   {.name = "sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE},
@@ -364,8 +366,9 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_TRACE( ptr, SAMPUPD, sampupd );
   DUF_RESTORE_OPTION_TRACE( ptr, SAMPLE, sample );
   DUF_RESTORE_OPTION_TRACE( ptr, MDPATH, mdpath );
+  DUF_RESTORE_OPTION_TRACE( ptr, DIRENT, dirent );
   DUF_RESTORE_OPTION_TRACE( ptr, MD5, md5 );
-  DUF_RESTORE_OPTION_TRACE( ptr, FILL, fill );
+  DUF_RESTORE_OPTION_TRACE( ptr, COLLECT, collect );
   DUF_RESTORE_OPTION_TRACE( ptr, INTEGRITY, integrity );
   DUF_RESTORE_OPTION_TRACE( ptr, SQL, sql );
 
@@ -386,8 +389,9 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_B( ptr, SAMPLE, sample, cli.act );
   DUF_RESTORE_OPTION_B( ptr, SAMPUPD, sampupd, cli.act );
   DUF_RESTORE_OPTION_B( ptr, MDPATH, mdpath, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, DIRENT, dirent, cli.act );
   DUF_RESTORE_OPTION_B( ptr, MD5, md5, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, FILL, fill, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, COLLECT, collect, cli.act );
   DUF_RESTORE_OPTION_B( ptr, INTEGRITY, integrity, cli.act );
   DUF_RESTORE_OPTION_B( ptr, PRINT, print, cli.act );
   DUF_RESTORE_OPTION_B( ptr, TREE, tree, cli.act );

@@ -50,7 +50,7 @@
 /*   fprintf( stderr, "Find duplicates\x1b[K\n" );                                                                                        */
 /*   r = duf_sql_select( duf_sel_cb_update_duplicates, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,        */
 /*                       ( duf_scan_callbacks_t * ) NULL (*  sccb *) , ( duf_dirhandle_t * ) NULL,                                        */
-/*                       "SELECT duf_md5.id as md5id, COUNT(*) as cnt " " FROM duf_md5 "                                                  */
+/*                       "SELECT duf_md5.id AS md5id, COUNT(*) AS cnt " " FROM duf_md5 "                                                  */
 /*                       " LEFT JOIN duf_filedatas ON (duf_md5.id=duf_filedatas.md5id) "                                                  */
 /*                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "                                           */
 /*                       " LEFT JOIN duf_paths ON (duf_filenames.pathid=duf_paths.id) " " WHERE " " dupcnt is null "                      */

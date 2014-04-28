@@ -37,7 +37,7 @@ main( int argc, char **argv )
     extern int dbgfunc_enabled;
     int or;
 
-    DUF_TRACE( any, 0, "X" );
+    DUF_TRACE( any, 0, "any test" );
     if ( r >= 0 )
       r = duf_infile_options( argc, argv );
     /* duf_config->cli.dbg.verbose = 4; */
@@ -81,7 +81,7 @@ main( int argc, char **argv )
         printf( "    --tree" "\n" );
         printf( "    --print" "\n" );
         printf( "    --sample" "\n" );
-        printf( "    --fill" "\n" );
+        printf( "    --collect" "\n" );
         printf( "Old options" "\n" );
         printf( "  --zero-duplicates" "\n" );
         /* printf( "  --update-duplicates" "\n" ); */
@@ -102,7 +102,7 @@ main( int argc, char **argv )
         printf( "  -Q, --trace-sql=%d" "\n", duf_config->cli.trace.sql );
         printf( "  --trace-sample=%d" "\n", duf_config->cli.trace.sample );
         printf( "  --trace-path=%d" "\n", duf_config->cli.trace.path );
-        printf( "  -F, --trace-fill=%d" "\n", duf_config->cli.trace.fill );
+        printf( "  -F, --trace-collect=%d" "\n", duf_config->cli.trace.collect );
         printf( "----------------" "\n" );
         r = 0;
         break;
@@ -110,7 +110,7 @@ main( int argc, char **argv )
         printf( "Examples" "\n" );
         printf( "  run  --db-name=test20140412  --drop-tables --create-tables" "\n" );
         printf( "  run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file" "\n" );
-        printf( "  run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/  --uni-scan -R --fill --files" "\n" );
+        printf( "  run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/  --uni-scan -R --collect --dirent --files" "\n" );
         printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --sample -f -R" "\n" );
         printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/chromium/   --print    -R --files" "\n" );
         printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print  --tree  -R --files" "\n" );
@@ -129,18 +129,18 @@ main( int argc, char **argv )
 
         printf( "===== Transition ============================" "\n" );
         printf( "  run --update-duplicates --update-mdpath --update-filedata --update-exif" "\n" );
-        printf( "  run --db-name=test`datem`.db  --uni-scan  --mdpath --fill -dfR  /mnt/new_media/media/down/" "\n" );
+        printf( "  run --db-name=test`datem`.db  --uni-scan  --mdpath --collect --dirent -dfR  /mnt/new_media/media/down/" "\n" );
         printf( "=============================================" "\n" );
         printf( "Collect basic file info recursively to db\n" );
-        printf( "  run  --db-name=test`datem`.db   --uni-scan -R --fill --files   /home/mastar/a/down/" "\n" );
+        printf( "  run  --db-name=test`datem`.db   --uni-scan -R --collect --dirent --files   /home/mastar/a/down/" "\n" );
         printf( "Calculate checksums recursively for files in db\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan -R --fill --md5 --files --dirs /home/mastar/a/down/" "\n" );
+        printf( "  run  --db-name=test`datem`.db  --uni-scan -R --collect --dirent --md5 --files --dirs /home/mastar/a/down/" "\n" );
         printf( "List files recursively from db\n" );
         printf( "  run  --db-name=test`datem`.db  --uni-scan   --print -R -d  --files /home/mastar/a/down/google-chrome/ " "\n" );
         printf( "=============================================" "\n" );
         printf( "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --totals" "\n" );
         printf( "    same as prev:" "\n" );
-        printf( "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --fill"
+        printf( "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --collect --dirent"
                 " --files --dirs --md5 /mnt/new_media/media/down/ --totals" "\n" );
 
         printf( "=============================================" "\n" );

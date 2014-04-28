@@ -99,8 +99,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
 
 /* callback of  duf_scan_callback_file_t */
 static int
-scan_leaf(  duf_depthinfo_t * pdi,
-                              duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -141,7 +140,7 @@ scan_leaf(  duf_depthinfo_t * pdi,
  * */
 static int
 scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                   duf_record_t * precord )
+                  duf_record_t * precord )
 {
   DUF_SFIELD( dirname );
   /* const char *dirname = duf_sql_str_by_name( "dirname", precord, 0 ); */
@@ -170,6 +169,7 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
   return r;
 }
 
+ /* *INDENT-OFF*  */
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
   .init_scan = NULL,
@@ -177,11 +177,13 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .leaf_scan = scan_leaf,
   .fieldset = "duf_filenames.pathid AS dirid " " , duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         " , uid, gid, nlink, inode, mtim AS mtime "
-        " , dupcnt AS nsame" " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode",
+        " , dupcnt AS nsame"
+	" , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode",
   .leaf_selector =
         "SELECT %s FROM duf_filenames "
-        " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE "
+        " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
+        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)"
+	"    WHERE "
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
         " duf_filenames.pathid='%llu' ",
@@ -206,3 +208,4 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
   /* .final_sql_argv = final_sql, */
 };
+ /* *INDENT-ON*  */

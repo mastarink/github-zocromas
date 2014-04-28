@@ -32,7 +32,11 @@
 #include "duf_sql.h"
 #include "duf_dbg.h"
 
-/* run  --db-name=test20140412   --uni-scan -R --fill --files --dirs /mnt/new_media/media/down/ */
+/* ###################################################################### */
+/* #include "duf_collect_uni.h" */
+/* ###################################################################### */
+
+/* run  --db-name=test20140412   --uni-scan -R --collect --files --dirs /mnt/new_media/media/down/ */
 /*                                                    ^^^^^^^ ^^^^^^                            */
 
 
@@ -76,7 +80,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
       if ( need_id )
       {
         resf = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( fill, 1, "inserted (SQLITE_OK) pathid=%llu:'%s'", dir_id, fname );
+        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) pathid=%llu:'%s'", dir_id, fname );
       }
     }
     else
@@ -101,7 +105,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
 
 /* callback of type duf_scan_callback_file_t */
 static int
-fill_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
 
@@ -115,12 +119,12 @@ fill_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirh
 
 
   /* 
-   * --uni-scan   -R   --fill   --files  --dirs  -FF
+   * --uni-scan   -R   --collect   --files  --dirs  -FF
    *                   ^^^^^^   ^^^^^^^  ^^^^^^
    * */
 
 
-  if ( DUF_IF_TRACE( fill ) )
+  if ( DUF_IF_TRACE( collect ) )
   {
     DUF_SFIELD( filename );
     DUF_UFIELD( dirid );
@@ -130,7 +134,7 @@ fill_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirh
 
     DUF_TEST_R( r );
 
-    DUF_TRACE( fill, 1, "path=%s/%s", path, filename );
+    DUF_TRACE( collect, 1, "path=%s/%s", path, filename );
     duf_close_dh( &dh );
     mas_free( path );
   }
@@ -178,8 +182,8 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
 }
 
 static unsigned long long
-duf_fill_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ const char *fname, unsigned long long dirid,
-                                               duf_depthinfo_t * pdi, int need_id, int *pr )
+duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ const char *fname, unsigned long long dirid,
+                                                  duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
@@ -212,8 +216,8 @@ duf_fill_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_n
 
 /* ------------------------------------------------------------------- */
 static unsigned long long
-duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path, struct dirent *de, unsigned long long pathid,
-                                                           duf_depthinfo_t * pdi, int need_id, int *pr )
+duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path, struct dirent *de, unsigned long long pathid,
+                                                              duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
@@ -224,7 +228,7 @@ duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path
   {
   case DT_REG:
     {
-      DUF_TRACE( fill, 1, "regfile='%s/%s'", real_path, de->d_name );
+      DUF_TRACE( collect, 1, "regfile='%s/%s'", real_path, de->d_name );
       itemid = duf_update_realpath_file_name_inode_filter_uni( real_path, de->d_name, pathid, pdi, need_id, &r );
     }
     break;
@@ -248,7 +252,7 @@ duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path
       }
       mas_free( fpath );
 
-      DUF_TRACE( fill, 1, "dir='%s/%s'", real_path, de->d_name );
+      DUF_TRACE( collect, 1, "dir='%s/%s'", real_path, de->d_name );
 
       /* don't return itemid ??? */
       /* itemid = */
@@ -262,8 +266,8 @@ duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path
 }
 
 static unsigned long long
-duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ struct dirent *de,
-                                                      unsigned long long pathid, duf_depthinfo_t * pdi, int need_id, int *pr )
+duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ struct dirent *de,
+                                                         unsigned long long pathid, duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
@@ -277,8 +281,8 @@ duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t 
   {
   case DT_REG:
     {
-      DUF_TRACE( fill, 1, "regfile='.../%s'", de->d_name );
-      itemid = duf_fill_file_info_by_pdh_and_name_and_pathid(  /* pdh_notused, */ de->d_name, pathid, pdi, 1 /*need_id */ , &r );
+      DUF_TRACE( collect, 1, "regfile='.../%s'", de->d_name );
+      itemid = duf_collect_file_info_by_pdh_and_name_and_pathid(  /* pdh_notused, */ de->d_name, pathid, pdi, 1 /*need_id */ , &r );
     }
     break;
   case DT_DIR:
@@ -300,7 +304,7 @@ duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t 
         ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, 0 /*need_id */ , &r );
       }
 
-      DUF_TRACE( fill, 1, "dir='.../%s'", de->d_name );
+      DUF_TRACE( collect, 1, "dir='.../%s'", de->d_name );
 
       /* don't return itemid ??? */
       /* itemid = */
@@ -317,7 +321,7 @@ duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t 
 /* to replace duf_update_realpath_entries_filter */
 /* TODO scan for removed files; mark as absent or remove from db */
 static int
-duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi, const char *dfname )
+duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi, const char *dfname )
 {
   int r = 0;
   int items = 0;
@@ -328,25 +332,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_
   duf_dirhandle_t dh;
 
   const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
-  int noopenat = duf_config->cli.noopenat || !pdhi;
-
-  /* if ( pdhi->dfd )                                                                                                                */
-  /* {                                                                                                                              */
-  /*   struct stat stt;                                                                                                             */
-  /*                                                                                                                                */
-  /*   if ( 0 != fstat( pdhi->dfd, &stt ) || pdhi->st.st_ino != stt.st_ino )                                                          */
-  /*   {                                                                                                                            */
-  /*     DUF_ERROR( "Transitional error 1 : dfd:%d ( %ld ? %ld ) %s %s", pdhi->dfd, pdhi->st.st_ino, stt.st_ino, dfname, real_path ); */
-  /*   }                                                                                                                            */
-  /*   if ( 0 != fstatat( pdhi->dfd, dfname, &stt, 0 ) )                                                                             */
-  /*   {                                                                                                                            */
-  /*     char serr[1024] = "";                                                                                                      */
-  /*     char *s = strerror_r( errno, serr, sizeof( serr ) );                                                                       */
-  /*                                                                                                                                */
-  /*     DUF_ERROR( "Transitional error 2 : %s %s {%s}", dfname, real_path, s );                                                    */
-  /*   }                                                                                                                            */
-  /* }                                                                                                                              */
-
+  int noopenat = !pdhi;
 
   if ( noopenat )
   {
@@ -372,7 +358,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_
     DUF_ERROR( "No such entry %s", rp );
     /* TODO mark as absent or remove from db */
 
-    DUF_TRACE( fill, 1, "No such entry %s", noopenat ? real_path : dfname );
+    DUF_TRACE( collect, 1, "No such entry %s", noopenat ? real_path : dfname );
     mas_free( rp );
     r = DUF_ERROR_STAT;
   }
@@ -383,12 +369,12 @@ duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_
 
     duf_dbgfunc( DBG_START, __func__, __LINE__ );
     /* fprintf( stderr, "Update path entries %s\n", noopenat?real_path:dfname ); */
-    DUF_TRACE( fill, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
+    DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
     if ( noopenat )
       nlist = scandir( real_path, &list, duf_direntry_filter, alphasort );
     else
       nlist = scandirat( pdhi->dfd, ".", &list, duf_direntry_filter, alphasort );
-    DUF_TRACE( fill, 1, "pathid=%llu; nlist=%d", pathid, nlist );
+    DUF_TRACE( collect, 1, "pathid=%llu; nlist=%d", pathid, nlist );
     if ( nlist < 0 )
     {
       /* char serr[512] = "";                                                                                            */
@@ -417,11 +403,11 @@ duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_
         {
           unsigned long long itemid = 0;
 
-          DUF_TRACE( fill, 1, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
+          DUF_TRACE( collect, 1, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
           if ( noopenat )
-            itemid = duf_fill_file_or_dir_info_by_realpath_and_name_and_pathid( real_path, list[il], pathid, pdi, 1 /*need_id */ , &r );
+            itemid = duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( real_path, list[il], pathid, pdi, 1 /*need_id */ , &r );
           else
-            itemid = duf_fill_file_or_dir_info_by_pdh_and_name_and_pathid(  /* pdhi, */ list[il], pathid, pdi, 1 /*need_id */ , &r );
+            itemid = duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* pdhi, */ list[il], pathid, pdi, 1 /*need_id */ , &r );
           DUF_TEST_R( r );
           if ( itemid )
             items++;
@@ -452,7 +438,7 @@ duf_fill_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-fill_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
                   duf_record_t * precord )
 {
   int r = 0;
@@ -461,8 +447,8 @@ fill_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh
   /* const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi ); */
 
   /* if ( pdh_notused )                                                */
-  /*   DUF_TRACE( fill, 0, "pdh_notused:%p", ( void * ) pdh_notused ); */
-  DUF_TRACE( fill, 1, "pathid=%llu", pathid );
+  /*   DUF_TRACE( collect, 0, "pdh_notused:%p", ( void * ) pdh_notused ); */
+  DUF_TRACE( collect, 1, "pathid=%llu", pathid );
 
   /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_notused, ( void * ) pdhi ); */
 
@@ -471,11 +457,11 @@ fill_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh
   {
     char *path = NULL;
 
-    if ( DUF_IF_TRACE( fill ) )
+    if ( DUF_IF_TRACE( collect ) )
     {
       path = duf_pathid_to_path_s( pathid, pdi, &r );
 
-      DUF_TRACE( fill, 1, "path=%s", path );
+      DUF_TRACE( collect, 1, "path=%s", path );
     }
 /* TODO additionally 
  * for each direntry:
@@ -483,21 +469,21 @@ fill_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh
  * */
 
 /* stat */
-    /* duf_fill_pathid_filter_uni:
+    /* duf_collect_pathid_filter_uni:
      * update (collected below) information for path
      * */
     {
       DUF_SFIELD( dfname );
-      DUF_TRACE( fill, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
-      /* r = duf_fill_pathid_filter_uni( pathid, pdh_notused, pdi ); */
-      /* r = duf_fill_pi_flt_uni( pathid, pdh_notused, pdi ); */
-      /* r = duf_fill_entries_filter_uni( pathid, pdh_notused, pdi ); */
-      r = duf_fill_ent_flt_uni( pathid, /* pdh_notused, */ pdi, dfname );
+      DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
+      /* r = duf_collect_pathid_filter_uni( pathid, pdh_notused, pdi ); */
+      /* r = duf_collect_pi_flt_uni( pathid, pdh_notused, pdi ); */
+      /* r = duf_collect_entries_filter_uni( pathid, pdh_notused, pdi ); */
+      r = duf_collect_ent_flt_uni( pathid, /* pdh_notused, */ pdi, dfname );
     }
 
-    if ( DUF_IF_TRACE( fill ) )
+    if ( DUF_IF_TRACE( collect ) )
     {
-      DUF_TRACE( fill, 1, "path=%s", path );
+      DUF_TRACE( collect, 1, "path=%s", path );
     }
     mas_free( path );
   }
@@ -551,11 +537,11 @@ NULL,};
 
 
 
-duf_scan_callbacks_t duf_fill_callbacks = {
+duf_scan_callbacks_t duf_collect_noopenat_callbacks = {
   .title = __FILE__,.init_scan = NULL,
-  .opendir = 1,
-  .node_scan_before = fill_scan_node_before,
-  .leaf_scan = fill_scan_leaf,
+  .opendir = 0,
+  .node_scan_before = scan_node_before,
+  .leaf_scan = scan_leaf,
   /* filename for debug only */
   .fieldset = " duf_filenames.pathid AS dirid, " " duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         ", uid, gid, nlink, inode, mtim AS mtime "

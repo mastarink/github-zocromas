@@ -1,8 +1,11 @@
 set path=src,src/inc
 "tab new
 
-find  duf_fill_uni.c
-tab sfind  duf_integrity_uni.c
+find  duf_integrity_uni.c
+
+tab sfind duf_fill_uni.c
+tab sfind duf_collect_openat_uni.c
+tab sfind duf_collect_noopenat_uni.c
 
 tab sfind duf_sample_uni.c
 tab sfind duf_sampupd_uni.c

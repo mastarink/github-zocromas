@@ -216,6 +216,8 @@ duf_openat_dh( duf_dirhandle_t * pdh, const duf_dirhandle_t * pdhu, const char *
 
       s = strerror_r( errno, serr, sizeof( serr ) );
       DUF_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhu ? pdhu->dfd : 555 );
+      assert( r >= 0 && r != ENOENT );
+
       r = DUF_ERROR_OPENAT;
     }
   }
