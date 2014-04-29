@@ -15,6 +15,8 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_levinfo.h"
+
 #include "duf_path.h"
 #include "duf_file.h"
 
@@ -39,7 +41,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 /* stat */
 
   /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
@@ -49,20 +51,20 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
    *                   ^^^^^^^^   ^^^^^^^
    * */
 
-  {
-    DUF_UFIELD( filenameid );
-    char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
-
-    printf( "#%4llu: statistics fpath %s\n", pdi->seq, fpath );
-
-    DUF_TRACE( statistics, 1, "fpath=%s", fpath );
-
-    mas_free( fpath );
-  }
+  /* {                                                              */
+  /*   DUF_UFIELD( filenameid );                                    */
+  /*   char *fpath = filenameid_to_filepath( filenameid, pdi, &r ); */
+  /*                                                                */
+  /*   printf( "#%4llu: statistics fpath %s\n", pdi->seq, fpath );  */
+  /*                                                                */
+  /*   DUF_TRACE( statistics, 1, "fpath=%s", fpath );               */
+  /*                                                                */
+  /*   mas_free( fpath );                                           */
+  /* }                                                              */
 
 
   DUF_TRACE( statistics, 1, "filename=%s", filename );
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -73,15 +75,19 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 {
   int r = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   {
-    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
+    const char *real_path = NULL;
 
-    printf( "#%4llu: statistics dPATH %s\n", pdi->seq, path );
-    DUF_TRACE( statistics, 1, "path=%s", path );
-    mas_free( path );
+    if ( !real_path )
+      real_path = duf_levinfo_path( pdi );
+    /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
+
+    printf( "#%4llu: statistics dPATH %s\n", pdi->seq, real_path );
+    DUF_TRACE( statistics, 1, "real_path=%s", real_path );
+    /* mas_free( path ); */
   }
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 /* *INDENT-OFF*  */

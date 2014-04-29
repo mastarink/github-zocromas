@@ -38,18 +38,21 @@
  * */
 /* will be static! */
 int
-duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                 const duf_dirhandle_t * pdhu )
+duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused,
+                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                 duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */  )
 {
   int r = 0;
+  int rc;
+
+  DUF_SFIELD( filename );
 
   DEBUG_START(  );
   assert( pdi );
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
   DUF_TRACE( scan, 0, "scan node" );
-  r = duf_levinfo_down( pdi, 0, NULL, 0, 0, 1 );
+  r = duf_levinfo_down( pdi, 0 /* dirid */ , filename, 0, 0, 1 /* is_leaf */  );
   DUF_OINV( pdi-> );
   if ( r >= 0 )
   {
@@ -68,14 +71,17 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata,
     /* called both for leaves (files) and nodes (dirs) */
     if ( str_cb )
     {
+      r = duf_levinfo_openat_dh( pdi );
       if ( r >= 0 )
-        r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
+        r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord /*, pdhu_off */  );
       DUF_TEST_R( r );
       /* DUF_ERROR( "r:%d; str_cb:%s", r, DUF_FUNN( str_cb ) ); */
+      rc = duf_levinfo_closeat_dh( pdi );
+      if ( r >= 0 && rc < 0 )
+        r = rc;
     }
     else
       DUF_TRACE( error, 0, "str_cb not set" );
-    DUF_OINV( pdi-> );
     DUF_OINV( pdi-> );
     duf_levinfo_up( pdi );
   }
@@ -97,9 +103,9 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata,
  * */
 /* will be static! */
 int
-duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                 const duf_dirhandle_t * pdhu )
+duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused,
+                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                 duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */  )
 {
   int r = 0;
 
@@ -164,7 +170,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
           DUF_TRACE( scan, 0, "scan node" );
 
           if ( r >= 0 )
-            r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord, pdhu );
+            r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord/*, pdhu_off */);
           DUF_TEST_R( r );
           /* DUF_ERROR( "F:%s", DUF_FUNN( str_cb ) ); */
           DUF_OINV_OPENED( pdi-> );
@@ -202,7 +208,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata,
  * */
 static int
 duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                     duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sql, va_list args )
+                     duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */ , const char *sql, va_list args )
 {
   int r = DUF_ERROR_UNKNOWN_NODE;
   duf_sql_select_cb_t sel_cb = NULL;
@@ -224,7 +230,7 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
              str_cb ? '+' : '-' );
 
   if ( sel_cb )
-    r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
+    r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, /* pdhu_off, */ sql, args );
 
   DUF_TRACE( scan, 0, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
   DUF_OINV( pdi-> );
@@ -241,7 +247,7 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
  * */
 int
 duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                    duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sql, ... )
+                    duf_scan_callbacks_t * sccb, /* const duf_dirhandle_t * pdhu_off, */ const char *sql, ... )
 {
   int r = 0;
   va_list args;
@@ -251,7 +257,7 @@ duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, 
     va_start( args, sql );
     {
       DUF_OINV( pdi-> );
-      r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
+      r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, /* pdhu_off, */ sql, args );
       DUF_OINV( pdi-> );
       DUF_TEST_R( r );
     }

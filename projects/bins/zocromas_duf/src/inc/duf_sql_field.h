@@ -7,7 +7,7 @@ int __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave,
 const char *__duf_sql_str_by_name( const char *name, duf_record_t * precord, int *phave, int optional );
 unsigned long long __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int optional );
 
-int duf_sel_cb_field_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu );
+int duf_sel_cb_field_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb/*, const duf_dirhandle_t * pdhu_unused_off */ );
 
 
 

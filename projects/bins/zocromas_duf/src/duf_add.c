@@ -67,7 +67,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
         /* unsigned long long pathid1; */
         duf_scan_callbacks_t sccb = {.fieldset = "pathid" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            &sccb, ( const duf_dirhandle_t * ) NULL,
+                            &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
                             "SELECT id AS pathid " " FROM duf_paths " " WHERE dev='%lu' AND inode='%lu'", dev_id, dir_ino );
         DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) pathid=%llu:'%s'", pathid, dename );
       }
@@ -160,10 +160,12 @@ duf_add_real_path_uni( const char *real_path, const char *group, int up, int nee
         DUF_TRACE( current, 0, "inserted [%s] AS %llu", base_name, pathid );
         mas_free( name );
       }
-  DUF_TRACE( action, 0, "#%llu : added real path %s",  pathid, real_path);
+      DUF_TRACE( action, 0, "#%llu : added real path %s", pathid, real_path );
 
+#ifdef DUF_COMPILE_EXPIRED
       if ( r >= 0 && group )
         duf_pathid_group( group, pathid, +1 );
+#endif
     }
   }
   mas_free( rpath );

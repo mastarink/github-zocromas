@@ -129,6 +129,7 @@ typedef enum
   DUF_ERROR_DATA,
   DUF_ERROR_MD5,
   DUF_ERROR_NOT_OPEN,
+  DUF_ERROR_PATH,
   DUF_ERROR_OPENAT,
   DUF_ERROR_OPEN,
   DUF_ERROR_READ,
@@ -221,7 +222,7 @@ typedef struct
   unsigned long long ndirs;
   unsigned long long nfiles;
   char *fullpath;
-  char *dirname;
+  char *itemname;
   void *context;
   duf_dirhandle_t lev_dh;
 } duf_levinfo_t;
@@ -283,13 +284,22 @@ typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
 
 
 /* this is callback of type: duf_scan_hook_dir_t (second range; ; sel_cb): */
-typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, /* const duf_dirhandle_t * pdh, */ duf_depthinfo_t * pdi,
-                                       duf_record_t * precord );
+typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord );
 
 /* this is callback of type: duf_scan_hook_file_t (first range; str_cb) */
-typedef int ( *duf_scan_hook_file_t ) (  /* void *str_cb_udata, */ duf_depthinfo_t * pdi,
-                                        duf_record_t * precord /*, const duf_dirhandle_t * pdhu */  );
+typedef int ( *duf_scan_hook_file_t ) ( duf_depthinfo_t * pdi, duf_record_t * precord );
 
+typedef int ( *duf_scan_hook_file_fd_t ) ( int fd, const struct stat * pst_file, duf_depthinfo_t * pdi, duf_record_t * precord );
+
+
+
+typedef int ( *duf_scan_hook_entry_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
+                                             duf_record_t * precord );
+typedef int ( *duf_scan_hook_entry_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
+                                             duf_record_t * precord );
+
+typedef int ( *duf_scan_hook_entry_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
+                                                duf_record_t * precord );
 
 typedef int ( *duf_anyhook_t ) ( void );
 
@@ -297,13 +307,16 @@ typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_scan_callback_file_t (first range; str_cb) */
 typedef int ( *duf_scan_callback_file_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi,
-                                            struct duf_scan_callbacks_s * sccb, duf_record_t * precord, const duf_dirhandle_t * pdhu );
+                                            struct duf_scan_callbacks_s * sccb,
+                                            duf_record_t * precord /*, const duf_dirhandle_t * pdhu_off */  );
 
 
 
 typedef int ( *duf_sql_select_cb_t ) ( duf_record_t * precord, va_list args,
                                        void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                                       struct duf_scan_callbacks_s * sccb, const duf_dirhandle_t * pdhu );
+                                       struct duf_scan_callbacks_s * sccb /*, const duf_dirhandle_t * pdhu_off */  );
+
+
 struct duf_scan_callbacks_s
 {
   unsigned opendir:1;
@@ -316,6 +329,10 @@ struct duf_scan_callbacks_s
   duf_scan_hook_dir_t node_scan_middle;
   duf_scan_hook_dir_t node_scan_after;
   duf_scan_hook_file_t leaf_scan;
+  duf_scan_hook_file_fd_t leaf_scan_fd;
+  duf_scan_hook_entry_reg_t entry_file_scan_before;
+  duf_scan_hook_entry_dir_t entry_dir_scan_before;
+
   char **final_sql_argv;
 };
 

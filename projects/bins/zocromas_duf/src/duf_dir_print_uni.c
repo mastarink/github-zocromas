@@ -17,6 +17,8 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_levinfo.h"
+
 /* #include "duf_sql_def.h" */
 /* #include "duf_sql.h" */
 #include "duf_sql_field.h"
@@ -40,7 +42,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 {
   int r = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   /* SQL at duf_scan_files_by_dirid */
   DUF_SFIELD( filename );
@@ -101,7 +103,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   }
   printf( "\n" );
 
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -111,10 +113,14 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 {
   int r = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   {
-    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
+    const char *real_path = NULL;
+
+    if ( !real_path )
+      real_path = duf_levinfo_path( pdi );
+    /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
 
     DUF_UFIELD( nfiles );
     DUF_UFIELD( minsize );
@@ -127,12 +133,12 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
         printf( "d%7llu ", pdi->seq );
       if ( duf_config->cli.format.dirid )
         printf( "[%8llu] ", pdi->levinfo[pdi->depth].dirid );
-      printf( " (%5llu) %llu-%llu %s\n", nfiles, minsize, maxsize, path ? path : "-=No path=-" );
+      printf( " (%5llu) %llu-%llu %s\n", nfiles, minsize, maxsize, real_path ? real_path : "-=No real_path=-" );
     }
-    mas_free( path );
+    /* mas_free( path ); */
   }
 
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
 
   return r;
 }

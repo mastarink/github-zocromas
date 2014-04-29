@@ -13,6 +13,7 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 #include "duf_config.h"
+#include "duf_dh.h"
 
 #include "duf_sql_def.h"
 #include "duf_sql.h"
@@ -57,7 +58,7 @@ typedef struct
 int
 duf_sel_cb_name_parid( duf_record_t * precord, va_list args, void *sel_cb_udata,
                        duf_scan_callback_file_t str_cb_notused, void *str_cb_udata_notused, duf_depthinfo_t * pdi,
-                       duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+                       duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
 {
   int r = 0;
   name_parid_udata_t *pud;
@@ -85,11 +86,11 @@ duf_sel_cb_name_parid( duf_record_t * precord, va_list args, void *sel_cb_udata,
 }
 
 char *
-duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh, const duf_depthinfo_t * pdi, int *pr )
+duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh_pathid, const duf_depthinfo_t * pdi, int *pr )
 {
   char *path = NULL;
   int r = 0;
-  int openat = !duf_config->cli.noopenat && pdh;
+  int openat = !duf_config->cli.noopenat && pdh_pathid;
 
   int test_o = duf_config->nopen;
   int test_c = duf_config->nclose;
@@ -108,7 +109,7 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh, const du
       r = duf_open_dh( &dh, "/" );
       DUF_TEST_R( r );
       if ( r >= 0 )
-        *pdh = dh;
+        *pdh_pathid = dh;
       r = 0;
     }
   }
@@ -118,7 +119,7 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh, const du
 
 /* get parentid for dirid */
     r = duf_sql_select( duf_sel_cb_name_parid, &pathdef, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb *//*, ( const duf_dirhandle_t * ) NULL off */ ,
                         "SELECT parentid, dirname " " FROM duf_paths WHERE id=%llu", dirid );
     DUF_TEST_R( r );
     if ( r >= 0 )
@@ -130,24 +131,24 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh, const du
           char *parent = NULL;
           duf_dirhandle_t dhu = {.dfd = 0 };
           duf_dirhandle_t dh = {.dfd = 0 };
-          duf_dirhandle_t *pdhu = NULL;
+          duf_dirhandle_t *pdhu_pathid = NULL;
 
           if ( openat )
-            pdhu = &dhu;
+            pdhu_pathid = &dhu;
 
-          parent = duf_pathid_to_path_dh( pathdef.parentid, pdhu, pdi, &r ); /* open!! */
+          parent = duf_pathid_to_path_dh( pathdef.parentid, pdhu_pathid, pdi, &r ); /* open!! */
           DUF_TEST_R( r );
           path = duf_join_path( parent, pathdef.name );
           if ( r >= 0 && openat )
           {
-            r = duf_openat_dh( &dh, pdhu, pathdef.name );
+            r = duf_openat_dh( &dh, pdhu_pathid, pathdef.name, 0 /* asfile */  );
             DUF_TEST_R( r );
             if ( r >= 0 )
-              *pdh = dh;
+              *pdh_pathid = dh;
             r = 0;
           }
-          if ( openat && pdhu && pdhu->dfd )
-            duf_close_dh( pdhu );
+          if ( openat && pdhu_pathid && pdhu_pathid->dfd )
+            duf_close_dh( pdhu_pathid );
           if ( parent )
             mas_free( parent );
         }
@@ -168,6 +169,7 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh, const du
   return path;
 }
 
+#ifdef DUF_COMPILE_EXPIRED
 char *
 duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
 {
@@ -181,10 +183,12 @@ duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int
   return s;
 }
 
+#endif
 /* will be static! */
 int
 duf_sel_cb_dirid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
-                  void *str_cb_udata_notused, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+                  void *str_cb_udata_notused, duf_depthinfo_t * xpdi,
+                  duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
 {
   int r = 0;
   duf_depthinfo_t *pdi = ( duf_depthinfo_t * ) sel_cb_udata;
@@ -260,29 +264,13 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
         /* duf_depthinfo_t di = {.dirid = 0 }; */
         /* fprintf( stderr, "%s: pathid_new: %llu; qbd: %s\n", __func__, pathid, qbd ); */
         r = duf_sql_select( duf_sel_cb_dirid /* duf_sql_path_to_pathid */ , pdi, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            ( duf_scan_callbacks_t * ) NULL /* sccb */ , ( const duf_dirhandle_t * ) NULL,
+                            ( duf_scan_callbacks_t * ) NULL /* sccb *//*, ( const duf_dirhandle_t * ) NULL off */ ,
                             "SELECT duf_paths.id AS dirid, duf_paths.dirname,  duf_paths.parentid "
                             ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
-                            /* " ,(SELECT count(*) FROM duf_paths AS subpaths WHERE subpaths.parentid=duf_paths.id) AS ndirs " */
-                            /* " ,(SELECT count(*) FROM duf_filenames AS fn "                                                  */
-                            /* "          JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "                                      */
-                            /* "          JOIN duf_md5 AS md ON (fd.md5id=md.id) "                                             */
-                            /* "          WHERE fn.pathid=duf_paths.id "                                                       */
-                            /* "              AND   fd.size >= %llu AND fd.size < %llu "                            */
-                            /* "              AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) " */
-                            /* " ) AS nfiles " */
-                            /* " ,(SELECT min(fd.size) FROM duf_filedatas AS fd JOIN duf_filenames AS fn ON (fn.dataid=fd.id) " */
-                            /* "           WHERE fn.pathid=duf_paths.id) AS minsize "                                           */
-                            /* " ,(SELECT max(fd.size) FROM duf_filedatas AS fd JOIN duf_filenames AS fn ON (fn.dataid=fd.id) " */
-                            /* "           WHERE fn.pathid=duf_paths.id) AS maxsize "                                           */
                             " FROM duf_paths "
                             " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
                             " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "
-                            " WHERE duf_paths.parentid='%llu' AND dirname='%s' ",
-                            /* pdi->u.minsize,                                                              */
-                            /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
-                            /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
-                            pathid, qbd );
+                            " WHERE duf_paths.parentid='%llu' AND dirname='%s' ", pathid, qbd );
 
         if ( r >= 0 && pdi )
           pathid_new = pdi->levinfo[pdi->depth].dirid;
@@ -323,7 +311,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
   return pathid_new;
 }
 
-unsigned long long
+static unsigned long long
 duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi, int *pr )
 {
   int r = 0;
@@ -364,9 +352,6 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
 
 
   pathid = duf_path_to_pathid_x( path, NULL, NULL, pdi, &r );
-
-
-
 
 
   DUF_TRACE( path, 0, "PATH TO PATHID '%s' => %llu", path, pathid );

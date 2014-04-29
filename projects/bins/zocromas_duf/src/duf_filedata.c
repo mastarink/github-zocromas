@@ -55,7 +55,7 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
       {
         duf_scan_callbacks_t sccb = {.fieldset = "dataid" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
-                            ( duf_depthinfo_t * ) NULL, &sccb, ( const duf_dirhandle_t * ) NULL,
+                            ( duf_depthinfo_t * ) NULL, &sccb/*, ( const duf_dirhandle_t * ) NULL off */,
                             "SELECT id AS dataid " " FROM duf_filedatas " " WHERE dev='%lu' AND inode='%lu'", pst_file->st_dev,
                             pst_file->st_ino );
       }

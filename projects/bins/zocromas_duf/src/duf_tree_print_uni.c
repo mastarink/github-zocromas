@@ -40,7 +40,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
   /*   DUF_ERROR( "depth should not be %d at this point", pdi->depth ); */
   if ( pdi->depth > 0 )
   {
-    duf_dbgfunc( DBG_START, __func__, __LINE__ );
+    DEBUG_START();
     if ( pdi )
       for ( int i = 0; i <= max; i++ )
       {
@@ -93,7 +93,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
         }
       }
   }
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -106,7 +106,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START();
 
   {
     duf_fileinfo_t fi = {.st.st_uid = 0,.st.st_gid = 0 };
@@ -131,7 +131,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
   printf( "%s\n", filename );
 
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -145,7 +145,7 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
   DUF_SFIELD( dirname );
   /* const char *dirname = duf_sql_str_by_name( "dirname", precord, 0 ); */
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START();
 
   int r = 0;
 
@@ -165,7 +165,7 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
     }
   }
 
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 

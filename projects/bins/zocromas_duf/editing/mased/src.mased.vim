@@ -37,6 +37,9 @@ sfind duf_file_md5id.h
 tab sfind duf_dir_scan.c
 sfind duf_dir_scan.h
 
+tab sfind duf_entry_scan.c
+sfind duf_entry_scan.h
+
 tab sfind duf_uni_scan.c
 sfind duf_uni_scan.h
 

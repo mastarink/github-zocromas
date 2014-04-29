@@ -20,7 +20,10 @@
 /* #include "duf_exif.h" */
 
 #include "duf_uni_scan.h"
+
+#ifdef DUF_COMPILE_EXPIRED
 #include "duf_group.h"
+#endif
 
 #include "duf_dbg.h"
 
@@ -128,27 +131,29 @@ duf_action_new( int argc, char **argv )
   /* if ( r >= 0 && duf_config->cli.act.update_mdpath ) */
   /*   duf_update_mdpaths( 0 );                         */
   /* DUF_TEST_R( r ); */
+#ifdef DUF_COMPILE_EXPIRED
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-/*   if ( r >= 0 && duf_config->cli.act.update_mdpath_selective )                                                                  */
-/*   {                                                                                                                             */
-/*     if ( !duf_config->targc )                                                                                                   */
-/*       duf_update_mdpaths( 0 );                                                                                                  */
-/*     else                                                                                                                        */
-/*       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )                                                                */
-/*       {                                                                                                                         */
-/*         const char *path;                                                                                                       */
-/*         unsigned long long pathid;                                                                                              */
-/*                                                                                                                                 */
-/*         path = duf_config->targv[ia];                                                                                           */
-/*         pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );                                                        */
-/*         if ( pathid )                                                                                                           */
-/*           r = duf_update_mdpaths( pathid );                                                                                     */
-/*         else                                                                                                                    */
-/*           fprintf( stderr, "not found %lld : '%s'\n", pathid, path );                                                           */
-/*       }                                                                                                                         */
-/* (*  --update-exif                                                               *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
-/*   }                                                                                                                             */
+  if ( r >= 0 && duf_config->cli.act.update_mdpath_selective )
+  {
+    if ( !duf_config->targc )
+      duf_update_mdpaths( 0 );
+    else
+      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+      {
+        const char *path;
+        unsigned long long pathid;
+
+        path = duf_config->targv[ia];
+        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
+        if ( pathid )
+          r = duf_update_mdpaths( pathid );
+        else
+          fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
+      }
+/*  --update-exif                                                               */ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+  }
   DUF_TEST_R( r );
+#endif
 #if 0
   if ( r >= 0 && duf_config->cli.act.update_exif )
   {
@@ -221,6 +226,7 @@ duf_action_new( int argc, char **argv )
   /* if ( r >= 0 && duf_config->cli.act.same_exif )     */
   /*   duf_print_exif_same( 1, duf_config->cli.limit ); */
 
+#ifdef DUF_COMPILE_EXPIRED
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( r >= 0 && duf_config->cli.act.to_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
@@ -229,7 +235,8 @@ duf_action_new( int argc, char **argv )
   if ( r >= 0 && duf_config->cli.act.from_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+#endif
+  /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   /* if ( r < 0 && !r == DUF_ERROR_MAX_REACHED ) */
   /*   DUF_TEST_R(r);        */
   /* else if ( r < 0 )                           */

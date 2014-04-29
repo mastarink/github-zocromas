@@ -49,7 +49,7 @@
  * */
 /* static int                                                                                                                                   */
 /* duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, */
-/*                               duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )                             */
+/*                               duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu_unused )                      */
 /* {                                                                                                                                            */
 /*   int r = 0;                                                                                                                                 */
 /*   const char *filename;                                                                                                                      */
@@ -152,7 +152,7 @@
  * */
 static int
 duf_sel_cb_update_exif( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu_unused )
 {
   int r = 0;
 

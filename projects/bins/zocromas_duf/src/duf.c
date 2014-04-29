@@ -66,9 +66,9 @@ main( int argc, char **argv )
       {
       case DUF_OPTION_HELP:
         DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", argv[0] );
-        DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help(DUF_OPTION_HELP) );
-        DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help(DUF_OPTION_EXAMPLES) );
-        DUF_PRINTF( 0, "  --printf			[%s]", duf_find_longval_help(DUF_OPTION_PRINTF) );
+        DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_HELP ) );
+        DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_EXAMPLES ) );
+        DUF_PRINTF( 0, "  --printf			[%s]", duf_find_longval_help( DUF_OPTION_PRINTF ) );
         DUF_PRINTF( 0, "Database ----------" );
         DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.name );
         DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );
@@ -91,7 +91,9 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "  --zero-filedatas" );
         DUF_PRINTF( 0, "  --update-filedatas" );
         DUF_PRINTF( 0, "  --update-mdpaths" );
+#ifdef DUF_COMPILE_EXPIRED
         DUF_PRINTF( 0, "  --update-exif" );
+#endif
         DUF_PRINTF( 0, "  --same-md5" );
         DUF_PRINTF( 0, "Debug ----------" );
         DUF_PRINTF( 0, "  --debug" );
@@ -121,7 +123,9 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print   -R --files" );
         DUF_PRINTF( 0, "----------------" );
         DUF_PRINTF( 0, "  run  --db-name=test20140412 --zero-duplicates --update-duplicates" );
+#ifdef DUF_COMPILE_EXPIRED
         DUF_PRINTF( 0, "  run  --db-name=test20140412 --zero-duplicates --update-exif" );
+#endif
         DUF_PRINTF( 0, "=============================================" );
         DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -f -R" );
         DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -f -d -R" );
@@ -133,7 +137,9 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan -Ri5fd /home/mastar/a/down/ --trace-md5 --trace-new=0 --trace-stdout" );
 
         DUF_PRINTF( 0, "===== Transition ============================" );
+#ifdef DUF_COMPILE_EXPIRED
         DUF_PRINTF( 0, "  run --update-duplicates --update-mdpath --update-filedata --update-exif" );
+#endif
         DUF_PRINTF( 0, "  run --db-name=test`datem`.db  --uni-scan  --mdpath --collect --dirent -dfR  /mnt/new_media/media/down/" );
         DUF_PRINTF( 0, "=============================================" );
         DUF_PRINTF( 0, "Collect basic file info recursively to db" );
@@ -168,13 +174,15 @@ main( int argc, char **argv )
 
         DUF_PUTS( 0, NULL );
         DUF_PUTSL( 0 );
-        DUF_PRINTF( 0, "=== Working with the tree as for 20140429 ===========================" );
+        DUF_PRINTF( 0, "=== Working with the tree as for 20140429 ===================" );
         DUF_PRINTF( 0, "  run --remove-database" );
         DUF_PRINTF( 0, "  run -OPA /home/mastar/a/down/chromium/" );
         DUF_PRINTF( 0, "  run --uni-scan -RdifE5 /home/mastar/a/down/chromium/" );
         DUF_PRINTF( 0, "  run -RdifE5 /home/mastar/a/down/chromium/" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf" );
-        DUF_PRINTF( 0, "=============================================" );
+        DUF_PRINTF( 0, "========================= as for 20140429 ===================" );
+        DUF_PRINTF( 0, "  run --sample=2 -Rdf /home/mastar/a/down/////  --printf --max-seq=2000" );
+        DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;
       default:

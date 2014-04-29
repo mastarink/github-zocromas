@@ -59,8 +59,8 @@
  *     5. for <current> dir call sccb->node_scan_after
  * */
 int
-duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord,
-                  const duf_dirhandle_t * pdhu )
+duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb,
+                  duf_record_t * precord /*, const duf_dirhandle_t * pdhu_off */  )
 {
   int r = 0;
   duf_depthinfo_t *pdi;
@@ -74,16 +74,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
   DUF_OINV_OPENED( pdi-> );
 
-  if ( DUF_IF_TRACE( scan ) )
-  {
-    char *path = duf_pathid_to_path_s( dirid, pdi, &r );
 
-    DUF_OINV_OPENED( pdi-> );
-
-
-    DUF_TRACE( scan, 0, "TOP B %llu:%s", dirid, path );
-    mas_free( path );
-  }
   if ( r >= 0 )
   {
     if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
@@ -105,7 +96,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  * */
 
       DUF_OINV_OPENED( pdi-> );
-      r = duf_scan_dirs_by_parentid( dirid, pdhu, duf_uni_scan_dir, pdi, sccb, precord );
+      r = duf_scan_dirs_by_parentid( dirid /*, pdhu_off */ , duf_uni_scan_dir, pdi, sccb, precord );
       DUF_OINV_OPENED( pdi-> );
       /* if ( r == DUF_ERROR_MAX_REACHED )                   */
       /* {                                                   */
@@ -159,8 +150,6 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 
 /* create level-control array, open 0 level */
     r = duf_levinfo_create( &di, path );
-    /* if ( !duf_config->cli.noopenat ) */
-    /*   r = duf_open_dh( pdh, path );  */
     DUF_TRACE( scan, 0, "di.levinfo %c", di.levinfo ? '+' : '-' );
     DUF_OINV( di. );
 
@@ -174,14 +163,6 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       DUF_TRACE( action, 0, "pathid %llu for %s", pathid, path );
 
 
-      if ( DUF_IF_TRACE( scan ) )
-      {
-        int tr = 0;
-        char *path = duf_pathid_to_path_s( pathid, &di, &tr );
-
-        DUF_TRACE( scan, 0, "TOP %llu:%s", pathid, path );
-        mas_free( path );
-      }
       DUF_OINV( di. );
       DUF_TEST_R( r );
 
@@ -208,7 +189,8 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
         DUF_OINV_OPENED( di. );
 
         if ( r >= 0 )
-          r = duf_scan_dirs_by_parentid( pathid, NULL /* pdh */ , duf_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+          r = duf_scan_dirs_by_parentid( pathid /*, (const duf_dirhandle_t * )NULL off */ , duf_uni_scan_dir, &di, sccb,
+                                         ( duf_record_t * ) NULL /* precord */  );
         DUF_OINV( di. );
         DUF_TEST_R( r );
 
@@ -266,7 +248,9 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     if ( r >= 0 && sccb && sccb->init_scan )
       r = sccb->init_scan( sccb );
     DUF_TRACE( action, 0, "inited scan" );
-    if ( r >= 0 && ( sccb->node_scan_before || sccb->node_scan_middle || sccb->node_scan_after || sccb->leaf_scan ) )
+    if ( r >= 0
+         && ( sccb->node_scan_before || sccb->node_scan_middle || sccb->node_scan_after || sccb->leaf_scan || sccb->leaf_scan_fd
+              || sccb->entry_file_scan_before || sccb->entry_dir_scan_before ) )
     {
       DUF_TRACE( action, 0, "targc:%u", duf_config->targc );
       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
@@ -309,17 +293,6 @@ duf_uni_scan_all( void )
   int max_steps = 100;
   int steps = 0;
 
-  extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
-  extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) );
-  extern duf_scan_callbacks_t duf_collect_md5_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
-  extern duf_scan_callbacks_t duf_collect_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
@@ -329,44 +302,76 @@ duf_uni_scan_all( void )
   assert( steps < max_steps );
   if ( duf_config->cli.act.integrity )
   {
+    extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
+
     DUF_TRACE( action, 0, "prep integrity ..." );
     ppscan_callbacks[steps++] = &duf_integrity_callbacks;
   }
-  DUF_TRACE( action, 0, "prep collect %d/%d/%d", &duf_collect_openat_callbacks ? 1 : 0, !duf_config->cli.noopenat ? 1 : 0,
-             duf_config->cli.act.collect ? 1 : 0 );
   assert( steps < max_steps );
   {
-    if ( &duf_collect_openat_callbacks && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
+    extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
+    extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) );
+
+    if ( &duf_collect_openat_callbacks && !duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
     {
       DUF_TRACE( action, 0, "prep collect ..." );
       ppscan_callbacks[steps++] = &duf_collect_openat_callbacks;
     }
-    else if ( &duf_collect_noopenat_callbacks && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
+    else if ( &duf_collect_noopenat_callbacks && duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
     {
       DUF_TRACE( action, 0, "prep collect ..." );
       ppscan_callbacks[steps++] = &duf_collect_noopenat_callbacks;
     }
+#ifdef DUF_COMPILE_EXPIRED
     else if ( ( ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) ) )
     {
       DUF_TRACE( action, 0, "prep fill ..." );
+      extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
+
       ppscan_callbacks[steps++] = &duf_fill_callbacks;
     }
+#endif
   }
   assert( steps < max_steps );
-  if ( duf_config->cli.act.md5 && ( duf_config->cli.act.collect ) )
   {
-    DUF_TRACE( action, 0, "prep fill md5" );
-    ppscan_callbacks[steps++] = &duf_collect_md5_callbacks;
+    extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );
+    extern duf_scan_callbacks_t duf_collect_noopenat_md5_callbacks __attribute( ( weak ) );
+
+    if ( &duf_collect_openat_md5_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.md5 && ( duf_config->cli.act.collect ) )
+    {
+
+      DUF_TRACE( action, 0, "prep fill md5" );
+      ppscan_callbacks[steps++] = &duf_collect_openat_md5_callbacks;
+    }
+    else if ( &duf_collect_noopenat_md5_callbacks && duf_config->cli.noopenat && duf_config->cli.act.md5
+              && ( duf_config->cli.act.collect ) )
+    {
+      DUF_TRACE( action, 0, "prep fill md5" );
+      ppscan_callbacks[steps++] = &duf_collect_noopenat_md5_callbacks;
+    }
+#ifdef DUF_COMPILE_EXPIRED
+    else if ( duf_config->cli.act.md5 && ( duf_config->cli.act.collect ) )
+    {
+      extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;
+
+      DUF_TRACE( action, 0, "prep fill md5" );
+      ppscan_callbacks[steps++] = &duf_fill_md5_callbacks;
+    }
+#endif
   }
   assert( steps < max_steps );
   if ( duf_config->cli.act.mdpath && ( duf_config->cli.act.collect ) )
   {
+    extern duf_scan_callbacks_t duf_collect_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
+
     DUF_TRACE( action, 0, "prep mdpath" );
     ppscan_callbacks[steps++] = &duf_collect_mdpath_callbacks;
   }
   assert( steps < max_steps );
   if ( duf_config->cli.act.md5 && duf_config->cli.act.print )
   {
+    extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
+
     DUF_TRACE( action, 0, "prep print md5" );
     ppscan_callbacks[steps++] = &duf_print_md5_callbacks;
   }
@@ -374,16 +379,23 @@ duf_uni_scan_all( void )
   assert( steps < max_steps );
   if ( duf_config->cli.act.print && duf_config->cli.act.tree && !duf_config->cli.act.md5 )
   {
+    extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
+
     DUF_TRACE( action, 0, "prep print tree" );
     ppscan_callbacks[steps++] = &duf_print_tree_callbacks;
   }
 
   assert( steps < max_steps );
   if ( duf_config->cli.act.print && !duf_config->cli.act.tree && !duf_config->cli.act.md5 )
-    ppscan_callbacks[steps++] = &duf_print_dir_callbacks;
+  {
+    extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
 
+    ppscan_callbacks[steps++] = &duf_print_dir_callbacks;
+  }
   if ( duf_config->cli.act.sample )
   {
+    extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
+
     assert( steps + duf_config->cli.act.sample < max_steps );
     for ( int i = 0; i < duf_config->cli.act.sample && steps < max_steps; i++ )
     {
@@ -393,7 +405,11 @@ duf_uni_scan_all( void )
 
   assert( steps < max_steps );
   if ( duf_config->cli.act.sampupd )
+  {
+    extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
+
     ppscan_callbacks[steps++] = &duf_sampupd_callbacks;
+  }
   if ( steps )
     DUF_TRACE( action, 0, "(%d) %d actions set", r, steps );
   else

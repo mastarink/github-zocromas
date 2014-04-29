@@ -95,11 +95,15 @@ mdpath_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
   DEBUG_START(  );
 
   {
-    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
+    const char *real_path = NULL;
+
+    if ( !real_path )
+      real_path = duf_levinfo_path( pdi );
+    /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
 
 
-    DUF_TRACE( mdpath, 1, "#%4llu: BEFORE dPATH=%s", pdi->seq, path );
-    mas_free( path );
+    DUF_TRACE( mdpath, 1, "#%4llu: BEFORE dPATH=%s", pdi->seq, real_path );
+    /* mas_free( path ); */
   }
   {
     MD5_CTX *pctx;
@@ -133,7 +137,7 @@ duf_insert_mdpath_uni( unsigned long long *md64, int *pr )
   {
     duf_scan_callbacks_t sccb = {.fieldset = "mppathid" };
     r = duf_sql_select( duf_sel_cb_field_by_sccb, &mdpathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        &sccb, ( const duf_dirhandle_t * ) NULL,
+                        &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
                         "SELECT id AS mppathid " " FROM duf_mdpath " " WHERE mdpathsum1='%lld' AND mdpathsum2='%lld'", md64[1], md64[0] );
   }
   else if ( r >= 0 )

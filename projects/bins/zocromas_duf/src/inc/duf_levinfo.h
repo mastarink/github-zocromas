@@ -1,11 +1,14 @@
 #ifndef DUF_LEVINFO_H
 #  define DUF_LEVINFO_H
 
+int duf_levinfo_depth( duf_depthinfo_t * pdi );
+int duf_levinfo_is_leaf( duf_depthinfo_t * pdi );
+
 
 int duf_levinfo_create( duf_depthinfo_t * pdi, const char *path );
 int duf_levinfo_delete( duf_depthinfo_t * pdi );
 
-const char *duf_levinfo_path( const duf_depthinfo_t * pdi, const char *tail );
+const char *duf_levinfo_path( const duf_depthinfo_t * pdi );
 
 void duf_levinfo_set_context( duf_depthinfo_t * pdi, void *ctx );
 void *duf_levinfo_context( duf_depthinfo_t * pdi );
@@ -22,6 +25,10 @@ int duf_levinfo_openat_dh( duf_depthinfo_t * pdi );
 int duf_levinfo_closeat_dh( duf_depthinfo_t * pdi );
 
 int duf_levinfo_udfd( duf_depthinfo_t * pdi );
+int duf_levinfo_dfd( duf_depthinfo_t * pdi );
+struct stat* duf_levinfo_stat( duf_depthinfo_t * pdi );
+
+
 duf_dirhandle_t *duf_levinfo_pdh( duf_depthinfo_t * pdi );
 
 #endif

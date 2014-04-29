@@ -414,7 +414,7 @@ function shn_setup_additional ()
     shn_errmsg "shn_setup_additional - $srcdir"
     return 1
   fi
-  for fn in sh shn m4zoc ; do
+  for fn in shn m4zoc ; do # sh removed 20140429
     if [[ -d "$MSH_SHN_PROJECTS_DIR/$fn" ]] ; then
       file=`shn_realpath --relative-to=. ${MSH_SHN_PROJECTS_DIR}/$fn`
       link=$( shn_basename $file )

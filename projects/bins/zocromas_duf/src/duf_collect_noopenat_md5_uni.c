@@ -42,7 +42,7 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr
   int r = 0;
   int changes = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   if ( md64 && md64[1] && md64[0] )
   {
     r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
@@ -52,7 +52,7 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr
       {
         duf_scan_callbacks_t sccb = {.fieldset = "md5id" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            &sccb, ( const duf_dirhandle_t * ) NULL,
+                            &sccb/*, ( const duf_dirhandle_t * ) NULL off */,
                             "SELECT id AS md5id FROM duf_md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
       }
     }
@@ -78,7 +78,7 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr
   if ( pr )
     *pr = r;
 
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, md5id );
+  DEBUG_ENDULL( md5id );
   return md5id;
 }
 
@@ -88,7 +88,7 @@ duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid, int *pr
   int r = 0;
   unsigned long long md5id = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   if ( fpath )
   {
     struct stat st;
@@ -178,159 +178,19 @@ duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid, int *pr
   if ( pr )
     *pr = r;
 
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, md5id );
-  return md5id;
-}
-
-static unsigned long long
-duf_upd_md5_pdh_uni( int dfd, const char *fname, unsigned long long filedataid )
-{
-  unsigned long long md5id = 0;
-
-  int r = 0;
-  struct stat st_file;
-
-  r = fstatat( dfd, fname, &st_file, 0 );
-  DUF_TRACE( md5, 0, "fstatat:%d", r );
-  DUF_TEST_R( r );
-  if ( r < 0 )
-  {
-    char *fpath = NULL;
-
-    /* filenameid_to_filepath( filenameid, pdi, &r ); */
-
-    /* DUF_TRACE( md5, 0, "filedataid:%lld; filesize:%lld; fpath:'%s'", filedataid, filesize, fpath ); */
-    /* TODO : file deleted ... */
-    DUF_ERRSYS( "stat file %s - %s", fpath ? fpath : "..", fname );
-    /* mas_free( fpath ); */
-  }
-  DUF_TEST_R( r );
-  if ( !r )
-  {
-    int fd;
-
-    fd = openat( dfd, fname, O_NOFOLLOW | O_RDONLY );
-    if ( fd >= 0 )
-    {
-      /* FILE *f; */
-      unsigned char mdr[MD5_DIGEST_LENGTH];
-
-      {
-        DUF_TRACE( md5, 0, "openat:%d", fd );
-        /* f = fdopen( fd, "r" ); */
-
-        /* if ( f ) */
-        {
-          MD5_CTX ctx;
-          unsigned char md[MD5_DIGEST_LENGTH];
-          size_t bufsz = 1024 * 1024 * 10;
-
-          memset( &ctx, 0, sizeof( ctx ) );
-          memset( &md, 0, sizeof( md ) );
-          {
-            char *buffer;
-
-            buffer = mas_malloc( bufsz );
-            if ( buffer )
-            {
-              if ( MD5_Init( &ctx ) != 1 )
-                r = DUF_ERROR_MD5;
-              DUF_TEST_R( r );
-              if ( r >= 0 )
-              {
-                /* while ( r >= 0 && !feof( f ) ) */
-                while ( r >= 0 )
-                {
-                  size_t rr;
-
-                  /* rr = fread( buffer, 1, bufsz, f ); */
-
-                  rr = read( fd, buffer, bufsz );
-                  /* if ( ferror( f ) ) */
-                  if ( rr < 0 )
-                  {
-                    r = DUF_ERROR_READ;
-                    DUF_TEST_R( r );
-                    break;
-                  }
-                  if ( rr > 0 )
-                  {
-                    if ( MD5_Update( &ctx, buffer, rr ) != 1 )
-                      r = DUF_ERROR_MD5;
-                  }
-                  else
-                    break;
-                  DUF_TEST_R( r );
-                }
-              }
-              mas_free( buffer );
-            }
-            else
-            {
-              r = DUF_ERROR_MEMORY;
-            }
-          }
-          if ( MD5_Final( md, &ctx ) != 1 )
-            r = DUF_ERROR_MD5;
-          DUF_TEST_R( r );
-          /* reverse */
-          for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
-          {
-            mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];
-          }
-        }
-        {
-          unsigned long long *pmd;
-
-          pmd = ( unsigned long long * ) &mdr;
-          if ( r >= 0 )
-          {
-            md5id = duf_insert_md5_uni( ( ( unsigned long long * ) &mdr[0] ), st_file.st_size, 1 /*need_id */ , &r );
-            DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu: %s", pmd[1], pmd[0], md5id, fname );
-            if ( r >= 0 && md5id )
-            {
-              r = duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, md5id, filedataid );
-              DUF_TEST_R( r );
-            }
-          }
-        }
-        /* fclose( f ); */
-        /* TODO : file deleted ... */
-      }
-      /* else                                               */
-      /* {                                                  */
-      /*   DUF_ERRSYS( "fdopen to read file : %s", fname ); */
-      /*   r = DUF_ERROR_OPEN;                              */
-      /*   DUF_TEST_R( r );                                 */
-      /* }                                                  */
-      close( fd );
-    }
-    else
-    {
-      DUF_ERRSYS( "open to read file : %s", fname );
-      r = fd;
-      r = DUF_ERROR_OPEN;
-    }
-    DUF_TEST_R( r );
-  }
-  DUF_TEST_R( r );
-  /* else                            */
-  /* {                               */
-  /*   DUF_ERRSYS( "file not set" ); */
-  /* }                               */
+  DEBUG_ENDULL( md5id );
   return md5id;
 }
 
 /* callback of type duf_scan_callback_file_t */
 static int
-fill_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+collect_noppenat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
 {
   int r = 0;
-  int udfd = duf_levinfo_udfd( pdi );
 
   DUF_SFIELD( filename );
   DUF_TRACE( md5, 0, "start" );
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 /* stat */
 
   /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
@@ -343,7 +203,7 @@ fill_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_
    *                   ^^^^^   ^^^^^^^
    * */
   {
-    DUF_UFIELD( filenameid );
+    /* DUF_UFIELD( filenameid ); */
     DUF_UFIELD( filedataid );
     DUF_UFIELD( filesize );
     /* DUF_UFIELD( dirid ); */
@@ -351,19 +211,21 @@ fill_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_
     {
       unsigned long long md5id = 0;
 
-      DUF_TRACE( md5, 0, "udfd:%d", udfd );
-      if ( udfd )
       {
-        md5id = duf_upd_md5_pdh_uni( udfd, filename, filedataid );
-      }
-      else
-      {
-        char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
+        /* char *fpath = filenameid_to_filepath( filenameid, pdi, &r ); */
+        const char *fpath;
+
+        /* DUF_SFIELD( filename ); */
+
+        fpath = duf_levinfo_path( pdi );
+
 
         DUF_TRACE( md5, 0, "filedataid:%lld; filesize:%lld; fpath:'%s'", filedataid, filesize, fpath );
         md5id = duf_upd_md5_fpath_uni( fpath, filedataid, &r );
-        mas_free( fpath );
+        /* mas_free( fpath ); */
       }
+
+
       /* if ( dirid && filenameid && inode && md5id )                     */
       /*   duf_insert_keydata_uni( dirid, filenameid, inode, md5id, &r ); */
       DUF_TRACE( md5, 0, "md5id:%llu", md5id );
@@ -372,34 +234,38 @@ fill_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_
   DUF_TRACE( md5, 1, "filename:'%s'", filename );
   if ( duf_config->cli.trace.md5 > 1 )
     printf( "[MD5  ] %20s: %s\n", __func__, filename );
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-fill_md5_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                           duf_record_t * precord )
+collect_noppenat_md5_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+                                       duf_record_t * precord )
 {
   int r = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   DUF_TRACE( md5, 1, "pathid=%llu", pathid );
   if ( duf_config->cli.trace.md5 > 1 )
     printf( "[MD5  ] %20s: pathid=%llu\n", __func__, pathid );
   {
-    char *path = duf_pathid_to_path_s( pathid, pdi, &r );
+      const char *real_path = NULL;
+
+      if ( !real_path )
+        real_path = duf_levinfo_path( pdi );
+    /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
 
 
-    DUF_TRACE( md5, 1, "path=%s", path );
+    DUF_TRACE( md5, 1, "path=%s", real_path );
     if ( duf_config->cli.trace.md5 > 1 )
-      printf( "[MD5  ] %20s: path=%s\n", __func__, path );
+      printf( "[MD5  ] %20s: path=%s\n", __func__, real_path );
 
-    mas_free( path );
+    /* mas_free( path ); */
   }
 
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -438,12 +304,12 @@ NULL,};
 
 
 
-duf_scan_callbacks_t duf_collect_md5_callbacks = {
+duf_scan_callbacks_t duf_collect_noppenat_md5_callbacks = {
   .title = __FILE__,
   .opendir = 1,
   .init_scan = NULL,
-  .node_scan_before = fill_md5_scan_node_before,
-  .leaf_scan = fill_md5_scan_leaf,
+  .node_scan_before = collect_noppenat_md5_scan_node_before,
+  .leaf_scan = collect_noppenat_md5_scan_leaf,
   .fieldset =
         " duf_filenames.pathid AS dirid "
         " , duf_filedatas.id AS filedataid, duf_filedatas.inode AS inode "

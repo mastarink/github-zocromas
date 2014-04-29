@@ -7,3 +7,8 @@ sfind duf_remove.h
 tab sfind duf_exif.c
 sfind duf_exif.h
 
+tab sfind duf_filedata_expire.c
+sfind duf_filedata_expire.h
+
+tab sfind duf_fill_uni.c
+tab sfind duf_fill_md5_uni.c

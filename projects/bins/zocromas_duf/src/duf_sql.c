@@ -62,11 +62,11 @@ duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args 
 
 int
 duf_sql_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sqlfmt, va_list args )
+                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb/*, const duf_dirhandle_t * pdhu_off */, const char *sqlfmt, va_list args )
 {
   int r;
 
-  r = duf_sqlite_error_code( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu, sqlfmt, args ) );
+  r = duf_sqlite_error_code( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb/*, pdhu_off*/, sqlfmt, args ) );
   DUF_TEST_R( r );
   return r;
 }
@@ -153,14 +153,14 @@ duf_sql( const char *fmt, int *pchanges, ... )
  * */
 int
 duf_sql_select( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu, const char *sqlfmt, ... )
+                duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb/*, const duf_dirhandle_t * pdhu_off */, const char *sqlfmt, ... )
 {
   va_list args;
   int r;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   va_start( args, sqlfmt );
-  r = duf_sql_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, pdhu, sqlfmt, args );
+  r = duf_sql_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb/*, pdhu_off */, sqlfmt, args );
   va_end( args );
   DUF_TEST_R( r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );

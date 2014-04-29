@@ -60,15 +60,14 @@ sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
     DUF_ERROR( "depth should not be %d at this point", pdi->depth );
     assert( pdi->depth > 0 );
   }
-  if ( 1 )
   {
     const char *fpath;
 
     DUF_SFIELD( filename );
 
-    fpath = duf_levinfo_path( pdi, filename );
-    DUF_TRACE( sample, 0, "@@@@@@@@@ (F%d) %s / ", pdi->depth, fpath );
-    DUF_PRINTF( 1, "#%4llu: sample fpath %s", pdi->seq, fpath );
+    fpath = duf_levinfo_path( pdi );
+    DUF_TRACE( sample, 0, "@@@@@@@@@ (F%d) '%s'/'%s'", pdi->depth, fpath, filename );
+    DUF_PRINTF( 1, "#%4llu: L%u%12s%s%s", pdi->seq, duf_levinfo_depth( pdi ), "", fpath ? fpath : "?/", filename );
   }
 
   DUF_TRACE( sample, 2, "filename=%s", filename );
@@ -88,9 +87,9 @@ sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
 
 
   {
-    const char *path = path = duf_levinfo_path( pdi, NULL );
+    const char *path = duf_levinfo_path( pdi );
 
-    DUF_PRINTF( 2, "#%4llu: sample BEFORE dPATH %s", pdi->seq, path );
+    DUF_PRINTF( 2, "#%4llu: L%u+ id%-7llu %s", pdi->seq, duf_levinfo_depth( pdi ), pathid, path );
   }
 
   if ( !pdi->levinfo[pdi->depth].context )
@@ -112,14 +111,11 @@ sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pd
   DEBUG_START(  );
 
   {
-    duf_config->cli.trace.sql--;
     {
-      /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
-      const char *path = duf_levinfo_path( pdi, NULL );
+      const char *path = duf_levinfo_path( pdi );
 
-      DUF_PRINTF( 4, "#%4llu: sample AFTER  dPATH %s", pdi->seq, path );
+      DUF_PRINTF( 4, "#%4llu: L%u- id%-7llu %s", pdi->seq, duf_levinfo_depth( pdi ), pathid, path );
     }
-    duf_config->cli.trace.sql++;
   }
   if ( !pdi->levinfo[pdi->depth].context || 0 != strcmp( ( char * ) pdi->levinfo[pdi->depth].context, "MIDDLE" ) )
     DUF_ERROR( "sample context %s", ( char * ) pdi->levinfo[pdi->depth].context );
@@ -145,11 +141,15 @@ sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * p
   {
     duf_config->cli.trace.sql--;
     {
-      char *path = duf_pathid_to_path_s( pathid, pdi, &r );
+      const char *real_path = NULL;
 
-      DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, path );
-      DUF_TRACE_SAMPLE( 1, "path=%s", path );
-      mas_free( path );
+      if ( !real_path )
+        real_path = duf_levinfo_path( pdi );
+      /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
+
+      DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, real_path );
+      DUF_TRACE_SAMPLE( 1, "path=%s", real_path );
+      /* mas_free( path ); */
     }
     duf_config->cli.trace.sql++;
   }
@@ -178,6 +178,7 @@ sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * p
 
 duf_scan_callbacks_t duf_sample_callbacks = {
   .title = __FILE__,
+  /* .opendir = 1, */
   .init_scan = NULL,
   .node_scan_before = sample_scan_node_before,
   .node_scan_after = sample_scan_node_after,

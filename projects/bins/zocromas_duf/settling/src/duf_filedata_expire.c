@@ -60,7 +60,7 @@ duf_update_filedatas_filedataid( unsigned long long filedataid, unsigned long lo
  * */
 static int
 duf_sel_cb_update_filedatas( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                             duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
+                             duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu_unused )
 {
   unsigned long long filedataid;
   unsigned long long filenameid;

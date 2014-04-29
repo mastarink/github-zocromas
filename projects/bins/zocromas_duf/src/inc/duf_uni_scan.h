@@ -12,7 +12,7 @@ int duf_uni_scan_all( void );
  *       for each <dir> record by pathid (i.e. children of pathid) with corresponding args 
  * otherwise do nothing
  * */
-int duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * pdi1, duf_scan_callbacks_t * sccb, duf_record_t * precord,
-                      const duf_dirhandle_t * pdhu );
+int duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * pdi1, duf_scan_callbacks_t * sccb,
+                      duf_record_t * precord /*, const duf_dirhandle_t * pdhu_off */  );
 
 #endif

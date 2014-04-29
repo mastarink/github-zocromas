@@ -23,8 +23,8 @@
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by pathid (i.e. children of pathid) with corresponding args
  * */
 static int
-duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                      const duf_dirhandle_t * pdhu )
+duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi,
+                      duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */  )
 {
   int r = DUF_ERROR_NO_FILE_SELECTOR;
 
@@ -44,7 +44,7 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
     DUF_OINV( pdi-> );
 
     DUF_TRACE( scan, 0, "scan leaves by:%llu", dirid );
-    r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb, pdhu, sccb->leaf_selector, /* ... */ sccb->fieldset,
+    r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb /*, pdhu_off */ , sccb->leaf_selector, /* ... */ sccb->fieldset,
                             /*   pdi->u.minsize,                                                            */
                             /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
                             /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
@@ -69,13 +69,13 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid with corresponding args
  * */
 int
-duf_scan_files_by_dirid( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb,
-                         const duf_dirhandle_t * pdhu )
+duf_scan_files_by_dirid( unsigned long long dirid, duf_scan_callback_file_t str_cb, duf_depthinfo_t * pdi,
+                         duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */  )
 {
   int r = 0;
 
   if ( duf_config->cli.act.files )
-    r = duf_scan_files_by_di( dirid, str_cb, pdi, sccb, pdhu );
+    r = duf_scan_files_by_di( dirid, str_cb, pdi, sccb /*, pdhu_off */  );
   else
     DUF_TRACE( scan, 0, "skip scan leaves by:%llu : no '--files'", dirid );
   return r;

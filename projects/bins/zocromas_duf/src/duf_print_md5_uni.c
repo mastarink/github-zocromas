@@ -40,7 +40,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   DUF_UFIELD( filesize );
   /* unsigned long long filesize = duf_sql_ull_by_name( "filesize", precord, 0 ); */
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START();
 /* stat */
 
   /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
@@ -53,7 +53,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
   printf( "%6llu:%6llu:%6llu [%10llu] file: %s\n", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
 
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
@@ -68,7 +68,7 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
   DUF_SFIELD( dirname );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START();
 
   {
     /* char *path = duf_pathid_to_path_s( pathid_unused ); */
@@ -80,7 +80,7 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
 
     /* mas_free( path ); */
   }
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }
 
