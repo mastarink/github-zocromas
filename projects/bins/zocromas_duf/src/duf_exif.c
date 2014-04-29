@@ -47,105 +47,102 @@
  *                int fun(  const char *const *presult, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, 
  *                         void *str_cb_udata )
  * */
-static int
-duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                              duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )
-{
-  int r=0;
-  const char *filename;
-  char *path = NULL;
-  unsigned long long pathid;
+/* static int                                                                                                                                   */
+/* duf_sel_cb_copy_jpeg_by_date( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, */
+/*                               duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const duf_dirhandle_t * pdhu )                             */
+/* {                                                                                                                                            */
+/*   int r = 0;                                                                                                                                 */
+/*   const char *filename;                                                                                                                      */
+/*   char *path = NULL;                                                                                                                         */
+/*   unsigned long long pathid;                                                                                                                 */
+/*                                                                                                                                              */
+/*   (* sqlite3_int64 dataid; *)                                                                                                                */
+/*   const char *datetime;                                                                                                                      */
+/*                                                                                                                                              */
+/*   (* dataid = *) ( void ) strtoll( precord->presult[0], NULL, 10 );                                                                          */
+/*   pathid = strtoll( precord->presult[3], NULL, 10 );                                                                                         */
+/*   path = duf_pathid_to_path_s( pathid, pdi, &r );                                                                                            */
+/*                                                                                                                                              */
+/*   fprintf( stderr, "PRESULT %s\n", __func__ );                                                                                               */
+/*   datetime = precord->presult[4];                                                                                                            */
+/*   filename = precord->presult[5];                                                                                                            */
+/*                                                                                                                                              */
+/*   if ( filename && path )                                                                                                                    */
+/*   {                                                                                                                                          */
+/*     char *base = "/mnt/new_media/media/years";                                                                                               */
+/*     char *filepath;                                                                                                                          */
+/*     char *new_path;                                                                                                                          */
+/*     char *new_fpath;                                                                                                                         */
+/*                                                                                                                                              */
+/*     new_path = mas_strdup( base );                                                                                                           */
+/*     {                                                                                                                                        */
+/*       struct stat stf;                                                                                                                       */
+/*                                                                                                                                              */
+/*       if ( 0 != stat( new_path, &stf ) && errno == ENOENT )                                                                                  */
+/*       {                                                                                                                                      */
+/*         fprintf( stderr, "%s\n", new_path );                                                                                                 */
+/*         mkdir( new_path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP );                                                                  */
+/*       }                                                                                                                                      */
+/*     }                                                                                                                                        */
+/*     new_path = mas_strcat_x( new_path, "/" );                                                                                                */
+/*     new_path = mas_strncat_x( new_path, datetime, 4 );                                                                                       */
+/*     (* fprintf( stderr, "%s: %s\n new_path => %s\n", datetime, filepath, new_path ); *)                                                      */
+/*     {                                                                                                                                        */
+/*       struct stat stf;                                                                                                                       */
+/*                                                                                                                                              */
+/*       if ( 0 != stat( new_path, &stf ) && errno == ENOENT )                                                                                  */
+/*       {                                                                                                                                      */
+/*         fprintf( stderr, "%s\n", new_path );                                                                                                 */
+/*         mkdir( new_path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP );                                                                  */
+/*       }                                                                                                                                      */
+/*     }                                                                                                                                        */
+/*     new_path = mas_strcat_x( new_path, "/" );                                                                                                */
+/*     new_path = mas_strncat_x( new_path, datetime + 5, 2 );                                                                                   */
+/*     {                                                                                                                                        */
+/*       struct stat stf;                                                                                                                       */
+/*                                                                                                                                              */
+/*       if ( 0 != stat( new_path, &stf ) && errno == ENOENT )                                                                                  */
+/*       {                                                                                                                                      */
+/*         fprintf( stderr, "%s\n", new_path );                                                                                                 */
+/*         mkdir( new_path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP );                                                                  */
+/*       }                                                                                                                                      */
+/*     }                                                                                                                                        */
+/*     new_path = mas_strcat_x( new_path, "/" );                                                                                                */
+/*     new_fpath = mas_strdup( new_path );                                                                                                      */
+/*     new_fpath = mas_strncat_x( new_fpath, datetime, 4 );                                                                                     */
+/*     new_fpath = mas_strncat_x( new_fpath, datetime + 5, 2 );                                                                                 */
+/*     new_fpath = mas_strncat_x( new_fpath, datetime + 8, 2 );                                                                                 */
+/*     new_fpath = mas_strcat_x( new_fpath, "-" );                                                                                              */
+/*     new_fpath = mas_strncat_x( new_fpath, datetime + 11, 2 );                                                                                */
+/*     new_fpath = mas_strncat_x( new_fpath, datetime + 14, 2 );                                                                                */
+/*     new_fpath = mas_strncat_x( new_fpath, datetime + 17, 2 );                                                                                */
+/*     (* new_fpath = mas_strcat_x( new_fpath, ".jpg" ); *)                                                                                     */
+/*     new_fpath = mas_strcat_x( new_fpath, "." );                                                                                              */
+/*     new_fpath = mas_strcat_x( new_fpath, filename );                                                                                         */
+/*     filepath = duf_join_path( path, filename );                                                                                              */
+/*     (* fprintf( stderr, "%u. %s\n  => %s\n", precord->nrow, filepath, new_fpath ); *)                                                        */
+/*     mas_free( new_fpath );                                                                                                                   */
+/*     mas_free( new_path );                                                                                                                    */
+/*     mas_free( filepath );                                                                                                                    */
+/*   }                                                                                                                                          */
+/*   mas_free( path );                                                                                                                          */
+/*   return r;                                                                                                                                  */
+/* }                                                                                                                                            */
 
-  /* sqlite3_int64 dataid; */
-  const char *datetime;
-
-  /* fprintf( stderr, "!!!!!! %10s %15s %5s %5s [%s]\n", precord->presult[0], precord->presult[ 1], precord->presult[ 2], precord->presult[ 3], */
-  /*          precord->presult[ 4] );                                                                                         */
-
-  /* dataid = */ ( void ) strtoll( precord->presult[0], NULL, 10 );
-  pathid = strtoll( precord->presult[3], NULL, 10 );
-  path = duf_pathid_to_path_s( pathid, pdi, &r );
-
-  fprintf( stderr, "PRESULT %s\n", __func__ );
-  datetime = precord->presult[4];
-  filename = precord->presult[5];
-
-  if ( filename && path )
-  {
-    char *base = "/mnt/new_media/media/years";
-    char *filepath;
-    char *new_path;
-    char *new_fpath;
-
-    new_path = mas_strdup( base );
-    {
-      struct stat stf;
-
-      if ( 0 != stat( new_path, &stf ) && errno == ENOENT )
-      {
-        fprintf( stderr, "%s\n", new_path );
-        mkdir( new_path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP );
-      }
-    }
-    new_path = mas_strcat_x( new_path, "/" );
-    new_path = mas_strncat_x( new_path, datetime, 4 );
-    /* fprintf( stderr, "%s: %s\n new_path => %s\n", datetime, filepath, new_path ); */
-    {
-      struct stat stf;
-
-      if ( 0 != stat( new_path, &stf ) && errno == ENOENT )
-      {
-        fprintf( stderr, "%s\n", new_path );
-        mkdir( new_path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP );
-      }
-    }
-    new_path = mas_strcat_x( new_path, "/" );
-    new_path = mas_strncat_x( new_path, datetime + 5, 2 );
-    {
-      struct stat stf;
-
-      if ( 0 != stat( new_path, &stf ) && errno == ENOENT )
-      {
-        fprintf( stderr, "%s\n", new_path );
-        mkdir( new_path, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP );
-      }
-    }
-    new_path = mas_strcat_x( new_path, "/" );
-    new_fpath = mas_strdup( new_path );
-    new_fpath = mas_strncat_x( new_fpath, datetime, 4 );
-    new_fpath = mas_strncat_x( new_fpath, datetime + 5, 2 );
-    new_fpath = mas_strncat_x( new_fpath, datetime + 8, 2 );
-    new_fpath = mas_strcat_x( new_fpath, "-" );
-    new_fpath = mas_strncat_x( new_fpath, datetime + 11, 2 );
-    new_fpath = mas_strncat_x( new_fpath, datetime + 14, 2 );
-    new_fpath = mas_strncat_x( new_fpath, datetime + 17, 2 );
-    /* new_fpath = mas_strcat_x( new_fpath, ".jpg" ); */
-    new_fpath = mas_strcat_x( new_fpath, "." );
-    new_fpath = mas_strcat_x( new_fpath, filename );
-    filepath = duf_join_path( path, filename );
-    /* fprintf( stderr, "%u. %s\n  => %s\n", precord->nrow, filepath, new_fpath ); */
-    mas_free( new_fpath );
-    mas_free( new_path );
-    mas_free( filepath );
-  }
-  mas_free( path );
-  return r;
-}
-
-int
-copy_jpeg_by_date( void )
-{
-  int r = 0;
-
-  r = duf_sql_select( duf_sel_cb_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                      ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( const duf_dirhandle_t * ) NULL ,
-                      "SELECT duf_filedatas.id AS dataid, duf_filedatas.dev, duf_filedatas.inode, "
-                      " duf_filenames.pathid, duf_exif.datetime, duf_filenames.name AS filename " " FROM duf_filedatas "
-                      " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "
-                      " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) " " WHERE duf_exif.datetime IS NOT NULL "
-                      " AND ( duf_filenames.name LIKE '%%.JpG' OR duf_filenames.name LIKE '%%.jPeG' ) " " ORDER BY duf_exif.datetime" );
-  return r;
-}
+/* int                                                                                                                                      */
+/* copy_jpeg_by_date( void )                                                                                                                */
+/* {                                                                                                                                        */
+/*   int r = 0;                                                                                                                             */
+/*                                                                                                                                          */
+/*   r = duf_sql_select( duf_sel_cb_copy_jpeg_by_date, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,          */
+/*                       ( duf_scan_callbacks_t * ) NULL (*  sccb *) , ( const duf_dirhandle_t * ) NULL,                                    */
+/*                       "SELECT duf_filedatas.id AS dataid, duf_filedatas.dev, duf_filedatas.inode, "                                      */
+/*                       " duf_filenames.pathid, duf_exif.datetime, duf_filenames.name AS filename " " FROM duf_filedatas "                 */
+/*                       " LEFT JOIN duf_filenames ON (duf_filedatas.id=duf_filenames.dataid) "                                             */
+/*                       " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) " " WHERE duf_exif.datetime IS NOT NULL "               */
+/*                       " AND ( duf_filenames.name LIKE '%%.JpG' OR duf_filenames.name LIKE '%%.jPeG' ) " " ORDER BY duf_exif.datetime" ); */
+/*   return r;                                                                                                                              */
+/* }                                                                                                                                        */
 
 /* 
  * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
@@ -262,7 +259,7 @@ duf_sel_cb_update_exif( duf_record_t * precord, va_list args, void *sel_cb_udata
                   t = timelocal( &times );
                   /* fprintf( stderr, "%s\n", stime ); */
                   r = duf_sql( "INSERT INTO duf_exif (dataid, model, datetime, d, broken_date) "
-                               " VALUES ( '%llu', '%s', datetime('%lu', 'unixepoch'), '%lu', '%s' )", (int*)NULL, dataid, model, t, t,
+                               " VALUES ( '%llu', '%s', datetime('%lu', 'unixepoch'), '%lu', '%s' )", ( int * ) NULL, dataid, model, t, t,
                                changed ? stime_original : "" );
                   /* sleep(1); */
                 }
@@ -313,7 +310,7 @@ duf_update_exif( unsigned long long pathid )
 
   if ( pathid )
     r = duf_sql_select( duf_sel_cb_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( const duf_dirhandle_t * ) NULL ,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT duf_filenames.pathid, duf_filenames.id AS filenameid, duf_filenames.name AS filename, "
                         " duf_filedatas.id AS dataid, duf_filedatas.dev, duf_filedatas.inode " " FROM duf_filedatas "
                         " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) "
@@ -322,7 +319,7 @@ duf_update_exif( unsigned long long pathid )
 /* " AND ( duf_filenames.name LIKE '%%.JPG' OR duf_filenames.name LIKE '%%.JPEG' )" */
   else
     r = duf_sql_select( duf_sel_cb_update_exif, SEL_CB_UDATA_DEF, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */, ( const duf_dirhandle_t * ) NULL ,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ , ( const duf_dirhandle_t * ) NULL,
                         "SELECT duf_filenames.pathid, duf_filenames.id AS filenameid, duf_filenames.name AS filename, "
                         " duf_filedatas.id, duf_filedatas.dev, duf_filedatas.inode " " FROM duf_filedatas "
                         " LEFT JOIN duf_exif ON (duf_exif.dataid=duf_filedatas.id) "
