@@ -240,7 +240,7 @@ duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out,
 {
   int r = -1;
 
-  if ( level > minlevel )
+  if ( level >= minlevel )
   {
     char rf = 0;
 
@@ -263,6 +263,10 @@ duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out,
       fprintf( out, "\n" );
     }
   }
+  else
+  {
+    /* fprintf( out, "SKP %d %d\n", level, minlevel ); */
+  }
   return r;
 }
 
@@ -275,5 +279,20 @@ duf_printf( int level, int minlevel, const char *funcid, int linid, FILE * out, 
   va_start( args, fmt );
   r = duf_vprintf( level, minlevel, funcid, linid, out, fmt, args );
   va_end( args );
+  return r;
+}
+
+int
+duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str )
+{
+  int r = 0;
+
+  if ( level >= minlevel )
+  {
+    if ( str && *str )
+      r = fputs( str, out );
+    if ( r >= 0 )
+      fputs( "\n", out );
+  }
   return r;
 }

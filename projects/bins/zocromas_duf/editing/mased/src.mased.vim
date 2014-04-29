@@ -46,9 +46,6 @@ sfind duf_levinfo.h
 tab sfind duf_pdi.c
 sfind duf_pdi.h
 
-tab sfind duf_exif.c
-sfind duf_exif.h
-
 tab sfind duf_add.c
 sfind duf_add.h
 

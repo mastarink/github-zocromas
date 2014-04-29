@@ -11,4 +11,7 @@ int duf_cli_option_by_string( const char *string );
 
 int duf_infile_options( int argc, char *argv[] );
 
+const duf_longval_extended_t *duf_find_longval_extended( int val );
+const char *duf_find_longval_help( int val );
+
 #endif

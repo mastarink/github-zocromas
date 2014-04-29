@@ -46,14 +46,13 @@ mdpath_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_di
   }
   if ( pdi->depth > 0 )
   {
-    {
-      DUF_UFIELD( filenameid );
-      char *fpath = filenameid_to_filepath( filenameid, pdi, &r );
-
-      DUF_TRACE( mdpath, 2, "#%4llu: mdpath fpath=%s", pdi->seq, fpath );
-
-      mas_free( fpath );
-    }
+    /* {                                                                     */
+    /*   DUF_UFIELD( filenameid );                                           */
+    /*   char *fpath = filenameid_to_filepath( filenameid, pdi, &r );        */
+    /*                                                                       */
+    /*   DUF_TRACE( mdpath, 2, "#%4llu: mdpath fpath=%s", pdi->seq, fpath ); */
+    /*   mas_free( fpath );                                                  */
+    /* }                                                                     */
     {
       MD5_CTX *pctx;
 
@@ -74,10 +73,10 @@ mdpath_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_di
           /* fprintf( stderr, "%lld:%lld\n", md5s1, md5s2 ); */
           if ( r >= 0 && MD5_Update( pctx, &md5sum1, sizeof( md5sum1 ) ) != 1 )
             r = DUF_ERROR_MD5;
-    DUF_TEST_R(r);
+          DUF_TEST_R( r );
           if ( r >= 0 && MD5_Update( pctx, &md5sum2, sizeof( md5sum2 ) ) != 1 )
             r = DUF_ERROR_MD5;
-    DUF_TEST_R(r);
+          DUF_TEST_R( r );
         }
       }
     }
@@ -109,7 +108,7 @@ mdpath_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
     memset( pctx, 0, sizeof( *pctx ) );
     if ( MD5_Init( pctx ) != 1 )
       r = DUF_ERROR_MD5;
-    DUF_TEST_R(r);
+    DUF_TEST_R( r );
     assert( !duf_levinfo_context( pdi ) );
     duf_levinfo_set_context( pdi, pctx );
     assert( duf_levinfo_context( pdi ) );
@@ -181,7 +180,7 @@ mdpath_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pd
       if ( pctx )
         if ( MD5_Final( md, pctx ) != 1 )
           r = DUF_ERROR_MD5;
-    DUF_TEST_R(r);
+      DUF_TEST_R( r );
     }
     DUF_TEST_R( r );
     if ( r >= 0 )

@@ -15,8 +15,9 @@
 
 #include "duf_add.h"
 
+/* #include "duf_filedata_expire.h" */
 #include "duf_filedata.h"
-#include "duf_exif.h"
+/* #include "duf_exif.h" */
 
 #include "duf_uni_scan.h"
 #include "duf_group.h"
@@ -113,6 +114,7 @@ duf_action_new( int argc, char **argv )
 /* --update-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   /* if ( r >= 0 && duf_config->cli.act.update_duplicates ) */
   /*   r = duf_update_duplicates(  );                       */
+#if 0
 /* --zero-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   if ( r >= 0 && duf_config->cli.act.zero_filedata )
     duf_zero_filedatas(  );
@@ -121,6 +123,7 @@ duf_action_new( int argc, char **argv )
   if ( r >= 0 && duf_config->cli.act.update_filedata )
     duf_update_filedatas(  );
   DUF_TEST_R( r );
+#endif
 /*  --update-mdpaths								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   /* if ( r >= 0 && duf_config->cli.act.update_mdpath ) */
   /*   duf_update_mdpaths( 0 );                         */
@@ -146,6 +149,7 @@ duf_action_new( int argc, char **argv )
 /* (*  --update-exif                                                               *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
 /*   }                                                                                                                             */
   DUF_TEST_R( r );
+#if 0
   if ( r >= 0 && duf_config->cli.act.update_exif )
   {
     if ( !duf_config->targc )
@@ -165,6 +169,7 @@ duf_action_new( int argc, char **argv )
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
+#endif
   DUF_TEST_R( r );
   /* if ( duf_config->cli.act.print_paths )          */
   /*   duf_print_paths( duf_config->group ); */

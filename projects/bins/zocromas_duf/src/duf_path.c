@@ -174,10 +174,8 @@ duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int
   int r = 0;
   char *s = NULL;
 
-  /* duf_config->cli.trace.nonew++; */
   s = duf_pathid_to_path_dh( dirid, ( duf_dirhandle_t * ) NULL, pdi, &r );
   DUF_TEST_R( r );
-  /* duf_config->cli.trace.nonew--; */
   if ( pr )
     *pr = r;
   return s;
@@ -306,13 +304,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
         *notfound = mas_strdup( bd );
       break;
     }
-    if ( 0 )
-    {
-      char *tpath = duf_pathid_to_path_s( pathid_new, pdi, &r );
 
-      DUF_TRACE( path, 0, "%lld => %lld : %s : ed='%s'", pathid, pathid_new, tpath, ed );
-      mas_free( tpath );
-    }
     pathid = pathid_new;
     bd = ed;
     mas_free( qname );

@@ -1,6 +1,6 @@
 noinst_HEADERS=duf.h duf_maindb.h duf_action.h \
-	duf_config.h duf_dbg.h duf_cli_options.h duf_option.h duf_create.h duf_def.h duf_dirent.h duf_exif.h \
-	duf_filedata.h \
+	duf_config.h duf_dbg.h duf_cli_options.h duf_option.h duf_create.h duf_def.h duf_dirent.h \
+	duf_filedata.h duf_filedata_expire.h \
 	duf_add.h duf_group.h \
 	duf_path.h duf_file.h duf_item_scan.h duf_dir_scan.h \
 	duf_levinfo.h  duf_pdi.h \

@@ -37,16 +37,14 @@
 
 
 int
-duf_parse_option( int opt, const char *optarg, int longindex )
+duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_extended_t * extended )
 {
   int r = 0;
 
   switch ( opt )
   {
   case DUF_OPTION_HELP:
-    r = opt;
-    break;
-  case DUF_OPTION_HELP_EXAMPLES:
+  case DUF_OPTION_EXAMPLES:
     r = opt;
     break;
   case DUF_OPTION_FORMAT:
@@ -375,7 +373,7 @@ duf_parse_option( int opt, const char *optarg, int longindex )
      * i.e.
      *  --create-tables --uni-scan --recursive --collect --dirent --files --dirs --md5 */
     duf_config->cli.act.create_tables = duf_config->cli.act.add_path = duf_config->cli.act.uni_scan = duf_config->u.recursive =
-           duf_config->cli.act.collect = duf_config->cli.act.files = duf_config->cli.act.dirs =
+          duf_config->cli.act.collect = duf_config->cli.act.files = duf_config->cli.act.dirs =
           duf_config->cli.act.dirent = duf_config->cli.act.md5 = 1;
     break;
   case DUF_OPTION_ZERO_DB:

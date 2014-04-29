@@ -246,7 +246,6 @@ duf_upd_md5_pdh_uni( int dfd, const char *fname, unsigned long long filedataid )
                   /* rr = fread( buffer, 1, bufsz, f ); */
 
                   rr = read( fd, buffer, bufsz );
-                  DUF_ERROR( "fread:%lu", rr );
                   /* if ( ferror( f ) ) */
                   if ( rr < 0 )
                   {

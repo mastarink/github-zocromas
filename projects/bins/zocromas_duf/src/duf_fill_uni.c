@@ -458,13 +458,8 @@ fill_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh
   int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  /* const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi ); */
 
-  /* if ( pdh_notused )                                                */
-  /*   DUF_TRACE( fill, 0, "pdh_notused:%p", ( void * ) pdh_notused ); */
   DUF_TRACE( fill, 1, "pathid=%llu", pathid );
-
-  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_notused, ( void * ) pdhi ); */
 
   /* pathid needless? */
   assert( pathid == pdi->levinfo[pdi->depth].dirid );

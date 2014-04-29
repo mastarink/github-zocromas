@@ -60,107 +60,121 @@ main( int argc, char **argv )
       r = main_db( argc, argv );
       DUF_TEST_R( r );
     }
+    DUF_PRINTF( 0, "(%d) main_db ended", r );
     {
       switch ( or )
       {
       case DUF_OPTION_HELP:
-        printf( "Usage: %s [OPTION]... [PATH]...\n", argv[0] );
-        printf( "  -h, --help			help\n" );
-        printf( "Database ----------" "\n" );
-        printf( "  -N, --db-name=%s\n", duf_config->db.name );
-        printf( "  -D, --db-directory=%s\n", duf_config->db.dir );
-        printf( "  --drop-tables		DANGEROUS!" "\n" );
-        printf( "  --remove-database		DANGEROUS!" "\n" );
-        printf( "  --create-tables" "\n" );
-        printf( "Manipulations --------------" "\n" );
-        printf( "  --add-path\n" );
-        printf( "  -R, --recursive		recursive" "\n" );
-        printf( "  --uni-scan" "\n" );
-        printf( "    --md5" "\n" );
-        printf( "    -f, --files" "\n" );
-        printf( "    --tree" "\n" );
-        printf( "    --print" "\n" );
-        printf( "    --sample" "\n" );
-        printf( "    --collect" "\n" );
-        printf( "Old options" "\n" );
-        printf( "  --zero-duplicates" "\n" );
-        /* printf( "  --update-duplicates" "\n" ); */
-        printf( "  --zero-filedatas" "\n" );
-        printf( "  --update-filedatas" "\n" );
-        printf( "  --update-mdpaths" "\n" );
-        printf( "  --update-exif" "\n" );
-        printf( "  --same-md5" "\n" );
-        printf( "Debug ----------" "\n" );
-        printf( "  --debug" "\n" );
-        printf( "  -v, --verbose=%d" "\n", duf_config->cli.dbg.verbose );
-        printf( "  --min-dbg-lines=%lu" "\n", duf_config->cli.dbg.max_line );
-        printf( "  --max-dbg-lines=%lu" "\n", duf_config->cli.dbg.min_line );
-        printf( "Trace ----------" "\n" );
-        printf( "  -A, --trace-action=%d" "\n", duf_config->cli.trace.action );
-        printf( "  -C, --trace-current=%d" "\n", duf_config->cli.trace.current );
-        printf( "  -S, --trace-scan=%d" "\n", duf_config->cli.trace.scan );
-        printf( "  -Q, --trace-sql=%d" "\n", duf_config->cli.trace.sql );
-        printf( "  --trace-sample=%d" "\n", duf_config->cli.trace.sample );
-        printf( "  --trace-path=%d" "\n", duf_config->cli.trace.path );
-        printf( "  -F, --trace-collect=%d" "\n", duf_config->cli.trace.collect );
-        printf( "----------------" "\n" );
+        DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", argv[0] );
+        DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help(DUF_OPTION_HELP) );
+        DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help(DUF_OPTION_EXAMPLES) );
+        DUF_PRINTF( 0, "  --printf			[%s]", duf_find_longval_help(DUF_OPTION_PRINTF) );
+        DUF_PRINTF( 0, "Database ----------" );
+        DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.name );
+        DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );
+        DUF_PRINTF( 0, "  --drop-tables		DANGEROUS!" );
+        DUF_PRINTF( 0, "  --remove-database		DANGEROUS!" );
+        DUF_PRINTF( 0, "  --create-tables" );
+        DUF_PRINTF( 0, "Manipulations --------------" );
+        DUF_PRINTF( 0, "  --add-path" );
+        DUF_PRINTF( 0, "  -R, --recursive		recursive" );
+        DUF_PRINTF( 0, "  --uni-scan" );
+        DUF_PRINTF( 0, "    --md5" );
+        DUF_PRINTF( 0, "    -f, --files" );
+        DUF_PRINTF( 0, "    --tree" );
+        DUF_PRINTF( 0, "    --print" );
+        DUF_PRINTF( 0, "    --sample" );
+        DUF_PRINTF( 0, "    --collect" );
+        DUF_PRINTF( 0, "Old options" );
+        DUF_PRINTF( 0, "  --zero-duplicates" );
+        /* DUF_PRINTF(0,  "  --update-duplicates"  ); */
+        DUF_PRINTF( 0, "  --zero-filedatas" );
+        DUF_PRINTF( 0, "  --update-filedatas" );
+        DUF_PRINTF( 0, "  --update-mdpaths" );
+        DUF_PRINTF( 0, "  --update-exif" );
+        DUF_PRINTF( 0, "  --same-md5" );
+        DUF_PRINTF( 0, "Debug ----------" );
+        DUF_PRINTF( 0, "  --debug" );
+        DUF_PRINTF( 0, "  -v, --verbose=%d", duf_config->cli.dbg.verbose );
+        DUF_PRINTF( 0, "  --min-dbg-lines=%lu", duf_config->cli.dbg.max_line );
+        DUF_PRINTF( 0, "  --max-dbg-lines=%lu", duf_config->cli.dbg.min_line );
+        DUF_PRINTF( 0, "Trace ----------" );
+        DUF_PRINTF( 0, "  -A, --trace-action=%d", duf_config->cli.trace.action );
+        DUF_PRINTF( 0, "  -C, --trace-current=%d", duf_config->cli.trace.current );
+        DUF_PRINTF( 0, "  -S, --trace-scan=%d", duf_config->cli.trace.scan );
+        DUF_PRINTF( 0, "  -Q, --trace-sql=%d", duf_config->cli.trace.sql );
+        DUF_PRINTF( 0, "  --trace-sample=%d", duf_config->cli.trace.sample );
+        DUF_PRINTF( 0, "  --trace-path=%d", duf_config->cli.trace.path );
+        DUF_PRINTF( 0, "  -F, --trace-collect=%d", duf_config->cli.trace.collect );
+        DUF_PRINTF( 0, "----------------" );
         r = 0;
         break;
-      case DUF_OPTION_HELP_EXAMPLES:
-        printf( "Examples" "\n" );
-        printf( "  run  --db-name=test20140412  --drop-tables --create-tables" "\n" );
-        printf( "  run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file" "\n" );
-        printf( "  run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/  --uni-scan -R --collect --dirent --files" "\n" );
-        printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --sample -f -R" "\n" );
-        printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/chromium/   --print    -R --files" "\n" );
-        printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print  --tree  -R --files" "\n" );
-        printf( "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print   -R --files" "\n" );
-        printf( "----------------" "\n" );
-        printf( "  run  --db-name=test20140412 --zero-duplicates --update-duplicates" "\n" );
-        printf( "  run  --db-name=test20140412 --zero-duplicates --update-exif" "\n" );
-        printf( "=============================================" "\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -f -R" "\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -f -d -R" "\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -d -R" "\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan  --sample -d -R --trace-sample /mnt/new_media/media/down/ --max-seq=10" "\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan  --sample -d -R --trace-sample=2 /mnt/new_media/media/down/ --max-seq=10"
-                "\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan -Ri5fd /home/mastar/a/down/ --trace-md5 --trace-new=0 --trace-stdout" "\n" );
+      case DUF_OPTION_EXAMPLES:
+        DUF_PRINTF( 0, "Examples" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412  --drop-tables --create-tables" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file" );
+        DUF_PRINTF( 0,
+                    "  run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/  --uni-scan -R --collect --dirent --files" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --sample -f -R" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/chromium/   --print    -R --files" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print  --tree  -R --files" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/   --print   -R --files" );
+        DUF_PRINTF( 0, "----------------" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412 --zero-duplicates --update-duplicates" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140412 --zero-duplicates --update-exif" );
+        DUF_PRINTF( 0, "=============================================" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -f -R" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -f -d -R" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan /mnt/new_media/media/down/   --sample -d -R" );
+        DUF_PRINTF( 0,
+                    "  run  --db-name=test`datem`.db  --uni-scan  --sample -d -R --trace-sample /mnt/new_media/media/down/ --max-seq=10" );
+        DUF_PRINTF( 0,
+                    "  run  --db-name=test`datem`.db  --uni-scan  --sample -d -R --trace-sample=2 /mnt/new_media/media/down/ --max-seq=10" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan -Ri5fd /home/mastar/a/down/ --trace-md5 --trace-new=0 --trace-stdout" );
 
-        printf( "===== Transition ============================" "\n" );
-        printf( "  run --update-duplicates --update-mdpath --update-filedata --update-exif" "\n" );
-        printf( "  run --db-name=test`datem`.db  --uni-scan  --mdpath --collect --dirent -dfR  /mnt/new_media/media/down/" "\n" );
-        printf( "=============================================" "\n" );
-        printf( "Collect basic file info recursively to db\n" );
-        printf( "  run  --db-name=test`datem`.db   --uni-scan -R --collect --dirent --files   /home/mastar/a/down/" "\n" );
-        printf( "Calculate checksums recursively for files in db\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan -R --collect --dirent --md5 --files --dirs /home/mastar/a/down/" "\n" );
-        printf( "List files recursively from db\n" );
-        printf( "  run  --db-name=test`datem`.db  --uni-scan   --print -R -d  --files /home/mastar/a/down/google-chrome/ " "\n" );
-        printf( "=============================================" "\n" );
-        printf( "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --totals" "\n" );
-        printf( "    same as prev:" "\n" );
-        printf( "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --collect --dirent"
-                " --files --dirs --md5 /mnt/new_media/media/down/ --totals" "\n" );
+        DUF_PRINTF( 0, "===== Transition ============================" );
+        DUF_PRINTF( 0, "  run --update-duplicates --update-mdpath --update-filedata --update-exif" );
+        DUF_PRINTF( 0, "  run --db-name=test`datem`.db  --uni-scan  --mdpath --collect --dirent -dfR  /mnt/new_media/media/down/" );
+        DUF_PRINTF( 0, "=============================================" );
+        DUF_PRINTF( 0, "Collect basic file info recursively to db" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db   --uni-scan -R --collect --dirent --files   /home/mastar/a/down/" );
+        DUF_PRINTF( 0, "Calculate checksums recursively for files in db" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan -R --collect --dirent --md5 --files --dirs /home/mastar/a/down/" );
+        DUF_PRINTF( 0, "List files recursively from db" );
+        DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan   --print -R -d  --files /home/mastar/a/down/google-chrome/ " );
+        DUF_PRINTF( 0, "=============================================" );
+        DUF_PRINTF( 0, "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --totals" );
+        DUF_PRINTF( 0, "    same as prev:" );
+        DUF_PRINTF( 0, "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --collect --dirent"
+                    " --files --dirs --md5 /mnt/new_media/media/down/ --totals" );
 
-        printf( "=============================================" "\n" );
-        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  --md5 --noopenat  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" "\n" );
-        printf( "=============================================" "\n" );
+        DUF_PRINTF( 0, "=============================================" );
+        DUF_PRINTF( 0,
+                    "  run  --db-name=test20140416.db  --uni-scan   --print  --md5 --noopenat  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" );
+        DUF_PRINTF( 0, "=============================================" );
 
-        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --totals"
-                " --format=filesize,seq,filename,md5" "\n" );
-        printf( "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6"
-                " --totals --format=filesize,seq,filename,md5 --tree" "\n" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --totals"
+                    " --format=filesize,seq,filename,md5" );
+        DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6"
+                    " --totals --format=filesize,seq,filename,md5 --tree" );
 
-        printf( "  run  --trace-any=0  --db-name=test20140416.db  --uni-scan   --print  -df --max-seq=76 --max-depth=6 --totals"
-                " --format=filesize,seq,filename,nlink,mtime,mode,gid,uid /mnt/new_media/media/down" "\n" );
+        DUF_PRINTF( 0, "  run  --trace-any=0  --db-name=test20140416.db  --uni-scan   --print  -df --max-seq=76 --max-depth=6 --totals"
+                    " --format=filesize,seq,filename,nlink,mtime,mode,gid,uid /mnt/new_media/media/down" );
 
-        printf( "=============================================" "\n" );
-        printf( "  run  --db-name=test$$.db  --uni-scan --print  --md5 --noopenat  -Rdf --max-dirs=300 --max-items=200 "
-                " --min-dirfiles=5 --min-size=10 --noopenat" "\n" );
+        DUF_PRINTF( 0, "=============================================" );
+        DUF_PRINTF( 0, "  run  --db-name=test$$.db  --uni-scan --print  --md5 --noopenat  -Rdf --max-dirs=300 --max-items=200 "
+                    " --min-dirfiles=5 --min-size=10 --noopenat" );
 
 
-        printf( "=============================================" "\n" );
+        DUF_PUTS( 0, NULL );
+        DUF_PUTSL( 0 );
+        DUF_PRINTF( 0, "=== Working with the tree as for 20140429 ===========================" );
+        DUF_PRINTF( 0, "  run --remove-database" );
+        DUF_PRINTF( 0, "  run -OPA /home/mastar/a/down/chromium/" );
+        DUF_PRINTF( 0, "  run --uni-scan -RdifE5 /home/mastar/a/down/chromium/" );
+        DUF_PRINTF( 0, "  run -RdifE5 /home/mastar/a/down/chromium/" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf" );
+        DUF_PRINTF( 0, "=============================================" );
         r = 0;
         break;
       default:

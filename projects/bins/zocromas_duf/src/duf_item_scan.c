@@ -222,11 +222,11 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
   DUF_OINV( pdi-> );
   DUF_TRACE( scan, 0, "scan items [%s] sel_cb%c; str_cb%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb ? '+' : '-',
              str_cb ? '+' : '-' );
-  
+
   if ( sel_cb )
     r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, pdhu, sql, args );
 
-  DUF_TRACE( scan, 0, "(%d) end scan items str_cb%c",r, str_cb ? '+' : '-' );
+  DUF_TRACE( scan, 0, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
   DUF_OINV( pdi-> );
 
   /* DUF_ERROR( "r:%d; sel_cb:%s", r, DUF_FUNN( sel_cb ) ); */

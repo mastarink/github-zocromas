@@ -35,9 +35,18 @@
 #  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
 
 
+#  define DUF_PUTS( min, str) \
+    duf_puts( duf_config ? duf_config->cli.printf.level:0, min, \
+		__func__,__LINE__, \
+			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, str)
+#  define DUF_PUTSL( min) \
+    duf_puts( duf_config ? duf_config->cli.printf.level:0, min, \
+		__func__,__LINE__, \
+			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, NULL)
+
 
 #  define DUF_PRINTF( min, ...) \
-    duf_printf( duf_config ? duf_config->cli.printf.level:1, min, \
+    duf_printf( duf_config ? duf_config->cli.printf.level:0, min, \
 		__func__,__LINE__, \
 			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, __VA_ARGS__ )
 

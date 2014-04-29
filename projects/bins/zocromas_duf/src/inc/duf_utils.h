@@ -13,6 +13,9 @@ int duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * 
 int duf_printf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, ... )
       __attribute__ ( ( format( __printf__, 6,7 ) ) );
 
+int duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str );
+
+
 
 const char *duf_error_name( duf_error_code_t c );
 

@@ -309,7 +309,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
         }
         DUF_TEST_R( rcb );
         DUF_TEST_R( duf_sqlite_error_code( r3 ) );
-        DUF_TRACE( collect, 0, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
+        DUF_TRACE( sql, 0, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
         r3 = rcb ? rcb : r3;
         DUF_TEST_R( duf_sqlite_error_code( r3 ) );
       }

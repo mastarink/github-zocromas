@@ -6,7 +6,7 @@ typedef enum
 {
   DUF_OPTION_NONE,
   DUF_OPTION_HELP = 'h',
-  DUF_OPTION_HELP_EXAMPLES = 'x',
+  DUF_OPTION_EXAMPLES = 'x',
   DUF_OPTION_DB_DIRECTORY = 'D',
   DUF_OPTION_DB_NAME = 'N',
   DUF_OPTION_RECURSIVE = 'R',
@@ -256,5 +256,15 @@ typedef struct
   /* long limit; */
   unsigned noopenat:1;
 } duf_config_cli_t;
+
+
+
+typedef struct
+{
+  int val;
+  const char *help;
+} duf_longval_extended_t;
+typedef struct option duf_option_t;
+
 
 #endif

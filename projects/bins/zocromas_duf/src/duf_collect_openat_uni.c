@@ -229,6 +229,29 @@ duf_collect_ent_flt_uni( unsigned long long pathid, duf_depthinfo_t * pdi, const
 
   pst_dir = &pdhi->st;
 
+
+
+
+
+
+  {
+    char *rp = duf_pathid_to_path_s( pathid, pdi, &r );
+
+    DUF_TRACE( collect, 0, "[%s] A fPATH %s", dfname, rp );
+    DUF_TRACE( collect, 0, "[%s] B fPATH %s", dfname, duf_levinfo_path( pdi, dfname ) );
+    mas_free( rp );
+  }
+
+
+
+
+
+
+
+
+
+
+
 /* check if it is really directory - by st_dir : S_ISDIR(st_dir.st_mode) */
   if ( r || !pst_dir || !( S_ISDIR( pst_dir->st_mode ) ) )
   {

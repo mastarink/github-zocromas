@@ -19,9 +19,19 @@
 #include "duf_cli_options.h"
 /* ###################################################################### */
 
-const struct option longopts[] = {
+
+
+const duf_longval_extended_t lo_extended[] = {
+  {.val = DUF_OPTION_PRINTF,.help = "this is printf option"},
+  {.val = DUF_OPTION_HELP,.help = "this is help option"},
+  {.val = DUF_OPTION_EXAMPLES,.help = "this is examples option"},
+  {.val = 0,.help = NULL},
+};
+
+const duf_option_t longopts[] = {
+/* const struct option longopts[] = { */
   {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_HELP},
-  {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_HELP_EXAMPLES},
+  {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
   {.name = "printf",.has_arg = optional_argument,.val = DUF_OPTION_PRINTF},
   /* --------------- */
@@ -121,6 +131,33 @@ const struct option longopts[] = {
   {.name = NULL,.has_arg = no_argument,.val = DUF_OPTION_NONE},
 };
 
+const duf_longval_extended_t *
+duf_find_longval_extended( int val )
+{
+  const duf_longval_extended_t *extended = NULL;
+
+  for ( int i = 0; val && i < sizeof( lo_extended ) / sizeof( lo_extended[0] ); i++ )
+  {
+    if ( lo_extended[i].val == val )
+    {
+      extended = &lo_extended[i];
+      break;
+    }
+  }
+
+  return extended;
+}
+
+const char *
+duf_find_longval_help( int val )
+{
+  const char *ph = NULL;
+  const duf_longval_extended_t *extended = duf_find_longval_extended( val );
+
+  if ( extended )
+    ph = extended->help;
+  return ph ? ph : "-";
+}
 
 int
 duf_cli_option_by_string( const char *string )
@@ -146,7 +183,9 @@ duf_cli_option_by_string( const char *string )
     {
       if ( 0 == strcmp( name, longopts[i].name ) )
       {
-        r = duf_parse_option( longopts[i].val, arg, i );
+        const duf_longval_extended_t *extended = duf_find_longval_extended( longopts[i].val );
+
+        r = duf_parse_option( longopts[i].val, arg, i, extended );
         DUF_TEST_R( r );
         if ( r == DUF_ERROR_OPTION )
         {
@@ -248,7 +287,9 @@ duf_cli_options( int argc, char *argv[] )
     opterr = 0;
     while ( r == 0 && ( opt = getopt_long( argc, argv, DUF_OPTIONS_SHORT, longopts, &longindex ) ) >= 0 )
     {
-      r = duf_parse_option( opt, optarg, longindex );
+      const duf_longval_extended_t *extended = duf_find_longval_extended( opt );
+
+      r = duf_parse_option( opt, optarg, longindex, extended );
       if ( r == DUF_ERROR_OPTION )
       {
         DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], opt, opt );

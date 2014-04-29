@@ -41,7 +41,7 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
     pdi->items.files++;
     r = sccb->leaf_scan(  /*str_cb_udata, */ pdi, precord /*, pdhu */  );
     DUF_TEST_R( r );
-    DUF_TRACE( collect, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
+    DUF_TRACE( scan, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
 
     /* DUF_TRACE( action, 0, "r=%d", r ); */
   }
