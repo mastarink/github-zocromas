@@ -268,7 +268,7 @@ duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minleve
 
 
 int
-duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
+duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
 {
   int r = -1;
 
@@ -282,8 +282,11 @@ duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out,
     /* : - prefix, no cr    */
     if ( rf == '.' || rf == ':' || rf == ';' || rf == '+' )
       fmt++;
-
-    if ( rf == '+' )
+    if ( ifexit )
+    {
+      fprintf( out, "[DIE] @ %d:%d %3u:%-23s: ", level, minlevel, linid, funcid );
+    }
+    else if ( rf == '+' )
     {
       fprintf( out, "%d:%d %3u:%-23s: ", level, minlevel, linid, funcid );
     }
@@ -299,17 +302,19 @@ duf_vprintf( int level, int minlevel, const char *funcid, int linid, FILE * out,
   {
     /* fprintf( out, "SKP %d %d\n", level, minlevel ); */
   }
+  if ( ifexit )
+    exit( ifexit );
   return r;
 }
 
 int
-duf_printf( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *fmt, ... )
+duf_printf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
 {
   int r;
   va_list args;
 
   va_start( args, fmt );
-  r = duf_vprintf( level, minlevel, funcid, linid, out, fmt, args );
+  r = duf_vprintf( level, minlevel, ifexit, funcid, linid, out, fmt, args );
   va_end( args );
   return r;
 }
@@ -328,4 +333,3 @@ duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, co
   }
   return r;
 }
-

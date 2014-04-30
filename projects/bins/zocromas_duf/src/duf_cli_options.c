@@ -38,6 +38,7 @@ const duf_option_t longopts[] = {
   {.name = "trace-file",.has_arg = required_argument,.val = DUF_OPTION_TRACE_FILE},
   {.name = "trace-stderr",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDERR},
   {.name = "trace-stdout",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDOUT},
+  {.name = "output",.has_arg = required_argument,.val = DUF_OPTION_PRINTF_FILE},
   /* --------------- */
   {.name = "trace-nonew",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NONEW},
   /* --------------- */

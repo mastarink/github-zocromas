@@ -13,6 +13,7 @@
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
+#include "duf_pdi.h"
 
 
 #include "duf_sql.h"
@@ -40,7 +41,6 @@ duf_scan_file_fd( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_
   DUF_UFIELD( filesize );
   if ( filesize >= duf_config->u.minsize && ( !duf_config->u.maxsize || filesize < duf_config->u.maxsize ) )
   {
-    /* fprintf( stderr, "+FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
     pdi->items.total++;
     pdi->items.files++;
 
@@ -50,10 +50,6 @@ duf_scan_file_fd( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_
     DUF_TRACE( scan, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
 
     /* DUF_TRACE( action, 0, "r=%d", r ); */
-  }
-  else
-  {
-    /* fprintf( stderr, "-FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
   }
   DUF_TEST_R( r );
   return r;
@@ -68,7 +64,6 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
   DUF_UFIELD( filesize );
   if ( filesize >= duf_config->u.minsize && ( !duf_config->u.maxsize || filesize < duf_config->u.maxsize ) )
   {
-    /* fprintf( stderr, "+FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
     pdi->items.total++;
     pdi->items.files++;
 
@@ -78,10 +73,6 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
     DUF_TRACE( scan, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
 
     /* DUF_TRACE( action, 0, "r=%d", r ); */
-  }
-  else
-  {
-    /* fprintf( stderr, "-FILE: %llu ? %llu : %llu\n", filesize, duf_config->u.minsize, duf_config->u.maxsize ); */
   }
   DUF_TEST_R( r );
   return r;
@@ -124,7 +115,7 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
 
     DUF_OINV_OPENED( pdi-> );
     DUF_TRACE( scan, 0, "scan node before:%llu", dirid );
-    r = sccb->node_scan_before( dirid, /*&pdi->levinfo[pdi->depth].lev_dh, */ pdi, precord );
+    r = sccb->node_scan_before( dirid, pdi, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
     if ( r == DUF_ERROR_MAX_REACHED )
@@ -134,13 +125,19 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
       if ( duf_pdi_reldepth( pdi ) == 0 )
         DUF_TRACE( action, 0, "Maximum reached ...." );
     }
-    /* else if ( r < 0 )             */
-    /*   DUF_ERROR( "code: %d", r ); */
   }
-  if ( duf_levinfo_numdir( pdi, pdi->depth - 1 ) <= 0 )
-    pdi->levinfo[pdi->depth - 1].eod = 1;
-  /* DUF_PRINTF( 0, "@@@@@@@@@@@@@@@ %d : %d", pdi->depth, duf_levinfo_numdir( pdi, pdi->depth - 1 ) ); */
+  {
+    int d = duf_pdi_depth( pdi ) - 1;
 
+    if ( d >= 0 && pdi->levinfo[d].numdir == 0 && !duf_levinfo_is_leaf( pdi ) )
+      duf_levinfo_set_eod( pdi );
+  }
+  assert( pdi->depth > 0 );
+  /* if ( duf_levinfo_numdir_d( pdi, pdi->depth - 1 ) <= 0 ) */
+  /* {                                                       */
+  /*   DUF_PRINTF(0, "EOD for L%u", pdi->depth - 1 );        */
+  /*   pdi->levinfo[pdi->depth - 1].eod = 1;                 */
+  /* }                                                       */
 
 
   if ( r >= 0 && sccb )
@@ -167,6 +164,18 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
       {
         DUF_OINV_OPENED( pdi-> );
         DUF_TRACE( scan, 0, "scan files by:%llu", dirid );
+
+        {
+          int rr __attribute__ ( ( unused ) );
+          int ch __attribute__ ( ( unused ) ) = 0;
+
+          rr = duf_sql( "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
+                        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
+                        " FROM duf_paths "
+                        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
+                        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ", &ch, 26LLU );
+        }
+
 
         r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb /*, pdh_off */  );
 
@@ -283,8 +292,6 @@ duf_scan_dirs_by_parentid( unsigned long long dirid /*, const duf_dirhandle_t * 
   else
   {
     DUF_TRACE( scan, 0, "off; dirid:%llu", dirid );
-    /* fprintf( stderr, "----dirid: %llu : ( N=%llu : %llu ) : ( %llu : %llu ) : ( %llu : %llu )\n", dirid, nfiles, duf_config->u.mindirfiles, */
-    /*          minsize, duf_config->u.minsize, maxsize, duf_config->u.maxsize );                                                              */
   }
   DUF_TEST_R( r );
   DUF_OINV( pdi-> );

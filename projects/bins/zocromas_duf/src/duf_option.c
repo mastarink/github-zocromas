@@ -134,10 +134,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_VERBOSE:
     DUF_OPT_NUM_PLUS( cli.dbg.verbose );
-    /* if ( optarg && *optarg )                                    */
-    /*   duf_config->cli.dbg.verbose = strtol( optarg, NULL, 10 ); */
-    /* else                                                        */
-    /*   duf_config->cli.dbg.verbose++;                            */
     break;
   case DUF_OPTION_MEMUSAGE:
     {
@@ -157,10 +153,13 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     {
       struct stat st;
 
+      if ( duf_config->cli.printf.file )
+        mas_free( duf_config->cli.printf.file );
+      duf_config->cli.printf.file = NULL;
       duf_config->cli.printf.file = mas_strdup( optarg );
       if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
       {
-        fprintf( stderr, "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
+        DUF_ERROR( "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
                  ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
         exit( 4 );
       }
@@ -175,10 +174,10 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
           duf_config->cli.printf.out = NULL;
         }
 
-        out = fopen( optarg, "w" );
+        out = fopen( duf_config->cli.printf.file, "w" );
         if ( !out )
         {
-          fprintf( stderr, "Can't open trace file %s\n", optarg );
+          DUF_ERROR( "Can't open trace file %s\n", optarg );
           exit( 4 );
         }
         else
@@ -222,10 +221,13 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     {
       struct stat st;
 
+      if ( duf_config->cli.printf.file )
+        mas_free( duf_config->cli.printf.file );
+      duf_config->cli.printf.file = NULL;
       duf_config->cli.trace.file = mas_strdup( optarg );
       if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
       {
-        fprintf( stderr, "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
+        DUF_ERROR( "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
                  ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
         exit( 4 );
       }
@@ -243,7 +245,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         out = fopen( optarg, "w" );
         if ( !out )
         {
-          fprintf( stderr, "Can't open trace file %s\n", optarg );
+          DUF_ERROR( "Can't open trace file %s\n", optarg );
           exit( 4 );
         }
         else
@@ -311,7 +313,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     /*   duf_config->cli.trace.path = strtol( optarg, NULL, 10 ); */
     /* else                                                       */
     /*   duf_config->cli.trace.path++;                            */
-    fprintf( stderr, "###################### %d\n", duf_config->cli.trace.path );
     break;
   case DUF_OPTION_FS_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.fs );
@@ -467,37 +468,24 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_MINDIRFILES:
     DUF_OPT_NUM( u.mindirfiles );
-    /* if ( optarg && *optarg )                                  */
-    /*   duf_config->u.mindirfiles = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MAXDEPTH:
-    DUF_OPT_NUM( u.maxdepth );
-    /* if ( optarg && *optarg )                               */
-    /*   duf_config->u.maxdepth = strtol( optarg, NULL, 10 ); */
+    DUF_OPT_NUM( u.maxreldepth );
     break;
   case DUF_OPTION_MAXITEMS:
     DUF_OPT_NUM( u.maxitems.total );
-    /* if ( optarg && *optarg )                                     */
-    /*   duf_config->u.maxitems.total = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MAXITEMS_FILES:
     DUF_OPT_NUM( u.maxitems.files );
-    /* if ( optarg && *optarg )                                     */
-    /*   duf_config->u.maxitems.files = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MAXITEMS_DIRS:
     DUF_OPT_NUM( u.maxitems.dirs );
-    /* if ( optarg && *optarg )                                    */
-    /*   duf_config->u.maxitems.dirs = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MAXSEQ:
     DUF_OPT_NUM( u.maxseq );
-    /* if ( optarg && *optarg )                             */
-    /*   duf_config->u.maxseq = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_UNI_SCAN:
     DUF_OPT_FLAG( cli.act.uni_scan );
-    /* duf_config->cli.act.uni_scan = 1; */
     break;
     /* case DUF_OPTION_PRINT_PATHS:   */
     /*   duf_config->cli.act.print_paths = 1; */

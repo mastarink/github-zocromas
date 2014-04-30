@@ -51,13 +51,12 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
   assert( pdi );
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
-  DUF_TRACE( scan, 0, "scan node" );
+  DUF_TRACE( scan, 0, "scan leaf L%u", duf_pdi_depth( pdi ) );
+
   r = duf_levinfo_down( pdi, 0 /* dirid */ , filename, 0, 0, 1 /* is_leaf */  );
   DUF_OINVC( pdi-> );
   if ( r >= 0 )
   {
-    DEBUG_STEPULL( pdi->levinfo[pdi->depth].dirid );
-
 /*
  * 4. call function str_cb
  * */
@@ -117,30 +116,24 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
   DEBUG_START(  );
   assert( pdi );
   DUF_OINV_OPENED( pdi-> );
-  DUF_TRACE( scan, 0, "scan node" );
 
-  if ( 0 == strcmp( dfname, "platforms" ) )
-  {
-    DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
-  }
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
-  r = duf_levinfo_down( pdi, dirid, dfname, ndirs, nfiles, 0 );
+  DUF_TRACE( scan, 0, "scan node" );
+  r = duf_levinfo_down( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  );
   if ( r != DUF_ERROR_MAX_DEPTH )
     DUF_TEST_R( r );
   /* DUF_ERROR( "r:%d;", r ); */
   if ( r >= 0 )
   {
     DUF_OINV_NOT_OPENED( pdi-> );
-    DUF_TRACE( scan, 0, "dirid:%llu", pdi->levinfo[pdi->depth].dirid );
 
-    DEBUG_STEPULL( pdi->levinfo[pdi->depth].dirid );
-    DUF_VERBOSE( 1, "call str_cb> %p", ( void * ) ( unsigned long long ) str_cb );
 /*
  * 4. call function str_cb
  * */
     pdi->seq++;
     pdi->seq_node++;
+    duf_levinfo_countdown_dirs( pdi );
     if ( !duf_pdi_max_filter( pdi ) )
       r = DUF_ERROR_MAX_REACHED;
     DUF_TEST_R( r );
@@ -156,32 +149,17 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
-          /* {                                                                                                         */
-          /*   struct stat stt;                                                                                        */
-          /*   const duf_dirhandle_t *pdht = &pdi->levinfo[pdi->depth].lev_dh;                                         */
-          /*                                                                                                           */
-          /*   if ( pdht->dfd && 0 == fstat( pdht->dfd, &stt )  )                                                      */
-          /*   {                                                                                                       */
-          /*     DUF_ERROR( "@@@@@@@@@@@@@@ L %d: %ld %s", pdi->depth, stt.st_ino, pdi->levinfo[pdi->depth].dirname ); */
-          /*   }                                                                                                       */
-          /* }                                                                                                         */
-
           DUF_TRACE( scan, 0, "scan node" );
 
           if ( r >= 0 )
-            r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord/*, pdhu_off */);
+            r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord /*, pdhu_off */  );
           DUF_TEST_R( r );
           /* DUF_ERROR( "F:%s", DUF_FUNN( str_cb ) ); */
           DUF_OINV_OPENED( pdi-> );
         }
         DUF_OINV( pdi-> );
-        {
-          int rc;
-
-          rc = duf_levinfo_closeat_dh( pdi );
-          if ( r >= 0 )
-            r = rc;
-        }
+        if ( r >= 0 )
+          r = duf_levinfo_closeat_dh( pdi );
         DUF_OINVC( pdi-> );
         DUF_OINV_NOT_OPENED( pdi-> );
         DUF_TEST_R( r );
@@ -189,7 +167,6 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
     }
     else
       DUF_TRACE( error, 0, "str_cb not set" );
-    duf_levinfo_countdown_dirs( pdi );
     DUF_OINV_NOT_OPENED( pdi-> );
     duf_levinfo_up( pdi );
     DUF_OINV_OPENED( pdi-> );

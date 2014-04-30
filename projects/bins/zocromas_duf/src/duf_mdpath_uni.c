@@ -59,7 +59,6 @@ mdpath_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_di
       /* unsigned long long pathid; */
 
       /* pathid = va_arg( args, unsigned long long );                                                */
-      /* fprintf( stderr, "(duf_sel_cb_update_mdpaths_path) parthid:%lld / %s\n", pathid, precord->presult[0] ); */
       /* pctx = ( MD5_CTX * ) pdi->levinfo[pdi->depth - 1].context;                                                   */
       /* DUF_TRACE( mdpath, 1, "(%p) L%u context=%p", ( void * ) pdi, pdi->depth, pdi->levinfo[pdi->depth].context ); */
       pctx = duf_levinfo_context_up( pdi );
@@ -70,7 +69,6 @@ mdpath_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_di
           DUF_UFIELD( md5sum1 );
           DUF_UFIELD( md5sum2 );
 
-          /* fprintf( stderr, "%lld:%lld\n", md5s1, md5s2 ); */
           if ( r >= 0 && MD5_Update( pctx, &md5sum1, sizeof( md5sum1 ) ) != 1 )
             r = DUF_ERROR_MD5;
           DUF_TEST_R( r );

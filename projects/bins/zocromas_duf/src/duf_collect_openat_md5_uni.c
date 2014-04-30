@@ -20,6 +20,7 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
 #include "duf_levinfo.h"
 
 #include "duf_file.h"
@@ -179,7 +180,7 @@ duf_scan_entry_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord
   int r = 0;
   int ffd = duf_levinfo_dfd( pdi );
 
-  DUF_ERROR( "ffd:%d for L%u", ffd, duf_levinfo_depth( pdi ) );
+  DUF_ERROR( "ffd:%d for L%u", ffd, duf_pdi_depth( pdi ) );
   if ( ffd )
   {
     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );
@@ -226,7 +227,7 @@ __attribute__ ( ( unused ) )
   DEBUG_START(  );
 
   real_path = duf_levinfo_path( pdi );
-  DUF_TRACE( md5, 0, "L%d; id%-7llu  real_path=%s;", duf_levinfo_depth( pdi ), pathid, real_path );
+  DUF_TRACE( md5, 0, "L%d; id%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid, real_path );
 
   DEBUG_ENDR( r );
   return r;

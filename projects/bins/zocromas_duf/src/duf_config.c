@@ -24,7 +24,7 @@ duf_config_create( void )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   duf_config = mas_malloc( sizeof( duf_config_t ) );
   memset( duf_config, 0, sizeof( duf_config ) );
-  duf_config->u.maxdepth = 100;
+  duf_config->u.maxreldepth = 100;
 
   if ( 0 )
   {

@@ -67,8 +67,8 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
   /* if (nsame<2) return r; */
 
-  /* printf( "> %s\n", duf_sql_str_by_name( "filename", precord ) ); */
-  /* printf( "-rw-------  1 mastar mastar-firefox 106580068 Jan 27 2014 12:35:27 sample_video_hd.zip\n" ); */
+  /* DUF_PRINTF(0, ".> %s\n", duf_sql_str_by_name( "filename", precord ) ); */
+  /* DUF_PRINTF(0, ".-rw-------  1 mastar mastar-firefox 106580068 Jan 27 2014 12:35:27 sample_video_hd.zip\n" ); */
   /* duf_sql_print_tree_prefix_uni( pdi, 1 ); */
   {
     duf_fileinfo_t fi;
@@ -101,7 +101,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
     fi.md5sum2 = md5sum2;
     duf_print_file_info( stdout, pdi, &fi, &format );
   }
-  printf( "\n" );
+  DUF_PUTSL( 0 );
 
   DEBUG_ENDR( r );
   return r;
@@ -128,12 +128,12 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
 
     if ( nfiles )
     {
-      /* optimizing makes puts, segfault by NULL, therefore printf( "%s\n", path  ); is not good */
+      /* optimizing makes puts, segfault by NULL, therefore DUF_PRINTF(0, ".%s\n", path  ); is not good */
       if ( duf_config->cli.format.seq )
-        printf( "d%7llu ", pdi->seq );
+        DUF_PRINTF( 0, ".d%7llu ", pdi->seq );
       if ( duf_config->cli.format.dirid )
-        printf( "[%8llu] ", pdi->levinfo[pdi->depth].dirid );
-      printf( " (%5llu) %llu-%llu %s\n", nfiles, minsize, maxsize, real_path ? real_path : "-=No real_path=-" );
+        DUF_PRINTF( 0, ".[%8llu] ", pdi->levinfo[pdi->depth].dirid );
+      DUF_PRINTF( 0, ". (%5llu) %llu-%llu %s\n", nfiles, minsize, maxsize, real_path ? real_path : "-=No real_path=-" );
     }
     /* mas_free( path ); */
   }

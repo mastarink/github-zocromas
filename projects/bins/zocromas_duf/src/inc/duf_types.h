@@ -46,9 +46,15 @@
 
 
 #  define DUF_PRINTF( min, ...) \
-    duf_printf( duf_config ? duf_config->cli.printf.level:0, min, \
+    duf_printf( duf_config ? duf_config->cli.printf.level:0, min, 0, \
 		__func__,__LINE__, \
 			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, __VA_ARGS__ )
+
+#  define DUF_DIE( min, ...) \
+    duf_printf( duf_config ? duf_config->cli.printf.level:0, min, 1, \
+		__func__,__LINE__, \
+			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, __VA_ARGS__ )
+
 
 
 
@@ -170,7 +176,7 @@ typedef struct
   unsigned recursive:1;
   unsigned noself_dir:1;
   unsigned noupper_dirs:1;
-  unsigned maxdepth;
+  unsigned maxreldepth;
   unsigned long long maxseq;
   duf_items_t maxitems;
   unsigned long long mindirfiles;
@@ -219,8 +225,8 @@ typedef struct duf_dirhandle_s
 
 typedef struct
 {
-  unsigned eod:1;
   unsigned is_leaf:1;
+  unsigned eod;
   unsigned long long dirid;
   /* const char *name; */
   unsigned long long items;
@@ -235,6 +241,7 @@ typedef struct
 typedef struct
 {
   unsigned opendir:1;
+  unsigned maxdepth;
   int depth; /* signed !! */
   int topdepth; /* signed !! */
   /* duf_node_type_t node_type; */

@@ -15,6 +15,7 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
 #include "duf_levinfo.h"
 
 #include "duf_path.h"
@@ -67,7 +68,7 @@ sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 
     fpath = duf_levinfo_path( pdi );
     DUF_TRACE( sample, 0, "@@@@@@@@@ (F%d) '%s'/'%s'", pdi->depth, fpath, filename );
-    DUF_PRINTF( 1, "#%4llu: L%u%12s%s%s", pdi->seq, duf_levinfo_depth( pdi ), "", fpath ? fpath : "?/", filename );
+    DUF_PRINTF( 1, "#%4llu: L%u%12s%s%s", pdi->seq, duf_pdi_depth( pdi ), "", fpath ? fpath : "?/", filename );
   }
 
   DUF_TRACE( sample, 2, "filename=%s", filename );
@@ -89,7 +90,7 @@ sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
   {
     const char *path = duf_levinfo_path( pdi );
 
-    DUF_PRINTF( 2, "#%4llu: L%u+ id%-7llu %s", pdi->seq, duf_levinfo_depth( pdi ), pathid, path );
+    DUF_PRINTF( 2, "#%4llu: L%u+ id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), pathid, path );
   }
 
   if ( !pdi->levinfo[pdi->depth].context )
@@ -114,7 +115,7 @@ sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pd
     {
       const char *path = duf_levinfo_path( pdi );
 
-      DUF_PRINTF( 4, "#%4llu: L%u- id%-7llu %s", pdi->seq, duf_levinfo_depth( pdi ), pathid, path );
+      DUF_PRINTF( 4, "#%4llu: L%u- id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), pathid, path );
     }
   }
   if ( !pdi->levinfo[pdi->depth].context || 0 != strcmp( ( char * ) pdi->levinfo[pdi->depth].context, "MIDDLE" ) )

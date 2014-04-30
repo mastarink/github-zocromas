@@ -176,7 +176,6 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
   }
   if ( st_file.st_size >= pdi->u.minsize && ( !pdi->u.maxsize || st_file.st_size < pdi->u.maxsize ) )
   {
-    /* fprintf( stderr, "duf_insert_filedata %lu %lu\n", file_inode, pst_file->st_dev ); */
     dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );
     fnid = duf_insert_filename_uni( fname, pathid, dataid, need_id /*need_id */ , &r );
   }
@@ -209,7 +208,6 @@ duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pd
     pst_file = &st_file;
   if ( pst_file && st_file.st_size >= pdi->u.minsize && ( !pdi->u.maxsize || st_file.st_size < pdi->u.maxsize ) )
   {
-    /* fprintf( stderr, "duf_insert_filedata %lu %lu\n", file_inode, pst_file->st_dev ); */
     dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );
     fnid = duf_insert_filename_uni( fname, dirid, dataid, need_id, &r );
   }
@@ -390,7 +388,6 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
     struct dirent **list = NULL;
 
     DEBUG_START(  );
-    /* fprintf( stderr, "Update path entries %s\n", noopenat?real_path:dfname ); */
     DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
     if ( noopenat )
       nlist = scandir( real_path, &list, duf_direntry_filter, alphasort );
@@ -442,12 +439,6 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
       }
       if ( list )
         free( list );
-      /* fprintf( stderr, "Update path entries %s done\n", real_path ); */
-
-
-      /* if ( r >= 0 ) */
-      /*   r = items;  */
-
 
       DUF_TEST_R( r );
     }

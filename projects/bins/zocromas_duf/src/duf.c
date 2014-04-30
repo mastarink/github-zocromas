@@ -172,6 +172,7 @@ main( int argc, char **argv )
                     " --min-dirfiles=5 --min-size=10 --noopenat" );
 
 
+        DUF_PUTS( 0, "" );
         DUF_PUTS( 0, NULL );
         DUF_PUTSL( 0 );
         DUF_PRINTF( 0, "=== Working with the tree as for 20140429 ===================" );

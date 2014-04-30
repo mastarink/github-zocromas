@@ -29,6 +29,9 @@ __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int
   {
     for ( int i = 0; i < precord->ncolumns; i++ )
     {
+      assert( name );
+      assert( precord->pnames );
+      assert( precord->pnames[i] );
       if ( 0 == strcmp( name, precord->pnames[i] ) )
       {
         pos = i;
@@ -45,9 +48,9 @@ __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int
       {
         for ( int i = 0; i < precord->ncolumns; i++ )
         {
-          fprintf( stderr, "  Have '%s'\n", precord->pnames[i] );
+          DUF_ERROR( "  Have '%s'\n", precord->pnames[i] );
         }
-        fprintf( stderr, "Error - no such field '%s' {%p} (%u)\n", name, ( void * ) precord, precord->ncolumns );
+        DUF_ERROR( "no such field '%s' {%p} (%u)\n", name, ( void * ) precord, precord->ncolumns );
       }
       assert( pos >= 0 || optional );
     }
@@ -90,7 +93,7 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
 /* this is callback of type: duf_sql_select_cb_t (first range) */
 int
 duf_sel_cb_field_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                          duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb/*, const duf_dirhandle_t * pdhu_unused_off*/ )
+                          duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
 {
   int r = DUF_ERROR_GET_FIELD;
 

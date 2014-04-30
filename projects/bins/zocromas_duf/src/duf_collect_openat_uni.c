@@ -146,7 +146,6 @@ duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned lon
 
   DEBUG_START(  );
 
-  DUF_ERROR( "STAT %s fname:%s", r == 0 ? "OK" : "FAIL", fname );
   if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
   {
     dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );

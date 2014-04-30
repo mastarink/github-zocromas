@@ -31,6 +31,12 @@ duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d )
 }
 
 int
+duf_pdi_depth( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->depth : 0;
+}
+
+int
 duf_pdi_reldepth( const duf_depthinfo_t * pdi )
 {
   return pdi ? duf_pdi_deltadepth( pdi, pdi->depth ) : 0;

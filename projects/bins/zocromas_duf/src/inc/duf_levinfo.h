@@ -1,13 +1,18 @@
 #ifndef DUF_LEVINFO_H
 #  define DUF_LEVINFO_H
 
-int duf_levinfo_depth( duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf( duf_depthinfo_t * pdi );
-int duf_levinfo_eod( const duf_depthinfo_t * pdi, int d );
-int duf_levinfo_numdir( const duf_depthinfo_t * pdi, int d );
+int duf_levinfo_is_leaf_d( duf_depthinfo_t * pdi, int d );
+int duf_levinfo_dirid( duf_depthinfo_t * pdi );
+
+int duf_levinfo_eod_d( const duf_depthinfo_t * pdi, int d );
+void duf_levinfo_set_eod_d( const duf_depthinfo_t * pdi, int d );
+void duf_levinfo_set_eod( const duf_depthinfo_t * pdi );
+
+int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );
 
 void duf_levinfo_clear_li( duf_levinfo_t * pli );
-void duf_levinfo_clear_level( duf_depthinfo_t * pdi, int d );
+void duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d );
 
 int duf_levinfo_create( duf_depthinfo_t * pdi, const char *path );
 int duf_levinfo_delete( duf_depthinfo_t * pdi );
@@ -27,6 +32,7 @@ void duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi );
 int duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path );
 int duf_levinfo_openat_dh( duf_depthinfo_t * pdi );
 int duf_levinfo_closeat_dh( duf_depthinfo_t * pdi );
+int duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d );
 
 int duf_levinfo_udfd( duf_depthinfo_t * pdi );
 int duf_levinfo_dfd( duf_depthinfo_t * pdi );

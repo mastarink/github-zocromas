@@ -148,7 +148,7 @@ duf_action_new( int argc, char **argv )
         if ( pathid )
           r = duf_update_mdpaths( pathid );
         else
-          fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
+          DUF_ERROR( "not found %lld : '%s'\n", pathid, path );
       }
 /*  --update-exif                                                               */ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
@@ -170,7 +170,7 @@ duf_action_new( int argc, char **argv )
         if ( r >= 0 && pathid )
           r = duf_update_exif( pathid );
         else
-          fprintf( stderr, "not found %lld : '%s'\n", pathid, path );
+          DUF_ERROR( "not found %lld : '%s'\n", pathid, path );
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
@@ -217,7 +217,7 @@ duf_action_new( int argc, char **argv )
 /*   if ( duf_config->cli.act.same_files )                                                                                         */
 /*   {                                                                                                                             */
 /*     if ( !duf_config->targc )                                                                                                   */
-/*       fprintf( stderr, "argument needed\n" );                                                                                   */
+/*       DUF_ERROR( "argument needed\n" );                                                                                   */
 /*     else                                                                                                                        */
 /*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
 /*         duf_print_files_same( duf_config->targv[ia] );                                                                          */

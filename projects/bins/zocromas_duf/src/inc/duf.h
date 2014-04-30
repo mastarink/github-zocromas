@@ -2,6 +2,12 @@
 #  define DUF_H
 
 
+/* cd /home/mastar/.mas/src/sqlite-3.8.4.3/work/sqlite-src-3080403/                                  */
+/* ./configure  --enable-debug  --disable-tcl  --disable-amalgamation \                              */
+/*     --prefix=/mnt/new_misc/develop/autotools/zoc-new/admin/install/default/ ; make ; make install */
+
+
+
 /* 20140420
  SEGFAULT:
 A. -good

@@ -79,7 +79,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
   if ( r >= 0 )
   {
-    if ( pdi->u.recursive && ( !pdi->u.maxdepth || duf_pdi_reldepth(pdi) < pdi->u.maxdepth ) )
+    if ( pdi->u.recursive && ( !pdi->u.maxreldepth || duf_pdi_reldepth(pdi) < pdi->u.maxreldepth ) )
     {
 /* duf_scan_fil_by_pi:
  * call duf_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args
@@ -202,7 +202,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
         /*   DUF_ERROR( "code: %d", r );                     */
       }
 /* delete level-control array, close 0 level */
-      DUF_OINV( di. );
+      DUF_OINV( di. );      
       duf_levinfo_delete( &di );
       DUF_OINV( di. );
       /* if ( r == DUF_ERROR_MAX_REACHED )                 */

@@ -207,8 +207,8 @@ duf_sel_cb_levinfo( duf_record_t * precord, va_list args, void *sel_cb_udata, du
     assert( dirname );
     assert( dirid );
     pli->dirid = dirid;
-    pli->numdir = ndirs - 1;
-    pli->numfile = nfiles - 1;
+    pli->numdir = ndirs;
+    pli->numfile = nfiles;
     pli->itemname = mas_strdup( dirname );
     /* unsigned depth;              */
     /* unsigned long long *levinfo; */
@@ -303,14 +303,14 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
 
     pathid = pathid_new;
     bd = ed;
-    DUF_PRINTF( 0, "@@@@@@@@ %d --- [%s]", pdi->depth, li.itemname );
+    /* DUF_PRINTF( 0, "@@@@@@@@ %d --- [%s]", pdi->depth, li.itemname ); */
     if ( r >= 0 )
-      r = duf_levinfo_down( pdi, pathid, li.itemname, li.numdir + 1, li.numfile + 1, 0 );
+      r = duf_levinfo_down( pdi, pathid, li.itemname, bd && *bd ? 0 : li.numdir, bd && *bd ? 0 : li.numfile, 0 );
     assert( pdi->depth >= 0 );
     if ( r >= 0 )
       r = duf_levinfo_openat_dh( pdi );
     DUF_OINV_OPENED( pdi-> );
-    DUF_PRINTF( 0, "@@@@@@@@ %d %s", pdi->depth, duf_levinfo_path( pdi ) );
+    /* DUF_PRINTF( 0, "@@@@@@@@ %d %s", pdi->depth, duf_levinfo_path( pdi ) ); */
     duf_levinfo_clear_li( &li );
     /* pdi->depth++; */
   }

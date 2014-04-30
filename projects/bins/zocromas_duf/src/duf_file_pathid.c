@@ -33,14 +33,10 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
 /* duf_scan_items_sql:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
-  /* assert( duf_config->cli.noopenat                                                                                         */
-  /*         || ( duf_config->nopen - ( pdi->levinfo[pdi->depth].lev_dh.dfd ? 1 : 0 ) - duf_config->nclose == pdi->depth ) ); */
   DUF_OINV( pdi-> );
 
   if ( sccb && sccb->leaf_selector )
   {
-    /* assert( duf_config->cli.noopenat                                                                                         */
-    /*         || ( duf_config->nopen - ( pdi->levinfo[pdi->depth].lev_dh.dfd ? 1 : 0 ) - duf_config->nclose == pdi->depth ) ); */
     DUF_OINV( pdi-> );
 
     DUF_TRACE( scan, 0, "scan leaves by:%llu", dirid );
@@ -49,8 +45,8 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
                             /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
                             /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
                             dirid );
-    /* assert( duf_config->cli.noopenat                                                                                         */
-    /*         || ( duf_config->nopen - ( pdi->levinfo[pdi->depth].lev_dh.dfd ? 1 : 0 ) - duf_config->nclose == pdi->depth ) ); */
+
+
     DUF_OINV( pdi-> );
     DUF_TEST_R( r );
   }
@@ -59,8 +55,6 @@ duf_scan_files_by_di( unsigned long long dirid, duf_scan_callback_file_t str_cb,
     DUF_ERROR( "sccb->leaf_selector must be set for %s", sccb->title );
   }
 
-  /* assert( duf_config->cli.noopenat                                                                                         */
-  /*         || ( duf_config->nopen - ( pdi->levinfo[pdi->depth].lev_dh.dfd ? 1 : 0 ) - duf_config->nclose == pdi->depth ) ); */
   DUF_OINV( pdi-> );
   return r;
 }

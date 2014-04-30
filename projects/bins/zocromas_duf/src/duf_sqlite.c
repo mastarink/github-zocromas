@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -223,7 +225,8 @@ duf_vsqlite( const char *fmt, int *pchanges, va_list args )
  * */
 int
 duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                    duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb/*, const duf_dirhandle_t * pdhu_off */, const char *fmt, va_list args )
+                    duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */ , const char *fmt,
+                    va_list args )
 {
   int r3 = 0;
   int row, column;
@@ -247,6 +250,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
       DUF_ERROR( "what happenrd to sql? [%s] => [%s]", fmt, sql );
     }
     r3 = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
+    assert( r3 != SQLITE_CORRUPT );
 
     DUF_TRACE( sql, 0, "[%s] r3=%d;  %u rows", sql, r3, row );
     duf_dbgfunc( DBG_STEPS, __func__, __LINE__, sql );
@@ -290,7 +294,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
           rrecord.pnames = &pcresult[0 * column];
           rrecord.presult = &pcresult[ir * column];
           {
-            rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb/*, pdhu_off */ );
+            rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb /*, pdhu_off */  );
 
             DUF_TEST_R( rcb );
             DUF_TRACE( sql, 1, "row #%u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
