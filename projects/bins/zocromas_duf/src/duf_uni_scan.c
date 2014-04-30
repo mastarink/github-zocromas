@@ -21,10 +21,12 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
+
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
-#include "duf_levinfo.h"
 
 #include "duf_path.h"
 
@@ -77,7 +79,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
   if ( r >= 0 )
   {
-    if ( pdi->u.recursive && ( !pdi->u.maxdepth || pdi->depth <= pdi->u.maxdepth ) )
+    if ( pdi->u.recursive && ( !pdi->u.maxdepth || duf_pdi_reldepth(pdi) < pdi->u.maxdepth ) )
     {
 /* duf_scan_fil_by_pi:
  * call duf_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args
@@ -134,7 +136,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
   DUF_TRACE( scan, 0, "sccb %c", sccb ? '+' : '-' );
   if ( sccb )
   {
-    duf_depthinfo_t di = {.depth = 0,
+    duf_depthinfo_t di = {.depth = -1,
       .seq = 0,
       .levinfo = NULL,
       .u = u,

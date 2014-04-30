@@ -90,9 +90,14 @@
 
 #  define DUF_OINV(pref) assert( duf_config->cli.noopenat || !pref opendir || ( \
     		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
-    			- ( (int) ( pref  levinfo && pref levinfo[pref  depth].lev_dh.dfd )) \
-	    		- pref  depth  == 0 ) \
+	    		- (pref  depth)  == 1 ) \
     		)
+ /* - (pref levinfo?pref levinfo[pref depth].is_leaf:0) */
+#  define DUF_OINVC(pref) assert( duf_config->cli.noopenat || !pref opendir || ( \
+    		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
+	    		- (pref  depth)  == 0 ) \
+    		)
+
 #  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
 #  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
@@ -219,8 +224,8 @@ typedef struct
   unsigned long long dirid;
   /* const char *name; */
   unsigned long long items;
-  unsigned long long ndirs;
-  unsigned long long nfiles;
+  long numdir;
+  long numfile;
   char *fullpath;
   char *itemname;
   void *context;
@@ -230,9 +235,10 @@ typedef struct
 typedef struct
 {
   unsigned opendir:1;
-  int depth;
+  int depth; /* signed !! */
+  int topdepth; /* signed !! */
   /* duf_node_type_t node_type; */
-  char *path;
+  /* char *path; */
   duf_levinfo_t *levinfo;
   unsigned long long seq;
   unsigned long long seq_leaf;
@@ -253,7 +259,7 @@ typedef struct
 
 typedef struct
 {
-  int depth;
+  int depth; /* signed !! */
   const struct
   {
     int *pseq;

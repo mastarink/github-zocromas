@@ -57,11 +57,13 @@ duf_dbg_funname( duf_anyhook_t p )
 
   static duf_fundesc_t table[] = {
     DUF_FUN( duf_uni_scan_dir ),
+#ifdef DUF_COMPILE_EXPIRED
     DUF_FUN( duf_sel_cb_name_parid ),
+#endif
     /* DUF_FUN( duf_sel_cb_items ), */
     DUF_FUN( duf_sel_cb_node ),
     DUF_FUN( duf_sel_cb_leaf ),
-    DUF_FUN( duf_sel_cb_dirid ),
+    DUF_FUN( duf_sel_cb_levinfo ),
     DUF_FUN( duf_scan_file ),
   };
   for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )
@@ -151,5 +153,3 @@ duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_
     printf( "\t:  %016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
   return 0;
 }
-
-

@@ -66,6 +66,34 @@ duf_single_quotes_2( const char *s )
   return r;
 }
 
+int
+duf_pathdepth( const char *path )
+{
+  int depth = 0;
+  const char *bd;
+
+  bd = path;
+  while ( bd && *bd && *bd == '/' )
+    bd++;
+  depth = 0;
+  while ( bd && *bd )
+  {
+    const char *ed;
+
+    ed = bd;
+    while ( ed && *ed && *ed != '/' )
+      ed++;
+    while ( ed && *ed && *ed == '/' )
+      ed++;
+
+    bd = ed;
+    depth++;
+  }
+  return depth;
+}
+
+
+
 
 typedef struct
 {
@@ -300,3 +328,4 @@ duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, co
   }
   return r;
 }
+

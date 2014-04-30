@@ -13,6 +13,9 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 #include "duf_config.h"
+
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
 #include "duf_dh.h"
 
 #include "duf_sql_def.h"
@@ -44,6 +47,7 @@ duf_join_path( const char *path, const char *fname )
   return fpath;
 }
 
+#ifdef DUF_COMPILE_EXPIRED
 typedef struct
 {
   char *name;
@@ -169,7 +173,6 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh_pathid, c
   return path;
 }
 
-#ifdef DUF_COMPILE_EXPIRED
 char *
 duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
 {
@@ -186,25 +189,27 @@ duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int
 #endif
 /* will be static! */
 int
-duf_sel_cb_dirid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
-                  void *str_cb_udata_notused, duf_depthinfo_t * xpdi,
-                  duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_sel_cb_levinfo( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
+                    void *str_cb_udata_notused, duf_depthinfo_t * xpdi,
+                    duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
 {
   int r = 0;
-  duf_depthinfo_t *pdi = ( duf_depthinfo_t * ) sel_cb_udata;
+  duf_levinfo_t *pli = ( duf_levinfo_t * ) sel_cb_udata;
 
-  if ( pdi )
+  if ( pli )
   {
     DUF_UFIELD( dirid );
-    /* DUF_SFIELD( dirname ); */
+    DUF_SFIELD( dirname );
     DUF_UFIELD( ndirs );
     DUF_UFIELD( nfiles );
 
     /*?? memset( &pdi->levinfo[pdi->depth], 0, sizeof( pdi->levinfo[pdi->depth] ) ); */
-    pdi->levinfo[pdi->depth].dirid = dirid;
-    pdi->levinfo[pdi->depth].ndirs = ndirs;
-    pdi->levinfo[pdi->depth].nfiles = nfiles;
-
+    assert( dirname );
+    assert( dirid );
+    pli->dirid = dirid;
+    pli->numdir = ndirs - 1;
+    pli->numfile = nfiles - 1;
+    pli->itemname = mas_strdup( dirname );
     /* unsigned depth;              */
     /* unsigned long long *levinfo; */
     /* unsigned long long seq;      */
@@ -228,7 +233,6 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
   unsigned long long prevpathid = 0;
   unsigned long long pathid = 0;
   char *bd = NULL;
-  char *qname = NULL;
   char *cpath = NULL;
 
 
@@ -239,10 +243,13 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
   DUF_TRACE( path, 0, "BD %s", bd );
   while ( bd && *bd && *bd == '/' )
     bd++;
-  while ( bd && *bd )
+  pdi->topdepth = pdi->depth = -1;
+  while ( r >= 0 && bd && *bd )
   {
+    duf_levinfo_t li = { 0 };
     char *ed;
 
+    /* TODO DEPTH++ */
 
     prevpathid = pathid;
     /* fprintf( stderr, "%s: %llu bd: %s\n", __func__, pathid, bd ); */
@@ -253,27 +260,26 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
     /* find next name */
     while ( ed && *ed && *ed == '/' )
       *ed++ = 0;
-    qname = duf_single_quotes_2( bd );
     {
       char *qbd;
+      char *qname = NULL;
 
+      qname = duf_single_quotes_2( bd );
       qbd = qname ? qname : bd;
       pathid_new = 0;
 
       {
         /* duf_depthinfo_t di = {.dirid = 0 }; */
-        /* fprintf( stderr, "%s: pathid_new: %llu; qbd: %s\n", __func__, pathid, qbd ); */
-        r = duf_sql_select( duf_sel_cb_dirid /* duf_sql_path_to_pathid */ , pdi, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            ( duf_scan_callbacks_t * ) NULL /* sccb *//*, ( const duf_dirhandle_t * ) NULL off */ ,
+        r = duf_sql_select( duf_sel_cb_levinfo /* duf_sql_path_to_pathid */ , &li, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                            ( duf_scan_callbacks_t * ) NULL /* sccb */ ,
                             "SELECT duf_paths.id AS dirid, duf_paths.dirname,  duf_paths.parentid "
-                            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
-                            " FROM duf_paths "
+                            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " " FROM duf_paths "
                             " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
                             " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "
                             " WHERE duf_paths.parentid='%llu' AND dirname='%s' ", pathid, qbd );
 
-        if ( r >= 0 && pdi )
-          pathid_new = pdi->levinfo[pdi->depth].dirid;
+        if ( r >= 0 )
+          pathid_new = li.dirid;
         if ( !pathid_new )
         {
           r = DUF_ERROR_DB_NO_PATH;
@@ -283,6 +289,8 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
                    qbd );
       }
       DUF_TRACE( path, 0, "%s: pathid_new: %llu; qbd: %s", __func__, pathid_new, qbd );
+      mas_free( qname );
+      qname = NULL;
     }
     if ( r < 0 )
       break;
@@ -295,15 +303,22 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
 
     pathid = pathid_new;
     bd = ed;
-    mas_free( qname );
-    qname = NULL;
+    DUF_PRINTF( 0, "@@@@@@@@ %d --- [%s]", pdi->depth, li.itemname );
+    if ( r >= 0 )
+      r = duf_levinfo_down( pdi, pathid, li.itemname, li.numdir + 1, li.numfile + 1, 0 );
+    assert( pdi->depth >= 0 );
+    if ( r >= 0 )
+      r = duf_levinfo_openat_dh( pdi );
+    DUF_OINV_OPENED( pdi-> );
+    DUF_PRINTF( 0, "@@@@@@@@ %d %s", pdi->depth, duf_levinfo_path( pdi ) );
+    duf_levinfo_clear_li( &li );
+    /* pdi->depth++; */
   }
+  pdi->topdepth = pdi->depth;
   if ( pprevpathid )
     *pprevpathid = prevpathid;
   mas_free( cpath );
   cpath = NULL;
-  mas_free( qname );
-  qname = NULL;
   DUF_TRACE( path, 0, "%s: FINAL pathid: %llu; pathid_new: %llu;", __func__, pathid, pathid_new );
   if ( pr )
     *pr = r;
@@ -342,6 +357,10 @@ duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **
   return pathid_new;
 }
 
+/* TODO new way : depth from root!;
+ * duf_path_to_pathid must set depth at pdi and levinfo for each level
+ * 
+ * */
 unsigned long long
 duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
 {
@@ -350,9 +369,7 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-
   pathid = duf_path_to_pathid_x( path, NULL, NULL, pdi, &r );
-
 
   DUF_TRACE( path, 0, "PATH TO PATHID '%s' => %llu", path, pathid );
   DUF_TEST_R( r );

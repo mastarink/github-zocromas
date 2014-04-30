@@ -11,6 +11,7 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
 #include "duf_levinfo.h"
 
 
@@ -130,13 +131,15 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
     {
       if ( pdi->depth == 0 )
         DUF_TRACE( action, 0, "Maximum reached ........" );
+      if ( duf_pdi_reldepth( pdi ) == 0 )
+        DUF_TRACE( action, 0, "Maximum reached ...." );
     }
     /* else if ( r < 0 )             */
     /*   DUF_ERROR( "code: %d", r ); */
   }
-  if ( pdi->depth > 0 && !pdi->levinfo[pdi->depth - 1].ndirs )
+  if ( duf_levinfo_numdir( pdi, pdi->depth - 1 ) <= 0 )
     pdi->levinfo[pdi->depth - 1].eod = 1;
-
+  /* DUF_PRINTF( 0, "@@@@@@@@@@@@@@@ %d : %d", pdi->depth, duf_levinfo_numdir( pdi, pdi->depth - 1 ) ); */
 
 
 
@@ -176,6 +179,8 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
       {
         if ( pdi->depth == 0 )
           DUF_TRACE( action, 0, "Maximum reached ........" );
+        if ( duf_pdi_reldepth( pdi ) == 0 )
+          DUF_TRACE( action, 0, "Maximum reached ...." );
       }
       /* else if ( r < 0 )             */
       /*   DUF_ERROR( "code: %d", r ); */
@@ -207,6 +212,8 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
       if ( r == DUF_ERROR_MAX_REACHED )
       {
         if ( pdi->depth == 0 )
+          DUF_TRACE( action, 0, "Maximum reached ...." );
+        if ( duf_pdi_reldepth( pdi ) == 0 )
           DUF_TRACE( action, 0, "Maximum reached ...." );
       }
       /* else if ( r < 0 )             */

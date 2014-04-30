@@ -17,6 +17,9 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
+
 #include "duf_sql_field.h"
 
 /* #include "duf_path.h" */
@@ -38,58 +41,68 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
 
   /* if ( pdi->depth <= 0 )                                             */
   /*   DUF_ERROR( "depth should not be %d at this point", pdi->depth ); */
-  if ( pdi->depth > 0 )
+  if ( duf_pdi_reldepth( pdi ) >= 0 )
   {
-    DEBUG_START();
+    DEBUG_START(  );
     if ( pdi )
-      for ( int i = 0; i <= max; i++ )
+      for ( int d = duf_pdi_topdepth( pdi ); d <= max; d++ )
       {
+        int eod = duf_levinfo_eod( pdi, d );
+
+        /* DUF_PRINTF( 0, ".T%d:dd%d:rd%d:eod%d:nd%d:", duf_pdi_topdepth( pdi ), duf_pdi_deltadepth( pdi, d ), duf_pdi_reldepth( pdi ), eod, */
+        /*             duf_levinfo_numdir( pdi, d ) );                                                                                       */
         if ( pdi->levinfo )
         {
-          if ( pdi->levinfo[i].ndirs > 0 )
+          if ( pdi->levinfo[d].numdir > 0 )
           {
-            if ( i == max )
+            if ( d == max )
             {
               if ( is_file )
-                printf( "│ ◇ " );
-              else if ( !pdi->levinfo[i].eod )
-                printf( "├─── " );
+                DUF_PRINTF( 0, ".│ ◇ " );
+              else if ( !eod )
+                DUF_PRINTF( 0, ".├─── " );
+              else
+                DUF_PRINTF( 0, ". *%-3d", __LINE__ );
             }
             else
             {
               if ( is_file )
-                printf( "│    " );
-              else if ( !pdi->levinfo[i].eod )
-                printf( "│    " );
+                DUF_PRINTF( 0, ".│    " );
+              else if ( !eod )
+                DUF_PRINTF( 0, ".│    " );
+              else
+                DUF_PRINTF( 0, ". *%-3d", __LINE__ );
             }
           }
-          else if ( pdi->levinfo[i].ndirs == 0 )
+          else if ( pdi->levinfo[d].numdir == 0 )
           {
-            if ( i == max )
+            if ( d == max )
             {
               if ( is_file )
-                printf( "  ◇ " );
-              else if ( !pdi->levinfo[i].eod )
-                printf( "└─── " );
+                DUF_PRINTF( 0, ".  ◇ " );
+              else if ( !eod )
+                DUF_PRINTF( 0, ".└─── " );
+              else
+                DUF_PRINTF( 0, ". *%-3d", __LINE__ );
             }
             else
             {
-              printf( "     " );
+              DUF_PRINTF( 0, ".     " );
             }
           }
           else
           {
             if ( is_file )
-              printf( " %3d", __LINE__ );
-            else if ( pdi->levinfo[i].eod )
-              printf( " %3d", __LINE__ );
+              DUF_PRINTF( 0, ". %-4d", __LINE__ );
+            else if ( eod )
+              DUF_PRINTF( 0, ". %-4d", __LINE__ );
             else
-              printf( " %3d", __LINE__ );
+              DUF_PRINTF( 0, ". %-4d", __LINE__ );
           }
         }
         else
         {
-          printf( "??? " );
+          DUF_PRINTF( 0, ".??? " );
         }
       }
   }
@@ -106,7 +119,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   DUF_SFIELD( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
-  DEBUG_START();
+  DEBUG_START(  );
 
   {
     duf_fileinfo_t fi = {.st.st_uid = 0,.st.st_gid = 0 };
@@ -129,7 +142,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
   /* SQL at duf_scan_files_by_dirid */
 
-  printf( "%s\n", filename );
+  DUF_PRINTF( 0, "%s", filename );
 
   DEBUG_ENDR( r );
   return r;
@@ -145,7 +158,7 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
   DUF_SFIELD( dirname );
   /* const char *dirname = duf_sql_str_by_name( "dirname", precord, 0 ); */
 
-  DEBUG_START();
+  DEBUG_START(  );
 
   int r = 0;
 
@@ -153,15 +166,15 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
     /* if ( pdi->levinfo && !nrow1 )                                             */
     /*   pdi->levinfo[pdi->depth] = nrows1;                                      */
     /* pdi->seq++;                                                              */
-    /* (* printf( "%4llu: (%7s) :", pathid, precord->presult[2] ? precord->presult[2] : "-" ); *) */
+    /* (* DUF_PRINTF(0, "%4llu: (%7s) :", pathid, precord->presult[2] ? precord->presult[2] : "-" ); *) */
     if ( duf_config->cli.format.seq )
-      printf( "%8llu ", pdi->seq );
+      DUF_PRINTF( 0, ".%8llu ", pdi->seq );
     if ( duf_config->cli.format.dirid )
-      printf( "[%8llu] ", pdi->levinfo[pdi->depth].dirid );
+      DUF_PRINTF( 0, ".[%8llu] ", pdi->levinfo[pdi->depth].dirid );
     r = duf_sql_print_tree_prefix_uni( pdi, 0 );
     {
-      /* optimizing makes puts, segfault by NULL, therefore printf( "%s\n", dirname  ); is not good */
-      printf( "%s\n", dirname ? dirname : "-=No dirname=-" );
+      /* optimizing makes puts, segfault by NULL, therefore DUF_PRINTF(0, "%s\n", dirname  ); is not good */
+      DUF_PRINTF( 0, ".%s\n", dirname ? dirname : "-=No dirname=-" );
     }
   }
 

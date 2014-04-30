@@ -53,7 +53,7 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
   DUF_OINV( pdi-> );
   DUF_TRACE( scan, 0, "scan node" );
   r = duf_levinfo_down( pdi, 0 /* dirid */ , filename, 0, 0, 1 /* is_leaf */  );
-  DUF_OINV( pdi-> );
+  DUF_OINVC( pdi-> );
   if ( r >= 0 )
   {
     DEBUG_STEPULL( pdi->levinfo[pdi->depth].dirid );
@@ -82,7 +82,7 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
     }
     else
       DUF_TRACE( error, 0, "str_cb not set" );
-    DUF_OINV( pdi-> );
+    DUF_OINVC( pdi-> );
     duf_levinfo_up( pdi );
   }
   if ( r == DUF_ERROR_MAX_DEPTH )
@@ -141,12 +141,11 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
  * */
     pdi->seq++;
     pdi->seq_node++;
-    duf_levinfo_countdown_dirs( pdi );
     if ( !duf_pdi_max_filter( pdi ) )
       r = DUF_ERROR_MAX_REACHED;
     DUF_TEST_R( r );
 
-    DUF_OINV( pdi-> );
+    DUF_OINVC( pdi-> );
     /* called both for leaves (files) and nodes (dirs) */
     if ( str_cb )
     {
@@ -183,12 +182,14 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
           if ( r >= 0 )
             r = rc;
         }
+        DUF_OINVC( pdi-> );
         DUF_OINV_NOT_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
     }
     else
       DUF_TRACE( error, 0, "str_cb not set" );
+    duf_levinfo_countdown_dirs( pdi );
     DUF_OINV_NOT_OPENED( pdi-> );
     duf_levinfo_up( pdi );
     DUF_OINV_OPENED( pdi-> );
