@@ -73,7 +73,7 @@
  * call str_cb for each file record got by the sql  with given md5id
  * */
 /* static int                                                                                                                                 */
-/* duf_scan_files_by_md5id( unsigned long long md5id, duf_scan_callback_file_t str_cb, void *str_cb_udata )                                   */
+/* duf_scan_files_by_md5id( unsigned long long md5id, duf_str_cb_t str_cb, void *str_cb_udata )                                   */
 /* {                                                                                                                                          */
 /*   int r = 0;                                                                                                                               */
 /*                                                                                                                                            */
