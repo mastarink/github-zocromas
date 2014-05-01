@@ -64,19 +64,28 @@ duf_levinfo_itemname( duf_depthinfo_t * pdi )
   return duf_levinfo_itemname_d( pdi, pdi->depth );
 }
 
-int
-duf_levinfo_dirid( duf_depthinfo_t * pdi )
+unsigned long long
+duf_levinfo_dirid_d( duf_depthinfo_t * pdi, int d )
 {
-
   assert( pdi );
   assert( pdi->levinfo );
-  {
-    int d;
+  return d >= 0 ? pdi->levinfo[d].dirid : 0;
+}
 
-    d = pdi->depth;
-    assert( d >= 0 );
-    return pdi->levinfo[d].dirid;
-  }
+unsigned long long
+duf_levinfo_dirid( duf_depthinfo_t * pdi )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  return duf_levinfo_dirid_d( pdi, pdi->depth );
+}
+
+unsigned long long
+duf_levinfo_dirid_up( duf_depthinfo_t * pdi )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  return duf_levinfo_dirid_d( pdi, pdi->depth - 1 );
 }
 
 int
@@ -252,6 +261,11 @@ duf_levinfo_down( duf_depthinfo_t * pdi, unsigned long long dirid, const char *i
       r = DUF_ERROR_MAX_DEPTH;
     }
   }
+  if ( is_leaf )
+    DUF_TRACE( scan, 2, "  L%u: scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+  else
+    DUF_TRACE( scan, 0, "  L%u: scan node:   =>  by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
+               duf_levinfo_itemname( pdi ) );
   DUF_TEST_R( r );
   return r;
 }
@@ -285,10 +299,19 @@ void
 duf_levinfo_up( duf_depthinfo_t * pdi )
 {
   assert( pdi );
-  DUF_OINV_NOT_OPENED( pdi-> );
+
+  if ( duf_levinfo_is_leaf( pdi ) )
+    DUF_TRACE( scan, 2, "  L%u: scan leaf  <=             - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+  else
+    DUF_TRACE( scan, 0, "  L%u: scan node: <=    by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
+               duf_levinfo_itemname( pdi ) );
   {
+    int r;
     int d = pdi->depth--;
 
+    r = duf_levinfo_closeat_dh_d( pdi, d );
+    if ( r < 0 )
+      DUF_ERROR( "close error" );
     assert( pdi->levinfo );
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->depth;
@@ -573,12 +596,7 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
     {
       DUF_OINV( pdi-> );
       {
-        int d = pdi->depth--;
-
-        r = duf_levinfo_closeat_dh_d( pdi, d );
-        if ( r < 0 )
-          DUF_ERROR( "close error" );
-        duf_levinfo_clear_level_d( pdi, d );
+        duf_levinfo_up( pdi );
       }
       DUF_OINV( pdi-> );
     }

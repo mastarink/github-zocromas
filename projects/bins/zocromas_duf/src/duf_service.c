@@ -57,7 +57,7 @@ duf_dbg_funname( duf_anyhook_t p )
 
   static duf_fundesc_t table[] = {
     DUF_FUN( duf_str_cb_uni_scan_dir ),
-    DUF_FUN( duf_str_cb_scan_file ),
+    DUF_FUN( duf_str_cb_leaf_scan ),
 #ifdef DUF_COMPILE_EXPIRED
     DUF_FUN( duf_sel_cb_name_parid ),
 #endif
@@ -86,7 +86,7 @@ int
 duf_print_file_info( FILE * f, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t * format )
 {
   if ( duf_config->cli.format.seq && ( !format || format->seq ) )
-    DUF_PRINTF( 0, ".%8llu ", pdi->seq );
+    DUF_PRINTF( 0, ".%-8llu ", pdi->seq );
   if ( duf_config->cli.format.dirid && ( !format || format->dirid ) )
     DUF_PRINTF( 0, ".[%8llu] ", pdi->levinfo[pdi->depth].dirid );
   if ( duf_config->cli.format.inode && ( !format || format->inode ) )

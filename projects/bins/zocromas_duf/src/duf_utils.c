@@ -17,6 +17,9 @@
 #include "duf_utils.h"
 /* ###################################################################### */
 
+#define FN_FMT "27s"
+/* #define FN_FMT "23s" */
+
 #define DUF_SINGLE_QUOTES_2_NOQ_ZERO
 char *
 duf_single_quotes_2( const char *s )
@@ -228,11 +231,17 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
 
     if ( rf != '.' && rf != ';' )
     {
+      const char *pfuncid;
+
       puname = uname;
+      pfuncid = funcid;
+      /* if ( 0 == strncmp( pfuncid, "duf_", 4 ) ) */
+      /*   pfuncid += 4;                           */
       for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      fprintf( out, "%d:%d [%-7s] %3u:%-23s: ", level, minlevel, uname, linid, funcid );
+
+      fprintf( out, "%d:%d [%-7s] %3u:%-" FN_FMT ": ", level, minlevel, uname, linid, pfuncid );
     }
     {
       r = vfprintf( out, fmt, args );
@@ -275,6 +284,11 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
   if ( level >= minlevel )
   {
     char rf = 0;
+    const char *pfuncid;
+
+    pfuncid = funcid;
+    /* if ( 0 == strncmp( pfuncid, "duf_", 4 ) ) */
+    /*   pfuncid += 4;                           */
 
     rf = *fmt;
     /* ; - no prefix, cr   */
@@ -284,11 +298,11 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
       fmt++;
     if ( ifexit )
     {
-      fprintf( out, "[DIE] @ %d:%d %3u:%-23s: ", level, minlevel, linid, funcid );
+      fprintf( out, "[DIE] @ %d:%d %3u:%-" FN_FMT ": ", level, minlevel, linid, pfuncid );
     }
     else if ( rf == '+' )
     {
-      fprintf( out, "%d:%d %3u:%-23s: ", level, minlevel, linid, funcid );
+      fprintf( out, "%d:%d %3u:%-" FN_FMT ": ", level, minlevel, linid, funcid );
     }
     {
       r = vfprintf( out, fmt, args );

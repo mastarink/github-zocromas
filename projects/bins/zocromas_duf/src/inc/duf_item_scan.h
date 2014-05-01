@@ -2,8 +2,8 @@
 #  define MAS_DUF_ITEM_SCAN_H
 
 
-int duf_scan_items_sql( duf_node_type_t node_type, duf_str_cb_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                        duf_scan_callbacks_t * sccb, const char *sql, ... );
+int duf_scan_db_items( duf_node_type_t node_type, duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sql,
+                       ... );
 
 
 /* will be static! */

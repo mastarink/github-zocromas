@@ -15,6 +15,10 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
+
+
 #include "duf_path.h"
 
 /* #include "duf_sql_def.h" */
@@ -50,6 +54,8 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
    *                   ^^^^^^^        ^^^^^^^
    * */
 
+  DUF_TRACE( scan, 2, "  L%u: scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+
 
   DUF_PRINTF( 0, "%6llu:%6llu:%6llu [%10llu] file: %s", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
 
@@ -57,7 +63,9 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   return r;
 }
 
-/* callback of type duf_scan_callback_dir_t */
+/* 
+ * this is callback of type: duf_scan_hook_dir_t
+ * */
 /* __attribute__ ( ( unused ) ) */
 static int
 scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
@@ -109,7 +117,7 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         " , duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         " , uid, gid, nlink, inode, mtim AS mtime "
         " , dupcnt AS nsame "
-        " , printf('%016x%016x',md5sum1,md5sum2) AS dirname, duf_filedatas.size AS filesize " " , duf_filenames.pathid AS hid "
+        " , printf('%016x%016x',md5sum1,md5sum2) AS dirname, duf_filedatas.size AS filesize " " , duf_filenames.Pathid AS hid "
         " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode",
   .leaf_selector = "SELECT %s FROM duf_filenames "
         "              JOIN duf_filedatas ON (duf_filedatas.id=duf_filenames.dataid) "

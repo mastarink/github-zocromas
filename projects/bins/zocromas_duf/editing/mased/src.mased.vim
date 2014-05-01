@@ -1,22 +1,4 @@
-" set path=src,src/inc
-find duf_sql.c
-sfind duf_sql.h
-sfind duf_sql_def.h
-
-tab sfind duf_sqlite.c
-sfind duf_sqlite.h
-
-tab sfind duf_sql_field.c
-sfind duf_sql_field.h
-
-tab sfind duf_option.c
-sfind duf_option.h
-
-tab sfind duf_cli_options.c
-sfind duf_cli_options.h
-
-
-tab sfind duf_path.c
+find duf_path.c
 sfind duf_path.h
 
 tab sfind duf_item_scan.c
@@ -46,21 +28,5 @@ sfind duf_pdi.h
 tab sfind duf_add.c
 sfind duf_add.h
 
-tab sfind duf.c
-sfind duf.h
-
-tab sfind duf_maindb.c
-sfind duf_maindb.h
-
-tab sfind duf_action.c
-sfind duf_action.h
-
-tab sfind duf_config.c
-sfind duf_config.h
-
-tab sfind duf_dbg.c
-sfind duf_dbg.h
-
 tab sfind duf_types.h
 sfind duf_cli_types.h
-

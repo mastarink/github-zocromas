@@ -10,4 +10,7 @@ sfind duf_dh.h
 tab sfind duf_service.c
 sfind duf_service.h
 
+tab sfind duf_dbg.c
+sfind duf_dbg.h
+
 tab sfind duf_def.h

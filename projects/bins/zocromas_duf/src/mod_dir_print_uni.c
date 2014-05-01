@@ -107,9 +107,11 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
   return r;
 }
 
+/* 
+ * this is callback of type: duf_scan_hook_dir_t
+ * */
 static int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
-                  duf_record_t * precord )
+scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -120,7 +122,6 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unus
 
     if ( !real_path )
       real_path = duf_levinfo_path( pdi );
-    /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
 
     DUF_UFIELD( nfiles );
     DUF_UFIELD( minsize );
@@ -149,7 +150,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .node_scan_before = scan_node_before,
   .leaf_scan = scan_leaf,
   .fieldset =
-        "duf_filenames.pathid AS dirid "
+        "duf_filenames.Pathid AS dirid "
         " , duf_filenames.name AS filename, duf_filedatas.size AS filesize " ", duf_filedatas.size AS filesize "
         " , uid, gid, nlink, inode, mtim AS mtime " " , dupcnt AS nsame"
         " , duf_filedatas.mode AS filemode " " , duf_filenames.id AS filenameid" " , md.md5sum1, md.md5sum2 ",
@@ -167,7 +168,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE "
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
-        " duf_filenames.pathid='%llu' ",
+        " duf_filenames.Pathid='%llu' ",
   .node_selector =
         "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
@@ -175,17 +176,17 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         /* " ,(SELECT count(*) FROM duf_filenames AS sfn "                                                       */
         /* "          JOIN duf_filedatas AS sfd ON (sfn.dataid=sfd.id) "                                         */
         /* "          JOIN duf_md5 AS smd ON (sfd.md5id=smd.id) "                                                */
-        /* "          WHERE sfn.pathid=duf_paths.id "                                                            */
+        /* "          WHERE sfn.Pathid=duf_paths.id "                                                            */
         /* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           */
         /* "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "               */
         /* " ) AS nfiles "                                                                                       */
         /* " ,(SELECT min(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
-        /* "           WHERE sfn.pathid=duf_paths.id) AS minsize "                                               */
+        /* "           WHERE sfn.Pathid=duf_paths.id) AS minsize "                                               */
         /* " ,(SELECT max(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
-        /* "           WHERE sfn.pathid=duf_paths.id) AS maxsize "                                               */
+        /* "           WHERE sfn.Pathid=duf_paths.id) AS maxsize "                                               */
         " FROM duf_paths "
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id)                                    "
         " WHERE duf_paths.parentid='%llu' ",
   /* .final_sql_argv = final_sql, */
 };

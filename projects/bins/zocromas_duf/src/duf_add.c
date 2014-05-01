@@ -31,7 +31,7 @@
 unsigned long long
 duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid, int need_id, int *pr )
 {
-  unsigned long long pathid = 0;
+  unsigned long long dirid = 0;
   int r;
 
   /* unsigned char c1 = ( unsigned char ) ( dename ? *dename : 0 ); */
@@ -64,19 +64,19 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
       if ( need_id )
       {
         /* unsigned long long pathid1; */
-        duf_scan_callbacks_t sccb = {.fieldset = "pathid" };
-        r = duf_sql_select( duf_sel_cb_field_by_sccb, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+        duf_scan_callbacks_t sccb = {.fieldset = "dirid" };
+        r = duf_sql_select( duf_sel_cb_field_by_sccb, &dirid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                             &sccb  ,
-                            "SELECT id AS pathid " " FROM duf_paths " " WHERE dev='%lu' AND inode='%lu'", dev_id, dir_ino );
-        DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) pathid=%llu:'%s'", pathid, dename );
+                            "SELECT id AS dirid " " FROM duf_paths " " WHERE dev='%lu' AND inode='%lu'", dev_id, dir_ino );
+        DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
     }
     else if ( !r /* assume SQLITE_OK */  )
     {
       if ( need_id )
       {
-        pathid = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) pathid=%llu:'%s'", pathid, dename );
+        dirid = duf_sql_last_insert_rowid(  );
+        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
     }
     else
@@ -89,8 +89,8 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
   }
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
-  return pathid;
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, dirid );
+  return dirid;
 }
 
 /* insert full path into db; return id 
@@ -101,7 +101,7 @@ unsigned long long
 duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long pathid = 0;
+  unsigned long long dirid = 0;
   char *dir_name;
   const char *base_name = NULL;
   char *rpath = mas_strdup( real_path );
@@ -155,25 +155,25 @@ duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
         char *name = mas_strdup( base_name );
 
         DUF_TRACE( current, 0, "to insert [%s]", base_name );
-        pathid = duf_insert_path_uni( name, st_dir.st_dev, st_dir.st_ino, parentid,  need_id , &r );
-        DUF_TRACE( current, 0, "inserted [%s] AS %llu", base_name, pathid );
+        dirid = duf_insert_path_uni( name, st_dir.st_dev, st_dir.st_ino, parentid,  need_id , &r );
+        DUF_TRACE( current, 0, "inserted [%s] AS %llu", base_name, dirid );
         mas_free( name );
       }
-      DUF_TRACE( action, 0, "#%llu : added real path %s", pathid, real_path );
+      DUF_TRACE( action, 0, "#%llu : added real path %s", dirid, real_path );
     }
   }
   mas_free( rpath );
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
-  return pathid;
+  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, dirid );
+  return dirid;
 }
 
 unsigned long long
 duf_add_path_uni( const char *path,  int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long pathid = 0;
+  unsigned long long dirid = 0;
 
 /*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
   {
@@ -192,13 +192,13 @@ duf_add_path_uni( const char *path,  int need_id, int *pr )
     if (  /* strlen( real_path ) > 1 && */ !( real_path && *real_path == '/' && real_path[1] == 0 ) )
     {
       DUF_TRACE( current, 0, "Update parent %s", real_path );
-      pathid = duf_add_real_path_uni( real_path,  DUF_TRUE, need_id, &r );
-      DUF_TRACE( current, 0, "Updated parent %s AS %llu", real_path, pathid );
+      dirid = duf_add_real_path_uni( real_path,  DUF_TRUE, need_id, &r );
+      DUF_TRACE( current, 0, "Updated parent %s AS %llu", real_path, dirid );
     }
     mas_free( real_path );
   }
   if ( pr )
     *pr = r;
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return pathid;
+  return dirid;
 }

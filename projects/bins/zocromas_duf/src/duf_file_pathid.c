@@ -9,6 +9,9 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
+
 #include "duf_path.h"
 #include "duf_item_scan.h"
 
@@ -20,17 +23,20 @@
 
 
 /* duf_scan_files_by_pi:
- * call str_cb + pdi (also) as str_cb_udata for each <file> record by pathid (i.e. children of pathid) with corresponding args
+ * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid (i.e. children of dirid) with corresponding args
+ *
+ * known str_cb for duf_scan_files_by_di:
+ *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
+ *   duf_str_cb_scan_file_fd
  * */
 static int
-duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi,
-                      duf_scan_callbacks_t * sccb   )
+duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = DUF_ERROR_NO_FILE_SELECTOR;
 
-  DUF_TRACE( scan, 0, "scan files by:%llu", dirid );
+  DUF_TRACE( scan, 1, "  L%u: scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
 
-/* duf_scan_items_sql:
+/* duf_scan_db_items:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
   DUF_OINV( pdi-> );
@@ -39,12 +45,12 @@ duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthin
   {
     DUF_OINV( pdi-> );
 
-    DUF_TRACE( scan, 0, "scan leaves by:%llu", dirid );
-    r = duf_scan_items_sql( DUF_NODE_LEAF, str_cb, pdi, pdi, sccb  , sccb->leaf_selector, /* ... */ sccb->fieldset,
-                            /*   pdi->u.minsize,                                                            */
-                            /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
-                            /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
-                            dirid );
+    r = duf_scan_db_items( DUF_NODE_LEAF, str_cb, pdi, sccb, sccb->leaf_selector, /* ... */ sccb->fieldset,
+                           /*   pdi->u.minsize,                                                            */
+                           /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
+                           /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
+                           dirid /* for WHERE */  );
+    DUF_TRACE( scan, 1, "  L%u: scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
 
 
     DUF_OINV( pdi-> );
@@ -61,16 +67,19 @@ duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthin
 
 /* duf_scan_files_by_dirid:
  * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid with corresponding args
+ *
+ * known str_cb for duf_scan_files_by_dirid:
+ *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
+ *   duf_str_cb_scan_file_fd
  * */
 int
-duf_scan_files_by_dirid( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi,
-                         duf_scan_callbacks_t * sccb   )
+duf_scan_files_by_dirid( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
   if ( duf_config->cli.act.files )
-    r = duf_scan_files_by_di( dirid, str_cb, pdi, sccb   );
+    r = duf_scan_files_by_di( dirid, str_cb, pdi, sccb );
   else
-    DUF_TRACE( scan, 0, "skip scan leaves by:%llu : no '--files'", dirid );
+    DUF_TRACE( scan, 0, "  L%u: skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
   return r;
 }

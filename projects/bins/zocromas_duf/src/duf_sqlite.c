@@ -95,7 +95,8 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
     }
     if ( r3 == SQLITE_OK && pchanges )
       *pchanges = sqlite3_changes( pDb );
-    DUF_TRACE( sql, 0, "[%s]   r3:%d; changes:%d", sql, r3, pchanges ? *pchanges : -1 );
+    DUF_TRACE( sql, 0, "  [%s]", sql );
+    DUF_TRACE( sql, 1, "r3:%d; changes:%d", r3, pchanges ? *pchanges : -1 );
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }
   if ( pemsg )
@@ -274,7 +275,8 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
     r3 = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
     assert( r3 != SQLITE_CORRUPT );
 
-    DUF_TRACE( sql, 0, "[%s] r3=%d;  %u rows", sql, r3, row );
+    DUF_TRACE( sql, 0, "  [%s]", sql );
+    DUF_TRACE( sql, 1, "r3=%d;  %u rows", r3, row );
     duf_dbgfunc( DBG_STEPS, __func__, __LINE__, sql );
     /* if ( trace )                                            */
     /*   printf(  "(%d) trace:[%s]\x1b[K\n", r3, sql ); */
@@ -305,10 +307,10 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
           rrecord.presult = &pcresult[ir * column];
           {
 
-            rcb = ( sel_cb ) ( &rrecord,  sel_cb_udata, str_cb, str_cb_udata, pdi, sccb   );
+            rcb = ( sel_cb ) ( &rrecord, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb );
 
             DUF_TEST_R( rcb );
-            DUF_TRACE( sql, 1, "row #%u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
+            DUF_TRACE( sql, 2, "row #%u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );
           }
         }
         if ( rcb )
@@ -324,7 +326,7 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
         }
         DUF_TEST_R( rcb );
         DUF_TEST_R( duf_sqlite_error_code( r3 ) );
-        DUF_TRACE( sql, 0, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
+        DUF_TRACE( sql, 4, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
         r3 = rcb ? rcb : r3;
         DUF_TEST_R( duf_sqlite_error_code( r3 ) );
       }

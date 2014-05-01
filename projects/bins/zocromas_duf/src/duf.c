@@ -183,6 +183,10 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf" );
         DUF_PRINTF( 0, "========================= as for 20140429 ===================" );
         DUF_PRINTF( 0, "  run --sample=2 -Rdf /home/mastar/a/down/////  --printf --max-seq=2000" );
+        DUF_PRINTF( 0, "========================= as for 20140501 ===================" );
+        DUF_PRINTF( 0, "  run -PRdifE5 /home/mastar/a/down/chromium/ -SSS" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rd --totals  --tree   /home/mastar/a/down/" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf --max-seq=1000" );
         DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;

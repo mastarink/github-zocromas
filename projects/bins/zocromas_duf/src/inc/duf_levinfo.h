@@ -7,7 +7,9 @@ const char *duf_levinfo_itemname_d( duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_itemname( duf_depthinfo_t * pdi );
 
 
-int duf_levinfo_dirid( duf_depthinfo_t * pdi );
+unsigned long long duf_levinfo_dirid_d( duf_depthinfo_t * pdi, int d );
+unsigned long long duf_levinfo_dirid_up( duf_depthinfo_t * pdi );
+unsigned long long duf_levinfo_dirid( duf_depthinfo_t * pdi );
 
 int duf_levinfo_eod_d( const duf_depthinfo_t * pdi, int d );
 void duf_levinfo_set_eod_d( const duf_depthinfo_t * pdi, int d );

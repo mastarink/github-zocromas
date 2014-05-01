@@ -76,13 +76,15 @@ sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
   return r;
 }
 
-/* callback of type duf_scan_callback_dir_t */
+/* 
+ * this is callback of type: duf_scan_hook_dir_t
+ * */
 /* will be static! */
 int
-sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
-                         duf_record_t * precord )
+sample_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
 
   DEBUG_START(  );
 
@@ -90,7 +92,7 @@ sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
   {
     const char *path = duf_levinfo_path( pdi );
 
-    DUF_PRINTF( 2, "#%4llu: L%u+ id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), pathid, path );
+    DUF_PRINTF( 2, "#%4llu: L%u+ id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path );
   }
 
   if ( !pdi->levinfo[pdi->depth].context )
@@ -104,19 +106,17 @@ sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
 }
 
 static int
-sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
-                        duf_record_t * precord )
+sample_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
   DEBUG_START(  );
 
   {
-    {
-      const char *path = duf_levinfo_path( pdi );
+    unsigned long long dirid = duf_levinfo_dirid( pdi );
+    const char *path = duf_levinfo_path( pdi );
 
-      DUF_PRINTF( 4, "#%4llu: L%u- id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), pathid, path );
-    }
+    DUF_PRINTF( 4, "#%4llu: L%u- id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path );
   }
   if ( !pdi->levinfo[pdi->depth].context || 0 != strcmp( ( char * ) pdi->levinfo[pdi->depth].context, "MIDDLE" ) )
     DUF_ERROR( "sample context %s", ( char * ) pdi->levinfo[pdi->depth].context );
@@ -131,14 +131,14 @@ sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pd
 }
 
 static int
-sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
-                         duf_record_t * precord )
+sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
 
   DEBUG_START(  );
 
-  DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
+  DUF_TRACE_SAMPLE( 2, "T2 dirid=%llu", dirid );
   {
     duf_config->cli.trace.sql--;
     {
@@ -146,7 +146,7 @@ sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * p
 
       if ( !real_path )
         real_path = duf_levinfo_path( pdi );
-      /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
+      /* char *path = duf_pathid_to_path_s( dirid, pdi, &r ); */
 
       DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, real_path );
       DUF_TRACE_SAMPLE( 1, "path=%s", real_path );
@@ -154,7 +154,7 @@ sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * p
     }
     duf_config->cli.trace.sql++;
   }
-  DUF_TRACE_SAMPLE( 2, "T2 pathid=%llu", pathid );
+  DUF_TRACE_SAMPLE( 2, "T2 dirid=%llu", dirid );
 
 
   if ( !pdi->levinfo[pdi->depth].context || 0 != strcmp( ( char * ) pdi->levinfo[pdi->depth].context, "BEFORE" ) )
@@ -186,7 +186,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   .node_scan_middle = sample_scan_node_middle,
   .leaf_scan = sample_scan_leaf,
   .fieldset =
-        " duf_filenames.pathid AS dirid " " ,duf_filenames.name AS filename, duf_filedatas.size AS filesize"
+        " duf_filenames.Pathid AS dirid " " ,duf_filenames.name AS filename, duf_filedatas.size AS filesize"
         " , uid, gid, nlink, inode, mtim AS mtime " " , dupcnt AS nsame "
         " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode, md.md5sum1, md.md5sum2 ",
   .leaf_selector =
@@ -195,7 +195,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
         " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE "
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "             */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu))  AND " */
-        " duf_filenames.pathid='%llu' ",
+        " duf_filenames.Pathid='%llu' ",
   .node_selector =
         "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
@@ -203,16 +203,16 @@ duf_scan_callbacks_t duf_sample_callbacks = {
         /* " ,(SELECT count(*) FROM duf_filenames AS sfn "                                                       */
         /* "          JOIN duf_filedatas AS sfd ON (sfn.dataid=sfd.id) "                                         */
         /* "          JOIN duf_md5 AS smd ON (sfd.md5id=smd.id) "                                                */
-        /* "          WHERE sfn.pathid=duf_paths.id "                                                            */
+        /* "          WHERE sfn.Pathid=duf_paths.id "                                                            */
         /* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           */
         /* "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "               */
         /* " ) AS nfiles "                                                                                       */
         /* " ,(SELECT min(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
-        /* "           WHERE sfn.pathid=duf_paths.id) AS minsize "                                               */
+        /* "           WHERE sfn.Pathid=duf_paths.id) AS minsize "                                               */
         /* " ,(SELECT max(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
-        /* "           WHERE sfn.pathid=duf_paths.id) AS maxsize "                                               */
+        /* "           WHERE sfn.Pathid=duf_paths.id) AS maxsize "                                               */
         " FROM duf_paths "
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
   /* .final_sql_argv = final_sql, */
 };

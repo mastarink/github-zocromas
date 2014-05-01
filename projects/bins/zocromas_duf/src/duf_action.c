@@ -131,29 +131,6 @@ duf_action_new( int argc, char **argv )
   /* if ( r >= 0 && duf_config->cli.act.update_mdpath ) */
   /*   duf_update_mdpaths( 0 );                         */
   /* DUF_TEST_R( r ); */
-#ifdef DUF_COMPILE_EXPIRED
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  if ( r >= 0 && duf_config->cli.act.update_mdpath_selective )
-  {
-    if ( !duf_config->targc )
-      duf_update_mdpaths( 0 );
-    else
-      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      {
-        const char *path;
-        unsigned long long pathid;
-
-        path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL );
-        if ( pathid )
-          r = duf_update_mdpaths( pathid );
-        else
-          DUF_ERROR( "not found %lld : '%s'\n", pathid, path );
-      }
-/*  --update-exif                                                               */ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
-  }
-  DUF_TEST_R( r );
-#endif
 #if 0
   if ( r >= 0 && duf_config->cli.act.update_exif )
   {
@@ -163,14 +140,14 @@ duf_action_new( int argc, char **argv )
       for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
       {
         const char *path;
-        unsigned long long pathid;
+        unsigned long long dirid;
 
         path = duf_config->targv[ia];
-        pathid = duf_path_to_pathid( path, ( duf_depthinfo_t * ) NULL, &r );
-        if ( r >= 0 && pathid )
-          r = duf_update_exif( pathid );
+        dirid = duf_path_to_dirid( path, ( duf_depthinfo_t * ) NULL, &r );
+        if ( r >= 0 && dirid )
+          r = duf_update_exif( dirid );
         else
-          DUF_ERROR( "not found %lld : '%s'\n", pathid, path );
+          DUF_ERROR( "not found %lld : '%s'\n", dirid, path );
       }
 /*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
   }

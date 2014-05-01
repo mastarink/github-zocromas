@@ -306,7 +306,9 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
     bd = ed;
     /* DUF_PRINTF( 0, "@@@@@@@@ %d --- [%s]", pdi->depth, li.itemname ); */
     if ( r >= 0 )
+    {
       r = duf_levinfo_down( pdi, pathid, li.itemname, bd && *bd ? 0 : li.numdir, bd && *bd ? 0 : li.numfile, 0 );
+    }
     assert( pdi->depth >= 0 );
     if ( r >= 0 )
       r = duf_levinfo_openat_dh( pdi );

@@ -32,8 +32,7 @@
 
 #if 0
 static int
-duf_scan_parent( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord,
-                 duf_scan_hook_entry_parent_t scan_entry_parent )
+duf_scan_parent( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord, duf_scan_hook_entry_parent_t scan_entry_parent )
 {
   int r = 0;
 
@@ -171,17 +170,18 @@ duf_scan_entries_by_pathid_and_dfname( unsigned long long pathid, duf_depthinfo_
   return r;
 }
 
-/* callback of type duf_scan_callback_dir_t */
 int
-duf_scan_entries_by_pathid_and_record( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord,
+duf_scan_entries_by_pathid_and_record( duf_depthinfo_t * pdi, duf_record_t * precord,
                                        duf_scan_hook_entry_reg_t scan_entry_reg, duf_scan_hook_entry_dir_t scan_entry_dir )
 {
   int r = 0;
+  unsigned long long dirid;
 
   DEBUG_START(  );
 
-  /* pathid needless? */
-  assert( pathid == pdi->levinfo[pdi->depth].dirid );
+  dirid = duf_levinfo_dirid( pdi );
+  /* dirid needless? */
+  assert( dirid == duf_levinfo_dirid( pdi ) );
   {
     const char *real_path_parent = NULL;
 
@@ -193,8 +193,8 @@ duf_scan_entries_by_pathid_and_record( unsigned long long pathid, duf_depthinfo_
     }
     {
       DUF_SFIELD( dfname );
-      DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
-      r = duf_scan_entries_by_pathid_and_dfname( pathid, pdi, precord, dfname, scan_entry_reg, scan_entry_dir );
+      DUF_TRACE( collect, 1, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
+      r = duf_scan_entries_by_pathid_and_dfname( dirid, pdi, precord, dfname, scan_entry_reg, scan_entry_dir );
     }
 
     if ( DUF_IF_TRACE( collect ) )

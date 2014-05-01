@@ -170,6 +170,7 @@ duf_scan_entry_content( int fd, const struct stat *pst_file, duf_depthinfo_t * p
       DUF_TEST_R( r );
     }
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
+    DUF_TRACE( scan, 2, "  L%u: scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
   }
   return r;
 }
@@ -217,9 +218,11 @@ __attribute__ ( ( unused ) )
   return r;
 }
 
-/* callback of type duf_scan_callback_dir_t */
+/* 
+ * this is callback of type: duf_scan_hook_dir_t
+ * */
 __attribute__ ( ( unused ) )
-     static int collect_openat_md5_scan_node_before( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord )
+     static int collect_openat_md5_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
   const char *real_path = NULL;
@@ -227,7 +230,7 @@ __attribute__ ( ( unused ) )
   DEBUG_START(  );
 
   real_path = duf_levinfo_path( pdi );
-  DUF_TRACE( md5, 0, "L%d; id%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid, real_path );
+  DUF_TRACE( md5, 0, "L%d; id%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid_unused, real_path );
 
   DEBUG_ENDR( r );
   return r;
@@ -245,21 +248,21 @@ static char *final_sql[] = {
 	  " JOIN duf_md5 AS md ON (fd.md5id=md.id) "
         " WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
   /* "DELETE FROM duf_pathtot_files", */
-  "INSERT OR IGNORE INTO duf_pathtot_dirs (pathid, numdirs) "
-        " SELECT p.id AS pathid, COUNT(*) AS numdirs "
+  "INSERT OR IGNORE INTO duf_pathtot_dirs (Pathid, numdirs) "
+        " SELECT p.id AS Pathid, COUNT(*) AS numdirs "
 	  " FROM duf_paths AS p "
             " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) "
 	" GROUP BY sp.parentid",
   "UPDATE duf_pathtot_dirs SET "
       " numdirs=(SELECT COUNT(*) AS numdirs "
                   " FROM duf_paths AS p "
-                      " WHERE p.parentid=duf_pathtot_dirs.pathid )",
+                      " WHERE p.parentid=duf_pathtot_dirs.Pathid )",
   /* "DELETE FROM duf_keydata", */
-  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, pathid) "
-      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS pathid "
+  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, Pathid) "
+      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid "
 	  " FROM duf_filenames AS fn "
 	    " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)"
-	      " JOIN duf_paths AS p ON (fn.pathid=p.id)"
+	      " JOIN duf_paths AS p ON (fn.Pathid=p.id)"
 	        " JOIN duf_md5 AS md ON (fd.md5id=md.id)",
 
  /* *INDENT-ON*  */
@@ -278,7 +281,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
   .leaf_scan_fd = duf_scan_entry_content,
   .fieldset =
-        " duf_filenames.pathid AS dirid "
+        " duf_filenames.Pathid AS dirid "
         " , duf_filedatas.id AS filedataid, duf_filedatas.inode AS inode "
         " , duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         " , uid, gid, nlink, inode, mtim AS mtime " " , dupcnt AS nsame "
@@ -286,12 +289,12 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .leaf_selector =
         "SELECT %s FROM duf_filenames "
         " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE " " duf_filenames.pathid='%llu' ",
+        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE " " duf_filenames.Pathid='%llu' ",
   .node_selector =
         "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
         " FROM duf_paths "
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
   .final_sql_argv = final_sql,
 };

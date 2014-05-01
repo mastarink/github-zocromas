@@ -60,7 +60,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
     qbase_name = duf_single_quotes_2( fname );
     qfname = qbase_name ? qbase_name : fname;
     {
-      r = duf_sql( "INSERT OR IGNORE INTO duf_filenames (pathid, name, dataid) VALUES ('%llu','%s','%llu')",
+      r = duf_sql( "INSERT OR IGNORE INTO duf_filenames (Pathid, name, dataid) VALUES ('%llu','%s','%llu')",
                    &changes, dir_id, qfname, dataid );
       DUF_TEST_R( r );
     }
@@ -72,7 +72,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
         duf_scan_callbacks_t sccb = {.fieldset = "resf" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &resf, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                             &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
-                            "SELECT id AS resf " " FROM duf_filenames " " WHERE pathid='%lu' AND name='%lu'", dir_id, qfname );
+                            "SELECT id AS resf " " FROM duf_filenames " " WHERE Pathid='%lu' AND name='%lu'", dir_id, qfname );
         DUF_TEST_R( r );
       }
     }
@@ -81,7 +81,7 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
       if ( need_id )
       {
         resf = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) pathid=%llu:'%s'", dir_id, fname );
+        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) Pathid=%llu:'%s'", dir_id, fname );
       }
     }
     else
@@ -135,13 +135,14 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 }
 
 static unsigned long long
-duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const char *fname, unsigned long long pathid, duf_depthinfo_t * pdi,
-                                                int need_id, int *pr )
+duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const char *fname, unsigned long long pathid_unused,
+                                                duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
   unsigned long long fnid = 0;
   struct stat st_file, *pst_file = NULL;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
 
   DEBUG_START(  );
   {
@@ -164,7 +165,7 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
   if ( st_file.st_size >= pdi->u.minsize && ( !pdi->u.maxsize || st_file.st_size < pdi->u.maxsize ) )
   {
     dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );
-    fnid = duf_insert_filename_uni( fname, pathid, dataid, need_id /*need_id */ , &r );
+    fnid = duf_insert_filename_uni( fname, dirid, dataid, need_id /*need_id */ , &r );
   }
   if ( pr )
     *pr = r;
@@ -173,7 +174,7 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
 }
 
 static unsigned long long
-duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_unused, */ const char *fname, unsigned long long dirid,
+duf_collect_file_info_by_pdh_and_name_and_pathid(   const char *fname, unsigned long long pathid_unused,
                                                   duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
@@ -181,6 +182,7 @@ duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pd
   unsigned long long fnid = 0;
   struct stat st_file;
   const struct stat *pst_file = NULL;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
 
   DEBUG_START(  );
   const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
@@ -206,11 +208,12 @@ duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pd
 
 /* ------------------------------------------------------------------- */
 static unsigned long long
-duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_path, struct dirent *de, unsigned long long pathid,
-                                                              duf_depthinfo_t * pdi, int need_id, int *pr )
+duf_collect_file_or_dir_info_by_rp_and_de_and_pdi( const char *real_path, struct dirent *de, unsigned long long pathid_unused,
+                                                   duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
 
   DEBUG_START(  );
 
@@ -219,7 +222,7 @@ duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_p
   case DT_REG:
     {
       DUF_TRACE( collect, 1, "regfile='%s/%s'", real_path, de->d_name );
-      itemid = duf_update_realpath_file_name_inode_filter_uni( real_path, de->d_name, pathid, pdi, need_id, &r );
+      itemid = duf_update_realpath_file_name_inode_filter_uni( real_path, de->d_name, dirid, pdi, need_id, &r );
     }
     break;
   case DT_DIR:
@@ -238,7 +241,7 @@ duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_p
       else
       {
         pst = &st;
-        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, 0 /*need_id */ , &r );
+        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, dirid, 0 /*need_id */ , &r );
       }
       mas_free( fpath );
 
@@ -256,14 +259,15 @@ duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_p
 }
 
 static unsigned long long
-duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_unused, */ struct dirent *de,
-                                                         unsigned long long pathid, duf_depthinfo_t * pdi, int need_id, int *pr )
+duf_collect_file_or_dir_info_by_pdh_and_pdi( struct dirent *de,
+                                             unsigned long long pathid_unused, duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long itemid = 0;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
+  const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
 
   DEBUG_START(  );
-  const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
 
   /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_unused, ( void * ) pdhi ); */
 
@@ -272,7 +276,7 @@ duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle
   case DT_REG:
     {
       DUF_TRACE( collect, 1, "regfile='.../%s'", de->d_name );
-      itemid = duf_collect_file_info_by_pdh_and_name_and_pathid(  /* pdh_unused, */ de->d_name, pathid, pdi, 1 /*need_id */ , &r );
+      itemid = duf_collect_file_info_by_pdh_and_name_and_pathid(  /* pdh_unused, */ de->d_name, dirid, pdi, 1 /*need_id */ , &r );
     }
     break;
   case DT_DIR:
@@ -286,16 +290,14 @@ duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle
 
         if ( !real_path )
           real_path = duf_levinfo_path( pdi );
-        /* char *rp = duf_pathid_to_path_s( pathid, pdi, &r ); */
 
         DUF_ERROR( "No such entry %s/%s", real_path, de->d_name );
-        /* mas_free( rp ); */
         r = DUF_ERROR_STAT;
       }
       else
       {
         pst = &st;
-        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, 0 /*need_id */ , &r );
+        ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, dirid, 0 /*need_id */ , &r );
       }
 
       DUF_TRACE( collect, 1, "dir='.../%s'", de->d_name );
@@ -315,7 +317,7 @@ duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle
 /* to replace duf_update_realpath_entries_filter */
 /* TODO scan for removed files; mark as absent or remove from db */
 static int
-duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi, const char *dfname )
+duf_collect_ent_flt_uni( unsigned long long pathid_unused, duf_depthinfo_t * pdi, const char *dfname )
 {
   int r = 0;
   int items = 0;
@@ -339,7 +341,7 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
     /* duf_dirhandle_t dh; */
 
     /* if ( !path )                                            */
-    /*   path = duf_pathid_to_path_dh( pathid, &dh, pdi, &r ); */
+    /*   path = duf_pathid_to_path_dh( dirid, &dh, pdi, &r ); */
     DUF_TEST_R( r );
     if ( r >= 0 )
       r = stat( real_path, &st_dir );
@@ -359,7 +361,7 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
   {
     if ( !real_path )
       real_path = duf_levinfo_path( pdi );
-    /* char *rp = duf_pathid_to_path_s( pathid, pdi, &r ); */
+    /* char *rp = duf_pathid_to_path_s( dirid, pdi, &r ); */
 
 /* no such entry */
     DUF_ERROR( "No such entry %s", real_path );
@@ -374,13 +376,15 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
     int nlist;
     struct dirent **list = NULL;
 
+    unsigned long long dirid = duf_levinfo_dirid( pdi );
+
     DEBUG_START(  );
-    DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
+    DUF_TRACE( collect, 1, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
     if ( noopenat )
       nlist = scandir( real_path, &list, duf_direntry_filter, alphasort );
     else
       nlist = scandirat( pdhi->dfd, ".", &list, duf_direntry_filter, alphasort );
-    DUF_TRACE( collect, 1, "pathid=%llu; nlist=%d", pathid, nlist );
+    DUF_TRACE( collect, 1, "dirid=%llu; nlist=%d", dirid, nlist );
     if ( nlist < 0 )
     {
       /* char serr[512] = "";                                                                                            */
@@ -391,7 +395,7 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
       int e = errno;
 
       /* if ( !real_path )                                      */
-      /*   real_path = duf_pathid_to_path_s( pathid, pdi, &r ); */
+      /*   real_path = duf_pathid_to_path_s( dirid, pdi, &r ); */
 
       if ( !real_path )
         real_path = duf_levinfo_path( pdi );
@@ -412,11 +416,11 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
         {
           unsigned long long itemid = 0;
 
-          DUF_TRACE( collect, 1, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
+          DUF_TRACE( collect, 1, "dirid=%llu; entry='%s'", dirid, list[il]->d_name );
           if ( noopenat )
-            itemid = duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( real_path, list[il], pathid, pdi, 1 /*need_id */ , &r );
+            itemid = duf_collect_file_or_dir_info_by_rp_and_de_and_pdi( real_path, list[il], dirid, pdi, 1 /*need_id */ , &r );
           else
-            itemid = duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* pdhi, */ list[il], pathid, pdi, 1 /*need_id */ , &r );
+            itemid = duf_collect_file_or_dir_info_by_pdh_and_pdi( list[il], dirid, pdi, 1 /*need_id */ , &r );
           DUF_TEST_R( r );
           if ( itemid )
             items++;
@@ -439,24 +443,28 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
   return r;
 }
 
-/* callback of type duf_scan_callback_dir_t */
+/* 
+ * this is callback of type: duf_scan_hook_dir_t
+ * */
 static int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
-                  duf_record_t * precord )
+collect_scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
+                          duf_record_t * precord )
 {
   int r = 0;
+  unsigned long long dirid = duf_levinfo_dirid( pdi );
+
 
   DEBUG_START(  );
   /* const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi ); */
 
   /* if ( pdh_unused )                                                */
   /*   DUF_TRACE( collect, 0, "pdh_unused:%p", ( void * ) pdh_unused ); */
-  DUF_TRACE( collect, 1, "pathid=%llu", pathid );
+  DUF_TRACE( collect, 1, "dirid=%llu", dirid );
 
   /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_unused, ( void * ) pdhi ); */
 
-  /* pathid needless? */
-  assert( pathid == pdi->levinfo[pdi->depth].dirid );
+  /* dirid needless? */
+  assert( dirid == pdi->levinfo[pdi->depth].dirid );
   {
     /* char *path = NULL; */
     const char *real_path = NULL;
@@ -467,7 +475,7 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unus
 
       if ( !real_path )
         real_path = duf_levinfo_path( pdi );
-      /* path = duf_pathid_to_path_s( pathid, pdi, &r ); */
+      /* path = duf_pathid_to_path_s( dirid, pdi, &r ); */
 
       DUF_TRACE( collect, 1, "real_path=%s", real_path );
     }
@@ -482,11 +490,11 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unus
      * */
     {
       DUF_SFIELD( dfname );
-      DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
-      /* r = duf_collect_pathid_filter_uni( pathid, pdh_unused, pdi ); */
-      /* r = duf_collect_pi_flt_uni( pathid, pdh_unused, pdi ); */
-      /* r = duf_collect_entries_filter_uni( pathid, pdh_unused, pdi ); */
-      r = duf_collect_ent_flt_uni( pathid, /* pdh_unused, */ pdi, dfname );
+      DUF_TRACE( collect, 1, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
+      /* r = duf_collect_pathid_filter_uni( dirid, pdh_unused, pdi ); */
+      /* r = duf_collect_pi_flt_uni( dirid, pdh_unused, pdi ); */
+      /* r = duf_collect_entries_filter_uni( dirid, pdh_unused, pdi ); */
+      r = duf_collect_ent_flt_uni( dirid, /* pdh_unused, */ pdi, dfname );
     }
 
     if ( DUF_IF_TRACE( collect ) )
@@ -507,36 +515,40 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unus
  /* *INDENT-OFF*  */
 
 static char *final_sql[] = {
-  "INSERT OR IGNORE INTO duf_pathtot_files (pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.id AS pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
+  "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
+        " SELECT fn.id AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
 	  " FROM duf_filenames AS fn "
 	      " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	" GROUP BY fn.pathid",
+	" GROUP BY fn.Pathid",
+  "DELETE FROM duf_sizes",
+  "INSERT OR IGNORE INTO duf_sizes (size, dupcnt) "
+        "SELECT size, COUNT(*) "
+          " FROM duf_filedatas AS fd GROUP BY fd.size",
   "UPDATE duf_pathtot_files SET "
       " minsize=(SELECT min(size) AS minsize "
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid) "
+	     " WHERE duf_pathtot_files.Pathid=fn.Pathid) "
      ", maxsize=(SELECT max(size) AS maxsize "
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid) "
+	     " WHERE duf_pathtot_files.Pathid=fn.Pathid) "
      ", numfiles=(SELECT COUNT(*) AS numfiles "
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid)",
-  "INSERT OR IGNORE INTO duf_pathtot_dirs (pathid, numdirs) "
-        " SELECT p.id AS pathid, COUNT(*) AS numdirs "
+	     " WHERE duf_pathtot_files.Pathid=fn.Pathid)",
+  "INSERT OR IGNORE INTO duf_pathtot_dirs (Pathid, numdirs) "
+        " SELECT p.id AS Pathid, COUNT(*) AS numdirs "
 	  " FROM duf_paths AS p "
             " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) "
 	" GROUP BY sp.parentid",
   "UPDATE duf_pathtot_dirs SET "
       " numdirs=(SELECT COUNT(*) AS numdirs "
                   " FROM duf_paths AS p "
-                      " WHERE p.parentid=duf_pathtot_dirs.pathid )",
+                      " WHERE p.parentid=duf_pathtot_dirs.Pathid )",
   /* "DELETE FROM duf_keydata", */
-  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, pathid) "
-      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS pathid "
+  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, Pathid) "
+      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid "
 	  " FROM duf_filenames AS fn "
 	    " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)"
-	      " JOIN duf_paths AS p ON (fn.pathid=p.id)"
+	      " JOIN duf_paths AS p ON (fn.Pathid=p.id)"
 	        " JOIN duf_md5 AS md ON (fd.md5id=md.id)",
 
  /* *INDENT-ON*  */
@@ -548,10 +560,10 @@ NULL,};
 duf_scan_callbacks_t duf_collect_noopenat_callbacks = {
   .title = __FILE__,.init_scan = NULL,
   .opendir = 0,
-  .node_scan_before = scan_node_before,
+  .node_scan_before = collect_scan_node_before,
   .leaf_scan = scan_leaf,
   /* filename for debug only */
-  .fieldset = " duf_filenames.pathid AS dirid, " " duf_filenames.name AS filename, duf_filedatas.size AS filesize "
+  .fieldset = " duf_filenames.Pathid AS dirid, " " duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         ", uid, gid, nlink, inode, mtim AS mtime "
         ", duf_filedatas.mode AS filemode " ", duf_filenames.id AS filenameid " ", md.dupcnt AS nsame, md.md5sum1, md.md5sum2 ",
   .leaf_selector =
@@ -560,7 +572,7 @@ duf_scan_callbacks_t duf_collect_noopenat_callbacks = {
         " LEFT JOIN duf_md5 AS md on( md.id = duf_filedatas.md5id ) " " WHERE "
         /* " duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "                      */
         /* " AND( md.dupcnt IS NULL OR( md.dupcnt >= %llu AND md.dupcnt < %llu ) ) AND " */
-        " duf_filenames.pathid = '%llu' ",
+        " duf_filenames.Pathid = '%llu' ",
   .node_selector =
         " SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
@@ -568,16 +580,16 @@ duf_scan_callbacks_t duf_collect_noopenat_callbacks = {
         /* ", ( SELECT count( * )FROM duf_filenames AS sfn "                                                           */
         /* " JOIN duf_filedatas AS sfd ON( sfn.dataid = sfd.id ) "                                                     */
         /* " JOIN duf_md5 AS smd ON( sfd.md5id = smd.id ) "                                                            */
-        /* " WHERE sfn.pathid = duf_paths.id "                                                                         */
+        /* " WHERE sfn.Pathid = duf_paths.id "                                                                         */
         /* " AND sfd.size >= %llu AND sfd.size < %llu "                                                                */
         /* " AND( smd.dupcnt IS NULL OR( smd.dupcnt >= %llu AND smd.dupcnt < %llu ) ) "                                */
         /* " ) AS nfiles "                                                                                             */
         /* ", ( SELECT min( sfd.size ) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON( sfn.dataid = sfd.id ) " */
-        /* " WHERE sfn.pathid = duf_paths.id ) AS minsize "                                                            */
+        /* " WHERE sfn.Pathid = duf_paths.id ) AS minsize "                                                            */
         /* ", ( SELECT max( sfd.size ) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON( sfn.dataid = sfd.id ) " */
-        /* " WHERE sfn.pathid = duf_paths.id ) AS maxsize "                                                            */
+        /* " WHERE sfn.Pathid = duf_paths.id ) AS maxsize "                                                            */
         " FROM duf_paths "
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid = '%llu' ",
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid = '%llu' ",
   .final_sql_argv = final_sql,
 };

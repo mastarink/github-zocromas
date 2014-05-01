@@ -38,37 +38,42 @@ static char *final_sql[] = {
         " FROM duf_filedatas AS fd "
 	  " JOIN duf_md5 AS md ON (fd.md5id=md.id) "
         " WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
+  "DELETE FROM duf_sizes",
+  "INSERT OR IGNORE INTO duf_sizes (size, dupcnt) "
+        "SELECT size, COUNT(*) "
+          " FROM duf_filedatas AS fd GROUP BY fd.size",
+
   /* "DELETE FROM duf_pathtot_files", */
-  "INSERT OR IGNORE INTO duf_pathtot_files (pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.id AS pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
+  "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
+        " SELECT fn.id AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
 	  " FROM duf_filenames AS fn "
 	      " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	" GROUP BY fn.pathid",
+	" GROUP BY fn.Pathid",
   "UPDATE duf_pathtot_files SET "
       " minsize=(SELECT min(size) AS minsize "
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid) "
+	     " WHERE duf_pathtot_files.Pathid=fn.Pathid) "
      ", maxsize=(SELECT max(size) AS maxsize "
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid) "
+	     " WHERE duf_pathtot_files.Pathid=fn.Pathid) "
      ", numfiles=(SELECT COUNT(*) AS numfiles "
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-	     " WHERE duf_pathtot_files.pathid=fn.pathid)",
-  "INSERT OR IGNORE INTO duf_pathtot_dirs (pathid, numdirs) "
-        " SELECT p.id AS pathid, COUNT(*) AS numdirs "
+	     " WHERE duf_pathtot_files.Pathid=fn.Pathid)",
+  "INSERT OR IGNORE INTO duf_pathtot_dirs (Pathid, numdirs) "
+        " SELECT p.id AS Pathid, COUNT(*) AS numdirs "
 	  " FROM duf_paths AS p "
             " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) "
 	" GROUP BY sp.parentid",
   "UPDATE duf_pathtot_dirs SET "
       " numdirs=(SELECT COUNT(*) AS numdirs "
                   " FROM duf_paths AS p "
-                      " WHERE p.parentid=duf_pathtot_dirs.pathid )",
+                      " WHERE p.parentid=duf_pathtot_dirs.Pathid )",
   /* "DELETE FROM duf_keydata", */
-  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, pathid) "
-      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS pathid "
+  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, Pathid) "
+      "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid "
 	  " FROM duf_filenames AS fn "
 	    " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)"
-	      " JOIN duf_paths AS p ON (fn.pathid=p.id)"
+	      " JOIN duf_paths AS p ON (fn.Pathid=p.id)"
 	        " JOIN duf_md5 AS md ON (fd.md5id=md.id)",
 
  /* *INDENT-ON*  */
