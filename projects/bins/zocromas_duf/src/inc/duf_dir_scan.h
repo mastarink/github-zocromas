@@ -7,7 +7,7 @@
  * 3. for each file in <current> dir call sccb->file_scan
  * see duf_scan_dir_by_pi
  * */
-int duf_scan_dirs_by_parentid( unsigned long long pathid /*, const duf_dirhandle_t * pdh_off*/, duf_scan_callback_file_t str_cb,
+int duf_scan_dirs_by_parentid( unsigned long long pathid, duf_str_cb_t str_cb,
                                duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord );
 
 
@@ -15,9 +15,11 @@ int duf_scan_dirs_by_parentid( unsigned long long pathid /*, const duf_dirhandle
 int duf_print_dirs( const char *path, duf_ufilter_t u, int tree );
 
 
+/* 
+ * this is callback of type: duf_str_cb_t (first range; str_cb) 
+ * */
 /* will be static! */
-int duf_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb,
-                   duf_record_t * precord /*, const duf_dirhandle_t * pdhu_unused_off */  );
+int duf_str_cb_scan_file( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord );
 
 
 #endif

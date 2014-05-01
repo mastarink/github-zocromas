@@ -3,6 +3,10 @@
 
 int duf_levinfo_is_leaf( duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf_d( duf_depthinfo_t * pdi, int d );
+const char *duf_levinfo_itemname_d( duf_depthinfo_t * pdi, int d );
+const char *duf_levinfo_itemname( duf_depthinfo_t * pdi );
+
+
 int duf_levinfo_dirid( duf_depthinfo_t * pdi );
 
 int duf_levinfo_eod_d( const duf_depthinfo_t * pdi, int d );

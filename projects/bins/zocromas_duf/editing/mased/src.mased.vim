@@ -19,9 +19,6 @@ sfind duf_cli_options.h
 tab sfind duf_path.c
 sfind duf_path.h
 
-tab sfind duf_file.c
-sfind duf_file.h
-
 tab sfind duf_item_scan.c
 sfind duf_item_scan.h
 
@@ -30,9 +27,6 @@ sfind duf_file_pathid.h
 
 tab sfind duf_filedata.c
 sfind duf_filedata.h
-
-tab sfind duf_file_md5id.c
-sfind duf_file_md5id.h
 
 tab sfind duf_dir_scan.c
 sfind duf_dir_scan.h
@@ -51,9 +45,6 @@ sfind duf_pdi.h
 
 tab sfind duf_add.c
 sfind duf_add.h
-
-tab sfind duf_group.c
-sfind duf_group.h
 
 tab sfind duf.c
 sfind duf.h

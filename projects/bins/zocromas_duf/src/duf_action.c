@@ -22,7 +22,7 @@
 #include "duf_uni_scan.h"
 
 #ifdef DUF_COMPILE_EXPIRED
-#include "duf_group.h"
+#  include "duf_group.h"
 #endif
 
 #include "duf_dbg.h"
@@ -79,7 +79,7 @@ duf_action_new( int argc, char **argv )
   if ( r >= 0 && duf_config->cli.act.add_path )
   {
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      ( void ) duf_add_path_uni( duf_config->targv[ia], "argument", 0 /*need_id */ , &r );
+      ( void ) duf_add_path_uni( duf_config->targv[ia], 0 /*need_id */ , &r );
     DUF_TEST_R( r );
   }
   /* ????????? */
@@ -236,7 +236,7 @@ duf_action_new( int argc, char **argv )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
 #endif
-  /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  /*          */ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   /* if ( r < 0 && !r == DUF_ERROR_MAX_REACHED ) */
   /*   DUF_TEST_R(r);        */
   /* else if ( r < 0 )                           */

@@ -40,8 +40,8 @@ typedef enum
 
   DUF_OPTION_FILL,
 
-  DUF_OPTION_PRINTF,
-  DUF_OPTION_PRINTF_FILE,
+  DUF_OPTION_OUTPUT,
+  DUF_OPTION_OUTPUT_FILE,
   DUF_OPTION_FORMAT,
 
   DUF_OPTION_INTEGRITY_TRACE,
@@ -244,14 +244,14 @@ typedef struct
   unsigned level;
   char *file;
   FILE *out;
-} duf_config_cli_printf_t;
+} duf_config_cli_output_t;
 
 typedef struct
 {
   duf_config_cli_actions_t act;
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
-  duf_config_cli_printf_t printf;
+  duf_config_cli_output_t output;
   duf_format_t format;
   /* long limit; */
   unsigned noopenat:1;

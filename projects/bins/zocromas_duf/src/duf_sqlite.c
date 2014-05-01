@@ -74,7 +74,7 @@ duf_sqlite_close( void )
 }
 
 int
-duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
+duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg )
 {
   int r3 = SQLITE_OK;
   char *emsg = ( char * ) NULL;
@@ -91,7 +91,7 @@ duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
     }
     else
     {
-      r3 = sqlite3_exec( pDb, sql, NULL, NULL, &emsg );
+      r3 = sqlite3_exec( pDb, sql, sqexe_cb, sqexe_data, &emsg );
     }
     if ( r3 == SQLITE_OK && pchanges )
       *pchanges = sqlite3_changes( pDb );
@@ -105,6 +105,28 @@ duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
 /*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
   DUF_TRACE( sql, 3, "[%s] : %d", sql, r3 );
   return ( r3 );
+}
+
+int
+duf_sqlite_execcb_e( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges )
+{
+  int r3;
+  char *emsg = NULL;
+
+  r3 = duf_sqlite_execcb( sql, sqexe_cb, sqexe_data, pchanges, &emsg );
+  if ( r3 != SQLITE_OK )
+    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+  if ( emsg )
+    sqlite3_free( emsg );
+  emsg = NULL;
+
+  return r3;
+}
+
+int
+duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
+{
+  return duf_sqlite_execcb( sql, ( duf_sqexe_cb_t ) NULL, ( void * ) NULL, pchanges, pemsg );
 }
 
 int
@@ -224,7 +246,7 @@ duf_vsqlite( const char *fmt, int *pchanges, va_list args )
  *  fmt + args - sql
  * */
 int
-duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
+duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
                     duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */ , const char *fmt,
                     va_list args )
 {
@@ -247,7 +269,7 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
     sql = sqlite3_vmprintf( fmt, args );
     if ( !sql )
     {
-      DUF_ERROR( "what happenrd to sql? [%s] => [%s]", fmt, sql );
+      DUF_ERROR( "what happend to sql? [%s] => [%s]", fmt, sql );
     }
     r3 = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
     assert( r3 != SQLITE_CORRUPT );
@@ -267,34 +289,23 @@ duf_sqlite_vselect( duf_sql_select_cb_t sel_cb, void *sel_cb_udata, duf_scan_cal
         for ( int ir = 1; ir <= row && rcb == 0; ir++ )
         {
           va_list cargs;
+          duf_record_t rrecord;
 
           va_copy( cargs, qargs );
 /* 
- * sel_cb is duf_sql_select_cb_t:
- *             int fun( int nrow, int nrows, const char *const *presult, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb );
+ * sel_cb is of duf_sel_cb_t:
  * */
-          if ( duf_config->cli.dbg.verbose > 1 )
-          {
-            const char *name = NULL;
-            const char *name2 = NULL;
 
-            /* if ( sel_cb == duf_sel_cb_field_by_sccb ) */
-            /*   name = "duf_sel_cb_field_by_sccb";      */
-            /* if ( str_cb == duf_uni_scan_dir )         */
-            /*   name2 = "duf_uni_scan_dir";             */
-
-            fprintf( stderr, "call sel_cb> %p:%s; pass %p:%s\n", ( void * ) ( unsigned long long ) sel_cb, name ? name : "-",
-                     ( void * ) ( unsigned long long ) str_cb, name2 ? name2 : "-" );
-          }
-          duf_record_t rrecord;
-
+#ifdef DUF_RECORD_WITH_NROWS
           rrecord.nrow = ir - 1;
           rrecord.nrows = row;
+#endif
           rrecord.ncolumns = column;
           rrecord.pnames = &pcresult[0 * column];
           rrecord.presult = &pcresult[ir * column];
           {
-            rcb = ( sel_cb ) ( &rrecord, cargs, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb /*, pdhu_off */  );
+
+            rcb = ( sel_cb ) ( &rrecord,  sel_cb_udata, str_cb, str_cb_udata, pdi, sccb   );
 
             DUF_TEST_R( rcb );
             DUF_TRACE( sql, 1, "row #%u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );

@@ -29,9 +29,9 @@
 
 
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 static int
-scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_unused */  )
 {
   int r = 0;
 
@@ -51,7 +51,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
    * */
 
 
-  DUF_PRINTF( 0, "%6llu:%6llu:%6llu [%10llu] file: %s\n", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
+  DUF_PRINTF( 0, "%6llu:%6llu:%6llu [%10llu] file: %s", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
 
   DEBUG_ENDR( r );
   return r;
@@ -60,7 +60,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 /* callback of type duf_scan_callback_dir_t */
 /* __attribute__ ( ( unused ) ) */
 static int
-scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
                   duf_record_t * precord )
 {
   int r = 0;
@@ -74,7 +74,7 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
     /* char *path = duf_pathid_to_path_s( pathid_unused ); */
 
 
-    DUF_PRINTF( 0, "------------------------------------- md5: %s\n", dirname );
+    DUF_PRINTF( 0, "------------------------------------- md5: %s", dirname );
 
 
     /* mas_free( path ); */

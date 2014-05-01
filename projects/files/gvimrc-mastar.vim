@@ -52,15 +52,15 @@ if exists("masedfile") && !empty(masedfile) && filereadable(masedfile)
   let  guienter=mas_localvimdirs . 'gvim-guienter.vim'
   if filereadable(guienter)
     au GUIEnter * sil so `=guienter`
-"   else
-"     echo 'guienter not found: ' . guienter
+  else
+    echo 'Not found: ' . guienter
   endif
 
   let  vimenter=mas_localvimdirs . 'gvim-vimenter.vim'
   if filereadable(vimenter)
     au VimEnter * sil so `=vimenter`
-"   else
-"     echo 'vimenter not found: ' . vimenter
+  else
+    echo 'Not found: ' . vimenter
   endif
 elseif exists("masedfile")
   echo 'masedfile not found: ' . masedfile

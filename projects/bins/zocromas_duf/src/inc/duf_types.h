@@ -12,10 +12,10 @@
 #  define DUF_CONSTRAINT_IGNORE_NO DUF_FALSE
 #  define DUF_CONSTRAINT_IGNORE_YES DUF_TRUE
 
-#  define SEL_CB_DEF ((duf_sql_select_cb_t)NULL)
+#  define SEL_CB_DEF ((duf_sel_cb_t)NULL)
 #  define SEL_CB_UDATA_DEF (NULL)
 
-#  define STR_CB_DEF ((duf_scan_callback_file_t)NULL)
+#  define STR_CB_DEF ((duf_str_cb_t)NULL)
 #  define STR_CB_UDATA_DEF (NULL)
 
 #  define DUF_STAT_DEF ((struct stat *) NULL)
@@ -36,24 +36,24 @@
 
 
 #  define DUF_PUTS( min, str) \
-    duf_puts( duf_config ? duf_config->cli.printf.level:0, min, \
+    duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
 		__func__,__LINE__, \
-			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, str)
+			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, str)
 #  define DUF_PUTSL( min) \
-    duf_puts( duf_config ? duf_config->cli.printf.level:0, min, \
+    duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
 		__func__,__LINE__, \
-			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, NULL)
+			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, NULL)
 
 
 #  define DUF_PRINTF( min, ...) \
-    duf_printf( duf_config ? duf_config->cli.printf.level:0, min, 0, \
+    duf_printf( duf_config ? duf_config->cli.output.level:0, min, 0, \
 		__func__,__LINE__, \
-			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, __VA_ARGS__ )
+			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
 
 #  define DUF_DIE( min, ...) \
-    duf_printf( duf_config ? duf_config->cli.printf.level:0, min, 1, \
+    duf_printf( duf_config ? duf_config->cli.output.level:0, min, 1, \
 		__func__,__LINE__, \
-			duf_config && duf_config->cli.printf.out?duf_config->cli.printf.out:stdout, __VA_ARGS__ )
+			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
 
 
 
@@ -95,12 +95,12 @@
 #  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
 
 #  define DUF_OINV(pref) assert( duf_config->cli.noopenat || !pref opendir || ( \
-    		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
+    		          ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \
 	    		- (pref  depth)  == 1 ) \
     		)
  /* - (pref levinfo?pref levinfo[pref depth].is_leaf:0) */
 #  define DUF_OINVC(pref) assert( duf_config->cli.noopenat || !pref opendir || ( \
-    		          ( (int) ( duf_config->nopen - (int) duf_config->nclose ) ) \
+    		          ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \
 	    		- (pref  depth)  == 0 ) \
     		)
 
@@ -242,8 +242,8 @@ typedef struct
 {
   unsigned opendir:1;
   unsigned maxdepth;
-  int depth; /* signed !! */
-  int topdepth; /* signed !! */
+  int depth;                    /* signed !! */
+  int topdepth;                 /* signed !! */
   /* duf_node_type_t node_type; */
   /* char *path; */
   duf_levinfo_t *levinfo;
@@ -266,7 +266,7 @@ typedef struct
 
 typedef struct
 {
-  int depth; /* signed !! */
+  int depth;                    /* signed !! */
   const struct
   {
     int *pseq;
@@ -284,11 +284,13 @@ typedef struct
 
 typedef struct
 {
+#  ifdef DUF_RECORD_WITH_NROWS
   int nrow;
   int nrows;
+#  endif
   int ncolumns;
-  const char *const *pnames;
   const char *const *presult;
+  const char *const *pnames;
 }
 duf_record_t;
 
@@ -296,10 +298,10 @@ struct duf_scan_callbacks_s;
 typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
 
 
-/* this is callback of type: duf_scan_hook_dir_t (second range; ; sel_cb): */
+/* this is callback of type: duf_scan_hook_dir_t : */
 typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord );
 
-/* this is callback of type: duf_scan_hook_file_t (first range; str_cb) */
+/* this is callback of type: duf_scan_hook_file_t : */
 typedef int ( *duf_scan_hook_file_t ) ( duf_depthinfo_t * pdi, duf_record_t * precord );
 
 typedef int ( *duf_scan_hook_file_fd_t ) ( int fd, const struct stat * pst_file, duf_depthinfo_t * pdi, duf_record_t * precord );
@@ -314,20 +316,29 @@ typedef int ( *duf_scan_hook_entry_dir_t ) ( const char *fname, const struct sta
 typedef int ( *duf_scan_hook_entry_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                                 duf_record_t * precord );
 
+
+typedef int ( *duf_sqexe_cb_t ) ( void *sqexe_data, int ncolumns, char **presult, char **pnames );
+
 typedef int ( *duf_anyhook_t ) ( void );
 
 
 
-/* this is callback of type: duf_scan_callback_file_t (first range; str_cb) */
-typedef int ( *duf_scan_callback_file_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi,
-                                            struct duf_scan_callbacks_s * sccb,
-                                            duf_record_t * precord /*, const duf_dirhandle_t * pdhu_off */  );
+/* this is callback of type: duf_str_cb_t (first range; str_cb) */
+typedef int ( *duf_str_cb_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s * sccb, duf_record_t * precord );
 
 
+/* this is callback of type:duf_sel_cb_t (second range; ; sel_cb) */
+typedef int ( *duf_sel_cb_t ) ( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                                struct duf_scan_callbacks_s * sccb );
+/* KNOWN duf_sel_cb_t callbacks:
+ * duf_sel_cb_field_by_sccb	: str_cb_unused	, str_cb_udata_unused, pdi_unused
+ * duf_sel_cb_levinfo		: str_cb_unused	, str_cb_udata_unused, xpdi_unused,	sccb_unused
+ * duf_sel_cb_name_parid	: str_cb_unused	, str_cb_udata_unused, 			sccb_unused
+ * duf_sel_cb_leaf		:		, sel_cb_udata_unused
+ * duf_sel_cb_node		:		, sel_cb_udata_unused
+*/
 
-typedef int ( *duf_sql_select_cb_t ) ( duf_record_t * precord, va_list args,
-                                       void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                                       struct duf_scan_callbacks_s * sccb /*, const duf_dirhandle_t * pdhu_off */  );
+
 
 
 struct duf_scan_callbacks_s

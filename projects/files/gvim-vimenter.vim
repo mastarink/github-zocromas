@@ -1,9 +1,10 @@
 " echo 'in ' . expand('<sfile>')
 
-if filereadable("gvim-vimenter.vim")
-  source gvim-funcs.vim
+let  gvim_funcs=mas_localvimdirs . 'gvim-funcs.vim'
+if filereadable(gvim_funcs)
+  source `=gvim_funcs`
 else
-  echo 'gvim-funcs.vim'
+  echo 'Not found: ' . gvim_funcs
 endif
 
 set swb=usetab,newtab,split

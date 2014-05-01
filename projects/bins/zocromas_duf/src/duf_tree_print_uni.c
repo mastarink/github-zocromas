@@ -33,144 +33,107 @@
 /* ###################################################################### */
 
 
+/* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
+/* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
+/* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
+/* ╌ ╍ ╎ ╏ ═ ║ ╒ ╓ ╔ ╕ ╖ ╗ ╘ ╙ ╚ ╛ ╜ ╝ ╞ ╟ ╠ ╡ ╢ ╣ ╤ ╥ ╦ ╧ ╨ ╩ ╪ ╫ ╬ */
+/* ╭ ╮ ╯ ╰ ╱ ╲ ╳ ╴ ╵ ╶ ╷ ╸ ╹ ╺ ╻ ╼ ╽ ╾ ╿                                                         */
+/* ₴ ☑ ♒ */
+/* ⬅⬇⬆➡🔜  🆘  🐰 */
+/* ╔═╦══╤╗ ┏━┳━━┯┓ ┌─┰──┬┐ ╲    ╲   ╱    ╱   ╭─────╮
+ * ║ ║  │║ ┃ ┃  │┃ │ ┃  ││  ╲    ╲ ╱    ╱    │     │       ╷
+ * ╠═╬══╪╣ ┣━╋━━┿┫ ┝━╋━━┿┥   ╲    ╳    ╱     │     │      ╶┼╴
+ * ╟─╫──┼╢ ┠─╂──┼┨ ├─╂──┼┤    ╲  ╱ ╲  ╱      ╰─────╯       ╵
+ * ╚═╩══╧╝ ┗━┻━━┷┛ └─┸──┴┘     ╲╱   ╲╱              
+ * */
 static int
 duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
 {
   int r = 0;
-  int max = duf_pdi_depth( pdi );
 
-  /* if ( pdi->depth <= 0 )                                             */
-  /*   DUF_ERROR( "depth should not be %d at this point", pdi->depth ); */
-  if ( duf_pdi_reldepth( pdi ) >= 0 )
+  DEBUG_START(  );
+
   {
+    int d0 = 0;
+    int max = duf_pdi_depth( pdi );
 
-    DEBUG_START(  );
-    if ( pdi )
+    for ( int d = d0; d <= max; d++ )
     {
-      int d0;
+      int du = d - 1;
+      unsigned flags = 0;
+      long ndu = duf_levinfo_numdir_d( pdi, du );
+      char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'z' );
+      int leaf = duf_levinfo_is_leaf_d( pdi, d );
+      char leafc = leaf ? 'L' : 'N';
+      int eod = duf_levinfo_eod_d( pdi, d );
+      char eodc = eod ? 'E' : '-';
+      char is_filec = is_file ? 'F' : '-';
 
-      d0 = duf_pdi_topdepth( pdi );
-      if ( d0 > 0 )
-        d0--;
-      d0 = 0;
-      for ( int d = d0; d <= max; d++ )
+      if ( ndu > 0 )
+        flags |= 0x1;
+      if ( ndu < 0 )
+        flags |= 0x2;
+      if ( leaf )
+        flags |= 0x4;
+      if ( eod )
+        flags |= 0x8;
+      if ( d == max )
+        flags |= 0x10;
+      if ( d >= pdi->maxdepth - 1 )
+        flags |= 0x20;
+      /* if ( is_file )   */
+      /*   flags |= 0x40; */
+      if ( duf_config->cli.dbg.debug )
       {
-        int du = d - 1;
-        unsigned flags = 0;
-        long ndu = duf_levinfo_numdir_d( pdi, du );
-        char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'z' );
-        int leaf = duf_levinfo_is_leaf_d( pdi, d );
-        char leafc = leaf ? 'L' : 'N';
-        int eod = duf_levinfo_eod_d( pdi, d );
-        char eodc = eod ? 'E' : '-';
-        char is_filec = is_file ? 'F' : '-';
-
-        if ( ndu > 0 )
-          flags |= 0x1;
-        if ( ndu < 0 )
-          flags |= 0x2;
-        if ( leaf )
-          flags |= 0x4;
-        if ( eod )
-          flags |= 0x8;
-        if ( d == max )
-          flags |= 0x10;
-        if ( d >= pdi->maxdepth -1)
-          flags |= 0x20;
-        /* if ( is_file )   */
-        /*   flags |= 0x40; */
-        if ( duf_config->cli.dbg.debug )
+        DUF_PRINTF( 0, ".L%-2d", d );
+        DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth );
+        DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) );
+        /* DUF_PRINTF( 0, ".(%3ld)", ndu ); */
+        DUF_PRINTF( 0, ".%c%c%c%c", eodc, nduc, leafc, is_filec );
+        /* DUF_PRINTF( 0, ".0x%02x",  flags ); */
+      }
+      {
+        /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
+        /*   DUF_PRINTF( 0, ".[  ◇ ]" );        */
+        /* else                                   */
+        switch ( flags )
         {
-          DUF_PRINTF( 0, ".L%-2d", d );
-          DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth );
-          DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) );
-          /* DUF_PRINTF( 0, ".(%3ld)", ndu ); */
-          DUF_PRINTF( 0, ".%c%c%c%c", eodc, nduc, leafc, is_filec );
-          /* DUF_PRINTF( 0, ".0x%02x",  flags ); */
-        }
-        if ( pdi->levinfo )
-        {
-          if ( 1 )
-          {
-            /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
-            /*   DUF_PRINTF( 0, ".[  ◇ ]" );        */
-            /* else                                   */
-            switch ( flags )
-            {
-            case 0x14:
-            case 0x34:
-            case 0x35:
-              DUF_PRINTF( 0, ".  ◇ " );
-              break;
-            case 0x15:
-              DUF_PRINTF( 0, ".│ ◇ " );
-              break;
-            case 0x10:
-              DUF_PRINTF( 0, ".└─── " );
-              break;
-            case 0x11:
-              DUF_PRINTF( 0, ".├─── " );
-              break;
-            case 0x1:
-              DUF_PRINTF( 0, ".│    " );
-              break;
-            case 0x8:
-              DUF_PRINTF( 0, ".     " );
-              break;
-            case 0x2:
-            case 0x0:
-              /* DUF_PRINTF( 0, ".     " ); */
-              break;
-            default:
-              DUF_PRINTF( 0, ".  0x%02x", flags );
-              break;
-            }
-          }
-          else
-          {
-            if ( duf_levinfo_numdir_d( pdi, du ) > 0 )
-            {
-              if ( d == max )
-              {
-                if ( !eod )
-                  DUF_PRINTF( 0, ".[├─── ]" );
-                else
-                  DUF_PRINTF( 0, ".[ *%-3d]", __LINE__ );
-              }
-              else
-              {
-                if ( !eod )
-                  DUF_PRINTF( 0, ".[│    ]" );
-                else
-                  DUF_PRINTF( 0, ".[ *%-3d]", __LINE__ );
-              }
-            }
-            else if ( duf_levinfo_numdir_d( pdi, du ) == 0 )
-            {
-              if ( d == max )
-              {
-                if ( !eod )
-                  DUF_PRINTF( 0, ".[└─── ]" );
-                else
-                  DUF_PRINTF( 0, ".[ *%-3d]", __LINE__ );
-              }
-              else
-              {
-                DUF_PRINTF( 0, ".[ *%-3d]", __LINE__ );
-              }
-            }
-            else
-            {
-              if ( eod )
-                DUF_PRINTF( 0, ".[ %-4d]", __LINE__ );
-              else
-                DUF_PRINTF( 0, ".[ %-4d]", __LINE__ );
-            }
-          }
-        }
-        else
-        {
-          DUF_PRINTF( 0, ".??? " );
+        case 0x14:
+        case 0x34:
+        case 0x35:
+          DUF_PRINTF( 0, ".  → " );
+          break;
+        case 0x15:
+          DUF_PRINTF( 0, ".│ → " );
+          break;
+        case 0x10:
+        case 0x30:
+          DUF_PRINTF( 0, ".└─── " );
+          break;
+        case 0x11:
+        case 0x31:
+          DUF_PRINTF( 0, ".├─── " );
+          break;
+        case 0x01:
+        case 0x21:
+          DUF_PRINTF( 0, ".│    " );
+          break;
+        case 0x12:
+          DUF_PRINTF( 0, ".┣━━━ " );
+          break;
+        case 0x28:
+        case 0x8:
+          DUF_PRINTF( 0, ".     " );
+          break;
+        case 0x02:
+          DUF_PRINTF( 0, ".┃    " );
+          break;
+        case 0x00:
+          DUF_PRINTF( 0, ".     " );
+          break;
+        default:
+          DUF_PRINTF( 0, ". 0x%02x]", flags );
+          break;
         }
       }
     }
@@ -179,9 +142,10 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi, int is_file )
   return r;
 }
 
-/* callback of  duf_scan_callback_file_t */
-__attribute__ ( ( unused ) )
-     static int scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+/* callback of  duf_scan_hook_file_t */
+/* __attribute__ ( ( unused ) ) */
+static int
+tree_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_unused */  )
 {
   int r = 0;
 
@@ -191,7 +155,7 @@ __attribute__ ( ( unused ) )
   DEBUG_START(  );
 
   {
-    duf_fileinfo_t fi = {.st.st_uid = 0,.st.st_gid = 0 };
+    duf_fileinfo_t fi = { 0 };
     duf_format_t format = {.filename = 0,.seq = 1 };
     /* fi.st.st_mode = ( mode_t ) filemode; */
     /* fi.st.st_ino = ( ino_t ) inode; */
@@ -220,9 +184,10 @@ __attribute__ ( ( unused ) )
 /*
  * this is callback of type: duf_scan_callback_dir_t (second range;):
  * */
-__attribute__ ( ( unused ) )
-     static int scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                  duf_record_t * precord )
+/* __attribute__ ( ( unused ) ) */
+static int
+tree_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
+                       duf_record_t * precord )
 {
   /* DUF_SFIELD( dirname ); */
 
@@ -243,7 +208,7 @@ __attribute__ ( ( unused ) )
     {
       /* optimizing makes puts, segfault by NULL, therefore DUF_PRINTF(0, "%s\n", dirname  ); is not good */
       /* DUF_PRINTF( 0, "<<<%s>>>", dirname ? dirname : "-=No dirname=-" ); */
-      DUF_PRINTF( 0, "%s", pdi->levinfo[pdi->depth].itemname );
+      DUF_PRINTF( 0, "%s", duf_levinfo_itemname( pdi ) );
     }
   }
 
@@ -255,8 +220,8 @@ __attribute__ ( ( unused ) )
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
   .init_scan = NULL,
-  .node_scan_before = scan_node_before,
-  .leaf_scan = scan_leaf,
+  .node_scan_before = tree_scan_node_before,
+  .leaf_scan = tree_scan_leaf,
   .fieldset = "duf_filenames.pathid AS dirid " " , duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         " , uid, gid, nlink, inode, mtim AS mtime "
         " , dupcnt AS nsame"

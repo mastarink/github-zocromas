@@ -19,7 +19,7 @@
 #include "duf_levinfo.h"
 
 #include "duf_path.h"
-#include "duf_file.h"
+/* #include "duf_file.h" */
 
 /* #include "duf_sql_def.h" */
 /* #include "duf_sql.h" */
@@ -33,7 +33,7 @@
 
 
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 static int
 sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {
@@ -79,7 +79,7 @@ sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 /* callback of type duf_scan_callback_dir_t */
 /* will be static! */
 int
-sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
                          duf_record_t * precord )
 {
   int r = 0;
@@ -104,7 +104,7 @@ sample_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * p
 }
 
 static int
-sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
                         duf_record_t * precord )
 {
   int r = 0;
@@ -131,7 +131,7 @@ sample_scan_node_after( unsigned long long pathid, /* const duf_dirhandle_t * pd
 }
 
 static int
-sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+sample_scan_node_middle( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
                          duf_record_t * precord )
 {
   int r = 0;

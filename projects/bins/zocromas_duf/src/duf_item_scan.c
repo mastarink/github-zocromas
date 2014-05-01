@@ -29,7 +29,7 @@
 
 
 /* duf_sel_cb_leaves:
- * this is callback of type: duf_sql_select_cb_t (first range): 
+ * this is callback of type: duf_sel_cb_t (first range): 
  *
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
@@ -38,9 +38,8 @@
  * */
 /* will be static! */
 int
-duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused,
-                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                 duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */  )
+duf_sel_cb_leaf( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t str_cb, void *str_cb_udata,
+                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
   int rc;
@@ -72,7 +71,7 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
     {
       r = duf_levinfo_openat_dh( pdi );
       if ( r >= 0 )
-        r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord /*, pdhu_off */  );
+        r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord   );
       DUF_TEST_R( r );
       /* DUF_ERROR( "r:%d; str_cb:%s", r, DUF_FUNN( str_cb ) ); */
       rc = duf_levinfo_closeat_dh( pdi );
@@ -93,7 +92,7 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
 }
 
 /* duf_sel_cb_leaves:
- * this is callback of type: duf_sql_select_cb_t (first range): 
+ * this is callback of type: duf_sel_cb_t (first range): 
  *
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
@@ -102,9 +101,8 @@ duf_sel_cb_leaf( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
  * */
 /* will be static! */
 int
-duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused,
-                 duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                 duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */  )
+duf_sel_cb_node( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t str_cb, void *str_cb_udata,
+                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
@@ -121,6 +119,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
   DUF_OINV( pdi-> );
   DUF_TRACE( scan, 0, "scan node" );
   r = duf_levinfo_down( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  );
+  assert( pdi->depth >= 0 );
   if ( r != DUF_ERROR_MAX_DEPTH )
     DUF_TEST_R( r );
   /* DUF_ERROR( "r:%d;", r ); */
@@ -152,7 +151,7 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
           DUF_TRACE( scan, 0, "scan node" );
 
           if ( r >= 0 )
-            r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord /*, pdhu_off */  );
+            r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord   );
           DUF_TEST_R( r );
           /* DUF_ERROR( "F:%s", DUF_FUNN( str_cb ) ); */
           DUF_OINV_OPENED( pdi-> );
@@ -185,15 +184,15 @@ duf_sel_cb_node( duf_record_t * precord, va_list args, void *sel_cb_udata_unused
  * call str_cb + str_cb_udata for each record by sql with corresponding args
  * */
 static int
-duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                     duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */ , const char *sql, va_list args )
+duf_scan_vitems_sql( duf_node_type_t node_type, duf_str_cb_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                     duf_scan_callbacks_t * sccb  , const char *sql, va_list args )
 {
   int r = DUF_ERROR_UNKNOWN_NODE;
-  duf_sql_select_cb_t sel_cb = NULL;
+  duf_sel_cb_t sel_cb = NULL;
 
   DEBUG_START(  );
 /* duf_sel_cb_(node|leaf):
- * this is callback of type: duf_sql_select_cb_t (first range): 
+ * this is callback of type: duf_sel_cb_t (first range): 
  *
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
@@ -208,7 +207,7 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
              str_cb ? '+' : '-' );
 
   if ( sel_cb )
-    r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, /* pdhu_off, */ sql, args );
+    r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, str_cb_udata, pdi, sccb, sql, args );
 
   DUF_TRACE( scan, 0, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
   DUF_OINV( pdi-> );
@@ -224,8 +223,8 @@ duf_scan_vitems_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb,
  * call str_cb + str_cb_udata for each record by sql with corresponding args
  * */
 int
-duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
-                    duf_scan_callbacks_t * sccb, /* const duf_dirhandle_t * pdhu_off, */ const char *sql, ... )
+duf_scan_items_sql( duf_node_type_t node_type, duf_str_cb_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
+                    duf_scan_callbacks_t * sccb, const char *sql, ... )
 {
   int r = 0;
   va_list args;
@@ -235,7 +234,7 @@ duf_scan_items_sql( duf_node_type_t node_type, duf_scan_callback_file_t str_cb, 
     va_start( args, sql );
     {
       DUF_OINV( pdi-> );
-      r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, /* pdhu_off, */ sql, args );
+      r = duf_scan_vitems_sql( node_type, str_cb, str_cb_udata, pdi, sccb, sql, args );
       DUF_OINV( pdi-> );
       DUF_TEST_R( r );
     }

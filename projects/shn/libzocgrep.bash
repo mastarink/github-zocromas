@@ -1,11 +1,30 @@
-function grepch ()
+function grepchg ()
 {
+  local qargs
+  for (( i=1; i <= $# ; i++ )) ; do
+    qargs+=" '${!i}'"
+  done
+
   if pushd $MSH_SHN_PROJECTS_DIR &>/dev/null ; then
 #   shn_msg grep "$*" -- ${MSH_SHN_PROJECTS[@]}
-    eval grep $* -r --inc='*.[ch]' -- ${MSH_SHN_PROJECTS[@]}
+    eval grep -r --inc='*.[ch]' $qargs -- ${MSH_SHN_PROJECTS[@]}
     popd &>/dev/null
   fi
 }
+function grepchp ()
+{
+  local qargs
+  for (( i=1; i <= $# ; i++ )) ; do
+    qargs+=" '${!i}'"
+  done
+
+  if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
+#   shn_msg grep "$*"
+    eval grep  -r --inc='*.[ch]' $qargs -- src/
+    popd &>/dev/null
+  fi
+}
+
 function grepnc ()
 {  
   local opts 
@@ -66,7 +85,7 @@ function grepf ()
 function wfile ()
 {
   local f
-  for f in `grepch -l $*` ; do
+  for f in `grepchg -l $*` ; do
     shn_msg "$f : `shn_project_by_file $f`"
   done
 }

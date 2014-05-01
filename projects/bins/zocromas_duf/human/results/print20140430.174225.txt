@@ -1,3 +1,4 @@
+# run  --uni-scan   --print  -Rdf --totals   --max-depth=36 /home/mastar/a/down/ --files --output=tttt
        1  24455219        12683 =1   :: 1SKEhBZ0.htm.part              
        2  24455199        27225 =1   :: 4m1hut.htm                     
        3  24453734      3686400 =1   :: Aladin.tar                     

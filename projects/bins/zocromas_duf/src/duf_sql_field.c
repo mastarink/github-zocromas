@@ -90,10 +90,12 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
   return ptr ? strtoll( ptr, NULL, 10 ) : 0;
 }
 
-/* this is callback of type: duf_sql_select_cb_t (first range) */
+/* 
+ * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
+ * */
 int
-duf_sel_cb_field_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                          duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
+                          duf_depthinfo_t * pdi_unused, duf_scan_callbacks_t * sccb )
 {
   int r = DUF_ERROR_GET_FIELD;
 
@@ -104,19 +106,31 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, va_list args, void *sel_cb_uda
 
     pvalue = ( unsigned long long * ) sel_cb_udata;
     /* fprintf( stderr, "OGO %s :: %llu\n", __func__, duf_sql_ull_by_name( sccb->fieldset, precord, 0 ) ); */
-    if ( pvalue && precord->nrow == 0 )
+    if ( pvalue
+#ifdef DUF_RECORD_WITH_NROWS
+         && precord->nrow == 0
+#endif
+           )
     {
       int have_pos = 0;
 
       r = DUF_ERROR_NO_FIELD_OPTIONAL;
       *pvalue = __duf_sql_ull_by_name( sccb->fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )
+      {
+#ifdef DUF_RECORD_WITH_NROWS
         r = precord->nrow;
+#else
+        r = 0;
+#endif
+      }
       else
         DUF_ERROR( "r=%d; no field %s", r, sccb->fieldset );
     }
+#ifdef DUF_RECORD_WITH_NROWS
     else
       DUF_ERROR( "something is wrong" );
+#endif
   }
   else
   {

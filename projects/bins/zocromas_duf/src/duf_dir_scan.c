@@ -31,10 +31,8 @@
 /* ###################################################################### */
 
 
-/* will be static! */
-int
-duf_scan_file_fd( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb,
-                  duf_record_t * precord /*, const duf_dirhandle_t * pdhu_unused_off */  )
+static int
+duf_str_cb_scan_file_fd( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
 {
   int r = 0;
 
@@ -55,9 +53,11 @@ duf_scan_file_fd( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_
   return r;
 }
 
+/* 
+ * this is callback of type: duf_str_cb_t (first range; str_cb) 
+ * */
 int
-duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb,
-               duf_record_t * precord /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_str_cb_scan_file( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
 {
   int r = 0;
 
@@ -67,7 +67,7 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
     pdi->items.total++;
     pdi->items.files++;
 
-    r = sccb->leaf_scan( pdi, precord /*, pdhu_unused_off */  );
+    r = sccb->leaf_scan( pdi, precord );
 
     DUF_TEST_R( r );
     DUF_TRACE( scan, 0, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
@@ -96,7 +96,7 @@ duf_scan_file( void *str_cb_udata_notused, duf_depthinfo_t * pdi, struct duf_sca
  *     5. for <current> dir call sccb->node_scan_after
  * */
 static int
-duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off */ , duf_scan_callback_file_t str_cb,
+duf_scan_dir_by_pi( unsigned long long dirid  , duf_str_cb_t str_cb,
                     duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   int r = 0;
@@ -132,7 +132,7 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
     if ( d >= 0 && pdi->levinfo[d].numdir == 0 && !duf_levinfo_is_leaf( pdi ) )
       duf_levinfo_set_eod( pdi );
   }
-  assert( pdi->depth > 0 );
+  /* assert( pdi->depth > 0 ); */
   /* if ( duf_levinfo_numdir_d( pdi, pdi->depth - 1 ) <= 0 ) */
   /* {                                                       */
   /*   DUF_PRINTF(0, "EOD for L%u", pdi->depth - 1 );        */
@@ -144,19 +144,17 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
   {
     {
 /* duf_scan_files_by_pathid:
- * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_scan_file) + pdi (also) as str_cb_udata
+ * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb_scan_file) + pdi (also) as str_cb_udata
  * 			for each <file> record by dirid with corresponding args
  *
- * duf_scan_file is called from  duf_leaf_scan.c:duf_sel_cb_items()
  * */
       if ( r >= 0 && sccb && sccb->leaf_scan_fd )
       {
         DUF_OINV_OPENED( pdi-> );
         DUF_TRACE( scan, 0, "scan files by:%llu", dirid );
 
-        r = duf_scan_files_by_dirid( dirid, duf_scan_file_fd /* str_cb */ , pdi, sccb /*, pdh_off */  );
+        r = duf_scan_files_by_dirid( dirid, duf_str_cb_scan_file_fd, pdi, sccb );
 
-        /* r = duf_scan_files_by_dirid( dirid, sccb->leaf_scan (* str_cb *) , pdi, sccb ); */
         DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
@@ -165,21 +163,8 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
         DUF_OINV_OPENED( pdi-> );
         DUF_TRACE( scan, 0, "scan files by:%llu", dirid );
 
-        {
-          int rr __attribute__ ( ( unused ) );
-          int ch __attribute__ ( ( unused ) ) = 0;
+        r = duf_scan_files_by_dirid( dirid, duf_str_cb_scan_file, pdi, sccb );
 
-          rr = duf_sql( "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
-                        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
-                        " FROM duf_paths "
-                        " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
-                        " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ", &ch, 26LLU );
-        }
-
-
-        r = duf_scan_files_by_dirid( dirid, duf_scan_file /* str_cb */ , pdi, sccb /*, pdh_off */  );
-
-        /* r = duf_scan_files_by_dirid( dirid, sccb->leaf_scan (* str_cb *) , pdi, sccb ); */
         DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
       }
@@ -209,7 +194,7 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
       {
         DUF_OINV( pdi-> );
         DUF_OINV_OPENED( pdi-> );
-        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb /*, pdh_off */ , sccb->node_selector,
+        r = duf_scan_items_sql( DUF_NODE_NODE, str_cb, pdi, pdi, sccb, sccb->node_selector,
                                 /* pdi->u.minsize,                                                              */
                                 /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
                                 /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
@@ -255,7 +240,7 @@ duf_scan_dir_by_pi( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off
  * see duf_scan_dir_by_pi
  * */
 int
-duf_scan_dirs_by_parentid( unsigned long long dirid /*, const duf_dirhandle_t * pdh_off */ , duf_scan_callback_file_t str_cb,
+duf_scan_dirs_by_parentid( unsigned long long dirid  , duf_str_cb_t str_cb,
                            duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   int r = 0;
@@ -285,7 +270,7 @@ duf_scan_dirs_by_parentid( unsigned long long dirid /*, const duf_dirhandle_t * 
   {
     DUF_OINV_OPENED( pdi-> );
     DUF_TRACE( scan, 0, "scan dirid:%llu", dirid );
-    r = duf_scan_dir_by_pi( dirid /*, pdh_off */ , str_cb, pdi, sccb, precord );
+    r = duf_scan_dir_by_pi( dirid  , str_cb, pdi, sccb, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }

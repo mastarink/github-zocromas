@@ -98,9 +98,9 @@ duf_collect_insert_filename_uni( const char *fname, unsigned long long dir_id, u
 }
 
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 static int
-collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -137,7 +137,8 @@ collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_d
 }
 
 static int
-duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
+                    duf_record_t * precord )
 {
   int r = 0;
   unsigned long long dataid = 0;
@@ -163,196 +164,6 @@ duf_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long l
   ( void ) duf_insert_path_uni( fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
   return r;
 }
-
-#if 0
-static int
-duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid( struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi )
-{
-  int r = 0;
-
-  /* unsigned long long itemid = 0; */
-
-  DEBUG_START(  );
-  const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
-  struct stat st;
-  const char *real_path = NULL;
-
-  r = fstatat( pdhi->dfd, de->d_name, &st, 0 );
-  if ( r < 0 )
-  {
-    if ( !real_path )
-      real_path = duf_levinfo_path( pdi );
-    /* char *rp = duf_pathid_to_path_s( pathid, pdi, &r ); */
-
-    DUF_ERROR( "No such entry %s/%s", real_path, de->d_name );
-    /* mas_free( rp ); */
-    r = DUF_ERROR_STAT;
-  }
-
-  if ( r >= 0 )
-    switch ( de->d_type )
-    {
-    case DT_REG:
-      {
-        r = duf_scan_entry_reg( de->d_name, &st, pathid, pdi );
-
-        if ( !real_path )
-          real_path = duf_levinfo_path( pdi );
-        DUF_TRACE( collect, 0, "regfile='%s%s'", real_path ? real_path : "?/", de->d_name );
-      }
-      break;
-    case DT_DIR:
-      {
-        /* ( void ) duf_insert_path_uni( de->d_name, pst->st_dev, pst->st_ino, pathid, 0 (*need_id *) , &r ); */
-        r = duf_scan_entry_dir( de->d_name, &st, pathid, pdi );
-
-        if ( !real_path )
-          real_path = duf_levinfo_path( pdi );
-        DUF_TRACE( collect, 0, "dir='%s%s'", real_path ? real_path : "?/", de->d_name );
-      }
-      break;
-    }
-  DEBUG_ENDR( r );
-  return r;
-}
-
-/* TODO scan for removed files; mark as absent or remove from db */
-static int
-duf_collect_ent_flt_uni( unsigned long long pathid, duf_depthinfo_t * pdi, const char *dfname )
-{
-  int r = 0;
-
-  /* int items = 0; */
-
-  const struct stat *pst_dir;
-
-  const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
-  const char *real_path = NULL;
-
-  assert( pdhi );
-
-  pst_dir = &pdhi->st;
-
-
-/* check if it is really directory - by st_dir : S_ISDIR(st_dir.st_mode) */
-  if ( r || !pst_dir || !( S_ISDIR( pst_dir->st_mode ) ) )
-  {
-    if ( !real_path )
-      real_path = duf_levinfo_path( pdi );
-/* no such entry */
-    DUF_ERROR( "No such entry '%s'/'%s'", real_path ? real_path : "?", dfname );
-    /* TODO mark as absent or remove from db */
-
-    DUF_TRACE( collect, 1, "No such entry %s", dfname );
-    r = DUF_ERROR_STAT;
-  }
-  else
-  {
-    int nlist;
-    struct dirent **list = NULL;
-
-    DEBUG_START(  );
-    DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
-    nlist = scandirat( pdhi->dfd, ".", &list, duf_direntry_filter, alphasort );
-    DUF_TRACE( collect, 1, "pathid=%llu; nlist=%d", pathid, nlist );
-    if ( nlist < 0 )
-    {
-      int errorno = errno;
-
-      if ( !real_path )
-        real_path = duf_levinfo_path( pdi );
-
-      if ( !real_path )
-        r = DUF_ERROR_PATH;
-      else if ( errorno == EACCES )
-        r = 0;
-      else
-      {
-        DUF_ERRSYSE( errorno, "path '%s'/'%s'", real_path ? real_path : "?", dfname );
-        r = DUF_ERROR_SCANDIR;
-      }
-      DUF_TEST_R( r );
-    }
-    else
-    {
-      for ( int il = 0; il < nlist; il++ )
-      {
-        {
-          /* unsigned long long itemid = 0; */
-
-          DUF_TRACE( collect, 1, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
-
-          /* itemid = */
-          r = duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* pdhi, */ list[il], pathid, pdi );
-
-          DUF_TEST_R( r );
-          /* if ( itemid ) */
-          /*   items++;    */
-        }
-        if ( list[il] )
-          free( list[il] );
-      }
-      if ( list )
-        free( list );
-      DUF_TEST_R( r );
-    }
-  }
-
-  /* mas_free( real_path ); */
-  DEBUG_ENDR( r );
-  return r;
-}
-
-/* callback of type duf_scan_callback_dir_t */
-static int
-collect_scan_node_before( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  DEBUG_START(  );
-  DUF_TRACE( collect, 1, "pathid=%llu", pathid );
-
-  /* pathid needless? */
-  assert( pathid == pdi->levinfo[pdi->depth].dirid );
-  {
-    const char *real_path = NULL;
-
-    /* char *path = NULL; */
-
-    if ( DUF_IF_TRACE( collect ) )
-    {
-      if ( !real_path )
-        real_path = duf_levinfo_path( pdi );
-      /* path = duf_pathid_to_path_s( pathid, pdi, &r ); */
-
-      DUF_TRACE( collect, 1, "real_path=%s", real_path );
-    }
-/* TODO additionally 
- * for each direntry:
- *  -- 
- * */
-
-/* stat */
-    /* duf_collect_pathid_filter_uni:
-     * update (collected below) information for path
-     * */
-    {
-      DUF_SFIELD( dfname );
-      DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
-      r = duf_collect_ent_flt_uni( pathid, pdi, dfname );
-    }
-
-    if ( DUF_IF_TRACE( collect ) )
-    {
-      DUF_TRACE( collect, 1, "real_path=%s", real_path );
-    }
-    /* mas_free( path ); */
-  }
-  DEBUG_ENDR( r );
-  return r;
-}
-#endif
-
 
 
 

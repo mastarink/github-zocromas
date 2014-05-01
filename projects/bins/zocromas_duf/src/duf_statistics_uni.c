@@ -18,7 +18,7 @@
 #include "duf_levinfo.h"
 
 #include "duf_path.h"
-#include "duf_file.h"
+/* #include "duf_file.h" */
 
 /* #include "duf_sql_def.h" */
 /* #include "duf_sql.h" */
@@ -32,9 +32,9 @@
 
 
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 static int
-scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_unused */  )
 {
   int r = 0;
 
@@ -70,7 +70,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
                   duf_record_t * precord )
 {
   int r = 0;

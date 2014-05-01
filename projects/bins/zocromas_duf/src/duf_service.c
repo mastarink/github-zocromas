@@ -56,7 +56,8 @@ duf_dbg_funname( duf_anyhook_t p )
 
 
   static duf_fundesc_t table[] = {
-    DUF_FUN( duf_uni_scan_dir ),
+    DUF_FUN( duf_str_cb_uni_scan_dir ),
+    DUF_FUN( duf_str_cb_scan_file ),
 #ifdef DUF_COMPILE_EXPIRED
     DUF_FUN( duf_sel_cb_name_parid ),
 #endif
@@ -64,7 +65,6 @@ duf_dbg_funname( duf_anyhook_t p )
     DUF_FUN( duf_sel_cb_node ),
     DUF_FUN( duf_sel_cb_leaf ),
     DUF_FUN( duf_sel_cb_levinfo ),
-    DUF_FUN( duf_scan_file ),
   };
   for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )
   {

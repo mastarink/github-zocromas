@@ -3,6 +3,6 @@ define hook-quit
     set confirm off
 end
 handle SIGPIPE nostop noprint
-b src/duf_path.c:132
+b duf_levinfo.c:554
 run
 bt

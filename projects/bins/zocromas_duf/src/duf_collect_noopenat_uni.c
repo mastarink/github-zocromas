@@ -104,26 +104,13 @@ duf_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned 
 }
 
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 static int
-scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_unused */  )
 {
   int r = 0;
 
   DEBUG_START(  );
-/* stat */
-
-
-/* static int                                                                                                                        */
-/* duf_sql_update_filedatas(  duf_record_t * precord, va_list args, void *sel_cb_udata,                          */
-/*                           duf_scan_callback_file_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb ) */
-
-
-  /* 
-   * --uni-scan   -R   --collect   --files  --dirs  -FF
-   *                   ^^^^^^   ^^^^^^^  ^^^^^^
-   * */
-
 
   if ( DUF_IF_TRACE( collect ) )
   {
@@ -186,7 +173,7 @@ duf_update_realpath_file_name_inode_filter_uni( const char *real_path, const cha
 }
 
 static unsigned long long
-duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ const char *fname, unsigned long long dirid,
+duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_unused, */ const char *fname, unsigned long long dirid,
                                                   duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
@@ -198,7 +185,7 @@ duf_collect_file_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pd
   DEBUG_START(  );
   const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
 
-  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_notused, ( void * ) pdhi ); */
+  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_unused, ( void * ) pdhi ); */
   r = fstatat( pdhi->dfd, fname, &st_file, 0 );
   if ( r < 0 )
   {
@@ -269,7 +256,7 @@ duf_collect_file_or_dir_info_by_realpath_and_name_and_pathid( const char *real_p
 }
 
 static unsigned long long
-duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_notused, */ struct dirent *de,
+duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle_t * pdh_unused, */ struct dirent *de,
                                                          unsigned long long pathid, duf_depthinfo_t * pdi, int need_id, int *pr )
 {
   int r = 0;
@@ -278,14 +265,14 @@ duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle
   DEBUG_START(  );
   const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi );
 
-  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_notused, ( void * ) pdhi ); */
+  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_unused, ( void * ) pdhi ); */
 
   switch ( de->d_type )
   {
   case DT_REG:
     {
       DUF_TRACE( collect, 1, "regfile='.../%s'", de->d_name );
-      itemid = duf_collect_file_info_by_pdh_and_name_and_pathid(  /* pdh_notused, */ de->d_name, pathid, pdi, 1 /*need_id */ , &r );
+      itemid = duf_collect_file_info_by_pdh_and_name_and_pathid(  /* pdh_unused, */ de->d_name, pathid, pdi, 1 /*need_id */ , &r );
     }
     break;
   case DT_DIR:
@@ -328,7 +315,7 @@ duf_collect_file_or_dir_info_by_pdh_and_name_and_pathid(  /* const duf_dirhandle
 /* to replace duf_update_realpath_entries_filter */
 /* TODO scan for removed files; mark as absent or remove from db */
 static int
-duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi, const char *dfname )
+duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi, const char *dfname )
 {
   int r = 0;
   int items = 0;
@@ -454,7 +441,7 @@ duf_collect_ent_flt_uni( unsigned long long pathid, /* const duf_dirhandle_t * p
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
+scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
                   duf_record_t * precord )
 {
   int r = 0;
@@ -462,11 +449,11 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
   DEBUG_START(  );
   /* const duf_dirhandle_t *pdhi = duf_levinfo_pdh( pdi ); */
 
-  /* if ( pdh_notused )                                                */
-  /*   DUF_TRACE( collect, 0, "pdh_notused:%p", ( void * ) pdh_notused ); */
+  /* if ( pdh_unused )                                                */
+  /*   DUF_TRACE( collect, 0, "pdh_unused:%p", ( void * ) pdh_unused ); */
   DUF_TRACE( collect, 1, "pathid=%llu", pathid );
 
-  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_notused, ( void * ) pdhi ); */
+  /* DUF_TRACE( current, 0, "%p ? %p", ( void * ) pdh_unused, ( void * ) pdhi ); */
 
   /* pathid needless? */
   assert( pathid == pdi->levinfo[pdi->depth].dirid );
@@ -496,10 +483,10 @@ scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notu
     {
       DUF_SFIELD( dfname );
       DUF_TRACE( collect, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
-      /* r = duf_collect_pathid_filter_uni( pathid, pdh_notused, pdi ); */
-      /* r = duf_collect_pi_flt_uni( pathid, pdh_notused, pdi ); */
-      /* r = duf_collect_entries_filter_uni( pathid, pdh_notused, pdi ); */
-      r = duf_collect_ent_flt_uni( pathid, /* pdh_notused, */ pdi, dfname );
+      /* r = duf_collect_pathid_filter_uni( pathid, pdh_unused, pdi ); */
+      /* r = duf_collect_pi_flt_uni( pathid, pdh_unused, pdi ); */
+      /* r = duf_collect_entries_filter_uni( pathid, pdh_unused, pdi ); */
+      r = duf_collect_ent_flt_uni( pathid, /* pdh_unused, */ pdi, dfname );
     }
 
     if ( DUF_IF_TRACE( collect ) )

@@ -45,10 +45,10 @@
  * run   --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree --print
 */
 
-/* duf_uni_scan_dir:
- * this is callback of type: duf_scan_callback_file_t (second range):
+/* duf_str_cb_uni_scan_dir:
+ * this is callback of type: duf_str_cb_t (second range):
  *
- * if recursive flag set, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_uni_scan_dir
+ * if recursive flag set, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
  *       for each <dir> record by pathid (i.e. children of pathid) with corresponding args 
  * otherwise do nothing
  *
@@ -57,12 +57,12 @@
  *     2. for each leaf in <current> dir call sccb->leaf_scan
  *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
+ *     4. for each dir in <current> dir call duf_str_cb_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
 int
-duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb,
-                  duf_record_t * precord /*, const duf_dirhandle_t * pdhu_off */  )
+duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb,
+                  duf_record_t * precord   )
 {
   int r = 0;
   duf_depthinfo_t *pdi;
@@ -79,12 +79,12 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
 
   if ( r >= 0 )
   {
-    if ( pdi->u.recursive && ( !pdi->u.maxreldepth || duf_pdi_reldepth(pdi) < pdi->u.maxreldepth ) )
+    if ( pdi->u.recursive && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
     {
 /* duf_scan_fil_by_pi:
- * call duf_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args
+ * call duf_str_cb_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by pathid (i.e. children of pathid) with corresponding args
  *
- * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_uni_scan_dir
+ * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
  *       for each <dir> record by pathid (i.e. children of pathid) with corresponding args 
  *         otherwise do nothing
  *
@@ -98,7 +98,7 @@ duf_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks
  * */
 
       DUF_OINV_OPENED( pdi-> );
-      r = duf_scan_dirs_by_parentid( dirid /*, pdhu_off */ , duf_uni_scan_dir, pdi, sccb, precord );
+      r = duf_scan_dirs_by_parentid( dirid  , duf_str_cb_uni_scan_dir, pdi, sccb, precord );
       DUF_OINV_OPENED( pdi-> );
       /* if ( r == DUF_ERROR_MAX_REACHED )                   */
       /* {                                                   */
@@ -161,37 +161,35 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       pathid = duf_path_to_pathid( path, &di, &r );
 
       DUF_TEST_R( r );
-      DUF_OINV_OPENED( di. );
       DUF_TRACE( action, 0, "pathid %llu for %s", pathid, path );
-
-
-      DUF_OINV( di. );
       DUF_TEST_R( r );
 
       if ( r >= 0 && ( pathid || !path ) )
       {
-        DUF_TRACE( scan, 0, "%llu:%s  duf_scan_dirs_by_parentid with str_cb=duf_uni_scan_dir(%p)", pathid,
-                   path, ( void * ) ( unsigned long long ) duf_uni_scan_dir );
-/* duf_uni_scan_dir:
+        DUF_OINV_OPENED( di. );
+        DUF_OINV( di. );
+        DUF_TRACE( scan, 0, "%llu:%s  duf_scan_dirs_by_parentid with str_cb=duf_str_cb_uni_scan_dir(%p)", pathid,
+                   path, ( void * ) ( unsigned long long ) duf_str_cb_uni_scan_dir );
+/* duf_str_cb_uni_scan_dir:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
  *       for each <dir> record by pathid (i.e. children of pathid) with corresponding args 
  * otherwise do nothing
  *
- * call duf_uni_scan_dir with pdi for each dir at db by pathid (i.e. children of pathid) 
+ * call duf_str_cb_uni_scan_dir with pdi for each dir at db by pathid (i.e. children of pathid) 
  *
  *   i.e.
  *     1. for <current> dir call sccb->node_scan_before
  *     2. for each leaf in <current> dir call sccb->leaf_scan
  *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call duf_uni_scan_dir + &di as str_cb_udata
+ *     4. for each dir in <current> dir call duf_str_cb_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
         DUF_OINV( di. );
         DUF_OINV_OPENED( di. );
 
         if ( r >= 0 )
-          r = duf_scan_dirs_by_parentid( pathid /*, (const duf_dirhandle_t * )NULL off */ , duf_uni_scan_dir, &di, sccb,
+          r = duf_scan_dirs_by_parentid( pathid  , duf_str_cb_uni_scan_dir, &di, sccb,
                                          ( duf_record_t * ) NULL /* precord */  );
         DUF_OINV( di. );
         DUF_TEST_R( r );
@@ -202,7 +200,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
         /*   DUF_ERROR( "code: %d", r );                     */
       }
 /* delete level-control array, close 0 level */
-      DUF_OINV( di. );      
+      DUF_OINV( di. );
       duf_levinfo_delete( &di );
       DUF_OINV( di. );
       /* if ( r == DUF_ERROR_MAX_REACHED )                 */

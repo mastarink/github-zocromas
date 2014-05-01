@@ -22,7 +22,7 @@
 
 #include "duf_levinfo.h"
 
-#include "duf_file.h"
+/* #include "duf_file.h" */
 #include "duf_path.h"
 
 #include "duf_sql_def.h"
@@ -52,7 +52,7 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr
       {
         duf_scan_callbacks_t sccb = {.fieldset = "md5id" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            &sccb/*, ( const duf_dirhandle_t * ) NULL off */,
+                            &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
                             "SELECT id AS md5id FROM duf_md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
       }
     }
@@ -182,9 +182,9 @@ duf_upd_md5_fpath_uni( const char *fpath, unsigned long long filedataid, int *pr
   return md5id;
 }
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 static int
-collect_noppenat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_notused */  )
+collect_noppenat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord   )
 {
   int r = 0;
 
@@ -240,8 +240,7 @@ collect_noppenat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*
 
 /* callback of type duf_scan_callback_dir_t */
 static int
-collect_noppenat_md5_scan_node_before( unsigned long long pathid, /* const duf_dirhandle_t * pdh_notused, */ duf_depthinfo_t * pdi,
-                                       duf_record_t * precord )
+collect_noppenat_md5_scan_node_before( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -251,10 +250,10 @@ collect_noppenat_md5_scan_node_before( unsigned long long pathid, /* const duf_d
   if ( duf_config->cli.trace.md5 > 1 )
     printf( "[MD5  ] %20s: pathid=%llu\n", __func__, pathid );
   {
-      const char *real_path = NULL;
+    const char *real_path = NULL;
 
-      if ( !real_path )
-        real_path = duf_levinfo_path( pdi );
+    if ( !real_path )
+      real_path = duf_levinfo_path( pdi );
     /* char *path = duf_pathid_to_path_s( pathid, pdi, &r ); */
 
 

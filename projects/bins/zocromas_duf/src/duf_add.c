@@ -20,7 +20,6 @@
 
 #include "duf_dbg.h"
 
-#include "duf_group.h"
 
 /* ###################################################################### */
 #include "duf_add.h"
@@ -67,7 +66,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
         /* unsigned long long pathid1; */
         duf_scan_callbacks_t sccb = {.fieldset = "pathid" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &pathid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
+                            &sccb  ,
                             "SELECT id AS pathid " " FROM duf_paths " " WHERE dev='%lu' AND inode='%lu'", dev_id, dir_ino );
         DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) pathid=%llu:'%s'", pathid, dename );
       }
@@ -99,7 +98,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
  * '/a/b/c/d/e/f' -> db
  * */
 unsigned long long
-duf_add_real_path_uni( const char *real_path, const char *group, int up, int need_id, int *pr )
+duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long pathid = 0;
@@ -142,7 +141,7 @@ duf_add_real_path_uni( const char *real_path, const char *group, int up, int nee
       if ( ( dir_name && *dir_name ) && up )
       {
         DUF_TRACE( current, 0, "update parent %s", dir_name );
-        parentid = duf_add_real_path_uni( dir_name, NULL /* group */ , DUF_TRUE /* up */ , 1 /*need_id */ , &r );
+        parentid = duf_add_real_path_uni( dir_name, DUF_TRUE /* up */ , 1 /*need_id */ , &r );
       }
       DUF_TRACE( current, 0, "updated parent %s AS %llu", dir_name, parentid );
 
@@ -156,16 +155,11 @@ duf_add_real_path_uni( const char *real_path, const char *group, int up, int nee
         char *name = mas_strdup( base_name );
 
         DUF_TRACE( current, 0, "to insert [%s]", base_name );
-        pathid = duf_insert_path_uni( name, st_dir.st_dev, st_dir.st_ino, parentid, ( need_id || group ), &r );
+        pathid = duf_insert_path_uni( name, st_dir.st_dev, st_dir.st_ino, parentid,  need_id , &r );
         DUF_TRACE( current, 0, "inserted [%s] AS %llu", base_name, pathid );
         mas_free( name );
       }
       DUF_TRACE( action, 0, "#%llu : added real path %s", pathid, real_path );
-
-#ifdef DUF_COMPILE_EXPIRED
-      if ( r >= 0 && group )
-        duf_pathid_group( group, pathid, +1 );
-#endif
     }
   }
   mas_free( rpath );
@@ -176,7 +170,7 @@ duf_add_real_path_uni( const char *real_path, const char *group, int up, int nee
 }
 
 unsigned long long
-duf_add_path_uni( const char *path, const char *group, int need_id, int *pr )
+duf_add_path_uni( const char *path,  int need_id, int *pr )
 {
   int r = 0;
   unsigned long long pathid = 0;
@@ -198,10 +192,9 @@ duf_add_path_uni( const char *path, const char *group, int need_id, int *pr )
     if (  /* strlen( real_path ) > 1 && */ !( real_path && *real_path == '/' && real_path[1] == 0 ) )
     {
       DUF_TRACE( current, 0, "Update parent %s", real_path );
-      pathid = duf_add_real_path_uni( real_path, group, DUF_TRUE, need_id, &r );
+      pathid = duf_add_real_path_uni( real_path,  DUF_TRUE, need_id, &r );
       DUF_TRACE( current, 0, "Updated parent %s AS %llu", real_path, pathid );
     }
-    /* DUF_TRACE( action, 0, "Added path %s as %llu;  group: %s", path, pathid, group ); */
     mas_free( real_path );
   }
   if ( pr )

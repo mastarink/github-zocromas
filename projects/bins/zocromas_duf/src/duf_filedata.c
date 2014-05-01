@@ -11,8 +11,6 @@
 #include "duf_sql.h"
 #include "duf_sql_field.h"
 
-#include "duf_file.h"
-
 #include "duf_dbg.h"
 
 /* ###################################################################### */
@@ -55,7 +53,7 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
       {
         duf_scan_callbacks_t sccb = {.fieldset = "dataid" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
-                            ( duf_depthinfo_t * ) NULL, &sccb/*, ( const duf_dirhandle_t * ) NULL off */,
+                            ( duf_depthinfo_t * ) NULL, &sccb,
                             "SELECT id AS dataid " " FROM duf_filedatas " " WHERE dev='%lu' AND inode='%lu'", pst_file->st_dev,
                             pst_file->st_ino );
       }

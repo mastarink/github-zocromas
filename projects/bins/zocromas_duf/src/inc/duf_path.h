@@ -23,13 +23,13 @@ int duf_pathdepth( const char *path );
 
 #  ifdef DUF_COMPILE_EXPIRED
 /* will be static! */
-int duf_sel_cb_name_parid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  );
+int duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
+                           duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
 #  endif
 
 /* will be static! */
-int duf_sel_cb_levinfo( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                        duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  );
+int duf_sel_cb_levinfo( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
+                        duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb );
 
 
 

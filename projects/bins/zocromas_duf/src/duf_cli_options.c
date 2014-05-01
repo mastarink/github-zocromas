@@ -22,7 +22,7 @@
 
 
 const duf_longval_extended_t lo_extended[] = {
-  {.val = DUF_OPTION_PRINTF,.help = "this is printf option"},
+  {.val = DUF_OPTION_OUTPUT,.help = "this is printf option"},
   {.val = DUF_OPTION_HELP,.help = "this is help option"},
   {.val = DUF_OPTION_EXAMPLES,.help = "this is examples option"},
   {.val = 0,.help = NULL},
@@ -33,12 +33,12 @@ const duf_option_t longopts[] = {
   {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_HELP},
   {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
-  {.name = "printf",.has_arg = optional_argument,.val = DUF_OPTION_PRINTF},
+  {.name = "output",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT},
   /* --------------- */
   {.name = "trace-file",.has_arg = required_argument,.val = DUF_OPTION_TRACE_FILE},
   {.name = "trace-stderr",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDERR},
   {.name = "trace-stdout",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDOUT},
-  {.name = "output",.has_arg = required_argument,.val = DUF_OPTION_PRINTF_FILE},
+  {.name = "output-file",.has_arg = required_argument,.val = DUF_OPTION_OUTPUT_FILE},
   /* --------------- */
   {.name = "trace-nonew",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NONEW},
   /* --------------- */
@@ -391,7 +391,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
 
 
 
-  DUF_RESTORE_OPTION( ptr, PRINTF, level, cli.printf );
+  DUF_RESTORE_OPTION( ptr, OUTPUT, level, cli.output );
 
 
 
@@ -459,7 +459,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr );
   DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout );
 
-  DUF_RESTORE_OPTION_S( ptr, PRINTF_FILE, file, cli.printf );
+  DUF_RESTORE_OPTION_S( ptr, OUTPUT_FILE, file, cli.output );
   DUF_RESTORE_OPTION_S( ptr, TRACE_FILE, file, cli.trace );
   DUF_RESTORE_OPTION_S( ptr, DB_DIRECTORY, dir, db );
   DUF_RESTORE_OPTION_S( ptr, DB_NAME, name, db );

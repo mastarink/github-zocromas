@@ -54,15 +54,13 @@ typedef struct
   unsigned long long parentid;
 } name_parid_udata_t;
 
-/* 
- * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
- * duf_sql_select_cb_t: 
- * */
 /* will be static! */
+/* 
+ * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
+ * */
 int
-duf_sel_cb_name_parid( duf_record_t * precord, va_list args, void *sel_cb_udata,
-                       duf_scan_callback_file_t str_cb_notused, void *str_cb_udata_notused, duf_depthinfo_t * pdi,
-                       duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
+                       duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb_unused )
 {
   int r = 0;
   name_parid_udata_t *pud;
@@ -123,7 +121,7 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh_pathid, c
 
 /* get parentid for dirid */
     r = duf_sql_select( duf_sel_cb_name_parid, &pathdef, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb *//*, ( const duf_dirhandle_t * ) NULL off */ ,
+                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
                         "SELECT parentid, dirname " " FROM duf_paths WHERE id=%llu", dirid );
     DUF_TEST_R( r );
     if ( r >= 0 )
@@ -188,10 +186,13 @@ duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int
 
 #endif
 /* will be static! */
+
+/* 
+ * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
+ * */
 int
-duf_sel_cb_levinfo( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb_notused,
-                    void *str_cb_udata_notused, duf_depthinfo_t * xpdi,
-                    duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_sel_cb_levinfo( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
+                    duf_depthinfo_t * xpdi_unused, duf_scan_callbacks_t * sccb_unused )
 {
   int r = 0;
   duf_levinfo_t *pli = ( duf_levinfo_t * ) sel_cb_udata;

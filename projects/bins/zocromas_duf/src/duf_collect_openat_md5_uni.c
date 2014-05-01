@@ -23,7 +23,7 @@
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-#include "duf_file.h"
+/* #include "duf_file.h" */
 #include "duf_path.h"
 
 #include "duf_sql_def.h"
@@ -141,8 +141,8 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
   return r;
 }
 
-__attribute__ ( ( unused ) )
-     static int duf_scan_entry_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )
+static int
+duf_scan_entry_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
   unsigned char mdr[MD5_DIGEST_LENGTH];
@@ -203,7 +203,7 @@ duf_scan_entry_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord
   return r;
 }
 
-/* callback of type duf_scan_callback_file_t */
+/* callback of type duf_scan_hook_file_t */
 __attribute__ ( ( unused ) )
      static int collect_openat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {

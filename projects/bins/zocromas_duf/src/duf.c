@@ -68,7 +68,7 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", argv[0] );
         DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_HELP ) );
         DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_EXAMPLES ) );
-        DUF_PRINTF( 0, "  --printf			[%s]", duf_find_longval_help( DUF_OPTION_PRINTF ) );
+        DUF_PRINTF( 0, "  --output			[%s]", duf_find_longval_help( DUF_OPTION_OUTPUT ) );
         DUF_PRINTF( 0, "Database ----------" );
         DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.name );
         DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );
