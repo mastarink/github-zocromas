@@ -32,11 +32,11 @@ typedef struct
 } md5id_fnid_udata_t;
 
 /* 
- * duf_sql_select_cb_t: 
+ * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
  * */
 static int
-duf_sel_cb_md5id_fnid( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                       duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_sel_cb_md5id_fnid( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused, duf_depthinfo_t * pdi_unused,
+                       duf_scan_callbacks_t * sccb )
 {
   int r = 0;
   md5id_fnid_udata_t *pud;
@@ -60,7 +60,7 @@ duf_sel_cb_md5id_fnid( duf_record_t * precord, va_list args, void *sel_cb_udata,
   return r;
 }
 
-unsigned long long
+static unsigned long long
 file_at_pathid_to_filenameid_x( unsigned long long pathid, const char *name, unsigned long long *pmd5id, int *pr )
 {
   int r = 0;
@@ -152,12 +152,11 @@ typedef struct
 } pi_fname_udata_t;
 
 /* 
- * sql must select pathid, filenameid, filename(, md5id, size, dupcnt)
- * duf_sql_select_cb_t: 
+ * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
  * */
 static int
-duf_sel_cb_pi_fname( duf_record_t * precord, va_list args, void *sel_cb_udata, duf_scan_callback_file_t str_cb, void *str_cb_udata,
-                     duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
+duf_sel_cb_pi_fname( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata,
+                     duf_depthinfo_t * pdi_unused, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_unused_off */  )
 {
   int r = 0;
   pi_fname_udata_t *pud;
