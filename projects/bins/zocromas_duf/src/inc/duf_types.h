@@ -3,6 +3,9 @@
 #  include <sys/stat.h>
 #  include <stdarg.h>
 
+#  include "duf_sql_def.h"
+
+
 #  define DUF_FALSE 0
 #  define DUF_TRUE 1
 
@@ -33,6 +36,14 @@
 
 #  define DUF_SFIELD_OPT(name) int duf_have_field_##name; const char* name = __duf_sql_str_by_name( #name, precord, &duf_have_field_##name, 1 )
 #  define DUF_UFIELD_OPT(name) int duf_have_field_##name; unsigned long long name = __duf_sql_ull_by_name( #name, precord, &duf_have_field_##name, 1 )
+
+
+#  define DUF_SET_SFIELD2(name) name = __duf_sql_str_by_name2( pstmt, #name )
+#  define DUF_SET_UFIELD2(name) name = __duf_sql_ull_by_name2( pstmt, #name )
+
+#  define DUF_SFIELD2(name) const char*  DUF_SET_SFIELD2(name)
+#  define DUF_UFIELD2(name) unsigned long long  DUF_SET_UFIELD2(name)
+
 
 
 #  define DUF_PUTS( min, str) \
@@ -86,7 +97,19 @@
 #  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
 #  define DUF_ERRORR(r, ...)              DUF_TRACE( errorr, r, __VA_ARGS__ )
 
-#  define DUF_TEST_R(val)       if (val && val!=DUF_ERROR_MAX_REACHED) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+#  define DUF_TEST_R(val)       if (val \
+    			&& val!=DUF_ERROR_MAX_REACHED \
+    			&& val!=DUF_SQL_ROW \
+    			&& val!=DUF_SQL_DONE \
+    					) \
+					DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+#  define DUF_TEST_R3(val)      if (val \
+    			&& (val)!=SQLITE_ROW \
+    			&& (val)!=SQLITE_DONE \
+    					)		\
+					DUF_ERROR( "<@TEST3@> rv=%d [%s]", \
+					    DUF_SQLITE_ERROR_CODE(val), \
+					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-" )
 
 #  define DUF_VERBOSE(lev,...)         DUF_TRACE_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
 #  define DUF_IF_VERBOSE()             DUF_IF_TRACE_WHAT(cli.dbg,verbose)
@@ -107,6 +130,8 @@
 #  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
 #  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
+#  define DUF_ACTION_TITLE_FMT "-17s"
+
 #  include "duf_cli_types.h"
 
 typedef enum
@@ -124,10 +149,17 @@ typedef enum
   DBG_END,
 } duf_dbgcode_t;
 
+/* #  define DUF_SQLITE_ERROR_CODE(r3c) ( int rt=(r3c);rt == SQLITE_OK ? 0 : ( rt > 0 ? DUF_SQLITE_ERROR_BASE + rt : rt ) ) */
+#define DUF_SQLITE_ERROR_CODE(r3c) duf_sqlite_error_code(r3c)
 #  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ )
 #  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ )
 #  define  DEBUG_ENDR(r)  DUF_TEST_R( r ); duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r )
+#  define  DEBUG_ENDR3(r)  DUF_TEST_R( DUF_SQLITE_ERROR_CODE(r) ); duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r )
 #  define  DEBUG_ENDULL(l) duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, l )
+#  define  DEBUG_ENDS(l) duf_dbgfunc( DBG_ENDS, __func__, __LINE__, l )
+#  define  DEBUG_STEP() duf_dbgfunc( DBG_STEP, __func__, __LINE__ )
+#  define  DEBUG_STEPS(l) duf_dbgfunc( DBG_STEPS, __func__, __LINE__, l )
+#  define  DEBUG_STEPIS(l, s) duf_dbgfunc( DBG_STEPIS, __func__, __LINE__, l, s )
 #  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, l )
 
 typedef enum
@@ -181,10 +213,12 @@ typedef struct
   duf_items_t maxitems;
   unsigned long long mindirfiles;
   unsigned long long maxdirfiles;
+  char *glob;
   unsigned long long minsize;
   unsigned long long maxsize;
   unsigned long long minsame;
   unsigned long long maxsame;
+  unsigned long long filter_id;
 } duf_ufilter_t;
 typedef struct
 {
@@ -300,21 +334,33 @@ typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
 
 /* this is callback of type: duf_scan_hook_dir_t : */
 typedef int ( *duf_scan_hook_dir_t ) ( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord );
+typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, unsigned long long pathid, duf_depthinfo_t * pdi );
 
 /* this is callback of type: duf_scan_hook_file_t : */
 typedef int ( *duf_scan_hook_file_t ) ( duf_depthinfo_t * pdi, duf_record_t * precord );
+typedef int ( *duf_scan_hook2_file_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 typedef int ( *duf_scan_hook_file_fd_t ) ( int fd, const struct stat * pst_file, duf_depthinfo_t * pdi, duf_record_t * precord );
+typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, const struct stat * pst_file, duf_depthinfo_t * pdi );
 
 
 
 typedef int ( *duf_scan_hook_entry_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                              duf_record_t * precord );
-typedef int ( *duf_scan_hook_entry_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
-                                             duf_record_t * precord );
+typedef int ( *duf_scan_hook2_entry_reg_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
+                                              unsigned long long dirid, duf_depthinfo_t * pdi );
+
+
+typedef int ( *duf_scan_hook_entry_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid,
+                                             duf_depthinfo_t * pdi, duf_record_t * precord );
+typedef int ( *duf_scan_hook2_entry_dir_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
+                                              unsigned long long dirid, duf_depthinfo_t * pdi );
+
 
 typedef int ( *duf_scan_hook_entry_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                                 duf_record_t * precord );
+typedef int ( *duf_scan_hook2_entry_parent_t ) ( duf_sqlite_stmt_t * pstmt, const struct stat * pstat, unsigned long long dirid,
+                                                 duf_depthinfo_t * pdi );
 
 
 typedef int ( *duf_sqexe_cb_t ) ( void *sqexe_data, int ncolumns, char **presult, char **pnames );
@@ -325,6 +371,7 @@ typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_str_cb_t (first range; str_cb) */
 typedef int ( *duf_str_cb_t ) ( void *str_cb_udata, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s * sccb, duf_record_t * precord );
+typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s * sccb );
 
 
 /* this is callback of type:duf_sel_cb_t (second range; ; sel_cb) */
@@ -337,9 +384,8 @@ typedef int ( *duf_sel_cb_t ) ( duf_record_t * precord, void *sel_cb_udata, duf_
  * duf_sel_cb_leaf		:		, sel_cb_udata_unused
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
-
-
-
+typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, duf_depthinfo_t * pdi,
+                                 struct duf_scan_callbacks_s * sccb );
 
 struct duf_scan_callbacks_s
 {
@@ -347,15 +393,31 @@ struct duf_scan_callbacks_s
   const char *title;
   const char *fieldset;
   const char *node_selector;
+  const char *node_selector2;
   const char *leaf_selector;
+  const char *leaf_selector2;
   duf_scan_hook_init_t init_scan;
+
   duf_scan_hook_dir_t node_scan_before;
+  duf_scan_hook2_dir_t node_scan_before2;
+
   duf_scan_hook_dir_t node_scan_middle;
+  duf_scan_hook2_dir_t node_scan_middle2;
+
   duf_scan_hook_dir_t node_scan_after;
+  duf_scan_hook2_dir_t node_scan_after2;
+
   duf_scan_hook_file_t leaf_scan;
+  duf_scan_hook2_file_t leaf_scan2;
+
   duf_scan_hook_file_fd_t leaf_scan_fd;
+  duf_scan_hook2_file_fd_t leaf_scan_fd2;
+
   duf_scan_hook_entry_reg_t entry_file_scan_before;
+  duf_scan_hook2_entry_reg_t entry_file_scan_before2;
+
   duf_scan_hook_entry_dir_t entry_dir_scan_before;
+  duf_scan_hook2_entry_dir_t entry_dir_scan_before2;
 
   char **final_sql_argv;
 };

@@ -169,7 +169,44 @@ tree_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirh
     fi.name = filename;
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
-    duf_print_file_info( stdout, pdi, &fi, &format );
+    duf_print_file_info( pdi, &fi, &format );
+  }
+
+  r = duf_sql_print_tree_prefix_uni( pdi, 1 );
+
+  /* SQL at duf_scan_files_by_dirid */
+
+  DUF_PRINTF( 0, "%s", filename );
+
+  DEBUG_ENDR( r );
+  return r;
+}
+
+static int
+tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+{
+  int r = 0;
+
+  DUF_SFIELD2( filename );
+  /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
+
+  DEBUG_START(  );
+
+  {
+    duf_fileinfo_t fi = { 0 };
+    duf_format_t format = {.filename = 0,.seq = 1 };
+    /* fi.st.st_mode = ( mode_t ) filemode; */
+    /* fi.st.st_ino = ( ino_t ) inode; */
+    /* fi.st.st_mtim.tv_sec = mtim; */
+    /* fi.st.st_mtim.tv_nsec = 0; */
+    /* fi.st.st_uid = ( uid_t ) uid; */
+    /* fi.st.st_gid = ( gid_t ) gid; */
+    /* fi.st.st_nlink = ( nlink_t ) nlink; */
+    /* fi.st.st_size = ( off_t ) filesize; */
+    fi.name = filename;
+    /* fi.md5sum1 = md5sum1; */
+    /* fi.md5sum2 = md5sum2; */
+    duf_print_file_info( pdi, &fi, &format );
   }
 
   r = duf_sql_print_tree_prefix_uni( pdi, 1 );
@@ -213,27 +250,57 @@ tree_scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_
   return r;
 }
 
- /* *INDENT-OFF*  */
+static int
+tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+{
+  DEBUG_START(  );
+
+  int r = 0;
+
+  {
+    if ( duf_config->cli.format.seq )
+      DUF_PRINTF( 0, ".%-8llu ", pdi->seq );
+    if ( duf_config->cli.format.dirid )
+      DUF_PRINTF( 0, ".[%8llu] ", pdi->levinfo[pdi->depth].dirid );
+    r = duf_sql_print_tree_prefix_uni( pdi, 0 );
+    {
+      /* optimizing makes puts, segfault by NULL, therefore DUF_PRINTF(0, "%s\n", dirname  ); is not good */
+      /* DUF_PRINTF( 0, "<<<%s>>>", dirname ? dirname : "-=No dirname=-" ); */
+      DUF_PRINTF( 0, "%s", duf_levinfo_itemname( pdi ) );
+    }
+  }
+
+  DEBUG_ENDR( r );
+  return r;
+}
+
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
   .init_scan = NULL,
   .node_scan_before = tree_scan_node_before,
+  .node_scan_before2 = tree_scan_node_before2,
   .leaf_scan = tree_scan_leaf,
-  .fieldset = "duf_filenames.Pathid AS dirid " " , duf_filenames.name AS filename, duf_filedatas.size AS filesize "
-        " , uid, gid, nlink, inode, mtim AS mtime "
-        " , dupcnt AS nsame"
-	" , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode",
-  .leaf_selector =
-        "SELECT %s FROM duf_filenames "
-        " LEFT JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)"
-	"    WHERE "
+  .leaf_scan2 = tree_scan_leaf2,
+  .fieldset = "duf_filenames.Pathid AS dirid " /* */
+        " , duf_filenames.name AS filename, duf_filedatas.size AS filesize " /* */
+        " , uid, gid, nlink, inode, mtim AS mtime " /* */
+        " , dupcnt AS nsame"    /* */
+        " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode",
+  .leaf_selector = "SELECT %s FROM duf_filenames " /* */
+        " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) " /* */
+        " LEFT JOIN duf_md5 AS md ON (md.id=duf_filedatas.md5id)" /* */
+        "    WHERE "            /* */
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
         " duf_filenames.Pathid='%llu' ",
-  .node_selector =
-        "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
+  .leaf_selector2 = "SELECT %s FROM duf_filenames " /* */
+        " LEFT JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) " /* */
+        " LEFT JOIN duf_md5 AS md ON (md.id=duf_filedatas.md5id)" /* */
+        "    WHERE "            /* */
+        " duf_filenames.Pathid=:dirid ",
+
+  .node_selector = "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
         /* " ,(SELECT count(*) FROM duf_paths AS sp WHERE sp.parentid=duf_paths.id) AS ndirs "                   */
         /* " ,(SELECT count(*) FROM duf_filenames AS sfn "                                                       */
         /* "          JOIN duf_filedatas AS sfd ON (sfn.dataid=sfd.id) "                                         */
@@ -247,9 +314,16 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
         /* "           WHERE sfn.Pathid=duf_paths.id) AS minsize "                                               */
         /* " ,(SELECT max(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
         /* "           WHERE sfn.Pathid=duf_paths.id) AS maxsize "                                               */
-        " FROM duf_paths "
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
+        " FROM duf_paths "      /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
+        " WHERE duf_paths.parentid='%llu' ",
+  .node_selector2 = "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+        " FROM duf_paths "      /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
+        " WHERE duf_paths.parentid=:dirid ",
+
   /* .final_sql_argv = final_sql, */
 };
- /* *INDENT-ON*  */

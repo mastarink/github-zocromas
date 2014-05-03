@@ -142,6 +142,8 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_SQL_NOTADB ),
     DUF_ERROR_NAME( DUF_SQL_NOTICE ),
     DUF_ERROR_NAME( DUF_SQL_WARNING ),
+    DUF_ERROR_NAME( DUF_SQL_ROW ),
+    DUF_ERROR_NAME( DUF_SQL_DONE ),
 /*========================================*/
     DUF_ERROR_NAME( DUF_ERROR_UNKNOWN ),
     DUF_ERROR_NAME( DUF_ERROR_UNKNOWN_NODE ),

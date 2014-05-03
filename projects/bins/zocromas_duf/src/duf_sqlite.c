@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -12,7 +13,6 @@
 
 #include "duf_config.h"
 
-#include "duf_sql_def.h"
 
 /* ###################################################################### */
 #include "duf_sqlite.h"
@@ -22,25 +22,21 @@
 /* int duf_constraint = SQLITE_CONSTRAINT; */
 static sqlite3 *pDb = NULL;
 
-
 int
 duf_sqlite_error_code( int r3 )
 {
-  int r;
+  int rt;
 
-  r = ( r3 == SQLITE_OK ? 0 : ( r3 > 0 ? DUF_SQLITE_ERROR_BASE + r3 : r3 ) );
-  /* if ( r3 && r3 != SQLITE_CONSTRAINT (* && r != DUF_ERROR_NO_FIELD_OPTIONAL *)  && r != DUF_ERROR_MAX_REACHED ) */
-  /*   DUF_ERROR( "CODE %d => %d", r3, r );                                                                        */
-  return r;
+  rt = (r3 == SQLITE_OK) ? 0 : ( r3 > 0 ? DUF_SQLITE_ERROR_BASE + r3 : r3 );
+  return rt;
 }
-
 
 int
 duf_sqlite_open( const char *dbpath )
 {
   int r3 = 0;
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+/*										*/ DEBUG_START(  );
   if ( !pDb )
   {
     r3 = sqlite3_initialize(  );
@@ -51,7 +47,7 @@ duf_sqlite_open( const char *dbpath )
       DUF_TRACE( action, 0, "DB Open %s %s (%d)", dbpath, r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
     }
   }
-  /*          */ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  /*          */ DEBUG_END(  );
   return ( r3 );
 }
 
@@ -60,7 +56,7 @@ duf_sqlite_close( void )
 {
   int r3 = 0;
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+/*										*/ DEBUG_START(  );
   if ( pDb )
     r3 = sqlite3_close( pDb );
   DUF_TRACE( action, 0, "DB Close %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
@@ -69,7 +65,7 @@ duf_sqlite_close( void )
   pDb = NULL;
   DUF_TRACE( action, 0, "DB Shutdown %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
 
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+/*										*/ DEBUG_END(  );
   return ( r3 );
 }
 
@@ -79,7 +75,9 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
   int r3 = SQLITE_OK;
   char *emsg = ( char * ) NULL;
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  if ( pemsg )
+    *pemsg = NULL;
+/*										*/ DEBUG_START(  );
   DUF_TRACE( sql, 2, "[%s] ", sql );
   if ( pchanges )
     *pchanges = 0;
@@ -97,15 +95,15 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
       *pchanges = sqlite3_changes( pDb );
     DUF_TRACE( sql, 0, "  [%s]", sql );
     DUF_TRACE( sql, 1, "r3:%d; changes:%d", r3, pchanges ? *pchanges : -1 );
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
   }
   if ( pemsg )
     *pemsg = emsg;
   else if ( emsg )
     sqlite3_free( emsg );
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+/*										*/ DEBUG_ENDR3( r3 );
   DUF_TRACE( sql, 3, "[%s] : %d", sql, r3 );
-  return ( r3 );
+  return r3;
 }
 
 int
@@ -169,20 +167,19 @@ duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list ar
   int r3 = 0;
   char *sql;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   DUF_TRACE( sql, 2, "[%s] ", fmt );
   sql = sqlite3_vmprintf( fmt, args );
   DUF_TRACE( sql, 2, "[%s] ", sql );
   r3 = duf_sqlite_exec_c( sql, constraint_ignore, pchanges );
 
-
   DUF_TRACE( sql, 3, "[%s] : %d", sql, r3 );
   sqlite3_free( sql );
   sql = NULL;
   DUF_TRACE( sql, 3, "r3: %d", r3 );
 
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
+  DEBUG_ENDR3( r3 );
   return ( r3 );
 }
 
@@ -192,7 +189,7 @@ duf_vsqlite_e( const char *fmt, int *pchanges, va_list args )
   int r3 = 0;
   char *sql;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   DUF_TRACE( sql, 2, "[%s] ", fmt );
   sql = sqlite3_vmprintf( fmt, args );
@@ -204,7 +201,7 @@ duf_vsqlite_e( const char *fmt, int *pchanges, va_list args )
   sql = NULL;
   DUF_TRACE( sql, 3, "r3: %d", r3 );
 
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
+  DEBUG_ENDR3( r3 );
   return ( r3 );
 }
 
@@ -216,7 +213,7 @@ duf_vsqlite( const char *fmt, int *pchanges, va_list args )
   char *sql;
   char *emsg = NULL;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   DUF_TRACE( sql, 2, "[%s] ", fmt );
   sql = sqlite3_vmprintf( fmt, args );
@@ -233,7 +230,7 @@ duf_vsqlite( const char *fmt, int *pchanges, va_list args )
   sql = NULL;
   DUF_TRACE( sql, 3, "r3: %d", r3 );
 
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
+  DEBUG_ENDR3( r3 );
   return ( r3 );
 }
 
@@ -259,7 +256,7 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
 
   va_list qargs;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   va_copy( qargs, args );
   if ( pDb )
   {
@@ -277,13 +274,13 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
 
     DUF_TRACE( sql, 0, "  [%s]", sql );
     DUF_TRACE( sql, 1, "r3=%d;  %u rows", r3, row );
-    duf_dbgfunc( DBG_STEPS, __func__, __LINE__, sql );
+    DEBUG_STEPS( sql );
     /* if ( trace )                                            */
     /*   printf(  "(%d) trace:[%s]\x1b[K\n", r3, sql ); */
     pcresult = ( const char *const * ) presult;
     if ( r3 == SQLITE_OK )
     {
-      duf_dbgfunc( DBG_STEPIS, __func__, __LINE__, row, "rows SQLITE_OK" );
+      DEBUG_STEPIS( row, "rows SQLITE_OK" );
       if ( row )
       {
         int rcb = 0;
@@ -325,10 +322,10 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
           }
         }
         DUF_TEST_R( rcb );
-        DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+        DUF_TEST_R3( r3 );
         DUF_TRACE( sql, 4, "rcb:%d; r3:%d sel_cb:%s; str_cb:%s", rcb, r3, DUF_FUNN( sel_cb ), DUF_FUNN( str_cb ) );
         r3 = rcb ? rcb : r3;
-        DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+        DUF_TEST_R3( r3 );
       }
       else
       {
@@ -337,12 +334,12 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
     }
     else if ( r3 == SQLITE_CONSTRAINT )
     {
-      DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+      DUF_TEST_R3( r3 );
       DUF_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
     }
     else
     {
-      DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+      DUF_TEST_R3( r3 );
       DUF_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
     }
     if ( emsg )
@@ -353,8 +350,7 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
     sqlite3_free( sql );
     sql = NULL;
   }
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r3 );
-  DUF_TEST_R( duf_sqlite_error_code( r3 ) );
+  DEBUG_ENDR3( r3 );
   return ( r3 );
 }
 
@@ -363,11 +359,157 @@ duf_sqlite_last_insert_rowid( void )
 {
   unsigned long long li = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   if ( pDb )
   {
     li = ( unsigned long long ) sqlite3_last_insert_rowid( pDb );
   }
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, li );
+  DEBUG_ENDULL( li );
   return ( li );
+}
+
+int
+duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
+{
+  int r3 = 0;
+  const char *tail = NULL;
+
+  /* DUF_PRINTF( 0, "PREPARE" ); */
+  DUF_TRACE( sql, 0, "  [%s]", sql );
+  r3 = sqlite3_prepare_v2( pDb, sql, strlen( sql ), pstmt, &tail );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_step( duf_sqlite_stmt_t * stmt )
+{
+  int r3;
+
+  /* DUF_PRINTF( 0, "STEP" ); */
+  r3 = sqlite3_step( stmt );
+  assert( r3 != SQLITE_MISUSE );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_finalize( duf_sqlite_stmt_t * stmt )
+{
+  int r3;
+
+  /* DUF_PRINTF( 0, "FINALIZE" ); */
+  r3 = sqlite3_finalize( stmt );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name )
+{
+  int r3 = 0;
+
+  r3 = sqlite3_bind_parameter_index( stmt, name );
+  return r3;
+}
+
+
+
+int
+duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val )
+{
+  int r3 = 0;
+  sqlite3_int64 val64;
+
+  /* DUF_PRINTF( 0, "BIND" ); */
+  val64 = val;
+  r3 = sqlite3_bind_int64( stmt, num, val64 );
+  /* DUF_ERROR( "val:%lld", val64 ); */
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_bind_int( duf_sqlite_stmt_t * stmt, int num, int val )
+{
+  int r3 = 0;
+
+  r3 = sqlite3_bind_int( stmt, num, val );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_bind_null( duf_sqlite_stmt_t * stmt, int num )
+{
+  int r3 = 0;
+
+  r3 = sqlite3_bind_null( stmt, num );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_bind_double( duf_sqlite_stmt_t * stmt, int num, double val )
+{
+  int r3 = 0;
+
+  r3 = sqlite3_bind_double( stmt, num, val );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_bind_string( duf_sqlite_stmt_t * stmt, int num, const char *val )
+{
+  int r3 = 0;
+
+  r3 = sqlite3_bind_text( stmt, num, val, strlen( val ), SQLITE_TRANSIENT );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
+
+int
+duf_sqlite_changes( void )
+{
+  int changes = 0;
+
+  changes = sqlite3_changes( pDb );
+  return changes;
+}
+
+long long
+duf_sqlite_column_long_long( duf_sqlite_stmt_t * stmt, int icol )
+{
+  return sqlite3_column_int64( stmt, icol );
+}
+
+int
+duf_sqlite_column_int( duf_sqlite_stmt_t * stmt, int icol )
+{
+  return sqlite3_column_int( stmt, icol );
+}
+
+const char *
+duf_sqlite_column_string( duf_sqlite_stmt_t * stmt, int icol )
+{
+  return ( const char * ) sqlite3_column_text( stmt, icol );
+}
+
+const char *
+duf_sqlite_column_name( duf_sqlite_stmt_t * stmt, int index )
+{
+  const char *str;
+
+  str = sqlite3_column_name( stmt, index );
+  return str;
+}
+
+int
+duf_sqlite_column_count( duf_sqlite_stmt_t * stmt )
+{
+  int cnt;
+
+  cnt = sqlite3_column_count( stmt );
+  return cnt;
 }

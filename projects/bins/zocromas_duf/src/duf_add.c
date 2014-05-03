@@ -16,7 +16,9 @@
 
 #include "duf_sql_def.h"
 #include "duf_sql_field.h"
+
 #include "duf_sql.h"
+#include "duf_sql1.h"
 
 #include "duf_dbg.h"
 
@@ -34,6 +36,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
   unsigned long long dirid = 0;
   int r;
 
+  DEBUG_START(  );
   /* unsigned char c1 = ( unsigned char ) ( dename ? *dename : 0 ); */
 
   if ( dename && dev_id && dir_ino )
@@ -44,7 +47,6 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
       const char *qdirname;
       char *qbase_name;
 
-      duf_dbgfunc( DBG_START, __func__, __LINE__ );
       qbase_name = duf_single_quotes_2( dename );
       qdirname = qbase_name ? qbase_name : dename;
       DUF_TRACE( current, 0, "insert [%s] @ %llu", qdirname, parentid );
@@ -66,8 +68,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
         /* unsigned long long pathid1; */
         duf_scan_callbacks_t sccb = {.fieldset = "dirid" };
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &dirid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            &sccb  ,
-                            "SELECT id AS dirid " " FROM duf_paths " " WHERE dev='%lu' AND inode='%lu'", dev_id, dir_ino );
+                            &sccb, "SELECT id AS dirid " " FROM duf_paths " " WHERE dev='%lu' AND inode='%lu'", dev_id, dir_ino );
         DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
     }
@@ -89,7 +90,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
   }
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, dirid );
+  DEBUG_ENDULL( dirid );
   return dirid;
 }
 
@@ -98,7 +99,7 @@ duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned l
  * '/a/b/c/d/e/f' -> db
  * */
 unsigned long long
-duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
+duf_add_real_path_uni( const char *real_path, int up, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long dirid = 0;
@@ -106,7 +107,7 @@ duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
   const char *base_name = NULL;
   char *rpath = mas_strdup( real_path );
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
 
   base_name = basename( rpath );
@@ -155,7 +156,7 @@ duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
         char *name = mas_strdup( base_name );
 
         DUF_TRACE( current, 0, "to insert [%s]", base_name );
-        dirid = duf_insert_path_uni( name, st_dir.st_dev, st_dir.st_ino, parentid,  need_id , &r );
+        dirid = duf_insert_path_uni( name, st_dir.st_dev, st_dir.st_ino, parentid, need_id, &r );
         DUF_TRACE( current, 0, "inserted [%s] AS %llu", base_name, dirid );
         mas_free( name );
       }
@@ -165,17 +166,17 @@ duf_add_real_path_uni( const char *real_path,  int up, int need_id, int *pr )
   mas_free( rpath );
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, dirid );
+  DEBUG_ENDULL( dirid );
   return dirid;
 }
 
 unsigned long long
-duf_add_path_uni( const char *path,  int need_id, int *pr )
+duf_add_path_uni( const char *path, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long dirid = 0;
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   {
     char *real_path = NULL;
 
@@ -192,13 +193,13 @@ duf_add_path_uni( const char *path,  int need_id, int *pr )
     if (  /* strlen( real_path ) > 1 && */ !( real_path && *real_path == '/' && real_path[1] == 0 ) )
     {
       DUF_TRACE( current, 0, "Update parent %s", real_path );
-      dirid = duf_add_real_path_uni( real_path,  DUF_TRUE, need_id, &r );
+      dirid = duf_add_real_path_uni( real_path, DUF_TRUE, need_id, &r );
       DUF_TRACE( current, 0, "Updated parent %s AS %llu", real_path, dirid );
     }
     mas_free( real_path );
   }
   if ( pr )
     *pr = r;
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_END(  );
   return dirid;
 }

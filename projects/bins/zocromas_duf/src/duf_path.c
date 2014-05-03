@@ -19,8 +19,9 @@
 #include "duf_dh.h"
 
 #include "duf_sql_def.h"
-#include "duf_sql.h"
 #include "duf_sql_field.h"
+
+#include "duf_sql2.h"
 
 #include "duf_dbg.h"
 
@@ -34,7 +35,7 @@ duf_join_path( const char *path, const char *fname )
 {
   char *fpath = NULL;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   if ( fname )
   {
     if ( path )
@@ -43,7 +44,7 @@ duf_join_path( const char *path, const char *fname )
       fpath = mas_strcat_x( fpath, "/" );
     fpath = mas_strcat_x( fpath, fname );
   }
-  duf_dbgfunc( DBG_ENDS, __func__, __LINE__, fpath );
+  DEBUG_ENDS( fpath );
   return fpath;
 }
 
@@ -65,7 +66,7 @@ duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t 
   int r = 0;
   name_parid_udata_t *pud;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   pud = ( name_parid_udata_t * ) sel_cb_udata;
   if ( precord->nrow == 0 )
   {
@@ -83,7 +84,7 @@ duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t 
   }
   /* fprintf( stderr, "pud a:%d nrow:%d\n", precord->presult ? 1 : 0, nrow ); */
   /* fprintf( stderr, "pud b: %s :: %s\n", precord->presult[0], precord->presult[1] ); */
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_END(  );
   return r;
 }
 
@@ -97,7 +98,7 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh_pathid, c
   int test_o = duf_config->nopen;
   int test_c = duf_config->nclose;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
   duf_check_dh( "Before" );
 
 
@@ -158,7 +159,7 @@ duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh_pathid, c
     }
     if ( pathdef.name )
       mas_free( pathdef.name );
-    duf_dbgfunc( DBG_ENDS, __func__, __LINE__, path );
+    DEBUG_ENDS( path );
   }
   if ( pr )
     *pr = r;
@@ -237,7 +238,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
   char *cpath = NULL;
 
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   bd = cpath = mas_strdup( rpath );
 
@@ -250,10 +251,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
     duf_levinfo_t li = { 0 };
     char *ed;
 
-    /* TODO DEPTH++ */
-
     prevpathid = pathid;
-    /* fprintf( stderr, "%s: %llu bd: %s\n", __func__, pathid, bd ); */
     ed = bd;
     /* find next '/' */
     while ( ed && *ed && *ed != '/' )
@@ -262,36 +260,73 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
     while ( ed && *ed && *ed == '/' )
       *ed++ = 0;
     {
-      char *qbd;
-      char *qname = NULL;
-
-      qname = duf_single_quotes_2( bd );
-      qbd = qname ? qname : bd;
       pathid_new = 0;
-
       {
-        /* duf_depthinfo_t di = {.dirid = 0 }; */
-        r = duf_sql_select( duf_sel_cb_levinfo /* duf_sql_path_to_pathid */ , &li, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            ( duf_scan_callbacks_t * ) NULL /* sccb */ ,
-                            "SELECT duf_paths.id AS dirid, duf_paths.dirname,  duf_paths.parentid "
-                            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " " FROM duf_paths "
-                            " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
-                            " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "
-                            " WHERE duf_paths.parentid='%llu' AND dirname='%s' ", pathid, qbd );
+#if 1
+        {
+          duf_sqlite_stmt_t *pstmt = NULL;
+          const char *sql = "SELECT duf_paths.id AS dirid, duf_paths.dirname " /*      */
+                ", tf.numfiles AS nfiles, td.numdirs AS ndirs " /*      */
+                " FROM duf_paths LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) " /*      */
+                " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " /*      */
+                " WHERE duf_paths.parentid=:dirid AND dirname=:dirname";
 
+          if ( r >= 0 )
+            r = duf_sql_prepare( sql, &pstmt );
+          if ( r >= 0 )
+            r = duf_sql_bind_long_long( pstmt, ":dirid", pathid );
+          if ( r >= 0 )
+            r = duf_sql_bind_string( pstmt, ":dirname", bd );
+          if ( r >= 0 )
+            r = duf_sql_step( pstmt );
+          if ( r == DUF_SQL_ROW )
+          {
+            li.dirid = duf_sql_column_long_long( pstmt, 0 );
+            li.itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) );
+            li.numfile = duf_sql_column_long_long( pstmt, 2 );
+            li.numdir = duf_sql_column_long_long( pstmt, 3 );
+            r = 0;
+          }
+          {
+            int rf = duf_sql_finalize( pstmt );
+
+            DUF_TEST_R( rf );
+            DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" );
+
+            if ( r >= 0 || r == DUF_SQL_DONE )
+              r = rf;
+          }
+        }
+#else
+        {
+          /* duf_depthinfo_t di = {.dirid = 0 }; */
+          char *qbd;
+          char *qname = NULL;
+
+          qname = duf_single_quotes_2( bd );
+          qbd = qname ? qname : bd;
+          r = duf_sql_select( duf_sel_cb_levinfo /* duf_sql_path_to_pathid */ , &li, STR_CB_DEF, STR_CB_UDATA_DEF,
+                              ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL /* sccb */ ,
+                              "SELECT duf_paths.id AS dirid, duf_paths.dirname,  duf_paths.parentid "
+                              ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
+                              " FROM duf_paths " " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "
+                              " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "
+                              " WHERE duf_paths.parentid='%llu' AND dirname='%s' ", pathid, qbd );
+          mas_free( qname );
+          qname = NULL;
+        }
+#endif
         if ( r >= 0 )
           pathid_new = li.dirid;
         if ( !pathid_new )
         {
           r = DUF_ERROR_DB_NO_PATH;
-          DUF_ERROR( "no pathid at %llu : %s; use -Q to see sql", pathid, qbd );
+          DUF_ERROR( "no pathid at %llu : %s; use -Q to see sql", pathid, bd );
         }
         DUF_TRACE( path, 0, "(%d)SELECT PATHID %s => %llu; WHERE duf_paths.parentid='%llu' AND dirname='%s'", r, bd, pathid_new, pathid,
-                   qbd );
+                   bd );
       }
-      DUF_TRACE( path, 0, "%s: pathid_new: %llu; qbd: %s", __func__, pathid_new, qbd );
-      mas_free( qname );
-      qname = NULL;
+      DUF_TRACE( path, 0, "%s: pathid_new: %llu; bd: %s", __func__, pathid_new, bd );
     }
     if ( r < 0 )
       break;
@@ -325,7 +360,7 @@ duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **n
   DUF_TRACE( path, 0, "%s: FINAL pathid: %llu; pathid_new: %llu;", __func__, pathid, pathid_new );
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid_new );
+  DEBUG_ENDULL( pathid_new );
   return pathid_new;
 }
 
@@ -335,8 +370,7 @@ duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **
   int r = 0;
   unsigned long long pathid_new = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  DUF_TRACE( action, 0, "PATH > ID" );
+  DEBUG_START(  );
 
   if ( path )
   {
@@ -356,7 +390,8 @@ duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **
 
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid_new );
+  DUF_TRACE( action, 0, "PATH > ID#%llu", pathid_new );
+  DEBUG_ENDULL( pathid_new );
   return pathid_new;
 }
 
@@ -370,7 +405,7 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
   int r = 0;
   unsigned long long pathid = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_START(  );
 
   pathid = duf_path_to_pathid_x( path, NULL, NULL, pdi, &r );
 
@@ -378,6 +413,6 @@ duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )
   DUF_TEST_R( r );
   if ( pr )
     *pr = r;
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, pathid );
+  DEBUG_ENDULL( pathid );
   return pathid;
 }

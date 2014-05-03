@@ -20,7 +20,12 @@
 #include "duf_levinfo.h"
 
 
+#include "duf_sql_def.h"
 #include "duf_sql_field.h"
+
+#include "duf_sql.h"
+#include "duf_sql1.h"
+
 #include "duf_path.h"
 
 #include "duf_add.h"
@@ -29,8 +34,6 @@
 #include "duf_filedata.h"
 #include "duf_dirent.h"
 
-#include "duf_sql_def.h"
-#include "duf_sql.h"
 #include "duf_dbg.h"
 
 /* run  --db-name=test20140412   --uni-scan -R --collect --files --dirs /mnt/new_media/media/down/ */
@@ -135,6 +138,41 @@ collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 }
 
 static int
+collect_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+{
+  int r = 0;
+
+  DEBUG_START(  );
+
+/* 
+   * --uni-scan   -R   --collect   --files  --dirs  -FF
+   *                   ^^^^^^   ^^^^^^^  ^^^^^^
+   * */
+
+
+  if ( DUF_IF_TRACE( collect ) )
+  {
+    DUF_SFIELD2( filename );
+    /* DUF_UFIELD( dirid ); */
+    /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
+    /* duf_dirhandle_t dh;                                        */
+    /* char *path = duf_pathid_to_path_dh( dirid, &dh, pdi, &r ); */
+    const char *real_path = NULL;
+
+    if ( !real_path )
+      real_path = duf_levinfo_path( pdi );
+
+    DUF_TEST_R( r );
+
+    DUF_TRACE( collect, 1, "path=%s/%s", real_path, filename );
+    /* duf_close_dh( &dh ); */
+    /* mas_free( path ); */
+  }
+  DEBUG_ENDR( r );
+  return r;
+}
+
+static int
 duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
                     duf_record_t * precord )
 {
@@ -155,7 +193,38 @@ duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned lon
 }
 
 static int
+duf_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
+                     duf_depthinfo_t * pdi )
+{
+  int r = 0;
+  unsigned long long dataid = 0;
+
+  /* unsigned long long fnid = 0; */
+
+  DEBUG_START(  );
+
+  if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
+  {
+    dataid = duf_insert_filedata_uni( pst_file, 1 /*need_id */ , &r );
+    r = duf_collect_insert_filename_uni( fname, dirid, dataid );
+  }
+  DEBUG_ENDR( r );
+  return r;
+}
+
+
+static int
 duf_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
+{
+  int r = 0;
+
+  ( void ) duf_insert_path_uni( fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
+  return r;
+}
+
+static int
+duf_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
+                     duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -166,11 +235,12 @@ duf_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long l
 
 
 
+
  /* *INDENT-OFF*  */
 
 static char *final_sql[] = {
   "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.id AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
+        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
 	  " FROM duf_filenames AS fn "
 	      " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
 	" GROUP BY fn.Pathid",
@@ -212,23 +282,36 @@ NULL,};
 
 
 duf_scan_callbacks_t duf_collect_openat_callbacks = {
-  .title = __FILE__,.init_scan = NULL,
+  .title = "collect o",
+  .init_scan = NULL,
   .opendir = 1,
   .entry_dir_scan_before = duf_scan_entry_dir,
+  .entry_dir_scan_before2 = duf_scan_entry_dir2,
+
   .entry_file_scan_before = duf_scan_entry_reg,
+  .entry_file_scan_before2 = duf_scan_entry_reg2,
+
   /* .node_scan_before = collect_scan_node_before, */
   .leaf_scan = collect_scan_leaf,
+  .leaf_scan2 = collect_scan_leaf2,
   /* filename for debug only */
   .fieldset = " duf_filenames.Pathid AS dirid, " " duf_filenames.name AS filename, duf_filedatas.size AS filesize "
         ", uid, gid, nlink, inode, mtim AS mtime "
         ", duf_filedatas.mode AS filemode " ", duf_filenames.id AS filenameid " ", md.dupcnt AS nsame, md.md5sum1, md.md5sum2 ",
   .leaf_selector =
         " SELECT %s FROM duf_filenames "
-        " JOIN duf_filedatas on( duf_filenames.dataid = duf_filedatas.id ) "
-        " LEFT JOIN duf_md5 AS md on( md.id = duf_filedatas.md5id ) " " WHERE "
+        " JOIN duf_filedatas ON ( duf_filenames.dataid = duf_filedatas.id ) "
+        " LEFT JOIN duf_md5 AS md ON ( md.id = duf_filedatas.md5id ) " " WHERE "
         /* " duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "                      */
         /* " AND( md.dupcnt IS NULL OR( md.dupcnt >= %llu AND md.dupcnt < %llu ) ) AND " */
         " duf_filenames.Pathid = '%llu' ",
+  .leaf_selector2 =
+        " SELECT %s FROM duf_filenames "
+        " JOIN duf_filedatas ON ( duf_filenames.dataid = duf_filedatas.id ) "
+        " LEFT JOIN duf_md5 AS md ON ( md.id = duf_filedatas.md5id ) " " WHERE "
+        /* " duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "                      */
+        /* " AND( md.dupcnt IS NULL OR( md.dupcnt >= %llu AND md.dupcnt < %llu ) ) AND " */
+        " duf_filenames.Pathid = :dirid ",
   .node_selector =
         " SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
@@ -247,5 +330,11 @@ duf_scan_callbacks_t duf_collect_openat_callbacks = {
         " FROM duf_paths "
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid = '%llu' ",
+  .node_selector2 =
+        " SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
+        " FROM duf_paths "
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid = :dirid ",
   .final_sql_argv = final_sql,
 };

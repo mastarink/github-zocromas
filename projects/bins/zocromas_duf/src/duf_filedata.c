@@ -8,8 +8,10 @@
 
 
 #include "duf_sql_def.h"
-#include "duf_sql.h"
 #include "duf_sql_field.h"
+
+#include "duf_sql.h"
+#include "duf_sql1.h"
 
 #include "duf_dbg.h"
 
@@ -33,7 +35,7 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
     int r;
     int changes = 0;
 
-    duf_dbgfunc( DBG_START, __func__, __LINE__ );
+    DEBUG_START(  );
     {
       r = duf_sql( "INSERT OR IGNORE INTO duf_filedatas " " (dev,  inode, size, mode, nlink, uid,  gid,  blksize, blocks, "
                    " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id) " "VALUES "
@@ -79,6 +81,6 @@ duf_insert_filedata_uni( const struct stat *pst_file, int need_id, int *pr )
   if ( pr )
     *pr = r;
   /* DUF_TRACE( current, 0, "%llu", resd ); */
-  duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, resd );
+  DEBUG_ENDULL( resd );
   return resd;
 }

@@ -43,9 +43,8 @@ static char *final_sql[] = {
         "SELECT size, COUNT(*) "
           " FROM duf_filedatas AS fd GROUP BY fd.size",
 
-  /* "DELETE FROM duf_pathtot_files", */
   "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.id AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
+        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
 	  " FROM duf_filenames AS fn "
 	      " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
 	" GROUP BY fn.Pathid",

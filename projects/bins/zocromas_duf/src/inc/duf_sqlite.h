@@ -2,6 +2,7 @@
 #  define MAS_DUF_SQLITE_H
 
 #  include <sqlite3.h>
+#  include "duf_sql_def.h"
 
 int duf_sqlite_error_code( int r3 );
 
@@ -19,10 +20,41 @@ int duf_vsqlite_c( const char *sqlfmt, int constraint_ignore, int *pchanges, va_
 int duf_vsqlite_e( const char *fmt, int *pchanges, va_list args );
 
 int duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb  , const char *sqlfmt,
-                        va_list args );
+                        duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, va_list args );
 
 unsigned long long duf_sqlite_last_insert_rowid( void );
+
+int duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt );
+int duf_sqlite_step( duf_sqlite_stmt_t * stmt );
+int duf_sqlite_finalize( duf_sqlite_stmt_t * stmt );
+
+int duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name );
+
+int duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val );
+int duf_sqlite_bind_int( duf_sqlite_stmt_t * stmt, int num, int val );
+int duf_sqlite_bind_null( duf_sqlite_stmt_t * stmt, int num );
+int duf_sqlite_bind_double( duf_sqlite_stmt_t * stmt, int num, double val );
+int duf_sqlite_bind_string( duf_sqlite_stmt_t * stmt, int num, const char *val );
+
+int duf_sqlite_changes( void );
+
+long long duf_sqlite_column_long_long( duf_sqlite_stmt_t * stmt, int icol );
+int duf_sqlite_column_int( duf_sqlite_stmt_t * stmt, int icol );
+const char *duf_sqlite_column_string( duf_sqlite_stmt_t * stmt, int icol );
+
+
+
+
+
+const char *duf_sqlite_column_name( duf_sqlite_stmt_t * stmt, int index );
+int duf_sqlite_column_count( duf_sqlite_stmt_t * stmt );
+
+
+
+
+
+
+
 
 /* As for sqlite 3.8.4.3 */
 /* #define SQLITE_OK           0   (* Successful result *)                          */

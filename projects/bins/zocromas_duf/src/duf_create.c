@@ -11,7 +11,7 @@
 #include "duf_utils.h"
 #include "duf_dbg.h"
 
-#include "duf_sql.h"
+#include "duf_sql1.h"
 
 
 /* ###################################################################### */
@@ -447,22 +447,61 @@ duf_check_table_path_group( void )
   return r;
 }
 
+static int
+duf_check_table_filefilter( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
 
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  /* *INDENT-OFF*  */
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS "
+                        " duf_filefilter (id INTEGER PRIMARY KEY autoincrement"
+			", type INTEGER"
+			", minsize INTEGER, maxsize INTEGER"
+			", mindups INTEGER, maxdups INTEGER"
+			", nameglob TEXT"
+                        ", run REAL"
+                        ", last_updated REAL"
+                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))"
+			")", "Create duf_filefilter" );
+  /* *INDENT-ON*  */
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS" " all_uniq ON duf_filefilter (minsize, maxsize, mindups, maxdups, nameglob)",
+                          "Create duf_filefilter" );
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS duf_sizes_lastupdated "
+                          " AFTER UPDATE OF minsize, maxsize, mindups, maxdups, nameglob "
+                          " ON duf_filefilter FOR EACH ROW BEGIN "
+                          "   UPDATE duf_filefilter SET last_updated=DATETIME() WHERE id=OLD.id ;" " END", "Create duf_filefilter" );
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
 
 
 int
 duf_clear_tables( void )
 {
-  int r = DUF_ERROR_CLEAR_TABLES;
+  int r = 0;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
-  r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filedatas", "Drop filedatas" );
-
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_log", "Drop log" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filedatas", "Drop filedatas" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_sizes", "Drop sizes" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filenames", "Drop filenames" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_paths", "Drop paths" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS pathtot_dirs", "Drop pathtot_dirs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS pathtot_files", "Drop pathtot_files" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_md5", "Drop md5" );
   if ( r >= 0 )
@@ -476,7 +515,7 @@ duf_clear_tables( void )
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_path_group", "Drop path_group" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "VACUUM", "vacuum" );
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS duf_filefilter", "Drop filefilter" );
   DUF_TRACE( action, 0, "Drop all tables from DB %s (%d)", r < 0 ? "FAIL" : "OK", r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -505,16 +544,17 @@ duf_check_tables( void )
   if ( r >= 0 )
     r = duf_check_table_md5(  );
   if ( r >= 0 )
-    r = duf_check_table_keydata(  );
-  if ( r >= 0 )
     r = duf_check_table_mdpath(  );
+  if ( r >= 0 )
+    r = duf_check_table_keydata(  );
   if ( r >= 0 )
     r = duf_check_table_exif(  );
   if ( r >= 0 )
     r = duf_check_table_group(  );
   if ( r >= 0 )
     r = duf_check_table_path_group(  );
-
+  if ( r >= 0 )
+    r = duf_check_table_filefilter(  );
   DUF_TRACE( action, 0, "Create all tables for DB %s (%d)", r < 0 ? "FAIL" : "OK", r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;

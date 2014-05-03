@@ -1,3 +1,4 @@
+#include <string.h>
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -10,6 +11,9 @@
 #include "duf_service.h"
 
 #include "duf_sql.h"
+#include "duf_sql1.h"
+#include "duf_sql2.h"
+
 #include "duf_create.h"
 #include "duf_path.h"
 
@@ -40,20 +44,19 @@ duf_action_new( int argc, char **argv )
 
 
   DUF_TEST_R( r );
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
-/* --drop-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_END(  );
+/* --drop-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.drop_tables )
     r = duf_clear_tables(  );
   DUF_TEST_R( r );
   if ( r >= 0 && duf_config->cli.act.vacuum )
     r = duf_sql_exec( "VACUUM", ( int * ) NULL );
   DUF_TEST_R( r );
-/* --create-tables								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/* --create-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.create_tables )
     r = duf_check_tables(  );
   DUF_TEST_R( r );
 
-  if ( 1 )
   {
     char *sargv1, *sargv2;
     char *qsargv1, *qsargv2;
@@ -64,18 +67,121 @@ duf_action_new( int argc, char **argv )
     DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
     qsargv1 = duf_single_quotes_2( sargv1 );
     qsargv2 = duf_single_quotes_2( sargv2 );
-
     r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES ('%s', '%s', '%s')", &changes,
                  qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );
-    DUF_TRACE( current, 0, "log inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
-    mas_free( qsargv1 );
+    DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
     mas_free( qsargv2 );
-    mas_free( sargv1 );
+    mas_free( qsargv1 );
     mas_free( sargv2 );
+    mas_free( sargv1 );
+  }
+  {
+    /*--max-size= ; --min-size= ; --glob= ;*/
+    /* --min-with-same-md5 : --min-copies= ; --max-copies= ;  --min-duplicates; --max-duplicates; */
+    /* --have-md5 ; --have-exif ; --attributes= ... */
+    /* --min-with-same-size */
+    /* --in-archive --on-removable */
+    /* --access-before= --access-after --modification-before= --modification-after ... */
+    /* see also for --filetype=  or --filemagic=                              */
+    /*   mastar@mastar .../bins/zocromas_duf $ apropos libmagic              */
+    /*   magic_buffer [libmagic] (3)  - Magic number recognition library     */
+    /*   magic_check [libmagic] (3)  - Magic number recognition library      */
+    /*   magic_close [libmagic] (3)  - Magic number recognition library      */
+    /*   magic_compile [libmagic] (3)  - Magic number recognition library    */
+    /*   magic_descriptor [libmagic] (3)  - Magic number recognition library */
+    /*   magic_error [libmagic] (3)  - Magic number recognition library      */
+    /*   magic_list [libmagic] (3)  - Magic number recognition library       */
+    /*   magic_load [libmagic] (3)  - Magic number recognition library       */
+    /*   magic_open [libmagic] (3)  - Magic number recognition library       */
+    /*   magic_setflags [libmagic] (3)  - Magic number recognition library   */
+    /*   magic_version [libmagic] (3)  - Magic number recognition library    */
+    {
+      const char *sqls[] = {
+        "UPDATE duf_filefilter SET run=datetime() "
+              " WHERE type='cli' AND ifnull(minsize,0)=ifnull(:minsize,0) AND ifnull(maxsize,0)=ifnull(:maxsize,0)"
+              " AND ifnull(mindups,0)=ifnull(:mindups,0) AND ifnull(maxdups,0)=ifnull(:maxdups,0) AND ifnull(nameglob,'')=ifnull(:nameglob,'')",
+        "INSERT INTO duf_filefilter (type,minsize,maxsize,mindups,maxdups,nameglob) VALUES ("
+              " 'cli', :minsize, :maxsize, :mindups, :maxdups, :nameglob " ")",
+        "SELECT id FROM duf_filefilter "
+              " WHERE type='cli' AND ifnull(minsize,0)=ifnull(:minsize,0) AND ifnull(maxsize,0)=ifnull(:maxsize,0)"
+              " AND ifnull(mindups,0)=ifnull(:mindups,0) AND ifnull(maxdups,0)=ifnull(:maxdups,0) AND ifnull(nameglob,'')=ifnull(:nameglob,'')",
+        NULL
+      };
+      {
+        int changes = 0;
+        const char **psql;
+
+        psql = sqls;
+        while ( psql && *psql )
+        {
+          const char *sql = *psql++;
+          duf_sqlite_stmt_t *pstmt = NULL;
+
+          if ( !changes || ( sql && 0 == strncmp( sql, "SELECT", 6 ) ) )
+          {
+            DUF_TRACE( action, 0, "to PREPARE %s", sql );
+            if ( r >= 0 )
+              r = duf_sql_prepare( sql, &pstmt );
+            DUF_TEST_R( r );
+            DUF_TEST_R( r );
+            DUF_TRACE( action, 0, "PREPARE:%d", r );
+            {
+              if ( r >= 0 && duf_config->u.minsize )
+                r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize );
+              DUF_TEST_R( r );
+              if ( r >= 0 && duf_config->u.maxsize )
+                r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize );
+              DUF_TRACE( action, 0, "BIND maxsize %lld", duf_config->u.maxsize );
+              DUF_TEST_R( r );
+              if ( r >= 0 && duf_config->u.minsame )
+                r = duf_sql_bind_long_long_nz( pstmt, ":mindups", duf_config->u.minsame );
+              DUF_TEST_R( r );
+              if ( r >= 0 && duf_config->u.maxsame )
+                r = duf_sql_bind_long_long_nz( pstmt, ":maxdups", duf_config->u.maxsame );
+              DUF_TEST_R( r );
+              if ( r >= 0 && duf_config->u.glob )
+                r = duf_sql_bind_string( pstmt, ":nameglob", duf_config->u.glob );
+              DUF_TEST_R( r );
+            }
+            do
+            {
+              if ( r == DUF_SQL_ROW )
+                r = 0;
+              if ( r >= 0 )
+                r = duf_sql_step( pstmt );
+              DUF_TEST_R( r );
+              if ( !changes )
+                changes = duf_sql_changes(  );
+
+              if ( r == DUF_SQL_ROW )
+              {
+                long long id;
+
+                id = duf_sql_column_long_long( pstmt, 0 );
+                DUF_TRACE( action, 0, "@@@@@@@@@@@@@@@@@ %lld", id );
+		duf_config->u.filter_id=id;
+              }
+            }
+            while ( r == DUF_SQL_ROW );
+
+            DUF_TRACE( action, 0, "STEP; changes:%d; %s", changes, r < 0 && r != DUF_SQL_DONE ? "FAIL" : "" );
+            {
+              int rf = duf_sql_finalize( pstmt );
+
+              DUF_TEST_R( rf );
+              DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" );
+
+              if ( r >= 0 || r == DUF_SQL_DONE )
+                r = rf;
+            }
+          }
+        }
+      }
+    }
   }
   DUF_TEST_R( r );
 
-/* --add-path									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/* --add-path									*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.add_path )
   {
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
@@ -91,12 +197,12 @@ duf_action_new( int argc, char **argv )
 
 
 
-/*  --update-path								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*  --update-path								*/ DEBUG_STEP(  );
   /* if ( duf_config->update_path )                                                    */
   /*   for ( int ia = 0; ia < duf_config->targc; ia++ )                                */
   /*     duf_update_path( duf_config->targv[ia], 0 (* parentid *) , duf_config->u,     */
   /*                      0 (* level *) , NULL (* pseq *) , DUF_TRUE (* dofiles *)  ); */
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
 
 
 
@@ -110,24 +216,24 @@ duf_action_new( int argc, char **argv )
   /* }                                                                  */
 
 
-/* --zero-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/* --zero-duplicates								*/ DEBUG_STEP(  );
   /* if ( r >= 0 && duf_config->cli.act.zero_duplicates ) */
   /*   r = duf_zero_duplicates(  );                       */
   DUF_TEST_R( r );
-/* --update-duplicates								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/* --update-duplicates								*/ DEBUG_STEP(  );
   /* if ( r >= 0 && duf_config->cli.act.update_duplicates ) */
   /*   r = duf_update_duplicates(  );                       */
 #if 0
-/* --zero-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/* --zero-filedatas								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.zero_filedata )
     duf_zero_filedatas(  );
   DUF_TEST_R( r );
-/* --update-filedatas								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/* --update-filedatas								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.update_filedata )
     duf_update_filedatas(  );
   DUF_TEST_R( r );
 #endif
-/*  --update-mdpaths								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*  --update-mdpaths								*/ DEBUG_STEP(  );
   /* if ( r >= 0 && duf_config->cli.act.update_mdpath ) */
   /*   duf_update_mdpaths( 0 );                         */
   /* DUF_TEST_R( r ); */
@@ -149,24 +255,24 @@ duf_action_new( int argc, char **argv )
         else
           DUF_ERROR( "not found %lld : '%s'\n", dirid, path );
       }
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
   }
 #endif
   DUF_TEST_R( r );
   /* if ( duf_config->cli.act.print_paths )          */
   /*   duf_print_paths( duf_config->group ); */
-/*  --print-dirs								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*  --print-dirs								*/ DEBUG_STEP(  );
 /*   if ( duf_config->cli.act.print_dirs )                                                                                                 */
 /*   {                                                                                                                             */
-/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/* (*                                                                              *) DEBUG_STEP( ); */
 /*     if ( duf_config->targc > 0 )                                                                                                */
 /*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
 /*         duf_print_dirs( duf_config->targv[ia], duf_config->u, duf_config->cli.act.tree );                                               */
 /*     else                                                                                                                        */
 /*       duf_print_dirs( NULL, duf_config->u, duf_config->cli.act.tree );                                                                  */
-/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/* (*                                                                              *) DEBUG_STEP( ); */
 /*   }                                                                                                                             */
-/*  --print-files								*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*  --print-files								*/ DEBUG_STEP(  );
 /*   if ( duf_config->cli.act.print_files )                                                                                                */
 /*   {                                                                                                                             */
 /*     if ( duf_config->targc > 0 )                                                                                                */
@@ -174,9 +280,9 @@ duf_action_new( int argc, char **argv )
 /*         duf_print_files( duf_config->targv[ia], duf_config->u );                                                                */
 /*     else                                                                                                                        */
 /*       duf_print_files( NULL, duf_config->u );                                                                                   */
-/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/* (*                                                                              *) DEBUG_STEP( ); */
 /*   }                                                                                                                             */
-/*  --uni-scan									*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*  --uni-scan									*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.uni_scan )
   {
     r = duf_uni_scan_all(  );
@@ -185,11 +291,11 @@ duf_action_new( int argc, char **argv )
     /* else if ( r < 0 )                                 */
     /*   DUF_ERROR( "code: %d", r );                     */
   }
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
   /* if ( duf_config->cli.act.same_md5 )               */
   /*   duf_print_md5_same( 1, duf_config->cli.limit ); */
 
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
 
 /*   if ( duf_config->cli.act.same_files )                                                                                         */
 /*   {                                                                                                                             */
@@ -198,22 +304,22 @@ duf_action_new( int argc, char **argv )
 /*     else                                                                                                                        */
 /*       for ( int ia = 0; ia < duf_config->targc; ia++ )                                                                          */
 /*         duf_print_files_same( duf_config->targv[ia] );                                                                          */
-/* (*                                                                              *) duf_dbgfunc( DBG_STEP, __func__, __LINE__ ); */
+/* (*                                                                              *) DEBUG_STEP( ); */
 /*   }                                                                                                                             */
   /* if ( r >= 0 && duf_config->cli.act.same_exif )     */
   /*   duf_print_exif_same( 1, duf_config->cli.limit ); */
 
 #ifdef DUF_COMPILE_EXPIRED
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.to_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );
-/*										*/ duf_dbgfunc( DBG_STEP, __func__, __LINE__ );
+/*										*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.from_group )
     for ( int ia = 0; ia < duf_config->targc; ia++ )
       duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
 #endif
-  /*          */ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  /*          */ DEBUG_END(  );
   /* if ( r < 0 && !r == DUF_ERROR_MAX_REACHED ) */
   /*   DUF_TEST_R(r);        */
   /* else if ( r < 0 )                           */

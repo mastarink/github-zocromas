@@ -20,7 +20,12 @@
 #include "duf_levinfo.h"
 
 
+#include "duf_sql_def.h"
 #include "duf_sql_field.h"
+
+#include "duf_sql.h"
+#include "duf_sql1.h"
+
 #include "duf_path.h"
 
 #include "duf_add.h"
@@ -29,8 +34,6 @@
 #include "duf_filedata.h"
 #include "duf_dirent.h"
 
-#include "duf_sql_def.h"
-#include "duf_sql.h"
 #include "duf_dbg.h"
 
 /* ###################################################################### */
@@ -516,7 +519,7 @@ collect_scan_node_before( unsigned long long pathid_unused, /* const duf_dirhand
 
 static char *final_sql[] = {
   "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.id AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
+        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
 	  " FROM duf_filenames AS fn "
 	      " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
 	" GROUP BY fn.Pathid",
@@ -558,7 +561,8 @@ NULL,};
 
 
 duf_scan_callbacks_t duf_collect_noopenat_callbacks = {
-  .title = __FILE__,.init_scan = NULL,
+  .title = "collect n/o",
+  .init_scan = NULL,
   .opendir = 0,
   .node_scan_before = collect_scan_node_before,
   .leaf_scan = scan_leaf,
@@ -568,8 +572,8 @@ duf_scan_callbacks_t duf_collect_noopenat_callbacks = {
         ", duf_filedatas.mode AS filemode " ", duf_filenames.id AS filenameid " ", md.dupcnt AS nsame, md.md5sum1, md.md5sum2 ",
   .leaf_selector =
         " SELECT %s FROM duf_filenames "
-        " JOIN duf_filedatas on( duf_filenames.dataid = duf_filedatas.id ) "
-        " LEFT JOIN duf_md5 AS md on( md.id = duf_filedatas.md5id ) " " WHERE "
+        " JOIN duf_filedatas ON ( duf_filenames.dataid = duf_filedatas.id ) "
+        " LEFT JOIN duf_md5 AS md ON ( md.id = duf_filedatas.md5id ) " " WHERE "
         /* " duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "                      */
         /* " AND( md.dupcnt IS NULL OR( md.dupcnt >= %llu AND md.dupcnt < %llu ) ) AND " */
         " duf_filenames.Pathid = '%llu' ",

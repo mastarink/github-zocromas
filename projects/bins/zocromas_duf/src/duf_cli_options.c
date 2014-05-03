@@ -125,6 +125,7 @@ const duf_option_t longopts[] = {
   {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES},
   {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},
   {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
+  {.name = "glob",.has_arg = required_argument,.val = DUF_OPTION_GLOB},
   {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
   /* {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT}, */
   {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP},

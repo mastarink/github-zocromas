@@ -11,6 +11,7 @@
 #include "duf_config.h"
 
 #include "duf_sql_def.h"
+#include "duf_sql2.h"
 
 #include "duf_dbg.h"
 
@@ -58,6 +59,22 @@ __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int
   return pos;
 }
 
+int
+__duf_sql_pos_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
+{
+  int pos = -1;
+
+  for ( int icol = 0; icol < duf_sql_column_count( pstmt ); icol++ )
+  {
+    if ( 0 == strcmp( duf_sql_column_name( pstmt, icol ), name ) )
+    {
+      pos = icol;
+      break;
+    }
+  }
+  return pos;
+}
+
 const char *
 __duf_sql_str_by_name( const char *name, duf_record_t * precord, int *phave, int optional )
 {
@@ -66,6 +83,18 @@ __duf_sql_str_by_name( const char *name, duf_record_t * precord, int *phave, int
 
   if ( pos >= 0 )
     ptr = precord->presult[pos];
+
+  return ptr;
+}
+
+const char *
+__duf_sql_str_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
+{
+  const char *ptr = NULL;
+  int pos = __duf_sql_pos_by_name2( pstmt, name );
+
+  if ( pos >= 0 )
+    ptr = duf_sql_column_string( pstmt, pos );
 
   return ptr;
 }
@@ -88,6 +117,17 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
 
   ptr = __duf_sql_val_by_name( name, precord, phave, optional );
   return ptr ? strtoll( ptr, NULL, 10 ) : 0;
+}
+
+unsigned long long
+__duf_sql_ull_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
+{
+  unsigned long long val = 0;
+  int pos = __duf_sql_pos_by_name2( pstmt, name );
+
+  if ( pos >= 0 )
+    val = duf_sql_column_long_long( pstmt, pos );
+  return val;
 }
 
 /* 

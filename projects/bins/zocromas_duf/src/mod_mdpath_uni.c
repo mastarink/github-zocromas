@@ -20,8 +20,10 @@
 /* #include "duf_file.h" */
 
 #include "duf_sql_def.h"
-#include "duf_sql.h"
 #include "duf_sql_field.h"
+
+#include "duf_sql.h"
+#include "duf_sql1.h"
 
 #include "duf_dbg.h"
 
@@ -218,8 +220,8 @@ duf_scan_callbacks_t duf_collect_mdpath_callbacks = {
         " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode, md.md5sum1, md.md5sum2",
   .leaf_selector =
         "SELECT %s FROM duf_filenames "
-        " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE "
+        " JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
+        " LEFT JOIN duf_md5 AS md ON (md.id=duf_filedatas.md5id)" "    WHERE "
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "            */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
         " duf_filenames.Pathid='%llu' " " ORDER BY duf_filenames.name ",

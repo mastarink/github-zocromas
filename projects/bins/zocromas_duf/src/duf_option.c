@@ -504,46 +504,30 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     /*   break;                                   */
   case DUF_OPTION_SAME_FILES:
     DUF_OPT_FLAG( cli.act.same_files );
-    /* duf_config->cli.act.same_files = 1; */
     break;
   case DUF_OPTION_SAME_EXIF:
     DUF_OPT_FLAG( cli.act.same_exif );
-    /* duf_config->cli.act.same_exif = 1; */
     break;
   case DUF_OPTION_SAME_MD5:
     DUF_OPT_FLAG( cli.act.same_md5 );
     break;
   case DUF_OPTION_ADD_TO_GROUP:
     DUF_OPT_FLAG( cli.act.to_group );
-    /* duf_config->cli.act.to_group = 1; */
     break;
   case DUF_OPTION_REMOVE_FROM_GROUP:
     DUF_OPT_FLAG( cli.act.from_group );
-    /* duf_config->cli.act.from_group = 1; */
+    break;
+  case DUF_OPTION_GLOB:
+    DUF_OPT_STR( u.glob );
     break;
   case DUF_OPTION_GROUP:
     DUF_OPT_STR( group );
-    /* if ( optarg )                               */
-    /* {                                           */
-    /*   mas_free( duf_config->group );            */
-    /*   duf_config->group = mas_strdup( optarg ); */
-    /* }                                           */
     break;
   case DUF_OPTION_DB_DIRECTORY:
     DUF_OPT_STR( db.dir );
-    /* if ( optarg )                                */
-    /* {                                            */
-    /*   mas_free( duf_config->db.dir );            */
-    /*   duf_config->db.dir = mas_strdup( optarg ); */
-    /* }                                            */
     break;
   case DUF_OPTION_DB_NAME:
     DUF_OPT_STR( db.name );
-    /* if ( optarg )                                 */
-    /* {                                             */
-    /*   mas_free( duf_config->db.name );            */
-    /*   duf_config->db.name = mas_strdup( optarg ); */
-    /* }                                             */
     break;
     /* case DUF_OPTION_LIMIT:      */
     /*   DUF_OPT_NUM( cli.limit ); */

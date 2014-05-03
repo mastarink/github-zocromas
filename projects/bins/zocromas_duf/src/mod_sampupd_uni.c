@@ -101,7 +101,7 @@ static char *final_sql[] = {
         " JOIN duf_md5 AS md ON (fd.md5id=md.id) " " WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
   /* "DELETE FROM duf_pathtot_files", */
   "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.id AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
+        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
         " FROM duf_filenames AS fn " " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " " GROUP BY fn.Pathid",
   "UPDATE duf_pathtot_files SET "
         " minsize=(SELECT min(size) AS minsize "
@@ -145,8 +145,8 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
         " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode, md.md5sum1, md.md5sum2 ",
   .leaf_selector =
         "SELECT %s FROM duf_filenames "
-        " JOIN duf_filedatas on (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 AS md on (md.id=duf_filedatas.md5id)" "    WHERE "
+        " JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
+        " LEFT JOIN duf_md5 AS md ON (md.id=duf_filedatas.md5id)" "    WHERE "
         /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "             */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu))  AND " */
         " duf_filenames.Pathid='%llu' ",

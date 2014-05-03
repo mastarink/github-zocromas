@@ -16,6 +16,7 @@
 #include "duf_service.h"
 
 #include "duf_sql.h"
+#include "duf_sql1.h"
 
 #include "duf_dbg.h"
 
@@ -35,7 +36,7 @@ main_db( int argc, char **argv )
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
+/*										*/ DEBUG_START( );
   if ( duf_config->db.dir && duf_config->db.name )
   {
     r = 0;
@@ -121,7 +122,7 @@ main_db( int argc, char **argv )
     r = DUF_ERROR_PTR;
     DUF_ERROR( "db.name not set" );
   }
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+/*										*/ DEBUG_END( );
   DUF_TEST_R( r );
   return r;
 }

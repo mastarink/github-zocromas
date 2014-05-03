@@ -56,6 +56,9 @@ duf_config_delete( void )
   mas_free( duf_config->group );
   duf_config->group = NULL;
 
+  mas_free( duf_config->u.glob );
+  duf_config->u.glob = NULL;
+
   mas_del_argv( duf_config->targc, duf_config->targv, 0 );
   duf_config->targc = 0;
   duf_config->targv = NULL;
