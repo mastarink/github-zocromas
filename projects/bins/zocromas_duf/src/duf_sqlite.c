@@ -403,7 +403,15 @@ duf_sqlite_finalize( duf_sqlite_stmt_t * stmt )
   DUF_TEST_R3( r3 );
   return r3;
 }
+int
+duf_sqlite_reset( duf_sqlite_stmt_t * stmt )
+{
+  int r3;
 
+  r3 = sqlite3_reset( stmt );
+  DUF_TEST_R3( r3 );
+  return r3;
+}
 int
 duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name )
 {

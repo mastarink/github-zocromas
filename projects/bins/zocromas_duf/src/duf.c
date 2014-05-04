@@ -187,7 +187,15 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "  run -PRdifE5 /home/mastar/a/down/chromium/ -SSS" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rd --totals  --tree   /home/mastar/a/down/" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf --max-seq=1000" );
+        DUF_PRINTF( 0, "========================= as for 20140504 ===================" );
+        DUF_PRINTF( 0, "= full - cycle collect in one command =======================" );
+        DUF_PRINTF( 0, "  run  --remove-database -OP  -RdifE5 /home/mastar/a/down/chromium/  --exclude='*.doc' --exclude='*.jpg' --exclude='*.css'  --exclude='*.html' --exclude='*.png'  --exclude='*.gif'   --exclude='*.js'  --exclude='*.php'" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/" );
         DUF_PRINTF( 0, "=============================================================" );
+
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/  --size=-10 --size=+0" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/  --size=-1b" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/  --size=+1G" );
         r = 0;
         break;
       default:

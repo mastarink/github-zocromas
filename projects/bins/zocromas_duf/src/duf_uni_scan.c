@@ -241,7 +241,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
 
         if ( r >= 0 )
         {
-          if ( 1 )
+          if ( sccb->scan_mode_step )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
             r = duf_scan_dirs_by_parentid( duf_str_cb_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );

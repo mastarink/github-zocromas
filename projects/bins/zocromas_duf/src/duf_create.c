@@ -459,7 +459,8 @@ duf_check_table_filefilter( void )
 			", type INTEGER"
 			", minsize INTEGER, maxsize INTEGER"
 			", mindups INTEGER, maxdups INTEGER"
-			", nameglob TEXT"
+			", glob_include TEXT"
+			", glob_exclude TEXT"
                         ", run REAL"
                         ", last_updated REAL"
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))"
@@ -467,12 +468,12 @@ duf_check_table_filefilter( void )
   /* *INDENT-ON*  */
 
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS" " all_uniq ON duf_filefilter (minsize, maxsize, mindups, maxdups, nameglob)",
-                          "Create duf_filefilter" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS" " all_uniq ON duf_filefilter (minsize, maxsize, mindups, maxdups"
+                          ", glob_include, glob_exclude)", "Create duf_filefilter" );
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS duf_sizes_lastupdated "
-                          " AFTER UPDATE OF minsize, maxsize, mindups, maxdups, nameglob "
+                          " AFTER UPDATE OF minsize, maxsize, mindups, maxdups, glob_include, glob_exclude "
                           " ON duf_filefilter FOR EACH ROW BEGIN "
                           "   UPDATE duf_filefilter SET last_updated=DATETIME() WHERE id=OLD.id ;" " END", "Create duf_filefilter" );
 

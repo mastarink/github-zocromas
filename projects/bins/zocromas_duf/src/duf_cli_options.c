@@ -56,6 +56,8 @@ const duf_option_t longopts[] = {
   {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
   {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
   {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
+  {.name = "trace-samupd",.has_arg = optional_argument,.val = DUF_OPTION_SAMPUPD_TRACE},
+  {.name = "trace-match",.has_arg = optional_argument,.val = DUF_OPTION_MATCH_TRACE},
   {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
   {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
   {.name = "trace-fs",.has_arg = optional_argument,.val = DUF_OPTION_FS_TRACE},
@@ -108,6 +110,7 @@ const duf_option_t longopts[] = {
   /* --------------- */
   {.name = "min-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MINDIRFILES},
   {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
+  {.name = "size",.has_arg = required_argument,.val = DUF_OPTION_SIZE},
   {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
   {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
   {.name = "min-same",.has_arg = required_argument,.val = DUF_OPTION_MINSAME},
@@ -125,7 +128,8 @@ const duf_option_t longopts[] = {
   {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES},
   {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},
   {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
-  {.name = "glob",.has_arg = required_argument,.val = DUF_OPTION_GLOB},
+  {.name = "include",.has_arg = required_argument,.val = DUF_OPTION_GLOB_INCLUDE_FILES},
+  {.name = "exclude",.has_arg = required_argument,.val = DUF_OPTION_GLOB_EXCLUDE_FILES},
   {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
   /* {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT}, */
   {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP},

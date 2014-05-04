@@ -249,6 +249,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
 
 duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = __FILE__ ".dir",
+  .scan_mode_step=1,
   .init_scan = NULL,
   .node_scan_before = scan_node_before,
   .node_scan_before2 = scan_node_before2,

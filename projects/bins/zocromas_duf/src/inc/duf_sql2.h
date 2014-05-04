@@ -8,6 +8,7 @@
 int duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt );
 int duf_sql_step( duf_sqlite_stmt_t * stmt );
 int duf_sql_finalize( duf_sqlite_stmt_t * stmt );
+int duf_sql_reset( duf_sqlite_stmt_t * stmt );
 
 int duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value );
 int duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long long value );

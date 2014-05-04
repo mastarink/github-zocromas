@@ -74,17 +74,20 @@
 #  define DUF_IF_TRACE_WHATN(what,name,min) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name>min )
 #  define DUF_IF_TRACEN(name,min)      DUF_IF_TRACE_WHATN(cli.trace, name)
 
-#  define DUF_TRACE_WHAT( what, name, min, ...) \
-    duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
+#  define DUF_TRACE_WHAT_C(cfg, what, name, min, ...) \
+    duf_trace( DUF_TRACE_MODE_ ## name, #name, ((cfg && !cfg->cli.trace.nonew) ? cfg->what.name: 1), min, \
 		__func__,__LINE__, 0, 0, \
-			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
+			cfg && cfg->cli.trace.out?cfg->cli.trace.out:stdout, __VA_ARGS__ )
+#  define DUF_TRACE_WHAT(what, name, min, ...) DUF_TRACE_WHAT_C(duf_config, what, name, min, __VA_ARGS__)
+
 #  define DUF_TRACE_WHATSYSE( ern, what, name, min, ...) \
     duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
 		__func__,__LINE__, DUF_TRACE_FLAG_SYSTEM, ern, \
 			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
 #  define DUF_TRACE_WHATSYS(  what, name, min, ...) DUF_TRACE_WHATSYSE(errno,  what, name, min, __VA_ARGS__)
 
-#  define DUF_TRACE(name, ...)           DUF_TRACE_WHAT(cli.trace, name, __VA_ARGS__)
+#  define DUF_TRACE_C(cfg,name, ...)     DUF_TRACE_WHAT_C(cfg, cli.trace, name, __VA_ARGS__)
+#  define DUF_TRACE(name, ...)           DUF_TRACE_WHAT_C(duf_config, cli.trace, name, __VA_ARGS__)
 
 #  define DUF_TRACESYS(name, ...)        DUF_TRACE_WHATSYS(cli.trace, name, __VA_ARGS__)
 #  define DUF_TRACESYSE(ern, name, ...)        DUF_TRACE_WHATSYSE(ern, cli.trace, name, __VA_ARGS__)
@@ -97,12 +100,10 @@
 #  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
 #  define DUF_ERRORR(r, ...)              DUF_TRACE( errorr, r, __VA_ARGS__ )
 
-#  define DUF_TEST_R(val)       if (val \
-    			&& val!=DUF_ERROR_MAX_REACHED \
-    			&& val!=DUF_SQL_ROW \
-    			&& val!=DUF_SQL_DONE \
-    					) \
-					DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+#  define DUF_TEST_RX(val) if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+
+#  define DUF_TEST_R(val)  if ( val!=DUF_ERROR_MAX_REACHED ) DUF_TEST_RX( val )
+#  define DUF_TEST_RR(val)  if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
 #  define DUF_TEST_R3(val)      if (val \
     			&& (val)!=SQLITE_ROW \
     			&& (val)!=SQLITE_DONE \
@@ -150,7 +151,7 @@ typedef enum
 } duf_dbgcode_t;
 
 /* #  define DUF_SQLITE_ERROR_CODE(r3c) ( int rt=(r3c);rt == SQLITE_OK ? 0 : ( rt > 0 ? DUF_SQLITE_ERROR_BASE + rt : rt ) ) */
-#define DUF_SQLITE_ERROR_CODE(r3c) duf_sqlite_error_code(r3c)
+#  define DUF_SQLITE_ERROR_CODE(r3c) duf_sqlite_error_code(r3c)
 #  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ )
 #  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ )
 #  define  DEBUG_ENDR(r)  DUF_TEST_R( r ); duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r )
@@ -205,6 +206,16 @@ typedef struct
 
 typedef struct
 {
+  int argc;
+  char **argv;
+} duf_argvc_t;
+typedef struct glob
+{
+  duf_argvc_t include_files;
+  duf_argvc_t exclude_files;
+} duf_filter_glob_t;
+typedef struct
+{
   unsigned recursive:1;
   unsigned noself_dir:1;
   unsigned noupper_dirs:1;
@@ -213,7 +224,7 @@ typedef struct
   duf_items_t maxitems;
   unsigned long long mindirfiles;
   unsigned long long maxdirfiles;
-  char *glob;
+  duf_filter_glob_t glob;
   unsigned long long minsize;
   unsigned long long maxsize;
   unsigned long long minsame;
@@ -377,6 +388,8 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pd
 /* this is callback of type:duf_sel_cb_t (second range; ; sel_cb) */
 typedef int ( *duf_sel_cb_t ) ( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, duf_depthinfo_t * pdi,
                                 struct duf_scan_callbacks_s * sccb );
+typedef int ( *duf_sel_cb_match_t ) ( duf_record_t * precord );
+
 /* KNOWN duf_sel_cb_t callbacks:
  * duf_sel_cb_field_by_sccb	: str_cb_unused	, str_cb_udata_unused, pdi_unused
  * duf_sel_cb_levinfo		: str_cb_unused	, str_cb_udata_unused, xpdi_unused,	sccb_unused
@@ -387,9 +400,14 @@ typedef int ( *duf_sel_cb_t ) ( duf_record_t * precord, void *sel_cb_udata, duf_
 typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, duf_depthinfo_t * pdi,
                                  struct duf_scan_callbacks_s * sccb );
 
+typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
+
+
+
 struct duf_scan_callbacks_s
 {
   unsigned opendir:1;
+  unsigned scan_mode_step:1;
   const char *title;
   const char *fieldset;
   const char *node_selector;

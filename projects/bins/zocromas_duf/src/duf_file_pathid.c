@@ -89,7 +89,6 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
 
     DUF_TRACE( scan, 1, "  L%u: scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
 
-
     DUF_OINV( pdi-> );
     DUF_TEST_R( r );
   }

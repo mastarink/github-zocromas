@@ -4,6 +4,8 @@
 
 char *duf_single_quotes_2( const char *s );
 int duf_pathdepth( const char *path );
+int duf_filename_match( duf_config_t * cfg, const char *filename );
+int duf_filesize_match( duf_config_t * cfg, size_t filesize );
 
 int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags,
                 int nerr, FILE * out, const char *fmt, va_list args );

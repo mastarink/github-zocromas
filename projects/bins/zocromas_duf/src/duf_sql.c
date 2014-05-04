@@ -190,7 +190,7 @@ duf_sql_step( duf_sqlite_stmt_t * stmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_step( stmt ) );
-  DUF_TEST_R( r );
+  DUF_TEST_RR( r );
   return r;
 }
 
@@ -200,6 +200,16 @@ duf_sql_finalize( duf_sqlite_stmt_t * stmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_finalize( stmt ) );
+  DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_sql_reset( duf_sqlite_stmt_t * stmt )
+{
+  int r = 0;
+
+  r = DUF_SQLITE_ERROR_CODE( duf_sqlite_reset( stmt ) );
   DUF_TEST_R( r );
   return r;
 }

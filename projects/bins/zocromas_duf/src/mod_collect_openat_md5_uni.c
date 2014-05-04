@@ -309,6 +309,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .title = "collect o md5",
   .init_scan = NULL,
   .opendir = 1,
+  .scan_mode_step=1,
   /* .entry_dir_scan_before = NULL, */
   /* .entry_file_scan_before = NULL, */
   /* .node_scan_before = collect_openat_md5_scan_node_before, */

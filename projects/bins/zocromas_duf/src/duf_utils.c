@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <errno.h>
+#include <fnmatch.h>
 /* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
@@ -65,6 +66,66 @@ duf_single_quotes_2( const char *s )
       r = mas_strdup( s );
     }
 #endif
+  }
+  return r;
+}
+
+int
+duf_filename_match( duf_config_t * cfg, const char *filename )
+{
+  int r;
+
+  r = 1;
+  if ( cfg )
+  {
+    if ( cfg->u.glob.include_files.argc )
+    {
+      int argc = cfg->u.glob.include_files.argc;
+      char *const *argv = cfg->u.glob.include_files.argv;
+
+      r = 0;
+      DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename );
+      for ( int ia = 0; ia < argc; ia++ )
+      {
+        if ( 0 == fnmatch( argv[ia], filename, FNM_PATHNAME ) )
+        {
+          r = 1;
+          DUF_TRACE_C( cfg, match, 1, "INCLUDE %s : %s", argv[ia], filename );
+        }
+      }
+    }
+    if ( cfg->u.glob.exclude_files.argc )
+    {
+      int argc = cfg->u.glob.exclude_files.argc;
+      char *const *argv = cfg->u.glob.exclude_files.argv;
+
+      DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename );
+      for ( int ia = 0; ia < argc; ia++ )
+      {
+        if ( 0 == fnmatch( argv[ia], filename, FNM_PATHNAME ) )
+        {
+          r = 0;
+          DUF_TRACE_C( cfg, match, 1, "EXCLUDE %s : %s", argv[ia], filename );
+        }
+      }
+    }
+  }
+  DUF_TRACE_C( cfg, match, 2, "MATCH %s %s", filename, r ? "OK" : "FAIL" );
+  return r;
+}
+
+int
+duf_filesize_match( duf_config_t * cfg, size_t filesize )
+{
+  int r;
+
+  r = 1;
+  if ( cfg )
+  {
+    if ( cfg->u.minsize )
+      r = ( filesize >= cfg->u.minsize ) ? r : 0;
+    if ( cfg->u.maxsize )
+      r = ( filesize <= cfg->u.maxsize ) ? r : 0;
   }
   return r;
 }

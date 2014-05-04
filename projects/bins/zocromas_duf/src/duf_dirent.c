@@ -1,4 +1,5 @@
 #include <dirent.h>
+
 /* #include <stdio.h> */
 #include <string.h>
 /* #include <unistd.h> */
@@ -7,13 +8,15 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_types.h"
+#include "duf_utils.h"
+
+#include "duf_config.h"
 
 #include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf_dirent.h"
 /* ###################################################################### */
-
 
 int
 duf_direntry_filter( const struct dirent *de )
@@ -41,8 +44,13 @@ duf_direntry_filter( const struct dirent *de )
   case DT_BLK:
     break;
   case DT_REG:
-    /* fprintf( stderr, "!!!! %u : %lu : %s\n", de->d_type, de->d_ino, de->d_name ); */
-    r = 1;
+
+    r = duf_filename_match( duf_config, de->d_name );
+
+/* #include <fnmatch.h>                                                   */
+/*     int fnmatch( const char *pattern, const char *string, int flags ); */
+
+
     break;
   case DT_LNK:
     break;

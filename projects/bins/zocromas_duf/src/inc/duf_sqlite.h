@@ -27,6 +27,7 @@ unsigned long long duf_sqlite_last_insert_rowid( void );
 int duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt );
 int duf_sqlite_step( duf_sqlite_stmt_t * stmt );
 int duf_sqlite_finalize( duf_sqlite_stmt_t * stmt );
+int duf_sqlite_reset( duf_sqlite_stmt_t * stmt );
 
 int duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name );
 

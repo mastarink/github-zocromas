@@ -56,8 +56,12 @@ duf_config_delete( void )
   mas_free( duf_config->group );
   duf_config->group = NULL;
 
-  mas_free( duf_config->u.glob );
-  duf_config->u.glob = NULL;
+  mas_del_argv( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0 );
+  duf_config->u.glob.include_files.argc = 0;
+  duf_config->u.glob.include_files.argv = NULL;
+  mas_del_argv( duf_config->u.glob.exclude_files.argc, duf_config->u.glob.exclude_files.argv, 0 );
+  duf_config->u.glob.exclude_files.argc = 0;
+  duf_config->u.glob.exclude_files.argv = NULL;
 
   mas_del_argv( duf_config->targc, duf_config->targv, 0 );
   duf_config->targc = 0;

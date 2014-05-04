@@ -36,7 +36,7 @@ main_db( int argc, char **argv )
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
-/*										*/ DEBUG_START( );
+/*										*/ DEBUG_START(  );
   if ( duf_config->db.dir && duf_config->db.name )
   {
     r = 0;
@@ -102,7 +102,10 @@ main_db( int argc, char **argv )
       DUF_TEST_R( r );
 
       if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
+      {
+        DUF_TEST_RX( r );
         DUF_ERROR( "action FAIL ; r=%d", r );
+      }
       /* duf_action( argc, argv ); */
       {
         int rc = duf_sql_close(  );
@@ -122,7 +125,7 @@ main_db( int argc, char **argv )
     r = DUF_ERROR_PTR;
     DUF_ERROR( "db.name not set" );
   }
-/*										*/ DEBUG_END( );
+/*										*/ DEBUG_END(  );
   DUF_TEST_R( r );
   return r;
 }

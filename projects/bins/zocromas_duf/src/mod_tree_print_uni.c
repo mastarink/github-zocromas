@@ -277,6 +277,7 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unu
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
   .init_scan = NULL,
+  .scan_mode_step = 1,
   .node_scan_before = tree_scan_node_before,
   .node_scan_before2 = tree_scan_node_before2,
   .leaf_scan = tree_scan_leaf,

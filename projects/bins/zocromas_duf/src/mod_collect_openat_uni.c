@@ -285,6 +285,7 @@ duf_scan_callbacks_t duf_collect_openat_callbacks = {
   .title = "collect o",
   .init_scan = NULL,
   .opendir = 1,
+  .scan_mode_step=1,
   .entry_dir_scan_before = duf_scan_entry_dir,
   .entry_dir_scan_before2 = duf_scan_entry_dir2,
 

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
-#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5EiMtZBPOGgXp"
+#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5EiMtZBPOGgXpm"
 typedef enum
 {
   DUF_OPTION_NONE,
@@ -37,6 +37,7 @@ typedef enum
   DUF_OPTION_DEBUG = 'g',
   DUF_OPTION_TREE = 'T',
   DUF_OPTION_PRINT = 'p',
+  DUF_OPTION_MATCH_TRACE = 'm',
 
   DUF_OPTION_LONG = 1000,
 
@@ -48,8 +49,8 @@ typedef enum
 
   DUF_OPTION_INTEGRITY_TRACE,
   DUF_OPTION_FS_TRACE,
-  DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_CALLS_TRACE,
+  DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_SAMPUPD_TRACE,
   DUF_OPTION_PATH_TRACE,
   DUF_OPTION_MD5_TRACE,
@@ -80,7 +81,9 @@ typedef enum
   DUF_OPTION_UPDATE_EXIF,
   DUF_OPTION_MINDIRFILES,
   DUF_OPTION_MAXDIRFILES,
-  DUF_OPTION_GLOB,
+  DUF_OPTION_GLOB_INCLUDE_FILES,
+  DUF_OPTION_GLOB_EXCLUDE_FILES,
+  DUF_OPTION_SIZE,
   DUF_OPTION_MINSIZE,
   DUF_OPTION_MAXSIZE,
   DUF_OPTION_MINSAME,
@@ -124,6 +127,7 @@ typedef enum
   DUF_TRACE_MODE_fs,
   DUF_TRACE_MODE_sample,
   DUF_TRACE_MODE_sampupd,
+  DUF_TRACE_MODE_match,
   DUF_TRACE_MODE_statistics,
   DUF_TRACE_MODE_mdpath,
   DUF_TRACE_MODE_dirent,
@@ -227,6 +231,7 @@ typedef struct
   unsigned scan;
   unsigned sample;
   unsigned sampupd;
+  unsigned match;
   unsigned dirent;
   unsigned md5;
   unsigned mdpath;

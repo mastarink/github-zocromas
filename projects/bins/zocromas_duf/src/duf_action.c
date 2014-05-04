@@ -76,7 +76,7 @@ duf_action_new( int argc, char **argv )
     mas_free( sargv1 );
   }
   {
-    /*--max-size= ; --min-size= ; --glob= ;*/
+    /*--max-size= ; --min-size= ; --include= ;*/
     /* --min-with-same-md5 : --min-copies= ; --max-copies= ;  --min-duplicates; --max-duplicates; */
     /* --have-md5 ; --have-exif ; --attributes= ... */
     /* --min-with-same-size */
@@ -97,14 +97,28 @@ duf_action_new( int argc, char **argv )
     /*   magic_version [libmagic] (3)  - Magic number recognition library    */
     {
       const char *sqls[] = {
-        "UPDATE duf_filefilter SET run=datetime() "
-              " WHERE type='cli' AND ifnull(minsize,0)=ifnull(:minsize,0) AND ifnull(maxsize,0)=ifnull(:maxsize,0)"
-              " AND ifnull(mindups,0)=ifnull(:mindups,0) AND ifnull(maxdups,0)=ifnull(:maxdups,0) AND ifnull(nameglob,'')=ifnull(:nameglob,'')",
-        "INSERT INTO duf_filefilter (type,minsize,maxsize,mindups,maxdups,nameglob) VALUES ("
-              " 'cli', :minsize, :maxsize, :mindups, :maxdups, :nameglob " ")",
-        "SELECT id FROM duf_filefilter "
-              " WHERE type='cli' AND ifnull(minsize,0)=ifnull(:minsize,0) AND ifnull(maxsize,0)=ifnull(:maxsize,0)"
-              " AND ifnull(mindups,0)=ifnull(:mindups,0) AND ifnull(maxdups,0)=ifnull(:maxdups,0) AND ifnull(nameglob,'')=ifnull(:nameglob,'')",
+        "UPDATE duf_filefilter SET run=datetime() " /* */
+              " WHERE type='cli' " /* */
+              " AND ifnull(minsize,0)=ifnull(:minsize,0) " /* */
+              " AND ifnull(maxsize,0)=ifnull(:maxsize,0) " /* */
+              " AND ifnull(mindups,0)=ifnull(:mindups,0) " /* */
+              " AND ifnull(maxdups,0)=ifnull(:maxdups,0) " /* */
+              " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
+              " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
+              ,
+        "INSERT INTO duf_filefilter (type,minsize,maxsize,mindups,maxdups,glob_include,glob_exclude) " /* */
+              " VALUES ("       /* */
+              " 'cli', :minsize, :maxsize, :mindups, :maxdups, :glob_include, :glob_exclude " /* */
+              ")",
+        "SELECT id FROM duf_filefilter " /* */
+              " WHERE type='cli' " /* */
+              " AND ifnull(minsize,0)=ifnull(:minsize,0) " /* */
+              " AND ifnull(maxsize,0)=ifnull(:maxsize,0) " /* */
+              " AND ifnull(mindups,0)=ifnull(:mindups,0) " /* */
+              " AND ifnull(maxdups,0)=ifnull(:maxdups,0) " /* */
+              " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
+              " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
+              ,
         NULL
       };
       {
@@ -123,8 +137,8 @@ duf_action_new( int argc, char **argv )
             if ( r >= 0 )
               r = duf_sql_prepare( sql, &pstmt );
             DUF_TEST_R( r );
-            DUF_TEST_R( r );
             DUF_TRACE( action, 0, "PREPARE:%d", r );
+            if ( r >= 0 )
             {
               if ( r >= 0 && duf_config->u.minsize )
                 r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize );
@@ -139,31 +153,47 @@ duf_action_new( int argc, char **argv )
               if ( r >= 0 && duf_config->u.maxsame )
                 r = duf_sql_bind_long_long_nz( pstmt, ":maxdups", duf_config->u.maxsame );
               DUF_TEST_R( r );
-              if ( r >= 0 && duf_config->u.glob )
-                r = duf_sql_bind_string( pstmt, ":nameglob", duf_config->u.glob );
-              DUF_TEST_R( r );
-            }
-            do
-            {
-              if ( r == DUF_SQL_ROW )
-                r = 0;
-              if ( r >= 0 )
-                r = duf_sql_step( pstmt );
-              DUF_TEST_R( r );
-              if ( !changes )
-                changes = duf_sql_changes(  );
-
-              if ( r == DUF_SQL_ROW )
               {
-                long long id;
+                char *j;
 
-                id = duf_sql_column_long_long( pstmt, 0 );
-                DUF_TRACE( action, 0, "@@@@@@@@@@@@@@@@@ %lld", id );
-		duf_config->u.filter_id=id;
+                j = mas_argv_string( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0);
+                DUF_TRACE( action, 0, "%d GLOB INCLUDE %s", duf_config->u.glob.include_files.argc, j );
+                if ( r >= 0 && duf_config->u.glob.include_files.argc )
+                  r = duf_sql_bind_string( pstmt, ":glob_include", j );
+                DUF_TEST_R( r );
+                mas_free( j );
               }
-            }
-            while ( r == DUF_SQL_ROW );
+              {
+                char *j;
 
+                j = mas_argv_string( duf_config->u.glob.exclude_files.argc, duf_config->u.glob.exclude_files.argv, 0 );
+
+                DUF_TRACE( action, 0, "GLOB EXCLUDE %s", j );
+                if ( r >= 0 && duf_config->u.glob.exclude_files.argc )
+                  r = duf_sql_bind_string( pstmt, ":glob_exclude", j );
+                DUF_TEST_R( r );
+                mas_free( j );
+              }
+              do
+              {
+                if ( r == DUF_SQL_ROW )
+                  r = 0;
+                if ( r >= 0 )
+                  r = duf_sql_step( pstmt );
+                DUF_TEST_RR( r );
+                if ( !changes )
+                  changes = duf_sql_changes(  );
+
+                if ( r == DUF_SQL_ROW )
+                {
+                  long long id;
+
+                  id = duf_sql_column_long_long( pstmt, 0 );
+                  duf_config->u.filter_id = id;
+                }
+              }
+              while ( r == DUF_SQL_ROW );
+            }
             DUF_TRACE( action, 0, "STEP; changes:%d; %s", changes, r < 0 && r != DUF_SQL_DONE ? "FAIL" : "" );
             {
               int rf = duf_sql_finalize( pstmt );

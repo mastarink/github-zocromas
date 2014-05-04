@@ -31,7 +31,7 @@
 /* ###################################################################### */
 
 
- const char *
+const char *
 duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
   const char *stitle;
@@ -317,23 +317,33 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   if ( r >= 0 && ( sccb->entry_dir_scan_before2 || sccb->entry_file_scan_before2 ) )
     r = duf_scan_entries_by_pathid_and_record2( pstmt, pdi, sccb->entry_file_scan_before2, sccb->entry_dir_scan_before2 );
 
+
+
   if ( r >= 0 && sccb && sccb->node_scan_before2 && duf_config->cli.act.dirs )
   {
-    pdi->items.total++;
-    pdi->items.dirs++;
+    int cnt_leaves = 0;
 
-    DUF_OINV_OPENED( pdi-> );
-    DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
-    r = sccb->node_scan_before2( pstmt, dirid, pdi );
-    DUF_OINV_OPENED( pdi-> );
-    DUF_TEST_R( r );
-    if ( r == DUF_ERROR_MAX_REACHED )
+    cnt_leaves = duf_count_db_vitems2( duf_match_leaf2, pdi, sccb, sccb->leaf_selector2, sccb->fieldset, dirid );
+    if ( cnt_leaves > 0 )
     {
-      if ( pdi->depth == 0 )
-        DUF_TRACE( action, 0, "Maximum reached ........" );
-      if ( duf_pdi_reldepth( pdi ) == 0 )
-        DUF_TRACE( action, 0, "Maximum reached ...." );
+      pdi->items.total++;
+      pdi->items.dirs++;
+
+      DUF_OINV_OPENED( pdi-> );
+      DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
+      r = sccb->node_scan_before2( pstmt, dirid, pdi );
+      DUF_OINV_OPENED( pdi-> );
+      DUF_TEST_R( r );
+      if ( r == DUF_ERROR_MAX_REACHED )
+      {
+        if ( pdi->depth == 0 )
+          DUF_TRACE( action, 0, "Maximum reached ........" );
+        if ( duf_pdi_reldepth( pdi ) == 0 )
+          DUF_TRACE( action, 0, "Maximum reached ...." );
+      }
     }
+    else if ( cnt_leaves < 0 )
+      r = cnt_leaves;
   }
   {
     int d = duf_pdi_depth( pdi ) - 1;
