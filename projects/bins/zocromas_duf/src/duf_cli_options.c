@@ -46,21 +46,22 @@ const duf_option_t longopts[] = {
   /* --------------- */
   {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
   {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
-  {.name = "trace-current",.has_arg = optional_argument,.val = DUF_OPTION_CURRENT_TRACE},
   {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
-  {.name = "trace-error",.has_arg = optional_argument,.val = DUF_OPTION_ERROR_TRACE},
   {.name = "trace-collect",.has_arg = optional_argument,.val = DUF_OPTION_COLLECT_TRACE},
-  {.name = "trace-integrity",.has_arg = optional_argument,.val = DUF_OPTION_INTEGRITY_TRACE},
-  {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
+  {.name = "trace-current",.has_arg = optional_argument,.val = DUF_OPTION_CURRENT_TRACE},
+  {.name = "trace-deleted",.has_arg = optional_argument,.val = DUF_OPTION_DELETED_TRACE},
   {.name = "trace-dirent",.has_arg = optional_argument,.val = DUF_OPTION_DIRENT_TRACE},
+  {.name = "trace-error",.has_arg = optional_argument,.val = DUF_OPTION_ERROR_TRACE},
+  {.name = "trace-fs",.has_arg = optional_argument,.val = DUF_OPTION_FS_TRACE},
+  {.name = "trace-integrity",.has_arg = optional_argument,.val = DUF_OPTION_INTEGRITY_TRACE},
+  {.name = "trace-match",.has_arg = optional_argument,.val = DUF_OPTION_MATCH_TRACE},
+  {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
   {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
   {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
   {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
   {.name = "trace-samupd",.has_arg = optional_argument,.val = DUF_OPTION_SAMPUPD_TRACE},
-  {.name = "trace-match",.has_arg = optional_argument,.val = DUF_OPTION_MATCH_TRACE},
   {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
   {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
-  {.name = "trace-fs",.has_arg = optional_argument,.val = DUF_OPTION_FS_TRACE},
   /* --------------- */
   {.name = "verbose",.has_arg = optional_argument,.val = DUF_OPTION_VERBOSE},
   {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
@@ -110,9 +111,11 @@ const duf_option_t longopts[] = {
   /* --------------- */
   {.name = "min-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MINDIRFILES},
   {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
+  {.name = "md5id",.has_arg = required_argument,.val = DUF_OPTION_MD5ID},
   {.name = "size",.has_arg = required_argument,.val = DUF_OPTION_SIZE},
   {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
   {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
+  {.name = "same",.has_arg = required_argument,.val = DUF_OPTION_SAME},
   {.name = "min-same",.has_arg = required_argument,.val = DUF_OPTION_MINSAME},
   {.name = "max-same",.has_arg = required_argument,.val = DUF_OPTION_MAXSAME},
   {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
@@ -219,7 +222,7 @@ duf_infile( int dot, const char *at )
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
   cfgpath = mas_strcat_x( cfgpath, "zocromas_duf.conf" );
-  DUF_TRACE( any, 0, "cfg:[%s]", cfgpath );
+  DUF_TRACE( any, 1, "cfg:[%s]", cfgpath );
   if ( cfgpath )
   {
     f = fopen( cfgpath, "r" );
@@ -236,7 +239,7 @@ duf_infile_options( int argc, char *argv[] )
   FILE *f = NULL;
 
   h = getenv( "MSH_CONF_DIR" );
-  DUF_TRACE( any, 0, "MSH_CONF_DIR:[%s]", h );
+  DUF_TRACE( any, 1, "MSH_CONF_DIR:[%s]", h );
   if ( h )
   {
     f = duf_infile( 0, h );
@@ -412,6 +415,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_TRACE( ptr, FS, fs );
   DUF_RESTORE_OPTION_TRACE( ptr, SAMPUPD, sampupd );
   DUF_RESTORE_OPTION_TRACE( ptr, SAMPLE, sample );
+  DUF_RESTORE_OPTION_TRACE( ptr, DELETED, deleted );
   DUF_RESTORE_OPTION_TRACE( ptr, MDPATH, mdpath );
   DUF_RESTORE_OPTION_TRACE( ptr, DIRENT, dirent );
   DUF_RESTORE_OPTION_TRACE( ptr, MD5, md5 );

@@ -76,25 +76,47 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_FORMAT:
     {
-      int r = 0;
       char *coptarg, *poptarg;
       unsigned nvalue;
       char *value;
 
+
+      /* duf_config->cli.format.seq = (* *)            */
+      /*       duf_config->cli.format.dirid = (* *)    */
+      /*       duf_config->cli.format.inode = (* *)    */
+      /*       duf_config->cli.format.mode = (* *)     */
+      /*       duf_config->cli.format.nlink = (* *)    */
+      /*       duf_config->cli.format.uid = (* *)      */
+      /*       duf_config->cli.format.gid = (* *)      */
+      /*       duf_config->cli.format.prefix = (* *)   */
+      /*       duf_config->cli.format.filesize = (* *) */
+      /*       duf_config->cli.format.mtime = (* *)    */
+      /*       duf_config->cli.format.filename = (* *) */
+      /*       duf_config->cli.format.md5 = (* *)      */
+      /*       duf_config->cli.format.md5id = (* *)    */
+      /*       duf_config->cli.format.nsame = 0;       */
+
+
       char *const tokens[] = {
-        [DUF_FORMAT_SEQ] = "seq",
-        [DUF_FORMAT_OFFSET] = "offset",
+        [DUF_FORMAT_DATAID] = "dataid",
         [DUF_FORMAT_DIRID] = "dirid",
-        [DUF_FORMAT_INODE] = "inode",
-        [DUF_FORMAT_MODE] = "mode",
-        [DUF_FORMAT_NLINK] = "nlink",
-        [DUF_FORMAT_UID] = "uid",
-        [DUF_FORMAT_GID] = "gid",
-        [DUF_FORMAT_FILESIZE] = "filesize",
-        [DUF_FORMAT_MTIME] = "mtime",
         [DUF_FORMAT_FILENAME] = "filename",
+        [DUF_FORMAT_FILESIZE] = "filesize",
+        [DUF_FORMAT_GID] = "gid",
+        [DUF_FORMAT_HUMAN] = "human",
+        [DUF_FORMAT_INODE] = "inode",
+        [DUF_FORMAT_MD5ID] = "md5id",
         [DUF_FORMAT_MD5] = "md5",
+        [DUF_FORMAT_MODE] = "mode",
+        [DUF_FORMAT_MTIME] = "mtime",
+        [DUF_FORMAT_NLINK] = "nlink",
         [DUF_FORMAT_NSAME] = "nsame",
+        [DUF_FORMAT_OFFSET] = "offset",
+        [DUF_FORMAT_PREFIX] = "prefix",
+        [DUF_FORMAT_REALPATH] = "realpath",
+        [DUF_FORMAT_SEQ] = "seq",
+        [DUF_FORMAT_TRUEPATH] = "truepath",
+        [DUF_FORMAT_UID] = "uid",
         [DUF_FORMAT_MAX] = NULL,
       };
       poptarg = coptarg = mas_strdup( optarg );
@@ -103,61 +125,88 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       DUF_TRACE( action, 0, "--format=%s", coptarg );
       while ( poptarg && *poptarg )
       {
-        /* char *hlp;                          */
-        /*                                     */
-        /* hlp = poptarg;                      */
-        /* DUF_TRACE( any, 0, "hlp:%s", hlp ); */
+        char *hlp;
+
+        hlp = poptarg;
+        DUF_TRACE( any, 0, "hlp:%s", hlp );
         r = getsubopt( &poptarg, tokens, &value );
-        /* DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" ); */
-        nvalue = value ? strtol( value, NULL, 10 ) : 0;
+        DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" );
+        nvalue = value ? strtol( value, NULL, 10 ) : -1;
         switch ( r )
         {
         case DUF_FORMAT_SEQ:
-          duf_config->cli.format.seq = 1;
+          duf_config->cli.format.seq = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_PREFIX:
+          duf_config->cli.format.prefix = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_DIRID:
-          duf_config->cli.format.dirid = 1;
+          duf_config->cli.format.dirid = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_TRUEPATH:
+          duf_config->cli.format.truepath = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_REALPATH:
+          duf_config->cli.format.realpath = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_INODE:
-          duf_config->cli.format.inode = 1;
+          duf_config->cli.format.inode = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_MODE:
-          duf_config->cli.format.mode = 1;
+          duf_config->cli.format.mode = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_NLINK:
-          duf_config->cli.format.nlink = 1;
+          duf_config->cli.format.nlink = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_UID:
-          duf_config->cli.format.uid = 1;
+          duf_config->cli.format.uid = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_GID:
-          duf_config->cli.format.gid = 1;
+          duf_config->cli.format.gid = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_FILESIZE:
-          duf_config->cli.format.filesize = 1;
+          duf_config->cli.format.filesize = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_MTIME:
-          duf_config->cli.format.mtime = 1;
+          duf_config->cli.format.mtime = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_FILENAME:
-          duf_config->cli.format.filename = 1;
+          duf_config->cli.format.filename = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_MD5:
-          duf_config->cli.format.md5 = 1;
+          duf_config->cli.format.md5 = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_MD5ID:
+          duf_config->cli.format.md5id = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_HUMAN:
+          duf_config->cli.format.human = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_DATAID:
+          duf_config->cli.format.dataid = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_NSAME:
-          duf_config->cli.format.nsame = 1;
+          duf_config->cli.format.nsame = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_OFFSET:
-          duf_config->cli.format.offset = nvalue;
+          duf_config->cli.format.offset = value == NULL ? 0 : nvalue;
           break;
         }
+        DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" );
         /* DUF_TRACE( any, 0, "r:%d", r ); */
         if ( r < 0 )
+        {
+          r = DUF_ERROR_SUBOPTION;
+          DUF_TEST_R( r );
           break;
+        }
+        else
+          r = 0;
       }
       mas_free( coptarg );
     }
+
+    DUF_TEST_R( r );
     break;
   case DUF_OPTION_VERBOSE:
     DUF_OPT_NUM_PLUS( cli.dbg.verbose );
@@ -291,6 +340,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       duf_config->cli.trace.md5++;
       duf_config->cli.trace.dirent++;
       duf_config->cli.trace.sample++;
+      duf_config->cli.trace.deleted++;
       duf_config->cli.trace.scan++;
     }
     break;
@@ -327,6 +377,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_FS_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.fs );
+    break;
+  case DUF_OPTION_DELETED_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.deleted );
     break;
   case DUF_OPTION_SAMPUPD_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.sampupd );
@@ -453,12 +506,15 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_DIRS:
     DUF_OPT_FLAG( cli.act.dirs );
     break;
+  case DUF_OPTION_MD5ID:
+    DUF_OPT_NUM( u.md5id );
+    DUF_ERROR( "%lld", duf_config->u.md5id );
+    break;
   case DUF_OPTION_SIZE:
     {
-      long n;
-
       if ( optarg )
       {
+        long n;
         const char *s = NULL;
         char c = 0;
 
@@ -493,11 +549,46 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_MINSIZE:
     DUF_OPT_NUM( u.minsize );
     break;
+  case DUF_OPTION_SAME:
+    {
+      if ( optarg )
+      {
+        long n;
+        const char *s = NULL;
+        char c = 0;
+
+        s = optarg;
+        if ( *s == '+' )
+          c = *s++;
+        else if ( *s == '-' )
+          c = *s++;
+        n = duf_strtol( s );
+        if ( c == '+' )
+        {
+          /* duf_config->u.maxsame = 0; */
+          duf_config->u.minsame = n + 1;
+        }
+        else if ( c == '-' )
+        {
+          duf_config->u.maxsame = n - 1;
+          /* duf_config->u.minsame = 0; */
+        }
+        else
+        {
+          duf_config->u.maxsame = n;
+          duf_config->u.minsame = n;
+        }
+        DUF_ERROR( "[%c] %lld - %lld", c, duf_config->u.minsame, duf_config->u.maxsame );
+      }
+    }
+    break;
   case DUF_OPTION_MAXSAME:
     DUF_OPT_NUM( u.maxsame );
+    DUF_ERROR( "%lld - %lld", duf_config->u.minsame, duf_config->u.maxsame );
     break;
   case DUF_OPTION_MINSAME:
     DUF_OPT_NUM( u.minsame );
+    DUF_ERROR( "%lld - %lld", duf_config->u.minsame, duf_config->u.maxsame );
     break;
   case DUF_OPTION_MAXDIRFILES:
     DUF_OPT_NUM( u.maxdirfiles );
@@ -575,5 +666,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     r = DUF_ERROR_OPTION;
     break;
   }
+  DUF_TEST_R( r );
   return r;
 }

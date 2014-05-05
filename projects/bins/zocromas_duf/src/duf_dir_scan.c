@@ -134,15 +134,27 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
   int r = 0;
 
   DUF_UFIELD2( filesize );
+  DUF_SFIELD2( filename );
   if ( filesize >= duf_config->u.minsize && ( !duf_config->u.maxsize || filesize < duf_config->u.maxsize ) )
   {
     pdi->items.total++;
     pdi->items.files++;
 
-    r = sccb->leaf_scan2( pstmt, pdi );
+    if ( duf_levinfo_deleted( pdi ) )
+    {
+      if ( sccb->leaf_scan2_deleted )
+        r = sccb->leaf_scan2_deleted( pstmt, pdi );
+      DUF_TRACE( scan, 3, "r:%d; sccb->leaf_scan2_deleted:%s", r, DUF_FUNN( sccb->leaf_scan2_deleted ) );
+      DUF_TRACE( deleted, 0, "DELETED '%s%s'", duf_levinfo_path( pdi ), filename );
+    }
+    else
+    {
+      if ( sccb->leaf_scan2 )
+        r = sccb->leaf_scan2( pstmt, pdi );
+      DUF_TRACE( scan, 3, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan2 ) );
+    }
 
     DUF_TEST_R( r );
-    DUF_TRACE( scan, 3, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan2 ) );
   }
   DUF_TEST_R( r );
   return r;
@@ -182,23 +194,16 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
   if ( r >= 0 && ( sccb->entry_dir_scan_before || sccb->entry_file_scan_before ) )
     r = duf_scan_entries_by_pathid_and_record( pdi, precord, sccb->entry_file_scan_before, sccb->entry_dir_scan_before );
 
-  if ( r >= 0 && sccb && sccb->node_scan_before && duf_config->cli.act.dirs )
+  if ( r >= 0 && sccb && duf_config->cli.act.dirs )
   {
     pdi->items.total++;
     pdi->items.dirs++;
 
     DUF_OINV_OPENED( pdi-> );
     DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
-    r = sccb->node_scan_before( dirid, pdi, precord );
-    DUF_OINV_OPENED( pdi-> );
+    if ( sccb->node_scan_before )
+      r = sccb->node_scan_before( dirid, pdi, precord );
     DUF_TEST_R( r );
-    if ( r == DUF_ERROR_MAX_REACHED )
-    {
-      if ( pdi->depth == 0 )
-        DUF_TRACE( action, 0, "Maximum reached ........" );
-      if ( duf_pdi_reldepth( pdi ) == 0 )
-        DUF_TRACE( action, 0, "Maximum reached ...." );
-    }
   }
   {
     int d = duf_pdi_depth( pdi ) - 1;
@@ -221,7 +226,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
  * 			for each <file> record by dirid with corresponding args
  *
  * */
-    if ( r >= 0 && sccb && sccb->leaf_scan_fd )
+    if ( r >= 0 && sccb->leaf_scan_fd )
     {
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 1, "  L%u: scan leaves fd   by %5llu", duf_pdi_depth( pdi ), dirid );
@@ -232,7 +237,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       DUF_OINV_OPENED( pdi-> );
       DUF_TEST_R( r );
     }
-    if ( r >= 0 && sccb && sccb->leaf_scan )
+    if ( r >= 0 && sccb->leaf_scan )
     {
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 1, "  L%u: scan leaves ..   by %5llu", duf_pdi_depth( pdi ), dirid );
@@ -253,12 +258,15 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
     /* else if ( r < 0 )             */
     /*   DUF_ERROR( "code: %d", r ); */
     DUF_OINV_OPENED( pdi-> );
-    if ( sccb && r >= 0 && sccb->node_scan_middle && duf_config->cli.act.dirs )
-      r = sccb->node_scan_middle( dirid, pdi, precord );
+    if ( r >= 0 && duf_config->cli.act.dirs )
+    {
+      if ( sccb->node_scan_middle )
+        r = sccb->node_scan_middle( dirid, pdi, precord );
+    }
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
 
-    if ( r >= 0 && sccb )
+    if ( r >= 0 )
     {
 /* duf_scan_db_items:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
@@ -288,9 +296,11 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       /*   DUF_ERROR( "code: %d", r ); */
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( sccb && r >= 0 && sccb->node_scan_after && duf_config->cli.act.dirs )
-      r = sccb->node_scan_after( dirid, pdi, precord );
-
+    if ( r >= 0 && duf_config->cli.act.dirs )
+    {
+      if ( sccb->node_scan_after )
+        r = sccb->node_scan_after( dirid, pdi, precord );
+    }
 
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
@@ -319,7 +329,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
 
 
 
-  if ( r >= 0 && sccb && sccb->node_scan_before2 && duf_config->cli.act.dirs )
+  if ( r >= 0 && sccb && duf_config->cli.act.dirs )
   {
     int cnt_leaves = 0;
 
@@ -331,16 +341,15 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
 
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
-      r = sccb->node_scan_before2( pstmt, dirid, pdi );
-      DUF_OINV_OPENED( pdi-> );
-      DUF_TEST_R( r );
-      if ( r == DUF_ERROR_MAX_REACHED )
+      if ( duf_levinfo_deleted( pdi ) )
       {
-        if ( pdi->depth == 0 )
-          DUF_TRACE( action, 0, "Maximum reached ........" );
-        if ( duf_pdi_reldepth( pdi ) == 0 )
-          DUF_TRACE( action, 0, "Maximum reached ...." );
+        if ( sccb->node_scan_before2_deleted )
+          r = sccb->node_scan_before2_deleted( pstmt, dirid, pdi );
+        DUF_TRACE( deleted, 0, "DELETED" );
       }
+      else if ( sccb->node_scan_before2 )
+        r = sccb->node_scan_before2( pstmt, dirid, pdi );
+      DUF_TEST_R( r );
     }
     else if ( cnt_leaves < 0 )
       r = cnt_leaves;
@@ -366,7 +375,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
  * 			for each <file> record by dirid with corresponding args
  *
  * */
-    if ( r >= 0 && sccb && sccb->leaf_scan_fd2 )
+    if ( r >= 0 && sccb->leaf_scan_fd2 )
     {
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 1, "  L%u: scan leaves fd   by %5llu", duf_pdi_depth( pdi ), dirid );
@@ -377,7 +386,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
       DUF_OINV_OPENED( pdi-> );
       DUF_TEST_R( r );
     }
-    if ( r >= 0 && sccb && sccb->leaf_scan2 )
+    if ( r >= 0 && sccb->leaf_scan2 )
     {
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 1, "  L%u: scan leaves ..   by %5llu", duf_pdi_depth( pdi ), dirid );
@@ -398,12 +407,22 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
     /* else if ( r < 0 )             */
     /*   DUF_ERROR( "code: %d", r ); */
     DUF_OINV_OPENED( pdi-> );
-    if ( sccb && r >= 0 && sccb->node_scan_middle2 && duf_config->cli.act.dirs )
-      r = sccb->node_scan_middle2( pstmt, dirid, pdi );
+    if ( r >= 0 && duf_config->cli.act.dirs )
+    {
+      if ( duf_levinfo_deleted( pdi ) )
+      {
+        if ( sccb->node_scan_middle2_deleted )
+          r = sccb->node_scan_middle2_deleted( pstmt, dirid, pdi );
+        DUF_TRACE( deleted, 0, "DELETED" );
+      }
+      else if ( sccb->node_scan_middle2 )
+        r = sccb->node_scan_middle2( pstmt, dirid, pdi );
+    }
+
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
 
-    if ( r >= 0 && sccb )
+    if ( r >= 0 )
     {
 /* duf_scan_db_items2:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
@@ -435,9 +454,17 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
       /*   DUF_ERROR( "code: %d", r ); */
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( sccb && r >= 0 && sccb->node_scan_after2 && duf_config->cli.act.dirs )
-      r = sccb->node_scan_after2( pstmt, dirid, pdi );
-
+    if ( duf_levinfo_deleted( pdi ) )
+    {
+      if ( sccb->node_scan_after2_deleted )
+        r = sccb->node_scan_after2_deleted( pstmt, dirid, pdi );
+      DUF_TRACE( deleted, 0, "DELETED" );
+    }
+    else if ( r >= 0 && duf_config->cli.act.dirs )
+    {
+      if ( sccb->node_scan_after2 )
+        r = sccb->node_scan_after2( pstmt, dirid, pdi );
+    }
 
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );

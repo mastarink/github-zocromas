@@ -1,77 +1,77 @@
 MSH_SHN_LIBEDIT_LOADED=$(datemt)
-shn_gvimer_plus_bin () 
-{ 
+shn_gvimer_plus_bin ()
+{
     local a c='-o'
     for a in "$@" ; do c+=" '$a'" ; done
-    shn_msg ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
+    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
     eval ${MSHCMD_GVIMC:=/usr/bin/gvim} $c
 }
-shn_gvimer_plus_fuuid () 
-{ 
-    local file=$1;
-    shift;
-    local fuuid=$1;
-    shift;
+shn_gvimer_plus_fuuid ()
+{
+    local file=$1
+    shift
+    local fuuid=$1
+    shift
     shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
-shn_gvimer_plus_resident () 
-{ 
-    local file=$1;
-    shift;
-    local fuuid=$1;
-    shift;
-    shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file" 
+shn_gvimer_plus_resident ()
+{
+    local file=$1
+    shift
+    local fuuid=$1
+    shift
+    shn_gvimer_plus_bin --servername "$fuuid" --remote-tab-silent ${fline:++$fline} "$file"
 }
-shn_gvimer_plus_uuid () 
-{ 
-    local fuuid;
-    local file;
-    local string;
-    local rp;
-    for file in $@;
+shn_gvimer_plus_uuid ()
+{
+    local fuuid
+    local file
+    local string
+    local rp
+    for file in $@
     do
         if [[ -n "$typf" ]] && [[ "$typf" == shn ]]; then
-            rp=`realpath $file`;
+            rp=`realpath $file`
         else
-            rp=`realpath -s $file`;
-        fi;
+            rp=`realpath -s $file`
+        fi
         if [[ -n "$string" ]]; then
             string+=";$rp"
         else
             string="$rp"
-        fi;
-    done;
+        fi
+    done
     echo -n 'shn_gvimer_plus-'
     echo -n "realpath $string" | md5sum | /bin/cut -b-32
 }
-shn_gvimer_plus_regfile_in () 
-{ 
-    local file=$1;
-    shift;
-    local fuuid=${1:-"$( shn_gvimer_plus_uuid $file )"};
-    shift;
-    local masedf=$1;
-    shift;
-    local typf=$1;
-    shift;
-    local filen=`basename $file`;
-    local resident;
+shn_gvimer_plus_regfile_in ()
+{
+    local file=$1
+    shift
+    local fuuid=${1:-"$( shn_gvimer_plus_uuid $file )"}
+    shift
+    local masedf=$1
+    shift
+    local typf=$1
+    shift
+    local filen=`basename $file`
+    local resident
     local fpath=$(realpath $file)
 #   local bfil=$(shn_gvimer_plus_bin --servername "$fuuid" --remote-expr "bufnr(\"^${fpath}$\")" 2>/dev/null )
 #   [[ $bfil ]] && echo "buffer = $bfil" >&2
-#   echo "regfile_in fuuid: $fuuid for $fpath" 1>&2;
+#   echo "regfile_in fuuid: $fuuid for $fpath" 1>&2
     if [[ -f "$fpath" ]] && [[ ${fuuid} ]] ; then
-        for resident in $( shn_gvimer_plus_bin --serverlist );
+        for resident in $( shn_gvimer_plus_bin --serverlist )
         do
             if [[ "$resident" == ${fuuid}* ]]; then
- 	        shn_msg "regfile_in resident:$resident for $fpath" 1>&2;
+ 	        [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "regfile_in resident:$resident for $fpath"
                 shn_gvimer_plus_resident $fpath $fuuid ${fline:++$fline}
-                return $?;
-            fi;
-        done;
+                return $?
+            fi
+        done
         if [[ -n "$typf" ]] && [[ -f "$masedf" ]]; then
             if /bin/grep --colour=auto "$filen" "$masedf" &>/dev/null; then
-#	        echo "1 gvimer --servername $fuuid ${typf}.mased ($masedf)" 1>&2;
+#	        echo "1 gvimer --servername $fuuid ${typf}.mased ($masedf)" 1>&2
 #		echo "masedf: $masedf" >&2
 #               shn_gvimer_plus_bin --servername "$fuuid" --cmd "set path=$(shn_gvimer_plus_vpath $typf)" --cmd "source $masedf" -c "tab drop $rfile"
 		local edpath=$(shn_gvimer_plus_vpath $typf)
@@ -81,40 +81,40 @@ shn_gvimer_plus_regfile_in ()
 			${edpath:+--cmd "let masedpath=\"$edpath\""} \
 			${rfile:+--cmd "let maseddrop=\"$rfile\""} \
 			${localvim_dir:+--cmd "let mas_localvimdir=\"$localvim_dir\""}
-#		/bin/sleep 0.5;
-#	        echo "2 gvimer_resident $rfile $fuuid" 1>&2;
-#		shn_gvimer_plus_resident $rfile $fuuid;
+#		/bin/sleep 0.5
+#	        echo "2 gvimer_resident $rfile $fuuid" 1>&2
+#		shn_gvimer_plus_resident $rfile $fuuid
             else
               shn_errmsg "not found '${filen}' [$typf] at $masedf -- `pwd`"
-                shn_gvimer_plus_fuuid $fpath $fuuid;
-            fi;
+                shn_gvimer_plus_fuuid $fpath $fuuid
+            fi
         else
-            shn_gvimer_plus_fuuid $fpath $fuuid;
-        fi;
-        return $?;
+            shn_gvimer_plus_fuuid $fpath $fuuid
+        fi
+        return $?
     else
         shn_errmsg "no file:$fpath"
-        return 1;
-    fi;
+        return 1
+    fi
     return 0
 }
-shn_gvimer_plus_regfile () 
-{ 
-    local nocase retcode;
+shn_gvimer_plus_regfile ()
+{
+    local nocase retcode
     if shopt nocasematch &>/dev/null; then
-        nocase=1;
+        nocase=1
     else
-        nocase=0;
-    fi;
-    shopt -s nocasematch &>/dev/null;
-    shn_gvimer_plus_regfile_in $@;
-    retcode=$?;
+        nocase=0
+    fi
+    shopt -s nocasematch &>/dev/null
+    shn_gvimer_plus_regfile_in $@
+    retcode=$?
     if [[ "$nocase" -eq 0 ]]; then
-        shopt -u nocasematch &>/dev/null;
-    fi;
+        shopt -u nocasematch &>/dev/null
+    fi
     return $retcode
 }
-shn_gvimer_plus_anywhere () 
+shn_gvimer_plus_anywhere ()
 {
   local file ser bfil fpath sl
   for file in $@ ; do
@@ -141,86 +141,86 @@ shn_gvimer_plus_anywhere ()
   done
   return 1
 }
-shn_gvimer_plus_nomased () 
-{ 
-    local file;
+shn_gvimer_plus_nomased ()
+{
+    local file
     local fuuid0 fuuid
     fuuid0=$( shn_gvimer_plus_uuid $@ )
-    for file in $@;
+    for file in $@
     do
         fuuid=$(shn_gvimer_plus_anywhere $file)
-#       shn_msg "nomased $file $fuuid (a/w)" >&2
+#       shn_msg "nomased $file $fuuid (a/w)"
 	[[ ${fuuid:=$fuuid0} ]]
 #	echo "fuuid:$fuuid" >&2
-        shn_gvimer_plus_regfile $file $fuuid || return $?;
-    done;
+        shn_gvimer_plus_regfile $file $fuuid || return $?
+    done
     return 0
 }
-shn_gvimer_plus_filtyp () 
+shn_gvimer_plus_filtyp ()
 {
-    local typf;
-    local filef=$1;
-    shift;
-    local dirn=$1;
-    shift;
+    local typf
+    local filef=$1
+    shift
+    local dirn=$1
+    shift
     if [[ "$filef" == *.c ]] || [[ "$filef" == *.h ]]; then
-       typf="src";
+       typf="src"
     elif [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ; then
-       typf="shn";
+       typf="shn"
     elif [[ "$dirn" == shn ]] && ( [[ "$filef" == *.sh ]] || [[ "$filef" == *.bash ]] ); then
-       typf="shn";
+       typf="shn"
     elif [[ "$filef" == *.ac ]] || [[ "$filef" == *.am ]]; then
-       typf="ac";
+       typf="ac"
     elif [[ "$filef" == *.mased.vim ]] ; then
-       typf="mased_vim";
+       typf="mased_vim"
     elif [[ "$filef" == *.vim ]] || [[ "$filef" == gvim* ]] || [[ "$filef" == vim* ]] ; then
-       typf="vimstd";
+       typf="vimstd"
     else
       shn_errmsg "can't set typf for '$filef'${dirn:+ at '$dirn'}"
     fi
-    shn_msg "typf: $typf">&2
+    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "typf: $typf"
     echo $typf
 }
-shn_gvimer_plus_find () 
-{ 
-    local file=$1;
-    shift;
-    local typf=$1;
-    shift;
-    local paths;
-    case $typf in 
+shn_gvimer_plus_find ()
+{
+    local file=$1
+    shift
+    local typf=$1
+    shift
+    local paths
+    case $typf in
         src)		paths='./src/ ./inc/ ./settling/src ./settling/src/inc'	;;
         ac)		paths='./'		;;
         shn)		paths='./shn/'		;;
         vimstd)		paths="$localvim_dir/"		;;
         mased_vim)	paths="./$mased_dir/"	;;
         *)		paths='./'		;;
-    esac;
+    esac
 #   eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1
-    filef=`eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1`;
-    shn_msg "found: '$filef'" >&2
+    filef=`eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1`
+    shn_msg "found: '$filef'"
     echo $filef
 }
-shn_gvimer_plus_vpath () 
-{ 
-    local typf=$1;
-    shift;
-    local paths;
-    case $typf in 
+shn_gvimer_plus_vpath ()
+{
+    local typf=$1
+    shift
+    local paths
+    case $typf in
         src)		paths='src/,src/inc/,inc/,settling/src/,settling/src/inc'	;;
         ac)		paths='.'			;;
         shn)		paths='shn/'			;;
         vimstd)		paths="$localvim_dir"			;;
         mased_vim)	paths="$mased_dir"	;;
         *)		paths='.'			;;
-    esac;
+    esac
     echo "${paths:-.}"
 }
 
-shn_gvimer_plus_mased () 
-{ 
-    local file=$1 filef 
-    local typf;
+shn_gvimer_plus_mased ()
+{
+    local file=$1 filef
+    local typf
     local fileq a b fline
     if [[ $file =~ ^(.*):(.*)$ ]] ; then
       a=${BASH_REMATCH[1]}
@@ -239,54 +239,54 @@ shn_gvimer_plus_mased ()
         file=$fileq
       fi
     fi
-    typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`;
+    typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`
     if [[ "$file" == */* ]]; then
         filef=$file
     else
-        filef=`shn_gvimer_plus_find $file $typf`;
+        filef=`shn_gvimer_plus_find $file $typf`
         if ! [[ -n "$filef" ]]; then
             shn_errmsg "not found '$file'${typf:+ as [typf:$typf]}"
-            return 1;
+            return 1
 	else
 	    shn_msg "($MSH_SHN_LIBEDIT_LOADED) libedit found '$filef'"
-        fi;
+        fi
     fi
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
-    local rfile=`/usr/bin/realpath $filef`;
+    local rfile=`/usr/bin/realpath $filef`
 #   echo "rfile:$rfile" >&2
-    filef=`/bin/basename $rfile`;
-    local dir=`/bin/dirname $rfile`;
-    local dirn=`/bin/basename $dir`;
-    typf=`shn_gvimer_plus_filtyp "${filef:-*.c}" $dirn`;
+    filef=`/bin/basename $rfile`
+    local dir=`/bin/dirname $rfile`
+    local dirn=`/bin/basename $dir`
+    typf=`shn_gvimer_plus_filtyp "${filef:-*.c}" $dirn`
 #   echo "2 typf:$typf" >&2
-    local masedf;
+    local masedf
 #   grep "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1 >&2
     masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1)
 #   echo "masedf:[$masedf] for $filef ($file)" >&2
 ####[[ ${masedf:=$mased_dir/${typf}.mased.vim} ]] # off 20140413
-    shn_msg "1 masedf: '$masedf' by '$filef' at $mased_dir/">&2
+    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "1 masedf: '$masedf' by '$filef' at $mased_dir/"
     [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=
-    shn_msg "2 masedf: $masedf">&2
+    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "2 masedf: $masedf"
     if [[ $masedf ]] ; then
-      local fuuid="$( shn_gvimer_plus_uuid $masedf )";
-      shn_msg "fuuid: $fuuid">&2
+      local fuuid="$( shn_gvimer_plus_uuid $masedf )"
+      [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "fuuid: $fuuid"
       if ! [[ -f "$masedf" ]]; then
 	  if [[ "$typf" == shn ]] && [[ -d "$typf" ]]; then
-	      /bin/ls --color=auto -1 shn/ | /bin/sed -e 's/^/:sfind /' > $masedf;
-	  fi;
-      fi;
+	      /bin/ls --color=auto -1 shn/ | /bin/sed -e 's/^/:sfind /' > $masedf
+	  fi
+      fi
       if [[ -f "$masedf" ]]; then
-#	  echo "mased fuuid: $fuuid" 1>&2;
-	  shn_msg "found masedf: $masedf" 1>&2;
+#	  echo "mased fuuid: $fuuid" 1>&2
+	  [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "found masedf: $masedf"
 	  shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
       else
 	  shn_errmsg "not found masedf '$masedf'"
-	  return 1;
-      fi;
+	  return 1
+      fi
     fi
     return 1
 }
-shn_gvimer_plus () 
+shn_gvimer_plus ()
 {
     local file deffile mased_dir=${MSH_SHN_DIRS[relmased]} localvim_dir=${MSH_SHN_DIRS[relvimid]}
     if [[ $mased_dir ]] && [[ -d $mased_dir ]] && [[ $localvim_dir ]] && [[ -d $localvim_dir ]] ; then
@@ -305,9 +305,9 @@ shn_gvimer_plus ()
         fi
     else
       echo "no mased mode: check '$mased_dir' and '$localvim_dir'"
-        shn_gvimer_plus_nomased $@ || return $?;
+        shn_gvimer_plus_nomased $@ || return $?
     fi
-    return 1;
+    return 1
 }
 function shn_file_edit ()
 {

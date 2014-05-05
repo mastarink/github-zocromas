@@ -175,17 +175,21 @@ typedef enum
   DUF_ERROR_NOT_OPEN,
   DUF_ERROR_PATH,
   DUF_ERROR_OPENAT,
+  DUF_ERROR_OPENAT_ENOENT,
   DUF_ERROR_OPEN,
+  DUF_ERROR_OPEN_ENOENT,
   DUF_ERROR_READ,
   DUF_ERROR_CLOSE,
   DUF_ERROR_UNLINK,
   DUF_ERROR_OPTION,
+  DUF_ERROR_SUBOPTION,
   DUF_ERROR_SCANDIR,
   DUF_ERROR_CHECK_TABLES,
   DUF_ERROR_CLEAR_TABLES,
   DUF_ERROR_NO_FILE_SELECTOR,
   DUF_ERROR_DB_NO_PATH,
   DUF_ERROR_NO_STR_CB,
+  DUF_ERROR_BIND_NAME,
   DUF_ERROR_MAX_DEPTH,
   DUF_ERROR_MAX_REACHED,
   DUF_ERROR_GET_FIELD,
@@ -225,6 +229,7 @@ typedef struct
   unsigned long long mindirfiles;
   unsigned long long maxdirfiles;
   duf_filter_glob_t glob;
+  unsigned long long md5id;
   unsigned long long minsize;
   unsigned long long maxsize;
   unsigned long long minsame;
@@ -271,6 +276,7 @@ typedef struct duf_dirhandle_s
 typedef struct
 {
   unsigned is_leaf:1;
+  unsigned deleted:1;
   unsigned eod;
   unsigned long long dirid;
   /* const char *name; */
@@ -303,7 +309,10 @@ typedef struct
 {
   const char *name;
   struct stat st;
+  unsigned long long truedirid;
   unsigned long long nsame;
+  unsigned long long md5id;
+  unsigned long long dataid;
   unsigned long long md5sum1;
   unsigned long long md5sum2;
 } duf_fileinfo_t;
@@ -402,6 +411,7 @@ typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 
+typedef int ( *duf_pdi_cb_t ) ( duf_depthinfo_t * pdi );
 
 
 struct duf_scan_callbacks_s
@@ -418,15 +428,19 @@ struct duf_scan_callbacks_s
 
   duf_scan_hook_dir_t node_scan_before;
   duf_scan_hook2_dir_t node_scan_before2;
+  duf_scan_hook2_dir_t node_scan_before2_deleted;
 
   duf_scan_hook_dir_t node_scan_middle;
   duf_scan_hook2_dir_t node_scan_middle2;
+  duf_scan_hook2_dir_t node_scan_middle2_deleted;
 
   duf_scan_hook_dir_t node_scan_after;
   duf_scan_hook2_dir_t node_scan_after2;
+  duf_scan_hook2_dir_t node_scan_after2_deleted;
 
   duf_scan_hook_file_t leaf_scan;
   duf_scan_hook2_file_t leaf_scan2;
+  duf_scan_hook2_file_t leaf_scan2_deleted;
 
   duf_scan_hook_file_fd_t leaf_scan_fd;
   duf_scan_hook2_file_fd_t leaf_scan_fd2;

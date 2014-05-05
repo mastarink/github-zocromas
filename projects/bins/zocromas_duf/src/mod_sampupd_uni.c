@@ -96,33 +96,42 @@ sampupd_scan_node_middle( unsigned long long pathid_unused, /* const duf_dirhand
 
 
 static char *final_sql[] = {
-  "UPDATE duf_md5 SET dupcnt=(SELECT COUNT(*) "
-        " FROM duf_filedatas AS fd "
-        " JOIN duf_md5 AS md ON (fd.md5id=md.id) " " WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
+  "UPDATE duf_md5 SET dupcnt=(SELECT COUNT(*) " /*	*/
+        " FROM duf_filedatas AS fd " /*	*/
+        " JOIN duf_md5 AS md ON (fd.md5id=md.id) " /*	*/
+	" WHERE duf_md5.md5sum1=md.md5sum1 AND duf_md5.md5sum2=md.md5sum2)",
   /* "DELETE FROM duf_pathtot_files", */
-  "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) "
-        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize "
-        " FROM duf_filenames AS fn " " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " " GROUP BY fn.Pathid",
-  "UPDATE duf_pathtot_files SET "
-        " minsize=(SELECT min(size) AS minsize "
-        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-        " WHERE duf_pathtot_files.Pathid=fn.Pathid) "
-        ", maxsize=(SELECT max(size) AS maxsize "
-        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) "
-        " WHERE duf_pathtot_files.Pathid=fn.Pathid) "
-        ", numfiles=(SELECT COUNT(*) AS numfiles "
-        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " " WHERE duf_pathtot_files.Pathid=fn.Pathid)",
-  "INSERT OR IGNORE INTO duf_pathtot_dirs (Pathid, numdirs) "
-        " SELECT p.id AS Pathid, COUNT(*) AS numdirs "
-        " FROM duf_paths AS p " " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) " " GROUP BY sp.parentid",
-  "UPDATE duf_pathtot_dirs SET "
-        " numdirs=(SELECT COUNT(*) AS numdirs " " FROM duf_paths AS p " " WHERE p.parentid=duf_pathtot_dirs.Pathid )",
+  "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) " /*	*/
+        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /*	*/
+        " FROM duf_filenames AS fn " /*	*/
+	" LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
+	" GROUP BY fn.Pathid",
+  "UPDATE duf_pathtot_files SET " /*	*/
+        " minsize=(SELECT min(size) AS minsize " /*	*/
+        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
+        " WHERE duf_pathtot_files.Pathid=fn.Pathid) " /*	*/
+        ", maxsize=(SELECT max(size) AS maxsize " /*	*/
+        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
+        " WHERE duf_pathtot_files.Pathid=fn.Pathid) " /*	*/
+        ", numfiles=(SELECT COUNT(*) AS numfiles " /*	*/
+        " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
+	" WHERE duf_pathtot_files.Pathid=fn.Pathid)",
+  "INSERT OR IGNORE INTO duf_pathtot_dirs (Pathid, numdirs) " /*	*/
+        " SELECT p.id AS Pathid, COUNT(*) AS numdirs " /*	*/
+        " FROM duf_paths AS p " /*	*/
+	" LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) " /*	*/
+	" GROUP BY sp.parentid",
+  "UPDATE duf_pathtot_dirs SET " /*	*/
+        " numdirs=(SELECT COUNT(*) AS numdirs " /*	*/
+	" FROM duf_paths AS p " /*	*/
+	" WHERE p.parentid=duf_pathtot_dirs.Pathid )",
   /* "DELETE FROM duf_keydata", */
-  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, Pathid) "
-        "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid "
-        " FROM duf_filenames AS fn "
-        " JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)"
-        " JOIN duf_paths AS p ON (fn.Pathid=p.id)" " JOIN duf_md5 AS md ON (fd.md5id=md.id)",
+  "INSERT OR REPLACE INTO duf_keydata (md5id, filenameid, dataid, Pathid) " /*	*/
+        "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid " /*	*/
+        " FROM duf_filenames AS fn " /*	*/
+        " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id)" /*	*/
+        " JOIN duf_paths AS p ON (fn.Pathid=p.id)" /*	*/
+	" JOIN duf_md5 AS md ON (fd.md5id=md.id)",
 
   /* *INDENT-ON*  */
 
@@ -140,19 +149,21 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
   .node_scan_middle = sampupd_scan_node_middle,
   .leaf_scan = sampupd_scan_leaf,
   .fieldset =
-        " duf_filenames.Pathid AS dirid " " ,duf_filenames.name AS filename, duf_filedatas.size AS filesize"
-        " , uid, gid, nlink, inode, mtim AS mtime " " , dupcnt AS nsame"
-        " , duf_filenames.id AS filenameid" " , duf_filedatas.mode AS filemode, md.md5sum1, md.md5sum2 ",
+        " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /*	*/
+        " , uid, gid, nlink, inode, mtim AS mtime " /*	*/
+	" , dupcnt AS nsame" /*	*/
+        " , fn.id AS filenameid, fd.mode AS filemode, md.md5sum1, md.md5sum2 ",
   .leaf_selector =
-        "SELECT %s FROM duf_filenames "
-        " JOIN duf_filedatas ON (duf_filenames.dataid=duf_filedatas.id) "
-        " LEFT JOIN duf_md5 AS md ON (md.id=duf_filedatas.md5id)" "    WHERE "
-        /* "           duf_filedatas.size >= %llu AND duf_filedatas.size < %llu "             */
+        "SELECT %s FROM duf_filenames AS fn " /*	*/
+        " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
+        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /*	*/
+	"    WHERE " /*	*/
+        /* "           fd.size >= %llu AND fd.size < %llu "             */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu))  AND " */
-        " duf_filenames.Pathid='%llu' ",
+        " fn.Pathid='%llu' ",
   .node_selector =
-        "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid "
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "
+        "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /*	*/
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /*	*/
         /* " ,(SELECT count(*) FROM duf_paths AS subpaths WHERE subpaths.parentid=duf_paths.id) AS ndirs "       */
         /* " ,(SELECT count(*) FROM duf_filenames AS sfn "                                                       */
         /* "          JOIN duf_filedatas AS sfd ON (sfn.dataid=sfd.id) "                                         */
@@ -165,8 +176,9 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
         /* "           WHERE sfn.Pathid=duf_paths.id) AS minsize "                                               */
         /* " ,(SELECT max(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
         /* "           WHERE sfn.Pathid=duf_paths.id) AS maxsize "                                               */
-        " FROM duf_paths "
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) "
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " " WHERE duf_paths.parentid='%llu' ",
+        " FROM duf_paths " /*	*/
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /*	*/
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /*	*/
+	" WHERE duf_paths.parentid='%llu' ",
   .final_sql_argv = final_sql,
 };

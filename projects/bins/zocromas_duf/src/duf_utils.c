@@ -129,6 +129,33 @@ duf_filesize_match( duf_config_t * cfg, size_t filesize )
   }
   return r;
 }
+int
+duf_filesame_match( duf_config_t * cfg, int filesame )
+{
+  int r;
+
+  r = 1;
+  if ( cfg )
+  {
+    if ( cfg->u.minsame )
+      r = ( filesame >= cfg->u.minsame ) ? r : 0;
+    if ( cfg->u.maxsame )
+      r = ( filesame <= cfg->u.maxsame ) ? r : 0;
+  }
+  return r;
+}
+int duf_md5id_match( duf_config_t * cfg, unsigned long long md5id )
+{
+  int r;
+
+  r = 1;
+  if ( cfg )
+  {
+    if ( cfg->u.md5id )
+      r = ( md5id == cfg->u.md5id ) ? r : 0;
+  }
+  return r;
+}
 
 int
 duf_pathdepth( const char *path )
@@ -215,17 +242,21 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_NOT_OPEN ),
     DUF_ERROR_NAME( DUF_ERROR_PATH ),
     DUF_ERROR_NAME( DUF_ERROR_OPENAT ),
+    DUF_ERROR_NAME( DUF_ERROR_OPENAT_ENOENT ),
     DUF_ERROR_NAME( DUF_ERROR_OPEN ),
+    DUF_ERROR_NAME( DUF_ERROR_OPEN_ENOENT ),
     DUF_ERROR_NAME( DUF_ERROR_READ ),
     DUF_ERROR_NAME( DUF_ERROR_CLOSE ),
     DUF_ERROR_NAME( DUF_ERROR_UNLINK ),
     DUF_ERROR_NAME( DUF_ERROR_OPTION ),
+    DUF_ERROR_NAME( DUF_ERROR_SUBOPTION ),
     DUF_ERROR_NAME( DUF_ERROR_SCANDIR ),
     DUF_ERROR_NAME( DUF_ERROR_CHECK_TABLES ),
     DUF_ERROR_NAME( DUF_ERROR_CLEAR_TABLES ),
     DUF_ERROR_NAME( DUF_ERROR_NO_FILE_SELECTOR ),
     DUF_ERROR_NAME( DUF_ERROR_DB_NO_PATH ),
     DUF_ERROR_NAME( DUF_ERROR_NO_STR_CB ),
+    DUF_ERROR_NAME( DUF_ERROR_BIND_NAME ),
     DUF_ERROR_NAME( DUF_ERROR_MAX_DEPTH ),
     DUF_ERROR_NAME( DUF_ERROR_MAX_REACHED ),
     DUF_ERROR_NAME( DUF_ERROR_GET_FIELD ),

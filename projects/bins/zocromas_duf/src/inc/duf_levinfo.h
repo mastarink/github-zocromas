@@ -3,6 +3,10 @@
 
 int duf_levinfo_is_leaf( duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf_d( duf_depthinfo_t * pdi, int d );
+
+int duf_levinfo_deleted( duf_depthinfo_t * pdi );
+int duf_levinfo_deleted_d( duf_depthinfo_t * pdi, int d );
+
 const char *duf_levinfo_itemname_d( duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_itemname( duf_depthinfo_t * pdi );
 
@@ -37,6 +41,9 @@ void duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi );
 
 int duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path );
 int duf_levinfo_openat_dh( duf_depthinfo_t * pdi );
+int duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d );
+int duf_levinfo_opened_dh( duf_depthinfo_t * pdi );
+
 int duf_levinfo_closeat_dh( duf_depthinfo_t * pdi );
 int duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d );
 

@@ -43,7 +43,23 @@ duf_levinfo_is_leaf( duf_depthinfo_t * pdi )
   assert( pdi->levinfo );
   return duf_levinfo_is_leaf_d( pdi, pdi->depth );
 }
+int
+duf_levinfo_deleted_d( duf_depthinfo_t * pdi, int d )
+{
 
+  assert( pdi );
+  assert( pdi->levinfo );
+  assert( d >= 0 );
+  return pdi->levinfo[d].deleted;
+}
+
+int
+duf_levinfo_deleted( duf_depthinfo_t * pdi )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  return duf_levinfo_deleted_d( pdi, pdi->depth );
+}
 const char *
 duf_levinfo_itemname_d( duf_depthinfo_t * pdi, int d )
 {
@@ -309,7 +325,8 @@ duf_levinfo_up( duf_depthinfo_t * pdi )
     int r;
     int d = pdi->depth--;
 
-    r = duf_levinfo_closeat_dh_d( pdi, d );
+    if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
+      r = duf_levinfo_closeat_dh_d( pdi, d );
     if ( r < 0 )
       DUF_ERROR( "close error" );
     assert( pdi->levinfo );
@@ -455,9 +472,16 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
       }
       else
         r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
-      DUF_OINV( pdi-> );
       if ( r >= 0 )
+      {
+        DUF_OINV( pdi-> );
         assert( pdhlev->dfd );
+      }
+      if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
+      {
+        pdi->levinfo[d].deleted = 1;
+        r = 0;
+      }
     }
     DUF_TEST_R( r );
     return r;
@@ -499,9 +523,12 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
       /* }                             */
       DUF_OINV( pdi-> );
 
+      if ( r >= 0 && real_path )
+        r = duf_open_dh( pdhlev, real_path );
+      if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
       {
-        if ( r >= 0 && real_path )
-          r = duf_open_dh( pdhlev, real_path );
+        pdi->levinfo[d].deleted = 1;
+        r = 0;
       }
       DUF_OINV( pdi-> );
       if ( r >= 0 )
@@ -519,6 +546,38 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 /*       mas_free( real_path );                 */
 /* #endif                                       */
 /*     }                                        */
+    DUF_TEST_R( r );
+    return r;
+  }
+}
+
+/* returns handle >0 */
+int
+duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
+{
+  assert( pdi );
+  {
+    int r = 0;
+
+    assert( d >= 0 );
+    if ( !duf_config->cli.noopenat && pdi->opendir )
+      r = duf_opened_dh( &pdi->levinfo[d].lev_dh );
+    return r;
+  }
+}
+
+/* returns handle >0 */
+int
+duf_levinfo_opened_dh( duf_depthinfo_t * pdi )
+{
+  assert( pdi );
+  {
+    int r = 0;
+    int d = pdi->depth;
+
+    assert( d >= 0 );
+    DUF_OINV( pdi-> );
+    r = duf_levinfo_opened_dh_d( pdi, pdi->depth );
     DUF_TEST_R( r );
     return r;
   }

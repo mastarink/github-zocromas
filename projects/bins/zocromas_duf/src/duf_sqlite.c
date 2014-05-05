@@ -27,7 +27,7 @@ duf_sqlite_error_code( int r3 )
 {
   int rt;
 
-  rt = (r3 == SQLITE_OK) ? 0 : ( r3 > 0 ? DUF_SQLITE_ERROR_BASE + r3 : r3 );
+  rt = ( r3 == SQLITE_OK ) ? 0 : ( r3 > 0 ? DUF_SQLITE_ERROR_BASE + r3 : r3 );
   return rt;
 }
 
@@ -377,6 +377,8 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   /* DUF_PRINTF( 0, "PREPARE" ); */
   DUF_TRACE( sql, 0, "  [%s]", sql );
   r3 = sqlite3_prepare_v2( pDb, sql, strlen( sql ), pstmt, &tail );
+  if ( r3 == SQLITE_ERROR )
+  {    DUF_ERROR( "can't prepare SQL:[%s] - %s", sql, sqlite3_errmsg(pDb) );}
   DUF_TEST_R3( r3 );
   return r3;
 }
@@ -403,6 +405,7 @@ duf_sqlite_finalize( duf_sqlite_stmt_t * stmt )
   DUF_TEST_R3( r3 );
   return r3;
 }
+
 int
 duf_sqlite_reset( duf_sqlite_stmt_t * stmt )
 {
@@ -412,6 +415,7 @@ duf_sqlite_reset( duf_sqlite_stmt_t * stmt )
   DUF_TEST_R3( r3 );
   return r3;
 }
+
 int
 duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name )
 {

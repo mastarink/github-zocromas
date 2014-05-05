@@ -47,17 +47,19 @@ typedef enum
   DUF_OPTION_OUTPUT_FILE,
   DUF_OPTION_FORMAT,
 
-  DUF_OPTION_INTEGRITY_TRACE,
-  DUF_OPTION_FS_TRACE,
   DUF_OPTION_CALLS_TRACE,
+  DUF_OPTION_DELETED_TRACE,
+  DUF_OPTION_DIRENT_TRACE,
+  DUF_OPTION_FS_TRACE,
+  DUF_OPTION_INTEGRITY_TRACE,
+  DUF_OPTION_MD5_TRACE,
+  DUF_OPTION_MDPATH_TRACE,
+  DUF_OPTION_PATH_TRACE,
   DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_SAMPUPD_TRACE,
-  DUF_OPTION_PATH_TRACE,
-  DUF_OPTION_MD5_TRACE,
-  DUF_OPTION_DIRENT_TRACE,
-  DUF_OPTION_MDPATH_TRACE,
-  DUF_OPTION_TRACE_NONEW,
+
   DUF_OPTION_TRACE_FILE,
+  DUF_OPTION_TRACE_NONEW,
   DUF_OPTION_TRACE_STDERR,
   DUF_OPTION_TRACE_STDOUT,
 
@@ -83,9 +85,11 @@ typedef enum
   DUF_OPTION_MAXDIRFILES,
   DUF_OPTION_GLOB_INCLUDE_FILES,
   DUF_OPTION_GLOB_EXCLUDE_FILES,
+  DUF_OPTION_MD5ID,
   DUF_OPTION_SIZE,
   DUF_OPTION_MINSIZE,
   DUF_OPTION_MAXSIZE,
+  DUF_OPTION_SAME,
   DUF_OPTION_MINSAME,
   DUF_OPTION_MAXSAME,
   DUF_OPTION_MAXDEPTH,
@@ -113,58 +117,71 @@ typedef enum
 typedef enum
 {
   DUF_TRACE_MODE_NONE,
+  DUF_TRACE_MODE_action,
+  DUF_TRACE_MODE_any,
+  DUF_TRACE_MODE_collect,
+  DUF_TRACE_MODE_current,
+  DUF_TRACE_MODE_deleted,
+  DUF_TRACE_MODE_dirent,
   DUF_TRACE_MODE_error,
   DUF_TRACE_MODE_errorr,
-  DUF_TRACE_MODE_any,
-  DUF_TRACE_MODE_verbose,
-  DUF_TRACE_MODE_action,
-  DUF_TRACE_MODE_current,
-  DUF_TRACE_MODE_MAX,
   DUF_TRACE_MODE_fill,
-  DUF_TRACE_MODE_collect,
-  DUF_TRACE_MODE_path,
-  DUF_TRACE_MODE_scan,
   DUF_TRACE_MODE_fs,
+  DUF_TRACE_MODE_match,
+  DUF_TRACE_MODE_MAX,
+  DUF_TRACE_MODE_md5,
+  DUF_TRACE_MODE_mdpath,
+  DUF_TRACE_MODE_path,
   DUF_TRACE_MODE_sample,
   DUF_TRACE_MODE_sampupd,
-  DUF_TRACE_MODE_match,
-  DUF_TRACE_MODE_statistics,
-  DUF_TRACE_MODE_mdpath,
-  DUF_TRACE_MODE_dirent,
-  DUF_TRACE_MODE_md5,
+  DUF_TRACE_MODE_scan,
   DUF_TRACE_MODE_sql,
+  DUF_TRACE_MODE_statistics,
+  DUF_TRACE_MODE_verbose,
 } duf_trace_mode_t;
 
 typedef enum
 {
-  DUF_FORMAT_SEQ,
+  DUF_FORMAT_DATAID,
   DUF_FORMAT_DIRID,
-  DUF_FORMAT_NSAME,
-  DUF_FORMAT_INODE,
-  DUF_FORMAT_MODE,
-  DUF_FORMAT_NLINK,
-  DUF_FORMAT_UID,
-  DUF_FORMAT_GID,
-  DUF_FORMAT_FILESIZE,
-  DUF_FORMAT_MTIME,
   DUF_FORMAT_FILENAME,
+  DUF_FORMAT_FILESIZE,
+  DUF_FORMAT_GID,
+  DUF_FORMAT_HUMAN,
+  DUF_FORMAT_INODE,
   DUF_FORMAT_MD5,
+  DUF_FORMAT_MD5ID,
+  DUF_FORMAT_MODE,
+  DUF_FORMAT_MTIME,
+  DUF_FORMAT_NLINK,
+  DUF_FORMAT_NSAME,
   DUF_FORMAT_OFFSET,
+  DUF_FORMAT_PREFIX,
+  DUF_FORMAT_REALPATH,
+  DUF_FORMAT_SEQ,
+  DUF_FORMAT_TRUEPATH,
+  DUF_FORMAT_UID,
   DUF_FORMAT_MAX,
 } duf_format_index_t;
 typedef struct
 {
-  unsigned seq:1;
+  unsigned dataid:1;
   unsigned dirid:1;
-  unsigned inode:1;
-  unsigned mode:1;
-  unsigned nlink:1;
-  unsigned uid:1;
-  unsigned gid:1;
-  unsigned filesize:1;
   unsigned filename:1;
+  unsigned filesize:1;
+  unsigned gid:1;
+  unsigned human:1;
+  unsigned inode:1;
   unsigned md5:1;
+  unsigned md5id:1;
+  unsigned mode:1;
   unsigned mtime:1;
+  unsigned nlink:1;
+  unsigned prefix:1;
+  unsigned realpath:1;
+  unsigned seq:1;
+  unsigned truepath:1;
+  unsigned uid:1;
   unsigned nsame;
   unsigned offset;
 } duf_format_t;
@@ -221,27 +238,28 @@ typedef struct
 
 typedef struct
 {
+  unsigned action;
+  unsigned any;
+  unsigned calls;
+  unsigned collect;
+  unsigned current;
+  unsigned deleted;
+  unsigned dirent;
   unsigned error;
   unsigned errorr;
-  unsigned any;
+  unsigned fill;
   unsigned fs;
-  unsigned current;
-  unsigned calls;
-  unsigned action;
-  unsigned scan;
-  unsigned sample;
-  unsigned sampupd;
+  unsigned integrity;
   unsigned match;
-  unsigned dirent;
   unsigned md5;
   unsigned mdpath;
-  unsigned integrity;
-  unsigned fill;
-  unsigned collect;
-  unsigned sql;
-  unsigned statistics;
   unsigned nonew;
   unsigned path;
+  unsigned sample;
+  unsigned sampupd;
+  unsigned scan;
+  unsigned sql;
+  unsigned statistics;
   char *file;
   FILE *out;
 } duf_config_cli_trace_t;

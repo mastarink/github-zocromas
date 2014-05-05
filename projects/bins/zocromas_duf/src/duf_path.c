@@ -186,6 +186,89 @@ duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int
 }
 
 #endif
+
+
+static char *
+duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
+{
+  char *path = NULL;
+  int r = 0;
+
+  DEBUG_START(  );
+  if ( dirid > 0 )
+  {
+/* get parentid for dirid */
+
+    if ( pstmt )
+    {
+      duf_sql_reset( pstmt );
+      if ( r >= 0 )
+        r = duf_sql_bind_long_long( pstmt, ":dirid", dirid );
+      if ( r >= 0 )
+        r = duf_sql_step( pstmt );
+      if ( r == DUF_SQL_ROW )
+      {
+        char *tail;
+
+        DUF_UFIELD2( parentid );
+        DUF_SFIELD2( dirname );
+        tail = mas_strdup( dirname );
+        if ( parentid >= 0 )
+        {
+          char *parent = NULL;
+
+          parent = duf_pathid_to_path2_in( pstmt, parentid, pdi, &r ); /* open!! */
+          DUF_TEST_R( r );
+          path = duf_join_path( parent, tail );
+          /* DUF_ERROR( "%llu (%s): %s @ %llu => %s", dirid, parent, tail, parentid, path ); */
+
+          if ( tail )
+            mas_free( tail );
+          if ( parent )
+            mas_free( parent );
+        }
+      }
+      DUF_TEST_R( r );
+      DEBUG_ENDS( path );
+    }
+  }
+  if ( pr )
+    *pr = r;
+  return path;
+}
+
+char *
+duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
+{
+  char *path = NULL;
+  int r = 0;
+  duf_sqlite_stmt_t *pstmt = NULL;
+
+  {
+    const char *sql = "SELECT parentid, dirname FROM duf_paths WHERE id=:dirid";
+
+    if ( r >= 0 && sql )
+      r = duf_sql_prepare( sql, &pstmt );
+  }
+  path = duf_pathid_to_path2_in( pstmt, dirid, pdi, &r );
+
+  {
+    int rf = duf_sql_finalize( pstmt );
+
+    pstmt = NULL;
+    DUF_TEST_R( rf );
+    DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" );
+
+    if ( r >= 0 || r == DUF_SQL_DONE )
+      r = rf;
+    DUF_TEST_R( r );
+  }
+  if ( pr )
+    *pr = r;
+  return path;
+}
+
+
 /* will be static! */
 
 /* 

@@ -34,8 +34,11 @@ duf_match_leaf( duf_record_t * precord )
 
   DUF_SFIELD( filename );
   DUF_UFIELD( filesize );
+  DUF_UFIELD( nsame );
+  DUF_UFIELD( md5id );
 
-  r = duf_filename_match( duf_config, filename ) && duf_filesize_match( duf_config, filesize );
+  r = duf_filename_match( duf_config, filename ) && duf_filesize_match( duf_config, filesize ) && duf_filesame_match( duf_config, nsame )
+        && duf_md5id_match( duf_config, md5id );
   return r;
 }
 
@@ -46,8 +49,11 @@ duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
 
   DUF_SFIELD2( filename );
   DUF_UFIELD2( filesize );
+  DUF_UFIELD2( nsame );
+  DUF_UFIELD2( md5id );
 
-  r = duf_filename_match( duf_config, filename ) && duf_filesize_match( duf_config, filesize );
+  r = duf_filename_match( duf_config, filename ) && duf_filesize_match( duf_config, filesize ) && duf_filesame_match( duf_config, nsame )
+        && duf_md5id_match( duf_config, md5id );
   if ( !r )
     DUF_TRACE( match, 0, "NOT MATCH %s (mode 2)", filename );
   return r;
@@ -61,7 +67,7 @@ duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
  * str_cb + str_cb_udata to be called for precord with correspondig args
  *
  * known str_cb for duf_sel_cb_leaf:
- *   duf_str_cb_leaf_scan;  duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
+ *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *   duf_str_cb_scan_file_fd;  duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd ; str_cb_udata_unused
  *   duf_str_cb_uni_scan_dir (in theory ?!)
  *   ...
@@ -99,7 +105,8 @@ duf_sel_cb_leaf( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
       if ( str_cb )
       {
         r = duf_levinfo_openat_dh( pdi );
-        if ( r >= 0 )
+
+        if ( r >= 0 && !duf_levinfo_deleted( pdi ) )
           r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord );
         DUF_TEST_R( r );
         /* DUF_ERROR( "r:%d; str_cb:%s", r, DUF_FUNN( str_cb ) ); */
@@ -153,6 +160,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       if ( str_cb2 )
       {
         r = duf_levinfo_openat_dh( pdi );
+
+        /* if ( r >= 0 && !duf_levinfo_deleted( pdi ) ) */
         if ( r >= 0 )
           r = ( str_cb2 ) ( pstmt, pdi, sccb );
         DUF_TEST_R( r );
@@ -234,6 +243,8 @@ duf_sel_cb_node( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
       {
         DUF_OINV_NOT_OPENED( pdi-> );
         r = duf_levinfo_openat_dh( pdi );
+
+        if ( r >= 0 && !duf_levinfo_deleted( pdi ) )
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
@@ -312,6 +323,9 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       {
         DUF_OINV_NOT_OPENED( pdi-> );
         r = duf_levinfo_openat_dh( pdi );
+
+        /* if ( r >= 0 && !duf_levinfo_deleted( pdi ) ) */
+        if ( r >= 0 )
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
@@ -449,29 +463,39 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
       DUF_TRACE( scan, 2, "sql:%s dirid:%llu", sql, dirid );
       DUF_TEST_R( r );
       {
-        int cnt = 0;
 
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":dirid", ( long long ) dirid );
-        DUF_TEST_R( r );
-
-        /* while ( r >= 0 && r != DUF_SQL_DONE )            */
-        /* {                                                */
-        /*   r = duf_sql_step( pstmt );                     */
-        /*   DUF_TEST_RR( r );                              */
-        /*   if ( r == DUF_SQL_ROW )                        */
-        /*   {                                              */
-        /*     if ( !match_cb2 || ( match_cb2 ) ( pstmt ) ) */
-        /*       cnt++;                                     */
-        /*     r = 0;                                       */
-        /*   }                                              */
-        /* }                                                */
-        /* if ( r == DUF_SQL_DONE )                         */
-        /*   r = 0;                                         */
-        /* DUF_TEST_R( r );                                 */
+          r = duf_sql_bind_long_long( pstmt, ":dirid", dirid );
         if ( r >= 0 )
         {
-          cnt = 0;
+          r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":minsame", duf_config->u.minsame );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":maxsame", duf_config->u.maxsame );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        DUF_TEST_R( r );
+
+        if ( r >= 0 )
+        {
+          int cnt = 0;
+
           r = duf_sql_reset( pstmt );
           DUF_TEST_R( r );
           /* if ( r >= 0 )                                            */
@@ -510,15 +534,6 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
             r = 0;
           DUF_TEST_R( r );
         }
-        /* {                                                                                                  */
-        /*   int rr;                                                                                          */
-        /*                                                                                                    */
-        /*   duf_sql_prepare                                                                                  */
-        /*         (  "SELECT duf_paths.id AS dirid  FROM duf_paths   WHERE duf_paths.parentid=5", &pstmt  ); */
-        /*   rr = duf_sql_step( pstmt );                                                                      */
-        /*   DUF_PRINTF( 0, ">>>>>> %s : %d", duf_sql_column_string( pstmt, 1 ), rr );                        */
-        /*   duf_sql_finalize( pstmt );                                                                       */
-        /* }                                                                                                  */
       }
       sqlite3_free( sql );
       sql = NULL;
@@ -568,7 +583,32 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
       {
 
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":dirid", ( long long ) dirid );
+          r = duf_sql_bind_long_long( pstmt, ":dirid", dirid );
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":minsame", duf_config->u.minsame );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+        if ( r >= 0 )
+        {
+          r = duf_sql_bind_long_long_nz( pstmt, ":maxsame", duf_config->u.maxsame );
+          if ( r == DUF_ERROR_BIND_NAME )
+            r = 0;
+        }
+
         DUF_TEST_R( r );
 
         while ( r >= 0 && r != DUF_SQL_DONE )
@@ -605,7 +645,7 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
  * call str_cb + pdi as str_cb_udata for each record by sql with corresponding args
  *
  * known str_cb for duf_scan_db_items:
- *   duf_str_cb_leaf_scan;  duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan ; str_cb_udata_unused
+ *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan ; str_cb_udata_unused
  *   duf_str_cb_scan_file_fd;  duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd ; str_cb_udata_unused
  *   duf_str_cb_uni_scan_dir
  *   ...

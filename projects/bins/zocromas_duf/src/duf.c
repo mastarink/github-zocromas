@@ -16,8 +16,8 @@
 /* ###################################################################### */
 
 
-int
-main( int argc, char **argv )
+static int
+duf_main( int argc, char **argv )
 {
   int r = 0;
 
@@ -37,7 +37,7 @@ main( int argc, char **argv )
     extern int dbgfunc_enabled;
     int or;
 
-    DUF_TRACE( any, 0, "any test" );
+    DUF_TRACE( any, 1, "any test" );
     if ( r >= 0 )
       r = duf_infile_options( argc, argv );
     /* duf_config->cli.dbg.verbose = 4; */
@@ -153,24 +153,20 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "    same as prev:" );
         DUF_PRINTF( 0, "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --collect --dirent"
                     " --files --dirs --md5 /mnt/new_media/media/down/ --totals" );
-
         DUF_PRINTF( 0, "=============================================" );
         DUF_PRINTF( 0,
-                    "  run  --db-name=test20140416.db  --uni-scan   --print  --md5 --noopenat  -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" );
+                    "  run  --db-name=test20140416.db  --uni-scan --print  --md5 --noopenat -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" );
         DUF_PRINTF( 0, "=============================================" );
 
         DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --totals"
                     " --format=filesize,seq,filename,md5" );
         DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6"
                     " --totals --format=filesize,seq,filename,md5 --tree" );
-
         DUF_PRINTF( 0, "  run  --trace-any=0  --db-name=test20140416.db  --uni-scan   --print  -df --max-seq=76 --max-depth=6 --totals"
                     " --format=filesize,seq,filename,nlink,mtime,mode,gid,uid /mnt/new_media/media/down" );
-
         DUF_PRINTF( 0, "=============================================" );
         DUF_PRINTF( 0, "  run  --db-name=test$$.db  --uni-scan --print  --md5 --noopenat  -Rdf --max-dirs=300 --max-items=200 "
                     " --min-dirfiles=5 --min-size=10 --noopenat" );
-
 
         DUF_PUTS( 0, "" );
         DUF_PUTS( 0, NULL );
@@ -189,13 +185,22 @@ main( int argc, char **argv )
         DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf --max-seq=1000" );
         DUF_PRINTF( 0, "========================= as for 20140504 ===================" );
         DUF_PRINTF( 0, "= full - cycle collect in one command =======================" );
-        DUF_PRINTF( 0, "  run  --remove-database -OP  -RdifE5 /home/mastar/a/down/chromium/  --exclude='*.doc' --exclude='*.jpg' --exclude='*.css'  --exclude='*.html' --exclude='*.png'  --exclude='*.gif'   --exclude='*.js'  --exclude='*.php'" );
+        DUF_PRINTF( 0, "  run  --remove-database -OP  -RdifE5 /home/mastar/a/down/chromium/"
+                    " --exclude='*.doc' --exclude='*.jpg' --exclude='*.css'" " --exclude='*.html' --exclude='*.png'  --exclude='*.gif'"
+                    " --exclude='*.js'  --exclude='*.php'" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/" );
         DUF_PRINTF( 0, "=============================================================" );
-
         DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/  --size=-10 --size=+0" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/  --size=-1b" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rfd  /home/mastar/a/down/  --size=+1G" );
+        DUF_PRINTF( 0, "=============================================================" );
+        DUF_PRINTF( 0, "  run --trace-any  --print    -Rdf /home/mastar/a/down/ --same=+1 --format=filename,md5id" );
+        DUF_PRINTF( 0, "  run --trace-any  --print    -Rdf /home/mastar/a/down/ --md5id=1285" );
+        DUF_PRINTF( 0, "========================= as for 20140505 ===================" );
+        DUF_PRINTF( 0, "  run --print  -Rfd /mnt/new_media/media/video/ --md5id=121549" " --format=human,inode=0,dataid=0" );
+        DUF_PRINTF( 0, "  run --print  -Rfd /mnt/new_media/media/video/" " --format=human,inode=0,dataid=0,seq=0,prefix=0"
+                    " --include='*Speckled*'" );
+        DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;
       default:
@@ -215,4 +220,10 @@ main( int argc, char **argv )
 #endif
   DUF_ERRORR( r, "-" );
   return r < 0 && r != DUF_ERROR_MAX_REACHED ? 31 : 0;
+}
+
+int
+main( int argc, char **argv )
+{
+  return duf_main( argc, argv );
 }

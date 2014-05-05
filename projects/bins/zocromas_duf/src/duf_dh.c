@@ -57,8 +57,8 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   }
   else
   {
-    DUF_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0, name ? 1 : 0, pdhandleup
-               && pdhandleup->dfd ? 1 : 0 );
+    DUF_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
+               name ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
     r = DUF_ERROR_OPENAT;
   }
   return r;
@@ -91,22 +91,24 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
       DUF_TRACE( fs, 0, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
                  duf_config->nopen - duf_config->nclose, pdhandle->dfd );
     }
-    else if ( r == -1 )
+    else if ( r < 0 && errno == ENOENT )
+    {
+      r = DUF_ERROR_OPENAT_ENOENT;
+    }
+    else if ( r < 0 )
     {
       char serr[1024] = "";
       char *s;
 
       s = strerror_r( errno, serr, sizeof( serr ) );
       DUF_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhandleup ? pdhandleup->dfd : 555 );
-      assert( r >= 0 && r != ENOENT );
-
       r = DUF_ERROR_OPENAT;
     }
   }
   else
   {
-    DUF_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0, name ? 1 : 0, pdhandleup
-               && pdhandleup->dfd ? 1 : 0 );
+    DUF_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
+               name ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
     r = DUF_ERROR_OPENAT;
   }
   return r;
@@ -133,6 +135,10 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
                  duf_config->nopen - duf_config->nclose, pdhandle->dfd );
       assert( pdhandle->dfd );
     }
+    else if ( errno == ENOENT )
+    {
+      r = DUF_ERROR_OPEN_ENOENT;
+    }
     else
     {
       char serr[512] = "";
@@ -152,6 +158,19 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   {
     DUF_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
+  return r;
+}
+
+/* returns handle >0 */
+int
+duf_opened_dh( duf_dirhandle_t * pdhandle )
+{
+  int r = DUF_ERROR_PTR;
+
+  if ( duf_config->cli.noopenat )
+    return 0;
+  if ( pdhandle )
+    r = pdhandle->dfd;
   return r;
 }
 

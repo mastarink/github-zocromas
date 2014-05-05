@@ -35,24 +35,26 @@ function shn_run ()
     MSH_SHN_MSG_PREFIX='shn: '
     shn_msg ; shn_msg
 #   shn_msg "------ to run '$bin $1 ...' -------"
-    shn_msg "------ to run '$rname $1 ...' -------"
-    shn_msg "------------------------------------`datemt`----"
     for (( i=1; i <= $# ; i++ )) ; do
 #     echo "$FUNCNAME $i : ${!i}" >&2
       qargs+=" '${!i}'"
     done
+    shn_msg " run $rname $qargs "
     export MSH_SHN_BASHPID=$BASHPID
     export MSH_SHN_LAUNCHPID=$$
-    shn_msg "qargs:$qargs" >&2
-    shn_msg "------------------------------------`datemt`--- $$ : $BASHPID -"
-    shn_msg "------ to run '$bin $1 ...' -------"
+#   shn_msg "qargs:$qargs" >&2
+    shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- "
+#   shn_msg " ---- to run '$bin $1 ...' ----- "
 #   shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
+      echo ; echo ; echo
+      echo ; echo ; echo
 
-#   time eval "$bin $qargs"
-    eval "$bin $qargs"
+#       time eval "$bin $qargs"
+	eval "$bin $qargs"
+	retcode=$?
 
-    retcode=$?
-    shn_msg "returned $retcode ---------------------------------------------"
+      echo ; echo ; echo
+    shn_msg " exited with $retcode "
   else
     retcode=1
   fi
