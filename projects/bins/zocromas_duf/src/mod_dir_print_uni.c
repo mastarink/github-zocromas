@@ -247,6 +247,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
   /*   }                                                                                                                    */
   /*   (* mas_free( path ); *)                                                                                              */
   /* }                                                                                                                      */
+  if ( pdi->items.files > 0 )
   {
     duf_fileinfo_t fi = { 0 };
 

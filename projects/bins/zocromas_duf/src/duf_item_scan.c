@@ -107,7 +107,9 @@ duf_sel_cb_leaf( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
         r = duf_levinfo_openat_dh( pdi );
 
         if ( r >= 0 && !duf_levinfo_deleted( pdi ) )
+        {
           r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord );
+        }
         DUF_TEST_R( r );
         /* DUF_ERROR( "r:%d; str_cb:%s", r, DUF_FUNN( str_cb ) ); */
       }
@@ -155,7 +157,6 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       pdi->seq++;
       pdi->seq_leaf++;
       DUF_TEST_R( r );
-
       /* called both for leaves (files) and nodes (dirs) */
       if ( str_cb2 )
       {
@@ -163,7 +164,9 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
 
         /* if ( r >= 0 && !duf_levinfo_deleted( pdi ) ) */
         if ( r >= 0 )
+        {
           r = ( str_cb2 ) ( pstmt, pdi, sccb );
+        }
         DUF_TEST_R( r );
         /* DUF_ERROR( "r:%d; str_cb2:%s", r, DUF_FUNN( str_cb2 ) ); */
       }
@@ -332,7 +335,9 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
           DUF_TRACE( scan, 1, "  L%u: str_cb2 node:     by %5llu", duf_pdi_depth( pdi ), dirid );
 
           if ( r >= 0 )
+          {
             r = ( str_cb2 ) ( pstmt, pdi, sccb );
+          }
           DUF_TEST_R( r );
           /* DUF_ERROR( "F:%s", DUF_FUNN( str_cb2 ) ); */
           DUF_OINV_OPENED( pdi-> );
@@ -340,9 +345,11 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
         DUF_OINV( pdi-> );
         DUF_TEST_R( r );
       }
+      DUF_TEST_R( r );
     }
     else
-      DUF_TRACE( error, 0, "str_cb2 not set" );
+      DUF_ERROR( "str_cb2 not set" );
+    DUF_TEST_R( r );
     duf_levinfo_up( pdi );
     DUF_OINV_OPENED( pdi-> );
   }
@@ -553,7 +560,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
 
 int
 duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
-                      duf_scan_callbacks_t * sccb, const char *selector2, const char *fieldset, unsigned long long dirid )
+                      duf_scan_callbacks_t * sccb, const char *selector2, const char *fieldset, unsigned long long dirid, int *pr )
 {
   int cnt = 0;
   int r = 0;

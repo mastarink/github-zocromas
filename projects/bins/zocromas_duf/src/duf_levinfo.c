@@ -43,6 +43,7 @@ duf_levinfo_is_leaf( duf_depthinfo_t * pdi )
   assert( pdi->levinfo );
   return duf_levinfo_is_leaf_d( pdi, pdi->depth );
 }
+
 int
 duf_levinfo_deleted_d( duf_depthinfo_t * pdi, int d )
 {
@@ -60,6 +61,7 @@ duf_levinfo_deleted( duf_depthinfo_t * pdi )
   assert( pdi->levinfo );
   return duf_levinfo_deleted_d( pdi, pdi->depth );
 }
+
 const char *
 duf_levinfo_itemname_d( duf_depthinfo_t * pdi, int d )
 {
@@ -322,13 +324,14 @@ duf_levinfo_up( duf_depthinfo_t * pdi )
     DUF_TRACE( scan, 0, "  L%u: scan node: <=    by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
                duf_levinfo_itemname( pdi ) );
   {
-    int r;
+    int r = 0;
     int d = pdi->depth--;
 
     if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
       r = duf_levinfo_closeat_dh_d( pdi, d );
+    DUF_TEST_R( r );
     if ( r < 0 )
-      DUF_ERROR( "close error" );
+      DUF_ERROR( "(%d) close error; L%d", r, pdi->depth );
     assert( pdi->levinfo );
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->depth;

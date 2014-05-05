@@ -327,14 +327,11 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   if ( r >= 0 && ( sccb->entry_dir_scan_before2 || sccb->entry_file_scan_before2 ) )
     r = duf_scan_entries_by_pathid_and_record2( pstmt, pdi, sccb->entry_file_scan_before2, sccb->entry_dir_scan_before2 );
 
-
-
   if ( r >= 0 && sccb && duf_config->cli.act.dirs )
   {
-    int cnt_leaves = 0;
+    pdi->items.files = duf_count_db_vitems2( duf_match_leaf2, pdi, sccb, sccb->leaf_selector2, sccb->fieldset, dirid, &r );
 
-    cnt_leaves = duf_count_db_vitems2( duf_match_leaf2, pdi, sccb, sccb->leaf_selector2, sccb->fieldset, dirid );
-    if ( cnt_leaves > 0 )
+    /* if ( pdi->pdi->items.files >= 0 ) */
     {
       pdi->items.total++;
       pdi->items.dirs++;
@@ -351,8 +348,6 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
         r = sccb->node_scan_before2( pstmt, dirid, pdi );
       DUF_TEST_R( r );
     }
-    else if ( cnt_leaves < 0 )
-      r = cnt_leaves;
   }
   {
     int d = duf_pdi_depth( pdi ) - 1;
