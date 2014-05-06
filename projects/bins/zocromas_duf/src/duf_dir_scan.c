@@ -140,7 +140,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
     pdi->items.total++;
     pdi->items.files++;
 
-    if ( duf_levinfo_deleted( pdi ) )
+    if ( duf_levinfo_item_deleted( pdi ) )
     {
       if ( sccb->leaf_scan2_deleted )
         r = sccb->leaf_scan2_deleted( pstmt, pdi );
@@ -208,16 +208,9 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
   {
     int d = duf_pdi_depth( pdi ) - 1;
 
-    if ( d >= 0 && pdi->levinfo[d].numdir == 0 && !duf_levinfo_is_leaf( pdi ) )
+    if ( d >= 0 && duf_levinfo_numdir_d( pdi, d ) == 0 && !duf_levinfo_is_leaf( pdi ) )
       duf_levinfo_set_eod( pdi );
   }
-  /* assert( pdi->depth > 0 ); */
-  /* if ( duf_levinfo_numdir_d( pdi, pdi->depth - 1 ) <= 0 ) */
-  /* {                                                       */
-  /*   DUF_PRINTF(0, "EOD for L%u", pdi->depth - 1 );        */
-  /*   pdi->levinfo[pdi->depth - 1].eod = 1;                 */
-  /* }                                                       */
-
 
   if ( r >= 0 && sccb )
   {
@@ -325,7 +318,16 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   dirid = duf_levinfo_dirid( pdi );
 
   if ( r >= 0 && ( sccb->entry_dir_scan_before2 || sccb->entry_file_scan_before2 ) )
+  {
+    DUF_TRACE( scan, 0, "scan entry_dir by %5llu", dirid );
     r = duf_scan_entries_by_pathid_and_record2( pstmt, pdi, sccb->entry_file_scan_before2, sccb->entry_dir_scan_before2 );
+  }
+  else
+  {
+    DUF_TRACE( scan, 0, "scan entry_dir by %5llu - sccb->entry_dir_scan_before2 empty and sccb->entry_file_scan_before2 for %s", dirid,
+               duf_uni_scan_action_title( sccb ) );
+  }
+
 
   if ( r >= 0 && sccb && duf_config->cli.act.dirs )
   {
@@ -337,31 +339,30 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
       pdi->items.dirs++;
 
       DUF_OINV_OPENED( pdi-> );
-      DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
-      if ( duf_levinfo_deleted( pdi ) )
+      if ( duf_levinfo_item_deleted( pdi ) )
       {
         if ( sccb->node_scan_before2_deleted )
           r = sccb->node_scan_before2_deleted( pstmt, dirid, pdi );
         DUF_TRACE( deleted, 0, "DELETED" );
       }
       else if ( sccb->node_scan_before2 )
+      {
+        DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
         r = sccb->node_scan_before2( pstmt, dirid, pdi );
+      }
+      else
+      {
+        DUF_TRACE( scan, 0, "scan node before by %5llu - sccb->node_scan_before2 empty for %s", dirid, duf_uni_scan_action_title( sccb ) );
+      }
       DUF_TEST_R( r );
     }
   }
   {
     int d = duf_pdi_depth( pdi ) - 1;
 
-    if ( d >= 0 && pdi->levinfo[d].numdir == 0 && !duf_levinfo_is_leaf( pdi ) )
+    if ( d >= 0 && duf_levinfo_numdir_d( pdi, d ) == 0 && !duf_levinfo_is_leaf( pdi ) )
       duf_levinfo_set_eod( pdi );
   }
-  /* assert( pdi->depth > 0 ); */
-  /* if ( duf_levinfo_numdir_d( pdi, pdi->depth - 1 ) <= 0 ) */
-  /* {                                                       */
-  /*   DUF_PRINTF(0, "EOD for L%u", pdi->depth - 1 );        */
-  /*   pdi->levinfo[pdi->depth - 1].eod = 1;                 */
-  /* }                                                       */
-
 
   if ( r >= 0 && sccb )
   {
@@ -404,7 +405,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
     DUF_OINV_OPENED( pdi-> );
     if ( r >= 0 && duf_config->cli.act.dirs )
     {
-      if ( duf_levinfo_deleted( pdi ) )
+      if ( duf_levinfo_item_deleted( pdi ) )
       {
         if ( sccb->node_scan_middle2_deleted )
           r = sccb->node_scan_middle2_deleted( pstmt, dirid, pdi );
@@ -449,7 +450,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
       /*   DUF_ERROR( "code: %d", r ); */
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( duf_levinfo_deleted( pdi ) )
+    if ( duf_levinfo_item_deleted( pdi ) )
     {
       if ( sccb->node_scan_after2_deleted )
         r = sccb->node_scan_after2_deleted( pstmt, dirid, pdi );

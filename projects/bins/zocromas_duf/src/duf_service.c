@@ -65,7 +65,7 @@ duf_dbg_funname( duf_anyhook_t p )
     /* DUF_FUN( duf_sel_cb_items ), */
     DUF_FUN( duf_sel_cb_node ),
     DUF_FUN( duf_sel_cb_leaf ),
-    DUF_FUN( duf_sel_cb_levinfo ),
+    /* DUF_FUN( duf_sel_cb_levinfo ), */
   };
   for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )
   {
@@ -201,9 +201,9 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
   {
     if ( duf_config->cli.dbg.debug )
       DUF_PRINTF( 0, ".{nlink}" );
-    if ( pfi->st.st_nlink == 1 )
+    if ( pfi->st.st_nlink <= 1 )
       DUF_PRINTF( 0, ".%3s ", "" );
-    else
+    else 
       DUF_PRINTF( 0, ".~%-2llu ", ( unsigned long long ) pfi->st.st_nlink );
 
     ok++;
@@ -291,7 +291,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
   {
     if ( duf_config->cli.dbg.debug )
       DUF_PRINTF( 0, ".{filename}" );
-    DUF_PRINTF( 0, ". %-30s ", pfi->name );
+    DUF_PRINTF( 0, ".%-30s ", pfi->name );
     ok++;
   }
   if ( duf_config->cli.format.md5 && ( !format || format->md5 ) )

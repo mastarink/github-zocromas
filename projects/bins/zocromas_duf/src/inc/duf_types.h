@@ -182,6 +182,7 @@ typedef enum
   DUF_ERROR_CLOSE,
   DUF_ERROR_UNLINK,
   DUF_ERROR_OPTION,
+  DUF_ERROR_OPTION_VALUE,
   DUF_ERROR_SUBOPTION,
   DUF_ERROR_SCANDIR,
   DUF_ERROR_CHECK_TABLES,
@@ -197,6 +198,7 @@ typedef enum
   DUF_ERROR_NO_FIELD_OPTIONAL,
   DUF_ERROR_INSERT_MDPATH,
   DUF_ERROR_STAT,
+  DUF_ERROR_STATAT,
   DUF_ERROR_MEMORY,
   DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
@@ -230,6 +232,7 @@ typedef struct
   unsigned long long maxdirfiles;
   duf_filter_glob_t glob;
   unsigned long long md5id;
+  unsigned long long mimeid;
   unsigned long long minsize;
   unsigned long long maxsize;
   unsigned long long minsame;
@@ -272,7 +275,12 @@ typedef struct duf_dirhandle_s
   struct stat st;
 } duf_dirhandle_t;
 
-
+typedef void ( *duf_void_voidp_t ) ( void * );
+typedef struct
+{
+  void *ptr;
+  duf_void_voidp_t destructor;
+} duf_context_t;
 typedef struct
 {
   unsigned is_leaf:1;
@@ -285,7 +293,7 @@ typedef struct
   long numfile;
   char *fullpath;
   char *itemname;
-  void *context;
+  duf_context_t context;
   duf_dirhandle_t lev_dh;
 } duf_levinfo_t;
 
@@ -303,6 +311,7 @@ typedef struct
   unsigned long long seq_node;
   duf_items_t items;
   duf_ufilter_t u;
+  duf_context_t context;
 } duf_depthinfo_t;
 
 typedef struct
@@ -312,6 +321,7 @@ typedef struct
   unsigned long long truedirid;
   unsigned long long nsame;
   unsigned long long md5id;
+  unsigned long long mimeid;
   unsigned long long dataid;
   unsigned long long md5sum1;
   unsigned long long md5sum2;
@@ -332,6 +342,7 @@ typedef struct
 typedef struct
 {
   unsigned long long md5id;
+  unsigned long long mimeid;
   unsigned long long size;
   unsigned long long nduplicates;
 } md5_std_data_t;

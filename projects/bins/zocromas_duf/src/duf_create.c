@@ -50,22 +50,22 @@ duf_check_table_filedatas( void )
   int r = DUF_ERROR_CHECK_TABLES;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  /* *INDENT-OFF*  */
-  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS "
-                        " duf_filedatas (id INTEGER PRIMARY KEY autoincrement, dev INTEGER NOT NULL, inode INTEGER NOT NULL"
-                        ", mode INTEGER NOT NULL, nlink INTEGER NOT NULL"
-			", uid INTEGER NOT NULL, gid INTEGER NOT NULL"
-			", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL"
-                        ", size INTEGER NOT NULL, md5id INTEGER NOT NULL"
-                        ", atim INTEGER NOT NULL, atimn INTEGER NOT NULL"
-			", mtim INTEGER NOT NULL, mtimn INTEGER NOT NULL"
-			", ctim INTEGER NOT NULL, ctimn INTEGER NOT NULL"
-			", filetype TEXT, filestatus INTEGER"
-                        ", last_updated REAL"
-                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))"
-                        ", FOREIGN KEY(md5id) REFERENCES duf_md5(id) "
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " /*	*/
+                        " duf_filedatas (id INTEGER PRIMARY KEY autoincrement, dev INTEGER NOT NULL, inode INTEGER NOT NULL" /*	*/
+                        ", mode INTEGER NOT NULL, nlink INTEGER NOT NULL" /*	*/
+			", uid INTEGER NOT NULL, gid INTEGER NOT NULL" /*	*/
+			", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /*	*/
+                        ", size INTEGER NOT NULL" /*	*/
+			", md5id INTEGER NOT NULL" /*	*/
+			", mimeid INTEGER" /*	*/
+                        ", atim INTEGER NOT NULL, atimn INTEGER NOT NULL" /*	*/
+			", mtim INTEGER NOT NULL, mtimn INTEGER NOT NULL" /*	*/
+			", ctim INTEGER NOT NULL, ctimn INTEGER NOT NULL" /*	*/
+			", filetype TEXT, filestatus INTEGER" /*	*/
+                        ", last_updated REAL" /*	*/
+                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /*	*/
+                        ", FOREIGN KEY(md5id) REFERENCES duf_md5(id) " /*	*/
 			")", "Create duf_filedatas" );
-  /* *INDENT-ON*  */
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS" " filedatas_md5id ON duf_filedatas (md5id)", "Create duf_filedatas 1" );
   if ( r >= 0 )
@@ -115,6 +115,35 @@ duf_check_table_sizes( void )
                           " AFTER UPDATE OF size, dupcnt "
                           " ON duf_sizes FOR EACH ROW BEGIN "
                           "   UPDATE duf_sizes SET last_updated=DATETIME() WHERE id=OLD.id ;" " END", "Create duf_sizes" );
+
+
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int
+duf_check_table_mime( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  /* *INDENT-OFF*  */
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS "
+                        " duf_mime (id INTEGER PRIMARY KEY autoincrement, mime text NOT NULL, charset text NOT NULL, tail text NOT NULL"
+                        ", last_updated REAL"
+                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))"
+			")", "Create duf_mime" );
+  /* *INDENT-ON*  */
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS" " mime_uniq ON duf_mime (mime, charset)", "Create duf_mime" );
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS duf_mime_lastupdated "
+                          " AFTER UPDATE OF mime, charset, tail "
+                          " ON duf_mime FOR EACH ROW BEGIN "
+                          "   UPDATE duf_mime SET last_updated=DATETIME() WHERE id=OLD.id ;" " END", "Create duf_mime" );
 
 
 
@@ -532,6 +561,8 @@ duf_check_tables( void )
   r = duf_check_table_log(  );
   if ( r >= 0 )
     r = duf_check_table_filedatas(  );
+  if ( r >= 0 )
+    r = duf_check_table_mime(  );
   if ( r >= 0 )
     r = duf_check_table_sizes(  );
   if ( r >= 0 )

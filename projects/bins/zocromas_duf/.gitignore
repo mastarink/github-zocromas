@@ -6,3 +6,4 @@ pit
 tags
 .comments/
 .marks/
+*.trace-sql

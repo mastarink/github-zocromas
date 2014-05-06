@@ -52,14 +52,14 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 
       s = strerror_r( errno, serr, sizeof( serr ) );
       DUF_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhandleup ? pdhandleup->dfd : 555 );
-      r = DUF_ERROR_OPENAT;
+      r = DUF_ERROR_STATAT;
     }
   }
   else
   {
     DUF_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
                name ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
-    r = DUF_ERROR_OPENAT;
+    r = DUF_ERROR_STATAT;
   }
   return r;
 }
@@ -68,24 +68,25 @@ int
 duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
   int r = DUF_ERROR_PTR;
+  int updfd = 0;
 
   if ( duf_config->cli.noopenat )
     return 0;
   assert( pdhandle );
-  assert( pdhandleup );
-  assert( pdhandleup->dfd );
   assert( name );
-  if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
+  assert( *name );
+  updfd = pdhandleup ? pdhandleup->dfd : 0;
+  if ( pdhandle && name && updfd )
   {
     if ( asfile )
-      r = openat( pdhandleup->dfd, name, O_NOFOLLOW | O_RDONLY );
+      r = openat( updfd, name, O_NOFOLLOW | O_RDONLY );
     else
-      r = openat( pdhandleup->dfd, name, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+      r = openat( updfd, *name ? name : "/", O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
     if ( r > 0 )
     {
       pdhandle->dfd = r;
       r = 0;
-      pdhandle->rs = fstatat( pdhandleup->dfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+      pdhandle->rs = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
 
       duf_config->nopen++;
       DUF_TRACE( fs, 0, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
@@ -101,14 +102,13 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
       char *s;
 
       s = strerror_r( errno, serr, sizeof( serr ) );
-      DUF_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhandleup ? pdhandleup->dfd : 555 );
+      DUF_ERROR( "(%d) errno:%d openat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd );
       r = DUF_ERROR_OPENAT;
     }
   }
   else
   {
-    DUF_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
-               name ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
+    DUF_ERROR( "parameter error pdhandle:%d; name:%s; updfd:%d", pdhandle ? 1 : 0, name, updfd );
     r = DUF_ERROR_OPENAT;
   }
   return r;

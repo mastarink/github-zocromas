@@ -18,11 +18,11 @@
 /* ###################################################################### */
 #define DUF_OPT_NUM(code)  \
       if ( optarg && *optarg ) \
-        duf_config->code = duf_strtol( optarg); \
+        duf_config->code = duf_strtol( optarg, &r); \
 
 #define DUF_OPT_NUM_PLUS(code)  \
       if ( optarg && *optarg ) \
-        duf_config->code = duf_strtol( optarg); \
+        duf_config->code = duf_strtol( optarg, &r); \
       else \
         duf_config->code++;
 
@@ -38,26 +38,90 @@
 #define DUF_OPT_FLAG(code)  \
     duf_config->code = 1;
 
-long
-duf_strtol( const char *s )
+static long
+duf_strtol( const char *s, int *pr )
 {
+  int r = 0;
   long l = 0;
   char *pe = NULL;
 
   l = strtol( s, &pe, 10 );
-  if ( pe && *pe == 'k' )
-    l *= 1024;
-  else if ( pe && *pe == 'M' )
-    l *= 1024 * 1024;
-  else if ( pe && *pe == 'G' )
-    l *= 1024 * 1024 * 1024;
-  else if ( pe && *pe == 'w' )
-    l *= 2;
-  else if ( pe && *pe == 'c' )
-    l *= 1;
-  else if ( pe && *pe == 'b' )
-    l *= 512;
+  if ( pe )
+  {
+    switch ( *pe )
+    {
+    case 'G':
+      l *= 1024 * 1024 * 1024;
+      break;
+    case 'M':
+      l *= 1024 * 1024;
+      break;
+    case 'k':
+      l *= 1024;
+      break;
+    case 'w':
+      l *= 2;
+      break;
+    case 'c':
+    case '\0':
+      break;
+    case 'b':
+      l *= 512;
+      break;
+    default:
+      r = DUF_ERROR_OPTION_VALUE;
+      l = 0;
+      break;
+    }
+  }
+  else
+  {
+    r = DUF_ERROR_OPTION_VALUE;
+    l = 0;
+  }
+  if ( pr )
+    *pr = r;
   return l;
+}
+
+static int
+duf_limits( const char *s, unsigned long long *pmin, unsigned long long *pmax )
+{
+  int r = 0;
+
+  if ( s )
+  {
+    long n;
+    char c = 0;
+
+    if ( *s == '+' )
+      c = *s++;
+    else if ( *s == '-' )
+      c = *s++;
+    n = duf_strtol( s, &r );
+    if ( r >= 0 )
+    {
+      if ( c == '+' )
+      {
+        if ( pmin )
+          *pmin = n + 1;
+      }
+      else if ( c == '-' )
+      {
+        if ( pmax )
+          *pmax = n - 1;
+      }
+      else
+      {
+        if ( pmin )
+          *pmin = n;
+        if ( pmax )
+          *pmax = n;
+      }
+    }
+    DUF_ERROR( "[%c] %lld - %lld", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
+  }
+  return r;
 }
 
 int
@@ -107,6 +171,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         [DUF_FORMAT_INODE] = "inode",
         [DUF_FORMAT_MD5ID] = "md5id",
         [DUF_FORMAT_MD5] = "md5",
+        [DUF_FORMAT_MIMEID] = "mimeid",
         [DUF_FORMAT_MODE] = "mode",
         [DUF_FORMAT_MTIME] = "mtime",
         [DUF_FORMAT_NLINK] = "nlink",
@@ -178,6 +243,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
           break;
         case DUF_FORMAT_MD5ID:
           duf_config->cli.format.md5id = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_MIMEID:
+          duf_config->cli.format.mimeid = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_HUMAN:
           duf_config->cli.format.human = value == NULL ? 1 : nvalue;
@@ -331,13 +399,15 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_ALL_TRACE:
     if ( optarg && *optarg )
-      duf_config->cli.trace.sql = duf_config->cli.trace.collect = duf_config->cli.trace.dirent =
-            duf_config->cli.trace.md5 = duf_config->cli.trace.sample = duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
+      duf_config->cli.trace.sql = duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.md5 =
+            duf_config->cli.trace.mime = duf_config->cli.trace.sample = duf_config->cli.trace.deleted = duf_config->cli.trace.scan =
+            strtol( optarg, NULL, 10 );
     else
     {
       duf_config->cli.trace.sql++;
       duf_config->cli.trace.collect++;
       duf_config->cli.trace.md5++;
+      duf_config->cli.trace.mime++;
       duf_config->cli.trace.dirent++;
       duf_config->cli.trace.sample++;
       duf_config->cli.trace.deleted++;
@@ -346,10 +416,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_TRACE_NONEW:
     DUF_OPT_NUM_PLUS( cli.trace.nonew );
-    /* if ( optarg && *optarg )                                    */
-    /*   duf_config->cli.trace.nonew = strtol( optarg, NULL, 10 ); */
-    /* else                                                        */
-    /*   duf_config->cli.trace.nonew++;                            */
     break;
   case DUF_OPTION_NOOPENAT:
     DUF_OPT_FLAG( cli.noopenat );
@@ -399,6 +465,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_MD5_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.md5 );
     break;
+  case DUF_OPTION_MIME_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.mime );
+    break;
   case DUF_OPTION_COLLECT_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.collect );
     break;
@@ -410,19 +479,11 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_MIN_DBGLINE:
     DUF_OPT_NUM( cli.dbg.min_line );
-    /* if ( optarg && *optarg )                                     */
-    /*   duf_config->cli.dbg.min_line = strtol( optarg, NULL, 10 ); */
     break;
   case DUF_OPTION_MAX_DBGLINE:
     DUF_OPT_NUM( cli.dbg.max_line );
-    /* if ( optarg && *optarg )                                     */
-    /*   duf_config->cli.dbg.max_line = strtol( optarg, NULL, 10 ); */
   case DUF_OPTION_TOTALS:
     DUF_OPT_FLAG( cli.act.totals );
-    /* if ( optarg && *optarg )                               */
-    /*   duf_config->cli.totals = strtol( optarg, NULL, 10 ); */
-    /* else                                                   */
-    /*   duf_config->cli.totals++;                            */
     break;
   case DUF_OPTION_TREE_TO_DB:
     /* -ORifd5 
@@ -434,7 +495,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_ZERO_DB:
     DUF_OPT_FLAG( cli.act.create_tables );
-    /* --drop-tables --create-tables */
     duf_config->cli.act.create_tables = 1;
   case DUF_OPTION_REMOVE_DATABASE:
     DUF_OPT_FLAG( cli.act.remove_database );
@@ -444,26 +504,21 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_CREATE_TABLES:
     DUF_OPT_FLAG( cli.act.create_tables );
-    /* duf_config->cli.act.create_tables = 1; */
     break;
   case DUF_OPTION_ADD_PATH:
     DUF_OPT_FLAG( cli.act.add_path );
-    /* duf_config->cli.act.add_path = 1; */
     break;
   case DUF_OPTION_ZERO_FILEDATA:
     DUF_OPT_FLAG( cli.act.zero_filedata );
-    /* duf_config->cli.act.zero_filedata = 1; */
     break;
   case DUF_OPTION_UPDATE_FILEDATA:
     DUF_OPT_FLAG( cli.act.update_filedata );
     break;
   case DUF_OPTION_UPDATE_EXIF:
     DUF_OPT_FLAG( cli.act.update_exif );
-    /* duf_config->cli.act.update_exif = 1; */
     break;
   case DUF_OPTION_RECURSIVE:
     DUF_OPT_FLAG( u.recursive );
-    /* duf_config->u.recursive = 1; */
     break;
   case DUF_OPTION_VACUUM:
     DUF_OPT_FLAG( cli.act.vacuum );
@@ -476,13 +531,15 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_MDPATH:
     DUF_OPT_FLAG( cli.act.mdpath );
-    /* DUF_OPT_FLAG( cli.act.integrity ); */
     break;
   case DUF_OPTION_DIRENT:
     DUF_OPT_FLAG( cli.act.dirent );
     break;
   case DUF_OPTION_MD5:
     DUF_OPT_FLAG( cli.act.md5 );
+    break;
+  case DUF_OPTION_MIME:
+    DUF_OPT_FLAG( cli.act.mime );
     break;
   case DUF_OPTION_FILL:
     DUF_OPT_FLAG( cli.act.dirent );
@@ -510,38 +567,12 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPT_NUM( u.md5id );
     DUF_ERROR( "%lld", duf_config->u.md5id );
     break;
+  case DUF_OPTION_MIMEID:
+    DUF_OPT_NUM( u.mimeid );
+    DUF_ERROR( "%lld", duf_config->u.mimeid );
+    break;
   case DUF_OPTION_SIZE:
-    {
-      if ( optarg )
-      {
-        long n;
-        const char *s = NULL;
-        char c = 0;
-
-        s = optarg;
-        if ( *s == '+' )
-          c = *s++;
-        else if ( *s == '-' )
-          c = *s++;
-        n = duf_strtol( s );
-        if ( c == '+' )
-        {
-          /* duf_config->u.maxsize = 0; */
-          duf_config->u.minsize = n + 1;
-        }
-        else if ( c == '-' )
-        {
-          duf_config->u.maxsize = n - 1;
-          /* duf_config->u.minsize = 0; */
-        }
-        else
-        {
-          duf_config->u.maxsize = n;
-          duf_config->u.minsize = n;
-        }
-        DUF_ERROR( "[%c] %lld - %lld", c, duf_config->u.minsize, duf_config->u.maxsize );
-      }
-    }
+    r = duf_limits( optarg, &duf_config->u.minsize, &duf_config->u.maxsize );
     break;
   case DUF_OPTION_MAXSIZE:
     DUF_OPT_NUM( u.maxsize );
@@ -550,37 +581,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPT_NUM( u.minsize );
     break;
   case DUF_OPTION_SAME:
-    {
-      if ( optarg )
-      {
-        long n;
-        const char *s = NULL;
-        char c = 0;
-
-        s = optarg;
-        if ( *s == '+' )
-          c = *s++;
-        else if ( *s == '-' )
-          c = *s++;
-        n = duf_strtol( s );
-        if ( c == '+' )
-        {
-          /* duf_config->u.maxsame = 0; */
-          duf_config->u.minsame = n + 1;
-        }
-        else if ( c == '-' )
-        {
-          duf_config->u.maxsame = n - 1;
-          /* duf_config->u.minsame = 0; */
-        }
-        else
-        {
-          duf_config->u.maxsame = n;
-          duf_config->u.minsame = n;
-        }
-        DUF_ERROR( "[%c] %lld - %lld", c, duf_config->u.minsame, duf_config->u.maxsame );
-      }
-    }
+    r = duf_limits( optarg, &duf_config->u.minsame, &duf_config->u.maxsame );
     break;
   case DUF_OPTION_MAXSAME:
     DUF_OPT_NUM( u.maxsame );

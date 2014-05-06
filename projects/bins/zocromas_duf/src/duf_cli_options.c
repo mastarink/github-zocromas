@@ -56,6 +56,7 @@ const duf_option_t longopts[] = {
   {.name = "trace-integrity",.has_arg = optional_argument,.val = DUF_OPTION_INTEGRITY_TRACE},
   {.name = "trace-match",.has_arg = optional_argument,.val = DUF_OPTION_MATCH_TRACE},
   {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
+  {.name = "trace-mime",.has_arg = optional_argument,.val = DUF_OPTION_MIME_TRACE},
   {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
   {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
   {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
@@ -99,6 +100,7 @@ const duf_option_t longopts[] = {
   {.name = "integrity",.has_arg = no_argument,.val = DUF_OPTION_INTEGRITY},
   {.name = "dirent",.has_arg = no_argument,.val = DUF_OPTION_DIRENT},
   {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
+  {.name = "mime",.has_arg = no_argument,.val = DUF_OPTION_MIME},
   {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
   {.name = "sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE},
   {.name = "vacuum",.has_arg = no_argument,.val = DUF_OPTION_VACUUM},
@@ -112,6 +114,7 @@ const duf_option_t longopts[] = {
   {.name = "min-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MINDIRFILES},
   {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
   {.name = "md5id",.has_arg = required_argument,.val = DUF_OPTION_MD5ID},
+  {.name = "mimeid",.has_arg = required_argument,.val = DUF_OPTION_MIMEID},
   {.name = "size",.has_arg = required_argument,.val = DUF_OPTION_SIZE},
   {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
   {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
@@ -419,6 +422,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_TRACE( ptr, MDPATH, mdpath );
   DUF_RESTORE_OPTION_TRACE( ptr, DIRENT, dirent );
   DUF_RESTORE_OPTION_TRACE( ptr, MD5, md5 );
+  DUF_RESTORE_OPTION_TRACE( ptr, MIME, mime );
   DUF_RESTORE_OPTION_TRACE( ptr, COLLECT, collect );
   DUF_RESTORE_OPTION_TRACE( ptr, INTEGRITY, integrity );
   DUF_RESTORE_OPTION_TRACE( ptr, SQL, sql );
@@ -442,6 +446,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_B( ptr, MDPATH, mdpath, cli.act );
   DUF_RESTORE_OPTION_B( ptr, DIRENT, dirent, cli.act );
   DUF_RESTORE_OPTION_B( ptr, MD5, md5, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, MIME, mime, cli.act );
   DUF_RESTORE_OPTION_B( ptr, COLLECT, collect, cli.act );
   DUF_RESTORE_OPTION_B( ptr, INTEGRITY, integrity, cli.act );
   DUF_RESTORE_OPTION_B( ptr, PRINT, print, cli.act );

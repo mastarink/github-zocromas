@@ -9,6 +9,9 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
@@ -90,7 +93,7 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
   DEBUG_ENDR( r );
   return r;
 }
-/* *INDENT-OFF*  */
+
 duf_scan_callbacks_t duf_statistics_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
@@ -132,4 +135,3 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
 	" WHERE duf_paths.parentid='%llu' ",
   /* .final_sql_argv = final_sql, */
 };
-/* *INDENT-ON*  */

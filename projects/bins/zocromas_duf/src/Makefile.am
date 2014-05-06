@@ -1,5 +1,6 @@
 SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
+noinst_PROGRAMS=mtest
 
 
 zocromas_duf_SOURCES=				 \
@@ -26,10 +27,16 @@ zocromas_duf_SOURCES=				 \
 	mod_statistics_uni.c		mod_mdpath_uni.c	      \
 	mod_print_md5_uni.c		mod_integrity_uni.c	       \
 	mod_collect_openat_uni.c	mod_collect_noopenat_uni.c	\
-	mod_collect_openat_md5_uni.c	mod_collect_noopenat_md5_uni.c
+	mod_collect_openat_md5_uni.c	mod_collect_noopenat_md5_uni.c   \
+	mod_collect_mime_uni.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
-zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif
+zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif -lmagic
+
+mtest_SOURCES=duftest.c
+mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
+mtest_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif -lmagic
+
 
 # bin_PROGRAMS = gui-program cli-program
 # gui_program_SOURCES = gui.c

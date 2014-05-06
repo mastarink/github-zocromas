@@ -12,6 +12,7 @@ tab sfind mod_mdpath_uni.c
 tab sfind mod_collect_openat_md5_uni.c
 tab sfind mod_collect_noopenat_md5_uni.c
 
+tab sfind mod_collect_mime_uni.c
 
 tab sfind mod_print_md5_uni.c
 

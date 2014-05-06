@@ -200,6 +200,8 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  run --print  -Rfd /mnt/new_media/media/video/ --md5id=121549" " --format=human,inode=0,dataid=0" );
         DUF_PRINTF( 0, "  run --print  -Rfd /mnt/new_media/media/video/" " --format=human,inode=0,dataid=0,seq=0,prefix=0"
                     " --include='*Speckled*'" );
+        DUF_PRINTF( 0, "========================= as for 20140506 ===================" );
+        DUF_PRINTF( 0, "  run -O -Rdif --mime /mnt/new_media/media/photo --max-seq=2000 (%gsec)", 2.8 );
         DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;

@@ -88,9 +88,9 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       if ( duf_config->cli.dbg.debug )
       {
         DUF_PRINTF( 0, ".L%-2d", d );
-        DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth );
-        DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) );
-        /* DUF_PRINTF( 0, ".(%3ld)", ndu ); */
+        /* DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth ); */
+        /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
+        DUF_PRINTF( 0, ".(%3ld)", ndu );
         DUF_PRINTF( 0, ".%c%c%c", eodc, nduc, leafc );
         /* DUF_PRINTF( 0, ".0x%02x",  flags ); */
       }
@@ -121,14 +121,14 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
           DUF_PRINTF( 0, ".│    " );
           break;
         case 0x12:
-          DUF_PRINTF( 0, ".┣━━━ " );
+          /* DUF_PRINTF( 0, ".┣━━━ " ); */
           break;
         case 0x28:
         case 0x8:
           DUF_PRINTF( 0, ".     " );
           break;
         case 0x02:
-          DUF_PRINTF( 0, ".┃    " );
+          /* DUF_PRINTF( 0, ".┃    " ); */
           break;
         case 0x00:
           DUF_PRINTF( 0, ".     " );

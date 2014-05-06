@@ -94,12 +94,15 @@ sample_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi
 
     DUF_PRINTF( 2, "#%4llu: L%u+ id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path );
   }
-
-  if ( !pdi->levinfo[pdi->depth].context )
   {
-    char *test = mas_strdup( "BEFORE" );
+    void *ctx = duf_levinfo_context( pdi );
 
-    pdi->levinfo[pdi->depth].context = ( void * ) test;
+    if ( !ctx )
+    {
+      char *test = mas_strdup( "BEFORE" );
+
+      duf_levinfo_set_context( pdi, test );
+    }
   }
   DEBUG_ENDR( r );
   return r;
@@ -118,14 +121,14 @@ sample_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi,
 
     DUF_PRINTF( 4, "#%4llu: L%u- id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path );
   }
-  if ( !pdi->levinfo[pdi->depth].context || 0 != strcmp( ( char * ) pdi->levinfo[pdi->depth].context, "MIDDLE" ) )
-    DUF_ERROR( "sample context %s", ( char * ) pdi->levinfo[pdi->depth].context );
-  DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, pdi->levinfo[pdi->depth].context );
+  {
+    void *ctx = duf_levinfo_context( pdi );
 
-  mas_free( pdi->levinfo[pdi->depth].context );
-
-
-  pdi->levinfo[pdi->depth].context = NULL;
+    if ( !ctx || 0 != strcmp( ( char * ) ctx, "MIDDLE" ) )
+      DUF_ERROR( "sample context %s", ( char * ) ctx );
+    DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, ctx );
+    duf_levinfo_set_context( pdi, NULL );
+  }
   DEBUG_ENDR( r );
   return r;
 }
@@ -156,20 +159,21 @@ sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi
   }
   DUF_TRACE_SAMPLE( 2, "T2 dirid=%llu", dirid );
 
-
-  if ( !pdi->levinfo[pdi->depth].context || 0 != strcmp( ( char * ) pdi->levinfo[pdi->depth].context, "BEFORE" ) )
-    DUF_ERROR( "sample context %s", ( char * ) pdi->levinfo[pdi->depth].context );
-
-  mas_free( pdi->levinfo[pdi->depth].context );
-  pdi->levinfo[pdi->depth].context = NULL;
-
-  if ( !pdi->levinfo[pdi->depth].context )
   {
-    char *test = mas_strdup( "MIDDLE" );
+    void *ctx = duf_levinfo_context( pdi );
 
-    pdi->levinfo[pdi->depth].context = ( void * ) test;
+    if ( !ctx || 0 != strcmp( ( char * ) ctx, "BEFORE" ) )
+      DUF_ERROR( "sample context %s", ( char * ) ctx );
+
+    duf_levinfo_set_context( pdi, NULL );
+    ctx = duf_levinfo_context( pdi );
+    if ( !ctx )
+    {
+      char *test = mas_strdup( "MIDDLE" );
+
+      duf_levinfo_set_context( pdi, test );
+    }
   }
-
 
   DEBUG_ENDR( r );
   return r;
@@ -185,24 +189,21 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   .node_scan_after = sample_scan_node_after,
   .node_scan_middle = sample_scan_node_middle,
   .leaf_scan = sample_scan_leaf,
-  .fieldset =
-        " fd.Pathid AS dirid " /*	*/
-	" ,fd.name AS filename, fd.size AS filesize" /*	*/
-        " , uid, gid, nlink, inode, mtim AS mtime " /*	*/
-	" , dupcnt AS nsame " /*	*/
-        " , fd.id AS filenameid" /*	*/
-	" , fd.mode AS filemode, md.md5sum1, md.md5sum2 ",
-  .leaf_selector =
-        "SELECT %s FROM duf_filenames AS fn " /*	*/
-        " LEFT JOIN duf_filedatas AS fd ON (fd.dataid=fd.id) " /*	*/
-        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /*	*/
-	"    WHERE " /*	*/
+  .fieldset = " fd.Pathid AS dirid " /* */
+        " ,fd.name AS filename, fd.size AS filesize" /* */
+        " , uid, gid, nlink, inode, mtim AS mtime " /* */
+        " , dupcnt AS nsame "   /* */
+        " , fd.id AS filenameid" /* */
+        " , fd.mode AS filemode, md.md5sum1, md.md5sum2 ",
+  .leaf_selector = "SELECT %s FROM duf_filenames AS fn " /* */
+        " LEFT JOIN duf_filedatas AS fd ON (fd.dataid=fd.id) " /* */
+        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /* */
+        "    WHERE "            /* */
         /* "           fd.size >= %llu AND fd.size < %llu "             */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu))  AND " */
         " fd.Pathid='%llu' ",
-  .node_selector =
-        "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /*	*/
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /*	*/
+  .node_selector = "SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
         /* " ,(SELECT count(*) FROM duf_paths AS subpaths WHERE subpaths.parentid=duf_paths.id) AS ndirs "       */
         /* " ,(SELECT count(*) FROM duf_filenames AS sfn "                                                       */
         /* "          JOIN duf_filedatas AS sfd ON (sfn.dataid=sfd.id) "                                         */
@@ -215,9 +216,9 @@ duf_scan_callbacks_t duf_sample_callbacks = {
         /* "           WHERE sfn.Pathid=duf_paths.id) AS minsize "                                               */
         /* " ,(SELECT max(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) " */
         /* "           WHERE sfn.Pathid=duf_paths.id) AS maxsize "                                               */
-        " FROM duf_paths " /*	*/
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /*	*/
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /*	*/
-	" WHERE duf_paths.parentid='%llu' ",
+        " FROM duf_paths "      /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
+        " WHERE duf_paths.parentid='%llu' ",
   /* .final_sql_argv = final_sql, */
 };

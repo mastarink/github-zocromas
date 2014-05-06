@@ -378,7 +378,9 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   DUF_TRACE( sql, 0, "  [%s]", sql );
   r3 = sqlite3_prepare_v2( pDb, sql, strlen( sql ), pstmt, &tail );
   if ( r3 == SQLITE_ERROR )
-  {    DUF_ERROR( "can't prepare SQL:[%s] - %s", sql, sqlite3_errmsg(pDb) );}
+  {
+    DUF_ERROR( "can't prepare SQL:[%s] - %s", sql, sqlite3_errmsg( pDb ) );
+  }
   DUF_TEST_R3( r3 );
   return r3;
 }

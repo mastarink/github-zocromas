@@ -181,6 +181,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
 
   DEBUG_START(  );
+  if ( pdi->items.files > 0 )
   {
     duf_fileinfo_t fi = { 0 };
 
@@ -214,7 +215,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
     duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL );
-    DUF_PUTSL( 0 );
+    DUF_PUTS( 0, " >--------------------------" );
 
 
     /* DUF_PRINTF( 0, "------------   =%-2llu    [%10llu]  md5: %s", nsame, maxsize, dirname ); */

@@ -42,6 +42,7 @@ typedef enum
   DUF_OPTION_LONG = 1000,
 
   DUF_OPTION_FILL,
+  DUF_OPTION_MIME,
 
   DUF_OPTION_OUTPUT,
   DUF_OPTION_OUTPUT_FILE,
@@ -53,6 +54,7 @@ typedef enum
   DUF_OPTION_FS_TRACE,
   DUF_OPTION_INTEGRITY_TRACE,
   DUF_OPTION_MD5_TRACE,
+  DUF_OPTION_MIME_TRACE,
   DUF_OPTION_MDPATH_TRACE,
   DUF_OPTION_PATH_TRACE,
   DUF_OPTION_SAMPLE_TRACE,
@@ -86,6 +88,7 @@ typedef enum
   DUF_OPTION_GLOB_INCLUDE_FILES,
   DUF_OPTION_GLOB_EXCLUDE_FILES,
   DUF_OPTION_MD5ID,
+  DUF_OPTION_MIMEID,
   DUF_OPTION_SIZE,
   DUF_OPTION_MINSIZE,
   DUF_OPTION_MAXSIZE,
@@ -131,6 +134,7 @@ typedef enum
   DUF_TRACE_MODE_MAX,
   DUF_TRACE_MODE_md5,
   DUF_TRACE_MODE_mdpath,
+  DUF_TRACE_MODE_mime,
   DUF_TRACE_MODE_path,
   DUF_TRACE_MODE_sample,
   DUF_TRACE_MODE_sampupd,
@@ -151,6 +155,7 @@ typedef enum
   DUF_FORMAT_INODE,
   DUF_FORMAT_MD5,
   DUF_FORMAT_MD5ID,
+  DUF_FORMAT_MIMEID,
   DUF_FORMAT_MODE,
   DUF_FORMAT_MTIME,
   DUF_FORMAT_NLINK,
@@ -174,6 +179,7 @@ typedef struct
   unsigned inode:1;
   unsigned md5:1;
   unsigned md5id:1;
+  unsigned mimeid:1;
   unsigned mode:1;
   unsigned mtime:1;
   unsigned nlink:1;
@@ -204,6 +210,7 @@ typedef struct
   unsigned vacuum:1;
   unsigned dirent:1;
   unsigned md5:1;
+  unsigned mime:1;
   unsigned integrity:1;
   unsigned collect:1;
   unsigned print:1;
@@ -252,6 +259,7 @@ typedef struct
   unsigned integrity;
   unsigned match;
   unsigned md5;
+  unsigned mime;
   unsigned mdpath;
   unsigned nonew;
   unsigned path;
