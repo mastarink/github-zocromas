@@ -44,7 +44,7 @@ static char *final_sql[] = {
           " FROM duf_filedatas AS fd GROUP BY fd.size",
 
   "INSERT OR IGNORE INTO duf_pathtot_files (Pathid, numfiles, minsize, maxsize) " /*	*/
-        " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /*	*/
+        "SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /*	*/
 	  " FROM duf_filenames AS fn " /*	*/
 	      " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
 	" GROUP BY fn.Pathid",
@@ -59,7 +59,7 @@ static char *final_sql[] = {
           " FROM duf_filenames AS fn JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
 	     " WHERE duf_pathtot_files.Pathid=fn.Pathid)",
   "INSERT OR IGNORE INTO duf_pathtot_dirs (Pathid, numdirs) " /*	*/
-        " SELECT p.id AS Pathid, COUNT(*) AS numdirs " /*	*/
+        "SELECT p.id AS Pathid, COUNT(*) AS numdirs " /*	*/
 	  " FROM duf_paths AS p " /*	*/
             " LEFT JOIN duf_paths AS sp ON (sp.parentid=p.id) " /*	*/
 	" GROUP BY sp.parentid",

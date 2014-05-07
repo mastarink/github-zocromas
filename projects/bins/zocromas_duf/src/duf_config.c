@@ -34,7 +34,7 @@ duf_config_create( void )
       duf_config->db.dir = mas_strcat_x( duf_config->db.dir, "/../duf_db" );
     }
   }
-  duf_config->db.name = mas_strdup( "duf-default.sqlite3" );
+  duf_config->db.name = mas_strdup( "duf-default.db" );
   duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
   /* duf_config->cli.trace.fs = 1; */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );

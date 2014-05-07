@@ -125,6 +125,57 @@ duf_limits( const char *s, unsigned long long *pmin, unsigned long long *pmax )
 }
 
 int
+duf_open_special( const char *pname, char **pfilename, FILE ** pfile )
+{
+  int r = 0;
+
+  if ( pname && *pname && pfilename && pfile )
+  {
+    int overw = 0;
+    const char *mode = "w";
+    struct stat st;
+
+    if ( *pname == '@' )
+    {
+      overw = 1;
+      pname++;
+    }
+    else if ( *pname == '+' )
+    {
+      mode = "a";
+      pname++;
+    }
+    if ( *pfilename )
+      mas_free( *pfilename );
+    *pfilename = mas_strdup( pname );
+    if ( 0 == stat( pname, &st ) && ( ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) && ( !overw && *mode != 'a' ) ) )
+    {
+      DUF_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
+                 ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
+      r = DUF_ERROR_OPTION_VALUE;
+    }
+    else
+    {
+      FILE *out;
+
+      out = fopen( *pfilename, mode );
+      if ( out )
+      {
+        if ( *pfile && *pfile != stderr && *pfile != stdout )
+          fclose( *pfile );
+        *pfile = out;
+      }
+      else
+      {
+        DUF_ERROR( "can't open file %s\n", pname );
+        r = DUF_ERROR_OPTION_VALUE;
+      }
+    }
+  }
+  return r;
+}
+
+int
 duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_extended_t * extended )
 {
   int r = 0;
@@ -293,41 +344,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPT_NUM_PLUS( cli.output.level );
     break;
   case DUF_OPTION_OUTPUT_FILE:
-    if ( optarg )
-    {
-      struct stat st;
-
-      if ( duf_config->cli.output.file )
-        mas_free( duf_config->cli.output.file );
-      duf_config->cli.output.file = NULL;
-      duf_config->cli.output.file = mas_strdup( optarg );
-      if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
-      {
-        DUF_ERROR( "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
-                   ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-        exit( 4 );
-      }
-      else
-      {
-        FILE *out;
-
-        if ( duf_config->cli.output.out )
-        {
-          if ( duf_config->cli.output.out != stderr && duf_config->cli.output.out != stdout )
-            fclose( duf_config->cli.output.out );
-          duf_config->cli.output.out = NULL;
-        }
-
-        out = fopen( duf_config->cli.output.file, "w" );
-        if ( !out )
-        {
-          DUF_ERROR( "Can't open trace file %s\n", optarg );
-          exit( 4 );
-        }
-        else
-          duf_config->cli.output.out = out;
-      }
-    }
+    r = duf_open_special( optarg, &duf_config->cli.output.file, &duf_config->cli.output.out );
     break;
   case DUF_OPTION_DEBUG:
     duf_config->cli.dbg.debug = 1;
@@ -361,41 +378,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     duf_config->cli.trace.out = stdout;
     break;
   case DUF_OPTION_TRACE_FILE:
-    if ( optarg )
-    {
-      struct stat st;
-
-      if ( duf_config->cli.trace.file )
-        mas_free( duf_config->cli.trace.file );
-      duf_config->cli.trace.file = NULL;
-      duf_config->cli.trace.file = mas_strdup( optarg );
-      if ( 0 == stat( optarg, &st ) && ( !S_ISCHR( st.st_mode ) || !( st.st_mode & S_IWUSR ) ) )
-      {
-        DUF_ERROR( "Can't open trace file %s - file exists %llu / %llu chr:%d\n", optarg, ( unsigned long long ) st.st_dev,
-                   ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-        exit( 4 );
-      }
-      else
-      {
-        FILE *out;
-
-        if ( duf_config->cli.trace.out )
-        {
-          if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
-            fclose( duf_config->cli.trace.out );
-          duf_config->cli.trace.out = NULL;
-        }
-
-        out = fopen( optarg, "w" );
-        if ( !out )
-        {
-          DUF_ERROR( "Can't open trace file %s\n", optarg );
-          exit( 4 );
-        }
-        else
-          duf_config->cli.trace.out = out;
-      }
-    }
+    r = duf_open_special( optarg, &duf_config->cli.trace.file, &duf_config->cli.trace.out );
     break;
   case DUF_OPTION_ALL_TRACE:
     if ( optarg && *optarg )

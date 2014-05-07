@@ -34,7 +34,7 @@ duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthin
 {
   int r = DUF_ERROR_NO_FILE_SELECTOR;
 
-  DUF_TRACE( scan, 1, "  L%u: scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
+  DUF_TRACE( scan, 1, "  "DUF_DEPTH_PFMT": scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
 
 /* duf_scan_db_items:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
@@ -52,7 +52,7 @@ duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthin
 
 
 
-    DUF_TRACE( scan, 1, "  L%u: scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
+    DUF_TRACE( scan, 1, "  "DUF_DEPTH_PFMT": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
 
 
     DUF_OINV( pdi-> );
@@ -72,7 +72,7 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
 {
   int r = DUF_ERROR_NO_FILE_SELECTOR;
 
-  DUF_TRACE( scan, 1, "  L%u: scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
+  DUF_TRACE( scan, 1, "  "DUF_DEPTH_PFMT": scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
 
 /* duf_scan_db_items2:
  * call str_cb2 + str_cb_udata for each record by this sql with corresponding args
@@ -87,7 +87,7 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
     r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->fieldset, /* ... */
                             dirid /* for WHERE */  );
 
-    DUF_TRACE( scan, 1, "  L%u: scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
+    DUF_TRACE( scan, 1, "  "DUF_DEPTH_PFMT": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
 
     DUF_OINV( pdi-> );
     DUF_TEST_R( r );
@@ -117,7 +117,7 @@ duf_scan_files_by_dirid( unsigned long long dirid, duf_str_cb_t str_cb, duf_dept
   if ( duf_config->cli.act.files )
     r = duf_scan_files_by_di( dirid, str_cb, pdi, sccb );
   else
-    DUF_TRACE( scan, 0, "  L%u: skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
+    DUF_TRACE( scan, 0, "  "DUF_DEPTH_PFMT": skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
   return r;
 }
 
@@ -129,6 +129,6 @@ duf_scan_files_by_dirid2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_d
   if ( duf_config->cli.act.files )
     r = duf_scan_files_by_di2( dirid, str_cb2, pdi, sccb );
   else
-    DUF_TRACE( scan, 0, "  L%u: skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
+    DUF_TRACE( scan, 0, "  "DUF_DEPTH_PFMT": skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
   return r;
 }

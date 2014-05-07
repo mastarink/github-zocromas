@@ -10,6 +10,8 @@
 #include "duf_service.h"
 #include "duf_config.h"
 
+#include "duf_sql2.h"
+
 #include "duf_dbg.h"
 
 #include "duf_levinfo.h"
@@ -79,11 +81,21 @@ duf_pdi_context( duf_depthinfo_t * pdi )
   return duf_context( &pdi->context );
 }
 
-void
+int
 duf_pdi_close( duf_depthinfo_t * pdi )
 {
+  int r = 0;
+
   duf_clear_context( &pdi->context );
+  for ( int i = 0; i < pdi->num_statements; i++ )
+  {
+    r = duf_pdi_finalize( pdi, i );
+  }
+  mas_free( pdi->statements );
+  pdi->statements = NULL;
+  pdi->num_statements = 0;
   duf_levinfo_delete( pdi );
+  return r;
 }
 
 int
@@ -128,4 +140,38 @@ duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
 {
   if ( pdi )
     pdi->topdepth = pdi->depth;
+}
+
+int
+duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql )
+{
+  int r = 0;
+
+  if ( !pdi->num_statements )
+  {
+    pdi->statements = mas_malloc( sizeof( duf_sqlite_stmt_t * ) );
+  }
+  else
+  {
+    pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
+  }
+  r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements++] );
+  return r;
+}
+
+duf_sqlite_stmt_t *
+duf_pdi_statement( duf_depthinfo_t * pdi, int i )
+{
+  return pdi ? pdi->statements[i] : NULL;
+}
+
+int
+duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
+{
+  int r = 0;
+
+  if ( pdi->statements[i] )
+    r = duf_sql_finalize( pdi->statements[i] );
+  pdi->statements[i] = NULL;
+  return r;
 }

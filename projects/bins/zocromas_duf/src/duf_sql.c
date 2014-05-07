@@ -61,9 +61,9 @@ duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args 
   int r = 0;
 
 
-  DUF_TRACE( sql, 1, "[%s]", fmt );
+  DUF_TRACE( sql, 1, " [[%s]]", fmt );
   r = DUF_SQLITE_ERROR_CODE( duf_vsqlite_c( fmt, constraint_ignore, pchanges, args ) );
-  DUF_TRACE( sql, 1, "[%s] : %d", fmt, r );
+  DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
   return r;
 }
 
@@ -126,7 +126,7 @@ duf_sql_c( const char *fmt, int constraint_ignore, int *pchanges, ... )
   DEBUG_START(  );
   va_start( args, pchanges );
   r = duf_vsql_c( fmt, constraint_ignore, pchanges, args );
-  DUF_TRACE( sql, 1, "[%s] : %d", fmt, r );
+  DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
   va_end( args );
   if ( !constraint_ignore || r != DUF_SQL_CONSTRAINT )
     DUF_TEST_R( r );
@@ -143,7 +143,7 @@ duf_sql( const char *fmt, int *pchanges, ... )
   DEBUG_START(  );
   va_start( args, pchanges );
   r = duf_vsql_c( fmt, DUF_CONSTRAINT_IGNORE_NO, pchanges, args );
-  DUF_TRACE( sql, 1, "[%s] : %d", fmt, r );
+  DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
   va_end( args );
   DUF_TEST_R( r );
   DEBUG_ENDR( r );
@@ -180,6 +180,7 @@ duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_prepare( sql, pstmt ) );
+  DUF_TRACE( sql, 0, " [[%s]]", sql );
   DUF_TEST_R( r );
   return r;
 }
@@ -190,6 +191,7 @@ duf_sql_step( duf_sqlite_stmt_t * stmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_step( stmt ) );
+  DUF_TRACE( sql, 1, " [[%s]]", sqlite3_sql( stmt ) );
   DUF_TEST_RR( r );
   return r;
 }
@@ -200,6 +202,7 @@ duf_sql_finalize( duf_sqlite_stmt_t * stmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_finalize( stmt ) );
+  DUF_TRACE( sql, 0, "-" );
   DUF_TEST_R( r );
   return r;
 }
@@ -210,6 +213,7 @@ duf_sql_reset( duf_sqlite_stmt_t * stmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_reset( stmt ) );
+  DUF_TRACE( sql, 0, "-" );
   DUF_TEST_R( r );
   return r;
 }
@@ -224,6 +228,7 @@ duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long
   if ( pi > 0 )
   {
     r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
+    DUF_TRACE( sql, 0, "long long %s='%lld'", fldname, value );
     DUF_TEST_R( r );
   }
   else if ( !r )
@@ -249,6 +254,7 @@ duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long l
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
     else
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
+    DUF_TRACE( sql, 0, "long long nz %s='%lld'", fldname, value );
     DUF_TEST_R( r );
   }
   else if ( !r )
@@ -272,6 +278,7 @@ duf_sql_bind_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   {
     r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_int( stmt, pi, value ) );
     DUF_TEST_R( r );
+    DUF_TRACE( sql, 0, "int %s='%d'", fldname, value );
   }
   else if ( !r )
   {
@@ -297,6 +304,7 @@ duf_sql_bind_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
     else
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
     DUF_TEST_R( r );
+    DUF_TRACE( sql, 0, "int nz %s='%d'", fldname, value );
   }
   else if ( !r )
   {
@@ -322,6 +330,7 @@ duf_sql_bind_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char *
     else
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
     DUF_TEST_R( r );
+    DUF_TRACE( sql, 0, "string %s='%s'", fldname, value );
   }
   else if ( !r )
   {
@@ -336,7 +345,11 @@ duf_sql_bind_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char *
 int
 duf_sql_changes( void )
 {
-  return duf_sqlite_changes(  );
+  int changes = 0;
+
+  changes = duf_sqlite_changes(  );
+  DUF_TRACE( sql, 0, "changes=%d", changes );
+  return changes;
 }
 
 int
@@ -367,4 +380,32 @@ int
 duf_sql_column_count( duf_sqlite_stmt_t * stmt )
 {
   return duf_sqlite_column_count( stmt );
+}
+
+char *
+duf_sql_vmprintf( const char *fmt, va_list args )
+{
+  char *s = NULL;
+
+  s = duf_sqlite_vmprintf( fmt, args );
+  return s;
+}
+
+char *
+duf_sql_mprintf( const char *fmt, ... )
+{
+  char *s = NULL;
+  va_list args;
+
+  va_start( args, fmt );
+  s = duf_sql_vmprintf( fmt, args );
+  DUF_TRACE( sql, 0, " [[%s]]", fmt );
+  va_end( args );
+  return s;
+}
+
+void
+duf_sql_free( char *s )
+{
+  duf_sqlite_free( s );
 }

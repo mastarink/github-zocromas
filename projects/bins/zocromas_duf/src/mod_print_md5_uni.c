@@ -54,7 +54,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
    *                   ^^^^^^^        ^^^^^^^
    * */
 
-  DUF_TRACE( scan, 2, "  L%u: scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( scan, 2, "  "DUF_DEPTH_PFMT": scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
 
 
   DUF_PRINTF( 0, "%6llu:%6llu:%6llu [%10llu] file: %s", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
@@ -81,7 +81,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
    *                   ^^^^^^^        ^^^^^^^
    * */
 
-  DUF_TRACE( scan, 2, "  L%u: scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( scan, 2, "  "DUF_DEPTH_PFMT": scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
 
   {
 
@@ -254,7 +254,7 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
   .node_scan_before2 = scan_node_before2,
   .leaf_scan = scan_leaf,
   .leaf_scan2 = scan_leaf2,
-  .fieldset = " md.id AS dirid, md.id AS md5id " /* */
+  .fieldset = "md.id AS dirid, md.id AS md5id " /* */
         ", fn.Pathid as truedirid " /* */
         ", fn.name AS filename, fd.size AS filesize " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */

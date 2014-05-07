@@ -169,7 +169,7 @@ duf_scan_entry_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *p
         mas_free( charset );
         mas_free( tail );
       }
-      DUF_TRACE( scan, 2, "  L%u: scan 5    : %llu", duf_pdi_depth( pdi ), mimeid );
+      DUF_TRACE( scan, 2, "  "DUF_DEPTH_PFMT": scan 5    : %llu", duf_pdi_depth( pdi ), mimeid );
     }
   }
   DUF_TEST_R( r );
@@ -184,26 +184,26 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .leaf_scan_fd2 = duf_scan_entry_content2,
 
   /* filename for debug only */
-  .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */
+  .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
         ", fd.mode AS filemode " /* */
         ", fn.id AS filenameid " /* */
         ,
-  .leaf_selector2 = " SELECT %s FROM duf_filenames AS fn " /* */
+  .leaf_selector2 = "SELECT %s FROM duf_filenames AS fn " /* */
         " LEFT JOIN duf_filedatas AS fd ON ( fn.dataid = fd.id ) " /* */
         " WHERE "               /* */
         " fn.Pathid = :dirid ORDER BY fd.mimeid ",
-  .node_selector = " SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+  .node_selector = "SELECT pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths "      /* */
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
-        " WHERE duf_paths.parentid = '%llu' ",
-  .node_selector2 = " SELECT duf_paths.id AS dirid, duf_paths.dirname, duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+        " FROM duf_paths AS pt "      /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " WHERE pt.parentid = '%llu' ",
+  .node_selector2 = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths "      /* */
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
-        " WHERE duf_paths.parentid = :dirid ",
+        " FROM duf_paths AS pt "      /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " WHERE pt.parentid = :dirid ",
   .final_sql_argv = NULL,
 };

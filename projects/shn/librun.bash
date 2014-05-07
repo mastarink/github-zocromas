@@ -42,16 +42,32 @@ function shn_run ()
     shn_msg " run $rname $qargs "
     export MSH_SHN_BASHPID=$BASHPID
     export MSH_SHN_LAUNCHPID=$$
+    export MSH_SHN_LAUNCHDATEM=$(datem)
+    export MSH_SHN_LAUNCHDATEMT=$(datemt)
 #   shn_msg "qargs:$qargs" >&2
     shn_msg " --[`datemt`]--(\$$:$$; \$BASHPID:$BASHPID;)-- "
 #   shn_msg " ---- to run '$bin $1 ...' ----- "
 #   shn_msg ; shn_msg ; shn_msg ; shn_msg ; shn_msg
       echo ; echo ; echo
       echo ; echo ; echo
-
 #       time eval "$bin $qargs"
+        if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
+	  {
+	    echo "# `datemt` : `daten` ++++++++++++++"
+	    echo "# cat $MSH_SHN_PROJECT_DIR/${rname}.conf"
+	    cat -n $MSH_SHN_PROJECT_DIR/${rname}.conf | sed -e 's@^@# => @'
+	    echo "# $bin"
+	    echo "# run $qargs"
+	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
+	fi
 	eval "$bin $qargs"
 	retcode=$?
+        if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
+	  {
+	    echo "# retcode:$retcode"
+	    echo "# `datemt` : `daten` --------------"
+	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
+	fi
 
       echo ; echo ; echo
     shn_msg " exited with $retcode "

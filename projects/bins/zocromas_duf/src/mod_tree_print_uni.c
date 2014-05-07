@@ -378,42 +378,45 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
         "    WHERE "            /* */
         /* "           fd.size >= %llu AND fd.size < %llu "            */
         /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
-        " fn.Pathid='%llu' ",
+        " fn.Pathid='%llu' "    /* */
+        ,
   .leaf_selector2 = "SELECT %s FROM duf_filenames AS fn " /* */
         " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /* */
         " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /* */
         "    WHERE "            /* */
-        " (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) AND " /* */
-        " (:minsame IS NULL OR md.dupcnt>=:minsame) AND (:maxsame IS NULL OR md.dupcnt<=:maxsame) AND " /* */
-        " fn.Pathid=:dirid ",
-
-  .node_selector = "SELECT duf_paths.id AS dirid, duf_paths.dirname " /* */
-        ", duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+        " fn.Pathid=:dirid "    /* */
+        " AND (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) " /* */
+        " AND (:minsame IS NULL OR md.dupcnt>=:minsame) AND (:maxsame IS NULL OR md.dupcnt<=:maxsame) " /* */
+        ,
+  .node_selector = "SELECT     pt.id AS dirid, pt.dirname " /* */
+        ", pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-/*      " ,(SELECT count(*) FROM duf_paths AS sp WHERE sp.parentid=duf_paths.id) AS ndirs "
+/*      " ,(SELECT count(*) FROM duf_paths AS sp WHERE sp.parentid=pt.id) AS ndirs "
            " ,(SELECT count(*) FROM duf_filenames AS sfn "
            "          JOIN duf_filedatas AS sfd ON (sfn.dataid=sfd.id) "
            "          JOIN duf_md5 AS smd ON (sfd.md5id=smd.id) "
            "            WHERE "
-           "                  sfn.Pathid=duf_paths.id "
+           "                  sfn.Pathid=pt.id "
            "              AND sfd.size >= %llu AND sfd.size < %llu "
            "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "
            " ) AS nfiles "
            " ,(SELECT min(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) "
-           "           WHERE sfn.Pathid=duf_paths.id) AS minsize "
+           "           WHERE sfn.Pathid=pt.id) AS minsize "
            " ,(SELECT max(sfd.size) FROM duf_filedatas AS sfd JOIN duf_filenames AS sfn ON (sfn.dataid=sfd.id) "
-           "           WHERE sfn.Pathid=duf_paths.id) AS maxsize " */
-        " FROM duf_paths "      /* */
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
-        " WHERE duf_paths.parentid='%llu' ",
-  .node_selector2 = "SELECT duf_paths.id AS dirid, duf_paths.dirname" /* */
-        ", duf_paths.dirname AS dfname,  duf_paths.parentid " /* */
+           "           WHERE sfn.Pathid=pt.id) AS maxsize " */
+        " FROM duf_paths AS pt " /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " WHERE pt.parentid='%llu' " /* */
+        ,
+  .node_selector2 = "SELECT pt.id AS dirid, pt.dirname" /* */
+        ", pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths "      /* */
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=duf_paths.id) " /* */
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=duf_paths.id) " /* */
-        " WHERE duf_paths.parentid=:dirid ",
+        " FROM duf_paths AS pt " /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " WHERE pt.parentid=:dirid " /* */
+        ,
 
   /* .final_sql_argv = final_sql, */
 };

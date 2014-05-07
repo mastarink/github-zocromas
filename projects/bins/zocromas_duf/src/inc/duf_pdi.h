@@ -2,7 +2,7 @@
 #  define DUF_PDI_H
 
 int duf_pdi_init( duf_depthinfo_t * pdi, const char *path );
-void duf_pdi_close( duf_depthinfo_t * pdi );
+int duf_pdi_close( duf_depthinfo_t * pdi );
 
 void duf_clear_context( duf_context_t * pcontext );
 void *duf_context( duf_context_t * pcontext );
@@ -22,5 +22,8 @@ int duf_pdi_topdepth( const duf_depthinfo_t * pdi );
 int duf_pdi_reldepth( const duf_depthinfo_t * pdi );
 int duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d );
 
+int duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql );
+int duf_pdi_finalize( duf_depthinfo_t * pdi, int i );
+duf_sqlite_stmt_t *duf_pdi_statement( duf_depthinfo_t * pdi, int i );
 
 #endif

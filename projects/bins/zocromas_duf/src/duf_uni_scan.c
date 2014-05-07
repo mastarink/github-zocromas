@@ -380,19 +380,19 @@ duf_uni_scan_all( void )
   assert( asteps < max_asteps );
   {
     extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
-    extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) );
+    /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
 
     if ( &duf_collect_openat_callbacks && !duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
     {
       DUF_TRACE( action, 0, "prep collect ..." );
       ppscan_callbacks[asteps++] = &duf_collect_openat_callbacks;
     }
+#ifdef DUF_COMPILE_EXPIRED
     else if ( &duf_collect_noopenat_callbacks && duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
     {
       DUF_TRACE( action, 0, "prep collect ..." );
       ppscan_callbacks[asteps++] = &duf_collect_noopenat_callbacks;
     }
-#ifdef DUF_COMPILE_EXPIRED
     else if ( ( ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) ) )
     {
       DUF_TRACE( action, 0, "prep fill ..." );
@@ -405,7 +405,7 @@ duf_uni_scan_all( void )
   assert( asteps < max_asteps );
   {
     extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );
-    extern duf_scan_callbacks_t duf_collect_noopenat_md5_callbacks __attribute( ( weak ) );
+    /* extern duf_scan_callbacks_t duf_collect_noopenat_md5_callbacks __attribute( ( weak ) ); */
 
     if ( &duf_collect_openat_md5_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.md5 && ( duf_config->cli.act.collect ) )
     {
@@ -413,13 +413,13 @@ duf_uni_scan_all( void )
       DUF_TRACE( action, 0, "prep fill md5" );
       ppscan_callbacks[asteps++] = &duf_collect_openat_md5_callbacks;
     }
+#ifdef DUF_COMPILE_EXPIRED
     else if ( &duf_collect_noopenat_md5_callbacks && duf_config->cli.noopenat && duf_config->cli.act.md5
               && ( duf_config->cli.act.collect ) )
     {
       DUF_TRACE( action, 0, "prep fill md5" );
       ppscan_callbacks[asteps++] = &duf_collect_noopenat_md5_callbacks;
     }
-#ifdef DUF_COMPILE_EXPIRED
     else if ( duf_config->cli.act.md5 && ( duf_config->cli.act.collect ) )
     {
       extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;

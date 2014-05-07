@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <fnmatch.h>
 /* #include <unistd.h> */
+#include <sys/time.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -129,6 +130,7 @@ duf_filesize_match( duf_config_t * cfg, size_t filesize )
   }
   return r;
 }
+
 int
 duf_filesame_match( duf_config_t * cfg, int filesame )
 {
@@ -144,7 +146,9 @@ duf_filesame_match( duf_config_t * cfg, int filesame )
   }
   return r;
 }
-int duf_md5id_match( duf_config_t * cfg, unsigned long long md5id )
+
+int
+duf_md5id_match( duf_config_t * cfg, unsigned long long md5id )
 {
   int r;
 
@@ -266,6 +270,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_INSERT_MDPATH ),
     DUF_ERROR_NAME( DUF_ERROR_STAT ),
     DUF_ERROR_NAME( DUF_ERROR_STATAT ),
+    DUF_ERROR_NAME( DUF_ERROR_PDI_SQL ),
     DUF_ERROR_NAME( DUF_ERROR_MEMORY ),
 /*========================================*/
     DUF_ERROR_NAME( DUF_ERROR_ERROR_MAX ),
@@ -308,6 +313,8 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
             FILE * out, const char *fmt, va_list args )
 {
   int r = -1;
+  static double time0 = 0.0;
+  double timec;
 
   if ( trace_mode == DUF_TRACE_MODE_errorr )
   {
@@ -315,8 +322,10 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
   }
   else if ( level > minlevel )
   {
+    int rt;
     char uname[10], *puname;
     char rf = 0;
+    struct timeval tv;
 
     rf = *fmt;
     /* ; - no prefix, cr   */
@@ -338,6 +347,15 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
       *puname = 0;
 
       fprintf( out, "%d:%d [%-7s] %3u:%-" FN_FMT ": ", level, minlevel, uname, linid, pfuncid );
+    }
+
+    rt = gettimeofday( &tv, NULL );
+    timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+    if ( !time0 )
+      time0 = timec;
+    if ( rt >= 0 )
+    {
+      fprintf( out, "%-7.4f ", timec-time0 );
     }
     {
       r = vfprintf( out, fmt, args );

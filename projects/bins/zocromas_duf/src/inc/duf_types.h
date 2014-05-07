@@ -132,6 +132,9 @@
 #  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
 #  define DUF_ACTION_TITLE_FMT "-17s"
+#  define DUF_ACTION_TITLE_PFMT "%" DUF_ACTION_TITLE_FMT
+#  define DUF_DEPTH_FMT "-2d"
+#  define DUF_DEPTH_PFMT "L%" DUF_DEPTH_FMT
 
 #  include "duf_cli_types.h"
 
@@ -199,6 +202,7 @@ typedef enum
   DUF_ERROR_INSERT_MDPATH,
   DUF_ERROR_STAT,
   DUF_ERROR_STATAT,
+  DUF_ERROR_PDI_SQL,
   DUF_ERROR_MEMORY,
   DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
@@ -312,6 +316,8 @@ typedef struct
   duf_items_t items;
   duf_ufilter_t u;
   duf_context_t context;
+  int num_statements;
+  duf_sqlite_stmt_t **statements;
 } duf_depthinfo_t;
 
 typedef struct

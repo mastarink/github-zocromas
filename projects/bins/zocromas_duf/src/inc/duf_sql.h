@@ -7,7 +7,10 @@
 int duf_sql_open( const char *dbpath );
 int duf_sql_close( void );
 
+char *duf_sql_vmprintf( const char *fmt, va_list args );
+char *duf_sql_mprintf(const char * fmt, ... );
 
+void duf_sql_free( char * s );
 
 unsigned long long duf_sql_last_insert_rowid( void );
 

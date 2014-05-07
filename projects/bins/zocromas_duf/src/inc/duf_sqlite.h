@@ -52,7 +52,10 @@ int duf_sqlite_column_count( duf_sqlite_stmt_t * stmt );
 
 
 
+char *duf_sqlite_vmprintf( const char *fmt, va_list args );
+char *duf_sqlite_mprintf( const char *fmt, ... );
 
+void duf_sqlite_free( char * s );
 
 
 

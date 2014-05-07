@@ -15,6 +15,7 @@
 
 
 #include "duf_sql_field.h"
+#include "duf_sql.h"
 #include "duf_sql1.h"
 #include "duf_sql2.h"
 
@@ -251,7 +252,7 @@ duf_sel_cb_node( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
-          DUF_TRACE( scan, 1, "  L%u: str_cb node:     by %5llu", duf_pdi_depth( pdi ), dirid );
+          DUF_TRACE( scan, 1, "  " DUF_DEPTH_PFMT ": str_cb node:     by %5llu", duf_pdi_depth( pdi ), dirid );
 
           if ( r >= 0 )
             r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord );
@@ -331,7 +332,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
-          DUF_TRACE( scan, 1, "  L%u: str_cb2 node:     by %5llu", duf_pdi_depth( pdi ), dirid );
+          DUF_TRACE( scan, 1, "  " DUF_DEPTH_PFMT ": str_cb2 node:     by %5llu", duf_pdi_depth( pdi ), dirid );
 
           if ( r >= 0 )
           {
@@ -446,7 +447,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
     r = DUF_ERROR_UNKNOWN_NODE;
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
-  DUF_TRACE( scan, 3, "scan items [%s] sel_cb2%c; str_cb2%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-',
+  DUF_TRACE( scan, 0, "scan items [%s] sel_cb2%c; str_cb2%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-',
              str_cb2 ? '+' : '-' );
   DUF_TEST_R( r );
 
@@ -457,16 +458,12 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
     unsigned long long dirid = 0;
     dirid = va_arg( args, unsigned long long );
 
-    /* DUF_ERROR( "(%d) selector2:%s", r, selector2 ); */
     {
       char *sql;
 
-      sql = sqlite3_mprintf( selector2, fieldset );
+      sql = duf_sql_mprintf( selector2, fieldset );
       if ( r >= 0 && sql )
-      {
         r = duf_sql_prepare( sql, &pstmt );
-        /* DUF_TRACE( action, 0, "PREPARE %s;", r < 0 ? "FAIL" : "" ); */
-      }
       DUF_TEST_R( r );
 
       DUF_TRACE( scan, 2, "sql:%s dirid:%llu", sql, dirid );
@@ -544,7 +541,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
           DUF_TEST_R( r );
         }
       }
-      sqlite3_free( sql );
+      duf_sql_free( sql );
       sql = NULL;
     }
   }
@@ -579,10 +576,11 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
   {
     duf_sqlite_stmt_t *pstmt = NULL;
 
+    DUF_TRACE( scan, 0, "count items match_cb2%c;", match_cb2 ? '+' : '-' );
     {
       char *sql;
 
-      sql = sqlite3_mprintf( selector2, fieldset );
+      sql = duf_sql_mprintf( selector2, fieldset );
       if ( r >= 0 && sql )
         r = duf_sql_prepare( sql, &pstmt );
       DUF_TEST_R( r );
@@ -635,7 +633,7 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
           r = 0;
         DUF_TEST_R( r );
       }
-      sqlite3_free( sql );
+      duf_sql_free( sql );
       sql = NULL;
     }
   }
