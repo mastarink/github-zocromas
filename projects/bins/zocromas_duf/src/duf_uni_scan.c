@@ -66,6 +66,7 @@ duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_ca
   /* DUF_SFIELD( dfname ); */
   DEBUG_START(  );
 
+  DUF_TRACE( scan, 0, "+" );
   if ( r >= 0 && pdi->u.recursive && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
   {
     assert( pdi );
@@ -103,6 +104,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 
   assert( pdi );
 
+  DUF_TRACE( scan, 0, "+" );
   if ( r >= 0 )
   {
     if ( pdi->u.recursive && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
@@ -124,6 +126,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  * */
 
       DUF_OINV_OPENED( pdi-> );
+      DUF_TRACE( scan, 0, "+" );
       r = duf_scan_dirs_by_parentid2( pstmt, duf_str_cb2_uni_scan_dir, pdi, sccb );
     }
   }
@@ -207,6 +210,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
 
         if ( r >= 0 )
         {
+          DUF_TRACE( scan, 0, "+" );
           if ( sccb->scan_mode_2 )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
@@ -224,16 +228,15 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
         *pchanges += di.changes;
       duf_pdi_close( &di );
     }
-
-    if ( duf_config->cli.act.totals )
+    if ( duf_config->cli.act.summary )
     {
       DUF_PRINTF( 0, " seq:%llu", di.seq );
       if ( duf_config->u.maxseq )
         DUF_PRINTF( 0, " of %llu", duf_config->u.maxseq );
       DUF_PRINTF( 0, "\n" );
     }
-    DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": end scan ; totals:%d", duf_uni_scan_action_title( sccb ),
-               duf_config->cli.act.totals );
+    DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ),
+               duf_config->cli.act.summary );
   }
   else
   {
@@ -296,7 +299,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
       DUF_TRACE( action, 0, "nothing defined for %s", duf_uni_scan_action_title( sccb ) );
     }
 
-    if ( duf_config->cli.act.totals )
+    if ( duf_config->cli.act.summary )
     {
       DUF_PRINTF( 0, "changes:%llu", changes );
     }
@@ -366,20 +369,17 @@ duf_uni_scan_all( void )
       DUF_TRACE( action, 0, "prep collect ..." );
       ppscan_callbacks[asteps++] = &duf_collect_openat_callbacks;
     }
-#ifdef DUF_COMPILE_EXPIRED
-    else if ( &duf_collect_noopenat_callbacks && duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
-    {
-      DUF_TRACE( action, 0, "prep collect ..." );
-      ppscan_callbacks[asteps++] = &duf_collect_noopenat_callbacks;
-    }
-    else if ( ( ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) ) )
-    {
-      DUF_TRACE( action, 0, "prep fill ..." );
-      extern duf_scan_callbacks_t duf_fill_callbacks /* __attribute( ( weak ) ) */ ;
+  }
+   {
+    extern duf_scan_callbacks_t duf_filedata_callbacks __attribute( ( weak ) );
 
-      ppscan_callbacks[asteps++] = &duf_fill_callbacks;
+    /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
+
+    if ( &duf_filedata_callbacks && !duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.filedata ) )
+    {
+      DUF_TRACE( action, 0, "prep filedata ..." );
+      ppscan_callbacks[asteps++] = &duf_filedata_callbacks;
     }
-#endif
   }
   assert( asteps < max_asteps );
   {

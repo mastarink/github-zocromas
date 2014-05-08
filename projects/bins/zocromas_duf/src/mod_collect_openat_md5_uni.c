@@ -23,13 +23,13 @@
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-/* #include "duf_file.h" */
 #include "duf_path.h"
 
 #include "duf_sql_def.h"
 #include "duf_sql_field.h"
 #include "duf_sql.h"
 #include "duf_sql1.h"
+#include "duf_sql2.h"
 
 #include "duf_dbg.h"
 
@@ -38,17 +38,35 @@
 /* ###################################################################### */
 
 static unsigned long long
-duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, size_t fsize, int need_id, int *pr )
+duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char *filename, size_t fsize, int need_id, int *pr )
 {
   unsigned long long md5id = -1;
   int r = 0;
   int changes = 0;
+  const char *real_path = duf_levinfo_path( pdi );
 
   DEBUG_START(  );
   if ( md64 && md64[1] && md64[0] )
   {
     if ( !duf_config->cli.disable.insert )
-      r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+    {
+      if ( 1 )
+      {
+        static const char *sql = "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES (:md5sum1,:md5sum2)";
+
+        DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, filename );
+        DUF_SQL_START_STMT( pdi, insert_md5, sql, r, pstmt );
+        DUF_SQL_BIND_LL( md5sum1, md64[1], r, pstmt );
+        DUF_SQL_BIND_LL( md5sum2, md64[0], r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_CHANGES( changes, r, pstmt );
+        DUF_SQL_END_STMT( r, pstmt );
+      }
+      else
+      {
+        r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+      }
+    }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
@@ -90,7 +108,7 @@ static int
 duf_make_md5_uni( int fd, unsigned char *pmd )
 {
   int r = 0;
-  size_t bufsz = 1024 * 1024 * 10;
+  size_t bufsz = 1024 * 1024 * 100;
   MD5_CTX ctx;
 
   memset( &ctx, 0, sizeof( ctx ) );
@@ -152,6 +170,7 @@ duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * 
   unsigned char md[MD5_DIGEST_LENGTH];
 
   DUF_UFIELD( filedataid );
+  DUF_SFIELD( filename );
 
   memset( md, 0, sizeof( md ) );
   r = duf_make_md5_uni( fd, md );
@@ -166,7 +185,7 @@ duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * 
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
-    md5id = duf_insert_md5_uni( pdi, pmd, pst_file->st_size, 1 /*need_id */ , &r );
+    md5id = duf_insert_md5_uni( pdi, pmd, filename, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && md5id )
     {
       int changes = 0;
@@ -190,6 +209,7 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
   unsigned char md[MD5_DIGEST_LENGTH];
 
   DUF_UFIELD2( filedataid );
+  DUF_SFIELD2( filename );
 
   memset( md, 0, sizeof( md ) );
   r = duf_make_md5_uni( fd, md );
@@ -204,7 +224,7 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
-    md5id = duf_insert_md5_uni( pdi, pmd, pst_file->st_size, 1 /*need_id */ , &r );
+    md5id = duf_insert_md5_uni( pdi, pmd, filename, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && md5id )
     {
       int changes = 0;

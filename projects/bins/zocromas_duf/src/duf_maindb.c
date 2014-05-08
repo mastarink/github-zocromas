@@ -16,7 +16,8 @@
 #include "duf_service.h"
 
 #include "duf_sql.h"
-#include "duf_sql1.h"
+/* #include "duf_sql1.h" */
+#include "duf_sql2.h"
 
 #include "duf_dbg.h"
 
@@ -92,10 +93,26 @@ main_db( int argc, char **argv )
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
-      r = duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL );
+      {
+        static const char *sql = "PRAGMA synchronous = OFF";
+
+        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      }
+
+      /* r = duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL ); */
+
       DUF_TEST_R( r );
-      if ( r >= 0 )
-        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL );
+      {
+        static const char *sql = "PRAGMA encoding = 'UTF-8'";
+
+        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      }
+      /* if ( r >= 0 )                                                           */
+      /*        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ); */
       DUF_TEST_R( r );
       if ( r >= 0 )
         r = duf_action_new( argc, argv );
@@ -104,7 +121,7 @@ main_db( int argc, char **argv )
       if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
       {
         DUF_TEST_RX( r );
-        DUF_ERROR( "action FAIL ; [%s] (#%d)",  duf_error_name(r), r );
+        DUF_ERROR( "action FAIL ; [%s] (#%d)", duf_error_name( r ), r );
       }
       /* duf_action( argc, argv ); */
       {

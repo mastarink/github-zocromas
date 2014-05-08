@@ -21,9 +21,12 @@
 
 #include "duf_config.h"
 /* #include "duf_sql_def.h" */
+
 #include "duf_uni_scan.h"
 #include "duf_dir_scan.h"
-#include "duf_item_scan.h"
+#include "duf_item_scan1.h"
+#include "duf_item_scan2.h"
+
 #include "duf_path.h"
 
 /* ###################################################################### */

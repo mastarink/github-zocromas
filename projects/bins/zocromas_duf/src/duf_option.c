@@ -468,8 +468,8 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_MAX_DBGLINE:
     DUF_OPT_NUM( cli.dbg.max_line );
-  case DUF_OPTION_TOTALS:
-    DUF_OPT_FLAG( cli.act.totals );
+  case DUF_OPTION_SUMMARY:
+    DUF_OPT_FLAG( cli.act.summary );
     break;
   case DUF_OPTION_TREE_TO_DB:
     /* -ORifd5 
@@ -494,15 +494,12 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_ADD_PATH:
     DUF_OPT_FLAG( cli.act.add_path );
     break;
-  case DUF_OPTION_ZERO_FILEDATA:
-    DUF_OPT_FLAG( cli.act.zero_filedata );
+  case DUF_OPTION_FDATA:
+    DUF_OPT_FLAG( cli.act.filedata );
     break;
-  case DUF_OPTION_UPDATE_FILEDATA:
-    DUF_OPT_FLAG( cli.act.update_filedata );
-    break;
-  case DUF_OPTION_UPDATE_EXIF:
-    DUF_OPT_FLAG( cli.act.update_exif );
-    break;
+  /* case DUF_OPTION_UPDATE_EXIF:           */
+  /*   DUF_OPT_FLAG( cli.act.update_exif ); */
+  /*   break;                               */
   case DUF_OPTION_RECURSIVE:
     DUF_OPT_FLAG( u.recursive );
     break;
@@ -622,30 +619,30 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     /* case DUF_OPTION_ZERO_DUPLICATES:           */
     /*   DUF_OPT_FLAG( cli.act.zero_duplicates ); */
     /*   break;                                   */
-  case DUF_OPTION_SAME_FILES:
-    DUF_OPT_FLAG( cli.act.same_files );
-    break;
-  case DUF_OPTION_SAME_EXIF:
-    DUF_OPT_FLAG( cli.act.same_exif );
-    break;
-  case DUF_OPTION_SAME_MD5:
-    DUF_OPT_FLAG( cli.act.same_md5 );
-    break;
-  case DUF_OPTION_ADD_TO_GROUP:
-    DUF_OPT_FLAG( cli.act.to_group );
-    break;
-  case DUF_OPTION_REMOVE_FROM_GROUP:
-    DUF_OPT_FLAG( cli.act.from_group );
-    break;
+  /* case DUF_OPTION_SAME_FILES:           */
+  /*   DUF_OPT_FLAG( cli.act.same_files ); */
+  /*   break;                              */
+  /* case DUF_OPTION_SAME_EXIF:            */
+  /*   DUF_OPT_FLAG( cli.act.same_exif );  */
+  /*   break;                              */
+  /* case DUF_OPTION_SAME_MD5:             */
+  /*   DUF_OPT_FLAG( cli.act.same_md5 );   */
+  /*   break;                              */
+  /* case DUF_OPTION_ADD_TO_GROUP:         */
+  /*   DUF_OPT_FLAG( cli.act.to_group );   */
+  /*   break;                              */
+  /* case DUF_OPTION_REMOVE_FROM_GROUP:    */
+  /*   DUF_OPT_FLAG( cli.act.from_group ); */
+  /*   break;                              */
   case DUF_OPTION_GLOB_INCLUDE_FILES:
     DUF_OPT_ARG( u.glob.include_files );
     break;
   case DUF_OPTION_GLOB_EXCLUDE_FILES:
     DUF_OPT_ARG( u.glob.exclude_files );
     break;
-  case DUF_OPTION_GROUP:
-    DUF_OPT_STR( group );
-    break;
+  /* case DUF_OPTION_GROUP:  */
+  /*   DUF_OPT_STR( group ); */
+  /*   break;                */
   case DUF_OPTION_DB_DIRECTORY:
     DUF_OPT_STR( db.dir );
     break;

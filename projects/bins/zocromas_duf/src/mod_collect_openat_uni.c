@@ -1,3 +1,5 @@
+#define DUF_SQL_PDI_STMT
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +28,7 @@
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
+#include "duf_sql2.h"
 
 #include "duf_path.h"
 
@@ -47,48 +50,22 @@ duf_collect_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsig
 {
   int r = 0;
 
-  /* unsigned long long resf = 0; */
-
   DEBUG_START(  );
 
   if ( fname && dir_id )
   {
     int r = 0;
     int changes = 0;
-    char *qbase_name = NULL;
-    const char *qfname;
 
-    qbase_name = duf_single_quotes_2( fname );
-    qfname = qbase_name ? qbase_name : fname;
-    if ( !duf_config->cli.disable.insert )
-      r = duf_sql( "INSERT OR IGNORE INTO duf_filenames (Pathid, name, dataid) VALUES (%llu,'%s','%llu')",
-                   &changes, dir_id, qfname, dataid );
-    duf_pdi_reg_changes( pdi, changes );
-    DUF_TEST_R( r );
-    if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
-    {
-      /* if ( need_id )                                                                                                            */
-      /* {                                                                                                                         */
-      /*   duf_scan_callbacks_t sccb = {.fieldset = "resf" };                                                                      */
-      /*   r = duf_sql_select( duf_sel_cb_field_by_sccb, &resf, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,          */
-      /*                       &sccb (*, ( const duf_dirhandle_t * ) NULL off *) ,                                                 */
-      /*                       "SELECT id AS resf " " FROM duf_filenames " " WHERE Pathid='%lu' AND name='%lu'", dir_id, qfname ); */
-      /*   DUF_TEST_R( r );                                                                                                        */
-      /* }                                                                                                                         */
-    }
-    else if ( !r /* assume SQLITE_OK */  )
-    {
-      /* if ( need_id )                                                                     */
-      /* {                                                                                  */
-      /*   resf = duf_sql_last_insert_rowid(  );                                            */
-      /*   DUF_TRACE( collect, 1, "inserted (SQLITE_OK) Pathid=%llu:'%s'", dir_id, fname ); */
-      /* }                                                                                  */
-    }
-    else
-    {
-      DUF_ERROR( "insert filename [%s] %d", fname, r );
-    }
-    mas_free( qbase_name );
+    const char *sql = "INSERT OR IGNORE INTO duf_filenames (Pathid, name, dataid) VALUES (:pathid, :name, :dataid)";
+
+    DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
+    DUF_SQL_BIND_LL( pathid, dir_id, r, pstmt );
+    DUF_SQL_BIND_S( name, fname, r, pstmt );
+    DUF_SQL_BIND_LL( dataid, dataid, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_CHANGES( changes, r, pstmt );
+    DUF_SQL_END_STMT( r, pstmt );
   }
   else
   {

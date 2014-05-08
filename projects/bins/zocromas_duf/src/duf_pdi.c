@@ -92,8 +92,11 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   }
   mas_free( pdi->statements );
   pdi->statements = NULL;
+  mas_free( pdi->xstatements );
+  pdi->xstatements = NULL;
   pdi->num_statements = 0;
   duf_levinfo_delete( pdi );
+  /* DUF_ERROR( "clear statements" ); */
   return r;
 }
 
@@ -144,35 +147,47 @@ duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
 int
 duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex )
 {
-  int r = 0;
+  int r = -1;
 
-  if ( !pdi->num_statements )
+  if ( pdi )
   {
-    pdi->statements = mas_malloc( sizeof( duf_sqlite_stmt_t * ) );
+    if ( !pdi->num_statements )
+    {
+      pdi->statements = mas_malloc( sizeof( duf_sqlite_stmt_t * ) );
+      pdi->xstatements = mas_malloc( sizeof( int * ) );
+    }
+    else
+    {
+      pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
+      pdi->xstatements = mas_realloc( pdi->xstatements, ( pdi->num_statements + 1 ) * sizeof( int * ) );
+    }
+    if ( pindex )
+      *pindex = pdi->num_statements;
+    pdi->xstatements[pdi->num_statements] = pindex;
+    r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements] );
+    pdi->num_statements++;
   }
-  else
-  {
-    pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
-  }
-  if ( pindex )
-    *pindex = pdi->num_statements;
-  r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements++] );
   return r;
 }
 
 duf_sqlite_stmt_t *
 duf_pdi_statement( duf_depthinfo_t * pdi, int i )
 {
-  return pdi ? pdi->statements[i] : NULL;
+  return pdi && pdi->statements ? pdi->statements[i] : NULL;
 }
 
 int
 duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
 {
   int r = 0;
+  int *pi;
 
   if ( pdi->statements[i] )
     r = duf_sql_finalize( pdi->statements[i] );
+  if ( pdi->xstatements[i] )
+    pi = pdi->xstatements[i];
+  if ( pi )
+    *pi = -1;
   pdi->statements[i] = NULL;
   return r;
 }

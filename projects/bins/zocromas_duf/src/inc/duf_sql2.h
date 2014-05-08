@@ -52,6 +52,9 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 	}
 
 
+/* DUF_ERROR("%s_index: %d, %p s:%p", #name, name ## _index, (void*)pdi, (void*)(pdi?pdi->statements:NULL)); \ */
+/* DUF_ERROR("%s_index: %d", #name, name ## _index); \                                                         */
+
 #ifdef DUF_SQL_PDI_STMT
 #define DUF_SQL_START_STMT( pdi, name, sql, r, pstmt ) \
 	{ \
@@ -74,8 +77,10 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 #define DUF_SQL_END_STMT(r, pstmt) \
 	  if ( r == DUF_SQL_DONE ) \
 	      r = 0; \
-	  duf_sql_reset( pstmt ); \
-	  duf_sql_clear_bindings( pstmt ); \
+          if ( r >= 0 && !pstmt ) \
+            r = DUF_ERROR_PDI_SQL; \
+	  if (pstmt) \
+	  { duf_sql_reset( pstmt ); duf_sql_clear_bindings( pstmt ); } \
 	}
 #else
 #define DUF_SQL_END_STMT(r, pstmt) \

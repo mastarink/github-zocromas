@@ -54,8 +54,10 @@ int duf_levinfo_opened_dh( duf_depthinfo_t * pdi );
 int duf_levinfo_closeat_dh( duf_depthinfo_t * pdi );
 int duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d );
 
-int duf_levinfo_udfd( duf_depthinfo_t * pdi );
+int duf_levinfo_dfd_d( duf_depthinfo_t * pdi, int d );
 int duf_levinfo_dfd( duf_depthinfo_t * pdi );
+int duf_levinfo_dfd_up( duf_depthinfo_t * pdi );
+
 struct stat *duf_levinfo_stat( duf_depthinfo_t * pdi );
 
 

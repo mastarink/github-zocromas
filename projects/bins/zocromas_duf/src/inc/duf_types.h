@@ -378,6 +378,7 @@ typedef struct
   duf_context_t context;
   int num_statements;
   duf_sqlite_stmt_t **statements;
+  int **xstatements;
 } duf_depthinfo_t;
 
 typedef struct

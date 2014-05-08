@@ -130,7 +130,7 @@ duf_check_table_mime( void )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   /* *INDENT-OFF*  */
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS "
-                        " duf_mime (id INTEGER PRIMARY KEY autoincrement, mime text NOT NULL, charset text NOT NULL, tail text NOT NULL"
+                        " duf_mime (id INTEGER PRIMARY KEY autoincrement, mime text NOT NULL, charset text NOT NULL, tail text"
                         ", last_updated REAL"
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))"
 			")", "Create duf_mime" );

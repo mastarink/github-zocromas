@@ -24,6 +24,7 @@
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
+#include "duf_sql2.h"
 
 #include "duf_dbg.h"
 
@@ -38,31 +39,45 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
     int changes = 0;
 
     DEBUG_START(  );
-    if ( !duf_config->cli.disable.insert )
-      r = duf_sql( "INSERT OR IGNORE INTO duf_mime ( mime, charset, tail) VALUES ('%s', '%s', '%s')", &changes, mime, chs, tail );
-    duf_pdi_reg_changes( pdi, changes );
-    if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+    if ( need_id )
     {
-      if ( need_id )
+      const char *sql = "SELECT id AS mimeid FROM duf_mime WHERE mime=:mime AND charset=:charset";
+
+      DUF_SQL_START_STMT( pdi, select_mime, sql, r, pstmt );
+      DUF_SQL_BIND_S( mime, mime, r, pstmt );
+      DUF_SQL_BIND_S( charset, chs, r, pstmt );
+      /* DUF_SQL_BIND_S( tail, tail, r, pstmt ); */
+      DUF_SQL_STEP( r, pstmt );
+      if ( r == DUF_SQL_ROW )
       {
-        duf_scan_callbacks_t sccb = {.fieldset = "mimeid" };
-        r = duf_sql_select( duf_sel_cb_field_by_sccb, &mimeid, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL, &sccb,
-                            "SELECT id AS mimeid FROM duf_mime WHERE mime='%s' AND charset='%s'", mime, chs );
+        DUF_TRACE( current, 0, "<selected>" );
+        mimeid = duf_sql_column_long_long( pstmt, 0 );
+        r = 0;
       }
-      DUF_TRACE( mime, 0, "inserted before (SQLITE_OK) mimeid=%llu / %llu", mimeid, duf_sql_last_insert_rowid(  ) );
+      if ( r == DUF_SQL_DONE )
+        r = 0;
+      DUF_TEST_R( r );
+      DUF_SQL_END_STMT( r, pstmt );
     }
-    else if ( !r )
+
+    if ( ( !mimeid || !need_id ) && !duf_config->cli.disable.insert )
     {
+      const char *sql = "INSERT OR IGNORE INTO duf_mime ( mime, charset, tail ) VALUES (:mime, :charset, :tail)";
+
+      DUF_SQL_START_STMT( pdi, insert_mime, sql, r, pstmt );
+      DUF_SQL_BIND_S( mime, mime, r, pstmt );
+      DUF_SQL_BIND_S( charset, chs, r, pstmt );
+      DUF_SQL_BIND_S( tail, tail, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      /* DUF_TEST_R(r); */
+      DUF_SQL_CHANGES( changes, r, pstmt );
       if ( need_id )
       {
         mimeid = duf_sql_last_insert_rowid(  );
         DUF_TRACE( mime, 0, "inserted now (SQLITE_OK) mimeid=%llu", mimeid );
+        assert( mimeid );
       }
-    }
-    else
-    {
-      DUF_ERROR( "insert mime %d [%s]", r, duf_error_name( r ) );
-      DUF_TEST_R( r );
+      DUF_SQL_END_STMT( r, pstmt );
     }
     DUF_TEST_R( r );
   }

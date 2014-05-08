@@ -77,6 +77,7 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  --drop-tables		DANGEROUS!" );
         DUF_PRINTF( 0, "  --remove-database		DANGEROUS!" );
         DUF_PRINTF( 0, "  --create-tables" );
+        DUF_PRINTF( 0, "  -V, --vacuum		vacuum" );
         DUF_PRINTF( 0, "Manipulations --------------" );
         DUF_PRINTF( 0, "  --add-path" );
         DUF_PRINTF( 0, "  -R, --recursive		recursive" );
@@ -151,20 +152,20 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "List files recursively from db" );
         DUF_PRINTF( 0, "  run  --db-name=test`datem`.db  --uni-scan   --print -R -d  --files /home/mastar/a/down/google-chrome/ " );
         DUF_PRINTF( 0, "=============================================" );
-        DUF_PRINTF( 0, "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --totals" );
+        DUF_PRINTF( 0, "  run --db-name=test.db  -AAPB   /mnt/new_media/media/down/ --summary" );
         DUF_PRINTF( 0, "    same as prev:" );
         DUF_PRINTF( 0, "  run --db-name=test.db --trace-action=2 --create-tables --uni-scan --recursive --collect --dirent"
-                    " --files --dirs --md5 /mnt/new_media/media/down/ --totals" );
+                    " --files --dirs --md5 /mnt/new_media/media/down/ --summary" );
         DUF_PRINTF( 0, "=============================================" );
         DUF_PRINTF( 0,
                     "  run  --db-name=test20140416.db  --uni-scan --print  --md5 --noopenat -Rdf --max-dirs=300  --min-dirfiles=5 --min-size=10" );
         DUF_PRINTF( 0, "=============================================" );
 
-        DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --totals"
+        DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6 --summary"
                     " --format=filesize,seq,filename,md5" );
         DUF_PRINTF( 0, "  run  --db-name=test20140416.db  --uni-scan   --print  -Rdf --max-seq=26 --max-depth=6"
-                    " --totals --format=filesize,seq,filename,md5 --tree" );
-        DUF_PRINTF( 0, "  run  --trace-any=0  --db-name=test20140416.db  --uni-scan   --print  -df --max-seq=76 --max-depth=6 --totals"
+                    " --summary --format=filesize,seq,filename,md5 --tree" );
+        DUF_PRINTF( 0, "  run  --trace-any=0  --db-name=test20140416.db  --uni-scan   --print  -df --max-seq=76 --max-depth=6 --summary"
                     " --format=filesize,seq,filename,nlink,mtime,mode,gid,uid /mnt/new_media/media/down" );
         DUF_PRINTF( 0, "=============================================" );
         DUF_PRINTF( 0, "  run  --db-name=test$$.db  --uni-scan --print  --md5 --noopenat  -Rdf --max-dirs=300 --max-items=200 "
@@ -183,7 +184,7 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  run --sample=2 -Rdf /home/mastar/a/down/////  --printf --max-seq=2000" );
         DUF_PRINTF( 0, "========================= as for 20140501 ===================" );
         DUF_PRINTF( 0, "  run -PRdifE5 /home/mastar/a/down/chromium/ -SSS" );
-        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rd --totals  --tree   /home/mastar/a/down/" );
+        DUF_PRINTF( 0, "  run  --uni-scan   --print  -Rd --summary  --tree   /home/mastar/a/down/" );
         DUF_PRINTF( 0, "  run  --uni-scan   --print  --md5  -Rdf --max-seq=1000" );
         DUF_PRINTF( 0, "========================= as for 20140504 ===================" );
         DUF_PRINTF( 0, "= full - cycle collect in one command =======================" );

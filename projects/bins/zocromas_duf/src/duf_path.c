@@ -53,145 +53,6 @@ duf_join_path( const char *path, const char *fname )
   return fpath;
 }
 
-#ifdef DUF_COMPILE_EXPIRED
-typedef struct
-{
-  char *name;
-  unsigned long long parentid;
-} name_parid_udata_t;
-
-/* will be static! */
-/* 
- * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
- * */
-int
-duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
-                       duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb_unused )
-{
-  int r = 0;
-  name_parid_udata_t *pud;
-
-  DEBUG_START(  );
-  pud = ( name_parid_udata_t * ) sel_cb_udata;
-  if ( precord->nrow == 0 )
-  {
-    DUF_UFIELD( parentid );
-    DUF_SFIELD( dirname );
-    pud->parentid = parentid;
-    /* pud->parentid = duf_sql_ull_by_name( "parentid", precord, 0 ); */
-
-
-    pud->name = mas_strdup( dirname );
-
-
-    /* pud->parentid = strtoll( precord->presult[0], NULL, 10 ); */
-    /* pud->name = mas_strdup( precord->presult[1] );            */
-  }
-  /* fprintf( stderr, "pud a:%d nrow:%d\n", precord->presult ? 1 : 0, nrow ); */
-  /* fprintf( stderr, "pud b: %s :: %s\n", precord->presult[0], precord->presult[1] ); */
-  DEBUG_END(  );
-  return r;
-}
-
-char *
-duf_pathid_to_path_dh( unsigned long long dirid, duf_dirhandle_t * pdh_pathid, const duf_depthinfo_t * pdi, int *pr )
-{
-  char *path = NULL;
-  int r = 0;
-  int openat = !duf_config->cli.noopenat && pdh_pathid;
-
-  int test_o = duf_config->nopen;
-  int test_c = duf_config->nclose;
-
-  DEBUG_START(  );
-  duf_check_dh( "Before" );
-
-
-  if ( dirid == 0 )
-  {
-    duf_dirhandle_t dh = {.dfd = 0 };
-    path = NULL;
-    if ( openat )
-    {
-      dh.dirid = dirid;
-      r = duf_open_dh( &dh, "/" );
-      DUF_TEST_R( r );
-      if ( r >= 0 )
-        *pdh_pathid = dh;
-      r = 0;
-    }
-  }
-  else
-  {
-    name_parid_udata_t pathdef = {.name = NULL,.parentid = 0 };
-
-/* get parentid for dirid */
-    r = duf_sql_select( duf_sel_cb_name_parid, &pathdef, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                        ( duf_scan_callbacks_t * ) NULL /*  sccb */ ,
-                        "SELECT parentid, dirname " " FROM duf_paths WHERE id=%llu", dirid );
-    DUF_TEST_R( r );
-    if ( r >= 0 )
-    {
-      if ( pathdef.name )
-      {
-        if ( pathdef.parentid >= 0 )
-        {
-          char *parent = NULL;
-          duf_dirhandle_t dhu = {.dfd = 0 };
-          duf_dirhandle_t dh = {.dfd = 0 };
-          duf_dirhandle_t *pdhu_pathid = NULL;
-
-          if ( openat )
-            pdhu_pathid = &dhu;
-
-          parent = duf_pathid_to_path_dh( pathdef.parentid, pdhu_pathid, pdi, &r ); /* open!! */
-          DUF_TEST_R( r );
-          path = duf_join_path( parent, pathdef.name );
-          if ( r >= 0 && openat )
-          {
-            r = duf_openat_dh( &dh, pdhu_pathid, pathdef.name, 0 /* asfile */  );
-            DUF_TEST_R( r );
-            if ( r >= 0 )
-              *pdh_pathid = dh;
-            r = 0;
-          }
-          if ( openat && pdhu_pathid && pdhu_pathid->dfd )
-            duf_close_dh( pdhu_pathid );
-          if ( parent )
-            mas_free( parent );
-        }
-      }
-    }
-    if ( pathdef.name )
-      mas_free( pathdef.name );
-    DEBUG_ENDS( path );
-  }
-  if ( pr )
-    *pr = r;
-  {
-    int dopen = ( duf_config->nopen - duf_config->nclose ) - ( test_o - test_c );
-
-    assert( dopen == 1 || !openat );
-  }
-  duf_check_dh( "After" );
-  return path;
-}
-
-char *
-duf_pathid_to_path_s( unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
-{
-  int r = 0;
-  char *s = NULL;
-
-  s = duf_pathid_to_path_dh( dirid, ( duf_dirhandle_t * ) NULL, pdi, &r );
-  DUF_TEST_R( r );
-  if ( pr )
-    *pr = r;
-  return s;
-}
-
-#endif
-
 
 static char *
 duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
@@ -284,7 +145,6 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
 
   DEBUG_START(  );
   /* unsigned char c1 = ( unsigned char ) ( dename ? *dename : 0 ); */
-
   if ( dename /* && dev_id && dir_ino */  )
   {
     int changes = 0;
@@ -293,14 +153,29 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
     {
       static const char *sql =
             "INSERT OR IGNORE INTO duf_paths ( dev, inode, dirname, parentid) VALUES (:dev, :inode, :dirname, :parentid )";
-      DUF_SQL_START_STMT( pdi, select_path, sql, r, pstmt );
-      DUF_SQL_BIND_LL( dev, dev_id, r, pstmt );
-      DUF_SQL_BIND_LL( inode, dir_ino, r, pstmt );
-      DUF_SQL_BIND_S( dirname, dename, r, pstmt );
-      DUF_SQL_BIND_LL( parentid, parentid, r, pstmt );
-      DUF_SQL_STEP( r, pstmt );
-      DUF_SQL_CHANGES( changes, r, pstmt );
-      DUF_SQL_END_STMT( r, pstmt );
+      if ( pdi )
+      {
+        DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
+        /* DUF_ERROR( "insert_path_index:%d", insert_path_index ); */
+        DUF_SQL_BIND_LL( dev, dev_id, r, pstmt );
+        DUF_SQL_BIND_LL( inode, dir_ino, r, pstmt );
+        DUF_SQL_BIND_S( dirname, dename, r, pstmt );
+        DUF_SQL_BIND_LL( parentid, parentid, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_CHANGES( changes, r, pstmt );
+        DUF_SQL_END_STMT( r, pstmt );
+      }
+      else
+      {
+        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+        DUF_SQL_BIND_LL( dev, dev_id, r, pstmt );
+        DUF_SQL_BIND_LL( inode, dir_ino, r, pstmt );
+        DUF_SQL_BIND_S( dirname, dename, r, pstmt );
+        DUF_SQL_BIND_LL( parentid, parentid, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      }
     }
     /* sql = NULL; */
     DUF_TRACE( current, 0, "<changes> : %d", changes );
@@ -316,35 +191,70 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
               " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " /*      */
               " WHERE duf_paths.parentid=:dirid AND dirname=:dirname";
 
-        DUF_SQL_START_STMT( pdi, select_path, sql, r, pstmt );
-        DUF_SQL_BIND_LL( dirid, parentid, r, pstmt );
-        DUF_SQL_BIND_S( dirname, dename, r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
-
-        if ( r == DUF_SQL_ROW )
+        if ( pdi )
         {
-          DUF_TRACE( current, 0, "<selected>" );
-          dirid = duf_sql_column_long_long( pstmt, 0 );
-          if ( need_id && !dirid )
+          DUF_SQL_START_STMT( pdi, select_path, sql, r, pstmt );
+          /* DUF_ERROR( "select_path_index:%d", select_path_index ); */
+          DUF_SQL_BIND_LL( dirid, parentid, r, pstmt );
+          DUF_SQL_BIND_S( dirname, dename, r, pstmt );
+          DUF_SQL_STEP( r, pstmt );
+          if ( r == DUF_SQL_ROW )
           {
-            DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+            DUF_TRACE( current, 0, "<selected>" );
+            dirid = duf_sql_column_long_long( pstmt, 0 );
+            if ( need_id && !dirid )
+            {
+              DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+            }
+            assert( !need_id || dirid );
+            if ( pli )
+            {
+              pli->dirid = dirid;
+              /* pli->itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) ); */
+              pli->numfile = duf_sql_column_long_long( pstmt, 2 );
+              pli->numdir = duf_sql_column_long_long( pstmt, 3 );
+            }
+            r = 0;
           }
-          assert( !need_id || dirid );
-          if ( pli )
+          else
           {
-            pli->dirid = dirid;
-            pli->itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) );
-            pli->numfile = duf_sql_column_long_long( pstmt, 2 );
-            pli->numdir = duf_sql_column_long_long( pstmt, 3 );
+            DUF_TEST_R( r );
+            DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
           }
-          r = 0;
+          DUF_SQL_END_STMT( r, pstmt );
         }
         else
         {
-          DUF_TEST_R( r );
-          DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+          DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+          DUF_SQL_BIND_LL( dirid, parentid, r, pstmt );
+          DUF_SQL_BIND_S( dirname, dename, r, pstmt );
+          DUF_SQL_STEP( r, pstmt );
+
+          if ( r == DUF_SQL_ROW )
+          {
+            DUF_TRACE( current, 0, "<selected>" );
+            dirid = duf_sql_column_long_long( pstmt, 0 );
+            if ( need_id && !dirid )
+            {
+              DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+            }
+            assert( !need_id || dirid );
+            if ( pli )
+            {
+              pli->dirid = dirid;
+              pli->itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) );
+              pli->numfile = duf_sql_column_long_long( pstmt, 2 );
+              pli->numdir = duf_sql_column_long_long( pstmt, 3 );
+            }
+            r = 0;
+          }
+          else
+          {
+            DUF_TEST_R( r );
+            DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+          }
+          DUF_SQL_END_STMT_NOPDI( r, pstmt );
         }
-        DUF_SQL_END_STMT( r, pstmt );
         DUF_TEST_R( r );
         DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }

@@ -11,7 +11,7 @@
 #include "duf_service.h"
 
 #include "duf_sql.h"
-#include "duf_sql1.h"
+/* #include "duf_sql1.h" */
 #include "duf_sql2.h"
 
 #include "duf_create.h"
@@ -50,7 +50,14 @@ duf_action_new( int argc, char **argv )
     r = duf_clear_tables(  );
   DUF_TEST_R( r );
   if ( r >= 0 && duf_config->cli.act.vacuum )
-    r = duf_sql_exec( "VACUUM", ( int * ) NULL );
+  {
+    static const char *sql = "VACUUM";
+
+    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
+  }
+  /* r = duf_sql_exec( "VACUUM", ( int * ) NULL ); */
   DUF_TEST_R( r );
 /* --create-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.create_tables )
@@ -67,8 +74,22 @@ duf_action_new( int argc, char **argv )
     DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
     qsargv1 = duf_single_quotes_2( sargv1 );
     qsargv2 = duf_single_quotes_2( sargv2 );
-    r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES ('%s', '%s', '%s')", &changes,
-                 qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );
+    /* if ( 1 ) */
+    {
+      static const char *sql = "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES (:args, :restored_args, '')";
+
+      DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+      DUF_SQL_BIND_S( args, sargv1, r, pstmt );
+      DUF_SQL_BIND_S( args, sargv2, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    }
+    /* else                                                                                                           */
+    /* {                                                                                                              */
+    /*   r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES ('%s', '%s', '%s')", &changes, */
+    /*                qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );                                   */
+    /* }                                                                                                              */
     DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
     mas_free( qsargv2 );
     mas_free( qsargv1 );
@@ -156,7 +177,7 @@ duf_action_new( int argc, char **argv )
               {
                 char *j;
 
-                j = mas_argv_string( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0);
+                j = mas_argv_string( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0 );
                 /* DUF_TRACE( action, 0, "%d GLOB INCLUDE %s", duf_config->u.glob.include_files.argc, j ); */
                 if ( r >= 0 && duf_config->u.glob.include_files.argc )
                   r = duf_sql_bind_string( pstmt, ":glob_include", j );

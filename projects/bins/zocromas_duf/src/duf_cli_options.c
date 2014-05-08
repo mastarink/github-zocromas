@@ -75,7 +75,7 @@ const duf_option_t longopts[] = {
   {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
   /* --------------- */
   {.name = "noopenat",.has_arg = optional_argument,.val = DUF_OPTION_NOOPENAT},
-  {.name = "totals",.has_arg = no_argument,.val = DUF_OPTION_TOTALS},
+  {.name = "summary",.has_arg = no_argument,.val = DUF_OPTION_SUMMARY},
   /* --------------- */
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
   {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
@@ -87,7 +87,6 @@ const duf_option_t longopts[] = {
   {.name = "tree-to-db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
 
   /* {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES}, */
-  {.name = "zero-filedata",.has_arg = no_argument,.val = DUF_OPTION_ZERO_FILEDATA},
 
   {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
   /* {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH}, */
@@ -95,7 +94,7 @@ const duf_option_t longopts[] = {
   /* {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES}, */
   /* {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH}, */
   /* {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE}, */
-  {.name = "update-filedata",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_FILEDATA},
+  {.name = "filedata",.has_arg = no_argument,.val = DUF_OPTION_FDATA},
   {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
   /* --------------- */
@@ -107,6 +106,7 @@ const duf_option_t longopts[] = {
   {.name = "mime",.has_arg = no_argument,.val = DUF_OPTION_MIME},
   {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
   {.name = "sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE},
+  {.name = "sampupd",.has_arg = optional_argument,.val = DUF_OPTION_SAMPUPD},
   {.name = "vacuum",.has_arg = no_argument,.val = DUF_OPTION_VACUUM},
   /* --------------- */
   {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
@@ -135,15 +135,15 @@ const duf_option_t longopts[] = {
   /* {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},   */
   /* {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES}, */
   /* {.name = "print-duplicates",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DUPLICATES}, */
-  {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES},
-  {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},
-  {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},
+  /* {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES}, */
+  /* {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},   */
+  /* {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},     */
   {.name = "include",.has_arg = required_argument,.val = DUF_OPTION_GLOB_INCLUDE_FILES},
   {.name = "exclude",.has_arg = required_argument,.val = DUF_OPTION_GLOB_EXCLUDE_FILES},
-  {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP},
+  /* {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP}, */
   /* {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT}, */
-  {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP},
-  {.name = "remove-from-group",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_FROM_GROUP},
+  /* {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP}, */
+  /* {.name = "remove-from-group",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_FROM_GROUP}, */
   {.name = NULL,.has_arg = no_argument,.val = DUF_OPTION_NONE},
 };
 
@@ -434,7 +434,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
 
   DUF_RESTORE_OPTION( ptr, MIN_DBGLINE, min_line, cli.dbg );
   DUF_RESTORE_OPTION( ptr, MAX_DBGLINE, max_line, cli.dbg );
-  DUF_RESTORE_OPTION_B( ptr, TOTALS, totals, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, SUMMARY, summary, cli.act );
   /* DUF_OPTION_TREE_TO_DB: */
   /* DUF_OPTION_ZERO_DB: */
 

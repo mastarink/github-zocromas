@@ -1,13 +1,12 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
-#  define DUF_OPTIONS_SHORT "hxD:N:RvAeSIQTVCfd5EiMtZBPOGgXpm"
+#  define DUF_OPTIONS_SHORT "hxN:RvAeSIQTVCfd5EiMuZBPOGgXpmD"
 typedef enum
 {
   DUF_OPTION_NONE,
   DUF_OPTION_HELP = 'h',
   DUF_OPTION_EXAMPLES = 'x',
-  DUF_OPTION_DB_DIRECTORY = 'D',
   DUF_OPTION_DB_NAME = 'N',
   DUF_OPTION_RECURSIVE = 'R',
   DUF_OPTION_VERBOSE = 'v',
@@ -26,9 +25,10 @@ typedef enum
   DUF_OPTION_DIRS = 'd',
   DUF_OPTION_MD5 = '5',
   DUF_OPTION_DIRENT = 'E',
+  DUF_OPTION_FDATA = 'D',
   DUF_OPTION_COLLECT = 'i',
   DUF_OPTION_MEMUSAGE = 'M',
-  DUF_OPTION_TOTALS = 't',
+  DUF_OPTION_SUMMARY = 'u',
   DUF_OPTION_ZERO_DB = 'Z',
   DUF_OPTION_TREE_TO_DB = 'B',
   DUF_OPTION_ADD_PATH = 'P',
@@ -40,6 +40,7 @@ typedef enum
   DUF_OPTION_MATCH_TRACE = 'm',
 
   DUF_OPTION_LONG = 1000,
+  DUF_OPTION_DB_DIRECTORY,
 
   DUF_OPTION_FILL,
   DUF_OPTION_MIME,
@@ -47,7 +48,7 @@ typedef enum
   DUF_OPTION_OUTPUT,
   DUF_OPTION_OUTPUT_FILE,
   DUF_OPTION_FORMAT,
-  
+
   DUF_OPTION_DISABLE_INSERT,
   DUF_OPTION_DISABLE_UPDATE,
 
@@ -84,8 +85,8 @@ typedef enum
   /* DUF_OPTION_UPDATE_DUPLICATES, */
   /* DUF_OPTION_UPDATE_MDPATH, */
   /* DUF_OPTION_UPDATE_MDPATH_SELECTIVE, */
-  DUF_OPTION_UPDATE_FILEDATA,
-  DUF_OPTION_ZERO_FILEDATA,
+  /* DUF_OPTION_UPDATE_FILEDATA, */
+  /* DUF_OPTION_ZERO_FILEDATA, */
   DUF_OPTION_UPDATE_EXIF,
   DUF_OPTION_MINDIRFILES,
   DUF_OPTION_MAXDIRFILES,
@@ -111,13 +112,13 @@ typedef enum
   /* DUF_OPTION_PRINT_DIRS, */
   /* DUF_OPTION_PRINT_FILES, */
   /* DUF_OPTION_PRINT_DUPLICATES, */
-  DUF_OPTION_SAME_FILES,
-  DUF_OPTION_SAME_EXIF,
-  DUF_OPTION_SAME_MD5,
-  DUF_OPTION_GROUP,
+  /* DUF_OPTION_SAME_FILES, */
+  /* DUF_OPTION_SAME_EXIF, */
+  /* DUF_OPTION_SAME_MD5, */
+  /* DUF_OPTION_GROUP, */
   /* DUF_OPTION_LIMIT, */
-  DUF_OPTION_ADD_TO_GROUP,
-  DUF_OPTION_REMOVE_FROM_GROUP,
+  /* DUF_OPTION_ADD_TO_GROUP, */
+  /* DUF_OPTION_REMOVE_FROM_GROUP, */
   DUF_OPTION_MAX_LONG,
 } duf_option_code_t;
 
@@ -209,32 +210,36 @@ typedef struct
   unsigned update_duplicates:1;
   /* unsigned update_mdpath:1; */
   /* unsigned update_mdpath_selective:1; */
-  unsigned update_filedata:1;
-  unsigned zero_filedata:1;
-  unsigned update_exif:1;
   unsigned mdpath:1;
   unsigned vacuum:1;
+  
+  unsigned dirs:1;
+  unsigned files:1;
+
   unsigned dirent:1;
+  unsigned filedata:1;
   unsigned md5:1;
   unsigned mime:1;
+  unsigned exif:1;
+
   unsigned integrity:1;
   unsigned collect:1;
+  
   unsigned print:1;
   unsigned tree:1;
-  unsigned files:1;
-  unsigned dirs:1;
+
   unsigned uni_scan:1;
   /* unsigned print_paths:1; */
   /* unsigned print_dirs:1; */
   /* unsigned print_files:1; */
-  unsigned print_duplicates:1;
+  /* unsigned print_duplicates:1; */
   /* (* unsigned zero_duplicates:1; *) */
-  unsigned same_files:1;
-  unsigned same_md5:1;
-  unsigned same_exif:1;
-  unsigned to_group:1;
-  unsigned from_group:1;
-  unsigned totals;
+  /* unsigned same_files:1; */
+  /* unsigned same_md5:1; */
+  /* unsigned same_exif:1; */
+  /* unsigned to_group:1; */
+  /* unsigned from_group:1; */
+  unsigned summary:1;
   unsigned sample;
   unsigned sampupd;
 } duf_config_cli_actions_t;

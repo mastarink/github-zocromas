@@ -25,14 +25,14 @@
 #include "duf_dbg.h"
 
 /* ###################################################################### */
-/* #include "duf_sampupd_uni.h" */
+/* #include "duf_filedata_uni.h" */
 /* ###################################################################### */
 
 
 
 /* callback of type duf_scan_hook_file_t */
 static int
-sampupd_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
+filedata_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -45,7 +45,7 @@ sampupd_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 }
 
 static int
-sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+filedata_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   int r = 0;
   int fd;
@@ -84,7 +84,7 @@ sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
  * this is callback of type: duf_scan_hook_dir_t
  * */
 static int
-sampupd_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
+filedata_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
   struct stat *st;
@@ -102,7 +102,7 @@ sampupd_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pd
 }
 
 static int
-sampupd_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+filedata_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -119,7 +119,7 @@ sampupd_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_
  * this is callback of type: duf_scan_hook_dir_t
  * */
 static int
-sampupd_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
+filedata_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -133,7 +133,7 @@ sampupd_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi
 }
 
 static int
-sampupd_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+filedata_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -151,7 +151,7 @@ sampupd_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_u
  * this is callback of type: duf_scan_hook_dir_t
  * */
 static int
-sampupd_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
+filedata_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -163,7 +163,7 @@ sampupd_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pd
 }
 
 static int
-sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+filedata_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -175,7 +175,7 @@ sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_
 }
 
 static int
-sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+filedata_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
   int ufd;
@@ -257,25 +257,25 @@ static char *final_sql[] = {
 
 
 
-duf_scan_callbacks_t duf_sampupd_callbacks = {
-  .title = __FILE__,
+duf_scan_callbacks_t duf_filedata_callbacks = {
+  .title = "filedata",
   .init_scan = NULL,
   .opendir = 1,
   .scan_mode_2 = 1,
 
-  .node_scan_before = sampupd_scan_node_before,
-  .node_scan_before2 = sampupd_scan_node_before2,
+  .node_scan_before = filedata_scan_node_before,
+  .node_scan_before2 = filedata_scan_node_before2,
 
-  .node_scan_after = sampupd_scan_node_after,
-  .node_scan_after2 = sampupd_scan_node_after2,
+  .node_scan_after = filedata_scan_node_after,
+  .node_scan_after2 = filedata_scan_node_after2,
 
-  .node_scan_middle = sampupd_scan_node_middle,
-  .node_scan_middle2 = sampupd_scan_node_middle2,
+  .node_scan_middle = filedata_scan_node_middle,
+  .node_scan_middle2 = filedata_scan_node_middle2,
 
-  .leaf_scan = sampupd_scan_leaf,
-  .leaf_scan2 = sampupd_scan_leaf2,
+  .leaf_scan = filedata_scan_leaf,
+  .leaf_scan2 = filedata_scan_leaf2,
 
-  .leaf_scan_fd2 = sampupd_scan_dirent_content2,
+  .leaf_scan_fd2 = filedata_scan_dirent_content2,
 
   .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /* */
         " , uid, gid, nlink, inode, mtim AS mtime " /* */
@@ -313,3 +313,5 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
   .final_sql_argv = final_sql   /* */
         ,
 };
+
+
