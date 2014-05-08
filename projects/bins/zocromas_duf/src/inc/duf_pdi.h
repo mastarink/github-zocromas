@@ -22,8 +22,10 @@ int duf_pdi_topdepth( const duf_depthinfo_t * pdi );
 int duf_pdi_reldepth( const duf_depthinfo_t * pdi );
 int duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d );
 
-int duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql );
+int duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex );
 int duf_pdi_finalize( duf_depthinfo_t * pdi, int i );
 duf_sqlite_stmt_t *duf_pdi_statement( duf_depthinfo_t * pdi, int i );
+
+void duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes );
 
 #endif

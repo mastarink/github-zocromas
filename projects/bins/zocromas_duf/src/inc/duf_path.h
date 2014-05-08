@@ -33,10 +33,10 @@ int duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_c
 /*                         duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb );                               */
 
 
-unsigned long long duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid, int need_id,
-                                        int *pr );
-unsigned long long duf_insert_path_uni2( const char *dename, int ifadd, duf_levinfo_t * pli, dev_t dev_id, ino_t dir_ino,
-                                         unsigned long long parentid, int need_id, int *pr );
+unsigned long long duf_insert_path_uni( duf_depthinfo_t * pdi, const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid,
+                                        int need_id, int *pr );
+unsigned long long duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_levinfo_t * pli, dev_t dev_id,
+                                         ino_t dir_ino, unsigned long long parentid, int need_id, int *pr );
 unsigned long long duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, int need_id, int *pr );
 
 

@@ -5,10 +5,11 @@
 
 #  include "duf_sql_def.h"
 
+
 /* ###################################################################### */
 
 #  define DUF_FL __func__,__LINE__
-#define DUF_UNUSED __attribute__(( unused ))
+#  define DUF_UNUSED __attribute__(( unused ))
 /* ###################################################################### */
 
 #  define DUF_FALSE 0
@@ -106,7 +107,7 @@
 
 #  define DUF_TRACE_WHAT_C( cfg, what, name, min, ...)	duf_trace( DUF_TRACE_MODE_ ## name, #name, \
 		    	DUF_IF_TRACE_WHAT_C( cfg, what, name ), min, \
-			DUF_FL,	0,		       0,   DUF_TRACE_FILE_C( cfg ), __VA_ARGS__ )
+			DUF_FL, cfg?cfg->loadtime:0, 0, 0, DUF_TRACE_FILE_C( cfg ), __VA_ARGS__ )
 #  define DUF_TRACE_WHAT( what, name, min, ...)		DUF_TRACE_WHAT_C( duf_config,	  what,	     name, min, __VA_ARGS__ )
 
 #  define DUF_TRACE_C( cfg, name, ... )			DUF_TRACE_WHAT_C( cfg,		  cli.trace, name, __VA_ARGS__ )
@@ -117,7 +118,7 @@
 #  define DUF_TRACE_WHATSYSE_C( cfg, ern, what, name, min, ... ) \
 		duf_trace( DUF_TRACE_MODE_ ## name, #name, \
 			DUF_IF_TRACE_WHAT_C( cfg, what, name ), min, \
-			DUF_FL, DUF_TRACE_FLAG_SYSTEM, ern, DUF_TRACE_FILE_C( cfg ), __VA_ARGS__ )
+			DUF_FL, cfg?cfg->loadtime:0, DUF_TRACE_FLAG_SYSTEM, ern, DUF_TRACE_FILE_C( cfg ), __VA_ARGS__ )
 
 #  define DUF_TRACE_WHATSYSE( ern, what, name, min, ... ) \
 							DUF_TRACE_WHATSYSE_C( duf_config, ern, what, name, min, __VA_ARGS__ )
@@ -144,12 +145,13 @@
 
 #  define DUF_ERROR( ... )				DUF_TRACE( error, 0, __VA_ARGS__ )
 #  define DUF_ERRORR( r, ... )				DUF_TRACE( errorr, r, __VA_ARGS__ )
+#  define DUF_ERRORiV( v )				DUF_ERROR( #v ":%d" , v )
 #  define DUF_ERRSYS( ... )				DUF_TRACESYS( error, 0, __VA_ARGS__ )
 #  define DUF_ERRSYSE( ern, ... )			DUF_TRACESYSE( ern, error, 0, __VA_ARGS__ )
 
 /* ###################################################################### */
 
-#  define DUF_TEST_RX(val)	if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+#  define DUF_TEST_RX(val)	if (val) DUF_ERROR( " - - - - - -> [%s] (#%d)", val<0?duf_error_name(val):"-", val )
 
 #  define DUF_TEST_R(val)	if ( val!=DUF_ERROR_MAX_REACHED ) DUF_TEST_RX( val )
 #  define DUF_TEST_RR(val)	if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
@@ -157,9 +159,10 @@
     			&& (val)!=SQLITE_ROW \
     			&& (val)!=SQLITE_DONE \
     					)		\
-					DUF_ERROR( "<@TEST3@> rv=%d [%s]", \
-					    DUF_SQLITE_ERROR_CODE(val), \
-					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-" )
+					DUF_ERROR( " - - - - - -> sqlite3 [%s] (#%d)", \
+					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-", \
+					    DUF_SQLITE_ERROR_CODE(val) \
+					    )
 
 /* ###################################################################### */
 
@@ -221,6 +224,7 @@ typedef enum
 
 typedef enum
 {
+  DUF_OK,
   DUF_ERROR_ERROR_BASE = -30000,
   DUF_ERROR_UNKNOWN,
   DUF_ERROR_UNKNOWN_NODE,
@@ -250,6 +254,7 @@ typedef enum
   DUF_ERROR_MAX_DEPTH,
   DUF_ERROR_MAX_REACHED,
   DUF_ERROR_GET_FIELD,
+  DUF_ERROR_NOT_IN_DB,
   DUF_ERROR_NO_FIELD,
   DUF_ERROR_NO_FIELD_OPTIONAL,
   DUF_ERROR_INSERT_MDPATH,
@@ -304,6 +309,7 @@ typedef struct
 } duf_db_config_t;
 typedef struct
 {
+  double loadtime;
   duf_ufilter_t u;
   duf_config_cli_t cli;
   duf_db_config_t db;
@@ -363,6 +369,7 @@ typedef struct
   /* duf_node_type_t node_type; */
   /* char *path; */
   duf_levinfo_t *levinfo;
+  unsigned long long changes;
   unsigned long long seq;
   unsigned long long seq_leaf;
   unsigned long long seq_node;
@@ -436,21 +443,21 @@ typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, c
 
 
 typedef int ( *duf_scan_hook_dirent_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
-                                             duf_record_t * precord );
+                                              duf_record_t * precord );
 typedef int ( *duf_scan_hook2_dirent_reg_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
-                                              unsigned long long dirid, duf_depthinfo_t * pdi );
+                                               unsigned long long dirid, duf_depthinfo_t * pdi );
 
 
 typedef int ( *duf_scan_hook_dirent_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid,
-                                             duf_depthinfo_t * pdi, duf_record_t * precord );
+                                              duf_depthinfo_t * pdi, duf_record_t * precord );
 typedef int ( *duf_scan_hook2_dirent_dir_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
-                                              unsigned long long dirid, duf_depthinfo_t * pdi );
+                                               unsigned long long dirid, duf_depthinfo_t * pdi );
 
 
 typedef int ( *duf_scan_hook_dirent_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
-                                                duf_record_t * precord );
+                                                 duf_record_t * precord );
 typedef int ( *duf_scan_hook2_dirent_parent_t ) ( duf_sqlite_stmt_t * pstmt, const struct stat * pstat, unsigned long long dirid,
-                                                 duf_depthinfo_t * pdi );
+                                                  duf_depthinfo_t * pdi );
 
 
 typedef int ( *duf_sqexe_cb_t ) ( void *sqexe_data, int ncolumns, char **presult, char **pnames );

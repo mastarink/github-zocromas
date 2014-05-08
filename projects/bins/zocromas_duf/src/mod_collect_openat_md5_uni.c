@@ -38,7 +38,7 @@
 /* ###################################################################### */
 
 static unsigned long long
-duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr )
+duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, size_t fsize, int need_id, int *pr )
 {
   unsigned long long md5id = -1;
   int r = 0;
@@ -47,7 +47,9 @@ duf_insert_md5_uni( unsigned long long *md64, size_t fsize, int need_id, int *pr
   DEBUG_START(  );
   if ( md64 && md64[1] && md64[0] )
   {
-    r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+    if ( !duf_config->cli.disable.insert )
+      r = duf_sql( "INSERT OR IGNORE INTO duf_md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+    duf_pdi_reg_changes( pdi, changes );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
       if ( need_id )
@@ -164,14 +166,18 @@ duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * 
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
-    md5id = duf_insert_md5_uni( pmd, pst_file->st_size, 1 /*need_id */ , &r );
+    md5id = duf_insert_md5_uni( pdi, pmd, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && md5id )
     {
-      r = duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, md5id, filedataid );
+      int changes = 0;
+
+      if ( r >= 0 && !duf_config->cli.disable.update )
+        r = duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", &changes, md5id, filedataid );
+      duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
-    DUF_TRACE( scan, 2, "  "DUF_DEPTH_PFMT": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
+    DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
   }
   return r;
 }
@@ -198,14 +204,18 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
-    md5id = duf_insert_md5_uni( pmd, pst_file->st_size, 1 /*need_id */ , &r );
+    md5id = duf_insert_md5_uni( pdi, pmd, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && md5id )
     {
-      r = duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", ( int * ) NULL, md5id, filedataid );
+      int changes = 0;
+
+      if ( r >= 0 && !duf_config->cli.disable.update )
+        r = duf_sql( "UPDATE duf_filedatas SET md5id='%llu' WHERE id='%lld'", &changes, md5id, filedataid );
+      duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
-    DUF_TRACE( scan, 2, "  "DUF_DEPTH_PFMT": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
+    DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
   }
   return r;
 }
@@ -216,7 +226,7 @@ duf_scan_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precor
   int r = 0;
   int ffd = duf_levinfo_dfd( pdi );
 
-  DUF_ERROR( "ffd:%d for "DUF_DEPTH_PFMT"", ffd, duf_pdi_depth( pdi ) );
+  DUF_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );
   if ( ffd )
   {
     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );
@@ -309,48 +319,43 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .title = "collect o md5",
   .init_scan = NULL,
   .opendir = 1,
-  .scan_mode_2=1,
+  .scan_mode_2 = 1,
   /* .dirent_dir_scan_before = NULL, */
   /* .dirent_file_scan_before = NULL, */
   /* .node_scan_before = collect_openat_md5_scan_node_before, */
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
   .leaf_scan_fd = duf_scan_dirent_content,
   .leaf_scan_fd2 = duf_scan_dirent_content2,
-  .fieldset =
-        "fn.Pathid AS dirid " /*	*/
-        " , fd.id AS filedataid, fd.inode AS inode " /*	*/
-        " , fn.name AS filename, fd.size AS filesize " /*	*/
-        " , uid, gid, nlink, inode, mtim AS mtime, md.dupcnt AS nsame " /*	*/
-        " , fn.id AS filenameid " /*	*/
-	" , fd.mode AS filemode, md.md5sum1, md.md5sum2 ",
-  .leaf_selector =
-        "SELECT %s FROM duf_filenames AS fn " /*	*/
-        " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
-        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /*	*/
-	" LEFT JOIN duf_sizes as sz ON (sz.size=fd.size)" /*	*/
-	"    WHERE " /*	*/
+  .fieldset = "fn.Pathid AS dirid " /* */
+        " , fd.id AS filedataid, fd.inode AS inode " /* */
+        " , fn.name AS filename, fd.size AS filesize " /* */
+        " , uid, gid, nlink, inode, mtim AS mtime, md.dupcnt AS nsame " /* */
+        " , fn.id AS filenameid " /* */
+        " , fd.mode AS filemode, md.md5sum1, md.md5sum2 ",
+  .leaf_selector = "SELECT %s FROM duf_filenames AS fn " /* */
+        " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /* */
+        " LEFT JOIN duf_sizes as sz ON (sz.size=fd.size)" /* */
+        "    WHERE "            /* */
         /* " sz.dupcnt > 1 AND " */
         " fn.Pathid='%llu' ",
-  .leaf_selector2 =
-        "SELECT %s FROM duf_filenames AS fn " /*	*/
-        " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
-        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /*	*/
-        " LEFT JOIN duf_sizes as sz ON (sz.size=fd.size)" /*	*/
-	"    WHERE " /*	*/
-	" fn.Pathid=:dirid ",
-  .node_selector =
-        "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /*	*/
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /*	*/
-        " FROM duf_paths AS pt " /*	*/
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /*	*/
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /*	*/
-	" WHERE pt.parentid='%llu' ",
-  .node_selector2 =
-        "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /*	*/
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /*	*/
-        " FROM duf_paths AS pt " /*	*/
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /*	*/
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /*	*/
-	" WHERE pt.parentid=:dirid ",
+  .leaf_selector2 = "SELECT %s FROM duf_filenames AS fn " /* */
+        " LEFT JOIN duf_filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN duf_md5 AS md ON (md.id=fd.md5id)" /* */
+        " LEFT JOIN duf_sizes as sz ON (sz.size=fd.size)" /* */
+        "    WHERE "            /* */
+        " fn.Pathid=:dirid ",
+  .node_selector = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+        " FROM duf_paths AS pt " /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " WHERE pt.parentid='%llu' ",
+  .node_selector2 = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+        " FROM duf_paths AS pt " /* */
+        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " WHERE pt.parentid=:dirid ",
   .final_sql_argv = final_sql,
 };

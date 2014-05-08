@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_UNI_SCAN_H
 #  define MAS_DUF_UNI_SCAN_H
 
-int duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb );
+/* int duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb ); */
 
 int duf_uni_scan_targ( duf_scan_callbacks_t * sccb );
 

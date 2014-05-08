@@ -16,15 +16,14 @@
 #include "duf_pdi.h"
 
 
-#include "duf_sql.h"
 #include "duf_sql_field.h"
-#include "duf_path.h"
-#include "duf_item_scan.h"
-#include "duf_entry_scan.h"
+#include "duf_item_scan1.h"
+#include "duf_item_scan2.h"
+#include "duf_dirent_scan.h"
+#include "duf_file_pathid.h"
 
 #include "duf_dbg.h"
 
-#include "duf_file_pathid.h"
 
 /* ###################################################################### */
 #include "duf_dir_scan.h"
@@ -121,7 +120,7 @@ duf_str_cb_leaf_scan( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct d
     pdi->items.files++;
 
     if ( sccb->leaf_scan )
-    r = sccb->leaf_scan( pdi, precord );
+      r = sccb->leaf_scan( pdi, precord );
 
     DUF_TEST_R( r );
     DUF_TRACE( scan, 3, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
@@ -309,6 +308,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   DEBUG_START(  );
   assert( sccb );
   dirid = duf_levinfo_dirid( pdi );
+  DUF_TRACE( scan, 0, "+" );
 
   /* scan dirent's */
   if ( r >= 0 && duf_config->cli.act.dirent )

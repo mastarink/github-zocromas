@@ -17,6 +17,7 @@
 #include "duf_config.h"
 #include "duf_dh.h"
 
+#include "duf_pdi.h"
 #include "duf_levinfo.h"
 
 
@@ -42,7 +43,7 @@
 
 
 static int
-duf_collect_insert_filename_uni( const char *fname, unsigned long long dir_id, unsigned long long dataid )
+duf_collect_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dir_id, unsigned long long dataid )
 {
   int r = 0;
 
@@ -52,18 +53,18 @@ duf_collect_insert_filename_uni( const char *fname, unsigned long long dir_id, u
 
   if ( fname && dir_id )
   {
-    int r;
+    int r = 0;
     int changes = 0;
     char *qbase_name = NULL;
     const char *qfname;
 
     qbase_name = duf_single_quotes_2( fname );
     qfname = qbase_name ? qbase_name : fname;
-    {
-      r = duf_sql( "INSERT OR IGNORE INTO duf_filenames (Pathid, name, dataid) VALUES ('%llu','%s','%llu')",
+    if ( !duf_config->cli.disable.insert )
+      r = duf_sql( "INSERT OR IGNORE INTO duf_filenames (Pathid, name, dataid) VALUES (%llu,'%s','%llu')",
                    &changes, dir_id, qfname, dataid );
-      DUF_TEST_R( r );
-    }
+    duf_pdi_reg_changes( pdi, changes );
+    DUF_TEST_R( r );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
       /* if ( need_id )                                                                                                            */
@@ -177,7 +178,7 @@ duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned lon
                     duf_record_t * precord )
 {
   int r = 0;
-  unsigned long long dataid = 0;
+  DUF_UNUSED unsigned long long dataid = 0;
 
   /* unsigned long long fnid = 0; */
 
@@ -186,7 +187,7 @@ duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned lon
   if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
   {
     dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
-    r = duf_collect_insert_filename_uni( fname, dirid, dataid );
+    r = duf_collect_insert_filename_uni( pdi, fname, dirid, dataid );
   }
   DEBUG_ENDR( r );
   return r;
@@ -201,14 +202,15 @@ duf_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct 
   DEBUG_START(  );
   DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
 
-  if ( pst_file /* && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) */  )
+  if ( pst_file /* && !duf_config->cli.disable.insert */  )
+    /* && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) */
   {
-    __attribute__ ( ( unused ) ) unsigned long long dataid = 0;
+    DUF_UNUSED unsigned long long dataid = 0;
 
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
     dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
-    r = duf_collect_insert_filename_uni( fname, dirid, dataid );
+    r = duf_collect_insert_filename_uni( pdi, fname, dirid, dataid );
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
   }
   DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
@@ -222,7 +224,7 @@ duf_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long l
 {
   int r = 0;
 
-  ( void ) duf_insert_path_uni( fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
+  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
   DUF_TEST_R( r );
   return r;
 }
@@ -234,7 +236,7 @@ duf_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct 
   int r = 0;
 
   DUF_TRACE( scan, 0, "scan entry dir2 by %s", fname );
-  ( void ) duf_insert_path_uni( fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
+  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
   DUF_TEST_R( r );
   return r;
 }

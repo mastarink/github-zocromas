@@ -7,7 +7,6 @@
 #include "duf_types.h"
 
 #include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config.h"
 
 #include "duf_sql2.h"
@@ -143,7 +142,7 @@ duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
 }
 
 int
-duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql )
+duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex )
 {
   int r = 0;
 
@@ -155,6 +154,8 @@ duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql )
   {
     pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
   }
+  if ( pindex )
+    *pindex = pdi->num_statements;
   r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements++] );
   return r;
 }
@@ -174,4 +175,11 @@ duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
     r = duf_sql_finalize( pdi->statements[i] );
   pdi->statements[i] = NULL;
   return r;
+}
+
+void
+duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes )
+{
+  if ( pdi )
+    pdi->changes += changes;
 }

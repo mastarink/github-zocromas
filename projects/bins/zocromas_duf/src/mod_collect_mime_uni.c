@@ -28,7 +28,7 @@
 #include "duf_dbg.h"
 
 static unsigned long long
-duf_insert_mime_uni( const char *mime, const char *chs, const char *tail, int need_id, int *pr )
+duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long mimeid = 0;
@@ -38,9 +38,9 @@ duf_insert_mime_uni( const char *mime, const char *chs, const char *tail, int ne
     int changes = 0;
 
     DEBUG_START(  );
-    {
+    if ( !duf_config->cli.disable.insert )
       r = duf_sql( "INSERT OR IGNORE INTO duf_mime ( mime, charset, tail) VALUES ('%s', '%s', '%s')", &changes, mime, chs, tail );
-    }
+    duf_pdi_reg_changes( pdi, changes );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
       if ( need_id )
@@ -158,18 +158,21 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
           charset = mas_strdup( p + 8 );
         else
           tail = mas_strdup( p );
-        mimeid = duf_insert_mime_uni( mimet, charset, tail, 1 /*need_id */ , &r );
+        mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , &r );
         DUF_TEST_R( r );
-        if ( r >= 0 && mimeid )
+        if ( r >= 0 && mimeid && !duf_config->cli.disable.update )
         {
-          r = duf_sql( "UPDATE duf_filedatas SET mimeid='%llu' WHERE id='%lld'", ( int * ) NULL, mimeid, dataid );
+          int changes = 0;
+
+          r = duf_sql( "UPDATE duf_filedatas SET mimeid='%llu' WHERE id='%lld'", &changes, mimeid, dataid );
+          duf_pdi_reg_changes( pdi, changes );
           DUF_TEST_R( r );
         }
         mas_free( mimet );
         mas_free( charset );
         mas_free( tail );
       }
-      DUF_TRACE( scan, 2, "  "DUF_DEPTH_PFMT": scan 5    : %llu", duf_pdi_depth( pdi ), mimeid );
+      DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    : %llu", duf_pdi_depth( pdi ), mimeid );
     }
   }
   DUF_TEST_R( r );
@@ -195,13 +198,13 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
         " fn.Pathid = :dirid ORDER BY fd.mimeid ",
   .node_selector = "SELECT pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths AS pt "      /* */
+        " FROM duf_paths AS pt " /* */
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
         " WHERE pt.parentid = '%llu' ",
   .node_selector2 = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths AS pt "      /* */
+        " FROM duf_paths AS pt " /* */
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
         " WHERE pt.parentid = :dirid ",

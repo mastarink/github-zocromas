@@ -1,3 +1,5 @@
+#define DUF_SQL_PDI_STMT
+
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -6,16 +8,10 @@
 #include "duf_types.h"
 #include "duf_config.h"
 #include "duf_utils.h"
-#include "duf_service.h"
 
 #include "duf_pdi.h"
 
-
-#include "duf_sql_def.h"
-#include "duf_sql_field.h"
-
 #include "duf_sql.h"
-#include "duf_sql1.h"
 #include "duf_sql2.h"
 
 #include "duf_dbg.h"
@@ -27,117 +23,80 @@
 /* run --create-tables --zero-filedata   */
 /* run --create-tables --update-filedata */
 
-#define DUF_PDI_STMT
 
 unsigned long long
 duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long resd = 0;
+  unsigned long long dataid = 0;
 
-#ifdef DUF_PDI_STMT
-  static int insert_filedata_index = -1;
-#endif
   if ( pst_file )
   {
     int r = 0;
     int changes = 0;
 
     DEBUG_START(  );
+    if ( !duf_config->cli.disable.insert )
     {
-      if ( 1 )
-      {
-        const char *sql = "INSERT OR IGNORE INTO duf_filedatas  " /* */
-              " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn,  md5id) " /* */
-              " VALUES "        /* */
-              " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id) " /* */
-              ;
-        duf_sqlite_stmt_t *pstmt = NULL;
+      const char *sql = "INSERT OR IGNORE INTO duf_filedatas  " /* */
+            " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn,  md5id) " /* */
+            " VALUES "          /* */
+            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id) " /* */
+            ;
 
-#ifdef DUF_PDI_STMT
-        if ( insert_filedata_index < 0 )
-          insert_filedata_index = duf_pdi_prepare_statement( pdi, sql );
-
-        if ( insert_filedata_index >= 0 )
-          pstmt = duf_pdi_statement( pdi, insert_filedata_index );
-        if ( !pstmt || insert_filedata_index < 0 )
-          r = DUF_ERROR_PDI_SQL;
-#else
-        if ( r >= 0 )
-          r = duf_sql_prepare( sql, &pstmt );
-#endif
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":dev", 1, ( long long ) pst_file->st_dev );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":inode", 2, ( long long ) pst_file->st_ino );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":size", 3, ( long long ) pst_file->st_size );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":mode", 4, ( long long ) pst_file->st_mode );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":nlink", 5, ( long long ) pst_file->st_nlink );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":uid", 6, ( long long ) pst_file->st_uid );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":gid", 7, ( long long ) pst_file->st_gid );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":blksize", 8, ( long long ) pst_file->st_blksize );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":blocks", 9, ( long long ) pst_file->st_blocks );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":atim", 10, ( long long ) pst_file->st_atim.tv_sec );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":atimn", 11, ( long long ) pst_file->st_atim.tv_nsec );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":mtim", 12, ( long long ) pst_file->st_mtim.tv_sec );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":mtimn", 13, ( long long ) pst_file->st_mtim.tv_nsec );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":ctim", 14, ( long long ) pst_file->st_ctim.tv_sec );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":ctimn", 15, ( long long ) pst_file->st_ctim.tv_nsec );
-        if ( r >= 0 )
-          r = duf_sql_bindu_long_long( pstmt, ":md5id", 16, ( long long ) 0 );
-        if ( r >= 0 )
-          r = duf_sql_step( pstmt );
-#ifdef DUF_PDI_STMT
-        if ( r == DUF_SQL_DONE )
-          r = 0;
-        duf_sql_reset( pstmt );
-        duf_sql_clear_bindings( pstmt );
-#else
-        {
-          int rf = duf_sql_finalize( pstmt );
-
-          pstmt = NULL;
-
-          if ( r >= 0 || r == DUF_SQL_DONE )
-            r = rf;
-          DUF_TEST_R( r );
-        }
-#endif
-        if ( r >= 0 )
-          changes = duf_sql_changes(  );
-        /* DUF_ERROR( "changes:%d", changes ); */
-      }
+      DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
+      DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
+      DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
+      DUF_SQL_BIND_LL( size, pst_file->st_size, r, pstmt );
+      DUF_SQL_BIND_LL( mode, pst_file->st_mode, r, pstmt );
+      DUF_SQL_BIND_LL( nlink, pst_file->st_nlink, r, pstmt );
+      DUF_SQL_BIND_LL( uid, pst_file->st_uid, r, pstmt );
+      DUF_SQL_BIND_LL( gid, pst_file->st_gid, r, pstmt );
+      DUF_SQL_BIND_LL( blksize, pst_file->st_blksize, r, pstmt );
+      DUF_SQL_BIND_LL( blocks, pst_file->st_blocks, r, pstmt );
+      DUF_SQL_BIND_LL( atim, pst_file->st_atim.tv_sec, r, pstmt );
+      DUF_SQL_BIND_LL( atimn, pst_file->st_atim.tv_nsec, r, pstmt );
+      DUF_SQL_BIND_LL( mtim, pst_file->st_mtim.tv_sec, r, pstmt );
+      DUF_SQL_BIND_LL( mtimn, pst_file->st_mtim.tv_nsec, r, pstmt );
+      DUF_SQL_BIND_LL( ctim, pst_file->st_ctim.tv_sec, r, pstmt );
+      DUF_SQL_BIND_LL( ctimn, pst_file->st_ctim.tv_nsec, r, pstmt );
+      DUF_SQL_BIND_LL( md5id, 0, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_CHANGES( changes, r, pstmt );
+      DUF_SQL_END_STMT( r, pstmt );
     }
-    /* DUF_TRACE( current, 0, "<changes> : %d", changes ); */
+    DUF_TRACE( current, 0, "<changes> : %d", changes );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
       if ( need_id )
       {
-        duf_scan_callbacks_t sccb = {.fieldset = "dataid" };
-        r = duf_sql_select( duf_sel_cb_field_by_sccb, &resd, STR_CB_DEF, STR_CB_UDATA_DEF,
-                            ( duf_depthinfo_t * ) NULL, &sccb,
-                            "SELECT id AS dataid FROM duf_filedatas WHERE dev='%lu' AND inode='%lu'", pst_file->st_dev, pst_file->st_ino );
+        const char *sql = "SELECT id AS dataid FROM duf_filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
+
+        DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
+        DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
+        DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        if ( r == DUF_SQL_ROW )
+        {
+          DUF_TRACE( current, 0, "<selected>" );
+          dataid = duf_sql_column_long_long( pstmt, 0 );
+          r = 0;
+        }
+        else
+        {
+          DUF_TEST_R( r );
+          DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+        }
+        DUF_TEST_R( r );
+        DUF_SQL_END_STMT( r, pstmt );
       }
     }
     else if ( !r /* assume SQLITE_OK */  )
     {
       if ( need_id )
       {
-        resd = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", resd );
+        dataid = duf_sql_last_insert_rowid(  );
+        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", dataid );
       }
     }
     else
@@ -152,8 +111,8 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   }
   if ( pr )
     *pr = r;
-  /* DUF_TRACE( current, 0, "%llu", resd ); */
-  assert( resd );
-  DEBUG_ENDULL( resd );
-  return resd;
+  /* DUF_TRACE( current, 0, "%llu", dataid ); */
+  assert( dataid );
+  DEBUG_ENDULL( dataid );
+  return dataid;
 }

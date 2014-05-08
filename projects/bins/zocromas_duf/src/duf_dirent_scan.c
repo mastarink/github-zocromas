@@ -10,7 +10,6 @@
 #include "duf_types.h"
 
 #include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config.h"
 
 #include "duf_levinfo.h"
@@ -19,44 +18,14 @@
 
 #include "duf_sql.h"
 #include "duf_sql_field.h"
-#include "duf_path.h"
-#include "duf_item_scan.h"
 
 #include "duf_dbg.h"
-
-#include "duf_file_pathid.h"
 
 /* ###################################################################### */
 #include "duf_dirent_scan.h"
 /* ###################################################################### */
 
-#if 0
-static int
-duf_scan_parent( unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord, duf_scan_hook_dirent_parent_t scan_dirent_parent )
-{
-  int r = 0;
 
-  DEBUG_START(  );
-  const duf_dirhandle_t *pdhi_parent = duf_levinfo_pdh( pdi );
-  struct stat st;
-
-  r = fstat( pdhi_parent->dfd, &st );
-  if ( r < 0 )
-  {
-    const char *real_path = NULL;
-
-    if ( !real_path )
-      real_path = duf_levinfo_path( pdi );
-    DUF_ERROR( "No such entry %s", real_path );
-    r = DUF_ERROR_STAT;
-  }
-
-  if ( r >= 0 )
-    r = ( *scan_dirent_parent ) ( &st, pathid, pdi, precord );
-  DEBUG_ENDR( r );
-  return r;
-}
-#endif
 static int
 duf_scan_direntry( struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord,
                 duf_scan_hook_dirent_reg_t scan_dirent_reg, duf_scan_hook_dirent_dir_t scan_dirent_dir )

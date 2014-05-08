@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <getopt.h>
+#include <sys/time.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -33,6 +34,14 @@ duf_config_create( void )
     {
       duf_config->db.dir = mas_strcat_x( duf_config->db.dir, "/../duf_db" );
     }
+  }
+  {
+    int rt;
+    struct timeval tv;
+
+    rt = gettimeofday( &tv, NULL );
+    if ( rt >= 0 )
+      duf_config->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
   duf_config->db.name = mas_strdup( "duf-default.db" );
   duf_config->cli.trace.any = duf_config->cli.trace.error = 1;

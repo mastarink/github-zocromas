@@ -1,13 +1,6 @@
-/* #include <stdio.h> */
-/* #include <stdlib.h> */
-/* #include <stdarg.h> */
-#include <string.h>
-/* #include <unistd.h> */
-/* #include <sys/stat.h> */
+#define DUF_SQL_PDI_STMT
 
-/* #include <sys/types.h> */
-/* #include <fcntl.h> */
-/* #include <unistd.h> */
+#include <string.h>
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -25,8 +18,8 @@
 #include "duf_levinfo.h"
 
 
-#include "duf_sql_field.h"
-#include "duf_sql1.h"
+#include "duf_sql.h"
+#include "duf_sql2.h"
 
 #include "duf_path.h"
 
@@ -76,8 +69,6 @@ duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_ca
   if ( r >= 0 && pdi->u.recursive && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
   {
     assert( pdi );
-    DUF_OINV_OPENED( pdi-> );
-
 
 /* duf_scan_fil_by_pi:
  * call duf_str_cb_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
@@ -97,19 +88,7 @@ duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_ca
 
     DUF_OINV_OPENED( pdi-> );
     r = duf_scan_dirs_by_parentid( duf_str_cb_uni_scan_dir, pdi, sccb, precord );
-    DUF_OINV_OPENED( pdi-> );
-    /* if ( r == DUF_ERROR_MAX_REACHED )                   */
-    /* {                                                   */
-    /*   if ( pdi->depth == 0 )                            */
-    /*     DUF_TRACE( action, 0, "Maximum reached ...." ); */
-    /* }                                                   */
-    /* else if ( r < 0 )                                   */
-    /* {                                                   */
-    /*   DUF_ERROR( "r=%d", r );                           */
-    /* }                                                   */
-
     DUF_TEST_R( r );
-    DUF_OINV_OPENED( pdi-> );
   }
   DEBUG_END(  );
   return r;
@@ -123,7 +102,6 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
   DEBUG_START(  );
 
   assert( pdi );
-  DUF_OINV_OPENED( pdi-> );
 
   if ( r >= 0 )
   {
@@ -147,20 +125,9 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 
       DUF_OINV_OPENED( pdi-> );
       r = duf_scan_dirs_by_parentid2( pstmt, duf_str_cb2_uni_scan_dir, pdi, sccb );
-      DUF_OINV_OPENED( pdi-> );
-      /* if ( r == DUF_ERROR_MAX_REACHED )                   */
-      /* {                                                   */
-      /*   if ( pdi->depth == 0 )                            */
-      /*     DUF_TRACE( action, 0, "Maximum reached ...." ); */
-      /* }                                                   */
-      /* else if ( r < 0 )                                   */
-      /* {                                                   */
-      /*   DUF_ERROR( "r=%d", r );                           */
-      /* }                                                   */
     }
   }
   DUF_TEST_R( r );
-  DUF_OINV_OPENED( pdi-> );
   DEBUG_END(  );
   return r;
 }
@@ -174,25 +141,18 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  */
-int
-duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
+static int
+duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
   int r = 0;
   char *real_path = NULL;
 
   DEBUG_START(  );
 
-  {
-    char *rp = realpath( path, NULL );
-
-    if ( rp )
-    {
-      real_path = mas_strdup( rp );
-      free( rp );
-    }
-  }
+  real_path = duf_realpath( path );
 
   DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": sccb        %c", duf_uni_scan_action_title( sccb ), sccb ? '+' : '-' );
+  DUF_TRACE( scan, 0, "+" );
   if ( sccb )
   {
     duf_depthinfo_t di = {.depth = -1,
@@ -204,8 +164,6 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
     };
 
     DEBUG_STEP(  );
-
-
 
     r = duf_pdi_init( &di, real_path );
 /* create level-control array, open 0 level */
@@ -220,6 +178,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
       if ( r >= 0 && ( top_dirid || !real_path ) )
       {
         assert( top_dirid == duf_levinfo_dirid( &di ) );
+        DUF_TRACE( scan, 0, "+" );
         DUF_TEST_R( r );
         DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": top_dirid %llu for %s", duf_uni_scan_action_title( sccb ), top_dirid, real_path );
         /* DUF_ERROR( "L%d", di.depth ); */
@@ -255,9 +214,14 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
         }
         DUF_OINV( di. );
         DUF_TEST_R( r );
-
+      }
+      else
+      {
+        DUF_TRACE( scan, 0, "? top_dirid:%llu; real_path:'%s'", top_dirid, real_path );
       }
 /* delete level-control array, close 0 level */
+      if ( pchanges )
+        *pchanges += di.changes;
       duf_pdi_close( &di );
     }
 
@@ -271,6 +235,10 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb )
     DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": end scan ; totals:%d", duf_uni_scan_action_title( sccb ),
                duf_config->cli.act.totals );
   }
+  else
+  {
+    DUF_TRACE( scan, 0, "?" );
+  }
   mas_free( real_path );
   DUF_TEST_R( r );
   DEBUG_END(  );
@@ -281,6 +249,7 @@ int
 duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
 {
   int r = 0;
+  unsigned long long changes = 0;
 
   DEBUG_START(  );
 
@@ -295,20 +264,20 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( sccb ) );
 
     do1 = ( !sccb->scan_mode_2 && ( sccb->node_scan_before /* */
-                                       || sccb->node_scan_middle /* */
-                                       || sccb->node_scan_after /* */
-                                       || sccb->leaf_scan /* */
-                                       || sccb->leaf_scan_fd /* */
-                                       || sccb->dirent_file_scan_before /* */
-                                       || sccb->dirent_dir_scan_before /* */
+                                    || sccb->node_scan_middle /* */
+                                    || sccb->node_scan_after /* */
+                                    || sccb->leaf_scan /* */
+                                    || sccb->leaf_scan_fd /* */
+                                    || sccb->dirent_file_scan_before /* */
+                                    || sccb->dirent_dir_scan_before /* */
              ) );
     do2 = ( sccb->scan_mode_2 && ( sccb->node_scan_before2 /* */
-                                      || sccb->node_scan_middle2 /* */
-                                      || sccb->node_scan_after2 /* */
-                                      || sccb->leaf_scan2 /* */
-                                      || sccb->leaf_scan_fd2 /* */
-                                      || sccb->dirent_file_scan_before2 /* */
-                                      || sccb->dirent_dir_scan_before2 /* */
+                                   || sccb->node_scan_middle2 /* */
+                                   || sccb->node_scan_after2 /* */
+                                   || sccb->leaf_scan2 /* */
+                                   || sccb->leaf_scan_fd2 /* */
+                                   || sccb->dirent_file_scan_before2 /* */
+                                   || sccb->dirent_dir_scan_before2 /* */
              ) );
     if ( r >= 0 && ( do2 || do1 ) )
     {
@@ -317,9 +286,9 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
         DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccb ), ia, duf_config->targv[ia] );
       if ( duf_config->targc > 0 )
         for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-          r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb );
+          r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb, &changes );
       else
-        r = duf_uni_scan( NULL, duf_config->u, sccb );
+        r = duf_uni_scan( NULL, duf_config->u, sccb, &changes );
       DUF_TEST_R( r );
     }
     else
@@ -327,7 +296,11 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
       DUF_TRACE( action, 0, "nothing defined for %s", duf_uni_scan_action_title( sccb ) );
     }
 
-    if ( sccb )
+    if ( duf_config->cli.act.totals )
+    {
+      DUF_PRINTF( 0, "changes:%llu", changes );
+    }
+    if ( sccb && changes )
     {
       char **psql = sccb->final_sql_argv;
 
@@ -339,7 +312,14 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
 
           /* DUF_TRACE( action, 0, "final psql : %s", *p ); */
           /* r = duf_sql( *p, &changes ); */
-          r = duf_sql_exec( *psql, &changes );
+
+          {
+            DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
+            /* r = duf_sql_exec( *psql, &changes ); */
+            DUF_SQL_STEP( r, pstmt );
+            DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+            DUF_SQL_END_STMT_NOPDI( r, pstmt );
+          }
           DUF_TEST_R( r );
           /* DUF_TRACE( action, 0, "(%d) final psql %s; changes:%d", r, *psql, changes ); */
           DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": final SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),

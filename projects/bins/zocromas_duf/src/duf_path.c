@@ -1,3 +1,5 @@
+#define DUF_SQL_PDI_STMT
+
 #include <string.h>
 
 #include <sys/types.h>
@@ -6,10 +8,7 @@
 #include <fcntl.h>              /* Definition of AT_* constants */
 #include <sys/stat.h>
 
-
-
 #include <assert.h>
-#include <limits.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -19,18 +18,14 @@
 #include "duf_types.h"
 
 #include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
-#include "duf_dh.h"
 
-#include "duf_sql_def.h"
 #include "duf_sql_field.h"
 
 #include "duf_sql.h"
-#include "duf_sql1.h"
 #include "duf_sql2.h"
 
 #include "duf_dbg.h"
@@ -279,235 +274,10 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
   return path;
 }
 
-
-/* will be static! */
-
-/* 
- * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
- * */
-/* static int                                                                                                             */
-/* duf_sel_cb_levinfo( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused, */
-/*                     duf_depthinfo_t * xpdi_unused, duf_scan_callbacks_t * sccb_unused )                                */
-/* {                                                                                                                      */
-/*   int r = 0;                                                                                                           */
-/*   duf_levinfo_t *pli = ( duf_levinfo_t * ) sel_cb_udata;                                                               */
-/*                                                                                                                        */
-/*   if ( pli )                                                                                                           */
-/*   {                                                                                                                    */
-/*     DUF_UFIELD( dirid );                                                                                               */
-/*     DUF_SFIELD( dirname );                                                                                             */
-/*     DUF_UFIELD( ndirs );                                                                                               */
-/*     DUF_UFIELD( nfiles );                                                                                              */
-/*                                                                                                                        */
-/*     assert( dirname );                                                                                                 */
-/*     assert( dirid );                                                                                                   */
-/*     pli->dirid = dirid;                                                                                                */
-/*     pli->numdir = ndirs;                                                                                               */
-/*     pli->numfile = nfiles;                                                                                             */
-/*     pli->itemname = mas_strdup( dirname );                                                                             */
-/*     (* unsigned depth;              *)                                                                                 */
-/*     (* unsigned long long *levinfo; *)                                                                                 */
-/*     (* unsigned long long seq;      *)                                                                                 */
-/*     (* duf_node_type_t node_type;   *)                                                                                 */
-/*     (* unsigned long long seq_leaf; *)                                                                                 */
-/*     (* unsigned long long seq_node; *)                                                                                 */
-/*     (* unsigned long long dirid;    *)                                                                                 */
-/*     (* const char *name;            *)                                                                                 */
-/*     (* unsigned long long items;    *)                                                                                 */
-/*     (* unsigned long long ndirs;    *)                                                                                 */
-/*     (* unsigned long long nfiles;   *)                                                                                 */
-/*   }                                                                                                                    */
-/*   return r;                                                                                                            */
-/* }                                                                                                                      */
-
-/* static unsigned long long                                                                                                                */
-/* duf_realpath_to_pathid_x( char *rpath, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi, int *pr )                */
-/* {                                                                                                                                        */
-/*   int r = 0;                                                                                                                             */
-/*   unsigned long long pathid_new = 0;                                                                                                     */
-/*   unsigned long long prevpathid = 0;                                                                                                     */
-/*   unsigned long long pathid = 0;                                                                                                         */
-/*   char *bd = NULL;                                                                                                                       */
-/*   char *cpath = NULL;                                                                                                                    */
-/*                                                                                                                                          */
-/*                                                                                                                                          */
-/*   DEBUG_START(  );                                                                                                                       */
-/*                                                                                                                                          */
-/*   bd = cpath = mas_strdup( rpath );                                                                                                      */
-/*                                                                                                                                          */
-/*   DUF_TRACE( path, 0, "BD %s", bd );                                                                                                     */
-/*   pdi->topdepth = pdi->depth = -1;                                                                                                       */
-/*   while ( r >= 0 && bd && *bd )                                                                                                          */
-/*   {                                                                                                                                      */
-/*     duf_levinfo_t li = { 0 };                                                                                                            */
-/*     char *ed;                                                                                                                            */
-/*                                                                                                                                          */
-/*     prevpathid = pathid;                                                                                                                 */
-/*     ed = bd;                                                                                                                             */
-/*     (* find next '/' *)                                                                                                                  */
-/*     while ( ed && *ed && *ed != '/' )                                                                                                    */
-/*       ed++;                                                                                                                              */
-/*     (* find next name *)                                                                                                                 */
-/*     while ( ed && *ed && *ed == '/' )                                                                                                    */
-/*       *ed++ = 0;                                                                                                                         */
-/*     {                                                                                                                                    */
-/*       pathid_new = 0;                                                                                                                    */
-/*       {                                                                                                                                  */
-/* #if 1                                                                                                                                    */
-/*         {                                                                                                                                */
-/*           duf_sqlite_stmt_t *pstmt = NULL;                                                                                               */
-/*           const char *sql = "SELECT duf_paths.id AS dirid, duf_paths.dirname " (*      *)                                                */
-/*                 ", tf.numfiles AS nfiles, td.numdirs AS ndirs " (*      *)                                                               */
-/*                 " FROM duf_paths LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) " (*      *)                               */
-/*                 " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " (*      *)                                             */
-/*                 " WHERE duf_paths.parentid=:dirid AND dirname=:dirname";                                                                 */
-/*                                                                                                                                          */
-/*           if ( r >= 0 )                                                                                                                  */
-/*             r = duf_sql_prepare( sql, &pstmt );                                                                                          */
-/*           if ( r >= 0 )                                                                                                                  */
-/*             r = duf_sql_bind_long_long( pstmt, ":dirid", pathid );                                                                       */
-/*           if ( r >= 0 )                                                                                                                  */
-/*             r = duf_sql_bind_string( pstmt, ":dirname", bd );                                                                            */
-/*           if ( r >= 0 )                                                                                                                  */
-/*             r = duf_sql_step( pstmt );                                                                                                   */
-/*           if ( r == DUF_SQL_ROW )                                                                                                        */
-/*           {                                                                                                                              */
-/*             li.dirid = duf_sql_column_long_long( pstmt, 0 );                                                                             */
-/*             li.itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) );                                                               */
-/*             li.numfile = duf_sql_column_long_long( pstmt, 2 );                                                                           */
-/*             li.numdir = duf_sql_column_long_long( pstmt, 3 );                                                                            */
-/*             r = 0;                                                                                                                       */
-/*           }                                                                                                                              */
-/*           {                                                                                                                              */
-/*             int rf = duf_sql_finalize( pstmt );                                                                                          */
-/*                                                                                                                                          */
-/*             DUF_TEST_R( rf );                                                                                                            */
-/*             (* DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); *)                                                          */
-/*                                                                                                                                          */
-/*             if ( r >= 0 || r == DUF_SQL_DONE )                                                                                           */
-/*               r = rf;                                                                                                                    */
-/*           }                                                                                                                              */
-/*         }                                                                                                                                */
-/* #else                                                                                                                                    */
-/*         {                                                                                                                                */
-/*           (* duf_depthinfo_t di = {.dirid = 0 }; *)                                                                                      */
-/*           char *qbd;                                                                                                                     */
-/*           char *qname = NULL;                                                                                                            */
-/*                                                                                                                                          */
-/*           qname = duf_single_quotes_2( bd );                                                                                             */
-/*           qbd = qname ? qname : bd;                                                                                                      */
-/*           r = duf_sql_select( duf_sel_cb_levinfo (* duf_sql_path_to_pathid *) , &li, STR_CB_DEF, STR_CB_UDATA_DEF,                       */
-/*                               ( duf_depthinfo_t * ) NULL, ( duf_scan_callbacks_t * ) NULL (* sccb *) ,                                   */
-/*                               "SELECT duf_paths.id AS dirid, duf_paths.dirname,  duf_paths.parentid "                                    */
-/*                               ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize "              */
-/*                               " FROM duf_paths " " LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) "                        */
-/*                               " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id)                                    "       */
-/*                               " WHERE duf_paths.parentid='%llu' AND dirname='%s' ", pathid, qbd );                                       */
-/*           mas_free( qname );                                                                                                             */
-/*           qname = NULL;                                                                                                                  */
-/*         }                                                                                                                                */
-/* #endif                                                                                                                                   */
-/*         if ( r >= 0 )                                                                                                                    */
-/*           pathid_new = li.dirid;                                                                                                         */
-/*         if ( !pathid_new )                                                                                                               */
-/*         {                                                                                                                                */
-/*           r = DUF_ERROR_DB_NO_PATH;                                                                                                      */
-/*           DUF_ERROR( "no pathid at %llu : %s; use -Q to see sql", pathid, bd );                                                          */
-/*         }                                                                                                                                */
-/*         DUF_TRACE( path, 0, "(%d)SELECT PATHID %s => %llu; WHERE duf_paths.parentid='%llu' AND dirname='%s'", r, bd, pathid_new, pathid, */
-/*                    bd );                                                                                                                 */
-/*       }                                                                                                                                  */
-/*       DUF_TRACE( path, 0, "%s: pathid_new: %llu; bd: %s", __func__, pathid_new, bd );                                                    */
-/*     }                                                                                                                                    */
-/*     if ( r < 0 )                                                                                                                         */
-/*       break;                                                                                                                             */
-/*     if ( !pathid_new )                                                                                                                   */
-/*     {                                                                                                                                    */
-/*       if ( notfound && !*notfound )                                                                                                      */
-/*         *notfound = mas_strdup( bd );                                                                                                    */
-/*       break;                                                                                                                             */
-/*     }                                                                                                                                    */
-/*                                                                                                                                          */
-/*     pathid = pathid_new;                                                                                                                 */
-/*     bd = ed;                                                                                                                             */
-/*     if ( r >= 0 )                                                                                                                        */
-/*       r = duf_levinfo_down( pdi, pathid, li.itemname, bd && *bd ? 0 : li.numdir, bd && *bd ? 0 : li.numfile, 0 );                        */
-/*     assert( pdi->depth >= 0 );                                                                                                           */
-/*     if ( r >= 0 )                                                                                                                        */
-/*       r = duf_levinfo_openat_dh( pdi );                                                                                                  */
-/*     DUF_OINV_OPENED( pdi-> );                                                                                                            */
-/*     duf_levinfo_clear_li( &li );                                                                                                         */
-/*   }                                                                                                                                      */
-/*   pdi->topdepth = pdi->depth;                                                                                                            */
-/*   if ( pprevpathid )                                                                                                                     */
-/*     *pprevpathid = prevpathid;                                                                                                           */
-/*   mas_free( cpath );                                                                                                                     */
-/*   cpath = NULL;                                                                                                                          */
-/*   DUF_TRACE( path, 0, "%s: FINAL pathid: %llu; pathid_new: %llu;", __func__, pathid, pathid_new );                                       */
-/*   if ( pr )                                                                                                                              */
-/*     *pr = r;                                                                                                                             */
-/*   DEBUG_ENDULL( pathid_new );                                                                                                            */
-/*   return pathid_new;                                                                                                                     */
-/* }                                                                                                                                        */
-/*                                                                                                                                          */
-/* static unsigned long long                                                                                                                */
-/* duf_path_to_pathid_x( const char *path, unsigned long long *pprevpathid, char **notfound, duf_depthinfo_t * pdi, int *pr )               */
-/* {                                                                                                                                        */
-/*   int r = 0;                                                                                                                             */
-/*   unsigned long long pathid_new = 0;                                                                                                     */
-/*                                                                                                                                          */
-/*   DEBUG_START(  );                                                                                                                       */
-/*                                                                                                                                          */
-/*   if ( path )                                                                                                                            */
-/*   {                                                                                                                                      */
-/*     char *real_path;                                                                                                                     */
-/*                                                                                                                                          */
-/*     real_path = mas_malloc( PATH_MAX );                                                                                                  */
-/*     if ( real_path )                                                                                                                     */
-/*     {                                                                                                                                    */
-/*       ( void ) realpath( path, real_path );                                                                                              */
-/*                                                                                                                                          */
-/*       pathid_new = duf_realpath_to_pathid_x( real_path, pprevpathid, notfound, pdi, &r );                                                */
-/*                                                                                                                                          */
-/*       DUF_TRACE( path, 0, "(%d)REAL PATH %s => %llu", r, real_path, pathid_new );                                                        */
-/*       mas_free( real_path );                                                                                                             */
-/*     }                                                                                                                                    */
-/*   }                                                                                                                                      */
-/*                                                                                                                                          */
-/*   if ( pr )                                                                                                                              */
-/*     *pr = r;                                                                                                                             */
-/*   DUF_TRACE( action, 0, "PATH > ID#%llu", pathid_new );                                                                                  */
-/*   DEBUG_ENDULL( pathid_new );                                                                                                            */
-/*   return pathid_new;                                                                                                                     */
-/* }                                                                                                                                        */
-/*                                                                                                                                          */
-/* (* TODO new way : depth from root!;                                                                                                      */
-/*  * duf_path_to_pathid must set depth at pdi and levinfo for each level                                                                   */
-/*  *                                                                                                                                       */
-/*  * *)                                                                                                                                    */
-/* unsigned long long                                                                                                                       */
-/* duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr )                                                                   */
-/* {                                                                                                                                        */
-/*   int r = 0;                                                                                                                             */
-/*   unsigned long long pathid = 0;                                                                                                         */
-/*                                                                                                                                          */
-/*   DEBUG_START(  );                                                                                                                       */
-/*                                                                                                                                          */
-/*   pathid = duf_path_to_pathid_x( path, NULL, NULL, pdi, &r );                                                                            */
-/*                                                                                                                                          */
-/*   DUF_TRACE( path, 0, "PATH TO PATHID '%s' => %llu", path, pathid );                                                                     */
-/*   DUF_TEST_R( r );                                                                                                                       */
-/*   if ( pr )                                                                                                                              */
-/*     *pr = r;                                                                                                                             */
-/*   DEBUG_ENDULL( pathid );                                                                                                                */
-/*   return pathid;                                                                                                                         */
-/* }                                                                                                                                        */
-
-
 /* insert path into db; return id */
 unsigned long long
-duf_insert_path_uni2( const char *dename, int ifadd, duf_levinfo_t * pli, dev_t dev_id, ino_t dir_ino, unsigned long long parentid,
-                      int need_id, int *pr )
+duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_levinfo_t * pli, dev_t dev_id, ino_t dir_ino,
+                      unsigned long long parentid, int need_id, int *pr )
 {
   unsigned long long dirid = 0;
   int r = 0;
@@ -518,47 +288,48 @@ duf_insert_path_uni2( const char *dename, int ifadd, duf_levinfo_t * pli, dev_t 
   if ( dename /* && dev_id && dir_ino */  )
   {
     int changes = 0;
-    const char *qdirname;
-    char *qbase_name;
 
-    qbase_name = duf_single_quotes_2( dename );
-    qdirname = qbase_name ? qbase_name : dename;
-
-    if ( ifadd )
+    if ( ifadd && !duf_config->cli.disable.insert )
     {
-      DUF_TRACE( current, 0, "insert [%s] @ %llu", qdirname, parentid );
-      {
-        r = duf_sql( "INSERT OR IGNORE INTO duf_paths (dev, inode, dirname, parentid) " " VALUES ('%lu','%lu','%s','%llu')", &changes,
-                     dev_id, dir_ino, qdirname, parentid );
-      }
-      DUF_TRACE( collect, 1, "INSERT: r=%d; dev_id=%lu; dir_ino=%lu; dirname=%s; parentid=%llu", r, dev_id, dir_ino, qdirname, parentid );
-
+      static const char *sql =
+            "INSERT OR IGNORE INTO duf_paths ( dev, inode, dirname, parentid) VALUES (:dev, :inode, :dirname, :parentid )";
+      DUF_SQL_START_STMT( pdi, select_path, sql, r, pstmt );
+      DUF_SQL_BIND_LL( dev, dev_id, r, pstmt );
+      DUF_SQL_BIND_LL( inode, dir_ino, r, pstmt );
+      DUF_SQL_BIND_S( dirname, dename, r, pstmt );
+      DUF_SQL_BIND_LL( parentid, parentid, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_CHANGES( changes, r, pstmt );
+      DUF_SQL_END_STMT( r, pstmt );
     }
     /* sql = NULL; */
     DUF_TRACE( current, 0, "<changes> : %d", changes );
     /* if ( r == DUF_SQL_CONSTRAINT ) */
-    if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+    if ( need_id )
     {
-      if ( need_id )
+      if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
       {
-        duf_sqlite_stmt_t *pstmt = NULL;
+        /* duf_sqlite_stmt_t *pstmt = NULL; */
         const char *sql = "SELECT duf_paths.id AS dirid, duf_paths.dirname " /*      */
               ", tf.numfiles AS nfiles, td.numdirs AS ndirs " /*      */
               " FROM duf_paths LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) " /*      */
               " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " /*      */
               " WHERE duf_paths.parentid=:dirid AND dirname=:dirname";
 
-        if ( r >= 0 )
-          r = duf_sql_prepare( sql, &pstmt );
-        if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":dirid", parentid );
-        if ( r >= 0 )
-          r = duf_sql_bind_string( pstmt, ":dirname", dename );
-        if ( r >= 0 )
-          r = duf_sql_step( pstmt );
+        DUF_SQL_START_STMT( pdi, select_path, sql, r, pstmt );
+        DUF_SQL_BIND_LL( dirid, parentid, r, pstmt );
+        DUF_SQL_BIND_S( dirname, dename, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+
         if ( r == DUF_SQL_ROW )
         {
+          DUF_TRACE( current, 0, "<selected>" );
           dirid = duf_sql_column_long_long( pstmt, 0 );
+          if ( need_id && !dirid )
+          {
+            DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+          }
+          assert( !need_id || dirid );
           if ( pli )
           {
             pli->dirid = dirid;
@@ -568,30 +339,25 @@ duf_insert_path_uni2( const char *dename, int ifadd, duf_levinfo_t * pli, dev_t 
           }
           r = 0;
         }
+        else
         {
-          int rf = duf_sql_finalize( pstmt );
-
-          DUF_TEST_R( rf );
-          /* DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); */
-
-          if ( r >= 0 || r == DUF_SQL_DONE )
-            r = rf;
+          DUF_TEST_R( r );
+          DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
         }
-
+        DUF_SQL_END_STMT( r, pstmt );
+        DUF_TEST_R( r );
         DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
-    }
-    else if ( !r /* assume SQLITE_OK */  )
-    {
-      if ( need_id )
+      else if ( !r /* assume SQLITE_OK */  )
       {
         dirid = duf_sql_last_insert_rowid(  );
+        if ( need_id && !dirid )
+          DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+        assert( !need_id || dirid );
         DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
+      DUF_TEST_R( r );
     }
-    else
-      DUF_ERROR( "insert path [%s] r:%d dirid:%llu", dename, r, dirid );
-    mas_free( qbase_name );
   }
   else
   {
@@ -600,6 +366,12 @@ duf_insert_path_uni2( const char *dename, int ifadd, duf_levinfo_t * pli, dev_t 
   }
   if ( pr )
     *pr = r;
+  if ( need_id && !dirid )
+  {
+    DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+  }
+  DUF_TEST_R( r );
+  /* assert( !need_id || dirid ); */
   DEBUG_ENDULL( dirid );
   return dirid;
 }
@@ -663,8 +435,9 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
       else
       {
         DUF_TRACE( path, 0, "to insert [%s]", insdir ? insdir : "/" );
-        parentid = duf_insert_path_uni2( insdir, ifadd, duf_levinfo( pdi ), st_dir.st_dev, st_dir.st_ino, parentid, 1 /*need_id */ ,
+        parentid = duf_insert_path_uni2( pdi, insdir, ifadd, duf_levinfo( pdi ), st_dir.st_dev, st_dir.st_ino, parentid, 1 /*need_id */ ,
                                          &r );
+        /* assert( parentid ); */
 
         if ( pdi )
           duf_levinfo_set_dirid( pdi, parentid );
@@ -678,15 +451,19 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
       close( upfd );
     upfd = 0;
   }
-  duf_pdi_set_topdepth(pdi);
+  duf_pdi_set_topdepth( pdi );
   mas_free( real_path );
+  if ( r >= 0 && !parentid )
+    r = DUF_ERROR_NOT_IN_DB;
   if ( pr )
     *pr = r;
+
   return parentid;
 }
 
 unsigned long long
-duf_insert_path_uni( const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid, int need_id, int *pr )
+duf_insert_path_uni( duf_depthinfo_t * pdi, const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid, int need_id,
+                     int *pr )
 {
-  return duf_insert_path_uni2( dename, 1, ( duf_levinfo_t * ) NULL, dev_id, dir_ino, parentid, need_id, pr );
+  return duf_insert_path_uni2( pdi, dename, 1, ( duf_levinfo_t * ) NULL, dev_id, dir_ino, parentid, need_id, pr );
 }

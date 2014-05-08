@@ -60,7 +60,9 @@ duf_main( int argc, char **argv )
       r = main_db( argc, argv );
       DUF_TEST_R( r );
     }
-    DUF_PRINTF( 0, "(%d) main_db ended", r );
+    DUF_PUTS( 0, "--------------------------------------------------" );
+    DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
+    DUF_PUTS( 0, "--------------------------------------------------" );
     {
       switch ( or )
       {
@@ -209,8 +211,6 @@ duf_main( int argc, char **argv )
         break;
       }
     }
-    DUF_TEST_R( r );
-
     duf_config_delete(  );
   }
   else

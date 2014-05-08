@@ -56,7 +56,7 @@ duf_check_table_filedatas( void )
 			", uid INTEGER NOT NULL, gid INTEGER NOT NULL" /*	*/
 			", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /*	*/
                         ", size INTEGER NOT NULL" /*	*/
-			", md5id INTEGER NOT NULL" /*	*/
+			", md5id INTEGER" /*	*/
 			", mimeid INTEGER" /*	*/
                         ", atim INTEGER NOT NULL, atimn INTEGER NOT NULL" /*	*/
 			", mtim INTEGER NOT NULL, mtimn INTEGER NOT NULL" /*	*/

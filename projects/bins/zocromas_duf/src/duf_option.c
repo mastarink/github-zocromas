@@ -403,6 +403,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_NOOPENAT:
     DUF_OPT_FLAG( cli.noopenat );
     break;
+  case DUF_OPTION_SEQ_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.seq );
+    break;
   case DUF_OPTION_CALLS_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.calls );
     break;
@@ -542,6 +545,12 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_FILES:
     DUF_OPT_FLAG( cli.act.files );
+    break;
+  case DUF_OPTION_DISABLE_INSERT:
+    DUF_OPT_FLAG( cli.disable.insert );
+    break;
+  case DUF_OPTION_DISABLE_UPDATE:
+    DUF_OPT_FLAG( cli.disable.update );
     break;
   case DUF_OPTION_DIRS:
     DUF_OPT_FLAG( cli.act.dirs );

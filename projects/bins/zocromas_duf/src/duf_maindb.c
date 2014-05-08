@@ -104,7 +104,7 @@ main_db( int argc, char **argv )
       if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
       {
         DUF_TEST_RX( r );
-        DUF_ERROR( "action FAIL ; r=%d", r );
+        DUF_ERROR( "action FAIL ; [%s] (#%d)",  duf_error_name(r), r );
       }
       /* duf_action( argc, argv ); */
       {

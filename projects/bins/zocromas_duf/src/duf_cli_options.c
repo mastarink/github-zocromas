@@ -35,6 +35,9 @@ const duf_option_t longopts[] = {
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
   {.name = "output",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT},
   /* --------------- */
+  {.name = "disable-insert",.has_arg = no_argument,.val = DUF_OPTION_DISABLE_INSERT},
+  {.name = "disable-update",.has_arg = no_argument,.val = DUF_OPTION_DISABLE_UPDATE},
+  /* --------------- */
   {.name = "trace-file",.has_arg = required_argument,.val = DUF_OPTION_TRACE_FILE},
   {.name = "trace-stderr",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDERR},
   {.name = "trace-stdout",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDOUT},
@@ -46,6 +49,7 @@ const duf_option_t longopts[] = {
   /* --------------- */
   {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
   {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
+  {.name = "trace-seq",.has_arg = optional_argument,.val = DUF_OPTION_SEQ_TRACE},
   {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
   {.name = "trace-collect",.has_arg = optional_argument,.val = DUF_OPTION_COLLECT_TRACE},
   {.name = "trace-current",.has_arg = optional_argument,.val = DUF_OPTION_CURRENT_TRACE},
@@ -408,6 +412,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
 
   DUF_RESTORE_OPTION( ptr, NOOPENAT, noopenat, cli );
 
+  DUF_RESTORE_OPTION_TRACE( ptr, SEQ, seq );
   DUF_RESTORE_OPTION_TRACE( ptr, CALLS, calls );
   DUF_RESTORE_OPTION_TRACE( ptr, ANY, any );
   DUF_RESTORE_OPTION_TRACE( ptr, CURRENT, current );
@@ -453,6 +458,8 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_B( ptr, TREE, tree, cli.act );
   DUF_RESTORE_OPTION_B( ptr, FILES, files, cli.act );
   DUF_RESTORE_OPTION_B( ptr, DIRS, dirs, cli.act );
+  DUF_RESTORE_OPTION_B( ptr, DISABLE_INSERT, insert, cli.disable );
+  DUF_RESTORE_OPTION_B( ptr, DISABLE_UPDATE, update, cli.disable );
 
   DUF_RESTORE_OPTION( ptr, MAXSEQ, maxseq, u );
 

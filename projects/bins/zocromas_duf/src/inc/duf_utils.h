@@ -9,10 +9,10 @@ int duf_filesize_match( duf_config_t * cfg, size_t filesize );
 int duf_filesame_match( duf_config_t * cfg, int filesame );
 int duf_md5id_match( duf_config_t * cfg, unsigned long long md5id );
 
-int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags,
-                int nerr, FILE * out, const char *fmt, va_list args );
-int duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, unsigned flags,
-               int nerr, FILE * out, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 10, 11 ) ) );
+int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0,
+                unsigned flags, int nerr, FILE * out, const char *fmt, va_list args );
+int duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0,
+               unsigned flags, int nerr, FILE * out, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 11, 12 ) ) );
 
 int duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args );
 int duf_printf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
@@ -20,6 +20,7 @@ int duf_printf( int level, int minlevel, int ifexit, const char *funcid, int lin
 
 int duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str );
 
+char *duf_realpath( const char *path );
 
 
 const char *duf_error_name( duf_error_code_t c );

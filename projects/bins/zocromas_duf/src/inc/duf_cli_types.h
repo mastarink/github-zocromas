@@ -47,7 +47,11 @@ typedef enum
   DUF_OPTION_OUTPUT,
   DUF_OPTION_OUTPUT_FILE,
   DUF_OPTION_FORMAT,
+  
+  DUF_OPTION_DISABLE_INSERT,
+  DUF_OPTION_DISABLE_UPDATE,
 
+  DUF_OPTION_SEQ_TRACE,
   DUF_OPTION_CALLS_TRACE,
   DUF_OPTION_DELETED_TRACE,
   DUF_OPTION_DIRENT_TRACE,
@@ -120,6 +124,7 @@ typedef enum
 typedef enum
 {
   DUF_TRACE_MODE_NONE,
+  DUF_TRACE_MODE_seq,
   DUF_TRACE_MODE_action,
   DUF_TRACE_MODE_any,
   DUF_TRACE_MODE_collect,
@@ -246,6 +251,7 @@ typedef struct
 
 typedef struct
 {
+  unsigned seq;
   unsigned action;
   unsigned any;
   unsigned calls;
@@ -278,10 +284,16 @@ typedef struct
   char *file;
   FILE *out;
 } duf_config_cli_output_t;
+typedef struct
+{
+  unsigned insert:1;
+  unsigned update:1;
+} duf_config_cli_disable_t;
 
 typedef struct
 {
   duf_config_cli_actions_t act;
+  duf_config_cli_disable_t disable;
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
   duf_config_cli_output_t output;
