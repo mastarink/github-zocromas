@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -25,7 +27,7 @@
 /* run --create-tables --zero-filedata   */
 /* run --create-tables --update-filedata */
 
-
+#define DUF_PDI_STMT
 
 unsigned long long
 duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
@@ -33,7 +35,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   int r = 0;
   unsigned long long resd = 0;
 
-#if 0
+#ifdef DUF_PDI_STMT
   static int insert_filedata_index = -1;
 #endif
   if ( pst_file )
@@ -45,14 +47,14 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     {
       if ( 1 )
       {
-        const char *sql = "INSERT OR IGNORE INTO duf_filedatas (dev, inode, size, mode, nlink, uid, gid, blksize, blocks, " /* */
-              " atim,atimn,mtim, mtimn,ctim,  ctimn,  md5id) " /* */
-              " VALUES (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks " /* */
-              ", :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id)" /* */
+        const char *sql = "INSERT OR IGNORE INTO duf_filedatas  " /* */
+              " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn,  md5id) " /* */
+              " VALUES "        /* */
+              " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id) " /* */
               ;
         duf_sqlite_stmt_t *pstmt = NULL;
 
-#if 0
+#ifdef DUF_PDI_STMT
         if ( insert_filedata_index < 0 )
           insert_filedata_index = duf_pdi_prepare_statement( pdi, sql );
 
@@ -65,44 +67,44 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
           r = duf_sql_prepare( sql, &pstmt );
 #endif
         if ( r >= 0 )
-          r = duf_sql_prepare( sql, &pstmt );
+          r = duf_sql_bindu_long_long( pstmt, ":dev", 1, ( long long ) pst_file->st_dev );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":dev", ( long long ) pst_file->st_dev );
+          r = duf_sql_bindu_long_long( pstmt, ":inode", 2, ( long long ) pst_file->st_ino );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":inode", ( long long ) pst_file->st_ino );
+          r = duf_sql_bindu_long_long( pstmt, ":size", 3, ( long long ) pst_file->st_size );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":size", ( long long ) pst_file->st_size );
+          r = duf_sql_bindu_long_long( pstmt, ":mode", 4, ( long long ) pst_file->st_mode );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":mode", ( long long ) pst_file->st_mode );
+          r = duf_sql_bindu_long_long( pstmt, ":nlink", 5, ( long long ) pst_file->st_nlink );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":nlink", ( long long ) pst_file->st_nlink );
+          r = duf_sql_bindu_long_long( pstmt, ":uid", 6, ( long long ) pst_file->st_uid );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":uid", ( long long ) pst_file->st_uid );
+          r = duf_sql_bindu_long_long( pstmt, ":gid", 7, ( long long ) pst_file->st_gid );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":gid", ( long long ) pst_file->st_gid );
+          r = duf_sql_bindu_long_long( pstmt, ":blksize", 8, ( long long ) pst_file->st_blksize );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":blksize", ( long long ) pst_file->st_blksize );
+          r = duf_sql_bindu_long_long( pstmt, ":blocks", 9, ( long long ) pst_file->st_blocks );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":blocks", ( long long ) pst_file->st_blocks );
+          r = duf_sql_bindu_long_long( pstmt, ":atim", 10, ( long long ) pst_file->st_atim.tv_sec );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":atim", ( long long ) pst_file->st_atim.tv_sec );
+          r = duf_sql_bindu_long_long( pstmt, ":atimn", 11, ( long long ) pst_file->st_atim.tv_nsec );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":atimn", ( long long ) pst_file->st_atim.tv_nsec );
+          r = duf_sql_bindu_long_long( pstmt, ":mtim", 12, ( long long ) pst_file->st_mtim.tv_sec );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":mtim", ( long long ) pst_file->st_mtim.tv_sec );
+          r = duf_sql_bindu_long_long( pstmt, ":mtimn", 13, ( long long ) pst_file->st_mtim.tv_nsec );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":mtimn", ( long long ) pst_file->st_mtim.tv_nsec );
+          r = duf_sql_bindu_long_long( pstmt, ":ctim", 14, ( long long ) pst_file->st_ctim.tv_sec );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":ctim", ( long long ) pst_file->st_ctim.tv_sec );
+          r = duf_sql_bindu_long_long( pstmt, ":ctimn", 15, ( long long ) pst_file->st_ctim.tv_nsec );
         if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":ctimn", ( long long ) pst_file->st_ctim.tv_nsec );
-        if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":md5id", ( long long ) 0 );
+          r = duf_sql_bindu_long_long( pstmt, ":md5id", 16, ( long long ) 0 );
         if ( r >= 0 )
           r = duf_sql_step( pstmt );
-        changes = duf_sql_changes(  );
-#if 0
-
+#ifdef DUF_PDI_STMT
+        if ( r == DUF_SQL_DONE )
+          r = 0;
+        duf_sql_reset( pstmt );
+        duf_sql_clear_bindings( pstmt );
 #else
         {
           int rf = duf_sql_finalize( pstmt );
@@ -114,6 +116,9 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
           DUF_TEST_R( r );
         }
 #endif
+        if ( r >= 0 )
+          changes = duf_sql_changes(  );
+        /* DUF_ERROR( "changes:%d", changes ); */
       }
     }
     /* DUF_TRACE( current, 0, "<changes> : %d", changes ); */
@@ -148,6 +153,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   if ( pr )
     *pr = r;
   /* DUF_TRACE( current, 0, "%llu", resd ); */
+  assert( resd );
   DEBUG_ENDULL( resd );
   return resd;
 }

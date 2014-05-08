@@ -133,11 +133,11 @@ duf_action_new( int argc, char **argv )
 
           if ( !changes || ( sql && 0 == strncmp( sql, "SELECT", 6 ) ) )
           {
-            DUF_TRACE( action, 0, "to PREPARE %s", sql );
+            /* DUF_TRACE( action, 0, "to PREPARE %s", sql ); */
             if ( r >= 0 )
               r = duf_sql_prepare( sql, &pstmt );
             DUF_TEST_R( r );
-            DUF_TRACE( action, 0, "PREPARE:%d", r );
+            /* DUF_TRACE( action, 0, "PREPARE:%d", r ); */
             if ( r >= 0 )
             {
               if ( r >= 0 && duf_config->u.minsize )
@@ -145,7 +145,7 @@ duf_action_new( int argc, char **argv )
               DUF_TEST_R( r );
               if ( r >= 0 && duf_config->u.maxsize )
                 r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize );
-              DUF_TRACE( action, 0, "BIND maxsize %lld", duf_config->u.maxsize );
+              /* DUF_TRACE( action, 0, "BIND maxsize %lld", duf_config->u.maxsize ); */
               DUF_TEST_R( r );
               if ( r >= 0 && duf_config->u.minsame )
                 r = duf_sql_bind_long_long_nz( pstmt, ":mindups", duf_config->u.minsame );
@@ -157,7 +157,7 @@ duf_action_new( int argc, char **argv )
                 char *j;
 
                 j = mas_argv_string( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0);
-                DUF_TRACE( action, 0, "%d GLOB INCLUDE %s", duf_config->u.glob.include_files.argc, j );
+                /* DUF_TRACE( action, 0, "%d GLOB INCLUDE %s", duf_config->u.glob.include_files.argc, j ); */
                 if ( r >= 0 && duf_config->u.glob.include_files.argc )
                   r = duf_sql_bind_string( pstmt, ":glob_include", j );
                 DUF_TEST_R( r );
@@ -168,7 +168,7 @@ duf_action_new( int argc, char **argv )
 
                 j = mas_argv_string( duf_config->u.glob.exclude_files.argc, duf_config->u.glob.exclude_files.argv, 0 );
 
-                DUF_TRACE( action, 0, "GLOB EXCLUDE %s", j );
+                /* DUF_TRACE( action, 0, "GLOB EXCLUDE %s", j ); */
                 if ( r >= 0 && duf_config->u.glob.exclude_files.argc )
                   r = duf_sql_bind_string( pstmt, ":glob_exclude", j );
                 DUF_TEST_R( r );
@@ -194,12 +194,12 @@ duf_action_new( int argc, char **argv )
               }
               while ( r == DUF_SQL_ROW );
             }
-            DUF_TRACE( action, 0, "STEP; changes:%d; %s", changes, r < 0 && r != DUF_SQL_DONE ? "FAIL" : "" );
+            /* DUF_TRACE( action, 0, "STEP; changes:%d; %s", changes, r < 0 && r != DUF_SQL_DONE ? "FAIL" : "" ); */
             {
               int rf = duf_sql_finalize( pstmt );
 
               DUF_TEST_R( rf );
-              DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" );
+              /* DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); */
 
               if ( r >= 0 || r == DUF_SQL_DONE )
                 r = rf;

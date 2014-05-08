@@ -43,7 +43,8 @@ duf_sqlite_open( const char *dbpath )
     DUF_TRACE( action, 0, "DB Initialize %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
     if ( r3 == SQLITE_OK )
     {
-      r3 = sqlite3_open( dbpath, &pDb );
+      /* r3 = sqlite3_open( dbpath, &pDb ); */
+      r3 = sqlite3_open_v2( dbpath, &pDb, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL );
       DUF_TRACE( action, 0, "DB Open %s %s (%d)", dbpath, r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
     }
   }
@@ -58,7 +59,7 @@ duf_sqlite_close( void )
 
 /*										*/ DEBUG_START(  );
   if ( pDb )
-    r3 = sqlite3_close( pDb );
+    r3 = sqlite3_close_v2( pDb );
   DUF_TRACE( action, 0, "DB Close %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
 
   r3 = sqlite3_shutdown(  );
@@ -421,7 +422,7 @@ duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name )
   int r3 = 0;
 
   r3 = sqlite3_bind_parameter_index( stmt, name );
-  DUF_TRACE( sql, 2, "  index of %s is %d", name, r3 );
+  /* DUF_TRACE( sql, 2, "  index of %s is %d", name, r3 ); */
   return r3;
 }
 
@@ -435,7 +436,7 @@ duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val )
 
   val64 = val;
   r3 = sqlite3_bind_int64( stmt, num, val64 );
-  DUF_TRACE( sql, 2, "  bind ll #%d=%lld", num, val64 );
+  /* DUF_TRACE( sql, 2, "  bind ll #%d=%lld", num, val64 ); */
   DUF_TEST_R3( r3 );
   return r3;
 }
@@ -555,4 +556,10 @@ void
 duf_sqlite_free( char *s )
 {
   sqlite3_free( s );
+}
+
+void
+duf_sqlite_clear_bindings( duf_sqlite_stmt_t * stmt )
+{
+  sqlite3_clear_bindings( stmt );
 }

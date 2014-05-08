@@ -427,7 +427,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
 {
   int r = 0;
   duf_sel_cb2_t sel_cb2 = NULL;
-  __attribute__ ( ( unused ) ) duf_sel_cb2_match_t match_cb2 = NULL;
+  duf_sel_cb2_match_t match_cb2 = NULL;
 
   DEBUG_START(  );
 /* duf_sel_cb_(node|leaf):
@@ -510,7 +510,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
           {
             r = duf_sql_step( pstmt );
             DUF_TEST_RR( r );
-            DUF_TRACE( scan, 1, "#%d sql_step : r:%d; %s", cnt, r, r == DUF_SQL_ROW ? "_ROW" : ( r == DUF_SQL_DONE ? "_DONE" : "_____" ) );
+            DUF_TRACE( scan, 2, "#%d sql_step : r:%d; %s", cnt, r, r == DUF_SQL_ROW ? "_ROW" : ( r == DUF_SQL_DONE ? "_DONE" : "_____" ) );
 
             if ( r == DUF_SQL_ROW )
             {

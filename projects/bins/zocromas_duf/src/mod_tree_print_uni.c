@@ -63,17 +63,17 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       int du = d - 1;
       unsigned flags = 0;
       long ndu = duf_levinfo_numdir_d( pdi, du );
-      char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'z' );
+      char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'o' );
       int leaf = duf_levinfo_is_leaf_d( pdi, d );
-      char leafc = leaf ? 'L' : 'N';
+      char leafc = leaf ? 'L' : 'D';
       int eod = duf_levinfo_eod_d( pdi, d );
-      char eodc = eod ? 'E' : '-';
+      char eodc = eod ? '.' : '~';
 
       /* char is_filec = is_file ? 'F' : '-'; */
 
-      if ( ndu > 0 )
+      if ( ndu > 0 && d > d0 )
         flags |= 0x1;
-      if ( ndu < 0 )
+      if ( ndu < 0 && d > d0 )
         flags |= 0x2;
       if ( leaf )
         flags |= 0x4;
@@ -85,15 +85,14 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         flags |= 0x20;
       /* if ( is_file )   */
       /*   flags |= 0x40; */
-      if ( duf_config->cli.dbg.debug )
-      {
-        DUF_PRINTF( 0, ".L%-2d", d );
-        /* DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth ); */
-        /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
-        DUF_PRINTF( 0, ".(%3ld)", ndu );
-        DUF_PRINTF( 0, ".%c%c%c", eodc, nduc, leafc );
-        /* DUF_PRINTF( 0, ".0x%02x",  flags ); */
-      }
+      DUF_DEBUG( 1,             /* */
+                 DUF_PRINTF( 0, ".L%-2d", d ); /* */
+                 /* DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth ); */
+                 /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
+                 DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
+                 DUF_PRINTF( 0, ".%c%c%c", eodc, nduc, leafc ); /* */
+                 /* DUF_PRINTF( 0, ".0x%02x",  flags ); */
+             );
       {
         /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
         /*   DUF_PRINTF( 0, ".[  ◇ ]" );        */
@@ -212,6 +211,7 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
     duf_format_t format = {
       .filename = 1,
+      .short_filename = 1,
       .seq = 1,
       .dirid = 0,
       .inode = 0,
@@ -313,6 +313,7 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unu
 
         duf_format_t format = {
           .filename = 1,
+          .short_filename = 1,
           .seq = 1,
           .dirid = 0,
           .inode = 0,
@@ -358,7 +359,7 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unu
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
   .init_scan = NULL,
-  .scan_mode_step = 1,
+  .scan_mode_2 = 1,
   .node_scan_before = tree_scan_node_before,
   .node_scan_before2 = tree_scan_node_before2,
   .leaf_scan = tree_scan_leaf,

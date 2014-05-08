@@ -100,7 +100,7 @@ duf_mime_destructor( void *ctx )
 }
 
 static int
-duf_scan_entry_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned long long mimeid = 0;
@@ -179,9 +179,9 @@ duf_scan_entry_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *p
 duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .title = "collect mime",
   .opendir = 1,
-  .scan_mode_step = 1,
+  .scan_mode_2 = 1,
 
-  .leaf_scan_fd2 = duf_scan_entry_content2,
+  .leaf_scan_fd2 = duf_scan_dirent_content2,
 
   /* filename for debug only */
   .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */

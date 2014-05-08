@@ -330,6 +330,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_VERBOSE:
     DUF_OPT_NUM_PLUS( cli.dbg.verbose );
     break;
+  case DUF_OPTION_DEBUG:
+    DUF_OPT_NUM_PLUS( cli.dbg.debug );
+    break;
   case DUF_OPTION_MEMUSAGE:
     {
       extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -345,9 +348,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_OUTPUT_FILE:
     r = duf_open_special( optarg, &duf_config->cli.output.file, &duf_config->cli.output.out );
-    break;
-  case DUF_OPTION_DEBUG:
-    duf_config->cli.dbg.debug = 1;
     break;
   case DUF_OPTION_TRACE_STDERR:
     if ( duf_config->cli.trace.out )

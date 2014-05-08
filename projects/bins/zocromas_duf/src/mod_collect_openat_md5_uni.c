@@ -143,7 +143,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 }
 
 static int
-duf_scan_entry_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )
+duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
   unsigned char mdr[MD5_DIGEST_LENGTH];
@@ -177,7 +177,7 @@ duf_scan_entry_content( int fd, const struct stat *pst_file, duf_depthinfo_t * p
 }
 
 static int
-duf_scan_entry_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned char mdr[MD5_DIGEST_LENGTH];
@@ -211,7 +211,7 @@ duf_scan_entry_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *p
 }
 
 static int
-duf_scan_entry_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize )
+duf_scan_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize )
 {
   int r = 0;
   int ffd = duf_levinfo_dfd( pdi );
@@ -222,7 +222,7 @@ duf_scan_entry_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord
     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );
     if ( ffd > 0 )
     {
-      r = duf_scan_entry_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );
+      r = duf_scan_dirent_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );
     }
     else
     {
@@ -248,7 +248,7 @@ __attribute__ ( ( unused ) )
   DUF_SFIELD( filename );
   DUF_UFIELD( filesize );
   DEBUG_START(  );
-  r = duf_scan_entry_content_by_precord( pdi, precord, filename, filesize );
+  r = duf_scan_dirent_content_by_precord( pdi, precord, filename, filesize );
   DEBUG_ENDR( r );
   return r;
 }
@@ -309,13 +309,13 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .title = "collect o md5",
   .init_scan = NULL,
   .opendir = 1,
-  .scan_mode_step=1,
-  /* .entry_dir_scan_before = NULL, */
-  /* .entry_file_scan_before = NULL, */
+  .scan_mode_2=1,
+  /* .dirent_dir_scan_before = NULL, */
+  /* .dirent_file_scan_before = NULL, */
   /* .node_scan_before = collect_openat_md5_scan_node_before, */
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
-  .leaf_scan_fd = duf_scan_entry_content,
-  .leaf_scan_fd2 = duf_scan_entry_content2,
+  .leaf_scan_fd = duf_scan_dirent_content,
+  .leaf_scan_fd2 = duf_scan_dirent_content2,
   .fieldset =
         "fn.Pathid AS dirid " /*	*/
         " , fd.id AS filedataid, fd.inode AS inode " /*	*/

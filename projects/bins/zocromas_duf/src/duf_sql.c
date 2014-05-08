@@ -219,6 +219,130 @@ duf_sql_reset( duf_sqlite_stmt_t * stmt )
 }
 
 int
+duf_sql_bindu_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value )
+{
+  int r = 0;
+
+  if (  fldname )
+    r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
+  if ( pi > 0 )
+  {
+    r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
+    /* DUF_TRACE( sql, 0, "long long %s='%lld'", fldname, value ); */
+    /* DUF_TEST_R( r ); */
+  }
+  else if ( !r )
+  {
+    r = DUF_ERROR_BIND_NAME;
+    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+  }
+  else
+    DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_sql_bindu_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value )
+{
+  int r = 0;
+
+  if ( 0 && fldname )
+    r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
+  if ( pi > 0 )
+  {
+    if ( value )
+      r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
+    else
+      r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
+    /* DUF_TRACE( sql, 0, "long long nz %s='%lld'", fldname, value ); */
+    /* DUF_TEST_R( r ); */
+  }
+  else if ( !r )
+  {
+    r = DUF_ERROR_BIND_NAME;
+    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+  }
+  else
+    DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_sql_bindu_int( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int value )
+{
+  int r = 0;
+
+  if ( 0 && fldname )
+    r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
+  if ( pi > 0 )
+  {
+    r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_int( stmt, pi, value ) );
+    DUF_TEST_R( r );
+    DUF_TRACE( sql, 0, "int %s='%d'", fldname, value );
+  }
+  else if ( !r )
+  {
+    r = DUF_ERROR_BIND_NAME;
+    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+  }
+  else
+    DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_sql_bindu_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int value )
+{
+  int r = 0;
+
+  if ( 0 && fldname )
+    r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
+  if ( pi > 0 )
+  {
+    if ( value )
+      r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_int( stmt, pi, value ) );
+    else
+      r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
+    DUF_TEST_R( r );
+    DUF_TRACE( sql, 0, "int nz %s='%d'", fldname, value );
+  }
+  else if ( !r )
+  {
+    r = DUF_ERROR_BIND_NAME;
+    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+  }
+  else
+    DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_sql_bindu_string( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, const char *value )
+{
+  int r = 0;
+
+  if ( 0 && fldname )
+    r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
+  if ( pi > 0 )
+  {
+    if ( value )
+      r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_string( stmt, pi, value ) );
+    else
+      r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
+    DUF_TEST_R( r );
+    DUF_TRACE( sql, 0, "string %s='%s'", fldname, value );
+  }
+  else if ( !r )
+  {
+    r = DUF_ERROR_BIND_NAME;
+    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+  }
+  else
+    DUF_TEST_R( r );
+  return r;
+}
+
+int
 duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
 {
   int r = 0;
@@ -228,8 +352,8 @@ duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long
   if ( pi > 0 )
   {
     r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
-    DUF_TRACE( sql, 0, "long long %s='%lld'", fldname, value );
-    DUF_TEST_R( r );
+    /* DUF_TRACE( sql, 0, "long long %s='%lld'", fldname, value ); */
+    /* DUF_TEST_R( r ); */
   }
   else if ( !r )
   {
@@ -254,8 +378,8 @@ duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long l
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
     else
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_null( stmt, pi ) );
-    DUF_TRACE( sql, 0, "long long nz %s='%lld'", fldname, value );
-    DUF_TEST_R( r );
+    /* DUF_TRACE( sql, 0, "long long nz %s='%lld'", fldname, value ); */
+    /* DUF_TEST_R( r ); */
   }
   else if ( !r )
   {
@@ -408,4 +532,10 @@ void
 duf_sql_free( char *s )
 {
   duf_sqlite_free( s );
+}
+
+void
+duf_sql_clear_bindings( duf_sqlite_stmt_t * stmt )
+{
+  duf_sqlite_clear_bindings( stmt );
 }

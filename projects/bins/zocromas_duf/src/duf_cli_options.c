@@ -65,7 +65,7 @@ const duf_option_t longopts[] = {
   {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
   /* --------------- */
   {.name = "verbose",.has_arg = optional_argument,.val = DUF_OPTION_VERBOSE},
-  {.name = "debug",.has_arg = no_argument,.val = DUF_OPTION_DEBUG},
+  {.name = "debug",.has_arg = optional_argument,.val = DUF_OPTION_DEBUG},
   {.name = "memusage",.has_arg = no_argument,.val = DUF_OPTION_MEMUSAGE},
   {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
   {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},

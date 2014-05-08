@@ -141,7 +141,7 @@ sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi
 
   DEBUG_START(  );
 
-  DUF_TRACE_SAMPLE( 2, "T2 dirid=%llu", dirid );
+  DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );
   {
     duf_config->cli.trace.sql--;
     {
@@ -152,12 +152,12 @@ sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi
       /* char *path = duf_pathid_to_path_s( dirid, pdi, &r ); */
 
       DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, real_path );
-      DUF_TRACE_SAMPLE( 1, "path=%s", real_path );
+      DUF_TRACE( sample, 1, "path=%s", real_path );
       /* mas_free( path ); */
     }
     duf_config->cli.trace.sql++;
   }
-  DUF_TRACE_SAMPLE( 2, "T2 dirid=%llu", dirid );
+  DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );
 
   {
     void *ctx = duf_levinfo_context( pdi );

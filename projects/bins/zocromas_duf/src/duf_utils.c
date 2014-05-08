@@ -19,6 +19,8 @@
 #include "duf_utils.h"
 /* ###################################################################### */
 
+#define DUF_TIMING
+
 #define FN_FMT "27s"
 /* #define FN_FMT "23s" */
 
@@ -313,20 +315,22 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
             FILE * out, const char *fmt, va_list args )
 {
   int r = -1;
+#ifdef DUF_TIMING
   static double time0 = 0.0;
   double timec;
-
+#endif
   if ( trace_mode == DUF_TRACE_MODE_errorr )
   {
     r = duf_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, fmt, args );
   }
   else if ( level > minlevel )
   {
-    int rt;
     char uname[10], *puname;
     char rf = 0;
+#ifdef DUF_TIMING
+    int rt;
     struct timeval tv;
-
+#endif
     rf = *fmt;
     /* ; - no prefix, cr   */
     /* . - no prefix, no cr */
@@ -348,7 +352,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
 
       fprintf( out, "%d:%d [%-7s] %3u:%-" FN_FMT ": ", level, minlevel, uname, linid, pfuncid );
     }
-
+#ifdef DUF_TIMING
     rt = gettimeofday( &tv, NULL );
     timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
     if ( !time0 )
@@ -357,6 +361,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
     {
       fprintf( out, "%-7.4f ", timec-time0 );
     }
+#endif
     {
       r = vfprintf( out, fmt, args );
     }

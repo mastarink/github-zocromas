@@ -102,7 +102,7 @@ duf_collect_insert_filename_uni( const char *fname, unsigned long long dir_id, u
 
 
 /* callback of type duf_scan_hook_file_t */
-static int
+static int DUF_UNUSED
 collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
@@ -137,7 +137,7 @@ collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
   return r;
 }
 
-static int
+static int DUF_UNUSED
 collect_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -198,19 +198,20 @@ duf_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct 
 {
   int r = 0;
 
-  /* unsigned long long fnid = 0; */
-
   DEBUG_START(  );
-
   DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
 
-  if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
+  if ( pst_file /* && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) */  )
   {
-    __attribute__( ( unused ) ) unsigned long long dataid = 0;
+    __attribute__ ( ( unused ) ) unsigned long long dataid = 0;
 
+    DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
     dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
-    /* r = duf_collect_insert_filename_uni( fname, dirid, dataid ); */
+    DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
+    r = duf_collect_insert_filename_uni( fname, dirid, dataid );
+    DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
   }
+  DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
   DEBUG_ENDR( r );
   return r;
 }
@@ -290,16 +291,16 @@ duf_scan_callbacks_t duf_collect_openat_callbacks = {
   .title = "collect o",
   .init_scan = NULL,
   .opendir = 1,
-  .scan_mode_step = 1,
-  .entry_dir_scan_before = duf_scan_entry_dir,
-  .entry_dir_scan_before2 = duf_scan_entry_dir2,
+  .scan_mode_2 = 1,
+  .dirent_dir_scan_before = duf_scan_entry_dir,
+  .dirent_dir_scan_before2 = duf_scan_entry_dir2,
 
-  .entry_file_scan_before = duf_scan_entry_reg,
-  .entry_file_scan_before2 = duf_scan_entry_reg2,
+  .dirent_file_scan_before = duf_scan_entry_reg,
+  .dirent_file_scan_before2 = duf_scan_entry_reg2,
 
   /* .node_scan_before = collect_scan_node_before, */
-  .leaf_scan = collect_scan_leaf,
-  .leaf_scan2 = collect_scan_leaf2,
+  /* .leaf_scan = collect_scan_leaf, */
+  /* .leaf_scan2 = collect_scan_leaf2, */
   /* filename for debug only */
   .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */

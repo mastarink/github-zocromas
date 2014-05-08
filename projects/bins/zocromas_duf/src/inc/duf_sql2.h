@@ -10,6 +10,12 @@ int duf_sql_step( duf_sqlite_stmt_t * stmt );
 int duf_sql_finalize( duf_sqlite_stmt_t * stmt );
 int duf_sql_reset( duf_sqlite_stmt_t * stmt );
 
+int duf_sql_bindu_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value );
+int duf_sql_bindu_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value );
+int duf_sql_bindu_int( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int value );
+int duf_sql_bindu_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int value );
+int duf_sql_bindu_string( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, const char *value );
+
 int duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value );
 int duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long long value );
 int duf_sql_bind_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value );

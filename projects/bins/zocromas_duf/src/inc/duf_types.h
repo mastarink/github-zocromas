@@ -5,15 +5,24 @@
 
 #  include "duf_sql_def.h"
 
+/* ###################################################################### */
+
+#  define DUF_FL __func__,__LINE__
+#define DUF_UNUSED __attribute__(( unused ))
+/* ###################################################################### */
 
 #  define DUF_FALSE 0
 #  define DUF_TRUE 1
+
+/* ###################################################################### */
 
 #  define DUF_RECURSIVE_NO DUF_FALSE
 #  define DUF_RECURSIVE_YES DUF_TRUE
 
 #  define DUF_CONSTRAINT_IGNORE_NO DUF_FALSE
 #  define DUF_CONSTRAINT_IGNORE_YES DUF_TRUE
+
+/* ###################################################################### */
 
 #  define SEL_CB_DEF ((duf_sel_cb_t)NULL)
 #  define SEL_CB_UDATA_DEF (NULL)
@@ -22,6 +31,8 @@
 #  define STR_CB_UDATA_DEF (NULL)
 
 #  define DUF_STAT_DEF ((struct stat *) NULL)
+
+/* ###################################################################### */
 
 #  define DUF_SET_SFIELD(name) name = __duf_sql_str_by_name( #name, precord, NULL, 0 )
 #  define DUF_SET_UFIELD(name) name = __duf_sql_ull_by_name( #name, precord, NULL, 0 )
@@ -44,67 +55,105 @@
 #  define DUF_SFIELD2(name) const char*  DUF_SET_SFIELD2(name)
 #  define DUF_UFIELD2(name) unsigned long long  DUF_SET_UFIELD2(name)
 
-
+/* ###################################################################### */
 
 #  define DUF_PUTS( min, str) \
     duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
-		__func__,__LINE__, \
-			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, str)
+		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, str)
 #  define DUF_PUTSL( min) \
     duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
-		__func__,__LINE__, \
-			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, NULL)
+		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, NULL)
 
 
 #  define DUF_PRINTF( min, ...) \
     duf_printf( duf_config ? duf_config->cli.output.level:0, min, 0, \
-		__func__,__LINE__, \
-			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
+		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
 
 #  define DUF_DIE( min, ...) \
     duf_printf( duf_config ? duf_config->cli.output.level:0, min, 1, \
-		__func__,__LINE__, \
-			duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
+		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
 
 
+/* ###################################################################### */
+#  define DUF_IF_TR_WHAT_C(  cfg, what, name )		(( cfg && !cfg->cli.trace.nonew) ? cfg->what.name: 1 )
+#  define DUF_IF_TR_WHAT( what, name )			DUF_IF_TR_WHAT_C( duf_config,  what,      name )
+#  define DUF_IF_TR( name )				DUF_IF_TR_WHAT(		  cli.trace, name)
+
+#  define DUF_IF_TR_WHATN_C( cfg, what, name, min )	( cfg && !cfg->cli.trace.nonew && cfg->what.name > min )
+#  define DUF_IF_TR_WHATN( what, name, min )		DUF_IF_TR_WHATN_C( duf_config, what,      name, min )
+#  define DUF_IF_TRN( name, min )			DUF_IF_TR_WHATN(		  cli.trace, name, min)
+
+#  define DUF_TR_WHAT_C( cfg, what, name, min, ... )	if ( DUF_IF_TR_WHATN_C( cfg, what, name, min )) { __VA_ARGS__ ; }
+#  define DUF_TR_WHAT( what, name, min, ... )		DUF_TR_WHAT_C( duf_config, what, name, min, __VA_ARGS__ )
+
+#  define DUF_TR_WHATSYS(  what, name, min, ...)	DUF_TR_WHATSYSE( errno,  what, name, min, __VA_ARGS__ )
+
+#  define DUF_TR_C( cfg,name, ... )			DUF_TR_WHAT_C( cfg, cli.trace, name, __VA_ARGS__ )
+#  define DUF_TR(name, ...)				DUF_TR_C( duf_config, __VA_ARGS__ )
+
+/* ###################################################################### */
+
+/* #  define DUF_IF_TRACE_WHAT(what,name) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name ) */
+#  define DUF_IF_TRACE_WHAT_C(  cfg, what, name )	(( cfg && !cfg->cli.trace.nonew) ? cfg->what.name: 1 )
+#  define DUF_IF_TRACE_WHAT( what, name )		DUF_IF_TRACE_WHAT_C( duf_config,  what,      name )
+#  define DUF_IF_TRACE( name )				DUF_IF_TRACE_WHAT(		  cli.trace, name)
+
+#  define DUF_IF_TRACE_WHATN_C( cfg, what, name, min )  ( cfg && !cfg->cli.trace.nonew && cfg->what.name > min )
+#  define DUF_IF_TRACE_WHATN( what, name, min )		DUF_IF_TRACE_WHATN_C( duf_config, what,      name, min )
+#  define DUF_IF_TRACEN( name, min )			DUF_IF_TRACE_WHATN(		  cli.trace, name, min)
+
+#  define DUF_TRACE_FILE_C( cfg ) ( cfg && cfg->cli.trace.out ? cfg->cli.trace.out : stdout )
+
+#  define DUF_TRACE_WHAT_C( cfg, what, name, min, ...)	duf_trace( DUF_TRACE_MODE_ ## name, #name, \
+		    	DUF_IF_TRACE_WHAT_C( cfg, what, name ), min, \
+			DUF_FL,	0,		       0,   DUF_TRACE_FILE_C( cfg ), __VA_ARGS__ )
+#  define DUF_TRACE_WHAT( what, name, min, ...)		DUF_TRACE_WHAT_C( duf_config,	  what,	     name, min, __VA_ARGS__ )
+
+#  define DUF_TRACE_C( cfg, name, ... )			DUF_TRACE_WHAT_C( cfg,		  cli.trace, name, __VA_ARGS__ )
+#  define DUF_TRACE( name, ... )			DUF_TRACE_C(	  duf_config,		     name, __VA_ARGS__ )
+
+/* ###################################################################### */
+
+#  define DUF_TRACE_WHATSYSE_C( cfg, ern, what, name, min, ... ) \
+		duf_trace( DUF_TRACE_MODE_ ## name, #name, \
+			DUF_IF_TRACE_WHAT_C( cfg, what, name ), min, \
+			DUF_FL, DUF_TRACE_FLAG_SYSTEM, ern, DUF_TRACE_FILE_C( cfg ), __VA_ARGS__ )
+
+#  define DUF_TRACE_WHATSYSE( ern, what, name, min, ... ) \
+							DUF_TRACE_WHATSYSE_C( duf_config, ern, what, name, min, __VA_ARGS__ )
+
+#  define DUF_TRACE_WHATSYS( what, name, min, ... )	DUF_TRACE_WHATSYSE( errno,  what, name, min, __VA_ARGS__ )
 
 
-#  define DUF_IF_TRACE_WHAT(what,name) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name )
-#  define DUF_IF_TRACE(name)           DUF_IF_TRACE_WHAT(cli.trace, name)
-#  define DUF_IF_TRACE_WHATN(what,name,min) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name>min )
-#  define DUF_IF_TRACEN(name,min)      DUF_IF_TRACE_WHATN(cli.trace, name)
+#  define DUF_TRACESYS(name, ...)			DUF_TRACE_WHATSYS( cli.trace, name, __VA_ARGS__ )
+#  define DUF_TRACESYSE(ern, name, ...)			DUF_TRACE_WHATSYSE( ern, cli.trace, name, __VA_ARGS__ )
 
-#  define DUF_TRACE_WHAT_C(cfg, what, name, min, ...) \
-    duf_trace( DUF_TRACE_MODE_ ## name, #name, ((cfg && !cfg->cli.trace.nonew) ? cfg->what.name: 1), min, \
-		__func__,__LINE__, 0, 0, \
-			cfg && cfg->cli.trace.out?cfg->cli.trace.out:stdout, __VA_ARGS__ )
-#  define DUF_TRACE_WHAT(what, name, min, ...) DUF_TRACE_WHAT_C(duf_config, what, name, min, __VA_ARGS__)
+/* ###################################################################### */
 
-#  define DUF_TRACE_WHATSYSE( ern, what, name, min, ...) \
-    duf_trace( DUF_TRACE_MODE_ ## name, #name, ((duf_config && !duf_config->cli.trace.nonew) ? duf_config->what.name: 1), min, \
-		__func__,__LINE__, DUF_TRACE_FLAG_SYSTEM, ern, \
-			duf_config && duf_config->cli.trace.out?duf_config->cli.trace.out:stdout, __VA_ARGS__ )
-#  define DUF_TRACE_WHATSYS(  what, name, min, ...) DUF_TRACE_WHATSYSE(errno,  what, name, min, __VA_ARGS__)
+#  define DUF_IF_DEBUG( lev )				DUF_IF_TRACE_WHAT( cli.dbg, debug )
+#  define DUF_IF_DEBUGN( lev )				DUF_IF_TRACE_WHAT( cli.dbg, debug, lev )
+#  define DUF_DEBUG(lev, ...)				if ( DUF_IF_DEBUG( lev ) ) {  __VA_ARGS__ ; }
 
-#  define DUF_TRACE_C(cfg,name, ...)     DUF_TRACE_WHAT_C(cfg, cli.trace, name, __VA_ARGS__)
-#  define DUF_TRACE(name, ...)           DUF_TRACE_WHAT_C(duf_config, cli.trace, name, __VA_ARGS__)
+/* ###################################################################### */
 
-#  define DUF_TRACESYS(name, ...)        DUF_TRACE_WHATSYS(cli.trace, name, __VA_ARGS__)
-#  define DUF_TRACESYSE(ern, name, ...)        DUF_TRACE_WHATSYSE(ern, cli.trace, name, __VA_ARGS__)
+#  define DUF_IF_VERBOSE()				DUF_IF_TRACE_WHAT( cli.dbg, verbose )
+#  define DUF_IF_VERBOSEN( lev )			DUF_IF_TRACE_WHATN( cli.dbg, verbose, lev )
+#  define DUF_VERBOSE( lev, ... )			DUF_TRACE_WHAT( cli.dbg, verbose, lev, __VA_ARGS__ )
 
-#  define DUF_TRACE_SCAN( min, ...)    DUF_TRACE( scan, min, __VA_ARGS__)
-#  define DUF_TRACE_SAMPLE( min, ...)  DUF_TRACE( sample, min, __VA_ARGS__)
+/* ###################################################################### */
 
-#  define DUF_ERRSYS(...)              DUF_TRACESYS( error, 0, __VA_ARGS__ )
-#  define DUF_ERRSYSE(ern,...)         DUF_TRACESYSE( ern, error, 0, __VA_ARGS__ )
-#  define DUF_ERROR(...)               DUF_TRACE( error, 0, __VA_ARGS__ )
-#  define DUF_ERRORR(r, ...)              DUF_TRACE( errorr, r, __VA_ARGS__ )
+#  define DUF_ERROR( ... )				DUF_TRACE( error, 0, __VA_ARGS__ )
+#  define DUF_ERRORR( r, ... )				DUF_TRACE( errorr, r, __VA_ARGS__ )
+#  define DUF_ERRSYS( ... )				DUF_TRACESYS( error, 0, __VA_ARGS__ )
+#  define DUF_ERRSYSE( ern, ... )			DUF_TRACESYSE( ern, error, 0, __VA_ARGS__ )
 
-#  define DUF_TEST_RX(val) if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+/* ###################################################################### */
 
-#  define DUF_TEST_R(val)  if ( val!=DUF_ERROR_MAX_REACHED ) DUF_TEST_RX( val )
-#  define DUF_TEST_RR(val)  if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
-#  define DUF_TEST_R3(val)      if (val \
+#  define DUF_TEST_RX(val)	if (val) DUF_ERROR( "<@TEST@> rv=%d [%s]", val, val<0?duf_error_name(val):"-" )
+
+#  define DUF_TEST_R(val)	if ( val!=DUF_ERROR_MAX_REACHED ) DUF_TEST_RX( val )
+#  define DUF_TEST_RR(val)	if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
+#  define DUF_TEST_R3(val)	if (val \
     			&& (val)!=SQLITE_ROW \
     			&& (val)!=SQLITE_DONE \
     					)		\
@@ -112,11 +161,11 @@
 					    DUF_SQLITE_ERROR_CODE(val), \
 					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-" )
 
-#  define DUF_VERBOSE(lev,...)         DUF_TRACE_WHAT(cli.dbg,verbose,lev,__VA_ARGS__)
-#  define DUF_IF_VERBOSE()             DUF_IF_TRACE_WHAT(cli.dbg,verbose)
-#  define DUF_IF_VERBOSEN(lev)         DUF_IF_TRACE_WHATN(cli.dbg,verbose,lev)
+/* ###################################################################### */
 
 #  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
+
+/* ###################################################################### */
 
 #  define DUF_OINV(pref) assert( duf_config->cli.noopenat || !pref opendir || ( \
     		          ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \
@@ -131,10 +180,14 @@
 #  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.noopenat || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
 #  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
+/* ###################################################################### */
+
 #  define DUF_ACTION_TITLE_FMT "-17s"
 #  define DUF_ACTION_TITLE_PFMT "%" DUF_ACTION_TITLE_FMT
 #  define DUF_DEPTH_FMT "-2d"
 #  define DUF_DEPTH_PFMT "L%" DUF_DEPTH_FMT
+
+/* ###################################################################### */
 
 #  include "duf_cli_types.h"
 
@@ -155,16 +208,16 @@ typedef enum
 
 /* #  define DUF_SQLITE_ERROR_CODE(r3c) ( int rt=(r3c);rt == SQLITE_OK ? 0 : ( rt > 0 ? DUF_SQLITE_ERROR_BASE + rt : rt ) ) */
 #  define DUF_SQLITE_ERROR_CODE(r3c) duf_sqlite_error_code(r3c)
-#  define  DEBUG_START() duf_dbgfunc( DBG_START, __func__, __LINE__ )
-#  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, __func__, __LINE__ )
-#  define  DEBUG_ENDR(r)  DUF_TEST_R( r ); duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r )
-#  define  DEBUG_ENDR3(r)  DUF_TEST_R( DUF_SQLITE_ERROR_CODE(r) ); duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r )
-#  define  DEBUG_ENDULL(l) duf_dbgfunc( DBG_ENDULL, __func__, __LINE__, l )
-#  define  DEBUG_ENDS(l) duf_dbgfunc( DBG_ENDS, __func__, __LINE__, l )
-#  define  DEBUG_STEP() duf_dbgfunc( DBG_STEP, __func__, __LINE__ )
-#  define  DEBUG_STEPS(l) duf_dbgfunc( DBG_STEPS, __func__, __LINE__, l )
-#  define  DEBUG_STEPIS(l, s) duf_dbgfunc( DBG_STEPIS, __func__, __LINE__, l, s )
-#  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, __func__, __LINE__, l )
+#  define  DEBUG_START() duf_dbgfunc( DBG_START, DUF_FL )
+#  define  DEBUG_END() duf_dbgfunc( DBG_ENDR, DUF_FL )
+#  define  DEBUG_ENDR(r)  DUF_TEST_R( r ); duf_dbgfunc( DBG_ENDR, DUF_FL, r )
+#  define  DEBUG_ENDR3(r)  DUF_TEST_R( DUF_SQLITE_ERROR_CODE(r) ); duf_dbgfunc( DBG_ENDR, DUF_FL, r )
+#  define  DEBUG_ENDULL(l) duf_dbgfunc( DBG_ENDULL, DUF_FL, l )
+#  define  DEBUG_ENDS(l) duf_dbgfunc( DBG_ENDS, DUF_FL, l )
+#  define  DEBUG_STEP() duf_dbgfunc( DBG_STEP, DUF_FL )
+#  define  DEBUG_STEPS(l) duf_dbgfunc( DBG_STEPS, DUF_FL, l )
+#  define  DEBUG_STEPIS(l, s) duf_dbgfunc( DBG_STEPIS, DUF_FL, l, s )
+#  define  DEBUG_STEPULL(l) duf_dbgfunc( DBG_STEPULL, DUF_FL, l )
 
 typedef enum
 {
@@ -382,21 +435,21 @@ typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, c
 
 
 
-typedef int ( *duf_scan_hook_entry_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
+typedef int ( *duf_scan_hook_dirent_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                              duf_record_t * precord );
-typedef int ( *duf_scan_hook2_entry_reg_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
+typedef int ( *duf_scan_hook2_dirent_reg_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
                                               unsigned long long dirid, duf_depthinfo_t * pdi );
 
 
-typedef int ( *duf_scan_hook_entry_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid,
+typedef int ( *duf_scan_hook_dirent_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid,
                                              duf_depthinfo_t * pdi, duf_record_t * precord );
-typedef int ( *duf_scan_hook2_entry_dir_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
+typedef int ( *duf_scan_hook2_dirent_dir_t ) ( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat * pstat,
                                               unsigned long long dirid, duf_depthinfo_t * pdi );
 
 
-typedef int ( *duf_scan_hook_entry_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
+typedef int ( *duf_scan_hook_dirent_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                                 duf_record_t * precord );
-typedef int ( *duf_scan_hook2_entry_parent_t ) ( duf_sqlite_stmt_t * pstmt, const struct stat * pstat, unsigned long long dirid,
+typedef int ( *duf_scan_hook2_dirent_parent_t ) ( duf_sqlite_stmt_t * pstmt, const struct stat * pstat, unsigned long long dirid,
                                                  duf_depthinfo_t * pdi );
 
 
@@ -434,7 +487,7 @@ typedef int ( *duf_pdi_cb_t ) ( duf_depthinfo_t * pdi );
 struct duf_scan_callbacks_s
 {
   unsigned opendir:1;
-  unsigned scan_mode_step:1;
+  unsigned scan_mode_2:1;
   const char *title;
   const char *fieldset;
   const char *node_selector;
@@ -462,11 +515,11 @@ struct duf_scan_callbacks_s
   duf_scan_hook_file_fd_t leaf_scan_fd;
   duf_scan_hook2_file_fd_t leaf_scan_fd2;
 
-  duf_scan_hook_entry_reg_t entry_file_scan_before;
-  duf_scan_hook2_entry_reg_t entry_file_scan_before2;
+  duf_scan_hook_dirent_reg_t dirent_file_scan_before;
+  duf_scan_hook2_dirent_reg_t dirent_file_scan_before2;
 
-  duf_scan_hook_entry_dir_t entry_dir_scan_before;
-  duf_scan_hook2_entry_dir_t entry_dir_scan_before2;
+  duf_scan_hook_dirent_dir_t dirent_dir_scan_before;
+  duf_scan_hook2_dirent_dir_t dirent_dir_scan_before2;
 
   char **final_sql_argv;
 };
