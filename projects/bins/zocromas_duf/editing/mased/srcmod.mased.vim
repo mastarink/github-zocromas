@@ -1,6 +1,6 @@
 find  mod_integrity_uni.c
 
-tab sfind mod_collect_openat_uni.c
+tab sfind mod_filenames_uni.c
 " tab sfind mod_collect_noopenat_uni.c
 
 tab sfind mod_filedata_uni.c

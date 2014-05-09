@@ -16,6 +16,12 @@ sfind duf_filedata.h
 tab sfind duf_dir_scan.c
 sfind duf_dir_scan.h
 
+tab sfind duf_dir_scan1.c
+sfind duf_dir_scan1.h
+
+tab sfind duf_dir_scan2.c
+sfind duf_dir_scan2.h
+
 tab sfind duf_dirent_scan.c
 sfind duf_dirent_scan.h
 

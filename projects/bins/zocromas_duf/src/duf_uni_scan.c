@@ -16,6 +16,7 @@
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
+#include "duf_cli_options.h"
 
 
 #include "duf_sql.h"
@@ -24,6 +25,8 @@
 #include "duf_path.h"
 
 #include "duf_dir_scan.h"
+#include "duf_dir_scan1.h"
+#include "duf_dir_scan2.h"
 
 #include "duf_dbg.h"
 
@@ -154,8 +157,8 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
 
   real_path = duf_realpath( path );
 
-  DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": sccb        %c", duf_uni_scan_action_title( sccb ), sccb ? '+' : '-' );
-  DUF_TRACE( scan, 0, "+" );
+  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": sccb        %c", duf_uni_scan_action_title( sccb ), sccb ? '+' : '-' );
+  DUF_TRACE( scan, 0, "uni" );
   if ( sccb )
   {
     duf_depthinfo_t di = {.depth = -1,
@@ -181,7 +184,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
       if ( r >= 0 && ( top_dirid || !real_path ) )
       {
         assert( top_dirid == duf_levinfo_dirid( &di ) );
-        DUF_TRACE( scan, 0, "+" );
+        DUF_TRACE( scan, 0, "top_dirid:%llu for %s", top_dirid, real_path );
         DUF_TEST_R( r );
         DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": top_dirid %llu for %s", duf_uni_scan_action_title( sccb ), top_dirid, real_path );
         /* DUF_ERROR( "L%d", di.depth ); */
@@ -210,7 +213,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
 
         if ( r >= 0 )
         {
-          DUF_TRACE( scan, 0, "+" );
+          DUF_TRACE( scan, 2, "before by_parentid" );
           if ( sccb->scan_mode_2 )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
@@ -362,9 +365,9 @@ duf_uni_scan_all( void )
   {
     extern duf_scan_callbacks_t duf_directories_callbacks __attribute( ( weak ) );
 
-    /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
 
-    if ( &duf_directories_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.dirs && duf_config->cli.act.dirent )
+    if ( &duf_directories_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.dirs
+         && duf_config->cli.act.dirent )
     {
       DUF_TRACE( action, 0, "prep directories ..." );
       ppscan_callbacks[asteps++] = &duf_directories_callbacks;
@@ -373,23 +376,23 @@ duf_uni_scan_all( void )
   {
     extern duf_scan_callbacks_t duf_filedata_callbacks __attribute( ( weak ) );
 
-    /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
 
-    if ( &duf_filedata_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.filedata && duf_config->cli.act.dirent )
+    if ( &duf_filedata_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.filedata
+         && duf_config->cli.act.dirent )
     {
       DUF_TRACE( action, 0, "prep filedata ..." );
       ppscan_callbacks[asteps++] = &duf_filedata_callbacks;
     }
   }
   {
-    extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
+    extern duf_scan_callbacks_t duf_filenames_callbacks __attribute( ( weak ) );
 
-    /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
 
-    if ( &duf_collect_openat_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.dirent )
+    if ( &duf_filenames_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.filenames
+         && duf_config->cli.act.dirent )
     {
-      DUF_TRACE( action, 0, "prep collect ..." );
-      ppscan_callbacks[asteps++] = &duf_collect_openat_callbacks;
+      DUF_TRACE( action, 0, "prep filenames ..." );
+      ppscan_callbacks[asteps++] = &duf_filenames_callbacks;
     }
   }
 
@@ -397,7 +400,6 @@ duf_uni_scan_all( void )
   {
     extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );
 
-    /* extern duf_scan_callbacks_t duf_collect_noopenat_md5_callbacks __attribute( ( weak ) ); */
 
     if ( &duf_collect_openat_md5_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.md5 )
     {
@@ -405,20 +407,6 @@ duf_uni_scan_all( void )
       DUF_TRACE( action, 0, "prep fill md5" );
       ppscan_callbacks[asteps++] = &duf_collect_openat_md5_callbacks;
     }
-#ifdef DUF_COMPILE_EXPIRED
-    else if ( &duf_collect_noopenat_md5_callbacks && duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.md5 )
-    {
-      DUF_TRACE( action, 0, "prep fill md5" );
-      ppscan_callbacks[asteps++] = &duf_collect_noopenat_md5_callbacks;
-    }
-    else if ( duf_config->cli.act.collect && duf_config->cli.act.md5 )
-    {
-      extern duf_scan_callbacks_t duf_fill_md5_callbacks /* __attribute( ( weak ) ) */ ;
-
-      DUF_TRACE( action, 0, "prep fill md5" );
-      ppscan_callbacks[asteps++] = &duf_fill_md5_callbacks;
-    }
-#endif
   }
   {
     extern duf_scan_callbacks_t duf_collect_mime_callbacks;
@@ -483,16 +471,63 @@ duf_uni_scan_all( void )
   }
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
-  else
-    DUF_TRACE( action, 0, "no actions set; %s", r < 0 ? "FAIL" : "" );
   for ( int astep = 0; r >= 0 && astep < asteps; astep++ )
   {
     if ( ppscan_callbacks[astep] )
     {
       DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
       r = duf_uni_scan_targ( ppscan_callbacks[astep] );
+      duf_config->actions_done++;
     }
   }
+
+  if ( !duf_config->actions_done )
+  {
+    char *optnames = NULL;
+    char *dirent_optnames = NULL;
+
+    r = DUF_ERROR_NO_ACTIONS;
+
+
+    DUF_TRACE( action, 0, "no actions set; %s", r < 0 ? "FAIL" : "" );
+    optnames = duf_option_names( DUF_OPTION_COLLECT );
+    dirent_optnames = duf_option_names( DUF_OPTION_DIRENT );
+    DUF_PRINTF( 0, "to collect something use %s", optnames );
+    {
+      char *ona = NULL;
+
+      ona = duf_option_names( DUF_OPTION_DIRS );
+      DUF_PRINTF( 0, "to collect directories use %s WITH %s AND %s", optnames, ona, dirent_optnames );
+      mas_free( ona );
+    }
+    {
+      char *ona = NULL;
+
+      ona = duf_option_names( DUF_OPTION_FILEDATA );
+      DUF_PRINTF( 0, "to collect file data use %s WITH %s AND %s", optnames, ona, dirent_optnames );
+      mas_free( ona );
+    }
+    {
+      char *ona = NULL;
+
+      ona = duf_option_names( DUF_OPTION_FILENAMES );
+      DUF_PRINTF( 0, "to collect file names use %s WITH %s AND %s", optnames, ona, dirent_optnames );
+      mas_free( ona );
+    }
+    {
+      char *ona = NULL;
+
+      ona = duf_option_names( DUF_OPTION_MD5 );
+      DUF_PRINTF( 0, "to collect md5 names use %s WITH %s AND %s", optnames, ona, dirent_optnames );
+      mas_free( ona );
+    }
+    DUF_PUTS( 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
+    DUF_PUTSL( 0 );
+    DUF_PUTSL( 0 );
+    mas_free( optnames );
+    mas_free( dirent_optnames );
+  }
+
   /* if ( r == DUF_ERROR_MAX_REACHED )                 */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */

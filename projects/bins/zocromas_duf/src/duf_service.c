@@ -23,7 +23,11 @@
 /* #include "duf_sql_def.h" */
 
 #include "duf_uni_scan.h"
+
 #include "duf_dir_scan.h"
+#include "duf_dir_scan1.h"
+#include "duf_dir_scan2.h"
+
 #include "duf_item_scan1.h"
 #include "duf_item_scan2.h"
 

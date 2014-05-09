@@ -1,4 +1,4 @@
-#include <stdarg.h>
+/* #include <stdarg.h> */
 #include <string.h>
 #include <getopt.h>
 
@@ -28,124 +28,8 @@ const duf_longval_extended_t lo_extended[] = {
   {.val = 0,.help = NULL},
 };
 
-const duf_option_t longopts[] = {
-/* const struct option longopts[] = { */
-  {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_HELP},
-  {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
-  {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
-  {.name = "output",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT},
-  /* --------------- */
-  {.name = "disable-insert",.has_arg = no_argument,.val = DUF_OPTION_DISABLE_INSERT},
-  {.name = "disable-update",.has_arg = no_argument,.val = DUF_OPTION_DISABLE_UPDATE},
-  /* --------------- */
-  {.name = "trace-file",.has_arg = required_argument,.val = DUF_OPTION_TRACE_FILE},
-  {.name = "trace-stderr",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDERR},
-  {.name = "trace-stdout",.has_arg = no_argument,.val = DUF_OPTION_TRACE_STDOUT},
-  {.name = "output-file",.has_arg = required_argument,.val = DUF_OPTION_OUTPUT_FILE},
-  /* --------------- */
-  {.name = "trace-nonew",.has_arg = optional_argument,.val = DUF_OPTION_TRACE_NONEW},
-  /* --------------- */
-  {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_ALL_TRACE},
-  /* --------------- */
-  {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
-  {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
-  {.name = "trace-seq",.has_arg = optional_argument,.val = DUF_OPTION_SEQ_TRACE},
-  {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
-  {.name = "trace-collect",.has_arg = optional_argument,.val = DUF_OPTION_COLLECT_TRACE},
-  {.name = "trace-current",.has_arg = optional_argument,.val = DUF_OPTION_CURRENT_TRACE},
-  {.name = "trace-deleted",.has_arg = optional_argument,.val = DUF_OPTION_DELETED_TRACE},
-  {.name = "trace-dirent",.has_arg = optional_argument,.val = DUF_OPTION_DIRENT_TRACE},
-  {.name = "trace-error",.has_arg = optional_argument,.val = DUF_OPTION_ERROR_TRACE},
-  {.name = "trace-fs",.has_arg = optional_argument,.val = DUF_OPTION_FS_TRACE},
-  {.name = "trace-integrity",.has_arg = optional_argument,.val = DUF_OPTION_INTEGRITY_TRACE},
-  {.name = "trace-match",.has_arg = optional_argument,.val = DUF_OPTION_MATCH_TRACE},
-  {.name = "trace-md5",.has_arg = optional_argument,.val = DUF_OPTION_MD5_TRACE},
-  {.name = "trace-mime",.has_arg = optional_argument,.val = DUF_OPTION_MIME_TRACE},
-  {.name = "trace-mdpath",.has_arg = optional_argument,.val = DUF_OPTION_MDPATH_TRACE},
-  {.name = "trace-path",.has_arg = optional_argument,.val = DUF_OPTION_PATH_TRACE},
-  {.name = "trace-sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE_TRACE},
-  {.name = "trace-samupd",.has_arg = optional_argument,.val = DUF_OPTION_SAMPUPD_TRACE},
-  {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
-  {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
-  /* --------------- */
-  {.name = "verbose",.has_arg = optional_argument,.val = DUF_OPTION_VERBOSE},
-  {.name = "debug",.has_arg = optional_argument,.val = DUF_OPTION_DEBUG},
-  {.name = "memusage",.has_arg = no_argument,.val = DUF_OPTION_MEMUSAGE},
-  {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
-  {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
-  /* --------------- */
-  {.name = "noopenat",.has_arg = optional_argument,.val = DUF_OPTION_NOOPENAT},
-  {.name = "summary",.has_arg = no_argument,.val = DUF_OPTION_SUMMARY},
-  /* --------------- */
-  {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
-  {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
-  {.name = "zero-db",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DB},
-  {.name = "drop-tables",.has_arg = no_argument,.val = DUF_OPTION_DROP_TABLES},
-  {.name = "remove-database",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_DATABASE},
-  {.name = "create-tables",.has_arg = no_argument,.val = DUF_OPTION_CREATE_TABLES},
-  {.name = "tree2db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
-  {.name = "tree-to-db",.has_arg = no_argument,.val = DUF_OPTION_TREE_TO_DB},
-
-  /* {.name = "zero-duplicates",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DUPLICATES}, */
-
-  {.name = "add-path",.has_arg = no_argument,.val = DUF_OPTION_ADD_PATH},
-  /* {.name = "update-path",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_PATH}, */
-  /* {.name = "update-md5",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MD5}, */
-  /* {.name = "update-duplicates",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_DUPLICATES}, */
-  /* {.name = "update-mdpath",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH}, */
-  /* {.name = "update-mdpath-selective",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_MDPATH_SELECTIVE}, */
-  {.name = "filedata",.has_arg = no_argument,.val = DUF_OPTION_FDATA},
-  {.name = "update-exif",.has_arg = no_argument,.val = DUF_OPTION_UPDATE_EXIF},
-  {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_RECURSIVE},
-  /* --------------- */
-  {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_UNI_SCAN},
-  {.name = "collect",.has_arg = no_argument,.val = DUF_OPTION_COLLECT},
-  {.name = "integrity",.has_arg = no_argument,.val = DUF_OPTION_INTEGRITY},
-  {.name = "dirent",.has_arg = no_argument,.val = DUF_OPTION_DIRENT},
-  {.name = "md5",.has_arg = no_argument,.val = DUF_OPTION_MD5},
-  {.name = "mime",.has_arg = no_argument,.val = DUF_OPTION_MIME},
-  {.name = "mdpath",.has_arg = no_argument,.val = DUF_OPTION_MDPATH},
-  {.name = "sample",.has_arg = optional_argument,.val = DUF_OPTION_SAMPLE},
-  {.name = "sampupd",.has_arg = optional_argument,.val = DUF_OPTION_SAMPUPD},
-  {.name = "vacuum",.has_arg = no_argument,.val = DUF_OPTION_VACUUM},
-  /* --------------- */
-  {.name = "print",.has_arg = no_argument,.val = DUF_OPTION_PRINT},
-  {.name = "tree",.has_arg = no_argument,.val = DUF_OPTION_TREE},
-  {.name = "files",.has_arg = no_argument,.val = DUF_OPTION_FILES},
-  {.name = "dirs",.has_arg = no_argument,.val = DUF_OPTION_DIRS},
-  {.name = "directories",.has_arg = no_argument,.val = DUF_OPTION_DIRS},
-  /* --------------- */
-  {.name = "min-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MINDIRFILES},
-  {.name = "max-dirfiles",.has_arg = required_argument,.val = DUF_OPTION_MAXDIRFILES},
-  {.name = "md5id",.has_arg = required_argument,.val = DUF_OPTION_MD5ID},
-  {.name = "mimeid",.has_arg = required_argument,.val = DUF_OPTION_MIMEID},
-  {.name = "size",.has_arg = required_argument,.val = DUF_OPTION_SIZE},
-  {.name = "min-size",.has_arg = required_argument,.val = DUF_OPTION_MINSIZE},
-  {.name = "max-size",.has_arg = required_argument,.val = DUF_OPTION_MAXSIZE},
-  {.name = "same",.has_arg = required_argument,.val = DUF_OPTION_SAME},
-  {.name = "min-same",.has_arg = required_argument,.val = DUF_OPTION_MINSAME},
-  {.name = "max-same",.has_arg = required_argument,.val = DUF_OPTION_MAXSAME},
-  {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
-  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
-  {.name = "max-dirs",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_DIRS},
-  {.name = "max-files",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_FILES},
-  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
-  {.name = "max-seq",.has_arg = required_argument,.val = DUF_OPTION_MAXSEQ},
-  /* {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS}, */
-  /* {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},   */
-  /* {.name = "print-files",.has_arg = no_argument,.val = DUF_OPTION_PRINT_FILES}, */
-  /* {.name = "print-duplicates",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DUPLICATES}, */
-  /* {.name = "same-files",.has_arg = no_argument,.val = DUF_OPTION_SAME_FILES}, */
-  /* {.name = "same-exif",.has_arg = no_argument,.val = DUF_OPTION_SAME_EXIF},   */
-  /* {.name = "same-md5",.has_arg = no_argument,.val = DUF_OPTION_SAME_MD5},     */
-  {.name = "include",.has_arg = required_argument,.val = DUF_OPTION_GLOB_INCLUDE_FILES},
-  {.name = "exclude",.has_arg = required_argument,.val = DUF_OPTION_GLOB_EXCLUDE_FILES},
-  /* {.name = "group",.has_arg = required_argument,.val = DUF_OPTION_GROUP}, */
-  /* {.name = "limit",.has_arg = required_argument,.val = DUF_OPTION_LIMIT}, */
-  /* {.name = "add-to-group",.has_arg = no_argument,.val = DUF_OPTION_ADD_TO_GROUP}, */
-  /* {.name = "remove-from-group",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_FROM_GROUP}, */
-  {.name = NULL,.has_arg = no_argument,.val = DUF_OPTION_NONE},
-};
+extern const duf_option_t *duf_longopts;
+extern const int duf_longopts_count;
 
 const duf_longval_extended_t *
 duf_find_longval_extended( int val )
@@ -175,6 +59,71 @@ duf_find_longval_help( int val )
   return ph ? ph : "-";
 }
 
+char *
+duf_cli_option_shorts( void )
+{
+  char shorts[512] = "";
+  char *p = shorts;
+
+  for ( int i = 0; duf_longopts[i].name && i < duf_longopts_count; i++ )
+  {
+    if ( duf_longopts[i].val < 0xFF )
+    {
+      /* DUF_ERROR( "S:%c %x - %s", duf_longopts[i].val, duf_longopts[i].val, shorts ); */
+      if ( !strchr( shorts, ( char ) duf_longopts[i].val ) )
+      {
+        *p++ = ( char ) duf_longopts[i].val;
+        if ( duf_longopts[i].has_arg == no_argument )
+        {
+        }
+        else if ( duf_longopts[i].has_arg == required_argument )
+        {
+          *p++ = ':';
+        }
+        else if ( duf_longopts[i].has_arg == optional_argument )
+        {
+          /* *p++ = ':'; */
+          /* *p++ = ':'; */
+        }
+        else
+        {
+          *p++ = ':';
+          *p++ = ':';
+        }
+      }
+      *p = 0;
+    }
+  }
+  return *shorts ? mas_strdup( shorts ) : NULL;
+}
+
+char *
+duf_option_names( duf_option_code_t code )
+{
+  char *names = NULL;
+
+  for ( int i = 0; duf_longopts[i].name && i < duf_longopts_count; i++ )
+  {
+    if ( duf_longopts[i].val == code )
+    {
+      if ( names )
+        names = mas_strcat_x( names, " OR " );
+      names = mas_strcat_x( names, "--" );
+      names = mas_strcat_x( names, duf_longopts[i].name );
+    }
+  }
+  if ( ( ( unsigned ) code ) < 0xff )
+  {
+    char sh[10] = "- ";
+
+    sh[1] = code & 0xff;
+    if ( names )
+      names = mas_strcat_x( names, " OR " );
+    names = mas_strcat_x( names, sh );
+  }
+  return names;
+}
+
 int
 duf_cli_option_by_string( const char *string )
 {
@@ -195,13 +144,13 @@ duf_cli_option_by_string( const char *string )
   }
   if ( name )
   {
-    for ( int i = 0; longopts[i].name && i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+    for ( int i = 0; duf_longopts[i].name && i < duf_longopts_count; i++ )
     {
-      if ( 0 == strcmp( name, longopts[i].name ) )
+      if ( 0 == strcmp( name, duf_longopts[i].name ) )
       {
-        const duf_longval_extended_t *extended = duf_find_longval_extended( longopts[i].val );
+        const duf_longval_extended_t *extended = duf_find_longval_extended( duf_longopts[i].val );
 
-        r = duf_parse_option( longopts[i].val, arg, i, extended );
+        r = duf_parse_option( duf_longopts[i].val, arg, i, extended );
         DUF_TEST_R( r );
         if ( r == DUF_ERROR_OPTION )
         {
@@ -301,16 +250,22 @@ duf_cli_options( int argc, char *argv[] )
     int longindex = 0;
 
     opterr = 0;
-    while ( r == 0 && ( opt = getopt_long( argc, argv, DUF_OPTIONS_SHORT, longopts, &longindex ) ) >= 0 )
     {
-      const duf_longval_extended_t *extended = duf_find_longval_extended( opt );
+      char *shorts = NULL;
 
-      r = duf_parse_option( opt, optarg, longindex, extended );
-      if ( r == DUF_ERROR_OPTION )
+      shorts = duf_cli_option_shorts(  );
+      while ( r == 0 && ( opt = getopt_long( argc, argv, shorts, duf_longopts, &longindex ) ) >= 0 )
       {
-        DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], opt, opt );
-        /* r = optopt ? optopt : opt; */
+        const duf_longval_extended_t *extended = duf_find_longval_extended( opt );
+
+        r = duf_parse_option( opt, optarg, longindex, extended );
+        if ( r == DUF_ERROR_OPTION )
+        {
+          DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], opt, opt );
+          /* r = optopt ? optopt : opt; */
+        }
       }
+      mas_free( shorts );
     }
     if ( optind < argc )
     {
@@ -355,11 +310,11 @@ duf_cli_options( int argc, char *argv[] )
 static int
 _duf_restore_option_i( char *ptr, duf_option_code_t code, int val )
 {
-  for ( int i = 0; i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+  for ( int i = 0; i < duf_longopts_count; i++ )
   {
-    if ( longopts[i].val == code )
+    if ( duf_longopts[i].val == code )
     {
-      sprintf( ptr, " --%s='%d'", longopts[i].name, val );
+      sprintf( ptr, " --%s='%d'", duf_longopts[i].name, val );
       break;
     }
   }
@@ -370,11 +325,11 @@ static int
 _duf_restore_option_s( char *ptr, duf_option_code_t code, const char *val )
 {
   if ( val )
-    for ( int i = 0; i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+    for ( int i = 0; i < duf_longopts_count; i++ )
     {
-      if ( longopts[i].val == code )
+      if ( duf_longopts[i].val == code )
       {
-        sprintf( ptr, " --%s='%s'", longopts[i].name, val );
+        sprintf( ptr, " --%s='%s'", duf_longopts[i].name, val );
         break;
       }
     }
@@ -385,11 +340,11 @@ static int
 _duf_restore_option_b( char *ptr, duf_option_code_t code, int val )
 {
   if ( val )
-    for ( int i = 0; i < sizeof( longopts ) / sizeof( longopts[0] ); i++ )
+    for ( int i = 0; i < duf_longopts_count; i++ )
     {
-      if ( longopts[i].val == code )
+      if ( duf_longopts[i].val == code )
       {
-        sprintf( ptr, " --%s", longopts[i].name );
+        sprintf( ptr, " --%s", duf_longopts[i].name );
         break;
       }
     }

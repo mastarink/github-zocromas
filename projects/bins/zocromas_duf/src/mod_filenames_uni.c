@@ -30,7 +30,7 @@
 
 
 static int
-collect_openat_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dir_id, unsigned long long dataid )
+filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dir_id, unsigned long long dataid )
 {
   int r = 0;
 
@@ -63,80 +63,12 @@ collect_openat_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, un
 }
 
 
-/* callback of type duf_scan_hook_file_t */
-static int DUF_UNUSED
-collect_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  DEBUG_START(  );
-
-/* 
-   * --uni-scan   -R   --collect   --files  --dirs  -FF
-   *                   ^^^^^^   ^^^^^^^  ^^^^^^
-   * */
 
 
-  if ( DUF_IF_TRACE( collect ) )
-  {
-    DUF_SFIELD( filename );
-    /* DUF_UFIELD( dirid ); */
-    /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
-    /* duf_dirhandle_t dh;                                        */
-    /* char *path = duf_pathid_to_path_dh( dirid, &dh, pdi, &r ); */
-    const char *real_path = NULL;
-
-    if ( !real_path )
-      real_path = duf_levinfo_path( pdi );
-
-    DUF_TEST_R( r );
-
-    DUF_TRACE( collect, 1, "path=%s/%s", real_path, filename );
-    /* duf_close_dh( &dh ); */
-    /* mas_free( path ); */
-  }
-  DEBUG_ENDR( r );
-  return r;
-}
-
-static int DUF_UNUSED
-collect_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
-{
-  int r = 0;
-
-  DEBUG_START(  );
-
-/* 
-   * --uni-scan   -R   --collect   --files  --dirs  -FF
-   *                   ^^^^^^   ^^^^^^^  ^^^^^^
-   * */
-
-
-  if ( DUF_IF_TRACE( collect ) )
-  {
-    DUF_SFIELD2( filename );
-    /* DUF_UFIELD( dirid ); */
-    /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
-    /* duf_dirhandle_t dh;                                        */
-    /* char *path = duf_pathid_to_path_dh( dirid, &dh, pdi, &r ); */
-    const char *real_path = NULL;
-
-    if ( !real_path )
-      real_path = duf_levinfo_path( pdi );
-
-    DUF_TEST_R( r );
-
-    DUF_TRACE( collect, 0, "path=%s/%s", real_path, filename );
-    /* duf_close_dh( &dh ); */
-    /* mas_free( path ); */
-  }
-  DEBUG_ENDR( r );
-  return r;
-}
 
 static int
-collect_openat_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
-                    duf_record_t * precord )
+filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
+                     duf_record_t * precord )
 {
   int r = 0;
   DUF_UNUSED unsigned long long dataid = 0;
@@ -147,16 +79,16 @@ collect_openat_entry_reg( const char *fname, const struct stat *pst_file, unsign
 
   if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
   {
-    dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
-    r = collect_openat_insert_filename_uni( pdi, fname, dirid, dataid );
+    dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
+    r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );
   }
   DEBUG_ENDR( r );
   return r;
 }
 
 static int
-collect_openat_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
-                     duf_depthinfo_t * pdi )
+filenames_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
+                      duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -169,36 +101,13 @@ collect_openat_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const s
     DUF_UNUSED unsigned long long dataid = 0;
 
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
-    dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
+    dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
-    r = collect_openat_insert_filename_uni( pdi, fname, dirid, dataid );
+    r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
   }
   DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
   DEBUG_ENDR( r );
-  return r;
-}
-
-
-static int
-collect_openat_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
-  DUF_TEST_R( r );
-  return r;
-}
-
-static int
-collect_openat_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
-                     duf_depthinfo_t * pdi )
-{
-  int r = 0;
-
-  DUF_TRACE( scan, 0, "scan entry dir2 by %s", fname );
-  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
-  DUF_TEST_R( r );
   return r;
 }
 
@@ -250,21 +159,15 @@ static char *final_sql[] = {
 
 
 
-duf_scan_callbacks_t duf_collect_openat_callbacks = {
-  .title = "collect o",
+duf_scan_callbacks_t duf_filenames_callbacks = {
+  .title = "filenames",
   .init_scan = NULL,
   .opendir = 1,
   .scan_mode_2 = 1,
-  .dirent_dir_scan_before = collect_openat_entry_dir,
-  .dirent_dir_scan_before2 = collect_openat_entry_dir2,
 
-  .dirent_file_scan_before = collect_openat_entry_reg,
-  .dirent_file_scan_before2 = collect_openat_entry_reg2,
+  .dirent_file_scan_before = filenames_entry_reg,
+  .dirent_file_scan_before2 = filenames_entry_reg2,
 
-  /* .node_scan_before = collect_scan_node_before, */
-  /* .leaf_scan = collect_scan_leaf, */
-  /* .leaf_scan2 = collect_scan_leaf2, */
-  /* filename for debug only */
   .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
         ", fd.mode AS filemode " /* */

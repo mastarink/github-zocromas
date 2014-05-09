@@ -101,7 +101,7 @@ static char *final_sql[] = {
 
 
 duf_scan_callbacks_t duf_directories_callbacks = {
-  .title = "collect o",
+  .title = "directories",
   .init_scan = NULL,
   .opendir = 1,
   .scan_mode_2 = 1,

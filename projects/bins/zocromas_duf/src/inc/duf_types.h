@@ -192,6 +192,7 @@
 
 /* ###################################################################### */
 
+#  include "duf_opt_types.h"
 #  include "duf_cli_types.h"
 
 typedef enum
@@ -229,6 +230,7 @@ typedef enum
   DUF_ERROR_UNKNOWN,
   DUF_ERROR_UNKNOWN_NODE,
   DUF_ERROR_MAIN,
+  DUF_ERROR_NO_ACTIONS,
   DUF_ERROR_PTR,
   DUF_ERROR_DATA,
   DUF_ERROR_MD5,
@@ -310,10 +312,11 @@ typedef struct
 typedef struct
 {
   double loadtime;
+  int actions_done;
   duf_ufilter_t u;
   duf_config_cli_t cli;
   duf_db_config_t db;
-  char *group;
+  /* char *group; */
   int targc;
   char **targv;
 

@@ -47,7 +47,10 @@ duf_action_new( int argc, char **argv )
 /*										*/ DEBUG_END(  );
 /* --drop-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.drop_tables )
+  {
     r = duf_clear_tables(  );
+    duf_config->actions_done++;
+  }
   DUF_TEST_R( r );
   if ( r >= 0 && duf_config->cli.act.vacuum )
   {
@@ -56,24 +59,25 @@ duf_action_new( int argc, char **argv )
     DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    duf_config->actions_done++;
   }
   /* r = duf_sql_exec( "VACUUM", ( int * ) NULL ); */
   DUF_TEST_R( r );
 /* --create-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && duf_config->cli.act.create_tables )
+  {
     r = duf_check_tables(  );
+    duf_config->actions_done++;
+  }
   DUF_TEST_R( r );
 
   {
     char *sargv1, *sargv2;
-    char *qsargv1, *qsargv2;
     int changes = 0;
 
     sargv1 = mas_argv_string( argc, argv, 1 );
     sargv2 = duf_restore_options( argv[0] );
     DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
-    qsargv1 = duf_single_quotes_2( sargv1 );
-    qsargv2 = duf_single_quotes_2( sargv2 );
     /* if ( 1 ) */
     {
       static const char *sql = "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES (:args, :restored_args, '')";
@@ -87,12 +91,17 @@ duf_action_new( int argc, char **argv )
     }
     /* else                                                                                                           */
     /* {                                                                                                              */
+    /*   char *qsargv1;                                                                                               */
+    /*   char *qsargv2;                                                                                               */
+    /*                                                                                                                */
+    /*   qsargv1 = duf_single_quotes_2( sargv1 );                                                                     */
+    /*   qsargv2 = duf_single_quotes_2( sargv2 );                                                                     */
     /*   r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES ('%s', '%s', '%s')", &changes, */
     /*                qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );                                   */
+    /*   mas_free( qsargv2 );                                                                                         */
+    /*   mas_free( qsargv1 );                                                                                         */
     /* }                                                                                                              */
     DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
-    mas_free( qsargv2 );
-    mas_free( qsargv1 );
     mas_free( sargv2 );
     mas_free( sargv1 );
   }
@@ -236,7 +245,10 @@ duf_action_new( int argc, char **argv )
   if ( r >= 0 && duf_config->cli.act.add_path )
   {
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+    {
       ( void ) duf_add_path_uni( duf_config->targv[ia], 0 /*need_id */ , &r );
+      duf_config->actions_done++;
+    }
     DUF_TEST_R( r );
   }
   /* ????????? */

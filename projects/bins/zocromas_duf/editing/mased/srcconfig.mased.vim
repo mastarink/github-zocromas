@@ -7,4 +7,5 @@ sfind duf_cli_options.h
 tab sfind duf_option.c
 sfind duf_option.h
 
-
+tab sfind duf_options_table.c
+tab sfind duf_opt_types.h

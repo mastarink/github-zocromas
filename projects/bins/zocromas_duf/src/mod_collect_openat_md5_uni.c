@@ -210,6 +210,7 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
+  DUF_TRACE( md5, 0, "+" );
 
   memset( md, 0, sizeof( md ) );
   r = duf_make_md5_uni( fd, md );

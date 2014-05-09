@@ -16,7 +16,6 @@
 #include "duf_service.h"
 
 #include "duf_sql.h"
-/* #include "duf_sql1.h" */
 #include "duf_sql2.h"
 
 #include "duf_dbg.h"

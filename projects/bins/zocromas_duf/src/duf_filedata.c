@@ -23,6 +23,36 @@
 /* run --create-tables --zero-filedata   */
 /* run --create-tables --update-filedata */
 
+unsigned long long
+duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int *pr )
+{
+  int r = 0;
+  unsigned long long dataid = 0;
+
+  DEBUG_START(  );
+  const char *sql = "SELECT id AS dataid FROM duf_filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
+
+  DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
+  DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
+  DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
+  DUF_SQL_STEP( r, pstmt );
+  if ( r == DUF_SQL_ROW )
+  {
+    DUF_TRACE( current, 0, "<selected>" );
+    dataid = duf_sql_column_long_long( pstmt, 0 );
+    r = 0;
+  }
+  else
+  {
+    DUF_TEST_R( r );
+    DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+  }
+  DUF_TEST_R( r );
+  DUF_SQL_END_STMT( r, pstmt );
+
+  DEBUG_ENDULL( dataid );
+  return dataid;
+}
 
 unsigned long long
 duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
@@ -69,27 +99,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
     {
       if ( need_id )
-      {
-        const char *sql = "SELECT id AS dataid FROM duf_filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
-
-        DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
-        DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
-        DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
-        if ( r == DUF_SQL_ROW )
-        {
-          DUF_TRACE( current, 0, "<selected>" );
-          dataid = duf_sql_column_long_long( pstmt, 0 );
-          r = 0;
-        }
-        else
-        {
-          DUF_TEST_R( r );
-          DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
-        }
-        DUF_TEST_R( r );
-        DUF_SQL_END_STMT( r, pstmt );
-      }
+        dataid = duf_file_dataid_by_stat( pdi, pst_file, pr );
     }
     else if ( !r /* assume SQLITE_OK */  )
     {

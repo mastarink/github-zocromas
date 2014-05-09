@@ -7,28 +7,29 @@ zocromas_duf_SOURCES=				 \
 	duf.c duf_maindb.c duf_action.c 	  \
 	duf_dbg.c				   \
 	duf_config.c duf_cli_options.c duf_option.c \
-						     \
+	duf_options_table.c			     \
 	duf_create.c 				      \
 						       \
 	duf_add.c 					\
 	duf_filedata.c duf_path.c duf_file_pathid.c 	 \
 							  \
-	duf_uni_scan.c duf_item_scan1.c duf_item_scan2.c duf_dir_scan.c      \
-	duf_dirent_scan.c				    \
-							     \
-	duf_levinfo.c duf_pdi.c				      \
-							       \
-	duf_utils.c duf_dh.c duf_dirent.c duf_service.c		\
-								 \
-	duf_sqlite.c duf_sql.c duf_sql_field.c			  \
-								   \
-	mod_dir_print_uni.c		mod_tree_print_uni.c	    \
-	mod_sample_uni.c		mod_sampupd_uni.c	     \
-	mod_statistics_uni.c		mod_mdpath_uni.c	      \
-	mod_print_md5_uni.c		mod_integrity_uni.c	       \
-	mod_collect_openat_uni.c	mod_filedata_uni.c              \
-	mod_directories_uni.c						 \
-	mod_collect_openat_md5_uni.c	                                  \
+	duf_uni_scan.c duf_item_scan1.c duf_item_scan2.c   \
+	duf_dir_scan.c duf_dir_scan1.c duf_dir_scan2.c	    \
+	duf_dirent_scan.c				     \
+							      \
+	duf_levinfo.c duf_pdi.c				       \
+							        \
+	duf_utils.c duf_dh.c duf_dirent.c duf_service.c		 \
+								  \
+	duf_sqlite.c duf_sql.c duf_sql_field.c			   \
+								    \
+	mod_dir_print_uni.c		mod_tree_print_uni.c	     \
+	mod_sample_uni.c		mod_sampupd_uni.c	      \
+	mod_statistics_uni.c		mod_mdpath_uni.c	       \
+	mod_print_md5_uni.c		mod_integrity_uni.c	        \
+	mod_filenames_uni.c		mod_filedata_uni.c               \
+	mod_directories_uni.c						  \
+	mod_collect_openat_md5_uni.c	                                   \
 	mod_collect_mime_uni.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
