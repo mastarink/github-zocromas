@@ -16,7 +16,9 @@
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
-#include "duf_cli_options.h"
+
+#include "duf_options.h"
+/* #include "duf_cli_options.h" */
 
 
 #include "duf_sql.h"
@@ -24,7 +26,7 @@
 
 #include "duf_path.h"
 
-#include "duf_dir_scan.h"
+#include "duf_sccb.h"
 #include "duf_dir_scan1.h"
 #include "duf_dir_scan2.h"
 

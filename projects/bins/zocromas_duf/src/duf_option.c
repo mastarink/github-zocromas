@@ -13,6 +13,8 @@
 
 #include "duf_config.h"
 
+#include "duf_options.h"
+
 /* ###################################################################### */
 #include "duf_option.h"
 /* ###################################################################### */
@@ -186,6 +188,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   switch ( opt )
   {
   case DUF_OPTION_HELP:
+  case DUF_OPTION_SMART_HELP:
   case DUF_OPTION_EXAMPLES:
     r = opt;
     break;
@@ -662,6 +665,15 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     r = DUF_ERROR_OPTION;
     break;
   }
+  if ( r )
+  {
+    char *ona = NULL;
+
+    ona = duf_option_description( r );
+    DUF_ERROR( "returns: %d = ( %s )", r, ona );
+    mas_free( ona );
+  }
+
   DUF_TEST_R( r );
   return r;
 }

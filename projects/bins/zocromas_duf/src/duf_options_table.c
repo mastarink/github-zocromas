@@ -7,9 +7,10 @@
 /* man getopt_long */
 const duf_option_t duf_longopts_table[] = {
 /* const struct option longopts[] = { */
-  {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_HELP},
-  {.name = "test-option",.has_arg = required_argument /*| optional_argument*/,.val = DUF_OPTION_TEST},
+  {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_SMART_HELP},
+  {.name = "help-short",.has_arg = no_argument,.val = DUF_OPTION_HELP},
   {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
+  {.name = "test-option",.has_arg = required_argument /*| optional_argument*/,.val = DUF_OPTION_TEST},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
   {.name = "output",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT},
   /* --------------- */

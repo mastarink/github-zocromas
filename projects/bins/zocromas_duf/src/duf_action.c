@@ -7,8 +7,11 @@
 
 #include "duf_config.h"
 #include "duf_utils.h"
-#include "duf_cli_options.h"
 #include "duf_service.h"
+
+#include "duf_cli_options.h"
+#include "duf_options.h"
+
 
 #include "duf_sql.h"
 /* #include "duf_sql1.h" */

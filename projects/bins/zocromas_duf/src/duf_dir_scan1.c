@@ -15,7 +15,8 @@
 #include "duf_levinfo.h"
 #include "duf_pdi.h"
 
-#include "duf_cli_options.h"
+#include "duf_options.h"
+/* #include "duf_cli_options.h" */
 
 #include "duf_sql_field.h"
 #include "duf_item_scan1.h"

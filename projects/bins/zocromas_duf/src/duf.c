@@ -3,7 +3,10 @@
 
 #include "duf_config.h"
 #include "duf_utils.h"
+
 #include "duf_cli_options.h"
+#include "duf_options.h"
+
 #include "duf_service.h"
 
 #include "duf_dbg.h"
@@ -54,18 +57,14 @@ duf_main( int argc, char **argv )
     /*   DUF_TRACE( any, 0, "r=%d", r ); */
     /* }                                 */
     dbgfunc_enabled = 1;
+    DUF_ERROR( "or:%d (%d:%d)", or, DUF_OPTION_SMART_HELP, DUF_OPTION_HELP );
     DUF_TEST_R( r );
-    if ( r == 0 && duf_config && duf_config->db.dir )
-    {
-      r = main_db( argc, argv );
-      DUF_TEST_R( r );
-    }
-    DUF_PUTS( 0, "--------------------------------------------------" );
-    DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
-    DUF_PUTS( 0, "--------------------------------------------------" );
     {
       switch ( or )
       {
+      case DUF_OPTION_SMART_HELP:
+        duf_option_smart_help(  );
+        break;
       case DUF_OPTION_HELP:
         DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", argv[0] );
         DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_HELP ) );
@@ -207,21 +206,29 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  run -O -Rdif --mime /mnt/new_media/media/photo --max-seq=2000 (%gsec)", 2.8 );
         DUF_PRINTF( 0, "========================= as for 20140509 ===================" );
         DUF_PRINTF( 0, "  run --remove-database" );
-        DUF_PRINTF( 0, "  run   -O - %s", "creates DB"  );
-        DUF_PRINTF( 0, "  run   -P  /mnt/new_media/media/photo - %s", "adds initial path"  );
-        DUF_PRINTF( 0, "  run   -OP  /mnt/new_media/media/photo - %s", "creates DB AND adds initial path"  );
-        DUF_PRINTF( 0, "  run   -RdE  /mnt/new_media/media/photo - %s", "no-action status"  );
-        DUF_PRINTF( 0, "  run   -Rd  /mnt/new_media/media/photo - %s", "no-action status"  );
-        DUF_PRINTF( 0, "  run   -Rdf  /mnt/new_media/media/photo - %s", "no-action status"  );
-        DUF_PRINTF( 0, "  run   -Rid  /mnt/new_media/media/photo - %s", "no-action status"  );
-        DUF_PRINTF( 0, "  run   -RidE  /mnt/new_media/media/photo - %s", "collect directories information"  );
-        DUF_PRINTF( 0, "  run   -RiDE  /mnt/new_media/media/photo - %s", "collect files data (nameless) information"  );
-        DUF_PRINTF( 0, "  run   -RinE  /mnt/new_media/media/photo - %s", "collect files names information"  );
-        DUF_PRINTF( 0, "  run   -RifE5  /mnt/new_media/media/photo - %s", "collect files md5 information (-f pre-open file)"  );
+        DUF_PRINTF( 0, "  run   -O - %s", "creates DB" );
+        DUF_PRINTF( 0, "  run   -P  /mnt/new_media/media/photo - %s", "adds initial path" );
+        DUF_PRINTF( 0, "  run   -OP  /mnt/new_media/media/photo - %s", "creates DB AND adds initial path" );
+        DUF_PRINTF( 0, "  run   -RdE  /mnt/new_media/media/photo - %s", "no-action status" );
+        DUF_PRINTF( 0, "  run   -Rd  /mnt/new_media/media/photo - %s", "no-action status" );
+        DUF_PRINTF( 0, "  run   -Rdf  /mnt/new_media/media/photo - %s", "no-action status" );
+        DUF_PRINTF( 0, "  run   -Rid  /mnt/new_media/media/photo - %s", "no-action status" );
+        DUF_PRINTF( 0, "  run   -RidE  /mnt/new_media/media/photo - %s", "collect directories information" );
+        DUF_PRINTF( 0, "  run   -RiDE  /mnt/new_media/media/photo - %s", "collect files data (nameless) information" );
+        DUF_PRINTF( 0, "  run   -RinE  /mnt/new_media/media/photo - %s", "collect files names information" );
+        DUF_PRINTF( 0, "  run   -RifE5  /mnt/new_media/media/photo - %s", "collect files md5 information (-f pre-open file)" );
         DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;
       default:
+        if ( r == 0 && duf_config && duf_config->db.dir )
+        {
+          r = main_db( argc, argv );
+          DUF_TEST_R( r );
+        }
+        DUF_PUTS( 0, "--------------------------------------------------" );
+        DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
+        DUF_PUTS( 0, "--------------------------------------------------" );
         break;
       }
     }

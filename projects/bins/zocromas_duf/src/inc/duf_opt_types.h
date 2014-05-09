@@ -6,7 +6,8 @@ typedef enum
 {
   DUF_OPTION_NONE,
 
-  DUF_OPTION_HELP = 'h',
+  DUF_OPTION_SMART_HELP = 'h',
+  DUF_OPTION_HELP = 'H',
   DUF_OPTION_EXAMPLES = 'x',
   DUF_OPTION_TEST = 't',
   DUF_OPTION_VERBOSE = 'v',

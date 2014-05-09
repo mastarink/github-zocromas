@@ -15,19 +15,22 @@
 #include "duf_levinfo.h"
 #include "duf_pdi.h"
 
-#include "duf_cli_options.h"
+#include "duf_options.h"
+/* #include "duf_cli_options.h" */
 
 #include "duf_sql_field.h"
 #include "duf_item_scan1.h"
 #include "duf_item_scan2.h"
+
 #include "duf_dirent_scan.h"
 #include "duf_file_pathid.h"
 
 #include "duf_dbg.h"
 
+#include "duf_sccb.h"
 
 /* ###################################################################### */
-#include "duf_dir_scan.h"
+#include "duf_dir_scan2.h"
 /* ###################################################################### */
 
 
@@ -36,8 +39,6 @@
  *
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
  * */
-
-
 static int
 duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb )
 {

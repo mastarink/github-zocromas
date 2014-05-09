@@ -1,7 +1,4 @@
-#include <stdarg.h>
 #include <string.h>
-#include <getopt.h>
-#include <time.h>
 
 #include <sys/types.h>
 #include <fcntl.h>
@@ -19,11 +16,6 @@
 #include "duf_utils.h"
 
 #include "duf_config.h"
-/* #include "duf_sql_def.h" */
-#include "duf_uni_scan.h"
-#include "duf_dir_scan.h"
-/* #include "duf_item_scan.h" */
-#include "duf_path.h"
 
 /* ###################################################################### */
 #include "duf_dh.h"

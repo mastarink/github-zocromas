@@ -13,8 +13,8 @@ sfind duf_file_pathid.h
 tab sfind duf_filedata.c
 sfind duf_filedata.h
 
-tab sfind duf_dir_scan.c
-sfind duf_dir_scan.h
+tab sfind duf_sccb.c
+sfind duf_sccb.h
 
 tab sfind duf_dir_scan1.c
 sfind duf_dir_scan1.h
