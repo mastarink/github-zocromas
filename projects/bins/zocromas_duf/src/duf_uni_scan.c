@@ -360,27 +360,39 @@ duf_uni_scan_all( void )
   }
   assert( asteps < max_asteps );
   {
-    extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
+    extern duf_scan_callbacks_t duf_directories_callbacks __attribute( ( weak ) );
 
     /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
 
-    if ( &duf_collect_openat_callbacks && !duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.dirent ) )
+    if ( &duf_directories_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.dirs && duf_config->cli.act.dirent )
     {
-      DUF_TRACE( action, 0, "prep collect ..." );
-      ppscan_callbacks[asteps++] = &duf_collect_openat_callbacks;
+      DUF_TRACE( action, 0, "prep directories ..." );
+      ppscan_callbacks[asteps++] = &duf_directories_callbacks;
     }
   }
-   {
+  {
     extern duf_scan_callbacks_t duf_filedata_callbacks __attribute( ( weak ) );
 
     /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
 
-    if ( &duf_filedata_callbacks && !duf_config->cli.noopenat && ( duf_config->cli.act.collect && duf_config->cli.act.filedata ) )
+    if ( &duf_filedata_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.filedata && duf_config->cli.act.dirent )
     {
       DUF_TRACE( action, 0, "prep filedata ..." );
       ppscan_callbacks[asteps++] = &duf_filedata_callbacks;
     }
   }
+  {
+    extern duf_scan_callbacks_t duf_collect_openat_callbacks __attribute( ( weak ) );
+
+    /* extern duf_scan_callbacks_t duf_collect_noopenat_callbacks __attribute( ( weak ) ); */
+
+    if ( &duf_collect_openat_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.dirent )
+    {
+      DUF_TRACE( action, 0, "prep collect ..." );
+      ppscan_callbacks[asteps++] = &duf_collect_openat_callbacks;
+    }
+  }
+
   assert( asteps < max_asteps );
   {
     extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );

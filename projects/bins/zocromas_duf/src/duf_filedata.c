@@ -112,7 +112,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   if ( pr )
     *pr = r;
   /* DUF_TRACE( current, 0, "%llu", dataid ); */
-  assert( dataid );
+  assert( !need_id || dataid );
   DEBUG_ENDULL( dataid );
   return dataid;
 }

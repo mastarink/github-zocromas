@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>              /* Definition of AT_* constants */
-#include <sys/stat.h>
+#define DUF_SQL_PDI_STMT
 
 #include <assert.h>
+
+#include <fcntl.h>              /* Definition of AT_* constants */
+#include <sys/stat.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -14,19 +13,18 @@
 #include "duf_types.h"
 
 #include "duf_utils.h"
-#include "duf_service.h"
+#include "duf_dbg.h"
 #include "duf_config.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
 #include "duf_sql_field.h"
+#include "duf_sql.h"
+#include "duf_sql2.h"
 
-#include "duf_dbg.h"
+#include "duf_filedata.h"
 
-/* ###################################################################### */
-/* #include "duf_filedata_uni.h" */
-/* ###################################################################### */
 
 
 
@@ -44,6 +42,7 @@ filedata_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
   return r;
 }
 
+/* In db sure */
 static int
 filedata_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
@@ -174,6 +173,7 @@ filedata_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid
   return r;
 }
 
+/* Possibly not in db */
 static int
 filedata_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
@@ -201,8 +201,8 @@ filedata_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
     r = stat( fpath, &fpst );
     mas_free( fpath );
   }
-/* Same! st->; fdst.; ufdst.; fpst.; -- use fd, st, path, name */
-  DUF_ERROR( "[%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, path, name );
+/* Same! st->; fdst.; ufdst.; fpst.; pst_file->; -- use fd, st, path, name */
+  DUF_ERROR( "[%lu:%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, pst_file->st_ino, path, name );
   DEBUG_ENDR( r );
   return r;
 }
@@ -254,7 +254,53 @@ static char *final_sql[] = {
   NULL,
 };
 
+static int
+filedata_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
+                         duf_record_t * precord )
+{
+  int r = 0;
 
+  DUF_TRACE( scan, 0, "scan entry dir by %s", fname );
+  DUF_TEST_R( r );
+  return r;
+}
+
+static int
+filedata_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
+                          duf_depthinfo_t * pdi )
+{
+  int r = 0;
+
+  DUF_TRACE( scan, 0, "scan entry dir2 by %s", fname );
+  DUF_TEST_R( r );
+  return r;
+}
+
+static int
+filedata_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
+                    duf_record_t * precord )
+{
+  int r = 0;
+
+  DEBUG_START(  );
+
+  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
+  DEBUG_ENDR( r );
+  return r;
+}
+
+static int
+filedata_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
+                     duf_depthinfo_t * pdi )
+{
+  int r = 0;
+
+  DEBUG_START(  );
+
+  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
+  DEBUG_ENDR( r );
+  return r;
+}
 
 
 duf_scan_callbacks_t duf_filedata_callbacks = {
@@ -271,6 +317,14 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 
   .node_scan_middle = filedata_scan_node_middle,
   .node_scan_middle2 = filedata_scan_node_middle2,
+
+  .dirent_dir_scan_before = filedata_scan_entry_dir,
+  .dirent_dir_scan_before2 = filedata_scan_entry_dir2,
+
+  .dirent_file_scan_before = filedata_scan_entry_reg,
+  .dirent_file_scan_before2 = filedata_scan_entry_reg2,
+
+
 
   .leaf_scan = filedata_scan_leaf,
   .leaf_scan2 = filedata_scan_leaf2,
@@ -313,5 +367,3 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .final_sql_argv = final_sql   /* */
         ,
 };
-
-

@@ -27,7 +27,8 @@ zocromas_duf_SOURCES=				 \
 	mod_statistics_uni.c		mod_mdpath_uni.c	      \
 	mod_print_md5_uni.c		mod_integrity_uni.c	       \
 	mod_collect_openat_uni.c	mod_filedata_uni.c              \
-	mod_collect_openat_md5_uni.c	                                 \
+	mod_directories_uni.c						 \
+	mod_collect_openat_md5_uni.c	                                  \
 	mod_collect_mime_uni.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@

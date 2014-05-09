@@ -1,52 +1,36 @@
 #define DUF_SQL_PDI_STMT
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
-
-#include <dirent.h>
-#include <errno.h>
 #include <assert.h>
+
+
+
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
-#include "duf_service.h"
+#include "duf_dbg.h"
 #include "duf_config.h"
-#include "duf_dh.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-
-#include "duf_sql_def.h"
 #include "duf_sql_field.h"
-
 #include "duf_sql.h"
-#include "duf_sql1.h"
 #include "duf_sql2.h"
 
-#include "duf_path.h"
-
-#include "duf_add.h"
-
-
 #include "duf_filedata.h"
-#include "duf_dirent.h"
 
-#include "duf_dbg.h"
-
-/* run  --db-name=test20140412   --uni-scan -R --collect --files --dirs /mnt/new_media/media/down/ */
-/*                                                    ^^^^^^^ ^^^^^^                            */
+#include "duf_path.h"
 
 
 
 static int
-duf_collect_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dir_id, unsigned long long dataid )
+collect_openat_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dir_id, unsigned long long dataid )
 {
   int r = 0;
 
@@ -151,7 +135,7 @@ collect_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
+collect_openat_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
                     duf_record_t * precord )
 {
   int r = 0;
@@ -164,14 +148,14 @@ duf_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned lon
   if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
   {
     dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
-    r = duf_collect_insert_filename_uni( pdi, fname, dirid, dataid );
+    r = collect_openat_insert_filename_uni( pdi, fname, dirid, dataid );
   }
   DEBUG_ENDR( r );
   return r;
 }
 
 static int
-duf_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
+collect_openat_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
                      duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -187,7 +171,7 @@ duf_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct 
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
     dataid = duf_insert_filedata_uni( pdi, pst_file, 1 /*need_id */ , &r );
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
-    r = duf_collect_insert_filename_uni( pdi, fname, dirid, dataid );
+    r = collect_openat_insert_filename_uni( pdi, fname, dirid, dataid );
     DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
   }
   DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
@@ -197,7 +181,7 @@ duf_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct 
 
 
 static int
-duf_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
+collect_openat_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
 
@@ -207,7 +191,7 @@ duf_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long l
 }
 
 static int
-duf_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
+collect_openat_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
                      duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -271,11 +255,11 @@ duf_scan_callbacks_t duf_collect_openat_callbacks = {
   .init_scan = NULL,
   .opendir = 1,
   .scan_mode_2 = 1,
-  .dirent_dir_scan_before = duf_scan_entry_dir,
-  .dirent_dir_scan_before2 = duf_scan_entry_dir2,
+  .dirent_dir_scan_before = collect_openat_entry_dir,
+  .dirent_dir_scan_before2 = collect_openat_entry_dir2,
 
-  .dirent_file_scan_before = duf_scan_entry_reg,
-  .dirent_file_scan_before2 = duf_scan_entry_reg2,
+  .dirent_file_scan_before = collect_openat_entry_reg,
+  .dirent_file_scan_before2 = collect_openat_entry_reg2,
 
   /* .node_scan_before = collect_scan_node_before, */
   /* .leaf_scan = collect_scan_leaf, */

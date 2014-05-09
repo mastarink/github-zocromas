@@ -210,18 +210,21 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .leaf_selector2 = "SELECT %s FROM duf_filenames AS fn " /* */
         " LEFT JOIN duf_filedatas AS fd ON ( fn.dataid = fd.id ) " /* */
         " WHERE "               /* */
-        " fn.Pathid = :dirid ORDER BY fd.mimeid ",
+        " fn.Pathid = :dirid ORDER BY fd.mimeid " /* */
+	,
   .node_selector = "SELECT pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
         " FROM duf_paths AS pt " /* */
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
-        " WHERE pt.parentid = '%llu' ",
+        " WHERE pt.parentid = '%llu' " /* */
+	,
   .node_selector2 = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
         " FROM duf_paths AS pt " /* */
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
-        " WHERE pt.parentid = :dirid ",
+        " WHERE pt.parentid = :dirid " /* */
+	,
   .final_sql_argv = NULL,
 };
