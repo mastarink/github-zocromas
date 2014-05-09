@@ -5,6 +5,8 @@ tab sfind mod_collect_openat_uni.c
 
 tab sfind mod_filedata_uni.c
 
+tab sfind mod_directories_uni.c
+
 tab sfind mod_sample_uni.c
 tab sfind mod_sampupd_uni.c
 
