@@ -33,6 +33,7 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   const char *sql = "SELECT id AS dataid FROM duf_filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
+  DUF_TRACE( select, 0, "S:%s", sql );
   DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
   DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
   DUF_SQL_STEP( r, pstmt );
@@ -75,6 +76,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
             ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
+      DUF_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
       DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
       DUF_SQL_BIND_LL( size, pst_file->st_size, r, pstmt );

@@ -1,3 +1,5 @@
+#define DUF_SQL_PDI_STMT
+
 #include <string.h>
 #include <assert.h>
 
@@ -265,100 +267,115 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
   if ( selector2 )
   {
-    duf_sqlite_stmt_t *pstmt = NULL;
+    /* duf_sqlite_stmt_t *pstmt = NULL; */
     unsigned long long dirid = 0;
     dirid = va_arg( args, unsigned long long );
 
     {
-      char *sql;
+      char *sql = NULL;
 
-      sql = duf_sql_mprintf( selector2, fieldset );
-      if ( r >= 0 && sql )
-        r = duf_sql_prepare( sql, &pstmt );
-      DUF_TEST_R( r );
-
-      DUF_TRACE( scan, 4, "sql:%s", sql );
-      DUF_TRACE( scan, 0, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
-      DUF_TEST_R( r );
+      if ( fieldset )
+        sql = duf_sql_mprintf( selector2, fieldset );
       {
+        const char *csql;
 
-        if ( r >= 0 )
-          r = duf_sql_bind_long_long( pstmt, ":dirid", dirid );
-        if ( r >= 0 )
-        {
-          r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize );
-          if ( r == DUF_ERROR_BIND_NAME )
-            r = 0;
-        }
-        if ( r >= 0 )
-        {
-          r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize );
-          if ( r == DUF_ERROR_BIND_NAME )
-            r = 0;
-        }
-        if ( r >= 0 )
-        {
-          r = duf_sql_bind_long_long_nz( pstmt, ":minsame", duf_config->u.minsame );
-          if ( r == DUF_ERROR_BIND_NAME )
-            r = 0;
-        }
-        if ( r >= 0 )
-        {
-          r = duf_sql_bind_long_long_nz( pstmt, ":maxsame", duf_config->u.maxsame );
-          if ( r == DUF_ERROR_BIND_NAME )
-            r = 0;
-        }
+        csql = sql ? sql : selector2;
+        /* if ( r >= 0 && sql )                  */
+        /*   r = duf_sql_prepare( sql, &pstmt ); */
+        DUF_SQL_START_STMT_NOPDI(  csql, r, pstmt );
+        DUF_TRACE( select, 0, "S:%s", csql );
         DUF_TEST_R( r );
 
-        if ( r >= 0 )
+        DUF_TRACE( scan, 4, "sql:%s", csql );
+        DUF_TRACE( scan, 0, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
+        DUF_TEST_R( r );
         {
-          int cnt = 0;
-
-          r = duf_sql_reset( pstmt );
+          /* if ( r >= 0 )                                           */
+          /*   r = duf_sql_bind_long_long( pstmt, ":dirid", dirid ); */
+          DUF_SQL_BIND_LL( dirid, dirid, r, pstmt );
+          /* if ( r >= 0 )                                                                */
+          /* {                                                                            */
+          /*   r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize ); */
+          /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+          /*     r = 0;                                                                   */
+          /* }                                                                            */
+          DUF_SQL_BIND_LL_NZ_OPT( minsize, duf_config->u.minsize, r, pstmt );
+          /* if ( r >= 0 )                                                                */
+          /* {                                                                            */
+          /*   r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize ); */
+          /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+          /*     r = 0;                                                                   */
+          /* }                                                                            */
+          DUF_SQL_BIND_LL_NZ_OPT( maxsize, duf_config->u.maxsize, r, pstmt );
+          /* if ( r >= 0 )                                                                */
+          /* {                                                                            */
+          /*   r = duf_sql_bind_long_long_nz( pstmt, ":minsame", duf_config->u.minsame ); */
+          /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+          /*     r = 0;                                                                   */
+          /* }                                                                            */
+          DUF_SQL_BIND_LL_NZ_OPT( minsame, duf_config->u.minsame, r, pstmt );
+          /* if ( r >= 0 )                                                                */
+          /* {                                                                            */
+          /*   r = duf_sql_bind_long_long_nz( pstmt, ":maxsame", duf_config->u.maxsame ); */
+          /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+          /*     r = 0;                                                                   */
+          /* }                                                                            */
+          DUF_SQL_BIND_LL_NZ_OPT( maxsame, duf_config->u.maxsame, r, pstmt );
           DUF_TEST_R( r );
-          /* if ( r >= 0 )                                            */
-          /*   r = duf_sql_bind_string( pstmt, ":dirname", bd );      */
-          while ( r >= 0 && r != DUF_SQL_DONE )
+
+          if ( r >= 0 )
           {
-            r = duf_sql_step( pstmt );
+            int cnt = 0;
 
-            DUF_TRACE( scan, 0, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
-            DUF_TEST_RR( r );
-            DUF_TRACE( scan, 2, "#%d sql_step : r:%d; %s", cnt, r, r == DUF_SQL_ROW ? "_ROW" : ( r == DUF_SQL_DONE ? "_DONE" : "_____" ) );
-
-            if ( r == DUF_SQL_ROW )
-            {
-              if ( !match_cb2 || ( match_cb2 ) ( pstmt ) )
-              {
-                DUF_TRACE( scan, 0, "before duf_sel_cb2_%s(...) as (sel_cb2) : (selector2) dirid:%llu",
-                           node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
-                /* sel_cb can be duf_sel_cb2_(node|leaf) */
-                r = ( sel_cb2 ) ( pstmt, str_cb2, pdi, sccb );
-                DUF_TEST_R( r );
-                cnt++;
-              }
-              else
-                r = 0;
-            }
-          }
-          DUF_TEST_RR( r );
-          {
-            int rf = duf_sql_finalize( pstmt );
-
-            pstmt = NULL;
-            DUF_TEST_R( rf );
-            /* DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); */
-
-            if ( r >= 0 || r == DUF_SQL_DONE )
-              r = rf;
+            /* r = duf_sql_reset( pstmt ); */
             DUF_TEST_R( r );
+            /* if ( r >= 0 )                                            */
+            /*   r = duf_sql_bind_string( pstmt, ":dirname", bd );      */
+            while ( r >= 0 && r != DUF_SQL_DONE )
+            {
+              /* r = duf_sql_step( pstmt ); */
+              DUF_SQL_STEP( r, pstmt );
+              DUF_TRACE( scan, 0, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
+              DUF_TEST_RR( r );
+              DUF_TRACE( scan, 2, "#%d sql_step : r:%d; %s", cnt, r,
+                         r == DUF_SQL_ROW ? "_ROW" : ( r == DUF_SQL_DONE ? "_DONE" : "_____" ) );
+
+              if ( r == DUF_SQL_ROW )
+              {
+                if ( !match_cb2 || ( match_cb2 ) ( pstmt ) )
+                {
+                  DUF_TRACE( scan, 0, "before duf_sel_cb2_%s(...) as (sel_cb2) : (selector2) dirid:%llu",
+                             node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
+                  /* sel_cb can be duf_sel_cb2_(node|leaf) */
+                  r = ( sel_cb2 ) ( pstmt, str_cb2, pdi, sccb );
+                  DUF_TEST_R( r );
+                  cnt++;
+                }
+                else
+                  r = 0;
+              }
+            }
+            DUF_TEST_RR( r );
+            DUF_SQL_END_STMT_NOPDI( r, pstmt );
+            /* {                                                                     */
+            /*   int rf = duf_sql_finalize( pstmt );                                 */
+            /*                                                                       */
+            /*   pstmt = NULL;                                                       */
+            /*   DUF_TEST_R( rf );                                                   */
+            /*   (* DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); *) */
+            /*                                                                       */
+            /*   if ( r >= 0 || r == DUF_SQL_DONE )                                  */
+            /*     r = rf;                                                           */
+            /*   DUF_TEST_R( r );                                                    */
+            /* }                                                                     */
+            /* if ( r == DUF_SQL_DONE )                                              */
+            /*   r = 0;                                                              */
+            /* DUF_TEST_R( r );                                                      */
           }
-          if ( r == DUF_SQL_DONE )
-            r = 0;
-          DUF_TEST_R( r );
         }
       }
-      duf_sql_free( sql );
+      if ( sql )
+        duf_sql_free( sql );
       sql = NULL;
     }
   }
@@ -391,65 +408,78 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
   if ( selector2 )
   {
-    duf_sqlite_stmt_t *pstmt = NULL;
+    /* duf_sqlite_stmt_t *pstmt = NULL; */
+    char *sql = NULL;
 
-
-    char *sql;
-
-    sql = duf_sql_mprintf( selector2, fieldset );
-    if ( r >= 0 && sql )
-      r = duf_sql_prepare( sql, &pstmt );
-    DUF_TEST_R( r );
-
-    DUF_TRACE( scan, 2, "sql:%s dirid:%llu", sql, dirid );
-    DUF_TEST_R( r );
+    if ( fieldset )
+      sql = duf_sql_mprintf( selector2, fieldset );
     {
+      const char *csql;
 
-      if ( r >= 0 )
-        r = duf_sql_bind_long_long( pstmt, ":dirid", dirid );
-      if ( r >= 0 )
-      {
-        r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize );
-        if ( r == DUF_ERROR_BIND_NAME )
-          r = 0;
-      }
-      if ( r >= 0 )
-      {
-        r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize );
-        if ( r == DUF_ERROR_BIND_NAME )
-          r = 0;
-      }
-      if ( r >= 0 )
-      {
-        r = duf_sql_bind_long_long_nz( pstmt, ":minsame", duf_config->u.minsame );
-        if ( r == DUF_ERROR_BIND_NAME )
-          r = 0;
-      }
-      if ( r >= 0 )
-      {
-        r = duf_sql_bind_long_long_nz( pstmt, ":maxsame", duf_config->u.maxsame );
-        if ( r == DUF_ERROR_BIND_NAME )
-          r = 0;
-      }
+      csql = sql ? sql : selector2;
+      /* if ( r >= 0 )                          */
+      /*   r = duf_sql_prepare( csql, &pstmt ); */
+      DUF_SQL_START_STMT_NOPDI(  csql, r, pstmt );
 
       DUF_TEST_R( r );
+      DUF_TRACE( select, 0, "S:%s", csql );
 
-      while ( r >= 0 && r != DUF_SQL_DONE )
+      DUF_TRACE( scan, 2, "sql:%s dirid:%llu", csql, dirid );
+      DUF_TEST_R( r );
       {
-        r = duf_sql_step( pstmt );
-        DUF_TEST_RR( r );
-        if ( r == DUF_SQL_ROW )
+        /* if ( r >= 0 )                                           */
+        /*   r = duf_sql_bind_long_long( pstmt, ":dirid", dirid ); */
+        DUF_SQL_BIND_LL( dirid, dirid, r, pstmt );
+        /* if ( r >= 0 )                                                                */
+        /* {                                                                            */
+        /*   r = duf_sql_bind_long_long_nz( pstmt, ":minsize", duf_config->u.minsize ); */
+        /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+        /*     r = 0;                                                                   */
+        /* }                                                                            */
+        DUF_SQL_BIND_LL_NZ_OPT( minsize, duf_config->u.minsize, r, pstmt );
+        /* if ( r >= 0 )                                                                */
+        /* {                                                                            */
+        /*   r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", duf_config->u.maxsize ); */
+        /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+        /*     r = 0;                                                                   */
+        /* }                                                                            */
+        DUF_SQL_BIND_LL_NZ_OPT( maxsize, duf_config->u.maxsize, r, pstmt );
+        /* if ( r >= 0 )                                                                */
+        /* {                                                                            */
+        /*   r = duf_sql_bind_long_long_nz( pstmt, ":minsame", duf_config->u.minsame ); */
+        /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+        /*     r = 0;                                                                   */
+        /* }                                                                            */
+        DUF_SQL_BIND_LL_NZ_OPT( minsame, duf_config->u.minsame, r, pstmt );
+        /* if ( r >= 0 )                                                                */
+        /* {                                                                            */
+        /*   r = duf_sql_bind_long_long_nz( pstmt, ":maxsame", duf_config->u.maxsame ); */
+        /*   if ( r == DUF_ERROR_BIND_NAME )                                            */
+        /*     r = 0;                                                                   */
+        /* }                                                                            */
+        DUF_SQL_BIND_LL_NZ_OPT( maxsame, duf_config->u.maxsame, r, pstmt );
+
+        DUF_TEST_R( r );
+
+        while ( r >= 0 && r != DUF_SQL_DONE )
         {
-          if ( !match_cb2 || ( match_cb2 ) ( pstmt ) )
-            cnt++;
-          r = 0;
+          r = duf_sql_step( pstmt );
+          DUF_TEST_RR( r );
+          if ( r == DUF_SQL_ROW )
+          {
+            if ( !match_cb2 || ( match_cb2 ) ( pstmt ) )
+              cnt++;
+            r = 0;
+          }
         }
+        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+        /* if ( r == DUF_SQL_DONE ) */
+        /*   r = 0;                 */
+        /* DUF_TEST_R( r );         */
       }
-      if ( r == DUF_SQL_DONE )
-        r = 0;
-      DUF_TEST_R( r );
     }
-    duf_sql_free( sql );
+    if ( sql )
+      duf_sql_free( sql );
     sql = NULL;
 
   }

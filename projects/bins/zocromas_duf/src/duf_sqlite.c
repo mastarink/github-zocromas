@@ -435,8 +435,8 @@ duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val )
   sqlite3_int64 val64;
 
   val64 = val;
+  DUF_TRACE( sql, 2, "  bind ll #%d=%lld [%s]", num, val64, sqlite3_sql( stmt ) );
   r3 = sqlite3_bind_int64( stmt, num, val64 );
-  /* DUF_TRACE( sql, 2, "  bind ll #%d=%lld", num, val64 ); */
   DUF_TEST_R3( r3 );
   return r3;
 }
@@ -446,8 +446,8 @@ duf_sqlite_bind_int( duf_sqlite_stmt_t * stmt, int num, int val )
 {
   int r3 = 0;
 
-  r3 = sqlite3_bind_int( stmt, num, val );
   DUF_TRACE( sql, 2, "  bind i #%d=%d", num, val );
+  r3 = sqlite3_bind_int( stmt, num, val );
   DUF_TEST_R3( r3 );
   return r3;
 }
@@ -457,8 +457,8 @@ duf_sqlite_bind_null( duf_sqlite_stmt_t * stmt, int num )
 {
   int r3 = 0;
 
-  r3 = sqlite3_bind_null( stmt, num );
   DUF_TRACE( sql, 2, "  bind null #%d", num );
+  r3 = sqlite3_bind_null( stmt, num );
   DUF_TEST_R3( r3 );
   return r3;
 }
@@ -468,8 +468,8 @@ duf_sqlite_bind_double( duf_sqlite_stmt_t * stmt, int num, double val )
 {
   int r3 = 0;
 
-  r3 = sqlite3_bind_double( stmt, num, val );
   DUF_TRACE( sql, 2, "  bind double #%d=%g", num, val );
+  r3 = sqlite3_bind_double( stmt, num, val );
   DUF_TEST_R3( r3 );
   return r3;
 }
@@ -479,8 +479,8 @@ duf_sqlite_bind_string( duf_sqlite_stmt_t * stmt, int num, const char *val )
 {
   int r3 = 0;
 
-  r3 = sqlite3_bind_text( stmt, num, val, strlen( val ), SQLITE_TRANSIENT );
   DUF_TRACE( sql, 2, "  bind string #%d=%s", num, val );
+  r3 = sqlite3_bind_text( stmt, num, val, strlen( val ), SQLITE_TRANSIENT );
   DUF_TEST_R3( r3 );
   return r3;
 }

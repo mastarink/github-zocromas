@@ -87,12 +87,26 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 	DUF_SQL_END_STMT_NOPDI(r, pstmt)
 #endif
 
-#define DUF_SQL_BIND_LL( name, value, r, pstmt ) { if ( r >= 0 ) r = duf_sql_bindn_long_long( pstmt, ":" #name, value ); DUF_TEST_R( r ); }
+
+
+#define DUF_SQL_BIND_LL( name, value, r, pstmt )    { if ( r >= 0 ) r = duf_sql_bindn_long_long( pstmt, ":" #name, value ); DUF_TEST_R( r ); }
+#define DUF_SQL_BIND_LL_NZ( name, value, r, pstmt ) { if ( r >= 0 ) r = duf_sql_bindn_long_long_nz( pstmt, ":" #name, value ); DUF_TEST_R( r ); }
+#define DUF_SQL_BIND_LL_NZ_OPT( name, value, r, pstmt ) \
+		{ \
+		  if ( r >= 0 ) \
+		  {  \
+		    r = duf_sql_bindn_long_long_nz( pstmt, ":" #name, value ); \
+		    if ( r == DUF_ERROR_BIND_NAME ) \
+		      r = 0; \
+		     DUF_TEST_R( r ); \
+		  } \
+		}
+
 #define DUF_SQL_BIND_S( name, value, r, pstmt ) { if ( r >= 0 ) r = duf_sql_bindn_string( pstmt, ":" #name, value ); DUF_TEST_R( r ); }
 
 #define DUF_SQL_STEP( r, pstmt ) if ( r >= 0 ) r = duf_sql_step( pstmt )
-#define DUF_SQL_CHANGES( changes, r, pstmt ) { if ( r >= 0 ) changes = duf_sql_changes(  );  duf_pdi_reg_changes( pdi, changes ); }
-#define DUF_SQL_CHANGES_NOPDI( changes, r, pstmt ) { if ( r >= 0 ) changes = duf_sql_changes(  ); }
+#define DUF_SQL_CHANGES_NOPDI( changes, r, pstmt ) if ( r >= 0 ) changes = duf_sql_changes(  )
+#define DUF_SQL_CHANGES( changes, r, pstmt )  DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );  duf_pdi_reg_changes( pdi, changes )
 
 
 

@@ -24,7 +24,6 @@ typedef enum
   DUF_OPTION_ACTION_TRACE = 'A',
   DUF_OPTION_SCAN_TRACE = 'S',
   DUF_OPTION_COLLECT_TRACE = 'I',
-  DUF_OPTION_SQL_TRACE = 'Q',
   DUF_OPTION_ANY_TRACE = 'y',
   DUF_OPTION_MATCH_TRACE = 'm',
   DUF_OPTION_ALL_TRACE = 'X',
@@ -37,7 +36,7 @@ typedef enum
   /* actions */
   DUF_OPTION_TREE = 'T',
   DUF_OPTION_PRINT = 'p',
-  DUF_OPTION_SUMMARY = 'u',
+  DUF_OPTION_SUMMARY = 's',
 
   /* actions */
   DUF_OPTION_COLLECT = 'i',
@@ -84,6 +83,10 @@ typedef enum
   DUF_OPTION_PATH_TRACE,
   DUF_OPTION_SAMPLE_TRACE,
   DUF_OPTION_SAMPUPD_TRACE,
+  DUF_OPTION_SQL_TRACE,
+  DUF_OPTION_SELECT_TRACE,
+  DUF_OPTION_INSERT_TRACE,
+  DUF_OPTION_UPDATE_TRACE,
 
   DUF_OPTION_TRACE_NONEW,
 
@@ -154,4 +157,3 @@ typedef struct option duf_option_t;
 
 
 #endif
-

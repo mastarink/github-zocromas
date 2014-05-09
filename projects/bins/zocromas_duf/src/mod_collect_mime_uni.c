@@ -65,6 +65,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       const char *sql = "INSERT OR IGNORE INTO duf_mime ( mime, charset, tail ) VALUES (:mime, :charset, :tail)";
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, r, pstmt );
+      DUF_TRACE( insert, 0, "S:%s", sql );
       DUF_SQL_BIND_S( mime, mime, r, pstmt );
       DUF_SQL_BIND_S( charset, chs, r, pstmt );
       DUF_SQL_BIND_S( tail, tail, r, pstmt );
@@ -211,20 +212,20 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
         " LEFT JOIN duf_filedatas AS fd ON ( fn.dataid = fd.id ) " /* */
         " WHERE "               /* */
         " fn.Pathid = :dirid ORDER BY fd.mimeid " /* */
-	,
+        ,
   .node_selector = "SELECT pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
         " FROM duf_paths AS pt " /* */
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
         " WHERE pt.parentid = '%llu' " /* */
-	,
+        ,
   .node_selector2 = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
         " FROM duf_paths AS pt " /* */
         " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
         " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
         " WHERE pt.parentid = :dirid " /* */
-	,
+        ,
   .final_sql_argv = NULL,
 };

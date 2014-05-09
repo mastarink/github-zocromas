@@ -44,6 +44,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigne
     const char *sql = "INSERT OR IGNORE INTO duf_filenames (Pathid, name, dataid) VALUES (:pathid, :name, :dataid)";
 
     DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
+    DUF_TRACE( insert, 0, "S:%s", sql );
     DUF_SQL_BIND_LL( pathid, dir_id, r, pstmt );
     DUF_SQL_BIND_S( name, fname, r, pstmt );
     DUF_SQL_BIND_LL( dataid, dataid, r, pstmt );

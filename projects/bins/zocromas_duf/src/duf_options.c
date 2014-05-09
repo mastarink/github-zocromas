@@ -363,6 +363,9 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_TRACE( ptr, COLLECT, collect );
   DUF_RESTORE_OPTION_TRACE( ptr, INTEGRITY, integrity );
   DUF_RESTORE_OPTION_TRACE( ptr, SQL, sql );
+  DUF_RESTORE_OPTION_TRACE( ptr, SELECT, select );
+  DUF_RESTORE_OPTION_TRACE( ptr, INSERT, insert );
+  DUF_RESTORE_OPTION_TRACE( ptr, UPDATE, update );
 
   DUF_RESTORE_OPTION( ptr, MIN_DBGLINE, min_line, cli.dbg );
   DUF_RESTORE_OPTION( ptr, MAX_DBGLINE, max_line, cli.dbg );

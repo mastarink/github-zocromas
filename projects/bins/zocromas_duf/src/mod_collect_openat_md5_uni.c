@@ -56,6 +56,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
 
         DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, filename );
         DUF_SQL_START_STMT( pdi, insert_md5, sql, r, pstmt );
+        DUF_TRACE( insert, 0, "S:%s", sql );
         DUF_SQL_BIND_LL( md5sum1, md64[1], r, pstmt );
         DUF_SQL_BIND_LL( md5sum2, md64[0], r, pstmt );
         DUF_SQL_STEP( r, pstmt );

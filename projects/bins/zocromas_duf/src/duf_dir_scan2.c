@@ -198,7 +198,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   {
     char *ona = NULL;
 
-    ona = duf_option_names( DUF_OPTION_FILES );
+    ona = duf_option_names( DUF_OPTION_DIRS );
     DUF_PRINTF( 0, "to scan node before2 use %s", ona );
     mas_free( ona );
   }
@@ -345,7 +345,7 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   {
     char *ona = NULL;
 
-    ona = duf_option_names( DUF_OPTION_FILES );
+    ona = duf_option_names( DUF_OPTION_DIRS );
     DUF_PRINTF( 0, "to scan node after2 use %s", ona );
     mas_free( ona );
   }

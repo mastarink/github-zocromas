@@ -13429,3 +13429,2027 @@
 # run  '-h'
 # retcode:0
 # 20140509.173122 : 1399645882.575237676 --------------
+# 20140509.175845 : 1399647525.850493977 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.175845 : 1399647525.864415715 --------------
+# 20140509.175910 : 1399647550.355059800 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-Rid' '--mime' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.175911 : 1399647551.514685458 --------------
+# 20140509.175918 : 1399647558.861525542 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-Rifd' '--mime' '/mnt/new_media/media/photo'
+# 20140509.180525 : 1399647925.397583975 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-Rif5' '/mnt/new_media/media/photo'
+# 20140509.180532 : 1399647932.360085062 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-Rifs' '--mime' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.180532 : 1399647932.372654743 --------------
+# 20140509.180536 : 1399647936.433831354 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-Rife' '--mime' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.181207 : 1399648327.357734755 --------------
+# 20140509.183005 : 1399649405.953735975 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-Rife' '/mnt/new_media/media/photo'
+# 20140509.183014 : 1399649414.567874032 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.183014 : 1399649414.582494143 --------------
+# 20140509.183048 : 1399649448.075922423 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.183049 : 1399649449.281502226 --------------
+# 20140509.183052 : 1399649452.863629330 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rdf' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.183107 : 1399649467.032787395 --------------
+# 20140509.191406 : 1399652046.236310345 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--remove-database'
+# retcode:31
+# 20140509.191406 : 1399652046.831694523 --------------
+# 20140509.191436 : 1399652076.084517040 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-OP' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.191436 : 1399652076.139803325 --------------
+# 20140509.191500 : 1399652100.933810229 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.191500 : 1399652100.943560792 --------------
+# 20140509.191520 : 1399652120.318415538 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '-Q'
+# 20140509.191532 : 1399652132.087818167 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.191533 : 1399652133.918039284 --------------
+# 20140509.191613 : 1399652173.453029550 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.191613 : 1399652173.463129101 --------------
+# 20140509.191627 : 1399652187.118970553 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo' '-Q'
+# retcode:0
+# 20140509.191638 : 1399652198.559956224 --------------
+# 20140509.191719 : 1399652239.110259377 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDEf' '/mnt/new_media/media/photo' '-Q'
+# 20140509.192337 : 1399652617.276331315 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo' '-Q'
+# retcode:0
+# 20140509.192342 : 1399652622.720567172 --------------
+# 20140509.193140 : 1399653100.602724843 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo' '-QQQ'
+# 20140509.193936 : 1399653576.628775273 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo' '-Q'
+# 20140509.194002 : 1399653602.640961956 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo' '-Q'
+# 20140509.194033 : 1399653633.266379531 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo' '--trace-select'
+# retcode:31
+# 20140509.194033 : 1399653633.279040551 --------------
+# 20140509.202147 : 1399656107.022074284 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rdf' '-T' '/mnt/new_media/media/photo'
+# retcode:139
+# 20140509.202147 : 1399656107.035781166 --------------
+# 20140509.202232 : 1399656152.717833270 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rdf' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.202232 : 1399656152.730887838 --------------
+# 20140509.202253 : 1399656173.088496748 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--remove-database'
+# retcode:31
+# 20140509.202253 : 1399656173.099838057 --------------
+# 20140509.202306 : 1399656186.618810424 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-OP' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.202306 : 1399656186.653064822 --------------
+# 20140509.202321 : 1399656201.119982058 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.202321 : 1399656201.137855081 --------------
+# 20140509.202533 : 1399656333.399618706 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.202533 : 1399656333.419092344 --------------
+# 20140509.202549 : 1399656349.749289244 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select'
+# retcode:31
+# 20140509.202549 : 1399656349.767672071 --------------
+# 20140509.202809 : 1399656489.382421226 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select'
+# retcode:31
+# 20140509.202809 : 1399656489.400725511 --------------
+# 20140509.202913 : 1399656553.331896943 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select'
+# retcode:31
+# 20140509.202913 : 1399656553.346066628 --------------
+# 20140509.202955 : 1399656595.452543474 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select'
+# retcode:31
+# 20140509.202955 : 1399656595.471424966 --------------
+# 20140509.203023 : 1399656623.564789493 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select'
+# retcode:31
+# 20140509.203023 : 1399656623.584260289 --------------
+# 20140509.203052 : 1399656652.994650953 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select' '-QQ'
+# retcode:31
+# 20140509.203053 : 1399656653.010717874 --------------
+# 20140509.203103 : 1399656663.076371598 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select' '--trace-sql'
+# retcode:31
+# 20140509.203103 : 1399656663.095438991 --------------
+# 20140509.203253 : 1399656773.079275478 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select' '--trace-sql=3'
+# retcode:31
+# 20140509.203253 : 1399656773.098632678 --------------
+# 20140509.203501 : 1399656901.816254786 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select' '--trace-sql=3'
+# retcode:31
+# 20140509.203501 : 1399656901.835979790 --------------
+# 20140509.203841 : 1399657121.251365899 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select' '--trace-sql=3'
+# retcode:31
+# 20140509.203841 : 1399657121.269747197 --------------
+# 20140509.204032 : 1399657232.735248742 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select' '--trace-sql=3'
+# 20140509.204516 : 1399657516.799733947 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-select'
+# 20140509.204524 : 1399657524.312599867 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert'
+# retcode:0
+# 20140509.204524 : 1399657524.714256414 --------------
+# 20140509.204535 : 1399657535.591159446 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert'
+# retcode:0
+# 20140509.204535 : 1399657535.987866828 --------------
+# 20140509.204822 : 1399657702.014112956 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert'
+# retcode:0
+# 20140509.204822 : 1399657702.408631943 --------------
+# 20140509.204826 : 1399657706.248007747 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert'
+# retcode:0
+# 20140509.204826 : 1399657706.645158434 --------------
+# 20140509.204858 : 1399657738.626788195 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert' '-SS'
+# 20140509.204931 : 1399657771.095712458 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.204931 : 1399657771.111987528 --------------
+# 20140509.205037 : 1399657837.775436483 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert' '-SS'
+# 20140509.205044 : 1399657844.195896969 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert'
+# retcode:0
+# 20140509.205044 : 1399657844.680034303 --------------
+# 20140509.205254 : 1399657974.311427338 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo' '--trace-insert'
+# retcode:0
+# 20140509.205254 : 1399657974.786424466 --------------
+# 20140509.205314 : 1399657994.251319200 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.205314 : 1399657994.266368073 --------------
+# 20140509.205322 : 1399658002.820697870 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo'
+# 20140509.205337 : 1399658017.501119070 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDEf' '/mnt/new_media/media/photo'
+# 20140509.205344 : 1399658024.148439389 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDEfd' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.205353 : 1399658033.198308790 --------------
+# 20140509.205402 : 1399658042.972894825 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo'
+# 20140509.205410 : 1399658050.247790978 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.205410 : 1399658050.263265732 --------------
+# 20140509.205845 : 1399658325.429688188 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.205856 : 1399658336.784873808 --------------
+# 20140509.205948 : 1399658388.186909473 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RiDE' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.205958 : 1399658398.277427696 --------------
+# 20140509.210120 : 1399658480.782415654 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.210120 : 1399658480.793582202 --------------
+# 20140509.210150 : 1399658510.455636479 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RinE'
+# retcode:31
+# 20140509.210150 : 1399658510.472641153 --------------
+# 20140509.210229 : 1399658549.275449518 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RinE' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.210237 : 1399658557.779349363 --------------
+# 20140509.210246 : 1399658566.623582389 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rdf' '-T' '/mnt/new_media/media/photo'
+# 20140509.210258 : 1399658578.309305526 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.210259 : 1399658579.334568912 --------------
+# 20140509.210304 : 1399658584.914702465 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.210304 : 1399658584.927233209 --------------
+# 20140509.210314 : 1399658594.349844198 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '--tree'
+# retcode:0
+# 20140509.210315 : 1399658595.305245434 --------------
+# 20140509.210405 : 1399658645.135175036 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '-Rd' '-T' '/mnt/new_media/media/photo' '--max-seq=10'
+# retcode:31
+# 20140509.210405 : 1399658645.147585616 --------------
+# 20140509.210408 : 1399658648.432687462 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '-Rd' '-T' '/mnt/new_media/media/photo' '--max-seq=50'
+# retcode:31
+# 20140509.210408 : 1399658648.445144624 --------------
+# 20140509.210423 : 1399658663.119596684 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.210423 : 1399658663.131598987 --------------
+# 20140509.210430 : 1399658670.661966347 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.210430 : 1399658670.674051331 --------------
+# 20140509.210443 : 1399658683.128439149 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.210443 : 1399658683.138450440 --------------
+# 20140509.210454 : 1399658694.434526269 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.210454 : 1399658694.449609397 --------------
+# 20140509.210501 : 1399658701.549600122 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.210501 : 1399658701.563140943 --------------
+# 20140509.210525 : 1399658725.628285333 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-d' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.210525 : 1399658725.646834377 --------------
+# 20140509.210534 : 1399658734.416125744 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-df' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.210534 : 1399658734.434345658 --------------
+# 20140509.210538 : 1399658738.111124968 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rdf' '-T' '/mnt/new_media/media/photo'
+# 20140509.210544 : 1399658744.785958517 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.210545 : 1399658745.742317753 --------------
+# 20140509.210634 : 1399658794.168707284 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '-gg'
+# retcode:0
+# 20140509.210635 : 1399658795.161076772 --------------
+# 20140509.210738 : 1399658858.786564148 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '-gg' '--max-seq=40'
+# retcode:0
+# 20140509.210738 : 1399658858.854443716 --------------
+# 20140509.210811 : 1399658891.731894776 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '-gg' '--max-seq=40'
+# retcode:0
+# 20140509.210811 : 1399658891.800300283 --------------
+# 20140509.210838 : 1399658918.200822394 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '-gg' '--max-seq=40'
+# retcode:0
+# 20140509.210838 : 1399658918.268681616 --------------
+# 20140509.211242 : 1399659162.389391309 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.211242 : 1399659162.406020463 --------------
+# 20140509.211259 : 1399659179.526919779 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RidE' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211301 : 1399659181.901079827 --------------
+# 20140509.211309 : 1399659189.503325103 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '-gg' '--max-seq=40'
+# retcode:0
+# 20140509.211309 : 1399659189.567383265 --------------
+# 20140509.211312 : 1399659192.782823569 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo' '--max-seq=40'
+# retcode:0
+# 20140509.211312 : 1399659192.846712202 --------------
+# 20140509.211315 : 1399659195.511898406 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--uni-scan' '--print' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211316 : 1399659196.480318999 --------------
+# 20140509.211329 : 1399659209.626399270 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '--print' '-Rd' '-T' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211330 : 1399659210.550559008 --------------
+# 20140509.211407 : 1399659247.839913423 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RdpT' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211408 : 1399659248.806025179 --------------
+# 20140509.211458 : 1399659298.313295677 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RdpTf' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211511 : 1399659311.726519813 --------------
+# 20140509.211540 : 1399659340.343931962 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     10	# trace-stderr
+# =>     11	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     12	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RdpTf' '/mnt/new_media/media/photo'
+# retcode:31
+# 20140509.211540 : 1399659340.359504973 --------------
+# 20140509.211659 : 1399659419.782781955 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-RdpTf' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211702 : 1399659422.942863521 --------------
+# 20140509.211856 : 1399659536.864430012 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRTd' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.211857 : 1399659537.841333682 --------------
+# 20140509.211913 : 1399659553.120132214 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRTd' '/mnt/new_media/media/photo' '--max-depth=2'
+# retcode:0
+# 20140509.211913 : 1399659553.140654165 --------------
+# 20140509.211939 : 1399659579.033289391 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRTd' '/mnt/new_media/media/photo' '--max-depth=2'
+# retcode:0
+# 20140509.211939 : 1399659579.055311539 --------------
+# 20140509.211949 : 1399659589.910816940 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRTd' '/mnt/new_media/media/photo' '--max-depth=2'
+# retcode:0
+# 20140509.211949 : 1399659589.930157253 --------------
+# 20140509.211950 : 1399659590.575900297 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRTd' '/mnt/new_media/media/photo' '--max-depth=2'
+# retcode:0
+# 20140509.211950 : 1399659590.597928294 --------------
+# 20140509.211952 : 1399659592.595802304 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRTd' '/mnt/new_media/media/photo' '--max-depth=2'
+# retcode:0
+# 20140509.211952 : 1399659592.610529203 --------------
+# 20140509.212128 : 1399659688.873897291 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRd' '/mnt/new_media/media/photo' '--max-depth=2'
+# retcode:0
+# 20140509.212128 : 1399659688.896034617 --------------
+# 20140509.212131 : 1399659691.533053273 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRd' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212132 : 1399659692.718913970 --------------
+# 20140509.212138 : 1399659698.588548010 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRdf' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212141 : 1399659701.989394259 --------------
+# 20140509.212157 : 1399659717.009053208 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRdf' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212159 : 1399659719.589822963 --------------
+# 20140509.212252 : 1399659772.327245501 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRd' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212253 : 1399659773.445915135 --------------
+# 20140509.212257 : 1399659777.103540629 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pR' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212257 : 1399659777.267328516 --------------
+# 20140509.212302 : 1399659782.747715012 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRf' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212305 : 1399659785.367559282 --------------
+# 20140509.212518 : 1399659918.682891344 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRfd' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212522 : 1399659922.062058113 --------------
+# 20140509.212526 : 1399659926.310647379 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRd' '/mnt/new_media/media/photo'
+# retcode:0
+# 20140509.212527 : 1399659927.356784710 --------------
+# 20140509.212654 : 1399660014.213727355 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRfd' '/mnt/new_media/media/photo' '--max-seq=200'
+# retcode:0
+# 20140509.212654 : 1399660014.267981624 --------------
+# 20140509.212705 : 1399660025.347043030 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-pRfd' '/mnt/new_media/media/photo' '--max-seq=20'
+# retcode:0
+# 20140509.212705 : 1399660025.374511957 --------------
+# 20140509.212907 : 1399660147.129254324 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.212907 : 1399660147.141584436 --------------
+# 20140509.213031 : 1399660231.258085650 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.213031 : 1399660231.271283879 --------------
+# 20140509.213118 : 1399660278.154399800 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.213118 : 1399660278.167322636 --------------
+# 20140509.213139 : 1399660299.961481231 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.213139 : 1399660299.974622799 --------------
+# 20140509.213222 : 1399660342.549089873 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.213222 : 1399660342.560150772 --------------
+# 20140509.213310 : 1399660390.154435064 ++++++++++++++
+# cat /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/zocromas_duf.conf
+# =>      1	trace-any=0
+# =>      2	trace-stdout
+# =>      3	uni-scan
+# =>      4	# noopenat
+# =>      5	# db-directory=$MSH_CONF_DIR_ZOC_NEW/duf_db
+# =>      6	db-directory=$MSH_DIR/lib/duf_db/
+# =>      7	# db-name=test${MSH_SHN_BASHPID}.db
+# =>      8	db-name=test${MSH_SHN_LAUNCHPID}.db
+# =>      9	db-name=test25561.db
+# =>     10	format=filesize,prefix,seq,nsame,md5,md5id,inode,filename,truepath,realpath,dataid,nlink
+# =>     11	# trace-stderr
+# =>     12	# trace-file=@${MSH_SHN_LAUNCHDATEMT}.trace-sql
+# =>     13	# trace-file=@human/trace/${MSH_SHN_LAUNCHDATEM}.trace
+# /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/.auxdir/.build/src/zocromas_duf
+# run  '-x'
+# retcode:0
+# 20140509.213310 : 1399660390.167162813 --------------

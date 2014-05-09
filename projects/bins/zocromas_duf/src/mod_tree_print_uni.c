@@ -86,12 +86,12 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       /* if ( is_file )   */
       /*   flags |= 0x40; */
       DUF_DEBUG( 1,             /* */
-                 DUF_PRINTF( 0, ".L%-2d", d ); /* */
+                 DUF_PRINTF( 0, ".[L%-2d", d ); /* */
                  /* DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth ); */
                  /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                  DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                  DUF_PRINTF( 0, ".%c%c%c", eodc, nduc, leafc ); /* */
-                 /* DUF_PRINTF( 0, ".0x%02x",  flags ); */
+                 DUF_PRINTF( 0, ".0x%02x]",  flags );
              );
       {
         /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */

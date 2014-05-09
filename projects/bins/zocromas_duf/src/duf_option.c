@@ -388,12 +388,15 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_ALL_TRACE:
     if ( optarg && *optarg )
-      duf_config->cli.trace.sql = duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.md5 =
-            duf_config->cli.trace.mime = duf_config->cli.trace.sample = duf_config->cli.trace.deleted = duf_config->cli.trace.scan =
-            strtol( optarg, NULL, 10 );
+      duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
+            duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.md5 = duf_config->cli.trace.mime =
+            duf_config->cli.trace.sample = duf_config->cli.trace.deleted = duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
     else
     {
       duf_config->cli.trace.sql++;
+      duf_config->cli.trace.select++;
+      duf_config->cli.trace.insert++;
+      duf_config->cli.trace.update++;
       duf_config->cli.trace.collect++;
       duf_config->cli.trace.md5++;
       duf_config->cli.trace.mime++;
@@ -468,6 +471,15 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     break;
   case DUF_OPTION_SQL_TRACE:
     DUF_OPT_NUM_PLUS( cli.trace.sql );
+    break;
+  case DUF_OPTION_SELECT_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.select );
+    break;
+  case DUF_OPTION_INSERT_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.insert );
+    break;
+  case DUF_OPTION_UPDATE_TRACE:
+    DUF_OPT_NUM_PLUS( cli.trace.update );
     break;
   case DUF_OPTION_MIN_DBGLINE:
     DUF_OPT_NUM( cli.dbg.min_line );

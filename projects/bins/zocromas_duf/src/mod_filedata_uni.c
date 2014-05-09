@@ -23,116 +23,16 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
-/* #include "duf_filedata.h" */
+#include "duf_filedata.h"
 
 
 
-static unsigned long long
-filedata_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int *pr )
-{
-  int r = 0;
-  unsigned long long dataid = 0;
 
-  DEBUG_START(  );
-  const char *sql = "SELECT id AS dataid FROM duf_filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
 
-  DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
-  DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
-  DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
-  DUF_SQL_STEP( r, pstmt );
-  if ( r == DUF_SQL_ROW )
-  {
-    DUF_TRACE( current, 0, "<selected>" );
-    dataid = duf_sql_column_long_long( pstmt, 0 );
-    r = 0;
-  }
-  else
-  {
-    DUF_TEST_R( r );
-    DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
-  }
-  DUF_TEST_R( r );
-  DUF_SQL_END_STMT( r, pstmt );
 
-  DEBUG_ENDULL( dataid );
-  return dataid;
-}
-
-static unsigned long long
-filedata_insert( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
-{
-  int r = 0;
-  unsigned long long dataid = 0;
-
-  if ( pst_file )
-  {
-    int r = 0;
-    int changes = 0;
-
-    DEBUG_START(  );
-    if ( !duf_config->cli.disable.insert )
-    {
-      const char *sql = "INSERT OR IGNORE INTO duf_filedatas  " /* */
-            " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn,  md5id) " /* */
-            " VALUES "          /* */
-            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id) " /* */
-            ;
-
-      DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
-      DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
-      DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
-      DUF_SQL_BIND_LL( size, pst_file->st_size, r, pstmt );
-      DUF_SQL_BIND_LL( mode, pst_file->st_mode, r, pstmt );
-      DUF_SQL_BIND_LL( nlink, pst_file->st_nlink, r, pstmt );
-      DUF_SQL_BIND_LL( uid, pst_file->st_uid, r, pstmt );
-      DUF_SQL_BIND_LL( gid, pst_file->st_gid, r, pstmt );
-      DUF_SQL_BIND_LL( blksize, pst_file->st_blksize, r, pstmt );
-      DUF_SQL_BIND_LL( blocks, pst_file->st_blocks, r, pstmt );
-      DUF_SQL_BIND_LL( atim, pst_file->st_atim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( atimn, pst_file->st_atim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( mtim, pst_file->st_mtim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( mtimn, pst_file->st_mtim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( ctim, pst_file->st_ctim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( ctimn, pst_file->st_ctim.tv_nsec, r, pstmt );
-      /* DUF_SQL_BIND_LL( md5id, 0, r, pstmt ); */
-      DUF_SQL_STEP( r, pstmt );
-      DUF_SQL_CHANGES( changes, r, pstmt );
-      DUF_SQL_END_STMT( r, pstmt );
-    }
-    DUF_TRACE( current, 0, "<changes> : %d", changes );
-    if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
-    {
-      if ( need_id )
-        dataid = filedata_dataid_by_stat( pdi, pst_file, pr );
-    }
-    else if ( !r /* assume SQLITE_OK */  )
-    {
-      if ( need_id )
-      {
-        dataid = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", dataid );
-      }
-    }
-    else
-    {
-      DUF_ERROR( "insert filedata %d [%s]", r, duf_error_name( r ) );
-    }
-  }
-  else
-  {
-    DUF_ERROR( "Wrong data" );
-    r = DUF_ERROR_DATA;
-  }
-  if ( pr )
-    *pr = r;
-  /* DUF_TRACE( current, 0, "%llu", dataid ); */
-  assert( !need_id || dataid );
-  DEBUG_ENDULL( dataid );
-  return dataid;
-}
 
 /* callback of type duf_scan_hook_file_t */
-static int
+DUF_UNUSED static int
 filedata_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
@@ -146,7 +46,7 @@ filedata_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
 }
 
 /* In db sure */
-static int
+static int DUF_UNUSED
 filedata_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -185,7 +85,7 @@ filedata_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
-static int
+static int DUF_UNUSED
 filedata_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
@@ -203,7 +103,7 @@ filedata_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * p
   return r;
 }
 
-static int
+DUF_UNUSED static int
 filedata_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -220,7 +120,7 @@ filedata_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
-static int
+DUF_UNUSED static int
 filedata_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
@@ -234,7 +134,7 @@ filedata_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pd
   return r;
 }
 
-static int
+DUF_UNUSED static int
 filedata_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -252,7 +152,7 @@ filedata_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
-static int
+static int DUF_UNUSED
 filedata_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   int r = 0;
@@ -264,7 +164,7 @@ filedata_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * p
   return r;
 }
 
-static int
+static int DUF_UNUSED
 filedata_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -277,7 +177,7 @@ filedata_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid
 }
 
 /* Possibly not in db */
-static int
+DUF_UNUSED static int
 filedata_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
@@ -357,7 +257,7 @@ static char *final_sql[] = {
   NULL,
 };
 
-static int
+DUF_UNUSED static int
 filedata_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                          duf_record_t * precord )
 {
@@ -368,7 +268,7 @@ filedata_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned l
   return r;
 }
 
-static int
+DUF_UNUSED static int
 filedata_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
                           duf_depthinfo_t * pdi )
 {
@@ -379,28 +279,28 @@ filedata_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const st
   return r;
 }
 
-static int
+DUF_UNUSED static int
 filedata_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
-                    duf_record_t * precord )
+                         duf_record_t * precord )
 {
   int r = 0;
 
   DEBUG_START(  );
 
-  ( void ) /* dataid= */ filedata_insert( pdi, pst_file, 0 /*need_id */ , &r );
+  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
   DEBUG_ENDR( r );
   return r;
 }
 
 static int
 filedata_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
-                     duf_depthinfo_t * pdi )
+                          duf_depthinfo_t * pdi )
 {
   int r = 0;
 
   DEBUG_START(  );
 
-  ( void ) /* dataid= */ filedata_insert( pdi, pst_file, 0 /*need_id */ , &r );
+  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
   DEBUG_ENDR( r );
   return r;
 }
@@ -412,27 +312,27 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .opendir = 1,
   .scan_mode_2 = 1,
 
-  .node_scan_before = filedata_scan_node_before,
-  .node_scan_before2 = filedata_scan_node_before2,
+  /* .node_scan_before = filedata_scan_node_before, */
+  /* .node_scan_before2 = filedata_scan_node_before2, */
 
-  .node_scan_after = filedata_scan_node_after,
-  .node_scan_after2 = filedata_scan_node_after2,
+  /* .node_scan_after = filedata_scan_node_after,   */
+  /* .node_scan_after2 = filedata_scan_node_after2, */
 
-  .node_scan_middle = filedata_scan_node_middle,
-  .node_scan_middle2 = filedata_scan_node_middle2,
+  /* .node_scan_middle = filedata_scan_node_middle,   */
+  /* .node_scan_middle2 = filedata_scan_node_middle2, */
 
-  .dirent_dir_scan_before = filedata_scan_entry_dir,
-  .dirent_dir_scan_before2 = filedata_scan_entry_dir2,
+  /* .dirent_dir_scan_before = filedata_scan_entry_dir,   */
+  /* .dirent_dir_scan_before2 = filedata_scan_entry_dir2, */
 
-  .dirent_file_scan_before = filedata_scan_entry_reg,
+  /* .dirent_file_scan_before = filedata_scan_entry_reg, */
   .dirent_file_scan_before2 = filedata_scan_entry_reg2,
+  /* .leaf_scan_fd2 = filedata_scan_dirent_content2, */
 
 
 
-  .leaf_scan = filedata_scan_leaf,
-  .leaf_scan2 = filedata_scan_leaf2,
+  /* .leaf_scan = filedata_scan_leaf, */
+  /* .leaf_scan2 = filedata_scan_leaf2, */
 
-  .leaf_scan_fd2 = filedata_scan_dirent_content2,
 
   .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /* */
         " , uid, gid, nlink, inode, mtim AS mtime " /* */

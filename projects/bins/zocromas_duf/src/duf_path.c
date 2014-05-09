@@ -156,6 +156,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
       if ( pdi )
       {
         DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
+        DUF_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, dev_id, dir_ino, dename, parentid );
         /* DUF_ERROR( "insert_path_index:%d", insert_path_index ); */
         DUF_SQL_BIND_LL( dev, dev_id, r, pstmt );
         DUF_SQL_BIND_LL( inode, dir_ino, r, pstmt );
@@ -194,6 +195,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
         if ( pdi )
         {
           DUF_SQL_START_STMT( pdi, select_path, sql, r, pstmt );
+          DUF_TRACE( select, 0, "S:%s (%llu,'%s')", sql, parentid, dename );
           /* DUF_ERROR( "select_path_index:%d", select_path_index ); */
           DUF_SQL_BIND_LL( dirid, parentid, r, pstmt );
           DUF_SQL_BIND_S( dirname, dename, r, pstmt );

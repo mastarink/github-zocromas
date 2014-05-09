@@ -308,7 +308,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     {
       DUF_PRINTF( 0, "changes:%llu", changes );
     }
-    if ( sccb && changes )
+    if ( sccb /* && changes */ )
     {
       char **psql = sccb->final_sql_argv;
 
@@ -411,9 +411,9 @@ duf_uni_scan_all( void )
     }
   }
   {
-    extern duf_scan_callbacks_t duf_collect_mime_callbacks;
+    extern duf_scan_callbacks_t duf_collect_mime_callbacks __attribute( ( weak ) );
 
-    if ( !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.mime )
+    if ( &duf_collect_mime_callbacks &&   !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.mime )
     {
 
       DUF_TRACE( action, 0, "prep fill mime" );

@@ -46,6 +46,9 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "trace-samupd",.has_arg = optional_argument,.val = DUF_OPTION_SAMPUPD_TRACE},
   {.name = "trace-scan",.has_arg = optional_argument,.val = DUF_OPTION_SCAN_TRACE},
   {.name = "trace-sql",.has_arg = optional_argument,.val = DUF_OPTION_SQL_TRACE},
+  {.name = "trace-select",.has_arg = optional_argument,.val = DUF_OPTION_SELECT_TRACE},
+  {.name = "trace-insert",.has_arg = optional_argument,.val = DUF_OPTION_INSERT_TRACE},
+  {.name = "trace-update",.has_arg = optional_argument,.val = DUF_OPTION_UPDATE_TRACE},
   /* --------------- */
   {.name = "verbose",.has_arg = optional_argument,.val = DUF_OPTION_VERBOSE},
   {.name = "debug",.has_arg = optional_argument,.val = DUF_OPTION_DEBUG},
