@@ -43,7 +43,8 @@ duf_config_create( void )
     if ( rt >= 0 )
       duf_config->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
-  duf_config->db.name = mas_strdup( "duf-default.db" );
+  duf_config->db.main.name = mas_strdup( "duf-main.db" );
+  duf_config->db.adm.name = mas_strdup( "duf-adm.db" );
   duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
   /* duf_config->cli.trace.fs = 1; */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -56,12 +57,16 @@ duf_config_delete( void )
   mas_free( duf_config->db.dir );
   duf_config->db.dir = NULL;
 
-  mas_free( duf_config->db.name );
-  duf_config->db.name = NULL;
+  mas_free( duf_config->db.main.name );
+  duf_config->db.main.name = NULL;
+  mas_free( duf_config->db.main.fpath );
+  duf_config->db.main.fpath = NULL;
 
-  mas_free( duf_config->db.fpath );
-  duf_config->db.fpath = NULL;
-
+  mas_free( duf_config->db.adm.name );
+  duf_config->db.adm.name = NULL;
+  mas_free( duf_config->db.adm.fpath );
+  duf_config->db.adm.fpath = NULL;
+  
   /* mas_free( duf_config->group ); */
   /* duf_config->group = NULL;      */
 

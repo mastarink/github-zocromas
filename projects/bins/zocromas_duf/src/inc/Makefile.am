@@ -11,5 +11,5 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h	   \
 	duf_dirent_scan.h duf_file_pathid.h		     \
 	duf_utils.h duf_dh.h duf_service.h		      \
 	duf_sqlite.h duf_sql.h duf_sql1.h duf_sql2.h	       \
-	duf_sql_field.h duf_sql_def.h				\
+	duf_sql_field.h duf_sql_field1.h duf_sql_def.h		\
 	duf_types.h duf_cli_types.h duf_opt_types.h

@@ -45,6 +45,7 @@ duf_sqlite_open( const char *dbpath )
     {
       /* r3 = sqlite3_open( dbpath, &pDb ); */
       r3 = sqlite3_open_v2( dbpath, &pDb, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL );
+      sqlite3_extended_result_codes( pDb, 1 );
       DUF_TRACE( action, 0, "DB Open %s %s (%d)", dbpath, r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
     }
   }
@@ -377,7 +378,13 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   r3 = sqlite3_prepare_v2( pDb, sql, strlen( sql ), pstmt, &tail );
   DUF_TRACE( sql, 2, "  [%s]", sql );
   if ( r3 == SQLITE_ERROR )
-    DUF_ERROR( "can't prepare SQL:[%s] - %s", sql, sqlite3_errmsg( pDb ) );
+  {
+    DUF_ERROR( "{%d:%d} can't prepare SQL:[%s] - %s", sqlite3_errcode( pDb ), sqlite3_extended_errcode( pDb ), sql, sqlite3_errmsg( pDb ) );
+    if ( sqlite3_strglob( "no such table: *", sqlite3_errmsg( pDb ) ) == 0 )
+    {
+      r3 = DUF_ERROR_SQL_NO_TABLE;
+    }
+  }
   DUF_TEST_R3( r3 );
   return r3;
 }

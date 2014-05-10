@@ -267,7 +267,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     int do2;
 
     if ( r >= 0 && sccb && sccb->init_scan )
-      r = sccb->init_scan( sccb );
+      r = sccb->init_scan(  );
     DUF_TEST_R( r );
     DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( sccb ) );
 
@@ -310,7 +310,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     }
     if ( sccb /* && changes */ )
     {
-      char **psql = sccb->final_sql_argv;
+      const char **psql = sccb->final_sql_argv;
 
       if ( psql )
       {

@@ -216,6 +216,7 @@ function shn_build_autoreconf ()
 }
 function shn_build_configure ()
 {
+  local configure_opts="$@"
   local global_opts_file=$MSH_SHN_PROJECTS_DIR/configure_opts.${MSH_SHN_FLAVOUR:-default}
   local project_opts_file=$MSH_SHN_PROJECT_DIR/configure_opts.${MSH_SHN_FLAVOUR:-default}
   local configscript=${MSH_SHN_DIRS[configure]}/configure
@@ -223,7 +224,6 @@ function shn_build_configure ()
   declare -a MSH_SHN_PROJECT_CONFIGURE_OPTS
   declare -a MSH_SHN_ADD_CONFIGURE_OPTS
   export PKG_CONFIG_PATH="${MSH_SHN_DIRS[flavour]}/lib/pkgconfig"
-  local configure_opts
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:configure]=`datemt`
   shn_setup_projects || return $?
   local shn_dont_setup=yes
@@ -238,9 +238,9 @@ function shn_build_configure ()
     shn_dbgmsg "project opts : ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]}"
   fi
   MSH_SHN_ADD_CONFIGURE_OPTS[${#MSH_SHN_ADD_CONFIGURE_OPTS[@]}]="--prefix=${MSH_SHN_DIRS[flavour]}"
-  configure_opts="${MSH_SHN_GLOBAL_CONFIGURE_OPTS[*]} ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]} ${MSH_SHN_ADD_CONFIGURE_OPTS[*]}"
+  configure_opts+=" ${MSH_SHN_GLOBAL_CONFIGURE_OPTS[*]} ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]} ${MSH_SHN_ADD_CONFIGURE_OPTS[*]}"
   shn_dbgmsg "configure_opts : $configure_opts"
-  shn_dbgmsg "configure [$MSH_SHN_PROJECT_NAME] `shn_project_version`"
+  shn_msg "$configscript  $configure_opts @ [$MSH_SHN_PROJECT_NAME] `shn_project_version`"
   shn_build_xcommand $configscript  $configure_opts && shn_msgns configure ok || return $?
   shn_dbgmsg "C1 `pwd`" >&2
 # shn_build_list . config.status config.log config.h

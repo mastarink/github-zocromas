@@ -14,7 +14,8 @@
 #include "duf_pdi.h"
 
 
-#include "duf_sql_field.h"
+#include "duf_sql_field1.h"
+
 #include "duf_sql.h"
 #include "duf_sql1.h"
 /* #include "duf_sql2.h" */
@@ -232,40 +233,45 @@ duf_scan_db_vitems( duf_node_type_t node_type, duf_str_cb_t str_cb, duf_depthinf
 {
   int r = 0;
   duf_sel_cb_t sel_cb = NULL;
-  __attribute__ ( ( unused ) ) duf_sel_cb_match_t match_cb = NULL;
+  DUF_UNUSED duf_sel_cb_match_t match_cb = NULL;
 
   DEBUG_START(  );
+  if ( 0 != strncmp( sql, "SELECT", 6 ) )
+    r = DUF_ERROR_SQL_NO_FIELDSET;
 /* duf_sel_cb_(node|leaf):
  * this is callback of type: duf_sel_cb_t (first range): 
  *
  * called with precord
  * str_cb + str_cb_udata to be called for precord with correspondig args
  * */
-  if ( node_type == DUF_NODE_LEAF )
+  if ( r >= 0 )
   {
-    sel_cb = duf_sel_cb_leaf;
-    match_cb = duf_match_leaf;
-  }
-  else if ( node_type == DUF_NODE_NODE )
-    sel_cb = duf_sel_cb_node;
-  else
-    r = DUF_ERROR_UNKNOWN_NODE;
-  DUF_OINV_OPENED( pdi-> );
-  DUF_OINV( pdi-> );
-  DUF_TRACE( scan, 3, "scan items [%s] sel_cb%c; str_cb%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb ? '+' : '-',
-             str_cb ? '+' : '-' );
+    if ( node_type == DUF_NODE_LEAF )
+    {
+      sel_cb = duf_sel_cb_leaf;
+      match_cb = duf_match_leaf;
+    }
+    else if ( node_type == DUF_NODE_NODE )
+      sel_cb = duf_sel_cb_node;
+    else
+      r = DUF_ERROR_UNKNOWN_NODE;
+    DUF_OINV_OPENED( pdi-> );
+    DUF_OINV( pdi-> );
+    DUF_TRACE( scan, 3, "scan items [%s] sel_cb%c; str_cb%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb ? '+' : '-',
+               str_cb ? '+' : '-' );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
-  if ( sel_cb )
-    r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, pdi, pdi, sccb, sql, args );
+    if ( sel_cb )
+      r = duf_sql_vselect( sel_cb, SEL_CB_UDATA_DEF, str_cb, pdi, pdi, sccb, sql, args );
 
 
 
-  DUF_TRACE( scan, 3, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
-  DUF_OINV( pdi-> );
+    DUF_TRACE( scan, 3, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
+    DUF_OINV( pdi-> );
 
-  /* DUF_ERROR( "r:%d; sel_cb:%s", r, DUF_FUNN( sel_cb ) ); */
-  DUF_OINV_OPENED( pdi-> );
+    /* DUF_ERROR( "r:%d; sel_cb:%s", r, DUF_FUNN( sel_cb ) ); */
+    DUF_OINV_OPENED( pdi-> );
+  }
   DUF_TEST_R( r );
   DEBUG_ENDR( r );
   return r;
@@ -290,6 +296,11 @@ duf_scan_db_items( duf_node_type_t node_type, duf_str_cb_t str_cb, duf_depthinfo
   DEBUG_START(  );
   {
     va_start( args, sql );
+
+    if ( 0 != strncmp( sql, "SELECT", 6 ) )
+      r = DUF_ERROR_SQL_NO_FIELDSET;
+
+    if ( r >= 0 )
     {
       DUF_OINV( pdi-> );
       r = duf_scan_db_vitems( node_type, str_cb, pdi, sccb, sql, args );

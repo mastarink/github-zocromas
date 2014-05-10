@@ -180,6 +180,7 @@ duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_prepare( sql, pstmt ) );
+
   DUF_TRACE( sql, 0, " [[%s]]", sql );
   DUF_TEST_R( r );
   return r;

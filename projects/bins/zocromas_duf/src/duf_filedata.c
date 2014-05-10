@@ -30,7 +30,7 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   unsigned long long dataid = 0;
 
   DEBUG_START(  );
-  const char *sql = "SELECT id AS dataid FROM duf_filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
+  const char *sql = "SELECT id AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
   DUF_TRACE( select, 0, "S:%s", sql );
@@ -69,7 +69,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     DEBUG_START(  );
     if ( !duf_config->cli.disable.insert )
     {
-      const char *sql = "INSERT OR IGNORE INTO duf_filedatas  " /* */
+      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filedatas  " /* */
             " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn,  md5id) " /* */
             " VALUES "          /* */
             " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id) " /* */

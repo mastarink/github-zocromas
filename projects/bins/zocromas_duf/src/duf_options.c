@@ -201,18 +201,19 @@ duf_cli_option_by_string( const char *string )
 
         r = duf_parse_option( duf_longopts[i].val, arg, i, extended );
         DUF_TEST_R( r );
-        if ( r == DUF_ERROR_OPTION )
-        {
-          DUF_ERROR( "Invalid option -- '%s'", string );
-        }
         break;
       }
     }
-    DUF_TEST_R( r );
+    /* DUF_TEST_R( r ); */
   }
   mas_free( name );
   mas_free( arg );
-  DUF_TEST_R( r );
+  if ( r == DUF_ERROR_OPTION )
+  {
+    DUF_ERROR( "Invalid option -- '%s'", string );
+  }
+  else
+    DUF_TEST_R( r );
   return r;
 }
 
@@ -418,7 +419,8 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_RESTORE_OPTION_S( ptr, OUTPUT_FILE, file, cli.output );
   DUF_RESTORE_OPTION_S( ptr, TRACE_FILE, file, cli.trace );
   DUF_RESTORE_OPTION_S( ptr, DB_DIRECTORY, dir, db );
-  DUF_RESTORE_OPTION_S( ptr, DB_NAME, name, db );
+  DUF_RESTORE_OPTION_S( ptr, DB_NAME_ADM, name, db.adm );
+  DUF_RESTORE_OPTION_S( ptr, DB_NAME_MAIN, name, db.main );
 
   /* DUF_RESTORE_OPTION_S( FILE, file, cli.trace ); */
 }

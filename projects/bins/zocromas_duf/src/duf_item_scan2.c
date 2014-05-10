@@ -6,6 +6,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
@@ -228,7 +230,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
  * call str_cb + pdi as str_cb_udata for each record by sql with corresponding args
  *
  *
- * known str_cb for duf_scan_db_vitems (to pass to duf_sql_vselect and then to duf_sel_cb_leaf OR duf_sel_cb_node ):
+ * known str_cb for duf_scan_db_vitems2 (to pass to duf_sql_vselect and then to duf_sel_cb_leaf OR duf_sel_cb_node ):
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *   duf_str_cb_scan_file_fd;  duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd ; str_cb_udata_unused
  *   duf_str_cb_uni_scan_dir
@@ -275,14 +277,33 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
       char *sql = NULL;
 
       if ( fieldset )
-        sql = duf_sql_mprintf( selector2, fieldset );
+      {
+        if ( 0 == strncmp( selector2, "SELECT", 6 ) )
+        {
+          char *sql3;
+
+          sql3 = duf_sql_mprintf( selector2, fieldset );
+          sql = mas_strdup( sql3 );
+          mas_free( sql3 );
+        }
+        else
+        {
+          sql = mas_strdup( "SELECT " );
+          sql = mas_strcat_x( sql, fieldset );
+          sql = mas_strcat_x( sql, " " );
+          sql = mas_strcat_x( sql, selector2 );
+        }
+      }
+      else
+        r = DUF_ERROR_SQL_NO_FIELDSET;
+
       {
         const char *csql;
 
-        csql = sql ? sql : selector2;
+        csql = sql;
         /* if ( r >= 0 && sql )                  */
         /*   r = duf_sql_prepare( sql, &pstmt ); */
-        DUF_SQL_START_STMT_NOPDI(  csql, r, pstmt );
+        DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
         DUF_TRACE( select, 0, "S:%s", csql );
         DUF_TEST_R( r );
 
@@ -375,7 +396,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
         }
       }
       if ( sql )
-        duf_sql_free( sql );
+        mas_free( sql );
       sql = NULL;
     }
   }
@@ -412,14 +433,34 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
     char *sql = NULL;
 
     if ( fieldset )
-      sql = duf_sql_mprintf( selector2, fieldset );
+    {
+      if ( 0 == strncmp( selector2, "SELECT", 6 ) )
+      {
+        char *sql3;
+
+        sql3 = duf_sql_mprintf( selector2, fieldset );
+        sql = mas_strdup( sql3 );
+        mas_free( sql3 );
+      }
+      else
+      {
+        sql = mas_strdup( "SELECT " );
+        sql = mas_strcat_x( sql, fieldset );
+        sql = mas_strcat_x( sql, " " );
+        sql = mas_strcat_x( sql, selector2 );
+      }
+    }
+    else
+      r = DUF_ERROR_SQL_NO_FIELDSET;
+
+    if ( r >= 0 )
     {
       const char *csql;
 
-      csql = sql ? sql : selector2;
+      csql = sql;
       /* if ( r >= 0 )                          */
       /*   r = duf_sql_prepare( csql, &pstmt ); */
-      DUF_SQL_START_STMT_NOPDI(  csql, r, pstmt );
+      DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
 
       DUF_TEST_R( r );
       DUF_TRACE( select, 0, "S:%s", csql );
@@ -479,7 +520,7 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
       }
     }
     if ( sql )
-      duf_sql_free( sql );
+      mas_free( sql );
     sql = NULL;
 
   }

@@ -41,7 +41,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
     DEBUG_START(  );
     if ( need_id )
     {
-      const char *sql = "SELECT id AS mimeid FROM duf_mime WHERE mime=:mime AND charset=:charset";
+      const char *sql = "SELECT id AS mimeid FROM " DUF_DBPREF "mime WHERE mime=:mime AND charset=:charset";
 
       DUF_SQL_START_STMT( pdi, select_mime, sql, r, pstmt );
       DUF_SQL_BIND_S( mime, mime, r, pstmt );
@@ -62,7 +62,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
     if ( ( !mimeid || !need_id ) && !duf_config->cli.disable.insert )
     {
-      const char *sql = "INSERT OR IGNORE INTO duf_mime ( mime, charset, tail ) VALUES (:mime, :charset, :tail)";
+      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime, charset, tail ) VALUES (:mime, :charset, :tail)";
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, r, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
@@ -180,7 +180,7 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
         {
           int changes = 0;
 
-          r = duf_sql( "UPDATE duf_filedatas SET mimeid='%llu' WHERE id='%lld'", &changes, mimeid, dataid );
+          r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET mimeid='%llu' WHERE id='%lld'", &changes, mimeid, dataid );
           duf_pdi_reg_changes( pdi, changes );
           DUF_TEST_R( r );
         }
@@ -203,29 +203,35 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .leaf_scan_fd2 = duf_scan_dirent_content2,
 
   /* filename for debug only */
-  .fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */
+  .leaf_fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
         ", fd.mode AS filemode " /* */
         ", fn.id AS filenameid " /* */
         ,
-  .leaf_selector2 = "SELECT %s FROM duf_filenames AS fn " /* */
-        " LEFT JOIN duf_filedatas AS fd ON ( fn.dataid = fd.id ) " /* */
+  .leaf_selector2 = /*	*/
+        /* "SELECT %s " */
+	" FROM " DUF_DBPREF "filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid = fd.id ) " /* */
         " WHERE "               /* */
         " fn.Pathid = :dirid ORDER BY fd.mimeid " /* */
         ,
+  .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+	,
   .node_selector = "SELECT pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths AS pt " /* */
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+        " FROM " DUF_DBPREF "paths AS pt " /* */
+        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
         " WHERE pt.parentid = '%llu' " /* */
         ,
-  .node_selector2 = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM duf_paths AS pt " /* */
-        " LEFT JOIN duf_pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
-        " LEFT JOIN duf_pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+  .node_selector2 = /*	*/
+        /* "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */
+        /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
+        " FROM " DUF_DBPREF "paths AS pt " /* */
+        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
         " WHERE pt.parentid = :dirid " /* */
         ,
-  .final_sql_argv = NULL,
+  .final_sql_argv = ( const char ** )  NULL,
 };

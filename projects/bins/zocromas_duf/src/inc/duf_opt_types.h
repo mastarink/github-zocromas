@@ -55,7 +55,8 @@ typedef enum
 /*==================================================*/
 
 /* db general */
-  DUF_OPTION_DB_NAME,
+  DUF_OPTION_DB_NAME_MAIN,
+  DUF_OPTION_DB_NAME_ADM,
   DUF_OPTION_REMOVE_DATABASE,
   DUF_OPTION_DROP_TABLES,
 

@@ -4,6 +4,7 @@ function shn_code ()
   declare -gx -A MSH_SHN_LAST_ACTION
   local code=${1:-h}
   shift
+  local codeopts
 
   shn_dbgmsg "shn 1 -- $code"
   shn_dbgmsg "shn 2 -- $code"
@@ -51,7 +52,7 @@ function shn_code ()
       shift
     ;;
     r)
-      shn_run "$@"
+      shn_run $@
     ;;
     g)
       shn_debug "$@"
@@ -63,8 +64,14 @@ function shn_code ()
       shn_core_debug_installed $@
     ;;
     c)
+      while [[ $1 == -* ]] ; do
+	codeopts="${codeopts:+ }$1"
+	let in_shift++
+	shift
+      done
+      shn_msg "opts: [$codeopts]"
       shn_dbgmsg "shn 2.${code}.1"
-      shn_build_configure || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
+      shn_build_configure $codeopts || { retcode=$? ; shn_errmsg 2.${code} shn ;  break ; }
       shn_dbgmsg shn $code ok
       shn_dbgmsg "shn 2.${code}.2"
     ;;
@@ -185,6 +192,7 @@ function shn_code ()
 function shn_i ()
 {
   local code=${1:-l} i
+  local in_shift=0
 # export MSH_SHN_DEBUG=yes  
   shift
 # for (( i=1; i <= $# ; i++ )) ; do echo "$FUNCNAME $i : ${!i}" >&2 ; done
@@ -218,7 +226,9 @@ function shn_i ()
     local shn_dont_setup=yes
     
 #   local shn_ignore_error=yes
+    in_shift=0
     shn_code "$@"
+    shift $in_shift
     retcode=$?
   elif [[ "$code" ]] ; then
     local shn_dont_setup=yes
@@ -229,7 +239,9 @@ function shn_i ()
 #     if [[ "$code" =~ ^(L|X|x|r)$ ]] ; then
 #       shn_warn "use '$FUNCNAME one $code'"
 #     else
+        in_shift=0
         shn_code $code "$@"
+	shift $in_shift
 #     fi
       if [[ "$code" =~ ^[LXxrgGj]$ ]] ; then
         return 0

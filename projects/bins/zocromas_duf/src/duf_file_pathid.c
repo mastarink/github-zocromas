@@ -47,7 +47,7 @@ duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthin
     DUF_OINV( pdi-> );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector */
-    r = duf_scan_db_items( DUF_NODE_LEAF, str_cb, pdi, sccb, sccb->leaf_selector, /* ... */ sccb->fieldset,
+    r = duf_scan_db_items( DUF_NODE_LEAF, str_cb, pdi, sccb, sccb->leaf_selector, /* ... */ sccb->leaf_fieldset,
                            dirid /* for WHERE */  );
 
 
@@ -85,7 +85,7 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
     DUF_OINV( pdi-> );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector2 */
-    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->fieldset, /* ... */
+    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset, /* ... */
                             dirid /* for WHERE */  );
 
     DUF_TRACE( scan, 1, "  "DUF_DEPTH_PFMT": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );

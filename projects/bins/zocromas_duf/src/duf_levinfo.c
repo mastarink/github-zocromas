@@ -98,6 +98,39 @@ duf_levinfo_set_dirid( const duf_depthinfo_t * pdi, unsigned long long dirid )
   duf_levinfo_set_dirid_d( pdi, dirid, pdi->depth );
 }
 
+void
+duf_levinfo_set_items_files_d( const duf_depthinfo_t * pdi, unsigned long long n, int d )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  if ( d >= 0 )
+    pdi->levinfo[d].items.files = n;
+}
+
+void
+duf_levinfo_set_items_files( const duf_depthinfo_t * pdi, unsigned long long n )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  duf_levinfo_set_items_files_d( pdi, n, pdi->depth );
+}
+
+unsigned long long
+duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  return d >= 0 ? pdi->levinfo[d].items.files : 0;
+}
+
+unsigned long long
+duf_levinfo_items_files( const duf_depthinfo_t * pdi )
+{
+  assert( pdi );
+  assert( pdi->levinfo );
+  return duf_levinfo_items_files_d( pdi, pdi->depth );
+}
+
 unsigned long long
 duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d )
 {

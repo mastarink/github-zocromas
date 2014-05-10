@@ -13,6 +13,12 @@ const char *duf_levinfo_itemname( const duf_depthinfo_t * pdi );
 void duf_levinfo_set_dirid_d( const duf_depthinfo_t * pdi, unsigned long long dirid, int d );
 void duf_levinfo_set_dirid( const duf_depthinfo_t * pdi, unsigned long long dirid );
 
+unsigned long long duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d );
+unsigned long long duf_levinfo_items_files( const duf_depthinfo_t * pdi );
+
+void duf_levinfo_set_items_files_d( const duf_depthinfo_t * pdi, unsigned long long n, int d );
+void duf_levinfo_set_items_files( const duf_depthinfo_t * pdi, unsigned long long n );
+
 unsigned long long duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_dirid_up( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_dirid( const duf_depthinfo_t * pdi );

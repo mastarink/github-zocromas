@@ -28,10 +28,6 @@
 
 #include "duf_uni_scan.h"
 
-#ifdef DUF_COMPILE_EXPIRED
-#  include "duf_group.h"
-#endif
-
 #include "duf_dbg.h"
 
 /* ###################################################################### */
@@ -81,9 +77,8 @@ duf_action_new( int argc, char **argv )
     sargv1 = mas_argv_string( argc, argv, 1 );
     sargv2 = duf_restore_options( argv[0] );
     DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
-    /* if ( 1 ) */
     {
-      static const char *sql = "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES (:args, :restored_args, '')";
+      static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:args, :restored_args, '')";
 
       DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
       DUF_SQL_BIND_S( args, sargv1, r, pstmt );
@@ -91,19 +86,9 @@ duf_action_new( int argc, char **argv )
       DUF_SQL_STEP( r, pstmt );
       DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      /* if ( r == DUF_ERROR_SQL_NO_TABLE ) */
+      /*   r = 0;                           */
     }
-    /* else                                                                                                           */
-    /* {                                                                                                              */
-    /*   char *qsargv1;                                                                                               */
-    /*   char *qsargv2;                                                                                               */
-    /*                                                                                                                */
-    /*   qsargv1 = duf_single_quotes_2( sargv1 );                                                                     */
-    /*   qsargv2 = duf_single_quotes_2( sargv2 );                                                                     */
-    /*   r = duf_sql( "INSERT OR IGNORE INTO duf_log (args, restored_args, msg) VALUES ('%s', '%s', '%s')", &changes, */
-    /*                qsargv1 ? qsargv1 : sargv1, qsargv2 ? qsargv2 : sargv2, "" );                                   */
-    /*   mas_free( qsargv2 );                                                                                         */
-    /*   mas_free( qsargv1 );                                                                                         */
-    /* }                                                                                                              */
     DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
     mas_free( sargv2 );
     mas_free( sargv1 );
@@ -130,7 +115,7 @@ duf_action_new( int argc, char **argv )
     /*   magic_version [libmagic] (3)  - Magic number recognition library    */
     {
       const char *sqls[] = {
-        "UPDATE duf_filefilter SET run=datetime() " /* */
+        "UPDATE " DUF_DBADMPREF "filefilter SET run=datetime() " /* */
               " WHERE type='cli' " /* */
               " AND ifnull(minsize,0)=ifnull(:minsize,0) " /* */
               " AND ifnull(maxsize,0)=ifnull(:maxsize,0) " /* */
@@ -139,11 +124,11 @@ duf_action_new( int argc, char **argv )
               " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
               " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
               ,
-        "INSERT INTO duf_filefilter (type,minsize,maxsize,mindups,maxdups,glob_include,glob_exclude) " /* */
+        "INSERT INTO " DUF_DBADMPREF "filefilter (type,minsize,maxsize,mindups,maxdups,glob_include,glob_exclude) " /* */
               " VALUES ("       /* */
               " 'cli', :minsize, :maxsize, :mindups, :maxdups, :glob_include, :glob_exclude " /* */
               ")",
-        "SELECT id FROM duf_filefilter " /* */
+        "SELECT id FROM " DUF_DBADMPREF "filefilter " /* */
               " WHERE type='cli' " /* */
               " AND ifnull(minsize,0)=ifnull(:minsize,0) " /* */
               " AND ifnull(maxsize,0)=ifnull(:maxsize,0) " /* */
@@ -375,16 +360,6 @@ duf_action_new( int argc, char **argv )
   /* if ( r >= 0 && duf_config->cli.act.same_exif )     */
   /*   duf_print_exif_same( 1, duf_config->cli.limit ); */
 
-#ifdef DUF_COMPILE_EXPIRED
-/*										*/ DEBUG_STEP(  );
-  if ( r >= 0 && duf_config->cli.act.to_group )
-    for ( int ia = 0; ia < duf_config->targc; ia++ )
-      duf_paths_group( duf_config->group, duf_config->targv[ia], +1 );
-/*										*/ DEBUG_STEP(  );
-  if ( r >= 0 && duf_config->cli.act.from_group )
-    for ( int ia = 0; ia < duf_config->targc; ia++ )
-      duf_paths_group( duf_config->group, duf_config->targv[ia], -1 );
-#endif
   /*          */ DEBUG_END(  );
   /* if ( r < 0 && !r == DUF_ERROR_MAX_REACHED ) */
   /*   DUF_TEST_R(r);        */

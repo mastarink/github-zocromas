@@ -37,13 +37,21 @@ main_db( int argc, char **argv )
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
 /*										*/ DEBUG_START(  );
-  if ( duf_config->db.dir && duf_config->db.name )
+  if ( duf_config->db.dir && duf_config->db.main.name )
   {
     r = 0;
-    DUF_TRACE( action, 0, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.name );
-    duf_config->db.fpath = mas_strdup( duf_config->db.dir );
-    duf_config->db.fpath = mas_strcat_x( duf_config->db.fpath, "/" );
-    duf_config->db.fpath = mas_strcat_x( duf_config->db.fpath, duf_config->db.name );
+    DUF_TRACE( action, 0, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.main.name );
+    duf_config->db.main.fpath = mas_strdup( duf_config->db.dir );
+    duf_config->db.main.fpath = mas_strcat_x( duf_config->db.main.fpath, "/" );
+    duf_config->db.main.fpath = mas_strcat_x( duf_config->db.main.fpath, duf_config->db.main.name );
+#ifdef MAS_SPLIT_DB
+    if ( duf_config->db.adm.name )
+    {
+      duf_config->db.adm.fpath = mas_strdup( duf_config->db.dir );
+      duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, "/" );
+      duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, duf_config->db.adm.name );
+    }
+#endif
 
     /* if ( r >= 0 )                                      */
     /*   r = duf_cli_option_by_string( "trace-maction=2" ); */
@@ -54,15 +62,18 @@ main_db( int argc, char **argv )
         DUF_TRACE( any, 0, "######### argv[%d]: %s", ia, argv[ia] );
       r = duf_config_show(  );
     }
-    DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.fpath );
+    DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.main.fpath );
+#ifdef MAS_SPLIT_DB
+    DUF_TRACE( any, 0, "adm dbfile: %s", duf_config->db.adm.fpath );
+#endif
     if ( r >= 0 )
     {
-      if ( duf_config->db.fpath )
+      if ( duf_config->cli.act.remove_database )
       {
-        if ( duf_config->cli.act.remove_database )
+        if ( duf_config->db.main.fpath )
         {
-          DUF_TRACE( any, 0, "removing %s ...", duf_config->db.fpath );
-          r = unlink( duf_config->db.fpath );
+          DUF_TRACE( any, 0, "removing %s ...", duf_config->db.main.fpath );
+          r = unlink( duf_config->db.main.fpath );
           if ( r < 0 )
           {
             char *s;
@@ -70,12 +81,11 @@ main_db( int argc, char **argv )
 
             s = strerror_r( errno, serr, sizeof( serr ) );
 
-            DUF_ERROR( "unlink %s: [%s]", duf_config->db.fpath, s );
+            DUF_ERROR( "unlink %s: [%s]", duf_config->db.main.fpath, s );
             if ( errno == ENOENT )
               r = 0;
             else
               r = DUF_ERROR_UNLINK;
-
           }
         }
       }
@@ -83,8 +93,8 @@ main_db( int argc, char **argv )
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
-      if ( duf_config->db.fpath )
-        r = duf_sql_open( duf_config->db.fpath );
+      if ( duf_config->db.main.fpath )
+        r = duf_sql_open( duf_config->db.main.fpath );
       else
         r = DUF_ERROR_PTR;
       DUF_TEST_R( r );
@@ -92,6 +102,16 @@ main_db( int argc, char **argv )
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
+#ifdef MAS_SPLIT_DB
+      {
+        static const char *sql = "ATTACH DATABASE :dbfpath AS adm";
+
+        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+        DUF_SQL_BIND_S( dbfpath, duf_config->db.adm.fpath, r, pstmt );
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      }
+#endif
       {
         static const char *sql = "PRAGMA synchronous = OFF";
 
@@ -136,10 +156,10 @@ main_db( int argc, char **argv )
     r = DUF_ERROR_PTR;
     DUF_ERROR( "db.dir not set" );
   }
-  else if ( !duf_config->db.name )
+  else if ( !duf_config->db.main.name )
   {
     r = DUF_ERROR_PTR;
-    DUF_ERROR( "db.name not set" );
+    DUF_ERROR( "db.main.name not set" );
   }
 /*										*/ DEBUG_END(  );
   DUF_TEST_R( r );

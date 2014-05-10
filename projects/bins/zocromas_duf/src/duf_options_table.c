@@ -60,7 +60,8 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "summary",.has_arg = no_argument,.val = DUF_OPTION_SUMMARY},
   /* --------------- */
   {.name = "db-directory",.has_arg = required_argument,.val = DUF_OPTION_DB_DIRECTORY},
-  {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME},
+  {.name = "db-name",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME_MAIN},
+  {.name = "db-name-adm",.has_arg = required_argument,.val = DUF_OPTION_DB_NAME_ADM},
   {.name = "zero-db",.has_arg = no_argument,.val = DUF_OPTION_ZERO_DB},
   {.name = "drop-tables",.has_arg = no_argument,.val = DUF_OPTION_DROP_TABLES},
   {.name = "remove-database",.has_arg = no_argument,.val = DUF_OPTION_REMOVE_DATABASE},

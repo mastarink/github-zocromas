@@ -18,9 +18,9 @@
 #include "duf_options.h"
 /* #include "duf_cli_options.h" */
 
-#include "duf_sql_field.h"
+#include "duf_sql_field1.h"
 #include "duf_item_scan1.h"
-#include "duf_item_scan2.h"
+/* #include "duf_item_scan2.h" */
 #include "duf_dirent_scan.h"
 #include "duf_file_pathid.h"
 

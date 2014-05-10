@@ -23,6 +23,14 @@
 #  define DUF_CONSTRAINT_IGNORE_NO DUF_FALSE
 #  define DUF_CONSTRAINT_IGNORE_YES DUF_TRUE
 
+#  ifdef MAS_SPLIT_DB
+#    define DUF_DBPREF "main."
+#    define DUF_DBADMPREF "adm."
+#  else
+#    define DUF_DBPREF "main."
+#    define DUF_DBADMPREF "main."
+#  endif
+
 /* ###################################################################### */
 
 #  define SEL_CB_DEF ((duf_sel_cb_t)NULL)
@@ -263,6 +271,8 @@ typedef enum
   DUF_ERROR_STAT,
   DUF_ERROR_STATAT,
   DUF_ERROR_PDI_SQL,
+  DUF_ERROR_SQL_NO_FIELDSET,
+  DUF_ERROR_SQL_NO_TABLE,
   DUF_ERROR_MEMORY,
   DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
@@ -305,17 +315,22 @@ typedef struct
 } duf_ufilter_t;
 typedef struct
 {
-  char *dir;
   char *name;
   char *fpath;
 } duf_db_config_t;
+typedef struct
+{
+  char *dir;
+  duf_db_config_t main;
+  duf_db_config_t adm;
+} duf_dbs_config_t;
 typedef struct
 {
   double loadtime;
   int actions_done;
   duf_ufilter_t u;
   duf_config_cli_t cli;
-  duf_db_config_t db;
+  duf_dbs_config_t db;
   /* char *group; */
   int targc;
   char **targv;
@@ -354,7 +369,7 @@ typedef struct
   unsigned eod;
   unsigned long long dirid;
   /* const char *name; */
-  unsigned long long items;
+  duf_items_t items;
   long numdir;
   long numfile;
   char *fullpath;
@@ -430,7 +445,7 @@ typedef struct
 duf_record_t;
 
 struct duf_scan_callbacks_s;
-typedef int ( *duf_scan_hook_init_t ) ( struct duf_scan_callbacks_s * cb );
+typedef int ( *duf_scan_hook_init_t ) ( void );
 
 
 /* this is callback of type: duf_scan_hook_dir_t : */
@@ -500,11 +515,15 @@ struct duf_scan_callbacks_s
   unsigned opendir:1;
   unsigned scan_mode_2:1;
   const char *title;
-  const char *fieldset;
+
+  const char *node_fieldset;
   const char *node_selector;
   const char *node_selector2;
+
+  const char *leaf_fieldset;
   const char *leaf_selector;
   const char *leaf_selector2;
+
   duf_scan_hook_init_t init_scan;
 
   duf_scan_hook_dir_t node_scan_before;
@@ -532,7 +551,7 @@ struct duf_scan_callbacks_s
   duf_scan_hook_dirent_dir_t dirent_dir_scan_before;
   duf_scan_hook2_dirent_dir_t dirent_dir_scan_before2;
 
-  char **final_sql_argv;
+  const char **final_sql_argv;
 };
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

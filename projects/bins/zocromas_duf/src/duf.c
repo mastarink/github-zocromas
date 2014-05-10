@@ -57,7 +57,6 @@ duf_main( int argc, char **argv )
     /*   DUF_TRACE( any, 0, "r=%d", r ); */
     /* }                                 */
     dbgfunc_enabled = 1;
-    DUF_ERROR( "or:%d (%d:%d)", or, DUF_OPTION_SMART_HELP, DUF_OPTION_HELP );
     DUF_TEST_R( r );
     {
       switch ( or )
@@ -71,7 +70,7 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_EXAMPLES ) );
         DUF_PRINTF( 0, "  --output			[%s]", duf_find_longval_help( DUF_OPTION_OUTPUT ) );
         DUF_PRINTF( 0, "Database ----------" );
-        DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.name );
+        DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.main.name );
         DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );
         DUF_PRINTF( 0, "  --drop-tables		DANGEROUS!" );
         DUF_PRINTF( 0, "  --remove-database		DANGEROUS!" );
@@ -224,6 +223,8 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  run   -pRdf  /mnt/new_media/media/photo		- %s", "      files (full paths) with dir headers linear" );
         DUF_PRINTF( 0, "  run   -pRd   /mnt/new_media/media/photo		- %s", "      dirs (full paths) linear" );
         DUF_PRINTF( 0, "  run   -pRf   /mnt/new_media/media/photo		- %s", "      files (full paths) linear" );
+        DUF_PRINTF( 0, "========================= as for 20140510 ===================" );
+        DUF_PRINTF( 0, "  run   -Rdf --sample  --output /mnt/new_media/media/photo/" );
         DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;

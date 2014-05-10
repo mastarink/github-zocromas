@@ -60,7 +60,7 @@ mastar@mastar .../bins/zocromas_duf $
 /*    run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/      */
 /* test:                                                                                               */
 /*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 .tables                      */
-/*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 'select * from duf_paths'    */
+/*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 'select * from dufs.paths'    */
 /* fill:                                                                                               */
 /*    run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/  -R  --fill -v --trace-fill=1 */
 
@@ -103,7 +103,7 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
 
 /* run tables drop tables check path add /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/
  * sqlite3 -header -column /mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3  \
- * 				'SELECT id, dirname, parentid  FROM duf_paths order by id limit 20'
+ * 				'SELECT id, dirname, parentid  FROM dufs.paths order by id limit 20'
  * */
 
 

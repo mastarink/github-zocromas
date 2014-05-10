@@ -111,7 +111,7 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
   duf_sqlite_stmt_t *pstmt = NULL;
 
   {
-    const char *sql = "SELECT parentid, dirname FROM duf_paths WHERE id=:dirid";
+    const char *sql = "SELECT parentid, dirname FROM " DUF_DBPREF "paths WHERE id=:dirid";
 
     if ( r >= 0 && sql )
       r = duf_sql_prepare( sql, &pstmt );
@@ -152,7 +152,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
     if ( ifadd && !duf_config->cli.disable.insert )
     {
       static const char *sql =
-            "INSERT OR IGNORE INTO duf_paths ( dev, inode, dirname, parentid) VALUES (:dev, :inode, :dirname, :parentid )";
+            "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid) VALUES (:dev, :inode, :dirname, :parentid )";
       if ( pdi )
       {
         DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
@@ -186,11 +186,11 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
       {
         /* duf_sqlite_stmt_t *pstmt = NULL; */
-        const char *sql = "SELECT duf_paths.id AS dirid, duf_paths.dirname " /*      */
+        const char *sql = "SELECT " DUF_DBPREF "paths.id AS dirid, " DUF_DBPREF "paths.dirname " /*      */
               ", tf.numfiles AS nfiles, td.numdirs AS ndirs " /*      */
-              " FROM duf_paths LEFT JOIN duf_pathtot_dirs AS td ON (td.pathid=duf_paths.id) " /*      */
-              " LEFT JOIN duf_pathtot_files AS tf ON (tf.pathid=duf_paths.id) " /*      */
-              " WHERE duf_paths.parentid=:dirid AND dirname=:dirname";
+              " FROM " DUF_DBPREF "paths LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.pathid=" DUF_DBPREF "paths.id) " /*      */
+              " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.pathid=" DUF_DBPREF "paths.id) " /*      */
+              " WHERE " DUF_DBPREF "paths.parentid=:dirid AND dirname=:dirname";
 
         if ( pdi )
         {

@@ -21,7 +21,7 @@ zocromas_duf_SOURCES=				     \
 								    \
 	duf_utils.c duf_dh.c duf_dirent.c duf_service.c		     \
 								      \
-	duf_sqlite.c duf_sql.c duf_sql_field.c			       \
+	duf_sqlite.c duf_sql.c duf_sql_field.c duf_sql_field1.c	       \
 									\
 	mod_dir_print_uni.c		mod_tree_print_uni.c		 \
 	mod_sample_uni.c		mod_sampupd_uni.c		  \
@@ -30,7 +30,7 @@ zocromas_duf_SOURCES=				     \
 	mod_filenames_uni.c		mod_filedata_uni.c		     \
 	mod_directories_uni.c						      \
 	mod_collect_openat_md5_uni.c					       \
-	mod_collect_mime_uni.c
+	mod_collect_mime_uni.c		mod_template_uni.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
 zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif -lmagic

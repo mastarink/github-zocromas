@@ -664,8 +664,11 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_DB_DIRECTORY:
     DUF_OPT_STR( db.dir );
     break;
-  case DUF_OPTION_DB_NAME:
-    DUF_OPT_STR( db.name );
+  case DUF_OPTION_DB_NAME_MAIN:
+    DUF_OPT_STR( db.main.name );
+    break;
+  case DUF_OPTION_DB_NAME_ADM:
+    DUF_OPT_STR( db.adm.name );
     break;
     /* case DUF_OPTION_LIMIT:      */
     /*   DUF_OPT_NUM( cli.limit ); */
