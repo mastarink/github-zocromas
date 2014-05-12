@@ -16,8 +16,12 @@ typedef struct
   unsigned gid:1;
   unsigned human:1;
   unsigned inode:1;
+  unsigned sd5:1;
+  unsigned sd5id:1;
   unsigned md5:1;
   unsigned md5id:1;
+  unsigned crc32:1;
+  unsigned crc32id:1;
   unsigned mimeid:1;
   unsigned mode:1;
   unsigned mtime:1;
@@ -42,8 +46,12 @@ typedef enum
   DUF_FORMAT_GID,
   DUF_FORMAT_HUMAN,
   DUF_FORMAT_INODE,
+  DUF_FORMAT_SD5,
+  DUF_FORMAT_SD5ID,
   DUF_FORMAT_MD5,
   DUF_FORMAT_MD5ID,
+  DUF_FORMAT_CRC32,
+  DUF_FORMAT_CRC32ID,
   DUF_FORMAT_MIMEID,
   DUF_FORMAT_MODE,
   DUF_FORMAT_MTIME,
@@ -77,7 +85,9 @@ typedef enum
   DUF_TRACE_MODE_fs,
   DUF_TRACE_MODE_match,
   DUF_TRACE_MODE_MAX,
+  DUF_TRACE_MODE_sd5,
   DUF_TRACE_MODE_md5,
+  DUF_TRACE_MODE_crc32,
   DUF_TRACE_MODE_mdpath,
   DUF_TRACE_MODE_mime,
   DUF_TRACE_MODE_path,
@@ -113,7 +123,9 @@ typedef struct
   unsigned dirent:1;
   unsigned filedata:1;
   unsigned filenames:1;
+  unsigned sd5:1;
   unsigned md5:1;
+  unsigned crc32:1;
   unsigned mime:1;
   unsigned exif:1;
 
@@ -134,6 +146,7 @@ typedef struct
   /* unsigned same_exif:1; */
   /* unsigned to_group:1; */
   /* unsigned from_group:1; */
+  unsigned progress:1;
   unsigned summary:1;
   unsigned sample;
   unsigned sampupd;
@@ -167,7 +180,9 @@ typedef struct
   unsigned fs;
   unsigned integrity;
   unsigned match;
+  unsigned sd5;
   unsigned md5;
+  unsigned crc32;
   unsigned mdpath;
   unsigned mime;
   unsigned nonew;
@@ -192,6 +207,7 @@ typedef struct
 } duf_config_cli_output_t;
 typedef struct
 {
+  unsigned calculate:1;
   unsigned insert:1;
   unsigned update:1;
 } duf_config_cli_disable_t;
@@ -206,6 +222,7 @@ typedef struct
   duf_format_t format;
   /* long limit; */
   unsigned noopenat:1;
+  unsigned dry_run:1;
 } duf_config_cli_t;
 
 

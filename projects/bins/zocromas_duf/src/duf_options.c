@@ -332,97 +332,104 @@ _duf_restore_option_b( char *ptr, duf_option_code_t code, int value )
 void
 duf_restore_option( char *ptr, duf_option_code_t code )
 {
-  DUF_RESTORE_OPTION( ptr, VERBOSE, verbose, cli.dbg );
-  DUF_RESTORE_OPTION( ptr, DEBUG, debug, cli.dbg );
-  /* DUF_RESTORE_OPTION_TRACE(ptr, ALL, all ); */
-  DUF_RESTORE_OPTION( ptr, TRACE_NONEW, nonew, cli.trace );
+  DUF_OPTION_RESTORE_NUM( ptr, VERBOSE, verbose, cli.dbg );
+  DUF_OPTION_RESTORE_NUM( ptr, DEBUG, debug, cli.dbg );
+  /* DUF_OPTION_RESTORE_TRACE(ptr, ALL, all ); */
+  DUF_OPTION_RESTORE_NUM( ptr, TRACE_NONEW, nonew, cli.trace );
 
 
 
-  DUF_RESTORE_OPTION( ptr, OUTPUT, level, cli.output );
+  DUF_OPTION_RESTORE_NUM( ptr, OUTPUT, level, cli.output );
 
 
 
-  DUF_RESTORE_OPTION( ptr, NOOPENAT, noopenat, cli );
+  DUF_OPTION_RESTORE_FLAG( ptr, DRY_RUN, dry_run, cli );
+  DUF_OPTION_RESTORE_FLAG( ptr, NOOPENAT, noopenat, cli );
 
-  DUF_RESTORE_OPTION_TRACE( ptr, SEQ, seq );
-  DUF_RESTORE_OPTION_TRACE( ptr, CALLS, calls );
-  DUF_RESTORE_OPTION_TRACE( ptr, ANY, any );
-  DUF_RESTORE_OPTION_TRACE( ptr, CURRENT, current );
-  DUF_RESTORE_OPTION_TRACE( ptr, ACTION, action );
-  DUF_RESTORE_OPTION_TRACE( ptr, ERROR, error );
-  DUF_RESTORE_OPTION_TRACE( ptr, SCAN, scan );
-  DUF_RESTORE_OPTION_TRACE( ptr, PATH, path );
-  DUF_RESTORE_OPTION_TRACE( ptr, FS, fs );
-  DUF_RESTORE_OPTION_TRACE( ptr, SAMPUPD, sampupd );
-  DUF_RESTORE_OPTION_TRACE( ptr, SAMPLE, sample );
-  DUF_RESTORE_OPTION_TRACE( ptr, DELETED, deleted );
-  DUF_RESTORE_OPTION_TRACE( ptr, MDPATH, mdpath );
-  DUF_RESTORE_OPTION_TRACE( ptr, DIRENT, dirent );
-  DUF_RESTORE_OPTION_TRACE( ptr, MD5, md5 );
-  DUF_RESTORE_OPTION_TRACE( ptr, MIME, mime );
-  DUF_RESTORE_OPTION_TRACE( ptr, COLLECT, collect );
-  DUF_RESTORE_OPTION_TRACE( ptr, INTEGRITY, integrity );
-  DUF_RESTORE_OPTION_TRACE( ptr, SQL, sql );
-  DUF_RESTORE_OPTION_TRACE( ptr, SELECT, select );
-  DUF_RESTORE_OPTION_TRACE( ptr, INSERT, insert );
-  DUF_RESTORE_OPTION_TRACE( ptr, UPDATE, update );
+  DUF_OPTION_RESTORE_TRACE( ptr, SEQ, seq );
+  DUF_OPTION_RESTORE_TRACE( ptr, CALLS, calls );
+  DUF_OPTION_RESTORE_TRACE( ptr, ANY, any );
+  DUF_OPTION_RESTORE_TRACE( ptr, CURRENT, current );
+  DUF_OPTION_RESTORE_TRACE( ptr, ACTION, action );
+  DUF_OPTION_RESTORE_TRACE( ptr, ERROR, error );
+  DUF_OPTION_RESTORE_TRACE( ptr, SCAN, scan );
+  DUF_OPTION_RESTORE_TRACE( ptr, PATH, path );
+  DUF_OPTION_RESTORE_TRACE( ptr, FS, fs );
+  DUF_OPTION_RESTORE_TRACE( ptr, SAMPUPD, sampupd );
+  DUF_OPTION_RESTORE_TRACE( ptr, SAMPLE, sample );
+  DUF_OPTION_RESTORE_TRACE( ptr, DELETED, deleted );
+  DUF_OPTION_RESTORE_TRACE( ptr, MDPATH, mdpath );
+  DUF_OPTION_RESTORE_TRACE( ptr, DIRENT, dirent );
+  DUF_OPTION_RESTORE_TRACE( ptr, MD5, md5 );
+  DUF_OPTION_RESTORE_TRACE( ptr, SD5, sd5 );
+  DUF_OPTION_RESTORE_TRACE( ptr, CRC32, crc32 );
+  DUF_OPTION_RESTORE_TRACE( ptr, MIME, mime );
+  DUF_OPTION_RESTORE_TRACE( ptr, COLLECT, collect );
+  DUF_OPTION_RESTORE_TRACE( ptr, INTEGRITY, integrity );
+  DUF_OPTION_RESTORE_TRACE( ptr, SQL, sql );
+  DUF_OPTION_RESTORE_TRACE( ptr, SELECT, select );
+  DUF_OPTION_RESTORE_TRACE( ptr, INSERT, insert );
+  DUF_OPTION_RESTORE_TRACE( ptr, UPDATE, update );
 
-  DUF_RESTORE_OPTION( ptr, MIN_DBGLINE, min_line, cli.dbg );
-  DUF_RESTORE_OPTION( ptr, MAX_DBGLINE, max_line, cli.dbg );
-  DUF_RESTORE_OPTION_B( ptr, SUMMARY, summary, cli.act );
+  DUF_OPTION_RESTORE_NUM( ptr, MIN_DBGLINE, min_line, cli.dbg );
+  DUF_OPTION_RESTORE_NUM( ptr, MAX_DBGLINE, max_line, cli.dbg );
+  DUF_OPTION_RESTORE_FLAG( ptr, PROGRESS, progress, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, SUMMARY, summary, cli.act );
   /* DUF_OPTION_TREE_TO_DB: */
   /* DUF_OPTION_ZERO_DB: */
 
-  DUF_RESTORE_OPTION_B( ptr, DROP_TABLES, drop_tables, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, CREATE_TABLES, create_tables, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, DROP_TABLES, drop_tables, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, CREATE_TABLES, create_tables, cli.act );
 
-  DUF_RESTORE_OPTION_B( ptr, ADD_PATH, add_path, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, UNI_SCAN, uni_scan, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, ADD_PATH, add_path, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, UNI_SCAN, uni_scan, cli.act );
 
-  DUF_RESTORE_OPTION( ptr, RECURSIVE, recursive, u );
+  DUF_OPTION_RESTORE_FLAG( ptr, RECURSIVE, recursive, u );
 
-  DUF_RESTORE_OPTION_B( ptr, SAMPLE, sample, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, SAMPUPD, sampupd, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, MDPATH, mdpath, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, DIRENT, dirent, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, MD5, md5, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, MIME, mime, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, COLLECT, collect, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, INTEGRITY, integrity, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, PRINT, print, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, TREE, tree, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, FILES, files, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, DIRS, dirs, cli.act );
-  DUF_RESTORE_OPTION_B( ptr, DISABLE_INSERT, insert, cli.disable );
-  DUF_RESTORE_OPTION_B( ptr, DISABLE_UPDATE, update, cli.disable );
+  DUF_OPTION_RESTORE_NUM( ptr, SAMPLE, sample, cli.act );
+  DUF_OPTION_RESTORE_NUM( ptr, SAMPUPD, sampupd, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, MDPATH, mdpath, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, DIRENT, dirent, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, MD5, md5, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, SD5, sd5, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, CRC32, crc32, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, MIME, mime, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, COLLECT, collect, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, INTEGRITY, integrity, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, PRINT, print, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, TREE, tree, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, FILES, files, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, DIRS, dirs, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, DISABLE_CALCULATE, calculate, cli.disable );
+  DUF_OPTION_RESTORE_FLAG( ptr, DISABLE_INSERT, insert, cli.disable );
+  DUF_OPTION_RESTORE_FLAG( ptr, DISABLE_UPDATE, update, cli.disable );
 
-  DUF_RESTORE_OPTION( ptr, MAXSEQ, maxseq, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXSEQ, maxseq, u );
 
-  DUF_RESTORE_OPTION( ptr, MINSIZE, minsize, u );
-  DUF_RESTORE_OPTION( ptr, MAXSIZE, maxsize, u );
-  DUF_RESTORE_OPTION( ptr, MINDIRFILES, mindirfiles, u );
-  DUF_RESTORE_OPTION( ptr, MAXDIRFILES, maxdirfiles, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MINSIZE, minsize, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXSIZE, maxsize, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MINDIRFILES, mindirfiles, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXDIRFILES, maxdirfiles, u );
 
-  DUF_RESTORE_OPTION( ptr, MAXITEMS, maxitems.total, u );
-  DUF_RESTORE_OPTION( ptr, MAXITEMS_FILES, maxitems.files, u );
-  DUF_RESTORE_OPTION( ptr, MAXITEMS_DIRS, maxitems.dirs, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXITEMS, maxitems.total, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXITEMS_FILES, maxitems.files, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXITEMS_DIRS, maxitems.dirs, u );
 
 
 
-  /* DUF_RESTORE_OPTION_TRACE(ptr, TRACE_STDERR, nonew, cli.trace ); */
-  /* DUF_RESTORE_OPTION_TRACE(ptr, TRACE_STDOUT, nonew, cli.trace ); */
+  /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDERR, nonew, cli.trace ); */
+  /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDOUT, nonew, cli.trace ); */
 
-  DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr );
-  DUF_RESTORE_OPTIONV_B( ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout );
+  DUF_OPTION_RESTOREV_B( ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr );
+  DUF_OPTION_RESTOREV_B( ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout );
 
-  DUF_RESTORE_OPTION_S( ptr, OUTPUT_FILE, file, cli.output );
-  DUF_RESTORE_OPTION_S( ptr, TRACE_FILE, file, cli.trace );
-  DUF_RESTORE_OPTION_S( ptr, DB_DIRECTORY, dir, db );
-  DUF_RESTORE_OPTION_S( ptr, DB_NAME_ADM, name, db.adm );
-  DUF_RESTORE_OPTION_S( ptr, DB_NAME_MAIN, name, db.main );
+  DUF_OPTION_RESTORE_STR( ptr, OUTPUT_FILE, file, cli.output );
+  DUF_OPTION_RESTORE_STR( ptr, TRACE_FILE, file, cli.trace );
+  DUF_OPTION_RESTORE_STR( ptr, DB_DIRECTORY, dir, db );
+  DUF_OPTION_RESTORE_STR( ptr, DB_NAME_ADM, name, db.adm );
+  DUF_OPTION_RESTORE_STR( ptr, DB_NAME_MAIN, name, db.main );
 
-  /* DUF_RESTORE_OPTION_S( FILE, file, cli.trace ); */
+  /* DUF_OPTION_RESTORE_STR( FILE, file, cli.trace ); */
 }
 
 

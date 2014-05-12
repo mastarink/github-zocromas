@@ -29,11 +29,12 @@ zocromas_duf_SOURCES=				     \
 	mod_print_md5_uni.c		mod_integrity_uni.c		    \
 	mod_filenames_uni.c		mod_filedata_uni.c		     \
 	mod_directories_uni.c						      \
-	mod_collect_openat_md5_uni.c					       \
+	mod_collect_openat_md5_uni.c	mod_sd5_uni.c			       \
+	mod_crc32_uni.c								\
 	mod_collect_mime_uni.c		mod_template_uni.c
 
 zocromas_duf_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@
-zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif -lmagic
+zocromas_duf_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFLAGS@ -lexif -lmagic -lz
 
 mtest_SOURCES=duftest.c
 mtest_CFLAGS=@AM_CFLAGS@ -pthread @DEPS_CFLAGS@ @GLIB_CFLAGS@

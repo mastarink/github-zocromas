@@ -177,6 +177,24 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
 /* create level-control array, open 0 level */
     DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": di.levinfo  %c", duf_uni_scan_action_title( sccb ), di.levinfo ? '+' : '-' );
 
+    if ( sccb->leaf_selector_total2 )
+    {
+      char *sqlt;
+      const char *csql;
+
+      sqlt = mas_strdup( "SELECT " );
+      sqlt = mas_strcat_x( sqlt, "count(*) AS nf" );
+      sqlt = mas_strcat_x( sqlt, " " );
+      sqlt = mas_strcat_x( sqlt, sccb->leaf_selector_total2 );
+      csql = sqlt;
+      DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      if ( r == DUF_SQL_ROW )
+        di.total_files = duf_sql_column_long_long( pstmt, 0 );
+      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      mas_free( sqlt );
+    }
+    DUF_ERROR( "TOTAL FILES:%llu", di.total_files );
     {
       unsigned long long top_dirid;
 
@@ -249,6 +267,9 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
   }
   mas_free( real_path );
   DUF_TEST_R( r );
+    
+  DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ),
+               duf_config->cli.act.summary );
   DEBUG_END(  );
   return r;
 }
@@ -298,6 +319,8 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
       else
         r = duf_uni_scan( NULL, duf_config->u, sccb, &changes );
       DUF_TEST_R( r );
+  
+      DUF_TRACE( action, 0, "after scan");
     }
     else
     {
@@ -308,7 +331,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
     {
       DUF_PRINTF( 0, "changes:%llu", changes );
     }
-    if ( sccb /* && changes */ )
+    if ( sccb /* && changes */  )
     {
       const char **psql = sccb->final_sql_argv;
 
@@ -318,7 +341,7 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
         {
           int changes = 0;
 
-          /* DUF_TRACE( action, 0, "final psql : %s", *p ); */
+          DUF_TRACE( action, 0, "final psql : %s", *psql );
           /* r = duf_sql( *p, &changes ); */
 
           {
@@ -375,6 +398,7 @@ duf_uni_scan_all( void )
       ppscan_callbacks[asteps++] = &duf_directories_callbacks;
     }
   }
+  assert( asteps < max_asteps );
   {
     extern duf_scan_callbacks_t duf_filedata_callbacks __attribute( ( weak ) );
 
@@ -386,6 +410,7 @@ duf_uni_scan_all( void )
       ppscan_callbacks[asteps++] = &duf_filedata_callbacks;
     }
   }
+  assert( asteps < max_asteps );
   {
     extern duf_scan_callbacks_t duf_filenames_callbacks __attribute( ( weak ) );
 
@@ -400,6 +425,30 @@ duf_uni_scan_all( void )
 
   assert( asteps < max_asteps );
   {
+    extern duf_scan_callbacks_t duf_collect_openat_crc32_callbacks __attribute( ( weak ) );
+
+
+    if ( &duf_collect_openat_crc32_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.crc32 )
+    {
+
+      DUF_TRACE( action, 0, "prep fill crc32" );
+      ppscan_callbacks[asteps++] = &duf_collect_openat_crc32_callbacks;
+    }
+  }
+  assert( asteps < max_asteps );
+  {
+    extern duf_scan_callbacks_t duf_collect_openat_sd5_callbacks __attribute( ( weak ) );
+
+
+    if ( &duf_collect_openat_sd5_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.sd5 )
+    {
+
+      DUF_TRACE( action, 0, "prep fill sd5" );
+      ppscan_callbacks[asteps++] = &duf_collect_openat_sd5_callbacks;
+    }
+  }
+  assert( asteps < max_asteps );
+  {
     extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );
 
 
@@ -410,10 +459,11 @@ duf_uni_scan_all( void )
       ppscan_callbacks[asteps++] = &duf_collect_openat_md5_callbacks;
     }
   }
+  assert( asteps < max_asteps );
   {
     extern duf_scan_callbacks_t duf_collect_mime_callbacks __attribute( ( weak ) );
 
-    if ( &duf_collect_mime_callbacks &&   !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.mime )
+    if ( &duf_collect_mime_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.mime )
     {
 
       DUF_TRACE( action, 0, "prep fill mime" );
@@ -492,34 +542,34 @@ duf_uni_scan_all( void )
 
 
     DUF_TRACE( action, 0, "no actions set; %s", r < 0 ? "FAIL" : "" );
-    optnames = duf_option_names( DUF_OPTION_COLLECT );
-    dirent_optnames = duf_option_names( DUF_OPTION_DIRENT );
+    optnames = duf_option_names( DUF_OPTION_FLAG_COLLECT );
+    dirent_optnames = duf_option_names( DUF_OPTION_FLAG_DIRENT );
     DUF_PRINTF( 0, "to collect something use %s", optnames );
     {
       char *ona = NULL;
 
-      ona = duf_option_names( DUF_OPTION_DIRS );
+      ona = duf_option_names( DUF_OPTION_FLAG_DIRS );
       DUF_PRINTF( 0, "to collect directories use %s WITH %s AND %s", optnames, ona, dirent_optnames );
       mas_free( ona );
     }
     {
       char *ona = NULL;
 
-      ona = duf_option_names( DUF_OPTION_FILEDATA );
+      ona = duf_option_names( DUF_OPTION_FLAG_FILEDATA );
       DUF_PRINTF( 0, "to collect file data use %s WITH %s AND %s", optnames, ona, dirent_optnames );
       mas_free( ona );
     }
     {
       char *ona = NULL;
 
-      ona = duf_option_names( DUF_OPTION_FILENAMES );
+      ona = duf_option_names( DUF_OPTION_FLAG_FILENAMES );
       DUF_PRINTF( 0, "to collect file names use %s WITH %s AND %s", optnames, ona, dirent_optnames );
       mas_free( ona );
     }
     {
       char *ona = NULL;
 
-      ona = duf_option_names( DUF_OPTION_MD5 );
+      ona = duf_option_names( DUF_OPTION_FLAG_MD5 );
       DUF_PRINTF( 0, "to collect md5 names use %s WITH %s AND %s", optnames, ona, dirent_optnames );
       mas_free( ona );
     }

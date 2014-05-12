@@ -34,12 +34,12 @@
  /* *INDENT-OFF*  */
 
 static const char *final_sql[] = {
-  "UPDATE " DUF_DBPREF "md5 SET dupcnt=(SELECT COUNT(*) " /*	*/
+  "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /*	*/
         " FROM " DUF_DBPREF "filedatas AS fd " /*	*/
 	  " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md.id) " /*	*/
         " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)",
   "DELETE FROM " DUF_DBPREF "sizes",
-  "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupcnt) " /*	*/
+  "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /*	*/
         "SELECT size, COUNT(*) " /*	*/
           " FROM " DUF_DBPREF "filedatas AS fd GROUP BY fd.size",
 
@@ -58,11 +58,16 @@ static const char *final_sql[] = {
      ", numfiles=(SELECT COUNT(*) AS numfiles " /*	*/
           " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /*	*/
 	     " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)",
-  "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /*	*/
-        "SELECT p.id AS Pathid, COUNT(*) AS numdirs " /*	*/
-	  " FROM " DUF_DBPREF "paths AS p " /*	*/
-            " LEFT JOIN " DUF_DBPREF "paths AS sp ON (sp.parentid=p.id) " /*	*/
-	" GROUP BY sp.parentid",
+ 
+  "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
+        "SELECT parents.id AS Pathid, COUNT(*) AS numdirs " /* */
+        " FROM " DUF_DBPREF "paths " /* */
+        " JOIN " DUF_DBPREF "paths AS parents ON (parents.id=paths.parentid) " /* */
+        " GROUP BY parents.id"  /* */
+        ,
+
+
+
   "UPDATE " DUF_DBPREF "pathtot_dirs SET " /*	*/
       " numdirs=(SELECT COUNT(*) AS numdirs " /*	*/
                   " FROM " DUF_DBPREF "paths AS p " /*	*/

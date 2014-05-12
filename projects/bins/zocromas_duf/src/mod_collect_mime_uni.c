@@ -41,11 +41,13 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
     DEBUG_START(  );
     if ( need_id )
     {
-      const char *sql = "SELECT id AS mimeid FROM " DUF_DBPREF "mime WHERE mime=:mime AND charset=:charset";
+      const char *sql = "SELECT id AS mimeid FROM " DUF_DBPREF "mime WHERE mime = :mime";
+
+      /* const char *sql = "SELECT id AS mimeid FROM " DUF_DBPREF "mime WHERE mime=:mime AND charset=:charset" ; */
 
       DUF_SQL_START_STMT( pdi, select_mime, sql, r, pstmt );
       DUF_SQL_BIND_S( mime, mime, r, pstmt );
-      DUF_SQL_BIND_S( charset, chs, r, pstmt );
+      /* DUF_SQL_BIND_S( charset, chs, r, pstmt ); */
       /* DUF_SQL_BIND_S( tail, tail, r, pstmt ); */
       DUF_SQL_STEP( r, pstmt );
       if ( r == DUF_SQL_ROW )
@@ -62,20 +64,22 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
     if ( ( !mimeid || !need_id ) && !duf_config->cli.disable.insert )
     {
-      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime, charset, tail ) VALUES (:mime, :charset, :tail)";
+      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime ) VALUES ( :mime )";
+
+      /* "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime, charset, tail ) VALUES (:mime, :charset, :tail )"; */
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, r, pstmt );
-      DUF_TRACE( insert, 0, "S:%s", sql );
+      DUF_TRACE( insert, 0, " S: %s ", sql );
       DUF_SQL_BIND_S( mime, mime, r, pstmt );
-      DUF_SQL_BIND_S( charset, chs, r, pstmt );
-      DUF_SQL_BIND_S( tail, tail, r, pstmt );
+      /* DUF_SQL_BIND_S( charset, chs, r, pstmt ); */
+      /* DUF_SQL_BIND_S( tail, tail, r, pstmt ); */
       DUF_SQL_STEP( r, pstmt );
       /* DUF_TEST_R(r); */
       DUF_SQL_CHANGES( changes, r, pstmt );
       if ( need_id )
       {
         mimeid = duf_sql_last_insert_rowid(  );
-        DUF_TRACE( mime, 0, "inserted now (SQLITE_OK) mimeid=%llu", mimeid );
+        DUF_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
       DUF_SQL_END_STMT( r, pstmt );
@@ -84,7 +88,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
   }
   else
   {
-    DUF_ERROR( "Wrong data" );
+    DUF_ERROR( " Wrong data " );
     r = DUF_ERROR_DATA;
   }
   DUF_TEST_R( r );
@@ -112,11 +116,11 @@ duf_mime_destructor( void *ctx )
   magic_t m = ( magic_t ) ctx;
 
   magic_close( m );
-  DUF_TRACE( mime, 0, "closed mime" );
+  DUF_TRACE( mime, 0, " closed mime " );
 }
 
 static int
-duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned long long mimeid = 0;
@@ -139,7 +143,7 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
     if ( !m )
     {
       m = magic_open( MAGIC_MIME | MAGIC_PRESERVE_ATIME );
-      DUF_TRACE( mime, 0, "opened mime %s", m ? "OK" : "FAIL" );
+      DUF_TRACE( mime, 0, " opened mime %s ", m ? " OK " : " FAIL " );
       if ( 1 )
       {
         duf_pdi_set_context( pdi, m );
@@ -170,7 +174,7 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
         p++;
         while ( p && *p && *p <= ' ' )
           p++;
-        if ( 0 == strncmp( p, "charset=", 8 ) )
+        if ( 0 == strncmp( p, " charset = ", 8 ) )
           charset = mas_strdup( p + 8 );
         else
           tail = mas_strdup( p );
@@ -180,15 +184,33 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
         {
           int changes = 0;
 
-          r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET mimeid='%llu' WHERE id='%lld'", &changes, mimeid, dataid );
-          duf_pdi_reg_changes( pdi, changes );
+          if ( 1 )
+          {
+            const char *sql = " UPDATE " DUF_DBPREF " filedatas SET mimeid = :mimeid WHERE id = :dataid ";
+
+            DUF_SQL_START_STMT( pdi, update_mime, sql, r, pstmt );
+            DUF_TRACE( update, 0, " S: %s ", sql );
+            DUF_SQL_BIND_LL( mimeid, mimeid, r, pstmt );
+            DUF_SQL_BIND_LL( dataid, dataid, r, pstmt );
+            DUF_SQL_STEP( r, pstmt );
+            /* DUF_TEST_R(r); */
+            DUF_SQL_CHANGES( changes, r, pstmt );
+            DUF_SQL_END_STMT( r, pstmt );
+          }
+          else
+          {
+            r = duf_sql( " UPDATE " DUF_DBPREF " filedatas SET mimeid = %llu WHERE id = %lld", &changes, mimeid, dataid );
+            duf_pdi_reg_changes( pdi, changes );
+          }
+
+
           DUF_TEST_R( r );
         }
         mas_free( mimet );
         mas_free( charset );
         mas_free( tail );
       }
-      DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    : %llu", duf_pdi_depth( pdi ), mimeid );
+      DUF_TRACE( scan, 2, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid );
     }
   }
   DUF_TEST_R( r );
@@ -196,42 +218,36 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
 }
 
 duf_scan_callbacks_t duf_collect_mime_callbacks = {
-  .title = "collect mime",
+  .title = " collect mime ",
   .opendir = 1,
   .scan_mode_2 = 1,
 
-  .leaf_scan_fd2 = duf_scan_dirent_content2,
+  .leaf_scan_fd2 = duf_scan_dirent_mime_content2,
 
   /* filename for debug only */
-  .leaf_fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */
+  .leaf_fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd.id as dataid " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
         ", fd.mode AS filemode " /* */
         ", fn.id AS filenameid " /* */
         ,
-  .leaf_selector2 = /*	*/
-        /* "SELECT %s " */
-	" FROM " DUF_DBPREF "filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid = fd.id ) " /* */
+  .leaf_selector2 =             /* */
+        " FROM " DUF_DBPREF " filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd.id ) " /* */
         " WHERE "               /* */
         " fn.Pathid = :dirid ORDER BY fd.mimeid " /* */
         ,
-  .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
-	,
-  .node_selector = "SELECT pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM " DUF_DBPREF "paths AS pt " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
-        " WHERE pt.parentid = '%llu' " /* */
+  .leaf_selector_total2 =       /* */
+        " FROM " DUF_DBPREF " filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd.id ) " /* */
         ,
-  .node_selector2 = /*	*/
-        /* "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */
-        /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
-        " FROM " DUF_DBPREF "paths AS pt " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
+  .node_fieldset = " pt.id AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+        ,
+  .node_selector2 =             /* */
+        " FROM " DUF_DBPREF " paths AS pt " /* */
+        " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt.id ) " /* */
+        " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt.id ) " /* */
         " WHERE pt.parentid = :dirid " /* */
         ,
-  .final_sql_argv = ( const char ** )  NULL,
+  .final_sql_argv = ( const char ** ) NULL,
 };

@@ -104,7 +104,7 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
         "fn.Pathid AS dirid " /*	*/
         " , fn.name AS filename, fd.size AS filesize" /*	*/
         " , uid, gid, nlink, inode, mtim AS mtime " /*	*/
-	" , dupcnt AS nsame" /*	*/
+	" , dup5cnt AS nsame" /*	*/
         " , fn.id AS filenameid" /*	*/
 	" , fd.mode AS filemode",
   .leaf_selector =
@@ -113,7 +113,7 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /*	*/
 	"    WHERE " /*	*/
         /* "           fd.size >= %llu AND fd.size < %llu "            */
-        /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
+        /* "       AND (md.dup5cnt IS NULL OR (md.dup5cnt >= %llu AND md.dup5cnt < %llu)) AND " */
         " fn.Pathid='%llu' ",
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
@@ -127,7 +127,7 @@ duf_scan_callbacks_t duf_statistics_callbacks = {
         /* "          JOIN " DUF_DBPREF "md5 AS smd ON (sfd.md5id=smd.id) "                                                */
         /* "          WHERE sfn.Pathid=pt.id "                                                            */
         /* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           */
-        /* "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "               */
+        /* "              AND (smd.dup5cnt IS NULL OR (smd.dup5cnt >= %llu AND smd.dup5cnt < %llu)) "               */
         /* " ) AS nfiles "                                                                                       */
         /* " ,(SELECT min(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF "filenames AS sfn ON (sfn.dataid=sfd.id) " */
         /* "           WHERE sfn.Pathid=pt.id) AS minsize "                                               */

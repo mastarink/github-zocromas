@@ -235,7 +235,7 @@ duf_sql_bindu_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, 
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -261,7 +261,7 @@ duf_sql_bindu_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int p
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -284,7 +284,7 @@ duf_sql_bindu_int( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int va
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -310,7 +310,7 @@ duf_sql_bindu_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -336,51 +336,12 @@ duf_sql_bindu_string( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, con
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
   return r;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 int
 duf_sql_bindn_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
@@ -399,7 +360,7 @@ duf_sql_bindn_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long lon
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -426,7 +387,7 @@ duf_sql_bindn_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long 
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -450,7 +411,7 @@ duf_sql_bindn_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -477,7 +438,7 @@ duf_sql_bindn_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -504,44 +465,12 @@ duf_sql_bindn_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char 
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    DUF_ERROR( "wrong field name '%s'", fldname );
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
   return r;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 int
 duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
@@ -559,7 +488,7 @@ duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -585,7 +514,7 @@ duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long l
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -608,7 +537,7 @@ duf_sql_bind_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -634,7 +563,7 @@ duf_sql_bind_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );
@@ -660,7 +589,7 @@ duf_sql_bind_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char *
   else if ( !r )
   {
     r = DUF_ERROR_BIND_NAME;
-    /* DUF_ERROR( "wrong field name '%s'", fldname ); */
+    /* DUF_ERROR( "wrong field name '%s' at %s", fldname, sqlite3_sql( stmt ) ); */
   }
   else
     DUF_TEST_R( r );

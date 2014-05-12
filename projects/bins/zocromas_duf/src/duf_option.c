@@ -18,27 +18,7 @@
 /* ###################################################################### */
 #include "duf_option.h"
 /* ###################################################################### */
-#define DUF_OPT_NUM(code)  \
-      if ( optarg && *optarg ) \
-        duf_config->code = duf_strtol( optarg, &r); \
 
-#define DUF_OPT_NUM_PLUS(code)  \
-      if ( optarg && *optarg ) \
-        duf_config->code = duf_strtol( optarg, &r); \
-      else \
-        duf_config->code++;
-
-#define DUF_OPT_STR(code)  \
-      if ( optarg ) \
-      { \
-        mas_free( duf_config->code ); \
-        duf_config->code = mas_strdup( optarg ); \
-      }
-#define DUF_OPT_ARG(code)  \
-      if ( optarg ) duf_config->code.argc=mas_add_argv_arg(duf_config->code.argc, &duf_config->code.argv, optarg)
-
-#define DUF_OPT_FLAG(code)  \
-    duf_config->code = 1;
 
 static long
 duf_strtol( const char *s, int *pr )
@@ -195,6 +175,203 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_TEST:
     DUF_PRINTF( 0, "This is test option output; optarg:%s", optarg ? optarg : "-" );
     break;
+/* */
+    DUF_OPTION_CASE_ACQUIRE_NUM( OUTPUT, /*             */ level, /*     */ cli.output );
+
+
+/* debug etc. */
+    DUF_OPTION_CASE_ACQUIRE_NUM( VERBOSE, /*            */ verbose, /*         */ cli.dbg );
+    DUF_OPTION_CASE_ACQUIRE_NUM( DEBUG, /*              */ debug, /*           */ cli.dbg );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MIN_DBGLINE, /*        */ min_line, /*        */ cli.dbg );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAX_DBGLINE, /*        */ max_line, /*        */ cli.dbg );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DRY_RUN, /*           */ dry_run, /*         */ cli );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( NOOPENAT, /*          */ noopenat, /*        */ cli );
+
+
+/* db */
+    DUF_OPTION_CASE_ACQUIRE_STR( DB_DIRECTORY, /*       */ dir, /*             */ db );
+    DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_MAIN, /*       */ main.name, /*       */ db );
+    DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_ADM, /*        */ adm.name, /*        */ db );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( REMOVE_DATABASE, /*   */ remove_database, /* */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DROP_TABLES, /*       */ drop_tables, /*     */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( CREATE_TABLES, /*     */ create_tables, /*   */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( ADD_PATH, /*          */ add_path, /*        */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( FILEDATA, /*          */ filedata, /*        */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( FILENAMES, /*         */ filenames, /*       */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( VACUUM, /*            */ vacuum, /*          */ cli.act );
+
+/* actions */
+    DUF_OPTION_CASE_ACQUIRE_FLAG( PROGRESS, /*          */ progress, /*        */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( SUMMARY, /*           */ summary, /*         */ cli.act );
+
+    DUF_OPTION_CASE_ACQUIRE_NUM( SAMPLE, /*             */ sample, /*          */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_NUM( SAMPUPD, /*            */ sampupd, /*         */ cli.act );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( MDPATH, /*            */ mdpath, /*          */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DIRENT, /*            */ dirent, /*          */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( SD5, /*               */ sd5, /*             */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( MD5, /*               */ md5, /*             */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( CRC32, /*             */ crc32, /*           */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( MIME, /*              */ mime, /*            */ cli.act );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( COLLECT, /*           */ collect, /*         */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( INTEGRITY, /*         */ integrity, /*       */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( PRINT, /*             */ print, /*           */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( TREE, /*              */ tree, /*            */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DIRS, /*              */ dirs, /*            */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( FILES, /*             */ files, /*           */ cli.act );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DISABLE_CALCULATE, /* */ calculate, /*       */ cli.disable );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DISABLE_INSERT, /*    */ insert, /*          */ cli.disable );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( DISABLE_UPDATE, /*    */ update, /*          */ cli.disable );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( RECURSIVE, /*         */ recursive, /*       */ u );
+
+    DUF_OPTION_CASE_ACQUIRE_NUM( SD5ID, /*              */ sd5id, /*           */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MD5ID, /*              */ md5id, /*           */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( CRC32ID, /*            */ crc32id, /*         */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MIMEID, /*             */ mimeid, /*          */ u );
+
+/* limits, filters, selectors */
+  case DUF_OPTION_SIZE:
+    r = duf_limits( optarg, &duf_config->u.minsize, &duf_config->u.maxsize );
+    break;
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXSIZE, /*            */ maxsize, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MINSIZE, /*            */ minsize, /*     */ u );
+
+  case DUF_OPTION_SAME:
+    r = duf_limits( optarg, &duf_config->u.minsame, &duf_config->u.maxsame );
+    break;
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXSAME, /*            */ maxsame, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MINSAME, /*            */ minsame, /*     */ u );
+
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXDIRFILES, /*        */ maxdirfiles, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MINDIRFILES, /*        */ mindirfiles, /*     */ u );
+
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXSEQ, /*             */ maxseq, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXDEPTH, /*           */ maxreldepth, /*     */ u );
+
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXITEMS, /*           */ maxitems.total, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXITEMS_FILES, /*     */ maxitems.files, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( MAXITEMS_DIRS, /*      */ maxitems.dirs, /*     */ u );
+
+    DUF_OPTION_CASE_ACQUIRE_FLAG( UNI_SCAN, /*          */ uni_scan, /*     */ cli.act );
+
+    DUF_OPTION_CASE_ACQUIRE_ARG( GLOB_INCLUDE_FILES, /* */ glob.include_files, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_ARG( GLOB_EXCLUDE_FILES, /* */ glob.exclude_files, /*     */ u );
+
+
+/* trace */
+    DUF_OPTION_CASE_ACQUIRE_NUM( TRACE_NONEW, /*        */ nonew, /*     */ cli.trace );
+
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, /*              */ seq );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( CALLS, /*            */ calls );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( ANY, /*              */ any );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( CURRENT, /*          */ current );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( ACTION, /*           */ action );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( ERROR, /*            */ error );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN, /*             */ scan );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( PATH, /*             */ path );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( FS, /*               */ fs );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( DELETED, /*          */ deleted );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SAMPUPD, /*          */ sampupd );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SAMPLE, /*           */ sample );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( MDPATH, /*           */ mdpath );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( DIRENT, /*           */ dirent );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SD5, /*              */ sd5 );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( MD5, /*              */ md5 );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( CRC32, /*            */ crc32 );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( MIME, /*             */ mime );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( COLLECT, /*          */ collect );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( INTEGRITY, /*        */ integrity );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SQL, /*              */ sql );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SELECT, /*           */ select );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( INSERT, /*           */ insert );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( UPDATE, /*           */ update );
+
+/* i/o */
+
+  case DUF_OPTION_TRACE_STDERR:
+    if ( duf_config->cli.trace.out )
+    {
+      if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
+        fclose( duf_config->cli.trace.out );
+      duf_config->cli.trace.out = NULL;
+    }
+    if ( duf_config->cli.trace.file )
+    {
+      mas_free( duf_config->cli.trace.file );
+      duf_config->cli.trace.file = NULL;
+    }
+    duf_config->cli.trace.out = stderr;
+    break;
+  case DUF_OPTION_TRACE_STDOUT:
+    if ( duf_config->cli.trace.out )
+    {
+      if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
+        fclose( duf_config->cli.trace.out );
+      duf_config->cli.trace.out = NULL;
+    }
+    if ( duf_config->cli.trace.file )
+    {
+      mas_free( duf_config->cli.trace.file );
+      duf_config->cli.trace.file = NULL;
+    }
+    duf_config->cli.trace.out = stdout;
+    break;
+  case DUF_OPTION_TRACE_FILE:
+    r = duf_open_special( optarg, &duf_config->cli.trace.file, &duf_config->cli.trace.out );
+    break;
+
+  case DUF_OPTION_OUTPUT_FILE:
+    r = duf_open_special( optarg, &duf_config->cli.output.file, &duf_config->cli.output.out );
+    break;
+
+/* combined */
+  case DUF_OPTION_ALL_TRACE:
+    if ( optarg && *optarg )
+      duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
+            duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.sd5 = duf_config->cli.trace.md5 =
+            duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.sample = duf_config->cli.trace.deleted =
+            duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
+    else
+    {
+      duf_config->cli.trace.sql++;
+      duf_config->cli.trace.select++;
+      duf_config->cli.trace.insert++;
+      duf_config->cli.trace.update++;
+      duf_config->cli.trace.collect++;
+      duf_config->cli.trace.sd5++;
+      duf_config->cli.trace.md5++;
+      duf_config->cli.trace.crc32++;
+      duf_config->cli.trace.mime++;
+      duf_config->cli.trace.dirent++;
+      duf_config->cli.trace.sample++;
+      duf_config->cli.trace.deleted++;
+      duf_config->cli.trace.scan++;
+    }
+    break;
+
+
+
+  case DUF_OPTION_FLAG_ZERO_DB:
+    DUF_OPTION_ACQUIRE_FLAG( cli.act.create_tables );
+    duf_config->cli.act.create_tables = 1;
+
+  case DUF_OPTION_TREE_TO_DB:
+    /* -ORifd5 
+     * i.e.
+     *  --create-tables --uni-scan --recursive ...
+     *  */
+    duf_config->cli.act.create_tables = duf_config->cli.act.add_path = duf_config->cli.act.uni_scan = duf_config->u.recursive =
+          duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.dirent =
+          duf_config->cli.act.sd5 = duf_config->cli.act.md5 = duf_config->cli.act.crc32 = duf_config->cli.act.filedata =
+          duf_config->cli.act.filenames = 1;
+    break;
+
+/* specific */
   case DUF_OPTION_FORMAT:
     {
       char *coptarg, *poptarg;
@@ -226,8 +403,12 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         [DUF_FORMAT_GID] = "gid",
         [DUF_FORMAT_HUMAN] = "human",
         [DUF_FORMAT_INODE] = "inode",
+        [DUF_FORMAT_SD5ID] = "sd5id",
+        [DUF_FORMAT_SD5] = "sd5",
         [DUF_FORMAT_MD5ID] = "md5id",
         [DUF_FORMAT_MD5] = "md5",
+        [DUF_FORMAT_CRC32ID] = "crc32id",
+        [DUF_FORMAT_CRC32] = "crc32",
         [DUF_FORMAT_MIMEID] = "mimeid",
         [DUF_FORMAT_MODE] = "mode",
         [DUF_FORMAT_MTIME] = "mtime",
@@ -295,11 +476,23 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         case DUF_FORMAT_FILENAME:
           duf_config->cli.format.filename = value == NULL ? 1 : nvalue;
           break;
+        case DUF_FORMAT_SD5:
+          duf_config->cli.format.sd5 = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_SD5ID:
+          duf_config->cli.format.sd5id = value == NULL ? 1 : nvalue;
+          break;
         case DUF_FORMAT_MD5:
           duf_config->cli.format.md5 = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_MD5ID:
           duf_config->cli.format.md5id = value == NULL ? 1 : nvalue;
+          break;
+	    case DUF_FORMAT_CRC32:
+          duf_config->cli.format.crc32 = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_CRC32ID:
+          duf_config->cli.format.crc32id = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_MIMEID:
           duf_config->cli.format.mimeid = value == NULL ? 1 : nvalue;
@@ -333,12 +526,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
 
     DUF_TEST_R( r );
     break;
-  case DUF_OPTION_VERBOSE:
-    DUF_OPT_NUM_PLUS( cli.dbg.verbose );
-    break;
-  case DUF_OPTION_DEBUG:
-    DUF_OPT_NUM_PLUS( cli.dbg.debug );
-    break;
   case DUF_OPTION_MEMUSAGE:
     {
       extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -349,330 +536,8 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       }
     }
     break;
-  case DUF_OPTION_OUTPUT:
-    DUF_OPT_NUM_PLUS( cli.output.level );
-    break;
-  case DUF_OPTION_OUTPUT_FILE:
-    r = duf_open_special( optarg, &duf_config->cli.output.file, &duf_config->cli.output.out );
-    break;
-  case DUF_OPTION_TRACE_STDERR:
-    if ( duf_config->cli.trace.out )
-    {
-      if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
-        fclose( duf_config->cli.trace.out );
-      duf_config->cli.trace.out = NULL;
-    }
-    if ( duf_config->cli.trace.file )
-    {
-      mas_free( duf_config->cli.trace.file );
-      duf_config->cli.trace.file = NULL;
-    }
-    duf_config->cli.trace.out = stderr;
-    break;
-  case DUF_OPTION_TRACE_STDOUT:
-    if ( duf_config->cli.trace.out )
-    {
-      if ( duf_config->cli.trace.out != stderr && duf_config->cli.trace.out != stdout )
-        fclose( duf_config->cli.trace.out );
-      duf_config->cli.trace.out = NULL;
-    }
-    if ( duf_config->cli.trace.file )
-    {
-      mas_free( duf_config->cli.trace.file );
-      duf_config->cli.trace.file = NULL;
-    }
-    duf_config->cli.trace.out = stdout;
-    break;
-  case DUF_OPTION_TRACE_FILE:
-    r = duf_open_special( optarg, &duf_config->cli.trace.file, &duf_config->cli.trace.out );
-    break;
-  case DUF_OPTION_ALL_TRACE:
-    if ( optarg && *optarg )
-      duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
-            duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.md5 = duf_config->cli.trace.mime =
-            duf_config->cli.trace.sample = duf_config->cli.trace.deleted = duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
-    else
-    {
-      duf_config->cli.trace.sql++;
-      duf_config->cli.trace.select++;
-      duf_config->cli.trace.insert++;
-      duf_config->cli.trace.update++;
-      duf_config->cli.trace.collect++;
-      duf_config->cli.trace.md5++;
-      duf_config->cli.trace.mime++;
-      duf_config->cli.trace.dirent++;
-      duf_config->cli.trace.sample++;
-      duf_config->cli.trace.deleted++;
-      duf_config->cli.trace.scan++;
-    }
-    break;
-  case DUF_OPTION_TRACE_NONEW:
-    DUF_OPT_NUM_PLUS( cli.trace.nonew );
-    break;
-  case DUF_OPTION_NOOPENAT:
-    DUF_OPT_FLAG( cli.noopenat );
-    break;
-  case DUF_OPTION_SEQ_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.seq );
-    break;
-  case DUF_OPTION_CALLS_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.calls );
-    break;
-  case DUF_OPTION_ANY_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.any );
-    break;
-  case DUF_OPTION_CURRENT_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.current );
-    break;
-  case DUF_OPTION_ACTION_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.action );
-    break;
-  case DUF_OPTION_ERROR_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.error );
-    break;
-  case DUF_OPTION_SCAN_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.scan );
-    break;
-  case DUF_OPTION_PATH_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.path );
-    break;
-  case DUF_OPTION_FS_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.fs );
-    break;
-  case DUF_OPTION_DELETED_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.deleted );
-    break;
-  case DUF_OPTION_SAMPUPD_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.sampupd );
-    break;
-  case DUF_OPTION_SAMPLE_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.sample );
-    break;
-  case DUF_OPTION_MATCH_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.match );
-    break;
-  case DUF_OPTION_MDPATH_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.mdpath );
-    break;
-  case DUF_OPTION_DIRENT_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.dirent );
-    break;
-  case DUF_OPTION_MD5_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.md5 );
-    break;
-  case DUF_OPTION_MIME_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.mime );
-    break;
-  case DUF_OPTION_COLLECT_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.collect );
-    break;
-  case DUF_OPTION_INTEGRITY_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.integrity );
-    break;
-  case DUF_OPTION_SQL_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.sql );
-    break;
-  case DUF_OPTION_SELECT_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.select );
-    break;
-  case DUF_OPTION_INSERT_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.insert );
-    break;
-  case DUF_OPTION_UPDATE_TRACE:
-    DUF_OPT_NUM_PLUS( cli.trace.update );
-    break;
-  case DUF_OPTION_MIN_DBGLINE:
-    DUF_OPT_NUM( cli.dbg.min_line );
-    break;
-  case DUF_OPTION_MAX_DBGLINE:
-    DUF_OPT_NUM( cli.dbg.max_line );
-  case DUF_OPTION_SUMMARY:
-    DUF_OPT_FLAG( cli.act.summary );
-    break;
-  case DUF_OPTION_TREE_TO_DB:
-    /* -ORifd5 
-     * i.e.
-     *  --create-tables --uni-scan --recursive ...
-     *  */
-    duf_config->cli.act.create_tables = duf_config->cli.act.add_path = duf_config->cli.act.uni_scan = duf_config->u.recursive =
-          duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.dirent =
-          duf_config->cli.act.md5 = duf_config->cli.act.filedata = duf_config->cli.act.filenames = 1;
-    break;
-  case DUF_OPTION_ZERO_DB:
-    DUF_OPT_FLAG( cli.act.create_tables );
-    duf_config->cli.act.create_tables = 1;
-  case DUF_OPTION_REMOVE_DATABASE:
-    DUF_OPT_FLAG( cli.act.remove_database );
-    break;
-  case DUF_OPTION_DROP_TABLES:
-    DUF_OPT_FLAG( cli.act.drop_tables );
-    break;
-  case DUF_OPTION_CREATE_TABLES:
-    DUF_OPT_FLAG( cli.act.create_tables );
-    break;
-  case DUF_OPTION_ADD_PATH:
-    DUF_OPT_FLAG( cli.act.add_path );
-    break;
-  case DUF_OPTION_FILEDATA:
-    DUF_OPT_FLAG( cli.act.filedata );
-    break;
-  case DUF_OPTION_FILENAMES:
-    DUF_OPT_FLAG( cli.act.filenames );
-    break;
-    /* case DUF_OPTION_UPDATE_EXIF:           */
-    /*   DUF_OPT_FLAG( cli.act.update_exif ); */
-    /*   break;                               */
-  case DUF_OPTION_RECURSIVE:
-    DUF_OPT_FLAG( u.recursive );
-    break;
-  case DUF_OPTION_VACUUM:
-    DUF_OPT_FLAG( cli.act.vacuum );
-    break;
-  case DUF_OPTION_SAMPLE:
-    DUF_OPT_NUM_PLUS( cli.act.sample );
-    break;
-  case DUF_OPTION_SAMPUPD:
-    DUF_OPT_FLAG( cli.act.sampupd );
-    break;
-  case DUF_OPTION_MDPATH:
-    DUF_OPT_FLAG( cli.act.mdpath );
-    break;
-  case DUF_OPTION_DIRENT:
-    DUF_OPT_FLAG( cli.act.dirent );
-    break;
-  case DUF_OPTION_MD5:
-    DUF_OPT_FLAG( cli.act.md5 );
-    break;
-  case DUF_OPTION_MIME:
-    DUF_OPT_FLAG( cli.act.mime );
-    break;
-  case DUF_OPTION_COLLECT:
-    DUF_OPT_FLAG( cli.act.collect );
-    break;
-  case DUF_OPTION_INTEGRITY:
-    DUF_OPT_FLAG( cli.act.integrity );
-    break;
-  case DUF_OPTION_PRINT:
-    DUF_OPT_FLAG( cli.act.print );
-    break;
-  case DUF_OPTION_TREE:
-    DUF_OPT_FLAG( cli.act.tree );
-    break;
-  case DUF_OPTION_FILES:
-    DUF_OPT_FLAG( cli.act.files );
-    break;
-  case DUF_OPTION_DISABLE_INSERT:
-    DUF_OPT_FLAG( cli.disable.insert );
-    break;
-  case DUF_OPTION_DISABLE_UPDATE:
-    DUF_OPT_FLAG( cli.disable.update );
-    break;
-  case DUF_OPTION_DIRS:
-    DUF_OPT_FLAG( cli.act.dirs );
-    break;
-  case DUF_OPTION_MD5ID:
-    DUF_OPT_NUM( u.md5id );
-    DUF_ERROR( "%lld", duf_config->u.md5id );
-    break;
-  case DUF_OPTION_MIMEID:
-    DUF_OPT_NUM( u.mimeid );
-    DUF_ERROR( "%lld", duf_config->u.mimeid );
-    break;
-  case DUF_OPTION_SIZE:
-    r = duf_limits( optarg, &duf_config->u.minsize, &duf_config->u.maxsize );
-    break;
-  case DUF_OPTION_MAXSIZE:
-    DUF_OPT_NUM( u.maxsize );
-    break;
-  case DUF_OPTION_MINSIZE:
-    DUF_OPT_NUM( u.minsize );
-    break;
-  case DUF_OPTION_SAME:
-    r = duf_limits( optarg, &duf_config->u.minsame, &duf_config->u.maxsame );
-    break;
-  case DUF_OPTION_MAXSAME:
-    DUF_OPT_NUM( u.maxsame );
-    DUF_ERROR( "%lld - %lld", duf_config->u.minsame, duf_config->u.maxsame );
-    break;
-  case DUF_OPTION_MINSAME:
-    DUF_OPT_NUM( u.minsame );
-    DUF_ERROR( "%lld - %lld", duf_config->u.minsame, duf_config->u.maxsame );
-    break;
-  case DUF_OPTION_MAXDIRFILES:
-    DUF_OPT_NUM( u.maxdirfiles );
-    break;
-  case DUF_OPTION_MINDIRFILES:
-    DUF_OPT_NUM( u.mindirfiles );
-    break;
-  case DUF_OPTION_MAXDEPTH:
-    DUF_OPT_NUM( u.maxreldepth );
-    break;
-  case DUF_OPTION_MAXITEMS:
-    DUF_OPT_NUM( u.maxitems.total );
-    break;
-  case DUF_OPTION_MAXITEMS_FILES:
-    DUF_OPT_NUM( u.maxitems.files );
-    break;
-  case DUF_OPTION_MAXITEMS_DIRS:
-    DUF_OPT_NUM( u.maxitems.dirs );
-    break;
-  case DUF_OPTION_MAXSEQ:
-    DUF_OPT_NUM( u.maxseq );
-    break;
-  case DUF_OPTION_UNI_SCAN:
-    DUF_OPT_FLAG( cli.act.uni_scan );
-    break;
-    /* case DUF_OPTION_PRINT_PATHS:   */
-    /*   duf_config->cli.act.print_paths = 1; */
-    /*   break;                       */
-    /* case DUF_OPTION_PRINT_DIRS:    */
-    /*   duf_config->cli.act.print_dirs = 1;  */
-    /*   break;                       */
-    /* case DUF_OPTION_PRINT_FILES:   */
-    /*   duf_config->cli.act.print_files = 1; */
-    /*   break;                       */
-    /* case DUF_OPTION_PRINT_DUPLICATES:   */
-    /*   duf_config->cli.act.print_duplicates = 1; */
-    /*   break;                            */
-    /* case DUF_OPTION_ZERO_DUPLICATES:           */
-    /*   DUF_OPT_FLAG( cli.act.zero_duplicates ); */
-    /*   break;                                   */
-    /* case DUF_OPTION_SAME_FILES:           */
-    /*   DUF_OPT_FLAG( cli.act.same_files ); */
-    /*   break;                              */
-    /* case DUF_OPTION_SAME_EXIF:            */
-    /*   DUF_OPT_FLAG( cli.act.same_exif );  */
-    /*   break;                              */
-    /* case DUF_OPTION_SAME_MD5:             */
-    /*   DUF_OPT_FLAG( cli.act.same_md5 );   */
-    /*   break;                              */
-    /* case DUF_OPTION_ADD_TO_GROUP:         */
-    /*   DUF_OPT_FLAG( cli.act.to_group );   */
-    /*   break;                              */
-    /* case DUF_OPTION_REMOVE_FROM_GROUP:    */
-    /*   DUF_OPT_FLAG( cli.act.from_group ); */
-    /*   break;                              */
-  case DUF_OPTION_GLOB_INCLUDE_FILES:
-    DUF_OPT_ARG( u.glob.include_files );
-    break;
-  case DUF_OPTION_GLOB_EXCLUDE_FILES:
-    DUF_OPT_ARG( u.glob.exclude_files );
-    break;
-    /* case DUF_OPTION_GROUP:  */
-    /*   DUF_OPT_STR( group ); */
-    /*   break;                */
-  case DUF_OPTION_DB_DIRECTORY:
-    DUF_OPT_STR( db.dir );
-    break;
-  case DUF_OPTION_DB_NAME_MAIN:
-    DUF_OPT_STR( db.main.name );
-    break;
-  case DUF_OPTION_DB_NAME_ADM:
-    DUF_OPT_STR( db.adm.name );
-    break;
-    /* case DUF_OPTION_LIMIT:      */
-    /*   DUF_OPT_NUM( cli.limit ); */
-    /*   break;                    */
+
+
   case ':':
     r = DUF_ERROR_OPTION_VALUE;
     break;

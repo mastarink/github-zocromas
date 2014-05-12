@@ -232,6 +232,7 @@ shn_gvimer_plus_mased ()
 	file=$a
 	fline=$b
       fi
+      shn_msg "$file -- $fline"
     fi
     if ! [[ $file == *.* ]] ; then
       fileq=$( grep -rl --inc='*.c' "^$file\>(" )
@@ -253,9 +254,10 @@ shn_gvimer_plus_mased ()
     fi
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
     local rfile=`/usr/bin/realpath $filef`
-#   echo "rfile:$rfile" >&2
+    shn_msg "rfile:$rfile" 
     filef=`/bin/basename $rfile`
     local dir=`/bin/dirname $rfile`
+    shn_msg "dir:$dir" 
     local dirn=`/bin/basename $dir`
     typf=`shn_gvimer_plus_filtyp "${filef:-*.c}" $dirn`
 #   echo "2 typf:$typf" >&2

@@ -225,6 +225,7 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "  run   -pRf   /mnt/new_media/media/photo		- %s", "      files (full paths) linear" );
         DUF_PRINTF( 0, "========================= as for 20140510 ===================" );
         DUF_PRINTF( 0, "  run   -Rdf --sample  --output /mnt/new_media/media/photo/" );
+        DUF_PRINTF( 0, "  run   -Rif5  /mnt/new_media/media/photo --progress" );
         DUF_PRINTF( 0, "=============================================================" );
         r = 0;
         break;

@@ -190,7 +190,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
   .leaf_fieldset = "fn.pathid AS dirid " /* */
         " , fn.name AS filename, fd.size AS filesize" /* */
         " , uid, gid, nlink, inode, mtim AS mtime " /* */
-        " , dupcnt AS nsame "   /* */
+        " , dup5cnt AS nsame "   /* */
         " , fd.id AS filenameid" /* */
         " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
         ,
@@ -199,6 +199,11 @@ duf_scan_callbacks_t duf_template_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         "    WHERE "            /* */
         " fn.pathid = :dirid"   /* */
+        ,
+  .leaf_selector_total2 =       /* */
+        " FROM " DUF_DBPREF "filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */

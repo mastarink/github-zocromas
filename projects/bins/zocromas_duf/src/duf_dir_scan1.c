@@ -218,7 +218,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
     {
       char *ona = NULL;
 
-      ona = duf_option_names( DUF_OPTION_DIRS );
+      ona = duf_option_names( DUF_OPTION_FLAG_DIRS );
       DUF_PRINTF( 0, "to scan dir / file before2 use %s", ona );
       mas_free( ona );
     }

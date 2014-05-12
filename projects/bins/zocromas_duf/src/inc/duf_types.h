@@ -241,7 +241,9 @@ typedef enum
   DUF_ERROR_NO_ACTIONS,
   DUF_ERROR_PTR,
   DUF_ERROR_DATA,
+  DUF_ERROR_SD5,
   DUF_ERROR_MD5,
+  DUF_ERROR_CRC32,
   DUF_ERROR_NOT_OPEN,
   DUF_ERROR_PATH,
   DUF_ERROR_OPENAT,
@@ -305,7 +307,9 @@ typedef struct
   unsigned long long mindirfiles;
   unsigned long long maxdirfiles;
   duf_filter_glob_t glob;
+  unsigned long long sd5id;
   unsigned long long md5id;
+  unsigned long long crc32id;
   unsigned long long mimeid;
   unsigned long long minsize;
   unsigned long long maxsize;
@@ -380,6 +384,17 @@ typedef struct
 
 typedef struct
 {
+  float percent;
+  int width;
+  int prev_width;
+} duf_bar_t;
+
+typedef struct
+{
+  unsigned long long dirent_content2;
+} duf_modcnts_t;
+typedef struct
+{
   unsigned opendir:1;
   unsigned maxdepth;
   int depth;                    /* signed !! */
@@ -391,12 +406,15 @@ typedef struct
   unsigned long long seq;
   unsigned long long seq_leaf;
   unsigned long long seq_node;
+  unsigned long long total_files;
   duf_items_t items;
   duf_ufilter_t u;
   duf_context_t context;
   int num_statements;
   duf_sqlite_stmt_t **statements;
   int **xstatements;
+  duf_bar_t bar;
+  duf_modcnts_t cnts;
 } duf_depthinfo_t;
 
 typedef struct
@@ -405,9 +423,14 @@ typedef struct
   struct stat st;
   unsigned long long truedirid;
   unsigned long long nsame;
+  unsigned long long sd5id;
   unsigned long long md5id;
+  unsigned long long crc32id;
   unsigned long long mimeid;
   unsigned long long dataid;
+  unsigned long long sd5sum1;
+  unsigned long long sd5sum2;
+  unsigned long long crc32sum;
   unsigned long long md5sum1;
   unsigned long long md5sum2;
 } duf_fileinfo_t;
@@ -426,7 +449,9 @@ typedef struct
 
 typedef struct
 {
+  unsigned long long sd5id;
   unsigned long long md5id;
+  unsigned long long crc32id;
   unsigned long long mimeid;
   unsigned long long size;
   unsigned long long nduplicates;
@@ -458,7 +483,6 @@ typedef int ( *duf_scan_hook2_file_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinf
 
 typedef int ( *duf_scan_hook_file_fd_t ) ( int fd, const struct stat * pst_file, duf_depthinfo_t * pdi, duf_record_t * precord );
 typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, const struct stat * pst_file, duf_depthinfo_t * pdi );
-
 
 
 typedef int ( *duf_scan_hook_dirent_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
@@ -523,6 +547,7 @@ struct duf_scan_callbacks_s
   const char *leaf_fieldset;
   const char *leaf_selector;
   const char *leaf_selector2;
+  const char *leaf_selector_total2;
 
   duf_scan_hook_init_t init_scan;
 

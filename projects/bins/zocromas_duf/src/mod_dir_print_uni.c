@@ -309,7 +309,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         ", fd.id AS dataid "    /* */
         ", fd.mode AS filemode " /* */
         ", fn.id AS filenameid" /* */
-        ", md.dupcnt AS nsame"  /* */
+        ", md.dup5cnt AS nsame"  /* */
         ", md.id AS md5id, md.md5sum1, md.md5sum2 " /* */
         ,
   /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
@@ -327,7 +327,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md.id=fd.md5id)" /* */
         "    WHERE "            /* */
         /* "           fd.size >= %llu AND fd.size < %llu "            */
-        /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu)) AND " */
+        /* "       AND (md.dup5cnt IS NULL OR (md.dup5cnt >= %llu AND md.dup5cnt < %llu)) AND " */
         " fn.Pathid='%llu' ",
   .leaf_selector2 =             /* */
         /* "SELECT %s " */
@@ -336,8 +336,16 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md.id=fd.md5id) " /* */
         "    WHERE "            /* */
         " (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) AND " /* */
-        " (:minsame IS NULL OR md.dupcnt>=:minsame) AND (:maxsame IS NULL OR md.dupcnt<=:maxsame) AND " /* */
+        " (:minsame IS NULL OR md.dup5cnt>=:minsame) AND (:maxsame IS NULL OR md.dup5cnt<=:maxsame) AND " /* */
         " fn.Pathid=:dirid "    /* */
+        ,
+ .leaf_selector_total2 =       /* */
+        " FROM " DUF_DBPREF "filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
+        "    WHERE "            /* */
+        " (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) AND " /* */
+        " (:minsame IS NULL OR md.dup5cnt>=:minsame) AND (:maxsame IS NULL OR md.dup5cnt<=:maxsame)" /* */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
@@ -350,7 +358,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
         /* "          JOIN " DUF_DBPREF "md5 AS smd ON (sfd.md5id=smd.id) "                                                */
         /* "          WHERE sfn.Pathid=pt.id "                                                            */
         /* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           */
-        /* "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "               */
+        /* "              AND (smd.dup5cnt IS NULL OR (smd.dup5cnt >= %llu AND smd.dup5cnt < %llu)) "               */
         /* " ) AS nfiles "                                                                                       */
         /* " ,(SELECT min(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF "filenames AS sfn ON (sfn.dataid=sfd.id) " */
         /* "           WHERE sfn.Pathid=pt.id) AS minsize "                                               */

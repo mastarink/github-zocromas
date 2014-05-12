@@ -229,7 +229,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
   return r;
 }
 
-/* #### duf_sql( "UPDATE " DUF_DBPREF "md5 SET dupcnt='%llu' WHERE id='%llu'", cnt, md5id ); */
+/* #### duf_sql( "UPDATE " DUF_DBPREF "md5 SET dup5cnt='%llu' WHERE id='%llu'", cnt, md5id ); */
 
   /* .node_selector =                                                                                             */
   /*       "SELECT " DUF_DBPREF "md5.id AS dirid, printf('%%016x%%016x',md5sum1,md5sum2) AS dirname "                      */
@@ -260,7 +260,7 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         ", fn.Pathid as truedirid " /* */
         ", fn.name AS filename, fd.size AS filesize " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
-        ", dupcnt AS nsame "    /* */
+        ", dup5cnt AS nsame "    /* */
         ", printf('%016x%016x',md5sum1,md5sum2) AS dirname " /* */
         ", fn.Pathid AS hid "   /* */
         ", fn.id AS filenameid" /* */
@@ -279,15 +279,23 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " WHERE "               /* */
         " (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) AND " /* */
-        " (:minsame IS NULL OR md.dupcnt>=:minsame) AND (:maxsame IS NULL OR md.dupcnt<=:maxsame) AND " /* */
+        " (:minsame IS NULL OR md.dup5cnt>=:minsame) AND (:maxsame IS NULL OR md.dup5cnt<=:maxsame) AND " /* */
         " fd.md5id=:dirid "     /* */
         " ORDER BY fd.size "    /* */
+        ,
+ .leaf_selector_total2 =       /* */
+        " FROM " DUF_DBPREF "filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
+        "    WHERE "            /* */
+        "     (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) " /* */
+        " AND (:minsame IS NULL OR md.dup5cnt>=:minsame) AND (:maxsame IS NULL OR md.dup5cnt<=:maxsame) " /* */
         ,
   .node_fieldset = "md.id AS dirid, md.id AS md5id " /* */
         ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dirname" /* */
         ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dfname " /* */
         ", 0 AS ndirs "         /* */
-        ", dupcnt AS nfiles, dupcnt AS nsame " /* */
+        ", dup5cnt AS nfiles, dup5cnt AS nsame " /* */
         /* ", (SELECT size FROM " DUF_DBPREF "filedatas AS fd WHERE md.id=fd.md5id LIMIT 1) AS filesize " (* *) */
         ", fd.size AS maxsize, fd.size AS minsize" /* */
         ,
@@ -295,7 +303,7 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dirname" /* */
         ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dfname " /* */
         ", 0 AS ndirs "         /* */
-        ", dupcnt AS nfiles "   /* */
+        ", dup5cnt AS nfiles "   /* */
         ", (SELECT size FROM " DUF_DBPREF "filedatas AS fd WHERE md.id=fd.md5id LIMIT 1) AS filesize " /* */
         ", 0 AS maxsize, 0 AS minsize" /* */
         " FROM " DUF_DBPREF "md5 AS md " /* */
@@ -308,13 +316,13 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         /* ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dfname " */
         /* ", md.md5sum1, md.md5sum2 "                                 */
         /* ", 0 AS ndirs "                                             */
-        /* ", dupcnt AS nfiles, dupcnt AS nsame "                      */
+        /* ", dup5cnt AS nfiles, dup5cnt AS nsame "                      */
         /* ", fd.size AS maxsize, fd.size AS minsize"                  */
         "  FROM " DUF_DBPREF "md5 AS md" /* */
         "  LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (md.id=fd.md5id) " /* */
         "  WHERE "              /* */
         " (:minsize IS NULL OR fd.size>=:minsize) AND (:maxsize IS NULL OR fd.size<=:maxsize) AND " /* */
-        " (:minsame IS NULL OR md.dupcnt>=:minsame) AND (:maxsame IS NULL OR md.dupcnt<=:maxsame) AND " /* */
+        " (:minsame IS NULL OR md.dup5cnt>=:minsame) AND (:maxsame IS NULL OR md.dup5cnt<=:maxsame) AND " /* */
         " :dirid<1 "            /* */
         "  GROUP BY md.id "     /* */
         "  ORDER BY fd.size, md.id " /* */

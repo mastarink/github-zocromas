@@ -76,6 +76,7 @@ sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
   DEBUG_ENDR( r );
   return r;
 }
+
 static int
 sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
@@ -274,6 +275,7 @@ sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi
   DEBUG_ENDR( r );
   return r;
 }
+
 static int
 sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
@@ -342,7 +344,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   .leaf_fieldset = "fn.pathid AS dirid " /* */
         " , fn.name AS filename, fd.size AS filesize" /* */
         " , uid, gid, nlink, inode, mtim AS mtime " /* */
-        " , dupcnt AS nsame "   /* */
+        " , dup5cnt AS nsame "   /* */
         " , fd.id AS filenameid" /* */
         " , fd.mode AS filemode, md.md5sum1, md.md5sum2 ",
   .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -350,13 +352,18 @@ duf_scan_callbacks_t duf_sample_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         "    WHERE "            /* */
         /* "           fd.size >= %llu AND fd.size < %llu "             */
-        /* "       AND (md.dupcnt IS NULL OR (md.dupcnt >= %llu AND md.dupcnt < %llu))  AND " */
+        /* "       AND (md.dup5cnt IS NULL OR (md.dup5cnt >= %llu AND md.dup5cnt < %llu))  AND " */
         " fn.pathid='%llu' ",
   .leaf_selector2 = " FROM " DUF_DBPREF "filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         "    WHERE "            /* */
         " fn.pathid = :dirid"   /* */
+        ,
+  .leaf_selector_total2 =       /* */
+        " FROM " DUF_DBPREF "filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
@@ -369,7 +376,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
         /* "          JOIN " DUF_DBPREF "md5 AS smd ON (sfd.md5id=smd.id) "                                                */
         /* "          WHERE sfn.Pathid=pt.id "                                                            */
         /* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           */
-        /* "              AND (smd.dupcnt IS NULL OR (smd.dupcnt >= %llu AND smd.dupcnt < %llu)) "               */
+        /* "              AND (smd.dup5cnt IS NULL OR (smd.dup5cnt >= %llu AND smd.dup5cnt < %llu)) "               */
         /* " ) AS nfiles "                                                                                       */
         /* " ,(SELECT min(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF "filenames AS sfn ON (sfn.dataid=sfd.id) " */
         /* "           WHERE sfn.Pathid=pt.id) AS minsize "                                               */

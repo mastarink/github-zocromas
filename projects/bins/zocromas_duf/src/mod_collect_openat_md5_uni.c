@@ -23,7 +23,7 @@
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-#include "duf_path.h"
+/* #include "duf_path.h" */
 
 #include "duf_sql_def.h"
 #include "duf_sql_field.h"
@@ -124,34 +124,27 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
       if ( MD5_Init( &ctx ) != 1 )
         r = DUF_ERROR_MD5;
       DUF_TEST_R( r );
-      if ( r >= 0 )
+      while ( r >= 0 )
       {
-        /* while ( r >= 0 && !feof( f ) ) */
-        while ( r >= 0 )
+        int rr;
+
+        rr = read( fd, buffer, bufsz );
+        if ( rr < 0 )
         {
-          int rr;
+          DUF_ERRSYS( "read file" );
 
-          /* rr = fread( buffer, 1, bufsz, f ); */
-
-          rr = read( fd, buffer, bufsz );
-          /* if ( ferror( f ) ) */
-          if ( rr < 0 )
-          {
-            DUF_ERRSYS( "read file" );
-
-            r = DUF_ERROR_READ;
-            DUF_TEST_R( r );
-            break;
-          }
-          if ( rr > 0 )
-          {
-            if ( MD5_Update( &ctx, buffer, rr ) != 1 )
-              r = DUF_ERROR_MD5;
-          }
-          else
-            break;
+          r = DUF_ERROR_READ;
           DUF_TEST_R( r );
+          break;
         }
+        if ( rr > 0 && !duf_config->cli.disable.calculate )
+        {
+          if ( MD5_Update( &ctx, buffer, rr ) != 1 )
+            r = DUF_ERROR_MD5;
+        }
+        if ( rr <= 0 )
+          break;
+        DUF_TEST_R( r );
       }
       mas_free( buffer );
     }
@@ -165,47 +158,47 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
   return r;
 }
 
+/* static int                                                                                                                        */
+/* duf_scan_dirent_md5_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )                     */
+/* {                                                                                                                                 */
+/*   int r = 0;                                                                                                                      */
+/*   unsigned char mdr[MD5_DIGEST_LENGTH];                                                                                           */
+/*   unsigned char md[MD5_DIGEST_LENGTH];                                                                                            */
+/*                                                                                                                                   */
+/*   DUF_UFIELD( filedataid );                                                                                                       */
+/*   DUF_SFIELD( filename );                                                                                                         */
+/*                                                                                                                                   */
+/*   memset( md, 0, sizeof( md ) );                                                                                                  */
+/*   r = duf_make_md5_uni( fd, md );                                                                                                 */
+/*   DUF_TEST_R( r );                                                                                                                */
+/*   (* reverse *)                                                                                                                   */
+/*   for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )                                                                      */
+/*     mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];                                                                          */
+/*                                                                                                                                   */
+/*   if ( r >= 0 )                                                                                                                   */
+/*   {                                                                                                                               */
+/*     unsigned long long md5id = 0;                                                                                                 */
+/*     unsigned long long *pmd;                                                                                                      */
+/*                                                                                                                                   */
+/*     pmd = ( unsigned long long * ) &mdr;                                                                                          */
+/*     md5id = duf_insert_md5_uni( pdi, pmd, filename, pst_file->st_size, 1 (*need_id *) , &r );                                     */
+/*     if ( r >= 0 && md5id )                                                                                                        */
+/*     {                                                                                                                             */
+/*       int changes = 0;                                                                                                            */
+/*                                                                                                                                   */
+/*       if ( r >= 0 && !duf_config->cli.disable.update )                                                                            */
+/*         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id=%llu WHERE id=%lld", &changes, md5id, filedataid );                */
+/*       duf_pdi_reg_changes( pdi, changes );                                                                                        */
+/*       DUF_TEST_R( r );                                                                                                            */
+/*     }                                                                                                                             */
+/*     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );                                                   */
+/*     DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
+/*   }                                                                                                                               */
+/*   return r;                                                                                                                       */
+/* }                                                                                                                                 */
+
 static int
-duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-  unsigned char mdr[MD5_DIGEST_LENGTH];
-  unsigned char md[MD5_DIGEST_LENGTH];
-
-  DUF_UFIELD( filedataid );
-  DUF_SFIELD( filename );
-
-  memset( md, 0, sizeof( md ) );
-  r = duf_make_md5_uni( fd, md );
-  DUF_TEST_R( r );
-  /* reverse */
-  for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
-    mdr[i] = md[sizeof( md ) / sizeof( md[0] ) - i - 1];
-
-  if ( r >= 0 )
-  {
-    unsigned long long md5id = 0;
-    unsigned long long *pmd;
-
-    pmd = ( unsigned long long * ) &mdr;
-    md5id = duf_insert_md5_uni( pdi, pmd, filename, pst_file->st_size, 1 /*need_id */ , &r );
-    if ( r >= 0 && md5id )
-    {
-      int changes = 0;
-
-      if ( r >= 0 && !duf_config->cli.disable.update )
-        r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE id='%lld'", &changes, md5id, filedataid );
-      duf_pdi_reg_changes( pdi, changes );
-      DUF_TEST_R( r );
-    }
-    DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
-    DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
-  }
-  return r;
-}
-
-static int
-duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+duf_scan_dirent_md5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned char mdr[MD5_DIGEST_LENGTH];
@@ -244,66 +237,66 @@ duf_scan_dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *
   return r;
 }
 
-static int
-duf_scan_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize )
-{
-  int r = 0;
-  int ffd = duf_levinfo_dfd( pdi );
-
-  DUF_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );
-  if ( ffd )
-  {
-    DUF_TRACE( md5, 2, "openat ffd:%d", ffd );
-    if ( ffd > 0 )
-    {
-      r = duf_scan_dirent_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );
-    }
-    else
-    {
-      DUF_ERRSYS( "open to read file : %s", fname );
-      r = ffd;
-      r = DUF_ERROR_OPEN;
-    }
-    DUF_TEST_R( r );
-    DUF_TEST_R( r );
-  }
-  else
-    r = DUF_ERROR_DATA;
-  DUF_TEST_R( r );
-  return r;
-}
+/* static int                                                                                                                          */
+/* duf_scan_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize ) */
+/* {                                                                                                                                   */
+/*   int r = 0;                                                                                                                        */
+/*   int ffd = duf_levinfo_dfd( pdi );                                                                                                 */
+/*                                                                                                                                     */
+/*   DUF_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );                                                          */
+/*   if ( ffd )                                                                                                                        */
+/*   {                                                                                                                                 */
+/*     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );                                                                                      */
+/*     if ( ffd > 0 )                                                                                                                  */
+/*     {                                                                                                                               */
+/*       r = duf_scan_dirent_md5_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );                                                */
+/*     }                                                                                                                               */
+/*     else                                                                                                                            */
+/*     {                                                                                                                               */
+/*       DUF_ERRSYS( "open to read file : %s", fname );                                                                                */
+/*       r = ffd;                                                                                                                      */
+/*       r = DUF_ERROR_OPEN;                                                                                                           */
+/*     }                                                                                                                               */
+/*     DUF_TEST_R( r );                                                                                                                */
+/*     DUF_TEST_R( r );                                                                                                                */
+/*   }                                                                                                                                 */
+/*   else                                                                                                                              */
+/*     r = DUF_ERROR_DATA;                                                                                                             */
+/*   DUF_TEST_R( r );                                                                                                                  */
+/*   return r;                                                                                                                         */
+/* }                                                                                                                                   */
 
 /* callback of type duf_scan_hook_file_t */
-__attribute__ ( ( unused ) )
-     static int collect_openat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  DUF_SFIELD( filename );
-  DUF_UFIELD( filesize );
-  DEBUG_START(  );
-  r = duf_scan_dirent_content_by_precord( pdi, precord, filename, filesize );
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                    */
+/* collect_openat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                             */
+/*   int r = 0;                                                                  */
+/*                                                                               */
+/*   DUF_SFIELD( filename );                                                     */
+/*   DUF_UFIELD( filesize );                                                     */
+/*   DEBUG_START(  );                                                            */
+/*   r = duf_scan_dirent_content_by_precord( pdi, precord, filename, filesize ); */
+/*   DEBUG_ENDR( r );                                                            */
+/*   return r;                                                                   */
+/* }                                                                             */
 
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
-__attribute__ ( ( unused ) )
-     static int collect_openat_md5_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-  const char *real_path = NULL;
-
-  DEBUG_START(  );
-
-  real_path = duf_levinfo_path( pdi );
-  DUF_TRACE( md5, 0, "L%d; id%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid_unused, real_path );
-
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                                                             */
+/* collect_openat_md5_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                                                                      */
+/*   int r = 0;                                                                                                           */
+/*   const char *real_path = NULL;                                                                                        */
+/*                                                                                                                        */
+/*   DEBUG_START(  );                                                                                                     */
+/*                                                                                                                        */
+/*   real_path = duf_levinfo_path( pdi );                                                                                 */
+/*   DUF_TRACE( md5, 0, "L%d; id%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid_unused, real_path );                 */
+/*                                                                                                                        */
+/*   DEBUG_ENDR( r );                                                                                                     */
+/*   return r;                                                                                                            */
+/* }                                                                                                                      */
 
 /* currently used for --same-md5  ??? */
 
@@ -311,22 +304,22 @@ __attribute__ ( ( unused ) )
 
 
 static const char *final_sql[] = {
-  "UPDATE " DUF_DBPREF "md5 SET dupcnt=(SELECT COUNT(*) " /* */
-        " FROM " DUF_DBPREF "filedatas AS fd " /* */
-        " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md.id) " /* */
+  "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /* */
+        " FROM " DUF_DBPREF "md5 AS md " /* */
+        " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.md5id=md.id) " /* */
         " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)" /* */
-	,
+        ,
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
-        "SELECT p.id AS Pathid, COUNT(*) AS numdirs " /* */
-        " FROM " DUF_DBPREF "paths AS p " /* */
-        " LEFT JOIN " DUF_DBPREF "paths AS sp ON (sp.ParentId=p.id) " /* */
-        " GROUP BY sp.ParentId" /* */
-	,
+        "SELECT parents.id AS Pathid, COUNT(*) AS numdirs " /* */
+        " FROM " DUF_DBPREF "paths " /* */
+        " JOIN " DUF_DBPREF "paths AS parents ON (parents.id=paths.parentid) " /* */
+        " GROUP BY parents.id"  /* */
+        ,
   "UPDATE " DUF_DBPREF "pathtot_dirs SET " /* */
         " numdirs=(SELECT COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths AS p " /* */
         " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" /* */
-	,
+        ,
   /* "DELETE FROM " DUF_DBPREF "keydata", */
   "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " /* */
         "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid " /* */
@@ -334,7 +327,7 @@ static const char *final_sql[] = {
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id)" /* */
         " JOIN " DUF_DBPREF "paths AS p ON (fn.Pathid=p.id)" /* */
         " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md.id)" /* */
-	,
+        ,
 
 
   NULL,
@@ -351,21 +344,21 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   /* .dirent_file_scan_before = NULL, */
   /* .node_scan_before = collect_openat_md5_scan_node_before, */
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
-  .leaf_scan_fd = duf_scan_dirent_content,
-  .leaf_scan_fd2 = duf_scan_dirent_content2,
+  /* .leaf_scan_fd = duf_scan_dirent_md5_content, */
+  .leaf_scan_fd2 = duf_scan_dirent_md5_content2,
   .leaf_fieldset = "fn.Pathid AS dirid " /* */
         " , fd.id AS filedataid, fd.inode AS inode " /* */
         " , fn.name AS filename, fd.size AS filesize " /* */
-        " , uid, gid, nlink, inode, mtim AS mtime, md.dupcnt AS nsame " /* */
+        " , uid, gid, nlink, inode, mtim AS mtime, md.dup5cnt AS nsame " /* */
         " , fn.id AS filenameid " /* */
         " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
-	,
+        ,
   .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
-        " sz.dupcnt > 1 AND "   /* */
+        " sz.dupzcnt > 1 AND "  /* */
         " fn.Pathid='%llu' "    /* */
         ,
   .leaf_selector2 =             /* */
@@ -375,7 +368,15 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
+        " sz.dupzcnt > 1 AND "  /* */
         " fn.Pathid=:dirid "    /* */
+        ,
+  .leaf_selector_total2 =       /* */
+        " FROM " DUF_DBPREF "filenames AS fn " /* */
+        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
+        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
+        " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
+        " WHERE sz.dupzcnt > 1 " /* */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */

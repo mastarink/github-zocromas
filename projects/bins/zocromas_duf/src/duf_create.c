@@ -24,6 +24,7 @@
  * filenames
  * paths
  * md5
+ * ...
  * keydata
  * exif
  * */
@@ -85,6 +86,8 @@ duf_check_table_filedatas( void )
                         ", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /* */
                         ", size INTEGER NOT NULL" /* */
                         ", md5id INTEGER" /* */
+                        ", sd5id INTEGER" /* */
+                        ", crc32id INTEGER" /* */
                         ", mimeid INTEGER" /* */
                         ", atim INTEGER NOT NULL, atimn INTEGER NOT NULL" /* */
                         ", mtim INTEGER NOT NULL, mtimn INTEGER NOT NULL" /* */
@@ -93,25 +96,32 @@ duf_check_table_filedatas( void )
                         ", last_updated REAL" /* */
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         ", FOREIGN KEY(md5id) REFERENCES md5(id) " /* */
+                        ", FOREIGN KEY(sd5id) REFERENCES sd5(id) " /* */
+                        ", FOREIGN KEY(crc32id) REFERENCES crc32(id) " /* */
                         ")", "Create filedatas" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_md5id ON filedatas (md5id)", "Create filedatas 1" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_sd5id ON filedatas (sd5id)", "Create filedatas 1" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filestatus ON filedatas (filestatus)", "Create filedatas 2" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_crc32id ON filedatas (crc32id)", "Create filedatas 1" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filetype ON filedatas (filetype)", "Create filedatas 3" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_md5id ON filedatas (md5id)", "Create filedatas 2" );
+  /* if ( r >= 0 )                                                                                                                              */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filestatus ON filedatas (filestatus)", "Create filedatas 3" ); */
+  /* if ( r >= 0 )                                                                                                                              */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filetype ON filedatas (filetype)", "Create filedatas 4" );     */
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_size ON filedatas (size)", "Create filedatas 4" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_size ON filedatas (size)", "Create filedatas 5" );
+  /* if ( r >= 0 )                                                                                                                */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uid ON filedatas (uid)", "Create filedatas 6" ); */
+  /* if ( r >= 0 )                                                                                                                */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_gid ON filedatas (gid)", "Create filedatas 7" ); */
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uid ON filedatas (uid)", "Create filedatas 5" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_gid ON filedatas (gid)", "Create filedatas 6" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uniq ON filedatas (dev,inode)", "Create filedatas 7" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uniq ON filedatas (dev,inode)", "Create filedatas 8" );
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "duf_filedatas_lastupdated " /* */
-                          " AFTER UPDATE OF dev,inode,mode,nlink,uid,gid,blksize,blocks,size,md5id,atim,atimn,mtim,mtimn,ctim,ctimn,filetype,filestatus " /* */
+                          " AFTER UPDATE OF dev,inode,mode,nlink,uid,gid,blksize,blocks,size,sd5id,crc32id,md5id" /*	*/
+			  ",atim,atimn,mtim,mtimn,ctim,ctimn,filetype,filestatus " /* */
                           " ON filedatas FOR EACH ROW BEGIN " /* */
                           "   UPDATE filedatas SET last_updated=DATETIME() WHERE id=OLD.id ; END", "Create filedatas" );
 
@@ -128,7 +138,7 @@ duf_check_table_sizes( void )
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " /* */
-                        DUF_DBPREF "sizes (id INTEGER PRIMARY KEY autoincrement, size INTEGER NOT NULL, dupcnt INTEGER" /* */
+                        DUF_DBPREF "sizes (id INTEGER PRIMARY KEY autoincrement, size INTEGER NOT NULL, dupzcnt INTEGER" /* */
                         ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create sizes" );
 
   if ( r >= 0 )
@@ -136,7 +146,7 @@ duf_check_table_sizes( void )
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "sizes_lastupdated " /* */
-                          " AFTER UPDATE OF size, dupcnt " /* */
+                          " AFTER UPDATE OF size, dupzcnt " /* */
                           " ON sizes FOR EACH ROW BEGIN " /* */
                           "   UPDATE sizes SET last_updated=DATETIME() WHERE id=OLD.id ; END", "Create sizes" );
 
@@ -323,13 +333,55 @@ duf_check_table_pathtot_dirs( void )
 }
 
 static int
+duf_check_table_crc32( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "crc32 " /* */
+                        " (id INTEGER PRIMARY KEY autoincrement, crc32sum INTEGER NOT NULL, dup32cnt INTEGER" /* */
+                        ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create crc32" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "crc32_crc32sum ON crc32 (crc32sum)", "Create crc32" );
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "crc32_lastupdated " /* */
+                          " AFTER UPDATE OF crc32sum ON crc32 " /* */
+                          " FOR EACH ROW BEGIN    UPDATE crc32 SET last_updated=DATETIME() WHERE id=OLD.id ; END", "Create crc32" );
+
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+static int
+duf_check_table_sd5( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "sd5 " /* */
+                        " (id INTEGER PRIMARY KEY autoincrement, sd5sum1 INTEGER NOT NULL, sd5sum2 INTEGER NOT NULL, dup2cnt INTEGER" /* */
+                        ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create sd5" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "sd5_sd5sum ON sd5 (sd5sum1,sd5sum2)", "Create sd5" );
+
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "sd5_lastupdated " /* */
+                          " AFTER UPDATE OF sd5sum1, sd5sum1 ON sd5 " /* */
+                          " FOR EACH ROW BEGIN    UPDATE sd5 SET last_updated=DATETIME() WHERE id=OLD.id ; END", "Create sd5" );
+
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+static int
 duf_check_table_md5( void )
 {
   int r = DUF_ERROR_CHECK_TABLES;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "md5 " /* */
-                        " (id INTEGER PRIMARY KEY autoincrement, md5sum1 INTEGER NOT NULL, md5sum2 INTEGER NOT NULL, dupcnt INTEGER" /* */
+                        " (id INTEGER PRIMARY KEY autoincrement, md5sum1 INTEGER NOT NULL, md5sum2 INTEGER NOT NULL, dup5cnt INTEGER" /* */
                         ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create md5" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "md5_md5sum ON md5 (md5sum1,md5sum2)", "Create md5" );
@@ -395,7 +447,7 @@ duf_check_table_mdpath( void )
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " /* */
                         DUF_DBPREF "mdpath (id INTEGER PRIMARY KEY autoincrement " /* */
                         ", mdpathsum1 INTEGER NOT NULL, mdpathsum2 INTEGER NOT NULL " /* */
-                        ", dupcnt INTEGER" /* */
+                        ", duppcnt INTEGER" /* */
                         ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create mdpath" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "mdpath_mdpathsum ON mdpath (mdpathsum1,mdpathsum2)",
@@ -489,6 +541,10 @@ duf_clear_tables( void )
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "pathtot_files", "Drop pathtot_files" );
   if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "sd5", "Drop sd5" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "crc32", "Drop crc32" );
+  if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "md5", "Drop md5" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "mdpath", "Drop mdpath" );
@@ -531,6 +587,10 @@ duf_check_tables( void )
     r = duf_check_table_pathtot_dirs(  );
   if ( r >= 0 )
     r = duf_check_table_pathtot_files(  );
+  if ( r >= 0 )
+    r = duf_check_table_crc32(  );
+  if ( r >= 0 )
+    r = duf_check_table_sd5(  );
   if ( r >= 0 )
     r = duf_check_table_md5(  );
   if ( r >= 0 )
