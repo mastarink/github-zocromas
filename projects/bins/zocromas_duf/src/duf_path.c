@@ -164,6 +164,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
         DUF_SQL_BIND_LL( parentid, parentid, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
+
         DUF_SQL_END_STMT( r, pstmt );
       }
       else
@@ -174,7 +175,9 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
         DUF_SQL_BIND_S( dirname, dename, r, pstmt );
         DUF_SQL_BIND_LL( parentid, parentid, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
+
         DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }
     }
@@ -260,7 +263,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
         DUF_TEST_R( r );
         DUF_TRACE( collect, 1, "sometime inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
-      else if ( !r /* assume SQLITE_OK */  )
+      else if ( !r /* assume SQLITE_OK */  && changes )
       {
         dirid = duf_sql_last_insert_rowid(  );
         if ( need_id && !dirid )
@@ -288,8 +291,8 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
   return dirid;
 }
 
-unsigned long long
-duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, int need_id, int *pr )
+int
+duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, int need_id )
 {
   unsigned long long parentid = 0;
   char *real_path = mas_strdup( rpath );
@@ -367,10 +370,9 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
   mas_free( real_path );
   if ( r >= 0 && !parentid )
     r = DUF_ERROR_NOT_IN_DB;
-  if ( pr )
-    *pr = r;
+  DUF_TEST_R( r );
 
-  return parentid;
+  return r;
 }
 
 unsigned long long

@@ -364,6 +364,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_OPTION_RESTORE_TRACE( ptr, SD5, sd5 );
   DUF_OPTION_RESTORE_TRACE( ptr, CRC32, crc32 );
   DUF_OPTION_RESTORE_TRACE( ptr, MIME, mime );
+  DUF_OPTION_RESTORE_TRACE( ptr, EXIF, exif );
   DUF_OPTION_RESTORE_TRACE( ptr, COLLECT, collect );
   DUF_OPTION_RESTORE_TRACE( ptr, INTEGRITY, integrity );
   DUF_OPTION_RESTORE_TRACE( ptr, SQL, sql );
@@ -394,6 +395,7 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_OPTION_RESTORE_FLAG( ptr, SD5, sd5, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, CRC32, crc32, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, MIME, mime, cli.act );
+  DUF_OPTION_RESTORE_FLAG( ptr, EXIF, exif, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, COLLECT, collect, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, INTEGRITY, integrity, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, PRINT, print, cli.act );

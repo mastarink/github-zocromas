@@ -14,6 +14,8 @@
 #include "duf_action.h"
 #include "duf_maindb.h"
 
+/* צאַצקע */
+
 /* ###################################################################### */
 #include "duf.h"
 /* ###################################################################### */
@@ -226,7 +228,10 @@ duf_main( int argc, char **argv )
         DUF_PRINTF( 0, "========================= as for 20140510 ===================" );
         DUF_PRINTF( 0, "  run   -Rdf --sample  --output /mnt/new_media/media/photo/" );
         DUF_PRINTF( 0, "  run   -Rif5  /mnt/new_media/media/photo --progress" );
+        DUF_PRINTF( 0, "========================= as for 20140513 ===================" );
+        DUF_PRINTF( 0, "  run   -RifX  /mnt/new_media/media/photo		- %s", "        files exif information (-f pre-open file)" );
         DUF_PRINTF( 0, "=============================================================" );
+
         r = 0;
         break;
       default:

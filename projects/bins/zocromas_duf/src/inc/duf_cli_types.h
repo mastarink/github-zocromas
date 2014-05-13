@@ -23,6 +23,7 @@ typedef struct
   unsigned crc32:1;
   unsigned crc32id:1;
   unsigned mimeid:1;
+  unsigned exifid:1;
   unsigned mode:1;
   unsigned mtime:1;
   unsigned nlink:1;
@@ -53,6 +54,7 @@ typedef enum
   DUF_FORMAT_CRC32,
   DUF_FORMAT_CRC32ID,
   DUF_FORMAT_MIMEID,
+  DUF_FORMAT_EXIFID,
   DUF_FORMAT_MODE,
   DUF_FORMAT_MTIME,
   DUF_FORMAT_NLINK,
@@ -90,6 +92,7 @@ typedef enum
   DUF_TRACE_MODE_crc32,
   DUF_TRACE_MODE_mdpath,
   DUF_TRACE_MODE_mime,
+  DUF_TRACE_MODE_exif,
   DUF_TRACE_MODE_path,
   DUF_TRACE_MODE_sample,
   DUF_TRACE_MODE_sampupd,
@@ -185,6 +188,7 @@ typedef struct
   unsigned crc32;
   unsigned mdpath;
   unsigned mime;
+  unsigned exif;
   unsigned nonew;
   unsigned path;
   unsigned sample;

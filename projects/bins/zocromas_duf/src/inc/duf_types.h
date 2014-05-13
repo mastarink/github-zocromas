@@ -244,7 +244,13 @@ typedef enum
   DUF_ERROR_SD5,
   DUF_ERROR_MD5,
   DUF_ERROR_CRC32,
+  DUF_ERROR_EXIF_END,
+  DUF_ERROR_EXIF_NO_MODEL,
+  DUF_ERROR_EXIF_NO_DATE,
+  DUF_ERROR_EXIF_BROKEN_DATE,
+  DUF_ERROR_EXIF,
   DUF_ERROR_NOT_OPEN,
+  DUF_ERROR_EOF,
   DUF_ERROR_PATH,
   DUF_ERROR_OPENAT,
   DUF_ERROR_OPENAT_ENOENT,
@@ -311,6 +317,7 @@ typedef struct
   unsigned long long md5id;
   unsigned long long crc32id;
   unsigned long long mimeid;
+  unsigned long long exifid;
   unsigned long long minsize;
   unsigned long long maxsize;
   unsigned long long minsame;
@@ -427,6 +434,7 @@ typedef struct
   unsigned long long md5id;
   unsigned long long crc32id;
   unsigned long long mimeid;
+  unsigned long long exifid;
   unsigned long long dataid;
   unsigned long long sd5sum1;
   unsigned long long sd5sum2;
@@ -453,6 +461,7 @@ typedef struct
   unsigned long long md5id;
   unsigned long long crc32id;
   unsigned long long mimeid;
+  unsigned long long exifid;
   unsigned long long size;
   unsigned long long nduplicates;
 } md5_std_data_t;

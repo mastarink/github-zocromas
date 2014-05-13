@@ -150,7 +150,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  *     5. for <current> dir call sccb->node_scan_after
  */
 static int
-duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
+duf_uni_scan_from_path( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
   int r = 0;
   char *real_path = NULL;
@@ -190,35 +190,44 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
       DUF_SQL_STEP( r, pstmt );
       if ( r == DUF_SQL_ROW )
+      {
         di.total_files = duf_sql_column_long_long( pstmt, 0 );
+        r = 0;
+      }
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
       mas_free( sqlt );
     }
-    DUF_ERROR( "TOTAL FILES:%llu", di.total_files );
+    DUF_ERROR( "TOTAL FILES:%llu; r:%d", di.total_files, r );
+    if ( r >= 0 )
     {
-      unsigned long long top_dirid;
-
-      /* top_dirid = duf_path_to_pathid( real_path, &di, &r ); */
-      top_dirid = duf_real_path_to_pathid2( &di, real_path, 0 /* ifadd */ , 1 /* need_id */ , &r );
-      DUF_TRACE( path, 0, "top_dirid:%llu for %s", top_dirid, real_path );
-      if ( r >= 0 && ( top_dirid || !real_path ) )
+      r = duf_real_path_to_pathid2( &di, real_path, 0 /* ifadd */ , 1 /* need_id */  );
+      if ( r == DUF_ERROR_NOT_IN_DB )
+        DUF_ERROR( "not in db:'%s' (%s)", real_path ? real_path : "-", path ? path : "-" );
+      DUF_TEST_R( r );
+      if ( r >= 0 )
       {
-        assert( top_dirid == duf_levinfo_dirid( &di ) );
-        DUF_TRACE( scan, 0, "top_dirid:%llu for %s", top_dirid, real_path );
+        DUF_TRACE( path, 0, "top dirid:%llu for %s", duf_levinfo_dirid( &di ), real_path );
+        /* assert( top dirid == duf_levinfo_dirid( &di ) ); */
+        DUF_TRACE( scan, 0, "top dirid:%llu for %s", duf_levinfo_dirid( &di ), real_path );
         DUF_TEST_R( r );
-        DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": top_dirid %llu for %s", duf_uni_scan_action_title( sccb ), top_dirid, real_path );
+
+        DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": top dirid %llu for %s", duf_uni_scan_action_title( sccb ), duf_levinfo_dirid( &di ), real_path );
+
+
         /* DUF_ERROR( "L%d", di.depth ); */
         DUF_OINV_OPENED( di. );
         assert( di.depth >= 0 );
         DUF_OINV( di. );
-        DUF_TRACE( scan, 5, "%llu:%s  duf_scan_dirs_by_parentid(2?) with str_cb=duf_str_cb_uni_scan_dir(%p)", top_dirid,
+        DUF_TRACE( scan, 5, "%llu:%s  duf_scan_dirs_by_parentid(2?) with str_cb=duf_str_cb_uni_scan_dir(%p)", duf_levinfo_dirid( &di ),
                    real_path, ( void * ) ( unsigned long long ) duf_str_cb_uni_scan_dir );
+
+
 /* duf_str_cb_uni_scan_dir:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
- *       for each <dir> record by top_dirid (i.e. children of top_dirid) with corresponding args 
+ *       for each <dir> record by top dirid (i.e. children of top dirid) with corresponding args 
  * otherwise do nothing
  *
- * call duf_str_cb_uni_scan_dir with pdi for each dir at db by top_dirid (i.e. children of top_dirid) 
+ * call duf_str_cb_uni_scan_dir with pdi for each dir at db by top dirid (i.e. children of top dirid) 
  *
  *   i.e.
  *     1. for <current> dir call sccb->node_scan_before
@@ -244,7 +253,7 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
       }
       else
       {
-        DUF_TRACE( scan, 0, "? top_dirid:%llu; real_path:'%s'", top_dirid, real_path );
+        DUF_TRACE( scan, 0, "? top dirid:%llu; real_path:'%s'", duf_levinfo_dirid( &di ), real_path );
       }
 /* delete level-control array, close 0 level */
       if ( pchanges )
@@ -267,9 +276,9 @@ duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb, un
   }
   mas_free( real_path );
   DUF_TEST_R( r );
-    
+
   DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ),
-               duf_config->cli.act.summary );
+             duf_config->cli.act.summary );
   DEBUG_END(  );
   return r;
 }
@@ -315,12 +324,12 @@ duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
         DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccb ), ia, duf_config->targv[ia] );
       if ( duf_config->targc > 0 )
         for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-          r = duf_uni_scan( duf_config->targv[ia], duf_config->u, sccb, &changes );
+          r = duf_uni_scan_from_path( duf_config->targv[ia], duf_config->u, sccb, &changes );
       else
-        r = duf_uni_scan( NULL, duf_config->u, sccb, &changes );
+        r = duf_uni_scan_from_path( NULL, duf_config->u, sccb, &changes );
       DUF_TEST_R( r );
-  
-      DUF_TRACE( action, 0, "after scan");
+
+      DUF_TRACE( action, 0, "after scan" );
     }
     else
     {
@@ -470,6 +479,17 @@ duf_uni_scan_all( void )
       ppscan_callbacks[asteps++] = &duf_collect_mime_callbacks;
     }
   }
+  {
+    extern duf_scan_callbacks_t duf_collect_exif_callbacks __attribute( ( weak ) );
+
+    if ( &duf_collect_exif_callbacks && !duf_config->cli.noopenat && duf_config->cli.act.collect && duf_config->cli.act.exif )
+    {
+
+      DUF_TRACE( action, 0, "prep fill exif" );
+      ppscan_callbacks[asteps++] = &duf_collect_exif_callbacks;
+    }
+  }
+
   assert( asteps < max_asteps );
   if ( duf_config->cli.act.collect && duf_config->cli.act.mdpath )
   {

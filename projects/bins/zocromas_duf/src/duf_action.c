@@ -234,7 +234,7 @@ duf_action_new( int argc, char **argv )
   {
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
     {
-      ( void ) duf_add_path_uni( duf_config->targv[ia], 0 /*need_id */ , &r );
+      r = duf_add_path_uni( duf_config->targv[ia] );
       duf_config->actions_done++;
     }
     DUF_TEST_R( r );

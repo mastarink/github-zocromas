@@ -70,9 +70,9 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     if ( !duf_config->cli.disable.insert )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filedatas  " /* */
-            " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn,  md5id) " /* */
+            " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
             " VALUES "          /* */
-            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn, :md5id) " /* */
+            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn) " /* */
             ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
@@ -92,7 +92,6 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
       DUF_SQL_BIND_LL( mtimn, pst_file->st_mtim.tv_nsec, r, pstmt );
       DUF_SQL_BIND_LL( ctim, pst_file->st_ctim.tv_sec, r, pstmt );
       DUF_SQL_BIND_LL( ctimn, pst_file->st_ctim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( md5id, 0, r, pstmt );
       DUF_SQL_STEP( r, pstmt );
       DUF_SQL_CHANGES( changes, r, pstmt );
       DUF_SQL_END_STMT( r, pstmt );
@@ -105,7 +104,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     }
     else if ( !r /* assume SQLITE_OK */  )
     {
-      if ( need_id )
+      if ( need_id && changes )
       {
         dataid = duf_sql_last_insert_rowid(  );
         DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", dataid );

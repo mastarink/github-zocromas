@@ -397,6 +397,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
                   r = 0;
               }
             }
+            DUF_TRACE( scan, 0, "had %d records by %s", cnt , csql);
             DUF_TEST_RR( r );
             DUF_SQL_END_STMT_NOPDI( r, pstmt );
             /* {                                                                     */

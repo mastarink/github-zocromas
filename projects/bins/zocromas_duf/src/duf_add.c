@@ -17,11 +17,10 @@
 /* ###################################################################### */
 
 
-unsigned long long
-duf_add_path_uni( const char *path, int need_id, int *pr )
+int
+duf_add_path_uni( const char *path )
 {
   int r = 0;
-  unsigned long long dirid = 0;
 
   DEBUG_START(  );
   {
@@ -30,15 +29,9 @@ duf_add_path_uni( const char *path, int need_id, int *pr )
     real_path = duf_realpath( path );
     DUF_TRACE( action, 0, "real_path:%s", real_path );
     if ( !( real_path && *real_path == '/' && real_path[1] == 0 ) )
-    {
-      dirid = duf_real_path_to_pathid2( ( duf_depthinfo_t * ) NULL, real_path, 1 /* add */ , need_id, &r );
-      if ( need_id )
-        DUF_TRACE( current, 0, "Updated parent %s AS %llu", real_path, dirid );
-    }
+      r = duf_real_path_to_pathid2( ( duf_depthinfo_t * ) NULL, real_path, 1 /* add */ , 0 /* need_id */  );
     mas_free( real_path );
   }
-  if ( pr )
-    *pr = r;
-  DEBUG_ENDULL( dirid );
-  return dirid;
+  DEBUG_ENDR( r );
+  return r;
 }

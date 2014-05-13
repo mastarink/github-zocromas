@@ -215,6 +215,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_FLAG( MD5, /*               */ md5, /*             */ cli.act );
     DUF_OPTION_CASE_ACQUIRE_FLAG( CRC32, /*             */ crc32, /*           */ cli.act );
     DUF_OPTION_CASE_ACQUIRE_FLAG( MIME, /*              */ mime, /*            */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_FLAG( EXIF, /*              */ exif, /*            */ cli.act );
 
     DUF_OPTION_CASE_ACQUIRE_FLAG( COLLECT, /*           */ collect, /*         */ cli.act );
     DUF_OPTION_CASE_ACQUIRE_FLAG( INTEGRITY, /*         */ integrity, /*       */ cli.act );
@@ -232,6 +233,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_NUM( SD5ID, /*              */ sd5id, /*           */ u );
     DUF_OPTION_CASE_ACQUIRE_NUM( MD5ID, /*              */ md5id, /*           */ u );
     DUF_OPTION_CASE_ACQUIRE_NUM( CRC32ID, /*            */ crc32id, /*         */ u );
+    DUF_OPTION_CASE_ACQUIRE_NUM( EXIFID, /*             */ exifid, /*          */ u );
     DUF_OPTION_CASE_ACQUIRE_NUM( MIMEID, /*             */ mimeid, /*          */ u );
 
 /* limits, filters, selectors */
@@ -284,6 +286,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_TRACE( MD5, /*              */ md5 );
     DUF_OPTION_CASE_ACQUIRE_TRACE( CRC32, /*            */ crc32 );
     DUF_OPTION_CASE_ACQUIRE_TRACE( MIME, /*             */ mime );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( EXIF, /*             */ exif );
     DUF_OPTION_CASE_ACQUIRE_TRACE( COLLECT, /*          */ collect );
     DUF_OPTION_CASE_ACQUIRE_TRACE( INTEGRITY, /*        */ integrity );
     DUF_OPTION_CASE_ACQUIRE_TRACE( SQL, /*              */ sql );
@@ -334,7 +337,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     if ( optarg && *optarg )
       duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
             duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.sd5 = duf_config->cli.trace.md5 =
-            duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.sample = duf_config->cli.trace.deleted =
+            duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.exif = duf_config->cli.trace.sample = duf_config->cli.trace.deleted =
             duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
     else
     {
@@ -347,6 +350,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       duf_config->cli.trace.md5++;
       duf_config->cli.trace.crc32++;
       duf_config->cli.trace.mime++;
+      duf_config->cli.trace.exif++;
       duf_config->cli.trace.dirent++;
       duf_config->cli.trace.sample++;
       duf_config->cli.trace.deleted++;
@@ -410,6 +414,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         [DUF_FORMAT_CRC32ID] = "crc32id",
         [DUF_FORMAT_CRC32] = "crc32",
         [DUF_FORMAT_MIMEID] = "mimeid",
+        [DUF_FORMAT_EXIFID] = "exifid",
         [DUF_FORMAT_MODE] = "mode",
         [DUF_FORMAT_MTIME] = "mtime",
         [DUF_FORMAT_NLINK] = "nlink",
@@ -496,6 +501,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
           break;
         case DUF_FORMAT_MIMEID:
           duf_config->cli.format.mimeid = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_EXIFID:
+          duf_config->cli.format.exifid = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_HUMAN:
           duf_config->cli.format.human = value == NULL ? 1 : nvalue;

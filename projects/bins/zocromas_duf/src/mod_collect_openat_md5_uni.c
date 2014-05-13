@@ -1,3 +1,5 @@
+#define DUF_SQL_PDI_STMT
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -83,7 +85,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     }
     else if ( !r /* assume SQLITE_OK */  )
     {
-      if ( need_id )
+      if ( need_id && changes )
       {
         md5id = duf_sql_last_insert_rowid(  );
       }
@@ -358,7 +360,8 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
-        " sz.dupzcnt > 1 AND "  /* */
+        " fd.md5id IS NULL AND" /* */
+        /* " sz.dupzcnt > 1 AND "  (* *) */
         " fn.Pathid='%llu' "    /* */
         ,
   .leaf_selector2 =             /* */
@@ -368,7 +371,8 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
-        " sz.dupzcnt > 1 AND "  /* */
+        " fd.md5id IS NULL AND" /* */
+        /* " sz.dupzcnt > 1 AND "  (* *) */
         " fn.Pathid=:dirid "    /* */
         ,
   .leaf_selector_total2 =       /* */
@@ -376,7 +380,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-        " WHERE sz.dupzcnt > 1 " /* */
+        " WHERE "               /* */
+        " fd.md5id IS NULL " /* */
+        /* " AND sz.dupzcnt > 1 "      (* *) */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */

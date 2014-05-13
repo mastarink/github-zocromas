@@ -21,6 +21,7 @@ tab sfind mod_sd5_uni.c
 tab sfind mod_crc32_uni.c
 
 tab sfind mod_collect_mime_uni.c
+tab sfind mod_exif_uni.c
 
 tab sfind mod_print_md5_uni.c
 

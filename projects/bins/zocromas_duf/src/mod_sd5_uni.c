@@ -1,3 +1,5 @@
+#define DUF_SQL_PDI_STMT
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -79,7 +81,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     }
     else if ( !r /* assume SQLITE_OK */  )
     {
-      if ( need_id )
+      if ( need_id && changes )
       {
         sd5id = duf_sql_last_insert_rowid(  );
       }
