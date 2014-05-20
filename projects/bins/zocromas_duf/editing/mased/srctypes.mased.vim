@@ -1,0 +1,24 @@
+find duf_types.h
+
+sfind duf_config_types.h
+sfind duf_levinfo_types.h
+
+tab sfind duf_trace_types.h
+sfind duf_trace_defs.h
+
+tab sfind duf_defs.h
+sfind duf_debug_defs.h
+sfind duf_print_defs.h
+
+tab sfind duf_fun_types.h
+sfind duf_error_types.h
+
+tab sfind duf_item_types.h
+tab sfind duf_ufilter_types.h
+tab sfind duf_fileinfo_types.h
+tab sfind duf_pdi_types.h
+tab sfind duf_hook_types.h
+tab sfind duf_record_types.h
+
+tab sfind duf_cli_types.h
+sfind duf_opt_types.h
