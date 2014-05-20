@@ -1,13 +1,20 @@
 #ifndef MAS_DUF_UTILS_H
 #  define MAS_DUF_UTILS_H
 
+/* duf_trace_mode_t */
+#include "duf_trace_types.h"
+#include "duf_error_types.h"
+#include "duf_ufilter_types.h"
 
 char *duf_single_quotes_2( const char *s );
 int duf_pathdepth( const char *path );
-int duf_filename_match( duf_config_t * cfg, const char *filename );
-int duf_filesize_match( duf_config_t * cfg, size_t filesize );
-int duf_filesame_match( duf_config_t * cfg, int filesame );
-int duf_md5id_match( duf_config_t * cfg, unsigned long long md5id );
+int duf_filename_match( duf_filter_glob_t * glob, const char *filename );
+
+
+int duf_lim_match( duf_limits_t lim, int filesame );
+
+
+int duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id );
 
 int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0,
                 unsigned flags, int nerr, FILE * out, const char *fmt, va_list args );

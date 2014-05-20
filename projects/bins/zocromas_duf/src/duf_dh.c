@@ -12,10 +12,12 @@
 
 /* #include <mastar/tools/mas_arg_tools.h> */
 
+#include "duf_trace_defs.h"
+
 #include "duf_types.h"
 #include "duf_utils.h"
 
-#include "duf_config.h"
+#include "duf_config_ref.h"
 
 /* ###################################################################### */
 #include "duf_dh.h"
@@ -28,7 +30,7 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 {
   int r = DUF_ERROR_PTR;
 
-  if ( duf_config->cli.noopenat )
+  if ( duf_config->cli.flag.noopenat )
     return 0;
   if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
   {
@@ -62,7 +64,7 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   int r = DUF_ERROR_PTR;
   int updfd = 0;
 
-  if ( duf_config->cli.noopenat )
+  if ( duf_config->cli.flag.noopenat )
     return 0;
   assert( pdhandle );
   assert( name );
@@ -111,7 +113,7 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   int r = DUF_ERROR_PTR;
 
-  if ( duf_config->cli.noopenat )
+  if ( duf_config->cli.flag.noopenat )
     return 0;
   if ( pdhandle && path )
   {
@@ -159,7 +161,7 @@ duf_opened_dh( duf_dirhandle_t * pdhandle )
 {
   int r = DUF_ERROR_PTR;
 
-  if ( duf_config->cli.noopenat )
+  if ( duf_config->cli.flag.noopenat )
     return 0;
   if ( pdhandle )
     r = pdhandle->dfd;
@@ -171,7 +173,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
 {
   int r = DUF_ERROR_PTR;
 
-  if ( duf_config->cli.noopenat )
+  if ( duf_config->cli.flag.noopenat )
     return 0;
   assert( pdhandle );
   if ( pdhandle )
@@ -212,7 +214,7 @@ duf_check_dh( const char *msg )
 {
   int r = 0;
 
-  if ( duf_config->cli.noopenat )
+  if ( duf_config->cli.flag.noopenat )
     return 0;
   DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose );
   return r;

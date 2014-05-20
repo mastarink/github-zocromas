@@ -4,11 +4,15 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_trace_defs.h"
+#include "duf_debug_defs.h"
+
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
 #include "duf_service.h"
-#include "duf_config.h"
+#include "duf_config_ref.h"
 
 #include "duf_levinfo.h"
 #include "duf_pdi.h"
@@ -16,6 +20,7 @@
 
 #include "duf_sql_field1.h"
 
+#include "duf_sql_defs.h"
 #include "duf_sql.h"
 #include "duf_sql1.h"
 /* #include "duf_sql2.h" */
@@ -39,8 +44,8 @@ duf_match_leaf( duf_record_t * precord )
   DUF_UFIELD( nsame );
   DUF_UFIELD( md5id );
 
-  r = duf_filename_match( duf_config, filename ) && duf_filesize_match( duf_config, filesize ) && duf_filesame_match( duf_config, nsame )
-        && duf_md5id_match( duf_config, md5id );
+  r = duf_filename_match(  &duf_config->u.glob, filename ) && duf_lim_match( duf_config->u.size, filesize ) && duf_lim_match( duf_config->u.same, nsame )
+        && duf_md5id_match( duf_config->u.md5id, md5id );
   return r;
 }
 
@@ -72,7 +77,7 @@ duf_sel_cb_leaf( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
 
-  if ( duf_filename_match( duf_config, filename ) && duf_filesize_match( duf_config, filesize ) )
+  if ( duf_filename_match(  &duf_config->u.glob, filename ) && duf_lim_match( duf_config->u.size, filesize ) )
   {
     r = duf_levinfo_down( pdi, 0 /* dirid */ , filename, 0, 0, 1 /* is_leaf */  );
     DUF_TEST_R( r );

@@ -13,7 +13,7 @@
 
 #include "duf_types.h"
 
-#include "duf_sql_def.h"
+#include "duf_sql_const.h"
 
 /* ###################################################################### */
 #include "duf_utils.h"
@@ -74,92 +74,70 @@ duf_single_quotes_2( const char *s )
 }
 
 int
-duf_filename_match( duf_config_t * cfg, const char *filename )
+duf_filename_match( duf_filter_glob_t * glob, const char *filename )
 {
   int r;
 
   r = 1;
-  if ( cfg )
+  if ( glob )
   {
-    if ( cfg->u.glob.include_files.argc )
+    if ( glob->include_files.argc )
     {
-      int argc = cfg->u.glob.include_files.argc;
-      char *const *argv = cfg->u.glob.include_files.argv;
+      int argc = glob->include_files.argc;
+      char *const *argv = glob->include_files.argv;
 
       r = 0;
-      DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename );
+      /* DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename ); */
       for ( int ia = 0; ia < argc; ia++ )
       {
         if ( 0 == fnmatch( argv[ia], filename, FNM_PATHNAME ) )
         {
           r = 1;
-          DUF_TRACE_C( cfg, match, 1, "INCLUDE %s : %s", argv[ia], filename );
+          /* DUF_TRACE_C( cfg, match, 1, "INCLUDE %s : %s", argv[ia], filename ); */
         }
       }
     }
-    if ( cfg->u.glob.exclude_files.argc )
+    if ( glob->exclude_files.argc )
     {
-      int argc = cfg->u.glob.exclude_files.argc;
-      char *const *argv = cfg->u.glob.exclude_files.argv;
+      int argc = glob->exclude_files.argc;
+      char *const *argv = glob->exclude_files.argv;
 
-      DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename );
+      /* DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename ); */
       for ( int ia = 0; ia < argc; ia++ )
       {
         if ( 0 == fnmatch( argv[ia], filename, FNM_PATHNAME ) )
         {
           r = 0;
-          DUF_TRACE_C( cfg, match, 1, "EXCLUDE %s : %s", argv[ia], filename );
+          /* DUF_TRACE_C( cfg, match, 1, "EXCLUDE %s : %s", argv[ia], filename ); */
         }
       }
     }
   }
-  DUF_TRACE_C( cfg, match, 2, "MATCH %s %s", filename, r ? "OK" : "FAIL" );
+  /* DUF_TRACE_C( cfg, match, 2, "MATCH %s %s", filename, r ? "OK" : "FAIL" ); */
   return r;
 }
 
 int
-duf_filesize_match( duf_config_t * cfg, size_t filesize )
+duf_lim_match( duf_limits_t lim, int n )
 {
   int r;
 
   r = 1;
-  if ( cfg )
-  {
-    if ( cfg->u.minsize )
-      r = ( filesize >= cfg->u.minsize ) ? r : 0;
-    if ( cfg->u.maxsize )
-      r = ( filesize <= cfg->u.maxsize ) ? r : 0;
-  }
+  if ( lim.min )
+    r = ( n >= lim.min ) ? r : 0;
+  if ( lim.max )
+    r = ( n <= lim.max ) ? r : 0;
   return r;
 }
 
 int
-duf_filesame_match( duf_config_t * cfg, int filesame )
+duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id )
 {
   int r;
 
   r = 1;
-  if ( cfg )
-  {
-    if ( cfg->u.minsame )
-      r = ( filesame >= cfg->u.minsame ) ? r : 0;
-    if ( cfg->u.maxsame )
-      r = ( filesame <= cfg->u.maxsame ) ? r : 0;
-  }
-  return r;
-}
-
-int
-duf_md5id_match( duf_config_t * cfg, unsigned long long md5id )
-{
-  int r;
-
-  r = 1;
-  if ( cfg )
-  {
-    if ( cfg->u.md5id )
-      r = ( md5id == cfg->u.md5id ) ? r : 0;
-  }
+  if ( md5id_filter )
+    r = ( md5id == md5id_filter ) ? r : 0;
   return r;
 }
 

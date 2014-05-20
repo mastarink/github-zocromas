@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_PATH_H
 #  define MAS_DUF_PATH_H
 
+#include "duf_levinfo_types.h"
+
 char *duf_join_path( const char *path, const char *fname );
 
 /* char *duf_pathid_to_path_dh( unsigned long long pathid, duf_dirhandle_t * pdh, const duf_depthinfo_t * pdi, int *pr ); */

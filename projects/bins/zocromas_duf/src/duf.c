@@ -1,6 +1,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_config_ref.h"
 #include "duf_config.h"
 #include "duf_utils.h"
 
@@ -15,6 +16,7 @@
 #include "duf_maindb.h"
 
 /* צאַצקע */
+#include "duf_trace_defs.h"
 
 /* ###################################################################### */
 #include "duf.h"

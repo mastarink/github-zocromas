@@ -1,17 +1,22 @@
 #include <stdarg.h>
 #include <string.h>
 #include <getopt.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_error_types.h"
+#include "duf_trace_defs.h"
 /* #include <mastar/tools/mas_arg_tools.h> */
 
 #include "duf_types.h"
 #include "duf_utils.h"
 
-#include "duf_config.h"
+/* #include "duf_config.h" */
+#include "duf_config_ref.h"
 
 #include "duf_options.h"
 
@@ -194,75 +199,76 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_MAIN, /*       */ main.name, /*       */ db );
     DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_ADM, /*        */ adm.name, /*        */ db );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( REMOVE_DATABASE, /*   */ remove_database, /* */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DROP_TABLES, /*       */ drop_tables, /*     */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( CREATE_TABLES, /*     */ create_tables, /*   */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( ADD_PATH, /*          */ add_path, /*        */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( FILEDATA, /*          */ filedata, /*        */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( FILENAMES, /*         */ filenames, /*       */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( VACUUM, /*            */ vacuum, /*          */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( UNI_SCAN, /*          */ uni_scan /*     */  );
+
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( REMOVE_DATABASE, /*   */ remove_database /* */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( DROP_TABLES, /*       */ drop_tables /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( CREATE_TABLES, /*     */ create_tables /*   */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( ADD_PATH, /*          */ add_path /*        */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( FILEDATA, /*          */ filedata /*        */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( FILENAMES, /*         */ filenames /*       */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( VACUUM, /*            */ vacuum /*          */  );
 
 /* actions */
-    DUF_OPTION_CASE_ACQUIRE_FLAG( PROGRESS, /*          */ progress, /*        */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( SUMMARY, /*           */ summary, /*         */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( PROGRESS, /*          */ progress /*        */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( SUMMARY, /*           */ summary /*         */  );
 
-    DUF_OPTION_CASE_ACQUIRE_NUM( SAMPLE, /*             */ sample, /*          */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_NUM( SAMPUPD, /*            */ sampupd, /*         */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_ACT_NUM( SAMPLE, /*             */ sample /*          */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_NUM( SAMPUPD, /*            */ sampupd /*         */  );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( MDPATH, /*            */ mdpath, /*          */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DIRENT, /*            */ dirent, /*          */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( SD5, /*               */ sd5, /*             */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( MD5, /*               */ md5, /*             */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( CRC32, /*             */ crc32, /*           */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( MIME, /*              */ mime, /*            */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( EXIF, /*              */ exif, /*            */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( MDPATH, /*            */ mdpath /*          */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( DIRENT, /*            */ dirent /*          */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( SD5, /*               */ sd5 /*             */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( MD5, /*               */ md5 /*             */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( CRC32, /*             */ crc32 /*           */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( MIME, /*              */ mime /*            */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( EXIF, /*              */ exif /*            */  );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( COLLECT, /*           */ collect, /*         */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( INTEGRITY, /*         */ integrity, /*       */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( PRINT, /*             */ print, /*           */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( TREE, /*              */ tree, /*            */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DIRS, /*              */ dirs, /*            */ cli.act );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( FILES, /*             */ files, /*           */ cli.act );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( COLLECT, /*           */ collect /*         */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( INTEGRITY, /*         */ integrity /*       */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( PRINT, /*             */ print /*           */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( TREE, /*              */ tree /*            */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( DIRS, /*              */ dirs /*            */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( FILES, /*             */ files /*           */  );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DISABLE_CALCULATE, /* */ calculate, /*       */ cli.disable );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DISABLE_INSERT, /*    */ insert, /*          */ cli.disable );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DISABLE_UPDATE, /*    */ update, /*          */ cli.disable );
+    DUF_OPTION_CASE_ACQUIRE_FLAGG( DISABLE_CALCULATE, /* */ calculate, /*       */ cli,.disable );
+    DUF_OPTION_CASE_ACQUIRE_FLAGG( DISABLE_INSERT, /*    */ insert, /*          */ cli,.disable );
+    DUF_OPTION_CASE_ACQUIRE_FLAGG( DISABLE_UPDATE, /*    */ update, /*          */ cli,.disable );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( RECURSIVE, /*         */ recursive, /*       */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_FLAG( RECURSIVE, /*         */ recursive /*       */  );
 
-    DUF_OPTION_CASE_ACQUIRE_NUM( SD5ID, /*              */ sd5id, /*           */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MD5ID, /*              */ md5id, /*           */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( CRC32ID, /*            */ crc32id, /*         */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( EXIFID, /*             */ exifid, /*          */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MIMEID, /*             */ mimeid, /*          */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( SD5ID, /*              */ sd5id /*           */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MD5ID, /*              */ md5id /*           */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( CRC32ID, /*            */ crc32id /*         */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( EXIFID, /*             */ exifid /*          */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MIMEID, /*             */ mimeid /*          */  );
 
 /* limits, filters, selectors */
   case DUF_OPTION_SIZE:
-    r = duf_limits( optarg, &duf_config->u.minsize, &duf_config->u.maxsize );
+    r = duf_limits( optarg, &duf_config->u.size.min, &duf_config->u.size .max);
     break;
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXSIZE, /*            */ maxsize, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MINSIZE, /*            */ minsize, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, /*            */ size .max/*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, /*            */ size .min/*     */  );
 
   case DUF_OPTION_SAME:
-    r = duf_limits( optarg, &duf_config->u.minsame, &duf_config->u.maxsame );
+    r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same .max);
     break;
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXSAME, /*            */ maxsame, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MINSAME, /*            */ minsame, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, /*            */ same .max/*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, /*            */ same .min/*     */  );
 
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXDIRFILES, /*        */ maxdirfiles, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MINDIRFILES, /*        */ mindirfiles, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDIRFILES, /*        */ dirfiles .max/*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINDIRFILES, /*        */ dirfiles .min/*     */  );
 
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXSEQ, /*             */ maxseq, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXDEPTH, /*           */ maxreldepth, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSEQ, /*             */ maxseq /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDEPTH, /*           */ maxreldepth /*     */  );
 
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXITEMS, /*           */ maxitems.total, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXITEMS_FILES, /*     */ maxitems.files, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_NUM( MAXITEMS_DIRS, /*      */ maxitems.dirs, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS, /*           */ maxitems.total /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS_FILES, /*     */ maxitems.files /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS_DIRS, /*      */ maxitems.dirs /*     */  );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( UNI_SCAN, /*          */ uni_scan, /*     */ cli.act );
 
-    DUF_OPTION_CASE_ACQUIRE_ARG( GLOB_INCLUDE_FILES, /* */ glob.include_files, /*     */ u );
-    DUF_OPTION_CASE_ACQUIRE_ARG( GLOB_EXCLUDE_FILES, /* */ glob.exclude_files, /*     */ u );
+    DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_INCLUDE_FILES, /* */ glob.include_files /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_EXCLUDE_FILES, /* */ glob.exclude_files /*     */  );
 
 
 /* trace */
@@ -337,8 +343,8 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     if ( optarg && *optarg )
       duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
             duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.sd5 = duf_config->cli.trace.md5 =
-            duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.exif = duf_config->cli.trace.sample = duf_config->cli.trace.deleted =
-            duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
+            duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.exif = duf_config->cli.trace.sample =
+            duf_config->cli.trace.deleted = duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
     else
     {
       duf_config->cli.trace.sql++;
@@ -361,18 +367,26 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
 
 
   case DUF_OPTION_FLAG_ZERO_DB:
-    DUF_OPTION_ACQUIRE_FLAG( cli.act.create_tables );
-    duf_config->cli.act.create_tables = 1;
-
+    DUF_OPTION_ACQUIRE_FLAG( create_tables, cli.act );
+/* no break here ! */
   case DUF_OPTION_TREE_TO_DB:
     /* -ORifd5 
      * i.e.
      *  --create-tables --uni-scan --recursive ...
      *  */
-    duf_config->cli.act.create_tables = duf_config->cli.act.add_path = duf_config->cli.act.uni_scan = duf_config->u.recursive =
-          duf_config->cli.act.files = duf_config->cli.act.dirs = duf_config->cli.act.dirent =
-          duf_config->cli.act.sd5 = duf_config->cli.act.md5 = duf_config->cli.act.crc32 = duf_config->cli.act.filedata =
-          duf_config->cli.act.filenames = 1;
+    DUF_ACT_FLAG( create_tables ) = /* */
+          DUF_ACT_FLAG( add_path ) = /* */
+          DUF_ACT_FLAG( uni_scan ) = /* */
+          DUF_U_FLAG( recursive ) = /* */
+          DUF_ACT_FLAG( files ) = /* */
+          DUF_ACT_FLAG( dirs ) = /* */
+          DUF_ACT_FLAG( dirent ) = /* */
+          DUF_ACT_FLAG( sd5 ) = /* */
+          DUF_ACT_FLAG( md5 ) = /* */
+          DUF_ACT_FLAG( crc32 ) = /* */
+          DUF_ACT_FLAG( filedata ) = /* */
+          DUF_ACT_FLAG( filenames ) = /* */
+          1;
     break;
 
 /* specific */
@@ -493,7 +507,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         case DUF_FORMAT_MD5ID:
           duf_config->cli.format.md5id = value == NULL ? 1 : nvalue;
           break;
-	    case DUF_FORMAT_CRC32:
+        case DUF_FORMAT_CRC32:
           duf_config->cli.format.crc32 = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_CRC32ID:

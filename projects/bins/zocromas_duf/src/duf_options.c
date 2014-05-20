@@ -7,12 +7,16 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_print_defs.h"
+#include "duf_trace_defs.h"
+
 #include "duf_types.h"
-#include "duf_opt_types.h"
 #include "duf_utils.h"
 #include "duf_service.h"
 
-#include "duf_config.h"
+/* #include "duf_config.h" */
+#include "duf_config_ref.h"
+
 
 #include "duf_option.h"
 
@@ -402,16 +406,17 @@ duf_restore_option( char *ptr, duf_option_code_t code )
   DUF_OPTION_RESTORE_FLAG( ptr, TREE, tree, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, FILES, files, cli.act );
   DUF_OPTION_RESTORE_FLAG( ptr, DIRS, dirs, cli.act );
-  DUF_OPTION_RESTORE_FLAG( ptr, DISABLE_CALCULATE, calculate, cli.disable );
-  DUF_OPTION_RESTORE_FLAG( ptr, DISABLE_INSERT, insert, cli.disable );
-  DUF_OPTION_RESTORE_FLAG( ptr, DISABLE_UPDATE, update, cli.disable );
+
+  DUF_OPTION_RESTORE_FLAGG( ptr, DISABLE_CALCULATE, calculate, cli, .disable );
+  DUF_OPTION_RESTORE_FLAGG( ptr, DISABLE_INSERT, insert, cli, .disable );
+  DUF_OPTION_RESTORE_FLAGG( ptr, DISABLE_UPDATE, update, cli, .disable );
 
   DUF_OPTION_RESTORE_NUM( ptr, MAXSEQ, maxseq, u );
 
-  DUF_OPTION_RESTORE_NUM( ptr, MINSIZE, minsize, u );
-  DUF_OPTION_RESTORE_NUM( ptr, MAXSIZE, maxsize, u );
-  DUF_OPTION_RESTORE_NUM( ptr, MINDIRFILES, mindirfiles, u );
-  DUF_OPTION_RESTORE_NUM( ptr, MAXDIRFILES, maxdirfiles, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MINSIZE, size.min, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXSIZE, size.max, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MINDIRFILES, dirfiles.min, u );
+  DUF_OPTION_RESTORE_NUM( ptr, MAXDIRFILES, dirfiles.max, u );
 
   DUF_OPTION_RESTORE_NUM( ptr, MAXITEMS, maxitems.total, u );
   DUF_OPTION_RESTORE_NUM( ptr, MAXITEMS_FILES, maxitems.files, u );

@@ -2,6 +2,7 @@
 #  define MAS_DUF_TRACE_DEFS_H
 
 #  include "duf_print_defs.h"
+#  include "duf_options.h"
 
 /* ###################################################################### */
 
@@ -15,7 +16,7 @@
 	    		- (pref  depth)  == 0 ) \
     		)
 
-#  define DUF_OINV_OPENED(pref)     assert( duf_config->cli.flag.noopenat || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
+#  define DUF_OINV_OPENED(pref)     assert( DUF_OPTION_FLAG(noopenat, cli) || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
 #  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.flag.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
 /* ###################################################################### */

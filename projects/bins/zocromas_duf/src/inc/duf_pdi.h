@@ -1,6 +1,8 @@
 #ifndef DUF_PDI_H
 #  define DUF_PDI_H
 
+#include "duf_levinfo_types.h"
+
 int duf_pdi_init( duf_depthinfo_t * pdi, const char *path );
 int duf_pdi_close( duf_depthinfo_t * pdi );
 

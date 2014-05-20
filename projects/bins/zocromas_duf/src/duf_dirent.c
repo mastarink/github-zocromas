@@ -10,7 +10,7 @@
 #include "duf_types.h"
 #include "duf_utils.h"
 
-#include "duf_config.h"
+#include "duf_config_ref.h"
 
 #include "duf_dbg.h"
 
@@ -45,7 +45,7 @@ duf_direntry_filter( const struct dirent *de )
     break;
   case DT_REG:
 
-    r = duf_filename_match( duf_config, de->d_name );
+    r = duf_filename_match( &duf_config->u.glob, de->d_name );
 
 /* #include <fnmatch.h>                                                   */
 /*     int fnmatch( const char *pattern, const char *string, int flags ); */

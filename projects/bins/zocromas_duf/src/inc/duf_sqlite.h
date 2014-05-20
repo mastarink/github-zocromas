@@ -2,7 +2,7 @@
 #  define MAS_DUF_SQLITE_H
 
 #  include <sqlite3.h>
-#  include "duf_sql_def.h"
+
 
 int duf_sqlite_error_code( int r3 );
 

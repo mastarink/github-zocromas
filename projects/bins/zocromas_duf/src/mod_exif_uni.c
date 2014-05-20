@@ -33,18 +33,23 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_trace_defs.h"
+#include "duf_debug_defs.h"
+
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
 #include "duf_service.h"
-#include "duf_config.h"
+#include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
 #include "duf_path.h"
 
-#include "duf_sql_def.h"
+#include "duf_sql_const.h"
+#include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 #include "duf_sql_field1.h"
 
@@ -166,8 +171,8 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
         r = 0;
       DUF_TEST_R( r );
       DUF_SQL_END_STMT( r, pstmt_select );
-      if ( !exifid )
-        DUF_ERROR( "exifid NOT SELECTED" );
+      /* if ( !exifid )                        */
+      /*   DUF_ERROR( "exifid NOT SELECTED" ); */
     }
 
     if ( !exifid && !duf_config->cli.disable.insert )

@@ -5,11 +5,15 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_trace_defs.h"
+#include "duf_debug_defs.h"
+
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
 #include "duf_service.h"
-#include "duf_config.h"
+#include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
@@ -18,6 +22,7 @@
 #include "duf_options.h"
 /* #include "duf_cli_options.h" */
 
+#include "duf_sql_defs.h"
 #include "duf_sql_field1.h"
 #include "duf_item_scan1.h"
 /* #include "duf_item_scan2.h" */
@@ -47,7 +52,7 @@ duf_str_cb_scan_file_fd( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struc
 
   DUF_UFIELD( filesize );
   DUF_TRACE( scan, 0, "+" );
-  if ( filesize >= duf_config->u.minsize && ( !duf_config->u.maxsize || filesize < duf_config->u.maxsize ) )
+  if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -75,7 +80,7 @@ duf_str_cb_leaf_scan( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct d
 
   DUF_UFIELD( filesize );
   DUF_TRACE( scan, 0, "+" );
-  if ( filesize >= duf_config->u.minsize && ( !duf_config->u.maxsize || filesize < duf_config->u.maxsize ) )
+  if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -124,7 +129,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
   if ( r >= 0 && ( sccb->dirent_dir_scan_before || sccb->dirent_file_scan_before ) )
     r = duf_scan_dirents_by_pathid_and_record( pdi, precord, sccb->dirent_file_scan_before, sccb->dirent_dir_scan_before );
 
-  if ( r >= 0 && sccb && duf_config->cli.act.dirs )
+  if ( r >= 0 && sccb && DUF_ACT_FLAG( dirs ) )
   {
     pdi->items.total++;
     pdi->items.dirs++;
@@ -149,7 +154,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
  * 			for each <file> record by dirid with corresponding args
  *
  * */
-    if ( duf_config->cli.act.files )
+    if ( DUF_ACT_FLAG( files ) )
     {
       if ( r >= 0 && sccb->leaf_scan_fd )
       {
@@ -174,7 +179,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       }
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( r >= 0 && sccb->node_scan_middle && duf_config->cli.act.dirs )
+    if ( r >= 0 && sccb->node_scan_middle && DUF_ACT_FLAG( dirs ) )
       r = sccb->node_scan_middle( dirid, pdi, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
@@ -191,9 +196,9 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->node_selector */
       r = duf_scan_db_items( DUF_NODE_NODE, str_cb, pdi, sccb, sccb->node_selector,
-                             /* pdi->u.minsize,                                                              */
-                             /* pdi->u.maxsize ? pdi->u.maxsize : ( unsigned long long ) -1, pdi->u.minsame, */
-                             /* pdi->u.maxsame ? pdi->u.maxsame : ( unsigned long long ) -1,                 */
+                             /* pdi->u.size.min,                                                              */
+                             /* pdi->u.size .max? pdi->u.size .max: ( unsigned long long ) -1, pdi->u.same.min, */
+                             /* pdi->u.same .max? pdi->u.same .max: ( unsigned long long ) -1,                 */
                              dirid );
       DUF_OINV_OPENED( pdi-> );
       DUF_TEST_R( r );
@@ -209,7 +214,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       /*   DUF_ERROR( "code: %d", r ); */
     }
     DUF_OINV_OPENED( pdi-> );
-    if ( r >= 0 && duf_config->cli.act.dirs )
+    if ( r >= 0 && DUF_ACT_FLAG( dirs ) )
     {
       if ( sccb->node_scan_after )
         r = sccb->node_scan_after( dirid, pdi, precord );
@@ -268,9 +273,9 @@ duf_scan_dirs_by_parentid( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_
   DUF_TRACE( scan, 0, "  " DUF_DEPTH_PFMT ": scan start       by %5llu", duf_pdi_depth( pdi ), dirid );
 
   if (  /* !nfiles || */ !dirid
-       || ( ( ( nfiles >= duf_config->u.mindirfiles ) && ( !duf_config->u.maxdirfiles || nfiles < duf_config->u.maxdirfiles ) )
+       || ( ( ( nfiles >= duf_config->u.dirfiles.min ) && ( !duf_config->u.dirfiles.max || nfiles < duf_config->u.dirfiles.max ) )
             /* && ( nfiles == 0
-               || ( ( maxsize >= duf_config->u.minsize ) && ( !duf_config->u.maxsize || minsize <= duf_config->u.maxsize ) ) ) */
+               || ( ( maxsize >= duf_config->u.size .min) && ( !duf_config->u.size .max|| minsize <= duf_config->u.size .max) ) ) */
         ) )
   {
     DUF_OINV_OPENED( pdi-> );

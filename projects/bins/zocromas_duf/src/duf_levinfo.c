@@ -8,14 +8,17 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_trace_defs.h"
+#include "duf_debug_defs.h"
+
+
 #include "duf_types.h"
 
 #include "duf_utils.h"
 #include "duf_service.h"
-#include "duf_config.h"
+#include "duf_config_ref.h"
 #include "duf_dh.h"
 
-#include "duf_sql.h"
 
 #include "duf_dbg.h"
 
@@ -475,7 +478,7 @@ duf_levinfo_pdh( duf_depthinfo_t * pdi )
   duf_dirhandle_t *pdhlev = NULL;
 
   assert( pdi );
-  if ( !duf_config->cli.noopenat && pdi->opendir )
+  if ( !duf_config->cli.flag.noopenat && pdi->opendir )
   {
     int d = pdi->depth;
 
@@ -495,7 +498,7 @@ duf_levinfo_dfd_d( duf_depthinfo_t * pdi, int d )
   int r = 0;
 
   assert( pdi );
-  if ( !duf_config->cli.noopenat && pdi->opendir )
+  if ( !duf_config->cli.flag.noopenat && pdi->opendir )
   {
     assert( pdi->levinfo );
     assert( d >= 0 );
@@ -528,7 +531,7 @@ duf_levinfo_stat( duf_depthinfo_t * pdi )
   struct stat *pst = NULL;
 
   assert( pdi );
-  if ( !duf_config->cli.noopenat && pdi->opendir )
+  if ( !duf_config->cli.flag.noopenat && pdi->opendir )
   {
     int d = pdi->depth;
 
@@ -562,7 +565,7 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
        if(d>0)
        pdi->levinfo[d - 1].lev_dh.dfd = 0;
      */
-    if ( !duf_config->cli.noopenat && pdi->opendir )
+    if ( !duf_config->cli.flag.noopenat && pdi->opendir )
     {
       duf_dirhandle_t *pdhlev = &pli->lev_dh;
       duf_dirhandle_t *pdhuplev = pliu ? &pliu->lev_dh : NULL;
@@ -626,7 +629,7 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
         r = DUF_ERROR_MEMORY;
     }
 
-    if ( !duf_config->cli.noopenat && pdi->opendir )
+    if ( !duf_config->cli.flag.noopenat && pdi->opendir )
     {
       assert( d >= 0 );
       duf_dirhandle_t *pdhlev = &pdi->levinfo[d].lev_dh;
@@ -673,7 +676,7 @@ duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
     int r = 0;
 
     assert( d >= 0 );
-    if ( !duf_config->cli.noopenat && pdi->opendir )
+    if ( !duf_config->cli.flag.noopenat && pdi->opendir )
       r = duf_opened_dh( &pdi->levinfo[d].lev_dh );
     return r;
   }
@@ -704,7 +707,7 @@ duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
     int r = 0;
 
     assert( d >= 0 );
-    if ( !duf_config->cli.noopenat && pdi->opendir )
+    if ( !duf_config->cli.flag.noopenat && pdi->opendir )
       r = duf_close_dh( &pdi->levinfo[d].lev_dh );
     DUF_TEST_R( r );
     return r;

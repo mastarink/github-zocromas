@@ -1,6 +1,8 @@
 #ifndef DUF_LEVINFO_H
 #  define DUF_LEVINFO_H
 
+#include "duf_levinfo_types.h"
+
 int duf_levinfo_is_leaf( duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf_d( duf_depthinfo_t * pdi, int d );
 

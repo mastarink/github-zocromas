@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_SQL1_H
 #  define MAS_DUF_SQL1_H
 
-#  include "duf_sql_def.h"
+#  include "duf_record_types.h"
+#  include "duf_hook_types.h"
 
 
 int duf_sql_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges );

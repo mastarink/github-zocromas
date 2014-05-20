@@ -1,9 +1,6 @@
 find duf_path.c
 sfind duf_path.h
 
-tab sfind duf_item_scan1.c
-sfind duf_item_scan1.h
-
 tab sfind duf_item_scan2.c
 sfind duf_item_scan2.h
 
@@ -15,9 +12,6 @@ sfind duf_filedata.h
 
 tab sfind duf_sccb.c
 sfind duf_sccb.h
-
-tab sfind duf_dir_scan1.c
-sfind duf_dir_scan1.h
 
 tab sfind duf_dir_scan2.c
 sfind duf_dir_scan2.h
@@ -37,5 +31,3 @@ sfind duf_pdi.h
 tab sfind duf_add.c
 sfind duf_add.h
 
-tab sfind duf_types.h
-sfind duf_cli_types.h

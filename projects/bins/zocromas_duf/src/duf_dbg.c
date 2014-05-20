@@ -8,7 +8,8 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
-#include "duf_config.h"
+#include "duf_config_ref.h"
+
 
 /* ###################################################################### */
 #include "duf_dbg.h"

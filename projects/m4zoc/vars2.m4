@@ -42,6 +42,26 @@ if test x$enable_debug = xyes ; then
 fi
 
 
+AC_ARG_ENABLE([split_db],
+  [AS_HELP_STRING([--enable-split-db],
+    [enable split-db code (default is no)])],
+  [split_db="$withval"], [split_db=no])
+
+AC_ARG_ENABLE([split_db],
+	      AC_HELP_STRING([--enable-split-db],
+			     [turn on split-db]),,
+	      [enable_split_db=no])
+if test x$enable_split_db = xyes ; then
+    AC_DEFINE(MAS_SPLIT_DB, 1,
+	[Enable  split-db])
+fi
+
+
+
+
+
+
+
 # AH_TEMPLATE([MAS_MODULESDIR],[mas_modulesdir])
 # MAS_MODULESDIR="\${pkglibdir}"
 # AC_SUBST(MAS_MODULESDIR)

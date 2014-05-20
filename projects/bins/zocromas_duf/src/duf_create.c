@@ -6,8 +6,15 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_defs.h"          /* */
+/* #include "duf_debug_defs.h" */
+#include "duf_trace_defs.h"          /* */
+
 #include "duf_types.h"          /* */
-#include "duf_config.h"         /* */
+
+/* #include "duf_config.h" */
+#include "duf_config_ref.h"
+
 #include "duf_utils.h"          /* */
 #include "duf_dbg.h"            /* */
 
@@ -515,7 +522,7 @@ duf_check_table_exif( void )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_d ON exif (modelid, date_time)", "Create exif" );
   
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_id ON exif (modelid)", "Create exif" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_id ON exif (modelid)", "Create exif" );
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "exif_dup ON exif (dupexifcnt)", "Create exif" );

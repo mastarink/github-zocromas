@@ -1,8 +1,7 @@
 #ifndef MAS_DUF_CONFIG_H
 #  define MAS_DUF_CONFIG_H
 
-#  include "duf_types.h"
-extern duf_config_t *duf_config;
+#  include "duf_config_types.h"
 
 
 int duf_config_create( void );

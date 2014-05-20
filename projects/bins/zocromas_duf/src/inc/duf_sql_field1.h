@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_SQL_FIELD1_H
 #  define MAS_DUF_SQL_FIELD1_H
 
+#include "duf_record_types.h"
+#include "duf_hook_types.h"
 
 
 int __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int optional );

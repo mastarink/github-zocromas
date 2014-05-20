@@ -1,8 +1,8 @@
 #ifndef MAS_DUF_SQL2_H
 #  define MAS_DUF_SQL2_H
 
-#  include "duf_sql_def.h"
 
+#  include "duf_sql_types.h"
 
 
 int duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt );

@@ -7,11 +7,15 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_error_types.h"
+#include "duf_trace_defs.h"
+
 #include "duf_types.h"
 #include "duf_utils.h"
 #include "duf_service.h"
 
-#include "duf_config.h"
+/* #include "duf_config.h" */
+#include "duf_config_ref.h"
 
 #include "duf_option.h"
 #include "duf_options.h"

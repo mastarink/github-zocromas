@@ -9,11 +9,18 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_trace_defs.h"
+#include "duf_debug_defs.h"
+
 #include "duf_types.h"
 
+#include "duf_config_ref.h"
 #include "duf_config.h"
+
 #include "duf_utils.h"
 #include "duf_service.h"
+
+#include "duf_options.h"
 
 #include "duf_sql.h"
 #include "duf_sql2.h"
@@ -22,6 +29,7 @@
 
 #include "duf_action.h"
 #include "duf_maindb.h"
+
 
 /* ###################################################################### */
 #include "duf_maindb.h"
@@ -68,7 +76,7 @@ main_db( int argc, char **argv )
 #endif
     if ( r >= 0 )
     {
-      if ( duf_config->cli.act.remove_database )
+      if ( DUF_ACT_FLAG( remove_database ) )
       {
         if ( duf_config->db.main.fpath )
         {

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_SQL_H
 #  define MAS_DUF_SQL_H
 
-#  include "duf_sql_def.h"
+#  include "duf_sql_const.h"
 
 
 int duf_sql_open( const char *dbpath );

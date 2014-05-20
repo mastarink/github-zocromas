@@ -2,23 +2,25 @@
 
 #include <assert.h>
 
-
-
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_trace_defs.h"
+#include "duf_debug_defs.h"
 
 
+
+#include "duf_hook_types.h"
 #include "duf_types.h"
 
 #include "duf_utils.h"
 #include "duf_dbg.h"
-#include "duf_config.h"
+#include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
+#include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 #include "duf_sql.h"
 #include "duf_sql2.h"
@@ -78,7 +80,7 @@ filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned lo
 
   DEBUG_START(  );
 
-  if ( pst_file && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) )
+  if ( pst_file && pst_file->st_size >= pdi->u.size.min && ( !pdi->u.size.max || pst_file->st_size < pdi->u.size.max ) )
   {
     dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
     r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );
@@ -97,7 +99,7 @@ filenames_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct
   DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
 
   if ( pst_file /* && !duf_config->cli.disable.insert */  )
-    /* && pst_file->st_size >= pdi->u.minsize && ( !pdi->u.maxsize || pst_file->st_size < pdi->u.maxsize ) */
+    /* && pst_file->st_size >= pdi->u.size .min&& ( !pdi->u.size .max|| pst_file->st_size < pdi->u.size .max) */
   {
     DUF_UNUSED unsigned long long dataid = 0;
 
@@ -137,7 +139,7 @@ static const char *final_sql[] = {
         ", numfiles=(SELECT COUNT(*) AS numfiles " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
         " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)",
-  
+
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents.id AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
