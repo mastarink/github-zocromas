@@ -13,6 +13,7 @@
 #include "duf_dbg.h"
 
 
+#include "duf_config_ref.h"
 /* ###################################################################### */
 #include "duf_config.h"
 /* ###################################################################### */
@@ -58,6 +59,8 @@ duf_config_delete( void )
   mas_free( duf_config->db.dir );
   duf_config->db.dir = NULL;
 
+  mas_free( duf_config->help_string );
+  duf_config->help_string = NULL;
   mas_free( duf_config->db.main.name );
   duf_config->db.main.name = NULL;
   mas_free( duf_config->db.main.fpath );

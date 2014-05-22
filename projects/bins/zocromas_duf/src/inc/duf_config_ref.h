@@ -4,6 +4,5 @@
 #  include "duf_config_types.h"
 extern duf_config_t *duf_config;
 
-
 #endif
 

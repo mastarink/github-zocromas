@@ -6,18 +6,20 @@
 
 /* ###################################################################### */
 
-#  define DUF_OINV(pref) assert( duf_config->cli.flag.noopenat || !pref opendir || ( \
+#  define DUF_OINV(pref) assert(  !pref opendir || ( \
     		          ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \
 	    		- (pref  depth)  == 1 ) \
     		)
  /* - (pref levinfo?pref levinfo[pref depth].is_leaf:0) */
-#  define DUF_OINVC(pref) assert( duf_config->cli.flag.noopenat || !pref opendir || ( \
+#  define DUF_OINVC(pref) assert(  !pref opendir || ( \
     		          ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \
 	    		- (pref  depth)  == 0 ) \
     		)
 
-#  define DUF_OINV_OPENED(pref)     assert( DUF_OPTION_FLAG(noopenat, cli) || !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
-#  define DUF_OINV_NOT_OPENED(pref) assert( duf_config->cli.flag.noopenat || !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
+#  define DUF_OINV_OPENED(pref)     \
+  		assert(  !pref opendir || (pref levinfo && pref levinfo[pref depth].lev_dh.dfd ))
+#  define DUF_OINV_NOT_OPENED(pref) \
+  		assert(  !pref opendir || (!pref levinfo || pref levinfo[pref depth].lev_dh.dfd==0 ))
 
 /* ###################################################################### */
 
@@ -99,6 +101,7 @@
 #  define DUF_TEST_RX(val)	if (val) DUF_ERROR( " - - - - - -> [%s] (#%d)", val<0?duf_error_name(val):"-", val )
 
 #  define DUF_TEST_R(val)	if ( val!=DUF_ERROR_MAX_REACHED ) DUF_TEST_RX( val )
+#  define DUF_TEST_RN(val)	if ( val<0 ) DUF_TEST_R( val )
 #  define DUF_TEST_RR(val)	if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
 #  define DUF_TEST_R3(val)	if (val \
     			&& (val)!=SQLITE_ROW \

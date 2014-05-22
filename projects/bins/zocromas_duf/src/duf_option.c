@@ -175,13 +175,20 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   case DUF_OPTION_HELP:
   case DUF_OPTION_SMART_HELP:
   case DUF_OPTION_EXAMPLES:
+  case DUF_OPTION_VERSION:
+    if ( optarg )
+    {
+      if ( duf_config->help_string )
+        mas_free( duf_config->help_string );
+      duf_config->help_string = mas_strdup( optarg );
+    }
     r = opt;
     break;
   case DUF_OPTION_TEST:
     DUF_PRINTF( 0, "This is test option output; optarg:%s", optarg ? optarg : "-" );
     break;
 /* */
-    DUF_OPTION_CASE_ACQUIRE_NUM( OUTPUT, /*             */ level, /*     */ cli.output );
+    DUF_OPTION_CASE_ACQUIRE_NUM( OUTPUT_LEVEL, /*             */ level, /*     */ cli.output );
 
 
 /* debug etc. */
@@ -191,7 +198,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_NUM( MAX_DBGLINE, /*        */ max_line, /*        */ cli.dbg );
 
     DUF_OPTION_CASE_ACQUIRE_FLAG( DRY_RUN, /*           */ dry_run, /*         */ cli );
-    DUF_OPTION_CASE_ACQUIRE_FLAG( NOOPENAT, /*          */ noopenat, /*        */ cli );
 
 
 /* db */
@@ -245,19 +251,19 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
 
 /* limits, filters, selectors */
   case DUF_OPTION_SIZE:
-    r = duf_limits( optarg, &duf_config->u.size.min, &duf_config->u.size .max);
+    r = duf_limits( optarg, &duf_config->u.size.min, &duf_config->u.size.max );
     break;
-    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, /*            */ size .max/*     */  );
-    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, /*            */ size .min/*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, /*            */ size.max /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, /*            */ size.min /*     */  );
 
   case DUF_OPTION_SAME:
-    r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same .max);
+    r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same.max );
     break;
-    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, /*            */ same .max/*     */  );
-    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, /*            */ same .min/*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, /*            */ same.max /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, /*            */ same.min /*     */  );
 
-    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDIRFILES, /*        */ dirfiles .max/*     */  );
-    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINDIRFILES, /*        */ dirfiles .min/*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDIRFILES, /*        */ dirfiles.max /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_U_NUM( MINDIRFILES, /*        */ dirfiles.min /*     */  );
 
     DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSEQ, /*             */ maxseq /*     */  );
     DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDEPTH, /*           */ maxreldepth /*     */  );
@@ -572,10 +578,10 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     char *ona = NULL;
 
     ona = duf_option_description( r );
-    DUF_ERROR( "returns: %d = ( %s )", r, ona );
+    /* DUF_ERROR( "returns: %d = ( %s )", r, ona ); */
     mas_free( ona );
   }
 
-  DUF_TEST_R( r );
+  DUF_TEST_RN( r );
   return r;
 }

@@ -21,4 +21,5 @@ tab sfind duf_hook_types.h
 tab sfind duf_record_types.h
 
 tab sfind duf_cli_types.h
-sfind duf_opt_types.h
+sfind duf_option_types.h
+sfind duf_options_def.h

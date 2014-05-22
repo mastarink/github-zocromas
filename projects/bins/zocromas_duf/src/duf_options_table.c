@@ -2,17 +2,18 @@
 #include <unistd.h>
 
 #include <getopt.h>
-#include "duf_opt_types.h"
+#include "duf_options_def.h"
 
 /* man getopt_long */
 const duf_option_t duf_longopts_table[] = {
 /* const struct option longopts[] = { */
-  {.name = "help",.has_arg = no_argument,.val = DUF_OPTION_SMART_HELP},
+  {.name = "help",.has_arg = optional_argument,.val = DUF_OPTION_SMART_HELP},
+  {.name = "version",.has_arg = no_argument,.val = DUF_OPTION_VERSION},
   {.name = "help-short",.has_arg = no_argument,.val = DUF_OPTION_HELP},
   {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
   {.name = "test-option",.has_arg = required_argument /*| optional_argument*/,.val = DUF_OPTION_TEST},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
-  {.name = "output",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT},
+  {.name = "output-level",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT_LEVEL},
   /* --------------- */
   {.name = "disable-calculate",.has_arg = no_argument,.val = DUF_OPTION_FLAG_DISABLE_CALCULATE},
   {.name = "disable-insert",.has_arg = no_argument,.val = DUF_OPTION_FLAG_DISABLE_INSERT},
@@ -61,7 +62,6 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
   /* --------------- */
   {.name = "dry-run",.has_arg = no_argument,.val = DUF_OPTION_FLAG_DRY_RUN},
-  {.name = "noopenat",.has_arg = optional_argument,.val = DUF_OPTION_FLAG_NOOPENAT},
   {.name = "progress",.has_arg = no_argument,.val = DUF_OPTION_FLAG_PROGRESS},
   {.name = "summary",.has_arg = no_argument,.val = DUF_OPTION_FLAG_SUMMARY},
   /* --------------- */

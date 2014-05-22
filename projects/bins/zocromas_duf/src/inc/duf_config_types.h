@@ -1,9 +1,9 @@
 #ifndef MAS_DUF_CONFIG_TYPES_H
 #  define MAS_DUF_CONFIG_TYPES_H
 
-#include "duf_cli_types.h"
-#include "duf_item_types.h"
-#include "duf_ufilter_types.h"
+#  include "duf_cli_types.h"
+#  include "duf_item_types.h"
+#  include "duf_ufilter_types.h"
 /* #include "duf_types.h" */
 
 typedef struct
@@ -18,8 +18,10 @@ typedef struct
   duf_db_config_t main;
   duf_db_config_t adm;
 } duf_dbs_config_t;
+
 typedef struct
 {
+  char *help_string;
   double loadtime;
   int actions_done;
   duf_ufilter_t u;

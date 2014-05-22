@@ -17,6 +17,6 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h	   \
 	duf_fun_types.h duf_levinfo_types.h			   \
 	duf_trace_types.h duf_trace_defs.h			    \
 	duf_def.h duf_defs.h duf_debug_defs.h duf_print_defs.h	     \
-	duf_config_types.h duf_cli_types.h duf_opt_types.h	      \
+	duf_config_types.h duf_cli_types.h duf_option_types.h	      \
 	duf_ufilter_types.h duf_fileinfo_types.h		       \
 	duf_pdi_types.h duf_hook_types.h duf_record_types.h

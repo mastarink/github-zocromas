@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_UFILTER_TYPES_H
 #  define MAS_DUF_UFILTER_TYPES_H
 
-#include "duf_item_types.h"
+#  include "duf_item_types.h"
 
 /* typedef struct                                  */
 /* {                                               */
@@ -41,7 +41,11 @@ typedef struct
 
 typedef struct
 {
-  duf_ufilter_flags_t flag;
+  union
+  {
+    duf_ufilter_flags_t flag;
+    unsigned short bit;
+  } v;
   unsigned maxreldepth;
   unsigned long long maxseq;
   duf_items_t maxitems;

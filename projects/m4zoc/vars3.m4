@@ -10,8 +10,11 @@ AC_SUBST(MAS_CFLAGS1)
 AM_CPPFLAGS="-I\$(srcdir)/inc -I\$(top_srcdir)/src/inc -I\$(top_srcdir)/src -I\$(includedir)"
 AC_SUBST(AM_CPPFLAGS)
 
+AC_DEFINE_UNQUOTED(MAS_LDFLAGS, "${AM_LDFLAGS}", [ld flags])
+AC_SUBST(MAS_LDFLAGS)
+
 AH_TEMPLATE([MAS_C_DATE],[mas_c_date])
-AC_DEFINE_UNQUOTED( MAS_C_DATE, "`date +%Y%m%d%H%M%S`", [cdate])
+AC_DEFINE_UNQUOTED( MAS_C_DATE, "`date +%Y%m%d.%H%M%S`", [cdate])
 AC_SUBST([MAS_C_DATE])
 
 AH_TEMPLATE([MAS_MALLOC])

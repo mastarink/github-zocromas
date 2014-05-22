@@ -2,13 +2,7 @@
 #  define MAS_DUF_CLI_TYPES_H
 
 /* duf_format_t */
-#include "duf_format_types.h"
-
-typedef struct
-{
-  int val;
-  const char *help;
-} duf_longval_extended_t;
+#  include "duf_format_types.h"
 
 
 typedef struct
@@ -60,7 +54,11 @@ typedef struct
 
 typedef struct
 {
-  duf_config_act_flags_t flag;
+  union
+  {
+    duf_config_act_flags_t flag;
+    unsigned bit;
+  } v;
   unsigned sample;
   unsigned sampupd;
 } duf_config_cli_actions_t;
@@ -128,13 +126,16 @@ typedef struct
 
 typedef struct
 {
-  unsigned noopenat:1;
   unsigned dry_run:1;
 } duf_config_cli_flags_t;
 
 typedef struct
 {
-  duf_config_cli_flags_t flag;
+  union
+  {
+    duf_config_cli_flags_t flag;
+    unsigned short bit;
+  } v;
   duf_config_cli_actions_t act;
   duf_config_cli_disable_t disable;
   duf_config_cli_debug_t dbg;

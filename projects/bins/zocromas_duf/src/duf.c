@@ -1,6 +1,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "duf_config_ref.h"
 #include "duf_config.h"
 #include "duf_utils.h"
@@ -68,11 +70,54 @@ duf_main( int argc, char **argv )
       case DUF_OPTION_SMART_HELP:
         duf_option_smart_help(  );
         break;
+      case DUF_OPTION_VERSION:
+        {
+          extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
+          char *sargv1, *sargv2;
+
+          sargv1 = mas_argv_string( argc, argv, 1 );
+          sargv2 = duf_restore_options( argv[0] );
+
+          DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
+          DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );
+          DUF_PRINTF( 0, "args:            (%s)", sargv1 );
+          DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 );
+          DUF_PRINTF( 0, "configire        (%s)", MAS_CONFIG_ARGS );
+          DUF_PRINTF( 0, "UUID             %s", MAS_UUID );
+          DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.bit ), duf_config->cli.v.bit );
+          DUF_PRINTF( 0, "u.        [%2lu]   %x", sizeof( duf_config->u.v.bit ), duf_config->u.v.bit );
+          DUF_PRINTF( 0, "cli.act.  [%2lu]   %x", sizeof( duf_config->cli.act.v.bit ), duf_config->cli.act.v.bit );
+          {
+            unsigned u = duf_config->cli.act.v.bit;
+
+            DUF_PRINTF( 0, ".cli.act.  [%2lu]   ", sizeof( duf_config->cli.act.v.bit ) );
+            while ( u )
+            {
+              DUF_PRINTF( 0, ".%u", u & 0x80000000 ? 1 : 0 );
+              u <<= 1;
+            }
+            DUF_PUTSL( 0 );
+          }
+          DUF_PRINTF( 0, "prefix    [%2lu]   %s", sizeof( MAS_CONFIG_PREFIX ), MAS_CONFIG_PREFIX );
+          DUF_PRINTF( 0, "O.        [%2lu]  %s", sizeof( MAS_OSVER ), MAS_OSVER );
+          DUF_PRINTF( 0, "U.        [%2lu]   %s", sizeof( MAS_UNAME ), MAS_UNAME );
+          DUF_PRINTF( 0, "V.        [%2lu]   %s", sizeof( PACKAGE_STRING ), PACKAGE_STRING );
+          DUF_PRINTF( 0, "d.        [%2lu]   %s", sizeof( MAS_C_DATE ), MAS_C_DATE );
+          DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
+                      sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__,
+                      ( unsigned long ) &__MAS_LINK_TIME__ );
+#ifdef MAS_SPLIT_DB
+          DUF_PRINTF( 0, "MAS_SPLIT_DB" );
+#endif
+          mas_free( sargv2 );
+          mas_free( sargv1 );
+        }
+        break;
       case DUF_OPTION_HELP:
         DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", argv[0] );
         DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_HELP ) );
         DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_EXAMPLES ) );
-        DUF_PRINTF( 0, "  --output			[%s]", duf_find_longval_help( DUF_OPTION_OUTPUT ) );
+        DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_OUTPUT_LEVEL ) );
         DUF_PRINTF( 0, "Database ----------" );
         DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.main.name );
         DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );

@@ -29,10 +29,10 @@ AC_ARG_ENABLE([gprof],
   [enable_gprof="$withval"], [enable_gprof=no])
 
 if test x$enable_gprof = xyes ; then
-  AM_CFLAGS="${AM_CFLAGS} -pg -O0 -g -ggdb"
+  AM_CFLAGS="${AM_CFLAGS} -pg -O0 -g -ggdb "
 else
   if test x$enable_debug = xyes ; then
-    AM_CFLAGS="${AM_CFLAGS} -O0 -g -ggdb"
+    AM_CFLAGS="${AM_CFLAGS} -O0 -g -ggdb "
   fi
 fi
 
