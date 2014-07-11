@@ -197,7 +197,6 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_NUM( MIN_DBGLINE, /*        */ min_line, /*        */ cli.dbg );
     DUF_OPTION_CASE_ACQUIRE_NUM( MAX_DBGLINE, /*        */ max_line, /*        */ cli.dbg );
 
-    DUF_OPTION_CASE_ACQUIRE_FLAG( DRY_RUN, /*           */ dry_run, /*         */ cli );
 
 
 /* db */
@@ -279,6 +278,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
 
 /* trace */
     DUF_OPTION_CASE_ACQUIRE_NUM( TRACE_NONEW, /*        */ nonew, /*     */ cli.trace );
+
+    DUF_OPTION_CASE_ACQUIRE_TRACE( DRY_RUN, /*           */ dry_run );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( EXPLAIN, /*           */ explain );
 
     DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, /*              */ seq );
     DUF_OPTION_CASE_ACQUIRE_TRACE( CALLS, /*            */ calls );

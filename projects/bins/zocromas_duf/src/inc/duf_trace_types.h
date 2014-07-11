@@ -5,6 +5,8 @@
 typedef enum
 {
   DUF_TRACE_MODE_NONE,
+  DUF_TRACE_MODE_dry_run,
+  DUF_TRACE_MODE_explain,
   DUF_TRACE_MODE_seq,
   DUF_TRACE_MODE_action,
   DUF_TRACE_MODE_any,

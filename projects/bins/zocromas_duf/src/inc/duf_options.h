@@ -1,8 +1,8 @@
 #ifndef MAS_DUF_OPTIONS_H
 #  define MAS_DUF_OPTIONS_H
 
-#include "duf_option_types.h"
-#include "duf_options_def.h"
+#  include "duf_option_types.h"
+#  include "duf_options_def.h"
 
 int duf_show_options( const char *a0 );
 
@@ -10,6 +10,7 @@ char *duf_restore_options( const char *a0 );
 
 int duf_cli_option_by_string( const char *string );
 
+int duf_env_options( int argc, char *argv[] );
 int duf_infile_options( int argc, char *argv[] );
 
 const duf_longval_extended_t *duf_find_longval_extended( duf_option_code_t code );

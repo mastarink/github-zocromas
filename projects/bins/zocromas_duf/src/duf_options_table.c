@@ -28,6 +28,9 @@ const duf_option_t duf_longopts_table[] = {
   /* --------------- */
   {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_ALL_TRACE},
   /* --------------- */
+  {.name = "dry-run",.has_arg = no_argument,.val = DUF_OPTION_DRY_RUN_TRACE},
+  {.name = "explain",.has_arg = no_argument,.val = DUF_OPTION_EXPLAIN_TRACE},
+  /* --------------- */
   {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
   {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
   {.name = "trace-seq",.has_arg = optional_argument,.val = DUF_OPTION_SEQ_TRACE},
@@ -61,7 +64,6 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "min-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MIN_DBGLINE},
   {.name = "max-dbg-lines",.has_arg = required_argument,.val = DUF_OPTION_MAX_DBGLINE},
   /* --------------- */
-  {.name = "dry-run",.has_arg = no_argument,.val = DUF_OPTION_FLAG_DRY_RUN},
   {.name = "progress",.has_arg = no_argument,.val = DUF_OPTION_FLAG_PROGRESS},
   {.name = "summary",.has_arg = no_argument,.val = DUF_OPTION_FLAG_SUMMARY},
   /* --------------- */

@@ -48,10 +48,10 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   }
   else
   {
-    DUF_TEST_R( r );
+    /* DUF_TEST_R( r ); */
     DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
   }
-  DUF_TEST_R( r );
+  /* DUF_TEST_R( r ); */
   DUF_SQL_END_STMT( r, pstmt );
 
   DEBUG_ENDULL( dataid );

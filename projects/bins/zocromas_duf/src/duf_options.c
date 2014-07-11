@@ -244,6 +244,51 @@ duf_cli_option_by_string( const char *string )
   return r;
 }
 
+int
+duf_env_options( int argc, char *argv[] )
+{
+  int r = 0;
+  const char *eo = NULL;
+  const char *peo, *e;
+
+  eo = getenv( "MSH_DUF_OPTIONS" );
+  DUF_TRACE( explain, 0, "env options tuple: %s", eo );
+  peo = eo;
+  while ( peo && *peo )
+  {
+    char *s;
+
+    s = NULL;
+    e = strchr( peo, ':' );
+    if ( e )
+    {
+      s = mas_strndup( peo, e - peo );
+      DUF_TRACE( explain, 0, "env option from \"%s\"", s );
+      e++;
+    }
+    else
+    {
+      s = mas_strdup( peo );
+      DUF_TRACE( explain, 0, "env option (last) from \"%s\"", s );
+    }
+    if ( s )
+    {
+      char *xs;
+
+      DUF_TRACE( explain, 0, "env s: \"%s\"", s );
+      xs = mas_expand_string( s );
+
+      DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
+      r = duf_cli_option_by_string( xs );
+      mas_free( xs );
+    }
+    mas_free( s );
+    peo = e;
+    DUF_TRACE( explain, 0, "env peo \"%s\"", peo );
+  }
+  return r;
+}
+
 static FILE *
 duf_infile( int dot, const char *at )
 {
@@ -370,7 +415,8 @@ duf_restore_option( char *ptr, duf_option_code_t optcode )
 
 
 
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, DRY_RUN, dry_run, cli );
+  DUF_OPTION_RESTORE_TRACE( optcode, ptr, DRY_RUN, dry_run );
+  DUF_OPTION_RESTORE_TRACE( optcode, ptr, EXPLAIN, explain );
 
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, SEQ, seq );
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, CALLS, calls );

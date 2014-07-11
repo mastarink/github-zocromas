@@ -47,19 +47,26 @@ main_db( int argc, char **argv )
 /*										*/ DEBUG_START(  );
   if ( duf_config->db.dir && duf_config->db.main.name )
   {
+    DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", duf_config->db.dir, duf_config->db.main.name );
     r = 0;
     DUF_TRACE( action, 0, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.main.name );
     duf_config->db.main.fpath = mas_strdup( duf_config->db.dir );
     duf_config->db.main.fpath = mas_strcat_x( duf_config->db.main.fpath, "/" );
     duf_config->db.main.fpath = mas_strcat_x( duf_config->db.main.fpath, duf_config->db.main.name );
+    DUF_TRACE( explain, 0, "config->db.main.fpath set: %s", duf_config->db.main.fpath );
 #ifdef MAS_SPLIT_DB
     if ( duf_config->db.adm.name )
     {
+      DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", duf_config->db.dir, duf_config->db.adm.name );
       duf_config->db.adm.fpath = mas_strdup( duf_config->db.dir );
       duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, "/" );
       duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, duf_config->db.adm.name );
+      DUF_TRACE( explain, 0, "config->db.adm.fpath set: %s", duf_config->db.adm.fpath );
     }
 #endif
+
+
+
 
     /* if ( r >= 0 )                                      */
     /*   r = duf_cli_option_by_string( "trace-maction=2" ); */

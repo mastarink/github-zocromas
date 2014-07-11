@@ -75,6 +75,9 @@ typedef struct
 
 typedef struct
 {
+  unsigned dry_run;
+  unsigned explain;
+
   unsigned action;
   unsigned any;
   unsigned calls;
@@ -127,6 +130,7 @@ typedef struct
 typedef struct
 {
   unsigned dry_run:1;
+  unsigned explain:1;
 } duf_config_cli_flags_t;
 
 typedef struct
