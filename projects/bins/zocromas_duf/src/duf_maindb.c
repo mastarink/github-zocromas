@@ -47,7 +47,8 @@ main_db( int argc, char **argv )
 /*										*/ DEBUG_START(  );
   if ( duf_config->db.dir && duf_config->db.main.name )
   {
-    DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", duf_config->db.dir, duf_config->db.main.name );
+    DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", duf_config->db.dir,
+               duf_config->db.main.name );
     r = 0;
     DUF_TRACE( action, 0, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.main.name );
     duf_config->db.main.fpath = mas_strdup( duf_config->db.dir );
@@ -57,7 +58,8 @@ main_db( int argc, char **argv )
 #ifdef MAS_SPLIT_DB
     if ( duf_config->db.adm.name )
     {
-      DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", duf_config->db.dir, duf_config->db.adm.name );
+      DUF_TRACE( explain, 0, "setting config->db.adm.fpath by db.dir: %s and db.adm.name: %s", duf_config->db.dir,
+                 duf_config->db.adm.name );
       duf_config->db.adm.fpath = mas_strdup( duf_config->db.dir );
       duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, "/" );
       duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, duf_config->db.adm.name );
@@ -77,6 +79,10 @@ main_db( int argc, char **argv )
         DUF_TRACE( any, 0, "######### argv[%d]: %s", ia, argv[ia] );
       r = duf_config_show(  );
     }
+    else
+    {
+      DUF_TRACE( explain, 0, "not showing config: not verbose" );
+    }
     DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.main.fpath );
 #ifdef MAS_SPLIT_DB
     DUF_TRACE( any, 0, "adm dbfile: %s", duf_config->db.adm.fpath );
@@ -85,6 +91,7 @@ main_db( int argc, char **argv )
     {
       if ( DUF_ACT_FLAG( remove_database ) )
       {
+        DUF_TRACE( explain, 0, "     option %s, removing database", duf_option_cnames( DUF_OPTION_FLAG_REMOVE_DATABASE ) );
         if ( duf_config->db.main.fpath )
         {
           DUF_TRACE( any, 0, "removing %s ...", duf_config->db.main.fpath );
@@ -104,15 +111,21 @@ main_db( int argc, char **argv )
           }
         }
       }
+      else
+      {
+        DUF_TRACE( explain, 1, "no %s option, not removing database", duf_option_cnames( DUF_OPTION_FLAG_REMOVE_DATABASE ) );
+      }
     }
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
     {
+      DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", duf_config->db.main.fpath );
       if ( duf_config->db.main.fpath )
         r = duf_sql_open( duf_config->db.main.fpath );
       else
         r = DUF_ERROR_PTR;
       DUF_TEST_R( r );
+      DUF_TRACE( explain, 0, "opened (?%d) database", r );
     }
     /* DUF_TRACE( any, 0, "r=%d", r ); */
     if ( r >= 0 )
@@ -121,6 +134,7 @@ main_db( int argc, char **argv )
       {
         static const char *sql = "ATTACH DATABASE :dbfpath AS adm";
 
+        DUF_TRACE( explain, 0, "attach adm database" );
         DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
         DUF_SQL_BIND_S( dbfpath, duf_config->db.adm.fpath, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
@@ -129,6 +143,8 @@ main_db( int argc, char **argv )
 #endif
       {
         static const char *sql = "PRAGMA synchronous = OFF";
+
+        DUF_TRACE( explain, 0, "PRAGMA synchronous = OFF" );
 
         DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
@@ -141,6 +157,8 @@ main_db( int argc, char **argv )
       {
         static const char *sql = "PRAGMA encoding = 'UTF-8'";
 
+        DUF_TRACE( explain, 0, "PRAGMA encoding = 'UTF-8'" );
+
         DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
@@ -148,9 +166,13 @@ main_db( int argc, char **argv )
       /* if ( r >= 0 )                                                           */
       /*        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ); */
       DUF_TEST_R( r );
+      DUF_TRACE( explain, 0, "to do actions" );
+      DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
       if ( r >= 0 )
         r = duf_action_new( argc, argv );
       DUF_TEST_R( r );
+      DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+      DUF_TRACE( explain, 0, "after actions" );
 
       if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
       {

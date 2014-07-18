@@ -1,4 +1,5 @@
 #include <string.h>
+#include <unistd.h>
 
 #include <assert.h>
 
@@ -51,7 +52,7 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, stru
 
   DUF_UFIELD2( filesize );
   DUF_TRACE( scan, 0, "+" );
-  if ( filesize >= duf_config->u.size .min&& ( !duf_config->u.size .max|| filesize < duf_config->u.size .max) )
+  if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -83,7 +84,8 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
   DUF_UFIELD2( filesize );
   DUF_SFIELD2( filename );
   DUF_TRACE( scan, 0, "+" );
-  if ( filesize >= duf_config->u.size .min&& ( !duf_config->u.size .max|| filesize < duf_config->u.size .max) )
+  DUF_TRACE( explain, 0, "= ? ============ str cb2 leaf scan => ≪leaf_scan2≫" );
+  if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -483,7 +485,7 @@ duf_scan_dirs_by_parentid2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, du
   DUF_TRACE( scan, 0, "  " DUF_DEPTH_PFMT ": scan start       by %5llu", duf_pdi_depth( pdi ), dirid );
 
   if (  /* !nfiles || */ !dirid
-       || ( ( ( nfiles >= duf_config->u.dirfiles .min) && ( !duf_config->u.dirfiles .max|| nfiles < duf_config->u.dirfiles .max) )
+       || ( ( ( nfiles >= duf_config->u.dirfiles.min ) && ( !duf_config->u.dirfiles.max || nfiles < duf_config->u.dirfiles.max ) )
             /* && ( nfiles == 0
                || ( ( maxsize >= duf_config->u.size .min) && ( !duf_config->u.size .max|| minsize <= duf_config->u.size .max) ) ) */
         ) )

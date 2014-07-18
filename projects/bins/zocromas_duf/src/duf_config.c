@@ -56,6 +56,9 @@ duf_config_create( void )
 int
 duf_config_delete( void )
 {
+  mas_free( duf_config->option_explanation );
+  duf_config->option_explanation = NULL;
+
   mas_free( duf_config->db.dir );
   duf_config->db.dir = NULL;
 

@@ -39,8 +39,9 @@ directories_entry_dir( const char *fname, const struct stat *pstat, unsigned lon
                        duf_record_t * precord )
 {
   int r = 0;
+  int changes = 0;
 
-  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
+  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &changes, &r );
   DUF_TEST_R( r );
   return r;
 }
@@ -50,9 +51,10 @@ directories_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const stru
                         duf_depthinfo_t * pdi )
 {
   int r = 0;
+  int changes = 0;
 
   DUF_TRACE( scan, 0, "scan entry dir2 by %s", fname );
-  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &r );
+  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &changes, &r );
   DUF_TEST_R( r );
   return r;
 }
@@ -82,8 +84,8 @@ static const char *final_sql[] = {
         ", numfiles=(SELECT COUNT(*) AS numfiles " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
         " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)",
- 
-   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
+
+  "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents.id AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
         " JOIN " DUF_DBPREF "paths AS parents ON (parents.id=paths.parentid) " /* */

@@ -21,6 +21,7 @@ typedef struct
 
 typedef struct
 {
+  char *option_explanation;
   char *help_string;
   double loadtime;
   int actions_done;

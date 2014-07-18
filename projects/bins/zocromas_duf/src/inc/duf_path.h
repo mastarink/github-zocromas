@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_PATH_H
 #  define MAS_DUF_PATH_H
 
-#include "duf_levinfo_types.h"
+#  include "duf_levinfo_types.h"
 
 char *duf_join_path( const char *path, const char *fname );
 
@@ -36,10 +36,10 @@ int duf_sel_cb_name_parid( duf_record_t * precord, void *sel_cb_udata, duf_str_c
 
 
 unsigned long long duf_insert_path_uni( duf_depthinfo_t * pdi, const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid,
-                                        int need_id, int *pr );
+                                        int need_id, int *pchanges, int *pr );
 unsigned long long duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_levinfo_t * pli, dev_t dev_id,
-                                         ino_t dir_ino, unsigned long long parentid, int need_id, int *pr );
-int duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, int need_id );
+                                         ino_t dir_ino, unsigned long long parentid, int need_id, int *pchanges, int *pr );
+int duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd );
 
 
 

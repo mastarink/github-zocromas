@@ -239,6 +239,11 @@ duf_test_help( int argc, char **argv, int opt )
     DUF_PRINTF( 0, "  run   -Rif5  /mnt/new_media/media/photo --progress" );
     DUF_PRINTF( 0, "========================= as for 20140513 ===================" );
     DUF_PRINTF( 0, "  run   -RifX  /mnt/new_media/media/photo		- %s", "        files exif information (-f pre-open file)" );
+    DUF_PRINTF( 0, "========================= as for 20140717 ===================" );
+    DUF_PRINTF( 0, "  export MSH_DUF_OPTIONS=explain=1			- %s", "" );
+    DUF_PRINTF( 0, "  run   -RidDnE  /mnt/new_media/media/photo		- %s", "" );
+    DUF_PRINTF( 0, "========================= as for 20140718 ===================" );
+    DUF_PRINTF( 0, "  run   -OPRidDnf5E  /mnt/new_media/media/photo		- %s", "" );
     DUF_PRINTF( 0, "=============================================================" );
 
     r = 1;
@@ -319,6 +324,21 @@ duf_main( int argc, char **argv )
   }
 #ifdef MAS_TRACEMEM
   print_memlist( FL, stderr );
+
+  {
+    extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
+
+    if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
+    {
+      DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_MEMUSAGE ) );
+    }
+    else
+    {
+      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_MEMUSAGE ) );
+    }
+  }
+
+
 #endif
   DUF_ERRORR( r, "-" );
   return r < 0 && r != DUF_ERROR_MAX_REACHED ? 31 : 0;

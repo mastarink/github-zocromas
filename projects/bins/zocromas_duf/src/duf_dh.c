@@ -75,6 +75,9 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
     if ( r > 0 )
     {
       pdhandle->dfd = r;
+
+      DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
+
       r = 0;
       pdhandle->rs = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
 
@@ -173,6 +176,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
     if ( pdhandle->dfd )
     {
       r = close( pdhandle->dfd );
+      DUF_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
       if ( r )
       {
         {

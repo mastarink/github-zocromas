@@ -143,7 +143,7 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
 /* insert path into db; return id */
 unsigned long long
 duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_levinfo_t * pli, dev_t dev_id, ino_t dir_ino,
-                      unsigned long long parentid, int need_id, int *pr )
+                      unsigned long long parentid, int need_id, int *pchanges, int *pr )
 {
   unsigned long long dirid = 0;
   int r = 0;
@@ -216,6 +216,10 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
             {
               DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
             }
+            else
+            {
+              DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", dename, dirid, parentid );
+            }
             assert( !need_id || dirid );
             if ( pli )
             {
@@ -248,6 +252,10 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
             {
               DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
             }
+            else
+            {
+              DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", dename, dirid, parentid );
+            }
             assert( !need_id || dirid );
             if ( pli )
             {
@@ -272,12 +280,20 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
       {
         dirid = duf_sql_last_insert_rowid(  );
         if ( need_id && !dirid )
+        {
           DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename );
+        }
+        else
+        {
+          DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", dename, dirid, parentid );
+        }
         assert( !need_id || dirid );
         DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, dename );
       }
       DUF_TEST_R( r );
     }
+    if ( pchanges )
+      *pchanges = changes;
   }
   else
   {
@@ -297,11 +313,13 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
 }
 
 int
-duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, int need_id )
+duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
 {
   unsigned long long parentid = 0;
   char *real_path = mas_strdup( rpath );
   int r = 0;
+
+  DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
 
   {
     int upfd = 0;
@@ -330,8 +348,11 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
           r = duf_levinfo_openat_dh( pdi );
       }
       if ( pdi )
+      {
         upfd = duf_levinfo_dfd( pdi );
-      else
+        DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, upfd );
+      }
+      else                      /* never used !!?? */
       {
         const char *opendir;
         int fd = 0;
@@ -343,6 +364,7 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
         fd = upfd;
         r = fstatat( fd, opendir, &st_dir, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
         upfd = openat( fd, opendir, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+        DUF_TRACE( explain, 0, "opened (at) ≪%s≫ upfd:%d", insdir, upfd );
         if ( fd )
           close( fd );
         fd = 0;
@@ -354,15 +376,26 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
       }
       else
       {
+        int changes;
+
+        changes = 0;
         DUF_TRACE( path, 0, "to insert [%s]", insdir ? insdir : "/" );
         parentid = duf_insert_path_uni2( pdi, insdir, ifadd, duf_levinfo( pdi ), st_dir.st_dev, st_dir.st_ino, parentid, 1 /*need_id */ ,
-                                         &r );
+                                         &changes, &r );
+        if ( changes )
+        {
+          DUF_TRACE( explain, 0, "added id: %llu for ≪%s≫", parentid, insdir );
+        }
+        else
+        {
+          DUF_TRACE( explain, 1, "already in db id: %llu for ≪%s≫", parentid, insdir );
+        }
         /* assert( parentid ); */
 
         if ( pdi )
           duf_levinfo_set_dirid( pdi, parentid );
         DUF_TRACE( path, 0, "inserted [%s] AS %llu", insdir, parentid );
-        DUF_TRACE( path, 0, "#%llu : added real path %s", parentid, real_path );
+        DUF_TRACE( path, 0, "id %llu for insdir ≪%s≫", parentid, insdir );
       }
       dir = edir;
       DUF_TRACE( path, 0, "next [%s] under %llu", dir, parentid );
@@ -382,7 +415,7 @@ duf_real_path_to_pathid2( duf_depthinfo_t * pdi, const char *rpath, int ifadd, i
 
 unsigned long long
 duf_insert_path_uni( duf_depthinfo_t * pdi, const char *dename, dev_t dev_id, ino_t dir_ino, unsigned long long parentid, int need_id,
-                     int *pr )
+                     int *pchanges, int *pr )
 {
-  return duf_insert_path_uni2( pdi, dename, 1, ( duf_levinfo_t * ) NULL, dev_id, dir_ino, parentid, need_id, pr );
+  return duf_insert_path_uni2( pdi, dename, 1, ( duf_levinfo_t * ) NULL, dev_id, dir_ino, parentid, need_id, pchanges, pr );
 }

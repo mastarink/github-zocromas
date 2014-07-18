@@ -373,6 +373,7 @@ duf_levinfo_down( duf_depthinfo_t * pdi, unsigned long long dirid, const char *i
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
       DUF_OINV_NOT_OPENED( pdi-> );
+      DUF_TRACE( explain, 0, "level down: %d; ≪%s≫", d, is_leaf ? "leaf" : "node" );
       assert( pdi->depth >= 0 );
     }
     else
@@ -453,6 +454,7 @@ duf_levinfo_up( duf_depthinfo_t * pdi )
     DUF_TEST_R( r );
     if ( r < 0 )
       DUF_ERROR( "(%d) close error; L%d", r, pdi->depth );
+    DUF_TRACE( explain, 0, "level up:   %d", d );
     assert( pdi->levinfo );
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->depth;

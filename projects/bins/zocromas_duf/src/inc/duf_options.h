@@ -17,7 +17,11 @@ const duf_longval_extended_t *duf_find_longval_extended( duf_option_code_t code 
 const char *duf_find_longval_help( duf_option_code_t code );
 
 char *duf_cli_option_shorts( void );
+
+const char *duf_option_cnames( duf_option_code_t code );
 char *duf_option_names( duf_option_code_t code );
+
+
 char *duf_option_description( duf_option_code_t code );
 void duf_option_smart_help( void );
 

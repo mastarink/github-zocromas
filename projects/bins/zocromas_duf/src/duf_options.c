@@ -112,22 +112,44 @@ duf_cli_option_shorts( void )
       *p = 0;
     }
   }
+  DUF_TRACE( explain, 0, "genereated options shorts: %s", shorts );
+
   return *shorts ? mas_strdup( shorts ) : NULL;
+}
+
+const char *
+duf_option_cnames( duf_option_code_t code )
+{
+  if ( duf_config )
+  {
+    mas_free( duf_config->option_explanation );
+    duf_config->option_explanation = NULL;
+    duf_config->option_explanation = duf_option_names( code );
+    return duf_config->option_explanation;
+  }
+  else
+  {
+    return NULL;
+  }
 }
 
 char *
 duf_option_names( duf_option_code_t code )
 {
   char *names = NULL;
+  int cnt = 0;
 
   for ( int i = 0; duf_longopts[i].name && i < duf_longopts_count; i++ )
   {
     if ( duf_longopts[i].val == code )
     {
-      if ( names )
-        names = mas_strcat_x( names, " OR " );
+      if ( !cnt )
+        names = mas_strcat_x( names, "≪" );
+      if ( cnt )
+        names = mas_strcat_x( names, " | " );
       names = mas_strcat_x( names, "--" );
       names = mas_strcat_x( names, duf_longopts[i].name );
+      cnt++;
     }
   }
   if ( names && code && ( ( unsigned ) code ) < 0xff )
@@ -135,9 +157,15 @@ duf_option_names( duf_option_code_t code )
     char sh[10] = "- ";
 
     sh[1] = code & 0xff;
-    names = mas_strcat_x( names, " OR " );
+    if ( !cnt )
+      names = mas_strcat_x( names, "≫" );
+    if ( cnt )
+      names = mas_strcat_x( names, " | " );
     names = mas_strcat_x( names, sh );
+    cnt++;
   }
+  if ( cnt )
+    names = mas_strcat_x( names, "≫" );
   return names;
 }
 
@@ -250,9 +278,12 @@ duf_env_options( int argc, char *argv[] )
   int r = 0;
   const char *eo = NULL;
   const char *peo, *e;
+  const char *varname = "MSH_DUF_OPTIONS";
 
   eo = getenv( "MSH_DUF_OPTIONS" );
-  DUF_TRACE( explain, 0, "env options tuple: %s", eo );
+  DUF_TRACE( explain, 0, "getting env options from variable %s", varname );
+
+  /* DUF_TRACE( explain, 0, "env options tuple: %s", eo ); */
   peo = eo;
   while ( peo && *peo )
   {
@@ -284,7 +315,8 @@ duf_env_options( int argc, char *argv[] )
     }
     mas_free( s );
     peo = e;
-    DUF_TRACE( explain, 0, "env peo \"%s\"", peo );
+    /* DUF_TRACE( explain, 0, "env peo \"%s\"", peo ); */
+    DUF_TRACE( explain, 0, "got env options from %s", varname );
   }
   return r;
 }
@@ -300,6 +332,7 @@ duf_infile( int dot, const char *at )
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
   cfgpath = mas_strcat_x( cfgpath, "zocromas_duf.conf" );
+  DUF_TRACE( explain, 0, "opening conf file %s", cfgpath );
   DUF_TRACE( any, 1, "cfg:[%s]", cfgpath );
   if ( cfgpath )
   {
@@ -317,6 +350,7 @@ duf_infile_options( int argc, char *argv[] )
   FILE *f = NULL;
 
   h = getenv( "MSH_CONF_DIR" );
+  DUF_TRACE( explain, 0, "getting variable MSH_DUF_OPTIONS value for config path" );
   DUF_TRACE( any, 1, "MSH_CONF_DIR:[%s]", h );
   if ( h )
   {
@@ -325,9 +359,11 @@ duf_infile_options( int argc, char *argv[] )
   if ( !f )
   {
     h = getenv( "HOME" );
+    DUF_TRACE( explain, 0, "getting variable HOME value for config path (secondary)" );
     DUF_TRACE( any, 0, "HOME:[%s]", h );
     f = duf_infile( 1, h );
   }
+  DUF_TRACE( explain, 0, "to read config file" );
   while ( r >= 0 && f && !feof( f ) )
   {
     char buffer[1024];

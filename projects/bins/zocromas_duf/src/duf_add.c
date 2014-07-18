@@ -29,10 +29,14 @@ duf_add_path_uni( const char *path )
   {
     char *real_path = NULL;
 
+    DUF_TRACE( explain, 0, "adding path uni: %s", path );
+
     real_path = duf_realpath( path );
     DUF_TRACE( action, 0, "real_path:%s", real_path );
+    DUF_TRACE( explain, 0, "converted to real_path: %s", real_path );
     if ( !( real_path && *real_path == '/' && real_path[1] == 0 ) )
-      r = duf_real_path_to_pathid2( ( duf_depthinfo_t * ) NULL, real_path, 1 /* add */ , 0 /* need_id */  );
+      r = duf_real_path2db( ( duf_depthinfo_t * ) NULL, real_path, 1 /* add */  );
+    DUF_TRACE( explain, 0, "added path uni: %s", real_path  );
     mas_free( real_path );
   }
   DEBUG_ENDR( r );

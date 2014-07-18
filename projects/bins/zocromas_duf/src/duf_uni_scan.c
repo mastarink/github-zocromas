@@ -70,6 +70,7 @@ duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_ca
   duf_depthinfo_t *pdi;
 
   pdi = ( duf_depthinfo_t * ) str_cb_udata;
+  assert( pdi );
   /* DUF_UFIELD( dirid ); */
   /* assert( dirid == duf_levinfo_dirid( pdi ) ); */
   /* DUF_SFIELD( dfname ); */
@@ -78,28 +79,43 @@ duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_ca
   DUF_TRACE( scan, 0, "+" );
   if ( r >= 0 && DUF_U_FLAG( recursive ) && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
   {
-    assert( pdi );
-
-/* duf_scan_fil_by_pi:
- * call duf_str_cb_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
- *
- * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
- *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
- *         otherwise do nothing
- *
- *   i.e.
- *     1. for <current> dir call sccb->node_scan_before
- *     2. for each leaf in <current> dir call sccb->leaf_scan
- *     3. for <current> dir call sccb->node_scan_middle
- *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->node_scan_after
- * */
-
+    if ( duf_pdi_reldepth( pdi ) <= 1 )
+    {
+      DUF_TRACE( explain, 2, "cb; option %s; option %s value %d; depth %d",
+                 duf_option_cnames( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
+                 duf_pdi_reldepth( pdi ) );
+    }
+    else
+    {
+      DUF_TRACE( explain, 3, "cb; option %s; option %s value %d; depth %d",
+                 duf_option_cnames( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
+                 duf_pdi_reldepth( pdi ) );
+    }
+    /* duf_scan_fil_by_pi:
+     * call duf_str_cb_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
+     *
+     * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
+     *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
+     *         otherwise do nothing
+     *
+     *   i.e.
+     *     1. for <current> dir call sccb->node_scan_before
+     *     2. for each leaf in <current> dir call sccb->leaf_scan
+     *     3. for <current> dir call sccb->node_scan_middle
+     *   recursively from <current> dir (if recursive flag set):
+     *     4. for each dir in <current> dir call str_cb + str_cb_udata
+     *     5. for <current> dir call sccb->node_scan_after
+     * */
     DUF_OINV_OPENED( pdi-> );
     r = duf_scan_dirs_by_parentid( duf_str_cb_uni_scan_dir, pdi, sccb, precord );
     DUF_TEST_R( r );
   }
+  else
+  {
+    DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", duf_option_cnames( DUF_OPTION_FLAG_RECURSIVE ),
+               duf_option_cnames( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth );
+  }
+
   DEBUG_END(  );
   return r;
 }
@@ -133,11 +149,29 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
+      if ( duf_pdi_reldepth( pdi ) <= 1 )
+      {
+        DUF_TRACE( explain, 3, "cb2; option %s; option %s value %d; depth %d",
+                   duf_option_cnames( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
+                   duf_pdi_reldepth( pdi ) );
+      }
+      else
+      {
+        DUF_TRACE( explain, 4, "cb2; option %s; option %s value %d; depth %d",
+                   duf_option_cnames( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
+                   duf_pdi_reldepth( pdi ) );
+      }
 
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 0, "+" );
       r = duf_scan_dirs_by_parentid2( pstmt, duf_str_cb2_uni_scan_dir, pdi, sccb );
     }
+    else
+    {
+      DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", duf_option_cnames( DUF_OPTION_FLAG_RECURSIVE ),
+                 duf_option_cnames( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth );
+    }
+
   }
   DUF_TEST_R( r );
   DEBUG_END(  );
@@ -162,6 +196,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
   DEBUG_START(  );
 
   real_path = duf_realpath( path );
+  DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
 
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": sccb        %c", duf_uni_scan_action_title( sccb ), sccb ? '+' : '-' );
   DUF_TRACE( scan, 0, "uni" );
@@ -201,10 +236,11 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
       mas_free( sqlt );
     }
-    DUF_ERROR( "TOTAL FILES:%llu; r:%d", di.total_files, r );
+    /* DUF_ERROR( "TOTAL FILES:%llu; r:%d", di.total_files, r ); */
+    DUF_TRACE( explain, 0, "%llu files registered in db", di.total_files );
     if ( r >= 0 )
     {
-      r = duf_real_path_to_pathid2( &di, real_path, 0 /* ifadd */ , 1 /* need_id */  );
+      r = duf_real_path2db( &di, real_path, 0 /* ifadd */  );
       if ( r == DUF_ERROR_NOT_IN_DB )
         DUF_ERROR( "not in db:'%s' (%s)", real_path ? real_path : "-", path ? path : "-" );
       DUF_TEST_R( r );
@@ -217,6 +253,10 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
 
         DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": top dirid %llu for %s", duf_uni_scan_action_title( sccb ),
                    duf_levinfo_dirid( &di ), real_path );
+
+        DUF_TRACE( explain, 0,
+                   "≫≫≫≫≫≫≫≫≫≫ %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
+                   duf_uni_scan_action_title( sccb ) );
 
 
         /* DUF_ERROR( "L%d", di.depth ); */
@@ -248,6 +288,8 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
         if ( r >= 0 )
         {
           DUF_TRACE( scan, 2, "before by_parentid" );
+          DUF_TRACE( explain, 0, "to scan" );
+
           if ( sccb->scan_mode_2 )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
@@ -267,10 +309,11 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
     }
     if ( DUF_ACT_FLAG( summary ) )
     {
-      DUF_PRINTF( 0, " seq:%llu", di.seq );
+      DUF_PRINTF( 0, " summary; seq:     %llu", di.seq );
+      DUF_PRINTF( 0, " summary; seq-leaf:%llu", di.seq_leaf );
+      DUF_PRINTF( 0, " summary; seq-node:%llu", di.seq_node );
       if ( duf_config->u.maxseq )
         DUF_PRINTF( 0, " of %llu", duf_config->u.maxseq );
-      DUF_PRINTF( 0, "\n" );
     }
     DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ), DUF_ACT_FLAG( summary ) );
   }
@@ -286,7 +329,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
   return r;
 }
 
-int
+static int
 duf_uni_scan_targ( duf_scan_callbacks_t * sccb )
 {
   int r = 0;
@@ -304,7 +347,15 @@ TODO scan mode
     int do2;
 
     if ( r >= 0 && sccb->init_scan )
+    {
+      DUF_TRACE( explain, 0, "to init scan" );
       r = sccb->init_scan(  );
+    }
+    else
+    {
+      DUF_TRACE( explain, 0, "no init scan" );
+    }
+    DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( sccb ) );
     DUF_TEST_R( r );
     DUF_TRACE( action, 0, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( sccb ) );
 
@@ -344,7 +395,7 @@ TODO scan mode
     }
 
     if ( DUF_ACT_FLAG( summary ) )
-      DUF_PRINTF( 0, "changes:%llu", changes );
+      DUF_PRINTF( 0, " summary; changes:%llu", changes );
 
     /* if ( changes ) */
     {
@@ -387,6 +438,7 @@ duf_uni_scan_all( void )
   DEBUG_START(  );
 
   DUF_TRACE( action, 0, "prep" );
+  DUF_TRACE( explain, 0, "scan all; setting actions" );
   ppscan_callbacks = mas_malloc( max_asteps * sizeof( duf_scan_callbacks_t * ) );
 
   assert( asteps < max_asteps );
@@ -394,144 +446,231 @@ duf_uni_scan_all( void )
   {
     extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
 
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_INTEGRITY ) );
     DUF_TRACE( action, 0, "prep integrity ..." );
+    DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪integrity≫ #%d", asteps );
     ppscan_callbacks[asteps++] = &duf_integrity_callbacks;
   }
-  assert( asteps < max_asteps );
+  else
   {
-    extern duf_scan_callbacks_t duf_directories_callbacks __attribute( ( weak ) );
-
-
-    if ( &duf_directories_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( dirs )
-         && DUF_ACT_FLAG( dirent ) )
-    {
-      DUF_TRACE( action, 0, "prep directories ..." );
-      ppscan_callbacks[asteps++] = &duf_directories_callbacks;
-    }
+    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_INTEGRITY ) );
   }
   assert( asteps < max_asteps );
+  if ( DUF_ACT_FLAG( collect ) )
   {
-    extern duf_scan_callbacks_t duf_filedata_callbacks __attribute( ( weak ) );
-
-
-    if ( &duf_filedata_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( filedata )
-         && DUF_ACT_FLAG( dirent ) )
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_COLLECT ) );
+    if ( DUF_ACT_FLAG( dirent ) )
     {
-      DUF_TRACE( action, 0, "prep filedata ..." );
-      ppscan_callbacks[asteps++] = &duf_filedata_callbacks;
+      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_DIRENT ) );
+      {
+        extern duf_scan_callbacks_t duf_directories_callbacks __attribute( ( weak ) );
+
+        if ( &duf_directories_callbacks && DUF_ACT_FLAG( dirs ) )
+        {
+          DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_DIRS ) );
+          DUF_TRACE( action, 0, "prep directories ..." );
+          DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪directories≫ #%d", asteps );
+          ppscan_callbacks[asteps++] = &duf_directories_callbacks;
+        }
+        else
+        {
+          DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_DIRS ) );
+        }
+      }
+      assert( asteps < max_asteps );
+      {
+        extern duf_scan_callbacks_t duf_filedata_callbacks __attribute( ( weak ) );
+
+
+        if ( &duf_filedata_callbacks && DUF_ACT_FLAG( filedata ) )
+        {
+          DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_FILEDATA ) );
+          DUF_TRACE( action, 0, "prep filedata ..." );
+          DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪filedata≫ #%d", asteps );
+          ppscan_callbacks[asteps++] = &duf_filedata_callbacks;
+        }
+        else
+        {
+          DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_FILEDATA ) );
+        }
+      }
+      assert( asteps < max_asteps );
+      {
+        extern duf_scan_callbacks_t duf_filenames_callbacks __attribute( ( weak ) );
+
+
+        if ( &duf_filenames_callbacks && DUF_ACT_FLAG( filenames ) )
+        {
+          DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_FILENAMES ) );
+          DUF_TRACE( action, 0, "prep filenames ..." );
+          DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪filenames≫ #%d", asteps );
+          ppscan_callbacks[asteps++] = &duf_filenames_callbacks;
+        }
+        else
+        {
+          DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_FILENAMES ) );
+        }
+      }
+    }
+    assert( asteps < max_asteps );
+    {
+      extern duf_scan_callbacks_t duf_collect_openat_crc32_callbacks __attribute( ( weak ) );
+
+
+      if ( &duf_collect_openat_crc32_callbacks && DUF_ACT_FLAG( crc32 ) )
+      {
+        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_CRC32 ) );
+        DUF_TRACE( action, 0, "prep fill crc32" );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_openat_crc32≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_collect_openat_crc32_callbacks;
+      }
+      else
+      {
+        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_CRC32 ) );
+      }
+    }
+    assert( asteps < max_asteps );
+    {
+      extern duf_scan_callbacks_t duf_collect_openat_sd5_callbacks __attribute( ( weak ) );
+
+
+      if ( &duf_collect_openat_sd5_callbacks && DUF_ACT_FLAG( sd5 ) )
+      {
+        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_SD5 ) );
+        DUF_TRACE( action, 0, "prep fill sd5" );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_openat_sd5≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_collect_openat_sd5_callbacks;
+      }
+      else
+      {
+        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_SD5 ) );
+      }
+    }
+    assert( asteps < max_asteps );
+    {
+      extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );
+
+
+      if ( &duf_collect_openat_md5_callbacks && DUF_ACT_FLAG( md5 ) )
+      {
+        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_MD5 ) );
+        DUF_TRACE( action, 0, "prep fill md5" );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_openat_md5≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_collect_openat_md5_callbacks;
+      }
+      else
+      {
+        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_MD5 ) );
+      }
+    }
+    assert( asteps < max_asteps );
+    {
+      extern duf_scan_callbacks_t duf_collect_mime_callbacks __attribute( ( weak ) );
+
+      if ( &duf_collect_mime_callbacks && DUF_ACT_FLAG( mime ) )
+      {
+        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_MIME ) );
+        DUF_TRACE( action, 0, "prep fill mime" );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_mime≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_collect_mime_callbacks;
+      }
+      else
+      {
+        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_MIME ) );
+      }
+    }
+    assert( asteps < max_asteps );
+    {
+      extern duf_scan_callbacks_t duf_collect_exif_callbacks __attribute( ( weak ) );
+
+      if ( &duf_collect_exif_callbacks && DUF_ACT_FLAG( exif ) )
+      {
+        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_EXIF ) );
+        DUF_TRACE( action, 0, "prep fill exif" );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_exif≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_collect_exif_callbacks;
+      }
+      else
+      {
+        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_FLAG_EXIF ) );
+      }
     }
   }
-  assert( asteps < max_asteps );
+  else
   {
-    extern duf_scan_callbacks_t duf_filenames_callbacks __attribute( ( weak ) );
-
-
-    if ( &duf_filenames_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( filenames )
-         && DUF_ACT_FLAG( dirent ) )
-    {
-      DUF_TRACE( action, 0, "prep filenames ..." );
-      ppscan_callbacks[asteps++] = &duf_filenames_callbacks;
-    }
+    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_COLLECT ) );
   }
-  assert( asteps < max_asteps );
-  {
-    extern duf_scan_callbacks_t duf_collect_openat_crc32_callbacks __attribute( ( weak ) );
 
-
-    if ( &duf_collect_openat_crc32_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( crc32 ) )
-    {
-
-      DUF_TRACE( action, 0, "prep fill crc32" );
-      ppscan_callbacks[asteps++] = &duf_collect_openat_crc32_callbacks;
-    }
-  }
-  assert( asteps < max_asteps );
-  {
-    extern duf_scan_callbacks_t duf_collect_openat_sd5_callbacks __attribute( ( weak ) );
-
-
-    if ( &duf_collect_openat_sd5_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( sd5 ) )
-    {
-
-      DUF_TRACE( action, 0, "prep fill sd5" );
-      ppscan_callbacks[asteps++] = &duf_collect_openat_sd5_callbacks;
-    }
-  }
-  assert( asteps < max_asteps );
-  {
-    extern duf_scan_callbacks_t duf_collect_openat_md5_callbacks __attribute( ( weak ) );
-
-
-    if ( &duf_collect_openat_md5_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( md5 ) )
-    {
-
-      DUF_TRACE( action, 0, "prep fill md5" );
-      ppscan_callbacks[asteps++] = &duf_collect_openat_md5_callbacks;
-    }
-  }
-  assert( asteps < max_asteps );
-  {
-    extern duf_scan_callbacks_t duf_collect_mime_callbacks __attribute( ( weak ) );
-
-    if ( &duf_collect_mime_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( mime ) )
-    {
-
-      DUF_TRACE( action, 0, "prep fill mime" );
-      ppscan_callbacks[asteps++] = &duf_collect_mime_callbacks;
-    }
-  }
-  assert( asteps < max_asteps );
-  {
-    extern duf_scan_callbacks_t duf_collect_exif_callbacks __attribute( ( weak ) );
-
-    if ( &duf_collect_exif_callbacks &&  DUF_ACT_FLAG( collect ) && DUF_ACT_FLAG( exif ) )
-    {
-      DUF_TRACE( action, 0, "prep fill exif" );
-      ppscan_callbacks[asteps++] = &duf_collect_exif_callbacks;
-    }
-  }
   assert( asteps < max_asteps );
   if (  /* DUF_ACT_FLAG(update )&& */ DUF_ACT_FLAG( mdpath ) )
   {
     extern duf_scan_callbacks_t duf_collect_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
 
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_MDPATH ) );
     DUF_TRACE( action, 0, "prep mdpath" );
+    DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_mdpath≫ #%d", asteps );
     ppscan_callbacks[asteps++] = &duf_collect_mdpath_callbacks;
   }
-  assert( asteps < max_asteps );
-  if ( DUF_ACT_FLAG( md5 ) && DUF_ACT_FLAG( print ) )
+  else
   {
-    extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
-
-    DUF_TRACE( action, 0, "prep print md5" );
-    ppscan_callbacks[asteps++] = &duf_print_md5_callbacks;
+    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_MDPATH ) );
   }
-
   assert( asteps < max_asteps );
-  if ( DUF_ACT_FLAG( print ) && DUF_ACT_FLAG( tree ) && !DUF_ACT_FLAG( md5 ) )
+  if ( DUF_ACT_FLAG( print ) )
   {
-    extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_PRINT ) );
+    if ( DUF_ACT_FLAG( md5 ) )
+    {
+      extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
 
-    DUF_TRACE( action, 0, "prep print tree" );
-    ppscan_callbacks[asteps++] = &duf_print_tree_callbacks;
+      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_MD5 ) );
+      DUF_TRACE( action, 0, "prep print md5" );
+      DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_md5≫ #%d", asteps );
+      ppscan_callbacks[asteps++] = &duf_print_md5_callbacks;
+    }
+    else
+    {
+      assert( asteps < max_asteps );
+      DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_MD5 ) );
+      if ( DUF_ACT_FLAG( tree ) )
+      {
+        extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
+
+        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_TREE ) );
+        DUF_TRACE( action, 0, "prep print tree" );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_tree≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_print_tree_callbacks;
+      }
+      else
+      {
+        assert( asteps < max_asteps );
+        extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
+
+        DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_TREE ) );
+        DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_dir≫ #%d", asteps );
+        ppscan_callbacks[asteps++] = &duf_print_dir_callbacks;
+      }
+    }
   }
-
-  assert( asteps < max_asteps );
-  if ( DUF_ACT_FLAG( print ) && !DUF_ACT_FLAG( tree ) && !DUF_ACT_FLAG( md5 ) )
+  else
   {
-    extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
-
-    ppscan_callbacks[asteps++] = &duf_print_dir_callbacks;
+    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_PRINT ) );
   }
   if ( duf_config->cli.act.sample )
   {
     extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
 
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_SAMPLE ) );
     assert( asteps + duf_config->cli.act.sample < max_asteps );
     for ( int i = 0; i < duf_config->cli.act.sample && asteps < max_asteps; i++ )
     {
+      DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sample #%d", asteps );
       ppscan_callbacks[asteps++] = &duf_sample_callbacks;
     }
+  }
+  else
+  {
+    DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_SAMPLE ) );
   }
 
   assert( asteps < max_asteps );
@@ -539,7 +678,13 @@ duf_uni_scan_all( void )
   {
     extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
 
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_SAMPUPD ) );
+    DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sampupd≫ #%d", asteps );
     ppscan_callbacks[asteps++] = &duf_sampupd_callbacks;
+  }
+  else
+  {
+    DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames( DUF_OPTION_SAMPUPD ) );
   }
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );

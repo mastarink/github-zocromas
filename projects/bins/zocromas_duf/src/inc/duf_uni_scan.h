@@ -4,7 +4,6 @@
 #include "duf_hook_types.h"
 /* int duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb ); */
 
-int duf_uni_scan_targ( duf_scan_callbacks_t * sccb );
 
 int duf_uni_scan_all( void );
 
