@@ -321,7 +321,7 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unu
           .filename = 1,
           .short_filename = 1,
           .seq = 1,
-          .dirid = 0,
+          .dirid = 1,
           .inode = 0,
           .mode = 0,
           .nlink = 0,

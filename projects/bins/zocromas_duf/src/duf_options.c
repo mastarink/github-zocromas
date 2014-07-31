@@ -492,6 +492,7 @@ duf_restore_option( char *ptr, duf_option_code_t optcode )
 
   DUF_OPTION_RESTORE_FLAG( optcode, ptr, ADD_PATH, add_path, cli.act );
   DUF_OPTION_RESTORE_FLAG( optcode, ptr, UNI_SCAN, uni_scan, cli.act );
+  DUF_OPTION_RESTORE_FLAG( optcode, ptr, INFO, info, cli.act );
 
   DUF_OPTION_RESTORE_FLAG( optcode, ptr, RECURSIVE, recursive, u );
 

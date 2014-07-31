@@ -156,6 +156,7 @@ typedef enum
   /* /filters */
 
   DUF_OPTION_FLAG_UNI_SCAN,
+  DUF_OPTION_FLAG_INFO,
 
   /* DUF_OPTION_PRINT_PATHS, */
   /* DUF_OPTION_PRINT_DIRS, */

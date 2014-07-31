@@ -11,7 +11,7 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "version",.has_arg = no_argument,.val = DUF_OPTION_VERSION},
   {.name = "help-short",.has_arg = no_argument,.val = DUF_OPTION_HELP},
   {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
-  {.name = "test-option",.has_arg = required_argument /*| optional_argument*/,.val = DUF_OPTION_TEST},
+  {.name = "test-option",.has_arg = required_argument /*| optional_argument */ ,.val = DUF_OPTION_TEST},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
   {.name = "output-level",.has_arg = optional_argument,.val = DUF_OPTION_OUTPUT_LEVEL},
   /* --------------- */
@@ -29,7 +29,8 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "trace-all",.has_arg = optional_argument,.val = DUF_OPTION_ALL_TRACE},
   /* --------------- */
   {.name = "dry-run",.has_arg = no_argument,.val = DUF_OPTION_DRY_RUN_TRACE},
-  {.name = "explain",.has_arg = no_argument,.val = DUF_OPTION_EXPLAIN_TRACE},
+  {.name = "explain",.has_arg = optional_argument,.val = DUF_OPTION_EXPLAIN_TRACE},
+  {.name = "trace-explain",.has_arg = optional_argument,.val = DUF_OPTION_EXPLAIN_TRACE},
   /* --------------- */
   {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
   {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
@@ -89,6 +90,8 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "recursive",.has_arg = no_argument,.val = DUF_OPTION_FLAG_RECURSIVE},
   /* --------------- */
   {.name = "uni-scan",.has_arg = no_argument,.val = DUF_OPTION_FLAG_UNI_SCAN},
+  {.name = "info",.has_arg = no_argument,.val = DUF_OPTION_FLAG_INFO},
+  {.name = "information",.has_arg = no_argument,.val = DUF_OPTION_FLAG_INFO},
   {.name = "collect",.has_arg = no_argument,.val = DUF_OPTION_FLAG_COLLECT},
   {.name = "integrity",.has_arg = no_argument,.val = DUF_OPTION_FLAG_INTEGRITY},
   {.name = "dirent",.has_arg = no_argument,.val = DUF_OPTION_FLAG_DIRENT},

@@ -75,8 +75,10 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filedatas  " /* */
             " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
             " VALUES "          /* */
-            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, :atim, :atimn, :mtim, :mtimn, :ctim, :ctimn) " /* */
-            ;
+            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, " /* */
+            "datetime(:atim, 'unixepoch'), :atimn, "
+	    "datetime(:mtim, 'unixepoch'), :mtimn, "
+	    "datetime(:ctim, 'unixepoch'), :ctimn) " /* */ ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );

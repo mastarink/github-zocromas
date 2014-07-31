@@ -97,9 +97,9 @@ duf_check_table_filedatas( void )
                         ", crc32id INTEGER" /* */
                         ", mimeid INTEGER" /* */
                         ", exifid INTEGER" /* */
-                        ", atim INTEGER NOT NULL, atimn INTEGER NOT NULL" /* */
-                        ", mtim INTEGER NOT NULL, mtimn INTEGER NOT NULL" /* */
-                        ", ctim INTEGER NOT NULL, ctimn INTEGER NOT NULL" /* */
+                        ", atim REAL NOT NULL, atimn INTEGER NOT NULL" /* */
+                        ", mtim REAL NOT NULL, mtimn INTEGER NOT NULL" /* */
+                        ", ctim REAL NOT NULL, ctimn INTEGER NOT NULL" /* */
                         ", filetype TEXT, filestatus INTEGER" /* */
                         ", last_updated REAL" /* */
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
@@ -514,7 +514,7 @@ duf_check_table_exif( void )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 
   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " /* */
-                        DUF_DBPREF "exif (id INTEGER PRIMARY KEY autoincrement, modelid INTEGER , date_time INTEGER" /* */
+                        DUF_DBPREF "exif (id INTEGER PRIMARY KEY autoincrement, modelid INTEGER , date_time REAL" /* */
                         ", dupexifcnt INTEGER" /* */
                         ", broken_date TEXT, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         ", FOREIGN KEY(id) REFERENCES filedatas(exifid) )", "Create exif" );

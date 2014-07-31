@@ -205,6 +205,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_ADM, /*        */ adm.name, /*        */ db );
 
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( UNI_SCAN, /*          */ uni_scan /*     */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( INFO, /*              */ info /*         */  );
 
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( REMOVE_DATABASE, /*   */ remove_database /* */  );
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( DROP_TABLES, /*       */ drop_tables /*     */  );

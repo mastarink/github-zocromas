@@ -38,6 +38,7 @@ typedef struct
   unsigned tree:1;
 
   unsigned uni_scan:1;
+  unsigned info:1;
   /* unsigned print_paths:1; */
   /* unsigned print_dirs:1; */
   /* unsigned print_files:1; */
@@ -149,6 +150,12 @@ typedef struct
   /* long limit; */
 } duf_config_cli_t;
 
-
+typedef struct
+{
+  int count;
+  const char *sql;
+  const char *title;
+  const char *labels[20];
+} duf_infodata_t;
 
 #endif
