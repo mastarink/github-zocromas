@@ -21,7 +21,11 @@ typedef struct
 
 typedef struct
 {
+  char *path;
   char *option_explanation;
+} duf_tmp_t;
+typedef struct
+{
   char *help_string;
   double loadtime;
   int actions_done;
@@ -31,11 +35,12 @@ typedef struct
   /* char *group; */
   int targc;
   char **targv;
+  char *config_path;
 
 
   unsigned nopen;
   unsigned nclose;
-
+  duf_tmp_t *tmp;
 } duf_config_t;
 
 

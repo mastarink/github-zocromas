@@ -18,12 +18,17 @@ const char *duf_find_longval_help( duf_option_code_t code );
 
 char *duf_cli_option_shorts( void );
 
-const char *duf_option_cnames( duf_option_code_t code );
+const char *duf_option_cnames_tmp( duf_option_code_t code );
+char *duf_option_names_d( duf_option_code_t code, const char *delim );
+
 char *duf_option_names( duf_option_code_t code );
+char *duf_option_names_d( duf_option_code_t code, const char *delim );
 
 
-char *duf_option_description( duf_option_code_t code );
-void duf_option_smart_help( void );
+char *duf_option_description( duf_option_code_t code, const duf_longval_extended_t * extended );
+char *duf_option_description_d( duf_option_code_t code, const duf_longval_extended_t * extended, const char *delimh, const char *delim );
+
+void duf_option_smart_help( duf_option_class_t oclass );
 
 #  define DUF_OPTION(lo)  \
     duf_config->lo

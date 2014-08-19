@@ -58,11 +58,11 @@ duf_scan_direntry( struct dirent *de, unsigned long long pathid, duf_depthinfo_t
     {
     case DT_REG:
       r = ( *scan_dirent_reg ) ( de->d_name, &st, pathid, pdi, precord );
-      DUF_TRACE( scan, 1, "regfile='.../%s'", de->d_name );
+      DUF_TRACE( scan, 11, "regfile='.../%s'", de->d_name );
       break;
     case DT_DIR:
       r = ( *scan_dirent_dir ) ( de->d_name, &st, pathid, pdi, precord );
-      DUF_TRACE( scan, 1, "dir='.../%s'", de->d_name );
+      DUF_TRACE( scan, 11, "dir='.../%s'", de->d_name );
       break;
     }
   DEBUG_ENDR( r );
@@ -96,25 +96,25 @@ duf_scan_direntry2( duf_sqlite_stmt_t * pstmt, struct dirent *de, unsigned long 
     case DT_REG:
       if ( scan_dirent_reg2 )
       {
-        DUF_TRACE( scan, 1, "pass   > regfile='.../%s'", de->d_name );
+        DUF_TRACE( scan, 11, "pass   > regfile='.../%s'", de->d_name );
         r = ( *scan_dirent_reg2 ) ( pstmt, de->d_name, &st, pathid, pdi );
-        DUF_TRACE( scan, 1, "passed < regfile='.../%s'", de->d_name );
+        DUF_TRACE( scan, 11, "passed < regfile='.../%s'", de->d_name );
       }
       else
       {
-        DUF_TRACE( scan, 1, "missing scan_dirent_reg2; regfile='.../%s'", de->d_name );
+        DUF_TRACE( scan, 11, "missing scan_dirent_reg2; regfile='.../%s'", de->d_name );
       }
       break;
     case DT_DIR:
       if ( scan_dirent_dir2 )
       {
-        DUF_TRACE( scan, 0, "pass   > dir='.../%s'", de->d_name );
+        DUF_TRACE( scan, 10, "pass   > dir='.../%s'", de->d_name );
         r = ( *scan_dirent_dir2 ) ( pstmt, de->d_name, &st, pathid, pdi );
-        DUF_TRACE( scan, 0, "passed < dir='.../%s'", de->d_name );
+        DUF_TRACE( scan, 10, "passed < dir='.../%s'", de->d_name );
       }
       else
       {
-        DUF_TRACE( scan, 0, "missing scan_dirent_dir2; dir='.../%s'", de->d_name );
+        DUF_TRACE( scan, 10, "missing scan_dirent_dir2; dir='.../%s'", de->d_name );
       }
       break;
     }
@@ -146,7 +146,7 @@ duf_scan_dirents_by_pathid_and_dfname( unsigned long long pathid, duf_depthinfo_
     DUF_ERROR( "No such entry '%s'/'%s'", real_path_parent ? real_path_parent : "?", dfname );
     /* TODO mark as absent or remove from db */
 
-    DUF_TRACE( scan, 1, "No such entry %s", dfname );
+    DUF_TRACE( scan, 11, "No such entry %s", dfname );
     r = DUF_ERROR_STAT;
   }
   else
@@ -155,9 +155,9 @@ duf_scan_dirents_by_pathid_and_dfname( unsigned long long pathid, duf_depthinfo_
     struct dirent **list = NULL;
 
     DEBUG_START(  );
-    DUF_TRACE( scan, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
+    DUF_TRACE( scan, 11, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
     nlist = scandirat( pdhi->dfd, ".", &list, duf_direntry_filter, alphasort );
-    DUF_TRACE( scan, 1, "pathid=%llu; nlist=%d", pathid, nlist );
+    DUF_TRACE( scan, 11, "pathid=%llu; nlist=%d", pathid, nlist );
     if ( nlist < 0 )
     {
       int errorno = errno;
@@ -180,7 +180,7 @@ duf_scan_dirents_by_pathid_and_dfname( unsigned long long pathid, duf_depthinfo_
     {
       for ( int il = 0; il < nlist; il++ )
       {
-        DUF_TRACE( scan, 1, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
+        DUF_TRACE( scan, 11, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
 
         r = duf_scan_direntry( list[il], pathid, pdi, precord, scan_dirent_reg, scan_dirent_dir );
 
@@ -221,7 +221,7 @@ duf_scan_dirents_by_pathid_and_dfname2( duf_sqlite_stmt_t * pstmt, unsigned long
     DUF_ERROR( "No such entry '%s'/'%s'", real_path_parent ? real_path_parent : "?", dfname );
     /* TODO mark as absent or remove from db */
 
-    DUF_TRACE( scan, 1, "No such entry %s", dfname );
+    DUF_TRACE( scan, 11, "No such entry %s", dfname );
     r = DUF_ERROR_STAT;
   }
   else
@@ -229,10 +229,10 @@ duf_scan_dirents_by_pathid_and_dfname2( duf_sqlite_stmt_t * pstmt, unsigned long
     int nlist;
     struct dirent **list = NULL;
 
-    DUF_TRACE( scan, 1, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
+    DUF_TRACE( scan, 11, "pathid=%llu; scandir dfname:[%s]", pathid, dfname );
     nlist = scandirat( pdhi->dfd, ".", &list, duf_direntry_filter, alphasort );
-    DUF_TRACE( scan, 0, "pathid=%llu;", pathid );
-    DUF_TRACE( scan, 0, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), dfname ? dfname : "nil", nlist,
+    DUF_TRACE( scan, 10, "pathid=%llu;", pathid );
+    DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), dfname ? dfname : "nil", nlist,
                pdhi->dfd );
     if ( nlist < 0 )
     {
@@ -256,17 +256,17 @@ duf_scan_dirents_by_pathid_and_dfname2( duf_sqlite_stmt_t * pstmt, unsigned long
     {
       for ( int il = 0; il < nlist; il++ )
       {
-        DUF_TRACE( scan, 1, "pathid=%llu; > entry='%s'", pathid, list[il]->d_name );
+        DUF_TRACE( scan, 11, "pathid=%llu; > entry='%s'", pathid, list[il]->d_name );
 
         r = duf_scan_direntry2( pstmt, list[il], pathid, pdi, scan_dirent_reg2, scan_dirent_dir2 );
         
-	DUF_TRACE( scan, 1, "pathid=%llu; < entry='%s'", pathid, list[il]->d_name );
+	DUF_TRACE( scan, 11, "pathid=%llu; < entry='%s'", pathid, list[il]->d_name );
 
         DUF_TEST_R( r );
         if ( list[il] )
           free( list[il] );
       }
-      DUF_TRACE( scan, 0, "passed scandirat='.../%s'", dfname );
+      DUF_TRACE( scan, 10, "passed scandirat='.../%s'", dfname );
       if ( list )
         free( list );
       DUF_TEST_R( r );
@@ -296,16 +296,16 @@ duf_scan_dirents_by_pathid_and_record( duf_depthinfo_t * pdi, duf_record_t * pre
     {
       if ( !real_path_parent )
         real_path_parent = duf_levinfo_path( pdi );
-      DUF_TRACE( scan, 1, "real_path_parent=%s", real_path_parent );
+      DUF_TRACE( scan, 11, "real_path_parent=%s", real_path_parent );
     }
     {
       DUF_SFIELD( dfname );
       assert( dfname );
-      DUF_TRACE( scan, 1, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
+      DUF_TRACE( scan, 11, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
       r = duf_scan_dirents_by_pathid_and_dfname( dirid, pdi, precord, dfname, scan_dirent_reg, scan_dirent_dir );
     }
 
-    DUF_TRACE( scan, 1, "real_path_parent=%s", real_path_parent );
+    DUF_TRACE( scan, 11, "real_path_parent=%s", real_path_parent );
   }
   DEBUG_ENDR( r );
   return r;
@@ -326,19 +326,19 @@ duf_scan_dirents_by_pathid_and_record2( duf_sqlite_stmt_t * pstmt, duf_depthinfo
   {
     const char *real_path_parent = NULL;
 
-    DUF_TRACE( scan, 0, "scan dirent_dir by %5llu", dirid );
+    DUF_TRACE( scan, 10, "scan dirent_dir by %5llu", dirid );
     if ( DUF_IF_TRACE( scan ) )
     {
       if ( !real_path_parent )
         real_path_parent = duf_levinfo_path( pdi );
-      DUF_TRACE( scan, 1, "real_path_parent=%s", real_path_parent );
+      DUF_TRACE( scan, 11, "real_path_parent=%s", real_path_parent );
     }
     DUF_SFIELD2( dfname );
     /* assert( dfname ); */
-    DUF_TRACE( scan, 1, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
+    DUF_TRACE( scan, 11, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
     r = duf_scan_dirents_by_pathid_and_dfname2( pstmt, dirid, pdi, dfname, scan_dirent_reg2, scan_dirent_dir2 );
 
-    DUF_TRACE( scan, 1, "real_path_parent=%s", real_path_parent );
+    DUF_TRACE( scan, 11, "real_path_parent=%s", real_path_parent );
   }
   DEBUG_ENDR( r );
   return r;

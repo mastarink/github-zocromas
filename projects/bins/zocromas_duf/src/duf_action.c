@@ -213,20 +213,20 @@ duf_action_new( int argc, char **argv )
 /* --drop-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && DUF_ACT_FLAG( drop_tables ) )
   {
-    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", duf_option_cnames( DUF_OPTION_FLAG_DROP_TABLES ) );
+    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_DROP_TABLES ) );
     r = duf_clear_tables(  );
     duf_config->actions_done++;
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", duf_option_cnames( DUF_OPTION_FLAG_DROP_TABLES ) );
+    DUF_TRACE( explain, 1, "no %s option, not dropping tables", duf_option_cnames_tmp( DUF_OPTION_FLAG_DROP_TABLES ) );
   }
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( vacuum ) )
   {
     static const char *sql = "VACUUM";
 
-    DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, duf_option_cnames( DUF_OPTION_FLAG_VACUUM ) );
+    DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, duf_option_cnames_tmp( DUF_OPTION_FLAG_VACUUM ) );
     DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
@@ -234,20 +234,20 @@ duf_action_new( int argc, char **argv )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_VACUUM ) );
+    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_VACUUM ) );
   }
   DUF_TEST_R( r );
 /* --create-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && DUF_ACT_FLAG( create_tables ) )
   {
-    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", duf_option_cnames( DUF_OPTION_FLAG_CREATE_TABLES ) );
+    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", duf_option_cnames_tmp( DUF_OPTION_FLAG_CREATE_TABLES ) );
 
     r = duf_check_tables(  );
     duf_config->actions_done++;
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_FLAG_CREATE_TABLES ) );
+    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_CREATE_TABLES ) );
   }
 
   DUF_TEST_R( r );
@@ -261,7 +261,7 @@ duf_action_new( int argc, char **argv )
 /* --add-path									*/ DEBUG_STEP(  );
   if ( r >= 0 && DUF_ACT_FLAG( add_path ) )
   {
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_FLAG_ADD_PATH ) );
+    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_ADD_PATH ) );
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
     {
       DUF_TRACE( explain, 0, "to add (#%d) path %s", ia, duf_config->targv[ia] );
@@ -272,7 +272,7 @@ duf_action_new( int argc, char **argv )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option, you may need it for adding initial path", duf_option_cnames( DUF_OPTION_FLAG_ADD_PATH ) );
+    DUF_TRACE( explain, 1, "no %s option, you may need it for adding initial path", duf_option_cnames_tmp( DUF_OPTION_FLAG_ADD_PATH ) );
   }
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )

@@ -104,7 +104,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
     fi.name = filename;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
-    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL );
+    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
   }
   DUF_PUTSL( 0 );
 
@@ -180,7 +180,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
-    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL );
+    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
   }
   DUF_PUTSL( 0 );
 
@@ -273,6 +273,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
       .mtime = 0,
       .nsame = 0,
       .prefix = 1,
+      .suffix = 1,
     };
     /* fi.nsame = nsame; */
     /* fi.st.st_mode = ( mode_t ) filemode; */
@@ -287,7 +288,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
     /* fi.md5id = md5id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
-    if ( duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL ) > 0 )
+    if ( duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
       DUF_PUTSL( 0 );
     else
       DUF_PUTS( 0, "????????????" );

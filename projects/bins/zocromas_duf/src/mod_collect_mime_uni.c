@@ -211,7 +211,7 @@ duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
         mas_free( charset );
         mas_free( tail );
       }
-      DUF_TRACE( scan, 2, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid );
+      /* DUF_TRACE( scan, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
     }
   }
   DUF_TEST_R( r );

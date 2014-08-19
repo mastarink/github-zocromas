@@ -24,15 +24,71 @@
 #include "duf.h"
 /* ###################################################################### */
 
-int
+static int
 duf_test_help( int argc, char **argv, int opt )
 {
-  int r = 0;
+  int r = -1;
 
   switch ( opt )
   {
   case DUF_OPTION_SMART_HELP:
-    duf_option_smart_help(  );
+    duf_option_smart_help( DUF_OPTION_CLASS_ANY );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_HELP:
+    duf_option_smart_help( DUF_OPTION_CLASS_HELP );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_ALL:
+    for ( duf_option_class_t oclass = DUF_OPTION_CLASS_MIN + 1; oclass < DUF_OPTION_CLASS_MAX; oclass++ )
+    {
+      duf_option_smart_help( oclass );
+    }
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_SYSTEM:
+    duf_option_smart_help( DUF_OPTION_CLASS_SYSTEM );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_CONTROL:
+    duf_option_smart_help( DUF_OPTION_CLASS_CONTROL );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_REFERENCE:
+    duf_option_smart_help( DUF_OPTION_CLASS_REFERENCE );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_COLLECT:
+    duf_option_smart_help( DUF_OPTION_CLASS_COLLECT );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_SCAN:
+    duf_option_smart_help( DUF_OPTION_CLASS_SCAN );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_UPDATE:
+    duf_option_smart_help( DUF_OPTION_CLASS_UPDATE );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_REQUEST:
+    duf_option_smart_help( DUF_OPTION_CLASS_REQUEST );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_PRINT:
+    duf_option_smart_help( DUF_OPTION_CLASS_PRINT );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_TRACE:
+    duf_option_smart_help( DUF_OPTION_CLASS_TRACE );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_DEBUG:
+    duf_option_smart_help( DUF_OPTION_CLASS_DEBUG );
+    r = 0;
+    break;
+  case DUF_OPTION_HELP_NODESC:
+    duf_option_smart_help( DUF_OPTION_CLASS_NODESC );
+    r = 0;
     break;
   case DUF_OPTION_VERSION:
     {
@@ -44,37 +100,80 @@ duf_test_help( int argc, char **argv, int opt )
 
       DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
       DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );
+      DUF_PRINTF( 0, "configire        (%s)", MAS_CONFIG_ARGS );
+      DUF_PUTSL( 0 );
+      DUF_PRINTF( 0, "UUID             %s", MAS_UUID );
+
+      DUF_PUTSL( 0 );
+      DUF_PRINTF( 0, "prefix    [%2lu]   %s", sizeof( MAS_CONFIG_PREFIX ), MAS_CONFIG_PREFIX );
+      DUF_PRINTF( 0, "C version:[%2lu]   %lu", sizeof( __STDC_VERSION__ ), __STDC_VERSION__ );
+      DUF_PRINTF( 0, "O.        [%2lu]   %s", sizeof( MAS_OSVER ), MAS_OSVER );
+      DUF_PRINTF( 0, "U.        [%2lu]   %s", sizeof( MAS_UNAME ), MAS_UNAME );
+      DUF_PRINTF( 0, "V.        [%2lu]   %s", sizeof( PACKAGE_STRING ), PACKAGE_STRING );
+      DUF_PRINTF( 0, "d.        [%2lu]   %s", sizeof( MAS_C_DATE ), MAS_C_DATE );
+      DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%06lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
+                  sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__,
+                  ( unsigned long ) &__MAS_LINK_TIME__ );
+      DUF_PRINTF( 0, "DATE/TIME          %s/%s", __DATE__, __TIME__ );
+#ifdef MAS_SPLIT_DB
+      DUF_PRINTF( 0, "MAS_SPLIT_DB" );
+#endif
+
+      DUF_PUTSL( 0 );
       DUF_PRINTF( 0, "args:            (%s)", sargv1 );
       DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 );
-      DUF_PRINTF( 0, "configire        (%s)", MAS_CONFIG_ARGS );
-      DUF_PRINTF( 0, "UUID             %s", MAS_UUID );
+
+      DUF_PUTSL( 0 );
+      DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_config->config_path );
       DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.bit ), duf_config->cli.v.bit );
       DUF_PRINTF( 0, "u.        [%2lu]   %x", sizeof( duf_config->u.v.bit ), duf_config->u.v.bit );
-      DUF_PRINTF( 0, "cli.act.  [%2lu]   %x", sizeof( duf_config->cli.act.v.bit ), duf_config->cli.act.v.bit );
       {
         unsigned u = duf_config->cli.act.v.bit;
 
-        DUF_PRINTF( 0, ".cli.act.  [%2lu]   ", sizeof( duf_config->cli.act.v.bit ) );
-        while ( u )
+        DUF_PRINTF( 0, "cli.act   [%2lu->%2lu]   %8lx :: ", sizeof( duf_config->cli.act.v ), sizeof( typeof( u ) ),
+                    ( unsigned long ) duf_config->cli.act.v.bit );
+
+        typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
+
+        DUF_PRINTF( 0, ".> > > " );
+        for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
         {
-          DUF_PRINTF( 0, ".%u", u & 0x80000000 ? 1 : 0 );
+          DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
           u <<= 1;
         }
         DUF_PUTSL( 0 );
       }
-      DUF_PRINTF( 0, "prefix    [%2lu]   %s", sizeof( MAS_CONFIG_PREFIX ), MAS_CONFIG_PREFIX );
-      DUF_PRINTF( 0, "O.        [%2lu]  %s", sizeof( MAS_OSVER ), MAS_OSVER );
-      DUF_PRINTF( 0, "U.        [%2lu]   %s", sizeof( MAS_UNAME ), MAS_UNAME );
-      DUF_PRINTF( 0, "V.        [%2lu]   %s", sizeof( PACKAGE_STRING ), PACKAGE_STRING );
-      DUF_PRINTF( 0, "d.        [%2lu]   %s", sizeof( MAS_C_DATE ), MAS_C_DATE );
-      DUF_PRINTF( 0, "Link d.   [%lu+%lu]  %lx.%lx", sizeof( ( unsigned long ) & __MAS_LINK_DATE__ ),
-                  sizeof( ( unsigned long ) & __MAS_LINK_TIME__ ), ( unsigned long ) &__MAS_LINK_DATE__,
-                  ( unsigned long ) &__MAS_LINK_TIME__ );
-#ifdef MAS_SPLIT_DB
-      DUF_PRINTF( 0, "MAS_SPLIT_DB" );
-#endif
+      /* *INDENT-OFF*  */
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --info" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --vacuum" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --remove_database" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --drop_tables" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --create_tables" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --add_path" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --update_duplicates" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --print" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --tree" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --sd5" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --md5" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --crc32" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ └─ --mime" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ └─ --exif" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ └─ --mdpath" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ └─ --dirs" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ └─ --files" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ └─ --dirent" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ └─ --filedata" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ └─ --filenames" );
+      DUF_PRINTF( 0, "                    │ │ │ │ └─ --integrity" );
+      DUF_PRINTF( 0, "                    │ │ │ └─ --collect" );
+      DUF_PRINTF( 0, "                    │ │ └─ --uni-scan" );
+      DUF_PRINTF( 0, "                    │ └─ --progress" );
+      DUF_PRINTF( 0, "                    └─ --summary" );
+      /* *INDENT-ON*  */
+      DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
       mas_free( sargv2 );
       mas_free( sargv1 );
+      r = 0;
     }
     break;
   case DUF_OPTION_HELP:
@@ -123,7 +222,7 @@ duf_test_help( int argc, char **argv, int opt )
     DUF_PRINTF( 0, "  --trace-path=%d", duf_config->cli.trace.path );
     DUF_PRINTF( 0, "  -F, --trace-collect=%d", duf_config->cli.trace.collect );
     DUF_PRINTF( 0, "----------------" );
-    r = 1;
+    r = 0;
     break;
   case DUF_OPTION_EXAMPLES:
     DUF_PRINTF( 0, "Examples" );
@@ -244,9 +343,25 @@ duf_test_help( int argc, char **argv, int opt )
     DUF_PRINTF( 0, "  run   -RidDnE  /mnt/new_media/media/photo		- %s", "" );
     DUF_PRINTF( 0, "========================= as for 20140718 ===================" );
     DUF_PRINTF( 0, "  run   -OPRidDnf5E  /mnt/new_media/media/photo		- %s", "" );
+
+
+    DUF_PRINTF( 0, "========================= as for 20140818 ===================" );
+    DUF_PRINTF( 0, "  run   --help-short 		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help       		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-help   		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-system 		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-refer		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-collect		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-scan   		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-update 		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-request		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-print  		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-nodesc 		- %s", "" );
+    DUF_PRINTF( 0, "  run   --help-examples		- %s", "" );
+
     DUF_PRINTF( 0, "=============================================================" );
 
-    r = 1;
+    r = 0;
     break;
   }
   return r;
@@ -274,19 +389,22 @@ duf_main( int argc, char **argv )
     int er = 0, fr = 0, or = 0;
 
     DUF_TRACE( any, 1, "any test" );
+
     if ( r >= 0 )
       er = r = duf_env_options( argc, argv );
     DUF_TRACE( explain, 0, "got env options; r:%d (%c)", r, r > ' ' && r < 'z' ? r : '-' );
+
     if ( r >= 0 )
       fr = r = duf_infile_options( argc, argv );
     DUF_TRACE( explain, 0, "got infile options; r:%d (%c)", r, r > ' ' && r < 'z' ? r : '-' );
+
     /* duf_config->cli.dbg.verbose = 4; */
+
     if ( r >= 0 )
       or = r = duf_cli_options( argc, argv );
-
     DUF_TRACE( explain, 0, "got cli options; r:%d (%c)", r, r > ' ' && r < 'z' ? r : '-' );
 
-    if ( r >= 0 )
+    if ( r >= 0 && duf_config->cli.trace.options )
       r = duf_show_options( argv[0] );
     /* {                                 */
     /*   char c;                         */
@@ -302,9 +420,9 @@ duf_main( int argc, char **argv )
       if ( &dbgfunc_enabled )
          /**/ dbgfunc_enabled = 1;
     }
-    DUF_TEST_R( r );
-    DUF_TRACE( explain, 0, "or: %d; fr: %d; er: %d", or, fr, er );
-    if ( !duf_test_help( argc, argv, or ) && !duf_test_help( argc, argv, fr ) && !duf_test_help( argc, argv, er ) )
+    DUF_TEST_RN( r );
+    DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
+    if ( duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
     {
       if ( r == 0 && duf_config && duf_config->db.dir )
       {
@@ -312,10 +430,20 @@ duf_main( int argc, char **argv )
         r = main_db( argc, argv );
         DUF_TEST_R( r );
       }
+      else if ( r > 0 )
+      {
+        DUF_TRACE( explain, 1, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
+        /* r=0; */
+      }
       DUF_PUTS( 0, "--------------------------------------------------" );
       DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
       DUF_PUTS( 0, "--------------------------------------------------" );
     }
+    else
+    {
+      r = 0;
+    }
+    DUF_TEST_R( r );
     duf_config_delete(  );
   }
   else
@@ -330,11 +458,11 @@ duf_main( int argc, char **argv )
 
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      DUF_TRACE( explain, 1, "no %s option", duf_option_cnames( DUF_OPTION_MEMUSAGE ) );
+      DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_MEMUSAGE ) );
     }
     else
     {
-      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames( DUF_OPTION_MEMUSAGE ) );
+      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_MEMUSAGE ) );
     }
   }
 

@@ -7,6 +7,8 @@
 
 typedef struct
 {
+  unsigned info:1;
+  unsigned vacuum:1;
   unsigned remove_database:1;
   unsigned drop_tables:1;
   unsigned create_tables:1;
@@ -14,10 +16,18 @@ typedef struct
   /* unsigned update_path:1; */
   /* unsigned update_md5:1; */
   unsigned update_duplicates:1;
+  unsigned print:1;
+  unsigned tree:1;
+
+  unsigned sd5:1;
+  unsigned md5:1;
+  unsigned crc32:1;
+  unsigned mime:1;
+  unsigned exif:1;
+
   /* unsigned update_mdpath:1; */
   /* unsigned update_mdpath_selective:1; */
   unsigned mdpath:1;
-  unsigned vacuum:1;
 
   unsigned dirs:1;
   unsigned files:1;
@@ -25,20 +35,11 @@ typedef struct
   unsigned dirent:1;
   unsigned filedata:1;
   unsigned filenames:1;
-  unsigned sd5:1;
-  unsigned md5:1;
-  unsigned crc32:1;
-  unsigned mime:1;
-  unsigned exif:1;
 
   unsigned integrity:1;
   unsigned collect:1;
 
-  unsigned print:1;
-  unsigned tree:1;
-
   unsigned uni_scan:1;
-  unsigned info:1;
   /* unsigned print_paths:1; */
   /* unsigned print_dirs:1; */
   /* unsigned print_files:1; */
@@ -107,6 +108,7 @@ typedef struct
   unsigned sampupd;
   unsigned scan;
   unsigned seq;
+  unsigned options;
   unsigned sql;
   unsigned select;
   unsigned insert;

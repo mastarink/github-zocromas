@@ -36,7 +36,7 @@
 
 
 const char *
-duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
+_duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 {
   const char *stitle;
 
@@ -53,5 +53,16 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
   {
     stitle = "";
   }
+  DEBUG_ENDS( stitle );
+
   return stitle;
+}
+
+const char *
+duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
+{
+  static char tbuf[1024];
+
+  snprintf( tbuf, sizeof( tbuf ), "◁ %s ▷", _duf_uni_scan_action_title( sccb ) );
+  return tbuf;
 }

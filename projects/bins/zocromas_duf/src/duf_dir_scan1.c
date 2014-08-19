@@ -51,7 +51,7 @@ duf_str_cb_scan_file_fd( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struc
   int r = 0;
 
   DUF_UFIELD( filesize );
-  DUF_TRACE( scan, 0, "+" );
+  DUF_TRACE( scan, 10, "+" );
   if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
   {
     pdi->items.total++;
@@ -60,7 +60,7 @@ duf_str_cb_scan_file_fd( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struc
       r = sccb->leaf_scan_fd( duf_levinfo_dfd( pdi ), duf_levinfo_stat( pdi ), pdi, precord );
 
     DUF_TEST_R( r );
-    DUF_TRACE( scan, 4, "r:%d; sccb->leaf_scan_fd:%s", r, DUF_FUNN( sccb->leaf_scan_fd ) );
+    DUF_TRACE( scan, 14, "r:%d; sccb->leaf_scan_fd:%s", r, DUF_FUNN( sccb->leaf_scan_fd ) );
 
     /* DUF_TRACE( action, 0, "r=%d", r ); */
   }
@@ -79,7 +79,7 @@ duf_str_cb_leaf_scan( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct d
   int r = 0;
 
   DUF_UFIELD( filesize );
-  DUF_TRACE( scan, 0, "+" );
+  DUF_TRACE( scan, 10, "+" );
   if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
   {
     pdi->items.total++;
@@ -89,7 +89,7 @@ duf_str_cb_leaf_scan( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct d
       r = sccb->leaf_scan( pdi, precord );
 
     DUF_TEST_R( r );
-    DUF_TRACE( scan, 3, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
+    DUF_TRACE( scan, 13, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan ) );
   }
   DUF_TEST_R( r );
   return r;
@@ -124,7 +124,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
 
   DEBUG_START(  );
   dirid = duf_levinfo_dirid( pdi );
-  DUF_TRACE( scan, 0, "by pi" );
+  DUF_TRACE( scan, 10, "by pi" );
 
   if ( r >= 0 && ( sccb->dirent_dir_scan_before || sccb->dirent_file_scan_before ) )
     r = duf_scan_dirents_by_pathid_and_record( pdi, precord, sccb->dirent_file_scan_before, sccb->dirent_dir_scan_before );
@@ -135,7 +135,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
     pdi->items.dirs++;
 
     DUF_OINV_OPENED( pdi-> );
-    DUF_TRACE( scan, 0, "scan node before by %5llu", dirid );
+    DUF_TRACE( scan, 10, "scan node before by %5llu", dirid );
     if ( sccb->node_scan_before )
       r = sccb->node_scan_before( dirid, pdi, precord );
     DUF_TEST_R( r );
@@ -159,7 +159,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       if ( r >= 0 && sccb->leaf_scan_fd )
       {
         DUF_OINV_OPENED( pdi-> );
-        DUF_TRACE( scan, 1, "  " DUF_DEPTH_PFMT ": scan leaves fd   by %5llu", duf_pdi_depth( pdi ), dirid );
+        DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves fd   by %5llu", duf_pdi_depth( pdi ), dirid );
 
         /* duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd */
         r = duf_scan_files_by_dirid( dirid, duf_str_cb_scan_file_fd, pdi, sccb );
@@ -170,7 +170,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       if ( r >= 0 && sccb->leaf_scan )
       {
         DUF_OINV_OPENED( pdi-> );
-        DUF_TRACE( scan, 1, "  " DUF_DEPTH_PFMT ": scan leaves ..   by %5llu", duf_pdi_depth( pdi ), dirid );
+        DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves ..   by %5llu", duf_pdi_depth( pdi ), dirid );
 /* duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan */
         r = duf_scan_files_by_dirid( dirid, duf_str_cb_leaf_scan, pdi, sccb );
 
@@ -192,7 +192,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       DUF_OINV( pdi-> );
       DUF_OINV_OPENED( pdi-> );
 
-      DUF_TRACE( scan, 0, "  " DUF_DEPTH_PFMT ": scan node selector: [%s]", duf_pdi_depth( pdi ), sccb->node_selector );
+      DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node selector: [%s]", duf_pdi_depth( pdi ), sccb->node_selector );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->node_selector */
       r = duf_scan_db_items( DUF_NODE_NODE, str_cb, pdi, sccb, sccb->node_selector,
@@ -268,9 +268,9 @@ duf_scan_dirs_by_parentid( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_
 
 
   dirid = duf_levinfo_dirid( pdi );
-  DUF_TRACE( scan, 0, "by_parentid" );
-  DUF_TRACE( scan, 3, "by parentid %5llu : %llu : %llu : %llu", dirid, nfiles, minsize, maxsize );
-  DUF_TRACE( scan, 0, "  " DUF_DEPTH_PFMT ": scan start       by %5llu", duf_pdi_depth( pdi ), dirid );
+  DUF_TRACE( scan, 10, "by_parentid" );
+  DUF_TRACE( scan, 13, "by parentid %5llu : %llu : %llu : %llu", dirid, nfiles, minsize, maxsize );
+  DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan start       by %5llu", duf_pdi_depth( pdi ), dirid );
 
   if (  /* !nfiles || */ !dirid
        || ( ( ( nfiles >= duf_config->u.dirfiles.min ) && ( !duf_config->u.dirfiles.max || nfiles < duf_config->u.dirfiles.max ) )
@@ -279,18 +279,18 @@ duf_scan_dirs_by_parentid( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_
         ) )
   {
     DUF_OINV_OPENED( pdi-> );
-    DUF_TRACE( scan, 3, "scan by %5llu", dirid );
+    DUF_TRACE( scan, 13, "scan by %5llu", dirid );
     r = duf_scan_dir_by_pi( str_cb, pdi, sccb, precord );
     DUF_OINV_OPENED( pdi-> );
     DUF_TEST_R( r );
   }
   else
   {
-    DUF_TRACE( scan, 0, "off; by %5llu", dirid );
+    DUF_TRACE( scan, 10, "off; by %5llu", dirid );
   }
   DUF_TEST_R( r );
   DUF_OINV( pdi-> );
   DUF_OINV_OPENED( pdi-> );
-  DUF_TRACE( scan, 0, "  " DUF_DEPTH_PFMT ": scan end         by %5llu", duf_pdi_depth( pdi ), dirid );
+  DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan end         by %5llu", duf_pdi_depth( pdi ), dirid );
   return r;
 }

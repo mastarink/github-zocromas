@@ -53,6 +53,7 @@ duf_cli_options( int argc, char *argv[] )
         const duf_longval_extended_t *extended = duf_find_longval_extended( opt );
 
         r = duf_parse_option( opt, optarg, longindex, extended );
+        DUF_TRACE( explain, 2, "parse options r: %d", r );
         if ( r == DUF_ERROR_OPTION )
         {
           DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], opt, opt );
@@ -70,6 +71,7 @@ duf_cli_options( int argc, char *argv[] )
       duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, argc, argv, optind );
     }
   }
+  DUF_TRACE( explain, 2, "cli options r: %d", r );
 #if 0
   /* Don't use it before all options processed */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
@@ -79,6 +81,3 @@ duf_cli_options( int argc, char *argv[] )
 
   /* if ( code==DUF_OPTION_ ## up  ) \                                                                                                          */
   /*   printf("[%d : %c] %s %d :: %d\n", code, code>' ' && code <= 'z' ? code : '-', #up, duf_config->pref.lo, duf_config->cli.trace.sample); \ */
-
-
-

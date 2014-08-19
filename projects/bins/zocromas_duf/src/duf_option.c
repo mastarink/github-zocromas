@@ -174,6 +174,21 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
   {
   case DUF_OPTION_HELP:
   case DUF_OPTION_SMART_HELP:
+
+  case DUF_OPTION_HELP_HELP:
+  case DUF_OPTION_HELP_ALL:
+  case DUF_OPTION_HELP_SYSTEM:
+  case DUF_OPTION_HELP_CONTROL:
+  case DUF_OPTION_HELP_REFERENCE:
+  case DUF_OPTION_HELP_COLLECT:
+  case DUF_OPTION_HELP_SCAN:
+  case DUF_OPTION_HELP_UPDATE:
+  case DUF_OPTION_HELP_REQUEST:
+  case DUF_OPTION_HELP_PRINT:
+  case DUF_OPTION_HELP_TRACE:
+  case DUF_OPTION_HELP_DEBUG:
+  case DUF_OPTION_HELP_NODESC:
+
   case DUF_OPTION_EXAMPLES:
   case DUF_OPTION_VERSION:
     if ( optarg )
@@ -284,6 +299,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_TRACE( EXPLAIN, /*           */ explain );
 
     DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, /*              */ seq );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( OPTIONS, /*          */ options );
     DUF_OPTION_CASE_ACQUIRE_TRACE( CALLS, /*            */ calls );
     DUF_OPTION_CASE_ACQUIRE_TRACE( ANY, /*              */ any );
     DUF_OPTION_CASE_ACQUIRE_TRACE( CURRENT, /*          */ current );
@@ -414,6 +430,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       /*       duf_config->cli.format.uid = (* *)      */
       /*       duf_config->cli.format.gid = (* *)      */
       /*       duf_config->cli.format.prefix = (* *)   */
+      /*       duf_config->cli.format.suffix = (* *)   */
       /*       duf_config->cli.format.filesize = (* *) */
       /*       duf_config->cli.format.mtime = (* *)    */
       /*       duf_config->cli.format.filename = (* *) */
@@ -444,6 +461,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
         [DUF_FORMAT_NSAME] = "nsame",
         [DUF_FORMAT_OFFSET] = "offset",
         [DUF_FORMAT_PREFIX] = "prefix",
+        [DUF_FORMAT_SUFFIX] = "suffix",
         [DUF_FORMAT_REALPATH] = "realpath",
         [DUF_FORMAT_SEQ] = "seq",
         [DUF_FORMAT_TRUEPATH] = "truepath",
@@ -470,6 +488,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
           break;
         case DUF_FORMAT_PREFIX:
           duf_config->cli.format.prefix = value == NULL ? 1 : nvalue;
+          break;
+        case DUF_FORMAT_SUFFIX:
+          duf_config->cli.format.suffix = value == NULL ? 1 : nvalue;
           break;
         case DUF_FORMAT_DIRID:
           duf_config->cli.format.dirid = value == NULL ? 1 : nvalue;
@@ -576,11 +597,12 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     r = DUF_ERROR_OPTION;
     break;
   }
+  /* DUF_TRACE( explain, 0, "parse option opt:%d r: %d", opt, r ); */
   if ( r )
   {
     char *ona = NULL;
 
-    ona = duf_option_description( r );
+    ona = duf_option_description( r, NULL );
     /* DUF_ERROR( "returns: %d = ( %s )", r, ona ); */
     mas_free( ona );
   }

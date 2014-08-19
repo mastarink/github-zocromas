@@ -93,7 +93,7 @@ duf_dbg_funname( duf_anyhook_t p )
 }
 
 int
-duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t * format, duf_pdi_cb_t prefix_cb )
+duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t * format, duf_pdi_cb_t prefix_cb, duf_pdi_cb_t suffix_cb )
 {
   int ok = 0;
 
@@ -121,12 +121,28 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
     if ( prefix_cb )
       ( prefix_cb ) ( pdi );
     else
-      DUF_PRINTF( 0, ".=-= " );
+      DUF_PRINTF( 0, ".= __________________________________________________ = " );
     ok++;
   }
   else
   {
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{noprefix}" ) );
+    /* DUF_PRINTF( 0, ".      " ); */
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
+  if ( duf_config->cli.format.suffix && ( !format || format->suffix ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{suffix}" ) );
+    if ( suffix_cb )
+      ( suffix_cb ) ( pdi );
+    else
+      DUF_PRINTF( 0, ".=%%%%%%%%%%%%%%%%%%%%%%%%= " );
+    ok++;
+  }
+  else
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nosuffix}" ) );
     /* DUF_PRINTF( 0, ".      " ); */
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );

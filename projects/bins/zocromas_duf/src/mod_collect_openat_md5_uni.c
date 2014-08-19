@@ -199,7 +199,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 /*       DUF_TEST_R( r );                                                                                                            */
 /*     }                                                                                                                             */
 /*     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );                                                   */
-/*     DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
+/*     DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
 /*   }                                                                                                                               */
 /*   return r;                                                                                                                       */
 /* }                                                                                                                                 */
@@ -239,7 +239,7 @@ duf_scan_dirent_md5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct st
       DUF_TEST_R( r );
     }
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
-    DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id );
+    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
   return r;
 }

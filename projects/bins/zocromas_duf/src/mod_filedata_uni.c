@@ -276,7 +276,7 @@ filedata_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned l
 {
   int r = 0;
 
-  DUF_TRACE( scan, 0, "scan entry dir by %s", fname );
+  /* DUF_TRACE( scan, 10, "scan entry dir by %s", fname ); */
   DUF_TEST_R( r );
   return r;
 }
@@ -287,7 +287,7 @@ filedata_scan_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const st
 {
   int r = 0;
 
-  DUF_TRACE( scan, 0, "scan entry dir2 by %s", fname );
+  /* DUF_TRACE( scan, 10, "scan entry dir2 by %s", fname ); */
   DUF_TEST_R( r );
   return r;
 }

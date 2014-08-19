@@ -175,7 +175,7 @@ duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct 
       DUF_TEST_R( r );
     }
     DUF_TRACE( crc32, 0, "%04lx : crc32id: %llu", crc32sum, crc32id );
-    DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id );
+    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   return r;
 }

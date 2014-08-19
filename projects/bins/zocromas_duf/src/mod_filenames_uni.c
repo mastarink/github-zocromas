@@ -96,20 +96,20 @@ filenames_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct
   int r = 0;
 
   DEBUG_START(  );
-  DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
+  /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
 
   if ( pst_file /* && !duf_config->cli.disable.insert */  )
     /* && pst_file->st_size >= pdi->u.size .min&& ( !pdi->u.size .max|| pst_file->st_size < pdi->u.size .max) */
   {
     DUF_UNUSED unsigned long long dataid = 0;
 
-    DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
+    /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
     dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
-    DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
+    /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
     r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );
-    DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
+    /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
   }
-  DUF_TRACE( scan, 1, "scan entry reg2 by %s", fname );
+  /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
   DEBUG_ENDR( r );
   return r;
 }

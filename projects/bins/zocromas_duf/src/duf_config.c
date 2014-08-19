@@ -21,6 +21,26 @@
 duf_config_t *duf_config = NULL;
 
 
+duf_tmp_t *
+duf_tmp_create( void )
+{
+  duf_tmp_t *tmp = NULL;
+
+  tmp = mas_malloc( sizeof( duf_tmp_t ) );
+  memset( tmp, 0, sizeof( duf_tmp_t ) );
+  return tmp;
+}
+
+void
+duf_tmp_delete( duf_tmp_t * tmp )
+{
+  mas_free( tmp->path );
+  tmp->path = NULL;
+  mas_free( tmp->option_explanation );
+  tmp->option_explanation = NULL;
+  mas_free( tmp );
+}
+
 int
 duf_config_create( void )
 {
@@ -28,7 +48,6 @@ duf_config_create( void )
   duf_config = mas_malloc( sizeof( duf_config_t ) );
   memset( duf_config, 0, sizeof( duf_config ) );
   duf_config->u.maxreldepth = 100;
-
   if ( 0 )
   {
     duf_config->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
@@ -49,6 +68,7 @@ duf_config_create( void )
   duf_config->db.adm.name = mas_strdup( "duf-adm.db" );
   duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
   /* duf_config->cli.trace.fs = 1; */
+  duf_config->tmp = duf_tmp_create(  );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
@@ -56,8 +76,11 @@ duf_config_create( void )
 int
 duf_config_delete( void )
 {
-  mas_free( duf_config->option_explanation );
-  duf_config->option_explanation = NULL;
+  duf_tmp_delete( duf_config->tmp );
+  duf_config->tmp = NULL;
+
+  mas_free( duf_config->config_path );
+  duf_config->config_path = NULL;
 
   mas_free( duf_config->db.dir );
   duf_config->db.dir = NULL;
@@ -73,7 +96,7 @@ duf_config_delete( void )
   duf_config->db.adm.name = NULL;
   mas_free( duf_config->db.adm.fpath );
   duf_config->db.adm.fpath = NULL;
-  
+
   /* mas_free( duf_config->group ); */
   /* duf_config->group = NULL;      */
 

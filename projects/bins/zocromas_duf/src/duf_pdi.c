@@ -117,6 +117,11 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   /* DUF_PRINTF( 0, "%llu ? %llu : %d", pdi->seq, pdi->u.maxseq, rv ); */
   return rv;
 }
+int
+duf_pdi_seq( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->seq : 0;
+}
 
 int
 duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d )

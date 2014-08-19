@@ -1,7 +1,7 @@
 #ifndef DUF_PDI_H
 #  define DUF_PDI_H
 
-#include "duf_levinfo_types.h"
+#  include "duf_levinfo_types.h"
 
 int duf_pdi_init( duf_depthinfo_t * pdi, const char *path );
 int duf_pdi_close( duf_depthinfo_t * pdi );
@@ -16,6 +16,9 @@ void duf_pdi_set_context_destructor( duf_depthinfo_t * pdi, duf_void_voidp_t des
 void *duf_pdi_context( duf_depthinfo_t * pdi );
 
 int duf_pdi_max_filter( const duf_depthinfo_t * pdi );
+
+int duf_pdi_seq( const duf_depthinfo_t * pdi );
+
 int duf_pdi_depth( const duf_depthinfo_t * pdi );
 
 void duf_pdi_set_topdepth( duf_depthinfo_t * pdi );

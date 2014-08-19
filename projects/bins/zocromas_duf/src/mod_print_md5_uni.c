@@ -60,7 +60,7 @@ scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle
    *                   ^^^^^^^        ^^^^^^^
    * */
 
-  DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+  /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) ); */
 
 
   DUF_PRINTF( 0, "%6llu:%6llu:%6llu [%10llu] file: %s", pdi->seq, pdi->items.files, pdi->items.total, filesize, filename );
@@ -88,7 +88,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
    *                   ^^^^^^^        ^^^^^^^
    * */
 
-  DUF_TRACE( scan, 2, "  " DUF_DEPTH_PFMT ": scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+  /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5       =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) ); */
 
   {
 
@@ -124,6 +124,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
         .mtime = 1,
         .nsame = 0,
         .prefix = 0,
+	.suffix = 0,
       };
       /* fi.nsame = nsame; */
       fi.st.st_mode = ( mode_t ) filemode;
@@ -139,7 +140,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       /* fi.md5id = md5id; */
       /* fi.md5sum1 = md5sum1; */
       /* fi.md5sum2 = md5sum2; */
-      duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL );
+      duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
       DUF_PUTSL( 0 );
     }
     /* DUF_PRINTF( 0, "%6llu:%6llu:%6llu %s%s", pdi->seq, pdi->items.files, pdi->items.total, true_path, filename ); */
@@ -207,6 +208,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
       .mtime = 1,
       .nsame = 1,
       .prefix = 1,
+      .suffix = 0,
     };
     fi.nsame = nsame;
     /* fi.st.st_mode = ( mode_t ) filemode; */
@@ -221,7 +223,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
     fi.md5id = md5id;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
-    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL );
+    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
     DUF_PUTS( 0, " >--------------------------" );
 
 

@@ -129,7 +129,7 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
 
     pstmt = NULL;
     DUF_TEST_R( rf );
-    DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" );
+    DUF_TRACE( action, 4, "FINALIZE %s;", rf < 0 ? "FAIL" : "" );
 
     if ( r >= 0 || r == DUF_SQL_DONE )
       r = rf;
@@ -138,6 +138,14 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
   if ( pr )
     *pr = r;
   return path;
+}
+
+const char *
+duf_pathid_to_path2_tmp( unsigned long long dirid, const duf_depthinfo_t * pdi )
+{
+  mas_free( duf_config->tmp->path );
+  duf_config->tmp->path = duf_pathid_to_path2( dirid, pdi, NULL );
+  return duf_config->tmp->path;
 }
 
 /* insert path into db; return id */

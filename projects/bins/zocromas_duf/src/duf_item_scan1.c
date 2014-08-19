@@ -192,7 +192,7 @@ duf_sel_cb_node( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
-          DUF_TRACE( scan, 1, "  " DUF_DEPTH_PFMT ": str_cb node:     by %5llu", duf_pdi_depth( pdi ), dirid );
+          DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": str_cb node:     by %5llu", duf_pdi_depth( pdi ), dirid );
 
           if ( r >= 0 )
             r = ( str_cb ) ( str_cb_udata, pdi, sccb, precord );
@@ -262,7 +262,7 @@ duf_scan_db_vitems( duf_node_type_t node_type, duf_str_cb_t str_cb, duf_depthinf
       r = DUF_ERROR_UNKNOWN_NODE;
     DUF_OINV_OPENED( pdi-> );
     DUF_OINV( pdi-> );
-    DUF_TRACE( scan, 3, "scan items [%s] sel_cb%c; str_cb%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb ? '+' : '-',
+    DUF_TRACE( scan, 13, "scan items [%s] sel_cb%c; str_cb%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb ? '+' : '-',
                str_cb ? '+' : '-' );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
@@ -271,7 +271,7 @@ duf_scan_db_vitems( duf_node_type_t node_type, duf_str_cb_t str_cb, duf_depthinf
 
 
 
-    DUF_TRACE( scan, 3, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
+    DUF_TRACE( scan, 13, "(%d) end scan items str_cb%c", r, str_cb ? '+' : '-' );
     DUF_OINV( pdi-> );
 
     /* DUF_ERROR( "r:%d; sel_cb:%s", r, DUF_FUNN( sel_cb ) ); */

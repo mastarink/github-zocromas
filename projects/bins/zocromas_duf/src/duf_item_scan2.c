@@ -83,7 +83,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
 
-  DUF_TRACE( scan, 0, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( pdi ) );
+  DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( pdi ) );
   DUF_TRACE( explain, 0, "@ sel cb2 leaf" );
 
   /* if ( duf_filename_match(  &duf_config->u.glob, filename ) && duf_filesize_match( duf_config, filesize ) ) */
@@ -187,7 +187,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
 
   /* Not here : assert( dirid == duf_levinfo_dirid( pdi ) );
    * */
-  DUF_TRACE( scan, 0, "before duf_levinfo_down() : dirid:%llu", dirid );
+  DUF_TRACE( scan, 10, "before duf_levinfo_down() : dirid:%llu", dirid );
   DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
   r = duf_levinfo_down( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  );
@@ -221,11 +221,11 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
         {
           DUF_OINV_OPENED( pdi-> );
           DUF_TEST_R( r );
-          DUF_TRACE( scan, 1, "  " DUF_DEPTH_PFMT ": str_cb2 node:     by %5llu", duf_pdi_depth( pdi ), dirid );
+          DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": str_cb2 node:     by %5llu", duf_pdi_depth( pdi ), dirid );
 
           if ( r >= 0 )
           {
-            DUF_TRACE( scan, 0, "before ... as (str_cb2)" );
+            DUF_TRACE( scan, 10, "before ... as (str_cb2)" );
             DUF_TRACE( explain, 0, "=> str cb2" );
             r = ( str_cb2 ) ( pstmt, pdi, sccb );
           }
@@ -297,7 +297,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
     r = DUF_ERROR_UNKNOWN_NODE;
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
-  DUF_TRACE( scan, 0, "scan items [%s] sel_cb2%c; str_cb2%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-',
+  DUF_TRACE( scan, 10, "scan items [%s] sel_cb2%c; str_cb2%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-',
              str_cb2 ? '+' : '-' );
   DUF_TEST_R( r );
 
@@ -346,8 +346,8 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
         DUF_TRACE( select, 0, "S:%s", csql );
         DUF_TEST_R( r );
 
-        DUF_TRACE( scan, 4, "sql:%s", csql );
-        DUF_TRACE( scan, 0, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
+        DUF_TRACE( scan, 14, "sql:%s", csql );
+        DUF_TRACE( scan, 10, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
         DUF_TEST_R( r );
         {
           /* if ( r >= 0 )                                           */
@@ -395,16 +395,16 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
             {
               /* r = duf_sql_step( pstmt ); */
               DUF_SQL_STEP( r, pstmt );
-              DUF_TRACE( scan, 0, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
+              DUF_TRACE( scan, 10, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
               DUF_TEST_RR( r );
-              DUF_TRACE( scan, 2, "#%d sql_step : r:%d; %s", cnt, r,
+              DUF_TRACE( scan, 12, "#%d sql_step : r:%d; %s", cnt, r,
                          r == DUF_SQL_ROW ? "_ROW" : ( r == DUF_SQL_DONE ? "_DONE" : "_____" ) );
 
               if ( r == DUF_SQL_ROW )
               {
                 if ( !match_cb2 || ( match_cb2 ) ( pstmt ) )
                 {
-                  DUF_TRACE( scan, 0, "before duf_sel_cb2_%s(...) as (sel_cb2) : (selector2) dirid:%llu",
+                  DUF_TRACE( scan, 10, "before duf_sel_cb2_%s(...) as (sel_cb2) : (selector2) dirid:%llu",
                              node_type == DUF_NODE_LEAF ? "leaf" : "node", dirid );
                   /* sel_cb can be duf_sel_cb2_(node|leaf) */
                   DUF_TRACE( explain, ( node_type == DUF_NODE_LEAF ? 0 : 2 ), "=> sel_cb2 ≪%s≫",
@@ -428,7 +428,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
               DUF_TRACE( explain, 0, "no records found of type ≪%s≫ ; action ≪%s≫; dirid:%llu",
                          node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_uni_scan_action_title( sccb ), dirid );
             }
-            DUF_TRACE( scan, 0, "had %d records by %s", cnt, csql );
+            DUF_TRACE( scan, 10, "had %d records by %s", cnt, csql );
             DUF_TEST_RR( r );
             DUF_SQL_END_STMT_NOPDI( r, pstmt );
             /* {                                                                     */
@@ -458,7 +458,7 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
     DUF_TRACE( explain, 0, "= ? ============ NO selector2 ≪%s≫", node_type == DUF_NODE_LEAF ? "leaf" : "node" );
     r = DUF_ERROR_PTR;
   }
-  DUF_TRACE( scan, 3, "(%d) end scan items str_cb2%c", r, str_cb2 ? '+' : '-' );
+  DUF_TRACE( scan, 13, "(%d) end scan items str_cb2%c", r, str_cb2 ? '+' : '-' );
   DUF_OINV( pdi-> );
 
   /* DUF_ERROR( "r:%d; sel_cb2:%s", r, DUF_FUNN( sel_cb2 ) ); */
@@ -521,7 +521,7 @@ duf_count_db_vitems2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi,
       DUF_TEST_R( r );
       DUF_TRACE( select, 0, "S:%s", csql );
 
-      DUF_TRACE( scan, 2, "sql:%s dirid:%llu", csql, dirid );
+      DUF_TRACE( scan, 12, "sql:%s dirid:%llu", csql, dirid );
       DUF_TEST_R( r );
       {
         /* if ( r >= 0 )                                           */

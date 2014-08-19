@@ -63,6 +63,13 @@
 #  define DUF_TRACE_C( cfg, name, ... )			DUF_TRACE_WHAT_C( cfg,		  cli.trace, name, __VA_ARGS__ )
 #  define DUF_TRACE( name, ... )			DUF_TRACE_C(	  duf_config,		     name, __VA_ARGS__ )
 
+#if defined(__GNUC__)
+#  define DUF_SCCB( macr, name, min, fmt, ... )			macr( name, min, "%" DUF_ACTION_TITLE_FMT "; "  fmt, \
+    			duf_uni_scan_action_title( sccb ),  ##__VA_ARGS__ )
+#  define DUF_SCCB_PDI( macr, name, min, pdi, fmt, ... )	macr( name, min, "%" DUF_ACTION_TITLE_FMT "; seq:%u "  fmt, \
+    			duf_uni_scan_action_title( sccb ), duf_pdi_seq(pdi),  ##__VA_ARGS__ )
+#endif
+
 /* ###################################################################### */
 
 #  define DUF_TRACE_WHATSYSE_C( cfg, ern, what, name, min, ... ) \

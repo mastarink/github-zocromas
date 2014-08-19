@@ -7,9 +7,23 @@
 /* man getopt_long */
 const duf_option_t duf_longopts_table[] = {
 /* const struct option longopts[] = { */
-  {.name = "help",.has_arg = optional_argument,.val = DUF_OPTION_SMART_HELP},
   {.name = "version",.has_arg = no_argument,.val = DUF_OPTION_VERSION},
   {.name = "help-short",.has_arg = no_argument,.val = DUF_OPTION_HELP},
+  {.name = "help",.has_arg = optional_argument,.val = DUF_OPTION_SMART_HELP},
+  {.name = "help-help",.has_arg = no_argument,.val = DUF_OPTION_HELP_HELP},
+  {.name = "help-all",.has_arg = no_argument,.val = DUF_OPTION_HELP_ALL},
+  {.name = "help-system",.has_arg = no_argument,.val = DUF_OPTION_HELP_SYSTEM},
+  {.name = "help-control",.has_arg = no_argument,.val = DUF_OPTION_HELP_CONTROL},
+  {.name = "help-reference",.has_arg = no_argument,.val = DUF_OPTION_HELP_REFERENCE},
+  {.name = "help-collect",.has_arg = no_argument,.val = DUF_OPTION_HELP_COLLECT},
+  {.name = "help-scan",.has_arg = no_argument,.val = DUF_OPTION_HELP_SCAN},
+  {.name = "help-update",.has_arg = no_argument,.val = DUF_OPTION_HELP_UPDATE},
+  {.name = "help-request",.has_arg = no_argument,.val = DUF_OPTION_HELP_REQUEST},
+  {.name = "help-print",.has_arg = no_argument,.val = DUF_OPTION_HELP_PRINT},
+  {.name = "help-trace",.has_arg = no_argument,.val = DUF_OPTION_HELP_TRACE},
+  {.name = "help-debug",.has_arg = no_argument,.val = DUF_OPTION_HELP_DEBUG},
+  {.name = "help-nodesc",.has_arg = no_argument,.val = DUF_OPTION_HELP_NODESC},
+  
   {.name = "help-examples",.has_arg = no_argument,.val = DUF_OPTION_EXAMPLES},
   {.name = "test-option",.has_arg = required_argument /*| optional_argument */ ,.val = DUF_OPTION_TEST},
   {.name = "format",.has_arg = required_argument,.val = DUF_OPTION_FORMAT},
@@ -35,6 +49,7 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "trace-action",.has_arg = optional_argument,.val = DUF_OPTION_ACTION_TRACE},
   {.name = "trace-any",.has_arg = optional_argument,.val = DUF_OPTION_ANY_TRACE},
   {.name = "trace-seq",.has_arg = optional_argument,.val = DUF_OPTION_SEQ_TRACE},
+  {.name = "trace-options",.has_arg = optional_argument,.val = DUF_OPTION_OPTIONS_TRACE},
   {.name = "trace-calls",.has_arg = optional_argument,.val = DUF_OPTION_CALLS_TRACE},
   {.name = "trace-collect",.has_arg = optional_argument,.val = DUF_OPTION_COLLECT_TRACE},
   {.name = "trace-current",.has_arg = optional_argument,.val = DUF_OPTION_CURRENT_TRACE},
@@ -125,10 +140,10 @@ const duf_option_t duf_longopts_table[] = {
   {.name = "min-same",.has_arg = required_argument,.val = DUF_OPTION_MINSAME},
   {.name = "max-same",.has_arg = required_argument,.val = DUF_OPTION_MAXSAME},
   {.name = "max-depth",.has_arg = required_argument,.val = DUF_OPTION_MAXDEPTH},
-  {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
   {.name = "max-dirs",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_DIRS},
   {.name = "max-files",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS_FILES},
   {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS},
+  /* {.name = "max-items",.has_arg = required_argument,.val = DUF_OPTION_MAXITEMS}, */
   {.name = "max-seq",.has_arg = required_argument,.val = DUF_OPTION_MAXSEQ},
   /* {.name = "print-paths",.has_arg = no_argument,.val = DUF_OPTION_PRINT_PATHS}, */
   /* {.name = "print-dirs",.has_arg = no_argument,.val = DUF_OPTION_PRINT_DIRS},   */
