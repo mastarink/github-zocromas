@@ -66,8 +66,8 @@ duf_dbg_funname( duf_anyhook_t p )
 
 
   static duf_fundesc_t table[] = {
-    DUF_FUN( duf_str_cb_uni_scan_dir ),
-    DUF_FUN( duf_str_cb_leaf_scan ),
+    DUF_FUN( duf_str_cb1_uni_scan_dir ),
+    /* DUF_FUN( duf_str_cb1_leaf_scan ), */
 #ifdef DUF_COMPILE_EXPIRED
     DUF_FUN( duf_sel_cb_name_parid ),
 #endif

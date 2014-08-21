@@ -26,7 +26,9 @@
 #include "duf_sql_field1.h"
 #include "duf_item_scan1.h"
 /* #include "duf_item_scan2.h" */
-#include "duf_dirent_scan.h"
+
+#include "duf_dirent_scan1.h"
+
 #include "duf_file_pathid.h"
 
 #include "duf_dbg.h"
@@ -71,10 +73,10 @@ duf_str_cb_scan_file_fd( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struc
 /* 
  * this is callback of type: duf_str_cb_t (first range; str_cb) 
  *
- * duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
+ * duf_str_cb(1?)_leaf_scan is just a wrapper for sccb->leaf_scan
  * */
 int
-duf_str_cb_leaf_scan( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
+duf_str_cb1_leaf_scan( void *str_cb_udata_unused, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb, duf_record_t * precord )
 {
   int r = 0;
 
@@ -150,7 +152,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
   if ( r >= 0 && sccb )
   {
 /* duf_scan_files_by_pathid:
- * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb_leaf_scan) + pdi (also) as str_cb_udata
+ * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb(1?)_leaf_scan) + pdi (also) as str_cb_udata
  * 			for each <file> record by dirid with corresponding args
  *
  * */
@@ -171,8 +173,8 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
       {
         DUF_OINV_OPENED( pdi-> );
         DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves ..   by %5llu", duf_pdi_depth( pdi ), dirid );
-/* duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan */
-        r = duf_scan_files_by_dirid( dirid, duf_str_cb_leaf_scan, pdi, sccb );
+/* duf_str_cb(1?)_leaf_scan is just a wrapper for sccb->leaf_scan */
+        r = duf_scan_files_by_dirid( dirid, duf_str_cb1_leaf_scan, pdi, sccb );
 
         DUF_OINV_OPENED( pdi-> );
         DUF_TEST_R( r );
@@ -241,20 +243,20 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
   return r;
 }
 
-/* duf_scan_dirs_by_parentid
+/* duf_scan_dirs_by_parentid1
  *     1. for <current> dir call sccb->node_scan_before
  *     2. for each leaf in <current> dir call sccb->leaf_scan
  *     3. for <current> dir call sccb->node_scan_middle
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  *
- * known str_cb for duf_scan_dirs_by_parentid:
+ * known str_cb for duf_scan_dirs_by_parentid1:
  *   duf_str_cb_uni_scan_dir
  *
  * see duf_scan_dir_by_pi
  * */
 int
-duf_scan_dirs_by_parentid( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
+duf_scan_dirs_by_parentid1( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
 {
   int r = 0;
   unsigned long long dirid;

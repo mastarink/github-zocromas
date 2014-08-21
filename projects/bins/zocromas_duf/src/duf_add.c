@@ -52,8 +52,17 @@ duf_add_path_uni( const char *path )
     DUF_TRACE( explain, 0, "converted to real_path: %s", real_path );
     if ( !( real_path && *real_path == '/' && real_path[1] == 0 ) )
       r = duf_real_path2db( &di, real_path, 1 /* add */  );
+  DUF_TRACE( path, 0, " ***********  %llu", duf_levinfo( &di )->dirid );
     DUF_TRACE( explain, 0, "added path uni: %s", real_path );
 
+    {
+      const char *real_path_b = NULL;
+
+      if ( !real_path_b )
+        real_path_b = duf_levinfo_path( &di );
+
+      DUF_TRACE( path, 0, "added path uni: [%s] :: [%s]  %llu", real_path, real_path_b, duf_levinfo( &di )->dirid);
+    }
     duf_pdi_close( &di );
 
 

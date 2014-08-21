@@ -36,6 +36,8 @@
 
 #include "duf_dbg.h"
 
+#include "duf_uni_scan1.h"
+#include "duf_uni_scan2.h"
 
 /* ###################################################################### */
 #include "duf_uni_scan.h"
@@ -48,135 +50,7 @@
 */
 
 
-/* duf_str_cb_uni_scan_dir:
- * this is callback of type: duf_str_cb_t (second range):
- *
- * if recursive flag set, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
- *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
- * otherwise do nothing
- *
- *   i.e.
- *     1. for <current> dir call sccb->node_scan_before
- *     2. for each leaf in <current> dir call sccb->leaf_scan
- *     3. for <current> dir call sccb->node_scan_middle
- *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call duf_str_cb_uni_scan_dir + &di as str_cb_udata
- *     5. for <current> dir call sccb->node_scan_after
- * */
-int
-duf_str_cb_uni_scan_dir( void *str_cb_udata, duf_depthinfo_t * xpdi, duf_scan_callbacks_t * sccb, duf_record_t * precord )
-{
-  int r = 0;
-  duf_depthinfo_t *pdi;
 
-  pdi = ( duf_depthinfo_t * ) str_cb_udata;
-  assert( pdi );
-  /* DUF_UFIELD( dirid ); */
-  /* assert( dirid == duf_levinfo_dirid( pdi ) ); */
-  /* DUF_SFIELD( dfname ); */
-  DEBUG_START(  );
-
-  DUF_TRACE( scan, 10, "+" );
-  if ( r >= 0 && DUF_U_FLAG( recursive ) && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
-  {
-    if ( duf_pdi_reldepth( pdi ) <= 1 )
-    {
-      DUF_TRACE( explain, 2, "cb; option %s; option %s value %d; depth %d",
-                 duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
-                 duf_pdi_reldepth( pdi ) );
-    }
-    else
-    {
-      DUF_TRACE( explain, 3, "cb; option %s; option %s value %d; depth %d",
-                 duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
-                 duf_pdi_reldepth( pdi ) );
-    }
-    /* duf_scan_fil_by_pi:
-     * call duf_str_cb_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
-     *
-     * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
-     *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
-     *         otherwise do nothing
-     *
-     *   i.e.
-     *     1. for <current> dir call sccb->node_scan_before
-     *     2. for each leaf in <current> dir call sccb->leaf_scan
-     *     3. for <current> dir call sccb->node_scan_middle
-     *   recursively from <current> dir (if recursive flag set):
-     *     4. for each dir in <current> dir call str_cb + str_cb_udata
-     *     5. for <current> dir call sccb->node_scan_after
-     * */
-    DUF_OINV_OPENED( pdi-> );
-    r = duf_scan_dirs_by_parentid( duf_str_cb_uni_scan_dir, pdi, sccb, precord );
-    DUF_TEST_R( r );
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ),
-               duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth );
-  }
-
-  DEBUG_END(  );
-  return r;
-}
-
-int
-duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  int r = 0;
-
-  DEBUG_START(  );
-
-  assert( pdi );
-
-  DUF_TRACE( scan, 10, "+" );
-  if ( r >= 0 )
-  {
-    if ( DUF_U_FLAG( recursive ) && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
-    {
-/* duf_scan_fil_by_pi:
- * call duf_str_cb_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
- *
- * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb_uni_scan_dir
- *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
- *         otherwise do nothing
- *
- *   i.e.
- *     1. for <current> dir call sccb->node_scan_before
- *     2. for each leaf in <current> dir call sccb->leaf_scan
- *     3. for <current> dir call sccb->node_scan_middle
- *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->node_scan_after
- * */
-      if ( duf_pdi_reldepth( pdi ) <= 1 )
-      {
-        DUF_TRACE( explain, 3, "cb2; option %s; option %s value %d; depth %d",
-                   duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
-                   duf_pdi_reldepth( pdi ) );
-      }
-      else
-      {
-        DUF_TRACE( explain, 4, "cb2; option %s; option %s value %d; depth %d",
-                   duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
-                   duf_pdi_reldepth( pdi ) );
-      }
-
-      DUF_OINV_OPENED( pdi-> );
-      DUF_TRACE( scan, 10, "+" );
-      r = duf_scan_dirs_by_parentid2( pstmt, duf_str_cb2_uni_scan_dir, pdi, sccb );
-    }
-    else
-    {
-      DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ),
-                 duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth );
-    }
-
-  }
-  DUF_TEST_R( r );
-  DEBUG_END(  );
-  return r;
-}
 
 /*
  *   i.e. 
@@ -187,7 +61,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  */
-static int
+int
 duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
   int r = 0;
@@ -269,23 +143,23 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
         DUF_OINV_OPENED( di. );
         assert( di.depth >= 0 );
         DUF_OINV( di. );
-        DUF_TRACE( scan, 15, "%llu:%s  duf_scan_dirs_by_parentid(2?) with str_cb=duf_str_cb_uni_scan_dir(%p)", duf_levinfo_dirid( &di ),
-                   real_path, ( void * ) ( unsigned long long ) duf_str_cb_uni_scan_dir );
+        DUF_TRACE( scan, 15, "%llu:%s  duf_scan_dirs_by_parentid(2?) with str_cb=duf_str_cb(1?)_uni_scan_dir(%p)", duf_levinfo_dirid( &di ),
+                   real_path, ( void * ) ( unsigned long long ) duf_str_cb1_uni_scan_dir );
 
 
-/* duf_str_cb_uni_scan_dir:
+/* duf_str_cb(1?)_uni_scan_dir:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
  *       for each <dir> record by top dirid (i.e. children of top dirid) with corresponding args 
  * otherwise do nothing
  *
- * call duf_str_cb_uni_scan_dir with pdi for each dir at db by top dirid (i.e. children of top dirid) 
+ * call duf_str_cb(1?)_uni_scan_dir with pdi for each dir at db by top dirid (i.e. children of top dirid) 
  *
  *   i.e.
  *     1. for <current> dir call sccb->node_scan_before
  *     2. for each leaf in <current> dir call sccb->leaf_scan
  *     3. for <current> dir call sccb->node_scan_middle
  *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call duf_str_cb_uni_scan_dir + &di as str_cb_udata
+ *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
         DUF_OINV( di. );
@@ -300,7 +174,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
           if ( sccb->scan_mode_2 )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
-            r = duf_scan_dirs_by_parentid( duf_str_cb_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+            r = duf_scan_dirs_by_parentid1( duf_str_cb1_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
         }
         DUF_OINV( di. );
         DUF_TEST_R( r );

@@ -22,6 +22,7 @@
 
 #include "duf_sql_defs.h"
 #include "duf_sql.h"
+
 #include "duf_sql_field.h"
 #include "duf_sql_field1.h"
 
@@ -29,13 +30,13 @@
 #include "duf_dbg.h"
 
 /* ###################################################################### */
-#include "duf_dirent_scan.h"
+#include "duf_dirent_scan1.h"
 /* ###################################################################### */
 
 
 static int
-duf_scan_direntry( struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord,
-                   duf_scan_hook_dirent_reg_t scan_dirent_reg, duf_scan_hook_dirent_dir_t scan_dirent_dir )
+duf_scan_direntry1( struct dirent *de, unsigned long long pathid, duf_depthinfo_t * pdi, duf_record_t * precord,
+                    duf_scan_hook_dirent_reg_t scan_dirent_reg, duf_scan_hook_dirent_dir_t scan_dirent_dir )
 {
   int r = 0;
 
@@ -55,6 +56,8 @@ duf_scan_direntry( struct dirent *de, unsigned long long pathid, duf_depthinfo_t
   }
 
   if ( r >= 0 )
+    r = duf_levinfo_down( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  );
+  if ( r >= 0 )
     switch ( de->d_type )
     {
     case DT_REG:
@@ -66,6 +69,7 @@ duf_scan_direntry( struct dirent *de, unsigned long long pathid, duf_depthinfo_t
       DUF_TRACE( scan_de_dir, 0, "dir='.../%s'", de->d_name );
       break;
     }
+  duf_levinfo_up( pdi );
   DEBUG_ENDR( r );
   return r;
 }
@@ -130,7 +134,8 @@ duf_scan_dirents_by_pathid_and_dfname( unsigned long long pathid, duf_depthinfo_
       {
         DUF_TRACE( scan, 11, "pathid=%llu; entry='%s'", pathid, list[il]->d_name );
 
-        r = duf_scan_direntry( list[il], pathid, pdi, precord, scan_dirent_reg, scan_dirent_dir );
+        r = duf_scan_direntry1( list[il], pathid, pdi, precord, scan_dirent_reg, scan_dirent_dir );
+        /* if(r<0) break; */
 
         DUF_TEST_R( r );
         if ( list[il] )

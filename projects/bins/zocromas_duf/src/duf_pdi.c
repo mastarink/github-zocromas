@@ -219,6 +219,7 @@ duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
   int *pi;
 
   assert( pdi );
+
   if ( pdi->statements[i] )
     r = duf_sql_finalize( pdi->statements[i] );
   if ( pdi->xstatements[i] )

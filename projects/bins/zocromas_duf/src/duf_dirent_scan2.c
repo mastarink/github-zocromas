@@ -55,6 +55,9 @@ duf_scan_direntry2( duf_sqlite_stmt_t * pstmt, struct dirent *de, unsigned long 
   }
 
   if ( r >= 0 )
+  r = duf_levinfo_down( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  );
+
+  if ( r >= 0 )
     switch ( de->d_type )
     {
     case DT_REG:
@@ -82,6 +85,7 @@ duf_scan_direntry2( duf_sqlite_stmt_t * pstmt, struct dirent *de, unsigned long 
       }
       break;
     }
+  duf_levinfo_up( pdi );
   DEBUG_ENDR( r );
   return r;
 }

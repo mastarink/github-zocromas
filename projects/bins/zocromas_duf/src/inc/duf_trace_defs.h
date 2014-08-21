@@ -89,8 +89,8 @@
 /* ###################################################################### */
 
 #  define DUF_IF_DEBUG( lev )				DUF_IF_TRACE_WHAT( cli.dbg, debug )
-#  define DUF_IF_DEBUGN( lev )				DUF_IF_TRACE_WHAT( cli.dbg, debug, lev )
-#  define DUF_DEBUG(lev, ...)				if ( DUF_IF_DEBUG( lev ) ) {  __VA_ARGS__ ; }
+#  define DUF_IF_DEBUGN( lev )				DUF_IF_TRACE_WHATN( cli.dbg, debug, lev )
+#  define DUF_DEBUG(lev, ...)				if ( DUF_IF_DEBUGN( lev ) ) {  __VA_ARGS__ ; }
 
 /* ###################################################################### */
 

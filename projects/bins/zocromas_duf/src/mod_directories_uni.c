@@ -42,7 +42,7 @@ directories_entry_dir( const char *fname, const struct stat *pstat, unsigned lon
   int changes = 0;
 
   DUF_TRACE( scan, 0, "@@@@@@@@@@@@@ scan entry dir by %s", fname );
-  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &changes, &r );
+  ( void ) duf_insert_path_uni2( pdi, fname, 1 /* ifadd */ , pstat->st_dev, pstat->st_ino, 0 /*need_id */ , &changes, &r );
   DUF_TEST_R( r );
   return r;
 }
@@ -55,7 +55,7 @@ directories_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const stru
   int changes = 0;
 
   DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
-  ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &changes, &r );
+  ( void ) duf_insert_path_uni2( pdi, fname, 1 /* ifadd */ , pstat->st_dev, pstat->st_ino, 0 /*need_id */ , &changes, &r );
   DUF_TEST_R( r );
   return r;
 }

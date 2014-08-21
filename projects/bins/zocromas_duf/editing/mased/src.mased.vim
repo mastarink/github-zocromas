@@ -16,11 +16,14 @@ sfind duf_sccb.h
 tab sfind duf_dir_scan2.c
 sfind duf_dir_scan2.h
 
-tab sfind duf_dirent_scan.c
-sfind duf_dirent_scan.h
+tab sfind duf_dirent_scan2.c
+sfind duf_dirent_scan2.h
 
 tab sfind duf_uni_scan.c
 sfind duf_uni_scan.h
+
+tab sfind duf_uni_scan2.c
+sfind duf_uni_scan2.h
 
 tab sfind duf_levinfo.c
 sfind duf_levinfo.h
