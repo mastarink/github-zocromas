@@ -24,6 +24,7 @@
 #include "duf_item_scan2.h"
 
 #include "duf_dbg.h"
+#include "duf_sccb.h"
 
 /* ###################################################################### */
 #include "duf_file_pathid.h"
@@ -90,6 +91,8 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
   if ( sccb && sccb->leaf_selector2 )
   {
     DUF_OINV( pdi-> );
+    
+    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 3." );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector2 */
     r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset, /* ... */

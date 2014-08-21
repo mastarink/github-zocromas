@@ -53,14 +53,14 @@ typedef struct
   unsigned progress:1;
   unsigned summary:1;
 } duf_config_act_flags_t;
-
+typedef union
+{
+  duf_config_act_flags_t flag;
+  unsigned bit;
+} duf_config_act_flags_combo_t;
 typedef struct
 {
-  union
-  {
-    duf_config_act_flags_t flag;
-    unsigned bit;
-  } v;
+  duf_config_act_flags_combo_t v;
   unsigned sample;
   unsigned sampupd;
 } duf_config_cli_actions_t;
@@ -107,6 +107,9 @@ typedef struct
   unsigned sample;
   unsigned sampupd;
   unsigned scan;
+  unsigned scan_de_dir;
+  unsigned scan_de_reg;
+  unsigned temp;
   unsigned seq;
   unsigned options;
   unsigned sql;

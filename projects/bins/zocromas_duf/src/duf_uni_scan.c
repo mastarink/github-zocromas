@@ -206,7 +206,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
       .seq = 0,
       .levinfo = NULL,
       .u = *pu,
-      .opendir = sccb ? sccb->opendir : 0,
+      .opendir = sccb ? sccb->def_opendir : 0,
       /* .name = real_path, */
     };
 
@@ -296,7 +296,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
           DUF_TRACE( scan, 12, "before by_parentid" );
           DUF_TRACE( explain, 0, "to scan" );
 
-          DUF_SCCB( DUF_TRACE, action, 0, "scanning: top dirid: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
+          DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirid: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
           if ( sccb->scan_mode_2 )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
@@ -316,11 +316,13 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
     }
     if ( DUF_ACT_FLAG( summary ) )
     {
+      DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( sccb ) );
+
       DUF_PRINTF( 0, " summary; seq:     %llu", di.seq );
       DUF_PRINTF( 0, " summary; seq-leaf:%llu", di.seq_leaf );
       DUF_PRINTF( 0, " summary; seq-node:%llu", di.seq_node );
       if ( duf_config->u.maxseq )
-        DUF_PRINTF( 0, " of %llu", duf_config->u.maxseq );
+        DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.maxseq );
     }
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ), DUF_ACT_FLAG( summary ) );
   }
@@ -329,6 +331,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
     DUF_TRACE( scan, 10, "?" );
   }
   mas_free( real_path );
+  r = duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 );
   DUF_TEST_R( r );
 
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ), DUF_ACT_FLAG( summary ) );
@@ -434,22 +437,115 @@ TODO scan mode
   return r;
 }
 
-int
-duf_uni_scan_all( void )
+typedef struct
 {
-  int r = 0;
-  duf_scan_callbacks_t **ppscan_callbacks;
-  int max_asteps = 100;
+  duf_config_act_flags_combo_t on;
+  duf_config_act_flags_combo_t off;
+  duf_scan_callbacks_t *sccb;
+} duf_action_table_t;
+
+extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
+      duf_directories_callbacks __attribute( ( weak ) ),
+      duf_filedata_callbacks __attribute( ( weak ) ),
+      duf_filenames_callbacks __attribute( ( weak ) ),
+      duf_collect_openat_crc32_callbacks __attribute( ( weak ) ),
+      duf_collect_openat_sd5_callbacks __attribute( ( weak ) ),
+      duf_collect_openat_md5_callbacks __attribute( ( weak ) ),
+      duf_collect_mime_callbacks __attribute( ( weak ) ),
+      duf_collect_exif_callbacks __attribute( ( weak ) ),
+      duf_collect_mdpath_callbacks __attribute( ( weak ) ),
+      duf_print_md5_callbacks __attribute( ( weak ) ),
+      duf_print_tree_callbacks __attribute( ( weak ) ),
+      duf_print_dir_callbacks __attribute( ( weak ) ),
+      duf_bubububububububububububububububububububububububububububububububububububu __attribute( ( weak ) );
+
+duf_action_table_t act_table[] = {
+  {.sccb = &duf_integrity_callbacks,
+   .on.flag = {.integrity = 1}
+   },
+  {.sccb = &duf_directories_callbacks,
+   .on.flag = {.collect = 1,.dirent = 1,.dirs = 1}
+   },
+  {.sccb = &duf_filedata_callbacks,
+   .on.flag = {.collect = 1,.dirent = 1,.filedata = 1}
+   },
+  {.sccb = &duf_filenames_callbacks,
+   .on.flag = {.collect = 1,.dirent = 1,.filenames = 1}
+   },
+  {.sccb = &duf_collect_openat_crc32_callbacks,
+   .on.flag = {.collect = 1,.crc32 = 1}
+   },
+  {.sccb = &duf_collect_openat_sd5_callbacks,
+   .on.flag = {.collect = 1,.sd5 = 1}
+   },
+  {.sccb = &duf_collect_openat_md5_callbacks,
+   .on.flag = {.collect = 1,.md5 = 1}
+   },
+  {.sccb = &duf_collect_mime_callbacks,
+   .on.flag = {.collect = 1,.mime = 1}
+   },
+  {.sccb = &duf_collect_exif_callbacks,
+   .on.flag = {.collect = 1,.exif = 1}
+   },
+  {.sccb = &duf_collect_mdpath_callbacks,
+   .on.flag = {.mdpath = 1}},
+
+  {.sccb = &duf_print_tree_callbacks,
+   .on.flag = {.print = 1,.tree = 1},
+   .off.flag = {.md5 = 1}
+   },
+  {.sccb = &duf_print_dir_callbacks,
+   .on.flag = {.print = 1},
+   .off.flag = {.md5 = 1,.tree = 1}
+   },
+  {.sccb = &duf_print_md5_callbacks,
+   .on.flag = {.print = 1,.md5 = 1}
+   },
+};
+
+#if 1
+static int
+duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
+{
   int asteps = 0;
 
-  DEBUG_START(  );
+  for ( int iac = 0; iac < sizeof( act_table ) / sizeof( act_table[0] ); iac++ )
+  {
+    if ( ( duf_config->cli.act.v.bit & act_table[iac].on.bit ) == act_table[iac].on.bit
+         && ( duf_config->cli.act.v.bit & act_table[iac].off.bit ) == 0 )
+    {
+      duf_scan_callbacks_t *sccb = act_table[iac].sccb;
 
-  DUF_TRACE( action, 1, "prep" );
-  DUF_TRACE( explain, 0, "scan all; setting actions" );
-  DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
-  ppscan_callbacks = mas_malloc( max_asteps * sizeof( duf_scan_callbacks_t * ) );
+      if ( sccb )
+      {
+        DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
+        ppscan_callbacks[asteps++] = sccb;
+      }
+    }
+  }
+  return asteps;
+}
+#else
+static int
+duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
+{
+  int asteps = 0;
 
-  assert( asteps < max_asteps );
+  /*
+   * 1. DUF_ACT_FLAG( integrity ) => duf_integrity_callbacks
+   * 
+   * 2. DUF_ACT_FLAG( collect )
+   *   2.1 DUF_ACT_FLAG( dirent )
+   *     2.1.1.    DUF_ACT_FLAG( dirs )  => duf_directories_callbacks
+   *     2.1.2    DUF_ACT_FLAG( filedata ) => duf_filedata_callbacks
+   *     2.1.3    DUF_ACT_FLAG( filenames ) => duf_filenames_callbacks
+   *   2.2.    DUF_ACT_FLAG( crc32 )     => duf_collect_openat_crc32_callbacks
+   *   2.3.    DUF_ACT_FLAG( sd5 )       => duf_collect_openat_sd5_callbacks
+   *   2.4.    DUF_ACT_FLAG( md5 )       => duf_collect_openat_md5_callbacks
+   *   2.5.    DUF_ACT_FLAG( mime )      => duf_collect_mime_callbacks
+   *   2.6.    DUF_ACT_FLAG( exif )      => duf_collect_exif_callbacks
+   *
+   * */
   if ( DUF_ACT_FLAG( integrity ) )
   {
     extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
@@ -687,6 +783,14 @@ duf_uni_scan_all( void )
   {
     DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_PRINT ) );
   }
+  return asteps;
+}
+#endif
+int
+duf_set_actions_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
+{
+  int asteps = 0;
+
   if ( duf_config->cli.act.sample )
   {
     extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
@@ -722,18 +826,43 @@ duf_uni_scan_all( void )
   {
     DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_SAMPUPD ) );
   }
-  if ( asteps )
-    DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
-  for ( int astep = 0; r >= 0 && astep < asteps; astep++ )
+  return asteps;
+}
+
+int
+duf_uni_scan_all( void )
+{
+  int r = 0;
+  duf_scan_callbacks_t **ppscan_callbacks;
+
+  DEBUG_START(  );
+
+  DUF_TRACE( action, 1, "prep" );
+  DUF_TRACE( explain, 0, "scan all; setting actions" );
+  DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
   {
-    if ( ppscan_callbacks[astep] )
+    int max_asteps = 100;
+
+    ppscan_callbacks = mas_malloc( max_asteps * sizeof( duf_scan_callbacks_t * ) );
+
     {
-      DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
-      r = duf_uni_scan_targ( ppscan_callbacks[astep] );
-      duf_config->actions_done++;
+      int asteps = 0;
+
+      asteps += duf_set_actions( ppscan_callbacks + asteps, max_asteps - asteps );
+      asteps += duf_set_actions_sample( ppscan_callbacks + asteps, max_asteps - asteps );
+      if ( asteps )
+        DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
+      for ( int astep = 0; r >= 0 && astep < asteps; astep++ )
+      {
+        if ( ppscan_callbacks[astep] )
+        {
+          DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
+          r = duf_uni_scan_targ( ppscan_callbacks[astep] );
+          duf_config->actions_done++;
+        }
+      }
     }
   }
-
   if ( !duf_config->actions_done )
   {
     char *optnames = NULL;

@@ -269,7 +269,7 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_sampupd_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .opendir = 1,
+  .def_opendir = 1,
   .scan_mode_2 = 1,
 
   .node_scan_before = sampupd_scan_node_before,

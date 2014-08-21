@@ -169,7 +169,7 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_filenames_callbacks = {
   .title = "filenames",
   .init_scan = NULL,
-  .opendir = 1,
+  .def_opendir = 1,
   .scan_mode_2 = 1,
 
   .dirent_file_scan_before = filenames_entry_reg,

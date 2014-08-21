@@ -41,6 +41,7 @@ directories_entry_dir( const char *fname, const struct stat *pstat, unsigned lon
   int r = 0;
   int changes = 0;
 
+  DUF_TRACE( scan, 0, "@@@@@@@@@@@@@ scan entry dir by %s", fname );
   ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &changes, &r );
   DUF_TEST_R( r );
   return r;
@@ -53,7 +54,7 @@ directories_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const stru
   int r = 0;
   int changes = 0;
 
-  /* DUF_TRACE( scan, 10, "scan entry dir2 by %s", fname ); */
+  DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
   ( void ) duf_insert_path_uni( pdi, fname, pstat->st_dev, pstat->st_ino, dirid, 0 /*need_id */ , &changes, &r );
   DUF_TEST_R( r );
   return r;
@@ -113,7 +114,7 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_directories_callbacks = {
   .title = "directories",
   .init_scan = NULL,
-  .opendir = 1,
+  .def_opendir = 1,
   .scan_mode_2 = 1,
   .dirent_dir_scan_before = directories_entry_dir,
   .dirent_dir_scan_before2 = directories_entry_dir2,

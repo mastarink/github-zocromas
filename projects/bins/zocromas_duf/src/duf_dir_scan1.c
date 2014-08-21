@@ -127,7 +127,7 @@ duf_scan_dir_by_pi( duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbac
   DUF_TRACE( scan, 10, "by pi" );
 
   if ( r >= 0 && ( sccb->dirent_dir_scan_before || sccb->dirent_file_scan_before ) )
-    r = duf_scan_dirents_by_pathid_and_record( pdi, precord, sccb->dirent_file_scan_before, sccb->dirent_dir_scan_before );
+    r = duf_scan_dirents1( pdi, precord, sccb->dirent_file_scan_before, sccb->dirent_dir_scan_before );
 
   if ( r >= 0 && sccb && DUF_ACT_FLAG( dirs ) )
   {

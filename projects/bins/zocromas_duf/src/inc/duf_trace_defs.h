@@ -107,7 +107,7 @@
 
 #  define DUF_TEST_RX(val)	if (val) DUF_ERROR( " - - - - - -> [%s] (#%d)", val<0?duf_error_name(val):"-", val )
 
-#  define DUF_TEST_R(val)	if ( val!=DUF_ERROR_MAX_REACHED ) DUF_TEST_RX( val )
+#  define DUF_TEST_R(val)	if ( val!=DUF_ERROR_MAX_REACHED && val!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( val )
 #  define DUF_TEST_RN(val)	if ( val<0 ) DUF_TEST_R( val )
 #  define DUF_TEST_RR(val)	if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
 #  define DUF_TEST_R3(val)	if (val \

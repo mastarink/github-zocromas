@@ -322,7 +322,7 @@ filedata_scan_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const st
 duf_scan_callbacks_t duf_filedata_callbacks = {
   .title = "filedata",
   .init_scan = NULL,
-  .opendir = 1,
+  .def_opendir = 1,
   .scan_mode_2 = 1,
 
   /* .node_scan_before = filedata_scan_node_before, */

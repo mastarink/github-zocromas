@@ -1,7 +1,7 @@
 #ifndef DUF_LEVINFO_H
 #  define DUF_LEVINFO_H
 
-#include "duf_levinfo_types.h"
+#  include "duf_levinfo_types.h"
 
 int duf_levinfo_is_leaf( duf_depthinfo_t * pdi );
 int duf_levinfo_is_leaf_d( duf_depthinfo_t * pdi, int d );
@@ -53,6 +53,7 @@ int duf_levinfo_down( duf_depthinfo_t * pdi, unsigned long long dirid, const cha
 void duf_levinfo_up( duf_depthinfo_t * pdi );
 
 void duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi );
+
 
 int duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path );
 int duf_levinfo_openat_dh( duf_depthinfo_t * pdi );

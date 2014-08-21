@@ -157,6 +157,9 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, duf_
   int r = 0;
 
   DEBUG_START(  );
+  assert( pdi );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@@ %llu/%llu/%llu; ifadd:%d; pdi:%d", parentid, duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ),
+             ifadd, pdi ? 1 : 0 );
   /* unsigned char c1 = ( unsigned char ) ( dename ? *dename : 0 ); */
   if ( dename /* && dev_id && dir_ino */  )
   {
@@ -326,9 +329,12 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
   unsigned long long parentid = 0;
   char *real_path = mas_strdup( rpath );
   int r = 0;
+  int od = 0;
 
   DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
 
+  assert( pdi );
+  od = duf_pdi_set_opendir( pdi, 1 );
   {
     int upfd = 0;
     char *dir = real_path;
@@ -339,6 +345,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
       char *edir = dir;
       const char *insdir;
       struct stat st_dir;
+      struct stat *pst_dir = NULL;
 
       DUF_TRACE( path, 0, "prepare [%s] under %llu", dir, parentid );
       while ( edir && *edir && *edir != '/' )
@@ -350,20 +357,26 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
       insdir = dir;
       if ( pdi )
       {
+        DUF_TRACE( temp, 0, "@@@@@@@@@@@ depth: %d", duf_pdi_depth( pdi ) );
         if ( r >= 0 )
           r = duf_levinfo_down( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  );
+        DUF_TRACE( temp, 0, "@@@@@@@@@@@ r: %d", r );
+
         if ( r >= 0 )
           r = duf_levinfo_openat_dh( pdi );
-      }
-      if ( pdi )
-      {
+        DUF_TRACE( temp, 0, "@@@@@@@@@@@ r: %d", r );
+
         upfd = duf_levinfo_dfd( pdi );
+        DUF_TRACE( temp, 0, "@@@@@@@@@@@ upfd: %d // %d // `%s` :: %d", upfd, duf_levinfo_dfd( pdi ), duf_levinfo_itemname( pdi ),
+                   pdi->opendir );
         DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, upfd );
+        pst_dir = duf_levinfo_stat( pdi );
+        /* assert( pst_dir ); */
       }
       else                      /* never used !!?? */
       {
-        const char *opendir;
         int fd = 0;
+        const char *opendir;
 
         if ( *insdir )
           opendir = insdir;
@@ -371,7 +384,9 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
           opendir = "/";
         fd = upfd;
         r = fstatat( fd, opendir, &st_dir, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+        pst_dir = &st_dir;
         upfd = openat( fd, opendir, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+        DUF_TRACE( temp, 0, "@@@@@@@@@@@ openat: %s", opendir );
         DUF_TRACE( explain, 0, "opened (at) ≪%s≫ upfd:%d", insdir, upfd );
         if ( fd )
           close( fd );
@@ -387,9 +402,10 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
         int changes;
 
         changes = 0;
-        DUF_TRACE( path, 0, "to insert [%s]", insdir ? insdir : "/" );
-        parentid = duf_insert_path_uni2( pdi, insdir, ifadd, duf_levinfo( pdi ), st_dir.st_dev, st_dir.st_ino, parentid, 1 /*need_id */ ,
-                                         &changes, &r );
+        DUF_TRACE( path, 0, "to insert [%s] pdi:%d", insdir ? insdir : "/", pdi ? 1 : 0 );
+        parentid =
+              duf_insert_path_uni2( pdi, insdir, ifadd, duf_levinfo( pdi ), pst_dir->st_dev, pst_dir->st_ino, parentid, 1 /*need_id */ ,
+                                    &changes, &r );
         if ( changes )
         {
           DUF_TRACE( explain, 0, "added id: %llu for ≪%s≫", parentid, insdir );
@@ -412,6 +428,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
       close( upfd );
     upfd = 0;
   }
+  duf_pdi_set_opendir( pdi, od );
   duf_pdi_set_topdepth( pdi );
   mas_free( real_path );
   if ( r >= 0 && !parentid )

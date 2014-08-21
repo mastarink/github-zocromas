@@ -108,8 +108,15 @@ void duf_option_smart_help( duf_option_class_t oclass );
       DUF_OPTION_ACQUIRE_NUM( pref.lo ); \
     break
 
+#  define  DUF_OPTION_CASE_ACQUIRE_NUM_PLUS( up, lo, pref ) \
+    case DUF_OPTION_ ## up: \
+      DUF_OPTION_ACQUIRE_NUM_PLUS( pref.lo ); \
+    break
+
 #  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, cli.act)
+#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM_PLUS(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, lo, cli.act)
 #  define DUF_OPTION_CASE_ACQUIRE_U_NUM(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, u)
+#  define DUF_OPTION_CASE_ACQUIRE_U_NUM_PLUS(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, lo, u)
 
 #  define DUF_ACT_NUM(lo) DUF_OPTION_NUM(lo, cli.act)
 #  define DUF_U_NUM(lo) DUF_OPTION_NUM(lo, u)

@@ -18,7 +18,6 @@
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
-#include "duf_pdi.h"
 
 #include "duf_options.h"
 /* #include "duf_cli_options.h" */
@@ -29,7 +28,9 @@
 #include "duf_item_scan2.h"
 
 #include "duf_path.h"
-#include "duf_dirent_scan.h"
+
+#include "duf_dirent_scan2.h"
+
 #include "duf_file_pathid.h"
 
 #include "duf_dbg.h"
@@ -112,7 +113,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
 }
 
 static int
-duf_qscan_dirents_by_pathid_and_record2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
   unsigned long long dirid;
@@ -121,10 +122,12 @@ duf_qscan_dirents_by_pathid_and_record2( duf_sqlite_stmt_t * pstmt, duf_depthinf
 
   if ( DUF_ACT_FLAG( dirent ) )
   {
+    duf_pdi_set_opendir( pdi, 1 );
+    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>>q +dirent" );
     if ( sccb->dirent_dir_scan_before2 || sccb->dirent_file_scan_before2 )
     {
       DUF_TRACE( scan, 10, "scan dirent_dir by %5llu", dirid );
-      r = duf_scan_dirents_by_pathid_and_record2( pstmt, pdi, sccb->dirent_file_scan_before2, sccb->dirent_dir_scan_before2 );
+      r = duf_scan_dirents2( pstmt, pdi, sccb->dirent_file_scan_before2, sccb->dirent_dir_scan_before2 );
     }
     else
     {
@@ -136,6 +139,7 @@ duf_qscan_dirents_by_pathid_and_record2( duf_sqlite_stmt_t * pstmt, duf_depthinf
   {
     char *ona = NULL;
 
+    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> -dirent" );
     ona = duf_option_names( DUF_OPTION_FLAG_DIRENT );
     DUF_PRINTF( 0, "to scan dir / file before2 use %s", ona );
     mas_free( ona );
@@ -288,7 +292,7 @@ duf_qscan_node_scan_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, du
     char *ona = NULL;
 
     ona = duf_option_names( DUF_OPTION_FLAG_DIRS );
-    DUF_PRINTF( 0, "to scan node after2 use %s", ona );
+    DUF_PRINTF( 0, "to scan node after2  use %s", ona );
     mas_free( ona );
   }
   else
@@ -314,6 +318,7 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf
   /* scan this files in this directory */
   if ( r >= 0 && DUF_ACT_FLAG( files ) )
   {
+    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 2." );
     if ( r >= 0 && sccb->leaf_scan_fd2 )
     {
       DUF_OINV_OPENED( pdi-> );
@@ -420,8 +425,11 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   assert( sccb );
   DUF_TRACE( scan, 10, "by pi2" );
 
+
+  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 1." );
+
   /* scan dirent's */
-  r = duf_qscan_dirents_by_pathid_and_record2( pstmt, pdi, sccb );
+  r = duf_qscan_dirents2( pstmt, pdi, sccb );
 
 
   if ( r >= 0 )

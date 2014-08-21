@@ -234,8 +234,8 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( PROGRESS, /*          */ progress /*        */  );
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( SUMMARY, /*           */ summary /*         */  );
 
-    DUF_OPTION_CASE_ACQUIRE_ACT_NUM( SAMPLE, /*             */ sample /*          */  );
-    DUF_OPTION_CASE_ACQUIRE_ACT_NUM( SAMPUPD, /*            */ sampupd /*         */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_NUM_PLUS( SAMPLE, /*        */ sample /*          */  );
+    DUF_OPTION_CASE_ACQUIRE_ACT_NUM_PLUS( SAMPUPD, /*       */ sampupd /*         */  );
 
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( MDPATH, /*            */ mdpath /*          */  );
     DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( DIRENT, /*            */ dirent /*          */  );
@@ -306,6 +306,9 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
     DUF_OPTION_CASE_ACQUIRE_TRACE( ACTION, /*           */ action );
     DUF_OPTION_CASE_ACQUIRE_TRACE( ERROR, /*            */ error );
     DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN, /*             */ scan );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN_DE_DIR, /*      */ scan_de_dir );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN_DE_REG, /*      */ scan_de_reg );
+    DUF_OPTION_CASE_ACQUIRE_TRACE( TEMP, /*             */ temp );
     DUF_OPTION_CASE_ACQUIRE_TRACE( PATH, /*             */ path );
     DUF_OPTION_CASE_ACQUIRE_TRACE( FS, /*               */ fs );
     DUF_OPTION_CASE_ACQUIRE_TRACE( DELETED, /*          */ deleted );
@@ -369,7 +372,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
             duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.sd5 = duf_config->cli.trace.md5 =
             duf_config->cli.trace.crc32 = duf_config->cli.trace.mime = duf_config->cli.trace.exif = duf_config->cli.trace.sample =
-            duf_config->cli.trace.deleted = duf_config->cli.trace.scan = strtol( optarg, NULL, 10 );
+            duf_config->cli.trace.deleted = duf_config->cli.trace.scan = duf_config->cli.trace.temp = strtol( optarg, NULL, 10 );
     else
     {
       duf_config->cli.trace.sql++;
@@ -386,6 +389,7 @@ duf_parse_option( int opt, const char *optarg, int longindex, const duf_longval_
       duf_config->cli.trace.sample++;
       duf_config->cli.trace.deleted++;
       duf_config->cli.trace.scan++;
+      duf_config->cli.trace.temp++;
     }
     break;
 

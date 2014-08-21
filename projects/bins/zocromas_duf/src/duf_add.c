@@ -14,6 +14,9 @@
 #include "duf_dbg.h"
 #include "duf_path.h"
 
+#include "duf_levinfo.h"
+#include "duf_pdi.h"
+
 
 /* ###################################################################### */
 #include "duf_add.h"
@@ -32,11 +35,28 @@ duf_add_path_uni( const char *path )
     DUF_TRACE( explain, 0, "adding path uni: %s", path );
 
     real_path = duf_realpath( path );
+
+    duf_depthinfo_t di = {.depth = -1,
+      .seq = 0,
+      .levinfo = NULL,
+      .u = duf_config->u,
+      /* .opendir = sccb ? sccb->opendir : 0, */
+      .opendir = 1,
+      /* .name = real_path, */
+    };
+
+    r = duf_pdi_init( &di, real_path );
+
+
     DUF_TRACE( action, 0, "real_path:%s", real_path );
     DUF_TRACE( explain, 0, "converted to real_path: %s", real_path );
     if ( !( real_path && *real_path == '/' && real_path[1] == 0 ) )
-      r = duf_real_path2db( ( duf_depthinfo_t * ) NULL, real_path, 1 /* add */  );
-    DUF_TRACE( explain, 0, "added path uni: %s", real_path  );
+      r = duf_real_path2db( &di, real_path, 1 /* add */  );
+    DUF_TRACE( explain, 0, "added path uni: %s", real_path );
+
+    duf_pdi_close( &di );
+
+
     mas_free( real_path );
   }
   DEBUG_ENDR( r );

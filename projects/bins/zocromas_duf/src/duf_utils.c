@@ -169,13 +169,46 @@ duf_pathdepth( const char *path )
 
 
 
+duf_error_code_t
+duf_vclear_error( duf_error_code_t r, va_list args )
+{
+  duf_error_code_t e = 0;
+
+  /* fprintf( stderr, ">>>>>>>>>>>>>> %d\n", r ); */
+  do
+  {
+    e = va_arg( args, int );
+
+    /* fprintf( stderr, ">>>>>>>>>>>>>> %d ? %d\n", r, e ); */
+
+    if ( r == e )
+    {
+      r = 0;
+      break;
+    }
+  }
+  while ( e );
+  /* fprintf( stderr, "!!! %d\n", r ); */
+  return r;
+}
+
+duf_error_code_t
+duf_clear_error( duf_error_code_t r, ... )
+{
+  va_list args;
+
+  va_start( args, r );
+  r = duf_vclear_error( r, args );
+  va_end( args );
+  return r;
+}
+
 
 typedef struct
 {
   const char *name;
   duf_error_code_t code;
 } duf_errdesc_t;
-
 
 const char *
 duf_error_name( duf_error_code_t c )
@@ -308,6 +341,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_BIND_NAME ),
     DUF_ERROR_NAME( DUF_ERROR_MAX_DEPTH ),
     DUF_ERROR_NAME( DUF_ERROR_MAX_REACHED ),
+    DUF_ERROR_NAME( DUF_ERROR_MAX_SEQ_REACHED ),
     DUF_ERROR_NAME( DUF_ERROR_GET_FIELD ),
     DUF_ERROR_NAME( DUF_ERROR_NOT_IN_DB ),
     DUF_ERROR_NAME( DUF_ERROR_NO_FIELD ),

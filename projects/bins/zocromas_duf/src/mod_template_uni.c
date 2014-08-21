@@ -171,7 +171,7 @@ static const char *final_sql[] = {
 
 duf_scan_callbacks_t duf_template_callbacks = {
   .title = "module",
-  .opendir = 0,
+  .def_opendir = 0,
   .init_scan = template_scan_init,
   .scan_mode_2 = 1,
 

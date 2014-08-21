@@ -15,7 +15,7 @@ zocromas_duf_SOURCES=				     \
 							      \
 	duf_uni_scan.c duf_item_scan1.c duf_item_scan2.c       \
 	duf_sccb.c duf_dir_scan1.c duf_dir_scan2.c		\
-	duf_dirent_scan.c					 \
+	duf_dirent_scan.c duf_dirent_scan2.c					 \
 								  \
 	duf_levinfo.c duf_pdi.c					   \
 								    \

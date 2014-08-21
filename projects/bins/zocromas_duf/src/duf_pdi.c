@@ -48,12 +48,14 @@ void
 duf_set_context( duf_context_t * pcontext, void *ptr )
 {
   duf_clear_context( pcontext );
+  assert( pcontext );
   pcontext->ptr = ptr;
 }
 
 void
 duf_set_context_destructor( duf_context_t * pcontext, duf_void_voidp_t destr )
 {
+  assert( pcontext );
   pcontext->destructor = destr;
 }
 
@@ -62,27 +64,40 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *path )
 {
   int r = 0;
 
+  pdi->inited = 1;
   r = duf_levinfo_create( pdi, path );
-
   return r;
 }
 
 void
 duf_pdi_set_context( duf_depthinfo_t * pdi, void *ctx )
 {
+  assert( pdi );
   duf_set_context( &pdi->context, ctx );
 }
 
 void
 duf_pdi_set_context_destructor( duf_depthinfo_t * pdi, duf_void_voidp_t destr )
 {
+  assert( pdi );
   duf_set_context_destructor( &pdi->context, destr );
 }
 
 void *
 duf_pdi_context( duf_depthinfo_t * pdi )
 {
+  assert( pdi );
   return duf_context( &pdi->context );
+}
+int
+duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
+{
+  int r = 0;
+
+  assert( pdi );
+  r = pdi->opendir;
+  pdi->opendir = od;
+  return r;
 }
 
 int
@@ -90,6 +105,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
 {
   int r = 0;
 
+  assert( pdi );
   duf_clear_context( &pdi->context );
   for ( int i = 0; i < pdi->num_statements; i++ )
   {
@@ -108,15 +124,25 @@ duf_pdi_close( duf_depthinfo_t * pdi )
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 {
-  int rv = 0;
+  int r = 0;
 
-  rv = ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )
-         && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )
-         && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )
-         && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) );
-  /* DUF_PRINTF( 0, "%llu ? %llu : %d", pdi->seq, pdi->u.maxseq, rv ); */
-  return rv;
+  assert( pdi );
+  if ( pdi->u.maxseq && pdi->seq >= pdi->u.maxseq )
+    r = DUF_ERROR_MAX_SEQ_REACHED;
+  else if ( pdi->u.maxitems.files && pdi->items.files >= pdi->u.maxitems.files )
+    r = DUF_ERROR_MAX_REACHED;
+  else if ( pdi->u.maxitems.dirs && pdi->items.dirs >= pdi->u.maxitems.dirs )
+    r = DUF_ERROR_MAX_REACHED;
+  else if ( pdi->u.maxitems.total && pdi->items.total >= pdi->u.maxitems.total )
+    r = DUF_ERROR_MAX_REACHED;
+
+  /* rv = ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )                                  */
+  /*        && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )    */
+  /*        && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )       */
+  /*        && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ); */
+  return r;
 }
+
 int
 duf_pdi_seq( const duf_depthinfo_t * pdi )
 {
@@ -192,6 +218,7 @@ duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
   int r = 0;
   int *pi;
 
+  assert( pdi );
   if ( pdi->statements[i] )
     r = duf_sql_finalize( pdi->statements[i] );
   if ( pdi->xstatements[i] )

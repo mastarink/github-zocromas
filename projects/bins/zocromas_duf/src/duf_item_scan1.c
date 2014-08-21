@@ -44,8 +44,8 @@ duf_match_leaf( duf_record_t * precord )
   DUF_UFIELD( nsame );
   DUF_UFIELD( md5id );
 
-  r = duf_filename_match(  &duf_config->u.glob, filename ) && duf_lim_match( duf_config->u.size, filesize ) && duf_lim_match( duf_config->u.same, nsame )
-        && duf_md5id_match( duf_config->u.md5id, md5id );
+  r = duf_filename_match( &duf_config->u.glob, filename ) && duf_lim_match( duf_config->u.size, filesize )
+        && duf_lim_match( duf_config->u.same, nsame ) && duf_md5id_match( duf_config->u.md5id, md5id );
   return r;
 }
 
@@ -77,7 +77,7 @@ duf_sel_cb_leaf( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
 
-  if ( duf_filename_match(  &duf_config->u.glob, filename ) && duf_lim_match( duf_config->u.size, filesize ) )
+  if ( duf_filename_match( &duf_config->u.glob, filename ) && duf_lim_match( duf_config->u.size, filesize ) )
   {
     r = duf_levinfo_down( pdi, 0 /* dirid */ , filename, 0, 0, 1 /* is_leaf */  );
     DUF_TEST_R( r );
@@ -114,8 +114,12 @@ duf_sel_cb_leaf( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
       r = 0;
     DUF_TEST_R( r );
     DUF_OINV_OPENED( pdi-> );
-    if ( !duf_pdi_max_filter( pdi ) )
-      r = DUF_ERROR_MAX_REACHED;
+    {
+      int rm = 0;
+
+      if ( ( rm = duf_pdi_max_filter( pdi ) ) )
+        r = rm;
+    }
   }
   else
     DUF_TRACE( match, 0, "NOT MATCH %s (mode 1)", filename );
@@ -215,8 +219,12 @@ duf_sel_cb_node( duf_record_t * precord, void *sel_cb_udata_unused, duf_str_cb_t
   if ( r == DUF_ERROR_MAX_DEPTH )
     r = 0;
   DUF_OINV_OPENED( pdi-> );
-  if ( !duf_pdi_max_filter( pdi ) )
-    r = DUF_ERROR_MAX_REACHED;
+  {
+    int rm = 0;
+
+    if ( ( rm = duf_pdi_max_filter( pdi ) ) )
+      r = DUF_ERROR_MAX_REACHED;
+  }
   DUF_TEST_R( r );
   DEBUG_END(  );
   return r;

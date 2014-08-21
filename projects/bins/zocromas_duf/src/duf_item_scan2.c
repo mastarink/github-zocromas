@@ -131,6 +131,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
         /* if ( r >= 0 && !duf_levinfo_item_deleted( pdi ) ) */
         if ( r >= 0 )
         {
+          DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 5. leaf str cb2" );
           r = ( str_cb2 ) ( pstmt, pdi, sccb );
         }
         DUF_TEST_R( r );
@@ -145,8 +146,12 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       r = 0;
     DUF_TEST_R( r );
     DUF_OINV_OPENED( pdi-> );
-    if ( !duf_pdi_max_filter( pdi ) )
-      r = DUF_ERROR_MAX_REACHED;
+    {
+      int rm = 0;
+
+      if ( ( rm = duf_pdi_max_filter( pdi ) ) )
+        r = rm;
+    }
   }
   DUF_TEST_R( r );
   DEBUG_ENDR( r );
@@ -180,10 +185,10 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
 
   DEBUG_START(  );
   assert( pdi );
-  DUF_OINV_OPENED( pdi-> );
 
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
+
 
   /* Not here : assert( dirid == duf_levinfo_dirid( pdi ) );
    * */
@@ -225,8 +230,8 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
 
           if ( r >= 0 )
           {
-            DUF_TRACE( scan, 10, "before ... as (str_cb2)" );
             DUF_TRACE( explain, 0, "=> str cb2" );
+            DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 5. node str cb2" );
             r = ( str_cb2 ) ( pstmt, pdi, sccb );
           }
           DUF_TEST_R( r );
@@ -250,8 +255,12 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
   if ( r == DUF_ERROR_MAX_DEPTH )
     r = 0;
   DUF_OINV_OPENED( pdi-> );
-  if ( !duf_pdi_max_filter( pdi ) )
-    r = DUF_ERROR_MAX_REACHED;
+  {
+    int rm = 0;
+
+    if ( ( rm = duf_pdi_max_filter( pdi ) ) )
+      r = rm;
+  }
   DUF_TEST_R( r );
   DEBUG_END(  );
   return r;
@@ -282,6 +291,8 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
  * called with precord
  * str_cb2 + str_cb_udata to be called for precord with correspondig args
  * */
+  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 4. set %s sel_cb2%c; str_cb2%c",
+                node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-', str_cb2 ? '+' : '-' );
   if ( node_type == DUF_NODE_LEAF )
   {
     sel_cb2 = duf_sel_cb2_leaf;
@@ -297,8 +308,6 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
     r = DUF_ERROR_UNKNOWN_NODE;
   DUF_OINV_OPENED( pdi-> );
   DUF_OINV( pdi-> );
-  DUF_TRACE( scan, 10, "scan items [%s] sel_cb2%c; str_cb2%c", node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-',
-             str_cb2 ? '+' : '-' );
   DUF_TEST_R( r );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sql */
@@ -409,6 +418,8 @@ duf_scan_db_vitems2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depth
                   /* sel_cb can be duf_sel_cb2_(node|leaf) */
                   DUF_TRACE( explain, ( node_type == DUF_NODE_LEAF ? 0 : 2 ), "=> sel_cb2 ≪%s≫",
                              node_type == DUF_NODE_LEAF ? "leaf" : "node" );
+
+
                   r = ( sel_cb2 ) ( pstmt, str_cb2, pdi, sccb );
                   DUF_TEST_R( r );
                   cnt++;

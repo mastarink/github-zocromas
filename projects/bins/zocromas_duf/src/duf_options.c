@@ -117,6 +117,9 @@ const duf_longval_extended_t lo_extended[] = {
   {.val = DUF_OPTION_SAMPLE_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
   {.val = DUF_OPTION_SAMPUPD_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
   {.val = DUF_OPTION_SCAN_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
+  {.val = DUF_OPTION_SCAN_DE_DIR_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
+  {.val = DUF_OPTION_SCAN_DE_REG_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
+  {.val = DUF_OPTION_TEMP_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
   {.val = DUF_OPTION_SD5_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
   {.val = DUF_OPTION_SELECT_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
   {.val = DUF_OPTION_SEQ_TRACE,.help = "trace ....",.oclass = DUF_OPTION_CLASS_TRACE},
@@ -642,6 +645,9 @@ duf_restore_option( char *ptr, duf_option_code_t optcode )
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, ACTION, action );
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, ERROR, error );
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, SCAN, scan );
+  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SCAN_DE_DIR, scan_de_dir );
+  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SCAN_DE_REG, scan_de_reg );
+  DUF_OPTION_RESTORE_TRACE( optcode, ptr, TEMP, temp );
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, PATH, path );
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, FS, fs );
   DUF_OPTION_RESTORE_TRACE( optcode, ptr, SAMPUPD, sampupd );

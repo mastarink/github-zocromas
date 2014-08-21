@@ -33,11 +33,12 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
   {
     r = fstatat( pdhandleup->dfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
-    if ( r > 0 )
-    {
-      pdhandle->rs = r;
-    }
-    else if ( r == -1 )
+
+    pdhandle->rs = r;
+    if ( !pdhandle->rs )
+      pdhandle->rs++;
+
+    if ( r < 0 )
     {
       char serr[1024] = "";
       char *s;
@@ -68,18 +69,29 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   updfd = pdhandleup ? pdhandleup->dfd : 0;
   if ( pdhandle && name && updfd )
   {
+    const char *opendir;
+
+    if ( *name )
+      opendir = name;
+    else
+      opendir = "/";
     if ( asfile )
       r = openat( updfd, name, O_NOFOLLOW | O_RDONLY );
     else
-      r = openat( updfd, *name ? name : "/", O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+      r = openat( updfd, opendir, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+
     if ( r > 0 )
     {
+      DUF_TRACE( temp, 0, "@@@@@@@@@@@ openat: %s (%s)", opendir, name );
       pdhandle->dfd = r;
 
       DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
 
-      r = 0;
-      pdhandle->rs = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+      r = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+
+      pdhandle->rs = r;
+      if ( !pdhandle->rs )
+        pdhandle->rs++;
 
       duf_config->nopen++;
       DUF_TRACE( fs, 0, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
@@ -117,9 +129,14 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     r = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
     if ( r > 0 )
     {
+      DUF_TRACE( temp, 0, "@@@@@@@@@@@ open: %s", path );
       pdhandle->dfd = r;
-      r = 0;
-      pdhandle->rs = stat( path, &pdhandle->st );
+
+      r = stat( path, &pdhandle->st );
+
+      pdhandle->rs = r;
+      if ( !pdhandle->rs )
+        pdhandle->rs++;
 
       duf_config->nopen++;
       DUF_TRACE( fs, 0, "opened %s (%u - %u = %u)  h%u", path, duf_config->nopen, duf_config->nclose,

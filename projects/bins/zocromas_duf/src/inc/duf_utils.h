@@ -2,9 +2,9 @@
 #  define MAS_DUF_UTILS_H
 
 /* duf_trace_mode_t */
-#include "duf_trace_types.h"
-#include "duf_error_types.h"
-#include "duf_ufilter_types.h"
+#  include "duf_trace_types.h"
+#  include "duf_error_types.h"
+#  include "duf_ufilter_types.h"
 
 char *duf_single_quotes_2( const char *s );
 int duf_pathdepth( const char *path );
@@ -29,6 +29,7 @@ int duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out
 
 char *duf_realpath( const char *path );
 
+duf_error_code_t duf_clear_error( duf_error_code_t r, ... );
 
 const char *duf_error_name( duf_error_code_t c );
 

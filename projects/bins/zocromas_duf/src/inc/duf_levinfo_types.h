@@ -57,6 +57,7 @@ typedef struct
 
 typedef struct
 {
+  unsigned inited:1;
   unsigned opendir:1;
   unsigned maxdepth;
   int depth;                    /* signed !! */

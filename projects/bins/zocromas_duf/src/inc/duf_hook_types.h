@@ -63,7 +63,7 @@ typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 
 struct duf_scan_callbacks_s
 {
-  unsigned opendir:1;
+  unsigned def_opendir:1;
   unsigned scan_mode_2:1;
   const char *title;
 

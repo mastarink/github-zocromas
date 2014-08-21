@@ -327,12 +327,28 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_u
   return r;
 }
 
+static int
+sample_entry_dir2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pstat, unsigned long long dirid,
+                        duf_depthinfo_t * pdi )
+{
+  int r = 0;
+
+  DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
+  DUF_TEST_R( r );
+  return r;
+}
+
+
+
 
 duf_scan_callbacks_t duf_sample_callbacks = {
-  .title = __FILE__,
-  /* .opendir = 1, */
+  .title = "sample mod",
   .init_scan = NULL,
+  /* .def_opendir = 1, */
   .scan_mode_2 = 1,
+
+  /* .dirent_dir_scan_before = directories_entry_dir, */
+  .dirent_dir_scan_before2 = sample_entry_dir2,
 
   .node_scan_before = sample_scan_node_before,
   .node_scan_before2 = sample_scan_node_before2,
