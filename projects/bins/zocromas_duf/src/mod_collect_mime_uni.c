@@ -237,7 +237,7 @@ static const char *final_sql[] = {
 
 
 duf_scan_callbacks_t duf_collect_mime_callbacks = {
-  .title = " collect mime ",
+  .title = "collect mime",
   .def_opendir = 1,
   .scan_mode_2 = 1,
 

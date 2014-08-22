@@ -546,7 +546,7 @@ static const char *final_sql[] = {
 
 
 duf_scan_callbacks_t duf_collect_exif_callbacks = {
-  .title = " collect exif ",
+  .title = "collect exif",
   .def_opendir = 1,
   .scan_mode_2 = 1,
 

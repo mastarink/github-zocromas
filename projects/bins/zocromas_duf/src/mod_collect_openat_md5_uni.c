@@ -343,7 +343,7 @@ static const char *final_sql[] = {
 
 
 duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
-  .title = "collect o md5",
+  .title = "collect md5",
   .init_scan = NULL,
   .def_opendir = 1,
   .scan_mode_2 = 1,

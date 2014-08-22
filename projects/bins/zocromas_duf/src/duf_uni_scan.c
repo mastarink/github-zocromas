@@ -208,7 +208,6 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
   r = duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 );
   DUF_TEST_R( r );
 
-  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ), DUF_ACT_FLAG( summary ) );
   DEBUG_END(  );
   return r;
 }
