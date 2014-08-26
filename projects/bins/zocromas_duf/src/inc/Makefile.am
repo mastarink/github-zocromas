@@ -9,7 +9,7 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h	   \
 	duf_sccb.h duf_dir_scan1.h duf_dir_scan2.h	   \
 	duf_levinfo.h  duf_pdi.h			    \
 	duf_dirent_scan1.h duf_dirent_scan2.h		     \
-	duf_file_pathid.h duf_file_pathid2.h		      \
+	duf_file_pathid1.h duf_file_pathid2.h		      \
 	duf_utils.h duf_dh.h duf_service.h		       \
 	duf_sqlite.h duf_sql.h duf_sql1.h duf_sql2.h		\
 	duf_sql_field.h duf_sql_field1.h			 \
