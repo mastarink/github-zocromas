@@ -29,7 +29,7 @@
 /* #include "duf_sql.h" */
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-#include "duf_sql_field1.h"
+/* #include "duf_sql_field1.h" */
 
 #include "duf_dbg.h"
 
@@ -40,47 +40,47 @@
 
 
 /* callback of type duf_scan_hook_file_t */
-static int
-sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  DUF_SFIELD( filename );
-
-  DEBUG_START(  );
-/* stat */
-
-  /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
-
-  /* 
-   * --uni-scan   -R   --sample   --files   -FF
-   *                   ^^^^^^^^   ^^^^^^^
-   * */
-
-
-
-
-  DUF_TRACE( sample, 2, "sample" );
-
-  if ( pdi->depth <= 0 )
-  {
-    DUF_ERROR( "depth should not be %d at this point", pdi->depth );
-    assert( pdi->depth > 0 );
-  }
-  {
-    const char *fpath;
-
-    DUF_SFIELD( filename );
-
-    fpath = duf_levinfo_path( pdi );
-    DUF_TRACE( sample, 0, "@@@@@@@@@ (F%d) '%s'/'%s'", pdi->depth, fpath, filename );
-    DUF_PRINTF( 1, "#%4llu: L%2u%12s%s%s", pdi->seq, duf_pdi_depth( pdi ), "", fpath ? fpath : "?/", filename );
-  }
-
-  DUF_TRACE( sample, 2, "filename=%s", filename );
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                                                       */
+/* sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )                                                */
+/* {                                                                                                                */
+/*   int r = 0;                                                                                                     */
+/*                                                                                                                  */
+/*   DUF_SFIELD( filename );                                                                                        */
+/*                                                                                                                  */
+/*   DEBUG_START(  );                                                                                               */
+/* (* stat *)                                                                                                       */
+/*                                                                                                                  */
+/*   (* SQL at duf_file_pathid.c : duf_scan_fil_by_pi *)                                                            */
+/*                                                                                                                  */
+/*   (*                                                                                                             */
+/*    * --uni-scan   -R   --sample   --files   -FF                                                                  */
+/*    *                   ^^^^^^^^   ^^^^^^^                                                                        */
+/*    * *)                                                                                                          */
+/*                                                                                                                  */
+/*                                                                                                                  */
+/*                                                                                                                  */
+/*                                                                                                                  */
+/*   DUF_TRACE( sample, 2, "sample" );                                                                              */
+/*                                                                                                                  */
+/*   if ( pdi->depth <= 0 )                                                                                         */
+/*   {                                                                                                              */
+/*     DUF_ERROR( "depth should not be %d at this point", pdi->depth );                                             */
+/*     assert( pdi->depth > 0 );                                                                                    */
+/*   }                                                                                                              */
+/*   {                                                                                                              */
+/*     const char *fpath;                                                                                           */
+/*                                                                                                                  */
+/*     DUF_SFIELD( filename );                                                                                      */
+/*                                                                                                                  */
+/*     fpath = duf_levinfo_path( pdi );                                                                             */
+/*     DUF_TRACE( sample, 0, "@@@@@@@@@ (F%d) '%s'/'%s'", pdi->depth, fpath, filename );                            */
+/*     DUF_PRINTF( 1, "#%4llu: L%2u%12s%s%s", pdi->seq, duf_pdi_depth( pdi ), "", fpath ? fpath : "?/", filename ); */
+/*   }                                                                                                              */
+/*                                                                                                                  */
+/*   DUF_TRACE( sample, 2, "filename=%s", filename );                                                               */
+/*   DEBUG_ENDR( r );                                                                                               */
+/*   return r;                                                                                                      */
+/* }                                                                                                                */
 
 static int
 sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
@@ -128,33 +128,33 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
  * this is callback of type: duf_scan_hook_dir_t
  * */
 /* will be static! */
-int
-sample_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-  unsigned long long dirid = duf_levinfo_dirid( pdi );
-
-  DEBUG_START(  );
-
-
-  {
-    const char *path = duf_levinfo_path( pdi );
-
-    DUF_PRINTF( 2, "#%4llu: " DUF_DEPTH_PFMT "+ id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path );
-  }
-  {
-    void *ctx = duf_levinfo_context( pdi );
-
-    if ( !ctx )
-    {
-      char *test = mas_strdup( "BEFORE" );
-
-      duf_levinfo_set_context( pdi, test );
-    }
-  }
-  DEBUG_ENDR( r );
-  return r;
-}
+/* int                                                                                                          */
+/* sample_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )   */
+/* {                                                                                                            */
+/*   int r = 0;                                                                                                 */
+/*   unsigned long long dirid = duf_levinfo_dirid( pdi );                                                       */
+/*                                                                                                              */
+/*   DEBUG_START(  );                                                                                           */
+/*                                                                                                              */
+/*                                                                                                              */
+/*   {                                                                                                          */
+/*     const char *path = duf_levinfo_path( pdi );                                                              */
+/*                                                                                                              */
+/*     DUF_PRINTF( 2, "#%4llu: " DUF_DEPTH_PFMT "+ id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path ); */
+/*   }                                                                                                          */
+/*   {                                                                                                          */
+/*     void *ctx = duf_levinfo_context( pdi );                                                                  */
+/*                                                                                                              */
+/*     if ( !ctx )                                                                                              */
+/*     {                                                                                                        */
+/*       char *test = mas_strdup( "BEFORE" );                                                                   */
+/*                                                                                                              */
+/*       duf_levinfo_set_context( pdi, test );                                                                  */
+/*     }                                                                                                        */
+/*   }                                                                                                          */
+/*   DEBUG_ENDR( r );                                                                                           */
+/*   return r;                                                                                                  */
+/* }                                                                                                            */
 
 static int
 sample_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
@@ -185,30 +185,30 @@ sample_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_u
 }
 
 
-static int
-sample_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  DEBUG_START(  );
-
-  {
-    unsigned long long dirid = duf_levinfo_dirid( pdi );
-    const char *path = duf_levinfo_path( pdi );
-
-    DUF_PRINTF( 4, "#%4llu: " DUF_DEPTH_PFMT "- id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path );
-  }
-  {
-    void *ctx = duf_levinfo_context( pdi );
-
-    if ( !ctx || 0 != strcmp( ( char * ) ctx, "MIDDLE" ) )
-      DUF_ERROR( "sample context %s", ( char * ) ctx );
-    DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, ctx );
-    duf_levinfo_set_context( pdi, NULL );
-  }
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                                                   */
+/* sample_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )    */
+/* {                                                                                                            */
+/*   int r = 0;                                                                                                 */
+/*                                                                                                              */
+/*   DEBUG_START(  );                                                                                           */
+/*                                                                                                              */
+/*   {                                                                                                          */
+/*     unsigned long long dirid = duf_levinfo_dirid( pdi );                                                     */
+/*     const char *path = duf_levinfo_path( pdi );                                                              */
+/*                                                                                                              */
+/*     DUF_PRINTF( 4, "#%4llu: " DUF_DEPTH_PFMT "- id%-7llu %s", pdi->seq, duf_pdi_depth( pdi ), dirid, path ); */
+/*   }                                                                                                          */
+/*   {                                                                                                          */
+/*     void *ctx = duf_levinfo_context( pdi );                                                                  */
+/*                                                                                                              */
+/*     if ( !ctx || 0 != strcmp( ( char * ) ctx, "MIDDLE" ) )                                                   */
+/*       DUF_ERROR( "sample context %s", ( char * ) ctx );                                                      */
+/*     DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, ctx );                                          */
+/*     duf_levinfo_set_context( pdi, NULL );                                                                    */
+/*   }                                                                                                          */
+/*   DEBUG_ENDR( r );                                                                                           */
+/*   return r;                                                                                                  */
+/* }                                                                                                            */
 
 static int
 sample_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
@@ -235,51 +235,51 @@ sample_scan_node_after2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_un
   return r;
 }
 
-static int
-sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-  unsigned long long dirid = duf_levinfo_dirid( pdi );
-
-  DEBUG_START(  );
-
-  DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );
-  {
-    duf_config->cli.trace.sql--;
-    {
-      const char *real_path = NULL;
-
-      if ( !real_path )
-        real_path = duf_levinfo_path( pdi );
-      /* char *path = duf_pathid_to_path_s( dirid, pdi, &r ); */
-
-      DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, real_path );
-      DUF_TRACE( sample, 1, "path=%s", real_path );
-      /* mas_free( path ); */
-    }
-    duf_config->cli.trace.sql++;
-  }
-  DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );
-
-  {
-    void *ctx = duf_levinfo_context( pdi );
-
-    if ( !ctx || 0 != strcmp( ( char * ) ctx, "BEFORE" ) )
-      DUF_ERROR( "sample context %s", ( char * ) ctx );
-
-    duf_levinfo_set_context( pdi, NULL );
-    ctx = duf_levinfo_context( pdi );
-    if ( !ctx )
-    {
-      char *test = mas_strdup( "MIDDLE" );
-
-      duf_levinfo_set_context( pdi, test );
-    }
-  }
-
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                                                 */
+/* sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                                                          */
+/*   int r = 0;                                                                                               */
+/*   unsigned long long dirid = duf_levinfo_dirid( pdi );                                                     */
+/*                                                                                                            */
+/*   DEBUG_START(  );                                                                                         */
+/*                                                                                                            */
+/*   DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );                                                          */
+/*   {                                                                                                        */
+/*     duf_config->cli.trace.sql--;                                                                           */
+/*     {                                                                                                      */
+/*       const char *real_path = NULL;                                                                        */
+/*                                                                                                            */
+/*       if ( !real_path )                                                                                    */
+/*         real_path = duf_levinfo_path( pdi );                                                               */
+/*       (* char *path = duf_pathid_to_path_s( dirid, pdi, &r ); *)                                           */
+/*                                                                                                            */
+/*       DUF_PRINTF( 5, "#%4llu: sample MIDDLE dPATH %s", pdi->seq, real_path );                              */
+/*       DUF_TRACE( sample, 1, "path=%s", real_path );                                                        */
+/*       (* mas_free( path ); *)                                                                              */
+/*     }                                                                                                      */
+/*     duf_config->cli.trace.sql++;                                                                           */
+/*   }                                                                                                        */
+/*   DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );                                                          */
+/*                                                                                                            */
+/*   {                                                                                                        */
+/*     void *ctx = duf_levinfo_context( pdi );                                                                */
+/*                                                                                                            */
+/*     if ( !ctx || 0 != strcmp( ( char * ) ctx, "BEFORE" ) )                                                 */
+/*       DUF_ERROR( "sample context %s", ( char * ) ctx );                                                    */
+/*                                                                                                            */
+/*     duf_levinfo_set_context( pdi, NULL );                                                                  */
+/*     ctx = duf_levinfo_context( pdi );                                                                      */
+/*     if ( !ctx )                                                                                            */
+/*     {                                                                                                      */
+/*       char *test = mas_strdup( "MIDDLE" );                                                                 */
+/*                                                                                                            */
+/*       duf_levinfo_set_context( pdi, test );                                                                */
+/*     }                                                                                                      */
+/*   }                                                                                                        */
+/*                                                                                                            */
+/*   DEBUG_ENDR( r );                                                                                         */
+/*   return r;                                                                                                */
+/* }                                                                                                          */
 
 static int
 sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
@@ -350,16 +350,16 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   /* .dirent_dir_scan_before = directories_entry_dir, */
   .dirent_dir_scan_before2 = sample_entry_dir2,
 
-  .node_scan_before = sample_scan_node_before,
+  /* .node_scan_before = sample_scan_node_before, */
   .node_scan_before2 = sample_scan_node_before2,
 
-  .node_scan_after = sample_scan_node_after,
+  /* .node_scan_after = sample_scan_node_after, */
   .node_scan_after2 = sample_scan_node_after2,
 
-  .node_scan_middle = sample_scan_node_middle,
+  /* .node_scan_middle = sample_scan_node_middle, */
   .node_scan_middle2 = sample_scan_node_middle2,
 
-  .leaf_scan = sample_scan_leaf,
+  /* .leaf_scan = sample_scan_leaf, */
   .leaf_scan2 = sample_scan_leaf2,
 
   .leaf_fieldset = "fn.pathid AS dirid " /* */

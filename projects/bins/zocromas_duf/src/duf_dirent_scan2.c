@@ -19,11 +19,12 @@
 #include "duf_levinfo.h"
 #include "duf_dirent.h"
 
+#include "duf_hook_types.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql.h"
 #include "duf_sql_field.h"
-#include "duf_sql_field1.h"
+/* #include "duf_sql_field1.h" */
 
 
 #include "duf_dbg.h"

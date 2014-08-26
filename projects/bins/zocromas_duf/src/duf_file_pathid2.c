@@ -20,7 +20,7 @@
 #include "duf_levinfo.h"
 
 #include "duf_path.h"
-#include "duf_item_scan1.h"
+/* #include "duf_item_scan1.h" */
 #include "duf_item_scan2.h"
 
 #include "duf_dbg.h"

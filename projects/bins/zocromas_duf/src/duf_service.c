@@ -27,10 +27,10 @@
 #include "duf_uni_scan.h"
 
 /* #include "duf_sccb.h" */
-#include "duf_dir_scan1.h"
+/* #include "duf_dir_scan1.h" */
 #include "duf_dir_scan2.h"
 
-#include "duf_item_scan1.h"
+/* #include "duf_item_scan1.h" */
 #include "duf_item_scan2.h"
 
 #include "duf_path.h"
@@ -72,8 +72,8 @@ duf_dbg_funname( duf_anyhook_t p )
     DUF_FUN( duf_sel_cb_name_parid ),
 #endif
     /* DUF_FUN( duf_sel_cb_items ), */
-    DUF_FUN( duf_sel_cb_node ),
-    DUF_FUN( duf_sel_cb_leaf ),
+    /* DUF_FUN( duf_sel_cb_node ), */
+    /* DUF_FUN( duf_sel_cb_leaf ), */
     /* DUF_FUN( duf_sel_cb_levinfo ), */
   };
   for ( int i = 0; i < sizeof( table ) / sizeof( table[9] ); i++ )

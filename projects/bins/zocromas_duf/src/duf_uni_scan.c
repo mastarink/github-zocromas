@@ -31,12 +31,12 @@
 #include "duf_path.h"
 
 #include "duf_sccb.h"
-#include "duf_dir_scan1.h"
+/* #include "duf_dir_scan1.h" */
 #include "duf_dir_scan2.h"
 
 #include "duf_dbg.h"
 
-#include "duf_uni_scan1.h"
+/* #include "duf_uni_scan1.h" */
 #include "duf_uni_scan2.h"
 
 /* ###################################################################### */

@@ -26,7 +26,7 @@
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-#include "duf_sql_field1.h"
+/* #include "duf_sql_field1.h" */
 
 /* #include "duf_path.h" */
 
@@ -150,42 +150,42 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
 
 /* callback of  duf_scan_hook_file_t */
 /* __attribute__ ( ( unused ) ) */
-static int
-tree_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord /*, const duf_dirhandle_t * pdh_unused */  )
-{
-  int r = 0;
-
-  DUF_SFIELD( filename );
-  /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
-
-  DEBUG_START(  );
-
-  {
-    duf_fileinfo_t fi = { 0 };
-    duf_format_t format = {.filename = 0,.seq = 1 };
-    /* fi.st.st_mode = ( mode_t ) filemode; */
-    /* fi.st.st_ino = ( ino_t ) inode; */
-    /* fi.st.st_mtim.tv_sec = mtim; */
-    /* fi.st.st_mtim.tv_nsec = 0; */
-    /* fi.st.st_uid = ( uid_t ) uid; */
-    /* fi.st.st_gid = ( gid_t ) gid; */
-    /* fi.st.st_nlink = ( nlink_t ) nlink; */
-    /* fi.st.st_size = ( off_t ) filesize; */
-    fi.name = filename;
-    /* fi.md5sum1 = md5sum1; */
-    /* fi.md5sum2 = md5sum2; */
-    duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
-  }
-
-  r = duf_sql_print_tree_prefix_uni( pdi );
-
-  /* SQL at duf_scan_files_by_dirid */
-
-  DUF_PRINTF( 0, "%s", filename );
-
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                                                 */
+/* tree_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord (*, const duf_dirhandle_t * pdh_unused *)  ) */
+/* {                                                                                                          */
+/*   int r = 0;                                                                                               */
+/*                                                                                                            */
+/*   DUF_SFIELD( filename );                                                                                  */
+/*   (* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); *)                              */
+/*                                                                                                            */
+/*   DEBUG_START(  );                                                                                         */
+/*                                                                                                            */
+/*   {                                                                                                        */
+/*     duf_fileinfo_t fi = { 0 };                                                                             */
+/*     duf_format_t format = {.filename = 0,.seq = 1 };                                                       */
+/*     (* fi.st.st_mode = ( mode_t ) filemode; *)                                                             */
+/*     (* fi.st.st_ino = ( ino_t ) inode; *)                                                                  */
+/*     (* fi.st.st_mtim.tv_sec = mtim; *)                                                                     */
+/*     (* fi.st.st_mtim.tv_nsec = 0; *)                                                                       */
+/*     (* fi.st.st_uid = ( uid_t ) uid; *)                                                                    */
+/*     (* fi.st.st_gid = ( gid_t ) gid; *)                                                                    */
+/*     (* fi.st.st_nlink = ( nlink_t ) nlink; *)                                                              */
+/*     (* fi.st.st_size = ( off_t ) filesize; *)                                                              */
+/*     fi.name = filename;                                                                                    */
+/*     (* fi.md5sum1 = md5sum1; *)                                                                            */
+/*     (* fi.md5sum2 = md5sum2; *)                                                                            */
+/*     duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );                */
+/*   }                                                                                                        */
+/*                                                                                                            */
+/*   r = duf_sql_print_tree_prefix_uni( pdi );                                                                */
+/*                                                                                                            */
+/*   (* SQL at duf_scan_files_by_dirid *)                                                                     */
+/*                                                                                                            */
+/*   DUF_PRINTF( 0, "%s", filename );                                                                         */
+/*                                                                                                            */
+/*   DEBUG_ENDR( r );                                                                                         */
+/*   return r;                                                                                                */
+/* }                                                                                                          */
 
 static int
 tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
@@ -269,32 +269,32 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
  * this is callback of type: duf_scan_hook_dir_t 
  * */
 /* __attribute__ ( ( unused ) ) */
-static int
-tree_scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * pdh_unused, */ duf_depthinfo_t * pdi,
-                       duf_record_t * precord )
-{
-  /* DUF_SFIELD( dirname ); */
-
-  DEBUG_START(  );
-
-  int r = 0;
-
-  {
-    if ( duf_config->cli.format.seq )
-      DUF_PRINTF( 0, ".%-8llu ", pdi->seq );
-    if ( duf_config->cli.format.dirid )
-      DUF_PRINTF( 0, ".[%8llu] ", pdi->levinfo[pdi->depth].dirid );
-    r = duf_sql_print_tree_prefix_uni( pdi );
-    {
-      /* optimizing makes puts, segfault by NULL, therefore DUF_PRINTF(0, "%s\n", dirname  ); is not good */
-      /* DUF_PRINTF( 0, "<<<%s>>>", dirname ? dirname : "-=No dirname=-" ); */
-      DUF_PRINTF( 0, "%s", duf_levinfo_itemname( pdi ) );
-    }
-  }
-
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                                                                                */
+/* tree_scan_node_before( unsigned long long pathid_unused, (* const duf_dirhandle_t * pdh_unused, *) duf_depthinfo_t * pdi, */
+/*                        duf_record_t * precord )                                                                           */
+/* {                                                                                                                         */
+/*   (* DUF_SFIELD( dirname ); *)                                                                                            */
+/*                                                                                                                           */
+/*   DEBUG_START(  );                                                                                                        */
+/*                                                                                                                           */
+/*   int r = 0;                                                                                                              */
+/*                                                                                                                           */
+/*   {                                                                                                                       */
+/*     if ( duf_config->cli.format.seq )                                                                                     */
+/*       DUF_PRINTF( 0, ".%-8llu ", pdi->seq );                                                                              */
+/*     if ( duf_config->cli.format.dirid )                                                                                   */
+/*       DUF_PRINTF( 0, ".[%8llu] ", pdi->levinfo[pdi->depth].dirid );                                                       */
+/*     r = duf_sql_print_tree_prefix_uni( pdi );                                                                             */
+/*     {                                                                                                                     */
+/*       (* optimizing makes puts, segfault by NULL, therefore DUF_PRINTF(0, "%s\n", dirname  ); is not good *)              */
+/*       (* DUF_PRINTF( 0, "<<<%s>>>", dirname ? dirname : "-=No dirname=-" ); *)                                            */
+/*       DUF_PRINTF( 0, "%s", duf_levinfo_itemname( pdi ) );                                                                 */
+/*     }                                                                                                                     */
+/*   }                                                                                                                       */
+/*                                                                                                                           */
+/*   DEBUG_ENDR( r );                                                                                                        */
+/*   return r;                                                                                                               */
+/* }                                                                                                                         */
 
 static int
 tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
@@ -367,9 +367,9 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
   .init_scan = NULL,
   .scan_mode_2 = 1,
-  .node_scan_before = tree_scan_node_before,
+  /* .node_scan_before = tree_scan_node_before, */
   .node_scan_before2 = tree_scan_node_before2,
-  .leaf_scan = tree_scan_leaf,
+  /* .leaf_scan = tree_scan_leaf, */
   .leaf_scan2 = tree_scan_leaf2,
   .leaf_fieldset = "fn.Pathid AS dirid " /* */
         ", fn.name AS filename, fd.size AS filesize " /* */
