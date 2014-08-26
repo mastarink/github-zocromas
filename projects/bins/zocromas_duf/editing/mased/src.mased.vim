@@ -7,6 +7,9 @@ sfind duf_item_scan2.h
 tab sfind duf_file_pathid.c
 sfind duf_file_pathid.h
 
+tab sfind duf_file_pathid2.c
+sfind duf_file_pathid2.h
+
 tab sfind duf_filedata.c
 sfind duf_filedata.h
 

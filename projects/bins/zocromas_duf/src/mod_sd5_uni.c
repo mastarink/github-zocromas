@@ -326,6 +326,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
+        " fd.sd5id IS NULL AND "    /* */
+	" sz.size > 0 "
         " sz.dupzcnt > 1 AND "  /* */
         " fn.Pathid='%llu' "    /* */
         ,
@@ -336,6 +338,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
+        " fd.sd5id IS NULL AND "    /* */
+	" sz.size > 0 "
         " sz.dupzcnt > 1 AND "  /* */
         " fn.Pathid=:dirid "    /* */
         ,
@@ -345,6 +349,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
+        " fd.sd5id IS NULL AND "    /* */
+	" sz.size > 0 "
         " sz.dupzcnt > 1 "      /* */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */

@@ -253,15 +253,21 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
         " FROM " DUF_DBPREF " filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi.id ) " /* */
+        " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
         " WHERE "               /* */
-        " fn.Pathid = :dirid AND ( mimeid IS NULL OR mi.mime IS NULL ) " /* */
+	" ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND "
+	" sz.size > 0 AND"
+        " fn.Pathid = :dirid " /* */
         ,
   .leaf_selector_total2 =       /* */
         " FROM " DUF_DBPREF " filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi.id ) " /* */
+        " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
         " WHERE "               /* */
-        " ( mimeid IS NULL OR mi.mime IS NULL ) ORDER BY fd.mimeid " /* */
+        " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " /* */
+	" sz.size > 0 "
+	" ORDER BY fd.mimeid " /* */
         ,
   .node_fieldset = " pt.id AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */

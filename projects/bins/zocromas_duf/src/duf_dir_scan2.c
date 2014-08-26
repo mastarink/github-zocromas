@@ -31,7 +31,7 @@
 
 #include "duf_dirent_scan2.h"
 
-#include "duf_file_pathid.h"
+#include "duf_file_pathid2.h"
 
 #include "duf_dbg.h"
 
@@ -58,7 +58,7 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, stru
   {
     pdi->items.total++;
     pdi->items.files++;
-
+    assert( duf_levinfo_dfd( pdi ) );
     if ( sccb->leaf_scan_fd2 )
       r = sccb->leaf_scan_fd2( pstmt, duf_levinfo_dfd( pdi ), duf_levinfo_stat( pdi ), pdi );
 
@@ -376,7 +376,6 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 /* duf_scan_db_items2:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
-  DUF_OINV( pdi-> );
   DUF_OINV_OPENED( pdi-> );
 
   DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan node selector2: [%s]", duf_pdi_depth( pdi ), sccb->node_selector2 );
@@ -485,7 +484,6 @@ duf_scan_dirs_by_parentid2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, du
   DUF_UFIELD2( minsize );
   DUF_UFIELD2( maxsize );
 
-  DUF_OINV( pdi-> );
   DUF_OINV_OPENED( pdi-> );
 
 
@@ -515,7 +513,6 @@ duf_scan_dirs_by_parentid2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, du
     DUF_TRACE( scan, 10, "off; by %5llu", dirid );
   }
   DUF_TEST_R( r );
-  DUF_OINV( pdi-> );
   DUF_OINV_OPENED( pdi-> );
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan end         by %5llu", duf_pdi_depth( pdi ), dirid );
   return r;

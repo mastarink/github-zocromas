@@ -219,6 +219,7 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_collect_mdpath_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
+  .scan_mode_2 = 0,
   .node_scan_before = mdpath_scan_node_before,
   .node_scan_after = mdpath_scan_node_after,
   .leaf_scan = mdpath_scan_leaf,

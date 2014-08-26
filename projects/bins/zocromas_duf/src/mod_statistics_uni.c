@@ -103,6 +103,7 @@ scan_node_before( unsigned long long pathid_unused, /* const duf_dirhandle_t * p
 duf_scan_callbacks_t duf_statistics_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
+  .scan_mode_2 = 0,
   .node_scan_before = scan_node_before,
   .leaf_scan = scan_leaf,
   .leaf_fieldset =

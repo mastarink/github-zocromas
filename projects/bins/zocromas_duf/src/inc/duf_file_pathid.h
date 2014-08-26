@@ -8,6 +8,5 @@
  * */
 int duf_scan_files_by_dirid( unsigned long long pathid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
 
-int duf_scan_files_by_dirid2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
 
 #endif

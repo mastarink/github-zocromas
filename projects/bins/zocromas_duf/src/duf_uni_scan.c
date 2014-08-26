@@ -142,7 +142,6 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
         /* DUF_ERROR( "L%d", di.depth ); */
         DUF_OINV_OPENED( di. );
         assert( di.depth >= 0 );
-        DUF_OINV( di. );
         DUF_TRACE( scan, 15, "%llu:%s  duf_scan_dirs_by_parentid(2?) with str_cb=duf_str_cb(1?)_uni_scan_dir(%p)", duf_levinfo_dirid( &di ),
                    real_path, ( void * ) ( unsigned long long ) duf_str_cb1_uni_scan_dir );
 
@@ -162,7 +161,6 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
  *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
-        DUF_OINV( di. );
         DUF_OINV_OPENED( di. );
 
         if ( r >= 0 )
@@ -174,9 +172,11 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
           if ( sccb->scan_mode_2 )
             r = duf_scan_dirs_by_parentid2( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
           else
-            r = duf_scan_dirs_by_parentid1( duf_str_cb1_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL /* precord */  );
+          {
+            /* r = duf_scan_dirs_by_parentid1( duf_str_cb1_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL (* precord *)  ); */
+	    DUF_ERROR("OBSOLETE sccb->scan_mode_2 == 0");
+          }
         }
-        DUF_OINV( di. );
         DUF_TEST_R( r );
       }
       else

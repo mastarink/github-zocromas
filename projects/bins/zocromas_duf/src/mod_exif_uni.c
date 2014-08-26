@@ -563,17 +563,22 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x.id ) " /* */
+        " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
         " WHERE "               /* */
+        " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
+	" sz.size > 0 AND"
+        " mi.mime='image/jpeg' AND" /* */
         " fn.Pathid = :dirid "  /* */
-        " AND mi.mime='image/jpeg' AND ( exifid IS NULL  OR x.modelid IS NULL ) " /* */
         ,
   .leaf_selector_total2 =       /* */
         " FROM " DUF_DBPREF " filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x.id ) " /* */
+        " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
         " WHERE "               /* */
-        " mi.mime='image/jpeg' AND ( exifid IS NULL OR x.modelid IS NULL ) " /* */
+        " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
+        " mi.mime='image/jpeg' " /* */
         ,
   .node_fieldset = " pt.id AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */

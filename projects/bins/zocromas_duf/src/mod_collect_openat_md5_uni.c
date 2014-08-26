@@ -122,6 +122,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
   MD5_CTX ctx;
 
   memset( &ctx, 0, sizeof( ctx ) );
+  DUF_TRACE( md5, 0, "make" );
   {
     char *buffer;
 
@@ -135,7 +136,9 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
       {
         int rr;
 
+        DUF_TRACE( temp, 0, "read fd:%u", fd );
         rr = read( fd, buffer, bufsz );
+        DUF_TRACE( temp, 0, "read rr:%u", rr );
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
@@ -205,7 +208,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 /* }                                                                                                                                 */
 
 static int
-duf_scan_dirent_md5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned char mdr[MD5_DIGEST_LENGTH];
@@ -213,10 +216,12 @@ duf_scan_dirent_md5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct st
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
-  DUF_TRACE( md5, 0, "+" );
+  DUF_TRACE( md5, 0, "+ %s", filename );
 
   memset( md, 0, sizeof( md ) );
+  DUF_TRACE( md5, 0, "+ %s", filename );
   r = duf_make_md5_uni( fd, md );
+  DUF_TRACE( md5, 0, "+ %s", filename );
   DUF_TEST_R( r );
   /* reverse */
   for ( int i = 0; i < sizeof( md ) / sizeof( md[0] ); i++ )
@@ -228,6 +233,7 @@ duf_scan_dirent_md5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct st
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
+    DUF_TRACE( md5, 0, "insert %s", filename );
     md5id = duf_insert_md5_uni( pdi, pmd, filename, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && md5id )
     {
@@ -352,7 +358,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   /* .node_scan_before = collect_openat_md5_scan_node_before, */
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
   /* .leaf_scan_fd = duf_scan_dirent_md5_content, */
-  .leaf_scan_fd2 = duf_scan_dirent_md5_content2,
+  .leaf_scan_fd2 = duf_dirent_md5_contnt2,
   .leaf_fieldset = "fn.Pathid AS dirid " /* */
         " , fd.id AS filedataid, fd.inode AS inode " /* */
         " , fn.name AS filename, fd.size AS filesize " /* */
@@ -360,15 +366,16 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " , fn.id AS filenameid " /* */
         " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
         ,
-  .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
-        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
-        " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-        "    WHERE "            /* */
-        " fd.md5id IS NULL AND" /* */
-        /* " sz.dupzcnt > 1 AND "  (* *) */
-        " fn.Pathid='%llu' "    /* */
-        ,
+  /* .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " (* *)       */
+  /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " (* *) */
+  /*       " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" (* *)         */
+  /*       " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" (* *)      */
+  /*       "    WHERE "            (* *)                                          */
+  /*       " fd.md5id IS NULL AND" (* *)                                          */
+  /*       " sz.size > 0 AND"                                                     */
+  /*       (* " sz.dupzcnt > 1 AND "  (* *) *)                                    */
+  /*       " fn.Pathid='%llu' "    (* *)                                          */
+  /*       ,                                                                      */
   .leaf_selector2 =             /* */
         /* "SELECT %s " */
         " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -377,6 +384,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
         " fd.md5id IS NULL AND" /* */
+	" sz.size > 0 AND"
         /* " sz.dupzcnt > 1 AND "  (* *) */
         " fn.Pathid=:dirid "    /* */
         ,
@@ -386,19 +394,20 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         " WHERE "               /* */
-        " fd.md5id IS NULL " /* */
+        " fd.md5id IS NULL AND"    /* */
+	" sz.size > 0 "
         /* " AND sz.dupzcnt > 1 "      (* *) */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
         ,
-  .node_selector = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM " DUF_DBPREF "paths AS pt " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
-        " WHERE pt.ParentId='%llu' " /* */
-        ,
+  /* .node_selector = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " (* *)       */
+  /*       ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " (* *) */
+  /*       " FROM " DUF_DBPREF "paths AS pt " (* *)                                                            */
+  /*       " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " (* *)                           */
+  /*       " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " (* *)                          */
+  /*       " WHERE pt.ParentId='%llu' " (* *)                                                                  */
+  /*       ,                                                                                                   */
   .node_selector2 =             /* */
         /* "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
         /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */

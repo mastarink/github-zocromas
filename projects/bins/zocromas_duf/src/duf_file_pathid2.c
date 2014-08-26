@@ -27,7 +27,7 @@
 #include "duf_sccb.h"
 
 /* ###################################################################### */
-#include "duf_file_pathid.h"
+#include "duf_file_pathid2.h"
 /* ###################################################################### */
 
 
@@ -38,35 +38,36 @@
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *   duf_str_cb_scan_file_fd
  * */
+
+
 static int
-duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = DUF_ERROR_NO_FILE_SELECTOR;
 
   DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
 
-/* duf_scan_db_items:
- * call str_cb + str_cb_udata for each record by this sql with corresponding args
+/* duf_scan_db_items2:
+ * call str_cb2 + str_cb_udata for each record by this sql with corresponding args
  * */
 
-  if ( sccb && sccb->leaf_selector )
+  if ( sccb && sccb->leaf_selector2 )
   {
 
-/* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector */
-    r = duf_scan_db_items( DUF_NODE_LEAF, str_cb, pdi, sccb, sccb->leaf_selector, /* ... */ sccb->leaf_fieldset,
-                           dirid /* for WHERE */  );
+    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 3." );
 
-
-
+/* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector2 */
+    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset, /* ... */
+                            dirid /* for WHERE */  );
 
     DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
-
 
     DUF_TEST_R( r );
   }
   else
   {
-    DUF_ERROR( "sccb->leaf_selector must be set for %s", sccb->title );
+    DUF_ERROR( "sccb->leaf_selector2 must be set for %s", sccb->title );
+    r = DUF_ERROR_PTR;
   }
 
   return r;
@@ -79,13 +80,15 @@ duf_scan_files_by_di( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthin
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *   duf_str_cb_scan_file_fd
  * */
+
+
 int
-duf_scan_files_by_dirid( unsigned long long dirid, duf_str_cb_t str_cb, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_dirid2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
   if ( DUF_ACT_FLAG( files ) )
-    r = duf_scan_files_by_di( dirid, str_cb, pdi, sccb );
+    r = duf_scan_files_by_di2( dirid, str_cb2, pdi, sccb );
   else
     DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
   return r;
