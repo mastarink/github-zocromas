@@ -142,8 +142,6 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
         /* DUF_ERROR( "L%d", di.depth ); */
         DUF_OINV_OPENED( di. );
         assert( di.depth >= 0 );
-        DUF_TRACE( scan, 15, "%llu:%s  duf_scan_dirs_by_parentid(2?) with str_cb=duf_str_cb(1?)_uni_scan_dir(%p)", duf_levinfo_dirid( &di ),
-                   real_path, ( void * ) ( unsigned long long ) duf_str_cb1_uni_scan_dir );
 
 
 /* duf_str_cb(1?)_uni_scan_dir:

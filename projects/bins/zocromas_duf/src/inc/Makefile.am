@@ -4,15 +4,15 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h	   \
 	duf_create.h				      \
 	duf_dirent.h duf_filedata.h		       \
 	duf_add.h duf_path.h				\
-	duf_item_scan2.h		 \
-	duf_uni_scan.h duf_uni_scan2.h	  \
-	duf_sccb.h duf_dir_scan2.h	   \
+	duf_item_scan2.h				 \
+	duf_uni_scan.h duf_uni_scan2.h			  \
+	duf_sccb.h duf_dir_scan2.h			   \
 	duf_levinfo.h  duf_pdi.h			    \
-	duf_dirent_scan2.h		     \
-	duf_file_pathid2.h		      \
+	duf_dirent_scan2.h				     \
+	duf_file_pathid2.h				      \
 	duf_utils.h duf_dh.h duf_service.h		       \
-	duf_sqlite.h duf_sql.h duf_sql2.h		\
-	duf_sql_field.h			 \
+	duf_sqlite.h duf_sql.h duf_sql2.h			\
+	duf_sql_field.h duf_sql_field2.h			 \
 	duf_sql_const.h duf_sql_defs.h				  \
 	duf_types.h duf_error_types.h duf_item_types.h		   \
 	duf_fun_types.h duf_levinfo_types.h			    \

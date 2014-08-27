@@ -13,7 +13,10 @@ int duf_cli_option_by_string( const char *string );
 int duf_env_options( int argc, char *argv[] );
 int duf_infile_options( int argc, char *argv[] );
 
-const duf_longval_extended_t *duf_find_longval_extended( duf_option_code_t code );
+int duf_find_long( duf_option_code_t code );
+
+/* const duf_longval_extended_t *_duf_find_longval_extended( duf_option_code_t code ); */
+const duf_longval_extended_t *duf_longindex_extended( int longindex );
 const char *duf_find_longval_help( duf_option_code_t code );
 
 char *duf_cli_option_shorts( void );
@@ -25,10 +28,9 @@ char *duf_option_names( duf_option_code_t code );
 char *duf_option_names_d( duf_option_code_t code, const char *delim );
 
 
-char *duf_option_description( duf_option_code_t code, const duf_longval_extended_t * extended );
-char *duf_option_description_d( duf_option_code_t code, const duf_longval_extended_t * extended, const char *delimh, const char *delim );
+char *duf_option_description( int longindex, const duf_longval_extended_t * extended );
+char *duf_option_description_d( int longindex, const char *delimh, const char *delim );
 
-void duf_option_smart_help( duf_option_class_t oclass );
 
 #  define DUF_OPTION(lo)  \
     duf_config->lo
@@ -162,5 +164,11 @@ void duf_option_smart_help( duf_option_class_t oclass );
 
 #  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, lo, u)
 
+duf_option_class_t duf_help_option2class( duf_option_code_t code );
+
+void duf_option_smart_help( duf_option_class_t oclass );
+void duf_option_help( int argc, char **argv );
+void duf_option_examples( int argc, char **argv );
+void duf_option_version( int argc, char **argv );
 
 #endif

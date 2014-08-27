@@ -25,6 +25,7 @@
 #include "duf_config_ref.h"
 
 #include "duf_uni_scan.h"
+#include "duf_uni_scan2.h"
 
 /* #include "duf_sccb.h" */
 /* #include "duf_dir_scan1.h" */
@@ -66,7 +67,7 @@ duf_dbg_funname( duf_anyhook_t p )
 
 
   static duf_fundesc_t table[] = {
-    DUF_FUN( duf_str_cb1_uni_scan_dir ),
+    DUF_FUN( duf_str_cb2_uni_scan_dir ),
     /* DUF_FUN( duf_str_cb1_leaf_scan ), */
 #ifdef DUF_COMPILE_EXPIRED
     DUF_FUN( duf_sel_cb_name_parid ),

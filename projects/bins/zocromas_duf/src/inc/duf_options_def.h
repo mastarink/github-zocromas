@@ -57,6 +57,7 @@ typedef enum
 /*==================================================*/
   DUF_OPTION_LONG = 1000,
 /*==================================================*/
+  DUF_OPTION_HELP_NONE,
   DUF_OPTION_HELP_ALL,
 
   DUF_OPTION_HELP_HELP,
@@ -68,9 +69,12 @@ typedef enum
   DUF_OPTION_HELP_UPDATE,
   DUF_OPTION_HELP_REQUEST,
   DUF_OPTION_HELP_PRINT,
+
   DUF_OPTION_HELP_TRACE,
   DUF_OPTION_HELP_DEBUG,
+  DUF_OPTION_HELP_OBSOLETE,
   DUF_OPTION_HELP_NODESC,
+  DUF_OPTION_HELP_OTHER,
 
   DUF_OPTION_SCAN_DE_DIR_TRACE,
   DUF_OPTION_SCAN_DE_REG_TRACE,
@@ -194,7 +198,6 @@ typedef enum
   DUF_OPTION_MAX_LONG,
 } duf_option_code_t;
 
-typedef struct option duf_option_t;
 
 
 #endif

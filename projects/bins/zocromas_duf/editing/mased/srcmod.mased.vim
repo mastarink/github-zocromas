@@ -15,7 +15,7 @@ tab sfind mod_sampupd_uni.c
 " tab sfind mod_statistics_uni.c
 tab sfind mod_mdpath_uni.c
 
-tab sfind mod_collect_openat_md5_uni.c
+tab sfind mod_md5_uni.c
 " tab sfind mod_collect_noopenat_md5_uni.c
 tab sfind mod_sd5_uni.c
 tab sfind mod_crc32_uni.c

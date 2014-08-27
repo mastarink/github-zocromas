@@ -72,7 +72,7 @@ duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
 /* will be static! */
 
 void
-duf_percent( unsigned long long curval, unsigned long long maxval )
+duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg )
 {
   float width = 90;
   static duf_bar_t bar;
@@ -84,11 +84,12 @@ duf_percent( unsigned long long curval, unsigned long long maxval )
     if ( bar.width == 0 )
       fputs( "\n", stderr );
     fprintf( stderr, "\r [" );
-    for ( int i = 0; i < bar.width; i++ )
+    for ( int i = 0; i < bar.width - 1; i++ )
       fputc( '=', stderr );
+    fputc( '>', stderr );
     for ( int i = bar.width; i < width; i++ )
       fputc( ' ', stderr );
-    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do.", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval );
+    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, msg );
     bar.prev_width = bar.width + 1;
     if ( bar.width == width )
       fputs( "\n", stderr );
@@ -120,7 +121,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
  * */
       pdi->seq++;
       pdi->seq_leaf++;
-      duf_percent(pdi->seq_leaf,  pdi->total_files );
+      duf_percent( pdi->seq_leaf, pdi->total_files, duf_uni_scan_action_title( sccb ) );
       /* {                                                                                                                    */
       /*   float width = 90;                                                                                                  */
       /*                                                                                                                      */

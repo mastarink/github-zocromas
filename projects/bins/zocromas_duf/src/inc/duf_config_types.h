@@ -4,6 +4,8 @@
 #  include "duf_cli_types.h"
 #  include "duf_item_types.h"
 #  include "duf_ufilter_types.h"
+
+#  include "duf_option_types.h"
 /* #include "duf_types.h" */
 
 typedef struct
@@ -30,6 +32,7 @@ typedef struct
   double loadtime;
   int actions_done;
   duf_ufilter_t u;
+  duf_option_t *longopts_table;
   duf_config_cli_t cli;
   duf_dbs_config_t db;
   /* char *group; */

@@ -1,6 +1,6 @@
 #include <stdarg.h>
 #include <string.h>
-#include <getopt.h>
+/* #include <getopt.h> */
 #include <sys/time.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -9,9 +9,11 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_types.h"
+#include "duf_utils.h"
+#include "duf_service.h"
 
 #include "duf_dbg.h"
-
+#include "duf_print_defs.h"
 
 #include "duf_config_ref.h"
 /* ###################################################################### */
@@ -69,6 +71,38 @@ duf_config_create( void )
   duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
   /* duf_config->cli.trace.fs = 1; */
   duf_config->tmp = duf_tmp_create(  );
+
+  {
+    /* extern const duf_option_t *duf_longopts; */
+    /* extern const int duf_longopts_count; */
+    extern const duf_longval_extended_t *lo_extended;
+    extern unsigned lo_extended_count;
+
+    {
+      size_t tbsize;
+
+      tbsize = lo_extended_count * ( sizeof( duf_longval_extended_t ) + 1 );
+      duf_config->longopts_table = mas_malloc( tbsize );
+      memset( duf_config->longopts_table, 0, tbsize );
+      for ( int i = 0; i < lo_extended_count; i++ )
+      {
+        duf_config->longopts_table[i].name = lo_extended[i].o.name;
+        duf_config->longopts_table[i].has_arg = lo_extended[i].o.has_arg;
+        duf_config->longopts_table[i].val = lo_extended[i].o.val;
+      }
+    }
+    /* {                                                                                                                                          */
+    /*   DUF_PRINTF( 0, "%u -- %u", lo_extended_count, duf_longopts_count );                                                                      */
+    /*   for ( int i = 0; i < duf_longopts_count && duf_longopts[i].name && duf_config->longopts_table[i].name; i++ )                             */
+    /*   {                                                                                                                                        */
+    /*     if ( 0 != strcmp( duf_longopts[i].name, duf_config->longopts_table[i].name )                                                           */
+    /*          || duf_longopts[i].has_arg != duf_config->longopts_table[i].has_arg || duf_longopts[i].val != duf_config->longopts_table[i].val ) */
+    /*     {                                                                                                                                      */
+    /*       DUF_PRINTF( 0, "%d: %30s :: %30s", i, duf_longopts[i].name, duf_config->longopts_table[i].name );                                    */
+    /*     }                                                                                                                                      */
+    /*   }                                                                                                                                        */
+    /* }                                                                                                                                          */
+  }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;
 }
@@ -84,6 +118,9 @@ duf_config_delete( void )
 
   mas_free( duf_config->db.dir );
   duf_config->db.dir = NULL;
+
+  mas_free( duf_config->longopts_table );
+  duf_config->longopts_table = NULL;
 
   mas_free( duf_config->help_string );
   duf_config->help_string = NULL;

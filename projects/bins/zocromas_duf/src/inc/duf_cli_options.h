@@ -4,7 +4,4 @@
 int duf_cli_options( int argc, char *argv[] );
 
 
-
-
-
 #endif

@@ -34,7 +34,7 @@
 #include "duf_sql_const.h"
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-#include "duf_sql_field1.h"
+#include "duf_sql_field2.h"
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
@@ -304,7 +304,7 @@ static const char *final_sql[] = {
 
 
 duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
-  .title = "collect o sd5",
+  .title = "collect sd5",
   .init_scan = NULL,
   .def_opendir = 1,
   .scan_mode_2 = 1,
@@ -327,7 +327,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
         " fd.sd5id IS NULL AND "    /* */
-	" sz.size > 0 "
+	" sz.size > 0 AND "
         " sz.dupzcnt > 1 AND "  /* */
         " fn.Pathid='%llu' "    /* */
         ,
@@ -339,7 +339,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
         " fd.sd5id IS NULL AND "    /* */
-	" sz.size > 0 "
+	" sz.size > 0 AND "
         " sz.dupzcnt > 1 AND "  /* */
         " fn.Pathid=:dirid "    /* */
         ,
@@ -350,7 +350,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
         " fd.sd5id IS NULL AND "    /* */
-	" sz.size > 0 "
+	" sz.size > 0 AND "
         " sz.dupzcnt > 1 "      /* */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */

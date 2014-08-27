@@ -1,12 +1,17 @@
 #ifndef MAS_DUF_OPTION_TYPES_H
 #  define MAS_DUF_OPTION_TYPES_H
+#  include <getopt.h>
 
 typedef enum
 {
-  DUF_OPTION_CLASS_NONE,
-
+  DUF_OPTION_CLASS_BAD = -2,
+  DUF_OPTION_CLASS_ALL = -1,
   DUF_OPTION_CLASS_ANY,
+  
   DUF_OPTION_CLASS_MIN,
+
+  DUF_OPTION_CLASS_NONE,
+  DUF_OPTION_CLASS_NO_HELP,
 
   DUF_OPTION_CLASS_HELP,
   DUF_OPTION_CLASS_SYSTEM,
@@ -17,21 +22,24 @@ typedef enum
   DUF_OPTION_CLASS_UPDATE,
   DUF_OPTION_CLASS_REQUEST,
   DUF_OPTION_CLASS_PRINT,
-  
+
   DUF_OPTION_CLASS_TRACE,
   DUF_OPTION_CLASS_DEBUG,
+  DUF_OPTION_CLASS_OBSOLETE,
   DUF_OPTION_CLASS_NODESC,
   DUF_OPTION_CLASS_OTHER,
 
   DUF_OPTION_CLASS_MAX,
 } duf_option_class_t;
 
+typedef struct option duf_option_t;
+
 typedef struct
 {
-  int val;
   const char *help;
   duf_option_class_t oclass;
   int shown;
+  duf_option_t o;
 } duf_longval_extended_t;
 
 #endif

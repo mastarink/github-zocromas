@@ -51,7 +51,7 @@
 #include "duf_sql_const.h"
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-#include "duf_sql_field1.h"
+/* #include "duf_sql_field1.h" */
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
@@ -577,7 +577,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
         " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x.id ) " /* */
         " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
         " WHERE "               /* */
-        " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
+        " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND " /* */
         " mi.mime='image/jpeg' " /* */
         ,
   .node_fieldset = " pt.id AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */

@@ -1,5 +1,6 @@
 /* #include <stdarg.h> */
 #include <string.h>
+#include <stddef.h>
 #include <getopt.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -25,8 +26,8 @@
 /* ###################################################################### */
 
 
-extern const duf_option_t *duf_longopts;
-extern const int duf_longopts_count;
+/* extern const duf_option_t *duf_longopts; */
+/* extern const int duf_longopts_count; */
 
 
 int
@@ -34,13 +35,15 @@ duf_cli_options( int argc, char *argv[] )
 {
   int r = 0;
 
+  /* DUF_PRINTF(0, ">>>>>>>>>> %lu", offsetof( duf_config_t, u)); */
+
 #if 0
   /* Don't use it before all oprions got */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 #endif
   if ( duf_config )
   {
-    int opt;
+    duf_option_code_t codeval;
     int longindex = 0;
 
     opterr = 0;
@@ -48,15 +51,14 @@ duf_cli_options( int argc, char *argv[] )
       char *shorts = NULL;
 
       shorts = duf_cli_option_shorts(  );
-      while ( r == 0 && ( opt = getopt_long( argc, argv, shorts, duf_longopts, &longindex ) ) >= 0 )
+      while ( r == 0 && ( ( int ) ( codeval = getopt_long( argc, argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
       {
-        const duf_longval_extended_t *extended = duf_find_longval_extended( opt );
-
-        r = duf_parse_option( opt, optarg, longindex, extended );
+        /* DUF_PRINTF( 0, "@@@@@@@@@@ >>>>> %d : %d ", codeval, longindex ); */
+        r = duf_parse_option( codeval, longindex, optarg );
         DUF_TRACE( explain, 2, "parse options r: %d", r );
         if ( r == DUF_ERROR_OPTION )
         {
-          DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], opt, opt );
+          DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], codeval, codeval );
           /* r = optopt ? optopt : opt; */
         }
       }

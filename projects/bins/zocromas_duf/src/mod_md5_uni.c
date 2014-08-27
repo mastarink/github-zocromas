@@ -34,7 +34,7 @@
 /* #include "duf_sql_const.h" */
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-#include "duf_sql_field1.h"
+#include "duf_sql_field2.h"
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
