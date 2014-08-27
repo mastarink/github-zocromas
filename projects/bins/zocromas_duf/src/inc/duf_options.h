@@ -75,6 +75,7 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, fls) \
     case DUF_OPTION_FLAG_##up: \
        DUF_OPTION_ACQUIRE_FLAGG( lo, pref, fls ); \
+    done = 1; \
     break
 #  define DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, pref) DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, .v.flag)
 
@@ -108,11 +109,13 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_NUM( pref.lo ); \
+    done = 1; \
     break
 
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM_PLUS( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_NUM_PLUS( pref.lo ); \
+    done = 1; \
     break
 
 #  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, cli.act)
@@ -133,6 +136,7 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define DUF_OPTION_CASE_ACQUIRE_TRACE(up, lo) \
     case DUF_OPTION_## up ##_TRACE: \
       DUF_OPTION_ACQUIRE_TRACE( cli.trace.lo ); \
+    done = 1; \
     break
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
@@ -148,6 +152,7 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define  DUF_OPTION_CASE_ACQUIRE_STR( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_STR( pref.lo ); \
+    done = 1; \
     break
 
 
@@ -160,6 +165,7 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define  DUF_OPTION_CASE_ACQUIRE_ARG( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_ARG( pref.lo ); \
+    done = 1; \
     break
 
 #  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, lo, u)

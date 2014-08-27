@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stddef.h>
 #include <string.h>
 #include <assert.h>
 
@@ -187,7 +188,6 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optarg )
       r = DUF_ERROR_OPTION;
       break;
     }
-  /* DUF_PRINTF( 0, "@@@@@@@@@@ >> %d : %d : %d : %d", codeval, r, longindex, duf_config->longopts_table[longindex].val ); */
   return r;
 }
 
@@ -195,8 +195,12 @@ int
 duf_parse_option_long( int longindex, const char *optarg )
 {
   int r = 0;
+  int done = 0;
   duf_option_code_t codeval;
+  const duf_longval_extended_t *extended;
 
+  extended = duf_longindex_extended( longindex );
+  codeval = extended->o.val;
   codeval = duf_config->longopts_table[longindex].val;
   /* __attribute__ ( ( unused ) ) size_t loptarg = 0; */
   duf_option_class_t oclass = DUF_OPTION_CLASS_BAD;
@@ -215,8 +219,41 @@ duf_parse_option_long( int longindex, const char *optarg )
       duf_config->help_string = mas_strdup( optarg );
     }
     r = codeval;
+    done = 1;
   }
-  else
+  if ( !done )
+  {
+    switch ( extended->oclass )
+    {
+    case DUF_OPTION_CLASS_TRACE:
+      if ( extended->mf == 1 && extended->vtype == DUF_OPTION_VTYPE_UPLUS )
+      {
+        duf_config_cli_trace_t *tt;
+        unsigned *pi;
+        int rl;
+
+        tt = &duf_config->cli.trace;
+        pi = ( unsigned * ) ( ( ( char * ) tt ) + extended->m );
+        {
+          if ( optarg )
+            ( *pi ) = duf_strtol( optarg, &rl );
+          else
+            ( *pi )++;
+        }                       /* r = codeval; */
+        /* DUF_PRINTF( 0, "T------------oc:%d; %d %lu/%lu '%s' :: %d/%d r(%d)", extended->oclass, extended->mf, extended->m, */
+        /*             offsetof( duf_config_cli_trace_t, scan ), extended->o.name, *pi, duf_config->cli.trace.scan, r );     */
+        done = 1;
+      }
+      break;
+      /* case DUF_OPTION_CLASS_DEBUG: */
+      /* DUF_PRINTF( 0, "------------ %lu", extended->m ); */
+      /* break; */
+    default:
+      /* DUF_PRINTF( 0, "D------------oc:%d; %d %lu '%s'", extended->oclass, extended->mf, extended->m, extended->o.name ); */
+      break;
+    }
+  }
+  if ( !done )
     switch ( codeval )
     {
       /* case DUF_OPTION_SMART_HELP:     */
@@ -249,9 +286,11 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->help_string = mas_strdup( optarg );
       }
       r = codeval;
+      done = 1;
       break;
     case DUF_OPTION_TEST:
       DUF_PRINTF( 0, "This is test option output; optarg:%s", optarg ? optarg : "-" );
+      done = 1;
       break;
 /* */
       DUF_OPTION_CASE_ACQUIRE_NUM( OUTPUT_LEVEL, /*             */ level, /*     */ cli.output );
@@ -318,12 +357,14 @@ duf_parse_option_long( int longindex, const char *optarg )
 /* limits, filters, selectors */
     case DUF_OPTION_SIZE:
       r = duf_limits( optarg, &duf_config->u.size.min, &duf_config->u.size.max );
+      done = 1;
       break;
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, /*            */ size.max /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, /*            */ size.min /*     */  );
 
     case DUF_OPTION_SAME:
       r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same.max );
+      done = 1;
       break;
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, /*            */ same.max /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, /*            */ same.min /*     */  );
@@ -344,40 +385,40 @@ duf_parse_option_long( int longindex, const char *optarg )
 
 
 /* trace */
-      DUF_OPTION_CASE_ACQUIRE_NUM( TRACE_NONEW, /*        */ nonew, /*     */ cli.trace );
+      /* DUF_OPTION_CASE_ACQUIRE_NUM( TRACE_NONEW, (*        *) nonew, (*     *) cli.trace ); */
 
-      DUF_OPTION_CASE_ACQUIRE_TRACE( DRY_RUN, /*           */ dry_run );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( EXPLAIN, /*           */ explain );
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( DRY_RUN, (*           *) dry_run ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( EXPLAIN, (*           *) explain ); */
 
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, /*              */ seq );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( OPTIONS, /*          */ options );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( CALLS, /*            */ calls );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( ANY, /*              */ any );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( CURRENT, /*          */ current );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( ACTION, /*           */ action );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( ERROR, /*            */ error );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN, /*             */ scan );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN_DE_DIR, /*      */ scan_de_dir );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN_DE_REG, /*      */ scan_de_reg );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( TEMP, /*             */ temp );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( PATH, /*             */ path );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( FS, /*               */ fs );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( DELETED, /*          */ deleted );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SAMPUPD, /*          */ sampupd );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SAMPLE, /*           */ sample );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( MDPATH, /*           */ mdpath );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( DIRENT, /*           */ dirent );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SD5, /*              */ sd5 );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( MD5, /*              */ md5 );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( CRC32, /*            */ crc32 );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( MIME, /*             */ mime );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( EXIF, /*             */ exif );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( COLLECT, /*          */ collect );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( INTEGRITY, /*        */ integrity );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SQL, /*              */ sql );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( SELECT, /*           */ select );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( INSERT, /*           */ insert );
-      DUF_OPTION_CASE_ACQUIRE_TRACE( UPDATE, /*           */ update );
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, (*              *) seq ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( OPTIONS, (*          *) options ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( CALLS, (*            *) calls ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( ANY, (*              *) any ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( CURRENT, (*          *) current ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( ACTION, (*           *) action ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( ERROR, (*            *) error ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN, (*             *) scan ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN_DE_DIR, (*      *) scan_de_dir ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SCAN_DE_REG, (*      *) scan_de_reg ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( TEMP, (*             *) temp ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( PATH, (*             *) path ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( FS, (*               *) fs ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( DELETED, (*          *) deleted ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SAMPUPD, (*          *) sampupd ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SAMPLE, (*           *) sample ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( MDPATH, (*           *) mdpath ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( DIRENT, (*           *) dirent ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SD5, (*              *) sd5 ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( MD5, (*              *) md5 ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( CRC32, (*            *) crc32 ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( MIME, (*             *) mime ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( EXIF, (*             *) exif ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( COLLECT, (*          *) collect ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( INTEGRITY, (*        *) integrity ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SQL, (*              *) sql ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SELECT, (*           *) select ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( INSERT, (*           *) insert ); */
+      /* DUF_OPTION_CASE_ACQUIRE_TRACE( UPDATE, (*           *) update ); */
 
 /* i/o */
 
@@ -394,6 +435,7 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.file = NULL;
       }
       duf_config->cli.trace.out = stderr;
+      done = 1;
       break;
     case DUF_OPTION_TRACE_STDOUT:
       if ( duf_config->cli.trace.out )
@@ -408,13 +450,16 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.file = NULL;
       }
       duf_config->cli.trace.out = stdout;
+      done = 1;
       break;
     case DUF_OPTION_TRACE_FILE:
       r = duf_open_special( optarg, &duf_config->cli.trace.file, &duf_config->cli.trace.out );
+      done = 1;
       break;
 
     case DUF_OPTION_OUTPUT_FILE:
       r = duf_open_special( optarg, &duf_config->cli.output.file, &duf_config->cli.output.out );
+      done = 1;
       break;
 
 /* combined */
@@ -442,6 +487,7 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.scan++;
         duf_config->cli.trace.temp++;
       }
+      done = 1;
       break;
 
     case DUF_OPTION_FLAG_ZERO_DB:
@@ -465,6 +511,7 @@ duf_parse_option_long( int longindex, const char *optarg )
             DUF_ACT_FLAG( filedata ) = /* */
             DUF_ACT_FLAG( filenames ) = /* */
             1;
+      done = 1;
       break;
 
 /* specific */
@@ -630,6 +677,7 @@ duf_parse_option_long( int longindex, const char *optarg )
       }
 
       DUF_TEST_R( r );
+      done = 1;
       break;
     case DUF_OPTION_MEMUSAGE:
       {
@@ -640,6 +688,7 @@ duf_parse_option_long( int longindex, const char *optarg )
           mas_mem_disable_print_usage = 0;
         }
       }
+      done = 1;
       break;
     default:
       r = DUF_ERROR_OPTION;

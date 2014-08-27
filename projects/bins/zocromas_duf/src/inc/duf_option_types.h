@@ -32,14 +32,23 @@ typedef enum
   DUF_OPTION_CLASS_MAX,
 } duf_option_class_t;
 
+typedef enum
+{
+  DUF_OPTION_VTYPE_UPLUS,
+  DUF_OPTION_VTYPE_U,
+} duf_option_vtype_t;
+
 typedef struct option duf_option_t;
 
 typedef struct
 {
   const char *help;
   duf_option_class_t oclass;
+  duf_option_vtype_t vtype;
   int shown;
   duf_option_t o;
+  unsigned long m;
+  unsigned mf:1;
 } duf_longval_extended_t;
 
 #endif

@@ -35,8 +35,6 @@ duf_cli_options( int argc, char *argv[] )
 {
   int r = 0;
 
-  /* DUF_PRINTF(0, ">>>>>>>>>> %lu", offsetof( duf_config_t, u)); */
-
 #if 0
   /* Don't use it before all oprions got */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
@@ -53,7 +51,6 @@ duf_cli_options( int argc, char *argv[] )
       shorts = duf_cli_option_shorts(  );
       while ( r == 0 && ( ( int ) ( codeval = getopt_long( argc, argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
       {
-        /* DUF_PRINTF( 0, "@@@@@@@@@@ >>>>> %d : %d ", codeval, longindex ); */
         r = duf_parse_option( codeval, longindex, optarg );
         DUF_TRACE( explain, 2, "parse options r: %d", r );
         if ( r == DUF_ERROR_OPTION )
