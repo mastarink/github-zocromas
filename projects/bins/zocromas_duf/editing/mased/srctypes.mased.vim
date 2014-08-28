@@ -22,6 +22,7 @@ tab sfind duf_record_types.h
 
 tab sfind duf_cli_types.h
 sfind duf_option_types.h
+sfind duf_flags_types.h
 sfind duf_options_def.h
 
 tab sfind duf_format_types.h
