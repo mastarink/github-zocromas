@@ -6,7 +6,7 @@
 #include <time.h>
 
 
-#include <openssl/md5.h>
+/* #include <openssl/md5.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -204,6 +204,8 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( gid );
   DUF_UFIELD2( nlink );
   DUF_UFIELD2( inode );
+  DUF_UFIELD2( exifid );
+  DUF_UFIELD2( mimeid );
   DUF_UFIELD2( nsame );
   /* DUF_SFIELD( mtimef ); */
   /* DUF_SFIELD( dowmtime ); */
@@ -219,6 +221,7 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       .short_filename = 1,
       .seq = 1,
       .dirid_space = 1,
+      /* .exifid_space = 1, */
       .nfiles_space = 1,
       .ndirs_space = 1,
       .inode = 0,
@@ -227,7 +230,7 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       .uid = 1,
       .gid = 1,
       .filesize = 1,
-      .md5 = 0,
+      .md5 = 1,
       .md5id = 1,
       .mtime = 1,
       .nsame = 1,
@@ -245,6 +248,8 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.st.st_nlink = ( nlink_t ) nlink;
     fi.st.st_size = ( off_t ) filesize;
     fi.name = filename;
+    fi.exifid = exifid;
+    fi.mimeid = mimeid;
     fi.md5id = md5id;
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
@@ -324,6 +329,8 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unu
           .short_filename = 1,
           .seq = 1,
           .dirid = 1,
+          .exifid = 0,
+          .mimeid = 0,
           .nfiles = 1,
           .ndirs = 1,
           .inode = 0,
@@ -376,7 +383,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   /* .leaf_scan = tree_scan_leaf, */
   .leaf_scan2 = tree_scan_leaf2,
   .leaf_fieldset = "fn.Pathid AS dirid " /* */
-        ", fn.name AS filename, fd.size AS filesize " /* */
+        ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid" /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
         ", dup5cnt AS nsame"    /* */
         ", md.id AS md5id, md.md5sum1, md.md5sum2 " /* */

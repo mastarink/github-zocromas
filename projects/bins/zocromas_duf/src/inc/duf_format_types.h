@@ -22,7 +22,9 @@ typedef struct
   unsigned crc32:1;
   unsigned crc32id:1;
   unsigned mimeid:1;
+  unsigned mimeid_space:1;
   unsigned exifid:1;
+  unsigned exifid_space:1;
   unsigned mode:1;
   unsigned mtime:1;
   unsigned nlink:1;

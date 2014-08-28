@@ -321,16 +321,16 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " , fn.id AS filenameid " /* */
         " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
         ,
-  .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " /* */
-        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
-        " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-        "    WHERE "            /* */
-        " fd.sd5id IS NULL AND "    /* */
-	" sz.size > 0 AND "
-        " sz.dupzcnt > 1 AND "  /* */
-        " fn.Pathid='%llu' "    /* */
-        ,
+  /* .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " (* *)       */
+  /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id) " (* *) */
+  /*       " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" (* *)         */
+  /*       " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" (* *)      */
+  /*       "    WHERE "            (* *)                                          */
+  /*       " fd.sd5id IS NULL AND "    (* *)                                      */
+  /*       " sz.size > 0 AND "                                                    */
+  /*       (* " sz.dupzcnt > 1 AND "  (* *) *)                                    */
+  /*       " fn.Pathid='%llu' "    (* *)                                          */
+  /*       ,                                                                      */
   .leaf_selector2 =             /* */
         /* "SELECT %s " */
         " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -340,7 +340,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         "    WHERE "            /* */
         " fd.sd5id IS NULL AND "    /* */
 	" sz.size > 0 AND "
-        " sz.dupzcnt > 1 AND "  /* */
+        /* " sz.dupzcnt > 1 AND "  (* *) */
         " fn.Pathid=:dirid "    /* */
         ,
   .leaf_selector_total2 =       /* */
@@ -350,19 +350,19 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
         " fd.sd5id IS NULL AND "    /* */
-	" sz.size > 0 AND "
-        " sz.dupzcnt > 1 "      /* */
+	" sz.size > 0  "
+        /* " AND sz.dupzcnt > 1 "      (* *) */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
         ,
-  .node_selector = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        " FROM " DUF_DBPREF "paths AS pt " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " /* */
-        " WHERE pt.ParentId='%llu' " /* */
-        ,
+  /* .node_selector = "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " (* *)       */
+  /*       ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " (* *) */
+  /*       " FROM " DUF_DBPREF "paths AS pt " (* *)                                                            */
+  /*       " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt.id) " (* *)                           */
+  /*       " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt.id) " (* *)                          */
+  /*       " WHERE pt.ParentId='%llu' " (* *)                                                                  */
+  /*       ,                                                                                                   */
   .node_selector2 =             /* */
         /* "SELECT     pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
         /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */

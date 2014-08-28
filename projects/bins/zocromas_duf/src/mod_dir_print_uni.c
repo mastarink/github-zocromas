@@ -137,6 +137,8 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( gid );
   DUF_UFIELD2( nlink );
   DUF_UFIELD2( inode );
+  DUF_UFIELD2( exifid );
+  DUF_UFIELD2( mimeid );
   DUF_UFIELD2( nsame );
   /* DUF_SFIELD( mtimef ); */
   /* DUF_SFIELD( dowmtime ); */
@@ -154,13 +156,15 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       .filename = 1,
       .seq = 1,
       .dirid = 0,
+      .exifid = 1,
+      .mimeid = 1,
       .inode = 1,
       .mode = 1,
       .nlink = 1,
       .uid = 1,
       .gid = 1,
       .filesize = 1,
-      .md5 = 0,
+      .md5 = 1,
       .md5id = 1,
       .mtime = 1,
       .nsame = 1,
@@ -176,10 +180,14 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.st.st_nlink = ( nlink_t ) nlink;
     fi.st.st_size = ( off_t ) filesize;
     fi.name = filename;
+    fi.exifid = exifid;
+    fi.mimeid = mimeid;
     fi.md5id = md5id;
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
+
+
     duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
   }
   DUF_PUTSL( 0 );
@@ -261,6 +269,8 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
       .realpath = 1,
       .seq = 1,
       .dirid = 1,
+      .exifid = 0,
+      .mimeid = 0,
       .inode = 0,
       .mode = 0,
       .nlink = 0,
@@ -309,7 +319,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .leaf_scan2 = scan_leaf2,
   .leaf_fieldset =                   /* */
         "fn.Pathid AS dirid "   /* */
-        ", fn.name AS filename, fd.size AS filesize " /* */
+        ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
         ", fd.size AS filesize " /* */
         ", uid, gid, nlink, inode, mtim AS mtime " /* */
         ", fd.id AS dataid "    /* */

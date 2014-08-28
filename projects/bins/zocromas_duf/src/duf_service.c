@@ -293,33 +293,19 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
       DUF_PRINTF( 0, ".=%-4llu ", ( unsigned long long ) pfi->nsame );
     }
     else
-      DUF_PRINTF( 0, ".%5s ", "" );
+      DUF_PRINTF( 0, ". %-4s ", "." );
     ok++;
-    if ( duf_config->cli.format.md5id && ( !format || format->md5id ) )
-    {
-      if ( pfi->nsame > 1 )
-      {
-        DUF_DEBUG( 2, DUF_PRINTF( 0, ".{md5id}" ) );
-        DUF_PRINTF( 0, ".##%-6llu ", pfi->md5id );
-        ok++;
-      }
-      else
-      {
-        DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nomd5id}" ) );
-        DUF_PRINTF( 0, ".%8s ", "" );
-        ok++;
-      }
-    }
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
 
   if ( duf_config->cli.format.dataid && ( !format || format->dataid ) )
   {
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{dataid}" ) );
     if ( pfi->dataid )
-      DUF_PRINTF( 0, ".$%-6llu ", pfi->dataid );
+      DUF_PRINTF( 0, ".D%-6llu ", pfi->dataid );
     else
-      DUF_PRINTF( 0, ".%7s ", "" );
+      DUF_PRINTF( 0, ". %6s ", "" );
     ok++;
   }
 
@@ -370,17 +356,76 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
   {
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{filename}" ) );
     if ( format->short_filename )
-      DUF_PRINTF( 0, ".%s ", pfi->name );
+      DUF_PRINTF( 0, ".%-15s ", pfi->name );
     else
       DUF_PRINTF( 0, ".%-30s ", pfi->name );
     ok++;
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
 
+  if ( duf_config->cli.format.md5id && ( !format || format->md5id ) )
+  {
+    if ( 1 || pfi->nsame > 1 )
+    {
+      DUF_DEBUG( 2, DUF_PRINTF( 0, ".{md5id}" ) );
+      if ( pfi->md5id )
+        DUF_PRINTF( 0, ".#%-6llu ", pfi->md5id );
+      else
+        DUF_PRINTF( 0, ". %-6s ", "" );
+      ok++;
+    }
+    else
+    {
+      DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nomd5id}" ) );
+      DUF_PRINTF( 0, ". %-6s ", "" );
+      ok++;
+    }
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
   if ( duf_config->cli.format.md5 && ( !format || format->md5 ) )
   {
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{md5}" ) );
-    DUF_PRINTF( 0, ".%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
+    if ( pfi->md5sum1 || pfi->md5sum2 )
+      DUF_PRINTF( 0, ".%016llx%016llx ", pfi->md5sum1, pfi->md5sum2 );
+    else
+      DUF_PRINTF( 0, ".%-32s ", "-" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
+  if ( duf_config->cli.format.exifid && ( !format || format->exifid ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{exifid}" ) );
+    if ( pfi->exifid )
+      DUF_PRINTF( 0, ".X%-6llu    ", pfi->exifid );
+    else
+      DUF_PRINTF( 0, ". %-6s    ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.exifid_space && ( !format || format->exifid_space ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{exifid_space}" ) );
+    DUF_PRINTF( 0, ". %6s    ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
+  if ( duf_config->cli.format.mimeid && ( !format || format->mimeid ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{mimeid}" ) );
+    if ( pfi->mimeid )
+      DUF_PRINTF( 0, ".M%-6llu    ", pfi->mimeid );
+    else
+      DUF_PRINTF( 0, ". %-6s    ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.mimeid_space && ( !format || format->mimeid_space ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{mimeid_space}" ) );
+    DUF_PRINTF( 0, ". %6s    ", "" );
     ok++;
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );

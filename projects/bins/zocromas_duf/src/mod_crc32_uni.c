@@ -224,7 +224,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
         "    WHERE "            /* */
         " fd.crc32id IS NULL AND" /* */
 	" sz.size > 0 AND"
-        " sz.dupzcnt > 1 AND "  /* */
+        /* " sz.dupzcnt > 1 AND "  (* *) */
         " fn.Pathid=:dirid "    /* */
         ,
   .leaf_selector_total2 =       /* */
@@ -233,8 +233,8 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         "    WHERE "            /* */
         " fd.crc32id IS NULL AND" /* */
-	" sz.size > 0 AND"
-        " sz.dupzcnt > 1 "      /* */
+	" sz.size > 0 "
+        /* " AND sz.dupzcnt > 1 "      (* *) */
         ,
   .node_fieldset = "pt.id AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */

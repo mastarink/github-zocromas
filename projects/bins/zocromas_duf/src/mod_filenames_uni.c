@@ -69,38 +69,37 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigne
 
 
 
+/* static int                                                                                                                      */
+/* filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,           */
+/*                      duf_record_t * precord )                                                                                   */
+/* {                                                                                                                               */
+/*   int r = 0;                                                                                                                    */
+/*   DUF_UNUSED unsigned long long dataid = 0;                                                                                     */
+/*                                                                                                                                 */
+/*   (* unsigned long long fnid = 0; *)                                                                                            */
+/*                                                                                                                                 */
+/*   DEBUG_START(  );                                                                                                              */
+/*                                                                                                                                 */
+/*   (* if ( pst_file && pst_file->st_size >= pdi->u.size.min && ( !pdi->u.size.max || pst_file->st_size <= pdi->u.size.max ) ) *) */
+/*   if ( pst_file && duf_lim_matchll( pdi->u.size, pst_file->st_size ) )                                                          */
+/*   {                                                                                                                             */
+/*     dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );                                                                      */
+/*     r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );                                                             */
+/*   }                                                                                                                             */
+/*   DEBUG_ENDR( r );                                                                                                              */
+/*   return r;                                                                                                                     */
+/* }                                                                                                                               */
+
 static int
-filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,
-                     duf_record_t * precord )
-{
-  int r = 0;
-  DUF_UNUSED unsigned long long dataid = 0;
-
-  /* unsigned long long fnid = 0; */
-
-  DEBUG_START(  );
-
-  /* if ( pst_file && pst_file->st_size >= pdi->u.size.min && ( !pdi->u.size.max || pst_file->st_size <= pdi->u.size.max ) ) */
-  if ( pst_file && duf_lim_matchll( pdi->u.size, pst_file->st_size ) )
-  {
-    dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
-    r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );
-  }
-  DEBUG_ENDR( r );
-  return r;
-}
-
-static int
-filenames_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid,
-                      duf_depthinfo_t * pdi )
+filenames_entry_reg2( duf_sqlite_stmt_t * pstmt, const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi )
 {
   int r = 0;
 
   DEBUG_START(  );
   /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
 
-  if ( pst_file /* && !duf_config->cli.disable.insert */  )
-    /* && pst_file->st_size >= pdi->u.size .min&& ( !pdi->u.size .max|| pst_file->st_size < pdi->u.size .max) */
+  if ( pst_file                 /* && !duf_config->cli.disable.insert */
+       /* && duf_lim_matchll( pdi->u.size, pst_file->st_size ) */ )
   {
     DUF_UNUSED unsigned long long dataid = 0;
 
@@ -173,7 +172,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .def_opendir = 1,
   .scan_mode_2 = 1,
 
-  .dirent_file_scan_before = filenames_entry_reg,
+  /* .dirent_file_scan_before = filenames_entry_reg, */
   .dirent_file_scan_before2 = filenames_entry_reg2,
 
   .leaf_fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
