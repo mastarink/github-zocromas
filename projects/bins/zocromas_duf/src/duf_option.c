@@ -74,8 +74,48 @@ duf_strtol( const char *s, int *pr )
   return l;
 }
 
-static int
-duf_limits( const char *s, unsigned long long *pmin, unsigned long long *pmax )
+DUF_UNUSED static int
+duf_limits( const char *s, unsigned *pmin, unsigned *pmax )
+{
+  int r = 0;
+
+  if ( s )
+  {
+    long n;
+    char c = 0;
+
+    if ( *s == '+' )
+      c = *s++;
+    else if ( *s == '-' )
+      c = *s++;
+    n = duf_strtol( s, &r );
+    if ( r >= 0 )
+    {
+      if ( c == '+' )
+      {
+        if ( pmin )
+          *pmin = n + 1;
+      }
+      else if ( c == '-' )
+      {
+        if ( pmax )
+          *pmax = n - 1;
+      }
+      else
+      {
+        if ( pmin )
+          *pmin = n;
+        if ( pmax )
+          *pmax = n;
+      }
+    }
+    DUF_ERROR( "[%c] %d - %d", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
+  }
+  return r;
+}
+
+DUF_UNUSED static int
+duf_limitsll( const char *s, unsigned long long *pmin, unsigned long long *pmax )
 {
   int r = 0;
 
@@ -234,11 +274,15 @@ duf_parse_option_long( int longindex, const char *optarg )
     if ( extended->mf == 1 )
     {
       unsigned *pi;
+      unsigned long long *pll;
       unsigned short *pis;
+      char **pstr;
       unsigned doplus = 0;
 
       pi = ( unsigned * ) ( ( ( char * ) duf_config ) + extended->m );
       pis = ( unsigned short * ) ( ( ( char * ) duf_config ) + extended->m );
+      pll = ( unsigned long long * ) ( ( ( char * ) duf_config ) + extended->m );
+      pstr = ( char ** ) ( ( ( char * ) duf_config ) + extended->m );
       switch ( extended->vtype )
       {
       case DUF_OPTION_VTYPE_UPLUS:
@@ -263,6 +307,62 @@ duf_parse_option_long( int longindex, const char *optarg )
           /*             offsetof( duf_config_cli_trace_t, scan ), extended->o.name, *pi, duf_config->cli.trace.scan, r );     */
         }
         break;
+      case DUF_OPTION_VTYPE_NLL:
+        {
+          int rl = 0;
+
+          {
+            if ( optarg )
+            {
+              ( *pll ) = duf_strtol( optarg, &rl );
+              done = 1;
+            }
+            else if ( doplus )
+            {
+              ( *pll )++;
+              done = 1;
+            }
+          }                     /* r = codeval; */
+          /* DUF_PRINTF( 0, "T------------oc:%d; %d %lu/%lu '%s' :: %d/%d r(%d)", extended->oclass, extended->mf, extended->m, */
+          /*             offsetof( duf_config_cli_trace_t, scan ), extended->o.name, *pi, duf_config->cli.trace.scan, r );     */
+        }
+        break;
+      case DUF_OPTION_VTYPE_MINMAX:
+        {
+          int rl = 0;
+
+          {
+            if ( optarg )
+            {
+              unsigned n;
+
+              n = duf_strtol( optarg, &rl );
+              *pi++ = n;
+              *pi = n;
+              done = 1;
+            }
+            /* DUF_PRINTF( 0, "%u - %u", duf_config->u.same.min, duf_config->u.same.max ); */
+          }                     /* r = codeval; */
+        }
+        break;
+      case DUF_OPTION_VTYPE_MINMAXLL:
+        {
+          int rl = 0;
+
+          {
+            if ( optarg )
+            {
+              unsigned long long n;
+
+              n = duf_strtol( optarg, &rl );
+              *pll++ = n;
+              *pll = n;
+              done = 1;
+            }
+            /* DUF_PRINTF( 0, "%llu - %llu", duf_config->u.same.min, duf_config->u.same.max ); */
+          }                     /* r = codeval; */
+        }
+        break;
         /* case DUF_OPTION_CLASS_DEBUG: */
         /* DUF_PRINTF( 0, "------------ %lu", extended->m ); */
         /* break; */
@@ -278,8 +378,15 @@ duf_parse_option_long( int longindex, const char *optarg )
           done = 1;
         }
         break;
-      default:
-        /* DUF_PRINTF( 0, "D------------oc:%d; %d %lu '%s'", extended->oclass, extended->mf, extended->m, extended->o.name ); */
+      case DUF_OPTION_VTYPE_STR:
+        {
+          if ( pstr && *pstr )
+            mas_free( *pstr );
+          *pstr = NULL;
+          if ( optarg )
+            *pstr = mas_strdup( optarg );
+          done = 1;
+        }
         break;
       }
     }
@@ -337,9 +444,9 @@ duf_parse_option_long( int longindex, const char *optarg )
 
 
 /* db */
-      DUF_OPTION_CASE_ACQUIRE_STR( DB_DIRECTORY, /*           */ dir, /*             */ db );
-      DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_MAIN, /*           */ main.name, /*       */ db );
-      DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_ADM, /*            */ adm.name, /*        */ db );
+      /* DUF_OPTION_CASE_ACQUIRE_STR( DB_DIRECTORY, (*           *) dir, (*             *) db ); */
+      /* DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_MAIN, (*           *) main.name, (*       *) db ); */
+      /* DUF_OPTION_CASE_ACQUIRE_STR( DB_NAME_ADM, (*            *) adm.name, (*        *) db ); */
 
       /* DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( UNI_SCAN, (*          *) uni_scan (*     *)  ); */
       /* DUF_OPTION_CASE_ACQUIRE_ACT_FLAG( INFO, (*              *) info (*         *)  ); */
@@ -387,25 +494,25 @@ duf_parse_option_long( int longindex, const char *optarg )
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MIMEID, /*             */ mimeid /*          */  );
 
 /* limits, filters, selectors */
-    case DUF_OPTION_SIZE:
-      r = duf_limits( optarg, &duf_config->u.size.min, &duf_config->u.size.max );
-      done = 1;
-      break;
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, /*            */ size.max /*     */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, /*            */ size.min /*     */  );
+    /* case DUF_OPTION_SIZE:                                                           */
+    /*   r = duf_limitsll( optarg, &duf_config->u.size.min, &duf_config->u.size.max ); */
+    /*   done = 1;                                                                     */
+    /*   break;                                                                        */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, (*            *) size.max (*     *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, (*            *) size.min (*     *)  ); */
 
-    case DUF_OPTION_SAME:
-      r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same.max );
-      done = 1;
-      break;
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, /*            */ same.max /*     */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, /*            */ same.min /*     */  );
+      /* case DUF_OPTION_SAME:                                                         */
+      /*   r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same.max ); */
+      /*   done = 1;                                                                   */
+      /*   break;                                                                      */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, (*            *) same.max (*     *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, (*            *) same.min (*     *)  ); */
 
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDIRFILES, /*        */ dirfiles.max /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MINDIRFILES, /*        */ dirfiles.min /*     */  );
 
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSEQ, /*             */ maxseq /*     */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDEPTH, /*           */ maxreldepth /*     */  );
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSEQ, (*             *) maxseq (*     *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXRELDEPTH, (*           *) max_rel_depth (*     *)  ); */
 
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS, /*           */ maxitems.total /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS_FILES, /*     */ maxitems.files /*     */  );
@@ -422,7 +529,7 @@ duf_parse_option_long( int longindex, const char *optarg )
       /* DUF_OPTION_CASE_ACQUIRE_TRACE( DRY_RUN, (*           *) dry_run ); */
       /* DUF_OPTION_CASE_ACQUIRE_TRACE( EXPLAIN, (*           *) explain ); */
 
-      /* DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, (*              *) seq ); */
+      DUF_OPTION_CASE_ACQUIRE_TRACE( SEQ, /*              */ seq );
       /* DUF_OPTION_CASE_ACQUIRE_TRACE( OPTIONS, (*          *) options ); */
       /* DUF_OPTION_CASE_ACQUIRE_TRACE( CALLS, (*            *) calls ); */
       /* DUF_OPTION_CASE_ACQUIRE_TRACE( ANY, (*              *) any ); */
@@ -574,6 +681,11 @@ duf_parse_option_long( int longindex, const char *optarg )
         char *const tokens[] = {
           [DUF_FORMAT_DATAID] = "dataid",
           [DUF_FORMAT_DIRID] = "dirid",
+          [DUF_FORMAT_DIRID_SPACE] = "dirid_space",
+          [DUF_FORMAT_NFILES] = "nfiles",
+          [DUF_FORMAT_NFILES_SPACE] = "nfiles_space",
+          [DUF_FORMAT_NDIRS] = "ndirs",
+          [DUF_FORMAT_NDIRS_SPACE] = "ndirs_space",
           [DUF_FORMAT_FILENAME] = "filename",
           [DUF_FORMAT_FILESIZE] = "filesize",
           [DUF_FORMAT_GID] = "gid",
@@ -626,6 +738,21 @@ duf_parse_option_long( int longindex, const char *optarg )
             break;
           case DUF_FORMAT_DIRID:
             duf_config->cli.format.dirid = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_DIRID_SPACE:
+            duf_config->cli.format.dirid_space = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_NFILES:
+            duf_config->cli.format.nfiles = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_NFILES_SPACE:
+            duf_config->cli.format.nfiles_space = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_NDIRS:
+            duf_config->cli.format.ndirs = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_NDIRS_SPACE:
+            duf_config->cli.format.ndirs_space = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_TRUEPATH:
             duf_config->cli.format.truepath = value == NULL ? 1 : nvalue;

@@ -335,8 +335,8 @@ duf_env_options( int argc, char *argv[] )
   const char *varname = "MSH_DUF_OPTIONS";
 
   eo = getenv( "MSH_DUF_OPTIONS" );
-  DUF_TRACE( explain, 0, "getting env options from variable %s", varname );
-  /* DUF_TRACE( explain, 0, "env options tuple: %s", eo ); */
+
+  DUF_TRACE( options, 0, "getting env options from variable %s", varname );
   peo = eo;
   while ( peo && *peo )
   {
@@ -384,8 +384,7 @@ duf_infile( int dot, const char *at )
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
   cfgpath = mas_strcat_x( cfgpath, DUF_CONFIG_FILE_NAME );
-  DUF_TRACE( explain, 0, "opening conf file %s", cfgpath );
-  DUF_TRACE( any, 1, "cfg:[%s]", cfgpath );
+  DUF_TRACE( options, 0, "opening conf file %s", cfgpath );
   if ( cfgpath )
   {
     f = fopen( cfgpath, "r" );
@@ -408,17 +407,13 @@ duf_infile_options( int argc, char *argv[] )
   FILE *f = NULL;
 
   h = getenv( DUF_CONFIG_PATH_FROM_ENV );
-  DUF_TRACE( explain, 0, "getting variable " DUF_CONFIG_PATH_FROM_ENV " value for config path" );
-  DUF_TRACE( any, 1, "MSH_CONF_DIR:[%s]", h );
+  DUF_TRACE( options, 0, "getting variable " DUF_CONFIG_PATH_FROM_ENV " value for config path : %s", h );
   if ( h )
-  {
     f = duf_infile( 0, h );
-  }
   if ( !f )
   {
     h = getenv( "HOME" );
-    DUF_TRACE( explain, 0, "getting variable HOME value for config path (secondary)" );
-    DUF_TRACE( any, 0, "HOME:[%s]", h );
+    DUF_TRACE( options, 0, "getting variable HOME value for config path (secondary) : %s", h );
     f = duf_infile( 1, h );
   }
   DUF_TRACE( explain, 0, "to read config file" );
@@ -564,7 +559,7 @@ duf_restore_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_CALCULATE, calculate, cli,.disable, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_INSERT, insert, cli,.disable, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_UPDATE, update, cli,.disable, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSEQ, maxseq, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSEQ, max_seq, u, maxlen );
   DUF_OPTION_RESTORE_NUM( codeval, ptr, MINSIZE, size.min, u, maxlen );
   DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSIZE, size.max, u, maxlen );
   DUF_OPTION_RESTORE_NUM( codeval, ptr, MINDIRFILES, dirfiles.min, u, maxlen );
@@ -968,6 +963,7 @@ duf_option_examples( int argc, char **argv )
               "  run  /mnt/new_media/media/photo/ -iPO --progress  --md5 --sd5 --crc32 --mime --exif --dirs --files --dirent --filenames --filedata --add-path --create-tables --drop-tables --remove-database --vacuum  --print --integrity --recursive --info  --disable-calculate  --disable-update --summary --version		- %s",
               "" );
   DUF_PRINTF( 0, "  run  -OPRdEifndD -532Xe /mnt/new_media/media/photo/ --trace-options		- %s", "" );
+  DUF_PRINTF( 0, "  run --print -Rdf --max-depth=2   /mnt/new_media/media/photo/		- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 }
 

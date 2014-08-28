@@ -737,11 +737,11 @@ duf_levinfo_create( duf_depthinfo_t * pdi, const char *path )
 
   assert( pdi );
 
-  if ( pdi->u.maxreldepth /* FIXME */  && !pdi->levinfo )
+  if ( pdi->u.max_rel_depth /* FIXME */  && !pdi->levinfo )
   {
     size_t lsz;
 
-    pdi->maxdepth = pdi->u.maxreldepth + duf_pathdepth( path );
+    pdi->maxdepth = pdi->u.max_rel_depth + duf_pathdepth( path );
     lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
     /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
     pdi->levinfo = mas_malloc( lsz );

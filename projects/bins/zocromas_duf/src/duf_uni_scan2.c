@@ -77,7 +77,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
   DUF_TRACE( scan, 10, "+" );
   if ( r >= 0 )
   {
-    if ( DUF_U_FLAG( recursive ) && ( !pdi->u.maxreldepth || duf_pdi_reldepth( pdi ) < pdi->u.maxreldepth ) )
+    if ( DUF_U_FLAG( recursive ) && ( !pdi->u.max_rel_depth || duf_pdi_reldepth( pdi ) < pdi->u.max_rel_depth ) )
     {
 /* duf_scan_fil_by_pi:
  * call duf_str_cb(2?)_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
@@ -97,13 +97,13 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
       if ( duf_pdi_reldepth( pdi ) <= 1 )
       {
         DUF_TRACE( explain, 3, "cb2; option %s; option %s value %d; depth %d",
-                   DUF_OPT_FLAG_NAME( RECURSIVE ), DUF_OPT_NAME( MAXDEPTH ), pdi->u.maxreldepth,
+                   DUF_OPT_FLAG_NAME( RECURSIVE ), DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth,
                    duf_pdi_reldepth( pdi ) );
       }
       else
       {
         DUF_TRACE( explain, 4, "cb2; option %s; option %s value %d; depth %d",
-                   DUF_OPT_FLAG_NAME( RECURSIVE ), DUF_OPT_NAME( MAXDEPTH ), pdi->u.maxreldepth,
+                   DUF_OPT_FLAG_NAME( RECURSIVE ), DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth,
                    duf_pdi_reldepth( pdi ) );
       }
 
@@ -114,7 +114,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
     else
     {
       DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", DUF_OPT_FLAG_NAME( RECURSIVE ),
-                 DUF_OPT_NAME( MAXDEPTH ), pdi->u.maxreldepth );
+                 DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth );
     }
 
   }

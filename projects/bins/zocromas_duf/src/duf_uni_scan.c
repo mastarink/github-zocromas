@@ -193,8 +193,8 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
       DUF_PRINTF( 0, " summary; seq:     %llu", di.seq );
       DUF_PRINTF( 0, " summary; seq-leaf:%llu", di.seq_leaf );
       DUF_PRINTF( 0, " summary; seq-node:%llu", di.seq_node );
-      if ( duf_config->u.maxseq )
-        DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.maxseq );
+      if ( duf_config->u.max_seq )
+        DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
     }
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ), DUF_ACT_FLAG( summary ) );
   }

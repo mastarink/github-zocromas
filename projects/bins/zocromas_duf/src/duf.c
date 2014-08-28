@@ -104,19 +104,19 @@ duf_main( int argc, char **argv )
 
     if ( r >= 0 )
       er = r = duf_env_options( argc, argv );
-    DUF_TRACE( explain, 0, "got env options; r:%d (%c)", r, r > ' ' && r < 'z' ? r : '-' );
+    DUF_TRACE( options, 0, "got env options; er:%d (%c)", er, er > ' ' && er < 'z' ? er : '-' );
 
     if ( r >= 0 )
       fr = r = duf_infile_options( argc, argv );
-    DUF_TRACE( explain, 0, "got infile options; r:%d (%c)", r, r > ' ' && r < 'z' ? r : '-' );
+    DUF_TRACE( options, 0, "got infile options; fr:%d (%c)", fr, fr > ' ' && fr < 'z' ? fr : '-' );
 
     /* duf_config->cli.dbg.verbose = 4; */
 
     if ( r >= 0 )
       or = r = duf_cli_options( argc, argv );
-    DUF_TRACE( explain, 0, "got cli options; r:%d (%c)", r, r > ' ' && r < 'z' ? r : '-' );
+    DUF_TRACE( options, 0, "got cli options; or:%d (%c)", or, or > ' ' && or < 'z' ? or : '-' );
 
-    if ( r >= 0 && duf_config->cli.trace.options )
+    if ( r >= 0 && DUF_IF_TRACE( options ) )
       r = duf_show_options( argv[0] );
     /* {                                 */
     /*   char c;                         */
@@ -137,7 +137,7 @@ duf_main( int argc, char **argv )
     DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
     if ( duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
     {
-      if ( r == 0 && duf_config && duf_config->db.dir )
+      if ( r == 0 && duf_config->db.dir )
       {
         DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
         r = main_db( argc, argv );

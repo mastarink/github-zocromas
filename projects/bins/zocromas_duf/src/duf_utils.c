@@ -129,6 +129,19 @@ duf_lim_match( duf_limits_t lim, int n )
     r = ( n <= lim.max ) ? r : 0;
   return r;
 }
+int
+duf_lim_matchll( duf_limitsll_t lim, int n )
+{
+  int r;
+
+  r = 1;
+  if ( lim.min )
+    r = ( n >= lim.min ) ? r : 0;
+  if ( lim.max )
+    r = ( n <= lim.max ) ? r : 0;
+  return r;
+}
+
 
 int
 duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id )

@@ -131,24 +131,26 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
     done = 1; \
     break
 
-#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, cli.act)
+#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, lo)      DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, cli.act)
 #  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM_PLUS(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, lo, cli.act)
-#  define DUF_OPTION_CASE_ACQUIRE_U_NUM(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, u)
-#  define DUF_OPTION_CASE_ACQUIRE_U_NUM_PLUS(up, lo) DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, lo, u)
+#  define DUF_OPTION_CASE_ACQUIRE_U_NUM(up, lo)        DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, u)
+#  define DUF_OPTION_CASE_ACQUIRE_U_NUM_PLUS(up, lo)   DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, lo, u)
 
-#  define DUF_ACT_NUM(lo) DUF_OPTION_NUM(lo, cli.act)
-#  define DUF_U_NUM(lo) DUF_OPTION_NUM(lo, u)
+#  define DUF_CLI_NUM( lo, n ) DUF_OPTION_NUM( lo, cli.n )
+#  define DUF_ACT_NUM(lo)      DUF_CLI_NUM( lo, act )
+#  define DUF_U_NUM(lo)        DUF_OPTION_NUM( lo, u )
+#  define DUF_TRACE_NUM(lo)    DUF_CLI_NUM( lo, trace )
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
-#  define DUF_OPTION_ACQUIRE_TRACE(lo)  \
-    DUF_OPTION_ACQUIRE_NUM_PLUS(lo)
-
 #  define DUF_OPTION_RESTORE_TRACE(ocode, ptr, up, lo, maxlen) \
   DUF_OPTION_RESTORE_NUM(ocode, ptr,  up ## _TRACE, lo, cli.trace, maxlen)
 
+#  define DUF_OPTION_ACQUIRE_TRACE( lo )  \
+    DUF_OPTION_ACQUIRE_NUM_PLUS( cli.trace.lo )
+
 #  define DUF_OPTION_CASE_ACQUIRE_TRACE(up, lo) \
     case DUF_OPTION_## up ##_TRACE: \
-      DUF_OPTION_ACQUIRE_TRACE( cli.trace.lo ); \
+      DUF_OPTION_ACQUIRE_TRACE( lo ); \
     done = 1; \
     break
 

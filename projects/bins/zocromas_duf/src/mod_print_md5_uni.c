@@ -274,11 +274,11 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         ", fd.id AS dataid "    /* */
         ", fd.mode AS filemode" /* */
         ,
-  .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fd.id=fn.dataid) " /* */
-        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" /* */
-        " WHERE fd.md5id='%llu' ORDER BY fd.size " /* */
-        ,
+  /* .leaf_selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " (* *)       */
+  /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fd.id=fn.dataid) " (* *) */
+  /*       " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md.id=fd.md5id)" (* *)         */
+  /*       " WHERE fd.md5id='%llu' ORDER BY fd.size " (* *)                       */
+  /*       ,                                                                      */
   .leaf_selector2 =             /* */
         /* "SELECT %s " */
         " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -306,17 +306,17 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
         /* ", (SELECT size FROM " DUF_DBPREF "filedatas AS fd WHERE md.id=fd.md5id LIMIT 1) AS filesize " (* *) */
         ", fd.size AS maxsize, fd.size AS minsize" /* */
         ,
-  .node_selector = "SELECT md.id AS dirid, md.id AS md5id " /* */
-        ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dirname" /* */
-        ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dfname " /* */
-        ", 0 AS ndirs "         /* */
-        ", dup5cnt AS nfiles "   /* */
-        ", (SELECT size FROM " DUF_DBPREF "filedatas AS fd WHERE md.id=fd.md5id LIMIT 1) AS filesize " /* */
-        ", 0 AS maxsize, 0 AS minsize" /* */
-        " FROM " DUF_DBPREF "md5 AS md " /* */
-        "  WHERE %llu<1 "       /* */
-        "  ORDER BY filesize, md.id " /* */
-        ,
+  /* .node_selector = "SELECT md.id AS dirid, md.id AS md5id " (* *)                                            */
+  /*       ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dirname" (* *)                                    */
+  /*       ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dfname " (* *)                                    */
+  /*       ", 0 AS ndirs "         (* *)                                                                        */
+  /*       ", dup5cnt AS nfiles "   (* *)                                                                       */
+  /*       ", (SELECT size FROM " DUF_DBPREF "filedatas AS fd WHERE md.id=fd.md5id LIMIT 1) AS filesize " (* *) */
+  /*       ", 0 AS maxsize, 0 AS minsize" (* *)                                                                 */
+  /*       " FROM " DUF_DBPREF "md5 AS md " (* *)                                                               */
+  /*       "  WHERE %llu<1 "       (* *)                                                                        */
+  /*       "  ORDER BY filesize, md.id " (* *)                                                                  */
+  /*       ,                                                                                                    */
   .node_selector2 =             /* */
         /* "SELECT md.id AS dirid, md.id AS md5id "                    */
         /* ", printf('%%016x%%016x',md.md5sum1,md.md5sum2) AS dirname" */

@@ -111,10 +111,51 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
   if ( duf_config->cli.format.dirid && ( !format || format->dirid ) )
   {
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{dirid}" ) );
-    DUF_PRINTF( 0, ".[%-8llu] ", pdi->levinfo[pdi->depth].dirid );
+    DUF_PRINTF( 0, ".[%6llu  ] ", pdi->levinfo[pdi->depth].dirid );
     ok++;
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.dirid_space && ( !format || format->dirid_space ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{dirid_space}" ) );
+    DUF_PRINTF( 0, ". %6s    ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
+  if ( duf_config->cli.format.nfiles && ( !format || format->nfiles ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nfiles}" ) );
+    DUF_PRINTF( 0, ".(%6llu) ", pdi->levinfo[pdi->depth].items.files );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.nfiles_space && ( !format || format->nfiles_space ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nfiles_space}" ) );
+    DUF_PRINTF( 0, ". %6s  ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
+  if ( duf_config->cli.format.ndirs && ( !format || format->ndirs ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{ndirs}" ) );
+    DUF_PRINTF( 0, ".{%6llu} ", pdi->levinfo[pdi->depth].items.dirs );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.ndirs_space && ( !format || format->ndirs_space ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{ndirs_space}" ) );
+    DUF_PRINTF( 0, ". %6s  ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+
+
+
+
 
   if ( duf_config->cli.format.prefix && ( !format || format->prefix ) )
   {

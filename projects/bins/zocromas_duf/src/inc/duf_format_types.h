@@ -5,6 +5,11 @@ typedef struct
 {
   unsigned dataid:1;
   unsigned dirid:1;
+  unsigned dirid_space:1;
+  unsigned nfiles:1;
+  unsigned nfiles_space:1;
+  unsigned ndirs:1;
+  unsigned ndirs_space:1;
   unsigned filename:1;
   unsigned filesize:1;
   unsigned gid:1;
@@ -37,6 +42,11 @@ typedef enum
 {
   DUF_FORMAT_DATAID,
   DUF_FORMAT_DIRID,
+  DUF_FORMAT_DIRID_SPACE,
+  DUF_FORMAT_NFILES,
+  DUF_FORMAT_NFILES_SPACE,
+  DUF_FORMAT_NDIRS,
+  DUF_FORMAT_NDIRS_SPACE,
   DUF_FORMAT_FILENAME,
   DUF_FORMAT_FILESIZE,
   DUF_FORMAT_GID,

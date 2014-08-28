@@ -54,7 +54,9 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, stru
 
   DUF_UFIELD2( filesize );
   DUF_TRACE( scan, 10, "+" );
-  if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
+
+  /* if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) ) */
+  if ( duf_lim_matchll( duf_config->u.size, filesize ) )
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -87,7 +89,9 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
   DUF_SFIELD2( filename );
   DUF_TRACE( scan, 10, "+" );
   DUF_TRACE( explain, 0, "= ? ============ str cb2 leaf scan => ≪leaf_scan2≫" );
-  if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) )
+  
+  /* if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) ) */
+  if ( duf_lim_matchll( duf_config->u.size, filesize ) )
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -160,40 +164,29 @@ duf_qscan_node_scan_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
   dirid = duf_levinfo_dirid( pdi );
   if ( DUF_ACT_FLAG( dirs ) )
   {
-    unsigned long long n;
+    pdi->items.total++;
+    pdi->items.dirs++;
 
-    n = duf_count_db_vitems2( duf_match_leaf2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset, dirid, &r );
-    DUF_TEST_R( r );
-    if ( r >= 0 )
+    DUF_OINV_OPENED( pdi-> );
+    if ( duf_levinfo_item_deleted( pdi ) )
     {
-      DUF_TRACE( scan, 10, "count items %llu", n );
-      duf_levinfo_set_items_files( pdi, n );
-
-      pdi->items.total++;
-      pdi->items.dirs++;
-
-      DUF_OINV_OPENED( pdi-> );
-      if ( duf_levinfo_item_deleted( pdi ) )
+      if ( sccb->node_scan_before2_deleted )
       {
-        if ( sccb->node_scan_before2_deleted )
-        {
-          DUF_TRACE( scan, 10, "scan node before2_deleted by %5llu", dirid );
-          r = sccb->node_scan_before2_deleted( pstmt, dirid, pdi );
-        }
-        DUF_TRACE( deleted, 0, "DELETED" );
+        DUF_TRACE( scan, 10, "scan node before2_deleted by %5llu", dirid );
+        r = sccb->node_scan_before2_deleted( pstmt, dirid, pdi );
       }
-      else if ( sccb->node_scan_before2 )
-      {
-        DUF_TRACE( scan, 10, "scan node before2 by %5llu", dirid );
-        r = sccb->node_scan_before2( pstmt, dirid, pdi );
-      }
-      else
-      {
-        DUF_TRACE( scan, 10, "NOT scan node before2 by %5llu - sccb->node_scan_before2 empty for %s", dirid,
-                   duf_uni_scan_action_title( sccb ) );
-      }
-      DUF_TEST_R( r );
+      DUF_TRACE( deleted, 0, "DELETED" );
     }
+    else if ( sccb->node_scan_before2 )
+    {
+      DUF_TRACE( scan, 10, "scan node before2 by %5llu", dirid );
+      r = sccb->node_scan_before2( pstmt, dirid, pdi );
+    }
+    else
+    {
+      DUF_TRACE( scan, 10, "NOT scan node before2 by %5llu - sccb->node_scan_before2 empty for %s", dirid, duf_uni_scan_action_title( sccb ) );
+    }
+    DUF_TEST_R( r );
   }
   else if ( sccb->node_scan_before2 )
   {
@@ -236,8 +229,7 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
     }
     else
     {
-      DUF_TRACE( scan, 10, "NOT scan node middle2 by %5llu - sccb->node_scan_middle2 empty for %s", dirid,
-                 duf_uni_scan_action_title( sccb ) );
+      DUF_TRACE( scan, 10, "NOT scan node middle2 by %5llu - sccb->node_scan_middle2 empty for %s", dirid, duf_uni_scan_action_title( sccb ) );
     }
     DUF_TEST_R( r );
   }
@@ -282,8 +274,7 @@ duf_qscan_node_scan_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, du
     }
     else
     {
-      DUF_TRACE( scan, 10, "NOT scan node after2 by %5llu - sccb->node_scan_after2 empty for %s", dirid,
-                 duf_uni_scan_action_title( sccb ) );
+      DUF_TRACE( scan, 10, "NOT scan node after2 by %5llu - sccb->node_scan_after2 empty for %s", dirid, duf_uni_scan_action_title( sccb ) );
     }
     DUF_TEST_R( r );
   }
@@ -429,10 +420,14 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
 
   /* scan dirent's */
   r = duf_qscan_dirents2( pstmt, pdi, sccb );
-
+  DUF_TEST_R( r );
 
   if ( r >= 0 )
+    r = duf_count_db_vitems2( duf_match_leaf2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset );
+  DUF_TEST_R( r );
+  if ( r >= 0 )
     r = duf_qscan_node_scan_before2( pstmt, pdi, sccb );
+  DUF_TEST_R( r );
 
   {
     int d = duf_pdi_depth( pdi ) - 1;

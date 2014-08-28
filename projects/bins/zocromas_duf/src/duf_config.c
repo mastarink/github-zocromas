@@ -55,7 +55,7 @@ duf_config_create( void )
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   duf_config = mas_malloc( sizeof( duf_config_t ) );
   memset( duf_config, 0, sizeof( duf_config ) );
-  duf_config->u.maxreldepth = 100;
+  duf_config->u.max_rel_depth = 100;
   if ( 0 )
   {
     duf_config->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );

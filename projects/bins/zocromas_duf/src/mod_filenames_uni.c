@@ -80,7 +80,8 @@ filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned lo
 
   DEBUG_START(  );
 
-  if ( pst_file && pst_file->st_size >= pdi->u.size.min && ( !pdi->u.size.max || pst_file->st_size < pdi->u.size.max ) )
+  /* if ( pst_file && pst_file->st_size >= pdi->u.size.min && ( !pdi->u.size.max || pst_file->st_size <= pdi->u.size.max ) ) */
+  if ( pst_file && duf_lim_matchll( pdi->u.size, pst_file->st_size ) )
   {
     dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
     r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );

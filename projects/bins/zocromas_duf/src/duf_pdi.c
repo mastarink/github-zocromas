@@ -127,7 +127,7 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   int r = 0;
 
   assert( pdi );
-  if ( pdi->u.maxseq && pdi->seq >= pdi->u.maxseq )
+  if ( pdi->u.max_seq && pdi->seq >= pdi->u.max_seq )
     r = DUF_ERROR_MAX_SEQ_REACHED;
   else if ( pdi->u.maxitems.files && pdi->items.files >= pdi->u.maxitems.files )
     r = DUF_ERROR_MAX_REACHED;
@@ -136,7 +136,7 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   else if ( pdi->u.maxitems.total && pdi->items.total >= pdi->u.maxitems.total )
     r = DUF_ERROR_MAX_REACHED;
 
-  /* rv = ( ( !pdi->u.maxseq || pdi->seq <= pdi->u.maxseq )                                  */
+  /* rv = ( ( !pdi->u.max_seq || pdi->seq <= pdi->u.max_seq )                                  */
   /*        && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )    */
   /*        && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )       */
   /*        && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ); */
