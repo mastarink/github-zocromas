@@ -53,7 +53,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   DEBUG_START(  );
   if ( md64 && md64[1] && md64[0] )
   {
-    if ( !duf_config->cli.disable.insert )
+    if ( !duf_config->cli.disable.flag.insert )
     {
       if ( 1 )
       {
@@ -127,7 +127,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
       int cnt = 0;
       int maxcnt = 2;
 
-      if ( !duf_config->cli.disable.calculate && ( MD5_Init( &ctx ) != 1 ) )
+      if ( !duf_config->cli.disable.flag.calculate && ( MD5_Init( &ctx ) != 1 ) )
         r = DUF_ERROR_MD5;
       DUF_TEST_R( r );
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
@@ -146,7 +146,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
         }
         if ( rr > 0 )
         {
-          if ( !duf_config->cli.disable.calculate && MD5_Update( &ctx, buffer, rr ) != 1 )
+          if ( !duf_config->cli.disable.flag.calculate && MD5_Update( &ctx, buffer, rr ) != 1 )
             r = DUF_ERROR_MD5;
         }
         if ( rr <= 0 )
@@ -161,7 +161,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
       r = DUF_ERROR_MEMORY;
     }
   }
-  if ( duf_config->cli.disable.calculate )
+  if ( duf_config->cli.disable.flag.calculate )
   {
   }
   else if ( MD5_Final( pmd, &ctx ) != 1 )
@@ -180,7 +180,7 @@ duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * 
   DUF_SFIELD( filename );
 
   memset( md, 0, sizeof( md ) );
-  if ( !duf_config->cli.disable.calculate )
+  if ( !duf_config->cli.disable.flag.calculate )
     r = duf_make_sd5_uni( fd, md );
   DUF_TEST_R( r );
   /* reverse */
@@ -192,14 +192,14 @@ duf_scan_dirent_content( int fd, const struct stat *pst_file, duf_depthinfo_t * 
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
-    if ( duf_config->cli.disable.calculate )
+    if ( duf_config->cli.disable.flag.calculate )
       pmd[0] = pmd[1] = duf_levinfo_dirid( pdi );
     sd5id = duf_insert_sd5_uni( pdi, pmd, filename, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && sd5id )
     {
       int changes = 0;
 
-      if ( r >= 0 && !duf_config->cli.disable.update )
+      if ( r >= 0 && !duf_config->cli.disable.flag.update )
         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET sd5id='%llu' WHERE id='%lld'", &changes, sd5id, filedataid );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
@@ -222,7 +222,7 @@ duf_scan_dirent_sd5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct st
   DUF_TRACE( sd5, 0, "+" );
 
   memset( md, 0, sizeof( md ) );
-  if ( !duf_config->cli.disable.calculate )
+  if ( !duf_config->cli.disable.flag.calculate )
     r = duf_make_sd5_uni( fd, md );
   DUF_TEST_R( r );
   /* reverse */
@@ -235,14 +235,14 @@ duf_scan_dirent_sd5_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct st
     unsigned long long *pmd;
 
     pmd = ( unsigned long long * ) &mdr;
-    if ( duf_config->cli.disable.calculate )
+    if ( duf_config->cli.disable.flag.calculate )
       pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74;
     sd5id = duf_insert_sd5_uni( pdi, pmd, filename, pst_file->st_size, 1 /*need_id */ , &r );
     if ( r >= 0 && sd5id )
     {
       int changes = 0;
 
-      if ( r >= 0 && !duf_config->cli.disable.update )
+      if ( r >= 0 && !duf_config->cli.disable.flag.update )
         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET sd5id=%llu WHERE id=%lld", &changes, sd5id, filedataid );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );

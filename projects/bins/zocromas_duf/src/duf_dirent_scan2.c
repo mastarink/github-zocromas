@@ -127,9 +127,9 @@ duf_scan_dirents_by_pdi_and_dfname2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t 
 
     if ( !real_path_parent )
       real_path_parent = duf_levinfo_path( pdi );
-    DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@ [%s :: %s] ", real_path_parent, dfname );
+    /* DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@ [%s :: %s] ", real_path_parent, dfname ); */
 
-    DUF_TRACE( scan, 0, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
+    DUF_TRACE( scan, 0, "dirid=%llu; scandir dfname:[%s :: %s]", dirid, real_path_parent, dfname );
     {
 #if 1
       nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
@@ -212,7 +212,7 @@ duf_scan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi,
       dirid = duf_levinfo_dirid( pdi );
       /* dirid needless? */
       assert( dirid == duf_levinfo_dirid( pdi ) );
-      DUF_TRACE( scan, 0, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
+      DUF_TRACE( scan, 2, "dirid=%llu; scandir dfname:[%s]", dirid, dfname );
     }
     r = duf_scan_dirents_by_pdi_and_dfname2( pstmt, pdi, dfname, scan_dirent_reg2, scan_dirent_dir2 );
   }

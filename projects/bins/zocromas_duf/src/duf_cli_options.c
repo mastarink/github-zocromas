@@ -42,21 +42,20 @@ duf_cli_options( int argc, char *argv[] )
   if ( duf_config )
   {
     duf_option_code_t codeval;
-    int longindex = 0;
 
     opterr = 0;
     {
       char *shorts = NULL;
+      int longindex;
 
       shorts = duf_cli_option_shorts(  );
-      while ( r == 0 && ( ( int ) ( codeval = getopt_long( argc, argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
+      while ( r == 0 && ( ( int ) ( longindex = -1, codeval = getopt_long( argc, argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
       {
         r = duf_parse_option( codeval, longindex, optarg );
-        DUF_TRACE( explain, 2, "parse options r: %d", r );
+        DUF_TRACE( explain, 3, "cli options r: %d", r );
         if ( r == DUF_ERROR_OPTION )
         {
           DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], codeval, codeval );
-          /* r = optopt ? optopt : opt; */
         }
       }
       mas_free( shorts );

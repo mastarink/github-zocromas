@@ -1,63 +1,11 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
 
+#  include "duf_flags_types.h"
 /* duf_format_t */
 #  include "duf_format_types.h"
 
 
-typedef struct
-{
-  unsigned info:1;
-  unsigned vacuum:1;
-  unsigned remove_database:1;
-  unsigned drop_tables:1;
-  unsigned create_tables:1;
-  unsigned add_path:1;
-  /* unsigned update_path:1; */
-  /* unsigned update_md5:1; */
-  unsigned update_duplicates:1;
-  unsigned print:1;
-  unsigned tree:1;
-
-  unsigned sd5:1;
-  unsigned md5:1;
-  unsigned crc32:1;
-  unsigned mime:1;
-  unsigned exif:1;
-
-  /* unsigned update_mdpath:1; */
-  /* unsigned update_mdpath_selective:1; */
-  unsigned mdpath:1;
-
-  unsigned dirs:1;
-  unsigned files:1;
-
-  unsigned dirent:1;
-  unsigned filedata:1;
-  unsigned filenames:1;
-
-  unsigned integrity:1;
-  unsigned collect:1;
-
-  unsigned uni_scan:1;
-  /* unsigned print_paths:1; */
-  /* unsigned print_dirs:1; */
-  /* unsigned print_files:1; */
-  /* unsigned print_duplicates:1; */
-  /* (* unsigned zero_duplicates:1; *) */
-  /* unsigned same_files:1; */
-  /* unsigned same_md5:1; */
-  /* unsigned same_exif:1; */
-  /* unsigned to_group:1; */
-  /* unsigned from_group:1; */
-  unsigned progress:1;
-  unsigned summary:1;
-} duf_config_act_flags_t;
-typedef union
-{
-  duf_config_act_flags_t flag;
-  unsigned bit;
-} duf_config_act_flags_combo_t;
 typedef struct
 {
   duf_config_act_flags_combo_t v;
@@ -126,28 +74,13 @@ typedef struct
   char *file;
   FILE *out;
 } duf_config_cli_output_t;
-typedef struct
-{
-  unsigned calculate:1;
-  unsigned insert:1;
-  unsigned update:1;
-} duf_config_cli_disable_t;
+
 
 typedef struct
 {
-  unsigned dry_run:1;
-  unsigned explain:1;
-} duf_config_cli_flags_t;
-
-typedef struct
-{
-  union
-  {
-    duf_config_cli_flags_t flag;
-    unsigned short bit;
-  } v;
+  duf_config_cli_flags_combo_t v;
   duf_config_cli_actions_t act;
-  duf_config_cli_disable_t disable;
+  duf_config_cli_disable_flags_combo_t disable;
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
   duf_config_cli_output_t output;

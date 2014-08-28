@@ -36,10 +36,16 @@ duf_tmp_create( void )
 void
 duf_tmp_delete( duf_tmp_t * tmp )
 {
-  mas_free( tmp->path );
-  tmp->path = NULL;
-  mas_free( tmp->option_explanation );
-  tmp->option_explanation = NULL;
+  for ( int i = 0; i < DUF_TMP_PATH_MAX; i++ )
+  {
+    mas_free( tmp->path[i] );
+    tmp->path[i] = NULL;
+  }
+  for ( int i = 0; i < DUF_TMP_EXPLANATION_MAX; i++ )
+  {
+    mas_free( tmp->option_explanation[i] );
+    tmp->option_explanation[i] = NULL;
+  }
   mas_free( tmp );
 }
 

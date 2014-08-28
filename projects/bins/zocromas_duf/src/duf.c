@@ -66,10 +66,23 @@ duf_test_help( int argc, char **argv, duf_option_code_t codeval )
   return r;
 }
 
-static int
+unsigned long
+duf_config_act_flags_combo_t_bits( duf_config_act_flags_t f )
+{
+  duf_config_act_flags_combo_t c;
+
+  c.flag = f;
+  return c.bit;
+}
+
+unsigned long long static int
 duf_main( int argc, char **argv )
 {
   int r = 0;
+
+  DUF_PRINTF( 0, "************************* %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_config_act_flags_t ), sizeof( duf_config_cli_flags_t ),
+              sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ), sizeof( unsigned long ),
+              sizeof( unsigned long long ) );
 
   /* DUF_TRACE( any, 0, "r=%d", r ); */
   {
@@ -158,11 +171,11 @@ duf_main( int argc, char **argv )
 
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_MEMUSAGE ) );
+      DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( MEMUSAGE ) );
     }
     else
     {
-      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_MEMUSAGE ) );
+      DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( MEMUSAGE ) );
     }
   }
 

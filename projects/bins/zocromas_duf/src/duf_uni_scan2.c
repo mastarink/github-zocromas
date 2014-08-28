@@ -97,13 +97,13 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
       if ( duf_pdi_reldepth( pdi ) <= 1 )
       {
         DUF_TRACE( explain, 3, "cb2; option %s; option %s value %d; depth %d",
-                   duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
+                   DUF_OPT_FLAG_NAME( RECURSIVE ), DUF_OPT_NAME( MAXDEPTH ), pdi->u.maxreldepth,
                    duf_pdi_reldepth( pdi ) );
       }
       else
       {
         DUF_TRACE( explain, 4, "cb2; option %s; option %s value %d; depth %d",
-                   duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ), duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth,
+                   DUF_OPT_FLAG_NAME( RECURSIVE ), DUF_OPT_NAME( MAXDEPTH ), pdi->u.maxreldepth,
                    duf_pdi_reldepth( pdi ) );
       }
 
@@ -113,8 +113,8 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
     }
     else
     {
-      DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", duf_option_cnames_tmp( DUF_OPTION_FLAG_RECURSIVE ),
-                 duf_option_cnames_tmp( DUF_OPTION_MAXDEPTH ), pdi->u.maxreldepth );
+      DUF_TRACE( explain, 1, "no %s option or depth condition by %s value %d", DUF_OPT_FLAG_NAME( RECURSIVE ),
+                 DUF_OPT_NAME( MAXDEPTH ), pdi->u.maxreldepth );
     }
 
   }

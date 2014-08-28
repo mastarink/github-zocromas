@@ -57,7 +57,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   DEBUG_START(  );
   if ( md64 && md64[1] && md64[0] )
   {
-    if ( !duf_config->cli.disable.insert )
+    if ( !duf_config->cli.disable.flag.insert )
     {
       if ( 1 )
       {
@@ -147,7 +147,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
           DUF_TEST_R( r );
           break;
         }
-        if ( rr > 0 && !duf_config->cli.disable.calculate )
+        if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
         {
           if ( MD5_Update( &ctx, buffer, rr ) != 1 )
             r = DUF_ERROR_MD5;
@@ -196,7 +196,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 /*     {                                                                                                                             */
 /*       int changes = 0;                                                                                                            */
 /*                                                                                                                                   */
-/*       if ( r >= 0 && !duf_config->cli.disable.update )                                                                            */
+/*       if ( r >= 0 && !duf_config->cli.disable.flag.update )                                                                            */
 /*         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id=%llu WHERE id=%lld", &changes, md5id, filedataid );                */
 /*       duf_pdi_reg_changes( pdi, changes );                                                                                        */
 /*       DUF_TEST_R( r );                                                                                                            */
@@ -239,7 +239,7 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
     {
       int changes = 0;
 
-      if ( r >= 0 && !duf_config->cli.disable.update )
+      if ( r >= 0 && !duf_config->cli.disable.flag.update )
         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE id='%lld'", &changes, md5id, filedataid );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );

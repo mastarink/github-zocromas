@@ -6,9 +6,9 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_defs.h"          /* */
+#include "duf_defs.h"           /* */
 /* #include "duf_debug_defs.h" */
-#include "duf_trace_defs.h"          /* */
+#include "duf_trace_defs.h"     /* */
 
 #include "duf_types.h"          /* */
 
@@ -257,8 +257,7 @@ duf_check_table_paths( void )
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "paths_parent1_uniq ON paths (parentid,id)", "Create paths" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "paths_parent2_uniq ON paths (parentid,dirname)",
-                          "Create paths" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "paths_parent2_uniq ON paths (parentid,dirname)", "Create paths" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "paths_dev ON paths (dev)", "Create paths" );
   if ( r >= 0 )
@@ -291,17 +290,13 @@ duf_check_table_pathtot_files( void )
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')), FOREIGN KEY(Pathid) REFERENCES paths(id) )",
                         "Create pathtot_files" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_Pathid ON pathtot_files (Pathid)",
-                          "Create pathtot_files" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_Pathid ON pathtot_files (Pathid)", "Create pathtot_files" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_numfiles ON pathtot_files (numfiles)",
-                          "Create pathtot_files" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_numfiles ON pathtot_files (numfiles)", "Create pathtot_files" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_minsize ON pathtot_files (minsize)",
-                          "Create pathtot_files" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_minsize ON pathtot_files (minsize)", "Create pathtot_files" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_maxsize ON pathtot_files (maxsize)",
-                          "Create pathtot_files" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_files_maxsize ON pathtot_files (maxsize)", "Create pathtot_files" );
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "pathtot_files_lastupdated " /* */
@@ -327,14 +322,11 @@ duf_check_table_pathtot_dirs( void )
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         ", FOREIGN KEY(Pathid) REFERENCES paths(id) )", "Create pathtot_dirs" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_dirs_Pathid ON pathtot_dirs (Pathid)",
-                          "Create pathtot_dirs" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "pathtot_dirs_Pathid ON pathtot_dirs (Pathid)", "Create pathtot_dirs" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "pathtot_dirs_mdPathid ON pathtot_dirs (mdPathid)",
-                          "Create pathtot_dirs" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "pathtot_dirs_mdPathid ON pathtot_dirs (mdPathid)", "Create pathtot_dirs" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "pathtot_dirs_numdirs ON pathtot_dirs (numdirs)",
-                          "Create pathtot_dirs" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "pathtot_dirs_numdirs ON pathtot_dirs (numdirs)", "Create pathtot_dirs" );
 
 
   if ( r >= 0 )
@@ -360,7 +352,7 @@ duf_check_table_crc32( void )
                         ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create crc32" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "crc32_crc32sum ON crc32 (crc32sum)", "Create crc32" );
-  
+
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "crc32_dup ON crc32 (dup32cnt)", "Create crc32" );
 
@@ -410,7 +402,7 @@ duf_check_table_md5( void )
                         ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create md5" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "md5_dup ON md5 (dup5cnt)", "Create md5" );
-  
+
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "md5_md5sum ON md5 (md5sum1,md5sum2)", "Create md5" );
 
@@ -443,8 +435,7 @@ duf_check_table_keydata( void )
                         ", FOREIGN KEY(Pathid)     REFERENCES paths(id) " /* */
                         ", FOREIGN KEY(md5id)      REFERENCES md5(id) )", "Create keydata" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "keydata_uniq   ON keydata (Pathid,filenameid,md5id)",
-                          "Create keydata" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "keydata_uniq   ON keydata (Pathid,filenameid,md5id)", "Create keydata" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_Pathid ON keydata (Pathid)", "Create keydata" );
   if ( r >= 0 )
@@ -478,8 +469,7 @@ duf_check_table_mdpath( void )
                         ", duppcnt INTEGER" /* */
                         ", last_updated REAL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))", "Create mdpath" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "mdpath_mdpathsum ON mdpath (mdpathsum1,mdpathsum2)",
-                          "Create mdpath" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "mdpath_mdpathsum ON mdpath (mdpathsum1,mdpathsum2)", "Create mdpath" );
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "mdpath_dup ON mdpath (duppcnt)", "Create mdpath" );
@@ -506,6 +496,7 @@ duf_check_table_exif_model( void )
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
+
 static int
 duf_check_table_exif( void )
 {
@@ -520,7 +511,7 @@ duf_check_table_exif( void )
                         ", FOREIGN KEY(id) REFERENCES filedatas(exifid) )", "Create exif" );
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_d ON exif (modelid, date_time)", "Create exif" );
-  
+
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_id ON exif (modelid)", "Create exif" );
 
@@ -560,8 +551,7 @@ duf_check_table_path_tags( void )
                         " Pathid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         " , FOREIGN KEY(Pathid)  REFERENCES paths(id)  , FOREIGN KEY(tagsid) REFERENCES tags(id) )", "Create path_tags" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "path_tags_uniq ON path_tags (tagsid, Pathid)",
-                          "Create path_tags" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "path_tags_uniq ON path_tags (tagsid, Pathid)", "Create path_tags" );
 
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -616,48 +606,62 @@ duf_clear_tables( void )
   return r;
 }
 
+typedef int duf_create_table_function( void );
+typedef struct
+{
+  const char *name;
+  duf_create_table_function *fun;
+} duf_create_table_element;
+
+#define DUF_TABLE_ELEMENT(n) { .name= # n, .fun= duf_check_table_ ## n }
+static duf_create_table_element tab_table[] = {
+  DUF_TABLE_ELEMENT( log ),
+  DUF_TABLE_ELEMENT( paths ),
+  DUF_TABLE_ELEMENT( filenames ),
+  DUF_TABLE_ELEMENT( filedatas ),
+  DUF_TABLE_ELEMENT( sizes ),
+  DUF_TABLE_ELEMENT( filefilter ),
+  DUF_TABLE_ELEMENT( mime ),
+  DUF_TABLE_ELEMENT( crc32 ),
+  DUF_TABLE_ELEMENT( sd5 ),
+  DUF_TABLE_ELEMENT( md5 ),
+  DUF_TABLE_ELEMENT( mdpath ),
+  DUF_TABLE_ELEMENT( exif_model ),
+  DUF_TABLE_ELEMENT( exif ),
+  DUF_TABLE_ELEMENT( tags ),
+  DUF_TABLE_ELEMENT( path_tags ),
+
+  DUF_TABLE_ELEMENT( keydata ),
+  DUF_TABLE_ELEMENT( pathtot_dirs ),
+  DUF_TABLE_ELEMENT( pathtot_files ),
+};
+
 int
 duf_check_tables( void )
 {
   int r = DUF_ERROR_CHECK_TABLES;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  {
+    int ntabs;
 
-  r = duf_check_table_log(  );
-  if ( r >= 0 )
-    r = duf_check_table_filefilter(  );
-  if ( r >= 0 )
-    r = duf_check_table_filedatas(  );
-  if ( r >= 0 )
-    r = duf_check_table_mime(  );
-  if ( r >= 0 )
-    r = duf_check_table_sizes(  );
-  if ( r >= 0 )
-    r = duf_check_table_filenames(  );
-  if ( r >= 0 )
-    r = duf_check_table_paths(  );
-  if ( r >= 0 )
-    r = duf_check_table_pathtot_dirs(  );
-  if ( r >= 0 )
-    r = duf_check_table_pathtot_files(  );
-  if ( r >= 0 )
-    r = duf_check_table_crc32(  );
-  if ( r >= 0 )
-    r = duf_check_table_sd5(  );
-  if ( r >= 0 )
-    r = duf_check_table_md5(  );
-  if ( r >= 0 )
-    r = duf_check_table_mdpath(  );
-  if ( r >= 0 )
-    r = duf_check_table_keydata(  );
-  if ( r >= 0 )
-    r = duf_check_table_exif_model(  );
-  if ( r >= 0 )
-    r = duf_check_table_exif(  );
-  if ( r >= 0 )
-    r = duf_check_table_tags(  );
-  if ( r >= 0 )
-    r = duf_check_table_path_tags(  );
+    ntabs = sizeof( tab_table ) / sizeof( tab_table[0] );
+    for ( int itab = 0; itab < ntabs; itab++ )
+    {
+      if ( DUF_CLI_FLAG( dry_run ) )
+      {
+        DUF_PRINTF( 0, "%2d of %2d; %s : action '%s' : table '%s'", itab, ntabs, DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME( CREATE_TABLES ),
+                    tab_table[itab].name );
+        r = 0;
+      }
+      else
+        r = ( tab_table[itab].fun ) (  );
+      DUF_TRACE( action, 0, "Created table '%s'\t\t%s (%d)", tab_table[itab].name, r < 0 ? "FAIL" : "OK", r );
+      /* DUF_PRINTF( 0, "r:%d", r ); */
+      if ( r < 0 )
+        break;
+    }
+  }
   DUF_TRACE( action, 0, "Create all tables for DB %s (%d)", r < 0 ? "FAIL" : "OK", r );
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;

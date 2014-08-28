@@ -17,11 +17,14 @@ int duf_find_long( duf_option_code_t code );
 
 /* const duf_longval_extended_t *_duf_find_longval_extended( duf_option_code_t code ); */
 const duf_longval_extended_t *duf_longindex_extended( int longindex );
+const char *duf_longindex_extended_name( int longindex );
+duf_option_code_t duf_longindex_extended_codeval( int longindex );
+
 const char *duf_find_longval_help( duf_option_code_t code );
 
 char *duf_cli_option_shorts( void );
 
-const char *duf_option_cnames_tmp( duf_option_code_t code );
+const char *duf_option_cnames_tmp( int index, duf_option_code_t code );
 char *duf_option_names_d( duf_option_code_t code, const char *delim );
 
 char *duf_option_names( duf_option_code_t code );
@@ -31,6 +34,15 @@ char *duf_option_names_d( duf_option_code_t code, const char *delim );
 char *duf_option_description( int longindex, const duf_longval_extended_t * extended );
 char *duf_option_description_d( int longindex, const char *delimh, const char *delim );
 
+#  define DUF_OPT_NAME(n) duf_option_cnames_tmp( -1, DUF_OPTION_ ## n )
+#  define DUF_OPT_FLAG_NAME(n) duf_option_cnames_tmp( -1, DUF_OPTION_FLAG_ ## n )
+#  define DUF_OPT_NAME1(n) duf_option_cnames_tmp( 1, DUF_OPTION_ ## n )
+#  define DUF_OPT_FLAG_NAME1(n) duf_option_cnames_tmp( 1, DUF_OPTION_FLAG_ ## n )
+#  define DUF_OPT_NAME2(n) duf_option_cnames_tmp( 2, DUF_OPTION_ ## n )
+#  define DUF_OPT_FLAG_NAME2(n) duf_option_cnames_tmp( 2, DUF_OPTION_FLAG_ ## n )
+
+#  define DUF_OPTION_NAME(n)  duf_option_cnames_tmp(-1,n)
+#  define DUF_OPTION_LINDEX_NAME(n)  duf_option_cnames_tmp( -1, duf_longindex_extended_codeval( n ) )
 
 #  define DUF_OPTION(lo)  \
     duf_config->lo
@@ -42,25 +54,25 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
     DUF_OPTION(lo).a
 
 
-#  define DUF_OPTION_RESTORETV(ocode, ptr, typ, up, lo, pref, value) \
+#  define DUF_OPTION_RESTORETV(ocode, ptr, typ, up, lo, pref, value, maxlen) \
   if ( ocode==DUF_OPTION_ ## up && value ) \
   { \
-    _duf_restore_option_ ## typ(ptr, ocode, value ); \
+    _duf_restore_option_ ## typ(ptr, ocode, value, maxlen ); \
   }
 
-#  define DUF_OPTION_RESTOREV_B(ocode, ptr,  up, lo, pref, value) \
-  DUF_OPTION_RESTORETV(ocode, ptr, b, up, lo, pref, value)
+#  define DUF_OPTION_RESTOREV_B(ocode, ptr,  up, lo, pref, value, maxlen) \
+  DUF_OPTION_RESTORETV(ocode, ptr, b, up, lo, pref, value, maxlen)
 
-#  define DUF_OPTION_RESTORET( ocode, ptr, typ, up, lo, pref) \
-  DUF_OPTION_RESTORETV( ocode, ptr, typ, up, lo, pref, DUF_OPTION(pref.lo))
+#  define DUF_OPTION_RESTORET( ocode, ptr, typ, up, lo, pref, maxlen) \
+  DUF_OPTION_RESTORETV( ocode, ptr, typ, up, lo, pref, DUF_OPTION(pref.lo), maxlen)
 
 
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
-#  define DUF_OPTION_RESTORE_FLAGG(ocode, ptr, up, lo, pref, fls) \
-    DUF_OPTION_RESTORET( ocode, ptr, b, FLAG_ ## up, lo, pref fls)
-#  define DUF_OPTION_RESTORE_FLAG(ocode, ptr, up, lo, pref) \
-    DUF_OPTION_RESTORE_FLAGG(ocode, ptr, up, lo, pref, .v.flag)
+#  define DUF_OPTION_RESTORE_FLAGG(ocode, ptr, up, lo, pref, fls, maxlen) \
+    DUF_OPTION_RESTORET( ocode, ptr, b, FLAG_ ## up, lo, pref fls.flag, maxlen)
+#  define DUF_OPTION_RESTORE_FLAG(ocode, ptr, up, lo, pref, maxlen) \
+    DUF_OPTION_RESTORE_FLAGG(ocode, ptr, up, lo, pref, .v, maxlen)
 
 /*  ACQUIRE  */
 #  define DUF_OPTION_ACQUIRE_FSET(lo)  \
@@ -74,15 +86,16 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 
 #  define DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, fls) \
     case DUF_OPTION_FLAG_##up: \
-       DUF_OPTION_ACQUIRE_FLAGG( lo, pref, fls ); \
+       DUF_OPTION_ACQUIRE_FLAGG( lo, pref, fls.flag ); \
     done = 1; \
     break
-#  define DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, pref) DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, .v.flag)
+#  define DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, pref) DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, .v)
 
 
 #  define DUF_OPTION_CASE_ACQUIRE_ACT_FLAG(up, lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, cli.act)
 #  define DUF_OPTION_CASE_ACQUIRE_U_FLAG(up, lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, u)
 
+#  define DUF_CLI_FLAG(lo) DUF_OPTION_FLAG(lo, cli)
 #  define DUF_ACT_FLAG(lo) DUF_OPTION_FLAG(lo, cli.act)
 #  define DUF_U_FLAG(lo) DUF_OPTION_FLAG(lo, u)
 
@@ -103,8 +116,8 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
       else \
         DUF_OPTION_N(lo)++
 
-#  define DUF_OPTION_RESTORE_NUM( ocode, ptr, up, lo, pref) \
-    DUF_OPTION_RESTORET( ocode, ptr, i, up, lo, pref)
+#  define DUF_OPTION_RESTORE_NUM( ocode, ptr, up, lo, pref, maxlen) \
+    DUF_OPTION_RESTORET( ocode, ptr, i, up, lo, pref, maxlen)
 
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
@@ -130,8 +143,8 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define DUF_OPTION_ACQUIRE_TRACE(lo)  \
     DUF_OPTION_ACQUIRE_NUM_PLUS(lo)
 
-#  define DUF_OPTION_RESTORE_TRACE(ocode, ptr, up, lo) \
-  DUF_OPTION_RESTORE_NUM(ocode, ptr,  up ## _TRACE, lo, cli.trace)
+#  define DUF_OPTION_RESTORE_TRACE(ocode, ptr, up, lo, maxlen) \
+  DUF_OPTION_RESTORE_NUM(ocode, ptr,  up ## _TRACE, lo, cli.trace, maxlen)
 
 #  define DUF_OPTION_CASE_ACQUIRE_TRACE(up, lo) \
     case DUF_OPTION_## up ##_TRACE: \
@@ -146,8 +159,8 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
         mas_free( DUF_OPTION_N(lo) ); \
         DUF_OPTION_N(lo) = mas_strdup( optarg ); \
       }
-#  define DUF_OPTION_RESTORE_STR( ocode, ptr, up, lo, pref) \
-    DUF_OPTION_RESTORET( ocode, ptr, s, up, lo, pref)
+#  define DUF_OPTION_RESTORE_STR( ocode, ptr, up, lo, pref, maxlen) \
+    DUF_OPTION_RESTORET( ocode, ptr, s, up, lo, pref, maxlen)
 
 #  define  DUF_OPTION_CASE_ACQUIRE_STR( up, lo, pref ) \
     case DUF_OPTION_ ## up: \

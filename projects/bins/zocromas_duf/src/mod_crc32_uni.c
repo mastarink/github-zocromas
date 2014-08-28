@@ -51,7 +51,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
   const char *real_path = duf_levinfo_path( pdi );
 
   DEBUG_START(  );
-  if ( !duf_config->cli.disable.insert )
+  if ( !duf_config->cli.disable.flag.insert )
   {
     static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "crc32 (crc32sum) VALUES (:crc32sum)";
 
@@ -100,9 +100,9 @@ duf_make_crc32_uni( int fd, int *pr )
   unsigned long crc32sum = 0;
   unsigned char *buffer;
 
-  if ( !duf_config->cli.disable.calculate )
+  if ( !duf_config->cli.disable.flag.calculate )
     crc32sum = crc32( 0L, Z_NULL, 0 );
-  /* if ( !duf_config->cli.disable.calculate ) */
+  /* if ( !duf_config->cli.disable.flag.calculate ) */
   {
     buffer = mas_malloc( bufsz );
     if ( buffer )
@@ -124,7 +124,7 @@ duf_make_crc32_uni( int fd, int *pr )
           r = DUF_ERROR_READ;
         }
         DUF_TEST_R( r );
-        if ( rr > 0 && !duf_config->cli.disable.calculate )
+        if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
           crc32sum = crc32( crc32sum, buffer, rr );
         if ( rr <= 0 )
           break;
@@ -152,7 +152,7 @@ duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
   DUF_TRACE( crc32, 0, "+ %s", filename );
-  if ( duf_config->cli.disable.calculate )
+  if ( duf_config->cli.disable.flag.calculate )
     crc32sum = duf_levinfo_dirid( pdi );
   else
     crc32sum = duf_make_crc32_uni( fd, &r );
@@ -169,7 +169,7 @@ duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct 
 
       pdi->cnts.dirent_content2++;
 
-      if ( r >= 0 && !duf_config->cli.disable.update )
+      if ( r >= 0 && !duf_config->cli.disable.flag.update )
         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET crc32id=%llu WHERE id=%lld", &changes, crc32id, filedataid );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );

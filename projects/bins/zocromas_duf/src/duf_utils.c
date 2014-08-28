@@ -367,7 +367,7 @@ duf_error_name( duf_error_code_t c )
     }
   }
   if ( !found )
-    snprintf( buf, sizeof( buf ), "Unknown code %d", c );
+    snprintf( buf, sizeof( buf ), "Unknown errcode %d", c );
   return buf;
 }
 

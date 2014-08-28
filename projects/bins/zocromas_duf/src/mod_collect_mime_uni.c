@@ -69,7 +69,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       DUF_SQL_END_STMT( r, pstmt_select );
     }
 
-    if ( !mimeid && !duf_config->cli.disable.insert )
+    if ( !mimeid && !duf_config->cli.disable.flag.insert )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime ) VALUES ( :mime )";
 
@@ -179,7 +179,7 @@ duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
           tail = mas_strdup( p );
         mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , &r );
         DUF_TEST_R( r );
-        if ( r >= 0 && mimeid && !duf_config->cli.disable.update )
+        if ( r >= 0 && mimeid && !duf_config->cli.disable.flag.update )
         {
           int changes = 0;
 

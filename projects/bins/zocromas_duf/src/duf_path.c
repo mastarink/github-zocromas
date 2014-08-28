@@ -141,11 +141,17 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
 }
 
 const char *
-duf_pathid_to_path2_tmp( unsigned long long dirid, const duf_depthinfo_t * pdi )
+duf_pathid_to_path2_tmp( int index, unsigned long long dirid, const duf_depthinfo_t * pdi )
 {
-  mas_free( duf_config->tmp->path );
-  duf_config->tmp->path = duf_pathid_to_path2( dirid, pdi, NULL );
-  return duf_config->tmp->path;
+  const char *p = NULL;
+
+  if ( index < DUF_TMP_PATH_MAX )
+  {
+    mas_free( duf_config->tmp->path[index] );
+    duf_config->tmp->path[index] = duf_pathid_to_path2( dirid, pdi, NULL );
+    p = duf_config->tmp->path[index];
+  }
+  return p;
 }
 
 /* insert path into db; return id */
@@ -163,14 +169,13 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
 
   /* DUF_TRACE( temp, 0, "@@@@@@@@@@@ %llu/%llu/%llu; ifadd:%d; pdi:%d", parentid_unused, duf_levinfo_dirid( pdi ), */
   /*            duf_levinfo_dirid_up( pdi ), ifadd, pdi ? 1 : 0 );                                                  */
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@ %llu/%llu; ifadd:%d; pdi:%d", duf_levinfo_dirid( pdi ),
-             duf_levinfo_dirid_up( pdi ), ifadd, pdi ? 1 : 0 );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@@ %llu/%llu; ifadd:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), ifadd, pdi ? 1 : 0 );
   /* unsigned char c1 = ( unsigned char ) ( dename ? *dename : 0 ); */
   if ( dename /* && dev_id && dir_ino */  )
   {
     int changes = 0;
 
-    if ( ifadd && !duf_config->cli.disable.insert )
+    if ( ifadd && !duf_config->cli.disable.flag.insert )
     {
       static const char *sql =
             "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid) VALUES (:dev, :inode, :dirname, :parentid )";
@@ -393,8 +398,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
           r = duf_levinfo_openat_dh( pdi );
 
         upfd = duf_levinfo_dfd( pdi );
-        DUF_TRACE( temp, 0, "@@@@@@@@@@@ upfd: %d // %d // `%s` :: %d", upfd, duf_levinfo_dfd( pdi ), duf_levinfo_itemname( pdi ),
-                   pdi->opendir );
+        DUF_TRACE( temp, 0, "@@@@@@@@@@@ upfd: %d // %d // `%s` :: %d", upfd, duf_levinfo_dfd( pdi ), duf_levinfo_itemname( pdi ), pdi->opendir );
         DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, upfd );
         pst_dir = duf_levinfo_stat( pdi );
         /* assert( pst_dir ); */

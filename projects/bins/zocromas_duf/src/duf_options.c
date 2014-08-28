@@ -1,4 +1,4 @@
-/* #include <stdarg.h> */
+#include <assert.h>
 #include <string.h>
 /* #include <getopt.h> */
 
@@ -34,8 +34,10 @@ duf_find_long( duf_option_code_t codeval )
 {
   int rv = -1;
 
+  assert( lo_extended_count );
   for ( int ilong = 0; codeval && ilong < lo_extended_count; ilong++ )
   {
+    DUF_TRACE( explain, 4, "%4d. find codeval codeval: %d ? %d", ilong, codeval, lo_extended[ilong].o.val );
     if ( lo_extended[ilong].o.val == codeval )
     {
       rv = ilong;
@@ -70,6 +72,28 @@ duf_longindex_extended( int longindex )
 
   return extended;
 }
+
+const char *
+duf_longindex_extended_name( int longindex )
+{
+  const duf_longval_extended_t *extended = NULL;
+
+  extended = duf_longindex_extended( longindex );
+
+  return extended ? extended->o.name : NULL;
+}
+
+duf_option_code_t
+duf_longindex_extended_codeval( int longindex )
+{
+  const duf_longval_extended_t *extended = NULL;
+
+  extended = duf_longindex_extended( longindex );
+
+  return extended ? extended->o.val : 0;
+}
+
+
 
 
 static const char *
@@ -134,19 +158,28 @@ duf_cli_option_shorts( void )
 }
 
 const char *
-duf_option_cnames_tmp( duf_option_code_t codeval )
+duf_option_cnames_tmp( int index, duf_option_code_t codeval )
 {
+  const char *x = NULL;
+
   if ( duf_config )
   {
-    mas_free( duf_config->tmp->option_explanation );
-    duf_config->tmp->option_explanation = NULL;
-    duf_config->tmp->option_explanation = duf_option_names( codeval );
-    return duf_config->tmp->option_explanation;
+    if ( index < 0 )
+    {
+      index = duf_config->tmp->explanation_index++;
+      if ( duf_config->tmp->explanation_index >= DUF_TMP_EXPLANATION_MAX )
+        duf_config->tmp->explanation_index = 0;
+    }
+
+    if ( index >= 0 && index < DUF_TMP_EXPLANATION_MAX )
+    {
+      mas_free( duf_config->tmp->option_explanation[index] );
+      duf_config->tmp->option_explanation[index] = NULL;
+      duf_config->tmp->option_explanation[index] = duf_option_names( codeval );
+      x = duf_config->tmp->option_explanation[index];
+    }
   }
-  else
-  {
-    return NULL;
-  }
+  return x;
 }
 
 char *
@@ -167,14 +200,11 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
     {
       const char *spaces = "                                                            ";
       size_t l;
-      size_t mln = 12;
+      size_t mln = 14;
 
       if ( !cnt )
-      {
-
         names = mas_strcat_x( names, "≪" );
-      }
-      if ( cnt )
+      else
         names = mas_strcat_x( names, delim ? delim : " | " );
       names = mas_strcat_x( names, "--" );
       names = mas_strcat_x( names, duf_config->longopts_table[ilong].name );
@@ -420,13 +450,13 @@ duf_infile_options( int argc, char *argv[] )
 }
 
 static int
-_duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value )
+_duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value, int maxlen )
 {
   for ( int ilong = 0; ilong < lo_extended_count; ilong++ )
   {
     if ( duf_config->longopts_table[ilong].val == codeval )
     {
-      sprintf( ptr, " --%s='%d'", duf_config->longopts_table[ilong].name, value );
+      snprintf( ptr, maxlen, " --%s='%d'", duf_config->longopts_table[ilong].name, value );
       break;
     }
   }
@@ -434,14 +464,14 @@ _duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value )
 }
 
 static int
-_duf_restore_option_s( char *ptr, duf_option_code_t codeval, const char *value )
+_duf_restore_option_s( char *ptr, duf_option_code_t codeval, const char *value, int maxlen )
 {
   if ( value )
     for ( int ilong = 0; ilong < lo_extended_count; ilong++ )
     {
       if ( duf_config->longopts_table[ilong].val == codeval )
       {
-        sprintf( ptr, " --%s='%s'", duf_config->longopts_table[ilong].name, value );
+        snprintf( ptr, maxlen, " --%s='%s'", duf_config->longopts_table[ilong].name, value );
         break;
       }
     }
@@ -449,14 +479,14 @@ _duf_restore_option_s( char *ptr, duf_option_code_t codeval, const char *value )
 }
 
 static int
-_duf_restore_option_b( char *ptr, duf_option_code_t codeval, int value )
+_duf_restore_option_b( char *ptr, duf_option_code_t codeval, int value, int maxlen )
 {
   if ( value )
     for ( int ilong = 0; ilong < lo_extended_count; ilong++ )
     {
       if ( duf_config->longopts_table[ilong].val == codeval )
       {
-        sprintf( ptr, " --%s", duf_config->longopts_table[ilong].name );
+        snprintf( ptr, maxlen, " --%s", duf_config->longopts_table[ilong].name );
         break;
       }
     }
@@ -464,91 +494,93 @@ _duf_restore_option_b( char *ptr, duf_option_code_t codeval, int value )
 }
 
 void
-duf_restore_option( char *ptr, duf_option_code_t optcode )
+duf_restore_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
 {
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, VERBOSE, verbose, cli.dbg );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, DEBUG, debug, cli.dbg );
+  /* most probably not all options mentioned here - FIXME */
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, VERBOSE, verbose, cli.dbg, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, DEBUG, debug, cli.dbg, maxlen );
   /* DUF_OPTION_RESTORE_TRACE(ptr, ALL, all ); */
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, TRACE_NONEW, nonew, cli.trace );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, OUTPUT_LEVEL, level, cli.output );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, DRY_RUN, dry_run );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, EXPLAIN, explain );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SEQ, seq );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, OPTIONS, options );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, CALLS, calls );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, ANY, any );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, CURRENT, current );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, ACTION, action );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, ERROR, error );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SCAN, scan );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SCAN_DE_DIR, scan_de_dir );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SCAN_DE_REG, scan_de_reg );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, TEMP, temp );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, PATH, path );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, FS, fs );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SAMPUPD, sampupd );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SAMPLE, sample );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, DELETED, deleted );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, MDPATH, mdpath );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, DIRENT, dirent );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, MD5, md5 );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SD5, sd5 );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, CRC32, crc32 );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, MIME, mime );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, EXIF, exif );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, COLLECT, collect );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, INTEGRITY, integrity );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SQL, sql );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, SELECT, select );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, INSERT, insert );
-  DUF_OPTION_RESTORE_TRACE( optcode, ptr, UPDATE, update );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MIN_DBGLINE, min_line, cli.dbg );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAX_DBGLINE, max_line, cli.dbg );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, PROGRESS, progress, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, SUMMARY, summary, cli.act );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, TRACE_NONEW, nonew, cli.trace, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, OUTPUT_LEVEL, level, cli.output, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, DRY_RUN, dry_run, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, EXPLAIN, explain, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SEQ, seq, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, OPTIONS, options, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, CALLS, calls, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, ANY, any, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, CURRENT, current, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, ACTION, action, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, ERROR, error, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN, scan, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN_DE_DIR, scan_de_dir, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN_DE_REG, scan_de_reg, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, TEMP, temp, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, PATH, path, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, FS, fs, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SAMPUPD, sampupd, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SAMPLE, sample, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, DELETED, deleted, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, MDPATH, mdpath, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, DIRENT, dirent, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, MD5, md5, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SD5, sd5, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, CRC32, crc32, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, MIME, mime, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, EXIF, exif, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, COLLECT, collect, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, INTEGRITY, integrity, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SQL, sql, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SELECT, select, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, INSERT, insert, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, UPDATE, update, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MIN_DBGLINE, min_line, cli.dbg, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAX_DBGLINE, max_line, cli.dbg, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, PROGRESS, progress, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, SUMMARY, summary, cli.act, maxlen );
   /* DUF_OPTION_TREE_TO_DB: */
   /* DUF_OPTION_ZERO_DB: */
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, DROP_TABLES, drop_tables, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, CREATE_TABLES, create_tables, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, ADD_PATH, add_path, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, UNI_SCAN, uni_scan, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, INFO, info, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, RECURSIVE, recursive, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, SAMPLE, sample, cli.act );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, SAMPUPD, sampupd, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, MDPATH, mdpath, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, DIRENT, dirent, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, MD5, md5, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, SD5, sd5, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, CRC32, crc32, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, MIME, mime, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, EXIF, exif, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, COLLECT, collect, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, INTEGRITY, integrity, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, PRINT, print, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, TREE, tree, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, FILES, files, cli.act );
-  DUF_OPTION_RESTORE_FLAG( optcode, ptr, DIRS, dirs, cli.act );
-  DUF_OPTION_RESTORE_FLAGG( optcode, ptr, DISABLE_CALCULATE, calculate, cli,.disable );
-  DUF_OPTION_RESTORE_FLAGG( optcode, ptr, DISABLE_INSERT, insert, cli,.disable );
-  DUF_OPTION_RESTORE_FLAGG( optcode, ptr, DISABLE_UPDATE, update, cli,.disable );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAXSEQ, maxseq, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MINSIZE, size.min, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAXSIZE, size.max, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MINDIRFILES, dirfiles.min, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAXDIRFILES, dirfiles.max, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAXITEMS, maxitems.total, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAXITEMS_FILES, maxitems.files, u );
-  DUF_OPTION_RESTORE_NUM( optcode, ptr, MAXITEMS_DIRS, maxitems.dirs, u );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, DROP_TABLES, drop_tables, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, CREATE_TABLES, create_tables, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, ADD_PATH, add_path, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, UNI_SCAN, uni_scan, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, INFO, info, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, RECURSIVE, recursive, u, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, DRY_RUN, dry_run, cli, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, SAMPLE, sample, cli.act, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, SAMPUPD, sampupd, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, MDPATH, mdpath, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, DIRENT, dirent, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, MD5, md5, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, SD5, sd5, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, CRC32, crc32, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, MIME, mime, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, EXIF, exif, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, COLLECT, collect, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, INTEGRITY, integrity, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, PRINT, print, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, TREE, tree, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, FILES, files, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, DIRS, dirs, cli.act, maxlen );
+  DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_CALCULATE, calculate, cli,.disable, maxlen );
+  DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_INSERT, insert, cli,.disable, maxlen );
+  DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_UPDATE, update, cli,.disable, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSEQ, maxseq, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MINSIZE, size.min, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSIZE, size.max, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MINDIRFILES, dirfiles.min, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXDIRFILES, dirfiles.max, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS, maxitems.total, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS_FILES, maxitems.files, u, maxlen );
+  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS_DIRS, maxitems.dirs, u, maxlen );
   /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDERR, nonew, cli.trace ); */
   /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDOUT, nonew, cli.trace ); */
-  DUF_OPTION_RESTOREV_B( optcode, ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr );
-  DUF_OPTION_RESTOREV_B( optcode, ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout );
-  DUF_OPTION_RESTORE_STR( optcode, ptr, OUTPUT_FILE, file, cli.output );
-  DUF_OPTION_RESTORE_STR( optcode, ptr, TRACE_FILE, file, cli.trace );
-  DUF_OPTION_RESTORE_STR( optcode, ptr, DB_DIRECTORY, dir, db );
-  DUF_OPTION_RESTORE_STR( optcode, ptr, DB_NAME_ADM, name, db.adm );
-  DUF_OPTION_RESTORE_STR( optcode, ptr, DB_NAME_MAIN, name, db.main );
+  DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr, maxlen );
+  DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, OUTPUT_FILE, file, cli.output, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, TRACE_FILE, file, cli.trace, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, DB_DIRECTORY, dir, db, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_ADM, name, db.adm, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_MAIN, name, db.main, maxlen );
   /* DUF_OPTION_RESTORE_STR( FILE, file, cli.trace ); */
 }
 
@@ -556,15 +588,20 @@ int
 duf_show_options( const char *a0 )
 {
   int r = 0;
+  int seq = 0;
 
   DUF_TRACE( options, 0, "%s", a0 );
-  for ( int i = 0; i < DUF_OPTION_MAX_LONG; i++ )
+  for ( duf_option_code_t codeval = DUF_OPTION_NONE; codeval < DUF_OPTION_MAX_LONG; codeval++ )
   {
-    char buffer[1024] = "";
+#define BUFSZ 1024 * 4
+    char buffer[BUFSZ] = "";
 
-    duf_restore_option( buffer, i );
+    duf_restore_option( buffer, codeval, BUFSZ );
     if ( *buffer )
-      DUF_TRACE( options, 0, "%s", buffer );
+    {
+      seq++;
+      DUF_TRACE( options, 0, "%2d. %s", seq, buffer );
+    }
   }
   DUF_TRACE( options, 0, " --" );
   return r;
@@ -576,11 +613,12 @@ duf_restore_options( const char *a0 )
   char *str;
 
   str = mas_strdup( a0 );
-  for ( int i = 0; i < DUF_OPTION_MAX_LONG; i++ )
+  for ( duf_option_code_t codeval = DUF_OPTION_NONE; codeval < DUF_OPTION_MAX_LONG; codeval++ )
   {
-    char buf[1024] = "";
+#define BUFSZ 1024 * 4
+    char buf[BUFSZ] = "";
 
-    duf_restore_option( buf, i );
+    duf_restore_option( buf, codeval, BUFSZ );
     if ( *buf )
     {
       /* str = mas_strcat_x( str, " @[ " ); */
@@ -925,6 +963,11 @@ duf_option_examples( int argc, char **argv )
   DUF_PRINTF( 0, "  run   --help-nodesc 		- %s", "" );
   DUF_PRINTF( 0, "  run   --help-examples		- %s", "" );
 
+  DUF_PRINTF( 0, "========================= as for 20140828 ===================" );
+  DUF_PRINTF( 0,
+              "  run  /mnt/new_media/media/photo/ -iPO --progress  --md5 --sd5 --crc32 --mime --exif --dirs --files --dirent --filenames --filedata --add-path --create-tables --drop-tables --remove-database --vacuum  --print --integrity --recursive --info  --disable-calculate  --disable-update --summary --version		- %s",
+              "" );
+  DUF_PRINTF( 0, "  run  -OPRdEifndD -532Xe /mnt/new_media/media/photo/ --trace-options		- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 }
 
@@ -963,8 +1006,8 @@ duf_option_version( int argc, char **argv )
 
   DUF_PUTSL( 0 );
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_config->config_path );
-  DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.bit ), duf_config->cli.v.bit );
-  DUF_PRINTF( 0, "u.        [%2lu]   %x", sizeof( duf_config->u.v.bit ), duf_config->u.v.bit );
+  DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.sbit ), duf_config->cli.v.sbit );
+  DUF_PRINTF( 0, "u.        [%2lu]   %x", sizeof( duf_config->u.v.sbit ), duf_config->u.v.sbit );
   {
     unsigned u = duf_config->cli.act.v.bit;
 
@@ -973,7 +1016,7 @@ duf_option_version( int argc, char **argv )
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
-    DUF_PRINTF( 0, ".> > > " );
+    DUF_PRINTF( 0, ".> > " );
     for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
     {
       DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
@@ -982,13 +1025,12 @@ duf_option_version( int argc, char **argv )
     DUF_PUTSL( 0 );
   }
       /* *INDENT-OFF*  */
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --info" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --vacuum" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --remove_database" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --drop_tables" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --create_tables" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --add_path" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --update_duplicates" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --info" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --vacuum" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --remove_database" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --drop_tables" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --create_tables" );
+      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --add_path" );
       DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --print" );
       DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --tree" );
       DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --sd5" );
@@ -1009,6 +1051,46 @@ duf_option_version( int argc, char **argv )
       DUF_PRINTF( 0, "                    └─ --summary" );
       /* *INDENT-ON*  */
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
+
+  {
+    unsigned u = duf_config->u.v.sbit;
+
+    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( duf_config->u.v ), sizeof( typeof( u ) ), ( unsigned long ) duf_config->u.v.sbit );
+
+    typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
+
+    DUF_PRINTF( 0, ".> > " );
+    for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
+    {
+      DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
+      u <<= 1;
+    }
+    DUF_PUTSL( 0 );
+  }
+  DUF_PRINTF( 0, "                                                                  └─ --recursive" );
+
+  {
+    unsigned u = duf_config->cli.disable.sbit;
+
+    DUF_PRINTF( 0, "cli.disable   [%2lu->%2lu]   %8lx :: ", sizeof( duf_config->cli.disable ), sizeof( typeof( u ) ),
+                ( unsigned long ) duf_config->cli.disable.sbit );
+
+    typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
+
+    DUF_PRINTF( 0, ".> > " );
+    for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
+    {
+      DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
+      u <<= 1;
+    }
+    DUF_PUTSL( 0 );
+  }
+  DUF_PRINTF( 0, "                                                              │ │ └─ --disable-calculate" );
+  DUF_PRINTF( 0, "                                                              │ └─ --disable-insert" );
+  DUF_PRINTF( 0, "                                                              └─ --disable-update" );
+
+
+
   mas_free( sargv2 );
   mas_free( sargv1 );
 }

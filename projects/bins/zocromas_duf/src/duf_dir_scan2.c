@@ -490,7 +490,7 @@ duf_scan_dirs_by_parentid2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, du
   dirid = duf_levinfo_dirid( pdi );
 
   DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, "** depth:%d/%d; dirid:%llu:%s", duf_pdi_depth( pdi ),
-                duf_pdi_reldepth( pdi ), dirid, duf_pathid_to_path2_tmp( dirid, pdi ) );
+                duf_pdi_reldepth( pdi ), dirid, DUF_PATHID2PATH( dirid, pdi ) );
 
   DUF_TRACE( scan, 10, "by_parentid2" );
   DUF_TRACE( scan, 13, "by parentid2 %5llu : %llu : %llu : %llu", dirid, nfiles, minsize, maxsize );

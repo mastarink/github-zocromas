@@ -3,6 +3,8 @@
 
 #  include "duf_item_types.h"
 
+#  include "duf_flags_types.h"
+
 /* typedef struct                                  */
 /* {                                               */
 /*   int depth;                    (* signed !! *) */
@@ -32,20 +34,10 @@ typedef struct
   unsigned long long max;
 } duf_limits_t;
 
-typedef struct
-{
-  unsigned recursive:1;
-  unsigned noself_dir:1;
-  unsigned noupper_dirs:1;
-} duf_ufilter_flags_t;
 
 typedef struct
 {
-  union
-  {
-    duf_ufilter_flags_t flag;
-    unsigned short bit;
-  } v;
+  duf_ufilter_flags_combo_t v;
   unsigned maxreldepth;
   unsigned long long maxseq;
   duf_items_t maxitems;

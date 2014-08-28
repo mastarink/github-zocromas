@@ -125,7 +125,7 @@ main_db( int argc, char **argv )
     {
       if ( DUF_ACT_FLAG( remove_database ) )
       {
-        DUF_TRACE( explain, 0, "     option %s, removing database", duf_option_cnames_tmp( DUF_OPTION_FLAG_REMOVE_DATABASE ) );
+        DUF_TRACE( explain, 0, "     option %s, removing database", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
         if ( duf_config->db.main.fpath )
         {
           DUF_TRACE( any, 0, "removing %s ...", duf_config->db.main.fpath );
@@ -147,7 +147,7 @@ main_db( int argc, char **argv )
       }
       else
       {
-        DUF_TRACE( explain, 1, "no %s option, not removing database", duf_option_cnames_tmp( DUF_OPTION_FLAG_REMOVE_DATABASE ) );
+        DUF_TRACE( explain, 1, "no %s option, not removing database", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
       }
     }
     /* DUF_TRACE( any, 0, "r=%d", r ); */

@@ -422,7 +422,7 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
     extern duf_scan_callbacks_t duf_integrity_callbacks /* __attribute( ( weak ) ) */ ;
     duf_scan_callbacks_t *sccb = &duf_integrity_callbacks;
 
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_INTEGRITY ) );
+    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_INTEGRITY ) );
     DUF_TRACE( action, 2, "prep integrity ..." );
     DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪integrity≫ #%d", asteps );
     DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
@@ -430,15 +430,15 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_INTEGRITY ) );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_INTEGRITY ) );
   }
   assert( asteps < max_asteps );
   if ( DUF_ACT_FLAG( collect ) )
   {
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_COLLECT ) );
+    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_COLLECT ) );
     if ( DUF_ACT_FLAG( dirent ) )
     {
-      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_DIRENT ) );
+      DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_DIRENT ) );
       {
         extern duf_scan_callbacks_t duf_directories_callbacks __attribute( ( weak ) );
 
@@ -446,14 +446,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
         {
           duf_scan_callbacks_t *sccb = &duf_directories_callbacks;
 
-          DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_DIRS ) );
+          DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_DIRS ) );
           DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪directories≫ #%d", asteps );
           DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
           ppscan_callbacks[asteps++] = sccb;
         }
         else
         {
-          DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_DIRS ) );
+          DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_DIRS ) );
         }
       }
       assert( asteps < max_asteps );
@@ -465,14 +465,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
         {
           duf_scan_callbacks_t *sccb = &duf_filedata_callbacks;
 
-          DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_FILEDATA ) );
+          DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_FILEDATA ) );
           DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪filedata≫ #%d", asteps );
           DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
           ppscan_callbacks[asteps++] = sccb;
         }
         else
         {
-          DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_FILEDATA ) );
+          DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_FILEDATA ) );
         }
       }
       assert( asteps < max_asteps );
@@ -484,14 +484,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
         {
           duf_scan_callbacks_t *sccb = &duf_filenames_callbacks;
 
-          DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_FILENAMES ) );
+          DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_FILENAMES ) );
           DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪filenames≫ #%d", asteps );
           DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
           ppscan_callbacks[asteps++] = sccb;
         }
         else
         {
-          DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_FILENAMES ) );
+          DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_FILENAMES ) );
         }
       }
     }
@@ -504,14 +504,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
       {
         duf_scan_callbacks_t *sccb = &duf_collect_openat_crc32_callbacks;
 
-        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_CRC32 ) );
+        DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_CRC32 ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_openat_crc32≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
       }
       else
       {
-        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_CRC32 ) );
+        DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_CRC32 ) );
       }
     }
     assert( asteps < max_asteps );
@@ -523,14 +523,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
       {
         duf_scan_callbacks_t *sccb = &duf_collect_openat_sd5_callbacks;
 
-        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_SD5 ) );
+        DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_SD5 ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_openat_sd5≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
       }
       else
       {
-        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_SD5 ) );
+        DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_SD5 ) );
       }
     }
     assert( asteps < max_asteps );
@@ -542,14 +542,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
       {
         duf_scan_callbacks_t *sccb = &duf_collect_openat_md5_callbacks;
 
-        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_MD5 ) );
+        DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MD5 ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_openat_md5≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
       }
       else
       {
-        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_MD5 ) );
+        DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_MD5 ) );
       }
     }
     assert( asteps < max_asteps );
@@ -560,14 +560,14 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
       {
         duf_scan_callbacks_t *sccb = &duf_collect_mime_callbacks;
 
-        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_MIME ) );
+        DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MIME ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_mime≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
       }
       else
       {
-        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_MIME ) );
+        DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_MIME ) );
       }
     }
     assert( asteps < max_asteps );
@@ -578,20 +578,20 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
       {
         duf_scan_callbacks_t *sccb = &duf_collect_exif_callbacks;
 
-        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_EXIF ) );
+        DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_EXIF ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_exif≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
       }
       else
       {
-        DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_FLAG_EXIF ) );
+        DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( FLAG_EXIF ) );
       }
     }
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_COLLECT ) );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_COLLECT ) );
   }
 
   assert( asteps < max_asteps );
@@ -600,25 +600,25 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
     extern duf_scan_callbacks_t duf_collect_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
     duf_scan_callbacks_t *sccb = &duf_collect_mdpath_callbacks;
 
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_MDPATH ) );
+    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MDPATH ) );
     DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_mdpath≫ #%d", asteps );
     DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
     ppscan_callbacks[asteps++] = sccb;
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_MDPATH ) );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_MDPATH ) );
   }
   assert( asteps < max_asteps );
   if ( DUF_ACT_FLAG( print ) )
   {
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_PRINT ) );
+    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_PRINT ) );
     if ( DUF_ACT_FLAG( md5 ) )
     {
       extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
       duf_scan_callbacks_t *sccb = &duf_print_md5_callbacks;
 
-      DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_MD5 ) );
+      DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MD5 ) );
       DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_md5≫ #%d", asteps );
       DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
       ppscan_callbacks[asteps++] = sccb;
@@ -626,13 +626,13 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
     else
     {
       assert( asteps < max_asteps );
-      DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_MD5 ) );
+      DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_MD5 ) );
       if ( DUF_ACT_FLAG( tree ) )
       {
         extern duf_scan_callbacks_t duf_print_tree_callbacks /* __attribute( ( weak ) ) */ ;
         duf_scan_callbacks_t *sccb = &duf_print_tree_callbacks;
 
-        DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_FLAG_TREE ) );
+        DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_TREE ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_tree≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
@@ -643,7 +643,7 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
         extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
         duf_scan_callbacks_t *sccb = &duf_print_dir_callbacks;
 
-        DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_TREE ) );
+        DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_TREE ) );
         DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_dir≫ #%d", asteps );
         DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
         ppscan_callbacks[asteps++] = sccb;
@@ -652,7 +652,7 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option", duf_option_cnames_tmp( DUF_OPTION_FLAG_PRINT ) );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_PRINT ) );
   }
   return asteps;
 }
@@ -666,7 +666,7 @@ duf_set_actions_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
   {
     extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
 
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_SAMPLE ) );
+    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPLE ) );
     assert( asteps + duf_config->cli.act.sample < max_asteps );
     for ( int i = 0; i < duf_config->cli.act.sample && asteps < max_asteps; i++ )
     {
@@ -679,7 +679,7 @@ duf_set_actions_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_SAMPLE ) );
+    DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( SAMPLE ) );
   }
 
   assert( asteps < max_asteps );
@@ -688,14 +688,14 @@ duf_set_actions_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
     extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
     duf_scan_callbacks_t *sccb = &duf_sampupd_callbacks;
 
-    DUF_TRACE( explain, 0, "     option %s", duf_option_cnames_tmp( DUF_OPTION_SAMPUPD ) );
+    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPUPD ) );
     DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sampupd≫ #%d", asteps );
     DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
     ppscan_callbacks[asteps++] = sccb;
   }
   else
   {
-    DUF_TRACE( explain, 1, "no %s option or no callback", duf_option_cnames_tmp( DUF_OPTION_SAMPUPD ) );
+    DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( SAMPUPD ) );
   }
   return asteps;
 }

@@ -95,7 +95,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       DUF_SQL_END_STMT( r, pstmt_select );
     }
 
-    if ( !modelid && !duf_config->cli.disable.insert )
+    if ( !modelid && !duf_config->cli.disable.flag.insert )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "exif_model ( model ) VALUES ( :model )";
 
@@ -175,7 +175,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       /*   DUF_ERROR( "exifid NOT SELECTED" ); */
     }
 
-    if ( !exifid && !duf_config->cli.disable.insert )
+    if ( !exifid && !duf_config->cli.disable.flag.insert )
     {
       int changes = 0;
       const char *sql =
@@ -464,7 +464,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
             /* r = duf_sql( "INSERT INTO duf_exif (dataid, model, datetime, d, broken_date) "                                   */
             /*              " VALUES ( %llu, '%s', datetime('%lu', 'unixepoch'), '%lu', '%s' )", ( int * ) NULL, dataid, model, */
             /*              timeepoch, timeepoch, date_changed ? stime_original : "" );                                         */
-            if ( r >= 0 && exifid && !duf_config->cli.disable.update )
+            if ( r >= 0 && exifid && !duf_config->cli.disable.flag.update )
             {
               int changes = 0;
 
