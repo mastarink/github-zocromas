@@ -7,10 +7,11 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_defs.h"           /* */
-/* #include "duf_debug_defs.h" */
-#include "duf_trace_defs.h"     /* */
-
 #include "duf_types.h"          /* */
+
+#include "duf_errors_headers.h"
+
+
 
 /* #include "duf_config.h" */
 #include "duf_config_ref.h"

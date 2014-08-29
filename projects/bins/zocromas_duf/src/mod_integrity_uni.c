@@ -10,11 +10,10 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_trace_defs.h"
-#include "duf_debug_defs.h"
-
 
 #include "duf_types.h"
+#include "duf_errors_headers.h"
+
 
 #include "duf_utils.h"
 #include "duf_service.h"
@@ -91,8 +90,9 @@ NULL,};
 
 
 duf_scan_callbacks_t duf_integrity_callbacks = {
-  .title = __FILE__,.init_scan = NULL,
-  .scan_mode_2=1,
+  .title = __FILE__,
+  .init_scan = NULL,
+  .scan_mode_2 = 1,
   .node_scan_before = NULL,
   .leaf_scan = NULL,
   /* filename for debug only */

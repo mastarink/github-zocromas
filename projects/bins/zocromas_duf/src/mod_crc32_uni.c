@@ -16,11 +16,10 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_trace_defs.h"
-#include "duf_debug_defs.h"
-
 
 #include "duf_types.h"
+#include "duf_errors_headers.h"
+
 
 #include "duf_utils.h"
 #include "duf_service.h"
@@ -205,7 +204,7 @@ static const char *final_sql[] = {
 
 
 duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
-  .title = "collect o crc32",
+  .title = "collect crc32",
   .init_scan = NULL,
   .def_opendir = 1,
   .scan_mode_2 = 1,

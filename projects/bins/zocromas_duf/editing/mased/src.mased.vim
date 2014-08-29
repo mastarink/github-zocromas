@@ -22,6 +22,9 @@ sfind duf_dirent_scan2.h
 tab sfind duf_uni_scan.c
 sfind duf_uni_scan.h
 
+tab sfind duf_prepare_actions.c
+sfind duf_prepare_actions.h
+
 tab sfind duf_uni_scan2.c
 sfind duf_uni_scan2.h
 

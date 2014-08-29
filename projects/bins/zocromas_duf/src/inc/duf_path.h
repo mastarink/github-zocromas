@@ -21,11 +21,6 @@ const char *duf_pathid_to_path2_tmp( int index, unsigned long long dirid, const 
 unsigned long long duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, int *pr );
 
 
-int duf_pathdepth( const char *path );
-
-
-
-
 
 #  ifdef DUF_COMPILE_EXPIRED
 /* will be static! */

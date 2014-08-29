@@ -5,18 +5,20 @@
 
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_trace_defs.h"
-#include "duf_debug_defs.h"
 
 
 #include "duf_types.h"
+#include "duf_errors_headers.h"
+
 
 #include "duf_utils.h"
+#include "duf_utils_path.h"
+
 #include "duf_config_ref.h"
 
 #include "duf_sql2.h"
+#include "duf_path.h"
 
-#include "duf_dbg.h"
 
 #include "duf_levinfo.h"
 
@@ -60,12 +62,37 @@ duf_set_context_destructor( duf_context_t * pcontext, duf_void_voidp_t destr )
 }
 
 int
-duf_pdi_init( duf_depthinfo_t * pdi, const char *path )
+duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path )
+{
+  int r = 0;
+  int pd;
+
+  pdi->inited = 1;
+  pd = duf_pathdepth( real_path, &r );
+  
+  if ( r >= 0 )
+    r = duf_levinfo_create( pdi, pd );
+
+  if ( r >= 0 )
+    r = duf_real_path2db( pdi, real_path, 0 /* ifadd */  );
+
+  return r;
+}
+
+int
+duf_pdi_init_msg( duf_depthinfo_t * pdi, const char *real_path )
 {
   int r = 0;
 
-  pdi->inited = 1;
-  r = duf_levinfo_create( pdi, path );
+  r = duf_pdi_init( pdi, real_path );
+  if ( r == DUF_ERROR_NOT_IN_DB )
+    DUF_ERROR( "not in db:'%s'", real_path );
+
+  DUF_TRACE( action, 0, "real_path:%s", real_path );
+  DUF_TRACE( explain, 0, "converted to real_path: %s", real_path );
+  DUF_TRACE( path, 0, " *********** dirid: %llu", duf_levinfo_dirid( pdi ) );
+  DUF_TRACE( explain, 0, "added path uni: %s", real_path );
+
   return r;
 }
 
@@ -89,6 +116,7 @@ duf_pdi_context( duf_depthinfo_t * pdi )
   assert( pdi );
   return duf_context( &pdi->context );
 }
+
 int
 duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
 {

@@ -8,11 +8,9 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_trace_defs.h"
-#include "duf_debug_defs.h"
-
-
 #include "duf_types.h"
+#include "duf_errors_headers.h"
+
 
 #include "duf_utils.h"
 #include "duf_service.h"
@@ -20,7 +18,6 @@
 #include "duf_dh.h"
 
 
-#include "duf_dbg.h"
 
 #include "duf_pdi.h"
 
@@ -731,7 +728,7 @@ duf_levinfo_closeat_dh( duf_depthinfo_t * pdi )
 
 /* create level-control array, open 0 level */
 int
-duf_levinfo_create( duf_depthinfo_t * pdi, const char *path )
+duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth )
 {
   int r = 0;
 
@@ -741,7 +738,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, const char *path )
   {
     size_t lsz;
 
-    pdi->maxdepth = pdi->u.max_rel_depth + duf_pathdepth( path );
+    pdi->maxdepth = pdi->u.max_rel_depth + pathdepth;
     lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
     /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
     pdi->levinfo = mas_malloc( lsz );

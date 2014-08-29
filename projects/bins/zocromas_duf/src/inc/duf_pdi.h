@@ -3,7 +3,9 @@
 
 #  include "duf_levinfo_types.h"
 
-int duf_pdi_init( duf_depthinfo_t * pdi, const char *path );
+int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path );
+int duf_pdi_init_msg( duf_depthinfo_t * pdi, const char *real_path );
+
 int duf_pdi_close( duf_depthinfo_t * pdi );
 
 int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );

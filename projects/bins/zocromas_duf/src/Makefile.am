@@ -15,13 +15,14 @@ zocromas_duf_SOURCES=				   \
 	duf_file_pathid2.c				    \
 							     \
 	duf_item_scan2.c				      \
-	duf_uni_scan.c duf_uni_scan2.c			       \
+	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
 	duf_sccb.c duf_dir_scan2.c				\
 	duf_dirent_scan2.c					 \
 								  \
 	duf_levinfo.c duf_pdi.c					   \
-								    \
-	duf_utils.c duf_dh.c duf_dirent.c duf_service.c		     \
+	duf_dirent.c 						    \
+	duf_utils.c duf_utils_path.c duf_errors.c  duf_trace.c	     \
+	duf_dh.c duf_service.c					     \
 								      \
 	duf_sqlite.c duf_sql.c duf_sql_field.c duf_sql_field2.c	       \
 									\
@@ -33,7 +34,7 @@ zocromas_duf_SOURCES=				   \
 	mod_md5_uni.c	mod_sd5_uni.c					      \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
-	mod_template_uni.c
+	mod_template_uni.c mod_print_md5_uni.c
 #	duf_dirent_scan1.c
 #	duf_dir_scan1.c
 #	duf_file_pathid1.c 

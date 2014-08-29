@@ -37,7 +37,7 @@ duf_levinfo_t *duf_levinfo( const duf_depthinfo_t * pdi );
 void duf_levinfo_clear_li( duf_levinfo_t * pli );
 void duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d );
 
-int duf_levinfo_create( duf_depthinfo_t * pdi, const char *path );
+int duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth );
 int duf_levinfo_delete( duf_depthinfo_t * pdi );
 
 const char *duf_levinfo_path( const duf_depthinfo_t * pdi );

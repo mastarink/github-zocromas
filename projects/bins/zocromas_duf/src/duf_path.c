@@ -15,11 +15,10 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_trace_defs.h"
-#include "duf_debug_defs.h"
-
 
 #include "duf_types.h"
+#include "duf_errors_headers.h"
+
 
 #include "duf_utils.h"
 #include "duf_config_ref.h"
@@ -33,7 +32,6 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
-#include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf_path.h"
