@@ -11,7 +11,6 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_types.h"
 
 #include "duf_sql_const.h"
 
@@ -197,6 +196,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_MAX_SEQ_REACHED ),
     DUF_ERROR_NAME( DUF_ERROR_GET_FIELD ),
     DUF_ERROR_NAME( DUF_ERROR_NOT_IN_DB ),
+    DUF_ERROR_NAME( DUF_ERROR_TOTALS ),
     DUF_ERROR_NAME( DUF_ERROR_NO_FIELD ),
     DUF_ERROR_NAME( DUF_ERROR_NO_FIELD_OPTIONAL ),
     DUF_ERROR_NAME( DUF_ERROR_INSERT_MDPATH ),

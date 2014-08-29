@@ -16,8 +16,8 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+/* #include "duf_types.h" */
+#include "duf_maintenance.h"
 
 
 #include "duf_utils.h"

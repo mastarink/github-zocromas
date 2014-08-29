@@ -10,8 +10,7 @@
 
 
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
 
 
 #include "duf_utils.h"
@@ -219,6 +218,8 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_collect_mdpath_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
+  .disabled = 1,
+  /* FIXME : convert to mode 2 */
   .scan_mode_2 = 0,
   .node_scan_before = mdpath_scan_node_before,
   .node_scan_after = mdpath_scan_node_after,

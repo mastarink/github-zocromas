@@ -1,30 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <errno.h>
-#include <fnmatch.h>
-/* #include <unistd.h> */
-#include <sys/time.h>
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_types.h"
-#include "duf_errors.h"
-
-#include "duf_sql_const.h"
+#include "duf_error_types.h"
 
 /* ###################################################################### */
 #include "duf_utils_path.h"
 /* ###################################################################### */
-
-/* #define DUF_NOTIMING */
-
-#define FN_FMT "27s"
-/* #define FN_FMT "23s" */
-
 
 int
 duf_pathdepth( const char *path, int *pr )
@@ -52,12 +33,12 @@ duf_pathdepth( const char *path, int *pr )
       bd = ed;
       depth++;
     }
+    r = 0;
   }
   if ( pr )
     *pr = r;
   return depth;
 }
-
 
 char *
 duf_realpath( const char *path, int *pr )

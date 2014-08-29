@@ -1,37 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
-
-/* #include <dirent.h> */
-#include <assert.h>
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
 
 
-#include "duf_utils.h"
+
 #include "duf_service.h"
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
-#include "duf_levinfo.h"
 
 
-#include "duf_path.h"
 
-/* #include "duf_sql_const.h" */
-/* #include "duf_sql.h" */
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 /* #include "duf_sql_field1.h" */
 #include "duf_sql_field2.h"
 
-#include "duf_dbg.h"
 
 /* ###################################################################### */
 /* #include "duf_print_md5_uni.h" */

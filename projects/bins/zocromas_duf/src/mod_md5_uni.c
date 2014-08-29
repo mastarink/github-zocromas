@@ -17,8 +17,7 @@
 #include <mastar/wrap/mas_memory.h>
 
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
 
 
 #include "duf_utils.h"
@@ -333,13 +332,13 @@ static const char *final_sql[] = {
         " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" /* */
         ,
   /* "DELETE FROM " DUF_DBPREF "keydata", */
-  "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " /* */
-        "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid " /* */
-        " FROM " DUF_DBPREF "filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id)" /* */
-        " JOIN " DUF_DBPREF "paths AS p ON (fn.Pathid=p.id)" /* */
-        " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md.id)" /* */
-        ,
+  /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (* *)  */
+  /*       "SELECT md.id AS md5id, fn.id AS filenameid, fd.id AS dataid, p.id AS Pathid " (* *) */
+  /*       " FROM " DUF_DBPREF "filenames AS fn " (* *)                                         */
+  /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.id)" (* *)                */
+  /*       " JOIN " DUF_DBPREF "paths AS p ON (fn.Pathid=p.id)" (* *)                           */
+  /*       " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md.id)" (* *)                            */
+  /*       ,                                                                                    */
 
 
   NULL,

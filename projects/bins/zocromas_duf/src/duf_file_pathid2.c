@@ -5,8 +5,8 @@
 
 
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
+#include "duf_scan_types.h"
 
 #include "duf_config_ref.h"
 
@@ -40,11 +40,11 @@
 
 
 static int
-duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_di2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = DUF_ERROR_NO_FILE_SELECTOR;
 
-  DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves -->  by %5llu", duf_pdi_depth( pdi ), dirid );
+  DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves -->  by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 
 /* duf_scan_db_items2:
  * call str_cb2 + str_cb_udata for each record by this sql with corresponding args
@@ -52,14 +52,12 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
 
   if ( sccb && sccb->leaf_selector2 )
   {
-
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 3." );
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector2 */
-    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset, /* ... */
-                            dirid /* for WHERE */  );
+    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset );
 
-    DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), dirid );
+    DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 
     DUF_TEST_R( r );
   }
@@ -82,13 +80,13 @@ duf_scan_files_by_di2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_dept
 
 
 int
-duf_scan_files_by_dirid2( unsigned long long dirid, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_files_by_dirid2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
   if ( DUF_ACT_FLAG( files ) )
-    r = duf_scan_files_by_di2( dirid, str_cb2, pdi, sccb );
+    r = duf_scan_files_by_di2( str_cb2, pdi, sccb );
   else
-    DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), dirid );
+    DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": skip scan leaves by %5llu : no '--files'", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
   return r;
 }

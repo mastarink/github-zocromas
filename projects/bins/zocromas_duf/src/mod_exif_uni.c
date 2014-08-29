@@ -1,15 +1,10 @@
 #define DUF_SQL_PDI_STMT
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
-
 
 #include <assert.h>
 
@@ -34,21 +29,17 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
 
-
-#include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-#include "duf_path.h"
 
-#include "duf_sql_const.h"
+/* #include "duf_sql_const.h" */
 #include "duf_sql_defs.h"
+
 #include "duf_sql_field.h"
 /* #include "duf_sql_field1.h" */
 
@@ -56,7 +47,6 @@
 #include "duf_sql1.h"
 #include "duf_sql2.h"
 
-#include "duf_dbg.h"
 
 
 DUF_UNUSED static unsigned long long

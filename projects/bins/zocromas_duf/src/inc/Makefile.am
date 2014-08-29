@@ -10,13 +10,13 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h		\
 	duf_levinfo.h  duf_pdi.h				 \
 	duf_dirent_scan2.h					  \
 	duf_file_pathid2.h					   \
-	duf_utils.h duf_utils_path.h				    \
-	duf_errors.h duf_errors_headers.h duf_trace.h		   \
+	duf_utils.h duf_utils_path.h duf_utils_print.h duf_match.h  \
+	duf_errors.h duf_maintenance.h duf_trace.h		   \
 	duf_dh.h duf_service.h					    \
 	duf_sqlite.h duf_sql.h duf_sql2.h			     \
 	duf_sql_field.h duf_sql_field2.h			      \
 	duf_sql_const.h duf_sql_defs.h				       \
-	duf_types.h duf_error_types.h duf_item_types.h			\
+	duf_scan_types.h duf_error_types.h duf_item_types.h			\
 	duf_fun_types.h duf_levinfo_types.h				 \
 	duf_trace_types.h duf_trace_defs.h				  \
 	duf_def.h duf_defs.h duf_debug_defs.h duf_print_defs.h		   \

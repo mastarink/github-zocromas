@@ -37,6 +37,7 @@ typedef enum
   DUF_TRACE_MODE_scan_de_reg,
   DUF_TRACE_MODE_temp,
   DUF_TRACE_MODE_sql,
+  DUF_TRACE_MODE_sqlite,
   DUF_TRACE_MODE_select,
   DUF_TRACE_MODE_insert,
   DUF_TRACE_MODE_update,

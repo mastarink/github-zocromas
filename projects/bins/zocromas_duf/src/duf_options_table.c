@@ -178,8 +178,6 @@ static const duf_longval_extended_t _lo_extended[] = {
    /*      */ DO_O( UPLUS, cli.trace.exif ) /*                                                               */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-explain" ), /*  */ DO_A_O, /* */ DO_V( EXPLAIN_TRACE )} /*  */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.explain ) /*                                                            */ , DO_H( trace .... ) /*         */ },
-  {.o = {DO_Q( "trace-file" ), /*     */ DO_A_R, /* */ DO_V( TRACE_FILE )} /*     */ , DO_CL( TRACE ) /*     */ ,
-   /*      */ DO_O( UPLUS, cli.trace.file ) /*                                                               */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-fs" ), /*       */ DO_A_O, /* */ DO_V( FS_TRACE )} /*       */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.fs ) /*                                                                 */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-insert" ), /*   */ DO_A_O, /* */ DO_V( INSERT_TRACE )} /*   */ , DO_CL( TRACE ) /*     */ ,
@@ -218,11 +216,14 @@ static const duf_longval_extended_t _lo_extended[] = {
    /*      */ DO_O( UPLUS, cli.trace.seq ) /*                                                                */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-sql" ), /*      */ DO_A_O, /* */ DO_V( SQL_TRACE )} /*      */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.sql ) /*                                                                */ , DO_H( trace .... ) /*         */ },
+  {.o = {DO_Q( "trace-sqlite" ), /*      */ DO_A_O, /* */ DO_V( SQL_TRACE )} /*      */ , DO_CL( TRACE ) /*  */ ,
+   /*      */ DO_O( UPLUS, cli.trace.sqlite ) /*                                                             */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-temp" ), /*     */ DO_A_O, /* */ DO_V( TEMP_TRACE )} /*     */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.temp ) /*                                                               */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-update" ), /*   */ DO_A_O, /* */ DO_V( UPDATE_TRACE )} /*   */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.update ) /*                                                             */ , DO_H( trace .... ) /*         */ },
 
+  {.o = {DO_Q( "trace-file" ), /*     */ DO_A_R, /* */ DO_V( TRACE_FILE )} /*     */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-stderr" ), /*   */ DO_A_N, /* */ DO_V( TRACE_STDERR )} /*   */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-stdout" ), /*   */ DO_A_N, /* */ DO_V( TRACE_STDOUT )} /*   */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
 

@@ -65,6 +65,7 @@ struct duf_scan_callbacks_s
 {
   unsigned def_opendir:1;
   unsigned scan_mode_2:1;
+  unsigned disabled:1;
   const char *title;
 
   const char *node_fieldset;

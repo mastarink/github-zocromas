@@ -63,12 +63,12 @@
 #  define DUF_TRACE_C( cfg, name, ... )			DUF_TRACE_WHAT_C( cfg,		  cli.trace, name, __VA_ARGS__ )
 #  define DUF_TRACE( name, ... )			DUF_TRACE_C(	  duf_config,		     name, __VA_ARGS__ )
 
-#if defined(__GNUC__)
-#  define DUF_SCCB( macr, name, min, fmt, ... )			macr( name, min, "%" DUF_ACTION_TITLE_FMT "; "  fmt, \
+#  if defined(__GNUC__)
+#    define DUF_SCCB( macr, name, min, fmt, ... )			macr( name, min, "%" DUF_ACTION_TITLE_FMT "; "  fmt, \
     			duf_uni_scan_action_title( sccb ),  ##__VA_ARGS__ )
-#  define DUF_SCCB_PDI( macr, name, min, pdi, fmt, ... )	macr( name, min, "%" DUF_ACTION_TITLE_FMT "; seq:%u "  fmt, \
+#    define DUF_SCCB_PDI( macr, name, min, pdi, fmt, ... )	macr( name, min, "%" DUF_ACTION_TITLE_FMT "; seq:%u "  fmt, \
     			duf_uni_scan_action_title( sccb ), duf_pdi_seq(pdi),  ##__VA_ARGS__ )
-#endif
+#  endif
 
 /* ###################################################################### */
 
@@ -106,10 +106,19 @@
 /* ###################################################################### */
 
 #  define DUF_TEST_RX(val)	if (val) DUF_ERROR( " - - - - - -> [%s] (#%d)", val<0?duf_error_name(val):"-", val )
+#  define DUF_TEST_RQX(val, cond) if ( !(cond) ) DUF_TEST_RX( val )
 
-#  define DUF_TEST_R(val)	if ( val!=DUF_ERROR_MAX_REACHED && val!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( val )
+/* #  define DUF_TEST_R(val)       if ( val!=DUF_ERROR_MAX_REACHED && val!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( val ) */
+#  define DUF_TEST_R(val)	DUF_TEST_RQX( val,  val==DUF_ERROR_MAX_REACHED || val==DUF_ERROR_MAX_SEQ_REACHED  )
+#  define DUF_DO_TEST_R(val, x) { val=x; DUF_TEST_R(val); }
+#  define DUF_TEST_RQ(val, cond) if ( !(cond) ) DUF_TEST_R( val )
+
 #  define DUF_TEST_RN(val)	if ( val<0 ) DUF_TEST_R( val )
-#  define DUF_TEST_RR(val)	if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val )
+
+/* #  define DUF_TEST_RR(val)      if ( val!=DUF_SQL_ROW && val!=DUF_SQL_DONE ) DUF_TEST_R( val ) */
+#  define DUF_TEST_RR(val)	DUF_TEST_RQ(val, val==DUF_SQL_ROW || val==DUF_SQL_DONE )
+
+
 #  define DUF_TEST_R3(val)	if (val \
     			&& (val)!=SQLITE_ROW \
     			&& (val)!=SQLITE_DONE \

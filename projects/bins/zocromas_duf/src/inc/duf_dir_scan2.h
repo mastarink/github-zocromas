@@ -7,7 +7,7 @@
  * 3. for each file in <current> dir call sccb->file_scan
  * see duf_scan_dir_by_pi
  * */
-int duf_scan_dirs_by_parentid2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
+int duf_scan_dirs_by_pi2_msg( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
 
 
 

@@ -25,10 +25,6 @@ unsigned long long duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_dirid_up( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_dirid( const duf_depthinfo_t * pdi );
 
-int duf_levinfo_eod_d( const duf_depthinfo_t * pdi, int d );
-void duf_levinfo_set_eod_d( const duf_depthinfo_t * pdi, int d );
-void duf_levinfo_set_eod( const duf_depthinfo_t * pdi );
-
 int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_numdir( const duf_depthinfo_t * pdi );
 
@@ -50,7 +46,7 @@ void duf_levinfo_set_context_up_destructor( duf_depthinfo_t * pdi, duf_void_void
 
 int duf_levinfo_down( duf_depthinfo_t * pdi, unsigned long long dirid, const char *dirname, unsigned long long ndirs,
                       unsigned long long nfiles, int is_leaf );
-void duf_levinfo_up( duf_depthinfo_t * pdi );
+int duf_levinfo_up( duf_depthinfo_t * pdi );
 
 void duf_levinfo_countdown_dirs( duf_depthinfo_t * pdi );
 

@@ -8,8 +8,8 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+/* #include "duf_types.h" */
+#include "duf_maintenance.h"
 
 
 #include "duf_utils.h"
@@ -169,31 +169,6 @@ duf_levinfo_numdir( const duf_depthinfo_t * pdi )
   assert( pdi );
   assert( pdi->levinfo );
   return duf_levinfo_numdir_d( pdi, pdi->depth );
-}
-
-void
-duf_levinfo_set_eod_d( const duf_depthinfo_t * pdi, int d )
-{
-  assert( pdi );
-  assert( pdi->levinfo );
-  assert( d >= 0 );
-  pdi->levinfo[d].eod = 1;
-}
-
-void
-duf_levinfo_set_eod( const duf_depthinfo_t * pdi )
-{
-  assert( pdi );
-  duf_levinfo_set_eod_d( pdi, pdi->depth );
-}
-
-int
-duf_levinfo_eod_d( const duf_depthinfo_t * pdi, int d )
-{
-  assert( pdi );
-  assert( pdi->levinfo );
-  assert( d >= 0 );
-  return /* duf_pdi_deltadepth( pdi, d ) <= 0 || */ pdi->levinfo[d].eod /*|| pdi->levinfo[d].is_leaf */ ;
 }
 
 const char *
@@ -409,13 +384,14 @@ duf_levinfo_down( duf_depthinfo_t * pdi, unsigned long long dirid, const char *i
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
       DUF_OINV_NOT_OPENED( pdi-> );
-      DUF_TRACE( explain, 0, "level down: %d; ≪%s≫", d, is_leaf ? "leaf" : "node" );
+      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫", d, is_leaf ? "leaf" : "node" );
       assert( pdi->depth >= 0 );
     }
     else
     {
       pdi->depth--;
       r = DUF_ERROR_MAX_DEPTH;
+      DUF_TEST_R( r );
     }
     /* assert( duf_pdi_depth( pdi ) == 0 || ( duf_pdi_depth( pdi ) > 0 && duf_levinfo_dirid( pdi ) ) ); */
     if ( is_leaf )
@@ -427,13 +403,14 @@ duf_levinfo_down( duf_depthinfo_t * pdi, unsigned long long dirid, const char *i
                  duf_levinfo_itemname( pdi ) );
     }
   }
-  DUF_TEST_R( r );
   return r;
 }
 
-void
+int
 duf_levinfo_up( duf_depthinfo_t * pdi )
 {
+  int r = 0;
+
   assert( pdi );
 
   if ( duf_levinfo_is_leaf( pdi ) )
@@ -442,7 +419,6 @@ duf_levinfo_up( duf_depthinfo_t * pdi )
     DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node: <=    by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
                duf_levinfo_itemname( pdi ) );
   {
-    int r = 0;
     int d = pdi->depth--;
 
     if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
@@ -453,11 +429,12 @@ duf_levinfo_up( duf_depthinfo_t * pdi )
     DUF_TEST_R( r );
     if ( r < 0 )
       DUF_ERROR( "(%d) close error; L%d", r, pdi->depth );
-    DUF_TRACE( explain, 0, "level up:   %d", d );
+    DUF_TRACE( explain, 1, "level up:   %d", d );
     assert( pdi->levinfo );
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->depth;
   }
+  return r;
 }
 
 void

@@ -7,7 +7,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_types.h"
+/* #include "duf_types.h" */
 #include "duf_utils.h"
 
 #include "duf_config_ref.h"

@@ -7,9 +7,8 @@
 #include <mastar/wrap/mas_memory.h>
 
 #include "duf_defs.h"           /* */
-#include "duf_types.h"          /* */
 
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
 
 
 
@@ -417,46 +416,46 @@ duf_check_table_md5( void )
   return r;
 }
 
-static int
-duf_check_table_keydata( void )
-{
-  int r = DUF_ERROR_CHECK_TABLES;
-
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " /* */
-                        DUF_DBPREF "keydata (id INTEGER PRIMARY KEY autoincrement" /* */
-                        ", md5id INTEGER NOT NULL" /* */
-                        ", filenameid INTEGER NOT NULL" /* */
-                        ", dataid INTEGER NOT NULL" /* */
-                        ", Pathid INTEGER NOT NULL" /* */
-                        ", last_updated REAL" /* */
-                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-                        ", FOREIGN KEY(dataid)     REFERENCES filedatas(id) " /* */
-                        ", FOREIGN KEY(filenameid) REFERENCES filenames(id) " /* */
-                        ", FOREIGN KEY(Pathid)     REFERENCES paths(id) " /* */
-                        ", FOREIGN KEY(md5id)      REFERENCES md5(id) )", "Create keydata" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "keydata_uniq   ON keydata (Pathid,filenameid,md5id)", "Create keydata" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_Pathid ON keydata (Pathid)", "Create keydata" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "keydata_nameid ON keydata (filenameid)", "Create keydata" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_dataid ON keydata (dataid)", "Create keydata" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_md5id  ON keydata (md5id)", "Create keydata" );
-
-
-  /* if ( r >= 0 )                                                                                                                 */
-  /*   r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "keydata_lastupdated "                                               */
-  /*                         " AFTER UPDATE OF ... ON keydata "                                                                */
-  /*                         " FOR EACH ROW BEGIN "                                                                                */
-  /*                         "   UPDATE keydata SET last_updated=DATETIME() WHERE id=OLD.id ; END", "Create keydata" ); */
-
-
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
-  return r;
-}
+/* static int                                                                                                                                           */
+/* duf_check_table_keydata( void )                                                                                                                      */
+/* {                                                                                                                                                    */
+/*   int r = DUF_ERROR_CHECK_TABLES;                                                                                                                    */
+/*                                                                                                                                                      */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                                                                      */
+/*   r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " (* *)                                                                                          */
+/*                         DUF_DBPREF "keydata (id INTEGER PRIMARY KEY autoincrement" (* *)                                                             */
+/*                         ", md5id INTEGER NOT NULL" (* *)                                                                                             */
+/*                         ", filenameid INTEGER NOT NULL" (* *)                                                                                        */
+/*                         ", dataid INTEGER NOT NULL" (* *)                                                                                            */
+/*                         ", Pathid INTEGER NOT NULL" (* *)                                                                                            */
+/*                         ", last_updated REAL" (* *)                                                                                                  */
+/*                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" (* *)                                                           */
+/*                         ", FOREIGN KEY(dataid)     REFERENCES filedatas(id) " (* *)                                                                  */
+/*                         ", FOREIGN KEY(filenameid) REFERENCES filenames(id) " (* *)                                                                  */
+/*                         ", FOREIGN KEY(Pathid)     REFERENCES paths(id) " (* *)                                                                      */
+/*                         ", FOREIGN KEY(md5id)      REFERENCES md5(id) )", "Create keydata" );                                                        */
+/*   if ( r >= 0 )                                                                                                                                      */
+/*     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "keydata_uniq   ON keydata (Pathid,filenameid,md5id)", "Create keydata" ); */
+/*   if ( r >= 0 )                                                                                                                                      */
+/*     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_Pathid ON keydata (Pathid)", "Create keydata" );                  */
+/*   if ( r >= 0 )                                                                                                                                      */
+/*     r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "keydata_nameid ON keydata (filenameid)", "Create keydata" );              */
+/*   if ( r >= 0 )                                                                                                                                      */
+/*     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_dataid ON keydata (dataid)", "Create keydata" );                  */
+/*   if ( r >= 0 )                                                                                                                                      */
+/*     r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "keydata_md5id  ON keydata (md5id)", "Create keydata" );                   */
+/*                                                                                                                                                      */
+/*                                                                                                                                                      */
+/*   (* if ( r >= 0 )                                                                                                                 *)                */
+/*   (*   r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "keydata_lastupdated "                                               *)      */
+/*   (*                         " AFTER UPDATE OF ... ON keydata "                                                                *)                    */
+/*   (*                         " FOR EACH ROW BEGIN "                                                                                *)                */
+/*   (*                         "   UPDATE keydata SET last_updated=DATETIME() WHERE id=OLD.id ; END", "Create keydata" ); *)                           */
+/*                                                                                                                                                      */
+/*                                                                                                                                                      */
+/*   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );                                                                                                    */
+/*   return r;                                                                                                                                          */
+/* }                                                                                                                                                    */
 
 static int
 duf_check_table_mdpath( void )
@@ -632,7 +631,7 @@ static duf_create_table_element tab_table[] = {
   DUF_TABLE_ELEMENT( tags ),
   DUF_TABLE_ELEMENT( path_tags ),
 
-  DUF_TABLE_ELEMENT( keydata ),
+  /* DUF_TABLE_ELEMENT( keydata ), */
   DUF_TABLE_ELEMENT( pathtot_dirs ),
   DUF_TABLE_ELEMENT( pathtot_files ),
 };

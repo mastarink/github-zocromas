@@ -29,7 +29,7 @@ typedef struct
 {
   unsigned is_leaf:1;
   unsigned deleted:1;
-  unsigned eod;
+  /* unsigned eod; */
   unsigned long long dirid;
   /* const char *name; */
   duf_items_t items;
@@ -40,13 +40,6 @@ typedef struct
   duf_context_t context;
   duf_dirhandle_t lev_dh;
 } duf_levinfo_t;
-
-typedef struct
-{
-  float percent;
-  int width;
-  int prev_width;
-} duf_bar_t;
 
 
 typedef struct
@@ -76,7 +69,6 @@ typedef struct
   int num_statements;
   duf_sqlite_stmt_t **statements;
   int **xstatements;
-  duf_bar_t bar;
   duf_modcnts_t cnts;
 } duf_depthinfo_t;
 

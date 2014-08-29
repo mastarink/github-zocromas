@@ -3,6 +3,11 @@
 
 #  include "duf_defs.h"
 
+#define FN_FMT "27s"
+/* #define FN_FMT "23s" */
+
+
+
 #  define DUF_PUTS( min, str) \
     duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
 		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, str)

@@ -61,6 +61,7 @@ typedef struct
   unsigned seq;
   unsigned options;
   unsigned sql;
+  unsigned sqlite;
   unsigned select;
   unsigned insert;
   unsigned update;

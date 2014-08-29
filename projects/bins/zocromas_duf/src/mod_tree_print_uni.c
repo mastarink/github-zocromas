@@ -1,21 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-/* #include <unistd.h> */
-#include <sys/stat.h>
-#include <time.h>
-
-
-/* #include <openssl/md5.h> */
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+#include "duf_maintenance.h"
+#include "duf_hook_types.h"
+#include "duf_fileinfo_types.h"
 
-
-#include "duf_utils.h"
 #include "duf_service.h"
 #include "duf_config_ref.h"
 
@@ -24,13 +13,7 @@
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-/* #include "duf_sql_field1.h" */
 
-/* #include "duf_path.h" */
-
-#include "duf_sql.h"
-
-#include "duf_dbg.h"
 
 /* ###################################################################### */
 /* #include "duf_tree_print_uni.h" */
@@ -70,8 +53,8 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'o' );
       int leaf = duf_levinfo_is_leaf_d( pdi, d );
       char leafc = leaf ? 'L' : 'D';
-      int eod = duf_levinfo_eod_d( pdi, d );
-      char eodc = eod ? '.' : '~';
+      /* int eod = duf_levinfo_eod_d( pdi, d ); */
+      /* char eodc = eod ? '.' : '~';           */
 
       /* char is_filec = is_file ? 'F' : '-'; */
 
@@ -81,8 +64,8 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         flags |= 0x2;
       if ( leaf )
         flags |= 0x4;
-      if ( eod )
-        flags |= 0x8;
+      /* if ( eod )      */
+      /*   flags |= 0x8; */
       if ( d == max )
         flags |= 0x10;
       if ( d >= pdi->maxdepth  )
@@ -94,7 +77,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
                  DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth );
                  /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                  DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
-                 DUF_PRINTF( 0, ".%c%c%c", eodc, nduc, leafc ); /* */
+                 DUF_PRINTF( 0, ".%c%c",  nduc, leafc ); /* */
                  DUF_PRINTF( 0, ".0x%02x]", flags ); );
       {
         /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
@@ -129,11 +112,11 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         case 0x8:
           DUF_PRINTF( 0, ".     " );
           break;
-        case 0x02:
-          /* DUF_PRINTF( 0, ".┃    " ); */
-          break;
         case 0x00:
           DUF_PRINTF( 0, ".     " );
+          break;
+        case 0x02:
+          /* DUF_PRINTF( 0, ".┃    " ); */
           break;
         default:
           DUF_PRINTF( 0, ". 0x%02x]", flags );

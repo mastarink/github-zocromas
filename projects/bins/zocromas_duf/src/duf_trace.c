@@ -11,20 +11,14 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include "duf_types.h"
 #include "duf_errors.h"
 
-#include "duf_sql_const.h"
 
 /* ###################################################################### */
 #include "duf_trace.h"
 /* ###################################################################### */
 
 /* #define DUF_NOTIMING */
-
-#define FN_FMT "27s"
-/* #define FN_FMT "23s" */
-
 
 static int
 duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_error_code_t ern, const char *funcid, int linid,

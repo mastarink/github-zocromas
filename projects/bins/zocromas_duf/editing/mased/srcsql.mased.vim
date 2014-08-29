@@ -10,8 +10,8 @@ sfind duf_sqlite.h
 tab sfind duf_sql_field.c
 sfind duf_sql_field.h
 
-tab sfind duf_sql_field1.c
-sfind duf_sql_field1.h
+" tab sfind duf_sql_field1.c
+" sfind duf_sql_field1.h
 
 tab sfind duf_sql_field2.c
 sfind duf_sql_field2.h

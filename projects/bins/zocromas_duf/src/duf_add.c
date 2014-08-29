@@ -5,8 +5,8 @@
 #include <mastar/wrap/mas_memory.h>
 
 
-#include "duf_types.h"
-#include "duf_errors_headers.h"
+/* #include "duf_types.h" */
+#include "duf_maintenance.h"
 
 
 #include "duf_config_ref.h"
@@ -49,8 +49,7 @@ duf_add_path_uni( const char *path )
     };
 
     if ( r >= 0 )
-      r = duf_pdi_init_msg( &di, real_path );
-
+      r = duf_pdi_init_msg( &di, real_path, 1 );
 
     if ( r >= 0 )
     {

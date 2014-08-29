@@ -7,6 +7,8 @@
 #  include "duf_hook_types.h"
 #  include "duf_format_types.h"
 
+#  define DUF_FUNN(af) duf_dbg_funname( ( duf_anyhook_t ) af )
+
 
 int duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t * format, duf_pdi_cb_t prefix_cb,
                          duf_pdi_cb_t suffix_cb );
