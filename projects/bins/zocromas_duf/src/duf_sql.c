@@ -376,6 +376,7 @@ duf_sql_bindn_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long 
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
   if ( pi > 0 )
   {
+    /* DUF_PRINTF(0,  "1 long long nz %s='%lld' [%s]", fldname, value,  sqlite3_sql( stmt ) ); */
     if ( value )
       r = DUF_SQLITE_ERROR_CODE( duf_sqlite_bind_long_long( stmt, pi, value ) );
     else

@@ -11,6 +11,7 @@ typedef struct
   unsigned long long sd5id;
   unsigned long long md5id;
   unsigned long long crc32id;
+  unsigned long long nameid;
   unsigned long long mimeid;
   unsigned long long exifid;
   unsigned long long dataid;

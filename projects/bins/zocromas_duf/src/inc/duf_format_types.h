@@ -21,6 +21,8 @@ typedef struct
   unsigned md5id:1;
   unsigned crc32:1;
   unsigned crc32id:1;
+  unsigned nameid:1;
+  unsigned nameid_space:1;
   unsigned mimeid:1;
   unsigned mimeid_space:1;
   unsigned exifid:1;
@@ -60,6 +62,7 @@ typedef enum
   DUF_FORMAT_MD5ID,
   DUF_FORMAT_CRC32,
   DUF_FORMAT_CRC32ID,
+  DUF_FORMAT_NAMEID,
   DUF_FORMAT_MIMEID,
   DUF_FORMAT_EXIFID,
   DUF_FORMAT_MODE,

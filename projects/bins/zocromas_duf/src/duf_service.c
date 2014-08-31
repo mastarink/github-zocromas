@@ -429,6 +429,23 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
 
+  if ( duf_config->cli.format.nameid && ( !format || format->nameid ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nameid}" ) );
+    if ( pfi->nameid )
+      DUF_PRINTF( 0, ".N%-6llu    ", pfi->nameid );
+    else
+      DUF_PRINTF( 0, ". %-6s    ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.nameid_space && ( !format || format->nameid_space ) )
+  {
+    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{nameid_space}" ) );
+    DUF_PRINTF( 0, ". %6s    ", "" );
+    ok++;
+  }
+  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
 
   assert( ok );
   return ok;

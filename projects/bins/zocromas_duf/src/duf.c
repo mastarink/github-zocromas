@@ -83,9 +83,9 @@ duf_main( int argc, char **argv )
 {
   int r = 0;
 
-  DUF_PRINTF( 0, "************************* %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_config_act_flags_t ), sizeof( duf_config_cli_flags_t ),
-              sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ), sizeof( unsigned long ),
-              sizeof( unsigned long long ) );
+  DUF_PRINTF( 0, "************************* %lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
+              sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
+              sizeof( unsigned long ), sizeof( unsigned long long ) );
 
   /* DUF_TRACE( any, 0, "r=%d", r ); */
   {

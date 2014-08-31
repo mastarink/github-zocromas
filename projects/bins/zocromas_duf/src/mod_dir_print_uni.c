@@ -120,6 +120,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( nlink );
   DUF_UFIELD2( inode );
   DUF_UFIELD2( exifid );
+  DUF_UFIELD2( filenameid );
   DUF_UFIELD2( mimeid );
   DUF_UFIELD2( nsame );
   /* DUF_SFIELD( mtimef ); */
@@ -139,6 +140,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       .seq = 1,
       .dirid = 1,
       .exifid = 1,
+      .nameid = 1,
       .mimeid = 1,
       .inode = 1,
       .mode = 1,
@@ -164,6 +166,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.st.st_size = ( off_t ) filesize;
     fi.name = filename;
     fi.exifid = exifid;
+    fi.nameid = filenameid;
     fi.mimeid = mimeid;
     fi.md5id = md5id;
     fi.dataid = dataid;
@@ -302,14 +305,14 @@ static const char *beginning_sql[] = {
         "   LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         "   LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
         "      WHERE "          /* */
-        "   (:minSize   IS NULL OR fd.size>=:minSize)     AND (:maxSize   IS NULL OR fd.size<=:maxSize)     AND " /* */
-        "   (:minSame   IS NULL OR md.dup5cnt>=:minSame)  AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame)  AND " /* */
-        "   (:minnameID IS NULL OR fn." DUF_SQL_IDNAME ">=:minnameID)     AND (:maxnameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxnameID) AND " /* */
-        "   (:minInode  IS NULL OR fd.inode>=:minInode)   AND (:maxInode  IS NULL OR fd.inode<=:maxInode)   AND " /* */
-        "   (:min5ID    IS NULL OR fd.md5id>=:min5ID)     AND (:max5ID    IS NULL OR fd.md5id<=:max5ID)     AND " /* */
-        "   (:min2id    IS NULL OR fd.sd5id>=:min2ID)     AND (:max2ID    IS NULL OR fd.sd5id<=:max2ID)     AND " /* */
-        "   (:minMimeID IS NULL OR fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID) AND " /* */
-        "   (:minExif   IS NULL OR fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID)     " /* */
+        "  ( (:minSize    IS NULL OR fd.size>=:minSize)     AND (:maxSize   IS NULL OR fd.size<=:maxSize      ))  AND " /* */
+        "  ( (:minSame    IS NULL OR md.dup5cnt>=:minSame)  AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame   ))  AND " /* */
+        "  ( (:minInode   IS NULL OR fd.inode>=:minInode)   AND (:maxInode  IS NULL OR fd.inode<=:maxInode    ))  AND " /* */
+        "  ( (:min5ID     IS NULL OR fd.md5id>=:min5ID)     AND (:max5ID    IS NULL OR fd.md5id<=:max5ID      ))  AND " /* */
+        "  ( (:min2ID     IS NULL OR fd.sd5id>=:min2ID)     AND (:max2ID    IS NULL OR fd.sd5id<=:max2ID      ))  AND " /* */
+        "  ( (:minMimeID  IS NULL OR fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND " /* */
+        "  ( (:minExifID  IS NULL OR fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND " /* */
+        "  ( (:minnameID  IS NULL OR fn." DUF_SQL_IDNAME ">=:minnameID) AND (:maxnameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxnameID )) " /* */
         ,
 };
 

@@ -251,32 +251,46 @@ TODO scan mode
         {
           DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
 
-          DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( minnameID, duf_config->u.nameid.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( maxnameID, duf_config->u.nameid.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->u.inode.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->u.inode.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->u.md5id.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->u.md5id.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.max, r, pstmt );
-
-          DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.max, r, pstmt );
-
-
-          DUF_TEST_R( r );
+          if ( duf_config->u.size.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
+          }
+          if ( duf_config->u.same.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
+          }
+          if ( duf_config->u.nameid.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( minnameID, duf_config->u.nameid.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( maxnameID, duf_config->u.nameid.max, r, pstmt );
+          }
+          if ( duf_config->u.inode.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->u.inode.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->u.inode.max, r, pstmt );
+          }
+          if ( duf_config->u.md5id.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->u.md5id.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->u.md5id.max, r, pstmt );
+          }
+          if ( duf_config->u.sd5id.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.max, r, pstmt );
+          }
+          if ( duf_config->u.mimeid.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.max, r, pstmt );
+          }
+          if ( duf_config->u.exifid.flag )
+          {
+            DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.min, r, pstmt );
+            DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.max, r, pstmt );
+          }
 
           /* r = duf_sql_exec( *psql, &changes ); */
           DUF_SQL_STEP( r, pstmt );

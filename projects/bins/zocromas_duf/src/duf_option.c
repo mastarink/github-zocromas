@@ -280,6 +280,7 @@ duf_parse_option_long( int longindex, const char *optarg )
       unsigned *pi;
       unsigned long long *pll;
       unsigned short *pis;
+      duf_limits_t *li;
       char **pstr;
       unsigned doplus = 0;
 
@@ -287,6 +288,7 @@ duf_parse_option_long( int longindex, const char *optarg )
       pis = ( unsigned short * ) ( ( ( char * ) duf_config ) + extended->m );
       pll = ( unsigned long long * ) ( ( ( char * ) duf_config ) + extended->m );
       pstr = ( char ** ) ( ( ( char * ) duf_config ) + extended->m );
+      li = ( duf_limits_t * ) ( ( ( char * ) duf_config ) + extended->m );
       switch ( extended->vtype )
       {
       case DUF_OPTION_VTYPE_UPLUS:
@@ -335,6 +337,8 @@ duf_parse_option_long( int longindex, const char *optarg )
           /*             offsetof( duf_config_cli_trace_t, scan ), extended->o.name, *pi, duf_config->cli.trace.scan, r );     */
         }
         break;
+      case DUF_OPTION_VTYPE_MIN:
+      case DUF_OPTION_VTYPE_MAX:
       case DUF_OPTION_VTYPE_MINMAX:
         {
           int rl = 0;
@@ -345,8 +349,11 @@ duf_parse_option_long( int longindex, const char *optarg )
               unsigned n;
 
               n = duf_strtol( optarg, &rl );
-              *pi++ = n;
-              *pi = n;
+              li->flag = 1;
+              if ( extended->vtype == DUF_OPTION_VTYPE_MIN || extended->vtype == DUF_OPTION_VTYPE_MINMAX )
+                li->min = n;
+              if ( extended->vtype == DUF_OPTION_VTYPE_MAX || extended->vtype == DUF_OPTION_VTYPE_MINMAX )
+                li->max = n;
               done = 1;
               if ( rl < 0 )
                 r = DUF_ERROR_OPTION_VALUE;
@@ -355,6 +362,8 @@ duf_parse_option_long( int longindex, const char *optarg )
           }                     /* r = codeval; */
         }
         break;
+      case DUF_OPTION_VTYPE_MINLL:
+      case DUF_OPTION_VTYPE_MAXLL:
       case DUF_OPTION_VTYPE_MINMAXLL:
         {
           int rl = 0;
@@ -365,8 +374,11 @@ duf_parse_option_long( int longindex, const char *optarg )
               unsigned long long n;
 
               n = duf_strtol( optarg, &rl );
-              *pll++ = n;
-              *pll = n;
+              li->flag = 1;
+              if ( extended->vtype == DUF_OPTION_VTYPE_MINLL || extended->vtype == DUF_OPTION_VTYPE_MINMAXLL )
+                li->min = n;
+              if ( extended->vtype == DUF_OPTION_VTYPE_MAXLL || extended->vtype == DUF_OPTION_VTYPE_MINMAXLL )
+                li->max = n;
               done = 1;
               if ( rl < 0 )
                 r = DUF_ERROR_OPTION_VALUE;
@@ -709,6 +721,7 @@ duf_parse_option_long( int longindex, const char *optarg )
           [DUF_FORMAT_MD5] = "md5",
           [DUF_FORMAT_CRC32ID] = "crc32id",
           [DUF_FORMAT_CRC32] = "crc32",
+          [DUF_FORMAT_NAMEID] = "nameid",
           [DUF_FORMAT_MIMEID] = "mimeid",
           [DUF_FORMAT_EXIFID] = "exifid",
           [DUF_FORMAT_MODE] = "mode",
@@ -813,6 +826,9 @@ duf_parse_option_long( int longindex, const char *optarg )
             break;
           case DUF_FORMAT_CRC32ID:
             duf_config->cli.format.crc32id = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_NAMEID:
+            duf_config->cli.format.nameid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MIMEID:
             duf_config->cli.format.mimeid = value == NULL ? 1 : nvalue;
