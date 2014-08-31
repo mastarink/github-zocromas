@@ -51,7 +51,7 @@
  * this is callback of type: duf_str_cb_t (second range):
  *
  * if recursive flag set, call duf_scan_dirs_by_parentid(2?) + pdi (built from str_cb_udata) with duf_str_cb(1?)_uni_scan_dir
- *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
+ *       for each <dir> record by dirID (i.e. children of dirID) with corresponding args 
  * otherwise do nothing
  *
  *   i.e.
@@ -78,10 +78,10 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
     if ( DUF_U_FLAG( recursive ) && ( !pdi->u.max_rel_depth || duf_pdi_reldepth( pdi ) < pdi->u.max_rel_depth ) )
     {
 /* duf_scan_fil_by_pi:
- * call duf_str_cb(2?)_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirid (i.e. children of dirid) with corresponding args
+ * call duf_str_cb(2?)_uni_scan_dir + pdi (also) as str_cb_udata for each <dir> record by dirID (i.e. children of dirID) with corresponding args
  *
  * i.e. if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata) with duf_str_cb(1?)_uni_scan_dir
- *       for each <dir> record by dirid (i.e. children of dirid) with corresponding args 
+ *       for each <dir> record by dirID (i.e. children of dirID) with corresponding args 
  *         otherwise do nothing
  *
  *   i.e.

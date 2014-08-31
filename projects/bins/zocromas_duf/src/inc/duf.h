@@ -103,7 +103,7 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
 
 /* run tables drop tables check path add /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/
  * sqlite3 -header -column /mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3  \
- * 				'SELECT id, dirname, parentid  FROM dufs.paths order by id limit 20'
+ * 				'SELECT ID, dirname, parentID  FROM dufs.paths order by ID limit 20'
  * */
 
 

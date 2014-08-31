@@ -16,6 +16,9 @@ sfind duf_sccb.h
 tab sfind duf_dir_scan2.c
 sfind duf_dir_scan2.h
 
+tab sfind duf_dir_scan2_stages.c
+sfind duf_dir_scan2_stages.h
+
 tab sfind duf_dirent_scan2.c
 sfind duf_dirent_scan2.h
 
@@ -30,6 +33,9 @@ sfind duf_uni_scan2.h
 
 tab sfind duf_levinfo.c
 sfind duf_levinfo.h
+
+tab sfind duf_levinfo_ref.c
+sfind duf_levinfo_ref.h
 
 tab sfind duf_pdi.c
 sfind duf_pdi.h

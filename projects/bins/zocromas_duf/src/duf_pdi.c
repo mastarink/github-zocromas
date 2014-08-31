@@ -95,10 +95,9 @@ duf_pdi_init_msg( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
   DUF_TEST_R( r );
   if ( r >= 0 )
   {
-    DUF_TRACE( action, 0, "real_path:%s", real_path );
-    DUF_TRACE( explain, 0, "converted to real_path: %s", real_path );
-    DUF_TRACE( path, 0, " *********** dirid: %llu", duf_levinfo_dirid( pdi ) );
-    DUF_TRACE( explain, 0, "added path uni: %s", real_path );
+    DUF_TRACE( explain, 1, "converted to real_path: %s", real_path );
+    DUF_TRACE( explain, 0, "added path: %s", real_path );
+    DUF_TRACE( path, 0, " *********** diridpid: %llu", duf_levinfo_dirid( pdi ) );
   }
   return r;
 }

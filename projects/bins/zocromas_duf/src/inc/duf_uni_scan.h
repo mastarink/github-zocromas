@@ -5,7 +5,7 @@
 /* int duf_uni_scan( const char *path, duf_ufilter_t u, duf_scan_callbacks_t * sccb ); */
 
 
-int duf_uni_scan_all( void );
+int duf_make_all_sccbs( void );
 int duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges );
 
 /*

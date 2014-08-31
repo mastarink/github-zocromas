@@ -16,10 +16,10 @@ zocromas_duf_SOURCES=				   \
 							     \
 	duf_item_scan2.c				      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
-	duf_sccb.c duf_dir_scan2.c				\
+	duf_sccb.c duf_dir_scan2.c duf_dir_scan2_stages.c	\
 	duf_dirent_scan2.c					 \
 								  \
-	duf_levinfo.c duf_pdi.c					   \
+	duf_levinfo.c duf_levinfo_ref.c duf_pdi.c		   \
 	duf_dirent.c 						    \
 	duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
 	duf_errors.c  duf_trace.c				      \

@@ -6,8 +6,8 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h		\
 	duf_add.h duf_path.h				     \
 	duf_item_scan2.h				      \
 	duf_uni_scan.h duf_prepare_actions.h duf_uni_scan2.h   \
-	duf_sccb.h duf_dir_scan2.h				\
-	duf_levinfo.h  duf_pdi.h				 \
+	duf_sccb.h duf_dir_scan2.h duf_dir_scan2_stages.h	\
+	duf_levinfo.h duf_levinfo_ref.h duf_pdi.h		 \
 	duf_dirent_scan2.h					  \
 	duf_file_pathid2.h					   \
 	duf_utils.h duf_utils_path.h duf_utils_print.h duf_match.h  \

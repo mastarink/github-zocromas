@@ -58,7 +58,7 @@ duf_add_path_uni( const char *path )
       if ( !real_path_b )
         real_path_b = duf_levinfo_path( &di );
 
-      DUF_TRACE( path, 0, "added path uni: [%s] :: [%s]  %llu", real_path, real_path_b, duf_levinfo( &di )->dirid );
+      DUF_TRACE( path, 0, "added path uni: [%s] :: [%s]  %llu", real_path, real_path_b, duf_levinfo_dirid( &di ) );
     }
     duf_pdi_close( &di );
 

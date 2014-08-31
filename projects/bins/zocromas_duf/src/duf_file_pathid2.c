@@ -31,7 +31,7 @@
 
 
 /* duf_scan_files_by_pi:
- * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid (i.e. children of dirid) with corresponding args
+ * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirID (i.e. children of dirID) with corresponding args
  *
  * known str_cb for duf_scan_files_by_di:
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
@@ -71,7 +71,7 @@ duf_scan_files_by_di2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_ca
 }
 
 /* duf_scan_files_by_dirid:
- * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirid with corresponding args
+ * call str_cb + pdi (also) as str_cb_udata for each <file> record by dirID with corresponding args
  *
  * known str_cb for duf_scan_files_by_dirid:
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan

@@ -15,6 +15,7 @@
 #include "duf_cli_options.h"
 #include "duf_options.h"
 
+#include "duf_sql_defs.h"
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
@@ -63,23 +64,23 @@ duf_store_filters( void )
     const char *sqls[] = {
       "UPDATE " DUF_DBADMPREF "filefilter SET run=datetime() " /* */
             " WHERE type='cli' " /* */
-            " AND ifnull(minsize,0)=ifnull(:minsize,0) " /* */
-            " AND ifnull(maxsize,0)=ifnull(:maxsize,0) " /* */
-            " AND ifnull(mindups,0)=ifnull(:mindups,0) " /* */
-            " AND ifnull(maxdups,0)=ifnull(:maxdups,0) " /* */
+            " AND ifnull(minsize,0)=ifnull(:minSize,0) " /* */
+            " AND ifnull(maxsize,0)=ifnull(:maxSize,0) " /* */
+            " AND ifnull(mindups,0)=ifnull(:minDups,0) " /* */
+            " AND ifnull(maxdups,0)=ifnull(:maxDups,0) " /* */
             " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
             " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
             ,
       "INSERT INTO " DUF_DBADMPREF "filefilter (type,minsize,maxsize,mindups,maxdups,glob_include,glob_exclude) " /* */
             " VALUES ("         /* */
-            " 'cli', :minsize, :maxsize, :mindups, :maxdups, :glob_include, :glob_exclude " /* */
+            " 'cli', :minSize, :maxSize, :minDups, :maxDups, :glob_include, :glob_exclude " /* */
             ")",
-      "SELECT id FROM " DUF_DBADMPREF "filefilter " /* */
+      "SELECT " DUF_SQL_IDNAME " FROM " DUF_DBADMPREF "filefilter " /* */
             " WHERE type='cli' " /* */
-            " AND ifnull(minsize,0)=ifnull(:minsize,0) " /* */
-            " AND ifnull(maxsize,0)=ifnull(:maxsize,0) " /* */
-            " AND ifnull(mindups,0)=ifnull(:mindups,0) " /* */
-            " AND ifnull(maxdups,0)=ifnull(:maxdups,0) " /* */
+            " AND ifnull(minsize,0)=ifnull(:minSize,0) " /* */
+            " AND ifnull(maxsize,0)=ifnull(:maxSize,0) " /* */
+            " AND ifnull(mindups,0)=ifnull(:minDups,0) " /* */
+            " AND ifnull(maxdups,0)=ifnull(:maxDups,0) " /* */
             " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
             " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
             ,
@@ -105,17 +106,17 @@ duf_store_filters( void )
           if ( r >= 0 )
           {
             if ( r >= 0 && DUF_U_NUM( size.min ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":minsize", DUF_U_NUM( size.min ) );
+              r = duf_sql_bind_long_long_nz( pstmt, ":minSize", DUF_U_NUM( size.min ) );
             DUF_TEST_R( r );
             if ( r >= 0 && DUF_U_NUM( size.max ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":maxsize", DUF_U_NUM( size.max ) );
+              r = duf_sql_bind_long_long_nz( pstmt, ":maxSize", DUF_U_NUM( size.max ) );
             /* DUF_TRACE( action, 0, "BIND maxsize %lld", DUF_U_NUM(maxsize )); */
             DUF_TEST_R( r );
             if ( r >= 0 && DUF_U_NUM( same.min ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":mindups", DUF_U_NUM( same.min ) );
+              r = duf_sql_bind_long_long_nz( pstmt, ":minDups", DUF_U_NUM( same.min ) );
             DUF_TEST_R( r );
             if ( r >= 0 && DUF_U_NUM( same.max ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":maxdups", DUF_U_NUM( same.max ) );
+              r = duf_sql_bind_long_long_nz( pstmt, ":maxDups", DUF_U_NUM( same.max ) );
             DUF_TEST_R( r );
             {
               char *j;
@@ -150,10 +151,10 @@ duf_store_filters( void )
 
               if ( r == DUF_SQL_ROW )
               {
-                long long id;
+                long long filtid;
 
-                id = duf_sql_column_long_long( pstmt, 0 );
-                duf_config->u.filter_id = id;
+                filtid = duf_sql_column_long_long( pstmt, 0 );
+                duf_config->u.filter_id = filtid;
               }
             }
             while ( r == DUF_SQL_ROW );
@@ -186,11 +187,11 @@ duf_store_log( int argc, char *const argv[] )
   sargv2 = duf_restore_options( argv[0] );
   DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
   {
-    static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:args, :restored_args, '')";
+    static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
 
     DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_BIND_S( args, sargv1, r, pstmt );
-    DUF_SQL_BIND_S( args, sargv2, r, pstmt );
+    DUF_SQL_BIND_S( Args, sargv1, r, pstmt );
+    DUF_SQL_BIND_S( restoredArgs, sargv2, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
@@ -285,6 +286,6 @@ duf_action_new( int argc, char **argv )
   }
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
-    r = duf_uni_scan_all(  );
+    r = duf_make_all_sccbs(  );
   return r;
 }

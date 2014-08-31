@@ -112,7 +112,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
   {
     DUF_SFIELD2( filename );
 
-    DUF_DO_TEST_R( r, duf_levinfo_down( pdi, 0 /* dirid */ , filename, 0, 0, 1 /* is_leaf */  ) );
+    DUF_DO_TEST_R( r, duf_levinfo_godown( pdi, 0 /* dir_id */ , filename, 0, 0, 1 /* is_leaf */  ) );
 
     if ( r >= 0 )
     {
@@ -135,7 +135,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
         if ( str_cb2 && !duf_levinfo_item_deleted( pdi ) )
           DUF_DO_TEST_R( r, ( str_cb2 ) ( pstmt, pdi, sccb ) );
       }
-      DUF_DO_TEST_R( r, duf_levinfo_up( pdi ) );
+      DUF_DO_TEST_R( r, duf_levinfo_goup( pdi ) );
     }
     if ( r == DUF_ERROR_MAX_DEPTH )
       r = 0;
@@ -168,30 +168,27 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
 {
   int r = 0;
 
-  DUF_UFIELD2( dirid );
-  DUF_UFIELD2( ndirs );
-  DUF_UFIELD2( nfiles );
-  DUF_SFIELD2( dfname );
-
   DEBUG_START(  );
   assert( pdi );
 
+  {
+    DUF_UFIELD2( dirid );
+    DUF_UFIELD2( ndirs );
+    DUF_UFIELD2( nfiles );
+    DUF_SFIELD2( dfname );
+    /* Not here : assert( dirid == duf_levinfo_dirid( pdi ) );
+     * */
+    DUF_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", dirid );
+    DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
-
-  /* Not here : assert( dirid == duf_levinfo_dirid( pdi ) );
-   * */
-  DUF_TRACE( scan, 10, "before duf_levinfo_down() : dirid:%llu", dirid );
-  DUF_TRACE( explain, 2, "@ sel cb2 node" );
-
-  /*!! dirid need not be same as duf_levinfo_dirid( pdi ) before duf_levinfo_down */
-  r = duf_levinfo_down( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  );
-  assert( dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_down */
-
+    /*!! dirid need not be same as duf_levinfo_dirid( pdi ) before duf_levinfo_godown */
+    r = duf_levinfo_godown( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  );
+    assert( dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
+  }
   assert( pdi->depth >= 0 );
-  /* if ( r != DUF_ERROR_MAX_DEPTH ) */
-  /*   DUF_TEST_R( r );              */
+
   DUF_TEST_RQ( r, r == DUF_ERROR_MAX_DEPTH );
-  /* DUF_ERROR( "r:%d;", r ); */
+
   if ( r >= 0 )                 /* levinfo_down OK */
   {
 /*
@@ -209,14 +206,14 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       /* if ( r >= 0 && !duf_levinfo_item_deleted( pdi ) ) */
       if ( r >= 0 )
       {
-        DUF_TRACE( explain, 0, "=> str cb2" );
+        DUF_TRACE( explain, 2, "=> str cb2" );
         DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 5. node str cb2" );
         DUF_DO_TEST_R( r, ( str_cb2 ) ( pstmt, pdi, sccb ) );
       }
     }
     else
       DUF_ERROR( "str_cb2 not set" );
-    DUF_DO_TEST_R( r, duf_levinfo_up( pdi ) );
+    DUF_DO_TEST_R( r, duf_levinfo_goup( pdi ) );
   }
 
   /* r = ( r == DUF_ERROR_MAX_DEPTH ) ? 0 : r; */
@@ -264,14 +261,14 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi, duf_s
       DUF_TEST_R( r );
       DUF_TRACE( select, 0, "S:%s", csql );
 
-      DUF_TRACE( scan, 12, "sql:%s dirid:%llu", csql, duf_levinfo_dirid( pdi ) );
+      DUF_TRACE( scan, 12, "sql:%s diridpdi:%llu", csql, duf_levinfo_dirid( pdi ) );
       DUF_TEST_R( r );
       {
-        DUF_SQL_BIND_LL( dirid, duf_levinfo_dirid( pdi ), r, pstmt );
-        DUF_SQL_BIND_LL_NZ_OPT( minsize, duf_config->u.size.min, r, pstmt );
-        DUF_SQL_BIND_LL_NZ_OPT( maxsize, duf_config->u.size.max, r, pstmt );
-        DUF_SQL_BIND_LL_NZ_OPT( minsame, duf_config->u.same.min, r, pstmt );
-        DUF_SQL_BIND_LL_NZ_OPT( maxsare, duf_config->u.same.max, r, pstmt );
+        DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( pdi ), r, pstmt );
+        DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
+        DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
+        DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
+        DUF_SQL_BIND_LL_NZ_OPT( maxSare, duf_config->u.same.max, r, pstmt );
 
         DUF_TEST_R( r );
 
@@ -318,11 +315,11 @@ duf_scan_db_items2_sql( const char *csql, duf_sel_cb2_match_t match_cb2, duf_sel
 
   DUF_TEST_R( r );
   {
-    DUF_SQL_BIND_LL( dirid, duf_levinfo_dirid( pdi ), r, pstmt );
-    DUF_SQL_BIND_LL_NZ_OPT( minsize, duf_config->u.size.min, r, pstmt );
-    DUF_SQL_BIND_LL_NZ_OPT( maxsize, duf_config->u.size.max, r, pstmt );
-    DUF_SQL_BIND_LL_NZ_OPT( minsame, duf_config->u.same.min, r, pstmt );
-    DUF_SQL_BIND_LL_NZ_OPT( maxsame, duf_config->u.same.max, r, pstmt );
+    DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( pdi ), r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
     DUF_TEST_R( r );
 
     if ( r >= 0 )
@@ -335,7 +332,7 @@ duf_scan_db_items2_sql( const char *csql, duf_sel_cb2_match_t match_cb2, duf_sel
       /*   r = duf_sql_bind_string( pstmt, ":dirname", bd );      */
 
 /*                                                            *INDENT-OFF*  */
-            DUF_SQL_EACH_ROW( r, pstmt, 
+         DUF_SQL_EACH_ROW( r, pstmt, 
 /*                                                            *INDENT-ON*  */
       if ( !match_cb2 || ( match_cb2 ) ( pstmt ) )
       {
@@ -392,7 +389,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depthi
   {
     sel_cb2 = duf_sel_cb2_leaf;
     match_cb2 = duf_match_leaf2;
-    DUF_TRACE( explain, 0, "set sel_cb2 <= cb2 leaf" );
+    DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 leaf" );
   }
   else if ( node_type == DUF_NODE_NODE )
   {
@@ -413,7 +410,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depthi
         sql = duf_selector2sql( selector2, fieldset );
 
       DUF_TRACE( scan, 14, "sql:%s", sql );
-      DUF_TRACE( scan, 10, "[%s] (selector2) dirid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_levinfo_dirid( pdi ) );
+      DUF_TRACE( scan, 10, "[%s] (selector2) diridpid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_levinfo_dirid( pdi ) );
 
       if ( r >= 0 )
         DUF_DO_TEST_R( r, duf_scan_db_items2_sql( sql, match_cb2, sel_cb2, str_cb2, pdi, sccb ) );
@@ -423,13 +420,13 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depthi
     }
     if ( r > 0 )
     {
-      DUF_TRACE( explain, 0, "%u records processed of type ≪%s≫ ; action ≪%s≫; dirid:%llu",
+      DUF_TRACE( explain, 0, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                  r, node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_uni_scan_action_title( sccb ), duf_levinfo_dirid( pdi ) );
     }
     else if ( r == 0 )
     {
       /* DUF_TRACE( explain, 0, "= ? ============ ≪%s≫", csql ); */
-      DUF_TRACE( explain, 0, "no records found of type ≪%s≫ ; action ≪%s≫; dirid:%llu",
+      DUF_TRACE( explain, 1, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
                  node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_uni_scan_action_title( sccb ), duf_levinfo_dirid( pdi ) );
     }
 

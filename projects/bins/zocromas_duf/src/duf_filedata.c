@@ -14,6 +14,7 @@
 
 #include "duf_pdi.h"
 
+#include "duf_sql_defs.h"
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
@@ -32,12 +33,12 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   unsigned long long dataid = 0;
 
   DEBUG_START(  );
-  const char *sql = "SELECT id AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:dev AND inode=:inode";
+  const char *sql = "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:Dev AND inode=:iNode";
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
   DUF_TRACE( select, 0, "S:%s", sql );
-  DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
-  DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
+  DUF_SQL_BIND_LL( Dev, pst_file->st_dev, r, pstmt );
+  DUF_SQL_BIND_LL( iNode, pst_file->st_ino, r, pstmt );
   DUF_SQL_STEP( r, pstmt );
   if ( r == DUF_SQL_ROW )
   {
@@ -74,28 +75,28 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filedatas  " /* */
             " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
             " VALUES "          /* */
-            " (:dev, :inode, :size, :mode, :nlink, :uid, :gid, :blksize, :blocks, " /* */
-            "datetime(:atim, 'unixepoch'), :atimn, "
-	    "datetime(:mtim, 'unixepoch'), :mtimn, "
-	    "datetime(:ctim, 'unixepoch'), :ctimn) " /* */ ;
+            " (:Dev, :iNode, :Size, :Mode, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
+            "datetime(:aTim, 'unixepoch'), :aTimn, "
+	    "datetime(:mTim, 'unixepoch'), :mTimn, "
+	    "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
-      DUF_SQL_BIND_LL( dev, pst_file->st_dev, r, pstmt );
-      DUF_SQL_BIND_LL( inode, pst_file->st_ino, r, pstmt );
-      DUF_SQL_BIND_LL( size, pst_file->st_size, r, pstmt );
-      DUF_SQL_BIND_LL( mode, pst_file->st_mode, r, pstmt );
-      DUF_SQL_BIND_LL( nlink, pst_file->st_nlink, r, pstmt );
-      DUF_SQL_BIND_LL( uid, pst_file->st_uid, r, pstmt );
-      DUF_SQL_BIND_LL( gid, pst_file->st_gid, r, pstmt );
-      DUF_SQL_BIND_LL( blksize, pst_file->st_blksize, r, pstmt );
-      DUF_SQL_BIND_LL( blocks, pst_file->st_blocks, r, pstmt );
-      DUF_SQL_BIND_LL( atim, pst_file->st_atim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( atimn, pst_file->st_atim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( mtim, pst_file->st_mtim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( mtimn, pst_file->st_mtim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( ctim, pst_file->st_ctim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( ctimn, pst_file->st_ctim.tv_nsec, r, pstmt );
+      DUF_SQL_BIND_LL( Dev, pst_file->st_dev, r, pstmt );
+      DUF_SQL_BIND_LL( iNode, pst_file->st_ino, r, pstmt );
+      DUF_SQL_BIND_LL( Size, pst_file->st_size, r, pstmt );
+      DUF_SQL_BIND_LL( Mode, pst_file->st_mode, r, pstmt );
+      DUF_SQL_BIND_LL( nLink, pst_file->st_nlink, r, pstmt );
+      DUF_SQL_BIND_LL( UID, pst_file->st_uid, r, pstmt );
+      DUF_SQL_BIND_LL( GID, pst_file->st_gid, r, pstmt );
+      DUF_SQL_BIND_LL( blkSize, pst_file->st_blksize, r, pstmt );
+      DUF_SQL_BIND_LL( Blocks, pst_file->st_blocks, r, pstmt );
+      DUF_SQL_BIND_LL( aTim, pst_file->st_atim.tv_sec, r, pstmt );
+      DUF_SQL_BIND_LL( aTimn, pst_file->st_atim.tv_nsec, r, pstmt );
+      DUF_SQL_BIND_LL( mTim, pst_file->st_mtim.tv_sec, r, pstmt );
+      DUF_SQL_BIND_LL( mTimn, pst_file->st_mtim.tv_nsec, r, pstmt );
+      DUF_SQL_BIND_LL( cTim, pst_file->st_ctim.tv_sec, r, pstmt );
+      DUF_SQL_BIND_LL( cTimn, pst_file->st_ctim.tv_nsec, r, pstmt );
       DUF_SQL_STEP( r, pstmt );
       DUF_SQL_CHANGES( changes, r, pstmt );
       DUF_SQL_END_STMT( r, pstmt );

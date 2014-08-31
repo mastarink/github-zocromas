@@ -2,6 +2,9 @@
 #  define MAS_DUF_SQL_DEFS_H
 
 
+/* #  define DUF_USE_IDCOL */
+#  define DUF_SQL_IDNAME "rowid"
+#define DUF_COMMA_AS(name, alias) , #name " AS " #alias
 
 
 /* ###################################################################### */
