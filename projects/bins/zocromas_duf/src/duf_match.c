@@ -77,13 +77,13 @@ duf_lim_matchll( duf_limitsll_t lim, int n )
 }
 
 
-int
-duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id )
-{
-  int r;
-
-  r = 1;
-  if ( md5id_filter )
-    r = ( md5id == md5id_filter ) ? r : 0;
-  return r;
-}
+/* int                                                                          */
+/* duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id ) */
+/* {                                                                            */
+/*   int r;                                                                     */
+/*                                                                              */
+/*   r = 1;                                                                     */
+/*   if ( md5id_filter )                                                        */
+/*     r = ( md5id == md5id_filter ) ? r : 0;                                   */
+/*   return r;                                                                  */
+/* }                                                                            */

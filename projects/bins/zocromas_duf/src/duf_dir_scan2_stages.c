@@ -30,8 +30,8 @@
 /* ###################################################################### */
 
 
-/* 
- * this is callback of type: duf_str_cb_t (first range; str_cb) 
+/*
+ * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
  * */
@@ -40,10 +40,10 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, stru
 {
   int r = 0;
 
-  DUF_UFIELD2( filesize );
-
-  /* if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) ) */
-  if ( duf_lim_matchll( duf_config->u.size, filesize ) )
+  /*
+   * 20140831.142148
+   * DUF_UFIELD2( filesize );
+   * if ( dufOFF_lim_matchll( duf_config->u.size, filesize ) ) */
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -60,8 +60,8 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, stru
   return r;
 }
 
-/* 
- * this is callback of type: duf_str_cb_t (first range; str_cb) 
+/*
+ * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
  * duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  * */
@@ -71,13 +71,16 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
 {
   int r = 0;
 
-  DUF_UFIELD2( filesize );
   DUF_SFIELD2( filename );
   DUF_TRACE( scan, 10, "+" );
   DUF_TRACE( explain, 5, "= ? ============ str cb2 leaf scan => ≪leaf_scan2≫" );
 
   /* if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) ) */
-  if ( duf_lim_matchll( duf_config->u.size, filesize ) )
+
+  /* 20140823.101349
+   * DUF_UFIELD2( filesize );
+   * if ( dufOFF_lim_matchll( duf_config->u.size, filesize ) )
+   * */
   {
     pdi->items.total++;
     pdi->items.files++;
@@ -102,6 +105,10 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
   return r;
 }
 
+/*
+ * call corresponding callback (by dir/regular)
+ *   for each direntry from filesystem with necessary info:
+ * */
 int
 duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
@@ -114,6 +121,11 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_c
     if ( sccb->dirent_dir_scan_before2 || sccb->dirent_file_scan_before2 )
     {
       DUF_TRACE( scan, 10, "scan dirent_dir by %5llu", duf_levinfo_dirid( pdi ) );
+      /*
+       *   -- call for each direntry
+       *      - for directory                - sccb->dirent_dir_scan_before2
+       *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
+       * */
       r = duf_scan_dirents2( pdi, sccb->dirent_file_scan_before2, sccb->dirent_dir_scan_before2 );
     }
     else
@@ -290,6 +302,12 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
   return r;
 }
 
+/*
+ * str_cb2 (sub-item scanner):
+ *       duf_str_cb2_uni_scan_dir
+ *     ( duf_str_cb2_leaf_scan    )
+ *     ( duf_str_cb2_scan_file_fd )
+ * */
 int
 duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_str_cb2_t str_cb2 )
 {
@@ -301,18 +319,27 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  * */
   DUF_OINV_OPENED( pdi-> );
 
-  DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan node selector2: [%s]", duf_pdi_depth( pdi ), sccb->node_selector2 );
+  DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan node selector2: [%s]", duf_pdi_depth( pdi ), sccb->node.selector2 );
 
-  if ( !sccb->node_selector2 )
+  if ( !sccb->node.selector2 )
   {
-    DUF_ERROR( "sccb->node_selector2 empty for %s", duf_uni_scan_action_title( sccb ) );
+    DUF_ERROR( "sccb->node.selector2 empty for %s", duf_uni_scan_action_title( sccb ) );
     r = DUF_ERROR_PTR;
     DUF_TEST_R( r );
   }
 
-/* calling duf_sel_cb_(node|leaf) for each record by sccb->node_selector2 */
-  if ( r >= 0 && sccb->node_selector2 )
-    r = duf_scan_db_items2( DUF_NODE_NODE, str_cb2, pdi, sccb, sccb->node_selector2, sccb->node_fieldset /* fieldset */  );
+/* calling duf_sel_cb_(node|leaf) for each record by sccb->node.selector2 */
+  /*
+   * DUF_NODE_NODE => sccb->node.selector2, sccb->node.fieldset
+   * DUF_NODE_LEAF => sccb->leaf.selector2, sccb->leaf.fieldset
+   *
+   * str_cb2 (sub-item scanner):
+   *       duf_str_cb2_uni_scan_dir
+   *     ( duf_str_cb2_leaf_scan    )
+   *     ( duf_str_cb2_scan_file_fd )
+   * */
+  if ( r >= 0 && sccb->node.selector2 )
+    r = duf_scan_db_items2( DUF_NODE_NODE, str_cb2, pdi, sccb /*, sccb->node.selector2, sccb->node.fieldset */  );
   return r;
 }
 

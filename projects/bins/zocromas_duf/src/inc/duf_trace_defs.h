@@ -127,5 +127,5 @@
 					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-", \
 					    DUF_SQLITE_ERROR_CODE(val) \
 					    )
-
+#define P(txt) DUF_PRINTF(0, #txt)
 #endif

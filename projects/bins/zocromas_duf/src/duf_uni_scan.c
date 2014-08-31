@@ -47,7 +47,7 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
   unsigned long long cnt = 0;
   int r = DUF_ERROR_TOTALS;
 
-  if ( sccb && sccb->leaf_selector_total2 )
+  if ( sccb && sccb->leaf.selector_total2 )
   {
     char *sqlt;
     const char *csql;
@@ -56,7 +56,7 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
     sqlt = mas_strdup( "SELECT " );
     sqlt = mas_strcat_x( sqlt, "count(*) AS nf" );
     sqlt = mas_strcat_x( sqlt, " " );
-    sqlt = mas_strcat_x( sqlt, sccb->leaf_selector_total2 );
+    sqlt = mas_strcat_x( sqlt, sccb->leaf.selector_total2 );
     csql = sqlt;
     DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
@@ -250,10 +250,33 @@ TODO scan mode
 
         {
           DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
+
           DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
           DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
+
           DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
-          DUF_SQL_BIND_LL_NZ_OPT( maxSare, duf_config->u.same.max, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
+
+          DUF_SQL_BIND_LL_NZ_OPT( minnameID, duf_config->u.nameid.min, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( maxnameID, duf_config->u.nameid.max, r, pstmt );
+
+          DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->u.inode.min, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->u.inode.max, r, pstmt );
+
+          DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->u.md5id.min, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->u.md5id.max, r, pstmt );
+
+          DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.min, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.max, r, pstmt );
+
+          DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.min, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.max, r, pstmt );
+
+          DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.min, r, pstmt );
+          DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.max, r, pstmt );
+
+
+          DUF_TEST_R( r );
 
           /* r = duf_sql_exec( *psql, &changes ); */
           DUF_SQL_STEP( r, pstmt );

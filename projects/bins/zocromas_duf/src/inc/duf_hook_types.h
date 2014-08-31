@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_HOOK_TYPES_H
 #  define MAS_DUF_HOOK_TYPES_H
 
-#include "duf_record_types.h"
+#  include "duf_record_types.h"
 
 typedef int ( *duf_scan_hook_init_t ) ( void );
 
@@ -20,18 +20,17 @@ typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, c
 
 typedef int ( *duf_scan_hook_dirent_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                               duf_record_t * precord );
-typedef int ( *duf_scan_hook2_dirent_reg_t ) (  /* duf_sqlite_stmt_t * pstmt, */const char *fname, const struct stat * pstat,
+typedef int ( *duf_scan_hook2_dirent_reg_t ) (  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat * pstat,
                                                unsigned long long dirid, duf_depthinfo_t * pdi );
 
 
 typedef int ( *duf_scan_hook_dirent_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid,
                                               duf_depthinfo_t * pdi, duf_record_t * precord );
-typedef int ( *duf_scan_hook2_dirent_dir_t ) ( /* duf_sqlite_stmt_t * pstmt, */const char *fname, const struct stat * pstat,
+typedef int ( *duf_scan_hook2_dirent_dir_t ) (  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat * pstat,
                                                unsigned long long dirid, duf_depthinfo_t * pdi );
 
 
-typedef int ( *duf_scan_hook_dirent_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
-                                                 duf_record_t * precord );
+typedef int ( *duf_scan_hook_dirent_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord );
 typedef int ( *duf_scan_hook2_dirent_parent_t ) ( duf_sqlite_stmt_t * pstmt, const struct stat * pstat, unsigned long long dirid,
                                                   duf_depthinfo_t * pdi );
 
@@ -54,12 +53,17 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pd
  * duf_sel_cb_leaf		:		, sel_cb_udata_unused
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
-typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, duf_depthinfo_t * pdi,
-                                 struct duf_scan_callbacks_s * sccb );
+typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s * sccb );
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 
-
+typedef struct
+{
+  const char *fieldset;
+  const char *selector;
+  const char *selector2;
+  const char *selector_total2;
+} duf_sql_set_t;
 
 struct duf_scan_callbacks_s
 {
@@ -68,13 +72,16 @@ struct duf_scan_callbacks_s
   unsigned disabled:1;
   const char *title;
 
-  const char *node_fieldset;
-  const char *node_selector;
-  const char *node_selector2;
+  duf_sql_set_t node;
+  /* const char *node_fieldset;  */
+  /* const char *node_selector;  */
+  /* const char *node_selector2; */
 
-  const char *leaf_fieldset;
-  const char *leaf_selector;
-  const char *leaf_selector2;
+  duf_sql_set_t leaf;
+  /* const char *leaf_fieldset;  */
+  /* const char *leaf_selector;  */
+  /* const char *leaf_selector2; */
+
   const char *leaf_selector_total2;
 
   duf_scan_hook_init_t init_scan;

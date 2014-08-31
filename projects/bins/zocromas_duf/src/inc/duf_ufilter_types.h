@@ -49,14 +49,21 @@ typedef struct
   duf_items_t maxitems;
   duf_limits_t dirfiles;
   duf_filter_glob_t glob;
-  unsigned long long sd5id;
-  unsigned long long md5id;
-  unsigned long long crc32id;
-  unsigned long long mimeid;
-  unsigned long long exifid;
+  /* unsigned long long sd5id; */
+  /* unsigned long long md5id; */
+  /* unsigned long long crc32id; */
+  /* unsigned long long mimeid; */
+  /* unsigned long long exifid; */
   duf_limitsll_t size;
   duf_limits_t same;
-  unsigned long long filter_id;
+  duf_limits_t nameid;
+  duf_limits_t inode;
+  duf_limits_t md5id;
+  duf_limits_t sd5id;
+  duf_limits_t crc32id;
+  duf_limits_t mimeid;
+  duf_limits_t exifid;
+  /* unsigned long long filter_id; */
 } duf_ufilter_t;
 
 #endif

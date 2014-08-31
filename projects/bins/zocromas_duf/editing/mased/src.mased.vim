@@ -4,6 +4,9 @@ sfind duf_path.h
 tab sfind duf_item_scan2.c
 sfind duf_item_scan2.h
 
+tab sfind duf_item_match2.c
+sfind duf_item_match2.h
+
 tab sfind duf_file_pathid2.c
 sfind duf_file_pathid2.h
 

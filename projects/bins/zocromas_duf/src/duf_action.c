@@ -36,7 +36,7 @@
 
 
 
-int
+static int
 duf_store_filters( void )
 {
   int r = 0;
@@ -149,13 +149,13 @@ duf_store_filters( void )
               if ( !changes )
                 changes = duf_sql_changes(  );
 
-              if ( r == DUF_SQL_ROW )
-              {
-                long long filtid;
-
-                filtid = duf_sql_column_long_long( pstmt, 0 );
-                duf_config->u.filter_id = filtid;
-              }
+              /* if ( r == DUF_SQL_ROW )                          */
+              /* {                                                */
+              /*   long long filtid;                              */
+              /*                                                  */
+              /*   filtid = duf_sql_column_long_long( pstmt, 0 ); */
+              /*   duf_config->u.filter_id = filtid;              */
+              /* }                                                */
             }
             while ( r == DUF_SQL_ROW );
           }
@@ -176,7 +176,7 @@ duf_store_filters( void )
   return r;
 }
 
-int
+static int
 duf_store_log( int argc, char *const argv[] )
 {
   int r = 0;
@@ -284,6 +284,10 @@ duf_action_new( int argc, char **argv )
   {
     DUF_TRACE( explain, 1, "no %s option, you may need it for adding initial path", DUF_OPT_FLAG_NAME( ADD_PATH ) );
   }
+  /* DUF_PRINTF(0, "@@@@@@@@@@@ %u %u", duf_config->u.md5id.min, duf_config->u.md5id.max );   */
+  /* DUF_PRINTF(0, "@@@@@@@@@@@ %u %u", duf_config->u.nameid.min, duf_config->u.nameid.max ); */
+  /* DUF_PRINTF(0, "@@@@@@@@@@@ %u %u", duf_config->u.inode.min, duf_config->u.inode.max );   */
+  /* DUF_PRINTF(0, "@@@@@@@@@@@ %llu %llu", duf_config->u.size.min, duf_config->u.size.max ); */
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
     r = duf_make_all_sccbs(  );

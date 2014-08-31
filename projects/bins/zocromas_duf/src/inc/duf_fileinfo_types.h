@@ -5,6 +5,7 @@ typedef struct
 {
   const char *name;
   struct stat st;
+  unsigned long long dirid;
   unsigned long long truedirid;
   unsigned long long nsame;
   unsigned long long sd5id;

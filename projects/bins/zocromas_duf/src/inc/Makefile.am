@@ -4,7 +4,7 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h		\
 	duf_create.h					   \
 	duf_dirent.h duf_filedata.h			    \
 	duf_add.h duf_path.h				     \
-	duf_item_scan2.h				      \
+	duf_item_scan2.h duf_item_match2.h		      \
 	duf_uni_scan.h duf_prepare_actions.h duf_uni_scan2.h   \
 	duf_sccb.h duf_dir_scan2.h duf_dir_scan2_stages.h	\
 	duf_levinfo.h duf_levinfo_ref.h duf_pdi.h		 \

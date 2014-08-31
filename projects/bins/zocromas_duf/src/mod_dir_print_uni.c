@@ -101,6 +101,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_START(  );
 
   /* SQL at duf_scan_files_by_dirid */
+  DUF_UFIELD2( dirid );
   DUF_SFIELD2( filename );
   /* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); */
   DUF_UFIELD2( filesize );
@@ -136,7 +137,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     duf_format_t format = {
       .filename = 1,
       .seq = 1,
-      .dirid = 0,
+      .dirid = 1,
       .exifid = 1,
       .mimeid = 1,
       .inode = 1,
@@ -152,6 +153,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       .dataid = 1,
     };
     fi.nsame = nsame;
+    fi.dirid = dirid;
     fi.st.st_mode = ( mode_t ) filemode;
     fi.st.st_ino = ( ino_t ) inode;
     fi.st.st_mtim.tv_sec = mtime;
@@ -300,8 +302,14 @@ static const char *beginning_sql[] = {
         "   LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         "   LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
         "      WHERE "          /* */
-        "   (:minSize IS NULL OR fd.size>=:minSize) AND (:maxSize IS NULL OR fd.size<=:maxSize) AND " /* */
-        "   (:minSame IS NULL OR md.dup5cnt>=:minSame) AND (:maxSame IS NULL OR md.dup5cnt<=:maxSame) " /* */
+        "   (:minSize   IS NULL OR fd.size>=:minSize)     AND (:maxSize   IS NULL OR fd.size<=:maxSize)     AND " /* */
+        "   (:minSame   IS NULL OR md.dup5cnt>=:minSame)  AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame)  AND " /* */
+        "   (:minnameID IS NULL OR fn." DUF_SQL_IDNAME ">=:minnameID)     AND (:maxnameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxnameID) AND " /* */
+        "   (:minInode  IS NULL OR fd.inode>=:minInode)   AND (:maxInode  IS NULL OR fd.inode<=:maxInode)   AND " /* */
+        "   (:min5ID    IS NULL OR fd.md5id>=:min5ID)     AND (:max5ID    IS NULL OR fd.md5id<=:max5ID)     AND " /* */
+        "   (:min2id    IS NULL OR fd.sd5id>=:min2ID)     AND (:max2ID    IS NULL OR fd.sd5id<=:max2ID)     AND " /* */
+        "   (:minMimeID IS NULL OR fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID) AND " /* */
+        "   (:minExif   IS NULL OR fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID)     " /* */
         ,
 };
 
@@ -309,92 +317,84 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = __FILE__ ".dir",
   .scan_mode_2 = 1,
   .init_scan = NULL,
-  /* TODO : create temporary table by conditions like
-   *    (:minSize IS NULL OR fd.size>=:minSize)      AND (:maxSize IS NULL OR fd.size<=:maxSize) AND 
-   *    (:minSame IS NULL OR md.dup5cnt>=:minSame)   AND (:maxSame IS NULL OR md.dup5cnt<=:maxSame) AND 
-   * */
   .beginning_sql_argv = beginning_sql,
   /* .node_scan_before = scan_node_before, */
   .node_scan_before2 = scan_node_before2,
   /* .leaf_scan = scan_leaf, */
   .leaf_scan2 = scan_leaf2,
-  .leaf_fieldset =              /* */
-        "fn.Pathid AS dirid "   /* */
-        ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
-        ", fd.size AS filesize " /* */
-        ", uid, gid, nlink, inode, mtim AS mtime " /* */
-        ", fd." DUF_SQL_IDNAME " AS dataid " /* */
-        ", fd.mode AS filemode " /* */
-        ", fn." DUF_SQL_IDNAME " AS filenameid" /* */
-        ", md.dup5cnt AS nsame" /* */
-        ", md.md5sum1, md.md5sum2 " /* */
-        /* ", md." DUF_SQL_IDNAME " AS md5id" (* *) */
-        ", fd.md5id AS md5id"   /* */
-        ,
-  /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
-  /* ", strftime('%Y-%m-%d %H:%M:%S',mtim,'unixepoch') AS mtimef " */
-  /* ", case cast (strftime('%w', mtim,'unixepoch') AS integer) "                                                                   */
-  /* " when 0 then 'Sun' when 1 then 'Mon' when 2 then 'Tue' when 3 then 'Wed' "                                                    */
-  /* " when 4 then 'Thu' when 5 then 'Fri' else 'Sat' end AS dowmtime, " "case cast (strftime('%m', mtim,'unixepoch') AS integer) " */
-  /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
-  /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
-  /* " else 'Wow' end AS monthmtime "                                                                                               */
-  /* .leaf_selector =              (* *)                                                              */
-  /*       "SELECT %s "            (* *)                                                              */
-  /*       " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fn " (* *)                                               */
-  /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " (* *)                     */
-  /*       " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" (* *)                            */
-  /*       "    WHERE "            (* *)                                                              */
-  /*       (* "           fd.size >= %llu AND fd.size < %llu "            *)                          */
-  /*       (* "       AND (md.dup5cnt IS NULL OR (md.dup5cnt >= %llu AND md.dup5cnt < %llu)) AND " *) */
-  /*       " fn.Pathid='%llu' ",                                                                      */
-  .leaf_selector2 =             /* */
-        /* "SELECT %s " */
-        " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fns " /* */
-        " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ")" /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-        " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-        "    WHERE "            /* */
-        " (:minSize IS NULL OR fd.size>=:minSize) AND (:maxSize IS NULL OR fd.size<=:maxSize) AND " /* */
-        " (:minSame IS NULL OR md.dup5cnt>=:minSame) AND (:maxSame IS NULL OR md.dup5cnt<=:maxSame) AND " /* */
-        " fn.Pathid=:dirID "    /* */
-        ,
-  .leaf_selector_total2 =       /* */
-        " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fns " /* */
-        " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ")" /* */
-        " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-        " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
-        "    WHERE "            /* */
-        " (:minSize IS NULL OR fd.size>=:minSize) AND (:maxSize IS NULL OR fd.size<=:maxSize) AND " /* */
-        " (:minSame IS NULL OR md.dup5cnt>=:minSame) AND (:maxSame IS NULL OR md.dup5cnt<=:maxSame)" /* */
-        ,
-  .node_fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
-        ,
-  /* .node_selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " (* *)                                   */
-  /*       ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " (* *)                             */
-  /*       (* " ,(SELECT count(*) FROM " DUF_DBPREF "paths AS subpaths WHERE subpaths.parentid=pt." DUF_SQL_IDNAME ") AS ndirs "       *)                  */
-  /*       (* " ,(SELECT count(*) FROM " DUF_DBPREF DUF_SELECTED_NAME " AS sfn "                                                       *)           */
-  /*       (* "          JOIN " DUF_DBPREF "filedatas AS sfd ON (sfn.dataid=sfd." DUF_SQL_IDNAME ") "                                         *)           */
-  /*       (* "          JOIN " DUF_DBPREF "md5 AS smd ON (sfd.md5id=smd." DUF_SQL_IDNAME ") "                                                *)           */
-  /*       (* "          WHERE sfn.Pathid=pt." DUF_SQL_IDNAME " "                                                            *)                            */
-  /*       (* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           *)                     */
-  /*       (* "              AND (smd.dup5cnt IS NULL OR (smd.dup5cnt >= %llu AND smd.dup5cnt < %llu)) "               *)                  */
-  /*       (* " ) AS nfiles "                                                                                       *)                     */
-  /*       (* " ,(SELECT min(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF DUF_SELECTED_NAME " AS sfn ON (sfn.dataid=sfd." DUF_SQL_IDNAME ") " *) */
-  /*       (* "           WHERE sfn.Pathid=pt." DUF_SQL_IDNAME ") AS minsize "                                               *)                            */
-  /*       (* " ,(SELECT max(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF DUF_SELECTED_NAME " AS sfn ON (sfn.dataid=sfd." DUF_SQL_IDNAME ") " *) */
-  /*       (* "           WHERE sfn.Pathid=pt." DUF_SQL_IDNAME ") AS maxsize "                                               *)                            */
-  /*       " FROM      " DUF_DBPREF "paths AS pt " (* *)                                                                                   */
-  /*       " LEFT JOIN " DUF_DBPREF "pathtot_dirs  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                                                      */
-  /*       " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                                                      */
-  /*       " WHERE pt.parentid='%llu' ",                                                                                                   */
-  .node_selector2 =             /* */
-        /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */
-        /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
-        " FROM      " DUF_DBPREF "paths AS pt " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-        " WHERE pt.parentid=:dirID ",
+  .leaf = {.fieldset =          /* */
+           "fn.Pathid AS dirid " /* */
+           ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
+           ", fd.size AS filesize " /* */
+           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+           ", fd.mode AS filemode " /* */
+           ", fn." DUF_SQL_IDNAME " AS filenameid" /* */
+           ", md.dup5cnt AS nsame" /* */
+           ", md.md5sum1, md.md5sum2 " /* */
+           /* ", md." DUF_SQL_IDNAME " AS md5id" (* *) */
+           ", fd.md5id AS md5id" /* */
+           ,
+           /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
+           /* ", strftime('%Y-%m-%d %H:%M:%S',mtim,'unixepoch') AS mtimef " */
+           /* ", case cast (strftime('%w', mtim,'unixepoch') AS integer) "                                                                   */
+           /* " when 0 then 'Sun' when 1 then 'Mon' when 2 then 'Tue' when 3 then 'Wed' "                                                    */
+           /* " when 4 then 'Thu' when 5 then 'Fri' else 'Sat' end AS dowmtime, " "case cast (strftime('%m', mtim,'unixepoch') AS integer) " */
+           /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
+           /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
+           /* " else 'Wow' end AS monthmtime "                                                                                               */
+           /* .leaf_selector =              (* *)                                                              */
+           /*       "SELECT %s "            (* *)                                                              */
+           /*       " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fn " (* *)                                               */
+           /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " (* *)                     */
+           /*       " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" (* *)                            */
+           /*       "    WHERE "            (* *)                                                              */
+           /*       (* "           fd.size >= %llu AND fd.size < %llu "            *)                          */
+           /*       (* "       AND (md.dup5cnt IS NULL OR (md.dup5cnt >= %llu AND md.dup5cnt < %llu)) AND " *) */
+           /*       " fn.Pathid='%llu' ",                                                                      */
+           .selector2 =         /* */
+           /* "SELECT %s " */
+           " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fns " /* */
+           " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ")" /* */
+           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+           "    WHERE "         /* */
+           " fn.Pathid=:dirID " /* */
+           ,
+           .selector_total2 =   /* */
+           " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fns " /* */
+           " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ")" /* */
+           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
+           },
+  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ,
+           /* .node_selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " (* *)                                   */
+           /*       ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " (* *)                             */
+           /*       (* " ,(SELECT count(*) FROM " DUF_DBPREF "paths AS subpaths WHERE subpaths.parentid=pt." DUF_SQL_IDNAME ") AS ndirs "       *)                  */
+           /*       (* " ,(SELECT count(*) FROM " DUF_DBPREF DUF_SELECTED_NAME " AS sfn "                                                       *)           */
+           /*       (* "          JOIN " DUF_DBPREF "filedatas AS sfd ON (sfn.dataid=sfd." DUF_SQL_IDNAME ") "                                         *)           */
+           /*       (* "          JOIN " DUF_DBPREF "md5 AS smd ON (sfd.md5id=smd." DUF_SQL_IDNAME ") "                                                *)           */
+           /*       (* "          WHERE sfn.Pathid=pt." DUF_SQL_IDNAME " "                                                            *)                            */
+           /*       (* "              AND   sfd.size >= %llu AND sfd.size < %llu "                                           *)                     */
+           /*       (* "              AND (smd.dup5cnt IS NULL OR (smd.dup5cnt >= %llu AND smd.dup5cnt < %llu)) "               *)                  */
+           /*       (* " ) AS nfiles "                                                                                       *)                     */
+           /*       (* " ,(SELECT min(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF DUF_SELECTED_NAME " AS sfn ON (sfn.dataid=sfd." DUF_SQL_IDNAME ") " *) */
+           /*       (* "           WHERE sfn.Pathid=pt." DUF_SQL_IDNAME ") AS minsize "                                               *)                            */
+           /*       (* " ,(SELECT max(sfd.size) FROM " DUF_DBPREF "filedatas AS sfd JOIN " DUF_DBPREF DUF_SELECTED_NAME " AS sfn ON (sfn.dataid=sfd." DUF_SQL_IDNAME ") " *) */
+           /*       (* "           WHERE sfn.Pathid=pt." DUF_SQL_IDNAME ") AS maxsize "                                               *)                            */
+           /*       " FROM      " DUF_DBPREF "paths AS pt " (* *)                                                                                   */
+           /*       " LEFT JOIN " DUF_DBPREF "pathtot_dirs  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                                                      */
+           /*       " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                                                      */
+           /*       " WHERE pt.parentid='%llu' ",                                                                                                   */
+           .selector2 =         /* */
+           /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */
+           /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
+           " FROM      " DUF_DBPREF "paths AS pt " /* */
+           " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " WHERE pt.parentid=:dirID ",
+           }
   /* .final_sql_argv = final_sql, */
 };

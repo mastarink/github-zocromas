@@ -109,6 +109,8 @@ duf_limits( const char *s, unsigned *pmin, unsigned *pmax )
           *pmax = n;
       }
     }
+    else
+      r = DUF_ERROR_OPTION_VALUE;
     DUF_ERROR( "[%c] %d - %d", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
   }
   return r;
@@ -149,6 +151,8 @@ duf_limitsll( const char *s, unsigned long long *pmin, unsigned long long *pmax 
           *pmax = n;
       }
     }
+    else
+      r = DUF_ERROR_OPTION_VALUE;
     DUF_ERROR( "[%c] %lld - %lld", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
   }
   return r;
@@ -296,6 +300,8 @@ duf_parse_option_long( int longindex, const char *optarg )
             {
               ( *pi ) = duf_strtol( optarg, &rl );
               done = 1;
+              if ( rl < 0 )
+                r = DUF_ERROR_OPTION_VALUE;
             }
             else if ( doplus )
             {
@@ -316,6 +322,8 @@ duf_parse_option_long( int longindex, const char *optarg )
             {
               ( *pll ) = duf_strtol( optarg, &rl );
               done = 1;
+              if ( rl < 0 )
+                r = DUF_ERROR_OPTION_VALUE;
             }
             else if ( doplus )
             {
@@ -340,6 +348,8 @@ duf_parse_option_long( int longindex, const char *optarg )
               *pi++ = n;
               *pi = n;
               done = 1;
+              if ( rl < 0 )
+                r = DUF_ERROR_OPTION_VALUE;
             }
             /* DUF_PRINTF( 0, "%u - %u", duf_config->u.same.min, duf_config->u.same.max ); */
           }                     /* r = codeval; */
@@ -358,6 +368,8 @@ duf_parse_option_long( int longindex, const char *optarg )
               *pll++ = n;
               *pll = n;
               done = 1;
+              if ( rl < 0 )
+                r = DUF_ERROR_OPTION_VALUE;
             }
             /* DUF_PRINTF( 0, "%llu - %llu", duf_config->u.same.min, duf_config->u.same.max ); */
           }                     /* r = codeval; */
@@ -487,17 +499,17 @@ duf_parse_option_long( int longindex, const char *optarg )
 
       /* DUF_OPTION_CASE_ACQUIRE_U_FLAG( RECURSIVE, (*         *) recursive (*       *)  ); */
 
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( SD5ID, /*              */ sd5id /*           */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MD5ID, /*              */ md5id /*           */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( CRC32ID, /*            */ crc32id /*         */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( EXIFID, /*             */ exifid /*          */  );
-      DUF_OPTION_CASE_ACQUIRE_U_NUM( MIMEID, /*             */ mimeid /*          */  );
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( SD5ID, (*              *) sd5id (*           *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MD5ID, (*              *) md5id (*           *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( CRC32ID, (*            *) crc32id (*         *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( EXIFID, (*             *) exifid (*          *)  ); */
+      /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MIMEID, (*             *) mimeid (*          *)  ); */
 
 /* limits, filters, selectors */
-    /* case DUF_OPTION_SIZE:                                                           */
-    /*   r = duf_limitsll( optarg, &duf_config->u.size.min, &duf_config->u.size.max ); */
-    /*   done = 1;                                                                     */
-    /*   break;                                                                        */
+      /* case DUF_OPTION_SIZE:                                                           */
+      /*   r = duf_limitsll( optarg, &duf_config->u.size.min, &duf_config->u.size.max ); */
+      /*   done = 1;                                                                     */
+      /*   break;                                                                        */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, (*            *) size.max (*     *)  ); */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, (*            *) size.min (*     *)  ); */
 

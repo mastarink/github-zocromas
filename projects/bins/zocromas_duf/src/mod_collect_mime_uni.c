@@ -242,40 +242,37 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .leaf_scan_fd2 = duf_scan_dirent_mime_content2,
 
   /* filename for debug only */
-  .leaf_fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-        ", uid, gid, nlink, inode, mtim AS mtime " /* */
-        ", fd.mode AS filemode " /* */
-        ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-	", fd.md5id AS md5id" /* */
-        ,
-  .leaf_selector2 =             /* */
-        " FROM " DUF_DBPREF " filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-        " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-        " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
-        " WHERE "               /* */
-	" ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND "
-	" sz.size > 0 AND"
-        " fn.Pathid = :dirID " /* */
-        ,
-  .leaf_selector_total2 =       /* */
-        " FROM " DUF_DBPREF " filenames AS fn " /* */
-        " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-        " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-        " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
-        " WHERE "               /* */
-        " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " /* */
-	" sz.size > 0 "
-	" ORDER BY fd.mimeid " /* */
-        ,
-  .node_fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
-        ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        ,
-  .node_selector2 =             /* */
-        " FROM " DUF_DBPREF " paths AS pt " /* */
-        " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-        " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-        " WHERE pt.parentid = :dirID " /* */
-        ,
+  .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
+           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", fd.mode AS filemode " /* */
+           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           ", fd.md5id AS md5id" /* */
+           ,
+           .selector2 =         /* */
+           " FROM " DUF_DBPREF " filenames AS fn " /* */
+           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
+           " WHERE "            /* */
+           " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " " sz.size > 0 AND" " fn.Pathid = :dirID " /* */
+           ,
+           .selector_total2 =   /* */
+           " FROM " DUF_DBPREF " filenames AS fn " /* */
+           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
+           " WHERE "            /* */
+           " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " /* */
+           " sz.size > 0 " " ORDER BY fd.mimeid " /* */
+           },
+  .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ,
+           .selector2 =         /* */
+           " FROM " DUF_DBPREF " paths AS pt " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " WHERE pt.parentid = :dirID " /* */
+           },
   .final_sql_argv = final_sql,
 };

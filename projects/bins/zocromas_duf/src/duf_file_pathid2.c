@@ -36,9 +36,12 @@
  * known str_cb for duf_scan_files_by_di:
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *   duf_str_cb_scan_file_fd
+ *
+ * str_cb2 (sub-item scanner):
+ *       duf_str_cb2_uni_scan_dir
+ *       duf_str_cb2_leaf_scan
+ *       duf_str_cb2_scan_file_fd
  * */
-
-
 static int
 duf_scan_files_by_di2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
@@ -46,16 +49,23 @@ duf_scan_files_by_di2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_ca
 
   DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves -->  by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 
-/* duf_scan_db_items2:
- * call str_cb2 + str_cb_udata for each record by this sql with corresponding args
- * */
-
-  if ( sccb && sccb->leaf_selector2 )
+  if ( sccb && sccb->leaf.selector2 )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 3." );
 
-/* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf_selector2 */
-    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset );
+/* calling duf_sel_cb_(node|leaf) for each record by sccb->leaf.selector2 */
+    /* 
+     * call str_cb2 + str_cb_udata for each record by this sql with corresponding args
+     *
+     * DUF_NODE_NODE => sccb->node.selector2, sccb->node.fieldset
+     * DUF_NODE_LEAF => sccb->leaf.selector2, sccb->leaf.fieldset
+     * 
+     * str_cb2 (sub-item scanner):
+     *       duf_str_cb2_uni_scan_dir
+     *     ( duf_str_cb2_leaf_scan    )
+     *     ( duf_str_cb2_scan_file_fd )
+     * */
+    r = duf_scan_db_items2( DUF_NODE_LEAF, str_cb2, pdi, sccb /*, sccb->leaf.selector2, sccb->leaf.fieldset */ );
 
     DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves <--  by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 
@@ -63,7 +73,7 @@ duf_scan_files_by_di2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_ca
   }
   else
   {
-    DUF_ERROR( "sccb->leaf_selector2 must be set for %s", sccb->title );
+    DUF_ERROR( "sccb->leaf.selector2 must be set for %s", sccb->title );
     r = DUF_ERROR_PTR;
   }
 
@@ -76,9 +86,12 @@ duf_scan_files_by_di2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_ca
  * known str_cb for duf_scan_files_by_dirid:
  *   duf_str_cb_leaf_scan;   duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  *   duf_str_cb_scan_file_fd
+ *
+ * str_cb2 (sub-item scanner):
+ *     ( duf_str_cb2_uni_scan_dir )
+ *       duf_str_cb2_leaf_scan
+ *       duf_str_cb2_scan_file_fd
  * */
-
-
 int
 duf_scan_files_by_dirid2( duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {

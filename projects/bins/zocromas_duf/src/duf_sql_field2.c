@@ -103,7 +103,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
     unsigned long long *pvalue;
 
     pvalue = ( unsigned long long * ) sel_cb_udata;
-    /* fprintf( stderr, "OGO %s :: %llu\n", __func__, duf_sql_ull_by_name( sccb->leaf_fieldset, precord, 0 ) ); */
+    /* fprintf( stderr, "OGO %s :: %llu\n", __func__, duf_sql_ull_by_name( sccb->leaf.fieldset, precord, 0 ) ); */
     if ( pvalue
 #ifdef DUF_RECORD_WITH_NROWS
          && precord->nrow == 0
@@ -113,7 +113,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
       int have_pos = 0;
 
       r = DUF_ERROR_NO_FIELD_OPTIONAL;
-      *pvalue = __duf_sql_ull_by_name( sccb->leaf_fieldset, precord, &have_pos, 0 );
+      *pvalue = __duf_sql_ull_by_name( sccb->leaf.fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )
       {
 #ifdef DUF_RECORD_WITH_NROWS
@@ -123,7 +123,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
 #endif
       }
       else
-        DUF_ERROR( "r=%d; no field %s", r, sccb->leaf_fieldset );
+        DUF_ERROR( "r=%d; no field %s", r, sccb->leaf.fieldset );
     }
 #ifdef DUF_RECORD_WITH_NROWS
     else

@@ -40,12 +40,12 @@ __duf_sql_pos_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
 }
 
 const char *
-__duf_sql_str_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
+__duf_sql_str_by_name2( duf_sqlite_stmt_t * pstmt, const char *name, int opt )
 {
   const char *ptr = NULL;
   int pos = __duf_sql_pos_by_name2( pstmt, name );
 
-  assert( pos >= 0 );
+  assert( opt || pos >= 0 );
 
   if ( pos >= 0 )
     ptr = duf_sql_column_string( pstmt, pos );
@@ -54,12 +54,12 @@ __duf_sql_str_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
 }
 
 unsigned long long
-__duf_sql_ull_by_name2( duf_sqlite_stmt_t * pstmt, const char *name )
+__duf_sql_ull_by_name2( duf_sqlite_stmt_t * pstmt, const char *name, int opt )
 {
   unsigned long long val = 0;
   int pos = __duf_sql_pos_by_name2( pstmt, name );
 
-  assert( pos >= 0 );
+  assert( opt || pos >= 0 );
 
   if ( pos >= 0 )
     val = duf_sql_column_long_long( pstmt, pos );

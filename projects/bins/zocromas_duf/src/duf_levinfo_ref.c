@@ -219,6 +219,21 @@ DUF_LEVINFO_FC_UP( unsigned long long, dirid )
 
 /************************************************************************/
 
+unsigned long long
+duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d )
+{
+  unsigned long long nodedirid = 0;
+
+  nodedirid = duf_levinfo_dirid_d( pdi, d - ( duf_levinfo_is_leaf_d( pdi, d ) ? 1 : 0 ) );
+  return nodedirid;
+}
+/* *INDENT-OFF*  */
+DUF_LEVINFO_FC( unsigned long long, nodedirid )
+DUF_LEVINFO_FC_UP( unsigned long long, nodedirid )
+/* *INDENT-ON*  */
+
+/************************************************************************/
+
 void
 duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, int d )
 {
@@ -412,14 +427,20 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
         path = mas_malloc( len );
         /* path = strcpy( path, pdi->path ); */
         p = path;
-        if ( *( p - 1 ) != '/' )
-          *p++ = '/';
-        *p = 0;
         for ( int i = 0; i <= d; i++ )
         {
-          strcpy( p, pdi->levinfo[i].itemname );
-          p += strlen( pdi->levinfo[i].itemname );
-          *p++ = '/';
+          size_t l;
+
+          if ( p == path || *( p - 1 ) != '/' )
+            *p++ = '/';
+          *p = 0;
+          l = strlen( pdi->levinfo[i].itemname );
+          if ( l > 0 )
+          {
+            strcpy( p, pdi->levinfo[i].itemname );
+            p += l;
+            /* *p++ = '/'; */
+          }
           *p = 0;
         }
         assert( d >= 0 );

@@ -7,25 +7,19 @@
 
 #include "duf_service.h"
 #include "duf_config_ref.h"
-/* #include "duf_match.h" */
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
-
-/* #include "duf_sql_defs.h" */
-/* #include "duf_sql_field.h" */
 
 #include "duf_item_scan2.h"
 
 #include "duf_path.h"
 
-/* #include "duf_dirent_scan2.h" */
-
-/* #include "duf_file_pathid2.h" */
-
 #include "duf_sccb.h"
 
 #include "duf_dir_scan2_stages.h"
+
+#include "duf_item_match2.h"
 
 /* ###################################################################### */
 #include "duf_dir_scan2.h"
@@ -53,8 +47,12 @@
  * known str_cb for duf_scan_dir_by_pi:
  *   duf_str_cb_uni_scan_dir
  *
+ *
+ * str_cb2 (sub-item scanner):
+ *       duf_str_cb2_uni_scan_dir
+ *     ( duf_str_cb2_leaf_scan    )
+ *     ( duf_str_cb2_scan_file_fd )
  * */
-
 static int
 duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
@@ -63,13 +61,17 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   DEBUG_START(  );
   assert( sccb );
 
-  /* scan dirent's */
+/*
+ * call corresponding callback (by dir/regular)
+ *   for each direntry from filesystem
+ * */
   r = duf_qscan_dirents2( pstmt, pdi, sccb );
   DUF_TEST_R( r );
 
   if ( r >= 0 )
-    r = duf_count_db_items2( duf_match_leaf2, pdi, sccb, sccb->leaf_selector2, sccb->leaf_fieldset );
+    r = duf_count_db_items2( NULL /* duf_match_leaf2 */ , pdi, sccb, &sccb->leaf );
   DUF_TEST_R( r );
+  /* DUF_PRINTF( 0, "@@@@@@@@@@@ %llu < %llu > %d [%s]", duf_levinfo_dirid( pdi ), duf_levinfo_items_files( pdi ), r, duf_levinfo_itemname( pdi ) ); */
 
   if ( r >= 0 )
     r = duf_qscan_node_scan_before2( pstmt, pdi, sccb );
@@ -106,6 +108,11 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
  *   duf_str_cb_uni_scan_dir
  *
  * see duf_scan_dir_by_pi
+ *
+ * str_cb2 (sub-item scanner):
+ *       duf_str_cb2_uni_scan_dir
+ *     ( duf_str_cb2_leaf_scan    )
+ *     ( duf_str_cb2_scan_file_fd )
  * */
 
 int

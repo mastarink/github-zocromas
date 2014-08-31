@@ -28,7 +28,6 @@ static const duf_longval_extended_t _lo_extended[] = {
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, collect ) /*                                              */ , DO_H( collect mode ) /*       */ },
   {.o = {DO_Q( "crc32" ), /*          */ DO_A_N, /* */ DO_VF( CRC32 )} /*         */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, crc32 ) /*                                                */ , DO_H( collect crc32 data ) /* */ },
-  {.o = {DO_Q( "crc32id" ), /*        */ DO_A_R, /* */ DO_V( CRC32ID )} /*        */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "create-tables" ), /*  */ DO_A_N, /* */ DO_VF( CREATE_TABLES )} /* */ , DO_CL( SYSTEM ) /*    */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, create_tables ) /*                                        */ , DO_H( create tables ) /*      */ },
   {.o = {DO_Q( "db-directory" ), /*   */ DO_A_R, /* */ DO_V( DB_DIRECTORY )} /*   */ , DO_CL( CONTROL ) /*   */ ,
@@ -55,7 +54,6 @@ static const duf_longval_extended_t _lo_extended[] = {
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, drop_tables ) /*                                          */ , DO_H( drop tables ) /*        */ },
   {.o = {DO_Q( "exif" ), /*           */ DO_A_N, /* */ DO_VF( EXIF )} /*          */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, exif ) /*                                                 */ , DO_H( collect exif data ) /*  */ },
-  {.o = {DO_Q( "exifid" ), /*         */ DO_A_R, /* */ DO_V( EXIFID )} /*         */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "filedata" ), /*       */ DO_A_N, /* */ DO_VF( FILEDATA )} /*      */ , DO_CL( COLLECT ) /*   */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, filedata ) /*                                             */ , DO_H( get filedata ) /*       */ },
   {.o = {DO_Q( "filenames" ), /*      */ DO_A_N, /* */ DO_VF( FILENAMES )} /*     */ , DO_CL( COLLECT ) /*   */ ,
@@ -105,29 +103,89 @@ static const duf_longval_extended_t _lo_extended[] = {
   {.o = {DO_Q( "max-dirs" ), /*       */ DO_A_R, /* */ DO_V( MAXITEMS_DIRS )} /*  */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-files" ), /*      */ DO_A_R, /* */ DO_V( MAXITEMS_FILES )} /* */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-items" ), /*      */ DO_A_R, /* */ DO_V( MAXITEMS )} /*       */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+
+
   {.o = {DO_Q( "min-same" ), /*       */ DO_A_R, /* */ DO_V( MINSAME )} /*        */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( NUM, u.same.min ) /*                                                                   */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-same" ), /*       */ DO_A_R, /* */ DO_V( MAXSAME )} /*        */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( NUM, u.same.max ) /*                                                                   */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "same" ), /*           */ DO_A_R, /* */ DO_V( SAME )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.same.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+
   {.o = {DO_Q( "max-seq" ), /*        */ DO_A_R, /* */ DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( NUM, u.max_seq ) /*                                                                      */ , DO_H(  .... ) /*              */ },
+  
   {.o = {DO_Q( "size" ), /*           */ DO_A_R, /* */ DO_V( SIZE )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAXLL, u.size.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-size" ), /*       */ DO_A_R, /* */ DO_V( MINSIZE )} /*        */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( NUM, u.size.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-size" ), /*       */ DO_A_R, /* */ DO_V( MAXSIZE )} /*        */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( NUM, u.size.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "nameid" ), /*           */ DO_A_R, /* */ DO_V( NAMEID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.nameid.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-nameid" ), /*       */ DO_A_R, /* */ DO_V( MINNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.nameid.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-nameid" ), /*       */ DO_A_R, /* */ DO_V( MAXNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.nameid.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "inode" ), /*           */ DO_A_R, /* */ DO_V( NAMEID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.inode.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-inode" ), /*       */ DO_A_R, /* */ DO_V( MINNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.inode.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-inode" ), /*       */ DO_A_R, /* */ DO_V( MAXNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.inode.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  /* {.o = {DO_Q( "md5id" ), (*          *) DO_A_R, (* *) DO_V( MD5ID )} (*          *) , DO_CL( NODESC ) (*    *) , DO_H(  .... ) (*              *) }, */
+  {.o = {DO_Q( "md5id" ), /*           */ DO_A_R, /* */ DO_V( MD5ID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.md5id.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-md5id" ), /*       */ DO_A_R, /* */ DO_V( MINMD5ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.md5id.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-md5id" ), /*       */ DO_A_R, /* */ DO_V( MAXMD5ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.md5id.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  /* {.o = {DO_Q( "sd5id" ), (*          *) DO_A_R, (* *) DO_V( SD5ID )} (*          *) , DO_CL( NODESC ) (*    *) , DO_H(  .... ) (*              *) }, */
+  {.o = {DO_Q( "sd5id" ), /*           */ DO_A_R, /* */ DO_V( SD5ID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.sd5id.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-sd5id" ), /*       */ DO_A_R, /* */ DO_V( MINSD5ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.sd5id.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-sd5id" ), /*       */ DO_A_R, /* */ DO_V( MAXSD5ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.sd5id.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  /* {.o = {DO_Q( "crc32id" ), (*        *) DO_A_R, (* *) DO_V( CRC32ID )} (*        *) , DO_CL( TRACE ) (*     *) , DO_H( trace .... ) (*         *) }, */
+  {.o = {DO_Q( "crc32id" ), /*           */ DO_A_R, /* */ DO_V( CRC32ID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.crc32id.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-crc32id" ), /*       */ DO_A_R, /* */ DO_V( MINCRC32ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.crc32id.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-crc32id" ), /*       */ DO_A_R, /* */ DO_V( MAXCRC32ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.crc32id.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  /* {.o = {DO_Q( "mimeid" ), (*         *) DO_A_R, (* *) DO_V( MIMEID )} (*         *) , DO_CL( NODESC ) (*    *) , DO_H(  .... ) (*              *) }, */
+  {.o = {DO_Q( "mimeid" ), /*           */ DO_A_R, /* */ DO_V( MIMEID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.mimeid.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-mimeid" ), /*       */ DO_A_R, /* */ DO_V( MINMIMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.mimeid.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-mimeid" ), /*       */ DO_A_R, /* */ DO_V( MAXMIMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.mimeid.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  /* {.o = {DO_Q( "exifid" ), (*         *) DO_A_R, (* *) DO_V( EXIFID )} (*         *) , DO_CL( TRACE ) (*     *) , DO_H( trace .... ) (*         *) }, */
+  {.o = {DO_Q( "exifid" ), /*           */ DO_A_R, /* */ DO_V( EXIFID )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.exifid.min ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-exifid" ), /*       */ DO_A_R, /* */ DO_V( MINEXIFID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.exifid.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-exifid" ), /*       */ DO_A_R, /* */ DO_V( MAXEXIFID )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.exifid.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+
+  
   {.o = {DO_Q( "md5" ), /*            */ DO_A_N, /* */ DO_VF( MD5 )} /*           */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, md5 ) /*                                                  */ , DO_H( collect md5 data ) /*   */ },
-  {.o = {DO_Q( "md5id" ), /*          */ DO_A_R, /* */ DO_V( MD5ID )} /*          */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "mdpath" ), /*         */ DO_A_N, /* */ DO_VF( MDPATH )} /*        */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, mdpath ) /*                                               */ , DO_H(  ... ..... ) /*         */ },
-  {.o = {DO_Q( "memusage" ), /*       */ DO_A_N, /* */ DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*     */ , DO_H( verbose ) /*            */ },
+  
+  /* ????????? */
   {.o = {DO_Q( "mime" ), /*           */ DO_A_N, /* */ DO_VF( MIME )} /*          */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, mime ) /*                                                 */ , DO_H( collect mime data ) /*  */ },
-  {.o = {DO_Q( "mimeid" ), /*         */ DO_A_R, /* */ DO_V( MIMEID )} /*         */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+
   {.o = {DO_Q( "min-dirfiles" ), /*   */ DO_A_R, /* */ DO_V( MINDIRFILES )} /*    */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "output-file" ), /*    */ DO_A_R, /* */ DO_V( OUTPUT_FILE )} /*    */ , DO_CL( PRINT ) /*     */ , DO_H( output to file ) /*     */ },
   {.o = {DO_Q( "output-level" ), /*   */ DO_A_O, /* */ DO_V( OUTPUT_LEVEL )} /*   */ , DO_CL( PRINT ) /*     */ , DO_H( output level ) /*       */ },
@@ -145,7 +203,6 @@ static const duf_longval_extended_t _lo_extended[] = {
    /*      */ DO_O( UPLUS, cli.act.sampupd ) /*                                                            */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "sd5" ), /*            */ DO_A_N, /* */ DO_VF( SD5 )} /*           */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, sd5 ) /*                                                  */ , DO_H( collect sd5 data ) /*   */ },
-  {.o = {DO_Q( "sd5id" ), /*          */ DO_A_R, /* */ DO_V( SD5ID )} /*          */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "summary" ), /*        */ DO_A_N, /* */ DO_VF( SUMMARY )} /*       */ , DO_CL( REFERENCE ) /* */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, summary ) /*                                              */ , DO_H( summary ) /*            */ },
 
@@ -241,6 +298,9 @@ static const duf_longval_extended_t _lo_extended[] = {
   {.o =
    {DO_Q( "version" ), /*        */ DO_A_N, /* */ DO_V( VERSION )} /*        */ , DO_CL( REFERENCE ) /* */ , DO_H( version info ) /*            */ },
   {.o = {DO_Q( "zero-db" ), /*        */ DO_A_N, /* */ DO_VF( ZERO_DB )} /*       */ , DO_CL( SYSTEM ) /*    */ , DO_H( zero db ) /*            */ },
+  
+  {.o = {DO_Q( "memusage" ), /*       */ DO_A_N, /* */ DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*     */ , DO_H( verbose ) /*            */ },
+
   /*{.o = {DO_N(),.has_arg = 0,DO_V(LIMIT)},.help = "....",.oclass = ...}, */
 /*{.o = {DO_N(add-to-group), 		 DO_A_N,		       .name = "",.has_arg = 0,DO_V(ADD_TO_GROUP)},.help = "...",.oclass = ...}, */
 /*{.o = {DO_N(group), 		 DO_A_R, 		 DO_V(GROUP)},.help = "help on all",DO_CL(HELP)}, */

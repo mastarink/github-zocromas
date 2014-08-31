@@ -110,7 +110,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
   if ( duf_config->cli.format.dirid && ( !format || format->dirid ) )
   {
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{dirid}" ) );
-    DUF_PRINTF( 0, ".[%6llu  ] ", pdi->levinfo[pdi->depth].dirid );
+    DUF_PRINTF( 0, ".[%6llu  ] ", duf_levinfo_nodedirid( pdi ) );
     ok++;
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
@@ -258,13 +258,13 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
     if ( duf_config->cli.format.human || ( format && format->human ) )
     {
       if ( sz < 1024 )
-        DUF_PRINTF( 0, ".%4llu  ", sz );
+        DUF_PRINTF( 0, ".%9llu  ", sz );
       else if ( sz < 1024 * 1024 )
-        DUF_PRINTF( 0, ".%4lluk ", sz / 1024 );
+        DUF_PRINTF( 0, ".%9lluk ", sz / 1024 );
       else if ( sz < 1024 * 1024 * 1024 )
-        DUF_PRINTF( 0, ".%4lluM ", sz / 1024 / 1024 );
+        DUF_PRINTF( 0, ".%9lluM ", sz / 1024 / 1024 );
       else
-        DUF_PRINTF( 0, ".%4lluG ", sz / 1024 / 1024 / 1024 );
+        DUF_PRINTF( 0, ".%9lluG ", sz / 1024 / 1024 / 1024 );
     }
     else
       DUF_PRINTF( 0, ".%10llu ", sz );

@@ -14,7 +14,7 @@ zocromas_duf_SOURCES=				   \
 	duf_filedata.c duf_path.c 			   \
 	duf_file_pathid2.c				    \
 							     \
-	duf_item_scan2.c				      \
+	duf_item_scan2.c duf_item_match2.c		      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
 	duf_sccb.c duf_dir_scan2.c duf_dir_scan2_stages.c	\
 	duf_dirent_scan2.c					 \

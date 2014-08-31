@@ -72,8 +72,10 @@ duf_scan_callbacks_t duf_integrity_callbacks = {
   .node_scan_before = NULL,
   .leaf_scan = NULL,
   /* filename for debug only */
-  .leaf_fieldset = NULL,
-  .leaf_selector = NULL,
-  .node_selector = NULL,
+  .leaf = {.fieldset = NULL,
+           .selector = NULL}
+  ,
+  .node = {.selector = NULL}
+  ,
   .final_sql_argv = final_sql,
 };

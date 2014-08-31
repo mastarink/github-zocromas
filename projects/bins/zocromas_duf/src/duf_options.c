@@ -966,6 +966,16 @@ duf_option_examples( int argc, char **argv )
   DUF_PRINTF( 0, "  run  -OPRdEifndD -532Xe /mnt/new_media/media/photo/ --trace-options		- %s", "" );
   DUF_PRINTF( 0, "  run --print -Rdf --max-depth=2   /mnt/new_media/media/photo/		- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
+  DUF_PRINTF( 0, "========================= as for 20140831 ===================" );
+
+  DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf		- %s", "" );
+  DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/dvd/benq/benq/  -Rpdf --min-size=600000 --min-same=6 --md5id=18468		- %s", "" );
+  DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf --inode=61080661		- %s", "" );
+  DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf --nameid=10000		- %s", "" );
+  DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf --size=181684411		- %s", "" );
+  DUF_PRINTF( 0, "  run  -OPRdEifndD -523Xe /mnt/new_media/media/photo/		- %s", "" );
+
+  DUF_PRINTF( 0, "=============================================================" );
 }
 
 void

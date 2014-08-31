@@ -8,8 +8,6 @@
 #include <mastar/wrap/mas_memory.h>
 
 
-
-/* #include "duf_types.h" */
 #include "duf_maintenance.h"
 
 
@@ -28,12 +26,21 @@
 /* #include "duf_sql_field1.h" */
 
 
-
 /* ###################################################################### */
 #include "duf_dirent_scan2.h"
 /* ###################################################################### */
 
-
+/*
+ * called for each direntry at dir from current pdi level
+ *
+ * 1. call. get stat
+ * 2. down 1 level
+ * 3. call
+ *      for directory                - scan_dirent_dir2
+ *      for other (~ regular) entry  - scan_dirent_reg2
+ * 4. up one level
+ *
+ * */
 static int
 duf_scan_direntry2(  /* duf_sqlite_stmt_t * pstmt, */ struct dirent *de, duf_depthinfo_t * pdi,
                     duf_scan_hook2_dirent_reg_t scan_dirent_reg2, duf_scan_hook2_dirent_dir_t scan_dirent_dir2 )
@@ -129,6 +136,13 @@ duf_scan_direntry2(  /* duf_sqlite_stmt_t * pstmt, */ struct dirent *de, duf_dep
 }
 
 /*
+ * 1. get entries from filesystem at dir from current pdi level
+ * 2. filter them with duf_direntry_filter
+ * 3. call duf_scan_direntry2 for each:
+ *             -- call for each direntry
+ *               - for directory                - scan_dirent_dir2
+ *               - for other (~ regular) entry  - scan_dirent_reg2
+ *
  * pdi
  * scan_dirent_reg2 - dir entry scanner function
  * scan_dirent_dir2 - reg (file) entry scanner function
@@ -193,6 +207,11 @@ duf_scan_dirents2(  /* duf_sqlite_stmt_t * pstmt, */ duf_depthinfo_t * pdi,
     {
       for ( int il = 0; il < nlist; il++ )
       {
+ /*
+  * call for eaach direntry
+  *   for directory                - scan_dirent_dir2
+  *   for other (~ regular) entry  - scan_dirent_reg2
+  * */
         r = duf_scan_direntry2(  /* pstmt, */ list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 );
 
         DUF_TEST_R( r );

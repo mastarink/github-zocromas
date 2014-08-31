@@ -24,6 +24,14 @@ void duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, i
 void duf_levinfo_set_dirid( duf_depthinfo_t * pdi, unsigned long long dirid );
 void duf_levinfo_set_dirid_up( duf_depthinfo_t * pdi, unsigned long long dirid );
 
+unsigned long long duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d );
+unsigned long long duf_levinfo_dirid( const duf_depthinfo_t * pdi );
+unsigned long long duf_levinfo_dirid_up( const duf_depthinfo_t * pdi );
+
+unsigned long long duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d );
+unsigned long long duf_levinfo_nodedirid( const duf_depthinfo_t * pdi );
+unsigned long long duf_levinfo_nodedirid_up( const duf_depthinfo_t * pdi );
+
 unsigned long long duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_items_files( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_items_files_up( const duf_depthinfo_t * pdi );
@@ -31,10 +39,6 @@ unsigned long long duf_levinfo_items_files_up( const duf_depthinfo_t * pdi );
 void duf_levinfo_set_items_files_d( duf_depthinfo_t * pdi, unsigned long long n, int d );
 void duf_levinfo_set_items_files( duf_depthinfo_t * pdi, unsigned long long n );
 void duf_levinfo_set_items_files_up( duf_depthinfo_t * pdi, unsigned long long n );
-
-unsigned long long duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d );
-unsigned long long duf_levinfo_dirid( const duf_depthinfo_t * pdi );
-unsigned long long duf_levinfo_dirid_up( const duf_depthinfo_t * pdi );
 
 int duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_numdir( const duf_depthinfo_t * pdi );
