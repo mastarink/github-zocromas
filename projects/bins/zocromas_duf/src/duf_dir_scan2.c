@@ -13,7 +13,7 @@
 
 #include "duf_item_scan2.h"
 
-#include "duf_path.h"
+#include "duf_db2path.h"
 
 #include "duf_sccb.h"
 
@@ -124,8 +124,8 @@ duf_scan_dirs_by_pi2_msg( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_
   diridpid = duf_levinfo_dirid( pdi );
 
   DUF_TRACE( scan, 10, "+" );
-  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, "** depth:%d/%d; diridpid:%llu:%s", duf_pdi_depth( pdi ),
-                duf_pdi_reldepth( pdi ), diridpid, DUF_PATHID2PATH( diridpid, pdi ) );
+  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( pdi ),
+                duf_pdi_reldepth( pdi ), diridpid );
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan start       by %5llu", duf_pdi_depth( pdi ), diridpid );
 

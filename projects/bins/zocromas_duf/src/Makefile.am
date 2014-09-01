@@ -10,9 +10,9 @@ zocromas_duf_SOURCES=				   \
 	duf_options_table.c			       \
 	duf_create.c 					\
 							 \
-	duf_add.c 					  \
-	duf_filedata.c duf_path.c 			   \
-	duf_file_pathid2.c				    \
+	duf_file_pathid2.c				  \
+	duf_filedata.c					   \
+	duf_add.c duf_path.c duf_path2db.c duf_db2path.c    \
 							     \
 	duf_item_scan2.c duf_item_match2.c		      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \

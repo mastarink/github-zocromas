@@ -184,7 +184,7 @@ duf_store_log( int argc, char *const argv[] )
   int changes = 0;
 
   sargv1 = mas_argv_string( argc, argv, 1 );
-  sargv2 = duf_restore_options( argv[0] );
+  sargv2 = duf_restore_some_options( argv[0] );
   DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
   {
     static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
@@ -290,6 +290,6 @@ duf_action_new( int argc, char **argv )
   /* DUF_PRINTF(0, "@@@@@@@@@@@ %llu %llu", duf_config->u.size.min, duf_config->u.size.max ); */
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
-    r = duf_make_all_sccbs(  );
+    r = duf_make_all_sccbs_msg(  );
   return r;
 }

@@ -1,6 +1,5 @@
 #include <string.h>
 #include <assert.h>
-#include <limits.h>
 
 
 #include <mastar/wrap/mas_std_def.h>
@@ -8,15 +7,11 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-/* #include "duf_types.h" */
+
 #include "duf_maintenance.h"
 
-
-#include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config_ref.h"
 #include "duf_dh.h"
-
 
 
 #include "duf_pdi.h"
@@ -151,6 +146,7 @@ duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d )
 
   assert( pdi );
   assert( pdi->levinfo );
+  /* assert( d >= 0 ); */
   if ( d >= 0 )
     n = pdi->levinfo[d].itemname;
   return n ? ( *n ? n : "/" ) : "";
@@ -178,6 +174,7 @@ duf_levinfo_set_items_files_d( duf_depthinfo_t * pdi, unsigned long long n, int 
 {
   assert( pdi );
   assert( pdi->levinfo );
+  /* assert( d >= 0 ); */
   if ( d >= 0 )
     pdi->levinfo[d].items.files = n;
 }
@@ -194,6 +191,7 @@ duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->levinfo );
+  /* assert( d >= 0 ); */
   return d >= 0 ? pdi->levinfo[d].items.files : 0;
 }
 
@@ -209,6 +207,7 @@ duf_levinfo_dirid_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->levinfo );
+  /* assert( d >= 0 ); */
   return d >= 0 ? pdi->levinfo[d].dirid : 0;
 }
 
@@ -239,6 +238,7 @@ duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, int d 
 {
   assert( pdi );
   assert( pdi->levinfo );
+  /* assert( d >= 0 ); */
   if ( d >= 0 )
     pdi->levinfo[d].dirid = dirid;
 }
@@ -255,6 +255,7 @@ duf_levinfo_numdir_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
   assert( pdi->levinfo );
+  /* assert( d >= 0 ); */
   return d >= 0 ? pdi->levinfo[d].numdir : -1;
 }
 
@@ -275,6 +276,7 @@ duf_levinfo_set_context_d( duf_depthinfo_t * pdi, void *ctx, int d )
   assert( pdi );
   {
     assert( d >= 0 );
+    assert( pdi->levinfo );
     duf_clear_context( &pdi->levinfo[d].context );
     duf_set_context( &pdi->levinfo[d].context, ctx );
   }
@@ -296,6 +298,7 @@ duf_levinfo_context_d( const duf_depthinfo_t * pdi, int d )
 
   {
     assert( d >= 0 );
+    assert( pdi->levinfo );
     ctx = duf_context( &pdi->levinfo[d].context );
   }
   return ctx;
@@ -316,10 +319,10 @@ duf_levinfo_pdh_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi );
   /* if ( pdi->opendir ) */
   {
-    assert( pdi->levinfo );
     /* DUF_ERROR( "IS_LEAF:%d", pdi->levinfo[d].is_leaf ); */
 
     assert( d >= 0 );
+    assert( pdi->levinfo );
     pdhlev = &pdi->levinfo[d].lev_dh;
   }
   return pdhlev;
@@ -379,6 +382,7 @@ duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
     int r = 0;
 
     assert( d >= 0 );
+    assert( pdi->levinfo );
     if ( duf_levinfo_dfd_d( pdi, d ) )
       r = duf_close_dh( &pdi->levinfo[d].lev_dh );
     assert( duf_levinfo_dfd_d( pdi, d ) == 0 );
@@ -401,9 +405,9 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
   char *path = NULL;
 
   assert( pdi );
-  assert( pdi->levinfo );
   {
     assert( d >= 0 );
+    assert( pdi->levinfo );
     if ( pdi->levinfo[d].is_leaf )
       d--;
     {

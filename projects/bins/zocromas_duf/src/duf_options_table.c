@@ -114,27 +114,61 @@ static const duf_longval_extended_t _lo_extended[] = {
 
   {.o = {DO_Q( "max-seq" ), /*        */ DO_A_R, /* */ DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( NUM, u.max_seq ) /*                                                                      */ , DO_H(  .... ) /*              */ },
-  
+
   {.o = {DO_Q( "size" ), /*           */ DO_A_R, /* */ DO_V( SIZE )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAXLL, u.size ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-size" ), /*       */ DO_A_R, /* */ DO_V( MINSIZE )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MINLL, u.size.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MINLL, u.size ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-size" ), /*       */ DO_A_R, /* */ DO_V( MAXSIZE )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAXLL, u.size.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAXLL, u.size ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
 
   {.o = {DO_Q( "nameid" ), /*           */ DO_A_R, /* */ DO_V( NAMEID )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.nameid ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-nameid" ), /*       */ DO_A_R, /* */ DO_V( MINNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MIN, u.nameid.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MIN, u.nameid ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-nameid" ), /*       */ DO_A_R, /* */ DO_V( MAXNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAX, u.nameid.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAX, u.nameid ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "mtime" ), /*           */ DO_A_R, /* */ DO_V( MTIME )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAXDATETIME, u.mtime ) /*                                                                */ ,
+   DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-mtime" ), /*       */ DO_A_R, /* */ DO_V( MINMTIME )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINDATETIME, u.mtime ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-mtime" ), /*       */ DO_A_R, /* */ DO_V( MAXMTIME )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MAXDATETIME, u.mtime ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "atime" ), /*           */ DO_A_R, /* */ DO_V( ATIME )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAXDATETIME, u.atime ) /*                                                                */ ,
+   DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-atime" ), /*       */ DO_A_R, /* */ DO_V( MINATIME )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( DATETIME, u.atime.min ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-atime" ), /*       */ DO_A_R, /* */ DO_V( MAXATIME )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( DATETIME, u.atime.max ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "ctime" ), /*           */ DO_A_R, /* */ DO_V( CTIME )} /*           */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( MINMAXDATETIME, u.ctime ) /*                                                                */ ,
+   DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-ctime" ), /*       */ DO_A_R, /* */ DO_V( MINCTIME )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( DATETIME, u.ctime.min ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-ctime" ), /*       */ DO_A_R, /* */ DO_V( MAXCTIME )} /*        */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( DATETIME, u.ctime.max ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
 
   {.o = {DO_Q( "inode" ), /*           */ DO_A_R, /* */ DO_V( NAMEID )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.inode ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-inode" ), /*       */ DO_A_R, /* */ DO_V( MINNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MIN, u.inode.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MIN, u.inode ) /*                                                                     */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-inode" ), /*       */ DO_A_R, /* */ DO_V( MAXNAMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAX, u.inode.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAX, u.inode ) /*                                                                     */ , DO_H(  .... ) /*              */ },
 
   /* {.o = {DO_Q( "md5id" ), (*          *) DO_A_R, (* *) DO_V( MD5ID )} (*          *) , DO_CL( NODESC ) (*    *) , DO_H(  .... ) (*              *) }, */
   {.o = {DO_Q( "md5id" ), /*           */ DO_A_R, /* */ DO_V( MD5ID )} /*           */ , DO_CL( NODESC ) /*    */ ,
@@ -148,40 +182,46 @@ static const duf_longval_extended_t _lo_extended[] = {
   {.o = {DO_Q( "sd5id" ), /*           */ DO_A_R, /* */ DO_V( SD5ID )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.sd5id ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-sd5id" ), /*       */ DO_A_R, /* */ DO_V( MINSD5ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MIN, u.sd5id.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MIN, u.sd5id ) /*                                                                     */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-sd5id" ), /*       */ DO_A_R, /* */ DO_V( MAXSD5ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAX, u.sd5id.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAX, u.sd5id ) /*                                                                     */ , DO_H(  .... ) /*              */ },
 
   /* {.o = {DO_Q( "crc32id" ), (*        *) DO_A_R, (* *) DO_V( CRC32ID )} (*        *) , DO_CL( TRACE ) (*     *) , DO_H( trace .... ) (*         *) }, */
   {.o = {DO_Q( "crc32id" ), /*           */ DO_A_R, /* */ DO_V( CRC32ID )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.crc32id ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-crc32id" ), /*       */ DO_A_R, /* */ DO_V( MINCRC32ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MIN, u.crc32id.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MIN, u.crc32id ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-crc32id" ), /*       */ DO_A_R, /* */ DO_V( MAXCRC32ID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAX, u.crc32id.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAX, u.crc32id ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
 
   /* {.o = {DO_Q( "mimeid" ), (*         *) DO_A_R, (* *) DO_V( MIMEID )} (*         *) , DO_CL( NODESC ) (*    *) , DO_H(  .... ) (*              *) }, */
   {.o = {DO_Q( "mimeid" ), /*           */ DO_A_R, /* */ DO_V( MIMEID )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.mimeid ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-mimeid" ), /*       */ DO_A_R, /* */ DO_V( MINMIMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MIN, u.mimeid.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MIN, u.mimeid ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-mimeid" ), /*       */ DO_A_R, /* */ DO_V( MAXMIMEID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAX, u.mimeid.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAX, u.mimeid ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
 
   /* {.o = {DO_Q( "exifid" ), (*         *) DO_A_R, (* *) DO_V( EXIFID )} (*         *) , DO_CL( TRACE ) (*     *) , DO_H( trace .... ) (*         *) }, */
   {.o = {DO_Q( "exifid" ), /*           */ DO_A_R, /* */ DO_V( EXIFID )} /*           */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( MINMAX, u.exifid ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-exifid" ), /*       */ DO_A_R, /* */ DO_V( MINEXIFID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MIN, u.exifid.min ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MIN, u.exifid ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-exifid" ), /*       */ DO_A_R, /* */ DO_V( MAXEXIFID )} /*        */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( MAX, u.exifid.max ) /*                                                                     */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_O( MAX, u.exifid ) /*                                                                     */ ,
+   DO_H(  .... ) /*              */ },
 
-  
+
   {.o = {DO_Q( "md5" ), /*            */ DO_A_N, /* */ DO_VF( MD5 )} /*           */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, md5 ) /*                                                  */ , DO_H( collect md5 data ) /*   */ },
   {.o = {DO_Q( "mdpath" ), /*         */ DO_A_N, /* */ DO_VF( MDPATH )} /*        */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, mdpath ) /*                                               */ , DO_H(  ... ..... ) /*         */ },
-  
+
   /* ????????? */
   {.o = {DO_Q( "mime" ), /*           */ DO_A_N, /* */ DO_VF( MIME )} /*          */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_F1( act, mime ) /*                                                 */ , DO_H( collect mime data ) /*  */ },
@@ -298,7 +338,7 @@ static const duf_longval_extended_t _lo_extended[] = {
   {.o =
    {DO_Q( "version" ), /*        */ DO_A_N, /* */ DO_V( VERSION )} /*        */ , DO_CL( REFERENCE ) /* */ , DO_H( version info ) /*            */ },
   {.o = {DO_Q( "zero-db" ), /*        */ DO_A_N, /* */ DO_VF( ZERO_DB )} /*       */ , DO_CL( SYSTEM ) /*    */ , DO_H( zero db ) /*            */ },
-  
+
   {.o = {DO_Q( "memusage" ), /*       */ DO_A_N, /* */ DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*     */ , DO_H( verbose ) /*            */ },
 
   /*{.o = {DO_N(),.has_arg = 0,DO_V(LIMIT)},.help = "....",.oclass = ...}, */

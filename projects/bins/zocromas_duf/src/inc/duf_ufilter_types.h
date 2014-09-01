@@ -59,6 +59,9 @@ typedef struct
   duf_limitsll_t size;
   duf_limits_t same;
   duf_limits_t nameid;
+  duf_limitsll_t mtime;
+  duf_limitsll_t atime;
+  duf_limitsll_t ctime;
   duf_limits_t inode;
   duf_limits_t md5id;
   duf_limits_t sd5id;

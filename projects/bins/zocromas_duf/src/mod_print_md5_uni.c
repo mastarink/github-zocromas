@@ -94,7 +94,6 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
       duf_format_t format = {
         .filename = 1,
-        .truepath = 1,
         .seq = 1,
         .dirid = 0,
         .inode = 0,
@@ -241,7 +240,6 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
 duf_scan_callbacks_t duf_print_md5_callbacks = {
   .title = __FILE__,
   /* .def_opendir = 1, */
-  .scan_mode_2 = 1,
   .init_scan = NULL,
   .node_scan_before = scan_node_before,
   .node_scan_before2 = scan_node_before2,
@@ -250,7 +248,7 @@ duf_scan_callbacks_t duf_print_md5_callbacks = {
   .leaf = {.fieldset = "md." DUF_SQL_IDNAME " AS dirid, md." DUF_SQL_IDNAME " AS md5id " /* */
            ", fn.Pathid as truedirid " /* */
            ", fn.name AS filename, fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", dup5cnt AS nsame " /* */
            ", printf('%016x%016x',md5sum1,md5sum2) AS dirname " /* */
            ", fn.Pathid AS hid " /* */

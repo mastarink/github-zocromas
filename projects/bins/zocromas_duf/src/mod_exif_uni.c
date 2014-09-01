@@ -534,13 +534,12 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_collect_exif_callbacks = {
   .title = "collect exif",
   .def_opendir = 1,
-  .scan_mode_2 = 1,
 
   .leaf_scan_fd2 = duf_scan_dirent_exif_content2,
 
   /* filename for debug only */
   .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.md5id AS md5id" /* */
@@ -553,7 +552,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
-           " sz.size > 0 AND" " mi.mime='image/jpeg' AND" /* */
+           " sz.size > 0 AND" /* */
+	   " mi.mime='image/jpeg' AND" /* */
            " fn.Pathid = :dirID " /* */
            ,
            .selector_total2 =   /* */

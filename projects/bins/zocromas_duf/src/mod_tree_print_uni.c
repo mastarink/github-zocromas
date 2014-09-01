@@ -79,7 +79,8 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
                  /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                  DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                  DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-                 DUF_PRINTF( 0, ".0x%02x]", flags ); );
+                 DUF_PRINTF( 0, ".0x%02x]", flags );
+             );
       {
         /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
         /*   DUF_PRINTF( 0, ".[  ◇ ]" );        */
@@ -382,7 +383,6 @@ static const char *beginning_sql[] = {
 
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree",
-  .scan_mode_2 = 1,
   .init_scan = NULL,
   .beginning_sql_argv = beginning_sql,
   /* .node_scan_before = tree_scan_node_before, */
@@ -391,7 +391,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .leaf_scan2 = tree_scan_leaf2,
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid" /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", dup5cnt AS nsame" /* */
            ", md.md5sum1, md.md5sum2 " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid" /* */

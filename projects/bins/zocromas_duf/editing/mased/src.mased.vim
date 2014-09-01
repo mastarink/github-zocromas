@@ -1,6 +1,12 @@
 find duf_path.c
 sfind duf_path.h
 
+tab sfind  duf_path2db.c
+sfind duf_path2db.h
+
+tab sfind duf_db2path.c
+sfind duf_db2path.h
+
 tab sfind duf_item_scan2.c
 sfind duf_item_scan2.h
 

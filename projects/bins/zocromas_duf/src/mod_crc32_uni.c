@@ -27,7 +27,6 @@
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-/* #include "duf_path.h" */
 
 #include "duf_sql_const.h"
 #include "duf_sql_defs.h"
@@ -206,7 +205,6 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .title = "collect crc32",
   .init_scan = NULL,
   .def_opendir = 1,
-  .scan_mode_2 = 1,
   .leaf_scan_fd2 = duf_scan_dirent_crc32_content2,
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            ", fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
@@ -232,8 +230,8 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
            " fd.crc32id IS NULL AND" /* */
+           /* " sz.dupzcnt > 1 AND "      (* *) */
            " sz.size > 0 "
-           /* " AND sz.dupzcnt > 1 "      (* *) */
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */

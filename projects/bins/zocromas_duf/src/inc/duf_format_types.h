@@ -34,7 +34,6 @@ typedef struct
   unsigned suffix:1;
   unsigned realpath:1;
   unsigned seq:1;
-  unsigned truepath:1;
   unsigned uid:1;
   unsigned short_filename:1;
   unsigned nsame;

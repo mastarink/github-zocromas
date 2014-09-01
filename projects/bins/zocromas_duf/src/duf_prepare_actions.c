@@ -6,42 +6,15 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
-
-
-/* #include "duf_types.h" */
 #include "duf_maintenance.h"
 
-#include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
-#include "duf_levinfo.h"
-
-#include "duf_options.h"
-/* #include "duf_cli_options.h" */
-
-
-#include "duf_sql.h"
-#include "duf_sql2.h"
-
-#include "duf_path.h"
-
 #include "duf_sccb.h"
-/* #include "duf_dir_scan1.h" */
-#include "duf_dir_scan2.h"
-
-
-/* #include "duf_uni_scan1.h" */
-#include "duf_uni_scan2.h"
 
 /* ###################################################################### */
 #include "duf_prepare_actions.h"
 /* ###################################################################### */
-
-
 
 
 

@@ -6,6 +6,8 @@
 
 
 int duf_make_all_sccbs( void );
+int duf_make_all_sccbs_msg( void );
+
 int duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges );
 
 /*

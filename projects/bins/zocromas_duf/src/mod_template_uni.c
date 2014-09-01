@@ -172,7 +172,6 @@ duf_scan_callbacks_t duf_template_callbacks = {
   .title = "module",
   .def_opendir = 0,
   .init_scan = template_scan_init,
-  .scan_mode_2 = 1,
 
   .node_scan_before2 = template_scan_node_before2,
   .node_scan_before2_deleted = template_scan_node_before2_deleted,
@@ -193,7 +192,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
 
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", dup5cnt AS nsame " /* */
            ", fd." DUF_SQL_IDNAME " AS filenameid" /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */

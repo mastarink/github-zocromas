@@ -4,18 +4,12 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
-/* #include "duf_types.h" */
 #include "duf_maintenance.h"
 
 
 #include "duf_config_ref.h"
 
-#include "duf_utils.h"
 #include "duf_utils_path.h"
-
-
-#include "duf_path.h"
 
 #include "duf_levinfo.h"
 #include "duf_pdi.h"

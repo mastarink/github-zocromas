@@ -68,7 +68,6 @@ NULL,};
 duf_scan_callbacks_t duf_integrity_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .scan_mode_2 = 1,
   .node_scan_before = NULL,
   .leaf_scan = NULL,
   /* filename for debug only */

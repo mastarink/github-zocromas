@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_UTILS_H
 #  define MAS_DUF_UTILS_H
 
+#include <time.h>
 /* #  include "duf_trace_types.h"   */
 /* #  include "duf_error_types.h"   */
 #  include "duf_ufilter_types.h"
@@ -25,5 +26,7 @@ int duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out
 
 
 void duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg );
+size_t duf_strflocaltime( char *s, size_t max, const char *format, time_t tim );
+size_t duf_strfgmtime( char *s, size_t max, const char *format, time_t tim );
 
 #endif

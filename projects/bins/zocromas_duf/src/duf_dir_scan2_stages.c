@@ -17,8 +17,6 @@
 
 #include "duf_item_scan2.h"
 
-/* #include "duf_path.h" */
-
 #include "duf_dirent_scan2.h"
 
 #include "duf_file_pathid2.h"

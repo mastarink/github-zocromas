@@ -10,7 +10,8 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_utils_path.h"
+#include "duf_utils.h"          /* duf_strfgmtime */
+#include "duf_utils_path.h"     /* duf_realpath */
 
 #include "duf_config_ref.h"
 
@@ -111,9 +112,10 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
 
     DEBUG_STEP(  );
 
-    total_files = duf_count_total_items( sccb, &rt );
+    total_files = duf_count_total_items( sccb, &rt ); /* reference */
     if ( rt >= 0 )
       di.total_files = total_files;
+
     DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", di.total_files );
     DUF_TRACE( explain, 0, "%llu files registered in db", di.total_files );
 
@@ -135,11 +137,10 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
 
 
       /* DUF_ERROR( "L%d", di.depth ); */
-      DUF_OINV_OPENED( di. );
       assert( di.depth >= 0 );
 
 
-/* duf_str_cb(1?)_uni_scan_dir:
+/* duf_str_cb2_uni_scan_dir:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
  *       for each <dir> record by top dirID (i.e. children of top dirID) with corresponding args 
  * otherwise do nothing
@@ -154,24 +155,12 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
  *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
-      DUF_OINV_OPENED( di. );
-
       if ( r >= 0 )
       {
-        DUF_TRACE( scan, 12, "before by_parentid" );
         DUF_TRACE( explain, 0, "to scan" );
-
         DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
         if ( !sccb->disabled )
-        {
-          if ( sccb->scan_mode_2 )
-            r = duf_scan_dirs_by_pi2_msg( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
-          else
-          {
-            /* r = duf_scan_dirs_by_parentid1( duf_str_cb1_uni_scan_dir, &di, sccb, ( duf_record_t * ) NULL (* precord *)  ); */
-            DUF_ERROR( "OBSOLETE sccb->scan_mode_2 == 0" );
-          }
-        }
+          r = duf_scan_dirs_by_pi2_msg( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
       }
       DUF_TEST_R( r );
     }
@@ -208,15 +197,183 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
   return r;
 }
 
+static int
+duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
+{
+  int r = 0;
+
+
+
+
+
+  if ( duf_config->u.size.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
+    /* DUF_PRINTF( 0, "binding size %llu .. %llu", duf_config->u.size.min, duf_config->u.size.max ); */
+  }
+  if ( duf_config->u.same.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
+  }
+  if ( duf_config->u.nameid.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minNameID, duf_config->u.nameid.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxNameID, duf_config->u.nameid.max, r, pstmt );
+  }
+  if ( duf_config->u.mtime.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minMTime, duf_config->u.mtime.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxMTime, duf_config->u.mtime.max, r, pstmt );
+#if 0
+    {
+      char buf1[512];
+      char buf2[512];
+
+      duf_strfgmtime( buf1, sizeof( buf1 ), "%a, %d %b %Y %T %z", ( time_t ) duf_config->u.mtime.min );
+      duf_strfgmtime( buf2, sizeof( buf2 ), "%a, %d %b %Y %T %z", ( time_t ) duf_config->u.mtime.max );
+      DUF_PRINTF( 0, "binding mtime %llu .. %llu: %s .. %s", duf_config->u.mtime.min, duf_config->u.mtime.max, buf1, buf2 );
+    }
+#endif
+  }
+  if ( duf_config->u.inode.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->u.inode.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->u.inode.max, r, pstmt );
+  }
+  if ( duf_config->u.md5id.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->u.md5id.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->u.md5id.max, r, pstmt );
+  }
+  if ( duf_config->u.sd5id.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.max, r, pstmt );
+  }
+  if ( duf_config->u.mimeid.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.max, r, pstmt );
+  }
+  if ( duf_config->u.exifid.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.max, r, pstmt );
+  }
+  return r;
+}
+
+/* 
+ * split from duf_scan_with_sccb  20140901.213744
+ * last function revision ...
+ * */
+static int
+duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
+{
+  int r = 0;
+  const char **psql = sccb->beginning_sql_argv;
+
+  while ( r >= 0 && psql && *psql )
+  {
+    int changes = 0;
+
+    DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
+    /* r = duf_sql( *p, &changes ); */
+
+    {
+      DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
+      r = duf_bind_ufilter( pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    }
+    DUF_TEST_R( r );
+    /* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, *psql, changes ); */
+    DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
+               psql - sccb->beginning_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
+    psql++;
+  }
+  return r;
+}
+
+/* 
+ * split from duf_scan_with_sccb  20140901.213803
+ * last function revision ...
+ * */
+int
+duf_scan_final_sql( duf_scan_callbacks_t * sccb, unsigned long long changes )
+{
+  int r = 0;
+
+  /* if ( changes ) */
+  {
+    const char **psql = sccb->final_sql_argv;
+
+    while ( r >= 0 && psql && *psql )
+    {
+      int changes = 0;
+
+      DUF_TRACE( action, 2, "final psql : %s", *psql );
+      /* r = duf_sql( *p, &changes ); */
+
+      {
+        DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
+        /* r = duf_sql_exec( *psql, &changes ); */
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      }
+      DUF_TEST_R( r );
+      /* DUF_TRACE( action, 2, "(%d) final psql %s; changes:%d", r, *psql, changes ); */
+      DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": final SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
+                 psql - sccb->final_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
+      psql++;
+    }
+  }
+  return r;
+}
+
+/* 
+ * split from duf_scan_with_sccb  20140901.214205
+ * last function revision ...
+ * */
+int
+duf_scan_cli_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
+{
+  int r = 0;
+
+  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( sccb ), duf_config->targc );
+  for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccb ), ia, duf_config->targv[ia] );
+  if ( duf_config->targc > 0 )
+    for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+      r = duf_uni_scan_from_path( duf_config->targv[ia], &duf_config->u, sccb, pchanges );
+  else
+    r = duf_uni_scan_from_path( NULL, &duf_config->u, sccb, pchanges );
+  DUF_TEST_R( r );
+
+  DUF_TRACE( action, 1, "after scan" );
+  if ( DUF_ACT_FLAG( summary ) )
+    DUF_PRINTF( 0, " summary; changes:%llu", *pchanges );
+  return r;
+}
+
 /*
- * sccb nz - sure
+ * sccb       nz - sure
  * duf_config nz - sure
+ *
+ * last function revision 20140901.214625:
+ *        split functions 
+ *                 duf_scan_beginning_sql
+ *                 duf_scan_cli_paths
+ *                 duf_scan_final_sql
 */
 static int
 duf_scan_with_sccb( duf_scan_callbacks_t * sccb )
 {
   int r = 0;
-  unsigned long long changes = 0;
 
   DEBUG_START(  );
 /*
@@ -225,8 +382,7 @@ TODO scan mode
   2. place ID's to temporary table, then scan in certain order
 */
   {
-    /*   int do1;
-       int do2; */
+    unsigned long long changes = 0;
 
     if ( sccb->init_scan )
     {
@@ -238,137 +394,19 @@ TODO scan mode
       DUF_TRACE( explain, 0, "no init scan" );
     }
 
-    {
-      const char **psql = sccb->beginning_sql_argv;
-
-      while ( r >= 0 && psql && *psql )
-      {
-        int changes = 0;
-
-        DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
-        /* r = duf_sql( *p, &changes ); */
-
-        {
-          DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-
-          if ( duf_config->u.size.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
-          }
-          if ( duf_config->u.same.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
-          }
-          if ( duf_config->u.nameid.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( minnameID, duf_config->u.nameid.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( maxnameID, duf_config->u.nameid.max, r, pstmt );
-          }
-          if ( duf_config->u.inode.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->u.inode.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->u.inode.max, r, pstmt );
-          }
-          if ( duf_config->u.md5id.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->u.md5id.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->u.md5id.max, r, pstmt );
-          }
-          if ( duf_config->u.sd5id.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->u.sd5id.max, r, pstmt );
-          }
-          if ( duf_config->u.mimeid.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->u.mimeid.max, r, pstmt );
-          }
-          if ( duf_config->u.exifid.flag )
-          {
-            DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.min, r, pstmt );
-            DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.max, r, pstmt );
-          }
-
-          /* r = duf_sql_exec( *psql, &changes ); */
-          DUF_SQL_STEP( r, pstmt );
-          DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-          DUF_SQL_END_STMT_NOPDI( r, pstmt );
-        }
-        DUF_TEST_R( r );
-        /* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, *psql, changes ); */
-        DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
-                   psql - sccb->beginning_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
-        psql++;
-      }
-    }
+    if ( r >= 0 )
+      r = duf_scan_beginning_sql( sccb );
+    DUF_TEST_R( r );
 
     DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( sccb ) );
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( sccb ) );
-/*
-    do1 = !sccb->disabled && ( !sccb->scan_mode_2 && ( sccb->node_scan_before 
-                                                       || sccb->node_scan_middle 
-                                                       || sccb->node_scan_after 
-                                                       || sccb->leaf_scan 
-                                                       || sccb->leaf_scan_fd 
-                                                       || sccb->dirent_file_scan_before 
-                                                       || sccb->dirent_dir_scan_before 
-                                ) );
-    do2 = !sccb->disabled && ( sccb->scan_mode_2 && ( sccb->node_scan_before2 
-                                                      || sccb->node_scan_middle2 
-                                                      || sccb->node_scan_after2 
-                                                      || sccb->leaf_scan2 
-                                                      || sccb->leaf_scan_fd2 
-                                                      || sccb->dirent_file_scan_before2 
-                                                      || sccb->dirent_dir_scan_before2 
-                                ) ); */
-    if ( r >= 0 /* && ( do2 || do1 ) */  )
-    {
-      DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( sccb ), duf_config->targc );
-      for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-        DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccb ), ia, duf_config->targv[ia] );
-      if ( duf_config->targc > 0 )
-        for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-          r = duf_uni_scan_from_path( duf_config->targv[ia], &duf_config->u, sccb, &changes );
-      else
-        r = duf_uni_scan_from_path( NULL, &duf_config->u, sccb, &changes );
-      DUF_TEST_R( r );
 
-      DUF_TRACE( action, 1, "after scan" );
-      if ( DUF_ACT_FLAG( summary ) )
-        DUF_PRINTF( 0, " summary; changes:%llu", changes );
-    }
-    else
-    {
-      DUF_TRACE( action, 0, "nothing defined for %s", duf_uni_scan_action_title( sccb ) );
-    }
-    /* if ( changes ) */
-    {
-      const char **psql = sccb->final_sql_argv;
-
-      while ( r >= 0 && psql && *psql )
-      {
-        int changes = 0;
-
-        DUF_TRACE( action, 2, "final psql : %s", *psql );
-        /* r = duf_sql( *p, &changes ); */
-
-        {
-          DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-          /* r = duf_sql_exec( *psql, &changes ); */
-          DUF_SQL_STEP( r, pstmt );
-          DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-          DUF_SQL_END_STMT_NOPDI( r, pstmt );
-        }
-        DUF_TEST_R( r );
-        /* DUF_TRACE( action, 2, "(%d) final psql %s; changes:%d", r, *psql, changes ); */
-        DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": final SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
-                   psql - sccb->final_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
-        psql++;
-      }
-    }
+    if ( r >= 0 )
+      r = duf_scan_cli_paths( sccb, &changes );
+    DUF_TEST_R( r );
+    if ( r >= 0 )
+      r = duf_scan_final_sql( sccb, changes );
+    DUF_TEST_R( r );
   }
   DEBUG_ENDR( r );
   return r;
@@ -376,12 +414,12 @@ TODO scan mode
 
 /*
  * duf_config nz - sure
+ * last function revision 20140901.212215
 */
 int
 duf_make_all_sccbs( void )
 {
   int r = 0;
-  duf_scan_callbacks_t **ppscan_callbacks;
 
   DEBUG_START(  );
 
@@ -390,29 +428,43 @@ duf_make_all_sccbs( void )
   DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
   {
     int max_asteps = 100;
+    int asteps = 0;
+    duf_scan_callbacks_t **ppscan_callbacks;
 
     ppscan_callbacks = mas_malloc( max_asteps * sizeof( duf_scan_callbacks_t * ) );
 
+    asteps += duf_set_actions( ppscan_callbacks + asteps, max_asteps - asteps );
+    asteps += duf_set_actions_sample( ppscan_callbacks + asteps, max_asteps - asteps );
+    if ( asteps )
+      DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
+    for ( int astep = 0; r >= 0 && astep < asteps; astep++ )
     {
-      int asteps = 0;
-
-      asteps += duf_set_actions( ppscan_callbacks + asteps, max_asteps - asteps );
-      asteps += duf_set_actions_sample( ppscan_callbacks + asteps, max_asteps - asteps );
-      if ( asteps )
-        DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
-      for ( int astep = 0; r >= 0 && astep < asteps; astep++ )
+      if ( ppscan_callbacks[astep] )
       {
-        if ( ppscan_callbacks[astep] )
-        {
-          DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
-          r = duf_scan_with_sccb( ppscan_callbacks[astep] /* sccb */  );
-          duf_config->actions_done++;
-        }
+        DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
+        r = duf_scan_with_sccb( ppscan_callbacks[astep] /* sccb */  );
+        duf_config->actions_done++;
       }
     }
+    mas_free( ppscan_callbacks );
   }
   if ( !duf_config->actions_done )
     r = DUF_ERROR_NO_ACTIONS;
+  DEBUG_ENDR( r );
+  return r;
+}
+
+/* 
+ * split from duf_make_all_sccbs  20140901.213001
+ * last function revision ...
+ * */
+int
+duf_make_all_sccbs_msg( void )
+{
+  int r;
+
+  DEBUG_START(  );
+  r = duf_make_all_sccbs(  );
   if ( r == DUF_ERROR_NO_ACTIONS )
   {
     char *optnames = NULL;
@@ -453,15 +505,14 @@ duf_make_all_sccbs( void )
     DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
     DUF_PUTSL( 0 );
     DUF_PUTSL( 0 );
-    mas_free( optnames );
     mas_free( dirent_optnames );
+    mas_free( optnames );
   }
 
   /* if ( r == DUF_ERROR_MAX_REACHED )                 */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */
   /*   DUF_ERROR( "code: %d", r );                     */
-  mas_free( ppscan_callbacks );
   DEBUG_ENDR( r );
   return r;
 }

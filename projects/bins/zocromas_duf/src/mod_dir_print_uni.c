@@ -305,20 +305,21 @@ static const char *beginning_sql[] = {
         "   LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         "   LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
         "      WHERE "          /* */
-        "  ( (:minSize    IS NULL OR fd.size>=:minSize)     AND (:maxSize   IS NULL OR fd.size<=:maxSize      ))  AND " /* */
-        "  ( (:minSame    IS NULL OR md.dup5cnt>=:minSame)  AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame   ))  AND " /* */
-        "  ( (:minInode   IS NULL OR fd.inode>=:minInode)   AND (:maxInode  IS NULL OR fd.inode<=:maxInode    ))  AND " /* */
-        "  ( (:min5ID     IS NULL OR fd.md5id>=:min5ID)     AND (:max5ID    IS NULL OR fd.md5id<=:max5ID      ))  AND " /* */
-        "  ( (:min2ID     IS NULL OR fd.sd5id>=:min2ID)     AND (:max2ID    IS NULL OR fd.sd5id<=:max2ID      ))  AND " /* */
-        "  ( (:minMimeID  IS NULL OR fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND " /* */
-        "  ( (:minExifID  IS NULL OR fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND " /* */
-        "  ( (:minnameID  IS NULL OR fn." DUF_SQL_IDNAME ">=:minnameID) AND (:maxnameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxnameID )) " /* */
+        "  ( (:minSize    IS NULL OR fd.size>=:minSize)     AND (:maxSize   IS NULL OR fd.size<=:maxSize      ))  AND" /* */
+        "  ( (:minSame    IS NULL OR md.dup5cnt>=:minSame)  AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame   ))  AND" /* */
+        "  ( (:minInode   IS NULL OR fd.inode>=:minInode)   AND (:maxInode  IS NULL OR fd.inode<=:maxInode    ))  AND" /* */
+        "  ( (:min5ID     IS NULL OR fd.md5id>=:min5ID)     AND (:max5ID    IS NULL OR fd.md5id<=:max5ID      ))  AND" /* */
+        "  ( (:min2ID     IS NULL OR fd.sd5id>=:min2ID)     AND (:max2ID    IS NULL OR fd.sd5id<=:max2ID      ))  AND" /* */
+        "  ( (:minMimeID  IS NULL OR fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND" /* */
+        "  ( (:minExifID  IS NULL OR fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND" /* */
+        "  ( (:minMTime   IS NULL OR fd.mtim>=datetime(:minMTime,'unixepoch')) AND " /* */
+	"                 (:maxMTime IS NULL OR fd.mtim<=datetime(:maxMTime,'unixepoch') )) AND" /* */
+        "  ( (:minNameID  IS NULL OR fn." DUF_SQL_IDNAME ">=:minNameID) AND (:maxNameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxNameID )) " /* */
         ,
 };
 
 duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = __FILE__ ".dir",
-  .scan_mode_2 = 1,
   .init_scan = NULL,
   .beginning_sql_argv = beginning_sql,
   /* .node_scan_before = scan_node_before, */
@@ -329,7 +330,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            "fn.Pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
            ", fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", fd." DUF_SQL_IDNAME " AS dataid " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid" /* */

@@ -20,14 +20,18 @@ typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, c
 
 typedef int ( *duf_scan_hook_dirent_reg_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi,
                                               duf_record_t * precord );
-typedef int ( *duf_scan_hook2_dirent_reg_t ) (  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat * pstat,
-                                               unsigned long long dirid, duf_depthinfo_t * pdi );
+/* typedef int ( *duf_scan_hook2_dirent_reg_t ) (  (* duf_sqlite_stmt_t * pstmt, *) const char *fname, const struct stat * pstat, */
+/*                                                unsigned long long dirid, duf_depthinfo_t * pdi );                              */
 
 
 typedef int ( *duf_scan_hook_dirent_dir_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid,
                                               duf_depthinfo_t * pdi, duf_record_t * precord );
-typedef int ( *duf_scan_hook2_dirent_dir_t ) (  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat * pstat,
-                                               unsigned long long dirid, duf_depthinfo_t * pdi );
+/* typedef int ( *duf_scan_hook2_dirent_dir_t ) (  (* duf_sqlite_stmt_t * pstmt, *) const char *fname, const struct stat * pstat, */
+/*                                                unsigned long long dirid, duf_depthinfo_t * pdi );                              */
+
+typedef int ( *duf_scan_hook2_dirent_t ) ( const char *fname, const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi );
+
+
 
 
 typedef int ( *duf_scan_hook_dirent_parent_t ) ( const struct stat * pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord );
@@ -68,7 +72,7 @@ typedef struct
 struct duf_scan_callbacks_s
 {
   unsigned def_opendir:1;
-  unsigned scan_mode_2:1;
+  /* unsigned scan_mode_2:1; */
   unsigned disabled:1;
   const char *title;
 
@@ -106,10 +110,12 @@ struct duf_scan_callbacks_s
   duf_scan_hook2_file_fd_t leaf_scan_fd2;
 
   duf_scan_hook_dirent_reg_t dirent_file_scan_before;
-  duf_scan_hook2_dirent_reg_t dirent_file_scan_before2;
+  /* duf_scan_hook2_dirent_reg_t dirent_file_scan_before2; */
+  duf_scan_hook2_dirent_t dirent_file_scan_before2;
 
   duf_scan_hook_dirent_dir_t dirent_dir_scan_before;
-  duf_scan_hook2_dirent_dir_t dirent_dir_scan_before2;
+  /* duf_scan_hook2_dirent_dir_t dirent_dir_scan_before2; */
+  duf_scan_hook2_dirent_t dirent_dir_scan_before2;
 
   const char **beginning_sql_argv;
   const char **final_sql_argv;

@@ -6,12 +6,10 @@
 #include <mastar/wrap/mas_memory.h>
 
 
-
 #include "duf_hook_types.h"
 #include "duf_maintenance.h"
 
 
-#include "duf_utils.h"
 #include "duf_dbg.h"
 #include "duf_config_ref.h"
 
@@ -25,8 +23,10 @@
 
 #include "duf_filedata.h"
 
-#include "duf_path.h"
 
+/* ###################################################################### */
+/* #include "duf_filenames_uni.h" */
+/* ###################################################################### */
 
 
 static int
@@ -168,13 +168,12 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .title = "filenames",
   .init_scan = NULL,
   .def_opendir = 1,
-  .scan_mode_2 = 1,
 
   /* .dirent_file_scan_before = filenames_entry_reg, */
   .dirent_file_scan_before2 = filenames_entry_reg2,
 
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", md.dup5cnt AS nsame" /* */

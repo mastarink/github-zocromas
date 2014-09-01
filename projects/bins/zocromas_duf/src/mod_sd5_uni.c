@@ -27,7 +27,6 @@
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-/* #include "duf_path.h" */
 
 #include "duf_sql_const.h"
 #include "duf_sql_defs.h"
@@ -305,7 +304,6 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
   .title = "collect sd5",
   .init_scan = NULL,
   .def_opendir = 1,
-  .scan_mode_2 = 1,
   /* .dirent_dir_scan_before = NULL, */
   /* .dirent_file_scan_before = NULL, */
   /* .node_scan_before = collect_openat_sd5_scan_node_before, */
@@ -315,7 +313,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            ", fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            ", fn.name AS filename, fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, mtim AS mtime, md.dup5cnt AS nsame " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime, md.dup5cnt AS nsame " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
@@ -339,7 +337,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            "    WHERE "         /* */
            " fd.sd5id IS NULL AND " /* */
            " sz.size > 0 AND "
-           /* " sz.dupzcnt > 1 AND "  (* *) */
+           /* "       sz.dupzcnt > 1 AND "  (* *) */
            " fn.Pathid=:dirID " /* */
            ,
            .selector_total2 =   /* */
@@ -349,8 +347,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
            " fd.sd5id IS NULL AND " /* */
+           /* "       sz.dupzcnt > 1 AND "      (* *) */
            " sz.size > 0  "
-           /* " AND sz.dupzcnt > 1 "      (* *) */
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */

@@ -269,7 +269,6 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
   .def_opendir = 1,
-  .scan_mode_2 = 1,
 
   .node_scan_before = sampupd_scan_node_before,
   .node_scan_before2 = sampupd_scan_node_before2,
@@ -286,7 +285,7 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
   .leaf_scan_fd2 = sampupd_scan_dirent_content2,
 
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", dup5cnt AS nsame" /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */

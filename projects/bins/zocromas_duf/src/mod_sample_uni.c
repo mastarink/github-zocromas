@@ -1,32 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
 
-/* #include <dirent.h> */
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 
-
 #include "duf_maintenance.h"
 
-
-#include "duf_utils.h"
 #include "duf_service.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 
-#include "duf_path.h"
-/* #include "duf_file.h" */
-
-/* #include "duf_sql_const.h" */
-/* #include "duf_sql.h" */
 #include "duf_sql_defs.h"
+
 #include "duf_sql_field.h"
 /* #include "duf_sql_field1.h" */
 
@@ -346,7 +337,6 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   .title = "sample mod",
   .init_scan = NULL,
   /* .def_opendir = 1, */
-  .scan_mode_2 = 1,
 
   /* .dirent_dir_scan_before = directories_entry_dir, */
   .dirent_dir_scan_before2 = sample_entry_dir2,
@@ -365,7 +355,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
 
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", dup5cnt AS nsame " /* */
            ", fd." DUF_SQL_IDNAME " AS filenameid" /* */
            ", fd.mode AS filemode" /* */

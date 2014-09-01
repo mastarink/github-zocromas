@@ -6,12 +6,17 @@
 
 int duf_show_options( const char *a0 );
 
-char *duf_restore_options( const char *a0 );
+char *duf_restore_some_options( const char *a0 );
 
 int duf_cli_option_by_string( const char *string );
 
+int duf_env_options_at_var( int argc, char *argv[], const char *envvarname );
 int duf_env_options( int argc, char *argv[] );
+
+int duf_infile_options_at_file( int argc, char *argv[], const char *filename );
 int duf_infile_options( int argc, char *argv[] );
+
+int duf_all_options( int argc, char *argv[] );
 
 int duf_find_long( duf_option_code_t code );
 
@@ -87,7 +92,6 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, fls) \
     case DUF_OPTION_FLAG_##up: \
        DUF_OPTION_ACQUIRE_FLAGG( lo, pref, fls.flag ); \
-    done = 1; \
     break
 #  define DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, pref) DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, .v)
 
@@ -122,13 +126,11 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_NUM( pref.lo ); \
-    done = 1; \
     break
 
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM_PLUS( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_NUM_PLUS( pref.lo ); \
-    done = 1; \
     break
 
 #  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, lo)      DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, cli.act)
@@ -151,7 +153,6 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define DUF_OPTION_CASE_ACQUIRE_TRACE(up, lo) \
     case DUF_OPTION_## up ##_TRACE: \
       DUF_OPTION_ACQUIRE_TRACE( lo ); \
-    done = 1; \
     break
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
@@ -167,7 +168,6 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define  DUF_OPTION_CASE_ACQUIRE_STR( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_STR( pref.lo ); \
-    done = 1; \
     break
 
 
@@ -180,7 +180,6 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 #  define  DUF_OPTION_CASE_ACQUIRE_ARG( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
       DUF_OPTION_ACQUIRE_ARG( pref.lo ); \
-    done = 1; \
     break
 
 #  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, lo, u)

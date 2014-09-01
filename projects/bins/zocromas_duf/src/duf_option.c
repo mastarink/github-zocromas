@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
+#include <time.h>
 #include <assert.h>
 
 /* #include <getopt.h> */
@@ -243,22 +244,72 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optarg )
   return r;
 }
 
-int
-duf_parse_option_long( int longindex, const char *optarg )
+unsigned long long
+duf_strtime2long( const char *s, int *pr )
+{
+  time_t t = 0;
+  int r = 0;
+  char *p = NULL;
+  struct tm tm;
+
+  {
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y-%m-%d %H:%M:%S", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y-%m-%d", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d.%H%M%S", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d.%H%M", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d.%H", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d", &tm );
+    }
+    tm.tm_zone = tzname[daylight];
+    tm.tm_isdst = daylight;
+    if ( p )
+      t = timelocal( &tm );
+    else
+      r = DUF_ERROR_OPTION_VALUE;
+  }
+  if ( pr )
+    *pr = r;
+  return ( unsigned long long ) t;
+}
+
+static duf_option_code_t
+duf_parse_option_long_typed( int longindex, const char *optarg, int *pr )
 {
   int r = 0;
-  int done = 0;
-  duf_option_code_t codeval;
   const duf_longval_extended_t *extended;
+  duf_option_code_t codeval = DUF_OPTION_NONE;
 
-  extended = duf_longindex_extended( longindex );
-  codeval = extended->o.val;
-  codeval = duf_config->longopts_table[longindex].val;
-  /* __attribute__ ( ( unused ) ) size_t loptarg = 0; */
   duf_option_class_t oclass = DUF_OPTION_CLASS_BAD;
 
   /* if ( optarg )                 */
   /*   loptarg = strlen( optarg ); */
+  extended = duf_longindex_extended( longindex );
+
+  /* codeval = extended->o.val; */
+  codeval = duf_config->longopts_table[longindex].val;
 
   oclass = duf_help_option2class( codeval );
 
@@ -270,155 +321,168 @@ duf_parse_option_long( int longindex, const char *optarg )
         mas_free( duf_config->help_string );
       duf_config->help_string = mas_strdup( optarg );
     }
-    r = codeval;
-    done = 1;
+    codeval = DUF_OPTION_NONE;
   }
-  if ( !done )
+  if ( codeval )
   {
     if ( extended->mf == 1 )
     {
-      unsigned *pi;
-      unsigned long long *pll;
-      unsigned short *pis;
-      duf_limits_t *li;
-      char **pstr;
       unsigned doplus = 0;
+      char *byteptr = ( ( ( char * ) duf_config ) + extended->m );
 
-      pi = ( unsigned * ) ( ( ( char * ) duf_config ) + extended->m );
-      pis = ( unsigned short * ) ( ( ( char * ) duf_config ) + extended->m );
-      pll = ( unsigned long long * ) ( ( ( char * ) duf_config ) + extended->m );
-      pstr = ( char ** ) ( ( ( char * ) duf_config ) + extended->m );
-      li = ( duf_limits_t * ) ( ( ( char * ) duf_config ) + extended->m );
+#define DUF_NUMOPT(typ,dopls,conv) \
+      { \
+        int rl = 0; \
+	typ *p; \
+	p = ( typ * ) byteptr; \
+	if ( optarg ) \
+	{ \
+	  ( *p ) = duf_ ## conv( optarg, &rl ); \
+	  codeval = DUF_OPTION_NONE; \
+	  if ( rl < 0 ) \
+	    r = DUF_ERROR_OPTION_VALUE; \
+	} \
+	else if ( dopls ) \
+	{ \
+	  ( *p )++; \
+	  codeval = DUF_OPTION_NONE; \
+	} \
+      }
+#define DUF_MINMAXOPT(typ,conv) \
+      { \
+        int rl = 0; \
+	typ *mm; \
+	mm= ( typ * ) byteptr; \
+	if ( optarg ) \
+	{ \
+	  mm->flag = 1; \
+	  mm->min = duf_ ## conv( optarg, &rl ); \
+	  mm->max = duf_ ## conv( optarg, &rl ); \
+	  codeval = DUF_OPTION_NONE; \
+	  if ( rl < 0 ) \
+	    r = DUF_ERROR_OPTION_VALUE; \
+	} \
+      }
+#define DUF_MOPT(typ,mix,conv) \
+      { \
+        int rl = 0; \
+	typ *mm; \
+	mm= ( typ * ) byteptr; \
+	if ( optarg ) \
+	{ \
+	  mm->flag = 1; \
+	  mm->mix = duf_ ## conv( optarg, &rl ); \
+	  codeval = DUF_OPTION_NONE; \
+	  if ( rl < 0 ) \
+	    r = DUF_ERROR_OPTION_VALUE; \
+	} \
+      }
+
+
+
       switch ( extended->vtype )
       {
       case DUF_OPTION_VTYPE_UPLUS:
         doplus = 1;
       case DUF_OPTION_VTYPE_NUM:
-        {
-          int rl = 0;
+        DUF_NUMOPT( unsigned, doplus, strtol );
 
-          {
-            if ( optarg )
-            {
-              ( *pi ) = duf_strtol( optarg, &rl );
-              done = 1;
-              if ( rl < 0 )
-                r = DUF_ERROR_OPTION_VALUE;
-            }
-            else if ( doplus )
-            {
-              ( *pi )++;
-              done = 1;
-            }
-          }                     /* r = codeval; */
-          /* DUF_PRINTF( 0, "T------------oc:%d; %d %lu/%lu '%s' :: %d/%d r(%d)", extended->oclass, extended->mf, extended->m, */
-          /*             offsetof( duf_config_cli_trace_t, scan ), extended->o.name, *pi, duf_config->cli.trace.scan, r );     */
-        }
+        break;
+      case DUF_OPTION_VTYPE_NL:
+        DUF_NUMOPT( unsigned long, 0, strtol );
+
         break;
       case DUF_OPTION_VTYPE_NLL:
-        {
-          int rl = 0;
+        DUF_NUMOPT( unsigned long long, 0, strtol );
 
-          {
-            if ( optarg )
-            {
-              ( *pll ) = duf_strtol( optarg, &rl );
-              done = 1;
-              if ( rl < 0 )
-                r = DUF_ERROR_OPTION_VALUE;
-            }
-            else if ( doplus )
-            {
-              ( *pll )++;
-              done = 1;
-            }
-          }                     /* r = codeval; */
-          /* DUF_PRINTF( 0, "T------------oc:%d; %d %lu/%lu '%s' :: %d/%d r(%d)", extended->oclass, extended->mf, extended->m, */
-          /*             offsetof( duf_config_cli_trace_t, scan ), extended->o.name, *pi, duf_config->cli.trace.scan, r );     */
-        }
         break;
       case DUF_OPTION_VTYPE_MIN:
+        DUF_MOPT( duf_limits_t, min, strtol );
+        break;
       case DUF_OPTION_VTYPE_MAX:
+        DUF_MOPT( duf_limits_t, max, strtol );
+        break;
       case DUF_OPTION_VTYPE_MINMAX:
-        {
-          int rl = 0;
-
-          {
-            if ( optarg )
-            {
-              unsigned n;
-
-              n = duf_strtol( optarg, &rl );
-              li->flag = 1;
-              if ( extended->vtype == DUF_OPTION_VTYPE_MIN || extended->vtype == DUF_OPTION_VTYPE_MINMAX )
-                li->min = n;
-              if ( extended->vtype == DUF_OPTION_VTYPE_MAX || extended->vtype == DUF_OPTION_VTYPE_MINMAX )
-                li->max = n;
-              done = 1;
-              if ( rl < 0 )
-                r = DUF_ERROR_OPTION_VALUE;
-            }
-            /* DUF_PRINTF( 0, "%u - %u", duf_config->u.same.min, duf_config->u.same.max ); */
-          }                     /* r = codeval; */
-        }
+        DUF_MINMAXOPT( duf_limits_t, strtol );
         break;
       case DUF_OPTION_VTYPE_MINLL:
+        DUF_MOPT( duf_limitsll_t, min, strtol );
+        break;
       case DUF_OPTION_VTYPE_MAXLL:
+        DUF_MOPT( duf_limitsll_t, max, strtol );
+        break;
       case DUF_OPTION_VTYPE_MINMAXLL:
-        {
-          int rl = 0;
-
-          {
-            if ( optarg )
-            {
-              unsigned long long n;
-
-              n = duf_strtol( optarg, &rl );
-              li->flag = 1;
-              if ( extended->vtype == DUF_OPTION_VTYPE_MINLL || extended->vtype == DUF_OPTION_VTYPE_MINMAXLL )
-                li->min = n;
-              if ( extended->vtype == DUF_OPTION_VTYPE_MAXLL || extended->vtype == DUF_OPTION_VTYPE_MINMAXLL )
-                li->max = n;
-              done = 1;
-              if ( rl < 0 )
-                r = DUF_ERROR_OPTION_VALUE;
-            }
-            /* DUF_PRINTF( 0, "%llu - %llu", duf_config->u.same.min, duf_config->u.same.max ); */
-          }                     /* r = codeval; */
-        }
+        DUF_MINMAXOPT( duf_limitsll_t, strtol );
         break;
         /* case DUF_OPTION_CLASS_DEBUG: */
         /* DUF_PRINTF( 0, "------------ %lu", extended->m ); */
         /* break; */
       case DUF_OPTION_VTYPE_FLAG:
         {
+          unsigned *pi;
+
+          pi = ( unsigned * ) byteptr;
           ( *pi ) |= extended->afl.bit;
-          done = 1;
+          codeval = DUF_OPTION_NONE;
         }
         break;
       case DUF_OPTION_VTYPE_SFLAG:
         {
+          unsigned short *pis;
+
+          pis = ( unsigned short * ) byteptr;
           ( *pis ) |= extended->afl.sbit;
-          done = 1;
+          codeval = DUF_OPTION_NONE;
         }
         break;
       case DUF_OPTION_VTYPE_STR:
         {
+          char **pstr;
+
+          pstr = ( char ** ) byteptr;
           if ( pstr && *pstr )
             mas_free( *pstr );
           *pstr = NULL;
           if ( optarg )
             *pstr = mas_strdup( optarg );
-          done = 1;
+          codeval = DUF_OPTION_NONE;
         }
+        break;
+      case DUF_OPTION_VTYPE_DATETIME:
+        DUF_NUMOPT( unsigned long long, 0, strtime2long );
+
+      case DUF_OPTION_VTYPE_MINMAXDATETIME:
+        DUF_MINMAXOPT( duf_limitsll_t, strtime2long );
+        break;
+      case DUF_OPTION_VTYPE_MINDATETIME:
+        DUF_MOPT( duf_limitsll_t, min, strtime2long );
+        break;
+      case DUF_OPTION_VTYPE_MAXDATETIME:
+        DUF_MOPT( duf_limitsll_t, max, strtime2long );
         break;
       }
     }
   }
+  if ( pr )
+    *pr = r;
+  return codeval;
+}
+
+int
+duf_parse_option_long( int longindex, const char *optarg )
+{
+  int r = 0;
+  duf_option_code_t codeval;
+
+  /* codeval = duf_config->longopts_table[longindex].val; */
+  codeval = duf_parse_option_long_typed( longindex, optarg, &r );
+
   /* DUF_PRINTF( 0, "############################### %x", extended->afl.bit ); */
-  if ( !done )
+  if ( r >= 0 )
     switch ( codeval )
     {
+    case DUF_OPTION_NONE:
+      break;
       /* case DUF_OPTION_SMART_HELP:     */
       /*                                 */
       /* case DUF_OPTION_HELP_ALL:       */
@@ -449,11 +513,9 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->help_string = mas_strdup( optarg );
       }
       r = codeval;
-      done = 1;
       break;
     case DUF_OPTION_TEST:
       DUF_PRINTF( 0, "This is test option output; optarg:%s", optarg ? optarg : "-" );
-      done = 1;
       break;
 /* */
       DUF_OPTION_CASE_ACQUIRE_NUM( OUTPUT_LEVEL, /*             */ level, /*     */ cli.output );
@@ -520,14 +582,12 @@ duf_parse_option_long( int longindex, const char *optarg )
 /* limits, filters, selectors */
       /* case DUF_OPTION_SIZE:                                                           */
       /*   r = duf_limitsll( optarg, &duf_config->u.size.min, &duf_config->u.size.max ); */
-      /*   done = 1;                                                                     */
       /*   break;                                                                        */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSIZE, (*            *) size.max (*     *)  ); */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSIZE, (*            *) size.min (*     *)  ); */
 
       /* case DUF_OPTION_SAME:                                                         */
       /*   r = duf_limits( optarg, &duf_config->u.same.min, &duf_config->u.same.max ); */
-      /*   done = 1;                                                                   */
       /*   break;                                                                      */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSAME, (*            *) same.max (*     *)  ); */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MINSAME, (*            *) same.min (*     *)  ); */
@@ -598,7 +658,6 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.file = NULL;
       }
       duf_config->cli.trace.out = stderr;
-      done = 1;
       break;
     case DUF_OPTION_TRACE_STDOUT:
       if ( duf_config->cli.trace.out )
@@ -613,16 +672,13 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.file = NULL;
       }
       duf_config->cli.trace.out = stdout;
-      done = 1;
       break;
     case DUF_OPTION_TRACE_FILE:
       r = duf_open_special( optarg, &duf_config->cli.trace.file, &duf_config->cli.trace.out );
-      done = 1;
       break;
 
     case DUF_OPTION_OUTPUT_FILE:
       r = duf_open_special( optarg, &duf_config->cli.output.file, &duf_config->cli.output.out );
-      done = 1;
       break;
 
 /* combined */
@@ -650,7 +706,6 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.scan++;
         duf_config->cli.trace.temp++;
       }
-      done = 1;
       break;
 
     case DUF_OPTION_FLAG_ZERO_DB:
@@ -674,7 +729,6 @@ duf_parse_option_long( int longindex, const char *optarg )
             DUF_ACT_FLAG( filedata ) = /* */
             DUF_ACT_FLAG( filenames ) = /* */
             1;
-      done = 1;
       break;
 
 /* specific */
@@ -733,7 +787,6 @@ duf_parse_option_long( int longindex, const char *optarg )
           [DUF_FORMAT_SUFFIX] = "suffix",
           [DUF_FORMAT_REALPATH] = "realpath",
           [DUF_FORMAT_SEQ] = "seq",
-          [DUF_FORMAT_TRUEPATH] = "truepath",
           [DUF_FORMAT_UID] = "uid",
           [DUF_FORMAT_MAX] = NULL,
         };
@@ -778,9 +831,6 @@ duf_parse_option_long( int longindex, const char *optarg )
             break;
           case DUF_FORMAT_NDIRS_SPACE:
             duf_config->cli.format.ndirs_space = value == NULL ? 1 : nvalue;
-            break;
-          case DUF_FORMAT_TRUEPATH:
-            duf_config->cli.format.truepath = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_REALPATH:
             duf_config->cli.format.realpath = value == NULL ? 1 : nvalue;
@@ -864,7 +914,6 @@ duf_parse_option_long( int longindex, const char *optarg )
       }
 
       DUF_TEST_R( r );
-      done = 1;
       break;
     case DUF_OPTION_MEMUSAGE:
       {
@@ -875,7 +924,6 @@ duf_parse_option_long( int longindex, const char *optarg )
           mas_mem_disable_print_usage = 0;
         }
       }
-      done = 1;
       break;
     default:
       r = DUF_ERROR_OPTION;

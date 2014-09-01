@@ -39,12 +39,20 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 
     if ( r < 0 )
     {
-      char serr[1024] = "";
-      char *s;
+      if ( errno == ENOENT )
+      {
+        DUF_ERROR( "No such entry %s", name );
+        r = DUF_ERROR_STATAT_ENOENT;
+      }
+      else
+      {
+        char serr[1024] = "";
+        char *s;
 
-      s = strerror_r( errno, serr, sizeof( serr ) );
-      DUF_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhandleup ? pdhandleup->dfd : 555 );
-      r = DUF_ERROR_STATAT;
+        s = strerror_r( errno, serr, sizeof( serr ) );
+        DUF_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhandleup ? pdhandleup->dfd : 555 );
+        r = DUF_ERROR_STATAT;
+      }
     }
   }
   else
@@ -203,8 +211,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
         DUF_ERROR( "close dfd:%d", pdhandle->dfd );
         r = DUF_ERROR_CLOSE;
       }
-      DUF_TRACE( fs, 0, "closed (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose,
-                 pdhandle->dfd );
+      DUF_TRACE( fs, 0, "closed (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose, pdhandle->dfd );
       duf_config->nclose++;
     }
     else

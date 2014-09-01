@@ -6,17 +6,12 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
 
-/* #include "duf_types.h" */
 #include "duf_maintenance.h"
 
 
-#include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config_ref.h"
 #include "duf_dh.h"
-
 
 
 #include "duf_pdi.h"
@@ -24,26 +19,6 @@
 /* ###################################################################### */
 #include "duf_levinfo.h"
 /* ###################################################################### */
-
-
-
-
-/* duf_dirhandle_t *                                                       */
-/* duf_levinfo_pdh( duf_depthinfo_t * pdi )                                */
-/* {                                                                       */
-/*   duf_dirhandle_t *pdhlev = NULL;                                       */
-/*                                                                         */
-/*   assert( pdi );                                                        */
-/*   (* if ( pdi->opendir ) *)                                             */
-/*   pdhlev = duf_levinfo_pdh_d( pdi->depth );                             */
-/*   return pdhlev;                                                        */
-/* }                                                                       */
-/* duf_dirhandle_t *                                                       */
-/* duf_levinfo_pdh_up( duf_depthinfo_t * pdi )                             */
-/* {                                                                       */
-/*   assert( pdi );                                                        */
-/*   return pdi->depth > 0 ? duf_levinfo_pdh_d( pdi, pdi->depth - 1 ) : 0; */
-/* }                                                                       */
 
 
 

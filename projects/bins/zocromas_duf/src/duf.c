@@ -1,3 +1,6 @@
+#include <string.h>
+#include <time.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -27,47 +30,7 @@
 #include "duf.h"
 /* ###################################################################### */
 
-static int
-duf_test_help( int argc, char **argv, duf_option_code_t codeval )
-{
-  int r = -1;
 
-  duf_option_class_t oclass = DUF_OPTION_CLASS_BAD;
-
-
-  oclass = duf_help_option2class( codeval );
-  /* DUF_PRINTF( 0, "%d / %c => OC:%d (?%d)", opt, opt > ' ' && opt <= 'z' ? opt : '?', oclass, DUF_OPTION_CLASS_ALL ); */
-  if ( oclass == DUF_OPTION_CLASS_ALL )
-  {
-    for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
-      duf_option_smart_help( oc );
-    r = 0;
-  }
-  else if (  /* oclass != DUF_OPTION_CLASS_NO_HELP && */ oclass != DUF_OPTION_CLASS_BAD )
-  {
-    duf_option_smart_help( oclass );
-    r = 0;
-  }
-  else
-    switch ( codeval )
-    {
-    case DUF_OPTION_VERSION:
-      duf_option_version( argc, argv );
-      r = 0;
-      break;
-    case DUF_OPTION_HELP:
-      duf_option_help( argc, argv );
-      r = 0;
-      break;
-    case DUF_OPTION_EXAMPLES:
-      duf_option_examples( argc, argv );
-      r = 0;
-      break;
-    default:
-      break;
-    }
-  return r;
-}
 
 unsigned long
 duf_config_act_flags_combo_t_bits( duf_config_act_flags_t f )
@@ -86,7 +49,6 @@ duf_main( int argc, char **argv )
   DUF_PRINTF( 0, "************************* %lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
               sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
               sizeof( unsigned long ), sizeof( unsigned long long ) );
-
   /* DUF_TRACE( any, 0, "r=%d", r ); */
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -101,23 +63,18 @@ duf_main( int argc, char **argv )
   /* DUF_TRACE( any, 0, "r=%d", r ); */
   if ( r >= 0 )
   {
-    int er = 0, fr = 0, or = 0;
-
     DUF_TRACE( any, 1, "any test" );
 
-    if ( r >= 0 )
-      er = r = duf_env_options( argc, argv );
-    DUF_TRACE( options, 0, "got env options; er:%d (%c)", er, er > ' ' && er < 'z' ? er : '-' );
-
-    if ( r >= 0 )
-      fr = r = duf_infile_options( argc, argv );
-    DUF_TRACE( options, 0, "got infile options; fr:%d (%c)", fr, fr > ' ' && fr < 'z' ? fr : '-' );
-
-    /* duf_config->cli.dbg.verbose = 4; */
-
-    if ( r >= 0 )
-      or = r = duf_cli_options( argc, argv );
-    DUF_TRACE( options, 0, "got cli options; or:%d (%c)", or, or > ' ' && or < 'z' ? or : '-' );
+    r = duf_all_options( argc, argv );
+    if ( r > 0 )
+    {
+      DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
+      r = main_db( argc, argv );
+      DUF_TEST_R( r );
+    }
+    DUF_PUTS( 0, "--------------------------------------------------" );
+    DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
+    DUF_PUTS( 0, "--------------------------------------------------" );
 
     if ( r >= 0 && DUF_IF_TRACE( options ) )
       r = duf_show_options( argv[0] );
@@ -137,28 +94,7 @@ duf_main( int argc, char **argv )
     }
 
     DUF_TEST_RN( r );
-    DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
-    if ( duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
-    {
-      if ( r == 0 && duf_config->db.dir )
-      {
-        DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
-        r = main_db( argc, argv );
-        DUF_TEST_R( r );
-      }
-      else if ( r > 0 )
-      {
-        DUF_TRACE( explain, 1, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
-        /* r=0; */
-      }
-      DUF_PUTS( 0, "--------------------------------------------------" );
-      DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
-      DUF_PUTS( 0, "--------------------------------------------------" );
-    }
-    else
-    {
-      r = 0;
-    }
+
     DUF_TEST_R( r );
     duf_config_delete(  );
   }
@@ -191,5 +127,7 @@ duf_main( int argc, char **argv )
 int
 main( int argc, char **argv )
 {
+  /* setenv( "TZ", "Europe/Kiev", 0 ); */
+  tzset();
   return duf_main( argc, argv );
 }

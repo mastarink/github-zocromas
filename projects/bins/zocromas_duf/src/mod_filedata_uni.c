@@ -320,7 +320,6 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .title = "filedata",
   .init_scan = NULL,
   .def_opendir = 1,
-  .scan_mode_2 = 1,
 
   /* .node_scan_before = filedata_scan_node_before, */
   /* .node_scan_before2 = filedata_scan_node_before2, */
@@ -345,7 +344,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 
 
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", dup5cnt AS nsame" /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid, fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */

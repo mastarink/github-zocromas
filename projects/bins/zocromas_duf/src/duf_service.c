@@ -13,11 +13,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include <mastar/tools/mas_arg_tools.h> */
-
 #include "duf_maintenance.h"
-
-#include "duf_utils.h"
 
 #include "duf_levinfo.h"
 
@@ -26,14 +22,15 @@
 #include "duf_uni_scan.h"
 #include "duf_uni_scan2.h"
 
-/* #include "duf_sccb.h" */
 /* #include "duf_dir_scan1.h" */
 #include "duf_dir_scan2.h"
 
 /* #include "duf_item_scan1.h" */
 #include "duf_item_scan2.h"
 
-#include "duf_path.h"
+/* #include "duf_path2db.h" */
+#include "duf_db2path.h"
+
 
 /* ###################################################################### */
 #include "duf_service.h"
@@ -319,21 +316,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_t *
     pmtimetm = localtime_r( &mtimet, &mtimetm );
     strftime( mtimes, sizeof( mtimes ), "%b %d %Y %H:%M:%S", pmtimetm );
     DUF_DEBUG( 2, DUF_PRINTF( 0, ".{mtime}" ) );
-    DUF_PRINTF( 0, ".m%-s ", mtimes );
-    ok++;
-  }
-  DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );
-
-  if ( duf_config->cli.format.truepath && ( !format || format->truepath ) )
-  {
-    int r = 0;
-    char *true_path = NULL;
-
-    true_path = duf_pathid_to_path2( pfi->truedirid, pdi, &r );
-    DUF_DEBUG( 2, DUF_PRINTF( 0, ".{true_path}" ) );
-    DUF_PRINTF( 0, ".%s", true_path );
-    if ( true_path )
-      mas_free( true_path );
+    DUF_PRINTF( 0, ". %-s (%lu) ", mtimes, mtimet );
     ok++;
   }
   DUF_DEBUG( 3, DUF_PRINTF( 0, ".▣" ) );

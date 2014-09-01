@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <assert.h>
-#include <openssl/md5.h>
+/* #include <openssl/md5.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -13,15 +13,12 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_utils.h"
+/* #include "duf_utils.h" */
 #include "duf_service.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
-
-#include "duf_path.h"
-/* #include "duf_file.h" */
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -221,13 +218,13 @@ duf_scan_callbacks_t duf_collect_mdpath_callbacks = {
   .init_scan = NULL,
   .disabled = 1,
   /* FIXME : convert to mode 2 */
-  .scan_mode_2 = 0,
+  /* .scan_mode_2 = 0, */
   .node_scan_before = mdpath_scan_node_before,
   .node_scan_after = mdpath_scan_node_after,
   .leaf_scan = mdpath_scan_leaf,
   .leaf_fieldset = "fn.Pathid AS dirid " /* */
         ",fn.name AS filename, fd.size AS filesize" /* */
-        ", uid, gid, nlink, inode, mtim AS mtime " /* */
+        ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
         ", dup5cnt AS nsame"   /* */
         ", fn." DUF_SQL_IDNAME " AS filenameid" /* */
         ", fd.mode AS filemode, md.md5sum1, md.md5sum2" /* */

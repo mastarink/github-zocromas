@@ -9,11 +9,12 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_print_defs.h"
+/* #include "duf_print_defs.h" */
 
-/* #include "duf_types.h" */
-#include "duf_utils.h"
+/* #include "duf_utils.h" */
 #include "duf_service.h"
+
+#include "duf_cli_options.h"
 
 /* #include "duf_config.h" */
 #include "duf_config_ref.h"
@@ -328,16 +329,15 @@ duf_cli_option_by_string( const char *string )
 }
 
 int
-duf_env_options( int argc, char *argv[] )
+duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
 {
   int r = 0;
   const char *eo = NULL;
   const char *peo, *e;
-  const char *varname = "MSH_DUF_OPTIONS";
 
-  eo = getenv( "MSH_DUF_OPTIONS" );
+  eo = getenv( envvarname );
 
-  DUF_TRACE( options, 0, "getting env options from variable %s", varname );
+  DUF_TRACE( options, 0, "getting env options from variable %s", envvarname );
   peo = eo;
   while ( peo && *peo )
   {
@@ -369,13 +369,21 @@ duf_env_options( int argc, char *argv[] )
     mas_free( s );
     peo = e;
     /* DUF_TRACE( explain, 0, "env peo \"%s\"", peo ); */
-    DUF_TRACE( explain, 0, "got env options from %s", varname );
+    DUF_TRACE( explain, 0, "got env options from %s", envvarname );
   }
   return r;
 }
 
+int
+duf_env_options( int argc, char *argv[] )
+{
+  const char *varname = "MSH_DUF_OPTIONS";
+
+  return duf_env_options_at_var( argc, argv, varname );
+}
+
 static FILE *
-duf_infile( int dot, const char *at )
+duf_infile( int dot, const char *at, const char *filename )
 {
   FILE *f = NULL;
   char *cfgpath = NULL;
@@ -384,7 +392,7 @@ duf_infile( int dot, const char *at )
   cfgpath = mas_strcat_x( cfgpath, "/" );
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
-  cfgpath = mas_strcat_x( cfgpath, DUF_CONFIG_FILE_NAME );
+  cfgpath = mas_strcat_x( cfgpath, filename );
   DUF_TRACE( options, 0, "opening conf file %s", cfgpath );
   if ( cfgpath )
   {
@@ -401,21 +409,18 @@ duf_infile( int dot, const char *at )
 }
 
 int
-duf_infile_options( int argc, char *argv[] )
+duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, const char *filename )
 {
   int r = 0;
-  const char *h = NULL;
   FILE *f = NULL;
 
-  h = getenv( DUF_CONFIG_PATH_FROM_ENV );
-  DUF_TRACE( options, 0, "getting variable " DUF_CONFIG_PATH_FROM_ENV " value for config path : %s", h );
-  if ( h )
-    f = duf_infile( 0, h );
+  if ( cfgdir )
+    f = duf_infile( 0, cfgdir, filename );
   if ( !f )
   {
-    h = getenv( "HOME" );
-    DUF_TRACE( options, 0, "getting variable HOME value for config path (secondary) : %s", h );
-    f = duf_infile( 1, h );
+    cfgdir = getenv( "HOME" );
+    DUF_TRACE( options, 0, "getting variable HOME value for config path (secondary) : %s", cfgdir );
+    f = duf_infile( 1, cfgdir, filename );
   }
   DUF_TRACE( explain, 0, "to read config file" );
   while ( r >= 0 && f && !feof( f ) )
@@ -441,8 +446,27 @@ duf_infile_options( int argc, char *argv[] )
   }
   if ( f )
     fclose( f );
+  return r;
+}
+
+int
+duf_infile_options_at_file( int argc, char *argv[], const char *filename )
+{
+  int r = 0;
+  const char *cfgdir = NULL;
+
+  cfgdir = getenv( DUF_CONFIG_PATH_FROM_ENV );
+  DUF_TRACE( options, 0, "getting variable " DUF_CONFIG_PATH_FROM_ENV " value for config path : %s", cfgdir );
+  r = duf_infile_options_at_dir_and_file( argc, argv, cfgdir, filename );
+
   DUF_TEST_R( r );
   return r;
+}
+
+int
+duf_infile_options( int argc, char *argv[] )
+{
+  return duf_infile_options_at_file( argc, argv, DUF_CONFIG_FILE_NAME );
 }
 
 static int
@@ -457,6 +481,90 @@ _duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value, int maxl
     }
   }
   return 0;
+}
+
+static int
+duf_test_help( int argc, char **argv, duf_option_code_t codeval )
+{
+  int r = -1;
+
+  duf_option_class_t oclass = DUF_OPTION_CLASS_BAD;
+
+
+  oclass = duf_help_option2class( codeval );
+  /* DUF_PRINTF( 0, "%d / %c => OC:%d (?%d)", opt, opt > ' ' && opt <= 'z' ? opt : '?', oclass, DUF_OPTION_CLASS_ALL ); */
+  if ( oclass == DUF_OPTION_CLASS_ALL )
+  {
+    for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
+      duf_option_smart_help( oc );
+    r = 0;
+  }
+  else if (  /* oclass != DUF_OPTION_CLASS_NO_HELP && */ oclass != DUF_OPTION_CLASS_BAD )
+  {
+    duf_option_smart_help( oclass );
+    r = 0;
+  }
+  else
+    switch ( codeval )
+    {
+    case DUF_OPTION_VERSION:
+      duf_option_version( argc, argv );
+      r = 0;
+      break;
+    case DUF_OPTION_HELP:
+      duf_option_help( argc, argv );
+      r = 0;
+      break;
+    case DUF_OPTION_EXAMPLES:
+      duf_option_examples( argc, argv );
+      r = 0;
+      break;
+    default:
+      break;
+    }
+  return r;
+}
+
+int
+duf_all_options( int argc, char *argv[] )
+{
+  int r = 0, er = 0, fr = 0, or = 0;
+
+  if ( r >= 0 )
+    er = r = duf_env_options( argc, argv );
+  DUF_TRACE( options, 0, "got env options; er:%d (%c)", er, er > ' ' && er < 'z' ? er : '-' );
+
+  if ( r >= 0 )
+    fr = r = duf_infile_options( argc, argv );
+  DUF_TRACE( options, 0, "got infile options; fr:%d (%c)", fr, fr > ' ' && fr < 'z' ? fr : '-' );
+
+  if ( r >= 0 )
+    or = r = duf_cli_options( argc, argv );
+  DUF_TRACE( options, 0, "got cli options; or:%d (%c)", or, or > ' ' && or < 'z' ? or : '-' );
+
+
+
+  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
+  if ( duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
+  {
+    r = 1;
+    if ( r == 0 && duf_config->db.dir )
+    {
+      DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
+      r = 1;
+    }
+    else if ( r > 0 )
+    {
+      DUF_TRACE( explain, 1, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
+      /* r=0; */
+    }
+  }
+  else
+  {
+    r = 0;
+  }
+
+  return r;
 }
 
 static int
@@ -490,7 +598,7 @@ _duf_restore_option_b( char *ptr, duf_option_code_t codeval, int value, int maxl
 }
 
 void
-duf_restore_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
+duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
 {
   /* most probably not all options mentioned here - FIXME */
   DUF_OPTION_RESTORE_NUM( codeval, ptr, VERBOSE, verbose, cli.dbg, maxlen );
@@ -592,7 +700,7 @@ duf_show_options( const char *a0 )
 #define BUFSZ 1024 * 4
     char buffer[BUFSZ] = "";
 
-    duf_restore_option( buffer, codeval, BUFSZ );
+    duf_restore_some_option( buffer, codeval, BUFSZ );
     if ( *buffer )
     {
       seq++;
@@ -604,7 +712,7 @@ duf_show_options( const char *a0 )
 }
 
 char *
-duf_restore_options( const char *a0 )
+duf_restore_some_options( const char *a0 )
 {
   char *str;
 
@@ -614,7 +722,7 @@ duf_restore_options( const char *a0 )
 #define BUFSZ 1024 * 4
     char buf[BUFSZ] = "";
 
-    duf_restore_option( buf, codeval, BUFSZ );
+    duf_restore_some_option( buf, codeval, BUFSZ );
     if ( *buf )
     {
       /* str = mas_strcat_x( str, " @[ " ); */
@@ -965,7 +1073,6 @@ duf_option_examples( int argc, char **argv )
               "" );
   DUF_PRINTF( 0, "  run  -OPRdEifndD -532Xe /mnt/new_media/media/photo/ --trace-options		- %s", "" );
   DUF_PRINTF( 0, "  run --print -Rdf --max-depth=2   /mnt/new_media/media/photo/		- %s", "" );
-  DUF_PRINTF( 0, "=============================================================" );
   DUF_PRINTF( 0, "========================= as for 20140831 ===================" );
 
   DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf		- %s", "" );
@@ -974,6 +1081,12 @@ duf_option_examples( int argc, char **argv )
   DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf --nameid=10000		- %s", "" );
   DUF_PRINTF( 0, "  run   /mnt/new_media/media/photo/  -Rpdf --size=181684411		- %s", "" );
   DUF_PRINTF( 0, "  run  -OPRdEifndD -523Xe /mnt/new_media/media/photo/		- %s", "" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20140901 ===================" );
+  DUF_PRINTF( 0,
+              "  run  /mnt/new_media/media/photo/  -Rpdf --format=human=0,mtime,nameid=0,dirid=0,inode=0,md5=0 "
+              "--min-mtime=\"'1999-01-01 00:00:00'\" --max-mtime=\"'2002-08-2 00:00:00'\" 		- %s", "" );
 
   DUF_PRINTF( 0, "=============================================================" );
 }
@@ -985,7 +1098,7 @@ duf_option_version( int argc, char **argv )
   char *sargv1, *sargv2;
 
   sargv1 = mas_argv_string( argc, argv, 1 );
-  sargv2 = duf_restore_options( argv[0] );
+  sargv2 = duf_restore_some_options( argv[0] );
 
   DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
   DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );

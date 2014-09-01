@@ -29,7 +29,8 @@
 
 #include "duf_filedata.h"
 
-#include "duf_path.h"
+#include "duf_path2db.h" /* duf_insert_path_uni2 */
+
 
 
 
@@ -114,14 +115,13 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .title = "directories",
   .init_scan = NULL,
   .def_opendir = 1,
-  .scan_mode_2 = 1,
   /* .dirent_dir_scan_before = directories_entry_dir, */
   .dirent_dir_scan_before2 = directories_entry_dir2,
 
 
   /* filename for debug only */
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, mtim AS mtime " /* */
+           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", md.dup5cnt AS nsame, md.md5sum1, md.md5sum2 " /* */
