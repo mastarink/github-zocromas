@@ -19,17 +19,63 @@ function! MasGo( line, col )
   return ''
 endfunction
 
-function! MasGoTag ()
-  exec 'tag ' . expand('<cword>')
-  let cup=getpos('.')
-  let bn=bufnr('%')
-" exec 'normal '
-" echo expand('<cword>')
-" normal bywp
-" exec 'normal '
-  pop
-  exec 'tab drop #' . bn
-  call setpos('.', cup)
+function! MasGoTag2 ()
+  let tl=taglist(expand('<cword>'))
+  try
+    for t in tl
+      let bn = bufnr( t.filename )
+"     echo t.name . ' ' . bn 
+"     echo t.cmd
+      if bn > 0
+	try
+	  execute 'tab drop #' . bn
+	catch
+	  echoerr "MasGoTag2: tab drop error"
+	endtry
+"       if search( t.cmd ) > 0
+"         echo "A: " . t.cmd
+"       else
+"         echo "B: " . t.cmd
+"       endif
+	set wrapscan
+	set nomagic
+	set noignorecase
+	execute t.cmd
+      else
+	echoerr "MasGoTag2: not in this set 1"
+      endif
+      break
+    endfor
+  catch
+    echoerr "MasGoTag2: not in this set 2"
+  endtry
+endfunction
+
+function! MasGoTag1 ()
+  try
+    exec 'tag ' . expand('<cword>')
+      let cup=getpos('.')
+      let bn=bufnr('%')
+"     exec 'normal '
+"     echo expand('<cword>')
+"     normal bywp
+"     exec 'normal '
+    pop
+    echo "buffer" . bn
+    if bn > 0
+      try
+	exec 'tab drop #' . bn
+	call setpos('.', cup)
+      catch
+	echoerr "MasGoTag1 tab drop error"
+      endtry
+    else
+      echoerr "not in this set"
+    endif
+  catch
+    echoerr "MasGoTag1 tag error"
+    pop
+  endtry
 endfunction
 
 

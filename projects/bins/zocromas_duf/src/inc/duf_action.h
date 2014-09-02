@@ -2,6 +2,6 @@
 #  define DUF_ACTION_H
 
 
-int duf_action_new( int argc, char **argv );
+int duf_action( int argc, char **argv );
 
 #endif

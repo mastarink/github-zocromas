@@ -93,7 +93,7 @@ duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 
       DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 10, "+" );
-      r = duf_scan_dirs_by_pi2_msg( pstmt, duf_str_cb2_uni_scan_dir, pdi, sccb );
+      r = duf_scan_dirs_by_pi2_wrap( pstmt, duf_str_cb2_uni_scan_dir, pdi, sccb );
     }
     else
     {

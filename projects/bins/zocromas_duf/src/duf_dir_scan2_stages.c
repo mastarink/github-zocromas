@@ -160,7 +160,6 @@ duf_qscan_node_scan_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
     pdi->items.total++;
     pdi->items.dirs++;
 
-    DUF_OINV_OPENED( pdi-> );
     if ( duf_levinfo_item_deleted( pdi ) )
     {
       if ( sccb->node_scan_before2_deleted )
@@ -212,13 +211,11 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 2." );
     if ( r >= 0 && sccb->leaf_scan_fd2 )
     {
-      DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves_scan2 fd   by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 
       /* duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd */
       r = duf_scan_files_by_dirid2( duf_str_cb2_scan_file_fd, pdi, sccb );
 
-      DUF_OINV_OPENED( pdi-> );
       DUF_TEST_R( r );
     }
     else
@@ -227,12 +224,10 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf
     }
     if ( r >= 0 && sccb->leaf_scan2 )
     {
-      DUF_OINV_OPENED( pdi-> );
       DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves_scan2 ..   by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 /* duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan */
       r = duf_scan_files_by_dirid2( duf_str_cb2_leaf_scan, pdi, sccb );
 
-      DUF_OINV_OPENED( pdi-> );
       DUF_TEST_R( r );
     }
     else
@@ -264,7 +259,6 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
   diridpdi = duf_levinfo_dirid( pdi );
   if ( DUF_ACT_FLAG( dirs ) )
   {
-    DUF_OINV_OPENED( pdi-> );
     if ( duf_levinfo_item_deleted( pdi ) )
     {
       if ( sccb->node_scan_middle2_deleted )
@@ -315,7 +309,6 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 /* duf_scan_db_items2:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
-  DUF_OINV_OPENED( pdi-> );
 
   DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan node selector2: [%s]", duf_pdi_depth( pdi ), sccb->node.selector2 );
 
@@ -350,7 +343,6 @@ duf_qscan_node_scan_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, du
   diridpdi = duf_levinfo_dirid( pdi );
   if ( DUF_ACT_FLAG( dirs ) )
   {
-    DUF_OINV_OPENED( pdi-> );
     if ( duf_levinfo_item_deleted( pdi ) )
     {
       if ( sccb->node_scan_after2_deleted )

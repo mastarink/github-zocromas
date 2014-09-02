@@ -15,6 +15,7 @@ tab sfind libzocgrep.bash
 tab sfind libzocserver.bash
 
 tab sfind doall.sh
+sfind doobj.sh
 sfind doprj.sh
 sfind draft1.sh
 sfind draft2.sh

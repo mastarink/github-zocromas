@@ -1,5 +1,4 @@
-/* #include <stdio.h> */
-/* #include <stdlib.h> */
+/* File #3 20140902.124011 */
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
@@ -69,6 +68,7 @@ duf_info_from_db( int count, const char *sql )
   return tuple;
 }
 
+/* last function revision 20140902.124219   */
 int
 main_db( int argc, char **argv )
 {
@@ -82,6 +82,7 @@ main_db( int argc, char **argv )
   {
     DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", duf_config->db.dir, duf_config->db.main.name );
     r = 0;
+    /* TODO move db.main.fpath and db.adm.fpath from duf_config to tmp etc. - it's not config values */
     /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.main.name ); */
     duf_config->db.main.fpath = mas_strdup( duf_config->db.dir );
     duf_config->db.main.fpath = mas_strcat_x( duf_config->db.main.fpath, "/" );
@@ -200,7 +201,7 @@ main_db( int argc, char **argv )
       DUF_TRACE( explain, 0, "to do actions" );
       DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
       if ( r >= 0 )
-        r = duf_action_new( argc, argv );
+        r = duf_action( argc, argv );
       if ( duf_config->cli.act.v.flag.info )
       {
         duf_infodata_t infod[] = {

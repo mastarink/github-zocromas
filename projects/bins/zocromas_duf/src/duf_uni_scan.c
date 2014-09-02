@@ -55,7 +55,7 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
 
     r = 0;
     sqlt = mas_strdup( "SELECT " );
-    sqlt = mas_strcat_x( sqlt, "count(*) AS nf" );
+    sqlt = mas_strcat_x( sqlt, "COUNT(*) AS nf" );
     sqlt = mas_strcat_x( sqlt, " " );
     sqlt = mas_strcat_x( sqlt, sccb->leaf.selector_total2 );
     csql = sqlt;
@@ -83,8 +83,8 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  */
-int
-duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
+static int
+duf_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
   int r = 0;
   char *real_path = NULL;
@@ -119,7 +119,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
     DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", di.total_files );
     DUF_TRACE( explain, 0, "%llu files registered in db", di.total_files );
 
-    r = duf_pdi_init_msg( &di, real_path, 0 );
+    r = duf_pdi_init_wrap( &di, real_path, 0 );
 
     /* create level-control array, open 0 level */
     DUF_SCCB( DUF_TRACE, action, 2, "di.levinfo  %c", di.levinfo ? '+' : '-' );
@@ -160,7 +160,7 @@ duf_uni_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks
         DUF_TRACE( explain, 0, "to scan" );
         DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
         if ( !sccb->disabled )
-          r = duf_scan_dirs_by_pi2_msg( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
+          r = duf_scan_dirs_by_pi2_wrap( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
       }
       DUF_TEST_R( r );
     }
@@ -339,8 +339,8 @@ duf_scan_final_sql( duf_scan_callbacks_t * sccb, unsigned long long changes )
  * split from duf_scan_with_sccb  20140901.214205
  * last function revision ...
  * */
-int
-duf_scan_cli_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
+static int
+duf_scan_argv_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
   int r = 0;
 
@@ -349,9 +349,9 @@ duf_scan_cli_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccb ), ia, duf_config->targv[ia] );
   if ( duf_config->targc > 0 )
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      r = duf_uni_scan_from_path( duf_config->targv[ia], &duf_config->u, sccb, pchanges );
+      r = duf_scan_from_path( duf_config->targv[ia], &duf_config->u, sccb, pchanges );
   else
-    r = duf_uni_scan_from_path( NULL, &duf_config->u, sccb, pchanges );
+    r = duf_scan_from_path( NULL, &duf_config->u, sccb, pchanges );
   DUF_TEST_R( r );
 
   DUF_TRACE( action, 1, "after scan" );
@@ -367,7 +367,7 @@ duf_scan_cli_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
  * last function revision 20140901.214625:
  *        split functions 
  *                 duf_scan_beginning_sql
- *                 duf_scan_cli_paths
+ *                 duf_scan_argv_paths
  *                 duf_scan_final_sql
 */
 static int
@@ -402,7 +402,7 @@ TODO scan mode
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( sccb ) );
 
     if ( r >= 0 )
-      r = duf_scan_cli_paths( sccb, &changes );
+      r = duf_scan_argv_paths( sccb, &changes );
     DUF_TEST_R( r );
     if ( r >= 0 )
       r = duf_scan_final_sql( sccb, changes );
@@ -459,7 +459,7 @@ duf_make_all_sccbs( void )
  * last function revision ...
  * */
 int
-duf_make_all_sccbs_msg( void )
+duf_make_all_sccbs_wrap( void )
 {
   int r;
 

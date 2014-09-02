@@ -79,7 +79,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 }
 
 int
-duf_pdi_init_msg( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 {
   int r = 0;
 

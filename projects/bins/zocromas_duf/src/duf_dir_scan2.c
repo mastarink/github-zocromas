@@ -27,31 +27,35 @@
 
 
 
-/* duf_scan_dir_by_pi:
- * call duf_scan_db_items with str_cb + pdi (also) as str_cb_udata and <path> sql
- *   i.e. call str_cb + str_cb_udata 
- *        for each record by standard <path> sql by dirID (i.e. children of dirID) with  corresponding args
+/* duf_scan_dir_by_pi2:
+				     * call duf_scan_db_items2 with str_cb + pdi (also) as str_cb_udata and <path> sql
+				     *   i.e. call str_cb + str_cb_udata
+				     *        for each record by standard <path> sql by dirID (i.e. children of dirID) with  corresponding args
+				     *
+				     *
+				     * also call duf_scan_files_by_pathid wirh sccb->leaf_scan
+				     *   i.e. call sccb->leaf_scan + pdi (also) as str_cb_udata
+				     *        for each <file> record by dirID (i.e. children of dirID) with corresponding args
+				     *
+				     * i.e.
+				     *     1. for <current> dir call sccb->node_scan_before
+				     *     2. for each file in <rrent> dir call sccb->leaf_scan
+				     *     3. for <current> dir call sccb->node_scan_middle
+				     *     4. for each dir in <current> dir call str_cb + str_cb_udata
+				     *     5. for <current> dir call sccb->node_scan_after
+				     *
  *
+ * consecutively call various scanner stages
  *
- * also call duf_scan_files_by_pathid wirh sccb->leaf_scan
- *   i.e. call sccb->leaf_scan + pdi (also) as str_cb_udata 
- *        for each <file> record by dirID (i.e. children of dirID) with corresponding args
- *
- * i.e.
- *     1. for <current> dir call sccb->node_scan_before
- *     2. for each file in <rrent> dir call sccb->leaf_scan
- *     3. for <current> dir call sccb->node_scan_middle
- *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->node_scan_after
- *
- * known str_cb for duf_scan_dir_by_pi:
- *   duf_str_cb_uni_scan_dir
- *
- *
- * str_cb2 (sub-item scanner):
+ * args:
+ *   pstmt: sql(ite) prepared statement
+ *   str_cb2: (sub-item scanner) one of:
  *       duf_str_cb2_uni_scan_dir
  *     ( duf_str_cb2_leaf_scan    )
  *     ( duf_str_cb2_scan_file_fd )
+ *   pdi:  depthinfo structure ptr
+ *   sccb: module callbacs structure
+ *
  * */
 static int
 duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
@@ -97,26 +101,26 @@ duf_scan_dir_by_pi2( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depth
   return r;
 }
 
-/* duf_scan_dirs_by_parentid
- *     1. for <current> dir call sccb->node_scan_before
- *     2. for each leaf in <current> dir call sccb->leaf_scan
- *     3. for <current> dir call sccb->node_scan_middle
- *     4. for each dir in <current> dir call str_cb + str_cb_udata
- *     5. for <current> dir call sccb->node_scan_after
+/* duf_scan_dirs_by_pi2_wrap          ( duf_scan_dirs_by_parentid )
+						 *     1. for <current> dir call sccb->node_scan_before
+						 *     2. for each leaf in <current> dir call sccb->leaf_scan
+						 *     3. for <current> dir call sccb->node_scan_middle
+						 *     4. for each dir in <current> dir call str_cb + str_cb_udata
+						 *     5. for <current> dir call sccb->node_scan_after
+						 *
+						 * known str_cb for duf_scan_dirs_by_parentid:
+						 *   duf_str_cb_uni_scan_dir
+						 *
+ * see duf_scan_dir_by_pi2
  *
- * known str_cb for duf_scan_dirs_by_parentid:
- *   duf_str_cb_uni_scan_dir
- *
- * see duf_scan_dir_by_pi
- *
- * str_cb2 (sub-item scanner):
+ * str_cb2 (sub-item scanner) one of:
  *       duf_str_cb2_uni_scan_dir
  *     ( duf_str_cb2_leaf_scan    )
  *     ( duf_str_cb2_scan_file_fd )
  * */
 
 int
-duf_scan_dirs_by_pi2_msg( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_dirs_by_pi2_wrap( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
   unsigned long long diridpid;

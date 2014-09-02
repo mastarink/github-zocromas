@@ -43,7 +43,7 @@ duf_add_path_uni( const char *path )
     };
 
     if ( r >= 0 )
-      r = duf_pdi_init_msg( &di, real_path, 1 );
+      r = duf_pdi_init_wrap( &di, real_path, 1 );
 
     if ( r >= 0 )
     {

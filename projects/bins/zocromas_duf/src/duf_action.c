@@ -1,3 +1,4 @@
+/* File #4 20140902.174509 */
 #include <string.h>
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -33,149 +34,6 @@
 /* ###################################################################### */
 
 
-
-
-
-static int
-duf_store_filters( void )
-{
-  int r = 0;
-
-  /*--max-size= ; --min-size= ; --include= ;*/
-  /* --min-with-same-md5 : --min-copies= ; --max-copies= ;  --min-duplicates; --max-duplicates; */
-  /* --have-md5 ; --have-exif ; --attributes= ... */
-  /* --min-with-same-size */
-  /* --in-archive --on-removable */
-  /* --access-before= --access-after --modification-before= --modification-after ... */
-  /* see also for --filetype=  or --filemagic=                              */
-  /*   mastar@mastar .../bins/zocromas_duf $ apropos libmagic              */
-  /*   magic_buffer [libmagic] (3)  - Magic number recognition library     */
-  /*   magic_check [libmagic] (3)  - Magic number recognition library      */
-  /*   magic_close [libmagic] (3)  - Magic number recognition library      */
-  /*   magic_compile [libmagic] (3)  - Magic number recognition library    */
-  /*   magic_descriptor [libmagic] (3)  - Magic number recognition library */
-  /*   magic_error [libmagic] (3)  - Magic number recognition library      */
-  /*   magic_list [libmagic] (3)  - Magic number recognition library       */
-  /*   magic_load [libmagic] (3)  - Magic number recognition library       */
-  /*   magic_open [libmagic] (3)  - Magic number recognition library       */
-  /*   magic_setflags [libmagic] (3)  - Magic number recognition library   */
-  /*   magic_version [libmagic] (3)  - Magic number recognition library    */
-  {
-    const char *sqls[] = {
-      "UPDATE " DUF_DBADMPREF "filefilter SET run=datetime() " /* */
-            " WHERE type='cli' " /* */
-            " AND ifnull(minsize,0)=ifnull(:minSize,0) " /* */
-            " AND ifnull(maxsize,0)=ifnull(:maxSize,0) " /* */
-            " AND ifnull(mindups,0)=ifnull(:minDups,0) " /* */
-            " AND ifnull(maxdups,0)=ifnull(:maxDups,0) " /* */
-            " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
-            " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
-            ,
-      "INSERT INTO " DUF_DBADMPREF "filefilter (type,minsize,maxsize,mindups,maxdups,glob_include,glob_exclude) " /* */
-            " VALUES ("         /* */
-            " 'cli', :minSize, :maxSize, :minDups, :maxDups, :glob_include, :glob_exclude " /* */
-            ")",
-      "SELECT " DUF_SQL_IDNAME " FROM " DUF_DBADMPREF "filefilter " /* */
-            " WHERE type='cli' " /* */
-            " AND ifnull(minsize,0)=ifnull(:minSize,0) " /* */
-            " AND ifnull(maxsize,0)=ifnull(:maxSize,0) " /* */
-            " AND ifnull(mindups,0)=ifnull(:minDups,0) " /* */
-            " AND ifnull(maxdups,0)=ifnull(:maxDups,0) " /* */
-            " AND ifnull(glob_include,'')=ifnull(:glob_include,'')" /* */
-            " AND ifnull(glob_exclude,'')=ifnull(:glob_exclude,'')" /* */
-            ,
-      NULL
-    };
-    {
-      int changes = 0;
-      const char **psql;
-
-      psql = sqls;
-      while ( psql && *psql )
-      {
-        const char *sql = *psql++;
-        duf_sqlite_stmt_t *pstmt = NULL;
-
-        if ( !changes || ( sql && 0 == strncmp( sql, "SELECT", 6 ) ) )
-        {
-          /* DUF_TRACE( action, 0, "to PREPARE %s", sql ); */
-          if ( r >= 0 )
-            r = duf_sql_prepare( sql, &pstmt );
-          DUF_TEST_R( r );
-          /* DUF_TRACE( action, 0, "PREPARE:%d", r ); */
-          if ( r >= 0 )
-          {
-            if ( r >= 0 && DUF_U_NUM( size.min ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":minSize", DUF_U_NUM( size.min ) );
-            DUF_TEST_R( r );
-            if ( r >= 0 && DUF_U_NUM( size.max ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":maxSize", DUF_U_NUM( size.max ) );
-            /* DUF_TRACE( action, 0, "BIND maxsize %lld", DUF_U_NUM(maxsize )); */
-            DUF_TEST_R( r );
-            if ( r >= 0 && DUF_U_NUM( same.min ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":minDups", DUF_U_NUM( same.min ) );
-            DUF_TEST_R( r );
-            if ( r >= 0 && DUF_U_NUM( same.max ) )
-              r = duf_sql_bind_long_long_nz( pstmt, ":maxDups", DUF_U_NUM( same.max ) );
-            DUF_TEST_R( r );
-            {
-              char *j;
-
-              j = mas_argv_string( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0 );
-              /* DUF_TRACE( action, 0, "%d GLOB INCLUDE %s", duf_config->u.glob.include_files.argc, j ); */
-              if ( r >= 0 && duf_config->u.glob.include_files.argc )
-                r = duf_sql_bind_string( pstmt, ":glob_include", j );
-              DUF_TEST_R( r );
-              mas_free( j );
-            }
-            {
-              char *j;
-
-              j = mas_argv_string( duf_config->u.glob.exclude_files.argc, duf_config->u.glob.exclude_files.argv, 0 );
-
-              /* DUF_TRACE( action, 0, "GLOB EXCLUDE %s", j ); */
-              if ( r >= 0 && duf_config->u.glob.exclude_files.argc )
-                r = duf_sql_bind_string( pstmt, ":glob_exclude", j );
-              DUF_TEST_R( r );
-              mas_free( j );
-            }
-            do
-            {
-              if ( r == DUF_SQL_ROW )
-                r = 0;
-              if ( r >= 0 )
-                r = duf_sql_step( pstmt );
-              DUF_TEST_RR( r );
-              if ( !changes )
-                changes = duf_sql_changes(  );
-
-              /* if ( r == DUF_SQL_ROW )                          */
-              /* {                                                */
-              /*   long long filtid;                              */
-              /*                                                  */
-              /*   filtid = duf_sql_column_long_long( pstmt, 0 ); */
-              /*   duf_config->u.filter_id = filtid;              */
-              /* }                                                */
-            }
-            while ( r == DUF_SQL_ROW );
-          }
-          /* DUF_TRACE( action, 0, "STEP; changes:%d; %s", changes, r < 0 && r != DUF_SQL_DONE ? "FAIL" : "" ); */
-          {
-            int rf = duf_sql_finalize( pstmt );
-
-            DUF_TEST_R( rf );
-            /* DUF_TRACE( action, 0, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); */
-
-            if ( r >= 0 || r == DUF_SQL_DONE )
-              r = rf;
-          }
-        }
-      }
-    }
-  }
-  return r;
-}
-
 static int
 duf_store_log( int argc, char *const argv[] )
 {
@@ -205,7 +63,7 @@ duf_store_log( int argc, char *const argv[] )
 }
 
 int
-duf_action_new( int argc, char **argv )
+duf_action( int argc, char **argv )
 {
   int r = 0;
 
@@ -261,8 +119,6 @@ duf_action_new( int argc, char **argv )
   if ( r >= 0 )
     r = duf_store_log( argc, argv );
   DUF_TEST_R( r );
-  if ( r >= 0 )
-    r = duf_store_filters(  );
   DUF_TEST_R( r );
 
 /* --add-path									*/ DEBUG_STEP(  );
@@ -290,6 +146,6 @@ duf_action_new( int argc, char **argv )
   /* DUF_PRINTF(0, "@@@@@@@@@@@ %llu %llu", duf_config->u.size.min, duf_config->u.size.max ); */
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
-    r = duf_make_all_sccbs_msg(  );
+    r = duf_make_all_sccbs_wrap(  );
   return r;
 }

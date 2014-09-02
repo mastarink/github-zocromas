@@ -1,5 +1,7 @@
 " echo 'in ' . expand('<sfile>')
 
+set makeprg=make\ -C\ $MSH_SHN_BUILD_DIR
+
 let  gvim_funcs=mas_localvimdirs . 'gvim-funcs.vim'
 if filereadable(gvim_funcs)
   source `=gvim_funcs`
@@ -48,25 +50,30 @@ endif
 "   nmap <C-\> <ESC>:execute "sbuffer " . expand('<cWORD>')<CR>
 " endif
 
-nmap <A-1> :tabfirst<CR>
-nmap <A-2> :tablast<CR>
+nnoremap <A-1> :tabfirst<CR>
+nnoremap <A-2> :tablast<CR>
 let shn_doprj="shn/doprj.sh"
 if filereadable(shn_doprj)
 " echo "has doprj:" . shn_doprj
-  nmap <F3>   :wa<CR>:!shn/doprj.sh i<CR>
-  nmap <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
+  nnoremap <F3>   :wa<CR>:!shn/doprj.sh i<CR>
+  nnoremap <C-F3> :wa<CR>:!shn/doprj.sh c i<CR>
 endif
-let shn_doall="shn/doall.sh"
-if filereadable(shn_doall)
-" echo "has doall:" . shn_doall
-  nmap <F4>   :wa<CR>:!shn/doall.sh i<CR>
-  nmap <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
-endif
- 
-" insert filename
-inoremap <F5> <C-R>=expand("%:t")<CR>
 
-nmap <C-]> :call MasGoTag()<CR>
+nnoremap <A-F4> "=expand("%:t")<CR>p
+inoremap <A-F4> <C-R>=expand("%:t")<CR>
+
+" let shn_doall="shn/doall.sh"
+" if filereadable(shn_doall)
+" " echo "has doall:" . shn_doall
+"   nmap <F4>   :wa<CR>:!shn/doall.sh i<CR>
+"   nmap <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
+" endif
+ 
+nnoremap <F6> "=strftime("%Y%m%d.%H%M%S")<CR>p
+inoremap <F6> <C-R>=strftime("%Y%m%d.%H%M%S")<CR>
+" insert filename
+
+nmap <C-]> :call MasGoTag2()<CR>
 
 
 " winpos 0 35
