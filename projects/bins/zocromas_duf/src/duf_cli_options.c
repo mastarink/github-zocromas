@@ -19,10 +19,6 @@
 /* ###################################################################### */
 
 
-/* extern const duf_option_t *duf_longopts; */
-/* extern const int duf_longopts_count; */
-
-
 int
 duf_cli_options( int argc, char *argv[] )
 {

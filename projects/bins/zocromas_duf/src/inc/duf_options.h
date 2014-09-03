@@ -6,8 +6,6 @@
 
 int duf_show_options( const char *a0 );
 
-
-
 int duf_all_options( int argc, char *argv[] );
 
 
@@ -22,25 +20,20 @@ int duf_all_options( int argc, char *argv[] );
     DUF_OPTION(lo).a
 
 
-#  define DUF_OPTION_RESTORETV(ocode, ptr, typ, up, lo, pref, value, maxlen) \
-  if ( ocode==DUF_OPTION_ ## up && value ) \
-  { \
-    _duf_restore_option_ ## typ(ptr, ocode, value, maxlen ); \
-  }
+#  define DUF_OPTION_FLAGG(lo, pref, fls) DUF_OPTION_F(pref fls.lo)
+#  define DUF_OPTION_FLAG(lo, pref) DUF_OPTION_FLAGG(lo, pref, .v.flag)
 
-#  define DUF_OPTION_RESTOREV_B(ocode, ptr,  up, lo, pref, value, maxlen) \
-  DUF_OPTION_RESTORETV(ocode, ptr, b, up, lo, pref, value, maxlen)
+#  define DUF_CLI_FLAG(lo) DUF_OPTION_FLAG(lo, cli)
+#  define DUF_ACT_FLAG(lo) DUF_OPTION_FLAG(lo, cli.act)
+#  define DUF_U_FLAG(lo) DUF_OPTION_FLAG(lo, u)
 
-#  define DUF_OPTION_RESTORET( ocode, ptr, typ, up, lo, pref, maxlen) \
-  DUF_OPTION_RESTORETV( ocode, ptr, typ, up, lo, pref, DUF_OPTION(pref.lo), maxlen)
+#  define DUF_CLI_NUM( lo, n ) DUF_OPTION_NUM( lo, cli.n )
+#  define DUF_ACT_NUM(lo)      DUF_CLI_NUM( lo, act )
+#  define DUF_U_NUM(lo)        DUF_OPTION_NUM( lo, u )
+#  define DUF_TRACE_NUM(lo)    DUF_CLI_NUM( lo, trace )
 
+#  define DUF_OPTION_NUM(lo, pref) DUF_OPTION_N(pref.lo)
 
-
-/* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
-#  define DUF_OPTION_RESTORE_FLAGG(ocode, ptr, up, lo, pref, fls, maxlen) \
-    DUF_OPTION_RESTORET( ocode, ptr, b, FLAG_ ## up, lo, pref fls.flag, maxlen)
-#  define DUF_OPTION_RESTORE_FLAG(ocode, ptr, up, lo, pref, maxlen) \
-    DUF_OPTION_RESTORE_FLAGG(ocode, ptr, up, lo, pref, .v, maxlen)
 
 /*  ACQUIRE  */
 #  define DUF_OPTION_ACQUIRE_FSET(lo)  \
@@ -48,9 +41,6 @@ int duf_all_options( int argc, char *argv[] );
 
 #  define DUF_OPTION_ACQUIRE_FLAGG(lo, pref, fls ) DUF_OPTION_ACQUIRE_FSET(pref fls.lo)
 #  define DUF_OPTION_ACQUIRE_FLAG(lo, pref ) DUF_OPTION_ACQUIRE_FLAGG(lo, pref, .v.flag)
-
-#  define DUF_OPTION_FLAGG(lo, pref, fls) DUF_OPTION_F(pref fls.lo)
-#  define DUF_OPTION_FLAG(lo, pref) DUF_OPTION_FLAGG(lo, pref, .v.flag)
 
 #  define DUF_OPTION_CASE_ACQUIRE_FLAGG(up, lo, pref, fls) \
     case DUF_OPTION_FLAG_##up: \
@@ -62,9 +52,6 @@ int duf_all_options( int argc, char *argv[] );
 #  define DUF_OPTION_CASE_ACQUIRE_ACT_FLAG(up, lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, cli.act)
 #  define DUF_OPTION_CASE_ACQUIRE_U_FLAG(up, lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, lo, u)
 
-#  define DUF_CLI_FLAG(lo) DUF_OPTION_FLAG(lo, cli)
-#  define DUF_ACT_FLAG(lo) DUF_OPTION_FLAG(lo, cli.act)
-#  define DUF_U_FLAG(lo) DUF_OPTION_FLAG(lo, u)
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
 #  define DUF_OPTION_ACQUIRE_NSET(lo, val)  \
@@ -74,7 +61,6 @@ int duf_all_options( int argc, char *argv[] );
       if ( optarg && *optarg ) \
         DUF_OPTION_ACQUIRE_NSET(lo, duf_strtol( optarg, &r) )
 
-#  define DUF_OPTION_NUM(lo, pref) DUF_OPTION_N(pref.lo)
 
 
 #  define DUF_OPTION_ACQUIRE_NUM_PLUS(lo)  \
@@ -82,9 +68,6 @@ int duf_all_options( int argc, char *argv[] );
         DUF_OPTION_ACQUIRE_NSET(lo, duf_strtol( optarg, &r) ); \
       else \
         DUF_OPTION_N(lo)++
-
-#  define DUF_OPTION_RESTORE_NUM( ocode, ptr, up, lo, pref, maxlen) \
-    DUF_OPTION_RESTORET( ocode, ptr, i, up, lo, pref, maxlen)
 
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, lo, pref ) \
     case DUF_OPTION_ ## up: \
@@ -101,15 +84,7 @@ int duf_all_options( int argc, char *argv[] );
 #  define DUF_OPTION_CASE_ACQUIRE_U_NUM(up, lo)        DUF_OPTION_CASE_ACQUIRE_NUM(up, lo, u)
 #  define DUF_OPTION_CASE_ACQUIRE_U_NUM_PLUS(up, lo)   DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, lo, u)
 
-#  define DUF_CLI_NUM( lo, n ) DUF_OPTION_NUM( lo, cli.n )
-#  define DUF_ACT_NUM(lo)      DUF_CLI_NUM( lo, act )
-#  define DUF_U_NUM(lo)        DUF_OPTION_NUM( lo, u )
-#  define DUF_TRACE_NUM(lo)    DUF_CLI_NUM( lo, trace )
-
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
-#  define DUF_OPTION_RESTORE_TRACE(ocode, ptr, up, lo, maxlen) \
-  DUF_OPTION_RESTORE_NUM(ocode, ptr,  up ## _TRACE, lo, cli.trace, maxlen)
-
 #  define DUF_OPTION_ACQUIRE_TRACE( lo )  \
     DUF_OPTION_ACQUIRE_NUM_PLUS( cli.trace.lo )
 

@@ -17,11 +17,6 @@
 #include "duf_option_find.h"
 /* ###################################################################### */
 
-
-
-extern const duf_longval_extended_t *lo_extended;
-extern unsigned lo_extended_count;
-
 int
 duf_find_long( duf_option_code_t codeval, int *pr )
 {
