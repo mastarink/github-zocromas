@@ -135,24 +135,25 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   {
     duf_fileinfo_t fi = { 0 };
 
-    duf_format_t format = {
-      .filename = 1,
-      .seq = 1,
-      .dirid = 1,
-      .exifid = 1,
-      .nameid = 1,
-      .mimeid = 1,
-      .inode = 1,
-      .mode = 1,
-      .nlink = 1,
-      .uid = 1,
-      .gid = 1,
-      .filesize = 1,
-      .md5 = 1,
-      .md5id = 1,
-      .mtime = 1,
-      .nsame = 1,
-      .dataid = 1,
+    duf_format_combo_t format = {.v.flag = {
+                                            .filename = 1,
+                                            .seq = 1,
+                                            .dirid = 1,
+                                            .exifid = 1,
+                                            .nameid = 1,
+                                            .mimeid = 1,
+                                            .inode = 1,
+                                            .mode = 1,
+                                            .nlink = 1,
+                                            .uid = 1,
+                                            .gid = 1,
+                                            .filesize = 1,
+                                            .md5 = 1,
+                                            .md5id = 1,
+                                            .mtime = 1,
+                                            .dataid = 1,
+                                            },
+    .nsame = 1,
     };
     fi.nsame = nsame;
     fi.dirid = dirid;
@@ -250,26 +251,27 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
   {
     duf_fileinfo_t fi = { 0 };
 
-    duf_format_t format = {
-      .filename = 0,
-      .realpath = 1,
-      .seq = 1,
-      .dirid = 1,
-      .exifid = 0,
-      .mimeid = 0,
-      .inode = 0,
-      .mode = 0,
-      .nlink = 0,
-      .uid = 0,
-      .gid = 0,
-      .filesize = 0,
-      .md5 = 0,
-      .md5id = 0,
-      .dataid = 0,
-      .mtime = 0,
-      .nsame = 0,
-      .prefix = 1,
-      .suffix = 1,
+    duf_format_combo_t format = {.v.flag = {
+                                            .filename = 0,
+                                            .realpath = 1,
+                                            .seq = 1,
+                                            .dirid = 1,
+                                            .exifid = 0,
+                                            .mimeid = 0,
+                                            .inode = 0,
+                                            .mode = 0,
+                                            .nlink = 0,
+                                            .uid = 0,
+                                            .gid = 0,
+                                            .filesize = 0,
+                                            .md5 = 0,
+                                            .md5id = 0,
+                                            .dataid = 0,
+                                            .mtime = 0,
+                                            .prefix = 1,
+                                            .suffix = 1,
+                                            },
+                                            .nsame = 0,
     };
     /* fi.nsame = nsame; */
     /* fi.st.st_mode = ( mode_t ) filemode; */
@@ -284,6 +286,8 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
     /* fi.md5id = md5id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
+    DUF_PRINTF( 0, "at module : %llx (%d) :: %llx", format.v.bit, format.v.flag.seq, duf_config->cli.format.v.bit );
+
     if ( duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
       DUF_PUTSL( 0 );
     else
@@ -313,7 +317,7 @@ static const char *beginning_sql[] = {
         "  ( (:minMimeID  IS NULL OR fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND" /* */
         "  ( (:minExifID  IS NULL OR fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND" /* */
         "  ( (:minMTime   IS NULL OR fd.mtim>=datetime(:minMTime,'unixepoch')) AND " /* */
-	"                 (:maxMTime IS NULL OR fd.mtim<=datetime(:maxMTime,'unixepoch') )) AND" /* */
+        "                 (:maxMTime IS NULL OR fd.mtim<=datetime(:maxMTime,'unixepoch') )) AND" /* */
         "  ( (:minNameID  IS NULL OR fn." DUF_SQL_IDNAME ">=:minNameID) AND (:maxNameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxNameID )) " /* */
         ,
 };

@@ -1,0 +1,45 @@
+#define DO_IFUNH(cl) DO_IFUN( duf_option_smart_help, DUF_OPTION_CLASS_ ## cl)
+  {.o = {DO_Q( "version" ), /*        */ DO_A_N, /* */ DO_V( VERSION )} /*        */ , DO_CL( REFERENCE ) /* */ ,
+   /*      */ DO_T( AFUN ), DO_AFUN( duf_option_version ) /*                                                 */ , DO_H( version info ) /*       */ },
+  {.o = {DO_Q( "help-examples" ), /*  */ DO_A_N, /* */ DO_V( EXAMPLES )} /*       */ , DO_CL( HELP ) /*      */ ,
+   /*      */ DO_T( AFUN ), DO_AFUN( duf_option_examples ) /*                                                */ , DO_H( examples ) /*           */ },
+
+  {.o = {DO_Q( "help-all" ), /*       */ DO_A_N, /* */ DO_VH( ALL )} /*           */ , DO_CL( HELP ) /*      */ ,
+   /*      */ DO_T( IFUN ), DO_IFUN( duf_option_smart_help_all, DUF_OPTION_CLASS_ALL ) /*                    */ , DO_H( help on all ) /*        */ },
+
+  {.o = {DO_Q( "help-collect" ), /*   */ DO_A_N, /* */ DO_VH( COLLECT )} /*   */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( COLLECT ) /*                                                           */ , DO_H( help on collect ) /*    */ },
+  {.o = {DO_Q( "help-control" ), /*   */ DO_A_N, /* */ DO_VH( CONTROL )} /*   */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( CONTROL ) /*                                                           */ , DO_H( help on control ) /*    */ },
+  {.o = {DO_Q( "help-debug" ), /*     */ DO_A_N, /* */ DO_VH( DEBUG )} /*     */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( DEBUG ) /*                                                             */ , DO_H( help on debug ) /*      */ },
+
+  {.o = {DO_Q( "help-help" ), /*      */ DO_A_N, /* */ DO_VH( HELP )} /*      */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( HELP ) /*                                                              */ , DO_H( help on help ) /*       */ },
+  /* {.o = {DO_Q( "help-short" ), (*  *) DO_A_N, (* *) DO_V( HELP )} (*           *) , DO_CL( HELP ) (*     *)  , DO_H( help ) (*               *) }, */
+  /* {.o = {DO_Q( "help" ), (*        *) DO_A_O, (* *) DO_V( SMART_HELP )} (*     *) , DO_CL( HELP ) (*      *) , DO_H( smart help ) (*         *) }, */
+
+
+  {.o = {DO_Q( "help-nodesc" ), /*    */ DO_A_N, /* */ DO_VH( NODESC )} /*    */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( NODESC ) /*                                                            */ , DO_H( help on nodesc ) /*     */ },
+  {.o = {DO_Q( "help-obsolete" ), /*  */ DO_A_N, /* */ DO_VH( OBSOLETE )} /*  */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( OBSOLETE ) /*                                                          */ , DO_H( help on obsolete ) /*   */ },
+  {.o = {DO_Q( "help-none" ), /*      */ DO_A_N, /* */ DO_VH( NONE )} /*      */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( NONE ) /*                                                              */ , DO_H( help on none ) /*       */ },
+  {.o = {DO_Q( "help-print" ), /*     */ DO_A_N, /* */ DO_VH( PRINT )} /*     */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( PRINT ) /*                                                             */ , DO_H( help on print ) /*      */ },
+  {.o = {DO_Q( "help-reference" ), /* */ DO_A_N, /* */ DO_VH( REFERENCE )} /* */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( REFERENCE ) /*                                                         */ , DO_H( help on reference ) /*  */ },
+  {.o = {DO_Q( "help-request" ), /*   */ DO_A_N, /* */ DO_VH( REQUEST )} /*   */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( REQUEST ) /*                                                           */ , DO_H( help on request ) /*    */ },
+  {.o = {DO_Q( "help-scan" ), /*      */ DO_A_N, /* */ DO_VH( SCAN )} /*      */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( SCAN ) /*                                                              */ , DO_H( help on scan ) /*       */ },
+  {.o = {DO_Q( "help-system" ), /*    */ DO_A_N, /* */ DO_VH( SYSTEM )} /*    */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( SYSTEM ) /*                                                            */ , DO_H( help on system ) /*     */ },
+  {.o = {DO_Q( "help-trace" ), /*     */ DO_A_N, /* */ DO_VH( TRACE )} /*     */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( TRACE ) /*                                                             */ , DO_H( help on trace ) /*      */ },
+  {.o = {DO_Q( "help-update" ), /*    */ DO_A_N, /* */ DO_VH( UPDATE )} /*    */ , DO_CL( HELP ) /*          */ ,
+   /*      */ DO_T( IFUN ), DO_IFUNH( UPDATE ) /*                                                            */ , DO_H( help on update ) /*     */ },
+
+/* vi: ft=c
+*/

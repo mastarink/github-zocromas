@@ -72,4 +72,3 @@ AC_SUBST([MAS_UUID])
 AH_TEMPLATE([MAS_S_DATE],[mas_s_date])
 AC_DEFINE_UNQUOTED( MAS_S_DATE, "`date +%s`", [sdate])
 AC_SUBST([MAS_S_DATE])
-

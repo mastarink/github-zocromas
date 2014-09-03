@@ -1,5 +1,5 @@
 noinst_HEADERS=duf.h duf_maindb.h duf_action.h		\
-	duf_config.h duf_config_ref.h duf_dbg.h		 \
+	duf_config.h duf_config_ref.h duf_status_ref.h	 \
 	duf_options.h duf_cli_options.h duf_option.h	  \
 	duf_create.h					   \
 	duf_dirent.h duf_filedata.h			    \
@@ -16,12 +16,13 @@ noinst_HEADERS=duf.h duf_maindb.h duf_action.h		\
 	duf_sqlite.h duf_sql.h duf_sql2.h			     \
 	duf_sql_field.h duf_sql_field2.h			      \
 	duf_sql_const.h duf_sql_defs.h				       \
-	duf_scan_types.h duf_error_types.h duf_item_types.h			\
+	duf_scan_types.h duf_error_types.h duf_item_types.h		\
 	duf_fun_types.h duf_levinfo_types.h				 \
 	duf_trace_types.h duf_trace_defs.h				  \
-	duf_def.h duf_defs.h duf_debug_defs.h duf_print_defs.h		   \
-	duf_config_types.h duf_cli_types.h duf_option_types.h		    \
-	duf_ufilter_types.h duf_flags_types.h duf_fileinfo_types.h	     \
+	duf_def.h duf_defs.h duf_debug_defs.h  duf_dbg.h duf_print_defs.h  \
+	duf_config_types.h duf_status_types.h				    \
+	duf_cli_types.h duf_option_types.h				     \
+	duf_ufilter_types.h duf_flags_types.h duf_fileinfo_types.h	      \
 	duf_pdi_types.h duf_hook_types.h duf_record_types.h
 #	duf_dirent_scan1.h
 #	duf_dir_scan1.h

@@ -36,12 +36,13 @@ typedef struct
 {
   char *help_string;
   double loadtime;
-  int actions_done;
   duf_ufilter_t u;
   duf_option_t *longopts_table;
   duf_config_cli_t cli;
   duf_dbs_config_t db;
   /* char *group; */
+  int cargc;
+  char *const *cargv;
   int targc;
   char **targv;
   char *config_path;
@@ -51,5 +52,6 @@ typedef struct
   unsigned nclose;
   duf_tmp_t *tmp;
 } duf_config_t;
+
 
 #endif

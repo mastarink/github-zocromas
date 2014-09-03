@@ -210,6 +210,12 @@ duf_open_special( const char *pname, char **pfilename, FILE ** pfile )
   return r;
 }
 
+/*
+ * return 
+ *       oclass (>0) for "help" options
+ *               =0  for normal options
+ * or errorcode (<0) for error
+ * */
 int
 duf_parse_option( duf_option_code_t codeval, int longindex, const char *optarg )
 {
@@ -221,8 +227,15 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optarg )
     longindex = duf_find_long( codeval );
   if ( longindex >= 0 )
   {
+/* 
+ * duf_parse_option_long return 
+ *     oclass(>0) for "help" option
+ *            =0  for other option
+ *   errorcode<0  for error
+ * */
     r = duf_parse_option_long( longindex, optarg );
     DUF_TRACE( explain, 2, "cli options r: %d", r );
+    DUF_TRACE( explain, 1, "parsed CLI option: (li:%d) %s  %s", longindex, duf_option_description( longindex ), duf_error_name( r ) );
   }
   else
     switch ( ( int ) codeval )
@@ -295,47 +308,49 @@ duf_strtime2long( const char *s, int *pr )
   return ( unsigned long long ) t;
 }
 
-static duf_option_code_t
-duf_parse_option_long_typed( int longindex, const char *optarg, int *pr )
+static int
+duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char *optarg )
 {
   int r = 0;
-  const duf_longval_extended_t *extended;
   duf_option_code_t codeval = DUF_OPTION_NONE;
 
-  duf_option_class_t oclass = DUF_OPTION_CLASS_BAD;
+  if ( extended )
+    codeval = extended->o.val;
+  else
+    r = DUF_ERROR_OPTION;
 
-  /* if ( optarg )                 */
-  /*   loptarg = strlen( optarg ); */
-  extended = duf_longindex_extended( longindex );
+/*
+ * if arg is help option
+ * return class id for options to display the help
+ * */
 
-  /* codeval = extended->o.val; */
-  codeval = duf_config->longopts_table[longindex].val;
-
-  oclass = duf_help_option2class( codeval );
-
-  if (  /* oclass != DUF_OPTION_CLASS_NO_HELP && */ oclass != DUF_OPTION_CLASS_BAD )
+//ohclass = duf_help_option2class( codeval );
+//
+//
+//if (  /* ohclass != DUF_OPTION_CLASS_NO_HELP && */ ohclass != DUF_OPTION_CLASS_BAD )
+//{
+//  /* this is help option! */
+//  if ( optarg )
+//  {
+//    if ( duf_config->help_string )
+//      mas_free( duf_config->help_string );
+//    duf_config->help_string = mas_strdup( optarg );
+//  }
+//  r = ohclass;
+//  codeval = DUF_OPTION_NONE;
+//}
+//else 
+  if ( codeval && r >= 0 && extended )
   {
-    if ( optarg )
-    {
-      if ( duf_config->help_string )
-        mas_free( duf_config->help_string );
-      duf_config->help_string = mas_strdup( optarg );
-    }
-    codeval = DUF_OPTION_NONE;
-  }
-  if ( codeval )
-  {
-    if ( extended->mf == 1 )
-    {
-      unsigned doplus = 0;
-      char *byteptr = ( ( ( char * ) duf_config ) + extended->m );
+    unsigned doplus = 0;
+    char *byteptr = ( ( ( char * ) duf_config ) + extended->m );
 
 #define DUF_NUMOPT(typ,dopls,conv) \
       { \
         int rl = 0; \
 	typ *p; \
-	p = ( typ * ) byteptr; \
-	if ( optarg ) \
+	p = ( typ * ) byteptr; /* byteptr only valid if extended->mf == 1 */ \
+	if ( extended->mf == 1 && optarg ) \
 	{ \
 	  ( *p ) = duf_ ## conv( optarg, &rl ); \
 	  codeval = DUF_OPTION_NONE; \
@@ -345,20 +360,18 @@ duf_parse_option_long_typed( int longindex, const char *optarg, int *pr )
 	else if ( dopls ) \
 	{ \
 	  ( *p )++; \
-	  codeval = DUF_OPTION_NONE; \
 	} \
       }
 #define DUF_MINMAXOPT(typ,conv) \
       { \
         int rl = 0; \
 	typ *mm; \
-	mm= ( typ * ) byteptr; \
-	if ( optarg ) \
+	mm= ( typ * ) byteptr; /* byteptr only valid if extended->mf == 1 */ \
+	if ( extended->mf == 1 && optarg ) \
 	{ \
 	  mm->flag = 1; \
 	  mm->min = duf_ ## conv( optarg, &rl ); \
 	  mm->max = duf_ ## conv( optarg, &rl ); \
-	  codeval = DUF_OPTION_NONE; \
 	  if ( rl < 0 ) \
 	    r = DUF_ERROR_OPTION_VALUE; \
 	} \
@@ -367,119 +380,204 @@ duf_parse_option_long_typed( int longindex, const char *optarg, int *pr )
       { \
         int rl = 0; \
 	typ *mm; \
-	mm= ( typ * ) byteptr; \
-	if ( optarg ) \
+	mm= ( typ * ) byteptr; /* byteptr only valid if extended->mf == 1 */ \
+	if ( extended->mf == 1 && optarg ) \
 	{ \
 	  mm->flag = 1; \
 	  mm->mix = duf_ ## conv( optarg, &rl ); \
-	  codeval = DUF_OPTION_NONE; \
 	  if ( rl < 0 ) \
 	    r = DUF_ERROR_OPTION_VALUE; \
 	} \
       }
 
+    switch ( extended->vtype )
+    {
+    case DUF_OPTION_VTYPE_NONE:
+      r = DUF_ERROR_OPTION_NOT_PARSED;
+      break;
+    case DUF_OPTION_VTYPE_UPLUS:
+      doplus = 1;
+    case DUF_OPTION_VTYPE_NUM:
+      DUF_NUMOPT( unsigned, doplus, strtol );
 
+      break;
+    case DUF_OPTION_VTYPE_NL:
+      DUF_NUMOPT( unsigned long, 0, strtol );
 
-      switch ( extended->vtype )
+      break;
+    case DUF_OPTION_VTYPE_NLL:
+      DUF_NUMOPT( unsigned long long, 0, strtol );
+
+      break;
+    case DUF_OPTION_VTYPE_MIN:
+      DUF_MOPT( duf_limits_t, min, strtol );
+      break;
+    case DUF_OPTION_VTYPE_MAX:
+      DUF_MOPT( duf_limits_t, max, strtol );
+      break;
+    case DUF_OPTION_VTYPE_MINMAX:
+      DUF_MINMAXOPT( duf_limits_t, strtol );
+      break;
+    case DUF_OPTION_VTYPE_MINLL:
+      DUF_MOPT( duf_limitsll_t, min, strtol );
+      break;
+    case DUF_OPTION_VTYPE_MAXLL:
+      DUF_MOPT( duf_limitsll_t, max, strtol );
+      break;
+    case DUF_OPTION_VTYPE_MINMAXLL:
+      DUF_MINMAXOPT( duf_limitsll_t, strtol );
+      break;
+      /* case DUF_OPTION_CLASS_DEBUG: */
+      /* DUF_PRINTF( 0, "------------ %lu", extended->m ); */
+      /* break; */
+    case DUF_OPTION_VTYPE_FLAG:
       {
-      case DUF_OPTION_VTYPE_UPLUS:
-        doplus = 1;
-      case DUF_OPTION_VTYPE_NUM:
-        DUF_NUMOPT( unsigned, doplus, strtol );
+        unsigned *pi;
 
-        break;
-      case DUF_OPTION_VTYPE_NL:
-        DUF_NUMOPT( unsigned long, 0, strtol );
-
-        break;
-      case DUF_OPTION_VTYPE_NLL:
-        DUF_NUMOPT( unsigned long long, 0, strtol );
-
-        break;
-      case DUF_OPTION_VTYPE_MIN:
-        DUF_MOPT( duf_limits_t, min, strtol );
-        break;
-      case DUF_OPTION_VTYPE_MAX:
-        DUF_MOPT( duf_limits_t, max, strtol );
-        break;
-      case DUF_OPTION_VTYPE_MINMAX:
-        DUF_MINMAXOPT( duf_limits_t, strtol );
-        break;
-      case DUF_OPTION_VTYPE_MINLL:
-        DUF_MOPT( duf_limitsll_t, min, strtol );
-        break;
-      case DUF_OPTION_VTYPE_MAXLL:
-        DUF_MOPT( duf_limitsll_t, max, strtol );
-        break;
-      case DUF_OPTION_VTYPE_MINMAXLL:
-        DUF_MINMAXOPT( duf_limitsll_t, strtol );
-        break;
-        /* case DUF_OPTION_CLASS_DEBUG: */
-        /* DUF_PRINTF( 0, "------------ %lu", extended->m ); */
-        /* break; */
-      case DUF_OPTION_VTYPE_FLAG:
-        {
-          unsigned *pi;
-
-          pi = ( unsigned * ) byteptr;
-          ( *pi ) |= extended->afl.bit;
-          codeval = DUF_OPTION_NONE;
-        }
-        break;
-      case DUF_OPTION_VTYPE_SFLAG:
-        {
-          unsigned short *pis;
-
-          pis = ( unsigned short * ) byteptr;
-          ( *pis ) |= extended->afl.sbit;
-          codeval = DUF_OPTION_NONE;
-        }
-        break;
-      case DUF_OPTION_VTYPE_STR:
-        {
-          char **pstr;
-
-          pstr = ( char ** ) byteptr;
-          if ( pstr && *pstr )
-            mas_free( *pstr );
-          *pstr = NULL;
-          if ( optarg )
-            *pstr = mas_strdup( optarg );
-          codeval = DUF_OPTION_NONE;
-        }
-        break;
-      case DUF_OPTION_VTYPE_DATETIME:
-        DUF_NUMOPT( unsigned long long, 0, strtime2long );
-
-      case DUF_OPTION_VTYPE_MINMAXDATETIME:
-        DUF_MINMAXOPT( duf_limitsll_t, strtime2long );
-        break;
-      case DUF_OPTION_VTYPE_MINDATETIME:
-        DUF_MOPT( duf_limitsll_t, min, strtime2long );
-        break;
-      case DUF_OPTION_VTYPE_MAXDATETIME:
-        DUF_MOPT( duf_limitsll_t, max, strtime2long );
-        break;
+        pi = ( unsigned * ) byteptr;
+        ( *pi ) |= extended->afl.bit;
+        codeval = DUF_OPTION_NONE;
       }
+      break;
+    case DUF_OPTION_VTYPE_SFLAG:
+      {
+        unsigned short *pis;
+
+        pis = ( unsigned short * ) byteptr;
+        ( *pis ) |= extended->afl.sbit;
+        codeval = DUF_OPTION_NONE;
+      }
+      break;
+    case DUF_OPTION_VTYPE_STR:
+      {
+        char **pstr;
+
+        pstr = ( char ** ) byteptr;
+        if ( pstr && *pstr )
+          mas_free( *pstr );
+        *pstr = NULL;
+        if ( optarg )
+          *pstr = mas_strdup( optarg );
+        r = 0;
+      }
+      break;
+    case DUF_OPTION_VTYPE_DATETIME:
+      DUF_NUMOPT( unsigned long long, 0, strtime2long );
+
+    case DUF_OPTION_VTYPE_MINMAXDATETIME:
+      DUF_MINMAXOPT( duf_limitsll_t, strtime2long );
+      break;
+    case DUF_OPTION_VTYPE_MINDATETIME:
+      DUF_MOPT( duf_limitsll_t, min, strtime2long );
+      break;
+    case DUF_OPTION_VTYPE_MAXDATETIME:
+      DUF_MOPT( duf_limitsll_t, max, strtime2long );
+      break;
+    case DUF_OPTION_VTYPE_IFUN:
+      if ( extended->func.i.func )
+        ( extended->func.i.func ) ( extended->func.i.arg );
+      break;
+    case DUF_OPTION_VTYPE_AFUN:
+      assert( duf_config->cargv );
+      if ( extended->func.a.func )
+        ( extended->func.a.func ) ( duf_config->cargc, duf_config->cargv );
+      break;
     }
   }
-  if ( pr )
-    *pr = r;
-  return codeval;
+  return r;
 }
 
+/* 
+ * return 
+ *   oclass  (>0) for "help" option
+ *            =0  for other option
+ *  errorcode(<0) for error
+ * */
 int
 duf_parse_option_long( int longindex, const char *optarg )
 {
   int r = 0;
-  duf_option_code_t codeval;
+  const duf_longval_extended_t *extended;
 
-  /* codeval = duf_config->longopts_table[longindex].val; */
-  codeval = duf_parse_option_long_typed( longindex, optarg, &r );
+  extended = duf_longindex_extended( longindex );
 
-  /* DUF_PRINTF( 0, "############################### %x", extended->afl.bit ); */
-  if ( r >= 0 )
-    switch ( codeval )
+  r = duf_parse_option_long_typed( extended, optarg );
+  /* r = DUF_ERROR_OPTION_NOT_PARSED; */
+  if ( extended )
+    switch ( extended->oclass )
+    {
+    case DUF_OPTION_CLASS_ANY:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_MIN:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_NONE:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_NO_HELP:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_HELP:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_SYSTEM:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_CONTROL:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_REFERENCE:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_COLLECT:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_SCAN:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_FILTER:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_UPDATE:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_REQUEST:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_PRINT:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_TRACE:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_DEBUG:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_OBSOLETE:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_NODESC:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_OTHER:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_MAX:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_BAD:
+      /* r = 0; */
+      break;
+    case DUF_OPTION_CLASS_ALL:
+      /* r = 0; */
+      break;
+    }
+
+  DUF_TRACE( explain, 2, "to parse %s (%s)  %s  cv:%d (F:%d)", duf_option_description( longindex ), extended->o.name, duf_error_name( r ),
+             extended->o.val, DUF_OPTION_FORMAT );
+  if ( extended && r == DUF_ERROR_OPTION_NOT_PARSED )
+    switch ( extended->o.val )
     {
     case DUF_OPTION_NONE:
       break;
@@ -512,7 +610,7 @@ duf_parse_option_long( int longindex, const char *optarg )
           mas_free( duf_config->help_string );
         duf_config->help_string = mas_strdup( optarg );
       }
-      r = codeval;
+      DUF_PRINTF( 0, "vvvvvvvvvvvv-" );
       break;
     case DUF_OPTION_TEST:
       DUF_PRINTF( 0, "This is test option output; optarg:%s", optarg ? optarg : "-" );
@@ -658,6 +756,7 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.file = NULL;
       }
       duf_config->cli.trace.out = stderr;
+      r = 0;
       break;
     case DUF_OPTION_TRACE_STDOUT:
       if ( duf_config->cli.trace.out )
@@ -672,6 +771,7 @@ duf_parse_option_long( int longindex, const char *optarg )
         duf_config->cli.trace.file = NULL;
       }
       duf_config->cli.trace.out = stdout;
+      r = 0;
       break;
     case DUF_OPTION_TRACE_FILE:
       r = duf_open_special( optarg, &duf_config->cli.trace.file, &duf_config->cli.trace.out );
@@ -738,6 +838,7 @@ duf_parse_option_long( int longindex, const char *optarg )
         unsigned nvalue;
         char *value;
 
+        DUF_TRACE( explain, 1, "really to parse %s (%s)  %s", duf_option_description( longindex ), extended->o.name, duf_error_name( r ) );
 
         /* duf_config->cli.format.seq = (* *)            */
         /*       duf_config->cli.format.dirid = (* *)    */
@@ -797,100 +898,102 @@ duf_parse_option_long( int longindex, const char *optarg )
         while ( poptarg && *poptarg )
         {
           char *hlp;
+          int rs = 0;
 
           hlp = poptarg;
           DUF_TRACE( any, 0, "hlp:%s", hlp );
-          r = getsubopt( &poptarg, tokens, &value );
-          DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" );
+          rs = getsubopt( &poptarg, tokens, &value );
+          DUF_TRACE( explain, 2, "really to parse format item [%s]    rs:%d; value:%s", poptarg, rs, value );
+          DUF_TRACE( any, 0, "%d: (%s) '%s'", rs, hlp, value ? value : "nil" );
           nvalue = value ? strtol( value, NULL, 10 ) : -1;
-          switch ( r )
+          switch ( rs )
           {
           case DUF_FORMAT_SEQ:
-            duf_config->cli.format.seq = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.seq = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_PREFIX:
-            duf_config->cli.format.prefix = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.prefix = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SUFFIX:
-            duf_config->cli.format.suffix = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.suffix = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DIRID:
-            duf_config->cli.format.dirid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.dirid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DIRID_SPACE:
-            duf_config->cli.format.dirid_space = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.dirid_space = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NFILES:
-            duf_config->cli.format.nfiles = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.nfiles = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NFILES_SPACE:
-            duf_config->cli.format.nfiles_space = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.nfiles_space = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NDIRS:
-            duf_config->cli.format.ndirs = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.ndirs = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NDIRS_SPACE:
-            duf_config->cli.format.ndirs_space = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.ndirs_space = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_REALPATH:
-            duf_config->cli.format.realpath = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.realpath = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_INODE:
-            duf_config->cli.format.inode = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.inode = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MODE:
-            duf_config->cli.format.mode = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.mode = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NLINK:
-            duf_config->cli.format.nlink = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.nlink = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_UID:
-            duf_config->cli.format.uid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.uid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_GID:
-            duf_config->cli.format.gid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.gid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILESIZE:
-            duf_config->cli.format.filesize = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.filesize = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MTIME:
-            duf_config->cli.format.mtime = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.mtime = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILENAME:
-            duf_config->cli.format.filename = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.filename = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SD5:
-            duf_config->cli.format.sd5 = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.sd5 = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SD5ID:
-            duf_config->cli.format.sd5id = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.sd5id = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MD5:
-            duf_config->cli.format.md5 = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.md5 = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MD5ID:
-            duf_config->cli.format.md5id = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.md5id = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_CRC32:
-            duf_config->cli.format.crc32 = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.crc32 = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_CRC32ID:
-            duf_config->cli.format.crc32id = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.crc32id = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NAMEID:
-            duf_config->cli.format.nameid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.nameid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MIMEID:
-            duf_config->cli.format.mimeid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.mimeid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_EXIFID:
-            duf_config->cli.format.exifid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.exifid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_HUMAN:
-            duf_config->cli.format.human = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.human = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DATAID:
-            duf_config->cli.format.dataid = value == NULL ? 1 : nvalue;
+            duf_config->cli.format.v.flag.dataid = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NSAME:
             duf_config->cli.format.nsame = value == NULL ? 1 : nvalue;
@@ -899,9 +1002,10 @@ duf_parse_option_long( int longindex, const char *optarg )
             duf_config->cli.format.offset = value == NULL ? 0 : nvalue;
             break;
           }
-          DUF_TRACE( any, 0, "%d: (%s) '%s'", r, hlp, value ? value : "nil" );
-          /* DUF_TRACE( any, 0, "r:%d", r ); */
-          if ( r < 0 )
+          DUF_TRACE( explain, 2, "FORMAT bits: %llx", duf_config->cli.format.v.bit );
+          DUF_TRACE( any, 0, "%d: (%s) '%s'", rs, hlp, value ? value : "nil" );
+          /* DUF_TRACE( any, 0, "rs:%d", rs ); */
+          if ( rs < 0 )
           {
             r = DUF_ERROR_SUBOPTION;
             DUF_TEST_R( r );
@@ -929,17 +1033,8 @@ duf_parse_option_long( int longindex, const char *optarg )
       r = DUF_ERROR_OPTION;
       break;
     }
-  /* DUF_TRACE( explain, 0, "parse option opt:%d r: %d", codeval, r ); */
-  if ( r )
-  {
-    char *ona = NULL;
 
-    ona = duf_option_description( longindex, NULL );
-    /* DUF_ERROR( "returns: %d = ( %s )", r, ona ); */
-    mas_free( ona );
-  }
-  /* DUF_PRINTF( 0, "xxxxxxxxxxxxxxxxxx %s -> %lu:%lu", optarg, duf_config->cli.dbg.min_line, duf_config->cli.dbg.max_line ); */
-
+  /* DUF_PRINTF( 0, "## long  ########### r:%d; Li:%d; %s", r, longindex, duf_option_description( longindex ) ); */
   DUF_TEST_RN( r );
   return r;
 }

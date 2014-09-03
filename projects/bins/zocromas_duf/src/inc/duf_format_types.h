@@ -36,9 +36,19 @@ typedef struct
   unsigned seq:1;
   unsigned uid:1;
   unsigned short_filename:1;
+} duf_format_flags_t;
+
+typedef struct
+{
+  union
+  {
+    duf_format_flags_t flag;
+    unsigned long long bit;
+  } v;
   unsigned nsame;
   unsigned offset;
-} duf_format_t;
+} duf_format_combo_t;
+
 
 
 typedef enum

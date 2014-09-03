@@ -1,3 +1,4 @@
+/* File 20140902.175935 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,9 +11,6 @@
 
 #include "duf_maintenance.h"
 
-
-
-/* #include "duf_config.h" */
 #include "duf_config_ref.h"
 
 #include "duf_utils.h"          /* */

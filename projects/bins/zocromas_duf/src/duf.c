@@ -1,4 +1,4 @@
-/* File #1 20140902.123820 */
+/* File 20140902.123820 */
 #include <string.h>
 #include <time.h>
 
@@ -67,7 +67,7 @@ duf_main( int argc, char **argv )
     DUF_TRACE( any, 1, "any test" );
 
     r = duf_all_options( argc, argv );
-    if ( r > 0 )
+    if ( r >= 0 )
     {
       DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
       r = main_db( argc, argv );

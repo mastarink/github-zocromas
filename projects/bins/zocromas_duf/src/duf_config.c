@@ -1,4 +1,4 @@
-/* File #2 20140902.123910 */
+/* File 20140902.123910 */
 #include <stdarg.h>
 #include <string.h>
 /* #include <getopt.h> */
@@ -22,7 +22,6 @@
 /* ###################################################################### */
 
 duf_config_t *duf_config = NULL;
-
 
 duf_tmp_t *
 duf_tmp_create( void )
@@ -147,6 +146,7 @@ duf_config_delete( void )
   mas_del_argv( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0 );
   duf_config->u.glob.include_files.argc = 0;
   duf_config->u.glob.include_files.argv = NULL;
+
   mas_del_argv( duf_config->u.glob.exclude_files.argc, duf_config->u.glob.exclude_files.argv, 0 );
   duf_config->u.glob.exclude_files.argc = 0;
   duf_config->u.glob.exclude_files.argv = NULL;

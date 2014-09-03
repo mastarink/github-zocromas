@@ -2,10 +2,13 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 noinst_PROGRAMS=mtest
 
+noinst_HEADERS=duf_optable.cdef duf_optable_help.cdef duf_optable_trace.cdef duf_optable_sflag.cdef \
+	duf_optable_uplus.cdef duf_optable_str.cdef \
+	duf_optable_flag.cdef duf_optable_filter.cdef
 
 zocromas_duf_SOURCES=				   \
 	duf.c duf_maindb.c duf_action.c		    \
-	duf_dbg.c duf_config.c			     \
+	duf_dbg.c duf_config.c duf_status.c	     \
 	duf_options.c duf_cli_options.c duf_option.c  \
 	duf_options_table.c			       \
 	duf_create.c 					\

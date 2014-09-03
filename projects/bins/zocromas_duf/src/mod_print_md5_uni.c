@@ -92,22 +92,23 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     {
       duf_fileinfo_t fi = { 0 };
 
-      duf_format_t format = {
-        .filename = 1,
-        .seq = 1,
-        .dirid = 0,
-        .inode = 0,
-        .mode = 1,
-        .nlink = 1,
-        .uid = 1,
-        .gid = 1,
-        .filesize = 0,
-        .md5 = 0,
-        .md5id = 0,
-        .mtime = 1,
-        .nsame = 0,
-        .prefix = 0,
-        .suffix = 0,
+      duf_format_combo_t format = {.v.flag = {
+                                              .filename = 1,
+                                              .seq = 1,
+                                              .dirid = 0,
+                                              .inode = 0,
+                                              .mode = 1,
+                                              .nlink = 1,
+                                              .uid = 1,
+                                              .gid = 1,
+                                              .filesize = 0,
+                                              .md5 = 0,
+                                              .md5id = 0,
+                                              .mtime = 1,
+                                              .prefix = 0,
+                                              .suffix = 0,
+                                              },
+      .nsame = 0,
       };
       /* fi.nsame = nsame; */
       fi.st.st_mode = ( mode_t ) filemode;
@@ -176,22 +177,24 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
   {
     duf_fileinfo_t fi = { 0 };
 
-    duf_format_t format = {
-      .filename = 0,
-      .seq = 1,
-      .dirid = 0,
-      .inode = 0,
-      .mode = 1,
-      .nlink = 1,
-      .uid = 1,
-      .gid = 1,
-      .filesize = 1,
-      .md5 = 1,
-      .md5id = 1,
-      .mtime = 1,
-      .nsame = 1,
-      .prefix = 1,
-      .suffix = 0,
+    duf_format_combo_t format = {.v.flag = {
+                                            .filename = 0,
+                                            .seq = 1,
+                                            .dirid = 0,
+                                            .inode = 0,
+                                            .mode = 1,
+                                            .nlink = 1,
+                                            .uid = 1,
+                                            .gid = 1,
+                                            .filesize = 1,
+                                            .md5 = 1,
+                                            .md5id = 1,
+                                            .mtime = 1,
+                                            .prefix = 1,
+                                            .suffix = 0,
+                                            }
+    ,
+    .nsame = 1,
     };
     fi.nsame = nsame;
     /* fi.st.st_mode = ( mode_t ) filemode; */

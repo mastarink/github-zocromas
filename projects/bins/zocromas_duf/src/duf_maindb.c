@@ -1,4 +1,4 @@
-/* File #3 20140902.124011 */
+/* File 20140902.124011 */
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
@@ -18,7 +18,7 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 
-#include "duf_options.h"
+/* #include "duf_options.h" */
 
 #include "duf_sql_defs.h"
 #include "duf_sql.h"
@@ -100,10 +100,6 @@ main_db( int argc, char **argv )
 #endif
 
 
-
-
-    /* if ( r >= 0 )                                      */
-    /*   r = duf_cli_option_by_string( "trace-maction=2" ); */
     DUF_TRACE( current, 0, "r:%d", r );
     if ( r >= 0 && duf_config->cli.dbg.verbose )
     {

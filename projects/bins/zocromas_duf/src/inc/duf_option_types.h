@@ -3,6 +3,7 @@
 #  include <getopt.h>
 
 #  include "duf_flags_types.h"
+#  include "duf_fun_types.h"
 
 typedef enum
 {
@@ -21,6 +22,7 @@ typedef enum
   DUF_OPTION_CLASS_REFERENCE,
   DUF_OPTION_CLASS_COLLECT,
   DUF_OPTION_CLASS_SCAN,
+  DUF_OPTION_CLASS_FILTER,
   DUF_OPTION_CLASS_UPDATE,
   DUF_OPTION_CLASS_REQUEST,
   DUF_OPTION_CLASS_PRINT,
@@ -36,19 +38,20 @@ typedef enum
 
 typedef enum
 {
+  DUF_OPTION_VTYPE_NONE,
   DUF_OPTION_VTYPE_UPLUS,
   DUF_OPTION_VTYPE_NUM,
   DUF_OPTION_VTYPE_NL,
   DUF_OPTION_VTYPE_NLL,
-  
+
   DUF_OPTION_VTYPE_MIN,
   DUF_OPTION_VTYPE_MAX,
   DUF_OPTION_VTYPE_MINMAX,
-  
+
   DUF_OPTION_VTYPE_MINLL,
   DUF_OPTION_VTYPE_MAXLL,
   DUF_OPTION_VTYPE_MINMAXLL,
-  
+
   DUF_OPTION_VTYPE_FLAG,
   DUF_OPTION_VTYPE_SFLAG,
   DUF_OPTION_VTYPE_STR,
@@ -58,9 +61,27 @@ typedef enum
   DUF_OPTION_VTYPE_MINDATETIME,
   DUF_OPTION_VTYPE_MAXDATETIME,
   DUF_OPTION_VTYPE_MINMAXDATETIME,
+
+  DUF_OPTION_VTYPE_IFUN,
+  DUF_OPTION_VTYPE_AFUN,
 } duf_option_vtype_t;
 
 typedef struct option duf_option_t;
+
+typedef struct
+{
+  duf_void_int_t func;
+  int arg;
+} duf_ifuncpair_t;
+typedef struct
+{
+  duf_void_argcv_t func;
+} duf_afuncpair_t;
+typedef struct
+{
+  duf_void_void_t func;
+} duf_funcpair_t;
+
 
 
 typedef struct
@@ -73,6 +94,12 @@ typedef struct
   unsigned long m;
   unsigned mf:1;
   duf_anyflag_t afl;
+  union
+  {
+    duf_ifuncpair_t i;
+    duf_funcpair_t v;
+    duf_afuncpair_t a;
+  } func;
 } duf_longval_extended_t;
 
 #endif

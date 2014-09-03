@@ -4,6 +4,7 @@ sfind duf_print_defs.h
 
 
 sfind duf_config_types.h
+sfind duf_status_types.h
 sfind duf_levinfo_types.h
 
 tab sfind duf_trace_types.h

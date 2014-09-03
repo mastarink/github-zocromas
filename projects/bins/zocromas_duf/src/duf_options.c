@@ -1,3 +1,4 @@
+/* File 20140903.131337 */
 #include <assert.h>
 #include <string.h>
 /* #include <getopt.h> */
@@ -234,40 +235,62 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
 }
 
 char *
-duf_option_description( int longindex, const duf_longval_extended_t * extended )
-{
-  return duf_option_description_d( longindex, NULL, NULL );
-}
-
-char *
-duf_option_description_d( int longindex, const char *delimh, const char *delim )
+duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim )
 {
   char *s = NULL;
-  duf_option_code_t codeval;
 
-  codeval = duf_config->longopts_table[longindex].val;
-  s = duf_option_names_d( codeval, delim );
-  if ( s )
+  if ( extended )
   {
-    const char *h;
+    duf_option_code_t codeval;
 
-    h = _duf_find_longval_help( codeval );
-    if ( h )
+    codeval = extended->o.val;
+    s = duf_option_names_d( codeval, delim );
+    if ( s )
     {
-      s = mas_strcat_x( s, delimh ? delimh : " :: " );
-      s = mas_strcat_x( s, h );
+      const char *h;
+
+      h = _duf_find_longval_help( codeval );
+      if ( h )
+      {
+        s = mas_strcat_x( s, delimh ? delimh : " :: " );
+        s = mas_strcat_x( s, h );
+      }
     }
   }
   return s;
 }
 
+char *
+duf_option_description_d( int longindex, const char *delimh, const char *delim )
+{
+  const duf_longval_extended_t *extended;
+
+  extended = duf_longindex_extended( longindex );
+  return duf_option_description_xd( extended, delimh, delim );
+}
+
+char *
+duf_option_description_x( const duf_longval_extended_t * extended )
+{
+  return duf_option_description_xd( extended, NULL, NULL );
+}
+
+char *
+duf_option_description( int longindex )
+{
+  return duf_option_description_d( longindex, NULL, NULL );
+}
+
+
 static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
   [DUF_OPTION_CLASS_HELP] = "Help",
+  [DUF_OPTION_CLASS_NO_HELP] = "No help",
   [DUF_OPTION_CLASS_SYSTEM] = "System",
   [DUF_OPTION_CLASS_CONTROL] = "Control",
   [DUF_OPTION_CLASS_REFERENCE] = "Reference",
   [DUF_OPTION_CLASS_COLLECT] = "Collect",
   [DUF_OPTION_CLASS_SCAN] = "Scan",
+  [DUF_OPTION_CLASS_FILTER] = "Filter",
   [DUF_OPTION_CLASS_UPDATE] = "Update",
   [DUF_OPTION_CLASS_REQUEST] = "Request",
   [DUF_OPTION_CLASS_PRINT] = "Print",
@@ -280,6 +303,11 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
 };
 
 
+/* 
+ * return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
 int
 duf_cli_option_by_string( const char *string )
 {
@@ -310,6 +338,11 @@ duf_cli_option_by_string( const char *string )
         /* extended = &lo_extended[ilong]; */
         /* extended = duf_longindex_extended( ilong ); */
 
+/* 
+ * duf_parse_option_long return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
         r = duf_parse_option_long( ilong, arg );
         DUF_TEST_R( r );
         break;
@@ -328,6 +361,11 @@ duf_cli_option_by_string( const char *string )
   return r;
 }
 
+/* 
+ * return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
 int
 duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
 {
@@ -363,6 +401,11 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
       DUF_TRACE( explain, 0, "env s: \"%s\"", s );
       xs = mas_expand_string( s );
       DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
+/* 
+ * duf_cli_option_by_string return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
       r = duf_cli_option_by_string( xs );
       mas_free( xs );
     }
@@ -374,6 +417,11 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
   return r;
 }
 
+/* 
+ * return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
 int
 duf_env_options( int argc, char *argv[] )
 {
@@ -408,6 +456,11 @@ duf_infile( int dot, const char *at, const char *filename )
   return f;
 }
 
+/* 
+ * return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
 int
 duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, const char *filename )
 {
@@ -439,6 +492,11 @@ duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, 
         char *xs;
 
         xs = mas_expand_string( s );
+/* 
+ * duf_cli_option_by_string return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
         r = duf_cli_option_by_string( xs );
         mas_free( xs );
       }
@@ -449,6 +507,11 @@ duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, 
   return r;
 }
 
+/* 
+ * return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
 int
 duf_infile_options_at_file( int argc, char *argv[], const char *filename )
 {
@@ -457,12 +520,22 @@ duf_infile_options_at_file( int argc, char *argv[], const char *filename )
 
   cfgdir = getenv( DUF_CONFIG_PATH_FROM_ENV );
   DUF_TRACE( options, 0, "getting variable " DUF_CONFIG_PATH_FROM_ENV " value for config path : %s", cfgdir );
+/* 
+ * duf_infile_options_at_dir_and_file return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
   r = duf_infile_options_at_dir_and_file( argc, argv, cfgdir, filename );
 
   DUF_TEST_R( r );
   return r;
 }
 
+/* 
+ * return oclass>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
 int
 duf_infile_options( int argc, char *argv[] )
 {
@@ -483,15 +556,16 @@ _duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value, int maxl
   return 0;
 }
 
+#if 0
 static int
-duf_test_help( int argc, char **argv, duf_option_code_t codeval )
+duf_test_help( int argc, char **argv, duf_option_class_t oclass )
 {
   int r = -1;
 
-  duf_option_class_t oclass = DUF_OPTION_CLASS_BAD;
+  assert( 0 );
+  /* duf_option_description( longindex ); */
 
-
-  oclass = duf_help_option2class( codeval );
+  /* DUF_PRINTF( 0, "Ooooo: %d",  oclass ); */
   /* DUF_PRINTF( 0, "%d / %c => OC:%d (?%d)", opt, opt > ' ' && opt <= 'z' ? opt : '?', oclass, DUF_OPTION_CLASS_ALL ); */
   if ( oclass == DUF_OPTION_CLASS_ALL )
   {
@@ -505,25 +579,28 @@ duf_test_help( int argc, char **argv, duf_option_code_t codeval )
     r = 0;
   }
   else
-    switch ( codeval )
-    {
-    case DUF_OPTION_VERSION:
-      duf_option_version( argc, argv );
-      r = 0;
-      break;
-    case DUF_OPTION_HELP:
-      duf_option_help( argc, argv );
-      r = 0;
-      break;
-    case DUF_OPTION_EXAMPLES:
-      duf_option_examples( argc, argv );
-      r = 0;
-      break;
-    default:
-      break;
-    }
+  {
+    /* switch ( oclass )                    */
+    /* {                                    */
+    /* case DUF_OPTION_CLASS_VERSION:       */
+    /*   duf_option_version( argc, argv );  */
+    /*   r = 0;                             */
+    /*   break;                             */
+    /* case DUF_OPTION_CLASS_HELP:          */
+    /*   duf_option_help( argc, argv );     */
+    /*   r = 0;                             */
+    /*   break;                             */
+    /* case DUF_OPTION_CLASS_EXAMPLES:      */
+    /*   duf_option_examples( argc, argv ); */
+    /*   r = 0;                             */
+    /*   break;                             */
+    /* default:                             */
+    /*   break;                             */
+    /* }                                    */
+  }
   return r;
 }
+#endif
 
 int
 duf_all_options( int argc, char *argv[] )
@@ -532,20 +609,24 @@ duf_all_options( int argc, char *argv[] )
 
   if ( r >= 0 )
     er = r = duf_env_options( argc, argv );
-  DUF_TRACE( options, 0, "got env options; er:%d (%c)", er, er > ' ' && er < 'z' ? er : '-' );
+  DUF_TRACE( options, 0, "got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-' , duf_error_name(r));
 
   if ( r >= 0 )
     fr = r = duf_infile_options( argc, argv );
-  DUF_TRACE( options, 0, "got infile options; fr:%d (%c)", fr, fr > ' ' && fr < 'z' ? fr : '-' );
+  DUF_TRACE( options, 0, "got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-' , duf_error_name(r));
 
   if ( r >= 0 )
     or = r = duf_cli_options( argc, argv );
-  DUF_TRACE( options, 0, "got cli options; or:%d (%c)", or, or > ' ' && or < 'z' ? or : '-' );
+  DUF_TRACE( options, 0, "got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name(r) );
 
-
-
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
-  if ( duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
+/* 
+ * er,fr,or 
+ *   =oclass (>0)  for "help" option
+ *   =0             for other option
+ *   errorcode(<0)  for error
+ * */
+#if 0
+  if ( r >= 0 && duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
   {
     r = 1;
     if ( r == 0 && duf_config->db.dir )
@@ -563,7 +644,8 @@ duf_all_options( int argc, char *argv[] )
   {
     r = 0;
   }
-
+#endif
+  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %s", or, fr, er, duf_error_name(r)  );
   return r;
 }
 
@@ -735,6 +817,10 @@ duf_restore_some_options( const char *a0 )
 }
 
 #define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTION_CLASS_ ## codename;
+/*
+ * if arg is help option
+ * return class id for options to display the help
+ * */
 duf_option_class_t
 duf_help_option2class( duf_option_code_t codeval )
 {
@@ -805,6 +891,14 @@ duf_help_option2class( duf_option_code_t codeval )
 }
 
 void
+duf_option_smart_help_all( duf_option_class_t oclass )
+{
+  if ( oclass == DUF_OPTION_CLASS_ALL )
+    for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
+      duf_option_smart_help( oc );
+}
+
+void
 duf_option_smart_help( duf_option_class_t oclass )
 {
   int *ashown;
@@ -812,11 +906,13 @@ duf_option_smart_help( duf_option_class_t oclass )
 
   ashown = mas_malloc( ss );
   memset( ( void * ) ashown, 0, ss );
-  for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ )
-  {
-  }
+  /* for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ ) */
+  /* {                                                                                                   */
+  /* }                                                                                                   */
   if ( oclass <= DUF_OPTION_CLASS_MAX && oclass_titles[oclass] && *oclass_titles[oclass] )
     DUF_PRINTF( 0, "-=-=-=-=- %s -=-=-=-=-", oclass_titles[oclass] );
+  else
+    DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
   for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ )
   {
     char *s = NULL;
@@ -933,7 +1029,7 @@ duf_option_help( int argc, char **argv )
 }
 
 void
-duf_option_examples( int argc, char **argv )
+duf_option_examples( int argc, char *const *argv )
 {
   DUF_PRINTF( 0, "Examples" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --drop-tables --create-tables" );
@@ -1092,7 +1188,7 @@ duf_option_examples( int argc, char **argv )
 }
 
 void
-duf_option_version( int argc, char **argv )
+duf_option_version( int argc, char *const *argv )
 {
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
   char *sargv1, *sargv2;

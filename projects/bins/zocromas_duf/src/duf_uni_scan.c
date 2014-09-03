@@ -1,3 +1,4 @@
+/* File 20140903.131139 */
 #define DUF_SQL_PDI_STMT
 
 #include <assert.h>
@@ -14,6 +15,7 @@
 #include "duf_utils_path.h"     /* duf_realpath */
 
 #include "duf_config_ref.h"
+#include "duf_status_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
@@ -203,14 +205,11 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
   int r = 0;
 
 
-
-
-
   if ( duf_config->u.size.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->u.size.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->u.size.max, r, pstmt );
-    /* DUF_PRINTF( 0, "binding size %llu .. %llu", duf_config->u.size.min, duf_config->u.size.max ); */
+    DUF_PRINTF( 0, "binding size %llu .. %llu", duf_config->u.size.min, duf_config->u.size.max );
   }
   if ( duf_config->u.same.flag )
   {
@@ -443,12 +442,12 @@ duf_make_all_sccbs( void )
       {
         DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
         r = duf_scan_with_sccb( ppscan_callbacks[astep] /* sccb */  );
-        duf_config->actions_done++;
+        global_status.actions_done++;
       }
     }
     mas_free( ppscan_callbacks );
   }
-  if ( !duf_config->actions_done )
+  if ( !global_status.actions_done )
     r = DUF_ERROR_NO_ACTIONS;
   DEBUG_ENDR( r );
   return r;

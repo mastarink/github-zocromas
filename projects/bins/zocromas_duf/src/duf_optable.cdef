@@ -1,0 +1,85 @@
+#define DO_CL( cl )  .oclass = DUF_OPTION_CLASS_ ## cl
+#define DO_V( vid )  .val = DUF_OPTION_ ## vid
+#define DO_VH( vid ) DO_V( HELP_ ## vid )
+#define DO_VF( vid )  .val = DUF_OPTION_FLAG_ ## vid
+#define DO_A_O .has_arg = optional_argument
+#define DO_A_R .has_arg = required_argument
+#define DO_A_N .has_arg = no_argument
+#define DO_N( n ) .name = # n
+#define DO_Q( n ) .name = n
+#define DO_H( h ) .help = # h
+#define DO_T(vt) .vtype=DUF_OPTION_VTYPE_ ## vt
+#define DO_O(vt, v) DO_T(vt),.mf=1,.m = offsetof(duf_config_t,v)
+#define DO_FL(t,fld) .afl.t={.fld=1}
+#define DO_IFUN(f, a) .func.i={.func=f, .arg=a}
+#define DO_AFUN(f) .func.a={.func=f}
+
+
+
+
+#include "duf_optable_str.cdef"
+#include "duf_optable_sflag.cdef"
+#include "duf_optable_uplus.cdef"
+#include "duf_optable_help.cdef"
+#include "duf_optable_flag.cdef"
+#include "duf_optable_trace.cdef"
+#include "duf_optable_filter.cdef"
+
+  {.o = {DO_Q( "format" ), /*         */ DO_A_R, /* */ DO_V( FORMAT )} /*         */ , DO_CL( PRINT ) /*     */ , DO_H( print format ) /*       */ },
+
+  {.o = {DO_Q( "include" ), /*        */ DO_A_R, /* */ DO_V( GLOB_INCLUDE_FILES )}, DO_CL( NODESC ) /*       */ , DO_H(  ... ) /*               */ },
+  {.o = {DO_Q( "exclude" ), /*        */ DO_A_R, /* */ DO_V( GLOB_EXCLUDE_FILES )}, DO_CL( NODESC ) /*       */ , DO_H(  ... ) /*               */ },
+  {.o = {DO_Q( "min-dbg-lines" ), /*  */ DO_A_R, /* */ DO_V( MIN_DBGLINE )} /*    */ , DO_CL( DEBUG ) /*     */ ,
+   /*      */ DO_O( NUM, cli.dbg.min_line ) /*                                                               */ , DO_H( verbose ) /*            */ },
+  {.o = {DO_Q( "max-dbg-lines" ), /*  */ DO_A_R, /* */ DO_V( MAX_DBGLINE )} /*    */ , DO_CL( DEBUG ) /*     */ ,
+   /*      */ DO_O( NUM, cli.dbg.max_line ) /*                                                               */ , DO_H( verbose ) /*            */ },
+  {.o = {DO_Q( "max-rel-depth" ), /*  */ DO_A_R, /* */ DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.max_rel_depth ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-depth" ), /*      */ DO_A_R, /* */ DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.max_rel_depth ) /*                                                                */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-dirfiles" ), /*   */ DO_A_R, /* */ DO_V( MAXDIRFILES )} /*    */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-dirs" ), /*       */ DO_A_R, /* */ DO_V( MAXITEMS_DIRS )} /*  */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-files" ), /*      */ DO_A_R, /* */ DO_V( MAXITEMS_FILES )} /* */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-items" ), /*      */ DO_A_R, /* */ DO_V( MAXITEMS )} /*       */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+
+
+  {.o = {DO_Q( "max-seq" ), /*        */ DO_A_R, /* */ DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*    */ ,
+   /*      */ DO_O( NUM, u.max_seq ) /*                                                                      */ , DO_H(  .... ) /*              */ },
+
+
+  /* ????????? */
+
+  {.o = {DO_Q( "min-dirfiles" ), /*   */ DO_A_R, /* */ DO_V( MINDIRFILES )} /*    */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "output-file" ), /*    */ DO_A_R, /* */ DO_V( OUTPUT_FILE )} /*    */ , DO_CL( PRINT ) /*     */ , DO_H( output to file ) /*     */ },
+  {.o = {DO_Q( "output-level" ), /*   */ DO_A_O, /* */ DO_V( OUTPUT_LEVEL )} /*   */ , DO_CL( PRINT ) /*     */ , DO_H( output level ) /*       */ },
+
+  {.o = {DO_Q( "test-option" ), /*    */ DO_A_R, /* */ DO_V( TEST )} /*           */ , DO_CL( DEBUG ) /*     */ , DO_H(  .... ) /*              */ },
+
+
+
+  {.o = {DO_Q( "tree2db" ), /*        */ DO_A_N, /* */ DO_V( TREE_TO_DB )} /*     */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "tree-to-db" ), /*     */ DO_A_N, /* */ DO_V( TREE_TO_DB )} /*     */ , DO_CL( NODESC ) /*    */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "zero-db" ), /*        */ DO_A_N, /* */ DO_VF( ZERO_DB )} /*       */ , DO_CL( SYSTEM ) /*    */ , DO_H( zero db ) /*            */ },
+
+  {.o = {DO_Q( "memusage" ), /*       */ DO_A_N, /* */ DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*     */ , DO_H( verbose ) /*            */ },
+
+  /*{.o = {DO_N(),.has_arg = 0,DO_V(LIMIT)},.help = "....",.oclass = ...}, */
+/*{.o = {DO_N(add-to-group), 		 DO_A_N,		       .name = "",.has_arg = 0,DO_V(ADD_TO_GROUP)},.help = "...",.oclass = ...}, */
+/*{.o = {DO_N(group), 		 DO_A_R, 		 DO_V(GROUP)},.help = "help on all",DO_CL(HELP)}, */
+/*{.o = {DO_N(limit), 		 DO_A_R, 		 DO_V(LIMIT)},.help = "trace ....",DO_CL(TRACE)}, */
+  /* .name = "print-dirs",                  .has_arg = no_argument,         */
+  /* .name = "print-duplicates",                    .has_arg = no_argument, */
+  /* .name = "print-files",                 .has_arg = no_argument,         */
+  /* .name = "print-paths",                 .has_arg = no_argument,         */
+  /* .name = "remove-from-group",                   .has_arg = no_argument, */
+  /* .name = "same-exif",                           .has_arg = no_argument, */
+  /* .name = "same-files",                  .has_arg = no_argument,         */
+  /* .name = "same-md5",                            .has_arg = no_argument, */
+  /* .name = "zero-duplicates",                     .has_arg = no_argument, */
+  /* .name = "update-exif",                 .has_arg = no_argument,         */
+  /* .name = "update-mdpath",                       .has_arg = no_argument, */
+  /* .name = "update-mdpath-selective",             .has_arg = no_argument, */
+  /* .name = "update-path",                 .has_arg = no_argument,         */
+
+/* vi: ft=c
+*/

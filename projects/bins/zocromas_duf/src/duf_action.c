@@ -1,4 +1,4 @@
-/* File #4 20140902.174509 */
+/* File 20140902.174509 */
 #include <string.h>
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -10,6 +10,9 @@
 
 /* #include "duf_config.h" */
 #include "duf_config_ref.h"
+
+#include "duf_status_ref.h"
+
 #include "duf_utils.h"
 #include "duf_service.h"
 
@@ -32,6 +35,7 @@
 /* ###################################################################### */
 #include "duf_action.h"
 /* ###################################################################### */
+
 
 
 static int
@@ -76,7 +80,7 @@ duf_action( int argc, char **argv )
       DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
     else
       r = duf_clear_tables(  );
-    duf_config->actions_done++;
+    global_status.actions_done++;
   }
   else
   {
@@ -96,7 +100,7 @@ duf_action( int argc, char **argv )
       DUF_SQL_STEP( r, pstmt );
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
     }
-    duf_config->actions_done++;
+    global_status.actions_done++;
   }
   else
   {
@@ -108,7 +112,7 @@ duf_action( int argc, char **argv )
   {
     DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
     r = duf_check_tables(  );
-    duf_config->actions_done++;
+    global_status.actions_done++;
   }
   else
   {
@@ -132,7 +136,7 @@ duf_action( int argc, char **argv )
         DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ADD_PATH ) );
       else
         r = duf_add_path_uni( duf_config->targv[ia] );
-      duf_config->actions_done++;
+      global_status.actions_done++;
     }
     DUF_TEST_R( r );
   }

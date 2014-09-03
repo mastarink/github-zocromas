@@ -36,8 +36,10 @@ char *duf_option_names( duf_option_code_t code );
 char *duf_option_names_d( duf_option_code_t code, const char *delim );
 
 
-char *duf_option_description( int longindex, const duf_longval_extended_t * extended );
+char *duf_option_description( int longindex );
 char *duf_option_description_d( int longindex, const char *delimh, const char *delim );
+char *duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim );
+char *duf_option_description_x( const duf_longval_extended_t * extended );
 
 #  define DUF_OPT_NAME(n) duf_option_cnames_tmp( -1, DUF_OPTION_ ## n )
 #  define DUF_OPT_FLAG_NAME(n) duf_option_cnames_tmp( -1, DUF_OPTION_FLAG_ ## n )
@@ -186,9 +188,10 @@ char *duf_option_description_d( int longindex, const char *delimh, const char *d
 
 duf_option_class_t duf_help_option2class( duf_option_code_t code );
 
+void duf_option_smart_help_all( duf_option_class_t oclass );
 void duf_option_smart_help( duf_option_class_t oclass );
 void duf_option_help( int argc, char **argv );
-void duf_option_examples( int argc, char **argv );
-void duf_option_version( int argc, char **argv );
+void duf_option_examples( int argc, char *const *argv );
+void duf_option_version( int argc, char *const *argv );
 
 #endif
