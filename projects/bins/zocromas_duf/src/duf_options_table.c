@@ -8,6 +8,8 @@
 #include "duf_options_def.h"
 #include "duf_cli_types.h"
 
+#include "duf_option_extended.h"
+#include "duf_option_help.h"
 #include "duf_options.h"
 
 /* man getopt_long */

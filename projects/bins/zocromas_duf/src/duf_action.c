@@ -18,6 +18,8 @@
 
 #include "duf_cli_options.h"
 #include "duf_options.h"
+#include "duf_option_names.h"
+#include "duf_option_restore.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql.h"

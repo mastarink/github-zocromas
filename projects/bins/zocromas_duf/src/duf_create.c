@@ -19,6 +19,7 @@
 #include "duf_sql_defs.h"       /* */
 #include "duf_sql1.h"           /* */
 
+#include "duf_option_names.h"
 
 /* ###################################################################### */
 #include "duf_create.h"         /* */

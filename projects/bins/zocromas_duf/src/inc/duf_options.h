@@ -6,50 +6,11 @@
 
 int duf_show_options( const char *a0 );
 
-char *duf_restore_some_options( const char *a0 );
 
-int duf_cli_option_by_string( const char *string );
-
-int duf_env_options_at_var( int argc, char *argv[], const char *envvarname );
-int duf_env_options( int argc, char *argv[] );
-
-int duf_infile_options_at_file( int argc, char *argv[], const char *filename );
-int duf_infile_options( int argc, char *argv[] );
 
 int duf_all_options( int argc, char *argv[] );
 
-int duf_find_long( duf_option_code_t code );
 
-/* const duf_longval_extended_t *_duf_find_longval_extended( duf_option_code_t code ); */
-const duf_longval_extended_t *duf_longindex_extended( int longindex );
-const char *duf_longindex_extended_name( int longindex );
-duf_option_code_t duf_longindex_extended_codeval( int longindex );
-
-const char *duf_find_longval_help( duf_option_code_t code );
-
-char *duf_cli_option_shorts( void );
-
-const char *duf_option_cnames_tmp( int index, duf_option_code_t code );
-char *duf_option_names_d( duf_option_code_t code, const char *delim );
-
-char *duf_option_names( duf_option_code_t code );
-char *duf_option_names_d( duf_option_code_t code, const char *delim );
-
-
-char *duf_option_description( int longindex );
-char *duf_option_description_d( int longindex, const char *delimh, const char *delim );
-char *duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim );
-char *duf_option_description_x( const duf_longval_extended_t * extended );
-
-#  define DUF_OPT_NAME(n) duf_option_cnames_tmp( -1, DUF_OPTION_ ## n )
-#  define DUF_OPT_FLAG_NAME(n) duf_option_cnames_tmp( -1, DUF_OPTION_FLAG_ ## n )
-#  define DUF_OPT_NAME1(n) duf_option_cnames_tmp( 1, DUF_OPTION_ ## n )
-#  define DUF_OPT_FLAG_NAME1(n) duf_option_cnames_tmp( 1, DUF_OPTION_FLAG_ ## n )
-#  define DUF_OPT_NAME2(n) duf_option_cnames_tmp( 2, DUF_OPTION_ ## n )
-#  define DUF_OPT_FLAG_NAME2(n) duf_option_cnames_tmp( 2, DUF_OPTION_FLAG_ ## n )
-
-#  define DUF_OPTION_NAME(n)  duf_option_cnames_tmp(-1,n)
-#  define DUF_OPTION_LINDEX_NAME(n)  duf_option_cnames_tmp( -1, duf_longindex_extended_codeval( n ) )
 
 #  define DUF_OPTION(lo)  \
     duf_config->lo
@@ -186,12 +147,5 @@ char *duf_option_description_x( const duf_longval_extended_t * extended );
 
 #  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, lo, u)
 
-duf_option_class_t duf_help_option2class( duf_option_code_t code );
-
-void duf_option_smart_help_all( duf_option_class_t oclass );
-void duf_option_smart_help( duf_option_class_t oclass );
-void duf_option_help( int argc, char **argv );
-void duf_option_examples( int argc, char *const *argv );
-void duf_option_version( int argc, char *const *argv );
 
 #endif

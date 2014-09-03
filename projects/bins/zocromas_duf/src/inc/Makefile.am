@@ -1,6 +1,10 @@
 noinst_HEADERS=duf.h duf_maindb.h duf_action.h		\
 	duf_config.h duf_config_ref.h duf_status_ref.h	 \
-	duf_options.h duf_cli_options.h duf_option.h	  \
+	duf_options.h duf_cli_options.h			  \
+	duf_option_find.h duf_option_descr.h duf_option.h  \
+	duf_option_file.h duf_option_env.h		\
+	duf_option_names.h duf_option_cmd.h  duf_option_restore.h	\
+	duf_option_help.h duf_option_extended.h		  \
 	duf_create.h					   \
 	duf_dirent.h duf_filedata.h			    \
 	duf_add.h duf_path.h duf_path2db.h duf_db2path.h     \

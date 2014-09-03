@@ -22,6 +22,7 @@
 #include "duf_file_pathid2.h"
 
 #include "duf_sccb.h"
+#include "duf_option_names.h"
 
 /* ###################################################################### */
 #include "duf_dir_scan2_stages.h"

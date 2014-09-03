@@ -1,4 +1,3 @@
-/* #include <stdarg.h> */
 #include <string.h>
 #include <stddef.h>
 #include <getopt.h>
@@ -10,15 +9,10 @@
 
 #include "duf_maintenance.h"
 
-/* #include "duf_types.h" */
-#include "duf_utils.h"
-#include "duf_service.h"
-
-/* #include "duf_config.h" */
 #include "duf_config_ref.h"
 
 #include "duf_option.h"
-#include "duf_options.h"
+#include "duf_option_names.h"
 
 /* ###################################################################### */
 #include "duf_cli_options.h"
@@ -53,6 +47,7 @@ duf_cli_options( int argc, char *argv[] )
       shorts = duf_cli_option_shorts(  );
       while ( r == 0 && ( ( int ) ( longindex = -1, codeval = getopt_long( argc, argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
       {
+        DUF_TRACE( explain, 1, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
  * duf_parse_option return
  *        oclass (>0) for "help" options
@@ -60,7 +55,7 @@ duf_cli_options( int argc, char *argv[] )
  * or  errorcode (<0) for error
  * */
         r = duf_parse_option( codeval, longindex, optarg );
-        DUF_TRACE( explain, 3, "cli options r: %d", r );
+        DUF_TRACE( explain, 2, "cli options r: %d", r );
 
         if ( r == DUF_ERROR_OPTION )
         {
@@ -68,7 +63,7 @@ duf_cli_options( int argc, char *argv[] )
         }
         cnt++;
       }
-      DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name(r) );
+      DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
       mas_free( shorts );
     }
     if ( optind < argc )
@@ -80,7 +75,7 @@ duf_cli_options( int argc, char *argv[] )
       duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, argc, argv, optind );
     }
   }
-  DUF_TRACE( explain, 2, "cli options  %s", duf_error_name(r) );
+  DUF_TRACE( explain, 2, "cli options  %s", duf_error_name( r ) );
 #if 0
   /* Don't use it before all options processed */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );

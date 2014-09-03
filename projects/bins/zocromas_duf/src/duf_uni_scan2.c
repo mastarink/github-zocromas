@@ -20,6 +20,7 @@
 #include "duf_sql2.h"
 
 #include "duf_sccb.h"
+#include "duf_option_names.h"
 
 #include "duf_dir_scan2.h"
 

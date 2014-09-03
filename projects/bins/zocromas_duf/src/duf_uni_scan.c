@@ -32,6 +32,7 @@
 /* #include "duf_uni_scan1.h" */
 #include "duf_uni_scan2.h"
 
+#include "duf_option_names.h"
 #include "duf_prepare_actions.h"
 
 /* ###################################################################### */
