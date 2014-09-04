@@ -38,7 +38,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
     if ( ( !duf_config->cli.dbg.max_line || duf_config->cli.dbg.lines < duf_config->cli.dbg.max_line )
          && ( duf_config->cli.dbg.lines >= duf_config->cli.dbg.min_line ) )
     {
-      FILE *out = duf_config->cli.trace.out ? duf_config->cli.trace.out : stderr;
+      FILE *out = duf_config->cli.trace.output.out ? duf_config->cli.trace.output.out : stderr;
 
       switch ( code )
       {
@@ -70,11 +70,11 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
       {
       case DBG_START:
         if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 1 )
-          fprintf( out, "#%4lu. %s┌─%3d:%-23s .........\n", duf_config->cli.dbg.lines , pref, line, func );
+          fprintf( out, "#%4lu. %s┌─%3d:%-23s .........\n", duf_config->cli.dbg.lines, pref, line, func );
         break;
       case DBG_STEP:
         if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 2 )
-          fprintf( out, "#%4lu. %s│ %3d:%-23s .........\n", duf_config->cli.dbg.lines , pref, line, func );
+          fprintf( out, "#%4lu. %s│ %3d:%-23s .........\n", duf_config->cli.dbg.lines, pref, line, func );
         break;
       case DBG_STEPIS:
         if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 2 )
@@ -84,7 +84,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           i = va_arg( args, int );
           s = va_arg( args, const char * );
 
-          fprintf( out, "#%4lu. %s│ %3d:%-23s ......... int(%d) (%s)\n", duf_config->cli.dbg.lines , pref, line, func, i, s );
+          fprintf( out, "#%4lu. %s│ %3d:%-23s ......... int(%d) (%s)\n", duf_config->cli.dbg.lines, pref, line, func, i, s );
         }
         break;
       case DBG_STEPI2S:
@@ -97,7 +97,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           i2 = va_arg( args, int );
           s = va_arg( args, const char * );
 
-          fprintf( out, "#%4lu. %s│ %3d:%-23s ......... int(%d;%d) (%s)\n", duf_config->cli.dbg.lines , pref, line, func, i1, i2, s );
+          fprintf( out, "#%4lu. %s│ %3d:%-23s ......... int(%d;%d) (%s)\n", duf_config->cli.dbg.lines, pref, line, func, i1, i2, s );
         }
         break;
       case DBG_STEPULL:
@@ -106,7 +106,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           unsigned long long ull = 0;
           ull = va_arg( args, int );
 
-          fprintf( out, "#%4lu. %s│ %3d:%-23s ......... ull(%llu)\n", duf_config->cli.dbg.lines , pref, line, func, ull );
+          fprintf( out, "#%4lu. %s│ %3d:%-23s ......... ull(%llu)\n", duf_config->cli.dbg.lines, pref, line, func, ull );
         }
         break;
       case DBG_STEPS:
@@ -116,14 +116,14 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           s = va_arg( args, const char * );
 
           if ( s )
-            fprintf( out, "#%4lu. %s│ %3d:%-23s ......... '%s'\n", duf_config->cli.dbg.lines , pref, line, func, s );
+            fprintf( out, "#%4lu. %s│ %3d:%-23s ......... '%s'\n", duf_config->cli.dbg.lines, pref, line, func, s );
           else
-            fprintf( out, "#%4lu. %s│ %3d:%-23s ......... Nil\n", duf_config->cli.dbg.lines , pref, line, func );
+            fprintf( out, "#%4lu. %s│ %3d:%-23s ......... Nil\n", duf_config->cli.dbg.lines, pref, line, func );
         }
         break;
       case DBG_END:
         if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 1 )
-          fprintf( out, "#%4lu. %s└─%3d:%-23s .........\n", duf_config->cli.dbg.lines , pref, line, func );
+          fprintf( out, "#%4lu. %s└─%3d:%-23s .........\n", duf_config->cli.dbg.lines, pref, line, func );
         break;
       case DBG_ENDR:
         if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 1 )
@@ -131,7 +131,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           int r = 0;
           r = va_arg( args, int );
 
-          fprintf( out, "#%4lu. %s└─%3d:%-23s ......... r=int(%d)\n", duf_config->cli.dbg.lines , pref, line, func, r );
+          fprintf( out, "#%4lu. %s└─%3d:%-23s ......... r=int(%d)\n", duf_config->cli.dbg.lines, pref, line, func, r );
         }
         break;
       case DBG_ENDRS:
@@ -142,7 +142,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           r = va_arg( args, int );
           s = va_arg( args, const char * );
 
-          fprintf( out, "#%4lu. %s└─%3d:%-23s ......... r=int(%d) (%s)\n", duf_config->cli.dbg.lines , pref, line, func, r, s );
+          fprintf( out, "#%4lu. %s└─%3d:%-23s ......... r=int(%d) (%s)\n", duf_config->cli.dbg.lines, pref, line, func, r, s );
         }
         break;
       case DBG_ENDULL:
@@ -151,7 +151,7 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           unsigned long long r = 0;
           r = va_arg( args, unsigned long long );
 
-          fprintf( out, "#%4lu. %s└─%3d:%-23s ......... llu(%llu)\n", duf_config->cli.dbg.lines , pref, line, func, r );
+          fprintf( out, "#%4lu. %s└─%3d:%-23s ......... llu(%llu)\n", duf_config->cli.dbg.lines, pref, line, func, r );
         }
         break;
       case DBG_ENDS:
@@ -161,17 +161,17 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
           s = va_arg( args, const char * );
 
           if ( s )
-            fprintf( out, "#%4lu. %s└─%3d:%-23s ......... '%s'\n", duf_config->cli.dbg.lines , pref, line, func, s );
+            fprintf( out, "#%4lu. %s└─%3d:%-23s ......... '%s'\n", duf_config->cli.dbg.lines, pref, line, func, s );
           else
-            fprintf( out, "#%4lu. %s└─%3d:%-23s ......... Nil\n", duf_config->cli.dbg.lines , pref, line, func );
+            fprintf( out, "#%4lu. %s└─%3d:%-23s ......... Nil\n", duf_config->cli.dbg.lines, pref, line, func );
         }
         break;
       default:
         if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 1 )
-          fprintf( out, "#%4lu. %s::%3d:%-23s r=%d .........\n", duf_config->cli.dbg.lines , pref, line, func, code );
+          fprintf( out, "#%4lu. %s::%3d:%-23s r=%d .........\n", duf_config->cli.dbg.lines, pref, line, func, code );
         break;
       }
-            switch ( code )
+      switch ( code )
       {
       case DBG_START:
         /* if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 1 ) */

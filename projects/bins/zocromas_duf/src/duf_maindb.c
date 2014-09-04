@@ -311,7 +311,7 @@ main_db( int argc, char **argv )
                 label++;
                 char buf[64];
 
-                duf_strfgmtime( buf, sizeof( buf ), "%F %T", tv );
+                duf_strfgmtime( buf, sizeof( buf ), "%F %T", &tv );
                 /* DUF_PRINTF( 0, ". %7s: %6lu:%15s;  ", label, tuple[iv], buf ); */
                 DUF_PRINTF( 0, ". %s: %15s;  ", label, buf );
               }

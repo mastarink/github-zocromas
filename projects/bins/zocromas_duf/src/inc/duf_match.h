@@ -3,7 +3,7 @@
 
 #  include "duf_ufilter_types.h"
 
-int duf_filename_match( duf_filter_glob_t * glob, const char *filename );
+int duf_filename_match( duf_filter_globx_t * globx, const char *filename );
 
 
 int duf_lim_match( duf_limits_t lim, int filesame );

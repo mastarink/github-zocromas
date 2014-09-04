@@ -35,7 +35,7 @@
 int
 duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
 {
-  int r;
+  int r = 0;
 
   DUF_SFIELD2( filename );
   DUF_UFIELD2( filesize );
@@ -43,7 +43,7 @@ duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
   DUF_UFIELD2OPT( nsame );
 
 
-  r = ( duf_filename_match( &duf_config->u.glob, filename ) ) && ( duf_lim_matchll( duf_config->u.size, filesize ) )
+  r = ( duf_filename_match( &duf_config->u.globx, filename ) ) && ( duf_lim_matchll( duf_config->u.size, filesize ) )
         && ( duf_lim_match( duf_config->u.same, nsame ) ) && ( duf_lim_match( duf_config->u.md5id, md5id ) );
 
   /* DUF_PRINTF( 0, "@@@@@@@@@@ %llu -- %llu -- %llu == %d / %d", duf_config->u.size.min, filesize, duf_config->u.size.max, */

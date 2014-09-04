@@ -59,13 +59,13 @@ int duf_all_options( int argc, char *argv[] );
 
 #  define DUF_OPTION_ACQUIRE_NUM(lo)  \
       if ( optarg && *optarg ) \
-        DUF_OPTION_ACQUIRE_NSET(lo, duf_strtol( optarg, &r) )
+        DUF_OPTION_ACQUIRE_NSET(lo, duf_strtol_suff( optarg, &r) )
 
 
 
 #  define DUF_OPTION_ACQUIRE_NUM_PLUS(lo)  \
       if ( optarg && *optarg ) \
-        DUF_OPTION_ACQUIRE_NSET(lo, duf_strtol( optarg, &r) ); \
+        DUF_OPTION_ACQUIRE_NSET(lo, duf_strtol_suff( optarg, &r) ); \
       else \
         DUF_OPTION_N(lo)++
 

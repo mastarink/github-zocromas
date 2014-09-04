@@ -144,10 +144,10 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS_DIRS, maxitems.dirs, u, maxlen );
   /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDERR, nonew, cli.trace ); */
   /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDOUT, nonew, cli.trace ); */
-  DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.out == stderr, maxlen );
-  DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.out == stdout, maxlen );
+  DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.output.out == stderr, maxlen );
+  DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDOUT, out, cli.trace, duf_config->cli.trace.output.out == stdout, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, OUTPUT_FILE, file, cli.output, maxlen );
-  DUF_OPTION_RESTORE_STR( codeval, ptr, TRACE_FILE, file, cli.trace, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, TRACE_FILE, file, cli.trace.output, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, DB_DIRECTORY, dir, db, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_ADM, name, db.adm, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_MAIN, name, db.main, maxlen );

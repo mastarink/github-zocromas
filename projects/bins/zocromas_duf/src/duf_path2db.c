@@ -239,11 +239,11 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
 static int
 duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert, unsigned long long *pparentid )
 {
-  int r;
+  int r = 0;
 
-  assert( pdi );
-  assert( pparentid );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@ depth: %d insdir:[%s]", duf_pdi_depth( pdi ), insdir );
+  /* assert( pdi );                                                                          */
+  /* assert( pparentid );                                                                    */
+  /* DUF_TRACE( temp, 0, "@@@@@@@@@@@ depth: %d insdir:[%s]", duf_pdi_depth( pdi ), insdir); */
   if ( r >= 0 )
     r = duf_levinfo_godown( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  );
 
@@ -252,8 +252,8 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
     r = duf_levinfo_openat_dh( pdi );
 
   /* upfd = duf_levinfo_dfd( pdi ); */
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@ upfd: %d // %d // `%s` :: %d", duf_levinfo_dfd( pdi ), duf_levinfo_dfd( pdi ), duf_levinfo_itemname( pdi ),
-             pdi->opendir );
+  DUF_TRACE( temp, 0, "@@ depth: %d @@@@@@@@@ upfd: %d // %d // `%s` :: %d", duf_pdi_depth( pdi ), duf_levinfo_dfd( pdi ), duf_levinfo_dfd( pdi ),
+             duf_levinfo_itemname( pdi ), pdi->opendir );
   DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, duf_levinfo_dfd( pdi ) );
   /* pst_dir = duf_levinfo_stat( pdi ); */
   /* assert( pst_dir ); */
@@ -382,6 +382,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
   char *real_path;
 
   assert( pdi );
+  /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );
 
@@ -406,4 +407,3 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
  *      ....
  *      return r;
  * */
-

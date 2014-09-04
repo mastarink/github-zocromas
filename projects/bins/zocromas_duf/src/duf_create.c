@@ -126,23 +126,27 @@ duf_check_table_filedatas( void )
 #endif
                         ")", "Create filedatas" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_sd5id ON filedatas (sd5id)", "Create filedatas 1" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_exifid ON filedatas (exifid)", "Create filedatas 1" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_crc32id ON filedatas (crc32id)", "Create filedatas 1" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_mimeid ON filedatas (mimeid)", "Create filedatas 1a" );
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_md5id ON filedatas (md5id)", "Create filedatas 2" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_sd5id ON filedatas (sd5id)", "Create filedatas 2" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_crc32id ON filedatas (crc32id)", "Create filedatas 3" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_md5id ON filedatas (md5id)", "Create filedatas 4" );
   /* if ( r >= 0 )                                                                                                                              */
-  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filestatus ON filedatas (filestatus)", "Create filedatas 3" ); */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filestatus ON filedatas (filestatus)", "Create filedatas 5" ); */
   /* if ( r >= 0 )                                                                                                                              */
-  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filetype ON filedatas (filetype)", "Create filedatas 4" );     */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filetype ON filedatas (filetype)", "Create filedatas 6" );     */
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_size ON filedatas (size)", "Create filedatas 5" );
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_size ON filedatas (size)", "Create filedatas 7" );
   /* if ( r >= 0 )                                                                                                                */
-  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uid ON filedatas (uid)", "Create filedatas 6" ); */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uid ON filedatas (uid)", "Create filedatas 8" ); */
   /* if ( r >= 0 )                                                                                                                */
-  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_gid ON filedatas (gid)", "Create filedatas 7" ); */
+  /*   r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_gid ON filedatas (gid)", "Create filedatas 9" ); */
   if ( r >= 0 )
-    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uniq ON filedatas (dev,inode)", "Create filedatas 8" );
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uniq ON filedatas (dev,inode)", "Create filedatas 10" );
 
   if ( r >= 0 )
     r = duf_sql_exec_msg( "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "duf_filedatas_lastupdated " /* */
@@ -608,7 +612,9 @@ duf_check_table_exif( void )
 #endif
                         " modelid INTEGER , date_time REAL" /* */
                         ", dupexifcnt INTEGER" /* */
-                        ", broken_date TEXT, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
+                        ", fixed INTEGER" /* */
+                        ", broken_date TEXT " /* */
+			", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         /* ", FOREIGN KEY(" DUF_SQL_IDNAME ") REFERENCES filedatas(exifid) " */
                         " )", "Create exif" );
   if ( r >= 0 )

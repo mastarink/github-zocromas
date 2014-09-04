@@ -304,7 +304,7 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
 int
 duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_str_cb2_t str_cb2 )
 {
-  int r;
+  int r = 0;
 
   /* scan directories in this directory */
 /* duf_scan_db_items2:

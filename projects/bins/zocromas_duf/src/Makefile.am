@@ -4,7 +4,8 @@ noinst_PROGRAMS=mtest
 
 noinst_HEADERS=duf_optable.cdef duf_optable_help.cdef duf_optable_trace.cdef duf_optable_sflag.cdef \
 	duf_optable_uplus.cdef duf_optable_str.cdef \
-	duf_optable_flag.cdef duf_optable_filter.cdef
+	duf_optable_flag.cdef duf_optable_filter.cdef \
+	duf_optable_debug.cdef duf_optable_redo_and_obsolete.cdef
 
 zocromas_duf_SOURCES=				   \
 	duf.c duf_maindb.c duf_action.c		    \

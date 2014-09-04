@@ -89,20 +89,44 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 
 
 
-#  define DUF_SQL_BIND_LL( name, value, r, pstmt_m )    { if ( r >= 0 ) r = duf_sql_bindn_long_long( pstmt_m, ":" #name, value ); DUF_TEST_R( r ); }
-#  define DUF_SQL_BIND_LL_NZ( name, value, r, pstmt_m ) { if ( r >= 0 ) r = duf_sql_bindn_long_long_nz( pstmt_m, ":" #name, value ); DUF_TEST_R( r ); }
-#  define DUF_SQL_BIND_LL_NZ_OPT( name, value, r, pstmt_m ) \
+#  define DUF_SQL_BIND_LL( name, value, r, pstmt_m ) \
 		{ \
 		  if ( r >= 0 ) \
-		  {  \
-		    r = duf_sql_bindn_long_long_nz( pstmt_m, ":" #name, value ); \
-		    if ( r == DUF_ERROR_BIND_NAME ) \
-		      r = 0; \
-		     DUF_TEST_R( r ); \
+		  { \
+		    r = duf_sql_bindn_long_long( pstmt_m, ":" #name, value ); \
+		    DUF_TEST_R( r ); \
 		  } \
 		}
+#  define DUF_SQL_BIND_LL_NZ    ( name, value, r, pstmt_m ) \
+		  if ( r >= 0 ) \
+		  { \
+		    r = duf_sql_bindn_long_long_nz( pstmt_m, ":" #name, value ); \
+		    DUF_TEST_R( r ); \
+		  }
+#  define DUF_SQL_BIND_LL_NZ_OPT( name, value, r, pstmt_m ) \
+		  if ( r >= 0 ) \
+		  {  \
+                    r = duf_sql_bindn_long_long_nz( pstmt_m, ":" #name, value ); \
+		    if ( r == DUF_ERROR_BIND_NAME ) \
+		      r = 0; \
+		    DUF_TEST_R( r ); \
+		  }
 
-#  define DUF_SQL_BIND_S( name, value, r, pstmt_m ) { if ( r >= 0 ) r = duf_sql_bindn_string( pstmt_m, ":" #name, value ); DUF_TEST_R( r ); }
+#  define DUF_SQL_BIND_S( name, value, r, pstmt_m ) \
+		  if ( r >= 0 ) \
+		  { \
+		    r = duf_sql_bindn_string( pstmt_m, ":" #name, value ); \
+		    DUF_TEST_R( r ); \
+		  }
+#  define DUF_SQL_BIND_S_OPT( name, value, r, pstmt_m ) \
+		  if ( r >= 0 ) \
+		  { \
+		    r = duf_sql_bindn_string( pstmt_m, ":" #name, value ); \
+		    if ( r == DUF_ERROR_BIND_NAME ) \
+		      r = 0; \
+		    DUF_TEST_R( r );\
+		  }
+
 
 #  define DUF_SQL_STEP( r, pstmt_m )                   if ( r >= 0 || r==DUF_SQL_ROW ) r = duf_sql_step( pstmt_m )
 #  define DUF_SQL_CHANGES_NOPDI( changes, r, pstmt_m ) if ( r >= 0 || r==DUF_SQL_ROW || r==DUF_SQL_DONE ) changes = duf_sql_changes(  )

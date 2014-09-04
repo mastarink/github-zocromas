@@ -225,7 +225,8 @@ static const char *final_sql[] = {
   "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
         " FROM " DUF_DBPREF "mime AS mi " /* */
         " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.mimeid=mi." DUF_SQL_IDNAME ") " /* */
-        " WHERE " DUF_DBPREF "mime.mime=mi.mime)" /* */
+        " WHERE " DUF_DBPREF "mime." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
+        /* " WHERE " DUF_DBPREF "mime.mime=mi.mime)" (* *) */
         ,
 
 

@@ -68,6 +68,10 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
   bar.width = width * bar.percent;
   if ( bar.width != ( bar.prev_width - 1 ) )
   {
+    char cur_time[128] = "??";
+
+    duf_strflocaltime( cur_time, sizeof( cur_time ), "%Y%m%d.%H:%M:%S", NULL );
+
     if ( bar.width == 0 )
       fputs( "\n", stderr );
     fprintf( stderr, "\r [" );
@@ -76,7 +80,8 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
     fputc( '>', stderr );
     for ( int i = bar.width; i < width; i++ )
       fputc( ' ', stderr );
-    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, msg );
+
+    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, cur_time, msg );
     bar.prev_width = bar.width + 1;
     if ( bar.width == width )
       fputs( "\n", stderr );
@@ -84,22 +89,37 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
 }
 
 size_t
-duf_strflocaltime( char *s, size_t max, const char *format, time_t tim )
+duf_strflocaltime( char *s, size_t max, const char *format, const time_t * ptim )
 {
   struct tm tm;
   size_t sz = 0;
+  time_t timet;
 
-  if ( localtime_r( &tim, &tm ) )
+  if ( !ptim )
+  {
+    timet = time( NULL );
+    ptim = &timet;
+  }
+
+  if ( localtime_r( ptim, &tm ) )
     sz = strftime( s, max, format, &tm );
   return sz;
 }
+
 size_t
-duf_strfgmtime( char *s, size_t max, const char *format, time_t tim )
+duf_strfgmtime( char *s, size_t max, const char *format, const time_t * ptim )
 {
   struct tm tm;
   size_t sz = 0;
+  time_t timet;
 
-  if ( gmtime_r( &tim, &tm ) )
+  if ( !ptim )
+  {
+    timet = time( NULL );
+    ptim = &timet;
+  }
+
+  if ( gmtime_r( ptim, &tm ) )
     sz = strftime( s, max, format, &tm );
   return sz;
 }

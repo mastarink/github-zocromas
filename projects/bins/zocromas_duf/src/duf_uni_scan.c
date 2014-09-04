@@ -121,7 +121,7 @@ duf_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t *
 
     DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", di.total_files );
     DUF_TRACE( explain, 0, "%llu files registered in db", di.total_files );
-
+    /* assert( di.depth == -1 ); */
     r = duf_pdi_init_wrap( &di, real_path, 0 );
 
     /* create level-control array, open 0 level */
@@ -217,6 +217,11 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
     DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->u.same.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->u.same.max, r, pstmt );
   }
+  if ( duf_config->u.exifsame.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minExifSame, duf_config->u.exifsame.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxExifSame, duf_config->u.exifsame.max, r, pstmt );
+  }
   if ( duf_config->u.nameid.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minNameID, duf_config->u.nameid.min, r, pstmt );
@@ -236,6 +241,11 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
       DUF_PRINTF( 0, "binding mtime %llu .. %llu: %s .. %s", duf_config->u.mtime.min, duf_config->u.mtime.max, buf1, buf2 );
     }
 #endif
+  }
+  if ( duf_config->u.exifdt.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minExifDT, duf_config->u.exifdt.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxExifDT, duf_config->u.exifdt.max, r, pstmt );
   }
   if ( duf_config->u.inode.flag )
   {
@@ -262,6 +272,11 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
     DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->u.exifid.max, r, pstmt );
   }
+  if ( duf_config->u.glob )
+  {
+    DUF_SQL_BIND_S_OPT( GName, duf_config->u.glob, r, pstmt );
+  }
+
   return r;
 }
 
@@ -461,7 +476,7 @@ duf_make_all_sccbs( void )
 int
 duf_make_all_sccbs_wrap( void )
 {
-  int r;
+  int r = 0;
 
   DEBUG_START(  );
   r = duf_make_all_sccbs(  );

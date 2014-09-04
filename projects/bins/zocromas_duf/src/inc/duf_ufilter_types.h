@@ -22,11 +22,11 @@ typedef struct
   char **argv;
 } duf_argvc_t;
 
-typedef struct glob
+typedef struct globx
 {
   duf_argvc_t include_files;
   duf_argvc_t exclude_files;
-} duf_filter_glob_t;
+} duf_filter_globx_t;
 
 typedef struct
 {
@@ -50,7 +50,8 @@ typedef struct
   unsigned long long max_seq;
   duf_items_t maxitems;
   duf_limits_t dirfiles;
-  duf_filter_glob_t glob;
+  duf_filter_globx_t globx;
+  char *glob;
   /* unsigned long long sd5id; */
   /* unsigned long long md5id; */
   /* unsigned long long crc32id; */
@@ -58,10 +59,13 @@ typedef struct
   /* unsigned long long exifid; */
   duf_limitsll_t size;
   duf_limits_t same;
+  duf_limits_t exifsame;
+  duf_limits_t mimesame;
   duf_limits_t nameid;
   duf_limitsll_t mtime;
   duf_limitsll_t atime;
   duf_limitsll_t ctime;
+  duf_limitsll_t exifdt;
   duf_limits_t inode;
   duf_limits_t md5id;
   duf_limits_t sd5id;

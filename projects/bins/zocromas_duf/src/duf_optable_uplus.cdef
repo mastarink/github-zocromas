@@ -1,12 +1,8 @@
-  {.o = {DO_Q( "debug" ), /*          */ DO_A_O, /* */ DO_V( DEBUG )} /*          */ , DO_CL( DEBUG ) /*     */ ,
-   /*      */ DO_O( UPLUS, cli.dbg.debug ) /*                                                                */ , DO_H( verbose ) /*            */ },
 
   {.o = {DO_Q( "sample" ), /*         */ DO_A_O, /* */ DO_V( SAMPLE )} /*         */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( UPLUS, cli.act.sample ) /*                                                               */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "sampupd" ), /*        */ DO_A_O, /* */ DO_V( SAMPUPD )} /*        */ , DO_CL( NODESC ) /*    */ ,
    /*      */ DO_O( UPLUS, cli.act.sampupd ) /*                                                              */ , DO_H(  .... ) /*              */ },
-  {.o = {DO_Q( "verbose" ), /*        */ DO_A_O, /* */ DO_V( VERBOSE )} /*        */ , DO_CL( DEBUG ) /*     */ ,
-   /*      */ DO_O( UPLUS, cli.dbg.verbose ) /*                                                              */ , DO_H( verbose ) /*            */ },
 
 /* vi: ft=c
 */

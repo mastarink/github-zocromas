@@ -48,9 +48,9 @@ duf_main( int argc, char **argv )
 {
   int r = 0;
 
-  DUF_PRINTF( 0, "************************* %lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
-              sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
-              sizeof( unsigned long ), sizeof( unsigned long long ) );
+  PF0( "%lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
+       sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
+       sizeof( unsigned long ), sizeof( unsigned long long ) );
   /* DUF_TRACE( any, 0, "r=%d", r ); */
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -61,6 +61,13 @@ duf_main( int argc, char **argv )
     }
   }
   r = duf_config_create(  );
+  {
+    extern int dbgfunc_enabled __attribute__ ( ( weak ) );
+
+    if ( &dbgfunc_enabled )
+       /**/ dbgfunc_enabled = 1;
+      PF( "%d", dbgfunc_enabled );
+  }
   /* duf_config->cli.trace.explain = 1; */
   /* DUF_TRACE( any, 0, "r=%d", r ); */
   if ( r >= 0 )
@@ -68,12 +75,15 @@ duf_main( int argc, char **argv )
     DUF_TRACE( any, 1, "any test" );
 
     r = duf_all_options( argc, argv );
+    /* PF( "%s, %d", duf_config->cli.trace.output.file, duf_config->cli.output.level ); */
+    /* PF( "%d", duf_config->cli.dbg.verbose ); */
     if ( r >= 0 )
     {
       DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
       r = main_db( argc, argv );
       DUF_TEST_R( r );
     }
+
     DUF_PUTS( 0, "--------------------------------------------------" );
     DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
     DUF_PUTS( 0, "--------------------------------------------------" );
@@ -88,12 +98,6 @@ duf_main( int argc, char **argv )
     /*   fprintf( stderr, "%c\n", c );   */
     /*   DUF_TRACE( any, 0, "r=%d", r ); */
     /* }                                 */
-    {
-      extern int dbgfunc_enabled __attribute__ ( ( weak ) );
-
-      if ( &dbgfunc_enabled )
-         /**/ dbgfunc_enabled = 1;
-    }
 
     DUF_TEST_RN( r );
 
@@ -130,6 +134,6 @@ int
 main( int argc, char **argv )
 {
   /* setenv( "TZ", "Europe/Kiev", 0 ); */
-  tzset();
+  tzset(  );
   return duf_main( argc, argv );
 }

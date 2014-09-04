@@ -53,7 +53,7 @@
 #  define DUF_IF_TRACE_WHATN( what, name, min )		DUF_IF_TRACE_WHATN_C( duf_config, what,      name, min )
 #  define DUF_IF_TRACEN( name, min )			DUF_IF_TRACE_WHATN(		  cli.trace, name, min)
 
-#  define DUF_TRACE_FILE_C( cfg ) ( cfg && cfg->cli.trace.out ? cfg->cli.trace.out : stdout )
+#  define DUF_TRACE_FILE_C( cfg ) ( cfg && cfg->cli.trace.output.out ? cfg->cli.trace.output.out : stdout )
 
 #  define DUF_TRACE_WHAT_C( cfg, what, name, min, ...)	duf_trace( DUF_TRACE_MODE_ ## name, #name, \
 		    	DUF_IF_TRACE_WHAT_C( cfg, what, name ), min, \
@@ -98,7 +98,7 @@
 /* ###################################################################### */
 
 #  define DUF_ERROR( ... )				DUF_TRACE( error, 0, __VA_ARGS__ )
-#  define DUF_ERRORR( r, ... )				DUF_TRACE( errorr, r, __VA_ARGS__ )
+#  define DUF_ERRORR( r_t, ... )			DUF_TRACE( errorr, r_t, __VA_ARGS__ )
 #  define DUF_ERRORiV( v )				DUF_ERROR( #v ":%d" , v )
 #  define DUF_ERRSYS( ... )				DUF_TRACESYS( error, 0, __VA_ARGS__ )
 #  define DUF_ERRSYSE( ern, ... )			DUF_TRACESYSE( ern, error, 0, __VA_ARGS__ )
@@ -128,4 +128,6 @@
 					    DUF_SQLITE_ERROR_CODE(val) \
 					    )
 #define P(txt) DUF_PRINTF(0, #txt)
+#define PF(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$$$$$$$$$$ " #__VA_ARGS__ " $$$ : " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
+#define PF0(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$$$$$$$$$$ " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
 #endif

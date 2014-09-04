@@ -94,6 +94,7 @@ duf_help_option2class( duf_option_code_t codeval )
   }
   return rv;
 }
+
 static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
   [DUF_OPTION_CLASS_HELP] = "Help",
   [DUF_OPTION_CLASS_NO_HELP] = "No help",
@@ -414,6 +415,11 @@ duf_option_examples( int argc, char *const *argv )
   DUF_PRINTF( 0,
               "  run  /mnt/new_media/media/photo/  -Rpdf --format=human=0,mtime,nameid=0,dirid=0,inode=0,md5=0 "
               "--min-mtime=\"'1999-01-01 00:00:00'\" --max-mtime=\"'2002-08-2 00:00:00'\" 		- %s", "" );
+
+  DUF_PRINTF( 0, "========================= as for 20140904 ===================" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same --glob='*06-unknown.jpeg' 		- %s", "" );
+  DUF_PRINTF( 0, "  shn g --memusage  /mnt/new_media/media/photo/  -Rpdf --same --glob='*06-unknown.jpeg' 		- %s", "" );
+  DUF_PRINTF( 0, "  run -OPREif -X /mnt/new_media/media/photo/ --progress 		- %s", "" );
 
   DUF_PRINTF( 0, "=============================================================" );
 }

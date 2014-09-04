@@ -38,7 +38,7 @@ sfind duf_option_help.h
 tab sfind duf_option_extended.c
 sfind duf_option_extended.h
 
-tab find duf_status.c
+tab sfind duf_status.c
 sfind duf_status_ref.h
 
 tab sfind duf_options_table.c

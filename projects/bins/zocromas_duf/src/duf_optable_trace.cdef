@@ -71,9 +71,12 @@
   {.o = {DO_Q( "trace-update" ), /*   */ DO_A_O, /* */ DO_V( UPDATE_TRACE )} /*   */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.update ) /*                                                             */ , DO_H( trace .... ) /*         */ },
 
-  {.o = {DO_Q( "trace-file" ), /*     */ DO_A_R, /* */ DO_V( TRACE_FILE )} /*     */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
-  {.o = {DO_Q( "trace-stderr" ), /*   */ DO_A_N, /* */ DO_V( TRACE_STDERR )} /*   */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
-  {.o = {DO_Q( "trace-stdout" ), /*   */ DO_A_N, /* */ DO_V( TRACE_STDOUT )} /*   */ , DO_CL( TRACE ) /*     */ , DO_H( trace .... ) /*         */ },
+  {.o = {DO_Q( "trace-file" ), /*     */ DO_A_R, /* */ DO_V( TRACE_FILE )} /*     */ , DO_CL( TRACE ) /*     */ ,
+   /*      */ DO_O( FILE, cli.trace.output ) /*                                                              */ , DO_H( trace output to file )     },
+  {.o = {DO_Q( "trace-stderr" ), /*   */ DO_A_N, /* */ DO_V( TRACE_STDERR )} /*   */ , DO_CL( TRACE ) /*     */ ,
+   /*      */ DO_O( FILE, cli.trace.output ), .call={.value={.u=2}} /*                                       */ , DO_H( trace output to stderr )   },
+  {.o = {DO_Q( "trace-stdout" ), /*   */ DO_A_N, /* */ DO_V( TRACE_STDOUT )} /*   */ , DO_CL( TRACE ) /*     */ ,
+   /*      */ DO_O( FILE, cli.trace.output ), .call={.value={.u=1}} /*                                       */ , DO_H( trace .... )  },
 
 
 /* vi: ft=c

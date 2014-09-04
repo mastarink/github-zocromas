@@ -1,18 +1,14 @@
 #include <dirent.h>
-
-/* #include <stdio.h> */
 #include <string.h>
-/* #include <unistd.h> */
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-/* #include "duf_types.h" */
-#include "duf_utils.h"
+#include "duf_maintenance.h"
+
+#include "duf_match.h"
 
 #include "duf_config_ref.h"
-
-#include "duf_dbg.h"
 
 /* ###################################################################### */
 #include "duf_dirent.h"
@@ -23,8 +19,7 @@ duf_direntry_filter( const struct dirent *de )
 {
   int r = 0;
 
-/*										*/ duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
+  DEBUG_START(  );
   switch ( de->d_type )
   {
   case DT_UNKNOWN:
@@ -45,7 +40,7 @@ duf_direntry_filter( const struct dirent *de )
     break;
   case DT_REG:
 
-    r = duf_filename_match( &duf_config->u.glob, de->d_name );
+    r = duf_filename_match( &duf_config->u.globx, de->d_name );
 
 /* #include <fnmatch.h>                                                   */
 /*     int fnmatch( const char *pattern, const char *string, int flags ); */
@@ -59,6 +54,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
-/*										*/ duf_dbgfunc( DBG_END, __func__, __LINE__ );
+  DEBUG_ENDR( r );
   return r;
 }

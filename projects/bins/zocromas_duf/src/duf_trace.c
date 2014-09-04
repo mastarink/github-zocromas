@@ -112,7 +112,7 @@ int
 duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0,
            unsigned flags, int nerr, FILE * out, const char *fmt, ... )
 {
-  int r;
+  int r = 0;
   va_list args;
 
   va_start( args, fmt );

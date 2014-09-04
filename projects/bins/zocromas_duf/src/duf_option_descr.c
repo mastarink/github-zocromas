@@ -42,7 +42,7 @@ duf_find_longval_help( duf_option_code_t codeval, int *pr )
   return ph ? ph : "-";
 }
 
-char *
+static char *
 duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim, int *pr )
 {
   char *s = NULL;
@@ -57,7 +57,8 @@ duf_option_description_xd( const duf_longval_extended_t * extended, const char *
     {
       const char *h;
 
-      h = _duf_find_longval_help( codeval, pr );
+      /* h = _duf_find_longval_help( codeval, pr ); */
+      h = extended->help;
       if ( h )
       {
         s = mas_strcat_x( s, delimh ? delimh : " :: " );
@@ -77,15 +78,40 @@ duf_option_description_d( int longindex, const char *delimh, const char *delim, 
   return duf_option_description_xd( extended, delimh, delim, pr );
 }
 
-char *
+static char *
 duf_option_description_x( const duf_longval_extended_t * extended, int *pr )
 {
   return duf_option_description_xd( extended, NULL, NULL, pr );
 }
 
-char *
-duf_option_description( int longindex, int *pr )
-{
-  return duf_option_description_d( longindex, NULL, NULL, pr );
-}
+/* char *                                                          */
+/* duf_option_description( int longindex, int *pr )                */
+/* {                                                               */
+/*   return duf_option_description_d( longindex, NULL, NULL, pr ); */
+/* }                                                               */
+/*                                                                 */
 
+const char *
+duf_option_description_x_tmp( int index, const duf_longval_extended_t * extended, int *pr )
+{
+  const char *x = NULL;
+
+  if ( duf_config )
+  {
+    if ( index < 0 )
+    {
+      index = duf_config->tmp->explanation_index++;
+      if ( duf_config->tmp->explanation_index >= DUF_TMP_EXPLANATION_MAX )
+        duf_config->tmp->explanation_index = 0;
+    }
+
+    if ( index >= 0 && index < DUF_TMP_EXPLANATION_MAX )
+    {
+      mas_free( duf_config->tmp->option_explanation[index] );
+      duf_config->tmp->option_explanation[index] = NULL;
+      duf_config->tmp->option_explanation[index] = duf_option_description_x( extended, pr );
+      x = duf_config->tmp->option_explanation[index];
+    }
+  }
+  return x;
+}

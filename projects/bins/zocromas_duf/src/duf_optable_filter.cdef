@@ -1,9 +1,23 @@
-  {.o = {DO_Q( "same" ), /*           */ DO_A_R, /* */ DO_V( SAME )} /*           */ , DO_CL( FILTER ) /*    */ ,
-   /*      */ DO_O( MINMAX, u.same ) /*                                                                      */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "same" ), /*           */ DO_A_O, /* */ DO_V( SAME )} /*           */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.same ), .call={.value={.u=2}} /*                                               */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "min-same" ), /*       */ DO_A_R, /* */ DO_V( MINSAME )} /*        */ , DO_CL( FILTER ) /*    */ ,
    /*      */ DO_O( MIN, u.same ) /*                                                                         */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-same" ), /*       */ DO_A_R, /* */ DO_V( MAXSAME )} /*        */ , DO_CL( FILTER ) /*    */ ,
    /*      */ DO_O( MAX, u.same ) /*                                                                         */ , DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "exifsame" ), /*       */ DO_A_O, /* */ DO_V( EXIFSAME )} /*       */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.exifsame ), .call={.value={.u=2}} /*                                               */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-exifsame" ), /*   */ DO_A_R, /* */ DO_V( MINEXIFSAME )} /*    */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MIN, u.exifsame ) /*                                                                         */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-exifsame" ), /*   */ DO_A_R, /* */ DO_V( MAXEXIFSAME )} /*    */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MAX, u.exifsame ) /*                                                                         */ , DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "mimesame" ), /*       */ DO_A_O, /* */ DO_V( MIMESAME )} /*       */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MINMAX, u.mimesame ), .call={.value={.u=2}} /*                                               */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-mimesame" ), /*   */ DO_A_R, /* */ DO_V( MINMIMESAME )} /*    */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MIN, u.mimesame ) /*                                                                         */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-mimesame" ), /*   */ DO_A_R, /* */ DO_V( MAXMIMESAME )} /*    */ , DO_CL( FILTER ) /*    */ ,
+   /*      */ DO_O( MAX, u.mimesame ) /*                                                                         */ , DO_H(  .... ) /*              */ },
 
   {.o = {DO_Q( "size" ), /*           */ DO_A_R, /* */ DO_V( SIZE )} /*           */ , DO_CL( FILTER ) /*    */ ,
    /*      */ DO_O( MINMAXLL, u.size ) /*                                                                    */ , DO_H(  .... ) /*              */ },
@@ -39,6 +53,13 @@
    /*      */ DO_O( DATETIME, u.ctime.min ) /*                                                               */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-ctime" ), /*      */ DO_A_R, /* */ DO_V( MAXCTIME )} /*        */ , DO_CL( FILTER ) /*   */ ,
    /*      */ DO_O( DATETIME, u.ctime.max ) /*                                                               */ , DO_H(  .... ) /*              */ },
+
+  {.o = {DO_Q( "exifdt" ), /*         */ DO_A_R, /* */ DO_V( EXIFDT )} /*           */ , DO_CL( FILTER ) /*  */ ,
+   /*      */ DO_O( MINMAXDATETIME, u.exifdt ) /*                                                          */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "min-exifdt" ), /*     */ DO_A_R, /* */ DO_V( MINEXIFDT )} /*        */ , DO_CL( FILTER ) /*  */ ,
+   /*      */ DO_O( DATETIME, u.exifdt.min ) /*                                                            */ , DO_H(  .... ) /*              */ },
+  {.o = {DO_Q( "max-exifdt" ), /*     */ DO_A_R, /* */ DO_V( MAXEXIFDT )} /*        */ , DO_CL( FILTER ) /*  */ ,
+   /*      */ DO_O( DATETIME, u.exifdt.max ) /*                                                            */ , DO_H(  .... ) /*              */ },
 
   {.o = {DO_Q( "inode" ), /*          */ DO_A_R, /* */ DO_V( NAMEID )} /*           */ , DO_CL( FILTER ) /*  */ ,
    /*      */ DO_O( MINMAX, u.inode ) /*                                                                     */ , DO_H(  .... ) /*              */ },
@@ -87,6 +108,8 @@
   {.o = {DO_Q( "max-exifid" ), /*     */ DO_A_R, /* */ DO_V( MAXEXIFID )} /*        */ , DO_CL( FILTER ) /*  */ ,
    /*      */ DO_O( MAX, u.exifid ) /*                                                                       */ , DO_H(  .... ) /*              */ },
 
+  {.o = {DO_Q( "glob" ), /*           */ DO_A_R, /* */ DO_V( DB_NAME_MAIN )} /*   */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_O( STR, u.glob ) /*                                                                         */ , DO_H( glob ) /*       */ },
 
 /* vi: ft=c
 */

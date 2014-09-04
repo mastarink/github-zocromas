@@ -55,7 +55,7 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
 int
 duf_printf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
 {
-  int r;
+  int r = 0;
   va_list args;
 
   va_start( args, fmt );

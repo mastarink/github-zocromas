@@ -16,7 +16,20 @@ static const char *final_sql[] = {
   "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /*	*/
         " FROM " DUF_DBPREF "filedatas AS fd " /*	*/
 	  " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md." DUF_SQL_IDNAME ") " /*	*/
-        " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)",
+        " WHERE " DUF_DBPREF "md5." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")",
+        /* " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)", */
+  
+  "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /*	*/
+        " FROM " DUF_DBPREF "filedatas AS fd " /*	*/
+	  " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /*	*/
+        " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL",
+
+  
+  /* "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " (*       *)                     */
+  /*       " FROM " DUF_DBPREF "filedatas AS fd " (*       *)                                     */
+  /*         " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " (*       *)     */
+  /*       " WHERE " DUF_DBPREF "x.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)", */
+
   "DELETE FROM " DUF_DBPREF "sizes",
   "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /*	*/
         "SELECT size, COUNT(*) " /*	*/

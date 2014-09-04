@@ -25,6 +25,14 @@ typedef struct
 
 typedef struct
 {
+  unsigned level;
+  unsigned handleid;
+  char *file;
+  FILE *out;
+} duf_config_output_t;
+
+typedef struct
+{
   unsigned dry_run;
   unsigned explain;
 
@@ -66,16 +74,8 @@ typedef struct
   unsigned insert;
   unsigned update;
   unsigned statistics;
-  char *file;
-  FILE *out;
+  duf_config_output_t output;
 } duf_config_cli_trace_t;
-typedef struct
-{
-  unsigned level;
-  char *file;
-  FILE *out;
-} duf_config_cli_output_t;
-
 
 typedef struct
 {
@@ -84,7 +84,7 @@ typedef struct
   duf_config_cli_disable_flags_combo_t disable;
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
-  duf_config_cli_output_t output;
+  duf_config_output_t output;
   duf_format_combo_t format;
   /* long limit; */
 } duf_config_cli_t;

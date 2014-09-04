@@ -7,17 +7,17 @@
 
 
 int
-duf_filename_match( duf_filter_glob_t * glob, const char *filename )
+duf_filename_match( duf_filter_globx_t * globx, const char *filename )
 {
-  int r;
+  int r=0;
 
   r = 1;
-  if ( glob )
+  if ( globx )
   {
-    if ( glob->include_files.argc )
+    if ( globx->include_files.argc )
     {
-      int argc = glob->include_files.argc;
-      char *const *argv = glob->include_files.argv;
+      int argc = globx->include_files.argc;
+      char *const *argv = globx->include_files.argv;
 
       r = 0;
       /* DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename ); */
@@ -30,10 +30,10 @@ duf_filename_match( duf_filter_glob_t * glob, const char *filename )
         }
       }
     }
-    if ( glob->exclude_files.argc )
+    if ( globx->exclude_files.argc )
     {
-      int argc = glob->exclude_files.argc;
-      char *const *argv = glob->exclude_files.argv;
+      int argc = globx->exclude_files.argc;
+      char *const *argv = globx->exclude_files.argv;
 
       /* DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename ); */
       for ( int ia = 0; ia < argc; ia++ )
@@ -53,7 +53,7 @@ duf_filename_match( duf_filter_glob_t * glob, const char *filename )
 int
 duf_lim_match( duf_limits_t lim, int n )
 {
-  int r;
+  int r=0;
 
   r = 1;
   if ( lim.min )
@@ -66,7 +66,7 @@ duf_lim_match( duf_limits_t lim, int n )
 int
 duf_lim_matchll( duf_limitsll_t lim, int n )
 {
-  int r;
+  int r=0;
 
   r = 1;
   if ( lim.min )
@@ -80,7 +80,7 @@ duf_lim_matchll( duf_limitsll_t lim, int n )
 /* int                                                                          */
 /* duf_md5id_match( unsigned long long md5id_filter, unsigned long long md5id ) */
 /* {                                                                            */
-/*   int r;                                                                     */
+/*   int r=0;                                                                   */
 /*                                                                              */
 /*   r = 1;                                                                     */
 /*   if ( md5id_filter )                                                        */

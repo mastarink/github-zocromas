@@ -7,7 +7,7 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_utils_path.h" /* duf_pathdepth */
+#include "duf_utils_path.h"     /* duf_pathdepth */
 
 #include "duf_config_ref.h"
 
@@ -63,6 +63,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
   int r = 0;
   int pd;
 
+  /* assert( pdi ); */
   pdi->inited = 1;
   pd = duf_pathdepth( real_path, &r );
   DUF_TEST_R( r );
@@ -71,6 +72,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
     r = duf_levinfo_create( pdi, pd ); /* depth = -1 */
   DUF_TEST_R( r );
 
+  /* assert( pdi->depth == -1 ); */
   if ( r >= 0 )
     r = duf_real_path2db( pdi, real_path, ifadd /* ifadd */  );
   DUF_TEST_R( r );

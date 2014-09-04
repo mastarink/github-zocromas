@@ -137,25 +137,29 @@ duf_config_delete( void )
 
   mas_free( duf_config->db.adm.name );
   duf_config->db.adm.name = NULL;
+
   mas_free( duf_config->db.adm.fpath );
   duf_config->db.adm.fpath = NULL;
+
+  mas_free( duf_config->u.glob );
+  duf_config->u.glob = NULL;
 
   /* mas_free( duf_config->group ); */
   /* duf_config->group = NULL;      */
 
-  mas_del_argv( duf_config->u.glob.include_files.argc, duf_config->u.glob.include_files.argv, 0 );
-  duf_config->u.glob.include_files.argc = 0;
-  duf_config->u.glob.include_files.argv = NULL;
+  mas_del_argv( duf_config->u.globx.include_files.argc, duf_config->u.globx.include_files.argv, 0 );
+  duf_config->u.globx.include_files.argc = 0;
+  duf_config->u.globx.include_files.argv = NULL;
 
-  mas_del_argv( duf_config->u.glob.exclude_files.argc, duf_config->u.glob.exclude_files.argv, 0 );
-  duf_config->u.glob.exclude_files.argc = 0;
-  duf_config->u.glob.exclude_files.argv = NULL;
+  mas_del_argv( duf_config->u.globx.exclude_files.argc, duf_config->u.globx.exclude_files.argv, 0 );
+  duf_config->u.globx.exclude_files.argc = 0;
+  duf_config->u.globx.exclude_files.argv = NULL;
 
   mas_del_argv( duf_config->targc, duf_config->targv, 0 );
   duf_config->targc = 0;
   duf_config->targv = NULL;
 
-  mas_free( duf_config->cli.trace.file );
+  mas_free( duf_config->cli.trace.output.file );
 
   mas_free( duf_config );
   duf_config = NULL;

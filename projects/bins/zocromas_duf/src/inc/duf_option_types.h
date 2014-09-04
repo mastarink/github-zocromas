@@ -64,6 +64,7 @@ typedef enum
 
   DUF_OPTION_VTYPE_IFUN,
   DUF_OPTION_VTYPE_AFUN,
+  DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
 
 typedef struct option duf_option_t;
@@ -83,6 +84,13 @@ typedef struct
 } duf_funcpair_t;
 
 
+typedef union
+{
+  int i;
+  unsigned u;
+  unsigned long ul;
+  unsigned long long ull;
+} duf_anynum_t;
 
 typedef struct
 {
@@ -94,12 +102,17 @@ typedef struct
   unsigned long m;
   unsigned mf:1;
   duf_anyflag_t afl;
-  union
+  struct
   {
-    duf_ifuncpair_t i;
-    duf_funcpair_t v;
-    duf_afuncpair_t a;
-  } func;
+    duf_anynum_t value;
+    duf_anynum_t value2;
+    union
+    {
+      duf_ifuncpair_t i;
+      duf_funcpair_t v;
+      duf_afuncpair_t a;
+    } fdesc;
+  } call;
 } duf_longval_extended_t;
 
 #endif

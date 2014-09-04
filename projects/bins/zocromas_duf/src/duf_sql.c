@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -70,7 +72,7 @@ int
 duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
                  duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, va_list args )
 {
-  int r;
+  int r = 0;
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, sqlfmt, args ) );
   DUF_TEST_R( r );
@@ -90,7 +92,7 @@ duf_sql_last_insert_rowid( void )
 int
 duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
 {
-  int r;
+  int r = 0;
 
   DEBUG_START(  );
   r = duf_sql_exec_c( sql, constraint_ignore, ( int * ) NULL );
@@ -103,7 +105,7 @@ duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
 int
 duf_sql_exec_msg( const char *sql, const char *msg )
 {
-  int r;
+  int r = 0;
 
   DEBUG_START(  );
   r = duf_sql_exec_c_msg( sql, msg, DUF_CONSTRAINT_IGNORE_NO );
@@ -162,7 +164,7 @@ duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, vo
                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, ... )
 {
   va_list args;
-  int r;
+  int r = 0;
 
   DEBUG_START(  );
   va_start( args, sqlfmt );
@@ -449,7 +451,7 @@ duf_sql_bindn_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char 
 {
   int r = 0;
   int pi = 0;
-
+  
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
   if ( pi > 0 )
