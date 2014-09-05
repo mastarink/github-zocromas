@@ -591,6 +591,31 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       }
       DUF_TEST_R( r );
       break;
+      /* case DUF_OPTION_VTYPE_FILEPATH:                                                  */
+      /*   {                                                                              */
+      /*     if ( optarg )                                                                */
+      /*     {                                                                            */
+      /*       duf_filepath_t *pfp;                                                       */
+      /*       char *pathname;                                                            */
+      /*       char *dir;                                                                 */
+      /*       char *base;                                                                */
+      /*                                                                                  */
+      /*       pathname = mas_strdup( optarg );                                           */
+      /*       base=basename( pathname );                                                 */
+      /*       dir=dirname( pathname );                                                   */
+      /*       T( " %s: %s @ %s", optarg, dir, base );                                    */
+      /*       pfp = ( duf_filepath_t * ) byteptr;                                        */
+      /*       mas_free( pfp->name );                                                     */
+      /*       pfp->name = NULL;                                                          */
+      /*       pfp->dirid = duf_path2db( dir, &r );                                       */
+      /*       pfp->name = mas_strdup( base );                                            */
+      /*       T( "%llu : %s", pfp->dirid, pfp->name );                                   */
+      /*       T( "%llu : %s", duf_config->u.same_as.dirid, duf_config->u.same_as.name ); */
+      /*       mas_free( pathname );                                                      */
+      /*     }                                                                            */
+      /*   }                                                                              */
+      /*   DUF_TEST_R( r );                                                               */
+      /*   break;                                                                         */
     case DUF_OPTION_VTYPE_DATETIME:
       DUF_NUMOPT( unsigned long long, 0, duf_strtime2long );
 
@@ -1004,7 +1029,7 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
         unsigned nvalue;
         char *value;
 
-        DUF_TRACE( explain, 5, "really to parse %s (%s)  %s", duf_option_description_x_tmp( -1, extended, NULL ), extended->o.name,
+        DUF_TRACE( options, 3, "really to parse %s = %s (%s)  %s", duf_option_description_x_tmp( -1, extended, NULL ), optarg, extended->o.name,
                    duf_error_name( r ) );
 
         /* duf_config->cli.format.seq = (* *)            */
@@ -1034,7 +1059,6 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
           [DUF_FORMAT_NDIRS_SPACE] = "ndirs_space",
           [DUF_FORMAT_FILENAME] = "filename",
           [DUF_FORMAT_FILESIZE] = "filesize",
-          [DUF_FORMAT_GID] = "gid",
           [DUF_FORMAT_HUMAN] = "human",
           [DUF_FORMAT_INODE] = "inode",
           [DUF_FORMAT_SD5ID] = "sd5id",
@@ -1044,6 +1068,7 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
           [DUF_FORMAT_CRC32ID] = "crc32id",
           [DUF_FORMAT_CRC32] = "crc32",
           [DUF_FORMAT_NAMEID] = "nameid",
+          [DUF_FORMAT_MIME] = "mime",
           [DUF_FORMAT_MIMEID] = "mimeid",
           [DUF_FORMAT_EXIFID] = "exifid",
           [DUF_FORMAT_MODE] = "mode",
@@ -1055,12 +1080,14 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
           [DUF_FORMAT_SUFFIX] = "suffix",
           [DUF_FORMAT_REALPATH] = "realpath",
           [DUF_FORMAT_SEQ] = "seq",
-          [DUF_FORMAT_UID] = "uid",
+          [DUF_FORMAT_SEQ_NODE] = "seq-node",
+          [DUF_FORMAT_SEQ_LEAF] = "seq-leaf",
+          [DUF_FORMAT_GROUP] = "group",
+          [DUF_FORMAT_USER] = "user",
           [DUF_FORMAT_MAX] = NULL,
         };
         poptarg = coptarg = mas_strdup( optarg );
         /* coptarg = mas_strdup( optarg ); */
-        value = NULL;
         DUF_TRACE( action, 0, "--format=%s", coptarg );
         while ( poptarg && *poptarg )
         {
@@ -1069,14 +1096,21 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
 
           hlp = poptarg;
           DUF_TRACE( any, 0, "hlp:%s", hlp );
+          value = NULL;
+          DUF_TRACE( options, 2, "really to parse format item [%s]     value:%s", poptarg, value );
           rs = getsubopt( &poptarg, tokens, &value );
-          DUF_TRACE( explain, 2, "really to parse format item [%s]    rs:%d; value:%s", poptarg, rs, value );
-          DUF_TRACE( any, 0, "%d: (%s) '%s'", rs, hlp, value ? value : "nil" );
+          DUF_TRACE( options, 2, "%d: (%s) '%s'", rs, hlp, value ? value : "nil" );
           nvalue = value ? strtol( value, NULL, 10 ) : -1;
           switch ( rs )
           {
           case DUF_FORMAT_SEQ:
             duf_config->cli.format.v.flag.seq = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_SEQ_NODE:
+            duf_config->cli.format.v.flag.seq_node = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_SEQ_LEAF:
+            duf_config->cli.format.v.flag.seq_leaf = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_PREFIX:
             duf_config->cli.format.v.flag.prefix = value == NULL ? 1 : nvalue;
@@ -1114,11 +1148,11 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
           case DUF_FORMAT_NLINK:
             duf_config->cli.format.v.flag.nlink = value == NULL ? 1 : nvalue;
             break;
-          case DUF_FORMAT_UID:
-            duf_config->cli.format.v.flag.uid = value == NULL ? 1 : nvalue;
+          case DUF_FORMAT_USER:
+            duf_config->cli.format.v.flag.user = value == NULL ? 1 : nvalue;
             break;
-          case DUF_FORMAT_GID:
-            duf_config->cli.format.v.flag.gid = value == NULL ? 1 : nvalue;
+          case DUF_FORMAT_GROUP:
+            duf_config->cli.format.v.flag.group = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILESIZE:
             duf_config->cli.format.v.flag.filesize = value == NULL ? 1 : nvalue;
@@ -1150,6 +1184,9 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
           case DUF_FORMAT_NAMEID:
             duf_config->cli.format.v.flag.nameid = value == NULL ? 1 : nvalue;
             break;
+          case DUF_FORMAT_MIME:
+            duf_config->cli.format.v.flag.mime = value == NULL ? 1 : nvalue;
+            break;
           case DUF_FORMAT_MIMEID:
             duf_config->cli.format.v.flag.mimeid = value == NULL ? 1 : nvalue;
             break;
@@ -1169,8 +1206,7 @@ duf_parse_option_long_x( const duf_longval_extended_t * extended, const char *op
             duf_config->cli.format.offset = value == NULL ? 0 : nvalue;
             break;
           }
-          DUF_TRACE( explain, 2, "FORMAT bits: %llx", duf_config->cli.format.v.bit );
-          DUF_TRACE( any, 0, "%d: (%s) '%s'", rs, hlp, value ? value : "nil" );
+          DUF_TRACE( options, 2, "rs:%d [%s:%s:%s] FORMAT bits: %llx", rs, poptarg, hlp, value ? value : "nil", duf_config->cli.format.v.bit );
           /* DUF_TRACE( any, 0, "rs:%d", rs ); */
           if ( rs < 0 )
           {

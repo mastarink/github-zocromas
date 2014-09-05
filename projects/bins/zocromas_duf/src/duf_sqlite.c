@@ -12,7 +12,7 @@
 
 #include "duf_config_ref.h"
 
-#  include "duf_sql_const.h"
+#include "duf_sql_const.h"
 
 /* ###################################################################### */
 #include "duf_sqlite.h"
@@ -61,10 +61,10 @@ duf_sqlite_close( void )
 /*										*/ DEBUG_START(  );
   if ( pDb )
     r3 = sqlite3_close_v2( pDb );
+  pDb = NULL;
   DUF_TRACE( action, 0, "DB Close %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
 
   r3 = sqlite3_shutdown(  );
-  pDb = NULL;
   DUF_TRACE( action, 0, "DB Shutdown %s (%d)", r3 == SQLITE_OK ? "OK" : "FAIL", r3 );
 
 /*										*/ DEBUG_END(  );
@@ -77,28 +77,26 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
   int r3 = SQLITE_OK;
   char *emsg = ( char * ) NULL;
 
+  assert( pDb );
   if ( pemsg )
     *pemsg = NULL;
 /*										*/ DEBUG_START(  );
   DUF_TRACE( sqlite, 2, "[%s] ", sql );
   if ( pchanges )
     *pchanges = 0;
-  if ( pDb )
+  if ( duf_config->cli.dbg.nosqlite )
   {
-    if ( duf_config->cli.dbg.nosqlite )
-    {
-      DUF_TRACE( current, 0, "SKIP %s", sql );
-    }
-    else
-    {
-      r3 = sqlite3_exec( pDb, sql, sqexe_cb, sqexe_data, &emsg );
-    }
-    if ( r3 == SQLITE_OK && pchanges )
-      *pchanges = sqlite3_changes( pDb );
-    DUF_TRACE( sqlite, 0, "  [%s]", sql );
-    DUF_TRACE( sqlite, 1, "r3:%d; changes:%d", r3, pchanges ? *pchanges : -1 );
-/*										*/ DEBUG_STEP(  );
+    DUF_TRACE( current, 0, "SKIP %s", sql );
   }
+  else
+  {
+    r3 = sqlite3_exec( pDb, sql, sqexe_cb, sqexe_data, &emsg );
+  }
+  if ( r3 == SQLITE_OK && pchanges )
+    *pchanges = sqlite3_changes( pDb );
+  DUF_TRACE( sqlite, 0, "  [%s]", sql );
+  DUF_TRACE( sqlite, 1, "r3:%d; changes:%d", r3, pchanges ? *pchanges : -1 );
+/*										*/ DEBUG_STEP(  );
   if ( pemsg )
     *pemsg = emsg;
   else if ( emsg )
@@ -255,12 +253,11 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
   char *sql, **presult = NULL;
 
   const char *const *pcresult = NULL;
-
   va_list qargs;
 
   DEBUG_START(  );
+  assert( pDb );
   va_copy( qargs, args );
-  if ( pDb )
   {
     char *emsg = NULL;
 
@@ -362,8 +359,8 @@ duf_sqlite_last_insert_rowid( void )
   unsigned long long li = 0;
 
   DEBUG_START(  );
-  if ( pDb )
-    li = ( unsigned long long ) sqlite3_last_insert_rowid( pDb );
+  assert( pDb );
+  li = ( unsigned long long ) sqlite3_last_insert_rowid( pDb );
   DUF_TRACE( sqlite, 2, "  last_insert_rowid" );
   DEBUG_ENDULL( li );
   return ( li );
@@ -375,6 +372,7 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   int r3 = 0;
   const char *tail = NULL;
 
+  assert( pDb );
   r3 = sqlite3_prepare_v2( pDb, sql, strlen( sql ), pstmt, &tail );
   DUF_TRACE( sqlite, 2, "  [%s]", sql );
   if ( r3 == SQLITE_ERROR )
@@ -385,7 +383,9 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
       r3 = DUF_ERROR_SQL_NO_TABLE;
     }
   }
-  DUF_TEST_R3( r3 );
+  assert( r3 == 0 );
+  /* assert( r3 != SQLITE_MISUSE ); */
+  DUF_TEST_R3S( r3, sql );
   return r3;
 }
 

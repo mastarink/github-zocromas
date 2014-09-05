@@ -207,13 +207,11 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
         /* sp = mas_strdup( "/" ); */
         /* sp = mas_strcat_x( sp, pdi->levinfo[d].itemname ); */
         r = duf_open_dh( pdhlev, "/" );
-        DUF_TRACE( temp, 0, "@@@@@@@@@@@ r: %d", r );
         /* mas_free( sp ); */
       }
       else
       {
         r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
-        DUF_TRACE( temp, 0, "@@@@@@@@@@@ r: %d (%s)", r, pdi->levinfo[d].itemname );
       }
       if ( r >= 0 )
       {
@@ -330,23 +328,28 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth )
 
   assert( pdi );
 
-  if ( pdi->u.max_rel_depth /* FIXME */  && !pdi->levinfo )
+  if ( !pdi->levinfo )
   {
     size_t lsz;
 
-    pdi->maxdepth = pdi->u.max_rel_depth + pathdepth;
-    lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
-    /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
-    pdi->levinfo = mas_malloc( lsz );
-    assert( pdi->levinfo );
-    memset( pdi->levinfo, 0, lsz );
-    assert( pdi->depth == -1 );
-
+    if ( pdi->u.max_rel_depth /* FIXME */  )
+    {
+      pdi->maxdepth = pdi->u.max_rel_depth + pathdepth;
+      lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
+      /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
+      pdi->levinfo = mas_malloc( lsz );
+      assert( pdi->levinfo );
+      memset( pdi->levinfo, 0, lsz );
+      assert( pdi->depth == -1 );
+    }
+    else
+    {
+      r = DUF_ERROR_MAX_DEPTH;
+    }
     /* r = duf_levinfo_open_dh( pdi, path ); */
   }
   else
   {
-
   }
   DUF_TEST_R( r );
   return r;

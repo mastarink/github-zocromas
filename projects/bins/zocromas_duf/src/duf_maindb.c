@@ -25,6 +25,7 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
+#include "duf_path2db.h"        /* test only */
 #include "duf_dbg.h"
 
 #include "duf_action.h"
@@ -192,6 +193,8 @@ main_db( int argc, char **argv )
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }
+
+      
       /* if ( r >= 0 )                                                           */
       /*        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ); */
       DUF_TEST_R( r );

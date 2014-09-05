@@ -12,7 +12,6 @@ typedef struct
   unsigned ndirs_space:1;
   unsigned filename:1;
   unsigned filesize:1;
-  unsigned gid:1;
   unsigned human:1;
   unsigned inode:1;
   unsigned sd5:1;
@@ -23,6 +22,7 @@ typedef struct
   unsigned crc32id:1;
   unsigned nameid:1;
   unsigned nameid_space:1;
+  unsigned mime:1;
   unsigned mimeid:1;
   unsigned mimeid_space:1;
   unsigned exifid:1;
@@ -34,7 +34,10 @@ typedef struct
   unsigned suffix:1;
   unsigned realpath:1;
   unsigned seq:1;
-  unsigned uid:1;
+  unsigned seq_node:1;
+  unsigned seq_leaf:1;
+  unsigned group:1;
+  unsigned user:1;
   unsigned short_filename:1;
 } duf_format_flags_t;
 
@@ -62,7 +65,6 @@ typedef enum
   DUF_FORMAT_NDIRS_SPACE,
   DUF_FORMAT_FILENAME,
   DUF_FORMAT_FILESIZE,
-  DUF_FORMAT_GID,
   DUF_FORMAT_HUMAN,
   DUF_FORMAT_INODE,
   DUF_FORMAT_SD5,
@@ -72,6 +74,7 @@ typedef enum
   DUF_FORMAT_CRC32,
   DUF_FORMAT_CRC32ID,
   DUF_FORMAT_NAMEID,
+  DUF_FORMAT_MIME,
   DUF_FORMAT_MIMEID,
   DUF_FORMAT_EXIFID,
   DUF_FORMAT_MODE,
@@ -83,9 +86,13 @@ typedef enum
   DUF_FORMAT_SUFFIX,
   DUF_FORMAT_REALPATH,
   DUF_FORMAT_SEQ,
-  DUF_FORMAT_TRUEPATH,
-  DUF_FORMAT_UID,
+  DUF_FORMAT_SEQ_NODE,
+  DUF_FORMAT_SEQ_LEAF,
+  /* DUF_FORMAT_TRUEPATH, */
+  DUF_FORMAT_USER,
+  DUF_FORMAT_GROUP,
   DUF_FORMAT_MAX,
+  DUF_FORMAT_BOO,
 } duf_format_index_t;
 
 

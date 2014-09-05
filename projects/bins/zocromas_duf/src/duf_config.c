@@ -144,6 +144,9 @@ duf_config_delete( void )
   mas_free( duf_config->u.glob );
   duf_config->u.glob = NULL;
 
+  mas_free( duf_config->u.same_as );
+  duf_config->u.same_as = NULL;
+
   /* mas_free( duf_config->group ); */
   /* duf_config->group = NULL;      */
 

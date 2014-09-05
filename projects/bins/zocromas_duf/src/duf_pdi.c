@@ -67,11 +67,10 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
   pdi->inited = 1;
   pd = duf_pathdepth( real_path, &r );
   DUF_TEST_R( r );
-
   if ( r >= 0 )
     r = duf_levinfo_create( pdi, pd ); /* depth = -1 */
   DUF_TEST_R( r );
-
+  assert( r<0 || pdi->levinfo );
   /* assert( pdi->depth == -1 ); */
   if ( r >= 0 )
     r = duf_real_path2db( pdi, real_path, ifadd /* ifadd */  );

@@ -89,7 +89,6 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 
     if ( r > 0 )
     {
-      DUF_TRACE( temp, 0, "@@@@@@@@@@@ openat: %s (%s)", opendir, name );
       pdhandle->dfd = r;
 
       DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
@@ -136,7 +135,6 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     r = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
     if ( r > 0 )
     {
-      DUF_TRACE( temp, 0, "@@@@@@@@@@@ open: %s", path );
       pdhandle->dfd = r;
 
       r = stat( path, &pdhandle->st );

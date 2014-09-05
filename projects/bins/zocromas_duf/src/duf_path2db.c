@@ -12,6 +12,7 @@
 
 
 #include "duf_config_ref.h"
+#include "duf_utils_path.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
@@ -43,7 +44,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
 
   /* DUF_TRACE( temp, 0, "@@@@@@@@@@@ %llu/%llu/%llu; ifadd:%d; pdi:%d", parentid_unused, duf_levinfo_dirid( pdi ), */
   /*            duf_levinfo_dirid_up( pdi ), ifadd, pdi ? 1 : 0 );                                                  */
-  DUF_TRACE( temp, 0, "@@@@@@@@@@@ %llu/%llu; ifadd:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), ifadd, pdi ? 1 : 0 );
+  DUF_TRACE( path, 2, "@@@@@@@@@@@ %llu/%llu; ifadd:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), ifadd, pdi ? 1 : 0 );
   /* unsigned char c1 = ( unsigned char ) ( dename ? *dename : 0 ); */
   if ( dename /* && dev_id && dir_ino */  )
   {
@@ -52,7 +53,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
     if ( ifadd && !duf_config->cli.disable.flag.insert )
     {
       static const char *sql =
-            "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid) VALUES (:Dev, :iNode, :dirName, :parentID )";
+            "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid ) VALUES (:Dev, :iNode, :dirName, :parentID )";
       if ( pdi )
       {
         DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
@@ -126,7 +127,6 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
               pli = duf_levinfo_ptr( pdi );
               if ( pli )
               {
-                DUF_TRACE( temp, 0, "@@@@@@@@@@@########## %llu ? %llu ", pli->dirid, dirid );
                 pli->dirid = dirid;
                 /* pli->itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) ); */
                 pli->numfile = duf_sql_column_long_long( pstmt, 2 );
@@ -252,7 +252,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
     r = duf_levinfo_openat_dh( pdi );
 
   /* upfd = duf_levinfo_dfd( pdi ); */
-  DUF_TRACE( temp, 0, "@@ depth: %d @@@@@@@@@ upfd: %d // %d // `%s` :: %d", duf_pdi_depth( pdi ), duf_levinfo_dfd( pdi ), duf_levinfo_dfd( pdi ),
+  DUF_TRACE( path, 2, "@@ depth: %d @@@@@@@@@ upfd: %d // %d // `%s` :: %d", duf_pdi_depth( pdi ), duf_levinfo_dfd( pdi ), duf_levinfo_dfd( pdi ),
              duf_levinfo_itemname( pdi ), pdi->opendir );
   DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, duf_levinfo_dfd( pdi ) );
   /* pst_dir = duf_levinfo_stat( pdi ); */
@@ -399,6 +399,32 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
   mas_free( real_path );
 
   return r;
+}
+
+unsigned long long
+duf_path2db( const char *path, int *pr )
+{
+  int r = 0;
+  char *real_path;
+  unsigned long long dirid = 0;
+
+  real_path = duf_realpath( path, &r );
+  duf_depthinfo_t di = {.depth = -1,
+    .seq = 0,
+    .levinfo = NULL,
+    .u = duf_config->u,
+    /* .opendir = sccb ? sccb->opendir : 0, */
+    .opendir = 1,
+    /* .name = real_path, */
+  };
+  if ( r >= 0 )
+    r = duf_pdi_init_wrap( &di, real_path, 0 );
+  if ( r >= 0 )
+    dirid = duf_levinfo_dirid( &di );
+
+  duf_pdi_close( &di );
+  mas_free( real_path );
+  return dirid;
 }
 
 /*

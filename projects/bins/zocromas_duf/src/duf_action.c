@@ -34,6 +34,9 @@
 
 #include "duf_dbg.h"
 
+#include "duf_path2db.h" /* for test only */
+
+
 /* ###################################################################### */
 #include "duf_action.h"
 /* ###################################################################### */
@@ -146,10 +149,6 @@ duf_action( int argc, char **argv )
   {
     DUF_TRACE( explain, 1, "no %s option, you may need it for adding initial path", DUF_OPT_FLAG_NAME( ADD_PATH ) );
   }
-  /* DUF_PRINTF(0, "@@@@@@@@@@@ %u %u", duf_config->u.md5id.min, duf_config->u.md5id.max );   */
-  /* DUF_PRINTF(0, "@@@@@@@@@@@ %u %u", duf_config->u.nameid.min, duf_config->u.nameid.max ); */
-  /* DUF_PRINTF(0, "@@@@@@@@@@@ %u %u", duf_config->u.inode.min, duf_config->u.inode.max );   */
-  /* DUF_PRINTF(0, "@@@@@@@@@@@ %llu %llu", duf_config->u.size.min, duf_config->u.size.max ); */
   DUF_TEST_R( r );
   if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
     r = duf_make_all_sccbs_wrap(  );

@@ -76,7 +76,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
   {
 
-    DUF_UFIELD2( truedirid );
+    /* DUF_UFIELD2( truedirid ); */
     /* DUF_UFIELD2( filesize ); */
     DUF_UFIELD2( filemode );
     /* DUF_UFIELD2( md5id ); */
@@ -99,8 +99,8 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
                                               .inode = 0,
                                               .mode = 1,
                                               .nlink = 1,
-                                              .uid = 1,
-                                              .gid = 1,
+                                              .user = 1,
+                                              .group = 1,
                                               .filesize = 0,
                                               .md5 = 0,
                                               .md5id = 0,
@@ -120,7 +120,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       fi.st.st_nlink = ( nlink_t ) nlink;
       /* fi.st.st_size = ( off_t ) maxsize; */
       fi.name = filename;
-      fi.truedirid = truedirid;
+      /* fi.truedirid = truedirid; */
       /* fi.md5id = md5id; */
       /* fi.md5sum1 = md5sum1; */
       /* fi.md5sum2 = md5sum2; */
@@ -184,8 +184,8 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
                                             .inode = 0,
                                             .mode = 1,
                                             .nlink = 1,
-                                            .uid = 1,
-                                            .gid = 1,
+                                            .user = 1,
+                                            .group = 1,
                                             .filesize = 1,
                                             .md5 = 1,
                                             .md5id = 1,

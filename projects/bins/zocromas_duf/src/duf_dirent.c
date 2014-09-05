@@ -54,6 +54,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
-  DEBUG_ENDR( r );
+  DEBUG_END( );
   return r;
 }

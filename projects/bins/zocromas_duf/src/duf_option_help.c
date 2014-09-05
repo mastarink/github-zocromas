@@ -421,6 +421,11 @@ duf_option_examples( int argc, char *const *argv )
   DUF_PRINTF( 0, "  shn g --memusage  /mnt/new_media/media/photo/  -Rpdf --same --glob='*06-unknown.jpeg' 		- %s", "" );
   DUF_PRINTF( 0, "  run -OPREif -X /mnt/new_media/media/photo/ --progress 		- %s", "" );
 
+
+  DUF_PRINTF( 0, "========================= as for 20140905.111356 ============" );
+  DUF_PRINTF( 0,
+              "  run  /mnt/new_media/media/photo/   -Rpdf  --output-level=6 "
+              " --same-as=/mnt/new_media/media/photo/Pictures/photos/sel/we/we9.jpg 		- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 }
 

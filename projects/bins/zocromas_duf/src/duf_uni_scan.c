@@ -2,6 +2,7 @@
 #define DUF_SQL_PDI_STMT
 
 #include <assert.h>
+#include <libgen.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -31,6 +32,7 @@
 
 /* #include "duf_uni_scan1.h" */
 #include "duf_uni_scan2.h"
+#include "duf_path2db.h"
 
 #include "duf_option_names.h"
 #include "duf_prepare_actions.h"
@@ -275,6 +277,27 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
   if ( duf_config->u.glob )
   {
     DUF_SQL_BIND_S_OPT( GName, duf_config->u.glob, r, pstmt );
+  }
+  if ( duf_config->u.same_as )
+  {
+    duf_filepath_t fp={0};
+    {
+      char *pathname;
+      char *dir;
+      char *base;
+
+      pathname = mas_strdup( duf_config->u.same_as );
+      base = basename( pathname );
+      dir = dirname( pathname );
+      fp.dirid = duf_path2db( dir, &r );
+      fp.name = mas_strdup( base );
+      mas_free( pathname );
+    }
+
+
+    DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
+    mas_free( fp.name );
   }
 
   return r;

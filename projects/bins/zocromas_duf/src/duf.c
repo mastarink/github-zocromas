@@ -25,6 +25,8 @@
 #include "duf_action.h"
 #include "duf_maindb.h"
 
+#include "duf_path2db.h"        /* test only */
+
 /* צאַצקע */
 #include "duf_trace_defs.h"
 
@@ -66,7 +68,7 @@ duf_main( int argc, char **argv )
 
     if ( &dbgfunc_enabled )
        /**/ dbgfunc_enabled = 1;
-      PF( "%d", dbgfunc_enabled );
+    T( "%d", dbgfunc_enabled );
   }
   /* duf_config->cli.trace.explain = 1; */
   /* DUF_TRACE( any, 0, "r=%d", r ); */
@@ -75,8 +77,9 @@ duf_main( int argc, char **argv )
     DUF_TRACE( any, 1, "any test" );
 
     r = duf_all_options( argc, argv );
-    /* PF( "%s, %d", duf_config->cli.trace.output.file, duf_config->cli.output.level ); */
-    /* PF( "%d", duf_config->cli.dbg.verbose ); */
+    
+
+
     if ( r >= 0 )
     {
       DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );

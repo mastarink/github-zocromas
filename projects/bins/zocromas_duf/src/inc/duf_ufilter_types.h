@@ -41,7 +41,11 @@ typedef struct
   unsigned long long max;
 } duf_limitsll_t;
 
-
+typedef struct
+{
+  unsigned long long dirid;
+  char *name;
+} duf_filepath_t;
 
 typedef struct
 {
@@ -52,6 +56,7 @@ typedef struct
   duf_limits_t dirfiles;
   duf_filter_globx_t globx;
   char *glob;
+  char *same_as;
   /* unsigned long long sd5id; */
   /* unsigned long long md5id; */
   /* unsigned long long crc32id; */

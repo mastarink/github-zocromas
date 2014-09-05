@@ -108,8 +108,10 @@
   {.o = {DO_Q( "max-exifid" ), /*     */ DO_A_R, /* */ DO_V( MAXEXIFID )} /*        */ , DO_CL( FILTER ) /*  */ ,
    /*      */ DO_O( MAX, u.exifid ) /*                                                                       */ , DO_H(  .... ) /*              */ },
 
-  {.o = {DO_Q( "glob" ), /*           */ DO_A_R, /* */ DO_V( DB_NAME_MAIN )} /*   */ , DO_CL( CONTROL ) /*   */ ,
-   /*      */ DO_O( STR, u.glob ) /*                                                                         */ , DO_H( glob ) /*       */ },
+  {.o = {DO_Q( "glob" ), /*           */ DO_A_R, /* */ DO_V( GLOB )} /*             */ , DO_CL( CONTROL ) /* */ ,
+   /*      */ DO_O( STR, u.glob ) /*                                                                         */ , DO_H( glob ) /*               */ },
+  {.o = {DO_Q( "same-as" ), /*        */ DO_A_R, /* */ DO_V( SAME_AS )} /*          */ , DO_CL( CONTROL ) /* */ ,
+   /*      */ DO_O( STR, u.same_as ) /*                                                                      */ , DO_H( same as ) /*            */ },
 
 /* vi: ft=c
 */

@@ -127,7 +127,17 @@
 					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-", \
 					    DUF_SQLITE_ERROR_CODE(val) \
 					    )
-#define P(txt) DUF_PRINTF(0, #txt)
-#define PF(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$$$$$$$$$$ " #__VA_ARGS__ " $$$ : " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
-#define PF0(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$$$$$$$$$$ " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
+#  define DUF_TEST_R3S(val, xstr) 	if (val \
+    			&& (val)!=SQLITE_ROW \
+    			&& (val)!=SQLITE_DONE \
+    					)		\
+					DUF_ERROR( " - - - - - -> sqlite3 [%s] (#%d) {%s}", \
+					    DUF_SQLITE_ERROR_CODE(val) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(val)) : "-", \
+					    DUF_SQLITE_ERROR_CODE(val), xstr \
+					    )
+
+#  define P(txt) DUF_PRINTF(0, #txt)
+#  define PF(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " #__VA_ARGS__ " $$$ : " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
+#  define PF0(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
+#  define T(fmt, ...) DUF_TRACE(temp,0,"[T] #@#@# "fmt,__VA_ARGS__)
 #endif

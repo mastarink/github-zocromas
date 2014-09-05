@@ -132,9 +132,9 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
       {
         int rr;
 
-        DUF_TRACE( temp, 0, "read fd:%u", fd );
+        DUF_TRACE( md5, 10, "read fd:%u", fd );
         rr = read( fd, buffer, bufsz );
-        DUF_TRACE( temp, 0, "read rr:%u", rr );
+        DUF_TRACE( md5, 10, "read rr:%u", rr );
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
