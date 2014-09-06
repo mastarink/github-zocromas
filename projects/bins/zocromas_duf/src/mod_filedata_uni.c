@@ -235,12 +235,15 @@ static const char *final_sql[] = {
         " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
 	,
 
+
+
   /* "DELETE FROM " DUF_DBPREF "pathtot_files", */
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_files (Pathid, numfiles, minsize, maxsize) " /* */
         "SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /* */
         " FROM " DUF_DBPREF "filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-        " GROUP BY fn.Pathid",
+        " GROUP BY fn.Pathid" /* */
+	,
   "UPDATE " DUF_DBPREF "pathtot_files SET " /* */
         " minsize=(SELECT min(size) AS minsize " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
@@ -250,7 +253,8 @@ static const char *final_sql[] = {
         " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid) " /* */
         ", numfiles=(SELECT COUNT(*) AS numfiles " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-        " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)",
+        " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)" /* */
+	,
 
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
@@ -258,12 +262,13 @@ static const char *final_sql[] = {
         " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.parentid) " /* */
         " GROUP BY parents." DUF_SQL_IDNAME "" /* */
         ,
+  /* "UPDATE " DUF_DBPREF "pathtot_dirs SET " (* *)                      */
+  /*       " numdirs=(SELECT COUNT(*) AS numdirs " (* *)                 */
+  /*       " FROM " DUF_DBPREF "paths AS p " (* *)                       */
+  /*       " WHERE p.parentid=" DUF_DBPREF "pathtot_dirs.Pathid )" (* *) */
+  /*       ,                                                             */
 
 
-  "UPDATE " DUF_DBPREF "pathtot_dirs SET " /* */
-        " numdirs=(SELECT COUNT(*) AS numdirs " /* */
-        " FROM " DUF_DBPREF "paths AS p " /* */
-        " WHERE p.parentid=" DUF_DBPREF "pathtot_dirs.Pathid )",
   /* "DELETE FROM " DUF_DBPREF "keydata", */
   /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (* *)  */
   /*       "SELECT md." DUF_SQL_IDNAME " AS md5id, fn." DUF_SQL_IDNAME " AS filenameid, fd." DUF_SQL_IDNAME " AS dataid, p." DUF_SQL_IDNAME " AS Pathid " (* *) */

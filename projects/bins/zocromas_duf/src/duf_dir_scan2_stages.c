@@ -313,12 +313,12 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 
   DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan node selector2: [%s]", duf_pdi_depth( pdi ), sccb->node.selector2 );
 
-  if ( !sccb->node.selector2 )
-  {
-    DUF_ERROR( "sccb->node.selector2 empty for %s", duf_uni_scan_action_title( sccb ) );
-    r = DUF_ERROR_PTR;
-    DUF_TEST_R( r );
-  }
+  /* if ( !sccb->node.selector2 )                                                           */
+  /* {                                                                                      */
+  /*   DUF_ERROR( "sccb->node.selector2 empty for %s", duf_uni_scan_action_title( sccb ) ); */
+  /*   r = DUF_ERROR_PTR;                                                                   */
+  /*   DUF_TEST_R( r );                                                                     */
+  /* }                                                                                      */
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->node.selector2 */
   /*

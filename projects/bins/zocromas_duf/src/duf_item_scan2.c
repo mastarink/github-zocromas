@@ -262,15 +262,14 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi, duf_s
     if ( sql )
       mas_free( sql );
     sql = NULL;
-
+    if ( r >= 0 )
+      duf_levinfo_set_items_files( pdi, cnt );
   }
-  else
-    r = DUF_ERROR_PTR;
+  /* else                 */
+  /*   r = DUF_ERROR_PTR; */
 
   /* DUF_ERROR( "r:%d; sel_cb2:%s", r, DUF_FUNN( sel_cb2 ) ); */
   DUF_TEST_R( r );
-  if ( r >= 0 )
-    duf_levinfo_set_items_files( pdi, cnt );
   DEBUG_ENDR( r );
   return r;
 }

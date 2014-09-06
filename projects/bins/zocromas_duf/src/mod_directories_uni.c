@@ -29,7 +29,7 @@
 
 #include "duf_filedata.h"
 
-#include "duf_path2db.h" /* duf_insert_path_uni2 */
+#include "duf_path2db.h"        /* duf_insert_path_uni2 */
 
 
 
@@ -75,6 +75,20 @@ static const char *final_sql[] = {
   "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /* */
         "SELECT size, COUNT(*) " /* */
         " FROM " DUF_DBPREF "filedatas AS fd GROUP BY fd.size",
+
+  "DELETE FROM path_pairs"      /* */
+        ,
+  "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT count(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
+        " FROM filenames AS fna" /* */
+        "   JOIN filedatas AS fda ON (fna.dataid=fda.rowid)" /* */
+        "   JOIN md5 AS mda ON (fda.md5id=mda.rowid)" /* */
+        "   JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)" /* */
+        "   JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)" /* */
+        " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
+        " GROUP BY Pathid1, Pathid2"   /* */
+        ,
+
+
   "UPDATE " DUF_DBPREF "pathtot_files SET " /* */
         " minsize=(SELECT min(size) AS minsize " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
@@ -86,17 +100,19 @@ static const char *final_sql[] = {
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)",
 
+
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
         " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.parentid) " /* */
         " GROUP BY parents." DUF_SQL_IDNAME "" /* */
         ,
-
   "UPDATE " DUF_DBPREF "pathtot_dirs SET " /* */
         " numdirs=(SELECT COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths AS p " /* */
         " WHERE p.parentid=" DUF_DBPREF "pathtot_dirs.Pathid )",
+
+
   /* "DELETE FROM " DUF_DBPREF "keydata", */
   /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (* *)  */
   /*       "SELECT md." DUF_SQL_IDNAME " AS md5id, fn." DUF_SQL_IDNAME " AS filenameid, fd." DUF_SQL_IDNAME " AS dataid, p." DUF_SQL_IDNAME " AS Pathid " (* *) */

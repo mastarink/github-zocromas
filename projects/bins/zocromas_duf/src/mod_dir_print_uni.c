@@ -328,6 +328,7 @@ static const char *beginning_sql[] = {
         "  ( (:minExifDT   IS NULL OR x.date_time>=datetime(:minExifDT,'unixepoch')) AND" /* */
         "                 (:maxExifDT IS NULL OR fd.mtim<=datetime(:maxExifDT,'unixepoch') )) AND" /* */
         "  ( (:minNameID   IS NULL OR fn." DUF_SQL_IDNAME ">=:minNameID) AND (:maxNameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxNameID )) AND" /* */
+        "  ( (:minDirID    IS NULL OR fn.Pathid>=:minDirID)  AND (:maxDirID IS NULL OR fn.Pathid<=:maxDirID )) AND" /* */
         "  ( (:minExifSame IS NULL OR x.dupexifcnt>=:minExifSame)  AND (:maxExifSame   IS NULL OR md.dup5cnt<=:maxExifSame   )) AND " /* */
         "  ( :GName        IS NULL OR fn.name GLOB :GName ) " /* */
         " AND "                 /* */
@@ -356,7 +357,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            ", md.md5sum1, md.md5sum2 " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid" /* */
            ", md.dup5cnt AS nsame" /* */
-	   ", mi.mime AS mime" /* */
+           ", mi.mime AS mime"  /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id" (* *) */
            ", fd.md5id AS md5id" /* */
            ,
@@ -424,7 +425,8 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            " FROM      " DUF_DBPREF "paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " WHERE pt.parentid=:dirID ",
+           " WHERE pt.parentid=:dirID " /* */
+           ,
            }
   /* .final_sql_argv = final_sql, */
 };

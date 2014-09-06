@@ -34,7 +34,18 @@
 #include "duf.h"
 /* ###################################################################### */
 
+/*
+Ideas: count for each dir pair number of matching files => path_pairs
 
+INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fna.Pathid, fnb.Pathid 
+	FROM filenames AS fna 
+	JOIN filedatas AS fda ON (fna.dataid=fda.rowid) 
+  	JOIN md5 AS mda ON (fda.md5id=mda.rowid)
+  	JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)
+  	JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)
+  WHERE fna.Pathid != fnb.Pathid
+  GROUP BY mda.rowid;
+*/
 
 unsigned long
 duf_config_act_flags_combo_t_bits( duf_config_act_flags_t f )

@@ -7,6 +7,10 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
+
+
 #include "duf_defs.h"           /* */
 
 #include "duf_maintenance.h"
@@ -292,9 +296,8 @@ duf_check_table_fnselected( void )
 /* #endif */
                         "last_updated REAL" /* */
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-			")" /* */
-			, "Create fnselected"
-			);
+                        ")"     /* */
+                        , "Create fnselected" );
 
 
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
@@ -414,6 +417,33 @@ duf_check_table_pathtot_dirs( void )
                           "Create pathtot_dirs" );
 
 
+
+  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
+  return r;
+}
+
+static int
+duf_check_table_path_pairs( void )
+{
+  int r = DUF_ERROR_CHECK_TABLES;
+
+  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  r = duf_sql_exec_msg( "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "path_pairs ("
+#ifdef DUF_USE_IDCOL
+                        DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
+#endif
+                        " Pathid1 INTEGER NOT NULL " /* */
+                        ", Pathid2 INTEGER NOT NULL " /* */
+                        ", samefiles INTEGER, last_updated REAL" /* */
+                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) )", "Create path_pairs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "path_pairs_uniq ON  path_pairs (Pathid1, Pathid2)", "Create path_pairs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "path_pairs_pathid1 ON path_pairs (Pathid1)", "Create path_pairs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "path_pairs_pathid2 ON path_pairs (Pathid2)", "Create path_pairs" );
+  if ( r >= 0 )
+    r = duf_sql_exec_msg( "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "path_pairs_samefiles ON path_pairs (samefiles)", "Create path_pairs" );
 
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
@@ -614,7 +644,7 @@ duf_check_table_exif( void )
                         ", dupexifcnt INTEGER" /* */
                         ", fixed INTEGER" /* */
                         ", broken_date TEXT " /* */
-			", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
+                        ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         /* ", FOREIGN KEY(" DUF_SQL_IDNAME ") REFERENCES filedatas(exifid) " */
                         " )", "Create exif" );
   if ( r >= 0 )
@@ -674,53 +704,7 @@ duf_check_table_path_tags( void )
 }
 
 
-int
-duf_clear_tables( void )
-{
-  int r = 0;
 
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
-
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS log", "Drop log" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS filefilter", "Drop filefilter" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "filedatas", "Drop filedatas" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "sizes", "Drop sizes" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "filenames", "Drop filenames" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "paths", "Drop paths" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "pathtot_dirs", "Drop pathtot_dirs" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "pathtot_files", "Drop pathtot_files" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "sd5", "Drop sd5" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "crc32", "Drop crc32" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "md5", "Drop md5" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "mdpath", "Drop mdpath" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "keydata", "Drop keydata" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "mime", "Drop mime" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "exif_model", "Drop exif_model" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "exif", "Drop exif" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "tags", "Drop tags" );
-  if ( r >= 0 )
-    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "path_tags", "Drop path_tags" );
-  DUF_TRACE( action, 0, "Drop all tables from DB %s (%d)", r < 0 ? "FAIL" : "OK", r );
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
-  return r;
-}
 
 typedef int duf_create_table_function( void );
 typedef struct
@@ -751,7 +735,83 @@ static duf_create_table_element tab_table[] = {
   /* DUF_TABLE_ELEMENT( keydata ), */
   DUF_TABLE_ELEMENT( pathtot_dirs ),
   DUF_TABLE_ELEMENT( pathtot_files ),
+  DUF_TABLE_ELEMENT( path_pairs ),
 };
+
+
+int
+duf_clear_tables( void )
+{
+  int r=0;
+  int ntabs;
+
+  ntabs = sizeof( tab_table ) / sizeof( tab_table[0] );
+  for ( int itab = 0; itab < ntabs; itab++ )
+  {
+    char *sql;
+    char *msg;
+
+    sql = mas_strdup( "DROP TABLE IF EXISTS " );
+    sql = mas_strcat_x( sql, tab_table[itab].name );
+    msg = mas_strdup( "Drop " );
+    msg = mas_strcat_x( msg, tab_table[itab].name );
+    r = duf_sql_exec_msg( "DROP TABLE IF EXISTS log", "Drop log" );
+    mas_free( sql );
+    mas_free( msg );
+  }
+  return r;
+}
+
+/* int                                                                                                   */
+/* duf_clear_tables_old( void )                                                                          */
+/* {                                                                                                     */
+/*   int r = 0;                                                                                          */
+/*                                                                                                       */
+/*   duf_dbgfunc( DBG_START, __func__, __LINE__ );                                                       */
+/*                                                                                                       */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS log", "Drop log" );                                   */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS filefilter", "Drop filefilter" );                     */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "filedatas", "Drop filedatas" );         */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "sizes", "Drop sizes" );                 */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "filenames", "Drop filenames" );         */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "paths", "Drop paths" );                 */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "pathtot_dirs", "Drop pathtot_dirs" );   */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "pathtot_files", "Drop pathtot_files" ); */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "path_pairs", "Drop path_pairs" );       */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "sd5", "Drop sd5" );                     */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "crc32", "Drop crc32" );                 */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "md5", "Drop md5" );                     */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "mdpath", "Drop mdpath" );               */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "keydata", "Drop keydata" );             */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "mime", "Drop mime" );                   */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "exif_model", "Drop exif_model" );       */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "exif", "Drop exif" );                   */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "tags", "Drop tags" );                   */
+/*   if ( r >= 0 )                                                                                       */
+/*     r = duf_sql_exec_msg( "DROP TABLE IF EXISTS " DUF_DBPREF "path_tags", "Drop path_tags" );         */
+/*   DUF_TRACE( action, 0, "Drop all tables from DB %s (%d)", r < 0 ? "FAIL" : "OK", r );                */
+/*   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );                                                     */
+/*   return r;                                                                                           */
+/* }                                                                                                     */
+
 
 int
 duf_check_tables( void )

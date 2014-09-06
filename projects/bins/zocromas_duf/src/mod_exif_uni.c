@@ -506,7 +506,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
           }
           else
           {
-            DUF_ERROR( "!!! (%d) read %lu m:%s t:%lu -- %s", r, sum, model, timeepoch, stime_original );
+            DUF_TRACE( update, 0, "Nothing got for EXIF : (%d)", r );
           }
           if ( r == DUF_ERROR_EXIF_NO_MODEL )
             r = 0;

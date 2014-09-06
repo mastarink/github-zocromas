@@ -67,6 +67,7 @@ typedef struct
   duf_limits_t exifsame;
   duf_limits_t mimesame;
   duf_limits_t nameid;
+  duf_limits_t dirid;
   duf_limitsll_t mtime;
   duf_limitsll_t atime;
   duf_limitsll_t ctime;

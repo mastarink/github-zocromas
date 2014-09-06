@@ -229,6 +229,11 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
     DUF_SQL_BIND_LL_NZ_OPT( minNameID, duf_config->u.nameid.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxNameID, duf_config->u.nameid.max, r, pstmt );
   }
+  if ( duf_config->u.dirid.flag )
+  {
+    DUF_SQL_BIND_LL_NZ_OPT( minDirID, duf_config->u.dirid.min, r, pstmt );
+    DUF_SQL_BIND_LL_NZ_OPT( maxDirID, duf_config->u.dirid.max, r, pstmt );
+  }
   if ( duf_config->u.mtime.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minMTime, duf_config->u.mtime.min, r, pstmt );
@@ -280,7 +285,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
   }
   if ( duf_config->u.same_as )
   {
-    duf_filepath_t fp={0};
+    duf_filepath_t fp = { 0 };
     {
       char *pathname;
       char *dir;
@@ -294,10 +299,11 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
       mas_free( pathname );
     }
 
-
     DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
     mas_free( fp.name );
+    if ( !fp.dirid )
+      r = DUF_ERROR_NOT_FOUND;
   }
 
   return r;
@@ -323,8 +329,11 @@ duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
     {
       DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
       r = duf_bind_ufilter( pstmt );
-      DUF_SQL_STEP( r, pstmt );
-      DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+      if ( r >= 0 )
+      {
+        DUF_SQL_STEP( r, pstmt );
+        DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+      }
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
     }
     DUF_TEST_R( r );
