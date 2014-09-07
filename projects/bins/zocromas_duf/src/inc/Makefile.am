@@ -9,7 +9,7 @@ noinst_HEADERS=duf.h duf_interactive.h			\
 	duf_create.h					   \
 	duf_dirent.h duf_filedata.h			    \
 	duf_add.h duf_path.h duf_path2db.h duf_db2path.h     \
-	duf_item_scan2.h duf_item_match2.h		      \
+	duf_item_scan2.h				      \
 	duf_uni_scan.h duf_prepare_actions.h duf_uni_scan2.h   \
 	duf_sccb.h duf_dir_scan2.h duf_dir_scan2_stages.h	\
 	duf_levinfo.h duf_levinfo_ref.h duf_pdi.h		 \
@@ -28,6 +28,7 @@ noinst_HEADERS=duf.h duf_interactive.h			\
 	duf_cli_types.h duf_option_types.h				     \
 	duf_ufilter_types.h duf_flags_types.h duf_fileinfo_types.h	      \
 	duf_pdi_types.h duf_hook_types.h duf_record_types.h
+#	duf_item_match2.h	
 #	duf_file_pathid2.h
 #	duf_dirent_scan1.h
 #	duf_dir_scan1.h

@@ -21,7 +21,7 @@ zocromas_duf_SOURCES=				   \
 	duf_filedata.c					   \
 	duf_add.c duf_path.c duf_path2db.c duf_db2path.c    \
 							     \
-	duf_item_scan2.c duf_item_match2.c		      \
+	duf_item_scan2.c				      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
 	duf_sccb.c duf_dir_scan2.c duf_dir_scan2_stages.c	\
 	duf_dirent_scan2.c					 \
@@ -43,6 +43,7 @@ zocromas_duf_SOURCES=				   \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_template_uni.c
+#	duf_item_match2.c	
 #	duf_file_pathid2.c
 #	mod_print_md5_uni.c
 #	duf_dirent_scan1.c

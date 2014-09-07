@@ -12,9 +12,9 @@ function duftest ()
     fi
     export MSH_CONF_DIR=$tdir0
     export MSH_DUF_OPTIONS=explain=0:trace-options=0:trace-action=0
-    shn m i r -OPRdEinD -f523Xe /mnt/new_media/media/photo/Pictures/photos/ --progress
+    shn m i r -OPRdEinD -f523Xe  /mnt/new_media/media/photo/Pictures/photos/ --progress
     export MSH_DUF_OPTIONS=explain=0:trace-options=0:trace-action=0
-    shn m i r   /mnt/new_media/media/photo/  -pd -T -f --output-file=@$testfile
+    shn m i r   /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --output-file=@$testfile
     if [[ -f $testfile ]] && [[ -f $cmpfile ]] ; then
       if diff $testfile $cmpfile ; then
         echo "Result file compare ok"
@@ -27,7 +27,7 @@ function duftest ()
 function create_config ()
 {
   local dbdir=$1
-cat <<EEE >$tdir0/zocromas11_duf.conf
+cat <<EEE >$tdir0/zocromas_duf.conf
 trace-any=0
 trace-stdout
 trace-temp
@@ -57,6 +57,7 @@ function maintest ()
     fi
   create_config $tdir0
   duftest
+  sqlite3 $tdir0/temp.db 'select "Paths" as Tb, count(*) as Cnt from paths UNION ALL select "Datas", count(*)  from filedatas UNION ALL select "Names", count(*) from filenames UNION ALL select "Sizes", count(*)  from sizes UNION ALL select "MD5s", count(*) from md5'
 }
 
 tput reset

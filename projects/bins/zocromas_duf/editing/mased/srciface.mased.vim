@@ -10,4 +10,7 @@ sfind duf_action.h
 tab sfind duf_interactive.c
 sfind duf_interactive.h
 
+tab sfind duf_prepare_actions.c
+sfind duf_prepare_actions.h
+
 

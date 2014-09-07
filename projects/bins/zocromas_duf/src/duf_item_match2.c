@@ -6,26 +6,15 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
-
-
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
 #include "duf_match.h"
-#include "duf_utils.h"
 
-#include "duf_levinfo.h"
-#include "duf_pdi.h"
 #include "duf_sccb.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
-#include "duf_sql.h"
-
-/* #include "duf_sql1.h" */
-#include "duf_sql2.h"
-
 
 
 /* ###################################################################### */
@@ -33,9 +22,9 @@
 /* ###################################################################### */
 
 int
-duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
+__duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   DUF_SFIELD2( filename );
   DUF_UFIELD2( filesize );
@@ -50,5 +39,5 @@ duf_match_leaf2( duf_sqlite_stmt_t * pstmt )
   /*             dufOFF_lim_matchll( duf_config->u.size, filesize ), r );                                                      */
   if ( !r )
     DUF_TRACE( match, 0, "NOT MATCH %s (mode 2)", filename );
-  return r;
+  DEBUG_ENDR( r );
 }

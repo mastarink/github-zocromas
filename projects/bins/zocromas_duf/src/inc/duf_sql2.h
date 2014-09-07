@@ -138,7 +138,7 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 	  DUF_TEST_RR( r1 ); \
 	  if ( r1 == DUF_SQL_ROW ) \
 	  { \
-	    ops \
+	    ops ; \
 	  } \
 	}
 

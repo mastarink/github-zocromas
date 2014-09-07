@@ -42,9 +42,7 @@
 static int
 duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   r = duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemname( pdi ) );
 
@@ -64,7 +62,6 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
     r = DUF_ERROR_STAT;
   }
   DEBUG_ENDR( r );
-  return r;
 }
 
 /*
@@ -82,9 +79,7 @@ static int
 duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
                           duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   r = duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , de->d_type != DT_DIR /* is_leaf */  );
   if ( r >= 0 )
@@ -92,13 +87,12 @@ duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
   duf_levinfo_goup( pdi );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   int nlist = 0;
   struct dirent **list = NULL;
@@ -117,9 +111,8 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
        *   for directory                - scan_dirent_dir2
        *   for other (~ regular) entry  - scan_dirent_reg2
        * */
-      r = duf_scan_direntry2_lower( list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 );
+      DOR(r , duf_scan_direntry2_lower( list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 ));
 
-      DUF_TEST_R( r );
       if ( list[il] )
         free( list[il] );
     }
@@ -143,7 +136,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
     }
     DUF_TEST_R( r );
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /*
@@ -162,10 +155,8 @@ int
 duf_scan_dirents2(  /* duf_sqlite_stmt_t * pstmt, */ duf_depthinfo_t * pdi,
                    duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   const struct stat *pst_parent;
-
-  DEBUG_START(  );
 
   pst_parent = duf_levinfo_stat( pdi );
 
@@ -182,5 +173,4 @@ duf_scan_dirents2(  /* duf_sqlite_stmt_t * pstmt, */ duf_depthinfo_t * pdi,
   else
     r = _duf_scan_dirents2( pdi, scan_dirent_reg2, scan_dirent_dir2 );
   DEBUG_ENDR( r );
-  return r;
 }

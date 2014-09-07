@@ -30,34 +30,74 @@
 /* ###################################################################### */
 
 
+
+#define DUF_QSCAN_NODE_DECLARE_FUNCTION(stagename) \
+    int \
+    duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb ) \
+    { \
+      DEBUG_STARTR( r ); \
+      unsigned long long diridpdi; \
+ \
+      diridpdi = duf_levinfo_dirid( pdi ); \
+      if ( DUF_ACT_FLAG( dirs ) ) \
+      { \
+	pdi->items.total++; \
+	pdi->items.dirs++; \
+ \
+	if ( duf_levinfo_item_deleted( pdi ) ) \
+	{ \
+	  if ( sccb->node_scan_ ## stagename ## 2_deleted ) \
+	  { \
+	    DUF_TRACE( scan, 10, "scan node " #stagename "2_deleted by %5llu", diridpdi ); \
+	    DOR( r, sccb->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ pdi ) ); \
+	  } \
+	  DUF_TRACE( deleted, 0, "DELETED" ); \
+	} \
+	else if ( sccb->node_scan_ ## stagename ## 2 ) \
+	{ \
+	  DUF_TRACE( scan, 10, "scan node " #stagename "2 by %5llu", diridpdi ); \
+	  DOR( r, sccb->node_scan_ ## stagename ## 2( pstmt, /* diridpdi, */ pdi ) ); \
+	} \
+	else \
+	{ \
+	  DUF_TRACE( scan, 10, "NOT scan node " #stagename "2 by %5llu - sccb->node_scan_" #stagename "2 empty for %s", \
+		      		diridpdi, duf_uni_scan_action_title( sccb ) ); \
+	} \
+	DUF_TEST_R( r ); \
+      } \
+      else if ( sccb->node_scan_ ## stagename ## 2 ) \
+      { \
+	DUF_TRACE( explain, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_DIRS ) ); \
+      } \
+      else \
+      { \
+	DUF_TRACE( scan, 10, "NOT scan " #stagename "2 ( -d or --dirs absent )" ); \
+      } \
+      DEBUG_ENDR( r ); \
+    }
+
+/* *INDENT-OFF*  */
+DUF_QSCAN_NODE_DECLARE_FUNCTION(before)
+DUF_QSCAN_NODE_DECLARE_FUNCTION(middle)
+DUF_QSCAN_NODE_DECLARE_FUNCTION(after)
+/* *INDENT-ON*  */
+
 /*
  * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
  * */
 static int
-duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  /*
-   * 20140831.142148
-   * DUF_UFIELD2( filesize );
-   * if ( dufOFF_lim_matchll( duf_config->u.size, filesize ) ) */
-  {
-    pdi->items.total++;
-    pdi->items.files++;
-    assert( duf_levinfo_dfd( pdi ) );
-    if ( sccb->leaf_scan_fd2 )
-      r = sccb->leaf_scan_fd2( pstmt, duf_levinfo_dfd( pdi ), duf_levinfo_stat( pdi ), pdi );
-
-    DUF_TEST_R( r );
-    DUF_TRACE( scan, 14, "r:%d; sccb->leaf_scan_fd:%s", r, DUF_FUNN( sccb->leaf_scan_fd2 ) );
-
-    /* DUF_TRACE( action, 0, "r=%d", r ); */
-  }
-  DUF_TEST_R( r );
-  return r;
+  pdi->items.total++;
+  pdi->items.files++;
+  assert( duf_levinfo_dfd( pdi ) );
+  if ( sccb->leaf_scan_fd2 )
+    DOR( r, sccb->leaf_scan_fd2( pstmt, duf_levinfo_dfd( pdi ), duf_levinfo_stat( pdi ), pdi ) );
+  DEBUG_ENDR( r );
 }
 
 /*
@@ -68,40 +108,26 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
 static int
 duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   DUF_SFIELD2( filename );
-  DUF_TRACE( scan, 10, "+" );
-  DUF_TRACE( explain, 5, "= ? ============ str cb2 leaf scan => ≪leaf_scan2≫" );
 
-  /* if ( filesize >= duf_config->u.size.min && ( !duf_config->u.size.max || filesize < duf_config->u.size.max ) ) */
+  pdi->items.total++;
+  pdi->items.files++;
 
-  /* 20140823.101349
-   * DUF_UFIELD2( filesize );
-   * if ( dufOFF_lim_matchll( duf_config->u.size, filesize ) )
-   * */
+  if ( duf_levinfo_item_deleted( pdi ) )
   {
-    pdi->items.total++;
-    pdi->items.files++;
-
-    if ( duf_levinfo_item_deleted( pdi ) )
-    {
-      if ( sccb->leaf_scan2_deleted )
-        r = sccb->leaf_scan2_deleted( pstmt, pdi );
-      DUF_TRACE( scan, 13, "r:%d; sccb->leaf_scan2_deleted:%s", r, DUF_FUNN( sccb->leaf_scan2_deleted ) );
-      DUF_TRACE( deleted, 0, "DELETED '%s%s'", duf_levinfo_path( pdi ), filename );
-    }
-    else
-    {
-      if ( sccb->leaf_scan2 )
-        r = sccb->leaf_scan2( pstmt, pdi );
-      DUF_TRACE( scan, 13, "r:%d; sccb->leaf_scan:%s", r, DUF_FUNN( sccb->leaf_scan2 ) );
-    }
-
-    DUF_TEST_R( r );
+    if ( sccb->leaf_scan2_deleted )
+      DOR( r, sccb->leaf_scan2_deleted( pstmt, pdi ) );
+    DUF_TRACE( deleted, 0, "DELETED '%s%s'", duf_levinfo_path( pdi ), filename );
   }
-  DUF_TEST_R( r );
-  return r;
+  else
+  {
+    if ( sccb->leaf_scan2 )
+      DOR( r, sccb->leaf_scan2( pstmt, pdi ) );
+  }
+
+  DEBUG_ENDR( r );
 }
 
 /*
@@ -150,56 +176,9 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi, duf
 }
 
 int
-duf_qscan_node_scan_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  int r = 0;
-  unsigned long long diridpdi;
-
-  diridpdi = duf_levinfo_dirid( pdi );
-  if ( DUF_ACT_FLAG( dirs ) )
-  {
-    pdi->items.total++;
-    pdi->items.dirs++;
-
-    if ( duf_levinfo_item_deleted( pdi ) )
-    {
-      if ( sccb->node_scan_before2_deleted )
-      {
-        DUF_TRACE( scan, 10, "scan node before2_deleted by %5llu", diridpdi );
-        r = sccb->node_scan_before2_deleted( pstmt, /* diridpdi, */ pdi );
-      }
-      DUF_TRACE( deleted, 0, "DELETED" );
-    }
-    else if ( sccb->node_scan_before2 )
-    {
-      DUF_TRACE( scan, 10, "scan node before2 by %5llu", diridpdi );
-      r = sccb->node_scan_before2( pstmt, /* diridpdi, */ pdi );
-    }
-    else
-    {
-      DUF_TRACE( scan, 10, "NOT scan node before2 by %5llu - sccb->node_scan_before2 empty for %s", diridpdi, duf_uni_scan_action_title( sccb ) );
-    }
-    DUF_TEST_R( r );
-  }
-  else if ( sccb->node_scan_before2 )
-  {
-    char *ona = NULL;
-
-    ona = duf_option_names( DUF_OPTION_FLAG_DIRS );
-    DUF_TRACE( explain, 1, "to scan node before2 use %s", ona );
-    mas_free( ona );
-  }
-  else
-  {
-    DUF_TRACE( scan, 10, "NOT scan before2 ( -d or --dirs absent )" );
-  }
-  return r;
-}
-
-int
 duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
 /* duf_scan_files_by_pathid:
  * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb_leaf_scan) + pdi (also) as str_cb_udata
@@ -207,106 +186,40 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf
  *
  * */
   /* scan this files in this directory */
-  if ( r >= 0 && DUF_ACT_FLAG( files ) )
+  if ( DUF_ACT_FLAG( files ) )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 2." );
-    if ( r >= 0 && sccb->leaf_scan_fd2 )
+    if ( sccb->leaf_scan_fd2 )
     {
-      /* duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd */
-      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_scan_file_fd, pdi, sccb ) );
+      /* duf_str_cb2_leaf_scan_fd is just a wrapper for sccb->leaf_scan_fd2 */
+      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan_fd, pdi, sccb ) );
     }
-    else
+    if ( sccb->leaf_scan2 )
     {
-      DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": NOT scan leaves_scan2 fd   by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
-    }
-    if ( r >= 0 && sccb->leaf_scan2 )
-    {
-/* duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan */
+      /* duf_str_cb2_leaf_scan is just a wrapper for sccb->leaf_scan2 */
       DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan, pdi, sccb ) );
-    }
-    else
-    {
-      DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": NOT scan leaves_scan2    by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
     }
   }
   else if ( sccb->leaf_scan_fd2 )
   {
-    char *ona = NULL;
-
-    ona = duf_option_names( DUF_OPTION_FLAG_FILES );
-    DUF_TRACE( explain, 0, "to scan fd2 use %s", ona );
-    mas_free( ona );
+    DUF_TRACE( explain, 0, "to scan fd2 use %s", DUF_OPT_NAME( FLAG_FILES ) );
   }
   else
   {
     DUF_TRACE( scan, 10, "NOT scan leaf_scan_fd2 and leaf_scan2  ( -f or --files absent )" );
   }
-  return r;
+  DEBUG_ENDR( r );
 }
-
-int
-duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  int r = 0;
-  unsigned long long diridpdi;
-
-  diridpdi = duf_levinfo_dirid( pdi );
-  if ( DUF_ACT_FLAG( dirs ) )
-  {
-    if ( duf_levinfo_item_deleted( pdi ) )
-    {
-      if ( sccb->node_scan_middle2_deleted )
-      {
-        DUF_TRACE( scan, 10, "scan node middle2_deleted by %5llu", diridpdi );
-        r = sccb->node_scan_middle2_deleted( pstmt, /* diridpdi, */ pdi );
-      }
-      DUF_TRACE( deleted, 0, "DELETED" );
-    }
-    else if ( sccb->node_scan_middle2 )
-    {
-      DUF_TRACE( scan, 10, "scan node middle2 by %5llu", diridpdi );
-      r = sccb->node_scan_middle2( pstmt, /* diridpdi, */ pdi );
-    }
-    else
-    {
-      DUF_TRACE( scan, 10, "NOT scan node middle2 by %5llu - sccb->node_scan_middle2 empty for %s", diridpdi, duf_uni_scan_action_title( sccb ) );
-    }
-    DUF_TEST_R( r );
-  }
-  else if ( sccb->node_scan_middle2 )
-  {
-    char *ona = NULL;
-
-    ona = duf_option_names( DUF_OPTION_FLAG_DIRS );
-    DUF_TRACE( explain, 0, "to scan node middle2 use %s", ona );
-    mas_free( ona );
-  }
-  else
-  {
-    DUF_TRACE( scan, 10, "NOT scan middle2 ( -d or --dirs absent )" );
-  }
-  return r;
-}
-
 
 int
 duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, duf_str_cb2_t str_cb2 */  )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   /* scan directories in this directory */
 /* duf_scan_db_items2:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
-
-  DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan node selector2: [%s]", duf_pdi_depth( pdi ), sccb->node.selector2 );
-
-  /* if ( !sccb->node.selector2 )                                                           */
-  /* {                                                                                      */
-  /*   DUF_ERROR( "sccb->node.selector2 empty for %s", duf_uni_scan_action_title( sccb ) ); */
-  /*   r = DUF_ERROR_PTR;                                                                   */
-  /*   DUF_TEST_R( r );                                                                     */
-  /* }                                                                                      */
 
 /* calling duf_sel_cb_(node|leaf) for each record by sccb->node.selector2 */
   /*
@@ -316,54 +229,10 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
    * str_cb2 (sub-item scanner):
    *       duf_scan_dirs_by_pdi_maxdepth
    *     ( duf_str_cb2_leaf_scan    )
-   *     ( duf_str_cb2_scan_file_fd )
+   *     ( duf_str_cb2_leaf_scan_fd )
    * */
-  if ( r >= 0 && sccb->node.selector2 )
-    r = duf_scan_db_items2( DUF_NODE_NODE, duf_scan_dirs_by_pdi_maxdepth /* str_cb2 */ , pdi,
-                            sccb /*, sccb->node.selector2, sccb->node.fieldset */  );
-  return r;
-}
-
-int
-duf_qscan_node_scan_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  int r = 0;
-  unsigned long long diridpdi;
-
-  diridpdi = duf_levinfo_dirid( pdi );
-  if ( DUF_ACT_FLAG( dirs ) )
-  {
-    if ( duf_levinfo_item_deleted( pdi ) )
-    {
-      if ( sccb->node_scan_after2_deleted )
-      {
-        DUF_TRACE( scan, 10, "scan node after2_deleted by %5llu", diridpdi );
-        r = sccb->node_scan_after2_deleted( pstmt, /* diridpdi, */ pdi );
-      }
-      DUF_TRACE( deleted, 0, "DELETED" );
-    }
-    else if ( sccb->node_scan_after2 )
-    {
-      DUF_TRACE( scan, 10, "scan node after2 by %5llu", diridpdi );
-      r = sccb->node_scan_after2( pstmt, /* diridpdi, */ pdi );
-    }
-    else
-    {
-      DUF_TRACE( scan, 10, "NOT scan node after2 by %5llu - sccb->node_scan_after2 empty for %s", diridpdi, duf_uni_scan_action_title( sccb ) );
-    }
-    DUF_TEST_R( r );
-  }
-  else if ( sccb->node_scan_after2 )
-  {
-    char *ona = NULL;
-
-    ona = duf_option_names( DUF_OPTION_FLAG_DIRS );
-    DUF_TRACE( explain, 0, "to scan node after2  use %s", ona );
-    mas_free( ona );
-  }
-  else
-  {
-    DUF_TRACE( scan, 10, "NOT scan after2 ( -d or --dirs absent )" );
-  }
-  return r;
+  if ( sccb->node.selector2 )
+    DOR( r, duf_scan_db_items2( DUF_NODE_NODE, duf_scan_dirs_by_pdi_maxdepth /* str_cb2 */ , pdi,
+                                sccb /*, sccb->node.selector2, sccb->node.fieldset */  ) );
+  DEBUG_ENDR( r );
 }

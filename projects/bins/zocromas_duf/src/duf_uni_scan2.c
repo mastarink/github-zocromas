@@ -53,9 +53,7 @@
 int
 duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   assert( pdi );
 
@@ -74,7 +72,5 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_depthinfo
     DUF_TRACE( explain, 1, "no depth condition by %s value %d", DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth );
   }
 
-  DUF_TEST_R( r );
-  DEBUG_END(  );
-  return r;
+  DEBUG_ENDR( r );
 }
