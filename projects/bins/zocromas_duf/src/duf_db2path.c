@@ -104,11 +104,3 @@ duf_pathid_to_path2_tmp( int index, unsigned long long dirid, const duf_depthinf
   return p;
 }
 #endif
-
-
-/*
- * rules for int/r functions:
- *   1. declare int r = 0;
- *      ....
- *      return r;
- * */

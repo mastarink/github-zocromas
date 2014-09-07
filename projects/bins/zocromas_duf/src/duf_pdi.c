@@ -61,7 +61,7 @@ duf_set_context_destructor( duf_context_t * pcontext, duf_void_voidp_t destr )
 int
 duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pd;
 
   /* assert( pdi ); */
@@ -77,13 +77,13 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
     r = duf_real_path2db( pdi, real_path, ifadd /* ifadd */  );
   DUF_TEST_R( r );
 
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   r = duf_pdi_init( pdi, real_path, ifadd );
   if ( r == DUF_ERROR_NOT_IN_DB )
@@ -97,7 +97,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
     DUF_TRACE( explain, 0, "added path: %s", real_path );
     DUF_TRACE( path, 0, " *********** diridpid: %llu", duf_levinfo_dirid( pdi ) );
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 void
@@ -124,18 +124,18 @@ duf_pdi_context( duf_depthinfo_t * pdi )
 int
 duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
   r = pdi->opendir;
   pdi->opendir = od;
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_pdi_close( duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
   duf_clear_context( &pdi->context );
@@ -151,13 +151,13 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   duf_levinfo_delete( pdi );
   global_status.changes += pdi->changes;
   /* DUF_ERROR( "clear statements" ); */
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
   if ( pdi->u.max_seq && pdi->seq >= pdi->u.max_seq )
@@ -173,7 +173,7 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   /*        && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )    */
   /*        && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )       */
   /*        && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ); */
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
@@ -219,7 +219,8 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
   return pdi ? pdi->maxdepth : 0;
 }
 
-int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
+int
+duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
 {
   return duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi );
 }
@@ -227,27 +228,24 @@ int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
 int
 duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex )
 {
-  int r = -1;
-
-  if ( pdi )
+  DEBUG_STARTR( r );
+  assert( pdi );
+  if ( !pdi->num_statements )
   {
-    if ( !pdi->num_statements )
-    {
-      pdi->statements = mas_malloc( sizeof( duf_sqlite_stmt_t * ) );
-      pdi->xstatements = mas_malloc( sizeof( int * ) );
-    }
-    else
-    {
-      pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
-      pdi->xstatements = mas_realloc( pdi->xstatements, ( pdi->num_statements + 1 ) * sizeof( int * ) );
-    }
-    if ( pindex )
-      *pindex = pdi->num_statements;
-    pdi->xstatements[pdi->num_statements] = pindex;
-    r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements] );
-    pdi->num_statements++;
+    pdi->statements = mas_malloc( sizeof( duf_sqlite_stmt_t * ) );
+    pdi->xstatements = mas_malloc( sizeof( int * ) );
   }
-  return r;
+  else
+  {
+    pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
+    pdi->xstatements = mas_realloc( pdi->xstatements, ( pdi->num_statements + 1 ) * sizeof( int * ) );
+  }
+  if ( pindex )
+    *pindex = pdi->num_statements;
+  pdi->xstatements[pdi->num_statements] = pindex;
+  r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements] );
+  pdi->num_statements++;
+  DEBUG_ENDR( r );
 }
 
 duf_sqlite_stmt_t *
@@ -259,7 +257,7 @@ duf_pdi_statement( duf_depthinfo_t * pdi, int i )
 int
 duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int *pi;
 
   assert( pdi );
@@ -271,7 +269,7 @@ duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
   if ( pi )
     *pi = -1;
   pdi->statements[i] = NULL;
-  return r;
+  DEBUG_ENDR( r );
 }
 
 void

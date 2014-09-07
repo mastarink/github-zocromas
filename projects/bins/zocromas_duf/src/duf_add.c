@@ -24,40 +24,25 @@
 int
 duf_add_path_uni( const char *path )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
+  char *real_path = NULL;
 
-  DEBUG_START(  );
-  {
-    char *real_path = NULL;
+  DUF_TRACE( explain, 0, "adding path uni: %s", path );
 
-    DUF_TRACE( explain, 0, "adding path uni: %s", path );
+  real_path = duf_realpath( path, &r );
 
-    real_path = duf_realpath( path, &r );
+  duf_depthinfo_t di = {.depth = -1,
+    .seq = 0,
+    .levinfo = NULL,
+    .u = duf_config->u,
+    /* .opendir = sccb ? sccb->opendir : 0, */
+    .opendir = 1,
+    /* .name = real_path, */
+  };
 
-    duf_depthinfo_t di = {.depth = -1,
-      .seq = 0,
-      .levinfo = NULL,
-      .u = duf_config->u,
-      /* .opendir = sccb ? sccb->opendir : 0, */
-      .opendir = 1,
-      /* .name = real_path, */
-    };
-
-    if ( r >= 0 )
-      r = duf_pdi_init_wrap( &di, real_path, 1 );
-
-    if ( r >= 0 )
-    {
-      const char *real_path_b = NULL;
-
-      if ( !real_path_b )
-        real_path_b = duf_levinfo_path( &di );
-
-      DUF_TRACE( path, 0, "added path uni: [%s] :: [%s]  %llu", real_path, real_path_b, duf_levinfo_dirid( &di ) );
-    }
-    duf_pdi_close( &di );
-    mas_free( real_path );
-  }
+  DOR( r, duf_pdi_init_wrap( &di, real_path, 1 ) );
+  DUF_TRACE( path, 0, "added path uni: [%s] :: [%s]  %llu", real_path, duf_levinfo_path( &di ), duf_levinfo_dirid( &di ) );
+  duf_pdi_close( &di );
+  mas_free( real_path );
   DEBUG_ENDR( r );
-  return r;
 }

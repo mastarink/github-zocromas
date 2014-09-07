@@ -239,24 +239,14 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
 static int
 duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert, unsigned long long *pparentid )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   /* assert( pdi );                                                                          */
-  /* assert( pparentid );                                                                    */
-  /* DUF_TRACE( temp, 0, "@@@@@@@@@@@ depth: %d insdir:[%s]", duf_pdi_depth( pdi ), insdir); */
-  if ( r >= 0 )
-    r = duf_levinfo_godown( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  );
+  assert( pparentid );
+  DOR( r, duf_levinfo_godown( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  ) );
+  DOR( r, duf_levinfo_openat_dh( pdi ) ); /* levinfo depth 1 level lower */
 
-  /* levinfo depth 1 level lower */
-  if ( r >= 0 )
-    r = duf_levinfo_openat_dh( pdi );
-
-  /* upfd = duf_levinfo_dfd( pdi ); */
-  DUF_TRACE( path, 2, "@@ depth: %d @@@@@@@@@ upfd: %d // %d // `%s` :: %d", duf_pdi_depth( pdi ), duf_levinfo_dfd( pdi ), duf_levinfo_dfd( pdi ),
-             duf_levinfo_itemname( pdi ), pdi->opendir );
   DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, duf_levinfo_dfd( pdi ) );
-  /* pst_dir = duf_levinfo_stat( pdi ); */
-  /* assert( pst_dir ); */
 
   if ( r >= 0 )
   {
@@ -277,7 +267,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
     DUF_TRACE( path, 0, "inserted [%s] AS %llu", insdir, *pparentid );
     DUF_TRACE( path, 0, "ID %llu for insdir ≪%s≫", *pparentid, insdir );
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /*
@@ -317,7 +307,7 @@ run  -OPRdEifndD -523Xe /mnt/new_media/media/photo/ --progress
 static int
 _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int ifadd )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int od = 0;
   unsigned long long parentid = 0;
 
@@ -354,7 +344,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int ifadd )
  *   
  *     depth + 1
  * */
-        r = duf_path_component2db( pdi, dir, ifadd, &parentid );
+        DOR( r, duf_path_component2db( pdi, dir, ifadd, &parentid ) );
         if ( r < 0 )
           DUF_ERROR( "No such entry %s [%s]", real_path, dir );
         dir = nextdir;
@@ -368,7 +358,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int ifadd )
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
   if ( r >= 0 && !parentid )
     r = DUF_ERROR_NOT_IN_DB;
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /*
@@ -378,7 +368,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int ifadd )
 int
 duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   char *real_path;
 
   assert( pdi );
@@ -398,7 +388,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd )
 
   mas_free( real_path );
 
-  return r;
+  DEBUG_ENDR( r );
 }
 
 unsigned long long
@@ -426,10 +416,3 @@ duf_path2db( const char *path, int *pr )
   mas_free( real_path );
   return dirid;
 }
-
-/*
- * rules for int/r functions:
- *   1. declare int r = 0;
- *      ....
- *      return r;
- * */

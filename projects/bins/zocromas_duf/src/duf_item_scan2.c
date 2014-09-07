@@ -26,7 +26,7 @@
 #include "duf_sql2.h"
 
 
-#include "duf_item_match2.h"
+/* #include "duf_item_match2.h" */
 
 /* ###################################################################### */
 #include "duf_item_scan2.h"

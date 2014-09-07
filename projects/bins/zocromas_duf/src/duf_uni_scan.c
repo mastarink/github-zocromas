@@ -114,9 +114,8 @@ duf_scan_from_pdi( duf_ufilter_t * pu, duf_depthinfo_t * pdi, duf_scan_callbacks
  *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
-  if ( r >= 0 && !sccb->disabled )
-    r = duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb );
-  DUF_TEST_R( r );
+  if ( !sccb->disabled )
+    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb ) );
 
   /* delete level-control array, close 0 level */
 
@@ -197,15 +196,16 @@ duf_sccb_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb
   DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
 
   if ( DUF_ACT_FLAG( interactive ) )
-    r = duf_interactive( real_path );
-  else                          /* if ( 1 || DUF_U_FLAG( recursive ) ) */
   {
-    if ( r >= 0 && sccb )
-      r = duf_scan_from_real_path( real_path, pu, sccb /*, pchanges */  );
+    DOR( r, duf_interactive( real_path ) );
+  }
+  else if ( sccb )
+  {
+    DOR( r, duf_scan_from_real_path( real_path, pu, sccb /*, pchanges */  ) );
   }
 
   mas_free( real_path );
-  DOR( r, duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 ) );
+  r = duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 );
 
   DEBUG_ENDR( r );
 }

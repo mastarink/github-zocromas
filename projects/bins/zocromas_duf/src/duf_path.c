@@ -34,11 +34,3 @@ duf_join_path( const char *path, const char *fname )
   DEBUG_ENDS( fpath );
   return fpath;
 }
-
-
-/*
- * rules for int/r functions:
- *   1. declare int r = 0;
- *      ....
- *      return r;
- * */
