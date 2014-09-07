@@ -35,18 +35,18 @@
 
 
 /* callback of type duf_scan_hook_file_t */
-static int
-sampupd_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  /* DUF_SFIELD( filename ); */
-
-  DEBUG_START(  );
-
-  DEBUG_ENDR( r );
-  return r;
-}
+/* static int                                                         */
+/* sampupd_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                  */
+/*   int r = 0;                                                       */
+/*                                                                    */
+/*   (* DUF_SFIELD( filename ); *)                                    */
+/*                                                                    */
+/*   DEBUG_START(  );                                                 */
+/*                                                                    */
+/*   DEBUG_ENDR( r );                                                 */
+/*   return r;                                                        */
+/* }                                                                  */
 
 static int
 sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
@@ -87,26 +87,26 @@ sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
+/* static int                                                                                                  */
+/* sampupd_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                                                           */
+/*   int r = 0;                                                                                                */
+/*   struct stat *st;                                                                                          */
+/*   const char *path;                                                                                         */
+/*   const char *name;                                                                                         */
+/*                                                                                                             */
+/*   DEBUG_START(  );                                                                                          */
+/*   st = duf_levinfo_stat( pdi );                                                                             */
+/*   path = duf_levinfo_path( pdi );                                                                           */
+/*   name = duf_levinfo_itemname( pdi );                                                                       */
+/*   DUF_PRINTF( 0, "[%lu] %s / %s", st->st_ino, path, name );                                                 */
+/*                                                                                                             */
+/*   DEBUG_ENDR( r );                                                                                          */
+/*   return r;                                                                                                 */
+/* }                                                                                                           */
+
 static int
-sampupd_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-  struct stat *st;
-  const char *path;
-  const char *name;
-
-  DEBUG_START(  );
-  st = duf_levinfo_stat( pdi );
-  path = duf_levinfo_path( pdi );
-  name = duf_levinfo_itemname( pdi );
-  DUF_PRINTF( 0, "[%lu] %s / %s", st->st_ino, path, name );
-
-  DEBUG_ENDR( r );
-  return r;
-}
-
-static int
-sampupd_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+sampupd_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -122,22 +122,22 @@ sampupd_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long 
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
+/* static int                                                                                                 */
+/* sampupd_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                                                          */
+/*   int r = 0;                                                                                               */
+/*                                                                                                            */
+/*   (* DUF_SFIELD( filename ); *)                                                                            */
+/*                                                                                                            */
+/*   DEBUG_START(  );                                                                                         */
+/*                                                                                                            */
+/*                                                                                                            */
+/*   DEBUG_ENDR( r );                                                                                         */
+/*   return r;                                                                                                */
+/* }                                                                                                          */
+
 static int
-sampupd_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  /* DUF_SFIELD( filename ); */
-
-  DEBUG_START(  );
-
-
-  DEBUG_ENDR( r );
-  return r;
-}
-
-static int
-sampupd_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+sampupd_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -154,20 +154,20 @@ sampupd_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long p
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
+/* static int                                                                                                  */
+/* sampupd_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* {                                                                                                           */
+/*   int r = 0;                                                                                                */
+/*                                                                                                             */
+/*   DEBUG_START(  );                                                                                          */
+/*                                                                                                             */
+/*                                                                                                             */
+/*   DEBUG_ENDR( r );                                                                                          */
+/*   return r;                                                                                                 */
+/* }                                                                                                           */
+
 static int
-sampupd_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  int r = 0;
-
-  DEBUG_START(  );
-
-
-  DEBUG_ENDR( r );
-  return r;
-}
-
-static int
-sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -278,16 +278,16 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .node_scan_before = sampupd_scan_node_before,
+  /* .node_scan_before = sampupd_scan_node_before, */
   .node_scan_before2 = sampupd_scan_node_before2,
 
-  .node_scan_after = sampupd_scan_node_after,
+  /* .node_scan_after = sampupd_scan_node_after, */
   .node_scan_after2 = sampupd_scan_node_after2,
 
-  .node_scan_middle = sampupd_scan_node_middle,
+  /* .node_scan_middle = sampupd_scan_node_middle, */
   .node_scan_middle2 = sampupd_scan_node_middle2,
 
-  .leaf_scan = sampupd_scan_leaf,
+  /* .leaf_scan = sampupd_scan_leaf, */
   .leaf_scan2 = sampupd_scan_leaf2,
 
   .leaf_scan_fd2 = sampupd_scan_dirent_content2,

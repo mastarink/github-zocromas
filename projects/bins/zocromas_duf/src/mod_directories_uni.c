@@ -48,7 +48,7 @@
 /* }                                                                                                                           */
 
 static int
-directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, unsigned long long dirid,
+directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid_unused, */
                         duf_depthinfo_t * pdi )
 {
   int r = 0;

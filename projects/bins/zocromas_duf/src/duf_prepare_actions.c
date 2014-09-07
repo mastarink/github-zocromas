@@ -35,8 +35,8 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
       duf_collect_openat_md5_callbacks __attribute( ( weak ) ),
       duf_collect_mime_callbacks __attribute( ( weak ) ),
       duf_collect_exif_callbacks __attribute( ( weak ) ),
-      duf_collect_mdpath_callbacks __attribute( ( weak ) ),
-      duf_print_md5_callbacks __attribute( ( weak ) ),
+      /* duf_collect_mdpath_callbacks __attribute( ( weak ) ), */
+      /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
       duf_print_tree_callbacks __attribute( ( weak ) ),
       duf_print_dir_callbacks __attribute( ( weak ) ),
       duf_bubububububububububububububububububububububububububububububububububububu __attribute( ( weak ) );
@@ -80,9 +80,9 @@ static duf_action_table_t act_table[] = {
    .on.flag = {.print = 1},
    .off.flag = {.md5 = 1,.tree = 1}
    },
-  {.sccb = &duf_print_md5_callbacks,
-   .on.flag = {.print = 1,.md5 = 1},
-   },
+  /* {.sccb = &duf_print_md5_callbacks, */
+  /*  .on.flag = {.print = 1,.md5 = 1}, */
+  /*  },                                */
 };
 
 #if 1
@@ -318,35 +318,35 @@ duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
   }
 
   assert( asteps < max_asteps );
-  if (  /* DUF_ACT_FLAG(update )&& */ DUF_ACT_FLAG( mdpath ) )
-  {
-    extern duf_scan_callbacks_t duf_collect_mdpath_callbacks /* __attribute( ( weak ) ) */ ;
-    duf_scan_callbacks_t *sccb = &duf_collect_mdpath_callbacks;
-
-    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MDPATH ) );
-    DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_mdpath≫ #%d", asteps );
-    DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-    ppscan_callbacks[asteps++] = sccb;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_MDPATH ) );
-  }
+  /* if (  (* DUF_ACT_FLAG(update )&& *) DUF_ACT_FLAG( mdpath ) )                                    */
+  /* {                                                                                               */
+  /*   extern duf_scan_callbacks_t duf_collect_mdpath_callbacks (* __attribute( ( weak ) ) *) ;      */
+  /*   duf_scan_callbacks_t *sccb = &duf_collect_mdpath_callbacks;                                   */
+  /*                                                                                                 */
+  /*   DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MDPATH ) );                       */
+  /*   DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪collect_mdpath≫ #%d", asteps );    */
+  /*   DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) ); */
+  /*   ppscan_callbacks[asteps++] = sccb;                                                            */
+  /* }                                                                                               */
+  /* else                                                                                            */
+  /* {                                                                                               */
+  /*   DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_MDPATH ) );                         */
+  /* }                                                                                               */
   assert( asteps < max_asteps );
   if ( DUF_ACT_FLAG( print ) )
   {
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_PRINT ) );
-    if ( DUF_ACT_FLAG( md5 ) )
-    {
-      extern duf_scan_callbacks_t duf_print_md5_callbacks /* __attribute( ( weak ) ) */ ;
-      duf_scan_callbacks_t *sccb = &duf_print_md5_callbacks;
-
-      DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MD5 ) );
-      DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_md5≫ #%d", asteps );
-      DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-      ppscan_callbacks[asteps++] = sccb;
-    }
-    else
+    /* if ( DUF_ACT_FLAG( md5 ) )                                                                      */
+    /* {                                                                                               */
+    /*   extern duf_scan_callbacks_t duf_print_md5_callbacks (* __attribute( ( weak ) ) *) ;           */
+    /*   duf_scan_callbacks_t *sccb = &duf_print_md5_callbacks;                                        */
+    /*                                                                                                 */
+    /*   DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( FLAG_MD5 ) );                          */
+    /*   DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪print_md5≫ #%d", asteps );         */
+    /*   DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) ); */
+    /*   ppscan_callbacks[asteps++] = sccb;                                                            */
+    /* }                                                                                               */
+    /* else                                                                                            */
     {
       assert( asteps < max_asteps );
       DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( FLAG_MD5 ) );

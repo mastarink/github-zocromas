@@ -149,7 +149,7 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /* }                                                                                                            */
 
 static int
-sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned long long dirid = duf_levinfo_dirid( pdi );
@@ -203,7 +203,7 @@ sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long p
 /* }                                                                                                            */
 
 static int
-sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -274,7 +274,7 @@ sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pa
 /* }                                                                                                          */
 
 static int
-sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   int r = 0;
   unsigned long long dirid = duf_levinfo_dirid( pdi );
@@ -320,7 +320,7 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long p
 }
 
 static int
-sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, unsigned long long dirid,
+sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid, */
                    duf_depthinfo_t * pdi )
 {
   int r = 0;

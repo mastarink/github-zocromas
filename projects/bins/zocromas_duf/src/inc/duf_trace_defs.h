@@ -105,7 +105,7 @@
 
 /* ###################################################################### */
 
-#  define DUF_TEST_RX(val)	if (val) DUF_ERROR( " - - - - - -> [%s] (#%d)", val<0?duf_error_name(val):"-", val )
+#  define DUF_TEST_RX(val)	if (val) DUF_ERROR( " - - - - - -> [%s] (#%d)", val<0?duf_error_name(val):"+", val )
 #  define DUF_TEST_RQX(val, cond) if ( !(cond) ) DUF_TEST_RX( val )
 
 /* #  define DUF_TEST_R(val)       if ( val!=DUF_ERROR_MAX_REACHED && val!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( val ) */

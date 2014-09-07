@@ -19,7 +19,7 @@
 
 #include "duf_dirent_scan2.h"
 
-#include "duf_file_pathid2.h"
+/* #include "duf_file_pathid2.h" */
 
 #include "duf_sccb.h"
 #include "duf_option_names.h"
@@ -36,7 +36,7 @@
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
  * */
 static int
-duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb )
+duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
@@ -65,9 +65,8 @@ duf_str_cb2_scan_file_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, stru
  *
  * duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
  * */
-
 static int
-duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s *sccb )
+duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
@@ -110,7 +109,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
  *   for each direntry from filesystem with necessary info:
  * */
 int
-duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
@@ -167,14 +166,14 @@ duf_qscan_node_scan_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
       if ( sccb->node_scan_before2_deleted )
       {
         DUF_TRACE( scan, 10, "scan node before2_deleted by %5llu", diridpdi );
-        r = sccb->node_scan_before2_deleted( pstmt, diridpdi, pdi );
+        r = sccb->node_scan_before2_deleted( pstmt, /* diridpdi, */ pdi );
       }
       DUF_TRACE( deleted, 0, "DELETED" );
     }
     else if ( sccb->node_scan_before2 )
     {
       DUF_TRACE( scan, 10, "scan node before2 by %5llu", diridpdi );
-      r = sccb->node_scan_before2( pstmt, diridpdi, pdi );
+      r = sccb->node_scan_before2( pstmt, /* diridpdi, */ pdi );
     }
     else
     {
@@ -213,12 +212,8 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 2." );
     if ( r >= 0 && sccb->leaf_scan_fd2 )
     {
-      DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves_scan2 fd   by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
-
       /* duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd */
-      r = duf_scan_files_by_dirid2( duf_str_cb2_scan_file_fd, pdi, sccb );
-
-      DUF_TEST_R( r );
+      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_scan_file_fd, pdi, sccb ) );
     }
     else
     {
@@ -226,11 +221,8 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf
     }
     if ( r >= 0 && sccb->leaf_scan2 )
     {
-      DUF_TRACE( scan, 11, "  " DUF_DEPTH_PFMT ": scan leaves_scan2 ..   by %5llu", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ) );
 /* duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan */
-      r = duf_scan_files_by_dirid2( duf_str_cb2_leaf_scan, pdi, sccb );
-
-      DUF_TEST_R( r );
+      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan, pdi, sccb ) );
     }
     else
     {
@@ -266,14 +258,14 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
       if ( sccb->node_scan_middle2_deleted )
       {
         DUF_TRACE( scan, 10, "scan node middle2_deleted by %5llu", diridpdi );
-        r = sccb->node_scan_middle2_deleted( pstmt, diridpdi, pdi );
+        r = sccb->node_scan_middle2_deleted( pstmt, /* diridpdi, */ pdi );
       }
       DUF_TRACE( deleted, 0, "DELETED" );
     }
     else if ( sccb->node_scan_middle2 )
     {
       DUF_TRACE( scan, 10, "scan node middle2 by %5llu", diridpdi );
-      r = sccb->node_scan_middle2( pstmt, diridpdi, pdi );
+      r = sccb->node_scan_middle2( pstmt, /* diridpdi, */ pdi );
     }
     else
     {
@@ -296,12 +288,7 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
   return r;
 }
 
-/*
- * str_cb2 (sub-item scanner):
- *       duf_scan_dirs_by_pdi_maxdepth
- *     ( duf_str_cb2_leaf_scan    )
- *     ( duf_str_cb2_scan_file_fd )
- * */
+
 int
 duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, duf_str_cb2_t str_cb2 */  )
 {
@@ -351,14 +338,14 @@ duf_qscan_node_scan_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, du
       if ( sccb->node_scan_after2_deleted )
       {
         DUF_TRACE( scan, 10, "scan node after2_deleted by %5llu", diridpdi );
-        r = sccb->node_scan_after2_deleted( pstmt, diridpdi, pdi );
+        r = sccb->node_scan_after2_deleted( pstmt, /* diridpdi, */ pdi );
       }
       DUF_TRACE( deleted, 0, "DELETED" );
     }
     else if ( sccb->node_scan_after2 )
     {
       DUF_TRACE( scan, 10, "scan node after2 by %5llu", diridpdi );
-      r = sccb->node_scan_after2( pstmt, diridpdi, pdi );
+      r = sccb->node_scan_after2( pstmt, /* diridpdi, */ pdi );
     }
     else
     {

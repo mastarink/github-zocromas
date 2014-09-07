@@ -51,7 +51,7 @@
  *     5. for <current> dir call sccb->node_scan_after
  * */
 int
-duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   int r = 0;
 
@@ -65,7 +65,7 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi,
                pdi->u.max_rel_depth, duf_pdi_reldepth( pdi ) );
 
     /* recursively calls this `duf_scan_dirs_by_pdi_maxdepth` */
-    r = duf_scan_dirs_by_pdi_wrap( pstmt, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb );
+    r = duf_scan_dirs_by_pdi_wrap( pstmt_selector, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb );
   }
   else
   {

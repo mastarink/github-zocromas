@@ -44,7 +44,7 @@ static const char *final_sql[] = {
         "   JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)" /* */
         "   JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)" /* */
         " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
-        " GROUP BY Pathid1, Pathid2"   /* */
+        " GROUP BY Pathid1, Pathid2" /* */
         ,
 
   "DELETE FROM pathtot_files",
@@ -94,8 +94,6 @@ static const char *final_sql[] = {
 duf_scan_callbacks_t duf_integrity_callbacks = {
   .title = __FILE__,
   .init_scan = NULL,
-  .node_scan_before = NULL,
-  .leaf_scan = NULL,
   /* filename for debug only */
   .leaf = {.fieldset = NULL,
            .selector = NULL}

@@ -322,7 +322,7 @@ filedata_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigne
 }
 
 static int
-filedata_scan_entry_reg2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pst_file, unsigned long long dirid,
+filedata_scan_entry_reg2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pst_file, /* unsigned long long dirid, */
                           duf_depthinfo_t * pdi )
 {
   int r = 0;

@@ -170,8 +170,8 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{prefix}" ) );
     if ( prefix_cb )
       ( prefix_cb ) ( pdi );
-    else
-      DUF_PRINTF( 0, ".= __________________________________________________ = " );
+    /* else                                                                           */
+    /*   DUF_PRINTF( 0, ".= __________________________________________________ = " ); */
     ok++;
   }
   else

@@ -18,7 +18,6 @@ zocromas_duf_SOURCES=				   \
 	duf_option_extended.c duf_option_names.c duf_option_cmd.c duf_option_restore.c	       \
 	duf_create.c 					\
 							 \
-	duf_file_pathid2.c				  \
 	duf_filedata.c					   \
 	duf_add.c duf_path.c duf_path2db.c duf_db2path.c    \
 							     \
@@ -43,7 +42,9 @@ zocromas_duf_SOURCES=				   \
 	mod_md5_uni.c	mod_sd5_uni.c					      \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
-	mod_template_uni.c mod_print_md5_uni.c
+	mod_template_uni.c
+#	duf_file_pathid2.c
+#	mod_print_md5_uni.c
 #	duf_dirent_scan1.c
 #	duf_dir_scan1.c
 #	duf_file_pathid1.c 

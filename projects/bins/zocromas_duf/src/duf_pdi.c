@@ -8,6 +8,7 @@
 
 
 #include "duf_utils_path.h"     /* duf_pathdepth */
+#include "duf_status_ref.h"
 
 #include "duf_config_ref.h"
 
@@ -148,6 +149,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   pdi->xstatements = NULL;
   pdi->num_statements = 0;
   duf_levinfo_delete( pdi );
+  global_status.changes += pdi->changes;
   /* DUF_ERROR( "clear statements" ); */
   return r;
 }

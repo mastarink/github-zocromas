@@ -434,8 +434,10 @@ duf_option_examples( int argc, char *const *argv )
   DUF_PRINTF( 0, "  run -OPRdEiD /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s",
               "collect dirs and file data from filesystem only; no file names" );
   DUF_PRINTF( 0, "  run -OPRdEinD /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s", "collect dirs and files from filesystem only" );
-  DUF_PRINTF( 0, "  run -OPRdEinD -f5 /mnt/new_media/media/photo/Pictures/photos/ --progress	- %s",
+  DUF_PRINTF( 0, "  run -OPRdDnEi -f5 /mnt/new_media/media/photo/Pictures/photos/ --progress	- %s",
               "collect dirs and files from filesystem, count md5" );
+  DUF_PRINTF( 0, "  run -OPRdDnEi  -f523Xe --progress /mnt/new_media/media/photo/Pictures/photos/	- %s",
+              "collect everything we can" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

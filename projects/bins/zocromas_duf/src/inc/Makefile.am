@@ -14,7 +14,6 @@ noinst_HEADERS=duf.h duf_interactive.h			\
 	duf_sccb.h duf_dir_scan2.h duf_dir_scan2_stages.h	\
 	duf_levinfo.h duf_levinfo_ref.h duf_pdi.h		 \
 	duf_dirent_scan2.h					  \
-	duf_file_pathid2.h					   \
 	duf_utils.h duf_utils_path.h duf_utils_print.h duf_match.h  \
 	duf_errors.h duf_maintenance.h duf_trace.h		   \
 	duf_dh.h duf_service.h					    \
@@ -29,6 +28,7 @@ noinst_HEADERS=duf.h duf_interactive.h			\
 	duf_cli_types.h duf_option_types.h				     \
 	duf_ufilter_types.h duf_flags_types.h duf_fileinfo_types.h	      \
 	duf_pdi_types.h duf_hook_types.h duf_record_types.h
+#	duf_file_pathid2.h
 #	duf_dirent_scan1.h
 #	duf_dir_scan1.h
 #	duf_file_pathid1.h

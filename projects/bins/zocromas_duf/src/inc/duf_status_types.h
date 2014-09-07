@@ -4,6 +4,7 @@
 typedef struct
 {
   int actions_done;
+  unsigned long long changes;
 } duf_status_t;
 
 #endif

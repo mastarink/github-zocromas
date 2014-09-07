@@ -225,7 +225,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /* }                                                                                                                        */
 
 static int
-scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
+scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   int r = 0;
 
@@ -293,11 +293,15 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, 
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
     DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", format.v.bit, format.v.flag.seq, duf_config->cli.format.v.bit ) );
-    DUF_PUTSL( 0 );
     if ( duf_print_file_info( pdi, &fi, &format, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
-      DUF_PUTSL( 0 );
+    {
+      /* DUF_PUTSL( 0 ); */
+    }
     else
+    {
       DUF_PUTS( 0, "????????????" );
+    }
+    DUF_PUTSL( 0 );
   }
 
   DEBUG_ENDR( r );
@@ -390,7 +394,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            "    WHERE "         /* */
            " fn.Pathid=:dirID " /* */
            " ORDER BY fn." DUF_SQL_IDNAME " " /* */
-	   ,
+           ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fns " /* */
            " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ")" /* */
