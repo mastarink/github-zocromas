@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <libgen.h>
 
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -37,6 +38,8 @@
 #include "duf_option_names.h"
 #include "duf_prepare_actions.h"
 
+#include "duf_interactive.h"
+
 /* ###################################################################### */
 #include "duf_uni_scan.h"
 /* ###################################################################### */
@@ -50,33 +53,41 @@
 static unsigned long long
 duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
 {
-  unsigned long long cnt = 0;
+  DEBUG_STARTULL( cnt );
   int r = DUF_ERROR_TOTALS;
 
   if ( sccb && sccb->leaf.selector_total2 )
   {
     char *sqlt;
-    const char *csql;
 
     r = 0;
     sqlt = mas_strdup( "SELECT " );
     sqlt = mas_strcat_x( sqlt, "COUNT(*) AS nf" );
     sqlt = mas_strcat_x( sqlt, " " );
     sqlt = mas_strcat_x( sqlt, sccb->leaf.selector_total2 );
-    csql = sqlt;
-    DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    if ( r == DUF_SQL_ROW )
     {
-      cnt = duf_sql_column_long_long( pstmt, 0 );
-      r = 0;
+      const char *csql;
+
+      csql = sqlt;
+      DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      if ( r == DUF_SQL_ROW )
+      {
+        cnt = duf_sql_column_long_long( pstmt, 0 );
+        r = 0;
+      }
+      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
     }
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
     mas_free( sqlt );
+  }
+  else
+  {
+    DUF_TRACE( explain, 0, "didn't count files in db" );
   }
   if ( pr )
     *pr = r;
-  return cnt;
+  DEBUG_ENDULL( cnt );
 }
 
 /*
@@ -89,61 +100,40 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
  *     5. for <current> dir call sccb->node_scan_after
  */
 static int
-duf_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
+duf_scan_from_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
-  int r = 0;
-  char *real_path = NULL;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
+  duf_depthinfo_t di = {.depth = -1,
+    .seq = 0,
+    .levinfo = NULL,
+    .u = *pu,
+    .opendir = sccb ? sccb->def_opendir : 0,
+    /* .name = real_path, */
+  };
 
-  real_path = duf_realpath( path, &r );
+  DEBUG_STEP(  );
 
-  DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
-
-  DUF_SCCB( DUF_TRACE, action, 0, "..." );
-  DUF_SCCB( DUF_TRACE, scan, 0, "uni" );
-  if ( r >= 0 && sccb )
   {
     int rt = 0;
     unsigned long long total_files;
 
-    duf_depthinfo_t di = {.depth = -1,
-      .seq = 0,
-      .levinfo = NULL,
-      .u = *pu,
-      .opendir = sccb ? sccb->def_opendir : 0,
-      /* .name = real_path, */
-    };
-
-    DEBUG_STEP(  );
-
     total_files = duf_count_total_items( sccb, &rt ); /* reference */
     if ( rt >= 0 )
       di.total_files = total_files;
-
-    DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", di.total_files );
-    DUF_TRACE( explain, 0, "%llu files registered in db", di.total_files );
-    /* assert( di.depth == -1 ); */
-    r = duf_pdi_init_wrap( &di, real_path, 0 );
-
-    /* create level-control array, open 0 level */
-    DUF_SCCB( DUF_TRACE, action, 2, "di.levinfo  %c", di.levinfo ? '+' : '-' );
-    DUF_SCCB( DUF_TRACE, action, 0, "top dirID: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
+/* total_files for progress bar only :( */
+    DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", total_files );
+    DUF_TRACE( explain, 0, "%llu files registered in db", total_files );
+  }
 
 
-    /* DUF_ERROR( "TOTAL FILES:%llu; r:%d", di.total_files, r ); */
-
-    if ( r >= 0 )
-    {
-      DUF_TRACE( path, 0, "top dirID:%llu for %s", duf_levinfo_dirid( &di ), real_path );
-      DUF_TRACE( scan, 10, "top dirID:%llu for %s", duf_levinfo_dirid( &di ), real_path );
-      DUF_TRACE( explain, 0, "≫≫≫≫≫≫≫≫≫≫ %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
-                 duf_uni_scan_action_title( sccb ) );
-
-
-      /* DUF_ERROR( "L%d", di.depth ); */
-      assert( di.depth >= 0 );
-
+  /* assert( di.depth == -1 ); */
+  DOR( r, duf_pdi_init_wrap( &di, real_path, 0 ) );
+  assert( di.depth >= 0 );
+  DUF_TRACE( explain, 0,
+             "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
+             duf_uni_scan_action_title( sccb ) );
+  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
 
 /* duf_str_cb2_uni_scan_dir:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
@@ -160,53 +150,60 @@ duf_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t *
  *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
-      if ( r >= 0 )
-      {
-        DUF_TRACE( explain, 0, "to scan" );
-        DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( &di ), real_path );
-        if ( !sccb->disabled )
-          r = duf_scan_dirs_by_pi2_wrap( ( duf_sqlite_stmt_t * ) NULL, duf_str_cb2_uni_scan_dir, &di, sccb );
-      }
-      DUF_TEST_R( r );
-    }
-    else
-    {
-      DUF_TRACE( scan, 10, "? top dirID:%llu; real_path:'%s'", duf_levinfo_dirid( &di ), real_path );
-    }
-/* delete level-control array, close 0 level */
-    if ( pchanges )
-      *pchanges += di.changes;
-    duf_pdi_close( &di );
+  if ( r >= 0 && !sccb->disabled )
+    r = duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_str_cb2_uni_scan_dir, */ &di, sccb );
+  DUF_TEST_R( r );
 
-    if ( DUF_ACT_FLAG( summary ) )
-    {
-      DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( sccb ) );
+  /* delete level-control array, close 0 level */
+  if ( pchanges )
+    *pchanges += di.changes;
+  duf_pdi_close( &di );
 
-      DUF_PRINTF( 0, " summary; seq:     %llu", di.seq );
-      DUF_PRINTF( 0, " summary; seq-leaf:%llu", di.seq_leaf );
-      DUF_PRINTF( 0, " summary; seq-node:%llu", di.seq_node );
-      if ( duf_config->u.max_seq )
-        DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
-    }
-    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": end scan ; summary:%d", duf_uni_scan_action_title( sccb ), DUF_ACT_FLAG( summary ) );
+  if ( r >= 0 && DUF_ACT_FLAG( summary ) )
+  {
+    DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( sccb ) );
+
+    DUF_PRINTF( 0, " summary; seq:     %llu", di.seq );
+    DUF_PRINTF( 0, " summary; seq-leaf:%llu", di.seq_leaf );
+    DUF_PRINTF( 0, " summary; seq-node:%llu", di.seq_node );
+    if ( duf_config->u.max_seq )
+      DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
+  }
+  DEBUG_ENDR( r );
+}
+
+static int
+duf_scan_from_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
+{
+  DEBUG_STARTR( r );
+  char *real_path = NULL;
+
+  real_path = duf_realpath( path, &r );
+
+  DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
+
+  if ( DUF_ACT_FLAG( interactive ) )
+    r = duf_interactive( real_path );
+  else if ( 1 || DUF_U_FLAG( recursive ) )
+  {
+    if ( r >= 0 && sccb )
+      r = duf_scan_from_real_path( real_path, pu, sccb, pchanges );
   }
   else
   {
-    DUF_TRACE( scan, 10, "?" );
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( RECURSIVE ) );
   }
-  mas_free( real_path );
-  r = duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 );
-  DUF_TEST_R( r );
 
-  DEBUG_END(  );
-  return r;
+  mas_free( real_path );
+  DOR( r, duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 ) );
+
+  DEBUG_ENDR( r );
 }
 
 static int
 duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 {
-  int r = 0;
-
+  DEBUG_STARTR( r );
 
   if ( duf_config->u.size.flag )
   {
@@ -306,7 +303,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
       r = DUF_ERROR_NOT_FOUND;
   }
 
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /* 
@@ -316,7 +313,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 static int
 duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   const char **psql = sccb->beginning_sql_argv;
 
   while ( r >= 0 && psql && *psql )
@@ -342,7 +339,7 @@ duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
                psql - sccb->beginning_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
     psql++;
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /* 
@@ -352,7 +349,7 @@ duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
 int
 duf_scan_final_sql( duf_scan_callbacks_t * sccb, unsigned long long changes )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   /* if ( changes ) */
   {
@@ -379,7 +376,7 @@ duf_scan_final_sql( duf_scan_callbacks_t * sccb, unsigned long long changes )
       psql++;
     }
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /* 
@@ -389,22 +386,26 @@ duf_scan_final_sql( duf_scan_callbacks_t * sccb, unsigned long long changes )
 static int
 duf_scan_argv_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( sccb ), duf_config->targc );
   for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccb ), ia, duf_config->targv[ia] );
-  if ( duf_config->targc > 0 )
-    for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      r = duf_scan_from_path( duf_config->targv[ia], &duf_config->u, sccb, pchanges );
+
+  if ( duf_config->targc <= 0 )
+  {
+    DOR( r, duf_scan_from_path( NULL, &duf_config->u, sccb, pchanges ) );
+  }
   else
-    r = duf_scan_from_path( NULL, &duf_config->u, sccb, pchanges );
-  DUF_TEST_R( r );
+  {
+    for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+      DOR( r, duf_scan_from_path( duf_config->targv[ia], &duf_config->u, sccb, pchanges ) );
+  }
 
   DUF_TRACE( action, 1, "after scan" );
   if ( DUF_ACT_FLAG( summary ) )
     DUF_PRINTF( 0, " summary; changes:%llu", *pchanges );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /*
@@ -420,9 +421,8 @@ duf_scan_argv_paths( duf_scan_callbacks_t * sccb, unsigned long long *pchanges )
 static int
 duf_scan_with_sccb( duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
 /*
 TODO scan mode
   1. direct, like now
@@ -441,22 +441,15 @@ TODO scan mode
       DUF_TRACE( explain, 0, "no init scan" );
     }
 
-    if ( r >= 0 )
-      r = duf_scan_beginning_sql( sccb );
-    DUF_TEST_R( r );
+    DOR( r, duf_scan_beginning_sql( sccb ) );
 
     DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( sccb ) );
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( sccb ) );
 
-    if ( r >= 0 )
-      r = duf_scan_argv_paths( sccb, &changes );
-    DUF_TEST_R( r );
-    if ( r >= 0 )
-      r = duf_scan_final_sql( sccb, changes );
-    DUF_TEST_R( r );
+    DOR( r, duf_scan_argv_paths( sccb, &changes ) );
+    DOR( r, duf_scan_final_sql( sccb, changes ) );
   }
   DEBUG_ENDR( r );
-  return r;
 }
 
 /*
@@ -466,9 +459,7 @@ TODO scan mode
 int
 duf_make_all_sccbs( void )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DUF_TRACE( action, 1, "prep" );
   DUF_TRACE( explain, 0, "scan all; setting actions" );
@@ -489,7 +480,7 @@ duf_make_all_sccbs( void )
       if ( ppscan_callbacks[astep] )
       {
         DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( ppscan_callbacks[astep] ), astep );
-        r = duf_scan_with_sccb( ppscan_callbacks[astep] /* sccb */  );
+        DOR( r, duf_scan_with_sccb( ppscan_callbacks[astep] /* sccb */  ) );
         global_status.actions_done++;
       }
     }
@@ -498,7 +489,6 @@ duf_make_all_sccbs( void )
   if ( !global_status.actions_done )
     r = DUF_ERROR_NO_ACTIONS;
   DEBUG_ENDR( r );
-  return r;
 }
 
 /* 
@@ -508,10 +498,9 @@ duf_make_all_sccbs( void )
 int
 duf_make_all_sccbs_wrap( void )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
-  r = duf_make_all_sccbs(  );
+  DOR( r, duf_make_all_sccbs(  ) );
   if ( r == DUF_ERROR_NO_ACTIONS )
   {
     char *optnames = NULL;
@@ -561,5 +550,4 @@ duf_make_all_sccbs_wrap( void )
   /* else if ( r < 0 )                                 */
   /*   DUF_ERROR( "code: %d", r );                     */
   DEBUG_ENDR( r );
-  return r;
 }

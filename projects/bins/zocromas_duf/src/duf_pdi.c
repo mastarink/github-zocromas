@@ -70,7 +70,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
   if ( r >= 0 )
     r = duf_levinfo_create( pdi, pd ); /* depth = -1 */
   DUF_TEST_R( r );
-  assert( r<0 || pdi->levinfo );
+  assert( r < 0 || pdi->levinfo );
   /* assert( pdi->depth == -1 ); */
   if ( r >= 0 )
     r = duf_real_path2db( pdi, real_path, ifadd /* ifadd */  );
@@ -198,17 +198,28 @@ duf_pdi_reldepth( const duf_depthinfo_t * pdi )
   return pdi ? duf_pdi_deltadepth( pdi, pdi->depth ) : 0;
 }
 
+void
+duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
+{
+  if ( pdi )
+    pdi->topdepth = pdi->depth;
+}
+
 int
 duf_pdi_topdepth( const duf_depthinfo_t * pdi )
 {
   return pdi ? pdi->topdepth : 0;
 }
 
-void
-duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
+int
+duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
 {
-  if ( pdi )
-    pdi->topdepth = pdi->depth;
+  return pdi ? pdi->maxdepth : 0;
+}
+
+int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
+{
+  return duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi );
 }
 
 int

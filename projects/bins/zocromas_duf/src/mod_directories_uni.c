@@ -71,10 +71,6 @@ static const char *final_sql[] = {
         " FROM " DUF_DBPREF "filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " GROUP BY fn.Pathid",
-  "DELETE FROM " DUF_DBPREF "sizes",
-  "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /* */
-        "SELECT size, COUNT(*) " /* */
-        " FROM " DUF_DBPREF "filedatas AS fd GROUP BY fd.size",
 
   "DELETE FROM path_pairs"      /* */
         ,
@@ -85,7 +81,7 @@ static const char *final_sql[] = {
         "   JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)" /* */
         "   JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)" /* */
         " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
-        " GROUP BY Pathid1, Pathid2"   /* */
+        " GROUP BY Pathid1, Pathid2" /* */
         ,
 
 

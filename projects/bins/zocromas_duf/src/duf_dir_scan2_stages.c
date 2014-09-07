@@ -24,6 +24,7 @@
 #include "duf_sccb.h"
 #include "duf_option_names.h"
 
+#include "duf_uni_scan2.h"
 /* ###################################################################### */
 #include "duf_dir_scan2_stages.h"
 /* ###################################################################### */
@@ -111,7 +112,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct 
 int
 duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   if ( DUF_ACT_FLAG( dirent ) )
   {
@@ -125,7 +126,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_c
        *      - for directory                - sccb->dirent_dir_scan_before2
        *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
        * */
-      r = duf_scan_dirents2( pdi, sccb->dirent_file_scan_before2, sccb->dirent_dir_scan_before2 );
+      DOR( r, duf_scan_dirents2( pdi, sccb->dirent_file_scan_before2, sccb->dirent_dir_scan_before2 ) );
     }
     else
     {
@@ -146,7 +147,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_c
   {
     DUF_TRACE( scan, 10, "NOT scan dirent_dir ( -E or --dirent absent )" );
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
@@ -297,12 +298,12 @@ duf_qscan_node_scan_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, d
 
 /*
  * str_cb2 (sub-item scanner):
- *       duf_str_cb2_uni_scan_dir
+ *       duf_scan_dirs_by_pdi_maxdepth
  *     ( duf_str_cb2_leaf_scan    )
  *     ( duf_str_cb2_scan_file_fd )
  * */
 int
-duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, duf_str_cb2_t str_cb2 )
+duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, duf_str_cb2_t str_cb2 */  )
 {
   int r = 0;
 
@@ -326,12 +327,13 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
    * DUF_NODE_LEAF => sccb->leaf.selector2, sccb->leaf.fieldset
    *
    * str_cb2 (sub-item scanner):
-   *       duf_str_cb2_uni_scan_dir
+   *       duf_scan_dirs_by_pdi_maxdepth
    *     ( duf_str_cb2_leaf_scan    )
    *     ( duf_str_cb2_scan_file_fd )
    * */
   if ( r >= 0 && sccb->node.selector2 )
-    r = duf_scan_db_items2( DUF_NODE_NODE, str_cb2, pdi, sccb /*, sccb->node.selector2, sccb->node.fieldset */  );
+    r = duf_scan_db_items2( DUF_NODE_NODE, duf_scan_dirs_by_pdi_maxdepth /* str_cb2 */ , pdi,
+                            sccb /*, sccb->node.selector2, sccb->node.fieldset */  );
   return r;
 }
 

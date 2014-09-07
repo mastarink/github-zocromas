@@ -37,13 +37,12 @@ static unsigned long long
 duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long mimeid = 0;
+  DEBUG_STARTULL( mimeid );
 
   if ( mime )
   {
     int changes = 0;
 
-    DEBUG_START(  );
     if ( need_id )
     {
       const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_DBPREF "mime WHERE mime = :Mime";
@@ -101,8 +100,6 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
   if ( pr )
     *pr = r;
   DEBUG_ENDULL( mimeid );
-  DUF_TEST_R( r );
-  return mimeid;
 }
 
 static void
@@ -255,7 +252,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " /* */
-	   " sz.size > 0 AND" " fn.Pathid = :dirID " /* */
+           " sz.size > 0 AND" " fn.Pathid = :dirID " /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
@@ -264,8 +261,8 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " /* */
-           " sz.size > 0 " /* */
-	   " ORDER BY fd.mimeid " /* */
+           " sz.size > 0 "      /* */
+           " ORDER BY fd.mimeid " /* */
            },
   .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */

@@ -334,8 +334,8 @@ static const char *beginning_sql[] = {
         " AND "                 /* */
         "  ( ( :GSameAs    IS NULL OR :GSamePathID IS NULL ) " /* */
         " OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM filenames AS fnb " /* */
-        "   JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") " /* */
-        "          WHERE fnb.name GLOB :GSameAs AND fnb.Pathid=:GSamePathID ) ) " /* */
+        "                              JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") " /* */
+        "                                      WHERE fnb.name GLOB :GSameAs AND fnb.Pathid=:GSamePathID ) ) " /* */
         ,
 };
 
@@ -389,7 +389,8 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            " LEFT JOIN " DUF_DBPREF "exif_model  AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
            "    WHERE "         /* */
            " fn.Pathid=:dirID " /* */
-           ,
+           " ORDER BY fn." DUF_SQL_IDNAME " " /* */
+	   ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF DUF_SELECTED_NAME " AS fns " /* */
            " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ")" /* */

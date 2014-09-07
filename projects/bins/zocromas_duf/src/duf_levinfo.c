@@ -102,7 +102,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
       DUF_OINV_NOT_OPENED( pdi-> );
-      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫", d, is_leaf ? "leaf" : "node" );
+      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemname(pdi) );
       assert( pdi->depth >= 0 );
     }
     else

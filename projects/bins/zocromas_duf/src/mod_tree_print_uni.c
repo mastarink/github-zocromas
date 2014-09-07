@@ -36,9 +36,7 @@
 static int
 duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   {
     int d0 = 0;
@@ -127,7 +125,6 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
     }
   }
   DEBUG_ENDR( r );
-  return r;
 }
 
 /* callback of  duf_scan_hook_file_t */
@@ -140,7 +137,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
 /*   DUF_SFIELD( filename );                                                                                  */
 /*   (* const char *filename = duf_sql_str_by_name( "filename", precord, 0 ); *)                              */
 /*                                                                                                            */
-/*   DEBUG_START(  );                                                                                         */
+/*   DEBUG_START( r );                                                                                         */
 /*                                                                                                            */
 /*   {                                                                                                        */
 /*     duf_fileinfo_t fi = { 0 };                                                                             */
@@ -295,9 +292,7 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 static int
 tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
-  DEBUG_START(  );
-
-  int r = 0;
+  DEBUG_STARTR( r );
 
   {
     /* if ( duf_config->cli.format.seq )                               */
@@ -361,7 +356,6 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt, unsigned long long pathid_unu
   }
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 #define DUF_SELECTED_NAME "fnselected"

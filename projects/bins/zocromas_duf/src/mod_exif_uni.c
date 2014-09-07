@@ -53,15 +53,13 @@ DUF_UNUSED static unsigned long long
 duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int *pr )
 {
   int r = 0;
-  unsigned long long modelid = 0;
 
-  DEBUG_START(  );
+  DEBUG_STARTULL( modelid );
 
   if ( model && *model )
   {
     int changes = 0;
 
-    DEBUG_START(  );
     if ( need_id )
     {
       const char *sql = "SELECT " DUF_SQL_IDNAME " AS modelid FROM " DUF_DBPREF "exif_model WHERE model=:Model";
@@ -118,10 +116,9 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 
   if ( pr )
     *pr = r;
-  DEBUG_ENDULL( modelid );
   DUF_TEST_R( r );
   /* assert( modelid ); */
-  return modelid;
+  DEBUG_ENDULL( modelid );
 }
 
 DUF_UNUSED static unsigned long long
@@ -130,14 +127,12 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
 {
   int r = 0;
   unsigned long long modelid = 0;
-  unsigned long long exifid = 0;
 
-  DEBUG_START(  );
+  DEBUG_STARTULL( exifid );
   modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , &r );
   if ( r >= 0 && ( timeepoch || modelid || dtfixed || stime_original ) )
   {
 
-    DEBUG_START(  );
     if ( need_id )
     {
       const char *sql =
@@ -235,8 +230,6 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
   if ( pr )
     *pr = r;
   DEBUG_ENDULL( exifid );
-  DUF_TEST_R( r );
-  return exifid;
 }
 
 static time_t

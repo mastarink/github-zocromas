@@ -24,6 +24,7 @@ AC_SUBST(GLIB_CFLAGS)
 
 PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools])
 
+AC_CHECK_LIB([readline], [readline])
 
 
 m4_include([m4zoc/vars1.m4])

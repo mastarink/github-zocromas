@@ -2,6 +2,7 @@
 #  define MAS_DUF_RECORD_TYPES_H
 
 #include "duf_levinfo_types.h"
+#include "duf_pdi_types.h"
 
 struct duf_scan_callbacks_s;
 

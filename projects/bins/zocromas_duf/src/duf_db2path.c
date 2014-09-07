@@ -29,7 +29,7 @@
 #include "duf_db2path.h"
 /* ###################################################################### */
 
-#if 0
+#if 1
 /* last function revision 20140901.204850 */
 static char *
 duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
@@ -43,12 +43,7 @@ duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, con
 /* get parentid for dirid */
     duf_sql_reset( pstmt );
 
-    /* if ( r >= 0 )                                           */
-    /*   r = duf_sql_bind_long_long( pstmt, ":dirID", dirid ); */
     DUF_SQL_BIND_LL( dirID, dirid, r, pstmt );
-
-    /* if ( r >= 0 )                */
-    /*   r = duf_sql_step( pstmt ); */
     DUF_SQL_STEP( r, pstmt );
 
     if ( r == DUF_SQL_ROW )
@@ -80,27 +75,14 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
   int r = 0;
   char *path = NULL;
 
-  /* duf_sqlite_stmt_t *pstmt = NULL; */
 
   const char *sql = "SELECT parentid, dirname FROM " DUF_DBPREF "paths WHERE " DUF_SQL_IDNAME "=:dirID";
 
   DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-  /* if ( r >= 0 && sql )                  */
-  /*   r = duf_sql_prepare( sql, &pstmt ); */
 
   path = duf_pathid_to_path2_in( pstmt, dirid, pdi, &r );
   path = mas_strcat_x( path, "/" );
-  /* {                                                               */
-  /*   int rf = duf_sql_finalize( pstmt );                           */
-  /*                                                                 */
-  /*   pstmt = NULL;                                                 */
-  /*   DUF_TEST_R( rf );                                             */
-  /*   DUF_TRACE( action, 4, "FINALIZE %s;", rf < 0 ? "FAIL" : "" ); */
-  /*                                                                 */
-  /*   if ( r >= 0 || r == DUF_SQL_DONE )                            */
-  /*     r = rf;                                                     */
-  /*   DUF_TEST_R( r );                                              */
-  /* }                                                               */
+
   DUF_SQL_END_STMT_NOPDI( r, pstmt );
   if ( pr )
     *pr = r;

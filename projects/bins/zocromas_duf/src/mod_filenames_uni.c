@@ -32,13 +32,10 @@
 static int
 filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dirid, unsigned long long dataid )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR(r);
 
   if ( fname && dirid )
   {
-    int r = 0;
     int changes = 0;
 
     const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filenames (Pathid, name, dataid) VALUES (:pathID, :Name, :dataID)";
@@ -59,8 +56,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigne
     DUF_TEST_R( r );
   }
   /* DUF_TRACE( current, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
-  DEBUG_ENDULL( dirid );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 
@@ -92,25 +88,16 @@ static int
 filenames_entry_reg2(  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat *pst_file, unsigned long long dirid,
                       duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
-  /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
-
-  if ( pst_file                 /* && !duf_config->cli.disable.insert */
-       /* && dufOFF_lim_matchll( pdi->u.size, pst_file->st_size ) */  )
+  if ( pst_file /* && !duf_config->cli.disable.insert */  )
   {
     DUF_UNUSED unsigned long long dataid = 0;
 
-    /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
-    dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );
-    /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
-    r = filenames_insert_filename_uni( pdi, fname, dirid, dataid );
-    /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
+    DOPR( r, dataid = duf_file_dataid_by_stat( pdi, pst_file, &r ) );
+    DOR( r, filenames_insert_filename_uni( pdi, fname, dirid, dataid ) );
   }
-  /* DUF_TRACE( scan, 11, "scan entry reg2 by %s", fname ); */
   DEBUG_ENDR( r );
-  return r;
 }
 
 
@@ -123,8 +110,8 @@ static const char *final_sql[] = {
         "SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /* */
         " FROM " DUF_DBPREF "filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-        " GROUP BY fn.Pathid" /* */
-	,
+        " GROUP BY fn.Pathid"   /* */
+        ,
   "UPDATE " DUF_DBPREF "pathtot_files SET " /* */
         " minsize=(SELECT min(size) AS minsize " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
@@ -135,7 +122,7 @@ static const char *final_sql[] = {
         ", numfiles=(SELECT COUNT(*) AS numfiles " /* */
         " FROM " DUF_DBPREF "filenames AS fn JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " WHERE " DUF_DBPREF "pathtot_files.Pathid=fn.Pathid)" /* */
-	,
+        ,
 
   /* "DELETE FROM " DUF_DBPREF "sizes",                                 */
   /* "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " (* *) */

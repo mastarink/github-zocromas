@@ -62,13 +62,13 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
 {
   int r = 0;
   unsigned long long dataid = 0;
+  DEBUG_START(  );
 
   if ( pst_file )
   {
     int r = 0;
     int changes = 0;
 
-    DEBUG_START(  );
     if ( !duf_config->cli.disable.flag.insert )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filedatas  " /* */

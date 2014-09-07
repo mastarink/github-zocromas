@@ -15,6 +15,7 @@ typedef struct
   /* unsigned update_duplicates:1; */
   unsigned print:1;
   unsigned tree:1;
+  unsigned interactive:1;
 
   unsigned sd5:1;
   unsigned md5:1;

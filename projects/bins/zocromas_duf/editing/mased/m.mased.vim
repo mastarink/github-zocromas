@@ -6,8 +6,9 @@ sfind srcdb.mased.vim
 sfind srcsql.mased.vim
 sfind srclow.mased.vim
 sfind src.mased.vim
+sfind srciface.mased.vim
 " sfind src1.mased.vim
-sfind srctypes.mased.vim
+tab sfind srctypes.mased.vim
 sfind srcconfig.mased.vim
 sfind srcmod.mased.vim
 sfind srctoexpire.mased.vim

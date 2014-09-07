@@ -263,6 +263,7 @@ duf_option_help( int argc, char **argv )
 void
 duf_option_examples( int argc, char *const *argv )
 {
+  DEBUG_START();
   DUF_PRINTF( 0, "Examples" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --drop-tables --create-tables" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file" );
@@ -426,7 +427,19 @@ duf_option_examples( int argc, char *const *argv )
   DUF_PRINTF( 0,
               "  run  /mnt/new_media/media/photo/   -Rpdf  --output-level=6 "
               " --same-as=/mnt/new_media/media/photo/Pictures/photos/sel/we/we9.jpg 		- %s", "" );
+  DUF_PRINTF( 0, "========================= as for 20140907.070802 ============" );
+  DUF_PRINTF( 0, "  run -OPRdEi /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s", "collect dirs from filesystem only" );
+  DUF_PRINTF( 0, "  run -OPRdEin /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s",
+              "collect dirs and filenames from filesystem only; no file info like permissions, size etc." );
+  DUF_PRINTF( 0, "  run -OPRdEiD /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s",
+              "collect dirs and file data from filesystem only; no file names" );
+  DUF_PRINTF( 0, "  run -OPRdEinD /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s", "collect dirs and files from filesystem only" );
+  DUF_PRINTF( 0, "  run -OPRdEinD -f5 /mnt/new_media/media/photo/Pictures/photos/ --progress	- %s",
+              "collect dirs and files from filesystem, count md5" );
+
   DUF_PRINTF( 0, "=============================================================" );
+
+  DEBUG_END();
 }
 
 void
@@ -434,6 +447,7 @@ duf_option_version( int argc, char *const *argv )
 {
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
   char *sargv1, *sargv2;
+  DEBUG_START();
 
   sargv1 = mas_argv_string( argc, argv, 1 );
   sargv2 = duf_restore_some_options( argv[0] );
@@ -551,6 +565,7 @@ duf_option_version( int argc, char *const *argv )
 
   mas_free( sargv2 );
   mas_free( sargv1 );
+  DEBUG_END();
 }
 
 #if 0

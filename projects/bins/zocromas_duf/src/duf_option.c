@@ -569,6 +569,15 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       }
       DUF_TEST_R( r );
       break;
+    case DUF_OPTION_VTYPE_NOFLAG:
+      {
+        unsigned *pi;
+
+        pi = ( unsigned * ) byteptr;
+        ( *pi ) &= ~extended->afl.bit;
+      }
+      DUF_TEST_R( r );
+      break;      
     case DUF_OPTION_VTYPE_SFLAG:
       {
         unsigned short *pis;

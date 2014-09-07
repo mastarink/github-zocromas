@@ -235,6 +235,12 @@ static const char *final_sql[] = {
         " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
 	,
 
+  "DELETE FROM " DUF_DBPREF "sizes",
+  "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /* */
+        "SELECT size, COUNT(*) " /* */
+        " FROM " DUF_DBPREF "filedatas AS fd GROUP BY fd.size" /* */
+        ,
+
 
 
   /* "DELETE FROM " DUF_DBPREF "pathtot_files", */

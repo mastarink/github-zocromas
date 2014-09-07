@@ -10,6 +10,6 @@
  *       for each <dir> record by pathid (i.e. children of pathid) with corresponding args 
  * otherwise do nothing
  * */
-int duf_str_cb2_uni_scan_dir( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
+int duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
 
 #endif

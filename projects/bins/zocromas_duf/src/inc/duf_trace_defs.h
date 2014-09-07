@@ -110,7 +110,12 @@
 
 /* #  define DUF_TEST_R(val)       if ( val!=DUF_ERROR_MAX_REACHED && val!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( val ) */
 #  define DUF_TEST_R(val)	DUF_TEST_RQX( val,  val==DUF_ERROR_MAX_REACHED || val==DUF_ERROR_MAX_SEQ_REACHED  )
-#  define DUF_DO_TEST_R(val, x) { val=x; DUF_TEST_R(val); }
+
+
+#  define DUF_DO_TEST_R(val, x) if (val>=0) { val=x; DUF_TEST_R(val); }
+/* #  define DUF_DO_TEST_R(val, x)  ((val>=0) ?( val=x, DUF_TEST_R(val) ) : 0 ) */
+
+#  define DUF_DO_TEST_PR(val, x) if (val>=0) { x; DUF_TEST_R(val); }
 #  define DUF_TEST_RQ(val, cond) if ( !(cond) ) DUF_TEST_R( val )
 
 #  define DUF_TEST_RN(val)	if ( val<0 ) DUF_TEST_R( val )
@@ -136,8 +141,23 @@
 					    DUF_SQLITE_ERROR_CODE(val), xstr \
 					    )
 
+
+#define DUF_START() {
+#define DUF_STARTR(_rt) int _rt=0; DUF_START()
+#define DUF_STARTULL(_rt) unsigned long long _rt=0; DUF_START()
+#define DUF_END() }
+#define DUF_ENDR(_rt)    DUF_TEST_R(_rt);                           DUF_END(); return _rt
+#define DUF_ENDR3(_rt3)  DUF_TEST_R( DUF_SQLITE_ERROR_CODE(_rt3) ); DUF_END(); return _rt3
+#define DUF_ENDULL(_rt)                                             DUF_END(); return _rt
+#define DUF_ENDS(_s)                                                DUF_END(); return _s
+
 #  define P(txt) DUF_PRINTF(0, #txt)
 #  define PF(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " #__VA_ARGS__ " $$$ : " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
 #  define PF0(fmt, ...) DUF_PRINTF(0, "[PF] $$$$$$$$$$$$$$ " fmt " $$$$$$$$$$$$",  __VA_ARGS__ )
 #  define T(fmt, ...) DUF_TRACE(temp,0,"[T] #@#@# "fmt,__VA_ARGS__)
+
+#  define DOR(val, x) DUF_DO_TEST_R(val, x)
+#  define DOPR(val, x) DUF_DO_TEST_PR(val, x)
+
+
 #endif
