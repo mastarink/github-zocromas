@@ -79,7 +79,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       if ( r == DUF_SQL_DONE )
         r = 0;
       DUF_TEST_R( r );
-      DUF_SQL_END_STMT( r, pstmt_select );
+      DUF_SQL_END_STMT( select_model, r, pstmt_select );
     }
 
     if ( !modelid && !duf_config->cli.disable.flag.insert )
@@ -102,7 +102,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
         modelid = duf_sql_last_insert_rowid(  );
         DUF_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
       }
-      DUF_SQL_END_STMT( r, pstmt_insert );
+      DUF_SQL_END_STMT( insert_model, r, pstmt_insert );
     }
     DUF_TEST_R( r );
   }
@@ -159,7 +159,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       if ( r == DUF_SQL_DONE )
         r = 0;
       DUF_TEST_R( r );
-      DUF_SQL_END_STMT( r, pstmt_select );
+      DUF_SQL_END_STMT( select_exif, r, pstmt_select );
       /* if ( !exifid )                        */
       /*   DUF_ERROR( "exifid NOT SELECTED" ); */
     }
@@ -216,7 +216,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
                    ( long ) timeepoch, changes, duf_levinfo_path( pdi ), filename );
       }
 
-      DUF_SQL_END_STMT( r, pstmt_insert );
+      DUF_SQL_END_STMT( insert_exif, r, pstmt_insert );
     }
     DUF_TEST_R( r );
   }
@@ -485,7 +485,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
                 DUF_SQL_STEP( r, pstmt_update );
                 /* DUF_TEST_R(r); */
                 DUF_SQL_CHANGES( changes, r, pstmt_update );
-                DUF_SQL_END_STMT( r, pstmt_update );
+                DUF_SQL_END_STMT( update_exif, r, pstmt_update );
               }
               else
               {

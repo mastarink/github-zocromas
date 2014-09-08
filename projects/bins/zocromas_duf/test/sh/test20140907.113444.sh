@@ -12,9 +12,9 @@ function duftest ()
     fi
     export MSH_CONF_DIR=$tdir0
     export MSH_DUF_OPTIONS=explain=0:trace-options=0:trace-action=0
-    shn m i r -OPRdEinD -f523Xe  /mnt/new_media/media/photo/Pictures/photos/ --progress
+    shn m i r --memusage  -OPRdEinD -f523Xe  /mnt/new_media/media/photo/Pictures/photos/ --progress
     export MSH_DUF_OPTIONS=explain=0:trace-options=0:trace-action=0
-    shn m i r   /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --output-file=@$testfile
+    shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --output-file=@$testfile
     if [[ -f $testfile ]] && [[ -f $cmpfile ]] ; then
       if diff $testfile $cmpfile ; then
         echo "Result file compare ok"

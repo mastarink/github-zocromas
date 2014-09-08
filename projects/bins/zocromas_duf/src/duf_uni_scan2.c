@@ -63,13 +63,11 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_depthinfo
                pdi->u.max_rel_depth, duf_pdi_reldepth( pdi ) );
 
     /* recursively calls this `duf_scan_dirs_by_pdi_maxdepth` */
-    r = duf_scan_dirs_by_pdi_wrap( pstmt_selector, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb );
+    DOR( r, duf_scan_dirs_by_pdi_wrap( pstmt_selector, pdi, sccb ) );
   }
   else
   {
-    T( "max_rel_depth:%d; duf_pdi_reldepth:%d; maxdepth:%d; topdepth:%d;", pdi->u.max_rel_depth, duf_pdi_reldepth( pdi ), pdi->maxdepth,
-       pdi->topdepth );
-    DUF_TRACE( explain, 1, "no depth condition by %s value %d", DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth );
+    DUF_TRACE( explain, 0, "no depth condition by %s value %d", DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth );
   }
 
   DEBUG_ENDR( r );

@@ -37,6 +37,7 @@ static unsigned long long
 duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )
 {
   int r = 0;
+
   DEBUG_STARTULL( mimeid );
 
   if ( mime )
@@ -63,7 +64,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       if ( r == DUF_SQL_DONE )
         r = 0;
       DUF_TEST_R( r );
-      DUF_SQL_END_STMT( r, pstmt_select );
+      DUF_SQL_END_STMT( select_mime, r, pstmt_select );
     }
 
     if ( !mimeid && !duf_config->cli.disable.flag.insert )
@@ -87,7 +88,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
         DUF_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
-      DUF_SQL_END_STMT( r, pstmt_insert );
+      DUF_SQL_END_STMT( insert_mime, r, pstmt_insert );
     }
     DUF_TEST_R( r );
   }
@@ -191,7 +192,7 @@ duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
             DUF_SQL_STEP( r, pstmt_update );
             /* DUF_TEST_R(r); */
             DUF_SQL_CHANGES( changes, r, pstmt_update );
-            DUF_SQL_END_STMT( r, pstmt_update );
+            DUF_SQL_END_STMT( update_mime, r, pstmt_update );
           }
           else
           {

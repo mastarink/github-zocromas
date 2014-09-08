@@ -101,9 +101,16 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
         /* DUF_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
-      DUF_OINV_NOT_OPENED( pdi-> );
-      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemname(pdi) );
+      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemname( pdi ) );
       assert( pdi->depth >= 0 );
+      if ( is_leaf )
+        DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+      else
+      {
+        duf_levinfo_countdown_dirs( pdi );
+        DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node:   =>  by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
+                   duf_levinfo_itemname( pdi ) );
+      }
     }
     else
     {
@@ -112,14 +119,6 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
       DUF_TEST_R( r );
     }
     /* assert( duf_pdi_depth( pdi ) == 0 || ( duf_pdi_depth( pdi ) > 0 && duf_levinfo_dirid( pdi ) ) ); */
-    if ( is_leaf )
-      DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
-    else
-    {
-      duf_levinfo_countdown_dirs( pdi );
-      DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node:   =>  by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
-                 duf_levinfo_itemname( pdi ) );
-    }
   }
   return r;
 }
@@ -212,16 +211,17 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
       else
       {
         r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
+        /* T("(%d) open %s", r, pdi->levinfo[d].itemname); */
       }
       if ( r >= 0 )
       {
         assert( pdhlev->dfd );
       }
-      if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
-      {
-        pdi->levinfo[d].deleted = 1;
-        r = 0;
-      }
+      /* if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT ) */
+      /* {                                                                 */
+      /*   pdi->levinfo[d].deleted = 1;                                    */
+      /*   r = 0;                                                          */
+      /* }                                                                 */
     }
     DUF_TEST_R( r );
     return r;

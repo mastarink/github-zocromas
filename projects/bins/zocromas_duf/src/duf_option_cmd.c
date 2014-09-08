@@ -21,24 +21,35 @@
 
 
 int
-_duf_cli_getcmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size )
+_duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator )
 {
   int r = DUF_ERROR_OPTION;
-  char *eq;
+  char *barg = NULL;
+  char *endn = NULL;
   char *name = NULL;
   char *arg = NULL;
 
-  eq = strchr( string, '=' );
-  if ( eq )
+  switch ( vseparator )
   {
-    name = mas_strndup( string, eq - string );
-    arg = mas_strdup( eq + 1 );
+  case ' ':
+    barg = endn = strpbrk( string, "\t\r\n " );
+    while ( barg && *barg && strchr( "\t\r\n ", *barg ) )
+      barg++;
+    break;
+  default:
+    barg = endn = strchr( string, '=' );
+    if ( barg )
+      barg++;
+    break;
   }
+  if ( endn )
+    name = mas_strndup( string, endn - string );
   else
-  {
     name = mas_strdup( string );
-  }
-  DUF_TRACE( explain, 0, "name:`%s`; arg:`%s`", name, arg );
+  if ( barg )
+    arg = mas_strdup( barg );
+
+  DUF_TRACE( options, 0, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
   if ( name )
   {
     /* for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ ) */
@@ -79,7 +90,7 @@ _duf_cli_getcmd_long( const char *string, const duf_longval_extended_t * xtable,
 }
 
 int
-duf_cli_getcmd_long( const char *string )
+duf_execute_cmd_long( const char *string, char vseparator )
 {
-  return _duf_cli_getcmd_long( string, lo_extended, lo_extended_count );
+  return _duf_execute_cmd_long( string, lo_extended, lo_extended_count, vseparator );
 }

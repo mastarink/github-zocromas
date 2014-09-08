@@ -89,8 +89,8 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
   DEBUG_ENDULL( cnt );
 }
 
-int
-duf_scan_from_pdi( duf_ufilter_t * pu, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+static int
+duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
   assert( pdi->depth >= 0 );
@@ -146,7 +146,7 @@ duf_scan_from_pdi( duf_ufilter_t * pu, duf_depthinfo_t * pdi, duf_scan_callbacks
  *     5. for <current> dir call sccb->node_scan_after
  */
 static int
-duf_scan_from_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
+duf_sccb_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
 {
   DEBUG_STARTR( r );
 
@@ -175,7 +175,7 @@ duf_scan_from_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_cal
 
   /* assert( di.depth == -1 ); */
   DOR( r, duf_pdi_init_wrap( &di, real_path, 0 ) );
-  DOR( r, duf_scan_from_pdi( pu, &di, sccb ) );
+  DOR( r, duf_sccb_pdi( &di, sccb ) );
   duf_pdi_close( &di );
 
   DEBUG_ENDR( r );
@@ -195,14 +195,8 @@ duf_sccb_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb
 
   DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
 
-  if ( DUF_ACT_FLAG( interactive ) )
-  {
-    DOR( r, duf_interactive( real_path ) );
-  }
-  else if ( sccb )
-  {
-    DOR( r, duf_scan_from_real_path( real_path, pu, sccb /*, pchanges */  ) );
-  }
+  if ( sccb )
+    DOR( r, duf_sccb_real_path( real_path, pu, sccb /*, pchanges */  ) );
 
   mas_free( real_path );
   r = duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 );
@@ -398,7 +392,7 @@ duf_scan_final_sql( duf_scan_callbacks_t * sccb /*, unsigned long long changes *
  *
  * */
 static int
-duf_sccb_each_path( duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
+duf_sccb_each_targv( duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
 {
   DEBUG_STARTR( r );
   /* unsigned long long changes = 0; */
@@ -432,19 +426,19 @@ duf_sccb_each_path( duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges
  * last function revision 20140901.214625:
  *        split functions
  *                 duf_scan_beginning_sql
- *                 duf_sccb_each_path
+ *                 duf_sccb_each_targv
  *                 duf_scan_final_sql
  *
  * do everything needed from sccb, i.e. :
  * - call init from sccb
  * - do beginning sql set from sccb
- * - via duf_sccb_each_path:
+ * - via duf_sccb_each_targv:
  *    - evaluate sccb for each string from duf_config->targ[cv] as path
  *    - store number of changes to *pchanges
  * - do final sql set from sccb
 */
 static int
-duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
+duf_make_sccb( duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
   /* unsigned long long changes = 0; */
@@ -471,7 +465,7 @@ TODO scan mode
 
   /* - evaluate sccb for each string from duf_config->targ[cv] as path
    * - store number of changes to *pchanges */
-  DOR( r, duf_sccb_each_path( sccb /*, &changes */  ) );
+  DOR( r, duf_sccb_each_targv( sccb /*, &changes */  ) );
   DOR( r, duf_scan_final_sql( sccb /*, changes */  ) );
   DEBUG_ENDR( r );
 }
@@ -481,7 +475,7 @@ TODO scan mode
  *   do everything needed from sccb, i.e. :
  *     - call init  from ppscan_callbacks[astep]
  *     - do beginning sql set  from ppscan_callbacks[astep]
- *     - via duf_sccb_each_path:
+ *     - via duf_sccb_each_targv:
  *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
  *     - do final sql set from ppscan_callbacks[astep]
  *
@@ -499,15 +493,15 @@ duf_make_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int
     {
       DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( sccb_sequence[astep] ), astep );
 
-      /* duf_evaluate_sccb:
+      /* duf_make_sccb:
        * do everything needed from sccb, i.e. :
        * - call init  from sccb_sequence[astep]
        * - do beginning sql set  from sccb_sequence[astep]
-       * - via duf_sccb_each_path:
+       * - via duf_sccb_each_targv:
        *     - evaluate sccb_sequence[astep] for each string  from duf_config->targ[cv] as path
        *     - store number of changes to *pchanges
        * - do final sql set from sccb_sequence[astep]
-       * XXX  XXX */ DOR( r, duf_evaluate_sccb( sccb_sequence[astep] /* sccb */  ) );
+       * XXX  XXX */ DOR( r, duf_make_sccb( sccb_sequence[astep] /* sccb */  ) );
       cnt++;
     }
   }
@@ -524,7 +518,7 @@ duf_make_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int
  *   do everything needed from sccb, i.e. :
  *     - call init  from ppscan_callbacks[astep]
  *     - do beginning sql set  from ppscan_callbacks[astep]
- *     - via duf_sccb_each_path:
+ *     - via duf_sccb_each_targv:
  *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
  *     - do final sql set from ppscan_callbacks[astep]
  * */
@@ -562,7 +556,7 @@ duf_make_all_sccbs( void )
  *   do everything needed from sccb, i.e. :
  *     - call init  from ppscan_callbacks[astep]
  *     - do beginning sql set  from ppscan_callbacks[astep]
- *     - via duf_sccb_each_path:
+ *     - via duf_sccb_each_targv:
  *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
  *     - do final sql set from ppscan_callbacks[astep]
  * */

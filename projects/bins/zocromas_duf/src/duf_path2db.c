@@ -57,6 +57,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
       if ( pdi )
       {
         DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
+
         DUF_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) );
         /* DUF_ERROR( "insert_path_index:%d", insert_path_index ); */
         DUF_SQL_BIND_LL( Dev, dev_id, r, pstmt );
@@ -67,21 +68,8 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
 
-        DUF_SQL_END_STMT( r, pstmt );
-      }
-      else
-      {
-        DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-        DUF_SQL_BIND_LL( Dev, dev_id, r, pstmt );
-        DUF_SQL_BIND_LL( iNode, dir_ino, r, pstmt );
-        DUF_SQL_BIND_S( dirName, dename, r, pstmt );
-        /* DUF_SQL_BIND_LL( parentID, parentid, r, pstmt ); */
-        DUF_SQL_BIND_LL( parentID, duf_levinfo_dirid_up( pdi ), r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
 
-        DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-
-        DUF_SQL_END_STMT_NOPDI( r, pstmt );
+        DUF_SQL_END_STMT( insert_path, r, pstmt );
       }
     }
     /* sql = NULL; */
@@ -140,7 +128,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
             DUF_TEST_R( r );
             DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
           }
-          DUF_SQL_END_STMT( r, pstmt );
+          DUF_SQL_END_STMT( select_path, r, pstmt );
         }
         else
         {
@@ -255,7 +243,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
     changes = 0;
     DUF_TRACE( path, 0, "to insert [%s] pdi:%d", insdir ? insdir : "/", pdi ? 1 : 0 );
     /* store/check path component to db; anyway get the ID */
-    *pparentid = duf_insert_path_uni2( pdi, insdir, caninsert, duf_levinfo_stat( pdi )->st_dev, duf_levinfo_stat( pdi )->st_ino, 1 /*need_id */ ,
+    *pparentid = duf_insert_path_uni2( pdi, insdir, caninsert, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ), 1 /*need_id */ ,
                                        &changes, &r );
     /* assert( *pparentid ); */
     if ( changes )
@@ -266,6 +254,10 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
     duf_levinfo_set_dirid( pdi, *pparentid );
     DUF_TRACE( path, 0, "inserted [%s] AS %llu", insdir, *pparentid );
     DUF_TRACE( path, 0, "ID %llu for insdir ≪%s≫", *pparentid, insdir );
+  }
+  else
+  {
+    duf_levinfo_goup( pdi );
   }
   DEBUG_ENDR( r );
 }

@@ -37,9 +37,9 @@
 /*
 Ideas: count for each dir pair number of matching files => path_pairs
 
-INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fna.Pathid, fnb.Pathid 
-	FROM filenames AS fna 
-	JOIN filedatas AS fda ON (fna.dataid=fda.rowid) 
+INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fna.Pathid, fnb.Pathid
+	FROM filenames AS fna
+	JOIN filedatas AS fda ON (fna.dataid=fda.rowid)
   	JOIN md5 AS mda ON (fda.md5id=mda.rowid)
   	JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)
   	JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)
@@ -88,8 +88,6 @@ duf_main( int argc, char **argv )
     DUF_TRACE( any, 1, "any test" );
 
     r = duf_all_options( argc, argv );
-    
-
 
     if ( r >= 0 )
     {

@@ -1,13 +1,13 @@
 #ifndef MAS_DUF_LEVINFO_TYPES_H
 #  define MAS_DUF_LEVINFO_TYPES_H
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
 
-#include "duf_fun_types.h"
-#include "duf_sql_types.h"
-#include "duf_item_types.h"
-#include "duf_ufilter_types.h"
+#  include "duf_fun_types.h"
+#  include "duf_sql_types.h"
+#  include "duf_item_types.h"
+#  include "duf_ufilter_types.h"
 
 typedef struct duf_dirhandle_s
 {
@@ -47,8 +47,13 @@ typedef struct
   unsigned long long dirent_content2;
 } duf_modcnts_t;
 
-
 typedef struct
+{
+  int *id;
+  duf_sqlite_stmt_t *pstmt;
+} duf_idstmt_t;
+
+typedef struct duf_depthinfo_s
 {
   unsigned inited:1;
   unsigned opendir:1;
@@ -66,9 +71,10 @@ typedef struct
   duf_items_t items;
   duf_ufilter_t u;
   duf_context_t context;
-  int num_statements;
-  duf_sqlite_stmt_t **statements;
-  int **xstatements;
+  int num_idstatements;
+  /* duf_sqlite_stmt_t **statements; */
+  duf_idstmt_t *idstatements;
+  /* int **xstatements; */
   duf_modcnts_t cnts;
 } duf_depthinfo_t;
 

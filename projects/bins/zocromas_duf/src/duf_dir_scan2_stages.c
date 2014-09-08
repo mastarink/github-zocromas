@@ -30,7 +30,11 @@
 /* ###################################################################### */
 
 
-
+/*
+ *  - pstmt - for 1 node data, obtained from db
+ *  - pdi
+ *  - sccb
+ * */
 #define DUF_QSCAN_NODE_DECLARE_FUNCTION(stagename) \
     int \
     duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb ) \
@@ -86,6 +90,10 @@ DUF_QSCAN_NODE_DECLARE_FUNCTION(after)
  * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
  * duf_str_cb_scan_file_fd is just a wrapper for sccb->leaf_scan_fd
+ *
+ *  - pstmt - for 1 leaf data, obtained from db
+ *  - pdi
+ *  - sccb
  * */
 static int
 duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
@@ -104,6 +112,10 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_
  * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
  * duf_str_cb_leaf_scan is just a wrapper for sccb->leaf_scan
+ *
+ *  - pstmt - for 1 leaf data, obtained from db
+ *  - pdi
+ *  - sccb
  * */
 static int
 duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
@@ -175,6 +187,11 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi, duf
   DEBUG_ENDR( r );
 }
 
+/*
+ *  - pstmt - for 1 node data, obtained from db
+ *  - pdi
+ *  - sccb
+ *  */
 int
 duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 {

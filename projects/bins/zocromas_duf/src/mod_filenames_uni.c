@@ -30,7 +30,7 @@
 
 
 static int
-filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsigned long long dirid_unused, */unsigned long long dataid )
+filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsigned long long dirid_unused, */ unsigned long long dataid )
 {
   DEBUG_STARTR( r );
   if ( fname && duf_levinfo_dirid_up( pdi ) )
@@ -46,7 +46,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
     DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
-    DUF_SQL_END_STMT( r, pstmt );
+    DUF_SQL_END_STMT( insert_filename, r, pstmt );
   }
   else
   {
@@ -84,7 +84,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
 /* }                                                                                                                               */
 
 static int
-filenames_entry_reg2(  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat *pst_file, /*unsigned long long dirid_unused,*/
+filenames_entry_reg2(  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat *pst_file, /*unsigned long long dirid_unused, */
                       duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
@@ -94,7 +94,8 @@ filenames_entry_reg2(  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const
     unsigned long long dataid = 0;
 
     DOPR( r, dataid = duf_file_dataid_by_stat( pdi, pst_file, &r ) );
-    DOR( r, filenames_insert_filename_uni( pdi, fname, /* dirid_unused, */dataid ) );
+
+    DOR( r, filenames_insert_filename_uni( pdi, fname, /* dirid_unused, */ dataid ) );
   }
   DEBUG_ENDR( r );
 }

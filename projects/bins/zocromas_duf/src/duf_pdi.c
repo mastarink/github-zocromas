@@ -14,7 +14,6 @@
 
 #include "duf_sql2.h"
 
-/* #include "duf_pdi.h" */
 #include "duf_levinfo.h"
 
 #include "duf_path2db.h"
@@ -62,21 +61,22 @@ int
 duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 {
   DEBUG_STARTR( r );
-  int pd;
 
-  /* assert( pdi ); */
-  pdi->inited = 1;
-  pd = duf_pathdepth( real_path, &r );
-  DUF_TEST_R( r );
-  if ( r >= 0 )
-    r = duf_levinfo_create( pdi, pd ); /* depth = -1 */
-  DUF_TEST_R( r );
-  assert( r < 0 || pdi->levinfo );
-  /* assert( pdi->depth == -1 ); */
-  if ( r >= 0 )
-    r = duf_real_path2db( pdi, real_path, ifadd /* ifadd */  );
-  DUF_TEST_R( r );
+  if ( !pdi->inited )
+  {
+    int pd;
 
+    /* assert( pdi ); */
+    pdi->inited = 1;
+
+    pd = duf_pathdepth( real_path, &r );
+    DUF_TEST_R( r );
+
+    DOR( r, duf_levinfo_create( pdi, pd ) ); /* depth = -1 */
+    assert( r < 0 || pdi->levinfo );
+    /* assert( pdi->depth == -1 ); */
+    DOR( r, duf_real_path2db( pdi, real_path, ifadd /* ifadd */  ) );
+  }
   DEBUG_ENDR( r );
 }
 
@@ -98,6 +98,15 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
     DUF_TRACE( path, 0, " *********** diridpid: %llu", duf_levinfo_dirid( pdi ) );
   }
   DEBUG_ENDR( r );
+}
+
+int
+duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, duf_ufilter_t * pu )
+{
+  duf_pdi_close( pdi );
+  pdi->u = *pu;
+  pdi->depth = -1;
+  return duf_pdi_init_wrap( pdi, real_path, 0 );
 }
 
 void
@@ -129,7 +138,7 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
   assert( pdi );
   r = pdi->opendir;
   pdi->opendir = od;
-  DEBUG_ENDR( r );
+  DEBUG_ENDRN( r );
 }
 
 int
@@ -138,19 +147,25 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
   assert( pdi );
-  duf_clear_context( &pdi->context );
-  for ( int i = 0; i < pdi->num_statements; i++ )
+  if ( pdi->inited )
   {
-    r = duf_pdi_finalize( pdi, i );
+    duf_clear_context( &pdi->context );
+
+    for ( int i = 0; i < pdi->num_idstatements; i++ )
+      r = duf_pdi_finalize_idstmt( pdi, i );
+
+    mas_free( pdi->idstatements );
+    pdi->idstatements = NULL;
+
+    /* mas_free( pdi->xstatements ); */
+    /* pdi->xstatements = NULL;      */
+
+    pdi->num_idstatements = 0;
+    duf_levinfo_delete( pdi );
+    global_status.changes += pdi->changes;
+    pdi->inited = 0;
   }
-  mas_free( pdi->statements );
-  pdi->statements = NULL;
-  mas_free( pdi->xstatements );
-  pdi->xstatements = NULL;
-  pdi->num_statements = 0;
-  duf_levinfo_delete( pdi );
-  global_status.changes += pdi->changes;
-  /* DUF_ERROR( "clear statements" ); */
+  /* DUF_ERROR( "clear idstatements" ); */
   DEBUG_ENDR( r );
 }
 
@@ -225,50 +240,110 @@ duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
   return duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi );
 }
 
-int
-duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex )
+duf_idstmt_t *
+duf_pdi_find_idstmt( duf_depthinfo_t * pdi, int *pindex )
+{
+  duf_idstmt_t *is = NULL;
+
+  if ( pdi->idstatements )
+  {
+    for ( int i = 0; i < pdi->num_idstatements; i++ )
+    {
+      /* T( "i:%d %p : %p", i, pdi->idstatements[i].id, pindex ); */
+      if ( pdi->idstatements[i].id == pindex )
+      {
+        is = &pdi->idstatements[i];
+        break;
+      }
+    }
+  }
+  return is;
+}
+
+/* must be checked it's absent */
+duf_sqlite_stmt_t *
+duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, int *pr )
 {
   DEBUG_STARTR( r );
+  duf_sqlite_stmt_t *pstmt = NULL;
+  duf_idstmt_t *is = NULL;
+
   assert( pdi );
-  if ( !pdi->num_statements )
+  is = duf_pdi_find_idstmt( pdi, pindex );
+  if ( !is )
   {
-    pdi->statements = mas_malloc( sizeof( duf_sqlite_stmt_t * ) );
-    pdi->xstatements = mas_malloc( sizeof( int * ) );
+    if ( !pdi->num_idstatements )
+    {
+      pdi->idstatements = mas_malloc( sizeof( duf_idstmt_t ) );
+      /* pdi->xstatements = mas_malloc( sizeof( int * ) ); */
+    }
+    else
+    {
+      pdi->idstatements = mas_realloc( pdi->idstatements, ( pdi->num_idstatements + 1 ) * sizeof( duf_idstmt_t ) );
+      /* pdi->xstatements = mas_realloc( pdi->xstatements, ( pdi->num_idstatements + 1 ) * sizeof( int * ) ); */
+    }
+    pdi->idstatements[pdi->num_idstatements].pstmt = NULL;
+    pdi->idstatements[pdi->num_idstatements].id = NULL;
+    /* if ( pindex )                      */
+    /*   *pindex = pdi->num_idstatements; */
+    /* pdi->xstatements[pdi->num_idstatements] = pindex; */
+    is = &( pdi->idstatements[pdi->num_idstatements] );
+    pdi->num_idstatements++;
   }
-  else
+  DOR( r, duf_sql_prepare( sql, &pstmt ) );
+  if ( pstmt )
   {
-    pdi->statements = mas_realloc( pdi->statements, ( pdi->num_statements + 1 ) * sizeof( duf_sqlite_stmt_t * ) );
-    pdi->xstatements = mas_realloc( pdi->xstatements, ( pdi->num_statements + 1 ) * sizeof( int * ) );
+    is->id = pindex;
+    is->pstmt = pstmt;
   }
-  if ( pindex )
-    *pindex = pdi->num_statements;
-  pdi->xstatements[pdi->num_statements] = pindex;
-  r = duf_sql_prepare( sql, &pdi->statements[pdi->num_statements] );
-  pdi->num_statements++;
-  DEBUG_ENDR( r );
+
+  if ( pr )
+    *pr = r;
+  return pstmt;
+  DEBUG_END(  );
 }
 
 duf_sqlite_stmt_t *
-duf_pdi_statement( duf_depthinfo_t * pdi, int i )
+duf_pdi_find_statement( duf_depthinfo_t * pdi, int *pindex )
 {
-  return pdi && pdi->statements ? pdi->statements[i] : NULL;
+  duf_idstmt_t *is = NULL;
+
+  if ( pdi && pdi->idstatements )
+    is = duf_pdi_find_idstmt( pdi, pindex );
+  return is ? is->pstmt : NULL;
 }
 
 int
-duf_pdi_finalize( duf_depthinfo_t * pdi, int i )
+duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i )
 {
   DEBUG_STARTR( r );
-  int *pi;
+  /* int *pi; */
 
   assert( pdi );
 
-  if ( pdi->statements[i] )
-    r = duf_sql_finalize( pdi->statements[i] );
-  if ( pdi->xstatements[i] )
-    pi = pdi->xstatements[i];
-  if ( pi )
-    *pi = -1;
-  pdi->statements[i] = NULL;
+  if ( pdi->idstatements[i].pstmt )
+    r = duf_sql_finalize( pdi->idstatements[i].pstmt );
+  /* if ( pdi->xstatements[i] )  */
+  /*   pi = pdi->xstatements[i]; */
+  /* if ( pi )                   */
+  /*   *pi = -1;                 */
+  pdi->idstatements[i].pstmt = NULL;
+  DEBUG_ENDR( r );
+}
+
+int
+duf_pdi_finalize_statement( duf_depthinfo_t * pdi, int *pindex )
+{
+  DEBUG_STARTR( r );
+  duf_idstmt_t *is = NULL;
+
+  is = duf_pdi_find_idstmt( pdi, pindex );
+  if ( is && is->pstmt )
+  {
+    r = duf_sql_finalize( is->pstmt );
+    is->pstmt = NULL;
+  }
+
   DEBUG_ENDR( r );
 }
 

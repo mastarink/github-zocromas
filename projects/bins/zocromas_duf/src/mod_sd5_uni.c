@@ -63,7 +63,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         DUF_SQL_BIND_LL( sd5sum2, md64[0], r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( r, pstmt );
+        DUF_SQL_END_STMT( insert_sd5, r, pstmt );
       }
       else
       {
@@ -348,8 +348,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            "    WHERE "         /* */
            " fd.sd5id IS NULL AND " /* */
            /* "       sz.dupzcnt > 1 AND "      (* *) */
-           " sz.size > 0  "
-           },
+           " sz.size > 0  "},
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,

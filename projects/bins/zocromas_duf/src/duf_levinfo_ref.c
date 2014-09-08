@@ -120,6 +120,24 @@ DUF_LEVINFO_FC( struct stat *, stat )
 DUF_LEVINFO_FC_UP( struct stat *, stat )
 /* *INDENT-ON*  */
 
+ino_t
+duf_levinfo_stat_inode( const duf_depthinfo_t * pdi )
+{
+  struct stat *st;
+
+  st = duf_levinfo_stat( pdi );
+  return st ? st->st_ino : 0;
+}
+
+dev_t
+duf_levinfo_stat_dev( const duf_depthinfo_t * pdi )
+{
+  struct stat *st;
+
+  st = duf_levinfo_stat( pdi );
+  return st ? st->st_dev : 0;
+}
+
 /************************************************************************/
 
 int
@@ -146,6 +164,7 @@ duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d )
 
   assert( pdi );
   assert( pdi->levinfo );
+  assert( d < pdi->maxdepth );
   /* assert( d >= 0 ); */
   if ( d >= 0 )
     n = pdi->levinfo[d].itemname;

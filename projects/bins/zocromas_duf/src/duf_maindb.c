@@ -28,6 +28,8 @@
 #include "duf_path2db.h"        /* test only */
 #include "duf_dbg.h"
 
+#include "duf_pdi.h"
+
 #include "duf_action.h"
 
 
@@ -194,12 +196,15 @@ main_db( int argc, char **argv )
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }
 
-      
+
       /* if ( r >= 0 )                                                           */
       /*        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ); */
       DUF_TEST_R( r );
       DUF_TRACE( explain, 0, "to do actions" );
       DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+
+
+
       if ( r >= 0 )
         r = duf_action( argc, argv );
       if ( duf_config->cli.act.v.flag.info )

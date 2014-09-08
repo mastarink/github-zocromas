@@ -51,7 +51,7 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
   }
   /* DUF_TEST_R( r ); */
-  DUF_SQL_END_STMT( r, pstmt );
+  DUF_SQL_END_STMT( select_filedata, r, pstmt );
 
   DEBUG_ENDULL( dataid );
   return dataid;
@@ -62,6 +62,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
 {
   int r = 0;
   unsigned long long dataid = 0;
+
   DEBUG_START(  );
 
   if ( pst_file )
@@ -75,9 +76,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
             " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
             " VALUES "          /* */
             " (:Dev, :iNode, :Size, :Mode, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
-            "datetime(:aTim, 'unixepoch'), :aTimn, "
-	    "datetime(:mTim, 'unixepoch'), :mTimn, "
-	    "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
+            "datetime(:aTim, 'unixepoch'), :aTimn, " "datetime(:mTim, 'unixepoch'), :mTimn, " "datetime(:cTim, 'unixepoch'), :cTimn) " /* */ ;
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
@@ -98,7 +97,7 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
       DUF_SQL_BIND_LL( cTimn, pst_file->st_ctim.tv_nsec, r, pstmt );
       DUF_SQL_STEP( r, pstmt );
       DUF_SQL_CHANGES( changes, r, pstmt );
-      DUF_SQL_END_STMT( r, pstmt );
+      DUF_SQL_END_STMT( insert_filedata, r, pstmt );
     }
     DUF_TRACE( current, 0, "<changes> : %d", changes );
     if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )

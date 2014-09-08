@@ -47,7 +47,7 @@ typedef struct
   char **targv;
   char *config_path;
 
-
+  struct duf_depthinfo_s *pdi;
   unsigned nopen;
   unsigned nclose;
   duf_tmp_t *tmp;

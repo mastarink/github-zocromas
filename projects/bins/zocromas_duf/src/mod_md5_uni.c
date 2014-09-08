@@ -66,7 +66,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         DUF_SQL_BIND_LL( md5sum2, md64[0], r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( r, pstmt );
+        DUF_SQL_END_STMT( insert_md5, r, pstmt );
       }
       else
       {
@@ -334,7 +334,7 @@ static const char *final_sql[] = {
         "   JOIN filedatas AS fdb ON (fdb.md5id=mda.rowid)" /* */
         "   JOIN filenames AS fnb ON (fdb.rowid=fnb.dataid)" /* */
         " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
-        " GROUP BY Pathid1, Pathid2"   /* */
+        " GROUP BY Pathid1, Pathid2" /* */
         ,
 
 

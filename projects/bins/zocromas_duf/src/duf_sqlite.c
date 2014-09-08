@@ -383,7 +383,7 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
       r3 = DUF_ERROR_SQL_NO_TABLE;
     }
   }
-  assert( r3 == 0 );
+  /* assert( r3 == 0 ); */
   /* assert( r3 != SQLITE_MISUSE ); */
   DUF_TEST_R3S( r3, sql );
   return r3;

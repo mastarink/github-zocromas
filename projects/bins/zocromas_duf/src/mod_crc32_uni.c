@@ -58,7 +58,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
     DUF_SQL_BIND_LL( crc32sum, crc32sum, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
-    DUF_SQL_END_STMT( r, pstmt );
+    DUF_SQL_END_STMT( insert_crc32, r, pstmt );
   }
   duf_pdi_reg_changes( pdi, changes );
   if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
@@ -231,8 +231,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            "    WHERE "         /* */
            " fd.crc32id IS NULL AND" /* */
            /* " sz.dupzcnt > 1 AND "      (* *) */
-           " sz.size > 0 "
-           },
+           " sz.size > 0 "},
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,

@@ -16,6 +16,10 @@
 
 #include "duf_config_ref.h"
 
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
+#include "duf_levinfo_ref.h"
+
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
@@ -419,22 +423,6 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
  * return class id for options to display the help
  * */
 
-//ohclass = duf_help_option2class( codeval );
-//
-//
-//if (  /* ohclass != DUF_OPTION_CLASS_NO_HELP && */ ohclass != DUF_OPTION_CLASS_BAD )
-//{
-//  /* this is help option! */
-//  if ( optarg )
-//  {
-//    if ( duf_config->help_string )
-//      mas_free( duf_config->help_string );
-//    duf_config->help_string = mas_strdup( optarg );
-//  }
-//  r = ohclass;
-//  codeval = DUF_OPTION_NONE;
-//}
-//else 
   if ( codeval && r >= 0 && extended )
   {
     unsigned doplus = 0;
@@ -577,7 +565,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         ( *pi ) &= ~extended->afl.bit;
       }
       DUF_TEST_R( r );
-      break;      
+      break;
     case DUF_OPTION_VTYPE_SFLAG:
       {
         unsigned short *pis;
@@ -600,31 +588,26 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       }
       DUF_TEST_R( r );
       break;
-      /* case DUF_OPTION_VTYPE_FILEPATH:                                                  */
-      /*   {                                                                              */
-      /*     if ( optarg )                                                                */
-      /*     {                                                                            */
-      /*       duf_filepath_t *pfp;                                                       */
-      /*       char *pathname;                                                            */
-      /*       char *dir;                                                                 */
-      /*       char *base;                                                                */
-      /*                                                                                  */
-      /*       pathname = mas_strdup( optarg );                                           */
-      /*       base=basename( pathname );                                                 */
-      /*       dir=dirname( pathname );                                                   */
-      /*       T( " %s: %s @ %s", optarg, dir, base );                                    */
-      /*       pfp = ( duf_filepath_t * ) byteptr;                                        */
-      /*       mas_free( pfp->name );                                                     */
-      /*       pfp->name = NULL;                                                          */
-      /*       pfp->dirid = duf_path2db( dir, &r );                                       */
-      /*       pfp->name = mas_strdup( base );                                            */
-      /*       T( "%llu : %s", pfp->dirid, pfp->name );                                   */
-      /*       T( "%llu : %s", duf_config->u.same_as.dirid, duf_config->u.same_as.name ); */
-      /*       mas_free( pathname );                                                      */
-      /*     }                                                                            */
-      /*   }                                                                              */
-      /*   DUF_TEST_R( r );                                                               */
-      /*   break;                                                                         */
+    case DUF_OPTION_VTYPE_PDISTR:
+      {
+        duf_depthinfo_t **ppdi;
+        duf_depthinfo_t *pdi;
+
+        ppdi = ( duf_depthinfo_t ** ) byteptr;
+        if ( ppdi )
+          pdi = *ppdi;
+        assert( pdi );
+        assert( duf_config->pdi == pdi );
+        PF( "pdi:%p", duf_config->pdi );
+
+        if ( optarg )
+        {
+          duf_pdi_close( pdi );
+          duf_pdi_reinit( pdi, optarg, &duf_config->u );
+        }
+      }
+      DUF_TEST_R( r );
+      break;
     case DUF_OPTION_VTYPE_DATETIME:
       DUF_NUMOPT( unsigned long long, 0, duf_strtime2long );
 

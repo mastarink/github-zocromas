@@ -30,6 +30,8 @@ static const duf_longval_extended_t _lo_extended_i[] = {
    /*      */ DO_T( AFUN ), DO_AFUN( duf_option_version ) /*                                                 */ , DO_H( version info ) /*       */ },
   {.o = {DO_Q( "quit" ), /*   */ DO_A_N, /* */ DO_VF( INTERACTIVE )} /* */ , DO_CL( CONTROL ) /* */ ,
    /*      */ DO_O( NOFLAG, cli.act.v ), DO_FL( act, interactive ) /*                                       */ , DO_H( get dir info ) /*       */ },
+  {.o = {DO_Q( "cd" ), /*        */ DO_A_O, /* */ DO_V( CD )} /*          */ , DO_CL( CONTROL ) /* */ ,
+   /*      */ DO_O( PDISTR, pdi ) /*                                                                      */ , DO_H( pdi cd ) /*            */ },
 
   {0}
 };
@@ -38,16 +40,16 @@ const duf_longval_extended_t *lo_extended_i = _lo_extended_i;
 unsigned lo_extended_i_count = sizeof( _lo_extended_i ) / sizeof( _lo_extended_i[0] );
 
 int
-duf_interactive( const char *real_path )
+duf_interactive( void )
 {
   int r = 0;
 
-  DUF_UNUSED duf_depthinfo_t di = {.depth = -1,
-    .seq = 0,
-    .levinfo = NULL,
-    .u = duf_config->u,
-  };
-  r = duf_pdi_init_wrap( &di, real_path, 0 );
+  /* DUF_UNUSED duf_depthinfo_t di = {.depth = -1, */
+  /*   .seq = 0,                                   */
+  /*   .levinfo = NULL,                            */
+  /*   .u = duf_config->u,                         */
+  /* };                                            */
+  /* r = duf_pdi_init_wrap( &di, real_path, 0 );   */
 
   /* rl_generic_bind( ISMACR, "\x1bq", ( char * ) "server exit\n", rl_get_keymap(  ) );     */
   /* rl_generic_bind( ISMACR, "\x1b[21~", ( char * ) "server exit\n", rl_get_keymap(  ) );  */
@@ -57,20 +59,24 @@ duf_interactive( const char *real_path )
   /* snprintf( rl_prompt, sizeof( rl_prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt ); */
   /* rh = read_history( fpath ); */
 
+  /* duf_pdi_close( &duf_config->di ); */
+
   {
     char *duf_rl_buffer = NULL;
     static char rl_prompt[256] = "";
 
     if ( !*rl_prompt )
-      snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", real_path );
+      snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );
 
     while ( DUF_ACT_FLAG( interactive ) )
     {
+      if ( duf_config && duf_config->pdi )
+        snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );
       while ( !duf_rl_buffer )
         duf_rl_buffer = readline( rl_prompt );
       if ( duf_rl_buffer && *duf_rl_buffer )
         add_history( duf_rl_buffer );
-      r = _duf_cli_getcmd_long( duf_rl_buffer, lo_extended_i, lo_extended_i_count );
+      r = _duf_execute_cmd_long( duf_rl_buffer, lo_extended_i, lo_extended_i_count, ' ' );
       free( duf_rl_buffer );
       duf_rl_buffer = NULL;
     }

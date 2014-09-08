@@ -1,20 +1,32 @@
 /* File 20140902.123910 */
 #include <stdarg.h>
 #include <string.h>
-/* #include <getopt.h> */
 #include <sys/time.h>
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
 #include <mastar/tools/mas_arg_tools.h>
 
-/* #include "duf_types.h" */
 #include "duf_utils.h"
 #include "duf_service.h"
 
+#include "duf_error_types.h"
+#include "duf_debug_defs.h"
+#include "duf_trace_defs.h"
+#include "duf_trace.h"
+#include "duf_errors.h"
+
 #include "duf_dbg.h"
 #include "duf_print_defs.h"
+
+
+#include "duf_pdi.h"
+#include "duf_levinfo.h"
+#include "duf_levinfo_ref.h"
+
+
 
 #include "duf_config_ref.h"
 /* ###################################################################### */
@@ -52,7 +64,9 @@ duf_tmp_delete( duf_tmp_t * tmp )
 int
 duf_config_create( void )
 {
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_STARTR( r );
+
+  assert( !duf_config );
   duf_config = mas_malloc( sizeof( duf_config_t ) );
   memset( duf_config, 0, sizeof( duf_config ) );
   duf_config->u.max_rel_depth = 100;
@@ -109,13 +123,19 @@ duf_config_create( void )
     /*   }                                                                                                                                        */
     /* }                                                                                                                                          */
   }
-  duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  duf_config->pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
+  memset( duf_config->pdi, 0, sizeof( duf_depthinfo_t ) );
+  PF( "CONFIG pdi:%p", duf_config->pdi );
+  DEBUG_ENDR( r );
 }
 
 int
 duf_config_delete( void )
 {
+  duf_pdi_close( duf_config->pdi );
+  mas_free( duf_config->pdi );
+  duf_config->pdi = NULL;
+
   duf_tmp_delete( duf_config->tmp );
   duf_config->tmp = NULL;
 
@@ -163,6 +183,9 @@ duf_config_delete( void )
   duf_config->targv = NULL;
 
   mas_free( duf_config->cli.trace.output.file );
+  duf_config->cli.trace.output.file = NULL;
+  mas_free( duf_config->cli.output.file );
+  duf_config->cli.output.file = NULL;
 
   mas_free( duf_config );
   duf_config = NULL;

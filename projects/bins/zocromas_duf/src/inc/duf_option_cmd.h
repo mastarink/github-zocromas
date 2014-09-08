@@ -4,8 +4,8 @@
 #  include "duf_option_types.h"
 #  include "duf_options_def.h"
 
-int _duf_cli_getcmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size );
-int duf_cli_getcmd_long( const char *string );
+int _duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator );
+int duf_execute_cmd_long( const char *string, char vseparator );
 
 
 #endif

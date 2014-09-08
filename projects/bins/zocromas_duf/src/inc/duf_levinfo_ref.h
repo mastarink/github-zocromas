@@ -73,6 +73,9 @@ struct stat *duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d );
 struct stat *duf_levinfo_stat( const duf_depthinfo_t * pdi );
 struct stat *duf_levinfo_stat_up( const duf_depthinfo_t * pdi );
 
+ino_t duf_levinfo_stat_inode( const duf_depthinfo_t * pdi );
+dev_t duf_levinfo_stat_dev( const duf_depthinfo_t * pdi );
+
 const char *duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_path( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_path_up( const duf_depthinfo_t * pdi );
