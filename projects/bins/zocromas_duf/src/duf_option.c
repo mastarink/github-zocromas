@@ -591,19 +591,22 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
     case DUF_OPTION_VTYPE_PDISTR:
       {
         duf_depthinfo_t **ppdi;
-        duf_depthinfo_t *pdi;
 
         ppdi = ( duf_depthinfo_t ** ) byteptr;
-        if ( ppdi )
-          pdi = *ppdi;
-        assert( pdi );
-        assert( duf_config->pdi == pdi );
-        PF( "pdi:%p", duf_config->pdi );
-
-        if ( optarg )
         {
-          duf_pdi_close( pdi );
-          duf_pdi_reinit( pdi, optarg, &duf_config->u );
+          duf_depthinfo_t *pdi = NULL;
+
+          if ( ppdi )
+            pdi = *ppdi;
+          assert( pdi );
+          assert( duf_config->pdi == pdi );
+          PF( "pdi:%p", duf_config->pdi );
+
+          if ( optarg )
+          {
+            duf_pdi_close( pdi );
+            duf_pdi_reinit( pdi, optarg, &duf_config->u );
+          }
         }
       }
       DUF_TEST_R( r );

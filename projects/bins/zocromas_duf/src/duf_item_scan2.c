@@ -61,7 +61,7 @@ duf_selector2sql( duf_sql_set_t * sql_set )
 }
 
 static int
-duf_pstmt_levinfo_godown( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+duf_pstmt_levinfo_godown_openat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -75,7 +75,7 @@ duf_pstmt_levinfo_godown( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
   /*!! dirid need not be same as duf_levinfo_dirid( pdi ) before duf_levinfo_godown */
-  r = duf_levinfo_godown( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  ) );
   assert( dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
   DEBUG_ENDR( r );
 }
@@ -101,7 +101,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( pdi ) );
   DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
 
-  DOR( r, duf_levinfo_godown( pdi, 0 /* dir_id */ , DUF_GET_SFIELD2( filename ), 0, 0, 1 /* is_leaf */  ) );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, 0 /* dir_id */ , DUF_GET_SFIELD2( filename ), 0, 0, 1 /* is_leaf */  ) );
+  /* DOR( r, duf_levinfo_openat_dh( pdi ) ); */
   if ( r >= 0 )
   {
 /*
@@ -114,7 +115,6 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
     DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", pdi->seq, pdi->seq_leaf );
 
     /* called both for leaves (files) and nodes (dirs) */
-    DOR( r, duf_levinfo_openat_dh( pdi ) );
 
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                   duf_levinfo_dfd( pdi ), pdi->opendir );
@@ -134,7 +134,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
   DEBUG_STARTR( r );
   assert( pdi );
 
-  DOR( r, duf_pstmt_levinfo_godown( pstmt, pdi ) );
+  DOR( r, duf_pstmt_levinfo_godown_openat_dh( pstmt, pdi ) );
   assert( pdi->depth >= 0 );
 
   DUF_TEST_RQ( r, r == DUF_ERROR_MAX_DEPTH );
@@ -151,8 +151,6 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
     /* called both for leaves (files) and nodes (dirs) */
     if ( str_cb2 )
     {
-      DOR( r, duf_levinfo_openat_dh( pdi ) );
-
       /* if ( r >= 0 && !duf_levinfo_item_deleted( pdi ) ) */
       DUF_TRACE( explain, 2, "=> str cb2" );
       DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 5. node str cb2" );

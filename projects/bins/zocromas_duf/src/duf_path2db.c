@@ -67,8 +67,6 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
         DUF_SQL_BIND_LL( parentID, duf_levinfo_dirid_up( pdi ), r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
-
-
         DUF_SQL_END_STMT( insert_path, r, pstmt );
       }
     }
@@ -125,6 +123,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
           }
           else
           {
+        T( "changes:%u; %lu:%lu; [%s] parentid:%llu", changes, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) );
             DUF_TEST_R( r );
             DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
           }
@@ -231,8 +230,8 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
 
   /* assert( pdi );                                                                          */
   assert( pparentid );
-  DOR( r, duf_levinfo_godown( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  ) );
-  DOR( r, duf_levinfo_openat_dh( pdi ) ); /* levinfo depth 1 level lower */
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  ) );
+  /* DOR( r, duf_levinfo_openat_dh( pdi ) ); (* levinfo depth 1 level lower *) */
 
   DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, duf_levinfo_dfd( pdi ) );
 
@@ -257,7 +256,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert,
   }
   else
   {
-    duf_levinfo_goup( pdi );
+    /* duf_levinfo_goup( pdi ); */
   }
   DEBUG_ENDR( r );
 }

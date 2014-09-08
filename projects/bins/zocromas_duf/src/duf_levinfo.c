@@ -124,6 +124,21 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
 }
 
 int
+duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, const char *itemname, unsigned long long ndirs,
+                              unsigned long long nfiles, int is_leaf )
+{
+  DEBUG_STARTR( r );
+  int rd;
+
+  DOR( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ) );
+  rd = r;
+  DOR( r, duf_levinfo_openat_dh( pdi ) );
+  if ( r < 0 && rd >= 0 )
+    duf_levinfo_goup( pdi );
+  DEBUG_ENDR( r );
+}
+
+int
 duf_levinfo_goup( duf_depthinfo_t * pdi )
 {
   int r = 0;
