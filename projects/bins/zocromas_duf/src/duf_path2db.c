@@ -67,8 +67,17 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
         DUF_SQL_BIND_LL( parentID, duf_levinfo_dirid_up( pdi ), r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
+        /* T( "I changes:%u; %lu:%lu; [%s] parentid:%llu", changes, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) ); */
         DUF_SQL_END_STMT( insert_path, r, pstmt );
       }
+      else
+      {
+        /* T( "(%d) I-1 changes:%u; %lu:%lu; [%s] parentid:%llu", ifadd, changes, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) ); */
+      }
+    }
+    else
+    {
+      /* T( "(%d) I-2 changes:%u; %lu:%lu; [%s] parentid:%llu", ifadd, changes, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) ); */
     }
     /* sql = NULL; */
     DUF_TRACE( current, 0, "<changes> : %d", changes );
@@ -123,7 +132,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
           }
           else
           {
-        T( "changes:%u; %lu:%lu; [%s] parentid:%llu", changes, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) );
+            /* T( "S changes:%u; %lu:%lu; [%s] parentid:%llu", changes, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) ); */
             DUF_TEST_R( r );
             DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
           }

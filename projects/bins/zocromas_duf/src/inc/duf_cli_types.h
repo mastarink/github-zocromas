@@ -2,6 +2,7 @@
 #  define MAS_DUF_CLI_TYPES_H
 
 #  include "duf_flags_types.h"
+#  include "duf_fun_types.h"
 /* duf_format_t */
 #  include "duf_format_types.h"
 
@@ -86,6 +87,8 @@ typedef struct
   duf_config_cli_trace_t trace;
   duf_config_output_t output;
   duf_format_combo_t format;
+  duf_int_void_t interstage_init;
+  char *shorts;
   /* long limit; */
 } duf_config_cli_t;
 

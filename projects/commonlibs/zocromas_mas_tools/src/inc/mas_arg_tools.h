@@ -19,7 +19,7 @@ const char *mas_skip_arg( const char *args, const char **pthis, size_t * plen, i
 /* int __mas_make_argv( const char *args, int argc, char ***pargv, int from_a ); */
 
 int mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset );
-int mas_add_argv_argv( int targc, char ***ptargv, int argc, char *argv[], int ia_offset );
+int mas_add_argv_argv( int targc, char ***ptargv, int argc, char *const *argv, int ia_offset );
 int mas_add_argv_arg( int targc, char ***ptargv, const char *arg );
 int mas_add_argv_arg_nodup( int targc, char ***ptargv, char *arg );
 int mas_add_argv_cmdline( int targc, char ***ptargv, const char *cmdline, size_t len );

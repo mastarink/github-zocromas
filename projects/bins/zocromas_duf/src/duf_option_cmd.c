@@ -11,6 +11,7 @@
 #include "duf_config_ref.h"
 
 
+#include "duf_option_find.h"
 #include "duf_option_extended.h"
 #include "duf_option.h"
 
@@ -21,9 +22,9 @@
 
 
 int
-_duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator )
+duf_find_cmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator, char **parg )
 {
-  int r = DUF_ERROR_OPTION;
+  DEBUG_STARTR( r );
   char *barg = NULL;
   char *endn = NULL;
   char *name = NULL;
@@ -50,47 +51,49 @@ _duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable
     arg = mas_strdup( barg );
 
   DUF_TRACE( options, 0, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
-  if ( name )
+
+  DORN( r, duf_find_name_long( name, xtable, xtable_size, 1 /* soft */ ) );
+  if ( r >= 0 && parg )
+    *parg = arg;
+  else
+    mas_free( arg );
+  arg = NULL;
+
+  if ( r == DUF_ERROR_OPTION )
   {
-    /* for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ ) */
-    for ( int ilong = 0; xtable[ilong].o.name && ilong < xtable_size; ilong++ )
-    {
-      DUF_TRACE( options, 4, "compare name:`%s` ? `%s` at %d", xtable[ilong].o.name, name, ilong );
-      if ( 0 == strcmp( name, xtable[ilong].o.name ) )
-      {
-        DUF_TRACE( options, 0, "found name:`%s` at %d", xtable[ilong].o.name, ilong );
-        /* const duf_longval_extended_t *extended; */
+    DUF_ERROR( "Invalid option -- '%s'", string );
+  }
+  mas_free( name );
+  DEBUG_ENDRN( r );
+}
 
-        /* extended = _duf_find_longval_extended( duf_config->longopts_table[ilong].val ); */
-        /* extended = &xtable[ilong]; */
-        /* extended = duf_longindex_extended( ilong ); */
+int
+duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator, int stage )
+{
+  DEBUG_STARTR( r );
+  const duf_longval_extended_t *extended = NULL;
+  char *arg = NULL;
 
+  r = duf_find_cmd_long( string, xtable, xtable_size, vseparator, &arg );
+  if ( r >= 0 )
+  {
+    extended = &xtable[r];
+    r = 0;
+  }
 /* 
  * duf_parse_option_long return 
  *   =0 for other option
  *   errorcode<0 for error
  * */
-        /* r = duf_parse_option_long( ilong, arg ); */
-        r = duf_parse_option_long_x( &xtable[ilong], arg );
-        DUF_TEST_R( r );
-        break;
-      }
-    }
-    /* DUF_TEST_R( r ); */
-  }
-  mas_free( name );
+  DOR( r, duf_parse_option_long_typed( extended, arg, stage ) );
+  if ( r == DUF_ERROR_OPTION_NOT_PARSED )
+    DOZR( r, duf_parse_option_long_old( extended, arg, stage ) );
   mas_free( arg );
-  if ( r == DUF_ERROR_OPTION )
-  {
-    DUF_ERROR( "Invalid option -- '%s'", string );
-  }
-  else
-    DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
-duf_execute_cmd_long( const char *string, char vseparator )
+duf_execute_cmd_long_std( const char *string, char vseparator, int stage )
 {
-  return _duf_execute_cmd_long( string, lo_extended, lo_extended_count, vseparator );
+  return duf_execute_cmd_long( string, lo_extended, lo_extended_count, vseparator, stage );
 }

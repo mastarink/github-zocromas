@@ -11,6 +11,7 @@ typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned l
 
 /* this is callback of type: duf_scan_hook_file_t : */
 typedef int ( *duf_scan_hook2_file_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+typedef int ( *duf_scan_hook2_item_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, const struct stat * pst_file, duf_depthinfo_t * pdi );
 

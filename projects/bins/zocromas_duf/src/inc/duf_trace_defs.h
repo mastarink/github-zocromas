@@ -46,7 +46,9 @@
 /* ###################################################################### */
 
 /* #  define DUF_IF_TRACE_WHAT(what,name) (duf_config && !duf_config->cli.trace.nonew && duf_config->what.name ) */
-#  define DUF_IF_TRACE_WHAT_C(  cfg, what, name )	(( cfg && !cfg->cli.trace.nonew) ? (cfg->what.name?1:0) : 1 )
+
+#  define DUF_IF_TRACE_WHAT_C(  cfg, what, name )	(( cfg && !cfg->cli.trace.nonew) ? cfg->what.name : 1 )
+
 #  define DUF_IF_TRACE_WHAT( what, name )		DUF_IF_TRACE_WHAT_C( duf_config,  what,      name )
 #  define DUF_IF_TRACE( name )                          DUF_IF_TRACE_WHAT(                cli.trace, name)
 
@@ -184,13 +186,20 @@
 /* ###################################################################### */
 
 #  ifdef DUF_T_NOIF
-#    define DUF_DO_TEST_R(_rval, _x)    ( (_rval>=0) ? ( (_rval=(_x)), DUF_TEST_R(_rval) ) : 0 )
-/* #  define DUF_DO_TEST_R(_rval, _x)  ((_rval>=0) ?( (_rval=_x), DUF_TEST_R(_rval) ) : 0 ) */
+#    define DUF_DO_TEST_R_INTERNAL(_rval, _x)     (_rval>=0) ? ( (_rval=(_x)), DUF_TEST_R(_rval) ) : 0
+#    define DUF_DO_TEST_R(_rval, _x)    ( DUF_DO_TEST_R_INTERNAL(_rval, _x) )
+
+#    define DUF_DO_TEST_RN_INTERNAL(_rval, _x)     (_rval>=0) ? ( (_rval=(_x)), DUF_TEST_RN(_rval) ) : 0
+#    define DUF_DO_TEST_RN(_rval, _x)   ( DUF_DO_TEST_RN_INTERNAL(_rval, _x) )
+
+#    define DUF_DO_TESTZ_R(_rval, _x)    ( _rval=0, DUF_DO_TEST_R_INTERNAL(_rval, _x)  )
 
 #    define DUF_DO_TEST_PR(_rval, _x)   ( (_rval>=0) ? ( (_x), DUF_TEST_R(_rval) ) : 0 )
 #  else
 #    define DUF_DO_TEST_R(_rval, _x)    if (_rval>=0) { (_rval=(_x)); DUF_TEST_R(_rval); }
-/* #  define DUF_DO_TEST_R(_rval, _x)  ((_rval>=0) ?( (_rval=_x), DUF_TEST_R(_rval) ) : 0 ) */
+#    define DUF_DO_TEST_RN(_rval, _x)   if (_rval>=0) { (_rval=(_x)); DUF_TEST_RN(_rval); }
+
+#    define DUF_DO_TESTZ_R(_rval, _x)   { _rval=0;DUF_DO_TEST_R(_rval, _x) }
 
 #    define DUF_DO_TEST_PR(_rval, _x)   if (_rval>=0) { _x; DUF_TEST_R(_rval); }
 #  endif
@@ -213,7 +222,9 @@
 
 /* ###################################################################### */
 
-#  define DOR(_rval, _x) DUF_DO_TEST_R(_rval, _x)
+#  define DOR(_rval, _x)  DUF_DO_TEST_R(_rval, _x)
+#  define DORN(_rval, _x) DUF_DO_TEST_RN(_rval, _x)
+#  define DOZR(_rval, _x) DUF_DO_TESTZ_R(_rval, _x)
 #  define DOPR(_rval, _x) DUF_DO_TEST_PR(_rval, _x)
 
 

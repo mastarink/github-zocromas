@@ -86,9 +86,8 @@ duf_main( int argc, char **argv )
   if ( r >= 0 )
   {
     DUF_TRACE( any, 1, "any test" );
-
+    duf_config->cli.interstage_init = duf_interstage_init;
     r = duf_all_options( argc, argv );
-
     if ( r >= 0 )
     {
       DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
@@ -121,7 +120,6 @@ duf_main( int argc, char **argv )
     DUF_ERROR( "(%d) %s", r, argv[0] );
   }
 #ifdef MAS_TRACEMEM
-  print_memlist( FL, stderr );
 
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -135,6 +133,7 @@ duf_main( int argc, char **argv )
       DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( MEMUSAGE ) );
     }
   }
+  print_memlist( FL, stdout );
 
 
 #endif

@@ -4,6 +4,7 @@
 
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
+#  include "duf_hook_types.h"
 
 typedef enum
 {
@@ -58,6 +59,7 @@ typedef enum
   DUF_OPTION_VTYPE_STR,
   
   DUF_OPTION_VTYPE_PDISTR,
+  DUF_OPTION_VTYPE_PDISCCB,
 
   DUF_OPTION_VTYPE_DATETIME,
 
@@ -65,7 +67,7 @@ typedef enum
   DUF_OPTION_VTYPE_MAXDATETIME,
   DUF_OPTION_VTYPE_MINMAXDATETIME,
 
-  DUF_OPTION_VTYPE_IFUN,
+  DUF_OPTION_VTYPE_VIFUN,
   DUF_OPTION_VTYPE_AFUN,
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
@@ -76,7 +78,11 @@ typedef struct
 {
   duf_void_int_t func;
   int arg;
-} duf_ifuncpair_t;
+} duf_vifuncpair_t;
+typedef struct
+{
+  duf_int_void_t func;
+} duf_ivfuncpair_t;
 typedef struct
 {
   duf_void_argcv_t func;
@@ -85,6 +91,12 @@ typedef struct
 {
   duf_void_void_t func;
 } duf_funcpair_t;
+typedef struct
+{
+  duf_scan_hook2_item_t func;
+  duf_scan_callbacks_t *sccb;
+} duf_hipair_t;
+
 
 
 typedef union
@@ -97,6 +109,7 @@ typedef union
 
 typedef struct
 {
+  int stage;
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
@@ -111,9 +124,11 @@ typedef struct
     duf_anynum_t value2;
     union
     {
-      duf_ifuncpair_t i;
-      duf_funcpair_t v;
+      duf_vifuncpair_t vi;
+      duf_ivfuncpair_t iv;
+      duf_funcpair_t vv;
       duf_afuncpair_t a;
+      duf_hipair_t hi;
     } fdesc;
   } call;
 } duf_longval_extended_t;

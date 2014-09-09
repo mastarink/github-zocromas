@@ -1,5 +1,7 @@
 /* File 20140902.174509 */
 #include <string.h>
+#include <assert.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -43,6 +45,28 @@
 #include "duf_action.h"
 /* ###################################################################### */
 
+
+int
+duf_interstage_init( void )
+{
+  DEBUG_STARTR( r );
+  /* DOR( r, duf_pdi_reinit( &duf_config->di, "/", &duf_config->u ) ); */
+
+  T( "INIT %p", duf_config->pdi );
+
+  if ( !duf_config->pdi )
+  {
+    duf_config->pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
+    memset( duf_config->pdi, 0, sizeof( duf_depthinfo_t ) );
+  }
+  duf_config->pdi->depth = -1;
+  duf_config->pdi->u = duf_config->u;
+  DOR( r, duf_pdi_reinit( duf_config->pdi, duf_config->targc > 0 ? duf_config->targv[0] : "/", &duf_config->u ) );
+  assert( duf_config->pdi->levinfo );
+  if ( r == DUF_ERROR_NOT_IN_DB )
+    r = 0;
+  DEBUG_ENDR( r );
+}
 
 
 static int
@@ -152,25 +176,14 @@ duf_action( int argc, char **argv )
     DUF_TRACE( explain, 1, "no %s option, you may need it for adding initial path", DUF_OPT_FLAG_NAME( ADD_PATH ) );
   }
   DUF_TEST_R( r );
-  if ( 1 )
-  {
-    /* DOR( r, duf_pdi_reinit( &duf_config->di, "/", &duf_config->u ) ); */
+  assert( duf_config );
+  assert( duf_config->pdi );
 
 
-    {
-      DUF_UNUSED const char *real_path = "/mnt/new_media/media/photo/Pictures/photos/";
-
-      if ( !duf_config->pdi )
-      {
-        duf_config->pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
-        memset( duf_config->pdi, 0, sizeof( duf_depthinfo_t ) );
-      }
-
-      duf_config->pdi->depth = -1;
-      duf_config->pdi->u = duf_config->u;
-      DOR( r, duf_pdi_reinit( duf_config->pdi, real_path, &duf_config->u ) );
-    }
-  }
+  if ( duf_config->cli.interstage_init )
+    r = ( duf_config->cli.interstage_init ) (  );
+  DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 1 ) );
+  assert( duf_config->pdi->levinfo );
 
   if ( 0 )
   {

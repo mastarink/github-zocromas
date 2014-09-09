@@ -20,6 +20,53 @@
 
 
 int
+duf_parse_cli_options( const char *shorts, int stage )
+{
+  DEBUG_STARTR( r );
+  int longindex;
+  int cnt = 0;
+  duf_option_code_t codeval;
+
+  int cargc;
+  char *const *cargv;
+  const duf_option_t *opttable;
+
+  opterr = 0;
+  optind = 1;
+  cargc = duf_config->cargc;
+  cargv = duf_config->cargv;
+  opttable = duf_config->longopts_table;
+  while ( ( r == 0 ) && ( ( int ) ( longindex = -1, codeval = getopt_long( cargc, cargv, shorts, opttable, &longindex ) ) >= 0 ) )
+  {
+    DUF_TRACE( explain, 1, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
+/*
+ * duf_parse_option return
+ *        oclass (>0) for "help" options
+ *                =0  for normal options
+ * or  errorcode (<0) for error
+ * */
+    r = duf_parse_option( codeval, longindex, optarg, stage );
+    DUF_TRACE( explain, 2, "cli options r: %d", r );
+
+    if ( r == DUF_ERROR_OPTION )
+    {
+      DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->cargv[optind - 1], codeval, codeval );
+    }
+    cnt++;
+  }
+  DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
+  if ( stage == 0 && optind < duf_config->cargc )
+  {
+    mas_del_argv( duf_config->targc, duf_config->targv, 0 );
+    duf_config->targc = 0;
+    duf_config->targv = NULL;
+
+    duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, duf_config->cargc, duf_config->cargv, optind );
+  }
+  DEBUG_ENDR( r );
+}
+
+int
 duf_cli_options( int argc, char *argv[] )
 {
   int r = 0;
@@ -30,46 +77,12 @@ duf_cli_options( int argc, char *argv[] )
 #endif
   if ( duf_config )
   {
-    duf_option_code_t codeval;
+    duf_config->cargc = argc;
+    duf_config->cargv = argv;
+    if ( !duf_config->cli.shorts )
+      duf_config->cli.shorts = duf_cli_option_shorts(  );
 
-    opterr = 0;
-    {
-      char *shorts = NULL;
-      int longindex;
-      int cnt = 0;
-
-      duf_config->cargc = argc;
-      duf_config->cargv = argv;
-      shorts = duf_cli_option_shorts(  );
-      while ( r == 0 && ( ( int ) ( longindex = -1, codeval = getopt_long( argc, argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
-      {
-        DUF_TRACE( explain, 1, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
-/*
- * duf_parse_option return
- *        oclass (>0) for "help" options
- *                =0  for normal options
- * or  errorcode (<0) for error
- * */
-        r = duf_parse_option( codeval, longindex, optarg );
-        DUF_TRACE( explain, 2, "cli options r: %d", r );
-
-        if ( r == DUF_ERROR_OPTION )
-        {
-          DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, argv[optind - 1], codeval, codeval );
-        }
-        cnt++;
-      }
-      DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
-      mas_free( shorts );
-    }
-    if ( optind < argc )
-    {
-      mas_del_argv( duf_config->targc, duf_config->targv, 0 );
-      duf_config->targc = 0;
-      duf_config->targv = NULL;
-
-      duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, argc, argv, optind );
-    }
+    DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 0 ) );
   }
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name( r ) );
 #if 0

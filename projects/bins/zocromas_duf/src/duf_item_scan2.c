@@ -12,6 +12,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
+#include "duf_status_ref.h"
 #include "duf_utils.h"
 
 #include "duf_levinfo.h"
@@ -111,7 +112,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
     pdi->seq++;
     pdi->seq_leaf++;
     if ( DUF_ACT_FLAG( progress ) )
-      duf_percent( pdi->seq_leaf, pdi->total_files, duf_uni_scan_action_title( sccb ) );
+      duf_percent( pdi->seq_leaf, global_status.total_files, duf_uni_scan_action_title( sccb ) );
     DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", pdi->seq, pdi->seq_leaf );
 
     /* called both for leaves (files) and nodes (dirs) */

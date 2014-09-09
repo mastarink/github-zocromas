@@ -43,28 +43,30 @@
       unsigned long long diridpdi; \
  \
       diridpdi = duf_levinfo_dirid( pdi ); \
+      DUF_TRACE( scan, 4, "? scan node [" #stagename "]2 by %5llu", diridpdi ); \
       if ( DUF_ACT_FLAG( dirs ) ) \
       { \
 	pdi->items.total++; \
 	pdi->items.dirs++; \
  \
+        DUF_TRACE( scan, 4, "? (dirs+) scan node [" #stagename "]2 by %5llu", diridpdi ); \
 	if ( duf_levinfo_item_deleted( pdi ) ) \
 	{ \
 	  if ( sccb->node_scan_ ## stagename ## 2_deleted ) \
 	  { \
-	    DUF_TRACE( scan, 10, "scan node " #stagename "2_deleted by %5llu", diridpdi ); \
+	    DUF_TRACE( scan, 4, "scan node " #stagename "2_deleted by %5llu", diridpdi ); \
 	    DOR( r, sccb->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ pdi ) ); \
 	  } \
 	  DUF_TRACE( deleted, 0, "DELETED" ); \
 	} \
 	else if ( sccb->node_scan_ ## stagename ## 2 ) \
 	{ \
-	  DUF_TRACE( scan, 10, "scan node " #stagename "2 by %5llu", diridpdi ); \
+	  DUF_TRACE( scan, 4, "scan node " #stagename "2 by %5llu", diridpdi ); \
 	  DOR( r, sccb->node_scan_ ## stagename ## 2( pstmt, /* diridpdi, */ pdi ) ); \
 	} \
 	else \
 	{ \
-	  DUF_TRACE( scan, 10, "NOT scan node " #stagename "2 by %5llu - sccb->node_scan_" #stagename "2 empty for %s", \
+	  DUF_TRACE( scan, 4, "NOT scan node " #stagename "2 by %5llu - sccb->node_scan_" #stagename "2 empty for %s", \
 		      		diridpdi, duf_uni_scan_action_title( sccb ) ); \
 	} \
 	DUF_TEST_R( r ); \
@@ -72,10 +74,11 @@
       else if ( sccb->node_scan_ ## stagename ## 2 ) \
       { \
 	DUF_TRACE( explain, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_DIRS ) ); \
+	DUF_TRACE( scan, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_DIRS ) ); \
       } \
       else \
       { \
-	DUF_TRACE( scan, 10, "NOT scan " #stagename "2 ( -d or --dirs absent )" ); \
+	DUF_TRACE( scan, 4, "NOT scan " #stagename "2 ( -d or --dirs absent )" ); \
       } \
       DEBUG_ENDR( r ); \
     }

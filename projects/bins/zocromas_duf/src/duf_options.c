@@ -34,7 +34,8 @@
 int
 duf_all_options( int argc, char *argv[] )
 {
-  int r = 0, er = 0, fr = 0, or = 0;
+  DEBUG_STARTR( r );
+  int er = 0, fr = 0, or = 0;
 
   if ( r >= 0 )
     er = r = duf_env_options( argc, argv );
@@ -47,6 +48,7 @@ duf_all_options( int argc, char *argv[] )
   if ( r >= 0 )
     or = r = duf_cli_options( argc, argv );
   DUF_TRACE( options, 0, "got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name( r ) );
+
 
 #if 0
   if ( r >= 0 && duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
@@ -69,14 +71,14 @@ duf_all_options( int argc, char *argv[] )
   }
 #endif
   DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %s", or, fr, er, duf_error_name( r ) );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 
 int
 duf_show_options( const char *a0 )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int seq = 0;
 
   DUF_TRACE( options, 0, "%s", a0 );
@@ -93,5 +95,5 @@ duf_show_options( const char *a0 )
     }
   }
   DUF_TRACE( options, 0, " --" );
-  return r;
+  DEBUG_ENDR( r );
 }

@@ -164,7 +164,7 @@ duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d )
 
   assert( pdi );
   assert( pdi->levinfo );
-  assert( d < pdi->maxdepth );
+  assert( d <= pdi->maxdepth );
   /* assert( d >= 0 ); */
   if ( d >= 0 )
     n = pdi->levinfo[d].itemname;

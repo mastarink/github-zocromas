@@ -462,7 +462,7 @@ mas_add_argv_args( int targc, char ***ptargv, const char *args, int ia_offset )
 }
 
 int
-mas_add_argv_argv( int targc, char ***ptargv, int argc, char *argv[], int ia_offset )
+mas_add_argv_argv( int targc, char ***ptargv, int argc, char *const *argv, int ia_offset )
 {
   char **targv = NULL;
   int totargc = 0;

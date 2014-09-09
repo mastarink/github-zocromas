@@ -14,6 +14,8 @@
   {.o = {DO_Q( "include" ), /*        */ DO_A_R, /* */ DO_V( GLOB_INCLUDE_FILES )}, DO_CL( NODESC ) /*       */ , DO_H(  ... ) /*               */ },
   {.o = {DO_Q( "exclude" ), /*        */ DO_A_R, /* */ DO_V( GLOB_EXCLUDE_FILES )}, DO_CL( NODESC ) /*       */ , DO_H(  ... ) /*               */ },
 
+  {.o = {DO_Q( "lsfiles" ), /*           */ DO_A_O, /* */ DO_V( SCCB )} /*           */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_O( PDISCCB, pdi ), .stage=1, .call={.fdesc={.hi={.sccb=&duf_print_dir_callbacks}}} /*        */ , DO_H( pdi cd ) /*            */ },
 
 
   {.o = {DO_Q( "max-rel-depth" ), /*  */ DO_A_R, /* */ DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*    */ ,

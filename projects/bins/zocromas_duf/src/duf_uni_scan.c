@@ -89,52 +89,6 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
   DEBUG_ENDULL( cnt );
 }
 
-static int
-duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
-{
-  DEBUG_STARTR( r );
-  assert( pdi->depth >= 0 );
-  DUF_TRACE( explain, 0,
-             "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
-             duf_uni_scan_action_title( sccb ) );
-  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
-
-/* duf_scan_dirs_by_pdi_maxdepth:
- * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
- *       for each <dir> record by top dirID (i.e. children of top dirID) with corresponding args
- * otherwise do nothing
- *
- * call duf_str_cb(1?)_uni_scan_dir with pdi for each dir at db by top dirID (i.e. children of top dirID)
- *
- *   i.e.
- *     1. for <current> dir call sccb->node_scan_before
- *     2. for each leaf in <current> dir call sccb->leaf_scan
- *     3. for <current> dir call sccb->node_scan_middle
- *   recursively from <current> dir (if recursive flag set):
- *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
- *     5. for <current> dir call sccb->node_scan_after
- * */
-  if ( !sccb->disabled )
-    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb ) );
-
-  /* delete level-control array, close 0 level */
-
-  /* if ( pchanges )
-   *pchanges += di.changes; */
-
-
-  if ( r >= 0 && DUF_ACT_FLAG( summary ) )
-  {
-    DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( sccb ) );
-
-    DUF_PRINTF( 0, " summary; seq:     %llu", pdi->seq );
-    DUF_PRINTF( 0, " summary; seq-leaf:%llu", pdi->seq_leaf );
-    DUF_PRINTF( 0, " summary; seq-node:%llu", pdi->seq_node );
-    if ( duf_config->u.max_seq )
-      DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
-  }
-  DEBUG_ENDR( r );
-}
 
 /*
  *   i.e.
@@ -159,19 +113,6 @@ duf_sccb_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callback
   };
 
   DEBUG_STEP(  );
-
-  {
-    int rt = 0;
-    unsigned long long total_files;
-
-    total_files = duf_count_total_items( sccb, &rt ); /* reference */
-    if ( rt >= 0 )
-      di.total_files = total_files;
-/* total_files for progress bar only :( */
-    DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", total_files );
-    DUF_TRACE( explain, 0, "%llu files registered in db", total_files );
-  }
-
 
   /* assert( di.depth == -1 ); */
   DOR( r, duf_pdi_init_wrap( &di, real_path, 0 ) );
@@ -443,6 +384,20 @@ duf_make_sccb( duf_scan_callbacks_t * sccb )
   DEBUG_STARTR( r );
   /* unsigned long long changes = 0; */
 
+  {
+    int rt = 0;
+    unsigned long long total_files;
+
+    total_files = duf_count_total_items( sccb, &rt ); /* reference */
+    if ( rt >= 0 )
+      global_status.total_files = total_files;
+/* total_files for progress bar only :( */
+    DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", total_files );
+    DUF_TRACE( explain, 0, "%llu files registered in db", total_files );
+  }
+
+
+
 /*
 TODO scan mode
   1. direct, like now
@@ -537,6 +492,12 @@ duf_make_all_sccbs( void )
   asteps += duf_set_actions( ppscan_callbacks + asteps, max_asteps - asteps );
   /* prepare sccb's 2 */
   asteps += duf_set_actions_sample( ppscan_callbacks + asteps, max_asteps - asteps );
+#if 0
+  for ( int i = 0; i < asteps; i++ )
+  {
+    T( "########### %d. %p", i, ppscan_callbacks[i] );
+  }
+#endif
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
 

@@ -8,10 +8,16 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_config_ref.h"
+#include "duf_status_ref.h"
+
 
 #include "duf_pdi.h"
+#include "duf_levinfo.h"
+
 
 #include "duf_sql_field.h"
+#include "duf_dir_scan2.h"
 
 
 /* ###################################################################### */
@@ -47,4 +53,54 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 
   snprintf( tbuf, sizeof( tbuf ), "◁ %s ▷", _duf_uni_scan_action_title( sccb ) );
   return tbuf;
+}
+
+int
+duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+{
+  DEBUG_STARTR( r );
+  assert( pdi->depth >= 0 );
+  DUF_TRACE( explain, 0,
+             "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
+             duf_uni_scan_action_title( sccb ) );
+
+  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
+
+/* duf_scan_dirs_by_pdi_maxdepth:
+ * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
+ *       for each <dir> record by top dirID (i.e. children of top dirID) with corresponding args
+ * otherwise do nothing
+ *
+ * call duf_str_cb(1?)_uni_scan_dir with pdi for each dir at db by top dirID (i.e. children of top dirID)
+ *
+ *   i.e.
+ *     1. for <current> dir call sccb->node_scan_before
+ *     2. for each leaf in <current> dir call sccb->leaf_scan
+ *     3. for <current> dir call sccb->node_scan_middle
+ *   recursively from <current> dir (if recursive flag set):
+ *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
+ *     5. for <current> dir call sccb->node_scan_after
+ * */
+
+  DUF_TRACE( scan, 4, "+" );
+  if ( !sccb->disabled /* && DUF_U_FLAG( recursive ) */  )
+    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb ) );
+
+  /* delete level-control array, close 0 level */
+
+  /* if ( pchanges )
+   *pchanges += di.changes; */
+
+
+  if ( r >= 0 && DUF_ACT_FLAG( summary ) )
+  {
+    DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( sccb ) );
+
+    DUF_PRINTF( 0, " summary; seq:     %llu", pdi->seq );
+    DUF_PRINTF( 0, " summary; seq-leaf:%llu", pdi->seq_leaf );
+    DUF_PRINTF( 0, " summary; seq-node:%llu", pdi->seq_node );
+    if ( duf_config->u.max_seq )
+      DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
+  }
+  DEBUG_ENDR( r );
 }

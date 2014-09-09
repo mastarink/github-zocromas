@@ -16,7 +16,7 @@
 #define DO_O(vt, v) DO_T(vt),.mf=1,.m = offsetof(duf_config_t,v)
 #define DO_FL(t,fld) .afl.t={.fld=1}
 #define DO_FL0(t,fld) .anfl.t={.fld=1}
-#define DO_IFUN(f, a) .call={.fdesc={.i={.func=f, .arg=a}}}
+#define DO_VIFUN(f, a) .call={.fdesc={.vi={.func=f, .arg=a}}}
 #define DO_AFUN(f) .call={.fdesc={.a={.func=f}}}
 
 

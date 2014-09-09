@@ -56,7 +56,7 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
       xs = mas_expand_string( s );
       DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
 
-      r = duf_execute_cmd_long( xs, '=' );
+      r = duf_execute_cmd_long_std( xs, '=', 0 );
       mas_free( xs );
     }
     mas_free( s );

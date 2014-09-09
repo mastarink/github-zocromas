@@ -5,8 +5,5 @@
 
 int duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt, /* duf_str_cb2_t str_cb2, */duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb );
 
-
-
-
 #endif
 

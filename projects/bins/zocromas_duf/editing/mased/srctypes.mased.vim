@@ -24,6 +24,7 @@ tab sfind duf_cli_types.h
 sfind duf_option_types.h
 sfind duf_flags_types.h
 sfind duf_options_def.h
+sfind duf_optable_def.h
 
 tab sfind duf_scan_types.h
 

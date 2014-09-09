@@ -82,11 +82,11 @@ duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, 
         xs = mas_expand_string( s );
         DUF_TRACE( explain, 0, "expanded config line %s", xs );
 /* 
- * duf_execute_cmd_long return codeval>0 for "help" option
+ * duf_execute_cmd_long_std return codeval>0 for "help" option
  *   =0 for other option
  *   errorcode<0 for error
  * */
-        r = duf_execute_cmd_long( xs, '=' );
+        r = duf_execute_cmd_long_std( xs, '=', 0 );
         mas_free( xs );
       }
     }

@@ -26,7 +26,7 @@ _duf_find_longval_help( duf_option_code_t codeval, int *pr )
   const char *ph = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_find_extended( codeval, pr );
+  extended = duf_find_codeval_extended_std( codeval, pr );
   /* extended = &lo_extended[ilong]; */
 
   if ( extended )

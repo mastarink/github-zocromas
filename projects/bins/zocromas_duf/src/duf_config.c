@@ -182,6 +182,8 @@ duf_config_delete( void )
   duf_config->targc = 0;
   duf_config->targv = NULL;
 
+  mas_free( duf_config->cli.shorts );
+  duf_config->cli.shorts = NULL;
   mas_free( duf_config->cli.trace.output.file );
   duf_config->cli.trace.output.file = NULL;
   mas_free( duf_config->cli.output.file );
