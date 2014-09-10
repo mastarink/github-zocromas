@@ -3,9 +3,9 @@
 
 #  include "duf_levinfo_types.h"
 
-int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd );
-int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd );
-int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, duf_ufilter_t * pu );
+int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive );
+int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive );
+int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, int recursive );
 int duf_pdi_close( duf_depthinfo_t * pdi );
 
 int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );
@@ -28,11 +28,13 @@ int duf_pdi_depth( const duf_depthinfo_t * pdi );
 void duf_pdi_set_topdepth( duf_depthinfo_t * pdi );
 int duf_pdi_topdepth( const duf_depthinfo_t * pdi );
 int duf_pdi_maxdepth( const duf_depthinfo_t * pdi );
-int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi );
-int duf_pdi_check_depth( const duf_depthinfo_t * pdi );
+
+int duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d );
+int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta );
 
 int duf_pdi_reldepth( const duf_depthinfo_t * pdi );
 int duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d );
+int duf_pdi_recursive( const duf_depthinfo_t * pdi );
 
 duf_sqlite_stmt_t *duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, int *pr );
 int duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i );

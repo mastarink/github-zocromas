@@ -12,7 +12,7 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
 {
   int r = -1;
 
-  if ( level >= minlevel )
+  if ( level > minlevel )
   {
     char rf = 0;
     const char *pfuncid;

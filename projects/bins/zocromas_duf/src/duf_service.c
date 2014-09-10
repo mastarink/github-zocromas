@@ -458,7 +458,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   if ( duf_config->cli.format.v.flag.depth && ( !format || format->v.flag.depth ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{depth}" ) );
-    DUF_PRINTF( 2, ".+%u ", duf_pdi_reldepth( pdi ) );
+    DUF_PRINTF( 2, ".  +%u ", duf_pdi_reldepth( pdi ) );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );

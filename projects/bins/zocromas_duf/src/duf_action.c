@@ -60,8 +60,8 @@ duf_interstage_init( void )
     memset( duf_config->pdi, 0, sizeof( duf_depthinfo_t ) );
   }
   duf_config->pdi->depth = -1;
-  duf_config->pdi->u = duf_config->u;
-  DOR( r, duf_pdi_reinit( duf_config->pdi, duf_config->targc > 0 ? duf_config->targv[0] : "/", &duf_config->u ) );
+  duf_config->pdi->pu = &duf_config->u;
+  DOR( r, duf_pdi_reinit( duf_config->pdi, duf_config->targc > 0 ? duf_config->targv[0] : "/", &duf_config->u, DUF_U_FLAG( recursive ) ) );
   assert( duf_config->pdi->levinfo );
   if ( r == DUF_ERROR_NOT_IN_DB )
     r = 0;

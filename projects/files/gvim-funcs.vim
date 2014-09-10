@@ -21,6 +21,7 @@ endfunction
 
 function! MasGoTag2 ()
   let tl=taglist(expand('<cword>'))
+  call system('ctags src/*.c src/inc/*.h')
   try
     for t in tl
       let bn = bufnr( t.filename )

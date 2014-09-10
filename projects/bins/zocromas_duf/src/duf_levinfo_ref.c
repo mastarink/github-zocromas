@@ -90,7 +90,7 @@ duf_levinfo_is_leaf_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi );
   assert( pdi->levinfo );
   assert( d >= 0 );
-  return pdi->levinfo[d].is_leaf;
+  return pdi->levinfo[d].is_leaf ? 1 : 0;
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC( int, is_leaf )
@@ -147,7 +147,7 @@ duf_levinfo_item_deleted_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi );
   assert( pdi->levinfo );
   /* assert( d >= 0 ); */
-  return d >= 0 ? pdi->levinfo[d].deleted : 0;
+  return d >= 0 ? ( pdi->levinfo[d].deleted ? 1 : 0 ) : 0;
 }
 
 /* *INDENT-OFF*  */
@@ -164,7 +164,7 @@ duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d )
 
   assert( pdi );
   assert( pdi->levinfo );
-  assert( d <= pdi->maxdepth );
+  /* assert( d <= pdi->maxdepth ); */
   /* assert( d >= 0 ); */
   if ( d >= 0 )
     n = pdi->levinfo[d].itemname;

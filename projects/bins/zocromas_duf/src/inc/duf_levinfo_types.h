@@ -57,6 +57,7 @@ typedef struct duf_depthinfo_s
 {
   unsigned inited:1;
   unsigned opendir:1;
+  unsigned recursive:1;
   unsigned maxdepth;
   int depth;                    /* signed !! */
   int topdepth;                 /* signed !! */
@@ -69,7 +70,7 @@ typedef struct duf_depthinfo_s
   unsigned long long seq_node;
   /* unsigned long long total_files; */
   duf_items_t items;
-  duf_ufilter_t u;
+  const duf_ufilter_t *pu;
   duf_context_t context;
   int num_idstatements;
   /* duf_sqlite_stmt_t **statements; */

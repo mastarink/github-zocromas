@@ -68,7 +68,8 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       if ( d == max )
         flags |= 0x10;
 
-      if ( d >= duf_pdi_maxdepth( pdi ) )
+      /* if ( d >= duf_pdi_maxdepth( pdi ) ) */
+      if ( !duf_pdi_is_good_depth_d( pdi, leaf ? 1 : 0, d ) )
         flags |= 0x20;
 
       /* if ( is_file )   */
@@ -88,9 +89,9 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         {
         case 0x14:
         case 0x34:
+        case 0x35:
           DUF_PRINTF( 0, ".  → " );
           break;
-	case 0x35: /* 20140909.215122 : was like 14, now like 15, don't ask why :) */
         case 0x15:
           DUF_PRINTF( 0, ".│ → " );
           break;
@@ -113,6 +114,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         case 0x8:
           DUF_PRINTF( 0, ".     " );
           break;
+        case 0x20:
         case 0x00:
           DUF_PRINTF( 0, ".     " );
           break;
@@ -120,7 +122,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
           /* DUF_PRINTF( 0, ".┃    " ); */
           break;
         default:
-          DUF_PRINTF( 0, ". 0x%02x]", flags );
+          DUF_PRINTF( 0, ". [x%02x]", flags );
           break;
         }
       }

@@ -128,7 +128,7 @@
 #  define DUF_TEST_R(_rval)	DUF_TEST_RQX( _rval,  \
     			   _rval==DUF_ERROR_MAX_REACHED \
     			|| _rval==DUF_ERROR_MAX_SEQ_REACHED \
-    			|| _rval==DUF_ERROR_MAX_DEPTH \
+    			|| _rval==DUF_ERROR_MAX_DEPTH  \
     	)
 #  ifdef DUF_T_NOIF
 #    define DUF_TEST_RQ(_rval, _cond)   ( ( !(_cond) ) ? DUF_TEST_R( _rval ) : 0 )

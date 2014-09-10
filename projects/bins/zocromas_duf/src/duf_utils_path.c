@@ -8,7 +8,7 @@
 /* ###################################################################### */
 
 int
-duf_pathdepth( const char *path, int *pr )
+duf_pathdepth( const char *path )
 {
   int r = DUF_ERROR_PATH;
   int depth = 0;
@@ -35,9 +35,7 @@ duf_pathdepth( const char *path, int *pr )
     }
     r = 0;
   }
-  if ( pr )
-    *pr = r;
-  return depth;
+  return r<0?r:depth;
 }
 
 char *

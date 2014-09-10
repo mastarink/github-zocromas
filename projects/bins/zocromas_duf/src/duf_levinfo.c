@@ -84,7 +84,8 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
     d = ++pdi->depth;
     /* assume only level 0 may have dirid==0 -- AND: simply dirid not set */
     /* assert( d == 0 || ( d > 0 && dirid  ) ); */
-    if ( d <= pdi->maxdepth )
+
+    /*!! if ( d <= pdi->maxdepth ) */
     {
       assert( pdi->levinfo );
       assert( d >= 0 );
@@ -112,11 +113,11 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
                    duf_levinfo_itemname( pdi ) );
       }
     }
-    else
-    {
-      pdi->depth--;
-      r = DUF_ERROR_MAX_DEPTH;
-    }
+    /* else                       */
+    /* {                          */
+    /*   pdi->depth--;            */
+    /*   r = DUF_ERROR_MAX_DEPTH; */
+    /* }                          */
     /* assert( duf_pdi_depth( pdi ) == 0 || ( duf_pdi_depth( pdi ) > 0 && duf_levinfo_dirid( pdi ) ) ); */
   }
   return r;
@@ -129,11 +130,15 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
   DEBUG_STARTR( r );
   int rd;
 
-  DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_MAX_DEPTH );
-  rd = r;
-  DOR( r, duf_levinfo_openat_dh( pdi ) );
-  if ( r < 0 && rd >= 0 )
-    duf_levinfo_goup( pdi );
+  DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
+  if ( r >= 0 )
+  {
+    DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_MAX_DEPTH );
+    rd = r;
+    DOR( r, duf_levinfo_openat_dh( pdi ) );
+    if ( r < 0 && rd >= 0 )
+      duf_levinfo_goup( pdi );
+  }
   DEBUG_ENDRQ( r, r == DUF_ERROR_MAX_DEPTH );
 }
 
@@ -225,7 +230,6 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
       else
       {
         r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
-        /* T("(%d) open %s", r, pdi->levinfo[d].itemname); */
       }
       if ( r >= 0 )
       {
@@ -336,7 +340,7 @@ duf_levinfo_opened_dh( duf_depthinfo_t * pdi )
 
 /* create level-control array, open 0 level */
 int
-duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth )
+duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
 {
   int r = 0;
 
@@ -346,9 +350,11 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth )
   {
     size_t lsz;
 
-    if ( pdi->u.max_rel_depth /* FIXME */  )
+    assert( pdi->depth == -1 );
+    if ( pdi->pu->max_rel_depth /* FIXME */  )
     {
-      pdi->maxdepth = pdi->u.max_rel_depth + pathdepth;
+      pdi->maxdepth = pdi->pu->max_rel_depth + pathdepth;
+      pdi->recursive = recursive ? 1 : 0;
       lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
       /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
       pdi->levinfo = mas_malloc( lsz );
@@ -390,5 +396,23 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
     pdi->levinfo = NULL;
   }
   DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
+{
+  DEBUG_STARTR( r );
+  int delta;
+  delta=( is_leaf ? 1 : 0 );
+  delta=0;
+  /* if ( duf_pdi_recursive( pdi ) )               */
+  /* {                                             */
+    if ( !duf_pdi_is_good_depth( pdi, delta ) )
+      r = DUF_ERROR_MAX_DEPTH;
+  /* }                                             */
+  /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
+  /*   r = DUF_ERROR_MAX_DEPTH;                    */
+  DEBUG_END(  );
   return r;
 }

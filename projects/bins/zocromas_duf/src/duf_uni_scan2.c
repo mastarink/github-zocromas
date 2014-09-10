@@ -60,7 +60,7 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_depthinfo
   /* if ( duf_pdi_is_good_depth( pdi ) ) */
   {
     DUF_TRACE( explain, duf_pdi_reldepth( pdi ) <= 1 ? 3 : 4, "cb2; option %s value %d; depth %d", DUF_OPT_NAME( MAXRELDEPTH ),
-               pdi->u.max_rel_depth, duf_pdi_reldepth( pdi ) );
+               pdi->pu->max_rel_depth, duf_pdi_reldepth( pdi ) );
 
     /* recursively calls this `duf_scan_dirs_by_pdi_maxdepth` */
     DOR( r, duf_scan_dirs_by_pdi_wrap( pstmt_selector, pdi, sccb ) );

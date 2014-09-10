@@ -66,7 +66,6 @@ duf_pstmt_levinfo_godown_openat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t *
 {
   DEBUG_STARTR( r );
 
-  r = duf_pdi_check_depth( pdi );
   if ( r >= 0 )
   {
     DUF_UFIELD2( dirid );
@@ -80,7 +79,7 @@ duf_pstmt_levinfo_godown_openat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t *
 
     /*!! dirid need not be same as duf_levinfo_dirid( pdi ) before duf_levinfo_godown */
     DOR( r, duf_levinfo_godown_openat_dh( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  ) );
-    assert( dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
+    assert( r<0 || dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
   }
   DEBUG_ENDR( r );
 }
@@ -142,7 +141,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
   DOR( r, duf_pstmt_levinfo_godown_openat_dh( pstmt, pdi ) );
   assert( pdi->depth >= 0 );
 
-  DUF_TEST_RQ( r, r == DUF_ERROR_MAX_DEPTH );
+  DUF_TEST_R( r );
 
   if ( r >= 0 )                 /* levinfo_down OK */
   {

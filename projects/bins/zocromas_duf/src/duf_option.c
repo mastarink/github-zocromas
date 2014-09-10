@@ -650,7 +650,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
               if ( r >= 0 )
               {
                 duf_pdi_close( pdi );
-                duf_pdi_reinit( pdi, real_path, &duf_config->u );
+                duf_pdi_reinit( pdi, real_path, &duf_config->u, 0 /* recursive */ );
               }
               mas_free( path );
               mas_free( real_path );

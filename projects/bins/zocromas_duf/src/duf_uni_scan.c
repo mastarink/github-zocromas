@@ -104,20 +104,26 @@ duf_sccb_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callback
 {
   DEBUG_STARTR( r );
 
-  duf_depthinfo_t di = {.depth = -1,
-    .seq = 0,
-    .levinfo = NULL,
-    .u = *pu,
-    .opendir = sccb ? sccb->def_opendir : 0,
-    /* .name = real_path, */
-  };
+  duf_depthinfo_t *pdi = NULL;
+
+  /* duf_depthinfo_t di = {.depth = -1,         */
+  /*   .seq = 0,                                */
+  /*   .levinfo = NULL,                         */
+  /*   .u = *pu,                                */
+  /*   .opendir = sccb ? sccb->def_opendir : 0, */
+  /*   (* .name = real_path, *)                 */
+  /* };                                         */
+  /*                                            */
+  /* pdi=&di;                                   */
+  pdi = duf_config->pdi;
 
   DEBUG_STEP(  );
 
   /* assert( di.depth == -1 ); */
-  DOR( r, duf_pdi_init_wrap( &di, real_path, 0 ) );
-  DOR( r, duf_sccb_pdi( &di, sccb ) );
-  duf_pdi_close( &di );
+  DOR( r, duf_pdi_reinit( pdi, real_path, pu, DUF_U_FLAG( recursive ) ) );
+  DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( pdi ), pdi->seq_leaf, duf_levinfo_path( pdi ) );
+  DOR( r, duf_sccb_pdi( pdi, sccb ) );
+  /* duf_pdi_close( &di ); */
 
   DEBUG_ENDR( r );
 }

@@ -32,8 +32,9 @@ duf_clear_context( duf_context_t * pcontext )
     else
       mas_free( pcontext->ptr );
   }
-
   pcontext->ptr = NULL;
+  /*? */
+  pcontext->destructor = NULL;
 }
 
 void *
@@ -58,21 +59,21 @@ duf_set_context_destructor( duf_context_t * pcontext, duf_void_voidp_t destr )
 }
 
 int
-duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
+duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive )
 {
   DEBUG_STARTR( r );
 
   if ( !pdi->inited )
   {
-    int pd;
-
+    /* memset( pdi, 0, sizeof( duf_depthinfo_t ) ); */
     /* assert( pdi ); */
     pdi->inited = 1;
-
-    pd = duf_pathdepth( real_path, &r );
-    DUF_TEST_R( r );
-
-    DOR( r, duf_levinfo_create( pdi, pd ) ); /* depth = -1 */
+    pdi->depth = -1;
+    DORN( r, duf_pathdepth( real_path ) );
+    if ( r >= 0 )
+      pdi->topdepth = r;
+    assert( pdi->depth == -1 );
+    DOR( r, duf_levinfo_create( pdi, r, recursive ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
     DOR( r, duf_real_path2db( pdi, real_path, ifadd /* ifadd */  ) );
@@ -81,11 +82,11 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 }
 
 int
-duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive )
 {
   DEBUG_STARTR( r );
 
-  r = duf_pdi_init( pdi, real_path, ifadd );
+  r = duf_pdi_init( pdi, real_path, ifadd, recursive );
   if ( r == DUF_ERROR_NOT_IN_DB )
     DUF_ERROR( "not in db:'%s'", real_path );
   else if ( r < 0 )
@@ -101,12 +102,15 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd )
 }
 
 int
-duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, duf_ufilter_t * pu )
+duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, int recursive )
 {
+  int rec = 0;
+
+  rec = pdi && !recursive ? duf_pdi_recursive( pdi ) : recursive;
   duf_pdi_close( pdi );
-  pdi->u = *pu;
-  pdi->depth = -1;
-  return duf_pdi_init_wrap( pdi, real_path, 0 );
+  pdi->pu = pu;
+  return duf_pdi_init_wrap( pdi, real_path, 0, rec );
+  /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
 }
 
 void
@@ -164,6 +168,31 @@ duf_pdi_close( duf_depthinfo_t * pdi )
     duf_levinfo_delete( pdi );
     global_status.changes += pdi->changes;
     pdi->inited = 0;
+    pdi->opendir = 0;
+    pdi->depth = pdi->topdepth = 0;
+    pdi->maxdepth = 0;
+    pdi->changes = 0;
+    pdi->pu = 0;
+    pdi->items.dirs = pdi->items.files = pdi->items.total = 0;
+    pdi->seq = pdi->seq_node = pdi->seq_leaf = 0;
+    assert( !pdi->inited );
+    assert( !pdi->opendir );
+    assert( !pdi->items.files );
+    assert( !pdi->items.dirs );
+    assert( !pdi->items.total );
+    assert( !pdi->maxdepth );
+    assert( !pdi->topdepth );
+    assert( !pdi->depth );
+    assert( !pdi->levinfo );
+    assert( !pdi->changes );
+    assert( !pdi->seq_node );
+    assert( !pdi->seq_leaf );
+    assert( !pdi->seq );
+    assert( !pdi->context.ptr );
+    assert( !pdi->context.destructor );
+    assert( !pdi->num_idstatements );
+    assert( !pdi->idstatements );
+    assert( !pdi->pu );
   }
   /* DUF_ERROR( "clear idstatements" ); */
   DEBUG_ENDR( r );
@@ -175,19 +204,19 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
   assert( pdi );
-  if ( pdi->u.max_seq && pdi->seq >= pdi->u.max_seq )
+  if ( pdi->pu->max_seq && pdi->seq >= pdi->pu->max_seq )
     r = DUF_ERROR_MAX_SEQ_REACHED;
-  else if ( pdi->u.maxitems.files && pdi->items.files >= pdi->u.maxitems.files )
+  else if ( pdi->pu->maxitems.files && pdi->items.files >= pdi->pu->maxitems.files )
     r = DUF_ERROR_MAX_REACHED;
-  else if ( pdi->u.maxitems.dirs && pdi->items.dirs >= pdi->u.maxitems.dirs )
+  else if ( pdi->pu->maxitems.dirs && pdi->items.dirs >= pdi->pu->maxitems.dirs )
     r = DUF_ERROR_MAX_REACHED;
-  else if ( pdi->u.maxitems.total && pdi->items.total >= pdi->u.maxitems.total )
+  else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
     r = DUF_ERROR_MAX_REACHED;
 
-  /* rv = ( ( !pdi->u.max_seq || pdi->seq <= pdi->u.max_seq )                                  */
-  /*        && ( !pdi->u.maxitems.files || ( pdi->items.files ) < pdi->u.maxitems.files )    */
-  /*        && ( !pdi->u.maxitems.dirs || ( pdi->items.dirs ) < pdi->u.maxitems.dirs )       */
-  /*        && ( !pdi->u.maxitems.total || ( pdi->items.total ) < pdi->u.maxitems.total ) ); */
+  /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
+  /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */
+  /*        && ( !pdi->pu->maxitems.dirs || ( pdi->items.dirs ) < pdi->pu->maxitems.dirs )       */
+  /*        && ( !pdi->pu->maxitems.total || ( pdi->items.total ) < pdi->pu->maxitems.total ) ); */
   DEBUG_ENDR( r );
 }
 
@@ -201,6 +230,12 @@ int
 duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d )
 {
   return pdi ? d - pdi->topdepth : 0;
+}
+
+int
+duf_pdi_recursive( const duf_depthinfo_t * pdi )
+{
+  return pdi ? ( pdi->recursive ? 1 : 0 ) : 0;
 }
 
 int
@@ -237,20 +272,22 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
 
 /* pdi->topdepth + pdi->depth - pdi->topdepth === pdi->depth */
 int
-duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
+duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
 {
-  /* return duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
-  return duf_pdi_depth( pdi ) < duf_pdi_maxdepth( pdi );
+  int r = 0;
+
+  if ( duf_pdi_recursive( pdi ) )
+    r = d - duf_pdi_maxdepth( pdi ) < delta; /* depth - maxdepth < delta */
+  else
+    r = duf_pdi_deltadepth( pdi, d ) <= delta; /* depth - topdepth <= delta */
+  /* r= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
+  return r;
 }
 
 int
-duf_pdi_check_depth( const duf_depthinfo_t * pdi )
+duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta )
 {
-  DEBUG_STARTR( r );
-  if ( !duf_pdi_is_good_depth( pdi ) )
-    r = DUF_ERROR_MAX_DEPTH;
-  DEBUG_END(  );
-  return r;
+  return duf_pdi_is_good_depth_d( pdi, delta, pdi->depth );
 }
 
 duf_idstmt_t *
@@ -262,7 +299,6 @@ duf_pdi_find_idstmt( duf_depthinfo_t * pdi, int *pindex )
   {
     for ( int i = 0; i < pdi->num_idstatements; i++ )
     {
-      /* T( "i:%d %p : %p", i, pdi->idstatements[i].id, pindex ); */
       if ( pdi->idstatements[i].id == pindex )
       {
         is = &pdi->idstatements[i];

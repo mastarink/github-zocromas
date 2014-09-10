@@ -83,7 +83,7 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
  * */
 
   DUF_TRACE( scan, 4, "+" );
-  if ( !sccb->disabled /* && DUF_U_FLAG( recursive ) */  )
+  if ( !sccb->disabled )
     DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb ) );
 
   /* delete level-control array, close 0 level */

@@ -97,7 +97,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
   int nlist = 0;
   struct dirent **list = NULL;
 
-  DUF_TRACE( scan, 0, "dirID=%llu; scandir dfname:[%s :: %s]", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( scan, 2, "dirID=%llu; scandir dfname:[%s :: %s]", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
   nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
   DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), duf_levinfo_itemname_q( pdi, "nil" ), nlist,
              duf_levinfo_dfd( pdi ) );
