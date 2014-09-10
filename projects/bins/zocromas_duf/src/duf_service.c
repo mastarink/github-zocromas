@@ -22,6 +22,8 @@
 #include "duf_uni_scan.h"
 #include "duf_uni_scan2.h"
 
+#include "duf_pdi.h"
+
 /* #include "duf_dir_scan1.h" */
 #include "duf_dir_scan2.h"
 
@@ -130,7 +132,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   if ( duf_config->cli.format.v.flag.dirid_space && ( !format || format->v.flag.dirid_space ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{dirid_space}" ) );
-    DUF_PRINTF( 2, ". %6s    ", "" );
+    DUF_PRINTF( 4, ". %6s    ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -453,6 +455,14 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.v.flag.depth && ( !format || format->v.flag.depth ) )
+  {
+    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{depth}" ) );
+    DUF_PRINTF( 2, ".+%u ", duf_pdi_reldepth( pdi ) );
+    ok++;
+  }
+  DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
+
   if ( !ok )
     DUF_PRINTF( 0, "%llx :: %llx", format->v.bit, duf_config->cli.format.v.bit );
   assert( ok );

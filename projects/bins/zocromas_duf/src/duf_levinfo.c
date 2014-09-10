@@ -116,7 +116,6 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
     {
       pdi->depth--;
       r = DUF_ERROR_MAX_DEPTH;
-      DUF_TEST_R( r );
     }
     /* assert( duf_pdi_depth( pdi ) == 0 || ( duf_pdi_depth( pdi ) > 0 && duf_levinfo_dirid( pdi ) ) ); */
   }
@@ -130,12 +129,12 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
   DEBUG_STARTR( r );
   int rd;
 
-  DOR( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ) );
+  DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_MAX_DEPTH );
   rd = r;
   DOR( r, duf_levinfo_openat_dh( pdi ) );
   if ( r < 0 && rd >= 0 )
     duf_levinfo_goup( pdi );
-  DEBUG_ENDR( r );
+  DEBUG_ENDRQ( r, r == DUF_ERROR_MAX_DEPTH );
 }
 
 int

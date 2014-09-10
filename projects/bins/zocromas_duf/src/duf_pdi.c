@@ -209,6 +209,7 @@ duf_pdi_depth( const duf_depthinfo_t * pdi )
   return pdi ? pdi->depth : 0;
 }
 
+/* pdi->depth - pdi->topdepth */
 int
 duf_pdi_reldepth( const duf_depthinfo_t * pdi )
 {
@@ -234,10 +235,22 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
   return pdi ? pdi->maxdepth : 0;
 }
 
+/* pdi->topdepth + pdi->depth - pdi->topdepth === pdi->depth */
 int
 duf_pdi_is_good_depth( const duf_depthinfo_t * pdi )
 {
-  return duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi );
+  /* return duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
+  return duf_pdi_depth( pdi ) < duf_pdi_maxdepth( pdi );
+}
+
+int
+duf_pdi_check_depth( const duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+  if ( !duf_pdi_is_good_depth( pdi ) )
+    r = DUF_ERROR_MAX_DEPTH;
+  DEBUG_END(  );
+  return r;
 }
 
 duf_idstmt_t *

@@ -1145,6 +1145,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
           [DUF_FORMAT_PREFIX] = "prefix",
           [DUF_FORMAT_SUFFIX] = "suffix",
           [DUF_FORMAT_REALPATH] = "realpath",
+          [DUF_FORMAT_DEPTH] = "depth",
           [DUF_FORMAT_SEQ] = "seq",
           [DUF_FORMAT_SEQ_NODE] = "seq-node",
           [DUF_FORMAT_SEQ_LEAF] = "seq-leaf",[DUF_FORMAT_GROUP] = "group",[DUF_FORMAT_USER] = "user",[DUF_FORMAT_MAX] = NULL,
@@ -1166,6 +1167,9 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
           nvalue = value ? strtol( value, NULL, 10 ) : -1;
           switch ( rs )
           {
+          case DUF_FORMAT_DEPTH:
+            duf_config->cli.format.v.flag.depth = value == NULL ? 1 : nvalue;
+            break;
           case DUF_FORMAT_SEQ:
             duf_config->cli.format.v.flag.seq = value == NULL ? 1 : nvalue;
             break;

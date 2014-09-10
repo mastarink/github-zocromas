@@ -102,9 +102,9 @@
 
 #  define DUF_ERROR( ... )				DUF_TRACE( error, 0, __VA_ARGS__ )
 #  ifdef DUF_T_NOIF
-#    define DUF_ERRORQ( cond, ... )		( ( cond ) ? DUF_ERROR(__VA_ARGS__) : 0)
+#    define DUF_ERRORQ( _cond, ... )		( ( _cond ) ? DUF_ERROR(__VA_ARGS__) : 0)
 #  else
-#    define DUF_ERRORQ( cond, ... )		if (cond)  DUF_ERROR(__VA_ARGS__)
+#    define DUF_ERRORQ( _cond, ... )		if (_cond)  DUF_ERROR(__VA_ARGS__)
 #  endif
 #  define DUF_ERRORR( r_t, ... )			DUF_TRACE( errorr, r_t, __VA_ARGS__ )
 #  define DUF_ERRORiV( v )				DUF_ERROR( #v ":%d" , v )
@@ -118,24 +118,28 @@
 #  define DUF_TEST_RX(_rval)	   DUF_ERRORQ( _rval, " - - - - - -> [%s] (#%d)", (_rval)<0?duf_error_name(_rval):"+", _rval )
 
 #  ifdef DUF_T_NOIF
-#    define DUF_TEST_RQX(_rval, cond)  (( !(cond) ) ? DUF_TEST_RX( _rval ) : 0)
+#    define DUF_TEST_RQX(_rval, _cond)  (( !(_cond) ) ? DUF_TEST_RX( _rval ) : 0)
 #  else
-#    define DUF_TEST_RQX(_rval, cond)  if ( !(cond) ) DUF_TEST_RX( _rval )
+#    define DUF_TEST_RQX(_rval, _cond)  if ( !(_cond) ) DUF_TEST_RX( _rval )
 #  endif
 /* #  define DUF_TEST_R(_rval)       if ( _rval!=DUF_ERROR_MAX_REACHED && _rval!=DUF_ERROR_MAX_SEQ_REACHED ) DUF_TEST_RX( _rval ) */
 
 /* error message if arg is not 0, except some predefines */
-#  define DUF_TEST_R(_rval)	DUF_TEST_RQX( _rval,  _rval==DUF_ERROR_MAX_REACHED || _rval==DUF_ERROR_MAX_SEQ_REACHED  )
+#  define DUF_TEST_R(_rval)	DUF_TEST_RQX( _rval,  \
+    			   _rval==DUF_ERROR_MAX_REACHED \
+    			|| _rval==DUF_ERROR_MAX_SEQ_REACHED \
+    			|| _rval==DUF_ERROR_MAX_DEPTH \
+    	)
 #  ifdef DUF_T_NOIF
-#    define DUF_TEST_RQ(_rval, cond)   ( ( !(cond) ) ? DUF_TEST_R( _rval ) : 0 )
+#    define DUF_TEST_RQ(_rval, _cond)   ( ( !(_cond) ) ? DUF_TEST_R( _rval ) : 0 )
 /* error message if arg is < 0, except some predefines */
 #    define DUF_TEST_RN(_rval)	   ( ( _rval<0 ) ? DUF_TEST_R( _rval ) : 0 )
-#    define DUF_TEST_RQN(_rval, cond)  ( ( !(cond) ) ? DUF_TEST_RQ( _rval ) : 0 )
+#    define DUF_TEST_RQN(_rval, _cond)  ( ( !(_cond) ) ? DUF_TEST_RQ( _rval ) : 0 )
 #  else
-#    define DUF_TEST_RQ(_rval, cond)   if ( !(cond) ) DUF_TEST_R( _rval )
+#    define DUF_TEST_RQ(_rval, _cond)   if ( !(_cond) ) DUF_TEST_R( _rval )
 /* error message if arg is < 0, except some predefines */
 #    define DUF_TEST_RN(_rval)	     if ( _rval<0 ) DUF_TEST_R( _rval )
-#    define DUF_TEST_RQN(_rval, cond)  if ( !(cond) ) DUF_TEST_RQ( _rval )
+#    define DUF_TEST_RQN(_rval, _cond)  if ( !(_cond) ) DUF_TEST_RQ( _rval )
 #  endif
 
 
@@ -187,7 +191,9 @@
 
 #  ifdef DUF_T_NOIF
 #    define DUF_DO_TEST_R_INTERNAL(_rval, _x)     (_rval>=0) ? ( (_rval=(_x)), DUF_TEST_R(_rval) ) : 0
+#    define DUF_DO_TEST_RQ_INTERNAL(_rval, _x, _cond)     (_rval>=0) ? ( (_rval=(_x)), DUF_TEST_RQ(_rval, _cond) ) : 0
 #    define DUF_DO_TEST_R(_rval, _x)    ( DUF_DO_TEST_R_INTERNAL(_rval, _x) )
+#    define DUF_DO_TEST_RQ(_rval, _x, _cond)    ( DUF_DO_TEST_RQ_INTERNAL(_rval, _x, _cond) )
 
 #    define DUF_DO_TEST_RN_INTERNAL(_rval, _x)     (_rval>=0) ? ( (_rval=(_x)), DUF_TEST_RN(_rval) ) : 0
 #    define DUF_DO_TEST_RN(_rval, _x)   ( DUF_DO_TEST_RN_INTERNAL(_rval, _x) )
@@ -197,6 +203,7 @@
 #    define DUF_DO_TEST_PR(_rval, _x)   ( (_rval>=0) ? ( (_x), DUF_TEST_R(_rval) ) : 0 )
 #  else
 #    define DUF_DO_TEST_R(_rval, _x)    if (_rval>=0) { (_rval=(_x)); DUF_TEST_R(_rval); }
+#    define DUF_DO_TEST_RQ(_rval, _x, _cond)    if (_rval>=0) { (_rval=(_x)); DUF_TEST_RQ(_rval, _cond); }
 #    define DUF_DO_TEST_RN(_rval, _x)   if (_rval>=0) { (_rval=(_x)); DUF_TEST_RN(_rval); }
 
 #    define DUF_DO_TESTZ_R(_rval, _x)   { _rval=0;DUF_DO_TEST_R(_rval, _x) }
@@ -209,11 +216,12 @@
 #  define DUF_STARTR(_rt) int _rt=0; DUF_START()
 #  define DUF_STARTULL(_rt) unsigned long long _rt=0; DUF_START()
 #  define DUF_END() }
-#  define DUF_ENDR(_rt)    DUF_TEST_R(_rt);                           DUF_END(); return _rt
-#  define DUF_ENDRN(_rt)   DUF_TEST_RN(_rt);                          DUF_END(); return _rt
-#  define DUF_ENDR3(_rt3)  DUF_TEST_R( DUF_SQLITE_ERROR_CODE(_rt3) ); DUF_END(); return _rt3
-#  define DUF_ENDULL(_rt)                                             DUF_END(); return _rt
-#  define DUF_ENDS(_s)                                                DUF_END(); return _s
+#  define DUF_ENDR(_rt)           DUF_TEST_R(_rt);                             DUF_END(); return _rt
+#  define DUF_ENDRQ(_rt,_cond)    DUF_TEST_RQ(_rt,_cond);                      DUF_END(); return _rt
+#  define DUF_ENDRN(_rt)          DUF_TEST_RN(_rt);                            DUF_END(); return _rt
+#  define DUF_ENDR3(_rt3)         DUF_TEST_R( DUF_SQLITE_ERROR_CODE(_rt3) );   DUF_END(); return _rt3
+#  define DUF_ENDULL(_rt)                                                      DUF_END(); return _rt
+#  define DUF_ENDS(_s)                                                         DUF_END(); return _s
 
 /* ###################################################################### */
 /* ###################################################################### */
@@ -222,10 +230,11 @@
 
 /* ###################################################################### */
 
-#  define DOR(_rval, _x)  DUF_DO_TEST_R(_rval, _x)
-#  define DORN(_rval, _x) DUF_DO_TEST_RN(_rval, _x)
-#  define DOZR(_rval, _x) DUF_DO_TESTZ_R(_rval, _x)
-#  define DOPR(_rval, _x) DUF_DO_TEST_PR(_rval, _x)
+#  define DOR(_rval, _x)          DUF_DO_TEST_R(_rval, _x)
+#  define DORQ(_rval, _x, _cond)  DUF_DO_TEST_RQ(_rval, _x, _cond)
+#  define DORN(_rval, _x)         DUF_DO_TEST_RN(_rval, _x)
+#  define DOZR(_rval, _x)         DUF_DO_TESTZ_R(_rval, _x)
+#  define DOPR(_rval, _x)         DUF_DO_TEST_PR(_rval, _x)
 
 
 #endif

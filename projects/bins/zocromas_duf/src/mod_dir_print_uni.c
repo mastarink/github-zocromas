@@ -138,6 +138,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
     duf_format_combo_t format = {.v.flag = {
                                             .filename = 1,
+                                            .depth = 1,
                                             .seq = 1,
                                             .seq_leaf = 1,
                                             .dirid = 1,
@@ -258,6 +259,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
     duf_format_combo_t format = {.v.flag = {
                                             .filename = 0,
                                             .realpath = 1,
+                                            .depth = 1,
                                             .seq = 1,
                                             .seq_node = 1,
                                             .dirid = 1,

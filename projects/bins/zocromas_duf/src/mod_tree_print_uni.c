@@ -67,13 +67,15 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       /*   flags |= 0x8; */
       if ( d == max )
         flags |= 0x10;
-      if ( d >= pdi->maxdepth )
+
+      if ( d >= duf_pdi_maxdepth( pdi ) )
         flags |= 0x20;
+
       /* if ( is_file )   */
       /*   flags |= 0x40; */
       DUF_DEBUG( 1,             /* */
                  DUF_PRINTF( 0, ".[L%-2d", d ); /* */
-                 DUF_PRINTF( 0, ".M%-2d", pdi->maxdepth );
+                 DUF_PRINTF( 0, ".M%-2d", duf_pdi_maxdepth( pdi ) );
                  /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                  DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                  DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
@@ -86,9 +88,9 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         {
         case 0x14:
         case 0x34:
-        case 0x35:
           DUF_PRINTF( 0, ".  → " );
           break;
+	case 0x35: /* 20140909.215122 : was like 14, now like 15, don't ask why :) */
         case 0x15:
           DUF_PRINTF( 0, ".│ → " );
           break;
@@ -200,6 +202,7 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     duf_format_combo_t format = {.v.flag = {
                                             .filename = 1,
                                             .short_filename = 1,
+                                            .depth = 1,
                                             .seq = 1,
                                             .dirid_space = 1,
                                             .exifid = 1,
@@ -311,6 +314,7 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long 
         duf_format_combo_t format = {.v.flag = {
                                                 .filename = 1,
                                                 .short_filename = 1,
+                                                .depth = 1,
                                                 .seq = 1,
                                                 .dirid = 1,
                                                 .exifid = 0,
@@ -410,7 +414,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            ", md.md5sum1, md.md5sum2 " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid" /* */
            ", md.dup5cnt AS nsame" /* */
-	   ", mi.mime AS mime" /* */
+           ", mi.mime AS mime"  /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id" (* *) */
            ", fd.md5id AS md5id" /* */
            ,

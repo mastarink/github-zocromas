@@ -29,6 +29,7 @@ void duf_pdi_set_topdepth( duf_depthinfo_t * pdi );
 int duf_pdi_topdepth( const duf_depthinfo_t * pdi );
 int duf_pdi_maxdepth( const duf_depthinfo_t * pdi );
 int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi );
+int duf_pdi_check_depth( const duf_depthinfo_t * pdi );
 
 int duf_pdi_reldepth( const duf_depthinfo_t * pdi );
 int duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d );

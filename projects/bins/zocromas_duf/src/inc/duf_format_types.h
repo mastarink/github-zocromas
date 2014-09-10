@@ -33,6 +33,7 @@ typedef struct
   unsigned prefix:1;
   unsigned suffix:1;
   unsigned realpath:1;
+  unsigned depth:1;
   unsigned seq:1;
   unsigned seq_node:1;
   unsigned seq_leaf:1;
@@ -85,6 +86,7 @@ typedef enum
   DUF_FORMAT_PREFIX,
   DUF_FORMAT_SUFFIX,
   DUF_FORMAT_REALPATH,
+  DUF_FORMAT_DEPTH,
   DUF_FORMAT_SEQ,
   DUF_FORMAT_SEQ_NODE,
   DUF_FORMAT_SEQ_LEAF,
