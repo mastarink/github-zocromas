@@ -25,7 +25,7 @@
 #include "duf_action.h"
 #include "duf_maindb.h"
 
-#include "duf_path2db.h"        /* test only */
+/* #include "duf_path2db.h"        (* test only *) */
 
 /* צאַצקע */
 #include "duf_trace_defs.h"
@@ -79,7 +79,6 @@ duf_main( int argc, char **argv )
 
     if ( &dbgfunc_enabled )
        /**/ dbgfunc_enabled = 1;
-    T( "%d", dbgfunc_enabled );
   }
   /* duf_config->cli.trace.explain = 1; */
   /* DUF_TRACE( any, 0, "r=%d", r ); */

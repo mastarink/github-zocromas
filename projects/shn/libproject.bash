@@ -154,6 +154,7 @@ function shn_project_cd ()
   pp=$PWD
   cd $p >&2 || return $?
   shn_setup_projects
+  shn_dbgmsg "after setup $LINENO $FUNCNAME" >&2
   if ! [[ $p == $pp ]] ; then
     git status .
   fi
@@ -231,6 +232,7 @@ function shn_load ()
   pushd &>/dev/null
   if ! [[ -L shn ]] && type -t shn_project_cd &>/dev/null ; then
     shn_project_cd
+    shn_dbgmsg "after shn_project_cd $LINENO $FUNCNAME" >&2
 #   "${MSH_SHN_PROJECT_NAME:-zoctypes}"
   fi
   if [[ -f shn/libwork.bash ]] ; then

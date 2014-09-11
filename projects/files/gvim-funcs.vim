@@ -38,10 +38,17 @@ function! MasGoTag2 ()
 "       else
 "         echo "B: " . t.cmd
 "       endif
+        echo "X: " . t.cmd
+	let mmagic=&magic
+	let mwrapscan=&wrapscan
+	let mignorecase=&ignorecase
 	set wrapscan
 	set nomagic
 	set noignorecase
 	execute t.cmd
+	let &magic=mmagic
+	let &wrapscan=mwrapscan
+	let &ignorecase=mignorecase
       else
 	echoerr "MasGoTag2: not in this set 1"
       endif

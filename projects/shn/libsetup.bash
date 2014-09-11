@@ -238,14 +238,14 @@ function shn_setup_projects ()
         unset MSH_SHN_ENABLED_PROJECTS
         for k in ${MSH_SHN_PROJECTS[@]} ; do
           if [[ "$k" ]] && [[ "${MSH_SHN_HASH_PROJECTS[$k]}" ]] ; then
-            shn_dbgmsg "-${i}. ENABLE [$k]"
+####        shn_dbgmsg "-${i}. ENABLE [$k]"
             MSH_SHN_ENABLED_PROJECTS[${#MSH_SHN_ENABLED_PROJECTS[@]}]=$k
           fi
         done
          
-        for (( i=0 ; $i < ${#MSH_SHN_ENABLED_PROJECTS[@]} ; i++ )) ; do
-          shn_dbgmsg "-${i}. ENABLED [${MSH_SHN_ENABLED_PROJECTS[$i]}]"
-        done
+####    for (( i=0 ; $i < ${#MSH_SHN_ENABLED_PROJECTS[@]} ; i++ )) ; do
+####      shn_dbgmsg "-${i}. ENABLED [${MSH_SHN_ENABLED_PROJECTS[$i]}]"
+####    done
 	
 	retcode=0
 	

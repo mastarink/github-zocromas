@@ -57,6 +57,7 @@ shn_gvimer_plus_regfile_in ()
     local filen=`basename $file`
     local resident
     local fpath=$(realpath $file)
+    shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) editing '$file'"
 #   local bfil=$(shn_gvimer_plus_bin --servername "$fuuid" --remote-expr "bufnr(\"^${fpath}$\")" 2>/dev/null )
 #   [[ $bfil ]] && echo "buffer = $bfil" >&2
 #   echo "regfile_in fuuid: $fuuid for $fpath" 1>&2
@@ -198,7 +199,7 @@ shn_gvimer_plus_find ()
     esac
 #   eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1
     filef=`eval "/usr/bin/find -L $paths -type f -name $file 2>/dev/null" | head -1`
-    shn_msg "found: '$filef'"
+#   shn_msg "found: '$filef'"
     echo $filef
 }
 shn_gvimer_plus_vpath ()
@@ -219,80 +220,92 @@ shn_gvimer_plus_vpath ()
 
 shn_gvimer_plus_mased ()
 {
-    local file=$1 filef
-    local typf
-    local fileq a b fline
-    if [[ $file =~ ^(.*):(.*)$ ]] ; then
-      a=${BASH_REMATCH[1]}
-      b=${BASH_REMATCH[2]}
-      if [[ $a =~ ^[[:digit:]]+$ ]] ; then
-	file=$b
-	fline=$a
-      elif [[ $b =~ ^[[:digit:]]+$ ]] ; then
-	file=$a
-	fline=$b
+  local file=$1 filef
+  local typf
+  local fileq a b fline
+  shn_dbgmsg "gvimer_plus_mased 1 $@"
+  if [[ $file =~ ^(.*):(.*)$ ]] ; then
+    a=${BASH_REMATCH[1]}
+    b=${BASH_REMATCH[2]}
+    if [[ $a =~ ^[[:digit:]]+$ ]] ; then
+      file=$b
+      fline=$a
+    elif [[ $b =~ ^[[:digit:]]+$ ]] ; then
+      file=$a
+      fline=$b
+    fi
+    shn_msg "$file -- $fline"
+  fi
+  if ! [[ $file == *.* ]] ; then
+    fileq=$( grep -rl --inc='*.c' "^$file\>(" )
+    if [[ $fileq ]] ; then
+      file=$fileq
+    fi
+  fi
+  typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`
+  shn_dbgmsg "gvimer_plus_mased 2 typf:$typf"
+  if [[ "$file" == */* ]]; then
+      filef=$file
+  else
+      filef=`shn_gvimer_plus_find $file $typf`
+      shn_dbgmsg "gvimer_plus_mased 3 filef:$filef"
+      if ! [[ -n "$filef" ]]; then
+	  shn_errmsg "not found '$file'${typf:+ as [typf:$typf]}"
+	  return 1
+      else
+	  shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found '$filef'"
       fi
-      shn_msg "$file -- $fline"
-    fi
-    if ! [[ $file == *.* ]] ; then
-      fileq=$( grep -rl --inc='*.c' "^$file\>(" )
-      if [[ $fileq ]] ; then
-        file=$fileq
-      fi
-    fi
-    typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`
-    if [[ "$file" == */* ]]; then
-        filef=$file
-    else
-        filef=`shn_gvimer_plus_find $file $typf`
-        if ! [[ -n "$filef" ]]; then
-            shn_errmsg "not found '$file'${typf:+ as [typf:$typf]}"
-            return 1
-	else
-	    shn_msg "($MSH_SHN_LIBEDIT_LOADED) libedit found '$filef'"
-        fi
-    fi
+  fi
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
-    local rfile=`/usr/bin/realpath $filef`
-    shn_msg "rfile:$rfile" 
-    filef=`/bin/basename $rfile`
-    local dir=`/bin/dirname $rfile`
-    shn_msg "dir:$dir" 
-    local dirn=`/bin/basename $dir`
-    typf=`shn_gvimer_plus_filtyp "${filef:-*.c}" $dirn`
+  local rfile=`/usr/bin/realpath $filef`
+  shn_dbgmsg "rfile:$rfile" 
+  filef=`/bin/basename $rfile`
+  local dir=`/bin/dirname $rfile`
+  shn_dbgmsg "dir:$dir" 
+  local dirn=`/bin/basename $dir`
+  typf=`shn_gvimer_plus_filtyp "${filef:-*.c}" $dirn`
 #   echo "2 typf:$typf" >&2
-    local masedf
+  local masedf
 #   grep "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1 >&2
-    masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1)
+  masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1)
 #   echo "masedf:[$masedf] for $filef ($file)" >&2
 ####[[ ${masedf:=$mased_dir/${typf}.mased.vim} ]] # off 20140413
-    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "1 masedf: '$masedf' by '$filef' at $mased_dir/"
-    [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=
-    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "2 masedf: $masedf"
-    if [[ $masedf ]] ; then
-      local fuuid="$( shn_gvimer_plus_uuid $masedf )"
-      [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "fuuid: $fuuid"
-      if ! [[ -f "$masedf" ]]; then
-	  if [[ "$typf" == shn ]] && [[ -d "$typf" ]]; then
-	      /bin/ls --color=auto -1 shn/ | /bin/sed -e 's/^/:sfind /' > $masedf
-	  fi
-      fi
-      if [[ -f "$masedf" ]]; then
-#	  echo "mased fuuid: $fuuid" 1>&2
-	  [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "found masedf: $masedf"
-	  shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
-      else
-	  shn_errmsg "not found masedf '$masedf'"
-	  return 1
-      fi
+  [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "1 masedf: '$masedf' by '$filef' at $mased_dir/"
+  [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=
+  [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "2 masedf: $masedf"
+  shn_dbgmsg "gvimer_plus_mased 4 $@"
+  if [[ $masedf ]] ; then
+    local fuuid="$( shn_gvimer_plus_uuid $masedf )"
+    shn_dbgmsg "gvimer_plus_mased 5 $@"
+    [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "fuuid: $fuuid"
+    if ! [[ -f "$masedf" ]]; then
+	if [[ "$typf" == shn ]] && [[ -d "$typf" ]]; then
+	    /bin/ls --color=auto -1 shn/ | /bin/sed -e 's/^/:sfind /' > $masedf
+	fi
     fi
-    return 1
+    shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
+    if [[ -f "$masedf" ]]; then
+#	  echo "mased fuuid: $fuuid" 1>&2
+	[[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "found masedf: $masedf"
+        shn_dbgmsg "gvimer_plus_mased 6a $@"
+	shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
+    else
+        shn_dbgmsg "gvimer_plus_mased 6b $@"
+	shn_errmsg "not found masedf '$masedf'"
+	return 1
+    fi
+  fi
+  shn_dbgmsg "gvimer_plus_mased E $@"
+  return 1
 }
 shn_gvimer_plus ()
 {
     local file deffile mased_dir=${MSH_SHN_DIRS[relmased]} localvim_dir=${MSH_SHN_DIRS[relvimid]}
+    shn_dbgmsg "gvimer $LINENO $@"
     if [[ $mased_dir ]] && [[ -d $mased_dir ]] && [[ $localvim_dir ]] && [[ -d $localvim_dir ]] ; then
+        shn_dbgmsg "gvimer $LINENO $@"
         if [[ -n "$@" ]]; then
+            shn_dbgmsg "gvimer $LINENO $@"
             shn_gvimer_plus_mased $@ && return 0
             shn_gvimer_plus_nomased   $@ && return 0
             shn_errmsg "can't edit; no <mased> for '$@' at $mased_dir; try direct path"
@@ -313,10 +326,14 @@ shn_gvimer_plus ()
 }
 function shn_file_edit ()
 {
+
   if [[ "$@" ]] ; then
     shn_project_file_cd $@
+# export MSH_SHN_DEBUG=yes
     shn_gvimer_plus $@
+# unset MSH_SHN_DEBUG
     shn_project_cd -
+    shn_dbgmsg "after shn_project_cd $LINENO $FUNCNAME" >&2
   else
     shn_gvimer_plus
   fi
