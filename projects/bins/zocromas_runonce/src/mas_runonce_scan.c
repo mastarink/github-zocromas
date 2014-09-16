@@ -29,7 +29,7 @@ runonce_section_vscan( config_group_t * grp, config_section_t * sect, int nsec, 
   va_list ids;
   int done = 0;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
 
   va_copy( ids, args );
@@ -90,7 +90,7 @@ runonce_group_vscan( config_group_t * grp, const char *sectpatt, int *pnsecg, ru
 {
   int nsec = 0;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
   for ( nsec = 0; nsec < grp->num_sections; nsec++ )
   {
@@ -125,7 +125,7 @@ runonce_vscan( const char *grppatt, const char *sectpatt, runonce_flags_t flags,
 {
   int nsecg = 0;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
   for ( int ngr = 0; ngr < configuration.numgroups; ngr++ )
   {
@@ -150,7 +150,7 @@ runonce_scan( const char *grppatt, const char *sectpatt, runonce_flags_t flags, 
 {
   va_list args;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
   va_start( args, msg );
   runonce_vscan( grppatt, sectpatt, flags, msg, args );

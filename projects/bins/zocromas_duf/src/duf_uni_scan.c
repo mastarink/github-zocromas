@@ -142,13 +142,12 @@ duf_sccb_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb
 
   DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
 
+  DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_MAX_DEPTH );
   if ( sccb )
     DOR( r, duf_sccb_real_path( real_path, pu, sccb /*, pchanges */  ) );
 
   mas_free( real_path );
-  r = duf_clear_error( r, DUF_ERROR_MAX_SEQ_REACHED, 0 );
-
-  DEBUG_ENDR( r );
+  DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_MAX_DEPTH );
 }
 
 static int
@@ -535,7 +534,10 @@ duf_make_all_sccbs_wrap( void )
   DUF_TRACE( action, 1, "prep" );
   DUF_TRACE( explain, 0, "scan all; setting actions" );
   DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
+
   DOR( r, duf_make_all_sccbs(  ) );
+
+
   if ( r == DUF_ERROR_NO_ACTIONS )
   {
     char *optnames = NULL;

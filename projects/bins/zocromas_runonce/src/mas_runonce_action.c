@@ -93,7 +93,7 @@ runonce_waitoff( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t
   int w = 0;
   int done = 0;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
   do
   {
@@ -133,8 +133,7 @@ runonce_waitoff( config_section_t * sect, int nsec, runonce_flags_t flags, pid_t
       break;
     }
     if ( flags.verbose > 1 /* && w >= 0 */  )
-      printf( "(%d) Wait OFF Instances %d(pid=%u) status:[%d:%d:%s(%u)]\n", w, sect->instances, pid, exit_status, exit_signal, scode,
-              info.si_code );
+      printf( "(%d) Wait OFF Instances %d(pid=%u) status:[%d:%d:%s(%u)]\n", w, sect->instances, pid, exit_status, exit_signal, scode, info.si_code );
     /* w = waitpid( pid, &status, WNOHANG ); */
     /* mas_nanosleep( 2 ); */
     /* if ( w )                                                                                             */
@@ -292,7 +291,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
 {
   int done = 0;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s n/l:%s\n", __func__, sect->values[RUNONCE_NOLAUNCH] );
   /* const char *command = sect->values[RUNONCE_COMMAND]; */
   int canlaunch = ( sect->values[RUNONCE_NOLAUNCH] && !flags.force ) ? 0 : 1;
@@ -478,8 +477,7 @@ runonce_launch( config_group_t * grp, config_section_t * sect, int nsec, runonce
             char *command = mas_argv_string( sect->largc, sect->largv, 0 );
             char buf[256];
 
-            printf( "ERROR '%s(%s, %s)' - %s\n", stdenv ? "execvp" : "execvpe", sect->largv[0], command,
-                    strerror_r( errno, buf, sizeof( buf ) ) );
+            printf( "ERROR '%s(%s, %s)' - %s\n", stdenv ? "execvp" : "execvpe", sect->largv[0], command, strerror_r( errno, buf, sizeof( buf ) ) );
             mas_free( command );
           }
         }
@@ -510,7 +508,7 @@ runonce_terminate( config_group_t * grp, config_section_t * sect, int nsec, runo
   int signal = 0;
   const char *signame = sect->values[RUNONCE_PFIN];
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
   if ( sect->instances )
   {
@@ -564,7 +562,7 @@ runonce_toggle( config_group_t * grp, config_section_t * sect, int nsec, runonce
 {
   int done = 0;
 
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
 
   if ( sect->instances )

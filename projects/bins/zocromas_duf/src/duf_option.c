@@ -346,7 +346,7 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   {
     if ( extended )
       r = duf_parse_option_long_x_wrap( extended, optargg, stage );
-    else /* switch is useless !... */
+    else                        /* switch is useless !... */
       switch ( ( int ) codeval )
       {
       case ':':
@@ -650,7 +650,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
               if ( r >= 0 )
               {
                 duf_pdi_close( pdi );
-                duf_pdi_reinit( pdi, real_path, &duf_config->u, 0 /* recursive */ );
+                duf_pdi_reinit( pdi, real_path, &duf_config->u, 0 /* recursive */  );
               }
               mas_free( path );
               mas_free( real_path );
@@ -661,30 +661,12 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PDISCCB:
         {
-          duf_depthinfo_t **ppdi;
+          duf_depthinfo_t *pdi;
 
-          ppdi = ( duf_depthinfo_t ** ) byteptr;
-          {
-            duf_depthinfo_t *pdi = NULL;
-
-            if ( ppdi )
-              pdi = *ppdi;
-            assert( pdi );
-            T( " duf_config->targc:%d", duf_config->targc );
-            T( " duf_config->pdi:%p", duf_config->pdi );
-            T( " pdi:%p", pdi );
-
-            assert( pdi->levinfo );
-            {
-              DUF_UNUSED extern duf_scan_callbacks_t duf_print_dir_callbacks __attribute( ( weak ) );
-
-              T( "trace.scan:%d", duf_config->cli.trace.scan );
-
-              T( "SCCB %s : %p - %p", duf_levinfo_path( pdi ), extended->call.fdesc.hi.sccb, &duf_print_dir_callbacks );
-              r = duf_sccb_pdi( pdi, extended->call.fdesc.hi.sccb );
-              T( "/SCCB %s : %p - %p", duf_levinfo_path( pdi ), extended->call.fdesc.hi.sccb, &duf_print_dir_callbacks );
-            }
-          }
+          pdi = *( ( duf_depthinfo_t ** ) byteptr );
+          assert( pdi );
+          assert( pdi->levinfo );
+          r = duf_sccb_pdi( pdi, extended->call.fdesc.hi.sccb );
         }
         break;
       case DUF_OPTION_VTYPE_DATETIME:

@@ -64,6 +64,6 @@ typedef enum
   DUF_ERROR_ERROR_MAX,
 } duf_error_code_t;
 
-
+#define DUF_ERROR_COUNT ( DUF_ERROR_ERROR_MAX - DUF_ERROR_ERROR_BASE )
 
 #endif

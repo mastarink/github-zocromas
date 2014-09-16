@@ -8,20 +8,20 @@
 
 
 
-#  define DUF_PUTS( min, str) \
-    duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
-		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, str)
-#  define DUF_PUTSL( min) \
-    duf_puts( duf_config ? duf_config->cli.output.level:0, min, \
+#  define DUF_PUTS( _min, _str) \
+    duf_puts( duf_config ? duf_config->cli.output.level:0, _min, \
+		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, _str)
+#  define DUF_PUTSL( _min) \
+    duf_puts( duf_config ? duf_config->cli.output.level:0, _min, \
 		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, NULL)
 
 
-#  define DUF_PRINTF( min, ...) \
-    duf_printf( duf_config ? duf_config->cli.output.level:0, min, 0, \
+#  define DUF_PRINTF( _min, ...) \
+    duf_printf( duf_config ? duf_config->cli.output.level:0, _min, 0, \
 		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
 
-#  define DUF_DIE( min, ...) \
-    duf_printf( duf_config ? duf_config->cli.output.level:0, min, 1, \
+#  define DUF_DIE( _min, ...) \
+    duf_printf( duf_config ? duf_config->cli.output.level:0, _min, 1, \
 		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, __VA_ARGS__ )
 
 

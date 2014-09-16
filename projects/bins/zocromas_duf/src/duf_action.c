@@ -52,8 +52,6 @@ duf_interstage_init( void )
   DEBUG_STARTR( r );
   /* DOR( r, duf_pdi_reinit( &duf_config->di, "/", &duf_config->u ) ); */
 
-  T( "INIT %p", duf_config->pdi );
-
   if ( !duf_config->pdi )
   {
     duf_config->pdi = mas_malloc( sizeof( duf_depthinfo_t ) );

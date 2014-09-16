@@ -52,7 +52,7 @@ duf_find_cmd_long( const char *string, const duf_longval_extended_t * xtable, un
 
   DUF_TRACE( options, 0, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
 
-  DORN( r, duf_find_name_long( name, xtable, xtable_size, 1 /* soft */ ) );
+  DORN( r, duf_find_name_long( name, xtable, xtable_size, 1 /* soft */  ) );
   if ( r >= 0 && parg )
     *parg = arg;
   else
@@ -85,9 +85,14 @@ duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable,
  *   =0 for other option
  *   errorcode<0 for error
  * */
-  DOR( r, duf_parse_option_long_typed( extended, arg, stage ) );
-  if ( r == DUF_ERROR_OPTION_NOT_PARSED )
-    DOZR( r, duf_parse_option_long_old( extended, arg, stage ) );
+
+  DUF_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
+  {
+    DOR( r, duf_parse_option_long_typed( extended, arg, stage ) );
+    if ( r == DUF_ERROR_OPTION_NOT_PARSED )
+      DOZR( r, duf_parse_option_long_old( extended, arg, stage ) );
+  }
+  DUF_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
   mas_free( arg );
   DEBUG_ENDR( r );
 }

@@ -19,7 +19,71 @@
 /* ###################################################################### */
 
 /* #define DUF_NOTIMING */
+static short int noreport_error[DUF_ERROR_COUNT] = { 0 };
+static short int noreport_error_once[DUF_ERROR_COUNT] = { 0 };
 
+int
+duf_errindex( duf_error_code_t rtest )
+{
+  return ( rtest - DUF_ERROR_ERROR_BASE );
+}
+
+void
+duf_set_ereport( int once, int doreport, duf_error_code_t rtest )
+{
+  if ( rtest < 0 )
+  {
+    int errindex = duf_errindex( rtest );
+
+    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
+    {
+      if ( once )
+        noreport_error_once[errindex] = doreport ? 0 : 1;
+      else
+        noreport_error[errindex] = doreport ? 0 : 1;
+    }
+  }
+}
+
+void
+duf_vset_ereport( int once, int doreport, va_list args )
+{
+  duf_error_code_t rtest = 0;
+
+  do
+  {
+    rtest = va_arg( args, int );
+    duf_set_ereport(once, doreport, rtest);
+  }
+  while ( rtest );
+}
+
+void
+duf_set_mereport( int once, int doreport, ... )
+{
+  va_list args;
+
+  va_start( args, doreport );
+  duf_vset_ereport( once, doreport, args );
+  va_end( args );
+}
+
+/* !=0 -- report it */
+int
+duf_get_ereport( duf_error_code_t rtest )
+{
+  int r = 0;
+
+  if ( rtest < 0 )
+  {
+    int errindex = duf_errindex( rtest );
+
+    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT && ( !( noreport_error[errindex] || noreport_error_once[errindex] ) ) )
+      r = -1;
+  }
+  memset( noreport_error_once, 0, sizeof( noreport_error_once ) );
+  return r;
+}
 
 duf_error_code_t
 duf_vclear_error( duf_error_code_t r, va_list args )

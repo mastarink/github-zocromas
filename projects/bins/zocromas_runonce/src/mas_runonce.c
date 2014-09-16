@@ -24,7 +24,7 @@
 int
 runonce_roaction( char *group_patt, char *sect_patt, roaction_t roaction, runonce_flags_t flags )
 {
-  if ( flags.verbose )
+  if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
   /* printf( "group_patt:%s; sect_patt:%s (strict:%d)\n", group_patt, sect_patt, flags.strict ); */
   switch ( roaction )
@@ -54,8 +54,7 @@ runonce_roaction( char *group_patt, char *sect_patt, roaction_t roaction, runonc
 
 
         printf( "\n(%d)\n         [%lx]\n-        [%s]\n  class: [%s]\n  role:  [%s]\n  icon:  [%s]\n  w.pid  [%u]\n", i,
-                ( unsigned long ) client_list[i], title ? title : "-", class ? class : "-", role ? role : "-", icon_name ? icon_name : "-",
-                wpid );
+                ( unsigned long ) client_list[i], title ? title : "-", class ? class : "-", role ? role : "-", icon_name ? icon_name : "-", wpid );
         mas_free( class );
         mas_free( role );
         mas_free( title );

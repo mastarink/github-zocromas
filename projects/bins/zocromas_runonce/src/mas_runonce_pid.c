@@ -203,11 +203,11 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
       /* notification-da(emon) */
       /* 123456789012345 */
       if ( flags.verbose > 3 )
-        printf( "? PidOf [%s:%s:%s] %d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
+        printf( "? PidOf [%s:%s:%s] argc:%d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
       if ( 0 == strncmp( name, runonce_pids.array[pid].progname, 15 ) )
       {
         if ( flags.verbose > 2 )
-          printf( "+ PidOf [%s:%s:%s] %d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
+          printf( "+ PidOf [%s:%s:%s] argc:%d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
         if ( subname )
         {
           if ( runonce_pids.array[pid].argc > 0 /* && runonce_pids.array[pid].argv */  )
