@@ -90,12 +90,12 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     }
     else
     {
-      DUF_ERROR( "insert sd5 %d", r );
+      DUF_SHOW_ERROR( "insert sd5 %d", r );
     }
   }
   else
   {
-    DUF_ERROR( "Wrong data" );
+    DUF_SHOW_ERROR( "Wrong data" );
     r = DUF_ERROR_DATA;
     DUF_TEST_R( r );
   }

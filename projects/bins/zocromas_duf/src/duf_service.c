@@ -43,7 +43,7 @@ duf_check_field( const char *name, int have )
 {
   if ( !have )
   {
-    DUF_ERROR( "No such field: %s", name );
+    DUF_SHOW_ERROR( "No such field: %s", name );
     /* assert(have); */
     return DUF_ERROR_NO_FIELD;
   }

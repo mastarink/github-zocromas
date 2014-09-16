@@ -78,7 +78,7 @@ sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
     mas_free( fpath );
   }
 /* Same! st->; fdst.; ufdst.; fpst.; -- use fd, st, path, name */
-  DUF_ERROR( "[%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, path, name );
+  DUF_SHOW_ERROR( "[%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, path, name );
   DEBUG_ENDR( r );
   return r;
 }
@@ -206,7 +206,7 @@ sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const st
     mas_free( fpath );
   }
 /* Same! st->; fdst.; ufdst.; fpst.; pst_file->; -- use fd, st, path, name */
-  DUF_ERROR( "[%lu:%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, pst_file->st_ino, path, name );
+  DUF_SHOW_ERROR( "[%lu:%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, pst_file->st_ino, path, name );
   DEBUG_ENDR( r );
   return r;
 }

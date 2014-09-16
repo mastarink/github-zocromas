@@ -54,7 +54,7 @@
 /*                                                                                                                  */
 /*   if ( pdi->depth <= 0 )                                                                                         */
 /*   {                                                                                                              */
-/*     DUF_ERROR( "depth should not be %d at this point", pdi->depth );                                             */
+/*     DUF_SHOW_ERROR( "depth should not be %d at this point", pdi->depth );                                             */
 /*     assert( pdi->depth > 0 );                                                                                    */
 /*   }                                                                                                              */
 /*   {                                                                                                              */
@@ -98,7 +98,7 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
   if ( pdi->depth <= 0 )
   {
-    DUF_ERROR( "depth should not be %d at this point", pdi->depth );
+    DUF_SHOW_ERROR( "depth should not be %d at this point", pdi->depth );
     assert( pdi->depth > 0 );
   }
   {
@@ -194,7 +194,7 @@ sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
 /*     void *ctx = duf_levinfo_context( pdi );                                                                  */
 /*                                                                                                              */
 /*     if ( !ctx || 0 != strcmp( ( char * ) ctx, "MIDDLE" ) )                                                   */
-/*       DUF_ERROR( "sample context %s", ( char * ) ctx );                                                      */
+/*       DUF_SHOW_ERROR( "sample context %s", ( char * ) ctx );                                                      */
 /*     DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, ctx );                                          */
 /*     duf_levinfo_set_context( pdi, NULL );                                                                    */
 /*   }                                                                                                          */
@@ -219,7 +219,7 @@ sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long
     void *ctx = duf_levinfo_context( pdi );
 
     if ( !ctx || 0 != strcmp( ( char * ) ctx, "MIDDLE" ) )
-      DUF_ERROR( "sample context %s", ( char * ) ctx );
+      DUF_SHOW_ERROR( "sample context %s", ( char * ) ctx );
     DUF_TRACE( sample, 0, "(%p) context=%p", ( void * ) pdi, ctx );
     duf_levinfo_set_context( pdi, NULL );
   }
@@ -257,7 +257,7 @@ sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long
 /*     void *ctx = duf_levinfo_context( pdi );                                                                */
 /*                                                                                                            */
 /*     if ( !ctx || 0 != strcmp( ( char * ) ctx, "BEFORE" ) )                                                 */
-/*       DUF_ERROR( "sample context %s", ( char * ) ctx );                                                    */
+/*       DUF_SHOW_ERROR( "sample context %s", ( char * ) ctx );                                                    */
 /*                                                                                                            */
 /*     duf_levinfo_set_context( pdi, NULL );                                                                  */
 /*     ctx = duf_levinfo_context( pdi );                                                                      */
@@ -303,7 +303,7 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
     void *ctx = duf_levinfo_context( pdi );
 
     if ( !ctx || 0 != strcmp( ( char * ) ctx, "BEFORE" ) )
-      DUF_ERROR( "sample context %s", ( char * ) ctx );
+      DUF_SHOW_ERROR( "sample context %s", ( char * ) ctx );
 
     duf_levinfo_set_context( pdi, NULL );
     ctx = duf_levinfo_context( pdi );

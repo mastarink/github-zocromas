@@ -50,7 +50,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
   }
   else
   {
-    DUF_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
+    DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
     r = DUF_ERROR_DATA;
     DUF_TEST_R( r );
   }

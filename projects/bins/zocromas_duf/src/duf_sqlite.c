@@ -114,7 +114,7 @@ duf_sqlite_execcb_e( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data,
 
   r3 = duf_sqlite_execcb( sql, sqexe_cb, sqexe_data, pchanges, &emsg );
   if ( r3 != SQLITE_OK )
-    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
   if ( emsg )
     sqlite3_free( emsg );
   emsg = NULL;
@@ -136,7 +136,7 @@ duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 
   r3 = duf_sqlite_exec( sql, pchanges, &emsg );
   if ( r3 != SQLITE_OK && !( r3 == SQLITE_CONSTRAINT && constraint_ignore ) )
-    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
 
   if ( emsg )
     sqlite3_free( emsg );
@@ -152,7 +152,7 @@ duf_sqlite_exec_e( const char *sql, int *pchanges )
 
   r3 = duf_sqlite_exec( sql, pchanges, &emsg );
   if ( r3 != SQLITE_OK )
-    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
   if ( emsg )
     sqlite3_free( emsg );
   emsg = NULL;
@@ -220,7 +220,7 @@ duf_vsqlite( const char *fmt, int *pchanges, va_list args )
   DUF_TRACE( sqlite, 2, "[%s] ", sql );
   r3 = duf_sqlite_exec( sql, pchanges, &emsg );
   if ( r3 != SQLITE_OK )
-    DUF_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
+    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
 
   DUF_TRACE( sqlite, 3, "(%d) SQL '%s' [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
   if ( emsg )
@@ -266,7 +266,7 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
     sql = sqlite3_vmprintf( fmt, args );
     if ( !sql )
     {
-      DUF_ERROR( "what happend to sql? [%s] => [%s]", fmt, sql );
+      DUF_SHOW_ERROR( "what happend to sql? [%s] => [%s]", fmt, sql );
     }
     r3 = sqlite3_get_table( pDb, sql, &presult, &row, &column, &emsg );
     assert( r3 != SQLITE_CORRUPT );
@@ -317,7 +317,7 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
           }
           else
           {
-            /* DUF_ERROR( "rcb:%d", rcb ); */
+            /* DUF_SHOW_ERROR( "rcb:%d", rcb ); */
           }
         }
         DUF_TEST_R( rcb );
@@ -334,12 +334,12 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
     else if ( r3 == SQLITE_CONSTRAINT )
     {
       DUF_TEST_R3( r3 );
-      DUF_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
+      DUF_SHOW_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
     }
     else
     {
       DUF_TEST_R3( r3 );
-      DUF_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
+      DUF_SHOW_ERROR( "SQL : %s [%s]", emsg ? emsg : "no error", sql );
     }
     if ( emsg )
       sqlite3_free( emsg );
@@ -377,7 +377,7 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   DUF_TRACE( sqlite, 2, "  [%s]", sql );
   if ( r3 == SQLITE_ERROR )
   {
-    DUF_ERROR( "{%d:%d} can't prepare SQL:[%s] - %s", sqlite3_errcode( pDb ), sqlite3_extended_errcode( pDb ), sql, sqlite3_errmsg( pDb ) );
+    DUF_SHOW_ERROR( "{%d:%d} can't prepare SQL:[%s] - %s", sqlite3_errcode( pDb ), sqlite3_extended_errcode( pDb ), sql, sqlite3_errmsg( pDb ) );
     if ( sqlite3_strglob( "no such table: *", sqlite3_errmsg( pDb ) ) == 0 )
     {
       r3 = DUF_ERROR_SQL_NO_TABLE;

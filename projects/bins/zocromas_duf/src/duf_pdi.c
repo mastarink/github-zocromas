@@ -4,6 +4,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "duf_maintenance.h"
 
 
@@ -88,9 +90,9 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int 
 
   r = duf_pdi_init( pdi, real_path, ifadd, recursive );
   if ( r == DUF_ERROR_NOT_IN_DB )
-    DUF_ERROR( "not in db:'%s'", real_path );
+    DUF_SHOW_ERROR( "not in db:'%s'", real_path );
   else if ( r < 0 )
-    DUF_ERROR( "path:%s", real_path );
+    DUF_SHOW_ERROR( "path:%s", real_path );
   DUF_TEST_R( r );
   if ( r >= 0 )
   {
@@ -106,11 +108,61 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
 {
   int rec = 0;
 
-  rec = pdi && !recursive ? duf_pdi_recursive( pdi ) : recursive;
+  /* rec = pdi && !recursive ? duf_pdi_recursive( pdi ) : recursive; */
+  rec = pdi && recursive < 0 ? duf_pdi_recursive( pdi ) : recursive;
   duf_pdi_close( pdi );
   pdi->pu = pu;
   return duf_pdi_init_wrap( pdi, real_path, 0, rec );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
+}
+
+int
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, int recursive )
+{
+  int r = 0;
+  char *path = NULL;
+  char *real_path = NULL;
+
+  if ( *cpath == '/' )
+    path = mas_strdup( cpath );
+  else
+  {
+    path = mas_strdup( duf_levinfo_path( pdi ) );
+    if ( !( cpath[0] == '.' && !cpath[1] ) )
+    {
+      path = mas_strcat_x( path, "/" );
+      path = mas_strcat_x( path, cpath );
+    }
+  }
+  real_path = duf_realpath( path, &r );
+  if ( r >= 0 )
+  {
+    duf_pdi_reinit( pdi, real_path, pu, recursive );
+  }
+  mas_free( path );
+  mas_free( real_path );
+  return r;
+}
+
+int
+duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive )
+{
+  DEBUG_STARTR( r );
+  char *path = NULL;
+
+  /* int recursive = 0; */
+
+  {
+    const char *cpath = NULL;
+
+    cpath = duf_levinfo_path( pdi );
+    if ( cpath )
+      path = mas_strdup( cpath );
+    /* recursive = pdi->recursive; */
+  }
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, &duf_config->u, recursive ) );
+  mas_free( path );
+  DEBUG_ENDR( r );
 }
 
 void
@@ -194,7 +246,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
     assert( !pdi->idstatements );
     assert( !pdi->pu );
   }
-  /* DUF_ERROR( "clear idstatements" ); */
+  /* DUF_SHOW_ERROR( "clear idstatements" ); */
   DEBUG_ENDR( r );
 }
 
@@ -277,9 +329,9 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
   int r = 0;
 
   if ( duf_pdi_recursive( pdi ) )
-    r = d - duf_pdi_maxdepth( pdi ) < delta; /* depth - maxdepth < delta */
+    r = d - duf_pdi_maxdepth( pdi ) < delta; /* d - maxdepth < delta */
   else
-    r = duf_pdi_deltadepth( pdi, d ) <= delta; /* depth - topdepth <= delta */
+    r = duf_pdi_deltadepth( pdi, d ) <= delta; /* d - topdepth <= delta */
   /* r= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
   return r;
 }

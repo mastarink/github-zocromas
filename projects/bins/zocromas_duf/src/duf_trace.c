@@ -28,10 +28,11 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
 
   if ( ern < 0 )
   {
-    const char *s = duf_error_name( ern );
+    const char *s = NULL;
 
+    s = duf_error_name( ern );
     if ( ern < 0 && s )
-      fprintf( out, "\n  [%s] (#%d; i.e.%d)\n", duf_error_name( ern ), ern, +ern - DUF_ERROR_ERROR_BASE );
+      fprintf( out, "\n  [%s] (#%d; i.e.%d)\n", duf_error_name( ern ), ern, duf_errindex( ern ) );
     else
       fprintf( out, "Error rv=%d\n", ern );
   }

@@ -15,8 +15,6 @@
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, dirs ) /*                                                 */ , DO_H( get dir info ) /*       */ },
   {.o = {DO_Q( "interactive" ), /*    */ DO_A_N, /* */ DO_VF( INTERACTIVE )} /*   */ , DO_CL( CONTROL ) /*   */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                                          */ , DO_H( get dir info ) /*       */ },
-  {.o = {DO_Q( "noninteractive" ), /*   */ DO_A_N, /* */ DO_VF( INTERACTIVE )} /* */ , DO_CL( CONTROL ) /* */ ,
-   /*      */ DO_O( NOFLAG, cli.act.v ), DO_FL( act, interactive ) /*                                       */ , DO_H( get dir info ) /*       */ },
   
   {.o = {DO_Q( "drop-tables" ), /*    */ DO_A_N, /* */ DO_VF( DROP_TABLES )} /*   */ , DO_CL( SYSTEM ) /*    */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, drop_tables ) /*                                          */ , DO_H( drop tables ) /*        */ },
@@ -55,7 +53,9 @@
   {.o = {DO_Q( "progress" ), /*       */ DO_A_N, /* */ DO_VF( PROGRESS )} /*      */ , DO_CL( REFERENCE ) /* */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, progress ) /*                                             */ , DO_H( progress ) /*           */ },
   {.o = {DO_Q( "recursive" ), /*      */ DO_A_N, /* */ DO_VF( RECURSIVE )} /*     */ , DO_CL( CONTROL ) /*   */ ,
-   /*      */ DO_O( SFLAG, u.v ), DO_FL( u, recursive ) /*                                                   */ , DO_H( recursive ) /*          */ },
+   /*      */ DO_O( SFLAG, u.v ), DO_FL( u, recursive ), .stage=-1 /*                                        */ , DO_H( recursive ) /*          */ },
+  {.o = {DO_Q( "if-recursive" ), /*     */ DO_A_N, /* */ DO_VF( RECURSIVE )} /*   */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_O( PSFLAG, u.v ), DO_FL( u, recursive ), .stage=1 /*                                        */ , DO_H( recursive ) /*          */ },
   {.o = {DO_Q( "remove-database" ), /* */ DO_A_N, /* */ DO_VF( REMOVE_DATABASE )}, DO_CL( SYSTEM ) /*        */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, remove_database ) /*                                      */ , DO_H(  .... ) /*              */ },
   

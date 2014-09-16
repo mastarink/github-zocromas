@@ -59,7 +59,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
         DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
 
         DUF_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, dev_id, dir_ino, dename, duf_levinfo_dirid_up( pdi ) );
-        /* DUF_ERROR( "insert_path_index:%d", insert_path_index ); */
+        /* DUF_SHOW_ERROR( "insert_path_index:%d", insert_path_index ); */
         DUF_SQL_BIND_LL( Dev, dev_id, r, pstmt );
         DUF_SQL_BIND_LL( iNode, dir_ino, r, pstmt );
         DUF_SQL_BIND_S( dirName, dename, r, pstmt );
@@ -105,8 +105,8 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
             dirid = duf_sql_column_long_long( pstmt, 0 );
             if ( need_id && !dirid )
             {
-              /* DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
-              DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
+              /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
+              DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
             }
             else
             {
@@ -148,8 +148,8 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
             dirid = duf_sql_column_long_long( pstmt, 0 );
             if ( need_id && !dirid )
             {
-              /* DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
-              DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
+              /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
+              DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
             }
             else
             {
@@ -189,8 +189,8 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
         dirid = duf_sql_last_insert_rowid(  );
         if ( need_id && !dirid )
         {
-          /* DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
-          DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
+          /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
+          DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
         }
         else
         {
@@ -206,15 +206,15 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_
   }
   else
   {
-    DUF_ERROR( "Wrong data dename(%s) OR dev_id(%lu) OR dir_ino(%lu)", dename, dev_id, dir_ino );
+    DUF_SHOW_ERROR( "Wrong data dename(%s) OR dev_id(%lu) OR dir_ino(%lu)", dename, dev_id, dir_ino );
     r = DUF_ERROR_DATA;
   }
   if ( pr )
     *pr = r;
   if ( need_id && !dirid )
   {
-    /* DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
-    DUF_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
+    /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", parentid, dename ); */
+    DUF_SHOW_ERROR( "no dirid by parentid=%llu and dename='%s'", duf_levinfo_dirid_up( pdi ), dename );
   }
   DUF_TEST_R( r );
   /* assert( !need_id || dirid ); */
@@ -342,7 +342,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int ifadd )
  * */
         DOR( r, duf_path_component2db( pdi, dir, ifadd, &parentid ) );
         if ( r < 0 )
-          DUF_ERROR( "No such entry %s [%s]", real_path, dir );
+          DUF_SHOW_ERROR( "No such entry %s [%s]", real_path, dir );
         dir = nextdir;
       }
       DUF_TRACE( path, 0, "next [%s] under %llu", dir, parentid );

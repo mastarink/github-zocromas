@@ -47,9 +47,9 @@ __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int
       {
         for ( int i = 0; i < precord->ncolumns; i++ )
         {
-          DUF_ERROR( "  Have '%s'\n", precord->pnames[i] );
+          DUF_SHOW_ERROR( "  Have '%s'\n", precord->pnames[i] );
         }
-        DUF_ERROR( "no such field '%s' {%p} (%u)\n", name, ( void * ) precord, precord->ncolumns );
+        DUF_SHOW_ERROR( "no such field '%s' {%p} (%u)\n", name, ( void * ) precord, precord->ncolumns );
       }
       assert( pos >= 0 || optional );
     }
@@ -123,11 +123,11 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
 #endif
       }
       else
-        DUF_ERROR( "r=%d; no field %s", r, sccb->leaf.fieldset );
+        DUF_SHOW_ERROR( "r=%d; no field %s", r, sccb->leaf.fieldset );
     }
 #ifdef DUF_RECORD_WITH_NROWS
     else
-      DUF_ERROR( "something is wrong" );
+      DUF_SHOW_ERROR( "something is wrong" );
 #endif
   }
   else

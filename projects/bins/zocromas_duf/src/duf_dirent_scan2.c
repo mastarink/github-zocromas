@@ -58,7 +58,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
   }
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {
-    DUF_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+    DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
     r = DUF_ERROR_STAT;
   }
   DEBUG_ENDR( r );
@@ -164,7 +164,7 @@ duf_scan_dirents2(  /* duf_sqlite_stmt_t * pstmt, */ duf_depthinfo_t * pdi,
   if ( r || !pst_parent || !( S_ISDIR( pst_parent->st_mode ) ) )
   {
 /* no such entry */
-    DUF_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemname( pdi ) );
+    DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemname( pdi ) );
     /* TODO mark as absent or remove from db */
 
     DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemname( pdi ) );

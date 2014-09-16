@@ -37,6 +37,7 @@ duf_all_options( int argc, char *argv[] )
   DEBUG_STARTR( r );
   int er = 0, fr = 0, or = 0;
 
+  DEBUG_E_NO( DUF_ERROR_OPTION );
   if ( r >= 0 )
     er = r = duf_env_options( argc, argv );
   DUF_TRACE( options, 0, "got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
@@ -71,7 +72,7 @@ duf_all_options( int argc, char *argv[] )
   }
 #endif
   DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; r: %s", or, fr, er, duf_error_name( r ) );
-  DEBUG_ENDR( r );
+  DEBUG_ENDR_YES( r, DUF_ERROR_OPTION );
 }
 
 

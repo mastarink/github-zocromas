@@ -561,6 +561,6 @@ duf_make_all_sccbs_wrap( void )
   /* if ( r == DUF_ERROR_MAX_REACHED )                 */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */
-  /*   DUF_ERROR( "code: %d", r );                     */
+  /*   DUF_SHOW_ERROR( "code: %d", r );                     */
   DEBUG_ENDR( r );
 }

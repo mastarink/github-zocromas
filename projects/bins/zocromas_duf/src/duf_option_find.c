@@ -17,6 +17,7 @@
 #include "duf_option_find.h"
 /* ###################################################################### */
 
+#define  DUF_NO_PREFIX "no-"
 
 int
 duf_find_codeval_long( duf_option_code_t codeval, const duf_longval_extended_t * xtable, unsigned xtable_size )
@@ -62,8 +63,9 @@ duf_find_codeval_extended_std( duf_option_code_t codeval, int *pr )
   return extended;
 }
 
-int
-duf_find_name_long_exact( const char *name, const duf_longval_extended_t * xtable, unsigned xtable_size )
+/* return so called `longindex` */
+static int
+duf_find_name_long_exact( const char *name, int witharg, const duf_longval_extended_t * xtable, unsigned xtable_size )
 {
   DEBUG_STARTR( r );
   r = DUF_ERROR_OPTION;
@@ -73,7 +75,7 @@ duf_find_name_long_exact( const char *name, const duf_longval_extended_t * xtabl
       DUF_TRACE( options, 4, "compare name:`%s` ? `%s` at %d", xtable[ilong].o.name, name, ilong );
       if ( 0 == strcmp( name, xtable[ilong].o.name ) )
       {
-        DUF_TRACE( options, 0, "found name:`%s` at %d", xtable[ilong].o.name, ilong );
+        DUF_TRACE( options, 3, "found name:`%s` at %d", xtable[ilong].o.name, ilong );
         r = ilong;
         break;
       }
@@ -81,8 +83,9 @@ duf_find_name_long_exact( const char *name, const duf_longval_extended_t * xtabl
   DEBUG_ENDRN( r );
 }
 
-int
-duf_find_name_long_soft( const char *name, const duf_longval_extended_t * xtable, unsigned xtable_size )
+/* return so called `longindex` */
+static int
+duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extended_t * xtable, unsigned xtable_size )
 {
   DEBUG_STARTR( r );
   int cnt = 0;
@@ -99,12 +102,20 @@ duf_find_name_long_soft( const char *name, const duf_longval_extended_t * xtable
       DUF_TRACE( options, 4, "compare name:`%s` ? `%s` at %d", xtable[ilong].o.name, name, ilong );
       if ( 0 == strncmp( name, xtable[ilong].o.name, l ) )
       {
-        if ( r < 0 )
-          r = ilong;
-        if ( !xtable[ilong].o.name[l] )
-          rexact = ilong;
-        DUF_TRACE( options, 0, "found name:`%s` at %d", xtable[ilong].o.name, ilong );
-        cnt++;
+        int ha;
+        const char *tname;
+
+        tname = xtable[ilong].o.name;
+        ha = xtable[ilong].o.has_arg;
+        if ( ( witharg && ha == required_argument ) || ( !witharg && ha == no_argument ) || ha == optional_argument )
+        {
+          if ( r < 0 )
+            r = ilong;
+          if ( !tname[l] )
+            rexact = ilong;
+          DUF_TRACE( options, 0, "found name:`%s` at %d", tname, ilong );
+          cnt++;
+        }
       }
     }
   if ( cnt > 1 )
@@ -117,13 +128,36 @@ duf_find_name_long_soft( const char *name, const duf_longval_extended_t * xtable
   DEBUG_ENDRN( r );
 }
 
+/* return so called `longindex` */
 int
-duf_find_name_long( const char *name, const duf_longval_extended_t * xtable, unsigned xtable_size, int soft )
+duf_find_name_long( const char *name, int witharg, const duf_longval_extended_t * xtable, unsigned xtable_size, int soft )
 {
   DEBUG_STARTR( r );
+  DUF_TRACE( options, 2, "find name:%s; witharg:%d; soft:%d", name, witharg, soft );
   if ( soft )
-    r = duf_find_name_long_soft( name, xtable, xtable_size );
+    r = duf_find_name_long_soft( name, witharg, xtable, xtable_size );
   else
-    r = duf_find_name_long_exact( name, xtable, xtable_size );
+    r = duf_find_name_long_exact( name, witharg, xtable, xtable_size );
+  DEBUG_ENDRN( r );
+}
+
+/* return so called `longindex` */
+int
+duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended_t * xtable, unsigned xtable_size, int soft, int *pno )
+{
+  DEBUG_STARTR( r );
+
+  r = duf_find_name_long( name, witharg, xtable, xtable_size, soft );
+  DUF_TRACE( options, 4, "name:%s; witharg:%d; soft:%d", name, witharg, soft );
+  if ( pno && r==DUF_ERROR_OPTION )
+  {
+    *pno = 0;
+    DUF_TRACE( options, 4, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );
+    if ( r == DUF_ERROR_OPTION && 0 == strncmp( name, DUF_NO_PREFIX, strlen( DUF_NO_PREFIX ) ) && strlen( name ) > strlen( DUF_NO_PREFIX ) )
+    {
+      r = duf_find_name_long( name + strlen( DUF_NO_PREFIX ), witharg, xtable, xtable_size, soft );
+      *pno = 1;
+    }
+  }
   DEBUG_ENDRN( r );
 }

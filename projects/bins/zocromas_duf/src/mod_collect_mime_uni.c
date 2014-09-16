@@ -81,7 +81,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       DUF_SQL_STEP( r, pstmt_insert );
       /* DUF_TEST_R(r); */
       DUF_SQL_CHANGES( changes, r, pstmt_insert );
-      /* DUF_ERROR( "changes:%d", changes ); */
+      /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
       {
         mimeid = duf_sql_last_insert_rowid(  );
@@ -94,7 +94,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
   }
   else
   {
-    DUF_ERROR( " Wrong data " );
+    DUF_SHOW_ERROR( " Wrong data " );
     r = DUF_ERROR_DATA;
   }
   DUF_TEST_R( r );
@@ -122,7 +122,7 @@ duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
   /* {                                    */
   /*   DUF_SFIELD2( filename );           */
-  /*   DUF_ERROR( "@@@@@ %s", filename ); */
+  /*   DUF_SHOW_ERROR( "@@@@@ %s", filename ); */
   /* }                                    */
   if ( r >= 0 )
   {

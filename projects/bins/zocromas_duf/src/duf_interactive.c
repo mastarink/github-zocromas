@@ -12,6 +12,9 @@
 
 #include "duf_optable_def.h"
 
+#include "duf_dbg.h"
+#include "duf_debug_defs.h"
+
 #include "duf_utils_print.h"
 
 #include "duf_config_ref.h"
@@ -89,14 +92,24 @@ duf_interactive( void )
   /* if ( r >= 0 ) */
   {
     char *duf_rl_buffer = NULL;
-    static char rl_prompt[256] = "";
+    static char rl_prompt[256 * 10] = "";
+
+    DUF_E_MAX( 5, DUF_ERROR_MAX_DEPTH );
 
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );
 
+    add_history( "cd /mnt/new_media/media/photo/Pictures/photos/" );
+    add_history( "quit" );
+    add_history( "pwd" );
+    add_history( "max-depth" );
+    add_history( "max-seq" );
+
     while ( r >= 0 && DUF_ACT_FLAG( interactive ) )
     {
       r = 0;
+      DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, DUF_U_FLAG( recursive ) ) );
+
       if ( duf_config && duf_config->pdi )
         snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );
       while ( !duf_rl_buffer )
@@ -109,13 +122,11 @@ duf_interactive( void )
         /* DOR( r, duf_execute_cmd_long( duf_rl_buffer, lo_extended_i, lo_extended_i_count, ' ', 1 ) ); */
         DOR( r, duf_execute_cmd_long_std( duf_rl_buffer, ' ', 1 ) );
       }
-      DUF_TEST_R( r );
-      if ( r == DUF_ERROR_OPTION_MULTIPLE || r == 0 )
-      {
-        r = 0;
-      }
+      /* DUF_TEST_R( r ); */
+      DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_MULTIPLE, DUF_ERROR_OPTION, DUF_ERROR_OPTION_VALUE, DUF_ERROR_PATH, DUF_ERROR_MAX_SEQ_REACHED );
       free( duf_rl_buffer );
       duf_rl_buffer = NULL;
+      fprintf( stderr, "\n" );
     }
   }
   return r;

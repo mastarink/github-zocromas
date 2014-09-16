@@ -42,8 +42,11 @@ typedef enum
   DUF_OPTION_VTYPE_NONE,
   DUF_OPTION_VTYPE_UPLUS,
   DUF_OPTION_VTYPE_NUM,
+  DUF_OPTION_VTYPE_PNUM,
   DUF_OPTION_VTYPE_NL,
+  DUF_OPTION_VTYPE_PNL,
   DUF_OPTION_VTYPE_NLL,
+  DUF_OPTION_VTYPE_PNLL,
 
   DUF_OPTION_VTYPE_MIN,
   DUF_OPTION_VTYPE_MAX,
@@ -54,11 +57,16 @@ typedef enum
   DUF_OPTION_VTYPE_MINMAXLL,
 
   DUF_OPTION_VTYPE_FLAG,
+  DUF_OPTION_VTYPE_PFLAG,
   DUF_OPTION_VTYPE_NOFLAG,
   DUF_OPTION_VTYPE_SFLAG,
+  DUF_OPTION_VTYPE_PSFLAG,
+  DUF_OPTION_VTYPE_NOSFLAG,
+
   DUF_OPTION_VTYPE_STR,
   
   DUF_OPTION_VTYPE_PDISTR,
+  DUF_OPTION_VTYPE_PDINUM,
   DUF_OPTION_VTYPE_PDISCCB,
 
   DUF_OPTION_VTYPE_DATETIME,
@@ -115,8 +123,12 @@ typedef struct
   duf_option_vtype_t vtype;
   int shown;
   duf_option_t o;
-  unsigned long m;
-  unsigned mf:1;
+  
+  unsigned long mcfg_offset;
+  unsigned long mpdi_offset;
+  unsigned mcfg_flag:1;
+  unsigned mpdi_flag:1;
+
   duf_anyflag_t afl;
   struct
   {

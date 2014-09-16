@@ -86,7 +86,13 @@ duf_main( int argc, char **argv )
   {
     DUF_TRACE( any, 1, "any test" );
     duf_config->cli.interstage_init = duf_interstage_init;
+
+    DEBUG_E_NO( DUF_ERROR_OPTION );
     r = duf_all_options( argc, argv );
+    DUF_E_YES( DUF_ERROR_OPTION );
+
+
+
     if ( r >= 0 )
     {
       DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
@@ -95,7 +101,8 @@ duf_main( int argc, char **argv )
     }
 
     DUF_PUTS( 0, "--------------------------------------------------" );
-    DUF_PRINTF( 0, " main_db ended                                                       [%s] (#%d)", duf_error_name( r ), r );
+    DUF_PRINTF( 0, " main_db ended" );
+    DUF_TEST_R( r );
     DUF_PUTS( 0, "--------------------------------------------------" );
 
     if ( r >= 0 && DUF_IF_TRACE( options ) )
@@ -109,14 +116,13 @@ duf_main( int argc, char **argv )
     /*   DUF_TRACE( any, 0, "r=%d", r ); */
     /* }                                 */
 
-    DUF_TEST_RN( r );
+    /* DUF_TEST_RN( r ); */
 
-    DUF_TEST_R( r );
     duf_config_delete(  );
   }
   else
   {
-    DUF_ERROR( "(%d) %s", r, argv[0] );
+    DUF_SHOW_ERROR( "(%d) %s", r, argv[0] );
   }
 #ifdef MAS_TRACEMEM
 
@@ -136,8 +142,9 @@ duf_main( int argc, char **argv )
 
 
 #endif
-  DUF_ERRORR( r, "-" );
-  return r < 0 && r != DUF_ERROR_MAX_REACHED ? 31 : 0;
+/* make exit status */
+  DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED );
+  return r < 0 ? 31 : 0;
 }
 
 int

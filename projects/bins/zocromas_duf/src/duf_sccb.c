@@ -65,7 +65,7 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
              duf_uni_scan_action_title( sccb ) );
 
   DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
-
+  DUF_E_NO( DUF_ERROR_MAX_DEPTH );
 /* duf_scan_dirs_by_pdi_maxdepth:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
  *       for each <dir> record by top dirID (i.e. children of top dirID) with corresponding args
@@ -102,5 +102,6 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
     if ( duf_config->u.max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
   }
+  DUF_E_YES( DUF_ERROR_MAX_DEPTH );
   DEBUG_ENDR( r );
 }

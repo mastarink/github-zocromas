@@ -14,5 +14,11 @@ void duf_vset_ereport( int once, int doreport, va_list args );
 void duf_set_ereport( int once, int enable, duf_error_code_t rtest );
 int duf_get_ereport( duf_error_code_t rtest );
 
+int duf_ecount( duf_error_code_t rtest );
+
+
+void duf_set_emax_count( int maxcount, duf_error_code_t rtest );
+void duf_vset_emax_count( int maxcount, va_list args );
+void duf_set_memax_count( int maxcount, ... );
 
 #endif

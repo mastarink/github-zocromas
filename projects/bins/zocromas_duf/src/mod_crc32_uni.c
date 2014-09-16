@@ -80,7 +80,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
   }
   else
   {
-    DUF_ERROR( "insert crc32 %d", r );
+    DUF_SHOW_ERROR( "insert crc32 %d", r );
   }
   if ( pr )
     *pr = r;

@@ -136,7 +136,7 @@ main_db( int argc, char **argv )
 
             s = strerror_r( errno, serr, sizeof( serr ) );
 
-            DUF_ERROR( "unlink %s: [%s]", duf_config->db.main.fpath, s );
+            DUF_SHOW_ERROR( "unlink %s: [%s]", duf_config->db.main.fpath, s );
             if ( errno == ENOENT )
               r = 0;
             else
@@ -344,7 +344,7 @@ main_db( int argc, char **argv )
       if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
       {
         DUF_TEST_RX( r );
-        DUF_ERROR( "action FAIL ; [%s] (#%d)", duf_error_name( r ), r );
+        DUF_SHOW_ERROR( "action FAIL ; [%s] (#%d)", duf_error_name( r ), r );
       }
       /* duf_action( argc, argv ); */
       {
@@ -358,12 +358,12 @@ main_db( int argc, char **argv )
   else if ( !duf_config->db.dir )
   {
     r = DUF_ERROR_PTR;
-    DUF_ERROR( "db.dir not set" );
+    DUF_SHOW_ERROR( "db.dir not set" );
   }
   else if ( !duf_config->db.main.name )
   {
     r = DUF_ERROR_PTR;
-    DUF_ERROR( "db.main.name not set" );
+    DUF_SHOW_ERROR( "db.main.name not set" );
   }
 /*										*/ DEBUG_END(  );
   DUF_TEST_R( r );

@@ -57,7 +57,7 @@ duf_selector2sql( duf_sql_set_t * sql_set )
     }
   }
   else
-    DUF_ERROR( "Bad arg" );
+    DUF_SHOW_ERROR( "Bad arg" );
   return sql;
 }
 
@@ -161,7 +161,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       DOR( r, ( str_cb2 ) ( pstmt, pdi, sccb ) );
     }
     else
-      DUF_ERROR( "str_cb2 not set" );
+      DUF_SHOW_ERROR( "str_cb2 not set" );
     DOR( r, duf_levinfo_goup( pdi ) );
   }
 
@@ -367,6 +367,6 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_depthi
   }
   DUF_TRACE( scan, 13, "(%d) end scan items str_cb2%c", r, str_cb2 ? '+' : '-' );
 
-  /* DUF_ERROR( "r:%d; sel_cb2:%s", r, DUF_FUNN( sel_cb2 ) ); */
+  /* DUF_SHOW_ERROR( "r:%d; sel_cb2:%s", r, DUF_FUNN( sel_cb2 ) ); */
   DEBUG_ENDR( r );
 }

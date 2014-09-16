@@ -93,12 +93,12 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     }
     else
     {
-      DUF_ERROR( "insert md5 %d", r );
+      DUF_SHOW_ERROR( "insert md5 %d", r );
     }
   }
   else
   {
-    DUF_ERROR( "Wrong data" );
+    DUF_SHOW_ERROR( "Wrong data" );
     r = DUF_ERROR_DATA;
     DUF_TEST_R( r );
   }
@@ -252,7 +252,7 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
 /*   int r = 0;                                                                                                                        */
 /*   int ffd = duf_levinfo_dfd( pdi );                                                                                                 */
 /*                                                                                                                                     */
-/*   DUF_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );                                                          */
+/*   DUF_SHOW_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );                                                          */
 /*   if ( ffd )                                                                                                                        */
 /*   {                                                                                                                                 */
 /*     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );                                                                                      */

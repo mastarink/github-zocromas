@@ -31,6 +31,7 @@ duf_parse_cli_options( const char *shorts, int stage )
   char *const *cargv;
   const duf_option_t *opttable;
 
+  DEBUG_E_NO( DUF_ERROR_OPTION );
   opterr = 0;
   optind = 1;
   cargc = duf_config->cargc;
@@ -50,7 +51,7 @@ duf_parse_cli_options( const char *shorts, int stage )
 
     if ( r == DUF_ERROR_OPTION )
     {
-      DUF_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->cargv[optind - 1], codeval, codeval );
+      DUF_SHOW_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->cargv[optind - 1], codeval, codeval );
     }
     cnt++;
   }
@@ -63,7 +64,7 @@ duf_parse_cli_options( const char *shorts, int stage )
 
     duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, duf_config->cargc, duf_config->cargv, optind );
   }
-  DEBUG_ENDR( r );
+  DEBUG_ENDR_YES( r, DUF_ERROR_OPTION );
 }
 
 int

@@ -96,7 +96,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       /* DUF_TEST_R( r ); */
       DUF_SQL_CHANGES( changes, r, pstmt_insert );
       /* DUF_TEST_R( r ); */
-      /* DUF_ERROR( "changes:%d", changes ); */
+      /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
       {
         modelid = duf_sql_last_insert_rowid(  );
@@ -109,7 +109,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
   else
   {
     /* No model is not soooo bad! */
-    /* DUF_ERROR( " Wrong data " ); */
+    /* DUF_SHOW_ERROR( " Wrong data " ); */
     /* r = DUF_ERROR_DATA;          */
   }
   DUF_TEST_R( r );
@@ -161,7 +161,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       DUF_TEST_R( r );
       DUF_SQL_END_STMT( select_exif, r, pstmt_select );
       /* if ( !exifid )                        */
-      /*   DUF_ERROR( "exifid NOT SELECTED" ); */
+      /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
     }
 
     if ( !exifid && !duf_config->cli.disable.flag.insert )
@@ -198,7 +198,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       /*   DUF_SFIELD2( filename );                                                                      */
       /*   real_path = duf_levinfo_path( pdi );                                                          */
       /*                                                                                                 */
-      /*   DUF_ERROR( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
+      /*   DUF_SHOW_ERROR( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
       /* }                                                                                               */
       DUF_SQL_STEP( r, pstmt_insert );
       /* DUF_TEST_R(r); */
@@ -209,7 +209,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
         assert( exifid );
       }
       if ( !changes )
-        DUF_ERROR( "exifid NOT INSERTED:%s - %llu, %lu, %s", sql, modelid, timeepoch, stime_original );
+        DUF_SHOW_ERROR( "exifid NOT INSERTED:%s - %llu, %lu, %s", sql, modelid, timeepoch, stime_original );
       {
         DUF_SFIELD2( filename );
         DUF_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
@@ -222,7 +222,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
   }
   else
   {
-    DUF_ERROR( " Wrong data " );
+    DUF_SHOW_ERROR( " Wrong data " );
     r = DUF_ERROR_DATA;
   }
 
@@ -265,7 +265,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       }
       if ( r >= 0 )
         corrected_time = mas_strdup( stime_original );
-      /* DUF_ERROR( "@@@@@@@@@@@@@@ %s", stime_original ); */
+      /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %s", stime_original ); */
       DUF_TRACE( exif, 3, "stime_original:%s", stime_original );
       /* 2008:06:21 13:18:19 */
       if ( r >= 0 )
@@ -303,7 +303,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
         r = DUF_ERROR_EXIF_NO_DATE;
       if ( r >= 0 && strchr( corrected_time, '?' ) )
       {
-        DUF_ERROR( "broken date %s", corrected_time );
+        DUF_SHOW_ERROR( "broken date %s", corrected_time );
         r = DUF_ERROR_EXIF_BROKEN_DATE;
       }
       if ( r >= 0 || r == DUF_ERROR_EXIF_BROKEN_DATE )
@@ -320,7 +320,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
           timeepoch = timegm( &times );
 
           /* strftime( buf1, sizeof( buf1 ), "%Y-%m-%d %H:%M:%S", &times ); */
-          /* DUF_ERROR( "!!!!! %lu : %lu", timeepoch, time(NULL) ); */
+          /* DUF_SHOW_ERROR( "!!!!! %lu : %lu", timeepoch, time(NULL) ); */
           /* Don't bother printing it if it's entirely blank */
           /* trim_spaces( corrected_time ); */
         }
@@ -333,25 +333,25 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   {
     r = DUF_ERROR_EXIF_NO_DATE;
     if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
-      DUF_ERROR( "NO DATE - HAS +1" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +1" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
-      DUF_ERROR( "NO DATE - HAS +2" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +2" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
-      DUF_ERROR( "NO DATE - HAS +3" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +3" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
-      DUF_ERROR( "NO DATE - HAS +4" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +4" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
-      DUF_ERROR( "NO DATE - HAS +5" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +5" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
-      DUF_ERROR( "NO DATE - HAS +6" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +6" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME ) ) )
-      DUF_ERROR( "NO DATE - HAS +7" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +7" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME ) ) )
-      DUF_ERROR( "NO DATE - HAS +8" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +8" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME ) ) )
-      DUF_ERROR( "NO DATE - HAS +9" );
+      DUF_SHOW_ERROR( "NO DATE - HAS +9" );
     else
-      DUF_ERROR( "NO DATE" );
+      DUF_SHOW_ERROR( "NO DATE" );
     /* ??? exif_entry_free( entry ); */
   }
 
@@ -452,7 +452,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
           }
 
           timeepoch = duf_exif_get_time( edata, &date_changed, stime_original, sizeof( stime_original ), &r );
-          /* DUF_ERROR( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
+          /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
           if ( timeepoch || *stime_original || model )
           {
             unsigned long long exifid = 0;

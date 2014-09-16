@@ -51,7 +51,7 @@ duf_levinfo_clear_li( duf_levinfo_t * pli )
   assert( pli->lev_dh.dfd == 0 );
   if ( pli->itemname )
   {
-    /* DUF_ERROR( "CLEAR %s %p", pli->itemname, pli->itemname ); */
+    /* DUF_SHOW_ERROR( "CLEAR %s %p", pli->itemname, pli->itemname ); */
     mas_free( pli->itemname );
   }
   pli->itemname = NULL;
@@ -97,9 +97,9 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
       pdi->levinfo[d].numfile = nfiles;
       if ( itemname )
       {
-        /* DUF_ERROR( "BEFORE NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
+        /* DUF_SHOW_ERROR( "BEFORE NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
         pdi->levinfo[d].itemname = mas_strdup( itemname );
-        /* DUF_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
+        /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
       DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemname( pdi ) );
@@ -164,7 +164,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
 
     DUF_TEST_R( r );
     if ( r < 0 )
-      DUF_ERROR( "(%d) close error; L%d", r, pdi->depth );
+      DUF_SHOW_ERROR( "(%d) close error; L%d", r, pdi->depth );
     DUF_TRACE( explain, 1, "level up:   %d", d );
     assert( pdi->levinfo );
     duf_levinfo_clear_level_d( pdi, d );
@@ -214,7 +214,7 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
       /* if ( S_ISBLK( stX.st_mode ) ) */
       /* {                             */
       /* }                             */
-      /* DUF_ERROR( "%s", pdi->levinfo[d].is_leaf ? "LEAF" : "NODE" ); */
+      /* DUF_SHOW_ERROR( "%s", pdi->levinfo[d].is_leaf ? "LEAF" : "NODE" ); */
       /* DUF_PRINTF( 0, "d:%d [%s]", d, pdi->levinfo[d].itemname ); */
       assert( pdi->levinfo[d].itemname );
       if ( d == 0 )
@@ -404,12 +404,16 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
 {
   DEBUG_STARTR( r );
   int delta;
-  delta=( is_leaf ? 1 : 0 );
-  delta=0;
+
+  delta = ( is_leaf ? 1 : 0 );
+  delta = 0;
   /* if ( duf_pdi_recursive( pdi ) )               */
   /* {                                             */
-    if ( !duf_pdi_is_good_depth( pdi, delta ) )
-      r = DUF_ERROR_MAX_DEPTH;
+  if ( !duf_pdi_is_good_depth( pdi, delta ) )
+    r = DUF_ERROR_MAX_DEPTH;
+  if ( r < 0 )
+    DUF_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pdi_depth( pdi ), duf_pdi_maxdepth( pdi ),
+               duf_pdi_topdepth( pdi ), delta, duf_pdi_recursive( pdi ) );
   /* }                                             */
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
   /*   r = DUF_ERROR_MAX_DEPTH;                    */

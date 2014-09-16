@@ -57,7 +57,7 @@ duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, con
         parent = duf_pathid_to_path2_in( pstmt, parentid, pdi, &r ); /* open!! */
         DUF_TEST_R( r );
         path = duf_join_path( parent, dirname );
-        /* DUF_ERROR( "%llu (%s): %s @ %llu => %s", dirid, parent, tail, parentid, path ); */
+        /* DUF_SHOW_ERROR( "%llu (%s): %s @ %llu => %s", dirid, parent, tail, parentid, path ); */
         mas_free( parent );
       }
     }

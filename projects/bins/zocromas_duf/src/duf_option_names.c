@@ -34,7 +34,7 @@ duf_cli_option_shorts( void )
   {
     if ( lo_extended[ilong].o.val < 0xFF )
     {
-      /* DUF_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
+      /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
       if ( !strchr( shorts, ( char ) lo_extended[ilong].o.val ) )
       {
         *p++ = ( char ) lo_extended[ilong].o.val;

@@ -8,6 +8,8 @@
    /*      */ DO_O( UPLUS, cli.trace.any ) /*                                                                */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-calls" ), /*    */ DO_A_O, /* */ DO_V( CALLS_TRACE )} /*    */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.calls ) /*                                                              */ , DO_H( trace .... ) /*         */ },
+  {.o = {DO_Q( "trace-depth" ), /*    */ DO_A_O, /* */ DO_V( CALLS_TRACE )} /*    */ , DO_CL( TRACE ) /*     */ ,
+   /*      */ DO_O( UPLUS, cli.trace.depth ) /*                                                              */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-collect" ), /*  */ DO_A_O, /* */ DO_V( COLLECT_TRACE )} /*  */ , DO_CL( TRACE ) /*     */ ,
    /*      */ DO_O( UPLUS, cli.trace.collect ) /*                                                            */ , DO_H( trace .... ) /*         */ },
   {.o = {DO_Q( "trace-crc32" ), /*    */ DO_A_O, /* */ DO_V( CRC32_TRACE )} /*    */ , DO_CL( TRACE ) /*     */ ,

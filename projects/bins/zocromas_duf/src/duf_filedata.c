@@ -115,12 +115,12 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
     }
     else
     {
-      DUF_ERROR( "insert filedata %d [%s]", r, duf_error_name( r ) );
+      DUF_SHOW_ERROR( "insert filedata %d [%s]", r, duf_error_name( r ) );
     }
   }
   else
   {
-    DUF_ERROR( "Wrong data" );
+    DUF_SHOW_ERROR( "Wrong data" );
     r = DUF_ERROR_DATA;
   }
   if ( pr )

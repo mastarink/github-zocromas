@@ -13,7 +13,8 @@
 #define DO_Q( _n ) .name = _n
 #define DO_H( _h ) .help = # _h
 #define DO_T(_vt) .vtype=DUF_OPTION_VTYPE_ ## _vt
-#define DO_O(_vt, _v) DO_T(_vt),.mf=1,.m = offsetof(duf_config_t,_v)
+#define DO_O(_vt, _v) DO_T(_vt),.mcfg_flag=1,.mcfg_offset = offsetof(duf_config_t,_v)
+#define DO_OPDI(_v) .mpdi_flag=1,.mpdi_offset = offsetof(duf_depthinfo_t,_v)
 #define DO_FL(_t,_fld) .afl._t={._fld=1}
 #define DO_FL0(_t,_fld) .anfl._t={._fld=1}
 #define DO_VIFUN(_f, _a) .call={.fdesc={.vi={.func=_f, .arg=_a}}}

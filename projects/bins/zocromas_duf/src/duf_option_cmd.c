@@ -20,9 +20,9 @@
 /* ###################################################################### */
 
 
-
+/* return so called `longindex` */
 int
-duf_find_cmd_long( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator, char **parg )
+duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtable, unsigned xtable_size, char vseparator, char **parg, int *pno )
 {
   DEBUG_STARTR( r );
   char *barg = NULL;
@@ -50,9 +50,9 @@ duf_find_cmd_long( const char *string, const duf_longval_extended_t * xtable, un
   if ( barg )
     arg = mas_strdup( barg );
 
-  DUF_TRACE( options, 0, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
+  DUF_TRACE( options, 6, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
 
-  DORN( r, duf_find_name_long( name, xtable, xtable_size, 1 /* soft */  ) );
+  DORN( r, duf_find_name_long_no( name, arg ? 1 : 0, xtable, xtable_size, 1 /* soft */ , pno ) );
   if ( r >= 0 && parg )
     *parg = arg;
   else
@@ -61,7 +61,7 @@ duf_find_cmd_long( const char *string, const duf_longval_extended_t * xtable, un
 
   if ( r == DUF_ERROR_OPTION )
   {
-    DUF_ERROR( "Invalid option -- '%s'", string );
+    DUF_SHOW_ERROR( "Invalid option -- '%s'", string );
   }
   mas_free( name );
   DEBUG_ENDRN( r );
@@ -73,8 +73,10 @@ duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable,
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
   char *arg = NULL;
+  int no = 0;
 
-  r = duf_find_cmd_long( string, xtable, xtable_size, vseparator, &arg );
+  r = duf_find_cmd_long_no( string, xtable, xtable_size, vseparator, &arg, &no );
+  DUF_TRACE( options, 6, "string:%s; no:%d", string, no );
   if ( r >= 0 )
   {
     extended = &xtable[r];
@@ -85,20 +87,23 @@ duf_execute_cmd_long( const char *string, const duf_longval_extended_t * xtable,
  *   =0 for other option
  *   errorcode<0 for error
  * */
+  /* if ( r >= 0 && extended && ( ( !arg && extended->o.has_arg == required_argument ) || ( arg && extended->o.has_arg == no_argument ) ) ) */
+  /* {                                                                                                                                      */
+  /*   r = DUF_ERROR_OPTION_VALUE;                                                                                                          */
+  /* }                                                                                                                                      */
 
-  DUF_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
-  {
-    DOR( r, duf_parse_option_long_typed( extended, arg, stage ) );
-    if ( r == DUF_ERROR_OPTION_NOT_PARSED )
-      DOZR( r, duf_parse_option_long_old( extended, arg, stage ) );
-  }
-  DUF_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
+
+  DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION );
+  DOR( r, duf_parse_option_long_full( extended, arg, stage, no ) );
   mas_free( arg );
-  DEBUG_ENDR( r );
+  DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_PARSED, DUF_ERROR_OPTION );
 }
 
 int
 duf_execute_cmd_long_std( const char *string, char vseparator, int stage )
 {
-  return duf_execute_cmd_long( string, lo_extended, lo_extended_count, vseparator, stage );
+  DEBUG_STARTR( r );
+  DEBUG_E_NO( DUF_ERROR_OPTION, DUF_ERROR_MAX_SEQ_REACHED );
+  DOR( r, duf_execute_cmd_long( string, lo_extended, lo_extended_count, vseparator, stage ) );
+  DEBUG_ENDR_YES( r, DUF_ERROR_OPTION, DUF_ERROR_MAX_SEQ_REACHED );
 }

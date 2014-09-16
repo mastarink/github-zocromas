@@ -338,7 +338,7 @@ duf_levinfo_pdh_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi );
   /* if ( pdi->opendir ) */
   {
-    /* DUF_ERROR( "IS_LEAF:%d", pdi->levinfo[d].is_leaf ); */
+    /* DUF_SHOW_ERROR( "IS_LEAF:%d", pdi->levinfo[d].is_leaf ); */
 
     assert( d >= 0 );
     assert( pdi->levinfo );
@@ -471,12 +471,12 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
       }
       /* else                                */
       /* {                                   */
-      /*   DUF_ERROR( "pdi->path not set" ); */
+      /*   DUF_SHOW_ERROR( "pdi->path not set" ); */
       /* }                                   */
     }
   }
   if ( !path )
-    DUF_ERROR( "no path returned" );
+    DUF_SHOW_ERROR( "no path returned" );
   return path;
 }
 
