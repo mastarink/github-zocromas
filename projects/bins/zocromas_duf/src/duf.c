@@ -1,6 +1,7 @@
 /* File 20140902.123820 */
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -24,6 +25,8 @@
 
 #include "duf_action.h"
 #include "duf_maindb.h"
+
+#include "duf_pdi.h"
 
 /* #include "duf_path2db.h"        (* test only *) */
 
@@ -85,11 +88,13 @@ duf_main( int argc, char **argv )
   if ( r >= 0 )
   {
     DUF_TRACE( any, 1, "any test" );
-    duf_config->cli.interstage_init = duf_interstage_init;
+    /* duf_config->cli.interstage_init = duf_interstage_init; (* ????? *) */
 
+    assert(duf_config->targc==0);
     DEBUG_E_NO( DUF_ERROR_OPTION );
     r = duf_all_options( argc, argv );
     DUF_E_YES( DUF_ERROR_OPTION );
+    assert(duf_config->targc>0);
 
 
 

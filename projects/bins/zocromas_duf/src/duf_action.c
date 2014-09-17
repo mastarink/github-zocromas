@@ -46,27 +46,6 @@
 /* ###################################################################### */
 
 
-int
-duf_interstage_init( void )
-{
-  DEBUG_STARTR( r );
-  /* DOR( r, duf_pdi_reinit( &duf_config->di, "/", &duf_config->u ) ); */
-
-  if ( !duf_config->pdi )
-  {
-    duf_config->pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
-    memset( duf_config->pdi, 0, sizeof( duf_depthinfo_t ) );
-  }
-  duf_config->pdi->depth = -1;
-  duf_config->pdi->pu = &duf_config->u;
-  DOR( r, duf_pdi_reinit( duf_config->pdi, duf_config->targc > 0 ? duf_config->targv[0] : "/", &duf_config->u, DUF_U_FLAG( recursive ) ) );
-  assert( duf_config->pdi->levinfo );
-  if ( r == DUF_ERROR_NOT_IN_DB )
-    r = 0;
-  DEBUG_ENDR( r );
-}
-
-
 static int
 duf_store_log( int argc, char *const argv[] )
 {
@@ -178,9 +157,16 @@ duf_action( int argc, char **argv )
   assert( duf_config->pdi );
 
 
-  if ( duf_config->cli.interstage_init )
-    r = ( duf_config->cli.interstage_init ) (  );
-  DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 1 ) );
+
+  {
+    /*
+     * DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targc > 0 ? duf_config->targv[0] : "/", &duf_config->u, DUF_U_FLAG( recursive ) ) );
+     *           ==> duf_maindb.c:main_db; before duf_action
+     * */
+
+    /* stage 1 - needs pdi inited with argv, which is known only after stage 0 */
+    DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 1 ) );
+  }
   assert( duf_config->pdi->levinfo );
 
   if ( 0 )
@@ -194,6 +180,6 @@ duf_action( int argc, char **argv )
     DOR( r, duf_interactive(  ) );
   }
   else if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
-    r = duf_make_all_sccbs_wrap(  );
+    r = duf_make_all_sccbs_wrap(  ); /* each targv; reinit will be made */
   return r;
 }

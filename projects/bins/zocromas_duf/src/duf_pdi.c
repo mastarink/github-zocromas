@@ -16,49 +16,16 @@
 
 #include "duf_sql2.h"
 
-#include "duf_levinfo.h"
+#include "duf_levinfo_ref.h"
+#include "duf_levinfo_credel.h"
+/* #include "duf_levinfo_context.h" */
+#include "duf_context.h"
 
 #include "duf_path2db.h"
 
 /* ###################################################################### */
 #include "duf_pdi.h"
 /* ###################################################################### */
-
-void
-duf_clear_context( duf_context_t * pcontext )
-{
-  if ( pcontext )
-  {
-    if ( pcontext->destructor )
-      ( pcontext->destructor ) ( pcontext->ptr );
-    else
-      mas_free( pcontext->ptr );
-  }
-  pcontext->ptr = NULL;
-  /*? */
-  pcontext->destructor = NULL;
-}
-
-void *
-duf_context( duf_context_t * pcontext )
-{
-  return pcontext ? pcontext->ptr : NULL;
-}
-
-void
-duf_set_context( duf_context_t * pcontext, void *ptr )
-{
-  duf_clear_context( pcontext );
-  assert( pcontext );
-  pcontext->ptr = ptr;
-}
-
-void
-duf_set_context_destructor( duf_context_t * pcontext, duf_void_voidp_t destr )
-{
-  assert( pcontext );
-  pcontext->destructor = destr;
-}
 
 int
 duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive )
@@ -108,6 +75,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
 {
   int rec = 0;
 
+  assert( real_path && *real_path == '/' );
   /* rec = pdi && !recursive ? duf_pdi_recursive( pdi ) : recursive; */
   rec = pdi && recursive < 0 ? duf_pdi_recursive( pdi ) : recursive;
   duf_pdi_close( pdi );
@@ -127,7 +95,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
     path = mas_strdup( cpath );
   else
   {
-    path = mas_strdup( duf_levinfo_path( pdi ) );
+    path = duf_levinfo_path_qdup( pdi, NULL );
     if ( !( cpath[0] == '.' && !cpath[1] ) )
     {
       path = mas_strcat_x( path, "/" );

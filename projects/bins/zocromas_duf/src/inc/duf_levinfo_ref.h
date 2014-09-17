@@ -53,14 +53,6 @@ void *duf_levinfo_context( const duf_depthinfo_t * pdi );
 void *duf_levinfo_context_up( const duf_depthinfo_t * pdi );
 
 
-int duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d );
-int duf_levinfo_opened_dh( duf_depthinfo_t * pdi );
-int duf_levinfo_opened_dh_up( duf_depthinfo_t * pdi );
-
-int duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d );
-int duf_levinfo_closeat_dh( duf_depthinfo_t * pdi );
-int duf_levinfo_closeat_dh_up( duf_depthinfo_t * pdi );
-
 int duf_levinfo_dfd_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_dfd( const duf_depthinfo_t * pdi );
 int duf_levinfo_dfd_up( const duf_depthinfo_t * pdi );
@@ -79,7 +71,9 @@ dev_t duf_levinfo_stat_dev( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_path( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_path_up( const duf_depthinfo_t * pdi );
+
 const char *duf_levinfo_path_q( const duf_depthinfo_t * pdi, const char *q );
+char *duf_levinfo_path_qdup( const duf_depthinfo_t * pdi, const char *q );
 
 
 #endif

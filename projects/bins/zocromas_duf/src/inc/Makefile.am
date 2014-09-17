@@ -1,6 +1,6 @@
 noinst_HEADERS=duf.h duf_interactive.h			\
 	duf_maindb.h duf_action.h			\
-	duf_config.h duf_config_ref.h duf_status_ref.h	 \
+	duf_config.h duf_config_ref.h duf_config4trace_ref.h duf_status_ref.h	 \
 	duf_options.h duf_cli_options.h			  \
 	duf_option_find.h duf_option_descr.h duf_option.h  \
 	duf_option_file.h duf_option_env.h		\
@@ -12,8 +12,10 @@ noinst_HEADERS=duf.h duf_interactive.h			\
 	duf_item_scan2.h				      \
 	duf_uni_scan.h duf_prepare_actions.h duf_uni_scan2.h   \
 	duf_sccb.h duf_dir_scan2.h duf_dir_scan2_stages.h	\
-	duf_levinfo.h duf_levinfo_ref.h duf_pdi.h		 \
-	duf_dirent_scan2.h					  \
+	duf_context.h	\
+	duf_levinfo.h duf_levinfo_ref_def.h duf_levinfo_ref.h duf_levinfo_credel.h duf_levinfo_openclose.h duf_levinfo_updown.h duf_levinfo_context.h	\
+	duf_pdi.h						\
+	duf_dirent_scan2.h					\
 	duf_utils.h duf_utils_path.h duf_utils_print.h duf_match.h  \
 	duf_errors.h duf_maintenance.h duf_trace.h		   \
 	duf_dh.h duf_service.h					    \

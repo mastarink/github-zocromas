@@ -1,11 +1,14 @@
-find duf_defs.h
+find duf_maintenance.h
+
+tab sfind duf_defs.h
 sfind duf_debug_defs.h
 sfind duf_print_defs.h
 
 
-sfind duf_config_types.h
+tab sfind duf_config_types.h
 sfind duf_status_types.h
-sfind duf_levinfo_types.h
+
+tab sfind duf_levinfo_types.h
 
 tab sfind duf_trace_types.h
 sfind duf_trace_defs.h

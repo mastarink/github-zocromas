@@ -18,8 +18,9 @@
 #include "duf_config_ref.h"
 #include "duf_status_ref.h"
 
+#include "duf_levinfo_ref.h"
+
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
 
 #include "duf_sql.h"
 #include "duf_sql2.h"
@@ -31,13 +32,13 @@
 
 
 /* #include "duf_uni_scan1.h" */
-#include "duf_uni_scan2.h"
+/* #include "duf_uni_scan2.h" */
 #include "duf_path2db.h"
 
 #include "duf_option_names.h"
 #include "duf_prepare_actions.h"
 
-#include "duf_interactive.h"
+/* #include "duf_interactive.h" */
 
 /* ###################################################################### */
 #include "duf_uni_scan.h"

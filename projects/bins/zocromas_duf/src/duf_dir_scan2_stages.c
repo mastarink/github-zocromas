@@ -5,12 +5,13 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_service.h"
+/* #include "duf_service.h" */
 #include "duf_config_ref.h"
-#include "duf_match.h"
+/* #include "duf_match.h" */
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
+/* #include "duf_levinfo.h" */
+#include "duf_levinfo_ref.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"

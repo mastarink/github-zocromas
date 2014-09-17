@@ -34,6 +34,7 @@
 /* ###################################################################### */
 
 duf_config_t *duf_config = NULL;
+const duf_config_t *duf_config4trace = NULL;
 
 duf_tmp_t *
 duf_tmp_create( void )
@@ -68,6 +69,7 @@ duf_config_create( void )
 
   assert( !duf_config );
   duf_config = mas_malloc( sizeof( duf_config_t ) );
+  duf_config4trace = duf_config;
   memset( duf_config, 0, sizeof( duf_config ) );
   duf_config->u.max_rel_depth = 100;
   if ( 0 )

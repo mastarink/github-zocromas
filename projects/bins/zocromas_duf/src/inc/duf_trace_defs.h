@@ -2,20 +2,21 @@
 #  define MAS_DUF_TRACE_DEFS_H
 
 #  include "duf_print_defs.h"
-#  include "duf_options.h"
+/* #  include "duf_options.h" */
 #  include "duf_error_types.h"
 #  include "duf_errors.h"
-
+#  include "duf_config4trace_ref.h"
 /* ###################################################################### */
 #  define DUF_T_NOIF
 
+#  define DUF_TRACE_CONFIG duf_config4trace
 /* #  define DUF_OINV(pref) assert(  !pref opendir || ( \                                                */
-/*                           ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \                */
+/*                           ( ( (int) DUF_TRACE_CONFIG->nopen - (int) DUF_TRACE_CONFIG->nclose ) ) \                */
 /*                         - (pref  depth)  == 1 ) \                                                     */
 /*                 )                                                                                     */
 /*  (* - (pref levinfo?pref levinfo[pref depth].is_leaf:0) *)                                            */
 /* #  define DUF_OINVC(pref) assert(  !pref opendir || ( \                                               */
-/*                           ( ( (int) duf_config->nopen - (int) duf_config->nclose ) ) \                */
+/*                           ( ( (int) DUF_TRACE_CONFIG->nopen - (int) DUF_TRACE_CONFIG->nclose ) ) \                */
 /*                         - (pref  depth)  == 0 ) \                                                     */
 /*                 )                                                                                     */
 /*                                                                                                       */
@@ -30,32 +31,32 @@
 
 /* ###################################################################### */
 #  define DUF_IF_TR_WHAT_C(  _cfg, _what, _name )		(( _cfg && !_cfg->cli.trace.nonew) ? _cfg->_what._name: 1 )
-#  define DUF_IF_TR_WHAT( _what, _name )			DUF_IF_TR_WHAT_C( duf_config,  _what,      _name )
+#  define DUF_IF_TR_WHAT( _what, _name )			DUF_IF_TR_WHAT_C( DUF_TRACE_CONFIG,  _what,      _name )
 #  define DUF_IF_TR( _name )				DUF_IF_TR_WHAT(		  cli.trace, _name)
 
 #  define DUF_IF_TR_WHATN_C( _cfg, _what, _name, _min )	( _cfg && !_cfg->cli.trace.nonew && _cfg->_what._name > _min )
-#  define DUF_IF_TR_WHATN( _what, _name, _min )		DUF_IF_TR_WHATN_C( duf_config, _what,      _name, _min )
+#  define DUF_IF_TR_WHATN( _what, _name, _min )		DUF_IF_TR_WHATN_C( DUF_TRACE_CONFIG, _what,      _name, _min )
 #  define DUF_IF_TRN( _name, _min )			DUF_IF_TR_WHATN(		  cli.trace, _name, _min)
 
 /* #  define DUF_TR_WHAT_C( _cfg, _what, _name, _min, ... )    if ( DUF_IF_TR_WHATN_C( _cfg, _what, _name, _min )) { __VA_ARGS__ ; } */
-/* #  define DUF_TR_WHAT( _what, _name, _min, ... )           DUF_TR_WHAT_C( duf_config, _what, _name, _min, __VA_ARGS__ ) */
+/* #  define DUF_TR_WHAT( _what, _name, _min, ... )           DUF_TR_WHAT_C( DUF_TRACE_CONFIG, _what, _name, _min, __VA_ARGS__ ) */
 
 /* #  define DUF_TR_WHATSYS(  _what, _name, _min, ...)        DUF_TR_WHATSYSE( errno,  _what, _name, _min, __VA_ARGS__ ) */
 
 /* #  define DUF_TR_C( _cfg,_name, ... )                     DUF_TR_WHAT_C( _cfg, cli.trace, _name, __VA_ARGS__ ) */
-/* #  define DUF_TR(_name, ...)                             DUF_TR_C( duf_config, __VA_ARGS__ )                */
+/* #  define DUF_TR(_name, ...)                             DUF_TR_C( DUF_TRACE_CONFIG, __VA_ARGS__ )                */
 
 /* ###################################################################### */
 
-/* #  define DUF_IF_TRACE_WHAT(_what,_name) (duf_config && !duf_config->cli.trace.nonew && duf_config->_what._name ) */
+/* #  define DUF_IF_TRACE_WHAT(_what,_name) (DUF_TRACE_CONFIG && !DUF_TRACE_CONFIG->cli.trace.nonew && DUF_TRACE_CONFIG->_what._name ) */
 
 #  define DUF_IF_TRACE_WHAT_C(  _cfg, _what, _name )	(( _cfg && !_cfg->cli.trace.nonew) ? _cfg->_what._name : 1 )
 
-#  define DUF_IF_TRACE_WHAT( _what, _name )		DUF_IF_TRACE_WHAT_C( duf_config,  _what,      _name )
+#  define DUF_IF_TRACE_WHAT( _what, _name )		DUF_IF_TRACE_WHAT_C( DUF_TRACE_CONFIG,  _what,      _name )
 #  define DUF_IF_TRACE( _name )                          DUF_IF_TRACE_WHAT(                cli.trace, _name)
 
 #  define DUF_IF_TRACE_WHATN_C( _cfg, _what, _name, _min )  ( _cfg && !_cfg->cli.trace.nonew && _cfg->_what._name > _min )
-#  define DUF_IF_TRACE_WHATN( _what, _name, _min )         DUF_IF_TRACE_WHATN_C( duf_config, _what,      _name, _min )
+#  define DUF_IF_TRACE_WHATN( _what, _name, _min )         DUF_IF_TRACE_WHATN_C( DUF_TRACE_CONFIG, _what,      _name, _min )
 #  define DUF_IF_TRACEN( _name, _min )                    DUF_IF_TRACE_WHATN(               cli.trace, _name, _min)
 
 #  define DUF_TRACE_FILE_C( _cfg ) ( _cfg && _cfg->cli.trace.output.out ? _cfg->cli.trace.output.out : stdout )
@@ -63,10 +64,10 @@
 #  define DUF_TRACE_WHAT_C( _cfg, _what, _name, _min, ...)	duf_trace( DUF_TRACE_MODE_ ## _name, #_name, \
 		    	DUF_IF_TRACE_WHAT_C( _cfg, _what, _name ), _min, \
 			DUF_FL, _cfg?_cfg->loadtime:0, 0, 0, DUF_TRACE_FILE_C( _cfg ), __VA_ARGS__ )
-#  define DUF_TRACE_WHAT( _what, _name, _min, ...)		DUF_TRACE_WHAT_C( duf_config,	  _what,	     _name, _min, __VA_ARGS__ )
+#  define DUF_TRACE_WHAT( _what, _name, _min, ...)		DUF_TRACE_WHAT_C( DUF_TRACE_CONFIG,	  _what,	     _name, _min, __VA_ARGS__ )
 
 #  define DUF_TRACE_C( _cfg, _name, ... )			DUF_TRACE_WHAT_C( _cfg,		  cli.trace, _name, __VA_ARGS__ )
-#  define DUF_TRACE( _name, ... )			DUF_TRACE_C(	  duf_config,		     _name, __VA_ARGS__ )
+#  define DUF_TRACE( _name, ... )			DUF_TRACE_C(	  DUF_TRACE_CONFIG,		     _name, __VA_ARGS__ )
 
 #  if defined(__GNUC__)
 #    define DUF_SCCB( _macr, _name, _min, _fmt, ... )			_macr( _name, _min, "%" DUF_ACTION_TITLE_FMT "; "  _fmt, \
@@ -83,7 +84,7 @@
 			DUF_FL, _cfg?_cfg->loadtime:0, DUF_TRACE_FLAG_SYSTEM, _ern, DUF_TRACE_FILE_C( _cfg ), __VA_ARGS__ )
 
 #  define DUF_TRACE_WHATSYSE( _ern, _what, _name, _min, ... ) \
-							DUF_TRACE_WHATSYSE_C( duf_config, _ern, _what, _name, _min, __VA_ARGS__ )
+							DUF_TRACE_WHATSYSE_C( DUF_TRACE_CONFIG, _ern, _what, _name, _min, __VA_ARGS__ )
 
 #  define DUF_TRACE_WHATSYS( _what, _name, _min, ... )	DUF_TRACE_WHATSYSE( errno,  _what, _name, _min, __VA_ARGS__ )
 

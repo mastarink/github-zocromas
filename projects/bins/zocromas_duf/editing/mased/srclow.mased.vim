@@ -15,7 +15,6 @@ sfind duf_match.h
 
 tab sfind duf_errors.c
 sfind duf_errors.h
-sfind duf_maintenance.h
 
 tab sfind duf_trace.c
 sfind duf_trace.h

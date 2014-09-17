@@ -9,11 +9,12 @@
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
+/* #include "duf_levinfo.h" */
+#include "duf_levinfo_ref.h"
 
 #include "duf_item_scan2.h"
 
-#include "duf_db2path.h"
+/* #include "duf_db2path.h" */
 
 #include "duf_sccb.h"
 
@@ -21,7 +22,7 @@
 
 /* #include "duf_item_match2.h" */
 
-#include "duf_uni_scan2.h"
+/* #include "duf_uni_scan2.h" */
 /* ###################################################################### */
 #include "duf_dir_scan2.h"
 /* ###################################################################### */

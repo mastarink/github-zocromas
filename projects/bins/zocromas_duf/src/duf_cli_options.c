@@ -63,6 +63,7 @@ duf_parse_cli_options( const char *shorts, int stage )
     duf_config->targv = NULL;
 
     duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, duf_config->cargc, duf_config->cargv, optind );
+    /* targv becomes valid here - may init pdi etc. */
   }
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION );
 }
