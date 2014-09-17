@@ -22,6 +22,7 @@
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_option_defs.h"
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
@@ -62,14 +63,14 @@ duf_strtol_suff( const char *s, int *pr )
       l *= 512;
       break;
     default:
-      r = DUF_ERROR_OPTION_VALUE;
+      DOR( r, DUF_ERROR_OPTION_VALUE );
       l = 0;
       break;
     }
   }
   else
   {
-    r = DUF_ERROR_OPTION_VALUE;
+    DOR( r, DUF_ERROR_OPTION_VALUE );
     l = 0;
   }
   if ( pr )
@@ -108,14 +109,14 @@ duf_strtoll_suff( const char *s, int *pr )
       l *= 512;
       break;
     default:
-      r = DUF_ERROR_OPTION_VALUE;
+      DOR( r, DUF_ERROR_OPTION_VALUE );
       l = 0;
       break;
     }
   }
   else
   {
-    r = DUF_ERROR_OPTION_VALUE;
+    DOR( r, DUF_ERROR_OPTION_VALUE );
     l = 0;
   }
   if ( pr )
@@ -159,7 +160,7 @@ duf_limits( const char *s, unsigned *pmin, unsigned *pmax )
       }
     }
     else
-      r = DUF_ERROR_OPTION_VALUE;
+      DOR( r, DUF_ERROR_OPTION_VALUE );
     DUF_SHOW_ERROR( "[%c] %d - %d", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
   }
   DEBUG_ENDR( r );
@@ -201,7 +202,7 @@ duf_limitsll( const char *s, unsigned long long *pmin, unsigned long long *pmax 
       }
     }
     else
-      r = DUF_ERROR_OPTION_VALUE;
+      DOR( r, DUF_ERROR_OPTION_VALUE );
     DUF_SHOW_ERROR( "[%c] %lld - %lld", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
   }
   DEBUG_ENDR( r );
@@ -211,7 +212,7 @@ static FILE *
 duf_open_file_special( const char *pname, char **popenedname, int *pr )
 {
   int r = 0;
-  FILE *newfile;
+  FILE *newfile = NULL;
   int overw = 0;
   const char *mode = "w";
   struct stat st;
@@ -231,7 +232,7 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
   {
     DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
                     ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-    r = DUF_ERROR_OPTION_VALUE;
+    DOR( r, DUF_ERROR_OPTION_VALUE );
   }
   else
   {
@@ -239,7 +240,7 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
     if ( !newfile )
     {
       DUF_SHOW_ERROR( "can't open file %s\n", pname );
-      r = DUF_ERROR_OPTION_VALUE;
+      DOR( r, DUF_ERROR_OPTION_VALUE );
     }
   }
   if ( pr )
@@ -248,12 +249,16 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
 }
 
 static int
-duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE * newout, int handleid )
+duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE * defout, int handleid )
 {
   DEBUG_STARTR( r );
+  FILE *newout;
+
+  newout = defout;
 
   if ( pfile )
   {
+    *pfile = NULL;
     if ( !newout && handleid )
     {
       switch ( handleid )
@@ -274,6 +279,8 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
       if ( pname && *pname )
         newout = duf_open_file_special( pname, pfilename, &r );
     }
+    if ( !newout )
+      newout = defout;
     if ( newout )
     {
       if ( *pfile && *pfile != stderr && *pfile != stdout )
@@ -328,7 +335,7 @@ duf_strtime2long( const char *s, int *pr )
     if ( p )
       t = timelocal( &tm );
     else
-      r = DUF_ERROR_OPTION_VALUE;
+      DOR( r, DUF_ERROR_OPTION_VALUE );
   }
   if ( pr )
     *pr = r;
@@ -336,7 +343,7 @@ duf_strtime2long( const char *s, int *pr )
 }
 
 static int
-duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char *optargg, int stage, int no )
+duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char *optargg, int istage, int no )
 {
   DEBUG_STARTR( r );
   duf_option_code_t codeval = DUF_OPTION_NONE;
@@ -344,7 +351,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
   if ( extended )
     codeval = extended->o.val;
   else
-    r = DUF_ERROR_OPTION;
+    DOR( r, DUF_ERROR_OPTION );
 
   DUF_TRACE( explain, 0, "parsing typed:`%s`; cv:%d;   %s", extended->o.name, codeval, duf_error_name( r ) );
 /*
@@ -353,13 +360,13 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
  * */
 
   DUF_TRACE( options, 0, "r:%d; codeval:%d; xname:%s; no:%d", r, codeval, extended ? extended->o.name : "?", no );
-  if ( codeval && r >= 0 )
+  if (  /* codeval && */ r >= 0 )
   {
     unsigned doplus = 0;
     char *byteptr = ( ( ( char * ) duf_config ) + extended->mcfg_offset );
 
-#define DUF_NUMOPT(_typ,_dopls,_conv) \
-      if(!no) \
+#define DUF_NUMOPT(_rt, _typ,_dopls,_conv) \
+      if(_rt>=0 && !no) \
       { \
         int __rl = 0; \
 	_typ *p; \
@@ -369,7 +376,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	  _typ __v; \
 	  __v = _conv( optargg, &__rl ); \
 	  if ( __rl < 0 ) \
-	    r = DUF_ERROR_OPTION_VALUE; \
+	    { DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	  else \
 	    ( *p ) = __v; \
 	} \
@@ -380,10 +387,10 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       } \
       else \
       { \
-	r = DUF_ERROR_OPTION; \
+	DOR(_rt, DUF_ERROR_OPTION); \
       }
-#define DUF_PNUMOPT(_typ ) \
-      if(!no) \
+#define DUF_PNUMOPT(_rt, _typ ) \
+      if(_rt>=0 && !no) \
       { \
 	_typ *p; \
 	p = ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
@@ -394,22 +401,22 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       } \
       else \
       { \
-	r = DUF_ERROR_OPTION; \
+	DOR(_rt, DUF_ERROR_OPTION); \
       }
-#define DUF_QPNUMOPT(_typ,_conv) \
-      if(!no) \
+#define DUF_QPNUMOPT(_rt, _typ,_conv) \
+      if(_rt>=0 && !no) \
       { \
         if ( optargg && *optargg ) \
-        {  DUF_NUMOPT(_typ,0,_conv); if (r==DUF_ERROR_OPTION_VALUE) { DUF_CLEAR_ERROR(r, DUF_ERROR_OPTION_VALUE); DUF_PNUMOPT(_typ); } } \
+        {  DUF_NUMOPT(_rt, _typ,0,_conv); if (_rt==DUF_ERROR_OPTION_VALUE) { DUF_CLEAR_ERROR(_rt, DUF_ERROR_OPTION_VALUE); DUF_PNUMOPT(_rt, _typ); } } \
         else \
-        {  DUF_PNUMOPT(_typ); } \
+        {  DUF_PNUMOPT(_rt, _typ); } \
       } \
       else \
       { \
-	r = DUF_ERROR_OPTION; \
+	DOR(_rt, DUF_ERROR_OPTION); \
       }
-#define DUF_MINMAXOPT(_typ,_conv) \
-      if(!no) \
+#define DUF_MINMAXOPT(_rt, _typ,_conv) \
+      if(_rt>=0 && !no) \
       { \
         int __rl = 0; \
 	_typ *mm; \
@@ -422,7 +429,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	    mm->flag = 1; \
 	    __v.min = _conv( optargg, &__rl ); \
 	    if ( __rl < 0 ) \
-	      r = DUF_ERROR_OPTION_VALUE; \
+	    { DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	    else \
 	      mm->min = mm->max = __v.min; \
 	  } \
@@ -436,10 +443,10 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       } \
       else \
       { \
-	r = DUF_ERROR_OPTION; \
+	DOR(_rt, DUF_ERROR_OPTION); \
       }
-#define DUF_MOPT(_typ,_mix,_conv) \
-      if(!no) \
+#define DUF_MOPT(_rt,_typ,_mix,_conv) \
+      if(_rt>=0 && !no) \
       { \
         int __rl = 0; \
 	_typ *mm; \
@@ -449,16 +456,16 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	  mm->flag = 1; \
 	  mm->_mix = _conv( optargg, &__rl ); \
 	  if ( __rl < 0 ) \
-	    r = DUF_ERROR_OPTION_VALUE; \
+	  {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	} \
       } \
       else \
       { \
-	r = DUF_ERROR_OPTION; \
+	DOR(_rt, DUF_ERROR_OPTION); \
       }
 
-#define DUF_OUTPUTFILE_A(_typ, _defoptarg) \
-      if(!no) \
+#define DUF_OUTPUTFILE_A(_rt, _typ, _defoptarg, _defout) \
+      if(_rt>=0 && !no) \
       { \
         int __rl = 0; \
 	const char *s; \
@@ -467,145 +474,101 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
 	if ( extended->mcfg_flag == 1 /* && (s || extended->call.value.u */ ) /* if  extended->mcfg_flag == 1, then mcfg_offset is offset */ \
 	{ \
-	  duf_set_file_special( s, &mm->file, &mm->out, NULL, extended->call.value.u ); \
+	  __rl = duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u ); \
 	  if ( __rl < 0 ) \
-	    r = DUF_ERROR_OPTION_VALUE; \
+	  {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	} \
       } \
       else \
       { \
-	r = DUF_ERROR_OPTION; \
+	DOR(_rt, DUF_ERROR_OPTION); \
       }
-#define DUF_OUTPUTFILE(_typ) DUF_OUTPUTFILE_A(_typ, NULL)
+#define DUF_OUTPUTFILE(_rt, _typ, _defout) DUF_OUTPUTFILE_A(_rt, _typ, NULL, _defout)
 
-
-    if ( extended->stage == stage || extended->stage == -1 )
+    /* if ( ( extended->stage.min <= istage && extended->stage.max >= istage ) || extended->stage.flag ) */
+    if ( istage == -1 || ( extended->stage.min <= istage && extended->stage.max >= istage ) || extended->stage.flag )
     {
       switch ( extended->vtype )
       {
       case DUF_OPTION_VTYPE_NONE:
         if ( r >= 0 )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         /* DUF_TEST_R( r ); */
         break;
       case DUF_OPTION_VTYPE_UPLUS:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
           doplus = 1;
       case DUF_OPTION_VTYPE_NUM:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_NUMOPT( unsigned, doplus, duf_strtol_suff );
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_NUMOPT( r, unsigned, doplus, duf_strtol_suff );
 
-          DUF_TEST_R( r );
-        }
         break;
       case DUF_OPTION_VTYPE_NL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_NUMOPT( unsigned long, 0, duf_strtol_suff );
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_NUMOPT( r, unsigned long, 0, duf_strtol_suff );
 
-          DUF_TEST_R( r );
-        }
         break;
       case DUF_OPTION_VTYPE_NLL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          DUF_NUMOPT( unsigned long long, 0, duf_strtoll_suff );
-
-          DUF_TEST_R( r );
+          DUF_NUMOPT( r, unsigned long long, 0, duf_strtoll_suff );
         }
         break;
       case DUF_OPTION_VTYPE_PNUM:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          DUF_QPNUMOPT( unsigned, duf_strtol_suff );
-
-          DUF_TEST_R( r );
+          DUF_QPNUMOPT( r, unsigned, duf_strtol_suff );
         }
         break;
       case DUF_OPTION_VTYPE_PNL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_QPNUMOPT( unsigned long, duf_strtol_suff );
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_QPNUMOPT( r, unsigned long, duf_strtol_suff );
 
-          DUF_TEST_R( r );
-        }
         break;
       case DUF_OPTION_VTYPE_PNLL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_QPNUMOPT( unsigned long long, duf_strtoll_suff );
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_QPNUMOPT( r, unsigned long long, duf_strtoll_suff );
 
-          DUF_TEST_R( r );
-        }
         break;
       case DUF_OPTION_VTYPE_MIN:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MOPT( duf_limits_t, min, duf_strtol_suff );
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MOPT( r, duf_limits_t, min, duf_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAX:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MOPT( duf_limits_t, max, duf_strtol_suff );
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MOPT( r, duf_limits_t, max, duf_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MINMAX:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MINMAXOPT( duf_limits_t, duf_strtol_suff );
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MINMAXOPT( r, duf_limits_t, duf_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MINLL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MOPT( duf_limitsll_t, min, duf_strtol_suff );
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MOPT( r, duf_limitsll_t, min, duf_strtol_suff );
         break;
       case DUF_OPTION_VTYPE_MAXLL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MOPT( duf_limitsll_t, max, duf_strtoll_suff );
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MOPT( r, duf_limitsll_t, max, duf_strtoll_suff );
         break;
       case DUF_OPTION_VTYPE_MINMAXLL:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MINMAXOPT( duf_limitsll_t, duf_strtoll_suff );
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MINMAXOPT( r, duf_limitsll_t, duf_strtoll_suff );
         break;
         /* case DUF_OPTION_CLASS_DEBUG: */
         /* DUF_PRINTF( 0, "------------ %lu", extended->mcfg_offset ); */
@@ -625,7 +588,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_NOFLAG:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           unsigned *pi;
@@ -637,7 +600,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PFLAG:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           unsigned *pi;
@@ -662,7 +625,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_NOSFLAG:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           unsigned *pi;
@@ -674,7 +637,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PSFLAG:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           unsigned *pi;
@@ -686,7 +649,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_STR:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           char **pstr;
@@ -702,7 +665,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PDISTR:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           if ( optargg && *optargg )
@@ -713,7 +676,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PDINUM:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 && extended->mpdi_flag == 1 )
         {
           duf_depthinfo_t *pdi;
@@ -729,7 +692,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PDISCCB:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           duf_depthinfo_t *pdi;
@@ -737,78 +700,55 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           pdi = *( ( duf_depthinfo_t ** ) byteptr );
           assert( pdi );
           assert( pdi->levinfo );
-          r = duf_sccb_pdi( pdi, extended->call.fdesc.hi.sccb );
+          DOR( r, duf_sccb_pdi( pdi, extended->call.fdesc.hi.sccb ) );
         }
         break;
       case DUF_OPTION_VTYPE_DATETIME:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_NUMOPT( unsigned long long, 0, duf_strtime2long );
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_NUMOPT( r, unsigned long long, 0, duf_strtime2long );
 
-          DUF_TEST_R( r );
-        }
         break;
       case DUF_OPTION_VTYPE_MINMAXDATETIME:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MINMAXOPT( duf_limitsll_t, duf_strtime2long );
-
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MINMAXOPT( r, duf_limitsll_t, duf_strtime2long );
         break;
       case DUF_OPTION_VTYPE_MINDATETIME:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MOPT( duf_limitsll_t, min, duf_strtime2long );
-
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MOPT( r, duf_limitsll_t, min, duf_strtime2long );
         break;
       case DUF_OPTION_VTYPE_MAXDATETIME:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
-        if ( r >= 0 )
-        {
-          DUF_MOPT( duf_limitsll_t, max, duf_strtime2long );
-
-          DUF_TEST_R( r );
-        }
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        DUF_MOPT( r, duf_limitsll_t, max, duf_strtime2long );
         break;
       case DUF_OPTION_VTYPE_VIFUN:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           if ( extended->call.fdesc.vi.func )
             ( extended->call.fdesc.vi.func ) ( extended->call.fdesc.vi.arg );
-
-          DUF_TEST_R( r );
         }
         break;
       case DUF_OPTION_VTYPE_AFUN:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
           assert( duf_config->cargv );
           if ( extended->call.fdesc.a.func )
             ( extended->call.fdesc.a.func ) ( duf_config->cargc, duf_config->cargv );
-
-          DUF_TEST_R( r );
         }
         break;
       case DUF_OPTION_VTYPE_FILE:
         if ( no )
-          r = DUF_ERROR_OPTION_NOT_PARSED;
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          DUF_OUTPUTFILE( duf_config_output_t );
+          DUF_OUTPUTFILE( r, duf_config_output_t, stderr );
           /* {                                                                                 */
           /*   char start_time[128] = "??";                                                    */
           /*                                                                                   */
@@ -816,7 +756,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           /*   PF( "%s", start_time );                                                         */
           /* }                                                                                 */
 
-          /* r = DUF_ERROR_OPTION_NOT_PARSED; */
+          /* DOR(r, DUF_ERROR_OPTION_NOT_PARSED); */
           DUF_TEST_R( r );
         }
         break;
@@ -827,7 +767,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 }
 
 int
-duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, int stage, int no )
+duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, int istage, int no )
 {
   DEBUG_STARTR( r );
   if ( extended )
@@ -838,25 +778,25 @@ duf_parse_option_long_full( const duf_longval_extended_t * extended, const char 
  *   errorcode<0  for error
  * */
     DUF_TRACE( options, 1, "xname:%s; no:%d", extended ? extended->o.name : "?", no );
-    DOR( r, duf_parse_option_long_typed( extended, optargg, stage, no ) );
+    DOR( r, duf_parse_option_long_typed( extended, optargg, istage, no ) );
     DUF_TRACE( explain, 1, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
     if ( r == DUF_ERROR_OPTION_NOT_PARSED && !no )
-      DOZR( r, duf_parse_option_long_old( extended, optargg, stage ) );
+      DOZR( r, duf_parse_option_long_old( extended, optargg, istage ) );
     DUF_TRACE( explain, 2, "cli options r: %d", r );
     DUF_TRACE( explain, 1, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name( r ) );
   }
   else
-    r = DUF_ERROR_OPTION_NOT_PARSED;
+    DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
 }
 
 static int
-duf_parse_option_long_x_wrap( const duf_longval_extended_t * extended, const char *optargg, int stage )
+duf_parse_option_long_x_wrap( const duf_longval_extended_t * extended, const char *optargg, int istage )
 {
   DEBUG_STARTR( r );
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
-  DOR( r, duf_parse_option_long_full( extended, optargg, stage, 0 /* no */  ) );
+  DOR( r, duf_parse_option_long_full( extended, optargg, istage, 0 /* no */  ) );
   DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
 }
@@ -867,7 +807,7 @@ duf_parse_option_long_x_wrap( const duf_longval_extended_t * extended, const cha
  * or errorcode (<0) for error
  * */
 int
-duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg, int stage )
+duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg, int istage )
 {
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
@@ -892,27 +832,28 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
     /* else                                                       */
     /*   extended = duf_longindex_extended( longindex );          */
 
-    extended = ( longindex < 0 ) ? duf_find_codeval_extended_std( codeval, &r ) : duf_longindex_extended( longindex );
-
+    extended = ( longindex < 0 ) ? duf_find_codeval_extended_std( codeval, &r ) : duf_longindex_extended( longindex, &r );
     DUF_TEST_R( r );
   }
   if ( r >= 0 )
   {
     if ( extended )
-      r = duf_parse_option_long_x_wrap( extended, optargg, stage );
+    {
+      DOR( r, duf_parse_option_long_x_wrap( extended, optargg, istage ) );
+    }
     else                        /* switch is useless !... */
       switch ( ( int ) codeval )
       {
       case ':':
-        r = DUF_ERROR_OPTION_VALUE;
+        DOR( r, DUF_ERROR_OPTION_VALUE );
         DUF_TRACE( explain, 3, "cli options r: %d", r );
         break;
       case '?':
-        r = DUF_ERROR_OPTION;
+        DOR( r, DUF_ERROR_OPTION );
         DUF_TRACE( explain, 3, "cli options r: %d", r );
         break;
       default:
-        r = DUF_ERROR_OPTION;
+        DOR( r, DUF_ERROR_OPTION );
         DUF_TRACE( explain, 3, "cli options r: %d; codeval:%d;", r, codeval );
         break;
       }
@@ -922,7 +863,7 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
 }
 
 int
-duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optargg, int stage )
+duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optargg, int istage )
 {
   DEBUG_STARTR( r );
 
@@ -997,12 +938,13 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       break;
     }
   else
-    r = DUF_ERROR_OPTION;
+    DOR( r, DUF_ERROR_OPTION );
 
   DUF_TRACE( explain, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended, NULL ),
              extended->o.name, r, duf_error_name( r ), extended->o.val, DUF_OPTION_FORMAT );
 
-  if ( extended && ( stage == 0 || stage == -1 ) )
+  /* if ( extended && ( istage == 0 || istage == -1 ) ) */
+  if ( istage == -1 || extended->stage.flag || ( extended->stage.min <= istage && extended->stage.max >= istage ) )
   {
     switch ( extended->o.val )
     {
@@ -1447,7 +1389,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
           /* DUF_TRACE( any, 0, "rs:%d", rs ); */
           if ( rs < 0 )
           {
-            r = DUF_ERROR_SUBOPTION;
+            DOR( r, DUF_ERROR_SUBOPTION );
             DUF_TEST_R( r );
             break;
           }
@@ -1470,7 +1412,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       }
       break;
     default:
-      r = DUF_ERROR_OPTION;
+      DOR( r, DUF_ERROR_OPTION );
       break;
     }
   }

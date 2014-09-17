@@ -129,14 +129,13 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 		  }
 
 
-#  define DUF_SQL_STEP( r, _pstmt_m )                   if ( r >= 0 || r==DUF_SQL_ROW ) r = duf_sql_step( _pstmt_m )
+#  define DUF_SQL_STEP( r, _pstmt_m )                   if ( r >= 0 || r==DUF_SQL_ROW ) DOR_NOE(r, duf_sql_step( _pstmt_m ), DUF_SQL_ROW, DUF_SQL_DONE)
 #  define DUF_SQL_CHANGES_NOPDI( changes, r, _pstmt_m ) if ( r >= 0 || r==DUF_SQL_ROW || r==DUF_SQL_DONE ) changes = duf_sql_changes(  )
 #  define DUF_SQL_CHANGES( changes, r, _pstmt_m )  DUF_SQL_CHANGES_NOPDI( changes, r, _pstmt_m );  duf_pdi_reg_changes( pdi, changes )
 
 #  define DUF_SQL_EACH_ROW(r1, pstmt1, ops) while ( r1 >= 0 && r1 != DUF_SQL_DONE ) \
 	{ \
 	  DUF_SQL_STEP( r1, pstmt1 ); \
-	  DUF_TEST_RR( r1 ); \
 	  if ( r1 == DUF_SQL_ROW ) \
 	  { \
 	    ops ; \

@@ -4,9 +4,9 @@
 typedef struct
 {
   int actions_done;
+  int selection_done;
   unsigned long long changes;
   unsigned long long total_files;
 } duf_status_t;
 
 #endif
-

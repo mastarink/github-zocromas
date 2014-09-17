@@ -71,7 +71,7 @@ duf_sqlite_close( void )
   return ( r3 );
 }
 
-int
+static int
 duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg )
 {
   int r3 = SQLITE_OK;
@@ -106,23 +106,23 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
   return r3;
 }
 
-int
-duf_sqlite_execcb_e( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges )
-{
-  int r3;
-  char *emsg = NULL;
+/* static int                                                                                       */
+/* duf_sqlite_execcb_e( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges ) */
+/* {                                                                                                */
+/*   int r3;                                                                                        */
+/*   char *emsg = NULL;                                                                             */
+/*                                                                                                  */
+/*   r3 = duf_sqlite_execcb( sql, sqexe_cb, sqexe_data, pchanges, &emsg );                          */
+/*   if ( r3 != SQLITE_OK )                                                                         */
+/*     DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );           */
+/*   if ( emsg )                                                                                    */
+/*     sqlite3_free( emsg );                                                                        */
+/*   emsg = NULL;                                                                                   */
+/*                                                                                                  */
+/*   return r3;                                                                                     */
+/* }                                                                                                */
 
-  r3 = duf_sqlite_execcb( sql, sqexe_cb, sqexe_data, pchanges, &emsg );
-  if ( r3 != SQLITE_OK )
-    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
-  if ( emsg )
-    sqlite3_free( emsg );
-  emsg = NULL;
-
-  return r3;
-}
-
-int
+static int
 duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
 {
   return duf_sqlite_execcb( sql, ( duf_sqexe_cb_t ) NULL, ( void * ) NULL, pchanges, pemsg );
@@ -144,21 +144,21 @@ duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
   return r3;
 }
 
-int
-duf_sqlite_exec_e( const char *sql, int *pchanges )
-{
-  int r3;
-  char *emsg = NULL;
-
-  r3 = duf_sqlite_exec( sql, pchanges, &emsg );
-  if ( r3 != SQLITE_OK )
-    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
-  if ( emsg )
-    sqlite3_free( emsg );
-  emsg = NULL;
-
-  return r3;
-}
+/* static int                                                                             */
+/* duf_sqlite_exec_e( const char *sql, int *pchanges )                                    */
+/* {                                                                                      */
+/*   int r3;                                                                              */
+/*   char *emsg = NULL;                                                                   */
+/*                                                                                        */
+/*   r3 = duf_sqlite_exec( sql, pchanges, &emsg );                                        */
+/*   if ( r3 != SQLITE_OK )                                                               */
+/*     DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" ); */
+/*   if ( emsg )                                                                          */
+/*     sqlite3_free( emsg );                                                              */
+/*   emsg = NULL;                                                                         */
+/*                                                                                        */
+/*   return r3;                                                                           */
+/* }                                                                                      */
 
 
 int
@@ -183,56 +183,56 @@ duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list ar
   return ( r3 );
 }
 
-int
-duf_vsqlite_e( const char *fmt, int *pchanges, va_list args )
-{
-  int r3 = 0;
-  char *sql;
+/* static int                                                    */
+/* duf_vsqlite_e( const char *fmt, int *pchanges, va_list args ) */
+/* {                                                             */
+/*   int r3 = 0;                                                 */
+/*   char *sql;                                                  */
+/*                                                               */
+/*   DEBUG_START(  );                                            */
+/*                                                               */
+/*   DUF_TRACE( sqlite, 2, "[%s] ", fmt );                       */
+/*   sql = sqlite3_vmprintf( fmt, args );                        */
+/*   DUF_TRACE( sqlite, 2, "[%s] ", sql );                       */
+/*   r3 = duf_sqlite_exec_e( sql, pchanges );                    */
+/*                                                               */
+/*   DUF_TRACE( sqlite, 3, "[%s] : %d", sql, r3 );               */
+/*   sqlite3_free( sql );                                        */
+/*   sql = NULL;                                                 */
+/*   DUF_TRACE( sqlite, 3, "r3: %d", r3 );                       */
+/*                                                               */
+/*   DEBUG_ENDR3( r3 );                                          */
+/*   return ( r3 );                                              */
+/* }                                                             */
 
-  DEBUG_START(  );
 
-  DUF_TRACE( sqlite, 2, "[%s] ", fmt );
-  sql = sqlite3_vmprintf( fmt, args );
-  DUF_TRACE( sqlite, 2, "[%s] ", sql );
-  r3 = duf_sqlite_exec_e( sql, pchanges );
-
-  DUF_TRACE( sqlite, 3, "[%s] : %d", sql, r3 );
-  sqlite3_free( sql );
-  sql = NULL;
-  DUF_TRACE( sqlite, 3, "r3: %d", r3 );
-
-  DEBUG_ENDR3( r3 );
-  return ( r3 );
-}
-
-
-int
-duf_vsqlite( const char *fmt, int *pchanges, va_list args )
-{
-  int r3 = 0;
-  char *sql;
-  char *emsg = NULL;
-
-  DEBUG_START(  );
-
-  DUF_TRACE( sqlite, 2, "[%s] ", fmt );
-  sql = sqlite3_vmprintf( fmt, args );
-  DUF_TRACE( sqlite, 2, "[%s] ", sql );
-  r3 = duf_sqlite_exec( sql, pchanges, &emsg );
-  if ( r3 != SQLITE_OK )
-    DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
-
-  DUF_TRACE( sqlite, 3, "(%d) SQL '%s' [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
-  if ( emsg )
-    sqlite3_free( emsg );
-
-  sqlite3_free( sql );
-  sql = NULL;
-  DUF_TRACE( sqlite, 3, "r3: %d", r3 );
-
-  DEBUG_ENDR3( r3 );
-  return ( r3 );
-}
+/* static int                                                                              */
+/* duf_vsqlite( const char *fmt, int *pchanges, va_list args )                             */
+/* {                                                                                       */
+/*   int r3 = 0;                                                                           */
+/*   char *sql;                                                                            */
+/*   char *emsg = NULL;                                                                    */
+/*                                                                                         */
+/*   DEBUG_START(  );                                                                      */
+/*                                                                                         */
+/*   DUF_TRACE( sqlite, 2, "[%s] ", fmt );                                                 */
+/*   sql = sqlite3_vmprintf( fmt, args );                                                  */
+/*   DUF_TRACE( sqlite, 2, "[%s] ", sql );                                                 */
+/*   r3 = duf_sqlite_exec( sql, pchanges, &emsg );                                         */
+/*   if ( r3 != SQLITE_OK )                                                                */
+/*     DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );  */
+/*                                                                                         */
+/*   DUF_TRACE( sqlite, 3, "(%d) SQL '%s' [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" ); */
+/*   if ( emsg )                                                                           */
+/*     sqlite3_free( emsg );                                                               */
+/*                                                                                         */
+/*   sqlite3_free( sql );                                                                  */
+/*   sql = NULL;                                                                           */
+/*   DUF_TRACE( sqlite, 3, "r3: %d", r3 );                                                 */
+/*                                                                                         */
+/*   DEBUG_ENDR3( r3 );                                                                    */
+/*   return ( r3 );                                                                        */
+/* }                                                                                       */
 
 
 
@@ -547,23 +547,23 @@ duf_sqlite_vmprintf( const char *fmt, va_list args )
   return s;
 }
 
-char *
-duf_sqlite_mprintf( const char *fmt, ... )
-{
-  char *s = NULL;
-  va_list args;
+/* static char *                              */
+/* duf_sqlite_mprintf( const char *fmt, ... ) */
+/* {                                          */
+/*   char *s = NULL;                          */
+/*   va_list args;                            */
+/*                                            */
+/*   va_start( args, fmt );                   */
+/*   s = sqlite3_vmprintf( fmt, args );       */
+/*   va_end( args );                          */
+/*   return s;                                */
+/* }                                          */
 
-  va_start( args, fmt );
-  s = sqlite3_vmprintf( fmt, args );
-  va_end( args );
-  return s;
-}
-
-void
-duf_sqlite_free( char *s )
-{
-  sqlite3_free( s );
-}
+/* static void                */
+/* duf_sqlite_free( char *s ) */
+/* {                          */
+/*   sqlite3_free( s );       */
+/* }                          */
 
 void
 duf_sqlite_clear_bindings( duf_sqlite_stmt_t * stmt )

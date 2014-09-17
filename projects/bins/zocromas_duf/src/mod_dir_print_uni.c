@@ -306,6 +306,10 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
     }
     DUF_PUTSL( 0 );
   }
+  else
+  {
+    /* DUF_SHOW_ERROR( "duf_levinfo_items_files is 0" ); */
+  }
 
   DEBUG_ENDR( r );
 

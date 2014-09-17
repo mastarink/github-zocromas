@@ -72,10 +72,16 @@ duf_option_description_xd( const duf_longval_extended_t * extended, const char *
 char *
 duf_option_description_d( int longindex, const char *delimh, const char *delim, int *pr )
 {
+  char *p = NULL;
+  int r = 0;
   const duf_longval_extended_t *extended;
 
-  extended = duf_longindex_extended( longindex );
-  return duf_option_description_xd( extended, delimh, delim, pr );
+  extended = duf_longindex_extended( longindex, &r );
+  if ( r >= 0 )
+    p = duf_option_description_xd( extended, delimh, delim, pr );
+  if ( pr )
+    *pr = r;
+  return p;
 }
 
 static char *

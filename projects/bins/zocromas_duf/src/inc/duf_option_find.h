@@ -2,7 +2,7 @@
 #  define MAS_DUF_OPTION_FIND_H
 
 #  include "duf_option_types.h"
-#  include "duf_options_def.h"
+#  include "duf_options_enum.h"
 
 int duf_find_name_long( const char *name, int witharg, const duf_longval_extended_t * xtable, unsigned xtable_size, int soft );
 

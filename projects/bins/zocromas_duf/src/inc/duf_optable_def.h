@@ -19,6 +19,7 @@
 #define DO_FL0(_t,_fld) .anfl._t={._fld=1}
 #define DO_VIFUN(_f, _a) .call={.fdesc={.vi={.func=_f, .arg=_a}}}
 #define DO_AFUN(_f) .call={.fdesc={.a={.func=_f}}}
-
+#define DO_STAGE(_stag) .stage={.min=_stag,.max=_stag}
+#define DO_STAGE_ANY() .stage={.min=0,.max=-1}
 
 #endif

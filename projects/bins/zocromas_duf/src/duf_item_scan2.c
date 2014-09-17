@@ -15,12 +15,13 @@
 #include "duf_status_ref.h"
 #include "duf_utils.h"
 
-/* #include "duf_levinfo.h" */
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
 
 #include "duf_pdi.h"
 #include "duf_sccb.h"
+
+#include "duf_option_defs.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -29,8 +30,6 @@
 /* #include "duf_sql1.h" */
 #include "duf_sql2.h"
 
-
-/* #include "duf_item_match2.h" */
 
 /* ###################################################################### */
 #include "duf_item_scan2.h"

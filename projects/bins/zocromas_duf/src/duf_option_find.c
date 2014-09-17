@@ -54,10 +54,9 @@ duf_find_codeval_extended_std( duf_option_code_t codeval, int *pr )
   int r = 0;
   const duf_longval_extended_t *extended = NULL;
 
-  r = duf_find_codeval_long_std( codeval );
+  DOR( r, duf_find_codeval_long_std( codeval ) );
   if ( r >= 0 )
-    extended = duf_longindex_extended( r );
-
+    extended = duf_longindex_extended( r, &r );
   if ( pr )
     *pr = r;
   return extended;
@@ -149,7 +148,7 @@ duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended
 
   r = duf_find_name_long( name, witharg, xtable, xtable_size, soft );
   DUF_TRACE( options, 4, "name:%s; witharg:%d; soft:%d", name, witharg, soft );
-  if ( pno && r==DUF_ERROR_OPTION )
+  if ( pno && r == DUF_ERROR_OPTION )
   {
     *pno = 0;
     DUF_TRACE( options, 4, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );

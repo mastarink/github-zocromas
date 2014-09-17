@@ -4,7 +4,7 @@
 
 /* #  define DUF_USE_IDCOL */
 #  define DUF_SQL_IDNAME "rowid"
-#define DUF_COMMA_AS(name, alias) , #name " AS " #alias
+#  define DUF_COMMA_AS(name, alias) , #name " AS " #alias
 
 
 /* ###################################################################### */
@@ -30,21 +30,21 @@
 
 #  define DUF_GET_SFIELD2(name)                    DUF_GET_SFIELD2Q(name, 0)
 #  define DUF_GET_UFIELD2(name)                    DUF_GET_UFIELD2Q(name, 0)
-                                                  
+
 #  define DUF_GET_SFIELD2OPT(name)                 DUF_GET_SFIELD2Q(name, 1)
 #  define DUF_GET_UFIELD2OPT(name)                 DUF_GET_UFIELD2Q(name, 1)
-                                                  
+
 #  define DUF_SET_SFIELD2(name) name =             DUF_GET_SFIELD2(name)
 #  define DUF_SET_UFIELD2(name) name =             DUF_GET_UFIELD2(name)
-                                                  
+
 #  define DUF_SFIELD2(name) const char*            DUF_SET_SFIELD2(name)
 #  define DUF_UFIELD2(name) unsigned long long     DUF_SET_UFIELD2(name)
-                                                  
+
 #  define DUF_SET_SFIELD2OPT(name) name =          DUF_GET_SFIELD2OPT(name)
 #  define DUF_SET_UFIELD2OPT(name) name =          DUF_GET_UFIELD2OPT(name)
 
 #  define DUF_SFIELD2OPT(name) const char*         DUF_SET_SFIELD2OPT(name)
 #  define DUF_UFIELD2OPT(name) unsigned long long  DUF_SET_UFIELD2OPT(name)
 
-
+#  define DOR3( _rval, _x ) DOR(_rval, DUF_SQLITE_ERROR_CODE(_x))
 #endif

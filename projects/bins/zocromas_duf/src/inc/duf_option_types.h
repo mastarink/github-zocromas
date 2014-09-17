@@ -2,6 +2,7 @@
 #  define MAS_DUF_OPTION_TYPES_H
 #  include <getopt.h>
 
+#  include "duf_base_types.h"
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
 #  include "duf_hook_types.h"
@@ -117,19 +118,21 @@ typedef union
 
 typedef struct
 {
-  int stage;
+  int shown;
+  
+  unsigned mcfg_flag:1;
+  unsigned mpdi_flag:1;
+  unsigned long mcfg_offset;
+  unsigned long mpdi_offset;
+
+  duf_limits_t stage;
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
-  int shown;
   duf_option_t o;
-  
-  unsigned long mcfg_offset;
-  unsigned long mpdi_offset;
-  unsigned mcfg_flag:1;
-  unsigned mpdi_flag:1;
-
+ 
   duf_anyflag_t afl;
+
   struct
   {
     duf_anynum_t value;

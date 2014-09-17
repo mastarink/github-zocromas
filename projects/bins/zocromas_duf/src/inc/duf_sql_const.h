@@ -1,5 +1,5 @@
-#ifndef MAS_DUF_SQL_DEF_H
-#  define MAS_DUF_SQL_DEF_H
+#ifndef MAS_DUF_SQL_CONST_H
+#  define MAS_DUF_SQL_CONST_H
 
 #  include <sqlite3.h>
 /* #  include "duf_sql_types.h" */

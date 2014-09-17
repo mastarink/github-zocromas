@@ -11,6 +11,7 @@
 #include "duf_config_ref.h"
 /* #include "duf_status_ref.h" */
 
+#include "duf_option_defs.h"
 
 /* #include "duf_pdi.h" */
 /* #include "duf_levinfo.h" */
@@ -64,7 +65,6 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
   DUF_TRACE( explain, 0,
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
              duf_uni_scan_action_title( sccb ) );
-
   DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
   DUF_E_NO( DUF_ERROR_MAX_DEPTH );
 /* duf_scan_dirs_by_pdi_maxdepth:

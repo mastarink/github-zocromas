@@ -1,8 +1,8 @@
 #ifndef MAS_DUF_UFILTER_TYPES_H
 #  define MAS_DUF_UFILTER_TYPES_H
 
+#  include "duf_base_types.h"
 #  include "duf_item_types.h"
-
 #  include "duf_flags_types.h"
 
 /* typedef struct                                  */
@@ -28,18 +28,6 @@ typedef struct globx
   duf_argvc_t exclude_files;
 } duf_filter_globx_t;
 
-typedef struct
-{
-  unsigned flag:1;
-  unsigned min;
-  unsigned max;
-} duf_limits_t;
-typedef struct
-{
-  unsigned flag:1;
-  unsigned long long min;
-  unsigned long long max;
-} duf_limitsll_t;
 
 typedef struct
 {

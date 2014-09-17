@@ -1,6 +1,8 @@
 #ifndef DUF_OPTION_H
 #  define DUF_OPTION_H
 
+#  include "duf_options_enum.h"
+
 int duf_parse_option( duf_option_code_t opt, int longindex, const char *optarg, int stage );
 int duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optarg, int stage );
 int duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, int stage, int no );

@@ -20,63 +20,67 @@
 int
 duf_sql_open( const char *dbpath )
 {
-  return duf_sqlite_open( dbpath );
+  return DUF_SQLITE_ERROR_CODE( duf_sqlite_open( dbpath ) );
 }
 
 int
 duf_sql_close( void )
 {
-  return duf_sqlite_close(  );
+  return DUF_SQLITE_ERROR_CODE( duf_sqlite_close(  ) );
 }
 
 int
 duf_sql_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 {
-  int r = DUF_SQLITE_ERROR_CODE( duf_sqlite_exec_c( sql, constraint_ignore, pchanges ) );
+  DEBUG_STARTR( r );
+
+  r = DUF_SQLITE_ERROR_CODE( duf_sqlite_exec_c( sql, constraint_ignore, pchanges ) );
 
   DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
-int
-duf_sql_exec( const char *sql, int *pchanges )
-{
-  int r = DUF_SQLITE_ERROR_CODE( duf_sqlite_exec_e( sql, pchanges ) );
+/* static int                                                         */
+/* duf_sql_exec( const char *sql, int *pchanges )                     */
+/* {                                                                  */
+/*   DEBUG_STARTR(r  );                                               */
+/*                                                                    */
+/*   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_exec_e( sql, pchanges ) ); */
+/*                                                                    */
+/*   DUF_TEST_R( r );                                                 */
+/*   DEBUG_ENDR( r );                                                 */
+/* }                                                                  */
 
-  DUF_TEST_R( r );
-  return r;
-}
-
-int
-duf_sql_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges )
-{
-  int r = DUF_SQLITE_ERROR_CODE( duf_sqlite_execcb_e( sql, sqexe_cb, sqexe_data, pchanges ) );
-
-  DUF_TEST_R( r );
-  return r;
-}
+/* static int                                                                                  */
+/* duf_sql_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges ) */
+/* {                                                                                           */
+/*   DEBUG_STARTR( r );                                                                        */
+/*   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_execcb_e( sql, sqexe_cb, sqexe_data, pchanges ) );  */
+/*                                                                                             */
+/*   DUF_TEST_R( r );                                                                          */
+/*   DEBUG_ENDR( r );                                                                          */
+/* }                                                                                           */
 
 static int
 duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
 
   DUF_TRACE( sql, 1, " [[%s]]", fmt );
   r = DUF_SQLITE_ERROR_CODE( duf_vsqlite_c( fmt, constraint_ignore, pchanges, args ) );
   DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
-int
+static int
 duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
                  duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, va_list args )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, sqlfmt, args ) );
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 unsigned long long
@@ -89,66 +93,53 @@ duf_sql_last_insert_rowid( void )
 /************************************************************************/
 /************************************************************************/
 
-int
+static int
 duf_sql_exec_c_msg( const char *sql, const char *msg, int constraint_ignore )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
   r = duf_sql_exec_c( sql, constraint_ignore, ( int * ) NULL );
   DUF_TRACE( sql, 1, "[%-40s] %s (%d)", msg, r != SQLITE_OK ? "FAIL" : "OK", r );
-  DUF_TEST_R( r );
   DEBUG_ENDR( r );
-  return r;
 }
 
 int
 duf_sql_exec_msg( const char *sql, const char *msg )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
   r = duf_sql_exec_c_msg( sql, msg, DUF_CONSTRAINT_IGNORE_NO );
   if ( r )
     DUF_SHOW_ERROR( "SQL EXEC ERROR in [%s]", sql );
 
-  DUF_TEST_R( r );
   DEBUG_ENDR( r );
-  return r;
 }
 
 
-int
-duf_sql_c( const char *fmt, int constraint_ignore, int *pchanges, ... )
-{
-  int r = 0;
-  va_list args;
-
-  DEBUG_START(  );
-  va_start( args, pchanges );
-  r = duf_vsql_c( fmt, constraint_ignore, pchanges, args );
-  DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
-  va_end( args );
-  if ( !constraint_ignore || r != DUF_SQL_CONSTRAINT )
-    DUF_TEST_R( r );
-  DEBUG_ENDR( r );
-  return ( r );
-}
+/* int                                                                     */
+/* duf_sql_c( const char *fmt, int constraint_ignore, int *pchanges, ... ) */
+/* {                                                                       */
+/*   DEBUG_STARTR( r );                                                    */
+/*   va_list args;                                                         */
+/*                                                                         */
+/*   va_start( args, pchanges );                                           */
+/*   r = duf_vsql_c( fmt, constraint_ignore, pchanges, args );             */
+/*   DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );                          */
+/*   va_end( args );                                                       */
+/*   if ( !constraint_ignore || r != DUF_SQL_CONSTRAINT )                  */
+/*     DUF_TEST_R( r );                                                    */
+/*   DEBUG_ENDR( r );                                                      */
+/* }                                                                       */
 
 int
 duf_sql( const char *fmt, int *pchanges, ... )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   va_list args;
 
-  DEBUG_START(  );
   va_start( args, pchanges );
   r = duf_vsql_c( fmt, DUF_CONSTRAINT_IGNORE_NO, pchanges, args );
   DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
   va_end( args );
-  DUF_TEST_R( r );
   DEBUG_ENDR( r );
-  return ( r );
 }
 
 
@@ -163,68 +154,63 @@ int
 duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, ... )
 {
+  DEBUG_STARTR( r );
   va_list args;
-  int r = 0;
 
-  DEBUG_START(  );
   va_start( args, sqlfmt );
   r = duf_sql_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, sqlfmt, args );
   va_end( args );
-  DUF_TEST_R( r );
   DEBUG_ENDR( r );
-  return ( r );
 }
 
 int
 duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  r = DUF_SQLITE_ERROR_CODE( duf_sqlite_prepare( sql, pstmt ) );
+  DOR_NOE( r, DUF_SQLITE_ERROR_CODE( duf_sqlite_prepare( sql, pstmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
 
   DUF_TRACE( sql, 2, " [[%s]]", sql );
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_step( duf_sqlite_stmt_t * stmt )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   DUF_TRACE( sql, 2, " [[%s]]", sqlite3_sql( stmt ) );
-  r = DUF_SQLITE_ERROR_CODE( duf_sqlite_step( stmt ) );
+  DOR_NOE( r, DUF_SQLITE_ERROR_CODE( duf_sqlite_step( stmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
   DUF_TRACE( sql, 0, " [[%s]]", sqlite3_sql( stmt ) );
-  DUF_TEST_RR( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_finalize( duf_sqlite_stmt_t * stmt )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_finalize( stmt ) );
   DUF_TRACE( sql, 6, "-" );
   DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_reset( duf_sqlite_stmt_t * stmt )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_reset( stmt ) );
   DUF_TRACE( sql, 6, "-" );
   DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindu_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -241,13 +227,13 @@ duf_sql_bindu_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, 
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindu_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, long long value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -267,13 +253,13 @@ duf_sql_bindu_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int p
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindu_int( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -290,13 +276,13 @@ duf_sql_bindu_int( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int va
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindu_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -316,13 +302,13 @@ duf_sql_bindu_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, int
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindu_string( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, const char *value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -342,13 +328,13 @@ duf_sql_bindu_string( duf_sqlite_stmt_t * stmt, const char *fldname, int pi, con
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindn_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -365,13 +351,13 @@ duf_sql_bindn_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long lon
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindn_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -392,13 +378,13 @@ duf_sql_bindn_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long 
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindn_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -416,13 +402,13 @@ duf_sql_bindn_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindn_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi = 0;
 
   if ( fldname )
@@ -443,15 +429,15 @@ duf_sql_bindn_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bindn_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char *value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi = 0;
-  
+
   if ( fldname )
     r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
   if ( pi > 0 )
@@ -470,13 +456,13 @@ duf_sql_bindn_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char 
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi;
 
   r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -493,13 +479,13 @@ duf_sql_bind_long_long( duf_sqlite_stmt_t * stmt, const char *fldname, long long
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long long value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi;
 
   r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -519,13 +505,13 @@ duf_sql_bind_long_long_nz( duf_sqlite_stmt_t * stmt, const char *fldname, long l
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bind_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi;
 
   r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -542,13 +528,13 @@ duf_sql_bind_int( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bind_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi;
 
   r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -568,13 +554,13 @@ duf_sql_bind_int_nz( duf_sqlite_stmt_t * stmt, const char *fldname, int value )
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_bind_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char *value )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int pi;
 
   r = pi = duf_sqlite_bind_parameter_index( stmt, fldname );
@@ -594,7 +580,7 @@ duf_sql_bind_string( duf_sqlite_stmt_t * stmt, const char *fldname, const char *
   }
   else
     DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
@@ -637,7 +623,7 @@ duf_sql_column_count( duf_sqlite_stmt_t * stmt )
   return duf_sqlite_column_count( stmt );
 }
 
-char *
+static char *
 duf_sql_vmprintf( const char *fmt, va_list args )
 {
   char *s = NULL;
@@ -659,11 +645,11 @@ duf_sql_mprintf( const char *fmt, ... )
   return s;
 }
 
-void
-duf_sql_free( char *s )
-{
-  duf_sqlite_free( s );
-}
+/* static void             */
+/* duf_sql_free( char *s ) */
+/* {                       */
+/*   duf_sqlite_free( s ); */
+/* }                       */
 
 void
 duf_sql_clear_bindings( duf_sqlite_stmt_t * stmt )

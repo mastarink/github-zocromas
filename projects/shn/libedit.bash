@@ -176,6 +176,8 @@ shn_gvimer_plus_filtyp ()
        typf="mased_vim"
     elif [[ "$filef" == *.vim ]] || [[ "$filef" == gvim* ]] || [[ "$filef" == vim* ]] ; then
        typf="vimstd"
+    elif [[ "$filef" =~ ^.*\.([a-z]+)$ ]] ; then
+       typf="${BASH_REMATCH[1]}"
     else
       shn_errmsg "can't set typf for '$filef'${dirn:+ at '$dirn'}"
     fi
@@ -191,6 +193,7 @@ shn_gvimer_plus_find ()
     local paths
     case $typf in
         src)		paths='./src/ ./inc/ ./settling/src ./settling/src/inc'	;;
+        cdef)		paths='./src/'	;;
         ac)		paths='./'		;;
         shn)		paths='./shn/'		;;
         vimstd)		paths="$localvim_dir/"		;;
@@ -211,8 +214,9 @@ shn_gvimer_plus_vpath ()
         src)		paths='src/,src/inc/,inc/,settling/src/,settling/src/inc'	;;
         ac)		paths='.'			;;
         shn)		paths='shn/'			;;
-        vimstd)		paths="$localvim_dir"			;;
-        mased_vim)	paths="$mased_dir"	;;
+        vimstd)		paths="$localvim_dir"		;;
+        mased_vim)	paths="$mased_dir"		;;
+        cdef)		paths="src/"			;;
         *)		paths='.'			;;
     esac
     echo "${paths:-.}"
@@ -283,13 +287,13 @@ shn_gvimer_plus_mased ()
 	    /bin/ls --color=auto -1 shn/ | /bin/sed -e 's/^/:sfind /' > $masedf
 	fi
     fi
-    shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
     if [[ -f "$masedf" ]]; then
+        shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
 #	  echo "mased fuuid: $fuuid" 1>&2
-	[[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "found masedf: $masedf"
         shn_dbgmsg "gvimer_plus_mased 6a $@"
 	shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
     else
+        shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) masedf '$masedf' not found"
         shn_dbgmsg "gvimer_plus_mased 6b $@"
 	shn_errmsg "not found masedf '$masedf'"
 	return 1

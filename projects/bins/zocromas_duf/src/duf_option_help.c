@@ -131,7 +131,7 @@ duf_option_smart_help( duf_option_class_t oclass )
     DUF_PRINTF( 0, "-=-=-=-=- %s -=-=-=-=-", oclass_titles[oclass] );
   else
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
-  for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ )
+  for ( int ilong = 0; r>=0 && duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ )
   {
     char *s = NULL;
     duf_option_code_t codeval;
@@ -142,9 +142,10 @@ duf_option_smart_help( duf_option_class_t oclass )
     name = duf_config->longopts_table[ilong].name;
     codeval = duf_config->longopts_table[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex_extended( ilong );
+    extd = duf_longindex_extended( ilong, &r );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
+    if ( r >= 0 )
     {
       int cnd = 0;
 
@@ -263,7 +264,7 @@ duf_option_help( int argc, char **argv )
 void
 duf_option_examples( int argc, char *const *argv )
 {
-  DEBUG_START();
+  DEBUG_START(  );
   DUF_PRINTF( 0, "Examples" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --drop-tables --create-tables" );
   DUF_PRINTF( 0, "  run  --db-name=test20140412  --add-path /home/mastar/a/down/  --uni-scan -R --md5 --file" );
@@ -436,12 +437,11 @@ duf_option_examples( int argc, char *const *argv )
   DUF_PRINTF( 0, "  run -OPRdEinD /mnt/new_media/media/photo/Pictures/photos/ --progress 		- %s", "collect dirs and files from filesystem only" );
   DUF_PRINTF( 0, "  run -OPRdDnEi -f5 /mnt/new_media/media/photo/Pictures/photos/ --progress	- %s",
               "collect dirs and files from filesystem, count md5" );
-  DUF_PRINTF( 0, "  run -OPRdDnEi  -f523Xe --progress /mnt/new_media/media/photo/Pictures/photos/	- %s",
-              "collect everything we can" );
+  DUF_PRINTF( 0, "  run -OPRdDnEi  -f523Xe --progress /mnt/new_media/media/photo/Pictures/photos/	- %s", "collect everything we can" );
 
   DUF_PRINTF( 0, "=============================================================" );
 
-  DEBUG_END();
+  DEBUG_END(  );
 }
 
 void
@@ -449,7 +449,8 @@ duf_option_version( int argc, char *const *argv )
 {
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
   char *sargv1, *sargv2;
-  DEBUG_START();
+
+  DEBUG_START(  );
 
   sargv1 = mas_argv_string( argc, argv, 1 );
   sargv2 = duf_restore_some_options( argv[0] );
@@ -567,7 +568,7 @@ duf_option_version( int argc, char *const *argv )
 
   mas_free( sargv2 );
   mas_free( sargv1 );
-  DEBUG_END();
+  DEBUG_END(  );
 }
 
 #if 0

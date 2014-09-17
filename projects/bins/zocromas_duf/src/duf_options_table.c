@@ -5,7 +5,7 @@
 
 #include "duf_config_types.h"
 #include "duf_option_types.h"
-#include "duf_options_def.h"
+#include "duf_option_defs.h"
 #include "duf_cli_types.h"
 
 #include "duf_option_extended.h"

@@ -18,7 +18,8 @@
 #include "duf_utils.h"
 #include "duf_service.h"
 
-/* #include "duf_options.h" */
+#include "duf_options.h"
+#include "duf_option_defs.h"
 #include "duf_option_names.h"
 
 #include "duf_sql_defs.h"
@@ -48,12 +49,8 @@ duf_info_from_db( int count, const char *sql )
     duf_sqlite_stmt_t *pstmt = NULL;
 
     /* DUF_TRACE( explain, 0, "SQL:'%s'", sql ); */
-    if ( r >= 0 )
-      r = duf_sql_prepare( sql, &pstmt );
-    DUF_TEST_R( r );
-    if ( r >= 0 )
-      r = duf_sql_step( pstmt );
-    DUF_TEST_RR( r );
+    DOR( r, duf_sql_prepare( sql, &pstmt ) );
+    DOR_NOE( r, duf_sql_step( pstmt ), DUF_SQL_ROW, DUF_SQL_DONE );
     if ( r == DUF_SQL_ROW )
     {
       tuple = mas_malloc( count * sizeof( unsigned long ) );
@@ -76,13 +73,12 @@ duf_info_from_db( int count, const char *sql )
 int
 main_db( int argc, char **argv )
 {
-  int r = DUF_ERROR_MAIN;
+  DEBUG_STARTR( r );
+  r = DUF_ERROR_MAIN;
 
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
-
-/*										*/ DEBUG_START(  );
   if ( duf_config->db.dir && duf_config->db.main.name )
   {
     DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", duf_config->db.dir, duf_config->db.main.name );
@@ -110,7 +106,7 @@ main_db( int argc, char **argv )
     {
       for ( int ia = 0; ia < argc; ia++ )
         DUF_TRACE( any, 0, "######### argv[%d]: %s", ia, argv[ia] );
-      r = duf_config_show(  );
+      DOR( r, duf_config_show(  ) );
     }
     else
     {
@@ -140,7 +136,7 @@ main_db( int argc, char **argv )
             if ( errno == ENOENT )
               r = 0;
             else
-              r = DUF_ERROR_UNLINK;
+              DOR( r, DUF_ERROR_UNLINK );
           }
         }
       }
@@ -154,10 +150,9 @@ main_db( int argc, char **argv )
     {
       DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", duf_config->db.main.fpath );
       if ( duf_config->db.main.fpath )
-        r = duf_sql_open( duf_config->db.main.fpath );
+        DOR( r, duf_sql_open( duf_config->db.main.fpath ) );
       else
-        r = DUF_ERROR_PTR;
-      DUF_TEST_R( r );
+        DOR( r, DUF_ERROR_PTR );
       DUF_TRACE( explain, 0, "opened (?%d) database", r );
     }
     /* DUF_TRACE( any, 0, "r=%d", r ); */
@@ -184,9 +179,8 @@ main_db( int argc, char **argv )
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }
 
-      /* r = duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL ); */
-
-      DUF_TEST_R( r );
+      /* DOR( r, duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL ) ); */
+      /* DUF_TEST_R( r );                                                      */
       {
         static const char *sql = "PRAGMA encoding = 'UTF-8'";
 
@@ -198,9 +192,8 @@ main_db( int argc, char **argv )
       }
 
 
-      /* if ( r >= 0 )                                                           */
-      /*        r = duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ); */
-      DUF_TEST_R( r );
+      /* DOR( r, duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ) ); */
+      /* DUF_TEST_R( r );                                                       */
       DUF_TRACE( explain, 0, "to do actions" );
       DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 
@@ -209,10 +202,7 @@ main_db( int argc, char **argv )
 /******************************************************************************************************/
 /******************************************************************************************************/
 /******************************************************************************************************/
-
-      DOR( r,
-           duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targc > 0 ? duf_config->targv[0] : "/", &duf_config->u, DUF_U_FLAG( recursive ) ) );
-      DOR( r, duf_action( argc, argv ) );
+          DOR( r, duf_action( argc, argv ) );
 
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -363,21 +353,19 @@ main_db( int argc, char **argv )
         int rc = duf_sql_close(  );
 
         if ( r == 0 )
-          r = rc;
+          DOR( r, rc );
       }
     }
   }
   else if ( !duf_config->db.dir )
   {
-    r = DUF_ERROR_PTR;
+    DOR( r, DUF_ERROR_PTR );
     DUF_SHOW_ERROR( "db.dir not set" );
   }
   else if ( !duf_config->db.main.name )
   {
-    r = DUF_ERROR_PTR;
+    DOR( r, DUF_ERROR_PTR );
     DUF_SHOW_ERROR( "db.main.name not set" );
   }
-/*										*/ DEBUG_END(  );
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }

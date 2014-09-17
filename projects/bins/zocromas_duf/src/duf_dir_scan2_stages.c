@@ -17,12 +17,12 @@
 #include "duf_sql_field.h"
 
 #include "duf_item_scan2.h"
-
 #include "duf_dirent_scan2.h"
 
 /* #include "duf_file_pathid2.h" */
 
 #include "duf_sccb.h"
+#include "duf_option_defs.h"
 #include "duf_option_names.h"
 
 #include "duf_uni_scan2.h"

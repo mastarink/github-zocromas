@@ -21,12 +21,10 @@
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-/* #include "duf_levinfo.h" */
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_context.h"
 
 
-/* #include "duf_sql_const.h" */
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 

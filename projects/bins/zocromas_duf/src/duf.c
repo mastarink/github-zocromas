@@ -59,10 +59,10 @@ duf_config_act_flags_combo_t_bits( duf_config_act_flags_t f )
   return c.bit;
 }
 
-unsigned long long static int
+static int
 duf_main( int argc, char **argv )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   PF0( "%lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
        sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
@@ -76,7 +76,7 @@ duf_main( int argc, char **argv )
       mas_mem_disable_print_usage = 7;
     }
   }
-  r = duf_config_create(  );
+  DOR( r, duf_config_create(  ) );
   {
     extern int dbgfunc_enabled __attribute__ ( ( weak ) );
 
@@ -90,28 +90,27 @@ duf_main( int argc, char **argv )
     DUF_TRACE( any, 1, "any test" );
     /* duf_config->cli.interstage_init = duf_interstage_init; (* ????? *) */
 
-    assert(duf_config->targc==0);
+    assert( duf_config->targc == 0 );
     DEBUG_E_NO( DUF_ERROR_OPTION );
-    r = duf_all_options( argc, argv );
+    DOR( r, duf_all_options( argc, argv ) );
     DUF_E_YES( DUF_ERROR_OPTION );
-    assert(duf_config->targc>0);
+    /* assert( duf_config->targc > 0 ); */
 
 
 
     if ( r >= 0 )
     {
       DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
-      r = main_db( argc, argv );
-      DUF_TEST_R( r );
+      DOR( r, main_db( argc, argv ) );
     }
 
     DUF_PUTS( 0, "--------------------------------------------------" );
     DUF_PRINTF( 0, " main_db ended" );
-    DUF_TEST_R( r );
+    DUF_TEST_R( r );            /* don't remove! */
     DUF_PUTS( 0, "--------------------------------------------------" );
 
     if ( r >= 0 && DUF_IF_TRACE( options ) )
-      r = duf_show_options( argv[0] );
+      DOR( r, duf_show_options( argv[0] ) );
     /* {                                 */
     /*   char c;                         */
     /*   char *s = NULL;                 */
@@ -148,8 +147,9 @@ duf_main( int argc, char **argv )
 
 #endif
 /* make exit status */
-  DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED );
-  return r < 0 ? 31 : 0;
+  DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
+  r = r < 0 ? 31 : 0;
+  DEBUG_ENDRN( r );
 }
 
 int
