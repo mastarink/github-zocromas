@@ -401,7 +401,7 @@ duf_path2db( const char *path, int *pr )
   duf_depthinfo_t di = {.depth = -1,
     .seq = 0,
     .levinfo = NULL,
-    .pu = &duf_config->u,
+    .pu = duf_config->pu,
     /* .opendir = sccb ? sccb->opendir : 0, */
     .opendir = 1,
     /* .name = real_path, */

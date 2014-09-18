@@ -81,7 +81,7 @@ duf_pstmt_levinfo_godown_openat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t *
 
     /*!! dirid need not be same as duf_levinfo_dirid( pdi ) before duf_levinfo_godown */
     DOR( r, duf_levinfo_godown_openat_dh( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  ) );
-    assert( r<0 || dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
+    assert( r < 0 || dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
   }
   DEBUG_ENDR( r );
 }
@@ -128,8 +128,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
       DOR( r, ( str_cb2 ) ( pstmt, pdi, sccb ) );
     DOR( r, duf_levinfo_goup( pdi ) );
   }
-  if ( r == DUF_ERROR_MAX_DEPTH )
-    r = 0;
+  DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP );
   DOR( r, duf_pdi_max_filter( pdi ) ); /* check if any of max's reached */
   DEBUG_ENDR( r );
 }
@@ -167,9 +166,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_depthinf
     DOR( r, duf_levinfo_goup( pdi ) );
   }
 
-  /* r = ( r == DUF_ERROR_MAX_DEPTH ) ? 0 : r; */
-  if ( r == DUF_ERROR_MAX_DEPTH ) /* reset error if it was `MAX_DEPTH` */
-    r = 0;
+  DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP );/* reset error if it was `MAX_DEPTH` */
 
   DOR( r, duf_pdi_max_filter( pdi ) ); /* check if any of max's reached */
 
@@ -200,8 +197,8 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_depthinfo_t * pdi, duf_s
       csql = sql;
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
 
-      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, duf_config->u.size.min, duf_config->u.size.max, duf_config->u.same.min,
-                 duf_config->u.same.max );
+      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, duf_config->pu->size.min, duf_config->pu->size.max, duf_config->pu->same.min,
+                 duf_config->pu->same.max );
 
       DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( pdi ), r, pstmt );
       DUF_SQL_EACH_ROW( r, pstmt, if ( !match_cb2 || ( match_cb2 ) ( pstmt ) ) cnt++; r = 0 );

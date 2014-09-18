@@ -65,7 +65,8 @@ typedef enum
   DUF_OPTION_VTYPE_NOSFLAG,
 
   DUF_OPTION_VTYPE_STR,
-  
+  DUF_OPTION_VTYPE_PSTR,
+
   DUF_OPTION_VTYPE_PDISTR,
   DUF_OPTION_VTYPE_PDINUM,
   DUF_OPTION_VTYPE_PDISCCB,
@@ -115,22 +116,26 @@ typedef union
   unsigned long ul;
   unsigned long long ull;
 } duf_anynum_t;
-
+typedef enum
+{
+  DUF_OFFSET_config = 0,
+  DUF_OFFSET_depthinfo,
+  DUF_OFFSET_ufilter,
+} duf_offset_to_t;
 typedef struct
 {
   int shown;
-  
-  unsigned mcfg_flag:1;
-  unsigned mpdi_flag:1;
-  unsigned long mcfg_offset;
-  unsigned long mpdi_offset;
+
+  unsigned m_flag:1;
+  unsigned long m_offset;
+  duf_offset_to_t relto;
 
   duf_limits_t stage;
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
   duf_option_t o;
- 
+
   duf_anyflag_t afl;
 
   struct

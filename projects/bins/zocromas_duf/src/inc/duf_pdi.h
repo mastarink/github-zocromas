@@ -3,6 +3,8 @@
 
 #  include "duf_levinfo_types.h"
 
+duf_depthinfo_t *duf_pdi_create( void );
+
 int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive );
 int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive );
 int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, int recursive );

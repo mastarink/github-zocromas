@@ -30,7 +30,7 @@ duf_errindex( duf_error_code_t rtest )
 }
 
 void
-duf_set_ereport( int once, int doreport, duf_error_code_t rtest )
+duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest )
 {
   if ( rtest < 0 )
   {
@@ -38,13 +38,28 @@ duf_set_ereport( int once, int doreport, duf_error_code_t rtest )
 
     if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
     {
-      noreport_error[errindex] += doreport ? 1 : -1;
+      /* int b;                        */
+      /*                               */
+      /* b = noreport_error[errindex]; */
+      if ( abs )
+        noreport_error[errindex] = enable;
+      else
+        noreport_error[errindex] += enable /* < 0 ? -1 : 1 */ ;
+      /* if ( rtest == DUF_ERROR_TOO_DEEP )                                                                                         */
+      /* {                                                                                                                          */
+      /*   if ( b < noreport_error[errindex] )                                                                                      */
+      /*     fprintf( stderr, "$$$$$$$$$$$$ %d+%d=%d (abs:%d)\n", b, noreport_error[errindex] - b, noreport_error[errindex], abs ); */
+      /*   else if ( b > noreport_error[errindex] )                                                                                 */
+      /*     fprintf( stderr, "$$$$$$$$$$$$ %d-%d=%d (abs:%d)\n", b, b - noreport_error[errindex], noreport_error[errindex], abs ); */
+      /*   else                                                                                                                     */
+      /*     fprintf( stderr, "$$$$$$$$$$$$ ==%d (abs:%d)\n", b, abs );                                                             */
+      /* }                                                                                                                          */
     }
   }
 }
 
 void
-duf_vset_ereport( int once, int doreport, va_list args )
+duf_vset_ereport( int once, int enable, int abs, va_list args )
 {
   duf_error_code_t rtest = 0;
 
@@ -53,24 +68,23 @@ duf_vset_ereport( int once, int doreport, va_list args )
     rtest = va_arg( args, int );
 
     if ( rtest )
-      duf_set_ereport( once, doreport, rtest );
+      duf_set_ereport( once, enable, abs, rtest );
   }
   while ( rtest );
 }
 
 void
-duf_set_mereport( int once, int doreport, ... )
+duf_set_mereport( int once, int enable, int abs, ... )
 {
   va_list args;
 
-  va_start( args, doreport );
-  duf_vset_ereport( once, doreport, args );
+  va_start( args, abs );
+  duf_vset_ereport( once, enable, abs, args );
   va_end( args );
 }
 
-/* >0 -- report it */
 int
-duf_get_ereport( duf_error_code_t rtest )
+duf_get_ereport_n( duf_error_code_t rtest )
 {
   int r = 0;
 
@@ -78,10 +92,24 @@ duf_get_ereport( duf_error_code_t rtest )
   {
     int errindex = duf_errindex( rtest );
 
-    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT
-         && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] ) )
-      r = noreport_error[errindex] + 1;
+    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
+      r = noreport_error[errindex];
   }
+  return r;
+}
+
+/* >0 -- report it */
+int
+duf_get_ereport( duf_error_code_t rtest )
+{
+  int r = 0;
+  int errindex = duf_errindex( rtest );
+
+  /* if ( rtest < 0 ) */
+  /*   return 1;      */
+  if ( rtest < 0 && errindex >= 0 && errindex < DUF_ERROR_COUNT
+       && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] ) )
+    r = noreport_error[errindex] + 1;
   return r;
 }
 
@@ -305,7 +333,8 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_DB_NO_PATH ),
     DUF_ERROR_NAME( DUF_ERROR_NO_STR_CB ),
     DUF_ERROR_NAME( DUF_ERROR_BIND_NAME ),
-    DUF_ERROR_NAME( DUF_ERROR_MAX_DEPTH ),
+    DUF_ERROR_NAME( DUF_ERROR_LEVINFO_SIZE ),
+    DUF_ERROR_NAME( DUF_ERROR_TOO_DEEP ),
     DUF_ERROR_NAME( DUF_ERROR_MAX_REACHED ),
     DUF_ERROR_NAME( DUF_ERROR_MAX_SEQ_REACHED ),
     DUF_ERROR_NAME( DUF_ERROR_GET_FIELD ),

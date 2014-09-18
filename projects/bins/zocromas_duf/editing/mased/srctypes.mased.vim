@@ -14,6 +14,9 @@ tab sfind duf_levinfo_types.h
 
 tab sfind duf_trace_types.h
 sfind duf_trace_defs.h
+sfind duf_start_end.h
+sfind duf_error_defs.h
+sfind duf_dodefs.h
 
 tab sfind duf_fun_types.h
 sfind duf_error_types.h

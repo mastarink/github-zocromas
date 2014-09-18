@@ -90,6 +90,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
   }
   return r;
 }
+
 static int
 duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
 {
@@ -100,17 +101,20 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
   delta = 0;
   /* if ( duf_pdi_recursive( pdi ) )               */
   /* {                                             */
-  if ( !duf_pdi_is_good_depth( pdi, delta ) )
-    r = DUF_ERROR_MAX_DEPTH;
+  if ( duf_pdi_depth( pdi ) > duf_pdi_maxdepth( pdi ) )
+    DOR( r, DUF_ERROR_LEVINFO_SIZE );
+  else if ( !duf_pdi_is_good_depth( pdi, delta ) )
+    DOR( r, DUF_ERROR_TOO_DEEP );
+
   if ( r < 0 )
     DUF_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pdi_depth( pdi ), duf_pdi_maxdepth( pdi ),
                duf_pdi_topdepth( pdi ), delta, duf_pdi_recursive( pdi ) );
   /* }                                             */
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
   /*   r = DUF_ERROR_MAX_DEPTH;                    */
-  DEBUG_END(  );
-  return r;
+  DEBUG_ENDR( r );
 }
+
 int
 duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, const char *itemname, unsigned long long ndirs,
                               unsigned long long nfiles, int is_leaf )
@@ -121,19 +125,21 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
   if ( r >= 0 )
   {
-    DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_MAX_DEPTH );
+    /* DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_TOO_DEEP ); */
+    DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
     rd = r;
     DOR( r, duf_levinfo_openat_dh( pdi ) );
     if ( r < 0 && rd >= 0 )
       duf_levinfo_goup( pdi );
   }
-  DEBUG_ENDRQ( r, r == DUF_ERROR_MAX_DEPTH );
+  /* DEBUG_ENDRQ( r, r == DUF_ERROR_TOO_DEEP ); */
+  DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
 }
 
 int
 duf_levinfo_goup( duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
 
@@ -146,7 +152,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
     int d = pdi->depth--;
 
     if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
-      r = duf_levinfo_closeat_dh_d( pdi, d );
+      DOR( r, duf_levinfo_closeat_dh_d( pdi, d ) );
 
     assert( pdi->levinfo[d].lev_dh.dfd == 0 );
 
@@ -158,5 +164,5 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->depth;
   }
-  return r;
+  DEBUG_ENDR( r );
 }

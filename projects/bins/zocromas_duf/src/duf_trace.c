@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
@@ -11,6 +12,7 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_print_defs.h"
 #include "duf_errors.h"
 
 
@@ -40,11 +42,12 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
 }
 
 int
-duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0,
+duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum,
             unsigned flags, int nerr, FILE * out, const char *fmt, va_list args )
 {
   int r = -1;
 
+  assert( signum != '-' );
 #ifndef DUF_NOTIMING
   double timec;
 #endif
@@ -80,7 +83,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
         *puname++ = toupper( name[i] );
       *puname = 0;
 
-      fprintf( out, "%d:%d [%-7s] %3u:%-" FN_FMT ": ", level, minlevel, uname, linid, pfuncid );
+      fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" FN_FMT ": ", signum, level, minlevel, uname, linid, pfuncid );
     }
 #ifndef DUF_NOTIMING
     rt = gettimeofday( &tv, NULL );
@@ -110,14 +113,14 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
 }
 
 int
-duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0,
+duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum,
            unsigned flags, int nerr, FILE * out, const char *fmt, ... )
 {
   int r = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = duf_vtrace( trace_mode, name, level, minlevel, funcid, linid, time0, flags, nerr, out, fmt, args );
+  r = duf_vtrace( trace_mode, name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, fmt, args );
   va_end( args );
   return r;
 }

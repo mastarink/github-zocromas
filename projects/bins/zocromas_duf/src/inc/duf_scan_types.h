@@ -4,7 +4,7 @@
 
 typedef enum
 {
-  DUF_NODE_LEAF = 100,
+  DUF_NODE_LEAF = 101,
   DUF_NODE_NODE,
 } duf_node_type_t;
 

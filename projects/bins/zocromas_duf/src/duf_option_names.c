@@ -9,6 +9,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
+#include "duf_status_ref.h"
 
 
 #include "duf_option_extended.h"
@@ -113,22 +114,19 @@ duf_option_cnames_tmp( int index, duf_option_code_t codeval, const char *delim )
 {
   const char *x = NULL;
 
-  if ( duf_config )
+  if ( index < 0 )
   {
-    if ( index < 0 )
-    {
-      index = duf_config->tmp->explanation_index++;
-      if ( duf_config->tmp->explanation_index >= DUF_TMP_EXPLANATION_MAX )
-        duf_config->tmp->explanation_index = 0;
-    }
+    index = global_status.tmp->explanation_index++;
+    if ( global_status.tmp->explanation_index >= DUF_TMP_EXPLANATION_MAX )
+      global_status.tmp->explanation_index = 0;
+  }
 
-    if ( index >= 0 && index < DUF_TMP_EXPLANATION_MAX )
-    {
-      mas_free( duf_config->tmp->option_explanation[index] );
-      duf_config->tmp->option_explanation[index] = NULL;
-      duf_config->tmp->option_explanation[index] = duf_option_names_d( codeval, delim );
-      x = duf_config->tmp->option_explanation[index];
-    }
+  if ( index >= 0 && index < DUF_TMP_EXPLANATION_MAX )
+  {
+    mas_free( global_status.tmp->option_explanation[index] );
+    global_status.tmp->option_explanation[index] = NULL;
+    global_status.tmp->option_explanation[index] = duf_option_names_d( codeval, delim );
+    x = global_status.tmp->option_explanation[index];
   }
   return x;
 }

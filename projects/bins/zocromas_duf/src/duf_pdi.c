@@ -27,6 +27,18 @@
 #include "duf_pdi.h"
 /* ###################################################################### */
 
+
+duf_depthinfo_t *
+duf_pdi_create( void )
+{
+  duf_depthinfo_t *pdi;
+
+  pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
+  memset( pdi, 0, sizeof( duf_depthinfo_t ) );
+
+  return pdi;
+}
+
 int
 duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive )
 {
@@ -55,7 +67,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int 
 {
   DEBUG_STARTR( r );
 
-  r = duf_pdi_init( pdi, real_path, ifadd, recursive );
+  DOR( r, duf_pdi_init( pdi, real_path, ifadd, recursive ) );
   if ( r == DUF_ERROR_NOT_IN_DB )
     DUF_SHOW_ERROR( "not in db:'%s'", real_path );
   else if ( r < 0 )
@@ -67,6 +79,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int 
     DUF_TRACE( explain, 0, "added path: %s", real_path );
     DUF_TRACE( path, 0, " *********** diridpid: %llu", duf_levinfo_dirid( pdi ) );
   }
+  /* TODO */ assert( pdi->levinfo );
   DEBUG_ENDR( r );
 }
 
@@ -87,7 +100,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
 int
 duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, int recursive )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   char *path = NULL;
   char *real_path = NULL;
 
@@ -109,7 +122,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
   }
   mas_free( path );
   mas_free( real_path );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
@@ -128,7 +141,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive )
       path = mas_strdup( cpath );
     /* recursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, &duf_config->u, recursive ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, duf_config->pu, recursive ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }
@@ -175,8 +188,8 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   {
     duf_clear_context( &pdi->context );
 
-    for ( int i = 0; i < pdi->num_idstatements; i++ )
-      r = duf_pdi_finalize_idstmt( pdi, i );
+    for ( int i = 0; /* r>=0 && */ i < pdi->num_idstatements; r = 0, i++ )
+      DOR( r, duf_pdi_finalize_idstmt( pdi, i ) );
 
     mas_free( pdi->idstatements );
     pdi->idstatements = NULL;
@@ -225,13 +238,13 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 
   assert( pdi );
   if ( pdi->pu->max_seq && pdi->seq >= pdi->pu->max_seq )
-    r = DUF_ERROR_MAX_SEQ_REACHED;
+    DOR( r, DUF_ERROR_MAX_SEQ_REACHED );
   else if ( pdi->pu->maxitems.files && pdi->items.files >= pdi->pu->maxitems.files )
-    r = DUF_ERROR_MAX_REACHED;
+    DOR( r, DUF_ERROR_MAX_REACHED );
   else if ( pdi->pu->maxitems.dirs && pdi->items.dirs >= pdi->pu->maxitems.dirs )
-    r = DUF_ERROR_MAX_REACHED;
+    DOR( r, DUF_ERROR_MAX_REACHED );
   else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
-    r = DUF_ERROR_MAX_REACHED;
+    DOR( r, DUF_ERROR_MAX_REACHED );
 
   /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
   /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */
@@ -391,7 +404,7 @@ duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i )
   assert( pdi );
 
   if ( pdi->idstatements[i].pstmt )
-    r = duf_sql_finalize( pdi->idstatements[i].pstmt );
+    DOR( r, duf_sql_finalize( pdi->idstatements[i].pstmt ) );
   /* if ( pdi->xstatements[i] )  */
   /*   pi = pdi->xstatements[i]; */
   /* if ( pi )                   */
@@ -409,7 +422,7 @@ duf_pdi_finalize_statement( duf_depthinfo_t * pdi, int *pindex )
   is = duf_pdi_find_idstmt( pdi, pindex );
   if ( is && is->pstmt )
   {
-    r = duf_sql_finalize( is->pstmt );
+    DOR( r, duf_sql_finalize( is->pstmt ) );
     is->pstmt = NULL;
   }
 

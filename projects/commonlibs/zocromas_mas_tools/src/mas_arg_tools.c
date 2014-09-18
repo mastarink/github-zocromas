@@ -544,6 +544,24 @@ mas_del_argv( int targc, char **targv, int from_a )
   return 0;
 }
 
+void
+mas_argv_delete( int targc, char **targv )
+{
+  mas_del_argv( targc, targv, 0 );
+}
+
+int
+mas_argv_clone( char ***pargv, int targc, char **targv )
+{
+  int argc = 0;
+
+  for ( int ia = 0; ia < targc; ia++ )
+  {
+    argc = mas_add_argv_arg( argc, pargv, targv[ia] );
+  }
+  return argc;
+}
+
 char *
 mas_argv_join( int targc, char *const *targv, int from_a, char delim )
 {

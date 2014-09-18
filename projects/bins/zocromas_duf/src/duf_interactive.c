@@ -8,7 +8,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_trace.h"
+#include "duf_maintenance.h"
 
 #include "duf_utils_print.h"
 
@@ -53,7 +53,7 @@ duf_interactive( void )
     char *duf_rl_buffer = NULL;
     static char rl_prompt[256 * 10] = "";
 
-    DUF_E_MAX( 5, DUF_ERROR_MAX_DEPTH );
+    DUF_E_MAX( 5, DUF_ERROR_TOO_DEEP, DUF_ERROR_LEVINFO_SIZE );
 
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );

@@ -25,6 +25,8 @@ int mas_add_argv_arg_nodup( int targc, char ***ptargv, char *arg );
 int mas_add_argv_cmdline( int targc, char ***ptargv, const char *cmdline, size_t len );
 
 int mas_del_argv( int argc, char **argv, int from_a );
+void mas_argv_delete( int targc, char **targv );
+int mas_argv_clone( char ***ptargv, int targc, char **targv );
 
 char *mas_argv_join( int targc, char *const *targv, int from_a, char delim );
 char *mas_argv_string( int targc, char *const *targv, int from_a );

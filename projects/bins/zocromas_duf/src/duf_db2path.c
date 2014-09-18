@@ -13,6 +13,8 @@
 
 
 #include "duf_config_ref.h"
+#include "duf_status_ref.h"
+
 
 /* #include "duf_pdi.h" */
 /* #include "duf_levinfo.h" */
@@ -29,8 +31,6 @@
 #include "duf_db2path.h"
 /* ###################################################################### */
 
-#if 1
-/* last function revision 20140901.204850 */
 static char *
 duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, const duf_depthinfo_t * pdi, int *pr )
 {
@@ -97,10 +97,9 @@ duf_pathid_to_path2_tmp( int index, unsigned long long dirid, const duf_depthinf
 
   if ( index < DUF_TMP_PATH_MAX )
   {
-    mas_free( duf_config->tmp->path[index] );
-    duf_config->tmp->path[index] = duf_pathid_to_path2( dirid, pdi, NULL );
-    p = duf_config->tmp->path[index];
+    mas_free( global_status.tmp->path[index] );
+    global_status.tmp->path[index] = duf_pathid_to_path2( dirid, pdi, NULL );
+    p = global_status.tmp->path[index];
   }
   return p;
 }
-#endif

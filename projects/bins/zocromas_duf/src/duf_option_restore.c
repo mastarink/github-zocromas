@@ -115,7 +115,7 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, ADD_PATH, add_path, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, UNI_SCAN, uni_scan, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, INFO, info, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, RECURSIVE, recursive, u, maxlen );
+  DUF_OPTION_RESTORE_FLAGP( codeval, ptr, RECURSIVE, recursive, pu, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, DRY_RUN, dry_run, cli, maxlen );
   DUF_OPTION_RESTORE_NUM( codeval, ptr, SAMPLE, sample, cli.act, maxlen );
   DUF_OPTION_RESTORE_NUM( codeval, ptr, SAMPUPD, sampupd, cli.act, maxlen );
@@ -135,14 +135,14 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_CALCULATE, calculate, cli,.disable, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_INSERT, insert, cli,.disable, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_UPDATE, update, cli,.disable, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSEQ, max_seq, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MINSIZE, size.min, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXSIZE, size.max, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MINDIRFILES, dirfiles.min, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXDIRFILES, dirfiles.max, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS, maxitems.total, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS_FILES, maxitems.files, u, maxlen );
-  DUF_OPTION_RESTORE_NUM( codeval, ptr, MAXITEMS_DIRS, maxitems.dirs, u, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MAXSEQ, max_seq, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MINSIZE, size.min, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MAXSIZE, size.max, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MINDIRFILES, dirfiles.min, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MAXDIRFILES, dirfiles.max, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MAXITEMS, maxitems.total, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MAXITEMS_FILES, maxitems.files, pu, maxlen );
+  DUF_OPTION_RESTORE_NUMP( codeval, ptr, MAXITEMS_DIRS, maxitems.dirs, pu, maxlen );
   /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDERR, nonew, cli.trace ); */
   /* DUF_OPTION_RESTORE_TRACE(ptr, TRACE_STDOUT, nonew, cli.trace ); */
   DUF_OPTION_RESTOREV_B( codeval, ptr, TRACE_STDERR, out, cli.trace, duf_config->cli.trace.output.out == stderr, maxlen );

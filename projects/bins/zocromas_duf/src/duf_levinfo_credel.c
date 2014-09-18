@@ -21,7 +21,7 @@
 int
 duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
 
@@ -43,15 +43,15 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
     }
     else
     {
-      r = DUF_ERROR_MAX_DEPTH;
+      T( "pdi->pu->max_rel_depth:%d", pdi->pu->max_rel_depth );
+      DOR( r, DUF_ERROR_LEVINFO_SIZE );
     }
     /* r = duf_levinfo_open_dh( pdi, path ); */
   }
   else
   {
   }
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /* delete level-control array, close 0 level */

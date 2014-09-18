@@ -115,7 +115,7 @@ static int
 duf_make_md5_uni( int fd, unsigned char *pmd )
 {
   int r = 0;
-  size_t bufsz = 1024 * 1024 * 100;
+  size_t bufsz = 1024 * 1024 * 102;
   MD5_CTX ctx;
 
   memset( &ctx, 0, sizeof( ctx ) );

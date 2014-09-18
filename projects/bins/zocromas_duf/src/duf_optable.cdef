@@ -18,33 +18,33 @@
 
 
 
-  {.o = {DO_Q( "quit" ), /*           */ DO_A_N } /*                              */ , DO_CL( CONTROL ) /*   */ ,
-   /*      */ DO_O( NOFLAG, cli.act.v ), DO_FL( act, interactive ),DO_STAGE(1) /*                             */ , DO_H( get dir info ) /*       */ },
-  {.o = {DO_Q( "depth" ), /*          */ DO_A_O } /*                              */ , DO_CL( CONTROL ) /*   */ ,
-   /*      */ DO_O( PDINUM, pdi ),DO_OPDI(depth),DO_STAGE(1) /*                                               */ , DO_H( pdi cd ) /*             */ },
-  {.o = {DO_Q( "maxdepth" ), /*       */ DO_A_O} /*                               */ , DO_CL( CONTROL ) /*   */ ,
-   /*      */ DO_O( PDINUM, pdi ),DO_OPDI(maxdepth),DO_STAGE(1) /*                                            */ , DO_H( pdi cd ) /*             */ },
-  {.o = {DO_Q( "cd" ), /*             */ DO_A_O} /*                               */ , DO_CL( CONTROL ) /*   */ ,
+  {.o = {DO_N( quit ), /*           */ DO_A_N } /*                              */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_O( NOFLAG, cli.act.v ), DO_FL( act, interactive ),  DO_STAGE(1) /*                          */ , DO_H( get dir info ) /*       */ },
+  {.o = {DO_N( depth ), /*          */ DO_A_O } /*                              */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_OPDI(PDINUM, depth),        DO_STAGE(1) /*                                                  */ , DO_H( pdi cd ) /*             */ },
+  {.o = {DO_N( maxdepth ), /*       */ DO_A_O} /*                               */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_OPDI(PDINUM, maxdepth),     DO_STAGE(1) /*                                                  */ , DO_H( pdi cd ) /*             */ },
+  {.o = {DO_N( cd ), /*             */ DO_A_O} /*                               */ , DO_CL( CONTROL ) /*   */ ,
    /*      */ DO_O( PDISTR, pdi ),DO_STAGE(1) /*                                                                */ , DO_H( pdi cd ) /*             */ },
-  {.o = {DO_Q( "pwd" ), /*            */ DO_A_N} /*                               */ , DO_CL( CONTROL ) /*   */ ,
+  {.o = {DO_N( pwd ), /*            */ DO_A_N} /*                               */ , DO_CL( CONTROL ) /*   */ ,
    /*      */ DO_O( PDISTR, pdi ),DO_STAGE(1) /*                                                                */ , DO_H( pdi cd ) /*             */ },
 
-  {.o = {DO_Q( "lsfiles" ), /*        */ DO_A_O } /*                              */ , DO_CL( CONTROL ) /*   */ ,
+  {.o = {DO_N( lsfiles ), /*        */ DO_A_O } /*                              */ , DO_CL( CONTROL ) /*   */ ,
    /*      */ DO_O( PDISCCB, pdi ),DO_STAGE(1), .call={.fdesc={.hi={.sccb=&duf_print_dir_callbacks}}} /*        */ , DO_H( pdi cd ) /*              */ },
 
 
 
 
   {.o = {DO_Q( "max-rel-depth" ), /*  */ DO_A_R, /* */ DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( NUM, u.max_rel_depth ) /*                                                                */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_OU( NUM, max_rel_depth ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-depth" ), /*      */ DO_A_R, /* */ DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( NUM, u.max_rel_depth ) /*                                                                */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_OU( NUM, max_rel_depth ) /*                                                                */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-depth" ), /*      */ DO_A_R, /* */ DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( PNUM, u.max_rel_depth ),DO_STAGE(1) /*                                                      */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_OU( PNUM, max_rel_depth ),DO_STAGE(1) /*                                                      */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-seq" ), /*        */ DO_A_R, /* */ DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( NUM, u.max_seq ) /*                                                                      */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_OU( NUM, max_seq ) /*                                                                      */ , DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-seq" ), /*        */ DO_A_R, /* */ DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*    */ ,
-   /*      */ DO_O( PNUM, u.max_seq ),DO_STAGE(1) /*                                                            */ , DO_H(  .... ) /*              */ },
+   /*      */ DO_OU( PNUM, max_seq ),DO_STAGE(1) /*                                                            */ , DO_H(  .... ) /*              */ },
 
 
   {.o = {DO_Q( "output-level" ), /*   */ DO_A_O, /* */ DO_V( OUTPUT_LEVEL )} /*   */ , DO_CL( PRINT ) /*     */ ,

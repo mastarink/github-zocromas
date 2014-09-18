@@ -363,15 +363,27 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
   if (  /* codeval && */ r >= 0 )
   {
     unsigned doplus = 0;
-    char *byteptr = ( ( ( char * ) duf_config ) + extended->mcfg_offset );
+    char *byteptr = NULL;
 
+    switch ( extended->relto )
+    {
+    case DUF_OFFSET_config:
+      byteptr = ( ( ( char * ) duf_config ) + extended->m_offset );
+      break;
+    case DUF_OFFSET_depthinfo:
+      byteptr = ( ( ( char * ) duf_config->pdi ) + extended->m_offset );
+      break;
+    case DUF_OFFSET_ufilter:
+      byteptr = ( ( ( char * ) duf_config->pu ) + extended->m_offset );
+      break;
+    }
 #define DUF_NUMOPT(_rt, _typ,_dopls,_conv) \
       if(_rt>=0 && !no) \
       { \
         int __rl = 0; \
 	_typ *p; \
-	p = ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
-	if ( extended->mcfg_flag == 1 && optargg ) /* if  extended->mcfg_flag == 1, then mcfg_offset is offset */ \
+	p = ( _typ * ) byteptr; /* byteptr only valid if extended->m_flag == 1 */ \
+	if ( extended->m_flag == 1 && optargg ) /* if  extended->m_flag == 1, then mcfg_offset is offset */ \
 	{ \
 	  _typ __v; \
 	  __v = _conv( optargg, &__rl ); \
@@ -393,8 +405,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       if(_rt>=0 && !no) \
       { \
 	_typ *p; \
-	p = ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
-	if ( extended->mcfg_flag == 1 ) /* if  extended->mcfg_flag == 1, then mcfg_offset is offset */ \
+	p = ( _typ * ) byteptr; /* byteptr only valid if extended->m_flag == 1 */ \
+	if ( extended->m_flag == 1 ) /* if  extended->m_flag == 1, then mcfg_offset is offset */ \
 	{ \
 	  DUF_PRINTF(0, "%lld", (unsigned long long)( *p )); \
 	} \
@@ -420,8 +432,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       { \
         int __rl = 0; \
 	_typ *mm; \
-	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
-	if ( extended->mcfg_flag == 1 ) /* if  extended->mcfg_flag == 1, then mcfg_offset is offset */ \
+	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->m_flag == 1 */ \
+	if ( extended->m_flag == 1 ) /* if  extended->m_flag == 1, then mcfg_offset is offset */ \
 	{ \
 	  if( optargg ) \
 	  { \
@@ -450,8 +462,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       { \
         int __rl = 0; \
 	_typ *mm; \
-	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
-	if ( extended->mcfg_flag == 1 && optargg ) /* if  extended->mcfg_flag == 1, then mcfg_offset is offset */ \
+	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->m_flag == 1 */ \
+	if ( extended->m_flag == 1 && optargg ) /* if  extended->m_flag == 1, then mcfg_offset is offset */ \
 	{ \
 	  mm->flag = 1; \
 	  mm->_mix = _conv( optargg, &__rl ); \
@@ -471,10 +483,10 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	const char *s; \
 	_typ *mm; \
 	s=optargg ? optargg : _defoptarg; \
-	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->mcfg_flag == 1 */ \
-	if ( extended->mcfg_flag == 1 /* && (s || extended->call.value.u */ ) /* if  extended->mcfg_flag == 1, then mcfg_offset is offset */ \
+	mm= ( _typ * ) byteptr; /* byteptr only valid if extended->m_flag == 1 */ \
+	if ( extended->m_flag == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_flag == 1, then mcfg_offset is offset */ \
 	{ \
-	  __rl = duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u ); \
+	  DOR(__rl, duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u )); \
 	  if ( __rl < 0 ) \
 	  {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	} \
@@ -504,8 +516,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         DUF_NUMOPT( r, unsigned, doplus, duf_strtol_suff );
-
-        break;
+        
+	break;
       case DUF_OPTION_VTYPE_NL:
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
@@ -660,7 +672,30 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           *pstr = NULL;
           if ( optargg )
             *pstr = mas_strdup( optargg );
-          DUF_TEST_R( r );
+        }
+        break;
+      case DUF_OPTION_VTYPE_PSTR:
+        if ( r >= 0 )
+        {
+          char **pstr;
+
+          pstr = ( char ** ) byteptr;
+          if ( no )
+          {
+            if ( pstr && *pstr )
+              mas_free( *pstr );
+            *pstr = NULL;
+          }
+          else if ( optargg && *optargg )
+          {
+            if ( pstr && *pstr )
+              mas_free( *pstr );
+            *pstr = mas_strdup( optargg );
+          }
+          else if ( extended->m_flag == 1 ) /* if  extended->m_flag == 1, then mcfg_offset is offset */
+          {
+            DUF_PRINTF( 0, "%s", ( *pstr ) );
+          }
         }
         break;
       case DUF_OPTION_VTYPE_PDISTR:
@@ -669,7 +704,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         if ( r >= 0 )
         {
           if ( optargg && *optargg )
-            DOR( r, duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg, &duf_config->u, 0 /* recursive */  ) );
+            DOR( r, duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg, duf_config->pu, 0 /* recursive */  ) );
           else
             DUF_PRINTF( 0, "%s", duf_levinfo_path( *( ( duf_depthinfo_t ** ) byteptr ) ) );
         }
@@ -677,17 +712,12 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       case DUF_OPTION_VTYPE_PDINUM:
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 && extended->mpdi_flag == 1 )
+        if ( r >= 0 && extended->m_flag == 1 )
         {
-          duf_depthinfo_t *pdi;
-
-          pdi = *( ( duf_depthinfo_t ** ) byteptr );
-          int *inpdiptr = ( int * ) ( ( ( char * ) pdi ) + extended->mpdi_offset );
-
           /* if ( optargg && *optargg )                                                                                              */
           /*   DOR( r, duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg, &duf_config->u, 0 (* recursive *)  ) ); */
           /* else                                                                                                                    */
-          DUF_PRINTF( 0, "%d", *inpdiptr );
+          DUF_PRINTF( 0, "%d", *( ( int * ) byteptr ) );
         }
         break;
       case DUF_OPTION_VTYPE_PDISCCB:
@@ -695,12 +725,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          duf_depthinfo_t *pdi;
-
-          pdi = *( ( duf_depthinfo_t ** ) byteptr );
-          assert( pdi );
-          assert( pdi->levinfo );
-          DOR( r, duf_sccb_pdi( pdi, extended->call.fdesc.hi.sccb ) );
+          DOR( r, duf_sccb_pdi( duf_config->pdi, extended->call.fdesc.hi.sccb ) );
         }
         break;
       case DUF_OPTION_VTYPE_DATETIME:
@@ -757,7 +782,6 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           /* }                                                                                 */
 
           /* DOR(r, DUF_ERROR_OPTION_NOT_PARSED); */
-          DUF_TEST_R( r );
         }
         break;
       }

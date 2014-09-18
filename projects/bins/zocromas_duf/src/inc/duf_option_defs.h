@@ -9,11 +9,11 @@
 
 
 #  define DUF_OPTION_FLAGG(_lo, _pref, _fls) DUF_OPTION_F(_pref _fls._lo)
-#  define DUF_OPTION_FLAG(_lo, _pref) DUF_OPTION_FLAGG(_lo, _pref, .v.flag)
+#  define DUF_OPTION_FLAG(_lo, _ref, _pref) DUF_OPTION_FLAGG(_lo, _pref, _ref v.flag)
 
-#  define DUF_CLI_FLAG(_lo) DUF_OPTION_FLAG(_lo, cli)
-#  define DUF_ACT_FLAG(_lo) DUF_OPTION_FLAG(_lo, cli.act)
-#  define DUF_U_FLAG(_lo) DUF_OPTION_FLAG(_lo, u)
+#  define DUF_CLI_FLAG(_lo) DUF_OPTION_FLAG(_lo, ., cli)
+#  define DUF_ACT_FLAG(_lo) DUF_OPTION_FLAG(_lo, ., cli.act)
+#  define DUF_U_FLAG(_lo) DUF_OPTION_FLAG(_lo, ->, pu)
 
 #  define DUF_CLI_NUM( _lo, n ) DUF_OPTION_NUM( _lo, cli.n )
 #  define DUF_ACT_NUM(_lo)      DUF_CLI_NUM( _lo, act )
@@ -34,11 +34,12 @@
     case DUF_OPTION_FLAG_##up: \
        DUF_OPTION_ACQUIRE_FLAGG( _lo, _pref, _fls.flag ); \
     break
-#  define DUF_OPTION_CASE_ACQUIRE_FLAG(up, _lo, _pref) DUF_OPTION_CASE_ACQUIRE_FLAGG(up, _lo, _pref, .v)
+
+#  define DUF_OPTION_CASE_ACQUIRE_FLAG(up, _lo, _ref, _pref) DUF_OPTION_CASE_ACQUIRE_FLAGG(up, _lo, _pref, _ref, v)
 
 
-#  define DUF_OPTION_CASE_ACQUIRE_ACT_FLAG(up, _lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, _lo, cli.act)
-#  define DUF_OPTION_CASE_ACQUIRE_U_FLAG(up, _lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, _lo, u)
+#  define DUF_OPTION_CASE_ACQUIRE_ACT_FLAG(up, _lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, _lo, ., cli.act)
+#  define DUF_OPTION_CASE_ACQUIRE_U_FLAG(up, _lo) DUF_OPTION_CASE_ACQUIRE_FLAG(up, _lo, ->, pu)
 
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
@@ -57,20 +58,20 @@
       else \
         DUF_OPTION_N(_lo)++
 
-#  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, _lo, _pref ) \
+#  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, _lo, _ref, _pref ) \
     case DUF_OPTION_ ## up: \
-      DUF_OPTION_ACQUIRE_NUM( _pref._lo ); \
+      DUF_OPTION_ACQUIRE_NUM( _pref _ref _lo ); \
     break
 
-#  define  DUF_OPTION_CASE_ACQUIRE_NUM_PLUS( up, _lo, _pref ) \
+#  define  DUF_OPTION_CASE_ACQUIRE_NUM_PLUS( up, _lo, _ref, _pref ) \
     case DUF_OPTION_ ## up: \
-      DUF_OPTION_ACQUIRE_NUM_PLUS( _pref._lo ); \
+      DUF_OPTION_ACQUIRE_NUM_PLUS( _pref _ref _lo ); \
     break
 
-#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, _lo)      DUF_OPTION_CASE_ACQUIRE_NUM(up, _lo, cli.act)
-#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM_PLUS(up, _lo) DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, _lo, cli.act)
-#  define DUF_OPTION_CASE_ACQUIRE_U_NUM(up, _lo)        DUF_OPTION_CASE_ACQUIRE_NUM(up, _lo, u)
-#  define DUF_OPTION_CASE_ACQUIRE_U_NUM_PLUS(up, _lo)   DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, _lo, u)
+#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM(up, _lo)      DUF_OPTION_CASE_ACQUIRE_NUM(up, _lo, ., cli.act)
+#  define DUF_OPTION_CASE_ACQUIRE_ACT_NUM_PLUS(up, _lo) DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, _lo, ., cli.act)
+#  define DUF_OPTION_CASE_ACQUIRE_U_NUM(up, _lo)        DUF_OPTION_CASE_ACQUIRE_NUM(up, _lo, ->, pu)
+#  define DUF_OPTION_CASE_ACQUIRE_U_NUM_PLUS(up, _lo)   DUF_OPTION_CASE_ACQUIRE_NUM_PLUS(up, _lo, ->, pu)
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
 #  define DUF_OPTION_ACQUIRE_TRACE( _lo )  \
@@ -88,8 +89,6 @@
         mas_free( DUF_OPTION_N(_lo) ); \
         DUF_OPTION_N(_lo) = mas_strdup( optarg ); \
       }
-#  define DUF_OPTION_RESTORE_STR( ocode, ptr, up, _lo, _pref, maxlen) \
-    DUF_OPTION_RESTORET( ocode, ptr, s, up, _lo, _pref, maxlen)
 
 #  define  DUF_OPTION_CASE_ACQUIRE_STR( up, _lo, _pref ) \
     case DUF_OPTION_ ## up: \
@@ -103,12 +102,12 @@
 #  define DUF_OPTION_ACQUIRE_ARG(_lo)  \
       if ( optarg ) DUF_OPTION_A(_lo,argc)=mas_add_argv_arg(DUF_OPTION_A(_lo,argc), &DUF_OPTION_A(_lo,argv), optarg)
 
-#  define  DUF_OPTION_CASE_ACQUIRE_ARG( up, _lo, _pref ) \
+#  define  DUF_OPTION_CASE_ACQUIRE_ARG( up, _lo, _ref, _pref ) \
     case DUF_OPTION_ ## up: \
-      DUF_OPTION_ACQUIRE_ARG( _pref._lo ); \
+      DUF_OPTION_ACQUIRE_ARG( _pref _ref _lo ); \
     break
 
-#  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, _lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, _lo, u)
+#  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, _lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, _lo, ->, pu)
 
 
 #endif

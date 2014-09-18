@@ -1,4 +1,3 @@
-/* File 20140902.123910 */
 #include <stdarg.h>
 #include <string.h>
 #include <sys/time.h>
@@ -26,6 +25,7 @@
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_ufilter.h"
 
 
 #include "duf_config_ref.h"
@@ -36,48 +36,21 @@
 duf_config_t *duf_config = NULL;
 const duf_config_t *duf_config4trace = NULL;
 
-duf_tmp_t *
-duf_tmp_create( void )
-{
-  duf_tmp_t *tmp = NULL;
-
-  tmp = mas_malloc( sizeof( duf_tmp_t ) );
-  memset( tmp, 0, sizeof( duf_tmp_t ) );
-  return tmp;
-}
-
-void
-duf_tmp_delete( duf_tmp_t * tmp )
-{
-  for ( int i = 0; i < DUF_TMP_PATH_MAX; i++ )
-  {
-    mas_free( tmp->path[i] );
-    tmp->path[i] = NULL;
-  }
-  for ( int i = 0; i < DUF_TMP_EXPLANATION_MAX; i++ )
-  {
-    mas_free( tmp->option_explanation[i] );
-    tmp->option_explanation[i] = NULL;
-  }
-  mas_free( tmp );
-}
-
-int
+duf_config_t *
 duf_config_create( void )
 {
-  DEBUG_STARTR( r );
+  duf_config_t *cfg = NULL;
 
-  assert( !duf_config );
-  duf_config = mas_malloc( sizeof( duf_config_t ) );
-  duf_config4trace = duf_config;
-  memset( duf_config, 0, sizeof( duf_config ) );
-  duf_config->u.max_rel_depth = 100;
+  assert( !cfg );
+  cfg = mas_malloc( sizeof( duf_config_t ) );
+  memset( cfg, 0, sizeof( cfg ) );
+  cfg->pu = duf_ufilter_create(  );
   if ( 0 )
   {
-    duf_config->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
-    if ( duf_config->db.dir )
+    cfg->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
+    if ( cfg->db.dir )
     {
-      duf_config->db.dir = mas_strcat_x( duf_config->db.dir, "/../duf_db" );
+      cfg->db.dir = mas_strcat_x( cfg->db.dir, "/../duf_db" );
     }
   }
   {
@@ -86,13 +59,12 @@ duf_config_create( void )
 
     rt = gettimeofday( &tv, NULL );
     if ( rt >= 0 )
-      duf_config->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+      cfg->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
-  duf_config->db.main.name = mas_strdup( "duf-main.db" );
-  duf_config->db.adm.name = mas_strdup( "duf-adm.db" );
-  duf_config->cli.trace.any = duf_config->cli.trace.error = 1;
-  /* duf_config->cli.trace.fs = 1; */
-  duf_config->tmp = duf_tmp_create(  );
+  cfg->db.main.name = mas_strdup( "duf-main.db" );
+  cfg->db.adm.name = mas_strdup( "duf-adm.db" );
+  cfg->cli.trace.any = cfg->cli.trace.error = 1;
+  /* cfg->cli.trace.fs = 1; */
 
   {
     /* extern const duf_option_t *duf_longopts; */
@@ -104,96 +76,87 @@ duf_config_create( void )
       size_t tbsize;
 
       tbsize = lo_extended_count * ( sizeof( duf_longval_extended_t ) + 1 );
-      duf_config->longopts_table = mas_malloc( tbsize );
-      memset( duf_config->longopts_table, 0, tbsize );
+      cfg->longopts_table = mas_malloc( tbsize );
+      memset( cfg->longopts_table, 0, tbsize );
       for ( int i = 0; i < lo_extended_count; i++ )
       {
-        duf_config->longopts_table[i].name = lo_extended[i].o.name;
-        duf_config->longopts_table[i].has_arg = lo_extended[i].o.has_arg;
-        duf_config->longopts_table[i].val = lo_extended[i].o.val;
+        cfg->longopts_table[i].name = lo_extended[i].o.name;
+        cfg->longopts_table[i].has_arg = lo_extended[i].o.has_arg;
+        cfg->longopts_table[i].val = lo_extended[i].o.val;
       }
     }
+    /* assert(cfg->longopts_table); */
     /* {                                                                                                                                          */
     /*   DUF_PRINTF( 0, "%u -- %u", lo_extended_count, duf_longopts_count );                                                                      */
-    /*   for ( int i = 0; i < duf_longopts_count && duf_longopts[i].name && duf_config->longopts_table[i].name; i++ )                             */
+    /*   for ( int i = 0; i < duf_longopts_count && duf_longopts[i].name && cfg->longopts_table[i].name; i++ )                             */
     /*   {                                                                                                                                        */
-    /*     if ( 0 != strcmp( duf_longopts[i].name, duf_config->longopts_table[i].name )                                                           */
-    /*          || duf_longopts[i].has_arg != duf_config->longopts_table[i].has_arg || duf_longopts[i].val != duf_config->longopts_table[i].val ) */
+    /*     if ( 0 != strcmp( duf_longopts[i].name, cfg->longopts_table[i].name )                                                           */
+    /*          || duf_longopts[i].has_arg != cfg->longopts_table[i].has_arg || duf_longopts[i].val != cfg->longopts_table[i].val ) */
     /*     {                                                                                                                                      */
-    /*       DUF_PRINTF( 0, "%d: %30s :: %30s", i, duf_longopts[i].name, duf_config->longopts_table[i].name );                                    */
+    /*       DUF_PRINTF( 0, "%d: %30s :: %30s", i, duf_longopts[i].name, cfg->longopts_table[i].name );                                    */
     /*     }                                                                                                                                      */
     /*   }                                                                                                                                        */
     /* }                                                                                                                                          */
   }
-  duf_config->pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
-  memset( duf_config->pdi, 0, sizeof( duf_depthinfo_t ) );
-  PF( "CONFIG pdi:%p", duf_config->pdi );
-  DEBUG_ENDR( r );
+  cfg->pdi = duf_pdi_create(  );
+  return cfg;
 }
 
-int
-duf_config_delete( void )
+void
+duf_config_delete( duf_config_t * cfg )
 {
-  duf_pdi_close( duf_config->pdi );
-  mas_free( duf_config->pdi );
-  duf_config->pdi = NULL;
+  if ( cfg )
+  {
+    duf_pdi_close( cfg->pdi );
+    mas_free( cfg->pdi );
+    cfg->pdi = NULL;
 
-  duf_tmp_delete( duf_config->tmp );
-  duf_config->tmp = NULL;
+    duf_ufilter_delete( cfg->pu );
+    cfg->pu = NULL;
 
-  mas_free( duf_config->config_path );
-  duf_config->config_path = NULL;
+    mas_free( cfg->config_path );
+    cfg->config_path = NULL;
 
-  mas_free( duf_config->db.dir );
-  duf_config->db.dir = NULL;
+    mas_free( cfg->db.dir );
+    cfg->db.dir = NULL;
 
-  mas_free( duf_config->longopts_table );
-  duf_config->longopts_table = NULL;
+    mas_free( cfg->longopts_table );
+    cfg->longopts_table = NULL;
 
-  mas_free( duf_config->help_string );
-  duf_config->help_string = NULL;
-  mas_free( duf_config->db.main.name );
-  duf_config->db.main.name = NULL;
-  mas_free( duf_config->db.main.fpath );
-  duf_config->db.main.fpath = NULL;
+    mas_free( cfg->help_string );
+    cfg->help_string = NULL;
 
-  mas_free( duf_config->db.adm.name );
-  duf_config->db.adm.name = NULL;
+    mas_free( cfg->db.main.name );
+    cfg->db.main.name = NULL;
 
-  mas_free( duf_config->db.adm.fpath );
-  duf_config->db.adm.fpath = NULL;
+    mas_free( cfg->db.main.fpath );
+    cfg->db.main.fpath = NULL;
 
-  mas_free( duf_config->u.glob );
-  duf_config->u.glob = NULL;
+    mas_free( cfg->db.adm.name );
+    cfg->db.adm.name = NULL;
 
-  mas_free( duf_config->u.same_as );
-  duf_config->u.same_as = NULL;
+    mas_free( cfg->db.adm.fpath );
+    cfg->db.adm.fpath = NULL;
 
-  /* mas_free( duf_config->group ); */
-  /* duf_config->group = NULL;      */
+    /* mas_free( cfg->group ); */
+    /* cfg->group = NULL;      */
 
-  mas_del_argv( duf_config->u.globx.include_files.argc, duf_config->u.globx.include_files.argv, 0 );
-  duf_config->u.globx.include_files.argc = 0;
-  duf_config->u.globx.include_files.argv = NULL;
+    mas_del_argv( cfg->targc, cfg->targv, 0 );
+    cfg->targc = 0;
+    cfg->targv = NULL;
 
-  mas_del_argv( duf_config->u.globx.exclude_files.argc, duf_config->u.globx.exclude_files.argv, 0 );
-  duf_config->u.globx.exclude_files.argc = 0;
-  duf_config->u.globx.exclude_files.argv = NULL;
+    mas_free( cfg->cli.shorts );
+    cfg->cli.shorts = NULL;
 
-  mas_del_argv( duf_config->targc, duf_config->targv, 0 );
-  duf_config->targc = 0;
-  duf_config->targv = NULL;
+    mas_free( cfg->cli.trace.output.file );
+    cfg->cli.trace.output.file = NULL;
 
-  mas_free( duf_config->cli.shorts );
-  duf_config->cli.shorts = NULL;
-  mas_free( duf_config->cli.trace.output.file );
-  duf_config->cli.trace.output.file = NULL;
-  mas_free( duf_config->cli.output.file );
-  duf_config->cli.output.file = NULL;
+    mas_free( cfg->cli.output.file );
+    cfg->cli.output.file = NULL;
 
-  mas_free( duf_config );
-  duf_config = NULL;
-  return 0;
+    mas_free( cfg );
+    cfg = NULL;
+  }
 }
 
 int

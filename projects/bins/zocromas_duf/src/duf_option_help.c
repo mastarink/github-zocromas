@@ -482,7 +482,7 @@ duf_option_version( int argc, char *const *argv )
   DUF_PUTSL( 0 );
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_config->config_path );
   DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.sbit ), duf_config->cli.v.sbit );
-  DUF_PRINTF( 0, "u.        [%2lu]   %x", sizeof( duf_config->u.v.sbit ), duf_config->u.v.sbit );
+  DUF_PRINTF( 0, "pu->      [%2lu]   %x", sizeof( duf_config->pu->v.sbit ), duf_config->pu->v.sbit );
   {
     unsigned u = duf_config->cli.act.v.bit;
 
@@ -528,9 +528,9 @@ duf_option_version( int argc, char *const *argv )
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
 
   {
-    unsigned u = duf_config->u.v.sbit;
+    unsigned u = duf_config->pu->v.sbit;
 
-    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( duf_config->u.v ), sizeof( typeof( u ) ), ( unsigned long ) duf_config->u.v.sbit );
+    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( duf_config->pu->v ), sizeof( typeof( u ) ), ( unsigned long ) duf_config->pu->v.sbit );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 

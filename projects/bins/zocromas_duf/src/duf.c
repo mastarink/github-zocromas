@@ -1,4 +1,3 @@
-/* File 20140902.123820 */
 #include <string.h>
 #include <time.h>
 #include <assert.h>
@@ -76,7 +75,11 @@ duf_main( int argc, char **argv )
       mas_mem_disable_print_usage = 7;
     }
   }
-  DOR( r, duf_config_create(  ) );
+  duf_config4trace = duf_config = duf_config_create(  );
+  assert( duf_config );
+  assert( duf_config4trace );
+  assert( duf_config->pu );
+  assert( duf_config->longopts_table );
   {
     extern int dbgfunc_enabled __attribute__ ( ( weak ) );
 
@@ -121,8 +124,6 @@ duf_main( int argc, char **argv )
     /* }                                 */
 
     /* DUF_TEST_RN( r ); */
-
-    duf_config_delete(  );
   }
   else
   {
@@ -142,7 +143,8 @@ duf_main( int argc, char **argv )
       DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( MEMUSAGE ) );
     }
   }
-  print_memlist( FL, stdout );
+  duf_config_delete( duf_config );
+  duf_config4trace = duf_config = NULL;
 
 
 #endif

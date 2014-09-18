@@ -66,7 +66,7 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
              duf_uni_scan_action_title( sccb ) );
   DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
-  DUF_E_NO( DUF_ERROR_MAX_DEPTH );
+  DUF_E_NO( DUF_ERROR_TOO_DEEP );
 /* duf_scan_dirs_by_pdi_maxdepth:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
  *       for each <dir> record by top dirID (i.e. children of top dirID) with corresponding args
@@ -100,9 +100,9 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
     DUF_PRINTF( 0, " summary; seq:     %llu", pdi->seq );
     DUF_PRINTF( 0, " summary; seq-leaf:%llu", pdi->seq_leaf );
     DUF_PRINTF( 0, " summary; seq-node:%llu", pdi->seq_node );
-    if ( duf_config->u.max_seq )
-      DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->u.max_seq );
+    if ( duf_config->pu->max_seq )
+      DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->pu->max_seq );
   }
-  DUF_E_YES( DUF_ERROR_MAX_DEPTH );
+  DUF_E_YES( DUF_ERROR_TOO_DEEP );
   DEBUG_ENDR( r );
 }

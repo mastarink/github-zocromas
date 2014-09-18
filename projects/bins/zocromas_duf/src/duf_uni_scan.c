@@ -144,12 +144,12 @@ duf_sccb_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb
 
   DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
 
-  DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_MAX_DEPTH );
+  DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
   if ( sccb )
     DOR( r, duf_sccb_real_path( real_path, pu, sccb /*, pchanges */  ) );
 
   mas_free( real_path );
-  DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_MAX_DEPTH );
+  DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }
 
 /*
@@ -210,13 +210,13 @@ duf_sccb_each_targv( duf_scan_callbacks_t * sccb /*, unsigned long long *pchange
   if ( duf_config->targc <= 0 )
   {
     /* - evaluate sccb for NULL path */
-    DOR( r, duf_sccb_path( NULL, &duf_config->u, sccb /*, &changes */  ) );
+    DOR( r, duf_sccb_path( NULL, duf_config->pu, sccb /*, &changes */  ) );
   }
   else
   {
     /* - evaluate sccb for each string from duf_config->targ[cv] as path */
     for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
-      DOR( r, duf_sccb_path( duf_config->targv[ia], &duf_config->u, sccb /*, &changes */  ) );
+      DOR( r, duf_sccb_path( duf_config->targv[ia], duf_config->pu, sccb /*, &changes */  ) );
   }
 
   DUF_TRACE( action, 1, "after scan" );
@@ -346,7 +346,7 @@ int
 duf_make_all_sccbs( void )
 {
   DEBUG_STARTR( r );
-  int max_asteps = 100;
+  int max_asteps = 210;
   int asteps = 0;
   duf_scan_callbacks_t **ppscan_callbacks;
 

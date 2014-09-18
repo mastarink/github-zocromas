@@ -216,7 +216,7 @@ shn_gvimer_plus_vpath ()
         shn)		paths='shn/'			;;
         vimstd)		paths="$localvim_dir"		;;
         mased_vim)	paths="$mased_dir"		;;
-        cdef)		paths="src/"			;;
+        cdef)		paths="src/,src/inc/"		;;
         *)		paths='.'			;;
     esac
     echo "${paths:-.}"

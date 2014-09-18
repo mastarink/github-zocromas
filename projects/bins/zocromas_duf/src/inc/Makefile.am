@@ -54,9 +54,13 @@ noinst_HEADERS=duf.h \
 	duf_status_ref.h \
 	duf_status_types.h \
 	duf_trace_defs.h \
+	duf_start_end.h \
+	duf_error_defs.h \
+	duf_dodefs.h \
 	duf_trace.h \
 	duf_trace_types.h \
 	duf_ufilter_types.h \
+	duf_ufilter.h \
 	duf_uni_scan2.h \
 	duf_uni_scan.h \
 	duf_utils.h \
