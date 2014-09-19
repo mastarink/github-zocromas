@@ -12,6 +12,9 @@ sfind duf_options.h
 tab sfind duf_option.c
 sfind duf_option.h
 
+tab sfind duf_option_typed.c
+sfind duf_option_typed.h
+
 tab sfind duf_cli_options.c
 sfind duf_cli_options.h
 

@@ -5,5 +5,5 @@
   {.o = {DO_Q( "disable-update" ), /* */ DO_A_N, /* */ DO_VF( DISABLE_UPDATE )}, DO_CL( COLLECT ) /*         */ ,
    /*      */ DO_O( SFLAG, cli.disable ), DO_FL( disable, update ) /*                                        */ , DO_H(  .... ) /*              */ },
 
-/* vi: ft=c
+/* vi: ft=c colorcolumn=3,40,54,84,108,145,146
 */

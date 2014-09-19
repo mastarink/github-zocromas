@@ -170,14 +170,17 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   {
     extended = duf_find_codeval_extended_std( codeval, &r );
     DUF_TEST_R( r );
-    DUF_TRACE( options, 0, "@@found by codeval of option %d (%c) => %d...", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', r );
+    DUF_TRACE( options, 0, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
+               && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
   }
   else if ( !extended )
   {
     extended = duf_longindex2extended( longindex, &r );
     DUF_TEST_R( r );
+    DUF_TRACE( options, 0, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
+               && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
   }
-  DUF_TRACE( options, 1, "parse option codeval: %d (%c) longindex:%d [%s] (%s)", codeval, codeval > ' '
+  DUF_TRACE( options, 1, "parse option codeval: %d (%c) longindex:%d [--%s] (%s)", codeval, codeval > ' '
              && codeval <= 'z' ? codeval : '?', longindex, extended ? extended->o.name : "?", duf_error_name( r ) );
   if ( r >= 0 )
   {

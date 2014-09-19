@@ -43,5 +43,5 @@
   {.o = {DO_Q( "help-update" ), /*    */ DO_A_N} /*    */ , DO_CL( HELP ) /*          */ ,
    /*      */ DO_T( VIFUN ), DO_VIFUNH( UPDATE ) /*                                                          */ , DO_H( help on update ) /*     */ },
 
-/* vi: ft=c
+/* vi: ft=c colorcolumn=3,40,54,84,108,145,146
 */

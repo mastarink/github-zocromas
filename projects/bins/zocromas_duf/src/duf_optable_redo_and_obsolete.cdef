@@ -37,5 +37,5 @@
   /* .name = "update-path",                 .has_arg = no_argument,         */
 
 
-/* vi: ft=c
+/* vi: ft=c colorcolumn=3,40,54,84,108,145,146
 */
