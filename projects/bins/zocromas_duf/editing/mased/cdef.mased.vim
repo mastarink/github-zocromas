@@ -1,14 +1,12 @@
 
 find duf_optable_def.h
-tab sfind duf_optable_flag.cdef
-tab sfind duf_optable_sflag.cdef
-tab sfind duf_optable_str.cdef
-tab sfind duf_optable_redo_and_obsolete.cdef
-tab sfind duf_optable_uplus.cdef
-tab sfind duf_optable_debug.cdef
-tab sfind duf_optable_filter.cdef
-tab sfind duf_optable_help.cdef
-tab sfind duf_optable_trace.cdef
-tab sfind duf_optable.cdef
-tab sfind duf_optable_flag.cdef
-
+tab sfind duf_optable_flag.c
+tab sfind duf_optable_sflag.c
+tab sfind duf_optable_str.c
+tab sfind duf_optable_redo_and_obsolete.c
+tab sfind duf_optable_uplus.c
+tab sfind duf_optable_debug.c
+tab sfind duf_optable_filter.c
+tab sfind duf_optable_help.c
+tab sfind duf_optable_trace.c
+tab sfind duf_optable.c

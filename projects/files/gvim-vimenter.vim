@@ -33,6 +33,8 @@ if exists('g:maseddrop')
   execute 'tab drop ' . g:maseddrop
 endif
 
+" hi ColorColumn ctermbg=lightgrey guibg=lightgrey
+hi ColorColumn ctermbg=grey guibg=#035656
 
 " if exists(dfile) && !empty(dfile)
 " tabfirst

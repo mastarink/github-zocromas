@@ -2,10 +2,10 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 noinst_PROGRAMS=mtest
 
-noinst_HEADERS=duf_optable.cdef duf_optable_help.cdef duf_optable_trace.cdef duf_optable_sflag.cdef \
-	duf_optable_uplus.cdef duf_optable_str.cdef \
-	duf_optable_flag.cdef duf_optable_filter.cdef \
-	duf_optable_debug.cdef duf_optable_redo_and_obsolete.cdef
+#noinst_HEADERS=duf_optable.cdef duf_optable_help.cdef duf_optable_trace.cdef duf_optable_sflag.cdef \
+#	duf_optable_uplus.cdef duf_optable_str.cdef \
+#	duf_optable_flag.cdef duf_optable_filter.cdef \
+#	duf_optable_debug.cdef duf_optable_redo_and_obsolete.cdef
 
 zocromas_duf_SOURCES=				   \
 	duf.c duf_interactive.c				\
@@ -45,13 +45,24 @@ zocromas_duf_SOURCES=				   \
 	mod_md5_uni.c	mod_sd5_uni.c					      \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
-	mod_template_uni.c
-#	duf_item_match2.c	
+	mod_template_uni.c	\
+	duf_optable_flag.c	\
+	duf_optable_sflag.c	\
+	duf_optable_str.c	\
+	duf_optable_redo_and_obsolete.c	\
+	duf_optable_uplus.c	\
+	duf_optable_debug.c	\
+	duf_optable_filter.c	\
+	duf_optable_help.c	\
+	duf_optable_trace.c	\
+	duf_optable.c
+
+#	duf_item_match2.c
 #	duf_file_pathid2.c
 #	mod_print_md5_uni.c
 #	duf_dirent_scan1.c
 #	duf_dir_scan1.c
-#	duf_file_pathid1.c 
+#	duf_file_pathid1.c
 #	duf_item_scan1.c
 #	duf_sql_field1.c
 #	duf_uni_scan1.c
@@ -70,5 +81,5 @@ mtest_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @CRYPTO_LIBS@ @CRYPTO_LIBS@ @SQLITE3_LDFL
 
 ## Only our GUI program uses GTK+ at the moment.
 #template_CPPFLAGS = @GTK_CFLAGS@ @GLADE_CFLAGS@ @GMODULE_CFLAGS@
-#template_LDADD = @GTK_LIBS@ @GLADE_LIBS@ @GMODULE_LIBS@ 
+#template_LDADD = @GTK_LIBS@ @GLADE_LIBS@ @GMODULE_LIBS@
 #   template_LDFLAGS = -Wl,--export-dynamic

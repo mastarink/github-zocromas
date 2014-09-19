@@ -32,29 +32,46 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
 
 
 static const duf_longval_extended_t _lo_extended1[] = {
-#include "duf_optable.cdef"
-#include "duf_optable_str.cdef"
-#include "duf_optable_sflag.cdef"
-#include "duf_optable_uplus.cdef"
-#include "duf_optable_help.cdef"
-#include "duf_optable_trace.cdef"
-#include "duf_optable_filter.cdef"
-#include "duf_optable_debug.cdef"
-#include "duf_optable_redo_and_obsolete.cdef"
- 
+/* #include "duf_optable.cdef"                   */
+/* #include "duf_optable_str.cdef"               */
+/* #include "duf_optable_sflag.cdef"             */
+/* #include "duf_optable_uplus.cdef"             */
+/* #include "duf_optable_help.cdef"              */
+/* #include "duf_optable_trace.cdef"             */
+/* #include "duf_optable_filter.cdef"            */
+/* #include "duf_optable_debug.cdef"             */
+/* #include "duf_optable_redo_and_obsolete.cdef" */
   {0}
 };
 
-static const duf_longval_extended_t _lo_extended2[] = {
-#include "duf_optable_flag.cdef"
+/* static const duf_longval_extended_t _lo_extended2[] = { */
+/* (* #include "duf_optable_flag.cdef" *)                  */
+/*   {0}                                                   */
+/* };                                                      */
 
-  {0}
-};
-
+extern const duf_longval_extended_t optable_main[];
+extern const duf_longval_extended_t optable_str[];
+extern const duf_longval_extended_t optable_flag[];
+extern const duf_longval_extended_t optable_sflag[];
+extern const duf_longval_extended_t optable_uplus[];
+extern const duf_longval_extended_t optable_help[];
+extern const duf_longval_extended_t optable_trace[];
+extern const duf_longval_extended_t optable_filter[];
+extern const duf_longval_extended_t optable_debug[];
+extern const duf_longval_extended_t optable_redo_and_obsolete[];
 
 static const duf_longval_extended_t *_lo_extended_multi[] = {
-  _lo_extended1,
-  _lo_extended2,
+  optable_main,
+  optable_str,
+  optable_sflag,
+  optable_flag,
+  optable_uplus,
+  optable_trace,
+  optable_filter,
+  optable_debug,
+  optable_help,
+  optable_redo_and_obsolete,
+
   NULL
 };
 

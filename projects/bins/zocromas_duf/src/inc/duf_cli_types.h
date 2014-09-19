@@ -1,6 +1,6 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
-
+#include <stdio.h> /* FILE */
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
 /* duf_format_t */
