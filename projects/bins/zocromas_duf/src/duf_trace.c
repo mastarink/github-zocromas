@@ -58,20 +58,43 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
   else if ( level > minlevel )
   {
     char uname[10], *puname;
-    char rf = 0;
+    int noeol = 0;
+    int noinfo = 0;
+    int highlight = 0;
 
 #ifndef DUF_NOTIMING
     int rt;
     struct timeval tv;
 #endif
-    rf = *fmt;
-    /* ; - no prefix, cr   */
-    /* . - no prefix, no cr */
-    /* : - prefix, no cr    */
-    if ( rf == '.' || rf == ':' || rf == ';' )
-      fmt++;
+    {
+      int valid;
 
-    if ( rf != '.' && rf != ';' )
+      /*
+       * . - w/o eol and w/o info-prefix
+       * : - w/o eol
+       * ; - w/o info-prefix
+       * @ - highlight
+       * */
+      do
+      {
+        valid = 0;
+        if ( strchr( ":.", *fmt ) )
+        {
+          noeol = valid = 1;
+        }
+        if ( strchr( ";.", *fmt ) )
+        {
+          noinfo = valid = 1;
+        }
+        if ( *fmt == '@' )
+        {
+          valid = 1;
+          highlight++;
+        }
+      }
+      while ( fmt += valid, valid );
+    }
+    if ( !noinfo )
     {
       const char *pfuncid;
 
@@ -82,20 +105,31 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
       for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-
-      fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" FN_FMT ": ", signum, level, minlevel, uname, linid, pfuncid );
+      fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" FN_FMT ":", signum, level, minlevel, uname, linid, pfuncid );
     }
 #ifndef DUF_NOTIMING
     rt = gettimeofday( &tv, NULL );
     timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
     if ( rt >= 0 )
     {
-      fprintf( out, "%-7.4f: ", timec - time0 );
+      fprintf( out, "%-7.4f:", timec - time0 );
     }
 #endif
+    if ( highlight == 1 )
+      fprintf( out, "\x1b[33m\x1b[44m\x1b[1m " );
+    else if ( highlight == 2 )
+      fprintf( out, "\x1b[33m\x1b[46m\x1b[1m " );
+    else if ( highlight == 3 )
+      fprintf( out, "\x1b[33m\x1b[42m\x1b[1m " );
+    else if ( highlight )
+      fprintf( out, "\x1b[33m\x1b[41m\x1b[1m " );
+    else
+      fprintf( out, " " );
     {
       r = vfprintf( out, fmt, args );
     }
+    if ( highlight )
+      fprintf( out, "\x1b[m" );
     if ( flags & DUF_TRACE_FLAG_SYSTEM )
     {
       char serr[1024] = "Why?";
@@ -104,7 +138,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
       s = strerror_r( nerr, serr, sizeof( serr ) - 1 );
       fprintf( out, "; errno:(%d) [%s]", nerr, s );
     }
-    if ( rf != '.' && rf != ':' )
+    if ( !noeol )
     {
       fprintf( out, "\n" );
     }

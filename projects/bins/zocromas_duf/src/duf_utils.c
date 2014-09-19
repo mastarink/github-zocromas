@@ -123,3 +123,146 @@ duf_strfgmtime( char *s, size_t max, const char *format, const time_t * ptim )
     sz = strftime( s, max, format, &tm );
   return sz;
 }
+
+long
+duf_strtol_suff( const char *s, int *pr )
+{
+  int r = 0;
+  long l = 0;
+  char *pe = NULL;
+
+  l = strtol( s, &pe, 10 );
+  if ( pe )
+  {
+    switch ( *pe )
+    {
+    case 'G':
+      l *= 1024 * 1024 * 1024;
+      break;
+    case 'M':
+      l *= 1024 * 1024;
+      break;
+    case 'k':
+      l *= 1024;
+      break;
+    case 'w':
+      l *= 2;
+      break;
+    case 'c':
+    case '\0':
+      break;
+    case 'b':
+      l *= 512;
+      break;
+    default:
+      r=-1;
+      l = 0;
+      break;
+    }
+  }
+  else
+  {
+    r=-1;
+    l = 0;
+  }
+  if ( pr )
+    *pr = r;
+  return l;
+}
+
+long long
+duf_strtoll_suff( const char *s, int *pr )
+{
+  int r = 0;
+  long l = 0;
+  char *pe = NULL;
+
+  l = strtoll( s, &pe, 10 );
+  if ( pe )
+  {
+    switch ( *pe )
+    {
+    case 'G':
+      l *= 1024 * 1024 * 1024;
+      break;
+    case 'M':
+      l *= 1024 * 1024;
+      break;
+    case 'k':
+      l *= 1024;
+      break;
+    case 'w':
+      l *= 2;
+      break;
+    case 'c':
+    case '\0':
+      break;
+    case 'b':
+      l *= 512;
+      break;
+    default:
+      r=-1;
+      l = 0;
+      break;
+    }
+  }
+  else
+  {
+    r=-1;
+    l = 0;
+  }
+  if ( pr )
+    *pr = r;
+  return l;
+}
+
+unsigned long long
+duf_strtime2long( const char *s, int *pr )
+{
+  int r = 0;
+  time_t t = 0;
+  char *p = NULL;
+  struct tm tm;
+
+  {
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y-%m-%d %H:%M:%S", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y-%m-%d", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d.%H%M%S", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d.%H%M", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d.%H", &tm );
+    }
+    if ( !p )
+    {
+      memset( &tm, 0, sizeof( tm ) );
+      p = strptime( s, "%Y%m%d", &tm );
+    }
+    tm.tm_zone = tzname[daylight];
+    tm.tm_isdst = daylight;
+    if ( p )
+      t = timelocal( &tm );
+    else
+      r=-1;
+  }
+  if ( pr )
+    *pr = r;
+  return ( unsigned long long ) t;
+}

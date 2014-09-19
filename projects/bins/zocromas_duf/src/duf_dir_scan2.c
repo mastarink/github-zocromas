@@ -138,7 +138,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
     if ( !fp.dirid )
       r = DUF_ERROR_NOT_FOUND;
   }
-  
+
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
 

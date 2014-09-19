@@ -27,6 +27,7 @@
 
 #include "duf_ufilter.h"
 
+#include "duf_option_extended.h"
 
 #include "duf_config_ref.h"
 /* ###################################################################### */
@@ -44,6 +45,7 @@ duf_config_create( void )
   assert( !cfg );
   cfg = mas_malloc( sizeof( duf_config_t ) );
   memset( cfg, 0, sizeof( cfg ) );
+
   cfg->pu = duf_ufilter_create(  );
   if ( 0 )
   {
@@ -67,23 +69,38 @@ duf_config_create( void )
   /* cfg->cli.trace.fs = 1; */
 
   {
-    /* extern const duf_option_t *duf_longopts; */
-    /* extern const int duf_longopts_count; */
-    extern const duf_longval_extended_t *lo_extended;
-    extern unsigned lo_extended_count;
+    int tbcount = 0;
+    size_t tbsize = 0;
+    const duf_longval_extended_t **xtables;
+    const duf_longval_extended_t *xtable;
 
+    tbcount = duf_longindex_extended_count( lo_extended_multi );
+    xtables = lo_extended_multi;
+    tbsize = tbcount * ( sizeof( duf_longval_extended_t ) + 1 );
     {
-      size_t tbsize;
+      duf_option_t *longopts_ptr;
 
-      tbsize = lo_extended_count * ( sizeof( duf_longval_extended_t ) + 1 );
-      cfg->longopts_table = mas_malloc( tbsize );
+      cfg->longopts_table = longopts_ptr = mas_malloc( tbsize );
       memset( cfg->longopts_table, 0, tbsize );
-      for ( int i = 0; i < lo_extended_count; i++ )
+
+      while ( ( xtable = *xtables++ ) )
       {
-        cfg->longopts_table[i].name = lo_extended[i].o.name;
-        cfg->longopts_table[i].has_arg = lo_extended[i].o.has_arg;
-        cfg->longopts_table[i].val = lo_extended[i].o.val;
+        while ( xtable->o.name )
+        {
+          longopts_ptr->name = xtable->o.name;
+          longopts_ptr->has_arg = xtable->o.has_arg;
+          longopts_ptr->val = xtable->o.val;
+          xtable++;
+	  longopts_ptr++;
+        }
       }
+
+      /* for ( int ilong = 0; ilong < lo_extended_count; ilong++ )            */
+      /* {                                                                    */
+      /*   cfg->longopts_table[ilong].name = lo_extended[ilong].o.name;       */
+      /*   cfg->longopts_table[ilong].has_arg = lo_extended[ilong].o.has_arg; */
+      /*   cfg->longopts_table[ilong].val = lo_extended[ilong].o.val;         */
+      /* }                                                                    */
     }
     /* assert(cfg->longopts_table); */
     /* {                                                                                                                                          */

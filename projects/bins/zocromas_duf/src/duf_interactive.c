@@ -13,6 +13,8 @@
 #include "duf_utils_print.h"
 
 #include "duf_config_ref.h"
+#include "duf_status_ref.h"
+
 
 #include "duf_option_defs.h"
 #include "duf_option_cmd.h"
@@ -63,10 +65,16 @@ duf_interactive( void )
     add_history( "pwd" );
     add_history( "max-depth" );
     add_history( "max-seq" );
+    add_history( "selection" );
+    add_history( "same-as /mnt/new_media/media/photo/Pictures/photos/sel/catfly.jpg" );
+    add_history( "lsfiles" );
 
     while ( r >= 0 && DUF_ACT_FLAG( interactive ) )
     {
       r = 0;
+      if ( DUF_ACT_FLAG( beginning_sql ) )
+        global_status.selection_done = 0;
+
       DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, DUF_U_FLAG( recursive ) ) );
 
       if ( duf_config && duf_config->pdi )
@@ -79,10 +87,10 @@ duf_interactive( void )
         if ( duf_rl_buffer && *duf_rl_buffer )
           add_history( duf_rl_buffer );
         /* DOR( r, duf_execute_cmd_long( duf_rl_buffer, lo_extended_i, lo_extended_i_count, ' ', 1 ) ); */
-        DOR( r, duf_execute_cmd_long_std( duf_rl_buffer, ' ', 1 ) );
+        DOR( r, duf_execute_cmd_long_xtables_std( duf_rl_buffer, ' ', 1 ) );
       }
       /* DUF_TEST_R( r ); */
-      DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_MULTIPLE, DUF_ERROR_OPTION, DUF_ERROR_OPTION_VALUE, DUF_ERROR_PATH, DUF_ERROR_MAX_SEQ_REACHED );
+      DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_MULTIPLE, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_OPTION_VALUE, DUF_ERROR_PATH, DUF_ERROR_MAX_SEQ_REACHED );
       free( duf_rl_buffer );
       duf_rl_buffer = NULL;
       fprintf( stderr, "\n" );

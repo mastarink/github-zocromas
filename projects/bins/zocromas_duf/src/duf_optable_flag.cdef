@@ -1,6 +1,6 @@
   {.o = {DO_Q( "add-path" ), /*       */ DO_A_N, /* */ DO_VF( ADD_PATH )} /*      */ , DO_CL( CONTROL ) /*   */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, add_path ) /*                                             */ , DO_H( reg.init path ) /*      */ },
-  {.o = {DO_Q( "collect" ), /*        */ DO_A_N, /* */ DO_VF( COLLECT )} /*       */ , DO_CL( CONTROL ) /*   */ ,
+  {.o = {DO_Q( "collect" ), /*        */ DO_A_N, /* */ DO_VF( COLLECT ) /*      */ } , DO_CL( CONTROL ) /*   */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, collect ) /*                                              */ , DO_H( collect mode ) /*       */ },
   {.o = {DO_Q( "crc32" ), /*          */ DO_A_N, /* */ DO_VF( CRC32 )} /*         */ , DO_CL( SCAN ) /*      */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, crc32 ) /*                                                */ , DO_H( collect crc32 data ) /* */ },
@@ -14,7 +14,9 @@
   {.o = {DO_Q( "dirs" ), /*           */ DO_A_N, /* */ DO_VF( DIRS )} /*          */ , DO_CL( COLLECT ) /*   */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, dirs ) /*                                                 */ , DO_H( get dir info ) /*       */ },
   {.o = {DO_Q( "interactive" ), /*    */ DO_A_N, /* */ DO_VF( INTERACTIVE )} /*   */ , DO_CL( CONTROL ) /*   */ ,
-   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                                          */ , DO_H( get dir info ) /*       */ },
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                                          */ , DO_H( ... ) /*       */ },
+  {.o = {DO_Q( "selection" ), /*      */ DO_A_N, /* */ DO_VF( BEGINNING_SQL ) /* */ } /* */ , DO_CL( CONTROL ) /*   */ ,
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_ANY() /*                        */ , DO_H( ... ) /*       */ },
   
   {.o = {DO_Q( "drop-tables" ), /*    */ DO_A_N, /* */ DO_VF( DROP_TABLES )} /*   */ , DO_CL( SYSTEM ) /*    */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, drop_tables ) /*                                          */ , DO_H( drop tables ) /*        */ },

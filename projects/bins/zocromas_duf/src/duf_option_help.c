@@ -13,6 +13,7 @@
 
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
+#include "duf_option_names.h"
 #include "duf_option_restore.h"
 #include "duf_option.h"
 
@@ -120,7 +121,11 @@ duf_option_smart_help( duf_option_class_t oclass )
 {
   int r = 0;
   int *ashown;
-  size_t ss = lo_extended_count * sizeof( int );
+  size_t ss;
+  int tbcount;
+
+  tbcount = duf_longindex_extended_count( lo_extended_multi );
+  ss = tbcount * sizeof( int );
 
   ashown = mas_malloc( ss );
   memset( ( void * ) ashown, 0, ss );
@@ -131,7 +136,7 @@ duf_option_smart_help( duf_option_class_t oclass )
     DUF_PRINTF( 0, "-=-=-=-=- %s -=-=-=-=-", oclass_titles[oclass] );
   else
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
-  for ( int ilong = 0; r>=0 && duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ )
+  for ( int ilong = 0; r >= 0 && duf_config->longopts_table[ilong].name && ilong < tbcount; ilong++ )
   {
     char *s = NULL;
     duf_option_code_t codeval;
@@ -142,7 +147,7 @@ duf_option_smart_help( duf_option_class_t oclass )
     name = duf_config->longopts_table[ilong].name;
     codeval = duf_config->longopts_table[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex_extended( ilong, &r );
+    extd = duf_longindex2extended( ilong, &r );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
     if ( r >= 0 )
@@ -483,48 +488,67 @@ duf_option_version( int argc, char *const *argv )
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_config->config_path );
   DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.sbit ), duf_config->cli.v.sbit );
   DUF_PRINTF( 0, "pu->      [%2lu]   %x", sizeof( duf_config->pu->v.sbit ), duf_config->pu->v.sbit );
+  mas_free( sargv2 );
+  mas_free( sargv1 );
+  DEBUG_END(  );
+}
+
+void
+duf_option_showflags( int argc, char *const *argv )
+{
+  DEBUG_START(  );
   {
     unsigned u = duf_config->cli.act.v.bit;
 
     DUF_PRINTF( 0, "cli.act   [%2lu->%2lu]   %8lx :: ", sizeof( duf_config->cli.act.v ), sizeof( typeof( u ) ),
                 ( unsigned long ) duf_config->cli.act.v.bit );
 
+
+
+      /* *INDENT-OFF*  */
+    DUF_PRINTF( 0, "                  ┌─  %s", DUF_OPT_FLAG_NAME( INTERACTIVE ) );
+    DUF_PRINTF( 0, "                  │   ┌─  %s", DUF_OPT_FLAG_NAME( PROGRESS ) );
+    DUF_PRINTF( 0, "                  │   │   ┌─  %s", DUF_OPT_FLAG_NAME( COLLECT ) );
+    DUF_PRINTF( 0, "                  │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( FILENAMES ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRENT ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRS ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( EXIF ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CRC32 ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( SD5 ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PRINT ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
+    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( INFO ) );
+    DUF_PRINTF( 0, "   ┌──────────────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─┐" );
+      /* *INDENT-ON*  */
+
+
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 
-    DUF_PRINTF( 0, ".> > " );
+    DUF_PRINTF( 0, ".   │" );
     for ( int i = 1; i < sizeof( u ) * 8 + 1; i++ )
     {
-      DUF_PRINTF( 0, ".%c ", u & mask ? '+' : ' ' );
+      DUF_PRINTF( 0, ".%s ", u & mask ? "◆" : " " );
       u <<= 1;
     }
-    DUF_PUTSL( 0 );
-  }
+    DUF_PRINTF( 0, "│" );
       /* *INDENT-OFF*  */
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --info" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --vacuum" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --remove_database" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --drop_tables" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --create_tables" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --add_path" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --print" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --tree" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --sd5" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --md5" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ │ └─ --crc32" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ │ └─ --mime" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ │ └─ --exif" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ │ └─ --mdpath" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ │ └─ --dirs" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ │ └─ --files" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ │ └─ --dirent" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ │ └─ --filedata" );
-      DUF_PRINTF( 0, "                    │ │ │ │ │ └─ --filenames" );
-      DUF_PRINTF( 0, "                    │ │ │ │ └─ --integrity" );
-      DUF_PRINTF( 0, "                    │ │ │ └─ --collect" );
-      DUF_PRINTF( 0, "                    │ │ └─ --uni-scan" );
-      DUF_PRINTF( 0, "                    │ └─ --progress" );
-      DUF_PRINTF( 0, "                    └─ --summary" );
+    DUF_PRINTF( 0, "   └────────────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┘" );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( VACUUM ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( TREE ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MD5 ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MIME ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MDPATH ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( FILES ) );
+    DUF_PRINTF( 0, "                │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( FILEDATA ) );
+    DUF_PRINTF( 0, "                │   │   │   └─ %s", DUF_OPT_FLAG_NAME( INTEGRITY ) );
+    DUF_PRINTF( 0, "                │   │   └─ %s", DUF_OPT_FLAG_NAME( UNI_SCAN ) );
+    DUF_PRINTF( 0, "                │   └─ %s", DUF_OPT_FLAG_NAME( SUMMARY ) );
+    DUF_PRINTF( 0, "                └─ %s", DUF_OPT_FLAG_NAME( BEGINNING_SQL ) );
       /* *INDENT-ON*  */
+  }
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
 
   {
@@ -564,10 +588,6 @@ duf_option_version( int argc, char *const *argv )
   DUF_PRINTF( 0, "                                                              │ └─ --disable-insert" );
   DUF_PRINTF( 0, "                                                              └─ --disable-update" );
 
-
-
-  mas_free( sargv2 );
-  mas_free( sargv1 );
   DEBUG_END(  );
 }
 

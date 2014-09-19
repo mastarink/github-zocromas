@@ -4,11 +4,11 @@
 #  include "duf_option_types.h"
 #  include "duf_options_enum.h"
 
-char *duf_cli_option_shorts( void );
+char *duf_cli_option_shorts( const duf_longval_extended_t ** xtables );
 
 const char *duf_option_cnames_tmp( int index, duf_option_code_t code, const char *delim );
 
-char *duf_option_names( duf_option_code_t code );
+char *duf_option_names( duf_option_code_t codeval );
 char *duf_option_names_d( duf_option_code_t codeval, const char *delim );
 
 

@@ -1,6 +1,8 @@
 #define DO_VIFUNH(cl) DO_VIFUN( duf_option_smart_help, DUF_OPTION_CLASS_ ## cl)
   {.o = {DO_Q( "version" ), /*        */ DO_A_N} /*        */ , DO_CL( REFERENCE ) /* */ ,
    /*      */ DO_T( AFUN ), DO_AFUN( duf_option_version ), DO_STAGE(1) /*                                    */ , DO_H( version info ) /*       */ },
+  {.o = {DO_Q( "flags" ), /*          */ DO_A_N} /*        */ , DO_CL( REFERENCE ) /* */ ,
+   /*      */ DO_T( AFUN ), DO_AFUN( duf_option_showflags ), DO_STAGE(1) /*                                  */ , DO_H( version info ) /*       */ },
   {.o = {DO_Q( "help-examples" ), /*  */ DO_A_N} /*       */ , DO_CL( HELP ) /*      */ ,
    /*      */ DO_T( AFUN ), DO_AFUN( duf_option_examples ) /*                                                */ , DO_H( examples ) /*           */ },
 

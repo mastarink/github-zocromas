@@ -94,9 +94,9 @@ duf_main( int argc, char **argv )
     /* duf_config->cli.interstage_init = duf_interstage_init; (* ????? *) */
 
     assert( duf_config->targc == 0 );
-    DEBUG_E_NO( DUF_ERROR_OPTION );
+    DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
     DOR( r, duf_all_options( argc, argv ) );
-    DUF_E_YES( DUF_ERROR_OPTION );
+    DUF_E_YES( DUF_ERROR_OPTION_NOT_FOUND );
     /* assert( duf_config->targc > 0 ); */
 
 

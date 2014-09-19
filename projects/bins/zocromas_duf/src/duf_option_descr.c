@@ -76,7 +76,7 @@ duf_option_description_d( int longindex, const char *delimh, const char *delim, 
   int r = 0;
   const duf_longval_extended_t *extended;
 
-  extended = duf_longindex_extended( longindex, &r );
+  extended = duf_longindex2extended( longindex, &r );
   if ( r >= 0 )
     p = duf_option_description_xd( extended, delimh, delim, pr );
   if ( pr )

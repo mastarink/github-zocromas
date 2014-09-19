@@ -15,7 +15,6 @@ typedef struct
   /* unsigned update_duplicates:1; */
   unsigned print:1;
   unsigned tree:1;
-  unsigned interactive:1;
 
   unsigned sd5:1;
   unsigned md5:1;
@@ -50,6 +49,8 @@ typedef struct
   /* unsigned from_group:1; */
   unsigned progress:1;
   unsigned summary:1;
+  unsigned interactive:1;
+  unsigned beginning_sql:1; /* do 'beginning' sql's again (first time mandatory!) */
 } duf_config_act_flags_t;
 typedef union
 {

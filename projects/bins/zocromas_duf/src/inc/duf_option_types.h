@@ -41,6 +41,7 @@ typedef enum
 typedef enum
 {
   DUF_OPTION_VTYPE_NONE,
+  DUF_OPTION_VTYPE_NOOP,
   DUF_OPTION_VTYPE_UPLUS,
   DUF_OPTION_VTYPE_NUM,
   DUF_OPTION_VTYPE_PNUM,
@@ -126,7 +127,10 @@ typedef struct
 {
   int shown;
 
-  unsigned m_flag:1;
+  unsigned setit:1;
+  unsigned unsetit:1;
+  unsigned m_hasoff:1;
+  duf_anyflag_t afl;
   unsigned long m_offset;
   duf_offset_to_t relto;
 
@@ -136,7 +140,6 @@ typedef struct
   duf_option_vtype_t vtype;
   duf_option_t o;
 
-  duf_anyflag_t afl;
 
   struct
   {

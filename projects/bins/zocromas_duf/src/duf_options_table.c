@@ -21,24 +21,48 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
       duf_collect_openat_crc32_callbacks __attribute( ( weak ) ),
       duf_collect_openat_sd5_callbacks __attribute( ( weak ) ),
       duf_collect_openat_md5_callbacks __attribute( ( weak ) ),
-      duf_collect_mime_callbacks __attribute( ( weak ) ),
-      duf_collect_exif_callbacks __attribute( ( weak ) ),
+      duf_collect_mime_callbacks __attribute( ( weak ) ), duf_collect_exif_callbacks __attribute( ( weak ) ),
       /* duf_collect_mdpath_callbacks __attribute( ( weak ) ), */
       /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
+ 
       duf_print_tree_callbacks __attribute( ( weak ) ),
       duf_print_dir_callbacks __attribute( ( weak ) ),
       duf_bubububububububububububububububububububububububububububububububububububu __attribute( ( weak ) );
 
 
 
-
-static const duf_longval_extended_t _lo_extended[] = {
+static const duf_longval_extended_t _lo_extended1[] = {
 #include "duf_optable.cdef"
+#include "duf_optable_str.cdef"
+#include "duf_optable_sflag.cdef"
+#include "duf_optable_uplus.cdef"
+#include "duf_optable_help.cdef"
+#include "duf_optable_trace.cdef"
+#include "duf_optable_filter.cdef"
+#include "duf_optable_debug.cdef"
+#include "duf_optable_redo_and_obsolete.cdef"
+ 
   {0}
 };
 
-const duf_longval_extended_t *lo_extended = _lo_extended;
-unsigned lo_extended_count = sizeof( _lo_extended ) / sizeof( _lo_extended[0] );
+static const duf_longval_extended_t _lo_extended2[] = {
+#include "duf_optable_flag.cdef"
+
+  {0}
+};
+
+
+static const duf_longval_extended_t *_lo_extended_multi[] = {
+  _lo_extended1,
+  _lo_extended2,
+  NULL
+};
+
+
+
+const duf_longval_extended_t **lo_extended_multi = _lo_extended_multi;
+
+/* unsigned lo_extended_count = sizeof( _lo_extended ) / sizeof( _lo_extended[0] ); */
 
 /* static const duf_option_t duf_longopts_table[] = {                                                                                             */
 /* (*{.name = "add-to-group",                      .has_arg = no_argument,                         .val = DUF_OPTION_ADD_TO_GROUP}, *)            */

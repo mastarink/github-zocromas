@@ -23,44 +23,74 @@
 static int
 _duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value, int maxlen )
 {
-  for ( int ilong = 0; ilong < lo_extended_count; ilong++ )
+  const duf_longval_extended_t **xtables;
+  const duf_longval_extended_t *xtable;
+
+  xtables = lo_extended_multi;
+  while ( ( xtable = *xtables++ ) )
   {
-    if ( duf_config->longopts_table[ilong].val == codeval )
+    while ( xtable->o.name )
     {
-      snprintf( ptr, maxlen, " --%s='%d'", duf_config->longopts_table[ilong].name, value );
-      break;
+      if ( xtable->o.val == codeval )
+      {
+        snprintf( ptr, maxlen, " --%s='%d'", xtable->o.name, value );
+        break;
+      }
+
+      xtable++;
     }
   }
+
   return 0;
 }
 
 static int
 _duf_restore_option_s( char *ptr, duf_option_code_t codeval, const char *value, int maxlen )
 {
+  const duf_longval_extended_t **xtables;
+  const duf_longval_extended_t *xtable;
+
+  xtables = lo_extended_multi;
   if ( value )
-    for ( int ilong = 0; ilong < lo_extended_count; ilong++ )
+    while ( ( xtable = *xtables++ ) )
     {
-      if ( duf_config->longopts_table[ilong].val == codeval )
+      while ( xtable->o.name )
       {
-        snprintf( ptr, maxlen, " --%s='%s'", duf_config->longopts_table[ilong].name, value );
-        break;
+        if ( xtable->o.val == codeval )
+        {
+          snprintf( ptr, maxlen, " --%s='%s'", xtable->o.name, value );
+          break;
+        }
+
+        xtable++;
       }
     }
+
   return 0;
 }
 
 static int
 _duf_restore_option_b( char *ptr, duf_option_code_t codeval, int value, int maxlen )
 {
+  const duf_longval_extended_t **xtables;
+  const duf_longval_extended_t *xtable;
+
+  xtables = lo_extended_multi;
   if ( value )
-    for ( int ilong = 0; ilong < lo_extended_count; ilong++ )
+    while ( ( xtable = *xtables++ ) )
     {
-      if ( duf_config->longopts_table[ilong].val == codeval )
+      while ( xtable->o.name )
       {
-        snprintf( ptr, maxlen, " --%s", duf_config->longopts_table[ilong].name );
-        break;
+        if ( xtable->o.val == codeval )
+        {
+          snprintf( ptr, maxlen, " --%s", xtable->o.name );
+          break;
+        }
+
+        xtable++;
       }
     }
+
   return 0;
 }
 

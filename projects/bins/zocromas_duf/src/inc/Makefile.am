@@ -33,7 +33,7 @@ noinst_HEADERS=duf.h \
 	duf_maintenance.h \
 	duf_match.h \
 	duf_optable_def.h duf_option_cmd.h duf_option_defs.h duf_option_descr.h duf_option_env.h \
-	duf_option_extended.h duf_option_file.h duf_option_find.h duf_option.h duf_option_help.h \
+	duf_option_extended.h duf_option_file.h duf_option_find.h duf_option.h duf_option_typed.h duf_option_help.h \
 	duf_option_names.h duf_option_restore.h duf_options_enum.h duf_options.h duf_option_types.h \
 	duf_path2db.h \
 	duf_path.h \

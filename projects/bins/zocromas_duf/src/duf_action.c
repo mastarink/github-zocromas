@@ -64,6 +64,7 @@ duf_action( int argc, char **argv )
 {
   DEBUG_STARTR( r );
   
+  DUF_E_SET( -96, DUF_ERROR_NO_ACTIONS );
   /* DUF_E_SET( 97, DUF_ERROR_TOO_DEEP, DUF_ERROR_NOT_IN_DB, (* DUF_ERROR_MAX_SEQ_REACHED, *) DUF_ERROR_MAX_REACHED ); */
 
 /* --drop-tables								*/ DEBUG_STEP(  );

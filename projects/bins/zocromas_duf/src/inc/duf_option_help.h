@@ -13,6 +13,6 @@ void duf_option_smart_help( duf_option_class_t oclass );
 void duf_option_help( int argc, char **argv );
 void duf_option_examples( int argc, char *const *argv );
 void duf_option_version( int argc, char *const *argv );
+void duf_option_showflags( int argc, char *const *argv );
 
 #endif
-

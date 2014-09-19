@@ -253,7 +253,13 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
   /*   }                                                                                                                    */
   /*   (* mas_free( path ); *)                                                                                              */
   /* }                                                                                                                      */
-  if ( duf_levinfo_items_files( pdi ) > 0 )
+
+  /*
+   * it's good to print directories to have all items listed under 'current' directory
+   * BUT
+   * it's not good to print directories for selected files if there are no files
+   * */
+  if ( /* 1 || */ duf_levinfo_items_files( pdi ) > 0 )
   {
     duf_fileinfo_t fi = { 0 };
 
@@ -306,10 +312,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
     }
     DUF_PUTSL( 0 );
   }
-  else
-  {
-    /* DUF_SHOW_ERROR( "duf_levinfo_items_files is 0" ); */
-  }
+  
 
   DEBUG_ENDR( r );
 

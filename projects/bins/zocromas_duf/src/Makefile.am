@@ -12,7 +12,7 @@ zocromas_duf_SOURCES=				   \
 	duf_maindb.c duf_action.c		    \
 	duf_dbg.c duf_config.c duf_status.c	     \
 	duf_ufilter.c \
-	duf_options.c duf_cli_options.c duf_option.c  \
+	duf_options.c duf_cli_options.c duf_option.c duf_option_typed.c  \
 	duf_option_find.c duf_options_table.c		\
 	duf_option_descr.c duf_option_file.c		\
 	duf_option_env.c duf_option_help.c		\
