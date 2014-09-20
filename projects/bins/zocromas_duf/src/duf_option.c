@@ -1,11 +1,4 @@
-#include <stdarg.h>
-#include <stddef.h>
-#include <string.h>
-#include <time.h>
 #include <assert.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -13,16 +6,11 @@
 
 #include "duf_maintenance.h"
 #include "duf_utils.h"
-#include "duf_utils_path.h"
 
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
-#include "duf_sccb.h"
-#include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"
-
 #include "duf_option_defs.h"
+#include "duf_option_acquire.h"
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"

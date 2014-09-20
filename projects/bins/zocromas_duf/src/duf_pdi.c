@@ -13,8 +13,10 @@
 #include "duf_status_ref.h"
 
 #include "duf_config_ref.h"
+#include "duf_option_defs.h"
 
 #include "duf_sql2.h"
+
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_credel.h"
@@ -98,7 +100,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
 }
 
 int
-duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufilter_t * pu, int recursive )
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath /*, const duf_ufilter_t * pu, int recursive */  )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -117,9 +119,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const duf_ufil
   }
   real_path = duf_realpath( path, &r );
   if ( r >= 0 )
-  {
-    duf_pdi_reinit( pdi, real_path, pu, recursive );
-  }
+    duf_pdi_reinit( pdi, real_path, duf_config->pu /* pu */ , DUF_U_FLAG( recursive ) /*recursive */  );
   mas_free( path );
   mas_free( real_path );
   DEBUG_ENDR( r );
@@ -141,7 +141,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive )
       path = mas_strdup( cpath );
     /* recursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, duf_config->pu, recursive ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path /*, duf_config->pu, recursive */ ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }

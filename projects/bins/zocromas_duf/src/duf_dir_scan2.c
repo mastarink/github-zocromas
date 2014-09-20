@@ -41,33 +41,33 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->pu->size.flag )
+  if ( r >= 0 && duf_config->pu->size.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->pu->size.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->pu->size.max, r, pstmt );
     DUF_PRINTF( 0, "binding size %llu .. %llu", duf_config->pu->size.min, duf_config->pu->size.max );
   }
-  if ( duf_config->pu->same.flag )
+  if ( r >= 0 && duf_config->pu->same.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->pu->same.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->pu->same.max, r, pstmt );
   }
-  if ( duf_config->pu->exifsame.flag )
+  if ( r >= 0 && duf_config->pu->exifsame.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minExifSame, duf_config->pu->exifsame.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxExifSame, duf_config->pu->exifsame.max, r, pstmt );
   }
-  if ( duf_config->pu->nameid.flag )
+  if ( r >= 0 && duf_config->pu->nameid.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minNameID, duf_config->pu->nameid.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxNameID, duf_config->pu->nameid.max, r, pstmt );
   }
-  if ( duf_config->pu->dirid.flag )
+  if ( r >= 0 && duf_config->pu->dirid.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minDirID, duf_config->pu->dirid.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxDirID, duf_config->pu->dirid.max, r, pstmt );
   }
-  if ( duf_config->pu->mtime.flag )
+  if ( r >= 0 && duf_config->pu->mtime.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minMTime, duf_config->pu->mtime.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxMTime, duf_config->pu->mtime.max, r, pstmt );
@@ -82,41 +82,41 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
     }
 #endif
   }
-  if ( duf_config->pu->exifdt.flag )
+  if ( r >= 0 && duf_config->pu->exifdt.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minExifDT, duf_config->pu->exifdt.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxExifDT, duf_config->pu->exifdt.max, r, pstmt );
   }
-  if ( duf_config->pu->inode.flag )
+  if ( r >= 0 && duf_config->pu->inode.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->pu->inode.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->pu->inode.max, r, pstmt );
   }
-  if ( duf_config->pu->md5id.flag )
+  if ( r >= 0 && duf_config->pu->md5id.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->pu->md5id.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->pu->md5id.max, r, pstmt );
   }
-  if ( duf_config->pu->sd5id.flag )
+  if ( r >= 0 && duf_config->pu->sd5id.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->pu->sd5id.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->pu->sd5id.max, r, pstmt );
   }
-  if ( duf_config->pu->mimeid.flag )
+  if ( r >= 0 && duf_config->pu->mimeid.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->pu->mimeid.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->pu->mimeid.max, r, pstmt );
   }
-  if ( duf_config->pu->exifid.flag )
+  if ( r >= 0 && duf_config->pu->exifid.flag )
   {
     DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->pu->exifid.min, r, pstmt );
     DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->pu->exifid.max, r, pstmt );
   }
-  if ( duf_config->pu->glob )
+  if ( r >= 0 && duf_config->pu->glob )
   {
     DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob, r, pstmt );
   }
-  if ( duf_config->pu->same_as )
+  if ( r >= 0 && duf_config->pu->same_as )
   {
     duf_filepath_t fp = { 0 };
     {
@@ -132,10 +132,12 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
       mas_free( pathname );
     }
 
-    DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
-    DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
+    if ( r >= 0 )
+      DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
+    if ( r >= 0 )
+      DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
     mas_free( fp.name );
-    if ( !fp.dirid )
+    if ( r >= 0 && !fp.dirid )
       r = DUF_ERROR_NOT_FOUND;
   }
 

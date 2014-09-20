@@ -63,7 +63,7 @@ int
 duf_action( int argc, char **argv )
 {
   DEBUG_STARTR( r );
-  
+
   DUF_E_SET( -96, DUF_ERROR_NO_ACTIONS );
   /* DUF_E_SET( 97, DUF_ERROR_TOO_DEEP, DUF_ERROR_NOT_IN_DB, (* DUF_ERROR_MAX_SEQ_REACHED, *) DUF_ERROR_MAX_REACHED ); */
 
@@ -142,7 +142,7 @@ duf_action( int argc, char **argv )
     const char *path = NULL;
 
     path = duf_config->targc > 0 ? duf_config->targv[0] : "/";
-    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path, duf_config->pu, DUF_U_FLAG( recursive ) ) );
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage 1 - needs pdi inited with argv, which is known only after stage 0 */
     DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 1 ) );

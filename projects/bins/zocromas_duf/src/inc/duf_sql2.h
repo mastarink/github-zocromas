@@ -91,41 +91,25 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 
 
 #  define DUF_SQL_BIND_LL( name, value, r, _pstmt_m ) \
-		{ \
-		  if ( r >= 0 ) \
-		  { \
-		    r = duf_sql_bindn_long_long( _pstmt_m, ":" #name, value ); \
-		    DUF_TEST_R( r ); \
-		  } \
-		}
+		    DOR(r, duf_sql_bindn_long_long( _pstmt_m, ":" #name, value ));
 #  define DUF_SQL_BIND_LL_NZ    ( name, value, r, _pstmt_m ) \
-		  if ( r >= 0 ) \
-		  { \
-		    r = duf_sql_bindn_long_long_nz( _pstmt_m, ":" #name, value ); \
-		    DUF_TEST_R( r ); \
-		  }
+		    DOR(r, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #name, value ));
 #  define DUF_SQL_BIND_LL_NZ_OPT( name, value, r, _pstmt_m ) \
-		  if ( r >= 0 ) \
 		  {  \
-                    r = duf_sql_bindn_long_long_nz( _pstmt_m, ":" #name, value ); \
-		    if ( r == DUF_ERROR_BIND_NAME ) \
-		      r = 0; \
-		    DUF_TEST_R( r ); \
+		    DUF_E_NO( DUF_ERROR_BIND_NAME ); \
+                    DOR(r, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #name, value )); \
+		    DUF_CLEAR_ERROR(r, DUF_ERROR_BIND_NAME); \
+		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
 		  }
 
 #  define DUF_SQL_BIND_S( name, value, r, _pstmt_m ) \
-		  if ( r >= 0 ) \
-		  { \
-		    r = duf_sql_bindn_string( _pstmt_m, ":" #name, value ); \
-		    DUF_TEST_R( r ); \
-		  }
+		    DOR(r, duf_sql_bindn_string( _pstmt_m, ":" #name, value ));
 #  define DUF_SQL_BIND_S_OPT( name, value, r, _pstmt_m ) \
-		  if ( r >= 0 ) \
 		  { \
-		    r = duf_sql_bindn_string( _pstmt_m, ":" #name, value ); \
-		    if ( r == DUF_ERROR_BIND_NAME ) \
-		      r = 0; \
-		    DUF_TEST_R( r );\
+		    DUF_E_NO( DUF_ERROR_BIND_NAME ); \
+		    DOR(r, duf_sql_bindn_string( _pstmt_m, ":" #name, value )); \
+		    DUF_CLEAR_ERROR(r, DUF_ERROR_BIND_NAME); \
+		    DUF_E_YES( DUF_ERROR_BIND_NAME ); \
 		  }
 
 

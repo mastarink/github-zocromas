@@ -27,10 +27,10 @@
 /* error message if arg is not 0 */
 /* #  define DUF_TEST_RX(_rval)         if (_rval) DUF_SHOW_ERROR( " - - - - - -> [%s] (#%d)", _rval<0?duf_error_name(_rval):"+", _rval ) */
 #  ifdef DUF_T_NOIF
-#    define DUF_TEST_RX(_rval)	   ( (DUF_EREPORT(_rval)) ? \
+#    define DUF_TEST_RX(_rval)	   (( (DUF_EREPORT(_rval)) ? \
     					DUF_SHOW_ERROR( " - - - - - -> [%s] (#%d) {+%d} #%u", \
 					  (_rval)<0?duf_error_name(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_ecount(_rval) ) : \
-    					0 )
+    					0 ), _rval)
 #  else
 #    define DUF_TEST_RX(_rval)	if (DUF_EREPORT(_rval)) \
 				{ \
