@@ -121,7 +121,7 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
     if ( extended_exact )       /* several soft but one(first?) exact */
       extended = extended_exact;
     else
-      r = DUF_ERROR_OPTION_MULTIPLE;
+      DOR( r, DUF_ERROR_OPTION_MULTIPLE );
   }
   else if ( cnt == 1 && extended_exact )
     extended = extended_exact;

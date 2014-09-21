@@ -227,13 +227,31 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	    if( optargg ) \
 	    { \
 	      _typ __v; \
+	      char c=0; \
 	      mm->flag = 1; \
+	      if ( *optargg == '+' ) \
+		c = *optargg++; \
+	      else if ( *optargg == '-' ) \
+		c = *optargg++; \
 	      __v.min = _conv( optargg, &__rl ); \
 	      if ( __rl < 0 ) \
 	      { DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	      else \
 	      { \
-		mm->min = mm->max = __v.min; \
+		if ( c=='+' ) \
+		{ \
+		  mm->min = __v.min; \
+		  mm->max = 0; \
+		} \
+		else if ( c=='-' ) \
+		{ \
+		  mm->min = 0; \
+		  mm->max = __v.min; \
+		} \
+		else \
+		{ \
+		  mm->min = mm->max = __v.min; \
+		} \
 		DUF_TRACE( options, 1, "%s: min/max set:%llu", extended->o.name, (unsigned long long) __v.min ); \
 	      } \
 	    } \

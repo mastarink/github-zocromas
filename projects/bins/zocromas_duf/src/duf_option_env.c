@@ -23,7 +23,7 @@
 int
 duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   const char *eo = NULL;
   const char *peo, *e;
 
@@ -55,7 +55,7 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
       DUF_TRACE( explain, 0, "env s: \"%s\"", s );
       xs = mas_expand_string( s );
       DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
-      r = duf_execute_cmd_long_xtables_std( xs, '=', 0 );
+      DOR( r, duf_execute_cmd_long_xtables_std( xs, '=', 0 ) );
       mas_free( xs );
     }
     mas_free( s );
@@ -63,7 +63,7 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
     /* DUF_TRACE( explain, 0, "env peo \"%s\"", peo ); */
     DUF_TRACE( explain, 0, "got env options from %s", envvarname );
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int

@@ -264,5 +264,6 @@ function shn_i ()
 }
 function shn ()
 {
+  local TIMEFORMAT='                                            real %lR; user %lU; system %lS; cpu %P'
   time shn_i $*
 }

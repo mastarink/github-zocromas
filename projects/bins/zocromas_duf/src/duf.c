@@ -62,7 +62,9 @@ static int
 duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
+  DUF_UNUSED char *ttt;
 
+  ttt = mas_strdup( "Woo" );
   PF0( "%lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
        sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
        sizeof( unsigned long ), sizeof( unsigned long long ) );

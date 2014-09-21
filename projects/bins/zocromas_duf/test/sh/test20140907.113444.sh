@@ -1,4 +1,86 @@
 #!/bin/sh
+function unitestid ()
+{
+  local testname=$1 
+  testid=$testname
+  if [[ "$testname" =~ ^test(.*)$ ]] ; then
+    testid=${BASH_REMATCH[1]}
+  fi
+  echo "============ [testid=$testid] ($testname)" >&2
+  echo "============ [testid=$testid] ($testname)"
+}
+function unicmp ()
+{
+# echo "comparing $testid" >&2
+  if [[ "$testid" ]] && [[ -f ${testfile}.${testid} ]] && [[ -f ${cmpfile}.${testid} ]] ; then
+    if diff ${testfile}.${testid} ${cmpfile}.${testid}  >>${testfile}.log ; then
+#     echo "[testid=$testid] compare ok" >&2
+      echo "[testid=$testid] compare ok"
+      return 0
+    else
+#     echo "[testid=$testid] compare fail ${testfile}.${testid} ${cmpfile}.${testid}" >&2
+      echo "[testid=$testid] compare fail ${testfile}.${testid} ${cmpfile}.${testid}"
+    fi
+  else
+#   echo "[testid=$testid] No file ${testfile}.${testid} OR ${cmpfile}.${testid}" >&2
+    echo "[testid=$testid] No file ${testfile}.${testid} OR ${cmpfile}.${testid}"
+  fi
+  return 1
+}
+function testcreadd ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  shn m i r --memusage  -OP  /mnt/new_media/media/photo/Pictures/photos/ || return 1
+  echo "add" >${testfile}.${testid}
+  unicmp $FUNCNAME
+}
+function test0 ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  shn m i r --memusage  -OPRdEinD -f523Xe  /mnt/new_media/media/photo/Pictures/photos/ --progress || return 1
+  echo "scan" >${testfile}.${testid}
+  unicmp $FUNCNAME
+}
+function test1 ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  
+  shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --output-file=@${testfile}.${testid} || return 1
+  unicmp $FUNCNAME
+}
+function test2 ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=1 --output-file=@${testfile}.${testid} || return 1
+  unicmp $FUNCNAME
+}
+function test3 ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=2 --output-file=@${testfile}.${testid} || return 1
+  unicmp $FUNCNAME
+}
+function test4 ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  shn m i r --memusage /mnt/new_media/media/photo/Pictures/photos/sel/ -pd -R -f --size=-500 --min-size=1 --output-file=@${testfile}.${testid} || return 1
+  unicmp $FUNCNAME
+}
+
+function testsql1 ()
+{
+  local testid='x'
+  unitestid $FUNCNAME
+  echo 'FAKED WMWMOMWMWM EMP MEMT'
+  time sqlite3 $tdir0/temp.db 'select "Paths" as Tb, count(*) as Cnt from paths UNION ALL select "Datas", count(*)  from filedatas UNION ALL select "Names", count(*) from filenames UNION ALL select "Sizes", count(*)  from sizes UNION ALL select "MD5s", count(*) from md5' 2>/dev/null >${testfile}.${testid}
+  unicmp $FUNCNAME
+}
 function duftest ()
 {
   local today=`datem`
@@ -7,76 +89,50 @@ function duftest ()
   local testfile=$tdir/out${now}.test
   local cmpfile=$tdir0/good.test
   local MSH_SHN_DISABLE_MSG=1
+  local oktests=0
+  local alltests=0
   if [[ -d $tdir0 ]] ; then
     if ! [[ -d $tdir ]] ; then
       mkdir $tdir
     fi
     export MSH_CONF_DIR=$tdir0
     export MSH_DUF_OPTIONS=explain=0:trace-options=0:trace-action=0
-    echo "============ test 0" >>${testfile}.log
-    shn m i r --memusage  -OPRdEinD -f523Xe  /mnt/new_media/media/photo/Pictures/photos/ --progress >>${testfile}.log
-    export MSH_DUF_OPTIONS=explain=0:trace-options=0:trace-action=0
-    echo "============ test 1" >>${testfile}.log
-    shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --output-file=@${testfile}.1 >>${testfile}.log
-    if [[ -f ${testfile}.1 ]] && [[ -f ${cmpfile}.1 ]] ; then
-      if diff ${testfile}.1 ${cmpfile}.1  >>${testfile}.log ; then
-        echo "file 1 compare ok" >>${testfile}.log
-      else
-        echo "file 1 compare fail ${testfile}.1 ${cmpfile}.1" >>${testfile}.log
-      fi
-    else
-      echo "No file ${testfile}.1 OR ${cmpfile}.1"
-    fi
-    echo "============ test 2" >>${testfile}.log
-    shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=1 --output-file=@${testfile}.2 >>${testfile}.log
-    if [[ -f ${testfile}.2 ]] && [[ -f ${cmpfile}.2 ]] ; then
-      if diff ${testfile}.2 ${cmpfile}.2  >>${testfile}.log ; then
-        echo "file 2 compare ok" >>${testfile}.log
-      else
-        echo "file 2 compare fail ${testfile}.2 ${cmpfile}.2" >>${testfile}.log
-      fi
-    else
-      echo "No file ${testfile}.2 OR ${cmpfile}.2"
-    fi    
-    echo "============ test 3" >>${testfile}.log
-    shn m i r --memusage  /mnt/new_media/media/photo/Pictures/photos/  -pd -RT -f --max-depth=2 --output-file=@${testfile}.3 >>${testfile}.log
-    if [[ -f ${testfile}.3 ]] && [[ -f ${cmpfile}.3 ]] ; then
-      if diff ${testfile}.3 ${cmpfile}.3  >>${testfile}.log ; then
-        echo "file 3 compare ok" >>${testfile}.log
-      else
-        echo "file 3 compare fail ${testfile}.3 ${cmpfile}.3" >>${testfile}.log
-      fi
-    else
-      echo "No file ${testfile}.3 OR ${cmpfile}.3"
-    fi    
-    echo "============ test 4" >>${testfile}.log
-    sqlite3 $tdir0/temp.db 'select "Paths" as Tb, count(*) as Cnt from paths UNION ALL select "Datas", count(*)  from filedatas UNION ALL select "Names", count(*) from filenames UNION ALL select "Sizes", count(*)  from sizes UNION ALL select "MD5s", count(*) from md5' 2>/dev/null >>${testfile}.4
-    if [[ -f ${testfile}.4 ]] && [[ -f ${cmpfile}.4 ]] ; then
-      if diff ${testfile}.4 ${cmpfile}.4  >>${testfile}.log ; then
-        echo "file 4 compare ok" >>${testfile}.log
-      else
-        echo "file 4 compare fail ${testfile}.4 ${cmpfile}.4" >>${testfile}.log
-      fi
-    else
-      echo "No file ${testfile}.4 OR ${cmpfile}.4"
-    fi    
+    declare -a duftests
+    duftests=(testcreadd test0 test1 test2 test3 test4 testsql1)
+    echo "To make ${#duftests[@]} tests"
+    for testf in ${duftests[@]} ; do    
+      echo
+      echo "########### run $testf #######################################"
+      eval $testf && let oktests++
+      let alltests++
+    done >>${testfile}.log
     echo "============ end " >>${testfile}.log
-    echo "4 mem protocols for 0,1,2,3 tests"
-    grep 'WMWMOMWMWM' ${testfile}.log
-    echo "4 output comparison for 1,2,3,4 tests"
-    grep 'file .* compare' ${testfile}.log
-    echo
-    echo
-    if [[ `grep 'WMWMOMWMWM.*EMP MEMT' ${testfile}.log|wc -l` == 4 ]] ; then
-      echo "Memory usage OK"
+    echo "----------------------------------"
+    if [[ $oktests -eq $alltests ]] ; then
+      echo "OK tests ${MSHPR_BBLUE}$oktests of $alltests${MSHPR_ATTROFF}"
     else
-      echo "Memory usage BAD"
+      echo "OK tests ${MSHPR_BYELLOWONRED}$oktests of $alltests${MSHPR_ATTROFF}"
     fi
-    if [[ `grep 'file .* compare ok' ${testfile}.log|wc -l` == 4 ]]; then
-      echo "Output OK"
+    
+    echo "----------------------------------"
+    echo "$alltests mem protocols for all tests"
+    local goodmem=`grep 'WMWMOMWMWM.*EMP MEMT' ${testfile}.log|wc -l`
+    if [[ ${goodmem:-0} -eq $alltests ]] ; then
+      echo "Memory usage ${MSHPR_BBLUE}OK${MSHPR_ATTROFF}"
     else
-      echo "Output BAD"
+      echo "Memory usage ${MSHPR_BYELLOWONRED}BAD (good $goodmem of $alltests)${MSHPR_ATTROFF}"
     fi
+
+
+    echo "----------------------------------"
+    echo "$alltests output comparison for all tests"
+    local goodcomapred=`grep '\[testid=.*\] compare ok' ${testfile}.log|wc -l`
+    if [[ ${goodcomapred:-0} -eq $alltests ]]; then
+      echo "Output ${MSHPR_BBLUE}OK${MSHPR_ATTROFF}"
+    else
+      echo "Output ${MSHPR_BYELLOWONRED}BAD (good $goodcomapred of $alltests)${MSHPR_ATTROFF}"
+    fi
+
     echo
     echo
 
