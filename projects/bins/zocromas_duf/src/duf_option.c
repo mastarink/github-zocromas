@@ -584,6 +584,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
           [DUF_FORMAT_MIME] = "mime",
           [DUF_FORMAT_MIMEID] = "mimeid",
           [DUF_FORMAT_EXIFID] = "exifid",
+          [DUF_FORMAT_EXIFDT] = "exifdt",
           [DUF_FORMAT_MODE] = "mode",
           [DUF_FORMAT_MTIME] = "mtime",
           [DUF_FORMAT_NLINK] = "nlink",
@@ -706,6 +707,9 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
             break;
           case DUF_FORMAT_EXIFID:
             duf_config->cli.format.v.flag.exifid = value == NULL ? 1 : nvalue;
+            break;
+          case DUF_FORMAT_EXIFDT:
+            duf_config->cli.format.v.flag.exifdt = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_HUMAN:
             duf_config->cli.format.v.flag.human = value == NULL ? 1 : nvalue;

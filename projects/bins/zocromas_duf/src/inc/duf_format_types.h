@@ -27,6 +27,7 @@ typedef struct
   unsigned mimeid_space:1;
   unsigned exifid:1;
   unsigned exifid_space:1;
+  unsigned exifdt:1;
   unsigned mode:1;
   unsigned mtime:1;
   unsigned nlink:1;
@@ -78,6 +79,7 @@ typedef enum
   DUF_FORMAT_MIME,
   DUF_FORMAT_MIMEID,
   DUF_FORMAT_EXIFID,
+  DUF_FORMAT_EXIFDT,
   DUF_FORMAT_MODE,
   DUF_FORMAT_MTIME,
   DUF_FORMAT_NLINK,

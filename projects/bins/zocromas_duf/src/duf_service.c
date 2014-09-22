@@ -397,7 +397,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     if ( pfi->exifid )
       DUF_PRINTF( 5, ".X%llu ", pfi->exifid );
     else
-      DUF_PRINTF( 5, ". %s ", "" );
+      DUF_PRINTF( 5, ".X%s ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -406,6 +406,24 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{exifid_space}" ) );
     DUF_PRINTF( 5, ". %s ", "" );
     ok++;
+  }
+  DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
+  if ( duf_config->cli.format.v.flag.exifdt && ( !format || format->v.flag.exifdt ) )
+  {
+    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{exifdt}" ) );
+    {
+      time_t xtimet;
+      struct tm xtimetm, *pxtimetm;
+      char xtimes[128];
+
+      xtimet = ( time_t ) pfi->exifdt;
+      pxtimetm = localtime_r( &xtimet, &xtimetm );
+      strftime( xtimes, sizeof( xtimes ), "%b %d %Y %H:%M:%S", pxtimetm );
+      DUF_DEBUG( 12, DUF_PRINTF( 0, ".{xtime}" ) );
+      /* DUF_PRINTF( 0, ". %-s (%lu) ", xtimes, xtimet ); */
+      DUF_PRINTF( 0, ".{%-s} ", xtimes );
+      ok++;
+    }
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
 

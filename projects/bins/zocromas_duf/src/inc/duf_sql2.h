@@ -92,8 +92,8 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 
 #  define DUF_SQL_BIND_LL( _name, _value, _rt, _pstmt_m ) \
 		    DOR(_rt, duf_sql_bindn_long_long( _pstmt_m, ":" #_name, _value ));
-#  define DUF_SQL_BIND_LL_NZ    ( _name, _value, _rt, _pstmt_m ) \
-		    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value ));
+#  define DUF_SQL_BIND_LL_NZ( _name, _value, _rt, _pstmt_m ) \
+  		    DOR(_rt, duf_sql_bindn_long_long_nz( _pstmt_m, ":" #_name, _value ));
 #  define DUF_SQL_BIND_LL_NZ_OPT( _name, _value, _rt, _pstmt_m ) \
 		  if ( _rt >= 0 ) \
 		  {  \
