@@ -10,6 +10,8 @@
 
 extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
 
+void duf_list_sccb( int ) __attribute__ ( ( weak ) );
+
 const duf_longval_extended_t optable_main[] = {
   {.o = {DO_Q( "format" ), /*         */ DO_A_R, /* */ DO_V( FORMAT )} /*         */ , DO_CL( PRINT ) /*   */ , DO_H( print format ) /*      */ },
 
@@ -35,6 +37,8 @@ const duf_longval_extended_t optable_main[] = {
                                                            {.hi =
                                                             {.sccb = &duf_print_dir_callbacks}}} /*        */ , DO_H( pdi cd ) /*            */ },
 
+  {.o = {DO_Q( "list-sccb" ), /*       */ DO_A_N}, /*                                                      */
+   /*      */ DO_T( VIFUN ), DO_VIFUN( duf_list_sccb, 0 ), DO_STAGE( 1 ) /*                                */ , DO_H( help on all ) /*       */ },
 
 
 

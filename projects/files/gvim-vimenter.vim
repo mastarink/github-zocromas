@@ -71,8 +71,6 @@ inoremap <A-F4> <C-R>=expand("%:t")<CR>
 "   nmap <C-F4> :wa<CR>:!shn/doall.sh c i<CR>
 " endif
  
-nnoremap <F6> "=strftime("%Y%m%d.%H%M%S")<CR>p
-inoremap <F6> <C-R>=strftime("%Y%m%d.%H%M%S")<CR>
 " insert filename
 
 nmap <C-]> :call MasGoTag2()<CR>

@@ -605,6 +605,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         {
           if ( extended->call.fdesc.vi.func )
             ( extended->call.fdesc.vi.func ) ( extended->call.fdesc.vi.arg );
+          else
+            r=DUF_ERROR_OPTION_NO_FUNC;
         }
         break;
       case DUF_OPTION_VTYPE_AFUN:

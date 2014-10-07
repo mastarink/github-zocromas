@@ -11,6 +11,12 @@
 #include "duf_config_ref.h"
 
 
+
+#include "duf_prepare_actions.h"
+#include "duf_sccb.h"
+
+
+
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
 #include "duf_option_names.h"
@@ -589,6 +595,15 @@ duf_option_showflags( int argc, char *const *argv )
   DUF_PRINTF( 0, "                                                              └─ --disable-update" );
 
   DEBUG_END(  );
+}
+
+void
+duf_list_sccb( int x )
+{
+  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
+  {
+    DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( act->sccb ) );
+  }
 }
 
 #if 0
