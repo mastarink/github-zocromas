@@ -2,10 +2,7 @@ SUBDIRS= inc
 bin_PROGRAMS=zocromas_duf
 noinst_PROGRAMS=mtest
 
-#noinst_HEADERS=duf_optable.cdef duf_optable_help.cdef duf_optable_trace.cdef duf_optable_sflag.cdef \
-#	duf_optable_uplus.cdef duf_optable_str.cdef \
-#	duf_optable_flag.cdef duf_optable_filter.cdef \
-#	duf_optable_debug.cdef duf_optable_redo_and_obsolete.cdef
+#noinst_HEADERS=....cdef ....cdef
 
 zocromas_duf_SOURCES=				   \
 	duf.c duf_interactive.c				\
@@ -46,16 +43,16 @@ zocromas_duf_SOURCES=				   \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_template_uni.c	\
-	duf_optable_flag.c	\
-	duf_optable_sflag.c	\
-	duf_optable_str.c	\
-	duf_optable_redo_and_obsolete.c	\
-	duf_optable_uplus.c	\
-	duf_optable_debug.c	\
-	duf_optable_filter.c	\
-	duf_optable_help.c	\
-	duf_optable_trace.c	\
-	duf_optable.c
+	data_optable_flag.c	\
+	data_optable_sflag.c	\
+	data_optable_str.c	\
+	data_optable_redo_and_obsolete.c	\
+	data_optable_uplus.c	\
+	data_optable_debug.c	\
+	data_optable_filter.c	\
+	data_optable_help.c	\
+	data_optable_trace.c	\
+	data_optable.c
 
 #	duf_item_match2.c
 #	duf_file_pathid2.c

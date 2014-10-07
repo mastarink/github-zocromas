@@ -49,25 +49,18 @@ INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fn
   GROUP BY mda.rowid;
 */
 
-unsigned long
-duf_config_act_flags_combo_t_bits( duf_config_act_flags_t f )
-{
-  duf_config_act_flags_combo_t c;
-
-  c.flag = f;
-  return c.bit;
-}
-
 static int
 duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
-
+/* output some useful(?) for development & debugging info at the beginning */
   PF0( "%lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
        sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
        sizeof( unsigned long ), sizeof( unsigned long long ) );
   /* DUF_TRACE( any, 0, "r=%d", r ); */
+
   {
+/* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
     if ( &mas_mem_disable_print_usage )
@@ -81,56 +74,32 @@ duf_main( int argc, char **argv )
   assert( duf_config->pu );
   assert( duf_config->longopts_table );
   {
+    /* enale debug function ... Is is obolete/useless? */
     extern int dbgfunc_enabled __attribute__ ( ( weak ) );
 
     if ( &dbgfunc_enabled )
        /**/ dbgfunc_enabled = 1;
   }
-  /* duf_config->cli.trace.explain = 1; */
-  /* DUF_TRACE( any, 0, "r=%d", r ); */
   if ( r >= 0 )
   {
     DUF_TRACE( any, 1, "any test" );
-    /* duf_config->cli.interstage_init = duf_interstage_init; (* ????? *) */
-
-    assert( duf_config->targc == 0 );
-    DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
-    DOR( r, duf_all_options( argc, argv ) );
-    DUF_E_YES( DUF_ERROR_OPTION_NOT_FOUND );
-    /* assert( duf_config->targc > 0 ); */
-
-
-
-    if ( r >= 0 )
-    {
-      DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
-      DOR( r, main_db( argc, argv ) );
-    }
+    DOR_NOE( r, duf_all_options( argc, argv ), DUF_ERROR_OPTION_NOT_FOUND );
+    DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
+    DOR( r, main_db( argc, argv ) );
 
     DUF_PUTS( 0, "--------------------------------------------------" );
     DUF_PRINTF( 0, " main_db ended" );
     DUF_TEST_R( r );            /* don't remove! */
     DUF_PUTS( 0, "--------------------------------------------------" );
 
-    if ( r >= 0 && DUF_IF_TRACE( options ) )
+    if ( DUF_IF_TRACE( options ) )
       DOR( r, duf_show_options( argv[0] ) );
-    /* {                                 */
-    /*   char c;                         */
-    /*   char *s = NULL;                 */
-    /*                                   */
-    /*   c = *s;                         */
-    /*   fprintf( stderr, "%c\n", c );   */
-    /*   DUF_TRACE( any, 0, "r=%d", r ); */
-    /* }                                 */
-
-    /* DUF_TEST_RN( r ); */
   }
   else
   {
     DUF_SHOW_ERROR( "(%d) %s", r, argv[0] );
   }
 #ifdef MAS_TRACEMEM
-
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 

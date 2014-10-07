@@ -3,5 +3,6 @@
 
 int duf_set_actions_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps );
 int duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps );
+duf_action_table_t *duf_action_table( void );
 
 #endif

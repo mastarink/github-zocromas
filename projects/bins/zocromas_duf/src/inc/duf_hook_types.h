@@ -78,5 +78,14 @@ struct duf_scan_callbacks_s
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 
+typedef struct
+{
+  duf_config_act_flags_combo_t on;
+  duf_config_act_flags_combo_t off;
+  duf_scan_callbacks_t *sccb;
+} duf_action_table_t;
+
+
+
 
 #endif

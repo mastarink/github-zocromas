@@ -89,7 +89,6 @@ typedef struct
   duf_config_cli_trace_t trace;
   duf_config_output_t output;
   duf_format_combo_t format;
-  /* duf_int_void_t interstage_init; */
   char *shorts;
   /* long limit; */
 } duf_config_cli_t;

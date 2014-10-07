@@ -19,13 +19,6 @@
 
 
 
-typedef struct
-{
-  duf_config_act_flags_combo_t on;
-  duf_config_act_flags_combo_t off;
-  duf_scan_callbacks_t *sccb;
-} duf_action_table_t;
-
 extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
       duf_directories_callbacks __attribute( ( weak ) ),
       duf_filedata_callbacks __attribute( ( weak ) ),
@@ -33,15 +26,15 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
       duf_collect_openat_crc32_callbacks __attribute( ( weak ) ),
       duf_collect_openat_sd5_callbacks __attribute( ( weak ) ),
       duf_collect_openat_md5_callbacks __attribute( ( weak ) ),
-      duf_collect_mime_callbacks __attribute( ( weak ) ),
-      duf_collect_exif_callbacks __attribute( ( weak ) ),
+      duf_collect_mime_callbacks __attribute( ( weak ) ), duf_collect_exif_callbacks __attribute( ( weak ) ),
       /* duf_collect_mdpath_callbacks __attribute( ( weak ) ), */
       /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
+ 
       duf_print_tree_callbacks __attribute( ( weak ) ),
       duf_print_dir_callbacks __attribute( ( weak ) ),
       duf_bubububububububububububububububububububububububububububububububububububu __attribute( ( weak ) );
 
-static duf_action_table_t act_table[] = {
+static duf_action_table_t actions_table[] = {
   {.sccb = &duf_integrity_callbacks,
    .on.flag = {.integrity = 1}
    },
@@ -83,38 +76,47 @@ static duf_action_table_t act_table[] = {
   /* {.sccb = &duf_print_md5_callbacks, */
   /*  .on.flag = {.print = 1,.md5 = 1}, */
   /*  },                                */
+  {.sccb = NULL},
 };
+
+
+duf_action_table_t *
+duf_action_table( void )
+{
+  return actions_table;
+}
 
 #if 1
 int
 duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
 {
   int asteps = 0;
-  int num;
 
-  num = sizeof( act_table ) / sizeof( act_table[0] );
-  for ( int iac = 0; iac < num; iac++ )
+  /* int num; */
+
+  /* num = sizeof( actions_table ) / sizeof( actions_table[0] ); */
+  /* for ( int iac = 0; iac < num; iac++ ) */
+  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
   {
-    duf_scan_callbacks_t *sccb = act_table[iac].sccb;
+    duf_scan_callbacks_t *sccb = act->sccb;
 
-    if ( ( duf_config->cli.act.v.bit & act_table[iac].on.bit ) == act_table[iac].on.bit
-         && ( duf_config->cli.act.v.bit & act_table[iac].off.bit ) == 0 )
+    if ( ( duf_config->cli.act.v.bit & act->on.bit ) == act->on.bit && ( duf_config->cli.act.v.bit & act->off.bit ) == 0 )
     {
       if ( sccb )
       {
         ppscan_callbacks[asteps++] = sccb;
-        DUF_TRACE( action, 0, "#%d (%d) of %d action prepared: %s", iac, asteps, num, duf_uni_scan_action_title( sccb ) );
+        DUF_TRACE( action, 0, "action prepared: %s", duf_uni_scan_action_title( sccb ) );
       }
       else
       {
-        DUF_TRACE( action, 0, "#%d of %d action not prepared (no sccb): %s : %x on:%x off:%x", iac, num, duf_uni_scan_action_title( sccb ),
-                   duf_config->cli.act.v.bit, act_table[iac].on.bit, act_table[iac].off.bit );
+        DUF_TRACE( action, 0, "action not prepared (no sccb): %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
+                   duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
       }
     }
     else
     {
-      DUF_TRACE( action, 0, "#%d of %d action not prepared: %s : %x on:%x off:%x", iac, num, duf_uni_scan_action_title( sccb ),
-                 duf_config->cli.act.v.bit, act_table[iac].on.bit, act_table[iac].off.bit );
+      DUF_TRACE( action, 0, "action not prepared: %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
+                 duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
     }
   }
   return asteps;
