@@ -1,0 +1,6 @@
+2014-10-08 06:43 UTC
+	* data_optable_interactive.c: split from  data_optable.c
+2014-10-07 15:22 UTC
+	added command/option list-sccb with function void duf_list_sccb(int)
+	added error DUF_ERROR_OPTION_NO_FUNC
+

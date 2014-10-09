@@ -606,6 +606,29 @@ duf_list_sccb( int x )
   }
 }
 
+void
+duf_list_targ( int *ptargc, char ***ptargv )
+{
+  if ( ptargc && ptargv )
+  {
+    int targc = *ptargc;
+    char **targv = *ptargv;
+
+    if ( targc && targv )
+      for ( int ia = 0; ia < targc; ia++ )
+      {
+        DUF_PRINTF( 0, " %d. %s", ia, targv[ia] );
+      }
+  }
+}
+
+void
+duf_clear_targ( int *ptargc, char ***ptargv )
+{
+  if ( ptargc && ptargv )
+    *ptargc = mas_argv_delete( *ptargc, *ptargv );
+}
+
 #if 0
 static int
 duf_test_help( int argc, char **argv, duf_option_class_t oclass )

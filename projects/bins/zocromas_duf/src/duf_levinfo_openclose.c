@@ -10,7 +10,7 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 #include "duf_dh.h"
 
 
@@ -34,7 +34,6 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
 
     assert( pdi->levinfo );
     assert( d >= 0 );
-    /* assert( duf_config->nopen - duf_config->nclose == d ); */
 
     duf_levinfo_t *pli, *pliu;
 

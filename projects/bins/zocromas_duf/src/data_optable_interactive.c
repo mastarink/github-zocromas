@@ -11,6 +11,8 @@
 extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
 
 void duf_list_sccb( int ) __attribute__ ( ( weak ) );
+void duf_list_targ( int *targc, char ***targv ) __attribute__ ( ( weak ) );
+void duf_clear_targ( int *targc, char ***targv ) __attribute__ ( ( weak ) );
 
 const duf_longval_extended_t optable_interactive[] = {
 
@@ -25,6 +27,8 @@ const duf_longval_extended_t optable_interactive[] = {
    /*      */ DO_O( PDISCCB, pdi ), DO_STAGE( 1 ),.call = {.fdesc = {.hi = {.sccb = &duf_print_dir_callbacks}}}, DO_H( pdi cd ) /*           */ },
 
   {.o = {DO_Q( "list-sccb" ), /*       */ DO_A_N}, DO_T( VIFUN ), DO_VIFUN( duf_list_sccb, 0 ), DO_STAGE( 1 )},
+  {.o = {DO_Q( "list-targ" ), /*       */ DO_A_N}, DO_T( TFUN ), DO_TFUN( duf_list_targ ), DO_STAGE( 1 )},
+  {.o = {DO_Q( "clear-targ" ), /*       */ DO_A_N}, DO_T( TFUN ), DO_TFUN( duf_clear_targ ), DO_STAGE( 1 )},
 
 
   {.o = {.name = NULL}}

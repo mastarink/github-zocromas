@@ -116,7 +116,7 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   DEBUG_STARTR( r );
   if ( sccbh )
   {
-    DOR( r, duf_scan_final_sql( sccbh->sccb /*, changes */  ) );
+    DOR( r, duf_scan_final_sql( sccbh->sccb ) );
     mas_free( sccbh );
   }
   DEBUG_ENDR( r );

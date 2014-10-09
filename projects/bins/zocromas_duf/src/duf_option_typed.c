@@ -581,13 +581,11 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           duf_sccb_handle_t *sccbh = &csccbh;
 
 #include "duf_sccb_way.h"
-#undef PDI
-#define PDI sccbh->pdi
-#undef SCCB
-#define SCCB sccbh->sccb
           DOR( r, duf_sccb_pdi( SCCBX ) );
         }
         break;
+/* r = duf_make_sccb( sccb );                            */
+/* r = duf_sccbh_each_path( duf_sccb_handle_t * sccbh ); */
       case DUF_OPTION_VTYPE_DATETIME:
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
@@ -630,6 +628,16 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
             ( extended->call.fdesc.a.func ) ( duf_config->cargc, duf_config->cargv );
         }
         break;
+     case DUF_OPTION_VTYPE_TFUN:
+        if ( no )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        if ( r >= 0 )
+        {
+          assert( duf_config->targv );
+          if ( extended->call.fdesc.t.func )
+            ( extended->call.fdesc.t.func ) ( &duf_config->targc, &duf_config->targv );
+        }
+        break;	
       case DUF_OPTION_VTYPE_FILE:
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );

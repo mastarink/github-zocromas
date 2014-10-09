@@ -11,7 +11,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"
+#include "duf_config_ref.h" /* for DUF_ACT_FLAG( progress ) !ONLY! */
 #include "duf_status_ref.h"
 #include "duf_utils.h"
 
@@ -197,8 +197,8 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, DSCCBX, const duf_sql_set_t 
       csql = sql;
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
 
-      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, duf_config->pu->size.min, duf_config->pu->size.max, duf_config->pu->same.min,
-                 duf_config->pu->same.max );
+      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, PU->size.min, PU->size.max, PU->same.min,
+                 PU->same.max );
 
       DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( PDI ), r, pstmt );
       DUF_SQL_EACH_ROW( r, pstmt, if ( !match_cb2 || ( match_cb2 ) ( pstmt ) ) cnt++; r = 0 );

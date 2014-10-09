@@ -100,8 +100,8 @@ duf_sccb_pdi( DSCCBX )
     DUF_PRINTF( 0, " summary; seq:     %llu", PDI->seq );
     DUF_PRINTF( 0, " summary; seq-leaf:%llu", PDI->seq_leaf );
     DUF_PRINTF( 0, " summary; seq-node:%llu", PDI->seq_node );
-    if ( duf_config->pu->max_seq )
-      DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->pu->max_seq );
+    if ( PU->max_seq )
+      DUF_PRINTF( 0, " of %llu (max-seq)", PU->max_seq );
   }
   DUF_E_YES( DUF_ERROR_TOO_DEEP );
   DEBUG_ENDR( r );

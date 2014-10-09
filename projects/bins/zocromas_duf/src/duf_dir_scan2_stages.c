@@ -6,7 +6,7 @@
 #include "duf_maintenance.h"
 
 /* #include "duf_service.h" */
-#include "duf_config_ref.h"
+#include "duf_config_ref.h" /* DUF_TRACE */
 /* #include "duf_match.h" */
 
 #include "duf_pdi.h"

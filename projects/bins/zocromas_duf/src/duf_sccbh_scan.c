@@ -11,6 +11,7 @@
 
 #include "duf_maintenance.h"
 
+/* #include "duf_config_ref.h" */
 
 #include "duf_utils_path.h"     /* duf_realpath */
 
@@ -77,7 +78,6 @@ int
 duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  /* unsigned long long changes = 0; */
   sccbh->changes = 0;
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( sccbh->sccb ), sccbh->targc );
   for ( int ia = 0; r >= 0 && ia < sccbh->targc; ia++ )
@@ -86,13 +86,13 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
   if ( sccbh->targc <= 0 )
   {
     /* - evaluate sccb for NULL path */
-    DOR( r, duf_sccbh_path( sccbh, NULL, sccbh->pu, sccbh->sccb /*, &changes */  ) );
+    DOR( r, duf_sccbh_path( sccbh, NULL, sccbh->pu, sccbh->sccb ) );
   }
   else
   {
     /* - evaluate sccb for each string from sccbh->targ[cv] as path */
     for ( int ia = 0; r >= 0 && ia < sccbh->targc; ia++ )
-      DOR( r, duf_sccbh_path( sccbh, sccbh->targv[ia], sccbh->pu, sccbh->sccb /*, &changes */  ) );
+      DOR( r, duf_sccbh_path( sccbh, sccbh->targv[ia], sccbh->pu, sccbh->sccb ) );
   }
 
   DUF_TRACE( action, 1, "after scan" );

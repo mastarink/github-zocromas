@@ -80,6 +80,7 @@ typedef enum
 
   DUF_OPTION_VTYPE_VIFUN,
   DUF_OPTION_VTYPE_AFUN,
+  DUF_OPTION_VTYPE_TFUN,
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
 
@@ -98,6 +99,10 @@ typedef struct
 {
   duf_void_argcv_t func;
 } duf_afuncpair_t;
+typedef struct
+{
+  duf_void_pargcv_t func;
+} duf_tfuncpair_t;
 typedef struct
 {
   duf_void_void_t func;
@@ -151,6 +156,7 @@ typedef struct
       duf_ivfuncpair_t iv;
       duf_funcpair_t vv;
       duf_afuncpair_t a;
+      duf_tfuncpair_t t;
       duf_hipair_t hi;
     } fdesc;
   } call;

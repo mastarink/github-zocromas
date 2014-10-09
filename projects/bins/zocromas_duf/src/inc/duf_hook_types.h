@@ -1,12 +1,12 @@
 #ifndef MAS_DUF_HOOK_TYPES_H
 #  define MAS_DUF_HOOK_TYPES_H
 
+#  include "duf_sccb_way.h"
 #  include "duf_record_types.h"
 
 typedef int ( *duf_scan_hook_init_t ) ( void );
 
 
-#  ifdef MAS_SCCBHANDLE
 /* this is callback of type: duf_scan_hook_dir_t : */
 typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned long long pathid, */ duf_depthinfo_t * pdi );
 
@@ -21,7 +21,7 @@ typedef int ( *duf_scan_hook2_dirent_t ) ( const char *fname, const struct stat 
 typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_str_cb_t (first range; str_cb) */
-typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_handle_s * sccbh );
+typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, DSCCBX );
 
 
 
@@ -32,35 +32,7 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_hand
  * duf_sel_cb_leaf		:		, sel_cb_udata_unused
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
-typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb,  struct duf_sccb_handle_s * sccbh );
-#  else
-/* this is callback of type: duf_scan_hook_dir_t : */
-typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned long long pathid, */ duf_depthinfo_t * pdi );
-
-/* this is callback of type: duf_scan_hook_file_t : */
-typedef int ( *duf_scan_hook2_file_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
-typedef int ( *duf_scan_hook2_item_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
-
-typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, const struct stat * pst_file, duf_depthinfo_t * pdi );
-
-typedef int ( *duf_scan_hook2_dirent_t ) ( const char *fname, const struct stat * pstat, /* unsigned long long dirid, */ duf_depthinfo_t * pdi );
-
-typedef int ( *duf_anyhook_t ) ( void );
-
-/* this is callback of type: duf_str_cb_t (first range; str_cb) */
-typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s * sccb );
-
-
-
-/* KNOWN duf_sel_cb_t callbacks:
- * duf_sel_cb_field_by_sccb	: str_cb_unused	, str_cb_udata_unused, pdi_unused
- * duf_sel_cb_levinfo		: str_cb_unused	, str_cb_udata_unused, xpdi_unused,	sccb_unused
- * duf_sel_cb_name_parid	: str_cb_unused	, str_cb_udata_unused, 			sccb_unused
- * duf_sel_cb_leaf		:		, sel_cb_udata_unused
- * duf_sel_cb_node		:		, sel_cb_udata_unused
-*/
-typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, duf_depthinfo_t * pdi, struct duf_scan_callbacks_s * sccb );
-#  endif
+typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, DSCCBX );
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 

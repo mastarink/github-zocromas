@@ -35,7 +35,7 @@ duf_add_path_uni( const char *path )
   duf_depthinfo_t di = {.depth = -1,
     .seq = 0,
     .levinfo = NULL,
-    .pu = duf_config->pu,
+    .pu = NULL,
     /* .opendir = sccb ? sccb->opendir : 0, */
     .opendir = 1,
     /* .name = real_path, */

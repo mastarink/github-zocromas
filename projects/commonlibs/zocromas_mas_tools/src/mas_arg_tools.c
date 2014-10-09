@@ -544,10 +544,10 @@ mas_del_argv( int targc, char **targv, int from_a )
   return 0;
 }
 
-void
+int
 mas_argv_delete( int targc, char **targv )
 {
-  mas_del_argv( targc, targv, 0 );
+  return mas_del_argv( targc, targv, 0 );
 }
 
 int

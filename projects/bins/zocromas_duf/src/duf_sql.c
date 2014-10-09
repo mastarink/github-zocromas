@@ -74,11 +74,11 @@ duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args 
 
 static int
 duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                 duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, va_list args )
+                 DSCCBX, const char *sqlfmt, va_list args )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, DUF_SQLITE_ERROR_CODE( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, sqlfmt, args ) ) );
+  DOR( r, DUF_SQLITE_ERROR_CODE( duf_sqlite_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, SCCBX, sqlfmt, args ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -151,13 +151,13 @@ duf_sql( const char *fmt, int *pchanges, ... )
  * */
 int
 duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, ... )
+                DSCCBX, const char *sqlfmt, ... )
 {
   DEBUG_STARTR( r );
   va_list args;
 
   va_start( args, sqlfmt );
-  DOR( r, duf_sql_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb, sqlfmt, args ) );
+  DOR( r, duf_sql_vselect( sel_cb, sel_cb_udata, str_cb, str_cb_udata, SCCBX, sqlfmt, args ) );
   va_end( args );
   DEBUG_ENDR( r );
 }

@@ -77,9 +77,15 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       if ( need_id )
       {
         duf_scan_callbacks_t sccb = {.leaf.fieldset = "sd5id" };
+#ifdef MAS_SCCBHANDLE
+        duf_sccb_handle_t csccbh = {.sccb = &sccb };
+        r = duf_sql_select( duf_sel_cb_field_by_sccb, &sd5id, STR_CB_DEF, STR_CB_UDATA_DEF, &csccbh /*, ( const duf_dirhandle_t * ) NULL off */ ,
+                            "SELECT " DUF_SQL_IDNAME " AS sd5id FROM " DUF_DBPREF "sd5 WHERE sd5sum1='%lld' AND sd5sum2='%lld'", md64[1], md64[0] );
+#else
         r = duf_sql_select( duf_sel_cb_field_by_sccb, &sd5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                             &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
                             "SELECT " DUF_SQL_IDNAME " AS sd5id FROM " DUF_DBPREF "sd5 WHERE sd5sum1='%lld' AND sd5sum2='%lld'", md64[1], md64[0] );
+#endif
       }
     }
     else if ( !r /* assume SQLITE_OK */  )

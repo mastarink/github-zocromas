@@ -245,7 +245,7 @@ duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list ar
  * */
 int
 duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                    duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb /*, const duf_dirhandle_t * pdhu_off */ , const char *fmt,
+                    DSCCBX /*, const duf_dirhandle_t * pdhu_off */ , const char *fmt,
                     va_list args )
 {
   int r3 = 0;
@@ -303,7 +303,7 @@ duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb
           rrecord.presult = &pcresult[ir * column];
           {
 
-            rcb = ( sel_cb ) ( &rrecord, sel_cb_udata, str_cb, str_cb_udata, pdi, sccb );
+            rcb = ( sel_cb ) ( &rrecord, sel_cb_udata, str_cb, str_cb_udata, SCCBX );
 
             DUF_TEST_R( rcb );
             DUF_TRACE( sqlite, 2, "row #%u; <sel_cb(%p) = %d", ir, ( void * ) ( unsigned long long ) sel_cb, rcb );

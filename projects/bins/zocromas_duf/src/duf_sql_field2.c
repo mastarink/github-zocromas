@@ -88,17 +88,17 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
   ptr = __duf_sql_val_by_name( name, precord, phave, optional );
   return ptr ? strtoll( ptr, NULL, 10 ) : 0;
 }
+
 /* 
  * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
  * */
 int
-duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
-                          duf_depthinfo_t * pdi_unused, duf_scan_callbacks_t * sccb )
+duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused, DSCCBX )
 {
   int r = DUF_ERROR_GET_FIELD;
 
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
-  if ( sccb )
+  if ( SCCB )
   {
     unsigned long long *pvalue;
 
@@ -113,7 +113,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
       int have_pos = 0;
 
       r = DUF_ERROR_NO_FIELD_OPTIONAL;
-      *pvalue = __duf_sql_ull_by_name( sccb->leaf.fieldset, precord, &have_pos, 0 );
+      *pvalue = __duf_sql_ull_by_name( SCCB->leaf.fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )
       {
 #ifdef DUF_RECORD_WITH_NROWS
@@ -123,7 +123,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
 #endif
       }
       else
-        DUF_SHOW_ERROR( "r=%d; no field %s", r, sccb->leaf.fieldset );
+        DUF_SHOW_ERROR( "r=%d; no field %s", r, SCCB->leaf.fieldset );
     }
 #ifdef DUF_RECORD_WITH_NROWS
     else
@@ -137,4 +137,3 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return ( r );
 }
-
