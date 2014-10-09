@@ -26,3 +26,7 @@ typedef enum
 
 
 #endif
+
+/*
+vi: ft=c
+*/

@@ -124,6 +124,7 @@ duf_config_delete( duf_config_t * cfg )
 {
   if ( cfg )
   {
+/* xchanges = di.changes; --- needless!? */
     duf_pdi_close( cfg->pdi );
     mas_free( cfg->pdi );
     cfg->pdi = NULL;

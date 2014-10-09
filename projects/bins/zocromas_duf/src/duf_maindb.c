@@ -1,4 +1,3 @@
-/* File 20140902.124011 */
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
@@ -16,9 +15,9 @@
 #include "duf_config.h"
 
 #include "duf_utils.h"
-#include "duf_service.h"
+/* #include "duf_service.h" */
 
-#include "duf_options.h"
+/* #include "duf_options.h" */
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
 
@@ -26,10 +25,8 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
-#include "duf_path2db.h"        /* test only */
+/* #include "duf_path2db.h"        (* test only *) */
 #include "duf_dbg.h"
-
-#include "duf_pdi.h"
 
 #include "duf_action.h"
 

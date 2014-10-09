@@ -51,23 +51,23 @@
  *     5. for <current> dir call sccb->node_scan_after
  * */
 int
-duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, DSCCBX )
 {
   DEBUG_STARTR( r );
 
-  assert( pdi );
+  assert( PDI );
 
-  /* if ( duf_pdi_is_good_depth( pdi ) ) */
+  /* if ( duf_pdi_is_good_depth( PDI ) ) */
   {
-    DUF_TRACE( explain, duf_pdi_reldepth( pdi ) <= 1 ? 3 : 4, "cb2; option %s value %d; depth %d", DUF_OPT_NAME( MAXRELDEPTH ),
-               pdi->pu->max_rel_depth, duf_pdi_reldepth( pdi ) );
+    DUF_TRACE( explain, duf_pdi_reldepth( PDI ) <= 1 ? 3 : 4, "cb2; option %s value %d; depth %d", DUF_OPT_NAME( MAXRELDEPTH ),
+               PDI->pu->max_rel_depth, duf_pdi_reldepth( PDI ) );
 
     /* recursively calls this `duf_scan_dirs_by_pdi_maxdepth` */
-    DOR( r, duf_scan_dirs_by_pdi_wrap( pstmt_selector, pdi, sccb ) );
+    DOR( r, duf_scan_dirs_by_pdi_wrap( pstmt_selector, SCCBX ) );
   }
   /* else                                                                                                               */
   /* {                                                                                                                  */
-  /*   DUF_TRACE( explain, 0, "no depth condition by %s value %d", DUF_OPT_NAME( MAXRELDEPTH ), pdi->u.max_rel_depth ); */
+  /*   DUF_TRACE( explain, 0, "no depth condition by %s value %d", DUF_OPT_NAME( MAXRELDEPTH ), PDI->u.max_rel_depth ); */
   /* }                                                                                                                  */
 
   DEBUG_ENDR( r );

@@ -15,7 +15,6 @@ noinst_HEADERS=duf.h \
 	duf_dh.h \
 	duf_dirent.h \
 	duf_dirent_scan2.h \
-	duf_dir_scan2.h \
 	duf_dir_scan2_stages.h \
 	duf_errors.h \
 	duf_error_types.h \
@@ -43,7 +42,8 @@ noinst_HEADERS=duf.h \
 	duf_print_defs.h \
 	duf_record_types.h \
 	duf_scan_types.h \
-	duf_sccb.h \
+	duf_sccb.h duf_sccb_handle.h duf_sccbh_scan.h duf_sccb_begfin.h duf_sccb_way.h \
+	duf_dir_scan2.h  \
 	duf_service.h \
 	duf_sql2.h \
 	duf_sql_const.h \

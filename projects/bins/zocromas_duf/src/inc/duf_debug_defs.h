@@ -32,3 +32,7 @@
 #  define DUF_VERBOSE( _lev, ... )		                          DUF_TRACE_WHAT( cli.dbg, verbose, _lev, __VA_ARGS__ )
 
 #endif
+
+/*
+vi: ft=c
+*/

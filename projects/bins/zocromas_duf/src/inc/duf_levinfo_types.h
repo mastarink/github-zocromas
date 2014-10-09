@@ -80,3 +80,7 @@ typedef struct duf_depthinfo_s
 } duf_depthinfo_t;
 
 #endif
+
+/*
+vi: ft=c
+*/

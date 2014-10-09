@@ -44,3 +44,7 @@ typedef struct
 
 
 #endif
+
+/*
+vi: ft=c
+*/

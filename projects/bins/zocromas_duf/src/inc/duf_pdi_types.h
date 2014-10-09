@@ -4,3 +4,7 @@
 typedef int ( *duf_pdi_cb_t ) ( duf_depthinfo_t * pdi );
 
 #endif
+
+/*
+vi: ft=c
+*/

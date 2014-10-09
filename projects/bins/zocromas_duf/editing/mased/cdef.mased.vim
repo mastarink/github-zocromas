@@ -9,4 +9,5 @@ tab sfind data_optable_debug.c
 tab sfind data_optable_filter.c
 tab sfind data_optable_help.c
 tab sfind data_optable_trace.c
+tab sfind data_optable_interactive.c
 tab sfind data_optable.c

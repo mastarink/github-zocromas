@@ -50,6 +50,7 @@ static const duf_longval_extended_t _lo_extended1[] = {
 /* };                                                      */
 
 extern const duf_longval_extended_t optable_main[];
+extern const duf_longval_extended_t optable_interactive[];
 extern const duf_longval_extended_t optable_str[];
 extern const duf_longval_extended_t optable_flag[];
 extern const duf_longval_extended_t optable_sflag[];
@@ -62,6 +63,7 @@ extern const duf_longval_extended_t optable_redo_and_obsolete[];
 
 static const duf_longval_extended_t *_lo_extended_multi[] = {
   optable_main,
+  optable_interactive,
   optable_str,
   optable_sflag,
   optable_flag,

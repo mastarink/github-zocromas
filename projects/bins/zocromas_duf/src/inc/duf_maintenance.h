@@ -16,3 +16,7 @@
 #  include "duf_dbg.h"
 
 #endif
+
+/*
+vi: ft=c
+*/

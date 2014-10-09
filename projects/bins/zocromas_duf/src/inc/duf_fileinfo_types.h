@@ -25,3 +25,7 @@ typedef struct
 } duf_fileinfo_t;
 
 #endif
+
+/*
+vi: ft=c
+*/

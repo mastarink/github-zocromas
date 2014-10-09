@@ -113,3 +113,7 @@ typedef union
 
 
 #endif
+
+/*
+vi: ft=c
+*/

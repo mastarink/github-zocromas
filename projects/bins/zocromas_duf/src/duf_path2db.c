@@ -410,7 +410,7 @@ duf_path2db( const char *path, int *pr )
     r = duf_pdi_init_wrap( &di, real_path, 0, 1 /* recursive */  );
   if ( r >= 0 )
     dirid = duf_levinfo_dirid( &di );
-
+  /* xchanges = di.changes; --- needless!? */
   duf_pdi_close( &di );
   mas_free( real_path );
   return dirid;

@@ -15,3 +15,7 @@ typedef struct
 } duf_limitsll_t;
 
 #endif
+
+/*
+vi: ft=c
+*/

@@ -21,7 +21,9 @@ zocromas_duf_SOURCES=				   \
 							     \
 	duf_item_scan2.c				      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
-	duf_sccb.c duf_dir_scan2.c duf_dir_scan2_stages.c	\
+	duf_sccb.c duf_sccb_handle.c duf_sccbh_scan.c duf_sccb_begfin.c \
+	duf_dir_scan2.c  \
+	duf_dir_scan2_stages.c	\
 	duf_dirent_scan2.c					 \
 								  \
 	duf_context.c	\
@@ -52,6 +54,7 @@ zocromas_duf_SOURCES=				   \
 	data_optable_filter.c	\
 	data_optable_help.c	\
 	data_optable_trace.c	\
+	data_optable_interactive.c \
 	data_optable.c
 
 #	duf_item_match2.c

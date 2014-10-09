@@ -58,14 +58,14 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 }
 
 int
-duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_sccb_pdi( DSCCBX )
 {
   DEBUG_STARTR( r );
-  assert( pdi->depth >= 0 );
+  assert( PDI->depth >= 0 );
   DUF_TRACE( explain, 0,
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
-             duf_uni_scan_action_title( sccb ) );
-  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ) );
+             duf_uni_scan_action_title( SCCB ) );
+  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
   DUF_E_NO( DUF_ERROR_TOO_DEEP );
 /* duf_scan_dirs_by_pdi_maxdepth:
  * if recursive, call duf_scan_dirs_by_parentid + pdi (built from str_cb_udata)
@@ -84,8 +84,8 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
  * */
 
   DUF_TRACE( scan, 4, "+" );
-  if ( !sccb->disabled )
-    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, /* duf_scan_dirs_by_pdi_maxdepth, */ pdi, sccb ) );
+  if ( !SCCB->disabled )
+    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL,  SCCBX ) );
 
   /* delete level-control array, close 0 level */
 
@@ -95,11 +95,11 @@ duf_sccb_pdi( duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
 
   if ( r >= 0 && DUF_ACT_FLAG( summary ) )
   {
-    DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( sccb ) );
+    DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( SCCB ) );
 
-    DUF_PRINTF( 0, " summary; seq:     %llu", pdi->seq );
-    DUF_PRINTF( 0, " summary; seq-leaf:%llu", pdi->seq_leaf );
-    DUF_PRINTF( 0, " summary; seq-node:%llu", pdi->seq_node );
+    DUF_PRINTF( 0, " summary; seq:     %llu", PDI->seq );
+    DUF_PRINTF( 0, " summary; seq-leaf:%llu", PDI->seq_leaf );
+    DUF_PRINTF( 0, " summary; seq-node:%llu", PDI->seq_node );
     if ( duf_config->pu->max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", duf_config->pu->max_seq );
   }

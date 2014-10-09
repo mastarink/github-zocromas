@@ -157,3 +157,7 @@ typedef struct
 } duf_longval_extended_t;
 
 #endif
+
+/*
+vi: ft=c
+*/

@@ -18,9 +18,15 @@ typedef struct
   int actions_done;
   int selection_done;
   duf_ufilter_t *selection_bound_ufilter;
+#ifndef MAS_SCCBHANDLE
   unsigned long long changes;
   unsigned long long total_files;
+#endif
   duf_tmp_t *tmp;
 } duf_status_t;
 
 #endif
+
+/*
+vi: ft=c
+*/

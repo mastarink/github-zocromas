@@ -26,6 +26,12 @@
 #include "duf_sql2.h"
 
 #include "duf_sccb.h"
+#ifdef MAS_SCCBHANDLE
+#  include "duf_sccb_handle.h"
+#  include "duf_sccbh_scan.h"
+#else
+#  include "duf_sccb_begfin.h"
+#endif
 
 /* #include "duf_dir_scan1.h" */
 #include "duf_dir_scan2.h"
@@ -51,6 +57,7 @@
  * run   --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree --print
 */
 
+#ifndef MAS_SCCBHANDLE
 static unsigned long long
 duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
 {
@@ -90,7 +97,7 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
     *pr = r;
   DEBUG_ENDULL( cnt );
 }
-
+#endif
 
 /*
  *   i.e.
@@ -101,6 +108,7 @@ duf_count_total_items( duf_scan_callbacks_t * sccb, int *pr )
  *     4. for each dir in <current> dir call str_cb + str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  */
+#ifndef MAS_SCCBHANDLE
 static int
 duf_sccb_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
 {
@@ -124,16 +132,18 @@ duf_sccb_real_path( const char *real_path, duf_ufilter_t * pu, duf_scan_callback
   /* assert( di.depth == -1 ); */
   DOR( r, duf_pdi_reinit( pdi, real_path, pu, DUF_U_FLAG( recursive ) ) );
   DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( pdi ), pdi->seq_leaf, duf_levinfo_path( pdi ) );
-  DOR( r, duf_sccb_pdi( pdi, sccb ) );
-  /* duf_pdi_close( &di ); */
+  DOR( r, duf_sccb_pdi( SCCBX ) );
+  /* (* xchanges = di.changes; --- needless!? *) */
+  /* duf_pdi_close( &di );                       */
 
   DEBUG_ENDR( r );
 }
-
+#endif
 /*
  * - evaluate sccb for given path 
  * - store (add!) number of changes to *pchanges
  * */
+#ifndef MAS_SCCBHANDLE
 static int
 duf_sccb_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
 {
@@ -151,43 +161,7 @@ duf_sccb_path( const char *path, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb
   mas_free( real_path );
   DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }
-
-/*
- * split from Duf_evaluate_sccb  20140901.213803
- * last function revision ...
- * */
-int
-duf_scan_final_sql( duf_scan_callbacks_t * sccb /*, unsigned long long changes */  )
-{
-  DEBUG_STARTR( r );
-
-  /* if ( changes ) */
-  {
-    const char **psql = sccb->final_sql_argv;
-
-    while ( r >= 0 && psql && *psql )
-    {
-      int changes = 0;
-
-      DUF_TRACE( action, 2, "final psql : %s", *psql );
-      /* r = duf_sql( *p, &changes ); */
-
-      {
-        DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-        /* r = duf_sql_exec( *psql, &changes ); */
-        DUF_SQL_STEP( r, pstmt );
-        DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-        DUF_SQL_END_STMT_NOPDI( r, pstmt );
-      }
-      DUF_TEST_R( r );
-      /* DUF_TRACE( action, 2, "(%d) final psql %s; changes:%d", r, *psql, changes ); */
-      DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": final SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
-                 psql - sccb->final_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
-      psql++;
-    }
-  }
-  DEBUG_ENDR( r );
-}
+#endif
 
 /*
  * split from Duf_evaluate_sccb  20140901.214205
@@ -196,7 +170,11 @@ duf_scan_final_sql( duf_scan_callbacks_t * sccb /*, unsigned long long changes *
  * - evaluate sccb for each string from duf_config->targ[cv] as path
  * - store number of changes to *pchanges
  *
+ * 
+ * <<>> for each targv do sccb_path <<>>
+ *
  * */
+#ifndef MAS_SCCBHANDLE
 static int
 duf_sccb_each_targv( duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
 {
@@ -224,6 +202,7 @@ duf_sccb_each_targv( duf_scan_callbacks_t * sccb /*, unsigned long long *pchange
     DUF_PRINTF( 0, " summary; changes:%llu", global_status.changes );
   DEBUG_ENDR( r );
 }
+#endif
 
 /*
  * sccb       nz - sure
@@ -242,42 +221,49 @@ duf_sccb_each_targv( duf_scan_callbacks_t * sccb /*, unsigned long long *pchange
  *    - evaluate sccb for each string from duf_config->targ[cv] as path
  *    - store number of changes to *pchanges
  * - do final sql set from sccb
-*/
-static int
+ *
+ * <<>> count_total_items ; sccb->init_scan ; for each targv do sccb_path ; scan_final_sql <<>>
+ *
+ * */
+int
 duf_make_sccb( duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
-  /* unsigned long long changes = 0; */
 
+#ifdef MAS_SCCBHANDLE
+  duf_sccb_handle_t *sccbh = NULL;
+
+  sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targc, duf_config->targv, duf_config->pu );
+#else
   {
-    int rt = 0;
-    unsigned long long total_files;
+    {
+      int rt = 0;
+      unsigned long long total_files;
 
-    total_files = duf_count_total_items( sccb, &rt ); /* reference */
-    if ( rt >= 0 )
-      global_status.total_files = total_files;
+      total_files = duf_count_total_items( sccb, &rt ); /* reference */
+      if ( rt >= 0 )
+        global_status.total_files = total_files;
 /* total_files for progress bar only :( */
-    DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", total_files );
-    DUF_TRACE( explain, 0, "%llu files registered in db", total_files );
-  }
-
-
+      DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", total_files );
+      DUF_TRACE( explain, 0, "%llu files registered in db", total_files );
+    }
 
 /*
 TODO scan mode
   1. direct, like now
   2. place ID's to temporary table, then scan in certain order
 */
-  if ( sccb->init_scan )
-  {
-    DUF_TRACE( explain, 0, "to init scan" );
-    DUF_DO_TEST_R( r, sccb->init_scan(  ) );
+    if ( sccb->init_scan )
+    {
+      DUF_TRACE( explain, 0, "to init scan" );
+      DUF_DO_TEST_R( r, sccb->init_scan(  ) );
+    }
+    else
+    {
+      DUF_TRACE( explain, 0, "no init scan" );
+    }
   }
-  else
-  {
-    DUF_TRACE( explain, 0, "no init scan" );
-  }
-
+#endif
   /* DOR( r, duf_scan_beginning_sql( sccb ) ); */
 
   DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( sccb ) );
@@ -285,8 +271,16 @@ TODO scan mode
 
   /* - evaluate sccb for each string from duf_config->targ[cv] as path
    * - store number of changes to *pchanges */
-  DOR( r, duf_sccb_each_targv( sccb /*, &changes */  ) );
+#ifdef MAS_SCCBHANDLE
+  DOR( r, duf_sccbh_each_path( sccbh ) );
+  if ( DUF_ACT_FLAG( summary ) )
+    DUF_PRINTF( 0, " summary; changes:%llu", sccbh->changes );
+  duf_close_sccb_handle( sccbh );
+#else
+  DOR( r, duf_sccb_each_targv( sccb ) );
   DOR( r, duf_scan_final_sql( sccb /*, changes */  ) );
+#endif
+
   DEBUG_ENDR( r );
 }
 

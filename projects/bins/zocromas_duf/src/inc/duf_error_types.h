@@ -70,3 +70,7 @@ typedef enum
 #define DUF_ERROR_COUNT ( DUF_ERROR_ERROR_MAX - DUF_ERROR_ERROR_BASE )
 
 #endif
+
+/*
+vi: ft=c
+*/

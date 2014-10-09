@@ -5,6 +5,7 @@
 #include "duf_pdi_types.h"
 
 struct duf_scan_callbacks_s;
+struct duf_sccb_handle_s;
 
 typedef struct
 {
@@ -25,3 +26,7 @@ typedef int ( *duf_sel_cb_match_t ) ( duf_record_t * precord );
 
 
 #endif
+
+/*
+vi: ft=c
+*/

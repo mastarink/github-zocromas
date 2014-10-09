@@ -102,3 +102,7 @@ typedef struct
 } duf_infodata_t;
 
 #endif
+
+/*
+vi: ft=c
+*/

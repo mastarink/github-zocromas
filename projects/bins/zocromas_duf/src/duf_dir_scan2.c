@@ -28,6 +28,7 @@
 
 #include "duf_ufilter.h"
 
+#include "duf_sccb_begfin.h"
 
 /* #include "duf_item_match2.h" */
 
@@ -35,154 +36,6 @@
 /* ###################################################################### */
 #include "duf_dir_scan2.h"
 /* ###################################################################### */
-
-static int
-duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
-{
-  DEBUG_STARTR( r );
-#define BIND_PAIR( _fld, _name ) \
-  if ( duf_config->pu->_name.flag ) \
-  { \
-    DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, duf_config->pu->_name.min, r, pstmt ); \
-    DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, duf_config->pu->_name.max, r, pstmt ); \
-  }
-  BIND_PAIR(Size, size);
-  /* if ( duf_config->pu->size.flag )                                         */
-  /* {                                                                        */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minSize, duf_config->pu->size.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxSize, duf_config->pu->size.max, r, pstmt ); */
-  /* }                                                                        */
-  BIND_PAIR(Same, same);
-  /* if ( duf_config->pu->same.flag )                                         */
-  /* {                                                                        */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minSame, duf_config->pu->same.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxSame, duf_config->pu->same.max, r, pstmt ); */
-  /* }                                                                        */
-  BIND_PAIR(ExifSame, exifsame);
-  /* if ( duf_config->pu->exifsame.flag )                                             */
-  /* {                                                                                */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minExifSame, duf_config->pu->exifsame.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxExifSame, duf_config->pu->exifsame.max, r, pstmt ); */
-  /* }                                                                                */
-  BIND_PAIR(NameID, nameid);
-  /* if ( duf_config->pu->nameid.flag )                                           */
-  /* {                                                                            */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minNameID, duf_config->pu->nameid.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxNameID, duf_config->pu->nameid.max, r, pstmt ); */
-  /* }                                                                            */
-  BIND_PAIR(DirID, dirid);
-  /* if ( duf_config->pu->dirid.flag )                                          */
-  /* {                                                                          */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minDirID, duf_config->pu->dirid.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxDirID, duf_config->pu->dirid.max, r, pstmt ); */
-  /* }                                                                          */
-  BIND_PAIR(MTime, mtime);
-  /* if ( duf_config->pu->mtime.flag )                                          */
-  /* {                                                                          */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minMTime, duf_config->pu->mtime.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxMTime, duf_config->pu->mtime.max, r, pstmt ); */
-  /* }                                                                          */
-  BIND_PAIR(ExifDT, exifdt);
-  /* if ( duf_config->pu->exifdt.flag )                                           */
-  /* {                                                                            */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minExifDT, duf_config->pu->exifdt.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxExifDT, duf_config->pu->exifdt.max, r, pstmt ); */
-  /* }                                                                            */
-  BIND_PAIR(Inode, inode);
-  /* if ( duf_config->pu->inode.flag )                                          */
-  /* {                                                                          */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minInode, duf_config->pu->inode.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( maxInode, duf_config->pu->inode.max, r, pstmt ); */
-  /* }                                                                          */
-  BIND_PAIR(5ID, md5id);
-  /* if ( duf_config->pu->md5id.flag )                                        */
-  /* {                                                                        */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( min5ID, duf_config->pu->md5id.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( max5ID, duf_config->pu->md5id.max, r, pstmt ); */
-  /* }                                                                        */
-  BIND_PAIR(2ID, sd5id);
-  /* if ( duf_config->pu->sd5id.flag )                                        */
-  /* {                                                                        */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->pu->sd5id.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( max2ID, duf_config->pu->sd5id.max, r, pstmt ); */
-  /* }                                                                        */
-  BIND_PAIR(MimeID, mimeid);
-  /* if ( duf_config->pu->mimeid.flag )                                           */
-  /* {                                                                            */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->pu->mimeid.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minMimeID, duf_config->pu->mimeid.max, r, pstmt ); */
-  /* }                                                                            */
-  BIND_PAIR(ExifID, exifid);
-  /* if ( duf_config->pu->exifid.flag )                                           */
-  /* {                                                                            */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->pu->exifid.min, r, pstmt ); */
-  /*   DUF_SQL_BIND_LL_NZ_OPT( minExifID, duf_config->pu->exifid.max, r, pstmt ); */
-  /* }                                                                            */
-  if ( duf_config->pu->glob )
-  {
-    DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob, r, pstmt );
-  }
-  if ( duf_config->pu->same_as )
-  {
-    duf_filepath_t fp = { 0 };
-    {
-      char *pathname;
-      char *dir;
-      char *base;
-
-      pathname = mas_strdup( duf_config->pu->same_as );
-      base = basename( pathname );
-      dir = dirname( pathname );
-      fp.dirid = duf_path2db( dir, &r );
-      fp.name = mas_strdup( base );
-      mas_free( pathname );
-    }
-
-    DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
-    DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
-    mas_free( fp.name );
-    if ( r >= 0 && !fp.dirid )
-      DOR( r, DUF_ERROR_NOT_FOUND );
-  }
-
-  duf_ufilter_delete( global_status.selection_bound_ufilter );
-  global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
-
-  DEBUG_ENDR( r );
-}
-
-static int
-duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
-{
-  DEBUG_STARTR( r );
-  const char **psql = sccb->beginning_sql_argv;
-
-  while ( r >= 0 && psql && *psql )
-  {
-    int changes = 0;
-
-    DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
-    /* r = duf_sql( *p, &changes ); */
-
-    {
-      DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-      DOR( r, duf_bind_ufilter( pstmt ) );
-      if ( r >= 0 )
-      {
-        DUF_SQL_STEP( r, pstmt );
-        DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-      }
-      DUF_SQL_END_STMT_NOPDI( r, pstmt );
-    }
-    DUF_TEST_R( r );
-    /* DUF_TRACE( action, 2, "(%d) beginning psql %s; changes:%d", r, *psql, changes ); */
-    DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
-               psql - sccb->beginning_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
-    psql++;
-  }
-  DEBUG_ENDR( r );
-}
-
 
 
 /* duf_scan_dirs_by_pdi:
@@ -199,14 +52,14 @@ duf_scan_beginning_sql( duf_scan_callbacks_t * sccb )
  *
  * */
 static int
-duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_cb2_unused, */ duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb )
+duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_cb2_unused, */ DSCCBX )
 {
   DEBUG_STARTR( r );
-  assert( sccb );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
+  assert( SCCB );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   if ( !global_status.selection_done )
   {
-    DOR( r, duf_scan_beginning_sql( sccb ) );
+    DOR( r, duf_scan_beginning_sql( SCCB ) );
     /* if ( r >= 0 ) */
     global_status.selection_done = 1;
   }
@@ -214,22 +67,22 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_c
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem
  * */
-  DOR( r, duf_qscan_dirents2( pstmt_selector, pdi, sccb ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
-  DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , pdi, sccb, &sccb->leaf ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
-  DOR( r, duf_qscan_node_scan_before2(  /*        */ pstmt_selector, pdi, sccb ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
-  DOR( r, duf_qscan_files_by_dirid2(  /*          */ pstmt_selector, pdi, sccb ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
-  DOR( r, duf_qscan_node_scan_middle2(  /*        */ pstmt_selector, pdi, sccb ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
+  DOR( r, duf_qscan_dirents2( pstmt_selector, SCCBX ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+  DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , SCCBX, &SCCB->leaf ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+  DOR( r, duf_qscan_node_scan_before2(  /*        */ pstmt_selector, SCCBX ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+  DOR( r, duf_qscan_files_by_dirid2(  /*          */ pstmt_selector, SCCBX ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+  DOR( r, duf_qscan_node_scan_middle2(  /*        */ pstmt_selector, SCCBX ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
 /* assert( duf_scan_dirs_by_pdi_maxdepth == str_cb2_unused ); */
   /* if ( DUF_U_FLAG( recursive ) ) */
-  DOR( r, duf_qscan_dirs_by_dirid2(  /*         */ pstmt_selector, pdi, sccb /* , duf_scan_dirs_by_pdi_maxdepth *//* str_cb2_unused */  ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
-  DOR( r, duf_qscan_node_scan_after2(  /*         */ pstmt_selector, pdi, sccb ) );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( pdi ) );
+  DOR( r, duf_qscan_dirs_by_dirid2(  /*         */ pstmt_selector, SCCBX /* , duf_scan_dirs_by_pdi_maxdepth *//* str_cb2_unused */  ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+  DOR( r, duf_qscan_node_scan_after2(  /*         */ pstmt_selector, SCCBX ) );
+  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
 
   DEBUG_ENDR( r );
 }
@@ -245,26 +98,25 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_c
  * */
 
 int
-duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_cb2_unused, */ duf_depthinfo_t * pdi,
-                           duf_scan_callbacks_t * sccb )
+duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_cb2_unused, */ DSCCBX )
 {
   DEBUG_STARTR( r );
   unsigned long long diridpid;
 
-  diridpid = duf_levinfo_dirid( pdi );
+  diridpid = duf_levinfo_dirid( PDI );
 
   /* assert( duf_scan_dirs_by_pdi_maxdepth == str_cb2_unused ); */
 
   DUF_TRACE( scan, 3, "[%llu]", diridpid );
-  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( pdi ),
-                duf_pdi_reldepth( pdi ), diridpid );
+  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( PDI ),
+                duf_pdi_reldepth( PDI ), diridpid );
 
-  DUF_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( pdi ) );
+  DUF_TRACE( scan, 3, "[%llu]  : scan start      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
 
-  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( pdi ), pdi, " >>> 1." );
+  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 1." );
 
-  DOR( r, duf_scan_dirs_by_pdi( pstmt_selector, /* str_cb2_unused, */ pdi, sccb ) );
+  DOR( r, duf_scan_dirs_by_pdi( pstmt_selector, /* str_cb2_unused, */ SCCBX ) );
 
-  DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( pdi ) );
+  DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
   DEBUG_ENDR( r );
 }

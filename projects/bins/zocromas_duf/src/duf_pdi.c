@@ -199,7 +199,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
 
     pdi->num_idstatements = 0;
     duf_levinfo_delete( pdi );
-    global_status.changes += pdi->changes;
+    /* global_status.changes += pdi->changes; */
     pdi->inited = 0;
     pdi->opendir = 0;
     pdi->depth = pdi->topdepth = 0;

@@ -47,7 +47,8 @@ duf_interactive( void )
   /* snprintf( rl_prompt, sizeof( rl_prompt ), "(bye to force exit) (%u) %% ", ctrl.restart_cnt ); */
   /* rh = read_history( fpath ); */
 
-  /* duf_pdi_close( &duf_config->di ); */
+  /* (* xchanges = di.changes; --- needless!? *) */
+  /* duf_pdi_close( &duf_config->di );           */
   assert( duf_config->pdi );
   assert( duf_config->pdi->levinfo );
   /* if ( r >= 0 ) */

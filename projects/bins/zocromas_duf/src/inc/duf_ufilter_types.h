@@ -70,3 +70,7 @@ typedef struct
 } duf_ufilter_t;
 
 #endif
+
+/*
+vi: ft=c
+*/
