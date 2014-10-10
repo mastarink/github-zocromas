@@ -607,7 +607,7 @@ duf_list_sccb( int x )
 }
 
 void
-duf_list_targ( int *ptargc, char ***ptargv )
+duf_list_targ( int *ptargc, char ***ptargv, long n )
 {
   if ( ptargc && ptargv )
   {
@@ -617,17 +617,25 @@ duf_list_targ( int *ptargc, char ***ptargv )
     if ( targc && targv )
       for ( int ia = 0; ia < targc; ia++ )
       {
-        DUF_PRINTF( 0, " %d. %s", ia, targv[ia] );
+        DUF_PRINTF( 0, "%s %d. %s", n == ia ? "*" : " ", ia, targv[ia] );
       }
   }
 }
 
 void
-duf_clear_targ( int *ptargc, char ***ptargv )
+duf_clear_targ( int *ptargc, char ***ptargv, long n )
 {
-  if ( ptargc && ptargv )
+  if ( ptargc && ptargv && n == 0 )
     *ptargc = mas_argv_delete( *ptargc, *ptargv );
 }
+
+void
+duf_add_targ( int *ptargc, char ***ptargv, const char *s )
+{
+  if ( ptargc && ptargv )
+    *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
+}
+
 
 #if 0
 static int

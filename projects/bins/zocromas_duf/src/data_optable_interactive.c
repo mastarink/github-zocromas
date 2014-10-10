@@ -11,8 +11,9 @@
 extern duf_scan_callbacks_t duf_print_dir_callbacks /* __attribute( ( weak ) ) */ ;
 
 void duf_list_sccb( int ) __attribute__ ( ( weak ) );
-void duf_list_targ( int *targc, char ***targv ) __attribute__ ( ( weak ) );
-void duf_clear_targ( int *targc, char ***targv ) __attribute__ ( ( weak ) );
+void duf_list_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak ) );
+void duf_add_targ( int *targc, char ***targv, const char *s ) __attribute__ ( ( weak ) );
+void duf_clear_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak ) );
 
 const duf_longval_extended_t optable_interactive[] = {
 
@@ -26,9 +27,10 @@ const duf_longval_extended_t optable_interactive[] = {
   {.o = {DO_N( lsfiles ), /*          */ DO_A_O} /*                               */ , DO_CL( CONTROL ) /* */ ,
    /*      */ DO_O( PDISCCB, pdi ), DO_STAGE( 1 ),.call = {.fdesc = {.hi = {.sccb = &duf_print_dir_callbacks}}}, DO_H( pdi cd ) /*           */ },
 
-  {.o = {DO_Q( "list-sccb" ), /*       */ DO_A_N}, DO_T( VIFUN ), DO_VIFUN( duf_list_sccb, 0 ), DO_STAGE( 1 )},
-  {.o = {DO_Q( "list-targ" ), /*       */ DO_A_N}, DO_T( TFUN ), DO_TFUN( duf_list_targ ), DO_STAGE( 1 )},
-  {.o = {DO_Q( "clear-targ" ), /*       */ DO_A_N}, DO_T( TFUN ), DO_TFUN( duf_clear_targ ), DO_STAGE( 1 )},
+  {.o = {DO_Q( "list-sccb" ), /*       */ DO_A_O}, DO_T( VIFUN ), DO_VIFUN( duf_list_sccb, 0 ), DO_STAGE( 1 )},
+  {.o = {DO_Q( "list-targ" ), /*       */ DO_A_O}, DO_T( TNFUN ), DO_TNFUN( duf_list_targ ), DO_STAGE( 1 )},
+  {.o = {DO_Q( "add-targ" ), /*        */ DO_A_O}, DO_TF( TSFUN, duf_add_targ ), DO_STAGE( 1 )},
+  {.o = {DO_Q( "clear-targ" ), /*      */ DO_A_O}, DO_T( TNFUN ), DO_TNFUN( duf_clear_targ ), DO_STAGE( 1 )},
 
 
   {.o = {.name = NULL}}
@@ -38,4 +40,3 @@ const duf_longval_extended_t optable_interactive[] = {
 
 /* vi: ft=c colorcolumn=3,40,54,84,109,145,146
 */
-

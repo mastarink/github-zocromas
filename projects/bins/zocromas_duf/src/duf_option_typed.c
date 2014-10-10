@@ -628,16 +628,24 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
             ( extended->call.fdesc.a.func ) ( duf_config->cargc, duf_config->cargv );
         }
         break;
-     case DUF_OPTION_VTYPE_TFUN:
+      case DUF_OPTION_VTYPE_TNFUN:
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          assert( duf_config->targv );
-          if ( extended->call.fdesc.t.func )
-            ( extended->call.fdesc.t.func ) ( &duf_config->targc, &duf_config->targv );
+          if ( extended->call.fdesc.tn.func )
+            ( extended->call.fdesc.tn.func ) ( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) );
         }
-        break;	
+        break;
+      case DUF_OPTION_VTYPE_TSFUN:
+        if ( no )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        if ( r >= 0 )
+        {
+          if ( extended->call.fdesc.tn.func )
+            ( extended->call.fdesc.ts.func ) ( &duf_config->targc, &duf_config->targv, optargg );
+        }
+        break;
       case DUF_OPTION_VTYPE_FILE:
         if ( no )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );

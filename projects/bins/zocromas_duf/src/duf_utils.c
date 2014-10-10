@@ -131,39 +131,42 @@ duf_strtol_suff( const char *s, int *pr )
   long l = 0;
   char *pe = NULL;
 
-  l = strtol( s, &pe, 10 );
-  if ( pe )
+  if ( s )
   {
-    switch ( *pe )
+    l = strtol( s, &pe, 10 );
+    if ( pe )
     {
-    case 'G':
-      l *= 1024 * 1024 * 1024;
-      break;
-    case 'M':
-      l *= 1024 * 1024;
-      break;
-    case 'k':
-      l *= 1024;
-      break;
-    case 'w':
-      l *= 2;
-      break;
-    case 'c':
-    case '\0':
-      break;
-    case 'b':
-      l *= 512;
-      break;
-    default:
-      r=-1;
-      l = 0;
-      break;
+      switch ( *pe )
+      {
+      case 'G':
+        l *= 1024 * 1024 * 1024;
+        break;
+      case 'M':
+        l *= 1024 * 1024;
+        break;
+      case 'k':
+        l *= 1024;
+        break;
+      case 'w':
+        l *= 2;
+        break;
+      case 'c':
+      case '\0':
+        break;
+      case 'b':
+        l *= 512;
+        break;
+      default:
+        r = -1;
+        l = 0;
+        break;
+      }
     }
-  }
-  else
-  {
-    r=-1;
-    l = 0;
+    else
+    {
+      r = -1;
+      l = 0;
+    }
   }
   if ( pr )
     *pr = r;
@@ -201,14 +204,14 @@ duf_strtoll_suff( const char *s, int *pr )
       l *= 512;
       break;
     default:
-      r=-1;
+      r = -1;
       l = 0;
       break;
     }
   }
   else
   {
-    r=-1;
+    r = -1;
     l = 0;
   }
   if ( pr )
@@ -260,7 +263,7 @@ duf_strtime2long( const char *s, int *pr )
     if ( p )
       t = timelocal( &tm );
     else
-      r=-1;
+      r = -1;
   }
   if ( pr )
     *pr = r;

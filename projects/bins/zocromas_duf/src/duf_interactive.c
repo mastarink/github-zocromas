@@ -69,6 +69,10 @@ duf_interactive( void )
     add_history( "selection" );
     add_history( "same-as /mnt/new_media/media/photo/Pictures/photos/sel/catfly.jpg" );
     add_history( "lsfiles" );
+    add_history( "list-sccb" );
+    add_history( "list-targ" );
+    add_history( "clear-targ" );
+    add_history( "add-targ /mnt/new_media/media/photo/Pictures/photos/sel/" );
 
     while ( r >= 0 && DUF_ACT_FLAG( interactive ) )
     {

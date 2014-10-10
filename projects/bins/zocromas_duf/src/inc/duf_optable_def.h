@@ -13,6 +13,7 @@
 #define DO_Q( _n ) .name = _n
 #define DO_H( _h ) .help = # _h
 #define DO_T(_vt) .vtype=DUF_OPTION_VTYPE_ ## _vt
+#define DO_TF(_vt, ...) DO_T(_vt), DO_ ## _vt(__VA_ARGS__)
 
 #define DO_OOO(_vt, _v, _styp, _fld)   DO_T(_vt), .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld
 #define DO_OO(_vt, _v, _styp)	DO_OOO(_vt, _v, _styp, _styp)
@@ -25,6 +26,8 @@
 #define DO_VIFUN(_f, _a) .call={.fdesc={.vi={.func=_f, .arg=_a}}}
 #define DO_AFUN(_f) .call={.fdesc={.a={.func=_f}}}
 #define DO_TFUN(_f) .call={.fdesc={.t={.func=_f}}}
+#define DO_TNFUN(_f) .call={.fdesc={.tn={.func=_f}}}
+#define DO_TSFUN(_f) .call={.fdesc={.ts={.func=_f}}}
 #define DO_STAGE(_stag) .stage={.min=_stag,.max=_stag}
 #define DO_STAGE_ANY() .stage={.min=0,.max=-1}
 

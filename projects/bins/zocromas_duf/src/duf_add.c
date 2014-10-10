@@ -1,4 +1,3 @@
-/* File 20140903.131105 */
 #include <stdlib.h>
 #include <string.h>
 
@@ -41,7 +40,7 @@ duf_add_path_uni( const char *path )
     /* .name = real_path, */
   };
 
-  DOR( r, duf_pdi_init_wrap( &di, real_path, 1, 1 /* recursive */  ) );
+  DOR( r, duf_pdi_init_wrap( &di, real_path, 1 /* ifadd ~ "root" */ , 1 /* recursive */  ) );
   DUF_TRACE( path, 0, "added path uni: [%s] :: [%s]  %llu", real_path, duf_levinfo_path( &di ), duf_levinfo_dirid( &di ) );
 
   /* xchanges = di.changes; --- needless!? */

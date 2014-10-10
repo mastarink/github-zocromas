@@ -169,51 +169,54 @@ function duftest ()
     duftests=(testcreadd testca1 test0 testsql1)
     echo "To make ${#duftests[@]} tests"
     {
-      for testf in ${duftests[@]} ; do    
-	printf "┌────────────┬ run %-10s ───┬────────────┐\n" $testf >&2
-	if eval $testf ; then
-	  printf "└────────────┴──── %-10s OK ┴────────────┘\n" $testf >&2
-	  let oktests++
+      {
+	for testf in ${duftests[@]} ; do    
+	  printf "┌────────────┬ run %-10s ───┬────────────┐\n" $testf >&2
+	  if eval $testf ; then
+	    printf "└────────────┴──── %-10s OK ┴────────────┘\n" $testf >&2
+	    let oktests++
+	  else
+	    printf "└────────────┴──── ${MSHPR_BYELLOWONRED}%-10s ERROR ${MSHPR_ATTROFF}┴────────────┘\n" $testf >&2
+	  fi
+	  let alltests++
+	done
+  #     done >> ${testfile}.log
+	testbatch $tdir0/test_set1.txt 2>&1
+	echo "============ end " >>${testfile}.log
+	echo "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑" >&2
+	if [[ $oktests -eq $alltests ]] ; then
+	  echo "│ OK tests ${MSHPR_BBLUE}$oktests of $alltests${MSHPR_ATTROFF}" >&2
 	else
-	  printf "└────────────┴──── ${MSHPR_BYELLOWONRED}%-10s ERROR ${MSHPR_ATTROFF}┴────────────┘\n" $testf >&2
+	  echo "│ OK tests ${MSHPR_BYELLOWONRED}$oktests of $alltests${MSHPR_ATTROFF}" >&2
 	fi
-	let alltests++
-      done >>${testfile}.log 
+	
+	echo "┝━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┥" >&2
+	echo "│ $alltests mem protocols for all tests" >&2
+	local goodmem=`grep 'WMWMOMWMWM.*EMP MEMT' ${testfile}.log|wc -l`
+	if [[ ${goodmem:-0} -eq $alltests ]] ; then
+	  echo "│ Memory usage ${MSHPR_BBLUE}OK${MSHPR_ATTROFF}" >&2
+	else
+	  echo "│ Memory usage ${MSHPR_BYELLOWONRED}BAD (good $goodmem of $alltests)${MSHPR_ATTROFF}" >&2
+	fi
+
+
+	echo "┝━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┥" >&2
+	echo "│ $alltests output comparison for all tests" >&2
+	local goodcomapred=`grep '\[testid=.*\] compare ok' ${testfile}.log|wc -l`
+	if [[ ${goodcomapred:-0} -eq $alltests ]]; then
+	  echo "│ Output ${MSHPR_BBLUE}OK${MSHPR_ATTROFF}" >&2
+	else
+	  echo "│ Output ${MSHPR_BYELLOWONRED}BAD (good $goodcomapred of $alltests)${MSHPR_ATTROFF}" >&2
+	fi
+	echo "┕━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙" >&2
+
+	echo >&2
+	echo >&2
+
+	echo " see ${testfile}.log for log" >&2
+	echo >&2
+      } | tee -a ${testfile}.log
     } 2>&1
-    testbatch $tdir0/test_set1.txt 2>&1
-    echo "============ end " >>${testfile}.log
-    echo "┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑"
-    if [[ $oktests -eq $alltests ]] ; then
-      echo "│ OK tests ${MSHPR_BBLUE}$oktests of $alltests${MSHPR_ATTROFF}"
-    else
-      echo "│ OK tests ${MSHPR_BYELLOWONRED}$oktests of $alltests${MSHPR_ATTROFF}"
-    fi
-    
-    echo "┝━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┥"
-    echo "│ $alltests mem protocols for all tests"
-    local goodmem=`grep 'WMWMOMWMWM.*EMP MEMT' ${testfile}.log|wc -l`
-    if [[ ${goodmem:-0} -eq $alltests ]] ; then
-      echo "│ Memory usage ${MSHPR_BBLUE}OK${MSHPR_ATTROFF}"
-    else
-      echo "│ Memory usage ${MSHPR_BYELLOWONRED}BAD (good $goodmem of $alltests)${MSHPR_ATTROFF}"
-    fi
-
-
-    echo "┝━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┥"
-    echo "│ $alltests output comparison for all tests"
-    local goodcomapred=`grep '\[testid=.*\] compare ok' ${testfile}.log|wc -l`
-    if [[ ${goodcomapred:-0} -eq $alltests ]]; then
-      echo "│ Output ${MSHPR_BBLUE}OK${MSHPR_ATTROFF}"
-    else
-      echo "│ Output ${MSHPR_BYELLOWONRED}BAD (good $goodcomapred of $alltests)${MSHPR_ATTROFF}"
-    fi
-    echo "┕━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙"
-
-    echo
-    echo
-
-    echo " see ${testfile}.log for log"
-    echo
   fi
 }
 function create_config ()

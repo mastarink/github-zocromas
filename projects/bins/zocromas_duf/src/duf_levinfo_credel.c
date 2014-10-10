@@ -28,11 +28,13 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
   if ( !pdi->levinfo )
   {
     size_t lsz;
+    int max_rel_depth = 0;
 
+    max_rel_depth = pdi && pdi->pu ? pdi->pu->max_rel_depth : 20;
     assert( pdi->depth == -1 );
-    if ( pdi->pu->max_rel_depth /* FIXME */  )
+    if ( max_rel_depth /* FIXME */  )
     {
-      pdi->maxdepth = pdi->pu->max_rel_depth + pathdepth;
+      pdi->maxdepth = max_rel_depth + pathdepth;
       pdi->recursive = recursive ? 1 : 0;
       lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
       /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
@@ -43,7 +45,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
     }
     else
     {
-      T( "pdi->pu->max_rel_depth:%d", pdi->pu->max_rel_depth );
+      T( "max_rel_depth:%d", max_rel_depth );
       DOR( r, DUF_ERROR_LEVINFO_SIZE );
     }
     /* r = duf_levinfo_open_dh( pdi, path ); */

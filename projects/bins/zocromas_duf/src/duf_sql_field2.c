@@ -95,9 +95,7 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
 int
 duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused, DSCCBX )
 {
-  int r = DUF_ERROR_GET_FIELD;
-
-  duf_dbgfunc( DBG_START, __func__, __LINE__ );
+  DEBUG_STARTR( r );
   if ( SCCB )
   {
     unsigned long long *pvalue;
@@ -112,7 +110,6 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
     {
       int have_pos = 0;
 
-      r = DUF_ERROR_NO_FIELD_OPTIONAL;
       *pvalue = __duf_sql_ull_by_name( SCCB->leaf.fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )
       {
@@ -123,17 +120,18 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
 #endif
       }
       else
+      {
+        r = DUF_ERROR_NO_FIELD_OPTIONAL;
         DUF_SHOW_ERROR( "r=%d; no field %s", r, SCCB->leaf.fieldset );
+      }
     }
 #ifdef DUF_RECORD_WITH_NROWS
     else
+    {
       DUF_SHOW_ERROR( "something is wrong" );
+      r = DUF_ERROR_GET_FIELD;
+    }
 #endif
   }
-  else
-  {
-    r = 0;
-  }
-  duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
-  return ( r );
+  DEBUG_ENDR( r );
 }
