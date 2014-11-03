@@ -26,11 +26,11 @@ function localrc_new
   unset MSH_SHN_PROJECTS_DIR MSH_PROJECTS_GLOBAL_CONFIG
   declare -A MSH_PROJECTS_GLOBAL_CONFIG
   declare -a MSH_PROJECTS_GLOBAL_CONFIGA
-  if [[ "$MSH_CONF_DIR_TERM" ]] \
-  		&& [[ -d "$MSH_CONF_DIR_TERM" ]] \
-		&& [[ -f "$MSH_CONF_DIR_TERM/.mastar_work_projects" ]]
+  if [[ "$MSHDIRS_CONF_DIR_TERM" ]] \
+  		&& [[ -d "$MSHDIRS_CONF_DIR_TERM" ]] \
+		&& [[ -f "$MSHDIRS_CONF_DIR_TERM/.mastar_work_projects" ]]
   then
-    readarray MSH_PROJECTS_GLOBAL_CONFIGA < "$MSH_CONF_DIR_TERM/.mastar_work_projects"
+    readarray MSH_PROJECTS_GLOBAL_CONFIGA < "$MSHDIRS_CONF_DIR_TERM/.mastar_work_projects"
     for (( i=0 ; $i < ${#MSH_PROJECTS_GLOBAL_CONFIGA[@]} ; i++ )) ; do
       if [[ "${MSH_PROJECTS_GLOBAL_CONFIGA[$i]}" =~ ^(projects_top)=(.*)$ ]] ; then
 	MSH_PROJECTS_GLOBAL_CONFIG[${BASH_REMATCH[1]}]=$( realpath ${BASH_REMATCH[2]} )
@@ -49,9 +49,9 @@ function localrc_new
     fi
 #   echo "projects dir set from config: $MSH_SHN_PROJECTS_DIR" >&2
 # else
-#   echo "projects dir not set ($MSH_CONF_DIR_TERM/.mastar_work_projects)" >&2
+#   echo "projects dir not set ($MSHDIRS_CONF_DIR_TERM/.mastar_work_projects)" >&2
   else
-    echo "error MSH_CONF_DIR_TERM='$MSH_CONF_DIR_TERM' - no file \$MSH_CONF_DIR_TERM/.mastar_work_projects" >&2
+    echo "error MSHDIRS_CONF_DIR_TERM='$MSHDIRS_CONF_DIR_TERM' - no file \$MSHDIRS_CONF_DIR_TERM/.mastar_work_projects" >&2
     return 4
   fi
   if [[ "$MSH_SHN_PROJECTS_DIR" ]] && [[ -d "$MSH_SHN_PROJECTS_DIR" ]] ; then

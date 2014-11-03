@@ -53,13 +53,13 @@ runonce_config_create( void )
 {
   const char *dir;
 
-  dir = getenv( "MSH_DIR" );
+  dir = getenv( "MSHDIRS_DIR" );
   /* printf( "dir=%s\n", dir ); */
-  dir = getenv( "MSH_CONF_DIR" );
+  dir = getenv( "MSHDIRS_CONF_DIR" );
   /* printf( "dir=%s\n", dir ); */
   if ( !dir || !*dir )
   {
-    printf( "(%s) MSH_CONF_DIR not defined\n", __func__ );
+    printf( "(%s) MSHDIRS_CONF_DIR not defined\n", __func__ );
   }
   else
   {
