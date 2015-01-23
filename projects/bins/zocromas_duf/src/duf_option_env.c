@@ -65,7 +65,13 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
   }
   DEBUG_ENDR( r );
 }
-
+/*
+ * get options/settings from OS environment
+ *    - global variable duf_config must be created/inited
+ * ****************************************
+ * 1. set OS environment variable name
+ * 2. call duf_env_options_at_var
+ * */
 int
 duf_env_options( int argc, char *argv[] )
 {

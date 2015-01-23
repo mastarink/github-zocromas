@@ -49,6 +49,17 @@ INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fn
   GROUP BY mda.rowid;
 */
 
+/*
+ * do everything (almost :)
+ * *************
+ *  1. (DBG) disable_print_usage
+ *  2. create config struct (global variable: duf_config)
+ *  3. call duf_all_options
+ *  4. call duf_main_db
+ *  5. (optional) call duf_show_options (see also duf_config_show call at duf_main_db)
+ *  6. delete config struct
+ *  7. final error process and set exit code
+ * */
 static int
 duf_main( int argc, char **argv )
 {
@@ -84,11 +95,11 @@ duf_main( int argc, char **argv )
   {
     DUF_TRACE( any, 1, "any test" );
     DOR_NOE( r, duf_all_options( argc, argv ), DUF_ERROR_OPTION_NOT_FOUND );
-    DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
-    DOR( r, main_db( argc, argv ) );
+    DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
+    DOR( r, duf_main_db( argc, argv ) );
 
     DUF_PUTS( 0, "--------------------------------------------------" );
-    DUF_PRINTF( 0, " main_db ended" );
+    DUF_PRINTF( 0, " duf_main_db ended" );
     DUF_TEST_R( r );            /* don't remove! */
     DUF_PUTS( 0, "--------------------------------------------------" );
 
@@ -122,7 +133,10 @@ duf_main( int argc, char **argv )
   r = r < 0 ? 31 : 0;
   DEBUG_ENDRN( r );
 }
-
+/*
+ * 1. set time zone
+ * 2. call duf_main
+ * */
 int
 main( int argc, char **argv )
 {

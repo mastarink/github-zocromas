@@ -205,25 +205,14 @@ duf_sccb_each_targv( duf_scan_callbacks_t * sccb /*, unsigned long long *pchange
 #endif
 
 /*
- * sccb       nz - sure
- * duf_config nz - sure
- *
- * last function revision 20140901.214625:
- *        split functions
- *                 duf_scan_beginning_sql
- *                 duf_sccb_each_targv
- *                 duf_scan_final_sql
- *
- * do everything needed from sccb, i.e. :
- * - call init from sccb
- * - do beginning sql set from sccb
- * - via duf_sccb_each_targv:
- *    - evaluate sccb for each string from duf_config->targ[cv] as path
- *    - store number of changes to *pchanges
- * - do final sql set from sccb
- *
- * <<>> count_total_items ; sccb->init_scan ; for each targv do sccb_path ; scan_final_sql <<>>
- *
+ * make/evaluate sccb
+ * ******************
+ * 1. «open» sccb handle - incorporate argv to the handle - by calling duf_open_sccb_handle
+ * 2. ?? call duf_count_total_items
+ * 3. call sccb->init_scan
+ * 4. casll duf_sccbh_each_path
+ * 5. «close» sccb handle - by calling duf_close_sccb_handle
+ *   ** description assumes MAS_SCCBHANDLE is defined
  * */
 int
 duf_make_sccb( duf_scan_callbacks_t * sccb )
@@ -285,14 +274,8 @@ TODO scan mode
 }
 
 /*
- * for each sccb from sequence of given size:
- *   do everything needed from sccb, i.e. :
- *     - call init  from ppscan_callbacks[astep]
- *     - do beginning sql set  from ppscan_callbacks[astep]
- *     - via duf_sccb_each_targv:
- *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
- *     - do final sql set from ppscan_callbacks[astep]
- *
+ * for each sccb from sequence/list (with given size - # of items) make/evaluate the task
+ *    by calling duf_make_sccb
  * */
 int
 duf_make_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int *pcnt )
@@ -324,17 +307,13 @@ duf_make_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num, int
   DEBUG_ENDR( r );
 }
 
-/*
- * duf_config nz - sure
- * last function revision 20140901.212215
- *
- * for each sccb at modules matching preset (options etc.) conditions:
- *   do everything needed from sccb, i.e. :
- *     - call init  from ppscan_callbacks[astep]
- *     - do beginning sql set  from ppscan_callbacks[astep]
- *     - via duf_sccb_each_targv:
- *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
- *     - do final sql set from ppscan_callbacks[astep]
+/* make/evaluate «duf_config» configured tasks
+ *       - global variable duf_config must be created/inited and set
+ * *******************************************
+ * 1. prepare sccb's i.e. "convert" «duf_config» representation of tasks/actions
+ *             into «sccb» sequence/list (duf_scan_callbacks_t) by calling duf_set_actions
+ * 2. prepare «sample» sccb's by calling duf_set_actions_sample
+ * 3. make/evaluate sccb sequence/list by calling duf_make_sccb_sequence
  * */
 int
 duf_make_all_sccbs( void )
@@ -347,7 +326,7 @@ duf_make_all_sccbs( void )
   /* memory for sccb's */
   ppscan_callbacks = mas_malloc( max_asteps * sizeof( duf_scan_callbacks_t * ) );
 
-  /* prepare sccb's */
+  /* prepare sccb's : "convert" «duf_config» representation of tasks/actions into «sccb» list (duf_scan_callbacks_t) */
   asteps += duf_set_actions( ppscan_callbacks + asteps, max_asteps - asteps );
   /* prepare sccb's 2 */
   asteps += duf_set_actions_sample( ppscan_callbacks + asteps, max_asteps - asteps );
@@ -359,8 +338,9 @@ duf_make_all_sccbs( void )
 #endif
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
-
+/* <body> */
   DOR( r, duf_make_sccb_sequence( ppscan_callbacks, asteps, &global_status.actions_done ) );
+/* </body> */
 
   mas_free( ppscan_callbacks );
   if ( !global_status.actions_done )

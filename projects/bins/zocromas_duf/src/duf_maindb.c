@@ -66,9 +66,20 @@ duf_info_from_db( int count, const char *sql )
   return tuple;
 }
 
-/* last function revision 20140902.124219   */
+/* do necessary actions to perform tasks, formulated in duf_config global variable and ... for standard database
+ *    - global variable duf_config must be created/inited and set
+ * ***************************************************************************************
+ * 1. build database path
+ * 2. optionally call duf_config_show (see also duf_show_options call at duf_main)
+ * 3. optionally remove existing database files (dangerous); (* to make sure it's before opening database *)
+ * 4. call duf_sql_open to open database
+ * 5. make necessary initial sql at database
+ * 6. call duf_action to perform tasks
+ * 7. optionally collect statistics from database ('info' option) by calling duf_info_from_db
+ * 8. call duf_sql_close to close database
+ * */
 int
-main_db( int argc, char **argv )
+duf_main_db( int argc, char **argv )
 {
   DEBUG_STARTR( r );
   r = DUF_ERROR_MAIN;
@@ -151,6 +162,7 @@ main_db( int argc, char **argv )
         DOR( r, duf_sql_open( duf_config->db.main.fpath ) );
       else
         DOR( r, DUF_ERROR_PTR );
+      DUF_TRACE( sql, 1, "open database; fpath:%s : %d", duf_config->db.main.fpath, r );
       DUF_TRACE( explain, 0, "opened (?%d) database", r );
     }
     /* DUF_TRACE( any, 0, "r=%d", r ); */
@@ -200,7 +212,7 @@ main_db( int argc, char **argv )
 /******************************************************************************************************/
 /******************************************************************************************************/
 /******************************************************************************************************/
-          DOR( r, duf_action( argc, argv ) );
+      DOR( r, duf_action( argc, argv ) );
 
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -353,6 +365,10 @@ main_db( int argc, char **argv )
         if ( r == 0 )
           DOR( r, rc );
       }
+    }
+    else
+    {
+      DUF_SHOW_ERROR( "db not opened @ %s" , duf_config->db.main.fpath);
     }
   }
   else if ( !duf_config->db.dir )

@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_OPTIONS_DEF_H
 #  define MAS_DUF_OPTIONS_DEF_H
 
-#  define DUF_CONFIG_PATH_FROM_ENV "MSH_CONF_DIR"
+#  define DUF_CONFIG_PATH_FROM_ENV "MSHDIRS_CONF_DIR"
 #  define DUF_CONFIG_FILE_NAME "zocromas_duf.conf"
 
 typedef enum

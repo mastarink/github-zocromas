@@ -23,6 +23,12 @@ int
 duf_sql_open( const char *dbpath )
 {
   return DUF_SQLITE_ERROR_CODE( duf_sqlite_open( dbpath ) );
+/*int r3, r;
+
+  r3 = duf_sqlite_open( dbpath );
+  r = DUF_SQLITE_ERROR_CODE( r3 );
+  DUF_TRACE( sql, 1, "r3:%d; r:%d", r3, r );
+  return r;*/
 }
 
 int
@@ -73,8 +79,7 @@ duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args 
 }
 
 static int
-duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                 DSCCBX, const char *sqlfmt, va_list args )
+duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, DSCCBX, const char *sqlfmt, va_list args )
 {
   DEBUG_STARTR( r );
 
@@ -150,8 +155,7 @@ duf_sql( const char *fmt, int *pchanges, ... )
  *  sqlfmt + ... - sql
  * */
 int
-duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                DSCCBX, const char *sqlfmt, ... )
+duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, DSCCBX, const char *sqlfmt, ... )
 {
   DEBUG_STARTR( r );
   va_list args;

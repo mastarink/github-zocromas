@@ -57,7 +57,8 @@ shn_gvimer_plus_regfile_in ()
     local filen=`basename $file`
     local resident
     local fpath=$(realpath $file)
-    shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) editing '$file'"
+#   shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) editing '$file'"
+    notifymas +shn "(libedit $MSH_SHN_LIBEDIT_LOADED) editing '$file'"
 #   local bfil=$(shn_gvimer_plus_bin --servername "$fuuid" --remote-expr "bufnr(\"^${fpath}$\")" 2>/dev/null )
 #   [[ $bfil ]] && echo "buffer = $bfil" >&2
 #   echo "regfile_in fuuid: $fuuid for $fpath" 1>&2
@@ -288,8 +289,9 @@ shn_gvimer_plus_mased ()
 	fi
     fi
     if [[ -f "$masedf" ]]; then
-        shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
-#	  echo "mased fuuid: $fuuid" 1>&2
+#       shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
+	notifymas +shn "(libedit $MSH_SHN_LIBEDIT_LOADED) found masedf '$masedf'"
+##	echo "mased fuuid: $fuuid" 1>&2
         shn_dbgmsg "gvimer_plus_mased 6a $@"
 	shn_gvimer_plus_regfile $rfile $fuuid $masedf $typf && return 0
     else
@@ -314,7 +316,11 @@ shn_gvimer_plus ()
             shn_gvimer_plus_nomased   $@ && return 0
             shn_errmsg "can't edit; no <mased> for '$@' at $mased_dir; try direct path"
         else
+	    local xg
+	    shopt -q extglob && xg=1
+	    shopt -s extglob
 	    local dn=${PWD##+(*([^/])/)zocromas_}.c
+	    [[ $xg ]] || shopt -u extglob
 	    [[ $dn ]] && deffile=${deffile:-$( find ./src -type f -name "*${dn}" | head -1 )}
 			 deffile=${deffile:-$( find ./src -type f -name '*.c'	 | head -1 )}
 			 deffile=${deffile:-$( find ./src -type f -name '*.h'	 | head -1 )}

@@ -87,36 +87,43 @@ duf_action_table( void )
 }
 
 #if 1
+/*
+ * "convert" «duf_config» representation of tasks/actions into «sccb» list (duf_scan_callbacks_t),
+ *         return list length (# of items)
+ * ********************************************************************************************
+ *  ppscan_callbacks (duf_scan_callbacks_t **) buffer must be inited for enough number of sccb (duf_scan_callbacks_t) pointers
+ * */
 int
 duf_set_actions( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
 {
   int asteps = 0;
 
-  /* int num; */
-
-  /* num = sizeof( actions_table ) / sizeof( actions_table[0] ); */
-  /* for ( int iac = 0; iac < num; iac++ ) */
-  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
+  if ( ppscan_callbacks )
   {
-    duf_scan_callbacks_t *sccb = act->sccb;
-
-    if ( ( duf_config->cli.act.v.bit & act->on.bit ) == act->on.bit && ( duf_config->cli.act.v.bit & act->off.bit ) == 0 )
+    ppscan_callbacks[asteps] = NULL;
+    for ( duf_action_table_t * act = duf_action_table(  ); act->sccb && asteps < max_asteps ; act++ )
     {
-      if ( sccb )
+      duf_scan_callbacks_t *sccb = act->sccb;
+
+      if ( ( duf_config->cli.act.v.bit & act->on.bit ) == act->on.bit && ( duf_config->cli.act.v.bit & act->off.bit ) == 0 )
       {
-        ppscan_callbacks[asteps++] = sccb;
-        DUF_TRACE( action, 0, "action prepared: %s", duf_uni_scan_action_title( sccb ) );
+        if ( sccb )
+        {
+          ppscan_callbacks[asteps++] = sccb;
+          ppscan_callbacks[asteps] = NULL;
+          DUF_TRACE( action, 0, "action prepared: %s", duf_uni_scan_action_title( sccb ) );
+        }
+        else
+        {
+          DUF_TRACE( action, 0, "action not prepared (no sccb): %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
+                     duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
+        }
       }
       else
       {
-        DUF_TRACE( action, 0, "action not prepared (no sccb): %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
+        DUF_TRACE( action, 0, "action not prepared: %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
                    duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
       }
-    }
-    else
-    {
-      DUF_TRACE( action, 0, "action not prepared: %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
-                 duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
     }
   }
   return asteps;

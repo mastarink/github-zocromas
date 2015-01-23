@@ -59,6 +59,22 @@ duf_store_log( int argc, char *const argv[] )
   DEBUG_ENDR( r );
 }
 
+/* do necessary actions to perform tasks, formulated in duf_config global variable and ... for opened database
+ *    - global variable duf_config must be created/inited and set
+ *    - database must be opened
+ * ***************************************************************************************
+ * 1. optionally drop (all) tables from database by calling duf_clear_tables
+ * 2. optionally vacuum database by performing specific sql
+ * 3. optionally create/check tables at database by calling duf_check_tables
+ * 4. optionally add given path(s) to database by calling duf_add_path_uni
+ * 5. re-init (structures?) by calling duf_pdi_reinit_anypath
+ * 6. stage 1 parse/execute options by calling duf_parse_cli_options
+ * 7. optionally call duf_interactive to enter interactive mode of command execution
+ * 8. optionally call duf_make_all_sccbs_wrap to scan files and/or db records to perform given tasks
+ * TODO split to functions:
+ *   1. ...init (1..6?)
+ *   2. ...execute
+ * */
 int
 duf_action( int argc, char **argv )
 {

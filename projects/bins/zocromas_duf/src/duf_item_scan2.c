@@ -11,7 +11,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h" /* for DUF_ACT_FLAG( progress ) !ONLY! */
+#include "duf_config_ref.h"     /* for DUF_ACT_FLAG( progress ) !ONLY! */
 #include "duf_status_ref.h"
 #include "duf_utils.h"
 
@@ -197,8 +197,8 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, DSCCBX, const duf_sql_set_t 
       csql = sql;
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
 
-      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, PU->size.min, PU->size.max, PU->same.min,
-                 PU->same.max );
+      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, PU ? PU->size.min : 0, PU ? PU->size.max : 0, PU ? PU->same.min : 0,
+                 PU ? PU->same.max : 0 );
 
       DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( PDI ), r, pstmt );
       DUF_SQL_EACH_ROW( r, pstmt, if ( !match_cb2 || ( match_cb2 ) ( pstmt ) ) cnt++; r = 0 );
@@ -292,7 +292,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, DSCCBX /* 
   DEBUG_STARTR( r );
   duf_sel_cb2_t sel_cb2 = NULL;
   duf_sel_cb2_match_t match_cb2 = NULL;
-const  duf_sql_set_t *sql_set = NULL;
+  const duf_sql_set_t *sql_set = NULL;
 
 /* duf_sel_cb_(node|leaf):
  * this is callback of type: duf_sel_cb_t (first range): 

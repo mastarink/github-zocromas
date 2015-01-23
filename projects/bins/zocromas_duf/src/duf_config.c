@@ -44,7 +44,7 @@ duf_config_create( void )
 
   assert( !cfg );
   cfg = mas_malloc( sizeof( duf_config_t ) );
-  memset( cfg, 0, sizeof( cfg ) );
+  memset( cfg, 0, sizeof( duf_config_t ) );
 
   cfg->pu = duf_ufilter_create(  );
   if ( 0 )
@@ -91,7 +91,7 @@ duf_config_create( void )
           longopts_ptr->has_arg = xtable->o.has_arg;
           longopts_ptr->val = xtable->o.val;
           xtable++;
-	  longopts_ptr++;
+          longopts_ptr++;
         }
       }
 

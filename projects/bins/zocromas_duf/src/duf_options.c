@@ -30,7 +30,14 @@
 #include "duf_options.h"
 /* ###################################################################### */
 
-
+/*
+ * get get options/settings
+ *    - global variable duf_config must be created/inited
+ * ************************
+ * 1. call duf_env_options, i.e. get options/settings from OS environment
+ * 2. call duf_infile_options, i.e. get options/settings from configuration file(s)
+ * 3. call duf_cli_options, i.e. get options/settings from command line
+ * */
 int
 duf_all_options( int argc, char *argv[] )
 {
