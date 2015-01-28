@@ -42,7 +42,7 @@ duf_pdi_create( void )
 }
 
 int
-duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive )
+duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, int recursive )
 {
   DEBUG_STARTR( r );
 
@@ -59,17 +59,17 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recur
     DOR( r, duf_levinfo_create( pdi, r, recursive ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
-    DOR( r, duf_real_path2db( pdi, real_path, ifadd /* ifadd */  ) );
+    DOR( r, duf_real_path2db( pdi, real_path, tag, caninsert /* caninsert */  ) );
   }
   DEBUG_ENDR( r );
 }
 
 int
-duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, int recursive )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pdi_init( pdi, real_path, ifadd, recursive ) );
+  DOR( r, duf_pdi_init( pdi, real_path, tag, caninsert, recursive ) );
   if ( r == DUF_ERROR_NOT_IN_DB )
     DUF_SHOW_ERROR( "not in db:'%s'", real_path );
   else if ( r < 0 )
@@ -79,7 +79,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int 
   {
     DUF_TRACE( explain, 1, "converted to real_path: %s", real_path );
     DUF_TRACE( explain, 0, "added path: %s", real_path );
-    DUF_TRACE( path, 0, " *********** diridpid: %llu", duf_levinfo_dirid( pdi ) );
+    DUF_TRACE( path, 10, "diridpid: %llu", duf_levinfo_dirid( pdi ) );
   }
   /* TODO */ assert( pdi->levinfo );
   DEBUG_ENDR( r );
@@ -95,7 +95,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
   rec = pdi && recursive < 0 ? duf_pdi_recursive( pdi ) : recursive;
   duf_pdi_close( pdi );
   pdi->pu = pu;
-  return duf_pdi_init_wrap( pdi, real_path, 0, rec );
+  return duf_pdi_init_wrap( pdi, real_path, 0 /* tag */ , 0 /* caninsert */ , rec );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
 }
 
@@ -141,7 +141,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive )
       path = mas_strdup( cpath );
     /* recursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path /*, duf_config->pu, recursive */ ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path /*, duf_config->pu, recursive */  ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }

@@ -5,11 +5,11 @@
 
 duf_depthinfo_t *duf_pdi_create( void );
 
-int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive );
-int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int ifadd, int recursive );
+int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, int recursive );
+int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, int recursive );
 int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, int recursive );
 int duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive );
-int duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath /*, const duf_ufilter_t * pu, int recursive */ );
+int duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath /*, const duf_ufilter_t * pu, int recursive */  );
 int duf_pdi_close( duf_depthinfo_t * pdi );
 
 int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );

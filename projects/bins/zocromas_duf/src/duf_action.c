@@ -59,30 +59,10 @@ duf_store_log( int argc, char *const argv[] )
   DEBUG_ENDR( r );
 }
 
-/* do necessary actions to perform tasks, formulated in duf_config global variable and ... for opened database
- *    - global variable duf_config must be created/inited and set
- *    - database must be opened
- * ***************************************************************************************
- * 1. optionally drop (all) tables from database by calling duf_clear_tables
- * 2. optionally vacuum database by performing specific sql
- * 3. optionally create/check tables at database by calling duf_check_tables
- * 4. optionally add given path(s) to database by calling duf_add_path_uni
- * 5. re-init (structures?) by calling duf_pdi_reinit_anypath
- * 6. stage 1 parse/execute options by calling duf_parse_cli_options
- * 7. optionally call duf_interactive to enter interactive mode of command execution
- * 8. optionally call duf_make_all_sccbs_wrap to scan files and/or db records to perform given tasks
- * TODO split to functions:
- *   1. ...init (1..6?)
- *   2. ...execute
- * */
-int
-duf_action( int argc, char **argv )
+static int
+duf_pre_action( void )
 {
   DEBUG_STARTR( r );
-
-  DUF_E_SET( -96, DUF_ERROR_NO_ACTIONS );
-  /* DUF_E_SET( 97, DUF_ERROR_TOO_DEEP, DUF_ERROR_NOT_IN_DB, (* DUF_ERROR_MAX_SEQ_REACHED, *) DUF_ERROR_MAX_REACHED ); */
-
 /* --drop-tables								*/ DEBUG_STEP(  );
   if ( r >= 0 && DUF_ACT_FLAG( drop_tables ) )
   {
@@ -128,8 +108,35 @@ duf_action( int argc, char **argv )
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
 
-  if ( r >= 0 )
-    DOR( r, duf_store_log( argc, argv ) );
+  DEBUG_ENDR( r );
+}
+
+/* do necessary actions to perform tasks, formulated in duf_config global variable and ... for opened database
+ *    - global variable duf_config must be created/inited and set
+ *    - database must be opened
+ * ***************************************************************************************
+ * 1. optionally drop (all) tables from database by calling duf_clear_tables
+ * 2. optionally vacuum database by performing specific sql
+ * 3. optionally create/check tables at database by calling duf_check_tables
+ * 4. optionally add given path(s) to database by calling duf_add_path_uni
+ * 5. re-init (structures?) by calling duf_pdi_reinit_anypath
+ * 6. stage 1 parse/execute options by calling duf_parse_cli_options
+ * 7. optionally call duf_interactive to enter interactive mode of command execution
+ * 8. optionally call duf_evaluate_all_at_config_wrap to scan files and/or db records to perform given tasks
+ * TODO split to functions:
+ *   1. ...init (1..6?)
+ *   2. ...execute
+ * */
+int
+duf_action( int argc, char **argv )
+{
+  DEBUG_STARTR( r );
+
+  DUF_E_SET( -96, DUF_ERROR_NO_ACTIONS );
+  /* DUF_E_SET( 97, DUF_ERROR_TOO_DEEP, DUF_ERROR_NOT_IN_DB, (* DUF_ERROR_MAX_SEQ_REACHED, *) DUF_ERROR_MAX_REACHED ); */
+
+  DORF( r, duf_pre_action );
+  DORF( r, duf_store_log, argc, argv );
 
 /* --add-path									*/ DEBUG_STEP(  );
   if ( r >= 0 && DUF_ACT_FLAG( add_path ) )
@@ -170,7 +177,6 @@ duf_action( int argc, char **argv )
     DOR( r, duf_interactive(  ) );
   }
   else if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
-    DORF(r, duf_make_all_sccbs_wrap ); /* each targv; reinit will be made */
-//  DOR( r, duf_make_all_sccbs_wrap(  ) ); /* each targv; reinit will be made */
+    DORF( r, duf_evaluate_all_at_config_wrap ); /* each targv; reinit will be made */
   DEBUG_ENDR( r );
 }

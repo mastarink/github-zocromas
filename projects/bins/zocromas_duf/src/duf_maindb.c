@@ -107,7 +107,6 @@ duf_main_db_opened( int argc, char **argv )
     DUF_TEST_RX( r );
     DUF_SHOW_ERROR( "action FAIL ; [%s] (#%d)", duf_error_name( r ), r );
   }
-  /* duf_action( argc, argv ); */
 
   DEBUG_ENDR( r );
 }

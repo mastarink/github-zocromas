@@ -25,7 +25,6 @@
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"
 
-#ifdef MAS_SCCBHANDLE
 static int
 duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 {
@@ -99,4 +98,3 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
 
   DEBUG_ENDR( r );
 }
-#endif

@@ -11,15 +11,9 @@
 
 #include "duf_maintenance.h"
 
-/* #include "duf_config_ref.h" */
 
 #include "duf_pdi.h"
-/* #include "duf_levinfo.h" */
 
-/* #include "duf_sql.h" */
-/* #include "duf_sql2.h" */
-
-/* #include "duf_sccb.h" */
 #include "duf_option_names.h"
 
 #include "duf_dir_scan2.h"

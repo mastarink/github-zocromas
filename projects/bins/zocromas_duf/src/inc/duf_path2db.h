@@ -12,9 +12,9 @@ unsigned long long duf_path_to_pathid( const char *path, duf_depthinfo_t * pdi, 
 
 
 
-unsigned long long duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int ifadd, dev_t dev_id,
+unsigned long long duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int tag, int caninsert, dev_t dev_id,
                                          ino_t dir_ino /*, unsigned long long parentid : unused */ , int need_id, int *pchanges, int *pr );
-int duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int ifadd );
+int duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int tag, int caninsert );
 
 unsigned long long duf_path2db( const char *path, int *pr );
 

@@ -28,7 +28,6 @@
 /* ###################################################################### */
 #include "duf_sccb_handle.h"
 /* ###################################################################### */
-#ifdef MAS_SCCBHANDLE
 
 static unsigned long long
 duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
@@ -121,4 +120,3 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   }
   DEBUG_ENDR( r );
 }
-#endif

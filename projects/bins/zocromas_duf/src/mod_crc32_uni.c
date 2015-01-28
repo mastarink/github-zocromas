@@ -67,16 +67,10 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
     if ( need_id )
     {
       duf_scan_callbacks_t sccb = {.leaf.fieldset = "crc32id" };
-#ifdef MAS_SCCBHANDLE
       duf_sccb_handle_t csccbh = {.sccb = &sccb };
       lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF,
                           &csccbh /*, ( const duf_dirhandle_t * ) NULL off */ ,
                           "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
-#else
-      lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                          &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
-                          "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
-#endif
     }
   }
   else if ( !lr /* assume SQLITE_OK */  )

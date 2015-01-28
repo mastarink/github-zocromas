@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_UNI_SCAN2_H
 #  define MAS_DUF_UNI_SCAN2_H
 
-#include "duf_sccb_way.h"
+#  include "duf_sccb_way.h"
 
 #  include "duf_hook_types.h"
 

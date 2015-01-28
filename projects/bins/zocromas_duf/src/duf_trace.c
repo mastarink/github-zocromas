@@ -115,14 +115,11 @@ duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlev
       fprintf( out, "%-7.4f:", timec - time0 );
     }
 #endif
-    if ( highlight == 1 )
-      fprintf( out, "\x1b[33m\x1b[44m\x1b[1m " );
-    else if ( highlight == 2 )
-      fprintf( out, "\x1b[33m\x1b[46m\x1b[1m " );
-    else if ( highlight == 3 )
-      fprintf( out, "\x1b[33m\x1b[42m\x1b[1m " );
+    static char *hls[] = { "1;33;41", "1;33;44", "1;37;46", "1;7;33;41", "30;47" };
+    if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
+      fprintf( out, "\x1b[%sm ", hls[highlight] );
     else if ( highlight )
-      fprintf( out, "\x1b[33m\x1b[41m\x1b[1m " );
+      fprintf( out, "\x1b[%sm ", hls[0] );
     else
       fprintf( out, " " );
     {

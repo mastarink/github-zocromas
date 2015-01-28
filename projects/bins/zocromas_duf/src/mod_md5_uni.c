@@ -80,17 +80,10 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       if ( need_id )
       {
         duf_scan_callbacks_t sccb = {.leaf.fieldset = "md5id" };
-#ifdef MAS_SCCBHANDLE
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF,
                              &csccbh,
                              "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
-#else
-
-        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                             &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
-                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
-#endif
       }
     }
     else if ( !lr /* assume SQLITE_OK */  )

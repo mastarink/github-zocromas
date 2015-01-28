@@ -30,16 +30,7 @@ AC_CHECK_LIB([readline], [readline])
 m4_include([m4zoc/vars1.m4])
 
 #############################################################################################
-AC_ARG_ENABLE([sccbhandle],
-	      AC_HELP_STRING([--enable-sccbhandle],
-			     [use sccbhandle]),,
-	      [enable_sccbhandle=no])
 
-if test x$enable_sccbhandle = xyes ; then
-    AC_DEFINE(MAS_SCCBHANDLE, 1,
-	[Enable sccbhandle.])
-fi
-#############################################################################################
 
 m4_include([m4zoc/am_ldflags.m4])
 
