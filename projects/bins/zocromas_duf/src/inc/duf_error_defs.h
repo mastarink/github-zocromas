@@ -26,17 +26,20 @@
 
 /* error message if arg is not 0 */
 /* #  define DUF_TEST_RX(_rval)         if (_rval) DUF_SHOW_ERROR( " - - - - - -> [%s] (#%d)", _rval<0?duf_error_name(_rval):"+", _rval ) */
+
+#    define DUF_TEST_RX_END(_rval) }
 #  ifdef DUF_T_NOIF
 #    define DUF_TEST_RX(_rval)	   (( (DUF_EREPORT(_rval)) ? \
     					DUF_SHOW_ERROR( " - - - - - -> [%s] (#%d) {+%d} #%u", \
 					  (_rval)<0?duf_error_name(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_ecount(_rval) ) : \
     					0 ), _rval)
+#    define DUF_TEST_RX_START(_rval) if (DUF_TEST_RX(_rval)<0) {
 #  else
-#    define DUF_TEST_RX(_rval)	if (DUF_EREPORT(_rval)) \
+#    define DUF_TEST_RX_START(_rval)	if (DUF_EREPORT(_rval)) \
 				{ \
 				  DUF_SHOW_ERROR( " - - - - - -> [%s] (#%d) {+%d} #%u", \
 				      (_rval)<0?duf_error_namduf_set_memax_counte(_rval):"+", _rval, duf_get_ereport_n(_rval), duf_ecount(_rval) ); \
-				}
+#    define DUF_TEST_RX(_rval) DUF_TEST_RX_START(_rval); DUF_TEST_RX_END(_rval)
 #  endif
 
 /* #  ifdef DUF_T_NOIF                                                               */
@@ -56,7 +59,7 @@
 /* #  define DUF_TEST_R(_rval)     ( DUF_E_NO(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),DUF_TEST_RX( _rval ),DUF_E_YES(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),_rval ) */
 #  define DUF_TEST_R(_rval)	DUF_TEST_RX( _rval )
 
-# define DUF_TEST_R_NOE(_rval, ...)	DUF_E_NO(  __VA_ARGS__ );DUF_TEST_R(_rval);DUF_E_YES( __VA_ARGS__ )
+#  define DUF_TEST_R_NOE(_rval, ...)	DUF_E_NO(  __VA_ARGS__ );DUF_TEST_R(_rval);DUF_E_YES( __VA_ARGS__ )
 
 
 

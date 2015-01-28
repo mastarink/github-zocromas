@@ -37,7 +37,7 @@
 static unsigned long long
 duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )
 {
-  int r = 0;
+  int lr = 0;
 
   DEBUG_STARTULL( mimeid );
 
@@ -51,21 +51,21 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
       /* const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_DBPREF "mime WHERE mime=:Mime AND charset=:charSet" ; */
 
-      DUF_SQL_START_STMT( pdi, select_mime, sql, r, pstmt_select );
-      DUF_SQL_BIND_S( Mime, mime, r, pstmt_select );
-      /* DUF_SQL_BIND_S( charSet, chs, r, pstmt_select ); */
-      /* DUF_SQL_BIND_S( Tail, tail, r, pstmt_select ); */
-      DUF_SQL_STEP( r, pstmt_select );
-      if ( r == DUF_SQL_ROW )
+      DUF_SQL_START_STMT( pdi, select_mime, sql, lr, pstmt_select );
+      DUF_SQL_BIND_S( Mime, mime, lr, pstmt_select );
+      /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_select ); */
+      /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_select ); */
+      DUF_SQL_STEP( lr, pstmt_select );
+      if ( lr == DUF_SQL_ROW )
       {
         DUF_TRACE( current, 0, "<selected>" );
         mimeid = duf_sql_column_long_long( pstmt_select, 0 );
-        r = 0;
+        lr = 0;
       }
-      if ( r == DUF_SQL_DONE )
-        r = 0;
-      DUF_TEST_R( r );
-      DUF_SQL_END_STMT( select_mime, r, pstmt_select );
+      if ( lr == DUF_SQL_DONE )
+        lr = 0;
+      DUF_TEST_R( lr );
+      DUF_SQL_END_STMT( select_mime, lr, pstmt_select );
     }
 
     if ( !mimeid && !duf_config->cli.disable.flag.insert )
@@ -74,14 +74,14 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
       /* "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
 
-      DUF_SQL_START_STMT( pdi, insert_mime, sql, r, pstmt_insert );
+      DUF_SQL_START_STMT( pdi, insert_mime, sql, lr, pstmt_insert );
       DUF_TRACE( insert, 0, " S: %s ", sql );
-      DUF_SQL_BIND_S( Mime, mime, r, pstmt_insert );
-      /* DUF_SQL_BIND_S( charSet, chs, r, pstmt_insert ); */
-      /* DUF_SQL_BIND_S( Tail, tail, r, pstmt_insert ); */
-      DUF_SQL_STEP( r, pstmt_insert );
-      /* DUF_TEST_R(r); */
-      DUF_SQL_CHANGES( changes, r, pstmt_insert );
+      DUF_SQL_BIND_S( Mime, mime, lr, pstmt_insert );
+      /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
+      /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
+      DUF_SQL_STEP( lr, pstmt_insert );
+      /* DUF_TEST_R(lr); */
+      DUF_SQL_CHANGES( changes, lr, pstmt_insert );
       /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
       {
@@ -89,18 +89,18 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
         DUF_TRACE( mime, 0, " inserted now( SQLITE_OK ) mimeid = %llu ", mimeid );
         assert( mimeid );
       }
-      DUF_SQL_END_STMT( insert_mime, r, pstmt_insert );
+      DUF_SQL_END_STMT( insert_mime, lr, pstmt_insert );
     }
-    DUF_TEST_R( r );
+    DUF_TEST_R( lr );
   }
   else
   {
     DUF_SHOW_ERROR( " Wrong data " );
-    r = DUF_ERROR_DATA;
+    lr = DUF_ERROR_DATA;
   }
-  DUF_TEST_R( r );
+  DUF_TEST_R( lr );
   if ( pr )
-    *pr = r;
+    *pr = lr;
   DEBUG_ENDULL( mimeid );
 }
 
@@ -113,13 +113,19 @@ duf_mime_destructor( void *ctx )
   DUF_TRACE( mime, 0, " closed mime " );
 }
 
+/*
+ * pstmt is needed for dataid
+ * */
 static int
 duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   unsigned long long mimeid = 0;
 
-  DUF_TEST_R( r );
+
+  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( pst_file == duf_levinfo_stat( pdi ) );
+
 
   /* {                                    */
   /*   DUF_SFIELD2( filename );           */
@@ -211,8 +217,7 @@ duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
       /* DUF_TRACE( scan, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
     }
   }
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 

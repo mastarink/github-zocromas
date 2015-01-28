@@ -67,7 +67,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
 /* filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,           */
 /*                      duf_record_t * precord )                                                                                   */
 /* {                                                                                                                               */
-/*   int r = 0;                                                                                                                    */
+/*   DEBUG_STARTR( r );                                                                                                            */
 /*   DUF_UNUSED unsigned long long dataid = 0;                                                                                     */
 /*                                                                                                                                 */
 /*   (* unsigned long long fnid = 0; *)                                                                                            */
@@ -81,7 +81,6 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
 /*     r = filenames_insert_filename_uni( pdi, fname, dirID, dataid );                                                             */
 /*   }                                                                                                                             */
 /*   DEBUG_ENDR( r );                                                                                                              */
-/*   return r;                                                                                                                     */
 /* }                                                                                                                               */
 
 static int

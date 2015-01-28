@@ -307,13 +307,13 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, DSCCBX /* 
     sel_cb2 = duf_sel_cb2_leaf;
     match_cb2 = NULL /* duf_match_leaf2 */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 leaf" );
-    sql_set = &SCCB->leaf;
+    sql_set = &SCCB->leaf; /**/
   }
   else if ( node_type == DUF_NODE_NODE )
   {
     sel_cb2 = duf_sel_cb2_node;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 node" );
-    sql_set = &SCCB->node;
+    sql_set = &SCCB->node; /**/
   }
   else
     r = DUF_ERROR_UNKNOWN_NODE;
@@ -335,7 +335,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, DSCCBX /* 
  * DUF_NODE_LEAF => duf_match_leaf2, duf_sel_cb2_leaf
  * DUF_NODE_NODE =>                  duf_sel_cb2_node
  * 
- * str_cb2 (sub-item scanner):
+ * str_cb2 (sub-item scanner ): (~~content-scanner!?)
  *       duf_scan_dirs_by_pdi_maxdepth
  *     ( duf_str_cb2_leaf_scan    )
  *     ( duf_str_cb2_scan_file_fd )

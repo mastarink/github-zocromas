@@ -273,6 +273,21 @@ TODO scan mode
   DEBUG_ENDR( r );
 }
 
+int
+duf_show_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num )
+{
+  DEBUG_STARTR( r );
+  DUF_PRINTF( 0, "SCCBS" );
+  for ( int astep = 0; r >= 0 && astep < sccb_num; astep++ )
+  {
+    if ( sccb_sequence[astep] )
+    {
+      DUF_PRINTF( 0, "%d. %s", astep, sccb_sequence[astep]->title );
+    }
+  }
+  DEBUG_ENDR( r );
+}
+
 /*
  * for each sccb from sequence/list (with given size - # of items) make/evaluate the task
  *    by calling duf_make_sccb
@@ -339,7 +354,10 @@ duf_make_all_sccbs( void )
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
 /* <body> */
-  DOR( r, duf_make_sccb_sequence( ppscan_callbacks, asteps, &global_status.actions_done ) );
+  if ( DUF_ACT_FLAG( show_sccbs ) )
+    DOR( r, duf_show_sccb_sequence( ppscan_callbacks, asteps ) );
+  if ( DUF_ACT_FLAG( do_sccbs ) )
+    DOR( r, duf_make_sccb_sequence( ppscan_callbacks, asteps, &global_status.actions_done ) );
 /* </body> */
 
   mas_free( ppscan_callbacks );

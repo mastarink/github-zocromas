@@ -34,7 +34,7 @@
 /* static int                                                                                                       */
 /* sample_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )                                                */
 /* {                                                                                                                */
-/*   int r = 0;                                                                                                     */
+  /* DEBUG_STARTR( r ); */
 /*                                                                                                                  */
 /*   DUF_SFIELD( filename );                                                                                        */
 /*                                                                                                                  */
@@ -70,17 +70,14 @@
 /*                                                                                                                  */
 /*   DUF_TRACE( sample, 2, "filename=%s", filename );                                                               */
 /*   DEBUG_ENDR( r );                                                                                               */
-/*   return r;                                                                                                      */
 /* }                                                                                                                */
 
 static int
 sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   DUF_SFIELD2( filename );
-
-  DEBUG_START(  );
 
   assert( 0 == strcmp( filename, duf_levinfo_itemname( pdi ) ) );
 /* stat */
@@ -114,7 +111,6 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
   DUF_TRACE( sample, 2, "filename=%s", filename );
   DEBUG_ENDR( r );
-  return r;
 }
 
 /* 
@@ -124,7 +120,7 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /* int                                                                                                          */
 /* sample_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )   */
 /* {                                                                                                            */
-/*   int r = 0;                                                                                                 */
+  /* DEBUG_STARTR( r ); */
 /*   unsigned long long dirid = duf_levinfo_dirid( pdi );                                                       */
 /*                                                                                                              */
 /*   DEBUG_START(  );                                                                                           */
@@ -146,16 +142,14 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /*     }                                                                                                        */
 /*   }                                                                                                          */
 /*   DEBUG_ENDR( r );                                                                                           */
-/*   return r;                                                                                                  */
 /* }                                                                                                            */
 
 static int
-sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
+sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
   unsigned long long dirid = duf_levinfo_dirid( pdi );
 
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
 
   {
@@ -174,16 +168,14 @@ sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
     }
   }
   DEBUG_ENDR( r );
-  return r;
 }
 
 
 /* static int                                                                                                   */
 /* sample_scan_node_after( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )    */
 /* {                                                                                                            */
-/*   int r = 0;                                                                                                 */
+  /* DEBUG_STARTR( r ); */
 /*                                                                                                              */
-/*   DEBUG_START(  );                                                                                           */
 /*                                                                                                              */
 /*   {                                                                                                          */
 /*     unsigned long long dirid = duf_levinfo_dirid( pdi );                                                     */
@@ -200,15 +192,12 @@ sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
 /*     duf_levinfo_set_context( pdi, NULL );                                                                    */
 /*   }                                                                                                          */
 /*   DEBUG_ENDR( r );                                                                                           */
-/*   return r;                                                                                                  */
 /* }                                                                                                            */
 
 static int
-sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
+sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   {
     unsigned long long dirid = duf_levinfo_dirid( pdi );
@@ -225,13 +214,12 @@ sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long
     duf_levinfo_set_context( pdi, NULL );
   }
   DEBUG_ENDR( r );
-  return r;
 }
 
 /* static int                                                                                                 */
 /* sample_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
 /* {                                                                                                          */
-/*   int r = 0;                                                                                               */
+  /* DEBUG_STARTR( r ); */
 /*   unsigned long long dirid = duf_levinfo_dirid( pdi );                                                     */
 /*                                                                                                            */
 /*   DEBUG_START(  );                                                                                         */
@@ -271,16 +259,13 @@ sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long
 /*   }                                                                                                        */
 /*                                                                                                            */
 /*   DEBUG_ENDR( r );                                                                                         */
-/*   return r;                                                                                                */
 /* }                                                                                                          */
 
 static int
 sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   unsigned long long dirid = duf_levinfo_dirid( pdi );
-
-  DEBUG_START(  );
 
   DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );
   {
@@ -317,18 +302,17 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
   }
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid, */
                    duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
-  DUF_TEST_R( r );
-  return r;
+
+  DEBUG_ENDR( r );
 }
 
 

@@ -44,7 +44,7 @@ DUF_UNUSED static unsigned long long
 duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char *filename, size_t fsize, int need_id, int *pr )
 {
   unsigned long long crc32id = -1;
-  int r = 0;
+  int lr = 0;
   int changes = 0;
   const char *real_path = duf_levinfo_path( pdi );
 
@@ -54,32 +54,32 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
     static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "crc32 (crc32sum) VALUES (:crc32sum)";
 
     DUF_TRACE( crc32, 0, "%0lx %s%s", crc32sum, real_path, filename );
-    DUF_SQL_START_STMT( pdi, insert_crc32, sql, r, pstmt );
+    DUF_SQL_START_STMT( pdi, insert_crc32, sql, lr, pstmt );
     DUF_TRACE( insert, 0, "S:%s", sql );
-    DUF_SQL_BIND_LL( crc32sum, crc32sum, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_CHANGES( changes, r, pstmt );
-    DUF_SQL_END_STMT( insert_crc32, r, pstmt );
+    DUF_SQL_BIND_LL( crc32sum, crc32sum, lr, pstmt );
+    DUF_SQL_STEP( lr, pstmt );
+    DUF_SQL_CHANGES( changes, lr, pstmt );
+    DUF_SQL_END_STMT( insert_crc32, lr, pstmt );
   }
   duf_pdi_reg_changes( pdi, changes );
-  if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+  if ( ( lr == DUF_SQL_CONSTRAINT || !lr ) && !changes )
   {
     if ( need_id )
     {
       duf_scan_callbacks_t sccb = {.leaf.fieldset = "crc32id" };
 #ifdef MAS_SCCBHANDLE
       duf_sccb_handle_t csccbh = {.sccb = &sccb };
-      r = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF,
+      lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF,
                           &csccbh /*, ( const duf_dirhandle_t * ) NULL off */ ,
                           "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
 #else
-      r = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+      lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
                           &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
                           "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
 #endif
     }
   }
-  else if ( !r /* assume SQLITE_OK */  )
+  else if ( !lr /* assume SQLITE_OK */  )
   {
     if ( need_id && changes )
     {
@@ -88,10 +88,10 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
   }
   else
   {
-    DUF_SHOW_ERROR( "insert crc32 %d", r );
+    DUF_SHOW_ERROR( "insert crc32 %d", lr );
   }
   if ( pr )
-    *pr = r;
+    *pr = lr;
 
   DEBUG_ENDULL( crc32id );
   return crc32id;
@@ -100,7 +100,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
 static unsigned long
 duf_make_crc32_uni( int fd, int *pr )
 {
-  int r = 0;
+  int lr = 0;
   size_t bufsz = 128 * 1;
   unsigned long crc32sum = 0;
   unsigned char *buffer;
@@ -115,9 +115,9 @@ duf_make_crc32_uni( int fd, int *pr )
       int cnt = 0;
       int maxcnt = 2;
 
-      DUF_TEST_R( r );
+      DUF_TEST_R( lr );
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
-      while ( r >= 0 && cnt++ < maxcnt )
+      while ( lr >= 0 && cnt++ < maxcnt )
       {
         int rr;
 
@@ -126,33 +126,37 @@ duf_make_crc32_uni( int fd, int *pr )
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
-          r = DUF_ERROR_READ;
+          lr = DUF_ERROR_READ;
         }
-        DUF_TEST_R( r );
+        DUF_TEST_R( lr );
         if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
           crc32sum = crc32( crc32sum, buffer, rr );
         if ( rr <= 0 )
           break;
 
-        DUF_TEST_R( r );
+        DUF_TEST_R( lr );
       }
       mas_free( buffer );
     }
     else
     {
-      r = DUF_ERROR_MEMORY;
+      lr = DUF_ERROR_MEMORY;
     }
   }
   if ( pr )
-    *pr = r;
+    *pr = lr;
   return crc32sum;
 }
 
 static int
 duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   unsigned long crc32sum = 0;
+
+  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( pst_file == duf_levinfo_stat( pdi ) );
+
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
@@ -182,7 +186,7 @@ duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct 
     DUF_TRACE( crc32, 0, "%04lx : crc32id: %llu", crc32sum, crc32id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 static const char *final_sql[] = {

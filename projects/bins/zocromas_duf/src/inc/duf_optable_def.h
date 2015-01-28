@@ -21,7 +21,8 @@
 #define DO_OU(_vt, _v)		DO_OO(_vt, _v, ufilter)
 #define DO_OPDI(_vt, _v)	DO_OO(_vt, _v, depthinfo)
 
-#define DO_FL(_t,_fld) .afl._t={._fld=1},.setit=1
+#define DO_FL(_t,_fld) .afl._t={._fld=1} /* ,.setit=1 */
+#define DO_FN(_t,_fld) .afl._t={._fld=1},.invert=1
 /* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
 #define DO_VIFUN(_f, _a) .call={.fdesc={.vi={.func=_f, .arg=_a}}}
 #define DO_AFUN(_f) .call={.fdesc={.a={.func=_f}}}

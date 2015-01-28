@@ -39,26 +39,24 @@
 /* directories_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi,        */
 /*                        duf_record_t * precord )                                                                             */
 /* {                                                                                                                           */
-/*   int r = 0;                                                                                                                */
+/*   DEBUG_STARTR( r );                                                                                                        */
 /*   int changes = 0;                                                                                                          */
 /*                                                                                                                             */
 /*   DUF_TRACE( scan, 0, "@@@@@@@@@@@@@ scan entry dir by %s", fname );                                                        */
 /*   ( void ) duf_insert_path_uni2( pdi, fname, 1 (* ifadd *) , pstat->st_dev, pstat->st_ino, 0 (*need_id *) , &changes, &r ); */
-/*   DUF_TEST_R( r );                                                                                                          */
-/*   return r;                                                                                                                 */
+/*   DEBUG_ENDR( r );                                                                                                          */
 /* }                                                                                                                           */
 
 static int
 directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid_unused, */
                         duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int changes = 0;
 
   /* DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname ); */
   ( void ) duf_insert_path_uni2( pdi, fname, 1 /* ifadd */ , pstat->st_dev, pstat->st_ino, 0 /*need_id */ , &changes, &r );
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 

@@ -6,7 +6,7 @@ noinst_PROGRAMS=mtest
 
 zocromas_duf_SOURCES=				   \
 	duf.c duf_interactive.c				\
-	duf_maindb.c duf_action.c		    \
+	duf_maindb_info.c duf_maindb.c duf_action.c		    \
 	duf_dbg.c duf_config.c duf_status.c	     \
 	duf_ufilter.c \
 	duf_options.c duf_cli_options.c duf_option.c duf_option_typed.c  \
@@ -30,7 +30,7 @@ zocromas_duf_SOURCES=				   \
 	duf_levinfo.c duf_levinfo_ref.c duf_levinfo_credel.c duf_levinfo_openclose.c duf_levinfo_updown.c duf_levinfo_context.c	\
 	duf_pdi.c						\
 	duf_dirent.c 						    \
-	duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
+	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
 	duf_errors.c  duf_trace.c				      \
 	duf_dh.c duf_service.c					     \
 								      \

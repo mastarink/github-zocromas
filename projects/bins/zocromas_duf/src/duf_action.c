@@ -170,6 +170,7 @@ duf_action( int argc, char **argv )
     DOR( r, duf_interactive(  ) );
   }
   else if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
-    DOR( r, duf_make_all_sccbs_wrap(  ) ); /* each targv; reinit will be made */
+    DORF(r, duf_make_all_sccbs_wrap ); /* each targv; reinit will be made */
+//  DOR( r, duf_make_all_sccbs_wrap(  ) ); /* each targv; reinit will be made */
   DEBUG_ENDR( r );
 }

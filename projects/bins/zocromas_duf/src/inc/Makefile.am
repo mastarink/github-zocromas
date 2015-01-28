@@ -28,7 +28,7 @@ noinst_HEADERS=duf.h \
 	duf_item_types.h \
 	duf_levinfo_context.h duf_levinfo_credel.h duf_levinfo.h duf_levinfo_openclose.h \
 	duf_levinfo_ref_def.h duf_levinfo_ref.h duf_levinfo_types.h duf_levinfo_updown.h \
-	duf_maindb.h \
+	duf_maindb_info.h duf_maindb.h \
 	duf_maintenance.h \
 	duf_match.h \
 	duf_optable_def.h duf_option_cmd.h duf_option_defs.h duf_option_descr.h duf_option_env.h \
@@ -64,7 +64,7 @@ noinst_HEADERS=duf.h \
 	duf_ufilter.h \
 	duf_uni_scan2.h \
 	duf_uni_scan.h \
-	duf_utils.h \
+	duf_sys_wrap.h duf_utils.h \
 	duf_utils_path.h \
 	duf_utils_print.h
 

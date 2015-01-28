@@ -53,7 +53,7 @@
 DUF_UNUSED static unsigned long long
 duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int *pr )
 {
-  int r = 0;
+  int lr = 0;
 
   DEBUG_STARTULL( modelid );
 
@@ -65,59 +65,59 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
     {
       const char *sql = "SELECT " DUF_SQL_IDNAME " AS modelid FROM " DUF_DBPREF "exif_model WHERE model=:Model";
 
-      DUF_SQL_START_STMT( pdi, select_model, sql, r, pstmt_select );
-      DUF_TEST_R( r );
-      DUF_SQL_BIND_S( Model, model, r, pstmt_select );
-      DUF_TEST_R( r );
-      DUF_SQL_STEP( r, pstmt_select );
-      /* DUF_TEST_R( r ); */
-      if ( r == DUF_SQL_ROW )
+      DUF_SQL_START_STMT( pdi, select_model, sql, lr, pstmt_select );
+      DUF_TEST_R( lr );
+      DUF_SQL_BIND_S( Model, model, lr, pstmt_select );
+      DUF_TEST_R( lr );
+      DUF_SQL_STEP( lr, pstmt_select );
+      /* DUF_TEST_R( lr ); */
+      if ( lr == DUF_SQL_ROW )
       {
         DUF_TRACE( current, 0, "<selected>" );
         modelid = duf_sql_column_long_long( pstmt_select, 0 );
-        r = 0;
+        lr = 0;
       }
-      if ( r == DUF_SQL_DONE )
-        r = 0;
-      DUF_TEST_R( r );
-      DUF_SQL_END_STMT( select_model, r, pstmt_select );
+      if ( lr == DUF_SQL_DONE )
+        lr = 0;
+      DUF_TEST_R( lr );
+      DUF_SQL_END_STMT( select_model, lr, pstmt_select );
     }
 
     if ( !modelid && !duf_config->cli.disable.flag.insert )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "exif_model ( model ) VALUES ( :Model )";
 
-      DUF_SQL_START_STMT( pdi, insert_model, sql, r, pstmt_insert );
-      DUF_TEST_R( r );
+      DUF_SQL_START_STMT( pdi, insert_model, sql, lr, pstmt_insert );
+      DUF_TEST_R( lr );
       DUF_TRACE( insert, 0, " S: %s ", sql );
-      DUF_SQL_BIND_S( Model, model, r, pstmt_insert );
-      DUF_TEST_R( r );
+      DUF_SQL_BIND_S( Model, model, lr, pstmt_insert );
+      DUF_TEST_R( lr );
 
-      DUF_SQL_STEP( r, pstmt_insert );
-      /* DUF_TEST_R( r ); */
-      DUF_SQL_CHANGES( changes, r, pstmt_insert );
-      /* DUF_TEST_R( r ); */
+      DUF_SQL_STEP( lr, pstmt_insert );
+      /* DUF_TEST_R( lr ); */
+      DUF_SQL_CHANGES( changes, lr, pstmt_insert );
+      /* DUF_TEST_R( lr ); */
       /* DUF_SHOW_ERROR( "changes:%d", changes ); */
       if ( need_id && changes )
       {
         modelid = duf_sql_last_insert_rowid(  );
         DUF_TRACE( exif, 0, " inserted now( SQLITE_OK ) modelid = %llu ", modelid );
       }
-      DUF_SQL_END_STMT( insert_model, r, pstmt_insert );
+      DUF_SQL_END_STMT( insert_model, lr, pstmt_insert );
     }
-    DUF_TEST_R( r );
+    DUF_TEST_R( lr );
   }
   else
   {
     /* No model is not soooo bad! */
     /* DUF_SHOW_ERROR( " Wrong data " ); */
-    /* r = DUF_ERROR_DATA;          */
+    /* lr = DUF_ERROR_DATA;          */
   }
-  DUF_TEST_R( r );
+  DUF_TEST_R( lr );
 
   if ( pr )
-    *pr = r;
-  DUF_TEST_R( r );
+    *pr = lr;
+  DUF_TEST_R( lr );
   /* assert( modelid ); */
   DEBUG_ENDULL( modelid );
 }
@@ -126,12 +126,12 @@ DUF_UNUSED static unsigned long long
 duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const char *model, time_t timeepoch, int dtfixed, const char *stime_original,
                      int need_id, int *pr )
 {
-  int r = 0;
+  int lr = 0;
   unsigned long long modelid = 0;
 
   DEBUG_STARTULL( exifid );
-  modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , &r );
-  if ( r >= 0 && ( timeepoch || modelid || dtfixed || stime_original ) )
+  modelid = duf_insert_model_uni( pdi, model, 1 /*need_id */ , &lr );
+  if ( lr >= 0 && ( timeepoch || modelid || dtfixed || stime_original ) )
   {
 
     if ( need_id )
@@ -140,27 +140,27 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
             "SELECT " DUF_SQL_IDNAME " AS exifid FROM " DUF_DBPREF "exif WHERE ( :modelID IS NULL OR modelid=:modelID ) "
             " AND date_time=datetime(:timeEpoch, 'unixepoch')";
 
-      DUF_SQL_START_STMT( pdi, select_exif, sql, r, pstmt_select );
-      DUF_TEST_R( r );
+      DUF_SQL_START_STMT( pdi, select_exif, sql, lr, pstmt_select );
+      DUF_TEST_R( lr );
       if ( modelid )
       {
-        DUF_SQL_BIND_LL( modelID, modelid, r, pstmt_select );
-        DUF_TEST_R( r );
+        DUF_SQL_BIND_LL( modelID, modelid, lr, pstmt_select );
+        DUF_TEST_R( lr );
       }
-      DUF_SQL_BIND_LL( timeEpoch, timeepoch, r, pstmt_select );
-      DUF_TEST_R( r );
-      DUF_SQL_STEP( r, pstmt_select );
-      /* DUF_TEST_R( r ); */
-      if ( r == DUF_SQL_ROW )
+      DUF_SQL_BIND_LL( timeEpoch, timeepoch, lr, pstmt_select );
+      DUF_TEST_R( lr );
+      DUF_SQL_STEP( lr, pstmt_select );
+      /* DUF_TEST_R( lr ); */
+      if ( lr == DUF_SQL_ROW )
       {
         DUF_TRACE( current, 0, "<selected>" );
         exifid = duf_sql_column_long_long( pstmt_select, 0 );
-        r = 0;
+        lr = 0;
       }
-      if ( r == DUF_SQL_DONE )
-        r = 0;
-      DUF_TEST_R( r );
-      DUF_SQL_END_STMT( select_exif, r, pstmt_select );
+      if ( lr == DUF_SQL_DONE )
+        lr = 0;
+      DUF_TEST_R( lr );
+      DUF_SQL_END_STMT( select_exif, lr, pstmt_select );
       /* if ( !exifid )                        */
       /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
     }
@@ -172,21 +172,21 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
             "INSERT OR IGNORE INTO " DUF_DBPREF "exif ( modelid, date_time, broken_date, fixed ) "
             " VALUES ( :modelID, datetime(:timeEpoch, 'unixepoch'), :origTime, :dtFixed )";
 
-      DUF_SQL_START_STMT( pdi, insert_exif, sql, r, pstmt_insert );
-      DUF_TEST_R( r );
+      DUF_SQL_START_STMT( pdi, insert_exif, sql, lr, pstmt_insert );
+      DUF_TEST_R( lr );
       DUF_TRACE( insert, 0, " S: %s ", sql );
-      DUF_TEST_R( r );
+      DUF_TEST_R( lr );
       if ( modelid )
       {
-        DUF_SQL_BIND_LL( modelID, modelid, r, pstmt_insert );
-        DUF_TEST_R( r );
+        DUF_SQL_BIND_LL( modelID, modelid, lr, pstmt_insert );
+        DUF_TEST_R( lr );
       }
-      DUF_SQL_BIND_LL_NZ_OPT( timeEpoch, timeepoch, r, pstmt_insert );
-      DUF_TEST_R( r );
-      DUF_SQL_BIND_LL_NZ_OPT( dtFixed, dtfixed, r, pstmt_insert );
-      DUF_TEST_R( r );
-      DUF_SQL_BIND_S( origTime, stime_original, r, pstmt_insert );
-      DUF_TEST_R( r );
+      DUF_SQL_BIND_LL_NZ_OPT( timeEpoch, timeepoch, lr, pstmt_insert );
+      DUF_TEST_R( lr );
+      DUF_SQL_BIND_LL_NZ_OPT( dtFixed, dtfixed, lr, pstmt_insert );
+      DUF_TEST_R( lr );
+      DUF_SQL_BIND_S( origTime, stime_original, lr, pstmt_insert );
+      DUF_TEST_R( lr );
       /* {                                                                                               */
       /*   const char *real_path = NULL;                                                                 */
       /*   static int c = 0;                                                                             */
@@ -201,9 +201,9 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       /*                                                                                                 */
       /*   DUF_SHOW_ERROR( "%d. nchanges:%d %llu:%lu  %s%s", n, c, modelid, timeepoch, real_path, filename ); */
       /* }                                                                                               */
-      DUF_SQL_STEP( r, pstmt_insert );
-      /* DUF_TEST_R(r); */
-      DUF_SQL_CHANGES( changes, r, pstmt_insert );
+      DUF_SQL_STEP( lr, pstmt_insert );
+      /* DUF_TEST_R(lr); */
+      DUF_SQL_CHANGES( changes, lr, pstmt_insert );
       if ( need_id && changes )
       {
         exifid = duf_sql_last_insert_rowid(  );
@@ -217,26 +217,26 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
                    ( long ) timeepoch, changes, duf_levinfo_path( pdi ), filename );
       }
 
-      DUF_SQL_END_STMT( insert_exif, r, pstmt_insert );
+      DUF_SQL_END_STMT( insert_exif, lr, pstmt_insert );
     }
-    DUF_TEST_R( r );
+    DUF_TEST_R( lr );
   }
   else
   {
     DUF_SHOW_ERROR( " Wrong data " );
-    r = DUF_ERROR_DATA;
+    lr = DUF_ERROR_DATA;
   }
 
-  DUF_TEST_R( r );
+  DUF_TEST_R( lr );
   if ( pr )
-    *pr = r;
+    *pr = lr;
   DEBUG_ENDULL( exifid );
 }
 
 static time_t
 duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, size_t stime_original_size, int *pr )
 {
-  int r = 0;
+  int lr = 0;
   time_t timeepoch = 0;
   ExifEntry *entry = NULL;
   int changed = 0;
@@ -247,8 +247,8 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   {
     memset( stime_original, stime_original_size, 0 );
     /* Get the contents of the tag in human-readable form */
-    if ( r >= 0 && !exif_entry_get_value( entry, stime_original, stime_original_size ) )
-      r = DUF_ERROR_EXIF;
+    if ( lr >= 0 && !exif_entry_get_value( entry, stime_original, stime_original_size ) )
+      lr = DUF_ERROR_EXIF;
     {
       char *corrected_time = NULL;
 
@@ -260,16 +260,16 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
         if ( ( c < ' ' || c > 'z' ) && c != '?' && c != ':' && c != ' ' )
         {
           DUF_TRACE( exif, 0, ">>>>>>>>>>>>>> %s <<<<<<<<<<<<<", stime_original );
-          r = DUF_ERROR_EXIF_BROKEN_DATE;
+          lr = DUF_ERROR_EXIF_BROKEN_DATE;
           break;
         }
       }
-      if ( r >= 0 )
+      if ( lr >= 0 )
         corrected_time = mas_strdup( stime_original );
       /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %s", stime_original ); */
       DUF_TRACE( exif, 3, "stime_original:%s", stime_original );
       /* 2008:06:21 13:18:19 */
-      if ( r >= 0 )
+      if ( lr >= 0 )
       {
         char *pq;
 
@@ -300,14 +300,14 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
           changed++;
         }
       }
-      if ( r >= 0 && !*corrected_time )
-        r = DUF_ERROR_EXIF_NO_DATE;
-      if ( r >= 0 && strchr( corrected_time, '?' ) )
+      if ( lr >= 0 && !*corrected_time )
+        lr = DUF_ERROR_EXIF_NO_DATE;
+      if ( lr >= 0 && strchr( corrected_time, '?' ) )
       {
         DUF_SHOW_ERROR( "broken date %s", corrected_time );
-        r = DUF_ERROR_EXIF_BROKEN_DATE;
+        lr = DUF_ERROR_EXIF_BROKEN_DATE;
       }
-      if ( r >= 0 || r == DUF_ERROR_EXIF_BROKEN_DATE )
+      if ( lr >= 0 || lr == DUF_ERROR_EXIF_BROKEN_DATE )
       {
         if ( corrected_time && *corrected_time )
         {
@@ -332,7 +332,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   }
   else if ( 0 )
   {
-    r = DUF_ERROR_EXIF_NO_DATE;
+    lr = DUF_ERROR_EXIF_NO_DATE;
     if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +1" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
@@ -359,18 +359,21 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   if ( pdate_changed )
     *pdate_changed = changed;
   if ( pr )
-    *pr = r;
+    *pr = lr;
   return timeepoch;
 }
 
 static int
 duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
+
+  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( pst_file == duf_levinfo_stat( pdi ) );
+
 
   DUF_UFIELD2( dataid );
 
-  DEBUG_START(  );
   {
     size_t bufsz = 1024;
     unsigned char *buffer;
@@ -529,10 +532,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
     DUF_TEST_R( r );
   }
 
-
-  DUF_TEST_R( r );
   DEBUG_ENDR( r );
-  return r;
 }
 
 

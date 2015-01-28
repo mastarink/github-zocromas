@@ -5,6 +5,5 @@ int duf_pathdepth( const char *path );
 char *duf_realpath( const char *path, int *pr );
 
 
-
 #endif
 

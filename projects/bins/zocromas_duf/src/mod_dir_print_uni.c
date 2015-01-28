@@ -27,9 +27,7 @@
 /* static int                                                                                                           */
 /* scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord (*, const duf_dirhandle_t * pdh_unused *)  )                */
 /* {                                                                                                                    */
-/*   int r = 0;                                                                                                         */
-/*                                                                                                                      */
-/*   DEBUG_START(  );                                                                                                   */
+/*   DEBUG_STARTR( r );                                                                                                 */
 /*                                                                                                                      */
 /*   (* SQL at duf_scan_files_by_dirid *)                                                                               */
 /*   DUF_SFIELD( filename );                                                                                            */
@@ -91,15 +89,12 @@
 /*   DUF_PUTSL( 0 );                                                                                                    */
 /*                                                                                                                      */
 /*   DEBUG_ENDR( r );                                                                                                   */
-/*   return r;                                                                                                          */
 /* }                                                                                                                    */
 
 static int
 scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   /* SQL at duf_scan_files_by_dirid */
   DUF_UFIELD2( dirid );
@@ -189,7 +184,6 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_PUTSL( 0 );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 /* 
@@ -198,9 +192,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /* static int                                                                                                               */
 /* scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )                      */
 /* {                                                                                                                        */
-/*   int r = 0;                                                                                                             */
-/*                                                                                                                          */
-/*   DEBUG_START(  );                                                                                                       */
+/*   DEBUG_STARTR( r );                                                                                                     */
 /*                                                                                                                          */
 /*   {                                                                                                                      */
 /*     const char *real_path = NULL;                                                                                        */
@@ -225,16 +217,12 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 /*   }                                                                                                                      */
 /*                                                                                                                          */
 /*   DEBUG_ENDR( r );                                                                                                       */
-/*                                                                                                                          */
-/*   return r;                                                                                                              */
 /* }                                                                                                                        */
 
 static int
 scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   /* DUF_UFIELD2( nfiles ); */
   /* DUF_UFIELD2( minsize ); */
@@ -317,10 +305,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
     DUF_PUTSL( 0 );
   }
 
-
   DEBUG_ENDR( r );
-
-  return r;
 }
 
 #define DUF_SELECTED_NAME "fnselected"

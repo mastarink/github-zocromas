@@ -47,7 +47,7 @@ static unsigned long long
 duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char *filename, size_t fsize, int need_id, int *pr )
 {
   unsigned long long md5id = -1;
-  int r = 0;
+  int lr = 0;
   int changes = 0;
   const char *real_path = duf_levinfo_path( pdi );
 
@@ -61,39 +61,39 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES (:md5sum1,:md5sum2)";
 
         DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, filename );
-        DUF_SQL_START_STMT( pdi, insert_md5, sql, r, pstmt );
+        DUF_SQL_START_STMT( pdi, insert_md5, sql, lr, pstmt );
         DUF_TRACE( insert, 0, "S:%s", sql );
-        DUF_SQL_BIND_LL( md5sum1, md64[1], r, pstmt );
-        DUF_SQL_BIND_LL( md5sum2, md64[0], r, pstmt );
-        DUF_SQL_STEP( r, pstmt );
-        DUF_SQL_CHANGES( changes, r, pstmt );
-        DUF_SQL_END_STMT( insert_md5, r, pstmt );
+        DUF_SQL_BIND_LL( md5sum1, md64[1], lr, pstmt );
+        DUF_SQL_BIND_LL( md5sum2, md64[0], lr, pstmt );
+        DUF_SQL_STEP( lr, pstmt );
+        DUF_SQL_CHANGES( changes, lr, pstmt );
+        DUF_SQL_END_STMT( insert_md5, lr, pstmt );
       }
       else
       {
-        r = duf_sql( "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+        lr = duf_sql( "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
       }
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+    if ( ( lr == DUF_SQL_CONSTRAINT || !lr ) && !changes )
     {
       if ( need_id )
       {
         duf_scan_callbacks_t sccb = {.leaf.fieldset = "md5id" };
 #ifdef MAS_SCCBHANDLE
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
-        r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF,
-                            &csccbh,
-                            "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
+        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF,
+                             &csccbh,
+                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
 #else
 
-        r = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
-                            &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
-                            "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
+        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, ( duf_depthinfo_t * ) NULL,
+                             &sccb /*, ( const duf_dirhandle_t * ) NULL off */ ,
+                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
 #endif
       }
     }
-    else if ( !r /* assume SQLITE_OK */  )
+    else if ( !lr /* assume SQLITE_OK */  )
     {
       if ( need_id && changes )
       {
@@ -102,18 +102,18 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     }
     else
     {
-      DUF_SHOW_ERROR( "insert md5 %d", r );
+      DUF_SHOW_ERROR( "insert md5 %d", lr );
     }
   }
   else
   {
     DUF_SHOW_ERROR( "Wrong data" );
-    r = DUF_ERROR_DATA;
-    DUF_TEST_R( r );
+    lr = DUF_ERROR_DATA;
+    DUF_TEST_R( lr );
   }
 
   if ( pr )
-    *pr = r;
+    *pr = lr;
 
   DEBUG_ENDULL( md5id );
   return md5id;
@@ -122,7 +122,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
 static int
 duf_make_md5_uni( int fd, unsigned char *pmd )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   size_t bufsz = 1024 * 1024 * 102;
   MD5_CTX ctx;
 
@@ -170,13 +170,13 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
   }
   if ( MD5_Final( pmd, &ctx ) != 1 )
     r = DUF_ERROR_MD5;
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /* static int                                                                                                                        */
 /* duf_scan_dirent_md5_content( int fd, const struct stat *pst_file, duf_depthinfo_t * pdi, duf_record_t * precord )                     */
 /* {                                                                                                                                 */
-/*   int r = 0;                                                                                                                      */
+/*   DEBUG_STARTR( r );                                                                                                              */
 /*   unsigned char mdr[MD5_DIGEST_LENGTH];                                                                                           */
 /*   unsigned char md[MD5_DIGEST_LENGTH];                                                                                            */
 /*                                                                                                                                   */
@@ -201,23 +201,26 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 /*     {                                                                                                                             */
 /*       int changes = 0;                                                                                                            */
 /*                                                                                                                                   */
-/*       if ( r >= 0 && !duf_config->cli.disable.flag.update )                                                                            */
-/*         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id=%llu WHERE " DUF_SQL_IDNAME "=%lld", &changes, md5id, filedataid );                */
+/*       if ( r >= 0 && !duf_config->cli.disable.flag.update )                                                                       */
+/*         r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id=%llu WHERE " DUF_SQL_IDNAME "=%lld", &changes, md5id, filedataid ); */
 /*       duf_pdi_reg_changes( pdi, changes );                                                                                        */
 /*       DUF_TEST_R( r );                                                                                                            */
 /*     }                                                                                                                             */
 /*     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );                                                   */
 /*     DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
 /*   }                                                                                                                               */
-/*   return r;                                                                                                                       */
+/*   DEBUG_ENDR( r );                                                                                                                */
 /* }                                                                                                                                 */
 
 static int
 duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   unsigned char mdr[MD5_DIGEST_LENGTH];
   unsigned char md[MD5_DIGEST_LENGTH];
+
+  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( pst_file == duf_levinfo_stat( pdi ) );
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
@@ -252,16 +255,16 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /* static int                                                                                                                          */
 /* duf_scan_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize ) */
 /* {                                                                                                                                   */
-/*   int r = 0;                                                                                                                        */
+/*   DEBUG_STARTR( r );                                                                                                                */
 /*   int ffd = duf_levinfo_dfd( pdi );                                                                                                 */
 /*                                                                                                                                     */
-/*   DUF_SHOW_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );                                                          */
+/*   DUF_SHOW_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );                                                     */
 /*   if ( ffd )                                                                                                                        */
 /*   {                                                                                                                                 */
 /*     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );                                                                                      */
@@ -281,21 +284,20 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
 /*   else                                                                                                                              */
 /*     r = DUF_ERROR_DATA;                                                                                                             */
 /*   DUF_TEST_R( r );                                                                                                                  */
-/*   return r;                                                                                                                         */
+/*   DEBUG_ENDR( r );                                                                                         */
 /* }                                                                                                                                   */
 
 /* callback of type duf_scan_hook_file_t */
 /* static int                                                                    */
 /* collect_openat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord ) */
 /* {                                                                             */
-/*   int r = 0;                                                                  */
+/*   DEBUG_STARTR( r );                                                                                                                */
 /*                                                                               */
 /*   DUF_SFIELD( filename );                                                     */
 /*   DUF_UFIELD( filesize );                                                     */
 /*   DEBUG_START(  );                                                            */
 /*   r = duf_scan_dirent_content_by_precord( pdi, precord, filename, filesize ); */
 /*   DEBUG_ENDR( r );                                                            */
-/*   return r;                                                                   */
 /* }                                                                             */
 
 /* 
@@ -304,7 +306,7 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
 /* static int                                                                                                             */
 /* collect_openat_md5_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
 /* {                                                                                                                      */
-/*   int r = 0;                                                                                                           */
+/*   DEBUG_STARTR( r );                                                                                                   */
 /*   const char *real_path = NULL;                                                                                        */
 /*                                                                                                                        */
 /*   DEBUG_START(  );                                                                                                     */
@@ -313,7 +315,6 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
 /*   DUF_TRACE( md5, 0, "L%d; " DUF_SQL_IDNAME "%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid_unused, real_path );                 */
 /*                                                                                                                        */
 /*   DEBUG_ENDR( r );                                                                                                     */
-/*   return r;                                                                                                            */
 /* }                                                                                                                      */
 
 /* currently used for --same-md5  ??? */

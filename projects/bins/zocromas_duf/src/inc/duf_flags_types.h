@@ -51,6 +51,9 @@ typedef struct
   unsigned summary:1;
   unsigned interactive:1;
   unsigned beginning_sql:1; /* do 'beginning' sql's again (first time mandatory!) */
+  unsigned do_sccbs:1;
+  unsigned show_sccbs:1;
+  unsigned show_sccbh:1;
 } duf_config_act_flags_t;
 typedef union
 {

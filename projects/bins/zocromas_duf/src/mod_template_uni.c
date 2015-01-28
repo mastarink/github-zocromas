@@ -31,111 +31,88 @@
 static int
 template_scan_init( void )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
+
+  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( pst_file == duf_levinfo_stat( pdi ) );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused,*/ duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
-
+  
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused,/* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
-  DEBUG_START(  );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 static int
 template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
 {
-  int r = 0;
-
-  DEBUG_START(  );
+  DEBUG_STARTR( r );
 
   DEBUG_ENDR( r );
-  return r;
 }
 
 int

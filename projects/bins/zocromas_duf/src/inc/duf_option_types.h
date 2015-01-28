@@ -141,8 +141,9 @@ typedef struct
 {
   int shown;
 
-  unsigned setit:1;
-  unsigned unsetit:1;
+//unsigned setit:1;
+//unsigned unsetit:1;
+  unsigned invert:1;
   unsigned m_hasoff:1;
   duf_anyflag_t afl;
   unsigned long m_offset;

@@ -78,6 +78,19 @@ const duf_longval_extended_t optable_flag[] = {
 
   {.o = {DO_Q( "uni-scan" ), /*       */ DO_A_N, /* */ DO_VF( UNI_SCAN )} /*      */ , DO_CL( OBSOLETE ) /* */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, uni_scan ) /*                                           */ , DO_H(  .... ) /*             */ },
+  {.o = {DO_Q( "nouni-scan" ), /*     */ DO_A_N, /* */ DO_VF( UNI_SCAN )} /*      */ , DO_CL( OBSOLETE ) /* */ ,
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, uni_scan ),.invert = 1 /*                                */ , DO_H(  .... ) /*             */ },
+
+  {.o = {DO_Q( "sccbs" ), /*       */ DO_A_N, /* */ DO_VF( DO_SCCBS )} /*      */ ,
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, do_sccbs ) /*                                           */ , DO_H(  .... ) /*             */ },
+  {.o = {DO_Q( "nosccbs" ), /*     */ DO_A_N, /* */ DO_VF( DO_SCCBS )} /*      */ ,
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, do_sccbs ),.invert = 1 /*                                */ , DO_H(  .... ) /*             */ },
+
+  {.o = {DO_Q( "show-sccbs" ), /*     */ DO_A_N, /* */ DO_VF( SHOW_SCCBS )} /*      */ ,
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, show_sccbs ) /*                                          */ , DO_H(  .... ) /*             */ },
+  {.o = {DO_Q( "show-sccbh" ), /*     */ DO_A_N, /* */ DO_VF( SHOW_SCCBH )} /*      */ ,
+   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, show_sccbh ) /*                                          */ , DO_H(  .... ) /*             */ },
+
   {.o = {DO_Q( "vacuum" ), /*         */ DO_A_N, /* */ DO_VF( VACUUM )} /*        */ , DO_CL( SYSTEM ) /*  */ ,
    /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, vacuum ) /*                                             */ , DO_H( vacuum db ) /*         */ },
 

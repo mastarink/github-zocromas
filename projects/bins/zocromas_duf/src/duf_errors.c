@@ -29,6 +29,12 @@ duf_errindex( duf_error_code_t rtest )
   return ( rtest - DUF_ERROR_ERROR_BASE );
 }
 
+int
+duf_errindex_sql( duf_error_code_t rtest )
+{
+  return ( rtest - DUF_SQLITE_ERROR_BASE );
+}
+
 void
 duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest )
 {
@@ -107,9 +113,16 @@ duf_get_ereport( duf_error_code_t rtest )
 
   /* if ( rtest < 0 ) */
   /*   return 1;      */
-  if ( rtest < 0 && errindex >= 0 && errindex < DUF_ERROR_COUNT
-       && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] ) )
-    r = noreport_error[errindex] + 1;
+  if ( rtest < 0 )
+  {
+    if ( errindex < 0 )
+    {
+      r = 0; /* sql ? ? ? */
+    }
+    else if ( errindex >= 0 && errindex < DUF_ERROR_COUNT
+              && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] ) )
+      r = noreport_error[errindex] + 1;
+  }
   return r;
 }
 

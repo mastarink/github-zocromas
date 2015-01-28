@@ -450,6 +450,8 @@ duf_option_examples( int argc, char *const *argv )
               "collect dirs and files from filesystem, count md5" );
   DUF_PRINTF( 0, "  run -OPRdDnEi  -f523Xe --progress /mnt/new_media/media/photo/Pictures/photos/	- %s", "collect everything we can" );
 
+  DUF_PRINTF( 0, "========================= as for 20150124.154800 ============" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -RDdnEiX235fOe   --show-sccbs --nosccbs	- %s", "dbg ..." );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
@@ -512,20 +514,21 @@ duf_option_showflags( int argc, char *const *argv )
 
 
       /* *INDENT-OFF*  */
-    DUF_PRINTF( 0, "                  ┌─  %s", DUF_OPT_FLAG_NAME( INTERACTIVE ) );
-    DUF_PRINTF( 0, "                  │   ┌─  %s", DUF_OPT_FLAG_NAME( PROGRESS ) );
-    DUF_PRINTF( 0, "                  │   │   ┌─  %s", DUF_OPT_FLAG_NAME( COLLECT ) );
-    DUF_PRINTF( 0, "                  │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( FILENAMES ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRENT ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRS ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( EXIF ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CRC32 ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( SD5 ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PRINT ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
-    DUF_PRINTF( 0, "                  │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( INFO ) );
-    DUF_PRINTF( 0, "   ┌──────────────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─┐" );
+    DUF_PRINTF( 0, "              ┌─  %s", DUF_OPT_FLAG_NAME( DO_SCCBS ) );
+    DUF_PRINTF( 0, "              │   ┌─  %s", DUF_OPT_FLAG_NAME( INTERACTIVE ) );
+    DUF_PRINTF( 0, "              │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PROGRESS ) );
+    DUF_PRINTF( 0, "              │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( COLLECT ) );
+    DUF_PRINTF( 0, "              │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( FILENAMES ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRENT ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRS ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( EXIF ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CRC32 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( SD5 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PRINT ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( INFO ) );
+    DUF_PRINTF( 0, "   ┌──────────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─┐" );
       /* *INDENT-ON*  */
 
 

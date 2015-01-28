@@ -22,19 +22,29 @@
 int
 duf_sql_open( const char *dbpath )
 {
-  return DUF_SQLITE_ERROR_CODE( duf_sqlite_open( dbpath ) );
+  DEBUG_STARTR( r );
+  int r3 = 0;
+
+  DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", duf_config->db.main.fpath );
+  DOR( r, DUF_SQLITE_ERROR_CODE( ( r3 = duf_sqlite_open( dbpath ) ) ) );
+  fprintf( stderr, "@@@@@@@@@@@ %d (%d)\n", r, r3 );
+  DUF_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
+  DUF_TRACE( explain, 0, "opened (?%d) database", r );
 /*int r3, r;
 
   r3 = duf_sqlite_open( dbpath );
   r = DUF_SQLITE_ERROR_CODE( r3 );
   DUF_TRACE( sql, 1, "r3:%d; r:%d", r3, r );
   return r;*/
+  DEBUG_ENDR( r );
 }
 
 int
 duf_sql_close( void )
 {
-  return DUF_SQLITE_ERROR_CODE( duf_sqlite_close(  ) );
+  DEBUG_STARTR( r );
+  DOR( r, DUF_SQLITE_ERROR_CODE( duf_sqlite_close(  ) ) );
+  DEBUG_ENDR( r );
 }
 
 int
