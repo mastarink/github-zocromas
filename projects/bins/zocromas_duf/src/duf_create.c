@@ -316,7 +316,7 @@ duf_check_table_paths( void )
                         DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, " /* */
 #endif
                         "  dev INTEGER NOT NULL, inode INTEGER NOT NULL " /* */
-                        ", dirname TEXT, parentid INTEGER " /* */
+                        ", dirname TEXT, parentid INTEGER, ntag INTEGER " /* */
                         ", last_updated REAL" /* */
                         ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
                         ", FOREIGN KEY(parentid) REFERENCES paths(" DUF_SQL_IDNAME ") )", "Create paths" );

@@ -58,7 +58,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int tag, int ca
     if ( caninsert && !duf_config->cli.disable.flag.insert )
     {
       static const char *sql =
-            "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid ) VALUES (:Dev, :iNode, :dirName, :parentID )";
+            "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid, ntag ) VALUES (:Dev, :iNode, :dirName, :parentID, :nTag )";
       if ( pdi )
       {
         DUF_SQL_START_STMT( pdi, insert_path, sql, r, pstmt );
@@ -70,6 +70,7 @@ duf_insert_path_uni2( duf_depthinfo_t * pdi, const char *dename, int tag, int ca
         DUF_SQL_BIND_S( dirName, dename, r, pstmt );
         /* DUF_SQL_BIND_LL( parentID, parentid, r, pstmt ); */
         DUF_SQL_BIND_LL( parentID, duf_levinfo_dirid_up( pdi ), r, pstmt );
+        DUF_SQL_BIND_LL( nTag, tag, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_CHANGES( changes, r, pstmt );
         DUF_SQL_END_STMT( insert_path, r, pstmt );

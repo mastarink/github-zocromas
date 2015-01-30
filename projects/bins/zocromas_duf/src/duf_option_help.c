@@ -452,6 +452,8 @@ duf_option_examples( int argc, char *const *argv )
 
   DUF_PRINTF( 0, "========================= as for 20150124.154800 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -RDdnEiX235fOe   --show-sccbs --nosccbs	- %s", "dbg ..." );
+  DUF_PRINTF( 0, "========================= as for 20150128.161052 ============" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/ -P --trace-path=3	- %s", "dbg, see human/screen-20150128.160747.png" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
