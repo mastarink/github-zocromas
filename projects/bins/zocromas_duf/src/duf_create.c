@@ -281,7 +281,7 @@ duf_check_table_filenames( void )
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
-
+#if 0
 static int
 duf_check_table_fnselected( void )
 {
@@ -304,6 +304,7 @@ duf_check_table_fnselected( void )
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
+#endif
 
 static int
 duf_check_table_paths( void )
@@ -714,12 +715,12 @@ typedef struct
   duf_create_table_function *fun;
 } duf_create_table_element;
 
+  /* DUF_TABLE_ELEMENT( fnselected ), */
 #define DUF_TABLE_ELEMENT(n) { .name= # n, .fun= duf_check_table_ ## n }
 static duf_create_table_element tab_table[] = {
   DUF_TABLE_ELEMENT( log ),
   DUF_TABLE_ELEMENT( paths ),
   DUF_TABLE_ELEMENT( filenames ),
-  DUF_TABLE_ELEMENT( fnselected ),
   DUF_TABLE_ELEMENT( filedatas ),
   DUF_TABLE_ELEMENT( sizes ),
   DUF_TABLE_ELEMENT( filefilter ),

@@ -6,5 +6,7 @@ define hook-quit
     set confirm off
 end
 handle SIGPIPE nostop noprint
+b duf_sccbh_scan.c:90
+b duf_dir_scan2.c:62
 run
 bt

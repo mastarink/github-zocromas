@@ -26,7 +26,7 @@ runonce_roaction( char *group_patt, char *sect_patt, roaction_t roaction, runonc
 {
   if ( flags.verbose > 1 )
     printf( "function %s\n", __func__ );
-  /* printf( "group_patt:%s; sect_patt:%s (strict:%d)\n", group_patt, sect_patt, flags.strict ); */
+  /* printf( "group_patt:%s; sect_patt:%s (strict:%d)\n", group_patt, sect_patt, !flags.nostrict ); */
   switch ( roaction )
   {
   case ROACTION_LIST:

@@ -69,14 +69,14 @@ static const char *final_sql[] = {
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
-        " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.parentid) " /* */
+        " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.ParentId) " /* */
         " GROUP BY parents." DUF_SQL_IDNAME "" /* */
         ,
 
   /* "UPDATE " DUF_DBPREF "pathtot_dirs SET " (*   *)                             */
   /*     " numdirs=(SELECT COUNT(*) AS numdirs " (*        *)                     */
   /*                 " FROM " DUF_DBPREF "paths AS p " (*  *)                     */
-  /*                     " WHERE p.parentid=" DUF_DBPREF "pathtot_dirs.Pathid )", */
+  /*                     " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )", */
 
   /* "DELETE FROM " DUF_DBPREF "keydata", */
   /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (*        *) */

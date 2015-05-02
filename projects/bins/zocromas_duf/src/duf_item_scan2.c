@@ -200,7 +200,7 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, DSCCBX, const duf_sql_set_t 
       DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, PU ? PU->size.min : 0, PU ? PU->size.max : 0, PU ? PU->same.min : 0,
                  PU ? PU->same.max : 0 );
 
-      DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( PDI ), r, pstmt );
+      DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt );
       DUF_SQL_EACH_ROW( r, pstmt, if ( !match_cb2 || ( match_cb2 ) ( pstmt ) ) cnt++; r = 0 );
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
     }
@@ -260,7 +260,7 @@ duf_scan_db_items2_sql( const char *csql_selector, duf_sel_cb2_match_t match_cb2
   DUF_SQL_START_STMT_NOPDI( csql_selector, r, pstmt_selector );
   DUF_TRACE( select, 0, "S:%s", csql_selector );
 
-  DUF_SQL_BIND_LL( dirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
+  DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
   DUF_SQL_EACH_ROW( r, pstmt_selector, r = duf_scan_db_items2_row( pstmt_selector, match_cb2, sel_cb2, str_cb2, SCCBX ) );
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );
   DEBUG_ENDR( r );

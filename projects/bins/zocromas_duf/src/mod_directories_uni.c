@@ -33,6 +33,7 @@
 #include "duf_path2db.h"        /* duf_insert_path_uni2 */
 
 
+duf_scan_callbacks_t duf_directories_callbacks;
 
 
 /* static int                                                                                                                  */
@@ -54,7 +55,8 @@ directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fna
   DEBUG_STARTR( r );
   int changes = 0;
 
-  ( void ) duf_insert_path_uni2( pdi, fname, 0 /* tag */, 1 /* caninsert */ , pstat->st_dev, pstat->st_ino, 0 /*need_id */ , &changes, &r );
+  ( void ) duf_insert_path_uni2( pdi, fname, 0 /* tag */ , 1 /* caninsert */ , pstat->st_dev, pstat->st_ino,
+                                 duf_directories_callbacks.node.selector2 /* const char *node_selector2 */ , 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
 
@@ -150,7 +152,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
            " WHERE "            /* */
-           " fn.Pathid = :dirID " /* */
+           " fn.Pathid = :parentdirID " /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -187,7 +189,8 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            " FROM " DUF_DBPREF "paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " WHERE pt.parentid = :dirID "}
+           " WHERE pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           }
   ,
   .final_sql_argv = final_sql,
 };

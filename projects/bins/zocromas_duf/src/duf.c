@@ -1,31 +1,21 @@
-#include <string.h>
 #include <time.h>
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
-
-#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
 #include "duf_config.h"
-#include "duf_utils.h"
 
 
-#include "duf_cli_options.h"
 #include "duf_options.h"
 #include "duf_option_names.h"
 
-#include "duf_service.h"
 
-#include "duf_dbg.h"
 
-#include "duf_action.h"
 #include "duf_maindb.h"
 
-#include "duf_pdi.h"
 
 /* #include "duf_path2db.h"        (* test only *) */
 
@@ -96,7 +86,7 @@ duf_main( int argc, char **argv )
     DUF_TRACE( any, 1, "any test" );
     DOR_NOE( r, duf_all_options( argc, argv ), DUF_ERROR_OPTION_NOT_FOUND );
     DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
-    DOR( r, duf_main_db( argc, argv ) );
+    DOR( r, duf_main_db( argc, argv ) ); /*  duf_main_db : duf_maindb.c */
 
     DUF_PUTS( 0, "--------------------------------------------------" );
     DUF_PRINTF( 0, " duf_main_db ended" );

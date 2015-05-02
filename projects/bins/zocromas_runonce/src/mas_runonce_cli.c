@@ -26,7 +26,7 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
 
   opterr = 0;
   /* printf( "@@ romax:%u\n", ( unsigned ) romax ); */
-  while ( ( opt = getopt_long( argc, argv, "FVNDLZMSGKO1strlvwo12f:", NULL, NULL ) ) >= 0 && roseq < romax )
+  while ( ( opt = getopt_long( argc, argv, "FVNDLZMSUGKO1strlvwo12f:", NULL, NULL ) ) >= 0 && roseq < romax )
   {
     /* printf( "-- roseq:%u; romax:%u\n", ( unsigned ) roseq, ( unsigned ) romax ); */
     /* printf( "OPT %c %s\n", opt, optarg ); */
@@ -57,7 +57,10 @@ runonce_cli_options( int argc, char *argv[], int *perrorcnt, roaction_t * roacti
       configuration.flags.nosetgid = 1;
       break;
     case 'S':
-      configuration.flags.strict = 1;
+      configuration.flags.nostrict = 0;
+      break;
+    case 'U':
+      configuration.flags.nostrict = 1;
       break;
     case 'L':
       configuration.flags.list_zero = 1;

@@ -76,32 +76,10 @@ static int
 duf_main_db_opened( int argc, char **argv )
 {
   DEBUG_STARTR( r );
+
   DORF( r, duf_main_db_tune );
-
-
-  /* DOR( r, duf_sql_exec( "PRAGMA encoding = 'UTF-8'", ( int * ) NULL ) ); */
-  /* DUF_TEST_R( r );                                                       */
-  DUF_TRACE( explain, 0, "to do actions" );
-  DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
-
-
-/******************************************************************************************************/
-/******************************************************************************************************/
-/******************************************************************************************************/
-/******************************************************************************************************/
-  DOR( r, duf_action( argc, argv ) );
-
-/******************************************************************************************************/
-/******************************************************************************************************/
-/******************************************************************************************************/
-/******************************************************************************************************/
-
+  DORF( r, duf_action, argc, argv ); /* duf_action : duf_action.c */
   DORF( r, duf_main_db_info );
-
-  DUF_TEST_R( r );
-  DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
-  DUF_TRACE( explain, 0, "after actions" );
-
   if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
   {
     DUF_TEST_RX( r );
@@ -220,13 +198,13 @@ duf_main_db_close( int ra )
   DEBUG_STARTR( r );
   r = ra;
   {
-    DEBUG_STARTR( rt );
+    int rt = 0;
+
     /* don't DOR it directly! call allways! */
     DORF( rt, duf_sql_close );
 
     if ( r == 0 && rt < 0 )
       DOR( r, rt );
-    DEBUG_END(  );
   }
   DEBUG_ENDR( r );
 }
@@ -257,7 +235,7 @@ duf_main_db( int argc, char **argv )
   DORF( r, duf_main_db_open );
 
   DUF_TEST_RX_START( r );
-  DUF_SHOW_ERROR( "db not opened @ %s ( %s )", duf_config->db.main.fpath, duf_error_name(r) );
+  DUF_SHOW_ERROR( "db not opened @ %s ( %s )", duf_config->db.main.fpath, duf_error_name( r ) );
   DUF_TEST_RX_END( r );
 
   DORF( r, duf_main_db_opened, argc, argv );

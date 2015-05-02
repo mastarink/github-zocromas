@@ -531,7 +531,9 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         if ( r >= 0 )
         {
           if ( optargg && *optargg )
-            DOR( r, duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg /* , duf_config->pu,  recursive */  ) );
+            DOR( r,
+                 duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg,
+                                         NULL /* const char *node_selector2 *//* , duf_config->pu,  recursive */  ) );
           else
             DUF_PRINTF( 0, "%s", duf_levinfo_path( *( ( duf_depthinfo_t ** ) byteptr ) ) );
         }

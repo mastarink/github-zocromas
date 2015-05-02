@@ -49,7 +49,7 @@ runonce_section_get_pids( config_section_t * sect, runonce_flags_t flags )
         prog = NULL;
       }
       npids = runonce_pidof( pids, sizeof( pids ) / sizeof( pids[0] ), pref, prog, path, targc, targv, flags );
-      if ( flags.verbose )
+      if ( flags.verbose > 1 )
         printf( "(%2d) %5s pref:%18s; prog:%18s; path:%5s; psname:%18s; process: %-25s\n", npids,
                 different ? "!!!!" : "", pref ? pref : "-", prog ? prog : "-", path ? path : "-", psname, process ? process : "-" );
     }

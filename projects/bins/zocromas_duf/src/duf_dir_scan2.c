@@ -57,12 +57,8 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_c
   DEBUG_STARTR( r );
   assert( SCCB );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  if ( !global_status.selection_done )
-  {
-    DOR( r, duf_scan_beginning_sql( SCCB ) );
-    /* if ( r >= 0 ) */
-    global_status.selection_done = 1;
-  }
+
+  /* duf_scan_qbeginning_sql( SCCB ); */
 /*
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem

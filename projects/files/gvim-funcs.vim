@@ -24,38 +24,42 @@ function! MasGoTag2 ()
   call system('ctags src/*.c src/inc/*.h')
   try
     for t in tl
-      let bn = bufnr( t.filename )
-"     echo t.name . ' ' . bn 
-"     echo t.cmd
-      if bn > 0
-	try
-	  execute 'tab drop #' . bn
-	catch
-	  echoerr "MasGoTag2: tab drop error"
-	endtry
-"       if search( t.cmd ) > 0
-"         echo "A: " . t.cmd
-"       else
-"         echo "B: " . t.cmd
-"       endif
-        echo "X: " . t.cmd
-	let mmagic=&magic
-	let mwrapscan=&wrapscan
-	let mignorecase=&ignorecase
-	set wrapscan
-	set nomagic
-	set noignorecase
-	execute t.cmd
-	let &magic=mmagic
-	let &wrapscan=mwrapscan
-	let &ignorecase=mignorecase
-      else
-	echoerr "MasGoTag2: not in this set 1"
-      endif
-      break
+      try
+	let bn = bufnr( t.filename )
+  "     echo t.name . ' ' . bn 
+  "     echo t.cmd
+	if bn > 0
+	  try
+	    execute 'tab drop #' . bn
+	  catch
+	    echoerr "MasGoTag2: tab drop error"
+	  endtry
+  "       if search( t.cmd ) > 0
+  "         echo "A: " . t.cmd
+  "       else
+  "         echo "B: " . t.cmd
+  "       endif
+	  echo "X: " . t.cmd
+	  let mmagic=&magic
+	  let mwrapscan=&wrapscan
+	  let mignorecase=&ignorecase
+	  set wrapscan
+	  set nomagic
+	  set noignorecase
+	  execute t.cmd
+	  let &magic=mmagic
+	  let &wrapscan=mwrapscan
+	  let &ignorecase=mignorecase
+	else
+	  echoerr "MasGoTag2: (" . t.filename . ") not in this set (A)"
+	endif
+	break
+      catch
+	echoerr "MasGoTag2: (" . t.filename . ") not in this set (B)"
+      endtry
     endfor
   catch
-    echoerr "MasGoTag2: not in this set 2"
+    echoerr "MasGoTag2: (" . t.filename . ") not in this set (C)"
   endtry
 endfunction
 

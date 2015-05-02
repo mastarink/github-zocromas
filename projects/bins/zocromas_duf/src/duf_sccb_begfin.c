@@ -38,7 +38,7 @@
 
 
 static int
-duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
+duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const char *node_selector2 )
 {
   DEBUG_STARTR( r );
 #define BIND_PAIR( _fld, _name ) \
@@ -55,8 +55,8 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
   BIND_PAIR( MTime, mtime );
   BIND_PAIR( ExifDT, exifdt );
   BIND_PAIR( Inode, inode );
-  BIND_PAIR( 5 ID, md5id );
-  BIND_PAIR( 2 ID, sd5id );
+  BIND_PAIR( Md5ID, md5id );
+  BIND_PAIR( Sd2ID, sd5id );
   BIND_PAIR( MimeID, mimeid );
   BIND_PAIR( ExifID, exifid );
   if ( duf_config->pu->glob )
@@ -74,7 +74,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
       pathname = mas_strdup( duf_config->pu->same_as );
       base = basename( pathname );
       dir = dirname( pathname );
-      fp.dirid = duf_path2db( dir, &r );
+      fp.dirid = duf_path2db( dir, node_selector2, &r );
       fp.name = mas_strdup( base );
       mas_free( pathname );
     }
@@ -93,6 +93,19 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 }
 
 int
+duf_scan_qbeginning_sql( const duf_scan_callbacks_t * sccb )
+{
+  DEBUG_STARTR( r );
+  if ( !global_status.selection_done )
+  {
+    DOR( r, duf_scan_beginning_sql( sccb ) );
+    /* if ( r >= 0 ) */
+    global_status.selection_done = 1;
+  }
+  DEBUG_ENDR( r );
+}
+
+int
 duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
@@ -107,7 +120,7 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb )
 
     {
       DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-      DOR( r, duf_bind_ufilter( pstmt ) );
+      DOR( r, duf_bind_ufilter( pstmt, sccb->node.selector2 ) );
       if ( r >= 0 )
       {
         DUF_SQL_STEP( r, pstmt );

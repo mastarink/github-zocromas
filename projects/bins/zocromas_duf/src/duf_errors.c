@@ -11,6 +11,8 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_maintenance.h"
+
 
 #include "duf_sql_const.h"
 
@@ -35,14 +37,14 @@ duf_errindex_sql( duf_error_code_t rtest )
   return ( rtest - DUF_SQLITE_ERROR_BASE );
 }
 
-void
-duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest )
+static void
+_duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest, int maxerr )
 {
   if ( rtest < 0 )
   {
     int errindex = duf_errindex( rtest );
 
-    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
+    if ( errindex >= 0 && errindex < maxerr )
     {
       /* int b;                        */
       /*                               */
@@ -62,6 +64,12 @@ duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest )
       /* }                                                                                                                          */
     }
   }
+}
+
+void
+duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest )
+{
+  _duf_set_ereport( once, enable, abs, rtest, DUF_ERROR_COUNT );
 }
 
 void
@@ -89,8 +97,8 @@ duf_set_mereport( int once, int enable, int abs, ... )
   va_end( args );
 }
 
-int
-duf_get_ereport_n( duf_error_code_t rtest )
+static int
+_duf_get_ereport_n( duf_error_code_t rtest, int maxerr )
 {
   int r = 0;
 
@@ -98,17 +106,18 @@ duf_get_ereport_n( duf_error_code_t rtest )
   {
     int errindex = duf_errindex( rtest );
 
-    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
+    if ( errindex >= 0 && errindex < maxerr )
       r = noreport_error[errindex];
   }
   return r;
 }
 
 /* >0 -- report it */
-int
-duf_get_ereport( duf_error_code_t rtest )
+static int
+_duf_get_ereport( duf_error_code_t rtest, int maxerr )
 {
   int r = 0;
+
   int errindex = duf_errindex( rtest );
 
   /* if ( rtest < 0 ) */
@@ -117,25 +126,49 @@ duf_get_ereport( duf_error_code_t rtest )
   {
     if ( errindex < 0 )
     {
-      r = 0; /* sql ? ? ? */
+      r = 0;                    /* sql ? ? ? */
     }
-    else if ( errindex >= 0 && errindex < DUF_ERROR_COUNT
+    else if ( errindex >= 0 && errindex < maxerr
               && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] ) )
       r = noreport_error[errindex] + 1;
   }
   return r;
 }
 
-void
-duf_set_emax_count( int maxcount, duf_error_code_t rtest )
+int
+duf_get_ereport_n( duf_error_code_t rtest )
+{
+  int r = 0;
+
+  DOCF( r, _duf_get_ereport_n, rtest, DUF_ERROR_COUNT );
+  return r;
+}
+
+int
+duf_get_ereport( duf_error_code_t rtest )
+{
+  int r = 0;
+
+  DOCF( r, _duf_get_ereport, rtest, DUF_ERROR_COUNT );
+  return r;
+}
+
+static void
+_duf_set_emax_count( int maxcount, duf_error_code_t rtest, int maxerr )
 {
   if ( rtest < 0 )
   {
     int errindex = duf_errindex( rtest );
 
-    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
+    if ( errindex >= 0 && errindex < maxerr )
       max_show_count_error[errindex] = maxcount;
   }
+}
+
+void
+duf_set_emax_count( int maxcount, duf_error_code_t rtest )
+{
+  _duf_set_emax_count( maxcount, rtest, DUF_ERROR_COUNT );
 }
 
 void
@@ -164,7 +197,7 @@ duf_set_memax_count( int maxcount, ... )
 }
 
 int
-duf_ecount( duf_error_code_t rtest )
+_duf_ecount( duf_error_code_t rtest, int maxerr )
 {
   int r = 0;
 
@@ -172,9 +205,18 @@ duf_ecount( duf_error_code_t rtest )
   {
     int errindex = duf_errindex( rtest );
 
-    if ( errindex >= 0 && errindex < DUF_ERROR_COUNT )
+    if ( errindex >= 0 && errindex < maxerr )
       r = count_error[errindex]++;
   }
+  return r;
+}
+
+int
+duf_ecount( duf_error_code_t rtest )
+{
+  int r = 0;
+
+  DOCF( r, _duf_ecount, rtest, DUF_ERROR_COUNT );
   return r;
 }
 

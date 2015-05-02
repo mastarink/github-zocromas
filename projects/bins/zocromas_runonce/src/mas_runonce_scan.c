@@ -98,21 +98,23 @@ runonce_group_vscan( config_group_t * grp, const char *sectpatt, int *pnsecg, ru
 
     if ( sect->name && sect->name[0] != '@' )
     {
-      if ( !sectpatt || ( flags.strict && 0 == strcmp( sectpatt, sect->name ) ) || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
+      if ( flags.verbose > 0 )
+        printf( "patt:%s; name:%s\n", sectpatt, sect->name );
+      if ( !sectpatt || ( !flags.nostrict && 0 == strcmp( sectpatt, sect->name ) ) || ( flags.nostrict && strstr( sect->name, sectpatt ) ) )
       {
         int secseq = nsec;
 
         if ( pnsecg )
           secseq = *pnsecg;
         if ( flags.verbose > 4 )
-          printf( "(strict:%d) #sect:%d %s ? %s\n", flags.strict, nsec, sectpatt, sect->name );
+          printf( "(strict:%d) #sect:%d %s ? %s\n", !flags.nostrict, nsec, sectpatt, sect->name );
         runonce_section_vscan( grp, sect, secseq, flags, msg, args );
         if ( pnsecg )
           ( *pnsecg )++;
       }
       else
       {
-        /* printf( "didn't match section %s (strict:%d; sectpatt:%s)\n", sect->name, flags.strict, sectpatt ); */
+        /* printf( "didn't match section %s (strict:%d; sectpatt:%s)\n", sect->name, !flags.nostrict, sectpatt ); */
       }
     }
   }
@@ -139,7 +141,7 @@ runonce_vscan( const char *grppatt, const char *sectpatt, runonce_flags_t flags,
     }
     else
     {
-      /* printf( "didn't match group %s (strict:%d; grppatt:%s)\n", grp->name, flags.strict, grppatt ); */
+      /* printf( "didn't match group %s (strict:%d; grppatt:%s)\n", grp->name, !flags.nostrict, grppatt ); */
     }
   }
   return 0;

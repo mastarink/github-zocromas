@@ -42,7 +42,7 @@ duf_pdi_create( void )
 }
 
 int
-duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, int recursive )
+duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, const char *node_selector2, int recursive )
 {
   DEBUG_STARTR( r );
 
@@ -59,17 +59,17 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninse
     DOR( r, duf_levinfo_create( pdi, r, recursive ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
-    DOR( r, duf_real_path2db( pdi, real_path, tag, caninsert /* caninsert */  ) );
+    DOR( r, duf_real_path2db( pdi, real_path, tag, caninsert /* caninsert */ ,node_selector2 ) );
   }
   DEBUG_ENDR( r );
 }
 
 int
-duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, int recursive )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, const char *node_selector2, int recursive )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pdi_init( pdi, real_path, tag, caninsert, recursive ) );
+  DOR( r, duf_pdi_init( pdi, real_path, tag, caninsert, node_selector2, recursive ) );
   if ( r == DUF_ERROR_NOT_IN_DB )
     DUF_SHOW_ERROR( "not in db:'%s'", real_path );
   else if ( r < 0 )
@@ -86,7 +86,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int ca
 }
 
 int
-duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, int recursive )
+duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, const char *node_selector2, int recursive )
 {
   int rec = 0;
 
@@ -95,12 +95,12 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
   rec = pdi && recursive < 0 ? duf_pdi_recursive( pdi ) : recursive;
   duf_pdi_close( pdi );
   pdi->pu = pu;
-  return duf_pdi_init_wrap( pdi, real_path, 0 /* tag */ , 0 /* caninsert */ , rec );
+  return duf_pdi_init_wrap( pdi, real_path, 0 /* tag */ , 0 /* caninsert */ , node_selector2, rec );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
 }
 
 int
-duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath /*, const duf_ufilter_t * pu, int recursive */  )
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *node_selector2 /*, const duf_ufilter_t * pu, int recursive */  )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -119,14 +119,14 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath /*, const duf_u
   }
   real_path = duf_realpath( path, &r );
   if ( r >= 0 )
-    duf_pdi_reinit( pdi, real_path, duf_config->pu /* pu */ , DUF_U_FLAG( recursive ) /*recursive */  );
+    duf_pdi_reinit( pdi, real_path, duf_config->pu /* pu */ , node_selector2, DUF_U_FLAG( recursive ) /*recursive */  );
   mas_free( path );
   mas_free( real_path );
   DEBUG_ENDR( r );
 }
 
 int
-duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive )
+duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int recursive )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -141,7 +141,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, int recursive )
       path = mas_strdup( cpath );
     /* recursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path /*, duf_config->pu, recursive */  ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, node_selector2 /*, duf_config->pu, recursive */  ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }

@@ -401,7 +401,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " sz.size > 0 AND"
            /* "       sz.dupzcnt > 1 AND "  (* *) */
            /* "                sd.dup2cnt > 1 AND " (* *) */
-           " fn.Pathid=:dirID " /* */
+           " fn.Pathid=:parentdirID " /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -430,7 +430,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " FROM " DUF_DBPREF "paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " WHERE pt.ParentId=:dirID" /* */
+           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
   .final_sql_argv = final_sql,
 };

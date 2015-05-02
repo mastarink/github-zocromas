@@ -580,7 +580,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
            " sz.size > 0 AND"   /* */
            " mi.mime='image/jpeg' AND" /* */
-           " fn.Pathid = :dirID " /* */
+           " fn.Pathid = :parentdirID " /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
@@ -600,7 +600,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " FROM " DUF_DBPREF " paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " WHERE pt.parentid = :dirID " /* */
+           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            },
   .final_sql_argv = final_sql,
 };

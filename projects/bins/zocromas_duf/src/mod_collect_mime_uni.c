@@ -259,7 +259,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " ( fd.mimeid IS NULL OR mi.mime IS NULL ) AND " /* */
-           " sz.size > 0 AND" " fn.Pathid = :dirID " /* */
+           " sz.size > 0 AND" " fn.Pathid = :parentdirID " /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
@@ -278,7 +278,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " FROM " DUF_DBPREF " paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " WHERE pt.parentid = :dirID " /* */
+           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
   .final_sql_argv = final_sql,
 };

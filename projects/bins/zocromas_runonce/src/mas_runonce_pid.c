@@ -186,14 +186,14 @@ runonce_pids_reset( void )
 }
 
 int
-runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, const char *path, int argc, char **argv,
-               runonce_flags_t flags )
+runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, const char *path, int argc, char **argv, runonce_flags_t flags )
 {
   size_t cnt = 0;
 
   for ( pid_t pid = 0; pid < runonce_pids.size; pid++ )
   {
     pid_t fpid = 0;
+    size_t maxcmp = 15;
 
     if ( runonce_pids.array[pid].progname && name )
     {
@@ -204,10 +204,17 @@ runonce_pidof( pid_t * pids, size_t num, const char *name, const char *subname, 
       /* 123456789012345 */
       if ( flags.verbose > 3 )
         printf( "? PidOf [%s:%s:%s] argc:%d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
-      if ( 0 == strncmp( name, runonce_pids.array[pid].progname, 15 ) )
+      if ( 0 == strncmp( name, runonce_pids.array[pid].progname, maxcmp ) )
       {
         if ( flags.verbose > 2 )
-          printf( "+ PidOf [%s:%s:%s] argc:%d\n", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
+        {
+          printf( "+ PidOf [%s:%s:%s] argc:%d", name, subname, runonce_pids.array[pid].progname, runonce_pids.array[pid].argc );
+          for ( int i = 1; i < runonce_pids.array[pid].argc; i++ )
+          {
+            printf( " %s;", runonce_pids.array[pid].argv[i] );
+          }
+          printf( "\n" );
+        }
         if ( subname )
         {
           if ( runonce_pids.array[pid].argc > 0 /* && runonce_pids.array[pid].argv */  )
@@ -290,8 +297,8 @@ runonce_group_get_pids( config_group_t * grp, const char *sectpatt, runonce_flag
 
     if ( flags.verbose > 3 )
       printf( "? Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
-    if ( !sectpatt || ( flags.strict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
-         || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
+    if ( !sectpatt || ( !flags.nostrict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
+         || ( flags.nostrict && strstr( sect->name, sectpatt ) ) )
     {
       if ( flags.verbose > 2 )
         printf( "+ Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
@@ -313,8 +320,8 @@ runonce_group_list_pids( config_group_t * grp, const char *sectpatt, runonce_fla
 
     if ( flags.verbose > 3 )
       printf( "? Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );
-    if ( !sectpatt || ( flags.strict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
-         || ( !flags.strict && strstr( sect->name, sectpatt ) ) )
+    if ( !sectpatt || ( !flags.nostrict && 0 == strncmp( sectpatt, sect->name, strlen( sectpatt ) ) )
+         || ( flags.nostrict && strstr( sect->name, sectpatt ) ) )
     {
       if ( flags.verbose > 2 )
         printf( "+ Sect:%d %s ? %s\n", nsec, sectpatt ? sectpatt : "-", sect->name );

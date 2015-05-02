@@ -80,7 +80,7 @@ duf_interactive( void )
       if ( DUF_ACT_FLAG( beginning_sql ) )
         global_status.selection_done = 0;
 
-      DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, DUF_U_FLAG( recursive ) ) );
+      DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */, DUF_U_FLAG( recursive ) ) );
 
       if ( duf_config && duf_config->pdi )
         snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );

@@ -22,14 +22,22 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
+#include "duf_status_ref.h"
+#include "duf_sccb_begfin.h"
+
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"
+#include "duf_sccb_handle.h"
+
+/* ###################################################################### */
+#include "duf_sccbh_scan.h"
+/* ###################################################################### */
+
 
 static int
 duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 {
   DEBUG_STARTR( r );
-
 
   /* duf_depthinfo_t di = {.depth = -1,         */
   /*   .seq = 0,                                */
@@ -44,7 +52,7 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
   DEBUG_STEP(  );
 
   /* assert( di.depth == -1 ); */
-  DOR( r, duf_pdi_reinit( sccbh->pdi, real_path, sccbh->pu, sccbh->pu->v.flag.recursive ) );
+  DOR( r, duf_pdi_reinit( sccbh->pdi, real_path, sccbh->pu, sccbh->sccb->node.selector2, sccbh->pu->v.flag.recursive ) );
   DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( sccbh->pdi ), sccbh->pdi->seq_leaf,
              duf_levinfo_path( sccbh->pdi ) );
   DOR( r, duf_sccb_pdi( SCCBX ) );
@@ -67,8 +75,10 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path, const duf_ufilter_t
 
   DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
   if ( sccb )
+  {
+    duf_scan_qbeginning_sql( sccb );
     DOR( r, duf_sccbh_real_path( sccbh, real_path ) );
-
+  }
   mas_free( real_path );
   DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }
@@ -84,6 +94,7 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
 
   if ( sccbh->targc <= 0 )
   {
+
     /* - evaluate sccb for NULL path */
     DOR( r, duf_sccbh_path( sccbh, NULL, sccbh->pu, sccbh->sccb ) );
   }
@@ -91,7 +102,9 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
   {
     /* - evaluate sccb for each string from sccbh->targ[cv] as path */
     for ( int ia = 0; r >= 0 && ia < sccbh->targc; ia++ )
+    {
       DOR( r, duf_sccbh_path( sccbh, sccbh->targv[ia], sccbh->pu, sccbh->sccb ) );
+    }
   }
 
   DUF_TRACE( action, 1, "after scan" );

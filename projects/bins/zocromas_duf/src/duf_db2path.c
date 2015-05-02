@@ -43,7 +43,7 @@ duf_pathid_to_path2_in( duf_sqlite_stmt_t * pstmt, unsigned long long dirid, con
 /* get parentid for dirid */
     duf_sql_reset( pstmt );
 
-    DUF_SQL_BIND_LL( dirID, dirid, r, pstmt );
+    DUF_SQL_BIND_LL( parentdirID, dirid, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
 
     if ( r == DUF_SQL_ROW )
@@ -76,7 +76,7 @@ duf_pathid_to_path2( unsigned long long dirid, const duf_depthinfo_t * pdi, int 
   char *path = NULL;
 
 
-  const char *sql = "SELECT parentid, dirname FROM " DUF_DBPREF "paths WHERE " DUF_SQL_IDNAME "=:dirID";
+  const char *sql = "SELECT parentid, dirname FROM " DUF_DBPREF "paths WHERE " DUF_SQL_IDNAME "=:parentdirID";
 
   DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
 

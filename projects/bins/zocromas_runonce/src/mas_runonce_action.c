@@ -218,7 +218,7 @@ runonce_show( config_group_t * grp, config_section_t * sect, int nsec, runonce_f
 
   runonce_wids_set(  );
   if ( !nsec )
-    printf( "%2s %1s %5s %10s %3s  %14s  %18s    %s\n", "N", "I", "PID", "WID", "D", "GROUP", "SECT", "COMMAND" );
+    printf( "%2s %1s %5s %10s %3s  %19s  %18s    %s\n", "N", "I", "PID", "WID", "D", "GROUP", "SECT", "COMMAND" );
 
   for ( int ipid = 0; ipid < sect->instances; ipid++ )
   {
@@ -276,7 +276,7 @@ runonce_show( config_group_t * grp, config_section_t * sect, int nsec, runonce_f
 
     snprintf( sinst, sizeof( sinst ), "%d", sect->instances );
     done = __LINE__;
-    printf( "%2d:%1s:%5s:%10s:D%2s: %14s: %18s:   [%s]\n", nsec, sect->instances ? sinst : "-", spids ? spids : "-", swids ? swids : "-",
+    printf( "%2d:%1s:%5s:%10s:D%2s: %19s: %18s:   [%s]\n", nsec, sect->instances ? sinst : "-", spids ? spids : "-", swids ? swids : "-",
             sdtids ? sdtids : "-", grp->name, sect->name, command );
   }
   mas_free( swids );

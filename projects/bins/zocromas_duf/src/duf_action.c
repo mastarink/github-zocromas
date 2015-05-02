@@ -26,6 +26,9 @@
 #include "duf_pdi.h"
 #include "duf_interactive.h"
 
+#include "duf_sql_defs.h"
+
+
 /* ###################################################################### */
 #include "duf_action.h"
 /* ###################################################################### */
@@ -131,6 +134,22 @@ int
 duf_action( int argc, char **argv )
 {
   DEBUG_STARTR( r );
+#if 0
+  const char *node_selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
+        " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+        " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+        " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND dirname=:dirName";
+
+#elif 0
+  extern duf_scan_callbacks_t duf_print_tree_callbacks;
+  const char *node_selector2 = duf_print_tree_callbacks.node.selector2;
+#else
+  const char *node_selector2 = NULL;
+#endif
+
+
+  DUF_TRACE( explain, 0, "to do actions" );
+  DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 
   DUF_E_SET( -96, DUF_ERROR_NO_ACTIONS );
   /* DUF_E_SET( 97, DUF_ERROR_TOO_DEEP, DUF_ERROR_NOT_IN_DB, (* DUF_ERROR_MAX_SEQ_REACHED, *) DUF_ERROR_MAX_REACHED ); */
@@ -148,7 +167,7 @@ duf_action( int argc, char **argv )
       if ( DUF_CLI_FLAG( dry_run ) )
         DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ADD_PATH ) );
       else
-        DOR( r, duf_add_path_uni( duf_config->targv[ia] ) );
+        DOR( r, duf_add_path_uni( duf_config->targv[ia], node_selector2 ) );
       global_status.actions_done++;
     }
   }
@@ -165,7 +184,7 @@ duf_action( int argc, char **argv )
     const char *path = NULL;
 
     path = duf_config->targc > 0 ? duf_config->targv[0] : "/";
-    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage 1 - needs pdi inited with argv, which is known only after stage 0 */
     DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 1 ) );
@@ -178,5 +197,9 @@ duf_action( int argc, char **argv )
   }
   else if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
     DORF( r, duf_evaluate_all_at_config_wrap ); /* each targv; reinit will be made */
+
+  DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+  DUF_TRACE( explain, 0, "after actions" );
+
   DEBUG_ENDR( r );
 }

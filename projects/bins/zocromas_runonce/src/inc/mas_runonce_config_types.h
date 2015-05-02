@@ -30,7 +30,7 @@ typedef struct
 
 typedef struct
 {
-  unsigned strict:1;
+  unsigned nostrict:1;
   unsigned dry:1;
   unsigned force:1;
   unsigned noop:1;

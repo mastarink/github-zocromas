@@ -320,12 +320,12 @@ static const char *beginning_sql[] = {
         "   LEFT JOIN " DUF_DBPREF "exif  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
         "      WHERE "          /* */
         "  ( (:minSize     IS NULL OR      fd.size>=:minSize)     AND (:maxSize   IS NULL OR fd.size<=:maxSize      ))  AND" /* */
-        "  ( (:minSame     IS NULL OR   md.dup5cnt>=:minSame)  AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame   ))  AND" /* */
-        "  ( (:minInode    IS NULL OR     fd.inode>=:minInode)   AND (:maxInode  IS NULL OR fd.inode<=:maxInode    ))  AND" /* */
-        "  ( (:min5ID      IS NULL OR     fd.md5id>=:min5ID)     AND (:max5ID    IS NULL OR fd.md5id<=:max5ID      ))  AND" /* */
-        "  ( (:min2ID      IS NULL OR     fd.sd5id>=:min2ID)     AND (:max2ID    IS NULL OR fd.sd5id<=:max2ID      ))  AND" /* */
-        "  ( (:minMimeID   IS NULL OR    fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND" /* */
-        "  ( (:minExifID   IS NULL OR    fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND" /* */
+        "  ( (:minSame     IS NULL OR   md.dup5cnt>=:minSame)     AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame   ))  AND" /* */
+        "  ( (:minInode    IS NULL OR     fd.inode>=:minInode)    AND (:maxInode  IS NULL OR fd.inode<=:maxInode    ))  AND" /* */
+        "  ( (:minMd5ID    IS NULL OR     fd.md5id>=:minMd5ID)    AND (:maxMd5ID    IS NULL OR fd.md5id<=:maxMd5ID      ))  AND" /* */
+        "  ( (:minSd2ID    IS NULL OR     fd.sd5id>=:minSd2ID)    AND (:maxMd2ID    IS NULL OR fd.sd5id<=:maxMd2ID      ))  AND" /* */
+        "  ( (:minMimeID   IS NULL OR    fd.mimeid>=:minMimeID)   AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND" /* */
+        "  ( (:minExifID   IS NULL OR    fd.exifid>=:minExifID)   AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND" /* */
         "  ( (:minMTime    IS NULL OR      fd.mtim>=datetime(:minMTime,'unixepoch')) AND " /* */
         "    (:maxMTime    IS NULL OR      fd.mtim<=datetime(:maxMTime,'unixepoch') )) AND" /* */
         "  ( (:minExifDT   IS NULL OR (x.date_time>=datetime(:minExifDT,'unixepoch'))) AND" /* */
@@ -393,7 +393,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            " LEFT JOIN " DUF_DBPREF "exif  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
            " LEFT JOIN " DUF_DBPREF "exif_model  AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
            "    WHERE "         /* */
-           " fn.Pathid=:dirID " /* */
+           " fn.Pathid=:parentdirID " /* */
            " ORDER BY fn." DUF_SQL_IDNAME " " /* */
            ,
            .selector_total2 =   /* */
@@ -431,7 +431,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            " FROM      " DUF_DBPREF "paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " WHERE pt.parentid=:dirID " /* */
+           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            ,
            }
   /* .final_sql_argv = final_sql, */
