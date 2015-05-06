@@ -1,4 +1,5 @@
 noinst_HEADERS=duf.h \
+	sql_beginning_selected.h \
 	duf_action.h \
 	duf_add.h \
 	duf_base_types.h \

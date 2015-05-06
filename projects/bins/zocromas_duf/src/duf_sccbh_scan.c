@@ -76,9 +76,9 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path, const duf_ufilter_t
   DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
   if ( sccb )
   {
-    duf_scan_qbeginning_sql( sccb );
+//  duf_scan_qbeginning_sql( sccb ); ==[20140506]==> duf_open_sccb_handle
     DOR( r, duf_sccbh_real_path( sccbh, real_path ) );
-  }
+  } 
   mas_free( real_path );
   DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }

@@ -75,36 +75,40 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
   duf_sccb_handle_t *sccbh = NULL;
   int r = 0;
 
-  sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
-  memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
-  /* sccbh->targc = mas_argv_clone( &sccbh->targv, targc, targv ); */
-  sccbh->targc = targc;
-  sccbh->targv = targv;
-  sccbh->pu = pu;
-  sccbh->pdi = pdi;
-  sccbh->sccb = sccb;
+  if ( sccb )
   {
-    int rt = 0;
+    sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
+    memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
+    /* sccbh->targc = mas_argv_clone( &sccbh->targv, targc, targv ); */
+    sccbh->targc = targc;
+    sccbh->targv = targv;
+    sccbh->pu = pu;
+    sccbh->pdi = pdi;
+    sccbh->sccb = sccb;
+    duf_scan_qbeginning_sql( sccb );
+    {
+      int rt = 0;
 
-    sccbh->total_files = duf_count_total_items( sccbh->sccb, &rt ); /* reference */
+      sccbh->total_files = duf_count_total_items( sccbh->sccb, &rt ); /* reference */
 /* total_files for progress bar only :( */
-    DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", sccbh->total_files );
-    DUF_TRACE( explain, 0, "%llu files registered in db", sccbh->total_files );
-  }
+      DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", sccbh->total_files );
+      DUF_TRACE( explain, 0, "%llu files registered in db", sccbh->total_files );
+    }
 
 /*
 TODO scan mode
   1. direct, like now
   2. place ID's to temporary table, then scan in certain order
 */
-  if ( sccb && sccb->init_scan )
-  {
-    DUF_TRACE( explain, 0, "to init scan" );
-    DUF_DO_TEST_R( r, sccb->init_scan(  ) );
-  }
-  else
-  {
-    DUF_TRACE( explain, 0, "no init scan" );
+    if ( sccb->init_scan )
+    {
+      DUF_TRACE( explain, 0, "to init scan" );
+      DUF_DO_TEST_R( r, sccb->init_scan(  ) );
+    }
+    else
+    {
+      DUF_TRACE( explain, 0, "no init scan" );
+    }
   }
   return sccbh;
 }

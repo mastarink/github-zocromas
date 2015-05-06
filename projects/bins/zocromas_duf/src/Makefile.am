@@ -45,6 +45,7 @@ zocromas_duf_SOURCES=				   \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_template_uni.c	\
+	sql_beginning_selected.c \
 	data_optable_flag.c	\
 	data_optable_sflag.c	\
 	data_optable_str.c	\
