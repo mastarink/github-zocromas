@@ -21,6 +21,7 @@
 
 /* #include "duf_file_pathid2.h" */
 
+#include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_option_defs.h"
 #include "duf_option_names.h"

@@ -28,3 +28,9 @@ tab sfind mod_exif_uni.c
 tab sfind mod_dir_print_uni.c
 
 tab sfind mod_tree_print_uni.c
+
+tab sfind sql_beginning_selected.c
+sfind sql_beginning_selected.h
+
+tab sfind sql_beginning_common.c
+sfind sql_beginning_common.h

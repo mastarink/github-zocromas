@@ -21,6 +21,7 @@ zocromas_duf_SOURCES=				   \
 							     \
 	duf_item_scan2.c				      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
+	duf_begfin.c \
 	duf_sccb.c duf_sccb_handle.c duf_sccbh_scan.c duf_sccb_begfin.c \
 	duf_dir_scan2.c  \
 	duf_dir_scan2_stages.c	\
@@ -46,6 +47,7 @@ zocromas_duf_SOURCES=				   \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_template_uni.c	\
 	sql_beginning_selected.c \
+	sql_beginning_common.c \
 	data_optable_flag.c	\
 	data_optable_sflag.c	\
 	data_optable_str.c	\

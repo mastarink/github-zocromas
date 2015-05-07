@@ -21,6 +21,7 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
+#include "duf_sccb_def.h"
 #include "duf_sccb.h"
 
 #include "duf_sccb_begfin.h"

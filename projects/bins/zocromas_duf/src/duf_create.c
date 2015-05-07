@@ -352,7 +352,7 @@ duf_check_table_paths( void )
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
-
+#if 0
 static int
 duf_check_table_pathtot_files( void )
 {
@@ -423,6 +423,7 @@ duf_check_table_pathtot_dirs( void )
   duf_dbgfunc( DBG_ENDR, __func__, __LINE__, r );
   return r;
 }
+#endif
 
 static int
 duf_check_table_path_pairs( void )
@@ -735,8 +736,10 @@ static duf_create_table_element tab_table[] = {
   DUF_TABLE_ELEMENT( path_tags ),
 
   /* DUF_TABLE_ELEMENT( keydata ), */
+#if 0
   DUF_TABLE_ELEMENT( pathtot_dirs ),
   DUF_TABLE_ELEMENT( pathtot_files ),
+#endif
   DUF_TABLE_ELEMENT( path_pairs ),
 };
 

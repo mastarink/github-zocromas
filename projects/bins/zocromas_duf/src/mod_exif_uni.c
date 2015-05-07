@@ -111,7 +111,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
   {
     /* No model is not soooo bad! */
     /* DUF_SHOW_ERROR( " Wrong data " ); */
-    /* lr = DUF_ERROR_DATA;          */
+    /* DUF_MAKE_ERROR(lr, DUF_ERROR_DATA);          */
   }
   DUF_TEST_R( lr );
 
@@ -224,7 +224,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
   else
   {
     DUF_SHOW_ERROR( " Wrong data " );
-    lr = DUF_ERROR_DATA;
+    DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
   }
 
   DUF_TEST_R( lr );
@@ -248,7 +248,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
     memset( stime_original, stime_original_size, 0 );
     /* Get the contents of the tag in human-readable form */
     if ( lr >= 0 && !exif_entry_get_value( entry, stime_original, stime_original_size ) )
-      lr = DUF_ERROR_EXIF;
+      DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF );
     {
       char *corrected_time = NULL;
 
@@ -260,7 +260,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
         if ( ( c < ' ' || c > 'z' ) && c != '?' && c != ':' && c != ' ' )
         {
           DUF_TRACE( exif, 0, ">>>>>>>>>>>>>> %s <<<<<<<<<<<<<", stime_original );
-          lr = DUF_ERROR_EXIF_BROKEN_DATE;
+          DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_BROKEN_DATE );
           break;
         }
       }
@@ -301,11 +301,11 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
         }
       }
       if ( lr >= 0 && !*corrected_time )
-        lr = DUF_ERROR_EXIF_NO_DATE;
+        DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE );
       if ( lr >= 0 && strchr( corrected_time, '?' ) )
       {
         DUF_SHOW_ERROR( "broken date %s", corrected_time );
-        lr = DUF_ERROR_EXIF_BROKEN_DATE;
+        DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_BROKEN_DATE );
       }
       if ( lr >= 0 || lr == DUF_ERROR_EXIF_BROKEN_DATE )
       {
@@ -332,7 +332,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   }
   else if ( 0 )
   {
-    lr = DUF_ERROR_EXIF_NO_DATE;
+    DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE );
     if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +1" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
@@ -398,7 +398,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
-          r = DUF_ERROR_READ;
+          DUF_MAKE_ERROR( r, DUF_ERROR_READ );
         }
         DUF_TEST_R( r );
         if ( rr > 0 )
@@ -406,13 +406,13 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
           sum += rr;
           if ( !exif_loader_write( loader, buffer, rr ) )
           {
-            r = DUF_ERROR_EXIF_END;
+            DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_END );
             break;
           }
         }
         if ( rr <= 0 )
         {
-          r = DUF_ERROR_EOF;
+          DUF_MAKE_ERROR( r, DUF_ERROR_EOF );
           break;
         }
 
@@ -445,9 +445,9 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
             entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_MODEL );
             if ( !entry )
-              r = DUF_ERROR_EXIF_NO_MODEL;
+              DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_NO_MODEL );
             if ( r >= 0 && !exif_entry_get_value( entry, tmodel, sizeof( tmodel ) ) )
-              r = DUF_ERROR_EXIF_NO_MODEL;
+              DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_NO_MODEL );
             if ( *tmodel )
             {
               mas_chomp( tmodel );
@@ -527,7 +527,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
     }
     else
     {
-      r = DUF_ERROR_MEMORY;
+      DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
     DUF_TEST_R( r );
   }
@@ -553,7 +553,7 @@ static const char *final_sql[] = {
   /*       ,                                                                                       */
 
 
-  NULL,
+  NULL
 };
 
 
@@ -598,8 +598,10 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ,
            .selector2 =         /* */
            " FROM " DUF_DBPREF " paths AS pt " /* */
+#if 0
            " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+#endif
            " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            },
   .final_sql_argv = final_sql,

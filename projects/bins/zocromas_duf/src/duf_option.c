@@ -57,7 +57,7 @@ duf_limits( const char *s, unsigned *pmin, unsigned *pmax )
       }
     }
     else
-      DOR( r, DUF_ERROR_OPTION_VALUE );
+      DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_VALUE );
     DUF_SHOW_ERROR( "[%c] %d - %d", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
   }
   DEBUG_ENDR( r );
@@ -99,7 +99,7 @@ duf_limitsll( const char *s, unsigned long long *pmin, unsigned long long *pmax 
       }
     }
     else
-      DOR( r, DUF_ERROR_OPTION_VALUE );
+      DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_VALUE );
     DUF_SHOW_ERROR( "[%c] %lld - %lld", c, pmin ? *pmin : 0, pmax ? *pmax : 0 );
   }
   DEBUG_ENDR( r );
@@ -125,7 +125,7 @@ duf_parse_option_long_full( const duf_longval_extended_t * extended, const char 
     DUF_TRACE( options, 1, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name( r ) );
   }
   else
-    DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
 }
 
@@ -180,15 +180,15 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
       switch ( ( int ) codeval )
       {
       case ':':
-        DOR( r, DUF_ERROR_OPTION_VALUE );
+        DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_VALUE );
         DUF_TRACE( options, 3, "cli options r: %d", r );
         break;
       case '?':
-        DOR( r, DUF_ERROR_OPTION );
+        DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
         DUF_TRACE( options, 3, "cli options r: %d", r );
         break;
       default:
-        DOR( r, DUF_ERROR_OPTION );
+        DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
         DUF_TRACE( options, 3, "cli options r: %d; codeval:%d;", r, codeval );
         break;
       }
@@ -273,7 +273,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       break;
     }
   else
-    DOR( r, DUF_ERROR_OPTION );
+    DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
 
   DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended, NULL ),
              extended->o.name, r, duf_error_name( r ), extended->o.val, DUF_OPTION_FORMAT );
@@ -728,7 +728,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
           /* DUF_TRACE( any, 0, "rs:%d", rs ); */
           if ( rs < 0 )
           {
-            DOR( r, DUF_ERROR_SUBOPTION );
+            DUF_MAKE_ERROR( r, DUF_ERROR_SUBOPTION );
             DUF_TEST_R( r );
             break;
           }
@@ -751,7 +751,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       }
       break;
     default:
-      DOR( r, DUF_ERROR_OPTION );
+      DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
       break;
     }
   }

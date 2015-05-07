@@ -46,7 +46,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
     else
     {
       T( "max_rel_depth:%d", max_rel_depth );
-      DOR( r, DUF_ERROR_LEVINFO_SIZE );
+      DUF_MAKE_ERROR( r, DUF_ERROR_LEVINFO_SIZE );
     }
     /* r = duf_levinfo_open_dh( pdi, path ); */
   }

@@ -53,7 +53,6 @@ duf_find_name_long_exact( const char *name, int witharg, const duf_longval_exten
   const duf_longval_extended_t *extended = NULL;
   int r = DUF_ERROR_OPTION_NOT_FOUND;
 
-  r = DUF_ERROR_OPTION_NOT_FOUND;
   if ( name && *name )
     for ( ; xtable->o.name; xtable++ )
     {
@@ -121,7 +120,7 @@ duf_find_name_long_soft( const char *name, int witharg, const duf_longval_extend
     if ( extended_exact )       /* several soft but one(first?) exact */
       extended = extended_exact;
     else
-      DOR( r, DUF_ERROR_OPTION_MULTIPLE );
+      DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_MULTIPLE );
   }
   else if ( cnt == 1 && extended_exact )
     extended = extended_exact;

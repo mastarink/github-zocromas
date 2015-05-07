@@ -124,14 +124,17 @@ function shn_debug ()
       if [[ "$tmpcmd" ]] && [[ -s "$tmpcmd" ]] ; then
     # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpcmd
 	libtool --mode=execute gdb  -q       $bin -x $tmpcmd
+#	libtool --mode=execute cgdb --  -q       $bin -x $tmpcmd
       else
 	echo "no file : $cmdfile" >&2
       fi
     else
       if [[ "$tmpcmd" ]] ; then
-        gdb   -q      $bin -x $tmpcmd
+	gdb   -q      $bin -x $tmpcmd
+#	cgdb --   -q      $bin -x $tmpcmd
       else
-        gdb   -q      $bin
+	gdb   -q      $bin
+#	cgdb --   -q      $bin
       fi
     fi
   else

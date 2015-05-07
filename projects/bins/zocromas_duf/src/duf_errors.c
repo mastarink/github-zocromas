@@ -25,6 +25,21 @@ static int noreport_error[DUF_ERROR_COUNT] = { 0 };
 static int count_error[DUF_ERROR_COUNT] = { 0 };
 static int max_show_count_error[DUF_ERROR_COUNT] = { 0 };
 
+static long _made_errors = 0;
+
+duf_error_code_t
+duf_make_error( duf_error_code_t err )
+{
+  _made_errors++;
+  return err;
+}
+
+long
+duf_made_errors( duf_error_code_t err )
+{
+  return _made_errors;
+}
+
 int
 duf_errindex( duf_error_code_t rtest )
 {

@@ -101,7 +101,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   else
   {
     DUF_SHOW_ERROR( "Wrong data" );
-    lr = DUF_ERROR_DATA;
+    DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
     DUF_TEST_R( lr );
   }
 
@@ -128,7 +128,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
     if ( buffer )
     {
       if ( MD5_Init( &ctx ) != 1 )
-        r = DUF_ERROR_MD5;
+        DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
       DUF_TEST_R( r );
       while ( r >= 0 )
       {
@@ -141,14 +141,14 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
         {
           DUF_ERRSYS( "read file" );
 
-          r = DUF_ERROR_READ;
+          DUF_MAKE_ERROR( r, DUF_ERROR_READ );
           DUF_TEST_R( r );
           break;
         }
         if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
         {
           if ( MD5_Update( &ctx, buffer, rr ) != 1 )
-            r = DUF_ERROR_MD5;
+            DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
         }
         if ( rr <= 0 )
           break;
@@ -158,11 +158,11 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
     }
     else
     {
-      r = DUF_ERROR_MEMORY;
+      DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
   if ( MD5_Final( pmd, &ctx ) != 1 )
-    r = DUF_ERROR_MD5;
+    DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
 
@@ -269,15 +269,15 @@ duf_dirent_md5_contnt2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *ps
 /*     {                                                                                                                               */
 /*       DUF_ERRSYS( "open to read file : %s", fname );                                                                                */
 /*       r = ffd;                                                                                                                      */
-/*       r = DUF_ERROR_OPEN;                                                                                                           */
+/*       DUF_MAKE_ERROR(r, DUF_ERROR_OPEN);                                                                                            */
 /*     }                                                                                                                               */
 /*     DUF_TEST_R( r );                                                                                                                */
 /*     DUF_TEST_R( r );                                                                                                                */
 /*   }                                                                                                                                 */
 /*   else                                                                                                                              */
-/*     r = DUF_ERROR_DATA;                                                                                                             */
+/*     DUF_MAKE_ERROR(r, DUF_ERROR_DATA);                                                                                              */
 /*   DUF_TEST_R( r );                                                                                                                  */
-/*   DEBUG_ENDR( r );                                                                                         */
+/*   DEBUG_ENDR( r );                                                                                                                  */
 /* }                                                                                                                                   */
 
 /* callback of type duf_scan_hook_file_t */
@@ -322,12 +322,14 @@ static const char *final_sql[] = {
         " WHERE " DUF_DBPREF "md5." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")" /* */
         /* " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)" (* *) */
         ,
+#if 0
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
         " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.parentid) " /* */
         " GROUP BY parents." DUF_SQL_IDNAME "" /* */
         ,
+#endif
   "DELETE FROM path_pairs"      /* */
         ,
   "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT count(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
@@ -339,21 +341,6 @@ static const char *final_sql[] = {
         " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
         " GROUP BY Pathid1, Pathid2" /* */
         ,
-
-
-  /* "UPDATE " DUF_DBPREF "pathtot_dirs SET " (* *)                      */
-  /*       " numdirs=(SELECT COUNT(*) AS numdirs " (* *)                 */
-  /*       " FROM " DUF_DBPREF "paths AS p " (* *)                       */
-  /*       " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" (* *) */
-  /*       ,                                                             */
-  /* "DELETE FROM " DUF_DBPREF "keydata", */
-  /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (* *)  */
-  /*       "SELECT md." DUF_SQL_IDNAME " AS md5id, fn." DUF_SQL_IDNAME " AS filenameid, fd." DUF_SQL_IDNAME " AS dataid, p." DUF_SQL_IDNAME " AS Pathid " (* *) */
-  /*       " FROM " DUF_DBPREF "filenames AS fn " (* *)                                         */
-  /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ")" (* *)                */
-  /*       " JOIN " DUF_DBPREF "paths AS p ON (fn.Pathid=p." DUF_SQL_IDNAME ")" (* *)                           */
-  /*       " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md." DUF_SQL_IDNAME ")" (* *)                            */
-  /*       ,                                                                                    */
 
 
   NULL,
@@ -417,19 +404,14 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,
-           /* .selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " (* *)       */
-           /*       ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " (* *) */
-           /*       " FROM " DUF_DBPREF "paths AS pt " (* *)                                                            */
-           /*       " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                           */
-           /*       " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                          */
-           /*       " WHERE pt.ParentId='%llu' " (* *)                                                                  */
-           /*       ,                                                                                                   */
            .selector2 =         /* */
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_DBPREF "paths AS pt " /* */
+#if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+#endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
   .final_sql_argv = final_sql,

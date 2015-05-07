@@ -27,6 +27,7 @@ sfind duf_filedata.h
 
 tab sfind duf_sccb.c
 sfind duf_sccb.h
+sfind duf_sccb_def.h
 
 tab sfind duf_sccb_handle.c
 sfind duf_sccb_handle.h
@@ -36,6 +37,9 @@ sfind duf_sccbh_scan.h
 
 tab sfind duf_sccb_begfin.c
 sfind duf_sccb_begfin.h
+
+tab sfind duf_begfin.c
+sfind duf_begfin.h
 
 sfind duf_sccb_way.h
 

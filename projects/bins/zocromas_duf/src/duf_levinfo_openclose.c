@@ -101,10 +101,10 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
       {
         *real_path = 0;
         if ( !realpath( path, real_path ) )
-          r = DUF_ERROR_PATH;
+          DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
       }
       else
-        r = DUF_ERROR_MEMORY;
+        DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
 
     if ( pdi->opendir )

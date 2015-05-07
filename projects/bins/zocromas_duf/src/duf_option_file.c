@@ -125,7 +125,7 @@ duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, 
   else
   {
     DUF_TRACE( explain, 0, "read config file" );
-    r = DUF_ERROR_OPEN;
+    DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
   }
   DEBUG_ENDR( r );
 }
@@ -150,7 +150,7 @@ duf_infile_options_at_file( int argc, char *argv[], const char *filename )
  *   =0 for other option
  *   errorcode<0 for error
  * */
-  DOR( r, duf_infile_options_at_dir_and_file( argc, argv, cfgdir, filename ));
+  DOR( r, duf_infile_options_at_dir_and_file( argc, argv, cfgdir, filename ) );
 
   DEBUG_ENDR( r );
 }

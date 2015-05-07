@@ -50,7 +50,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {
     DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
-    r = DUF_ERROR_STAT;
+    DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
   }
   DEBUG_ENDR( r );
 }
@@ -102,7 +102,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
        *   for directory                - scan_dirent_dir2
        *   for other (~ regular) entry  - scan_dirent_reg2
        * */
-      DOR(r , duf_scan_direntry2_lower( list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 ));
+      DOR( r, duf_scan_direntry2_lower( list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 ) );
 
       if ( list[il] )
         free( list[il] );
@@ -117,13 +117,13 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
     int errorno = errno;
 
     if ( !duf_levinfo_path( pdi ) )
-      r = DUF_ERROR_PATH;
+      DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     else if ( errorno == EACCES )
       r = 0;
     else
     {
       DUF_ERRSYSE( errorno, "path '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemname( pdi ) );
-      r = DUF_ERROR_SCANDIR;
+      DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
     }
     DUF_TEST_R( r );
   }
@@ -159,7 +159,7 @@ duf_scan_dirents2(  /* duf_sqlite_stmt_t * pstmt, */ duf_depthinfo_t * pdi,
     /* TODO mark as absent or remove from db */
 
     DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemname( pdi ) );
-    r = DUF_ERROR_STAT;
+    DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
   }
   else
     r = _duf_scan_dirents2( pdi, scan_dirent_reg2, scan_dirent_dir2 );

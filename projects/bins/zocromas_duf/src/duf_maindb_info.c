@@ -21,6 +21,8 @@
 #include "duf_maindb_info.h"
 /* ###################################################################### */
 
+
+#if 0
 static unsigned long *
 duf_info_from_db( int count, const char *sql )
 {
@@ -51,7 +53,6 @@ duf_info_from_db( int count, const char *sql )
 
   return tuple;
 }
-
 int
 duf_main_db_info( void )
 {
@@ -187,3 +188,4 @@ duf_main_db_info( void )
   }
   DEBUG_ENDR( r );
 }
+#endif

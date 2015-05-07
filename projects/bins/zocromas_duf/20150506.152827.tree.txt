@@ -1,0 +1,1104 @@
+
+
+
+
+
+
+[PF] $$$$$$$$$$$$$$ 12 4 4 4 4 4 8 8 $$$$$$$$$$$$
+└─── photo        
+     ├─── Photo        
+     │    └─── k            
+     │         └─── Images       
+     │                → -r--r--r-- 1  u1000      g1000              22  Jan 25 2012 11:27:03  .    index.xml~0001~.zip #9      <application/octet-stream> 
+     │                → -r--r--r-- 1  u1000      g1000             531  Jan 25 2012 13:45:47  .    index.xml~0002~.zip #10     <application/zip> 
+     │                → -r--r--r-- 1  u1000      g1000             488  Jan 25 2012 11:46:09  .    layout.dat   #11     <application/octet-stream> 
+     ├─── Pictures     
+     │    │ → -r--r--r-- 1  u1000      g1000             974  Aug 30 2012 18:29:42  .    layout.dat   #21     <application/octet-stream> 
+     │    ├─── HTC_Legend   
+     │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 20100717.114028 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             674  Jul 21 2010 13:35:13 =2    Picasa.ini   #1040   <text/plain> 
+     │    │    │    └─── Originals    
+     │    │    │           → -r--r--r-- 1  u1000      g1000              87  Jul 21 2010 13:35:13 =2    Picasa.ini   #1043   <text/plain> 
+     │    │    ├─── 20100720     
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    └─── picasa       
+     │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 20100720a    
+     │    │    │      → -rw-r--r-- 1  u1000      g1067              35  Jul 21 2010 12:43:28 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 20101116.133237 
+     │    │    │    └─── g1           
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             130  Jul 14 2010 18:06:14  .    UMLogger.txt #2670   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             785  Nov 17 2008 15:57:38  .    fdisk-l.20080627.txt #2673   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             155  Nov 17 2008 15:57:38  .    mac-addresses.txt #2676   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000              14  Nov 17 2008 15:57:38  .    mg.txt       #2677   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             938  Nov 17 2008 15:57:38  .    mount-l.20080627.txt #2678   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             462  Nov 17 2008 16:02:00  .    note.txt     #2679   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             995  Jul 14 2010 16:56:10  .    ping.xml     #2684   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             724  Nov 17 2008 16:02:00  .    pvdisplay.txt #2685   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             436  Dec 15 2009 21:54:06  .    sclock.log   #2686   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             361  Nov 17 2008 16:02:00  .    sfdisk-l.20080627.d.txt #2687   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000             564  Nov 17 2008 16:02:00  .    sfdisk-l.20080627.txt #2688   <text/plain> 
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000              14  Nov 17 2008 16:02:40  .    test.txt     #2690   <text/plain> 
+     │    │    │         ├─── .system      
+     │    │    │         │    ├─── QTDownLoad   
+     │    │    │         │    │    │ → -r--r--r-- 1  u1000      g1000               5  Nov 17 2008 15:52:52  .    mpkg_uninstall #2698   <text/plain> 
+     │    │    │         │    │    ├─── 33swapmem    
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             207  Nov 17 2008 15:52:48  .    33swapmem.desktop #2699   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             576  Nov 17 2008 15:52:48  .    33swapmem.lin #2700   <text/x-shellscript> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             269  Nov 17 2008 15:52:48  .    ding.mid     #2703   <audio/midi> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             238  Nov 17 2008 15:52:48  .    dingdong.mid #2704   <audio/midi> 
+     │    │    │         │    │    ├─── MFile        
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             225  Nov 17 2008 15:52:48  .    MFile.desktop #2710   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             352  Nov 17 2008 15:52:48  .    MFile.lin    #2711   <text/x-shellscript> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             251  Nov 17 2008 15:52:48  .    a.lin        #2716   <text/x-shellscript> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             192  Nov 17 2008 15:52:48  .    b.lin        #2717   <text/x-shellscript> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             492  Nov 17 2008 15:52:48  .    setup.txt    #2718   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000              30  Nov 17 2008 15:52:48  .    software.txt #2719   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             318  Nov 17 2008 15:52:48  .    system.txt   #2720   <text/plain> 
+     │    │    │         │    │    ├─── busybox      
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             192  Nov 17 2008 15:52:52  .    busybox-desktop #2724   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             818  Nov 17 2008 15:52:52  .    busybox.lin  #2726   <text/x-shellscript> 
+     │    │    │         │    │    ├─── ekonsole     
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             176  Nov 17 2008 15:52:50  .    ekonsole.desktop #2731   <text/plain> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             540  Nov 17 2008 15:52:50  .    ekonsole.sh  #2733   <text/x-shellscript> 
+     │    │    │         │    │    │    └─── root         
+     │    │    │         │    │    │         │ → -r--r--r-- 1  u1000      g1000             437  Nov 17 2008 15:52:50 =2    .bashrc      #2741   <text/plain> 
+     │    │    │         │    │    │         │ → -r--r--r-- 1  u1000      g1000             437  Nov 17 2008 15:52:50 =2    .profile     #2741   <text/plain> 
+     │    │    │         │    │    │         │ → -r--r--r-- 1  u1000      g1000             194  Nov 17 2008 15:52:50  .    .user_profile #2742   <text/plain> 
+     │    │    │         │    │    │         └─── Settings     
+     │    │    │         │    │    │                → -r--r--r-- 1  u1000      g1000             169  Nov 17 2008 15:52:50  .    Konsole.conf #2744   <text/plain> 
+     │    │    │         │    │    ├─── flip-ctrl    
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             169  Nov 17 2008 15:52:48  .    flip-ctrl.desktop #2745   <text/plain> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             716  Nov 17 2008 15:52:48  .    flip.lin     #2746   <text/x-shellscript> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             891  Nov 17 2008 15:52:48  .    flip_sm.png  #2748   <image/png> 
+     │    │    │         │    │    │    └─── Scripts      
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             258  Nov 17 2008 15:52:48  .    off.lin      #2750   <text/plain> 
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             257  Nov 17 2008 15:52:48  .    on.lin       #2751   <text/plain> 
+     │    │    │         │    │    ├─── fmradio      
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             170  Nov 17 2008 15:52:52  .    fmradio.desktop #2755   <text/plain> 
+     │    │    │         │    │    ├─── loader       
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             198  Nov 17 2008 15:52:48  .    loader.desktop #2756   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             250  Nov 17 2008 15:52:48  .    loader.lin   #2757   <text/x-shellscript> 
+     │    │    │         │    │    ├─── mplayer      
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             537  Nov 17 2008 15:52:50  .    browser_dir.png #2766   <image/png> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             293  Nov 17 2008 15:52:50  .    browser_down.png #2767   <image/png> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             779  Nov 17 2008 15:52:50  .    browser_file.png #2768   <image/png> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             782  Nov 17 2008 15:52:50  .    browser_quit.png #2769   <image/png> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             456  Nov 17 2008 15:52:50  .    browser_slider.png #2770   <image/png> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             292  Nov 17 2008 15:52:50  .    browser_up.png #2771   <image/png> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             233  Nov 17 2008 15:52:50  .    c.sh         #2772   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             182  Nov 17 2008 15:52:50  .    mplayer.desktop #2778   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             147  Nov 17 2008 15:52:50  .    mplayer.lin  #2779   <text/x-shellscript> 
+     │    │    │         │    │    ├─── mystuff      
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             151  Nov 17 2008 15:52:48  .    mystuff.desktop #2783   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             125  Nov 17 2008 15:52:48  .    mystuff.lin  #2785   <text/x-shellscript> 
+     │    │    │         │    │    ├─── netcontrol   
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             948  Nov 17 2008 15:52:48  .    background.png #2787   <image/png> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             178  Nov 17 2008 15:52:48  .    if_address   #2792   <text/x-shellscript> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000            1017  Nov 17 2008 15:52:48  .    net-sm.png   #2793   <image/png> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             156  Nov 17 2008 15:52:48  .    netcontrol.desktop #2796   <text/plain> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             156  Nov 17 2008 15:52:48  .    netcontrol.desktop~ #2797   <text/plain> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             153  Nov 17 2008 15:52:48  .    netcontrol.sh #2798   <text/x-shellscript> 
+     │    │    │         │    │    │    ├─── fake_dsmA1200 
+     │    │    │         │    │    │    │      → -r--r--r-- 1  u1000      g1000             618  Nov 17 2008 15:52:48  .    fake_dsm.lin #2800   <text/x-shellscript> 
+     │    │    │         │    │    │    ├─── inetd        
+     │    │    │         │    │    │    │      → -r--r--r-- 1  u1000      g1000             242  Nov 17 2008 15:52:48  .    inetd.conf   #2803   <text/plain> 
+     │    │    │         │    │    │    │      → -r--r--r-- 1  u1000      g1000             753  Nov 17 2008 15:52:48  .    inetd.sh     #2804   <text/plain> 
+     │    │    │         │    │    │    │      → -r--r--r-- 1  u1000      g1000              39  Nov 17 2008 15:52:48 =2    usbnet.sh    #2807   <text/x-shellscript> 
+     │    │    │         │    │    │    └─── smbd         
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             667  Nov 17 2008 15:52:48  .    smb.conf     #2808   <text/plain> 
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             984  Nov 17 2008 15:52:48  .    smbd.sh      #2810   <text/x-shellscript> 
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000              39  Nov 17 2008 15:52:48 =2    usbnet.sh    #2807   <text/x-shellscript> 
+     │    │    │         │    │    ├─── showQ        
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             171  Nov 17 2008 15:52:50  .    showQ-desktop #2812   <text/plain> 
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             608  Nov 17 2008 15:52:50  .    showQ.lin    #2814   <text/x-shellscript> 
+     │    │    │         │    │    ├─── skins        
+     │    │    │         │    │    │      → -r--r--r-- 1  u1000      g1000             179  Nov 17 2008 15:52:48  .    skins.desktop #2820   <text/plain> 
+     │    │    │         │    │    └─── sysinfo      
+     │    │    │         │    │         │ → -r--r--r-- 1  u1000      g1000              13  Nov 17 2008 15:52:48  .    qpe.conf     #2824   <text/plain> 
+     │    │    │         │    │         │ → -r--r--r-- 1  u1000      g1000             317  Nov 17 2008 15:52:48  .    start.sh     #2826   <text/x-shellscript> 
+     │    │    │         │    │         │ → -r--r--r-- 1  u1000      g1000             171  Nov 17 2008 15:52:48  .    sysedit.desktop #2827   <text/plain> 
+     │    │    │         │    │         │ → -r--r--r-- 1  u1000      g1000             212  Nov 17 2008 15:52:48  .    sysinfo.sh   #2831   <text/x-shellscript> 
+     │    │    │         │    │         └─── pics         
+     │    │    │         │    │                → -r--r--r-- 1  u1000      g1000             273  Nov 17 2008 15:52:48  .    whatsthis.png #2838   <image/png> 
+     │    │    │         │    └─── java         
+     │    │    │         │         │ → -r--r--r-- 1  u1000      g1000              12  Nov 17 2008 15:52:52 =3    .RegistryFileCard.dat #2839   <application/octet-stream> 
+     │    │    │         │         ├─── DownloadApps 
+     │    │    │         │         │    ├─── MIDlet20000  
+     │    │    │         │         │    │    │ → -r--r--r-- 1  u1000      g1000             791  Jul 08 2010 16:05:34  .    registry.txt #2842   <text/plain> 
+     │    │    │         │         │    │    └─── Files        
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             649  Nov 17 2008 15:52:52 =2    MIDlet-1.png #2843   <image/png> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             216  Nov 17 2008 15:52:52 =3    gmail-g.drm#Preferences.idx #2845   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              80  Nov 17 2008 15:52:52  .    gmail-g.drm#Settings#Store.db #2846   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             216  Nov 17 2008 15:52:52 =3    gmail-g.drm#Settings#Store.idx #2845   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             321  Nov 17 2008 15:52:52  .    gmail-g.drm.ii #2848   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              60  Nov 17 2008 15:52:52  .    gmail-g.drm.ss #2850   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             841  Nov 17 2008 15:52:52  .    opera_6YSJkL3cJYf16Hp.jad #2851   <text/plain> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             649  Nov 17 2008 15:52:52 =2    suiteicon.png #2843   <image/png> 
+     │    │    │         │         │    ├─── MIDlet20003  
+     │    │    │         │         │    │    │ → -r--r--r-- 1  u1000      g1000             527  Nov 17 2008 15:52:52  .    registry.txt #2852   <text/plain> 
+     │    │    │         │         │    │    └─── Files        
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             352  Nov 17 2008 15:52:52  .    MIDlet-1.png #2853   <image/png> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             518  Nov 17 2008 15:52:52  .    MobileHeart.com-Tobi-Tris-673-1225.ap #2854   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              35  Nov 17 2008 15:52:52 =4    MobileHeart.com-Tobi-Tris-673-1225.ii #2855   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              60  Nov 17 2008 15:52:52  .    MobileHeart.com-Tobi-Tris-673-1225.ss #2857   <application/octet-stream> 
+     │    │    │         │         │    ├─── MIDlet20004  
+     │    │    │         │         │    │    │ → -r--r--r-- 1  u1000      g1000             538  Nov 17 2008 15:52:52  .    registry.txt #2858   <text/plain> 
+     │    │    │         │         │    │    └─── Files        
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             224  Nov 17 2008 15:52:52  .    MIDlet-1.png #2859   <image/png> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             336  Jun 28 2010 13:59:44  .    MobileHeart.com-Solytare-665-1326#Solytare.db #2860   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             216  Jun 28 2010 13:59:44 =3    MobileHeart.com-Solytare-665-1326#Solytare.idx #2845   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             636  Nov 17 2008 15:52:52  .    MobileHeart.com-Solytare-665-1326.ap #2861   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              35  Nov 17 2008 15:52:52 =4    MobileHeart.com-Solytare-665-1326.ii #2855   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              60  Nov 17 2008 15:52:52  .    MobileHeart.com-Solytare-665-1326.ss #2863   <application/octet-stream> 
+     │    │    │         │         │    ├─── MIDlet20005  
+     │    │    │         │         │    │    │ → -r--r--r-- 1  u1000      g1000             541  Nov 17 2008 15:52:52  .    registry.txt #2864   <text/plain> 
+     │    │    │         │         │    │    └─── Files        
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             233  Nov 17 2008 15:52:52  .    MIDlet-1.png #2865   <image/png> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000             680  Nov 17 2008 15:52:52  .    MobileHeart.com-Sameness-949-3447.ap #2866   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              35  Nov 17 2008 15:52:52 =4    MobileHeart.com-Sameness-949-3447.ii #2855   <application/octet-stream> 
+     │    │    │         │         │    │           → -r--r--r-- 1  u1000      g1000              60  Nov 17 2008 15:52:52  .    MobileHeart.com-Sameness-949-3447.ss #2868   <application/octet-stream> 
+     │    │    │         │         │    └─── MIDlet20011  
+     │    │    │         │         │         │ → -r--r--r-- 1  u1000      g1000             501  Feb 19 2009 13:48:28  .    registry.txt #2869   <text/plain> 
+     │    │    │         │         │         └─── Files        
+     │    │    │         │         │                → -r--r--r-- 1  u1000      g1000             152  Feb 20 2009 13:45:44  .    anyRemote-64b#Settings.db #2871   <application/octet-stream> 
+     │    │    │         │         │                → -r--r--r-- 1  u1000      g1000             216  Feb 20 2009 13:45:44  .    anyRemote-64b#Settings.idx #2872   <application/octet-stream> 
+     │    │    │         │         │                → -r--r--r-- 1  u1000      g1000             836  Feb 19 2009 13:48:28  .    anyRemote-64b.ap #2873   <application/octet-stream> 
+     │    │    │         │         │                → -r--r--r-- 1  u1000      g1000              35  Feb 19 2009 13:48:28 =4    anyRemote-64b.ii #2855   <application/octet-stream> 
+     │    │    │         │         │                → -r--r--r-- 1  u1000      g1000              60  Feb 19 2009 13:48:28  .    anyRemote-64b.ss #2875   <application/octet-stream> 
+     │    │    │         │         │                → -r--r--r-- 1  u1000      g1000             216  Feb 19 2009 14:50:00  .    anyRemote-64bicons16.idx #2877   <application/octet-stream> 
+     │    │    │         │         └─── JAMInfo      
+     │    │    │         │                → -r--r--r-- 1  u1000      g1000             736  Feb 19 2009 13:48:28  .    index_card1  #2878   <text/plain> 
+     │    │    │         │                → -r--r--r-- 1  u1000      g1000               5  Feb 19 2009 13:48:28  .    maxsuiteid_card1 #2879   <text/plain> 
+     │    │    │         ├─── .system0     
+     │    │    │         │    ├─── QTDownLoad   
+     │    │    │         │    │    ├─── SuperClock   
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             186  Nov 17 2008 15:52:54  .    sclock.desktop_ #2888   <text/plain> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             841  Nov 17 2008 15:52:54  .    sclock.gif   #2889   <image/gif> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000            1012  Nov 17 2008 15:52:54  .    sclock.lin   #2890   <text/x-shellscript> 
+     │    │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             629  Nov 17 2008 15:52:54  .    sclock_sm.gif #2891   <image/gif> 
+     │    │    │         │    │    │    └─── .magick      
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             979  Nov 17 2008 15:52:54  .    log.xml      #2898   <application/xml> 
+     │    │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             701  Nov 17 2008 15:52:54  .    type.xml     #2903   <application/xml> 
+     │    │    │         │    │    └─── fbreader     
+     │    │    │         │    │         │ → -r--r--r-- 1  u1000      g1000             245  Nov 17 2008 15:52:52  .    FBReader.desktop_ #2919   <text/plain> 
+     │    │    │         │    │         ├─── .FBReader    
+     │    │    │         │    │         │      → -r--r--r-- 1  u1000      g1000             610  Nov 17 2008 15:52:52  .    books.xml    #2921   <application/xml> 
+     │    │    │         │    │         │      → -r--r--r-- 1  u1000      g1000             149  Nov 17 2008 15:52:52  .    options.xml  #2922   <application/xml> 
+     │    │    │         │    │         │      → -r--r--r-- 1  u1000      g1000             535  Nov 17 2008 15:52:52  .    state.xml    #2923   <application/xml> 
+     │    │    │         │    │         │      → -r--r--r-- 1  u1000      g1000             146  Nov 17 2008 15:52:52  .    system.xml   #2924   <application/xml> 
+     │    │    │         │    │         ├─── bin          
+     │    │    │         │    │         │      → -r--r--r-- 1  u1000      g1000             227  Nov 17 2008 15:52:52  .    FBReader.sh  #2926   <text/x-shellscript> 
+     │    │    │         │    │         ├─── pics         
+     │    │    │         │    │         │    │ → -r--r--r-- 1  u1000      g1000             487  Nov 17 2008 15:52:52  .    FBReader.png #2935   <image/png> 
+     │    │    │         │    │         │    └─── FBReader     
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             632  Nov 17 2008 15:52:52  .    addBook.png  #2936   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             659  Nov 17 2008 15:52:52  .    bookInfo.png #2937   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    fb2.png      #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             690  Nov 17 2008 15:52:52  .    findNext.png #2939   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             676  Nov 17 2008 15:52:52  .    findPrevious.png #2940   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             680  Nov 17 2008 15:52:52  .    folder.png   #2941   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             659  Nov 17 2008 15:52:52  .    gotoHome.png #2942   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    mobipocket.png #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    oeb.png      #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    openreader.png #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    palm.png     #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    plucker.png  #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             834  Nov 17 2008 15:52:52  .    preferences.png #2944   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             592  Nov 17 2008 15:52:52  .    redo.png     #2945   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             816  Nov 17 2008 15:52:52  .    rotate.png   #2946   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             654  Nov 17 2008 15:52:52  .    rtf.png      #2947   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             670  Nov 17 2008 15:52:52  .    search.png   #2948   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             638  Nov 17 2008 15:52:52  .    showHelp.png #2949   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             656  Nov 17 2008 15:52:52  .    showLibrary.png #2950   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             722  Nov 17 2008 15:52:52  .    showRecent.png #2951   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    tcr.png      #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             537  Nov 17 2008 15:52:52  .    toc.png      #2952   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             271  Nov 17 2008 15:52:52  .    tree-authorinfo.png #2953   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             947  Nov 17 2008 15:52:52  .    tree-bookinfo.png #2954   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             328  Nov 17 2008 15:52:52  .    tree-order.png #2955   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             703  Nov 17 2008 15:52:52  .    tree-remove.png #2956   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             252  Nov 17 2008 15:52:52  .    tree-removetag.png #2957   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             600  Nov 17 2008 15:52:52  .    undo.png     #2959   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    unknown.png  #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             836  Nov 17 2008 15:52:52  .    upfolder.png #2960   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             523  Nov 17 2008 15:52:52 =9    weasel.png   #2938   <image/png> 
+     │    │    │         │    │         │           → -r--r--r-- 1  u1000      g1000             695  Nov 17 2008 15:52:52  .    zipfolder.png #2961   <image/png> 
+     │    │    │         │    │         └─── share        
+     │    │    │         │    │              ├─── FBReader     
+     │    │    │         │    │              │    ├─── default      
+     │    │    │         │    │              │    │      → -r--r--r-- 1  u1000      g1000             261  Nov 17 2008 15:52:52  .    external.xml #2963   <application/xml> 
+     │    │    │         │    │              │    │      → -r--r--r-- 1  u1000      g1000             600  Nov 17 2008 15:52:52  .    keymap.xml   #2964   <application/xml> 
+     │    │    │         │    │              │    │      → -r--r--r-- 1  u1000      g1000             906  Nov 17 2008 15:52:52  .    menubar.xml  #2965   <application/xml> 
+     │    │    │         │    │              │    │      → -r--r--r-- 1  u1000      g1000             449  Nov 17 2008 15:52:52  .    toolbar.xml  #2967   <application/xml> 
+     │    │    │         │    │              │    └─── formats      
+     │    │    │         │    │              │         └─── fb2          
+     │    │    │         │    │              │                → -r--r--r-- 1  u1000      g1000              37  Nov 17 2008 15:52:54  .    FBReaderVersion.ent #2968   <text/plain> 
+     │    │    │         │    │              └─── zlibrary     
+     │    │    │         │    │                   │ → -r--r--r-- 1  u1000      g1000             747  Nov 17 2008 15:52:54  .    keynames.xml #2991   <application/xml> 
+     │    │    │         │    │                   ├─── default      
+     │    │    │         │    │                   │      → -r--r--r-- 1  u1000      g1000             324  Nov 17 2008 15:52:54  .    config.xml   #2993   <application/xml> 
+     │    │    │         │    │                   └─── encodings    
+     │    │    │         │    │                          → -r--r--r-- 1  u1000      g1000              23  Nov 17 2008 15:52:54  .    ISO-8859-1   #2996   <text/plain> 
+     │    │    │         │    │                          → -r--r--r-- 1  u1000      g1000             311  Nov 17 2008 15:52:54  .    ISO-8859-15  #3001   <text/plain> 
+     │    │    │         │    │                          → -r--r--r-- 1  u1000      g1000             275  Nov 17 2008 15:52:54  .    ISO-8859-9   #3010   <text/plain> 
+     │    │    │         │    ├─── java         
+     │    │    │         │    │    │ → -r--r--r-- 1  u1000      g1000              12  Nov 17 2008 15:53:42 =3    .RegistryFileCard.dat #2839   <application/octet-stream> 
+     │    │    │         │    │    └─── JAMInfo      
+     │    │    │         │    │           → -r--r--r-- 1  u1000      g1000               5  Nov 17 2008 15:53:42  .    maxsuiteid_card1 #3029   <text/plain> 
+     │    │    │         │    └─── java0        
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000              12  Nov 17 2008 15:53:42 =3    .RegistryFileCard.dat #2839   <application/octet-stream> 
+     │    │    │         ├─── App          
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000             431  Nov 17 2008 15:57:22  .    Clock_large.jad #3033   <text/plain> 
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000             462  Nov 17 2008 15:54:20  .    FileExplorer(2).jad #3036   <text/plain> 
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000             652  Nov 17 2008 15:57:22  .    J2MEDataMatrix.jad #3038   <text/plain> 
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000             925  Nov 17 2008 15:54:20  .    J2MEQRCode.jad #3039   <text/plain> 
+     │    │    │         ├─── MyAudio      
+     │    │    │         │    ├─── Flamenco     
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             654  Nov 17 2008 15:58:16  .    index.html   #3155   <text/html> 
+     │    │    │         │    └─── beatles      
+     │    │    │         │         └─── 1967 - Magical Mystery Tour 
+     │    │    │         │                → -r--r--r-- 1  u1000      g1000             307  Apr 27 2009 16:14:36  .    Magical Mystery Tour.m3u #3171   <text/plain> 
+     │    │    │         ├─── MyImages     
+     │    │    │         │    └─── 20100720     
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:28 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         ├─── MyInfo       
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000             127  Jan 11 2010 07:49:44  .    mg.20091212.txt #3505   <text/plain> 
+     │    │    │         ├─── Site         
+     │    │    │         │    ├─── www.flameeyes.eu 
+     │    │    │         │    │    │ → -r--r--r-- 1  u1000      g1000             103  Jul 09 2010 19:19:06  .    robots.txt   #3607   <text/plain> 
+     │    │    │         │    │    └─── autotools-mythbuster 
+     │    │    │         │    │         ├─── examples     
+     │    │    │         │    │         │    └─── autoconf     
+     │    │    │         │    │         │         └─── caching      
+     │    │    │         │    │         │              └─── whynot       
+     │    │    │         │    │         │                     → -r--r--r-- 1  u1000      g1000              72  Jul 09 2010 22:06:24  .    configure.c.ac #3623   <text/plain> 
+     │    │    │         │    │         │                     → -r--r--r-- 1  u1000      g1000              87  Jul 09 2010 22:06:24  .    configure.c99.ac #3624   <text/plain> 
+     │    │    │         │    │         └─── stylesheets  
+     │    │    │         │    │                → -r--r--r-- 1  u1000      g1000             264  Jul 09 2010 22:06:24  .    flameeyes.css #3632   <text/plain> 
+     │    │    │         │    └─── www.tutorialspoint.com 
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000              58  Jul 21 2007 19:11:40  .    bullet.gif   #3634   <image/gif> 
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000              45  Oct 10 2007 18:14:56  .    robots.txt   #3635   <text/plain> 
+     │    │    │         ├─── Skin         
+     │    │    │         │    ├─── LinuxH       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:12  .    LinuxH.pskn  #3675   <text/plain> 
+     │    │    │         │    ├─── MacOSX       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:12  .    MacOSX.pskn  #3681   <text/plain> 
+     │    │    │         │    ├─── Motrix       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:00  .    Motrix.pskn  #3687   <text/plain> 
+     │    │    │         │    ├─── Purple       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             753  Nov 17 2008 16:02:12  .    Purple.pskn  #3692   <text/plain> 
+     │    │    │         │    ├─── Sky          
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             724  Nov 17 2008 16:02:26  .    Sky.pskn     #3698   <text/plain> 
+     │    │    │         │    ├─── TLinux       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:12  .    TLinux.pskn  #3704   <text/plain> 
+     │    │    │         │    ├─── apple        
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             744  Nov 17 2008 16:02:12  .    apple.pskn   #3709   <text/plain> 
+     │    │    │         │    ├─── fense        
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             742  Nov 17 2008 16:02:40  .    fense.pskn   #3715   <text/plain> 
+     │    │    │         │    ├─── football     
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             769  Nov 17 2008 16:02:26  .    football.pskn #3721   <text/plain> 
+     │    │    │         │    ├─── football1    
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             778  Nov 17 2008 16:02:26  .    football1.pskn #3727   <text/plain> 
+     │    │    │         │    ├─── green        
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             742  Nov 17 2008 16:02:26  .    green.pskn   #3731   <text/plain> 
+     │    │    │         │    ├─── green1       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:00  .    green1.pskn  #3736   <text/plain> 
+     │    │    │         │    ├─── linux        
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             742  Nov 17 2008 16:02:26  .    LINUX.pskn   #3739   <text/plain> 
+     │    │    │         │    ├─── maqua        
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             742  Nov 17 2008 16:02:00  .    maqua.pskn   #3746   <text/plain> 
+     │    │    │         │    ├─── oMac         
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             733  Nov 17 2008 16:02:40  .    oMac.pskn    #3750   <text/plain> 
+     │    │    │         │    ├─── orange       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:00  .    orange.pskn  #3758   <text/plain> 
+     │    │    │         │    ├─── prison       
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             751  Nov 17 2008 16:02:00  .    prison.pskn  #3764   <text/plain> 
+     │    │    │         │    ├─── qq           
+     │    │    │         │    │      → -r--r--r-- 1  u1000      g1000             715  Nov 17 2008 16:02:26  .    QQ.pskn      #3766   <text/plain> 
+     │    │    │         │    └─── sealblue     
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000             769  Nov 17 2008 16:02:00  .    sealblue.pskn #3774   <text/plain> 
+     │    │    │         ├─── System Volume Information 
+     │    │    │         │    └─── _restore{129201FA-B0AC-49B3-96B2-DEB8B91E727B} 
+     │    │    │         │         └─── rp118        
+     │    │    │         │                → -r--r--r-- 1  u1000      g1000             498  Nov 17 2008 16:02:40  .    change.log   #3776   <application/x-font-ttf> 
+     │    │    │         ├─── backup       
+     │    │    │         │    └─── HTC Legend   
+     │    │    │         │         │ → -r--r--r-- 1  u1000      g1000             384  Aug 01 2010 04:18:14  .    backup.dat   #3779   <application/octet-stream> 
+     │    │    │         │         ├─── @pm@         
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              16  Jul 28 2010 17:30:50  .    QG1ldGFA     #3780   <application/octet-stream> 
+     │    │    │         │         ├─── android      
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             192  Jul 31 2010 06:38:48  .    d2FsbHBhcGVyOi9kYXRhL3N5c3RlbS93YWxscGFwZXJfaW5mby54bWw= #3788   <application/octet-stream> 
+     │    │    │         │         ├─── com.android.mms 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             144  Jul 28 2010 18:31:34  .    bW1zX3NoYXJlZF9wcmVmczpfaGFzX3NldF9kZWZhdWx0X3ZhbHVlcw== #3790   <application/octet-stream> 
+     │    │    │         │         ├─── com.android.providers.settings 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             888  Jul 31 2010 04:17:46  .    77+tV0lGSQ== #3792   <application/octet-stream> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000               8  Jul 28 2010 17:30:52  .    bG9jYWxl     #3793   <application/octet-stream> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             424  Jul 31 2010 06:26:48  .    c2VjdXJl     #3794   <application/octet-stream> 
+     │    │    │         │         ├─── com.android.providers.telephony 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              80  Jul 28 2010 17:30:52  .    Y2Fub25pY2FsX2FkZHJlc3Nlcw== #3796   <application/octet-stream> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   Y2JjaA==     #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   YWRkcg==     #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   YXR0YWNobWVudHM= #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   ZHJt         #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             264  Jul 30 2010 16:27:54  .    c21z         #3798   <application/octet-stream> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   c3JfcGVuZGluZw== #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   cGFydA==     #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   cGFydHM=     #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   cGR1         #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   cGVuZGluZ19tc2dz #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             360  Jul 28 2010 17:30:52  .    cXRleHQ=     #3799   <application/octet-stream> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   cmF0ZQ==     #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              24  Jul 31 2010 06:38:46 =11   cmF3         #3797   <text/plain> 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             272  Jul 30 2010 16:27:54  .    dGhyZWFkcw== #3800   <application/octet-stream> 
+     │    │    │         │         ├─── com.android.vending 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              16  Jul 31 2010 06:38:46  .    dmVuZGluZw== #3801   <application/octet-stream> 
+     │    │    │         │         ├─── com.htc.CustomizationSetup 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000              40  Jul 29 2010 11:01:50  .    X2h0Y2FjY291bnRf #3802   <application/octet-stream> 
+     │    │    │         │         ├─── com.htc.android.htcime 
+     │    │    │         │         │      → -r--r--r-- 1  u1000      g1000             216  Jul 28 2010 23:44:46  .    QUxQSEFfVURC #3803   <application/octet-stream> 
+     │    │    │         │         └─── com.htc.provider.settings 
+     │    │    │         │                → -r--r--r-- 1  u1000      g1000              32  Jul 31 2010 06:38:42  .    a2V5X3NldHRpbmc= #3804   <application/octet-stream> 
+     │    │    │         ├─── goog         
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000               8  Jul 29 2010 09:06:46  .    gmail.txt    #3805   <text/plain> 
+     │    │    │         ├─── html         
+     │    │    │         │    └─── realestate-idx 
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000             561  Nov 17 2008 15:57:38  .    index.css    #3807   <text/plain> 
+     │    │    │         │           → -r--r--r-- 1  u1000      g1000             235  Nov 17 2008 15:57:38  .    index.dat    #3808   <text/plain> 
+     │    │    │         └─── steel        
+     │    │    │                → -r--r--r-- 1  u1000      g1000             407  Jul 30 2010 13:03:34  .    sshot0       #3844   <application/octet-stream> 
+     │    │    └─── Vera         
+     │    │           → -r--r--r-- 1  u1000      g1000             867  Jul 21 2010 12:43:29 =2    Picasa.ini   #6633   <text/plain> 
+     │    ├─── Picasa       
+     │    │    └─── Collages     
+     │    │           → -r--r--r-- 1  u1000      g1000              44  Jul 21 2010 12:50:35 =2    Picasa.ini   #6666   <text/plain> 
+     │    │           → -r--r--r-- 1  u1000      g1000             642  Jul 21 2010 13:30:14 =2    autosave.cxf #6667   <application/xml> 
+     │    ├─── all          
+     │    │    ├─── 200208       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             439  Jul 21 2010 12:43:29 =2    Picasa.ini   #7219   <text/plain> 
+     │    │    ├─── 200209       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200210       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200211       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200212       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200301       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             540  Jul 21 2010 12:43:29 =2    Picasa.ini   #7625   <text/plain> 
+     │    │    ├─── 200302       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             133  Jul 21 2010 12:43:29 =2    Picasa.ini   #7687   <text/plain> 
+     │    │    ├─── 200303       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             843  Jul 21 2010 12:43:29 =2    Picasa.ini   #7747   <text/plain> 
+     │    │    ├─── 200304       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200305       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200306       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200307       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             237  Jul 21 2010 12:43:29 =2    Picasa.ini   #8276   <text/plain> 
+     │    │    ├─── 200308       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200309       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200310       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             131  Jul 21 2010 12:43:29 =2    Picasa.ini   #8391   <text/plain> 
+     │    │    ├─── 200311       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200401       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200402       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200403       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200404       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200405       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200406       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200407       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200408       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200410       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200411       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200504       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200505       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200506       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200507       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200508       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200511       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200512       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200601       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200603       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 13:03:13 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200604       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200605       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200606       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200708       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200709       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200710       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200711       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             347  Jul 21 2010 14:12:44 =2    Picasa.ini   #9786   <text/plain> 
+     │    │    ├─── 200712       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200801       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200805       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200806       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             754  Jun 23 2008 06:41:10 =5    20080623.0941-2be87335b9014a004fa87becab90f64b-Motorola.jpeg #10692  <image/jpeg> 
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200807       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200808       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200809       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 200810       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             560  Jul 21 2010 12:43:29 =2    Picasa.ini   #10766  <text/plain> 
+     │    │    ├─── 200811       
+     │    │    │      → -r--r--r-- 1  u1000      g1000             560  Jul 21 2010 12:43:29 =2    Picasa.ini   #10799  <text/plain> 
+     │    │    ├─── 200812       
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    └─── unknown--    
+     │    │           → -r--r--r-- 1  u1000      g1000             235  Jul 21 2010 12:43:29 =2    Picasa.ini   #11295  <text/plain> 
+     │    ├─── date         
+     │    │    ├─── 2002         
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             839  Apr 07 2003 18:16:05  .    TRANS.TBL    #13202  <text/plain> 
+     │    │    │    ├─── 12oct2002a   
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             810  Apr 07 2003 18:16:05 =3    TRANS.TBL    #13468  <text/plain> 
+     │    │    │    └─── 30dec2002    
+     │    │    │           → -r--r--r-- 1  u1000      g1000             594  Apr 07 2003 18:16:05  .    TRANS.TBL    #13880  <text/plain> 
+     │    │    ├─── 2003         
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             409  Apr 07 2003 18:16:05  .    TRANS.TBL    #13993  <text/plain> 
+     │    │    │    ├─── 08feb2003a   
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             212  Apr 07 2003 18:16:05  .    TRANS.TBL    #14028  <text/plain> 
+     │    │    │    ├─── 08jan2003    
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             810  Apr 07 2003 18:16:05 =3    TRANS.TBL    #13468  <text/plain> 
+     │    │    │    ├─── 11jan2003    
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             216  Apr 07 2003 18:16:05  .    TRANS.TBL    #14047  <text/plain> 
+     │    │    │    ├─── 20jan2003    
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             702  Apr 07 2003 18:16:05  .    TRANS.TBL    #14086  <text/plain> 
+     │    │    │    ├─── 27jan2003    
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             810  Apr 07 2003 18:16:05 =3    TRANS.TBL    #13468  <text/plain> 
+     │    │    │    └─── 29mar2003    
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000              86  Apr 07 2003 18:16:05  .    TRANS.TBL    #14111  <text/plain> 
+     │    │    │         └─── 2            
+     │    │    │                → -r--r--r-- 1  u1000      g1000             378  Apr 07 2003 18:16:05  .    TRANS.TBL    #14158  <text/plain> 
+     │    │    ├─── 2007-10-27   
+     │    │    │      → -r--r--r-- 1  u1000      g1000             118  Jan 01 2006 12:03:08 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │      → -r--r--r-- 1  u1000      g1000             305  Sep 29 2007 15:42:06 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │      → -r--r--r-- 1  u1000      g1000              36  Jan 01 2006 12:45:18 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    ├─── 20090514     
+     │    │    │      → -r--r--r-- 1  u1000      g1000             118  May 14 2009 13:25:28 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │      → -r--r--r-- 1  u1000      g1000             305  May 14 2009 13:25:28 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │      → -r--r--r-- 1  u1000      g1000              36  May 14 2009 13:25:28 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    ├─── 20090626     
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             662  Jul 21 2010 13:13:11 =2    Picasa.ini   #15196  <text/plain> 
+     │    │    │    └─── sending      
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         └─── 1            
+     │    │    │                → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 20090904     
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             118  Sep 04 2009 20:23:44 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             305  Sep 04 2009 20:23:44 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000              36  Sep 04 2009 20:23:45 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    │    └─── Originals    
+     │    │    │           → -r--r--r-- 1  u1000      g1000             522  Jul 21 2010 13:35:11 =2    Picasa.ini   #15517  <text/plain> 
+     │    │    ├─── 20090912     
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             118  Jan 01 2006 12:03:08 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             305  Sep 29 2007 15:42:06 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000              36  Jan 01 2006 12:45:18 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             716  Jul 21 2010 13:34:54 =2    Picasa.ini   #15518  <text/plain> 
+     │    │    │    └─── Originals    
+     │    │    │           → -r--r--r-- 1  u1000      g1000              87  Jul 21 2010 13:34:53 =2    Picasa.ini   #15519  <text/plain> 
+     │    │    └─── 20090912a    
+     │    │         └─── Originals    
+     │    │                → -r--r--r-- 1  u1000      g1000             609  Jul 21 2010 13:35:06 =2    Picasa.ini   #15821  <text/plain> 
+     │    ├─── mastar       
+     │    │      → -r--r--r-- 1  u1000      g1000             413  Jul 21 2010 13:47:01 =2    Picasa.ini   #16156  <text/plain> 
+     │    ├─── one          
+     │    │    ├─── A1200        
+     │    │    │    ├─── 20090430     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20090514     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             155  Jul 21 2010 12:43:29 =2    Picasa.ini   #16308  <text/plain> 
+     │    │    │    └─── 20090626     
+     │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    └─── c433         
+     │    │         ├─── 20090430     
+     │    │         │      → -r--r--r-- 1  u1000      g1000             898  Jul 21 2010 12:43:29 =2    Picasa.ini   #16678  <text/plain> 
+     │    │         ├─── 20091214     
+     │    │         │      → -r--r--r-- 1  u1000      g1000             149  Jul 21 2010 12:43:29 =2    Picasa.ini   #16712  <text/plain> 
+     │    │         ├─── 20091229     
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── 20100122     
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── 20100211     
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── 20100502     
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         └─── 20100526     
+     │    │              │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              └─── 1            
+     │    │                     → -r--r--r-- 1  u1000      g1000             149  Jul 21 2010 12:43:29 =2    Picasa.ini   #16869  <text/plain> 
+     │    ├─── photos       
+     │    │    ├─── crimea2003   
+     │    │    │    └─── 1            
+     │    │    │           → -r--r--r-- 1  u1000      g1000               7  Aug 06 2003 17:51:24 =2    me0085.xface #18375  <text/plain> 
+     │    │    │           → -r--r--r-- 1  u1000      g1000               7  Aug 06 2003 17:32:46 =2    mebl0085.xface #18375  <text/plain> 
+     │    │    └─── sel          
+     │    │         ├─── 3            
+     │    │         │      → -r--r--r-- 1  u1000      g1000             108  Apr 07 2003 18:16:05  .    TRANS.TBL    #18617  <text/plain> 
+     │    │         ├─── 4            
+     │    │         │      → -r--r--r-- 1  u1000      g1000             265  Apr 07 2003 18:16:05  .    TRANS.TBL    #18622  <text/plain> 
+     │    │         ├─── print        
+     │    │         │      → -r--r--r-- 1  u1000      g1000             147  Feb 13 2003 21:59:56  .    a            #18674  <text/plain> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000              56  Feb 13 2003 21:53:30 =2    as           #18675  <text/plain> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 21:47:42  .    auto002-48.pbm #18676  <image/x-portable-bitmap> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000             346  Feb 13 2003 12:52:48  .    auto002-48a.png #18681  <image/png> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000             148  Feb 13 2003 22:26:28  .    auto002-48c.face #18682  <text/plain> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 21:50:58  .    auto002-48c.pbm #18683  <image/x-portable-bitmap> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000              56  Feb 13 2003 21:45:06 =2    auto002-cf   #18675  <text/plain> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 13:03:02  .    auto002.pbm  #18685  <image/x-portable-bitmap> 
+     │    │         │      → -r--r--r-- 1  u1000      g1000             297  Feb 13 2003 13:03:58  .    auto002c.pbm #18687  <image/x-portable-bitmap> 
+     │    │         └─── z            
+     │    │                → -r--r--r-- 1  u1000      g1000             272  Apr 07 2003 18:16:05  .    TRANS.TBL    #18780  <text/plain> 
+     │    ├─── unsorted     
+     │    │    ├─── 2007-08-28--08.39.04 
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 2007-08-29--22.30.07 
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── 20080117.Pictures 
+     │    │    │    ├─── 2007-10-27   
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             118  Jan 17 2008 17:27:44 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             305  Jan 17 2008 17:27:44 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              36  Jan 17 2008 17:27:43 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071005     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071006     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071013     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071114     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071117     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071126     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071129     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071229     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071230     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20071231     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20080105     
+     │    │    │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    │    └─── L            
+     │    │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    └─── 20080112     
+     │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── Pictures     
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             118  Jan 01 2006 12:03:08 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             305  Sep 29 2007 15:42:06 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000              36  Jan 01 2006 12:45:18 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    └─── L            
+     │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── dup          
+     │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── kodak        
+     │    │    │    └─── Kodak Pictures 
+     │    │    │         ├─── 08-03-2007   
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         ├─── 08-04-2007   
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         ├─── 08-06-2007   
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         ├─── 08-12-2007   
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         ├─── 08-14-2007   
+     │    │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         └─── 09-28-2007   
+     │    │    │                → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── motorola-A1200 
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000             754  Jun 23 2008 06:41:10 =5    0623_094057.jpg #10692  <image/jpeg> 
+     │    │    │    ├─── 20080419     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20080502     
+     │    │    │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    │    └─── 1            
+     │    │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20080511     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20080531     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20081117     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              95  Jul 21 2010 12:43:29 =2    Picasa.ini   #20612  <text/plain> 
+     │    │    │    └─── Send         
+     │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    └─── photos_n     
+     │    │         ├─── 2005         
+     │    │         │    ├─── 02sep2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 04mar2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000             322  Jul 21 2010 12:43:29 =2    Picasa.ini   #20630  <text/plain> 
+     │    │         │    ├─── 10apr2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 10feb2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20051220     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20feb2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000             491  Jul 21 2010 12:43:30 =2    Picasa.ini   #20790  <text/plain> 
+     │    │         │    ├─── 21aug2005a   
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │    └─── a            
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000             672  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20803  <text/plain> 
+     │    │         │    ├─── 22may2005    
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │    └─── export       
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 13:01:13 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000             900  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20826  <text/plain> 
+     │    │         │    ├─── 24apr2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              89  Jul 21 2010 12:43:29 =2    Picasa.ini   #20831  <text/plain> 
+     │    │         │    ├─── 24aug2005    
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000             449  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20855  <text/plain> 
+     │    │         │    ├─── 26feb2005    
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000              71  Jul 21 2010 12:43:30 =2    Picasa.ini   #20858  <text/plain> 
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000             898  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20859  <text/plain> 
+     │    │         │    │    └─── Originals    
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000              87  Jul 20 2010 14:45:45 =2    Picasa.ini   #20863  <text/plain> 
+     │    │         │    ├─── 29may2005    
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000             357  Jul 21 2010 12:43:29 =2    Picasa.ini   #20867  <text/plain> 
+     │    │         │    │    ├─── 1            
+     │    │         │    │    │    │ → -r--r--r-- 1  u1000      g1000             394  Jul 21 2010 12:43:29 =2    Picasa.ini   #20887  <text/plain> 
+     │    │         │    │    │    └─── Originals    
+     │    │         │    │    │           → -r--r--r-- 1  u1000      g1000             870  Jul 20 2010 14:46:21 =2    Picasa.ini   #20890  <text/plain> 
+     │    │         │    │    └─── Originals    
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000             783  Jul 20 2010 14:46:30 =2    Picasa.ini   #20900  <text/plain> 
+     │    │         │    └─── 30jul2005    
+     │    │         │         └─── Originals    
+     │    │         │                → -r--r--r-- 1  u1000      g1000             522  Jul 21 2010 12:48:22 =2    Picasa.ini   #20906  <text/plain> 
+     │    │         └─── 2006         
+     │    │              ├─── 20060104     
+     │    │              │    │ → -r--r--r-- 1  u1000      g1000             107  Jul 21 2010 12:43:29 =2    Picasa.ini   #20907  <text/plain> 
+     │    │              │    └─── Originals    
+     │    │              │           → -r--r--r-- 1  u1000      g1000             174  Jul 20 2010 14:46:31 =2    Picasa.ini   #20916  <text/plain> 
+     │    │              ├─── 20060109     
+     │    │              │    │ → -r--r--r-- 1  u1000      g1000             250  Jul 21 2010 12:43:29 =2    Picasa.ini   #20919  <text/plain> 
+     │    │              │    └─── Originals    
+     │    │              │           → -r--r--r-- 1  u1000      g1000             522  Jul 20 2010 14:46:34 =2    Picasa.ini   #20962  <text/plain> 
+     │    │              ├─── 20060205     
+     │    │              │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              ├─── 20060318     
+     │    │              │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              ├─── 20060327     
+     │    │              │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              ├─── 20060423     
+     │    │              │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              ├─── 20060430     
+     │    │              │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              ├─── 20060520     
+     │    │              │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    └─── cut          
+     │    │              │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 13:03:52 =214  Picasa.ini   #29     <text/plain> 
+     │    │              └─── 200606       
+     │    │                   │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   ├─── 20060627     
+     │    │                   │      → -r--r--r-- 1  u1000      g1000              82  Jun 27 2006 12:27:25 =2    ._.DS_Store  #21219  <application/octet-stream> 
+     │    │                   └─── rokitno2006  
+     │    │                        │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                        └─── Rokytno      
+     │    │                               → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    └─── Альбомы digiKam 
+     │         └─── Leeza        
+     │                → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     ├─── Pictures.R.20120207.164339 
+     │    ├─── 20090514     
+     │    │      → -r--r--r-- 1  u1000      g1000             118  May 14 2009 13:25:28 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │      → -r--r--r-- 1  u1000      g1000             305  May 14 2009 13:25:28 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │      → -r--r--r-- 1  u1000      g1000              36  May 14 2009 13:25:28 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    ├─── 20090626     
+     │    │    │ → -r--r--r-- 1  u1000      g1000             662  Jul 21 2010 13:13:11 =2    Picasa.ini   #15196  <text/plain> 
+     │    │    └─── sending      
+     │    │         │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │         └─── 1            
+     │    │                → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    ├─── 20090904     
+     │    │    │ → -r--r--r-- 1  u1000      g1000             118  Sep 04 2009 20:23:44 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │ → -r--r--r-- 1  u1000      g1000             305  Sep 04 2009 20:23:44 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │ → -r--r--r-- 1  u1000      g1000              36  Sep 04 2009 20:23:45 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    └─── Originals    
+     │    │           → -r--r--r-- 1  u1000      g1000             522  Jul 21 2010 13:35:11 =2    Picasa.ini   #15517  <text/plain> 
+     │    ├─── 20090912     
+     │    │    │ → -r--r--r-- 1  u1000      g1000             118  Jan 01 2006 12:03:08 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │    │ → -r--r--r-- 1  u1000      g1000             305  Sep 29 2007 15:42:06 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │    │ → -r--r--r-- 1  u1000      g1000              36  Jan 01 2006 12:45:18 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │    │ → -r--r--r-- 1  u1000      g1000             716  Jul 21 2010 13:34:54 =2    Picasa.ini   #15518  <text/plain> 
+     │    │    └─── Originals    
+     │    │           → -r--r--r-- 1  u1000      g1000              87  Jul 21 2010 13:34:53 =2    Picasa.ini   #15519  <text/plain> 
+     │    ├─── 20090912a    
+     │    │    └─── Originals    
+     │    │           → -r--r--r-- 1  u1000      g1000             609  Jul 21 2010 13:35:06 =2    Picasa.ini   #15821  <text/plain> 
+     │    ├─── Photo        
+     │    │    ├─── A1200        
+     │    │    │    ├─── 20090430     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20090514     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             155  Jul 21 2010 12:43:29 =2    Picasa.ini   #16308  <text/plain> 
+     │    │    │    └─── 20090626     
+     │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    ├─── HTC_Legend   
+     │    │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20100717.114028 
+     │    │    │    │    │ → -r--r--r-- 1  u1000      g1000             674  Jul 21 2010 13:35:13 =2    Picasa.ini   #1040   <text/plain> 
+     │    │    │    │    ├─── Leeza        
+     │    │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    │    └─── Originals    
+     │    │    │    │           → -r--r--r-- 1  u1000      g1000              87  Jul 21 2010 13:35:13 =2    Picasa.ini   #1043   <text/plain> 
+     │    │    │    ├─── 20100720     
+     │    │    │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    │    └─── picasa       
+     │    │    │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    └─── Vera         
+     │    │    │           → -r--r--r-- 1  u1000      g1000             867  Jul 21 2010 12:43:29 =2    Picasa.ini   #6633   <text/plain> 
+     │    │    ├─── Untitled     
+     │    │    │      → -r--r--r-- 1  u1000      g1000              65  Jul 21 2010 13:07:54  .    Picasa.ini   #21804  <text/plain> 
+     │    │    ├─── all          
+     │    │    │    ├─── 200208       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             439  Jul 21 2010 12:43:29 =2    Picasa.ini   #7219   <text/plain> 
+     │    │    │    ├─── 200209       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200210       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200211       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200212       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200301       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             540  Jul 21 2010 12:43:29 =2    Picasa.ini   #7625   <text/plain> 
+     │    │    │    ├─── 200302       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             133  Jul 21 2010 12:43:29 =2    Picasa.ini   #7687   <text/plain> 
+     │    │    │    ├─── 200303       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             843  Jul 21 2010 12:43:29 =2    Picasa.ini   #7747   <text/plain> 
+     │    │    │    ├─── 200304       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200305       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200306       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200307       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             237  Jul 21 2010 12:43:29 =2    Picasa.ini   #8276   <text/plain> 
+     │    │    │    ├─── 200308       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200309       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200310       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             131  Jul 21 2010 12:43:29 =2    Picasa.ini   #8391   <text/plain> 
+     │    │    │    ├─── 200311       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200401       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200402       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200403       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200404       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200405       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200406       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200407       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200408       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200410       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200411       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200504       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200505       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200506       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200507       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200508       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200511       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200512       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200601       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200603       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 13:03:13 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200604       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200605       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200606       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200708       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200709       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200710       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200711       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             347  Jul 21 2010 14:12:44 =2    Picasa.ini   #9786   <text/plain> 
+     │    │    │    ├─── 200712       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200801       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200805       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200806       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             754  Jun 23 2008 06:41:10 =5    20080623.0941-2be87335b9014a004fa87becab90f64b-Motorola.jpeg #10692  <image/jpeg> 
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200807       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200808       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200809       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 200810       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             560  Jul 21 2010 12:43:29 =2    Picasa.ini   #10766  <text/plain> 
+     │    │    │    ├─── 200811       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             560  Jul 21 2010 12:43:29 =2    Picasa.ini   #10799  <text/plain> 
+     │    │    │    ├─── 200812       
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    └─── unknown--    
+     │    │    │           → -r--r--r-- 1  u1000      g1000             235  Jul 21 2010 12:43:29 =2    Picasa.ini   #11295  <text/plain> 
+     │    │    ├─── c433         
+     │    │    │    ├─── 20090430     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             898  Jul 21 2010 12:43:29 =2    Picasa.ini   #16678  <text/plain> 
+     │    │    │    ├─── 20091214     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000             149  Jul 21 2010 12:43:29 =2    Picasa.ini   #16712  <text/plain> 
+     │    │    │    ├─── 20091229     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20100122     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20100211     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    ├─── 20100502     
+     │    │    │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │    └─── 20100526     
+     │    │    │         │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │    │         └─── 1            
+     │    │    │                → -r--r--r-- 1  u1000      g1000             149  Jul 21 2010 12:43:29 =2    Picasa.ini   #16869  <text/plain> 
+     │    │    └─── unsorted     
+     │    │         ├─── 2007-08-28--08.39.04 
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── 2007-08-29--22.30.07 
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── 20080117.Pictures 
+     │    │         │    ├─── 2007-10-27   
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000             118  Jan 17 2008 17:27:44 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000             305  Jan 17 2008 17:27:44 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              36  Jan 17 2008 17:27:43 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071005     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071006     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071013     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071114     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071117     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071126     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071129     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071229     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071230     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20071231     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20080105     
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │    └─── L            
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    └─── 20080112     
+     │    │         │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── Pictures     
+     │    │         │    │ → -r--r--r-- 1  u1000      g1000             118  Jan 01 2006 12:03:08 =11   DCEMAIL.ABK  #14211  <text/plain> 
+     │    │         │    │ → -r--r--r-- 1  u1000      g1000             305  Sep 29 2007 15:42:06 =11   LABELCTB.LCB #14212  <application/octet-stream> 
+     │    │         │    │ → -r--r--r-- 1  u1000      g1000              36  Jan 01 2006 12:45:18 =11   PREFGUID.TXT #14213  <text/plain> 
+     │    │         │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    └─── L            
+     │    │         │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── Rokytno      
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── dup          
+     │    │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── kodak        
+     │    │         │    └─── Kodak Pictures 
+     │    │         │         ├─── 08-03-2007   
+     │    │         │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │         ├─── 08-04-2007   
+     │    │         │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │         ├─── 08-06-2007   
+     │    │         │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │         ├─── 08-12-2007   
+     │    │         │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │         ├─── 08-14-2007   
+     │    │         │         │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │         └─── 09-28-2007   
+     │    │         │                → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         ├─── motorola-A1200 
+     │    │         │    │ → -r-xr-xr-x 1  u1000      g1000             754  Jun 23 2008 06:41:10 =5    0623_094057.jpg #10692  <image/jpeg> 
+     │    │         │    ├─── 20080419     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20080502     
+     │    │         │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    │    └─── 1            
+     │    │         │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20080511     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20080531     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         │    ├─── 20081117     
+     │    │         │    │      → -r--r--r-- 1  u1000      g1000              95  Jul 21 2010 12:43:29 =2    Picasa.ini   #20612  <text/plain> 
+     │    │         │    └─── Send         
+     │    │         │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │         └─── photos_n     
+     │    │              ├─── 2005         
+     │    │              │    ├─── 02sep2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    ├─── 04mar2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000             322  Jul 21 2010 12:43:29 =2    Picasa.ini   #20630  <text/plain> 
+     │    │              │    ├─── 10apr2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    ├─── 10feb2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    ├─── 20051220     
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    ├─── 20feb2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000             491  Jul 21 2010 12:43:30 =2    Picasa.ini   #20790  <text/plain> 
+     │    │              │    ├─── 21aug2005a   
+     │    │              │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    │    └─── a            
+     │    │              │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    │           → -r--r--r-- 1  u1000      g1000             672  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20803  <text/plain> 
+     │    │              │    ├─── 22may2005    
+     │    │              │    │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:30 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    │    └─── export       
+     │    │              │    │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 13:01:13 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    │           → -r--r--r-- 1  u1000      g1000             900  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20826  <text/plain> 
+     │    │              │    ├─── 24apr2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000              89  Jul 21 2010 12:43:29 =2    Picasa.ini   #20831  <text/plain> 
+     │    │              │    ├─── 24aug2005    
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │              │    │      → -r--r--r-- 1  u1000      g1000             449  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20855  <text/plain> 
+     │    │              │    ├─── 26feb2005    
+     │    │              │    │    │ → -r--r--r-- 1  u1000      g1000              71  Jul 21 2010 12:43:30 =2    Picasa.ini   #20858  <text/plain> 
+     │    │              │    │    │ → -r--r--r-- 1  u1000      g1000             898  Nov 12 2005 16:56:45 =2    TRANS.TBL    #20859  <text/plain> 
+     │    │              │    │    └─── Originals    
+     │    │              │    │           → -r--r--r-- 1  u1000      g1000              87  Jul 20 2010 14:45:45 =2    Picasa.ini   #20863  <text/plain> 
+     │    │              │    ├─── 29may2005    
+     │    │              │    │    │ → -r--r--r-- 1  u1000      g1000             357  Jul 21 2010 12:43:29 =2    Picasa.ini   #20867  <text/plain> 
+     │    │              │    │    ├─── 1            
+     │    │              │    │    │    │ → -r--r--r-- 1  u1000      g1000             394  Jul 21 2010 12:43:29 =2    Picasa.ini   #20887  <text/plain> 
+     │    │              │    │    │    └─── Originals    
+     │    │              │    │    │           → -r--r--r-- 1  u1000      g1000             870  Jul 20 2010 14:46:21 =2    Picasa.ini   #20890  <text/plain> 
+     │    │              │    │    └─── Originals    
+     │    │              │    │           → -r--r--r-- 1  u1000      g1000             783  Jul 20 2010 14:46:30 =2    Picasa.ini   #20900  <text/plain> 
+     │    │              │    └─── 30jul2005    
+     │    │              │         └─── Originals    
+     │    │              │                → -r--r--r-- 1  u1000      g1000             522  Jul 21 2010 12:48:22 =2    Picasa.ini   #20906  <text/plain> 
+     │    │              └─── 2006         
+     │    │                   ├─── 20060104     
+     │    │                   │    │ → -r--r--r-- 1  u1000      g1000             107  Jul 21 2010 12:43:29 =2    Picasa.ini   #20907  <text/plain> 
+     │    │                   │    └─── Originals    
+     │    │                   │           → -r--r--r-- 1  u1000      g1000             174  Jul 20 2010 14:46:31 =2    Picasa.ini   #20916  <text/plain> 
+     │    │                   ├─── 20060109     
+     │    │                   │    │ → -r--r--r-- 1  u1000      g1000             250  Jul 21 2010 12:43:29 =2    Picasa.ini   #20919  <text/plain> 
+     │    │                   │    └─── Originals    
+     │    │                   │           → -r--r--r-- 1  u1000      g1000             522  Jul 20 2010 14:46:34 =2    Picasa.ini   #20962  <text/plain> 
+     │    │                   ├─── 20060205     
+     │    │                   │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   ├─── 20060318     
+     │    │                   │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   ├─── 20060327     
+     │    │                   │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   ├─── 20060423     
+     │    │                   │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   ├─── 20060430     
+     │    │                   │      → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   ├─── 20060520     
+     │    │                   │    │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   │    └─── cut          
+     │    │                   │           → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 13:03:52 =214  Picasa.ini   #29     <text/plain> 
+     │    │                   └─── 200606       
+     │    │                        │ → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    │                        ├─── 20060627     
+     │    │                        │      → -r--r--r-- 1  u1000      g1000              82  Jun 27 2006 12:27:25 =2    ._.DS_Store  #21219  <application/octet-stream> 
+     │    │                        └─── rokitno2006  
+     │    │                               → -r--r--r-- 1  u1000      g1000              35  Jul 21 2010 12:43:29 =214  Picasa.ini   #29     <text/plain> 
+     │    ├─── Picasa       
+     │    │    └─── Collages     
+     │    │           → -r--r--r-- 1  u1000      g1000              44  Jul 21 2010 12:50:35 =2    Picasa.ini   #6666   <text/plain> 
+     │    │           → -r--r--r-- 1  u1000      g1000             642  Jul 21 2010 13:30:14 =2    autosave.cxf #6667   <application/xml> 
+     │    └─── mastar       
+     │           → -r--r--r-- 1  u1000      g1000             413  Jul 21 2010 13:47:01 =2    Picasa.ini   #16156  <text/plain> 
+     └─── dvd          
+          ├─── benq         
+          │    │ → -r--r--r-- 1  u1000      g0                515  Dec 07 2002 22:17:38  .    TRANS.TBL    #22028  <text/plain> 
+          │    └─── benq         
+          │         ├─── 12oct2002a   
+          │         │      → -r--r--r-- 1  u1000      g0                810  Dec 07 2002 22:17:38  .    TRANS.TBL    #22097  <text/plain> 
+          │         ├─── 4            
+          │         │      → -r--r--r-- 1  u1000      g0                308  Dec 07 2002 22:17:38  .    TRANS.TBL    #22102  <text/plain> 
+          │         ├─── 9sep2002     
+          │         │      → -r--r--r-- 1  u1000      g0                319  Dec 07 2002 22:17:38  .    TRANS.TBL    #22127  <text/plain> 
+          │         └─── forcd        
+          │                → -r--r--r-- 1  u1000      g0                328  Dec 07 2002 22:17:38  .    TRANS.TBL    #22129  <text/plain> 
+          └─── dvd1         
+               ├─── 200507       
+               │      → -r--r--r-- 1  u1000      g0                757  Mar 24 2009 20:01:48  .    TRANS.TBL    #24346  <text/plain> 
+               ├─── 200511       
+               │      → -r--r--r-- 1  u1000      g0                489  Mar 24 2009 20:01:48  .    TRANS.TBL    #24380  <text/plain> 
+               ├─── 200603       
+               │      → -r--r--r-- 1  u1000      g0                757  Mar 24 2009 20:01:48  .    TRANS.TBL    #24403  <text/plain> 
+               ├─── 200806       
+               │      → -rw-r--r-- 1  u1000      g1000             754  Jun 23 2008 06:41:10 =5    20080623.0941-2be87335b9014a004fa87becab90f64b-Motorola.jpeg #10692  <image/jpeg> 
+               └─── 200809       
+                      → -r--r--r-- 1  u1000      g0                493  Mar 24 2009 20:01:48  .    TRANS.TBL    #26372  <text/plain> 
+--------------------------------------------------
+ duf_main_db ended
+--------------------------------------------------
+
+
+

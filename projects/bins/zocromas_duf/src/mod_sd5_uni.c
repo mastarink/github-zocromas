@@ -79,7 +79,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         duf_scan_callbacks_t sccb = {.leaf.fieldset = "sd5id" };
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &sd5id, STR_CB_DEF, STR_CB_UDATA_DEF, &csccbh /*, ( const duf_dirhandle_t * ) NULL off */ ,
-                            "SELECT " DUF_SQL_IDNAME " AS sd5id FROM " DUF_DBPREF "sd5 WHERE sd5sum1='%lld' AND sd5sum2='%lld'", md64[1], md64[0] );
+                             "SELECT " DUF_SQL_IDNAME " AS sd5id FROM " DUF_DBPREF "sd5 WHERE sd5sum1='%lld' AND sd5sum2='%lld'", md64[1], md64[0] );
       }
     }
     else if ( !lr /* assume SQLITE_OK */  )
@@ -97,7 +97,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   else
   {
     DUF_SHOW_ERROR( "Wrong data" );
-    lr = DUF_ERROR_DATA;
+    DUF_MAKE_ERROR( lr, DUF_ERROR_DATA );
     DUF_TEST_R( lr );
   }
 
@@ -127,7 +127,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
       int maxcnt = 2;
 
       if ( !duf_config->cli.disable.flag.calculate && ( MD5_Init( &ctx ) != 1 ) )
-        r = DUF_ERROR_MD5;
+        DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
       DUF_TEST_R( r );
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
       while ( r >= 0 && cnt++ < maxcnt )
@@ -139,14 +139,14 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
         {
           DUF_ERRSYS( "read file" );
 
-          r = DUF_ERROR_READ;
+          DUF_MAKE_ERROR( r, DUF_ERROR_READ );
           DUF_TEST_R( r );
           break;
         }
         if ( rr > 0 )
         {
           if ( !duf_config->cli.disable.flag.calculate && MD5_Update( &ctx, buffer, rr ) != 1 )
-            r = DUF_ERROR_MD5;
+            DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
         }
         if ( rr <= 0 )
           break;
@@ -157,14 +157,14 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
     }
     else
     {
-      r = DUF_ERROR_MEMORY;
+      DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
   if ( duf_config->cli.disable.flag.calculate )
   {
   }
   else if ( MD5_Final( pmd, &ctx ) != 1 )
-    r = DUF_ERROR_MD5;
+    DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
 
@@ -285,6 +285,7 @@ static const char *final_sql[] = {
         " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.md5id=sd." DUF_SQL_IDNAME ") " /* */
         " WHERE " DUF_DBPREF "sd5.sd5sum1=sd.sd5sum1 AND " DUF_DBPREF "sd5.sd5sum2=sd.sd5sum2)" /* */
         ,
+#if 0
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
@@ -297,7 +298,7 @@ static const char *final_sql[] = {
         " FROM " DUF_DBPREF "paths AS p " /* */
         " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" /* */
         ,
-
+#endif
 
   NULL,
 };
@@ -356,19 +357,12 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,
-           /* .selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " (* *)       */
-           /*       ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " (* *) */
-           /*       " FROM " DUF_DBPREF "paths AS pt " (* *)                                                            */
-           /*       " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                           */
-           /*       " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " (* *)                          */
-           /*       " WHERE pt.ParentId='%llu' " (* *)                                                                  */
-           /*       ,                                                                                                   */
            .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
-           /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_DBPREF "paths AS pt " /* */
+#if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+#endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
   .final_sql_argv = final_sql,

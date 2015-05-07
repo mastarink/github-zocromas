@@ -19,7 +19,6 @@
 /* #include "duf_db2path.h" */
 #include "duf_path2db.h"
 
-#include "duf_sccb.h"
 
 #include "duf_sql.h"
 #include "duf_sql2.h"
@@ -28,6 +27,8 @@
 
 #include "duf_ufilter.h"
 
+#include "duf_sccb.h"
+#include "duf_sccb_def.h"
 #include "duf_sccb_begfin.h"
 
 /* #include "duf_item_match2.h" */

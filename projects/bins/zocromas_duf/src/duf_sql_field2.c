@@ -121,7 +121,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
       }
       else
       {
-        r = DUF_ERROR_NO_FIELD_OPTIONAL;
+        DUF_MAKE_ERROR( r, DUF_ERROR_NO_FIELD_OPTIONAL );
         DUF_SHOW_ERROR( "r=%d; no field %s", r, SCCB->leaf.fieldset );
       }
     }
@@ -129,7 +129,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
     else
     {
       DUF_SHOW_ERROR( "something is wrong" );
-      r = DUF_ERROR_GET_FIELD;
+      DUF_MAKE_ERROR( r, DUF_ERROR_GET_FIELD );
     }
 #endif
   }

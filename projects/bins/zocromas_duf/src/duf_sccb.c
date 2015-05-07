@@ -21,6 +21,7 @@
 /* #include "duf_sql_field.h" */
 #include "duf_dir_scan2.h"
 
+#include "duf_sccb_def.h"
 
 /* ###################################################################### */
 #include "duf_sccb.h"

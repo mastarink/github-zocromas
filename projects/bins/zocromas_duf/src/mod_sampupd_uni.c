@@ -212,7 +212,7 @@ static const char *final_sql[] = {
 	  " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /*	*/
         " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
 	,
-
+#if 0
   /* "DELETE FROM " DUF_DBPREF "pathtot_files", */
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_files (Pathid, numfiles, minsize, maxsize) " /* */
         "SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min(size) AS minsize, max(size) AS maxsize " /* */
@@ -242,6 +242,7 @@ static const char *final_sql[] = {
         " numdirs=(SELECT COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths AS p " /* */
         " WHERE p.parentid=" DUF_DBPREF "pathtot_dirs.Pathid )",
+#endif
   /* "DELETE FROM " DUF_DBPREF "keydata", */
   /* "INSERT OR REPLACE INTO " DUF_DBPREF "keydata (md5id, filenameid, dataid, Pathid) " (* *)  */
   /*       "SELECT md." DUF_SQL_IDNAME " AS md5id, fn." DUF_SQL_IDNAME " AS filenameid, fd." DUF_SQL_IDNAME " AS dataid, p." DUF_SQL_IDNAME " AS Pathid " (* *) */
@@ -312,16 +313,20 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
            .selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
            " FROM     " DUF_DBPREF "paths AS pt " /* */
+#if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+#endif
            " WHERE pt.ParentId='%llu' " /* */
            ,
            .selector2 =         /* */
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_DBPREF "paths AS pt " /* */
+#if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+#endif
            " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            },
   .final_sql_argv = final_sql   /* */

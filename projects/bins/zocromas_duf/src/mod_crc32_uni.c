@@ -68,9 +68,8 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
     {
       duf_scan_callbacks_t sccb = {.leaf.fieldset = "crc32id" };
       duf_sccb_handle_t csccbh = {.sccb = &sccb };
-      lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF,
-                          &csccbh /*, ( const duf_dirhandle_t * ) NULL off */ ,
-                          "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
+      lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, &csccbh /*, ( const duf_dirhandle_t * ) NULL off */ ,
+                           "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
     }
   }
   else if ( !lr /* assume SQLITE_OK */  )
@@ -120,7 +119,7 @@ duf_make_crc32_uni( int fd, int *pr )
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
-          lr = DUF_ERROR_READ;
+          DUF_MAKE_ERROR( lr, DUF_ERROR_READ );
         }
         DUF_TEST_R( lr );
         if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
@@ -134,7 +133,7 @@ duf_make_crc32_uni( int fd, int *pr )
     }
     else
     {
-      lr = DUF_ERROR_MEMORY;
+      DUF_MAKE_ERROR( lr, DUF_ERROR_MEMORY );
     }
   }
   if ( pr )
@@ -189,6 +188,7 @@ static const char *final_sql[] = {
         " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.md5id=c32." DUF_SQL_IDNAME ") " /* */
         " WHERE " DUF_DBPREF "crc32.crc32sum=c32.crc32sum )" /* */
         ,
+#if 0
   "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
         "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
         " FROM " DUF_DBPREF "paths " /* */
@@ -200,6 +200,7 @@ static const char *final_sql[] = {
         " FROM " DUF_DBPREF "paths AS p " /* */
         " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" /* */
         ,
+#endif
 
 
   NULL,
@@ -245,8 +246,10 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
            " FROM " DUF_DBPREF "paths AS pt " /* */
+#if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+#endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
   .final_sql_argv = final_sql,

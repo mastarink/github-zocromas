@@ -38,17 +38,35 @@ INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fn
   WHERE fna.Pathid != fnb.Pathid
   GROUP BY mda.rowid;
 */
+/*
+ *  - (DBG) ..._disable_print_usage
+ * */
+__attribute__ ( ( constructor( 101 ) ) )
+     static void constructor_main( void )
+{
+/* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
+  extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
+
+  if ( &mas_mem_disable_print_usage )
+  {
+    mas_mem_disable_print_usage = 7;
+  }
+}
+
+__attribute__ ( ( destructor( 101 ) ) )
+     static void destructor_main( void )
+{
+}
 
 /*
  * do everything (almost :)
  * *************
- *  1. (DBG) disable_print_usage
- *  2. create config struct (global variable: duf_config)
- *  3. call duf_all_options
- *  4. call duf_main_db
- *  5. (optional) call duf_show_options (see also duf_config_show call at duf_main_db)
- *  6. delete config struct
- *  7. final error process and set exit code
+ *  - create config struct (global variable: duf_config)
+ *  - call duf_all_options
+ *  - call duf_main_db
+ *  - (optional) call duf_show_options (see also duf_config_show call at duf_main_db)
+ *  - delete config struct
+ *  - final error process and set exit code
  * */
 static int
 duf_main( int argc, char **argv )
@@ -60,15 +78,6 @@ duf_main( int argc, char **argv )
        sizeof( unsigned long ), sizeof( unsigned long long ) );
   /* DUF_TRACE( any, 0, "r=%d", r ); */
 
-  {
-/* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
-    extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
-
-    if ( &mas_mem_disable_print_usage )
-    {
-      mas_mem_disable_print_usage = 7;
-    }
-  }
   duf_config4trace = duf_config = duf_config_create(  );
   assert( duf_config );
   assert( duf_config4trace );
@@ -123,6 +132,7 @@ duf_main( int argc, char **argv )
   r = r < 0 ? 31 : 0;
   DEBUG_ENDRN( r );
 }
+
 /*
  * 1. set time zone
  * 2. call duf_main

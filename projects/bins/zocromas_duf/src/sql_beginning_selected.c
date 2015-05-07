@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "duf_defs.h"
 #include "duf_sql_defs.h"
 
@@ -41,7 +43,7 @@ const char *sql_beginning_selected[] = {
 #ifndef DUF_SELECTED_TEMPORARY
   "DROP TABLE IF EXISTS " DUF_SELECTED_NAME_FULL /* */ ,
 #endif
-  "CREATE  " DUF_SELECTED_TEMPORARY "  TABLE  " DUF_SELECTED_NAME_FULL /* */
+  "CREATE  " DUF_SELECTED_TEMPORARY_STRING "  TABLE  " DUF_SELECTED_NAME_FULL /* */
         " AS "                  /* */
         " SELECT fn." DUF_SQL_IDNAME ", fn." DUF_SQL_IDNAME " AS nameid "
         /* ",NULL AS last_updated,NULL AS inow" */
@@ -79,7 +81,7 @@ const char *sql_beginning_selected[] = {
 #ifndef DUF_SELECTED_TEMPORARY
   "DROP TABLE IF EXISTS " DUF_SELECTED_PATHS_FULL /* */ ,
 #endif
-  "CREATE " DUF_SELECTED_TEMPORARY " TABLE  " DUF_SELECTED_PATHS_FULL " AS " /* */
+  "CREATE " DUF_SELECTED_TEMPORARY_STRING " TABLE  " DUF_SELECTED_PATHS_FULL " AS " /* */
         " WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
         "   ( SELECT sel.rowid as fid, fn.dataid AS did, p.rowid as parentid " /* */
         "      FROM " DUF_SELECTED_NAME_FULL " AS sel LEFT JOIN filenames AS fn ON (sel.rowid=fn.rowid) " /* */
@@ -100,7 +102,7 @@ const char *sql_beginning_selected[] = {
 #ifndef DUF_SELECTED_TEMPORARY
   "DROP TABLE IF EXISTS " DUF_SELECTED_PATHTOT_FILES_FULL /* */ ,
 #endif
-  "CREATE " DUF_SELECTED_TEMPORARY " TABLE " DUF_SELECTED_PATHTOT_FILES_FULL /* */
+  "CREATE " DUF_SELECTED_TEMPORARY_STRING " TABLE " DUF_SELECTED_PATHTOT_FILES_FULL /* */
         " AS "                  /* */
         " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
         " FROM " DUF_DBPREF " filenames AS fn " /* */
@@ -113,7 +115,7 @@ const char *sql_beginning_selected[] = {
 #ifndef DUF_SELECTED_TEMPORARY
   "DROP TABLE IF EXISTS " DUF_SELECTED_PATHTOT_DIRS_FULL /* */ ,
 #endif
-  "CREATE " DUF_SELECTED_TEMPORARY " TABLE " DUF_SELECTED_PATHTOT_DIRS_FULL /* */
+  "CREATE " DUF_SELECTED_TEMPORARY_STRING " TABLE " DUF_SELECTED_PATHTOT_DIRS_FULL /* */
         " AS "                  /* */
         " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) " /* */
         " AS numdirs "          /* */
@@ -128,4 +130,5 @@ const char *sql_beginning_selected[] = {
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SELECTED_PATHTOT_DIRS_FULL "_rowid ON " DUF_SELECTED_PATHTOT_DIRS_FULL " (rowid) " /* */        ,
   "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SELECTED_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SELECTED_PATHTOT_DIRS_FULL " (Pathid)" /* */ ,
   "CREATE INDEX IF NOT EXISTS        " DUF_SELECTED_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SELECTED_PATHTOT_DIRS_FULL " (numdirs)" /* */ ,
+  NULL
 };

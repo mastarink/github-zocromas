@@ -61,14 +61,14 @@ global_status_reset( void )
   global_status.selection_bound_ufilter = NULL;
 }
 
-__attribute__ ( ( constructor( 101 ) ) )
-     static void constructor1( void )
+__attribute__ ( ( constructor( 102 ) ) )
+     static void constructor_global_status( void )
 {
   global_status_init(  );
 }
 
 __attribute__ ( ( destructor ) )
-     static void destructor( void )
+     static void destructor_global_status( void )
 {
   global_status_reset(  );
   print_memlist( FL, stdout );

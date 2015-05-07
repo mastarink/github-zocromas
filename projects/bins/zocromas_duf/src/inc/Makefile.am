@@ -1,5 +1,6 @@
 noinst_HEADERS=duf.h \
 	sql_beginning_selected.h \
+	sql_beginning_common.h \
 	duf_action.h \
 	duf_add.h \
 	duf_base_types.h \
@@ -43,7 +44,8 @@ noinst_HEADERS=duf.h \
 	duf_print_defs.h \
 	duf_record_types.h \
 	duf_scan_types.h \
-	duf_sccb.h duf_sccb_handle.h duf_sccbh_scan.h duf_sccb_begfin.h duf_sccb_way.h \
+	duf_sccb_begfin.h \
+	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_scan.h duf_sccb_begfin.h duf_sccb_way.h \
 	duf_dir_scan2.h  \
 	duf_service.h \
 	duf_sql2.h \
@@ -56,6 +58,10 @@ noinst_HEADERS=duf.h \
 	duf_status_ref.h \
 	duf_status_types.h \
 	duf_trace_defs.h \
+	duf_trace_defs_if.h \
+	duf_trace_defs_base.h \
+	duf_trace_defs_what.h \
+	duf_trace_defs_sys.h \
 	duf_start_end.h \
 	duf_error_defs.h \
 	duf_dodefs.h \

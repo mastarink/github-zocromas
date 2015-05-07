@@ -28,6 +28,9 @@
 
 #include "duf_maindb_info.h"
 
+#include "duf_begfin.h"
+#include "sql_beginning_common.h"
+
 /* ###################################################################### */
 #include "duf_maindb.h"
 /* ###################################################################### */
@@ -48,6 +51,8 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
   }
 #endif
+
+#if 0
   {
     static const char *sql = "PRAGMA synchronous = OFF";
 
@@ -69,6 +74,8 @@ duf_main_db_tune( void )
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
   }
+#endif
+  duf_scan_beginning_psql( sql_beginning_common, 0, NULL, NULL );
   DEBUG_ENDR( r );
 }
 
@@ -79,11 +86,12 @@ duf_main_db_opened( int argc, char **argv )
 
   DORF( r, duf_main_db_tune );
   DORF( r, duf_action, argc, argv ); /* duf_action : duf_action.c */
+#if 0
   DORF( r, duf_main_db_info );
+#endif
   if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
   {
-    DUF_TEST_RX( r );
-    DUF_SHOW_ERROR( "action FAIL ; [%s] (#%d)", duf_error_name( r ), r );
+    DUF_TEST_RX_SHOW( r, "action FAIL" );
   }
 
   DEBUG_ENDR( r );
@@ -122,20 +130,20 @@ duf_main_db_locate( void )
 #endif
     }
     else
-      DOR( r, DUF_ERROR_PTR );
+      DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
   }
   else if ( !duf_config->db.dir )
   {
-    DOR( r, DUF_ERROR_PTR );
+    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
     DUF_SHOW_ERROR( "db.dir not set" );
   }
   else if ( !duf_config->db.main.name )
   {
-    DOR( r, DUF_ERROR_PTR );
+    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
     DUF_SHOW_ERROR( "db.main.name not set" );
   }
   else
-    DOR( r, DUF_ERROR_UNKNOWN );
+    DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN );
   DEBUG_ENDR( r );
 }
 

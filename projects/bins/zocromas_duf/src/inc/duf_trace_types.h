@@ -49,8 +49,15 @@ typedef enum
   DUF_TRACE_MODE_update,
   DUF_TRACE_MODE_verbose,
 
-  DUF_TRACE_MODE_MAX,
+  DUF_TRACE_MODE_MAX
 } duf_trace_mode_t;
+
+typedef enum
+{
+  DUF_TRACE_SUBMODE_SIMPLE,
+  DUF_TRACE_SUBMODE_ARROW,
+  DUF_TRACE_SUBMODE_MAX
+} duf_trace_submode_t;
 
 
 

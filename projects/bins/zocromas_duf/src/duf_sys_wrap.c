@@ -42,7 +42,7 @@ duf_unlink( const char *path )
       if ( errno == ENOENT )
         r = 0;
       else
-        DOR( r, DUF_ERROR_UNLINK );
+        DUF_MAKE_ERROR( r, DUF_ERROR_UNLINK );
     }
   }
   DEBUG_ENDR( r );

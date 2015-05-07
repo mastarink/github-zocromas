@@ -84,7 +84,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
     /* else                       */
     /* {                          */
     /*   pdi->depth--;            */
-    /*   r = DUF_ERROR_MAX_DEPTH; */
+    /*   DUF_MAKE_ERROR( r, DUF_ERROR_MAX_DEPTH); */
     /* }                          */
     /* assert( duf_pdi_depth( pdi ) == 0 || ( duf_pdi_depth( pdi ) > 0 && duf_levinfo_dirid( pdi ) ) ); */
   }
@@ -102,16 +102,16 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
   /* if ( duf_pdi_recursive( pdi ) )               */
   /* {                                             */
   if ( duf_pdi_depth( pdi ) > duf_pdi_maxdepth( pdi ) )
-    DOR( r, DUF_ERROR_LEVINFO_SIZE );
+    DUF_MAKE_ERROR( r, DUF_ERROR_LEVINFO_SIZE );
   else if ( !duf_pdi_is_good_depth( pdi, delta ) )
-    DOR( r, DUF_ERROR_TOO_DEEP );
+    DUF_MAKE_ERROR( r, DUF_ERROR_TOO_DEEP );
 
   if ( r < 0 )
     DUF_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pdi_depth( pdi ), duf_pdi_maxdepth( pdi ),
                duf_pdi_topdepth( pdi ), delta, duf_pdi_recursive( pdi ) );
   /* }                                             */
   /* else if ( duf_pdi_reldepth( pdi ) > delta )   */
-  /*   r = DUF_ERROR_MAX_DEPTH;                    */
+  /*   DUF_MAKE_ERROR( r, DUF_ERROR_MAX_DEPTH);    */
   DEBUG_ENDR( r );
 }
 

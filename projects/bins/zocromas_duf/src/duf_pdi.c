@@ -59,7 +59,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninse
     DOR( r, duf_levinfo_create( pdi, r, recursive ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
-    DOR( r, duf_real_path2db( pdi, real_path, tag, caninsert /* caninsert */ ,node_selector2 ) );
+    DOR( r, duf_real_path2db( pdi, real_path, tag, caninsert /* caninsert */ , node_selector2 ) );
   }
   DEBUG_ENDR( r );
 }
@@ -70,10 +70,12 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int ca
   DEBUG_STARTR( r );
 
   DOR( r, duf_pdi_init( pdi, real_path, tag, caninsert, node_selector2, recursive ) );
-  if ( r == DUF_ERROR_NOT_IN_DB )
-    DUF_SHOW_ERROR( "not in db:'%s'", real_path );
-  else if ( r < 0 )
-    DUF_SHOW_ERROR( "path:%s", real_path );
+  /*
+     if ( r == DUF_ERROR_NOT_IN_DB )
+     DUF_SHOW_ERROR( "not in db:'%s'", real_path );
+     else if ( r < 0 )
+     DUF_SHOW_ERROR( "path:%s", real_path );
+   */
   DUF_TEST_R( r );
   if ( r >= 0 )
   {
@@ -238,13 +240,13 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 
   assert( pdi );
   if ( pdi->pu->max_seq && pdi->seq >= pdi->pu->max_seq )
-    DOR( r, DUF_ERROR_MAX_SEQ_REACHED );
+    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
   else if ( pdi->pu->maxitems.files && pdi->items.files >= pdi->pu->maxitems.files )
-    DOR( r, DUF_ERROR_MAX_REACHED );
+    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
   else if ( pdi->pu->maxitems.dirs && pdi->items.dirs >= pdi->pu->maxitems.dirs )
-    DOR( r, DUF_ERROR_MAX_REACHED );
+    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
   else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
-    DOR( r, DUF_ERROR_MAX_REACHED );
+    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
 
   /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
   /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */

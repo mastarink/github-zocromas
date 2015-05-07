@@ -6,10 +6,11 @@
 #  include "duf_trace_types.h"
 
 
-int duf_vtrace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum,
-                unsigned flags, int nerr, FILE * out, const char *fmt, va_list args );
-int duf_trace( duf_trace_mode_t trace_mode, const char *name, int level, int minlevel, const char *funcid, int linid, double time0, char signum,
-               unsigned flags, int nerr, FILE * out, const char *fmt, ... ) __attribute__ ( ( format( __printf__, 12, 13 ) ) );
+int duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, const char *name, int level, int minlevel, const char *funcid,
+                int linid, double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, va_list args );
+int duf_trace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, const char *name, int level, int minlevel, const char *funcid,
+               int linid, double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, ... )
+      __attribute__ ( ( format( __printf__, 14, 15 ) ) );
 
 
 typedef enum

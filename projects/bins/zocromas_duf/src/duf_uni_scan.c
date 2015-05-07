@@ -144,7 +144,7 @@ duf_evaluate_all_at_config( void )
 
   mas_free( ppscan_callbacks );
   if ( !global_status.actions_done )
-    DOR( r, DUF_ERROR_NO_ACTIONS );
+    DUF_MAKE_ERROR( r, DUF_ERROR_NO_ACTIONS );
   DEBUG_ENDR( r );
 }
 

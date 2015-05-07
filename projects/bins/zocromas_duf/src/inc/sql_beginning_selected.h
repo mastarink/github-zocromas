@@ -2,6 +2,12 @@
 #  define SQL_BEGINNING_SELECTED_H
 
 #  define DUF_SELECTED_TEMPORARY "TEMPORARY"
+#  ifdef DUF_SELECTED_TEMPORARY
+#    define DUF_SELECTED_TEMPORARY_STRING DUF_SELECTED_TEMPORARY
+#  else
+#    define DUF_SELECTED_TEMPORARY_STRING
+#  endif
+
 #  define DUF_SELECTED_NAME  "selected_filenames"
 #  define DUF_SELECTED_PATHS "selected_paths"
 #  define DUF_SELECTED_PATHTOT_FILES "selected_pathtot_files"
