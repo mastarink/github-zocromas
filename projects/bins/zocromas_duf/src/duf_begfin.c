@@ -22,7 +22,7 @@
 
 
 static int
-duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const char *node_selector2 )
+duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 {
   DEBUG_STARTR( r );
 #define BIND_PAIR( _fld, _name ) \
@@ -58,7 +58,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const char *node_selector2 )
       pathname = mas_strdup( duf_config->pu->same_as );
       base = basename( pathname );
       dir = dirname( pathname );
-      fp.dirid = duf_path2db( dir, node_selector2, &r );
+      fp.dirid = duf_path2db( dir, NULL, &r );
       fp.name = mas_strdup( base );
       mas_free( pathname );
     }
@@ -77,7 +77,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const char *node_selector2 )
 }
 
 int
-duf_scan_beginning_psql( const char **psql, int bind, const char *node_selector2, const char *title )
+duf_scan_beginning_psql( const char **psql, int bind, const char *title )
 {
   DEBUG_STARTR( r );
   const char **psql0 = psql;
@@ -91,7 +91,8 @@ duf_scan_beginning_psql( const char **psql, int bind, const char *node_selector2
 
     {
       DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-      if (bind)DOR( r, duf_bind_ufilter( pstmt, node_selector2 ) );
+      if ( bind )
+        DOR( r, duf_bind_ufilter( pstmt ) );
       if ( r >= 0 )
       {
         DUF_SQL_STEP( r, pstmt );

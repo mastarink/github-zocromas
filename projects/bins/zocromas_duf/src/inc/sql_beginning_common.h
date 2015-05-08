@@ -1,23 +1,6 @@
 #ifndef SQL_BEGINNING_COMMON_H
 #  define SQL_BEGINNING_COMMON_H
 
-#  define DUF_COMMON_TEMPORARY "TEMPORARY"
-#  ifdef DUF_COMMON_TEMPORARY
-#    define DUF_COMMON_TEMPORARY_STRING DUF_COMMON_TEMPORARY
-#  else
-#    define DUF_COMMON_TEMPORARY_STRING
-#  endif
-
-#  define DUF_COMMON_NAME  "filenames"
-#  define DUF_COMMON_PATHS "paths"
-#  define DUF_COMMON_PATHTOT_FILES "common_pathtot_files"
-#  define DUF_COMMON_PATHTOT_DIRS "common_pathtot_dirs"
-
-#  define DUF_COMMON_NAME_FULL  DUF_COMMON_NAME
-#  define DUF_COMMON_PATHS_FULL DUF_COMMON_PATHS
-#  define DUF_COMMON_PATHTOT_FILES_FULL DUF_COMMON_PATHTOT_FILES
-#  define DUF_COMMON_PATHTOT_DIRS_FULL DUF_COMMON_PATHTOT_DIRS
-
 
 
 extern const char *sql_beginning_common[];

@@ -34,6 +34,9 @@
 
 #include "duf_dbg.h"
 
+#include "sql_beginning_selected.h"
+#include "sql_beginning_tables.h"
+
 static unsigned long long
 duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )
 {
@@ -276,6 +279,8 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            ,
            .selector2 =         /* */
            " FROM " DUF_DBPREF " paths AS pt " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0
            " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */

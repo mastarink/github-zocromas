@@ -94,10 +94,12 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         case 0x14:
         case 0x34:
         case 0x35:
-          DUF_PRINTF( 0, ".  → " );
+          /* DUF_PRINTF( 0, ".  → " ); */
+          DUF_PRINTF( 0, ".    " );
           break;
         case 0x15:
-          DUF_PRINTF( 0, ".│ → " );
+          /* DUF_PRINTF( 0, ".│ → " ); */
+          DUF_PRINTF( 0, ".│   " );
           break;
         case 0x10:
         case 0x30:
@@ -222,7 +224,7 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
                                             .md5 = 1,
                                             .md5id = 1,
                                             .mtime = 1,
-                                            .dataid = 0,
+                                            .dataid = 1,
                                             .prefix = 1,
                                             .suffix = 1,
                                             },
@@ -391,7 +393,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            ,
            .selector2 =         /* */
            /* "SELECT %s " */
-           " FROM " DUF_SELECTED_NAME_FULL " AS fns " /* */
+           " FROM " DUF_SQL_SELECTED_NAME_FULL " AS fns " /* */
            " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas  AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
@@ -405,7 +407,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF " md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-//         " FROM "  DUF_SELECTED_NAME_FULL " AS fns " /* */
+//         " FROM "  DUF_SQL_SELECTED_NAME_FULL " AS fns " /* */
 //         " JOIN " DUF_DBPREF " filenames AS fn ON( fns." DUF_SQL_IDNAME " = fn." DUF_SQL_IDNAME " ) " /* */
 //         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
 //         " LEFT JOIN " DUF_DBPREF " md5 AS md ON( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
@@ -423,10 +425,10 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
 	   " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #else
-           DUF_SELECTED_PATHS_FULL " AS pts " /* */
+           DUF_SQL_SELECTED_PATHS_FULL " AS pts " /* */
            " LEFT JOIN " DUF_DBPREF " paths AS pt ON( pts.parentid = pt.rowid ) " /* */
-           " LEFT JOIN " DUF_SELECTED_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SELECTED_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_SELECTED_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
            " WHERE pt.ParentId =:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            }

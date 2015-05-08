@@ -13,7 +13,7 @@
 
 #  define DUF_EREPORT(r) (duf_get_ereport(r)>0)
 
-#  define DUF_MAKE_ERROR(_rval, _code) (_rval = duf_make_error(_code))
+#  define DUF_MAKE_ERROR(_rval, _code) (_rval = duf_make_error(_code, FL))
 
 #  define DUF_SHOW_ERROR_WP( _prefix, ... )		DUF_TRACE_WP( _prefix, error, 0, __VA_ARGS__ )
 #  define DUF_SHOW_ERROR( ... )				DUF_SHOW_ERROR_WP(NULL, __VA_ARGS__)

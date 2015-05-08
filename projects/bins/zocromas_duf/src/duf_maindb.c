@@ -75,7 +75,8 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
   }
 #endif
-  duf_scan_beginning_psql( sql_beginning_common, 0, NULL, NULL );
+/* TODO : part to only after possible tables creation */
+  duf_scan_beginning_psql( sql_beginning_common, 0, NULL );
   DEBUG_ENDR( r );
 }
 

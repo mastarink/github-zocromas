@@ -28,6 +28,9 @@
 
 #include "duf_sql_defs.h"
 
+#include "duf_begfin.h"
+#include "sql_beginning_create.h"
+#include "sql_beginning_tables.h"
 
 /* ###################################################################### */
 #include "duf_action.h"
@@ -73,7 +76,10 @@ duf_pre_action( void )
     if ( DUF_CLI_FLAG( dry_run ) )
       DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
     else
-      DOR( r, duf_clear_tables(  ) );
+    {
+      /* DOR( r, duf_clear_tables(  ) ); */
+      DORF( r, duf_scan_beginning_psql, sql_beginning_clear, 0, NULL );
+    }
     global_status.actions_done++;
   }
   else
@@ -103,13 +109,15 @@ duf_pre_action( void )
   if ( r >= 0 && DUF_ACT_FLAG( create_tables ) )
   {
     DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-    DOR( r, duf_check_tables(  ) );
+    /* DOR( r, duf_check_tables(  ) ); */
+    DORF( r, duf_scan_beginning_psql, sql_beginning_create, 0, NULL );
     global_status.actions_done++;
   }
   else
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
+  duf_scan_beginning_psql( sql_beginning_tables, 0, NULL );
 
   DEBUG_ENDR( r );
 }

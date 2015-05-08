@@ -3,7 +3,7 @@
 
 #  include "duf_error_types.h"
 
-duf_error_code_t duf_make_error( duf_error_code_t err );
+duf_error_code_t duf_make_error( duf_error_code_t err, const char *funcid, int linid );
 long duf_made_errors( duf_error_code_t err );
 duf_error_code_t duf_vclear_error( duf_error_code_t r, va_list args );
 duf_error_code_t duf_clear_error( duf_error_code_t r, ... );

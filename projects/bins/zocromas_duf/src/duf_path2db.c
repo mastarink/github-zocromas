@@ -27,7 +27,7 @@
 #include "duf_sql2.h"
 
 #include "sql_beginning_selected.h"
-#include "sql_beginning_common.h"
+#include "sql_beginning_tables.h"
 
 /* ###################################################################### */
 #include "duf_path2db.h"
@@ -100,8 +100,8 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int tag, int cani
               ", td.numdirs AS ndirs  " /*      */
               ;
         const char *def_node_selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
-              " LEFT JOIN " DUF_COMMON_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
-              " LEFT JOIN " DUF_COMMON_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+              " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+              " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
               " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dirname=:dirName)";
 
         sqlv = mas_strdup( "SELECT " );

@@ -48,6 +48,8 @@ zocromas_duf_SOURCES=				   \
 	mod_template_uni.c	\
 	sql_beginning_selected.c \
 	sql_beginning_common.c \
+	sql_beginning_create.c \
+	sql_beginning_tables.c \
 	data_optable_flag.c	\
 	data_optable_sflag.c	\
 	data_optable_str.c	\

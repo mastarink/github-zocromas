@@ -99,41 +99,78 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
 
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
 
+  if ( duf_config->cli.format.v.flag.depth && ( !format || format->v.flag.depth ) )
+  {
+    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{depth}" ) );
+    DUF_PRINTF( 2, ".  +%-2u ", duf_pdi_reldepth( pdi ) );
+    ok++;
+  }
+  DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
+
   if ( duf_config->cli.format.v.flag.seq && ( !format || format->v.flag.seq ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{seq}" ) );
-    DUF_PRINTF( 2, ".#%-6llu ", pdi->seq );
+    DUF_PRINTF( 2, ".#%-3llu ", pdi->seq );
     ok++;
+  }
+  else
+  {
+    /* DUF_PRINTF( 2, ". %-3s ", "" ); */
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
   if ( duf_config->cli.format.v.flag.seq_node && ( !format || format->v.flag.seq_node ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{seq_node}" ) );
-    DUF_PRINTF( 2, ".#%-6llu ", pdi->seq_node );
+    DUF_PRINTF( 2, ".#%-3llu ", pdi->seq_node );
     ok++;
+  }
+  else
+  {
+    /* DUF_PRINTF( 2, ". %-3s ", "" ); */
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
 
   if ( duf_config->cli.format.v.flag.seq_leaf && ( !format || format->v.flag.seq_leaf ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{seq_leaf}" ) );
-    DUF_PRINTF( 2, ".#%-6llu ", pdi->seq_leaf );
+    DUF_PRINTF( 2, ".#%-3llu ", pdi->seq_leaf );
     ok++;
   }
+  else
+  {
+    DUF_PRINTF( 2, ". %-3s ", "" );
+  }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
+
+  if ( duf_config->cli.format.v.flag.prefix && ( !format || format->v.flag.prefix ) )
+  {
+    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{prefix}" ) );
+    if ( prefix_cb )
+      ( prefix_cb ) ( pdi );
+    /* else                                                                           */
+    /*   DUF_PRINTF( 0, ".= __________________________________________________ = " ); */
+    ok++;
+  }
+  else
+  {
+    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{noprefix}" ) );
+    /* DUF_PRINTF( 0, ".      " ); */
+  }
+  DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
+
 
 
   if ( duf_config->cli.format.v.flag.dirid && ( !format || format->v.flag.dirid ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{dirid}" ) );
-    DUF_PRINTF( 4, ".[%6llu  ] ", duf_levinfo_nodedirid( pdi ) );
+    DUF_PRINTF( 4, ".d%-6llu ", duf_levinfo_nodedirid( pdi ) );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
   if ( duf_config->cli.format.v.flag.dirid_space && ( !format || format->v.flag.dirid_space ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{dirid_space}" ) );
-    DUF_PRINTF( 4, ". %6s    ", "" );
+    DUF_PRINTF( 4, ".%3s", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -168,20 +205,16 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
 
-  if ( duf_config->cli.format.v.flag.prefix && ( !format || format->v.flag.prefix ) )
+  if ( duf_config->cli.format.v.flag.dataid && ( !format || format->v.flag.dataid ) )
   {
-    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{prefix}" ) );
-    if ( prefix_cb )
-      ( prefix_cb ) ( pdi );
-    /* else                                                                           */
-    /*   DUF_PRINTF( 0, ".= __________________________________________________ = " ); */
+    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{dataid}" ) );
+    if ( pfi->dataid )
+      DUF_PRINTF( 2, ".~%-6llu ", pfi->dataid );
+    else
+      DUF_PRINTF( 2, ". %6s ", "" );
     ok++;
   }
-  else
-  {
-    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{noprefix}" ) );
-    /* DUF_PRINTF( 0, ".      " ); */
-  }
+
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
 
   if ( duf_config->cli.format.v.flag.suffix && ( !format || format->v.flag.suffix ) )
@@ -203,7 +236,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   if ( duf_config->cli.format.v.flag.inode && ( !format || format->v.flag.inode ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{inode}" ) );
-    DUF_PRINTF( 1, ".%-9llu ", ( unsigned long long ) pfi->st.st_ino );
+    DUF_PRINTF( 9, ".i%-9llu ", ( unsigned long long ) pfi->st.st_ino );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -241,7 +274,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     if ( S_IXOTH & pfi->st.st_mode )
       *pmode = 'x';
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{mode}" ) );
-    DUF_PRINTF( 0, ".%s ", modebuf );
+    DUF_PRINTF( 7, ".%s ", modebuf );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -249,10 +282,10 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   if ( duf_config->cli.format.v.flag.nlink && ( !format || format->v.flag.nlink ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{nlink}" ) );
-    /* if ( pfi->st.st_nlink <= 1 )    */
-    /*   DUF_PRINTF( 0, ".%3s ", "" ); */
-    /* else                            */
-    DUF_PRINTF( 0, ".%-2llu ", ( unsigned long long ) pfi->st.st_nlink );
+    if ( pfi->st.st_nlink <= 1 )
+      DUF_PRINTF( 0, ".%2s ", "" );
+    else
+      DUF_PRINTF( 0, ".ln%-2llu ", ( unsigned long long ) pfi->st.st_nlink );
 
     ok++;
   }
@@ -261,7 +294,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   if ( duf_config->cli.format.v.flag.user && ( !format || format->v.flag.user ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{user}" ) );
-    DUF_PRINTF( 0, ".u%-9llu ", ( unsigned long long ) pfi->st.st_uid );
+    DUF_PRINTF( 2, ".u%-9llu ", ( unsigned long long ) pfi->st.st_uid );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -269,7 +302,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   if ( duf_config->cli.format.v.flag.group && ( !format || format->v.flag.group ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{group}" ) );
-    DUF_PRINTF( 0, ".g%-9llu ", ( unsigned long long ) pfi->st.st_gid );
+    DUF_PRINTF( 3, ".g%-9llu ", ( unsigned long long ) pfi->st.st_gid );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -282,7 +315,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     if ( duf_config->cli.format.v.flag.human || ( format && format->v.flag.human ) )
     {
       if ( sz < 1024 )
-        DUF_PRINTF( 0, ".%9llu  ", sz );
+        DUF_PRINTF( 0, ".%9llu.  ", sz );
       else if ( sz < 1024 * 1024 )
         DUF_PRINTF( 0, ".%9lluk ", sz / 1024 );
       else if ( sz < 1024 * 1024 * 1024 )
@@ -291,22 +324,11 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
         DUF_PRINTF( 0, ".%9lluG ", sz / 1024 / 1024 / 1024 );
     }
     else
-      DUF_PRINTF( 0, ".%10llu ", sz );
+      DUF_PRINTF( 0, ".%10llu.", sz );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
 
-  if ( duf_config->cli.format.v.flag.dataid && ( !format || format->v.flag.dataid ) )
-  {
-    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{dataid}" ) );
-    if ( pfi->dataid )
-      DUF_PRINTF( 2, ".D%-6llu ", pfi->dataid );
-    else
-      DUF_PRINTF( 2, ". %6s ", "" );
-    ok++;
-  }
-
-  DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
   if ( duf_config->cli.format.v.flag.mtime && ( !format || format->v.flag.mtime ) )
   {
     time_t mtimet;
@@ -355,7 +377,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     if ( format->v.flag.short_filename )
       DUF_PRINTF( 0, ".%-12s ", pfi->name );
     else
-      DUF_PRINTF( 0, ".%-30s ", pfi->name );
+      DUF_PRINTF( 0, ".[%-30s] ", pfi->name );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -366,9 +388,9 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
     {
       DUF_DEBUG( 12, DUF_PRINTF( 0, ".{md5id}" ) );
       if ( pfi->md5id )
-        DUF_PRINTF( 0, ".#%-6llu ", pfi->md5id );
+        DUF_PRINTF( 0, ".md%-6llu ", pfi->md5id );
       else
-        DUF_PRINTF( 0, ". %-6s ", "" );
+        DUF_PRINTF( 0, ".  %-6s ", "" );
       ok++;
     }
     else
@@ -384,9 +406,9 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{md5}" ) );
     if ( pfi->md5sum1 || pfi->md5sum2 )
-      DUF_PRINTF( 5, ".%016llx%016llx ", pfi->md5sum1, pfi->md5sum2 );
+      DUF_PRINTF( 8, ".%016llx%016llx ", pfi->md5sum1, pfi->md5sum2 );
     else
-      DUF_PRINTF( 5, ".%-32s ", "-" );
+      DUF_PRINTF( 8, ".%-32s ", "-" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -395,9 +417,9 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{exifid}" ) );
     if ( pfi->exifid )
-      DUF_PRINTF( 5, ".X%llu ", pfi->exifid );
+      DUF_PRINTF( 5, ".X%-6llu ", pfi->exifid );
     else
-      DUF_PRINTF( 5, ".X%s ", "" );
+      DUF_PRINTF( 5, ". %-6s ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -421,7 +443,7 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
       strftime( xtimes, sizeof( xtimes ), "%b %d %Y %H:%M:%S", pxtimetm );
       DUF_DEBUG( 12, DUF_PRINTF( 0, ".{xtime}" ) );
       /* DUF_PRINTF( 0, ". %-s (%lu) ", xtimes, xtimet ); */
-      DUF_PRINTF( 0, ".{%-s} ", xtimes );
+      DUF_PRINTF( 5, ".{%-s} ", xtimes );
       ok++;
     }
   }
@@ -431,16 +453,16 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{mimeid}" ) );
     if ( pfi->mimeid )
-      DUF_PRINTF( 5, ".M%llu ", pfi->mimeid );
+      DUF_PRINTF( 5, ".M%-6llu ", pfi->mimeid );
     else
-      DUF_PRINTF( 5, ". %s ", "" );
+      DUF_PRINTF( 5, ". %-6s ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
   if ( duf_config->cli.format.v.flag.mimeid_space && ( !format || format->v.flag.mimeid_space ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{mimeid_space}" ) );
-    DUF_PRINTF( 5, ". %6s ", "" );
+    DUF_PRINTF( 5, ". %3s ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -461,23 +483,16 @@ duf_print_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_format_com
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{nameid}" ) );
     if ( pfi->nameid )
-      DUF_PRINTF( 5, ".N%llu ", pfi->nameid );
+      DUF_PRINTF( 9, ".N%-6llu ", pfi->nameid );
     else
-      DUF_PRINTF( 5, ". %s ", "" );
+      DUF_PRINTF( 9, ". %-6s ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
   if ( duf_config->cli.format.v.flag.nameid_space && ( !format || format->v.flag.nameid_space ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{nameid_space}" ) );
-    DUF_PRINTF( 5, ". %s ", "" );
-    ok++;
-  }
-  DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
-  if ( duf_config->cli.format.v.flag.depth && ( !format || format->v.flag.depth ) )
-  {
-    DUF_DEBUG( 12, DUF_PRINTF( 0, ".{depth}" ) );
-    DUF_PRINTF( 2, ".  +%u ", duf_pdi_reldepth( pdi ) );
+    DUF_PRINTF( 5, ". %1s ", "" );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );

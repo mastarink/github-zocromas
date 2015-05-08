@@ -28,7 +28,7 @@ static int max_show_count_error[DUF_ERROR_COUNT] = { 0 };
 static long _made_errors = 0;
 
 duf_error_code_t
-duf_make_error( duf_error_code_t err )
+duf_make_error( duf_error_code_t err, const char *funcid, int linid )
 {
   _made_errors++;
   return err;
