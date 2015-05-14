@@ -5,7 +5,8 @@
 #include "duf_hook_types.h"
 #include "duf_fileinfo_types.h"
 
-#include "duf_service.h"
+/* #include "duf_service.h" */
+#include "duf_print.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
@@ -261,7 +262,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
                                             .realpath = 1,
                                             .depth = 1,
                                             .seq = 1,
-                                            .seq_node = 0,
+                                            .seq_node = 1,
                                             .dirid = 1,
                                             .exifid = 0,
                                             .exifdt = 0,

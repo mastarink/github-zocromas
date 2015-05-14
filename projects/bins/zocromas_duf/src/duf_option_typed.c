@@ -587,7 +587,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         DUF_MOPT( noo, r, duf_limitsll_t, max, duf_strtime2long );
         break;
-      case DUF_OPTION_VTYPE_VIFUN:
+      case DUF_OPTION_VTYPE_VI_CALL:
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
@@ -598,7 +598,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
             r = DUF_ERROR_OPTION_NO_FUNC;
         }
         break;
-      case DUF_OPTION_VTYPE_AFUN:
+      case DUF_OPTION_VTYPE_A_CALL:
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
@@ -608,7 +608,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
             ( extended->call.fdesc.a.func ) ( duf_config->cargc, duf_config->cargv );
         }
         break;
-      case DUF_OPTION_VTYPE_TNFUN:
+      case DUF_OPTION_VTYPE_TN_CALL:
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
@@ -617,7 +617,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
             ( extended->call.fdesc.tn.func ) ( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) );
         }
         break;
-      case DUF_OPTION_VTYPE_TSFUN:
+      case DUF_OPTION_VTYPE_TS_CALL:
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )

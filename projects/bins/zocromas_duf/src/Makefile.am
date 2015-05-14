@@ -33,7 +33,7 @@ zocromas_duf_SOURCES=				   \
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
 	duf_errors.c  duf_trace.c				      \
-	duf_dh.c duf_service.c					     \
+	duf_dh.c duf_service.c duf_print.c			     \
 								      \
 	duf_sqlite.c duf_sql.c duf_sql_field.c duf_sql_field2.c	       \
 									\

@@ -9,13 +9,13 @@
 #include "duf_optable_def.h"
 const duf_longval_extended_t optable_uplus[] = {
 
-  {.o = {DO_Q( "sample" ), /*         */ DO_A_O, /* */ DO_V( SAMPLE )} /*         */ , DO_CL( NODESC ) /*  */ ,
+  {.o = {DO_Q( "sample" ) /*             */, DO_A_O /* */, DO_V( SAMPLE )} /*         */ , DO_CL( NODESC ) /*  */ ,
    /*      */ DO_O( UPLUS, cli.act.sample ) /*                                                             */ , DO_H(  .... ) /*             */ },
-  {.o = {DO_Q( "sampupd" ), /*        */ DO_A_O, /* */ DO_V( SAMPUPD )} /*        */ , DO_CL( NODESC ) /*  */ ,
+  {.o = {DO_Q( "sampupd" ) /*            */, DO_A_O /* */, DO_V( SAMPUPD )} /*        */ , DO_CL( NODESC ) /*  */ ,
    /*      */ DO_O( UPLUS, cli.act.sampupd ) /*                                                            */ , DO_H(  .... ) /*             */ },
 
   {.o = {.name = NULL}}
 };
 
-/* vi: ft=c colorcolumn=3,40,54,84,109,145,146
+/* vi: ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */

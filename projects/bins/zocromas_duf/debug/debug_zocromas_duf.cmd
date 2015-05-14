@@ -6,9 +6,7 @@ define hook-quit
     set confirm off
 end
 handle SIGPIPE nostop noprint
-# b duf_sqlite.c:380
-# b duf_service.c:394
-# b mod_dir_print_uni.c:183
-b duf_begfin.c:61
+
+# b mod_tree_print_uni.c:52
 run
 bt

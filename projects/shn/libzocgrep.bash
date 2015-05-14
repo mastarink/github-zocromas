@@ -11,18 +11,29 @@ function grepchg ()
     popd &>/dev/null
   fi
 }
-function grepchp ()
+function grepchpx ()
 {
+  local ex
   local qargs
+  ex=$1
+  shift
   for (( i=1; i <= $# ; i++ )) ; do
     qargs+=" '${!i}'"
   done
 
   if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
 #   shn_msg grep "$*"
-    eval grep  -r --inc='*.[ch]' $qargs -- src/
+    eval grep  -r --inc='*.['${ex:-ch}']' $qargs -- src/
     popd &>/dev/null
   fi
+}
+function grepchp ()
+{
+  grepchpx ch "$*"
+}
+function grephp ()
+{
+  grepchpx h "$*"
 }
 
 function grepnc ()

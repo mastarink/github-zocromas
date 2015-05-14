@@ -123,17 +123,17 @@ function shn_debug ()
     if [[ "$lt" ]] ; then
       if [[ "$tmpcmd" ]] && [[ -s "$tmpcmd" ]] ; then
     # libtool --mode=execute gdb -batch $binsdir/$mas_name -x $tmpcmd
-	libtool --mode=execute gdb  -q       $bin -x $tmpcmd
+	libtool --mode=execute ${MSH_SHN:-gdb}  -q       $bin -x $tmpcmd
 #	libtool --mode=execute cgdb --  -q       $bin -x $tmpcmd
       else
 	echo "no file : $cmdfile" >&2
       fi
     else
       if [[ "$tmpcmd" ]] ; then
-	gdb   -q      $bin -x $tmpcmd
+	${MSH_SHN:-gdb}   -q      $bin -x $tmpcmd
 #	cgdb --   -q      $bin -x $tmpcmd
       else
-	gdb   -q      $bin
+	${MSH_SHN:-gdb}   -q      $bin
 #	cgdb --   -q      $bin
       fi
     fi
@@ -179,8 +179,8 @@ function shn_core_debug ()
       return 1
     fi
     shn_msg "--=<>=--=<>=--=<>=--=<>=--=<$bin>=--=<>=--=<>=--=<>=--=<>=--"
-    shn_msg "libtool --mode=execute gdb -q $bin -c '$corename'"
-    libtool --mode=execute gdb -q $bin -c "$corename"
+    shn_msg "libtool --mode=execute ${MSH_SHN:-gdb} -q $bin -c '$corename'"
+    libtool --mode=execute ${MSH_SHN:-gdb} -q $bin -c "$corename"
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"
@@ -217,7 +217,7 @@ function shn_core_debug_installed ()
       return 1
     fi
 
-    libtool --mode=execute gdb -q $bin -c "$corename"
+    libtool --mode=execute ${MSH_SHN:-gdb} -q $bin -c "$corename"
   else
     shn_errmsg "rname:$rname"
     shn_errmsg "bsrc:$bsrc"

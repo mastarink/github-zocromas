@@ -33,8 +33,7 @@
  * if arg is help option
  * return class id for options to display the help
  * */
-duf_option_class_t
-duf_help_option2class( duf_option_code_t codeval )
+static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( duf_option_code_t codeval )
 {
   duf_option_class_t rv = DUF_OPTION_CLASS_BAD;
 
@@ -145,13 +144,14 @@ duf_option_smart_help( duf_option_class_t oclass )
   for ( int ilong = 0; r >= 0 && duf_config->longopts_table[ilong].name && ilong < tbcount; ilong++ )
   {
     char *s = NULL;
-    duf_option_code_t codeval;
+
+    /* duf_option_code_t codeval; */
     const char *name;
     const duf_longval_extended_t *extd;
     int ie;
 
     name = duf_config->longopts_table[ilong].name;
-    codeval = duf_config->longopts_table[ilong].val;
+    /* codeval = duf_config->longopts_table[ilong].val; */
     /* extended = _duf_find_longval_extended( codeval ); */
     extd = duf_longindex2extended( ilong, &r );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
@@ -176,6 +176,7 @@ duf_option_smart_help( duf_option_class_t oclass )
           if ( duf_config->help_string )
           {
             char *s = duf_config->help_string;
+            duf_option_code_t codeval = duf_config->longopts_table[ilong].val;
 
             look = ( ( s && *s && !s[1] && codeval == *s ) || ( 0 == strcmp( s, name ) ) /* OR: else if ( strstr( name, s ) ) */  );
           }
@@ -220,7 +221,7 @@ duf_option_smart_help_all( duf_option_class_t oclass )
 
 
 void
-duf_option_help( int argc, char **argv )
+duf_option_help( int argc, char *const *argv )
 {
   int r = 0;
 
@@ -457,17 +458,21 @@ duf_option_examples( int argc, char *const *argv )
 
 
   DUF_PRINTF( 0, "========================= as for 20150506.153411 ============" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf    	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --min-size=300M -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --min-size=200M -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=200M -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=20M -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=2M -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=2K -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=2k -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=1k -T	- %s", "collect everything we can" );
-  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=1k --min-size=1 -T > `datemt`.tt	- %s", "collect everything we can" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf    	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --min-size=300M -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --min-size=200M -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=200M -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=20M -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=2M -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=2K -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=2k -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=1k -T	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf   --max-size=1k --min-size=1 -T > `datemt`.tt	- %s", "" );
 
+  DUF_PRINTF( 0, "========================= as for 20150509.152057 ============" );
+  DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/  --remove-database  -PRDdnEiX235fOep --progres    	- %s", "" );
+  DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/   -Rpdf     --min-same=10 --output-level=4    	- %s", "" );
+  DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/   -Rpdf     --same=5 -T    	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
@@ -617,7 +622,7 @@ duf_option_showflags( int argc, char *const *argv )
 }
 
 void
-duf_list_sccb( int x )
+duf_option_list_sccb( int x )
 {
   for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
   {
@@ -626,7 +631,7 @@ duf_list_sccb( int x )
 }
 
 void
-duf_list_targ( int *ptargc, char ***ptargv, long n )
+duf_option_list_targ( int *ptargc, char ***ptargv, long n )
 {
   if ( ptargc && ptargv )
   {
@@ -642,14 +647,14 @@ duf_list_targ( int *ptargc, char ***ptargv, long n )
 }
 
 void
-duf_clear_targ( int *ptargc, char ***ptargv, long n )
+duf_option_clear_targ( int *ptargc, char ***ptargv, long n )
 {
   if ( ptargc && ptargv && n == 0 )
     *ptargc = mas_argv_delete( *ptargc, *ptargv );
 }
 
 void
-duf_add_targ( int *ptargc, char ***ptargv, const char *s )
+duf_option_add_targ( int *ptargc, char ***ptargv, const char *s )
 {
   if ( ptargc && ptargv )
     *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );

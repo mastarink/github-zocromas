@@ -30,6 +30,7 @@ alias e='shn_file_edit'
 alias run='shn m i r'
 alias gnc="grepnc"
 alias g="grepchp"
+alias gh="grephp"
 
 # if [[ "$MSH_SHLIB" ]] && [[ -d "$MSH_SHLIB" ]] && [[ -f "$MSH_SHLIB/libed2.bash" ]] ; then
 #   . $MSH_SHLIB/libed2.bash

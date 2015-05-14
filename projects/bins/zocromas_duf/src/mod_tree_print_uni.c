@@ -5,7 +5,8 @@
 #include "duf_hook_types.h"
 #include "duf_fileinfo_types.h"
 
-#include "duf_service.h"
+/* #include "duf_service.h" */
+#include "duf_print.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
@@ -45,6 +46,8 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
     int max = duf_pdi_depth( pdi );
 
     d0 = duf_pdi_topdepth( pdi );
+    if ( d0 == 0 )
+      d0 = 1;
     for ( int d = d0; d <= max; d++ )
     {
       int du = d - 1;
@@ -82,8 +85,7 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
                  /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                  DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                  DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-                 DUF_PRINTF( 0, ".0x%02x]", flags );
-             );
+                 DUF_PRINTF( 0, ".0x%02x]", flags ); );
       {
         /* DUF_PRINTF( 0, ".%05ld", ndu ); */
         /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
@@ -95,11 +97,11 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
         case 0x34:
         case 0x35:
           /* DUF_PRINTF( 0, ".  → " ); */
-          DUF_PRINTF( 0, ".    " );
+          DUF_PRINTF( 0, ".  " );
           break;
         case 0x15:
           /* DUF_PRINTF( 0, ".│ → " ); */
-          DUF_PRINTF( 0, ".│   " );
+          DUF_PRINTF( 0, ".│ " );
           break;
         case 0x10:
         case 0x30:
@@ -331,12 +333,12 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long 
                                                 .group = 0,
                                                 .filesize = 0,
                                                 .md5 = 0,
-                                                .md5id = 0,
+                                                .md5id = 1,
                                                 .mtime = 0,
                                                 .prefix = 1,
                                                 .suffix = 1,
                                                 },
-        .nsame = 0,
+        .nsame = 1,
         };
         /* fi.nsame = nsame; */
         /* fi.st.st_mode = ( mode_t ) filemode; */
@@ -400,7 +402,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            " LEFT JOIN " DUF_DBPREF "mime       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
            " LEFT JOIN " DUF_DBPREF "exif       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
            " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-           "    WHERE "            /* */
+           "    WHERE "         /* */
            " fn.Pathid =:parentdirID " /* */
            ,
            .selector_total2 =   /* */
@@ -411,7 +413,8 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
 //         " JOIN " DUF_DBPREF " filenames AS fn ON( fns." DUF_SQL_IDNAME " = fn." DUF_SQL_IDNAME " ) " /* */
 //         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
 //         " LEFT JOIN " DUF_DBPREF " md5 AS md ON( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
-           },
+           }
+  ,
   .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
            ,
@@ -422,7 +425,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            " FROM "
 #if 0
            DUF_DBPREF "paths AS pt " /* */
-	   " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #else
            DUF_SQL_SELECTED_PATHS_FULL " AS pts " /* */

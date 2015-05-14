@@ -25,6 +25,9 @@ sfind duf_dh.h
 tab sfind duf_service.c
 sfind duf_service.h
 
+tab sfind duf_print.c
+sfind duf_print.h
+
 tab sfind duf_dbg.c
 sfind duf_dbg.h
 
