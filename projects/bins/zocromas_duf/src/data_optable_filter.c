@@ -134,10 +134,10 @@ const duf_longval_extended_t optable_filter[] = {
    /*      */ DO_OU( STR, same_as ) /*                                                                     */ , DO_H( same as ) /*           */ },
 
   {.o = {DO_Q( "same-as" ) /*           */ , DO_A_O} /*                              */ , DO_CL( CONTROL ) /*  */ ,
-   /*      */ DO_OU( PSTR, same_as ), DO_STAGE_SAME( 1 ) /*                                                     */ ,
+   /*      */ DO_OU( PSTR, same_as ), DO_AT_STAGE( 1 ) /*                                                     */ ,
    DO_H( same as ) /*           */ },
   {.o = {DO_Q( "same-as" ) /*           */ , DO_A_O} /*                              */ , DO_CL( CONTROL ) /*  */ ,
-   /*      */ DO_O( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_SAME( 1 ) /*                       */ ,
+   /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, beginning_sql ),   DO_AT_STAGE( 1 ) /*                       */ ,
    DO_H( same as ) /*           */ },
 
   {.o = {.name = NULL}}

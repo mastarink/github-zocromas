@@ -2,7 +2,8 @@
 #  define SQL_BEGINNING_COMMON_H
 
 
+#include "sql_beginning_types.h"
 
-extern const char *sql_beginning_common[];
+extern duf_beginning_t sql_beginning_common;
 
 #endif

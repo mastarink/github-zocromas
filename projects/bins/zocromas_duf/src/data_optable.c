@@ -19,9 +19,9 @@ const duf_longval_extended_t optable_main[] = {
 
 
   {.o = {DO_N( depth ) /*               */ , DO_A_O} /*                               */ , DO_CL( CONTROL ) /* */ ,
-   /*      */ DO_OPDI( PDINUM, depth ), DO_STAGE_SAME( 1 ) /*                                              */ , DO_H( pdi cd ) /*               */ },
+   /*      */ DO_OPDI( PDINUM, depth ), DO_AT_STAGE( 1 ) /*                                              */ , DO_H( pdi cd ) /*               */ },
   {.o = {DO_N( maxdepth ) /*            */ , DO_A_O} /*                               */ , DO_CL( CONTROL ) /* */ ,
-   /*      */ DO_OPDI( PDINUM, maxdepth ), DO_STAGE_SAME( 1 ) /*                                           */ , DO_H( pdi cd ) /*            */ },
+   /*      */ DO_OPDI( PDINUM, maxdepth ), DO_AT_STAGE( 1 ) /*                                           */ , DO_H( pdi cd ) /*            */ },
 
 
   {.o = {DO_Q( "max-rel-depth" ) /*     */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*  */ ,
@@ -29,24 +29,24 @@ const duf_longval_extended_t optable_main[] = {
   {.o = {DO_Q( "max-depth" ) /*         */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*  */ ,
    /*      */ DO_OU( NUM, max_rel_depth ) /*                                                               */ , DO_H(  .... ) /*             */ },
   {.o = {DO_Q( "max-depth" ) /*         */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*    */ , DO_CL( NODESC ) /*  */ ,
-   /*      */ DO_OU( PNUM, max_rel_depth ), DO_STAGE_SAME( 1 ) /*                                               */ ,
+   /*      */ DO_OU( PNUM, max_rel_depth ), DO_AT_STAGE( 1 ) /*                                               */ ,
    DO_H(  .... ) /*              */ },
   {.o = {DO_Q( "max-seq" ) /*           */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*   */ ,
    /*      */ DO_OU( NUM, max_seq ) /*                                                                      */ , DO_H(  .... ) /*            */ },
   {.o = {DO_Q( "max-seq" ) /*           */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*         */ , DO_CL( NODESC ) /*   */ ,
-   /*      */ DO_OU( PNUM, max_seq ), DO_STAGE_SAME( 1 ) /*                                                      */ ,
+   /*      */ DO_OU( PNUM, max_seq ), DO_AT_STAGE( 1 ) /*                                                      */ ,
    DO_H(  .... ) /*              */ },
 
 
   {.o = {DO_Q( "output-level" ) /*      */ , DO_A_O /* */ , DO_V( OUTPUT_LEVEL )} /*   */ , DO_CL( PRINT ) /*   */ ,
-   /*      */ DO_O( NUM, cli.output.level ) /*                                                             */ , DO_H( output level ) /*      */ },
+   /*      */ DO_OC( NUM, cli.output.level ) /*                                                             */ , DO_H( output level ) /*      */ },
   {.o = {DO_Q( "output-file" ) /*       */ , DO_A_R /* */ , DO_V( OUTPUT_FILE )} /*    */ , DO_CL( PRINT ) /*   */ ,
-   /*      */ DO_O( FILE, cli.output ) /*                                                                  */ , DO_H( output to file ) /*    */ },
+   /*      */ DO_OC( FILE, cli.output ) /*                                                                  */ , DO_H( output to file ) /*    */ },
   {.o = {DO_Q( "output-stderr" ) /*     */ , DO_A_N /* */ , DO_V( OUTPUT_STDERR )} /*  */ , DO_CL( PRINT ) /*   */ ,
-   /*      */ DO_O( FILE, cli.output ),.call = {.value =
+   /*      */ DO_OC( FILE, cli.output ),.call = {.value =
                                                 {.u = 2}} /*                                             */ , DO_H( output to stderr ) /*    */ },
   {.o = {DO_Q( "output-stdout" ) /*     */ , DO_A_N /* */ , DO_V( OUTPUT_STDOUT )} /*  */ , DO_CL( PRINT ) /*   */ ,
-   /*      */ DO_O( FILE, cli.output ),.call = {.value =
+   /*      */ DO_OC( FILE, cli.output ),.call = {.value =
                                                 {.u = 1}} /*                                             */ , DO_H( output to stdout ) /*    */ },
 
 

@@ -1,7 +1,9 @@
 #ifndef   MAS_DUF_BEGFIN_H
 #  define MAS_DUF_BEGFIN_H
 
-int duf_scan_beginning_psql( const char **psql, int bind, const char *title );
+#  include "sql_beginning_types.h"
+
+int duf_scan_beginning_ssql( duf_beginning_t * ssql, int bind, const char *title );
 
 #endif
 

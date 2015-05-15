@@ -7,5 +7,14 @@ echo " gitlab ----------------------------------------"
 git push gitlab master
 echo " bitbucket ----------------------------------------"
 git push bitbucket master
-echo " gitorius-zoc ----------------------------------------"
-git push gitorius-zoc master
+
+# # remote: 
+# # remote: ============================== WARNING ==============================
+# # remote: 
+# # remote: Gitorious.org is entering read-only mode on May 15th. If you still
+# # remote: need push capabilities please migrate your repository to GitLab.com
+# # remote: 
+# # remote: ============================== WARNING ==============================
+# # remote: 
+# echo " gitorius-zoc ----------------------------------------"
+# git push gitorius-zoc master

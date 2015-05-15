@@ -47,7 +47,14 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
 {
   int r = -1;
 
-  assert( signum != '-' );
+  /* 
+   * needless??
+   *
+  assert( signum != '-' ); (* '-' means there is no config pointer *)
+   *
+   * see definition of DUF_TRACE_WHAT_C at duf_trace_defs_what.h
+   *
+   * */
 #ifndef DUF_NOTIMING
   double timec;
 #endif

@@ -22,6 +22,9 @@
 #include "duf_pdi.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_begfin.h"
+#include "sql_beginning_tables.h"
+
 /* ###################################################################### */
 #include "duf_interactive.h"
 /* ###################################################################### */
@@ -78,9 +81,13 @@ duf_interactive( void )
     {
       r = 0;
       if ( DUF_ACT_FLAG( beginning_sql ) )
-        global_status.selection_done = 0;
-
-      DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */, DUF_U_FLAG( recursive ) ) );
+      {
+        /* TODO:reset selection */
+        sql_beginning_tables.done = 0;
+        /* global_status.selection_done = 0; */
+      }
+      /* DOR( r, duf_scan_beginning_ssql( &sql_beginning_tables, 0, NULL ) ); */
+      DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */ , DUF_U_FLAG( recursive ) ) );
 
       if ( duf_config && duf_config->pdi )
         snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );

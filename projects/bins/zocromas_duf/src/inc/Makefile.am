@@ -2,7 +2,9 @@ noinst_HEADERS=duf.h \
 	sql_beginning_selected.h \
 	sql_beginning_common.h \
 	sql_beginning_create.h \
+	sql_beginning_vacuum.h \
 	sql_beginning_tables.h \
+	sql_beginning_types.h \
 	duf_action.h \
 	duf_add.h \
 	duf_base_types.h \

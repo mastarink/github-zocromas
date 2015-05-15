@@ -86,7 +86,8 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     sccbh->pu = pu;
     sccbh->pdi = pdi;
     sccbh->sccb = sccb;
-    duf_scan_qbeginning_sql( sccb );
+    /* duf_scan_qbeginning_sql( sccb ); */
+    DOR( r, duf_scan_beginning_sql( sccb ) );
     {
       int rt = 0;
 
@@ -120,7 +121,7 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   DEBUG_STARTR( r );
   if ( sccbh )
   {
-    DOR( r, duf_scan_final_sql( sccbh->sccb ) );
+    DOR( r, duf_scan_beginning_sql( sccbh->sccb ) );
     mas_free( sccbh );
   }
   DEBUG_ENDR( r );

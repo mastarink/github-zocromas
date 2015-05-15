@@ -62,6 +62,7 @@ typedef struct
   unsigned mime;
   unsigned nonew;
   unsigned options;
+  unsigned config;
   unsigned path;
   unsigned sample;
   unsigned sampupd;

@@ -14,15 +14,15 @@
 #include "duf_config_ref.h"
 #include "duf_config.h"
 
-#include "duf_utils.h"
+/* #include "duf_utils.h" */
 #include "duf_sys_wrap.h"
 
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
 
-#include "duf_sql_defs.h"
+/* #include "duf_sql_defs.h" */
 #include "duf_sql.h"
-#include "duf_sql2.h"
+/* #include "duf_sql2.h" */
 
 #include "duf_action.h"
 
@@ -76,7 +76,7 @@ duf_main_db_tune( void )
   }
 #endif
 /* TODO : part to only after possible tables creation */
-  duf_scan_beginning_psql( sql_beginning_common, 0, NULL );
+  duf_scan_beginning_ssql( &sql_beginning_common, 0, NULL );
   DEBUG_ENDR( r );
 }
 

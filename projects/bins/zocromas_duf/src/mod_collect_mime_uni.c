@@ -228,16 +228,18 @@ duf_scan_dirent_mime_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
 
 
-static const char *final_sql[] = {
-  "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
-        " FROM " DUF_DBPREF "mime AS mi " /* */
-        " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.mimeid=mi." DUF_SQL_IDNAME ") " /* */
-        " WHERE " DUF_DBPREF "mime." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
-        /* " WHERE " DUF_DBPREF "mime.mime=mi.mime)" (* *) */
-        ,
+static duf_beginning_t final_sql = {.done = 0,
+  .sql = {
+          "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_DBPREF "mime AS mi " /* */
+          " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.mimeid=mi." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_DBPREF "mime." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
+          /* " WHERE " DUF_DBPREF "mime.mime=mi.mime)" (* *) */
+          ,
 
 
-  NULL,
+          NULL,
+          }
 };
 
 
@@ -287,5 +289,5 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
 #endif
            " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
-  .final_sql_argv = final_sql,
+  .final_sql_argv = &final_sql,
 };

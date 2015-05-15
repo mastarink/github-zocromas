@@ -6,21 +6,23 @@
              example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
  * */
 
-#  define DO_VX( _vid, ... ) .val = DUF_OPTION ##  __VA_ARGS__ ## _ ## _vid
-
-#  define DO_CL( _cl )  .oclass = DUF_OPTION_CLASS_ ## _cl
-#  define DO_V( _vid )  DO_VX( _vid )
-#  define DO_VF( _vid ) DO_VX( _vid, _FLAG )
-/* #  define DO_VH( _vid ) DO_V( HELP_ ## _vid ) */
-
-
 #  define DO_A_X(_fld) .has_arg = _fld ## _argument
 #  define DO_A_O  DO_A_X(optional)
 #  define DO_A_R  DO_A_X(required)
 #  define DO_A_N  DO_A_X(no)
 
-#  define DO_N( _n ) .name = # _n
-#  define DO_Q( _n ) .name = _n
+#  define DO_SET_VAL(_val) .val = _val
+#  define DO_VX( _vid, ... ) DO_SET_VAL( DUF_OPTION ##  __VA_ARGS__ ## _ ## _vid )
+#  define DO_V( _vid )  DO_VX( _vid )
+#  define DO_VF( _vid ) DO_VX( _vid, _FLAG )
+
+#  define DO_SET_OCLASS(_ocl) .oclass = _ocl
+#  define DO_CL( _cl )  DO_SET_OCLASS( DUF_OPTION_CLASS_ ## _cl )
+/* #  define DO_VH( _vid ) DO_V( HELP_ ## _vid ) */
+
+#  define DO_SET_NAME( _nam ) .name = _nam
+#  define DO_N( _n ) DO_SET_NAME( # _n )
+#  define DO_Q( _n ) DO_SET_NAME( _n )
 #  define DO_H( _h ) .help = # _h
 
 
@@ -29,9 +31,10 @@
 
 #  define DO_TF(_vt, ...) DO_SET_VTYPE(_vt), DO_ ## _vt(__VA_ARGS__)
 
-#  define DO_OOO(_vt, _v, _styp, _fld)   DO_SET_VTYPE(_vt), .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld
+#  define DO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld
+#  define DO_OOO(_vt, _v, _styp, _fld)   DO_SET_VTYPE(_vt), DO_OFFSET( _v, _styp, _fld )
 #  define DO_OO(_vt, _v, _styp)	DO_OOO(_vt, _v, _styp, _styp)
-#  define DO_O(_vt, _v)         DO_OO(_vt, _v, config)
+#  define DO_OC(_vt, _v)        DO_OO(_vt, _v, config)
 #  define DO_OU(_vt, _v)	DO_OO(_vt, _v, ufilter)
 #  define DO_OPDI(_vt, _v)	DO_OO(_vt, _v, depthinfo)
 
@@ -40,6 +43,7 @@
                                          /* ,.setit=1 */
 #  define DO_FN(_t,_fld) DO_FL(_t,_fld),.invert=1
 /* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
+#  define DO_INTERACTIVE DO_FL( act, interactive )
 
 #  define DO_SET_FUNC(_f) .func=duf_option_ ## _f
 #  define DO_XFUNC(_f)	    { DO_SET_FUNC(_f)	   }
@@ -56,7 +60,7 @@
 #  define DO_TS_CALL(_f)        DO_SET_CALL(ts, _f)
 
 #  define DO_SET_STAGE(_min, _max) .stage={.min=_min, .max=_max}
-#  define DO_STAGE_SAME(_stag)	DO_SET_STAGE(_stag, _stag)
+#  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
 #  define DO_STAGE_ANY()	DO_SET_STAGE(0, -1)
 
 #endif

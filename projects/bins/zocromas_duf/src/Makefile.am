@@ -49,6 +49,7 @@ zocromas_duf_SOURCES=				   \
 	sql_beginning_selected.c \
 	sql_beginning_common.c \
 	sql_beginning_create.c \
+	sql_beginning_vacuum.c \
 	sql_beginning_tables.c \
 	data_optable_flag.c	\
 	data_optable_sflag.c	\

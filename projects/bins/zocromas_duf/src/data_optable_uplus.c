@@ -10,9 +10,9 @@
 const duf_longval_extended_t optable_uplus[] = {
 
   {.o = {DO_Q( "sample" ) /*             */, DO_A_O /* */, DO_V( SAMPLE )} /*         */ , DO_CL( NODESC ) /*  */ ,
-   /*      */ DO_O( UPLUS, cli.act.sample ) /*                                                             */ , DO_H(  .... ) /*             */ },
+   /*      */ DO_OC( UPLUS, cli.act.sample ) /*                                                             */ , DO_H(  .... ) /*             */ },
   {.o = {DO_Q( "sampupd" ) /*            */, DO_A_O /* */, DO_V( SAMPUPD )} /*        */ , DO_CL( NODESC ) /*  */ ,
-   /*      */ DO_O( UPLUS, cli.act.sampupd ) /*                                                            */ , DO_H(  .... ) /*             */ },
+   /*      */ DO_OC( UPLUS, cli.act.sampupd ) /*                                                            */ , DO_H(  .... ) /*             */ },
 
   {.o = {.name = NULL}}
 };

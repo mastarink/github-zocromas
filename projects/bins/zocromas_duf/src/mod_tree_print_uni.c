@@ -372,7 +372,7 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long 
 duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = __FILE__ ".tree ",
   .init_scan = NULL,
-  .beginning_sql_argv = sql_beginning_selected,
+  .beginning_sql_argv = &sql_beginning_selected,
   /* .node_scan_before = tree_scan_node_before, */
   .node_scan_before2 = tree_scan_node_before2,
   /* .leaf_scan = tree_scan_leaf, */
@@ -436,5 +436,5 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            " WHERE pt.ParentId =:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            }
 
-  /* , .final_sql_argv = final_sql, */
+  /* , .final_sql_argv = &final_sql, */
 };

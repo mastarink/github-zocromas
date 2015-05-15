@@ -8,10 +8,11 @@
 /* ###################################################################### */
 
 
-const char *sql_beginning_common[] = {
-  "PRAGMA synchronous = OFF" /* */ ,
-  "PRAGMA encoding = 'UTF-8'" /* */ ,
+duf_beginning_t sql_beginning_common = {.done = 0,
+  .sql = {
+            "PRAGMA synchronous = OFF" /* */ ,
+            "PRAGMA encoding = 'UTF-8'" /* */ ,
 
 
-  NULL
+            NULL}
 };

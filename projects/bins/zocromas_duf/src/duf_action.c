@@ -30,6 +30,7 @@
 
 #include "duf_begfin.h"
 #include "sql_beginning_create.h"
+#include "sql_beginning_vacuum.h"
 #include "sql_beginning_tables.h"
 
 /* ###################################################################### */
@@ -78,7 +79,7 @@ duf_pre_action( void )
     else
     {
       /* DOR( r, duf_clear_tables(  ) ); */
-      DORF( r, duf_scan_beginning_psql, sql_beginning_clear, 0, NULL );
+      DORF( r, duf_scan_beginning_ssql, &sql_beginning_clear, 0, NULL );
     }
     global_status.actions_done++;
   }
@@ -88,16 +89,17 @@ duf_pre_action( void )
   }
   if ( r >= 0 && DUF_ACT_FLAG( vacuum ) )
   {
-    static const char *sql = "VACUUM";
+    /* static const char *sql = "VACUUM"; */
 
-    DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( VACUUM ) );
+    /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( VACUUM ) ); */
     if ( DUF_CLI_FLAG( dry_run ) )
       DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
     else
     {
-      DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-      DUF_SQL_STEP( r, pstmt );
-      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      /* DUF_SQL_START_STMT_NOPDI( sql, r, pstmt ); */
+      /* DUF_SQL_STEP( r, pstmt );                  */
+      /* DUF_SQL_END_STMT_NOPDI( r, pstmt );        */
+    DORF( r, duf_scan_beginning_ssql, &sql_beginning_vacuum, 0, NULL );
     }
     global_status.actions_done++;
   }
@@ -110,14 +112,14 @@ duf_pre_action( void )
   {
     DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
     /* DOR( r, duf_check_tables(  ) ); */
-    DORF( r, duf_scan_beginning_psql, sql_beginning_create, 0, NULL );
+    DORF( r, duf_scan_beginning_ssql, &sql_beginning_create, 0, NULL );
     global_status.actions_done++;
   }
   else
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
-  duf_scan_beginning_psql( sql_beginning_tables, 0, NULL );
+  duf_scan_beginning_ssql( &sql_beginning_tables, 0, NULL );
 
   DEBUG_ENDR( r );
 }

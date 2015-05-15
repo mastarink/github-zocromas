@@ -27,8 +27,8 @@
 #include "duf_option_help.h"
 /* ###################################################################### */
 
-
-#define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTION_CLASS_ ## codename;
+#if 0
+#  define DUF_H2C( codename, val ) case DUF_OPTION_HELP_ ## codename: val=DUF_OPTION_CLASS_ ## codename;
 /*
  * if arg is help option
  * return class id for options to display the help
@@ -100,7 +100,7 @@ static duf_option_class_t __attribute__ ( ( unused ) ) duf_help_option2class( du
   }
   return rv;
 }
-
+#endif
 static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
   [DUF_OPTION_CLASS_HELP] = "Help",
   [DUF_OPTION_CLASS_NO_HELP] = "No help",
@@ -145,18 +145,18 @@ duf_option_smart_help( duf_option_class_t oclass )
   {
     char *s = NULL;
 
-    /* duf_option_code_t codeval; */
+    duf_option_code_t codeval;
     const char *name;
     const duf_longval_extended_t *extd;
     int ie;
 
     name = duf_config->longopts_table[ilong].name;
-    /* codeval = duf_config->longopts_table[ilong].val; */
+    codeval = duf_config->longopts_table[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
     extd = duf_longindex2extended( ilong, &r );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
-    if ( r >= 0 )
+    if ( codeval && r >= 0 )
     {
       int cnd = 0;
 
@@ -176,7 +176,6 @@ duf_option_smart_help( duf_option_class_t oclass )
           if ( duf_config->help_string )
           {
             char *s = duf_config->help_string;
-            duf_option_code_t codeval = duf_config->longopts_table[ilong].val;
 
             look = ( ( s && *s && !s[1] && codeval == *s ) || ( 0 == strcmp( s, name ) ) /* OR: else if ( strstr( name, s ) ) */  );
           }
@@ -193,7 +192,7 @@ duf_option_smart_help( duf_option_class_t oclass )
               /* if ( shown >= 0 )                    */
               /*   DUF_PRINTF( 0, " ## %d;", shown ); */
 
-              DUF_PRINTF( 0, "\t%s", s );
+              DUF_PRINTF( 0, "%d. [%u] \t%s", ilong, duf_config->longopts_table[ilong].val, s );
               mas_free( s );
             }
             else
@@ -214,11 +213,13 @@ void
 duf_option_smart_help_all( duf_option_class_t oclass )
 {
   if ( oclass == DUF_OPTION_CLASS_ALL )
+  {
     for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
+    {
       duf_option_smart_help( oc );
+    }
+  }
 }
-
-
 
 void
 duf_option_help( int argc, char *const *argv )

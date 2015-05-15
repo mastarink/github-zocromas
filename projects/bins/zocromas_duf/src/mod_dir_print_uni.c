@@ -315,7 +315,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
 duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = __FILE__ ".dir",
   .init_scan = NULL,
-  .beginning_sql_argv = sql_beginning_selected,
+  .beginning_sql_argv = &sql_beginning_selected,
   /* .node_scan_before = scan_node_before, */
   .node_scan_before2 = scan_node_before2,
   /* .leaf_scan = scan_leaf, */
@@ -391,7 +391,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            ,
            }
-  /* .final_sql_argv = final_sql, */
+  /* .final_sql_argv = &final_sql, */
 };
 
 

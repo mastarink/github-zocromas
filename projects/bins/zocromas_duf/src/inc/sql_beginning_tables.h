@@ -18,8 +18,9 @@
 #  define DUF_SQL_TABLES_PATHTOT_FILES_FULL DUF_SQL_TABLES_PATHTOT_FILES
 #  define DUF_SQL_TABLES_PATHTOT_DIRS_FULL DUF_SQL_TABLES_PATHTOT_DIRS
 
+#include "sql_beginning_types.h"
 
 
-extern const char *sql_beginning_tables[];
+extern duf_beginning_t sql_beginning_tables;
 
 #endif

@@ -25,6 +25,8 @@
 #    define DUF_SQL_SELECTED_PATHTOT_DIRS_FULL DUF_SQL_SELECTED_PATHTOT_DIRS
 #  endif
 
-extern const char *sql_beginning_selected[];
+#include "sql_beginning_types.h"
+
+extern duf_beginning_t sql_beginning_selected;
 
 #endif

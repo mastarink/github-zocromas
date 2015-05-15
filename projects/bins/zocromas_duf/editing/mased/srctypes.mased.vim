@@ -42,3 +42,4 @@ sfind duf_option_types.h
 tab sfind duf_scan_types.h
 
 tab sfind duf_format_types.h
+tab sfind sql_beginning_types.h

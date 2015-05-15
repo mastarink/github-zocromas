@@ -8,8 +8,8 @@
 extern const duf_longval_extended_t **lo_extended_multi;
 
 const duf_longval_extended_t *duf_longindex2extended( int longindex, int *pr );
-const char *duf_longindex_extended_name( int longindex, int *pr );
-duf_option_code_t duf_longindex_extended_codeval( int longindex, int *pr );
+/* const char *duf_longindex_extended_name( int longindex, int *pr ); */
+/* duf_option_code_t duf_longindex_extended_codeval( int longindex, int *pr ); */
 
 int duf_longindex_extended_count( const duf_longval_extended_t ** xtables );
 

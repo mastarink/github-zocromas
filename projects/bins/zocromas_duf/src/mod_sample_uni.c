@@ -402,5 +402,5 @@ duf_scan_callbacks_t duf_sample_callbacks = {
 #endif
            " WHERE pt.ParentId=:parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            }
-  /*, .final_sql_argv = final_sql, */
+  /*, .final_sql_argv = &final_sql, */
 };

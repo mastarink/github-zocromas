@@ -1,4 +1,4 @@
-#include <stdarg.h>
+/* #include <stdarg.h> */
 #include <string.h>
 #include <sys/time.h>
 #include <assert.h>
@@ -8,22 +8,8 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-#include "duf_utils.h"
-#include "duf_service.h"
-
-#include "duf_error_types.h"
-#include "duf_debug_defs.h"
-#include "duf_trace_defs.h"
-#include "duf_trace.h"
-#include "duf_errors.h"
-
 #include "duf_dbg.h"
-#include "duf_print_defs.h"
-
-
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"
 
 #include "duf_ufilter.h"
 
@@ -87,11 +73,13 @@ duf_config_create( void )
       {
         while ( xtable->o.name )
         {
-          longopts_ptr->name = xtable->o.name;
-          longopts_ptr->has_arg = xtable->o.has_arg;
-          longopts_ptr->val = xtable->o.val;
+          {
+              longopts_ptr->name = xtable->o.name;
+              longopts_ptr->has_arg = xtable->o.has_arg;
+              longopts_ptr->val = xtable->o.val;
+              longopts_ptr++;
+          }
           xtable++;
-          longopts_ptr++;
         }
       }
 

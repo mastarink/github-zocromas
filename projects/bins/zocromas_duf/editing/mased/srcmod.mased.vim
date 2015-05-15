@@ -40,3 +40,6 @@ sfind sql_beginning_tables.h
 
 tab sfind sql_beginning_create.c
 sfind sql_beginning_create.h
+
+tab sfind sql_beginning_vacuum.c
+sfind sql_beginning_vacuum.h

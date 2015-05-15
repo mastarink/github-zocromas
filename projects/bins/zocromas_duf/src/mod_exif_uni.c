@@ -542,21 +542,22 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
 
 
-static const char *final_sql[] = {
-  "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
-        " FROM " DUF_DBPREF "filedatas AS fd " /* */
-        " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
-        " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
-        ,
-  /* "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " (* *)                            */
-  /*       " FROM " DUF_DBPREF "exif AS x " (* *)                                                  */
-  /*       " JOIN " DUF_DBPREF "exif_model AS mo ON (x.modelid=mo." DUF_SQL_IDNAME ") " (* *)                      */
-  /*       " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.exifid=x." DUF_SQL_IDNAME ") " (* *)                        */
-  /*       " WHERE " DUF_DBPREF "exif.modelid=x.modelid AND exif.date_time=x.date_time" " )" (* *) */
-  /*       ,                                                                                       */
+static duf_beginning_t final_sql = {.done = 0,
+  .sql = {
+          "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_DBPREF "filedatas AS fd " /* */
+          " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
+          " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
+          ,
+          /* "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " (* *)                            */
+          /*       " FROM " DUF_DBPREF "exif AS x " (* *)                                                  */
+          /*       " JOIN " DUF_DBPREF "exif_model AS mo ON (x.modelid=mo." DUF_SQL_IDNAME ") " (* *)                      */
+          /*       " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.exifid=x." DUF_SQL_IDNAME ") " (* *)                        */
+          /*       " WHERE " DUF_DBPREF "exif.modelid=x.modelid AND exif.date_time=x.date_time" " )" (* *) */
+          /*       ,                                                                                       */
 
 
-  NULL
+          NULL}
 };
 
 
@@ -609,5 +610,5 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
 #endif
            " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            },
-  .final_sql_argv = final_sql,
+  .final_sql_argv = &final_sql,
 };

@@ -3,6 +3,8 @@
 
 #  include "duf_sccb_way.h"
 #  include "duf_record_types.h"
+#  include "sql_beginning_types.h"
+
 
 typedef int ( *duf_scan_hook_init_t ) ( void );
 
@@ -73,8 +75,8 @@ struct duf_scan_callbacks_s
   duf_scan_hook2_dirent_t dirent_file_scan_before2;
   duf_scan_hook2_dirent_t dirent_dir_scan_before2;
 
-  const char **beginning_sql_argv;
-  const char **final_sql_argv;
+  duf_beginning_t *beginning_sql_argv;
+  duf_beginning_t *final_sql_argv;
 };
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

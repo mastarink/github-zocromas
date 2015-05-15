@@ -14,7 +14,7 @@
 
 
 
-
+#if 0
 const char *
 duf_longindex_extended_name( int longindex, int *pr )
 {
@@ -32,6 +32,7 @@ duf_longindex_extended_codeval( int longindex, int *pr )
   extended = duf_longindex2extended( longindex, pr );
   return extended ? extended->o.val : 0;
 }
+#endif
 
 const duf_longval_extended_t *
 duf_longindex2extended( int longindex, int *pr )
@@ -46,7 +47,10 @@ duf_longindex2extended( int longindex, int *pr )
     {
       DUF_TRACE( options, 5, "@li2ex %d:%d [%s]", ntable, tbcount, xtable->o.name );
       if ( tbcount == longindex )
+      {
         extended = xtable;
+        /* break; */
+      }
     }
   }
 
@@ -63,6 +67,7 @@ duf_longindex_extended_count( const duf_longval_extended_t ** xtables )
   {
     while ( xtable->o.name )
     {
+      /* if ( xtable->stage.min == 0 && xtable->stage.max == 0 ) */
       tbcount++;
       xtable++;
     }

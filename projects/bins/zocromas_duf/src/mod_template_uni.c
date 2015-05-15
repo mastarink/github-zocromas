@@ -67,16 +67,16 @@ template_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t *
 }
 
 static int
-template_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused,*/ duf_depthinfo_t * pdi )
+template_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  
+
   DEBUG_ENDR( r );
 }
 
 static int
-template_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused,/* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
+template_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -110,7 +110,7 @@ template_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lo
 }
 
 static int
-template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */duf_depthinfo_t * pdi )
+template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -137,10 +137,12 @@ template_dirent_file_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ cons
   DEBUG_ENDR( r );
 }
 
-static const char *final_sql[] = {
+static duf_beginning_t final_sql = {.done = 0,
+  .sql = {
 
 
-  NULL,
+          NULL,
+          }
 };
 
 
@@ -198,5 +200,5 @@ duf_scan_callbacks_t duf_template_callbacks = {
 #endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
-  .final_sql_argv = final_sql,
+  .final_sql_argv = &final_sql,
 };

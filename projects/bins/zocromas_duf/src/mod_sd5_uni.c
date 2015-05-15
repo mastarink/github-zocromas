@@ -282,28 +282,30 @@ __attribute__ ( ( unused ) )
 
 
 
-static const char *final_sql[] = {
-  "UPDATE " DUF_DBPREF "sd5 SET dup2cnt=(SELECT COUNT(*) " /* */
-        " FROM " DUF_DBPREF "sd5 AS sd " /* */
-        " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.md5id=sd." DUF_SQL_IDNAME ") " /* */
-        " WHERE " DUF_DBPREF "sd5.sd5sum1=sd.sd5sum1 AND " DUF_DBPREF "sd5.sd5sum2=sd.sd5sum2)" /* */
-        ,
+static duf_beginning_t final_sql = {.done = 0,
+  .sql = {
+          "UPDATE " DUF_DBPREF "sd5 SET dup2cnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_DBPREF "sd5 AS sd " /* */
+          " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.md5id=sd." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_DBPREF "sd5.sd5sum1=sd.sd5sum1 AND " DUF_DBPREF "sd5.sd5sum2=sd.sd5sum2)" /* */
+          ,
 #if 0
-  "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
-        "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
-        " FROM " DUF_DBPREF "paths " /* */
-        " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.parentid) " /* */
-        " GROUP BY parents." DUF_SQL_IDNAME "" /* */
-        ,
+          "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
+          "SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT(*) AS numdirs " /* */
+          " FROM " DUF_DBPREF "paths " /* */
+          " JOIN " DUF_DBPREF "paths AS parents ON (parents." DUF_SQL_IDNAME "=paths.parentid) " /* */
+          " GROUP BY parents." DUF_SQL_IDNAME "" /* */
+          ,
 
-  "UPDATE " DUF_DBPREF "pathtot_dirs SET " /* */
-        " numdirs=(SELECT COUNT(*) AS numdirs " /* */
-        " FROM " DUF_DBPREF "paths AS p " /* */
-        " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" /* */
-        ,
+          "UPDATE " DUF_DBPREF "pathtot_dirs SET " /* */
+          " numdirs=(SELECT COUNT(*) AS numdirs " /* */
+          " FROM " DUF_DBPREF "paths AS p " /* */
+          " WHERE p.ParentId=" DUF_DBPREF "pathtot_dirs.Pathid )" /* */
+          ,
 #endif
 
-  NULL,
+          NULL,
+          }
 };
 
 
@@ -370,5 +372,5 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
 #endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
-  .final_sql_argv = final_sql,
+  .final_sql_argv = &final_sql,
 };
