@@ -8,5 +8,7 @@ end
 handle SIGPIPE nostop noprint
 
 # b mod_tree_print_uni.c:52
+b duf_evaluate_sccb
+
 run
 bt

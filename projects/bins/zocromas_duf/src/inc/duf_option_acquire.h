@@ -39,12 +39,12 @@
         DUF_OPTION_N(_lo)++
 
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM( up, _lo, _ref, _pref ) \
-    case DUF_OPTION_ ## up: \
+    case DUF_OPTION_VAL_ ## up: \
       DUF_OPTION_ACQUIRE_NUM( _pref _ref _lo ); \
     break
 
 #  define  DUF_OPTION_CASE_ACQUIRE_NUM_PLUS( up, _lo, _ref, _pref ) \
-    case DUF_OPTION_ ## up: \
+    case DUF_OPTION_VAL_ ## up: \
       DUF_OPTION_ACQUIRE_NUM_PLUS( _pref _ref _lo ); \
     break
 
@@ -58,7 +58,7 @@
     DUF_OPTION_ACQUIRE_NUM_PLUS( cli.trace._lo )
 
 #  define DUF_OPTION_CASE_ACQUIRE_TRACE(up, _lo) \
-    case DUF_OPTION_## up ##_TRACE: \
+    case DUF_OPTION_VAL_ ## up ##_TRACE: \
       DUF_OPTION_ACQUIRE_TRACE( _lo ); \
     break
 
@@ -71,7 +71,7 @@
       }
 
 #  define  DUF_OPTION_CASE_ACQUIRE_STR( up, _lo, _pref ) \
-    case DUF_OPTION_ ## up: \
+    case DUF_OPTION_VAL_ ## up: \
       DUF_OPTION_ACQUIRE_STR( _pref._lo ); \
     break
 
@@ -83,7 +83,7 @@
       if ( optarg ) DUF_OPTION_A(_lo,argc)=mas_add_argv_arg(DUF_OPTION_A(_lo,argc), &DUF_OPTION_A(_lo,argv), optarg)
 
 #  define  DUF_OPTION_CASE_ACQUIRE_ARG( up, _lo, _ref, _pref ) \
-    case DUF_OPTION_ ## up: \
+    case DUF_OPTION_VAL_ ## up: \
       DUF_OPTION_ACQUIRE_ARG( _pref _ref _lo ); \
     break
 

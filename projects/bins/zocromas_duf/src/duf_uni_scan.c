@@ -37,7 +37,7 @@
  * 4. casll duf_sccbh_each_path
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
-static int
+int
 duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
@@ -178,8 +178,8 @@ duf_evaluate_all_at_config_wrap( void )
     char *dirent_optnames = NULL;
 
     DUF_TRACE( action, 0, "no actions set; %s", r < 0 ? "FAIL" : "" );
-    optnames = duf_option_names( DUF_OPTION_FLAG_COLLECT );
-    dirent_optnames = duf_option_names( DUF_OPTION_FLAG_DIRENT );
+    optnames = duf_option_names( DUF_OPTION_VAL_FLAG_COLLECT );
+    dirent_optnames = duf_option_names( DUF_OPTION_VAL_FLAG_DIRENT );
     DUF_TRACE( explain, 0, "to collect something   use %s", optnames );
     DUF_TRACE( explain, 0, "to collect directories use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_DIRS ), dirent_optnames );
     DUF_TRACE( explain, 0, "to collect file data   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILEDATA ), dirent_optnames );

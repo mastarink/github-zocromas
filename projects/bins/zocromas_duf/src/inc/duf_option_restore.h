@@ -9,7 +9,7 @@ void duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxle
 
 
 #  define DUF_OPTION_RESTORETV(ocode, ptr, typ, up, lo, pref, value, maxlen) \
-  if ( ocode==DUF_OPTION_ ## up && value ) \
+  if ( ocode==DUF_OPTION_VAL_ ## up && value ) \
   { \
     _duf_restore_option_ ## typ(ptr, ocode, value, maxlen ); \
   }

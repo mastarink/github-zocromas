@@ -100,7 +100,7 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
   if ( ppscan_callbacks )
   {
     ppscan_callbacks[asteps] = NULL;
-    for ( duf_action_table_t * act = duf_action_table(  ); act->sccb && asteps < max_asteps ; act++ )
+    for ( duf_action_table_t * act = duf_action_table(  ); act->sccb && asteps < max_asteps; act++ )
     {
       duf_scan_callbacks_t *sccb = act->sccb;
 
@@ -127,6 +127,7 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
   }
   return asteps;
 }
+
 int
 duf_config2sccb_vector_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
 {

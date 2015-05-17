@@ -246,6 +246,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .title = "collect mime",
+  .name = "mime",
   .def_opendir = 1,
 
   .leaf_scan_fd2 = duf_scan_dirent_mime_content2,

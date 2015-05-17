@@ -134,6 +134,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_directories_callbacks = {
   .title = "directories",
+  .name = "dirs",
   .init_scan = NULL,
   .def_opendir = 1,
   /* .dirent_dir_scan_before = directories_entry_dir, */

@@ -23,21 +23,23 @@
 static int
 _duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value, int maxlen )
 {
-  const duf_longval_extended_t **xtables;
-  const duf_longval_extended_t *xtable;
+  const duf_longval_extended_table_t **xtables;
+  const duf_longval_extended_table_t *xtable;
 
-  xtables = lo_extended_multi;
+  xtables = lo_extended_table_multi;
   while ( ( xtable = *xtables++ ) )
   {
-    while ( xtable->o.name )
+    const duf_longval_extended_t *xtended = xtable->table;
+
+    while ( xtended->o.name )
     {
-      if ( xtable->o.val == codeval )
+      if ( xtended->o.val == codeval )
       {
-        snprintf( ptr, maxlen, " --%s='%d'", xtable->o.name, value );
+        snprintf( ptr, maxlen, " --%s='%d'", xtended->o.name, value );
         break;
       }
 
-      xtable++;
+      xtended++;
     }
   }
 
@@ -47,22 +49,24 @@ _duf_restore_option_i( char *ptr, duf_option_code_t codeval, int value, int maxl
 static int
 _duf_restore_option_s( char *ptr, duf_option_code_t codeval, const char *value, int maxlen )
 {
-  const duf_longval_extended_t **xtables;
-  const duf_longval_extended_t *xtable;
+  const duf_longval_extended_table_t **xtables;
+  const duf_longval_extended_table_t *xtable;
 
-  xtables = lo_extended_multi;
+  xtables = lo_extended_table_multi;
   if ( value )
     while ( ( xtable = *xtables++ ) )
     {
-      while ( xtable->o.name )
+      const duf_longval_extended_t *xtended = xtable->table;
+
+      while ( xtended->o.name )
       {
-        if ( xtable->o.val == codeval )
+        if ( xtended->o.val == codeval )
         {
-          snprintf( ptr, maxlen, " --%s='%s'", xtable->o.name, value );
+          snprintf( ptr, maxlen, " --%s='%s'", xtended->o.name, value );
           break;
         }
 
-        xtable++;
+        xtended++;
       }
     }
 
@@ -72,22 +76,24 @@ _duf_restore_option_s( char *ptr, duf_option_code_t codeval, const char *value, 
 static int
 _duf_restore_option_b( char *ptr, duf_option_code_t codeval, int value, int maxlen )
 {
-  const duf_longval_extended_t **xtables;
-  const duf_longval_extended_t *xtable;
+  const duf_longval_extended_table_t **xtables;
+  const duf_longval_extended_table_t *xtable;
 
-  xtables = lo_extended_multi;
+  xtables = lo_extended_table_multi;
   if ( value )
     while ( ( xtable = *xtables++ ) )
     {
-      while ( xtable->o.name )
+      const duf_longval_extended_t *xtended = xtable->table;
+
+      while ( xtended->o.name )
       {
-        if ( xtable->o.val == codeval )
+        if ( xtended->o.val == codeval )
         {
-          snprintf( ptr, maxlen, " --%s", xtable->o.name );
+          snprintf( ptr, maxlen, " --%s", xtended->o.name );
           break;
         }
 
-        xtable++;
+        xtended++;
       }
     }
 
@@ -193,7 +199,7 @@ duf_restore_some_options( const char *a0 )
   char *str;
 
   str = mas_strdup( a0 );
-  for ( duf_option_code_t codeval = DUF_OPTION_NONE; codeval < DUF_OPTION_MAX_LONG; codeval++ )
+  for ( duf_option_code_t codeval = DUF_OPTION_VAL_NONE; codeval < DUF_OPTION_VAL_MAX_LONG; codeval++ )
   {
 #define BUFSZ 1024 * 4
     char buf[BUFSZ] = "";

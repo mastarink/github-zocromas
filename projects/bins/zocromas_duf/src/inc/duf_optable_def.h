@@ -12,9 +12,9 @@
 #  define DO_A_N  DO_A_X(no)
 
 #  define DO_SET_VAL(_val) .val = _val
-#  define DO_VX( _vid, ... ) DO_SET_VAL( DUF_OPTION ##  __VA_ARGS__ ## _ ## _vid )
+#  define DO_VX( _vid, ... ) DO_SET_VAL( DUF_OPTION_VAL_ ##  __VA_ARGS__  ## _vid )
 #  define DO_V( _vid )  DO_VX( _vid )
-#  define DO_VF( _vid ) DO_VX( _vid, _FLAG )
+#  define DO_VF( _vid ) DO_VX( _vid, FLAG_ )
 
 #  define DO_SET_OCLASS(_ocl) .oclass = _ocl
 #  define DO_CL( _cl )  DO_SET_OCLASS( DUF_OPTION_CLASS_ ## _cl )
@@ -52,15 +52,26 @@
 #  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) }}
 #  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f)      }}
 
-#  define DO_VI_CALL(_f, _a) DO_SET_CALLA(vi, _f, _a)
-#  define DO_VI_CALLH(cl)	DO_VI_CALL( smart_help, DUF_OPTION_CLASS_ ## cl)
-#  define DO_A_CALL(_f)		DO_SET_CALL(a, _f)
-#  define DO_T_CALL(_f)         DO_SET_CALL(t, _f)
-#  define DO_TN_CALL(_f)        DO_SET_CALL(tn, _f)
-#  define DO_TS_CALL(_f)        DO_SET_CALL(ts, _f)
+/* void f( .vi.arg ) */
+#  define DO_VI_CALL(_f, _a)    DO_SET_VTYPE( VI_CALL ), DO_SET_CALLA(vi, _f, _a)
+#  define DO_VI_CALLH(_cl)	DO_VI_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
+#  define DO_VI_CALLCL(_f, _cl)	DO_VI_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
+/* void f( int argc, char *const *argv ) */
+#  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f)
+/*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL(t, _f) */
+/* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) */
+#  define DO_TN_CALL(_f)        DO_SET_VTYPE( TN_CALL ), DO_SET_CALL(tn, _f)
+/* void f( void ) */
+#  define DO_VV_CALL(_f)        DO_SET_VTYPE( VV_CALL ), DO_SET_CALL(vv, _f)
+/* void f( duf_strtol_suff( optargg, &r ) ) */
+#  define DO_N_CALL(_f)         DO_SET_VTYPE( N_CALL ), DO_SET_CALL(n, _f)
+/* void f( &duf_config->targc, &duf_config->targv, optargg ) */
+#  define DO_TS_CALL(_f)        DO_SET_VTYPE( TS_CALL ), DO_SET_CALL(ts, _f)
+/* void f( optargg ) */
+#  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f)
 
-#  define DO_SET_STAGE(_min, _max) .stage={.min=_min, .max=_max}
+#  define DO_SET_STAGE(_min, _max) .stage={.min=_min, .max=_max},.use_stage=1
 #  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
-#  define DO_STAGE_ANY()	DO_SET_STAGE(0, -1)
+#  define DO_STAGE_ANY		DO_SET_STAGE(0, -1)
 
 #endif

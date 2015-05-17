@@ -3,8 +3,10 @@
 
 #  include "duf_options_enum.h"
 
-int duf_parse_option( duf_option_code_t opt, int longindex, const char *optarg, int stage );
-int duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optarg, int stage );
-int duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, int stage, int no );
+int duf_parse_option( duf_option_code_t opt, int longindex, const char *optarg, duf_option_stage_t stage );
+int duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optarg, duf_option_stage_t stage,
+                               const duf_longval_extended_table_t * xtable );
+int duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t stage,
+                                const duf_longval_extended_table_t * xtable, int no );
 
 #endif

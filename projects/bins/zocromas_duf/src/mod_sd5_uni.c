@@ -312,6 +312,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
   .title = "collect sd5",
+  .name = "sd5",
   .init_scan = NULL,
   .def_opendir = 1,
   /* .dirent_dir_scan_before = NULL, */

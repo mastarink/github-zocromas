@@ -129,7 +129,7 @@ duf_option_smart_help( duf_option_class_t oclass )
   size_t ss;
   int tbcount;
 
-  tbcount = duf_longindex_extended_count( lo_extended_multi );
+  tbcount = duf_longindex_extended_count( lo_extended_table_multi );
   ss = tbcount * sizeof( int );
 
   ashown = mas_malloc( ss );
@@ -143,7 +143,6 @@ duf_option_smart_help( duf_option_class_t oclass )
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
   for ( int ilong = 0; r >= 0 && duf_config->longopts_table[ilong].name && ilong < tbcount; ilong++ )
   {
-    char *s = NULL;
 
     duf_option_code_t codeval;
     const char *name;
@@ -153,7 +152,7 @@ duf_option_smart_help( duf_option_class_t oclass )
     name = duf_config->longopts_table[ilong].name;
     codeval = duf_config->longopts_table[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, &r );
+    extd = duf_longindex2extended( ilong, NULL, &r );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
     if ( codeval && r >= 0 )
@@ -181,6 +180,8 @@ duf_option_smart_help( duf_option_class_t oclass )
           }
           if ( look )
           {
+            char *s = NULL;
+
             /* duf_option_class_t hclass; */
 
             /* hclass = duf_help_option2class( codeval ); */
@@ -222,14 +223,14 @@ duf_option_smart_help_all( duf_option_class_t oclass )
 }
 
 void
-duf_option_help( int argc, char *const *argv )
+duf_option_help(  /* int argc, char *const *argv */ void )
 {
   int r = 0;
 
-  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", argv[0] );
-  DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", duf_config->cargv[0] );
+  DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_VAL_HELP, &r ) );
+  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &r ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.main.name );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );
@@ -275,7 +276,7 @@ duf_option_help( int argc, char *const *argv )
 }
 
 void
-duf_option_examples( int argc, char *const *argv )
+duf_option_examples(  /* int argc, char *const *argv */ void )
 {
   DEBUG_START(  );
   DUF_PRINTF( 0, "Examples" );
@@ -474,21 +475,27 @@ duf_option_examples( int argc, char *const *argv )
   DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/  --remove-database  -PRDdnEiX235fOep --progres    	- %s", "" );
   DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/   -Rpdf     --min-same=10 --output-level=4    	- %s", "" );
   DUF_PRINTF( 0, "  run /home/mastar/.mas/lib/mpd/music/   -Rpdf     --same=5 -T    	- %s", "" );
+
+  DUF_PRINTF( 0, "========================= as for 20150517.113041 ============" );
+  DUF_PRINTF( 0, "  run -pdf /mnt/new_media/media/audio/music/best/world/  --max-seq=30 --min-same=9    -R    	- %s", "" );
+  DUF_PRINTF( 0, "  run --memusa --flags    	- %s", "" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/     --min-exifdt=20120101 --max-exifdt=20130101  -dfR  --evaluate-sccb=listing    	- %s", "" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --list-sccbs    	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
 }
 
 void
-duf_option_version( int argc, char *const *argv )
+duf_option_version(  /* int argc, char *const *argv */ void )
 {
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
   char *sargv1, *sargv2;
 
   DEBUG_START(  );
 
-  sargv1 = mas_argv_string( argc, argv, 1 );
-  sargv2 = duf_restore_some_options( argv[0] );
+  sargv1 = mas_argv_string( duf_config->cargc, duf_config->cargv, 1 );
+  sargv2 = duf_restore_some_options( duf_config->cargv[0] );
 
   DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
   DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );
@@ -524,7 +531,7 @@ duf_option_version( int argc, char *const *argv )
 }
 
 void
-duf_option_showflags( int argc, char *const *argv )
+duf_option_showflags(  /* int argc, char *const *argv */ void )
 {
   DEBUG_START(  );
   {
@@ -659,6 +666,33 @@ duf_option_add_targ( int *ptargc, char ***ptargv, const char *s )
 {
   if ( ptargc && ptargv )
     *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
+}
+
+void
+duf_option_list_options( long n )
+{
+  int ntable = 0;
+  int tbcount = 0;
+
+  for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; *xtables; xtables++, ntable++ )
+  {
+    const duf_longval_extended_table_t *xtable = *xtables;
+
+    for ( const duf_longval_extended_t * xtended = xtable->table; xtended->o.name; xtended++, tbcount++ )
+    {
+      char *s = NULL;
+      int r = 0;
+
+      if ( xtended->o.val )
+        s = duf_option_description_xd( xtended, "\t", " // ", &r );
+
+      DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
+      /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage.min, xtended->stage.max, xtended->o.name ); */
+      DUF_PRINTF( 0, "%3d (%2d) %4d %d:%d\t--%-40s - %s", tbcount, ntable, xtended->o.val, xtended->stage.min, xtended->stage.max, xtended->o.name,
+                  s ? s : "" );
+      mas_free( s );
+    }
+  }
 }
 
 

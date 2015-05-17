@@ -93,13 +93,12 @@ duf_interactive( void )
         snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );
       while ( !duf_rl_buffer )
         duf_rl_buffer = readline( rl_prompt );
-      mas_chomp( duf_rl_buffer );
-      if ( *duf_rl_buffer )
+      if ( duf_rl_buffer && *duf_rl_buffer )
       {
-        if ( duf_rl_buffer && *duf_rl_buffer )
-          add_history( duf_rl_buffer );
+        mas_chomp( duf_rl_buffer );
+        add_history( duf_rl_buffer );
         /* DOR( r, duf_execute_cmd_long( duf_rl_buffer, lo_extended_i, lo_extended_i_count, ' ', 1 ) ); */
-        DOR( r, duf_execute_cmd_long_xtables_std( duf_rl_buffer, ' ', 1 ) );
+        DOR( r, duf_execute_cmd_long_xtables_std( duf_rl_buffer, ' ', DUF_OPTION_STAGE_INTERACTIVE ) );
       }
       /* DUF_TEST_R( r ); */
       DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_MULTIPLE, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_OPTION_VALUE, DUF_ERROR_PATH, DUF_ERROR_MAX_SEQ_REACHED );

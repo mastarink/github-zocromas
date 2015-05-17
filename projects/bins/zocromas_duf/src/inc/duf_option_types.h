@@ -79,8 +79,11 @@ typedef enum
   DUF_OPTION_VTYPE_MINMAXDATETIME,
 
   DUF_OPTION_VTYPE_VI_CALL,
+  DUF_OPTION_VTYPE_VV_CALL,
   DUF_OPTION_VTYPE_A_CALL,
+  DUF_OPTION_VTYPE_N_CALL,
   DUF_OPTION_VTYPE_TN_CALL,
+  DUF_OPTION_VTYPE_S_CALL,
   DUF_OPTION_VTYPE_TS_CALL,
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
@@ -91,36 +94,47 @@ typedef struct
 {
   duf_void_int_t func;
   int arg;
-} duf_vifuncpair_t;
+} duf_void_int_funcpair_t;
 typedef struct
 {
   duf_int_void_t func;
-} duf_ivfuncpair_t;
+} duf_int_void_funcpair_t;
 typedef struct
 {
   duf_void_argcv_t func;
-} duf_afuncpair_t;
+} duf_void_argcv_funcpair_t;
 typedef struct
 {
   duf_void_pargcv_t func;
-} duf_tfuncpair_t;
+} duf_void_pargcv_funcpair_t;
+
+typedef struct
+{
+  duf_void_pnv_t func;
+} duf_void_pnv_funcpair_t;
 typedef struct
 {
   duf_void_pargcnv_t func;
-} duf_tnfuncpair_t;
+} duf_void_pargcnv_funcpair_t;
+
+typedef struct
+{
+  duf_void_psv_t func;
+} duf_void_psv_funcpair_t;
 typedef struct
 {
   duf_void_pargcsv_t func;
-} duf_tsfuncpair_t;
+} duf_void_pargcsv_funcpair_t;
+
 typedef struct
 {
   duf_void_void_t func;
-} duf_funcpair_t;
+} duf_void_void_funcpair_t;
 typedef struct
 {
   duf_scan_hook2_item_t func;
   duf_scan_callbacks_t *sccb;
-} duf_hipair_t;
+} duf_scan_hook2_item_pair_t;
 
 
 
@@ -145,6 +159,7 @@ typedef struct
 //unsigned unsetit:1;
   unsigned invert:1;
   unsigned m_hasoff:1;
+  unsigned use_stage:1;
   duf_anyflag_t afl;
   unsigned long m_offset;
   duf_offset_to_t relto;
@@ -162,17 +177,38 @@ typedef struct
     duf_anynum_t value2;
     union
     {
-      duf_vifuncpair_t vi;
-      duf_ivfuncpair_t iv;
-      duf_funcpair_t vv;
-      duf_afuncpair_t a;
-      duf_tfuncpair_t t;
-      duf_tnfuncpair_t tn;
-      duf_tsfuncpair_t ts;
-      duf_hipair_t hi;
+      duf_void_int_funcpair_t vi;
+      duf_int_void_funcpair_t iv;
+      duf_void_void_funcpair_t vv;
+      duf_void_argcv_funcpair_t a;
+      duf_void_pargcv_funcpair_t t;
+      duf_void_pnv_funcpair_t n;
+      duf_void_pargcnv_funcpair_t tn;
+      duf_void_pargcsv_funcpair_t ts;
+      duf_void_psv_funcpair_t s;
+      duf_scan_hook2_item_pair_t hi;
     } fdesc;
   } call;
 } duf_longval_extended_t;
+typedef duf_longval_extended_t *duf_longval_pextended;
+
+typedef struct
+{
+  unsigned use_stage:1;
+  int id;
+  duf_limits_t stage;
+  duf_longval_extended_t table[];
+} duf_longval_extended_table_t;
+
+typedef enum
+{
+  DUF_OPTION_STAGE_DEFAULT = 0,
+  DUF_OPTION_STAGE_FIRST,
+  DUF_OPTION_STAGE_INTERACTIVE,
+  DUF_OPTION_STAGE_MAX
+} duf_option_stage_t;
+
+
 
 #endif
 

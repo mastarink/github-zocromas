@@ -1,0 +1,40 @@
+#include <stddef.h>
+#include "duf_config_types.h"
+#include "duf_ufilter_types.h"
+#include "duf_levinfo_types.h"
+
+#include "duf_config_ref.h"
+#include "duf_option_types.h"
+#include "duf_options_enum.h"
+#include "duf_optable_def.h"
+
+#include "duf_option_sccb.h"
+
+/*
+At duf_options_table.c:
+  1. extern const duf_longval_extended_table_t optable_sccb[];
+  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+         ...
+	optable_sccb,
+	 ...
+
+	NULL
+      };
+*/
+
+
+const duf_longval_extended_table_t optable_sccb = {
+  /* DO_SET_STAGE( DUF_OPTION_STAGE_DEFAULT, DUF_OPTION_STAGE_INTERACTIVE ), */
+  .table =                      /* */
+  {
+   {.o = {DO_Q( "list-sccbs" ) /*        */ , DO_A_N /* */ , DO_V( LIST_SCCBS )} /*         */ , DO_CL( NODESC ) /*  */
+    , DO_VV_CALL( list_sccbs ) /*                                          */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "evaluate-sccb" ) /*     */ , DO_A_R /* */ , DO_V( EVALUATE_SCCB )} /*      */ , DO_CL( NODESC ) /*  */
+    , DO_S_CALL( evaluate_sccb ) /*                                          */ , DO_H(  ... ) /*                             */ },
+
+   {.o = {.name = NULL}}
+   }
+};
+
+/* vi: ft=c colorcolumn=3,44,59,60,95,96,123,145,146
+*/

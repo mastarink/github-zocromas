@@ -48,38 +48,41 @@ static const duf_longval_extended_t _lo_extended1[] = {
 /* (* #include "duf_optable_flag.cdef" *)                  */
 /*   {0}                                                   */
 /* };                                                      */
+extern const duf_longval_extended_table_t optable_main;
+extern const duf_longval_extended_table_t optable_interactive;
+extern const duf_longval_extended_table_t optable_str;
+extern const duf_longval_extended_table_t optable_sccb;
+extern const duf_longval_extended_table_t optable_info;
+extern const duf_longval_extended_table_t optable_flag;
+extern const duf_longval_extended_table_t optable_sflag;
+extern const duf_longval_extended_table_t optable_uplus;
+extern const duf_longval_extended_table_t optable_help;
+extern const duf_longval_extended_table_t optable_trace;
+extern const duf_longval_extended_table_t optable_filter;
+extern const duf_longval_extended_table_t optable_debug;
+extern const duf_longval_extended_table_t optable_redo_and_obsolete;
 
-extern const duf_longval_extended_t optable_main[];
-extern const duf_longval_extended_t optable_interactive[];
-extern const duf_longval_extended_t optable_str[];
-extern const duf_longval_extended_t optable_flag[];
-extern const duf_longval_extended_t optable_sflag[];
-extern const duf_longval_extended_t optable_uplus[];
-extern const duf_longval_extended_t optable_help[];
-extern const duf_longval_extended_t optable_trace[];
-extern const duf_longval_extended_t optable_filter[];
-extern const duf_longval_extended_t optable_debug[];
-extern const duf_longval_extended_t optable_redo_and_obsolete[];
-
-static const duf_longval_extended_t *_lo_extended_multi[] = {
-  optable_main,
-  optable_interactive,
-  optable_str,
-  optable_sflag,
-  optable_flag,
-  optable_uplus,
-  optable_trace,
-  optable_filter,
-  optable_debug,
-  optable_help,
-  optable_redo_and_obsolete,
+static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
+  &optable_main,
+  &optable_interactive,
+  &optable_str,
+  &optable_sccb,
+  &optable_info,
+  &optable_sflag,
+  &optable_flag,
+  &optable_uplus,
+  &optable_trace,
+  &optable_filter,
+  &optable_debug,
+  &optable_help,
+  &optable_redo_and_obsolete,
 
   NULL
 };
 
 
 
-const duf_longval_extended_t **lo_extended_multi = _lo_extended_multi;
+const duf_longval_extended_table_t **lo_extended_table_multi = _lo_extended_table_multi;
 
 /* unsigned lo_extended_count = sizeof( _lo_extended ) / sizeof( _lo_extended[0] ); */
 

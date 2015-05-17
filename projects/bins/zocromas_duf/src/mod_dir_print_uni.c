@@ -313,7 +313,8 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
 
 
 duf_scan_callbacks_t duf_print_dir_callbacks = {
-  .title = __FILE__ ".dir",
+  .title = "listing print",
+  .name = "listing",
   .init_scan = NULL,
   .beginning_sql_argv = &sql_beginning_selected,
   /* .node_scan_before = scan_node_before, */
@@ -370,16 +371,17 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF " md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-           },
+           }
+  ,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,
            .selector2 =         /* */
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */
            /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
-           " FROM      " /* */
+           " FROM      "        /* */
 #if 0
-	   DUF_DBPREF "paths AS pt " /* */
+           DUF_DBPREF "paths AS pt " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #else
@@ -393,11 +395,3 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
            }
   /* .final_sql_argv = &final_sql, */
 };
-
-
-
-
-
-
-
-

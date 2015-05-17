@@ -106,7 +106,8 @@ duf_limitsll( const char *s, unsigned long long *pmin, unsigned long long *pmax 
 }
 
 int
-duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, int istage, int no )
+duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+                            const duf_longval_extended_table_t * xtable, int no )
 {
   DEBUG_STARTR( r );
   if ( extended )
@@ -117,10 +118,10 @@ duf_parse_option_long_full( const duf_longval_extended_t * extended, const char 
  *   errorcode<0  for error
  * */
     DUF_TRACE( options, 1, "xname:%s; arg:%s; no:%d", extended ? extended->o.name : "?", optargg, no );
-    DOR( r, duf_parse_option_long_typed( extended, optargg, istage, no ) );
+    DOR( r, duf_parse_option_long_typed( extended, optargg, istage, xtable, no ) );
     DUF_TRACE( options, 1, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
     if ( r == DUF_ERROR_OPTION_NOT_PARSED && !no )
-      DOZR( r, duf_parse_option_long_old( extended, optargg, istage ) );
+      DOZR( r, duf_parse_option_long_old( extended, optargg, istage, xtable ) );
     DUF_TRACE( options, 2, "cli options r: %d", r );
     DUF_TRACE( options, 1, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name( r ) );
   }
@@ -130,12 +131,13 @@ duf_parse_option_long_full( const duf_longval_extended_t * extended, const char 
 }
 
 static int
-duf_parse_option_long_x_wrap( const duf_longval_extended_t * extended, const char *optargg, int istage )
+duf_parse_option_long_full_wrap( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+                                 const duf_longval_extended_table_t * xtable )
 {
   DEBUG_STARTR( r );
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
-  DOR( r, duf_parse_option_long_full( extended, optargg, istage, 0 /* no */  ) );
+  DOR( r, duf_parse_option_long_full( extended, optargg, istage, xtable, 0 /* no */  ) );
   DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
 }
@@ -146,24 +148,25 @@ duf_parse_option_long_x_wrap( const duf_longval_extended_t * extended, const cha
  * or errorcode (<0) for error
  * */
 int
-duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg, int istage )
+duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
+  const duf_longval_extended_table_t *xtable = NULL;
 
   assert( ( int ) codeval >= 0 );
   /* short always corresponds long (in my case) - find it */
   DUF_TRACE( options, 1, "parse option longindex:%d", longindex );
   if ( longindex < 0 )
   {
-    extended = duf_find_codeval_extended_std( codeval, &r );
+    extended = duf_find_codeval_extended_std( codeval, &xtable, &r );
     DUF_TEST_R( r );
     DUF_TRACE( options, 0, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
   }
   else if ( !extended )
   {
-    extended = duf_longindex2extended( longindex, &r );
+    extended = duf_longindex2extended( longindex, &xtable, &r );
     DUF_TEST_R( r );
     DUF_TRACE( options, 0, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
@@ -174,7 +177,7 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   {
     if ( extended )
     {
-      DOR( r, duf_parse_option_long_x_wrap( extended, optargg, istage ) );
+      DOR( r, duf_parse_option_long_full_wrap( extended, optargg, istage, xtable ) );
     }
     else                        /* switch is useless !... */
       switch ( ( int ) codeval )
@@ -198,7 +201,8 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
 }
 
 int
-duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optargg, int istage )
+duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+                           const duf_longval_extended_table_t * xtable )
 {
   DEBUG_STARTR( r );
 
@@ -276,38 +280,37 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
 
   DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended, NULL ),
-             extended->o.name, r, duf_error_name( r ), extended->o.val, DUF_OPTION_FORMAT );
+             extended->o.name, r, duf_error_name( r ), extended->o.val, DUF_OPTION_VAL_FORMAT );
 
-  /* if ( extended && ( istage == 0 || istage == -1 ) ) */
-  if ( istage == -1 || extended->stage.flag || ( extended->stage.min <= istage && extended->stage.max >= istage ) )
+  if ( DUF_OPTION_CHECK_STATE( istage, extended, xtable ) )
   {
     switch ( extended->o.val )
     {
-    case DUF_OPTION_NONE:
+    case DUF_OPTION_VAL_NONE:
       break;
-      /* case DUF_OPTION_SMART_HELP:     */
+      /* case DUF_OPTION_VAL_SMART_HELP:     */
       /*                                 */
-      /* case DUF_OPTION_HELP_ALL:       */
-      /* case DUF_OPTION_HELP_NONE:      */
+      /* case DUF_OPTION_VAL_HELP_ALL:       */
+      /* case DUF_OPTION_VAL_HELP_NONE:      */
       /*                                 */
-      /* case DUF_OPTION_HELP_HELP:      */
-      /* case DUF_OPTION_HELP_SYSTEM:    */
-      /* case DUF_OPTION_HELP_CONTROL:   */
-      /* case DUF_OPTION_HELP_REFERENCE: */
-      /* case DUF_OPTION_HELP_COLLECT:   */
-      /* case DUF_OPTION_HELP_SCAN:      */
-      /* case DUF_OPTION_HELP_UPDATE:    */
-      /* case DUF_OPTION_HELP_REQUEST:   */
-      /* case DUF_OPTION_HELP_PRINT:     */
+      /* case DUF_OPTION_VAL_HELP_HELP:      */
+      /* case DUF_OPTION_VAL_HELP_SYSTEM:    */
+      /* case DUF_OPTION_VAL_HELP_CONTROL:   */
+      /* case DUF_OPTION_VAL_HELP_REFERENCE: */
+      /* case DUF_OPTION_VAL_HELP_COLLECT:   */
+      /* case DUF_OPTION_VAL_HELP_SCAN:      */
+      /* case DUF_OPTION_VAL_HELP_UPDATE:    */
+      /* case DUF_OPTION_VAL_HELP_REQUEST:   */
+      /* case DUF_OPTION_VAL_HELP_PRINT:     */
       /*                                 */
-      /* case DUF_OPTION_HELP_TRACE:     */
-      /* case DUF_OPTION_HELP_DEBUG:     */
-      /* case DUF_OPTION_HELP_OBSOLETE:  */
-      /* case DUF_OPTION_HELP_NODESC:    */
+      /* case DUF_OPTION_VAL_HELP_TRACE:     */
+      /* case DUF_OPTION_VAL_HELP_DEBUG:     */
+      /* case DUF_OPTION_VAL_HELP_OBSOLETE:  */
+      /* case DUF_OPTION_VAL_HELP_NODESC:    */
 /* .................................................. */
-      /* case DUF_OPTION_HELP:                               */
-      /* case DUF_OPTION_EXAMPLES:                           */
-      /* case DUF_OPTION_VERSION:                            */
+      /* case DUF_OPTION_VAL_HELP:                               */
+      /* case DUF_OPTION_VAL_EXAMPLES:                           */
+      /* case DUF_OPTION_VAL_VERSION:                            */
       /*   if ( optargg )                                     */
       /*   {                                                 */
       /*     if ( duf_config->help_string )                  */
@@ -316,7 +319,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       /*   }                                                 */
       /*   DUF_PRINTF( 0, "vvvvvvvvvvvv-" );                 */
       /*   break;                                            */
-    case DUF_OPTION_TEST:
+    case DUF_OPTION_VAL_TEST:
       DUF_PRINTF( 0, "This is test option output; optargg:%s", optargg ? optargg : "-" );
       break;
 /* */
@@ -447,7 +450,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
 
 /* i/o */
 
-    case DUF_OPTION_TRACE_STDERR:
+    case DUF_OPTION_VAL_TRACE_STDERR:
       if ( duf_config->cli.trace.output.out )
       {
         if ( duf_config->cli.trace.output.out != stderr && duf_config->cli.trace.output.out != stdout )
@@ -462,7 +465,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       duf_config->cli.trace.output.out = stderr;
       r = 0;
       break;
-    case DUF_OPTION_TRACE_STDOUT:
+    case DUF_OPTION_VAL_TRACE_STDOUT:
       if ( duf_config->cli.trace.output.out )
       {
         if ( duf_config->cli.trace.output.out != stderr && duf_config->cli.trace.output.out != stdout )
@@ -477,16 +480,16 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       duf_config->cli.trace.output.out = stdout;
       r = 0;
       break;
-      /* case DUF_OPTION_TRACE_FILE:                                                                              */
+      /* case DUF_OPTION_VAL_TRACE_FILE:                                                                              */
       /*   r = duf_open_special( optargg, &duf_config->cli.trace.output.file, &duf_config->cli.trace.output.out ); */
       /*   break;                                                                                                 */
       /*                                                                                                          */
-      /* case DUF_OPTION_OUTPUT_FILE:                                                                             */
+      /* case DUF_OPTION_VAL_OUTPUT_FILE:                                                                             */
       /*   r = duf_open_special( optargg, &duf_config->cli.output.file, &duf_config->cli.output.out );             */
       /*   break;                                                                                                 */
 
 /* combined */
-    case DUF_OPTION_ALL_TRACE:
+    case DUF_OPTION_VAL_ALL_TRACE:
       if ( optargg && *optargg )
         duf_config->cli.trace.sql = duf_config->cli.trace.select = duf_config->cli.trace.insert = duf_config->cli.trace.update =
               duf_config->cli.trace.collect = duf_config->cli.trace.dirent = duf_config->cli.trace.sd5 = duf_config->cli.trace.md5 =
@@ -512,10 +515,10 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       }
       break;
 
-    case DUF_OPTION_FLAG_ZERO_DB:
+    case DUF_OPTION_VAL_FLAG_ZERO_DB:
       DUF_OPTION_ACQUIRE_FLAG( create_tables, cli.act );
 /* no break here ! */
-    case DUF_OPTION_TREE_TO_DB:
+    case DUF_OPTION_VAL_TREE_TO_DB:
       /* -ORifd5 
        * i.e.
        *  --create-tables --uni-scan --recursive ...
@@ -536,7 +539,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       break;
 
 /* specific */
-    case DUF_OPTION_FORMAT:
+    case DUF_OPTION_VAL_FORMAT:
       {
         char *coptarg, *poptarg;
         unsigned nvalue;
@@ -740,7 +743,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
 
       DUF_TEST_R( r );
       break;
-    case DUF_OPTION_MEMUSAGE:
+    case DUF_OPTION_VAL_MEMUSAGE:
       {
         extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
@@ -755,6 +758,11 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       break;
     }
   }
+  else
+  {
+    r = DUF_ERROR_OPTION_NOT_FOUND;
+  }
 
   DEBUG_ENDR( r );
+  /* DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND ); */
 }

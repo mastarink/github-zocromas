@@ -71,6 +71,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_integrity_callbacks = {
   .title = __FILE__,
+  .name = "integrity",
   .init_scan = NULL,
   /* filename for debug only */
   .leaf = {.fieldset = NULL,

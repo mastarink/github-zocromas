@@ -21,7 +21,7 @@
 
 
 int
-duf_parse_cli_options( const char *shorts, int stage )
+duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
   int longindex;
@@ -54,7 +54,7 @@ duf_parse_cli_options( const char *shorts, int stage )
  *                =0  for normal options
  * or  errorcode (<0) for error
  * */
-    r = duf_parse_option( codeval, longindex, optarg, stage );
+    r = duf_parse_option( codeval, longindex, optarg, istage );
     DUF_TRACE( options, 2, "cli options r: %d", r );
 
     if ( r == DUF_ERROR_OPTION_NOT_FOUND || r == DUF_ERROR_OPTION )
@@ -64,7 +64,7 @@ duf_parse_cli_options( const char *shorts, int stage )
     cnt++;
   }
   DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
-  if ( stage == 0 && optind < duf_config->cargc )
+  if ( istage == 0 && optind < duf_config->cargc )
   {
     mas_del_argv( duf_config->targc, duf_config->targv, 0 );
     duf_config->targc = 0;
@@ -91,9 +91,9 @@ duf_cli_options( int argc, char *argv[] )
     duf_config->cargc = argc;
     duf_config->cargv = argv;
     if ( !duf_config->cli.shorts )
-      duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_multi );
+      duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
 
-    DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 0 ) );
+    DOR( r, duf_parse_cli_options( duf_config->cli.shorts, DUF_OPTION_STAGE_DEFAULT ) );
   }
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name( r ) );
 #if 0

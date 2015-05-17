@@ -35,20 +35,24 @@ duf_longindex_extended_codeval( int longindex, int *pr )
 #endif
 
 const duf_longval_extended_t *
-duf_longindex2extended( int longindex, int *pr )
+duf_longindex2extended( int longindex, const duf_longval_extended_table_t **pxtable, int *pr )
 {
   const duf_longval_extended_t *extended = NULL;
   int ntable = 0;
   int tbcount = 0;
 
-  for ( const duf_longval_extended_t ** xtables = lo_extended_multi; tbcount <= longindex && *xtables; xtables++, ntable++ )
+  for ( const duf_longval_extended_table_t ** xtables = lo_extended_table_multi; tbcount <= longindex && *xtables; xtables++, ntable++ )
   {
-    for ( const duf_longval_extended_t * xtable = *xtables; tbcount <= longindex && xtable->o.name; xtable++, tbcount++ )
+    const duf_longval_extended_table_t *xtable = *xtables;
+
+    for ( const duf_longval_extended_t * xtended = xtable->table; tbcount <= longindex && xtended->o.name; xtended++, tbcount++ )
     {
-      DUF_TRACE( options, 5, "@li2ex %d:%d [%s]", ntable, tbcount, xtable->o.name );
+      DUF_TRACE( options, 5, "@li2ex %d:%d [%s]", ntable, tbcount, xtended->o.name );
       if ( tbcount == longindex )
       {
-        extended = xtable;
+        extended = xtended;
+        if ( pxtable )
+          *pxtable = xtable;
         /* break; */
       }
     }
@@ -58,19 +62,21 @@ duf_longindex2extended( int longindex, int *pr )
 }
 
 int
-duf_longindex_extended_count( const duf_longval_extended_t ** xtables )
+duf_longindex_extended_count( const duf_longval_extended_table_t ** xtables )
 {
-  int tbcount = 0;
-  const duf_longval_extended_t *xtable;
+  int xcount = 0;
+  const duf_longval_extended_table_t *xtable;
 
   while ( ( xtable = *xtables++ ) )
   {
-    while ( xtable->o.name )
+    const duf_longval_extended_t *xtended = xtable->table;
+
+    while ( xtended->o.name )
     {
-      /* if ( xtable->stage.min == 0 && xtable->stage.max == 0 ) */
-      tbcount++;
-      xtable++;
+      /* if ( xtended->stage.min == 0 && xtended->stage.max == 0 ) */
+      xcount++;
+      xtended++;
     }
   }
-  return tbcount;
+  return xcount;
 }

@@ -91,7 +91,7 @@ duf_show_options( const char *a0 )
   int seq = 0;
 
   DUF_TRACE( options, 0, "%s", a0 );
-  for ( duf_option_code_t codeval = DUF_OPTION_NONE; codeval < DUF_OPTION_MAX_LONG; codeval++ )
+  for ( duf_option_code_t codeval = DUF_OPTION_VAL_NONE; codeval < DUF_OPTION_VAL_MAX_LONG; codeval++ )
   {
 #define BUFSZ 1024 * 4
     char buffer[BUFSZ] = "";

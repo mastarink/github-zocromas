@@ -19,26 +19,29 @@
 /* ###################################################################### */
 
 char *
-duf_cli_option_shorts( const duf_longval_extended_t ** xtables )
+duf_cli_option_shorts( const duf_longval_extended_table_t ** xtables )
 {
-  const duf_longval_extended_t *xtable;
+  const duf_longval_extended_table_t *xtable;
   char shorts[1024 * 4] = "";
   char *p = shorts;
 
   while ( ( xtable = *xtables++ ) )
   {
-    while ( xtable->o.name )
+const    duf_longval_extended_t *xtended;
+
+    xtended = xtable->table;
+    while ( xtended->o.name )
     {
-      if ( xtable->o.val < 0xFF )
+      if ( xtended->o.val < 0xFF )
       {
         /* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); */
-        if ( !strchr( shorts, ( char ) xtable->o.val ) )
+        if ( !strchr( shorts, ( char ) xtended->o.val ) )
         {
-          *p++ = ( char ) xtable->o.val;
-          if ( xtable->o.has_arg == no_argument );
-          else if ( xtable->o.has_arg == required_argument )
+          *p++ = ( char ) xtended->o.val;
+          if ( xtended->o.has_arg == no_argument );
+          else if ( xtended->o.has_arg == required_argument )
             *p++ = ':';
-          else if ( xtable->o.has_arg == optional_argument )
+          else if ( xtended->o.has_arg == optional_argument )
           {
             /* *p++ = ':'; */
             /* *p++ = ':'; */
@@ -51,62 +54,29 @@ duf_cli_option_shorts( const duf_longval_extended_t ** xtables )
         }
         *p = 0;
       }
-      xtable++;
+      xtended++;
     }
   }
   return *shorts ? mas_strdup( shorts ) : NULL;
 }
 
-/* char *                                                                                                  */
-/* duf_cli_option_shorts( void )                                                                           */
-/* {                                                                                                       */
-/*   char shorts[512] = "";                                                                                */
-/*   char *p = shorts;                                                                                     */
-/*                                                                                                         */
-/*   for ( int ilong = 0; lo_extended[ilong].o.name && ilong < lo_extended_count; ilong++ )                */
-/*   {                                                                                                     */
-/*     if ( lo_extended[ilong].o.val < 0xFF )                                                              */
-/*     {                                                                                                   */
-/*       (* DUF_SHOW_ERROR( "S:%c %x - %s", duf_longopts[ilong].val, duf_longopts[ilong].val, shorts ); *) */
-/*       if ( !strchr( shorts, ( char ) lo_extended[ilong].o.val ) )                                       */
-/*       {                                                                                                 */
-/*         *p++ = ( char ) lo_extended[ilong].o.val;                                                       */
-/*         if ( lo_extended[ilong].o.has_arg == no_argument );                                             */
-/*         else if ( lo_extended[ilong].o.has_arg == required_argument )                                   */
-/*           *p++ = ':';                                                                                   */
-/*         else if ( lo_extended[ilong].o.has_arg == optional_argument )                                   */
-/*         {                                                                                               */
-/*           (* *p++ = ':'; *)                                                                             */
-/*           (* *p++ = ':'; *)                                                                             */
-/*         }                                                                                               */
-/*         else                                                                                            */
-/*         {                                                                                               */
-/*           *p++ = ':';                                                                                   */
-/*           *p++ = ':';                                                                                   */
-/*         }                                                                                               */
-/*       }                                                                                                 */
-/*       *p = 0;                                                                                           */
-/*     }                                                                                                   */
-/*   }                                                                                                     */
-/*   DUF_TRACE( explain, 0, "genereated options shorts: %s", shorts );                                     */
-/*   return *shorts ? mas_strdup( shorts ) : NULL;                                                         */
-/* }                                                                                                       */
-
 char *
 duf_option_names_d( duf_option_code_t codeval, const char *delim )
 {
-  const duf_longval_extended_t **xtables;
-  const duf_longval_extended_t *xtable;
+  const duf_longval_extended_table_t **xtables;
+  const duf_longval_extended_table_t *xtable;
   char *names = NULL;
   int cnt = 0;
 
-  xtables = lo_extended_multi;
+  xtables = lo_extended_table_multi;
 
   while ( ( xtable = *xtables++ ) )
   {
-    while ( xtable->o.name )
+    const duf_longval_extended_t *xtended = xtable->table;
+
+    while ( xtended->o.name )
     {
-      if ( xtable->o.val == codeval )
+      if ( xtended->o.val == codeval )
       {
         const char *spaces = "                                                            ";
         size_t l;
@@ -117,14 +87,14 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
         else
           names = mas_strcat_x( names, delim ? delim : " | " );
         names = mas_strcat_x( names, "--" );
-        names = mas_strcat_x( names, xtable->o.name );
-        l = strlen( xtable->o.name );
+        names = mas_strcat_x( names, xtended->o.name );
+        l = strlen( xtended->o.name );
         if ( l < mln )
           names = mas_strncat_x( names, spaces, mln - l );
         cnt++;
       }
 
-      xtable++;
+      xtended++;
     }
   }
   if ( names && codeval && ( ( unsigned ) codeval ) < 0xff )

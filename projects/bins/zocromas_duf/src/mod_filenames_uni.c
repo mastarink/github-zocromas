@@ -164,7 +164,8 @@ static duf_beginning_t final_sql = {.done = 0,
 
 
 duf_scan_callbacks_t duf_filenames_callbacks = {
-  .title = "filenames",
+  .title = "file names",
+  .name = "filenames",
   .init_scan = NULL,
   .def_opendir = 1,
 

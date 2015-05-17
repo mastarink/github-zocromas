@@ -324,6 +324,7 @@ sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, c
 
 duf_scan_callbacks_t duf_sample_callbacks = {
   .title = "sample mod",
+  .name = "samp",
   .init_scan = NULL,
   /* .def_opendir = 1, */
 

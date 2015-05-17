@@ -148,6 +148,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_template_callbacks = {
   .title = "module",
+  .name = "template",
   .def_opendir = 0,
   .init_scan = template_scan_init,
 

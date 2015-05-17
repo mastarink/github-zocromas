@@ -99,7 +99,7 @@ duf_pre_action( void )
       /* DUF_SQL_START_STMT_NOPDI( sql, r, pstmt ); */
       /* DUF_SQL_STEP( r, pstmt );                  */
       /* DUF_SQL_END_STMT_NOPDI( r, pstmt );        */
-    DORF( r, duf_scan_beginning_ssql, &sql_beginning_vacuum, 0, NULL );
+      DORF( r, duf_scan_beginning_ssql, &sql_beginning_vacuum, 0, NULL );
     }
     global_status.actions_done++;
   }
@@ -197,7 +197,8 @@ duf_action( int argc, char **argv )
     DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage 1 - needs pdi inited with argv, which is known only after stage 0 */
-    DOR( r, duf_parse_cli_options( duf_config->cli.shorts, 1 ) );
+    if ( 0 )
+      DOR( r, duf_parse_cli_options( duf_config->cli.shorts, DUF_OPTION_STAGE_FIRST ) );
   }
   assert( duf_config->pdi->levinfo );
 

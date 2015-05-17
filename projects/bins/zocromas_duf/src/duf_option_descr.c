@@ -26,7 +26,7 @@ _duf_find_longval_help( duf_option_code_t codeval, int *pr )
   const char *ph = NULL;
   const duf_longval_extended_t *extended;
 
-  extended = duf_find_codeval_extended_std( codeval, pr );
+  extended = duf_find_codeval_extended_std( codeval, NULL, pr );
   /* extended = &lo_extended[ilong]; */
 
   if ( extended )
@@ -42,7 +42,7 @@ duf_find_longval_help( duf_option_code_t codeval, int *pr )
   return ph ? ph : "-";
 }
 
-static char *
+char *
 duf_option_description_xd( const duf_longval_extended_t * extended, const char *delimh, const char *delim, int *pr )
 {
   char *s = NULL;
@@ -76,7 +76,7 @@ duf_option_description_d( int longindex, const char *delimh, const char *delim, 
   int r = 0;
   const duf_longval_extended_t *extended;
 
-  extended = duf_longindex2extended( longindex, &r );
+  extended = duf_longindex2extended( longindex, NULL, &r );
   if ( r >= 0 )
     p = duf_option_description_xd( extended, delimh, delim, pr );
   if ( pr )

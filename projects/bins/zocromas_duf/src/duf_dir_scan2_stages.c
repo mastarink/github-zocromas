@@ -183,7 +183,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, DSCCBX )
     char *ona = NULL;
 
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> -dirent" );
-    ona = duf_option_names( DUF_OPTION_FLAG_DIRENT );
+    ona = duf_option_names( DUF_OPTION_VAL_FLAG_DIRENT );
     DUF_TRACE( explain, 0, "to scan dir / file before2 use %s", ona );
     mas_free( ona );
   }

@@ -316,7 +316,8 @@ filedata_scan_entry_reg2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *f
 
 
 duf_scan_callbacks_t duf_filedata_callbacks = {
-  .title = "filedata",
+  .title = "file data",
+  .name = "filedata",
   .init_scan = NULL,
   .def_opendir = 1,
 

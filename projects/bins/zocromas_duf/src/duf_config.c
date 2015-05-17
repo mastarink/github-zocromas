@@ -57,11 +57,11 @@ duf_config_create( void )
   {
     int tbcount = 0;
     size_t tbsize = 0;
-    const duf_longval_extended_t **xtables;
-    const duf_longval_extended_t *xtable;
+    const duf_longval_extended_table_t **xtables;
+    const duf_longval_extended_table_t *xtable;
 
-    tbcount = duf_longindex_extended_count( lo_extended_multi );
-    xtables = lo_extended_multi;
+    tbcount = duf_longindex_extended_count( lo_extended_table_multi );
+    xtables = lo_extended_table_multi;
     tbsize = tbcount * ( sizeof( duf_longval_extended_t ) + 1 );
     {
       duf_option_t *longopts_ptr;
@@ -71,15 +71,18 @@ duf_config_create( void )
 
       while ( ( xtable = *xtables++ ) )
       {
-        while ( xtable->o.name )
+       const duf_longval_extended_t *xtended;
+
+        xtended = xtable->table;
+        while ( xtended->o.name )
         {
           {
-              longopts_ptr->name = xtable->o.name;
-              longopts_ptr->has_arg = xtable->o.has_arg;
-              longopts_ptr->val = xtable->o.val;
-              longopts_ptr++;
+            longopts_ptr->name = xtended->o.name;
+            longopts_ptr->has_arg = xtended->o.has_arg;
+            longopts_ptr->val = xtended->o.val;
+            longopts_ptr++;
           }
-          xtable++;
+          xtended++;
         }
       }
 

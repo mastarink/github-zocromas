@@ -355,6 +355,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .title = "collect md5",
+  .name = "md5",
   .init_scan = NULL,
   .def_opendir = 1,
   /* .dirent_dir_scan_before = NULL, */

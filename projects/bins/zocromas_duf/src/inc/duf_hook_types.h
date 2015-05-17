@@ -52,6 +52,7 @@ struct duf_scan_callbacks_s
   /* unsigned scan_mode_2:1; */
   unsigned disabled:1;
   const char *title;
+  const char *name;
 
   duf_sql_set_t node;
   duf_sql_set_t leaf;

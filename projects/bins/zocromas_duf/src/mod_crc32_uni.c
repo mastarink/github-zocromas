@@ -215,6 +215,7 @@ static duf_beginning_t final_sql = {.done = 0,
 
 duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .title = "collect crc32",
+  .name = "crc32",
   .init_scan = NULL,
   .def_opendir = 1,
   .leaf_scan_fd2 = duf_scan_dirent_crc32_content2,

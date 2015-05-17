@@ -22,6 +22,13 @@
 
 #  define DUF_OPTION_NUM(_lo, _pref) DUF_OPTION_N(_pref._lo)
 
+#if 0
+#define DUF_OPTION_CHECK_STATE(_istage, _extended, _xtable) \
+	  ( _istage == -1 || ( !_extended->use_stage || ( _extended->stage.min <= _istage && _extended->stage.max >= _istage ) ) \
+       || ( _xtable && ( !_xtable->use_stage || ( _xtable->stage.min <= _istage && _xtable->stage.max >= _istage ) ) ) || _extended->stage.flag )
+#else
+#define DUF_OPTION_CHECK_STATE(_istage, _extended, _xtable) duf_check_stage( _istage, _extended, _xtable)
+#endif
 
 #endif
 
