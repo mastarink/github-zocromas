@@ -70,12 +70,12 @@ const duf_longval_extended_table_t optable_flag = {
 
    {.o = {DO_Q( "mime" ) /*              */ , DO_A_N /* */ , DO_VF( MIME )} /*              */ , DO_CL( SCAN ) /*    */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, mime ) /*                                */ , DO_H( collect mime data ) /*                */ },
-
+#if 0
    {.o = {DO_Q( "print" ) /*             */ , DO_A_N /* */ , DO_VF( PRINT )} /*             */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, print ) /*                               */ , DO_H( print ) /*                            */ },
    {.o = {DO_Q( "tree" ) /*              */ , DO_A_N /* */ , DO_VF( TREE )} /*              */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, tree ) /*             */ , DO_H( tree ) /*                             */ },
-
+#endif
    {.o = {DO_Q( "progress" ) /*          */ , DO_A_N /* */ , DO_VF( PROGRESS )} /*          */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, progress ) /*                            */ , DO_H( progress ) /*                         */ },
    {.o = {DO_Q( "recursive" ) /*         */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,

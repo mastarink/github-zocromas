@@ -13,9 +13,13 @@ typedef struct
   /* unsigned update_path:1; */
   /* unsigned update_md5:1; */
   /* unsigned update_duplicates:1; */
+#if 0
   unsigned print:1;
   unsigned tree:1;
-
+#else
+  unsigned placeholder1:1;
+  unsigned placeholder2:1;
+#endif
   unsigned sd5:1;
   unsigned md5:1;
   unsigned crc32:1;

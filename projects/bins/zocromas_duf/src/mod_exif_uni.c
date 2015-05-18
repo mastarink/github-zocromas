@@ -549,13 +549,6 @@ static duf_beginning_t final_sql = {.done = 0,
           " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
           " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
           ,
-          /* "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " (* *)                            */
-          /*       " FROM " DUF_DBPREF "exif AS x " (* *)                                                  */
-          /*       " JOIN " DUF_DBPREF "exif_model AS mo ON (x.modelid=mo." DUF_SQL_IDNAME ") " (* *)                      */
-          /*       " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.exifid=x." DUF_SQL_IDNAME ") " (* *)                        */
-          /*       " WHERE " DUF_DBPREF "exif.modelid=x.modelid AND exif.date_time=x.date_time" " )" (* *) */
-          /*       ,                                                                                       */
-
 
           NULL}
 };

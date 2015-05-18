@@ -52,7 +52,7 @@ typedef struct
   } v;
   unsigned nsame;
   unsigned offset;
-} duf_format_combo_t;
+} duf_bformat_combo_t;
 
 
 

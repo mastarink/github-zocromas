@@ -164,8 +164,10 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, EXIF, exif, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, COLLECT, collect, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, INTEGRITY, integrity, cli.act, maxlen );
+#if 0
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, PRINT, print, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, TREE, tree, cli.act, maxlen );
+#endif
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, FILES, files, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, DIRS, dirs, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_CALCULATE, calculate, cli,.disable, maxlen );

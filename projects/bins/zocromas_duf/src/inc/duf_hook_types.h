@@ -98,6 +98,7 @@ typedef struct duf_sccb_handle_s duf_sccb_handle_t;
 
 typedef struct
 {
+  unsigned tovector:1;
   duf_config_act_flags_combo_t on;
   duf_config_act_flags_combo_t off;
   duf_scan_callbacks_t *sccb;

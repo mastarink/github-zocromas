@@ -32,46 +32,65 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
  
       duf_print_tree_callbacks __attribute( ( weak ) ),
       duf_print_dir_callbacks __attribute( ( weak ) ),
-      duf_bubububububububububububububububububububububububububububububububububububu __attribute( ( weak ) );
+      duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
 
 static duf_action_table_t actions_table[] = {
-  {.sccb = &duf_integrity_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_integrity_callbacks,
    .on.flag = {.integrity = 1}
    },
-  {.sccb = &duf_directories_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_directories_callbacks,
    .on.flag = {.collect = 1,.dirent = 1,.dirs = 1}
    },
-  {.sccb = &duf_filedata_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_filedata_callbacks,
    .on.flag = {.collect = 1,.dirent = 1,.filedata = 1}
    },
-  {.sccb = &duf_filenames_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_filenames_callbacks,
    .on.flag = {.collect = 1,.dirent = 1,.filenames = 1}
    },
-  {.sccb = &duf_collect_openat_crc32_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_collect_openat_crc32_callbacks,
    .on.flag = {.collect = 1,.crc32 = 1}
    },
-  {.sccb = &duf_collect_openat_sd5_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_collect_openat_sd5_callbacks,
    .on.flag = {.collect = 1,.sd5 = 1}
    },
-  {.sccb = &duf_collect_openat_md5_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_collect_openat_md5_callbacks,
    .on.flag = {.collect = 1,.md5 = 1}
    },
-  {.sccb = &duf_collect_mime_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_collect_mime_callbacks,
    .on.flag = {.collect = 1,.mime = 1}
    },
-  {.sccb = &duf_collect_exif_callbacks,
+  {.tovector = 1,
+   .sccb = &duf_collect_exif_callbacks,
    .on.flag = {.collect = 1,.exif = 1}
    },
   /* {.sccb = &duf_collect_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
 
-  {.sccb = &duf_print_tree_callbacks,
+  {.tovector = 0,
+   .sccb = &duf_print_tree_callbacks,
+#if 0
    .on.flag = {.print = 1,.tree = 1},
+#endif
    .off.flag = {.md5 = 1}
    },
-  {.sccb = &duf_print_dir_callbacks,
+  {.tovector = 0,
+   .sccb = &duf_print_dir_callbacks,
+#if 0
    .on.flag = {.print = 1},
-   .off.flag = {.md5 = 1,.tree = 1}
+#endif
+   .off.flag = {.md5 = 1
+#if 0
+     ,.tree = 1
+#endif
+   }
    },
   /* {.sccb = &duf_print_md5_callbacks, */
   /*  .on.flag = {.print = 1,.md5 = 1}, */
@@ -104,7 +123,7 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
     {
       duf_scan_callbacks_t *sccb = act->sccb;
 
-      if ( ( duf_config->cli.act.v.bit & act->on.bit ) == act->on.bit && ( duf_config->cli.act.v.bit & act->off.bit ) == 0 )
+      if ( act->tovector && ( duf_config->cli.act.v.bit & act->on.bit ) == act->on.bit && ( duf_config->cli.act.v.bit & act->off.bit ) == 0 )
       {
         if ( sccb )
         {

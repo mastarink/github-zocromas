@@ -89,7 +89,7 @@ typedef struct
   duf_config_cli_debug_t dbg;
   duf_config_cli_trace_t trace;
   duf_config_output_t output;
-  duf_format_combo_t format;
+  duf_bformat_combo_t bformat;
   char *shorts;
   /* long limit; */
 } duf_config_cli_t;

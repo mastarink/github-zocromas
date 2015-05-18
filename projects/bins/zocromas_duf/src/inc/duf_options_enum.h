@@ -38,8 +38,12 @@ typedef enum
   DUF_OPTION_VAL_FLAG_ADD_PATH = 'P',
 
   /* actions */
+#  if 0
   DUF_OPTION_VAL_FLAG_TREE = 'T',
   DUF_OPTION_VAL_FLAG_PRINT = 'p',
+#  else
+  DUF_OPTION_VAL_TREE = 'T',    /* new implementation 20150518.083230 */
+#  endif
   DUF_OPTION_VAL_FLAG_SUMMARY = 's',
 
   /* actions */
@@ -263,7 +267,9 @@ typedef enum
   DUF_OPTION_VAL_CD,
   DUF_OPTION_VAL_QUIT,
   DUF_OPTION_VAL_PWD,
-  DUF_OPTION_VAL_LSFILES,
+
+  DUF_OPTION_VAL_LSFILES,       /* new implementation 20150518.083230 */
+
   DUF_OPTION_VAL_ADD_TARG,
   DUF_OPTION_VAL_LIST_TARG,
   DUF_OPTION_VAL_CLEAR_TARG,
@@ -278,6 +284,9 @@ typedef enum
   /* DUF_OPTION_VAL_LIMIT, */
   /* DUF_OPTION_VAL_ADD_TO_GROUP, */
   /* DUF_OPTION_VAL_REMOVE_FROM_GROUP, */
+
+
+
   DUF_OPTION_VAL_ANY_OTHER,
   DUF_OPTION_VAL_MAX_LONG
 } duf_option_code_t;

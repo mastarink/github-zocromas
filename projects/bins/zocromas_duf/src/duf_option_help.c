@@ -553,7 +553,9 @@ duf_option_showflags(  /* int argc, char *const *argv */ void )
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( EXIF ) );
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CRC32 ) );
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( SD5 ) );
+#if 0
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PRINT ) );
+#endif
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
     DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( INFO ) );
@@ -575,7 +577,9 @@ duf_option_showflags(  /* int argc, char *const *argv */ void )
     DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( VACUUM ) );
     DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
     DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
+#if 0
     DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( TREE ) );
+#endif
     DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MD5 ) );
     DUF_PRINTF( 0, "                │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MIME ) );
     DUF_PRINTF( 0, "                │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MDPATH ) );

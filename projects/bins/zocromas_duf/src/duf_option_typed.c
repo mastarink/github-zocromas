@@ -619,14 +619,26 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         DUF_MOPT( noo, r, duf_limitsll_t, max, duf_strtime2long );
         break;
-      case DUF_OPTION_VTYPE_VI_CALL:
+      case DUF_OPTION_VTYPE_VIA_CALL:
         DUF_TRACE( options, 2, "vtype VI_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          if ( extended->call.fdesc.vi.func )
-            ( extended->call.fdesc.vi.func ) ( extended->call.fdesc.vi.arg );
+          if ( extended->call.fdesc.via.func )
+            ( extended->call.fdesc.via.func ) ( extended->call.fdesc.via.arg );
+          else
+            r = DUF_ERROR_OPTION_NO_FUNC;
+        }
+        break;
+      case DUF_OPTION_VTYPE_VSA_CALL:
+        DUF_TRACE( options, 2, "vtype VS_CALL" );
+        if ( noo )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        if ( r >= 0 )
+        {
+          if ( extended->call.fdesc.vsa.func )
+            ( extended->call.fdesc.vsa.func ) ( extended->call.fdesc.vsa.arg );
           else
             r = DUF_ERROR_OPTION_NO_FUNC;
         }
@@ -715,7 +727,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
     {
       DUF_TRACE( options, 2, "NOT switching by extended->vtype=%d; istage=%d (%d:%d); stage.flag:%d", extended->vtype, istage, extended->stage.min,
                  extended->stage.max, extended->stage.flag );
-      r = DUF_ERROR_OPTION_NOT_FOUND;
+      /* r = DUF_ERROR_OPTION_NOT_FOUND; */
     }
   }
   DEBUG_ENDR( r );

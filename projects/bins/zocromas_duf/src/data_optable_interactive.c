@@ -31,7 +31,7 @@ void duf_add_targ( int *targc, char ***targv, const char *s ) __attribute__ ( ( 
 void duf_clear_targ( int *targc, char ***targv, long n ) __attribute__ ( ( weak ) );
 */
 const duf_longval_extended_table_t optable_interactive = {
-  DO_AT_STAGE( DUF_OPTION_STAGE_INTERACTIVE ),
+  /* DO_AT_STAGE( DUF_OPTION_STAGE_INTERACTIVE ), */
   .table =                      /* */
   {
 
@@ -47,10 +47,10 @@ const duf_longval_extended_table_t optable_interactive = {
     /*      */ DO_OC( PDISTR, pdi ) /*                                    */ , DO_H( pdi cd ) /*                           */ },
    {.o = {DO_N( pwd ) /*                 */ , DO_A_N, DO_V( PWD )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( PDISTR, pdi ) /*                                    */ , DO_H( pdi cd ) /*                           */ },
-
+#if 0
    {.o = {DO_N( lsfiles ) /*             */ , DO_A_O, DO_V( LSFILES )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( PDISCCB, pdi ),.call = {.fdesc = {.hi = {.sccb = &duf_print_dir_callbacks}}}, DO_H( pdi cd ) /*      */ },
-
+#endif
    /* {.o = {DO_N( list-sccb ) (*           *) , DO_A_O}, DO_TF( VI_CALL, list_sccb, 0 ) (*                     *) }, */
    {.o = {DO_Q( "list-targ" ) /*           */ , DO_A_O, DO_V( LIST_TARG )}, DO_TF( TN_CALL, list_targ ) /*                        */ },
    {.o = {DO_Q( "add-targ" ) /*            */ , DO_A_O, DO_V( ADD_TARG )}, DO_TF( TS_CALL, add_targ ) /*                                      */ },

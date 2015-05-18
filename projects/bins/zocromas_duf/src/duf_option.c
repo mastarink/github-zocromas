@@ -619,115 +619,115 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
           switch ( rs )
           {
           case DUF_FORMAT_DEPTH:
-            duf_config->cli.format.v.flag.depth = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( depth ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SEQ:
-            duf_config->cli.format.v.flag.seq = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( seq ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SEQ_NODE:
-            duf_config->cli.format.v.flag.seq_node = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( seq_node ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SEQ_LEAF:
-            duf_config->cli.format.v.flag.seq_leaf = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( seq_leaf ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_PREFIX:
-            duf_config->cli.format.v.flag.prefix = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( prefix ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SUFFIX:
-            duf_config->cli.format.v.flag.suffix = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( suffix ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DIRID:
-            duf_config->cli.format.v.flag.dirid = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( dirid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DIRID_SPACE:
-            duf_config->cli.format.v.flag.dirid_space = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( dirid_space ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NFILES:
-            duf_config->cli.format.v.flag.nfiles = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( nfiles ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NFILES_SPACE:
-            duf_config->cli.format.v.flag.nfiles_space = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( nfiles_space ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NDIRS:
-            duf_config->cli.format.v.flag.ndirs = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( ndirs ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NDIRS_SPACE:
-            duf_config->cli.format.v.flag.ndirs_space = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( ndirs_space ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_REALPATH:
-            duf_config->cli.format.v.flag.realpath = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( realpath ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_INODE:
-            duf_config->cli.format.v.flag.inode = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( inode ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MODE:
-            duf_config->cli.format.v.flag.mode = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( mode ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NLINK:
-            duf_config->cli.format.v.flag.nlink = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( nlink ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_USER:
-            duf_config->cli.format.v.flag.user = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( user ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_GROUP:
-            duf_config->cli.format.v.flag.group = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( group ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILESIZE:
-            duf_config->cli.format.v.flag.filesize = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( filesize ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MTIME:
-            duf_config->cli.format.v.flag.mtime = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( mtime ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILENAME:
-            duf_config->cli.format.v.flag.filename = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( filename ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SD5:
-            duf_config->cli.format.v.flag.sd5 = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( sd5 ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SD5ID:
-            duf_config->cli.format.v.flag.sd5id = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( sd5id ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MD5:
-            duf_config->cli.format.v.flag.md5 = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( md5 ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MD5ID:
-            duf_config->cli.format.v.flag.md5id = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( md5id ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_CRC32:
-            duf_config->cli.format.v.flag.crc32 = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( crc32 ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_CRC32ID:
-            duf_config->cli.format.v.flag.crc32id = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( crc32id ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NAMEID:
-            duf_config->cli.format.v.flag.nameid = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( nameid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MIME:
-            duf_config->cli.format.v.flag.mime = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( mime ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MIMEID:
-            duf_config->cli.format.v.flag.mimeid = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( mimeid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_EXIFID:
-            duf_config->cli.format.v.flag.exifid = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( exifid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_EXIFDT:
-            duf_config->cli.format.v.flag.exifdt = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( exifdt ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_HUMAN:
-            duf_config->cli.format.v.flag.human = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( human ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DATAID:
-            duf_config->cli.format.v.flag.dataid = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_FLAG_NUM( dataid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NSAME:
-            duf_config->cli.format.nsame = value == NULL ? 1 : nvalue;
+            DUF_FORMAT_NUM( nsame ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_OFFSET:
-            duf_config->cli.format.offset = value == NULL ? 0 : nvalue;
+            DUF_FORMAT_NUM( offset ) = value == NULL ? 0 : nvalue;
             break;
           }
-          DUF_TRACE( options, 2, "rs:%d [%s:%s:%s] FORMAT bits: %llx", rs, poptarg, hlp, value ? value : "nil", duf_config->cli.format.v.bit );
+          DUF_TRACE( options, 2, "rs:%d [%s:%s:%s] FORMAT bits: %llx", rs, poptarg, hlp, value ? value : "nil", duf_config->cli.bformat.v.bit );
           /* DUF_TRACE( any, 0, "rs:%d", rs ); */
           if ( rs < 0 )
           {
@@ -760,7 +760,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
   }
   else
   {
-    r = DUF_ERROR_OPTION_NOT_FOUND;
+    /* r = DUF_ERROR_OPTION_NOT_FOUND; */
   }
 
   DEBUG_ENDR( r );

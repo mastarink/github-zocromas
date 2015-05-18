@@ -52,10 +52,10 @@
 #  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) }}
 #  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f)      }}
 
-/* void f( .vi.arg ) */
-#  define DO_VI_CALL(_f, _a)    DO_SET_VTYPE( VI_CALL ), DO_SET_CALLA(vi, _f, _a)
-#  define DO_VI_CALLH(_cl)	DO_VI_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
-#  define DO_VI_CALLCL(_f, _cl)	DO_VI_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
+/* void f( .via.arg ) -- */
+#  define DO_VIA_CALL(_f, _a)		DO_SET_VTYPE( VIA_CALL ), DO_SET_CALLA(via, _f, _a)
+#  define DO_VIA_CALLH(_cl)		DO_VIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
+#  define DO_VIA_CALLCL(_f, _cl)	DO_VIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
 /* void f( int argc, char *const *argv ) */
 #  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f)
 /*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL(t, _f) */
@@ -69,6 +69,8 @@
 #  define DO_TS_CALL(_f)        DO_SET_VTYPE( TS_CALL ), DO_SET_CALL(ts, _f)
 /* void f( optargg ) */
 #  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f)
+/* void f( .vsa.arg ) -- */
+#  define DO_VSA_CALL(_f, _a)		DO_SET_VTYPE( VSA_CALL ), DO_SET_CALLA(vsa, _f, _a)
 
 #  define DO_SET_STAGE(_min, _max) .stage={.min=_min, .max=_max},.use_stage=1
 #  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
