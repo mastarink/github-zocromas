@@ -10,6 +10,9 @@
 
 
 
+#  define DUF_WRITES( _min, _str) \
+    duf_writes( duf_config ? duf_config->cli.output.level:0, _min, \
+		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, _str)
 #  define DUF_PUTS( _min, _str) \
     duf_puts( duf_config ? duf_config->cli.output.level:0, _min, \
 		DUF_FL, duf_config && duf_config->cli.output.out?duf_config->cli.output.out:stdout, _str)

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
 
@@ -75,6 +76,19 @@ duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, co
       r = fputs( str, out );
     if ( r >= 0 )
       fputs( "\n", out );
+  }
+  return r;
+}
+
+int
+duf_writes( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str )
+{
+  int r = 0;
+
+  if ( level >= minlevel )
+  {
+    if ( str && *str )
+      r = fwrite( str, 1, strlen( str ), out );
   }
   return r;
 }

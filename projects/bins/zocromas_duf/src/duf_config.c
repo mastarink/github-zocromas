@@ -163,6 +163,24 @@ duf_config_delete( duf_config_t * cfg )
     mas_free( cfg->cli.output.file );
     cfg->cli.output.file = NULL;
 
+    mas_free( cfg->cli.output.sformat_files_tree );
+    cfg->cli.output.sformat_files_tree = NULL;
+
+    mas_free( cfg->cli.output.sformat_dirs_tree );
+    cfg->cli.output.sformat_dirs_tree = NULL;
+
+    mas_free( cfg->cli.output.sformat_files_list );
+    cfg->cli.output.sformat_files_list = NULL;
+
+    mas_free( cfg->cli.output.sformat_dirs_list );
+    cfg->cli.output.sformat_dirs_list = NULL;
+
+    mas_free( cfg->cli.output.sformat_files_gen );
+    cfg->cli.output.sformat_files_gen = NULL;
+
+    mas_free( cfg->cli.output.sformat_dirs_gen );
+    cfg->cli.output.sformat_dirs_gen = NULL;
+
     mas_free( cfg );
     cfg = NULL;
   }

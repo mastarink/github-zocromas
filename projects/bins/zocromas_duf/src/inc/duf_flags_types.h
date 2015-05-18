@@ -58,6 +58,7 @@ typedef struct
   unsigned do_sccbs:1;
   unsigned show_sccbs:1;
   unsigned show_sccbh:1;
+  unsigned use_binformat:1;
 } duf_config_act_flags_t;
 typedef union
 {

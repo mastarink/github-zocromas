@@ -48,7 +48,7 @@ duf_option_evaluate_sccb( const char *name )
   {
     duf_scan_callbacks_t *sccb = act->sccb;
 
-    DUF_PRINTF( 0, "%s : %s ----- %s", name, sccb->name, duf_uni_scan_action_title( sccb ) );
+    /* DUF_PRINTF( 0, "%s : %s ----- %s", name, sccb->name, duf_uni_scan_action_title( sccb ) ); */
     if ( 0 == strcmp( name, sccb->name ) )
     {
       int r = 0;

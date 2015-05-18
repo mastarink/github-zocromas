@@ -1,3 +1,4 @@
+#include <string.h>
 #include <mastar/wrap/mas_std_def.h>
 /* #include <mastar/wrap/mas_memory.h> */
 
@@ -11,6 +12,8 @@
 #include "duf_pdi.h"
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
+
+#include "duf_option_defs.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -36,7 +39,7 @@
  * ╚═╩══╧╝ ┗━┻━━┷┛ └─┸──┴┘     ╲╱   ╲╱              
  * */
 static int
-duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
+duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -95,46 +98,63 @@ duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi /*, int is_file */  )
       case 0x14:
       case 0x34:
       case 0x35:
-        /* DUF_PRINTF( 0, ".  → " ); */
-        DUF_PRINTF( 0, ".  " );
+        /* strncpy(pbuffer, "  → ", bfsz ); */
+        strncpy( pbuffer, "  ", bfsz );
         break;
       case 0x15:
-        /* DUF_PRINTF( 0, ".│ → " ); */
-        DUF_PRINTF( 0, ".│ " );
+        /* strncpy(pbuffer, "│ → ", bfsz ); */
+        strncpy( pbuffer, "│ ", bfsz );
         break;
       case 0x10:
       case 0x30:
-        DUF_PRINTF( 0, ".└─── " );
+        strncpy( pbuffer, "└─── ", bfsz );
         break;
       case 0x11:
       case 0x31:
-        DUF_PRINTF( 0, ".├─── " );
+        strncpy( pbuffer, "├─── ", bfsz );
         break;
       case 0x01:
       case 0x21:
-        DUF_PRINTF( 0, ".│    " );
+        strncpy( pbuffer, "│    ", bfsz );
         break;
       case 0x12:
-        /* DUF_PRINTF( 0, ".┣━━━ " ); */
+        /* strncpy(pbuffer, "┣━━━ " , bfsz); */
         break;
       case 0x28:
       case 0x8:
-        DUF_PRINTF( 0, ".     " );
+        strncpy( pbuffer, "     ", bfsz );
         break;
       case 0x20:
       case 0x00:
-        DUF_PRINTF( 0, ".     " );
+        strncpy( pbuffer, "     ", bfsz );
         break;
       case 0x02:
-        /* DUF_PRINTF( 0, ".┃    " ); */
+        /* strncpy(pbuffer, "┃    " , bfsz); */
         break;
       default:
-        DUF_PRINTF( 0, ". [x%02x]", flags );
+        snprintf( pbuffer, bfsz, " [x%02x]", flags );
         break;
       }
     }
+    {
+      size_t len = strlen( pbuffer );
+
+      pbuffer += len;
+      bfsz -= len;
+    }
   }
 
+  DEBUG_ENDR( r );
+}
+
+static int
+duf_sql_print_tree_prefix_uni( duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+  char buffer[1024];
+
+  duf_sql_print_tree_sprefix_uni( buffer, sizeof( buffer ), pdi );
+  DUF_WRITES( 0, buffer );
   DEBUG_ENDR( r );
 }
 
@@ -216,16 +236,24 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
 
-    if ( 0 )
-    {
-       duf_print_sformat_file_info( pdi, &fi, "%f", duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL );
-    }
-    else
+    if ( DUF_ACT_FLAG( use_binformat ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
       else
         DUF_PUTS( 0, "????????????" );
+    }
+    else
+    {
+      const char *sformat = NULL;
+
+      sformat = duf_config->cli.output.sformat_files_gen;
+      if ( !sformat )
+        sformat = duf_config->cli.output.sformat_files_tree;
+
+      if ( !sformat )
+        sformat = " _%-6M =%-4S%P %f\n";
+      duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
     }
   }
 
@@ -284,11 +312,25 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi 
   /* fi.md5id = md5id; */
   /* fi.md5sum1 = md5sum1; */
   /* fi.md5sum2 = md5sum2; */
-  if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
-    DUF_PUTSL( 0 );
+  if ( DUF_ACT_FLAG( use_binformat ) )
+  {
+    if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
+      DUF_PUTSL( 0 );
+    else
+      DUF_PUTS( 0, "????????????" );
+  }
   else
-    DUF_PUTS( 0, "????????????" );
+  {
+    const char *sformat = NULL;
 
+    sformat = duf_config->cli.output.sformat_dirs_gen;
+    if ( !sformat )
+      sformat = duf_config->cli.output.sformat_dirs_tree;
+
+    if ( !sformat )
+      sformat = "%14s%P%f\n";
+    duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+  }
 
 
   DEBUG_ENDR( r );

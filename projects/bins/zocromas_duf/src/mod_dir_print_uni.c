@@ -12,6 +12,8 @@
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
+#include "duf_option_defs.h"
+
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
@@ -108,14 +110,23 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.md5sum2 = md5sum2;
 
 
-    if ( 1 )
-    {
-      duf_print_sformat_file_info( pdi, &fi, "_%M   =%S %f", ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
-    }
-    else
+    if ( DUF_ACT_FLAG( use_binformat ) )
     {
       duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
       DUF_PUTSL( 0 );
+    }
+    else
+    {
+      const char *sformat = NULL;
+
+      sformat = duf_config->cli.output.sformat_files_gen;
+      if ( !sformat )
+        sformat = duf_config->cli.output.sformat_files_list;
+
+      if ( !sformat )
+        sformat = " _%M  =%S %8s%f\n";
+        /* sformat = " _%M  =%S %f  %@\n"; */
+      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }
 
@@ -230,11 +241,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
     DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", bformat.v.bit, bformat.v.flag.seq, duf_config->cli.bformat.v.bit ) );
-    if ( 1 )
-    {
-      duf_print_sformat_file_info( pdi, &fi, "%r", ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL );
-    }
-    else
+    if ( DUF_ACT_FLAG( use_binformat ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
       {
@@ -245,6 +252,18 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
         DUF_PUTS( 0, "????????????" );
       }
       DUF_PUTSL( 0 );
+    }
+    else
+    {
+      const char *sformat = NULL;
+
+      sformat = duf_config->cli.output.sformat_dirs_gen;
+      if ( !sformat )
+        sformat = duf_config->cli.output.sformat_dirs_list;
+
+      if ( !sformat )
+        sformat = "%r\n";
+      duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }
 

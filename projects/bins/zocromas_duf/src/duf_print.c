@@ -715,11 +715,12 @@ static int __attribute__ ( ( unused ) ) duf_print_file_info_template( duf_depthi
    %E : mimeid
    %e : mime
    %N : nameid
+   %s : << space >>
 
 ***/
 static int
-duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_pdi_cb_t prefix_cb,
-                duf_pdi_cb_t suffix_cb )
+duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_pdi_scb_t prefix_scb,
+                duf_pdi_scb_t suffix_scb )
 {
   int ok = 0;
   char c;
@@ -742,7 +743,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%u" );
     snprintf( pbuffer, bfsz, format, duf_pdi_reldepth( pdi ) );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'Q':                    /* seq */
     if ( v )
@@ -751,7 +751,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pdi->seq );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'q':                    /* seq_node */
     if ( v )
@@ -760,7 +759,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pdi->seq_node );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case '#':                    /* seq_leaf */
     if ( v )
@@ -769,7 +767,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pdi->seq_leaf );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'M':                    /* md5id */
     if ( v )
@@ -778,7 +775,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'S':                    /* nsame */
     if ( v )
@@ -787,15 +783,39 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->nsame );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
-  case 'P':                    /* prefix */
-    if ( prefix_cb )
+  case 's':                    /* prefix */
     {
-      ( prefix_cb ) ( pdi );
+      if ( v )
+      {
+        size_t l;
+
+        l = ( v < bfsz ) ? v : bfsz;
+        memset( pbuffer, ' ', l );
+      }
       ok++;
     }
-      pbuffer+=strlen(pbuffer);
+    break;
+  case 'P':                    /* prefix */
+    if ( prefix_scb )
+    {
+      char sprefix[512];
+
+      ( prefix_scb ) ( sprefix, sizeof( sprefix ), pdi );
+/*
+      if ( v )
+      {
+        size_t l;
+
+        l = ( v < bfsz ) ? v : bfsz;
+        memset( pbuffer, ' ', l );
+        bfsz -= l;
+        pbuffer += l;
+      }
+*/
+      strncpy( pbuffer, sprefix, bfsz );
+      ok++;
+    }
     break;
   case 'I':                    /* dirid */
     if ( v )
@@ -804,7 +824,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'F':                    /* nfiles */
     if ( v )
@@ -813,7 +832,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pdi->levinfo[pdi->depth].items.files );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'D':                    /* ndirs */
     if ( v )
@@ -822,7 +840,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pdi->levinfo[pdi->depth].items.dirs );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'A':                    /* dataid */
     if ( v )
@@ -831,10 +848,8 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->dataid );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case '~':                    /* suffix */
-      pbuffer+=strlen(pbuffer);
     break;
   case 'O':                    /* inode */
     if ( v )
@@ -843,7 +858,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_ino );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'm':                    /* mode */
     {
@@ -880,7 +894,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( pbuffer, bfsz, "%s", modebuf );
       ok++;
     }
-      pbuffer+=strlen(pbuffer);
     break;
   case 'n':                    /* nlink */
     if ( v )
@@ -889,7 +902,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_nlink );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'u':                    /* user */
     if ( v )
@@ -898,7 +910,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_uid );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'g':                    /* group */
     if ( v )
@@ -907,7 +918,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_gid );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'z':                    /* filesize */
     {
@@ -956,7 +966,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
         }
       }
     }
-      pbuffer+=strlen(pbuffer);
     break;
   case 't':                    /* mtime */
     {
@@ -974,7 +983,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( pbuffer, bfsz, format, mtimes );
       ok++;
     }
-      pbuffer+=strlen(pbuffer);
     break;
   case 'r':                    /* realpath */
     {
@@ -989,7 +997,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( pbuffer, bfsz, format, real_path );
       ok++;
     }
-      pbuffer+=strlen(pbuffer);
     break;
   case 'f':                    /* filename */
     {
@@ -1001,7 +1008,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( pbuffer, bfsz, format, pfi->name );
       ok++;
     }
-      pbuffer+=strlen(pbuffer);
+    pbuffer += strlen( pbuffer );
     break;
   case '@':                    /* md5sum */
     if ( pfi->md5sum1 || pfi->md5sum2 )
@@ -1009,7 +1016,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
     else
       snprintf( pbuffer, bfsz, "%-32s", "-" );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'X':                    /* exifid */
     if ( v )
@@ -1018,7 +1024,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->exifid );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'T':                    /* exif datatime */
     {
@@ -1037,7 +1042,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( pbuffer, bfsz, format, xtimes );
       ok++;
     }
-      pbuffer+=strlen(pbuffer);
     break;
   case 'E':                    /* mimeid */
     if ( v )
@@ -1046,7 +1050,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->mimeid );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'e':                    /* mime */
     if ( v )
@@ -1055,7 +1058,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%s" );
     snprintf( pbuffer, bfsz, format, pfi->mime );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   case 'N':                    /* nameid */
     if ( v )
@@ -1064,18 +1066,18 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->nameid );
     ok++;
-      pbuffer+=strlen(pbuffer);
     break;
   default:
     break;
   }
+  pbuffer += strlen( pbuffer );
   *pfmt = fmt;
   *ppbuffer = pbuffer;
   return ok;
 }
 
 int
-duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_cb_t prefix_cb, duf_pdi_cb_t suffix_cb )
+duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb )
 {
   int ok = 0;
   const char *fmt = format;
@@ -1090,14 +1092,30 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
     if ( *fmt == '%' )
     {
       fmt++;
-      ok = duf_sformat_id( &fmt, &pbuffer, buffer + bfsz - pbuffer, pdi, pfi, prefix_cb, suffix_cb );
+      ok = duf_sformat_id( &fmt, &pbuffer, buffer + bfsz - pbuffer, pdi, pfi, prefix_scb, suffix_scb );
+    }
+    else if ( *fmt == '\\' )
+    {
+      fmt++;
+      if ( *fmt == 'n' )
+        *pbuffer++ = '\n';
+      else if ( *fmt == 'r' )
+        *pbuffer++ = '\r';
+      else if ( *fmt == 't' )
+        *pbuffer++ = '\t';
+      else
+      {
+        *pbuffer++ = '\\';
+        *pbuffer++ = *fmt;
+      }
+      fmt++;
     }
     else
     {
       *pbuffer++ = *fmt++;
     }
   }
-  DUF_PUTS( 0, buffer );
+  DUF_WRITES( 0, buffer );
   mas_free( buffer );
   return ok;
 }

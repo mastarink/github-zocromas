@@ -28,6 +28,12 @@ typedef struct
 {
   unsigned level;
   unsigned handleid;
+  char *sformat_dirs_tree;
+  char *sformat_files_tree;
+  char *sformat_dirs_list;
+  char *sformat_files_list;
+  char *sformat_dirs_gen;
+  char *sformat_files_gen;
   char *file;
   FILE *out;
 } duf_config_output_t;
