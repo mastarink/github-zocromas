@@ -330,6 +330,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
         path = mas_malloc( len );
         /* path = strcpy( path, pdi->path ); */
         p = path;
+
         for ( int i = 0; i <= d; i++ )
         {
           size_t l;
@@ -337,17 +338,20 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
           if ( p == path || *( p - 1 ) != '/' )
             *p++ = '/';
           *p = 0;
+          DUF_TRACE( path, 0, "path:%s", path );
           l = strlen( pdi->levinfo[i].itemname );
           if ( l > 0 )
           {
             strcpy( p, pdi->levinfo[i].itemname );
             p += l;
-            /* *p++ = '/'; */
+            *p++ = '/';
           }
           *p = 0;
         }
         assert( d >= 0 );
         duf_levinfo_ptr_d( pdi, d )->fullpath = path;
+        DUF_TRACE( path, 0, "fullpath:%s", path );
+        DUF_TRACE( path, 0, "fullpath:%s", duf_levinfo_ptr_d( pdi, d )->fullpath );
       }
       /* else                                */
       /* {                                   */

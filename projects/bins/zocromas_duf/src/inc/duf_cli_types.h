@@ -70,6 +70,7 @@ typedef struct
   unsigned options;
   unsigned config;
   unsigned path;
+  unsigned mod;
   unsigned sample;
   unsigned sampupd;
   unsigned scan;

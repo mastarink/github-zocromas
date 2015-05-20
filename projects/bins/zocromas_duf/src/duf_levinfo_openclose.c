@@ -62,11 +62,13 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
         /* sp = mas_strdup( "/" ); */
         /* sp = mas_strcat_x( sp, pdi->levinfo[d].itemname ); */
         r = duf_open_dh( pdhlev, "/" );
+        DUF_TRACE( fs, 0, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
         /* mas_free( sp ); */
       }
       else
       {
         r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
+        DUF_TRACE( fs, 0, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
       }
       if ( r >= 0 )
       {
@@ -78,6 +80,7 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
       /*   r = 0;                                                          */
       /* }                                                                 */
     }
+    DUF_TRACE( fs, 0, "(%d)? levinfo openated %s; opendir:%d", r, pdi->levinfo[d].itemname, pdi->opendir );
     DUF_TEST_R( r );
     return r;
   }

@@ -87,7 +87,9 @@ duf_interactive( void )
         /* global_status.selection_done = 0; */
       }
       /* DOR( r, duf_scan_beginning_ssql( &sql_beginning_tables, 0, NULL ) ); */
-      DOR( r, duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */ , DUF_U_FLAG( recursive ) ) );
+      DOR( r,
+           duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */ , DUF_U_FLAG( recursive ),
+                                   duf_pdi_opendir( duf_config->pdi ) ) );
 
       if ( duf_config && duf_config->pdi )
         snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );

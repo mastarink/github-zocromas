@@ -76,4 +76,7 @@
 #  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
 #  define DO_STAGE_ANY		DO_SET_STAGE(0, -1)
 
+#  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v
+#  define DO_STG_NOT(_v) DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )
+
 #endif

@@ -37,24 +37,50 @@ duf_option_list_sccbs( void )
     duf_scan_callbacks_t *sccb = act->sccb;
 
     /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
-    DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( sccb ) );
+    DUF_PRINTF( 0, "*%s: %s", sccb->name, duf_uni_scan_action_title( sccb ) );
   }
 }
 
 void
-duf_option_evaluate_sccb( const char *name )
+duf_option_evaluate_sccb( const char *names )
 {
-  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
+  int ok = 0;
+  const char *pnames;
+
+  pnames = names;
+  while ( pnames && *pnames )
   {
-    duf_scan_callbacks_t *sccb = act->sccb;
+    const char *ename = NULL;
 
-    /* DUF_PRINTF( 0, "%s : %s ----- %s", name, sccb->name, duf_uni_scan_action_title( sccb ) ); */
-    if ( 0 == strcmp( name, sccb->name ) )
+    ename = strchr( pnames, ',' );
+    for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
     {
-      int r = 0;
+      size_t len = 0;
+      duf_scan_callbacks_t *sccb = act->sccb;
 
-      DOR( r, duf_evaluate_sccb( sccb ) );
+      if ( ename )
+        len = ename - pnames;
+      else
+        len = strlen( pnames );
+      /* DUF_PRINTF( 0, "%s : %s ----- %s", name, sccb->name, duf_uni_scan_action_title( sccb ) ); */
+      if ( 0 == strncmp( pnames, sccb->name, len ) )
+      {
+        int r = 0;
+
+        DOR( r, duf_evaluate_sccb( sccb ) );
+        ok++;
+      }
+      /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
     }
-    /* DUF_PRINTF( 0, ".  %s", sccb->title ); */
+    /* DUF_PRINTF( 0, "pnames:%s; ename:%s", pnames, ename ); */
+    if ( ename && *ename )
+      pnames = ename + 1;
+    else
+      pnames = NULL;
+    ename = NULL;
+  }
+  if ( !ok )
+  {
+    DUF_SHOW_ERROR( "sccb not found: %s", names );
   }
 }

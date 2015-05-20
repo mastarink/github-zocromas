@@ -25,6 +25,7 @@ At duf_options_table.c:
 
 const duf_longval_extended_table_t optable_sccb = {
   /* DO_SET_STAGE( DUF_OPTION_STAGE_DEFAULT, DUF_OPTION_STAGE_INTERACTIVE ), */
+  DO_STG_NOT( DEFAULT ),
   .table =                      /* */
   {
    {.o = {DO_Q( "list-sccbs" ) /*       */ , DO_A_N /*  */ , DO_V( LIST_SCCBS )} /*        */ , DO_CL( NODESC ) /*  */

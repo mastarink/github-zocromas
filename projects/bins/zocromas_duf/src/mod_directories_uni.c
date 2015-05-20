@@ -2,37 +2,14 @@
 
 #include <assert.h>
 
-
-
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
 #include "duf_maintenance.h"
 
-
-
-#include "duf_hook_types.h"
-
-#include "duf_utils.h"
-#include "duf_dbg.h"
-#include "duf_config_ref.h"
-
-#include "duf_pdi.h"
-#include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"
-
 #include "duf_sql_defs.h"
-#include "duf_sql_field.h"
-#include "duf_sql.h"
-#include "duf_sql2.h"
-
-#include "duf_filedata.h"
-
 #include "duf_path2db.h"        /* duf_dirname2dirid */
 
-#include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
 
@@ -60,13 +37,11 @@ directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fna
   DEBUG_STARTR( r );
   int changes = 0;
 
+  DUF_TRACE( scan, 0, "@ @ @ @ scan entry dir 2 by %s", fname );
   ( void ) duf_dirname2dirid( pdi, fname, 0 /* tag */ , 1 /* caninsert */ , pstat->st_dev, pstat->st_ino,
                               duf_directories_callbacks.node.selector2 /* const char *node_selector2 */ , 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
-
-
-
 
 
 

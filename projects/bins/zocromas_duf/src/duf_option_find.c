@@ -36,6 +36,12 @@ duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * exten
   /* DUF_PRINTF( 0, "3b. (%d)  check_stage:%s: %d [%d:%d]", istage, extended->o.name, r2, xtable ? xtable->stage.min : 999,
      xtable ? xtable->stage.max : 999 ); */
   r = r || ( r1 && r2 );
+  /* DUF_PRINTF( 0, "%d:%s: sm:%lx [%x]", istage, extended->o.name, xtable->stage_mask, ( 1 << istage ) ); */
+  if ( ( extended->use_stage_mask && ( extended->stage_mask & ( 1 << istage ) ) )
+       || ( xtable->use_stage_mask && ( xtable->stage_mask & ( 1 << istage ) ) ) )
+  {
+    r = 0;
+  }
   /* DUF_PRINTF( 0, "3.  (%d)  check_stage:%s: %d", istage, extended->o.name, r ); */
   return r;
 }

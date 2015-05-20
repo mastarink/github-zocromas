@@ -52,7 +52,7 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
   DEBUG_STEP(  );
 
   /* assert( di.depth == -1 ); */
-  DOR( r, duf_pdi_reinit( sccbh->pdi, real_path, sccbh->pu, sccbh->sccb->node.selector2, sccbh->pu->v.flag.recursive ) );
+  DOR( r, duf_pdi_reinit( PDI, real_path, sccbh->pu, sccbh->sccb->node.selector2, sccbh->pu->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
   DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( sccbh->pdi ), sccbh->pdi->seq_leaf,
              duf_levinfo_path( sccbh->pdi ) );
   DOR( r, duf_sccb_pdi( SCCBX ) );
@@ -78,7 +78,7 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path, const duf_ufilter_t
   {
 //  duf_scan_qbeginning_sql( sccb ); ==[20140506]==> duf_open_sccb_handle
     DOR( r, duf_sccbh_real_path( sccbh, real_path ) );
-  } 
+  }
   mas_free( real_path );
   DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }

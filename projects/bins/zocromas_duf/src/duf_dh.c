@@ -76,16 +76,16 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   updfd = pdhandleup ? pdhandleup->dfd : 0;
   if ( pdhandle && name && updfd )
   {
-    const char *opendir;
+    const char *openname;
 
     if ( *name )
-      opendir = name;
+      openname = name;
     else
-      opendir = "/";
+      openname = "/";
     if ( asfile )
       r = openat( updfd, name, O_NOFOLLOW | O_RDONLY );
     else
-      r = openat( updfd, opendir, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
+      r = openat( updfd, openname, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
 
     if ( r > 0 )
     {
@@ -135,11 +135,14 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     r = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
     if ( r > 0 )
     {
+      int rs = 0;
+
       pdhandle->dfd = r;
 
-      r = stat( path, &pdhandle->st );
-
-      pdhandle->rs = r;
+      rs = stat( path, &pdhandle->st );
+      if ( rs < 0 )
+        r = rs;
+      pdhandle->rs = rs;
       if ( !pdhandle->rs )
         pdhandle->rs++;
 
@@ -171,6 +174,7 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   {
     DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
+  DUF_TRACE( fs, 0, "(%d)? opened %s", r, path );
   return r;
 }
 

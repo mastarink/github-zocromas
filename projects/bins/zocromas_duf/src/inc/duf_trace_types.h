@@ -35,6 +35,7 @@ typedef enum
   DUF_TRACE_MODE_options,
   DUF_TRACE_MODE_config,
   DUF_TRACE_MODE_path,
+  DUF_TRACE_MODE_mod,
   DUF_TRACE_MODE_sample,
   DUF_TRACE_MODE_sampupd,
   DUF_TRACE_MODE_scan,

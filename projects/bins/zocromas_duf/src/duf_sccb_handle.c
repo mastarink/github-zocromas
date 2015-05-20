@@ -78,6 +78,8 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 
   if ( sccb )
   {
+    duf_pdi_set_opendir( pdi, sccb->def_opendir );
+
     sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
     memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
     /* sccbh->targc = mas_argv_clone( &sccbh->targv, targc, targv ); */
@@ -87,7 +89,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     sccbh->pdi = pdi;
     sccbh->sccb = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
-    DOR( r, duf_scan_beginning_sql( sccb ) );
+    DOR( r, duf_scan_beginning_sql( sccb /* sccbh->sccb */  ) );
     {
       int rt = 0;
 
@@ -121,7 +123,11 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   DEBUG_STARTR( r );
   if ( sccbh )
   {
-    DOR( r, duf_scan_beginning_sql( sccbh->sccb ) );
+    const duf_scan_callbacks_t *sccb;
+
+    sccb = sccbh->sccb;
+    /* final */
+    DOR( r, duf_scan_final_sql( sccb /* sccbh->sccb */  ) );
     mas_free( sccbh );
   }
   DEBUG_ENDR( r );

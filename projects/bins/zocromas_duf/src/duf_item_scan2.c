@@ -125,6 +125,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, DSCCBX )
 
     DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                   duf_levinfo_dfd( PDI ), PDI->opendir );
+
+
     if ( str_cb2 && !duf_levinfo_item_deleted( PDI ) )
       DOR( r, ( str_cb2 ) ( pstmt, SCCBX ) );
     DOR( r, duf_levinfo_goup( PDI ) );
@@ -301,21 +303,23 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, DSCCBX /* 
  * called with precord
  * str_cb2 + str_cb_udata to be called for precord with correspondig args
  * */
-  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 4. set %s sel_cb2%c; str_cb2%c",
+  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' sel_cb2%c; str_cb2%c",
                 node_type == DUF_NODE_LEAF ? "leaf" : "node", sel_cb2 ? '+' : '-', str_cb2 ? '+' : '-' );
   if ( node_type == DUF_NODE_LEAF )
   {
     sel_cb2 = duf_sel_cb2_leaf;
     match_cb2 = NULL /* duf_match_leaf2 */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 leaf" );
+    DUF_TRACE( scan, 0, "set sel_cb2 <= cb2 leaf" );
     sql_set = &SCCB->leaf;
-  /**/}
+   /**/}
   else if ( node_type == DUF_NODE_NODE )
   {
     sel_cb2 = duf_sel_cb2_node;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 node" );
+    DUF_TRACE( scan, 0, "set sel_cb2 <= cb2 node" );
     sql_set = &SCCB->node;
-  /**/}
+   /**/}
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN_NODE );
   DUF_TEST_R( r );
@@ -330,7 +334,8 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, DSCCBX /* 
         sql_selector = duf_selector2sql( sql_set );
 
       DUF_TRACE( scan, 14, "sql:%s", sql_selector );
-      DUF_TRACE( scan, 10, "[%s] (selector2) diridpid:%llu", node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_levinfo_dirid( PDI ) );
+      DUF_TRACE( scan, 0, "[%s] (slctr2) #%llu: \"%s\"", node_type == DUF_NODE_LEAF ? "leaf" : "node", duf_levinfo_dirid( PDI ),
+                 duf_levinfo_itemname( PDI ) );
 /*
  * match_cb2,sel_cb2 from sccb:
  * DUF_NODE_LEAF => duf_match_leaf2, duf_sel_cb2_leaf

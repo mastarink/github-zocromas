@@ -5,14 +5,13 @@
 
 duf_depthinfo_t *duf_pdi_create( void );
 
-int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, const char *node_selector2, int recursive );
-int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, const char *node_selector2, int recursive );
-int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, const char *node_selector2, int recursive );
-int duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int recursive );
-int duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *node_selector2 /*, const duf_ufilter_t * pu, int recursive */  );
+int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, const char *node_selector2, int recursive, int opendir );
+int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int tag, int caninsert, const char *node_selector2, int recursive, int opendir );
+int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, const char *node_selector2, int recursive, int opendir );
+int duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int recursive, int opendir );
+int duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *node_selector2 );
 int duf_pdi_close( duf_depthinfo_t * pdi );
 
-int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );
 
 int duf_pdi_max_filter( const duf_depthinfo_t * pdi );
 
@@ -34,6 +33,8 @@ int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta );
 int duf_pdi_reldepth( const duf_depthinfo_t * pdi );
 int duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d );
 int duf_pdi_recursive( const duf_depthinfo_t * pdi );
+int duf_pdi_opendir( const duf_depthinfo_t * pdi );
+int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );
 
 duf_sqlite_stmt_t *duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, int *pr );
 int duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i );

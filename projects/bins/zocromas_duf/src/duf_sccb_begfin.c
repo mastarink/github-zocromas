@@ -47,6 +47,16 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb )
   DEBUG_ENDR( r );
 }
 
+int
+duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
+{
+  DEBUG_STARTR( r );
+
+  duf_scan_beginning_ssql( sccb->final_sql_argv, 1 /* bind */ , /* sccb->node.selector2, */ duf_uni_scan_action_title( sccb ) );
+  DEBUG_ENDR( r );
+}
+
+
 #if 0
 int
 duf_scan_final_sql( const duf_scan_callbacks_t * sccb )

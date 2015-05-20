@@ -129,6 +129,7 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
     DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
     rd = r;
     DOR( r, duf_levinfo_openat_dh( pdi ) );
+    DUF_TRACE( fs, 0, "(%d)? levinfo u/d openated %s; dfd:%d", r, duf_levinfo_itemname( pdi ),  duf_levinfo_dfd(pdi) );
     if ( r < 0 && rd >= 0 )
       duf_levinfo_goup( pdi );
   }

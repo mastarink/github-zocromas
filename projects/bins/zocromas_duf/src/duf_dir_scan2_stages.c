@@ -6,7 +6,7 @@
 #include "duf_maintenance.h"
 
 /* #include "duf_service.h" */
-#include "duf_config_ref.h" /* DUF_TRACE */
+#include "duf_config_ref.h"     /* DUF_TRACE */
 /* #include "duf_match.h" */
 
 #include "duf_pdi.h"
@@ -105,12 +105,14 @@ static int
 duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, DSCCBX )
 {
   DEBUG_STARTR( r );
+  int dfd;
 
   PDI->items.total++;
   PDI->items.files++;
-  assert( duf_levinfo_dfd( PDI ) );
+  dfd = duf_levinfo_dfd( PDI );
+  assert( dfd );
   if ( SCCB->leaf_scan_fd2 )
-    DOR( r, SCCB->leaf_scan_fd2( pstmt, duf_levinfo_dfd( PDI ), duf_levinfo_stat( PDI ), PDI ) );
+    DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, duf_levinfo_stat( PDI ), PDI ) );
   DEBUG_ENDR( r );
 }
 
@@ -157,13 +159,14 @@ int
 duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, DSCCBX )
 {
   DEBUG_STARTR( r );
-
-  if ( DUF_ACT_FLAG( dirent ) )
+#if 0
+  if ( DUF_ACT_FLAG( dirent ) ) /* needless here */
+#endif
   {
-    duf_pdi_set_opendir( PDI, 1 );
-    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
     {
+      duf_pdi_set_opendir( PDI, 1 );
+      DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
       DUF_TRACE( scan, 10, "scan dirent_dir by %5llu", duf_levinfo_dirid( PDI ) );
       /*
        *   -- call for each direntry
@@ -178,6 +181,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, DSCCBX )
                  duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ) );
     }
   }
+#if 0
   else if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
     char *ona = NULL;
@@ -191,6 +195,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, DSCCBX )
   {
     DUF_TRACE( scan, 10, "NOT scan dirent_dir ( -E or --dirent absent )" );
   }
+#endif
   DEBUG_ENDR( r );
 }
 

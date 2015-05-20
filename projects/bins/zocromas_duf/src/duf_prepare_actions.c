@@ -19,20 +19,22 @@
 
 
 
-extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
-      duf_directories_callbacks __attribute( ( weak ) ),
-      duf_filedata_callbacks __attribute( ( weak ) ),
-      duf_filenames_callbacks __attribute( ( weak ) ),
-      duf_collect_openat_crc32_callbacks __attribute( ( weak ) ),
-      duf_collect_openat_sd5_callbacks __attribute( ( weak ) ),
-      duf_collect_openat_md5_callbacks __attribute( ( weak ) ),
-      duf_collect_mime_callbacks __attribute( ( weak ) ), duf_collect_exif_callbacks __attribute( ( weak ) ),
+extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ), /* */
+  duf_directories_callbacks __attribute( ( weak ) ), /* */
+  duf_filedata_callbacks __attribute( ( weak ) ), /* */
+  duf_filenames_callbacks __attribute( ( weak ) ), /* */
+  duf_collect_openat_crc32_callbacks __attribute( ( weak ) ), /* */
+  duf_collect_openat_sd5_callbacks __attribute( ( weak ) ), /* */
+  duf_collect_openat_md5_callbacks __attribute( ( weak ) ), /* */
+  duf_collect_mime_callbacks __attribute( ( weak ) ), duf_collect_exif_callbacks __attribute( ( weak ) ), /* */
       /* duf_collect_mdpath_callbacks __attribute( ( weak ) ), */
       /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
- 
-      duf_print_tree_callbacks __attribute( ( weak ) ),
-      duf_print_dir_callbacks __attribute( ( weak ) ),
-      duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
+  duf_print_tree_callbacks __attribute( ( weak ) ), /* */
+  duf_print_dir_callbacks __attribute( ( weak ) ), /* */
+  duf_sample_callbacks,         /* */
+  duf_dummy_callbacks,          /* */
+  duf_template_callbacks,       /* */
+  duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
 
 static duf_action_table_t actions_table[] = {
   {.tovector = 1,
@@ -73,6 +75,15 @@ static duf_action_table_t actions_table[] = {
    },
   /* {.sccb = &duf_collect_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
+  {.tovector = 0,
+   .sccb = &duf_sample_callbacks,
+   },
+  {.tovector = 0,
+   .sccb = &duf_template_callbacks,
+   },
+  {.tovector = 0,
+   .sccb = &duf_dummy_callbacks,
+   },
 
   {.tovector = 0,
    .sccb = &duf_print_tree_callbacks,
@@ -88,9 +99,9 @@ static duf_action_table_t actions_table[] = {
 #endif
    .off.flag = {.md5 = 1
 #if 0
-     ,.tree = 1
+                ,.tree = 1
 #endif
-   }
+                }
    },
   /* {.sccb = &duf_print_md5_callbacks, */
   /*  .on.flag = {.print = 1,.md5 = 1}, */

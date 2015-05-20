@@ -22,6 +22,7 @@ At duf_options_table.c:
 */
 
 const duf_longval_extended_table_t optable_help = {
+  DO_STG_NOT( FIRST ),
   .table =                      /* */
   {
 
@@ -30,6 +31,8 @@ const duf_longval_extended_table_t optable_help = {
     /*      */ DO_VIA_CALLCL( smart_help_all, ALL ) /*                                        */ , DO_H( help on all ) /*                      */ },
    {.o = {DO_Q( "help-collect" ) /*     */ , DO_A_N /*  */ , DO_V( HELP_COLLECT )} /*      */ , DO_CL( HELP ) /*       */ ,
     /*      */ DO_VIA_CALLCL( smart_help, COLLECT ) /*                                        */ , DO_H( help on collect ) /*                  */ },
+   {.o = {DO_Q( "help-filter" ) /*     */ , DO_A_N /*  */ , DO_V( HELP_FILTER )} /*        */ , DO_CL( HELP ) /*       */ ,
+    /*      */ DO_VIA_CALLCL( smart_help, FILTER ) /*                                        */ , DO_H( help on collect ) /*                  */ },
    {.o = {DO_Q( "help-control" ) /*     */ , DO_A_N /*  */ , DO_V( HELP_CONTROL )} /*      */ , DO_CL( HELP ) /*       */ ,
     /*      */ DO_VIA_CALLCL( smart_help, CONTROL ) /*                                        */ , DO_H( help on control ) /*                  */ },
    {.o = {DO_Q( "help-debug" ) /*       */ , DO_A_N /*  */ , DO_V( HELP_DEBUG )} /*        */ , DO_CL( HELP ) /*       */ ,

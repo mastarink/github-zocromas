@@ -167,11 +167,13 @@ typedef struct
   unsigned invert:1;
   unsigned m_hasoff:1;
   unsigned use_stage:1;
+  unsigned use_stage_mask:1;
   duf_anyflag_t afl;
   unsigned long m_offset;
   duf_offset_to_t relto;
 
   duf_limits_t stage;
+  unsigned long stage_mask;
   const char *help;
   duf_option_class_t oclass;
   duf_option_vtype_t vtype;
@@ -203,8 +205,10 @@ typedef duf_longval_extended_t *duf_longval_pextended;
 typedef struct
 {
   unsigned use_stage:1;
+  unsigned use_stage_mask:1;
   int id;
   duf_limits_t stage;
+  unsigned long stage_mask;
   duf_longval_extended_t table[];
 } duf_longval_extended_table_t;
 

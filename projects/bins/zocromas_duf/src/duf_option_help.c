@@ -481,6 +481,41 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --memusa --flags    	- %s", "" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/     --min-exifdt=20120101 --max-exifdt=20130101  -dfR  --evaluate-sccb=listing    	- %s", "" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --list-sccbs    	- %s", "" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20150520.114602 ============" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEi   	- %s",
+              "insert direct child dirs into db; " " without -i will insert only 'upper' (containted in the path)" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO  --evaluate-sccb=dirs    	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEiR   	- %s", "insert directly, recursively dirs into db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -R --evaluate-sccb=dirs  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150520.121030 +===========" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO  -dEiD   	- %s",
+              "(-D is for filedata) insert direct child dirs,filedata into db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO  --evaluate-sccb=dirs --evaluate-sccb=filedata  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150520.122922 +===========" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEiDn   	- %s",
+              "(-n if for filenames) insert direct child dirs,filedata,filenames into db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO --evaluate-sccb=dirs,filedata,filenames  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150520.122922 +===========" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO -dEiDn3	- %s",
+              "(-3) insert direct child dirs,filedata,filenames,crc32 into db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO --evaluate-sccb=dirs,filedata,filenames,crc32	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150520.175243 +===========" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fi3ER	- %s", "(-3) add crc32 data to db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fR --evaluate-sccb=crc32    	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150520.175243 +===========" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fi2ER	- %s", "(-2) add sd5 data to db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fR --evaluate-sccb=sd5    	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150520.220258 +===========" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --trace-mod -f --evaluate-sccb=dummy   	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

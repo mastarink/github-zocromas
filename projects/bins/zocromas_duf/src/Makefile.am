@@ -46,7 +46,7 @@ zocromas_duf_SOURCES=				   \
 	mod_md5_uni.c	mod_sd5_uni.c					      \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
-	mod_template_uni.c	\
+	mod_template_uni.c mod_dummy_uni.c	\
 	sql_beginning_selected.c \
 	sql_beginning_common.c \
 	sql_beginning_create.c \

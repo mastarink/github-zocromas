@@ -80,11 +80,12 @@ int
 duf_scan_beginning_ssql( duf_beginning_t * ssql, int bind, const char *title )
 {
   DEBUG_STARTR( r );
-  const char **psql = ssql->sql;
-  const char **psql0 = psql;
 
-  if ( !ssql->done )
+  if ( ssql && !ssql->done )
   {
+    const char **psql = ssql->sql;
+    const char **psql0 = psql;
+
     while ( r >= 0 && psql && *psql )
     {
       int changes = 0;

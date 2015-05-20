@@ -19,7 +19,7 @@
 
 /* create level-control array, open 0 level */
 int
-duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
+duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int opendir )
 {
   DEBUG_STARTR( r );
 
@@ -36,6 +36,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive )
     {
       pdi->maxdepth = max_rel_depth + pathdepth;
       pdi->recursive = recursive ? 1 : 0;
+      pdi->opendir = opendir ? 1 : 0;
       lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
       /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
       pdi->levinfo = mas_malloc( lsz );
