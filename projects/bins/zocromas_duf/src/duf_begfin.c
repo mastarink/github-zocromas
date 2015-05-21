@@ -47,7 +47,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
   {
     DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob, r, pstmt );
   }
-  if ( duf_config->pu->same_as )
+  if ( duf_config->pu->same_md5 )
   {
     duf_filepath_t fp = { 0 };
     {
@@ -55,7 +55,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
       char *dir;
       char *base;
 
-      pathname = mas_strdup( duf_config->pu->same_as );
+      pathname = mas_strdup( duf_config->pu->same_md5 );
       base = basename( pathname );
       dir = dirname( pathname );
       fp.dirid = duf_path2db( dir, NULL, &r );

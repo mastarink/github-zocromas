@@ -52,8 +52,8 @@ duf_ufilter_delete( duf_ufilter_t * pu )
     mas_free( pu->glob );
     pu->glob = NULL;
 
-    mas_free( pu->same_as );
-    pu->same_as = NULL;
+    mas_free( pu->same_md5 );
+    pu->same_md5 = NULL;
 
     mas_argv_delete( pu->globx.include_files.argc, pu->globx.include_files.argv );
     pu->globx.include_files.argc = 0;
@@ -73,7 +73,7 @@ duf_ufilter_copy( duf_ufilter_t * pu, const duf_ufilter_t * pusrc )
   {
     memcpy( pu, pusrc, sizeof( duf_ufilter_t ) );
     pu->glob = mas_strdup( pusrc->glob );
-    pu->same_as = mas_strdup( pusrc->same_as );
+    pu->same_md5 = mas_strdup( pusrc->same_md5 );
 
     pu->globx.include_files.argc = 0;
     pu->globx.include_files.argv = NULL;

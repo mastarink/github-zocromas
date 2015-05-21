@@ -149,7 +149,7 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, DROP_TABLES, drop_tables, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, CREATE_TABLES, create_tables, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, ADD_PATH, add_path, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, UNI_SCAN, uni_scan, cli.act, maxlen );
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, UNI_SCAN, uni_scan, cli.act, maxlen ); */
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, INFO, info, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAGP( codeval, ptr, RECURSIVE, recursive, pu, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, DRY_RUN, dry_run, cli, maxlen );

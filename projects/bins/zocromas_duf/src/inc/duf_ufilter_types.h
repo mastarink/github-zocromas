@@ -44,7 +44,7 @@ typedef struct
   duf_limits_t dirfiles;
   duf_filter_globx_t globx;
   char *glob;
-  char *same_as;
+  char *same_md5;
   /* unsigned long long sd5id; */
   /* unsigned long long md5id; */
   /* unsigned long long crc32id; */

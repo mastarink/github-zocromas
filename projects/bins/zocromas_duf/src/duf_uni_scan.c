@@ -59,7 +59,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 
   DEBUG_ENDR( r );
 }
-
+#if 0
 static int
 duf_show_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num )
 {
@@ -74,7 +74,7 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** sccb_sequence, int sccb_num )
   }
   DEBUG_ENDR( r );
 }
-
+#endif
 /*
  * for each sccb from sequence/list (with given size - # of items) make/evaluate the task
  *    by calling duf_evaluate_sccb
@@ -136,8 +136,10 @@ duf_evaluate_all_at_config( void )
   if ( asteps )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
 /* <body> */
+#if 0
   if ( DUF_ACT_FLAG( show_sccbs ) )
     DOR( r, duf_show_sccb_sequence( ppscan_callbacks, asteps ) );
+#endif
   if ( DUF_ACT_FLAG( do_sccbs ) )
     DOR( r, duf_evaluate_sccb_sequence( ppscan_callbacks, asteps, &global_status.actions_done ) );
 /* </body> */

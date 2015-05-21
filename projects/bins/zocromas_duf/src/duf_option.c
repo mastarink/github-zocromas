@@ -525,7 +525,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
        *  */
       DUF_ACT_FLAG( create_tables ) = /* */
             DUF_ACT_FLAG( add_path ) = /* */
-            DUF_ACT_FLAG( uni_scan ) = /* */
+            /* DUF_ACT_FLAG( uni_scan ) = (* *) */
             DUF_U_FLAG( recursive ) = /* */
             DUF_ACT_FLAG( files ) = /* */
             DUF_ACT_FLAG( dirs ) = /* */

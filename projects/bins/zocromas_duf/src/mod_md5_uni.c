@@ -20,12 +20,12 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_utils.h"
-#include "duf_service.h"
+/* #include "duf_utils.h" */
+/* #include "duf_service.h" */
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
+/* #include "duf_levinfo.h" */
 #include "duf_levinfo_ref.h"
 
 /* #include "duf_sql_const.h" */
@@ -37,7 +37,7 @@
 #include "duf_sql1.h"
 #include "duf_sql2.h"
 
-#include "duf_dbg.h"
+/* #include "duf_dbg.h" */
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
@@ -119,7 +119,7 @@ static int
 duf_make_md5_uni( int fd, unsigned char *pmd )
 {
   DEBUG_STARTR( r );
-  size_t bufsz = 1024 * 1024 * 102;
+  size_t bufsz = 1024 * 1024 * 1;
   MD5_CTX ctx;
 
   memset( &ctx, 0, sizeof( ctx ) );

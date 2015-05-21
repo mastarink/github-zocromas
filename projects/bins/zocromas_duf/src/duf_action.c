@@ -205,7 +205,7 @@ duf_action( int argc, char **argv )
   {
     DOR( r, duf_interactive(  ) );
   }
-  else if ( r >= 0 && DUF_ACT_FLAG( uni_scan ) )
+  else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */ )
     DORF( r, duf_evaluate_all_at_config_wrap ); /* each targv; reinit will be made */
 
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );

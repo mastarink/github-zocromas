@@ -516,6 +516,18 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "========================= as for 20150520.220258 +===========" );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --trace-mod -f --evaluate-sccb=dummy   	- %s", "" );
+
+  DUF_PRINTF( 0, "========================= as for 20150521.082012 ============" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fieER	- %s", "(-e) add mime data to db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fR --evaluate-sccb=mime   	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150521.082052 ============" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fiXER	- %s", "(-X) add exif data to db" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --progress -fR --evaluate-sccb=exif   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/ --remove-database -PO --progress -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif	- %s", "all from scratch..." );
+  DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/Pictures/one/ --remove-database -PO --progress -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,md5,mime,exif   	- %s", "for faster testing use this path" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

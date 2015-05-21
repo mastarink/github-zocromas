@@ -70,7 +70,7 @@ duf_interactive( void )
     add_history( "max-depth" );
     add_history( "max-seq" );
     add_history( "selection" );
-    add_history( "same-as /mnt/new_media/media/photo/Pictures/photos/sel/catfly.jpg" );
+    add_history( "same-md5 /mnt/new_media/media/photo/Pictures/photos/sel/catfly.jpg" );
     add_history( "lsfiles" );
     add_history( "list-sccb" );
     add_history( "list-targ" );
