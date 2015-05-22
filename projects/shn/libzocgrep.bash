@@ -19,21 +19,33 @@ function grepchpx ()
   shift
   for (( i=1; i <= $# ; i++ )) ; do
     qargs+=" '${!i}'"
+    shn_msg B ${!i}
   done
 
   if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
 #   shn_msg grep "$*"
+    shn_msg  -r --inc='*.['${ex:-ch}']' $qargs -- src/
     eval grep  -r --inc='*.['${ex:-ch}']' $qargs -- src/
     popd &>/dev/null
   fi
 }
 function grepchp ()
 {
-  grepchpx ch "$*"
+  local qargs
+  for (( i=1; i <= $# ; i++ )) ; do
+    qargs+=" '${!i}'"
+#   shn_msg A ${!i}
+  done
+  grepchpx ch $qargs
 }
 function grephp ()
 {
-  grepchpx h "$*"
+  local qargs
+  for (( i=1; i <= $# ; i++ )) ; do
+    qargs+=" '${!i}'"
+#   shn_msg A ${!i}
+  done
+  grepchpx h $qargs
 }
 
 function grepnc ()

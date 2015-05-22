@@ -15,7 +15,6 @@ zocromas_duf_SOURCES=				   \
 	duf_option_env.c duf_option_help.c		\
 	duf_option_extended.c duf_option_sccb.c duf_option_names.c duf_option_cmd.c \
 	duf_option_restore.c	       \
-	duf_create.c 					\
 							 \
 	duf_filedata.c					   \
 	duf_add.c duf_path.c duf_path2db.c duf_db2path.c    \

@@ -305,7 +305,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       }
       if ( lr >= 0 && !*corrected_time )
         DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE );
-      if ( lr >= 0 && strchr( corrected_time, '?' ) )
+      else if ( lr >= 0 && strchr( corrected_time, '?' ) )
       {
         DUF_SHOW_ERROR( "broken date %s", corrected_time );
         DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_BROKEN_DATE );
@@ -460,7 +460,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
           timeepoch = duf_exif_get_time( edata, &date_changed, stime_original, sizeof( stime_original ), &r );
           /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
-          if ( timeepoch || *stime_original || model )
+          if ( r >= 0 && ( timeepoch || *stime_original || model ) )
           {
             unsigned long long exifid = 0;
             const char *real_path = NULL;
@@ -534,7 +534,8 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
     }
     DUF_TEST_R( r );
   }
-
+  if ( r == DUF_ERROR_EXIF_NO_DATE )
+    r = 0;
   DEBUG_ENDR( r );
 }
 
