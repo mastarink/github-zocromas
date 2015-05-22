@@ -40,8 +40,8 @@ duf_add_path_uni( const char *path, const char *node_selector2 )
     /* .name = real_path, */
   };
 
-  DOR( r, duf_pdi_init_wrap( &di, real_path, 1 /* tag ~ "root" */ , 1 /* caninsert ~ "root" */ , node_selector2,
-                             1 /* recursive */ ,  0 /* opendir */) );
+  DOR( r, duf_pdi_init_wrap( &di, real_path, 1 /* caninsert ~ "root" */ , node_selector2,
+                             1 /* recursive */ , 0 /* opendir */  ) );
   DUF_TRACE( path, 1, "@@@#%-5llu    added path:[%40s]", duf_levinfo_dirid( &di ), real_path );
 
   /* xchanges = di.changes; --- needless!? */

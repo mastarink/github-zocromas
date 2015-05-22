@@ -1,15 +1,11 @@
 #define DUF_SQL_PDI_STMT
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-/* #include <unistd.h> */
+#include <errno.h>
 
 /* man libmagic */
 #include <magic.h>
 
-
-#include <errno.h>
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
@@ -19,16 +15,15 @@
 #include "duf_maintenance.h"
 
 
-/* #include "duf_utils.h" */
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_context.h"
 
-
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
+
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
@@ -36,8 +31,11 @@
 
 /* #include "duf_dbg.h" */
 
-#include "sql_beginning_selected.h"
+/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
+
+
+/* ########################################################################################## */
 
 static unsigned long long
 duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, const char *tail, int need_id, int *pr )

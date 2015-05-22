@@ -273,7 +273,7 @@ shn_gvimer_plus_mased ()
   local masedf
 #   grep "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1 >&2
   masedf=$(grep -l "^\s*\(e\|sp\|find\|sfind\|tab\s\+\(sfind\|find\|sp\)\)\s*\<${filef}\s*$" $mased_dir/*.mased.vim | head -1)
-#   echo "masedf:[$masedf] for $filef ($file)" >&2
+# echo "masedf:[$masedf] for $filef ($file)" >&2
 ####[[ ${masedf:=$mased_dir/${typf}.mased.vim} ]] # off 20140413
   [[ $MSH_SHN_LIBEDIT_TRACE ]] && shn_msg "1 masedf: '$masedf' by '$filef' at $mased_dir/"
   [[ $masedf ]] && ! [[ -f $masedf ]] && masedf=

@@ -53,6 +53,7 @@ noinst_HEADERS=duf.h \
 	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_scan.h duf_sccb_begfin.h duf_sccb_way.h \
 	duf_dir_scan2.h  \
 	duf_service.h \
+	mod_exif.h \
 	duf_print.h \
 	duf_sql2.h \
 	duf_sql_const.h \

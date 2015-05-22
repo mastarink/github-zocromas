@@ -1,30 +1,41 @@
+#define DUF_SQL_PDI_STMT
+
+#include <string.h>
+
+
+
+
+
+/* #include <assert.h> */
+
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
+
+
 
 #include "duf_maintenance.h"
-/* #include "duf_hook_types.h" */
-/* #include "duf_fileinfo_types.h" */
 
-#include "duf_print.h"
+
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_option_defs.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
+
+#include "duf_option_defs.h"
+#include "duf_print.h"
+
+
+/* #include "duf_dbg.h" */
+
 #include "sql_beginning_selected.h"
 
-/* ###################################################################### */
-/* #include "duf_dir_print_uni.h" */
-/* ###################################################################### */
 
 
-
+/* ########################################################################################## */
 
 static int
 scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
@@ -125,7 +136,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-        /* sformat = " _%M  =%S %f  %@\n"; */
+      /* sformat = " _%M  =%S %f  %@\n"; */
       duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }

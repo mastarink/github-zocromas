@@ -34,13 +34,13 @@
 /* ###################################################################### */
 
 static int
-duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, int tag, dev_t dev_id, ino_t dir_ino )
+duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, dev_t dev_id, ino_t dir_ino )
 {
   int changes = 0;
   int r = 0;
 
   static const char *sql =
-        "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid, ntag ) VALUES (:Dev, :iNode, :dirName, :parentdirID, :nTag )";
+        "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid ) VALUES (:Dev, :iNode, :dirName, :parentdirID )";
 //    if ( pdi )
   {
     DUF_SQL_START_STMT( pdi, insert_path_table, sql, r, pstmt );
@@ -52,7 +52,6 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, int t
     DUF_SQL_BIND_S( dirName, dirname, r, pstmt );
     /* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
     DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
-    DUF_SQL_BIND_LL( nTag, tag, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
     DUF_SQL_END_STMT( insert_path_table, r, pstmt );
@@ -65,7 +64,7 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, int t
 
 /* insert (if not there) path into db; return ID */
 unsigned long long
-duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int tag, int caninsert, dev_t dev_id, ino_t dir_ino, const char *node_selector2,
+duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, dev_t dev_id, ino_t dir_ino, const char *node_selector2,
                    /* unsigned long long parentid_unused : unused, */ int need_id, int *pchanges, int *pr )
 {
   unsigned long long dirid = 0;
@@ -78,16 +77,15 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int tag, int cani
 
   /* assert( parentid_unused == duf_levinfo_dirid_up( pdi ) ); */
 
-  DUF_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; tag:%d; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), tag, caninsert,
-             pdi ? 1 : 0 );
-  DUF_TRACE( path, 2, "@           inserting [%40s] %d:%d", dirname, tag, caninsert );
+  DUF_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert, pdi ? 1 : 0 );
+  DUF_TRACE( path, 2, "@           inserting [%40s] %d", dirname, caninsert );
   if ( dirname /* && dev_id && dir_ino */  )
   {
     int changes = 0;
 
     if ( caninsert && !duf_config->cli.disable.flag.insert )
     {
-      changes = duf_dirname_insert_path_table( pdi, dirname, tag, dev_id, dir_ino );
+      changes = duf_dirname_insert_path_table( pdi, dirname, dev_id, dir_ino );
     }
     DUF_TRACE( current, 0, "<changes> : %d", changes );
     if ( need_id )
@@ -220,7 +218,7 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int tag, int cani
  *   anyway get the ID
  * */
 static int
-duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int tag, int caninsert, const char *node_selector2, unsigned long long *pparentid )
+duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert, const char *node_selector2, unsigned long long *pparentid )
 {
   DEBUG_STARTR( r );
 
@@ -239,7 +237,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int tag, int c
     DUF_TRACE( path, 5, "to insert [%s] pdi:%d", insdir ? insdir : "/", pdi ? 1 : 0 );
     /* store/check path component to db; anyway get the ID */
     *pparentid =
-          duf_dirname2dirid( pdi, insdir, tag, caninsert, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ), node_selector2,
+          duf_dirname2dirid( pdi, insdir, caninsert, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ), node_selector2,
                              1 /*need_id */ , &changes, &r );
     /* assert( *pparentid ); */
     if ( changes )
@@ -293,7 +291,7 @@ run  -OPRdEifndD -523Xe /mnt/new_media/media/photo/ --progress
  *   note: sets depth + n
  * */
 static int
-_duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int tag, int caninsert, const char *node_selector2 )
+_duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const char *node_selector2 )
 {
   DEBUG_STARTR( r );
   int od = 0;
@@ -304,8 +302,6 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int tag, int caninser
   {
     int upfd = 0;
     char *path;
-
-    int realtag = 0;
 
     path = real_path;
 
@@ -335,9 +331,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int tag, int caninser
  *   
  *     depth + 1
  * */
-        if ( !nextdir || !*nextdir )
-          realtag = tag;
-        DOR( r, duf_path_component2db( pdi, path, realtag, caninsert, node_selector2, &parentid ) );
+        DOR( r, duf_path_component2db( pdi, path, caninsert, node_selector2, &parentid ) );
         DUF_TRACE( path, 1, "@@@@#%-5llu (parentid)    [%40s]", parentid, path );
 /*        if ( r < 0 )
           DUF_SHOW_ERROR( "No such entry %s [%s]", real_path, path ); */
@@ -361,7 +355,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int tag, int caninser
  *   setting each level info to levinfo
  * */
 int
-duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int tag, int caninsert, const char *node_selector2 )
+duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int caninsert, const char *node_selector2 )
 {
   DEBUG_STARTR( r );
   char *real_path;
@@ -377,7 +371,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, const char *rpath, int tag, int caninse
    *
    *   note: sets depth + n
    * */
-  r = _duf_real_path2db( pdi, real_path, tag, caninsert, node_selector2 );
+  r = _duf_real_path2db( pdi, real_path, caninsert, node_selector2 );
   duf_pdi_set_topdepth( pdi );
   DUF_TEST_R( r );
 
@@ -403,7 +397,7 @@ duf_path2db( const char *path, const char *node_selector2, int *pr )
     /* .name = real_path, */
   };
   if ( r >= 0 )
-    r = duf_pdi_init_wrap( &di, real_path, 0 /* tag */ , 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
+    r = duf_pdi_init_wrap( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
   if ( r >= 0 )
     dirid = duf_levinfo_dirid( &di );
   /* xchanges = di.changes; --- needless!? */

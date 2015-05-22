@@ -1,61 +1,56 @@
 #define DUF_SQL_PDI_STMT
 
-#include <assert.h>
-
 #include <fcntl.h>              /* Definition of AT_* constants */
-#include <sys/stat.h>
+
+
+
+
+
+#include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
-
 #include <mastar/tools/mas_arg_tools.h>
-
-#include "duf_defs.h"
 
 #include "duf_maintenance.h"
 
 
-#include "duf_record_types.h"
-#include "duf_hook_types.h"
-
-
-#include "duf_utils.h"
-#include "duf_dbg.h"
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
-#include "duf_levinfo.h"
+
 #include "duf_levinfo_ref.h"
 
+
 #include "duf_sql_defs.h"
-#include "duf_sql_field.h"
-#include "duf_sql.h"
 #include "duf_sql2.h"
+
+
+
 
 #include "duf_filedata.h"
 
+/* #include "duf_dbg.h" */
 
-#include "sql_beginning_selected.h"
+/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
 
 
+/* ########################################################################################## */
 
-
-
-
-/* callback of type duf_scan_hook_file_t */
-DUF_UNUSED static int
-filedata_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord )
+static int
+filedata_scan_entry_reg2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pst_file, /* unsigned long long dirid, */
+                          duf_depthinfo_t * pdi )
 {
-  /* DUF_SFIELD( filename ); */
-
   DEBUG_STARTR( r );
 
+  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
   DEBUG_ENDR( r );
 }
 
+#if 0
+
 /* In db sure */
-static int DUF_UNUSED
+DUF_UNUSED static int
 filedata_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   int fd;
@@ -88,11 +83,10 @@ filedata_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   DEBUG_ENDR( r );
 }
 
-
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
-static int DUF_UNUSED
+DUF_UNUSED static int
 filedata_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   struct stat *st;
@@ -146,11 +140,10 @@ filedata_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long 
   DEBUG_ENDR( r );
 }
 
-
 /* 
  * this is callback of type: duf_scan_hook_dir_t
  * */
-static int DUF_UNUSED
+DUF_UNUSED static int
 filedata_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord )
 {
   DEBUG_STARTR( r );
@@ -159,7 +152,7 @@ filedata_scan_node_middle( unsigned long long pathid_unused, duf_depthinfo_t * p
   DEBUG_ENDR( r );
 }
 
-static int DUF_UNUSED
+DUF_UNUSED static int
 filedata_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, unsigned long long pathid_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
@@ -205,6 +198,37 @@ filedata_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const s
 }
 
 
+
+
+
+DUF_UNUSED static int
+filedata_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
+{
+  DEBUG_STARTR( r );
+
+  /* DUF_TRACE( scan, 10, "scan entry dir by %s", fname ); */
+  DEBUG_ENDR( r );
+}
+
+DUF_UNUSED static int
+filedata_scan_entry_dir2( duf_sqlite_stmt_t * pstmt_unused, const char *fname, const struct stat *pstat, unsigned long long dirid,
+                          duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+  /* DUF_TRACE( scan, 10, "scan entry dir2 by %s", fname ); */
+  DEBUG_ENDR( r );
+}
+
+DUF_UNUSED static int
+filedata_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
+{
+  DEBUG_STARTR( r );
+
+  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
+  DEBUG_ENDR( r );
+}
+#endif
 
 
 
@@ -275,44 +299,6 @@ static duf_beginning_t final_sql = {.done = 0,
           NULL,
           }
 };
-
-DUF_UNUSED static int
-filedata_scan_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  DEBUG_STARTR( r );
-
-  /* DUF_TRACE( scan, 10, "scan entry dir by %s", fname ); */
-  DEBUG_ENDR( r );
-}
-
-DUF_UNUSED static int
-filedata_scan_entry_dir2( duf_sqlite_stmt_t * pstmt_unused, const char *fname, const struct stat *pstat, unsigned long long dirid,
-                          duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-  /* DUF_TRACE( scan, 10, "scan entry dir2 by %s", fname ); */
-  DEBUG_ENDR( r );
-}
-
-DUF_UNUSED static int
-filedata_scan_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi, duf_record_t * precord )
-{
-  DEBUG_STARTR( r );
-
-  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
-  DEBUG_ENDR( r );
-}
-
-static int
-filedata_scan_entry_reg2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pst_file, /* unsigned long long dirid, */
-                          duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-  ( void ) /* dataid= */ duf_insert_filedata_uni( pdi, pst_file, 0 /*need_id */ , &r );
-  DEBUG_ENDR( r );
-}
 
 
 duf_scan_callbacks_t duf_filedata_callbacks = {

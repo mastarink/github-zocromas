@@ -23,6 +23,7 @@ tab sfind mod_crc32_uni.c
 
 tab sfind mod_collect_mime_uni.c
 tab sfind mod_exif_uni.c
+sfind mod_exif.h
 
 " tab sfind mod_print_md5_uni.c
 
@@ -30,17 +31,4 @@ tab sfind mod_dir_print_uni.c
 
 tab sfind mod_tree_print_uni.c
 
-tab sfind sql_beginning_selected.c
-sfind sql_beginning_selected.h
 
-tab sfind sql_beginning_common.c
-sfind sql_beginning_common.h
-
-tab sfind sql_beginning_tables.c
-sfind sql_beginning_tables.h
-
-tab sfind sql_beginning_create.c
-sfind sql_beginning_create.h
-
-tab sfind sql_beginning_vacuum.c
-sfind sql_beginning_vacuum.h

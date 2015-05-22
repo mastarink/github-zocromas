@@ -1,17 +1,12 @@
 #define DUF_SQL_PDI_STMT
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
 
+#include <openssl/md5.h>
 
 #include <assert.h>
-#include <openssl/md5.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -20,16 +15,12 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
 
-#include "duf_sql_const.h"
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 #include "duf_sql_field2.h"
@@ -38,10 +29,13 @@
 #include "duf_sql1.h"
 #include "duf_sql2.h"
 
-#include "duf_dbg.h"
+/* #include "duf_dbg.h" */
 
-#include "sql_beginning_selected.h"
+/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
+
+
+/* ########################################################################################## */
 
 static unsigned long long
 duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char *filename, size_t fsize, int need_id, int *pr )

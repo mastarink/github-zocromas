@@ -1,30 +1,50 @@
+#define DUF_SQL_PDI_STMT
+
 #include <string.h>
+
+
+
+
+
+/* #include <assert.h> */
+
 #include <mastar/wrap/mas_std_def.h>
-/* #include <mastar/wrap/mas_memory.h> */
+
+
 
 #include "duf_maintenance.h"
-/* #include "duf_hook_types.h" */
-/* #include "duf_fileinfo_types.h" */
 
-#include "duf_print.h"
+
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_option_defs.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
+
+#include "duf_option_defs.h"
+#include "duf_print.h"
+
+
+/* #include "duf_dbg.h" */
+
 #include "sql_beginning_selected.h"
 
-/* ###################################################################### */
-/* #include "duf_tree_print_uni.h" */
-/* ###################################################################### */
 
 
+/* ########################################################################################## */
+
+static int
+duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+
+  int d0 = duf_pdi_topdepth( pdi );
+  int max = duf_pdi_depth( pdi );
 /* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
 /* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
 /* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
@@ -38,14 +58,6 @@
  * ╟─╫──┼╢ ┠─╂──┼┨ ├─╂──┼┤    ╲  ╱ ╲  ╱      ╰─────╯       ╵
  * ╚═╩══╧╝ ┗━┻━━┷┛ └─┸──┴┘     ╲╱   ╲╱              
  * */
-static int
-duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-
-  int d0 = duf_pdi_topdepth( pdi );
-  int max = duf_pdi_depth( pdi );
 
   if ( d0 == 0 )
     d0 = 1;

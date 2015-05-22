@@ -18,7 +18,7 @@ function grepchpx ()
   ex=$1
   shift
   for (( i=1; i <= $# ; i++ )) ; do
-    qargs+=" '${!i}'"
+    qargs+=" ${!i}"
     shn_msg B ${!i}
   done
 

@@ -11,5 +11,6 @@ sfind srciface.mased.vim
 tab sfind srctypes.mased.vim
 sfind srcconfig.mased.vim
 sfind srcmod.mased.vim
+sfind srcbegfin.mased.vim
 sfind srctoexpire.mased.vim
 sfind vimrc.mased.vim

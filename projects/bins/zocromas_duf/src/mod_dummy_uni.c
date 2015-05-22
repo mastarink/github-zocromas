@@ -1,6 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
+#define DUF_SQL_PDI_STMT
 #include <string.h>
+
+
+
+
+
 
 #include <assert.h>
 
@@ -9,26 +13,29 @@
 
 
 #include "duf_maintenance.h"
-#include "duf_hook_types.h"
 
 
-#include "duf_utils.h"
-#include "duf_service.h"
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
-#include "duf_levinfo.h"
+
 #include "duf_levinfo_ref.h"
 
-#include "duf_sql.h"
-#include "duf_sql2.h"
+
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
-#include "duf_dbg.h"
 
-#include "sql_beginning_selected.h"
+
+
+
+
+/* #include "duf_dbg.h" */
+
+/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
+
+
+/* ########################################################################################## */
 
 static int
 scan_init( void )

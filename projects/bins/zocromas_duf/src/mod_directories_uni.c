@@ -1,34 +1,41 @@
 #define DUF_SQL_PDI_STMT
 
+
+
+
+
+
+
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+
 #include "duf_maintenance.h"
 
+
+
+
+
+
+
+
 #include "duf_sql_defs.h"
+
+
+
+
+
 #include "duf_path2db.h"        /* duf_dirname2dirid */
 
+/* #include "duf_dbg.h" */
+
+/* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
 
 
-duf_scan_callbacks_t duf_directories_callbacks;
-
-
-/* static int                                                                                                                  */
-/* directories_entry_dir( const char *fname, const struct stat *pstat, unsigned long long dirid, duf_depthinfo_t * pdi,        */
-/*                        duf_record_t * precord )                                                                             */
-/* {                                                                                                                           */
-/*   DEBUG_STARTR( r );                                                                                                        */
-/*   int changes = 0;                                                                                                          */
-/*                                                                                                                             */
-/*   DUF_TRACE( scan, 0, "~~~~~~~~~~~~~ scan entry dir by %s", fname );                                                        */
-/*   ( void ) duf_dirname2dirid( pdi, fname, 1 (* caninsert *) , pstat->st_dev, pstat->st_ino, 0 (*need_id *) , &changes, &r ); */
-/*   DEBUG_ENDR( r );                                                                                                          */
-/* }                                                                                                                           */
-
-
+/* ########################################################################################## */
 /* make sure dir name in db */
 static int
 directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid_unused, */
@@ -36,9 +43,10 @@ directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fna
 {
   DEBUG_STARTR( r );
   int changes = 0;
+  duf_scan_callbacks_t duf_directories_callbacks; /* see below */
 
   DUF_TRACE( scan, 0, "@ @ @ @ scan entry dir 2 by %s", fname );
-  ( void ) duf_dirname2dirid( pdi, fname, 0 /* tag */ , 1 /* caninsert */ , pstat->st_dev, pstat->st_ino,
+  ( void ) duf_dirname2dirid( pdi, fname, 1 /* caninsert */ , pstat->st_dev, pstat->st_ino,
                               duf_directories_callbacks.node.selector2 /* const char *node_selector2 */ , 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }

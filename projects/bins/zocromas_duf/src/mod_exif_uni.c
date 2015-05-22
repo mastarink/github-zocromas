@@ -8,48 +8,34 @@
 
 #include <assert.h>
 
-
-#include <libexif/exif-data.h>
-#include <libexif/exif-loader.h>
-#include <libexif/exif-byte-order.h>
-#include <libexif/exif-data-type.h>
-#include <libexif/exif-ifd.h>
-#include <libexif/exif-log.h>
-#include <libexif/exif-tag.h>
-#include <libexif/exif-content.h>
-#include <libexif/exif-mnote-data.h>
-#include <libexif/exif-mem.h>
-#include <libexif/exif-log.h>
-#include <libexif/exif-mem.h>
-
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
-
 #include <mastar/tools/mas_arg_tools.h>
 
-
 #include "duf_maintenance.h"
+#include "mod_exif.h"
 
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
 
-/* #include "duf_sql_const.h" */
 #include "duf_sql_defs.h"
-
 #include "duf_sql_field.h"
-/* #include "duf_sql_field1.h" */
 
 #include "duf_sql.h"
 #include "duf_sql1.h"
 #include "duf_sql2.h"
 
+
+
+
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
+
+
+/* ########################################################################################## */
 
 
 

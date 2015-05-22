@@ -20,10 +20,10 @@ mdpath
 mime
 path_pairs
 paths
-path_tags
 sd5
 sizes
-tags
+unitags
+tagnames
 */
 
 duf_beginning_t sql_beginning_clear = {.done = 0,
@@ -40,10 +40,10 @@ duf_beginning_t sql_beginning_clear = {.done = 0,
           "DROP TABLE IF EXISTS mime",
           "DROP TABLE IF EXISTS path_pairs",
           "DROP TABLE IF EXISTS paths",
-          "DROP TABLE IF EXISTS path_tags",
           "DROP TABLE IF EXISTS sd5",
           "DROP TABLE IF EXISTS sizes",
-          "DROP TABLE IF EXISTS tags",
+          "DROP TABLE IF EXISTS unitags",
+          "DROP TABLE IF EXISTS tagnames",
           NULL}
 };
 
@@ -164,7 +164,7 @@ duf_beginning_t sql_beginning_create = {.done = 0,
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, " /* */
 #endif
           "  dev INTEGER NOT NULL, inode INTEGER NOT NULL " /* */
-          ", dirname TEXT, parentid INTEGER, ntag INTEGER " /* */
+          ", dirname TEXT, parentid INTEGER " /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
           ", FOREIGN KEY(parentid) REFERENCES paths(" DUF_SQL_IDNAME ") )",
@@ -344,25 +344,27 @@ duf_beginning_t sql_beginning_create = {.done = 0,
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "tags " /* */
+          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "tagnames " /* */
           "("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
           " name TEXT NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')))",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "tags_uniq ON tags (name)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "tagnames_uniq ON tagnames (name)",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "path_tags ("
+          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "unitags ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement,"
 #endif
           " tagsid INTEGER NOT NULL, " /* */
-          " Pathid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-          " , FOREIGN KEY(Pathid)  REFERENCES paths(" DUF_SQL_IDNAME ") " " , FOREIGN KEY(tagsid) REFERENCES tags(" DUF_SQL_IDNAME ") )",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "path_tags_uniq ON path_tags (tagsid, Pathid)",
+          " itemtype TEXT NOT NULL, " /* */
+          " itemid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) " /* */
+/*          " , FOREIGN KEY(itemid)  REFERENCES paths(" DUF_SQL_IDNAME ") " */  /* */
+          " , FOREIGN KEY(tagsid) REFERENCES tagnames(" DUF_SQL_IDNAME ") )",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "unitags_uniq ON unitags (tagsid, itemid)",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
