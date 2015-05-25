@@ -359,12 +359,12 @@ duf_beginning_t sql_beginning_create = {.done = 0,
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement,"
 #endif
-          " tagsid INTEGER NOT NULL, " /* */
+          " tagnameid INTEGER NOT NULL, " /* */
           " itemtype TEXT NOT NULL, " /* */
           " itemid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) " /* */
 /*          " , FOREIGN KEY(itemid)  REFERENCES paths(" DUF_SQL_IDNAME ") " */  /* */
-          " , FOREIGN KEY(tagsid) REFERENCES tagnames(" DUF_SQL_IDNAME ") )",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "unitags_uniq ON unitags (tagsid, itemid)",
+          " , FOREIGN KEY(tagnameid) REFERENCES tagnames(" DUF_SQL_IDNAME ") )",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "unitags_uniq ON unitags (tagnameid, itemid)",
 
 /******************************************************************************************************/
 /***                                                                                             ******/

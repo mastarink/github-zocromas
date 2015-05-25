@@ -8,7 +8,8 @@ end
 handle SIGPIPE nostop noprint
 
 
-b duf_open_sccb_handle
+# b duf_open_sccb_handle
+b duf_path2db.c:306
 
 run
 bt

@@ -446,11 +446,12 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
           timeepoch = duf_exif_get_time( edata, &date_changed, stime_original, sizeof( stime_original ), &r );
           /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
-          if ( r >= 0 && ( timeepoch || *stime_original || model ) )
+          if ( ( r >= 0 || r == DUF_ERROR_EXIF_BROKEN_DATE ) && ( timeepoch || *stime_original || model ) )
           {
             unsigned long long exifid = 0;
             const char *real_path = NULL;
 
+            r = 0;
             DUF_SFIELD2( filename );
             real_path = duf_levinfo_path( pdi );
             DUF_TRACE( exif, 2, "%s%s", real_path, filename );

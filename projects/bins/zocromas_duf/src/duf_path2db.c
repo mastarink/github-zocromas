@@ -32,6 +32,99 @@
 /* ###################################################################### */
 #include "duf_path2db.h"
 /* ###################################################################### */
+static unsigned long long
+duf_add_tagname( duf_depthinfo_t * pdi, const char *tagname, int *pr )
+{
+  int r = 0;
+  unsigned long long tagnameid = 0;
+  int changes = 0;
+  static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "tagnames ( name ) VALUES (:tagName )";
+  static const char *sqlv = "SELECT rowid AS tagnameid FROM " DUF_DBPREF "tagnames WHERE name=:tagName";
+
+  {
+    DUF_SQL_START_STMT( pdi, insert_tagname, sql, r, pstmt );
+
+    DUF_SQL_BIND_S( tagName, tagname, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_CHANGES( changes, r, pstmt );
+    DUF_SQL_END_STMT( insert_tagname, r, pstmt );
+  }
+  DUF_TRACE( path, 2, "@           inserting tagname; tagname %s; changes:%u", tagname, changes );
+  if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+  {
+    DUF_SQL_START_STMT( pdi, select_tagname, sqlv, r, pstmt );
+    DUF_SQL_BIND_S( tagName, tagname, r, pstmt );
+
+    DUF_SQL_STEP( r, pstmt );
+    if ( r == DUF_SQL_ROW )
+    {
+      r = 0;
+      DUF_TRACE( current, 0, "<selected>" );
+      tagnameid = duf_sql_column_long_long( pstmt, 0 );
+      DUF_TRACE( path, 2, "@           inserting tagname %s; selected tagnameid:%llu", tagname, tagnameid );
+    }
+
+    DUF_SQL_END_STMT( select_tagname, r, pstmt );
+  }
+  else
+  {
+    tagnameid = duf_sql_last_insert_rowid(  );
+    DUF_TRACE( path, 2, "@           inserting tagname %s; last_insert tagnameid:%llu", tagname, tagnameid );
+  }
+  if ( pr )
+    *pr = r;
+  return tagnameid;
+}
+
+static unsigned long long
+duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long itemid, const char *tagname, int *pr )
+{
+  int r = 0;
+  unsigned long long tagid DUF_UNUSED = 0;
+  unsigned long long tagnameid = 0;
+  int changes = 0;
+  static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "unitags ( tagnameid, itemtype, itemid ) VALUES (:tagNameID, :itemType, :itemID )";
+  static const char *sqlv = "SELECT rowid AS tagid FROM " DUF_DBPREF "unitags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
+
+  tagnameid = duf_add_tagname( pdi, tagname, &r );
+  {
+    DUF_SQL_START_STMT( pdi, insert_tag, sql, r, pstmt );
+
+    DUF_SQL_BIND_LL( tagNameID, tagnameid, r, pstmt );
+    DUF_SQL_BIND_S( itemType, itemtype, r, pstmt );
+    DUF_SQL_BIND_LL( itemID, itemid, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_CHANGES( changes, r, pstmt );
+    DUF_SQL_END_STMT( insert_tag, r, pstmt );
+  }
+  DUF_TRACE( path, 2, "@           inserting tag; tagname %s; changes:%u", tagname, changes );
+  if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+  {
+    DUF_SQL_START_STMT( pdi, select_tag, sqlv, r, pstmt );
+    DUF_SQL_BIND_LL( tagNameID, tagnameid, r, pstmt );
+    DUF_SQL_BIND_S( itemType, itemtype, r, pstmt );
+    DUF_SQL_BIND_LL( itemID, itemid, r, pstmt );
+
+    DUF_SQL_STEP( r, pstmt );
+    if ( r == DUF_SQL_ROW )
+    {
+      r = 0;
+      DUF_TRACE( current, 0, "<selected>" );
+      tagid = duf_sql_column_long_long( pstmt, 0 );
+      DUF_TRACE( path, 2, "@           inserting tagname %s; selected tagid:%llu", tagname, tagnameid );
+    }
+
+    DUF_SQL_END_STMT( select_tag, r, pstmt );
+  }
+  else
+  {
+    tagid = duf_sql_last_insert_rowid(  );
+    DUF_TRACE( path, 2, "@           inserting tagname %s; last_insert tagid:%llu", tagname, tagnameid );
+  }
+  if ( pr )
+    *pr = r;
+  return tagid;
+}
 
 static int
 duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, dev_t dev_id, ino_t dir_ino )
@@ -64,8 +157,8 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, dev_t
 
 /* insert (if not there) path into db; return ID */
 unsigned long long
-duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, dev_t dev_id, ino_t dir_ino, const char *node_selector2,
-                   /* unsigned long long parentid_unused : unused, */ int need_id, int *pchanges, int *pr )
+duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, dev_t dev_id, ino_t dir_ino, const char *node_selector2, int need_id,
+                   int *pchanges, int *pr )
 {
   unsigned long long dirid = 0;
   int r = 0;
@@ -218,36 +311,41 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, de
  *   anyway get the ID
  * */
 static int
-duf_path_component2db( duf_depthinfo_t * pdi, const char *insdir, int caninsert, const char *node_selector2, unsigned long long *pparentid )
+duf_path_component2db( duf_depthinfo_t * pdi, const char *dirname, int caninsert, const char *node_selector2, unsigned long long *pparentid )
 {
   DEBUG_STARTR( r );
 
   /* assert( pdi );                                                                          */
   assert( pparentid );
-  DOR( r, duf_levinfo_godown_openat_dh( pdi, 0, insdir, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  ) );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, 0, dirname, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  ) );
   /* DOR( r, duf_levinfo_openat_dh( pdi ) ); (* levinfo depth 1 level lower *) */
 
-  DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", insdir, duf_levinfo_dfd( pdi ) );
+  DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", dirname, duf_levinfo_dfd( pdi ) );
 
   if ( r >= 0 )
   {
-    int changes;
+    int changes = 0;
 
     changes = 0;
-    DUF_TRACE( path, 5, "to insert [%s] pdi:%d", insdir ? insdir : "/", pdi ? 1 : 0 );
+    DUF_TRACE( path, 5, "to insert [%s] pdi:%d", dirname ? dirname : "/", pdi ? 1 : 0 );
     /* store/check path component to db; anyway get the ID */
     *pparentid =
-          duf_dirname2dirid( pdi, insdir, caninsert, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ), node_selector2,
+          duf_dirname2dirid( pdi, dirname, caninsert, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ), node_selector2,
                              1 /*need_id */ , &changes, &r );
     /* assert( *pparentid ); */
     if ( changes )
-      DUF_TRACE( explain, 0, "added ID: %llu for ≪%s≫", *pparentid, insdir );
+    {
+      DUF_TRACE( path, 0, "@@@dir added : %s (changes:%d)", dirname, changes );
+      DUF_TRACE( explain, 0, "added ID: %llu for ≪%s≫", *pparentid, dirname );
+      if ( r >= 0 )
+        r = changes;
+    }
     else
-      DUF_TRACE( explain, 1, "already in db ID: %llu for ≪%s≫", *pparentid, insdir );
+      DUF_TRACE( explain, 1, "already in db ID: %llu for ≪%s≫", *pparentid, dirname );
 
     duf_levinfo_set_dirid( pdi, *pparentid );
-    DUF_TRACE( path, 5, "inserted [%s] AS %llu", insdir, *pparentid );
-    DUF_TRACE( path, 5, "ID %llu for insdir ≪%s≫", *pparentid, insdir );
+    DUF_TRACE( path, 5, "inserted [%s] AS %llu", dirname, *pparentid );
+    DUF_TRACE( path, 5, "ID %llu for dirname ≪%s≫", *pparentid, dirname );
   }
   else
   {
@@ -335,10 +433,21 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
         DUF_TRACE( path, 1, "@@@@#%-5llu (parentid)    [%40s]", parentid, path );
 /*        if ( r < 0 )
           DUF_SHOW_ERROR( "No such entry %s [%s]", real_path, path ); */
+        DUF_TRACE( path, 2, "@r:%d;next                 [%40s]  #%llu:%s", r, path, parentid, nextdir && *nextdir ? nextdir : "-=NONE=-" );
+        if ( caninsert /* && r > 0 */ && parentid > 0 && !( nextdir && *nextdir ) )
+        {
+          unsigned long long tagid;
+
+          tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "added" /* tagname */ , &r );
+          DUF_TRACE( path, 2, "%d: tag \"added\": %llu", r, tagid );
+          if ( 1 )
+          {
+            tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "dummy" /* tagname */ , &r );
+            DUF_TRACE( path, 2, "%d: tag \"dummy\": %llu", r, tagid );
+          }
+        }
         path = nextdir;
       }
-      if ( nextdir && *nextdir )
-        DUF_TRACE( path, 2, "@next                 [%40s] under #%llu", path, parentid );
     }
     if ( !pdi && upfd )
       close( upfd );
