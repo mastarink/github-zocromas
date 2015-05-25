@@ -23,20 +23,6 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_main = {
   .table =                      /* */
   {
-   {.o = {DO_Q( "bformat" ) /*          */ , DO_A_R /* */ , DO_V( BFORMAT )} /*            */ , DO_CL( PRINT ) /*   */
-    /*                                                                                      */ , DO_H( print w / bformat ) /*                */ },
-   {.o = {DO_Q( "format-dir-tree" ) /*  */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_TREE )} /*  */ , DO_CL( PRINT ) /* */ ,
-    /*      */ DO_OC( STR, cli.output.sformat_dirs_tree ) /*                                */ , DO_H( format ) /*                           */ },
-   {.o = {DO_Q( "format-file-tree" ) /* */ , DO_A_R /* */ , DO_V( SFORMAT_FILES_TREE )} /* */ , DO_CL( PRINT ) /* */ ,
-    /*      */ DO_OC( STR, cli.output.sformat_files_tree ) /*                               */ , DO_H( format ) /*                           */ },
-   {.o = {DO_Q( "format-dir-list" ) /*  */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_LIST )} /*  */ , DO_CL( PRINT ) /* */ ,
-    /*      */ DO_OC( STR, cli.output.sformat_dirs_list ) /*                                */ , DO_H( format ) /*                           */ },
-   {.o = {DO_Q( "format-file-list" ) /* */ , DO_A_R /* */ , DO_V( SFORMAT_FILES_LIST )} /* */ , DO_CL( PRINT ) /* */ ,
-    /*      */ DO_OC( STR, cli.output.sformat_files_list ) /*                               */ , DO_H( format ) /*                           */ },
-   {.o = {DO_Q( "format-dir" ) /*       */ , DO_A_R /* */ , DO_V( SFORMAT_DIRS_GEN )} /*   */ , DO_CL( PRINT ) /* */ ,
-    /*      */ DO_OC( STR, cli.output.sformat_dirs_gen ) /*                                 */ , DO_H( format ) /*                           */ },
-   {.o = {DO_Q( "format-file" ) /*      */ , DO_A_R /* */ , DO_V( SFORMAT_FILES_GEN )} /*  */ , DO_CL( PRINT ) /* */ ,
-    /*      */ DO_OC( STR, cli.output.sformat_files_gen ) /*                                */ , DO_H( format ) /*                           */ },
    {.o = {DO_Q( "include" ) /*          */ , DO_A_R /* */ , DO_V( GLOB_INCLUDE_FILES )} /* */ , DO_CL( NODESC ) /*     */
     /*                                                                                      */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "exclude" ) /*          */ , DO_A_R /* */ , DO_V( GLOB_EXCLUDE_FILES )} /* */ , DO_CL( NODESC ) /*     */

@@ -60,6 +60,7 @@ zocromas_duf_SOURCES=				   \
 	data_optable_filter.c	\
 	data_optable_help.c	\
 	data_optable_trace.c	\
+	data_optable_format.c	\
 	data_optable_sccb.c \
 	data_optable_info.c \
 	data_optable_interactive.c \

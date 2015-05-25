@@ -247,7 +247,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
     /* fi.st.st_gid = ( gid_t ) gid;        */
     /* fi.st.st_nlink = ( nlink_t ) nlink;  */
     /* fi.st.st_size = ( off_t ) filesize; */
-    /* fi.name = duf_levinfo_itemname( pdi ); */
+    fi.name = duf_levinfo_itemname( pdi );
     /* fi.md5id = md5id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */

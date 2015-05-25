@@ -45,6 +45,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
 
   int d0 = duf_pdi_topdepth( pdi );
   int max = duf_pdi_depth( pdi );
+
 /* ━ │ ┃ ┄ ┅ ┆ ┇ ┈ ┉ ┊ ┋ ┌ ┍ ┎ ┏ ┐ ┑ ┒ ┓ └ ┕ ┖ ┗ ┘ ┙                                 */
 /* ┚ ┛ ├ ┝ ┞ ┟ ┠ ┡ ┢ ┣ ┤ ┥ ┦ ┧ ┨ ┩ ┪ ┫ ┬ ┭ ┮ ┯ ┰ ┱ ┲                                 */
 /* ┳ ┴ ┵ ┶ ┷ ┸ ┹ ┺ ┻ ┼ ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋                                 */
@@ -98,8 +99,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 0, ".0x%02x]", flags );
-           );
+               DUF_PRINTF( 0, ".0x%02x]", flags ); );
     {
       /* DUF_PRINTF( 0, ".%05ld", ndu ); */
       /* if ( duf_levinfo_is_leaf_d( pdi, d ) ) */
@@ -259,12 +259,20 @@ tree_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     {
       const char *sformat = NULL;
 
+      sformat = duf_config->cli.output.sformat_prefix_gen_tree;
+      if ( !sformat )
+        sformat = duf_config->cli.output.sformat_prefix_files_tree;
+
+      if ( !sformat )
+        sformat = "_%-6M =%-4S%P";
+      duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+
       sformat = duf_config->cli.output.sformat_files_gen;
       if ( !sformat )
         sformat = duf_config->cli.output.sformat_files_tree;
 
       if ( !sformat )
-        sformat = " _%-6M =%-4S%P %f\n";
+        sformat = "%f\n";
       duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
     }
   }
@@ -335,12 +343,20 @@ tree_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi 
   {
     const char *sformat = NULL;
 
+    sformat = duf_config->cli.output.sformat_prefix_gen_tree;
+    if ( !sformat )
+      sformat = duf_config->cli.output.sformat_prefix_dirs_tree;
+
+    if ( !sformat )
+      sformat = " %6s  %4s%P";
+    duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
+
     sformat = duf_config->cli.output.sformat_dirs_gen;
     if ( !sformat )
       sformat = duf_config->cli.output.sformat_dirs_tree;
 
     if ( !sformat )
-      sformat = "%14s%P%f\n";
+      sformat = "%f\n";
     duf_print_sformat_file_info( pdi, &fi, sformat, duf_sql_print_tree_sprefix_uni, ( duf_pdi_scb_t ) NULL );
   }
 

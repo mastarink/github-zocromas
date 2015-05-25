@@ -531,6 +531,7 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
   
   DUF_PRINTF( 0, "========================= as for 20150522.100438 ============" );
   DUF_PRINTF( 0, "  run /home/mastar/.maslib/firefox/scrapbook  -dfR --min-same=900 --max-same=3000  --evaluate-sccb=listing    	- %s", "" );
+  DUF_PRINTF( 0, "========================= as for 20150525.102116 ============" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

@@ -790,6 +790,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       {
         size_t l;
 
+        v = v < 0 ? -v : v;
         l = ( v < bfsz ) ? v : bfsz;
         memset( pbuffer, ' ', l );
       }
@@ -825,7 +826,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
     ok++;
     break;
-  case 'F':                    /* nfiles */
+  case 'L':                    /* nfiles */
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
@@ -1010,6 +1011,20 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
     }
     pbuffer += strlen( pbuffer );
     break;
+#if 0
+  case 'F':                    /* itemname */
+    {
+      if ( v )
+        snprintf( format, fbsz, "%%%lds", v );
+      else
+        snprintf( format, fbsz, "%%s" );
+
+      snprintf( pbuffer, bfsz, format, duf_levinfo_itemname( pdi ) );
+      ok++;
+    }
+    pbuffer += strlen( pbuffer );
+    break;
+#endif
   case '@':                    /* md5sum */
     if ( pfi->md5sum1 || pfi->md5sum2 )
       snprintf( pbuffer, bfsz, "%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
@@ -1068,6 +1083,13 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
     ok++;
     break;
   default:
+    pbuffer += strlen( pbuffer );
+    *pbuffer++ = '%';
+    if ( v )
+      snprintf( pbuffer, bfsz, "%ld", v );
+    pbuffer += strlen( pbuffer );
+    *pbuffer++ = c;
+    *pbuffer = 0;
     break;
   }
   pbuffer += strlen( pbuffer );

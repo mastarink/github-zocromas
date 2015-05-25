@@ -11,5 +11,6 @@ tab sfind data_optable_help.c
 tab sfind data_optable_sccb.c
 tab sfind data_optable_info.c
 tab sfind data_optable_trace.c
+tab sfind data_optable_format.c
 tab sfind data_optable_interactive.c
 tab sfind data_optable.c

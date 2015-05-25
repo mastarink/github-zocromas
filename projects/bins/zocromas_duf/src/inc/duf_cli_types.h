@@ -30,6 +30,9 @@ typedef struct
   unsigned handleid;
   char *sformat_dirs_tree;
   char *sformat_files_tree;
+  char *sformat_prefix_gen_tree;
+  char *sformat_prefix_files_tree;
+  char *sformat_prefix_dirs_tree;
   char *sformat_dirs_list;
   char *sformat_files_list;
   char *sformat_dirs_gen;
