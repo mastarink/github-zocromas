@@ -26,6 +26,7 @@
 
 #include "duf_sccb_begfin.h"
 
+#include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccb_handle.h"
 /* ###################################################################### */
@@ -82,21 +83,20 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 
     sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
     memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
-    /* sccbh->targc = mas_argv_clone( &sccbh->targv, targc, targv ); */
-    sccbh->targc = targc;
-    sccbh->targv = targv;
-    sccbh->pu = pu;
-    sccbh->pdi = pdi;
-    sccbh->sccb = sccb;
+    TARGC = targc;
+    TARGV = targv;
+    PU = pu;
+    PDI = pdi;
+    SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
-    DOR( r, duf_scan_beginning_sql( sccb /* sccbh->sccb */  ) );
+    DOR( r, duf_scan_beginning_sql( sccb ) );
     {
       int rt = 0;
 
-      sccbh->total_files = duf_count_total_items( sccbh->sccb, &rt ); /* reference */
+      TOTFILES = duf_count_total_items( SCCB, &rt ); /* reference */
 /* total_files for progress bar only :( */
-      DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", sccbh->total_files );
-      DUF_TRACE( explain, 0, "%llu files registered in db", sccbh->total_files );
+      DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", TOTFILES );
+      DUF_TRACE( explain, 0, "%llu files registered in db", TOTFILES );
     }
 
 /*
@@ -123,11 +123,8 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   DEBUG_STARTR( r );
   if ( sccbh )
   {
-    const duf_scan_callbacks_t *sccb;
-
-    sccb = sccbh->sccb;
     /* final */
-    DOR( r, duf_scan_final_sql( sccb /* sccbh->sccb */  ) );
+    DOR( r, duf_scan_final_sql( SCCB ) );
     mas_free( sccbh );
   }
   DEBUG_ENDR( r );

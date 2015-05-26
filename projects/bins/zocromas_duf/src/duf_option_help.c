@@ -532,9 +532,14 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150522.100438 ============" );
   DUF_PRINTF( 0, "  run /home/mastar/.maslib/firefox/scrapbook  -dfR --min-same=900 --max-same=3000  --evaluate-sccb=listing    	- %s", "" );
   DUF_PRINTF( 0, "========================= as for 20150526.150510 ============" );
-  DUF_PRINTF( 0,
-              "  run  /mnt/new_media/media/photo/    -dfR -p" " --format-dirs-list='-%%_%%f%%_------%%_%%r\\n'"
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -p"
+              " --format-dirs-list='-%%_%%f%%_------%%_%%r\\n'"
               " --format-files-list='%%-4S%%5_%%f%%4s%%8z%%4_%%m%%_%%t%%_/%%_%%T\\n'    	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -T" " --glob=IMAG1248.jpg "
+              " --format-dirs-tree='%%f\\n' " " --format-files-tree='%%f%%4s%%8z%%4_%%m%%_%%t%%_/%%_%%T\\n' "
+              " --format-prefix-files-tree='%%2_#%%-6M%%6_%%P'    	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -fR -p --glob=IMAG1248.jpg "
+              " --format-files-list='%%2_=%%-4S%%5_%%5z%%4_%%m%%_%%t%%_/%%_%%T%%_%%r%%f\\n'    	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

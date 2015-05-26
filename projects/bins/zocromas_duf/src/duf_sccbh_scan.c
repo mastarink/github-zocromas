@@ -53,9 +53,9 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
   DEBUG_STEP(  );
 
   /* assert( di.depth == -1 ); */
-  DOR( r, duf_pdi_reinit( PDI, real_path, sccbh->pu, sccbh->sccb->node.selector2, sccbh->pu->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
-  DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( sccbh->pdi ), sccbh->pdi->seq_leaf,
-             duf_levinfo_path( sccbh->pdi ) );
+  DOR( r, duf_pdi_reinit( PDI, real_path, PU, SCCB->node.selector2, PU->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
+  DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( PDI ), PDI->seq_leaf,
+             duf_levinfo_path( PDI ) );
   DOR( r, duf_sccb_pdi( sccbh ) );
   /* (* xchanges = di.changes; --- needless!? *) */
   /* duf_pdi_close( &di ); */
@@ -68,8 +68,7 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
-  /* const duf_ufilter_t *pu = sccbh->pu; */
-  const duf_scan_callbacks_t *sccb = sccbh->sccb;
+  const duf_scan_callbacks_t *sccb = SCCB;
 
   real_path = duf_realpath( path, &r );
 
@@ -89,12 +88,12 @@ int
 duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  sccbh->changes = 0;
-  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( sccbh->sccb ), sccbh->targc );
-  for ( int ia = 0; r >= 0 && ia < sccbh->targc; ia++ )
-    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( sccbh->sccb ), ia, sccbh->targv[ia] );
+  HCHANGES = 0;
+  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( SCCB ), TARGC );
+  for ( int ia = 0; r >= 0 && ia < TARGC; ia++ )
+    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( SCCB ), ia, TARGV[ia] );
 
-  if ( sccbh->targc <= 0 )
+  if ( TARGC <= 0 )
   {
 
     /* - evaluate sccb for NULL path */
@@ -102,10 +101,10 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
   }
   else
   {
-    /* - evaluate sccb for each string from sccbh->targ[cv] as path */
-    for ( int ia = 0; r >= 0 && ia < sccbh->targc; ia++ )
+    /* - evaluate sccb for each string from TARG[CV] as path */
+    for ( int ia = 0; r >= 0 && ia < TARGC; ia++ )
     {
-      DOR( r, duf_sccbh_path( sccbh, sccbh->targv[ia] ) );
+      DOR( r, duf_sccbh_path( sccbh, TARGV[ia] ) );
     }
   }
 
