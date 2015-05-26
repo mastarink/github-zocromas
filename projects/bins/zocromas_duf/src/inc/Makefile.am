@@ -43,6 +43,7 @@ noinst_HEADERS=duf.h \
 	duf_options_enum.h duf_options.h duf_option_types.h \
 	duf_option_acquire.h \
 	duf_path2db.h \
+	duf_tags.h \
 	duf_path.h \
 	duf_pdi.h duf_pdi_types.h \
 	duf_prepare_actions.h \
@@ -50,7 +51,7 @@ noinst_HEADERS=duf.h \
 	duf_record_types.h \
 	duf_scan_types.h \
 	duf_sccb_begfin.h \
-	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_scan.h duf_sccb_begfin.h duf_sccb_way.h \
+	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccb_eval.h duf_sccbh_scan.h duf_sccb_begfin.h duf_sccb_way.h \
 	duf_dir_scan2.h  \
 	duf_service.h \
 	mod_exif.h \

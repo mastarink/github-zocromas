@@ -528,10 +528,13 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif	- %s", "all from scratch..." );
   DUF_PRINTF( 0, "  run /mnt/new_media/media/photo/Pictures/one/ --remove-database -PO --progress -fR "
               " --evaluate-sccb=dirs,filedata,filenames,md5,mime,exif   	- %s", "for faster testing use this path" );
-  
+
   DUF_PRINTF( 0, "========================= as for 20150522.100438 ============" );
   DUF_PRINTF( 0, "  run /home/mastar/.maslib/firefox/scrapbook  -dfR --min-same=900 --max-same=3000  --evaluate-sccb=listing    	- %s", "" );
-  DUF_PRINTF( 0, "========================= as for 20150525.102116 ============" );
+  DUF_PRINTF( 0, "========================= as for 20150526.150510 ============" );
+  DUF_PRINTF( 0,
+              "  run  /mnt/new_media/media/photo/    -dfR -p" " --format-dirs-list='-%%_%%f%%_------%%_%%r\\n'"
+              " --format-files-list='%%-4S%%5_%%f%%4s%%8z%%4_%%m%%_%%t%%_/%%_%%T\\n'    	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

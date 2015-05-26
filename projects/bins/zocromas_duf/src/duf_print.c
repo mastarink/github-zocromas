@@ -1082,6 +1082,10 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
     snprintf( pbuffer, bfsz, format, pfi->nameid );
     ok++;
     break;
+  case '_':                    /* space */
+    pbuffer += strlen( pbuffer );
+    memset( pbuffer, ' ', v > 0 ? v : ( v < 0 ? -v : 1 ) );
+    break;
   default:
     pbuffer += strlen( pbuffer );
     *pbuffer++ = '%';

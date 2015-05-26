@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_HOOK_TYPES_H
 #  define MAS_DUF_HOOK_TYPES_H
 
-#  include "duf_sccb_way.h"
+/* #  include "duf_sccb_way.h" */
 #  include "duf_record_types.h"
 #  include "sql_beginning_types.h"
 
@@ -23,7 +23,7 @@ typedef int ( *duf_scan_hook2_dirent_t ) ( const char *fname, const struct stat 
 typedef int ( *duf_anyhook_t ) ( void );
 
 /* this is callback of type: duf_str_cb_t (first range; str_cb) */
-typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, DSCCBX );
+typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
 
 
 
@@ -34,7 +34,7 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, DSCCBX );
  * duf_sel_cb_leaf		:		, sel_cb_udata_unused
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
-typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, DSCCBX );
+typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */ * sccbh );
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 

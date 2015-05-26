@@ -120,16 +120,16 @@ duf_action_table( void )
  * "convert" «duf_config» representation of tasks/actions into «sccb» list (duf_scan_callbacks_t),
  *         return list length (# of items)
  * ********************************************************************************************
- *  ppscan_callbacks (duf_scan_callbacks_t **) buffer must be inited for enough number of sccb (duf_scan_callbacks_t) pointers
+ *  psccbs (duf_scan_callbacks_t **) buffer must be inited for enough number of sccb (duf_scan_callbacks_t) pointers
  * */
 int
-duf_config2sccb_vector( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
+duf_config2sccb_vector( duf_scan_callbacks_t ** psccbs, int max_asteps )
 {
   int asteps = 0;
 
-  if ( ppscan_callbacks )
+  if ( psccbs )
   {
-    ppscan_callbacks[asteps] = NULL;
+    psccbs[asteps] = NULL;
     for ( duf_action_table_t * act = duf_action_table(  ); act->sccb && asteps < max_asteps; act++ )
     {
       duf_scan_callbacks_t *sccb = act->sccb;
@@ -138,8 +138,8 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
       {
         if ( sccb )
         {
-          ppscan_callbacks[asteps++] = sccb;
-          ppscan_callbacks[asteps] = NULL;
+          psccbs[asteps++] = sccb;
+          psccbs[asteps] = NULL;
           DUF_TRACE( action, 0, "action prepared: %s", duf_uni_scan_action_title( sccb ) );
         }
         else
@@ -159,7 +159,7 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps
 }
 
 int
-duf_config2sccb_vector_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max_asteps )
+duf_config2sccb_vector_sample( duf_scan_callbacks_t ** psccbs, int max_asteps )
 {
   int asteps = 0;
 
@@ -175,7 +175,7 @@ duf_config2sccb_vector_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max
 
       DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sample #%d", asteps );
       DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-      ppscan_callbacks[asteps++] = sccb;
+      psccbs[asteps++] = sccb;
     }
   }
   else
@@ -192,7 +192,7 @@ duf_config2sccb_vector_sample( duf_scan_callbacks_t ** ppscan_callbacks, int max
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPUPD ) );
     DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sampupd≫ #%d", asteps );
     DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-    ppscan_callbacks[asteps++] = sccb;
+    psccbs[asteps++] = sccb;
   }
   else
   {

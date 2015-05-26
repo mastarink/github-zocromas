@@ -53,7 +53,7 @@
  *
  * */
 static int
-duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_cb2_unused, */ DSCCBX )
+duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   assert( SCCB );
@@ -64,21 +64,21 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_c
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem
  * */
-  DOR( r, duf_qscan_dirents2( pstmt_selector, SCCBX ) );
+  DOR( r, duf_qscan_dirents2( pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , SCCBX, &SCCB->leaf ) );
+  DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, &SCCB->leaf ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  DOR( r, duf_qscan_node_scan_before2(  /*        */ pstmt_selector, SCCBX ) );
+  DOR( r, duf_qscan_node_scan_before2(  /*        */ pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  DOR( r, duf_qscan_files_by_dirid2(  /*          */ pstmt_selector, SCCBX ) );
+  DOR( r, duf_qscan_files_by_dirid2(  /*          */ pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  DOR( r, duf_qscan_node_scan_middle2(  /*        */ pstmt_selector, SCCBX ) );
+  DOR( r, duf_qscan_node_scan_middle2(  /*        */ pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
 /* assert( duf_scan_dirs_by_pdi_maxdepth == str_cb2_unused ); */
   /* if ( DUF_U_FLAG( recursive ) ) */
-  DOR( r, duf_qscan_dirs_by_dirid2(  /*         */ pstmt_selector, SCCBX /* , duf_scan_dirs_by_pdi_maxdepth *//* str_cb2_unused */  ) );
+  DOR( r, duf_qscan_dirs_by_dirid2(  /*         */ pstmt_selector, sccbh /* , duf_scan_dirs_by_pdi_maxdepth *//* str_cb2_unused */  ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  DOR( r, duf_qscan_node_scan_after2(  /*         */ pstmt_selector, SCCBX ) );
+  DOR( r, duf_qscan_node_scan_after2(  /*         */ pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
 
   DEBUG_ENDR( r );
@@ -95,7 +95,7 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_c
  * */
 
 int
-duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t str_cb2_unused, */ DSCCBX )
+duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   unsigned long long diridpid;
@@ -112,7 +112,7 @@ duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, /* duf_str_cb2_t 
 
   DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 1." );
 
-  DOR( r, duf_scan_dirs_by_pdi( pstmt_selector, /* str_cb2_unused, */ SCCBX ) );
+  DOR( r, duf_scan_dirs_by_pdi( pstmt_selector, /* str_cb2_unused, */ sccbh ) );
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
   DEBUG_ENDR( r );

@@ -29,6 +29,7 @@
 #include "duf_sccb_handle.h"
 #include "duf_sccb_handle.h"
 
+#include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccbh_scan.h"
 /* ###################################################################### */
@@ -55,7 +56,7 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
   DOR( r, duf_pdi_reinit( PDI, real_path, sccbh->pu, sccbh->sccb->node.selector2, sccbh->pu->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
   DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( sccbh->pdi ), sccbh->pdi->seq_leaf,
              duf_levinfo_path( sccbh->pdi ) );
-  DOR( r, duf_sccb_pdi( SCCBX ) );
+  DOR( r, duf_sccb_pdi( sccbh ) );
   /* (* xchanges = di.changes; --- needless!? *) */
   /* duf_pdi_close( &di ); */
 
@@ -63,11 +64,12 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 }
 
 static int
-duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path, const duf_ufilter_t * pu,
-                const duf_scan_callbacks_t * sccb /*, unsigned long long *pchanges */  )
+duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
+  /* const duf_ufilter_t *pu = sccbh->pu; */
+  const duf_scan_callbacks_t *sccb = sccbh->sccb;
 
   real_path = duf_realpath( path, &r );
 
@@ -96,14 +98,14 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
   {
 
     /* - evaluate sccb for NULL path */
-    DOR( r, duf_sccbh_path( sccbh, NULL, sccbh->pu, sccbh->sccb ) );
+    DOR( r, duf_sccbh_path( sccbh, NULL ) );
   }
   else
   {
     /* - evaluate sccb for each string from sccbh->targ[cv] as path */
     for ( int ia = 0; r >= 0 && ia < sccbh->targc; ia++ )
     {
-      DOR( r, duf_sccbh_path( sccbh, sccbh->targv[ia], sccbh->pu, sccbh->sccb ) );
+      DOR( r, duf_sccbh_path( sccbh, sccbh->targv[ia] ) );
     }
   }
 

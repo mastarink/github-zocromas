@@ -14,13 +14,15 @@ int duf_sqlite_close( void );
 /* int duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg ); */
 /* int duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg ); */
 int duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges );
+
 /* int duf_sqlite_exec_e( const char *sql, int *pchanges ); */
 
 int duf_vsqlite_c( const char *sqlfmt, int constraint_ignore, int *pchanges, va_list args );
+
 /* int duf_vsqlite_e( const char *fmt, int *pchanges, va_list args ); */
 
 int duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                        DSCCBX, const char *sqlfmt, va_list args );
+                        duf_sccb_handle_t * sccbh, const char *sqlfmt, va_list args );
 
 unsigned long long duf_sqlite_last_insert_rowid( void );
 
@@ -53,6 +55,7 @@ int duf_sqlite_column_count( duf_sqlite_stmt_t * stmt );
 
 
 char *duf_sqlite_vmprintf( const char *fmt, va_list args );
+
 /* char *duf_sqlite_mprintf( const char *fmt, ... ); */
 
 /* void duf_sqlite_free( char *s ); */

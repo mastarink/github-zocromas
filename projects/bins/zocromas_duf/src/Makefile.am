@@ -18,11 +18,11 @@ zocromas_duf_SOURCES=				   \
 							 \
 	duf_filedata.c					   \
 	duf_add.c duf_path.c duf_path2db.c duf_db2path.c    \
-							     \
+	duf_tags.c					     \
 	duf_item_scan2.c				      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
 	duf_begfin.c \
-	duf_sccb.c duf_sccb_handle.c duf_sccbh_scan.c duf_sccb_begfin.c \
+	duf_sccb.c duf_sccb_handle.c duf_sccb_eval.c duf_sccbh_scan.c duf_sccb_begfin.c \
 	duf_dir_scan2.c  \
 	duf_dir_scan2_stages.c	\
 	duf_dirent_scan2.c					 \

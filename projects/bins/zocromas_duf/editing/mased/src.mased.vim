@@ -32,6 +32,9 @@ sfind duf_sccb_def.h
 tab sfind duf_sccb_handle.c
 sfind duf_sccb_handle.h
 
+tab sfind duf_sccb_eval.c
+sfind duf_sccb_eval.h
+
 tab sfind duf_sccbh_scan.c
 sfind duf_sccbh_scan.h
 
@@ -41,13 +44,16 @@ sfind duf_sccb_begfin.h
 tab sfind duf_begfin.c
 sfind duf_begfin.h
 
-sfind duf_sccb_way.h
+sfind duf_sccbh_shortcuts.h
 
 tab sfind duf_path.c
 sfind duf_path.h
 
 tab sfind  duf_path2db.c
 sfind duf_path2db.h
+
+tab sfind  duf_tags.c
+sfind duf_tags.h
 
 tab sfind duf_db2path.c
 sfind duf_db2path.h

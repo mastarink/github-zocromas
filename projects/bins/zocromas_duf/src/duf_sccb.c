@@ -9,20 +9,15 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
-/* #include "duf_status_ref.h" */
 
 #include "duf_option_defs.h"
-
-/* #include "duf_pdi.h" */
-/* #include "duf_levinfo.h" */
 #include "duf_levinfo_ref.h"
 
-
-/* #include "duf_sql_field.h" */
 #include "duf_dir_scan2.h"
 
 #include "duf_sccb_def.h"
 
+#include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccb.h"
 /* ###################################################################### */
@@ -59,7 +54,7 @@ duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
 }
 
 int
-duf_sccb_pdi( DSCCBX )
+duf_sccb_pdi( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   assert( PDI->depth >= 0 );
@@ -86,7 +81,7 @@ duf_sccb_pdi( DSCCBX )
 
   DUF_TRACE( scan, 4, "+" );
   if ( !SCCB->disabled )
-    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL,  SCCBX ) );
+    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, sccbh ) );
 
   /* delete level-control array, close 0 level */
 

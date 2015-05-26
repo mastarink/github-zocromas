@@ -18,6 +18,8 @@
 
 #include "duf_dir_scan2.h"
 
+#include "duf_sccbh_shortcuts.h"
+
 /* ###################################################################### */
 #include "duf_uni_scan2.h"
 /* ###################################################################### */
@@ -45,7 +47,7 @@
  *     5. for <current> dir call sccb->node_scan_after
  * */
 int
-duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, DSCCBX )
+duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -57,7 +59,7 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, DSCCBX )
                PDI->pu->max_rel_depth, duf_pdi_reldepth( PDI ) );
 
     /* recursively calls this `duf_scan_dirs_by_pdi_maxdepth` */
-    DOR( r, duf_scan_dirs_by_pdi_wrap( pstmt_selector, SCCBX ) );
+    DOR( r, duf_scan_dirs_by_pdi_wrap( pstmt_selector, sccbh ) );
   }
   /* else                                                                                                               */
   /* {                                                                                                                  */

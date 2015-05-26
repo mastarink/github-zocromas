@@ -27,6 +27,7 @@
 #include "duf_option_names.h"
 
 #include "duf_uni_scan2.h"
+#include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_dir_scan2_stages.h"
 /* ###################################################################### */
@@ -40,7 +41,7 @@
 
 #define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, DSCCBX ) \
+    duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
       unsigned long long diridpdi; \
@@ -102,7 +103,7 @@ DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(after)
  *  - sccb
  * */
 static int
-duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, DSCCBX )
+duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   int dfd;
@@ -126,7 +127,7 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, DSCCBX )
  *  - sccb
  * */
 static int
-duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, DSCCBX )
+duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -156,7 +157,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, DSCCBX )
  * */
 
 int
-duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, DSCCBX )
+duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 #if 0
@@ -206,7 +207,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, DSCCBX )
  *  */
 
 int
-duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, DSCCBX )
+duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -223,12 +224,12 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, DSCCBX )
     {
       /* duf_str_cb2_leaf_scan_fd is just a wrapper for sccb->leaf_scan_fd2 */
 
-      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan_fd, SCCBX ) );
+      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan_fd, sccbh ) );
     }
     if ( SCCB->leaf_scan2 )
     {
       /* duf_str_cb2_leaf_scan is just a wrapper for sccb->leaf_scan2 */
-      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan, SCCBX ) );
+      DOR( r, duf_scan_db_items2( DUF_NODE_LEAF, duf_str_cb2_leaf_scan, sccbh ) );
     }
   }
   else if ( SCCB->leaf_scan_fd2 )
@@ -243,7 +244,7 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, DSCCBX )
 }
 
 int
-duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, DSCCBX /*, duf_str_cb2_t str_cb2 */  )
+duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /*, duf_str_cb2_t str_cb2 */  )
 {
   DEBUG_STARTR( r );
 
@@ -264,6 +265,6 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, DSCCBX /*, duf_str_cb2_t st
    * */
   if ( SCCB->node.selector2 )
     DOR( r, duf_scan_db_items2( DUF_NODE_NODE, duf_scan_dirs_by_pdi_maxdepth /* str_cb2 */ ,
-                                SCCBX /*, sccb->node.selector2, sccb->node.fieldset */  ) );
+                                sccbh /*, sccb->node.selector2, sccb->node.fieldset */  ) );
   DEBUG_ENDR( r );
 }

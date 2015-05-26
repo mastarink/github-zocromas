@@ -11,7 +11,7 @@ unsigned long long __duf_sql_ull_by_name( const char *name, duf_record_t * preco
 
 
 
-int duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, DSCCBX );
+int duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata, duf_sccb_handle_t * sccbh );
 
 
 

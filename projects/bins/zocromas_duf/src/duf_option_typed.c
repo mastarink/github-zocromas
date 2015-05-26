@@ -588,8 +588,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           };
           duf_sccb_handle_t *sccbh = &csccbh;
 
-#include "duf_sccb_way.h"
-          DOR( r, duf_sccb_pdi( SCCBX ) );
+/* #include "duf_sccb_way.h" */
+          DOR( r, duf_sccb_pdi( sccbh ) );
         }
         break;
 /* r = duf_make_sccb( sccb );                            */

@@ -12,7 +12,7 @@
 
 #include "duf_sql2.h"
 
-
+#include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sql_field2.h"
 /* ###################################################################### */
@@ -93,7 +93,8 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
  * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
  * */
 int
-duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused, DSCCBX )
+duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
+                          duf_sccb_handle_t *sccbh )
 {
   DEBUG_STARTR( r );
   if ( SCCB )
