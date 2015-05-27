@@ -61,7 +61,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       DUF_SQL_STEP( lr, pstmt_select );
       if ( lr == DUF_SQL_ROW )
       {
-        DUF_TRACE( current, 0, "<selected>" );
+        DUF_TRACE( mod, 0, "<selected>" );
         mimeid = duf_sql_column_long_long( pstmt_select, 0 );
         lr = 0;
       }
@@ -78,7 +78,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       /* "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, lr, pstmt_insert );
-      DUF_TRACE( insert, 0, " S: %s ", sql );
+      DUF_TRACE( mod, 3, " S: %s ", sql );
       DUF_SQL_BIND_S( Mime, mime, lr, pstmt_insert );
       /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_insert ); */
       /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_insert ); */
@@ -165,7 +165,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file,
     DUF_TEST_R( r );
 
     mime = magic_descriptor( m, fd );
-    DUF_TRACE( mod, 0, " opened mime %s : %s", m ? " OK " : " FAIL ", mime );
+    DUF_TRACE( mime, 0, " opened mime %s : %s", m ? " OK " : " FAIL ", mime );
 
     if ( mime )
     {
@@ -198,7 +198,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file,
             const char *sql = " UPDATE " DUF_DBPREF " filedatas SET mimeid = :mimeID WHERE " DUF_SQL_IDNAME " = :dataID ";
 
             DUF_SQL_START_STMT( pdi, update_mime, sql, r, pstmt_update );
-            DUF_TRACE( update, 0, " S: %s ", sql );
+            DUF_TRACE( mod, 3, " S: %s ", sql );
             DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
             DUF_SQL_BIND_LL( dataID, dataid, r, pstmt_update );
             DUF_SQL_STEP( r, pstmt_update );
@@ -219,7 +219,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file,
         mas_free( charset );
         mas_free( tail );
       }
-      /* DUF_TRACE( scan, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
+      /* DUF_TRACE( mod, 12, " " DUF_DEPTH_PFMT ": scan 5: %llu ", duf_pdi_depth( pdi ), mimeid ); */
     }
   }
   DEBUG_ENDR( r );

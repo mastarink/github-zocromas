@@ -7,11 +7,9 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
 
-/* #include "duf_config_ref.h" */
 
 #include "duf_utils_path.h"     /* duf_realpath */
 
@@ -19,15 +17,8 @@
 
 #include "duf_pdi.h"
 
-#include "duf_sql.h"
-#include "duf_sql2.h"
-
-#include "duf_status_ref.h"
-#include "duf_sccb_begfin.h"
-
 #include "duf_sccb.h"
-#include "duf_sccb_handle.h"
-#include "duf_sccb_handle.h"
+#include "duf_sccbh.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
@@ -36,7 +27,7 @@
 
 
 static int
-duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
+duf_sccbh_eval_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 {
   DEBUG_STARTR( r );
 
@@ -45,14 +36,14 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 
   DOR( r, duf_pdi_reinit( PDI, real_path, PU, duf_get_node_sql_set( SCCB )->selector2, PU->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
   DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( PDI ), PDI->seq_leaf, duf_levinfo_path( PDI ) );
-  DOR( r, duf_sccb_pdi( sccbh ) );
+  DOR( r, duf_sccbh_eval_pdi( sccbh ) );
   /* duf_pdi_close( PDI ); */
 
   DEBUG_ENDR( r );
 }
 
 static int
-duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path )
+duf_sccbh_eval_path( duf_sccb_handle_t * sccbh, const char *path )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
@@ -67,7 +58,7 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path )
 
       DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 //  duf_scan_qbeginning_sql( sccb ); ==[20140506]==> duf_open_sccb_handle
-      DOR( r, duf_sccbh_real_path( sccbh, real_path ) );
+      DOR( r, duf_sccbh_eval_real_path( sccbh, real_path ) );
     }
     mas_free( real_path );
   }
@@ -75,7 +66,7 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path )
 }
 
 int
-duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -104,7 +95,7 @@ duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
     if ( sargv )
       cargv = *sargv++;
     DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV[ia], cargv );
-    DOR( r, duf_sccbh_path( sccbh, cargv ) );
+    DOR( r, duf_sccbh_eval_path( sccbh, cargv ) );
   }
 
   DUF_TRACE( action, 1, "after scan" );

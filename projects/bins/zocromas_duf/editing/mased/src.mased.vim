@@ -16,6 +16,12 @@ sfind duf_dirent_scan2.h
 tab sfind duf_item_scan2.c
 sfind duf_item_scan2.h
 
+tab sfind duf_ufilter.c
+sfind duf_ufilter.h
+
+tab sfind duf_ufilter_bind.c
+sfind duf_ufilter_bind.h
+
 " tab sfind duf_item_match2.c
 " sfind duf_item_match2.h
 
@@ -24,6 +30,9 @@ sfind duf_item_scan2.h
 
 tab sfind duf_filedata.c
 sfind duf_filedata.h
+
+tab sfind duf_sccbh.c
+sfind duf_sccbh.h
 
 tab sfind duf_sccb.c
 sfind duf_sccb.h

@@ -124,7 +124,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
     /* called both for leaves (files) and nodes (dirs) */
 
-    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
+    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                   duf_levinfo_dfd( PDI ), PDI->opendir );
 
 
@@ -162,7 +162,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     {
       /* if ( r >= 0 && !duf_levinfo_item_deleted( PDI ) ) */
       DUF_TRACE( explain, 2, "=> str cb2" );
-      DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
+      DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
     }
     else
@@ -270,7 +270,7 @@ duf_scan_db_items2_sql( const char *csql_selector, duf_sel_cb2_match_t match_cb2
 
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
   duf_bind_ufilter_uni( pstmt_selector );
-  
+
   DUF_SQL_EACH_ROW( r, pstmt_selector, r = duf_scan_db_items2_row( pstmt_selector, match_cb2, sel_cb2, str_cb2, sccbh ) );
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );
   DEBUG_ENDR( r );
@@ -311,14 +311,14 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
  * called with precord
  * str_cb2 + str_cb_udata to be called for precord with correspondig args
  * */
-  DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' sel_cb2%c; str_cb2%c",
+  DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' sel_cb2%c; str_cb2%c",
                 set_type_title, sel_cb2 ? '+' : '-', str_cb2 ? '+' : '-' );
   if ( node_type == DUF_NODE_LEAF )
   {
     sel_cb2 = duf_sel_cb2_leaf;
     match_cb2 = NULL /* duf_match_leaf2 */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 %s", set_type_title );
-    DUF_TRACE( scan, 0, "set sel_cb2 <= cb2 %s", set_type_title );
+    DUF_TRACE( scan, 2, "set sel_cb2 <= cb2 %s", set_type_title );
 #if 0
     sql_set = &SCCB->leaf;
 #elif 0
@@ -333,7 +333,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
     sel_cb2 = duf_sel_cb2_node;
     match_cb2 = NULL /* duf_match_node2 ?? */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 %s", set_type_title );
-    DUF_TRACE( scan, 0, "set sel_cb2 <= cb2 %s", set_type_title );
+    DUF_TRACE( scan, 2, "set sel_cb2 <= cb2 %s", set_type_title );
 #if 0
     sql_set = &SCCB->node;
 #elif 0
@@ -356,7 +356,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
         sql_selector = duf_selector2sql( sql_set );
 
       DUF_TRACE( scan, 14, "sql:%s", sql_selector );
-      DUF_TRACE( scan, 0, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemname( PDI ) );
+      DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemname( PDI ) );
 /*
  * match_cb2,sel_cb2 from sccb:
  * DUF_NODE_LEAF => duf_match_leaf2, duf_sel_cb2_leaf

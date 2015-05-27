@@ -1,6 +1,4 @@
-#include <stdarg.h>
 #include <string.h>
-#include <sys/time.h>
 #include <assert.h>
 #include <libgen.h>
 
@@ -10,29 +8,11 @@
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
-
-#include "duf_utils.h"
-#include "duf_service.h"
-
-#include "duf_error_types.h"
-#include "duf_debug_defs.h"
-#include "duf_trace_defs.h"
-#include "duf_trace.h"
-#include "duf_errors.h"
-
-#include "duf_dbg.h"
-#include "duf_print_defs.h"
-
-
-#include "duf_pdi.h"
-#include "duf_levinfo.h"
-#include "duf_levinfo_ref.h"
-
+#include "duf_config_ref.h"
 
 #include "duf_path2db.h"
 #include "duf_sql2.h"
 
-#include "duf_config_ref.h"
 
 /* ###################################################################### */
 #include "duf_ufilter_bind.h"

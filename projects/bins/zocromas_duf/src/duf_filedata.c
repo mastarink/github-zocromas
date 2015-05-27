@@ -11,6 +11,9 @@
 #include "duf_config_ref.h"
 #include "duf_utils.h"
 
+#include "duf_levinfo_ref.h"
+#include "duf_levinfo_updown.h"
+
 #include "duf_pdi.h"
 
 #include "duf_sql_defs.h"
@@ -22,11 +25,8 @@
 #include "duf_filedata.h"
 /* ###################################################################### */
 
-/* run --create-tables --zero-filedata   */
-/* run --create-tables --update-filedata */
-
 unsigned long long
-duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int *pr )
+duf_stat2file_dataid_existed( duf_depthinfo_t * pdi, const struct stat *pst_file, int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
@@ -35,7 +35,7 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
   const char *sql = "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:Dev AND inode=:iNode";
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
-  DUF_TRACE( select, 0, "S:%s", sql );
+  DUF_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( Dev, pst_file->st_dev, r, pstmt );
   DUF_SQL_BIND_LL( iNode, pst_file->st_ino, r, pstmt );
   DUF_SQL_STEP( r, pstmt );
@@ -58,7 +58,7 @@ duf_file_dataid_by_stat( duf_depthinfo_t * pdi, const struct stat *pst_file, int
 }
 
 unsigned long long
-duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
+duf_stat2file_dataid( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
@@ -100,22 +100,28 @@ duf_insert_filedata_uni( duf_depthinfo_t * pdi, const struct stat *pst_file, int
       DUF_SQL_END_STMT( insert_filedata, r, pstmt );
     }
     DUF_TRACE( current, 0, "<changes> : %d", changes );
-    if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+    if ( need_id )
     {
-      if ( need_id )
-        dataid = duf_file_dataid_by_stat( pdi, pst_file, pr );
-    }
-    else if ( !r /* assume SQLITE_OK */  )
-    {
-      if ( need_id && changes )
+      if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
+      {
+        dataid = duf_stat2file_dataid_existed( pdi, pst_file, pr );
+      }
+      else if ( !r /* assume SQLITE_OK */  && changes )
       {
         dataid = duf_sql_last_insert_rowid(  );
+        if ( !dataid )
+        {
+          DUF_SHOW_ERROR( "(2) no dataid by parentid=%llu", duf_levinfo_dirid_up( pdi ) );
+          if ( r >= 0 )
+            DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
+        }
+        else
+        {
+        }
+        assert( dataid );
         DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dataid=%llu", dataid );
       }
-    }
-    else
-    {
-      DUF_SHOW_ERROR( "insert filedata %d [%s]", r, duf_error_name( r ) );
+      DUF_TEST_R( r );
     }
   }
   else

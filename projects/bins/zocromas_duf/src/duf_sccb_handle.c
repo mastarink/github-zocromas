@@ -11,11 +11,6 @@
 
 #include "duf_maintenance.h"
 
-
-#include "duf_utils_path.h"     /* duf_realpath */
-
-#include "duf_levinfo_ref.h"
-
 #include "duf_pdi.h"
 
 #include "duf_sql.h"

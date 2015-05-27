@@ -314,7 +314,7 @@ sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, c
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( scan, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
+  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
 
   DEBUG_ENDR( r );
 }

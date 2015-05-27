@@ -473,7 +473,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
                 const char *sql = " UPDATE " DUF_DBPREF " filedatas SET exifid = :exifID WHERE " DUF_SQL_IDNAME " = :dataID ";
 
                 DUF_SQL_START_STMT( pdi, update_exif, sql, r, pstmt_update );
-                DUF_TRACE( update, 0, " S: %s ", sql );
+                DUF_TRACE( mod, 3, " S: %s ", sql );
                 DUF_SQL_BIND_LL( exifID, exifid, r, pstmt_update );
                 DUF_SQL_BIND_LL( dataID, dataid, r, pstmt_update );
                 DUF_SQL_STEP( r, pstmt_update );
@@ -493,7 +493,7 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
           }
           else
           {
-            DUF_TRACE( update, 0, "Nothing got for EXIF : (%d)", r );
+            DUF_TRACE( exif, 3, "Nothing got for EXIF : (%d)", r );
           }
           if ( r == DUF_ERROR_EXIF_NO_MODEL )
             r = 0;

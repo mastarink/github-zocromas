@@ -154,49 +154,39 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 /*
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:
+ *
+ * call from duf_scan_dirs_by_pdi / duf_scan_dirs_by_pdi_wrap
+ *
+ * fn of type: duf_str_cb2_t
  * */
 
 int
 duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-#if 0
-  if ( DUF_ACT_FLAG( dirent ) ) /* needless here */
-#endif
+  if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
   {
-    if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
-    {
-      duf_pdi_set_opendir( PDI, 1 );
-      DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
-      DUF_TRACE( scan, 10, "scan dirent_dir by %5llu", duf_levinfo_dirid( PDI ) );
-      /*
-       *   -- call for each direntry
-       *      - for directory                - sccb->dirent_dir_scan_before2
-       *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
-       * */
-      DOR( r, duf_scan_dirents2( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
-    }
-    else
-    {
-      DUF_TRACE( scan, 10, "NOT scan dirent_dir by %5llu - sccb->dirent_dir_scan_before2 empty and sccb->dirent_file_scan_before2 for %s",
-                 duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ) );
-    }
-  }
-#if 0
-  else if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
-  {
-    char *ona = NULL;
-
-    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> -dirent" );
-    ona = duf_option_names( DUF_OPTION_VAL_FLAG_DIRENT );
-    DUF_TRACE( explain, 0, "to scan dir / file before2 use %s", ona );
-    mas_free( ona );
+    duf_pdi_set_opendir( PDI, 1 );
+    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
+    DUF_TRACE( scan, 0, "scan dirent_dir by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+    /*
+     *   -- call for each direntry
+     *      - for directory                - sccb->dirent_dir_scan_before2
+     *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
+     * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
+    DOR( r, duf_scan_dirents2( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
   }
   else
   {
-    DUF_TRACE( scan, 10, "NOT scan dirent_dir ( -E or --dirent absent )" );
+    DUF_TRACE( scan, 10, "NOT scan dirent_dir by %5llu - sccb->dirent_dir_scan_before2 empty and sccb->dirent_file_scan_before2 for %s",
+               duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ) );
   }
-#endif
+  {
+    const duf_sql_set_t *sql_set = NULL;
+
+    sql_set = duf_get_leaf_sql_set( SCCB );
+    DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, sql_set ) ); /* count for possibly --progress */
+  }
   DEBUG_ENDR( r );
 }
 
@@ -219,7 +209,7 @@ duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh 
   /* scan this files in this directory */
   if ( DUF_ACT_FLAG( files ) )
   {
-    DUF_SCCB_PDI( DUF_TRACE, scan, duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
+    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     if ( SCCB->leaf_scan_fd2 )
     {
       /* duf_str_cb2_leaf_scan_fd is just a wrapper for sccb->leaf_scan_fd2 */

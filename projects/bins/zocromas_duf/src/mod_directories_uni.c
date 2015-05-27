@@ -38,16 +38,15 @@
 /* ########################################################################################## */
 /* make sure dir name in db */
 static int
-directories_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid_unused, */
-                        duf_depthinfo_t * pdi )
+register_direntry( const char *fname, const struct stat *pst_dir, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
   duf_scan_callbacks_t duf_directories_callbacks; /* see below */
 
-  DUF_TRACE( scan, 0, "@ @ @ @ scan entry dir 2 by %s", fname );
-  ( void ) duf_dirname2dirid( pdi, fname, 1 /* caninsert */ , pstat->st_dev, pstat->st_ino,
-                              duf_directories_callbacks.node.selector2 /* const char *node_selector2 */ , 0 /*need_id */ , &changes, &r );
+/* fname === */
+  DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s", fname );
+  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */, fname , pst_dir, duf_directories_callbacks.node.selector2, 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
 
@@ -120,13 +119,12 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .name = "dirs",
   .init_scan = NULL,
   .def_opendir = 1,
-  /* .dirent_dir_scan_before = directories_entry_dir, */
-  .dirent_dir_scan_before2 = directories_entry_dir2,
+  .dirent_dir_scan_before2 = register_direntry,
 
 
-  
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */

@@ -38,7 +38,7 @@
 /* ########################################################################################## */
 
 static int
-filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsigned long long dirid_unused, */ unsigned long long dataid )
+filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, unsigned long long dataid )
 {
   DEBUG_STARTR( r );
   if ( fname && duf_levinfo_dirid_up( pdi ) )
@@ -48,7 +48,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
     const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filenames (Pathid, name, dataid) VALUES (:pathID, :Name, :dataID)";
 
     DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
-    DUF_TRACE( insert, 0, "S:%s", sql );
+    DUF_TRACE( mod, 3, "S:%s", sql );
     DUF_SQL_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), r, pstmt );
     DUF_SQL_BIND_S( Name, fname, r, pstmt );
     DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
@@ -62,47 +62,21 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname, /* unsi
     DUF_MAKE_ERROR( r, DUF_ERROR_DATA );
     DUF_TEST_R( r );
   }
-  /* DUF_TRACE( current, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
+  /* DUF_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
   DEBUG_ENDR( r );
 }
 
-
-
-
-
-/* static int                                                                                                                      */
-/* filenames_entry_reg( const char *fname, const struct stat *pst_file, unsigned long long dirid, duf_depthinfo_t * pdi,           */
-/*                      duf_record_t * precord )                                                                                   */
-/* {                                                                                                                               */
-/*   DEBUG_STARTR( r );                                                                                                            */
-/*   DUF_UNUSED unsigned long long dataid = 0;                                                                                     */
-/*                                                                                                                                 */
-/*   (* unsigned long long fnid = 0; *)                                                                                            */
-/*                                                                                                                                 */
-/*   DEBUG_START(  );                                                                                                              */
-/*                                                                                                                                 */
-/*   (* if ( pst_file && pst_file->st_size >= pdi->u.size.min && ( !pdi->u.size.max || pst_file->st_size <= pdi->u.size.max ) ) *) */
-/*   if ( pst_file && dufOFF_lim_matchll( pdi->u.size, pst_file->st_size ) )                                                          */
-/*   {                                                                                                                             */
-/*     dataid = duf_file_dataid_by_stat( pdi, pst_file, &r );                                                                      */
-/*     r = filenames_insert_filename_uni( pdi, fname, dirID, dataid );                                                             */
-/*   }                                                                                                                             */
-/*   DEBUG_ENDR( r );                                                                                                              */
-/* }                                                                                                                               */
-
 static int
-filenames_entry_reg2(  /* duf_sqlite_stmt_t * pstmt, */ const char *fname, const struct stat *pst_file, /*unsigned long long dirid_unused, */
-                      duf_depthinfo_t * pdi )
+register_direntry( const char *fname, const struct stat *pst_file, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  if ( pst_file /* && !duf_config->cli.disable.insert */  )
+  if ( pst_file )
   {
     unsigned long long dataid = 0;
 
-    DOPR( r, dataid = duf_file_dataid_by_stat( pdi, pst_file, &r ) );
-
-    DOR( r, filenames_insert_filename_uni( pdi, fname, /* dirid_unused, */ dataid ) );
+    DOPR( r, dataid = duf_stat2file_dataid_existed( pdi, pst_file, &r ) );
+    DOR( r, filenames_insert_filename_uni( pdi, fname, dataid ) );
   }
   DEBUG_ENDR( r );
 }
@@ -175,11 +149,11 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .def_opendir = 1,
 
   /* .dirent_file_scan_before = filenames_entry_reg, */
-  .dirent_file_scan_before2 = filenames_entry_reg2,
+  .dirent_file_scan_before2 = register_direntry,
 
-  
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", fd.mode AS filemode " /* */

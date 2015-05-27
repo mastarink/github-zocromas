@@ -9,6 +9,7 @@
 typedef struct
 {
   float percent;
+  unsigned calls;
   int width;
   int prev_width;
 } duf_bar_t;

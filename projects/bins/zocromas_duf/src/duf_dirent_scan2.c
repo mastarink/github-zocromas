@@ -143,8 +143,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
  * scan_dirent_dir2 - reg (file) entry scanner function
  * */
 int
-duf_scan_dirents2(  /* duf_sqlite_stmt_t * pstmt, */ duf_depthinfo_t * pdi,
-                   duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
+duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   const struct stat *pst_parent;

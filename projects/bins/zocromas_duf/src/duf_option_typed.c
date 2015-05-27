@@ -19,6 +19,7 @@
 
 #include "duf_pdi.h"
 #include "duf_sccb.h"
+#include "duf_sccbh.h"
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
@@ -589,7 +590,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           duf_sccb_handle_t *sccbh = &csccbh;
 
 /* #include "duf_sccb_way.h" */
-          DOR( r, duf_sccb_pdi( sccbh ) );
+          DOR( r, duf_sccbh_eval_pdi( sccbh ) );
         }
         break;
 /* r = duf_make_sccb( sccb );                            */

@@ -41,7 +41,7 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
 
     /* - evaluate sccb for each string from duf_config->targ[cv] as path
      * - store number of changes to *pchanges */
-    DOR( r, duf_sccbh_each_path( sccbh ) );
+    DOR( r, duf_sccbh_eval_each_path( sccbh ) );
     if ( DUF_ACT_FLAG( summary ) )
       DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
   }
@@ -58,7 +58,7 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
  * 1. «open» sccb handle - incorporate argv to the handle - by calling duf_open_sccb_handle
  * 2. ?? call duf_count_total_items
  * 3. call sccb->init_scan
- * 4. casll duf_sccbh_each_path
+ * 4. casll duf_sccbh_eval_each_path
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 int

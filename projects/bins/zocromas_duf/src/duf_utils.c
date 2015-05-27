@@ -64,6 +64,8 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
   float width = 90;
   static duf_bar_t bar;
 
+  if ( curval == 1 )
+    memset( &bar, 0, sizeof( bar ) );
   bar.percent = ( ( ( float ) curval ) / ( ( float ) maxval ) );
   bar.width = width * bar.percent;
   if ( bar.width != ( bar.prev_width - 1 ) )
@@ -72,8 +74,11 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
 
     duf_strflocaltime( cur_time, sizeof( cur_time ), "%Y%m%d.%H:%M:%S", NULL );
 
-    if ( bar.width == 0 )
+    if ( !bar.calls )
+    {
       fputs( "\n", stderr );
+    }
+    bar.calls++;
     fprintf( stderr, "\r [" );
     for ( int i = 0; i < bar.width - 1; i++ )
       fputc( '=', stderr );
@@ -83,8 +88,8 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
 
     fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, cur_time, msg );
     bar.prev_width = bar.width + 1;
-    if ( bar.width == width )
-      fputs( "\n", stderr );
+    /* if ( bar.width == width ) */
+    /*   fputs( "\n", stderr );  */
   }
 }
 

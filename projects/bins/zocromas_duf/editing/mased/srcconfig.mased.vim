@@ -48,9 +48,6 @@ sfind duf_option_sccb.h
 tab sfind duf_status.c
 sfind duf_status_ref.h
 
-tab sfind duf_ufilter.c
-sfind duf_ufilter.h
-
 sfind duf_option_acquire.h
 
 tab sfind duf_options_table.c
