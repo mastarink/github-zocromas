@@ -9,3 +9,4 @@ tags
 *.trace-sql
 1.tt
 2.tt
+.*.sw*

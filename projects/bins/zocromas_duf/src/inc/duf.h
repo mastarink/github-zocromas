@@ -4,7 +4,7 @@
 
 /* cd /home/mastar/.mas/src/sqlite-3.8.4.3/work/sqlite-src-3080403/                                  */
 /* ./configure  --enable-debug  --disable-tcl  --disable-amalgamation \                              */
-/*     --prefix=/mnt/new_misc/develop/autotools/zoc-new/admin/install/default/ ; make ; make install */
+/*     --prefix=$MSH_SHN_PRJTOP_DIR/admin/install/default/ ; make ; make install */
 
 
 
@@ -59,8 +59,8 @@ mastar@mastar .../bins/zocromas_duf $
 /* reset:                                                                                              */
 /*    run  --db-name=test20140412  --drop-tables --create-tables  --add-path /home/mastar/a/down/      */
 /* test:                                                                                               */
-/*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 .tables                      */
-/*    sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/test20140412 'select * from dufs.paths'    */
+/*    sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/test20140412 .tables                      */
+/*    sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/test20140412 'select * from dufs.paths'    */
 /* fill:                                                                                               */
 /*    run  --db-name=test20140412  --uni-scan /mnt/new_media/media/down/  -R  --fill -v --trace-fill=1 */
 
@@ -101,50 +101,50 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
  * /mnt/new_media/media/down/
  * */
 
-/* run tables drop tables check path add /mnt/new_misc/develop/autotools/zoc-new/projects/bins/zocromas_duf/
- * sqlite3 -header -column /mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo.sqlite3  \
+/* run tables drop tables check path add $MSH_SHN_PRJTOP_DIR/projects/bins/zocromas_duf/
+ * sqlite3 -header -column $MSH_SHN_PRJTOP_DIR/duf_db/duf-photo.sqlite3  \
  * 				'SELECT ID, dirname, parentID  FROM dufs.paths order by ID limit 20'
  * */
 
 
 /***
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -N aaaaa a b c
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -N aaaaa --drop-tables a b c
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_dab/ -N temp.sqlite3 --drop-tables --create-tables
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa a b c
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables 
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path .
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_dab/ -N aaaaa a b c
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_dab/ -N aaaaa --drop-tables a b c
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_dab/ -N temp.sqlite3 --drop-tables --create-tables
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N aaaaa a b c
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path .
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path 
  * 				/mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures
  * 				/mnt/new_media/media/photo/Pictures.R.20120207.164339 
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path 
  * 				/mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures
  * 				/mnt/new_media/media/photo/Pictures.R.20120207.164339
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
  * 				/mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures
  * 				/mnt/new_media/media/photo/Pictures.R.20120207.164339 
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
  * 				--print-dirs 
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
  * 				--print-dirs --recursive .
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path
  * 				--print-files --print-dirs --recursive .
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
  * 				--print-files --recursive .
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
  * 				--print-paths .
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
  * 				--print-paths . /mnt/new_media/media/photo/Pictures.R.20120207.164339 
- * run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
+ * run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path 
  * 				--print-paths /mnt/tall/htclegend/ /mnt/old_home/mastar/.mas/HTC_Legend/ /mnt/new_media/media/photo/Pictures 
  * 				/mnt/new_media/media/photo/Pictures.R.20120207.164339 
- * run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/
- * run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/duf-photo
- * run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N 
- * run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa
- * run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa 
- * run -D /mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N aaaaa a b c
+ * run -D $MSH_SHN_PRJTOP_DIR/duf_db/
+ * run -D $MSH_SHN_PRJTOP_DIR/duf_db/duf-photo
+ * run -D $MSH_SHN_PRJTOP_DIR/duf_db/ -N 
+ * run -D $MSH_SHN_PRJTOP_DIR/duf_db/ -N aaaaa
+ * run -D $MSH_SHN_PRJTOP_DIR/duf_db/ -N aaaaa 
+ * run -D $MSH_SHN_PRJTOP_DIR/duf_db/ -N aaaaa a b c
  * run -N temp.sqlite3 --add-path --update-path --print-dirs --recursive .
  * run -N temp.sqlite3 --add-to-group --group=aaaaaa mased/ ; . shsq/libsql.bash ; sqf_group temp
  * run -N temp.sqlite3 --add-to-group --group=bbbbbb mased/ ; . shsq/libsql.bash ; sqf_group temp
@@ -199,7 +199,7 @@ run  --uni-scan /home/mastar/a/down/ --max-depth=4  --max-items=70 -R --tree
 
 /*
  *
- * $ run --db-directory=/mnt/new_misc/develop/autotools/zoc-new/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path --print-dirs --recursive .
+ * $ run --db-directory=$MSH_SHN_PRJTOP_DIR/duf_db/ -N temp.sqlite3 --drop-tables --create-tables --add-path --update-path --print-dirs --recursive .
  * $ run --print-dirs --recursive
  *
  * */

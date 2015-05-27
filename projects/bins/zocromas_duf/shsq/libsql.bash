@@ -1,9 +1,9 @@
 #!/bin/sh
 function sqf_paths ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
   shift
-  ls /mnt/new_misc/develop/autotools/zoc-new/duf_db >&2
+  ls $MSH_SHN_PRJTOP_DIR/duf_db >&2
   sqlite3 "$db" <<SQL
 .header on
 .mode column
@@ -13,9 +13,9 @@ SQL
 }
 function sqf_mdpath ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
   shift
-  ls /mnt/new_misc/develop/autotools/zoc-new/duf_db >&2
+  ls $MSH_SHN_PRJTOP_DIR/duf_db >&2
   sqlite3 "$db" <<SQL
 .header on
 .mode column
@@ -25,9 +25,9 @@ SQL
 }
 function sqf_group ()
 {
-  local db="/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3"
+  local db="$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3"
   shift
-  ls /mnt/new_misc/develop/autotools/zoc-new/duf_db >&2
+  ls $MSH_SHN_PRJTOP_DIR/duf_db >&2
   sqlite3 "$db" <<SQL
 .header on
 .mode column
@@ -36,9 +36,9 @@ SQL
 }
 function sqf_files ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
   shift
-  ls /mnt/new_misc/develop/autotools/zoc-new/duf_db >&2
+  ls $MSH_SHN_PRJTOP_DIR/duf_db >&2
   sqlite3 "$db" <<SQL
 .header on
 .mode column
@@ -50,9 +50,9 @@ SQL
 }
 function sqf_exif ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
   shift
-  ls /mnt/new_misc/develop/autotools/zoc-new/duf_db >&2
+  ls $MSH_SHN_PRJTOP_DIR/duf_db >&2
   sqlite3 "$db" <<SQL
 .header on
 .mode column
@@ -64,9 +64,9 @@ SQL
 }
 function sqf ()
 {
-  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
   shift
-  ls /mnt/new_misc/develop/autotools/zoc-new/duf_db >&2
+  ls $MSH_SHN_PRJTOP_DIR/duf_db >&2
   sqlite3 "$db" <<SQL
 .header on
 .separator "	"
@@ -75,7 +75,7 @@ SQL
 }
 ##function sqfiles ()
 ##{
-##  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+##  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
 ##  shift
 ##  sqlite3 "$db" <<SQL
 ##.header on
@@ -89,14 +89,14 @@ SQL
 ##}
 ##function sqfiledatas ()
 ##{
-##  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+##  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
 ##  shift
 ##  local sql='SELECT * FROM duf_filedatas'" $@"
 ##  sqlite3 -header -column "$db" "$sql"
 ##}
 ##function sqfilenames ()
 ##{
-##  local db=/mnt/new_misc/develop/autotools/zoc-new/duf_db/${1}.sqlite3
+##  local db=$MSH_SHN_PRJTOP_DIR/duf_db/${1}.sqlite3
 ##  shift
 ##  sqlite3 "$db" << SQL
 ##.header on

@@ -16,11 +16,11 @@ function test_duf ()
   echo "----- reset $LINENO $?"
   wc -l /tmp/test_duf.tmp
 
-  sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/$database .tables >/tmp/test_duf.tmp
+  sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/$database .tables >/tmp/test_duf.tmp
   echo "----- $LINENO $?"
   wc -l /tmp/test_duf.tmp
 
-  sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/$database 'select * from duf_paths' >/tmp/test_duf.tmp
+  sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/$database 'select * from duf_paths' >/tmp/test_duf.tmp
   echo "----- $LINENO $? paths before"
   wc -l /tmp/test_duf.tmp
   
@@ -41,11 +41,11 @@ function test_duf ()
   echo "----- $LINENO $? print files"
   wc -l /tmp/test_duf.tmp
 
-  sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/$database 'select * from duf_paths' >/tmp/test_duf.tmp
+  sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/$database 'select * from duf_paths' >/tmp/test_duf.tmp
   echo "----- $LINENO $? paths after"
   wc -l /tmp/test_duf.tmp
 
-  sqlite3 /mnt/new_misc/develop/autotools/zoc-new/duf_db/$database 'select * from duf_filenames' >/tmp/test_duf.tmp
+  sqlite3 $MSH_SHN_PRJTOP_DIR/duf_db/$database 'select * from duf_filenames' >/tmp/test_duf.tmp
   echo "----- $LINENO $? filenames after"
   wc -l /tmp/test_duf.tmp
 }
