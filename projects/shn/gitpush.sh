@@ -1,12 +1,14 @@
 #!/bin/sh
 echo " gmas ----------------------------------------"
 git push gmas master
-echo " gh ----------------------------------------"
+echo " github (ghn) ----------------------------------------"
+git push ghn master
+echo " github (gh) ----------------------------------------"
 git push gh master
-echo " gitlab ----------------------------------------"
-git push gitlab master
-echo " bitbucket ----------------------------------------"
-git push bitbucket master
+echo " gitlab (gl) ----------------------------------------"
+git push gl master
+echo " bitbucket (bb) ----------------------------------------"
+git push bb master
 
 # # remote: 
 # # remote: ============================== WARNING ==============================
