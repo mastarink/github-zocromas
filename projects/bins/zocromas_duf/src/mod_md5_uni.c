@@ -355,6 +355,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
   /* .leaf_scan_fd = duf_scan_dirent_md5_content, */
   .leaf_scan_fd2 = duf_dirent_md5_contnt2,
+  
+  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            " , fn.name AS filename, fd.size AS filesize " /* */

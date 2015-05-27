@@ -6,7 +6,7 @@
 #  include "sql_beginning_types.h"
 
 
-typedef int ( *duf_scan_hook_init_t ) ( void );
+typedef int ( *duf_scan_hook_init_t ) ( duf_depthinfo_t * pdi );
 
 
 /* this is callback of type: duf_scan_hook_dir_t : */
@@ -40,6 +40,8 @@ typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 
 typedef struct
 {
+  unsigned use_std_fieldset:1;
+  unsigned use_std_selector2:1;
   const char *fieldset;
   const char *selector;
   const char *selector2;
@@ -54,9 +56,13 @@ struct duf_scan_callbacks_s
   const char *title;
   const char *name;
 
+  unsigned use_std_node;
   duf_sql_set_t node;
+  
+  unsigned use_std_leaf;
   duf_sql_set_t leaf;
-  const char *leaf_selector_total2;
+  
+  /* const char *leaf_selector_total2; */
 
   duf_scan_hook_init_t init_scan;
 

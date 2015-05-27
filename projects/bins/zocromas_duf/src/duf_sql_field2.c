@@ -10,6 +10,7 @@
 
 #include "duf_config_ref.h"
 
+#include "duf_sccb.h"
 #include "duf_sql2.h"
 
 #include "duf_sccbh_shortcuts.h"
@@ -94,7 +95,7 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
  * */
 int
 duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
-                          duf_sccb_handle_t *sccbh )
+                          duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   if ( SCCB )
@@ -102,7 +103,6 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
     unsigned long long *pvalue;
 
     pvalue = ( unsigned long long * ) sel_cb_udata;
-    /* fprintf( stderr, "OGO %s :: %llu\n", __func__, duf_sql_ull_by_name( sccb->leaf.fieldset, precord, 0 ) ); */
     if ( pvalue
 #ifdef DUF_RECORD_WITH_NROWS
          && precord->nrow == 0
@@ -110,8 +110,9 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
            )
     {
       int have_pos = 0;
+      const duf_sql_set_t *leaf_set = duf_get_leaf_sql_set( SCCB );
 
-      *pvalue = __duf_sql_ull_by_name( SCCB->leaf.fieldset, precord, &have_pos, 0 );
+      *pvalue = __duf_sql_ull_by_name( leaf_set->fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )
       {
 #ifdef DUF_RECORD_WITH_NROWS
@@ -123,7 +124,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
       else
       {
         DUF_MAKE_ERROR( r, DUF_ERROR_NO_FIELD_OPTIONAL );
-        DUF_SHOW_ERROR( "r=%d; no field %s", r, SCCB->leaf.fieldset );
+        DUF_SHOW_ERROR( "r=%d; no field %s", r, leaf_set->fieldset );
       }
     }
 #ifdef DUF_RECORD_WITH_NROWS

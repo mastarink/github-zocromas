@@ -8,7 +8,7 @@ zocromas_duf_SOURCES=				   \
 	duf.c duf_interactive.c				\
 	duf_maindb_info.c duf_maindb.c duf_action.c		    \
 	duf_dbg.c duf_config.c duf_status.c	     \
-	duf_ufilter.c \
+	duf_ufilter.c duf_ufilter_bind.c \
 	duf_options.c duf_cli_options.c duf_option.c duf_option_typed.c  \
 	duf_option_find.c duf_options_table.c		\
 	duf_option_descr.c duf_option_file.c		\
@@ -46,6 +46,7 @@ zocromas_duf_SOURCES=				   \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_template_uni.c mod_dummy_uni.c	\
+	std_mod_sets.c \
 	sql_beginning_selected.c \
 	sql_beginning_common.c \
 	sql_beginning_create.c \

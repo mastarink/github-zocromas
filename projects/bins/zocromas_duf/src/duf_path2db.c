@@ -55,6 +55,8 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi, const char *dirname, dev_t
     DUF_SQL_BIND_S( dirName, dirname, r, pstmt );
     /* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
     DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
+    /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
+
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_CHANGES( changes, r, pstmt );
     DUF_SQL_END_STMT( insert_path_table, r, pstmt );
@@ -123,10 +125,10 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, de
         {
           DUF_SQL_START_STMT( pdi, select_path, sqlv, r, pstmt );
           {
-            /* DUF_TRACE( select, 0, "S:%s (%llu,'%s')", sqlv, parentid, dirname ); */
             DUF_TRACE( select, 0, "S:%s (%llu,'%s')", sqlv, duf_levinfo_dirid_up( pdi ), dirname );
-            /* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
-            DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
+	    DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
+            /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
+
             DUF_SQL_BIND_S( dirName, dirname, r, pstmt );
             DUF_SQL_STEP( r, pstmt );
             if ( r == DUF_SQL_ROW )

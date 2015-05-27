@@ -67,7 +67,7 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sc
  * */
   DOR( r, duf_qscan_dirents2( pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, &SCCB->leaf ) );
+  DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, duf_get_leaf_sql_set( SCCB ) ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   DOR( r, duf_qscan_node_scan_before2(  /*        */ pstmt_selector, sccbh ) );
   DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );

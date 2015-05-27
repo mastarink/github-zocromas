@@ -24,8 +24,8 @@ function grepchpx ()
 
   if pushd $MSH_SHN_PROJECT_DIR &>/dev/null ; then
 #   shn_msg grep "$*"
-    shn_msg  -r --inc='*.['${ex:-ch}']' $qargs -- src/
-    eval grep  -r --inc='*.['${ex:-ch}']' $qargs -- src/
+    shn_msg  -r --inc='*.['${ex:-ch}']' $qargs src/
+    eval grep  -r --inc='*.['${ex:-ch}']' $qargs src/
     popd &>/dev/null
   fi
 }

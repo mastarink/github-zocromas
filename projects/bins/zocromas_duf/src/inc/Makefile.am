@@ -55,6 +55,7 @@ noinst_HEADERS=duf.h \
 	duf_dir_scan2.h  \
 	duf_service.h \
 	mod_exif.h \
+	std_mod_sets.h \
 	duf_print.h \
 	duf_sql2.h \
 	duf_sql_const.h \
@@ -76,7 +77,7 @@ noinst_HEADERS=duf.h \
 	duf_trace.h \
 	duf_trace_types.h \
 	duf_ufilter_types.h \
-	duf_ufilter.h \
+	duf_ufilter.h duf_ufilter_bind.h \
 	duf_uni_scan2.h \
 	duf_uni_scan.h \
 	duf_sys_wrap.h duf_utils.h \

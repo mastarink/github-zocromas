@@ -15,6 +15,7 @@
 #include "duf_sql2.h"
 
 #include "duf_ufilter.h"
+#include "duf_ufilter_bind.h"
 
 /* ###################################################################### */
 #include "duf_begfin.h"
@@ -25,51 +26,7 @@ static int
 duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 {
   DEBUG_STARTR( r );
-#define BIND_PAIR( _fld, _name ) \
-  if ( duf_config->pu->_name.flag ) \
-  { \
-    DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, duf_config->pu->_name.min, r, pstmt ); \
-    DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, duf_config->pu->_name.max, r, pstmt ); \
-  }
-  BIND_PAIR( Size, size );
-  BIND_PAIR( Same, same );
-  BIND_PAIR( ExifSame, exifsame );
-  BIND_PAIR( NameID, nameid );
-  BIND_PAIR( DirID, dirid );
-  BIND_PAIR( MTime, mtime );
-  BIND_PAIR( ExifDT, exifdt );
-  BIND_PAIR( Inode, inode );
-  BIND_PAIR( Md5ID, md5id );
-  BIND_PAIR( Sd2ID, sd5id );
-  BIND_PAIR( MimeID, mimeid );
-  BIND_PAIR( ExifID, exifid );
-  if ( duf_config->pu->glob )
-  {
-    DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob, r, pstmt );
-  }
-  if ( duf_config->pu->same_md5 )
-  {
-    duf_filepath_t fp = { 0 };
-    {
-      char *pathname;
-      char *dir;
-      char *base;
-
-      pathname = mas_strdup( duf_config->pu->same_md5 );
-      base = basename( pathname );
-      dir = dirname( pathname );
-      fp.dirid = duf_path2db( dir, NULL, &r );
-      fp.name = mas_strdup( base );
-      mas_free( pathname );
-    }
-
-    DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
-    DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
-    mas_free( fp.name );
-    if ( r >= 0 && !fp.dirid )
-      DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
-  }
-
+  DOR(r, duf_bind_ufilter_uni(pstmt));
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
 

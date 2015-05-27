@@ -73,6 +73,9 @@ duf_scan_callbacks_t duf_integrity_callbacks = {
   .title = __FILE__,
   .name = "integrity",
   .init_scan = NULL,
+
+  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = NULL,
            .selector = NULL}

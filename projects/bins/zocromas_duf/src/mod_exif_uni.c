@@ -549,8 +549,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
 
   .leaf_scan_fd2 = duf_scan_dirent_exif_content2,
 
+  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   /* filename for debug only */
-  .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
+  .leaf = {
+           .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */

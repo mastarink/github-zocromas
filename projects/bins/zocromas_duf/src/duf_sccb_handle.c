@@ -36,16 +36,19 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
 {
   DEBUG_STARTULL( cnt );
   int r = DUF_ERROR_TOTALS;
+  const char *leaf_selector_total2 = NULL;
 
-  if ( sccb && sccb->leaf.selector_total2 )
+  assert( sccb );
+  leaf_selector_total2 = duf_get_leaf_sql_set( sccb )->selector_total2;
+  if ( sccb && leaf_selector_total2 )
   {
-    char *sqlt;
+    char *sqlt = NULL;
 
     r = 0;
     sqlt = mas_strdup( "SELECT " );
     sqlt = mas_strcat_x( sqlt, "COUNT(*) AS nf" );
     sqlt = mas_strcat_x( sqlt, " " );
-    sqlt = mas_strcat_x( sqlt, sccb->leaf.selector_total2 );
+    sqlt = mas_strcat_x( sqlt, leaf_selector_total2 );
     {
       const char *csql;
 
@@ -107,7 +110,7 @@ TODO scan mode
     if ( sccb->init_scan )
     {
       DUF_TRACE( explain, 0, "to init scan" );
-      DUF_DO_TEST_R( r, sccb->init_scan(  ) );
+      DUF_DO_TEST_R( r, sccb->init_scan( pdi ) );
     }
     else
     {

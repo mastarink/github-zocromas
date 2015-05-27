@@ -247,24 +247,26 @@ int
 duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /*, duf_str_cb2_t str_cb2 */  )
 {
   DEBUG_STARTR( r );
+  const char *node_selector2 = NULL;
 
+  assert( sccbh );
+  assert( SCCB );
   /* scan directories in this directory */
 /* duf_scan_db_items2:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
 
-/* calling duf_sel_cb_(node|leaf) for each record by sccb->node.selector2 */
+/* calling duf_sel_cb_(node|leaf) for each record by node.selector2 */
   /*
-   * DUF_NODE_NODE => sccb->node.selector2, sccb->node.fieldset
-   * DUF_NODE_LEAF => sccb->leaf.selector2, sccb->leaf.fieldset
    *
    * str_cb2 (sub-item scanner):
    *       duf_scan_dirs_by_pdi_maxdepth
    *     ( duf_str_cb2_leaf_scan    )
    *     ( duf_str_cb2_leaf_scan_fd )
    * */
-  if ( SCCB->node.selector2 )
+  node_selector2 = duf_get_node_sql_set( SCCB )->selector2;
+  if ( node_selector2 )
     DOR( r, duf_scan_db_items2( DUF_NODE_NODE, duf_scan_dirs_by_pdi_maxdepth /* str_cb2 */ ,
-                                sccbh /*, sccb->node.selector2, sccb->node.fieldset */  ) );
+                                sccbh ) );
   DEBUG_ENDR( r );
 }

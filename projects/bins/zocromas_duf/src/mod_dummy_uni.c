@@ -1,46 +1,32 @@
 #define DUF_SQL_PDI_STMT
 #include <string.h>
 
-
-
-
-
-
 #include <assert.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
 #include "duf_maintenance.h"
 
-
 #include "duf_config_ref.h"
-
-
 #include "duf_levinfo_ref.h"
-
-
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
-
-
-
-
-
 /* #include "duf_dbg.h" */
 
-/* #include "sql_beginning_selected.h" */
+#include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
 
 /* ########################################################################################## */
 
 static int
-scan_init( void )
+scan_init( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+  
+  DUF_TRACE( mod, 0, "dummy scan_init %s", duf_levinfo_path( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -177,6 +163,7 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .name = "dummy",
   .def_opendir = 0,
   .init_scan = scan_init,
+  .beginning_sql_argv = &sql_beginning_selected,
 
   .node_scan_before2 = scan_node_before2,
   .node_scan_before2_deleted = scan_node_before2_deleted,
@@ -195,38 +182,16 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .dirent_file_scan_before2 = dirent_file_scan_before2,
   .dirent_dir_scan_before2 = dirent_dir_scan_before2,
 
-  .leaf = {.fieldset = "fn.pathid AS dirid " /* */
-           ", fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
-           ", dup5cnt AS nsame " /* */
-           ", fd." DUF_SQL_IDNAME " AS filenameid" /* */
-           ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
-           ", fd.md5id AS md5id" /* */
-           ,
-           .selector2 =         /* */
-           " FROM      " DUF_DBPREF "filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid            =fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF "md5       AS md ON ( md." DUF_SQL_IDNAME "=fd.md5id              ) " /* */
-           "    WHERE "         /* */
-           " fn.pathid = :parentdirID" /* */
-           ,
-           .selector_total2 =   /* */
-           " FROM " DUF_DBPREF "filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
+  .use_std_leaf = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .leaf = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL,   /* */
+           .selector_total2 = NULL, /* */
            },
-  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
-           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
-           ,
-           .selector2 =         /* */
-           " FROM " DUF_DBPREF "paths AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-#if 0
-           " LEFT JOIN " DUF_DBPREF "pathtot_dirs            AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "pathtot_files           AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-#endif
-           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+  .node = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL    /* */
            },
   .final_sql_argv = &final_sql,
 };

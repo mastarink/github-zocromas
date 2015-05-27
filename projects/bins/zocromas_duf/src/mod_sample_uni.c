@@ -343,6 +343,8 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   /* .leaf_scan = sample_scan_leaf, */
   .leaf_scan2 = sample_scan_leaf2,
 
+  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize" /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */

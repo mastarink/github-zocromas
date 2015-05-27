@@ -33,6 +33,7 @@
 
 #include "sql_beginning_selected.h"
 
+#include "std_mod_sets.h"
 
 
 /* ########################################################################################## */
@@ -281,87 +282,40 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
   DEBUG_ENDR( r );
 }
 
+/* NOTES */
+ /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
+ /* ", strftime('%Y-%m-%d %H:%M:%S',mtim,'unixepoch') AS mtimef " */
+ /* ", case cast (strftime('%w', mtim,'unixepoch') AS integer) "                                                                   */
+ /* " when 0 then 'Sun' when 1 then 'Mon' when 2 then 'Tue' when 3 then 'Wed' "                                                    */
+ /* " when 4 then 'Thu' when 5 then 'Fri' else 'Sat' end AS dowmtime, " "case cast (strftime('%m', mtim,'unixepoch') AS integer) " */
+ /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
+ /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
+ /* " else 'Wow' end AS monthmtime "                                                                                               */
+/* /NOTES */
+
 
 duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = "listing print",
   .name = "listing",
-  .init_scan = NULL,
+  .init_scan = NULL,            /* */
   .beginning_sql_argv = &sql_beginning_selected,
   /* .node_scan_before = scan_node_before, */
   .node_scan_before2 = scan_node_before2,
   /* .leaf_scan = scan_leaf, */
   .leaf_scan2 = scan_leaf2,
-  .leaf = {.fieldset =          /* */
-           "fn.Pathid AS dirid " /* */
-           ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid" /* */
-           ", fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode " /* */
-           ", STRFTIME('%s',mtim) AS mtime " /* */
-           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
-           ", fd.mode AS filemode " /* */
-           ", md.md5sum1, md.md5sum2 " /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid" /* */
-           ", md.dup5cnt AS nsame" /* */
-           ", mi.mime AS mime"  /* */
-           ", STRFTIME('%s', x.date_time) AS exifdt " /* */
-           /* ", md." DUF_SQL_IDNAME " AS md5id" (* *) */
-           ", fd.md5id AS md5id" /* */
-           ,
-           /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
-           /* ", strftime('%Y-%m-%d %H:%M:%S',mtim,'unixepoch') AS mtimef " */
-           /* ", case cast (strftime('%w', mtim,'unixepoch') AS integer) "                                                                   */
-           /* " when 0 then 'Sun' when 1 then 'Mon' when 2 then 'Tue' when 3 then 'Wed' "                                                    */
-           /* " when 4 then 'Thu' when 5 then 'Fri' else 'Sat' end AS dowmtime, " "case cast (strftime('%m', mtim,'unixepoch') AS integer) " */
-           /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
-           /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
-           /* " else 'Wow' end AS monthmtime "                                                                                               */
-           /* .leaf_selector =              (* *)                                                              */
-           /*       "SELECT %s "            (* *)                                                              */
-           /*       " FROM " DUF_DBPREF DUF_SQL_SELECTED_NAME " AS fn " (* *)                                               */
-           /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " (* *)                     */
-           /*       " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" (* *)                            */
-           /*       "    WHERE "            (* *)                                                              */
-           /*       (* "           fd.size >= %llu AND fd.size < %llu "            *)                          */
-           /*       (* "       AND (md.dup5cnt IS NULL OR (md.dup5cnt >= %llu AND md.dup5cnt < %llu)) AND " *) */
-           /*       " fn.Pathid='%llu' ",                                                                      */
-           .selector2 =         /* */
-           /* "SELECT %s " */
-           " FROM " DUF_SQL_SELECTED_NAME_FULL " AS fns " /* */
-           " JOIN " DUF_DBPREF "filenames AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas  AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-           " LEFT JOIN " DUF_DBPREF "mime       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-           " LEFT JOIN " DUF_DBPREF "exif       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-           " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-           "    WHERE "         /* */
-           " fn.Pathid=:parentdirID " /* */
-           " ORDER BY fn." DUF_SQL_IDNAME " " /* */
-           ,
-           .selector_total2 =   /* */
-           " FROM " DUF_DBPREF " filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF " md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+  .use_std_leaf = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+#if 0
+  .leaf = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL,   /* */
+           .selector_total2 = NULL /* */
            }
   ,
-  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
-           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
-           ,
-           .selector2 =         /* */
-           /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */
-           /* ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " */
-           " FROM      "        /* */
-#if 0
-           DUF_DBPREF "paths AS pt " /* */
-           " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-#else
-           DUF_SQL_SELECTED_PATHS_FULL " AS pts " /* */
-           " LEFT JOIN " DUF_DBPREF " paths AS pt ON( pts.parentid = pt.rowid ) " /* */
-           " LEFT JOIN " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_SELECTED_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-#endif
-           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
-           ,
+  .node = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL    /* */
            }
-  /* .final_sql_argv = &final_sql, */
+#endif
+  /* , .final_sql_argv = &final_sql, */
 };

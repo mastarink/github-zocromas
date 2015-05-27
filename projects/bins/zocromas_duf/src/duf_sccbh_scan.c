@@ -40,25 +40,13 @@ duf_sccbh_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 {
   DEBUG_STARTR( r );
 
-  /* duf_depthinfo_t di = {.depth = -1,         */
-  /*   .seq = 0,                                */
-  /*   .levinfo = NULL,                         */
-  /*   .u = *pu,                                */
-  /*   .opendir = sccb ? sccb->def_opendir : 0, */
-  /*   (* .name = real_path, *)                 */
-  /* };                                         */
-  /*                                            */
-  /* pdi=&di;                                   */
-
+  assert( sccbh );
   DEBUG_STEP(  );
 
-  /* assert( di.depth == -1 ); */
-  DOR( r, duf_pdi_reinit( PDI, real_path, PU, SCCB->node.selector2, PU->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
-  DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( PDI ), PDI->seq_leaf,
-             duf_levinfo_path( PDI ) );
+  DOR( r, duf_pdi_reinit( PDI, real_path, PU, duf_get_node_sql_set( SCCB )->selector2, PU->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
+  DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( PDI ), PDI->seq_leaf, duf_levinfo_path( PDI ) );
   DOR( r, duf_sccb_pdi( sccbh ) );
-  /* (* xchanges = di.changes; --- needless!? *) */
-  /* duf_pdi_close( &di ); */
+  /* duf_pdi_close( PDI ); */
 
   DEBUG_ENDR( r );
 }
@@ -70,17 +58,19 @@ duf_sccbh_path( duf_sccb_handle_t * sccbh, const char *path )
   char *real_path = NULL;
   const duf_scan_callbacks_t *sccb = SCCB;
 
-  real_path = duf_realpath( path, &r );
-
-  DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
-
-  DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
-  if ( sccb )
+  assert( sccb );
   {
+    real_path = duf_realpath( path, &r );
+    {
+      DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
+      DUF_TRACE( path, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
+
+      DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 //  duf_scan_qbeginning_sql( sccb ); ==[20140506]==> duf_open_sccb_handle
-    DOR( r, duf_sccbh_real_path( sccbh, real_path ) );
+      DOR( r, duf_sccbh_real_path( sccbh, real_path ) );
+    }
+    mas_free( real_path );
   }
-  mas_free( real_path );
   DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }
 
@@ -88,24 +78,33 @@ int
 duf_sccbh_each_path( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  HCHANGES = 0;
+
+  int DUF_UNUSED count = 0;
+  char DUF_UNUSED *const *sargv = NULL;
+
+  assert( sccbh );
+
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( SCCB ), TARGC );
   for ( int ia = 0; r >= 0 && ia < TARGC; ia++ )
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( SCCB ), ia, TARGV[ia] );
 
-  if ( TARGC <= 0 )
+  count = 1;
+  sargv = NULL;
+  HCHANGES = 0;
+  if ( TARGC > 0 )
   {
-
-    /* - evaluate sccb for NULL path */
-    DOR( r, duf_sccbh_path( sccbh, NULL ) );
+    count = TARGC;
+    sargv = TARGV;
   }
-  else
+  /* - evaluate sccb for each string from TARG[CV] as path */
+  for ( int ia = 0; r >= 0 && ia < count; ia++ )
   {
-    /* - evaluate sccb for each string from TARG[CV] as path */
-    for ( int ia = 0; r >= 0 && ia < TARGC; ia++ )
-    {
-      DOR( r, duf_sccbh_path( sccbh, TARGV[ia] ) );
-    }
+    char *cargv = NULL;
+
+    if ( sargv )
+      cargv = *sargv++;
+    DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV[ia], cargv );
+    DOR( r, duf_sccbh_path( sccbh, cargv ) );
   }
 
   DUF_TRACE( action, 1, "after scan" );

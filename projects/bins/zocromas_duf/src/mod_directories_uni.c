@@ -124,6 +124,9 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .dirent_dir_scan_before2 = directories_entry_dir2,
 
 
+  
+  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
