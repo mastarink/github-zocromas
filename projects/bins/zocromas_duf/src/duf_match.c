@@ -14,10 +14,10 @@ duf_filename_match( duf_filter_globx_t * globx, const char *filename )
   r = 1;
   if ( globx )
   {
-    if ( globx->include_files.argc )
+    if ( globx->include_fs_files.argc )
     {
-      int argc = globx->include_files.argc;
-      char *const *argv = globx->include_files.argv;
+      int argc = globx->include_fs_files.argc;
+      char *const *argv = globx->include_fs_files.argv;
 
       r = 0;
       /* DUF_TRACE_C( cfg, match, 2, "MATCH include argc:%d; %s", argc, filename ); */
@@ -30,10 +30,10 @@ duf_filename_match( duf_filter_globx_t * globx, const char *filename )
         }
       }
     }
-    if ( globx->exclude_files.argc )
+    if ( globx->exclude_fs_files.argc )
     {
-      int argc = globx->exclude_files.argc;
-      char *const *argv = globx->exclude_files.argv;
+      int argc = globx->exclude_fs_files.argc;
+      char *const *argv = globx->exclude_fs_files.argv;
 
       /* DUF_TRACE_C( cfg, match, 2, "MATCH exclude argc:%d; %s", argc, filename ); */
       for ( int ia = 0; ia < argc; ia++ )

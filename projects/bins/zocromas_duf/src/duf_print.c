@@ -784,18 +784,11 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->nsame );
     ok++;
     break;
-  case 's':                    /* prefix */
-    {
-      if ( v )
-      {
-        size_t l;
-
-        v = v < 0 ? -v : v;
-        l = ( v < bfsz ) ? v : bfsz;
-        memset( pbuffer, ' ', l );
-      }
-      ok++;
-    }
+  case '_':                    /* space */
+  case 's':                    /* space */
+    pbuffer += strlen( pbuffer );
+    memset( pbuffer, ' ', v > 0 ? v : ( v < 0 ? -v : 1 ) );
+    ok++;
     break;
   case 'P':                    /* prefix */
     if ( prefix_scb )
@@ -1051,10 +1044,17 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       else
         snprintf( format, fbsz, "%%s" );
 
-      xtimet = ( time_t ) pfi->exifdt;
-      pxtimetm = localtime_r( &xtimet, &xtimetm );
-      strftime( xtimes, sizeof( xtimes ), "%b %d %Y %H:%M:%S", pxtimetm );
-      snprintf( pbuffer, bfsz, format, xtimes );
+      if ( pfi->exifid )
+      {
+        xtimet = ( time_t ) pfi->exifdt;
+        pxtimetm = localtime_r( &xtimet, &xtimetm );
+        strftime( xtimes, sizeof( xtimes ), "%b %d %Y %H:%M:%S", pxtimetm );
+        snprintf( pbuffer, bfsz, format, xtimes );
+      }
+      else
+      {
+        strcpy( pbuffer, "___ __ ____ __:__:__" );
+      }
       ok++;
     }
     break;
@@ -1081,10 +1081,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->nameid );
     ok++;
-    break;
-  case '_':                    /* space */
-    pbuffer += strlen( pbuffer );
-    memset( pbuffer, ' ', v > 0 ? v : ( v < 0 ? -v : 1 ) );
     break;
   default:
     pbuffer += strlen( pbuffer );

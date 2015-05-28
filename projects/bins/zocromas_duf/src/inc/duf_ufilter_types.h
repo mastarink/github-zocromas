@@ -24,8 +24,8 @@ typedef struct
 
 typedef struct globx
 {
-  duf_argvc_t include_files;
-  duf_argvc_t exclude_files;
+  duf_argvc_t include_fs_files;
+  duf_argvc_t exclude_fs_files;
 } duf_filter_globx_t;
 
 
@@ -43,7 +43,9 @@ typedef struct
   duf_items_t maxitems;
   duf_limits_t dirfiles;
   duf_filter_globx_t globx;
-  char *glob;
+  char *glob_db;
+  char *glob_db_include;
+  char *glob_db_exclude;
   char *same_md5;
   /* unsigned long long sd5id; */
   /* unsigned long long md5id; */

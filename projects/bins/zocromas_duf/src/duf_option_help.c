@@ -540,6 +540,9 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
               " --format-prefix-files-tree='%%2_#%%-6M%%6_%%P'    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -fR -p --glob=IMAG1248.jpg "
               " --format-files-list='%%2_=%%-4S%%5_%%5z%%4_%%m%%_%%t%%_/%%_%%T%%_%%r%%f\\n'    	- %s", "" );
+  DUF_PRINTF( 0, "========================= as for 20150528.122815 ============" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same --glob-db='*506-unknown.jpeg'    	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -T --min-same=10 --exclude-db=Picasa.ini    	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

@@ -136,16 +136,22 @@ const duf_longval_extended_table_t optable_filter = {
    {.o = {DO_Q( "max-exifid" ) /*       */ , DO_A_R /* */ , DO_V( MAXEXIFID )} /*         */ , DO_CL( FILTER ) /*   */ ,
     /*      */ DO_OU( MAX, exifid ) /*                                                      */ , DO_H(  .... ) /*                            */ },
 
-   {.o = {DO_Q( "glob" ) /*             */ , DO_A_R /* */ , DO_V( GLOB )} /*               */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OU( STR, glob ) /*                                                        */ , DO_H( glob ) /*                             */ },
+   {.o = {DO_Q( "glob-db" ) /*          */ , DO_A_R /* */ , DO_V( GLOB_DB )} /*            */ , DO_CL( FILTER ) /*  */ ,
+    /*      */ DO_OU( STR, glob_db ) /*                                                     */ , DO_H( glob db ) /*                          */ },
+   {.o = {DO_Q( "include-db" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_DB_FILES )} /* */ , DO_CL( FILTER ) /*     */ ,
+    /*      */ DO_OU( STR, glob_db_include ) /*                                             */ , DO_H( glob db include ) /*                  */ },
+   {.o = {DO_Q( "exclude-db" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_DB_FILES )} /* */ , DO_CL( FILTER ) /*     */,
+    /*      */ DO_OU( STR, glob_db_exclude ) /*                                             */ , DO_H( glob db exclude ) /*                  */ },
+
+
    {.o = {DO_Q( "same-md5" ) /*         */ , DO_A_R /* */ , DO_V( SAME_AS )} /*            */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OU( STR, same_md5 ) /*                                                    */ , DO_H( same md5 ) /*                          */ },
+    /*      */ DO_OU( STR, same_md5 ) /*                                                    */ , DO_H( same md5 ) /*                         */ },
 #if 0
    {.o = {DO_Q( "same-md5" ) /*           */ , DO_A_O} /*                                  */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OU( PSTR, same_md5 ), DO_AT_STAGE( 1 ) /*                                 */ , DO_H( same md5 ) /*                          */ },
+    /*      */ DO_OU( PSTR, same_md5 ), DO_AT_STAGE( 1 ) /*                                 */ , DO_H( same md5 ) /*                         */ },
 #endif
    {.o = {DO_Q( "same-md5" ) /*           */ , DO_A_O} /*                                  */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_AT_STAGE( 1 ) /*   */ , DO_H( same md5 ) /*                          */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_AT_STAGE( 1 ) /*   */ , DO_H( same md5 ) /*                         */ },
 
    {.o = {.name = NULL}}
    }

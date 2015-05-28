@@ -1,0 +1,16 @@
+#!/bin/sh
+function mas_chk_all ()
+{
+  local f s
+  echo "Hook $0 ( $* )"
+  for f in $(git diff --name-only --cached ) ; do
+    s=$(stat --format='%s' $f)
+    echo "$s: $f"
+    if [[ $s ]] && [[ $s -gt 16777216 ]] ; then
+      echo "file '$f' is too big (size: $s)"
+      exit 1
+    fi
+  done
+}
+mas_chk_all $*
+exit 0

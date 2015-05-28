@@ -408,8 +408,8 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS_DIRS, /*      */ maxitems.dirs /*     */  );
 
 
-      DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_INCLUDE_FILES, /* */ globx.include_files /*     */  );
-      DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_EXCLUDE_FILES, /* */ globx.exclude_files /*     */  );
+      DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_INCL_FS_FILES, /* */ globx.include_fs_files /*     */  );
+      DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_EXCL_FS_FILES, /* */ globx.exclude_fs_files /*     */  );
 
 
 /* trace */

@@ -28,29 +28,40 @@
 #include "sql_beginning_types.h"
 
 #define DUF_SQL_UFILTER_BINDINGS \
-        "  ( (:minSize     IS NULL OR      fd.size>=:minSize)   AND (:maxSize   IS NULL OR fd.size<=:maxSize      ))  AND"   \
-        "  ( (:minSame     IS NULL OR   md.dup5cnt>=:minSame)   AND (:maxSame   IS NULL OR md.dup5cnt<=:maxSame   ))  AND"  \
-        "  ( (:minInode    IS NULL OR     fd.inode>=:minInode)  AND (:maxInode  IS NULL OR fd.inode<=:maxInode    ))  AND"  \
-        "  ( (:minMd5ID    IS NULL OR     fd.md5id>=:minMd5ID)  AND (:maxMd5ID    IS NULL OR fd.md5id<=:maxMd5ID  ))  AND"  \
-        "  ( (:minSd2ID    IS NULL OR     fd.sd5id>=:minSd2ID)  AND (:maxSd2ID    IS NULL OR fd.sd5id<=:maxSd2ID  ))  AND"  \
-        "  ( (:minMimeID   IS NULL OR    fd.mimeid>=:minMimeID) AND (:maxMimeID IS NULL OR fd.mimeid<=:maxMimeID  ))  AND"  \
-        "  ( (:minExifID   IS NULL OR    fd.exifid>=:minExifID) AND (:maxExifID IS NULL OR fd.exifid<=:maxExifID  ))  AND"  \
-        "  ( (:minMTime    IS NULL OR      fd.mtim>=datetime(:minMTime,'unixepoch'  ))         AND "  \
-        "      (:maxMTime    IS NULL OR      fd.mtim<=datetime(:maxMTime,'unixepoch'))                             )  AND"  \
-        "  ( (:minExifDT   IS NULL OR  x.date_time>=datetime(:minExifDT,'unixepoch' ))         AND "  \
-        "    (:maxExifDT   IS NULL OR  x.date_time<=datetime(:maxExifDT,'unixepoch'))                              )  AND"  \
-        "  ( (:minNameID   IS NULL OR fn." DUF_SQL_IDNAME ">=:minNameID)                       AND "  \
-        "            (:maxNameID IS NULL OR fn." DUF_SQL_IDNAME "<=:maxNameID )                                    )  AND"  \
-        "  ( (:minDirID    IS NULL OR    fn.Pathid>=:minDirID)                                 AND "  \
-        "                   (:maxDirID IS NULL OR fn.Pathid<=:maxDirID )                                           )  AND"  \
-        "  ( (:minExifSame IS NULL OR x.dupexifcnt>=:minExifSame)                              AND "  \
-        "                   (:maxExifSame   IS NULL OR md.dup5cnt<=:maxExifSame   )                                )  AND"  \
-        "  ( :GName        IS NULL OR fn.name GLOB :GName )                                    AND "  \
-        "                  ( ( :GSameAs    IS NULL OR :GSamePathID IS NULL ) "  \
-        "                            OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM filenames AS fnb "  \
-        "                                                         JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
-        "                                                         WHERE fnb.name GLOB :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
-        "                  ) "
+        "    (:minSize     IS NULL OR  fd.size>=:minSize                                  ) AND"  \
+        "    (:maxSize     IS NULL OR  fd.size<=:maxSize                                  ) AND"  \
+        "    (:minSame     IS NULL OR  md.dup5cnt>=:minSame                               ) AND"  \
+        "    (:maxSame     IS NULL OR  md.dup5cnt<=:maxSame                               ) AND"  \
+        "    (:minInode    IS NULL OR  fd.inode>=:minInode                                ) AND"  \
+        "    (:maxInode    IS NULL OR  fd.inode<=:maxInode                                ) AND"  \
+        "    (:minMd5ID    IS NULL OR  fd.md5id>=:minMd5ID                                ) AND"  \
+        "    (:maxMd5ID    IS NULL OR  fd.md5id<=:maxMd5ID                                ) AND"  \
+        "    (:minSd2ID    IS NULL OR  fd.sd5id>=:minSd2ID                                ) AND"  \
+        "    (:maxSd2ID    IS NULL OR  fd.sd5id<=:maxSd2ID                                ) AND"  \
+        "    (:minMimeID   IS NULL OR  fd.mimeid>=:minMimeID                              ) AND"  \
+        "    (:maxMimeID   IS NULL OR  fd.mimeid<=:maxMimeID                              ) AND"  \
+        "    (:minExifID   IS NULL OR  fd.exifid>=:minExifID                              ) AND"  \
+        "    (:maxExifID   IS NULL OR  fd.exifid<=:maxExifID                              ) AND"  \
+        "    (:minMTime    IS NULL OR  fd.mtim>=datetime(:minMTime,'unixepoch')           ) AND"  \
+        "    (:maxMTime    IS NULL OR  fd.mtim<=datetime(:maxMTime,'unixepoch')           ) AND"  \
+        "    (:minExifDT   IS NULL OR  x.date_time>=datetime(:minExifDT,'unixepoch')      ) AND"  \
+        "    (:maxExifDT   IS NULL OR  x.date_time<=datetime(:maxExifDT,'unixepoch')      ) AND"  \
+        "    (:minNameID   IS NULL OR  fn." DUF_SQL_IDNAME ">=:minNameID                  ) AND"  \
+        "    (:maxNameID   IS NULL OR  fn." DUF_SQL_IDNAME "<=:maxNameID                  ) AND"  \
+        "    (:minDirID    IS NULL OR  fn.Pathid>=:minDirID                               ) AND"  \
+        "    (:maxDirID    IS NULL OR  fn.Pathid<=:maxDirID                               ) AND"  \
+        "    (:minExifSame IS NULL OR  x.dupexifcnt>=:minExifSame                         ) AND"  \
+        "    (:maxExifSame IS NULL OR  md.dup5cnt<=:maxExifSame                           ) AND"  \
+        "    ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
+        "                          OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM filenames AS fnb "  \
+        "                                   JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+        "                                     WHERE fnb.name GLOB :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
+        "                  ) " \
+	" AND " \
+        "  ( :GName        IS NULL OR fn.name     GLOB :GName                             ) AND "  \
+        "  ( :GNameI       IS NULL OR fn.name     GLOB :GNameI                            ) AND "  \
+        "  ( :GNameX       IS NULL OR fn.name NOT GLOB :GNameX                            ) AND "  \
+	" 1 "
 
 
 extern duf_beginning_t sql_beginning_selected;

@@ -19,7 +19,7 @@
 /* ###################################################################### */
 
 
-  int
+int
 duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
 {
   DEBUG_STARTR( r );
@@ -41,10 +41,19 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
   DUF_SQL_BIND_PAIR( Sd2ID, sd5id );
   DUF_SQL_BIND_PAIR( MimeID, mimeid );
   DUF_SQL_BIND_PAIR( ExifID, exifid );
-  if ( duf_config->pu->glob )
+  if ( duf_config->pu->glob_db )
   {
-    DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob_db, r, pstmt );
   }
+  if ( duf_config->pu->glob_db_include )
+  {
+    DUF_SQL_BIND_S_OPT( GNameI, duf_config->pu->glob_db_include, r, pstmt );
+  }
+  if ( duf_config->pu->glob_db_exclude )
+  {
+    DUF_SQL_BIND_S_OPT( GNameX, duf_config->pu->glob_db_exclude, r, pstmt );
+  }
+
   if ( duf_config->pu->same_md5 )
   {
     duf_filepath_t fp = { 0 };

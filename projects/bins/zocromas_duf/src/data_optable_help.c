@@ -10,15 +10,14 @@
 
 #include "duf_option_help.h"
 /*
-At duf_options_table.c:
-  1. extern const duf_longval_extended_table_t optable_help[];
-  2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
-         ...
-	optable_help,
-	 ...
-
-	NULL
-      };
+ * At duf_options_table.c:
+ * 1. extern const duf_longval_extended_table_t optable_help[];
+ * 2.  static const duf_longval_extended_table_t *_lo_extended_multi[] = {
+ *    ...
+ *     optable_help,
+ *    ...
+ *   NULL
+ *  };
 */
 
 const duf_longval_extended_table_t optable_help = {

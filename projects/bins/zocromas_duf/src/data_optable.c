@@ -23,9 +23,9 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_main = {
   .table =                      /* */
   {
-   {.o = {DO_Q( "include" ) /*          */ , DO_A_R /* */ , DO_V( GLOB_INCLUDE_FILES )} /* */ , DO_CL( NODESC ) /*     */
+   {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
     /*                                                                                      */ , DO_H(  ... ) /*                             */ },
-   {.o = {DO_Q( "exclude" ) /*          */ , DO_A_R /* */ , DO_V( GLOB_EXCLUDE_FILES )} /* */ , DO_CL( NODESC ) /*     */
+   {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
     /* */ , DO_H(  ... ) /*              */ },
 
 

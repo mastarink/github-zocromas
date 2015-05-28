@@ -1,0 +1,8 @@
+git log --abbrev-commit --pretty=oneline --reverse
+git show d8ac14d1975b8aa
+git config core.pager most
+git config pager.log vimmanpager
+
+# "forget file"
+git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch projects/bins/zocromas_duf/dummy.txt' d1f37689f5e7bc22f1e9623ae716a76e3d098f5f..HEAD
+(?) git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch projects/bins/zocromas_duf/dummy.txt' ..HEAD
