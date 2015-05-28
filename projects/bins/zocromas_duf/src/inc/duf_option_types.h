@@ -6,6 +6,7 @@
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
 #  include "duf_hook_types.h"
+#  include "duf_options_enum.h"
 
 typedef enum
 {
@@ -220,6 +221,12 @@ typedef enum
   DUF_OPTION_STAGE_MAX
 } duf_option_stage_t;
 
+typedef struct
+{
+  duf_config_act_flags_combo_t test;
+  const char *name;
+  duf_option_code_t id;
+} duf_chk_act_flags_t;
 
 
 #endif

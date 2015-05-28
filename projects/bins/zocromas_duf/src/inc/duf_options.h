@@ -1,7 +1,6 @@
 #ifndef MAS_DUF_OPTIONS_H
 #  define MAS_DUF_OPTIONS_H
 
-#  include "duf_option_types.h"
 
 int duf_show_options( const char *a0 );
 

@@ -1,8 +1,6 @@
 #ifndef MAS_DUF_OPTION_NAMES_H
 #  define MAS_DUF_OPTION_NAMES_H
 
-#  include "duf_option_types.h"
-#  include "duf_options_enum.h"
 
 char *duf_cli_option_shorts( const duf_longval_extended_table_t ** xtables );
 

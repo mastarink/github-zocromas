@@ -11,10 +11,8 @@
 #include "duf_config_ref.h"
 
 
-
 #include "duf_prepare_actions.h"
 #include "duf_sccb.h"
-
 
 
 #include "duf_option_descr.h"
@@ -530,7 +528,8 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
               " --evaluate-sccb=dirs,filedata,filenames,md5,mime,exif   	- %s", "for faster testing use this path" );
 
   DUF_PRINTF( 0, "========================= as for 20150522.100438 ============" );
-  DUF_PRINTF( 0, "  run /home/mastar/.maslib/firefox/scrapbook  -dfR --min-same=900 --max-same=3000  --evaluate-sccb=listing    	- %s", "" );
+  DUF_PRINTF( 0, "  run  --db-name=temp.db.big20150522.124517 /home/mastar/.maslib/firefox/scrapbook -dfR "
+              " --min-same=900 --max-same=3000  --evaluate-sccb=listing    	- %s", "" );
   DUF_PRINTF( 0, "========================= as for 20150526.150510 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -p"
               " --format-dirs-list='-%%_%%f%%_------%%_%%r\\n'"
@@ -543,6 +542,8 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150528.122815 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same --glob-db='*506-unknown.jpeg'    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -T --min-same=10 --exclude-db=Picasa.ini    	- %s", "" );
+  DUF_PRINTF( 0, "  run / --same-as-md5=/mnt/new_media/media/photo/Фото0829.jpg  -Rdfp    	- %s", "" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same-md5 --glob-db='*506-unknown.jpeg'    	- %s", "" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
@@ -592,6 +593,94 @@ duf_option_version(  /* int argc, char *const *argv */ void )
   DEBUG_END(  );
 }
 
+duf_option_code_t
+duf_flag2code( duf_config_act_flags_combo_t fset )
+{
+  duf_option_code_t rc = DUF_OPTION_VAL_NONE;
+
+#define CHECK_FLAG_ID_ROW(_l, _u) {{.flag._l = 1}, #_l, DUF_OPTION_VAL_FLAG_ ## _u}
+  duf_chk_act_flags_t tab[] DUF_UNUSED = {
+    CHECK_FLAG_ID_ROW( info, INFO ),
+    CHECK_FLAG_ID_ROW( vacuum, VACUUM ),
+    CHECK_FLAG_ID_ROW( remove_database, REMOVE_DATABASE ),
+    CHECK_FLAG_ID_ROW( drop_tables, DROP_TABLES ),
+    CHECK_FLAG_ID_ROW( vacuum, VACUUM ),
+    CHECK_FLAG_ID_ROW( remove_database, REMOVE_DATABASE ),
+    CHECK_FLAG_ID_ROW( drop_tables, DROP_TABLES ),
+    CHECK_FLAG_ID_ROW( create_tables, CREATE_TABLES ),
+    CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
+
+    CHECK_FLAG_ID_ROW( sd5, SD5 ),
+    CHECK_FLAG_ID_ROW( md5, MD5 ),
+    CHECK_FLAG_ID_ROW( crc32, CRC32 ),
+    CHECK_FLAG_ID_ROW( mime, MIME ),
+    CHECK_FLAG_ID_ROW( exif, EXIF ),
+
+    CHECK_FLAG_ID_ROW( mdpath, MDPATH ),
+
+    CHECK_FLAG_ID_ROW( dirs, DIRS ),
+    CHECK_FLAG_ID_ROW( files, FILES ),
+
+    CHECK_FLAG_ID_ROW( dirent, DIRENT ),
+    CHECK_FLAG_ID_ROW( filedata, FILEDATA ),
+    CHECK_FLAG_ID_ROW( filenames, FILENAMES ),
+
+    CHECK_FLAG_ID_ROW( integrity, INTEGRITY ),
+    CHECK_FLAG_ID_ROW( collect, COLLECT ),
+
+    CHECK_FLAG_ID_ROW( progress, PROGRESS ),
+    CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ),
+
+    CHECK_FLAG_ID_ROW( summary, SUMMARY ),
+    CHECK_FLAG_ID_ROW( interactive, INTERACTIVE ),
+    CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS )
+  };
+#if 0
+  for ( typeof( fset.bit ) uf = 1; uf != 0; uf = uf << 1 )
+  {
+    duf_config_act_flags_combo_t tst;
+
+    tst.bit = uf;
+    /* if ( tst.bit == fset.bit ) */
+    {
+      DUF_PRINTF( 0, "%lx/%lx - %lx", ( unsigned long ) uf, ( unsigned long ) tst.bit, ( unsigned long ) fset.bit );
+    }
+  }
+#endif
+  for ( int i = 0; i < sizeof( tab ) / sizeof( tab[0] ); i++ )
+  {
+    if ( tab[i].test.bit == fset.bit )
+      rc = tab[i].id;
+  }
+  return rc;
+}
+
+duf_option_code_t
+duf_uflag2code( unsigned long ufset )
+{
+  duf_config_act_flags_combo_t fset;
+  duf_option_code_t id = DUF_OPTION_VAL_NONE;
+
+  fset.bit = ufset;
+  id = duf_flag2code( fset );
+  return id;
+}
+
+const char *
+duf_uflag2cnames( unsigned long ufset )
+{
+  duf_option_code_t id = DUF_OPTION_VAL_NONE;
+
+  id = duf_uflag2code( ufset );
+  return id == DUF_OPTION_VAL_NONE ? "" : duf_option_cnames_tmp( -1, id, NULL );
+}
+
+const char *
+duf_unflag2cnames( unsigned unfset )
+{
+  return duf_uflag2cnames( 1 << unfset );
+}
+
 void
 duf_option_showflags(  /* int argc, char *const *argv */ void )
 {
@@ -603,24 +692,21 @@ duf_option_showflags(  /* int argc, char *const *argv */ void )
                 ( unsigned long ) duf_config->cli.act.v.bit );
 
 
-
       /* *INDENT-OFF*  */
-    DUF_PRINTF( 0, "              ┌─  %s", DUF_OPT_FLAG_NAME( DO_SCCBS ) );
-    DUF_PRINTF( 0, "              │   ┌─  %s", DUF_OPT_FLAG_NAME( INTERACTIVE ) );
-    DUF_PRINTF( 0, "              │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PROGRESS ) );
-    DUF_PRINTF( 0, "              │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( COLLECT ) );
-    DUF_PRINTF( 0, "              │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( FILENAMES ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRENT ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( DIRS ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( EXIF ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CRC32 ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( SD5 ) );
-#if 0
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( PRINT ) );
-#endif
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
-    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", DUF_OPT_FLAG_NAME( INFO ) );
+    DUF_PRINTF( 0, "              ┌─  %s", duf_unflag2cnames( 26 ) );
+    DUF_PRINTF( 0, "              │   ┌─  %s", duf_unflag2cnames( 24 ) );
+    DUF_PRINTF( 0, "              │   │   ┌─  %s", duf_unflag2cnames( 22 ) );
+    DUF_PRINTF( 0, "              │   │   │   ┌─  %s", duf_unflag2cnames( 20 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   ┌─  %s", duf_unflag2cnames( 18 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 16 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 14 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 12 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 10 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 8 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 6 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 4 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 2 ) );
+    DUF_PRINTF( 0, "              │   │   │   │   │   │   │   │   │   │   │   │   │   ┌─  %s", duf_unflag2cnames( 0 ) );
     DUF_PRINTF( 0, "   ┌──────────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─┐" );
       /* *INDENT-ON*  */
 
@@ -636,21 +722,19 @@ duf_option_showflags(  /* int argc, char *const *argv */ void )
     DUF_PRINTF( 0, "│" );
       /* *INDENT-OFF*  */
     DUF_PRINTF( 0, "   └────────────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┘" );
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( VACUUM ) );
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
-#if 0
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( TREE ) );
-#endif
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MD5 ) );
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MIME ) );
-    DUF_PRINTF( 0, "                │   │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( MDPATH ) );
-    DUF_PRINTF( 0, "                │   │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( FILES ) );
-    DUF_PRINTF( 0, "                │   │   │   │   └─ %s", DUF_OPT_FLAG_NAME( FILEDATA ) );
-    DUF_PRINTF( 0, "                │   │   │   └─ %s", DUF_OPT_FLAG_NAME( INTEGRITY ) );
-    DUF_PRINTF( 0, "                │   │   └─ %s", DUF_OPT_FLAG_NAME( UNI_SCAN ) );
-    DUF_PRINTF( 0, "                │   └─ %s", DUF_OPT_FLAG_NAME( SUMMARY ) );
-    DUF_PRINTF( 0, "                └─ %s", DUF_OPT_FLAG_NAME( BEGINNING_SQL ) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 1) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 3) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 5) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 7) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 9) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 11) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   │   └─ %s", duf_unflag2cnames( 13) );
+    DUF_PRINTF( 0, "                │   │   │   │   │   └─ %s", duf_unflag2cnames( 15) );
+    DUF_PRINTF( 0, "                │   │   │   │   └─ %s", duf_unflag2cnames( 17) );
+    DUF_PRINTF( 0, "                │   │   │   └─ %s", duf_unflag2cnames( 19) );
+    DUF_PRINTF( 0, "                │   │   └─ %s", duf_unflag2cnames( 21) );
+    DUF_PRINTF( 0, "                │   └─ %s", duf_unflag2cnames( 23) );
+    DUF_PRINTF( 0, "                └─ %s", duf_unflag2cnames( 25) );
       /* *INDENT-ON*  */
   }
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
@@ -691,7 +775,21 @@ duf_option_showflags(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "                                                              │ │ └─ --disable-calculate" );
   DUF_PRINTF( 0, "                                                              │ └─ --disable-insert" );
   DUF_PRINTF( 0, "                                                              └─ --disable-update" );
+#if 0
+  {
+    duf_option_code_t id = DUF_OPTION_VAL_NONE;
 
+    duf_config_act_flags_combo_t vv = {
+      .flag.progress = 1
+    };
+    id = duf_flag2code( vv );
+    DUF_PRINTF( 0, "id:%u - %s", id, duf_option_cnames_tmp( -1, id, NULL ) );
+    for ( unsigned u = 0; u < 30; u++ )
+    {
+      DUF_PRINTF( 0, "====================== %u. %s", u, duf_unflag2cnames( u ) );
+    }
+  }
+#endif
   DEBUG_END(  );
 }
 

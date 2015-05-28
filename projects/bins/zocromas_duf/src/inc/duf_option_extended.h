@@ -2,7 +2,6 @@
 #  define MAS_DUF_OPTION_EXTENDED_H
 
 #  include "duf_option_types.h"
-#  include "duf_options_enum.h"
 
 
 extern const duf_longval_extended_table_t **lo_extended_table_multi;

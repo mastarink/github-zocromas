@@ -80,12 +80,14 @@ duf_interactive( void )
     while ( r >= 0 && DUF_ACT_FLAG( interactive ) )
     {
       r = 0;
+#if 0
       if ( DUF_ACT_FLAG( beginning_sql ) )
       {
         /* TODO:reset selection */
         sql_beginning_tables.done = 0;
         /* global_status.selection_done = 0; */
       }
+#endif
       /* DOR( r, duf_scan_beginning_ssql( &sql_beginning_tables, 0, NULL ) ); */
       DOR( r,
            duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */ , DUF_U_FLAG( recursive ),

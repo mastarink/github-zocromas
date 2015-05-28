@@ -1,8 +1,6 @@
 #ifndef MAS_DUF_OPTION_FIND_H
 #  define MAS_DUF_OPTION_FIND_H
 
-#  include "duf_option_types.h"
-#  include "duf_options_enum.h"
 
 /* const duf_longval_extended_t *duf_find_name_long( const char *name, int witharg, const duf_longval_extended_t * xtended, int soft, int *pr ); */
 

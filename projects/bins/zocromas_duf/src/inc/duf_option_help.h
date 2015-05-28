@@ -1,8 +1,6 @@
 #ifndef MAS_DUF_OPTION_HELP_H
 #  define MAS_DUF_OPTION_HELP_H
 
-#  include "duf_option_types.h"
-#  include "duf_options_enum.h"
 
 
 

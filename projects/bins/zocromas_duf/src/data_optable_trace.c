@@ -4,8 +4,6 @@
 #include "duf_levinfo_types.h"
 
 #include "duf_config_ref.h"
-#include "duf_option_types.h"
-#include "duf_options_enum.h"
 #include "duf_optable_def.h"
 
 /*

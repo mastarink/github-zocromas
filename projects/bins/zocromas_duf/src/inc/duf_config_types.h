@@ -2,12 +2,7 @@
 #  define MAS_DUF_CONFIG_TYPES_H
 
 #  include "duf_cli_types.h"
-#  include "duf_item_types.h"
-#  include "duf_ufilter_types.h"
-
 #  include "duf_option_types.h"
-#  include "duf_flags_types.h"
-/* #include "duf_types.h" */
 
 typedef struct
 {

@@ -3,8 +3,6 @@
 #include "duf_ufilter_types.h"
 #include "duf_levinfo_types.h"
 
-#include "duf_option_types.h"
-#include "duf_options_enum.h"
 #include "duf_optable_def.h"
 /*
 At duf_options_table.c:
@@ -33,8 +31,10 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, collect ) /*                           */ , DO_H( collect mode ) /*                     */ },
    {.o = {DO_Q( "interactive" ) /*      */ , DO_A_N /* */ , DO_VF( INTERACTIVE )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*              */ },
+#if 0
    {.o = {DO_Q( "selection" ) /*        */ , DO_A_N /* */ , DO_VF( BEGINNING_SQL ) /* */ } /* */ , DO_CL( CONTROL ) /*   */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_STAGE_ANY /*        */ , DO_H(  ... ) /*                            */ },
+#endif
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( u, recursive ), DO_STAGE_ANY /*                    */ , DO_H( recursive ) /*                        */ },
    {.o = {DO_Q( "if-recursive" ) /*     */ , DO_A_N} /*                                    */ , DO_CL( CONTROL ) /* */ ,
@@ -78,7 +78,7 @@ const duf_longval_extended_table_t optable_flag = {
 
    {.o = {DO_Q( "mime" ) /*             */ , DO_A_N /* */ , DO_VF( MIME )} /*              */ , DO_CL( SCAN ) /*    */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, mime ) /*                              */ , DO_H( collect mime data ) /*              */ },
-   {.o = {DO_Q( "use-binformat" ) /*        */ , DO_A_N /* */ , DO_VF( BINFORMAT )} /*     */ , DO_CL( PRINT ) /*   */ ,
+   {.o = {DO_Q( "use-binformat" ) /*        */ , DO_A_N /* */ , DO_VF( USE_BINFORMAT )} /* */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, use_binformat ) /*                     */ , DO_H( use bin format ) /*                   */ },
 #if 0
    {.o = {DO_Q( "print" ) /*             */ , DO_A_N /* */ , DO_VF( PRINT )} /*             */ , DO_CL( PRINT ) /*   */ ,

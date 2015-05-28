@@ -1,8 +1,6 @@
 #ifndef MAS_DUF_OPTION_DESCR_H
 #  define MAS_DUF_OPTION_DESCR_H
 
-#  include "duf_option_types.h"
-#  include "duf_options_enum.h"
 
 /* char *duf_option_description( int longindex, int *pr );                                                                     */
 char *duf_option_description_d( int longindex, const char *delimh, const char *delim, int *pr );

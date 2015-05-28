@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 #include "duf_config_types.h"
-#include "duf_option_types.h"
 #include "duf_option_defs.h"
 #include "duf_cli_types.h"
 

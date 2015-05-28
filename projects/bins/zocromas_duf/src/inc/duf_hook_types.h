@@ -1,7 +1,6 @@
 #ifndef MAS_DUF_HOOK_TYPES_H
 #  define MAS_DUF_HOOK_TYPES_H
 
-/* #  include "duf_sccb_way.h" */
 #  include "duf_record_types.h"
 #  include "sql_beginning_types.h"
 

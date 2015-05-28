@@ -1,7 +1,6 @@
 #ifndef MAS_DUF_OPTION_RESTORE_H
 #  define MAS_DUF_OPTION_RESTORE_H
 
-#  include "duf_option_types.h"
 
 
 char *duf_restore_some_options( const char *a0 );
