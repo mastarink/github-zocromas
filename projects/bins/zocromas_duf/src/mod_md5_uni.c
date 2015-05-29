@@ -337,8 +337,8 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " fd.md5id IS NULL AND" /* */
            
 	   " sz.size > 0 AND"
-	   "(  :Fast IS NULL OR sz.dupzcnt > 1 ) AND"
-	   "(  :Fast IS NULL OR sd.dup2cnt > 1 ) AND"
+	   "(  :fFast IS NULL OR sz.dupzcnt > 1 ) AND"
+	   "(  :fFast IS NULL OR sd.dup2cnt > 1 ) AND"
 
            " fn.Pathid=:parentdirID " /* */
            ,
@@ -351,8 +351,8 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " WHERE "            /* */
            " fd.md5id IS NULL AND" /* */
            " sz.size > 0 AND" /* */
-	   "(  :Fast IS NULL OR  sz.dupzcnt > 1 ) AND" /* */
-	   "(  :Fast IS NULL OR  sd.dup2cnt > 1 ) AND" /* */
+	   "(  :fFast IS NULL OR  sz.dupzcnt > 1 ) AND" /* */
+	   "(  :fFast IS NULL OR  sd.dup2cnt > 1 ) AND" /* */
 	   " 1 " /* */
   }
 ,

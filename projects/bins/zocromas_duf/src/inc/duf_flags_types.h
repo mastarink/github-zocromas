@@ -37,6 +37,7 @@ typedef struct
   unsigned beginning_sql:1; /* do 'beginning' sql's again (first time mandatory!) */
 #endif
   unsigned do_sccbs:1;
+  unsigned fast:1;
 } duf_config_act_flags_t;
 typedef union
 {

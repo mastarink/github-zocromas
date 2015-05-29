@@ -9,6 +9,7 @@
 
 #include "duf_maintenance.h"
 #include "duf_config_ref.h"
+#include "duf_option_defs.h"
 
 #include "duf_path2db.h"
 #include "duf_sql2.h"
@@ -54,6 +55,7 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
     DUF_SQL_BIND_S_OPT( GNameX, duf_config->pu->glob_db_exclude, r, pstmt );
   }
 
+  DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACT_FLAG( fast ), r, pstmt );
   if ( duf_config->pu->same_md5 )
   {
     duf_filepath_t fp = { 0 };

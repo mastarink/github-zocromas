@@ -634,7 +634,8 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
 
     CHECK_FLAG_ID_ROW( summary, SUMMARY ),
     CHECK_FLAG_ID_ROW( interactive, INTERACTIVE ),
-    CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS )
+    CHECK_FLAG_ID_ROW( do_sccbs, DO_SCCBS ),
+    CHECK_FLAG_ID_ROW( fast, FAST ),
   };
 #if 0
   for ( typeof( fset.bit ) uf = 1; uf != 0; uf = uf << 1 )

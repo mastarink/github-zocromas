@@ -46,6 +46,7 @@ typedef enum
   DUF_OPTION_VAL_LSFILES = 'p', /* new implementation 20150518.083230 */
 #  endif
   DUF_OPTION_VAL_FLAG_SUMMARY = 's',
+  DUF_OPTION_VAL_FLAG_FAST = 'F',
 
   /* actions */
   DUF_OPTION_VAL_FLAG_COLLECT = 'i',

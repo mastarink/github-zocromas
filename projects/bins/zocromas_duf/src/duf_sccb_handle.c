@@ -20,6 +20,7 @@
 #include "duf_sccb.h"
 
 #include "duf_sccb_begfin.h"
+#include "duf_ufilter_bind.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
@@ -49,6 +50,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
 
       csql = sqlt;
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
+      duf_bind_ufilter_uni( pstmt );
       DUF_SQL_STEP( r, pstmt );
       if ( r == DUF_SQL_ROW )
       {
