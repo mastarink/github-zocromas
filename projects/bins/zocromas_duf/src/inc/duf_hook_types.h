@@ -61,6 +61,7 @@ struct duf_scan_callbacks_s
   unsigned use_std_leaf;
   duf_sql_set_t leaf;
   
+  unsigned count_nodes:1;
   /* const char *leaf_selector_total2; */
 
   duf_scan_hook_init_t init_scan;
@@ -89,7 +90,7 @@ typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 
 struct duf_sccb_handle_s
 {
-  unsigned long long total_files;
+  unsigned long long total_items;
   int targc;
   char *const *targv;
   const duf_ufilter_t *pu;

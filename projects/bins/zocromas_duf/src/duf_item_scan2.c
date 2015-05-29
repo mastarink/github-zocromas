@@ -14,7 +14,7 @@
 #include "duf_config_ref.h"     /* for DUF_ACT_FLAG( progress ) !ONLY! */
 #include "duf_option_defs.h"    /* for DUF_ACT_FLAG( progress ) !ONLY! */
 
-#include "duf_utils.h" /* duf_percent */ 
+#include "duf_utils.h"          /* duf_percent */
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
@@ -117,8 +117,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
  * */
     PDI->seq++;
     PDI->seq_leaf++;
-    if ( DUF_ACT_FLAG( progress ) )
-      duf_percent( PDI->seq_leaf, TOTFILES, duf_uni_scan_action_title( SCCB ) );
+    if ( DUF_ACT_FLAG( progress ) && !SCCB->count_nodes )
+      duf_percent( PDI->seq_leaf, TOTITEMS, duf_uni_scan_action_title( SCCB ) );
     DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
 
     /* called both for leaves (files) and nodes (dirs) */
@@ -154,6 +154,9 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
  * */
     PDI->seq++;
     PDI->seq_node++;
+    if ( DUF_ACT_FLAG( progress ) && SCCB->count_nodes )
+      duf_percent( PDI->seq_node, TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1, duf_uni_scan_action_title( SCCB ) );
+
     DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
 
     /* called both for leaves (files) and nodes (dirs) */
@@ -333,6 +336,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
     match_cb2 = NULL /* duf_match_node2 ?? */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 %s", set_type_title );
     DUF_TRACE( scan, 2, "set sel_cb2 <= cb2 %s", set_type_title );
+    DUF_TRACE( scan_de_dir, 0, "%llu : %d / %d", PDI->seq, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
 #if 0
     sql_set = &SCCB->node;
 #elif 0

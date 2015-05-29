@@ -545,6 +545,14 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run / --same-as-md5=/mnt/new_media/media/photo/Фото0829.jpg  -Rdfp    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same-md5 --glob-db='*506-unknown.jpeg'    	- %s", "" );
   DUF_PRINTF( 0, "  run --memusage  --nosccbs --vacuum --flags    	- %s", "" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20150529.151033 ============" );
+  DUF_PRINTF( 0, "  run --progress  -F     /mnt/new_media/media/photo/ --remove-database -PO -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif    	- %s", "" );
+  DUF_PRINTF( 0, "  run --progress  --fast /mnt/new_media/media/photo/ --remove-database -PO -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif    	- %s", "" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

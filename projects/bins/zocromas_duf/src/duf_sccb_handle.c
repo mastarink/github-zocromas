@@ -93,10 +93,10 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     {
       int rt = 0;
 
-      TOTFILES = duf_count_total_items( SCCB, &rt ); /* reference */
+      TOTITEMS = duf_count_total_items( SCCB, &rt ); /* reference */
 /* total_files for progress bar only :( */
-      DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", TOTFILES );
-      DUF_TRACE( explain, 0, "%llu files registered in db", TOTFILES );
+      DUF_SCCB( DUF_TRACE, action, 0, "total_files: %llu", TOTITEMS );
+      DUF_TRACE( explain, 0, "%llu files registered in db", TOTITEMS );
     }
 
 /*

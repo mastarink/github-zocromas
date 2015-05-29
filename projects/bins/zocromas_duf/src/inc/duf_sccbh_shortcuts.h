@@ -3,7 +3,7 @@
 
 #  define PDI (sccbh->pdi)
 #  define SCCB (sccbh->sccb)
-#  define TOTFILES (sccbh->total_files)
+#  define TOTITEMS (sccbh->total_items)
 #  define PU (sccbh->pu)
 #  define HCHANGES (sccbh->changes)
 #  define TARGC (sccbh->targc)

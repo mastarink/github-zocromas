@@ -68,7 +68,6 @@ typedef struct duf_depthinfo_s
   unsigned long long seq;
   unsigned long long seq_leaf;
   unsigned long long seq_node;
-  /* unsigned long long total_files; */
   duf_items_t items;
   const duf_ufilter_t *pu;
   duf_context_t context;
