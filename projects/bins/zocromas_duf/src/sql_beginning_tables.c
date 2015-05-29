@@ -11,6 +11,7 @@
 duf_sql_sequence_t sql_beginning_tables = {
   .done = 0,
   .sql = {
+          "BEGIN" /* */ ,
 #ifndef DUF_SQL_TABLES_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHTOT_FILES_FULL /* */ ,
 #endif
@@ -53,5 +54,6 @@ duf_sql_sequence_t sql_beginning_tables = {
            *
            *  - see mod_integrity_uni.c
            * */
+          "END" /* */ ,
           NULL}
 };

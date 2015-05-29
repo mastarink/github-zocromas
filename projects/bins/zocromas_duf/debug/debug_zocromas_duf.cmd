@@ -7,9 +7,7 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-
-# b duf_open_sccb_handle
-b duf_path2db.c:306
+b duf_sccb_handle.c:126
 
 run
 bt

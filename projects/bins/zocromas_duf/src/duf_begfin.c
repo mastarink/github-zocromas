@@ -26,7 +26,7 @@ static int
 duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 {
   DEBUG_STARTR( r );
-  DOR(r, duf_bind_ufilter_uni(pstmt));
+  DOR( r, duf_bind_ufilter_uni( pstmt ) );
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
 
@@ -57,7 +57,10 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
         if ( r >= 0 )
         {
           DUF_SQL_STEP( r, pstmt );
+/* DUF_SHOW_ERROR( "@@@ %s", duf_error_name(r) ); */
           DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+/* DUF_SHOW_ERROR( "@@@ %s: %s", duf_error_name(r),  *psql); */
+
         }
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }

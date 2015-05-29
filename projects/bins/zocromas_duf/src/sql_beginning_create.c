@@ -49,6 +49,7 @@ duf_sql_sequence_t sql_beginning_clear = {.done = 0,
 
 duf_sql_sequence_t sql_beginning_create = {.done = 0,
   .sql = {
+          "BEGIN" /* */ ,
           "CREATE TABLE IF NOT EXISTS " /* */
           DUF_DBADMPREF "log ("
 #ifdef DUF_USE_IDCOL
@@ -362,7 +363,7 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           " tagnameid INTEGER NOT NULL, " /* */
           " itemtype TEXT NOT NULL, " /* */
           " itemid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) " /* */
-/*          " , FOREIGN KEY(itemid)  REFERENCES paths(" DUF_SQL_IDNAME ") " */  /* */
+          /*          " , FOREIGN KEY(itemid)  REFERENCES paths(" DUF_SQL_IDNAME ") " *//* */
           " , FOREIGN KEY(tagnameid) REFERENCES tagnames(" DUF_SQL_IDNAME ") )",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "unitags_uniq ON unitags (tagnameid, itemid)",
 
@@ -371,6 +372,6 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
 /******************************************************************************************************/
 
 
-
+          "END" /* */ ,
           NULL}
 };

@@ -122,6 +122,7 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   if ( sccbh )
   {
     /* final */
+    DUF_TRACE( scan, 0, "final sql %s", SCCB->title );
     DOR( r, duf_scan_final_sql( SCCB ) );
     mas_free( sccbh );
   }

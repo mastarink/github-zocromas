@@ -179,10 +179,6 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
   DUF_SFIELD2( filename );
   DUF_TRACE( sd5, 0, "+" );
 
-  {
-    DUF_SHOW_ERROR( "@@@@@ %s", filename );
-  }
-
   memset( md, 0, sizeof( md ) );
   if ( !duf_config->cli.disable.flag.calculate )
     r = duf_make_sd5_uni( fd, md );
@@ -219,7 +215,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "sd5 SET dup2cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "sd5 AS sd " /* */
-          " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.md5id=sd." DUF_SQL_IDNAME ") " /* */
+          " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.sd5id=sd." DUF_SQL_IDNAME ") " /* */
           " WHERE " DUF_DBPREF "sd5.sd5sum1=sd.sd5sum1 AND " DUF_DBPREF "sd5.sd5sum2=sd.sd5sum2)" /* */
           ,
           NULL}

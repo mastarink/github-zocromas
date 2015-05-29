@@ -49,6 +49,7 @@ register_filedata( const char *fname_unused, const struct stat *pst_file, duf_de
 
 static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
+#if 0
           "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "filedatas AS fd " /* */
           " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md." DUF_SQL_IDNAME ") " /* */
@@ -60,7 +61,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
           " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
           " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
           ,
-
+#endif
           "DELETE FROM " DUF_DBPREF "sizes",
           "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /* */
           "SELECT size, COUNT(*) " /* */

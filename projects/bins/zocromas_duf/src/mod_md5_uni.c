@@ -326,16 +326,6 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
-           /* .selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " (* *)       */
-           /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " (* *) */
-           /*       " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" (* *)         */
-           /*       " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" (* *)      */
-           /*       "    WHERE "            (* *)                                          */
-           /*       " fd.md5id IS NULL AND" (* *)                                          */
-           /*       " sz.size > 0 AND"                                                     */
-           /*       (* " sz.dupzcnt > 1 AND "  (* *) *)                                    */
-           /*       " fn.Pathid='%llu' "    (* *)                                          */
-           /*       ,                                                                      */
            .selector2 =         /* */
            /* "SELECT %s " */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -345,9 +335,11 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
            " fd.md5id IS NULL AND" /* */
-           " sz.size > 0 AND"
-           /* "       sz.dupzcnt > 1 AND "  (* *) */
-           /* "                sd.dup2cnt > 1 AND " (* *) */
+           
+	   " sz.size > 0 AND"
+	   "(  :Fast IS NULL OR sz.dupzcnt > 1 ) AND"
+	   "(  :Fast IS NULL OR sd.dup2cnt > 1 ) AND"
+
            " fn.Pathid=:parentdirID " /* */
            ,
            .selector_total2 =   /* */
@@ -358,9 +350,12 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " fd.md5id IS NULL AND" /* */
-           /* "        sz.dupzcnt > 1 AND "      (* *) */
-           /* "                sd.dup2cnt > 1 AND " (* *) */
-           " sz.size > 0 "},
+           " sz.size > 0 AND" /* */
+	   "(  :Fast IS NULL OR  sz.dupzcnt > 1 ) AND" /* */
+	   "(  :Fast IS NULL OR  sd.dup2cnt > 1 ) AND" /* */
+	   " 1 " /* */
+  }
+,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,
