@@ -12,7 +12,6 @@ noinst_HEADERS=duf.h \
 	duf_cli_types.h \
 	duf_config4trace_ref.h duf_config.h duf_config_ref.h duf_config_types.h \
 	duf_context.h \
-	duf_db2path.h \
 	duf_dbg.h \
 	duf_debug_defs.h \
 	duf_def.h \

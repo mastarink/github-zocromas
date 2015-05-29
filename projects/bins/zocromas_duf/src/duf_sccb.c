@@ -8,17 +8,9 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"
-
-#include "duf_option_defs.h"
-#include "duf_levinfo_ref.h"
-
-#include "duf_dir_scan2.h"
-
-#include "duf_sccb_def.h"
-
 #include "duf_sccbh_shortcuts.h"
 #include "std_mod_sets.h"
+
 /* ###################################################################### */
 #include "duf_sccb.h"
 /* ###################################################################### */

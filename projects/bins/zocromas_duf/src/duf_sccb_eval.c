@@ -11,7 +11,6 @@
 
 
 #include "duf_config_ref.h"
-#include "duf_status_ref.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"
@@ -19,7 +18,6 @@
 
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
-#include "duf_prepare_actions.h"
 
 
 #include "duf_sccbh_shortcuts.h"

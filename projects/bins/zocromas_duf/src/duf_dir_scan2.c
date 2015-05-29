@@ -8,30 +8,15 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
-#include "duf_status_ref.h"
 
 #include "duf_pdi.h"
 #include "duf_levinfo_ref.h"
 
-#include "duf_item_scan2.h"
-
-#include "duf_path2db.h"
-
-
-#include "duf_sql.h"
-#include "duf_sql2.h"
-
 #include "duf_dir_scan2_stages.h"
-
-#include "duf_ufilter.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
-#include "duf_sccb_begfin.h"
 
-/* #include "duf_item_match2.h" */
-
-/* #include "duf_uni_scan2.h" */
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_dir_scan2.h"

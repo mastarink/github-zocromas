@@ -1,7 +1,6 @@
 #ifndef MAS_DUF_ITEM_SCAN2_H
 #  define MAS_DUF_ITEM_SCAN2_H
 
-/* #include "duf_sccb_way.h" */
 #  include "duf_scan_types.h"   /* duf_node_type_t */
 
 

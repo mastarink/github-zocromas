@@ -18,7 +18,6 @@
 #include "duf_sccb_def.h"
 
 #include "duf_sccbh_shortcuts.h"
-#include "std_mod_sets.h"
 #include "duf_sccb.h"
 /* ###################################################################### */
 #include "duf_sccbh.h"

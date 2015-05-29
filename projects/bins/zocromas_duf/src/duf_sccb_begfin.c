@@ -5,39 +5,14 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_service.h"
-#include "duf_config_ref.h"
-#include "duf_status_ref.h"
-
 #include "duf_sccb.h"
-
-#include "duf_sql.h"
-#include "duf_sql2.h"
-
-#include "duf_dir_scan2_stages.h"
-
 #include "duf_begfin.h"
-
 
 /* ###################################################################### */
 #include "duf_sccb_begfin.h"
 /* ###################################################################### */
 
 
-#if 0
-int
-duf_scan_qbeginning_sql( const duf_scan_callbacks_t * sccb )
-{
-  DEBUG_STARTR( r );
-  if ( !global_status.selection_done )
-  {
-    DOR( r, duf_scan_beginning_sql( sccb ) );
-    /* if ( r >= 0 ) */
-    global_status.selection_done = 1;
-  }
-  DEBUG_ENDR( r );
-}
-#endif
 int
 duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb )
 {

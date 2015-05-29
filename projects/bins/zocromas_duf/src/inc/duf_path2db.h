@@ -1,7 +1,6 @@
 #ifndef MAS_DUF_PATH2DB_H
 #  define MAS_DUF_PATH2DB_H
 
-#  include "duf_levinfo_types.h"
 
 #if 0
 unsigned long long duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dename, int caninsert, dev_t dev_id, ino_t dir_ino,

@@ -17,7 +17,7 @@ zocromas_duf_SOURCES=				   \
 	duf_option_restore.c	       \
 							 \
 	duf_filedata.c					   \
-	duf_add.c duf_path.c duf_path2db.c duf_db2path.c    \
+	duf_add.c duf_path.c duf_path2db.c    \
 	duf_tags.c					     \
 	duf_item_scan2.c				      \
 	duf_uni_scan.c duf_prepare_actions.c duf_uni_scan2.c   \
