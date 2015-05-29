@@ -34,7 +34,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 }
 
 int
-duf_scan_beginning_ssql( duf_beginning_t * ssql, int bind, const char *title )
+duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
 {
   DEBUG_STARTR( r );
 

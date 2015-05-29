@@ -25,22 +25,22 @@ static int
 scan_init( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  
+
   DUF_TRACE( mod, 0, "dummy scan_init %s", duf_levinfo_path( pdi ) );
 
   DEBUG_ENDR( r );
 }
 
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
   DUF_SFIELD2( filename );
+  const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi );
 
   DUF_TRACE( mod, 0, "dummy dirent %s : %s", duf_levinfo_path( pdi ), filename );
   assert( fd == duf_levinfo_dfd( pdi ) );
-  assert( pst_file == duf_levinfo_stat( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -149,7 +149,7 @@ dirent_file_scan_before2( const char *fname, const struct stat *pstat, duf_depth
   DEBUG_ENDR( r );
 }
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
 
 
@@ -182,8 +182,8 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .dirent_file_scan_before2 = dirent_file_scan_before2,
   .dirent_dir_scan_before2 = dirent_dir_scan_before2,
 
-  .use_std_leaf = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   .leaf = {
            .fieldset = NULL,    /* */
            .selector2 = NULL,   /* */

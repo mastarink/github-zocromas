@@ -3,7 +3,7 @@
 
 #  include "sql_beginning_types.h"
 
-int duf_scan_beginning_ssql( duf_beginning_t * ssql, int bind, const char *title );
+int duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title );
 
 #endif
 

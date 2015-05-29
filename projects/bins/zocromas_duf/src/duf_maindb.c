@@ -76,7 +76,7 @@ duf_main_db_tune( void )
   }
 #endif
 /* TODO : part to only after possible tables creation */
-  duf_scan_beginning_ssql( &sql_beginning_common, 0, NULL );
+  duf_eval_sql_sequence( &sql_beginning_common, 0, NULL );
   DEBUG_ENDR( r );
 }
 

@@ -26,7 +26,7 @@ unitags
 tagnames
 */
 
-duf_beginning_t sql_beginning_clear = {.done = 0,
+duf_sql_sequence_t sql_beginning_clear = {.done = 0,
   .sql = {
           "DROP TABLE IF EXISTS crc32",
           "DROP TABLE IF EXISTS exif",
@@ -47,7 +47,7 @@ duf_beginning_t sql_beginning_clear = {.done = 0,
           NULL}
 };
 
-duf_beginning_t sql_beginning_create = {.done = 0,
+duf_sql_sequence_t sql_beginning_create = {.done = 0,
   .sql = {
           "CREATE TABLE IF NOT EXISTS " /* */
           DUF_DBADMPREF "log ("

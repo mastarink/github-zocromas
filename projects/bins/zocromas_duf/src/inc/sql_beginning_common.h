@@ -4,6 +4,6 @@
 
 #include "sql_beginning_types.h"
 
-extern duf_beginning_t sql_beginning_common;
+extern duf_sql_sequence_t sql_beginning_common;
 
 #endif

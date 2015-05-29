@@ -353,12 +353,11 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
 }
 
 static int
-duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
   assert( fd == duf_levinfo_dfd( pdi ) );
-  assert( pst_file == duf_levinfo_stat( pdi ) );
 
 
   DUF_UFIELD2( dataid );
@@ -530,14 +529,13 @@ duf_scan_dirent_exif_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct s
 
 
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "filedatas AS fd " /* */
           " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
           " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
           ,
-
           NULL}
 };
 
@@ -547,10 +545,10 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
   .name = "exif",
   .def_opendir = 1,
 
-  .leaf_scan_fd2 = duf_scan_dirent_exif_content2,
+  .leaf_scan_fd2 = dirent_contnt2,
 
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {
            .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */

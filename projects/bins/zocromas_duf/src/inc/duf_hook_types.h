@@ -15,7 +15,7 @@ typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned l
 typedef int ( *duf_scan_hook2_file_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 typedef int ( *duf_scan_hook2_item_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
-typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, const struct stat * pst_file, duf_depthinfo_t * pdi );
+typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat * pst_file, */ duf_depthinfo_t * pdi );
 
 typedef int ( *duf_scan_hook2_dirent_t ) ( const char *fname, const struct stat * pstat, /* unsigned long long dirid, */ duf_depthinfo_t * pdi );
 
@@ -81,8 +81,8 @@ struct duf_scan_callbacks_s
   duf_scan_hook2_dirent_t dirent_file_scan_before2;
   duf_scan_hook2_dirent_t dirent_dir_scan_before2;
 
-  duf_beginning_t *beginning_sql_argv;
-  duf_beginning_t *final_sql_argv;
+  duf_sql_sequence_t *beginning_sql_argv;
+  duf_sql_sequence_t *final_sql_argv;
 };
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

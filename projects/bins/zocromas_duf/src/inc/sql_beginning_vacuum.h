@@ -4,6 +4,6 @@
 
 #include "sql_beginning_types.h"
 
-extern duf_beginning_t sql_beginning_vacuum;
+extern duf_sql_sequence_t sql_beginning_vacuum;
 
 #endif

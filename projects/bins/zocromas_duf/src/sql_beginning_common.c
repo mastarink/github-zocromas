@@ -8,7 +8,7 @@
 /* ###################################################################### */
 
 
-duf_beginning_t sql_beginning_common = {.done = 0,
+duf_sql_sequence_t sql_beginning_common = {.done = 0,
   .sql = {
             "PRAGMA synchronous = OFF" /* */ ,
             "PRAGMA encoding = 'UTF-8'" /* */ ,

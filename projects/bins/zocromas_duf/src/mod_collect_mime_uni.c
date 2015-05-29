@@ -120,21 +120,16 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long mimeid = 0;
 
 
   assert( fd == duf_levinfo_dfd( pdi ) );
-  assert( pst_file == duf_levinfo_stat( pdi ) );
 
   DUF_TRACE( mod, 0, " mime" );
 
-  /* {                                    */
-  /*   DUF_SFIELD2( filename );           */
-  /*   DUF_SHOW_ERROR( "@@@@@ %s", filename ); */
-  /* }                                    */
   if ( r >= 0 )
   {
     const char *mime = NULL;
@@ -230,7 +225,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file,
 
 
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
           " FROM  " DUF_DBPREF "mime      AS mi " /* */
@@ -256,8 +251,8 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
 
   .leaf_scan_fd2 = dirent_content2,
 
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
            ", uid, gid, nlink, inode " /* */

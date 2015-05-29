@@ -22,7 +22,7 @@
 
 
 #include "duf_sql_defs.h"
-#include "duf_sql2.h"
+/* #include "duf_sql2.h" */
 
 
 
@@ -47,7 +47,7 @@ register_filedata( const char *fname_unused, const struct stat *pst_file, duf_de
 }
 
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "filedatas AS fd " /* */

@@ -38,7 +38,7 @@
 /* ########################################################################################## */
 
 static unsigned long long
-duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char *filename, size_t fsize, int need_id, int *pr )
+duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char *filename, int need_id, int *pr )
 {
   unsigned long long crc32id = -1;
   int lr = 0;
@@ -141,13 +141,12 @@ duf_make_crc32_uni( int fd, int *pr )
 }
 
 static int
-duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long crc32sum = 0;
 
   assert( fd == duf_levinfo_dfd( pdi ) );
-  assert( pst_file == duf_levinfo_stat( pdi ) );
 
 
   DUF_UFIELD2( filedataid );
@@ -163,7 +162,7 @@ duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct 
   {
     unsigned long long crc32id = crc32sum;
 
-    crc32id = duf_insert_crc32_uni( pdi, crc32sum, filename, pst_file->st_size, 1 /*need_id */ , &r );
+    crc32id = duf_insert_crc32_uni( pdi, crc32sum, filename, 1 /*need_id */ , &r );
     if ( r >= 0 && crc32id )
     {
       int changes = 0;
@@ -175,13 +174,13 @@ duf_scan_dirent_crc32_content2( duf_sqlite_stmt_t * pstmt, int fd, const struct 
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( crc32, 0, "%04lx : crc32id: %llu (sz:%lu) \"%s\"", crc32sum, crc32id, pst_file->st_size, filename );
+    DUF_TRACE( crc32, 0, "%04lx : crc32id: %llu (sz:%lu) \"%s\"", crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, filename );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   DEBUG_ENDR( r );
 }
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "crc32 SET dup32cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "crc32 AS c32 " /* */
@@ -214,10 +213,10 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .name = "crc32",
   .init_scan = NULL,
   .def_opendir = 1,
-  .leaf_scan_fd2 = duf_scan_dirent_crc32_content2,
+  .leaf_scan_fd2 = dirent_contnt2,
 
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            ", fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            ", fn.name AS filename, fd.size AS filesize " /* */

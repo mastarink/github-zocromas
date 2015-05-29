@@ -8,7 +8,7 @@
 /* ###################################################################### */
 
 
-duf_beginning_t sql_beginning_vacuum = {.done = 0,
+duf_sql_sequence_t sql_beginning_vacuum = {.done = 0,
   .sql = {
             "VACUUM",
 

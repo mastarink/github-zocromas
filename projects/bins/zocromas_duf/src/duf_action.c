@@ -79,7 +79,7 @@ duf_pre_action( void )
     else
     {
       /* DOR( r, duf_clear_tables(  ) ); */
-      DORF( r, duf_scan_beginning_ssql, &sql_beginning_clear, 0, NULL );
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL );
     }
     global_status.actions_done++;
   }
@@ -99,7 +99,7 @@ duf_pre_action( void )
       /* DUF_SQL_START_STMT_NOPDI( sql, r, pstmt ); */
       /* DUF_SQL_STEP( r, pstmt );                  */
       /* DUF_SQL_END_STMT_NOPDI( r, pstmt );        */
-      DORF( r, duf_scan_beginning_ssql, &sql_beginning_vacuum, 0, NULL );
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL );
     }
     global_status.actions_done++;
   }
@@ -112,14 +112,14 @@ duf_pre_action( void )
   {
     DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
     /* DOR( r, duf_check_tables(  ) ); */
-    DORF( r, duf_scan_beginning_ssql, &sql_beginning_create, 0, NULL );
+    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
     global_status.actions_done++;
   }
   else
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
-  duf_scan_beginning_ssql( &sql_beginning_tables, 0, NULL );
+  duf_eval_sql_sequence( &sql_beginning_tables, 0, NULL );
 
   DEBUG_ENDR( r );
 }

@@ -9,7 +9,7 @@
 
 
 
-duf_beginning_t sql_beginning_selected = {
+duf_sql_sequence_t sql_beginning_selected = {
   .done = 0,
   .sql = {
 //"DELETE FROM " DUF_SQL_SELECTED_NAME /* */

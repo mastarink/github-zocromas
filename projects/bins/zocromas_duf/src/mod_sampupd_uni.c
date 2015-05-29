@@ -165,7 +165,7 @@ sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lo
 }
 
 static int
-sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, /* const struct stat *pst_file, */ duf_depthinfo_t * pdi )
 {
   int ufd;
   struct stat *st;
@@ -177,7 +177,6 @@ sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const st
   DEBUG_STARTR( r );
 
   assert( fd == duf_levinfo_dfd( pdi ) );
-  assert( pst_file == duf_levinfo_stat( pdi ) );
 
 
   ufd = duf_levinfo_dfd_up( pdi );
@@ -195,7 +194,7 @@ sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const st
     mas_free( fpath );
   }
 /* Same! st->; fdst.; ufdst.; fpst.; pst_file->; -- use fd, st, path, name */
-  DUF_SHOW_ERROR( "[%lu:%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, pst_file->st_ino, path, name );
+  DUF_SHOW_ERROR( "[%lu:%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, duf_levinfo_stat( pdi )->st_ino, path, name );
   DEBUG_ENDR( r );
 }
 
@@ -203,7 +202,7 @@ sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const st
 
 
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "filedatas AS fd " /* */

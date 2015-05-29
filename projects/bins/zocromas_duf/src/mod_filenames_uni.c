@@ -86,7 +86,7 @@ register_direntry( const char *fname, const struct stat *pst_file, duf_depthinfo
 
 
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
 #if 0
           "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_files (Pathid, numfiles, minsize, maxsize) " /* */

@@ -113,7 +113,7 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   dfd = duf_levinfo_dfd( PDI );
   assert( dfd );
   if ( SCCB->leaf_scan_fd2 )
-    DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, duf_levinfo_stat( PDI ), PDI ) );
+    DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, /* duf_levinfo_stat( PDI ), */ PDI ) );
   DEBUG_ENDR( r );
 }
 

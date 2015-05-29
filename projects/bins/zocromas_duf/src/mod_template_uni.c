@@ -46,13 +46,12 @@ template_scan_init( duf_depthinfo_t * pdi )
 }
 
 static int
-template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, const struct stat *pst_file, duf_depthinfo_t * pdi )
+template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
 
   assert( fd == duf_levinfo_dfd( pdi ) );
-  assert( pst_file == duf_levinfo_stat( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -144,7 +143,7 @@ template_dirent_file_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ cons
   DEBUG_ENDR( r );
 }
 
-static duf_beginning_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
 
 

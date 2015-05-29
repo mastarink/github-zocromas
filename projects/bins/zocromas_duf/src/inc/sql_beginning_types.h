@@ -5,6 +5,6 @@ typedef struct
 {
   unsigned done;
   const char *sql[];
-} duf_beginning_t;
+} duf_sql_sequence_t;
 
 #endif

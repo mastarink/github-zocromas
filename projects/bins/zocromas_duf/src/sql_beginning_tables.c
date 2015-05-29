@@ -8,7 +8,7 @@
 /* ###################################################################### */
 
 
-duf_beginning_t sql_beginning_tables = {
+duf_sql_sequence_t sql_beginning_tables = {
   .done = 0,
   .sql = {
 #ifndef DUF_SQL_TABLES_TEMPORARY
