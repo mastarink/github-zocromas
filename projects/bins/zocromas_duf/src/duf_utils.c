@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <sys/time.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -56,41 +57,6 @@ duf_single_quotes_2( const char *s )
 #endif
   }
   return r;
-}
-
-void
-duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg )
-{
-  float width = 90;
-  static duf_bar_t bar;
-
-  if ( curval == 1 )
-    memset( &bar, 0, sizeof( bar ) );
-  bar.percent = ( ( ( float ) curval ) / ( ( float ) maxval ) );
-  bar.width = width * bar.percent;
-  if ( bar.width != ( bar.prev_width - 1 ) )
-  {
-    char cur_time[128] = "??";
-
-    duf_strflocaltime( cur_time, sizeof( cur_time ), "%Y%m%d.%H:%M:%S", NULL );
-
-    if ( !bar.calls )
-    {
-      fputs( "\n", stderr );
-    }
-    bar.calls++;
-    fprintf( stderr, "\r [" );
-    for ( int i = 0; i < bar.width - 1; i++ )
-      fputc( '=', stderr );
-    fputc( '>', stderr );
-    for ( int i = bar.width; i < width; i++ )
-      fputc( ' ', stderr );
-
-    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, cur_time, msg );
-    bar.prev_width = bar.width + 1;
-    /* if ( bar.width == width ) */
-    /*   fputs( "\n", stderr );  */
-  }
 }
 
 size_t
@@ -273,4 +239,68 @@ duf_strtime2long( const char *s, int *pr )
   if ( pr )
     *pr = r;
   return ( unsigned long long ) t;
+}
+
+void
+duf_percent( unsigned long long curval, unsigned long long maxval, const char *msg )
+{
+  float width = 90.0;
+  int swidth;
+  static duf_bar_t bar;
+  const char *sc = getenv( "COLUMNS" );
+  double delta = 0;
+
+  if ( sc && *sc )
+  {
+    swidth = strtol( sc, NULL, 10 );
+    width = ( float ) swidth - 90;
+  }
+  {
+    struct timeval tv;
+    static double time0;
+    double timec;
+
+    if ( curval == 1 )
+    {
+      memset( &bar, 0, sizeof( bar ) );
+      gettimeofday( &tv, NULL );
+      time0 = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+    }
+    gettimeofday( &tv, NULL );
+    timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+    delta = timec - time0;
+  }
+  bar.percent = ( ( ( float ) curval ) / ( ( float ) maxval ) );
+  bar.width = width * bar.percent;
+  if ( bar.width != ( bar.prev_width - 1 ) )
+  {
+    char cur_time[128] = "??";
+
+    duf_strflocaltime( cur_time, sizeof( cur_time ), "%Y%m%d.%H:%M:%S", NULL );
+
+    if ( !bar.calls )
+    {
+      fputs( "\n", stderr );
+    }
+    bar.calls++;
+    fprintf( stderr, "\r [" );
+    for ( int i = 0; i < bar.width; i++ )
+      fputc( '=', stderr );
+    if ( bar.width < width )
+    {
+      fputc( '>', stderr );
+      for ( int i = bar.width + 1; i < width; i++ )
+        fputc( ' ', stderr );
+    }
+#if 1
+    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %2g %2g %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval,
+             delta, delta * 1000. / ( ( float ) curval ), msg );
+#else
+    fprintf( stderr, "] %d%%; %llu of %llu; %llu to do; %s %2g %s  ", ( int ) ( bar.percent * 100. ), curval, maxval, maxval - curval, cur_time,
+             delta, msg );
+#endif
+    bar.prev_width = bar.width + 1;
+    /* if ( bar.width == width ) */
+    /*   fputs( "\n", stderr );  */
+  }
 }

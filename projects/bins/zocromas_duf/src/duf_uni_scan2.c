@@ -45,6 +45,7 @@
  *     4. for each dir in <current> dir call duf_str_cb(1?)_uni_scan_dir + &di as str_cb_udata
  *     5. for <current> dir call sccb->node_scan_after
  * */
+#if 0
 int
 duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
@@ -52,6 +53,7 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_hand
 
   assert( PDI );
 
+  /* depth now checked at at duf_levinfo_godown_openat_dh */
   /* if ( duf_pdi_is_good_depth( PDI ) ) */
   {
     DUF_TRACE( explain, duf_pdi_reldepth( PDI ) <= 1 ? 3 : 4, "cb2; option %s value %d; depth %d", DUF_OPT_NAME( MAXRELDEPTH ),
@@ -67,3 +69,4 @@ duf_scan_dirs_by_pdi_maxdepth( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_hand
 
   DEBUG_ENDR( r );
 }
+#endif

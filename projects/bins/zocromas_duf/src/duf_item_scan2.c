@@ -117,6 +117,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
  * */
     PDI->seq++;
     PDI->seq_leaf++;
+    DUF_TRACE( scan_de_reg, 0, "* %llu / %llu %s", PDI->seq_leaf,  TOTITEMS, SCCB->title );
     if ( DUF_ACT_FLAG( progress ) && !SCCB->count_nodes )
       duf_percent( PDI->seq_leaf, TOTITEMS, duf_uni_scan_action_title( SCCB ) );
     DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
@@ -154,6 +155,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
  * */
     PDI->seq++;
     PDI->seq_node++;
+    DUF_TRACE( scan_de_dir, 0, "* %llu / %llu %s", PDI->seq_node, TOTITEMS, SCCB->title );
     if ( DUF_ACT_FLAG( progress ) && SCCB->count_nodes )
       duf_percent( PDI->seq_node, TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1, duf_uni_scan_action_title( SCCB ) );
 
@@ -321,6 +323,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
     match_cb2 = NULL /* duf_match_leaf2 */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 %s", set_type_title );
     DUF_TRACE( scan, 2, "set sel_cb2 <= cb2 %s", set_type_title );
+    DUF_TRACE( scan_de_reg, 2, "%llu / %llu %s", PDI->seq_leaf, PDI->seq , SCCB->title);
 #if 0
     sql_set = &SCCB->leaf;
 #elif 0
@@ -336,7 +339,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
     match_cb2 = NULL /* duf_match_node2 ?? */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 %s", set_type_title );
     DUF_TRACE( scan, 2, "set sel_cb2 <= cb2 %s", set_type_title );
-    DUF_TRACE( scan_de_dir, 0, "%llu : %d / %d", PDI->seq, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
+    DUF_TRACE( scan_de_dir, 2, "%llu / %llu %s", PDI->seq_node, PDI->seq, SCCB->title );
 #if 0
     sql_set = &SCCB->node;
 #elif 0

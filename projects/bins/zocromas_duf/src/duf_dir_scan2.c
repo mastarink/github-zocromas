@@ -102,8 +102,6 @@ duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t
 
   diridpid = duf_levinfo_dirid( PDI );
 
-  /* assert( duf_scan_dirs_by_pdi_maxdepth == str_cb2_unused ); */
-
   DUF_TRACE( scan, 3, "[%llu]", diridpid );
   DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( PDI ),
                 duf_pdi_reldepth( PDI ), diridpid );
