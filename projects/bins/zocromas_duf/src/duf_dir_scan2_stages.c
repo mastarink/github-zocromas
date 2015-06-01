@@ -22,7 +22,7 @@
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
 
-#include "duf_uni_scan2.h"
+/* #include "duf_uni_scan2.h" */
 #include "duf_dir_scan2.h"
 
 #include "duf_sccbh_shortcuts.h"
