@@ -8,6 +8,9 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_maintenance.h"
+
+
 #include "duf_dbg.h"
 #include "duf_pdi.h"
 

@@ -31,7 +31,10 @@
  * 2. prepare «sample» sccb's by calling duf_set_actions_sample
  * 3. make/evaluate sccb sequence/list by calling duf_evaluate_sccb_array
  * */
-static int
+#ifdef MAS_WRAP_FUNC
+static
+#endif
+      int
 duf_evaluate_all_at_config( void )
 {
   DEBUG_STARTR( r );
@@ -76,6 +79,7 @@ duf_evaluate_all_at_config( void )
  *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
  *     - do final sql set from ppscan_callbacks[astep]
  * */
+#ifdef MAS_WRAP_FUNC
 int
 duf_evaluate_all_at_config_wrap( void )
 {
@@ -114,3 +118,4 @@ duf_evaluate_all_at_config_wrap( void )
   /*   DUF_SHOW_ERROR( "code: %d", r );                     */
   DEBUG_ENDR( r );
 }
+#endif

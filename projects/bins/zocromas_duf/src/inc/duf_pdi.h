@@ -5,8 +5,9 @@
 
 duf_depthinfo_t *duf_pdi_create( void );
 
-int duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const char *node_selector2, int recursive, int opendir );
-int duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const char *node_selector2, int recursive, int opendir );
+int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const char *node_selector2, int recursive,
+                                  int opendir );
+
 int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, const char *node_selector2, int recursive, int opendir );
 int duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int recursive, int opendir );
 int duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *node_selector2 );

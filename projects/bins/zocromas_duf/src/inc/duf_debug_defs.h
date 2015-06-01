@@ -2,6 +2,12 @@
 #  define MAS_DUF_DEBUG_DEFS_H
 #  include "duf_defs.h"
 
+#ifdef MAS_WRAP_FUNC
+#define DUF_WRAPPED(_f) _f ## _wrap
+#else
+#define DUF_WRAPPED(_f) _f
+#endif
+
 #define DUF_DBGF(_what)       duf_dbgfunc( DBG_ ## _what, DUF_FL )
 #define DUF_DBGFX(_what, ...) duf_dbgfunc( DBG_ ## _what, DUF_FL, __VA_ARGS__ )
 #  define  DEBUG_E_NO(...)			DUF_E_NO(__VA_ARGS__);                DUF_DBGF(STEP)

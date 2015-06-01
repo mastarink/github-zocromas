@@ -130,18 +130,19 @@ duf_parse_option_long_full( const duf_longval_extended_t * extended, const char 
   DEBUG_ENDR( r );
 }
 
+#ifdef MAS_WRAP_FUNC
 static int
 duf_parse_option_long_full_wrap( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                 const duf_longval_extended_table_t * xtable )
+                                 const duf_longval_extended_table_t * xtable, int no )
 {
   DEBUG_STARTR( r );
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
-  DOR( r, duf_parse_option_long_full( extended, optargg, istage, xtable, 0 /* no */  ) );
+  DOR( r, duf_parse_option_long_full( extended, optargg, istage, xtable, no ) );
   DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
 }
-
+#endif
 /*
  * return 
  *               =0  for normal options
@@ -177,7 +178,7 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   {
     if ( extended )
     {
-      DOR( r, duf_parse_option_long_full_wrap( extended, optargg, istage, xtable ) );
+      DOR( r, DUF_WRAPPED( duf_parse_option_long_full ) ( extended, optargg, istage, xtable, 0 /* no */ ) );
     }
     else                        /* switch is useless !... */
       switch ( ( int ) codeval )

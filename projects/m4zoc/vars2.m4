@@ -21,6 +21,17 @@ AC_ARG_ENABLE([mas_test],
 	      [enable_mas_test=no])
 AM_CONDITIONAL([MAS_TEST], [test x$enable_mas_test = xyes])
 
+# Configure options: --enable-wrap-func[=no].
+AC_ARG_ENABLE([wrap_func],
+	      AC_HELP_STRING([--enable-wrap-func],
+			     [turn off wrap-func]),,
+	      [enable_wrap_func=no])
+
+if test x$enable_wrap_func = xyes ; then
+    AC_DEFINE(MAS_WRAP_FUNC, 1,
+	[Enable wrap functions.])
+fi
+
 
 
 AC_ARG_ENABLE([gprof],

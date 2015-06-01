@@ -3,3 +3,4 @@
 --enable-tracemem
 --enable-debug
 --enable-mas-test
+--enable-wrap-func

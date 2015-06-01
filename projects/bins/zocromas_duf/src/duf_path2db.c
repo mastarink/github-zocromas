@@ -587,7 +587,7 @@ duf_path2db( const char *path, const char *node_selector2, int *pr )
     /* .name = real_path, */
   };
   if ( r >= 0 )
-    r = duf_pdi_init_wrap( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
+    r = DUF_WRAPPED( duf_pdi_init ) ( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
   if ( r >= 0 )
     dirid = duf_levinfo_dirid( &di );
   /* xchanges = di.changes; --- needless!? */

@@ -153,7 +153,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:
  *
- * call from duf_scan_dirs_by_pdi(wrap)
+ * call from duf_scan_dirs_by_pdi(_wrap)
  *
  * fn of type: duf_str_cb2_t
  * */
@@ -254,7 +254,7 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /
    * */
   node_selector2 = duf_get_node_sql_set( SCCB )->selector2;
   if ( node_selector2 )
-    DOR( r, duf_scan_db_items2( DUF_NODE_NODE, duf_scan_dirs_by_pdi_wrap  /* str_cb2 */ /* duf_scan_dirs_by_pdi_maxdepth */ ,
+    DOR( r, duf_scan_db_items2( DUF_NODE_NODE, DUF_WRAPPED(duf_scan_dirs_by_pdi) /* str_cb2 */ ,
                                 sccbh ) );
   DEBUG_ENDR( r );
 }

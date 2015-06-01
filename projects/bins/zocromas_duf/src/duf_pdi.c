@@ -59,11 +59,12 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     DOR( r, duf_levinfo_create( pdi, r, recursive, opendir ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
-    DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */, real_path , node_selector2 ) );
+    DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, node_selector2 ) );
   }
   DEBUG_ENDR( r );
 }
 
+#ifdef MAS_WRAP_FUNC
 int
 duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const char *node_selector2, int recursive, int opendir )
 {
@@ -86,6 +87,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
   /* TODO */ assert( pdi->levinfo );
   DEBUG_ENDR( r );
 }
+#endif
 
 int
 duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, const char *node_selector2, int recursive, int opendir )
@@ -99,7 +101,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
   od = pdi && pdi->opendir;
   duf_pdi_close( pdi );
   pdi->pu = pu;
-  return duf_pdi_init_wrap( pdi, real_path, 0 /* caninsert */ , node_selector2, rec /* recursive */ , od /* opendir */  );
+  return DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, 0 /* caninsert */ , node_selector2, rec /* recursive */ , od /* opendir */  );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
 }
 

@@ -37,7 +37,11 @@
  *   sccb: module callbacs structure
  *
  * */
-static int
+
+#ifdef MAS_WRAP_FUNC
+static
+#endif
+      int
 duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
@@ -93,7 +97,7 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sc
  *     ( duf_str_cb2_leaf_scan    )
  *     ( duf_str_cb2_scan_file_fd )
  * */
-
+#ifdef MAS_WRAP_FUNC
 int
 duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
@@ -117,3 +121,4 @@ duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
   DEBUG_ENDR( r );
 }
+#endif

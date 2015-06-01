@@ -54,7 +54,7 @@ duf_sccbh_eval_pdi( duf_sccb_handle_t * sccbh )
 
   DUF_TRACE( scan, 4, "+" );
   if ( !SCCB->disabled )
-    DOR( r, duf_scan_dirs_by_pdi_wrap( ( duf_sqlite_stmt_t * ) NULL, sccbh ) );
+    DOR( r, DUF_WRAPPED( duf_scan_dirs_by_pdi ) ( ( duf_sqlite_stmt_t * ) NULL, sccbh ) );
 
   /* delete level-control array, close 0 level */
 
