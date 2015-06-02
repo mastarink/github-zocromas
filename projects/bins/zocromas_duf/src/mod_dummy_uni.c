@@ -163,7 +163,7 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .name = "dummy",
   .def_opendir = 0,
   .init_scan = scan_init,
-  .beginning_sql_argv = &sql_beginning_selected,
+  .beginning_sql_seq = &sql_beginning_selected,
 
   .node_scan_before2 = scan_node_before2,
   .node_scan_before2_deleted = scan_node_before2_deleted,
@@ -182,8 +182,8 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .dirent_file_scan_before2 = dirent_file_scan_before2,
   .dirent_dir_scan_before2 = dirent_dir_scan_before2,
 
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {
            .fieldset = NULL,    /* */
            .selector2 = NULL,   /* */
@@ -193,5 +193,5 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
            .fieldset = NULL,    /* */
            .selector2 = NULL    /* */
            },
-  .final_sql_argv = &final_sql,
+  .final_sql_seq = &final_sql,
 };

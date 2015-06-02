@@ -251,8 +251,8 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
 
   .leaf_scan_fd2 = dirent_content2,
 
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
            ", uid, gid, nlink, inode " /* */
@@ -298,5 +298,5 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
 #endif
            " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
-  .final_sql_argv = &final_sql,
+  .final_sql_seq = &final_sql,
 };

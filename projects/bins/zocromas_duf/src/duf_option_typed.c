@@ -31,6 +31,7 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
   const char *mode = "w";
   struct stat st;
 
+  DUF_TRACE( io, 0, "to open %s", pname );
   if ( *pname == '@' )
   {
     overw = 1;
@@ -70,10 +71,13 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
 
   newout = defout;
 
+  DUF_TRACE( io, 0, "to set file special %s", pname );
   if ( pfile )
   {
     *pfile = NULL;
-    if ( !newout && handleid )
+
+    DUF_TRACE( io, 0, "handleid %d", handleid );
+    if ( handleid )
     {
       switch ( handleid )
       {
@@ -85,14 +89,15 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
         break;
       }
     }
+    DUF_TRACE( io, 0, "pname %s", pname );
     if ( pfilename )
     {
       if ( *pfilename )
         mas_free( *pfilename );
       *pfilename = NULL;
-      if ( pname && *pname )
-        newout = duf_open_file_special( pname, pfilename, &r );
     }
+    if ( pname && *pname )
+      newout = duf_open_file_special( pname, pfilename, &r );
     if ( !newout )
       newout = defout;
     if ( newout )
@@ -713,6 +718,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
+          DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s)", extended->o.name );
           DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr );
           /* {                                                                                 */
           /*   char start_time[128] = "??";                                                    */

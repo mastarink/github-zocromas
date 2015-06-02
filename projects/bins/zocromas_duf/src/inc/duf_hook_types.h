@@ -82,8 +82,8 @@ struct duf_scan_callbacks_s
   duf_scan_hook2_dirent_t dirent_file_scan_before2;
   duf_scan_hook2_dirent_t dirent_dir_scan_before2;
 
-  duf_sql_sequence_t *beginning_sql_argv;
-  duf_sql_sequence_t *final_sql_argv;
+  duf_sql_sequence_t *beginning_sql_seq;
+  duf_sql_sequence_t *final_sql_seq;
 };
 
 typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;

@@ -87,6 +87,7 @@ typedef struct
   unsigned statistics;
   unsigned temp;
   unsigned update;
+  unsigned io;
   unsigned verbose;
   duf_config_output_t output;
 } duf_config_cli_trace_t;

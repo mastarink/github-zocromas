@@ -152,8 +152,8 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .dirent_file_scan_before2 = register_direntry,
 
 
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
@@ -188,5 +188,5 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 #endif
            " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            },
-  .final_sql_argv = &final_sql,
+  .final_sql_seq = &final_sql,
 };

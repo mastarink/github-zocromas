@@ -50,13 +50,17 @@ const duf_longval_extended_table_t optable_main = {
 
 
    {.o = {DO_Q( "output-level" ) /*     */ , DO_A_O /* */ , DO_V( OUTPUT_LEVEL )} /*       */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( NUM, cli.output.level ) /*                                            */ , DO_H( output level ) /*                     */ },
+    /*      */ DO_OC( NUM, cli.output.level ), DO_AT_STAGE( 1 ) /*                                            */ ,
+    DO_H( output level ) /*                     */ },
    {.o = {DO_Q( "output-file" ) /*      */ , DO_A_R /* */ , DO_V( OUTPUT_FILE )} /*        */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.output ) /*                                                 */ , DO_H( output to file ) /*                   */ },
+    /*      */ DO_OC( FILE, cli.output ), DO_AT_STAGE( 1 ) /*                                                 */ ,
+    DO_H( output to file ) /*                   */ },
    {.o = {DO_Q( "output-stderr" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDERR )} /*      */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.output ),.call = {.value = {.u = 2}} /*                     */ , DO_H( output to stderr ) /*                 */ },
+    /*      */ DO_OC( FILE, cli.output ), DO_AT_STAGE( 1 )
+    ,.call = {.value = {.u = 2}} /*                     */ , DO_H( output to stderr ) /*                 */ },
    {.o = {DO_Q( "output-stdout" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDOUT )} /*      */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.output ),.call = {.value = {.u = 1}} /*                     */ , DO_H( output to stdout ) /*                 */ },
+    /*      */ DO_OC( FILE, cli.output ), DO_AT_STAGE( 1 )
+    ,.call = {.value = {.u = 1}} /*                     */ , DO_H( output to stdout ) /*                 */ },
 
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },
 

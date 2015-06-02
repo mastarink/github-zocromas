@@ -18,7 +18,7 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
-  duf_eval_sql_sequence( sccb->beginning_sql_argv, 1 /* bind */ , duf_uni_scan_action_title( sccb ) );
+  duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) );
   DEBUG_ENDR( r );
 }
 
@@ -27,7 +27,7 @@ duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
-  duf_eval_sql_sequence( sccb->final_sql_argv, 1 /* bind */ , duf_uni_scan_action_title( sccb ) );
+  duf_eval_sql_sequence( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) );
   DEBUG_ENDR( r );
 }
 
@@ -40,7 +40,7 @@ duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
 
   /* if ( changes ) */
   {
-    const char **psql = sccb->final_sql_argv;
+    const char **psql = sccb->final_sql_seq;
 
     while ( r >= 0 && psql && *psql )
     {
@@ -59,7 +59,7 @@ duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
       DUF_TEST_R( r );
       /* DUF_TRACE( action, 2, "(%d) final psql %s; changes:%d", r, *psql, changes ); */
       DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": final SQL %lu; [%s] changes:%d; %s", duf_uni_scan_action_title( sccb ),
-                 psql - sccb->final_sql_argv, *psql, changes, r < 0 ? "FAIL" : "OK" );
+                 psql - sccb->final_sql_seq, *psql, changes, r < 0 ? "FAIL" : "OK" );
       psql++;
     }
   }

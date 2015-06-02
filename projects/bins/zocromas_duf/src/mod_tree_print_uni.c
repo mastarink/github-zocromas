@@ -370,15 +370,15 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = "tree print",
   .name = "tree",
   .init_scan = NULL,            /* */
-  .beginning_sql_argv = &sql_beginning_selected,
+  .beginning_sql_seq = &sql_beginning_selected,
   /* .node_scan_before = tree_scan_node_before, */
   .node_scan_before2 = scan_node_before2,
   /* .leaf_scan = tree_scan_leaf, */
   .leaf_scan2 = scan_leaf2,
 
   /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
-  .use_std_leaf = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 2, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 1, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
 #if 0
   .leaf = {
            .fieldset = NULL,    /* */
@@ -391,5 +391,5 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
            .selector2 = NULL    /* */
            }
 #endif
-  /* , .final_sql_argv = &final_sql, */
+  /* , .final_sql_seq = &final_sql, */
 };

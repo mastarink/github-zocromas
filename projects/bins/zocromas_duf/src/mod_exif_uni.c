@@ -578,8 +578,12 @@ static duf_sql_sequence_t final_sql =
 
 duf_scan_callbacks_t duf_collect_exif_callbacks =
 {
-  .title = "collect exif",.name = "exif",.def_opendir = 1,.leaf_scan_fd2 = dirent_contnt2,.use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-        .use_std_node = 0,      /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .title = "collect exif",      /* */
+        .name = "exif",         /* */
+        .def_opendir = 1,       /* */
+        .leaf_scan_fd2 = dirent_contnt2, /* */
+        .use_std_leaf = 0,      /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+        .use_std_node = 0,      /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
         /* filename for debug only */
         .leaf =
   {
@@ -622,4 +626,4 @@ duf_scan_callbacks_t duf_collect_exif_callbacks =
           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
-},.final_sql_argv = &final_sql,};
+},.final_sql_seq = &final_sql,};

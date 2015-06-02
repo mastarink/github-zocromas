@@ -316,8 +316,8 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   /* .leaf_scan_fd = duf_scan_dirent_md5_content, */
   .leaf_scan_fd2 = dirent_contnt2,
 
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            " , fn.name AS filename, fd.size AS filesize " /* */
@@ -371,5 +371,5 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
 #endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            },
-  .final_sql_argv = &final_sql,
+  .final_sql_seq = &final_sql,
 };

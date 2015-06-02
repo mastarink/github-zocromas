@@ -49,6 +49,7 @@ typedef enum
   DUF_TRACE_MODE_statistics,
   DUF_TRACE_MODE_temp,
   DUF_TRACE_MODE_update,
+  DUF_TRACE_MODE_io,
   DUF_TRACE_MODE_verbose,
 
   DUF_TRACE_MODE_MAX
