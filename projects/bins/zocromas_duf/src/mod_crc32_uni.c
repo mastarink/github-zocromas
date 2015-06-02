@@ -231,7 +231,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
            " fd.crc32id IS NULL AND" /* */
-           /* " sz.size > 0 AND" */
+           " sz.size > 0 AND"
            /* " sz.dupzcnt > 1 AND "  (* *) */
            " fn.Pathid=:parentdirID " /* */
            ,
@@ -242,7 +242,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            "    WHERE "         /* */
            " fd.crc32id IS NULL AND" /* */
            /* " sz.dupzcnt > 1 AND "      (* *) */
-           /* " sz.size > 0 AND "      (* *) */
+           " sz.size > 0 AND "      /* */
 	   " 1 "
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */

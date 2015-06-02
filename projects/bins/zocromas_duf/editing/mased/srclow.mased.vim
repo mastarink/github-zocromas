@@ -1,6 +1,9 @@
 find duf_dirent.c
 sfind duf_dirent.h
 
+tab sfind duf_sys_wrap.c
+sfind duf_sys_wrap.h
+
 tab sfind duf_utils.c
 sfind duf_utils.h
 

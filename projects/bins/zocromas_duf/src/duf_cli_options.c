@@ -1,7 +1,3 @@
-#include <string.h>
-#include <stddef.h>
-#include <getopt.h>
-
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -27,15 +23,17 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
   int longindex;
   int cnt = 0;
   duf_option_code_t codeval;
-
-  int cargc;
-  char *const *cargv;
+  duf_cargvc_t carg;
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
   opterr = 0;
   optind = 1;
-  cargc = duf_config->cargc;
-  cargv = duf_config->cargv;
+#if 0
+  carg.argc = duf_config->carg.argc;
+  carg.argv = duf_config->carg.argv;
+#else
+  carg = duf_config->carg;
+#endif
   DUF_TRACE( options, 0, "parse cli options (%d)...", duf_config->longopts_table ? 1 : 0 );
 #if 0
   {
@@ -45,7 +43,8 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     }
   }
 #endif
-  while ( ( r == 0 ) && ( ( int ) ( longindex = -1, codeval = getopt_long( cargc, cargv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
+  while ( ( r == 0 )
+          && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
   {
     DUF_TRACE( options, 1, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
@@ -59,19 +58,19 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
 
     if ( r == DUF_ERROR_OPTION_NOT_FOUND || r == DUF_ERROR_OPTION )
     {
-      DUF_SHOW_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->cargv[optind - 1], codeval, codeval );
+      DUF_SHOW_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->carg.argv[optind - 1], codeval, codeval );
     }
     cnt++;
   }
   DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
-  if ( istage == 0 && optind < duf_config->cargc )
+  if ( istage == 0 && optind < duf_config->carg.argc )
   {
-    mas_del_argv( duf_config->targc, duf_config->targv, 0 );
-    duf_config->targc = 0;
-    duf_config->targv = NULL;
+    mas_del_argv( duf_config->targ.argc, duf_config->targ.argv, 0 );
+    duf_config->targ.argc = 0;
+    duf_config->targ.argv = NULL;
 
-    duf_config->targc = mas_add_argv_argv( duf_config->targc, &duf_config->targv, duf_config->cargc, duf_config->cargv, optind );
-    /* targv becomes valid here - may init pdi etc. */
+    duf_config->targ.argc = mas_add_argv_argv( duf_config->targ.argc, &duf_config->targ.argv, duf_config->carg.argc, duf_config->carg.argv, optind );
+    /* targ.argv becomes valid here - may init pdi etc. */
   }
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
@@ -88,8 +87,8 @@ duf_cli_options( int argc, char *argv[] )
   DUF_TRACE( options, 0, "cli options..." );
   if ( duf_config )
   {
-    duf_config->cargc = argc;
-    duf_config->cargv = argv;
+    duf_config->carg.argc = argc;
+    duf_config->carg.argv = argv;
     if ( !duf_config->cli.shorts )
       duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
 

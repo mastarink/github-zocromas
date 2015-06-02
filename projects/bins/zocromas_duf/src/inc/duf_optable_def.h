@@ -58,6 +58,8 @@
 #  define DO_VIA_CALLCL(_f, _cl)	DO_VIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
 /* void f( int argc, char *const *argv ) */
 #  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f)
+/* void f( duf_cargvc_t arg ) */
+#  define DO_AA_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(aa, _f)
 /*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL(t, _f) */
 /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) */
 #  define DO_TN_CALL(_f)        DO_SET_VTYPE( TN_CALL ), DO_SET_CALL(tn, _f)

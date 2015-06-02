@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include <string.h>
-#include <getopt.h>
 #include <time.h>
 
 #include <sys/types.h>
@@ -11,7 +10,7 @@
 
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
+/* #include <mastar/wrap/mas_memory.h> */
 
 
 #include "duf_maintenance.h"

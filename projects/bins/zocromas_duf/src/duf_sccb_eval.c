@@ -37,11 +37,16 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
     DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( SCCB ) );
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
 
-    /* - evaluate sccb for each string from duf_config->targ[cv] as path
-     * - store number of changes to *pchanges */
-    DOR( r, duf_sccbh_eval_each_path( sccbh ) );
-    if ( DUF_ACT_FLAG( summary ) )
-      DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
+    if ( !( TARGC && TARGV ) )
+    {
+    }
+    {
+      /* - evaluate sccb for each string from duf_config->targ[cv] as path
+       * - store number of changes to *pchanges */
+      DOR( r, duf_sccbh_eval_each_path( sccbh ) );
+      if ( DUF_ACT_FLAG( summary ) )
+        DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
+    }
   }
   else
   {
@@ -66,7 +71,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 
   duf_sccb_handle_t *sccbh = NULL;
 
-  sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targc, duf_config->targv, duf_config->pu );
+  sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targ.argc, duf_config->targ.argv, duf_config->pu );
   DOR( r, duf_evaluate_sccb_handle( sccbh ) );
   duf_close_sccb_handle( sccbh );
 
@@ -93,7 +98,7 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
  * for each sccb from sequence/list (with given size - # of items) make/evaluate the task
  *    by calling duf_evaluate_sccb
  * */
- int
+int
 duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
 {
   DEBUG_STARTR( r );
@@ -122,4 +127,3 @@ duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
     *pcnt += cnt;
   DEBUG_ENDR( r );
 }
-

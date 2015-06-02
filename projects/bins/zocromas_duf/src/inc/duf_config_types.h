@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_CONFIG_TYPES_H
 #  define MAS_DUF_CONFIG_TYPES_H
 
+#  include "duf_base_types.h"
 #  include "duf_cli_types.h"
 #  include "duf_option_types.h"
 
@@ -26,10 +27,8 @@ typedef struct
   duf_config_cli_t cli;
   duf_dbs_config_t db;
   /* char *group; */
-  int cargc;
-  char *const *cargv;
-  int targc;
-  char **targv;
+  duf_cargvc_t carg;
+  duf_argvc_t targ;
   char *config_path;
 
   struct duf_depthinfo_s *pdi;

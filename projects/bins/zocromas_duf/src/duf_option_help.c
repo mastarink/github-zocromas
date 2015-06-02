@@ -225,7 +225,7 @@ duf_option_help(  /* int argc, char *const *argv */ void )
 {
   int r = 0;
 
-  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", duf_config->cargv[0] );
+  DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", duf_config->carg.argv[0] );
   DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_VAL_HELP, &r ) );
   DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &r ) );
   DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
@@ -566,8 +566,8 @@ duf_option_version(  /* int argc, char *const *argv */ void )
 
   DEBUG_START(  );
 
-  sargv1 = mas_argv_string( duf_config->cargc, duf_config->cargv, 1 );
-  sargv2 = duf_restore_some_options( duf_config->cargv[0] );
+  sargv1 = mas_argv_string( duf_config->carg.argc, duf_config->carg.argv, 1 );
+  sargv2 = duf_restore_some_options( duf_config->carg.argv[0] );
 
   DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
   DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );

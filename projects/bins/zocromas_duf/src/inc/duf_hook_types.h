@@ -91,8 +91,12 @@ typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 struct duf_sccb_handle_s
 {
   unsigned long long total_items;
+#if 0
   int targc;
   char *const *targv;
+#else
+  duf_cargvc_t targ;
+#endif
   const duf_ufilter_t *pu;
   duf_depthinfo_t *pdi;
   unsigned long long changes;

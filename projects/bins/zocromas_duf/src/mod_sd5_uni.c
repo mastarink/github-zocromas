@@ -269,8 +269,10 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
            " fd.sd5id IS NULL AND " /* */
+           " sz.size > 0 AND "  /* */
            /* "       sz.dupzcnt > 1 AND "      (* *) */
-           " sz.size > 0  "},
+           " 1 "                /* */
+           },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ,

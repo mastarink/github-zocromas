@@ -82,6 +82,7 @@ typedef enum
   DUF_OPTION_VTYPE_VIA_CALL,
   DUF_OPTION_VTYPE_VV_CALL,
   DUF_OPTION_VTYPE_A_CALL,
+  DUF_OPTION_VTYPE_AA_CALL,
   DUF_OPTION_VTYPE_N_CALL,
   DUF_OPTION_VTYPE_TN_CALL,
   DUF_OPTION_VTYPE_S_CALL,
@@ -105,6 +106,12 @@ typedef struct
 {
   duf_void_argcv_t func;
 } duf_void_argcv_funcpair_t;
+
+typedef struct
+{
+  duf_void_arg_t func;
+} duf_void_arg_funcpair_t;
+
 typedef struct
 {
   duf_void_pargcv_t func;
@@ -191,6 +198,7 @@ typedef struct
       duf_int_void_funcpair_t iv;
       duf_void_void_funcpair_t vv;
       duf_void_argcv_funcpair_t a;
+      duf_void_arg_funcpair_t aa;
       duf_void_pargcv_funcpair_t t;
       duf_void_pnv_funcpair_t n;
       duf_void_pargcnv_funcpair_t tn;

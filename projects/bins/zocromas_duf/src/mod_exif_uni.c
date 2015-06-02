@@ -321,25 +321,53 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   }
   else if ( 0 )
   {
-    DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE );
+#if 0
+#  define exif_data_get_entry(d, t) (
+    exif_content_get_entry( d->ifd[EXIF_IFD_0], t ) ?
+          exif_content_get_entry( d->ifd[EXIF_IFD_0], t ) :
+          exif_content_get_entry( d->ifd[EXIF_IFD_1], t ) ?
+          exif_content_get_entry( d->ifd[EXIF_IFD_1], t ) :
+          exif_content_get_entry( d->ifd[EXIF_IFD_EXIF], t ) ?
+          exif_content_get_entry( d->ifd[EXIF_IFD_EXIF], t ) :
+          exif_content_get_entry( d->ifd[EXIF_IFD_GPS], t ) ?
+          exif_content_get_entry( d->ifd[EXIF_IFD_GPS], t ) :
+          exif_content_get_entry( d->ifd[EXIF_IFD_INTEROPERABILITY], t ) ? exif_content_get_entry( d->ifd[EXIF_IFD_INTEROPERABILITY], t ) : NULL )
+#endif
+          DUF_MAKE_ERROR( lr, DUF_ERROR_EXIF_NO_DATE );
+#if 0
     if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +1" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +2" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +3" );
+#else
+    if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME_ORIGINAL ) ) )
+      DUF_SHOW_ERROR( "NO DATE - HAS +123" );
+#endif
+#if 0
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +4" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +5" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +6" );
+#else
+    else if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME_DIGITIZED ) ) )
+      DUF_SHOW_ERROR( "NO DATE - HAS +456" );
+#endif
+
+#if 0
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +7" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_1], EXIF_TAG_DATE_TIME ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +8" );
     else if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME ) ) )
       DUF_SHOW_ERROR( "NO DATE - HAS +9" );
+#else
+    else if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME ) ) )
+      DUF_SHOW_ERROR( "NO DATE - HAS +789" );
+#endif
     else
       DUF_SHOW_ERROR( "NO DATE" );
     /* ??? exif_entry_free( entry ); */
@@ -352,8 +380,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   return timeepoch;
 }
 
-static int
-dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -367,28 +394,30 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
     unsigned char *buffer;
     size_t sum = 0;
 
-    buffer = mas_malloc( bufsz );
+      buffer = mas_malloc( bufsz );
     if ( buffer )
     {
       int cnt = 0;
       int maxcnt = 2;
       ExifLoader *loader;
 
-      loader = exif_loader_new(  );
+        loader = exif_loader_new(  );
 
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
+      /* exif_loader_write_file */
       while ( r >= 0 && cnt++ < maxcnt )
       {
         int rr;
 
-        rr = read( fd, buffer, bufsz );
-        DUF_TRACE( exif, 5, "read %d", rr );
+          rr = read( fd, buffer, bufsz );
+          DUF_TRACE( exif, 5, "read %d", rr );
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
           DUF_MAKE_ERROR( r, DUF_ERROR_READ );
         }
         DUF_TEST_R( r );
+
         if ( rr > 0 )
         {
           sum += rr;
@@ -419,10 +448,12 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
 
         edata = exif_loader_get_data( loader );
         exif_loader_unref( loader );
-        if ( r >= 0 && edata )
+        if ( r >= 0 && edata /* && edata->size */  )
         {
           /* ??? exif_entry_free( entry ); */
-          char stime_original[1024] = { '\0' };
+          char stime_original[1024] =
+          {
+          '\0'};
           time_t timeepoch = 0;
           int date_changed = 0;
           char *model = NULL;
@@ -431,7 +462,11 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
             ExifEntry *entry = NULL;
             char tmodel[1024] = "";
 
+#if 0
             entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_MODEL );
+#else
+            entry = exif_data_get_entry( edata, EXIF_TAG_MODEL );
+#endif
             if ( !entry )
               DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_NO_MODEL );
             if ( r >= 0 && !exif_entry_get_value( entry, tmodel, sizeof( tmodel ) ) )
@@ -529,69 +564,62 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
 
 
 
-static duf_sql_sequence_t final_sql = {.done = 0,
-  .sql = {
-          "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
+static duf_sql_sequence_t final_sql =
+{
+  .done = 0,.sql =
+  {
+    "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "filedatas AS fd " /* */
           " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
           " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
-          ,
-          NULL}
+  , NULL}
 };
 
 
-duf_scan_callbacks_t duf_collect_exif_callbacks = {
-  .title = "collect exif",
-  .name = "exif",
-  .def_opendir = 1,
-
-  .leaf_scan_fd2 = dirent_contnt2,
-
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
-  /* filename for debug only */
-  .leaf = {
-           .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
-           ", fd.mode AS filemode " /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-           ", fd.md5id AS md5id" /* */
-           ,
-           .selector2 =         /* */
-           " FROM " DUF_DBPREF " filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
-           " WHERE "            /* */
-           " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
-           " sz.size > 0 AND"   /* */
-           " mi.mime='image/jpeg' AND" /* */
-           " fn.Pathid = :parentdirID " /* */
-           ,
-           .selector_total2 =   /* */
-           " FROM " DUF_DBPREF " filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
-           " WHERE "            /* */
-           " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND " /* */
-           " sz.size > 0 AND"   /* */
-           " mi.mime='image/jpeg' " /* */
-           },
-  .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
-           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-           ,
-           .selector2 =         /* */
-           " FROM " DUF_DBPREF " paths AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+duf_scan_callbacks_t duf_collect_exif_callbacks =
+{
+  .title = "collect exif",.name = "exif",.def_opendir = 1,.leaf_scan_fd2 = dirent_contnt2,.use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+        .use_std_node = 0,      /* 1 : preliminary selection; 2 : direct (beginning_sql_argv=NULL recommended in many cases) */
+        /* filename for debug only */
+        .leaf =
+  {
+    .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
+          ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
+          ", fd.mode AS filemode " /* */
+          ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+          ", fd.md5id AS md5id" /* */
+          ,.selector2 =         /* */
+          " FROM " DUF_DBPREF " filenames AS fn " /* */
+          " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
+          " WHERE "             /* */
+          " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
+          " sz.size > 0 AND"    /* */
+          " mi.mime='image/jpeg' AND" /* */
+          " fn.Pathid = :parentdirID " /* */
+          ,.selector_total2 =   /* */
+          " FROM " DUF_DBPREF " filenames AS fn " /* */
+          " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
+          " WHERE "             /* */
+          " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND " /* */
+          " sz.size > 0 AND"    /* */
+          " mi.mime='image/jpeg' " /* */
+  },.node =
+  {
+    .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+          ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+          ,.selector2 =         /* */
+          " FROM " DUF_DBPREF " paths AS pt " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0
-           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+          " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
-           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
-           },
-  .final_sql_argv = &final_sql,
-};
+          " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+},.final_sql_argv = &final_sql,};

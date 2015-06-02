@@ -16,12 +16,6 @@
 /*   const duf_ufilter_t u;                        */
 /* } duf_filter_t;                                 */
 
-typedef struct
-{
-  int argc;
-  char **argv;
-} duf_argvc_t;
-
 typedef struct globx
 {
   duf_argvc_t include_fs_files;

@@ -1,32 +1,21 @@
-#include <stdarg.h>
-#include <stddef.h>
-#include <string.h>
-#include <time.h>
 #include <assert.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
+/* #include <mastar/tools/mas_arg_tools.h> */
 
 #include "duf_maintenance.h"
+
 #include "duf_utils.h"
-#include "duf_utils_path.h"
 
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
-#include "duf_sccb.h"
 #include "duf_sccbh.h"
-#include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"
 
 #include "duf_option_defs.h"
 #include "duf_option_find.h"
-#include "duf_option_descr.h"
-#include "duf_option_extended.h"
 
 /* ###################################################################### */
 #include "duf_option_typed.h"
@@ -650,11 +639,24 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
         {
-          assert( duf_config->cargv );
+          assert( duf_config->carg.argv );
           if ( extended->call.fdesc.a.func )
-            ( extended->call.fdesc.a.func ) ( duf_config->cargc, duf_config->cargv );
+            ( extended->call.fdesc.a.func ) ( duf_config->carg.argc, duf_config->carg.argv );
         }
         break;
+      case DUF_OPTION_VTYPE_AA_CALL:
+        DUF_TRACE( options, 2, "vtype AA_CALL" );
+        if ( noo )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        if ( r >= 0 )
+        {
+          assert( duf_config->carg.argc );
+          assert( duf_config->carg.argv );
+          if ( extended->call.fdesc.aa.func )
+            ( extended->call.fdesc.aa.func ) ( duf_config->carg );
+        }
+        break;
+
       case DUF_OPTION_VTYPE_VV_CALL:
         DUF_TRACE( options, 2, "vtype VV_CALL" );
         if ( noo )
@@ -682,7 +684,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         if ( r >= 0 )
         {
           if ( extended->call.fdesc.tn.func )
-            ( extended->call.fdesc.tn.func ) ( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) );
+            ( extended->call.fdesc.tn.func ) ( &duf_config->targ.argc, &duf_config->targ.argv, duf_strtol_suff( optargg, &r ) );
         }
         break;
       case DUF_OPTION_VTYPE_TS_CALL:
@@ -692,7 +694,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         if ( r >= 0 )
         {
           if ( extended->call.fdesc.ts.func )
-            ( extended->call.fdesc.ts.func ) ( &duf_config->targc, &duf_config->targv, optargg );
+            ( extended->call.fdesc.ts.func ) ( &duf_config->targ.argc, &duf_config->targ.argv, optargg );
         }
         break;
       case DUF_OPTION_VTYPE_S_CALL:

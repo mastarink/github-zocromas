@@ -6,7 +6,7 @@
 #  define TOTITEMS (sccbh->total_items)
 #  define PU (sccbh->pu)
 #  define HCHANGES (sccbh->changes)
-#  define TARGC (sccbh->targc)
-#  define TARGV (sccbh->targv)
+#  define TARGC (sccbh->targ.argc)
+#  define TARGV (sccbh->targ.argv)
 
 #endif

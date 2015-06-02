@@ -171,13 +171,13 @@ duf_action( int argc, char **argv )
   if ( r >= 0 && DUF_ACT_FLAG( add_path ) )
   {
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
-    for ( int ia = 0; r >= 0 && ia < duf_config->targc; ia++ )
+    for ( int ia = 0; r >= 0 && ia < duf_config->targ.argc; ia++ )
     {
-      DUF_TRACE( explain, 0, "to add (#%d) path %s", ia, duf_config->targv[ia] );
+      DUF_TRACE( explain, 0, "to add (#%d) path %s", ia, duf_config->targ.argv[ia] );
       if ( DUF_CLI_FLAG( dry_run ) )
         DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ADD_PATH ) );
       else
-        DOR( r, duf_add_path_uni( duf_config->targv[ia], node_selector2 ) );
+        DOR( r, duf_add_path_uni( duf_config->targ.argv[ia], node_selector2 ) );
       global_status.actions_done++;
     }
   }
@@ -189,11 +189,11 @@ duf_action( int argc, char **argv )
   assert( duf_config->pdi );
 
 
-/* re-init after db is open, created, paths are ready at targv, paths added */
+/* re-init after db is open, created, paths are ready at targ.argv, paths added */
   {
     const char *path = NULL;
 
-    path = duf_config->targc > 0 ? duf_config->targv[0] : "/";
+    path = duf_config->targ.argc > 0 ? duf_config->targ.argv[0] : "/";
     DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage DUF_OPTION_STAGE_FIRST  (1) - needs pdi inited with argv, which is known only after stage 0 */
@@ -206,7 +206,7 @@ duf_action( int argc, char **argv )
     DOR( r, duf_interactive(  ) );
   }
   else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
-    DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targv; reinit will be made */
+    DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
 
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   DUF_TRACE( explain, 0, "after actions" );

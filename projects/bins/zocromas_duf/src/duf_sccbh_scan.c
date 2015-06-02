@@ -70,10 +70,11 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
-  int DUF_UNUSED count = 0;
-  char DUF_UNUSED *const *sargv = NULL;
+  int count = 0;
+  char *const *sargv = NULL;
 
   assert( sccbh );
+  /* assert( TARGV ); */
 
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( SCCB ), TARGC );
   for ( int ia = 0; r >= 0 && ia < TARGC; ia++ )
@@ -90,11 +91,11 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
   /* - evaluate sccb for each string from TARG[CV] as path */
   for ( int ia = 0; r >= 0 && ia < count; ia++ )
   {
-    char *cargv = NULL;
+    const char *cargv = NULL;
 
     if ( sargv )
       cargv = *sargv++;
-    DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV[ia], cargv );
+    DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV ? TARGV[ia] : NULL, cargv );
     DOR( r, duf_sccbh_eval_path( sccbh, cargv ) );
   }
 

@@ -153,9 +153,9 @@ duf_config_delete( duf_config_t * cfg )
     /* mas_free( cfg->group ); */
     /* cfg->group = NULL;      */
 
-    mas_del_argv( cfg->targc, cfg->targv, 0 );
-    cfg->targc = 0;
-    cfg->targv = NULL;
+    mas_del_argv( cfg->targ.argc, cfg->targ.argv, 0 );
+    cfg->targ.argc = 0;
+    cfg->targ.argv = NULL;
 
     mas_free( cfg->cli.shorts );
     cfg->cli.shorts = NULL;
@@ -208,9 +208,9 @@ duf_config_show( void )
   {
     fprintf( stderr, "db.dir: %s\n", duf_config->db.dir );
   }
-  for ( int ia = 0; ia < duf_config->targc; ia++ )
+  for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
   {
-    fprintf( stderr, "targv[%d]: %s\n", ia, duf_config->targv[ia] );
+    fprintf( stderr, "targ.argv[%d]: %s\n", ia, duf_config->targ.argv[ia] );
   }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
   return 0;

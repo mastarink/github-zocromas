@@ -14,6 +14,20 @@ typedef struct
   unsigned long long max;
 } duf_limitsll_t;
 
+typedef struct
+{
+  int argc;
+  char **argv;
+} duf_argvc_t;
+typedef struct
+{
+  int argc;
+  char *const*argv;
+} duf_cargvc_t;
+
+
+
+
 #endif
 
 /*
