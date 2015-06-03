@@ -10,7 +10,7 @@
 #include "duf_config_ref.h"
 
 #include "duf_option_defs.h"
-#include "duf_option_acquire.h"
+/* #include "duf_option_acquire.h" */
 #include "duf_option_find.h"
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
