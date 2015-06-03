@@ -28,8 +28,6 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
 {
   DEBUG_STARTR( r );
 
-
-
   DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended, NULL ),
              extended->o.name, r, duf_error_name( r ), extended->o.val, DUF_OPTION_VAL_BFORMAT );
 

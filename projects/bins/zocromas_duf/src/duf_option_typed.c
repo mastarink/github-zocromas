@@ -547,6 +547,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
       case DUF_OPTION_VTYPE_PAA:
         DUF_TRACE( options, 2, "vtype PAA" );
+
         if ( r >= 0 )
         {
           duf_argvc_t *parg;
