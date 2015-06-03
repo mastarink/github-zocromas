@@ -21,7 +21,7 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_trace = {
   .table =                      /* */
   {
-   {.o = {DO_Q( "trace-all" ) /*             */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*     */ , DO_CL( TRACE ) /*   */
+   {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*     */ , DO_CL( TRACE ) /*   */
     /*                                                                                      */ , DO_H( trace .... ) /*                       */ },
 
    {.o = {DO_Q( "trace-dry" ) /*        */ , DO_A_N /* */ , DO_V( DRY_RUN_TRACE )} /*  */ , DO_CL( TRACE ) /*   */ ,
