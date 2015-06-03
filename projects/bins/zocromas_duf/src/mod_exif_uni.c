@@ -62,7 +62,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       /* DUF_TEST_R( lr ); */
       if ( lr == DUF_SQL_ROW )
       {
-        DUF_TRACE( current, 0, "<selected>" );
+        DUF_TRACE( select, 0, "<selected>" );
         modelid = duf_sql_column_long_long( pstmt_select, 0 );
         lr = 0;
       }
@@ -142,7 +142,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       /* DUF_TEST_R( lr ); */
       if ( lr == DUF_SQL_ROW )
       {
-        DUF_TRACE( current, 0, "<selected>" );
+        DUF_TRACE( select, 0, "<selected>" );
         exifid = duf_sql_column_long_long( pstmt_select, 0 );
         lr = 0;
       }

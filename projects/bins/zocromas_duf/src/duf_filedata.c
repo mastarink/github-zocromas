@@ -39,14 +39,14 @@ duf_stat2file_dataid_existed( duf_depthinfo_t * pdi, const struct stat *pst_file
   DUF_SQL_STEP( r, pstmt );
   if ( r == DUF_SQL_ROW )
   {
-    DUF_TRACE( current, 0, "<selected>" );
+    DUF_TRACE( select, 0, "<selected>" );
     dataid = duf_sql_column_long_long( pstmt, 0 );
     r = 0;
   }
   else
   {
     /* DUF_TEST_R( r ); */
-    DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+    DUF_TRACE( select, 0, "<NOT selected> (%d)", r );
   }
   /* DUF_TEST_R( r ); */
   DUF_SQL_END_STMT( select_filedata, r, pstmt );
@@ -97,7 +97,7 @@ duf_stat2file_dataid( duf_depthinfo_t * pdi, const struct stat *pst_file, int ne
       DUF_SQL_CHANGES( changes, r, pstmt );
       DUF_SQL_END_STMT( insert_filedata, r, pstmt );
     }
-    DUF_TRACE( current, 0, "<changes> : %d", changes );
+    DUF_TRACE( select, 0, "<changes> : %d", changes );
     if ( need_id )
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
@@ -129,7 +129,7 @@ duf_stat2file_dataid( duf_depthinfo_t * pdi, const struct stat *pst_file, int ne
   }
   if ( pr )
     *pr = r;
-  /* DUF_TRACE( current, 0, "%llu", dataid ); */
+  /* DUF_TRACE( select, 0, "%llu", dataid ); */
   assert( !need_id || dataid );
   DEBUG_ENDULL( dataid );
   return dataid;

@@ -114,7 +114,7 @@ duf_dirname_stat2dirid_existed( duf_depthinfo_t * pdi, const char *dirname, cons
       if ( r == DUF_SQL_ROW )
       {
         r = 0;
-        DUF_TRACE( current, 0, "<selected>" );
+        DUF_TRACE( select, 0, "<selected>" );
         dirid = duf_sql_column_long_long( pstmt, 0 );
         if ( !dirid )
         {
@@ -145,7 +145,7 @@ duf_dirname_stat2dirid_existed( duf_depthinfo_t * pdi, const char *dirname, cons
       else
       {
         DUF_TEST_R( r );
-        DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+        DUF_TRACE( select, 0, "<NOT selected> (%d)", r );
       }
     }
     DUF_SQL_END_STMT( select_path, r, pstmt );
@@ -182,7 +182,7 @@ duf_dirname_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const char *dirnam
     {
       changes = duf_dirname_insert_path_table( pdi, dirname, pstat->st_dev, pstat->st_ino );
     }
-    DUF_TRACE( current, 0, "<changes> : %d", changes );
+    DUF_TRACE( select, 0, "<changes> : %d", changes );
     if ( need_id )
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
@@ -257,7 +257,7 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, de
     {
       changes = duf_dirname_insert_path_table( pdi, dirname, st_dev, st_ino );
     }
-    DUF_TRACE( current, 0, "<changes> : %d", changes );
+    DUF_TRACE( select, 0, "<changes> : %d", changes );
     if ( need_id )
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
@@ -299,7 +299,7 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, de
             if ( r == DUF_SQL_ROW )
             {
               r = 0;
-              DUF_TRACE( current, 0, "<selected>" );
+              DUF_TRACE( select, 0, "<selected>" );
               dirid = duf_sql_column_long_long( pstmt, 0 );
               if ( need_id && !dirid )
               {
@@ -330,7 +330,7 @@ duf_dirname2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, de
             else
             {
               DUF_TEST_R( r );
-              DUF_TRACE( current, 0, "<NOT selected> (%d)", r );
+              DUF_TRACE( select, 0, "<NOT selected> (%d)", r );
             }
           }
           DUF_SQL_END_STMT( select_path, r, pstmt );

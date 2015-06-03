@@ -41,7 +41,6 @@ noinst_HEADERS=duf.h \
 	duf_option_names.h \
 	duf_option_restore.h \
 	duf_options_enum.h duf_options.h duf_option_types.h \
-	duf_option_acquire.h \
 	duf_path2db.h \
 	duf_tags.h \
 	duf_path.h \

@@ -1,6 +1,7 @@
 #ifndef MAS_DUF_OPTION_ACQUIRE_H
 #  define MAS_DUF_OPTION_ACQUIRE_H
 
+#if 0
 
 
 /*  ACQUIRE  */
@@ -61,8 +62,9 @@
     case DUF_OPTION_VAL_ ## up ##_TRACE: \
       DUF_OPTION_ACQUIRE_TRACE( _lo ); \
     break
-
+#endif
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
+#if 0
 #  define DUF_OPTION_ACQUIRE_STR(_lo)  \
       if ( optarg ) \
       { \
@@ -74,11 +76,12 @@
     case DUF_OPTION_VAL_ ## up: \
       DUF_OPTION_ACQUIRE_STR( _pref._lo ); \
     break
+#endif
 
 
 /* # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # */
 
-
+#if 0
 #  define DUF_OPTION_ACQUIRE_ARG(_lo)  \
       if ( optarg ) DUF_OPTION_A(_lo,argc)=mas_add_argv_arg(DUF_OPTION_A(_lo,argc), &DUF_OPTION_A(_lo,argv), optarg)
 
@@ -88,6 +91,7 @@
     break
 
 #  define DUF_OPTION_CASE_ACQUIRE_U_ARG(up, _lo) DUF_OPTION_CASE_ACQUIRE_ARG(up, _lo, ->, pu)
+#endif
 
 
 #endif

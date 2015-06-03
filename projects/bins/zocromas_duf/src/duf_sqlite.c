@@ -86,7 +86,7 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
     *pchanges = 0;
   if ( duf_config->cli.dbg.nosqlite )
   {
-    DUF_TRACE( current, 0, "SKIP %s", sql );
+    DUF_TRACE( sqlite, 0, "SKIP %s", sql );
   }
   else
   {

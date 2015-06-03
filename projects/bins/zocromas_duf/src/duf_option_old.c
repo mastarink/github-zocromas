@@ -42,20 +42,23 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
     case DUF_OPTION_VAL_TEST:
       DUF_PRINTF( 0, "This is test option output; optargg:%s", optargg ? optargg : "-" );
       break;
+#if 0
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXDIRFILES, /*        */ dirfiles.max /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MINDIRFILES, /*        */ dirfiles.min /*     */  );
-
+#endif
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXSEQ, (*             *) maxseq (*     *)  ); */
       /* DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXRELDEPTH, (*           *) max_rel_depth (*     *)  ); */
 
+#if 0
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS, /*           */ maxitems.total /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS_FILES, /*     */ maxitems.files /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_NUM( MAXITEMS_DIRS, /*      */ maxitems.dirs /*     */  );
+#endif
 
-
+#if 0
       DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_INCL_FS_FILES, /* */ globx.include_fs_files /*     */  );
       DUF_OPTION_CASE_ACQUIRE_U_ARG( GLOB_EXCL_FS_FILES, /* */ globx.exclude_fs_files /*     */  );
-
+#endif
 
 /* i/o */
 
@@ -116,7 +119,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
         duf_config->cli.trace.temp++;
       }
       break;
-
+#if 0
     case DUF_OPTION_VAL_FLAG_ZERO_DB:
       DUF_OPTION_ACQUIRE_FLAG( create_tables, cli.act );
 /* no break here ! */
@@ -139,7 +142,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
             DUF_ACT_FLAG( filenames ) = /* */
             1;
       break;
-
+#endif
 /* specific */
     case DUF_OPTION_VAL_BFORMAT:
       {

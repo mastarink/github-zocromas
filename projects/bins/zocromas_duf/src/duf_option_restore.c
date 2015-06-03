@@ -115,7 +115,7 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, OPTIONS, options, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, CALLS, calls, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, ANY, any, maxlen );
-  DUF_OPTION_RESTORE_TRACE( codeval, ptr, CURRENT, current, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, TEMPORARY, temporary, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, ACTION, action, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, ERROR, error, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN, scan, maxlen );

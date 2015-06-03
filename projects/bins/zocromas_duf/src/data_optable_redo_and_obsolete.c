@@ -22,11 +22,33 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_redo_and_obsolete = {
   .table =                      /* */
   {
+#if 0
    {.o = {DO_Q( "min-dirfiles" ) /*       */ , DO_A_R /* */ , DO_V( MINDIRFILES )} /*    */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "max-dirfiles" ) /*       */ , DO_A_R /* */ , DO_V( MAXDIRFILES )} /*    */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
+#else
+   {.o = {DO_Q( "min-dirfiles" ) /*          */ , DO_A_R /* */ , DO_V( MINDIRFILES )} /*             */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, dirfiles.min ) /*                                                     */ ,
+    DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-dirfiles" ) /*          */ , DO_A_R /* */ , DO_V( MAXDIRFILES )} /*             */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, dirfiles.max ) /*                                                     */ ,
+    DO_H(  .... ) /*                            */ },
+#endif
+
+#if 0
    {.o = {DO_Q( "max-dirs" ) /*           */ , DO_A_R /* */ , DO_V( MAXITEMS_DIRS )} /*  */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "max-files" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_FILES )} /* */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "max-items" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS )} /*       */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
+#else
+   {.o = {DO_Q( "max-dirs" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_DIRS )} /*             */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, maxitems.dirs ) /*                                                     */ ,
+    DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-files" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_FILES )} /*             */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, maxitems.files ) /*                                                     */ ,
+    DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-items" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS )} /*             */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, maxitems.total ) /*                                                     */ ,
+    DO_H(  .... ) /*                            */ },
+#endif
 
 
 
@@ -36,11 +58,11 @@ const duf_longval_extended_table_t optable_redo_and_obsolete = {
 
 
 
-
+#if 0
    {.o = {DO_Q( "tree2db" ) /*            */ , DO_A_N /* */ , DO_V( TREE_TO_DB )} /*     */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "tree-to-db" ) /*         */ , DO_A_N /* */ , DO_V( TREE_TO_DB )} /*     */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "zero-db" ) /*            */ , DO_A_N /* */ , DO_VF( ZERO_DB )} /*       */ , DO_CL( SYSTEM ) /*  */ , DO_H( zero db ) /*       */ },
-
+#endif
 
    /*{.o = {DO_N(),.has_arg = 0,DO_V(LIMIT)},.help = "....",.oclass = ...}, */
 /*{.o = {DO_N(add-to-group), 		 DO_A_N,		       .name = "",.has_arg = 0,DO_V(ADD_TO_GROUP)},.help = "...",.oclass = ...}, */

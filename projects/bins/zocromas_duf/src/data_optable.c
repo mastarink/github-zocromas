@@ -21,10 +21,17 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_main = {
   .table =                      /* */
   {
+#if 0
    {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
     /*                                                                                      */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
-    /* */ , DO_H(  ... ) /*              */ },
+    /*                                                                                      */ , DO_H(  ... ) /*                             */ },
+#else
+   {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
+    /*      */ DO_OU( PAA, globx.include_fs_files ) /*                                      */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
+    /*      */ DO_OU( PAA, globx.exclude_fs_files ) /*                                      */ , DO_H(  ... ) /*                             */ },
+#endif
 
 
 

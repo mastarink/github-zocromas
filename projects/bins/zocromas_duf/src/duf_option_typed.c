@@ -2,7 +2,7 @@
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
-/* #include <mastar/tools/mas_arg_tools.h> */
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
 
@@ -542,6 +542,31 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           else if ( extended->m_hasoff == 1 ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */
           {
             DUF_PRINTF( 0, "%s", ( *pstr ) );
+          }
+        }
+        break;
+      case DUF_OPTION_VTYPE_PAA:
+        DUF_TRACE( options, 2, "vtype PAA" );
+        if ( r >= 0 )
+        {
+          duf_argvc_t *parg;
+
+          parg = ( duf_argvc_t * ) byteptr;
+          if ( noo )
+          {
+            if ( parg )
+              mas_argv_delete( parg->argc, parg->argv );
+          }
+          else if ( optargg && *optargg )
+          {
+            parg->argc = mas_add_argv_arg( parg->argc, &parg->argv, optargg );
+          }
+          else if ( extended->m_hasoff == 1 ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */
+          {
+            char *str = mas_argv_string( parg->argc, parg->argv, 0 );
+
+            DUF_PRINTF( 0, "%s", ( str ) );
+            mas_free( str );
           }
         }
         break;

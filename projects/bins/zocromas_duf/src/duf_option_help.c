@@ -263,7 +263,7 @@ duf_option_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --max-dbg-lines=%lu", duf_config->cli.dbg.min_line );
   DUF_PRINTF( 0, "Trace ----------" );
   DUF_PRINTF( 0, "  -A, --trace-action=%d", duf_config->cli.trace.action );
-  DUF_PRINTF( 0, "  -C, --trace-current=%d", duf_config->cli.trace.current );
+  DUF_PRINTF( 0, "  -C, --trace-temporary=%d", duf_config->cli.trace.temporary );
   DUF_PRINTF( 0, "  -S, --trace-scan=%d", duf_config->cli.trace.scan );
   DUF_PRINTF( 0, "  -Q, --trace-sql=%d", duf_config->cli.trace.sql );
   DUF_PRINTF( 0, "  --trace-sample=%d", duf_config->cli.trace.sample );

@@ -42,7 +42,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tagname, int *pr )
     if ( r == DUF_SQL_ROW )
     {
       r = 0;
-      DUF_TRACE( current, 0, "<selected>" );
+      DUF_TRACE( select, 0, "<selected>" );
       tagnameid = duf_sql_column_long_long( pstmt, 0 );
       DUF_TRACE( path, 2, "@           inserting tagname %s; selected tagnameid:%llu", tagname, tagnameid );
     }
@@ -92,7 +92,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
     if ( r == DUF_SQL_ROW )
     {
       r = 0;
-      DUF_TRACE( current, 0, "<selected>" );
+      DUF_TRACE( select, 0, "<selected>" );
       tagid = duf_sql_column_long_long( pstmt, 0 );
       DUF_TRACE( path, 2, "@           inserting tagname %s; selected tagid:%llu", tagname, tagnameid );
     }

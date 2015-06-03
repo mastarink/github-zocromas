@@ -13,7 +13,7 @@ typedef enum
   DUF_TRACE_MODE_calls,
   DUF_TRACE_MODE_collect,
   DUF_TRACE_MODE_crc32,
-  DUF_TRACE_MODE_current,
+  DUF_TRACE_MODE_temporary,
   DUF_TRACE_MODE_deleted,
   DUF_TRACE_MODE_depth,
   DUF_TRACE_MODE_dirent,

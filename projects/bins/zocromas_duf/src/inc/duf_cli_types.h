@@ -51,7 +51,7 @@ typedef struct
   unsigned calls;
   unsigned collect;
   unsigned crc32;
-  unsigned current;
+  unsigned temporary;
   unsigned deleted;
   unsigned depth;
   unsigned dirent;
