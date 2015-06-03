@@ -29,12 +29,12 @@ const duf_longval_extended_table_t optable_sccb = {
    {.o = {DO_Q( "list-sccbs" ) /*       */ , DO_A_N /*  */ , DO_V( LIST_SCCBS )} /*        */ , DO_CL( NODESC ) /*  */
     , DO_VV_CALL( list_sccbs ) /*                                                           */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "evaluate-sccb" ) /*    */ , DO_A_R /*  */ , DO_V( EVALUATE_SCCB )} /*     */ , DO_CL( NODESC ) /*  */
-    , DO_S_CALL( evaluate_sccb ) /*       */ , DO_AT_STAGE( DUF_OPTION_STAGE_FIRST ) /*     */ , DO_H(  ... ) /*                             */ },
+    , DO_S_CALL( evaluate_sccb ) /*       */ , DO_AT_STAGE( FIRST ) /*                      */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "lsfiles" ) /*               */ , DO_A_N /*  */ , DO_V( LSFILES )} /*      */ , DO_CL( NODESC ) /*  */
     , DO_VSA_CALL( evaluate_sccb, "listing" ) /* */
-    /*      */ , DO_AT_STAGE( DUF_OPTION_STAGE_FIRST ) /*                                   */ , DO_H(  ... ) /*                             */ },
+    /*      */ , DO_AT_STAGE( FIRST ) /*                                                    */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "tree" ) /*             */ , DO_A_N /*  */ , DO_V( TREE )} /*              */ , DO_CL( NODESC ) /*  */
-    , DO_VSA_CALL( evaluate_sccb, "tree" ) /* */ , DO_AT_STAGE( DUF_OPTION_STAGE_FIRST ) /* */ , DO_H(  ... ) /*                             */ },
+    , DO_VSA_CALL( evaluate_sccb, "tree" ) /* */ , DO_AT_STAGE( FIRST ) /*                  */ , DO_H(  ... ) /*                             */ },
 
    {.o = {.name = NULL}}
    }

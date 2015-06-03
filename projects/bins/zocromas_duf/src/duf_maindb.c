@@ -243,23 +243,23 @@ duf_main_db( int argc, char **argv )
   DORF( r, duf_main_db_optionally_remove_files );
   DORF( r, duf_main_db_open );
 
-  DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ maxitems.total %lld", duf_config->pu->maxitems.total );
-  DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ maxitems.files %lld", duf_config->pu->maxitems.files );
-  DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ maxitems.dirs %lld", duf_config->pu->maxitems.dirs );
-  DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ dirfiles.min %u", duf_config->pu->dirfiles.min );
-  DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ dirfiles.max %u", duf_config->pu->dirfiles.max );
+  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", duf_config->pu->maxitems.total );
+  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", duf_config->pu->maxitems.files );
+  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", duf_config->pu->maxitems.dirs );
+  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", duf_config->pu->dirfiles.min );
+  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", duf_config->pu->dirfiles.max );
   {
     char *sif = NULL;
 
     sif = mas_argv_string( duf_config->pu->globx.include_fs_files.argc, duf_config->pu->globx.include_fs_files.argv, 0 );
-    DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ include-fs %s", sif );
+    DUF_TRACE( temporary, 0, "@ include-fs %s", sif );
     mas_free( sif );
   }
   {
     char *sif = NULL;
 
     sif = mas_argv_string( duf_config->pu->globx.exclude_fs_files.argc, duf_config->pu->globx.exclude_fs_files.argv, 0 );
-    DUF_TRACE( temporary, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ exclude-fs %s", sif );
+    DUF_TRACE( temporary, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }
 

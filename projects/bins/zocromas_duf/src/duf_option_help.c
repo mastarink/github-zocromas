@@ -553,6 +553,12 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --progress  --fast /mnt/new_media/media/photo/ --remove-database -PO -fR "
               " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif    	- %s", "" );
 
+  DUF_PRINTF( 0, "========================= as for 20150603.145115 ============" );
+  DUF_PRINTF( 0, "  run --mem --trace-temporary --max-dirfiles=17 --max-dirs=234 --max-files=543 --max-items=951 "
+              " --fast  --min-dirfiles=13 --include-fs='*.jpg'  --include-fs='*.png' --exclude-fs='*.avi' --exclude-fs='*.mp4'    	- %s",
+              "debug to show some data (temporary); argv-typed options --(in|ex)clude-fs=" );
+  DUF_PRINTF( 0, "  run  --memusa --max-rel-depth=? --max-depth=? --output-level=5 --output-level=?    	- %s",
+              "show values (? instead of value; esp. for interactive)" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

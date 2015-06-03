@@ -1,6 +1,7 @@
 #ifndef DUF_OPTABLE_DEF_H
 #  define DUF_OPTABLE_DEF_H
 
+#include "duf_option_types.h"
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
              example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
@@ -74,9 +75,9 @@
 /* void f( .vsa.arg ) -- */
 #  define DO_VSA_CALL(_f, _a)		DO_SET_VTYPE( VSA_CALL ), DO_SET_CALLA(vsa, _f, _a)
 
-#  define DO_SET_STAGE(_min, _max) .stage={.min=_min, .max=_max},.use_stage=1
+#  define DO_SET_STAGE(_min, _max) .stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.use_stage=1
 #  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
-#  define DO_STAGE_ANY		DO_SET_STAGE(0, -1)
+#  define DO_STAGE_ANY		DO_SET_STAGE(DEFAULT, ANY)
 
 #  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v
 #  define DO_STG_NOT(_v) DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )

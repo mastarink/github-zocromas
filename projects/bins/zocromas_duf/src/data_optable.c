@@ -27,6 +27,7 @@ const duf_longval_extended_table_t optable_main = {
    {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */
     /*                                                                                      */ , DO_H(  ... ) /*                             */ },
 #else
+   /* FIXME in fact only 1 works...? XXX */
    {.o = {DO_Q( "include-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
     /*      */ DO_OU( PAA, globx.include_fs_files ) /*                                      */ , DO_H(  ... ) /*                             */ },
    {.o = {DO_Q( "exclude-fs" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_FS_FILES )} /* */ , DO_CL( NODESC ) /*     */ ,
@@ -37,37 +38,34 @@ const duf_longval_extended_table_t optable_main = {
 
 
    {.o = {DO_N( depth ) /*              */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OPDI( PDINUM, depth ), DO_AT_STAGE( 1 ) /*                                */ , DO_H( pdi cd ) /*                           */ },
+    /*      */ DO_OPDI( PDINUM, depth ) /*             */ , DO_AT_STAGE( DEF ) /*           */ , DO_H( pdi cd ) /*                           */ },
    {.o = {DO_N( maxdepth ) /*           */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OPDI( PDINUM, maxdepth ), DO_AT_STAGE( 1 ) /*                                           */ , DO_H( pdi cd ) /*             */ },
+    /*      */ DO_OPDI( PDINUM, maxdepth ) /*          */ , DO_AT_STAGE( DEF ) /*           */ , DO_H( pdi cd ) /*                           */ },
 
 
    {.o = {DO_Q( "max-rel-depth" ) /*    */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
-    /*      */ DO_OU( NUM, max_rel_depth ) /*                                               */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_AT_STAGE( DEF ) /*         */ , DO_H(  .... ) /*                            */ },
    {.o = {DO_Q( "max-depth" ) /*        */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
-    /*      */ DO_OU( NUM, max_rel_depth ) /*                                               */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_AT_STAGE( DEF ) /*          */ , DO_H(  .... ) /*                            */ },
+#if 0
    {.o = {DO_Q( "max-depth" ) /*        */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
-    /*      */ DO_OU( PNUM, max_rel_depth ), DO_AT_STAGE( 1 ) /*                                               */ ,
-    DO_H(  .... ) /*              */ },
+    /*      */ DO_OU( PNUM, max_rel_depth ) /*         */ , DO_AT_STAGE( DEF ) /*           */ , DO_H(  .... ) /*                            */ },
+#endif
    {.o = {DO_Q( "max-seq" ) /*          */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, max_seq ) /*                                                     */ , DO_H(  .... ) /*                            */ },
+    /*      */ DO_OU( NUM, max_seq ) /*                 */ , DO_AT_STAGE( DEF ) /*          */ , DO_H(  .... ) /*                            */ },
+#if 0
    {.o = {DO_Q( "max-seq" ) /*          */ , DO_A_R /* */ , DO_V( MAXSEQ )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( PNUM, max_seq ), DO_AT_STAGE( 1 ) /*                                                      */ ,
-    DO_H(  .... ) /*              */ },
-
+    /*      */ DO_OU( PNUM, max_seq ) /*                */ , DO_AT_STAGE( DEF ) /*          */ , DO_H(  .... ) /*                            */ },
+#endif
 
    {.o = {DO_Q( "output-level" ) /*     */ , DO_A_O /* */ , DO_V( OUTPUT_LEVEL )} /*       */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( NUM, cli.output.level ), DO_AT_STAGE( 1 ) /*                                            */ ,
-    DO_H( output level ) /*                     */ },
+    /*      */ DO_OC( NUM, cli.output.level ) /*        */ , DO_AT_STAGE( DEF ) /*          */ , DO_H( output level ) /*                     */ },
    {.o = {DO_Q( "output-file" ) /*      */ , DO_A_R /* */ , DO_V( OUTPUT_FILE )} /*        */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.output ), DO_AT_STAGE( 1 ) /*                                                 */ ,
-    DO_H( output to file ) /*                   */ },
-   {.o = {DO_Q( "output-stderr" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDERR )} /*      */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.output ), DO_AT_STAGE( 1 )
-    ,.call = {.value = {.u = 2}} /*                     */ , DO_H( output to stderr ) /*                 */ },
-   {.o = {DO_Q( "output-stdout" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDOUT )} /*      */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.output ), DO_AT_STAGE( 1 )
-    ,.call = {.value = {.u = 1}} /*                     */ , DO_H( output to stdout ) /*                 */ },
+    /*      */ DO_OC( FILE, cli.output ) /*             */ , DO_AT_STAGE( DEF ) /*          */ , DO_H( output to file ) /*                   */ },
+   {.o = {DO_Q( "output-stderr" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDERR )} /*      */ , DO_CL( PRINT ) /* */ ,.call = {.value = {.u = 2}},
+    /*      */ DO_OC( FILE, cli.output ) /*             */ , DO_AT_STAGE( DEF ) /*          */ , DO_H( output to stderr ) /*                 */ },
+   {.o = {DO_Q( "output-stdout" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDOUT )} /*      */ , DO_CL( PRINT ) /* */ ,.call = {.value = {.u = 1}},
+    /*      */ DO_OC( FILE, cli.output ) /*          */ , DO_AT_STAGE( DEF ) /*             */ , DO_H( output to stdout ) /*                 */ },
 
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },
 

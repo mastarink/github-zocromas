@@ -26,12 +26,10 @@ const duf_longval_extended_table_t optable_redo_and_obsolete = {
    {.o = {DO_Q( "min-dirfiles" ) /*       */ , DO_A_R /* */ , DO_V( MINDIRFILES )} /*    */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "max-dirfiles" ) /*       */ , DO_A_R /* */ , DO_V( MAXDIRFILES )} /*    */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
 #else
-   {.o = {DO_Q( "min-dirfiles" ) /*          */ , DO_A_R /* */ , DO_V( MINDIRFILES )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, dirfiles.min ) /*                                                     */ ,
-    DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "max-dirfiles" ) /*          */ , DO_A_R /* */ , DO_V( MAXDIRFILES )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, dirfiles.max ) /*                                                     */ ,
-    DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "min-dirfiles" ) /*          */ , DO_A_R /* */ , DO_V( MINDIRFILES )} /*   */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, dirfiles.min ), DO_AT_STAGE( DEFAULT ) /*                        */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-dirfiles" ) /*          */ , DO_A_R /* */ , DO_V( MAXDIRFILES )} /*   */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, dirfiles.max ), DO_AT_STAGE( DEFAULT ) /*                        */ , DO_H(  .... ) /*                            */ },
 #endif
 
 #if 0
@@ -39,15 +37,12 @@ const duf_longval_extended_table_t optable_redo_and_obsolete = {
    {.o = {DO_Q( "max-files" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_FILES )} /* */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
    {.o = {DO_Q( "max-items" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS )} /*       */ , DO_CL( NODESC ) /*  */ , DO_H(  .... ) /*         */ },
 #else
-   {.o = {DO_Q( "max-dirs" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_DIRS )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, maxitems.dirs ) /*                                                     */ ,
-    DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "max-files" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_FILES )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, maxitems.files ) /*                                                     */ ,
-    DO_H(  .... ) /*                            */ },
-   {.o = {DO_Q( "max-items" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS )} /*             */ , DO_CL( NODESC ) /*   */ ,
-    /*      */ DO_OU( NUM, maxitems.total ) /*                                                     */ ,
-    DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-dirs" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_DIRS )} /*     */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, maxitems.dirs ), DO_AT_STAGE( DEFAULT ) /*                       */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-files" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS_FILES )} /*   */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, maxitems.files ), DO_AT_STAGE( DEFAULT ) /*                      */ , DO_H(  .... ) /*                            */ },
+   {.o = {DO_Q( "max-items" ) /*          */ , DO_A_R /* */ , DO_V( MAXITEMS )} /*         */ , DO_CL( NODESC ) /*   */ ,
+    /*      */ DO_OU( NUM, maxitems.total ), DO_AT_STAGE( DEFAULT ) /*                      */ , DO_H(  .... ) /*                            */ },
 #endif
 
 
