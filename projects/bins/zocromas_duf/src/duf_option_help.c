@@ -120,7 +120,7 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
 };
 
 void
-duf_option_smart_help( duf_option_class_t oclass )
+duf_option_$_smart_help( duf_option_class_t oclass )
 {
   int r = 0;
   int *ashown;
@@ -209,19 +209,19 @@ duf_option_smart_help( duf_option_class_t oclass )
 }
 
 void
-duf_option_smart_help_all( duf_option_class_t oclass )
+duf_option_$_smart_help_all( duf_option_class_t oclass )
 {
   if ( oclass == DUF_OPTION_CLASS_ALL )
   {
     for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
     {
-      duf_option_smart_help( oc );
+      duf_option_$_smart_help( oc );
     }
   }
 }
 
 void
-duf_option_help(  /* int argc, char *const *argv */ void )
+duf_option_$_help(  /* int argc, char *const *argv */ void )
 {
   int r = 0;
 
@@ -274,7 +274,7 @@ duf_option_help(  /* int argc, char *const *argv */ void )
 }
 
 void
-duf_option_examples(  /* int argc, char *const *argv */ void )
+duf_option_$_examples(  /* int argc, char *const *argv */ void )
 {
   DEBUG_START(  );
   DUF_PRINTF( 0, "Examples" );
@@ -559,13 +559,16 @@ duf_option_examples(  /* int argc, char *const *argv */ void )
               "debug to show some data (temporary); argv-typed options --(in|ex)clude-fs=" );
   DUF_PRINTF( 0, "  run  --memusa --max-rel-depth=? --max-depth=? --output-level=5 --output-level=?    	- %s",
               "show values (? instead of value; esp. for interactive)" );
+
+  DUF_PRINTF( 0, "  run  --open-db --cd=/mnt/new_media/media/photo/     -dfR -p   --md5id=857    	- %s", "" );
+  DUF_PRINTF( 0, "  run                 /mnt/new_media/media/photo/     -dfR -p   --md5id=857    	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
 }
 
 void
-duf_option_version(  /* int argc, char *const *argv */ void )
+duf_option_$_version( void )
 {
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
   char *sargv1, *sargv2;
@@ -698,7 +701,7 @@ duf_unflag2cnames( unsigned unfset )
 }
 
 void
-duf_option_showflags(  /* int argc, char *const *argv */ void )
+duf_option_$_showflags(  /* int argc, char *const *argv */ void )
 {
   DEBUG_START(  );
   {
@@ -810,16 +813,7 @@ duf_option_showflags(  /* int argc, char *const *argv */ void )
 }
 
 void
-duf_option_list_sccb( int x )
-{
-  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
-  {
-    DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( act->sccb ) );
-  }
-}
-
-void
-duf_option_list_targ( int *ptargc, char ***ptargv, long n )
+duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
 {
   if ( ptargc && ptargv )
   {
@@ -835,21 +829,21 @@ duf_option_list_targ( int *ptargc, char ***ptargv, long n )
 }
 
 void
-duf_option_clear_targ( int *ptargc, char ***ptargv, long n )
+duf_option_$_clear_targ( int *ptargc, char ***ptargv, long n )
 {
   if ( ptargc && ptargv && n == 0 )
     *ptargc = mas_argv_delete( *ptargc, *ptargv );
 }
 
 void
-duf_option_add_targ( int *ptargc, char ***ptargv, const char *s )
+duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s )
 {
   if ( ptargc && ptargv )
     *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
 }
 
 void
-duf_option_list_options( long n )
+duf_option_$_list_options( long n )
 {
   int ntable = 0;
   int tbcount = 0;
@@ -890,12 +884,12 @@ duf_test_help( int argc, char **argv, duf_option_class_t oclass )
   if ( oclass == DUF_OPTION_CLASS_ALL )
   {
     for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
-      duf_option_smart_help( oc );
+      duf_option_$_smart_help( oc );
     r = 0;
   }
   else if (  /* oclass != DUF_OPTION_CLASS_NO_HELP && */ oclass != DUF_OPTION_CLASS_BAD )
   {
-    duf_option_smart_help( oclass );
+    duf_option_$_smart_help( oclass );
     r = 0;
   }
   else
@@ -903,15 +897,15 @@ duf_test_help( int argc, char **argv, duf_option_class_t oclass )
     /* switch ( oclass )                    */
     /* {                                    */
     /* case DUF_OPTION_CLASS_VERSION:       */
-    /*   duf_option_version( argc, argv );  */
+    /*   duf_option_$_version( argc, argv );  */
     /*   r = 0;                             */
     /*   break;                             */
     /* case DUF_OPTION_CLASS_HELP:          */
-    /*   duf_option_help( argc, argv );     */
+    /*   duf_option_$_help( argc, argv );     */
     /*   r = 0;                             */
     /*   break;                             */
     /* case DUF_OPTION_CLASS_EXAMPLES:      */
-    /*   duf_option_examples( argc, argv ); */
+    /*   duf_option_$_examples( argc, argv ); */
     /*   r = 0;                             */
     /*   break;                             */
     /* default:                             */

@@ -338,7 +338,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
           if ( p == path || *( p - 1 ) != '/' )
             *p++ = '/';
           *p = 0;
-          DUF_TRACE( path, 0, "path:%s", path );
+          DUF_TRACE( path, 4, "path:%s", path );
           l = strlen( pdi->levinfo[i].itemname );
           if ( l > 0 )
           {
@@ -350,8 +350,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
         }
         assert( d >= 0 );
         duf_levinfo_ptr_d( pdi, d )->fullpath = path;
-        DUF_TRACE( path, 0, "fullpath:%s", path );
-        DUF_TRACE( path, 0, "fullpath:%s", duf_levinfo_ptr_d( pdi, d )->fullpath );
+        DUF_TRACE( path, 4, "fullpath:%s", path );
       }
       /* else                                */
       /* {                                   */

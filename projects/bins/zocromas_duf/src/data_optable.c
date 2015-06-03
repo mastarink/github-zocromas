@@ -6,6 +6,9 @@
 #include "duf_config_ref.h"
 #include "duf_optable_def.h"
 
+
+#include "duf_option_sccb.h" /* FIXME : temp for duf_option_$_db_open               */
+
 /*
 At duf_options_table.c:
   1. extern const duf_longval_extended_table_t optable_main[];
@@ -35,6 +38,10 @@ const duf_longval_extended_table_t optable_main = {
 #endif
 
 
+   {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */
+    , DO_VV_CALL( db_open ) /*                                                     */ , DO_H(  ... ) /*                             */ },
+   {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,
+    /*      */ DO_OC( PDISTR, pdi ) /*                                                      */ , DO_H( pdi cd ) /*                           */ },
 
 
    {.o = {DO_N( depth ) /*              */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,

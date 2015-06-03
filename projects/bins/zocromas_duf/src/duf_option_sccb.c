@@ -16,6 +16,8 @@
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
 
+#include "duf_levinfo_ref.h"
+#include "duf_maindb.h"
 
 
 #include "duf_option_descr.h"
@@ -31,7 +33,7 @@
 /* ###################################################################### */
 
 void
-duf_option_list_sccbs( void )
+duf_option_$_list_sccbs( void )
 {
   for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
   {
@@ -43,12 +45,22 @@ duf_option_list_sccbs( void )
 }
 
 void
-duf_option_evaluate_sccb( const char *names )
+duf_option_$_list_sccb( int x )
+{
+  for ( duf_action_table_t * act = duf_action_table(  ); act->sccb; act++ )
+  {
+    DUF_PRINTF( 0, "* %s", duf_uni_scan_action_title( act->sccb ) );
+  }
+}
+
+void
+duf_option_$_evaluate_sccb( const char *names )
 {
   int ok = 0;
   const char *pnames;
 
   pnames = names;
+  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   while ( pnames && *pnames )
   {
     const char *ename = NULL;
@@ -68,6 +80,9 @@ duf_option_evaluate_sccb( const char *names )
       {
         int r = 0;
 
+        DUF_TRACE( path, 0, "@ (to duf_evaluate_sccb) levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
+
+
         DOR( r, duf_evaluate_sccb( sccb ) );
         ok++;
       }
@@ -84,4 +99,10 @@ duf_option_evaluate_sccb( const char *names )
   {
     DUF_SHOW_ERROR( "sccb not found: %s", names );
   }
+}
+
+void
+duf_option_$_db_open( void )
+{
+  (void) duf_main_db_open(  );
 }

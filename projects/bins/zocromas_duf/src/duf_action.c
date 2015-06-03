@@ -23,6 +23,10 @@
 #include "duf_add.h"
 #include "duf_uni_scan.h"
 
+#include "duf_levinfo_ref.h"
+
+
+
 #include "duf_pdi.h"
 #include "duf_interactive.h"
 
@@ -66,63 +70,7 @@ duf_store_log( int argc, char *const argv[] )
   DEBUG_ENDR( r );
 }
 
-static int
-duf_pre_action( void )
-{
-  DEBUG_STARTR( r );
-/* --drop-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 && DUF_ACT_FLAG( drop_tables ) )
-  {
-    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
-    if ( DUF_CLI_FLAG( dry_run ) )
-      DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
-    else
-    {
-      /* DOR( r, duf_clear_tables(  ) ); */
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL );
-    }
-    global_status.actions_done++;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
-  }
-  if ( r >= 0 && DUF_ACT_FLAG( vacuum ) )
-  {
-    /* static const char *sql = "VACUUM"; */
 
-    /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( VACUUM ) ); */
-    if ( DUF_CLI_FLAG( dry_run ) )
-      DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
-    else
-    {
-      /* DUF_SQL_START_STMT_NOPDI( sql, r, pstmt ); */
-      /* DUF_SQL_STEP( r, pstmt );                  */
-      /* DUF_SQL_END_STMT_NOPDI( r, pstmt );        */
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL );
-    }
-    global_status.actions_done++;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( VACUUM ) );
-  }
-/* --create-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 && DUF_ACT_FLAG( create_tables ) )
-  {
-    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-    /* DOR( r, duf_check_tables(  ) ); */
-    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
-    global_status.actions_done++;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-  }
-  duf_eval_sql_sequence( &sql_beginning_tables, 0, NULL );
-
-  DEBUG_ENDR( r );
-}
 
 /* do necessary actions to perform tasks, formulated in duf_config global variable and ... for opened database
  *    - global variable duf_config must be created/inited and set
@@ -158,13 +106,15 @@ duf_action( int argc, char **argv )
 #endif
 
 
+  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   DUF_TRACE( explain, 0, "to do actions" );
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 
   DUF_E_SET( -96, DUF_ERROR_NO_ACTIONS );
   /* DUF_E_SET( 97, DUF_ERROR_TOO_DEEP, DUF_ERROR_NOT_IN_DB, (* DUF_ERROR_MAX_SEQ_REACHED, *) DUF_ERROR_MAX_REACHED ); */
-
+#if 0
   DORF( r, duf_pre_action );
+#endif
   DORF( r, duf_store_log, argc, argv );
 
 /* --add-path									*/ DEBUG_STEP(  );
@@ -188,17 +138,26 @@ duf_action( int argc, char **argv )
   assert( duf_config );
   assert( duf_config->pdi );
 
+  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
 
 /* re-init after db is open, created, paths are ready at targ.argv, paths added */
   {
-    const char *path = NULL;
+    const char *tpath = NULL;
 
-    path = duf_config->targ.argc > 0 ? duf_config->targ.argv[0] : "/";
-    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, path, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
+    tpath = duf_levinfo_path( duf_config->pdi );
+    if ( !tpath || !*tpath )
+      tpath = duf_config->targ.argc > 0 ? duf_config->targ.argv[0] : "/";
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, tpath, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage DUF_OPTION_STAGE_FIRST  (1) - needs pdi inited with argv, which is known only after stage 0 */
+
+    /*!XXX here duf_levinfo_path( duf_config->pdi ) is valid XXX! */
+
+    DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
     DOR( r, duf_parse_cli_options( duf_config->cli.shorts, DUF_OPTION_STAGE_FIRST ) );
+    DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   }
+  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   assert( duf_config->pdi->levinfo );
 
   if ( DUF_ACT_FLAG( interactive ) )
@@ -206,8 +165,9 @@ duf_action( int argc, char **argv )
     DOR( r, duf_interactive(  ) );
   }
   else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
+  {
     DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
-
+  }
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   DUF_TRACE( explain, 0, "after actions" );
 

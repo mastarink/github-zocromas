@@ -2,5 +2,7 @@
 #  define DUF_MAINDB_H
 
 int duf_main_db( int argc, char **argv );
+int duf_main_db_open( void );
+int duf_pre_action( void );
 
 #endif

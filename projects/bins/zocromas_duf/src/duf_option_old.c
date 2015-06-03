@@ -31,7 +31,7 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
   DUF_TRACE( options, 2, "(x%d) to parse %s (%s)  (%d)%s  cv:%d (F:%d)", extended ? 1 : 0, duf_option_description_x_tmp( -1, extended, NULL ),
              extended->o.name, r, duf_error_name( r ), extended->o.val, DUF_OPTION_VAL_BFORMAT );
 
-  if ( DUF_OPTION_CHECK_STATE( istage, extended, xtable ) )
+  if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) )
   {
     switch ( extended->o.val )
     {

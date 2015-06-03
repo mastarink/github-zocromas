@@ -26,6 +26,10 @@ duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * exten
   int r1 = 0;
   int r2 = 0;
 
+  DUF_TRACE( options, 3, "checking stage; istage:%d xflag:%d xuse:%d xminmax:%d/%d", istage, extended->stage.flag, extended->use_stage,
+             extended->stage.min, extended->stage.max );
+  DUF_TRACE( options, 3, "checking stage; istage:%d tflag:%d tuse:%d tminmax:%d/%d", istage, xtable->stage.flag, xtable->use_stage,
+             xtable->stage.min, xtable->stage.max );
   r = ( istage == -1 );
   /* DUF_PRINTF( 0, "1.  (%d)  check_stage:%s: %d", istage, extended->o.name, r ); */
   r = r || extended->stage.flag;
@@ -43,6 +47,8 @@ duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * exten
     r = 0;
   }
   /* DUF_PRINTF( 0, "3.  (%d)  check_stage:%s: %d", istage, extended->o.name, r ); */
+
+  DUF_TRACE( options, 2, "checked stage; istage:%d; r:%d", istage, r );
   return r;
 }
 

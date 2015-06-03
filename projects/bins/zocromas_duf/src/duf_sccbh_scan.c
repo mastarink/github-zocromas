@@ -54,7 +54,7 @@ duf_sccbh_eval_path( duf_sccb_handle_t * sccbh, const char *path )
     real_path = duf_realpath( path, &r );
     {
       DUF_TRACE( explain, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
-      DUF_TRACE( path, 0, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
+      DUF_TRACE( path, 4, "start scan from path: ≪%s≫; real: ≪%s≫", path, real_path );
 
       DUF_E_NO( DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 //  duf_scan_qbeginning_sql( sccb ); ==[20140506]==> duf_open_sccb_handle
@@ -88,17 +88,23 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
     count = TARGC;
     sargv = TARGV;
   }
-  /* - evaluate sccb for each string from TARG[CV] as path */
-  for ( int ia = 0; r >= 0 && ia < count; ia++ )
   {
-    const char *cargv = NULL;
+    const char *lpath = NULL;
 
-    if ( sargv )
-      cargv = *sargv++;
-    DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV ? TARGV[ia] : NULL, cargv );
-    DOR( r, duf_sccbh_eval_path( sccbh, cargv ) );
+    lpath = duf_levinfo_path( PDI );
+    DOR( r, duf_sccbh_eval_path( sccbh, lpath ) );
+    /* - evaluate sccb for each string from TARG[CV] as path */
+    if ( !lpath )
+      for ( int ia = 0; r >= 0 && ia < count; ia++ )
+      {
+        const char *cargv = NULL;
+
+        if ( sargv )
+          cargv = *sargv++;
+        DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV ? TARGV[ia] : NULL, cargv );
+        DOR( r, duf_sccbh_eval_path( sccbh, cargv ) );
+      }
   }
-
   DUF_TRACE( action, 1, "after scan" );
 
   DEBUG_ENDR( r );

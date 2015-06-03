@@ -180,7 +180,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	} \
       }
 #if 0
-#define DUF_PNUMOPT( _no, _rt, _typ ) \
+#  define DUF_PNUMOPT( _no, _rt, _typ ) \
       if (_rt>=0) \
       { \
 	if ( !_no ) \
@@ -197,7 +197,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	  DOR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
-#define DUF_QPNUMOPT( _no, _rt, _typ, _conv ) \
+#  define DUF_QPNUMOPT( _no, _rt, _typ, _conv ) \
       if (_rt>=0) \
       { \
 	if ( !_no ) \
@@ -320,7 +320,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       }
 #define DUF_OUTPUTFILE(_no, _rt, _typ, _defout) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout)
 
-    if ( DUF_OPTION_CHECK_STATE( istage, extended, xtable ) )
+    DUF_TRACE( options, 2, "to check stage; istage:%d", istage );
+    if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) /* duf_check_stage */
     {
       int nof;
 
@@ -586,9 +587,12 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         if ( r >= 0 )
         {
           if ( optargg && *optargg )
+          {
             DOR( r,
                  duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg,
                                          NULL /* const char *node_selector2 *//* , duf_config->pu,  recursive */  ) );
+            DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
+          }
           else
             DUF_PRINTF( 0, "%s", duf_levinfo_path( *( ( duf_depthinfo_t ** ) byteptr ) ) );
         }
