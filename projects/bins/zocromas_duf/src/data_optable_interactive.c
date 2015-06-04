@@ -41,8 +41,6 @@ const duf_longval_extended_table_t optable_interactive = {
     * */
    {.o = {DO_N( quit ) /*                */ , DO_A_N , DO_V( QUIT )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( NOFLAG, cli.act.v ), DO_INTERACTIVE /*              */ , DO_H( get dir info ) /*                     */ },
-   {.o = {DO_N( pwd ) /*                 */ , DO_A_N, DO_V( PWD )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
-    /*      */ DO_OC( PDISTR, pdi ) /*                                    */ , DO_H( pdi cd ) /*                           */ },
 #if 0
    {.o = {DO_N( lsfiles ) /*             */ , DO_A_O, DO_V( LSFILES )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( PDISCCB, pdi ),.call = {.fdesc = {.hi = {.sccb = &duf_print_dir_callbacks}}}, DO_H( pdi cd ) /*      */ },

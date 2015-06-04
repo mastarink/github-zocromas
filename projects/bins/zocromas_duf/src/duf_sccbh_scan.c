@@ -89,12 +89,10 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
     sargv = TARGV;
   }
   {
-    const char *lpath = NULL;
-
-    lpath = duf_levinfo_path( PDI );
-    DOR( r, duf_sccbh_eval_path( sccbh, lpath ) );
     /* - evaluate sccb for each string from TARG[CV] as path */
-    if ( !lpath )
+    if ( duf_levinfo_path( PDI ) )
+      DOR( r, duf_sccbh_eval_pdi( sccbh ) );
+    else
       for ( int ia = 0; r >= 0 && ia < count; ia++ )
       {
         const char *cargv = NULL;

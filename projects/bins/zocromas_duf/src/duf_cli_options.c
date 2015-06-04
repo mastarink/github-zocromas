@@ -55,6 +55,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
  * */
     r = duf_parse_option( codeval, longindex, optarg, istage );
     DUF_TRACE( options, 2, "cli options r: %d", r );
+    DUF_TRACE( options, 0, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
 
     if ( r == DUF_ERROR_OPTION_NOT_FOUND || r == DUF_ERROR_OPTION )
     {
@@ -62,6 +63,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     }
     cnt++;
   }
+  DUF_TRACE( options, 0, "optind:%d; carg.argc:%d", optind, carg.argc );
   DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
   if ( istage == 0 && optind < duf_config->carg.argc )
   {
@@ -69,6 +71,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     duf_config->targ.argc = 0;
     duf_config->targ.argv = NULL;
 
+    DUF_TRACE( options, 0, "(for targ) carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
     duf_config->targ.argc = mas_add_argv_argv( duf_config->targ.argc, &duf_config->targ.argv, duf_config->carg.argc, duf_config->carg.argv, optind );
     /* targ.argv becomes valid here - may init pdi etc. */
   }

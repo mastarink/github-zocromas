@@ -31,7 +31,7 @@
 
 /* #include "duf_dbg.h" */
 
-/* #include "sql_beginning_selected.h" */
+#include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
 
@@ -46,7 +46,7 @@ register_direntry( const char *fname, const struct stat *pst_dir, duf_depthinfo_
 
 /* fname === */
   DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s", fname );
-  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */, fname , pst_dir, duf_directories_callbacks.node.selector2, 0 /*need_id */ , &changes, &r );
+  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , fname, pst_dir, duf_directories_callbacks.node.selector2, 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
 
@@ -121,6 +121,8 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .def_opendir = 1,
   .dirent_dir_scan_before2 = register_direntry,
 
+  .count_nodes = 1,
+  .beginning_sql_seq = &sql_beginning_selected,
 
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -167,6 +169,9 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
            " WHERE pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .selector_total2 =   /* */
+           " /* dir */ FROM " DUF_SQL_SELECTED_PATHS_FULL " AS p " /* */
            }
   ,
   .final_sql_seq = &final_sql,

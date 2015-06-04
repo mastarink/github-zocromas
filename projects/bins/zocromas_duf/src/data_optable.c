@@ -7,7 +7,7 @@
 #include "duf_optable_def.h"
 
 
-#include "duf_option_sccb.h" /* FIXME : temp for duf_option_$_db_open               */
+#include "duf_option_sccb.h"    /* FIXME : temp for duf_option_$_cd               */
 
 /*
 At duf_options_table.c:
@@ -38,17 +38,22 @@ const duf_longval_extended_table_t optable_main = {
 #endif
 
 
-   {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */
-    , DO_VV_CALL( db_open ) /*                                                     */ , DO_H(  ... ) /*                             */ },
+#if 0
    {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( PDISTR, pdi ) /*                                                      */ , DO_H( pdi cd ) /*                           */ },
+   {.o = {DO_N( pwd ) /*                 */ , DO_A_N, DO_V( PWD )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
+    /*      */ DO_OC( PDISTR, pdi ) /*                                    */ , DO_H( pdi cd ) /*                           */ },
+#else
+   {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,
+    /*      */ DO_S_CALL( cd ) /*                                                           */ , DO_H( pdi cd ) /*                           */ },
+#endif
 
-
+#if 0
    {.o = {DO_N( depth ) /*              */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OPDI( PDINUM, depth ) /*             */ , DO_AT_STAGE( DEF ) /*           */ , DO_H( pdi cd ) /*                           */ },
+    /*      */ DO_ODI( PDINUM, depth ) /*             */ , DO_AT_STAGE( DEF ) /*           */ , DO_H( pdi cd ) /*                           */ },
    {.o = {DO_N( maxdepth ) /*           */ , DO_A_O} /*                                    */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OPDI( PDINUM, maxdepth ) /*          */ , DO_AT_STAGE( DEF ) /*           */ , DO_H( pdi cd ) /*                           */ },
-
+    /*      */ DO_ODI( PDINUM, maxdepth ) /*          */ , DO_AT_STAGE( DEF ) /*           */ , DO_H( pdi cd ) /*                           */ },
+#endif
 
    {.o = {DO_Q( "max-rel-depth" ) /*    */ , DO_A_R /* */ , DO_V( MAXRELDEPTH )} /*        */ , DO_CL( NODESC ) /*  */ ,
     /*      */ DO_OU( NUM, max_rel_depth ) /*          */ , DO_AT_STAGE( DEF ) /*         */ , DO_H(  .... ) /*                            */ },

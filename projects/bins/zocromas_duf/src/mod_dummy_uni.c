@@ -192,6 +192,9 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .node = {
            .fieldset = NULL,    /* */
            .selector2 = NULL    /* */
+           ,
+           .selector_total2 =   /* */
+           " /* dum */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
            },
   .final_sql_seq = &final_sql,
 };

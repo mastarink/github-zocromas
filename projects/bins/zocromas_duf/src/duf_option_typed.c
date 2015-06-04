@@ -580,6 +580,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
           }
         }
         break;
+#if 0
       case DUF_OPTION_VTYPE_PDISTR:
         DUF_TRACE( options, 2, "vtype PDISTR" );
         if ( noo )
@@ -588,10 +589,12 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         {
           if ( optargg && *optargg )
           {
+            duf_depthinfo_t *pdi = duf_config->pdi;
+
             DOR( r,
                  duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg,
                                          NULL /* const char *node_selector2 *//* , duf_config->pu,  recursive */  ) );
-            DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
+            DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( *( duf_depthinfo_t ** ) byteptr ) );
           }
           else
             DUF_PRINTF( 0, "%s", duf_levinfo_path( *( ( duf_depthinfo_t ** ) byteptr ) ) );
@@ -627,6 +630,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
         break;
 /* r = duf_make_sccb( sccb );                            */
 /* r = duf_sccbh_each_path( duf_sccb_handle_t * sccbh ); */
+#endif
       case DUF_OPTION_VTYPE_DATETIME:
         DUF_TRACE( options, 2, "vtype DATETIME" );
         if ( noo )

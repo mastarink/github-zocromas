@@ -562,6 +562,13 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "  run  --open-db --cd=/mnt/new_media/media/photo/     -dfR -p   --md5id=857    	- %s", "" );
   DUF_PRINTF( 0, "  run                 /mnt/new_media/media/photo/     -dfR -p   --md5id=857    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "========================= as for 20150604.115535 ============" );
+  DUF_PRINTF( 0, "  run -df --interac    	- %s", "\n	tree\n	recursive\n	tree\n	no-recursive\n	tree\n" );
+
+  DUF_PRINTF( 0, "  run --remove-database -O -P /mnt/new_media/media/photo/Pictures/one/    	- %s",
+              "remove old and create new DB, add path to DB; -O, -P, --remove-database are flags!" );
+  DUF_PRINTF( 0, "  run --remove-database /mnt/new_media/media/photo/Pictures/one/ -OP    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/Pictures/one/ -OP --remove-database    	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

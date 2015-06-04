@@ -35,9 +35,10 @@
 #  define DO_OFFSET( _v, _styp, _fld ) .m_hasoff=1,.m_offset = offsetof(duf_## _styp ## _t,_v),   .relto=DUF_OFFSET_ ## _fld
 #  define DO_OOO(_vt, _v, _styp, _fld)   DO_SET_VTYPE(_vt), DO_OFFSET( _v, _styp, _fld )
 #  define DO_OO(_vt, _v, _styp)	DO_OOO(_vt, _v, _styp, _styp)
+#  define DO_OP(_vt, _v)        DO_OO(_vt, _v, depthinfo)
 #  define DO_OC(_vt, _v)        DO_OO(_vt, _v, config)
 #  define DO_OU(_vt, _v)	DO_OO(_vt, _v, ufilter)
-#  define DO_OPDI(_vt, _v)	DO_OO(_vt, _v, depthinfo)
+#  define DO_ODI(_vt, _v)	DO_OO(_vt, _v, depthinfo)
 
 
 #  define DO_FL(_t,_fld) .afl._t={._fld=1}

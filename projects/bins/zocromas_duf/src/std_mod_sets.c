@@ -58,6 +58,9 @@ duf_sql_set_t std_node_set = {
         " LEFT JOIN " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
         " LEFT JOIN " DUF_SQL_SELECTED_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
         " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+        ,
+  .selector_total2 =            /* */
+        " /* std */ FROM " DUF_SQL_SELECTED_PATHS_FULL " AS p " /* */
 };
 
 
@@ -92,7 +95,7 @@ duf_sql_set_t std_ns_leaf_set = {
         "    WHERE "            /* */
         " fn.Pathid=:parentdirID " /* */
         " AND "                 /* */
-	DUF_SQL_UFILTER_BINDINGS
+        DUF_SQL_UFILTER_BINDINGS
         /* " ORDER BY fn." DUF_SQL_IDNAME " " *//* */
         ,
   .selector_total2 =            /* */
@@ -110,27 +113,10 @@ duf_sql_set_t std_ns_node_set = {
         " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
         " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
         " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+        ,
+  .selector_total2 =            /* */
+        " /* sns */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 duf_sql_set_t std_leaf_set__ = {
@@ -163,4 +149,7 @@ duf_sql_set_t std_node_set__ = {
         " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
         " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
         " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+        ,
+  .selector_total2 =            /* */
+        " /* _ */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
 };

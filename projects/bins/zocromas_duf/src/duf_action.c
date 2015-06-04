@@ -147,6 +147,8 @@ duf_action( int argc, char **argv )
     tpath = duf_levinfo_path( duf_config->pdi );
     if ( !tpath || !*tpath )
       tpath = duf_config->targ.argc > 0 ? duf_config->targ.argv[0] : "/";
+    DUF_TRACE( path, 0, "@ targ.argv[0]: %s", duf_config->targ.argv ? duf_config->targ.argv[0] : NULL );
+    DUF_TRACE( path, 0, "@ tpath: %s", tpath );
     DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, tpath, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage DUF_OPTION_STAGE_FIRST  (1) - needs pdi inited with argv, which is known only after stage 0 */
@@ -158,7 +160,7 @@ duf_action( int argc, char **argv )
     DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   }
   DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
-  assert( duf_config->pdi->levinfo );
+  /* assert( duf_config->pdi->levinfo ); */
 
   if ( DUF_ACT_FLAG( interactive ) )
   {

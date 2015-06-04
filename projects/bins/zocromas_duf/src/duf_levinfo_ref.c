@@ -358,8 +358,12 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
       /* }                                   */
     }
   }
+#if 0
   if ( !path )
+  {
     DUF_SHOW_ERROR( "no path returned" );
+  }
+#endif
   return path;
 }
 

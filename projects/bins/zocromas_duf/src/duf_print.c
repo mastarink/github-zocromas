@@ -791,21 +791,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t bfsz, duf_depthinfo_t
   case 'P':                    /* prefix */
     if ( prefix_scb )
     {
-      char sprefix[512];
-
-      ( prefix_scb ) ( sprefix, sizeof( sprefix ), pdi );
-/*
-      if ( v )
-      {
-        size_t l;
-
-        l = ( v < bfsz ) ? v : bfsz;
-        memset( pbuffer, ' ', l );
-        bfsz -= l;
-        pbuffer += l;
-      }
-*/
-      strncpy( pbuffer, sprefix, bfsz );
+      ( prefix_scb ) ( pbuffer, bfsz, pdi );
       ok++;
     }
     break;
@@ -1101,8 +1087,8 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
 {
   int ok = 0;
   const char *fmt = format;
-  char *buffer;
-  char *pbuffer;
+  char *buffer = NULL;
+  char *pbuffer = NULL;
   size_t bfsz = 1024 * 16;
 
   pbuffer = buffer = mas_malloc( bfsz + 8 );

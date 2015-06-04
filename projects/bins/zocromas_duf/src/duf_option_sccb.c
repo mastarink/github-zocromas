@@ -13,6 +13,7 @@
 
 
 #include "duf_prepare_actions.h"
+#include "duf_pdi.h"
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
 
@@ -104,5 +105,13 @@ duf_option_$_evaluate_sccb( const char *names )
 void
 duf_option_$_db_open( void )
 {
-  (void) duf_main_db_open(  );
+  ( void ) duf_main_db_open(  );
+}
+
+void
+duf_option_$_cd( const char *s )
+{
+  int r=0;
+  if ( s && *s )
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, s, NULL  ) );
 }

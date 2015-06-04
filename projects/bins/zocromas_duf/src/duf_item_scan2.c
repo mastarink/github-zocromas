@@ -36,7 +36,7 @@
 #include "duf_item_scan2.h"
 /* ###################################################################### */
 
-static char *
+char *
 duf_selector2sql( const duf_sql_set_t * sql_set )
 {
   char *sql = NULL;
@@ -61,6 +61,38 @@ duf_selector2sql( const duf_sql_set_t * sql_set )
   }
   else
     DUF_SHOW_ERROR( "Bad arg" );
+  return sql;
+}
+
+char *
+duf_selector_total2sql( const duf_sql_set_t * sql_set )
+{
+  char *sql = NULL;
+
+  assert( sql_set );
+  assert( sql_set->selector_total2 );
+  if ( sql_set->selector_total2 )
+  {
+    if ( 0 == strncmp( sql_set->selector_total2, "SELECT", 6 ) )
+    {
+      char *sql3;
+
+      sql3 = duf_sql_mprintf( sql_set->selector_total2, sql_set->fieldset );
+      sql = mas_strdup( sql3 );
+      mas_free( sql3 );
+    }
+    else
+    {
+      sql = mas_strdup( "SELECT " );
+      sql = mas_strcat_x( sql, "COUNT(*) AS nf" );
+      sql = mas_strcat_x( sql, " " );
+      sql = mas_strcat_x( sql, sql_set->selector_total2 );
+    }
+  }
+  else
+  {
+    DUF_SHOW_ERROR( "Bad arg" );
+  }
   return sql;
 }
 
@@ -112,14 +144,20 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   /* DOR( r, duf_levinfo_openat_dh( PDI ) ); */
   if ( r >= 0 )
   {
+    unsigned long m;
+
+    m = TOTITEMS;
 /*
  * 4. call function str_cb2
  * */
     PDI->seq++;
     PDI->seq_leaf++;
-    DUF_TRACE( scan_de_reg, 0, "* %llu / %llu %s", PDI->seq_leaf,  TOTITEMS, SCCB->title );
-    if ( DUF_ACT_FLAG( progress ) && !SCCB->count_nodes )
+    DUF_TRACE( scan_de_reg, 0, "* %llu / %llu %s", PDI->seq_leaf, TOTITEMS, SCCB->title );
+    if ( DUF_ACT_FLAG( progress ) && !SCCB->count_nodes && TOTITEMS > 0 && m > 0 )
+    {
+      /* assert( PDI->seq_leaf <= m ); */
       duf_percent( PDI->seq_leaf, TOTITEMS, duf_uni_scan_action_title( SCCB ) );
+    }
     DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
 
     /* called both for leaves (files) and nodes (dirs) */
@@ -150,14 +188,20 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
   if ( r >= 0 )                 /* levinfo_down OK */
   {
+    unsigned long m;
+
+    m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
 /*
  * 4. call function str_cb2
  * */
     PDI->seq++;
     PDI->seq_node++;
     DUF_TRACE( scan_de_dir, 0, "* %llu / %llu %s", PDI->seq_node, TOTITEMS, SCCB->title );
-    if ( DUF_ACT_FLAG( progress ) && SCCB->count_nodes )
-      duf_percent( PDI->seq_node, TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1, duf_uni_scan_action_title( SCCB ) );
+    if ( DUF_ACT_FLAG( progress ) && SCCB->count_nodes && TOTITEMS > 0 && m > 0 )
+    {
+      /* assert( PDI->seq_node <= m ); */
+      duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
+    }
 
     DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
 
@@ -181,50 +225,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DEBUG_ENDR( r );
 }
 
-int
-duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_sccb_handle_t * sccbh, const duf_sql_set_t * sql_set )
-{
-  DEBUG_STARTR( r );
-  unsigned long long cnt = 0;
 
-  /* match_cb2 = duf_match_leaf2; ... */
-
-/* calling duf_sel_cb_(node|leaf) for each record by sql */
-  if ( sql_set->selector2 )
-  {
-    char *sql = NULL;
-
-    if ( !sql_set->fieldset )
-      DUF_MAKE_ERROR( r, DUF_ERROR_SQL_NO_FIELDSET );
-    if ( r >= 0 )
-      sql = duf_selector2sql( sql_set );
-    if ( r >= 0 )
-    {
-      const char *csql;
-
-      csql = sql;
-      DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
-
-      DUF_TRACE( select, 0, "S:%s %llu/%llu/%u/%u", csql, PU ? PU->size.min : 0, PU ? PU->size.max : 0, PU ? PU->same.min : 0,
-                 PU ? PU->same.max : 0 );
-
-      DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt );
-      duf_bind_ufilter_uni( pstmt );
-
-      DUF_SQL_EACH_ROW( r, pstmt, if ( !match_cb2 || ( match_cb2 ) ( pstmt ) ) cnt++; r = 0 );
-      DUF_SQL_END_STMT_NOPDI( r, pstmt );
-    }
-    if ( sql )
-      mas_free( sql );
-    sql = NULL;
-    if ( r >= 0 )
-      duf_levinfo_set_items_files( PDI, cnt );
-  }
-  /* else                 */
-  /*   DUF_MAKE_ERROR(r, DUF_ERROR_PTR); */
-
-  DEBUG_ENDR( r );
-}
 
 /*
  * do sel_cb2 for 1 record at statment pstmt_selector
@@ -323,7 +324,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
     match_cb2 = NULL /* duf_match_leaf2 */ ;
     DUF_TRACE( explain, 2, "set sel_cb2 <= cb2 %s", set_type_title );
     DUF_TRACE( scan, 2, "set sel_cb2 <= cb2 %s", set_type_title );
-    DUF_TRACE( scan_de_reg, 2, "%llu / %llu %s", PDI->seq_leaf, PDI->seq , SCCB->title);
+    DUF_TRACE( scan_de_reg, 2, "%llu / %llu %s", PDI->seq_leaf, PDI->seq, SCCB->title );
 #if 0
     sql_set = &SCCB->leaf;
 #elif 0

@@ -230,9 +230,13 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   ExifEntry *entry = NULL;
   int changed = 0;
 
+#if 0
   if ( ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_ORIGINAL ) )
 /*                 || ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_EXIF], EXIF_TAG_DATE_TIME_DIGITIZED ) ) */
        || ( entry = exif_content_get_entry( edata->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME ) ) )
+#else
+  if ( ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME_ORIGINAL ) ) || ( entry = exif_data_get_entry( edata, EXIF_TAG_DATE_TIME ) ) )
+#endif
   {
     memset( stime_original, stime_original_size, 0 );
     /* Get the contents of the tag in human-readable form */
@@ -458,6 +462,163 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct st
           int date_changed = 0;
           char *model = NULL;
 
+          /* Other tags
+           *
+           * === EXIF_IFD_0,EXIF_IFD_1,EXIF_IFD_EXIF ===
+           *    EXIF_TAG_INTEROPERABILITY_INDEX
+           *    EXIF_TAG_INTEROPERABILITY_VERSION
+           *    EXIF_TAG_NEW_SUBFILE_TYPE
+           *  ! EXIF_TAG_IMAGE_WIDTH
+           *  ! EXIF_TAG_IMAGE_LENGTH
+           *    EXIF_TAG_BITS_PER_SAMPLE
+           *  ! EXIF_TAG_COMPRESSION
+           *    EXIF_TAG_PHOTOMETRIC_INTERPRETATION
+           *    EXIF_TAG_FILL_ORDER
+           *    EXIF_TAG_DOCUMENT_NAME
+           *    EXIF_TAG_IMAGE_DESCRIPTION
+           *  ! EXIF_TAG_MAKE       /// LG Electronics
+           *    EXIF_TAG_MODEL
+           *    EXIF_TAG_STRIP_OFFSETS
+           *  ! EXIF_TAG_ORIENTATION
+           *    EXIF_TAG_SAMPLES_PER_PIXEL
+           *    EXIF_TAG_ROWS_PER_STRIP
+           *    EXIF_TAG_STRIP_BYTE_COUNTS
+           *  ! EXIF_TAG_X_RESOLUTION
+           *  ! EXIF_TAG_Y_RESOLUTION
+           *    EXIF_TAG_PLANAR_CONFIGURATION
+           *  ! EXIF_TAG_RESOLUTION_UNIT
+           *    EXIF_TAG_TRANSFER_FUNCTION
+           *    EXIF_TAG_SOFTWARE
+           * !! EXIF_TAG_DATE_TIME
+           *    EXIF_TAG_ARTIST
+           *    EXIF_TAG_WHITE_POINT
+           *    EXIF_TAG_PRIMARY_CHROMATICITIES
+           *    EXIF_TAG_SUB_IFDS
+           *    EXIF_TAG_TRANSFER_RANGE
+           *    EXIF_TAG_JPEG_PROC
+           *    EXIF_TAG_JPEG_INTERCHANGE_FORMAT
+           *    EXIF_TAG_JPEG_INTERCHANGE_FORMAT_LENGTH
+           *    EXIF_TAG_YCBCR_COEFFICIENTS
+           *    EXIF_TAG_YCBCR_SUB_SAMPLING
+           *    EXIF_TAG_YCBCR_POSITIONING
+           *    EXIF_TAG_REFERENCE_BLACK_WHITE
+           *    EXIF_TAG_XML_PACKET
+           *    EXIF_TAG_RELATED_IMAGE_FILE_FORMAT
+           *    EXIF_TAG_RELATED_IMAGE_WIDTH
+           *    EXIF_TAG_RELATED_IMAGE_LENGTH
+           *    EXIF_TAG_CFA_REPEAT_PATTERN_DIM
+           *    EXIF_TAG_CFA_PATTERN
+           *    EXIF_TAG_BATTERY_LEVEL
+           *    EXIF_TAG_COPYRIGHT
+           *  ! EXIF_TAG_EXPOSURE_TIME     ==? EXIF_TAG_SHUTTER_SPEED_VALUE
+           *    EXIF_TAG_FNUMBER
+           *    EXIF_TAG_IPTC_NAA
+           *    EXIF_TAG_IMAGE_RESOURCES
+           *    EXIF_TAG_EXIF_IFD_POINTER
+           *    EXIF_TAG_INTER_COLOR_PROFILE
+           *    EXIF_TAG_EXPOSURE_PROGRAM
+           *    EXIF_TAG_SPECTRAL_SENSITIVITY
+           *    EXIF_TAG_GPS_INFO_IFD_POINTER
+           *  ! EXIF_TAG_ISO_SPEED_RATINGS
+           *    EXIF_TAG_OECF
+           *    EXIF_TAG_TIME_ZONE_OFFSET
+           *    EXIF_TAG_EXIF_VERSION
+           * !! EXIF_TAG_DATE_TIME_ORIGINAL
+           * !! EXIF_TAG_DATE_TIME_DIGITIZED
+           *    EXIF_TAG_COMPONENTS_CONFIGURATION
+           *    EXIF_TAG_COMPRESSED_BITS_PER_PIXEL
+           *  ! EXIF_TAG_SHUTTER_SPEED_VALUE    ==? EXIF_TAG_EXPOSURE_TIME
+           *  ! EXIF_TAG_APERTURE_VALUE     /// Fixed for camera?
+           *    EXIF_TAG_BRIGHTNESS_VALUE
+           *    EXIF_TAG_EXPOSURE_BIAS_VALUE
+           *    EXIF_TAG_MAX_APERTURE_VALUE
+           *    EXIF_TAG_SUBJECT_DISTANCE
+           *    EXIF_TAG_METERING_MODE
+           *    EXIF_TAG_LIGHT_SOURCE
+           *  ! EXIF_TAG_FLASH      /// Fired / No flash
+           *  ! EXIF_TAG_FOCAL_LENGTH     /// Fixed for camera?
+           *    EXIF_TAG_SUBJECT_AREA
+           *    EXIF_TAG_TIFF_EP_STANDARD_ID
+           *    EXIF_TAG_MAKER_NOTE
+           *    EXIF_TAG_USER_COMMENT
+           *    EXIF_TAG_SUB_SEC_TIME
+           *    EXIF_TAG_SUB_SEC_TIME_ORIGINAL
+           *    EXIF_TAG_SUB_SEC_TIME_DIGITIZED
+           *    EXIF_TAG_XP_TITLE
+           *    EXIF_TAG_XP_COMMENT
+           *    EXIF_TAG_XP_AUTHOR
+           *    EXIF_TAG_XP_KEYWORDS
+           *    EXIF_TAG_XP_SUBJECT
+           *    EXIF_TAG_FLASH_PIX_VERSION
+           *    EXIF_TAG_COLOR_SPACE
+           *    EXIF_TAG_PIXEL_X_DIMENSION
+           *    EXIF_TAG_PIXEL_Y_DIMENSION
+           *    EXIF_TAG_RELATED_SOUND_FILE
+           *    EXIF_TAG_INTEROPERABILITY_IFD_POINTER
+           *    EXIF_TAG_FLASH_ENERGY
+           *    EXIF_TAG_SPATIAL_FREQUENCY_RESPONSE
+           *    EXIF_TAG_FOCAL_PLANE_X_RESOLUTION
+           *    EXIF_TAG_FOCAL_PLANE_Y_RESOLUTION
+           *    EXIF_TAG_FOCAL_PLANE_RESOLUTION_UNIT
+           *    EXIF_TAG_SUBJECT_LOCATION
+           *    EXIF_TAG_EXPOSURE_INDEX
+           *    EXIF_TAG_SENSING_METHOD
+           *    EXIF_TAG_FILE_SOURCE
+           *    EXIF_TAG_SCENE_TYPE
+           *    EXIF_TAG_NEW_CFA_PATTERN
+           *    EXIF_TAG_CUSTOM_RENDERED
+           *    EXIF_TAG_EXPOSURE_MODE
+           *    EXIF_TAG_WHITE_BALANCE
+           *  ! EXIF_TAG_DIGITAL_ZOOM_RATIO
+           *    EXIF_TAG_FOCAL_LENGTH_IN_35MM_FILM
+           *    EXIF_TAG_SCENE_CAPTURE_TYPE
+           *    EXIF_TAG_GAIN_CONTROL
+           *    EXIF_TAG_CONTRAST
+           *    EXIF_TAG_SATURATION
+           *    EXIF_TAG_SHARPNESS
+           *    EXIF_TAG_DEVICE_SETTING_DESCRIPTION
+           *    EXIF_TAG_SUBJECT_DISTANCE_RANGE
+           *    EXIF_TAG_IMAGE_UNIQUE_ID
+           *    EXIF_TAG_GAMMA
+           *    EXIF_TAG_PRINT_IMAGE_MATCHING
+           *    EXIF_TAG_PADDING
+           * ==== EXIF_IFD_GPS ===
+           * GPS tags overlap with above ones, so use (?)
+           *                    entry = exif_content_get_entry( edata->ifd[EXIF_IFD_GPS], EXIF_TAG_GPS_LATITUDE )
+           *         NOT macro: entry = exif_data_get_entry( edata, EXIF_TAG_GPS_LATITUDE )
+           * -------------------------------
+           *    EXIF_TAG_GPS_VERSION_ID
+           *    EXIF_TAG_GPS_LATITUDE_REF   === INTEROPERABILITY_INDEX   /// North/South
+           *  ! EXIF_TAG_GPS_LATITUDE       === INTEROPERABILITY_VERSION
+           *    EXIF_TAG_GPS_LONGITUDE_REF      /// East/West
+           *  ! EXIF_TAG_GPS_LONGITUDE
+           *    EXIF_TAG_GPS_ALTITUDE_REF      /// Above Sea Level
+           *  ! EXIF_TAG_GPS_ALTITUDE
+           *    EXIF_TAG_GPS_TIME_STAMP
+           *  ! EXIF_TAG_GPS_SATELLITES
+           *    EXIF_TAG_GPS_STATUS
+           *    EXIF_TAG_GPS_MEASURE_MODE
+           *    EXIF_TAG_GPS_DOP
+           *    EXIF_TAG_GPS_SPEED_REF
+           *  ! EXIF_TAG_GPS_SPEED
+           *    EXIF_TAG_GPS_TRACK_REF
+           *    EXIF_TAG_GPS_TRACK
+           *    EXIF_TAG_GPS_IMG_DIRECTION_REF      /// Magnetic North
+           *  ! EXIF_TAG_GPS_IMG_DIRECTION      /// 333
+           *    EXIF_TAG_GPS_MAP_DATUM
+           *    EXIF_TAG_GPS_DEST_LATITUDE_REF
+           *    EXIF_TAG_GPS_DEST_LATITUDE
+           *    EXIF_TAG_GPS_DEST_LONGITUDE_REF
+           *    EXIF_TAG_GPS_DEST_LONGITUDE
+           *    EXIF_TAG_GPS_DEST_BEARING_REF
+           *    EXIF_TAG_GPS_DEST_BEARING
+           *    EXIF_TAG_GPS_DEST_DISTANCE_REF
+           *    EXIF_TAG_GPS_DEST_DISTANCE
+           *    EXIF_TAG_GPS_PROCESSING_METHOD
+           *    EXIF_TAG_GPS_AREA_INFORMATION
+           *    EXIF_TAG_GPS_DATE_STAMP
+           *    EXIF_TAG_GPS_DIFFERENTIAL
+           */
           {
             ExifEntry *entry = NULL;
             char tmodel[1024] = "";
@@ -626,4 +787,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks =
           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .selector_total2 =   /* */
+           " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
 },.final_sql_seq = &final_sql,};

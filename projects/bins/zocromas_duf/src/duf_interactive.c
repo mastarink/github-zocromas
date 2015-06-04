@@ -64,7 +64,6 @@ duf_interactive( void )
     if ( !*rl_prompt )
       snprintf( rl_prompt, sizeof( rl_prompt ), "%s> ", "CMD" );
 
-    add_history( "cd /mnt/new_media/media/photo/Pictures/photos/" );
     add_history( "quit" );
     add_history( "pwd" );
     add_history( "max-depth" );
@@ -76,6 +75,10 @@ duf_interactive( void )
     add_history( "list-targ" );
     add_history( "clear-targ" );
     add_history( "add-targ /mnt/new_media/media/photo/Pictures/photos/sel/" );
+    add_history( "cd /mnt/new_media/media/photo/Pictures/photos/" );
+    add_history( "tree" );
+    add_history( "recursive" );
+    add_history( "no-recursive" );
 
     while ( r >= 0 && DUF_ACT_FLAG( interactive ) )
     {

@@ -12,6 +12,8 @@
 
 #include "duf_config_ref.h"
 
+#include "duf_pdi.h"
+
 #include "duf_sccb.h"
 #include "duf_sccb_handle.h"
 #include "duf_sccbh_scan.h"
@@ -75,6 +77,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 
   DUF_TRACE( path, 0, "@ (to open sccbh) levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targ.argc, duf_config->targ.argv, duf_config->pu );
+
   DOR( r, duf_evaluate_sccb_handle( sccbh ) );
   duf_close_sccb_handle( sccbh );
 
@@ -107,6 +110,7 @@ duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
   DEBUG_STARTR( r );
 
   int cnt = 0;
+
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
 
   for ( int astep = 0; r >= 0 && astep < sccb_num; astep++ )

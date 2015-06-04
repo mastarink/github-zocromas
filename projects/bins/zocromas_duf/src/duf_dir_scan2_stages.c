@@ -179,12 +179,14 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
     DUF_TRACE( scan, 10, "NOT scan dirent_dir by %5llu - sccb->dirent_dir_scan_before2 empty and sccb->dirent_file_scan_before2 for %s",
                duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ) );
   }
+#if 0
   {
     const duf_sql_set_t *sql_set = NULL;
 
     sql_set = duf_get_leaf_sql_set( SCCB );
     DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, sql_set ) ); /* count for possibly --progress */
   }
+#endif
   DEBUG_ENDR( r );
 }
 

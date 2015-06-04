@@ -209,6 +209,9 @@ duf_scan_callbacks_t duf_template_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_files           AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
            " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .selector_total2 =   /* */
+           " /* t */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
            },
   .final_sql_seq = &final_sql,
 };

@@ -88,7 +88,9 @@ duf_writes( int level, int minlevel, const char *funcid, int linid, FILE * out, 
   if ( level >= minlevel )
   {
     if ( str && *str )
+    {
       r = fwrite( str, 1, strlen( str ), out );
+    }
   }
   return r;
 }

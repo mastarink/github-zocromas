@@ -204,6 +204,7 @@ duf_main_db_open( void )
   if ( !duf_config->db.opened )
   {
     DORF( r, duf_main_db_locate );
+    DORF( r, duf_main_db_optionally_remove_files );
     DORF( r, duf_sql_open, duf_config->db.main.fpath );
     duf_config->db.opened = ( r >= 0 );
     DORF( r, duf_main_db_tune );
@@ -253,7 +254,6 @@ duf_main_db( int argc, char **argv )
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
   DORF( r, duf_main_db_optionally_config_show, argc, argv );
-  DORF( r, duf_main_db_optionally_remove_files );
   DORF( r, duf_main_db_open );
 
   DUF_TRACE( temporary, 0, "@ maxitems.total %lld", duf_config->pu->maxitems.total );
@@ -338,7 +338,7 @@ duf_pre_action( void )
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
-  duf_eval_sql_sequence( &sql_beginning_tables, 0, NULL );
+  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL );
 
   DEBUG_ENDR( r );
 }
