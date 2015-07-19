@@ -47,7 +47,11 @@ duf_store_log( int argc, char *const argv[] )
 {
   DEBUG_STARTR( r );
   char *sargv1, *sargv2;
+#ifdef MAS_TRACING
   int changes = 0;
+#else
+  int DUF_UNUSED changes = 0;
+#endif
 
   sargv1 = mas_argv_string( argc, argv, 1 );
   sargv2 = duf_restore_some_options( argv[0] );

@@ -56,7 +56,9 @@ extern const duf_longval_extended_table_t optable_flag;
 extern const duf_longval_extended_table_t optable_sflag;
 extern const duf_longval_extended_table_t optable_uplus;
 extern const duf_longval_extended_table_t optable_help;
+#ifdef MAS_TRACING_OPTIONS
 extern const duf_longval_extended_table_t optable_trace;
+#endif
 extern const duf_longval_extended_table_t optable_format;
 extern const duf_longval_extended_table_t optable_filter;
 extern const duf_longval_extended_table_t optable_debug;
@@ -71,7 +73,9 @@ static const duf_longval_extended_table_t *_lo_extended_table_multi[] = {
   &optable_sflag,
   &optable_flag,
   &optable_uplus,
+#ifdef MAS_TRACING_OPTIONS
   &optable_trace,
+#endif
   &optable_filter,
   &optable_debug,
   &optable_help,

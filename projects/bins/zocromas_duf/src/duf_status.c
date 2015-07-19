@@ -71,5 +71,7 @@ __attribute__ ( ( destructor ) )
      static void destructor_global_status( void )
 {
   global_status_reset(  );
+#ifdef MAS_TRACEMEM
   print_memlist( FL, stdout );
+#endif
 }

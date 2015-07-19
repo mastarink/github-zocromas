@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -209,10 +210,15 @@ duf_parse_option_long_old( const duf_longval_extended_t * extended, const char *
         DUF_TRACE( action, 0, "--format=%s", coptarg );
         while ( poptarg && *poptarg )
         {
+#ifdef MAS_TRACING
           char *hlp;
+#endif
           int rs = 0;
 
+
+#ifdef MAS_TRACING
           hlp = poptarg;
+#endif
           DUF_TRACE( any, 0, "hlp:%s", hlp );
           value = NULL;
           DUF_TRACE( options, 2, "really to parse format item [%s]     value:%s", poptarg, value );

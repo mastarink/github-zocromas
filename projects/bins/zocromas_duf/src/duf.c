@@ -49,12 +49,14 @@ __attribute__ ( ( constructor( 101 ) ) )
      static void constructor_main( void )
 {
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
+#ifdef MAS_TRACEMEM
   extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
   if ( &mas_mem_disable_print_usage )
   {
     mas_mem_disable_print_usage = 7;
   }
+#endif
 }
 
 __attribute__ ( ( destructor( 101 ) ) )
@@ -82,9 +84,12 @@ duf_main( int argc, char **argv )
        sizeof( unsigned long ), sizeof( unsigned long long ) );
   /* DUF_TRACE( any, 0, "r=%d", r ); */
 
-  duf_config4trace = duf_config = duf_config_create(  );
+  duf_config = duf_config_create(  );
   assert( duf_config );
+#ifdef MAS_TRACING
+  duf_config4trace = duf_config;
   assert( duf_config4trace );
+#endif
   assert( duf_config->pu );
   assert( duf_config->longopts_table );
   {
@@ -127,7 +132,9 @@ duf_main( int argc, char **argv )
     }
   }
   duf_config_delete( duf_config );
+#  ifdef MAS_TRACING
   duf_config4trace = duf_config = NULL;
+#  endif
 
 
 #endif

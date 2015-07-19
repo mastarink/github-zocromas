@@ -43,7 +43,7 @@
 
 
 #  ifdef DUF_T_NOIF
-#    define DUF_TEST_RX(_rval)	   (( (DUF_EREPORT(_rval)) ? DUF_SHOW_ERROR_TEST_STD(_rval) : \
+#    define DUF_TEST_RX(_rval)	   (( (DUF_EREPORT(_rval)) ? (DUF_SHOW_ERROR_TEST_STD(_rval)) : \
     					0 ), _rval)
 #    define DUF_TEST_RX_WP(_rval, _prefix)  (( (DUF_EREPORT(_rval)) ? DUF_SHOW_ERROR_TEST_WP_STD(_rval,_prefix) : \
     					0 ), _rval)

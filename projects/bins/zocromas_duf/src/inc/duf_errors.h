@@ -1,6 +1,8 @@
 #ifndef MAS_DUF_ERRORS_H
 #  define MAS_DUF_ERRORS_H
 
+#  include <stdarg.h>
+
 #  include "duf_error_types.h"
 
 duf_error_code_t duf_make_error( duf_error_code_t err, const char *funcid, int linid );

@@ -36,7 +36,7 @@
  *  - pdi
  *  - sccb
  * */
-
+#ifdef MAS_TRACING
 #define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
     duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
@@ -84,7 +84,34 @@
       } \
       DEBUG_ENDR( r ); \
     }
-
+#else
+#define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
+    int \
+    duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    { \
+      DEBUG_STARTR( r ); \
+ \
+      if ( DUF_ACT_FLAG( dirs ) ) \
+      { \
+	PDI->items.total++; \
+	PDI->items.dirs++; \
+ \
+	if ( duf_levinfo_item_deleted( PDI ) ) \
+	{ \
+	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
+	  { \
+	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, PDI ) ); \
+	  } \
+	} \
+	else if ( SCCB->node_scan_ ## stagename ## 2 ) \
+	{ \
+	  DOR( r, SCCB->node_scan_ ## stagename ## 2( pstmt, PDI ) ); \
+	} \
+	DUF_TEST_R( r ); \
+      } \
+      DEBUG_ENDR( r ); \
+    }
+#endif
 /* *INDENT-OFF*  */
 DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(before)
 DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(middle)
@@ -129,8 +156,9 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
-
+#endif
   PDI->items.total++;
   PDI->items.files++;
 

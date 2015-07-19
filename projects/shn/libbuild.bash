@@ -223,6 +223,7 @@ function shn_build_configure ()
   declare -a MSH_SHN_GLOBAL_CONFIGURE_OPTS
   declare -a MSH_SHN_PROJECT_CONFIGURE_OPTS
   declare -a MSH_SHN_ADD_CONFIGURE_OPTS
+  declare -a MSH_SHN_CONFIGURE_OPTS
   export PKG_CONFIG_PATH="${MSH_SHN_DIRS[flavour]}/lib/pkgconfig"
   MSH_SHN_LAST_ACTION[$MSH_SHN_PROJECT_NAME:configure]=`datemt`
   shn_setup_projects || return $?
@@ -236,9 +237,20 @@ function shn_build_configure ()
     readarray -t MSH_SHN_PROJECT_CONFIGURE_OPTS < $project_opts_file
     shn_dbgmsg "project opts from $project_opts_file"
     shn_dbgmsg "project opts : ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]}"
+    local o
   fi
-  MSH_SHN_ADD_CONFIGURE_OPTS[${#MSH_SHN_ADD_CONFIGURE_OPTS[@]}]="--prefix=${MSH_SHN_DIRS[flavour]}"
-  configure_opts+=" ${MSH_SHN_GLOBAL_CONFIGURE_OPTS[*]} ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]} ${MSH_SHN_ADD_CONFIGURE_OPTS[*]}"
+# MSH_SHN_ADD_CONFIGURE_OPTS[${#MSH_SHN_ADD_CONFIGURE_OPTS[@]}]="--prefix=${MSH_SHN_DIRS[flavour]}"
+  MSH_SHN_ADD_CONFIGURE_OPTS=( '--prefix='${MSH_SHN_DIRS[flavour]} )
+  MSH_SHN_CONFIGURE_OPTS=()
+  MSH_SHN_CONFIGURE_OPTS+=(${MSH_SHN_GLOBAL_CONFIGURE_OPTS[*]/\#*/})
+  MSH_SHN_CONFIGURE_OPTS+=(${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]/\#*/})
+  MSH_SHN_CONFIGURE_OPTS+=(${MSH_SHN_ADD_CONFIGURE_OPTS[*]/\#*/})
+  shn_msg "-= configure with: =-"
+  for o in ${MSH_SHN_CONFIGURE_OPTS[*]} ; do
+    shn_msg " $o"
+  done
+  configure_opts+=" ${MSH_SHN_GLOBAL_CONFIGURE_OPTS[*]/\#*/} ${MSH_SHN_PROJECT_CONFIGURE_OPTS[*]/\#*/} ${MSH_SHN_ADD_CONFIGURE_OPTS[*]/\#*/}"
+
   shn_dbgmsg "configure_opts : $configure_opts"
   shn_msg "$configscript  $configure_opts @ [$MSH_SHN_PROJECT_NAME] `shn_project_version`"
   shn_build_xcommand $configscript  $configure_opts && shn_msgns configure ok || return $?

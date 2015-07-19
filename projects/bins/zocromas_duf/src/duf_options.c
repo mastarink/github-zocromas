@@ -42,8 +42,11 @@ int
 duf_all_options( int argc, char *argv[] )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   int er = 0, fr = 0, or = 0;
-
+#else
+  int DUF_UNUSED er = 0, fr = 0, or = 0;
+#endif
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
   if ( r >= 0 )
     er = r = duf_env_options( argc, argv );

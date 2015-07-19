@@ -41,12 +41,17 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
   if ( ssql && !ssql->done )
   {
     const char **psql = ssql->sql;
+#ifdef MAS_TRACING
     const char **psql0 = psql;
+#endif
 
     while ( r >= 0 && psql && *psql )
     {
+#ifdef MAS_TRACING
       int changes = 0;
-
+#else
+      int DUF_UNUSED changes = 0;
+#endif
       DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
       /* r = duf_sql( *p, &changes ); */
 

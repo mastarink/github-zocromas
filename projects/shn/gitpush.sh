@@ -9,6 +9,8 @@ echo " gitlab (gl) ----------------------------------------"
 git push gl master
 echo " bitbucket (bb) ----------------------------------------"
 git push bb master
+# echo " xp-dev ----------------------------------------"
+# git push xp-dev master
 
 # # remote: 
 # # remote: ============================== WARNING ==============================

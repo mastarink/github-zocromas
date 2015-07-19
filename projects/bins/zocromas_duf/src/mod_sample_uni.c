@@ -269,8 +269,9 @@ static int
 sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   unsigned long long dirid = duf_levinfo_dirid( pdi );
-
+#endif
   DUF_TRACE( sample, 2, "T2 dirid=%llu", dirid );
   {
     duf_config->cli.trace.sql--;

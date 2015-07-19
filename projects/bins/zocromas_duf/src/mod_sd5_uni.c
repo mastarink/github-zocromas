@@ -43,7 +43,9 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   unsigned long long sd5id = -1;
   int lr = 0;
   int changes = 0;
+#ifdef MAS_TRACING
   const char *real_path = duf_levinfo_path( pdi );
+#endif
 
   DEBUG_START(  );
   if ( md64 && md64[1] && md64[0] )

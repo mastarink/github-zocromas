@@ -308,8 +308,9 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
   duf_sel_cb2_t sel_cb2 = NULL;
   duf_sel_cb2_match_t match_cb2 = NULL;
   const duf_sql_set_t *sql_set = NULL;
+#ifdef MAS_TRACING
   const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_LEAF ? "node" : "UNDEF" );
-
+#endif
 /* duf_sel_cb_(node|leaf):
  * this is callback of type: duf_sel_cb_t (first range): 
  *

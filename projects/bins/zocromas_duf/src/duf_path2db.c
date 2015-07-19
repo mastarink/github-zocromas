@@ -367,7 +367,11 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
         DUF_TRACE( path, 2, "@r:%d;next                 [%40s]  #%llu:%s", r, path, parentid, nextdir && *nextdir ? nextdir : "-=NONE=-" );
         if ( caninsert /* && r > 0 */  && parentid > 0 && !( nextdir && *nextdir ) )
         {
+#ifdef MAS_TRACING
           unsigned long long tagid;
+#else
+          unsigned long long DUF_UNUSED tagid;
+#endif
 
           tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "added" /* tagname */ , &r );
           DUF_TRACE( path, 2, "%d: tag \"added\": %llu", r, tagid );

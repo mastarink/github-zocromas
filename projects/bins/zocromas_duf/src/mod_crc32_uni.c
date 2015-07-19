@@ -43,7 +43,9 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
   unsigned long long crc32id = -1;
   int lr = 0;
   int changes = 0;
+#ifdef MAS_TRACING
   const char *real_path = duf_levinfo_path( pdi );
+#endif
 
   DEBUG_START(  );
   if ( !duf_config->cli.disable.flag.insert )

@@ -201,7 +201,9 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       if ( !changes )
         DUF_SHOW_ERROR( "exifid NOT INSERTED:%s - %llu, %lu, %s", sql, modelid, timeepoch, stime_original );
       {
+#ifdef MAS_TRACING
         DUF_SFIELD2( filename );
+#endif
         DUF_TRACE( exif, 1, " inserted now( SQLITE_OK ) exifid=%llu; modelid=%llu; %lu ; changes:%d; %s%s", exifid, modelid,
                    ( long ) timeepoch, changes, duf_levinfo_path( pdi ), filename );
       }
@@ -644,11 +646,15 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct st
           if ( ( r >= 0 || r == DUF_ERROR_EXIF_BROKEN_DATE ) && ( timeepoch || *stime_original || model ) )
           {
             unsigned long long exifid = 0;
+#ifdef MAS_TRACING
             const char *real_path = NULL;
+#endif
 
             r = 0;
+#ifdef MAS_TRACING
             DUF_SFIELD2( filename );
             real_path = duf_levinfo_path( pdi );
+#endif
             DUF_TRACE( exif, 2, "%s%s", real_path, filename );
 
             exifid = duf_insert_exif_uni( pstmt, pdi, model, timeepoch, date_changed, stime_original, 1 /* need_id */ , &r );

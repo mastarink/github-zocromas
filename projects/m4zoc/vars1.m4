@@ -9,6 +9,27 @@ if test x$enable_tracemem = xyes ; then
     AC_DEFINE(MAS_TRACEMEM, 1,
 	[Enable tracememing at the expense of performance and size])
 fi
+
+########### tracing #######################################################################
+AC_ARG_ENABLE([tracing],
+	      AC_HELP_STRING([--enable-tracing],
+			     [turn on tracing]),,
+	      [enable_tracing=no])
+
+if test x$enable_tracing = xyes ; then
+    AC_DEFINE(MAS_TRACING, 1,
+	[Enable tracing at the expense of performance and size])
+fi
+AC_ARG_ENABLE([tracing-options],
+	      AC_HELP_STRING([--enable-tracing-options],
+			     [turn on tracing options]),,
+	      [enable_tracing_options=no])
+
+if test x$enable_tracing_options = xyes ; then
+    AC_DEFINE(MAS_TRACING_OPTIONS, 1,
+	[Enable tracing options])
+fi
+
 ########### ctrl   ########################################################################
 AC_ARG_ENABLE([noctrl],
 	      AC_HELP_STRING([--enable-noctrl],

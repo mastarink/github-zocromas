@@ -36,7 +36,9 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fi
 {
   DEBUG_STARTR( r );
 
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi );
 
   DUF_TRACE( mod, 0, "dummy dirent %s : %s", duf_levinfo_path( pdi ), filename );
@@ -50,7 +52,9 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );
@@ -60,7 +64,9 @@ static int
 scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );
@@ -70,7 +76,9 @@ static int
 scan_node_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
 
 
@@ -81,7 +89,9 @@ static int
 scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy node before: %s : %s", duf_levinfo_path( pdi ), filename );
 
 
@@ -92,7 +102,9 @@ static int
 scan_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );
@@ -102,7 +114,9 @@ static int
 scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy node middle %s : %s", duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );
@@ -112,7 +126,9 @@ static int
 scan_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy node after: %s : %s", duf_levinfo_path( pdi ), filename );
 
 
@@ -123,7 +139,9 @@ static int
 scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+#ifdef MAS_TRACING
   DUF_SFIELD2( filename );
+#endif
   DUF_TRACE( mod, 0, "dummy node after %s : %s", duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );

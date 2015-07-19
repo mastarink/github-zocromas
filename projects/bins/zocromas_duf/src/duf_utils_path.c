@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 

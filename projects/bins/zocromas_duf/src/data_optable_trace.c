@@ -17,7 +17,7 @@ At duf_options_table.c:
 	NULL
       };
 */
-
+#ifdef MAS_TRACING_OPTIONS
 const duf_longval_extended_table_t optable_trace = {
   .table =                      /* */
   {
@@ -113,6 +113,6 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {.name = NULL}}
    }
 };
-
+#endif
 /* vi: et ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */
