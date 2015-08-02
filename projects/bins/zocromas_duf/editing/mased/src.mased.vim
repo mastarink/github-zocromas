@@ -1,8 +1,11 @@
-find duf_uni_scan.c
-sfind duf_uni_scan.h
+find duf_eval_at_config.c
+sfind duf_eval_at_config.h
 
 " tab sfind duf_uni_scan2.c
 " sfind duf_uni_scan2.h
+
+tab sfind duf_sccb_eval.c
+sfind duf_sccb_eval.h
 
 tab sfind duf_dir_scan2.c
 sfind duf_dir_scan2.h
@@ -40,9 +43,6 @@ sfind duf_sccb_def.h
 
 tab sfind duf_sccb_handle.c
 sfind duf_sccb_handle.h
-
-tab sfind duf_sccb_eval.c
-sfind duf_sccb_eval.h
 
 tab sfind duf_sccbh_scan.c
 sfind duf_sccbh_scan.h

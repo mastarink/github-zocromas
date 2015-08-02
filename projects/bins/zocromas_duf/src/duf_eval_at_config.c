@@ -17,8 +17,9 @@
 #include "duf_prepare_actions.h"
 
 
+/* duf_eval_at_config.[ch] is former duf_uni_scan.[ch] */
 /* ###################################################################### */
-#include "duf_uni_scan.h"
+#include "duf_eval_at_config.h"
 /* ###################################################################### */
 
 

@@ -21,7 +21,7 @@
 
 /* #include "duf_create.h" - obsolete 20150522.122406 */
 #include "duf_add.h"
-#include "duf_uni_scan.h"
+#include "duf_eval_at_config.h"
 
 #include "duf_levinfo_ref.h"
 
