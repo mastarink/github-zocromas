@@ -87,7 +87,7 @@ duf_execute_cmd_long_xtable( const char *string, const duf_longval_extended_tabl
     if ( extended )
     {
       DUF_TRACE( options, 3, "@(%s) found cmd #%d for %s", duf_error_name( r ), found, extended->o.name );
-      DOR( r, DUF_WRAPPED( duf_parse_option_long_full ) ( extended, arg, istage, xtable, no ) );
+      DORF( r, DUF_WRAPPED( duf_parse_option_long_full ), extended, arg, istage, xtable, no );
       DUF_TRACE( options, 3, "@(%s) full #%d done for %s", duf_error_name( r ), found, extended->o.name );
       found += ( extended ? 1 : 0 );
     }

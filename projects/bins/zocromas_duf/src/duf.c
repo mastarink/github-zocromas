@@ -50,12 +50,22 @@ __attribute__ ( ( constructor( 101 ) ) )
 {
 /* configure my zocromas_mas_wrap library (malloc/free wrapper) not to print memory usage map; may be enabled later */
 #ifdef MAS_TRACEMEM
-  extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
-
-  if ( &mas_mem_disable_print_usage )
   {
-    mas_mem_disable_print_usage = 7;
+    extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
+
+    if ( &mas_mem_disable_print_usage )
+    {
+      mas_mem_disable_print_usage = 7;
+    }
   }
+  {
+    /* enale debug function ... Is is obolete/useless? */
+    extern int dbgfunc_enabled __attribute__ ( ( weak ) );
+
+    if ( &dbgfunc_enabled )
+       /**/ dbgfunc_enabled = 1;
+  }
+
 #endif
 }
 
@@ -64,60 +74,27 @@ __attribute__ ( ( destructor( 101 ) ) )
 {
 }
 
-/*
- * do everything (almost :)
- * *************
- *  - create config struct (global variable: duf_config)
- *  - call duf_all_options
- *  - call duf_main_db
- *  - (optional) call duf_show_options (see also duf_config_show call at duf_main_db)
- *  - delete config struct
- *  - final error process and set exit code
- * */
 static int
-duf_main( int argc, char **argv )
+duf_main_with_config( int argc, char **argv )
 {
   DEBUG_STARTR( r );
-/* output some useful(?) for development & debugging info at the beginning */
-  PF0( "%lu %lu %lu %lu %lu %lu %lu %lu", sizeof( duf_limits_t ), sizeof( duf_config_act_flags_t ),
-       sizeof( duf_config_cli_flags_t ), sizeof( duf_ufilter_flags_t ), sizeof( duf_config_cli_disable_flags_t ), sizeof( unsigned ),
-       sizeof( unsigned long ), sizeof( unsigned long long ) );
-  /* DUF_TRACE( any, 0, "r=%d", r ); */
 
-  duf_config = duf_config_create(  );
-  assert( duf_config );
-#ifdef MAS_TRACING
-  duf_config4trace = duf_config;
-  assert( duf_config4trace );
-#endif
-  assert( duf_config->pu );
-  assert( duf_config->longopts_table );
-  {
-    /* enale debug function ... Is is obolete/useless? */
-    extern int dbgfunc_enabled __attribute__ ( ( weak ) );
+  DUF_TRACE( any, 1, "any test" );
 
-    if ( &dbgfunc_enabled )
-       /**/ dbgfunc_enabled = 1;
-  }
-  if ( r >= 0 )
-  {
-    DUF_TRACE( any, 1, "any test" );
-    DOR_NOE( r, duf_all_options( argc, argv ), DUF_ERROR_OPTION_NOT_FOUND );
-    DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
-    DOR( r, duf_main_db( argc, argv ) ); /*  duf_main_db : duf_maindb.c */
+  DOR_NOE( r, duf_all_options( argc, argv ), DUF_ERROR_OPTION_NOT_FOUND );
 
-    DUF_PUTS( 0, "--------------------------------------------------" );
-    DUF_PRINTF( 0, " duf_main_db ended" );
-    DUF_TEST_R( r );            /* don't remove! */
-    DUF_PUTS( 0, "--------------------------------------------------" );
+  DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
 
-    if ( DUF_IF_TRACE( options ) )
-      DOR( r, duf_show_options( argv[0] ) );
-  }
-  else
-  {
-    DUF_SHOW_ERROR( "(%d) %s", r, argv[0] );
-  }
+  DOR( r, duf_main_db( argc, argv ) ); /*  duf_main_db : duf_maindb.c */
+
+  DUF_PUTS( 0, "--------------------------------------------------" );
+  DUF_PRINTF( 0, " duf_main_db ended" );
+  DUF_TEST_R( r );              /* don't remove! */
+  DUF_PUTS( 0, "--------------------------------------------------" );
+
+  if ( DUF_IF_TRACE( options ) )
+    DOR( r, duf_show_options( argv[0] ) );
+
 #ifdef MAS_TRACEMEM
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
@@ -131,16 +108,27 @@ duf_main( int argc, char **argv )
       DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( MEMUSAGE ) );
     }
   }
-  duf_config_delete( duf_config );
-#  ifdef MAS_TRACING
-  duf_config4trace = duf_config = NULL;
-#  endif
-
-
 #endif
+
+  DEBUG_ENDRN( r );
+}
+
+static int
+duf_main( int argc, char **argv )
+{
+  DEBUG_STARTR( r );
+  duf_config_create(  );
+
+  DOR( r, duf_main_with_config( argc, argv ) );
+  if ( r < 0 )
+    DUF_SHOW_ERROR( "(%d) %s", r, argv[0] );
+
+  duf_config_delete(  );
+
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
   r = r < 0 ? 31 : 0;
+
   DEBUG_ENDRN( r );
 }
 

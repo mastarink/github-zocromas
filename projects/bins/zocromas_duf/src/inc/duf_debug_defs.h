@@ -3,8 +3,10 @@
 #  include "duf_defs.h"
 
 #ifdef MAS_WRAP_FUNC
+#define DUF_WRAPSTATIC static
 #define DUF_WRAPPED(_f) _f ## _wrap
 #else
+#define DUF_WRAPSTATIC 
 #define DUF_WRAPPED(_f) _f
 #endif
 

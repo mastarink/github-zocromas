@@ -27,7 +27,7 @@ duf_config_t *duf_config = NULL;
 const duf_config_t *duf_config4trace = NULL;
 
 duf_config_t *
-duf_config_create( void )
+duf_cfg_create( void )
 {
   duf_config_t *cfg = NULL;
 
@@ -36,6 +36,7 @@ duf_config_create( void )
   memset( cfg, 0, sizeof( duf_config_t ) );
 
   cfg->pu = duf_ufilter_create(  );
+  assert( cfg->pu );
   if ( 0 )
   {
     cfg->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
@@ -110,11 +111,14 @@ duf_config_create( void )
     /* }                                                                                                                                          */
   }
   cfg->pdi = duf_pdi_create(  );
+  assert( cfg->pu );
+  assert( cfg->longopts_table );
+
   return cfg;
 }
 
 void
-duf_config_delete( duf_config_t * cfg )
+duf_cfg_delete( duf_config_t * cfg )
 {
   if ( cfg )
   {
@@ -200,18 +204,54 @@ duf_config_delete( duf_config_t * cfg )
   }
 }
 
+void
+duf_config_create( void )
+{
+  duf_config = duf_cfg_create(  );
+  assert( duf_config );
+#ifdef MAS_TRACING
+  duf_config4trace = duf_config;
+  assert( duf_config4trace );
+#endif
+}
+
+void
+duf_config_delete( void )
+{
+  duf_cfg_delete( duf_config );
+#ifdef MAS_TRACING
+  duf_config4trace = duf_config = NULL;
+#endif
+}
+
 int
 duf_config_show( void )
 {
+  DEBUG_STARTR( r );
+  
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( duf_config )
-  {
     fprintf( stderr, "db.dir: %s\n", duf_config->db.dir );
-  }
   for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
-  {
     fprintf( stderr, "targ.argv[%d]: %s\n", ia, duf_config->targ.argv[ia] );
-  }
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  return 0;
+  
+  DEBUG_ENDR( r );
+}
+
+int
+duf_config_optionally_show( void )
+{
+  DEBUG_STARTR( r );
+
+  if ( duf_config->cli.dbg.verbose )
+  {
+    DOR( r, duf_config_show(  ) );
+  }
+  else
+  {
+    DUF_TRACE( explain, 0, "not showing config: not verbose" );
+  }
+
+  DEBUG_ENDR( r );
 }

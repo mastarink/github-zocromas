@@ -27,7 +27,6 @@ duf_sql_open( const char *dbpath )
 
   DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", duf_config->db.main.fpath );
   DOR( r, DUF_SQLITE_ERROR_CODE( ( r3 = duf_sqlite_open( dbpath ) ) ) );
-  fprintf( stderr, "@@@@@@@@@@@ %d (%d)\n", r, r3 );
   DUF_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
   DUF_TRACE( explain, 0, "opened (?%d) database", r );
 /*int r3, r;

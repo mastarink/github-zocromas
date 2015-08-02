@@ -31,22 +31,20 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
   FILE *f = NULL;
   char *cfgpath = NULL;
 
+  assert( duf_config );
   cfgpath = mas_strdup( at );
+  assert( cfgpath );
   cfgpath = mas_strcat_x( cfgpath, "/" );
+  assert( cfgpath );
   if ( dot )
     cfgpath = mas_strcat_x( cfgpath, "." );
+  assert( cfgpath );
   cfgpath = mas_strcat_x( cfgpath, filename );
-  if ( cfgpath )
-  {
-    f = fopen( cfgpath, "r" );
-  }
-  if ( duf_config )
-  {
-    mas_free( duf_config->config_path );
-    duf_config->config_path = cfgpath;
-  }
-  else
-    mas_free( cfgpath );
+  assert( cfgpath );
+  f = fopen( cfgpath, "r" );
+
+  mas_free( duf_config->config_path );
+  duf_config->config_path = cfgpath;
   DUF_TRACE( options, 0, "opening conf file %s %s", cfgpath, f ? "Ok" : "FAIL" );
   if ( !f && pr )
     *pr = errno;

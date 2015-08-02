@@ -21,10 +21,7 @@
 /* ###################################################################### */
 
 
-#ifdef MAS_WRAP_FUNC
-static
-#endif
-      int
+DUF_WRAPSTATIC int
 duf_parse_option_long_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
                             const duf_longval_extended_table_t * xtable, int no )
 {

@@ -47,6 +47,7 @@ duf_store_log( int argc, char *const argv[] )
 {
   DEBUG_STARTR( r );
   char *sargv1, *sargv2;
+
 #ifdef MAS_TRACING
   int changes = 0;
 #else
@@ -92,7 +93,7 @@ duf_store_log( int argc, char *const argv[] )
  *   1. ...init (1..6?)
  *   2. ...execute
  * */
-int
+DUF_WRAPSTATIC int
 duf_action( int argc, char **argv )
 {
   DEBUG_STARTR( r );
@@ -172,6 +173,7 @@ duf_action( int argc, char **argv )
   }
   else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
   {
+    /* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
     DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
   }
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
@@ -179,3 +181,23 @@ duf_action( int argc, char **argv )
 
   DEBUG_ENDR( r );
 }
+
+#ifdef MAS_WRAP_FUNC
+int
+duf_action_wrap( int argc, char **argv )
+{
+  DEBUG_STARTR( r );
+
+  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
+  DORF( r, duf_action, argc, argv ); /* duf_action : duf_action.c */
+#  if 0
+  DORF( r, duf_main_db_info );
+#  endif
+  if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
+  {
+    DUF_TEST_RX_SHOW( r, "action FAIL" );
+  }
+
+  DEBUG_ENDR( r );
+}
+#endif

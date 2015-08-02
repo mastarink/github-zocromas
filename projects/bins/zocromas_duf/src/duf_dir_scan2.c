@@ -38,10 +38,7 @@
  *
  * */
 
-#ifdef MAS_WRAP_FUNC
-static
-#endif
-      int
+DUF_WRAPSTATIC int
 duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
@@ -102,11 +99,11 @@ int
 duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-#ifdef MAS_TRACING
+#  ifdef MAS_TRACING
   unsigned long long diridpid;
 
   diridpid = duf_levinfo_dirid( PDI );
-#endif
+#  endif
   DUF_TRACE( scan, 3, "[%llu]", diridpid );
   DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( PDI ),
                 duf_pdi_reldepth( PDI ), diridpid );

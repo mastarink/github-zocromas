@@ -43,68 +43,6 @@
 
 
 static int
-duf_main_db_tune( void )
-{
-  DEBUG_STARTR( r );
-#ifdef MAS_SPLIT_DB
-  {
-    static const char *sql = "ATTACH DATABASE :dbfPath AS adm";
-
-    DUF_TRACE( explain, 0, "attach adm database" );
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_BIND_S( dbfPath, duf_config->db.adm.fpath, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  }
-#endif
-
-#if 0
-  {
-    static const char *sql = "PRAGMA synchronous = OFF";
-
-    DUF_TRACE( explain, 0, "PRAGMA synchronous = OFF" );
-
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  }
-
-  /* DOR( r, duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL ) ); */
-  /* DUF_TEST_R( r );                                                      */
-  {
-    static const char *sql = "PRAGMA encoding = 'UTF-8'";
-
-    DUF_TRACE( explain, 0, "PRAGMA encoding = 'UTF-8'" );
-
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  }
-#endif
-/* TODO : part to only after possible tables creation */
-  duf_eval_sql_sequence( &sql_beginning_common, 0, NULL );
-  DEBUG_ENDR( r );
-}
-
-static int
-duf_main_db_opened_action( int argc, char **argv )
-{
-  DEBUG_STARTR( r );
-
-  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
-  DORF( r, duf_action, argc, argv ); /* duf_action : duf_action.c */
-#if 0
-  DORF( r, duf_main_db_info );
-#endif
-  if ( r < 0 && r != DUF_ERROR_MAX_REACHED )
-  {
-    DUF_TEST_RX_SHOW( r, "action FAIL" );
-  }
-
-  DEBUG_ENDR( r );
-}
-
-static int
 duf_main_db_locate( void )
 {
   DEBUG_STARTR( r );
@@ -180,20 +118,99 @@ duf_main_db_optionally_remove_files( void )
 }
 
 static int
-duf_main_db_optionally_config_show( int argc, char **argv )
+duf_main_db_pre_action( void )
 {
   DEBUG_STARTR( r );
-  if ( duf_config->cli.dbg.verbose )
+/* --drop-tables								*/ DEBUG_STEP(  );
+  if ( r >= 0 && DUF_ACT_FLAG( drop_tables ) )
   {
-    for ( int ia = 0; ia < argc; ia++ )
-      DUF_TRACE( any, 0, "######### argv[%d]: %s", ia, argv[ia] );
-    DOR( r, duf_config_show(  ) );
+    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
+    if ( DUF_CLI_FLAG( dry_run ) )
+      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
+    else
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL );
+    global_status.actions_done++;
   }
   else
   {
-    DUF_TRACE( explain, 0, "not showing config: not verbose" );
+    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
+  }
+  if ( r >= 0 && DUF_ACT_FLAG( vacuum ) )
+  {
+    /* static const char *sql = "VACUUM"; */
+
+    /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( VACUUM ) ); */
+    if ( DUF_CLI_FLAG( dry_run ) )
+      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
+    else
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL );
+    global_status.actions_done++;
+  }
+  else
+  {
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( VACUUM ) );
+  }
+/* --create-tables								*/ DEBUG_STEP(  );
+  if ( r >= 0 && DUF_ACT_FLAG( create_tables ) )
+  {
+    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
+    /* DOR( r, duf_check_tables(  ) ); */
+    if ( DUF_CLI_FLAG( dry_run ) )
+      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
+    else
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
+    global_status.actions_done++;
+  }
+  else
+  {
+    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
+  }
+  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL );
+
+  DEBUG_ENDR( r );
+}
+
+static int
+duf_main_db_tune( void )
+{
+  DEBUG_STARTR( r );
+#ifdef MAS_SPLIT_DB
+  {
+    static const char *sql = "ATTACH DATABASE :dbfPath AS adm";
+
+    DUF_TRACE( explain, 0, "attach adm database" );
+    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+    DUF_SQL_BIND_S( dbfPath, duf_config->db.adm.fpath, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
+  }
+#endif
+
+#if 0
+  {
+    static const char *sql = "PRAGMA synchronous = OFF";
+
+    DUF_TRACE( explain, 0, "PRAGMA synchronous = OFF" );
+
+    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
   }
 
+  /* DOR( r, duf_sql_exec( "PRAGMA synchronous = OFF", ( int * ) NULL ) ); */
+  /* DUF_TEST_R( r );                                                      */
+  {
+    static const char *sql = "PRAGMA encoding = 'UTF-8'";
+
+    DUF_TRACE( explain, 0, "PRAGMA encoding = 'UTF-8'" );
+
+    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
+  }
+#endif
+/* TODO : part to only after possible tables creation */
+  duf_eval_sql_sequence( &sql_beginning_common, 0, NULL );
   DEBUG_ENDR( r );
 }
 
@@ -201,6 +218,7 @@ int
 duf_main_db_open( void )
 {
   DEBUG_STARTR( r );
+
   if ( !duf_config->db.opened )
   {
     DORF( r, duf_main_db_locate );
@@ -208,13 +226,13 @@ duf_main_db_open( void )
     DORF( r, duf_sql_open, duf_config->db.main.fpath );
     duf_config->db.opened = ( r >= 0 );
     DORF( r, duf_main_db_tune );
-    DORF( r, duf_pre_action );
+    DORF( r, duf_main_db_pre_action );
   }
 
   DEBUG_ENDR( r );
 }
 
-static int
+int
 duf_main_db_close( int ra )
 {
   DEBUG_STARTR( r );
@@ -232,6 +250,7 @@ duf_main_db_close( int ra )
   }
   DEBUG_ENDR( r );
 }
+
 
 /* do necessary actions to perform tasks, formulated in duf_config global variable and ... for standard database
  *    - global variable duf_config must be created/inited and set
@@ -253,7 +272,7 @@ duf_main_db( int argc, char **argv )
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
-  DORF( r, duf_main_db_optionally_config_show, argc, argv );
+  DORF( r, duf_config_optionally_show );
   DORF( r, duf_main_db_open );
 
   DUF_TRACE( temporary, 0, "@ maxitems.total %lld", duf_config->pu->maxitems.total );
@@ -261,6 +280,7 @@ duf_main_db( int argc, char **argv )
   DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", duf_config->pu->maxitems.dirs );
   DUF_TRACE( temporary, 0, "@ dirfiles.min %u", duf_config->pu->dirfiles.min );
   DUF_TRACE( temporary, 0, "@ dirfiles.max %u", duf_config->pu->dirfiles.max );
+#ifdef MAS_TRACING
   {
     char *sif = NULL;
 
@@ -275,70 +295,12 @@ duf_main_db( int argc, char **argv )
     DUF_TRACE( temporary, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }
-
+#endif
   DUF_TEST_RX_START( r );
   DUF_SHOW_ERROR( "db not opened @ %s ( %s )", duf_config->db.main.fpath, duf_error_name( r ) );
   DUF_TEST_RX_END( r );
 
-  DORF( r, duf_main_db_opened_action, argc, argv );
+  DORF( r, DUF_WRAPPED( duf_action ), argc, argv );
   DORF( r, duf_main_db_close, r );
-  DEBUG_ENDR( r );
-}
-
-int
-duf_pre_action( void )
-{
-  DEBUG_STARTR( r );
-/* --drop-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 && DUF_ACT_FLAG( drop_tables ) )
-  {
-    DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
-    if ( DUF_CLI_FLAG( dry_run ) )
-      DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
-    else
-    {
-      /* DOR( r, duf_clear_tables(  ) ); */
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL );
-    }
-    global_status.actions_done++;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
-  }
-  if ( r >= 0 && DUF_ACT_FLAG( vacuum ) )
-  {
-    /* static const char *sql = "VACUUM"; */
-
-    /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( VACUUM ) ); */
-    if ( DUF_CLI_FLAG( dry_run ) )
-      DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
-    else
-    {
-      /* DUF_SQL_START_STMT_NOPDI( sql, r, pstmt ); */
-      /* DUF_SQL_STEP( r, pstmt );                  */
-      /* DUF_SQL_END_STMT_NOPDI( r, pstmt );        */
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL );
-    }
-    global_status.actions_done++;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( VACUUM ) );
-  }
-/* --create-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 && DUF_ACT_FLAG( create_tables ) )
-  {
-    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-    /* DOR( r, duf_check_tables(  ) ); */
-    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
-    global_status.actions_done++;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-  }
-  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL );
-
   DEBUG_ENDR( r );
 }

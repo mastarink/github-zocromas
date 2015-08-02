@@ -37,7 +37,7 @@
  *  - sccb
  * */
 #ifdef MAS_TRACING
-#define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
+#  define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
     duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
@@ -85,7 +85,7 @@
       DEBUG_ENDR( r ); \
     }
 #else
-#define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
+#  define DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
     duf_qscan_node_scan_## stagename ## 2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
@@ -284,7 +284,7 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /
    * */
   node_selector2 = duf_get_node_sql_set( SCCB )->selector2;
   if ( node_selector2 )
-    DOR( r, duf_scan_db_items2( DUF_NODE_NODE, DUF_WRAPPED(duf_scan_dirs_by_pdi) /* str_cb2 */ ,
-                                sccbh ) );
+    DORF( r, duf_scan_db_items2, DUF_NODE_NODE, DUF_WRAPPED( duf_scan_dirs_by_pdi ) /* str_cb2 */ ,
+          sccbh );
   DEBUG_ENDR( r );
 }

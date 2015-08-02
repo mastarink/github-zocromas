@@ -31,10 +31,8 @@
  * 2. prepare «sample» sccb's by calling duf_set_actions_sample
  * 3. make/evaluate sccb sequence/list by calling duf_evaluate_sccb_array
  * */
-#ifdef MAS_WRAP_FUNC
-static
-#endif
-      int
+/* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
+DUF_WRAPSTATIC int
 duf_evaluate_all_at_config( void )
 {
   DEBUG_STARTR( r );
