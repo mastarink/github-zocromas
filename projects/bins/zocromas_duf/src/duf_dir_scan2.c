@@ -23,7 +23,7 @@
 /* ###################################################################### */
 
 
-/* duf_scan_dirs_by_pdi:
+/* duf_sccbh_eval_pdi_dirs:
  *  -= Walk (scan) dirs from DB =-
  *
  * consecutively call various scanner stages with the sccb
@@ -39,7 +39,7 @@
  * */
 
 DUF_WRAPSTATIC int
-duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -88,7 +88,7 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sc
 /* duf_scan_dirs_by_pdi_wrap          ( duf_scan_dirs_by_parentid )
  *  -= Walk (scan) dirs from DB =-
  *
- * see duf_scan_dirs_by_pdi
+ * see duf_sccbh_eval_pdi_dirs
  *
  * str_cb2 (sub-item scanner) one of:
  *       duf_scan_dirs_by_pdi_maxdepth
@@ -96,7 +96,7 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sc
  *     ( duf_str_cb2_scan_file_fd )
  * */
 #ifdef MAS_WRAP_FUNC
-int DUF_WRAPPED( duf_scan_dirs_by_pdi ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
  
@@ -123,7 +123,7 @@ int DUF_WRAPPED( duf_scan_dirs_by_pdi ) ( duf_sqlite_stmt_t * pstmt_selector, du
 #  endif
   if ( !SCCB->disabled )
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, duf_scan_dirs_by_pdi( pstmt_selector, /* str_cb2_unused, */ sccbh ) );
+    DOR( r, duf_sccbh_eval_pdi_dirs( pstmt_selector, /* str_cb2_unused, */ sccbh ) );
   }
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );
