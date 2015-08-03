@@ -36,7 +36,7 @@ duf_sccbh_eval_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 
   DOR( r, duf_pdi_reinit( PDI, real_path, PU, duf_get_node_sql_set( SCCB )->selector2, PU->v.flag.recursive, duf_pdi_opendir( PDI ) ) );
   DUF_TRACE( scan, 0, "[%llu] #%llu start scan from pdi path: ≪%s≫;", duf_levinfo_dirid( PDI ), PDI->seq_leaf, duf_levinfo_path( PDI ) );
-  DOR( r, duf_sccbh_eval_pdi( sccbh ) );
+  DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) );
   /* duf_pdi_close( PDI ); */
 
   DEBUG_ENDR( r );
@@ -91,7 +91,7 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
   {
     /* - evaluate sccb for each string from TARG[CV] as path */
     if ( duf_levinfo_path( PDI ) )
-      DOR( r, duf_sccbh_eval_pdi( sccbh ) );
+      DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) );
     else
       for ( int ia = 0; r >= 0 && ia < count; ia++ )
       {

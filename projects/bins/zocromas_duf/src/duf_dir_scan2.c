@@ -81,6 +81,7 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sc
   /* 6. */ DOR( r, duf_qscan_node_scan_after2 /*  */ ( pstmt_selector, sccbh ) );
   /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
 #endif
+
   DEBUG_ENDR( r );
 }
 
@@ -95,15 +96,17 @@ duf_scan_dirs_by_pdi( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sc
  *     ( duf_str_cb2_scan_file_fd )
  * */
 #ifdef MAS_WRAP_FUNC
-int
-duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_scan_dirs_by_pdi ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
+ 
+  assert( PDI );
+  assert( PDI->depth >= 0 );
+
 #  ifdef MAS_TRACING
   unsigned long long diridpid;
 
   diridpid = duf_levinfo_dirid( PDI );
-#  endif
   DUF_TRACE( scan, 3, "[%llu]", diridpid );
   DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, "** depth:%d/%d; diridpid:%llu", duf_pdi_depth( PDI ),
                 duf_pdi_reldepth( PDI ), diridpid );
@@ -112,6 +115,13 @@ duf_scan_dirs_by_pdi_wrap( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t
 
   DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 1." );
 
+  DUF_TRACE( explain, 0,
+             "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
+             duf_uni_scan_action_title( SCCB ) );
+  DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );
+
+#  endif
+  if ( !SCCB->disabled )
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
     DOR( r, duf_scan_dirs_by_pdi( pstmt_selector, /* str_cb2_unused, */ sccbh ) );
   }
