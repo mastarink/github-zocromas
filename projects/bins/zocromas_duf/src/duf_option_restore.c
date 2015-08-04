@@ -119,8 +119,8 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, ACTION, action, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, ERROR, error, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN, scan, maxlen );
-  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN_DE_DIR, scan_de_dir, maxlen );
-  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN_DE_REG, scan_de_reg, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN_DIR, scan_dir, maxlen );
+  DUF_OPTION_RESTORE_TRACE( codeval, ptr, SCAN_REG, scan_reg, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, TEMP, temp, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, PATH, path, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, FS, fs, maxlen );

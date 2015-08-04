@@ -61,13 +61,13 @@ global_status_reset( void )
   global_status.selection_bound_ufilter = NULL;
 }
 
-__attribute__ ( ( constructor( 102 ) ) )
+__attribute__ ( ( constructor( 101 ) ) )
      static void constructor_global_status( void )
 {
   global_status_init(  );
 }
 
-__attribute__ ( ( destructor ) )
+__attribute__ ( ( destructor( 101 ) ) )
      static void destructor_global_status( void )
 {
   global_status_reset(  );

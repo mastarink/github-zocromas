@@ -91,7 +91,7 @@ int
 duf_show_options( const char *a0 )
 {
   DEBUG_STARTR( r );
-  int seq = 0;
+  int oseq = 0;
 
   DUF_TRACE( options, 0, "%s", a0 );
   for ( duf_option_code_t codeval = DUF_OPTION_VAL_NONE; codeval < DUF_OPTION_VAL_MAX_LONG; codeval++ )
@@ -102,8 +102,8 @@ duf_show_options( const char *a0 )
     duf_restore_some_option( buffer, codeval, BUFSZ );
     if ( *buffer )
     {
-      seq++;
-      DUF_TRACE( options, 0, "%2d. %s", seq, buffer );
+      oseq++;
+      DUF_TRACE( options, 0, "%2d. %s", oseq, buffer );
     }
   }
   DUF_TRACE( options, 0, " --" );

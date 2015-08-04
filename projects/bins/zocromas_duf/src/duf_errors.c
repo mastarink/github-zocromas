@@ -27,9 +27,39 @@ static int max_show_count_error[DUF_ERROR_COUNT] = { 0 };
 
 static long _made_errors = 0;
 
+#define MAX_ERRORS 1000
+typedef struct
+{
+  long made_id;
+  duf_error_code_t err;
+  const char *funcid;
+  int linid;
+  int shown;
+} error_desc_t;
+
+static error_desc_t *global_error_list = NULL;
+
+__attribute__ ( ( destructor( 65535 ) ) )
+     static void destructor_errorlist( void )
+{
+  mas_free( global_error_list );
+  global_error_list = NULL;
+}
+
 duf_error_code_t
 duf_make_error( duf_error_code_t err, const char *funcid, int linid )
 {
+  if ( !global_error_list )
+  {
+    global_error_list = mas_malloc( sizeof( error_desc_t ) * MAX_ERRORS );
+    memset( global_error_list, 0, sizeof( error_desc_t ) * MAX_ERRORS );
+  }
+  if ( _made_errors < MAX_ERRORS )
+  {
+    global_error_list[_made_errors].err = err;
+    global_error_list[_made_errors].funcid = funcid;
+    global_error_list[_made_errors].linid = linid;
+  }
   _made_errors++;
   return err;
 }
@@ -144,7 +174,7 @@ _duf_get_ereport( duf_error_code_t rtest, int maxerr )
       r = 0;                    /* sql ? ? ? */
     }
     else if ( errindex >= 0 && errindex < maxerr
-              && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] ) )
+              && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] - 1 ) )
       r = noreport_error[errindex] + 1;
   }
   return r;
@@ -176,7 +206,7 @@ _duf_set_emax_count( int maxcount, duf_error_code_t rtest, int maxerr )
     int errindex = duf_errindex( rtest );
 
     if ( errindex >= 0 && errindex < maxerr )
-      max_show_count_error[errindex] = maxcount;
+      max_show_count_error[errindex] = maxcount + 1;
   }
 }
 
@@ -307,11 +337,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_SQL_FORMAT ),
     DUF_ERROR_NAME( DUF_SQL_RANGE ),
     DUF_ERROR_NAME( DUF_SQL_NOTADB ),
-    DUF_ERROR_NAME( DUF_SQL_NOTICE ),
-    DUF_ERROR_NAME( DUF_SQL_WARNING ),
-    DUF_ERROR_NAME( DUF_SQL_ROW ),
-    DUF_ERROR_NAME( DUF_SQL_DONE ),
-
+    DUF_ERROR_NAME( DUF_SQL_NOTICE ), DUF_ERROR_NAME( DUF_SQL_WARNING ), DUF_ERROR_NAME( DUF_SQL_ROW ), DUF_ERROR_NAME( DUF_SQL_DONE ),
 /* extended */
     DUF_ERROR_NAME( DUF_SQL_IOERR_READ ),
     DUF_ERROR_NAME( DUF_SQL_IOERR_SHORT_READ ),
@@ -363,9 +389,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_SQL_CONSTRAINT_VTAB ),
     DUF_ERROR_NAME( DUF_SQL_CONSTRAINT_ROWID ),
     DUF_ERROR_NAME( DUF_SQL_NOTICE_RECOVER_WAL ),
-    DUF_ERROR_NAME( DUF_SQL_NOTICE_RECOVER_ROLLBACK ),
-    DUF_ERROR_NAME( DUF_SQL_WARNING_AUTOINDEX ),
-
+    DUF_ERROR_NAME( DUF_SQL_NOTICE_RECOVER_ROLLBACK ), DUF_ERROR_NAME( DUF_SQL_WARNING_AUTOINDEX ),
 /*========================================*/
     DUF_ERROR_NAME( DUF_OK ),
     DUF_ERROR_NAME( DUF_ERROR_UNKNOWN ),
@@ -422,9 +446,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_STATAT ),
     DUF_ERROR_NAME( DUF_ERROR_STATAT_ENOENT ),
     DUF_ERROR_NAME( DUF_ERROR_PDI_SQL ),
-    DUF_ERROR_NAME( DUF_ERROR_SQL_NO_FIELDSET ),
-    DUF_ERROR_NAME( DUF_ERROR_SQL_NO_TABLE ),
-    DUF_ERROR_NAME( DUF_ERROR_MEMORY ),
+    DUF_ERROR_NAME( DUF_ERROR_SQL_NO_FIELDSET ), DUF_ERROR_NAME( DUF_ERROR_SQL_NO_TABLE ), DUF_ERROR_NAME( DUF_ERROR_MEMORY ),
 /*========================================*/
     DUF_ERROR_NAME( DUF_ERROR_ERROR_MAX ),
   };

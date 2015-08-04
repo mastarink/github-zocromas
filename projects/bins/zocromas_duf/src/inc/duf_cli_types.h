@@ -77,8 +77,8 @@ typedef struct
   unsigned sample;
   unsigned sampupd;
   unsigned scan;
-  unsigned scan_de_dir;
-  unsigned scan_de_reg;
+  unsigned scan_dir;
+  unsigned scan_reg;
   unsigned sd5;
   unsigned select;
   unsigned seq;

@@ -99,9 +99,10 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
 int DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
- 
+
   assert( PDI );
   assert( PDI->depth >= 0 );
+  /* assert( pstmt_selector ); */
 
 #  ifdef MAS_TRACING
   unsigned long long diridpid;

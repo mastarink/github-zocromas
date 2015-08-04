@@ -77,9 +77,9 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  /* DUF_SFIELD2( filename ); */
 #endif
-  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), "no filename" );
 
 
   DEBUG_ENDR( r );

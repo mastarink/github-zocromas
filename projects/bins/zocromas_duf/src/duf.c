@@ -2,6 +2,37 @@
  * TODO : libarchive
  * */
 
+/*
+  main
+    duf_main
+      duf_main_with_config
+	duf_all_options
+	duf_main_db
+	  duf_main_db_open
+	  duf_action
+	    duf_evaluate_all_at_config
+	  duf_main_db_close
+
+
+  duf_option_$_list_sccbs
+  duf_option_$_evaluate_sccb
+
+  duf_option_$_list_sccb
+  duf_option_$_db_open
+
+  duf_option_$_cd
+  ... ...
+*/
+
+
+/*
+
+   tput reset ; run  --drop-tables /home/mastar/big/misc/media/photo/20130507/ -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress
+
+   run  /mnt/new_media/media/photo/20130507/  -dfR --ls
+
+*/
+
 #include <time.h>
 #include <assert.h>
 
@@ -118,6 +149,8 @@ duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
   duf_config_create(  );
+
+  DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DOR( r, duf_main_with_config( argc, argv ) );
   if ( r < 0 )
