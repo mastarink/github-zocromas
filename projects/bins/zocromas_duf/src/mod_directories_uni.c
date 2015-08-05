@@ -41,7 +41,7 @@
 /* ########################################################################################## */
 /* make sure dir name in db */
 static int
-register_direntry( const char *fname_unused, const struct stat *pst_dir, duf_depthinfo_t * pdi )
+register_direntry( const char *fname_unused, const struct stat *pst_dir_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
@@ -49,10 +49,30 @@ register_direntry( const char *fname_unused, const struct stat *pst_dir, duf_dep
   duf_scan_callbacks_t duf_directories_callbacks; /* see below */
 
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
+  {
+    struct stat *st = duf_levinfo_stat( pdi );
+
+    assert( st->st_dev == pst_dir_unused->st_dev );
+    assert( st->st_ino == pst_dir_unused->st_ino );
+    assert( st->st_mode == pst_dir_unused->st_mode );
+    assert( st->st_nlink == pst_dir_unused->st_nlink );
+    assert( st->st_uid == pst_dir_unused->st_uid );
+    assert( st->st_gid == pst_dir_unused->st_gid );
+    assert( st->st_rdev == pst_dir_unused->st_rdev );
+    assert( st->st_size == pst_dir_unused->st_size );
+    assert( st->st_blksize == pst_dir_unused->st_blksize );
+    assert( st->st_blocks == pst_dir_unused->st_blocks );
+    /* assert( st->st_atim == pst_dir_unused->st_atim ); */
+    /* assert( st->st_mtim == pst_dir_unused->st_mtim ); */
+    /* assert( st->st_ctim == pst_dir_unused->st_ctim ); */
+    assert( 0 == memcmp( st, pst_dir_unused, sizeof( struct stat ) ) );
+    assert( pst_dir_unused == st );
+  }
 
 /* fname === */
   DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s : %s", fname_unused, duf_levinfo_itemname( pdi ) );
-  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , duf_levinfo_itemname( pdi ), pst_dir, duf_directories_callbacks.node.selector2,
+  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ),
+                                   duf_directories_callbacks.node.selector2,
                                    0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
