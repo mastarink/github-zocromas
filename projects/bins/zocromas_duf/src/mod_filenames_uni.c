@@ -42,7 +42,8 @@ static int
 filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname_unused, unsigned long long dataid )
 {
   DEBUG_STARTR( r );
-  const char *fname=duf_levinfo_itemname( pdi );
+  const char *fname = duf_levinfo_itemname( pdi );
+
   assert( 0 == strcmp( fname_unused, fname ) );
 
   if ( fname && duf_levinfo_dirid_up( pdi ) )
@@ -71,10 +72,11 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname_unused, 
 }
 
 static int
-register_direntry( const char *fname_unused, const struct stat *pst_file_unused, duf_depthinfo_t * pdi )
+register_direntry(  /* const char *fname_unused, const struct stat *pst_file_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+#if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
   /* pst_file_unused equal to duf_levinfo_stat( pdi ) ? */
   {
@@ -96,6 +98,7 @@ register_direntry( const char *fname_unused, const struct stat *pst_file_unused,
     assert( 0 == memcmp( st, pst_file_unused, sizeof( struct stat ) ) );
     assert( pst_file_unused == st );
   }
+#endif
 
   if ( duf_levinfo_stat( pdi ) )
   {

@@ -38,11 +38,11 @@
 /* ########################################################################################## */
 
 static int
-register_filedata( const char *fname_unused, const struct stat *pst_file, duf_depthinfo_t * pdi )
+register_filedata(  /* const char *fname_unused, const struct stat *pst_file, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  ( void ) /* dataid= */ duf_stat2file_dataid( pdi, pst_file, 0 /*need_id */ , &r );
+  ( void ) /* dataid= */ duf_stat2file_dataid( pdi, duf_levinfo_stat( pdi ) /* pst_file */ , 0 /*need_id */ , &r );
   DEBUG_ENDR( r );
 }
 

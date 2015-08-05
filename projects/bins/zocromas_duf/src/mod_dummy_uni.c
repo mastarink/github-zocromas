@@ -171,10 +171,11 @@ scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 int
-dirent_dir_scan_before2( const char *fname_unused, const struct stat *pstat_unused, duf_depthinfo_t * pdi )
+dirent_dir_scan_before2( /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+#if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
 
   /* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
@@ -197,6 +198,7 @@ dirent_dir_scan_before2( const char *fname_unused, const struct stat *pstat_unus
     assert( 0 == memcmp( st, pstat_unused, sizeof( struct stat ) ) );
     assert( pstat_unused == st );
   }
+#endif
 
   DUF_TRACE( scan, 0, "scan dirent - sub-directory scanned here" );
 
@@ -205,10 +207,11 @@ dirent_dir_scan_before2( const char *fname_unused, const struct stat *pstat_unus
 }
 
 int
-dirent_file_scan_before2( const char *fname_unused, const struct stat *pstat_unused, duf_depthinfo_t * pdi )
+dirent_file_scan_before2( /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+#if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
   /* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
   {
@@ -230,6 +233,7 @@ dirent_file_scan_before2( const char *fname_unused, const struct stat *pstat_unu
     assert( 0 == memcmp( st, pstat_unused, sizeof( struct stat ) ) );
     assert( pstat_unused == st );
   }
+#endif
 
   DUF_TRACE( mod, 0, "dummy dirent file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
 

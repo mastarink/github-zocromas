@@ -310,13 +310,12 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
 }
 
 static int
-sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname_unused, const struct stat *pstat_unused, /* unsigned long long dirid, */
-                   duf_depthinfo_t * pdi )
+sample_entry_dir2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
+  /* assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) ); */
 
-  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname_unused );
+  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s",  duf_levinfo_itemname( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -345,8 +344,8 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   /* .leaf_scan = sample_scan_leaf, */
   .leaf_scan2 = sample_scan_leaf2,
 
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize" /* */
            ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */

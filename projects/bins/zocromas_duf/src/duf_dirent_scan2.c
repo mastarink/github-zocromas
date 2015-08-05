@@ -45,7 +45,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
     /* sccb->dirent_file_scan_before2 -- duf_scan_hook2_dirent_t */
     /* sccb->dirent_dir_scan_before2 -- duf_scan_hook2_dirent_t */
     if ( scanner )
-      r = ( scanner ) (  /* pstmt, */ duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), /* duf_levinfo_dirid_up( pdi ) , */ pdi );
+      r = ( scanner ) (  /* pstmt, */ /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */ /* duf_levinfo_dirid_up( pdi ) , */ pdi );
   }
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {

@@ -41,13 +41,14 @@
 /* ########################################################################################## */
 /* make sure dir name in db */
 static int
-register_direntry( const char *fname_unused, const struct stat *pst_dir_unused, duf_depthinfo_t * pdi )
+register_direntry( /* const char *fname_unused, const struct stat *pst_dir_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
 
   duf_scan_callbacks_t duf_directories_callbacks; /* see below */
 
+#if 0
   assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
   {
     struct stat *st = duf_levinfo_stat( pdi );
@@ -68,9 +69,10 @@ register_direntry( const char *fname_unused, const struct stat *pst_dir_unused, 
     assert( 0 == memcmp( st, pst_dir_unused, sizeof( struct stat ) ) );
     assert( pst_dir_unused == st );
   }
+#endif
 
 /* fname === */
-  DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s : %s", fname_unused, duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemname( pdi ) );
   ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
                                    duf_directories_callbacks.node.selector2,
                                    0 /*need_id */ , &changes, &r );
