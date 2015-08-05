@@ -71,7 +71,7 @@ register_direntry( const char *fname_unused, const struct stat *pst_dir_unused, 
 
 /* fname === */
   DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s : %s", fname_unused, duf_levinfo_itemname( pdi ) );
-  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ),
+  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
                                    duf_directories_callbacks.node.selector2,
                                    0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
