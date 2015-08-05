@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include <assert.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -32,16 +33,23 @@ scan_init( duf_depthinfo_t * pdi )
 }
 
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
+  /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
   DUF_SFIELD2( filename );
 #endif
-  const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi );
 
-  DUF_TRACE( mod, 0, "dummy dirent %s : %s", duf_levinfo_path( pdi ), filename );
+/* filename from db same as duf_levinfo_itemname( pdi ) */
+  assert( 0 == strcmp( filename, duf_levinfo_itemname( pdi ) ) );
+
+
+/*
+* 2: 0 [MOD    ]  47:dirent_content2                 :3.8916 :  dummy dirent /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
+*/
+  DUF_TRACE( mod, 0, "dummy dirent %s : %s : %s", duf_levinfo_path( pdi ), filename, duf_levinfo_itemname( pdi ) );
   assert( fd == duf_levinfo_dfd( pdi ) );
 
   DEBUG_ENDR( r );
@@ -55,7 +63,11 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 #ifdef MAS_TRACING
   DUF_SFIELD2( filename );
 #endif
-  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
+/* filename from db same as duf_levinfo_itemname( pdi ) */
+  assert( 0 == strcmp( filename, duf_levinfo_itemname( pdi ) ) );
+
+
+  DUF_TRACE( mod, 0, "dummy %s : %s -=-", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -73,15 +85,17 @@ scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_before2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-#ifdef MAS_TRACING
-  /* DUF_SFIELD2( filename ); */
+  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+
+#if 0
+#  ifdef MAS_TRACING
+  DUF_SFIELD2( filename );
+#  endif
+  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), filename );
 #endif
-  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), "no filename" );
-
-
   DEBUG_ENDR( r );
 }
 
@@ -102,10 +116,15 @@ static int
 scan_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-#ifdef MAS_TRACING
+
+  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+
+#if 0
+#  ifdef MAS_TRACING
   DUF_SFIELD2( filename );
-#endif
+#  endif
   DUF_TRACE( mod, 0, "dummy node middle: %s : %s", duf_levinfo_path( pdi ), filename );
+#endif
 
   DEBUG_ENDR( r );
 }
@@ -126,11 +145,15 @@ static int
 scan_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-#ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
-#endif
-  DUF_TRACE( mod, 0, "dummy node after: %s : %s", duf_levinfo_path( pdi ), filename );
 
+  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+
+#if 0
+#  ifdef MAS_TRACING
+  DUF_SFIELD2( filename );
+#  endif
+  DUF_TRACE( mod, 0, "dummy node after: %s : %s", duf_levinfo_path( pdi ), filename );
+#endif
 
   DEBUG_ENDR( r );
 }
@@ -148,21 +171,67 @@ scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 int
-dirent_dir_scan_before2( const char *fname, const struct stat *pstat, duf_depthinfo_t * pdi )
+dirent_dir_scan_before2( const char *fname_unused, const struct stat *pstat_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  DUF_TRACE( mod, 0, "dummy dirent dir before: %s : %s", duf_levinfo_path( pdi ), fname );
 
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
 
+  /* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
+  {
+    struct stat *st = duf_levinfo_stat( pdi );
+
+    assert( st->st_dev == pstat_unused->st_dev );
+    assert( st->st_ino == pstat_unused->st_ino );
+    assert( st->st_mode == pstat_unused->st_mode );
+    assert( st->st_nlink == pstat_unused->st_nlink );
+    assert( st->st_uid == pstat_unused->st_uid );
+    assert( st->st_gid == pstat_unused->st_gid );
+    assert( st->st_rdev == pstat_unused->st_rdev );
+    assert( st->st_size == pstat_unused->st_size );
+    assert( st->st_blksize == pstat_unused->st_blksize );
+    assert( st->st_blocks == pstat_unused->st_blocks );
+    /* assert( st->st_atim == pstat_unused->st_atim ); */
+    /* assert( st->st_mtim == pstat_unused->st_mtim ); */
+    /* assert( st->st_ctim == pstat_unused->st_ctim ); */
+    assert( 0 == memcmp( st, pstat_unused, sizeof( struct stat ) ) );
+    assert( pstat_unused == st );
+  }
+
+  DUF_TRACE( scan, 0, "scan dirent - sub-directory scanned here" );
+
+  DUF_TRACE( mod, 0, "dummy dirent dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
   DEBUG_ENDR( r );
 }
 
 int
-dirent_file_scan_before2( const char *fname, const struct stat *pstat, duf_depthinfo_t * pdi )
+dirent_file_scan_before2( const char *fname_unused, const struct stat *pstat_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  DUF_TRACE( mod, 0, "dummy dirent file before: %s : %s", duf_levinfo_path( pdi ), fname );
 
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
+  /* pstat_unused equal to duf_levinfo_stat( pdi ) ? */
+  {
+    struct stat *st = duf_levinfo_stat( pdi );
+
+    assert( st->st_dev == pstat_unused->st_dev );
+    assert( st->st_ino == pstat_unused->st_ino );
+    assert( st->st_mode == pstat_unused->st_mode );
+    assert( st->st_nlink == pstat_unused->st_nlink );
+    assert( st->st_uid == pstat_unused->st_uid );
+    assert( st->st_gid == pstat_unused->st_gid );
+    assert( st->st_rdev == pstat_unused->st_rdev );
+    assert( st->st_size == pstat_unused->st_size );
+    assert( st->st_blksize == pstat_unused->st_blksize );
+    assert( st->st_blocks == pstat_unused->st_blocks );
+    /* assert( st->st_atim == pstat_unused->st_atim ); */
+    /* assert( st->st_mtim == pstat_unused->st_mtim ); */
+    /* assert( st->st_ctim == pstat_unused->st_ctim ); */
+    assert( 0 == memcmp( st, pstat_unused, sizeof( struct stat ) ) );
+    assert( pstat_unused == st );
+  }
+
+  DUF_TRACE( mod, 0, "dummy dirent file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
 
   DEBUG_ENDR( r );
 }

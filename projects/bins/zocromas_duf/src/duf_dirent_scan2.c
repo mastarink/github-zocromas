@@ -90,6 +90,15 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
 
   DUF_TRACE( scan, 2, "dirID=%llu; scandir dfname:[%s :: %s]", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
   nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
+
+
+  {
+    extern duf_scan_callbacks_t duf_dummy_callbacks;
+
+    DUF_TRACE( scan, 0, "scan dirent (nlist:%d) hooks d:%p; r:%p; %p !!", nlist, scan_dirent_dir2, scan_dirent_reg2,
+               duf_dummy_callbacks.dirent_dir_scan_before2 );
+  }
+
   DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), duf_levinfo_itemname_q( pdi, "nil" ), nlist,
              duf_levinfo_dfd( pdi ) );
 
@@ -102,6 +111,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
        *   for directory                - scan_dirent_dir2
        *   for other (~ regular) entry  - scan_dirent_reg2
        * */
+      DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
       DOR( r, duf_scan_direntry2_lower( list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 ) );
 
       if ( list[il] )
@@ -150,9 +160,12 @@ duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_re
 
   pst_parent = duf_levinfo_stat( pdi );
 
+  DUF_TRACE( scan, 0, "scan dirent hooks d:%d; r:%d", scan_dirent_dir2 ? 1 : 0, scan_dirent_reg2 ? 1 : 0 );
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
   if ( r || !pst_parent || !( S_ISDIR( pst_parent->st_mode ) ) )
   {
+
+
 /* no such entry */
     DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemname( pdi ) );
     /* TODO mark as absent or remove from db */
@@ -161,6 +174,8 @@ duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_re
     DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
   }
   else
+  {
     r = _duf_scan_dirents2( pdi, scan_dirent_reg2, scan_dirent_dir2 );
+  }
   DEBUG_ENDR( r );
 }

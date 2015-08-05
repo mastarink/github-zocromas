@@ -194,7 +194,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
   {
     duf_pdi_set_opendir( PDI, 1 );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
-    DUF_TRACE( scan, 0, "scan dirent_dir by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 0, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
     /*
      *   -- call for each direntry
      *      - for directory                - sccb->dirent_dir_scan_before2

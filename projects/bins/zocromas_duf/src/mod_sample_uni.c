@@ -310,12 +310,13 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
 }
 
 static int
-sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat, /* unsigned long long dirid, */
+sample_entry_dir2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname_unused, const struct stat *pstat_unused, /* unsigned long long dirid, */
                    duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
 
-  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname );
+  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", fname_unused );
 
   DEBUG_ENDR( r );
 }

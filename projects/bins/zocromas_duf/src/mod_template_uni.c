@@ -124,7 +124,7 @@ template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned
 }
 
 int
-template_dirent_dir_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat,
+template_dirent_dir_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname_unused, const struct stat *pstat_unused,
                                   /* unsigned long long dirid, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
@@ -134,7 +134,7 @@ template_dirent_dir_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const
 }
 
 int
-template_dirent_file_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname, const struct stat *pstat,
+template_dirent_file_scan_before2(  /* duf_sqlite_stmt_t * pstmt_unused, */ const char *fname_unused, const struct stat *pstat_unused,
                                    /* unsigned long long dirid, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );

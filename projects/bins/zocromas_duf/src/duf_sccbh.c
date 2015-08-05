@@ -30,7 +30,7 @@ duf_sccbh_eval_pdi_and_summary( duf_sccb_handle_t * sccbh )
 
   DUF_E_NO( DUF_ERROR_TOO_DEEP );
 
-  DOR( r, DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ) ( ( duf_sqlite_stmt_t * ) NULL, sccbh ) );
+  DORF( r, DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ), ( duf_sqlite_stmt_t * ) NULL, sccbh );
 
   if ( r >= 0 && DUF_ACT_FLAG( summary ) )
   {

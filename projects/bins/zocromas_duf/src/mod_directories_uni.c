@@ -7,6 +7,7 @@
 
 
 #include <assert.h>
+#include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -19,6 +20,8 @@
 
 
 
+/* #include "duf_pdi.h" */
+#include "duf_levinfo_ref.h"
 
 
 #include "duf_sql_defs.h"
@@ -38,15 +41,19 @@
 /* ########################################################################################## */
 /* make sure dir name in db */
 static int
-register_direntry( const char *fname, const struct stat *pst_dir, duf_depthinfo_t * pdi )
+register_direntry( const char *fname_unused, const struct stat *pst_dir, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
+
   duf_scan_callbacks_t duf_directories_callbacks; /* see below */
 
+  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
+
 /* fname === */
-  DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s", fname );
-  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , fname, pst_dir, duf_directories_callbacks.node.selector2, 0 /*need_id */ , &changes, &r );
+  DUF_TRACE( mod, 0, "@ @ @ @ scan entry dir 2 by %s : %s", fname_unused, duf_levinfo_itemname( pdi ) );
+  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , duf_levinfo_itemname( pdi ), pst_dir, duf_directories_callbacks.node.selector2,
+                                   0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
 
