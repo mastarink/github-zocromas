@@ -569,6 +569,13 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
               "remove old and create new DB, add path to DB; -O, -P, --remove-database are flags!" );
   DUF_PRINTF( 0, "  run --remove-database /mnt/new_media/media/photo/Pictures/one/ -OP    	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/Pictures/one/ -OP --remove-database    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "========================= as for 20150806.154601 ============" );
+  DUF_PRINTF( 0, "  ( echo open-db ; echo \"cd=`pwd`/..\" ; echo 'evaluate-sccb=tree' ) | run -dfR   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run -dfR < test.cmds    	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0,
+              "     test.cmds:  	- %s  \n" "\t\topen-db\n" "\t\tcd=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf\n"
+              "\t\tevaluate-sccb=tree\n", "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );
