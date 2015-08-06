@@ -112,7 +112,7 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
 }
 
 int
-duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
                              const duf_longval_extended_table_t * xtable, int noo )
 {
   DEBUG_STARTR( r );
@@ -120,8 +120,8 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
   if ( !extended )
     DOR( r, DUF_ERROR_OPTION );
 
-  DUF_TRACE( options, 2, "parsing typed:`%s`;   %s", extended->o.name, duf_error_name( r ) );
-  DUF_TRACE( options, 2, "r:%d; xname:%s; noo:%d", r, extended ? extended->o.name : "?", noo );
+  DUF_TRACE( options, 1, "parsing typed:`%s`;   %s", extended->o.name, duf_error_name( r ) );
+  DUF_TRACE( options, 1, "r:%d; xname:%s; noo:%d", r, extended ? extended->o.name : "?", noo );
 /*
  * if arg is help option
  * return class id for options to display the help
@@ -132,7 +132,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
     unsigned doplus = 0;
     char *byteptr = NULL;
 
-    DUF_TRACE( options, 2, "switching by extended->relto=%d", extended->relto );
+    DUF_TRACE( options, 1, "switching by extended->relto=%d", extended->relto );
     switch ( extended->relto )
     {
     case DUF_OFFSET_config:
@@ -166,7 +166,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
 	      else \
 	      { \
 		( *p ) = __v; \
-		DUF_TRACE( options, 1, "%s : number set:%llu", extended->o.name, (unsigned long long) __v ); \
+		DUF_TRACE( options, 7, "%s : number set:%llu", extended->o.name, (unsigned long long) __v ); \
 	      } \
 	    } \
 	  } \
@@ -321,7 +321,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
       }
 #define DUF_OUTPUTFILE(_no, _rt, _typ, _defout) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout)
 
-    DUF_TRACE( options, 2, "to check stage; istage:%d", istage );
+    DUF_TRACE( options, 0, "@@@to check stage; istage:%d", istage );
     if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) /* duf_check_stage */
     {
       int nof;
@@ -777,7 +777,7 @@ duf_parse_option_long_typed( const duf_longval_extended_t * extended, const char
     }
     else
     {
-      DUF_TRACE( options, 2, "NOT switching by extended->vtype=%d; istage=%d (%d:%d); stage.flag:%d", extended->vtype, istage, extended->stage.min,
+      DUF_TRACE( options, 0, "@@@NOT switching by extended->vtype=%d; istage=%d (%d:%d); stage.flag:%d", extended->vtype, istage, extended->stage.min,
                  extended->stage.max, extended->stage.flag );
       /* r = DUF_ERROR_OPTION_NOT_FOUND; */
     }

@@ -59,7 +59,7 @@ duf_option_$_evaluate_sccb( const char *names )
   const char *pnames;
 
   pnames = names;
-  DUF_TRACE( path, 0, "@ levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
+  DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   while ( pnames && *pnames )
   {
     const char *ename = NULL;

@@ -82,14 +82,18 @@ duf_execute_cmd_long_xtable( const char *string, const duf_longval_extended_tabl
     int no = 0;
 
     extended = duf_find_cmd_long_no( string, xtended, vseparator, &arg, &no, &r );
-    DUF_TRACE( options, 6, "string:%s; no:%d", string, no );
+    DUF_TRACE( options, 1, "string:%s; no:%d extended(+-):%d", string, no, extended ? 1 : 0 );
 
     if ( extended )
     {
       DUF_TRACE( options, 3, "@(%s) found cmd #%d for %s", duf_error_name( r ), found, extended->o.name );
-      DORF( r, DUF_WRAPPED( duf_parse_option_long_full ), extended, arg, istage, xtable, no );
-      DUF_TRACE( options, 3, "@(%s) full #%d done for %s", duf_error_name( r ), found, extended->o.name );
+      DORF( r, DUF_WRAPPED( duf_interpret_option_long_full ), extended, arg, istage, xtable, no );
+      DUF_TRACE( options, 1, "@(%s) full #%d done for %s", duf_error_name( r ), found, extended->o.name );
       found += ( extended ? 1 : 0 );
+    }
+    else
+    {
+      /* DUF_SHOW_ERROR( "extended is NULL after duf_find_cmd_long_no for %s", string ); */
     }
     mas_free( arg );
     arg = NULL;
@@ -117,6 +121,7 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
     /* PF0( "table %s; search %s", xtable->o.name, string ); */
     DORN( r, duf_execute_cmd_long_xtable( string, xtable, vseparator, istage ) );
+    DUF_TRACE( options, ( r >= 0 ) ? 1 : 5, "executed cmd; r=%d; xs=%s", r, string );
     if ( r > 0 )
       found += r;
     /* if ( r >= 0 ) */

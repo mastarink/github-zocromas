@@ -21,7 +21,7 @@
 
 
 int
-duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
+duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
 {
   DEBUG_STARTR( r );
   const char *eo = NULL;
@@ -55,7 +55,7 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
       DUF_TRACE( explain, 0, "env s: \"%s\"", s );
       xs = mas_expand_string( s );
       DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
-      DOR( r, duf_execute_cmd_long_xtables_std( xs, '=', 0 ) );
+      DOR( r, duf_execute_cmd_long_xtables_std( xs, '=', istage ) );
       mas_free( xs );
     }
     mas_free( s );
@@ -65,6 +65,7 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
   }
   DEBUG_ENDR( r );
 }
+
 /*
  * get options/settings from OS environment
  *    - global variable duf_config must be created/inited
@@ -73,9 +74,9 @@ duf_env_options_at_var( int argc, char *argv[], const char *envvarname )
  * 2. call duf_env_options_at_var
  * */
 int
-duf_env_options( int argc, char *argv[] )
+duf_env_options( duf_option_stage_t istage )
 {
   const char *varname = "MSH_DUF_OPTIONS";
 
-  return duf_env_options_at_var( argc, argv, varname );
+  return duf_env_options_at_var( istage, varname );
 }

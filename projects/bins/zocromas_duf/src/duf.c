@@ -112,7 +112,7 @@ duf_main_with_config( int argc, char **argv )
 
   DUF_TRACE( any, 1, "any test" );
 
-  DOR_NOE( r, duf_all_options( argc, argv ), DUF_ERROR_OPTION_NOT_FOUND );
+  DOR_NOE( r, duf_all_options( argc, argv, DUF_OPTION_STAGE_DEFAULT ), DUF_ERROR_OPTION_NOT_FOUND );
 
   DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
 

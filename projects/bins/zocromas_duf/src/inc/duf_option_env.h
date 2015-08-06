@@ -2,8 +2,8 @@
 #  define MAS_DUF_OPTION_ENV_H
 
 
-int duf_env_options_at_var( int argc, char *argv[], const char *envvarname );
-int duf_env_options( int argc, char *argv[] );
+int duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname );
+int duf_env_options( duf_option_stage_t istage );
 
 
 

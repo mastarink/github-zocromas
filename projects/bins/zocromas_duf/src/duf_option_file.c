@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -66,8 +67,51 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
  *            4.5. call duf_execute_cmd_long_xtables_std to parse/process/execute option
  *            4.6. close configuration file
  * */
+
+
+int
+duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f )
+{
+  DEBUG_STARTR( r );
+
+  DUF_TRACE( options, 1, "@@@stream stage:%d", istage );
+  while ( r >= 0 && f && !feof( f ) )
+  {
+    char buffer[1024];
+    char *s;
+
+    s = fgets( buffer, sizeof( buffer ), f );
+    if ( s )
+    {
+      s = mas_chomp( s );
+      DUF_TRACE( options, 1, "@@@@read cmd '%s'", s );
+      if ( s && ( ( *s == '#' ) || !*s ) )
+        continue;
+      /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
+      DUF_TRACE( explain, 0, "read config line %s", s );
+      {
+        char *xs;
+
+        xs = mas_expand_string( s );
+        DUF_TRACE( explain, 0, "expanded config line %s", xs );
+/* 
+ * duf_execute_cmd_long_xtables_std return codeval>0 for "help" option
+ *   =0 for other option
+ *   errorcode<0 for error
+ * */
+        DOR( r, duf_execute_cmd_long_xtables_std( xs, '=', istage ) );
+
+
+        DUF_TRACE( options, 0, "executed cmd; r=%d; xs=%s", r, xs );
+        mas_free( xs );
+      }
+    }
+  }
+  DEBUG_ENDR( r );
+}
+
 static int
-duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, const char *filename )
+duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdir, const char *filename )
 {
   DEBUG_STARTR( r );
   FILE *f = NULL;
@@ -89,34 +133,8 @@ duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, 
   DUF_TRACE( explain, 0, "to read config file" );
   if ( f )
   {
-    while ( r >= 0 && f && !feof( f ) )
-    {
-      char buffer[1024];
-      char *s;
+    DOR( r, duf_infile_options_at_stream( istage, f ) );
 
-      s = fgets( buffer, sizeof( buffer ), f );
-      if ( s )
-      {
-        s = mas_chomp( s );
-        if ( s && ( ( *s == '#' ) || !*s ) )
-          continue;
-        /* DUF_TRACE( any, 0, "buffer:[%s]", buffer ); */
-        DUF_TRACE( explain, 0, "read config line %s", s );
-        {
-          char *xs;
-
-          xs = mas_expand_string( s );
-          DUF_TRACE( explain, 0, "expanded config line %s", xs );
-/* 
- * duf_execute_cmd_long_xtables_std return codeval>0 for "help" option
- *   =0 for other option
- *   errorcode<0 for error
- * */
-          r = duf_execute_cmd_long_xtables_std( xs, '=', 0 );
-          mas_free( xs );
-        }
-      }
-    }
     fclose( f );
     DUF_TRACE( explain, 0, "read config file" );
   }
@@ -135,8 +153,8 @@ duf_infile_options_at_dir_and_file( int argc, char *argv[], const char *cfgdir, 
  * 1. set configuration directory from OS envirionment
  * 2. call duf_infile_options_at_dir_and_file
  * */
-static int
-duf_infile_options_at_file( int argc, char *argv[], const char *filename )
+int
+duf_infile_options_at_file( duf_option_stage_t istage, const char *filename )
 {
   DEBUG_STARTR( r );
   const char *cfgdir = NULL;
@@ -148,7 +166,7 @@ duf_infile_options_at_file( int argc, char *argv[], const char *filename )
  *   =0 for other option
  *   errorcode<0 for error
  * */
-  DOR( r, duf_infile_options_at_dir_and_file( argc, argv, cfgdir, filename ) );
+  DOR( r, duf_infile_options_at_dir_and_file( istage, cfgdir, filename ) );
 
   DEBUG_ENDR( r );
 }
@@ -161,7 +179,30 @@ duf_infile_options_at_file( int argc, char *argv[], const char *filename )
  * 2. call duf_infile_options_at_file
  * */
 int
-duf_infile_options( int argc, char *argv[] )
+duf_infile_options( duf_option_stage_t istage )
 {
-  return duf_infile_options_at_file( argc, argv, DUF_CONFIG_FILE_NAME );
+  return duf_infile_options_at_file( istage, DUF_CONFIG_FILE_NAME );
+}
+
+/* duf_stdin_options - can be executed only once (direct stdin reading!)  */
+int
+duf_stdin_options( duf_option_stage_t istage )
+{
+  DEBUG_STARTR( r );
+  static int done = 0;
+
+  if ( !done )
+  {
+    DUF_TRACE( options, 4, "@@@ isatty: %d:%d:%d", isatty( STDIN_FILENO ), isatty( STDOUT_FILENO ), isatty( STDERR_FILENO ) );
+    if ( !isatty( STDIN_FILENO ) )
+    {
+      DOR( r, duf_infile_options_at_stream( istage, stdin ) );
+      done = 1;
+    }
+  }
+  else
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
+  }
+  DEBUG_ENDR( r );
 }
