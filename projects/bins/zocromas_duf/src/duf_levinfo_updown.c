@@ -1,6 +1,7 @@
 #include <string.h>
 #include <assert.h>
 #include <limits.h>
+#include <unistd.h>
 
 
 #include <mastar/wrap/mas_std_def.h>
@@ -70,15 +71,15 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
         /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
-      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemname( pdi ) );
+      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemshowname( pdi ) );
       assert( pdi->depth >= 0 );
       if ( is_leaf )
-        DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+        DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
       else
       {
         duf_levinfo_countdown_dirs( pdi );
         DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node:   =>  by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
-                   duf_levinfo_itemname( pdi ) );
+                   duf_levinfo_itemshowname( pdi ) );
       }
     }
     /* else                       */
@@ -120,16 +121,25 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
                               unsigned long long nfiles, int is_leaf )
 {
   DEBUG_STARTR( r );
-  int rd;
 
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
   if ( r >= 0 )
   {
+    int rd;
+
     /* DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_TOO_DEEP ); */
     DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
     rd = r;
+    DUF_E_NO( DUF_ERROR_OPENAT_ENOENT );
     DOR( r, duf_levinfo_openat_dh( pdi ) );
-    DUF_TRACE( fs, 0, "(%d)? levinfo u/d openated %s; dfd:%d", r, duf_levinfo_itemname( pdi ),  duf_levinfo_dfd(pdi) );
+    DUF_E_YES( DUF_ERROR_OPENAT_ENOENT );
+    if ( r == DUF_ERROR_OPENAT_ENOENT && rd >= 0 && duf_levinfo_item_deleted( pdi ) )
+      r = 0;
+    if ( duf_levinfo_item_deleted( pdi ) )
+    {
+      DUF_TRACE( fs, 0, "@@(%d;%d;D:%d)? levinfo u/d openated %s; dfd:%d", r, rd, duf_levinfo_item_deleted( pdi ), duf_levinfo_itemshowname( pdi ),
+                 duf_levinfo_dfd( pdi ) );
+    }
     if ( r < 0 && rd >= 0 )
       duf_levinfo_goup( pdi );
   }
@@ -145,10 +155,10 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
   assert( pdi );
 
   if ( duf_levinfo_is_leaf( pdi ) )
-    DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf  <=             - %s", duf_pdi_depth( pdi ), duf_levinfo_itemname( pdi ) );
+    DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf  <=             - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
   else
     DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node: <=    by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
-               duf_levinfo_itemname( pdi ) );
+               duf_levinfo_itemshowname( pdi ) );
   {
     int d = pdi->depth--;
 

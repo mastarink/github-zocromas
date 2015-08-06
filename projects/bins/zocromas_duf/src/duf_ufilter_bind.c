@@ -19,6 +19,35 @@
 #include "duf_ufilter_bind.h"
 /* ###################################################################### */
 
+int
+duf_init_filepath( duf_filepath_t * pfp, const char *filepath )
+{
+  DEBUG_STARTR( r );
+  char *pathname;
+
+  memset( pfp, 0, sizeof( duf_filepath_t ) );
+  pathname = mas_strdup( filepath );
+  {
+    char *dir;
+    char *base;
+
+    base = basename( pathname );
+    dir = dirname( pathname );
+    pfp->dirid = duf_path2dirid( dir, NULL, &r );
+    pfp->name = mas_strdup( base );
+  }
+  mas_free( pathname );
+  DEBUG_ENDR( r );
+}
+
+int
+duf_clear_filepath( duf_filepath_t * pfp )
+{
+  DEBUG_STARTR( r );
+  if ( pfp )
+    mas_free( pfp->name );
+  DEBUG_ENDR( r );
+}
 
 int
 duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
@@ -56,29 +85,19 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
   }
 
   DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACT_FLAG( fast ), r, pstmt );
+
+
   if ( duf_config->pu->same_md5 )
   {
-    duf_filepath_t fp = { 0 };
-    {
-      char *pathname;
-      char *dir;
-      char *base;
+    duf_filepath_t fp;
 
-      pathname = mas_strdup( duf_config->pu->same_md5 );
-      base = basename( pathname );
-      dir = dirname( pathname );
-      fp.dirid = duf_path2db( dir, NULL, &r );
-      fp.name = mas_strdup( base );
-      mas_free( pathname );
-    }
-
+    DOR( r, duf_init_filepath( &fp, duf_config->pu->same_md5 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
-    mas_free( fp.name );
+    DOR( r, duf_clear_filepath( &fp ) );
     if ( r >= 0 && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
-
 
   DEBUG_ENDR( r );
 }

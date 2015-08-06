@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -141,7 +142,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
 
   DOR( r, duf_levinfo_godown_openat_dh( PDI, 0 /* dir_id */ , DUF_GET_SFIELD2( filename ), 0, 0, 1 /* is_leaf */  ) );
-  /* DOR( r, duf_levinfo_openat_dh( PDI ) ); */
+
   if ( r >= 0 )
   {
     unsigned long m;
@@ -165,13 +166,28 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                   duf_levinfo_dfd( PDI ), PDI->opendir );
 
-
-    if ( str_cb2 && !duf_levinfo_item_deleted( PDI ) )
+    if ( str_cb2 /* && !duf_levinfo_item_deleted( PDI ) */ )
+    {
+      if ( duf_levinfo_item_deleted( PDI ) )
+      {
+        DUF_TRACE( fs, 1, "@@@ >>> [%s] ", duf_levinfo_itemshowname( PDI ) );
+      }
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
+      if ( r == DUF_ERROR_OPENAT_ENOENT )
+        r = 0;
+    }
+
     DOR( r, duf_levinfo_goup( PDI ) );
   }
+  /* else if ( r == DUF_ERROR_OPENAT_ENOENT )                                                                        */
+  /* {                                                                                                               */
+  /*   DUF_TRACE( temp, 0, "@!!! %d : [%s] ==> [%s]", r, duf_levinfo_itemname( PDI ), DUF_GET_SFIELD2( filename ) ); */
+  /*   sleep( 1 );                                                                                                   */
+  /*   r = 0;                                                                                                        */
+  /* }                                                                                                               */
   DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP );
   DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
+
   DEBUG_ENDR( r );
 }
 
@@ -211,7 +227,15 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       /* if ( r >= 0 && !duf_levinfo_item_deleted( PDI ) ) */
       DUF_TRACE( explain, 2, "=> str cb2" );
       DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
+      /* DUF_E_NO( DUF_ERROR_OPENAT_ENOENT ); */
+      /* DUF_TRACE( temp, 0, "@+[%s]", duf_levinfo_itemname( PDI ) ); */
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
+      /* DUF_TRACE( temp, 0, "@@-[%s]", duf_levinfo_itemname( PDI ) ); */
+      /* assert( r != DUF_ERROR_OPENAT_ENOENT ); */
+      /* DUF_E_YES( DUF_ERROR_OPENAT_ENOENT ); */
+      /* if ( r == DUF_ERROR_OPENAT_ENOENT ) */
+      /* r = 0; */
+      /* DUF_TRACE( temp, 0, "r:%d DUF_ERROR_OPENAT_ENOENT:%d", r, DUF_ERROR_OPENAT_ENOENT ); */
     }
     else
       DUF_SHOW_ERROR( "str_cb2 not set" );
@@ -308,6 +332,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
   duf_sel_cb2_t sel_cb2 = NULL;
   duf_sel_cb2_match_t match_cb2 = NULL;
   const duf_sql_set_t *sql_set = NULL;
+
 #ifdef MAS_TRACING
   const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_LEAF ? "node" : "UNDEF" );
 #endif
@@ -364,7 +389,7 @@ duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_h
         sql_selector = duf_selector2sql( sql_set );
 
       DUF_TRACE( scan, 14, "sql:%s", sql_selector );
-      DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemname( PDI ) );
+      DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );
 /*
  * match_cb2,sel_cb2 from sccb:
  * DUF_NODE_LEAF => duf_match_leaf2, duf_sel_cb2_leaf

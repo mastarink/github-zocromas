@@ -386,11 +386,11 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   return timeepoch;
 }
 
-static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   DUF_UFIELD2( dataid );
@@ -415,7 +415,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct st
       {
         int rr;
 
-          rr = read( fd, buffer, bufsz );
+          rr = read( duf_levinfo_dfd( pdi ), buffer, bufsz );
           DUF_TRACE( exif, 5, "read %d", rr );
         if ( rr < 0 )
         {

@@ -41,7 +41,7 @@
 /* ########################################################################################## */
 /* make sure dir name in db */
 static int
-register_direntry( /* const char *fname_unused, const struct stat *pst_dir_unused, */ duf_depthinfo_t * pdi )
+register_pdidirectory( /* const char *fname_unused, const struct stat *pst_dir_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
@@ -72,8 +72,8 @@ register_direntry( /* const char *fname_unused, const struct stat *pst_dir_unuse
 #endif
 
 /* fname === */
-  DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemname( pdi ) );
-  ( void ) duf_dirname_stat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
+  DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
+  ( void ) duf_dirname_pdistat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
                                    duf_directories_callbacks.node.selector2,
                                    0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
@@ -148,7 +148,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .name = "dirs",
   .init_scan = NULL,
   .def_opendir = 1,
-  .dirent_dir_scan_before2 = register_direntry,
+  .dirent_dir_scan_before2 = register_pdidirectory,
 
   .count_nodes = 1,
   .beginning_sql_seq = &sql_beginning_selected,

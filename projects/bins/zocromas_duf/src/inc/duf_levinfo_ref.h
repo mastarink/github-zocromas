@@ -15,10 +15,15 @@ int duf_levinfo_item_deleted_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_item_deleted( const duf_depthinfo_t * pdi );
 int duf_levinfo_item_deleted_up( const duf_depthinfo_t * pdi );
 
-const char *duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d );
-const char *duf_levinfo_itemname( const duf_depthinfo_t * pdi );
-const char *duf_levinfo_itemname_up( const duf_depthinfo_t * pdi );
-const char *duf_levinfo_itemname_q( const duf_depthinfo_t * pdi, const char *q );
+const char *duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d );
+const char *duf_levinfo_itemshowname( const duf_depthinfo_t * pdi );
+const char *duf_levinfo_itemshowname_up( const duf_depthinfo_t * pdi );
+const char *duf_levinfo_itemshowname_q( const duf_depthinfo_t * pdi, const char *q );
+
+const char *duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d );
+const char *duf_levinfo_itemtruename( const duf_depthinfo_t * pdi );
+const char *duf_levinfo_itemtruename_up( const duf_depthinfo_t * pdi );
+const char *duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q );
 
 void duf_levinfo_set_dirid_d( duf_depthinfo_t * pdi, unsigned long long dirid, int d );
 void duf_levinfo_set_dirid( duf_depthinfo_t * pdi, unsigned long long dirid );

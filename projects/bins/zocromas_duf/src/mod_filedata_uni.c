@@ -37,14 +37,6 @@
 
 /* ########################################################################################## */
 
-static int
-register_filedata(  /* const char *fname_unused, const struct stat *pst_file, */ duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-  ( void ) /* dataid= */ duf_stat2file_dataid( pdi, duf_levinfo_stat( pdi ) /* pst_file */ , 0 /*need_id */ , &r );
-  DEBUG_ENDR( r );
-}
 
 
 static duf_sql_sequence_t final_sql = {.done = 0,
@@ -123,7 +115,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .dirent_file_scan_before2 = register_filedata,
+  .dirent_file_scan_before2 = /* register_pdifiledata == */ duf_pdistat2file,
 
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */

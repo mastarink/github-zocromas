@@ -27,13 +27,13 @@ scan_init( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( mod, 0, "dummy scan_init %s", duf_levinfo_path( pdi ) );
+  DUF_TRACE( mod, 3, "dummy scan_init %s", duf_levinfo_path( pdi ) );
 
   DEBUG_ENDR( r );
 }
 
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, duf_depthinfo_t * pdi )
+dirent_content2( duf_sqlite_stmt_t * pstmt, int fd_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -43,14 +43,14 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, duf_depthinfo_t * pdi )
 #endif
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemname( pdi ) ) );
+  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
 
 
 /*
 * 2: 0 [MOD    ]  47:dirent_content2                 :3.8916 :  dummy dirent /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  DUF_TRACE( mod, 0, "dummy dirent %s : %s : %s", duf_levinfo_path( pdi ), filename, duf_levinfo_itemname( pdi ) );
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  DUF_TRACE( mod, 2, "dummy dirent %s : %s : %s", duf_levinfo_path( pdi ), filename, duf_levinfo_itemshowname( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -64,10 +64,11 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_SFIELD2( filename );
 #endif
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemname( pdi ) ) );
+  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
 
 
-  DUF_TRACE( mod, 0, "dummy %s : %s -=-", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 5, "dummy %s -a-", duf_levinfo_path( pdi ) );
+  DUF_TRACE( mod, 2, "dummy %s : %s -b-", duf_levinfo_itemshowname( pdi ), filename );
 
   DEBUG_ENDR( r );
 }
@@ -88,7 +89,7 @@ static int
 scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 2, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 #  ifdef MAS_TRACING
@@ -117,7 +118,7 @@ scan_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 2, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 #  ifdef MAS_TRACING
@@ -146,7 +147,7 @@ scan_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( mod, 0, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 2, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 #  ifdef MAS_TRACING
@@ -202,7 +203,7 @@ dirent_dir_scan_before2( /* const char *fname_unused, const struct stat *pstat_u
 
   DUF_TRACE( scan, 0, "scan dirent - sub-directory scanned here" );
 
-  DUF_TRACE( mod, 0, "dummy dirent dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 2, "dummy dirent dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
   DEBUG_ENDR( r );
 }
 
@@ -235,7 +236,7 @@ dirent_file_scan_before2( /* const char *fname_unused, const struct stat *pstat_
   }
 #endif
 
-  DUF_TRACE( mod, 0, "dummy dirent file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( mod, 2, "dummy dirent file before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
   DEBUG_ENDR( r );
 }

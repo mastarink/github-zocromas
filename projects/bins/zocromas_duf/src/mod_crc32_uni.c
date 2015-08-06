@@ -143,12 +143,12 @@ duf_make_crc32_uni( int fd, int *pr )
 }
 
 static int
-dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long crc32sum = 0;
 
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   DUF_UFIELD2( filedataid );
@@ -157,7 +157,7 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
   if ( duf_config->cli.disable.flag.calculate )
     crc32sum = duf_levinfo_dirid( pdi );
   else
-    crc32sum = duf_make_crc32_uni( fd, &r );
+    crc32sum = duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &r );
   DUF_TEST_R( r );
 
   if ( r >= 0 )

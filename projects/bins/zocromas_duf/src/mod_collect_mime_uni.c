@@ -120,13 +120,13 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_content2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long mimeid = 0;
 
 
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
   DUF_TRACE( mod, 0, " mime" );
 
@@ -159,7 +159,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fi
     r = magic_load( m, NULL );
     DUF_TEST_R( r );
 
-    mime = magic_descriptor( m, fd );
+    mime = magic_descriptor( m, duf_levinfo_dfd( pdi ) );
     DUF_TRACE( mime, 0, " opened mime %s : %s", m ? " OK " : " FAIL ", mime );
 
     if ( mime )

@@ -112,11 +112,10 @@
       DEBUG_ENDR( r ); \
     }
 #endif
-/* *INDENT-OFF*  */
-DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(before)
-DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(middle)
-DUF_QSCAN_NODE_IMPLEMENT_FUNCTION(after)
-/* *INDENT-ON*  */
+
+DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( before );
+DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( middle );
+DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( after );
 
 /*
  * this is callback of type: duf_str_cb_t (first range; str_cb)
@@ -136,9 +135,17 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   PDI->items.total++;
   PDI->items.files++;
   dfd = duf_levinfo_dfd( PDI );
-  assert( dfd );
-  if ( SCCB->leaf_scan_fd2 )
-    DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, /* duf_levinfo_stat( PDI ), */ PDI ) );
+  if ( duf_levinfo_item_deleted( PDI ) )
+  {
+    if ( SCCB->leaf_scan_fd2 )
+      DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, /* duf_levinfo_stat( PDI ), */ PDI ) );
+  }
+  else
+  {
+    assert( dfd );
+    if ( SCCB->leaf_scan_fd2 )
+      DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, /* duf_levinfo_stat( PDI ), */ PDI ) );
+  }
   DEBUG_ENDR( r );
 }
 
@@ -164,6 +171,7 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 
   if ( duf_levinfo_item_deleted( PDI ) )
   {
+    DUF_TRACE( fs, 0, "@ %d:%s ", duf_levinfo_item_deleted( PDI ), duf_levinfo_itemshowname( PDI ) );
     if ( SCCB->leaf_scan2_deleted )
       DOR( r, SCCB->leaf_scan2_deleted( pstmt, PDI ) );
     DUF_TRACE( deleted, 0, "DELETED '%s%s'", duf_levinfo_path( PDI ), filename );

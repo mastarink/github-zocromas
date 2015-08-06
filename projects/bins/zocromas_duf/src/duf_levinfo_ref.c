@@ -106,7 +106,7 @@ DUF_LEVINFO_3GET_BOOL( int, item_deleted, deleted )
 /************************************************************************/
 
 const char *
-duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d )
+duf_levinfo_itemshowname_d( const duf_depthinfo_t * pdi, int d )
 {
   const char *n = NULL;
 
@@ -116,16 +116,40 @@ duf_levinfo_itemname_d( const duf_depthinfo_t * pdi, int d )
 }
 
 /* *INDENT-OFF*  */
-DUF_LEVINFO_FC_REF( const char, itemname )
-DUF_LEVINFO_FC_UP_REF( const char, itemname )
+DUF_LEVINFO_FC_REF( const char, itemshowname )
+DUF_LEVINFO_FC_UP_REF( const char, itemshowname )
 /* *INDENT-ON*  */
 
 const char *
-duf_levinfo_itemname_q( const duf_depthinfo_t * pdi, const char *q )
+duf_levinfo_itemshowname_q( const duf_depthinfo_t * pdi, const char *q )
 {
   const char *p;
 
-  p = duf_levinfo_itemname( pdi );
+  p = duf_levinfo_itemshowname( pdi );
+  return p ? p : q;
+}
+
+const char *
+duf_levinfo_itemtruename_d( const duf_depthinfo_t * pdi, int d )
+{
+  const char *n = NULL;
+
+  n = duf_levinfo_ptr_d( pdi, d )->itemname;
+  /* return n ? ( *n ? n : "/" ) : n; */
+  return n;
+}
+
+/* *INDENT-OFF*  */
+DUF_LEVINFO_FC_REF( const char, itemtruename )
+DUF_LEVINFO_FC_UP_REF( const char, itemtruename )
+/* *INDENT-ON*  */
+
+const char *
+duf_levinfo_itemtruename_q( const duf_depthinfo_t * pdi, const char *q )
+{
+  const char *p;
+
+  p = duf_levinfo_itemtruename( pdi );
   return p ? p : q;
 }
 

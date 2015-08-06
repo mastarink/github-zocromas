@@ -1,6 +1,7 @@
 #include <string.h>
 #include <assert.h>
 #include <limits.h>
+#include <unistd.h>
 
 
 #include <mastar/wrap/mas_std_def.h>
@@ -27,108 +28,104 @@
 int
 duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
 {
+  int r = 0;
+  int d = pdi->depth;
+
   assert( pdi );
+  assert( pdi->levinfo );
+  assert( d >= 0 );
+
+  duf_levinfo_t *pli, *pliu;
+
+  pli = &pdi->levinfo[d];
+  pliu = d > 0 ? &pdi->levinfo[d - 1] : NULL;
+  /* ????? What was this ???
+     if(d>0)
+     pdi->levinfo[d - 1].lev_dh.dfd = 0;
+   */
+  if ( pdi->opendir )
   {
-    int r = 0;
-    int d = pdi->depth;
+    duf_dirhandle_t *pdhlev = &pli->lev_dh;
+    duf_dirhandle_t *pdhuplev = pliu ? &pliu->lev_dh : NULL;
 
-    assert( pdi->levinfo );
-    assert( d >= 0 );
-
-    duf_levinfo_t *pli, *pliu;
-
-    pli = &pdi->levinfo[d];
-    pliu = d > 0 ? &pdi->levinfo[d - 1] : NULL;
-    /* ????? What was this ???
-       if(d>0)
-       pdi->levinfo[d - 1].lev_dh.dfd = 0;
-     */
-    if ( pdi->opendir )
+    /* if ( S_ISBLK( stX.st_mode ) ) */
+    /* {                             */
+    /* }                             */
+    /* DUF_SHOW_ERROR( "%s", pdi->levinfo[d].is_leaf ? "LEAF" : "NODE" ); */
+    /* DUF_PRINTF( 0, "d:%d [%s]", d, pdi->levinfo[d].itemname ); */
+    assert( pdi->levinfo[d].itemname );
+    if ( d == 0 )
     {
-      duf_dirhandle_t *pdhlev = &pli->lev_dh;
-      duf_dirhandle_t *pdhuplev = pliu ? &pliu->lev_dh : NULL;
+      /* char *sp; */
 
-      /* if ( S_ISBLK( stX.st_mode ) ) */
-      /* {                             */
-      /* }                             */
-      /* DUF_SHOW_ERROR( "%s", pdi->levinfo[d].is_leaf ? "LEAF" : "NODE" ); */
-      /* DUF_PRINTF( 0, "d:%d [%s]", d, pdi->levinfo[d].itemname ); */
-      assert( pdi->levinfo[d].itemname );
-      if ( d == 0 )
-      {
-        /* char *sp; */
-
-        assert( *pdi->levinfo[d].itemname == 0 );
-        /* sp = mas_strdup( "/" ); */
-        /* sp = mas_strcat_x( sp, pdi->levinfo[d].itemname ); */
-        r = duf_open_dh( pdhlev, "/" );
-        DUF_TRACE( fs, 0, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
-        /* mas_free( sp ); */
-      }
-      else
-      {
-        r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
-        DUF_TRACE( fs, 0, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
-      }
-      if ( r >= 0 )
-      {
-        assert( pdhlev->dfd );
-      }
-      /* if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT ) */
-      /* {                                                                 */
-      /*   pdi->levinfo[d].deleted = 1;                                    */
-      /*   r = 0;                                                          */
-      /* }                                                                 */
+      assert( *pdi->levinfo[d].itemname == 0 );
+      /* sp = mas_strdup( "/" ); */
+      /* sp = mas_strcat_x( sp, pdi->levinfo[d].itemname ); */
+      r = duf_open_dh( pdhlev, "/" );
+      DUF_TRACE( fs, 1, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
+      /* mas_free( sp ); */
     }
-    DUF_TRACE( fs, 0, "(%d)? levinfo openated %s; opendir:%d", r, pdi->levinfo[d].itemname, pdi->opendir );
-    DUF_TEST_R( r );
-    return r;
+    else
+    {
+      r = duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf );
+      DUF_TRACE( fs, 1, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
+    }
+    if ( r >= 0 )
+    {
+      assert( pdhlev->dfd );
+    }
+    if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
+    {
+      pdi->levinfo[d].deleted = 1;
+      DUF_TRACE( fs, 0, "@@@(%d)? levinfo openated %s; opendir:%d", r, pdi->levinfo[d].itemname, pdi->opendir );
+    }
   }
+  DUF_TEST_R( r );
+  return r;
 }
 
 int
 duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 {
+  int r = 0;
+  int d = pdi->depth;
+  char *real_path = NULL;
+
   assert( pdi );
+  assert( pdi->levinfo );
+
+  if ( path )
   {
-    int r = 0;
-    int d = pdi->depth;
-    char *real_path = NULL;
-
-    assert( pdi->levinfo );
-
-    if ( path )
+    real_path = mas_malloc( PATH_MAX );
+    if ( real_path )
     {
-      real_path = mas_malloc( PATH_MAX );
-      if ( real_path )
-      {
-        *real_path = 0;
-        if ( !realpath( path, real_path ) )
-          DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
-      }
-      else
-        DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
+      *real_path = 0;
+      if ( !realpath( path, real_path ) )
+        DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     }
+    else
+      DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
+  }
 
-    if ( pdi->opendir )
+  if ( pdi->opendir )
+  {
+    assert( d >= 0 );
+    duf_dirhandle_t *pdhlev = &pdi->levinfo[d].lev_dh;
+
+    /* if ( S_ISBLK( stX.st_mode ) ) */
+    /* {                             */
+    /* }                             */
+
+    if ( r >= 0 && real_path )
+      r = duf_open_dh( pdhlev, real_path );
+    if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
     {
-      assert( d >= 0 );
-      duf_dirhandle_t *pdhlev = &pdi->levinfo[d].lev_dh;
-
-      /* if ( S_ISBLK( stX.st_mode ) ) */
-      /* {                             */
-      /* }                             */
-
-      if ( r >= 0 && real_path )
-        r = duf_open_dh( pdhlev, real_path );
-      if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
-      {
-        pdi->levinfo[d].deleted = 1;
-        r = 0;
-      }
-      if ( r >= 0 )
-        assert( pdhlev->dfd );
+      pdi->levinfo[d].deleted = 1;
+      r = 0;
     }
+    if ( r >= 0 )
+      assert( pdhlev->dfd );
+  }
 /*     {                                        */
 /* #ifdef DUF_NO_ECONOMY                        */
 /*       if ( r >= 0 )                          */
@@ -141,9 +138,8 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 /*       mas_free( real_path );                 */
 /* #endif                                       */
 /*     }                                        */
-    DUF_TEST_R( r );
-    return r;
-  }
+  DUF_TEST_R( r );
+  return r;
 }
 
 /************************************************************************/

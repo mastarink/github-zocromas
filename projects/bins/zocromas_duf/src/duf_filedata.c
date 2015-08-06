@@ -24,13 +24,17 @@
 /* ###################################################################### */
 
 unsigned long long
-duf_stat2file_dataid_existed( duf_depthinfo_t * pdi, const struct stat *pst_file, int *pr )
+duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, /* const struct stat *pst_file, */ int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
+  const char *sql = "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:Dev AND inode=:iNode";
 
   DEBUG_START(  );
-  const char *sql = "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:Dev AND inode=:iNode";
+
+  const struct stat *pst_file = NULL;
+
+  pst_file = duf_levinfo_stat( pdi );
 
   DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
@@ -56,13 +60,15 @@ duf_stat2file_dataid_existed( duf_depthinfo_t * pdi, const struct stat *pst_file
 }
 
 unsigned long long
-duf_stat2file_dataid( duf_depthinfo_t * pdi, const struct stat *pst_file, int need_id, int *pr )
+duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, */ int need_id, int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
+  const struct stat *pst_file = NULL;
 
   DEBUG_START(  );
 
+  pst_file = duf_levinfo_stat( pdi );
   if ( pst_file )
   {
     int r = 0;
@@ -102,7 +108,7 @@ duf_stat2file_dataid( duf_depthinfo_t * pdi, const struct stat *pst_file, int ne
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
       {
-        dataid = duf_stat2file_dataid_existed( pdi, pst_file, pr );
+        dataid = duf_pdistat2file_dataid_existed( pdi, /* pst_file, */ pr );
       }
       else if ( !r /* assume SQLITE_OK */  && changes )
       {
@@ -133,4 +139,13 @@ duf_stat2file_dataid( duf_depthinfo_t * pdi, const struct stat *pst_file, int ne
   assert( !need_id || dataid );
   DEBUG_ENDULL( dataid );
   return dataid;
+}
+
+int
+duf_pdistat2file( duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+  ( void ) /* dataid= */ duf_pdistat2file_dataid( pdi, 0 /*need_id */ , &r );
+  DEBUG_ENDR( r );
 }

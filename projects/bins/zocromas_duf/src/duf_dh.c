@@ -100,7 +100,7 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
         pdhandle->rs++;
 
       duf_config->nopen++;
-      DUF_TRACE( fs, 0, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
+      DUF_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
                  duf_config->nopen - duf_config->nclose, pdhandle->dfd );
     }
     else if ( r < 0 && errno == ENOENT )
@@ -147,7 +147,7 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
         pdhandle->rs++;
 
       duf_config->nopen++;
-      DUF_TRACE( fs, 0, "opened %s (%u - %u = %u)  h%u", path, duf_config->nopen, duf_config->nclose,
+      DUF_TRACE( fs, 5, "opened %s (%u - %u = %u)  h%u", path, duf_config->nopen, duf_config->nclose,
                  duf_config->nopen - duf_config->nclose, pdhandle->dfd );
       assert( pdhandle->dfd );
     }
@@ -174,7 +174,7 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   {
     DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
   }
-  DUF_TRACE( fs, 0, "(%d)? opened %s", r, path );
+  DUF_TRACE( fs, 5, "(%d)? opened %s", r, path );
   return r;
 }
 
@@ -215,7 +215,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
         DUF_SHOW_ERROR( "close dfd:%d", pdhandle->dfd );
         DUF_MAKE_ERROR( r, DUF_ERROR_CLOSE );
       }
-      DUF_TRACE( fs, 0, "closed (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose, pdhandle->dfd );
+      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose, pdhandle->dfd );
       duf_config->nclose++;
     }
     else

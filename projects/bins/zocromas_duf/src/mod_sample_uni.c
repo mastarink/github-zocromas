@@ -83,7 +83,7 @@ sample_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
   DUF_SFIELD2( filename );
 
-  assert( 0 == strcmp( filename, duf_levinfo_itemname( pdi ) ) );
+  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
 /* stat */
 
   /* SQL at duf_file_pathid.c : duf_scan_fil_by_pi */
@@ -315,7 +315,7 @@ sample_entry_dir2(  /* const char *fname_unused, const struct stat *pstat_unused
   DEBUG_STARTR( r );
   /* assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) ); */
 
-  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s",  duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s",  duf_levinfo_itemshowname( pdi ) );
 
   DEBUG_ENDR( r );
 }

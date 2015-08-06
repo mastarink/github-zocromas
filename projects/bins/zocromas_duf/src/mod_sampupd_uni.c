@@ -67,7 +67,7 @@ sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   ufd = duf_levinfo_dfd_up( pdi );
   st = duf_levinfo_stat( pdi ); /* stat info for file */
   path = duf_levinfo_path( pdi ); /* location for file, ends with '/' */
-  name = duf_levinfo_itemname( pdi ); /* file name */
+  name = duf_levinfo_itemshowname( pdi ); /* file name */
   r = fstat( fd, &fdst );
   r = fstatat( ufd, name, &ufdst, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
   {
@@ -165,7 +165,7 @@ sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lo
 }
 
 static int
-sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, /* const struct stat *pst_file, */ duf_depthinfo_t * pdi )
+sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd_unused, /* const struct stat *pst_file, */ duf_depthinfo_t * pdi )
 {
   int ufd;
   struct stat *st;
@@ -176,14 +176,14 @@ sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, /* const
 
   DEBUG_STARTR( r );
 
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   ufd = duf_levinfo_dfd_up( pdi );
   st = duf_levinfo_stat( pdi ); /* stat info for file */
   path = duf_levinfo_path( pdi ); /* location for file, ends with '/' */
-  name = duf_levinfo_itemname( pdi ); /* file name */
-  r = fstat( fd, &fdst );
+  name = duf_levinfo_itemshowname( pdi ); /* file name */
+  r = fstat( duf_levinfo_dfd( pdi ), &fdst );
   r = fstatat( ufd, name, &ufdst, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
   {
     char *fpath;

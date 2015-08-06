@@ -39,14 +39,16 @@
 /* ########################################################################################## */
 
 static int
-filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname_unused, unsigned long long dataid )
+register_pdifilename( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  const char *fname = duf_levinfo_itemname( pdi );
+  const char *fname = duf_levinfo_itemtruename( pdi );
 
-  assert( 0 == strcmp( fname_unused, fname ) );
+  unsigned long long dataid;
 
-  if ( fname && duf_levinfo_dirid_up( pdi ) )
+  DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ &r ) );
+
+  if ( r>=0 && fname && duf_levinfo_dirid_up( pdi ) )
   {
     int changes = 0;
 
@@ -71,44 +73,7 @@ filenames_insert_filename_uni( duf_depthinfo_t * pdi, const char *fname_unused, 
   DEBUG_ENDR( r );
 }
 
-static int
-register_direntry(  /* const char *fname_unused, const struct stat *pst_file_unused, */ duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
 
-#if 0
-  assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) );
-  /* pst_file_unused equal to duf_levinfo_stat( pdi ) ? */
-  {
-    struct stat *st = duf_levinfo_stat( pdi );
-
-    assert( st->st_dev == pst_file_unused->st_dev );
-    assert( st->st_ino == pst_file_unused->st_ino );
-    assert( st->st_mode == pst_file_unused->st_mode );
-    assert( st->st_nlink == pst_file_unused->st_nlink );
-    assert( st->st_uid == pst_file_unused->st_uid );
-    assert( st->st_gid == pst_file_unused->st_gid );
-    assert( st->st_rdev == pst_file_unused->st_rdev );
-    assert( st->st_size == pst_file_unused->st_size );
-    assert( st->st_blksize == pst_file_unused->st_blksize );
-    assert( st->st_blocks == pst_file_unused->st_blocks );
-    /* assert( st->st_atim == pst_file_unused->st_atim ); */
-    /* assert( st->st_mtim == pst_file_unused->st_mtim ); */
-    /* assert( st->st_ctim == pst_file_unused->st_ctim ); */
-    assert( 0 == memcmp( st, pst_file_unused, sizeof( struct stat ) ) );
-    assert( pst_file_unused == st );
-  }
-#endif
-
-  if ( duf_levinfo_stat( pdi ) )
-  {
-    unsigned long long dataid = 0;
-
-    DOPR( r, dataid = duf_stat2file_dataid_existed( pdi, duf_levinfo_stat( pdi ), &r ) );
-    DOR( r, filenames_insert_filename_uni( pdi, duf_levinfo_itemname( pdi ), dataid ) );
-  }
-  DEBUG_ENDR( r );
-}
 
 
 
@@ -178,7 +143,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .def_opendir = 1,
 
   /* .dirent_file_scan_before = filenames_entry_reg, */
-  .dirent_file_scan_before2 = register_direntry,
+  .dirent_file_scan_before2 = register_pdifilename,
 
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */

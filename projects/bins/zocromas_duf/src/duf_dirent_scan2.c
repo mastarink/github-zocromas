@@ -35,7 +35,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
 {
   DEBUG_STARTR( r );
 
-  r = duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemname( pdi ) );
+  r = duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemshowname( pdi ) );
 
   if ( r >= 0 )
   {
@@ -49,7 +49,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
   }
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {
-    DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+    DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
   }
   DEBUG_ENDR( r );
@@ -88,7 +88,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
   int nlist = 0;
   struct dirent **list = NULL;
 
-  DUF_TRACE( scan, 2, "dirID=%llu; scandir dfname:[%s :: %s]", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemname( pdi ) );
+  DUF_TRACE( scan, 2, "dirID=%llu; scandir dfname:[%s :: %s]", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
   nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
 
 
@@ -99,7 +99,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
                duf_dummy_callbacks.dirent_dir_scan_before2 );
   }
 
-  DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), duf_levinfo_itemname_q( pdi, "nil" ), nlist,
+  DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), duf_levinfo_itemshowname_q( pdi, "nil" ), nlist,
              duf_levinfo_dfd( pdi ) );
 
   if ( nlist >= 0 )
@@ -117,7 +117,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
       if ( list[il] )
         free( list[il] );
     }
-    DUF_TRACE( scan, 10, "passed scandirat='.../%s'", duf_levinfo_itemname( pdi ) );
+    DUF_TRACE( scan, 10, "passed scandirat='.../%s'", duf_levinfo_itemshowname( pdi ) );
     if ( list )
       free( list );
     DUF_TEST_R( r );
@@ -132,7 +132,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
       r = 0;
     else
     {
-      DUF_ERRSYSE( errorno, "path '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemname( pdi ) );
+      DUF_ERRSYSE( errorno, "path '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
       DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
     }
     DUF_TEST_R( r );
@@ -167,10 +167,10 @@ duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_re
 
 
 /* no such entry */
-    DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemname( pdi ) );
+    DUF_SHOW_ERROR( "No such entry '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
     /* TODO mark as absent or remove from db */
 
-    DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemname( pdi ) );
+    DUF_TRACE( scan, 0, "No such entry %s", duf_levinfo_itemshowname( pdi ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
   }
   else

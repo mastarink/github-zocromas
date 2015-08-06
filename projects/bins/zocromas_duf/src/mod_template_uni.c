@@ -46,12 +46,12 @@ template_scan_init( duf_depthinfo_t * pdi )
 }
 
 static int
-template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
 
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
   DEBUG_ENDR( r );
 }

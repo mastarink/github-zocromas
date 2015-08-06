@@ -163,13 +163,13 @@ duf_make_md5_uni( int fd, unsigned char *pmd5 )
 }
 
 static int
-dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];
   unsigned char amd5[MD5_DIGEST_LENGTH];
 
-  assert( fd == duf_levinfo_dfd( pdi ) );
+  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
@@ -177,7 +177,7 @@ dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat *pst_fil
 
   memset( amd5, 0, sizeof( amd5 ) );
   DUF_TRACE( md5, 0, "+ %s", filename );
-  r = duf_make_md5_uni( fd, amd5 );
+  r = duf_make_md5_uni( duf_levinfo_dfd( pdi ), amd5 );
   DUF_TRACE( md5, 0, "+ %s", filename );
   DUF_TEST_R( r );
   /* reverse */
