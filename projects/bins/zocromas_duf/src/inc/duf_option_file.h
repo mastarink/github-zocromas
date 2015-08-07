@@ -8,5 +8,8 @@ int duf_infile_options( duf_option_stage_t istage );
 int duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f );
 int duf_stdin_options( duf_option_stage_t istage );
 
+int duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath );
+
+int duf_indirect_options( duf_option_stage_t istage );
 
 #endif

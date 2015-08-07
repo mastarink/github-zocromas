@@ -61,11 +61,11 @@ function shn_run ()
 	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
 	fi
 	{
-	  echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
-	  pushd $MSH_SHN_CWD  &>/dev/null && echo "bin: $bin" >&2
-	  eval "$bin $qargs"
-	  retcode=$?
-	  popd
+	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
+	    eval "$bin $qargs"
+	    retcode=$?
+	    popd
+	  fi
 	}
         if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
 	  {

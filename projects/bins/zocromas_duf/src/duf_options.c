@@ -45,9 +45,9 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
   DUF_TRACE( temp, 0, "this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
 #ifdef MAS_TRACING
-  int er = 0, fr = 0, or = 0, ir = 0;
+  int er = 0, fr = 0, or = 0, ir = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, or = 0, ir = 0;
+  int DUF_UNUSED er = 0, fr = 0, or = 0, ir = 0, tr = 0;
 #endif
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
 
@@ -81,6 +81,13 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     or = r = duf_cli_options( istage );
   DUF_TRACE( options, 0, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name( r ) );
 
+#if 1
+/* duf_indirect_options - only for next stage  */
+  if ( r >= 0 )
+    ir = r = duf_indirect_options( istage );
+  DUF_TRACE( options, 0, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
+#endif
+  
 #if 0
 /* duf_stdin_options - only for next stage, can be executed only once (direct stdin reading!)  */
   if ( r >= 0 )
@@ -108,8 +115,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     r = 0;
   }
 #endif
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; ir: %d; r: %s", or, fr, er, ir, duf_error_name( r ) );
-  DUF_TRACE( temp, 2, "@@@>>>>>>> targ_offset:%d", duf_config->targ_offset );
+  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; ir: %d; tr: %d; r: %s", or, fr, er, ir, tr, duf_error_name( r ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 

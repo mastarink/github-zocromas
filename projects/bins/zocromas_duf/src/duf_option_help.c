@@ -579,6 +579,13 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "========================= as for 20150807.095509 ============" );
   DUF_PRINTF( 0, "  MSH_DUF_OPTIONS=trace-temp=-3 run  -dfR @tist.cmd  `pwd`/human @test.cmds --tree @tost.cmd   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  MSH_DUF_OPTIONS=trace-temp=1 run @test.cmds   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  cd human && MSH_DUF_OPTIONS=trace-temp=1 run @../test.cmds"
+              " --same-as=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/test/duf/20150602/out20150602.134103.test.1   	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  cd human && MSH_DUF_OPTIONS=trace-temp=1 run @../test.cmds"
+              " --same-as=../test/duf/20150602/out20150602.134103.test.1   	- %s",
+              "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

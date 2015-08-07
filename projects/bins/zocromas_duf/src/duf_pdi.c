@@ -130,7 +130,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *no
   }
 #endif
   real_path = duf_realpath( path, &r );
-  DUF_TRACE( temp, 0, "cpath:%s; path:%s; real_path:%s", cpath, path, real_path );
+  DUF_TRACE( temp, 2, "cpath:%s; path:%s; real_path:%s", cpath, path, real_path );
   if ( r >= 0 )
     duf_pdi_reinit( pdi, real_path, duf_config->pu /* pu */ , node_selector2, DUF_U_FLAG( recursive ) /*recursive */ , duf_pdi_opendir( pdi ) );
   mas_free( path );

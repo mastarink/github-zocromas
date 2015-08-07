@@ -154,7 +154,7 @@ duf_main( int argc, char **argv )
 
   DOR( r, duf_main_with_config( argc, argv ) );
   if ( r < 0 )
-    DUF_SHOW_ERROR( "(%d) %s", r, argv[0] );
+    DUF_SHOW_ERROR( "(%d:%s) %s", r, duf_error_name(r), argv[0] );
 
   duf_config_delete(  );
 

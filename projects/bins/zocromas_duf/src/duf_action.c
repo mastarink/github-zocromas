@@ -170,8 +170,12 @@ duf_action( int argc, char **argv )
     /* DOR( r, duf_parse_cli_options( duf_config->cli.shorts, DUF_OPTION_STAGE_FIRST ) ); */
     DUF_TRACE( options, 0, "@stage_first cli_options" );
     DOR( r, duf_cli_options( DUF_OPTION_STAGE_FIRST ) );
+    DUF_TRACE( options, 0, "@stage_first indirect_options" );
+    DOR( r, duf_indirect_options( DUF_OPTION_STAGE_FIRST ) );
     DUF_TRACE( options, 0, "@stage_first stdin_options" );
     DOR( r, duf_stdin_options( DUF_OPTION_STAGE_FIRST ) );
+
+
 
     DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   }
