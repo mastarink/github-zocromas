@@ -113,7 +113,7 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
 
 int
 duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                             const duf_longval_extended_table_t * xtable, int noo )
+                                 const duf_longval_extended_table_t * xtable, int noo )
 {
   DEBUG_STARTR( r );
 
@@ -145,7 +145,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
       byteptr = ( ( ( char * ) duf_config->pu ) + extended->m_offset );
       break;
     }
-#define DUF_NUMOPT( _no, _rt, _typ,_dopls,_conv) \
+#define DUF_NUMOPT( _no, _rt, _typ, _dopls, _conv) \
       if (_rt>=0) \
       { \
 	if ( !_no ) \
@@ -165,7 +165,10 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
 	      { DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	      else \
 	      { \
-		( *p ) = __v; \
+		if ( _dopls && ( *optargg=='-' || *optargg=='+' ) ) \
+		  ( *p ) += __v; \
+		else \
+		  ( *p ) = __v; \
 		DUF_TRACE( options, 7, "%s : number set:%llu", extended->o.name, (unsigned long long) __v ); \
 	      } \
 	    } \
@@ -511,6 +514,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
         }
         break;
       case DUF_OPTION_VTYPE_STR:
+        /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */
         DUF_TRACE( options, 2, "vtype STR" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
@@ -530,7 +534,10 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
         }
         break;
       case DUF_OPTION_VTYPE_PSTR:
+        /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */
         DUF_TRACE( options, 2, "vtype PSTR" );
+
+
         if ( r >= 0 )
         {
           char **pstr;

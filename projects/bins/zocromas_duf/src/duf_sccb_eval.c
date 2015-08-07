@@ -41,7 +41,7 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
     DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( SCCB ) );
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
 
-    if ( !( TARGC && TARGV ) )
+    if ( !( PARGC && PARGV ) )
     {
     }
     {

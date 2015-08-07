@@ -3,6 +3,9 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_maintenance.h"
+
+
 #include "duf_error_types.h"
 
 /* ###################################################################### */
@@ -46,6 +49,8 @@ duf_realpath( const char *path, int *pr )
   int r = DUF_ERROR_PATH;
   char *real_path = NULL;
   char *rp = realpath( path, NULL );
+
+  DUF_TRACE( temp, 2, ">> path:%s; rp:%s", path, rp );
 
   if ( rp )
   {

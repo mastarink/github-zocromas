@@ -55,8 +55,9 @@ duf_cfg_create( void )
   }
   cfg->db.main.name = mas_strdup( "duf-main.db" );
   cfg->db.adm.name = mas_strdup( "duf-adm.db" );
-  cfg->cli.trace.any = cfg->cli.trace.error = 1;
-  /* cfg->cli.trace.fs = 1; */
+  cfg->cli.trace.any = cfg->cli.trace.error += 1;
+  /* cfg->cli.trace.fs += 1; */
+  cfg->cli.trace.temp += 1;
 
   {
     int tbcount = 0;
@@ -113,6 +114,7 @@ duf_cfg_create( void )
   cfg->pdi = duf_pdi_create(  );
   assert( cfg->pu );
   assert( cfg->longopts_table );
+
 
   return cfg;
 }

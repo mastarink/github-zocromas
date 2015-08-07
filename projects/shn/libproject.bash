@@ -155,9 +155,9 @@ function shn_project_cd ()
   cd $p >&2 || return $?
   shn_setup_projects
   shn_dbgmsg "after setup $LINENO $FUNCNAME" >&2
-  if ! [[ $p == $pp ]] ; then
-    git status .
-  fi
+# if ! [[ $p == $pp ]] ; then
+#   git status .
+# fi
   return 0
 }
 function shn_project_each_control_c ()

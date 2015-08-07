@@ -24,7 +24,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, create_tables ) /*                     */ , DO_H( create tables ) /*                    */ },
    {.o = {DO_Q( "drop-tables" ) /*      */ , DO_A_N /* */ , DO_VF( DROP_TABLES )} /*       */ , DO_CL( SYSTEM ) /*  */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, drop_tables ) /*                       */ , DO_H( drop tables ) /*                      */ },
-   
+
    {.o = {DO_Q( "add-path" ) /*         */ , DO_A_N /* */ , DO_VF( ADD_PATH )} /*          */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, add_path ) /*                          */ , DO_H( reg.init path ) /*                    */ },
    {.o = {DO_Q( "collect" ) /*          */ , DO_A_N /* */ , DO_VF( COLLECT )} /*           */ , DO_CL( CONTROL ) /* */ ,
@@ -42,15 +42,15 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "if-recursive" ) /*     */ , DO_A_N} /*                                    */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( PSFLAG, v ), DO_FL( u, recursive ) /*                                 */ , DO_H( recursive ) /*                        */ },
 
-   
-   
+
+
    {.o = {DO_Q( "crc32" ) /*            */ , DO_A_N /* */ , DO_VF( CRC32 )} /*             */ , DO_CL( SCAN ) /*    */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, crc32 ) /*                             */ , DO_H( collect crc32 ) /*                    */ },
 
    {.o = {DO_Q( "dirent" ) /*           */ , DO_A_N /* */ , DO_VF( DIRENT )} /*            */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirent ) /*                            */ , DO_H( dirent ) /*                           */ },
    {.o = {DO_Q( "directories" ) /*      */ , DO_A_N /* */ , DO_VF( DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirs ) /*                              */ , DO_H( collect dir info ) /*  */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirs ), DO_STAGE_ANY /*                */ , DO_H( collect dir info ) /*                 */ },
    {.o = {DO_Q( "dirs" ) /*             */ , DO_A_N /* */ , DO_VF( DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirs ) /*                              */ , DO_H( get dir info ) /*      */ },
 
@@ -61,7 +61,7 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "filenames" ) /*        */ , DO_A_N /* */ , DO_VF( FILENAMES )} /*         */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, filenames ) /*                         */ , DO_H( get filenames ) /*                    */ },
    {.o = {DO_Q( "files" ) /*            */ , DO_A_N /* */ , DO_VF( FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, files ) /*                             */ , DO_H( get file info ) /*                    */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, files ), DO_STAGE_ANY /*               */ , DO_H( get file info ) /*                    */ },
 
    {.o = {DO_Q( "info" ) /*             */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, info ) /*                              */ , DO_H( db info ) /*                          */ },

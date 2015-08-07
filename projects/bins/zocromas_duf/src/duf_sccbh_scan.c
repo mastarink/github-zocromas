@@ -74,22 +74,22 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
   char *const *sargv = NULL;
 
   assert( sccbh );
-  /* assert( TARGV ); */
+  /* assert( PARGV ); */
 
-  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( SCCB ), TARGC );
-  for ( int ia = 0; r >= 0 && ia < TARGC; ia++ )
-    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( SCCB ), ia, TARGV[ia] );
+  DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( SCCB ), PARGC );
+  for ( int ia = 0; r >= 0 && ia < PARGC; ia++ )
+    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( SCCB ), ia, PARGV[ia] );
 
   count = 1;
   sargv = NULL;
   HCHANGES = 0;
-  if ( TARGC > 0 )
+  if ( PARGC > 0 )
   {
-    count = TARGC;
-    sargv = TARGV;
+    count = PARGC;
+    sargv = PARGV;
   }
   {
-    /* - evaluate sccb for each string from TARG[CV] as path */
+    /* - evaluate sccb for each string from PARG[CV] as path */
     if ( duf_levinfo_path( PDI ) )
       DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) );
     else
@@ -99,7 +99,7 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
 
         if ( sargv )
           cargv = *sargv++;
-        DUF_TRACE( path, 0, "@@TARGV[%d]=\"%s\"; cargv=\"%s\"", ia, TARGV ? TARGV[ia] : NULL, cargv );
+        DUF_TRACE( path, 0, "@@PARGV[%d]=\"%s\"; cargv=\"%s\"", ia, PARGV ? PARGV[ia] : NULL, cargv );
         DOR( r, duf_sccbh_eval_path( sccbh, cargv ) );
       }
   }

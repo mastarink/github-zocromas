@@ -573,9 +573,12 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  ( echo open-db ; echo \"cd=`pwd`/..\" ; echo 'evaluate-sccb=tree' ) | run -dfR   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run -dfR < test.cmds    	- %s", "-= \"\" =-" );
 
-  DUF_PRINTF( 0,
-              "     test.cmds:  	- %s  \n" "\t\topen-db\n" "\t\tcd=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf\n"
+  DUF_PRINTF( 0, "     test.cmds:  	- %s  \n"
+              "\t\topen-db\n" "\t\tcd=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf\n"
               "\t\tevaluate-sccb=tree\n", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150807.095509 ============" );
+  DUF_PRINTF( 0, "  MSH_DUF_OPTIONS=trace-temp=-3 run  -dfR @tist.cmd  `pwd`/human @test.cmds --tree @tost.cmd   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

@@ -60,8 +60,13 @@ function shn_run ()
 	    echo "# run $qargs"
 	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
 	fi
-	eval "$bin $qargs"
-	retcode=$?
+	{
+	  echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
+	  pushd $MSH_SHN_CWD  &>/dev/null && echo "bin: $bin" >&2
+	  eval "$bin $qargs"
+	  retcode=$?
+	  popd
+	}
         if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
 	  {
 	    echo "# retcode:$retcode"

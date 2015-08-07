@@ -143,6 +143,7 @@ duf_action( int argc, char **argv )
   }
   assert( duf_config );
   assert( duf_config->pdi );
+  DUF_TRACE( temp, 2, ">> targ_offset:%d", duf_config->targ_offset );
 
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
 
@@ -151,10 +152,13 @@ duf_action( int argc, char **argv )
     const char *tpath = NULL;
 
     tpath = duf_levinfo_path( duf_config->pdi );
-    if ( !tpath || !*tpath )
-      tpath = duf_config->targ.argc > 0 ? duf_config->targ.argv[0] : "/";
+    if ( ( !tpath || !*tpath ) )
+      tpath = ( duf_config->targ.argc > 0 && duf_config->targ_offset < duf_config->targ.argc ) ? duf_config->targ.argv[duf_config->targ_offset] : "/";
     DUF_TRACE( path, 0, "@targ.argv[0]: %s", duf_config->targ.argv ? duf_config->targ.argv[0] : NULL );
-    DUF_TRACE( path, 0, "@tpath: %s", tpath );
+
+
+    DUF_TRACE( path, 0, "@tpath: %s;targ_offset:%d", tpath, duf_config->targ_offset );
+    DUF_TRACE( temp, 2, ">> tpath:%s", tpath );
     DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, tpath, node_selector2 /* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
 
     /* stage DUF_OPTION_STAGE_FIRST  (1) - needs pdi inited with argv, which is known only after stage 0 */
@@ -164,9 +168,9 @@ duf_action( int argc, char **argv )
     DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
 
     /* DOR( r, duf_parse_cli_options( duf_config->cli.shorts, DUF_OPTION_STAGE_FIRST ) ); */
-    DUF_TRACE( options, 0, "@stage_first cli_options");
+    DUF_TRACE( options, 0, "@stage_first cli_options" );
     DOR( r, duf_cli_options( DUF_OPTION_STAGE_FIRST ) );
-    DUF_TRACE( options, 0, "@stage_first stdin_options");
+    DUF_TRACE( options, 0, "@stage_first stdin_options" );
     DOR( r, duf_stdin_options( DUF_OPTION_STAGE_FIRST ) );
 
     DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );

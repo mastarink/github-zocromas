@@ -145,8 +145,9 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 
     sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );
     memset( sccbh, 0, sizeof( duf_sccb_handle_t ) );
-    TARGC = targc;
-    TARGV = targv;
+    PARGC = targc;
+    PARGV = targv;
+
     PU = pu;
     PDI = pdi;
     SCCB = sccb;

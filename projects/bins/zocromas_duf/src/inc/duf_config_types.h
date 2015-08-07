@@ -30,6 +30,7 @@ typedef struct
   /* char *group; */
   duf_cargvc_t carg;
   duf_argvc_t targ;
+  int targ_offset;
   char *config_path;
 
   struct duf_depthinfo_s *pdi;

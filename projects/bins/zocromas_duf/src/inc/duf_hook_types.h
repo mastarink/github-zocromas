@@ -95,7 +95,7 @@ struct duf_sccb_handle_s
   int targc;
   char *const *targv;
 #else
-  duf_cargvc_t targ;
+  duf_cargvc_t parg;
 #endif
   const duf_ufilter_t *pu;
   duf_depthinfo_t *pdi;

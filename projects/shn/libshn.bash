@@ -265,5 +265,9 @@ function shn_i ()
 function shn ()
 {
   local TIMEFORMAT=${TIMEFORMAT:-real %lR; user %lU; system %lS; cpu %P}
+  declare -gx MSH_SHN_CWD 
+  MSH_SHN_CWD=`pwd`
+# echo "MSH_SHN_CWD: $MSH_SHN_CWD" >&2
+
   time shn_i $*
 }

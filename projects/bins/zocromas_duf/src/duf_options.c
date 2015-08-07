@@ -42,6 +42,8 @@ int
 duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
+
+  DUF_TRACE( temp, 0, "this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, or = 0, ir = 0;
 #else
@@ -51,6 +53,10 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
   duf_config->carg.argc = argc;
   duf_config->carg.argv = argv;
+
+
+
+
   if ( !duf_config->cli.shorts )
     duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
 
@@ -58,6 +64,14 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
   if ( r >= 0 )
     er = r = duf_env_options( istage );
   DUF_TRACE( options, 0, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
+
+#ifdef MAS_TRACING
+  for ( int ia = 0; ia < duf_config->carg.argc; ia++ )
+  {
+    DUF_TRACE( temp, 2, "this is temp DUF_TRACE again - cargv[%d]='%s'", ia, duf_config->carg.argv[ia] );
+  }
+#endif
+
 
   if ( r >= 0 )
     fr = r = duf_infile_options( istage );
@@ -95,6 +109,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
   }
 #endif
   DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; ir: %d; r: %s", or, fr, er, ir, duf_error_name( r ) );
+  DUF_TRACE( temp, 2, "@@@>>>>>>> targ_offset:%d", duf_config->targ_offset );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 
