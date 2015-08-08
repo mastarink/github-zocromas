@@ -18,7 +18,7 @@
 #include "duf_pdi.h"
 
 #include "duf_sccb.h"
-#include "duf_sccbh.h"
+/* #include "duf_sccbh.h" */
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */

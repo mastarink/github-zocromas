@@ -34,9 +34,6 @@ sfind duf_ufilter_bind.h
 tab sfind duf_filedata.c
 sfind duf_filedata.h
 
-tab sfind duf_sccbh.c
-sfind duf_sccbh.h
-
 tab sfind duf_sccb.c
 sfind duf_sccb.h
 sfind duf_sccb_def.h
