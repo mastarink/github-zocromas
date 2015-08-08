@@ -114,7 +114,7 @@ function shn_debug ()
     bin=${bindir}/${rname}
     cmdfile="$debugdir/debug_${rname}.cmd"
     echo "Using $cmdfile"
-    sedex="s@^\(run\)@\1 $@@"
+    sedex="s!^\(run\)!\1 $@!"
     if [[ -f "$cmdfile" ]] ; then
       tmpcmd="${cmdfile}.tmp"
       /bin/sed -e "$sedex" "$cmdfile" > $tmpcmd

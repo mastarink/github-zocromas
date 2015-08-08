@@ -62,6 +62,7 @@ struct duf_scan_callbacks_s
   duf_sql_set_t leaf;
   
   unsigned count_nodes:1;
+  unsigned no_progress:1;
   /* const char *leaf_selector_total2; */
 
   duf_scan_hook_init_t init_scan;

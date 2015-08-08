@@ -247,6 +247,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .title = "listing print",
   .name = "listing",
   .init_scan = NULL,            /* */
+  .no_progress = 1,
   .beginning_sql_seq = &sql_beginning_selected,
   /* .node_scan_before = scan_node_before, */
   .node_scan_before2 = scan_node_before2,

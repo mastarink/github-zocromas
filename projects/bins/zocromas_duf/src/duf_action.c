@@ -36,9 +36,9 @@
 #include "duf_sql_defs.h"
 
 #include "duf_begfin.h"
-#include "sql_beginning_create.h"
-#include "sql_beginning_vacuum.h"
-#include "sql_beginning_tables.h"
+/* #include "sql_beginning_create.h" */
+/* #include "sql_beginning_vacuum.h" */
+/* #include "sql_beginning_tables.h" */
 
 /* ###################################################################### */
 #include "duf_action.h"
@@ -129,7 +129,7 @@ duf_action( int argc, char **argv )
   if ( r >= 0 && DUF_ACT_FLAG( add_path ) )
   {
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
-    for ( int ia = 0; r >= 0 && ia < duf_config->targ.argc; ia++ )
+    for ( int ia = duf_config->targ_offset; r >= 0 && ia < duf_config->targ.argc; ia++ )
     {
       DUF_TRACE( explain, 0, "to add (#%d) path %s", ia, duf_config->targ.argv[ia] );
       if ( DUF_CLI_FLAG( dry_run ) )
@@ -189,11 +189,13 @@ duf_action( int argc, char **argv )
     if ( isatty( STDIN_FILENO ) )
       DOR( r, duf_interactive(  ) );
   }
+#if 0
   else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
   {
     /* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
     DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
   }
+#endif
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   DUF_TRACE( explain, 0, "after actions" );
 

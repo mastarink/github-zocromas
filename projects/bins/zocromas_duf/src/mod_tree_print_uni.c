@@ -244,6 +244,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .title = "tree print",
   .name = "tree",
   .init_scan = NULL,            /* */
+  .no_progress = 1,
   .beginning_sql_seq = &sql_beginning_selected,
   /* .node_scan_before = tree_scan_node_before, */
   .node_scan_before2 = scan_node_before2,
@@ -331,8 +332,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 0, ".0x%02x]", flags );
-           );
+               DUF_PRINTF( 0, ".0x%02x]", flags ); );
     {
 #if 0
       {

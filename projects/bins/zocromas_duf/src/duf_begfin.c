@@ -38,7 +38,7 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
 {
   DEBUG_STARTR( r );
 
-  if ( ssql && !ssql->done )
+  if ( ssql /* && !ssql->done */ )
   {
     const char **psql = ssql->sql;
 #ifdef MAS_TRACING

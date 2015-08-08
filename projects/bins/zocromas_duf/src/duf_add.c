@@ -30,6 +30,7 @@ duf_add_path_uni( const char *path, const char *node_selector2 )
   DUF_TRACE( explain, 0, "adding path uni: %s", path );
 
   real_path = duf_realpath( path, &r );
+  DUF_TEST_R( r );
 
   duf_depthinfo_t di = {.depth = -1,
     .seq = 0,
