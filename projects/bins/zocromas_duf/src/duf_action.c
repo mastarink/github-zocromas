@@ -1,5 +1,7 @@
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
+
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -184,7 +186,8 @@ duf_action( int argc, char **argv )
 
   if ( DUF_ACT_FLAG( interactive ) )
   {
-    DOR( r, duf_interactive(  ) );
+    if ( isatty( STDIN_FILENO ) )
+      DOR( r, duf_interactive(  ) );
   }
   else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
   {

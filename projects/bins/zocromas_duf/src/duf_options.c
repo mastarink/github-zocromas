@@ -1,6 +1,11 @@
 #include <assert.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -87,7 +92,50 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     ir = r = duf_indirect_options( istage );
   DUF_TRACE( options, 0, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
-  
+
+#ifdef MAS_TRACING
+  {
+    struct stat st_stdin;
+
+    if ( fstat( STDIN_FILENO, &st_stdin ) >= 0 )
+    {
+      DUF_TRACE( temp, 2, "isatty:%d, st_dev:%04llx, st_rdev:%04llx, st_ino:%04llx, chr:%d, isfifo:%d", isatty( STDIN_FILENO ),
+                 ( unsigned long long ) st_stdin.st_dev, ( unsigned long long ) st_stdin.st_rdev, ( unsigned long long ) st_stdin.st_ino,
+                 S_ISCHR( st_stdin.st_mode ), S_ISFIFO( st_stdin.st_mode ) );
+
+      switch ( st_stdin.st_mode & S_IFMT )
+      {
+      case S_IFBLK:
+        DUF_TRACE( temp, 2, "block device" );
+        break;
+      case S_IFCHR:
+        DUF_TRACE( temp, 2, "character device" );
+        break;
+      case S_IFDIR:
+        DUF_TRACE( temp, 2, "directory" );
+        break;
+      case S_IFIFO:
+        DUF_TRACE( temp, 2, "FIFO/pipe" );
+        break;
+      case S_IFLNK:
+        DUF_TRACE( temp, 2, "symlink" );
+        break;
+      case S_IFREG:
+        DUF_TRACE( temp, 2, "regular file" );
+        break;
+      case S_IFSOCK:
+        DUF_TRACE( temp, 2, "socket" );
+        break;
+      default:
+        DUF_TRACE( temp, 2, "unknown?" );
+        break;
+      }
+    }
+  }
+#endif
+
+
+
 #if 0
 /* duf_stdin_options - only for next stage, can be executed only once (direct stdin reading!)  */
   if ( r >= 0 )

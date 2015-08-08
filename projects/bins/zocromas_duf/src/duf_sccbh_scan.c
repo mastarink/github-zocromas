@@ -25,7 +25,7 @@
 #include "duf_sccbh_scan.h"
 /* ###################################################################### */
 
-
+#if 0
 static int
 duf_sccbh_eval_real_path( duf_sccb_handle_t * sccbh, const char *real_path )
 {
@@ -64,35 +64,39 @@ duf_sccbh_eval_path( duf_sccb_handle_t * sccbh, const char *path )
   }
   DEBUG_ENDR_YES_CLEAR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_MAX_SEQ_REACHED, DUF_ERROR_TOO_DEEP );
 }
+#endif
 
+#if 0
 int
 duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
-  int count = 0;
-  char *const *sargv = NULL;
 
   assert( sccbh );
-  /* assert( PARGV ); */
 
   DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targc:%u", duf_uni_scan_action_title( SCCB ), PARGC );
   for ( int ia = 0; r >= 0 && ia < PARGC; ia++ )
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": targv[%d]='%s'", duf_uni_scan_action_title( SCCB ), ia, PARGV[ia] );
 
-  count = 1;
-  sargv = NULL;
-  HCHANGES = 0;
-  if ( PARGC > 0 )
-  {
-    count = PARGC;
-    sargv = PARGV;
-  }
   {
     /* - evaluate sccb for each string from PARG[CV] as path */
     if ( duf_levinfo_path( PDI ) )
       DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) );
     else
+    {
+      int count = 0;
+      char *const *sargv = NULL;
+
+      assert( 0 );
+      /* assert( PARGV ); */
+      count = 1;
+      sargv = NULL;
+      if ( PARGC > 0 )
+      {
+        count = PARGC;
+        sargv = PARGV;
+      }
       for ( int ia = 0; r >= 0 && ia < count; ia++ )
       {
         const char *cargv = NULL;
@@ -102,8 +106,10 @@ duf_sccbh_eval_each_path( duf_sccb_handle_t * sccbh )
         DUF_TRACE( path, 0, "@@PARGV[%d]=\"%s\"; cargv=\"%s\"", ia, PARGV ? PARGV[ia] : NULL, cargv );
         DOR( r, duf_sccbh_eval_path( sccbh, cargv ) );
       }
+    }
   }
   DUF_TRACE( action, 1, "after scan" );
 
   DEBUG_ENDR( r );
 }
+#endif
