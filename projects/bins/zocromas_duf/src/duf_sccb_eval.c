@@ -151,7 +151,7 @@ duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * tabl
       act = duf_find_sccb_by_name( pnames, len, table );
     if ( act )
     {
-      DUF_TRACE( path, 0, "@ (to duf_evaluate_sccb) levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
+      DUF_TRACE( path, 0, "@ (to duf_evaluate_sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( duf_config->pdi ) );
 
 
       DOR( r, duf_evaluate_sccb( act->sccb ) );

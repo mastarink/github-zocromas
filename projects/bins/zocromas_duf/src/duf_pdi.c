@@ -89,8 +89,9 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
 }
 #endif
 
-int
-duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_t * pu, const char *node_selector2, int recursive, int opendir )
+static int
+duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_ufilter_t * pu, const char *node_selector2, int recursive,
+                int opendir )
 {
   DEBUG_STARTR( r );
   int rec = 0;
@@ -102,13 +103,13 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, const duf_ufilter_
   od = pdi && pdi->opendir;
   duf_pdi_close( pdi );
   pdi->pu = pu;
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, 0 /* caninsert */ , node_selector2, rec /* recursive */ , od /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , node_selector2, rec /* recursive */ , od /* opendir */  ) );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
   DEBUG_ENDR( r );
 }
 
 int
-duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *node_selector2 )
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert, const char *node_selector2 )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -132,7 +133,8 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, const char *no
   real_path = duf_realpath( path, &r );
   DUF_TRACE( temp, 2, "cpath:%s; path:%s; real_path:%s", cpath, path, real_path );
   if ( r >= 0 )
-    duf_pdi_reinit( pdi, real_path, duf_config->pu /* pu */ , node_selector2, DUF_U_FLAG( recursive ) /*recursive */ , duf_pdi_opendir( pdi ) );
+    duf_pdi_reinit( pdi, real_path, caninsert /* caninsert */ , duf_config->pu /* pu */ , node_selector2, DUF_U_FLAG( recursive ) /*recursive */ ,
+                    duf_pdi_opendir( pdi ) );
   mas_free( path );
   mas_free( real_path );
   DEBUG_ENDR( r );
@@ -154,7 +156,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int r
       path = mas_strdup( cpath );
     /* recursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, node_selector2 /*, duf_config->pu, recursive */  ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , node_selector2 /*, duf_config->pu, recursive */  ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }

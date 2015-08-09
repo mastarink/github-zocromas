@@ -142,7 +142,7 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi /* , const char *dirnam
             /* pli->itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) ); */
             pli->numfile = duf_sql_column_long_long( pstmt, 2 );
             pli->numdir = duf_sql_column_long_long( pstmt, 3 );
-            DUF_TRACE( path, 0, "@@@numdir:%ld; numfile: %ld;", pli->numdir, pli->numfile );
+            /* DUF_TRACE( path, 0, "@@@numdir:%ld; numfile: %ld;", pli->numdir, pli->numfile ); */
           }
         }
       }

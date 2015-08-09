@@ -154,7 +154,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     PDI->seq++;
     PDI->seq_leaf++;
     DUF_TRACE( scan_reg, 0, "* %llu / %llu %s", PDI->seq_leaf, TOTITEMS, SCCB->title );
-    if ( !SCCB->no_progress && DUF_ACT_FLAG( progress ) && !SCCB->count_nodes && TOTITEMS > 0 && m > 0 )
+    if ( !SCCB->no_progress && !SCCB->count_nodes && DUF_ACT_FLAG( progress ) && TOTITEMS > 0 && m > 0 )
     {
       /* assert( PDI->seq_leaf <= m ); */
       duf_percent( PDI->seq_leaf, TOTITEMS, duf_uni_scan_action_title( SCCB ) );
@@ -213,7 +213,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     PDI->seq++;
     PDI->seq_node++;
     DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
-    if ( !SCCB->no_progress && DUF_ACT_FLAG( progress ) && SCCB->count_nodes && TOTITEMS > 0 && m > 0 )
+    if ( !SCCB->no_progress && SCCB->count_nodes && DUF_ACT_FLAG( progress ) && TOTITEMS > 0 && m > 0 )
     {
       /* assert( PDI->seq_node <= m ); */
       duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );

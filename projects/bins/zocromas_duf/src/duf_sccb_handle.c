@@ -177,7 +177,7 @@ TODO scan mode
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    DOR( r, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_get_node_sql_set( SCCB )->selector2 ) );
+    DOR( r, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_node_sql_set( SCCB )->selector2 ) );
   }
   return sccbh;
 }
