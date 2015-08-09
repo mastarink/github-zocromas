@@ -106,6 +106,7 @@ duf_action_path( char *tpath )
         /* char *real_path = NULL; */
 
         duf_config->pdi->opendir = 1;
+        duf_config->pdi->recursive = 1;
         /* real_path = duf_realpath( tpath, &r ); */
 
         DUF_TRACE( path, 0, "@[%s] %s", tpath, duf_levinfo_path( duf_config->pdi ) );

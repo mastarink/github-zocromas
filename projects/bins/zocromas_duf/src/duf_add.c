@@ -22,7 +22,7 @@
 
 
 int
-duf_add_path_uni( const char *path, const char *node_selector2 )
+duf_add_path_uni___( const char *path, const char *node_selector2 )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
