@@ -6,7 +6,6 @@ noinst_HEADERS=duf.h \
 	sql_beginning_tables.h \
 	sql_beginning_types.h \
 	duf_action.h \
-	duf_add.h \
 	duf_base_types.h \
 	duf_cli_options.h \
 	duf_cli_types.h \

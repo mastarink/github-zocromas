@@ -61,9 +61,6 @@ sfind duf_path2db.h
 tab sfind  duf_tags.c
 sfind duf_tags.h
 
-tab sfind duf_add.c
-sfind duf_add.h
-
 tab sfind duf_context.c
 sfind duf_context.h
 
