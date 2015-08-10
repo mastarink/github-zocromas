@@ -1,0 +1,8 @@
+drop-tables
+add-path
+create-tables
+recursive
+files
+directories
+progress
+evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif,tree
