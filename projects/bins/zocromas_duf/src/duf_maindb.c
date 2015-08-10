@@ -20,12 +20,13 @@
 
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
+#include "duf_option_restore.h"
 
 #include "duf_levinfo_ref.h"
 
 /* #include "duf_sql_defs.h" */
 #include "duf_sql.h"
-/* #include "duf_sql2.h" */
+#include "duf_sql2.h"
 
 #include "duf_action.h"
 
@@ -251,6 +252,38 @@ duf_main_db_close( int ra )
   DEBUG_ENDR( r );
 }
 
+static int
+duf_store_log( int argc, char *const argv[] )
+{
+  DEBUG_STARTR( r );
+  char *sargv1, *sargv2;
+
+#ifdef MAS_TRACING
+  int changes = 0;
+#else
+  int DUF_UNUSED changes = 0;
+#endif
+
+  sargv1 = mas_argv_string( argc, argv, 1 );
+  sargv2 = duf_restore_some_options( argv[0] );
+  DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
+  {
+    static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
+
+    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+    DUF_SQL_BIND_S( Args, sargv1, r, pstmt );
+    DUF_SQL_BIND_S( restoredArgs, sargv2, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    /* if ( r == DUF_ERROR_SQL_NO_TABLE ) */
+    /*   r = 0;                           */
+  }
+  DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
+  mas_free( sargv2 );
+  mas_free( sargv1 );
+  DEBUG_ENDR( r );
+}
 
 /* do necessary actions to perform tasks, formulated in duf_config global variable and ... for standard database
  *    - global variable duf_config must be created/inited and set
@@ -300,7 +333,9 @@ duf_main_db( int argc, char **argv )
   DUF_SHOW_ERROR( "db not opened @ %s ( %s )", duf_config->db.main.fpath, duf_error_name( r ) );
   DUF_TEST_RX_END( r );
 
-  DORF( r, DUF_WRAPPED( duf_action ), argc, argv );
+  DORF( r, duf_store_log, duf_config->targ.argc, duf_config->targ.argv );
+
+  DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  );
   DORF( r, duf_main_db_close, r );
   DEBUG_ENDR( r );
 }

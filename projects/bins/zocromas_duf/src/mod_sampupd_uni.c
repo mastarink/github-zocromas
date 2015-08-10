@@ -165,7 +165,7 @@ sampupd_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lo
 }
 
 static int
-sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd_unused, /* const struct stat *pst_file, */ duf_depthinfo_t * pdi )
+sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, /* const struct stat *pst_file, */ duf_depthinfo_t * pdi )
 {
   int ufd;
   struct stat *st;
@@ -176,7 +176,6 @@ sampupd_scan_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd_unused, /
 
   DEBUG_STARTR( r );
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   ufd = duf_levinfo_dfd_up( pdi );
@@ -283,10 +282,10 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
 
   .leaf_scan_fd2 = sampupd_scan_dirent_content2,
 
-  .use_std_leaf = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0, /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", dup5cnt AS nsame" /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
@@ -316,6 +315,7 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
@@ -341,6 +341,6 @@ duf_scan_callbacks_t duf_sampupd_callbacks = {
            .selector_total2 =   /* */
            " /* su */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
            },
-  .final_sql_seq = &final_sql  /* */
+  .final_sql_seq = &final_sql   /* */
         ,
 };

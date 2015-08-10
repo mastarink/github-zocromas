@@ -89,19 +89,21 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
-          "dev INTEGER NOT NULL, inode INTEGER NOT NULL" /* */
+          "dev INTEGER NOT NULL, rdev INTEGER, inode INTEGER NOT NULL" /* */
           ", mode INTEGER NOT NULL, nlink INTEGER NOT NULL" /* */
           ", uid INTEGER NOT NULL, gid INTEGER NOT NULL" /* */
           ", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /* */
           ", size INTEGER NOT NULL" /* */
+
+          ", atim REAL NOT NULL, atimn INTEGER NOT NULL" /* */
+          ", mtim REAL NOT NULL, mtimn INTEGER NOT NULL" /* */
+          ", ctim REAL NOT NULL, ctimn INTEGER NOT NULL" /* */
+
           ", md5id INTEGER"     /* */
           ", sd5id INTEGER"     /* */
           ", crc32id INTEGER"   /* */
           ", mimeid INTEGER"    /* */
           ", exifid INTEGER"    /* */
-          ", atim REAL NOT NULL, atimn INTEGER NOT NULL" /* */
-          ", mtim REAL NOT NULL, mtimn INTEGER NOT NULL" /* */
-          ", ctim REAL NOT NULL, ctimn INTEGER NOT NULL" /* */
           ", filetype TEXT, filestatus INTEGER" /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
@@ -165,6 +167,16 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, " /* */
 #endif
           "  dev INTEGER NOT NULL, inode INTEGER NOT NULL " /* */
+          ", rdev INTEGER"      /* */
+          ", mode INTEGER, nlink INTEGER" /* */
+          ", uid INTEGER, gid INTEGER" /* */
+          ", blksize INTEGER, blocks INTEGER" /* */
+          ", size INTEGER" /* */
+          
+	  ", atim REAL, atimn INTEGER" /* */
+          ", mtim REAL, mtimn INTEGER" /* */
+          ", ctim REAL, ctimn INTEGER" /* */
+
           ", dirname TEXT, parentid INTEGER " /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */

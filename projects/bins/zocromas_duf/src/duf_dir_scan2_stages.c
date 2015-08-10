@@ -130,21 +130,26 @@ static int
 duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  int dfd;
+  /* int dfd; */
 
   PDI->items.total++;
   PDI->items.files++;
-  dfd = duf_levinfo_dfd( PDI );
+  /* dfd = duf_levinfo_dfd( PDI ); */
   if ( duf_levinfo_item_deleted( PDI ) )
   {
+#if 0
     if ( SCCB->leaf_scan_fd2 )
-      DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, /* duf_levinfo_stat( PDI ), */ PDI ) );
+      DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
+#else
+    if ( SCCB->leaf_scan2_deleted )
+      DOR( r, SCCB->leaf_scan2_deleted( pstmt,  /* duf_levinfo_stat( PDI ), */ PDI ) );
+#endif
   }
   else
   {
-    assert( dfd );
+    /* assert( dfd ); */
     if ( SCCB->leaf_scan_fd2 )
-      DOR( r, SCCB->leaf_scan_fd2( pstmt, dfd, /* duf_levinfo_stat( PDI ), */ PDI ) );
+      DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
   }
   DEBUG_ENDR( r );
 }

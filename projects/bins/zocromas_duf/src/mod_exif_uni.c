@@ -386,11 +386,10 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
   return timeepoch;
 }
 
-static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   DUF_UFIELD2( dataid );
@@ -400,14 +399,14 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const st
     unsigned char *buffer;
     size_t sum = 0;
 
-      buffer = mas_malloc( bufsz );
+    buffer = mas_malloc( bufsz );
     if ( buffer )
     {
       int cnt = 0;
       int maxcnt = 2;
       ExifLoader *loader;
 
-        loader = exif_loader_new(  );
+      loader = exif_loader_new(  );
 
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
       /* exif_loader_write_file */
@@ -415,8 +414,8 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const st
       {
         int rr;
 
-          rr = read( duf_levinfo_dfd( pdi ), buffer, bufsz );
-          DUF_TRACE( exif, 5, "read %d", rr );
+        rr = read( duf_levinfo_dfd( pdi ), buffer, bufsz );
+        DUF_TRACE( exif, 5, "read %d", rr );
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
@@ -646,6 +645,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const st
           if ( ( r >= 0 || r == DUF_ERROR_EXIF_BROKEN_DATE ) && ( timeepoch || *stime_original || model ) )
           {
             unsigned long long exifid = 0;
+
 #ifdef MAS_TRACING
             const char *real_path = NULL;
 #endif
@@ -755,7 +755,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks =
         .leaf =
   {
     .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-          ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
+          ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+          "  "                  /* */
           ", fd.mode AS filemode " /* */
           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
           ", fd.md5id AS md5id" /* */
@@ -784,7 +785,9 @@ duf_scan_callbacks_t duf_collect_exif_callbacks =
   {
     .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-          ,.selector2 =         /* */
+          ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+          ,                     /* */
+          .selector2 =          /* */
           " FROM " DUF_DBPREF " paths AS pt " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
@@ -793,7 +796,6 @@ duf_scan_callbacks_t duf_collect_exif_callbacks =
           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
-           ,
-           .selector_total2 =   /* */
-           " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+          ,.selector_total2 =   /* */
+          " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
 },.final_sql_seq = &final_sql,};

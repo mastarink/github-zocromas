@@ -315,7 +315,7 @@ sample_entry_dir2(  /* const char *fname_unused, const struct stat *pstat_unused
   DEBUG_STARTR( r );
   /* assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) ); */
 
-  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s",  duf_levinfo_itemshowname( pdi ) );
+  DUF_TRACE( sample, 0, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ IN scan entry dir2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -348,7 +348,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", dup5cnt AS nsame " /* */
            ", fd." DUF_SQL_IDNAME " AS filenameid" /* */
            ", fd.mode AS filemode" /* */
@@ -376,6 +376,7 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   ,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector = "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */

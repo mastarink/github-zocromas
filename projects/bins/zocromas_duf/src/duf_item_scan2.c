@@ -107,15 +107,22 @@ duf_pstmt_levinfo_godown_openat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t *
     DUF_UFIELD2( dirid );
     DUF_UFIELD2( ndirs );
     DUF_UFIELD2( nfiles );
-    DUF_SFIELD2( dfname );
     /* Not here : assert( dirid == duf_levinfo_dirid( pdi ) );
      * */
     DUF_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", dirid );
     DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
     /*!! dirid need not be same as duf_levinfo_dirid( pdi ) before duf_levinfo_godown */
-    DOR( r, duf_levinfo_godown_openat_dh( pdi, dirid, dfname, ndirs, nfiles, 0 /*is_leaf */  ) );
-    assert( r < 0 || dirid == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
+#if 1
+    DOR( r, duf_levinfo_godown_openat_dh( pdi, dirid, DUF_GET_SFIELD2( dfname ), ndirs, nfiles, 0 /*is_leaf */  ) );
+#else
+    DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, 0, DUF_GET_SFIELD2( dfname ), ndirs, nfiles, 0 /* is_leaf */ , pstmt ) );
+#endif
+    {
+      unsigned long long did = duf_levinfo_dirid( pdi );
+
+      assert( r < 0 || dirid == did ); /* was set by duf_levinfo_godown */
+    }
   }
   DEBUG_ENDR( r );
 }
@@ -138,10 +145,18 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DEBUG_STARTR( r );
   assert( PDI );
 
+  /* data from db at pstmt */
+
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
 
+
+#if 1
   DOR( r, duf_levinfo_godown_openat_dh( PDI, 0 /* dir_id */ , DUF_GET_SFIELD2( filename ), 0, 0, 1 /* is_leaf */  ) );
+#else
+  DOR( r, duf_levinfo_godown_dbopenat_dh( PDI, 0, DUF_GET_SFIELD2( filename ), 0 /* ndirs */ , 0 /* nfiles */ , 1 /* is_leaf */ , pstmt ) );
+#endif
+
 
   if ( r >= 0 )
   {

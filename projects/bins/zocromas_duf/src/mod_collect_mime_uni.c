@@ -120,13 +120,12 @@ mime_destructor( void *ctx )
  * pstmt is needed for dataid
  * */
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long long mimeid = 0;
 
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
   DUF_TRACE( mod, 0, " mime" );
 
@@ -255,8 +254,9 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           ", uid, gid, nlink, inode " /* */
-           ", strftime('%s',mtim)   AS mtime " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
+           "  "                 /* */
+           ", strftime('%s',fd.mtim)   AS mtime " /* */
            ", fd.mode               AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.md5id              AS md5id " /* */
@@ -287,6 +287,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            },
   .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM      " DUF_DBPREF " paths                  AS pt " /* */

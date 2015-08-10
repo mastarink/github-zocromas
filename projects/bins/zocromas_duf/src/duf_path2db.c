@@ -60,6 +60,7 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi /* , const char *dirname, d
   DUF_SQL_STEP( r, pstmt );
   DUF_SQL_CHANGES( changes, r, pstmt );
   DUF_SQL_END_STMT( insert_path_table, r, pstmt );
+        DUF_TEST_R( r );
   return changes;
 }
 
@@ -445,20 +446,22 @@ duf_path2dirid( const char *path, const char *node_selector2, int *pr )
   unsigned long long dirid = 0;
 
   real_path = duf_realpath( path, &r );
-  duf_depthinfo_t di = {.depth = -1,
-    .seq = 0,
-    .levinfo = NULL,
-    .pu = NULL,
-    /* .opendir = sccb ? sccb->opendir : 0, */
-    .opendir = 1,
-    /* .name = real_path, */
-  };
-  if ( r >= 0 )
-    r = DUF_WRAPPED( duf_pdi_init ) ( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
-  if ( r >= 0 )
-    dirid = duf_levinfo_dirid( &di );
-  /* xchanges = di.changes; --- needless!? */
-  duf_pdi_close( &di );
+  {
+    duf_depthinfo_t di = {.depth = -1,
+      .seq = 0,
+      .levinfo = NULL,
+      .pu = NULL,
+      /* .opendir = sccb ? sccb->opendir : 0, */
+      .opendir = 1,
+      /* .name = real_path, */
+    };
+    if ( r >= 0 )
+      r = DUF_WRAPPED( duf_pdi_init ) ( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
+    if ( r >= 0 )
+      dirid = duf_levinfo_dirid( &di );
+    /* xchanges = di.changes; --- needless!? */
+    duf_pdi_close( &di );
+  }
   mas_free( real_path );
   return dirid;
 }
@@ -477,17 +480,17 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );
-
-  DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
-  /* _duf_real_path2db
-   *  need a copy of real_path to modify during parse
-   *
-   *   note: sets depth + n
-   * */
-  r = _duf_real_path2db( pdi, real_path, caninsert, node_selector2 );
-  duf_pdi_set_topdepth( pdi );
-  DUF_TEST_R( r );
-
+  {
+    DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
+    /* _duf_real_path2db
+     *  need a copy of real_path to modify during parse
+     *
+     *   note: sets depth + n
+     * */
+    r = _duf_real_path2db( pdi, real_path, caninsert, node_selector2 );
+    duf_pdi_set_topdepth( pdi );
+    DUF_TEST_R( r );
+  }
   mas_free( real_path );
 
   DEBUG_ENDR( r );

@@ -43,6 +43,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   unsigned long long sd5id = -1;
   int lr = 0;
   int changes = 0;
+
 #ifdef MAS_TRACING
   const char *real_path = duf_levinfo_path( pdi );
 #endif
@@ -168,13 +169,12 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
 }
 
 static int
-dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned char mdr[MD5_DIGEST_LENGTH];
   unsigned char md[MD5_DIGEST_LENGTH];
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   DUF_UFIELD2( filedataid );
@@ -237,7 +237,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            ", fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            ", fn.name AS filename, fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime, md.dup5cnt AS nsame " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           " , md.dup5cnt AS nsame " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
@@ -277,6 +278,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM " DUF_DBPREF "paths AS pt " /* */

@@ -14,6 +14,8 @@
 /* #include "duf_config_ref.h" */
 #include "duf_dh.h"
 
+#include "duf_sql_defs.h"
+#include "duf_sql_field.h"
 
 /* #include "duf_pdi.h" */
 
@@ -78,6 +80,53 @@ duf_levinfo_openat_dh( duf_depthinfo_t * pdi )
     {
       pdi->levinfo[d].deleted = 1;
       DUF_TRACE( fs, 0, "@@@(%d)? levinfo openated %s; opendir:%d", r, pdi->levinfo[d].itemname, pdi->opendir );
+    }
+  }
+  DUF_TEST_R( r );
+  return r;
+}
+
+int
+duf_levinfo_dbopenat_dh( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int is_leaf )
+{
+  int r = 0;
+  int d = pdi->depth;
+
+  assert( pdi );
+  assert( pdi->levinfo );
+  assert( d >= 0 );
+
+  duf_levinfo_t *pli;
+
+  pli = &pdi->levinfo[d];
+  /* if ( pdi->opendir ) */
+  {
+    duf_dirhandle_t *pdhlev = &pli->lev_dh;
+
+    /* if ( S_ISBLK( stX.st_mode ) ) */
+    /* {                             */
+    /* }                             */
+    /* DUF_SHOW_ERROR( "%s", pdi->levinfo[d].is_leaf ? "LEAF" : "NODE" ); */
+    /* DUF_PRINTF( 0, "d:%d [%s]", d, pdi->levinfo[d].itemname ); */
+    assert( pdi->levinfo[d].itemname );
+    {
+      /* stat */
+      pli->dirid = DUF_GET_UFIELD2( dirid );
+      pdhlev->st.st_dev = DUF_GET_UFIELD2( dev );
+      pdhlev->st.st_ino = DUF_GET_UFIELD2( inode );
+      pdhlev->st.st_mode = DUF_GET_UFIELD2( filemode );
+      pdhlev->st.st_nlink = DUF_GET_UFIELD2( nlink );
+      pdhlev->st.st_uid = DUF_GET_UFIELD2( uid );
+      pdhlev->st.st_gid = DUF_GET_UFIELD2( gid );
+      pdhlev->st.st_rdev = DUF_GET_UFIELD2( rdev );
+      pdhlev->st.st_size = DUF_GET_UFIELD2( filesize );
+      pdhlev->st.st_blksize = DUF_GET_UFIELD2( blksize );
+      pdhlev->st.st_blocks = DUF_GET_UFIELD2( blocks );
+      /* pdhlev->st.st_atim =; */
+      /* pdhlev->st.st_mtim =; */
+      /* pdhlev->st.st_ctim =; */
+      DUF_TRACE( fs, 1, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
+      /* mas_free( sp ); */
     }
   }
   DUF_TEST_R( r );

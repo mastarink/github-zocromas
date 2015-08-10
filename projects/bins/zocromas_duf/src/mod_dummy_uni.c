@@ -23,17 +23,17 @@
 /* ########################################################################################## */
 
 static int
-scan_init( duf_depthinfo_t * pdi )
+dummy_scan_init( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( mod, 3, "dummy scan_init %s", duf_levinfo_path( pdi ) );
+  DUF_TRACE( mod, 3, "dummy_scan_init %s", duf_levinfo_path( pdi ) );
 
   DEBUG_ENDR( r );
 }
 
 static int
-dirent_content2( duf_sqlite_stmt_t * pstmt, int fd_unused, duf_depthinfo_t * pdi )
+dummy_dirent_content2( duf_sqlite_stmt_t * pstmt,  duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -47,16 +47,16 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, int fd_unused, duf_depthinfo_t * pdi
 
 
 /*
-* 2: 0 [MOD    ]  47:dirent_content2                 :3.8916 :  dummy dirent /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
+* 2: 0 [MOD    ]  47:dummy_dirent_content2                 :3.8916 :  dummy dirent /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  DUF_TRACE( mod, 2, "dummy dirent %s : %s : %s", duf_levinfo_path( pdi ), filename, duf_levinfo_itemshowname( pdi ) );
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
+  DUF_TRACE( mod, 2, "dummy dirent %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), filename, duf_levinfo_itemshowname( pdi ),
+             duf_levinfo_dfd( pdi ), duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat( pdi )->st_dev );
 
   DEBUG_ENDR( r );
 }
 
 static int
-scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -68,13 +68,14 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
 
   DUF_TRACE( mod, 5, "dummy %s -a-", duf_levinfo_path( pdi ) );
-  DUF_TRACE( mod, 2, "dummy %s : %s -b-", duf_levinfo_itemshowname( pdi ), filename );
+  DUF_TRACE( mod, 2, "dummy %s : %s -b- ::  {%d:%d} x%llx", duf_levinfo_itemshowname( pdi ), filename, duf_levinfo_dfd( pdi ),
+             duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat( pdi )->st_dev );
 
   DEBUG_ENDR( r );
 }
 
 static int
-scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -86,7 +87,7 @@ scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+dummy_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   DUF_TRACE( mod, 2, "dummy %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
@@ -101,7 +102,7 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -114,7 +115,7 @@ scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -143,7 +144,7 @@ scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -172,7 +173,7 @@ scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 int
-dirent_dir_scan_before2( /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+dirent_dir_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -208,7 +209,7 @@ dirent_dir_scan_before2( /* const char *fname_unused, const struct stat *pstat_u
 }
 
 int
-dirent_file_scan_before2( /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+dirent_file_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -254,22 +255,22 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .title = "dummy",
   .name = "dummy",
   .def_opendir = 0,
-  .init_scan = scan_init,
+  .init_scan = dummy_scan_init,
   .beginning_sql_seq = &sql_beginning_selected,
 
-  .node_scan_before2 = scan_node_before2,
-  .node_scan_before2_deleted = scan_node_before2_deleted,
+  .node_scan_before2 = dummy_scan_node_before2,
+  .node_scan_before2_deleted = dummy_scan_node_before2_deleted,
 
-  .node_scan_after2 = scan_node_after2,
+  .node_scan_after2 = dummy_scan_node_after2,
   .node_scan_after2_deleted = scan_node_after2_deleted,
 
-  .node_scan_middle2 = scan_node_middle2,
+  .node_scan_middle2 = dummy_scan_node_middle2,
   .node_scan_middle2_deleted = scan_node_middle2_deleted,
 
-  .leaf_scan_fd2 = dirent_content2,
+  .leaf_scan_fd2 = dummy_dirent_content2,
 
-  .leaf_scan2 = scan_leaf2,
-  .leaf_scan2_deleted = scan_leaf2_deleted,
+  .leaf_scan2 = dummy_scan_leaf2,
+  .leaf_scan2_deleted = dummy_scan_leaf2_deleted,
 
   .dirent_file_scan_before2 = dirent_file_scan_before2,
   .dirent_dir_scan_before2 = dirent_dir_scan_before2,

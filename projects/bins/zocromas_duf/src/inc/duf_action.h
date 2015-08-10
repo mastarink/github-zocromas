@@ -2,6 +2,6 @@
 #  define DUF_ACTION_H
 
 
-int DUF_WRAPPED( duf_action ) ( int argc, char **argv );
+int DUF_WRAPPED( duf_action ) ( void );
 
 #endif

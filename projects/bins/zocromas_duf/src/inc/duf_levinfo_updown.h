@@ -9,8 +9,9 @@ int duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const c
                         unsigned long long nfiles, int is_leaf );
 int duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, const char *itemname, unsigned long long ndirs,
                                   unsigned long long nfiles, int is_leaf );
+int duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, const char *itemname, unsigned long long ndirs,
+                                    unsigned long long nfiles, int is_leaf, duf_sqlite_stmt_t * pstmt );
 int duf_levinfo_goup( duf_depthinfo_t * pdi );
 
 
 #endif
-

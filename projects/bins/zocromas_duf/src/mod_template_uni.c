@@ -46,12 +46,12 @@ template_scan_init( duf_depthinfo_t * pdi )
 }
 
 static int
-template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, /* int fd_unused, *//* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
+  /* assert( fd_unused == duf_levinfo_dfd( pdi ) ); */
 
   DEBUG_ENDR( r );
 }
@@ -178,7 +178,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
            ", fn.name AS filename, fd.size AS filesize" /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", dup5cnt AS nsame " /* */
            ", fd." DUF_SQL_IDNAME " AS filenameid" /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
@@ -197,6 +197,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            " FROM " DUF_DBPREF "paths AS pt " /* */

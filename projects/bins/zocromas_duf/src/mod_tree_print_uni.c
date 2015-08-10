@@ -53,6 +53,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( md5sum1 );
   DUF_UFIELD2( md5sum2 );
   DUF_UFIELD2( mtime );
+  DUF_UFIELD2( dev );
   DUF_UFIELD2( uid );
   DUF_UFIELD2( gid );
   DUF_UFIELD2( nlink );
@@ -107,6 +108,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.st.st_ino = ( ino_t ) inode;
     fi.st.st_mtim.tv_sec = mtime;
     fi.st.st_mtim.tv_nsec = 0;
+    fi.st.st_dev = ( dev_t ) dev;
     fi.st.st_uid = ( uid_t ) uid;
     fi.st.st_gid = ( gid_t ) gid;
     fi.st.st_nlink = ( nlink_t ) nlink;

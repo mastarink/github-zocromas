@@ -43,6 +43,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
   unsigned long long crc32id = -1;
   int lr = 0;
   int changes = 0;
+
 #ifdef MAS_TRACING
   const char *real_path = duf_levinfo_path( pdi );
 #endif
@@ -143,12 +144,11 @@ duf_make_crc32_uni( int fd, int *pr )
 }
 
 static int
-dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned long crc32sum = 0;
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
 
   DUF_UFIELD2( filedataid );
@@ -220,8 +220,10 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
-           ", fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
+           ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
            ", fn.name AS filename, fd.size AS filesize " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           "  "                 /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.mode AS filemode " /* */
            ", fd.md5id AS md5id" /* */
@@ -244,11 +246,11 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            "    WHERE "         /* */
            " fd.crc32id IS NULL AND" /* */
            /* " sz.dupzcnt > 1 AND "      (* *) */
-           " sz.size > 0 AND "      /* */
-	   " 1 "
-           },
+           " sz.size > 0 AND "  /* */
+           " 1 "},
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */

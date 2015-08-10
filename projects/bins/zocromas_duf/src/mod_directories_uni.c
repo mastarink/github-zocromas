@@ -41,7 +41,7 @@
 /* ########################################################################################## */
 /* make sure dir name in db */
 static int
-register_pdidirectory( /* const char *fname_unused, const struct stat *pst_dir_unused, */ duf_depthinfo_t * pdi )
+register_pdidirectory(  /* const char *fname_unused, const struct stat *pst_dir_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
@@ -74,8 +74,7 @@ register_pdidirectory( /* const char *fname_unused, const struct stat *pst_dir_u
 /* fname === */
   DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
   ( void ) duf_dirname_pdistat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
-                                   duf_directories_callbacks.node.selector2,
-                                   0 /*need_id */ , &changes, &r );
+                                      duf_directories_callbacks.node.selector2, 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }
 
@@ -158,7 +157,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize " /* */
-           ", uid, gid, nlink, inode, strftime('%s',mtim) AS mtime " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", md.dup5cnt AS nsame, md.md5sum1, md.md5sum2 " /* */
@@ -186,6 +185,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid "                  */

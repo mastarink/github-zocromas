@@ -36,6 +36,7 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
     pdhandle->rs = r;
     if ( !pdhandle->rs )
       pdhandle->rs++;
+    pdhandle->source = DUF_DH_SOURCE_FS;
 
     if ( r < 0 )
     {

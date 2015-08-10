@@ -163,13 +163,12 @@ duf_make_md5_uni( int fd, unsigned char *pmd5 )
 }
 
 static int
-dirent_contnt2( duf_sqlite_stmt_t * pstmt, int fd_unused, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+md5_dirent_content2( duf_sqlite_stmt_t * pstmt,  /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   unsigned char amd5r[MD5_DIGEST_LENGTH];
   unsigned char amd5[MD5_DIGEST_LENGTH];
 
-  assert( fd_unused == duf_levinfo_dfd( pdi ) );
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
@@ -316,14 +315,15 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   /* .node_scan_before = collect_openat_md5_scan_node_before, */
   /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
   /* .leaf_scan_fd = duf_scan_dirent_md5_content, */
-  .leaf_scan_fd2 = dirent_contnt2,
+  .leaf_scan_fd2 = md5_dirent_content2,
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            " , fn.name AS filename, fd.size AS filesize " /* */
-           " , uid, gid, nlink, inode, strftime('%s',mtim) AS mtime, md.dup5cnt AS nsame " /* */
+           " , fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+	   " , md.dup5cnt AS nsame " /* */
            " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
            " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
@@ -360,6 +360,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
 ,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
+        ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
            /* "SELECT     pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId "                  */

@@ -9,6 +9,13 @@
 #  include "duf_item_types.h"
 #  include "duf_ufilter_types.h"
 
+typedef enum
+{
+  DUF_DH_SOURCE_FS = 1,
+  DUF_DH_SOURCE_DB,
+  DUF_DH_SOURCE_MAX
+} duf_dh_source_t;
+
 typedef struct duf_dirhandle_s
 {
   unsigned long long dirid;
@@ -16,6 +23,7 @@ typedef struct duf_dirhandle_s
   int dfd;
   int rs;
   struct stat st;
+  duf_dh_source_t source;
 } duf_dirhandle_t;
 
 typedef struct

@@ -319,6 +319,13 @@ DUF_LEVINFO_3GET( int, dfd, lev_dh.dfd )
 
 
 /************************************************************************/
+/* *INDENT-OFF*  */
+DUF_LEVINFO_3GET( int, source, lev_dh.source )
+/* *INDENT-ON*  */
+
+
+
+/************************************************************************/
 
 const char *
 duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
