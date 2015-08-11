@@ -64,7 +64,7 @@ function shn_run ()
 	  if pushd $MSH_SHN_CWD  &>/dev/null ; then
 	    eval "$bin $qargs"
 	    retcode=$?
-	    popd
+	    popd  &>/dev/null
 	  fi
 	}
         if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then

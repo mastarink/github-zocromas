@@ -18,6 +18,7 @@
 /* #include "duf_levinfo.h" */
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
+#include "duf_levinfo_openclose.h"
 
 #include "duf_pdi.h"
 
@@ -46,12 +47,18 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi /* , const char *dirname, d
 
 
   DUF_SQL_START_STMT( pdi, insert_path_table, sql, r, pstmt );
+  if ( !duf_levinfo_stat_dev( pdi ) )
+  {
+    DOR( r, duf_levinfo_statat_dh( pdi ) );
+  }
 
-  DUF_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, duf_levinfo_stat( pdi )->st_dev, duf_levinfo_stat( pdi )->st_ino,
+  assert( duf_levinfo_stat_dev( pdi ) );
+
+  DUF_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ),
              duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ) );
   /* DUF_SHOW_ERROR( "insert_path_index:%d", insert_path_index ); */
-  DUF_SQL_BIND_LL( Dev, duf_levinfo_stat( pdi )->st_dev, r, pstmt );
-  DUF_SQL_BIND_LL( iNode, duf_levinfo_stat( pdi )->st_ino, r, pstmt );
+  DUF_SQL_BIND_LL( Dev, duf_levinfo_stat_dev( pdi ), r, pstmt );
+  DUF_SQL_BIND_LL( iNode, duf_levinfo_stat_inode( pdi ), r, pstmt );
   DUF_SQL_BIND_S( dirName, duf_levinfo_itemtruename( pdi ), r, pstmt );
   /* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
@@ -60,13 +67,12 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi /* , const char *dirname, d
   DUF_SQL_STEP( r, pstmt );
   DUF_SQL_CHANGES( changes, r, pstmt );
   DUF_SQL_END_STMT( insert_path_table, r, pstmt );
-        DUF_TEST_R( r );
+  DUF_TEST_R( r );
   return changes;
 }
 
 static unsigned long long
-duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi /* , const char *dirname_unused, const struct stat *pstat_unused */ ,
-                                   const char *node_selector2, int *pr )
+duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *node_selector2, int *pr )
 {
   unsigned long long dirid = 0;
   int r = 0;
@@ -221,8 +227,8 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
   }
   else
   {
-    DUF_SHOW_ERROR( "Wrong data dirname(%s) OR st_dev(%lu) OR st_ino(%lu)", duf_levinfo_itemshowname( pdi ), duf_levinfo_stat( pdi )->st_dev,
-                    duf_levinfo_stat( pdi )->st_ino );
+    DUF_SHOW_ERROR( "Wrong data dirname(%s) OR st_dev(%lu) OR st_ino(%lu)", duf_levinfo_itemshowname( pdi ), duf_levinfo_stat_dev( pdi ),
+                    duf_levinfo_stat_inode( pdi ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_DATA );
   }
   if ( need_id && !dirid )
@@ -381,7 +387,6 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
     DUF_TRACE( path, 0, "@@@@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
     while ( r >= 0 && path && *path )
     {
-      /* struct stat *pst_dir = NULL; */
       char *nextdir = path;
 
       DUF_TRACE( path, 4, "@@       -prepare path:[%40s]\tunder %llu", path, parentid );

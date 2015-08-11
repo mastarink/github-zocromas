@@ -84,6 +84,14 @@ duf_levinfo_stat_dev( const duf_depthinfo_t * pdi )
   st = duf_levinfo_stat( pdi );
   return st ? st->st_dev : 0;
 }
+mode_t
+duf_levinfo_stat_mode( const duf_depthinfo_t * pdi )
+{
+  struct stat *st;
+
+  st = duf_levinfo_stat( pdi );
+  return st ? st->st_mode : 0;
+}
 
 /************************************************************************/
 

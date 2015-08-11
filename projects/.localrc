@@ -87,6 +87,7 @@ function localrc_new
 }
 # localrc $@
 
+  echo "localrc_new to do" >&2
 if localrc_new $@ ; then
   echo "localrc_new done" >&2
 # alias >&2

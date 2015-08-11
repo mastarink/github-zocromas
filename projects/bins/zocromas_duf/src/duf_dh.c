@@ -28,10 +28,12 @@ int
 duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
 {
   int r = 0;
+  int updfd = 0;
 
+  updfd = pdhandleup ? pdhandleup->dfd : 0;
   if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
   {
-    r = fstatat( pdhandleup->dfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+    r = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
 
     pdhandle->rs = r;
     if ( !pdhandle->rs )
@@ -51,7 +53,7 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
         char *s;
 
         s = strerror_r( errno, serr, sizeof( serr ) );
-        DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, pdhandleup ? pdhandleup->dfd : 555 );
+        DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", r, errno, s ? s : serr, name, updfd );
         DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
       }
     }
@@ -75,6 +77,9 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   assert( name );
   assert( *name );
   updfd = pdhandleup ? pdhandleup->dfd : 0;
+  assert( pdhandle );
+  assert( name );
+  assert( updfd );
   if ( pdhandle && name && updfd )
   {
     const char *openname;
@@ -94,7 +99,7 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 
       DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
 
-      r = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+      /* r = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT ); */
 
       pdhandle->rs = r;
       if ( !pdhandle->rs )

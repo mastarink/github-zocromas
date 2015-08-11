@@ -22,6 +22,8 @@
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
 
+#include "duf_levinfo_openclose.h"
+
 /* #include "duf_uni_scan2.h" */
 #include "duf_dir_scan2.h"
 
@@ -142,14 +144,22 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
       DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
 #else
     if ( SCCB->leaf_scan2_deleted )
-      DOR( r, SCCB->leaf_scan2_deleted( pstmt,  /* duf_levinfo_stat( PDI ), */ PDI ) );
+      DOR( r, SCCB->leaf_scan2_deleted( pstmt, /* duf_levinfo_stat( PDI ), */ PDI ) );
 #endif
   }
   else
   {
     /* assert( dfd ); */
     if ( SCCB->leaf_scan_fd2 )
+    {
+      if ( !duf_levinfo_dfd( PDI ) )
+      {
+        DOR( r, duf_levinfo_openat_dh( PDI ) );
+      }
+
+      assert( duf_levinfo_dfd( PDI ) );
       DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
+    }
   }
   DEBUG_ENDR( r );
 }
@@ -208,6 +218,16 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
     duf_pdi_set_opendir( PDI, 1 );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 0, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+
+#if 1
+    if ( !duf_levinfo_stat( PDI ) )
+    {
+      /* DOR( r, duf_levinfo_openat_dh( PDI ) ); */
+      DOR( r, duf_levinfo_statat_dh( PDI ) );
+    }
+    /* assert( duf_levinfo_dfd( PDI ) ); */
+    assert( duf_levinfo_stat( PDI ) );
+#endif
     /*
      *   -- call for each direntry
      *      - for directory                - sccb->dirent_dir_scan_before2

@@ -12,6 +12,7 @@
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
+#include "duf_levinfo_openclose.h"
 
 #include "duf_dh.h"
 #include "duf_dirent.h"
@@ -35,7 +36,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
 {
   DEBUG_STARTR( r );
 
-  r = duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemshowname( pdi ) );
+  DOR( r, duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemshowname( pdi ) ) );
 
   if ( r >= 0 )
   {
@@ -45,7 +46,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
     /* sccb->dirent_file_scan_before2 -- duf_scan_hook2_dirent_t */
     /* sccb->dirent_dir_scan_before2 -- duf_scan_hook2_dirent_t */
     if ( scanner )
-      r = ( scanner ) (  /* pstmt, */ /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */ /* duf_levinfo_dirid_up( pdi ) , */ pdi );
+      DOR( r, ( scanner ) (  /* pstmt, *//* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), *//* duf_levinfo_dirid_up( pdi ) , */ pdi ) );
   }
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {
@@ -89,6 +90,9 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
   struct dirent **list = NULL;
 
   DUF_TRACE( scan, 2, "dirID=%llu; scandir dfname:[%s :: %s]", duf_levinfo_dirid( pdi ), duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  if ( !duf_levinfo_dfd( pdi ) )
+    DOR( r, duf_levinfo_openat_dh( pdi ) );
+  assert( duf_levinfo_dfd( pdi ) );
   nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
 
 
@@ -132,7 +136,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
       r = 0;
     else
     {
-      DUF_ERRSYSE( errorno, "path '%s'/'%s'", duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
+      DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", nlist, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
       DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
     }
     DUF_TEST_R( r );
@@ -156,13 +160,23 @@ int
 duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
   DEBUG_STARTR( r );
-  const struct stat *pst_parent;
+  /* const struct stat *pst_parent; */
 
-  pst_parent = duf_levinfo_stat( pdi );
+  assert( pdi );
+
+  /* pst_parent = duf_levinfo_stat( pdi ); */
+  /* assert( pst_parent ); */
+
+  if ( !duf_levinfo_stat_dev( pdi ) )
+  {
+    DOR( r, duf_levinfo_statat_dh( pdi ) );
+  }
+
+  assert( duf_levinfo_stat_dev( pdi ) );
 
   DUF_TRACE( scan, 0, "scan dirent hooks d:%d; r:%d", scan_dirent_dir2 ? 1 : 0, scan_dirent_reg2 ? 1 : 0 );
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
-  if ( r || !pst_parent || !( S_ISDIR( pst_parent->st_mode ) ) )
+  if (  /* r || !pst_parent || */ !( S_ISDIR( duf_levinfo_stat_mode( pdi ) ) ) )
   {
 
 
