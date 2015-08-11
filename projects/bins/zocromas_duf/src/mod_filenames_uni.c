@@ -31,6 +31,7 @@
 #include "duf_filedata.h"
 
 /* #include "duf_dbg.h" */
+#include "duf_mod_defs.h"
 
 /* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
@@ -38,49 +39,11 @@
 
 /* ########################################################################################## */
 
-static int
-register_pdifilename( duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-  const char *fname = duf_levinfo_itemtruename( pdi );
+static int register_pdifilename( duf_depthinfo_t * pdi );
 
-  unsigned long long dataid;
-
-  DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ &r ) );
-
-  if ( r >= 0 && fname && duf_levinfo_dirid_up( pdi ) )
-  {
-    int changes = 0;
-
-    const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filenames (Pathid, name, dataid) VALUES (:pathID, :Name, :dataID)";
-
-    DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
-    DUF_TRACE( mod, 3, "S:%s", sql );
-    DUF_SQL_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), r, pstmt );
-    DUF_SQL_BIND_S( Name, fname, r, pstmt );
-    DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_CHANGES( changes, r, pstmt );
-    DUF_SQL_END_STMT( insert_filename, r, pstmt );
-  }
-  else
-  {
-    DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
-    DUF_MAKE_ERROR( r, DUF_ERROR_DATA );
-    DUF_TEST_R( r );
-  }
-  /* DUF_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
-  DEBUG_ENDR( r );
-}
-
-
-
-
-
-
-
-
-static duf_sql_sequence_t final_sql = {.done = 0,
+/* ########################################################################################## */
+static duf_sql_sequence_t final_sql = { /* */
+  .done = 0,
   .sql = {
 #if 0
           "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_files (Pathid, numfiles, minsize, maxsize) " /* */
@@ -135,6 +98,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
           }
 };
 
+/* ########################################################################################## */
 
 duf_scan_callbacks_t duf_filenames_callbacks = {
   .title = "file names",
@@ -188,3 +152,40 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            },
   .final_sql_seq = &final_sql,
 };
+
+/* ########################################################################################## */
+
+static int
+register_pdifilename( duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+  const char *fname = duf_levinfo_itemtruename( pdi );
+
+  unsigned long long dataid;
+
+  DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ &r ) );
+
+  if ( r >= 0 && fname && duf_levinfo_dirid_up( pdi ) )
+  {
+    int changes = 0;
+
+    const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filenames (Pathid, name, dataid) VALUES (:pathID, :Name, :dataID)";
+
+    DUF_SQL_START_STMT( pdi, insert_filename, sql, r, pstmt );
+    DUF_TRACE( mod, 3, "S:%s", sql );
+    DUF_SQL_BIND_LL( pathID, duf_levinfo_dirid_up( pdi ), r, pstmt );
+    DUF_SQL_BIND_S( Name, fname, r, pstmt );
+    DUF_SQL_BIND_LL( dataID, dataid, r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_CHANGES( changes, r, pstmt );
+    DUF_SQL_END_STMT( insert_filename, r, pstmt );
+  }
+  else
+  {
+    DUF_SHOW_ERROR( "Wrong data (fname:%s; dirid:%llu)", fname, duf_levinfo_dirid_up( pdi ) );
+    DUF_MAKE_ERROR( r, DUF_ERROR_DATA );
+    DUF_TEST_R( r );
+  }
+  /* DUF_TRACE( mod, 0, "%llu : %s @ %llu", dirid, fname, dirid ); */
+  DEBUG_ENDR( r );
+}

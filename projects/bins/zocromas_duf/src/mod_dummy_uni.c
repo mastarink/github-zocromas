@@ -15,24 +15,14 @@
 #include "duf_sql_field.h"
 
 /* #include "duf_dbg.h" */
+#include "duf_mod_defs.h"
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
 
 /* ########################################################################################## */
-static int dummy_scan_init( duf_depthinfo_t * pdi );
-static int dummy_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int dummy_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int dummy_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int dummy_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int dummy_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int dummy_scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int dummy_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
-static int dummy_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
-static int dummy_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
-static int dummy_dirent_file_scan_before2( duf_depthinfo_t * pdi );
-static int dummy_dirent_dir_scan_before2( duf_depthinfo_t * pdi );
+DUF_MOD_DECLARE_ALL_FUNCS( dummy )
 
 /* ########################################################################################## */
 

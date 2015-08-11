@@ -35,6 +35,94 @@
 #include "sql_beginning_tables.h"
 
 
+
+/* ########################################################################################## */
+static int dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+
+/* ########################################################################################## */
+static duf_sql_sequence_t final_sql = { /* */
+  .done = 0,
+  .sql = {
+          "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
+          " FROM  " DUF_DBPREF "mime      AS mi " /* */
+          " JOIN  " DUF_DBPREF "filedatas AS fd ON (fd.mimeid=mi." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_DBPREF "mime." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
+          /* " WHERE " DUF_DBPREF "mime.mime=mi.mime)" (* *) */
+          ,
+
+
+          NULL,
+          }
+};
+
+/* ########################################################################################## */
+#define Q_J " LEFT JOIN "
+#define Q_FROM( _t, _a ) " FROM " DUF_DBPREF # _t " AS " # _a
+#define Q_JOIN_ID( _up, _t, _as, _o )  " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." DUF_SQL_IDNAME " ) "
+#define Q_JOIN_SYN( _up, _t, _as, _o ) " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." # _o ")"
+
+duf_scan_callbacks_t duf_collect_mime_callbacks = {
+  .title = "collect mime",
+  .name = "mime",
+  .def_opendir = 1,
+
+  .leaf_scan_fd2 = dirent_content2,
+
+  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  /* filename for debug only */
+  .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
+           "  "                 /* */
+           ", strftime('%s',fd.mtim)   AS mtime " /* */
+           ", fd.mode               AS filemode " /* */
+           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           ", fd.md5id              AS md5id " /* */
+           ,
+           .selector2 =         /* */
+           " FROM      " DUF_DBPREF " filenames AS fn " /* */
+           /* Q_FROM( filenames, fn ) (* *) */
+           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           /* Q_JOIN_ID( fd, mime, mi, mimeid) */
+           " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
+           /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
+           " WHERE "            /* */
+           " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
+           " sz.size > 0                               AND " /* */
+           " fn.Pathid = :parentdirID " /* */
+           ,
+           .selector_total2 =   /* */
+           " FROM      " DUF_DBPREF " filenames AS fn " /* */
+           /* Q_FROM( filenames, fn ) (* *) */
+           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
+           " WHERE "            /* */
+           " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
+           " sz.size > 0 "      /* */
+           " ORDER BY fd.mimeid " /* */
+           },
+  .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+           ,
+           .selector2 =         /* */
+           " FROM      " DUF_DBPREF " paths                  AS pt " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+#if 0
+           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+#endif
+           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .selector_total2 =   /* */
+           " /* mime */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+           },
+  .final_sql_seq = &final_sql,
+};
+
 /* ########################################################################################## */
 
 static unsigned long long
@@ -218,89 +306,3 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
   }
   DEBUG_ENDR( r );
 }
-
-
-
-
-
-
-static duf_sql_sequence_t final_sql = {.done = 0,
-  .sql = {
-          "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
-          " FROM  " DUF_DBPREF "mime      AS mi " /* */
-          " JOIN  " DUF_DBPREF "filedatas AS fd ON (fd.mimeid=mi." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_DBPREF "mime." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
-          /* " WHERE " DUF_DBPREF "mime.mime=mi.mime)" (* *) */
-          ,
-
-
-          NULL,
-          }
-};
-
-#define Q_J " LEFT JOIN "
-#define Q_FROM( _t, _a ) " FROM " DUF_DBPREF # _t " AS " # _a
-#define Q_JOIN_ID( _up, _t, _as, _o )  " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." DUF_SQL_IDNAME " ) "
-#define Q_JOIN_SYN( _up, _t, _as, _o ) " LEFT JOIN " DUF_DBPREF # _t " AS " # _as " ON ( " # _up "." # _o " = " # _as "." # _o ")"
-
-duf_scan_callbacks_t duf_collect_mime_callbacks = {
-  .title = "collect mime",
-  .name = "mime",
-  .def_opendir = 1,
-
-  .leaf_scan_fd2 = dirent_content2,
-
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  /* filename for debug only */
-  .leaf = {.fieldset = " fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
-           "  "                 /* */
-           ", strftime('%s',fd.mtim)   AS mtime " /* */
-           ", fd.mode               AS filemode " /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-           ", fd.md5id              AS md5id " /* */
-           ,
-           .selector2 =         /* */
-           " FROM      " DUF_DBPREF " filenames AS fn " /* */
-           /* Q_FROM( filenames, fn ) (* *) */
-           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           /* Q_JOIN_ID( fd, mime, mi, mimeid) */
-           " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
-           /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
-           " WHERE "            /* */
-           " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
-           " sz.size > 0                               AND " /* */
-           " fn.Pathid = :parentdirID " /* */
-           ,
-           .selector_total2 =   /* */
-           " FROM      " DUF_DBPREF " filenames AS fn " /* */
-           /* Q_FROM( filenames, fn ) (* *) */
-           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
-           " WHERE "            /* */
-           " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
-           " sz.size > 0 "      /* */
-           " ORDER BY fd.mimeid " /* */
-           },
-  .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
-           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
-           ,
-           .selector2 =         /* */
-           " FROM      " DUF_DBPREF " paths                  AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-#if 0
-           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-#endif
-           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
-           ,
-           .selector_total2 =   /* */
-           " /* mime */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-           },
-  .final_sql_seq = &final_sql,
-};

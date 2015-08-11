@@ -39,6 +39,7 @@
 
 /* ########################################################################################## */
 static int register_pdidirectory( duf_depthinfo_t * pdi );
+/* ########################################################################################## */
 
 static duf_sql_sequence_t final_sql = /* */
 {
@@ -101,6 +102,7 @@ static duf_sql_sequence_t final_sql = /* */
           NULL,
           }
 };
+/* ########################################################################################## */
 
 duf_scan_callbacks_t duf_directories_callbacks = {
   .title = "directories",

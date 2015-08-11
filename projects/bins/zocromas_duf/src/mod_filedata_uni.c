@@ -38,7 +38,6 @@
 /* ########################################################################################## */
 
 
-
 static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
 #if 0
@@ -108,6 +107,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
           }
 };
 
+/* ########################################################################################## */
 
 duf_scan_callbacks_t duf_filedata_callbacks = {
   .title = "file data",
@@ -165,3 +165,5 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   ,
   .final_sql_seq = &final_sql   /* */
 };
+
+/* ########################################################################################## */

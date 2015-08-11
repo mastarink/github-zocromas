@@ -28,14 +28,17 @@
 
 
 
-
 /* #include "duf_dbg.h" */
+#include "duf_mod_defs.h"
 
 /* #include "sql_beginning_selected.h" */
 #include "sql_beginning_tables.h"
 
 
 /* ########################################################################################## */
+#if 1
+DUF_MOD_DECLARE_ALL_FUNCS( template )
+#else
 static int template_scan_init( duf_depthinfo_t * pdi );
 static int template_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
 static int template_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
@@ -47,7 +50,8 @@ static int template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, duf_depth
 static int template_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
 static int template_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
 static int template_dirent_file_scan_before2( duf_depthinfo_t * pdi );
-static int template_dirent_dir_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi );
+static int template_dirent_dir_scan_before2( duf_depthinfo_t * pdi );
+#endif
 
 static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {

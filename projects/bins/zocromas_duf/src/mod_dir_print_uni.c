@@ -35,7 +35,51 @@
 
 
 
+/* ########################################################################################## */
+static int scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
+/* ########################################################################################## */
+
+/* NOTES */
+ /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
+ /* ", strftime('%Y-%m-%d %H:%M:%S',mtim,'unixepoch') AS mtimef " */
+ /* ", case cast (strftime('%w', mtim,'unixepoch') AS integer) "                                                                   */
+ /* " when 0 then 'Sun' when 1 then 'Mon' when 2 then 'Tue' when 3 then 'Wed' "                                                    */
+ /* " when 4 then 'Thu' when 5 then 'Fri' else 'Sat' end AS dowmtime, " "case cast (strftime('%m', mtim,'unixepoch') AS integer) " */
+ /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
+ /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
+ /* " else 'Wow' end AS monthmtime "                                                                                               */
+/* /NOTES */
+
+/* ########################################################################################## */
+
+duf_scan_callbacks_t duf_print_dir_callbacks = {
+  .title = "listing print",
+  .name = "listing",
+  .init_scan = NULL,            /* */
+  .no_progress = 1,
+  .beginning_sql_seq = &sql_beginning_selected,
+  /* .node_scan_before = scan_node_before, */
+  .node_scan_before2 = scan_node_before2,
+  /* .leaf_scan = scan_leaf, */
+  .leaf_scan2 = scan_leaf2,
+  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+#if 0
+  .leaf = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL,   /* */
+           .selector_total2 = NULL /* */
+           }
+  ,
+  .node = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL    /* */
+           }
+#endif
+  /* , .final_sql_seq = &final_sql, */
+};
 
 /* ########################################################################################## */
 
@@ -232,42 +276,3 @@ scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathi
 
   DEBUG_ENDR( r );
 }
-
-/* NOTES */
- /* " , DATETIME(mtim, 'unixepoch') AS mtimef " */
- /* ", strftime('%Y-%m-%d %H:%M:%S',mtim,'unixepoch') AS mtimef " */
- /* ", case cast (strftime('%w', mtim,'unixepoch') AS integer) "                                                                   */
- /* " when 0 then 'Sun' when 1 then 'Mon' when 2 then 'Tue' when 3 then 'Wed' "                                                    */
- /* " when 4 then 'Thu' when 5 then 'Fri' else 'Sat' end AS dowmtime, " "case cast (strftime('%m', mtim,'unixepoch') AS integer) " */
- /* " when 1 then 'Jan' when 2 then 'Feb' when 3 then 'Mar' when 4 then 'Apr' when 5 then 'May' when 6 then "                      */
- /* " 'Jun' when 7 then 'Jul' when 8 then 'Aug' when 9 then 'Sep' when 10 then 'Oct' when 11 then 'Nov' when 12 then 'Dec' "       */
- /* " else 'Wow' end AS monthmtime "                                                                                               */
-/* /NOTES */
-
-
-duf_scan_callbacks_t duf_print_dir_callbacks = {
-  .title = "listing print",
-  .name = "listing",
-  .init_scan = NULL,            /* */
-  .no_progress = 1,
-  .beginning_sql_seq = &sql_beginning_selected,
-  /* .node_scan_before = scan_node_before, */
-  .node_scan_before2 = scan_node_before2,
-  /* .leaf_scan = scan_leaf, */
-  .leaf_scan2 = scan_leaf2,
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-#if 0
-  .leaf = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL,   /* */
-           .selector_total2 = NULL /* */
-           }
-  ,
-  .node = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL    /* */
-           }
-#endif
-  /* , .final_sql_seq = &final_sql, */
-};

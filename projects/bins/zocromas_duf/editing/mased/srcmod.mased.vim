@@ -33,3 +33,4 @@ tab sfind mod_tree_print_uni.c
 tab sfind std_mod_sets.c
 sfind std_mod_sets.h
 
+tab sfind duf_mod_defs.h
