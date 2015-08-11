@@ -24,7 +24,7 @@
 /* ###################################################################### */
 
 unsigned long long
-duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, /* const struct stat *pst_file, */ int *pr )
+duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
 {
   int r = 0;
   unsigned long long dataid = 0;
@@ -32,14 +32,10 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, /* const struct stat *ps
 
   DEBUG_START(  );
 
-  const struct stat *pst_file = NULL;
-
-  pst_file = duf_levinfo_stat( pdi );
-
   DUF_SQL_START_STMT( pdi, select_filedata, sql, r, pstmt );
   DUF_TRACE( select, 3, "S:%s", sql );
-  DUF_SQL_BIND_LL( Dev, pst_file->st_dev, r, pstmt );
-  DUF_SQL_BIND_LL( iNode, pst_file->st_ino, r, pstmt );
+  DUF_SQL_BIND_LL( Dev, duf_levinfo_stat_dev( pdi ), r, pstmt );
+  DUF_SQL_BIND_LL( iNode, duf_levinfo_stat_inode( pdi ), r, pstmt );
   DUF_SQL_STEP( r, pstmt );
   if ( r == DUF_SQL_ROW )
   {
@@ -64,12 +60,12 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
 {
   int r = 0;
   unsigned long long dataid = 0;
-  const struct stat *pst_file = NULL;
+  /* const struct stat *pst_file = NULL; */
 
   DEBUG_START(  );
 
-  pst_file = duf_levinfo_stat( pdi );
-  if ( pst_file )
+  /* pst_file = duf_levinfo_stat( pdi ); */
+  /* if ( pst_file ) */
   {
     int r = 0;
     int changes = 0;
@@ -84,21 +80,25 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, r, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
-      DUF_SQL_BIND_LL( Dev, pst_file->st_dev, r, pstmt );
-      DUF_SQL_BIND_LL( iNode, pst_file->st_ino, r, pstmt );
-      DUF_SQL_BIND_LL( Size, pst_file->st_size, r, pstmt );
-      DUF_SQL_BIND_LL( Mode, pst_file->st_mode, r, pstmt );
-      DUF_SQL_BIND_LL( nLink, pst_file->st_nlink, r, pstmt );
-      DUF_SQL_BIND_LL( UID, pst_file->st_uid, r, pstmt );
-      DUF_SQL_BIND_LL( GID, pst_file->st_gid, r, pstmt );
-      DUF_SQL_BIND_LL( blkSize, pst_file->st_blksize, r, pstmt );
-      DUF_SQL_BIND_LL( Blocks, pst_file->st_blocks, r, pstmt );
-      DUF_SQL_BIND_LL( aTim, pst_file->st_atim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( aTimn, pst_file->st_atim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( mTim, pst_file->st_mtim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( mTimn, pst_file->st_mtim.tv_nsec, r, pstmt );
-      DUF_SQL_BIND_LL( cTim, pst_file->st_ctim.tv_sec, r, pstmt );
-      DUF_SQL_BIND_LL( cTimn, pst_file->st_ctim.tv_nsec, r, pstmt );
+      
+      DUF_SQL_BIND_LL( Dev, duf_levinfo_stat_dev( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( iNode, duf_levinfo_stat_inode( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( Mode, duf_levinfo_stat_mode( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( Size, duf_levinfo_stat_size( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( nLink, duf_levinfo_stat_nlink( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( UID, duf_levinfo_stat_uid( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( GID, duf_levinfo_stat_gid( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( blkSize, duf_levinfo_stat_blksize( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( Blocks, duf_levinfo_stat_blocks( pdi ), r, pstmt );
+ 
+      DUF_SQL_BIND_LL( aTim, duf_levinfo_stat_asec( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( mTim, duf_levinfo_stat_msec( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( cTim, duf_levinfo_stat_csec( pdi ), r, pstmt );
+     
+      DUF_SQL_BIND_LL( aTimn, duf_levinfo_stat_ansec( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( mTimn, duf_levinfo_stat_mnsec( pdi ), r, pstmt );
+      DUF_SQL_BIND_LL( cTimn, duf_levinfo_stat_cnsec( pdi ), r, pstmt );
+
       DUF_SQL_STEP( r, pstmt );
       DUF_SQL_CHANGES( changes, r, pstmt );
       DUF_SQL_END_STMT( insert_filedata, r, pstmt );
@@ -108,7 +108,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
       {
-        dataid = duf_pdistat2file_dataid_existed( pdi, /* pst_file, */ pr );
+        dataid = duf_pdistat2file_dataid_existed( pdi,  pr );
       }
       else if ( !r /* assume SQLITE_OK */  && changes )
       {
@@ -128,11 +128,11 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
       DUF_TEST_R( r );
     }
   }
-  else
-  {
-    DUF_SHOW_ERROR( "Wrong data" );
-    DUF_MAKE_ERROR( r, DUF_ERROR_DATA );
-  }
+  /* else                                   */
+  /* {                                      */
+  /*   DUF_SHOW_ERROR( "Wrong data" );      */
+  /*   DUF_MAKE_ERROR( r, DUF_ERROR_DATA ); */
+  /* }                                      */
   if ( pr )
     *pr = r;
   /* DUF_TRACE( select, 0, "%llu", dataid ); */

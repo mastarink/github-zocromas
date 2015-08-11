@@ -37,7 +37,7 @@
 
 
 static int
-duf_dirname_insert_path_table( duf_depthinfo_t * pdi /* , const char *dirname, dev_t st_dev, ino_t st_ino */  )
+duf_dirname_insert_path_table( duf_depthinfo_t * pdi /* , const char *dirname, dev_t st_dev, ino_t st_ino */ , int *pr )
 {
   int changes = 0;
   int r = 0;
@@ -67,6 +67,8 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi /* , const char *dirname, d
   DUF_SQL_STEP( r, pstmt );
   DUF_SQL_CHANGES( changes, r, pstmt );
   DUF_SQL_END_STMT( insert_path_table, r, pstmt );
+  if ( pr )
+    *pr = r;
   DUF_TEST_R( r );
   return changes;
 }
@@ -91,7 +93,6 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *node_selec
   DEBUG_START(  );
 
   assert( pdi );
-
 
   sqlv = mas_strdup( "SELECT " );
   sqlv = mas_strcat_x( sqlv, def_node_fieldset2 );
@@ -179,9 +180,11 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
 {
   unsigned long long dirid = 0;
   int r = 0;
+  static unsigned long long cccc = 0;
 
   DEBUG_START(  );
 
+  cccc++;
   assert( pdi );
 
   /* assert( parentid_unused == duf_levinfo_dirid_up( pdi ) ); */
@@ -192,15 +195,20 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
   {
     int changes = 0;
 
-    if ( caninsert && !duf_config->cli.disable.flag.insert )
+#if 1
+    dirid = duf_dirname_pdistat2dirid_existed( pdi /* , duf_levinfo_itemname( pdi ), pstat_unused */ , node_selector2, pr );
+    DUF_TRACE( path, 0, "(%d) dirid before insert: %llu for '%s' at %llu", r, dirid, duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
+#endif
+    if ( dirid <= 0 && caninsert && !duf_config->cli.disable.flag.insert )
     {
-      changes = duf_dirname_insert_path_table( pdi /* , duf_levinfo_itemname( pdi ), pstat_unused->st_dev, pstat_unused->st_ino */  );
+      changes = duf_dirname_insert_path_table( pdi /* , duf_levinfo_itemname( pdi ), pstat_unused->st_dev, pstat_unused->st_ino */ , &r );
     }
     DUF_TRACE( select, 0, "<changes> : %d", changes );
-    if ( need_id )
+    if ( dirid <= 0 && need_id )
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
       {
+        assert( 0 );
         dirid = duf_dirname_pdistat2dirid_existed( pdi /* , duf_levinfo_itemname( pdi ), pstat_unused */ , node_selector2, pr );
       }
       else if ( !r /* assume SQLITE_OK */  && changes )
@@ -254,6 +262,7 @@ duf_path_component_here2db( duf_depthinfo_t * pdi, /* const char *dirname, */ in
 
   assert( pparentid );
   assert( pdi );
+
 #if 0
   {
     const char *s1 = duf_levinfo_itemname( pdi );

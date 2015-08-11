@@ -67,32 +67,25 @@ DUF_LEVINFO_FC_REF( struct stat, stat )
 DUF_LEVINFO_FC_UP_REF( struct stat, stat )
 /* *INDENT-ON*  */
 
-ino_t
-duf_levinfo_stat_inode( const duf_depthinfo_t * pdi )
-{
-  struct stat *st;
 
-  st = duf_levinfo_stat( pdi );
-  return st ? st->st_ino : 0;
-}
+DUF_LEVINFO_ST_FLD_NAME( ino, inode );
+DUF_LEVINFO_ST_FLD( dev );
+DUF_LEVINFO_ST_FLD( mode );
+DUF_LEVINFO_ST_FLD( nlink );
+DUF_LEVINFO_ST_FLD( uid );
+DUF_LEVINFO_ST_FLD( gid );
+DUF_LEVINFO_ST_TYP_FLD( blkcnt, blocks );
+DUF_LEVINFO_ST_FLD( blksize );
+DUF_LEVINFO_ST_TYP_FLD( off, size );
+DUF_LEVINFO_ST_TYP_FLD_NAME( time, atime, asec );
+DUF_LEVINFO_ST_TYP_FLD_NAME( time, mtime, msec );
+DUF_LEVINFO_ST_TYP_FLD_NAME( time, ctime, csec );
+DUF_LEVINFO_ST_TYP_FLD_NAME( long, atim.tv_nsec, ansec );
+DUF_LEVINFO_ST_TYP_FLD_NAME( long, mtim.tv_nsec, mnsec );
+DUF_LEVINFO_ST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
 
-dev_t
-duf_levinfo_stat_dev( const duf_depthinfo_t * pdi )
-{
-  struct stat *st;
 
-  st = duf_levinfo_stat( pdi );
-  return st ? st->st_dev : 0;
-}
-mode_t
-duf_levinfo_stat_mode( const duf_depthinfo_t * pdi )
-{
-  struct stat *st;
-
-  st = duf_levinfo_stat( pdi );
-  return st ? st->st_mode : 0;
-}
-
+/* TODO st_nlink, st_uid, st_gid, st_blksize, st_blocks, st_?tim */
 /************************************************************************/
 
 /* int                                                              */

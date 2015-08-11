@@ -21,6 +21,74 @@
 
 
 /* ########################################################################################## */
+static int dummy_scan_init( duf_depthinfo_t * pdi );
+static int dummy_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int dummy_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int dummy_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int dummy_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int dummy_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int dummy_scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int dummy_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int dummy_scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int dummy_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int dummy_dirent_file_scan_before2( duf_depthinfo_t * pdi );
+static int dummy_dirent_dir_scan_before2( duf_depthinfo_t * pdi );
+
+/* ########################################################################################## */
+
+static duf_sql_sequence_t final_sql = { /* */
+  .done = 0,
+  .sql = {
+
+
+          NULL,
+          }
+};
+
+/* ########################################################################################## */
+
+duf_scan_callbacks_t duf_dummy_callbacks = {
+  .title = "dummy",
+  .name = "dummy",
+  .def_opendir = 0,
+  .init_scan = dummy_scan_init,
+  .beginning_sql_seq = &sql_beginning_selected,
+
+  .node_scan_before2 = dummy_scan_node_before2,
+  .node_scan_before2_deleted = dummy_scan_node_before2_deleted,
+
+  .node_scan_after2 = dummy_scan_node_after2,
+  .node_scan_after2_deleted = dummy_scan_node_after2_deleted,
+
+  .node_scan_middle2 = dummy_scan_node_middle2,
+  .node_scan_middle2_deleted = dummy_scan_node_middle2_deleted,
+
+  .leaf_scan_fd2 = dummy_dirent_content2,
+
+  .leaf_scan2 = dummy_scan_leaf2,
+  .leaf_scan2_deleted = dummy_scan_leaf2_deleted,
+
+  .dirent_file_scan_before2 = dummy_dirent_file_scan_before2,
+  .dirent_dir_scan_before2 = dummy_dirent_dir_scan_before2,
+
+  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+  .leaf = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL,   /* */
+           .selector_total2 = NULL, /* */
+           },
+  .node = {
+           .fieldset = NULL,    /* */
+           .selector2 = NULL    /* */
+           ,
+           .selector_total2 =   /* */
+           " /* dum */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+           },
+  .final_sql_seq = &final_sql,
+};
+
+/* ########################################################################################## */
 
 static int
 dummy_scan_init( duf_depthinfo_t * pdi )
@@ -33,7 +101,7 @@ dummy_scan_init( duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_dirent_content2( duf_sqlite_stmt_t * pstmt,  duf_depthinfo_t * pdi )
+dummy_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -132,7 +200,7 @@ dummy_scan_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -161,7 +229,7 @@ dummy_scan_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+dummy_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
@@ -172,8 +240,8 @@ scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DEBUG_ENDR( r );
 }
 
-int
-dirent_dir_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+static int
+dummy_dirent_dir_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -208,8 +276,8 @@ dirent_dir_scan_before2(  /* const char *fname_unused, const struct stat *pstat_
   DEBUG_ENDR( r );
 }
 
-int
-dirent_file_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+static int
+dummy_dirent_file_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -241,53 +309,3 @@ dirent_file_scan_before2(  /* const char *fname_unused, const struct stat *pstat
 
   DEBUG_ENDR( r );
 }
-
-static duf_sql_sequence_t final_sql = {.done = 0,
-  .sql = {
-
-
-          NULL,
-          }
-};
-
-
-duf_scan_callbacks_t duf_dummy_callbacks = {
-  .title = "dummy",
-  .name = "dummy",
-  .def_opendir = 0,
-  .init_scan = dummy_scan_init,
-  .beginning_sql_seq = &sql_beginning_selected,
-
-  .node_scan_before2 = dummy_scan_node_before2,
-  .node_scan_before2_deleted = dummy_scan_node_before2_deleted,
-
-  .node_scan_after2 = dummy_scan_node_after2,
-  .node_scan_after2_deleted = scan_node_after2_deleted,
-
-  .node_scan_middle2 = dummy_scan_node_middle2,
-  .node_scan_middle2_deleted = scan_node_middle2_deleted,
-
-  .leaf_scan_fd2 = dummy_dirent_content2,
-
-  .leaf_scan2 = dummy_scan_leaf2,
-  .leaf_scan2_deleted = dummy_scan_leaf2_deleted,
-
-  .dirent_file_scan_before2 = dirent_file_scan_before2,
-  .dirent_dir_scan_before2 = dirent_dir_scan_before2,
-
-  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL,   /* */
-           .selector_total2 = NULL, /* */
-           },
-  .node = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL    /* */
-           ,
-           .selector_total2 =   /* */
-           " /* dum */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-           },
-  .final_sql_seq = &final_sql,
-};

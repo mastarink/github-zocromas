@@ -45,6 +45,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
     scanner = duf_levinfo_is_leaf( pdi ) ? scan_dirent_reg2 : scan_dirent_dir2;
     /* sccb->dirent_file_scan_before2 -- duf_scan_hook2_dirent_t */
     /* sccb->dirent_dir_scan_before2 -- duf_scan_hook2_dirent_t */
+
     if ( scanner )
       DOR( r, ( scanner ) (  /* pstmt, *//* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), *//* duf_levinfo_dirid_up( pdi ) , */ pdi ) );
   }

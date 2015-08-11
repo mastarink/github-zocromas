@@ -43,27 +43,29 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
   pliu = d > 0 ? &pdi->levinfo[d - 1] : NULL;
   {
     duf_dirhandle_t *pdhlev = &pli->lev_dh;
-    duf_dirhandle_t *pdhuplev = pliu ? &pliu->lev_dh : NULL;
 
     assert( pdi->levinfo[d].itemname );
     if ( d == 0 )
     {
       assert( *pdi->levinfo[d].itemname == 0 );
-      assert( 0 );
-      /* TODO??? r = duf_stat_dh( pdhlev, "/" ); */
+      r = duf_stat_dh( pdhlev, "/" );
 
-      DUF_TRACE( fs, 1, "(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
+      DUF_TRACE( fs, 10, "(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
     }
     else                        /* d > 0 ! */
     {
+      duf_dirhandle_t *pdhuplev = pliu ? &pliu->lev_dh : NULL;
+
+      if ( !pdhuplev->dfd )
+        DOR( r, duf_levinfo_openat_dh_d( pdi, d - 1 ) );
       DOR( r, duf_statat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname ) );
       assert( pdhlev->st.st_dev );
-      DUF_TRACE( fs, 1, "(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
+      DUF_TRACE( fs, 10, "(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
     }
     if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT ) /* FIXME ?? */
     {
       pdi->levinfo[d].deleted = 1;
-      DUF_TRACE( fs, 0, "@@@(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
+      DUF_TRACE( fs, 10, "@@@(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
     }
   }
   DEBUG_ENDR( r );
@@ -111,7 +113,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       /* sp = mas_strdup( "/" ); */
       /* sp = mas_strcat_x( sp, pdi->levinfo[d].itemname ); */
       r = duf_open_dh( pdhlev, "/" );
-      DUF_TRACE( fs, 1, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
+      DUF_TRACE( fs, 10, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
       /* mas_free( sp ); */
     }
     else                        /* d > 0 ! */
@@ -120,7 +122,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
         DOR( r, duf_levinfo_openat_dh_d( pdi, d - 1 ) );
       assert( pdhuplev->dfd );
       DOR( r, duf_openat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname, pdi->levinfo[d].is_leaf ) );
-      DUF_TRACE( fs, 1, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
+      DUF_TRACE( fs, 10, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
     }
     if ( r >= 0 )
     {
@@ -129,7 +131,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
     if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
     {
       pdi->levinfo[d].deleted = 1;
-      DUF_TRACE( fs, 0, "@@@(%d)? levinfo openated %s; opendir:%d", r, pdi->levinfo[d].itemname, pdi->opendir );
+      DUF_TRACE( fs, 10, "@@@(%d)? levinfo openated %s; opendir:%d", r, pdi->levinfo[d].itemname, pdi->opendir );
     }
   }
   DUF_TEST_R( r );
@@ -179,7 +181,7 @@ duf_levinfo_dbopenat_dh( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int i
       /* pdhlev->st.st_atim =; */
       /* pdhlev->st.st_mtim =; */
       /* pdhlev->st.st_ctim =; */
-      DUF_TRACE( fs, 1, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
+      DUF_TRACE( fs, 10, "(%d)? levinfo openated %s; dfd:%d", r, pdi->levinfo[d].itemname, pdhlev->dfd );
       /* mas_free( sp ); */
     }
   }
