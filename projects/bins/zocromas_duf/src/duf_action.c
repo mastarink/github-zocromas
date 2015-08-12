@@ -167,7 +167,7 @@ duf_action( void )
   DEBUG_STARTR( r );
 
 
-  assert( !duf_levinfo_path( duf_config->pdi ) );
+  /* assert( !duf_levinfo_path( duf_config->pdi ) ); */
 
   DUF_TRACE( explain, 0, "to do actions" );
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
@@ -218,7 +218,7 @@ duf_action_wrap( void /* int argc, char **argv */ )
 {
   DEBUG_STARTR( r );
 
-  assert( !duf_levinfo_path( duf_config->pdi ) );
+  /* assert( !duf_levinfo_path( duf_config->pdi ) ); */
   DORF( r, duf_action /* , argc, argv */ ); /* duf_action : duf_action.c */
 #  if 0
   DORF( r, duf_main_db_info );

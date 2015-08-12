@@ -55,7 +55,7 @@ noinst_HEADERS=duf.h \
 	mod_exif.h \
 	std_mod_sets.h \
 	duf_mod_defs.h \
-	duf_print.h \
+	duf_print.h duf_printb.h \
 	duf_sql2.h \
 	duf_sql_const.h \
 	duf_sql_defs.h \

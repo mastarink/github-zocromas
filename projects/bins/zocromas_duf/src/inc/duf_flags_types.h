@@ -52,6 +52,7 @@ typedef struct
   unsigned calculate:1;
   unsigned insert:1;
   unsigned update:1;
+  unsigned fs:1;
 } duf_config_cli_disable_flags_t;
 
 typedef union

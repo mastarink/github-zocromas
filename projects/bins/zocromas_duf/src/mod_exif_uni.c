@@ -65,7 +65,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fd.md5id AS md5id" /* */
-           ,.selector2 =        /* */
+           ,                    /* */
+           .selector2 =         /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
@@ -76,7 +77,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " sz.size > 0 AND"   /* */
            " mi.mime='image/jpeg' AND" /* */
            " fn.Pathid = :parentdirID " /* */
-           ,.selector_total2 =  /* */
+           ,                    /* */
+           .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
@@ -84,25 +86,28 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND " /* */
-           " sz.size > 0 AND"   /* */
-           " mi.mime='image/jpeg' " /* */
-           },.node = {
-                      .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
-                      ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-                      ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
-                      ,         /* */
-                      .selector2 = /* */
-                      " FROM " DUF_DBPREF " paths AS pt " /* */
-                      " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-                      " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " sz.size > 0 AND "   /* */
+           " mi.mime='image/jpeg' AND " /* */
+           " 1 "                /* */
+           },                   /* */
+  .node = {
+           .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+           ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
+           ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
+           ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+           ,                    /* */
+           .selector2 =         /* */
+           " FROM " DUF_DBPREF " paths AS pt " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0
-                      " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
-                      " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
-                      " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
-                      ,.selector_total2 = /* */
-                      " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-                      },
+           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,.selector_total2 =  /* */
+           " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+           },
   .final_sql_seq = &final_sql,
 };
 

@@ -60,6 +60,9 @@ duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d )
     if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rs > 0 )
       pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;
   }
+  /* TODO NOT here: assert( pst->st_dev ); 
+   * (used to check presence, so no stat is OK)
+   * TODO */
   return pst;
 }
 /* *INDENT-OFF*  */

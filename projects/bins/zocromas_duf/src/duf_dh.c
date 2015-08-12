@@ -25,8 +25,8 @@
 
 /* #define DUF_TMP_ASSERT0 */
 
-int
-duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
+static int
+_duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
 {
   int r = 0;
   int updfd = 0;
@@ -73,7 +73,19 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 }
 
 int
-duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
+duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
+{
+  int r = 0;
+
+  if ( !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_statat_dh( pdhandle, pdhandleup, name );
+  }
+  return r;
+}
+
+static int
+_duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   int r = 0;
 
@@ -93,8 +105,7 @@ duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
       pdhandle->rs++;
 
     duf_config->nopen++;
-    DUF_TRACE( fs, 5, "opened %s (%u - %u = %u)", path, duf_config->nopen, duf_config->nclose,
-               duf_config->nopen - duf_config->nclose );
+    DUF_TRACE( fs, 5, "opened %s (%u - %u = %u)", path, duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose );
   }
   else if ( path )
   {
@@ -109,7 +120,19 @@ duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 }
 
 int
-duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
+duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
+{
+  int r = 0;
+
+  if ( !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_stat_dh( pdhandle, path );
+  }
+  return r;
+}
+
+static int
+_duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
   int r = 0;
   int updfd = 0;
@@ -178,7 +201,19 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 }
 
 int
-duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
+duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
+{
+  int r = 0;
+
+  if ( !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_openat_dh( pdhandle, pdhandleup, name, asfile );
+  }
+  return r;
+}
+
+static int
+_duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   int r = 0;
 
@@ -232,9 +267,22 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   return r;
 }
 
-/* returns handle >0 */
 int
-duf_opened_dh( duf_dirhandle_t * pdhandle )
+duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
+{
+  int r = 0;
+
+  if ( !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_open_dh( pdhandle, path );
+  }
+  return r;
+}
+
+
+/* returns handle >0 */
+static int
+_duf_opened_dh( duf_dirhandle_t * pdhandle )
 {
   int r = 0;
 
@@ -247,7 +295,19 @@ duf_opened_dh( duf_dirhandle_t * pdhandle )
 }
 
 int
-duf_close_dh( duf_dirhandle_t * pdhandle )
+duf_opened_dh( duf_dirhandle_t * pdhandle )
+{
+  int r = 0;
+
+  if ( !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_opened_dh( pdhandle );
+  }
+  return r;
+}
+
+int
+_duf_close_dh( duf_dirhandle_t * pdhandle )
 {
   int r = 0;
 
@@ -286,10 +346,34 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
 }
 
 int
-duf_check_dh( const char *msg )
+duf_close_dh( duf_dirhandle_t * pdhandle )
+{
+  int r = 0;
+
+  if ( !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_close_dh( pdhandle );
+  }
+  return r;
+}
+
+int
+_duf_check_dh( const char *msg )
 {
   int r = 0;
 
   DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose );
+  return r;
+}
+
+int
+duf_check_dh( const char *msg )
+{
+  int r = 0;
+
+  if ( 1 || !duf_config->cli.disable.flag.fs )
+  {
+    r = _duf_check_dh( msg );
+  }
   return r;
 }

@@ -138,11 +138,11 @@ const duf_longval_extended_table_t optable_filter = {
     /*      */ DO_OU( STR, glob_db ) /*                                                     */ , DO_H( glob db ) /*                          */ },
    {.o = {DO_Q( "include-db" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_INCL_DB_FILES )} /* */ , DO_CL( FILTER ) /*     */ ,
     /*      */ DO_OU( STR, glob_db_include ) /*                                             */ , DO_H( glob db include ) /*                  */ },
-   {.o = {DO_Q( "exclude-db" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_DB_FILES )} /* */ , DO_CL( FILTER ) /*     */,
+   {.o = {DO_Q( "exclude-db" ) /*       */ , DO_A_R /* */ , DO_V( GLOB_EXCL_DB_FILES )} /* */ , DO_CL( FILTER ) /*     */ ,
     /*      */ DO_OU( STR, glob_db_exclude ) /*                                             */ , DO_H( glob db exclude ) /*                  */ },
 
 
-   {.o = {DO_Q( "same-as-md5" ) /*         */ , DO_A_R /* */ , DO_V( SAME_AS )} /*            */ , DO_CL( FILTER ) /*  */ ,
+   {.o = {DO_Q( "same-as-md5" ) /*      */ , DO_A_R /* */ , DO_V( SAME_AS )} /*            */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, same_md5 ) /*                                                    */ , DO_H( same md5 ) /*                         */ },
 #if 0
    {.o = {DO_Q( "same-md5" ) /*           */ , DO_A_O} /*                                  */ , DO_CL( CONTROL ) /*  */ ,

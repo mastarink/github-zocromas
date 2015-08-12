@@ -36,7 +36,12 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemshowname( pdi ) ) );
+  /* TODO - remove from here */
+#if 0
+  /* DOR( r, duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemshowname( pdi ) ) ); */
+#else
+  DOR( r, duf_levinfo_statat_dh( pdi ) );
+#endif
 
   if ( r >= 0 )
   {

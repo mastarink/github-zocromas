@@ -1,9 +1,13 @@
 drop-tables
 add-path
+# TODO : why open-db needed when cd=...;
+# TODO : 'cd ' instead of 'cd='
+# open-db
 create-tables
 recursive
 files
 directories
+# cd=/home/mastar/big/misc/media/photo/20130507/
 progress
-# evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif
-evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif,tree
+evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif
+# evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif,tree

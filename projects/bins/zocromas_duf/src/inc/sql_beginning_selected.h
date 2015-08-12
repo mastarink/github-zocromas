@@ -55,12 +55,12 @@
         "    ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
         "                          OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM filenames AS fnb "  \
         "                                   JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
-        "                                     WHERE fnb.name GLOB :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
+        "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
         "                  ) " \
 	" AND " \
-        "  ( :GName        IS NULL OR fn.name     GLOB :GName                             ) AND "  \
-        "  ( :GNameI       IS NULL OR fn.name     GLOB :GNameI                            ) AND "  \
-        "  ( :GNameX       IS NULL OR fn.name NOT GLOB :GNameX                            ) AND "  \
+        "  ( :GName        IS NULL OR fn.name      GLOB :GName                             ) AND "  \
+        "  ( :GNameI       IS NULL OR fn.name      GLOB :GNameI                            ) AND "  \
+        "  ( :GNameX       IS NULL OR fn.name  NOT GLOB :GNameX                            ) AND "  \
 	" 1 "
 
 

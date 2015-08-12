@@ -27,6 +27,7 @@
 
 #include "duf_option_defs.h"
 #include "duf_print.h"
+#include "duf_printb.h"
 
 
 /* #include "duf_dbg.h" */

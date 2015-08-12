@@ -31,6 +31,9 @@ sfind duf_service.h
 tab sfind duf_print.c
 sfind duf_print.h
 
+tab sfind duf_printb.c
+sfind duf_printb.h
+
 tab sfind duf_dbg.c
 sfind duf_dbg.h
 

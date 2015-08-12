@@ -208,6 +208,8 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
     {
       if ( ( r == DUF_SQL_CONSTRAINT || !r ) && !changes )
       {
+        /* DUF_SQL_CONSTRAINT should be impossible from now */
+        /*  !changes should be impossible from now too */
         assert( 0 );
         dirid = duf_dirname_pdistat2dirid_existed( pdi /* , duf_levinfo_itemname( pdi ), pstat_unused */ , node_selector2, pr );
       }

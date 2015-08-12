@@ -256,32 +256,34 @@ static int
 duf_store_log( int argc, char *const argv[] )
 {
   DEBUG_STARTR( r );
-  char *sargv1, *sargv2;
+  /* if ( argv ) */
+  {
+    char *sargv1, *sargv2;
 
 #ifdef MAS_TRACING
-  int changes = 0;
+    int changes = 0;
 #else
-  int DUF_UNUSED changes = 0;
+    int DUF_UNUSED changes = 0;
 #endif
+    sargv1 = mas_argv_string( argc, argv, 1 );
+    sargv2 = duf_restore_some_options( argv[0] );
+    DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
+    {
+      static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
 
-  sargv1 = mas_argv_string( argc, argv, 1 );
-  sargv2 = duf_restore_some_options( argv[0] );
-  DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
-  {
-    static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
-
-    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    DUF_SQL_BIND_S( Args, sargv1, r, pstmt );
-    DUF_SQL_BIND_S( restoredArgs, sargv2, r, pstmt );
-    DUF_SQL_STEP( r, pstmt );
-    DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-    /* if ( r == DUF_ERROR_SQL_NO_TABLE ) */
-    /*   r = 0;                           */
+      DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+      DUF_SQL_BIND_S( Args, sargv1, r, pstmt );
+      DUF_SQL_BIND_S( restoredArgs, sargv2, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_CHANGES_NOPDI( changes, r, pstmt );
+      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      /* if ( r == DUF_ERROR_SQL_NO_TABLE ) */
+      /*   r = 0;                           */
+    }
+    DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
+    mas_free( sargv2 );
+    mas_free( sargv1 );
   }
-  DUF_TRACE( action, 0, "LOG inserted %d/%d [%s] - %d", changes, r, sargv1, argc );
-  mas_free( sargv2 );
-  mas_free( sargv1 );
   DEBUG_ENDR( r );
 }
 
@@ -306,7 +308,7 @@ duf_main_db( int argc, char **argv )
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
   DORF( r, duf_config_optionally_show );
-  DORF( r, duf_main_db_open );
+  /* DORF( r, duf_main_db_open ); */
 
   DUF_TRACE( temporary, 0, "@ maxitems.total %lld", duf_config->pu->maxitems.total );
   DUF_TRACE( temporary, 0, "@ maxitems.files %lld", duf_config->pu->maxitems.files );
@@ -333,7 +335,8 @@ duf_main_db( int argc, char **argv )
   DUF_SHOW_ERROR( "db not opened @ %s ( %s )", duf_config->db.main.fpath, duf_error_name( r ) );
   DUF_TEST_RX_END( r );
 
-  DORF( r, duf_store_log, duf_config->targ.argc, duf_config->targ.argv );
+  if ( duf_config->targ.argc > 0 )
+    DORF( r, duf_store_log, duf_config->targ.argc, duf_config->targ.argv );
 
   DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  );
   DORF( r, duf_main_db_close, r );
