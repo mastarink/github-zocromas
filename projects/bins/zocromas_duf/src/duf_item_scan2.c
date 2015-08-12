@@ -219,20 +219,25 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
   if ( r >= 0 )                 /* levinfo_down OK */
   {
-    unsigned long m;
+    long long m;
 
-    m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+    PDI->seq++;
+    PDI->seq_node++;
+    if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
+    {
+      m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+      DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
 /*
  * 4. call function str_cb2
  * */
-    PDI->seq++;
-    PDI->seq_node++;
-    DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
-    if ( !SCCB->no_progress && SCCB->count_nodes && DUF_ACT_FLAG( progress ) && TOTITEMS > 0 && m > 0 )
-    {
-      /* assert( PDI->seq_node <= m ); */
-      duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
+      DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
+      if ( m > 0 )
+      {
+        assert( PDI->seq_node <= m );
+        duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
+      }
     }
+
 
     DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
 

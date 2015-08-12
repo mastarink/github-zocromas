@@ -44,8 +44,8 @@
 #include "duf_action.h"
 /* ###################################################################### */
 
-
-static int
+#if 0
+static int DUF_UNUSED
 duf_action_path( char *tpath )
 {
   DEBUG_STARTR( r );
@@ -103,18 +103,18 @@ duf_action_path( char *tpath )
       DUF_TRACE( options, 0, "@stage_first indirect_options" );
       DOR( r, duf_indirect_options( DUF_OPTION_STAGE_FIRST ) );
 
-#if 1
+#  if 1
       /* TODO this will not work for path except first */
       DUF_TRACE( options, 0, "@stage_first stdin_options" );
       DOR( r, duf_stdin_options( DUF_OPTION_STAGE_FIRST ) );
-#endif
+#  endif
 
 
       DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
     }
-#if 0
+#  if 0
     duf_pdi_close( duf_config->pdi );
-#endif
+#  endif
   }
   else
   {
@@ -127,23 +127,20 @@ duf_action_path( char *tpath )
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
   /* assert( duf_config->pdi->levinfo ); */
 
-  if ( DUF_ACT_FLAG( interactive ) )
-  {
-    if ( isatty( STDIN_FILENO ) )
-      DOR( r, duf_interactive(  ) );
-  }
-#if 0
-  else if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
-  {
-    /* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
-    DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
-  }
-#endif
+#  if 0
+  else
+if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
+{
+  /* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
+  DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
+}
+#  endif
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   DUF_TRACE( explain, 0, "after actions" );
 
   DEBUG_ENDR( r );
 }
+#endif
 
 /* do necessary actions to perform tasks, formulated in duf_config global variable and ... for opened database
  *    - global variable duf_config must be created/inited and set
@@ -178,9 +175,9 @@ duf_action( void )
   DORF( r, duf_pre_action );
 #endif
 
-
+  DUF_TRACE( path, 0, "@@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
   /* TODO */
-#if 1
+#if 0
   if ( duf_config->targ_offset < duf_config->targ.argc )
   {
     char *real_path = NULL;
@@ -194,12 +191,56 @@ duf_action( void )
   }
 #endif
 
-
+#if 0
   for ( int ia = duf_config->targ_offset; r >= 0 && ia < duf_config->targ.argc; ia++ )
   {
     DUF_TRACE( path, 0, "@%d. [%s] %s", ia, duf_config->targ.argv[ia], duf_levinfo_path( duf_config->pdi ) );
     DOR( r, duf_action_path( duf_config->targ.argv[ia] ) );
   }
+#else
+  {
+    int ia = duf_config->targ_offset;
+
+
+
+    do
+    {
+      DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+      if ( duf_levinfo_path( duf_config->pdi ) )
+      {
+        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+        DOR( r, duf_cli_options( DUF_OPTION_STAGE_FIRST ) );
+        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+#  if 1
+        if ( ia == 0 )
+        {
+          /* TODO this will not work for path except first */
+          DUF_TRACE( options, 0, "@stage_first stdin_options" );
+          DOR( r, duf_stdin_options( DUF_OPTION_STAGE_FIRST ) );
+        }
+#  endif
+
+        DOR( r, duf_indirect_options( DUF_OPTION_STAGE_FIRST ) );
+      }
+      DUF_TRACE( path, 0, "@ia:%d of %d; path@pdi: %s", ia, duf_config->targ.argc, duf_levinfo_path( duf_config->pdi ) );
+      if ( ia < duf_config->targ.argc )
+      {
+        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+        DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targ.argv[ia], 7 /* caninsert */ ,
+                                        NULL /* node_selector2 */  ) );
+        ia++;
+      }
+      else
+      {
+        duf_pdi_close( duf_config->pdi );
+        assert( !duf_levinfo_path( duf_config->pdi ) );
+      }
+      DUF_TRACE( path, 0, "@ia:%d of %d; path@pdi: %s", ia, duf_config->targ.argc, duf_levinfo_path( duf_config->pdi ) );
+    }
+    while ( ( r >= 0 && duf_levinfo_path( duf_config->pdi ) ) );
+    DUF_TRACE( path, 0, "@r:%d; %d ? %d; path@pdi: %s", r, ia, duf_config->targ.argc, duf_levinfo_path( duf_config->pdi ) );
+  }
+#endif
   /* assert( duf_config->pdi->levinfo ); */
 
   if ( DUF_ACT_FLAG( interactive ) && isatty( STDIN_FILENO ) )
@@ -214,12 +255,12 @@ duf_action( void )
 
 #ifdef MAS_WRAP_FUNC
 int
-duf_action_wrap( void /* int argc, char **argv */ )
+duf_action_wrap( void /* int argc, char **argv */  )
 {
   DEBUG_STARTR( r );
 
   /* assert( !duf_levinfo_path( duf_config->pdi ) ); */
-  DORF( r, duf_action /* , argc, argv */ ); /* duf_action : duf_action.c */
+  DORF( r, duf_action /* , argc, argv */  ); /* duf_action : duf_action.c */
 #  if 0
   DORF( r, duf_main_db_info );
 #  endif

@@ -197,7 +197,7 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
 
 #if 1
     dirid = duf_dirname_pdistat2dirid_existed( pdi /* , duf_levinfo_itemname( pdi ), pstat_unused */ , node_selector2, pr );
-    DUF_TRACE( path, 0, "(%d) dirid before insert: %llu for '%s' at %llu", r, dirid, duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
+    DUF_TRACE( path, 2, "(%d) dirid before insert: %llu for '%s' at %llu", r, dirid, duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
 #endif
     if ( dirid <= 0 && caninsert && !duf_config->cli.disable.flag.insert )
     {
@@ -496,6 +496,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );
+    DUF_TRACE( path, 0, "@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
   {
     DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
     /* _duf_real_path2db

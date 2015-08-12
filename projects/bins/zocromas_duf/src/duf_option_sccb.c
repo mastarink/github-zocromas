@@ -63,12 +63,11 @@ duf_option_$_db_open( void )
 {
   ( void ) duf_main_db_open(  );
 }
-
 void
 duf_option_$_cd( const char *s )
 {
   int r = 0;
 
   if ( s && *s )
-    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, s, 0 /* caninsert */ , NULL ) );
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, s, 1 /* caninsert */ , NULL ) );
 }

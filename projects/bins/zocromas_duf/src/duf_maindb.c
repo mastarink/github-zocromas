@@ -119,6 +119,20 @@ duf_main_db_optionally_remove_files( void )
 }
 
 static int
+duf_main_db_create_tables( void )
+{
+  DEBUG_STARTR( r );
+  DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
+  /* DOR( r, duf_check_tables(  ) ); */
+  if ( DUF_CLI_FLAG( dry_run ) )
+    DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
+  else
+    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
+
+  DEBUG_ENDR( r );
+}
+
+static int
 duf_main_db_pre_action( void )
 {
   DEBUG_STARTR( r );
@@ -152,14 +166,9 @@ duf_main_db_pre_action( void )
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( VACUUM ) );
   }
 /* --create-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 && DUF_ACT_FLAG( create_tables ) )
+  if ( r >= 0 /* && DUF_ACT_FLAG( create_tables ) */  )
   {
-    DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
-    /* DOR( r, duf_check_tables(  ) ); */
-    if ( DUF_CLI_FLAG( dry_run ) )
-      DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
-    else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
+    DOR( r, duf_main_db_create_tables(  ) );
     global_status.actions_done++;
   }
   else
@@ -211,7 +220,7 @@ duf_main_db_tune( void )
   }
 #endif
 /* TODO : part to only after possible tables creation */
-  duf_eval_sql_sequence( &sql_beginning_common, 0, NULL ); /* PRAGMAs etc. */
+  DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL ) ); /* PRAGMAs etc. */
   DEBUG_ENDR( r );
 }
 
@@ -252,7 +261,7 @@ duf_main_db_close( int ra )
   DEBUG_ENDR( r );
 }
 
-static int
+static int DUF_UNUSED
 duf_store_log( int argc, char *const argv[] )
 {
   DEBUG_STARTR( r );
@@ -268,6 +277,7 @@ duf_store_log( int argc, char *const argv[] )
     sargv1 = mas_argv_string( argc, argv, 1 );
     sargv2 = duf_restore_some_options( argv[0] );
     DUF_TRACE( any, 0, "restored optd:%s", sargv2 );
+    DORF( r, duf_main_db_open );
     {
       static const char *sql = "INSERT OR IGNORE INTO " DUF_DBADMPREF "log (args, restored_args, msg) VALUES (:Args, :restoredArgs, '')";
 
@@ -335,8 +345,10 @@ duf_main_db( int argc, char **argv )
   DUF_SHOW_ERROR( "db not opened @ %s ( %s )", duf_config->db.main.fpath, duf_error_name( r ) );
   DUF_TEST_RX_END( r );
 
+#if 0
   if ( duf_config->targ.argc > 0 )
     DORF( r, duf_store_log, duf_config->targ.argc, duf_config->targ.argv );
+#endif
 
   DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  );
   DORF( r, duf_main_db_close, r );

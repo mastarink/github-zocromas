@@ -17,6 +17,8 @@
 
 #include "duf_sql2.h"
 
+#include "duf_maindb.h"
+
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_credel.h"
@@ -380,6 +382,7 @@ duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, 
     is = &( pdi->idstatements[pdi->num_idstatements] );
     pdi->num_idstatements++;
   }
+  DORF( r, duf_main_db_open );
   DOR( r, duf_sql_prepare( sql, &pstmt ) );
   if ( pstmt )
   {

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -250,6 +251,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
   const char *sc = getenv( "COLUMNS" );
   double delta = 0;
 
+  /* assert( curval <= maxval ); */
   if ( sc && *sc )
   {
     swidth = strtol( sc, NULL, 10 );
@@ -265,6 +267,7 @@ duf_percent( unsigned long long curval, unsigned long long maxval, const char *m
       memset( &bar, 0, sizeof( bar ) );
       gettimeofday( &tv, NULL );
       time0 = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+      /* fprintf( stderr,"\n@###@"); */
     }
     gettimeofday( &tv, NULL );
     timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;

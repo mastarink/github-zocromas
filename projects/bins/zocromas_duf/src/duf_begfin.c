@@ -10,6 +10,7 @@
 #include "duf_status_ref.h"
 
 /* #include "duf_path2db.h" */
+#include "duf_maindb.h"
 
 #include "duf_sql.h"
 #include "duf_sql2.h"
@@ -38,9 +39,10 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
 {
   DEBUG_STARTR( r );
 
-  if ( ssql /* && !ssql->done */ )
+  if ( ssql /* && !ssql->done */  )
   {
     const char **psql = ssql->sql;
+
 #ifdef MAS_TRACING
     const char **psql0 = psql;
 #endif
@@ -54,6 +56,7 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
 #endif
       DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
       /* r = duf_sql( *p, &changes ); */
+      DORF( r, duf_main_db_open );
 
       {
         DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );

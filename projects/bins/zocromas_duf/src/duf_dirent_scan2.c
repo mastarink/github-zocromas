@@ -32,12 +32,12 @@
  *
  * */
 static int
-duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
+duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner )
 {
   DEBUG_STARTR( r );
 
-  /* TODO - remove from here */
 #if 0
+  /* TODO - remove from here */
   /* DOR( r, duf_statat_dh( duf_levinfo_pdh( pdi ), duf_levinfo_pdh_up( pdi ), duf_levinfo_itemshowname( pdi ) ) ); */
 #else
   DOR( r, duf_levinfo_statat_dh( pdi ) );
@@ -45,14 +45,8 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dir
 
   if ( r >= 0 )
   {
-    duf_scan_hook2_dirent_t scanner;
-
-    scanner = duf_levinfo_is_leaf( pdi ) ? scan_dirent_reg2 : scan_dirent_dir2;
-    /* sccb->dirent_file_scan_before2 -- duf_scan_hook2_dirent_t */
-    /* sccb->dirent_dir_scan_before2 -- duf_scan_hook2_dirent_t */
-
     if ( scanner )
-      DOR( r, ( scanner ) (  /* pstmt, *//* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), *//* duf_levinfo_dirid_up( pdi ) , */ pdi ) );
+      DOR( r, ( scanner ) ( pdi ) );
   }
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {
@@ -78,11 +72,12 @@ duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
                           duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
 {
   DEBUG_STARTR( r );
+  int is_leaf;
 
-  r = duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , de->d_type != DT_DIR /* is_leaf */  );
-  if ( r >= 0 )
-    r = duf_scan_direntry2_here( pdi, scan_dirent_reg2, scan_dirent_dir2 );
-  duf_levinfo_goup( pdi );
+  is_leaf = de->d_type != DT_DIR;
+  DOR( r, duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , is_leaf ) );
+  DOR( r, duf_scan_direntry2_here( pdi, is_leaf ? scan_dirent_reg2 : scan_dirent_dir2 ) );
+  DOR( r, duf_levinfo_goup( pdi ) );
 
   DEBUG_ENDR( r );
 }

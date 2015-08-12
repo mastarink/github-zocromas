@@ -16,6 +16,7 @@
 #include "duf_cli_options.h"
 
 #include "duf_config_ref.h"
+#include "duf_maindb.h"
 
 /* #include "duf_pdi.h" */
 /* #include "duf_levinfo.h" */
