@@ -39,8 +39,6 @@ const duf_longval_extended_table_t optable_interactive = {
     * DO_OC: set: .m_hasoff=1, .m_offset = offsetof(duf_config_t, cli.act.v)
     * DO_FL: .afl.act={.interactive=1}
     * */
-   {.o = {DO_N( quit ) /*                */ , DO_A_N , DO_V( QUIT )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
-    /*      */ DO_OC( NOFLAG, cli.act.v ), DO_INTERACTIVE /*              */ , DO_H( get dir info ) /*                     */ },
 #if 0
    {.o = {DO_N( lsfiles ) /*             */ , DO_A_O, DO_V( LSFILES )} /*                                    */ , DO_CL( CONTROL ) /*    */ ,
     /*      */ DO_OC( PDISCCB, pdi ),.call = {.fdesc = {.hi = {.sccb = &duf_print_dir_callbacks}}}, DO_H( pdi cd ) /*      */ },

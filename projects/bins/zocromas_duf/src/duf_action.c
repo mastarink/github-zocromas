@@ -17,6 +17,7 @@
 
 
 #include "duf_cli_options.h"
+#include "duf_option_interactive.h"
 #include "duf_option_file.h"
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
@@ -200,53 +201,46 @@ duf_action( void )
 #else
   {
     int ia = duf_config->targ_offset;
+    duf_option_stage_t istage = DUF_OPTION_STAGE_FIRST;
 
 
+    DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
 
-    do
+
+    if ( duf_levinfo_path( duf_config->pdi ) )
     {
-      DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+      DOR( r, duf_cli_options( istage ) );
+#  if 1
+      /* TODO this will not work for path except first */
+      DUF_TRACE( options, 0, "@stage_first stdin_options" );
+      DOR( r, duf_stdin_options( istage ) );
+#  endif
+      DOR( r, duf_indirect_options( istage ) );
+    }
+    
+    DOR( r, duf_interactive_options( DUF_OPTION_STAGE_INTERACTIVE ) );
+    while ( r >= 0 && ia < duf_config->targ.argc )
+    {
+      istage = DUF_OPTION_STAGE_LOOP;
+      DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targ.argv[ia], 7 /* caninsert */ ,
+                                      NULL /* node_selector2 */  ) );
       if ( duf_levinfo_path( duf_config->pdi ) )
       {
-        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
-        DOR( r, duf_cli_options( DUF_OPTION_STAGE_FIRST ) );
-        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+        DOR( r, duf_cli_options( istage ) );
 #  if 1
-        if ( ia == 0 )
-        {
-          /* TODO this will not work for path except first */
-          DUF_TRACE( options, 0, "@stage_first stdin_options" );
-          DOR( r, duf_stdin_options( DUF_OPTION_STAGE_FIRST ) );
-        }
+        /* TODO this will not work for path except first */
+        DUF_TRACE( options, 0, "@stage_first stdin_options" );
+        DOR( r, duf_stdin_options( istage ) );
 #  endif
-
-        DOR( r, duf_indirect_options( DUF_OPTION_STAGE_FIRST ) );
+        DOR( r, duf_indirect_options( istage ) );
       }
-      DUF_TRACE( path, 0, "@ia:%d of %d; path@pdi: %s", ia, duf_config->targ.argc, duf_levinfo_path( duf_config->pdi ) );
-      if ( ia < duf_config->targ.argc )
-      {
-        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
-        DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targ.argv[ia], 7 /* caninsert */ ,
-                                        NULL /* node_selector2 */  ) );
-        ia++;
-      }
-      else
-      {
-        duf_pdi_close( duf_config->pdi );
-        assert( !duf_levinfo_path( duf_config->pdi ) );
-      }
-      DUF_TRACE( path, 0, "@ia:%d of %d; path@pdi: %s", ia, duf_config->targ.argc, duf_levinfo_path( duf_config->pdi ) );
+      ia++;
     }
-    while ( ( r >= 0 && duf_levinfo_path( duf_config->pdi ) ) );
     DUF_TRACE( path, 0, "@r:%d; %d ? %d; path@pdi: %s", r, ia, duf_config->targ.argc, duf_levinfo_path( duf_config->pdi ) );
   }
 #endif
   /* assert( duf_config->pdi->levinfo ); */
 
-  if ( DUF_ACT_FLAG( interactive ) && isatty( STDIN_FILENO ) )
-  {
-    DOR( r, duf_interactive(  ) );
-  }
   DUF_TRACE( explain, 0, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
   DUF_TRACE( explain, 0, "after actions" );
 

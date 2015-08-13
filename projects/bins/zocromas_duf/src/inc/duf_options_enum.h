@@ -28,7 +28,7 @@ typedef enum
   DUF_OPTION_VAL_ACTION_TRACE = 'A',
   DUF_OPTION_VAL_SCAN_TRACE = 'S',
   DUF_OPTION_VAL_TEMP_TRACE = '$',
-  DUF_OPTION_VAL_COLLECT_TRACE = 'I',
+  DUF_OPTION_VAL_COLLECT_TRACE = 'I', /* obsolete */
   DUF_OPTION_VAL_ANY_TRACE = 'y',
   DUF_OPTION_VAL_MATCH_TRACE = 'm',
   /* /trace */
@@ -287,7 +287,7 @@ typedef enum
   DUF_OPTION_VAL_FLAG_INFO,
 
   DUF_OPTION_VAL_CD,
-  DUF_OPTION_VAL_QUIT,
+  DUF_OPTION_VAL_FLAG_QUIT, /* same as no-interactive */
   DUF_OPTION_VAL_PWD,
 
 

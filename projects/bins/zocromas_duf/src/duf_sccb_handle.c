@@ -157,7 +157,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
       int rt = 0;
 
       TOTITEMS = duf_count_total_items( SCCB, &rt ); /* reference */
-      DUF_TRACE( temp, 0, "counted for %s... %lld", SCCB->title , TOTITEMS);
+      DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title , TOTITEMS);
 /* total_files for progress bar only :( */
       /* assert(TOTITEMS=38); */
       DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu", TOTITEMS );

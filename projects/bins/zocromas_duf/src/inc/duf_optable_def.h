@@ -1,7 +1,7 @@
 #ifndef DUF_OPTABLE_DEF_H
 #  define DUF_OPTABLE_DEF_H
 
-#include "duf_option_types.h"
+#  include "duf_option_types.h"
 /*
   for short (single-char) opts: add DO_V() or DO_VF()
              example: { .o = { .......  DO_V(SMART_HELP)} ... } ;;; DUF_OPTION_SMART_HELP should be defined as a char
@@ -45,7 +45,7 @@
                                          /* ,.setit=1 */
 #  define DO_FN(_t,_fld) DO_FL(_t,_fld),.invert=1
 /* #define DO_FL0(_t,_fld) .anfl._t={._fld=1} */
-#  define DO_INTERACTIVE DO_FL( act, interactive )
+/* #  define DO_INTERACTIVE DO_FL( act, interactive ) */
 
 #  define DO_SET_FUNC(_f) .func=duf_option_$_ ## _f
 #  define DO_XFUNC(_f)	    { DO_SET_FUNC(_f)	   }

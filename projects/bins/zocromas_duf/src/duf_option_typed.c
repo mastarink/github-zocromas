@@ -442,7 +442,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
         DUF_TRACE( options, 2, "vtype NOFLAG" );
         nof = !nof;
       case DUF_OPTION_VTYPE_FLAG:
-        DUF_TRACE( options, 2, "vtype FLAG" );
+        DUF_TRACE( options, 2, "vtype FLAG %x", extended->afl.bit );
         {
           if ( extended->invert )
             nof = !nof;

@@ -63,11 +63,39 @@ duf_option_$_db_open( void )
 {
   ( void ) duf_main_db_open(  );
 }
+
 void
 duf_option_$_cd( const char *s )
 {
   int r = 0;
 
+
   if ( s && *s )
-    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, s, 1 /* caninsert */ , NULL ) );
+  {
+    char *new_path = NULL;
+
+    if ( duf_levinfo_path( duf_config->pdi ) && *s && *s != '/' )
+    {
+      if ( *s != '/' )
+      {
+        new_path = mas_strdup( duf_levinfo_path( duf_config->pdi ) );
+        if ( new_path[strlen( new_path ) - 1] != '/' )
+          new_path = mas_strcat_x( new_path, "/" );
+        new_path = mas_strcat_x( new_path, s );
+      }
+      else
+      {
+        new_path = mas_strdup( s );
+      }
+    }
+    else if ( *s == '/' )
+    {
+      new_path = mas_strdup( s );
+    }
+    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_config->pdi ) );
+
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL ) );
+    DUF_TRACE( temp, 0, "(r:%d)", r );
+    mas_free( new_path );
+  }
 }

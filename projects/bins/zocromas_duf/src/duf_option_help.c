@@ -588,6 +588,17 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
 
   DUF_PRINTF( 0, "========================= as for 20150809.163906 ============" );
   DUF_PRINTF( 0, "  rm 1.tmp ; run  @scan-here.cmds   /home/mastar/tmp . --output-file=1.tmp ; l 1.tmp   	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150812.171929 ============" );
+  DUF_PRINTF( 0, "  run  -dR --cd=human --tree .auxdir/ human/   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run @test.cmds  /   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  rm  $MSHDIRS_DIR/lib/duf_db/temp.db ; shn m i r  --trace-path=0 --trace-temp=0 --cd=.auxdir/ @scan-here.cmds  human   	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0,
+              "  run --db-name=photo.20150812.124329.db   -dfR --lsf --same-as=/home/mastar/big/misc/media/photo/dvd/benq/benq/saltov/imag0154.jpg /   	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --db-name=photo.20150812.124329.db -dfR --glob='*.avi' --min-same=2 --tree /   	- %s", "-= \"\" =-" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

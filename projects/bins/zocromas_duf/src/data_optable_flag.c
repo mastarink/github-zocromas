@@ -25,9 +25,12 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "drop-tables" ) /*      */ , DO_A_N /* */ , DO_VF( DROP_TABLES )} /*       */ , DO_CL( SYSTEM ) /*  */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, drop_tables ) /*                       */ , DO_H( drop tables ) /*                      */ },
 
+   {.o = {DO_Q( "quit" ) /*             */ , DO_A_N /* */ , DO_VF( QUIT )} /*              */ , DO_CL( CONTROL ) /*    */ ,
+    /*      */ DO_OC( NOFLAG, cli.act.v ), DO_FL( act, interactive ) /*                    */ , DO_H( quit ) /*                             */ },
    {.o = {DO_Q( "add-path" ) /*         */ , DO_A_N /* */ , DO_VF( ADD_PATH )} /*          */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, add_path ) /*                          */ , DO_H( reg.init path ) /*                    */ },
-   {.o = {DO_Q( "collect" ) /*          */ , DO_A_N /* */ , DO_VF( COLLECT )} /*           */ , DO_CL( CONTROL ) /* */ ,
+
+   {.o = {DO_Q( "collect" ) /* OBSOLETE */ , DO_A_N /* */ , DO_VF( COLLECT )} /*           */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, collect ) /*                           */ , DO_H( collect mode ) /*                     */ },
    {.o = {DO_Q( "interactive" ) /*      */ , DO_A_N /* */ , DO_VF( INTERACTIVE )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*              */ },

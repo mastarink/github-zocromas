@@ -121,12 +121,13 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
     /* PF0( "table %s; search %s", xtable->o.name, string ); */
     DORN( r, duf_execute_cmd_long_xtable( string, xtable, vseparator, istage ) );
-    DUF_TRACE( options, ( r >= 0 ) ? 1 : 5, "executed cmd; r=%d; xs=%s", r, string );
+    DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
     if ( r > 0 )
       found += r;
     /* if ( r >= 0 ) */
     /*   break;      */
   }
+  DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
   if ( found )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   if ( r == DUF_ERROR_OPTION || r == DUF_ERROR_OPTION_NOT_FOUND )
@@ -141,6 +142,7 @@ duf_execute_cmd_long_xtables_std( const char *string, char vseparator, duf_optio
 {
   DEBUG_STARTR( r );
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
+  DUF_TRACE( options, 0, "(%d) executed cmd", r );
   DOR( r, duf_execute_cmd_long_xtables( string, lo_extended_table_multi, vseparator, istage ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }

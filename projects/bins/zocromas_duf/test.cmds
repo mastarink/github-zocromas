@@ -1,7 +1,7 @@
 recursive
-files
+#files
 directories
-open-db
+# open-db
 # cd=/home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf
-# cd=human
+cd=human
 evaluate-sccb=tree
