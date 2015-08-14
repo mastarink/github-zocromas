@@ -39,6 +39,7 @@ typedef struct
   char *sformat_files_gen;
   char *file;
   FILE *out;
+  char *history_filename;
 } duf_config_output_t;
 
 typedef struct

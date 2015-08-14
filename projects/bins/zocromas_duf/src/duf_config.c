@@ -153,6 +153,9 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.adm.name );
     cfg->db.adm.name = NULL;
 
+    mas_free( cfg->db.opened_name );
+    cfg->db.opened_name = NULL;
+
     mas_free( cfg->db.adm.fpath );
     cfg->db.adm.fpath = NULL;
 
@@ -196,6 +199,9 @@ duf_cfg_delete( duf_config_t * cfg )
 
       mas_free( cfg->cli.output.sformat_files_gen );
       cfg->cli.output.sformat_files_gen = NULL;
+
+      mas_free( cfg->cli.output.history_filename );
+      cfg->cli.output.history_filename = NULL;
 
       mas_free( cfg->cli.output.sformat_dirs_gen );
       cfg->cli.output.sformat_dirs_gen = NULL;

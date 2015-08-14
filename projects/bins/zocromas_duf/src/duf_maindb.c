@@ -229,12 +229,19 @@ duf_main_db_open( void )
 {
   DEBUG_STARTR( r );
 
+  DUF_TRACE( temp, 0, "db:%s : %s", duf_config->db.main.name, duf_config->db.opened_name );
+  if ( duf_config->db.opened_name && 0 != strcmp( duf_config->db.main.name, duf_config->db.opened_name ) )
+  {
+    DOR( r, duf_main_db_close( 0 ) );
+  }
   if ( !duf_config->db.opened )
   {
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
     DORF( r, duf_sql_open, duf_config->db.main.fpath );
     duf_config->db.opened = ( r >= 0 );
+    if ( r >= 0 )
+      duf_config->db.opened_name = mas_strdup( duf_config->db.main.name );
     DORF( r, duf_main_db_tune );
     DORF( r, duf_main_db_pre_action );
   }

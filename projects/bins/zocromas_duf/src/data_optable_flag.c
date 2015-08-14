@@ -34,6 +34,13 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, collect ) /*                           */ , DO_H( collect mode ) /*                     */ },
    {.o = {DO_Q( "interactive" ) /*      */ , DO_A_N /* */ , DO_VF( INTERACTIVE )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*              */ },
+
+
+   {.o = {DO_Q( "history-file" ) /*      */ , DO_A_R /* */ , DO_V( HISTORY_FILE )} /*      */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OC( STR, cli.output.history_filename ) /*                                 */ , DO_H( same md5 ) /*                         */ },
+
+
+
    {.o = {DO_Q( "fast" ) /*             */ , DO_A_N /* */ , DO_VF( FAST )} /*              */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, fast ) /*                              */ , DO_H(  ... ) /*              */ },
 #if 0

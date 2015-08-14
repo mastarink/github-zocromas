@@ -287,8 +287,10 @@ typedef enum
   DUF_OPTION_VAL_FLAG_INFO,
 
   DUF_OPTION_VAL_CD,
-  DUF_OPTION_VAL_FLAG_QUIT, /* same as no-interactive */
   DUF_OPTION_VAL_PWD,
+  DUF_OPTION_VAL_FLAG_QUIT,     /* same as no-interactive */
+  DUF_OPTION_VAL_HISTORY_FILE,
+
 
 
   DUF_OPTION_VAL_ADD_TARG,
