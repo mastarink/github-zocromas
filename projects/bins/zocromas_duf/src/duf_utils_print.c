@@ -30,11 +30,11 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
       fmt++;
     if ( ifexit )
     {
-      fprintf( out, "[DIE] @ %d:%d %3u:%-" FN_FMT ": ", level, minlevel, linid, pfuncid );
+      fprintf( out, "[DIE] @ %d:%d %3u:%-" P_FN_FMT "s: ", level, minlevel, linid, pfuncid );
     }
     else if ( rf == '+' )
     {
-      fprintf( out, "%d:%d %3u:%-" FN_FMT ": ", level, minlevel, linid, funcid );
+      fprintf( out, "%d:%d %3u:%-" P_FN_FMT "s: ", level, minlevel, linid, funcid );
     }
     {
       r = vfprintf( out, fmt, args );

@@ -37,8 +37,8 @@
 
 
 /* ########################################################################################## */
-static int scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
+static int print_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 
@@ -62,9 +62,9 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .no_progress = 1,
   .beginning_sql_seq = &sql_beginning_selected,
   /* .node_scan_before = scan_node_before, */
-  .node_scan_before2 = scan_node_before2,
-  /* .leaf_scan = scan_leaf, */
-  .leaf_scan2 = scan_leaf2,
+  .node_scan_before2 = print_node_before2,
+  /* .leaf_scan = print_leaf, */
+  .leaf_scan2 = print_leaf2,
   .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
 #if 0
@@ -85,7 +85,7 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
 /* ########################################################################################## */
 
 static int
-scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -195,7 +195,7 @@ scan_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

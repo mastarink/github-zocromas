@@ -82,9 +82,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .def_opendir = 1,
   /* .dirent_dir_scan_before = NULL, */
   /* .dirent_file_scan_before = NULL, */
-  /* .node_scan_before = collect_openat_md5_scan_node_before, */
-  /*  .leaf_scan =  collect_openat_md5_scan_leaf, */
-  /* .leaf_scan_fd = duf_scan_dirent_md5_content, */
+  /* .node_scan_before = collect_openat_md5_node_before, */
+  /*  .leaf_scan =  collect_openat_md5_leaf, */
+  /* .leaf_scan_fd = duf_dirent_md5_content, */
   .leaf_scan_fd2 = md5_dirent_content2,
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -320,7 +320,7 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
 }
 
 /* static int                                                                                                                          */
-/* duf_scan_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize ) */
+/* duf_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize ) */
 /* {                                                                                                                                   */
 /*   DEBUG_STARTR( r );                                                                                                                */
 /*   int ffd = duf_levinfo_dfd( pdi );                                                                                                 */
@@ -331,7 +331,7 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
 /*     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );                                                                                      */
 /*     if ( ffd > 0 )                                                                                                                  */
 /*     {                                                                                                                               */
-/*       r = duf_scan_dirent_md5_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );                                                */
+/*       r = duf_dirent_md5_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );                                                */
 /*     }                                                                                                                               */
 /*     else                                                                                                                            */
 /*     {                                                                                                                               */
@@ -350,14 +350,14 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
 
 /* callback of type duf_scan_hook_file_t */
 /* static int                                                                    */
-/* collect_openat_md5_scan_leaf( duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* collect_openat_md5_leaf( duf_depthinfo_t * pdi, duf_record_t * precord ) */
 /* {                                                                             */
 /*   DEBUG_STARTR( r );                                                                                                                */
 /*                                                                               */
 /*   DUF_SFIELD( filename );                                                     */
 /*   DUF_UFIELD( filesize );                                                     */
 /*   DEBUG_START(  );                                                            */
-/*   r = duf_scan_dirent_content_by_precord( pdi, precord, filename, filesize ); */
+/*   r = duf_dirent_content_by_precord( pdi, precord, filename, filesize ); */
 /*   DEBUG_ENDR( r );                                                            */
 /* }                                                                             */
 
@@ -365,7 +365,7 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
  * this is callback of type: duf_scan_hook_dir_t
  * */
 /* static int                                                                                                             */
-/* collect_openat_md5_scan_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
+/* collect_openat_md5_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
 /* {                                                                                                                      */
 /*   DEBUG_STARTR( r );                                                                                                   */
 /*   const char *real_path = NULL;                                                                                        */

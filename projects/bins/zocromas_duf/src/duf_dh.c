@@ -38,7 +38,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
   if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
   {
     r = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
-    DUF_TRACE( fs, 0, "lowlev. fstatated (%d) ≪%s≫", r, name );
+    DUF_TRACE( fs, 5, "lowlev. fstatated (%d) ≪%s≫", r, name );
 
     pdhandle->rs = r;
     if ( !pdhandle->rs )
@@ -97,7 +97,7 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
     int rs = 0;
 
     rs = stat( path, &pdhandle->st );
-    DUF_TRACE( fs, 0, "lowlev. stated (%d) ≪%s≫", r, path );
+    DUF_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", r, path );
     if ( rs < 0 )
       r = rs;
     pdhandle->rs = rs;
@@ -160,7 +160,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       r = openat( updfd, name, O_NOFOLLOW | O_RDONLY );
     else
       r = openat( updfd, openname, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-    DUF_TRACE( fs, 0, "lowlev. openated (%d) ≪%s≫", r, name );
+    DUF_TRACE( fs, 5, "lowlev. openated (%d) ≪%s≫", r, name );
 
     if ( r > 0 )
     {

@@ -39,18 +39,18 @@
 #if 1
 DUF_MOD_DECLARE_ALL_FUNCS( template )
 #else
-static int template_scan_init( duf_depthinfo_t * pdi );
-static int template_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
-static int template_dirent_file_scan_before2( duf_depthinfo_t * pdi );
-static int template_dirent_dir_scan_before2( duf_depthinfo_t * pdi );
+static int template_init( duf_depthinfo_t * pdi );
+static int template_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_node_before2_del( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_node_after2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_node_after2_del( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_node_middle2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_node_middle2_del( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_de_content2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_leaf2_del( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+static int template_de_file_before2( duf_depthinfo_t * pdi );
+static int template_de_dir_before2( duf_depthinfo_t * pdi );
 #endif
 
 static duf_sql_sequence_t final_sql = {.done = 0,
@@ -66,24 +66,25 @@ duf_scan_callbacks_t duf_template_callbacks = {
   .title = "module",
   .name = "template",
   .def_opendir = 0,
-  .init_scan = template_scan_init,
+  .init_scan = template_init,
 
-  .node_scan_before2 = template_scan_node_before2,
-  .node_scan_before2_deleted = template_scan_node_before2_deleted,
+  .node_scan_before2 = template_node_before2,
+  .node_scan_before2_deleted = template_node_before2_del,
 
-  .node_scan_after2 = template_scan_node_after2,
-  .node_scan_after2_deleted = template_scan_node_after2_deleted,
+  .node_scan_after2 = template_node_after2,
+  .node_scan_after2_deleted = template_node_after2_del,
 
-  .node_scan_middle2 = template_scan_node_middle2,
-  .node_scan_middle2_deleted = template_scan_node_middle2_deleted,
+  .node_scan_middle2 = template_node_middle2,
+  .node_scan_middle2_deleted = template_node_middle2_del,
 
-  .leaf_scan_fd2 = template_dirent_content2,
+  .leaf_scan_fd2 = template_de_content2,
+  .leaf_scan_fd2_deleted = template_de_content2_del,
 
-  .leaf_scan2 = template_scan_leaf2,
-  .leaf_scan2_deleted = template_scan_leaf2_deleted,
+  .leaf_scan2 = template_leaf2,
+  .leaf_scan2_deleted = template_leaf2_del,
 
-  .dirent_file_scan_before2 = template_dirent_file_scan_before2,
-  .dirent_dir_scan_before2 = template_dirent_dir_scan_before2,
+  .dirent_file_scan_before2 = template_de_file_before2,
+  .dirent_dir_scan_before2 = template_de_dir_before2,
 
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -130,7 +131,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
 /* ########################################################################################## */
 
 static int
-template_scan_init( duf_depthinfo_t * pdi )
+template_init( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -138,7 +139,7 @@ template_scan_init( duf_depthinfo_t * pdi )
 }
 
 static int
-template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, /* int fd_unused, *//* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+template_de_content2( duf_sqlite_stmt_t * pstmt_unused, /* int fd_unused, *//* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -149,7 +150,19 @@ template_dirent_content2( duf_sqlite_stmt_t * pstmt_unused, /* int fd_unused, */
 }
 
 static int
-template_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+template_de_content2_del( duf_sqlite_stmt_t * pstmt_unused, /* int fd_unused, *//* const struct stat *pst_file_needless, */
+                              duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+
+  /* assert( fd_unused == duf_levinfo_dfd( pdi ) ); */
+
+  DEBUG_ENDR( r );
+}
+
+static int
+template_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -157,7 +170,7 @@ template_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 }
 
 static int
-template_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+template_leaf2_del( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -165,41 +178,7 @@ template_scan_leaf2_deleted( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t *
 }
 
 static int
-template_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-
-  DEBUG_ENDR( r );
-}
-
-static int
-template_scan_node_before2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-
-  DEBUG_ENDR( r );
-}
-
-static int
-template_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-  DEBUG_ENDR( r );
-}
-
-static int
-template_scan_node_middle2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-  DEBUG_ENDR( r );
-}
-
-static int
-template_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+template_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -208,7 +187,16 @@ template_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lo
 }
 
 static int
-template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+template_node_before2_del( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+
+  DEBUG_ENDR( r );
+}
+
+static int
+template_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -216,7 +204,32 @@ template_scan_node_after2_deleted( duf_sqlite_stmt_t * pstmt_unused, /* unsigned
 }
 
 static int
-template_dirent_dir_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+template_node_middle2_del( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+  DEBUG_ENDR( r );
+}
+
+static int
+template_node_after2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+
+  DEBUG_ENDR( r );
+}
+
+static int
+template_node_after2_del( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long pathid_unused, */ duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+
+  DEBUG_ENDR( r );
+}
+
+static int
+template_de_dir_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   /* unsigned long long dirid = duf_levinfo_dirid_up( pdi ); */
@@ -225,7 +238,7 @@ template_dirent_dir_scan_before2(  /* const char *fname_unused, const struct sta
 }
 
 static int
-template_dirent_file_scan_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+template_de_file_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   /* unsigned long long dirid = duf_levinfo_dirid_up( pdi ); */

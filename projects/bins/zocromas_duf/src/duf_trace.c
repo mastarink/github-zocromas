@@ -112,7 +112,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
       for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" FN_FMT ":", signum, level, minlevel, uname, linid, pfuncid );
+      fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" T_FN_FMT "s:", signum, level, minlevel, uname, linid, pfuncid );
     }
 #ifndef DUF_NOTIMING
     rt = gettimeofday( &tv, NULL );

@@ -3,10 +3,12 @@
 
 #  include "duf_defs.h"
 
-/* #  define FN_FMT "29s" */
-#  define FN_FMT "32s"
-/* #  define FN_FMT "27s" */
-/* #  define FN_FMT "23s" */
+#  define P_FN_FMT "32"
+
+/* #  define T_FN_FMT "29" */
+/* #  define T_FN_FMT "32" */
+/* #  define T_FN_FMT "27" */
+#  define T_FN_FMT "21"
 
 
 

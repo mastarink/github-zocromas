@@ -80,6 +80,7 @@ struct duf_scan_callbacks_s
   duf_scan_hook2_file_t leaf_scan2_deleted;
   /* duf_scan_hook2_file_fd_t leaf_scan_fd2; */
   duf_scan_hook2_file_t leaf_scan_fd2;
+  duf_scan_hook2_file_t leaf_scan_fd2_deleted;
 
   duf_scan_hook2_dirent_t dirent_file_scan_before2;
   duf_scan_hook2_dirent_t dirent_dir_scan_before2;

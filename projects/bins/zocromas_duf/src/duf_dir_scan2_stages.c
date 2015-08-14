@@ -137,27 +137,22 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   PDI->items.total++;
   PDI->items.files++;
   /* dfd = duf_levinfo_dfd( PDI ); */
+  if ( !duf_levinfo_dfd( PDI ) )
+  {
+    DOR( r, duf_levinfo_openat_dh( PDI ) );
+  }
+
   if ( duf_levinfo_item_deleted( PDI ) )
   {
-#if 0
-    if ( SCCB->leaf_scan_fd2 )
-      DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
-#else
-    if ( SCCB->leaf_scan2_deleted )
-      DOR( r, SCCB->leaf_scan2_deleted( pstmt, /* duf_levinfo_stat( PDI ), */ PDI ) );
-#endif
+    if ( SCCB->leaf_scan_fd2_deleted )
+      DOR( r, SCCB->leaf_scan_fd2_deleted( pstmt, /* duf_levinfo_stat( PDI ), */ PDI ) );
   }
   else
   {
     /* assert( dfd ); */
     if ( SCCB->leaf_scan_fd2 )
     {
-      if ( !duf_levinfo_dfd( PDI ) )
-      {
-        DOR( r, duf_levinfo_openat_dh( PDI ) );
-      }
-
-      assert( duf_levinfo_dfd( PDI ) );
+      assert( duf_levinfo_dfd( PDI ) || duf_levinfo_item_deleted( PDI ) );
       DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
     }
   }

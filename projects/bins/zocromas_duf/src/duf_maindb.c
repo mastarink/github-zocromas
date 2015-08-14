@@ -229,7 +229,7 @@ duf_main_db_open( void )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( temp, 0, "db:%s : %s", duf_config->db.main.name, duf_config->db.opened_name );
+  /* DUF_TRACE( temp, 0, "db:%s : %s", duf_config->db.main.name, duf_config->db.opened_name ); */
   if ( duf_config->db.opened_name && 0 != strcmp( duf_config->db.main.name, duf_config->db.opened_name ) )
   {
     DOR( r, duf_main_db_close( 0 ) );
