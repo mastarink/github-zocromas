@@ -74,7 +74,6 @@ static duf_sql_sequence_t final_sql = {.done = 0,
 
 /* ########################################################################################## */
 
-
 duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .title = "collect md5",
   .name = "md5",
@@ -92,11 +91,11 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
   .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            " , fn.name AS filename, fd.size AS filesize " /* */
-           " , fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           " , fd.dev, fd.uid, fd.gid, fd.nlink, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            " , md.dup5cnt AS nsame " /* */
            " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
            " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
-           ", fd.md5id AS md5id" /* */
+           " , fd.md5id AS md5id" /* */
            ,
            .selector2 =         /* */
            /* "SELECT %s " */
@@ -106,9 +105,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
-           " fd.md5id IS NULL AND " /* */
+           " fd.md5id   IS NULL AND " /* */
            " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND" /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
            "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND" /* */
            " fn.Pathid=:parentdirID " /* */
            ,
@@ -166,23 +165,20 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
   {
     if ( !duf_config->cli.disable.flag.insert )
     {
-      if ( 1 )
-      {
-        static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "md5 ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
+#if 1
+      static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "md5 ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
 
-        DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, msg );
-        DUF_SQL_START_STMT( pdi, insert_md5, sql, lr, pstmt );
-        DUF_TRACE( insert, 0, "S:%s", sql );
-        DUF_SQL_BIND_LL( md5sum1, md64[1], lr, pstmt );
-        DUF_SQL_BIND_LL( md5sum2, md64[0], lr, pstmt );
-        DUF_SQL_STEP( lr, pstmt );
-        DUF_SQL_CHANGES( changes, lr, pstmt );
-        DUF_SQL_END_STMT( insert_md5, lr, pstmt );
-      }
-      else
-      {
-        lr = duf_sql( "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
-      }
+      DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, msg );
+      DUF_SQL_START_STMT( pdi, insert_md5, sql, lr, pstmt );
+      DUF_TRACE( insert, 0, "S:%s", sql );
+      DUF_SQL_BIND_LL( md5sum1, md64[1], lr, pstmt );
+      DUF_SQL_BIND_LL( md5sum2, md64[0], lr, pstmt );
+      DUF_SQL_STEP( lr, pstmt );
+      DUF_SQL_CHANGES( changes, lr, pstmt );
+      DUF_SQL_END_STMT( insert_md5, lr, pstmt );
+#else
+      lr = duf_sql( "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+#endif
     }
     duf_pdi_reg_changes( pdi, changes );
     if ( ( lr == DUF_SQL_CONSTRAINT || !lr ) && !changes )
@@ -191,8 +187,8 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       {
         duf_scan_callbacks_t sccb = {.leaf.fieldset = "md5id" };
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
-        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF,
-                             &csccbh,
+        lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
+                             &csccbh, /* */
                              "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
       }
     }
@@ -282,33 +278,78 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 }
 
 static int
-md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
+duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
 {
   DEBUG_STARTR( r );
-  unsigned char amd5r[MD5_DIGEST_LENGTH];
   unsigned char amd5[MD5_DIGEST_LENGTH];
+  int fd;
+
+  memset( amd5, 0, sizeof( amd5 ) );
+  fd = duf_levinfo_dfd( pdi );
+  r = duf_make_md5_uni( fd, amd5 );
+  /* reverse */
+  for ( int i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
+    pmdr[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
+
+
+  DEBUG_ENDR( r );
+}
+
+static int
+md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+#if 0
+  unsigned long long data[MD5_DIGEST_LENGTH * sizeof( unsigned char ) / sizeof( unsigned long long )];
+
+  DUF_UFIELD2( filedataid );
+  DUF_SFIELD2( filename );
+  DUF_TRACE( md5, 0, "+ %s", filename );
+
+  if ( duf_config->cli.disable.flag.calculate )
+    r = 0;
+  else
+    DOR( r, duf_make_md5r_uni( pdi, ( unsigned char * ) data ) );
+
+  if ( r >= 0 )
+  {
+    unsigned long long md5id = 0;
+
+    DUF_TRACE( md5, 0, "insert %s", filename );
+
+
+    md5id = duf_insert_md5_uni( pdi, data, filename /* for dbg message only */ , 1 /*need_id */ , &r );
+    if ( r >= 0 && md5id )
+    {
+      int changes = 0;
+
+      pdi->cnts.dirent_content2++;
+      if ( r >= 0 && !duf_config->cli.disable.flag.update )
+        DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, md5id, filedataid ) );
+      duf_pdi_reg_changes( pdi, changes );
+      DUF_TEST_R( r );
+    }
+    DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", data[1], data[0], md5id );
+    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
+  }
+#else
+  unsigned char amd5r[MD5_DIGEST_LENGTH];
 
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
   DUF_TRACE( md5, 0, "+ %s", filename );
 
-  memset( amd5, 0, sizeof( amd5 ) );
-  DUF_TRACE( md5, 0, "+ %s", filename );
-  if ( !duf_config->cli.disable.flag.calculate )
-    r = duf_make_md5_uni( duf_levinfo_dfd( pdi ), amd5 );
-  DUF_TRACE( md5, 0, "+ %s", filename );
-  DUF_TEST_R( r );
-  /* reverse */
-  for ( int i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
-    amd5r[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
+  if ( duf_config->cli.disable.flag.calculate )
+    r = 0;
+  else
+    DOR( r, duf_make_md5r_uni( pdi, amd5r ) );
 
   if ( r >= 0 )
   {
     unsigned long long md5id = 0;
-    unsigned long long *pmd;
+    unsigned long long *pmd = ( unsigned long long * ) &amd5r;
 
-    pmd = ( unsigned long long * ) &amd5r;
     DUF_TRACE( md5, 0, "insert %s", filename );
 
 
@@ -317,6 +358,7 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
     {
       int changes = 0;
 
+      pdi->cnts.dirent_content2++;
       if ( r >= 0 && !duf_config->cli.disable.flag.update )
         DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, md5id, filedataid ) );
       duf_pdi_reg_changes( pdi, changes );
@@ -325,6 +367,7 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
+#endif
   DEBUG_ENDR( r );
 }
 
