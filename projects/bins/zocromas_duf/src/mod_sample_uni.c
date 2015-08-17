@@ -32,7 +32,7 @@
 /* #include "duf_sample_uni.h" */
 /* ###################################################################### */
 
-static int sample_entry_dir2( duf_depthinfo_t * pdi );
+static int sample_entry_dir2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
 static int sample_scan_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
 static int sample_scan_node_after2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
 static int sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
@@ -410,7 +410,7 @@ sample_scan_node_middle2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long lon
 }
 
 static int
-sample_entry_dir2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+sample_entry_dir2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   /* assert( 0 == strcmp( fname_unused, duf_levinfo_itemname( pdi ) ) ); */

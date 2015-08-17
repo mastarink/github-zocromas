@@ -123,6 +123,53 @@ DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( before );
 DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( middle );
 DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( after );
 
+int
+duf_qscan_any_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh, const char *stagename, duf_scan_hook2_dir_t scanner,
+                    duf_scan_hook2_dir_t scanner_deleted )
+{
+  DEBUG_STARTR( r );
+  unsigned long long diridpdi;
+
+  diridpdi = duf_levinfo_dirid( PDI );
+  if ( DUF_ACT_FLAG( dirs ) )
+  {
+    PDI->items.total++;
+    PDI->items.dirs++;
+
+    if ( duf_levinfo_item_deleted( PDI ) )
+    {
+      if ( scanner_deleted )
+      {
+        /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */
+        DOR( r, ( scanner_deleted ) ( pstmt, /* diridpdi, */ PDI ) );
+      }
+      DUF_TRACE( deleted, 0, "DELETED" );
+    }
+    else if ( scanner )
+    {
+      /* scanner = SCCB->node_scan_ ## stagename ## 2 */
+      DOR( r, ( scanner ) ( pstmt, /* diridpdi, */ PDI ) );
+    }
+    else
+    {
+      DUF_TRACE( scan, 4, "NOT scan node %s2 by %5llu - sccb->node_scan_%s2 empty for %s",
+                 stagename, diridpdi, stagename, duf_uni_scan_action_title( SCCB ) );
+    }
+    DUF_TEST_R( r );
+  }
+  else if ( scanner )
+  {
+    DUF_TRACE( explain, 1, "to scan node %s2 use %s", stagename, DUF_OPT_NAME( FLAG_DIRS ) );
+    DUF_TRACE( scan, 1, "to scan node %s2 use %s", stagename, DUF_OPT_NAME( FLAG_DIRS ) );
+  }
+  else
+  {
+    DUF_TRACE( scan, 4, "NOT scan %s2 ( -d or --dirs absent )", stagename );
+  }
+
+  DEBUG_ENDR( r );
+}
+
 /*
  * this is callback of type: duf_str_cb_t (first range; str_cb)
  *

@@ -7,6 +7,7 @@
 
 typedef int ( *duf_scan_hook_init_t ) ( duf_depthinfo_t * pdi );
 
+typedef int ( *duf_scanner_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned long long pathid, */ duf_depthinfo_t * pdi );
 
 /* this is callback of type: duf_scan_hook_dir_t : */
 typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned long long pathid, */ duf_depthinfo_t * pdi );
@@ -17,7 +18,8 @@ typedef int ( *duf_scan_hook2_item_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinf
 
 typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat * pst_file, */ duf_depthinfo_t * pdi );
 
-typedef int ( *duf_scan_hook2_dirent_t ) ( /* const char *fname, const struct stat * pstat, */ /* unsigned long long dirid, */ duf_depthinfo_t * pdi );
+typedef int ( *duf_scan_hook2_dirent_t ) (  /* const char *fname, const struct stat * pstat, *//* unsigned long long dirid, */ duf_depthinfo_t *
+                                           pdi );
 
 typedef int ( *duf_anyhook_t ) ( void );
 
@@ -33,9 +35,11 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_hand
  * duf_sel_cb_leaf		:		, sel_cb_udata_unused
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
-typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */ * sccbh );
+#  if 0
+typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
+#  endif
 
 typedef struct
 {
@@ -57,14 +61,35 @@ struct duf_scan_callbacks_s
 
   unsigned use_std_node;
   duf_sql_set_t node;
-  
+
   unsigned use_std_leaf;
   duf_sql_set_t leaf;
-  
+
   unsigned count_nodes:1;
   unsigned no_progress:1;
   /* const char *leaf_selector_total2; */
 
+#  if 1
+  duf_scanner_t init_scan;
+
+  duf_scanner_t node_scan_before2;
+  duf_scanner_t node_scan_before2_deleted;
+
+  duf_scanner_t node_scan_middle2;
+  duf_scanner_t node_scan_middle2_deleted;
+
+  duf_scanner_t node_scan_after2;
+  duf_scanner_t node_scan_after2_deleted;
+
+  duf_scanner_t leaf_scan2;
+  duf_scanner_t leaf_scan2_deleted;
+  /* duf_scanner_t leaf_scan_fd2; */
+  duf_scanner_t leaf_scan_fd2;
+  duf_scanner_t leaf_scan_fd2_deleted;
+
+  duf_scanner_t dirent_file_scan_before2;
+  duf_scanner_t dirent_dir_scan_before2;
+#  else
   duf_scan_hook_init_t init_scan;
 
   duf_scan_hook2_dir_t node_scan_before2;
@@ -84,7 +109,7 @@ struct duf_scan_callbacks_s
 
   duf_scan_hook2_dirent_t dirent_file_scan_before2;
   duf_scan_hook2_dirent_t dirent_dir_scan_before2;
-
+#  endif
   duf_sql_sequence_t *beginning_sql_seq;
   duf_sql_sequence_t *final_sql_seq;
 };
@@ -94,12 +119,12 @@ typedef struct duf_scan_callbacks_s duf_scan_callbacks_t;
 struct duf_sccb_handle_s
 {
   unsigned long long total_items;
-#if 0
+#  if 0
   int targc;
   char *const *targv;
-#else
+#  else
   duf_cargvc_t parg;
-#endif
+#  endif
   const duf_ufilter_t *pu;
   duf_depthinfo_t *pdi;
   unsigned long long changes;

@@ -80,7 +80,7 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
 /* ########################################################################################## */
 
 static int
-dummy_init( duf_depthinfo_t * pdi )
+dummy_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -257,7 +257,7 @@ dummy_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 }
 
 static int
-dummy_de_dir_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+dummy_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -293,7 +293,7 @@ dummy_de_dir_before2(  /* const char *fname_unused, const struct stat *pstat_unu
 }
 
 static int
-dummy_de_file_before2(  /* const char *fname_unused, const struct stat *pstat_unused, */ duf_depthinfo_t * pdi )
+dummy_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 

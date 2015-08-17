@@ -36,6 +36,9 @@
 
 
 /* ########################################################################################## */
+static int register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+
+/* ########################################################################################## */
 
 
 static duf_sql_sequence_t final_sql = {.done = 0,
@@ -115,7 +118,7 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
-  .dirent_file_scan_before2 = /* register_pdifiledata == */ duf_pdistat2file,
+  .dirent_file_scan_before2 = register_pdifiledata,
 
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
@@ -168,3 +171,8 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
 };
 
 /* ########################################################################################## */
+static int
+register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
+{
+  return duf_pdistat2file( pdi );
+}

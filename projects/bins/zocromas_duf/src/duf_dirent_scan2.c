@@ -32,7 +32,11 @@
  *
  * */
 static int
+#if 0
 duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner )
+#else
+duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
+#endif
 {
   DEBUG_STARTR( r );
 
@@ -47,7 +51,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner 
   {
     /* call hook frmo mod_ */
     if ( scanner )
-      DOR( r, ( scanner ) ( pdi ) );
+      DOR( r, ( scanner ) ( NULL /* pstmt */ , pdi ) );
   }
   else if ( r == DUF_ERROR_STATAT_ENOENT )
   {
@@ -69,8 +73,12 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner 
  *
  * */
 static int
+#if 0
 duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
                           duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
+#else
+duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+#endif
 {
   DEBUG_STARTR( r );
   int is_leaf;
@@ -84,7 +92,11 @@ duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
 }
 
 static int
+#if 0
 _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
+#else
+_duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
+#endif
 {
   DEBUG_STARTR( r );
 
@@ -159,7 +171,8 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner_diren
  * scanner_dirent_dir2 - reg (file) entry scanner function
  * */
 int
-duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
+duf_scan_dirents2( duf_depthinfo_t * pdi, /* duf_scan_hook2_dirent_t */ duf_scanner_t scanner_dirent_reg2, /* duf_scan_hook2_dirent_t */
+                   duf_scanner_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   /* const struct stat *pst_parent; */

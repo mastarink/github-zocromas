@@ -63,6 +63,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
     if ( sqlt )
     {
       const char *csql;
+
 /*
  * TODO: counting by 'dry' pass, by db is bad
  * for instance: selected_paths does NOT contain "fileless" directories
@@ -178,7 +179,7 @@ TODO scan mode
     if ( sccb->init_scan )
     {
       DUF_TRACE( explain, 0, "to init scan" );
-      DUF_DO_TEST_R( r, sccb->init_scan( pdi ) );
+      DUF_DO_TEST_R( r, sccb->init_scan( NULL /* pstmt */ , pdi ) );
     }
     else
     {

@@ -38,7 +38,8 @@
 #include "sql_beginning_tables.h"
 
 /* ########################################################################################## */
-static int register_pdidirectory( duf_depthinfo_t * pdi );
+static int register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi );
+
 /* ########################################################################################## */
 
 static duf_sql_sequence_t final_sql = /* */
@@ -102,6 +103,7 @@ static duf_sql_sequence_t final_sql = /* */
           NULL,
           }
 };
+
 /* ########################################################################################## */
 
 duf_scan_callbacks_t duf_directories_callbacks = {
@@ -173,7 +175,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 
 /* make sure dir name in db */
 static int
-register_pdidirectory(  /* const char *fname_unused, const struct stat *pst_dir_unused, */ duf_depthinfo_t * pdi )
+register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   int changes = 0;
