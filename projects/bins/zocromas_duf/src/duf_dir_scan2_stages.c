@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <string.h>
+#include <stddef.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -124,8 +126,8 @@ DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( middle );
 DUF_QSCAN_NODE_IMPLEMENT_FUNCTION( after );
 
 int
-duf_qscan_any_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh, const char *stagename, duf_scan_hook2_dir_t scanner,
-                    duf_scan_hook2_dir_t scanner_deleted )
+_duf_qscan_any_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh, const char *stagename, duf_scan_hook2_dir_t scanner,
+                     duf_scan_hook2_dir_t scanner_deleted )
 {
   DEBUG_STARTR( r );
   unsigned long long diridpdi;
@@ -170,6 +172,7 @@ duf_qscan_any_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh, const 
   DEBUG_ENDR( r );
 }
 
+
 /*
  * this is callback of type: duf_str_cb_t (first range; str_cb)
  *
@@ -184,7 +187,6 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   /* int dfd; */
-
   PDI->items.total++;
   PDI->items.files++;
   /* dfd = duf_levinfo_dfd( PDI ); */
@@ -220,7 +222,6 @@ static int
 duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-
 #ifdef MAS_TRACING
 #endif
   PDI->items.total++;
@@ -268,7 +269,6 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
     duf_pdi_set_opendir( PDI, 1 );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 0, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-
     {
 #if 1
       if ( !duf_levinfo_stat( PDI ) )
@@ -289,7 +289,8 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
   }
   else
   {
-    DUF_TRACE( scan, 10, "NOT scan dirent_dir by %5llu - sccb->dirent_dir_scan_before2 empty and sccb->dirent_file_scan_before2 for %s",
+    DUF_TRACE( scan, 10,
+               "NOT scan dirent_dir by %5llu - sccb->dirent_dir_scan_before2 empty and sccb->dirent_file_scan_before2 for %s",
                duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ) );
   }
 #if 0
@@ -314,7 +315,6 @@ int
 duf_qscan_files_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-
 /* duf_scan_files_by_pathid:
  * call sccb->leaf_scan (or sccb->leaf_scan wrapped by duf_str_cb_leaf_scan) + pdi (also) as str_cb_udata
  * 			for each <file> record by dirID with corresponding args
@@ -359,7 +359,6 @@ duf_qscan_dirs_by_dirid2( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /
 /* duf_scan_db_items2:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
-
 /* calling duf_sel_cb_(node|leaf) for each record by node.selector2 */
   /*
    *
