@@ -223,6 +223,8 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
     PDI->seq++;
     PDI->seq_node++;
+    DUF_TRACE( temp, 2, "TOTITEMS: %llu", TOTITEMS );
+
     if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
     {
       m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;

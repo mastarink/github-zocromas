@@ -58,8 +58,9 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 
       if ( !pdhuplev->dfd )
         DOR( r, duf_levinfo_openat_dh_d( pdi, d - 1 ) );
+      assert( r < 0 || pdhuplev->dfd );
       DOR( r, duf_statat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname ) );
-      assert( pdhlev->st.st_dev );
+      assert( r < 0 || pdhlev->st.st_dev );
       DUF_TRACE( fs, 10, "(%d)? levinfo statated %s", r, pdi->levinfo[d].itemname );
     }
     if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT ) /* FIXME ?? */
@@ -79,7 +80,7 @@ DUF_LEVINFO_F_UP( int, statat_dh )
 int
 duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
   assert( pdi->levinfo );
@@ -122,8 +123,8 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
     else                        /* d > 0 ! */
     {
       if ( !pdhuplev->dfd )
-        DOR( r, duf_levinfo_openat_dh_d( pdi, d - 1 ) );
-      assert( pdhuplev->dfd );
+        DOR_NOE( r, duf_levinfo_openat_dh_d( pdi, d - 1 ), DUF_ERROR_FS_DISABLED );
+      assert( r <= 0 || pdhuplev->dfd );
 
       DOR_NOE( r, duf_openat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ), duf_levinfo_is_leaf_d( pdi, d ) ), DUF_ERROR_OPENAT_ENOENT );
       DUF_TRACE( fs, r < 0 ? 0 : 2, "(%d)? levinfo openated %s : %s; dfd:%d", r, duf_levinfo_path_d( pdi, d ), duf_levinfo_itemshowname_d( pdi, d ),
@@ -131,7 +132,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
     }
     if ( r >= 0 )
     {
-      assert( pdhlev->dfd );
+      assert( r <= 0 || pdhlev->dfd );
     }
     if ( r == DUF_ERROR_OPEN_ENOENT || r == DUF_ERROR_OPENAT_ENOENT )
     {
@@ -141,8 +142,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
       r = 0;
     }
   }
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_F( int, openat_dh )
@@ -152,7 +152,7 @@ DUF_LEVINFO_F_UP( int, openat_dh )
 int
 duf_levinfo_dbopenat_dh( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int is_leaf )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int d = pdi->depth;
 
   assert( pdi );
@@ -192,14 +192,13 @@ duf_levinfo_dbopenat_dh( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int i
       /* mas_free( sp ); */
     }
   }
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 int
 duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
   int d = pdi->depth;
   char *real_path = NULL;
 
@@ -250,8 +249,7 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 /*       mas_free( real_path );                 */
 /* #endif                                       */
 /*     }                                        */
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }
 
 /************************************************************************/
@@ -262,8 +260,16 @@ int
 duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
+#if 0
   if ( pdi->opendir || duf_levinfo_dfd_d( pdi, d ) )
-    r = duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh );
+    DOR( r, duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
+#else
+  DOR( r, duf_levinfo_dfd_d( pdi, d ) );
+#endif
+  /*
+   * duf_levinfo_dfd_d( pdi, d )    returns : duf_levinfo_ptr_d( pdi, d )->lev_dh.dfd
+   * duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) returns :  duf_levinfo_ptr_d( pdi, d )->lev_dh->dfd
+   */
   DEBUG_ENDR( r );
 }
 
@@ -280,7 +286,7 @@ duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
   DEBUG_STARTR( r );
 
   if ( duf_levinfo_dfd_d( pdi, d ) )
-    r = duf_close_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh );
+    DOR( r, duf_close_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
   assert( duf_levinfo_dfd_d( pdi, d ) == 0 );
 
   DEBUG_ENDR( r );

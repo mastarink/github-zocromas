@@ -8,6 +8,10 @@ tab sfind mod_filenames_uni.c
 
 tab sfind mod_filedata_uni.c
 
+tab sfind duf_filedata.c
+sfind duf_filedata.h
+
+
 tab sfind mod_directories_uni.c
 
 tab sfind mod_sample_uni.c

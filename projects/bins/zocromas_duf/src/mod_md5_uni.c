@@ -106,8 +106,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
-           " fd.md5id IS NULL AND" /* */
-           " sz.size > 0 AND" "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND" /* */
+           " fd.md5id IS NULL AND " /* */
+           " sz.size > 0 AND "  /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND" /* */
            "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND" /* */
            " fn.Pathid=:parentdirID " /* */
            ,
@@ -117,10 +118,10 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-           " WHERE "            /* */
-           " fd.md5id IS NULL AND" /* */
-           " sz.size > 0 AND"   /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND" /* */
+           "    WHERE "         /* */
+           " fd.md5id IS NULL AND " /* */
+           " sz.size > 0 AND "  /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
            "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND" /* */
            " 1 "                /* */
            }
@@ -167,7 +168,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     {
       if ( 1 )
       {
-        static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES (:md5sum1,:md5sum2)";
+        static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "md5 ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
 
         DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, msg );
         DUF_SQL_START_STMT( pdi, insert_md5, sql, lr, pstmt );
@@ -222,7 +223,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
 }
 
 static int
-duf_make_md5_uni( int fd, unsigned char *pmd5 )
+duf_make_md5_uni( int fd, unsigned char *pmd )
 {
   DEBUG_STARTR( r );
   size_t bufsz = 1024 * 1024 * 1;
@@ -236,32 +237,37 @@ duf_make_md5_uni( int fd, unsigned char *pmd5 )
     buffer = mas_malloc( bufsz );
     if ( buffer )
     {
-      if ( MD5_Init( &ctx ) != 1 )
+      if ( !duf_config->cli.disable.flag.calculate && ( MD5_Init( &ctx ) != 1 ) )
         DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
       DUF_TEST_R( r );
-      while ( r >= 0 )
       {
-        int rr;
+        int maxcnt = 0;
+        int cnt = 0;
 
-        DUF_TRACE( md5, 10, "read fd:%u", fd );
-        rr = read( fd, buffer, bufsz );
-        DUF_TRACE( md5, 10, "read rr:%u", rr );
-        if ( rr < 0 )
+        while ( r >= 0 && ( maxcnt == 0 || cnt++ < maxcnt ) )
         {
-          DUF_ERRSYS( "read file" );
+          int rr;
 
-          DUF_MAKE_ERROR( r, DUF_ERROR_READ );
+          DUF_TRACE( md5, 10, "read fd:%u", fd );
+          rr = read( fd, buffer, bufsz );
+          DUF_TRACE( md5, 10, "read rr:%u", rr );
+          if ( rr < 0 )
+          {
+            DUF_ERRSYS( "read file" );
+
+            DUF_MAKE_ERROR( r, DUF_ERROR_READ );
+            DUF_TEST_R( r );
+            break;
+          }
+          if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
+          {
+            if ( MD5_Update( &ctx, buffer, rr ) != 1 )
+              DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
+          }
+          if ( rr <= 0 )
+            break;
           DUF_TEST_R( r );
-          break;
         }
-        if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
-        {
-          if ( MD5_Update( &ctx, buffer, rr ) != 1 )
-            DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
-        }
-        if ( rr <= 0 )
-          break;
-        DUF_TEST_R( r );
       }
       mas_free( buffer );
     }
@@ -270,7 +276,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd5 )
       DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
     }
   }
-  if ( MD5_Final( pmd5, &ctx ) != 1 )
+  if ( !duf_config->cli.disable.flag.calculate && MD5_Final( pmd, &ctx ) != 1 )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
@@ -289,7 +295,8 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
 
   memset( amd5, 0, sizeof( amd5 ) );
   DUF_TRACE( md5, 0, "+ %s", filename );
-  r = duf_make_md5_uni( duf_levinfo_dfd( pdi ), amd5 );
+  if ( !duf_config->cli.disable.flag.calculate )
+    r = duf_make_md5_uni( duf_levinfo_dfd( pdi ), amd5 );
   DUF_TRACE( md5, 0, "+ %s", filename );
   DUF_TEST_R( r );
   /* reverse */
@@ -299,22 +306,24 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
   if ( r >= 0 )
   {
     unsigned long long md5id = 0;
-    unsigned long long *pmd5;
+    unsigned long long *pmd;
 
-    pmd5 = ( unsigned long long * ) &amd5r;
+    pmd = ( unsigned long long * ) &amd5r;
     DUF_TRACE( md5, 0, "insert %s", filename );
-    md5id = duf_insert_md5_uni( pdi, pmd5, filename /* for dbg message only */ , 1 /*need_id */ , &r );
+
+
+    md5id = duf_insert_md5_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
     if ( r >= 0 && md5id )
     {
       int changes = 0;
 
       if ( r >= 0 && !duf_config->cli.disable.flag.update )
-        r = duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, md5id, filedataid );
+        DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, md5id, filedataid ) );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd5[1], pmd5[0], md5id );
-    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd5[1], pmd5[0], md5id ); */
+    DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
+    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
   DEBUG_ENDR( r );
 }

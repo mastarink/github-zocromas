@@ -77,7 +77,11 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 {
   int r = 0;
 
-  if ( !duf_config->cli.disable.flag.fs )
+  if ( duf_config->cli.disable.flag.fs )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+  }
+  else
   {
     r = _duf_statat_dh( pdhandle, pdhandleup, name );
   }
@@ -205,7 +209,11 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 {
   int r = 0;
 
-  if ( !duf_config->cli.disable.flag.fs )
+  if ( duf_config->cli.disable.flag.fs )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+  }
+  else
   {
     r = _duf_openat_dh( pdhandle, pdhandleup, name, asfile );
   }
@@ -272,7 +280,11 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   int r = 0;
 
-  if ( !duf_config->cli.disable.flag.fs )
+  if ( duf_config->cli.disable.flag.fs )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+  }
+  else
   {
     r = _duf_open_dh( pdhandle, path );
   }
@@ -299,7 +311,11 @@ duf_opened_dh( duf_dirhandle_t * pdhandle )
 {
   int r = 0;
 
-  if ( !duf_config->cli.disable.flag.fs )
+  if ( duf_config->cli.disable.flag.fs )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+  }
+  else
   {
     r = _duf_opened_dh( pdhandle );
   }
@@ -350,7 +366,11 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
 {
   int r = 0;
 
-  if ( !duf_config->cli.disable.flag.fs )
+  if ( duf_config->cli.disable.flag.fs )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
+  }
+  else
   {
     r = _duf_close_dh( pdhandle );
   }
@@ -371,7 +391,7 @@ duf_check_dh( const char *msg )
 {
   int r = 0;
 
-  if ( 1 || !duf_config->cli.disable.flag.fs )
+  /* if ( !duf_config->cli.disable.flag.fs ) */
   {
     r = _duf_check_dh( msg );
   }

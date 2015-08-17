@@ -63,8 +63,12 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
     if ( sqlt )
     {
       const char *csql;
-
+/*
+ * TODO: counting by 'dry' pass, by db is bad
+ * for instance: selected_paths does NOT contain "fileless" directories
+ */
       csql = sqlt;
+      DUF_TRACE( temp, 0, "count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
       duf_bind_ufilter_uni( pstmt );
       DUF_SQL_STEP( r, pstmt );
@@ -74,6 +78,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
         r = 0;
       }
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      DUF_TRACE( temp, 0, "counted %llu SIZED files in db", cnt );
       DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
     }
     mas_free( sqlt );
@@ -157,7 +162,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
       int rt = 0;
 
       TOTITEMS = duf_count_total_items( SCCB, &rt ); /* reference */
-      DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title , TOTITEMS);
+      DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title, TOTITEMS );
 /* total_files for progress bar only :( */
       /* assert(TOTITEMS=38); */
       DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu", TOTITEMS );

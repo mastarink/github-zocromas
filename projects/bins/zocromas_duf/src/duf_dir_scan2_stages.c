@@ -137,25 +137,30 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   PDI->items.total++;
   PDI->items.files++;
   /* dfd = duf_levinfo_dfd( PDI ); */
+#if 1
+  if ( !duf_levinfo_opened_dh( PDI ) )
+#else
   if ( !duf_levinfo_dfd( PDI ) )
+#endif
   {
-    DOR( r, duf_levinfo_openat_dh( PDI ) );
+    DOR_NOE( r, duf_levinfo_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
   }
 
   if ( duf_levinfo_item_deleted( PDI ) )
   {
     if ( SCCB->leaf_scan_fd2_deleted )
-      DOR( r, SCCB->leaf_scan_fd2_deleted( pstmt, /* duf_levinfo_stat( PDI ), */ PDI ) );
+      DOR( r, SCCB->leaf_scan_fd2_deleted( pstmt, PDI ) );
   }
   else
   {
     /* assert( dfd ); */
     if ( SCCB->leaf_scan_fd2 )
     {
-      assert( duf_levinfo_dfd( PDI ) || duf_levinfo_item_deleted( PDI ) );
-      DOR( r, SCCB->leaf_scan_fd2( pstmt, /* dfd, *//* duf_levinfo_stat( PDI ), */ PDI ) );
+      assert( r < 0 || duf_levinfo_opened_dh( PDI ) || duf_levinfo_item_deleted( PDI ) );
+      DOR_NOE( r, SCCB->leaf_scan_fd2( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
     }
   }
+  /* DUF_CLEAR_ERROR( r, DUF_ERROR_FS_DISABLED ); */
   DEBUG_ENDR( r );
 }
 
@@ -214,21 +219,23 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 0, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-#if 1
-    if ( !duf_levinfo_stat( PDI ) )
     {
-      /* DOR( r, duf_levinfo_openat_dh( PDI ) ); */
-      DOR( r, duf_levinfo_statat_dh( PDI ) );
-    }
-    /* assert( duf_levinfo_dfd( PDI ) ); */
-    assert( duf_levinfo_stat( PDI ) );
+#if 1
+      if ( !duf_levinfo_stat( PDI ) )
+      {
+        /* DOR( r, duf_levinfo_openat_dh( PDI ) ); */
+        DOR_NOE( r, duf_levinfo_statat_dh( PDI ), DUF_ERROR_FS_DISABLED );
+      }
+      /* assert( duf_levinfo_dfd( PDI ) ); */
+      assert( r < 0 || duf_levinfo_stat( PDI ) );
 #endif
+    }
     /*
      *   -- call for each direntry
      *      - for directory                - sccb->dirent_dir_scan_before2
      *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
      * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, duf_scan_dirents2( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
+    DOR_NOE( r, duf_scan_dirents2( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ), DUF_ERROR_FS_DISABLED );
   }
   else
   {
@@ -243,6 +250,7 @@ duf_qscan_dirents2( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh 
     DOR( r, duf_count_db_items2( NULL /* duf_match_leaf2 */ , sccbh, sql_set ) ); /* count for possibly --progress */
   }
 #endif
+  /* DUF_CLEAR_ERROR( r, DUF_ERROR_FS_DISABLED ); */
   DEBUG_ENDR( r );
 }
 

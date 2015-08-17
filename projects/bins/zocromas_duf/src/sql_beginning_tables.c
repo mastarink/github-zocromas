@@ -15,6 +15,7 @@ duf_sql_sequence_t sql_beginning_tables = {
 #ifndef DUF_SQL_TABLES_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHTOT_FILES_FULL /* */ ,
 #endif
+          /* CREATE TABLE common_pathtot_files AS SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize FROM filenames AS fn LEFT JOIN filedatas AS fd ON( fn.dataid = fd.rowid ) GROUP BY fn.Pathid */
           "CREATE " DUF_SQL_TABLES_TEMPORARY_STRING " TABLE " DUF_SQL_TABLES_PATHTOT_FILES_FULL /* */
           " AS "                /* */
           " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
@@ -29,6 +30,7 @@ duf_sql_sequence_t sql_beginning_tables = {
 #ifndef DUF_SQL_TABLES_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHTOT_DIRS_FULL /* */ ,
 #endif
+	  /* CREATE TABLE common_pathtot_dirs AS SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM paths AS pts LEFT JOIN paths ON( pts.parentid = paths.rowid )  JOIN paths AS parents ON( parents.rowid = paths.parentid ) GROUP BY parents.rowid */
           "CREATE " DUF_SQL_TABLES_TEMPORARY_STRING " TABLE " DUF_SQL_TABLES_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
           " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) " /* */

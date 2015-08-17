@@ -61,7 +61,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
 int
 duf_levinfo_delete( duf_depthinfo_t * pdi )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
   assert( pdi );
   assert( pdi->levinfo );
@@ -77,6 +77,5 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
     mas_free( pdi->levinfo );
     pdi->levinfo = NULL;
   }
-  DUF_TEST_R( r );
-  return r;
+  DEBUG_ENDR( r );
 }

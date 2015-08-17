@@ -138,7 +138,7 @@ shn_gvimer_plus_anywhere ()
 	  return 0
 	fi
       fi
-      shn_errmsg "no file:$file at server '$ser'"
+#     shn_errmsg "no buffer:$file at server '$ser'"
     done
   done
   return 1
