@@ -16,6 +16,15 @@ sfind duf_dirent_scan2.h
 tab sfind duf_item_scan2.c
 sfind duf_item_scan2.h
 
+tab sfind duf_sel_cb_leaf.c
+sfind duf_sel_cb_leaf.h
+
+tab sfind duf_pstmt_levinfo.c
+sfind duf_pstmt_levinfo.h
+
+tab sfind duf_sel_cb_node.c
+sfind duf_sel_cb_node.h
+
 tab sfind duf_ufilter.c
 sfind duf_ufilter.h
 

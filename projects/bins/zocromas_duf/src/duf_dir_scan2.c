@@ -54,7 +54,7 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
  * */
 #if 1
   duf_str_cb2_t stages[] = {
-    duf_qscan_dirents2,
+    duf_qscan_dirents2, /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
     duf_qscan_node_scan_before2,
     duf_qscan_files_by_dirid2,
     duf_qscan_node_scan_middle2,

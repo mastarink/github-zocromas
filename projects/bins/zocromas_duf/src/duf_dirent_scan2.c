@@ -26,8 +26,8 @@
  *
  * 1. call. get stat
  * 2. call
- *      for directory                - scan_dirent_dir2
- *      for other (~ regular) entry  - scan_dirent_reg2
+ *      for directory                - scanner_dirent_dir2
+ *      for other (~ regular) entry  - scanner_dirent_reg2
  * 3. up one level
  *
  * */
@@ -45,6 +45,7 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner 
 
   if ( r >= 0 )
   {
+    /* call hook frmo mod_ */
     if ( scanner )
       DOR( r, ( scanner ) ( pdi ) );
   }
@@ -62,28 +63,28 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner 
  * 1. down 1 level
  * 2. call. get stat
  * 3. call
- *      for directory                - scan_dirent_dir2
- *      for other (~ regular) entry  - scan_dirent_reg2
+ *      for directory                - scanner_dirent_dir2
+ *      for other (~ regular) entry  - scanner_dirent_reg2
  * 4. up one level
  *
  * */
 static int
 duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
-                          duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
+                          duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   int is_leaf;
 
   is_leaf = de->d_type != DT_DIR;
   DOR( r, duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , is_leaf ) );
-  DOR( r, duf_scan_direntry2_here( pdi, is_leaf ? scan_dirent_reg2 : scan_dirent_dir2 ) );
+  DOR( r, duf_scan_direntry2_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
   DOR( r, duf_levinfo_goup( pdi ) );
 
   DEBUG_ENDR( r );
 }
 
 static int
-_duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
+_duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
 
@@ -100,7 +101,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
   {
     extern duf_scan_callbacks_t duf_dummy_callbacks;
 
-    DUF_TRACE( scan, 0, "scan dirent (nlist:%d) hooks d:%p; r:%p; %p !!", nlist, scan_dirent_dir2, scan_dirent_reg2,
+    DUF_TRACE( scan, 0, "scan dirent (nlist:%d) hooks d:%p; r:%p; %p !!", nlist, scanner_dirent_dir2, scanner_dirent_reg2,
                duf_dummy_callbacks.dirent_dir_scan_before2 );
   }
 
@@ -113,11 +114,11 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
     {
       /*
        * call for each direntry
-       *   for directory                - scan_dirent_dir2
-       *   for other (~ regular) entry  - scan_dirent_reg2
+       *   for directory                - scanner_dirent_dir2
+       *   for other (~ regular) entry  - scanner_dirent_reg2
        * */
       DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_scan_direntry2_lower( list[il], pdi, scan_dirent_reg2, scan_dirent_dir2 ) );
+      DOR( r, duf_scan_direntry2_lower( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
 
       if ( list[il] )
         free( list[il] );
@@ -150,15 +151,15 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_r
  * 2. filter them with duf_direntry_filter
  * 3. call duf_scan_direntry2 for each:
  *             -- call for each direntry
- *               - for directory                - scan_dirent_dir2
- *               - for other (~ regular) entry  - scan_dirent_reg2
+ *               - for directory                - scanner_dirent_dir2
+ *               - for other (~ regular) entry  - scanner_dirent_reg2
  *
  * pdi
- * scan_dirent_reg2 - dir entry scanner function
- * scan_dirent_dir2 - reg (file) entry scanner function
+ * scanner_dirent_reg2 - dir entry scanner function
+ * scanner_dirent_dir2 - reg (file) entry scanner function
  * */
 int
-duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_reg2, duf_scan_hook2_dirent_t scan_dirent_dir2 )
+duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   /* const struct stat *pst_parent; */
@@ -175,7 +176,7 @@ duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_re
 
   assert( duf_levinfo_stat_dev( pdi ) );
 
-  DUF_TRACE( scan, 0, "scan dirent hooks d:%d; r:%d", scan_dirent_dir2 ? 1 : 0, scan_dirent_reg2 ? 1 : 0 );
+  DUF_TRACE( scan, 0, "scan dirent hooks d:%d; r:%d", scanner_dirent_dir2 ? 1 : 0, scanner_dirent_reg2 ? 1 : 0 );
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
   if (  /* r || !pst_parent || */ !( S_ISDIR( duf_levinfo_stat_mode( pdi ) ) ) )
   {
@@ -190,7 +191,7 @@ duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scan_dirent_re
   }
   else
   {
-    r = _duf_scan_dirents2( pdi, scan_dirent_reg2, scan_dirent_dir2 );
+    r = _duf_scan_dirents2( pdi, scanner_dirent_reg2, scanner_dirent_dir2 );
   }
   DEBUG_ENDR( r );
 }

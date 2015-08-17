@@ -121,7 +121,8 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
-  .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fd.size AS filesize" /* */
+  .leaf = {.fieldset = "fn.Pathid AS dirid, fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
+           ", 0 as ndirs, 0 as nfiles" /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks, strftime('%s', fd.mtim) AS mtime " /* */
            ", dup5cnt AS nsame" /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid, fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */

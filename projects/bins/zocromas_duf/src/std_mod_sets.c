@@ -15,7 +15,8 @@
 duf_sql_set_t std_leaf_set = {
   .fieldset =                   /* */
         "  fn.Pathid AS dirid " /* */
-        ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
+	", 0 as ndirs, 0 as nfiles" /* */
+        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
         ", fd.size AS filesize " /* */
         ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
         ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -69,7 +70,8 @@ duf_sql_set_t std_node_set = {
 duf_sql_set_t std_ns_leaf_set = {
   .fieldset =                   /* */
         "  fn.Pathid AS dirid " /* */
-        ", fn.name AS filename, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
+	", 0 as ndirs, 0 as nfiles" /* */
+        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
         ", fd.size AS filesize " /* */
         ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
         ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
@@ -123,7 +125,8 @@ duf_sql_set_t std_ns_node_set = {
 
 duf_sql_set_t std_leaf_set__ = {
   .fieldset = "fn.pathid AS dirid " /* */
-        ", fn.name AS filename, fd.size AS filesize" /* */
+        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
+	", 0 as ndirs, 0 as nfiles" /* */
         ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
         " , strftime('%s',fd.mtim) AS mtime " /* */
         ", dup5cnt AS nsame "   /* */

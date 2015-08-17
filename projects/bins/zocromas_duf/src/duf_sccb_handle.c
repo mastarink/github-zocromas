@@ -68,7 +68,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
  * for instance: selected_paths does NOT contain "fileless" directories
  */
       csql = sqlt;
-      DUF_TRACE( temp, 0, "count by %s", csql );
+      DUF_TRACE( temp, 5, "count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
       duf_bind_ufilter_uni( pstmt );
       DUF_SQL_STEP( r, pstmt );
@@ -78,7 +78,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
         r = 0;
       }
       DUF_SQL_END_STMT_NOPDI( r, pstmt );
-      DUF_TRACE( temp, 0, "counted %llu SIZED files in db", cnt );
+      DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
       DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
     }
     mas_free( sqlt );

@@ -64,7 +64,8 @@ duf_scan_callbacks_t duf_sample_callbacks = {
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset = "fn.pathid AS dirid " /* */
-           ", fn.name AS filename, fd.size AS filesize" /* */
+           ", 0 as ndirs, 0 as nfiles" /* */
+           ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", dup5cnt AS nsame " /* */
            ", fd." DUF_SQL_IDNAME " AS filenameid" /* */

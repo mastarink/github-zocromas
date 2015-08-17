@@ -59,6 +59,7 @@
 	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
 	  { \
 	    DUF_TRACE( scan, 4, "scan node " #stagename "2_deleted by %5llu", diridpdi ); \
+	     /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */ \
 	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ PDI ) ); \
 	  } \
 	  DUF_TRACE( deleted, 0, "DELETED" ); \
@@ -66,6 +67,7 @@
 	else if ( SCCB->node_scan_ ## stagename ## 2 ) \
 	{ \
 	  DUF_TRACE( scan, 4, "scan node " #stagename "2 by %5llu", diridpdi ); \
+	  /* scanner = SCCB->node_scan_ ## stagename ## 2 */ \
 	  DOR( r, SCCB->node_scan_ ## stagename ## 2( pstmt, /* diridpdi, */ PDI ) ); \
 	} \
 	else \
@@ -102,11 +104,13 @@
 	{ \
 	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
 	  { \
+	  /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */ \
 	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, PDI ) ); \
 	  } \
 	} \
 	else if ( SCCB->node_scan_ ## stagename ## 2 ) \
 	{ \
+	  /* scanner = SCCB->node_scan_ ## stagename ## 2 */ \
 	  DOR( r, SCCB->node_scan_ ## stagename ## 2( pstmt, PDI ) ); \
 	} \
 	DUF_TEST_R( r ); \
@@ -146,21 +150,13 @@ duf_str_cb2_leaf_scan_fd( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
     DOR_NOE( r, duf_levinfo_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
   }
 
-  if ( duf_levinfo_item_deleted( PDI ) )
+  assert( r < 0 || duf_levinfo_opened_dh( PDI ) || duf_levinfo_item_deleted( PDI ) );
   {
-    if ( SCCB->leaf_scan_fd2_deleted )
-      DOR( r, SCCB->leaf_scan_fd2_deleted( pstmt, PDI ) );
-  }
-  else
-  {
-    /* assert( dfd ); */
-    if ( SCCB->leaf_scan_fd2 )
-    {
-      assert( r < 0 || duf_levinfo_opened_dh( PDI ) || duf_levinfo_item_deleted( PDI ) );
-      DOR_NOE( r, SCCB->leaf_scan_fd2( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
-    }
-  }
-  /* DUF_CLEAR_ERROR( r, DUF_ERROR_FS_DISABLED ); */
+    duf_scan_hook2_file_t scanner = duf_levinfo_item_deleted( PDI ) ? SCCB->leaf_scan_fd2_deleted : SCCB->leaf_scan_fd2;
+
+    if ( scanner )
+      DOR_NOE( r, scanner( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+  }                             /* DUF_CLEAR_ERROR( r, DUF_ERROR_FS_DISABLED ); */
   DEBUG_ENDR( r );
 }
 
@@ -179,14 +175,14 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   DEBUG_STARTR( r );
 
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
 #endif
   PDI->items.total++;
   PDI->items.files++;
-
+  DUF_TRACE( fs, 0, "@ %d:%s ", duf_levinfo_item_deleted( PDI ), duf_levinfo_itemshowname( PDI ) );
+#if 0
   if ( duf_levinfo_item_deleted( PDI ) )
   {
-    DUF_TRACE( fs, 0, "@ %d:%s ", duf_levinfo_item_deleted( PDI ), duf_levinfo_itemshowname( PDI ) );
+    DUF_SFIELD2( filename );
     if ( SCCB->leaf_scan2_deleted )
       DOR( r, SCCB->leaf_scan2_deleted( pstmt, PDI ) );
     DUF_TRACE( deleted, 0, "DELETED '%s%s'", duf_levinfo_path( PDI ), filename );
@@ -196,7 +192,14 @@ duf_str_cb2_leaf_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
     if ( SCCB->leaf_scan2 )
       DOR( r, SCCB->leaf_scan2( pstmt, PDI ) );
   }
+#else
+  {
+    duf_scan_hook2_file_t scanner = duf_levinfo_item_deleted( PDI ) ? SCCB->leaf_scan2_deleted : SCCB->leaf_scan2;
 
+    if ( scanner )
+      DOR_NOE( r, scanner( pstmt, PDI ), DUF_ERROR_FS_DISABLED );
+  }
+#endif
   DEBUG_ENDR( r );
 }
 
