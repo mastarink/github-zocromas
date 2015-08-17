@@ -96,10 +96,10 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            /* "SELECT %s " */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
            "    WHERE "         /* */
-           " fd.crc32id IS NULL AND " /* */
+           " ( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) AND " /* */
            " sz.size > 0 AND "  /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
            " fn.Pathid=:parentdirID " /* */
@@ -108,8 +108,9 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
            "    WHERE "         /* */
-           " fd.crc32id IS NULL AND " /* */
+           " ( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) AND " /* */
            " sz.size > 0 AND "  /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
            " 1 "                /* */

@@ -90,11 +90,11 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            /* "SELECT %s " */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
-           " fd.sd5id IS NULL AND " /* */
+           " ( fd.sd5id   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL ) AND " /* */
            " sz.size > 0 AND "  /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND" /* */
            " fn.Pathid=:parentdirID " /* */
@@ -102,11 +102,11 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            "    WHERE "         /* */
-           " fd.sd5id IS NULL AND " /* */
+           " ( fd.sd5id   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL ) AND " /* */
            " sz.size > 0 AND "  /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
            " 1 "                /* */

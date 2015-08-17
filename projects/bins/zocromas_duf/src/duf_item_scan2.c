@@ -235,7 +235,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
       if ( m > 0 )
       {
-        assert( PDI->seq_node <= m );
+        /* assert( PDI->seq_node <= m ); FIXME counters! */
         duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
       }
     }
