@@ -44,6 +44,7 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
   const duf_sql_set_t *set = NULL;
 
   assert( sccb );
+
   switch ( sccb->use_std_node )
   {
   case 0:

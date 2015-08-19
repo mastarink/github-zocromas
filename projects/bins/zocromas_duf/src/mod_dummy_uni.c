@@ -150,7 +150,7 @@ dummy_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 #endif
 
 
-  DUF_TRACE( mod, 1, "dummy %s -a-", duf_levinfo_path( pdi ) );
+  DUF_TRACE( mod, 1, "dummy %s : %s -a-", duf_levinfo_path( pdi ), filename );
   DUF_TRACE( mod, 2, "dummy %s : %s -b- ::  {%d:%d} x%llx", duf_levinfo_itemshowname( pdi ), filename, duf_levinfo_dfd( pdi ),
              duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
 

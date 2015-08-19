@@ -41,11 +41,13 @@
  *  - pstmt - for 1 node data, obtained from db
  *  - pdi
  *  - sccb
+ *
+ *  duf_sccbh_eval_db_node_before
  * */
 #ifdef MAS_TRACING
 #  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_scan_db_node_## stagename ## _with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_sccbh_eval_db_node_## stagename( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
       unsigned long long diridpdi; \
@@ -94,7 +96,7 @@
 #else
 #  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_scan_db_node_## stagename ## _with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_scan_db_node_## stagename ## _with_sccbh( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
  \
@@ -126,67 +128,17 @@ DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( before );
 DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( middle );
 DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( after );
 
-int
-_duf_qscan_any_scan( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh, const char *stagename, duf_scan_hook2_dir_t scanner,
-                     duf_scan_hook2_dir_t scanner_deleted )
-{
-  DEBUG_STARTR( r );
-#ifdef MAS_TRACING
-  unsigned long long diridpdi;
-
-  diridpdi = duf_levinfo_dirid( PDI );
-#endif
-  if ( DUF_ACT_FLAG( dirs ) )
-  {
-    PDI->items.total++;
-    PDI->items.dirs++;
-
-    if ( duf_levinfo_item_deleted( PDI ) )
-    {
-      if ( scanner_deleted )
-      {
-        /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */
-        DOR( r, ( scanner_deleted ) ( pstmt, PDI ) );
-      }
-      DUF_TRACE( deleted, 0, "DELETED" );
-    }
-    else if ( scanner )
-    {
-      /* scanner = SCCB->node_scan_ ## stagename ## 2 */
-      DOR( r, ( scanner ) ( pstmt, PDI ) );
-    }
-    else
-    {
-      DUF_TRACE( scan, 4, "NOT scan node %s2 by %5llu - sccb->node_scan_%s2 empty for %s",
-                 stagename, diridpdi, stagename, duf_uni_scan_action_title( SCCB ) );
-    }
-    DUF_TEST_R( r );
-  }
-  else if ( scanner )
-  {
-    DUF_TRACE( explain, 1, "to scan node %s2 use %s", stagename, DUF_OPT_NAME( FLAG_DIRS ) );
-    DUF_TRACE( scan, 1, "to scan node %s2 use %s", stagename, DUF_OPT_NAME( FLAG_DIRS ) );
-  }
-  else
-  {
-    DUF_TRACE( scan, 4, "NOT scan %s2 ( -d or --dirs absent )", stagename );
-  }
-
-  DEBUG_ENDR( r );
-}
-
-
 /*
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:
  *
- * call from duf_sccbh_eval_pdi_dirs(_wrap)
+ * call from duf_eval_sccbh_all(_wrap)
  *
  * fn of type: duf_str_cb2_t
  * */
 
 int
-duf_scan_fs_items_with_sccb( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   if ( SCCB->dirent_dir_scan_before2 || SCCB->dirent_file_scan_before2 )
@@ -210,7 +162,7 @@ duf_scan_fs_items_with_sccb( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t
      *      - for directory                - sccb->dirent_dir_scan_before2
      *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
      * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR_NOE( r, duf_scan_dirents2( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ), DUF_ERROR_FS_DISABLED );
+    DOR_NOE( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ), DUF_ERROR_FS_DISABLED );
   }
   else
   {
@@ -237,7 +189,7 @@ duf_scan_fs_items_with_sccb( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t
  *  */
 
 int
-duf_scan_db_items_with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
+duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 /* duf_scan_files_by_pathid:
@@ -251,14 +203,13 @@ duf_scan_db_items_with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccb
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     if ( SCCB->leaf_scan_fd2 )
     {
-      /* duf_str_cb2_leaf_scan_fd is just a wrapper for sccb->leaf_scan_fd2 */
-
-      DOR( r, duf_scan_db_items_with_str_cb( DUF_NODE_LEAF, duf_str_cb2_leaf_scan_fd, sccbh ) );
+      /* duf_eval_sccbh_db_leaf_fd_str_cb is just a wrapper for sccb->leaf_scan_fd2 */
+      DOR( r, duf_eval_sccbh_db_items_str_cb( DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_fd_str_cb, sccbh ) );
     }
     if ( SCCB->leaf_scan2 )
     {
-      /* duf_str_cb2_leaf_scan is just a wrapper for sccb->leaf_scan2 */
-      DOR( r, duf_scan_db_items_with_str_cb( DUF_NODE_LEAF, duf_str_cb2_leaf_scan, sccbh ) );
+      /* duf_eval_sccbh_db_leaf_str_cb is just a wrapper for sccb->leaf_scan2 */
+      DOR( r, duf_eval_sccbh_db_items_str_cb( DUF_NODE_LEAF, duf_eval_sccbh_db_leaf_str_cb, sccbh ) );
     }
   }
   else if ( SCCB->leaf_scan_fd2 )
@@ -273,7 +224,7 @@ duf_scan_db_items_with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccb
 }
 
 int
-duf_scan_db_subnodes_with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /*, duf_str_cb2_t str_cb2 */  )
+duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /*, duf_str_cb2_t str_cb2 */  )
 {
   DEBUG_STARTR( r );
   const char *node_selector2 = NULL;
@@ -281,20 +232,20 @@ duf_scan_db_subnodes_with_sccb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * s
   assert( sccbh );
   assert( SCCB );
   /* scan directories in this directory */
-/* duf_scan_db_items_with_str_cb:
+/* duf_eval_sccbh_db_items_str_cb:
  * call str_cb + str_cb_udata for each record by this sql with corresponding args
  * */
 /* calling duf_sel_cb_(node|leaf) for each record by node.selector2 */
   /*
    *
    * str_cb2 (sub-item scanner):
-   *       duf_sccbh_eval_pdi_dirs(_wrap)
-   *     ( duf_str_cb2_leaf_scan    )
-   *     ( duf_str_cb2_leaf_scan_fd )
+   *       duf_eval_sccbh_all(_wrap)
+   *     ( duf_eval_sccbh_db_leaf_str_cb    )
+   *     ( duf_eval_sccbh_db_leaf_fd_str_cb )
    * */
   node_selector2 = duf_get_node_sql_set( SCCB )->selector2;
   if ( node_selector2 )
-    DORF( r, duf_scan_db_items_with_str_cb, DUF_NODE_NODE, DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ) /* str_cb2 */ ,
+    DORF( r, duf_eval_sccbh_db_items_str_cb, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ) /* str_cb2 */ ,
           sccbh );
   DEBUG_ENDR( r );
 }

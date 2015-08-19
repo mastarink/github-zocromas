@@ -25,7 +25,7 @@
 /* ###################################################################### */
 
 
-/* duf_sccbh_eval_pdi_dirs:
+/* duf_eval_sccbh_all:
  *  -= Walk (scan) dirs from DB =-
  *
  * consecutively call various scanner stages with the sccb
@@ -41,13 +41,13 @@
  * */
 
 DUF_WRAPSTATIC int
-duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+duf_eval_sccbh_all( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
 
   assert( SCCB );
-  DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
+  DUF_TRACE( scan, 4, "@[%llu] %s", duf_levinfo_dirid( PDI ), duf_levinfo_path(PDI) );
   /* duf_scan_qbeginning_sql( SCCB ); */
 /*
  * call corresponding callback (by dir/regular)
@@ -55,12 +55,12 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
  *                                     -- see duf_dir_scan2_stages.c
  * */
   duf_str_cb2_t stages[] = {
-    duf_scan_fs_items_with_sccb,         /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
-    duf_scan_db_node_before_with_sccb,
-    duf_scan_db_items_with_sccb,
-    duf_scan_db_node_middle_with_sccb,
-    duf_scan_db_subnodes_with_sccb,
-    duf_scan_db_node_after_with_sccb,
+    duf_sccbh_eval_fs_items,         /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
+    duf_sccbh_eval_db_node_before,
+    duf_sccbh_eval_db_leaves,
+    duf_sccbh_eval_db_node_middle,
+    duf_sccbh_eval_db_subnodes,
+    duf_sccbh_eval_db_node_after,
     NULL
   };
   for ( duf_str_cb2_t * pstage = stages; *pstage; pstage++ )
@@ -84,7 +84,7 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
 /* duf_scan_dirs_by_pdi_wrap          ( duf_scan_dirs_by_parentid )
  *  -= Walk (scan) dirs from DB =-
  *
- * see duf_sccbh_eval_pdi_dirs
+ * see duf_eval_sccbh_all
  *
  * str_cb2 (sub-item scanner) one of:
  *       duf_scan_dirs_by_pdi_maxdepth
@@ -92,7 +92,7 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
  *     ( duf_str_cb2_scan_file_fd )
  * */
 #ifdef MAS_WRAP_FUNC
-int DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
+int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
@@ -120,7 +120,7 @@ int DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ) ( duf_sqlite_stmt_t * pstmt_selector,
 #  endif
   if ( !SCCB->disabled )
   {                             /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR( r, duf_sccbh_eval_pdi_dirs( pstmt_selector, /* str_cb2_unused, */ sccbh ) );
+    DOR( r, duf_eval_sccbh_all( pstmt_selector, /* str_cb2_unused, */ sccbh ) );
   }
 
   DUF_TRACE( scan, 3, "[%llu]  : scan end      +" DUF_DEPTH_PFMT "", diridpid, duf_pdi_depth( PDI ) );

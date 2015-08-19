@@ -23,6 +23,7 @@
 #include "duf_pdi.h"
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
+#include "duf_leaf_scan2.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_pstmt_levinfo.h"
@@ -54,6 +55,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan leaf2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 leaf" );
+
+  assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 
 
 #if 1
@@ -96,6 +99,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     {
       DUF_TRACE( explain, 2, "=> str cb2" );
       DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
+      assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
       if ( r == DUF_ERROR_OPENAT_ENOENT )
         r = 0;

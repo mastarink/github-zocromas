@@ -14,32 +14,30 @@
 
 #include "duf_config_ref.h"
 
-#include "duf_pdi.h"
-
 #include "duf_sccb.h"
 #include "duf_sccb_eval_dirs.h"
 #include "duf_sccb_handle.h"
-#include "duf_sccbh_scan.h"
 
 #include "duf_levinfo_ref.h"
 
-#include "duf_option_names.h"
 #include "duf_option_defs.h"
-
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccb_eval.h"
 /* ###################################################################### */
 
-int
-duf_sccbh_eval_pdi_and_summary( duf_sccb_handle_t * sccbh )
+/* 20150819.164652 */
+static int
+duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
 
   DUF_E_NO( DUF_ERROR_TOO_DEEP );
+  assert( sccbh );
+  assert( SCCB );
 
-  DORF( r, DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
+  DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
   if ( r >= 0 && DUF_ACT_FLAG( summary ) )
   {
@@ -57,8 +55,9 @@ duf_sccbh_eval_pdi_and_summary( duf_sccb_handle_t * sccbh )
   DEBUG_ENDR( r );
 }
 
-static int
-duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
+#ifdef MAS_WRAP_FUNC
+/* 20150819.164643 */
+static int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh ) /* duf_eval_sccbh_all */
 {
   DEBUG_STARTR( r );
   if ( sccbh && SCCB )
@@ -72,12 +71,12 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
       HCHANGES = 0;
       /* - evaluate sccb for each string from duf_config->targ[cv] as path
        * - store number of changes to *pchanges */
-#if 0
+#  if 0
       DOR( r, duf_sccbh_eval_each_path( sccbh ) );
-#else
+#  else
       if ( duf_levinfo_path( PDI ) )
-        DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
-#endif
+        DOR( r, duf_eval_sccbh_all_and_summary( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
+#  endif
     }
   }
   else
@@ -86,7 +85,7 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
   }
   DEBUG_ENDR( r );
 }
-
+#endif
 /*
  * make/evaluate sccb
  * ******************
@@ -108,7 +107,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 
     sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targ.argc, duf_config->targ.argv, duf_config->pu );
 
-    DOR( r, duf_evaluate_sccb_handle( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
+    DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
 
     duf_close_sccb_handle( sccbh );
   }

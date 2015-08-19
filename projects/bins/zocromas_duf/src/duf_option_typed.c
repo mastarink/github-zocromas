@@ -334,8 +334,10 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
       {
       case DUF_OPTION_VTYPE_NONE:
         DUF_TRACE( options, 2, "vtype NONE" );
-        if ( r >= 0 )
-          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+#if 0
+        if ( r >= 0 ) 
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );  // Why was ???
+#endif
         /* DUF_TEST_R( r ); */
         break;
       case DUF_OPTION_VTYPE_NOOP:

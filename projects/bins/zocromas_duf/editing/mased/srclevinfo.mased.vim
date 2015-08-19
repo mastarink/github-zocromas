@@ -17,4 +17,7 @@ tab sfind duf_levinfo_ref.c
 sfind duf_levinfo_ref.h
 sfind duf_levinfo_ref_def.h
 
+tab sfind duf_pstmt_levinfo.c
+sfind duf_pstmt_levinfo.h
+
 

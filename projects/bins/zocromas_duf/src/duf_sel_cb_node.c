@@ -23,6 +23,7 @@
 #include "duf_pdi.h"
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
+#include "duf_sccb_eval_dirs.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_pstmt_levinfo.h"
@@ -34,7 +35,7 @@
 
 /*
  * str_cb2 can be
- *   -- duf_sccbh_eval_pdi_dirs(_wrap)
+ *   -- duf_eval_sccbh_all(_wrap)
  *   ...
  */
 int
@@ -47,7 +48,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
   DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": =====> scan node2", duf_pdi_depth( PDI ) );
   DUF_TRACE( explain, 4, "@ sel cb2 node" );
-
+  assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) );
 
 #if 1
   DOR( r, duf_pstmt_levinfo_godown_openat_dh( pstmt, PDI, 0 /* is_leaf */  ) );

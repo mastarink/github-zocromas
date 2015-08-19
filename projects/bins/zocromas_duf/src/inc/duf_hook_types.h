@@ -18,8 +18,7 @@ typedef int ( *duf_scan_hook2_item_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinf
 
 typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat * pst_file, */ duf_depthinfo_t * pdi );
 
-typedef int ( *duf_scan_hook2_dirent_t ) (  /* const char *fname, const struct stat * pstat, *//* unsigned long long dirid, */ duf_depthinfo_t *
-                                           pdi );
+/* typedef int ( *duf_scan_hook2_dirent_t ) ( duf_depthinfo_t * pdi ); */
 
 typedef int ( *duf_anyhook_t ) ( void );
 
@@ -37,6 +36,7 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_hand
 */
 
 typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
+
 #  if 0
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );

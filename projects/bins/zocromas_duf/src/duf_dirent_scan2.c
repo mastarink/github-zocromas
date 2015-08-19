@@ -32,11 +32,7 @@
  *
  * */
 static int
-#if 0
-duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner )
-#else
-duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
-#endif
+duf_scan_with_scanner_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
 {
   DEBUG_STARTR( r );
 
@@ -73,30 +69,21 @@ duf_scan_direntry2_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
  *
  * */
 static int
-#if 0
-duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi,
-                          duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
-#else
-duf_scan_direntry2_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
-#endif
+duf_scan_fs_with2scanners_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   int is_leaf;
 
   is_leaf = de->d_type != DT_DIR;
   DOR( r, duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , is_leaf ) );
-  DOR( r, duf_scan_direntry2_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
+  DOR( r, duf_scan_with_scanner_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
   DOR( r, duf_levinfo_goup( pdi ) );
 
   DEBUG_ENDR( r );
 }
 
 static int
-#if 0
-_duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scan_hook2_dirent_t scanner_dirent_reg2, duf_scan_hook2_dirent_t scanner_dirent_dir2 )
-#else
-_duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
-#endif
+_duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
 
@@ -131,7 +118,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, du
        *   for other (~ regular) entry  - scanner_dirent_reg2
        * */
       DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_scan_direntry2_lower( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
+      DOR( r, duf_scan_fs_with2scanners_lower( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
 
       if ( list[il] )
         free( list[il] );
@@ -172,8 +159,7 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, du
  * scanner_dirent_dir2 - reg (file) entry scanner function
  * */
 int
-duf_scan_dirents2( duf_depthinfo_t * pdi, /* duf_scan_hook2_dirent_t */ duf_scanner_t scanner_dirent_reg2, /* duf_scan_hook2_dirent_t */
-                   duf_scanner_t scanner_dirent_dir2 )
+duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, duf_scanner_t scanner_dirent_dir2 )
 {
   DEBUG_STARTR( r );
   /* const struct stat *pst_parent; */
@@ -205,7 +191,7 @@ duf_scan_dirents2( duf_depthinfo_t * pdi, /* duf_scan_hook2_dirent_t */ duf_scan
   }
   else
   {
-    r = _duf_scan_dirents2( pdi, scanner_dirent_reg2, scanner_dirent_dir2 );
+    r = _duf_scan_fs_with2scanners( pdi, scanner_dirent_reg2, scanner_dirent_dir2 );
   }
   DEBUG_ENDR( r );
 }
