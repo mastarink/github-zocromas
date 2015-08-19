@@ -11,6 +11,9 @@ sfind duf_sccb_handle.h
 tab sfind duf_sccbh_scan.c
 sfind duf_sccbh_scan.h
 
+tab sfind duf_sccb_eval_dirs.c
+sfind duf_sccb_eval_dirs.h
+
 tab sfind duf_sccb_begfin.c
 sfind duf_sccb_begfin.h
 

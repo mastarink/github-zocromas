@@ -4,9 +4,6 @@ sfind duf_eval_at_config.h
 " tab sfind duf_uni_scan2.c
 " sfind duf_uni_scan2.h
 
-tab sfind duf_dir_scan2.c
-sfind duf_dir_scan2.h
-
 tab sfind duf_dir_scan2_stages.c
 sfind duf_dir_scan2_stages.h
 
@@ -15,6 +12,9 @@ sfind duf_dirent_scan2.h
 
 tab sfind duf_item_scan2.c
 sfind duf_item_scan2.h
+
+tab sfind duf_leaf_scan2.c
+sfind duf_leaf_scan2.h
 
 tab sfind duf_sel_cb_leaf.c
 sfind duf_sel_cb_leaf.h

@@ -21,7 +21,7 @@
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
-#include "duf_dir_scan2.h"
+#include "duf_sccb_eval_dirs.h"
 /* ###################################################################### */
 
 
@@ -66,6 +66,7 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
   };
   for ( duf_str_cb2_t * pstage = stages; *pstage; pstage++ )
   {
+#if 0
     DUF_TRACE( temp, 0, "%lu : %lu : %lu : %lu : %p : %p : %p @ %p : %p", ( offsetof( duf_scan_callbacks_t, leaf ) ),
                ( offsetof( duf_scan_callbacks_t, init_scan ) ), ( offsetof( duf_scan_callbacks_t, node_scan_before2 ) ),
                ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ),
@@ -73,6 +74,7 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
                SCCB, &( SCCB->node_scan_after2 ),
                ( duf_scan_hook2_dir_t * ) ( ( ( char * ) SCCB ) + ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ) ), SCCB->node_scan_after2,
                *( ( duf_scan_hook2_dir_t * ) ( ( ( char * ) SCCB ) + ( offsetof( duf_scan_callbacks_t, node_scan_after2 ) ) ) ) );
+#endif
     DOR( r, ( *pstage ) ( pstmt_selector, sccbh ) );
     /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   }

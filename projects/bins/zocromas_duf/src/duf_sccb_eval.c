@@ -17,7 +17,7 @@
 #include "duf_pdi.h"
 
 #include "duf_sccb.h"
-#include "duf_dir_scan2.h"
+#include "duf_sccb_eval_dirs.h"
 #include "duf_sccb_handle.h"
 #include "duf_sccbh_scan.h"
 

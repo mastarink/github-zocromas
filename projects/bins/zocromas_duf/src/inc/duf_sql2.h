@@ -124,6 +124,7 @@ int duf_sql_column_count( duf_sqlite_stmt_t * stmt );
 	  DUF_SQL_STEP( _rt, _pstmt1 ); \
 	  if ( _rt == DUF_SQL_ROW ) \
 	  { \
+	    _rt = 0; \
 	    _ops ; \
 	  } \
 	}
