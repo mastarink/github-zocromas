@@ -1,3 +1,4 @@
+/* 20150819.134107 */
 #define DUF_SQL_PDI_STMT
 
 #include <string.h>

@@ -1,3 +1,4 @@
+/* 20150819.134056 */
 #define DUF_SQL_PDI_STMT
 
 #include <string.h>
@@ -12,40 +13,15 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* for DUF_ACT_FLAG( progress ) !ONLY! */
-#include "duf_option_defs.h"    /* for DUF_ACT_FLAG( progress ) !ONLY! */
-
-#include "duf_utils.h"          /* duf_percent */
-
-#include "duf_levinfo_ref.h"
-#include "duf_levinfo_updown.h"
-
-#include "duf_pdi.h"
-#include "duf_sccb_def.h"
-#include "duf_sccb.h"
-
-
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
 #include "duf_sql.h"
-
-#include "duf_sql2.h"
-#include "duf_ufilter_bind.h"
-
-#include "duf_sccbh_shortcuts.h"
-#include "duf_sccb_eval_dirs.h" /* for assert  */
-
-#include "duf_leaf_scan2.h"
-
-#include "duf_sel_cb_leaf.h"
-#include "duf_sel_cb_node.h"
 
 /* ###################################################################### */
 #include "duf_selector.h"
 /* ###################################################################### */
 
 
- char *
+/* 20150819.133515 */
+char *
 duf_selector2sql( const duf_sql_set_t * sql_set )
 {
   char *sql = NULL;
@@ -73,6 +49,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set )
   return sql;
 }
 
+/* 20150819.133525 */
 char *
 duf_selector_total2sql( const duf_sql_set_t * sql_set )
 {
@@ -104,5 +81,3 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set )
   }
   return sql;
 }
-
-
