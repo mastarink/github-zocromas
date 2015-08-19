@@ -97,10 +97,10 @@ dummy_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
   DUF_SFIELD2( filename );
-#endif
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+#endif
 
 
 /*
@@ -121,10 +121,10 @@ dummy_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
   DUF_SFIELD2( filename );
-#endif
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+#endif
 
 
 /*
@@ -144,9 +144,10 @@ dummy_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
 #ifdef MAS_TRACING
   DUF_SFIELD2( filename );
-#endif
-/* filename from db same as duf_levinfo_itemname( pdi ) */
+
+  /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+#endif
 
 
   DUF_TRACE( mod, 1, "dummy %s -a-", duf_levinfo_path( pdi ) );

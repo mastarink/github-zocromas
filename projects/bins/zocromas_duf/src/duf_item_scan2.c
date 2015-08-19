@@ -154,7 +154,7 @@ duf_scan_db_items2_sql_set( const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2
 
 /* 20150819.133354 */
 int
-duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
+duf_scan_db_items_with_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   const duf_sql_set_t *sql_set = NULL;

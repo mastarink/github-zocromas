@@ -4,7 +4,7 @@
 #  include "duf_scan_types.h"   /* duf_node_type_t */
 
 
-int duf_scan_db_items2( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh );
+int duf_scan_db_items_with_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh );
 
 char *duf_selector_total2sql( const duf_sql_set_t * sql_set );
 

@@ -54,14 +54,13 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
  *   for each direntry from filesystem
  *                                     -- see duf_dir_scan2_stages.c
  * */
-#if 1
   duf_str_cb2_t stages[] = {
-    duf_qscan_dirents2,         /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
-    duf_qscan_node_scan_before2,
-    duf_qscan_files_by_dirid2,
-    duf_qscan_node_scan_middle2,
-    duf_qscan_dirs_by_dirid2,
-    duf_qscan_node_scan_after2,
+    duf_scan_fs_items_with_sccb,         /* SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 */
+    duf_scan_db_node_before_with_sccb,
+    duf_scan_db_items_with_sccb,
+    duf_scan_db_node_middle_with_sccb,
+    duf_scan_db_subnodes_with_sccb,
+    duf_scan_db_node_after_with_sccb,
     NULL
   };
   for ( duf_str_cb2_t * pstage = stages; *pstage; pstage++ )
@@ -78,20 +77,6 @@ duf_sccbh_eval_pdi_dirs( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t *
     DOR( r, ( *pstage ) ( pstmt_selector, sccbh ) );
     /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   }
-#else
-  /* 1. */ DOR( r, duf_qscan_dirents2 /*          */ ( pstmt_selector, sccbh ) ); /* walk FS entries (dirents) for dir at curr. level at pdi */
-  /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  /* 2. */ DOR( r, duf_qscan_node_scan_before2 /* */ ( pstmt_selector, sccbh ) );
-  /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  /* 3. */ DOR( r, duf_qscan_files_by_dirid2 /*   */ ( pstmt_selector, sccbh ) );
-  /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  /* 4. */ DOR( r, duf_qscan_node_scan_middle2 /* */ ( pstmt_selector, sccbh ) );
-  /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  /* 5. */ DOR( r, duf_qscan_dirs_by_dirid2 /*    */ ( pstmt_selector, sccbh ) );
-  /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-  /* 6. */ DOR( r, duf_qscan_node_scan_after2 /*  */ ( pstmt_selector, sccbh ) );
-  /*                                                                              */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
-#endif
 
   DEBUG_ENDR( r );
 }

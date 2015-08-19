@@ -109,13 +109,14 @@ _duf_scan_dirents2( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_reg2, du
   assert( duf_levinfo_dfd( pdi ) );
   nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
 
-
+#ifdef MAS_TRACING
   {
     extern duf_scan_callbacks_t duf_dummy_callbacks;
 
     DUF_TRACE( scan, 0, "scan dirent (nlist:%d) hooks d:%p; r:%p; %p !!", nlist, scanner_dirent_dir2, scanner_dirent_reg2,
                duf_dummy_callbacks.dirent_dir_scan_before2 );
   }
+#endif
 
   DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), duf_levinfo_itemshowname_q( pdi, "nil" ), nlist,
              duf_levinfo_dfd( pdi ) );
