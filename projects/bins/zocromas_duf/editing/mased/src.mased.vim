@@ -41,8 +41,8 @@ tab sfind duf_begfin.c
 sfind duf_begfin.h
 
 
-tab sfind duf_path.c
-sfind duf_path.h
+" tab sfind duf_path.c
+" sfind duf_path.h
 
 tab sfind  duf_path2db.c
 sfind duf_path2db.h

@@ -43,7 +43,6 @@ noinst_HEADERS=duf.h \
 	duf_options_enum.h duf_options.h duf_option_types.h \
 	duf_path2db.h \
 	duf_tags.h \
-	duf_path.h \
 	duf_pdi.h duf_pdi_types.h \
 	duf_prepare_actions.h \
 	duf_print_defs.h \
