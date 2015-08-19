@@ -357,7 +357,7 @@ duf_main_db( int argc, char **argv )
     DORF( r, duf_store_log, duf_config->targ.argc, duf_config->targ.argv );
 #endif
 
-  DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  );
-  DORF( r, duf_main_db_close, r );
+  DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  DORF( r, duf_main_db_close, r ); /* [@] */
   DEBUG_ENDR( r );
 }

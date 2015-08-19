@@ -1,0 +1,76 @@
+/mnt/new_media/media/photo/Pictures/date/2007-10-27/100_0784.JPG:
+Camera-Specific Properties:
+
+Equipment Make: EASTMAN KODAK COMPANY
+Camera Model: KODAK EASYSHARE C433 ZOOM DIGITAL CAMERA
+Maximum Lens Aperture: f/2.7
+Sensing Method: One-Chip Color Area
+Focal Length (35mm Equiv): 36 mm
+
+Image-Specific Properties:
+
+Image Orientation: Top, Left-Hand
+Horizontal Resolution: 480 dpi
+Vertical Resolution: 480 dpi
+Exposure Time: 1/60 sec
+F-Number: f/2.7
+Exposure Program: Normal Program
+ISO Speed Rating: 80
+Lens Aperture: f/2.8
+Exposure Bias: 0 EV
+Metering Mode: Center Weighted Average
+Light Source: Unknown
+Flash: No Flash, Compulsory
+Focal Length: 6.00 mm
+Color Space Information: sRGB
+Image Width: 2304
+Image Height: 1728
+Exposure Index: 80
+Rendering: Normal
+Exposure Mode: Auto
+White Balance: Auto
+Scene Capture Type: Standard
+Gain Control: None
+Contrast: Normal
+Saturation: Normal
+Sharpness: Normal
+Subject Distance Range: Macro
+
+/mnt/new_media/media/photo/Pictures/unsorted/20080117.Pictures/2007-10-27/100_0784.JPG:
+Camera-Specific Properties:
+
+Equipment Make: EASTMAN KODAK COMPANY
+Camera Model: KODAK EASYSHARE C433 ZOOM DIGITAL CAMERA
+Camera Software: digiKam-2.4.1
+Maximum Lens Aperture: f/2.7
+Sensing Method: One-Chip Color Area
+Focal Length (35mm Equiv): 36 mm
+
+Image-Specific Properties:
+
+Image Orientation: Top, Left-Hand
+Horizontal Resolution: 480 dpi
+Vertical Resolution: 480 dpi
+Exposure Time: 1/60 sec
+F-Number: f/2.7
+Exposure Program: Normal Program
+ISO Speed Rating: 80
+Lens Aperture: f/2.8
+Exposure Bias: 0 EV
+Metering Mode: Center Weighted Average
+Light Source: Unknown
+Flash: No Flash, Compulsory
+Focal Length: 6.00 mm
+Color Space Information: sRGB
+Image Width: 2304
+Image Height: 1728
+Exposure Index: 80
+Rendering: Normal
+Exposure Mode: Auto
+White Balance: Auto
+Scene Capture Type: Standard
+Gain Control: None
+Contrast: Normal
+Saturation: Normal
+Sharpness: Normal
+Subject Distance Range: Macro

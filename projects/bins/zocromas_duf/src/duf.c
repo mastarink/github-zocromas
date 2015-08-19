@@ -116,7 +116,7 @@ duf_main_with_config( int argc, char **argv )
 
   DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
 
-  DOR( r, duf_main_db( argc, argv ) ); /*  duf_main_db : duf_maindb.c */
+  DOR( r, duf_main_db( argc, argv ) ); /* XXX XXX XXX XXX XXX XXX */
 
   DUF_PUTS( 0, "--------------------------------------------------" );
   DUF_PRINTF( 0, " duf_main_db ended" );
@@ -152,7 +152,7 @@ duf_main( int argc, char **argv )
 
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
-  DOR( r, duf_main_with_config( argc, argv ) );
+  DOR( r, duf_main_with_config( argc, argv ) ); /* XXX XXX XXX XXX */
   if ( r < 0 )
     DUF_SHOW_ERROR( "(%d:%s) %s", r, duf_error_name(r), argv[0] );
 

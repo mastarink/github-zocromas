@@ -206,6 +206,7 @@ duf_action( void )
 
     DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
 
+    /* XXX XXX see duf_option_$_evaluate_sccb for "main events" XXX XXX ( through --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif ) */
 
     if ( duf_levinfo_path( duf_config->pdi ) )
     {

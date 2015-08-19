@@ -39,7 +39,7 @@ duf_sccbh_eval_pdi_and_summary( duf_sccb_handle_t * sccbh )
 
   DUF_E_NO( DUF_ERROR_TOO_DEEP );
 
-  DORF( r, DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ), ( duf_sqlite_stmt_t * ) NULL, sccbh );
+  DORF( r, DUF_WRAPPED( duf_sccbh_eval_pdi_dirs ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
   if ( r >= 0 && DUF_ACT_FLAG( summary ) )
   {
@@ -50,6 +50,8 @@ duf_sccbh_eval_pdi_and_summary( duf_sccb_handle_t * sccbh )
     DUF_PRINTF( 0, " summary; seq-node:%llu", PDI->seq_node );
     if ( PU->max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", PU->max_seq );
+    if ( DUF_ACT_FLAG( summary ) )
+      DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
   }
   DUF_E_YES( DUF_ERROR_TOO_DEEP );
   DEBUG_ENDR( r );
@@ -74,10 +76,8 @@ duf_evaluate_sccb_handle( duf_sccb_handle_t * sccbh )
       DOR( r, duf_sccbh_eval_each_path( sccbh ) );
 #else
       if ( duf_levinfo_path( PDI ) )
-        DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) );
+        DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
 #endif
-      if ( DUF_ACT_FLAG( summary ) )
-        DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
     }
   }
   else
@@ -108,7 +108,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 
     sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targ.argc, duf_config->targ.argv, duf_config->pu );
 
-    DOR( r, duf_evaluate_sccb_handle( sccbh ) );
+    DOR( r, duf_evaluate_sccb_handle( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
 
     duf_close_sccb_handle( sccbh );
   }
@@ -148,13 +148,13 @@ duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * tabl
     else
       len = strlen( pnames );
     if ( r >= 0 )
-      act = duf_find_sccb_by_name( pnames, len, table );
+      act = duf_find_sccb_by_name( pnames, len, table ); /* XXX XXX */
     if ( act )
     {
       DUF_TRACE( path, 0, "@ (to duf_evaluate_sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( duf_config->pdi ) );
 
 
-      DOR( r, duf_evaluate_sccb( act->sccb ) );
+      DOR( r, duf_evaluate_sccb( act->sccb ) ); /* XXX XXX XXX XXX */
       ok++;
     }
     /* DUF_PRINTF( 0, "pnames:%s; ename:%s", pnames, ename ); */

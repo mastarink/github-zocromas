@@ -1,0 +1,103 @@
+======== /mnt/new_media/media/photo/Pictures/unsorted/20080117.Pictures/2007-10-27/100_0784.JPG
+ExifTool Version Number         : 9.78
+File Name                       : 100_0784.JPG
+Directory                       : /mnt/new_media/media/photo/Pictures/unsorted/20080117.Pictures/2007-10-27
+File Size                       : 1058 kB
+File Modification Date/Time     : 2008:01:17 17:27:47+02:00
+File Access Date/Time           : 2015:06:01 19:41:59+03:00
+File Inode Change Date/Time     : 2013:06:09 11:27:08+03:00
+File Permissions                : r--r--r--
+File Type                       : JPEG
+MIME Type                       : image/jpeg
+Exif Byte Order                 : Little-endian (Intel, II)
+Processing Software             : digiKam-2.4.1
+Make                            : EASTMAN KODAK COMPANY
+Camera Model Name               : KODAK EASYSHARE C433 ZOOM DIGITAL CAMERA
+Orientation                     : Horizontal (normal)
+X Resolution                    : 480
+Y Resolution                    : 480
+Resolution Unit                 : inches
+Software                        : digiKam-2.4.1
+Y Cb Cr Positioning             : Co-sited
+Exposure Time                   : 1/60
+F Number                        : 2.7
+Exposure Program                : Program AE
+ISO                             : 80
+Exif Version                    : 0221
+Date/Time Original              : 2007:10:27 13:10:52
+Create Date                     : 2007:10:27 13:10:52
+Components Configuration        : Y, Cb, Cr, -
+Shutter Speed Value             : 1/64
+Aperture Value                  : 2.8
+Exposure Compensation           : 0
+Max Aperture Value              : 2.7
+Metering Mode                   : Center-weighted average
+Light Source                    : Unknown
+Flash                           : Off, Did not fire
+Focal Length                    : 6.0 mm
+Serial Number                   : KCFFK65104112
+Flashpix Version                : 0100
+Color Space                     : sRGB
+Exif Image Width                : 2304
+Exif Image Height               : 1728
+Interoperability Index          : R98 - DCF basic file (sRGB)
+Interoperability Version        : 0100
+Exposure Index                  : 80
+Sensing Method                  : One-chip color area
+File Source                     : Digital Camera
+Scene Type                      : Directly photographed
+Custom Rendered                 : Normal
+Exposure Mode                   : Auto
+White Balance                   : Auto
+Digital Zoom Ratio              : 0
+Focal Length In 35mm Format     : 36 mm
+Scene Capture Type              : Standard
+Gain Control                    : None
+Contrast                        : Normal
+Saturation                      : Normal
+Sharpness                       : Normal
+Subject Distance Range          : Macro
+Compression                     : JPEG (old-style)
+Thumbnail Offset                : 5432
+Thumbnail Length                : 4797
+XMP Toolkit                     : XMP Core 4.4.0-Exiv2
+Warning                         : [minor] Fixed incorrect URI for xmlns:MicrosoftPhoto
+Creator Tool                    : digiKam-2.4.1
+Pick Label                      : 0
+Color Label                     : 0
+Tags List                       : mas-no-tag
+Subject                         : mas-no-tag
+Last Keyword XMP                : mas-no-tag
+Hierarchical Subject            : mas-no-tag
+Current IPTC Digest             : 2c5183ac9992c47479dd948d8ff107c7
+Originating Program             : digiKam
+Program Version                 : 2.4.1
+Keywords                        : mas-no-tag
+Code Page                       : Unicode UTF-16, little endian
+Used Extension Numbers          : 1
+Extension Name                  : Screen Nail
+Extension Class ID              : 10000230-6FC0-11D0-BD01-00609719A180
+Extension Persistence           : Invalidated By Modification
+Extension Create Date           : 2003:03:29 17:47:50
+Extension Modify Date           : 2003:03:29 17:47:50
+Creating Application            : Picoss
+Extension Description           : 
+Storage-Stream Pathname         : /.Screen.Nail_bd0100609719a180
+Screen Nail                     : (Binary data 39104 bytes, use -b option to extract)
+Image Width                     : 2304
+Image Height                    : 1728
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:2:2 (2 1)
+Aperture                        : 2.7
+Image Size                      : 2304x1728
+Preview Image                   : (Binary data 38964 bytes, use -b option to extract)
+Scale Factor To 35 mm Equivalent: 6.0
+Shutter Speed                   : 1/60
+Thumbnail Image                 : (Binary data 4797 bytes, use -b option to extract)
+Circle Of Confusion             : 0.005 mm
+Field Of View                   : 53.1 deg
+Focal Length                    : 6.0 mm (35 mm equivalent: 36.0 mm)
+Hyperfocal Distance             : 2.66 m
+Light Value                     : 9.1
