@@ -19,6 +19,7 @@ zocromas_duf_SOURCES=				   \
 	duf_filedata.c					   \
 	duf_path.c duf_path2db.c    \
 	duf_tags.c					     \
+	duf_selector.c \
 	duf_item_scan2.c duf_leaf_scan2.c duf_sel_cb_leaf.c duf_sel_cb_node.c  duf_pstmt_levinfo.c		      \
 	duf_eval_at_config.c duf_prepare_actions.c   \
 	duf_begfin.c \

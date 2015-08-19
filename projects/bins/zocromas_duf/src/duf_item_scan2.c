@@ -35,6 +35,7 @@
 #include "duf_sccbh_shortcuts.h"
 #include "duf_sccb_eval_dirs.h" /* for assert  */
 
+#include "duf_selector.h"
 #include "duf_leaf_scan2.h"
 
 #include "duf_sel_cb_leaf.h"
@@ -43,66 +44,6 @@
 /* ###################################################################### */
 #include "duf_item_scan2.h"
 /* ###################################################################### */
-
-static char *
-duf_selector2sql( const duf_sql_set_t * sql_set )
-{
-  char *sql = NULL;
-
-  if ( sql_set->fieldset && sql_set->selector2 )
-  {
-    if ( 0 == strncmp( sql_set->selector2, "SELECT", 6 ) )
-    {
-      char *sql3;
-
-      sql3 = duf_sql_mprintf( sql_set->selector2, sql_set->fieldset );
-      sql = mas_strdup( sql3 );
-      mas_free( sql3 );
-    }
-    else
-    {
-      sql = mas_strdup( "SELECT " );
-      sql = mas_strcat_x( sql, sql_set->fieldset );
-      sql = mas_strcat_x( sql, " " );
-      sql = mas_strcat_x( sql, sql_set->selector2 );
-    }
-  }
-  else
-    DUF_SHOW_ERROR( "Bad arg" );
-  return sql;
-}
-
-char *
-duf_selector_total2sql( const duf_sql_set_t * sql_set )
-{
-  char *sql = NULL;
-
-  assert( sql_set );
-  assert( sql_set->selector_total2 );
-  if ( sql_set->selector_total2 )
-  {
-    if ( 0 == strncmp( sql_set->selector_total2, "SELECT", 6 ) )
-    {
-      char *sql3;
-
-      sql3 = duf_sql_mprintf( sql_set->selector_total2, sql_set->fieldset );
-      sql = mas_strdup( sql3 );
-      mas_free( sql3 );
-    }
-    else
-    {
-      sql = mas_strdup( "SELECT " );
-      sql = mas_strcat_x( sql, "COUNT(*) AS nf" );
-      sql = mas_strcat_x( sql, " " );
-      sql = mas_strcat_x( sql, sql_set->selector_total2 );
-    }
-  }
-  else
-  {
-    DUF_SHOW_ERROR( "Bad arg" );
-  }
-  return sql;
-}
 
 
 /*
