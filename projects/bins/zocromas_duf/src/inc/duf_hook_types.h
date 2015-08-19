@@ -35,8 +35,9 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_hand
  * duf_sel_cb_leaf		:		, sel_cb_udata_unused
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
-#  if 0
+
 typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
+#  if 0
 
 typedef int ( *duf_sel_cb2_match_t ) ( duf_sqlite_stmt_t * pstmt );
 #  endif
