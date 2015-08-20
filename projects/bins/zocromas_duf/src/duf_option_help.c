@@ -122,7 +122,7 @@ static const char *oclass_titles[DUF_OPTION_CLASS_MAX + 1] = {
 void
 duf_option_$_smart_help( duf_option_class_t oclass )
 {
-  int r = 0;
+  int rt = 0;
   int *ashown;
   size_t ss;
   int tbcount;
@@ -139,7 +139,7 @@ duf_option_$_smart_help( duf_option_class_t oclass )
     DUF_PRINTF( 0, "-=-=-=-=- %s -=-=-=-=-", oclass_titles[oclass] );
   else
     DUF_PRINTF( 0, "-=-=-=-=- <no title set for %d> -=-=-=-=-", oclass );
-  for ( int ilong = 0; r >= 0 && duf_config->longopts_table[ilong].name && ilong < tbcount; ilong++ )
+  for ( int ilong = 0; rt >= 0 && duf_config->longopts_table[ilong].name && ilong < tbcount; ilong++ )
   {
 
     duf_option_code_t codeval;
@@ -150,10 +150,10 @@ duf_option_$_smart_help( duf_option_class_t oclass )
     name = duf_config->longopts_table[ilong].name;
     codeval = duf_config->longopts_table[ilong].val;
     /* extended = _duf_find_longval_extended( codeval ); */
-    extd = duf_longindex2extended( ilong, NULL, &r );
+    extd = duf_longindex2extended( ilong, NULL, &rt );
     /* ie = extended ? extended - &lo_extended[0] : -1; */
     ie = ilong;
-    if ( codeval && r >= 0 )
+    if ( codeval && rt >= 0 )
     {
       int cnd = 0;
 
@@ -183,8 +183,8 @@ duf_option_$_smart_help( duf_option_class_t oclass )
             /* duf_option_class_t hclass; */
 
             /* hclass = duf_help_option2class( codeval ); */
-            s = duf_option_description_d( ilong, "\t", " // ", &r );
-            DUF_TEST_R( r );
+            s = duf_option_description_d( ilong, "\t", " // ", &rt );
+            DUF_TEST_R( rt );
             /* s = mas_strcat_x( s, " ...................." ); */
             if ( s )
             {
@@ -223,12 +223,12 @@ duf_option_$_smart_help_all( duf_option_class_t oclass )
 void
 duf_option_$_help(  /* int argc, char *const *argv */ void )
 {
-  int r = 0;
+  int rt = 0;
 
   DUF_PRINTF( 0, "Usage: %s [OPTION]... [PATH]...", duf_config->carg.argv[0] );
-  DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_VAL_HELP, &r ) );
-  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &r ) );
-  DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &r ) );
+  DUF_PRINTF( 0, "  -h, --help			[%s]", duf_find_longval_help( DUF_OPTION_VAL_HELP, &rt ) );
+  DUF_PRINTF( 0, "  -x, --example			[%s]", duf_find_longval_help( DUF_OPTION_VAL_EXAMPLES, &rt ) );
+  DUF_PRINTF( 0, "  --output-level		[%s]", duf_find_longval_help( DUF_OPTION_VAL_OUTPUT_LEVEL, &rt ) );
   DUF_PRINTF( 0, "Database ----------" );
   DUF_PRINTF( 0, "  -N, --db-name=%s", duf_config->db.main.name );
   DUF_PRINTF( 0, "  -D, --db-directory=%s", duf_config->db.dir );
@@ -270,7 +270,7 @@ duf_option_$_help(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  --trace-path=%d", duf_config->cli.trace.path );
   DUF_PRINTF( 0, "  -F, --trace-collect=%d", duf_config->cli.trace.collect );
   DUF_PRINTF( 0, "----------------" );
-  DUF_TEST_R( r );
+  DUF_TEST_R( rt );
 }
 
 void
@@ -892,10 +892,10 @@ duf_option_$_list_options( long n )
     for ( const duf_longval_extended_t * xtended = xtable->table; xtended->o.name; xtended++, tbcount++ )
     {
       char *s = NULL;
-      int r = 0;
+      int rt = 0;
 
       if ( xtended->o.val )
-        s = duf_option_description_xd( xtended, "\t", " // ", &r );
+        s = duf_option_description_xd( xtended, "\t", " // ", &rt );
 
       DUF_TRACE( options, 5, "@li2ex %d [%s]", ntable, xtended->o.name );
       /* DUF_PRINTF( 0, "[%ld] %3d (%2d) %4d %d:%d\t--%-40s", n, tbcount, ntable, xtended->o.val, xtended->stage.min, xtended->stage.max, xtended->o.name ); */
@@ -905,50 +905,3 @@ duf_option_$_list_options( long n )
     }
   }
 }
-
-
-#if 0
-static int
-duf_test_help( int argc, char **argv, duf_option_class_t oclass )
-{
-  int r = -1;
-
-  assert( 0 );
-  /* duf_option_description( longindex ); */
-
-  /* DUF_PRINTF( 0, "Ooooo: %d",  oclass ); */
-  /* DUF_PRINTF( 0, "%d / %c => OC:%d (?%d)", opt, opt > ' ' && opt <= 'z' ? opt : '?', oclass, DUF_OPTION_CLASS_ALL ); */
-  if ( oclass == DUF_OPTION_CLASS_ALL )
-  {
-    for ( duf_option_class_t oc = DUF_OPTION_CLASS_MIN + 1; oc < DUF_OPTION_CLASS_MAX; oc++ )
-      duf_option_$_smart_help( oc );
-    r = 0;
-  }
-  else if (  /* oclass != DUF_OPTION_CLASS_NO_HELP && */ oclass != DUF_OPTION_CLASS_BAD )
-  {
-    duf_option_$_smart_help( oclass );
-    r = 0;
-  }
-  else
-  {
-    /* switch ( oclass )                    */
-    /* {                                    */
-    /* case DUF_OPTION_CLASS_VERSION:       */
-    /*   duf_option_$_version( argc, argv );  */
-    /*   r = 0;                             */
-    /*   break;                             */
-    /* case DUF_OPTION_CLASS_HELP:          */
-    /*   duf_option_$_help( argc, argv );     */
-    /*   r = 0;                             */
-    /*   break;                             */
-    /* case DUF_OPTION_CLASS_EXAMPLES:      */
-    /*   duf_option_$_examples( argc, argv ); */
-    /*   r = 0;                             */
-    /*   break;                             */
-    /* default:                             */
-    /*   break;                             */
-    /* }                                    */
-  }
-  return r;
-}
-#endif

@@ -73,12 +73,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
   DEBUG_STARTR( r );
 
   DOR( r, duf_pdi_init( pdi, real_path, caninsert, node_selector2, frecursive, opendir ) );
-  /*
-     if ( r == DUF_ERROR_NOT_IN_DB )
-     DUF_SHOW_ERROR( "not in db:'%s'", real_path );
-     else if ( r < 0 )
-     DUF_SHOW_ERROR( "path:%s", real_path );
-   */
+ 
   DUF_TEST_R( r );
   if ( r >= 0 )
   {
@@ -272,14 +267,14 @@ duf_pdi_opendir( const duf_depthinfo_t * pdi )
 int
 duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
 {
-  DEBUG_STARTR( r );
+  DEBUG_STARTR( rd );
 
   assert( pdi );
-  r = pdi->opendir;
+  rd = pdi->opendir;
   pdi->opendir = od;
   DUF_TRACE( fs, 3, "set opendir:%d", od );
 
-  DEBUG_ENDRN( r );
+  DEBUG_ENDRN( rd );
 }
 
 int
@@ -318,14 +313,14 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
 int
 duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
 {
-  int r = 0;
+  int rd = 0;
 
   if ( duf_pdi_recursive( pdi ) )
-    r = d - duf_pdi_maxdepth( pdi ) < delta; /* d - maxdepth < delta */
+    rd = d - duf_pdi_maxdepth( pdi ) < delta; /* d - maxdepth < delta */
   else
-    r = duf_pdi_deltadepth( pdi, d ) <= delta; /* d - topdepth <= delta */
-  /* r= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
-  return r;
+    rd = duf_pdi_deltadepth( pdi, d ) <= delta; /* d - topdepth <= delta */
+  /* rd= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
+  return rd;
 }
 
 int

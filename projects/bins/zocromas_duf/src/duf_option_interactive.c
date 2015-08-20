@@ -61,7 +61,7 @@ duf_interactive_options( duf_option_stage_t istage )
     DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
     snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );
 
-    DUF_TRACE(temp, 0, "HISTORY:%s", duf_config->cli.output.history_filename );
+    DUF_TRACE( temp, 0, "HISTORY:%s", duf_config->cli.output.history_filename );
     if ( duf_config->cli.output.history_filename )
       read_history( duf_config->cli.output.history_filename );
 
@@ -91,10 +91,7 @@ duf_interactive_options( duf_option_stage_t istage )
  * */
         DOR( r, duf_execute_cmd_long_xtables_std( xs, ' ', istage ) );
 
-        if ( r == DUF_ERROR_OPTION_NOT_FOUND )
-        {
-          r = 0;
-        }
+        DUF_CLEAR_ERROR(r, DUF_ERROR_OPTION_NOT_FOUND);
 
         DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACT_FLAG( interactive ), duf_config->pdi ? 1 : 0 );
         mas_free( xs );

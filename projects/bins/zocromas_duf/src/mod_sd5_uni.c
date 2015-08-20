@@ -265,7 +265,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
-
+/* 20150820.143755 */
 static int
 sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )
 {
@@ -281,7 +281,7 @@ sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
   memset( amd5, 0, sizeof( amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", filename );
   if ( !duf_config->cli.disable.flag.calculate )
-    r = duf_make_sd5_uni( duf_levinfo_dfd( pdi ), amd5 );
+    DOR( r, duf_make_sd5_uni( duf_levinfo_dfd( pdi ), amd5 ) );
   DUF_TRACE( sd5, 0, "+ %s", filename );
   DUF_TEST_R( r );
   /* reverse */
@@ -298,14 +298,15 @@ sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
     if ( duf_config->cli.disable.flag.calculate )
       pmd[0] = pmd[1] = duf_levinfo_dirid( pdi ) + 74; /* FIXME What is it? */
     sd5id = duf_insert_sd5_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
-    if ( r >= 0 && sd5id )
+    if ( sd5id )
     {
       int changes = 0;
 
-      if ( r >= 0 && !duf_config->cli.disable.flag.update )
+      if ( !duf_config->cli.disable.flag.update )
+      {
         DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET sd5id=%llu WHERE " DUF_SQL_IDNAME "=%lld", &changes, sd5id, filedataid ) );
-      duf_pdi_reg_changes( pdi, changes );
-      DUF_TEST_R( r );
+        duf_pdi_reg_changes( pdi, changes );
+      }
     }
     DUF_TRACE( sd5, 0, "%016llx%016llx : sd5id: %llu", pmd[1], pmd[0], sd5id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], sd5id ); */

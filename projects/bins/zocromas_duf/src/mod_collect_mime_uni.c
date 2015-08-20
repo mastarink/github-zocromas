@@ -290,7 +290,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
           }
           else
           {
-            r = duf_sql( " UPDATE " DUF_DBPREF " filedatas SET mimeid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, mimeid, dataid );
+            DOR( r, duf_sql( " UPDATE " DUF_DBPREF " filedatas SET mimeid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, mimeid, dataid ) );
             duf_pdi_reg_changes( pdi, changes );
           }
 

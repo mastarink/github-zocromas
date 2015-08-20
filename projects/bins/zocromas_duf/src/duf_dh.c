@@ -23,17 +23,13 @@
 /* ###################################################################### */
 
 
-/* #define DUF_TMP_ASSERT0 */
-
+/* 20150820.142734 */
 static int
 _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
 {
   DEBUG_STARTR( r );
   int updfd = 0;
 
-#ifdef DUF_TMP_ASSERT0
-  assert( 0 );
-#endif
   updfd = pdhandleup ? pdhandleup->dfd : 0;
   if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
   {
@@ -74,6 +70,7 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142729 */
 int
 duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
 {
@@ -90,6 +87,7 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142723 */
 static int
 _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
@@ -123,7 +121,6 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
       }
     }
 
-
     pdhandle->rs = ry;
     if ( !pdhandle->rs )
       pdhandle->rs++;
@@ -140,6 +137,7 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142714 */
 int
 duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
@@ -152,6 +150,7 @@ duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142710 */
 static int
 _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
@@ -222,6 +221,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142704 */
 int
 duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
 {
@@ -238,6 +238,7 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142701 */
 static int
 _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
@@ -250,11 +251,10 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 
     ry = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
     DUF_TRACE( fs, 0, "lowlev. opened (%d) ≪%s≫", r, path );
-#if 1
     if ( ry >= 0 )
     {
       pdhandle->dfd = ry;
-      DOR(r , duf_stat_dh( pdhandle, path ));
+      DOR( r, duf_stat_dh( pdhandle, path ) );
     }
     else
     {
@@ -272,53 +272,17 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
         DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
       }
     }
-#else
-    if ( r > 0 )
-    {
-      int rs = 0;
-
-      pdhandle->dfd = r;
-
-      rs = stat( path, &pdhandle->st );
-      if ( rs < 0 )
-        r = rs;
-      pdhandle->rs = rs;
-      if ( !pdhandle->rs )
-        pdhandle->rs++;
-
-      duf_config->nopen++;
-      DUF_TRACE( fs, 5, "opened %s (%u - %u = %u)  h%u", path, duf_config->nopen, duf_config->nclose,
-                 duf_config->nopen - duf_config->nclose, pdhandle->dfd );
-      assert( pdhandle->dfd );
-    }
-    else if ( errno == ENOENT )
-    {
-      DUF_MAKE_ERROR( r, DUF_ERROR_OPEN_ENOENT );
-    }
-    else
-    {
-      char serr[512] = "";
-      char *s;
-
-      s = strerror_r( errno, serr, sizeof( serr ) );
-      DUF_SHOW_ERROR( "(%d) errno:%d open_dh :%s; name:'%s'", r, errno, s ? s : serr, path );
-      DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
-    }
-#endif
   }
-  else if ( path )
-  {
-    r = 0;
-    assert( pdhandle->dfd );
-  }
-  else
+  else if ( !path )
   {
     DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
+    DUF_MAKE_ERROR( r, DUF_ERROR_OPENAT );
   }
   DUF_TRACE( fs, 5, "(%d)? opened %s", r, path );
   DEBUG_ENDR( r );
 }
 
+/* 20150820.142754 */
 int
 duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
@@ -334,7 +298,6 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
   }
   DEBUG_ENDR( r );
 }
-
 
 /* returns handle >0 */
 static int
@@ -377,9 +340,10 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
     assert( pdhandle->dfd );
     if ( pdhandle->dfd )
     {
-      r = close( pdhandle->dfd );
+      int ry=0;
+      ry = close( pdhandle->dfd );
       DUF_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
-      if ( r )
+      if ( ry )
       {
         {
           /* for debug only!!! */
@@ -400,8 +364,6 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
 
     pdhandle->dfd = 0;
   }
-  else
-    r = 0;
   DEBUG_ENDR( r );
 }
 

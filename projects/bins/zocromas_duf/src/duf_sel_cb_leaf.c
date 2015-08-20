@@ -115,9 +115,12 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       DUF_TRACE( explain, 2, "=> str cb2" );
       DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2" );
       assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
+#if 1
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
-      if ( r == DUF_ERROR_OPENAT_ENOENT )
-        r = 0;
+      DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT );
+#else
+      DOR_NOE( r, ( str_cb2 ) ( pstmt, sccbh ), DUF_ERROR_OPENAT_ENOENT );
+#endif
     }
 
     DOR( r, duf_levinfo_goup( PDI ) );

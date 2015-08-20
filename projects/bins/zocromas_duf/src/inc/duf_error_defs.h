@@ -137,6 +137,7 @@
 
 /* ###################################################################### */
 #  define DUF_CLEAR_ERROR(_rt, ...)  _rt=duf_clear_error( _rt, __VA_ARGS__, 0 )
+#  define DUF_CLEARED_ERROR(_rt, ...)  (0==(_rt=duf_clear_error( _rt, __VA_ARGS__, 0 )))
 #  define DUF_IS_ERROR(_rt, _er) ( _rt == _er )
 #  define DUF_NOERROR(_rt) ( _rt >= 0 )
 

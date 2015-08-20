@@ -39,7 +39,6 @@ zocromas_duf_SOURCES=				   \
 	duf_sqlite.c duf_sql.c duf_sql_field.c duf_sql_field2.c	       \
 									\
 	mod_dir_print_uni.c		mod_tree_print_uni.c		 \
-	mod_sample_uni.c		mod_sampupd_uni.c		  \
 	mod_integrity_uni.c						   \
 	mod_filenames_uni.c		mod_filedata_uni.c		    \
 	mod_directories_uni.c						     \

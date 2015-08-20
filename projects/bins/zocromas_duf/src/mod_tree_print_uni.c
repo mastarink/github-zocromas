@@ -190,8 +190,6 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     }
   }
 
-  /* r = duf_sql_print_tree_prefix_uni( pdi ); */
-
   /* SQL at duf_scan_files_by_dirid */
 
   /* DUF_PRINTF( 0, "%s", filename ); */

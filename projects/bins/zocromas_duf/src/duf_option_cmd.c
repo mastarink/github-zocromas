@@ -24,7 +24,7 @@ static const duf_longval_extended_t *
 duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended, char vseparator, char **parg, int *pno, int *pr )
 {
   const duf_longval_extended_t *extended = NULL;
-  int r = 0;
+  int rpr = 0;
   char *barg = NULL;
   char *endn = NULL;
   char *name = NULL;
@@ -52,8 +52,8 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
 
   DUF_TRACE( options, 6, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
 
-  extended = duf_find_name_long_no( name, arg ? 1 : 0, xtended, 1 /* soft */ , pno, &r );
-  if ( r >= 0 && parg )
+  extended = duf_find_name_long_no( name, arg ? 1 : 0, xtended, 1 /* soft */ , pno, &rpr );
+  if ( rpr >= 0 && parg )
     *parg = arg;
   else
     mas_free( arg );
@@ -61,9 +61,9 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
 
   mas_free( name );
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   if ( extended )
-    DUF_TRACE( options, 2, "@@(%s) found name:`%s`", duf_error_name( r ), extended->o.name );
+    DUF_TRACE( options, 2, "@@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
   return extended;
 }
 
@@ -130,7 +130,7 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
   DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
   if ( found )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-  if ( r == DUF_ERROR_OPTION || r == DUF_ERROR_OPTION_NOT_FOUND )
+  if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
     DUF_SHOW_ERROR( "Invalid command -- '%s'", string );
   }

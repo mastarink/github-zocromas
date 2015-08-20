@@ -67,9 +67,6 @@ duf_option_$_db_open( void )
 void
 duf_option_$_cd( const char *s )
 {
-  int r = 0;
-
-
   if ( s && *s )
   {
     char *new_path = NULL;
@@ -93,9 +90,12 @@ duf_option_$_cd( const char *s )
       new_path = mas_strdup( s );
     }
     DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_config->pdi ) );
+    {
+      int rt = 0;
 
-    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL ) );
-    DUF_TRACE( temp, 0, "(r:%d)", r );
+      DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL ) );
+      DUF_TRACE( temp, 0, "(r:%d)", rt );
+    }
     mas_free( new_path );
   }
 }

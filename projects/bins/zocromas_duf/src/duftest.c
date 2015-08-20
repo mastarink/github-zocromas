@@ -4,7 +4,7 @@
 int
 main( int argc, char *argv[] )
 {
-  __attribute__ ( ( unused ) ) int r = 0;
+  __attribute__ ( ( unused ) ) int rtst = 0;
   magic_t m = NULL;
   magic_t m1 = NULL;
 
@@ -26,8 +26,8 @@ main( int argc, char *argv[] )
       "test/stealthyapk",
       "test/stealthysh",
     };
-    r = magic_load( m, NULL );
-    r = magic_load( m1, NULL );
+    rtst = magic_load( m, NULL );
+    rtst = magic_load( m1, NULL );
     for ( int i = 0; i < sizeof( test ) / sizeof( test[0] ); i++ )
     {
       const char *desc = NULL;

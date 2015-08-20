@@ -15,7 +15,7 @@
 char *
 duf_single_quotes_2( const char *s )
 {
-  char *r = NULL;
+  char *sr = NULL;
 
 #ifdef DUF_SINGLE_QUOTES_2_NOQ_ZERO
   if ( s && strchr( s, '\'' ) )
@@ -37,11 +37,11 @@ duf_single_quotes_2( const char *s )
     if ( qcnt )
     {
       siz = ( len + 1 + qcnt );
-      r = mas_malloc( siz );
+      sr = mas_malloc( siz );
       /* fprintf( stderr, "Q:[%s] (%lu)\n", s, len ); */
       ip = s;
-      op = r;
-      while ( ip && *ip && op < r + siz )
+      op = sr;
+      while ( ip && *ip && op < sr + siz )
       {
         if ( *ip == '\'' )
           *op++ = '\'';
@@ -53,11 +53,11 @@ duf_single_quotes_2( const char *s )
 #ifndef DUF_SINGLE_QUOTES_2_NOQ_ZERO
     else
     {
-      r = mas_strdup( s );
+      sr = mas_strdup( s );
     }
 #endif
   }
-  return r;
+  return sr;
 }
 
 size_t
@@ -99,7 +99,7 @@ duf_strfgmtime( char *s, size_t max, const char *format, const time_t * ptim )
 long
 duf_strtol_suff( const char *s, int *pr )
 {
-  int r = 0;
+  int rpr = 0;
   long l = 0;
   char *pe = NULL;
 
@@ -129,26 +129,26 @@ duf_strtol_suff( const char *s, int *pr )
         l *= 512;
         break;
       default:
-        r = -1;
+        rpr = -1;
         l = 0;
         break;
       }
     }
     else
     {
-      r = -1;
+      rpr = -1;
       l = 0;
     }
   }
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   return l;
 }
 
 long long
 duf_strtoll_suff( const char *s, int *pr )
 {
-  int r = 0;
+  int rpr = 0;
   long l = 0;
   char *pe = NULL;
 
@@ -176,25 +176,25 @@ duf_strtoll_suff( const char *s, int *pr )
       l *= 512;
       break;
     default:
-      r = -1;
+      rpr = -1;
       l = 0;
       break;
     }
   }
   else
   {
-    r = -1;
+    rpr = -1;
     l = 0;
   }
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   return l;
 }
 
 unsigned long long
 duf_strtime2long( const char *s, int *pr )
 {
-  int r = 0;
+  int rpr = 0;
   time_t t = 0;
   char *p = NULL;
   struct tm tm;
@@ -235,10 +235,10 @@ duf_strtime2long( const char *s, int *pr )
     if ( p )
       t = timelocal( &tm );
     else
-      r = -1;
+      rpr = -1;
   }
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   return ( unsigned long long ) t;
 }
 

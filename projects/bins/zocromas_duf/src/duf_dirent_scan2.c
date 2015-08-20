@@ -98,8 +98,42 @@ _duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_
   if ( !duf_levinfo_dfd( pdi ) )
     DOR( r, duf_levinfo_openat_dh( pdi ) );
   assert( duf_levinfo_dfd( pdi ) );
-  nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
+  if ( DUF_NOERROR( r ) )
+  {
+    nlist = scandirat( duf_levinfo_dfd( pdi ), ".", &list, duf_direntry_filter, alphasort );
+    if ( nlist < 0 )
+    {
+      int errorno = errno;
 
+      if ( !duf_levinfo_path( pdi ) )
+        DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
+      else if (errorno != EACCES)
+      {
+        DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", nlist, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
+        DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
+      }
+    }
+    else
+    {
+      for ( int il = 0; il < nlist; il++ )
+      {
+        /*
+         * call for each direntry
+         *   for directory                - scanner_dirent_dir2
+         *   for other (~ regular) entry  - scanner_dirent_reg2
+         * */
+        DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
+        DOR( r, duf_scan_fs_with2scanners_lower( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
+
+        if ( list[il] )
+          free( list[il] );
+      }
+      DUF_TRACE( scan, 10, "passed scandirat='.../%s'", duf_levinfo_itemshowname( pdi ) );
+      if ( list )
+        free( list );
+      DUF_TEST_R( r );
+    }
+  }
 #ifdef MAS_TRACING
   {
     extern duf_scan_callbacks_t duf_dummy_callbacks;
@@ -112,41 +146,6 @@ _duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_
   DUF_TRACE( scan, 10, "scan dirent_dir by %5llu - %s; nlist=%d; (dfd:%d)", duf_levinfo_dirid( pdi ), duf_levinfo_itemshowname_q( pdi, "nil" ), nlist,
              duf_levinfo_dfd( pdi ) );
 
-  if ( nlist >= 0 )
-  {
-    for ( int il = 0; il < nlist; il++ )
-    {
-      /*
-       * call for each direntry
-       *   for directory                - scanner_dirent_dir2
-       *   for other (~ regular) entry  - scanner_dirent_reg2
-       * */
-      DUF_TRACE( scan, 2, "scan dirent %d: %s", il, list[il]->d_name );
-      DOR( r, duf_scan_fs_with2scanners_lower( list[il], pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
-
-      if ( list[il] )
-        free( list[il] );
-    }
-    DUF_TRACE( scan, 10, "passed scandirat='.../%s'", duf_levinfo_itemshowname( pdi ) );
-    if ( list )
-      free( list );
-    DUF_TEST_R( r );
-  }
-  else
-  {
-    int errorno = errno;
-
-    if ( !duf_levinfo_path( pdi ) )
-      DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
-    else if ( errorno == EACCES )
-      r = 0;
-    else
-    {
-      DUF_ERRSYSE( errorno, "(%d) path '%s'/'%s'", nlist, duf_levinfo_path_q( pdi, "?" ), duf_levinfo_itemshowname( pdi ) );
-      DUF_MAKE_ERROR( r, DUF_ERROR_SCANDIR );
-    }
-    DUF_TEST_R( r );
-  }
   DEBUG_ENDR( r );
 }
 

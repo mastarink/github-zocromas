@@ -91,7 +91,7 @@ duf_evaluate_all_at_config_wrap( void )
   DOR( r, duf_evaluate_all_at_config(  ) );
 
 
-  if ( r == DUF_ERROR_NO_ACTIONS )
+  if ( DUF_IS_ERROR( r, DUF_ERROR_NO_ACTIONS ) )
   {
     char *optnames = NULL;
     char *dirent_optnames = NULL;
@@ -111,10 +111,10 @@ duf_evaluate_all_at_config_wrap( void )
     mas_free( optnames );
   }
 
-  /* if ( r == DUF_ERROR_MAX_REACHED )                 */
+  /* if ( DUF_IS_ERROR( r, DUF_ERROR_MAX_REACHED ) )   */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */
-  /*   DUF_SHOW_ERROR( "code: %d", r );                     */
+  /*   DUF_SHOW_ERROR( "code: %d", r );                */
   DEBUG_ENDR( r );
 }
 #endif

@@ -11,7 +11,7 @@
 int
 duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
 {
-  int r = -1;
+  int ry = -1;
 
   if ( level >= minlevel )
   {
@@ -37,7 +37,7 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
       fprintf( out, "%d:%d %3u:%-" P_FN_FMT "s: ", level, minlevel, linid, funcid );
     }
     {
-      r = vfprintf( out, fmt, args );
+      ry = vfprintf( out, fmt, args );
     }
     if ( rf != '.' && rf != ':' )
     {
@@ -50,47 +50,47 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
   }
   if ( ifexit )
     exit( ifexit );
-  return r;
+  return ry;
 }
 
 int
 duf_printf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
 {
-  int r = 0;
+  int ry = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = duf_vprintf( level, minlevel, ifexit, funcid, linid, out, fmt, args );
+  ry = duf_vprintf( level, minlevel, ifexit, funcid, linid, out, fmt, args );
   va_end( args );
-  return r;
+  return ry;
 }
 
 int
 duf_puts( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str )
 {
-  int r = 0;
+  int ry = 0;
 
   if ( level >= minlevel )
   {
     if ( str && *str )
-      r = fputs( str, out );
-    if ( r >= 0 )
+      ry = fputs( str, out );
+    if ( ry >= 0 )
       fputs( "\n", out );
   }
-  return r;
+  return ry;
 }
 
 int
 duf_writes( int level, int minlevel, const char *funcid, int linid, FILE * out, const char *str )
 {
-  int r = 0;
+  int ry = 0;
 
   if ( level >= minlevel )
   {
     if ( str && *str )
     {
-      r = fwrite( str, 1, strlen( str ), out );
+      ry = fwrite( str, 1, strlen( str ), out );
     }
   }
-  return r;
+  return ry;
 }

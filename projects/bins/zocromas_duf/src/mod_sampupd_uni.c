@@ -61,26 +61,26 @@ sampupd_scan_leaf2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   const char *path;
   const char *name;
 
-  DEBUG_STARTR( r );
+  int ry =0;
 
   fd = duf_levinfo_dfd( pdi );
   ufd = duf_levinfo_dfd_up( pdi );
   st = duf_levinfo_stat( pdi ); /* stat info for file */
   path = duf_levinfo_path( pdi ); /* location for file, ends with '/' */
   name = duf_levinfo_itemshowname( pdi ); /* file name */
-  r = fstat( fd, &fdst );
-  r = fstatat( ufd, name, &ufdst, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+  ry = fstat( fd, &fdst );
+  ry = fstatat( ufd, name, &ufdst, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
   {
     char *fpath;
 
     fpath = mas_strdup( path );
     fpath = mas_strcat_x( fpath, name );
-    r = stat( fpath, &fpst );
+    ry = stat( fpath, &fpst );
     mas_free( fpath );
   }
 /* Same! st->; fdst.; ufdst.; fpst.; -- use fd, st, path, name */
   DUF_SHOW_ERROR( "[%lu:%lu:%lu:%lu] %s%s", st->st_ino, fdst.st_ino, ufdst.st_ino, fpst.st_ino, path, name );
-  DEBUG_ENDR( r );
+  return ry ;
 }
 
 

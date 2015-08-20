@@ -85,6 +85,7 @@ int
 duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
+
   int longindex;
   int cnt = 0;
   duf_option_code_t codeval;
@@ -108,7 +109,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     }
   }
 #endif
-  while ( ( r == 0 )
+  while ( r >= 0
           && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
   {
     DUF_TRACE( options, 1, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
@@ -122,7 +123,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     DUF_TRACE( options, 3, "cli options r: %d", r );
     DUF_TRACE( options, 1, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
 
-    if ( r == DUF_ERROR_OPTION_NOT_FOUND || r == DUF_ERROR_OPTION )
+    if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION ) )
     {
       DUF_SHOW_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->carg.argv[optind - 1], codeval, codeval );
     }
@@ -156,13 +157,14 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     /* targ.argv becomes valid here - may init pdi etc. */
   }
   DUF_TRACE( temp, 2, ">> targ_offset:%d", duf_config->targ_offset );
+ 
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 
 int
 duf_cli_options( duf_option_stage_t istage )
 {
-  int r = 0;
+  DEBUG_STARTR( r );
 
 #if 0
   /* Don't use it before all oprions got */
@@ -178,7 +180,7 @@ duf_cli_options( duf_option_stage_t istage )
   /* Don't use it before all options processed */
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
 #endif
-  return r;
+  DEBUG_ENDR( r );
 }
 
   /* if ( code==DUF_OPTION_ ## up  ) \                                                                                                          */

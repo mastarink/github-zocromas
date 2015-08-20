@@ -17,7 +17,7 @@
 int
 duf_direntry_filter( const struct dirent *de )
 {
-  int r = 0;
+  int rx = 0;
 
   DEBUG_START(  );
   switch ( de->d_type )
@@ -29,7 +29,7 @@ duf_direntry_filter( const struct dirent *de )
   case DT_CHR:
     break;
   case DT_DIR:
-    r = ( 1
+    rx = ( 1
           && ( 0 != strcmp( de->d_name, "." ) )
           && ( 0 != strcmp( de->d_name, ".." ) )
           && ( 0 != strcmp( de->d_name, ".comments" ) )
@@ -40,7 +40,7 @@ duf_direntry_filter( const struct dirent *de )
     break;
   case DT_REG:
 
-    r = duf_filename_match( &duf_config->pu->globx, de->d_name );
+    rx = duf_filename_match( &duf_config->pu->globx, de->d_name );
 
 /* #include <fnmatch.h>                                                   */
 /*     int fnmatch( const char *pattern, const char *string, int flags ); */
@@ -55,5 +55,5 @@ duf_direntry_filter( const struct dirent *de )
     break;
   }
   DEBUG_END( );
-  return r;
+  return rx;
 }

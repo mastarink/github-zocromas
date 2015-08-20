@@ -29,12 +29,6 @@ duf_sql_open( const char *dbpath )
   DOR( r, DUF_SQLITE_ERROR_CODE( ( r3 = duf_sqlite_open( dbpath ) ) ) );
   DUF_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
   DUF_TRACE( explain, 0, "opened (?%d) database", r );
-/*int r3, r;
-
-  r3 = duf_sqlite_open( dbpath );
-  r = DUF_SQLITE_ERROR_CODE( r3 );
-  DUF_TRACE( sql, 1, "r3:%d; r:%d", r3, r );
-  return r;*/
   DEBUG_ENDR( r );
 }
 
@@ -55,25 +49,6 @@ duf_sql_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 
   DEBUG_ENDR( r );
 }
-
-/* static int                                                         */
-/* duf_sql_exec( const char *sql, int *pchanges )                     */
-/* {                                                                  */
-/*   DEBUG_STARTR(r  );                                               */
-/*                                                                    */
-/*   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_exec_e( sql, pchanges ) ); */
-/*                                                                    */
-/*   DEBUG_ENDR( r );                                                 */
-/* }                                                                  */
-
-/* static int                                                                                  */
-/* duf_sql_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges ) */
-/* {                                                                                           */
-/*   DEBUG_STARTR( r );                                                                        */
-/*   r = DUF_SQLITE_ERROR_CODE( duf_sqlite_execcb_e( sql, sqexe_cb, sqexe_data, pchanges ) );  */
-/*                                                                                             */
-/*   DEBUG_ENDR( r );                                                                          */
-/* }                                                                                           */
 
 static int
 duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args )
@@ -126,22 +101,6 @@ duf_sql_exec_msg( const char *sql, const char *msg )
 
   DEBUG_ENDR( r );
 }
-
-
-/* int                                                                     */
-/* duf_sql_c( const char *fmt, int constraint_ignore, int *pchanges, ... ) */
-/* {                                                                       */
-/*   DEBUG_STARTR( r );                                                    */
-/*   va_list args;                                                         */
-/*                                                                         */
-/*   va_start( args, pchanges );                                           */
-/*   r = duf_vsql_c( fmt, constraint_ignore, pchanges, args );             */
-/*   DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );                          */
-/*   va_end( args );                                                       */
-/*   if ( !constraint_ignore || r != DUF_SQL_CONSTRAINT )                  */
-/*     DUF_TEST_R( r );                                                    */
-/*   DEBUG_ENDR( r );                                                      */
-/* }                                                                       */
 
 int
 duf_sql( const char *fmt, int *pchanges, ... )

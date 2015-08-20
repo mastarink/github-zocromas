@@ -87,7 +87,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            " WHERE "            /* */
            " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND " /* */
-           " sz.size > 0 AND "   /* */
+           " sz.size > 0 AND "  /* */
            " mi.mime='image/jpeg' AND " /* */
            " 1 "                /* */
            },                   /* */
@@ -518,8 +518,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
         DUF_TEST_R( r );
       }
       mas_free( buffer );
-      if ( r == DUF_ERROR_EOF || r == DUF_ERROR_EXIF_END )
-        r = 0;
+      DUF_CLEAR_ERROR( r, DUF_ERROR_EOF, DUF_ERROR_EXIF_END );
       if ( r >= 0 )
       {
         ExifData *edata = NULL;
@@ -719,7 +718,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
           timeepoch = duf_exif_get_time( edata, &date_changed, stime_original, sizeof( stime_original ), &r );
           /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %lu - %lu", sum, timeepoch ); */
-          if ( ( r >= 0 || r == DUF_ERROR_EXIF_BROKEN_DATE ) && ( timeepoch || *stime_original || model ) )
+          if ( DUF_CLEARED_ERROR( r, DUF_ERROR_EXIF_BROKEN_DATE ) && ( timeepoch || *stime_original || model ) )
           {
             unsigned long long exifid = 0;
 
@@ -727,7 +726,6 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
             const char *real_path = NULL;
 #endif
 
-            r = 0;
 #ifdef MAS_TRACING
             DUF_SFIELD2( filename );
             real_path = duf_levinfo_path( pdi );
@@ -739,9 +737,6 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
             DUF_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
 
-            /* r = duf_sql( "INSERT INTO duf_exif (dataid, model, datetime, d, broken_date) "                                   */
-            /*              " VALUES ( %llu, '%s', datetime('%lu', 'unixepoch'), '%lu', '%s' )", ( int * ) NULL, dataid, model, */
-            /*              timeepoch, timeepoch, date_changed ? stime_original : "" );                                         */
             if ( r >= 0 && exifid && !duf_config->cli.disable.flag.update )
             {
               int changes = 0;
@@ -761,7 +756,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
               }
               else
               {
-                r = duf_sql( " UPDATE " DUF_DBPREF " filedatas SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid, dataid );
+                DOR( r, duf_sql( " UPDATE " DUF_DBPREF " filedatas SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid, dataid ) );
                 duf_pdi_reg_changes( pdi, changes );
               }
 
@@ -773,8 +768,8 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
           {
             DUF_TRACE( exif, 3, "Nothing got for EXIF : (%d)", r );
           }
-          if ( r == DUF_ERROR_EXIF_NO_MODEL )
-            r = 0;
+          DUF_CLEAR_ERROR( r, DUF_ERROR_EXIF_NO_MODEL );
+
           mas_free( model );
           model = NULL;
           /* sleep(1); */
@@ -799,7 +794,6 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
     }
     DUF_TEST_R( r );
   }
-  if ( r == DUF_ERROR_EXIF_NO_DATE )
-    r = 0;
+  DUF_CLEAR_ERROR( r, DUF_ERROR_EXIF_NO_DATE );
   DEBUG_ENDR( r );
 }

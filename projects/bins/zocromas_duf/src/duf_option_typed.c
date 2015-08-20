@@ -25,7 +25,7 @@
 static FILE *
 duf_open_file_special( const char *pname, char **popenedname, int *pr )
 {
-  int r = 0;
+  int rpr = 0;
   FILE *newfile = NULL;
   int overw = 0;
   const char *mode = "w";
@@ -47,7 +47,7 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
   {
     DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
                     ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-    DOR( r, DUF_ERROR_OPTION_VALUE );
+    DOR( rpr, DUF_ERROR_OPTION_VALUE );
   }
   else
   {
@@ -55,11 +55,11 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
     if ( !newfile )
     {
       DUF_SHOW_ERROR( "can't open file %s\n", pname );
-      DOR( r, DUF_ERROR_OPTION_VALUE );
+      DOR( rpr, DUF_ERROR_OPTION_VALUE );
     }
   }
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   return newfile;
 }
 
@@ -335,10 +335,10 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
       case DUF_OPTION_VTYPE_NONE:
         DUF_TRACE( options, 2, "vtype NONE" );
 #if 0
-        if ( r >= 0 ) 
-          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );  // Why was ???
-#endif
+        if ( r >= 0 )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED ); // Why was ???
         /* DUF_TEST_R( r ); */
+#endif
         break;
       case DUF_OPTION_VTYPE_NOOP:
         DUF_TRACE( options, 2, "vtype NOOP" );
@@ -347,7 +347,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
         DUF_TRACE( options, 2, "vtype UPLUS" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
           doplus = 1;
       case DUF_OPTION_VTYPE_NUM:
         DUF_TRACE( options, 2, "vtype NUM" );
@@ -637,8 +637,8 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
           DOR( r, duf_sccbh_eval_pdi_and_summary( sccbh ) );
         }
         break;
-/* r = duf_make_sccb( sccb );                            */
-/* r = duf_sccbh_each_path( duf_sccb_handle_t * sccbh ); */
+/* DOR( r, duf_make_sccb( sccb ) );                            */
+/* DOR( r, duf_sccbh_each_path( duf_sccb_handle_t * sccbh ) ); */
 #endif
       case DUF_OPTION_VTYPE_DATETIME:
         DUF_TRACE( options, 2, "vtype DATETIME" );
@@ -674,7 +674,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
           if ( extended->call.fdesc.via.func )
             ( extended->call.fdesc.via.func ) ( extended->call.fdesc.via.arg );
           else
-            r = DUF_ERROR_OPTION_NO_FUNC;
+            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
         }
         break;
       case DUF_OPTION_VTYPE_VSA_CALL:
@@ -686,7 +686,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
           if ( extended->call.fdesc.vsa.func )
             ( extended->call.fdesc.vsa.func ) ( extended->call.fdesc.vsa.arg );
           else
-            r = DUF_ERROR_OPTION_NO_FUNC;
+            DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NO_FUNC );
         }
         break;
       case DUF_OPTION_VTYPE_A_CALL:
@@ -787,7 +787,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
     {
       DUF_TRACE( options, 0, "@@@NOT switching by extended->vtype=%d; istage=%d (%d:%d); stage.flag:%d", extended->vtype, istage, extended->stage.min,
                  extended->stage.max, extended->stage.flag );
-      /* r = DUF_ERROR_OPTION_NOT_FOUND; */
+      /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }
   }
   DEBUG_ENDR( r );

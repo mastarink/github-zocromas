@@ -108,7 +108,7 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
   {
     duf_sccb_handle_t *sccbh = NULL;
 
-    sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targ.argc, duf_config->targ.argv, duf_config->pu );
+    sccbh = duf_open_sccb_handle( duf_config->pdi, sccb, duf_config->targ.argc, duf_config->targ.argv, duf_config->pu, &r );
 
     DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
 

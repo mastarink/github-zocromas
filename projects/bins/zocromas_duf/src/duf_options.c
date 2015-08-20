@@ -68,7 +68,8 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
 
   if ( r >= 0 )
-    er = r = duf_env_options( istage );
+    DOR( r, duf_env_options( istage ) );
+  er = r;
   DUF_TRACE( options, 0, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
 
 #ifdef MAS_TRACING
@@ -80,17 +81,26 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
 
   if ( r >= 0 )
-    fr = r = duf_infile_options( istage );
+  {
+    DOR( r, duf_infile_options( istage ) );
+    fr = r;
+  }
   DUF_TRACE( options, 0, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name( r ) );
 
   if ( r >= 0 )
-    or = r = duf_cli_options( istage );
+  {
+    DOR( r, duf_cli_options( istage ) );
+    or = r;
+  }
   DUF_TRACE( options, 0, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name( r ) );
 
 #if 1
 /* duf_indirect_options - only for next stage  */
   if ( r >= 0 )
-    ir = r = duf_indirect_options( istage );
+  {
+    DOR( r, duf_indirect_options( istage ) );
+    ir = r;
+  }
   DUF_TRACE( options, 0, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
@@ -140,30 +150,13 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 #if 0
 /* duf_stdin_options - only for next stage, can be executed only once (direct stdin reading!)  */
   if ( r >= 0 )
-    ir = r = duf_stdin_options( istage );
+  {
+    DOR( r, duf_stdin_options( istage ) );
+    ir = r;
+  }
   DUF_TRACE( options, 0, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
-#if 0
-  if ( r >= 0 && duf_test_help( argc, argv, or ) < 0 && duf_test_help( argc, argv, fr ) < 0 && duf_test_help( argc, argv, er ) < 0 )
-  {
-    r = 1;
-    if ( r == 0 && duf_config->db.dir )
-    {
-      DUF_TRACE( explain, 0, "to run main_db( argc, argv )" );
-      r = 1;
-    }
-    else if ( r > 0 )
-    {
-      DUF_TRACE( explain, 1, "or: %d; fr: %d; er: %d; r: %d", or, fr, er, r );
-      /* r=0; */
-    }
-  }
-  else
-  {
-    r = 0;
-  }
-#endif
   DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; ir: %d; tr: %d; r: %s", or, fr, er, ir, tr, duf_error_name( r ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }

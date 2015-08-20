@@ -243,12 +243,12 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
 
         while ( r >= 0 && ( maxcnt == 0 || cnt++ < maxcnt ) )
         {
-          int rr;
+          int ry;
 
           DUF_TRACE( md5, 10, "read fd:%u", fd );
-          rr = read( fd, buffer, bufsz );
-          DUF_TRACE( md5, 10, "read rr:%u", rr );
-          if ( rr < 0 )
+          ry = read( fd, buffer, bufsz );
+          DUF_TRACE( md5, 10, "read ry:%u", ry );
+          if ( ry < 0 )
           {
             DUF_ERRSYS( "read file" );
 
@@ -256,12 +256,12 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
             DUF_TEST_R( r );
             break;
           }
-          if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
+          if ( ry > 0 && !duf_config->cli.disable.flag.calculate )
           {
-            if ( MD5_Update( &ctx, buffer, rr ) != 1 )
+            if ( MD5_Update( &ctx, buffer, ry ) != 1 )
               DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
           }
-          if ( rr <= 0 )
+          if ( ry <= 0 )
             break;
           DUF_TEST_R( r );
         }
@@ -287,7 +287,7 @@ duf_make_md5r_uni( duf_depthinfo_t * pdi, unsigned char *pmdr )
 
   memset( amd5, 0, sizeof( amd5 ) );
   fd = duf_levinfo_dfd( pdi );
-  r = duf_make_md5_uni( fd, amd5 );
+  DOR( r, duf_make_md5_uni( fd, amd5 ) );
   /* reverse */
   for ( int i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     pmdr[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
@@ -300,40 +300,6 @@ static int
 md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-#if 0
-  unsigned long long data[MD5_DIGEST_LENGTH * sizeof( unsigned char ) / sizeof( unsigned long long )];
-
-  DUF_UFIELD2( filedataid );
-  DUF_SFIELD2( filename );
-  DUF_TRACE( md5, 0, "+ %s", filename );
-
-  if ( duf_config->cli.disable.flag.calculate )
-    r = 0;
-  else
-    DOR( r, duf_make_md5r_uni( pdi, ( unsigned char * ) data ) );
-
-  if ( r >= 0 )
-  {
-    unsigned long long md5id = 0;
-
-    DUF_TRACE( md5, 0, "insert %s", filename );
-
-
-    md5id = duf_insert_md5_uni( pdi, data, filename /* for dbg message only */ , 1 /*need_id */ , &r );
-    if ( r >= 0 && md5id )
-    {
-      int changes = 0;
-
-      pdi->cnts.dirent_content2++;
-      if ( r >= 0 && !duf_config->cli.disable.flag.update )
-        DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, md5id, filedataid ) );
-      duf_pdi_reg_changes( pdi, changes );
-      DUF_TEST_R( r );
-    }
-    DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", data[1], data[0], md5id );
-    /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
-  }
-#else
   unsigned char amd5r[MD5_DIGEST_LENGTH];
 
 
@@ -341,12 +307,10 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_SFIELD2( filename );
   DUF_TRACE( md5, 0, "+ %s", filename );
 
-  if ( duf_config->cli.disable.flag.calculate )
-    r = 0;
-  else
+  if ( !duf_config->cli.disable.flag.calculate )
     DOR( r, duf_make_md5r_uni( pdi, amd5r ) );
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     unsigned long long md5id = 0;
     unsigned long long *pmd = ( unsigned long long * ) &amd5r;
@@ -355,12 +319,12 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
 
     md5id = duf_insert_md5_uni( pdi, pmd, filename /* for dbg message only */ , 1 /*need_id */ , &r );
-    if ( r >= 0 && md5id )
+    if ( md5id )
     {
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( r >= 0 && !duf_config->cli.disable.flag.update )
+      if ( !duf_config->cli.disable.flag.update )
         DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET md5id='%llu' WHERE " DUF_SQL_IDNAME "='%lld'", &changes, md5id, filedataid ) );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
@@ -368,67 +332,8 @@ md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     DUF_TRACE( md5, 0, "%016llx%016llx : md5id: %llu", pmd[1], pmd[0], md5id );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %016llx%016llx : %llu", duf_pdi_depth( pdi ), pmd[1], pmd[0], md5id ); */
   }
-#endif
   DEBUG_ENDR( r );
 }
 
-/* static int                                                                                                                          */
-/* duf_dirent_content_by_precord( duf_depthinfo_t * pdi, duf_record_t * precord, const char *fname, unsigned long long filesize ) */
-/* {                                                                                                                                   */
-/*   DEBUG_STARTR( r );                                                                                                                */
-/*   int ffd = duf_levinfo_dfd( pdi );                                                                                                 */
-/*                                                                                                                                     */
-/*   DUF_SHOW_ERROR( "ffd:%d for " DUF_DEPTH_PFMT "", ffd, duf_pdi_depth( pdi ) );                                                     */
-/*   if ( ffd )                                                                                                                        */
-/*   {                                                                                                                                 */
-/*     DUF_TRACE( md5, 2, "openat ffd:%d", ffd );                                                                                      */
-/*     if ( ffd > 0 )                                                                                                                  */
-/*     {                                                                                                                               */
-/*       r = duf_dirent_md5_content( ffd, duf_levinfo_stat( pdi ), pdi, precord );                                                */
-/*     }                                                                                                                               */
-/*     else                                                                                                                            */
-/*     {                                                                                                                               */
-/*       DUF_ERRSYS( "open to read file : %s", fname );                                                                                */
-/*       r = ffd;                                                                                                                      */
-/*       DUF_MAKE_ERROR(r, DUF_ERROR_OPEN);                                                                                            */
-/*     }                                                                                                                               */
-/*     DUF_TEST_R( r );                                                                                                                */
-/*     DUF_TEST_R( r );                                                                                                                */
-/*   }                                                                                                                                 */
-/*   else                                                                                                                              */
-/*     DUF_MAKE_ERROR(r, DUF_ERROR_DATA);                                                                                              */
-/*   DUF_TEST_R( r );                                                                                                                  */
-/*   DEBUG_ENDR( r );                                                                                                                  */
-/* }                                                                                                                                   */
-
-/* callback of type duf_scan_hook_file_t */
-/* static int                                                                    */
-/* collect_openat_md5_leaf( duf_depthinfo_t * pdi, duf_record_t * precord ) */
-/* {                                                                             */
-/*   DEBUG_STARTR( r );                                                                                                                */
-/*                                                                               */
-/*   DUF_SFIELD( filename );                                                     */
-/*   DUF_UFIELD( filesize );                                                     */
-/*   DEBUG_START(  );                                                            */
-/*   r = duf_dirent_content_by_precord( pdi, precord, filename, filesize ); */
-/*   DEBUG_ENDR( r );                                                            */
-/* }                                                                             */
-
-/* 
- * this is callback of type: duf_scan_hook_dir_t
- * */
-/* static int                                                                                                             */
-/* collect_openat_md5_node_before( unsigned long long pathid_unused, duf_depthinfo_t * pdi, duf_record_t * precord ) */
-/* {                                                                                                                      */
-/*   DEBUG_STARTR( r );                                                                                                   */
-/*   const char *real_path = NULL;                                                                                        */
-/*                                                                                                                        */
-/*   DEBUG_START(  );                                                                                                     */
-/*                                                                                                                        */
-/*   real_path = duf_levinfo_path( pdi );                                                                                 */
-/*   DUF_TRACE( md5, 0, "L%d; " DUF_SQL_IDNAME "%-7llu  real_path=%s;", duf_pdi_depth( pdi ), pathid_unused, real_path );                 */
-/*                                                                                                                        */
-/*   DEBUG_ENDR( r );                                                                                                     */
-/* }                                                                                                                      */
 
 /* currently used for --same-md5  ??? */

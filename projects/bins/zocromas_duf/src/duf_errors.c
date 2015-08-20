@@ -145,23 +145,23 @@ duf_set_mereport( int once, int enable, int abs, ... )
 static int
 _duf_get_ereport_n( duf_error_code_t rtest, int maxerr )
 {
-  int r = 0;
+  int re = 0;
 
   if ( rtest < 0 )
   {
     int errindex = duf_errindex( rtest );
 
     if ( errindex >= 0 && errindex < maxerr )
-      r = noreport_error[errindex];
+      re = noreport_error[errindex];
   }
-  return r;
+  return re;
 }
 
 /* >0 -- report it */
 static int
 _duf_get_ereport( duf_error_code_t rtest, int maxerr )
 {
-  int r = 0;
+  int re = 0;
 
   int errindex = duf_errindex( rtest );
 
@@ -171,31 +171,31 @@ _duf_get_ereport( duf_error_code_t rtest, int maxerr )
   {
     if ( errindex < 0 )
     {
-      r = 0;                    /* sql ? ? ? */
+      re = 0;                    /* sql ? ? ? */
     }
     else if ( errindex >= 0 && errindex < maxerr
               && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] - 1 ) )
-      r = noreport_error[errindex] + 1;
+      re = noreport_error[errindex] + 1;
   }
-  return r;
+  return re;
 }
 
 int
 duf_get_ereport_n( duf_error_code_t rtest )
 {
-  int r = 0;
+  int re = 0;
 
-  DOCF( r, _duf_get_ereport_n, rtest, DUF_ERROR_COUNT );
-  return r;
+  DOCF( re, _duf_get_ereport_n, rtest, DUF_ERROR_COUNT );
+  return re;
 }
 
 int
 duf_get_ereport( duf_error_code_t rtest )
 {
-  int r = 0;
+  int re = 0;
 
-  DOCF( r, _duf_get_ereport, rtest, DUF_ERROR_COUNT );
-  return r;
+  DOCF( re, _duf_get_ereport, rtest, DUF_ERROR_COUNT );
+  return re;
 }
 
 static void
@@ -244,29 +244,29 @@ duf_set_memax_count( int maxcount, ... )
 int
 _duf_ecount( duf_error_code_t rtest, int maxerr )
 {
-  int r = 0;
+  int re = 0;
 
   if ( rtest < 0 )
   {
     int errindex = duf_errindex( rtest );
 
     if ( errindex >= 0 && errindex < maxerr )
-      r = count_error[errindex]++;
+      re = count_error[errindex]++;
   }
-  return r;
+  return re;
 }
 
 int
 duf_ecount( duf_error_code_t rtest )
 {
-  int r = 0;
+  int re = 0;
 
-  DOCF( r, _duf_ecount, rtest, DUF_ERROR_COUNT );
-  return r;
+  DOCF( re, _duf_ecount, rtest, DUF_ERROR_COUNT );
+  return re;
 }
 
 duf_error_code_t
-duf_vclear_error( duf_error_code_t r, va_list args )
+duf_vclear_error( duf_error_code_t re, va_list args )
 {
   duf_error_code_t e = 0;
 
@@ -274,25 +274,25 @@ duf_vclear_error( duf_error_code_t r, va_list args )
   {
     e = va_arg( args, int );
 
-    if ( r == e )
+    if ( re == e )
     {
-      r = 0;
+      re = 0;
       break;
     }
   }
   while ( e );
-  return r;
+  return re;
 }
 
 duf_error_code_t
-duf_clear_error( duf_error_code_t r, ... )
+duf_clear_error( duf_error_code_t re, ... )
 {
   va_list args;
 
-  va_start( args, r );
-  r = duf_vclear_error( r, args );
+  va_start( args, re );
+  re = duf_vclear_error( re, args );
   va_end( args );
-  return r;
+  return re;
 }
 
 

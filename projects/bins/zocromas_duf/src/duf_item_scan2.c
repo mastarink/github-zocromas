@@ -119,12 +119,12 @@ duf_scan_db_items_with_str_cb_sql( const char *csql_selector, duf_str_cb2_t str_
   duf_bind_ufilter_uni( pstmt_selector );
 
   /* cal one of duf_sel_cb2_(leaf|node) by node_type
-   * i.e. r = (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh )
+   * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh ) )
    * */
 #if 1
   DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) ) );
 #else
-  DUF_SQL_EACH_ROW( r, pstmt_selector, r = duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) );
+  DUF_SQL_EACH_ROW( r, pstmt_selector, DOR( r, duf_scan_db_row_with_str_cb( pstmt_selector, str_cb2, sccbh, node_type ) ) );
 #endif
   DUF_SQL_END_STMT_NOPDI( r, pstmt_selector );
   DEBUG_ENDR( r );
@@ -163,6 +163,7 @@ int
 duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
+
   const duf_sql_set_t *sql_set = NULL;
 
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || ( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb )
@@ -179,12 +180,15 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
   if ( sql_set->selector2 && sql_set->fieldset )
   {
     DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set, str_cb2, sccbh, node_type ) );
-    if ( r > 0 )
-      DUF_TRACE( explain, 0, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
-                 r, set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
-    else if ( r == 0 )
-      DUF_TRACE( explain, 1, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
-                 set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
+    if ( DUF_NOERROR( r ) )
+    {
+      if ( r > 0 )
+        DUF_TRACE( explain, 0, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
+                   r, set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
+      else
+        DUF_TRACE( explain, 1, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
+                   set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
+    }
   }
   else
   {

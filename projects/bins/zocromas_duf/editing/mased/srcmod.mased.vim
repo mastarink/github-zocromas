@@ -14,9 +14,6 @@ sfind duf_filedata.h
 
 tab sfind mod_directories_uni.c
 
-tab sfind mod_sample_uni.c
-tab sfind mod_sampupd_uni.c
-
 " tab sfind mod_statistics_uni.c
 " tab sfind mod_mdpath_uni.c
 

@@ -255,7 +255,7 @@ duf_indirect_options( duf_option_stage_t istage )
     DUF_TRACE( temp, 2, ">> targv[%d]='%s'", ia, cf );
     if ( cf && *cf == '@' )
     {
-      r = duf_infile_options_at_filepath( istage, cf + 1 );
+      DOR( r, duf_infile_options_at_filepath( istage, cf + 1 ) );
       DUF_TRACE( temp, 2, ">> (%d) done targv[%d]='%s'", r, ia, cf );
     }
   }

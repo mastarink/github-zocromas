@@ -34,7 +34,7 @@ static unsigned long long
 duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
 {
   DEBUG_STARTULL( cnt );
-  int r = DUF_ERROR_TOTALS;
+  int rpr = DUF_ERROR_TOTALS;
 
   /* const char *leaf_selector_total2 = NULL; */
 
@@ -46,7 +46,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
     char *sqlt = NULL;
     const duf_sql_set_t *sql_set = NULL;
 
-    r = 0;
+    rpr = 0;
 #if 0
     sqlt = mas_strdup( "SELECT " );
     sqlt = mas_strcat_x( sqlt, "COUNT(*) AS nf" );
@@ -70,15 +70,15 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
  */
       csql = sqlt;
       DUF_TRACE( temp, 5, "count by %s", csql );
-      DUF_SQL_START_STMT_NOPDI( csql, r, pstmt );
+      DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
       duf_bind_ufilter_uni( pstmt );
-      DUF_SQL_STEP( r, pstmt );
-      if ( r == DUF_SQL_ROW )
+      DUF_SQL_STEP( rpr, pstmt );
+      if ( rpr == DUF_SQL_ROW )
       {
         cnt = duf_sql_column_long_long( pstmt, 0 );
-        r = 0;
+        rpr = 0;
       }
-      DUF_SQL_END_STMT_NOPDI( r, pstmt );
+      DUF_SQL_END_STMT_NOPDI( rpr, pstmt );
       DUF_TRACE( temp, 5, "counted %llu SIZED files in db", cnt );
       DUF_TRACE( explain, 0, "counted %llu SIZED files in db", cnt );
     }
@@ -89,7 +89,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
     DUF_TRACE( explain, 0, "didn't count files in db" );
   }
   if ( pr )
-    *pr = r;
+    *pr = rpr;
   DEBUG_ENDULL( cnt );
 }
 
@@ -140,10 +140,10 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_sccb_handle_t * sccbh, c
 }
 #endif
 duf_sccb_handle_t *
-duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, const duf_ufilter_t * pu )
+duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, const duf_ufilter_t * pu, int *pr )
 {
   duf_sccb_handle_t *sccbh = NULL;
-  int r = 0;
+  int rpr = 0;
 
   if ( sccb )
   {
@@ -158,7 +158,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PDI = pdi;
     SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
-    DOR( r, duf_scan_beginning_sql( sccb ) );
+    DOR( rpr, duf_scan_beginning_sql( sccb ) );
     {
       int rt = 0;
 
@@ -179,14 +179,16 @@ TODO scan mode
     if ( sccb->init_scan )
     {
       DUF_TRACE( explain, 0, "to init scan" );
-      DOR( r, sccb->init_scan( NULL /* pstmt */ , pdi ) );
+      DOR( rpr, sccb->init_scan( NULL /* pstmt */ , pdi ) );
     }
     else
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    DOR( r, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_node_sql_set( SCCB )->selector2 ) );
+    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_node_sql_set( SCCB )->selector2 ) );
   }
+  if ( pr )
+    *pr = rpr;
   return sccbh;
 }
 
