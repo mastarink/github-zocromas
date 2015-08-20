@@ -86,7 +86,7 @@ __attribute__ ( ( constructor( 101 ) ) )
 
     if ( &mas_mem_disable_print_usage )
     {
-      mas_mem_disable_print_usage = 7;
+      mas_mem_disable_print_usage = 0;
     }
   }
   {
@@ -132,11 +132,11 @@ duf_main_with_config( int argc, char **argv )
 
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
-      DUF_TRACE( explain, 1, "no %s option", DUF_OPT_NAME( MEMUSAGE ) );
+      DUF_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( MEMUSAGE ) );
     }
     else
     {
-      DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( MEMUSAGE ) );
+      DUF_TRACE( explain, 0, "@     option %s", DUF_OPT_NAME( MEMUSAGE ) );
     }
   }
 #endif
@@ -152,9 +152,10 @@ duf_main( int argc, char **argv )
 
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
+  DUF_TRACE( explain, 1, "@main with config" );
   DOR( r, duf_main_with_config( argc, argv ) ); /* XXX XXX XXX XXX */
   if ( r < 0 )
-    DUF_SHOW_ERROR( "(%d:%s) %s", r, duf_error_name(r), argv[0] );
+    DUF_SHOW_ERROR( "(%d:%s) %s", r, duf_error_name( r ), argv[0] );
 
   duf_config_delete(  );
 

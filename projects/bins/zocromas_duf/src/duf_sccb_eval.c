@@ -120,9 +120,9 @@ duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 const duf_action_table_t *
 duf_find_sccb_by_name( const char *name, size_t namelen, const duf_action_table_t * table )
 {
-  for ( const duf_action_table_t * act = table; act->sccb; act++ )
+  for ( const duf_action_table_t * act = table; !act->end_of_table; act++ )
   {
-    if ( 0 == strncmp( name, act->sccb->name, namelen ) )
+    if ( act->sccb && act->in_use && 0 == strncmp( name, act->sccb->name, namelen ) )
       return act;
   }
   return NULL;

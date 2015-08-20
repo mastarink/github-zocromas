@@ -31,7 +31,6 @@ const duf_longval_extended_table_t optable_debug = {
    {.o = {DO_Q( "verbose" ) /*           */ , DO_A_O /* */ , DO_V( VERBOSE )} /*        */ , DO_CL( DEBUG ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.dbg.verbose ) /*                                                            */ , DO_H( verbose ) /*           */ },
 
-   {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
 
 
    {.o = {.name = NULL}}

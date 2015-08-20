@@ -31,68 +31,72 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ), /* 
       /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
   duf_print_tree_callbacks __attribute( ( weak ) ), /* */
   duf_print_dir_callbacks __attribute( ( weak ) ), /* */
-  duf_sample_callbacks,         /* */
+  duf_sample_callbacks __attribute( ( weak ) ), /* */
+  duf_sampupd_callbacks __attribute( ( weak ) ), /* */
   duf_dummy_callbacks,          /* */
   duf_template_callbacks,       /* */
   duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
 
 static duf_action_table_t actions_table[] = {
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_integrity_callbacks,
    .on.flag = {.integrity = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_directories_callbacks,
    .on.flag = {.collect = 1,.dirent = 1,.dirs = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_filedata_callbacks,
    .on.flag = {.collect = 1,.dirent = 1,.filedata = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_filenames_callbacks,
    .on.flag = {.collect = 1,.dirent = 1,.filenames = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_openat_crc32_callbacks,
    .on.flag = {.collect = 1,.crc32 = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_openat_sd5_callbacks,
    .on.flag = {.collect = 1,.sd5 = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_openat_md5_callbacks,
    .on.flag = {.collect = 1,.md5 = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_mime_callbacks,
    .on.flag = {.collect = 1,.mime = 1}
    },
-  {.tovector = 1,
+  {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_exif_callbacks,
    .on.flag = {.collect = 1,.exif = 1}
    },
   /* {.sccb = &duf_collect_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
-  {.tovector = 0,
+  {.tovector = 0, .in_use=0,
    .sccb = &duf_sample_callbacks,
    },
-  {.tovector = 0,
+    {.tovector = 0, .in_use=0,
+   .sccb = &duf_sampupd_callbacks,
+   },
+  {.tovector = 0, .in_use=1,
    .sccb = &duf_template_callbacks,
    },
-  {.tovector = 0,
+  {.tovector = 0, .in_use=1,
    .sccb = &duf_dummy_callbacks,
    },
 
-  {.tovector = 0,
+  {.tovector = 0, .in_use=1,
    .sccb = &duf_print_tree_callbacks,
 #if 0
    .on.flag = {.print = 1,.tree = 1},
 #endif
    .off.flag = {.md5 = 1}
    },
-  {.tovector = 0,
+  {.tovector = 0, .in_use=1,
    .sccb = &duf_print_dir_callbacks,
 #if 0
    .on.flag = {.print = 1},
@@ -106,7 +110,7 @@ static duf_action_table_t actions_table[] = {
   /* {.sccb = &duf_print_md5_callbacks, */
   /*  .on.flag = {.print = 1,.md5 = 1}, */
   /*  },                                */
-  {.sccb = NULL},
+  {.sccb = NULL, .end_of_table=1},
 };
 
 
@@ -175,7 +179,8 @@ duf_config2sccb_vector_sample( duf_scan_callbacks_t ** psccbs, int max_asteps )
 
       DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sample #%d", asteps );
       DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-      psccbs[asteps++] = sccb;
+      if ( sccb )
+        psccbs[asteps++] = sccb;
     }
   }
   else
@@ -186,13 +191,14 @@ duf_config2sccb_vector_sample( duf_scan_callbacks_t ** psccbs, int max_asteps )
   assert( asteps < max_asteps );
   if ( duf_config->cli.act.sampupd )
   {
-    extern duf_scan_callbacks_t duf_sampupd_callbacks /* __attribute( ( weak ) ) */ ;
+    extern duf_scan_callbacks_t duf_sampupd_callbacks __attribute( ( weak ) );
     duf_scan_callbacks_t *sccb = &duf_sampupd_callbacks;
 
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPUPD ) );
     DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sampupd≫ #%d", asteps );
     DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-    psccbs[asteps++] = sccb;
+    if ( sccb )
+      psccbs[asteps++] = sccb;
   }
   else
   {

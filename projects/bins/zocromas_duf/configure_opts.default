@@ -1,4 +1,4 @@
 # --with-sqlite3=/mnt/new_misc/develop/autotools/zoc/admin/install/default
 --enable-tracing
---disable-wrap-func
+--enable-wrap-func
 --enable-tracing-options

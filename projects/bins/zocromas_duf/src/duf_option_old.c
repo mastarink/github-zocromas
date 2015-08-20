@@ -358,6 +358,7 @@ duf_interpret_option_long_old( const duf_longval_extended_t * extended, const ch
 
         if ( &mas_mem_disable_print_usage )
         {
+	  fprintf(stderr, "#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#\n");
           mas_mem_disable_print_usage = 0;
         }
       }

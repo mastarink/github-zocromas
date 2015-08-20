@@ -105,7 +105,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
       }
       else
       {
-        DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), dirid, duf_levinfo_dirid_up( pdi ) );
+        DUF_TRACE( explain, 2, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), dirid, duf_levinfo_dirid_up( pdi ) );
       }
       assert( dirid );
       if ( rpr >= 0 )
@@ -309,7 +309,7 @@ duf_path_component_here2db( duf_depthinfo_t * pdi, /* const char *dirname, */ in
         r = changes;
     }
     else
-      DUF_TRACE( explain, 1, "already in db ID: %llu for ≪%s≫", *pparentid, duf_levinfo_itemshowname( pdi ) );
+      DUF_TRACE( explain, 2, "already in db ID: %llu for ≪%s≫", *pparentid, duf_levinfo_itemshowname( pdi ) );
 
     duf_levinfo_set_dirid( pdi, *pparentid );
     DUF_TRACE( path, 5, "inserted [%s] AS %llu", duf_levinfo_itemshowname( pdi ), *pparentid );

@@ -98,7 +98,7 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
         /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
       }
       pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
-      DUF_TRACE( explain, 1, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemshowname( pdi ) );
+      DUF_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemshowname( pdi ) );
       assert( pdi->depth >= 0 );
       if ( is_leaf )
         DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
@@ -190,7 +190,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
     DUF_TEST_R( r );
     if ( r < 0 )
       DUF_SHOW_ERROR( "(%d) close error; L%d", r, pdi->depth );
-    DUF_TRACE( explain, 1, "level up:   %d", d );
+    DUF_TRACE( explain, 2, "level up:   %d", d );
     assert( pdi->levinfo );
     duf_levinfo_clear_level_d( pdi, d );
     d = pdi->depth;

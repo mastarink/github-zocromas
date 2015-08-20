@@ -137,6 +137,8 @@ typedef struct duf_sccb_handle_s duf_sccb_handle_t;
 
 typedef struct
 {
+  unsigned end_of_table:1;
+  unsigned in_use:1;
   unsigned tovector:1;
   duf_config_act_flags_combo_t on;
   duf_config_act_flags_combo_t off;

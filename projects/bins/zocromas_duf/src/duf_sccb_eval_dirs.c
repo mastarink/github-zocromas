@@ -118,7 +118,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_sqlite_stmt_t * pstmt_selector, duf_
 
   DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 1." );
 
-  DUF_TRACE( explain, 0,
+  DUF_TRACE( explain, 2,
              "≫≫≫≫≫≫≫≫≫≫  to scan %" "s" /* DUF_ACTION_TITLE_FMT */ " ≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪≪",
              duf_uni_scan_action_title( SCCB ) );
   DUF_SCCB( DUF_TRACE, scan, 0, "scanning: top dirID: %llu; path: %s;", duf_levinfo_dirid( PDI ), duf_levinfo_path( PDI ) );

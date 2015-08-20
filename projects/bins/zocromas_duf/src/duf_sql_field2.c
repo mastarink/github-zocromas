@@ -97,7 +97,8 @@ int
 duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
                           duf_sccb_handle_t * sccbh )
 {
-  DEBUG_STARTR( r );
+  int r_ = 0;
+
   if ( SCCB )
   {
     unsigned long long *pvalue;
@@ -116,24 +117,24 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
       if ( have_pos >= 0 )
       {
 #ifdef DUF_RECORD_WITH_NROWS
-        r = precord->nrow;
+        r_ = precord->nrow;
 #else
-        r = 0;
+        r_ = 0;
 #endif
       }
       else
       {
-        DUF_MAKE_ERROR( r, DUF_ERROR_NO_FIELD_OPTIONAL );
-        DUF_SHOW_ERROR( "r=%d; no field %s", r, leaf_set->fieldset );
+        DUF_MAKE_ERROR( r_, DUF_ERROR_NO_FIELD_OPTIONAL );
+        DUF_SHOW_ERROR( "r_=%d; no field %s", r_, leaf_set->fieldset );
       }
     }
 #ifdef DUF_RECORD_WITH_NROWS
     else
     {
       DUF_SHOW_ERROR( "something is wrong" );
-      DUF_MAKE_ERROR( r, DUF_ERROR_GET_FIELD );
+      DUF_MAKE_ERROR( r_, DUF_ERROR_GET_FIELD );
     }
 #endif
   }
-  DEBUG_ENDR( r );
+  return r_;
 }

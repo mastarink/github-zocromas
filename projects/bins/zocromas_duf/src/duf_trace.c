@@ -26,7 +26,7 @@ static int
 duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_error_code_t ern, const char *funcid, int linid,
                   unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, va_list args )
 {
-  int r = 0;
+  int r_ = 0;
 
   if ( ern < 0 )
   {
@@ -38,14 +38,14 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
     else
       fprintf( out, "Error rv=%d\n", ern );
   }
-  return r;
+  return r_;
 }
 
 int
 duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, const char *name, int level, int minlevel, const char *funcid, int linid,
             double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, va_list args )
 {
-  int r = -1;
+  int r_ = -1;
 
   /* 
    * needless??
@@ -60,7 +60,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
 #endif
   if ( trace_mode == DUF_TRACE_MODE_errorr )
   {
-    r = duf_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
+    r_ = duf_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
   }
   else if ( level > minlevel )
   {
@@ -133,14 +133,14 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
     }
     if ( prefix && *prefix )
     {
-      r = fprintf( out, "%15s%s", prefix ? prefix : " ", prefix ? " " : "  " );
+      r_ = fprintf( out, "%15s%s", prefix ? prefix : " ", prefix ? " " : "  " );
     }
     else
     {
-      r = fprintf( out, " " );
+      r_ = fprintf( out, " " );
     }
     {
-      r = vfprintf( out, fmt, args );
+      r_ = vfprintf( out, fmt, args );
     }
     if ( highlight )
       fprintf( out, "\x1b[m" );
@@ -157,18 +157,18 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
       fprintf( out, "\n" );
     }
   }
-  return r;
+  return r_;
 }
 
 int
 duf_trace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, const char *name, int level, int minlevel, const char *funcid, int linid,
            double time0, char signum, unsigned flags, int nerr, FILE * out, const char *prefix, const char *fmt, ... )
 {
-  int r = 0;
+  int r_ = 0;
   va_list args;
 
   va_start( args, fmt );
-  r = duf_vtrace( trace_mode, trace_submode, name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fmt, args );
+  r_ = duf_vtrace( trace_mode, trace_submode, name, level, minlevel, funcid, linid, time0, signum, flags, nerr, out, prefix, fmt, args );
   va_end( args );
-  return r;
+  return r_;
 }

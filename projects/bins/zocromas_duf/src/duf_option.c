@@ -36,8 +36,17 @@ duf_interpret_option_long_full( const duf_longval_extended_t * extended, const c
     DUF_TRACE( options, 0, "@@xname:%s; arg:%s; istage:%d; no:%d", extended ? extended->o.name : "?", optargg, istage, no );
     DOR( r, duf_interpret_option_long_typed( extended, optargg, istage, xtable, no ) );
     DUF_TRACE( options, 2, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
+
+
     if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
+    {
+      DUF_TRACE( explain, 1, "@old opt for %s", extended?extended->o.name:NULL  );
       DOZR( r, duf_interpret_option_long_old( extended, optargg, istage, xtable ) );
+    }
+    else
+    {
+      DUF_TRACE( explain, 1, "@no old opt for %s", extended?extended->o.name:NULL );
+    }
     DUF_TRACE( options, 3, "cli options r: %d", r );
     DUF_TRACE( options, 2, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name( r ) );
   }
