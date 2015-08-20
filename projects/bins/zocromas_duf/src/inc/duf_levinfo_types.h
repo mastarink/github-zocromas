@@ -22,6 +22,7 @@ typedef struct duf_dirhandle_s
 
   int dfd;
   int rs;
+  int rdb;
   struct stat st;
   duf_dh_source_t source;
 } duf_dirhandle_t;

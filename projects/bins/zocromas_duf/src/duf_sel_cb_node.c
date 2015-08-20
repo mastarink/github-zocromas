@@ -38,11 +38,13 @@
  *   -- duf_eval_sccbh_all(_wrap)
  *   ...
  */
+/* 20150820.085950 */
 int
 duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   assert( PDI );
+  assert( PDI->depth >= 0 );
 
   /* data from db at pstmt */
 
@@ -50,57 +52,48 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DUF_TRACE( explain, 4, "@ sel cb2 node" );
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) );
 
-#if 1
-  DOR( r, duf_pstmt_levinfo_godown_openat_dh( pstmt, PDI, 0 /* is_leaf */  ) );
-
-
-#elif 0
-
-#else
-
-#endif
-  assert( PDI->depth >= 0 );
-
-  if ( r >= 0 )                 /* levinfo_down OK */
   {
-    PDI->seq++;
-    PDI->seq_node++;
+    /*@ 1. go down + dbopenat */
+    DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 0 /* is_leaf */  ) );
+    assert( PDI->depth >= 0 );
 
-    DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
-    if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
+    if ( r >= 0 )               /* levinfo_down OK */
     {
-      long long m;
+      PDI->seq++;
+      PDI->seq_node++;
 
-      m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
-      DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
-      /* assert( PDI->seq_node <= m ); FIXME counters! */
-      if ( m > 0 )
+      DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
+      if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
       {
-        duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
+        long long m;
+
+        m = TOTITEMS + duf_pdi_reldepth( PDI ) - duf_pdi_depth( PDI ) - 1;
+        DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
+        /* assert( PDI->seq_node <= m ); FIXME counters! */
+        /*@ 2. progress bar */
+        if ( m > 0 )
+          duf_percent( PDI->seq_node, m, duf_uni_scan_action_title( SCCB ) );
       }
+
+      DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
+
+
+      DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
+                    duf_levinfo_dfd( PDI ), PDI->opendir );
+
+      if ( str_cb2 )
+      {
+        DUF_TRACE( explain, 2, "=> str cb2" );
+        DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
+        /*@ 3. str_cb2 */
+        DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
+        if ( r == DUF_ERROR_OPENAT_ENOENT )
+          r = 0;
+      }
+
+    /*@ 4. go up */
+      DOR( r, duf_levinfo_goup( PDI ) );
     }
-
-    DUF_TRACE( seq, 0, "seq:%llu; seq_node:%llu", PDI->seq, PDI->seq_node );
-
-
-    DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
-                  duf_levinfo_dfd( PDI ), PDI->opendir );
-
-    if ( str_cb2 )
-    {
-      DUF_TRACE( explain, 2, "=> str cb2" );
-      DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. node str cb2" );
-      DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
-      if ( r == DUF_ERROR_OPENAT_ENOENT )
-        r = 0;
-    }
-
-    DOR( r, duf_levinfo_goup( PDI ) );
   }
-
-  DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
-
-  DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
-
   DEBUG_ENDR( r );
 }

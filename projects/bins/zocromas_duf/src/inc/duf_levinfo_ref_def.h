@@ -116,4 +116,21 @@
 #define DUF_LEVINFO_ST_FLD(_fld) DUF_LEVINFO_ST_FLD_NAME(_fld, _fld)
 
 
+#define DUF_LEVINFO_DBST_TYP_FLD_NAME(_typ, _fld, _name) \
+  _typ ## _t \
+  duf_levinfo_dbstat_ ## _name( const duf_depthinfo_t * pdi ) \
+  { \
+   struct stat *st; \
+  \
+   st = duf_levinfo_dbstat( pdi ); \
+   return st ? st->st_ ## _fld : 0; \
+ }
+
+#define DUF_LEVINFO_DBST_FLD_NAME(_fld, _name) DUF_LEVINFO_DBST_TYP_FLD_NAME(_fld, _fld, _name)
+#define DUF_LEVINFO_DBST_TYP_FLD(_typ, _fld) DUF_LEVINFO_DBST_TYP_FLD_NAME(_typ, _fld, _fld)
+
+#define DUF_LEVINFO_DBST_FLD(_fld) DUF_LEVINFO_DBST_FLD_NAME(_fld, _fld)
+
+
+
 #endif

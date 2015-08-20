@@ -58,11 +58,11 @@ duf_scan_db_row_with_str_cb( duf_sqlite_stmt_t * pstmt_selector, duf_str_cb2_t s
     duf_sel_cb2_t cb = NULL;
 
     if ( node_type == DUF_NODE_NODE )
-      cb = duf_sel_cb2_node; /* str_cb2 is duf_eval_sccbh_all */
+      cb = duf_sel_cb2_node;    /* str_cb2 is duf_eval_sccbh_all */
     else if ( node_type == DUF_NODE_LEAF )
-      cb = duf_sel_cb2_leaf; /* str_cb2 is duf_eval_sccbh_db_leaf_str_cb or duf_eval_sccbh_db_leaf_fd_str_cb */
+      cb = duf_sel_cb2_leaf;    /* str_cb2 is duf_eval_sccbh_db_leaf_str_cb or duf_eval_sccbh_db_leaf_fd_str_cb */
     if ( cb )
-      ( cb ) ( pstmt_selector, str_cb2, sccbh );
+      DOR( r, ( cb ) ( pstmt_selector, str_cb2, sccbh ) );
     else
       DUF_MAKE_ERROR( r, DUF_ERROR_ARGUMENT );
   }
@@ -89,11 +89,15 @@ duf_scan_db_row_with_str_cb( duf_sqlite_stmt_t * pstmt_selector, duf_str_cb2_t s
   {
     duf_sel_cb2_t cb = NULL;
 
-    cb = ( ( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ); 
+    cb = ( ( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) );
     if ( cb )
       ( cb ) ( pstmt_selector, str_cb2, sccbh );
   }
 #endif
+
+  DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
+  DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
+
   DEBUG_ENDR( r );
 }
 
@@ -159,7 +163,8 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
   DEBUG_STARTR( r );
   const duf_sql_set_t *sql_set = NULL;
 
-  assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || ( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb ) || ( str_cb2 == duf_eval_sccbh_db_leaf_str_cb ) );
+  assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || ( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb )
+          || ( str_cb2 == duf_eval_sccbh_db_leaf_str_cb ) );
 #ifdef MAS_TRACING
   const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_LEAF ? "node" : "UNDEF" );
 #endif

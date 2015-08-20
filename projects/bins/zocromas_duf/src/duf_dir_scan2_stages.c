@@ -124,11 +124,12 @@
     }
 #endif
 
+/* 20150820.085420 */
 DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( before );
 DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( middle );
 DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION( after );
 
-/*
+/*20150820.085447
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:
  *
@@ -146,17 +147,10 @@ duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * s
     duf_pdi_set_opendir( PDI, 1 );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 0, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-    {
-#if 1
-      if ( !duf_levinfo_stat( PDI ) )
-      {
-        /* DOR( r, duf_levinfo_openat_dh( PDI ) ); */
-        DOR_NOE( r, duf_levinfo_statat_dh( PDI ), DUF_ERROR_FS_DISABLED );
-      }
-      /* assert( duf_levinfo_dfd( PDI ) ); */
-      assert( r < 0 || duf_levinfo_stat( PDI ) );
-#endif
-    }
+
+    DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED );
+    /* assert( duf_levinfo_dfd( PDI ) ); */
+    assert( r < 0 || duf_levinfo_stat( PDI ) );
     /*
      *   -- call for each direntry
      *      - for directory                - sccb->dirent_dir_scan_before2
@@ -182,7 +176,7 @@ duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * s
   DEBUG_ENDR( r );
 }
 
-/*
+/*20150820.085607
  *  - pstmt - for 1 node data, obtained from db
  *  - pdi
  *  - sccb
@@ -223,8 +217,9 @@ duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   DEBUG_ENDR( r );
 }
 
+/* 20150820.085615 */
 int
-duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh /*, duf_str_cb2_t str_cb2 */  )
+duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
   const char *node_selector2 = NULL;
@@ -245,7 +240,6 @@ duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh
    * */
   node_selector2 = duf_get_node_sql_set( SCCB )->selector2;
   if ( node_selector2 )
-    DORF( r, duf_eval_sccbh_db_items_str_cb, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ) /* str_cb2 */ ,
-          sccbh );
+    DORF( r, duf_eval_sccbh_db_items_str_cb, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ), sccbh );
   DEBUG_ENDR( r );
 }

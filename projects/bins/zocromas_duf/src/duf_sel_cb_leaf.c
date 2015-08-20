@@ -19,11 +19,15 @@
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
+#include "duf_levinfo_openclose.h"
 
 #include "duf_pdi.h"
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_leaf_scan2.h"
+
+#include "duf_sql_defs.h"
+#include "duf_sql_field.h"
 
 #include "duf_sccbh_shortcuts.h"
 #include "duf_pstmt_levinfo.h"
@@ -45,6 +49,7 @@
  *   duf_str_cb_uni_scan_dir (in theory ?!)
  *   ...
  * */
+/* 20150820.085847 */
 int
 duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
 {
@@ -59,15 +64,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 
 
-#if 1
-  DOR( r, duf_pstmt_levinfo_godown_openat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
-/* TODO  duf_pstmt_levinfo_godown_openat_dh can be used if sql contains dirid, ndirs and nfiles
- * ( something like " 0 as ndirs, 0 as nfiles" ) */
-#elif 0
-  DOR( r, duf_levinfo_godown_openat_dh( PDI, 0 /* dir_id */ , DUF_GET_SFIELD2( filename ), 0, 0, 1 /* is_leaf */  ) );
-#else
-  DOR( r, duf_levinfo_godown_dbopenat_dh( PDI, 0, DUF_GET_SFIELD2( filename ), 0 /* ndirs */ , 0 /* nfiles */ , 1 /* is_leaf */ , pstmt ) );
-#endif
+  DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
   assert( PDI->depth >= 0 );
 
   if ( r >= 0 )                 /* levinfo_down OK */
@@ -94,6 +91,24 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
                   duf_levinfo_dfd( PDI ), PDI->opendir );
+#ifdef MAS_TRACING
+    {
+      DUF_SFIELD2( filename );
+      const char *dfn = duf_levinfo_itemshowname( PDI );
+
+      /* filename from db same as duf_levinfo_itemname( pdi ) */
+      assert( 0 == strcmp( filename, dfn ) );
+      DOR( r, duf_levinfo_dbopenat_dh( PDI, pstmt, 1 /* is_leaf */  ) );
+      {
+        duf_levinfo_t *l = duf_levinfo_ptr( PDI );
+
+        assert( l );
+        assert( duf_levinfo_dbstat( PDI ) );
+        assert( duf_levinfo_dbstat_dev( PDI ) );
+        assert( duf_levinfo_dbstat_inode( PDI ) );
+      }
+    }
+#endif
 
     if ( str_cb2 )
     {
@@ -107,10 +122,6 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
     DOR( r, duf_levinfo_goup( PDI ) );
   }
-
-  DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
-
-  DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
 
   DEBUG_ENDR( r );
 }

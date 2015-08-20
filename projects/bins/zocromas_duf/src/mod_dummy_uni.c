@@ -10,6 +10,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_config_ref.h"
+#include "duf_levinfo_openclose.h"
 #include "duf_levinfo_ref.h"
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -100,6 +101,9 @@ dummy_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( duf_levinfo_opened_dh( pdi ) || duf_levinfo_item_deleted( pdi ) );
+  assert( duf_levinfo_stat( pdi ) || duf_levinfo_item_deleted( pdi ) );
+
 #endif
 
 
@@ -145,14 +149,17 @@ dummy_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 #ifdef MAS_TRACING
   DUF_SFIELD2( filename );
 
+  assert( !duf_levinfo_dfd( pdi ) );
   /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( duf_levinfo_dbstat( pdi ) );
 #endif
 
 
-  DUF_TRACE( mod, 1, "dummy %s : %s -a-", duf_levinfo_path( pdi ), filename );
-  DUF_TRACE( mod, 2, "dummy %s : %s -b- ::  {%d:%d} x%llx", duf_levinfo_itemshowname( pdi ), filename, duf_levinfo_dfd( pdi ),
-             duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
+  DUF_TRACE( mod, 4, "dummy %s : %s -a-", duf_levinfo_path( pdi ), filename );
+  DUF_TRACE( mod, 2, "@dummy %s : %s -b- ::  {dfd:%d; source:%d} dev:x%llx; inode:%llu", duf_levinfo_itemshowname( pdi ), filename,
+             duf_levinfo_dfd( pdi ), duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_dbstat_dev( pdi ),
+             ( unsigned long long ) duf_levinfo_dbstat_inode( pdi ) );
 
   DEBUG_ENDR( r );
 }

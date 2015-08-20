@@ -237,6 +237,7 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
 
+
   /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
   /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */
   /*        && ( !pdi->pu->maxitems.dirs || ( pdi->items.dirs ) < pdi->pu->maxitems.dirs )       */

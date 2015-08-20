@@ -57,7 +57,7 @@ duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d )
 
   /* if ( pdi->opendir ) */
   {
-    if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rs > 0 )
+    if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rs > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_FS )
       pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;
   }
   /* TODO NOT here: assert( pst->st_dev ); 
@@ -86,6 +86,47 @@ DUF_LEVINFO_ST_TYP_FLD_NAME( time, ctime, csec );
 DUF_LEVINFO_ST_TYP_FLD_NAME( long, atim.tv_nsec, ansec );
 DUF_LEVINFO_ST_TYP_FLD_NAME( long, mtim.tv_nsec, mnsec );
 DUF_LEVINFO_ST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
+
+
+struct stat *
+duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d )
+{
+  struct stat *pst = NULL;
+
+  /* if ( pdi->opendir ) */
+  {
+    if ( duf_levinfo_ptr_d( pdi, d )->lev_dh.rdb > 0 && duf_levinfo_ptr_d( pdi, d )->lev_dh.source == DUF_DH_SOURCE_DB )
+      pst = &duf_levinfo_ptr_d( pdi, d )->lev_dh.st;
+  }
+  /* TODO NOT here: assert( pst->st_dev ); 
+   * (used to check presence, so no stat is OK)
+   * TODO */
+  return pst;
+}
+/* *INDENT-OFF*  */
+DUF_LEVINFO_FC_REF( struct stat, dbstat )
+DUF_LEVINFO_FC_UP_REF( struct stat, dbstat )
+/* *INDENT-ON*  */
+
+
+DUF_LEVINFO_DBST_FLD_NAME( ino, inode );
+DUF_LEVINFO_DBST_FLD( dev );
+DUF_LEVINFO_DBST_FLD( mode );
+DUF_LEVINFO_DBST_FLD( nlink );
+DUF_LEVINFO_DBST_FLD( uid );
+DUF_LEVINFO_DBST_FLD( gid );
+DUF_LEVINFO_DBST_TYP_FLD( blkcnt, blocks );
+DUF_LEVINFO_DBST_FLD( blksize );
+DUF_LEVINFO_DBST_TYP_FLD( off, size );
+DUF_LEVINFO_DBST_TYP_FLD_NAME( time, atime, asec );
+DUF_LEVINFO_DBST_TYP_FLD_NAME( time, mtime, msec );
+DUF_LEVINFO_DBST_TYP_FLD_NAME( time, ctime, csec );
+DUF_LEVINFO_DBST_TYP_FLD_NAME( long, atim.tv_nsec, ansec );
+DUF_LEVINFO_DBST_TYP_FLD_NAME( long, mtim.tv_nsec, mnsec );
+DUF_LEVINFO_DBST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
+
+
+
 
 
 /* TODO st_nlink, st_uid, st_gid, st_blksize, st_blocks, st_?tim */

@@ -271,6 +271,10 @@ crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file
   DUF_SFIELD2( filename );
   DUF_TRACE( crc32, 0, "+ %s", filename );
 
+  /* assert( duf_levinfo_dbstat( pdi ) ); */
+  assert( duf_levinfo_dfd( pdi ) );
+  assert( duf_levinfo_stat( pdi ) );
+
   if ( duf_config->cli.disable.flag.calculate )
     crc32sum = duf_levinfo_dirid( pdi );
   else

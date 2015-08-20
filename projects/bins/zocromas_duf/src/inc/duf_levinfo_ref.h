@@ -74,6 +74,8 @@ struct stat *duf_levinfo_stat_d( const duf_depthinfo_t * pdi, int d );
 struct stat *duf_levinfo_stat( const duf_depthinfo_t * pdi );
 struct stat *duf_levinfo_stat_up( const duf_depthinfo_t * pdi );
 
+typedef long long_t;
+
 ino_t duf_levinfo_stat_inode( const duf_depthinfo_t * pdi );
 dev_t duf_levinfo_stat_dev( const duf_depthinfo_t * pdi );
 mode_t duf_levinfo_stat_mode( const duf_depthinfo_t * pdi );
@@ -86,10 +88,33 @@ blksize_t duf_levinfo_stat_blksize( const duf_depthinfo_t * pdi );
 time_t duf_levinfo_stat_asec( const duf_depthinfo_t * pdi );
 time_t duf_levinfo_stat_msec( const duf_depthinfo_t * pdi );
 time_t duf_levinfo_stat_csec( const duf_depthinfo_t * pdi );
-typedef long long_t;
 long_t duf_levinfo_stat_ansec( const duf_depthinfo_t * pdi );
 long_t duf_levinfo_stat_mnsec( const duf_depthinfo_t * pdi );
 long_t duf_levinfo_stat_cnsec( const duf_depthinfo_t * pdi );
+
+
+struct stat *duf_levinfo_dbstat_d( const duf_depthinfo_t * pdi, int d );
+struct stat *duf_levinfo_dbstat( const duf_depthinfo_t * pdi );
+struct stat *duf_levinfo_dbstat_up( const duf_depthinfo_t * pdi );
+
+ino_t duf_levinfo_dbstat_inode( const duf_depthinfo_t * pdi );
+dev_t duf_levinfo_dbstat_dev( const duf_depthinfo_t * pdi );
+mode_t duf_levinfo_dbstat_mode( const duf_depthinfo_t * pdi );
+off_t duf_levinfo_dbstat_size( const duf_depthinfo_t * pdi );
+nlink_t duf_levinfo_dbstat_nlink( const duf_depthinfo_t * pdi );
+uid_t duf_levinfo_dbstat_uid( const duf_depthinfo_t * pdi );
+gid_t duf_levinfo_dbstat_gid( const duf_depthinfo_t * pdi );
+blkcnt_t duf_levinfo_dbstat_blocks( const duf_depthinfo_t * pdi );
+blksize_t duf_levinfo_dbstat_blksize( const duf_depthinfo_t * pdi );
+time_t duf_levinfo_dbstat_asec( const duf_depthinfo_t * pdi );
+time_t duf_levinfo_dbstat_msec( const duf_depthinfo_t * pdi );
+time_t duf_levinfo_dbstat_csec( const duf_depthinfo_t * pdi );
+long_t duf_levinfo_dbstat_ansec( const duf_depthinfo_t * pdi );
+long_t duf_levinfo_dbstat_mnsec( const duf_depthinfo_t * pdi );
+long_t duf_levinfo_dbstat_cnsec( const duf_depthinfo_t * pdi );
+
+
+
 
 
 const char *duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d );
