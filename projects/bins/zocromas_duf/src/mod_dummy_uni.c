@@ -294,7 +294,7 @@ dummy_de_dir_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   }
 #endif
 
-  DUF_TRACE( scan, 0, "scan de - sub-directory scanned here %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+  DUF_TRACE( scan, 3, "scan de - sub-directory scanned here %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
 
   DUF_TRACE( mod, 1, "dummy de dir before: %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
   DEBUG_ENDR( r );

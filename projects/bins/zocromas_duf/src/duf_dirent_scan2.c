@@ -10,6 +10,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_pdi.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_openclose.h"
@@ -75,9 +76,17 @@ duf_scan_fs_with2scanners_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_s
   int is_leaf;
 
   is_leaf = de->d_type != DT_DIR;
+  if ( !is_leaf )
+    DUF_TRACE( scan, 0, "@@@(%s) scan b.DOWN %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
   DOR( r, duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , is_leaf ) );
+  if ( !is_leaf )
+    DUF_TRACE( scan, 0, "@@@(%s) scan DOWN %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
   DOR( r, duf_scan_with_scanner_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
+  if ( !is_leaf )
+    DUF_TRACE( scan, 0, "@@@(%s) scan b.UP %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
   DOR( r, duf_levinfo_goup( pdi ) );
+  if ( !is_leaf )
+    DUF_TRACE( scan, 0, "@@@(%s) scan UP %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -100,7 +109,7 @@ _duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_
   {
     extern duf_scan_callbacks_t duf_dummy_callbacks;
 
-    DUF_TRACE( scan, 0, "scan dirent (nlist:%d) hooks d:%p; r:%p; %p !!", nlist, scanner_dirent_dir2, scanner_dirent_reg2,
+    DUF_TRACE( scan, 4, "scan dirent (nlist:%d) hooks d:%p; r:%p; %p !!", nlist, scanner_dirent_dir2, scanner_dirent_reg2,
                duf_dummy_callbacks.dirent_dir_scan_before2 );
   }
 #endif
@@ -176,7 +185,7 @@ duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_r
 
   assert( duf_levinfo_stat_dev( pdi ) );
 
-  DUF_TRACE( scan, 0, "scan dirent hooks d:%d; r:%d", scanner_dirent_dir2 ? 1 : 0, scanner_dirent_reg2 ? 1 : 0 );
+  DUF_TRACE( scan, 4, "scan dirent hooks d:%d; r:%d", scanner_dirent_dir2 ? 1 : 0, scanner_dirent_reg2 ? 1 : 0 );
 /* check if parent really existing directory - by st_dir : S_ISDIR(st_dir.st_mode) */
   if (  /* r || !pst_parent || */ !( S_ISDIR( duf_levinfo_stat_mode( pdi ) ) ) )
   {

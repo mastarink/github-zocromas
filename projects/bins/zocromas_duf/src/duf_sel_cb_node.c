@@ -52,9 +52,11 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DUF_TRACE( explain, 4, "@ sel cb2 node" );
   assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) );
 
+  DUF_TRACE( scan, 0, "@@NODE %s", duf_levinfo_path( PDI ) );
   {
     /*@ 1. go down + dbopenat */
     DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 0 /* is_leaf */  ) );
+  DUF_TRACE( scan, 0, "@@(%s) NODE down %s", duf_error_name(r), duf_levinfo_path( PDI ) );
     assert( PDI->depth >= 0 );
 
     if ( r >= 0 )               /* levinfo_down OK */
@@ -95,5 +97,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       DOR( r, duf_levinfo_goup( PDI ) );
     }
   }
+  DUF_TRACE( scan, 0, "@@/NODE %s", duf_levinfo_path( PDI ) );
+
   DEBUG_ENDR( r );
 }

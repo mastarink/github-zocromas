@@ -19,7 +19,7 @@
 #include "duf_utils.h"          /* duf_percent */
 
 #include "duf_levinfo_ref.h"
-#include "duf_levinfo_updown.h"
+/* #include "duf_levinfo_updown.h" */
 
 #include "duf_pdi.h"
 #include "duf_sccb_def.h"
@@ -95,7 +95,9 @@ duf_scan_db_row_with_str_cb( duf_sqlite_stmt_t * pstmt_selector, duf_str_cb2_t s
   }
 #endif
 
-  DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); /* reset error if it was `MAX_DEPTH` */
+  /* ==> Moved to duf_sccb_eval_dirs.c: duf_eval_sccbh_all() <==
+   * DUF_CLEAR_ERROR( r, DUF_ERROR_TOO_DEEP ); (* reset error if it was `MAX_DEPTH` *)
+   * */
   DOR( r, duf_pdi_max_filter( PDI ) ); /* check if any of max's reached */
 
   DEBUG_ENDR( r );

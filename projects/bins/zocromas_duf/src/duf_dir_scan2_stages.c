@@ -146,7 +146,7 @@ duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * s
   {
     duf_pdi_set_opendir( PDI, 1 );
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
-    DUF_TRACE( scan, 0, "scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+    DUF_TRACE( scan, 0, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
     DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED );
     /* assert( duf_levinfo_dfd( PDI ) ); */
@@ -239,6 +239,9 @@ duf_sccbh_eval_db_subnodes( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh
    *     ( duf_eval_sccbh_db_leaf_fd_str_cb )
    * */
   node_selector2 = duf_get_node_sql_set( SCCB )->selector2;
+
+  DUF_TRACE( scan, 0, "@@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+
   if ( node_selector2 )
     DORF( r, duf_eval_sccbh_db_items_str_cb, DUF_NODE_NODE, DUF_WRAPPED( duf_eval_sccbh_all ), sccbh );
   DEBUG_ENDR( r );

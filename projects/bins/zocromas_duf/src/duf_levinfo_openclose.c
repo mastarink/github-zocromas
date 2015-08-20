@@ -75,6 +75,9 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
         DOR( r, duf_levinfo_openat_dh_d( pdi, d - 1 ) );
       assert( r < 0 || pdhuplev->dfd );
       DOR( r, duf_statat_dh( pdhlev, pdhuplev, pdi->levinfo[d].itemname ) );
+      if (r==DUF_ERROR_STATAT_ENOENT)
+	DUF_SHOW_ERROR( "No such entry %s/%s (%s)", duf_levinfo_path_d( pdi, d ), duf_levinfo_itemtruename_d(pdi, d),  pliu->itemname );
+
       if ( r >= 0 )
         pdhlev->source = DUF_DH_SOURCE_FS;
       assert( r < 0 || pdhlev->st.st_dev );

@@ -37,6 +37,8 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
   assert( sccbh );
   assert( SCCB );
 
+  DUF_TRACE( scan, 2, "scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
+
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
   if ( r >= 0 && DUF_ACT_FLAG( summary ) )
@@ -51,6 +53,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
     if ( DUF_ACT_FLAG( summary ) )
       DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
   }
+  DUF_TRACE( scan, 2, "/scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
   DUF_E_YES( DUF_ERROR_TOO_DEEP );
   DEBUG_ENDR( r );
 }
