@@ -89,7 +89,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
 
     DUF_SQL_BIND_S( dirName, truedirname, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
-    if ( r == DUF_SQL_ROW )
+    if ( DUF_IS_ERROR( r, DUF_SQL_ROW ) )
     {
       r = 0;
       DUF_TRACE( select, 0, "<selected>" );
@@ -481,9 +481,8 @@ duf_path2dirid( const char *path, const char *node_selector2, int *pr )
       .opendir = 1,
       /* .name = real_path, */
     };
-    if ( r >= 0 )
-      r = DUF_WRAPPED( duf_pdi_init ) ( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  );
-    if ( r >= 0 )
+    DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, real_path, 0 /* caninsert */ , node_selector2, 1 /* recursive */ , 0 /* opendir */  ) );
+    if ( DUF_NOERROR( r ) )
       dirid = duf_levinfo_dirid( &di );
     /* xchanges = di.changes; --- needless!? */
     duf_pdi_close( &di );
@@ -514,9 +513,8 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
      *
      *   note: sets depth + n
      * */
-    r = _duf_real_path2db( pdi, real_path, caninsert, node_selector2 );
+    DOR( r, _duf_real_path2db( pdi, real_path, caninsert, node_selector2 ) );
     duf_pdi_set_topdepth( pdi );
-    DUF_TEST_R( r );
   }
   mas_free( real_path );
 

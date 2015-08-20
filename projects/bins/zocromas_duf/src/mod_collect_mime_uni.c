@@ -244,8 +244,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
         duf_levinfo_set_context_up_destructor( pdi, mime_destructor );
       }
     }
-    r = magic_load( m, NULL );
-    DUF_TEST_R( r );
+    DOR( r, magic_load( m, NULL ) );
 
     mime = magic_descriptor( m, duf_levinfo_dfd( pdi ) );
     DUF_TRACE( mime, 0, " opened mime %s : %s", m ? " OK " : " FAIL ", mime );

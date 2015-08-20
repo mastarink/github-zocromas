@@ -128,32 +128,8 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
   if ( r >= 0 )
   {
-
-    /* DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_TOO_DEEP ); */
     DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
-#if 0
-    {
-      int rd;
-
-      {
-        rd = r;
-        DUF_E_NO( DUF_ERROR_OPENAT_ENOENT );
-        DOR( r, duf_levinfo_openat_dh( pdi ) );
-        DUF_E_YES( DUF_ERROR_OPENAT_ENOENT );
-        if ( r == DUF_ERROR_OPENAT_ENOENT && rd >= 0 && duf_levinfo_item_deleted( pdi ) )
-          r = 0;
-        if ( duf_levinfo_item_deleted( pdi ) )
-        {
-          DUF_TRACE( fs, 0, "@@(%d;%d;D:%d)? levinfo u/d openated %s; dfd:%d", r, rd, duf_levinfo_item_deleted( pdi ),
-                     duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ) );
-        }
-      }
-      if ( r < 0 && rd >= 0 )
-        duf_levinfo_goup( pdi );
-    }
-#endif
   }
-  /* DEBUG_ENDRQ( r, r == DUF_ERROR_TOO_DEEP ); */
   DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
 }
 
@@ -168,40 +144,24 @@ duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, unsigned long long dirid,
   {
     int rd;
 
-    /* DORQ( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), r == DUF_ERROR_TOO_DEEP ); */
     DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
     {
       rd = r;
-#if 0
-      DUF_E_NO( DUF_ERROR_OPENAT_ENOENT );
-      DOR( r, duf_levinfo_openat_dh( pdi ) );
-      DUF_E_YES( DUF_ERROR_OPENAT_ENOENT );
-      if ( r == DUF_ERROR_OPENAT_ENOENT && rd >= 0 && duf_levinfo_item_deleted( pdi ) )
-        r = 0;
-      if ( duf_levinfo_item_deleted( pdi ) )
-      {
-        DUF_TRACE( fs, 0, "@@(%d;%d;D:%d)? levinfo u/d openated %s; dfd:%d", r, rd, duf_levinfo_item_deleted( pdi ), duf_levinfo_itemshowname( pdi ),
-                   duf_levinfo_dfd( pdi ) );
-      }
-#else
       /* do same as duf_levinfo_openat_dh, but from db: */
       DUF_E_NO( DUF_ERROR_OPENAT_ENOENT );
       DOR( r, duf_levinfo_dbopenat_dh( pdi, pstmt, is_leaf ) );
       DUF_E_YES( DUF_ERROR_OPENAT_ENOENT );
-      if ( r == DUF_ERROR_OPENAT_ENOENT && rd >= 0 && duf_levinfo_item_deleted( pdi ) )
+      if ( DUF_IS_ERROR( r, DUF_ERROR_OPENAT_ENOENT ) && rd >= 0 && duf_levinfo_item_deleted( pdi ) )
         r = 0;
       if ( duf_levinfo_item_deleted( pdi ) )
       {
         DUF_TRACE( fs, 0, "@@(%d;%d;D:%d)? levinfo u/d openated %s; dfd:%d", r, rd, duf_levinfo_item_deleted( pdi ), duf_levinfo_itemshowname( pdi ),
                    duf_levinfo_dfd( pdi ) );
       }
-
-#endif
     }
     if ( r < 0 && rd >= 0 )
       duf_levinfo_goup( pdi );
   }
-  /* DEBUG_ENDRQ( r, r == DUF_ERROR_TOO_DEEP ); */
   DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
 }
 

@@ -179,7 +179,7 @@ TODO scan mode
     if ( sccb->init_scan )
     {
       DUF_TRACE( explain, 0, "to init scan" );
-      DUF_DO_TEST_R( r, sccb->init_scan( NULL /* pstmt */ , pdi ) );
+      DOR( r, sccb->init_scan( NULL /* pstmt */ , pdi ) );
     }
     else
     {
@@ -197,7 +197,7 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   if ( sccbh )
   {
     /* final */
-    DUF_TRACE( scan, 0, "final sql %s", SCCB->title );
+    DUF_TRACE( scan, 6, "final sql %s", SCCB->title );
     DOR( r, duf_scan_final_sql( SCCB ) );
     mas_free( sccbh );
   }

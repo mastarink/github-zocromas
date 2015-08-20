@@ -50,7 +50,7 @@ duf_scan_with_scanner_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
     if ( scanner )
       DOR( r, ( scanner ) ( NULL /* pstmt */ , pdi ) );
   }
-  else if ( r == DUF_ERROR_STATAT_ENOENT )
+  else if ( DUF_IS_ERROR( r, DUF_ERROR_STATAT_ENOENT ) )
   {
     DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
@@ -76,17 +76,12 @@ duf_scan_fs_with2scanners_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_s
   int is_leaf;
 
   is_leaf = de->d_type != DT_DIR;
-  if ( !is_leaf )
-    DUF_TRACE( scan, 0, "@@@(%s) scan b.DOWN %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
+
   DOR( r, duf_levinfo_godown( pdi, 0, de->d_name, 0 /* ndirs */ , 0 /* nfiles */ , is_leaf ) );
-  if ( !is_leaf )
-    DUF_TRACE( scan, 0, "@@@(%s) scan DOWN %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
-  DOR( r, duf_scan_with_scanner_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
-  if ( !is_leaf )
-    DUF_TRACE( scan, 0, "@@@(%s) scan b.UP %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
+  {
+    DOR( r, duf_scan_with_scanner_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
+  }
   DOR( r, duf_levinfo_goup( pdi ) );
-  if ( !is_leaf )
-    DUF_TRACE( scan, 0, "@@@(%s) scan UP %d %s", duf_error_name( r ), duf_pdi_depth( pdi ), duf_levinfo_path( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -200,7 +195,7 @@ duf_scan_fs_with2scanners( duf_depthinfo_t * pdi, duf_scanner_t scanner_dirent_r
   }
   else
   {
-    r = _duf_scan_fs_with2scanners( pdi, scanner_dirent_reg2, scanner_dirent_dir2 );
+    DOR( r, _duf_scan_fs_with2scanners( pdi, scanner_dirent_reg2, scanner_dirent_dir2 ) );
   }
   DEBUG_ENDR( r );
 }

@@ -29,6 +29,7 @@
                                                                                   
 #  define  DEBUG_ENDULL(_l)			DUF_ENDULL(_l);                       DUF_DBGFX(ENDULL, _l)
 #  define  DEBUG_ENDS(_l)			DUF_ENDS(_l);                         DUF_DBGFX(ENDS, _l)
+#  define  DEBUG_ENDCS(_l)			DUF_ENDCS(_l);                        DUF_DBGFX(ENDCS, _l)
                                                                           
 #  define  DEBUG_STEP()                                                           DUF_DBGF(STEP)
 #  define  DEBUG_STEPS(_l)                                                        DUF_DBGFX(STEPS, _l)

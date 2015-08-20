@@ -53,12 +53,19 @@ duf_dbgfuncv( duf_dbgcode_t code, const char *func, int line, va_list args )
       case DBG_ENDRS:
       case DBG_ENDULL:
       case DBG_ENDS:
+      case DBG_ENDCS:
         /* if ( !duf_config->cli.trace.calls || duf_config->cli.trace.calls > duf_dbgfunlevel + 1 ) */
         /*   fprintf( out, "#%4lu. ", duf_config->cli.dbg.lines );                                  */
         /* pref[duf_dbgfunlevel--] = 0; */
         break;
-      default:
+      case DBG_STEP:
+      case DBG_STEPS:
+      case DBG_STEPIS:
+      case DBG_STEPI2S:
+      case DBG_STEPULL:
         break;
+        /* default: */
+        /*   break; */
       }
 
       /* fprintf( out, "%3d:%-23s .........\n", duf_config->cli.dbg.lines, duf_dbgfunlevel, line, func ); */

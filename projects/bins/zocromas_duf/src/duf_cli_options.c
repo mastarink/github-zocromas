@@ -33,7 +33,7 @@ duf_reorder_at_sign( int argc, char *argv[] )
   {
     if ( *( argv[ia] ) == '@' )
       kra = ia;
-    else 
+    else
       nkra = ia;
     if ( kra >= 0 && nkra >= 0 )
     {
@@ -118,7 +118,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
  *                =0  for normal options
  * or  errorcode (<0) for error
  * */
-    r = duf_parse_option( codeval, longindex, optarg, istage );
+    DOR( r, duf_parse_option( codeval, longindex, optarg, istage ) );
     DUF_TRACE( options, 3, "cli options r: %d", r );
     DUF_TRACE( options, 1, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
 

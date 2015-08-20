@@ -109,7 +109,7 @@ _duf_uni_scan_action_title( const duf_scan_callbacks_t * sccb )
   {
     stitle = "";
   }
-  DEBUG_ENDS( stitle );
+  DEBUG_ENDCS( stitle );
 }
 
 const char *

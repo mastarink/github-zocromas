@@ -12,6 +12,7 @@ typedef enum
   DBG_ENDR,
   DBG_ENDULL,
   DBG_ENDS,
+  DBG_ENDCS,
   DBG_ENDRS,
   DBG_END,
 } duf_dbgcode_t;
