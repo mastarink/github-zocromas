@@ -128,20 +128,15 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            ", md.dup5cnt AS nsame, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
-           /* .selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " (* *)                       */
-           /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " (* *)             */
-           /*       " LEFT JOIN " DUF_DBPREF "md5 AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " (* *)                    */
-           /*       " WHERE "               (* *)                                                          */
-           /*       (* " fd.size >= %llu AND fd.size < %llu "                      *)                      */
-           /*       (* " AND( md.dup5cnt IS NULL OR( md.dup5cnt >= %llu AND md.dup5cnt < %llu ) ) AND " *) */
-           /*       " fn.Pathid = '%llu' ",                                                                */
            .selector2 =         /* */
            /* "SELECT %s " */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
-           " WHERE "            /* */
-           " fn.Pathid = :parentdirID " /* */
+           ,
+           .matcher = " fn.Pathid = :parentdirID " /* */
+           ,
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -162,7 +157,10 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
-           " WHERE pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " /* dir */ FROM " DUF_SQL_SELECTED_PATHS_FULL " AS p " /* */
@@ -208,6 +206,6 @@ register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   ( void ) duf_dirname_pdistat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
-                                      duf_directories_callbacks.node.selector2, 0 /*need_id */ , &changes, &r );
+                                      &duf_directories_callbacks.node, 0 /*need_id */ , &changes, &r );
   DEBUG_ENDR( r );
 }

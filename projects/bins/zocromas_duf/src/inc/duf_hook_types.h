@@ -47,8 +47,10 @@ typedef struct
   unsigned use_std_fieldset:1;
   unsigned use_std_selector2:1;
   const char *fieldset;
-  const char *selector;
+  /* const char *selector; */
   const char *selector2;
+  const char *matcher;
+  const char *filter;
   const char *selector_total2;
 } duf_sql_set_t;
 

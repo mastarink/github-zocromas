@@ -595,10 +595,18 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  rm  $MSHDIRS_DIR/lib/duf_db/temp.db ; shn m i r  --trace-path=0 --trace-temp=0 --cd=.auxdir/ @scan-here.cmds  human   	- %s",
               "-= \"\" =-" );
   DUF_PRINTF( 0,
-              "  run --db-name=photo.20150812.124329.db   -dfR --lsf --same-as=/home/mastar/big/misc/media/photo/dvd/benq/benq/saltov/imag0154.jpg /   	- %s",
-              "-= \"\" =-" );
+              "  run --db-name=photo.20150812.124329.db   -dfR --lsf "
+              " --same-as=/home/mastar/big/misc/media/photo/dvd/benq/benq/saltov/imag0154.jpg /   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --db-name=photo.20150812.124329.db -dfR --glob='*.avi' --min-same=2 --tree /   	- %s", "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "========================= as for 20150820.205622 ============" );
+  DUF_PRINTF( 0, "  run --trace-explain=2 --memusage  -dfR --trace-fs=0  --trace-mod=2 " " --include-fs='.*.sw*'  --evaluate-sccb=dummy .   	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run   --trace-scan=0 --trace-fs=0  --drop-tables  -dfR --max-depth=3 "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress .   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --disable-memusage  -dfR  --tree  --max-depth=2 .   	- %s", "new opt: --disable-memusage; --memusage removed" );
+  DUF_PRINTF( 0, "  run  --db-name=photo.db /home/mastar/big/misc/media/photo  "
+              " -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif  " " --progress   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

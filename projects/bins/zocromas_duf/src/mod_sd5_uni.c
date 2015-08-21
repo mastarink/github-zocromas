@@ -77,16 +77,6 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " , fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
-           /* .selector = "SELECT %s FROM " DUF_DBPREF "filenames AS fn " (* *)       */
-           /*       " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " (* *) */
-           /*       " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" (* *)         */
-           /*       " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" (* *)      */
-           /*       "    WHERE "            (* *)                                          */
-           /*       " fd.sd5id IS NULL AND "    (* *)                                      */
-           /*       " sz.size > 0 AND "                                                    */
-           /*       (* " sz.dupzcnt > 1 AND "  (* *) *)                                    */
-           /*       " fn.Pathid='%llu' "    (* *)                                          */
-           /*       ,                                                                      */
            .selector2 =         /* */
            /* "SELECT %s " */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -94,11 +84,14 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           "    WHERE "         /* */
+           ,
+           .matcher = " fn.Pathid=:parentdirID " /* */
+           ,                    /* */
+           .filter =            /* */
            " ( fd.sd5id   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND" /* */
-           " fn.Pathid=:parentdirID " /* */
+           " sz.size > 0                                             AND " /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
+           " 1 "                /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -106,11 +99,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           "    WHERE "         /* */
-           " ( fd.sd5id   IS NULL OR sd." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
-           " 1 "                /* */
+           ,                    /* */
            }
   ,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
@@ -125,7 +114,10 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
-           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,                    /* */
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " /* sd5 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
@@ -265,6 +257,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
     DUF_MAKE_ERROR( r, DUF_ERROR_MD5 );
   DEBUG_ENDR( r );
 }
+
 /* 20150820.143755 */
 static int
 sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needless, */ duf_depthinfo_t * pdi )

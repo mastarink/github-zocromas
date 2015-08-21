@@ -136,8 +136,10 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
-           " WHERE "            /* */
-           " fn.Pathid = :parentdirID " /* */
+           ,
+           .matcher = " fn.Pathid = :parentdirID " /* */
+           ,
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
 #if 0
@@ -161,7 +163,10 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
-           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " /* fd */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */

@@ -1,5 +1,9 @@
 /*
- * TODO : libarchive
+ * TODO :
+ *   - libarchive
+ *   - option as for du(1)
+ *         -x, --one-file-system :      skip directories on different file systems
+ *   - 
  * */
 
 /*
@@ -130,6 +134,10 @@ duf_main_with_config( int argc, char **argv )
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
+    if ( &mas_mem_disable_print_usage && duf_config->cli.disable.flag.memusage )
+    {
+      mas_mem_disable_print_usage = 1;
+    }
     if ( &mas_mem_disable_print_usage && mas_mem_disable_print_usage )
     {
       DUF_TRACE( explain, 1, "@no %s option", DUF_OPT_NAME( MEMUSAGE ) );

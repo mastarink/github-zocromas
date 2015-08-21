@@ -105,12 +105,15 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           "    WHERE "         /* */
-           " ( fd.md5id   IS NULL OR md." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
-           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND" /* */
-           " fn.Pathid=:parentdirID " /* */
+           ,
+           .matcher = " fn.Pathid=:parentdirID " /* */
+           ,                    /* */
+           .filter =            /* */
+           " ( fd.md5id   IS NULL OR md." DUF_SQL_IDNAME " IS NULL )               AND " /* */
+           " sz.size > 0                                                           AND " /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 )               AND " /* */
+           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND " /* */
+           " 1 "                /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -118,15 +121,11 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           "    WHERE "         /* */
-           " ( fd.md5id   IS NULL OR md." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
-           "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND" /* */
-           " 1 "                /* */
+           ,                    /* */
            }
-  ,
-  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
+  ,                             /* */
+  .node = {                     /* */
+           .fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
@@ -140,7 +139,10 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
-           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " /* md5 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */

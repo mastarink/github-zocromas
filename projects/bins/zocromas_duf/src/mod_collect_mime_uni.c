@@ -88,10 +88,13 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            /* Q_JOIN_ID( fd, mime, mi, mimeid) */
            " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
            /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
-           " WHERE "            /* */
+           ,
+           .matcher = " fn.Pathid = :parentdirID " /* */
+           ,                    /* */
+           .filter =            /* */
            " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
            " sz.size > 0                               AND " /* */
-           " fn.Pathid = :parentdirID " /* */
+           " 1 "                /* */
            ,
            .selector_total2 =   /* */
            " FROM      " DUF_DBPREF " filenames AS fn " /* */
@@ -99,10 +102,6 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
-           " WHERE "            /* */
-           " ( fd.mimeid IS NULL OR mi.mime IS NULL )  AND " /* */
-           " sz.size > 0 "      /* */
-           " ORDER BY fd.mimeid " /* */
            },
   .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
@@ -116,7 +115,10 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
-           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,                    /* */
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " /* mime */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */

@@ -44,7 +44,7 @@ duf_pdi_create( void )
 }
 
 int
-duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const char *node_selector2, int frecursive, int opendir )
+duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
@@ -61,19 +61,19 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     DOR( r, duf_levinfo_create( pdi, r, frecursive, opendir ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
-    DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, node_selector2 ) );
+    DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */ ) );
   }
   DEBUG_ENDR( r );
 }
 
 #ifdef MAS_WRAP_FUNC
 int
-duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const char *node_selector2, int frecursive, int opendir )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pdi_init( pdi, real_path, caninsert, node_selector2, frecursive, opendir ) );
- 
+  DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set /* node_selector2 */, frecursive, opendir ) );
+
   DUF_TEST_R( r );
   if ( r >= 0 )
   {
@@ -87,7 +87,8 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
 #endif
 
 static int
-duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_ufilter_t * pu, const char *node_selector2, int frecursive,
+duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_ufilter_t * pu,
+                const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int frecursive,
                 int opendir )
 {
   DEBUG_STARTR( r );
@@ -100,13 +101,13 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, con
   od = pdi && pdi->opendir;
   duf_pdi_close( pdi );
   pdi->pu = pu;
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , node_selector2, frec /* frecursive */ , od /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , sql_set /* node_selector2 */, frec /* frecursive */ , od /* opendir */  ) );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
   DEBUG_ENDR( r );
 }
 
 int
-duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert, const char *node_selector2 )
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */  )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
@@ -114,7 +115,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert,
   real_path = duf_realpath( cpath, &r );
   {
     DUF_TRACE( temp, 2, "cpath:%s; real_path:%s", cpath, real_path );
-    DOR( r, duf_pdi_reinit( pdi, real_path, caninsert /* caninsert */ , duf_config->pu /* pu */ , node_selector2,
+    DOR( r, duf_pdi_reinit( pdi, real_path, caninsert /* caninsert */ , duf_config->pu /* pu */ , sql_set /* node_selector2 */ ,
                             DUF_U_FLAG( recursive ) /* recursive */ ,
                             duf_pdi_opendir( pdi ) ) );
   }
@@ -123,7 +124,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert,
 }
 
 int
-duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int frecursive, int opendir )
+duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* const char *node_selector2 */, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -138,7 +139,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const char *node_selector2, int f
       path = mas_strdup( cpath );
     /* frecursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , node_selector2 /*, duf_config->pu, frecursive */  ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , sql_set /* node_selector2 */ /*, duf_config->pu, frecursive */  ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }

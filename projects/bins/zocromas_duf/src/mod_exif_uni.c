@@ -73,11 +73,14 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
-           " WHERE "            /* */
+           ,
+           .matcher = " fn.Pathid = :parentdirID " /* */
+           ,                    /* */
+           .filter =            /* */
            " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND" /* */
-           " sz.size > 0 AND"   /* */
-           " mi.mime='image/jpeg' AND" /* */
-           " fn.Pathid = :parentdirID " /* */
+           " sz.size > 0                                 AND" /* */
+           " mi.mime='image/jpeg'                        AND" /* */
+           " 1 "                /* */
            ,                    /* */
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
@@ -85,11 +88,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
-           " WHERE "            /* */
-           " ( fd.exifid IS NULL  OR x.modelid IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           " mi.mime='image/jpeg' AND " /* */
-           " 1 "                /* */
+           ,                    /* */
            },                   /* */
   .node = {
            .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
@@ -105,7 +104,10 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_DBPREF " pathtot_dirs AS td ON( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " pathtot_files AS tf ON( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
 #endif
-           " WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,
+           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           ,                    /* */
+           .filter = NULL       /* */
            ,.selector_total2 =  /* */
            " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
            },

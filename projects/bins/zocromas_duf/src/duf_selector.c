@@ -32,16 +32,41 @@ duf_selector2sql( const duf_sql_set_t * sql_set )
     {
       char *sql3;
 
+      assert( 0 );
       sql3 = duf_sql_mprintf( sql_set->selector2, sql_set->fieldset );
       sql = mas_strdup( sql3 );
       mas_free( sql3 );
     }
     else
     {
+      int has_where = 0;
+
       sql = mas_strdup( "SELECT " );
       sql = mas_strcat_x( sql, sql_set->fieldset );
       sql = mas_strcat_x( sql, " " );
       sql = mas_strcat_x( sql, sql_set->selector2 );
+#if 1
+      if ( sql_set->filter )
+      {
+        if ( has_where )
+          sql = mas_strcat_x( sql, " aND " );
+        else
+          sql = mas_strcat_x( sql, " wHERE " );
+        has_where = 1;
+        sql = mas_strcat_x( sql, sql_set->filter );
+      }
+#endif
+#if 1
+      if ( sql_set->matcher )
+      {
+        if ( has_where )
+          sql = mas_strcat_x( sql, " AnD " );
+        else
+          sql = mas_strcat_x( sql, " WhERE " );
+        has_where = 1;
+        sql = mas_strcat_x( sql, sql_set->matcher );
+      }
+#endif
     }
   }
   else
@@ -49,31 +74,66 @@ duf_selector2sql( const duf_sql_set_t * sql_set )
   return sql;
 }
 
+/*
+SELECT COUNT(*) AS nf  FROM main.paths AS pt  LEFT JOIN common_pathtot_dirs  AS td ON (td.Pathid=pt.rowid)  LEFT JOIN common_pathtot_files AS tf ON (tf.Pathid=pt.rowid)  WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )
+SELECT COUNT(*) AS nf  FROM paths AS p 
+
+*/
+
 /* 20150819.133525 */
 char *
 duf_selector_total2sql( const duf_sql_set_t * sql_set )
 {
   char *sql = NULL;
 
+#define DUF_SELECTOR_TOTAL selector_total2
+/* #define DUF_SELECTOR_TOTAL selector2 */
   assert( sql_set );
-  assert( sql_set->selector_total2 );
-  if ( sql_set->selector_total2 )
+  assert( sql_set->DUF_SELECTOR_TOTAL );
+  if ( sql_set->DUF_SELECTOR_TOTAL )
   {
-    if ( 0 == strncmp( sql_set->selector_total2, "SELECT", 6 ) )
+    if ( 0 == strncmp( sql_set->DUF_SELECTOR_TOTAL, "SELECT", 6 ) )
     {
       char *sql3;
 
-      sql3 = duf_sql_mprintf( sql_set->selector_total2, sql_set->fieldset );
+      assert( 0 );
+      sql3 = duf_sql_mprintf( sql_set->DUF_SELECTOR_TOTAL, sql_set->fieldset );
       sql = mas_strdup( sql3 );
       mas_free( sql3 );
     }
     else
     {
+      int has_where = 0;
+
       sql = mas_strdup( "SELECT " );
       sql = mas_strcat_x( sql, "COUNT(*) AS nf" );
       sql = mas_strcat_x( sql, " " );
-      sql = mas_strcat_x( sql, sql_set->selector_total2 );
+      sql = mas_strcat_x( sql, sql_set->DUF_SELECTOR_TOTAL );
+
+#if 1
+      if ( sql_set->filter )
+      {
+        if ( has_where )
+          sql = mas_strcat_x( sql, " aND " );
+        else
+          sql = mas_strcat_x( sql, " wHERE " );
+        has_where = 1;
+        sql = mas_strcat_x( sql, sql_set->filter );
+      }
+#endif
+#if 0
+      if ( sql_set->matcher )
+      {
+        if ( has_where )
+          sql = mas_strcat_x( sql, " AnD " );
+        else
+          sql = mas_strcat_x( sql, " WhERE " );
+        has_where = 1;
+        sql = mas_strcat_x( sql, sql_set->matcher );
+      }
+#endif
     }
+    DUF_TRACE( select, 0, "TOTAL: %s", sql );
   }
   else
   {

@@ -20,8 +20,9 @@ At duf_options_table.c:
 const duf_longval_extended_table_t optable_flag = {
   .table =                      /* */
   {
+#if 0
    {.o = {DO_Q( "memusage" ) /*          */ , DO_A_N /* */ , DO_V( MEMUSAGE )} /*       */ , DO_CL( DEBUG ) /*   */ , DO_H( debug ) /*        */ },
-
+#endif
    {.o = {DO_Q( "create-tables" ) /*    */ , DO_A_N /* */ , DO_VF( CREATE_TABLES )} /*     */ , DO_CL( SYSTEM ) /*  */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, create_tables ) /*                     */ , DO_H( create tables ) /*                    */ },
    {.o = {DO_Q( "drop-tables" ) /*      */ , DO_A_N /* */ , DO_VF( DROP_TABLES )} /*       */ , DO_CL( SYSTEM ) /*  */ ,

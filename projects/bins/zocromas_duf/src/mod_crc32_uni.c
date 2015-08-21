@@ -99,22 +99,21 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
-           "    WHERE "         /* */
+           ,
+           .matcher = " fn.Pathid=:parentdirID " /* */
+           ,                    /* */
+           .filter =            /* */
            " ( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
-           " fn.Pathid=:parentdirID " /* */
+           " sz.size > 0                                              AND " /* */
+           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 )  AND " /* */
+           " 1 "                /* */
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
-           "    WHERE "         /* */
-           " ( fd.crc32id IS NULL OR crc." DUF_SQL_IDNAME " IS NULL ) AND " /* */
-           " sz.size > 0 AND "  /* */
-           "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 ) AND " /* */
-           " 1 "                /* */
+           ,                    /* */
            }
   ,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
@@ -131,7 +130,10 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
-           " WHERE pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,
+           .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
+           ,                    /* */
+           .filter = NULL       /* */
            ,
            .selector_total2 =   /* */
            " /* c3 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */

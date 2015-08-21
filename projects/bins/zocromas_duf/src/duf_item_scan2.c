@@ -113,7 +113,7 @@ duf_scan_db_items_with_str_cb_sql( const char *csql_selector, duf_str_cb2_t str_
   DEBUG_STARTR( r );
 
   DUF_SQL_START_STMT_NOPDI( csql_selector, r, pstmt_selector );
-  DUF_TRACE( select, 0, "S:%s", csql_selector );
+  DUF_TRACE( select, 1, "S:%s", csql_selector );
 
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
   duf_bind_ufilter_uni( pstmt_selector );

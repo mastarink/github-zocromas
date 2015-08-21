@@ -29,6 +29,9 @@ const duf_longval_extended_table_t optable_sflag = {
    {.o = {DO_Q( "disable-fs" ) /*       */ , DO_A_N /* */ , DO_VF( DISABLE_FS )} /*        */ , DO_CL( CONTROL ) /* */ , DO_STAGE_ANY /* */ ,
     /*      */ DO_OC( SFLAG, cli.disable ) /*           */ , DO_FL( disable, fs ) /*        */ , DO_H( disable_fs ) /*                       */ },
 
+   {.o = {DO_Q( "disable-memusage" ) /*       */ , DO_A_N /* */ , DO_VF( DISABLE_MEMUSAGE )} /*  */ , DO_CL( CONTROL ) /* */ , DO_STAGE_ANY /* */ ,
+    /*      */ DO_OC( SFLAG, cli.disable ) /*           */ , DO_FL( disable, memusage ) /*  */ , DO_H( disable_memusage ) /*                 */ },
+
    {.o = {.name = NULL}}
    }
 };
