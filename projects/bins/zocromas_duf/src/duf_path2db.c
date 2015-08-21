@@ -27,6 +27,7 @@
 
 #include "duf_sql.h"
 #include "duf_sql2.h"
+#include "duf_sql_field.h"
 
 #include "duf_tags.h"
 
@@ -118,8 +119,19 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
         {
           pli->dirid = dirid;
           /* pli->itemname = mas_strdup( duf_sql_column_string( pstmt, 1 ) ); */
+#if 0
           pli->numfile = duf_sql_column_long_long( pstmt, 2 );
           pli->numdir = duf_sql_column_long_long( pstmt, 3 );
+#elif 0
+          pli->numfile = duf_sql_column_long_long( pstmt, 4 );
+          pli->numdir = duf_sql_column_long_long( pstmt, 5 );
+#else
+          pli->numfile = DUF_GET_UFIELD2( nfiles );
+          pli->numdir = DUF_GET_UFIELD2( ndirs );
+#endif
+
+          DUF_TRACE( temp, 2, "@@@ numdir:%ld; numfile:%ld [%s]", pli->numdir, pli->numfile, sqlv );
+
           /* DUF_TRACE( path, 0, "@@@numdir:%ld; numfile: %ld;", pli->numdir, pli->numfile ); */
         }
       }

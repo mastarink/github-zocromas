@@ -26,6 +26,8 @@ tab sfind mod_collect_mime_uni.c
 tab sfind mod_exif_uni.c
 sfind mod_exif.h
 
+tab sfind mod_tagit.c
+
 " tab sfind mod_print_md5_uni.c
 
 tab sfind mod_dir_print_uni.c

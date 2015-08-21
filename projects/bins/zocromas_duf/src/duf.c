@@ -122,10 +122,10 @@ duf_main_with_config( int argc, char **argv )
 
   DOR( r, duf_main_db( argc, argv ) ); /* XXX XXX XXX XXX XXX XXX */
 
-  DUF_PUTS( 0, "--------------------------------------------------" );
+  DUF_PUTS( 0, "------------------------------------(*)" );
   DUF_PRINTF( 0, " duf_main_db ended" );
   DUF_TEST_R( r );              /* don't remove! */
-  DUF_PUTS( 0, "--------------------------------------------------" );
+  DUF_PUTS( 0, "---------------------------------------------(o)" );
 
   if ( DUF_IF_TRACE( options ) )
     DOR( r, duf_show_options( argv[0] ) );

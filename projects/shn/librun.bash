@@ -70,7 +70,7 @@ function shn_run ()
         if [[ -d $MSH_SHN_PROJECT_DIR/human/run ]] ; then
 	  {
 	    echo "# retcode:$retcode"
-	    echo "# `datemt` : `daten` --------------"
+	    echo "# `datemt` : `daten` ------------[r]--"
 	  } >> $MSH_SHN_PROJECT_DIR/human/run/history.txt
 	fi
 

@@ -56,7 +56,8 @@ duf_sql_set_t std_leaf_set = {
 duf_sql_set_t std_node_set = {
   .fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
         ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
-        ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+        ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
+        ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
         ,
   .selector2 =                  /* */
         " FROM      " DUF_SQL_SELECTED_PATHS_FULL " AS pts " /* */
@@ -139,7 +140,7 @@ duf_sql_set_t std_ns_node_set = {
 #endif
 };
 
-
+#if 0
 duf_sql_set_t std_leaf_set__ = {
   .fieldset = "fn.pathid AS dirid " /* */
         ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
@@ -186,3 +187,4 @@ duf_sql_set_t std_node_set__ = {
         " /* _ */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
 #endif
 };
+#endif

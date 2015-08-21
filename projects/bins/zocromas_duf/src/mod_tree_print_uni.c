@@ -309,9 +309,11 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
     int du = d - 1;
     unsigned flags = 0;
     long ndu = duf_levinfo_numdir_d( pdi, du );
+
     char nduc = ndu > 0 ? '+' : ( ndu < 0 ? '-' : 'o' );
     int leaf = duf_levinfo_is_leaf_d( pdi, d );
     char leafc = leaf ? 'L' : 'D';
+
 
     /* int eod = duf_levinfo_eod_d( pdi, d ); */
     /* char eodc = eod ? '.' : '~';           */
@@ -336,12 +338,12 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
     /* if ( is_file )   */
     /*   flags |= 0x40; */
     DUF_DEBUG( 1,               /* */
-               DUF_PRINTF( 0, ".[L%-2d", d ); /* */
-               DUF_PRINTF( 0, ".M%-2d", duf_pdi_maxdepth( pdi ) );
+               DUF_PRINTF( 1, ".[L%-2d", d ); /* */
+               DUF_PRINTF( 1, ".M%-2d", duf_pdi_maxdepth( pdi ) );
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 0, ".0x%02x]", flags );
+               DUF_PRINTF( 1, ".0x%02x]", flags );
            );
     {
 #if 0
