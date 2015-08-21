@@ -126,9 +126,9 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
     }
     else
     {
-      DUF_TRACE( select, 0, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
+      DUF_TRACE( select, 1, "S:%s (%llu,'%s') [%d] ~ '%s'; No dirid", sqlv, duf_levinfo_dirid_up( pdi ), truedirname, *truedirname,
                  duf_levinfo_itemshowname( pdi ) );
-      DUF_TRACE( select, 0, "<NOT selected> (%d)", rpr );
+      DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
     }
   }
   DUF_SQL_END_STMT( select_path, rpr, pstmt );

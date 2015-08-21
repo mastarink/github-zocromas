@@ -90,10 +90,12 @@ duf_scan_callbacks_t duf_template_callbacks = {
            ,
            .filter = NULL       /* */
            ,
+#if 0
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
+#endif
            },
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
@@ -112,8 +114,10 @@ duf_scan_callbacks_t duf_template_callbacks = {
            ,
            .filter = NULL       /* */
            ,
+#if 0
            .selector_total2 =   /* */
            " /* t */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            },
   .final_sql_seq = &final_sql,
 };

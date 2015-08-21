@@ -60,9 +60,9 @@ duf_selector2sql( const duf_sql_set_t * sql_set )
       if ( sql_set->matcher )
       {
         if ( has_where )
-          sql = mas_strcat_x( sql, " AnD " );
+          sql = mas_strcat_x( sql, " AND " );
         else
-          sql = mas_strcat_x( sql, " WhERE " );
+          sql = mas_strcat_x( sql, " WHERE " );
         has_where = 1;
         sql = mas_strcat_x( sql, sql_set->matcher );
       }
@@ -86,8 +86,8 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set )
 {
   char *sql = NULL;
 
-#define DUF_SELECTOR_TOTAL selector_total2
-/* #define DUF_SELECTOR_TOTAL selector2 */
+/* #define DUF_SELECTOR_TOTAL selector_total2 */
+#define DUF_SELECTOR_TOTAL selector2
   assert( sql_set );
   assert( sql_set->DUF_SELECTOR_TOTAL );
   if ( sql_set->DUF_SELECTOR_TOTAL )
@@ -104,9 +104,13 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set )
     else
     {
       int has_where = 0;
+      int has_group = 0;
+      int has_order = 0;
 
       sql = mas_strdup( "SELECT " );
-      sql = mas_strcat_x( sql, "COUNT(*) AS nf" );
+      sql = mas_strcat_x( sql, "COUNT(" );
+      sql = mas_strcat_x( sql, sql_set->count_aggregate ? sql_set->count_aggregate : "*" );
+      sql = mas_strcat_x( sql, ") AS nf" );
       sql = mas_strcat_x( sql, " " );
       sql = mas_strcat_x( sql, sql_set->DUF_SELECTOR_TOTAL );
 
@@ -114,9 +118,9 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set )
       if ( sql_set->filter )
       {
         if ( has_where )
-          sql = mas_strcat_x( sql, " aND " );
+          sql = mas_strcat_x( sql, " AND " );
         else
-          sql = mas_strcat_x( sql, " wHERE " );
+          sql = mas_strcat_x( sql, " WHERE " );
         has_where = 1;
         sql = mas_strcat_x( sql, sql_set->filter );
       }
@@ -132,6 +136,30 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set )
         sql = mas_strcat_x( sql, sql_set->matcher );
       }
 #endif
+      #if 1
+      if ( sql_set->group )
+      {
+        if ( has_group )
+          sql = mas_strcat_x( sql, "," );
+        else
+          sql = mas_strcat_x( sql, " GROUP BY " );
+        has_group = 1;
+        sql = mas_strcat_x( sql, sql_set->order );
+      }
+#endif
+           #if 1
+      if ( sql_set->order )
+      {
+        if ( has_order )
+          sql = mas_strcat_x( sql, "," );
+        else
+          sql = mas_strcat_x( sql, " ORDER BY " );
+        has_order = 1;
+        sql = mas_strcat_x( sql, sql_set->order );
+      }
+#endif
+
+
     }
     DUF_TRACE( select, 0, "TOTAL: %s", sql );
   }

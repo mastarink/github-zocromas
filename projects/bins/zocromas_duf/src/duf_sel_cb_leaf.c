@@ -69,24 +69,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
   if ( r >= 0 )                 /* levinfo_down OK */
   {
-    PDI->seq++;
-    PDI->seq_leaf++;
 
     DUF_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_leaf, PDI->seq, TOTITEMS, SCCB->title );
-    if ( !SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
-    {
-      long long m;
-
-      m = TOTITEMS;
-      DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
-      /* assert( PDI->seq_node <= m ); FIXME counters! */
-      if ( m > 0 )
-      {
-        duf_percent( PDI->seq_leaf, m, duf_uni_scan_action_title( SCCB ) );
-      }
-    }
-
-    DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
 
 
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 5. leaf str cb2; r:%d; dfd:%d ; opendir:%d", r,
@@ -110,6 +94,8 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     }
 #endif
 
+
+
     if ( str_cb2 )
     {
       DUF_TRACE( explain, 2, "=> str cb2" );
@@ -117,6 +103,25 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 #if 1
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
+      if ( r >= 0 )
+      {
+        PDI->seq++;
+        PDI->seq_leaf++;
+        DUF_TRACE( seq, 0, "seq:%llu; seq_leaf:%llu", PDI->seq, PDI->seq_leaf );
+      }
+      if ( !SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
+      {
+        long long m;
+
+        m = TOTITEMS;
+        DUF_SCCB( DUF_TRACE, action, 0, "total_items: %llu; m: %llu rd:%d; d:%d", TOTITEMS, m, duf_pdi_reldepth( PDI ), duf_pdi_depth( PDI ) );
+        /* assert( PDI->seq_node <= m ); FIXME counters! */
+        if ( m > 0 )
+        {
+          duf_percent( PDI->seq_leaf, m, duf_uni_scan_action_title( SCCB ) );
+          DUF_TRACE( seq, 0, "PROGRESS: seq:%llu; seq_leaf:%llu OF %llu", PDI->seq, PDI->seq_leaf, m );
+        }
+      }
       DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT );
 #else
       DOR_NOE( r, ( str_cb2 ) ( pstmt, sccbh ), DUF_ERROR_OPENAT_ENOENT );

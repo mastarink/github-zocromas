@@ -115,13 +115,17 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            "(  :fFast IS NULL OR sd." DUF_SQL_IDNAME " IS NULL OR sd.dup2cnt > 1 ) AND " /* */
            " 1 "                /* */
            ,
-           .selector_total2 =   /* */
+           .count_aggregate = "distinct fd." DUF_SQL_IDNAME
+#if 0
+           ,
+	   .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
            ,                    /* */
+#endif
            }
   ,                             /* */
   .node = {                     /* */
@@ -144,8 +148,10 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            ,
            .filter = NULL       /* */
            ,
+#if 0
            .selector_total2 =   /* */
            " /* md5 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            },
   .final_sql_seq = &final_sql,
 };

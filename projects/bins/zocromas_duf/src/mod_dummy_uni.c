@@ -66,14 +66,18 @@ duf_scan_callbacks_t duf_dummy_callbacks = {
   .leaf = {
            .fieldset = NULL,    /* */
            .selector2 = NULL,   /* */
+#if 0
            .selector_total2 = NULL, /* */
+#endif
            },
   .node = {
            .fieldset = NULL,    /* */
            .selector2 = NULL    /* */
            ,
+#if 0
            .selector_total2 =   /* */
            " /* dum */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            },
   .final_sql_seq = &final_sql,
 };

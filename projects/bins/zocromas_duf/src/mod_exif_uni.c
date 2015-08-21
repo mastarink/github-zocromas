@@ -82,13 +82,17 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " mi.mime='image/jpeg'                        AND" /* */
            " 1 "                /* */
            ,                    /* */
-           .selector_total2 =   /* */
+           .count_aggregate = "distinct fd." DUF_SQL_IDNAME
+#if 0
+           ,
+	   .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
            ,                    /* */
+#endif
            },                   /* */
   .node = {
            .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
@@ -108,8 +112,10 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            ,                    /* */
            .filter = NULL       /* */
+#if 0
            ,.selector_total2 =  /* */
            " /* exif */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            },
   .final_sql_seq = &final_sql,
 };

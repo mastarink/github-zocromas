@@ -51,7 +51,10 @@ typedef struct
   const char *selector2;
   const char *matcher;
   const char *filter;
-  const char *selector_total2;
+  const char *group;
+  const char *order;
+  const char *count_aggregate;
+  /* const char *selector_total2; */
 } duf_sql_set_t;
 
 struct duf_scan_callbacks_s

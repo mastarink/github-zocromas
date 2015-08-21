@@ -82,7 +82,8 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
+  .leaf = {                     /* */
+           .fieldset = "fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
@@ -107,6 +108,10 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " sz.size > 0                                              AND " /* */
            "(  :fFast IS NULL OR sz.size IS NULL OR sz.dupzcnt > 1 )  AND " /* */
            " 1 "                /* */
+           /*, .group=" fd." DUF_SQL_IDNAME */
+           ,                    /* */
+           .count_aggregate = "distinct fd." DUF_SQL_IDNAME
+#if 0
            ,
            .selector_total2 =   /* */
            " FROM " DUF_DBPREF "filenames AS fn " /* */
@@ -114,6 +119,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
            ,                    /* */
+#endif
            }
   ,
   .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
@@ -134,9 +140,11 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            .matcher = "pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            ,                    /* */
            .filter = NULL       /* */
+#if 0
            ,
            .selector_total2 =   /* */
            " /* c3 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            },
   .final_sql_seq = &final_sql,
 };
@@ -157,18 +165,21 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
   DEBUG_START(  );
   if ( crc32sum )
   {
+    static unsigned long insert_cnt = 0;
+
     if ( !duf_config->cli.disable.flag.insert )
     {
 #if 1
       static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "crc32 (crc32sum) VALUES (:crc32sum)";
 
-      DUF_TRACE( crc32, 0, "%0lx %s%s", crc32sum, real_path, filename );
+      DUF_TRACE( crc32, 10, "%0lx %s%s", crc32sum, real_path, filename );
       DUF_SQL_START_STMT( pdi, insert_crc32, sql, lr, pstmt );
-      DUF_TRACE( insert, 0, "S:%s", sql );
+      DUF_TRACE( insert, 0, "(%ld) S:%s", insert_cnt, sql );
       DUF_SQL_BIND_LL( crc32sum, crc32sum, lr, pstmt );
       DUF_SQL_STEP( lr, pstmt );
       DUF_SQL_CHANGES( changes, lr, pstmt );
       DUF_SQL_END_STMT( insert_crc32, lr, pstmt );
+      insert_cnt++;
 #else
 
 #endif
@@ -235,7 +246,7 @@ duf_make_crc32_uni( int fd, unsigned long *pcrc32sum )
         int rr;
 
         rr = read( fd, buffer, bufsz );
-        DUF_TRACE( crc32, 0, "read %d : crc32sum:%lx", rr, crc32sum );
+        DUF_TRACE( crc32, 10, "read %d : crc32sum:%lx", rr, crc32sum );
         if ( rr < 0 )
         {
           DUF_ERRSYS( "read file" );
@@ -244,12 +255,12 @@ duf_make_crc32_uni( int fd, unsigned long *pcrc32sum )
         DUF_TEST_R( r );
         if ( rr > 0 && !duf_config->cli.disable.flag.calculate )
           crc32sum = crc32( crc32sum, buffer, rr );
-        DUF_TRACE( crc32, 0, "rr:%d; r:%d; crc32sum:%lx", rr, r, crc32sum );
+        DUF_TRACE( crc32, 10, "rr:%d; r:%d; crc32sum:%lx", rr, r, crc32sum );
         if ( rr <= 0 )
           break;
 
       }
-      DUF_TRACE( crc32, 0, "last crc32sum:%lx", crc32sum );
+      DUF_TRACE( crc32, 10, "last crc32sum:%lx", crc32sum );
       mas_free( buffer );
     }
     else
@@ -268,6 +279,7 @@ crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file
 {
   DEBUG_STARTR( r );
   unsigned long crc32sum = 0;
+  static unsigned long content_cnt = 0;
 
   DUF_UFIELD2( filedataid );
   DUF_SFIELD2( filename );
@@ -282,11 +294,12 @@ crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file
   else
     DOR( r, duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &crc32sum ) );
 
+  content_cnt++;
   if ( r >= 0 )
   {
     unsigned long long crc32id = 0;
 
-    DUF_TRACE( crc32, 0, "insert %s", filename );
+    DUF_TRACE( crc32, 10, "insert %s", filename );
 
 
     crc32id = duf_insert_crc32_uni( pdi, crc32sum, filename /* for dbg message only */ , 1 /*need_id */ , &r );
@@ -300,7 +313,7 @@ crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );
     }
-    DUF_TRACE( crc32, 0, "%04lx : crc32id: %llu (sz:%lu) \"%s\"", crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, filename );
+    DUF_TRACE( crc32, 0, "(%lu) %04lx : crc32id: %llu (sz:%lu) \"%s\"", content_cnt, crc32sum, crc32id, duf_levinfo_stat( pdi )->st_size, filename );
     /* DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan 5    * %04lx : %llu", duf_pdi_depth( pdi ), crc32sum, crc32id ); */
   }
   DEBUG_ENDR( r );

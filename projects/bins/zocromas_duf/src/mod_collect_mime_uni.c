@@ -96,12 +96,16 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " sz.size > 0                               AND " /* */
            " 1 "                /* */
            ,
-           .selector_total2 =   /* */
+           .count_aggregate = "distinct fd." DUF_SQL_IDNAME
+#if 0
+           ,
+	   .selector_total2 =   /* */
            " FROM      " DUF_DBPREF " filenames AS fn " /* */
            /* Q_FROM( filenames, fn ) (* *) */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
+#endif
            },
   .node = {.fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
@@ -119,9 +123,11 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            ,                    /* */
            .filter = NULL       /* */
+#if 0
            ,
            .selector_total2 =   /* */
            " /* mime */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            },
   .final_sql_seq = &final_sql,
 };
@@ -201,9 +207,9 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 static void
 mime_destructor( void *ctx )
 {
-  magic_t m = ( magic_t ) ctx;
+  magic_t magic = ( magic_t ) ctx;
 
-  magic_close( m );
+  magic_close( magic );
   DUF_TRACE( mime, 0, " closed mime " );
 }
 
@@ -224,32 +230,32 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
   {
     const char *mime = NULL;
 
-    magic_t m = NULL;
+    magic_t magic = NULL;
 
     if ( 1 )
-      m = ( magic_t ) duf_pdi_context( pdi );
+      magic = ( magic_t ) duf_pdi_context( pdi );
     else
-      m = ( magic_t ) duf_levinfo_context_up( pdi );
+      magic = ( magic_t ) duf_levinfo_context_up( pdi );
 
-    if ( !m )
+    if ( !magic )
     {
-      m = magic_open( MAGIC_MIME | MAGIC_PRESERVE_ATIME );
-      DUF_TRACE( mime, 0, " opened mime %s ", m ? " OK " : " FAIL " );
+      magic = magic_open( MAGIC_MIME | MAGIC_PRESERVE_ATIME );
+      DUF_TRACE( mime, 0, " opened mime %s ", magic ? " OK " : " FAIL " );
       if ( 1 )
       {
-        duf_pdi_set_context( pdi, m );
+        duf_pdi_set_context( pdi, magic );
         duf_pdi_set_context_destructor( pdi, mime_destructor );
       }
       else
       {
-        duf_levinfo_set_context_up( pdi, m );
+        duf_levinfo_set_context_up( pdi, magic );
         duf_levinfo_set_context_up_destructor( pdi, mime_destructor );
       }
     }
-    DOR( r, magic_load( m, NULL ) );
+    DOR( r, magic_load( magic, NULL ) );
 
-    mime = magic_descriptor( m, duf_levinfo_dfd( pdi ) );
-    DUF_TRACE( mime, 0, " opened mime %s : %s", m ? " OK " : " FAIL ", mime );
+    mime = magic_descriptor( magic, duf_levinfo_dfd( pdi ) );
+    DUF_TRACE( mime, 0, " opened mime %s : %s", magic ? " OK " : " FAIL ", mime );
 
     if ( mime )
     {

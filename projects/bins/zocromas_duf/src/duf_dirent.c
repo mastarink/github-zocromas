@@ -29,12 +29,22 @@ duf_direntry_filter( const struct dirent *de )
   case DT_CHR:
     break;
   case DT_DIR:
-    rx = ( 1
-          && ( 0 != strcmp( de->d_name, "." ) )
-          && ( 0 != strcmp( de->d_name, ".." ) )
-          && ( 0 != strcmp( de->d_name, ".comments" ) )
-          && ( 0 != strcmp( de->d_name, ".thumbnails" ) )
-          && ( 0 != strcmp( de->d_name, ".xvpics" ) ) && ( 0 != strcmp( de->d_name, ".catalogimages" ) ) );
+    rx = ( 1                    /* */
+#if 0
+           && !( de->d_name[0] == '.' && !de->d_name[1] ) /* */
+           && !( de->d_name[0] == '.' && de->d_name[1] == '.' && !de->d_name[2] ) /* */
+#else
+           && ( 0 != strcmp( de->d_name, "." ) ) /* */
+           && ( 0 != strcmp( de->d_name, ".." ) ) /* */
+#endif
+
+#if 0
+           && ( 0 != strcmp( de->d_name, ".comments" ) ) /* */
+           && ( 0 != strcmp( de->d_name, ".thumbnails" ) ) /* */
+           && ( 0 != strcmp( de->d_name, ".xvpics" ) ) /* */
+           && ( 0 != strcmp( de->d_name, ".catalogimages" ) ) /* */
+#endif
+           );
     break;
   case DT_BLK:
     break;
@@ -54,6 +64,6 @@ duf_direntry_filter( const struct dirent *de )
   case DT_WHT:
     break;
   }
-  DEBUG_END( );
+  DEBUG_END(  );
   return rx;
 }

@@ -45,10 +45,12 @@ duf_sql_set_t std_leaf_set = {
   .filter = NULL                /* */
         /* " ORDER BY fn." DUF_SQL_IDNAME " " *//* */
         ,
+#if 0
   .selector_total2 =            /* */
         " FROM " DUF_DBPREF " filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " LEFT JOIN " DUF_DBPREF " md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+#endif
 };
 
 duf_sql_set_t std_node_set = {
@@ -66,8 +68,10 @@ duf_sql_set_t std_node_set = {
         ,
   .filter = NULL                /* */
         ,
+#if 0
   .selector_total2 =            /* */
         " /* std */ FROM " DUF_SQL_SELECTED_PATHS_FULL " AS p " /* */
+#endif
 };
 
 
@@ -107,10 +111,12 @@ duf_sql_set_t std_ns_leaf_set = {
   .filter =                     /* */
         DUF_SQL_UFILTER_BINDINGS /* */
         ,
+#if 0
   .selector_total2 =            /* */
         " FROM " DUF_DBPREF " filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " LEFT JOIN " DUF_DBPREF " md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+#endif
 };
 
 duf_sql_set_t std_ns_node_set = {
@@ -127,8 +133,10 @@ duf_sql_set_t std_ns_node_set = {
         ,
   .filter = NULL                /* */
         ,
+#if 0
   .selector_total2 =            /* */
         " /* sns */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
 };
 
 
@@ -152,10 +160,12 @@ duf_sql_set_t std_leaf_set__ = {
         ,
   .filter = NULL                /* */
         ,
+#if 0
   .selector_total2 =            /* */
         " FROM " DUF_DBPREF "filenames AS fn " /* */
         " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
+#endif
 };
 
 duf_sql_set_t std_node_set__ = {
@@ -171,6 +181,8 @@ duf_sql_set_t std_node_set__ = {
         ,
   .filter = NULL                /* */
         ,
+#if 0
   .selector_total2 =            /* */
         " /* _ */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
 };

@@ -141,11 +141,13 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            ,
            .filter = NULL       /* */
            ,
+#if 0
            .selector_total2 =   /* */
 #if 0
            " FROM " DUF_DBPREF "paths AS p " /* */
 #else
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
 #endif
            }
   ,
@@ -168,8 +170,10 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            ,
            .filter = NULL       /* */
            ,
+#if 0
            .selector_total2 =   /* */
            " /* fd */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
+#endif
            }
   ,
   .final_sql_seq = &final_sql   /* */

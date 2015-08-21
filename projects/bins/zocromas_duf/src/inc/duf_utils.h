@@ -11,7 +11,7 @@ typedef struct
   float percent;
   unsigned calls;
   int width;
-  int prev_width;
+  float prev_percent;
 } duf_bar_t;
 
 
