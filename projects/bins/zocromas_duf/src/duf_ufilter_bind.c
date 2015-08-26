@@ -69,6 +69,10 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
   DUF_SQL_BIND_PAIR( Sd2ID, sd5id );
   DUF_SQL_BIND_PAIR( MimeID, mimeid );
   DUF_SQL_BIND_PAIR( ExifID, exifid );
+  if ( duf_config->pu->mime.type )
+  {
+    DUF_SQL_BIND_S_OPT( MimeType, duf_config->pu->mime.type, r, pstmt );
+  }
   if ( duf_config->pu->glob_db )
   {
     DUF_SQL_BIND_S_OPT( GName, duf_config->pu->glob_db, r, pstmt );

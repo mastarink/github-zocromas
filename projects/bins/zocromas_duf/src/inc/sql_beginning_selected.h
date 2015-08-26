@@ -40,6 +40,7 @@
         "    (:maxSd2ID    IS NULL OR  fd.sd5id    <=:maxSd2ID                            ) AND"  \
         "    (:minMimeID   IS NULL OR  fd.mimeid   >=:minMimeID                           ) AND"  \
         "    (:maxMimeID   IS NULL OR  fd.mimeid   <=:maxMimeID                           ) AND"  \
+        "    (:MimeType    IS NULL OR  mi.mime     =:MimeType                             ) AND"  \
         "    (:minExifID   IS NULL OR  fd.exifid   >=:minExifID                           ) AND"  \
         "    (:maxExifID   IS NULL OR  fd.exifid   <=:maxExifID                           ) AND"  \
         "    (:minMTime    IS NULL OR  fd.mtim     >=datetime(:minMTime,'unixepoch')      ) AND"  \

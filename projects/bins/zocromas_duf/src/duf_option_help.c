@@ -612,6 +612,25 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --db-name=photo.db -dfR  --md5id=854 --disable-fs /home/mastar/big/misc/media/photo  --tree "
               " --tag-file=ch-IMAG3115  --evaluate-sccb=tagit   	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run  --db-name=photo.db -dfR  --with-tag-file=ch-IMAG3115 /home/mastar/big/misc/media/photo  --tree   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=photo.db -dfR  --files-tagged-as='ch-IMAG3115' /home/mastar/big/misc/media/photo --tree   	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  /home/mastar/big/misc/media/photo/LG_G3/ "
+              " --min-same=2 --tag-file=at-LG_G3  --evaluate-sccb=tagit   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' / --tree   	- %s", "-= \"\" =-" );
+
+
+  DUF_PRINTF( 0, "  run  --db-name=htc_20101224.db  --drop-tables  -PO -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/Pictures/HTC_Legend/20101224  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=lg_g3.db  --drop-tables  -PO -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/LG_G3/  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=htc.db  --drop-tables  -PO -fR "
+              " --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress /home/mastar/big/misc/media/photo/Pictures/HTC_Legend/  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' --with-mime-type=application/octet-stream / --ls  	- %s",
+              "-= \"\" =-" );
+
 
   DUF_PRINTF( 0, "=============================================================" );
 

@@ -85,6 +85,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
+           " LEFT JOIN " DUF_DBPREF "tags AS tg ON (tg.itemid=fn." DUF_SQL_IDNAME " AND tg.itemtype='filename') " /* */
+           " LEFT JOIN " DUF_DBPREF "tagnames AS tgn ON (tg.tagnameid=tgn." DUF_SQL_IDNAME ") " /* */
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
@@ -117,6 +119,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " FROM " DUF_DBPREF "paths AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_DBPREF "tags AS tg ON (tg.itemid=pt." DUF_SQL_IDNAME " AND tg.itemtype='dirname') " /* */
+           " LEFT JOIN " DUF_DBPREF "tagnames AS tgn ON (tg.tagnameid=tgn." DUF_SQL_IDNAME ") " /* */
 #if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
