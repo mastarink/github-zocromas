@@ -114,7 +114,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     cnt++;
   }
 
-  DUF_TRACE( options, 0, "optind:%d; carg.argc:%d", optind, carg.argc );
+  DUF_TRACE( options, +2, "optind:%d; carg.argc:%d", optind, carg.argc );
   DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
   if ( istage == 0 && optind < duf_config->carg.argc )
   {
@@ -122,7 +122,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     duf_config->targ.argc = 0;
     duf_config->targ.argv = NULL;
 
-    DUF_TRACE( options, 0, "(for targ) carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
+    DUF_TRACE( options, +2, "(for targ) carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
     duf_config->targ.argc = mas_add_argv_argv( duf_config->targ.argc, &duf_config->targ.argv, duf_config->carg.argc, duf_config->carg.argv, optind );
 
     duf_config->targ_offset = duf_reorder_at_sign( duf_config->targ.argc, duf_config->targ.argv );
@@ -144,7 +144,7 @@ duf_cli_options( duf_option_stage_t istage )
   /* Don't use it before all oprions got */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 #endif
-  DUF_TRACE( options, 0, "cli options..." );
+  DUF_TRACE( options, +2, "cli options..." );
   if ( duf_config )
   {
     DOR( r, duf_parse_cli_options( duf_config->cli.shorts, istage ) );

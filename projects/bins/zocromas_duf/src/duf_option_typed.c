@@ -16,6 +16,7 @@
 
 #include "duf_option_defs.h"
 #include "duf_option_find.h"
+#include "duf_option_tmpdb.h"
 
 /* ###################################################################### */
 #include "duf_option_typed.h"
@@ -111,8 +112,8 @@ duf_set_file_special( const char *pname, char **pfilename, FILE ** pfile, FILE *
 }
 
 int
-duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                 const duf_longval_extended_table_t * xtable, int noo )
+duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+                       const duf_longval_extended_table_t * xtable, int noo )
 {
   DEBUG_STARTR( r );
 
@@ -323,7 +324,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
       }
 #define DUF_OUTPUTFILE(_no, _rt, _typ, _defout) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout)
 
-    DUF_TRACE( options, +0, "@@@to check stage; istage:%d", istage );
+    DUF_TRACE( options, +2, "to check stage; istage:%d", istage );
     if ( DUF_OPTION_CHECK_STAGE( istage, extended, xtable ) ) /* duf_check_stage */
     {
       int nof;
@@ -516,7 +517,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
         break;
       case DUF_OPTION_VTYPE_STR:
         /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */
-        DUF_TRACE( options, +3, "vtype STR" );
+        DUF_TRACE( options, +0, "@@vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( r >= 0 )
@@ -530,7 +531,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
           if ( optargg )
           {
             *pstr = mas_strdup( optargg );
-            DUF_TRACE( options, 0, "string set:%s @%p", optargg, pstr );
+            DUF_TRACE( options, +2, "string set:%s @%p", optargg, pstr );
           }
         }
         break;
@@ -563,6 +564,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
           }
         }
         break;
+      case DUF_OPTION_VTYPE_ARGV:
       case DUF_OPTION_VTYPE_PAA:
         DUF_TRACE( options, +3, "vtype PAA" );
 
@@ -587,6 +589,32 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
             DUF_PRINTF( 0, "%s", ( str ) );
             mas_free( str );
           }
+        }
+        break;
+      case DUF_OPTION_VTYPE_TDB:
+        DUF_TRACE( options, +3, "vtype TDB" );
+
+        if ( r >= 0 )
+        {
+          if ( noo )
+          {
+#if 0
+            duf_tmpdb_delete( extended->o.name, optargg );
+#endif
+          }
+          else if ( optargg && *optargg )
+          {
+            duf_tmpdb_add( extended->o.name, optargg );
+          }
+#if 0
+          else if ( extended->m_hasoff == 1 ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */
+          {
+            char *str = duf_tmpdb_select( extended->o.name );
+
+            DUF_PRINTF( 0, "%s", ( str ) );
+            mas_free( str );
+          }
+#endif
         }
         break;
 #if 0
@@ -785,7 +813,7 @@ duf_interpret_option_long_typed( const duf_longval_extended_t * extended, const 
     }
     else
     {
-      DUF_TRACE( options, 0, "@@@NOT switching by extended->vtype=%d; istage=%d (%d:%d); stage.flag:%d", extended->vtype, istage, extended->stage.min,
+      DUF_TRACE( options, 0, "@@NOT switching by extended->vtype=%d; istage=%d (%d:%d); stage.flag:%d", extended->vtype, istage, extended->stage.min,
                  extended->stage.max, extended->stage.flag );
       /* DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ); */
     }

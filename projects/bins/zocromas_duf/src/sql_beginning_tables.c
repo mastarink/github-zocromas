@@ -12,6 +12,20 @@ duf_sql_sequence_t sql_beginning_tables = {
   .done = 0,
   .sql = {
           "BEGIN" /* */ ,
+
+#ifndef DUF_SQL_TTABLES_TEMPORARY
+          "DROP TABLE IF EXISTS tdb_options" /* */ ,
+#endif
+          "CREATE " DUF_SQL_TTABLES_TEMPORARY_STRING " TABLE  IF NOT EXISTS tdb_options ( "
+#ifdef DUF_USE_IDCOL
+          DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
+#endif
+          " name TEXT NOT NULL, arg TEXT NOT NULL" /* */
+          " )",                 /* */
+          "CREATE INDEX IF NOT EXISTS names ON tdb_options (name)", /* */
+
+
+
 #ifndef DUF_SQL_TABLES_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHTOT_FILES_FULL /* */ ,
 #endif
@@ -30,7 +44,7 @@ duf_sql_sequence_t sql_beginning_tables = {
 #ifndef DUF_SQL_TABLES_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHTOT_DIRS_FULL /* */ ,
 #endif
-	  /* CREATE TABLE common_pathtot_dirs AS SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM paths AS pts LEFT JOIN paths ON( pts.parentid = paths.rowid )  JOIN paths AS parents ON( parents.rowid = paths.parentid ) GROUP BY parents.rowid */
+          /* CREATE TABLE common_pathtot_dirs AS SELECT parents.rowid AS Pathid, COUNT( * ) AS numdirs FROM paths AS pts LEFT JOIN paths ON( pts.parentid = paths.rowid )  JOIN paths AS parents ON( parents.rowid = paths.parentid ) GROUP BY parents.rowid */
           "CREATE " DUF_SQL_TABLES_TEMPORARY_STRING " TABLE " DUF_SQL_TABLES_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
           " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) " /* */

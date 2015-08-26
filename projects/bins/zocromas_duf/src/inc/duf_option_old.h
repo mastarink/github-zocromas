@@ -3,7 +3,7 @@
 
 
 
-int duf_interpret_option_long_old( const duf_longval_extended_t * extended, const char *optarg, duf_option_stage_t stage,
+int duf_clarify_opt_old( const duf_longval_extended_t * extended, const char *optarg, duf_option_stage_t stage,
                                const duf_longval_extended_table_t * xtable );
 
 #endif

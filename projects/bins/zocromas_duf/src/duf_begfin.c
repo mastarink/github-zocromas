@@ -24,10 +24,10 @@
 
 
 static int
-duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
+duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t *ttarg )
 {
   DEBUG_STARTR( r );
-  DOR( r, duf_bind_ufilter_uni( pstmt ) );
+  DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
 
@@ -35,7 +35,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt )
 }
 
 int
-duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
+duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind_cb_t callback, const duf_argvc_t *ttarg )
 {
   DEBUG_STARTR( r );
 
@@ -61,8 +61,8 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
 
       {
         DUF_SQL_START_STMT_NOPDI( *psql, r, pstmt );
-        if ( bind )
-          DOR( r, duf_bind_ufilter( pstmt ) );
+        if ( callback )
+          DOR( r, ( callback ) ( pstmt, ttarg ) );
         if ( r >= 0 )
         {
           DUF_SQL_STEP( r, pstmt );
@@ -82,5 +82,15 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
     ssql->done++;
 
   }
+  DEBUG_ENDR( r );
+}
+
+int
+duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
+{
+  DEBUG_STARTR( r );
+
+  DOR( r, duf_eval_sql_sequence_cb( ssql, title, bind ? duf_bind_ufilter : NULL, NULL ) );
+
   DEBUG_ENDR( r );
 }

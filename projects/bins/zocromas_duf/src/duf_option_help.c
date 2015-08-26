@@ -630,6 +630,9 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
               "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' --with-mime-type=application/octet-stream / --ls  	- %s",
               "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0  --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' --files-tagged-as='ch-IMAG3115'  / --ls  	- %s",
+              "allowed multiple --files-tagged-as options" );
+
 
 
   DUF_PRINTF( 0, "=============================================================" );

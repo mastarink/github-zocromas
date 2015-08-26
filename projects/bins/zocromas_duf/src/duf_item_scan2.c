@@ -116,7 +116,7 @@ duf_scan_db_items_with_str_cb_sql( const char *csql_selector, duf_str_cb2_t str_
   DUF_TRACE( select, 1, "S:%s", csql_selector );
 
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
-  duf_bind_ufilter_uni( pstmt_selector );
+  duf_bind_ufilter_uni( pstmt_selector, NULL );
 
   /* cal one of duf_sel_cb2_(leaf|node) by node_type
    * i.e. DOR( r, (( node_type == DUF_NODE_NODE ) ? duf_sel_cb2_node : ( node_type == DUF_NODE_LEAF ? duf_sel_cb2_leaf : NULL ) ) ( pstmt_selector, str_cb2, sccbh ) )

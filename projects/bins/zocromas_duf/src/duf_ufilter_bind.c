@@ -48,7 +48,7 @@ duf_clear_filepath( duf_filepath_t * pfp )
 }
 
 int
-duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
+duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t *ttarg_unused )
 {
   DEBUG_STARTR( r );
 #define DUF_SQL_BIND_PAIR( _fld, _name ) \

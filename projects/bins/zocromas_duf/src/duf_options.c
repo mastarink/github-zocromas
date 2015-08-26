@@ -70,7 +70,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
   if ( r >= 0 )
     DOR( r, duf_env_options( istage ) );
   er = r;
-  DUF_TRACE( options, 0, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
+  DUF_TRACE( options, +2, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
 
 #ifdef MAS_TRACING
   for ( int ia = 0; ia < duf_config->carg.argc; ia++ )
@@ -85,14 +85,14 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     DOR( r, duf_infile_options( istage ) );
     fr = r;
   }
-  DUF_TRACE( options, 0, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name( r ) );
+  DUF_TRACE( options, +2, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name( r ) );
 
   if ( r >= 0 )
   {
     DOR( r, duf_cli_options( istage ) );
     or = r;
   }
-  DUF_TRACE( options, 0, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name( r ) );
+  DUF_TRACE( options, +2, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name( r ) );
 
 #if 1
 /* duf_indirect_options - only for next stage  */
@@ -101,7 +101,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     DOR( r, duf_indirect_options( istage ) );
     ir = r;
   }
-  DUF_TRACE( options, 0, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
+  DUF_TRACE( options, +2, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
 #ifdef MAS_TRACING
@@ -154,7 +154,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     DOR( r, duf_stdin_options( istage ) );
     ir = r;
   }
-  DUF_TRACE( options, 0, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
+  DUF_TRACE( options, +2, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
   DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; ir: %d; tr: %d; r: %s", or, fr, er, ir, tr, duf_error_name( r ) );
@@ -168,7 +168,7 @@ duf_show_options( const char *a0 )
   DEBUG_STARTR( r );
   int oseq = 0;
 
-  DUF_TRACE( options, 0, "%s", a0 );
+  DUF_TRACE( options, +2, "%s", a0 );
   for ( duf_option_code_t codeval = DUF_OPTION_VAL_NONE; codeval < DUF_OPTION_VAL_MAX_LONG; codeval++ )
   {
 #define BUFSZ 1024 * 4
@@ -178,9 +178,9 @@ duf_show_options( const char *a0 )
     if ( *buffer )
     {
       oseq++;
-      DUF_TRACE( options, 0, "%2d. %s", oseq, buffer );
+      DUF_TRACE( options, +2, "%2d. %s", oseq, buffer );
     }
   }
-  DUF_TRACE( options, 0, " --" );
+  DUF_TRACE( options, +2, " --" );
   DEBUG_ENDR( r );
 }

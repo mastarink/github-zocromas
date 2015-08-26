@@ -12,6 +12,7 @@
 duf_sql_sequence_t sql_beginning_selected = {
   .done = 0,
   .sql = {
+
 //"DELETE FROM " DUF_SQL_SELECTED_NAME /* */
 //      ,
 //"INSERT INTO " DUF_SQL_SELECTED_NAME /* */
@@ -120,7 +121,7 @@ duf_sql_sequence_t sql_beginning_selected = {
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "_rowid ON " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL " (rowid) " /* */        ,
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL " (Pathid)" /* */
           ,
-          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL " (numdirs)"
-          /* */ ,
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_PATHTOT_DIRS_FULL " (numdirs)",
+
           NULL}
 };

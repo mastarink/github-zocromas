@@ -15,6 +15,9 @@ sfind duf_option_old.h
 tab sfind duf_option_typed.c
 sfind duf_option_typed.h
 
+tab sfind duf_option_tmpdb.c
+sfind duf_option_tmpdb.h
+
 tab sfind duf_cli_options.c
 sfind duf_cli_options.h
 

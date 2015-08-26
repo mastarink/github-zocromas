@@ -60,6 +60,7 @@
         "                  ) " \
         " AND (:TagDir  IS NULL OR tgn.name=:TagDir)" \
         " AND (:TagFile IS NULL OR tgn.name=:TagFile)" \
+	" AND ((SELECT COUNT(*) AS C FROM tdb_options) == 0 OR tgn.name IN (SELECT arg FROM tdb_options AS tbo WHERE tbo.name='files-tagged-as' ))" \
 	" AND " \
         "  ( :GName        IS NULL OR fn.name      GLOB :GName                             ) AND "  \
         "  ( :GNameI       IS NULL OR fn.name      GLOB :GNameI                            ) AND "  \

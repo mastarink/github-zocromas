@@ -71,7 +71,7 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
       csql = sqlt;
       DUF_TRACE( temp, 5, "count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
-      duf_bind_ufilter_uni( pstmt );
+      duf_bind_ufilter_uni( pstmt, NULL );
       DUF_SQL_STEP( rpr, pstmt );
       if ( rpr == DUF_SQL_ROW )
       {

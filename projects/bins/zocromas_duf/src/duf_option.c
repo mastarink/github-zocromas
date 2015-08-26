@@ -22,7 +22,7 @@
 
 
 DUF_WRAPSTATIC int
-duf_interpret_option_long_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+duf_clarify_opt_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
                                 const duf_longval_extended_table_t * xtable, int no )
 {
   DEBUG_STARTR( r );
@@ -34,14 +34,14 @@ duf_interpret_option_long_full( const duf_longval_extended_t * extended, const c
  *   errorcode<0  for error
  * */
     DUF_TRACE( options, +2, "xname:%s; arg:%s; istage:%d; no:%d", extended ? extended->o.name : "?", optargg, istage, no );
-    DOR( r, duf_interpret_option_long_typed( extended, optargg, istage, xtable, no ) );
+    DOR( r, duf_clarify_opt_typed( extended, optargg, istage, xtable, no ) );
     DUF_TRACE( options, +3, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
 
 
     if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
     {
       DUF_TRACE( explain, 1, "@old opt for %s", extended?extended->o.name:NULL  );
-      DOZR( r, duf_interpret_option_long_old( extended, optargg, istage, xtable ) );
+      DOZR( r, duf_clarify_opt_old( extended, optargg, istage, xtable ) );
     }
     else
     {
@@ -58,13 +58,13 @@ duf_interpret_option_long_full( const duf_longval_extended_t * extended, const c
 
 #ifdef MAS_WRAP_FUNC
 int
-DUF_WRAPPED( duf_interpret_option_long_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+DUF_WRAPPED( duf_clarify_opt_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
                                                 const duf_longval_extended_table_t * xtable, int no )
 {
   DEBUG_STARTR( r );
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
-  DOR( r, duf_interpret_option_long_full( extended, optargg, istage, xtable, no ) );
+  DOR( r, duf_clarify_opt_full( extended, optargg, istage, xtable, no ) );
   DUF_TRACE( options, +2, "xname:%s; arg:%s; no:%d", extended ? extended->o.name : "?", optargg, no );
   DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
@@ -105,7 +105,7 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   {
     if ( extended )
     {
-      DOR( r, DUF_WRAPPED( duf_interpret_option_long_full ) ( extended, optargg, istage, xtable, 0 /* no */  ) );
+      DOR( r, DUF_WRAPPED( duf_clarify_opt_full ) ( extended, optargg, istage, xtable, 0 /* no */  ) );
     }
     else                        /* switch is useless !... */
       switch ( ( int ) codeval )
