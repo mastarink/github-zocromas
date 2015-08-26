@@ -66,8 +66,8 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
   unsigned long long tagid DUF_UNUSED = 0;
   unsigned long long tagnameid = 0;
   int changes = 0;
-  static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "unitags ( tagnameid, itemtype, itemid ) VALUES (:tagNameID, :itemType, :itemID )";
-  static const char *sqlv = "SELECT rowid AS tagid FROM " DUF_DBPREF "unitags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
+  static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "tags ( tagnameid, itemtype, itemid ) VALUES (:tagNameID, :itemType, :itemID )";
+  static const char *sqlv = "SELECT rowid AS tagid FROM " DUF_DBPREF "tags WHERE tagnameid=:tagNameID AND itemtype=:itemType AND itemid=:itemID";
 
   tagnameid = duf_add_tagname( pdi, tagname, &rpr );
   {

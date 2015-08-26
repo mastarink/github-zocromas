@@ -25,6 +25,11 @@ typedef struct
   char *const*argv;
 } duf_cargvc_t;
 
+typedef struct {
+  char *file;
+  char *dir;
+} duf_itemtag_t;
+
 
 
 

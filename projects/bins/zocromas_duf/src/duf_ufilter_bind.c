@@ -40,13 +40,11 @@ duf_init_filepath( duf_filepath_t * pfp, const char *filepath )
   DEBUG_ENDR( r );
 }
 
-int
+static void
 duf_clear_filepath( duf_filepath_t * pfp )
 {
-  DEBUG_STARTR( r );
   if ( pfp )
     mas_free( pfp->name );
-  DEBUG_ENDR( r );
 }
 
 int
@@ -94,10 +92,19 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt )
     DOR( r, duf_init_filepath( &fp, duf_config->pu->same_md5 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
-    DOR( r, duf_clear_filepath( &fp ) );
+    duf_clear_filepath( &fp );
     if ( r >= 0 && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
-
+#if 1
+  if ( duf_config->pu->tag.file )
+  {
+    DUF_SQL_BIND_S_OPT( TagFile, duf_config->pu->tag.file, r, pstmt );
+  }
+  if ( duf_config->pu->tag.dir )
+  {
+    DUF_SQL_BIND_S_OPT( TagDir, duf_config->pu->tag.dir, r, pstmt );
+  }
+#endif
   DEBUG_ENDR( r );
 }

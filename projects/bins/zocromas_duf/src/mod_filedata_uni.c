@@ -128,7 +128,9 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            ", 0 as ndirs, 0 as nfiles" /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks, strftime('%s', fd.mtim) AS mtime " /* */
            ", dup5cnt AS nsame" /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid, fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
+           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+           ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
            .selector2 =         /* */
@@ -143,15 +145,17 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            ,
 #if 0
            .selector_total2 =   /* */
-#if 0
+#  if 0
            " FROM " DUF_DBPREF "paths AS p " /* */
-#else
+#  else
            " FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-#endif
+#  endif
 #endif
            }
   ,
-  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid" /* */
+           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           ", pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,

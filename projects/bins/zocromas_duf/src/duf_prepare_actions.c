@@ -33,8 +33,9 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ), /* 
   duf_print_dir_callbacks __attribute( ( weak ) ), /* */
   duf_sample_callbacks __attribute( ( weak ) ), /* */
   duf_sampupd_callbacks __attribute( ( weak ) ), /* */
-  duf_dummy_callbacks,          /* */
-  duf_template_callbacks,       /* */
+  duf_dummy_callbacks __attribute( ( weak ) ),          /* */
+  duf_tagit_callbacks __attribute( ( weak ) ),          /* */
+  duf_template_callbacks __attribute( ( weak ) ),       /* */
   duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
 
 static duf_action_table_t actions_table[] = {
@@ -84,6 +85,9 @@ static duf_action_table_t actions_table[] = {
    },
   {.tovector = 0, .in_use=1,
    .sccb = &duf_template_callbacks,
+   },
+  {.tovector = 0, .in_use=1,
+   .sccb = &duf_tagit_callbacks,
    },
   {.tovector = 0, .in_use=1,
    .sccb = &duf_dummy_callbacks,

@@ -29,10 +29,16 @@ duf_ufilter_create( void )
 void
 duf_ufilter_delete( duf_ufilter_t * pu )
 {
+  /* Don't forget to update duf_ufilter_copy too */
   if ( pu )
   {
     mas_free( pu->glob_db );
     pu->glob_db = NULL;
+
+    mas_free( pu->tag.dir );
+    pu->tag.dir = NULL;
+    mas_free( pu->tag.file );
+    pu->tag.file = NULL;
 
     mas_free( pu->glob_db_include );
     pu->glob_db_include = NULL;
@@ -60,6 +66,8 @@ duf_ufilter_copy( duf_ufilter_t * pu, const duf_ufilter_t * pusrc )
   if ( pu && pusrc )
   {
     memcpy( pu, pusrc, sizeof( duf_ufilter_t ) );
+    pu->tag.file = mas_strdup( pusrc->tag.file );
+    pu->tag.dir = mas_strdup( pusrc->tag.dir );
     pu->glob_db = mas_strdup( pusrc->glob_db );
     pu->glob_db_include = mas_strdup( pusrc->glob_db_include );
     pu->glob_db_exclude = mas_strdup( pusrc->glob_db_exclude );

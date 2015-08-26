@@ -40,6 +40,7 @@ typedef struct
   unsigned deleted:1;
   /* unsigned eod; */
   unsigned long long dirid;
+  unsigned long long nameid;
   /* const char *name; */
   duf_items_t items;
   long numdir;

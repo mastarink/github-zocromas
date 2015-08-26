@@ -90,6 +90,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " , fd.dev, fd.uid, fd.gid, fd.nlink, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            " , crc.dup32cnt AS nsame " /* */
            " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            " , fd.mode AS filemode, crc.crc32sum " /* */
            " , fd.crc32id AS crc32id" /* */
            " , fd.md5id AS md5id" /* */
@@ -122,7 +123,9 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
 #endif
            }
   ,
-  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
+  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid" /* */
+           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           ", pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,

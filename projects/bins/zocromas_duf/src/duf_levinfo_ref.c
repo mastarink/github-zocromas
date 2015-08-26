@@ -268,6 +268,12 @@ DUF_LEVINFO_3GET( unsigned long long, dirid, dirid )
 
 /************************************************************************/
 
+  /* *INDENT-OFF*  */
+DUF_LEVINFO_3GET( unsigned long long, nameid, nameid )
+/* *INDENT-ON*  */
+
+/************************************************************************/
+
 unsigned long long
 duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d )
 {

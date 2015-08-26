@@ -130,7 +130,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
           pli->numdir = DUF_GET_UFIELD2( ndirs );
 #endif
 
-          DUF_TRACE( temp, 2, "@@@ numdir:%ld; numfile:%ld [%s]", pli->numdir, pli->numfile, sqlv );
+          DUF_TRACE( path, 20, "@@@ numdir:%ld; numfile:%ld [%s]", pli->numdir, pli->numfile, sqlv );
 
           /* DUF_TRACE( path, 0, "@@@numdir:%ld; numfile: %ld;", pli->numdir, pli->numfile ); */
         }
@@ -466,6 +466,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
         DUF_TRACE( path, 2, "@r:%d;next                 [%40s]  #%llu:%s", r, path, parentid, nextdir && *nextdir ? nextdir : "-=NONE=-" );
         if ( caninsert /* && r > 0 */  && parentid > 0 && !( nextdir && *nextdir ) )
         {
+#if 0
 #ifdef MAS_TRACING
           unsigned long long tagid;
 #else
@@ -479,6 +480,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
             tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "dummy" /* tagname */ , &r );
             DUF_TRACE( path, 2, "%d: tag \"dummy\": %llu", r, tagid );
           }
+#endif
         }
         path = nextdir;
       }

@@ -1,5 +1,6 @@
 #include "mas_std_def.h"
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -78,6 +79,7 @@ memerror( mas_mem_head_t * m )
 {
   fprintf( stderr, "\nMEMORY ERROR 0x%lx > [sig:0x%llx : id:0x%lx]\n", ( unsigned long ) ( m + 1 ), m->sig, m->id );
   /* sleep( 98 ); */
+  assert( 12 - 12 );
   exit( 11 );
 }
 

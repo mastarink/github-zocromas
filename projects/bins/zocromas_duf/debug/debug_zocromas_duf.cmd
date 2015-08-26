@@ -7,7 +7,8 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-b duf_item_scan2.c:190
+b duf_option_typed.c:533
+b duf_ufilter.c:37
 
 run
 bt

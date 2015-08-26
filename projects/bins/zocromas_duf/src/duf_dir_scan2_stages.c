@@ -148,7 +148,9 @@ duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * s
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>>q +dirent" );
     DUF_TRACE( scan, 4, "@scan dirent by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
-    DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED );
+    /* DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED ); */
+    DOR( r, duf_levinfo_if_statat_dh( PDI ) );
+
     /* assert( duf_levinfo_dfd( PDI ) ); */
     assert( r < 0 || duf_levinfo_stat( PDI ) );
     /*
@@ -156,7 +158,9 @@ duf_sccbh_eval_fs_items( duf_sqlite_stmt_t * pstmt_unused, duf_sccb_handle_t * s
      *      - for directory                - sccb->dirent_dir_scan_before2
      *      - for other (~ regular) entry  - sccb->dirent_file_scan_before2
      * XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
-    DOR_NOE( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ), DUF_ERROR_FS_DISABLED );
+    
+    /* DOR_NOE( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ), DUF_ERROR_FS_DISABLED ); */
+    DOR( r, duf_scan_fs_with2scanners( PDI, SCCB->dirent_file_scan_before2, SCCB->dirent_dir_scan_before2 ) );
   }
   else
   {

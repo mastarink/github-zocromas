@@ -60,12 +60,13 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
   /* filename for debug only */
   .leaf = {
            .fieldset = " fn.Pathid AS dirid, fn.name AS filename, fn.name AS dfname, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           " , 0 as ndirs, 0 as nfiles" /* */
+           " , fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            "  "                 /* */
-           ", fd.mode AS filemode " /* */
-           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
-           ", fd.md5id AS md5id" /* */
+           " , fd.mode AS filemode " /* */
+           " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           " , fn." DUF_SQL_IDNAME " AS nameid " /* */
+           " , fd.md5id AS md5id" /* */
            ,                    /* */
            .selector2 =         /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
@@ -85,7 +86,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .count_aggregate = "distinct fd." DUF_SQL_IDNAME
 #if 0
            ,
-	   .selector_total2 =   /* */
+           .selector_total2 =   /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
@@ -95,7 +96,9 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
 #endif
            },                   /* */
   .node = {
-           .fieldset = " pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
+           .fieldset = " pt." DUF_SQL_IDNAME " AS dirid" /* */
+           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
            ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */

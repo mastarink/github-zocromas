@@ -22,12 +22,6 @@ duf_reorder_at_sign( int argc, char *argv[] )
   int nkra = -1;
   int kra = -1;
 
-#ifdef MAS_TRACING
-  for ( int ia = 0; ia < argc; ia++ )
-  {
-    DUF_TRACE( temp, 2, "Before argv[%d]='%s'", ia, argv[ia] );
-  }
-#endif
 
   for ( int ia = 0; ia < argc; ia++ )
   {
@@ -53,30 +47,20 @@ duf_reorder_at_sign( int argc, char *argv[] )
 #if 1
   for ( int ia = 0; ia < argc; ia++ )
   {
-    DUF_TRACE( temp, 2, "1> ia:%d ra:%d %s", ia, ra, argv[ia] );
     if ( argv[ia][0] != '@' )
     {
       ra = ia;
       break;
     }
-    DUF_TRACE( temp, 2, "2> ia:%d ra:%d %s", ia, ra, argv[ia] );
   }
 #else
   for ( int ia = argc - 1; ia >= 0; ia-- )
   {
-    DUF_TRACE( temp, 2, "1> ia:%d ra:%d %s", ia, ra, argv[ia] );
     if ( argv[ia] && argv[ia][0] != '@' )
       ra = ia;
-    DUF_TRACE( temp, 2, "2> ia:%d ra:%d %s", ia, ra, argv[ia] );
   }
 #endif
 
-#ifdef MAS_TRACING
-  for ( int ia = 0; ia < argc; ia++ )
-  {
-    DUF_TRACE( temp, 2, "After argv[%d]='%s'", ia, argv[ia] );
-  }
-#endif
 
   return ra;
 }
@@ -100,19 +84,19 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
 #else
   carg = duf_config->carg;
 #endif
-  DUF_TRACE( options, 1, "parse cli options (%d)...", duf_config->longopts_table ? 1 : 0 );
+  DUF_TRACE( options, +2, "parse cli options (%d)...", duf_config->longopts_table ? 1 : 0 );
 #if 0
   {
     for ( const duf_option_t * po = duf_config->longopts_table; po && po->name; po++ )
     {
-      DUF_TRACE( options, 3, "L:%3ld. %s", ( po - duf_config->longopts_table ), po->name );
+      DUF_TRACE( options, +4, "L:%3ld. %s", ( po - duf_config->longopts_table ), po->name );
     }
   }
 #endif
   while ( r >= 0
           && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
   {
-    DUF_TRACE( options, 1, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
+    DUF_TRACE( options, +2, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
  * duf_parse_option return
  *        oclass (>0) for "help" options
@@ -120,8 +104,8 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
  * or  errorcode (<0) for error
  * */
     DOR( r, duf_parse_option( codeval, longindex, optarg, istage ) );
-    DUF_TRACE( options, 3, "cli options r: %d", r );
-    DUF_TRACE( options, 1, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
+    DUF_TRACE( options, +4, "cli options r: %d", r );
+    DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
 
     if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION ) )
     {
@@ -143,20 +127,10 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
 
     duf_config->targ_offset = duf_reorder_at_sign( duf_config->targ.argc, duf_config->targ.argv );
 
-    DUF_TRACE( temp, 2, ">> duf_config->targ_offset:%d", duf_config->targ_offset );
-    for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
-    {
-      DUF_TRACE( temp, 2, "After duf_config->targv[%d]='%s'", ia, duf_config->targ.argv[ia] );
-    }
-
-    DUF_TRACE( temp, 2, ">> targ_offset:%d", duf_config->targ_offset );
-
-    DUF_TRACE( temp, 2, ">> optind=%d; targc=%d", optind, duf_config->targ.argc );
-
+ 
 
     /* targ.argv becomes valid here - may init pdi etc. */
   }
-  DUF_TRACE( temp, 2, ">> targ_offset:%d", duf_config->targ_offset );
  
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }

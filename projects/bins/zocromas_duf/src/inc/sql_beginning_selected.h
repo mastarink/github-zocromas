@@ -57,6 +57,8 @@
         "                                   JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
         "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
         "                  ) " \
+        " AND (:TagDir  IS NULL OR tgn.name=:TagDir)" \
+        " AND (:TagFile IS NULL OR tgn.name=:TagFile)" \
 	" AND " \
         "  ( :GName        IS NULL OR fn.name      GLOB :GName                             ) AND "  \
         "  ( :GNameI       IS NULL OR fn.name      GLOB :GNameI                            ) AND "  \

@@ -37,6 +37,8 @@ typedef struct
   struct duf_depthinfo_s *pdi;
   unsigned nopen;
   unsigned nclose;
+
+  duf_itemtag_t tag;
 } duf_config_t;
 
 

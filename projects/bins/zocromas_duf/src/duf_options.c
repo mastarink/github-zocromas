@@ -110,35 +110,35 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
     if ( fstat( STDIN_FILENO, &st_stdin ) >= 0 )
     {
-      DUF_TRACE( temp, 2, "isatty:%d, st_dev:%04llx, st_rdev:%04llx, st_ino:%04llx, chr:%d, isfifo:%d", isatty( STDIN_FILENO ),
+      DUF_TRACE( options, 20, "isatty:%d, st_dev:%04llx, st_rdev:%04llx, st_ino:%04llx, chr:%d, isfifo:%d", isatty( STDIN_FILENO ),
                  ( unsigned long long ) st_stdin.st_dev, ( unsigned long long ) st_stdin.st_rdev, ( unsigned long long ) st_stdin.st_ino,
                  S_ISCHR( st_stdin.st_mode ), S_ISFIFO( st_stdin.st_mode ) );
 
       switch ( st_stdin.st_mode & S_IFMT )
       {
       case S_IFBLK:
-        DUF_TRACE( temp, 2, "block device" );
+        DUF_TRACE( options, 20, "block device" );
         break;
       case S_IFCHR:
-        DUF_TRACE( temp, 2, "character device" );
+        DUF_TRACE( options, 20, "character device" );
         break;
       case S_IFDIR:
-        DUF_TRACE( temp, 2, "directory" );
+        DUF_TRACE( options, 20, "directory" );
         break;
       case S_IFIFO:
-        DUF_TRACE( temp, 2, "FIFO/pipe" );
+        DUF_TRACE( options, 20, "FIFO/pipe" );
         break;
       case S_IFLNK:
-        DUF_TRACE( temp, 2, "symlink" );
+        DUF_TRACE( options, 20, "symlink" );
         break;
       case S_IFREG:
-        DUF_TRACE( temp, 2, "regular file" );
+        DUF_TRACE( options, 20, "regular file" );
         break;
       case S_IFSOCK:
-        DUF_TRACE( temp, 2, "socket" );
+        DUF_TRACE( options, 20, "socket" );
         break;
       default:
-        DUF_TRACE( temp, 2, "unknown?" );
+        DUF_TRACE( options, 20, "unknown?" );
         break;
       }
     }

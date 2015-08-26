@@ -159,6 +159,11 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.adm.fpath );
     cfg->db.adm.fpath = NULL;
 
+    mas_free( cfg->tag.file );
+    cfg->tag.file = NULL;
+    mas_free( cfg->tag.dir );
+    cfg->tag.dir = NULL;
+
     /* mas_free( cfg->group ); */
     /* cfg->group = NULL;      */
 
@@ -236,14 +241,14 @@ int
 duf_config_show( void )
 {
   DEBUG_STARTR( r );
-  
+
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
   if ( duf_config )
     fprintf( stderr, "db.dir: %s\n", duf_config->db.dir );
   for ( int ia = 0; ia < duf_config->targ.argc; ia++ )
     fprintf( stderr, "targ.argv[%d]: %s\n", ia, duf_config->targ.argv[ia] );
   duf_dbgfunc( DBG_END, __func__, __LINE__ );
-  
+
   DEBUG_ENDR( r );
 }
 

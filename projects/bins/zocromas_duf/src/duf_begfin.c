@@ -55,6 +55,7 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
       int DUF_UNUSED changes = 0;
 #endif
       DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
+      DUF_TRACE( select, 0, "beginning psql : %s", *psql );
       /* r = duf_sql( *p, &changes ); */
       DORF( r, duf_main_db_open );
 

@@ -22,7 +22,7 @@ path_pairs
 paths
 sd5
 sizes
-unitags
+tags
 tagnames
 */
 
@@ -42,7 +42,7 @@ duf_sql_sequence_t sql_beginning_clear = {.done = 0,
           "DROP TABLE IF EXISTS paths",
           "DROP TABLE IF EXISTS sd5",
           "DROP TABLE IF EXISTS sizes",
-          "DROP TABLE IF EXISTS unitags",
+          "DROP TABLE IF EXISTS tags",
           "DROP TABLE IF EXISTS tagnames",
           NULL}
 };
@@ -368,7 +368,7 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "unitags ("
+          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "tags ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement,"
 #endif
@@ -376,8 +376,11 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           " itemtype TEXT NOT NULL, " /* */
           " itemid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) " /* */
           /*          " , FOREIGN KEY(itemid)  REFERENCES paths(" DUF_SQL_IDNAME ") " *//* */
-          " , FOREIGN KEY(tagnameid) REFERENCES tagnames(" DUF_SQL_IDNAME ") )",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "unitags_uniq ON unitags (tagnameid, itemid)",
+          " , FOREIGN KEY(tagnameid) REFERENCES tagnames(" DUF_SQL_IDNAME ") "
+          " , FOREIGN KEY(itemid) REFERENCES filenames(" DUF_SQL_IDNAME ") "
+          " , FOREIGN KEY(itemid) REFERENCES paths(" DUF_SQL_IDNAME ") "
+	    " )",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "tags_uniq ON tags (tagnameid, itemid)",
 
 /******************************************************************************************************/
 /***                                                                                             ******/

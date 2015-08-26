@@ -37,6 +37,10 @@ unsigned long long duf_levinfo_nodedirid_d( const duf_depthinfo_t * pdi, int d )
 unsigned long long duf_levinfo_nodedirid( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_nodedirid_up( const duf_depthinfo_t * pdi );
 
+unsigned long long duf_levinfo_nameid_d( const duf_depthinfo_t * pdi, int d );
+unsigned long long duf_levinfo_nameid( const duf_depthinfo_t * pdi );
+unsigned long long duf_levinfo_nameid_up( const duf_depthinfo_t * pdi );
+
 unsigned long long duf_levinfo_items_files_d( const duf_depthinfo_t * pdi, int d );
 unsigned long long duf_levinfo_items_files( const duf_depthinfo_t * pdi );
 unsigned long long duf_levinfo_items_files_up( const duf_depthinfo_t * pdi );

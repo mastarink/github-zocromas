@@ -33,6 +33,12 @@ const duf_longval_extended_table_t optable_str = {
    {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */
     , DO_VV_CALL( db_open ), DO_STAGE_ANY /*                                                */ , DO_H(  ... ) /*                             */ },
 
+   {.o = {DO_Q( "tag-file" ) /*         */ , DO_A_R /* */ , DO_V( TAG_FILE )} /*           */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( STR, tag.file ) /*                                                    */ , DO_H( tag file ) /*                     */ },
+   {.o = {DO_Q( "tag-dir" ) /*          */ , DO_A_R /* */ , DO_V( TAG_DIR )} /*            */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( STR, tag.dir ) /*                                                     */ , DO_H( tag dir ) /*                     */ },
+
+
    {.o = {.name = NULL}}
    }
 };

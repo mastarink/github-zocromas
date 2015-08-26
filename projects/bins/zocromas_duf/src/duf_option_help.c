@@ -607,6 +607,12 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --disable-memusage  -dfR  --tree  --max-depth=2 .   	- %s", "new opt: --disable-memusage; --memusage removed" );
   DUF_PRINTF( 0, "  run  --db-name=photo.db /home/mastar/big/misc/media/photo  "
               " -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif  " " --progress   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "========================= as for 20150826.112235 ============" );
+  DUF_PRINTF( 0, "  run  --db-name=photo.db -dfR  --md5id=854 --disable-fs /home/mastar/big/misc/media/photo  --tree    	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=photo.db -dfR  --md5id=854 --disable-fs /home/mastar/big/misc/media/photo  --tree "
+              " --tag-file=ch-IMAG3115  --evaluate-sccb=tagit   	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=photo.db -dfR  --with-tag-file=ch-IMAG3115 /home/mastar/big/misc/media/photo  --tree   	- %s", "-= \"\" =-" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

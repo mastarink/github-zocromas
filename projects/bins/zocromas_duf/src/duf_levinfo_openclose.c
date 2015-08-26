@@ -208,6 +208,7 @@ duf_levinfo_dbopenat_dh( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int i
     {
       /* stat */
       pli->dirid = DUF_GET_UFIELD2( dirid );
+      pli->nameid = DUF_GET_UFIELD2( nameid );
       pdhlev->st.st_dev = DUF_GET_UFIELD2( dev );
       pdhlev->st.st_ino = DUF_GET_UFIELD2( inode );
       pdhlev->st.st_mode = DUF_GET_UFIELD2( filemode );

@@ -125,6 +125,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           ", fn." DUF_SQL_IDNAME " AS nameid " /* */
            ", md.dup5cnt AS nsame, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
@@ -146,7 +147,9 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 #endif
            },
   .node = {                     /* */
-           .fieldset = "pt." DUF_SQL_IDNAME " AS dirid, pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
+           .fieldset = "pt." DUF_SQL_IDNAME " AS dirid " /* */
+           ", pt." DUF_SQL_IDNAME " AS nameid " /* */
+           ", pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,

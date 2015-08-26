@@ -37,6 +37,7 @@ typedef struct
   duf_items_t maxitems;
   duf_limits_t dirfiles;
   duf_filter_globx_t globx;
+  duf_itemtag_t tag;
   char *glob_db;
   char *glob_db_include;
   char *glob_db_exclude;
