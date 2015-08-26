@@ -604,7 +604,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
           }
           else if ( optargg && *optargg )
           {
-            duf_tmpdb_add( extended->o.name, optargg );
+            duf_tmpdb_add( extended->o.val, extended->o.name, optargg );
           }
 #if 0
           else if ( extended->m_hasoff == 1 ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */

@@ -20,7 +20,7 @@ duf_sql_sequence_t sql_beginning_tables = {
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
-          " name TEXT NOT NULL, arg TEXT NOT NULL" /* */
+	  " oval INTEGER NOT NULL, name TEXT NOT NULL, arg TEXT NOT NULL" /* */
           " )",                 /* */
           "CREATE INDEX IF NOT EXISTS names ON tdb_options (name)", /* */
 

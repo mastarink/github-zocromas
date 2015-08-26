@@ -48,7 +48,7 @@ duf_clear_filepath( duf_filepath_t * pfp )
 }
 
 int
-duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t *ttarg_unused )
+duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg_unused )
 {
   DEBUG_STARTR( r );
 #define DUF_SQL_BIND_PAIR( _fld, _name ) \
@@ -87,6 +87,7 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t *ttarg_unused
   }
 
   DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACT_FLAG( fast ), r, pstmt );
+  DUF_SQL_BIND_LL_NZ_OPT( DUF_OPTION_VAL_WITH_TAG_FILE, DUF_OPTION_VAL_WITH_TAG_FILE, r, pstmt );
 
 
   if ( duf_config->pu->same_md5 )

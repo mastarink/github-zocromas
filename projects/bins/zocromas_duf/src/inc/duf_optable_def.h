@@ -75,7 +75,7 @@
 #  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f)
 /* void f( .vsa.arg ) -- */
 #  define DO_VSA_CALL(_f, _a)		DO_SET_VTYPE( VSA_CALL ), DO_SET_CALLA(vsa, _f, _a)
-#  define DO_TDB(_vt) 	DO_SET_VTYPE( _vt )
+#  define DO_TDB( ) 	DO_SET_VTYPE( TDB )
 
 #  define DO_SET_STAGE(_min, _max) .stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.use_stage=1
 #  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)

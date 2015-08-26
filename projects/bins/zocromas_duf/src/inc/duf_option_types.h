@@ -71,11 +71,11 @@ typedef enum
   DUF_OPTION_VTYPE_ARGV,
   DUF_OPTION_VTYPE_PAA,
   DUF_OPTION_VTYPE_TDB,
-#if 0
+#  if 0
   DUF_OPTION_VTYPE_PDISTR,
   DUF_OPTION_VTYPE_PDINUM,
   DUF_OPTION_VTYPE_PDISCCB,
-#endif
+#  endif
   DUF_OPTION_VTYPE_DATETIME,
 
   DUF_OPTION_VTYPE_MINDATETIME,
@@ -94,6 +94,13 @@ typedef enum
   DUF_OPTION_VTYPE_FILE,
 } duf_option_vtype_t;
 
+/* struct option       */
+/* {                   */
+/*   const char *name; */
+/*   int has_arg;      */
+/*   int *flag;        */
+/*   int val;          */
+/* };                  */
 typedef struct option duf_option_t;
 
 typedef struct
