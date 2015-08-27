@@ -124,6 +124,11 @@ long_t duf_levinfo_dbstat_cnsec( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d );
 const char *duf_levinfo_path( const duf_depthinfo_t * pdi );
 const char *duf_levinfo_path_up( const duf_depthinfo_t * pdi );
+const char *duf_levinfo_path_top( const duf_depthinfo_t * pdi );
+
+const char *duf_levinfo_relpath_d( const duf_depthinfo_t * pdi, int d );
+const char *duf_levinfo_relpath( const duf_depthinfo_t * pdi );
+const char *duf_levinfo_relpath_up( const duf_depthinfo_t * pdi );
 
 const char *duf_levinfo_path_q( const duf_depthinfo_t * pdi, const char *q );
 char *duf_levinfo_path_qdup( const duf_depthinfo_t * pdi, const char *q );

@@ -467,24 +467,24 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
 /*        if ( r < 0 )
           DUF_SHOW_ERROR( "No such entry %s [%s]", real_path, path ); */
         DUF_TRACE( path, 2, "@r:%d;next                 [%40s]  #%llu:%s", r, path, parentid, nextdir && *nextdir ? nextdir : "-=NONE=-" );
+#if 0
         if ( caninsert /* && r > 0 */  && parentid > 0 && !( nextdir && *nextdir ) )
         {
-#if 0
 #  ifdef MAS_TRACING
           unsigned long long tagid;
 #  else
           unsigned long long DUF_UNUSED tagid;
 #  endif
 
-          tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "added" /* tagname */ , &r );
+          tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "added" /* tag name */ , &r );
           DUF_TRACE( path, 2, "%d: tag \"added\": %llu", r, tagid );
           if ( 1 )
           {
-            tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "dummy" /* tagname */ , &r );
+            tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "dummy" /* tag name */ , &r );
             DUF_TRACE( path, 2, "%d: tag \"dummy\": %llu", r, tagid );
           }
-#endif
         }
+#endif
         path = nextdir;
       }
     }

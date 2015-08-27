@@ -41,6 +41,7 @@
    %z : filesize
    %t : mtime
    %r : realpath
+   %R : relative realpath (relative to 'top level')
    %f : filename
    %@ : md5sum
    %X : exifid
@@ -331,6 +332,20 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
+  case 'R':                    /* relative realpath */
+    {
+      const char *rel_real_path = NULL;
+
+      if ( v )
+        snprintf( format, fbsz, "%%%lds", v );
+      else
+        snprintf( format, fbsz, "%%s" );
+
+      rel_real_path = duf_levinfo_relpath( pdi );
+      snprintf( pbuffer, bfsz, format, rel_real_path );
+      ok++;
+    }
+    break;    
   case 'f':                    /* filename */
     {
       if ( v )

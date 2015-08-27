@@ -452,6 +452,24 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC( const char *, path )
 DUF_LEVINFO_FC_UP( const char *, path )
+DUF_LEVINFO_FC_TOP( const char *, path )
+/* *INDENT-ON*  */
+
+const char *
+duf_levinfo_relpath_d( const duf_depthinfo_t * pdi, int d )
+{
+  const char *toppath;
+  const char *path;
+  size_t len;
+
+  toppath = duf_levinfo_path_top( pdi );
+  len = strlen( toppath );
+  path = duf_levinfo_path_d( pdi, d );
+  return path + len;
+}
+/* *INDENT-OFF*  */
+DUF_LEVINFO_FC( const char *, relpath )
+DUF_LEVINFO_FC_UP( const char *, relpath )
 /* *INDENT-ON*  */
 
 const char *

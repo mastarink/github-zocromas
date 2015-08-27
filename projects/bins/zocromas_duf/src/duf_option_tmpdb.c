@@ -34,9 +34,9 @@ duf_bind_tmp( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
   DEBUG_STARTR( r );
   if ( ttarg && ttarg->argc >= 2 && ttarg->argv )
   {
-    DUF_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] );
-    DUF_TRACE( temp, 0, "%d:1 >>>> %s", ttarg->argc, ttarg->argv[1] );
-    DUF_TRACE( temp, 0, "%d:2 >>>> %s", ttarg->argc, ttarg->argv[2] );
+    /* DUF_TRACE( temp, 0, "%d:0 >>>> %s", ttarg->argc, ttarg->argv[0] ); */
+    /* DUF_TRACE( temp, 0, "%d:1 >>>> %s", ttarg->argc, ttarg->argv[1] ); */
+    /* DUF_TRACE( temp, 0, "%d:2 >>>> %s", ttarg->argc, ttarg->argv[2] ); */
     DUF_SQL_BIND_S_OPT( optVal, ttarg->argv[0], r, pstmt );
     DUF_SQL_BIND_S_OPT( optName, ttarg->argv[1], r, pstmt );
     DUF_SQL_BIND_S_OPT( optArg, ttarg->argv[2], r, pstmt );

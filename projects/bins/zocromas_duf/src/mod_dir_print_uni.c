@@ -187,6 +187,7 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
       /* sformat = " _%M  =%S %f  %@\n"; */
+      DUF_TRACE( temp, 8, "%s : %s", duf_levinfo_relpath( pdi ), duf_levinfo_path_top( pdi ) );
       duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }
@@ -271,6 +272,7 @@ print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long path
 
       if ( !sformat )
         sformat = "%r\n";
+      DUF_TRACE( temp, 0, "%s : %s", duf_levinfo_path( pdi ), duf_levinfo_path_d( pdi, pdi->topdepth ) );
       duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }

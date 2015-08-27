@@ -12,7 +12,7 @@
 duf_sql_sequence_t sql_beginning_selected = {
   .done = 0,
   .sql = {
-
+          "BEGIN",
 //"DELETE FROM " DUF_SQL_SELECTED_TMP_FILENAMES /* */
 //      ,
 //"INSERT INTO " DUF_SQL_SELECTED_TMP_FILENAMES /* */
@@ -58,7 +58,7 @@ duf_sql_sequence_t sql_beginning_selected = {
           "      WHERE "        /* */
           DUF_SQL_UFILTER_BINDINGS /* */
           /* " GROUP BY nameid " (* *) */
-	  ,
+          ,
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " (rowid) " /* */
           ,
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_nameid ON " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " (nameid) " /* */        ,
@@ -127,5 +127,6 @@ duf_sql_sequence_t sql_beginning_selected = {
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL
           " (numdirs)",
 
+          "END",
           NULL}
 };
