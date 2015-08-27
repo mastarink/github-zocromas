@@ -1,6 +1,8 @@
 #ifndef SQL_BEGINNING_SELECTED_H
 #  define SQL_BEGINNING_SELECTED_H
 
+#include "sql_beginning_tables.h"
+
 /* #  define DUF_SQL_SELECTED_TEMPORARY "TEMPORARY" */
 #  ifdef DUF_SQL_SELECTED_TEMPORARY
 #    define DUF_SQL_SELECTED_TEMPORARY_STRING DUF_SQL_SELECTED_TEMPORARY
@@ -8,26 +10,26 @@
 #    define DUF_SQL_SELECTED_TEMPORARY_STRING
 #  endif
 
-#  define DUF_SQL_SELECTED_NAME  "selected_filenames"
-#  define DUF_SQL_SELECTED_PATHS "selected_paths"
-#  define DUF_SQL_SELECTED_PATHTOT_FILES "selected_pathtot_files"
-#  define DUF_SQL_SELECTED_PATHTOT_DIRS "selected_pathtot_dirs"
+#  define DUF_SQL_SELECTED_TMP_FILENAMES  "t_selected_filenames"
+#  define DUF_SQL_SELECTED_TMP_PATHS "t_selected_paths"
+#  define DUF_SQL_SELECTED_TMP_PATHTOT_FILES "t_selected_pathtot_files"
+#  define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS "t_selected_pathtot_dirs"
 
 #  if 0
-#    define DUF_SQL_SELECTED_NAME_FULL  DUF_DBPREF DUF_SQL_SELECTED_NAME
-#    define DUF_SQL_SELECTED_PATHS_FULL DUF_DBPREF DUF_SQL_SELECTED_PATHS
-#    define DUF_SQL_SELECTED_PATHTOT_FILES_FULL DUF_DBPREF DUF_SQL_SELECTED_PATHTOT_FILES
-#    define DUF_SQL_SELECTED_PATHTOT_DIRS_FULL DUF_DBPREF DUF_SQL_SELECTED_PATHTOT_DIRS
+#    define DUF_SQL_SELECTED_TMP_FILENAMES_FULL  DUF_DBPREF DUF_SQL_SELECTED_TMP_FILENAMES
+#    define DUF_SQL_SELECTED_TMP_PATHS_FULL DUF_DBPREF DUF_SQL_SELECTED_TMP_PATHS
+#    define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL DUF_DBPREF DUF_SQL_SELECTED_TMP_PATHTOT_FILES
+#    define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL DUF_DBPREF DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
 #  else
-#    define DUF_SQL_SELECTED_NAME_FULL  DUF_SQL_SELECTED_NAME
-#    define DUF_SQL_SELECTED_PATHS_FULL DUF_SQL_SELECTED_PATHS
-#    define DUF_SQL_SELECTED_PATHTOT_FILES_FULL DUF_SQL_SELECTED_PATHTOT_FILES
-#    define DUF_SQL_SELECTED_PATHTOT_DIRS_FULL DUF_SQL_SELECTED_PATHTOT_DIRS
+#    define DUF_SQL_SELECTED_TMP_FILENAMES_FULL  DUF_SQL_SELECTED_TMP_FILENAMES
+#    define DUF_SQL_SELECTED_TMP_PATHS_FULL DUF_SQL_SELECTED_TMP_PATHS
+#    define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL DUF_SQL_SELECTED_TMP_PATHTOT_FILES
+#    define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
 #  endif
 
-#include "sql_beginning_types.h"
+#  include "sql_beginning_types.h"
 
-#define DUF_SQL_UFILTER_BINDINGS \
+#  define DUF_SQL_UFILTER_BINDINGS \
         "    (:minSize     IS NULL OR  fd.size     >=:minSize                             ) AND"  \
         "    (:maxSize     IS NULL OR  fd.size     <=:maxSize                             ) AND"  \
         "    (:minSame     IS NULL OR  md.dup5cnt  >=:minSame                             ) AND"  \
@@ -58,16 +60,26 @@
         "                                   JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
         "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
         "                  ) " \
-	" AND ((SELECT COUNT(*) AS C FROM tdb_options) == 0 OR tgn.name IN (SELECT arg FROM tdb_options AS tbo WHERE tbo.oval= :DUF_OPTION_VAL_WITH_TAG_FILE ))" \
+	" AND ( " \
+	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS ") == 0 " \
+	"         OR " \
+	"            fn.rowid IN (SELECT itemid FROM tags AS t LEFT JOIN  tagnames AS tn ON (t.tagnameid=tn.rowid) " \
+	"                         WHERE itemtype='filename' and tn.name IN " \
+	"                                          (SELECT arg FROM t_tdb_options AS tbo WHERE tbo.oval= :DUF_OPTION_VAL_WITH_TAG_FILE ))  " \
+	"     ) " \
 	" AND " \
         "  ( :GName        IS NULL OR fn.name      GLOB :GName                             ) AND "  \
         "  ( :GNameI       IS NULL OR fn.name      GLOB :GNameI                            ) AND "  \
         "  ( :GNameX       IS NULL OR fn.name  NOT GLOB :GNameX                            ) AND "  \
 	" 1 "
 
+
+        /* "         OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.oval= :DUF_OPTION_VAL_WITH_TAG_FILE ))" \ */
+
         /* " AND (:TagDir  IS NULL OR tgn.name=:TagDir)" \  */
         /* " AND (:TagFile IS NULL OR tgn.name=:TagFile)" \ */
-        /* " AND ((SELECT COUNT(*) AS C FROM tdb_options) == 0 OR tgn.name IN (SELECT arg FROM tdb_options AS tbo WHERE tbo.name='files-tagged-as' ))" \ */
+/* " AND ((SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS ") == 0 OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.name='files-tagged-as' ))" \ */
+
 
 extern duf_sql_sequence_t sql_beginning_selected;
 

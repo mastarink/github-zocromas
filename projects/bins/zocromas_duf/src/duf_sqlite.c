@@ -381,6 +381,7 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
     if ( sqlite3_strglob( "no such table: *", sqlite3_errmsg( pDb ) ) == 0 )
     {
       r3 = DUF_ERROR_SQL_NO_TABLE;
+      assert(0);
     }
   }
   /* assert( r3 == 0 ); */

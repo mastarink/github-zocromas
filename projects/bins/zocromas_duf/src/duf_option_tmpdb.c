@@ -19,6 +19,9 @@
 
 #include "duf_begfin.h"
 #include "duf_sql2.h"
+
+#include "sql_beginning_tables.h"
+
 /* ###################################################################### */
 #include "duf_option_tmpdb.h"
 /* ###################################################################### */
@@ -48,7 +51,7 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
   DEBUG_STARTR( r );
   static duf_sql_sequence_t DUF_UNUSED tmpseq = { /* */
     .sql = {
-            "INSERT OR IGNORE INTO tdb_options (oval, name, arg) VALUES (:optVal, :optName, :optArg) " /* */
+            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_TMP_TDB_OPTIONS " (oval, name, arg) VALUES (:optVal, :optName, :optArg) " /* */
             , NULL}
   };
   char optval[512];

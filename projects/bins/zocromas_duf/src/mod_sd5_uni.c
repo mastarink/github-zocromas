@@ -67,7 +67,9 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {.fieldset = "fn.Pathid AS dirid " /* */
+  .leaf = {.fieldset =          /* */
+           /* "'sd5-leaf' AS fieldset_id, " (* *) */
+           " fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
            " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
            " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
@@ -85,8 +87,6 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           " LEFT JOIN " DUF_DBPREF "tags AS tg ON (tg.itemid=fn." DUF_SQL_IDNAME " AND tg.itemtype='filename') " /* */
-           " LEFT JOIN " DUF_DBPREF "tagnames AS tgn ON (tg.tagnameid=tgn." DUF_SQL_IDNAME ") " /* */
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
@@ -109,7 +109,9 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
 #endif
            }
   ,
-  .node = {.fieldset = "pt." DUF_SQL_IDNAME " AS dirid" /* */
+  .node = {.fieldset =          /* */
+           /* "'sd5-node' AS fieldset_id, " (* *) */
+           " pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname,  pt.ParentId " /* */
            ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize" /* */
@@ -117,10 +119,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            ,
            .selector2 =         /* */
            " FROM " DUF_DBPREF "paths AS pt " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "tags AS tg ON (tg.itemid=pt." DUF_SQL_IDNAME " AND tg.itemtype='dirname') " /* */
-           " LEFT JOIN " DUF_DBPREF "tagnames AS tgn ON (tg.tagnameid=tgn." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0
            " LEFT JOIN " DUF_DBPREF "pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */

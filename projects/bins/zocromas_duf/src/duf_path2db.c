@@ -94,8 +94,11 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
     if ( DUF_IS_ERROR( rpr, DUF_SQL_ROW ) )
     {
       rpr = 0;
-      DUF_TRACE( select, 10, "<selected>" );
+      DUF_TRACE( select, 0, "<selected> %s", sqlv );
       dirid = duf_sql_column_long_long( pstmt, 0 );
+
+      assert( DUF_GET_UFIELD2( dirid ) == dirid );
+
       DUF_TRACE( select, 1, "S:%s (%llu,'%s') ~ '%s'; dirid:%llu", sqlv, duf_levinfo_dirid_up( pdi ), truedirname,
                  duf_levinfo_itemshowname( pdi ), dirid );
       if ( !dirid )
@@ -159,25 +162,25 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * 
 
 #if 1
   duf_sql_set_t def_node_set = {
-    .fieldset = "pt." DUF_SQL_IDNAME " AS dirID " /* */
+    .fieldset = "pt." DUF_SQL_IDNAME " AS dirid " /* */
           ", pt.dirname "       /*      */
           ", tf.numfiles AS nfiles" /* */
           ", td.numdirs AS ndirs  " /*      */
           ,
     .selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
     " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dirname=:dirName)"
   };
 #else
-  const char *def_node_fieldset2 = "pt." DUF_SQL_IDNAME " AS dirID " /* */
+  const char *def_node_fieldset2 = "pt." DUF_SQL_IDNAME " AS dirid " /* */
         ", pt.dirname "         /*      */
         ", tf.numfiles AS nfiles" /* */
         ", td.numdirs AS ndirs  " /*      */
         ;
   const char *def_node_selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
-        " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
-        " LEFT JOIN " DUF_SQL_TABLES_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+        " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+        " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
         " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dirname=:dirName)";
 #endif
   DEBUG_START(  );
@@ -467,11 +470,11 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
         if ( caninsert /* && r > 0 */  && parentid > 0 && !( nextdir && *nextdir ) )
         {
 #if 0
-#ifdef MAS_TRACING
+#  ifdef MAS_TRACING
           unsigned long long tagid;
-#else
+#  else
           unsigned long long DUF_UNUSED tagid;
-#endif
+#  endif
 
           tagid = duf_add_tag( pdi, "path" /* itemtype */ , parentid /* itemid */ , "added" /* tagname */ , &r );
           DUF_TRACE( path, 2, "%d: tag \"added\": %llu", r, tagid );
@@ -497,7 +500,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
 
 /* 20150820.144142 */
 unsigned long long
-duf_path2dirid( const char *path, const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int *pr )
+duf_path2dirid( const char *path, const duf_sql_set_t * sql_set, int *pr )
 {
   int rpr = 0;
   char *real_path;

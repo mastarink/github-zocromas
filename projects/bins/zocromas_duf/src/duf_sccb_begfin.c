@@ -18,6 +18,7 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
+  DUF_TRACE( sql, 0, "beginning_sql '%s'", *sccb->beginning_sql_seq->sql );
   duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) );
   DEBUG_ENDR( r );
 }

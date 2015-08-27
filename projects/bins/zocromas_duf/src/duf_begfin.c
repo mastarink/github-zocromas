@@ -24,7 +24,7 @@
 
 
 static int
-duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t *ttarg )
+duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );
@@ -35,7 +35,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t *ttarg )
 }
 
 int
-duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind_cb_t callback, const duf_argvc_t *ttarg )
+duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind_cb_t callback, const duf_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
 
@@ -46,16 +46,18 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
 #ifdef MAS_TRACING
     const char **psql0 = psql;
 #endif
+    int nn = 0;
 
     while ( r >= 0 && psql && *psql )
     {
+      nn++;
 #ifdef MAS_TRACING
       int changes = 0;
 #else
       int DUF_UNUSED changes = 0;
 #endif
-      DUF_TRACE( sql, 0, "beginning psql : %s", *psql );
-      DUF_TRACE( select, 0, "beginning psql : %s", *psql );
+      DUF_TRACE( sql, 0, "beginning psql #%d: %s", nn, *psql );
+      DUF_TRACE( select, 0, "beginning psql #%d: %s", nn, *psql );
       /* r = duf_sql( *p, &changes ); */
       DORF( r, duf_main_db_open );
 

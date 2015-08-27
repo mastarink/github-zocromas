@@ -158,7 +158,9 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PDI = pdi;
     SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
+    DUF_TRACE( sql, 0, "beginning_sql for '%s'", sccb->title );
     DOR( rpr, duf_scan_beginning_sql( sccb ) );
+    DUF_TRACE( sql, 0, "/beginning_sql for '%s'", sccb->title );
     {
       int rt = 0;
 
