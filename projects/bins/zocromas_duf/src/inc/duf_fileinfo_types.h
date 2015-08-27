@@ -16,6 +16,7 @@ typedef struct
   unsigned long long mimeid;
   unsigned long long exifid;
   unsigned long long exifdt;
+  const char *camera;
   unsigned long long dataid;
   unsigned long long sd5sum1;
   unsigned long long sd5sum2;

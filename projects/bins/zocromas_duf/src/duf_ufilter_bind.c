@@ -85,9 +85,19 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg_unuse
   {
     DUF_SQL_BIND_S_OPT( GNameX, duf_config->pu->glob_db_exclude, r, pstmt );
   }
+  if ( duf_config->pu->exif.camera )
+  {
+    char *t;
+
+    t = mas_strdup( "%" );
+    t = mas_strcat_x( t, duf_config->pu->exif.camera );
+    t = mas_strcat_x( t, "%" );
+    DUF_SQL_BIND_S_OPT( Camera, t, r, pstmt );
+    mas_free( t );
+  }
 
   DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACT_FLAG( fast ), r, pstmt );
-  DUF_SQL_BIND_LL_NZ_OPT( DUF_OPTION_VAL_WITH_TAG_FILE, DUF_OPTION_VAL_WITH_TAG_FILE, r, pstmt );
+  DUF_SQL_BIND_LL_NZ_OPT( OPTION_VAL_WITH_TAG_FILE, DUF_OPTION_VAL_WITH_TAG_FILE, r, pstmt );
 
 
   if ( duf_config->pu->same_md5 )

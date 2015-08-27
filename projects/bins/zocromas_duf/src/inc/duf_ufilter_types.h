@@ -33,6 +33,11 @@ typedef struct
 {
   char *type;
 } duf_ufilter_mime_t;
+typedef struct
+{
+  char *camera;
+} duf_ufilter_exif_t;
+
 
 typedef struct
 {
@@ -69,6 +74,7 @@ typedef struct
   char *glob_db_exclude;
   char *same_md5;
   duf_ufilter_mime_t mime;
+  duf_ufilter_exif_t exif;
   /* unsigned long long filter_id; */
 } duf_ufilter_t;
 

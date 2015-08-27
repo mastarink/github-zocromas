@@ -49,6 +49,7 @@
    %E : mimeid
    %e : mime
    %N : nameid
+   %a : camera
    %p : move to position
    %s : << space >>
 
@@ -133,7 +134,8 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       long vp = 0;
 
       vp = v - position;
-      memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? -vp : 1 ) );
+      /* memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? -vp : 1 ) ); */
+      memset( pbuffer, ' ', vp > 0 ? vp : ( vp < 0 ? 1 : 1 ) );
       ok++;
     }
     break;
@@ -345,7 +347,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       snprintf( pbuffer, bfsz, format, rel_real_path );
       ok++;
     }
-    break;    
+    break;
   case 'f':                    /* filename */
     {
       if ( v )
@@ -385,6 +387,17 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     else
       snprintf( format, fbsz, "%%llu" );
     snprintf( pbuffer, bfsz, format, pfi->exifid );
+    ok++;
+    break;
+  case 'a':                    /* camera */
+    if ( pfi->camera )
+    {
+      if ( v )
+        snprintf( format, fbsz, "%%%lds", v );
+      else
+        snprintf( format, fbsz, "%%s" );
+      snprintf( pbuffer, bfsz, format, pfi->camera );
+    }
     ok++;
     break;
   case 'T':                    /* exif datatime */

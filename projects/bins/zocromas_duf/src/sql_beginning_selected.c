@@ -54,6 +54,7 @@ duf_sql_sequence_t sql_beginning_selected = {
           "        JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
           "   LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
           "   LEFT JOIN " DUF_DBPREF "exif  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+          "   LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
           "   LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
           "      WHERE "        /* */
           DUF_SQL_UFILTER_BINDINGS /* */

@@ -38,6 +38,9 @@ duf_ufilter_delete( duf_ufilter_t * pu )
     mas_free( pu->mime.type );
     pu->mime.type = NULL;
 
+    mas_free( pu->exif.camera );
+    pu->exif.camera = NULL;
+
     mas_free( pu->tag.dir );
     pu->tag.dir = NULL;
     mas_free( pu->tag.file );
@@ -82,6 +85,8 @@ duf_ufilter_copy( duf_ufilter_t * pu, const duf_ufilter_t * pusrc )
     pu->same_md5 = mas_strdup( pusrc->same_md5 );
 /*  */ assert( ( ( char * ) &pu->same_md5 + sizeof( char * ) ) == ( ( char * ) &pu->mime.type ) );
     pu->mime.type = mas_strdup( pusrc->mime.type );
+/*  */ assert( ( ( char * ) &pu->mime.type + sizeof( char * ) ) == ( ( char * ) &pu->exif.camera ) );
+    pu->exif.camera = mas_strdup( pusrc->exif.camera );
 
     pu->globx.include_fs_files.argc = 0;
     pu->globx.include_fs_files.argv = NULL;

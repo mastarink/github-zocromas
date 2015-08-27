@@ -633,6 +633,21 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run --trace-sql=0  --db-name=photo.db -dfR   --files-tagged-as='at-LG_G3' --files-tagged-as='ch-IMAG3115'  / --ls  	- %s",
               "allowed multiple --files-tagged-as options" );
 
+  DUF_PRINTF( 0, "========================= as for 20150827.165852 ============" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='LG-D855'   /home/mastar/big/misc/media/photo --ls  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='LG-'   /home/mastar/big/misc/media/photo --ls  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='EZX'   /home/mastar/big/misc/media/photo --ls  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='KODAK'   /home/mastar/big/misc/media/photo --ls  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='C433'   /home/mastar/big/misc/media/photo --ls  	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='2110'   /home/mastar/big/misc/media/photo --ls  	- %s",
+              "-= \"\" =-" );
+
+
 
 
   DUF_PRINTF( 0, "=============================================================" );

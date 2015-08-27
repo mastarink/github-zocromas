@@ -105,6 +105,7 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DUF_UFIELD2( inode );
   DUF_UFIELD2( exifid );
   DUF_UFIELD2( exifdt );
+  DUF_SFIELD2( camera );
   DUF_UFIELD2( filenameid );
   DUF_UFIELD2( mimeid );
   DUF_SFIELD2( mime );
@@ -125,6 +126,7 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
                  .dirid_space = 1,
                  .exifid = 1,
                  .exifdt = 1,
+                 .camera = 1,
                  .nameid = 1,
                  .mime = 1,
                  .mimeid = 1,
@@ -161,6 +163,7 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.name = filename;
     fi.exifid = exifid;
     fi.exifdt = exifdt;
+    fi.camera = camera;
     fi.nameid = filenameid;
     fi.mime = mime;
     fi.mimeid = mimeid;
@@ -219,6 +222,7 @@ print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long path
                  .dirid = 1,
                  .exifid = 0,
                  .exifdt = 0,
+                 .camera = 0,
                  .mimeid = 0,
                  .inode = 0,
                  .mode = 0,

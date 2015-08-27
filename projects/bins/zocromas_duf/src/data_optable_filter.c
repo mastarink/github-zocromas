@@ -150,9 +150,11 @@ const duf_longval_extended_table_t optable_filter = {
    /*  (*      *) DO_OU( STR, tag.file ) (*                                                    *) , DO_H( with tag file ) (*                    *) }, */
    {.o = {DO_Q( "with-tag-file" ) /*    */ , DO_A_R /* */ , DO_V( WITH_TAG_FILE )} /*      */ , DO_CL( FILTER ) /*     */ ,
     /*      */ DO_TDB(  ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                            */ , DO_H( with tag file ) /*                    */ },
-
    {.o = {DO_Q( "files-tagged-as" ) /*  */ , DO_A_R /* */ , DO_V( WITH_TAG_FILE )} /*      */ , DO_CL( FILTER ) /*     */ ,
     /*      */ DO_TDB(  ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                            */ , DO_H( with tag file ) /*                    */ },
+
+   {.o = {DO_Q( "with-camera" ) /*      */ , DO_A_R /* */ , DO_V( WITH_CAMERA )} /*        */ , DO_CL( FILTER ) /*     */ ,
+    /*      */ DO_OU( STR, exif.camera ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*             */ , DO_H( with tag file ) /*                    */ },
 
    {.o = {DO_Q( "with-mime-type" ) /*   */ , DO_A_R /* */ , DO_V( WITH_MIME_TYPE )} /*     */ , DO_CL( FILTER ) /*     */ ,
     /*      */ DO_OU( STR, mime.type ) /*                                                   */ , DO_H( with tag file ) /*                    */ },

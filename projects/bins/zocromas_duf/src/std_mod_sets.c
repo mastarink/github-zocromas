@@ -29,6 +29,7 @@ duf_sql_set_t std_leaf_set = {
         ", md.dup5cnt AS nsame " /* */
         ", mi.mime AS mime "    /* */
         ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
+	", xm.model as camera"
         /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
         ", fd.md5id AS md5id "  /* */
         ,
@@ -101,6 +102,7 @@ duf_sql_set_t std_ns_leaf_set = {
         ", md.dup5cnt AS nsame " /* */
         ", mi.mime AS mime "    /* */
         ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
+	", xm.model as camera"
         /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
         ", fd.md5id AS md5id "  /* */
         ,

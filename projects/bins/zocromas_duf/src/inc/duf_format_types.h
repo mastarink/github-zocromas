@@ -28,6 +28,7 @@ typedef struct
   unsigned exifid:1;
   unsigned exifid_space:1;
   unsigned exifdt:1;
+  unsigned camera:1;
   unsigned mode:1;
   unsigned mtime:1;
   unsigned nlink:1;
