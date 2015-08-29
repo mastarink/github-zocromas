@@ -1,6 +1,6 @@
 #ifndef MAS_DUF_CLI_TYPES_H
 #  define MAS_DUF_CLI_TYPES_H
-#include <stdio.h> /* FILE */
+#  include <stdio.h>            /* FILE */
 #  include "duf_flags_types.h"
 #  include "duf_fun_types.h"
 /* duf_format_t */
@@ -26,8 +26,22 @@ typedef struct
 
 typedef struct
 {
+  duf_argvc_t files;
+  duf_argvc_t dirs;
+} duf_filedirformat_t;
+typedef struct
+{
+  int use;
+  duf_filedirformat_t tree;
+  duf_filedirformat_t list;
+  duf_filedirformat_t gen;
+} duf_asformats_t;
+
+typedef struct
+{
   unsigned level;
   unsigned handleid;
+  duf_asformats_t as_formats;
   char *sformat_dirs_tree;
   char *sformat_files_tree;
   char *sformat_prefix_gen_tree;

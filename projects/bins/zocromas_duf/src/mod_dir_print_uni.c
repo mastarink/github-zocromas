@@ -183,14 +183,22 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     {
       const char *sformat = NULL;
 
-      sformat = duf_config->cli.output.sformat_files_gen;
-      if ( !sformat )
-        sformat = duf_config->cli.output.sformat_files_list;
+      {
+        int use;
+        duf_filedirformat_t *fmt;
+
+        use = duf_config->cli.output.as_formats.use - 1;
+        fmt = &duf_config->cli.output.as_formats.list;
+        if ( use >= 0 && use < fmt->files.argc && !sformat )
+          sformat = fmt->files.argv[use];
+        if ( !sformat )
+          sformat = duf_config->cli.output.sformat_files_gen;
+        if ( !sformat )
+          sformat = duf_config->cli.output.sformat_files_list;
+      }
 
       if ( !sformat )
         sformat = " _%M  =%S %8s%f\n";
-      /* sformat = " _%M  =%S %f  %@\n"; */
-      DUF_TRACE( temp, 8, "%s : %s", duf_levinfo_relpath( pdi ), duf_levinfo_path_top( pdi ) );
       duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }
@@ -270,9 +278,23 @@ print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long path
     {
       const char *sformat = NULL;
 
-      sformat = duf_config->cli.output.sformat_dirs_gen;
-      if ( !sformat )
-        sformat = duf_config->cli.output.sformat_dirs_list;
+      {
+        int use;
+        duf_filedirformat_t *fmt;
+
+        use = duf_config->cli.output.as_formats.use - 1;
+        fmt = &duf_config->cli.output.as_formats.list;
+        DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
+        if ( use >= 0 && use < fmt->dirs.argc && !sformat )
+          sformat = fmt->dirs.argv[use];
+        DUF_TRACE( temp, 5, "sformat A: %s", sformat );
+        if ( !sformat )
+          sformat = duf_config->cli.output.sformat_dirs_gen;
+        DUF_TRACE( temp, 5, "sformat B: %s", sformat );
+        if ( !sformat )
+          sformat = duf_config->cli.output.sformat_dirs_list;
+        DUF_TRACE( temp, 5, "sformat C: %s", sformat );
+      }
 
       if ( !sformat )
         sformat = "%r\n";

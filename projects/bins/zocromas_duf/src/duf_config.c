@@ -181,6 +181,14 @@ duf_cfg_delete( duf_config_t * cfg )
     cfg->cli.output.file = NULL;
 
     {
+      mas_del_argv( cfg->cli.output.as_formats.tree.files.argc, cfg->cli.output.as_formats.tree.files.argv, 0 );
+      mas_del_argv( cfg->cli.output.as_formats.tree.dirs.argc, cfg->cli.output.as_formats.tree.dirs.argv, 0 );
+      mas_del_argv( cfg->cli.output.as_formats.list.files.argc, cfg->cli.output.as_formats.list.files.argv, 0 );
+      mas_del_argv( cfg->cli.output.as_formats.list.dirs.argc, cfg->cli.output.as_formats.list.dirs.argv, 0 );
+      mas_del_argv( cfg->cli.output.as_formats.gen.files.argc, cfg->cli.output.as_formats.gen.files.argv, 0 );
+      mas_del_argv( cfg->cli.output.as_formats.gen.dirs.argc, cfg->cli.output.as_formats.gen.dirs.argv, 0 );
+    }
+    {
       mas_free( cfg->cli.output.sformat_files_tree );
       cfg->cli.output.sformat_files_tree = NULL;
 
