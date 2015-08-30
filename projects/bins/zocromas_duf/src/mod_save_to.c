@@ -7,10 +7,15 @@
 #include <errno.h>
 #include <sys/stat.h>
 
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/time.h>
+
 
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
 
@@ -105,6 +110,108 @@ save_to_init( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   DEBUG_ENDR( r );
 }
 
+int
+duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
+{
+  DEBUG_STARTR( r );
+  FILE *fw;
+  FILE *fr;
+  char *fpath = NULL;
+
+  if ( *save_path == '/' )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
+  }
+  else if ( *save_path == '.' )
+  {
+    DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
+  }
+  else
+  {
+    fpath = mas_strdup( duf_levinfo_path_top( pdi ) );
+  }
+  fpath = mas_strcat_x( fpath, save_path );
+  fpath = mas_strcat_x( fpath, "//" );
+  fpath = mas_strcat_x( fpath, duf_levinfo_itemtruename( pdi ) );
+  DUF_TRACE( mod, 0, "%s", fpath );
+  fr = fopen( fpath, "r" );
+  if ( fr )
+  {
+/* TODO : Compare 2 files; if NOT same - copy with another name */
+    fclose( fr );
+    /* DUF_MAKE_ERROR( r, DUF_ERROR_PATH ); */
+  }
+  else
+  {
+    fw = fopen( fpath, "w" );
+    if ( fw )
+    {
+      int fd;
+
+      DUF_TRACE( mod, 0, "OPENED %s", fpath );
+
+      fd = duf_levinfo_dfd( pdi );
+      if ( fd > 0 )
+      {
+        int ry;
+
+        ry = lseek( fd, 0, SEEK_SET );
+        if ( ry >= 0 )
+        {
+          size_t len = 0;
+          size_t lw = 0;
+
+          do
+          {
+            char buffer[1024 * 1000];
+
+            len = read( fd, buffer, sizeof( buffer ) );
+            lw = fwrite( buffer, 1, len, fw );
+            DUF_TRACE( mod, 0, "READ %lu of %s", len, fpath );
+            if ( lw != len )
+              DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
+          }
+          while ( r >= 0 && len > 0 );
+        }
+      }
+      fclose( fw );
+      if ( r >= 0 )
+      {
+        int ry;
+        struct timeval times[2];
+
+        memset( times, 0, sizeof( times ) );
+        times[0].tv_sec = duf_levinfo_stat_asec( pdi );
+        times[1].tv_sec = duf_levinfo_stat_msec( pdi );
+        times[0].tv_usec = duf_levinfo_stat_ansec( pdi ) / 1000;
+        times[1].tv_usec = duf_levinfo_stat_mnsec( pdi ) / 1000;
+
+        /* chmod(); */
+        ry = utimes( fpath, times );
+        if ( ry < 0 )
+        {
+          char serr[1024] = "";
+          char *s;
+
+          s = strerror_r( errno, serr, sizeof( serr ) );
+          DUF_SHOW_ERROR( "(%d) errno:%d utimes :%s; name:'%s'", ry, errno, s ? s : serr, fpath );
+          DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
+        }
+      }
+      else
+      {
+        unlink( fpath );
+      }
+    }
+    else
+    {
+      DUF_TRACE( mod, 0, "NOT OPENED %s", fpath );
+    }
+  }
+  mas_free( fpath );
+  DEBUG_ENDR( r );
+}
+
 static int
 save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
@@ -133,9 +240,11 @@ save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     DUF_TRACE( mod, 2, "@to => %s", save_path );
     if ( *save_path == '/' )
     {
+      DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     }
     else if ( *save_path == '.' )
     {
+      DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
     }
     else
     {
@@ -145,12 +254,14 @@ save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
       sl = save_path;
       assert( duf_levinfo_dfd_top( pdi ) );
-      while ( r >= 0 && sl && *sl && ( sl = strchr( sl, '/' ) ) )
+      while ( r >= 0 && sl && *sl )
       {
         struct stat stdir;
 
-        *sl = 0;
-        DUF_TRACE( mod, 2, "%d. create => %s", nn, save_path );
+        sl = strchr( sl, '/' );
+        if ( sl )
+          *sl = 0;
+        DUF_TRACE( mod, 0, "%d. create => %s", nn, save_path );
         rt = fstatat( duf_levinfo_dfd_top( pdi ), save_path, &stdir, AT_NO_AUTOMOUNT | AT_SYMLINK_NOFOLLOW );
         if ( rt < 0 && errno == ENOENT )
         {
@@ -159,11 +270,14 @@ save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
         else
         {
         }
-        *sl++ = '/';
+        if ( sl )
+          *sl++ = '/';
         if ( rt < 0 )
-          r = DUF_ERROR_PATH;
+          DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
+
         nn++;
       }
+      DOR( r, duf_copy_to( pdi, save_path ) );
     }
     mas_free( save_path );
   }
