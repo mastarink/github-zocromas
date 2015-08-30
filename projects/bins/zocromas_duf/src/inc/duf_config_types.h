@@ -22,12 +22,18 @@ typedef struct
 
 typedef struct
 {
+  char *path;
+} duf_save_config_t;
+
+typedef struct
+{
   char *help_string;
   double loadtime;
   duf_ufilter_t *pu;
   duf_option_t *longopts_table;
   duf_config_cli_t cli;
   duf_dbs_config_t db;
+  duf_save_config_t save;
   /* char *group; */
   duf_cargvc_t carg;
   duf_argvc_t targ;

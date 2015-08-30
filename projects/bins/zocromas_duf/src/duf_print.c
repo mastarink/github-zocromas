@@ -39,13 +39,15 @@
    %u : user
    %g : group
    %z : filesize
-   %t : mtime
+   %tm : mtime
+   %ta : mtime
+   %tc : mtime
+   %tx : exif datetime
    %r : realpath
    %R : relative realpath (relative to 'top level')
    %f : filename
    %@ : md5sum
    %X : exifid
-   %T : exif datetime
    %E : mimeid
    %e : mime
    %N : nameid
@@ -303,20 +305,72 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       }
     }
     break;
-  case 't':                    /* mtime */
+  case 'T':                    /* time */
+  case 't':                    /* time */
     {
-      time_t mtimet;
-      struct tm mtimetm, *pmtimetm;
-      char mtimes[128];
+      time_t timet;
+      struct tm time_tm, *ptime_tm;
+      char stime[128];
+      char c2 = 0;
 
-      mtimet = ( time_t ) pfi->st.st_mtim.tv_sec;
-      pmtimetm = localtime_r( &mtimet, &mtimetm );
-      strftime( mtimes, sizeof( mtimes ), "%b %d %Y %H:%M:%S", pmtimetm );
+      timet = ( time_t ) 0;
+      c2 = *fmt++;
+      switch ( c2 )
+      {
+      case 'm':
+        timet = ( time_t ) pfi->st.st_mtim.tv_sec;
+        break;
+      case 'a':
+        timet = ( time_t ) pfi->st.st_atim.tv_sec;
+        break;
+      case 'c':
+        timet = ( time_t ) pfi->st.st_atim.tv_sec;
+        break;
+      case 'x':
+        if ( pfi->exifid )
+          timet = ( time_t ) pfi->exifdt;
+        break;
+      default:
+        timet = ( time_t ) pfi->st.st_mtim.tv_sec;
+        fmt--;
+      }
+      ptime_tm = localtime_r( &timet, &time_tm );
+      switch ( c )
+      {
+      case 't':
+        strftime( stime, sizeof( stime ), "%b %d %Y %H:%M:%S", ptime_tm );
+        break;
+      case 'T':
+        {
+          char *f = NULL;
+
+          if ( *fmt == '{' )
+          {
+            const char *efmt;
+
+            fmt++;
+            efmt = strchr( fmt, '}' );
+            if ( efmt )
+            {
+              f = mas_strndup( fmt, efmt - fmt );
+              /* DUF_TRACE( temp, 0, "=== '%s'", f ); */
+              fmt = efmt;
+              fmt++;
+            }
+          }
+          if ( !f )
+            f = mas_strdup( "%Y/%B/%d" );
+          if ( f )
+            strftime( stime, sizeof( stime ), f, ptime_tm );
+          mas_free( f );
+        }
+        break;
+      }
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
       else
         snprintf( format, fbsz, "%%s" );
-      snprintf( pbuffer, bfsz, format, mtimes );
+      snprintf( pbuffer, bfsz, format, stime );
       ok++;
     }
     break;
@@ -400,31 +454,6 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     }
     ok++;
     break;
-  case 'T':                    /* exif datatime */
-    {
-      time_t xtimet;
-      struct tm xtimetm, *pxtimetm;
-      char xtimes[128];
-
-      if ( v )
-        snprintf( format, fbsz, "%%%lds", v );
-      else
-        snprintf( format, fbsz, "%%s" );
-
-      if ( pfi->exifid )
-      {
-        xtimet = ( time_t ) pfi->exifdt;
-        pxtimetm = localtime_r( &xtimet, &xtimetm );
-        strftime( xtimes, sizeof( xtimes ), "%b %d %Y %H:%M:%S", pxtimetm );
-        snprintf( pbuffer, bfsz, format, xtimes );
-      }
-      else
-      {
-        strcpy( pbuffer, "___ __ ____ __:__:__" );
-      }
-      ok++;
-    }
-    break;
   case 'E':                    /* mimeid */
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
@@ -465,8 +494,8 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
   return ok;
 }
 
-int
-duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb )
+char *
+duf_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb, int *pr )
 {
   int ok = 0;
   const char *fmt = format;
@@ -504,6 +533,18 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
       *pbuffer++ = *fmt++;
     }
   }
+  if ( pr )
+    *pr = ok;
+  return buffer;
+}
+
+int
+duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const char *format, duf_pdi_scb_t prefix_scb, duf_pdi_scb_t suffix_scb )
+{
+  int ok = 0;
+  char *buffer;
+
+  buffer = duf_sformat_file_info( pdi, pfi, format, prefix_scb, suffix_scb, &ok );
   DUF_WRITES( 0, buffer );
   mas_free( buffer );
   return ok;

@@ -34,7 +34,7 @@ zocromas_duf_SOURCES=				   \
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
 	duf_errors.c  duf_trace.c				      \
-	duf_dh.c duf_service.c duf_print.c duf_printb.c		     \
+	duf_dh.c duf_service.c duf_print.c duf_printb.c	duf_fileinfo.c	     \
 								      \
 	duf_sqlite.c duf_sql.c duf_sql_field.c duf_sql_field2.c	       \
 									\
@@ -48,6 +48,7 @@ zocromas_duf_SOURCES=				   \
 	mod_template_uni.c \
 	mod_dummy_uni.c	\
 	mod_tagit.c	\
+	mod_save_to.c	\
 	std_mod_sets.c \
 	sql_beginning_selected.c \
 	sql_beginning_common.c \
@@ -55,6 +56,7 @@ zocromas_duf_SOURCES=				   \
 	sql_beginning_vacuum.c \
 	sql_beginning_tables.c \
 	data_optable_flag.c	\
+	data_optable_flag_obsolete.c	\
 	data_optable_sflag.c	\
 	data_optable_str.c	\
 	data_optable_redo_and_obsolete.c	\

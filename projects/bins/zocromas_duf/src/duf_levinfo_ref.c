@@ -364,7 +364,7 @@ DUF_LEVINFO_3GET_REF( duf_dirhandle_t, pdh, lev_dh )
 /* (* *INDENT-ON*  *)                                      */
 
 /* *INDENT-OFF*  */
-DUF_LEVINFO_3GET( int, dfd, lev_dh.dfd )
+DUF_LEVINFO_4GET( int, dfd, lev_dh.dfd )
 /* *INDENT-ON*  */
 
 

@@ -38,6 +38,8 @@ const duf_longval_extended_table_t optable_str = {
    {.o = {DO_Q( "tag-dir" ) /*          */ , DO_A_R /* */ , DO_V( TAG_DIR )} /*            */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, tag.dir ) /*                                                     */ , DO_H( tag dir ) /*                     */ },
 
+   {.o = {DO_Q( "save-directory" ) /*   */ , DO_A_R /* */ , DO_V( SAVE_DIRECTORY )} /*     */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( STR, save.path ) /*                                                   */ , DO_H( save path ) /*                     */ },
 
    {.o = {.name = NULL}}
    }

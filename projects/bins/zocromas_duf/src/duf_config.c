@@ -159,6 +159,9 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.adm.fpath );
     cfg->db.adm.fpath = NULL;
 
+    mas_free( cfg->save.path );
+    cfg->save.path = NULL;
+
     mas_free( cfg->tag.file );
     cfg->tag.file = NULL;
     mas_free( cfg->tag.dir );

@@ -10,13 +10,13 @@ typedef struct
   unsigned drop_tables:1;
   unsigned create_tables:1;
   unsigned add_path:1;
-  unsigned sd5:1;
-  unsigned md5:1;
-  unsigned crc32:1;
-  unsigned mime:1;
-  unsigned exif:1;
 
-  unsigned mdpath:1;
+  unsigned sd5_obs:1;
+  unsigned md5_obs:1;
+  unsigned crc32_obs:1;
+  unsigned mime_obs:1;
+  unsigned exif_obs:1;
+  unsigned mdpath_obs:1;
 
   unsigned dirs:1;
   unsigned files:1;
@@ -26,7 +26,7 @@ typedef struct
   unsigned filenames:1;
 
   unsigned integrity:1;
-  unsigned collect:1;
+  unsigned collect_obs:1;
   
   unsigned progress:1;
   unsigned use_binformat:1;

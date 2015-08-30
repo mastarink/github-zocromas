@@ -147,6 +147,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
 
   if ( sccb )
   {
+    DUF_TRACE( fs, 0, "set def. opendir: %d", sccb->def_opendir );
     duf_pdi_set_opendir( pdi, sccb->def_opendir );
 
     sccbh = mas_malloc( sizeof( duf_sccb_handle_t ) );

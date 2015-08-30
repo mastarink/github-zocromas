@@ -35,6 +35,7 @@ extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ), /* 
   duf_sampupd_callbacks __attribute( ( weak ) ), /* */
   duf_dummy_callbacks __attribute( ( weak ) ),          /* */
   duf_tagit_callbacks __attribute( ( weak ) ),          /* */
+  duf_save_to_callbacks __attribute( ( weak ) ),          /* */
   duf_template_callbacks __attribute( ( weak ) ),       /* */
   duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
 
@@ -45,35 +46,35 @@ static duf_action_table_t actions_table[] = {
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_directories_callbacks,
-   .on.flag = {.collect = 1,.dirent = 1,.dirs = 1}
+   .on.flag = {.collect_obs = 1,.dirent = 1,.dirs = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_filedata_callbacks,
-   .on.flag = {.collect = 1,.dirent = 1,.filedata = 1}
+   .on.flag = {.collect_obs = 1,.dirent = 1,.filedata = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_filenames_callbacks,
-   .on.flag = {.collect = 1,.dirent = 1,.filenames = 1}
+   .on.flag = {.collect_obs = 1,.dirent = 1,.filenames = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_openat_crc32_callbacks,
-   .on.flag = {.collect = 1,.crc32 = 1}
+   .on.flag = {.collect_obs = 1,.crc32_obs = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_openat_sd5_callbacks,
-   .on.flag = {.collect = 1,.sd5 = 1}
+   .on.flag = {.collect_obs = 1,.sd5_obs = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_openat_md5_callbacks,
-   .on.flag = {.collect = 1,.md5 = 1}
+   .on.flag = {.collect_obs = 1,.md5_obs = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_mime_callbacks,
-   .on.flag = {.collect = 1,.mime = 1}
+   .on.flag = {.collect_obs = 1,.mime_obs = 1}
    },
   {.tovector = 1, .in_use=1,
    .sccb = &duf_collect_exif_callbacks,
-   .on.flag = {.collect = 1,.exif = 1}
+   .on.flag = {.collect_obs = 1,.exif_obs = 1}
    },
   /* {.sccb = &duf_collect_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
@@ -90,6 +91,9 @@ static duf_action_table_t actions_table[] = {
    .sccb = &duf_tagit_callbacks,
    },
   {.tovector = 0, .in_use=1,
+   .sccb = &duf_save_to_callbacks,
+   },
+  {.tovector = 0, .in_use=1,
    .sccb = &duf_dummy_callbacks,
    },
 
@@ -98,14 +102,14 @@ static duf_action_table_t actions_table[] = {
 #if 0
    .on.flag = {.print = 1,.tree = 1},
 #endif
-   .off.flag = {.md5 = 1}
+   .off.flag = {.md5_obs = 1}
    },
   {.tovector = 0, .in_use=1,
    .sccb = &duf_print_dir_callbacks,
 #if 0
    .on.flag = {.print = 1},
 #endif
-   .off.flag = {.md5 = 1
+   .off.flag = {.md5_obs = 1
 #if 0
                 ,.tree = 1
 #endif

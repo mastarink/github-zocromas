@@ -27,6 +27,7 @@ tab sfind mod_exif_uni.c
 sfind mod_exif.h
 
 tab sfind mod_tagit.c
+tab sfind mod_save_to.c
 
 " tab sfind mod_print_md5_uni.c
 

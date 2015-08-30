@@ -104,22 +104,13 @@ tagit_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
   /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_opened_dh( pdi ) || duf_levinfo_item_deleted( pdi ) );
   assert( duf_levinfo_stat( pdi ) || duf_levinfo_item_deleted( pdi ) );
 
 #endif
-
-
-/*
-* 2: 0 [MOD    ]  47:tagit_de_content2                 :3.8916 :  tagit de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
-*/
-  DUF_TRACE( mod, 1, "tagit de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), filename,
-             0 == strcmp( duf_levinfo_itemshowname( pdi ), filename ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
-             duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
 
   DEBUG_ENDR( r );
 }
@@ -131,20 +122,15 @@ tagit_de_content2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
   /* const struct stat *pst_file DUF_UNUSED = duf_levinfo_stat( pdi ); */
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
-  assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+  assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
 #endif
 
 
 /*
 * 2: 0 [MOD    ]  47:tagit_de_content2                 :3.8916 :  tagit de /home/mastar/big/misc/media/video/startrek-ng/log/ : 25060543.log
 */
-  DUF_TRACE( mod, 0, "@tagit de %s : %s : %s {%d:%d} x%llx", duf_levinfo_path( pdi ), filename,
-             0 == strcmp( duf_levinfo_itemshowname( pdi ), filename ) ? "«SAME»" : duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ),
-             duf_levinfo_source( pdi ), ( unsigned long long ) duf_levinfo_stat_dev( pdi ) );
-
   DEBUG_ENDR( r );
 }
 
@@ -155,22 +141,15 @@ tagit_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   if ( duf_config->tag.file )
   {
 #ifdef MAS_TRACING
-    DUF_SFIELD2( filename );
-    DUF_UFIELD2( nameid );
-
     assert( !duf_levinfo_dfd( pdi ) );
     /* filename from db same as duf_levinfo_itemname( pdi ) */
-    assert( 0 == strcmp( filename, duf_levinfo_itemtruename( pdi ) ) );
+    assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
     assert( duf_levinfo_dbstat( pdi ) );
 #endif
 
     duf_add_tag( pdi, "filename", duf_levinfo_nameid( pdi ), duf_config->tag.file ? duf_config->tag.file : "NONE", &r );
 
     DUF_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
-    DUF_TRACE( mod, 1, "@(%s:%s)tagit #%llu:%llu: %s : %s ::  dev:x%llx; inode:%llu",
-               duf_config->tag.dir ? duf_config->tag.dir : "", duf_config->tag.file ? duf_config->tag.file : "", nameid, duf_levinfo_nameid( pdi ),
-               duf_levinfo_itemshowname( pdi ), filename,
-               ( unsigned long long ) duf_levinfo_dbstat_dev( pdi ), ( unsigned long long ) duf_levinfo_dbstat_inode( pdi ) );
   }
   DEBUG_ENDR( r );
 }
@@ -180,9 +159,8 @@ tagit_leaf2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_TRACE( mod, 1, "@@tagit %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
 #endif
-  DUF_TRACE( mod, 1, "@@tagit %s : %s", duf_levinfo_path( pdi ), filename );
   /* Never called (no deleted flag - didn't try to open !!) */
   assert( 0 );
 
@@ -212,9 +190,8 @@ tagit_node_before2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_TRACE( mod, 0, "@tagit node before: %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
 #endif
-  DUF_TRACE( mod, 0, "@tagit node before: %s : %s", duf_levinfo_path( pdi ), filename );
 
 
   DEBUG_ENDR( r );
@@ -244,9 +221,8 @@ tagit_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_TRACE( mod, 1, "@(%s:%s)tagit node middle %s : %s", duf_config->tag.dir, duf_config->tag.file, duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
 #endif
-  DUF_TRACE( mod, 1, "@(%s:%s)tagit node middle %s : %s", duf_config->tag.dir, duf_config->tag.file, duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );
 }
@@ -275,9 +251,8 @@ tagit_node_after2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_SFIELD2( filename );
+  DUF_TRACE( mod, 0, "@tagit node after %s : %s", duf_levinfo_path( pdi ), DUF_GET_SFIELD2( filename ) );
 #endif
-  DUF_TRACE( mod, 0, "@tagit node after %s : %s", duf_levinfo_path( pdi ), filename );
 
   DEBUG_ENDR( r );
 }

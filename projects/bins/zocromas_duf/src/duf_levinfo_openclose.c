@@ -103,7 +103,10 @@ duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
   if ( !duf_levinfo_opened_dh_d( pdi, d ) )
   {
     DOR( r, duf_levinfo_openat_dh_d( pdi, d ) );
+    DUF_TRACE( fs, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
   }
+  DUF_TRACE( fs, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
+  assert( duf_levinfo_dfd_d( pdi, d ) > 0 );
   DEBUG_ENDR( r );
 }
 /* *INDENT-OFF*  */
@@ -174,6 +177,10 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
                  duf_levinfo_itemshowname_d( pdi, d ), pdi->opendir );
       r = 0;
     }
+  }
+  else
+  {
+    DUF_TRACE( fs, 0, "pdi->opendir not set" );
   }
   DEBUG_ENDR( r );
 }

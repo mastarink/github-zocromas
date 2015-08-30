@@ -109,7 +109,7 @@
   DUF_LEVINFO_FC_UP_PLUS( _typ, _name,              _ref1, _ref2 )
 
 #define DUF_LEVINFO_4GET_PLUS(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
-  DUF_LEVINFO_3GET_PLUS() \
+  DUF_LEVINFO_3GET_PLUS( _typ, _name, _fld, _cond, _ref1, _ref2, _suffix ) \
   DUF_LEVINFO_FC_TOP_PLUS( _typ, _name, _ref1, _ref2 )
   
 

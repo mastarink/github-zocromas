@@ -29,6 +29,7 @@
 #include "duf_print.h"
 #include "duf_printb.h"
 
+#include "duf_fileinfo.h"
 
 /* #include "duf_dbg.h" */
 

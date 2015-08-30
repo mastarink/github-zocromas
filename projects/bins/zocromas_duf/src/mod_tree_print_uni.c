@@ -29,6 +29,7 @@
 #include "duf_print.h"
 #include "duf_printb.h"
 
+#include "duf_fileinfo.h"
 
 /* #include "duf_dbg.h" */
 
@@ -80,7 +81,7 @@ static int
 tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-
+#if 0
   DUF_UFIELD2( dirid );
   DUF_SFIELD2( filename );
   DUF_UFIELD2( filesize );
@@ -105,7 +106,7 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   /* DUF_SFIELD( mtimef ); */
   /* DUF_SFIELD( dowmtime ); */
   /* DUF_SFIELD( monthmtime ); */
-
+#endif
   {
     duf_bformat_combo_t bformat = { /* */
       .v.flag = {
@@ -139,8 +140,8 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
                  },
       .nsame = 1,
     };
-
     duf_fileinfo_t fi = { 0 };
+#if 0
     fi.nsame = nsame;
     fi.dirid = dirid;
     fi.st.st_mode = ( mode_t ) filemode;
@@ -163,7 +164,9 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.dataid = dataid;
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
-
+#else
+    DOR(r, duf_fileinfo( pstmt, pdi, &fi ));
+#endif
     if ( DUF_ACT_FLAG( use_binformat ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
@@ -379,8 +382,7 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags );
-           );
+               DUF_PRINTF( 1, ".0x%02x]", flags ); );
     {
 #if 0
       {

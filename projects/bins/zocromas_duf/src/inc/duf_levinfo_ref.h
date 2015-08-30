@@ -65,6 +65,7 @@ void *duf_levinfo_context_up( const duf_depthinfo_t * pdi );
 int duf_levinfo_dfd_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_dfd( const duf_depthinfo_t * pdi );
 int duf_levinfo_dfd_up( const duf_depthinfo_t * pdi );
+int duf_levinfo_dfd_top( const duf_depthinfo_t * pdi );
 
 int duf_levinfo_source_d( const duf_depthinfo_t * pdi, int d );
 int duf_levinfo_source( const duf_depthinfo_t * pdi );

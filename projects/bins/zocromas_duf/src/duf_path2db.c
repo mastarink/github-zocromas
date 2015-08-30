@@ -430,6 +430,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   unsigned long long parentid = 0;
 
   assert( pdi );
+  DUF_TRACE(fs, 0, "set opendir to 1 (one)");
   od = duf_pdi_set_opendir( pdi, 1 ); /* save open status to restore */
   {
     int upfd = 0;
@@ -492,6 +493,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
       close( upfd );
     upfd = 0;
   }
+  DUF_TRACE(fs, 0, "set (restore) opendir to %d", od);
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
   if ( r >= 0 && !parentid )
     DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );

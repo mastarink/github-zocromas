@@ -34,7 +34,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, add_path ) /*                          */ , DO_H( reg.init path ) /*                    */ },
 
    {.o = {DO_Q( "collect" ) /* OBSOLETE */ , DO_A_N /* */ , DO_VF( COLLECT )} /*           */ , DO_CL( CONTROL ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, collect ) /*                           */ , DO_H( collect mode ) /*                     */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, collect_obs ) /*                       */ , DO_H( collect mode ) /*                     */ },
    {.o = {DO_Q( "interactive" ) /*      */ , DO_A_N /* */ , DO_VF( INTERACTIVE )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, interactive ) /*                       */ , DO_H(  ... ) /*              */ },
 
@@ -58,7 +58,7 @@ const duf_longval_extended_table_t optable_flag = {
 
 
    {.o = {DO_Q( "crc32" ) /*            */ , DO_A_N /* */ , DO_VF( CRC32 )} /*             */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, crc32 ) /*                             */ , DO_H( collect crc32 ) /*                    */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, crc32_obs ) /*                         */ , DO_H( collect crc32 ) /*                    */ },
 
    {.o = {DO_Q( "dirent" ) /*           */ , DO_A_N /* */ , DO_VF( DIRENT )} /*            */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirent ) /*                            */ , DO_H( dirent ) /*                           */ },
@@ -68,7 +68,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirs ) /*                              */ , DO_H( get dir info ) /*      */ },
 
    {.o = {DO_Q( "exif" ) /*             */ , DO_A_N /* */ , DO_VF( EXIF )} /*              */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, exif ) /*                              */ , DO_H( collect exif data ) /*                */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, exif_obs ) /*                          */ , DO_H( collect exif data ) /*                */ },
    {.o = {DO_Q( "filedata" ) /*         */ , DO_A_N /* */ , DO_VF( FILEDATA )} /*          */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, filedata ) /*                          */ , DO_H( get filedata ) /*                     */ },
    {.o = {DO_Q( "filenames" ) /*        */ , DO_A_N /* */ , DO_VF( FILENAMES )} /*         */ , DO_CL( COLLECT ) /* */ ,
@@ -86,20 +86,13 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, integrity ) /*                         */ , DO_H( db integrity ... ) /*                 */ },
 
 
-   {.o = {DO_Q( "md5" ) /*              */ , DO_A_N /* */ , DO_VF( MD5 )} /*               */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, md5 ) /*                               */ , DO_H( collect md5 data ) /*                 */ },
-   {.o = {DO_Q( "mdpath" ) /*           */ , DO_A_N /* */ , DO_VF( MDPATH )} /*            */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, mdpath ) /*                            */ , DO_H(  ... ..... ) /*                     */ },
-
-   {.o = {DO_Q( "mime" ) /*             */ , DO_A_N /* */ , DO_VF( MIME )} /*              */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, mime ) /*                              */ , DO_H( collect mime data ) /*              */ },
    {.o = {DO_Q( "use-binformat" ) /*        */ , DO_A_N /* */ , DO_VF( USE_BINFORMAT )} /* */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, use_binformat ) /*                     */ , DO_H( use bin format ) /*                   */ },
 #if 0
-   {.o = {DO_Q( "print" ) /*             */ , DO_A_N /* */ , DO_VF( PRINT )} /*             */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, print ) /*                               */ , DO_H( print ) /*                          */ },
-   {.o = {DO_Q( "tree" ) /*              */ , DO_A_N /* */ , DO_VF( TREE )} /*              */ , DO_CL( PRINT ) /*   */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, tree ) /*             */ , DO_H( tree ) /*                             */ },
+   {.o = {DO_Q( "print" ) /*             */ , DO_A_N /* */ , DO_VF( PRINT )} /*            */ , DO_CL( PRINT ) /*   */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, print ) /*                             */ , DO_H( print ) /*                            */ },
+   {.o = {DO_Q( "tree" ) /*              */ , DO_A_N /* */ , DO_VF( TREE )} /*             */ , DO_CL( PRINT ) /*   */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, tree ) /*                              */ , DO_H( tree ) /*                             */ },
 #endif
    {.o = {DO_Q( "progress" ) /*         */ , DO_A_N /* */ , DO_VF( PROGRESS )} /*          */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, progress ) /*                          */ , DO_H( progress ) /*                         */ },
@@ -107,7 +100,7 @@ const duf_longval_extended_table_t optable_flag = {
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, remove_database ) /*                   */ , DO_H(  .... ) /*                            */ },
 
    {.o = {DO_Q( "sd5" ) /*              */ , DO_A_N /* */ , DO_VF( SD5 )} /*               */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, sd5 ) /*                               */ , DO_H( collect sd5 data ) /*                 */ },
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, sd5_obs ) /*                           */ , DO_H( collect sd5 data ) /*                 */ },
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, summary ) /*                           */ , DO_H( summary ) /*                          */ },
 

@@ -533,12 +533,12 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150526.150510 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -p"
               " --format-dirs-list='-%%_%%f%%_------%%_%%r\\n'"
-              " --format-files-list='%%-4S%%5_%%f%%4s%%8z%%4_%%m%%_%%t%%_/%%_%%T\\n'    	- %s", "" );
+              " --format-files-list='%%-4S%%5_%%f%%4s%%8z%%4_%%m%%_%%tm%%_/%%_%%T\\n'    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -T" " --glob=IMAG1248.jpg "
-              " --format-dirs-tree='%%f\\n' " " --format-files-tree='%%f%%4s%%8z%%4_%%m%%_%%t%%_/%%_%%T\\n' "
+              " --format-dirs-tree='%%f\\n' " " --format-files-tree='%%f%%4s%%8z%%4_%%m%%_%%tm%%_/%%_%%T\\n' "
               " --format-prefix-files-tree='%%2_#%%-6M%%6_%%P'    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -fR -p --glob=IMAG1248.jpg "
-              " --format-files-list='%%2_=%%-4S%%5_%%5z%%4_%%m%%_%%t%%_/%%_%%T%%_%%r%%f\\n'    	- %s", "" );
+              " --format-files-list='%%2_=%%-4S%%5_%%5z%%4_%%m%%_%%tm%%_/%%_%%T%%_%%r%%f\\n'    	- %s", "" );
   DUF_PRINTF( 0, "========================= as for 20150528.122815 ============" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/  -Rpdf --same --glob-db='*506-unknown.jpeg'    	- %s", "" );
   DUF_PRINTF( 0, "  run  /mnt/new_media/media/photo/    -dfR -T --min-same=10 --exclude-db=Picasa.ini    	- %s", "" );
@@ -636,19 +636,31 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150827.165852 ============" );
   DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='LG-D855'   /home/mastar/big/misc/media/photo --ls  	- %s",
               "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='LG-'   /home/mastar/big/misc/media/photo --ls  	- %s",
-              "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='EZX'   /home/mastar/big/misc/media/photo --ls  	- %s",
-              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='LG-'   /home/mastar/big/misc/media/photo --ls  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='EZX'   /home/mastar/big/misc/media/photo --ls  	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='KODAK'   /home/mastar/big/misc/media/photo --ls  	- %s",
               "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='C433'   /home/mastar/big/misc/media/photo --ls  	- %s",
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='C433'   /home/mastar/big/misc/media/photo --ls  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='2110'   /home/mastar/big/misc/media/photo --ls  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150829.201454 ============" );
+  DUF_PRINTF( 0, "  run  --db-name=photo.db --md5id=854  -dfR --use-format=2 /  --tree  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150830.125604 ============" );
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  --min-size=10k --min-same=4 "
+              " --with-mime-type=image/jpeg  --save-dir=/tmp --evaluate-sccb=save_to /  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  --with-mime-type=image/jpeg --min-size=10k --min-same=4 "
+              " --with-camera=2110  --save-dir=/tmp --evaluate-sccb=save_to --max-seq=30 /  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  --with-mime-type=image/jpeg --min-size=10k --min-same=4 --with-camera=2110 "
+              " --save-dir=/tmp/%%a/%%Tx{%%Y/%%B/%%d/%%H%%M%%S}/%%f --evaluate-sccb=save_to /  	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  --with-mime-type=image/jpeg --with-camera=D855 "
+              " --save-dir=/home/mastar/big/misc/media/photo/save/%%Tx{%%Y}/%%a/%%Tx{%%B/%%d/%%H%%M%%S}/%%f --evaluate-sccb=save_to /  	- %s",
               "-= \"\" =-" );
-  DUF_PRINTF( 0, "  run --trace-sql=0 --db-name=photo.db -dfR   --with-camera='2110'   /home/mastar/big/misc/media/photo --ls  	- %s",
-              "-= \"\" =-" );
 
-
-
+  DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  --trace-mod=2 --with-mime-type=image/jpeg --with-camera=2110 "
+              " --save-dir=save/%%Tx{%%Y}/%%a/%%Tx{%%B/%%d/%%H%%M%%S}/%%M --evaluate-sccb=save_to /home/mastar/big/misc/media/photo  	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 
@@ -716,13 +728,13 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     CHECK_FLAG_ID_ROW( create_tables, CREATE_TABLES ),
     CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
 
-    CHECK_FLAG_ID_ROW( sd5, SD5 ),
-    CHECK_FLAG_ID_ROW( md5, MD5 ),
-    CHECK_FLAG_ID_ROW( crc32, CRC32 ),
-    CHECK_FLAG_ID_ROW( mime, MIME ),
-    CHECK_FLAG_ID_ROW( exif, EXIF ),
+    CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),
+    CHECK_FLAG_ID_ROW( md5_obs, MD5 ),
+    CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ),
+    CHECK_FLAG_ID_ROW( mime_obs, MIME ),
+    CHECK_FLAG_ID_ROW( exif_obs, EXIF ),
 
-    CHECK_FLAG_ID_ROW( mdpath, MDPATH ),
+    CHECK_FLAG_ID_ROW( mdpath_obs, MDPATH ),
 
     CHECK_FLAG_ID_ROW( dirs, DIRS ),
     CHECK_FLAG_ID_ROW( files, FILES ),
@@ -732,7 +744,7 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     CHECK_FLAG_ID_ROW( filenames, FILENAMES ),
 
     CHECK_FLAG_ID_ROW( integrity, INTEGRITY ),
-    CHECK_FLAG_ID_ROW( collect, COLLECT ),
+    CHECK_FLAG_ID_ROW( collect_obs, COLLECT ),
 
     CHECK_FLAG_ID_ROW( progress, PROGRESS ),
     CHECK_FLAG_ID_ROW( use_binformat, USE_BINFORMAT ),
