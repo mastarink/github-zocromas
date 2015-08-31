@@ -48,19 +48,21 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi, int *pchanges )
 
 
   DUF_SQL_START_STMT( pdi, insert_path_table, sql, r, pstmt );
-  if ( !duf_levinfo_stat_dev( pdi ) )
-  {
-    DOR( r, duf_levinfo_statat_dh( pdi ) );
-  }
 
+#if 0
+  if ( !duf_levinfo_stat_dev( pdi ) )
+    DOR( r, duf_levinfo_statat_dh( pdi ) );
+#else
+  DOR( r, duf_levinfo_if_statat_dh( pdi ) );
+#endif
   assert( duf_levinfo_stat_dev( pdi ) );
 
   DUF_TRACE( insert, 0, "S:%s (%lu,%lu,'%s',%llu)", sql, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ),
              duf_levinfo_itemshowname( pdi ), duf_levinfo_dirid_up( pdi ) );
   /* DUF_SHOW_ERROR( "insert_path_index:%d", insert_path_index ); */
-  DUF_SQL_BIND_LL( Dev, duf_levinfo_stat_dev( pdi ), r, pstmt );
-  DUF_SQL_BIND_LL( iNode, duf_levinfo_stat_inode( pdi ), r, pstmt );
-  DUF_SQL_BIND_S( dirName, duf_levinfo_itemtruename( pdi ), r, pstmt );
+  DUF_SQL_BIND_LL( Dev, /*    */ duf_levinfo_stat_dev( pdi ), /*    */ r, pstmt );
+  DUF_SQL_BIND_LL( iNode, /*  */ duf_levinfo_stat_inode( pdi ), /*  */ r, pstmt );
+  DUF_SQL_BIND_S( dirName, /* */ duf_levinfo_itemtruename( pdi ), /**/ r, pstmt );
   /* DUF_SQL_BIND_LL( parentdirID, parentid, r, pstmt ); */
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid_up( pdi ), r, pstmt );
   /* NO: duf_bind_ufilter_uni( pstmt_selector ); */
@@ -97,7 +99,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
 #if 0
       dirid = duf_sql_column_long_long( pstmt, 0 );
 #else
-      dirid=DUF_GET_UFIELD2( dirid );
+      dirid = DUF_GET_UFIELD2( dirid );
 #endif
       assert( DUF_GET_UFIELD2( dirid ) == dirid );
 
