@@ -27,10 +27,6 @@ int duf_pdi_close( duf_depthinfo_t * pdi );
 int duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d );
 int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta );
 
-duf_sqlite_stmt_t *duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, int *pr );
-int duf_pdi_finalize_idstmt( duf_depthinfo_t * pdi, int i );
-duf_sqlite_stmt_t *duf_pdi_find_statement( duf_depthinfo_t * pdi, int *pindex );
-int duf_pdi_finalize_statement( duf_depthinfo_t * pdi, int *pindex );
 
 void duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes );
 

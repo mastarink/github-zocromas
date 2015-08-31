@@ -62,3 +62,6 @@ sfind duf_pdi_ref.h
 tab sfind duf_pdi_context.c
 sfind duf_pdi_context.h
 
+tab sfind duf_pdi_stmt.c
+sfind duf_pdi_stmt.h
+

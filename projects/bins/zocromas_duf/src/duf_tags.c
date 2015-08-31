@@ -7,6 +7,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_stmt.h"
 
 #include "duf_sql.h"
 #include "duf_sql2.h"
