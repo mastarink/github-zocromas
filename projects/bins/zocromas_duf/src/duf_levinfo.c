@@ -1,17 +1,14 @@
 #include <string.h>
 #include <assert.h>
-#include <limits.h>
-
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
 #include "duf_maintenance.h"
-
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_context.h"
+
 /* ###################################################################### */
 #include "duf_levinfo.h"
 /* ###################################################################### */
@@ -46,6 +43,7 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
   duf_levinfo_clear_li( &pdi->levinfo[d] );
 }
 
+/* 20150831.000000 */
 void
 duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
                           int is_leaf, int d )

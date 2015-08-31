@@ -1,15 +1,13 @@
 #include <string.h>
 #include <assert.h>
-#include <limits.h>
-
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
 #include "duf_maintenance.h"
 
 #include "duf_levinfo_updown.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_credel.h"
 /* ###################################################################### */

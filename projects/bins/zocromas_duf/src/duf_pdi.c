@@ -10,23 +10,16 @@
 
 
 #include "duf_utils_path.h"     /* duf_pathdepth */
-#include "duf_status_ref.h"
 
 #include "duf_config_ref.h"
 #include "duf_option_defs.h"
 
-#include "duf_sql2.h"
-
-#include "duf_maindb.h"
-
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_credel.h"
-/* #include "duf_levinfo_context.h" */
 #include "duf_context.h"
 
 #include "duf_pdi_ref.h"
-#include "duf_pdi_context.h"
 #include "duf_pdi_stmt.h"
 
 #include "duf_path2db.h"
@@ -205,5 +198,3 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   /* DUF_SHOW_ERROR( "clear idstatements" ); */
   DEBUG_ENDR( r );
 }
-
-

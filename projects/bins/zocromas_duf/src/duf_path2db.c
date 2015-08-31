@@ -15,7 +15,6 @@
 #include "duf_config_ref.h"
 #include "duf_utils_path.h"
 
-/* #include "duf_levinfo.h" */
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_openclose.h"
@@ -30,8 +29,6 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 #include "duf_sql_field.h"
-
-#include "duf_tags.h"
 
 #include "sql_beginning_tables.h"
 

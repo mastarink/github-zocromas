@@ -1,26 +1,19 @@
-#include <string.h>
 #include <assert.h>
-#include <limits.h>
-#include <unistd.h>
 
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
-
+/* #include <mastar/wrap/mas_memory.h> */
 
 #include "duf_maintenance.h"
 
-
-/* #include "duf_config_ref.h" */
 #include "duf_dh.h"
 
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
-/* #include "duf_pdi.h" */
-
 #include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_ref.h"
+
 /* ###################################################################### */
 #include "duf_levinfo_openclose.h"
 /* ###################################################################### */
