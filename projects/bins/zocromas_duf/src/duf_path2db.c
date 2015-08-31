@@ -153,7 +153,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
 }
 
 static unsigned long long
-duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int *pr )
+duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set, int *pr )
 {
   unsigned long long dirid = 0;
   int rpr = 0;
@@ -212,32 +212,26 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * 
   DEBUG_ENDULL( dirid );
 }
 
+
 /* TODO remake to pdiitem2dirid */
 unsigned long long
-duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *dirname_unused, const struct stat *pstat_unused, */
-                           const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int need_id, int *pchanges, int *pr )
+duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id, int *pchanges, int *pr )
 {
   unsigned long long dirid = 0;
   int rpr = 0;
-  static unsigned long long cccc = 0;
 
   DEBUG_START(  );
 
-  cccc++;
   assert( pdi );
-
-  /* assert( parentid_unused == duf_levinfo_dirid_up( pdi ) ); */
 
   DUF_TRACE( path, 10, "@@@@@@@@@@@ %llu/%llu; caninsert:%d; pdi:%d", duf_levinfo_dirid( pdi ), duf_levinfo_dirid_up( pdi ), caninsert, pdi ? 1 : 0 );
   DUF_TRACE( path, 2, "@           inserting [%40s] %d", duf_levinfo_itemshowname( pdi ), caninsert );
-  if ( 1 /* && dirname_unused *//* && pstat_unused->st_dev && pstat_unused->st_ino */  )
   {
     int changes = 0;
 
-#if 1
     dirid = duf_dirname_pdistat2dirid_existed( pdi, sql_set /* node_selector2 */ , pr );
     DUF_TRACE( path, 2, "(%d) dirid before insert: %llu for '%s' at %llu", rpr, dirid, duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
-#endif
+
     if ( dirid <= 0 && caninsert && !duf_config->cli.disable.flag.insert )
     {
       DOR( rpr, duf_dirname_insert_path_table( pdi, &changes ) );
@@ -245,12 +239,54 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
     DUF_TRACE( select, 10, "<changes> : %d : %s", changes, duf_levinfo_itemshowname( pdi ) );
     if ( dirid <= 0 && need_id )
     {
+#if 1
+      if ( changes )
+      {
+        if ( DUF_NOERROR( rpr ) )
+        {
+          dirid = duf_sql_last_insert_rowid(  );
+          if ( dirid )
+            DUF_TRACE( explain, 0, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), dirid, duf_levinfo_dirid_up( pdi ) );
+          else
+          {
+            /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dirname='%s'", parentid, duf_levinfo_itemshowname( pdi ) ); */
+            DUF_SHOW_ERROR( "(2) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
+            if ( rpr >= 0 )
+              DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
+          }
+          assert( dirid );
+          DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, duf_levinfo_itemshowname( pdi ) );
+        }
+      }
+      else
+      {
+        if ( DUF_IS_ERROR( rpr, DUF_SQL_CONSTRAINT ) || DUF_NOERROR( rpr ) )
+        {
+          if ( caninsert )
+          {
+            assert( 0 );
+            dirid = duf_dirname_pdistat2dirid_existed( pdi, sql_set /* node_selector2 */ , pr );
+          }
+          else
+          {
+            DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
+          }
+        }
+      }
+#else
       if ( ( rpr == DUF_SQL_CONSTRAINT || !rpr ) && !changes )
       {
         /* DUF_SQL_CONSTRAINT should be impossible from now */
         /*  !changes should be impossible from now too */
-        assert( 0 );
-        dirid = duf_dirname_pdistat2dirid_existed( pdi, sql_set /* node_selector2 */ , pr );
+        if ( caninsert )
+        {
+          assert( 0 );
+          dirid = duf_dirname_pdistat2dirid_existed( pdi, sql_set /* node_selector2 */ , pr );
+        }
+        else
+        {
+          DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
+        }
       }
       else if ( !rpr /* assume SQLITE_OK */  && changes )
       {
@@ -269,16 +305,11 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
         assert( dirid );
         DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, duf_levinfo_itemshowname( pdi ) );
       }
+#endif
       DUF_TEST_R( rpr );
     }
     if ( pchanges )
       *pchanges = changes;
-  }
-  else
-  {
-    DUF_SHOW_ERROR( "Wrong data dirname(%s) OR st_dev(%lu) OR st_ino(%lu)", duf_levinfo_itemshowname( pdi ), duf_levinfo_stat_dev( pdi ),
-                    duf_levinfo_stat_inode( pdi ) );
-    DUF_MAKE_ERROR( rpr, DUF_ERROR_DATA );
   }
   if ( need_id && !dirid )
   {
@@ -287,69 +318,45 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, /* const char *
     DUF_SHOW_ERROR( "(3) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
     DUF_TEST_RX_SHOW( rpr, "(3) no dirid" );
   }
-  /* DUF_TEST_R( rpr ); */
   if ( pr )
     *pr = rpr;
-  /* assert( !need_id || dirid ); */
+  assert( !need_id || dirid );
   DEBUG_ENDULL( dirid );
   return dirid;
 }
 
+/* 20150831.142443 */
 static int
-duf_path_component_here2db( duf_depthinfo_t * pdi, /* const char *dirname, */ int caninsert,
-                            const duf_sql_set_t * sql_set /* const char *node_selector2 */ ,
-                            unsigned long long *pparentid )
+duf_path_component_here2db( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, unsigned long long *pparentid )
 {
   DEBUG_STARTR( r );
+  unsigned long long parentid = 0;
 
   assert( pparentid );
   assert( pdi );
 
-#if 0
-  {
-    const char *s1 = duf_levinfo_itemname( pdi );
-
-    assert( ( s1[0] == '/' && s1[1] == 0 && dirname[0] == 0 ) || 0 == strcmp( s1, dirname ) );
-  }
-  DUF_TRACE( depth, 0, "D:%d; dirname:%s : itemname:%s", duf_pdi_depth( pdi ), dirname, duf_levinfo_itemname( pdi ) );
-#endif
-
-  DUF_TRACE( explain, 4, "already opened (at) ≪%s≫ upfd:%d", duf_levinfo_itemshowname( pdi ), duf_levinfo_dfd( pdi ) );
-
-  if ( r >= 0 )
   {
     int changes = 0;
 
     changes = 0;
-    DUF_TRACE( path, 5, "to insert [%s] pdi:%d", duf_levinfo_itemshowname( pdi ), pdi ? 1 : 0 );
+    DUF_TRACE( path, 5, "to insert [%s]", duf_levinfo_itemshowname( pdi ) );
     /* store/check path component to db; anyway get the ID */
-#if 0
-    *pparentid =
-          duf_dirname2dirid( pdi, dirname, caninsert, duf_levinfo_stat_dev( pdi ), duf_levinfo_stat_inode( pdi ), node_selector2,
-                             1 /* need_id */ , &changes, &r );
-#else
-    *pparentid = duf_dirname_pdistat2dirid( pdi, caninsert, sql_set /* node_selector2 */ , 1 /* need_id */ , &changes, &r );
-#endif
-    /* assert( *pparentid ); */
+    parentid = duf_dirname_pdistat2dirid( pdi, caninsert, sql_set /* node_selector2 */ , 1 /* need_id */ , &changes, &r );
     if ( changes )
     {
       DUF_TRACE( path, 0, "@@@dir added : %s (changes:%d)", duf_levinfo_itemshowname( pdi ), changes );
-      DUF_TRACE( explain, 0, "added ID: %llu for ≪%s≫", *pparentid, duf_levinfo_itemshowname( pdi ) );
+      DUF_TRACE( explain, 0, "added ID: %llu for ≪%s≫", parentid, duf_levinfo_itemshowname( pdi ) );
       if ( r >= 0 )
         r = changes;
     }
     else
-      DUF_TRACE( explain, 2, "already in db ID: %llu for ≪%s≫", *pparentid, duf_levinfo_itemshowname( pdi ) );
+      DUF_TRACE( explain, 2, "already in db ID: %llu for ≪%s≫", parentid, duf_levinfo_itemshowname( pdi ) );
 
-    duf_levinfo_set_dirid( pdi, *pparentid );
-    DUF_TRACE( path, 5, "inserted [%s] AS %llu", duf_levinfo_itemshowname( pdi ), *pparentid );
-    DUF_TRACE( path, 5, "ID %llu for dirname ≪%s≫", *pparentid, duf_levinfo_itemshowname( pdi ) );
+    DUF_TRACE( path, 5, "inserted [%s] AS %llu", duf_levinfo_itemshowname( pdi ), parentid );
+    DUF_TRACE( path, 5, "ID %llu for dirname ≪%s≫", parentid, duf_levinfo_itemshowname( pdi ) );
   }
-  else
-  {
-    /* duf_levinfo_goup( pdi ); */
-  }
-
+  if ( pparentid )
+    *pparentid = parentid;
   DEBUG_ENDR( r );
 }
 
@@ -379,7 +386,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *dirname, int caninsert
     /*  */
     /* assert( ( s1[0] == '/' && s1[1] == 0 && dirname[0] == 0 ) || 0 == strcmp( s1, dirname ) ); */
   }
-
+  /* duf_levinfo_godown_openat_dh: 1. check depth; 2. duf_levinfo_godown */
   DOR( r, duf_levinfo_godown_openat_dh( pdi, 0, dirname, 0 /* ndirs */ , 0 /* nfiles */ , 0 /* is_leaf */  ) );
   /* DOR( r, duf_levinfo_openat_dh( pdi ) ); (* levinfo depth 1 level lower *) */
   DOR( r, duf_path_component_here2db( pdi, /* dirname, */ caninsert, sql_set /* node_selector2 */ , pparentid ) );
@@ -430,7 +437,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   unsigned long long parentid = 0;
 
   assert( pdi );
-  DUF_TRACE(fs, 0, "set opendir to 1 (one)");
+  DUF_TRACE( fs, 0, "set opendir to 1 (one)" );
   od = duf_pdi_set_opendir( pdi, 1 ); /* save open status to restore */
   {
     int upfd = 0;
@@ -464,6 +471,8 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
  *     depth + 1
  * */
         DOR( r, duf_path_component2db( pdi, path, caninsert, sql_set /* node_selector2 */ , &parentid ) );
+        if ( DUF_NOERROR( r ) )
+          duf_levinfo_set_dirid( pdi, parentid );
         DUF_TRACE( path, 1, "@@@@#%-5llu (parentid)    [%40s]", parentid, path );
 /*        if ( r < 0 )
           DUF_SHOW_ERROR( "No such entry %s [%s]", real_path, path ); */
@@ -493,7 +502,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
       close( upfd );
     upfd = 0;
   }
-  DUF_TRACE(fs, 0, "set (restore) opendir to %d", od);
+  DUF_TRACE( fs, 0, "set (restore) opendir to %d", od );
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
   if ( r >= 0 && !parentid )
     DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
@@ -559,4 +568,104 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   mas_free( real_path );
 
   DEBUG_ENDR( r );
+}
+
+static char *
+_duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long long dirid, unsigned long long *pparentid, int *pr )
+{
+  int rpr = 0;
+  char *name = NULL;
+
+  DEBUG_START(  );
+  DUF_SQL_START_STMT( pdi, select_path, sqlv, rpr, pstmt );
+  {
+    DUF_SQL_BIND_LL( dirID, dirid, rpr, pstmt );
+    DUF_SQL_STEP( rpr, pstmt );
+    if ( DUF_IS_ERROR( rpr, DUF_SQL_ROW ) )
+    {
+      rpr = 0;
+      DUF_TRACE( select, 0, "<selected> %s", sqlv );
+      name = mas_strdup( DUF_GET_SFIELD2( name ) );
+      if ( pparentid )
+        *pparentid = DUF_GET_UFIELD2( parentid );
+      DUF_TRACE( temp, 0, "%s", DUF_GET_SFIELD2( name ) );
+    }
+    else
+    {
+      DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
+    }
+  }
+  DUF_SQL_END_STMT( select_path, rpr, pstmt );
+  if ( pr )
+    *pr = rpr;
+  DEBUG_ENDS( name );
+}
+
+static char *
+duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigned long long *pparentid, int *pr )
+{
+  char *name = NULL;
+
+  DEBUG_START(  );
+
+  int rpr = 0;
+  char *sqlv = NULL;
+
+  duf_sql_set_t def_node_set = {
+    .fieldset = "pt.parentid AS parentid, pt.dirname as name " /* */
+          ,
+    .selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+          " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
+    " WHERE pt." DUF_SQL_IDNAME "=:dirID"
+  };
+
+  assert( pdi );
+
+  {
+    sqlv = duf_selector2sql( &def_node_set );
+
+    name = _duf_dirid2name_existed( pdi, sqlv, dirid, pparentid, &rpr );
+
+    mas_free( sqlv );
+  }
+  if ( pr )
+    *pr = rpr;
+  DEBUG_ENDS( name );
+}
+
+char *
+duf_dirid2path( duf_depthinfo_t * pdi, unsigned long long dirid, int *pr )
+{
+  char *path = NULL;
+
+  DEBUG_START(  );
+  int r = 0;
+  int done = 0;
+  int depth = 0;
+
+  do
+  {
+    char *name = NULL;
+
+    name = duf_dirid2name_existed( pdi, dirid, &dirid, &r );
+    DUF_TRACE( temp, 0, "@@%u: #%llu %s", depth, dirid, name );
+    if ( name && *name )
+    {
+      char *t;
+
+      t = path;
+      path = mas_strdup( "/" );
+      path = mas_strcat_x( path, name );
+      path = mas_strcat_x( path, t );
+      mas_free( t );
+      depth++;
+    }
+    else
+      done = 1;
+  }
+  while ( !done );
+  if ( pr )
+    *pr = r;
+  DEBUG_ENDS( path );
 }

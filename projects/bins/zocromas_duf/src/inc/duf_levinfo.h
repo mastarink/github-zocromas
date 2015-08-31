@@ -5,5 +5,7 @@
 
 void duf_levinfo_clear_li( duf_levinfo_t * pli );
 void duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d );
+void duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs,
+                               unsigned long long nfiles, int is_leaf, int d );
 
 #endif

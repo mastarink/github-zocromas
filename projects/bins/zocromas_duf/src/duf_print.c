@@ -19,6 +19,29 @@
 #include "duf_print.h"
 /* ###################################################################### */
 
+void
+duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
+{
+  if ( fbsz > 0 )
+  {
+    *format++ = '%';
+    fbsz--;
+  }
+  DUF_TRACE( temp, 5, ">%ld>> '%s' (%c:%d:%d) :: '%s'", fbsz, fmt, *fmt, ( ( *fmt == '+' ) || ( *fmt == '-' ) ) ? 1 : 0, *fmt - '-', tail );
+  if ( fbsz > 0 && ( *fmt == '+' || *fmt == '-' ) )
+  {
+    DUF_TRACE( temp, 5, ">%ld>> %s :: %s", fbsz, fmt, tail );
+    *format++ = *fmt++;
+    fbsz--;
+  }
+  while ( fbsz > 0 && *fmt >= '0' && *fmt <= '9' )
+  {
+    DUF_TRACE( temp, 5, ">%ld>> %s :: %s", fbsz, fmt, tail );
+    *format++ = *fmt++;
+    fbsz--;
+  }
+  strncpy( format, tail, fbsz );
+}
 
 /***
    %h : depth
@@ -68,57 +91,88 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
   const char *fmt = *pfmt;
   char *pbuffer = *ppbuffer;
   char format[fbsz];
+  const char *fmt0;
 
+  fmt0 = fmt;
   v = strtol( fmt, &pe, 10 );
   fmt = pe;
   c = *fmt++;
   switch ( c )
   {
   case 'h':                    /* depth */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "u" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldu", v );
     else
       snprintf( format, fbsz, "%%u" );
+#endif
+
     snprintf( pbuffer, bfsz, format, duf_pdi_reldepth( pdi ) );
     ok++;
     break;
   case 'Q':                    /* seq */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pdi->seq );
     ok++;
     break;
   case 'q':                    /* seq_node */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pdi->seq_node );
     ok++;
     break;
   case '#':                    /* seq_leaf */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pdi->seq_leaf );
     ok++;
     break;
   case 'M':                    /* md5id */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     ok++;
     break;
   case 'S':                    /* nsame */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->nsame );
     ok++;
     break;
@@ -149,44 +203,69 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     }
     break;
   case 'I':                    /* dirid */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
     ok++;
     break;
   case 'L':                    /* nfiles */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pdi->levinfo[pdi->depth].items.files );
     ok++;
     break;
   case 'D':                    /* ndirs */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pdi->levinfo[pdi->depth].items.dirs );
     ok++;
     break;
   case 'A':                    /* dataid */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pfi->dataid );
     ok++;
     break;
   case '~':                    /* suffix */
     break;
   case 'O':                    /* inode */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_ino );
     ok++;
     break;
@@ -227,26 +306,41 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     }
     break;
   case 'n':                    /* nlink */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_nlink );
     ok++;
     break;
   case 'u':                    /* user */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_uid );
     ok++;
     break;
   case 'g':                    /* group */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_gid );
     ok++;
     break;
@@ -254,10 +348,15 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     {
       unsigned long long sz = pfi->st.st_size;
 
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "llu." );
+#else
       if ( v )
         snprintf( format, fbsz, "%%%ldllu.", v );
       else
         snprintf( format, fbsz, "%%llu." );
+#endif
+
 
       snprintf( pbuffer, bfsz, format, sz );
       ok++;
@@ -269,37 +368,57 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
 
       if ( sz < 1024 )
       {
+#if 1
+        duf_convert_fmt( format, fbsz, fmt0, "llu." );
+#else
         if ( v )
           snprintf( format, fbsz, "%%%ldllu.", v );
         else
           snprintf( format, fbsz, "%%llu." );
+#endif
+
         snprintf( pbuffer, bfsz, format, sz );
         ok++;
       }
       else if ( sz < 1024 * 1024 )
       {
+#if 1
+        duf_convert_fmt( format, fbsz, fmt0, "lluk" );
+#else
         if ( v )
           snprintf( format, fbsz, "%%%ldlluk", v );
         else
           snprintf( format, fbsz, "%%lluk" );
+#endif
+
         snprintf( pbuffer, bfsz, format, sz / 1024 );
         ok++;
       }
       else if ( sz < 1024 * 1024 * 1024 )
       {
+#if 1
+        duf_convert_fmt( format, fbsz, fmt0, "lluM" );
+#else
         if ( v )
           snprintf( format, fbsz, "%%%ldlluM", v );
         else
           snprintf( format, fbsz, "%%lluM" );
+#endif
+
         snprintf( pbuffer, bfsz, format, sz / 1024 / 1024 );
         ok++;
       }
       else
       {
+#if 1
+        duf_convert_fmt( format, fbsz, fmt0, "lluG" );
+#else
         if ( v )
           snprintf( format, fbsz, "%%%ldlluG", v );
         else
           snprintf( format, fbsz, "%%lluG" );
+#endif
+
         snprintf( pbuffer, bfsz, format, sz / 1024 / 1024 / 1024 );
         ok++;
       }
@@ -366,10 +485,15 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
         }
         break;
       }
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "s" );
+#else
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
       else
         snprintf( format, fbsz, "%%s" );
+#endif
+
       snprintf( pbuffer, bfsz, format, stime );
       ok++;
     }
@@ -378,10 +502,14 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     {
       const char *real_path = NULL;
 
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "s" );
+#else
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
       else
         snprintf( format, fbsz, "%%s" );
+#endif
 
       real_path = duf_levinfo_path( pdi );
       snprintf( pbuffer, bfsz, format, real_path );
@@ -392,10 +520,15 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     {
       const char *rel_real_path = NULL;
 
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "s" );
+#else
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
       else
         snprintf( format, fbsz, "%%s" );
+#endif
+
 
       rel_real_path = duf_levinfo_relpath( pdi );
       snprintf( pbuffer, bfsz, format, rel_real_path );
@@ -404,10 +537,15 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     break;
   case 'f':                    /* filename */
     {
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "s" );
+#else
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
       else
         snprintf( format, fbsz, "%%s" );
+#endif
+
 
       snprintf( pbuffer, bfsz, format, pfi->name );
       ok++;
@@ -436,45 +574,70 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     ok++;
     break;
   case 'X':                    /* exifid */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pfi->exifid );
     ok++;
     break;
   case 'a':                    /* camera */
     if ( pfi->camera )
     {
+#if 1
+      duf_convert_fmt( format, fbsz, fmt0, "s" );
+#else
       if ( v )
         snprintf( format, fbsz, "%%%lds", v );
       else
         snprintf( format, fbsz, "%%s" );
+#endif
+
       snprintf( pbuffer, bfsz, format, pfi->camera );
     }
     ok++;
     break;
   case 'E':                    /* mimeid */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pfi->mimeid );
     ok++;
     break;
   case 'e':                    /* mime */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "s" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%lds", v );
     else
       snprintf( format, fbsz, "%%s" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pfi->mime );
     ok++;
     break;
   case 'N':                    /* nameid */
+#if 1
+    duf_convert_fmt( format, fbsz, fmt0, "llu" );
+#else
     if ( v )
       snprintf( format, fbsz, "%%%ldllu", v );
     else
       snprintf( format, fbsz, "%%llu" );
+#endif
+
     snprintf( pbuffer, bfsz, format, pfi->nameid );
     ok++;
     break;

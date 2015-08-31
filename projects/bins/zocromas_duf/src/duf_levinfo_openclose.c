@@ -238,7 +238,7 @@ duf_levinfo_dbopenat_dh( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, int i
   }
   DEBUG_ENDR( r );
 }
-
+#if 0
 int
 duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 {
@@ -295,7 +295,7 @@ duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
 /*     }                                        */
   DEBUG_ENDR( r );
 }
-
+#endif
 /************************************************************************/
 
 

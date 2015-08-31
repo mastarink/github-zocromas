@@ -16,7 +16,7 @@ int duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d );
 int duf_levinfo_if_openat_dh( duf_depthinfo_t * pdi );
 int duf_levinfo_if_openat_dh_up( duf_depthinfo_t * pdi );
 
-int duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path );
+/* int duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path ); */
 
 int duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d );
 int duf_levinfo_openat_dh( duf_depthinfo_t * pdi );

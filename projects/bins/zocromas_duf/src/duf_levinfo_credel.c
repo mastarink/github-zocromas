@@ -32,13 +32,13 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
 
     max_rel_depth = pdi && pdi->pu ? pdi->pu->max_rel_depth : 20;
     assert( pdi->depth == -1 );
+    /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
     if ( max_rel_depth /* FIXME */  )
     {
-      pdi->maxdepth = max_rel_depth + pathdepth;
+      pdi->maxdepth = max_rel_depth + ( pathdepth ? pathdepth : 20 );
       pdi->recursive = recursive ? 1 : 0;
       pdi->opendir = opendir ? 1 : 0;
       lsz = sizeof( pdi->levinfo[0] ) * ( pdi->maxdepth + 3 );
-      /* DUF_DIE( 0, "@@@@@@@ %lu : %u : %lu : %lu", lsz,pdi->maxdepth, sizeof( pdi->levinfo[0] ), sizeof( duf_levinfo_t ) ); */
       pdi->levinfo = mas_malloc( lsz );
       assert( pdi->levinfo );
       memset( pdi->levinfo, 0, lsz );

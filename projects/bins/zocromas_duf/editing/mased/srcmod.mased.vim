@@ -1,5 +1,6 @@
 find  mod_template_uni.c
 tab sfind  mod_dummy_uni.c
+tab sfind  mod_dumplet.c
 
 tab sfind  mod_integrity_uni.c
 

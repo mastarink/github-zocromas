@@ -78,28 +78,19 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
     int d;
 
     d = ++pdi->depth;
+    assert( pdi->depth >= 0 );
+    assert( d >= 0 );
+    assert( d == pdi->depth );
     /* assume only level 0 may have dirid==0 -- AND: simply dirid not set */
     /* assert( d == 0 || ( d > 0 && dirid  ) ); */
 
     /*!! if ( d <= pdi->maxdepth ) */
     {
       assert( pdi->levinfo );
-      assert( d >= 0 );
-      memset( &pdi->levinfo[d], 0, sizeof( pdi->levinfo[d] ) );
-      pdi->levinfo[d].lev_dh.dirid = dirid;
+      duf_levinfo_init_level_d( pdi, itemname, dirid, ndirs, nfiles, is_leaf, d );
 
-      pdi->levinfo[d].dirid = dirid;
-      pdi->levinfo[d].numdir = ndirs;
-      pdi->levinfo[d].numfile = nfiles;
-      if ( itemname )
-      {
-        /* DUF_SHOW_ERROR( "BEFORE NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
-        pdi->levinfo[d].itemname = mas_strdup( itemname );
-        /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
-      }
-      pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
+
       DUF_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemshowname( pdi ) );
-      assert( pdi->depth >= 0 );
       if ( is_leaf )
         DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
       else
@@ -109,16 +100,15 @@ duf_levinfo_godown( duf_depthinfo_t * pdi, unsigned long long dirid, const char 
                    duf_levinfo_itemshowname( pdi ) );
       }
     }
-    /* else                       */
-    /* {                          */
-    /*   pdi->depth--;            */
-    /*   DUF_MAKE_ERROR( r, DUF_ERROR_MAX_DEPTH); */
-    /* }                          */
-    /* assert( duf_pdi_depth( pdi ) == 0 || ( duf_pdi_depth( pdi ) > 0 && duf_levinfo_dirid( pdi ) ) ); */
   }
   DEBUG_ENDR( r );
 }
 
+/*
+ * 1. check depth
+ * 2. duf_levinfo_godown
+ * 2.1. check depth
+ * */
 int
 duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, const char *itemname, unsigned long long ndirs,
                               unsigned long long nfiles, int is_leaf )
@@ -126,10 +116,8 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, unsigned long long dirid, c
   DEBUG_STARTR( r );
 
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
-  if ( r >= 0 )
-  {
-    DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
-  }
+  DOR_NOE( r, duf_levinfo_godown( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
+
   DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
 }
 

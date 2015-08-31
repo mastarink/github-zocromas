@@ -44,42 +44,46 @@ duf_pdi_create( void )
 }
 
 int
-duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */, int frecursive, int opendir )
+duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
+  assert( pdi );
   if ( !pdi->inited )
   {
-    /* memset( pdi, 0, sizeof( duf_depthinfo_t ) ); */
-    /* assert( pdi ); */
     pdi->inited = 1;
     pdi->depth = -1;
-    DORN( r, duf_pathdepth( real_path ) );
-    if ( r >= 0 )
-      pdi->topdepth = r;
+    if ( real_path )
+    {
+      DORN( r, duf_pathdepth( real_path ) );
+      if ( r >= 0 )
+        pdi->topdepth = r;
+    }
     assert( pdi->depth == -1 );
-    DOR( r, duf_levinfo_create( pdi, r, frecursive, opendir ) ); /* depth = -1 */
+    DOR( r, duf_levinfo_create( pdi, pdi->topdepth, frecursive, opendir ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
-    DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */ ) );
+    if ( real_path )
+      DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */  ) );
   }
   DEBUG_ENDR( r );
 }
 
 #ifdef MAS_WRAP_FUNC
 int
-duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */, int frecursive, int opendir )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */ ,
+                   int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set /* node_selector2 */, frecursive, opendir ) );
+  DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set /* node_selector2 */ , frecursive, opendir ) );
 
   DUF_TEST_R( r );
   if ( r >= 0 )
   {
     DUF_TRACE( explain, 1, "converted to real_path: %s", real_path );
     DUF_TRACE( explain, 0, "added path: %s", real_path );
-    DUF_TRACE( path, 10, "diridpid: %llu", duf_levinfo_dirid( pdi ) );
+    /* DUF_TRACE( path, 10, "diridpid: %llu", duf_levinfo_dirid( pdi ) ); */
   }
   /* TODO */ assert( pdi->levinfo );
   DEBUG_ENDR( r );
@@ -101,7 +105,8 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, con
   od = pdi && pdi->opendir;
   duf_pdi_close( pdi );
   pdi->pu = pu;
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , sql_set /* node_selector2 */, frec /* frecursive */ , od /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , sql_set /* node_selector2 */ , frec /* frecursive */ ,
+                                        od /* opendir */  ) );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
   DEBUG_ENDR( r );
 }
@@ -124,7 +129,7 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert,
 }
 
 int
-duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* const char *node_selector2 */, int frecursive, int opendir )
+duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
@@ -139,7 +144,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* 
       path = mas_strdup( cpath );
     /* frecursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , sql_set /* node_selector2 */ /*, duf_config->pu, frecursive */  ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , sql_set /* node_selector2 *//*, duf_config->pu, frecursive */  ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }
@@ -335,6 +340,7 @@ duf_pdi_find_idstmt( duf_depthinfo_t * pdi, int *pindex )
 {
   duf_idstmt_t *is = NULL;
 
+  assert( pdi->inited );
   if ( pdi->idstatements )
   {
     for ( int i = 0; i < pdi->num_idstatements; i++ )
@@ -358,6 +364,7 @@ duf_pdi_prepare_statement( duf_depthinfo_t * pdi, const char *sql, int *pindex, 
   duf_idstmt_t *is = NULL;
 
   assert( pdi );
+  assert( pdi->inited );
   is = duf_pdi_find_idstmt( pdi, pindex );
   if ( !is )
   {
@@ -427,6 +434,7 @@ duf_pdi_finalize_statement( duf_depthinfo_t * pdi, int *pindex )
   DEBUG_STARTR( r );
   duf_idstmt_t *is = NULL;
 
+  assert( pdi->inited );
   is = duf_pdi_find_idstmt( pdi, pindex );
   if ( is && is->pstmt )
   {

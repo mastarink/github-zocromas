@@ -12,26 +12,31 @@
 #include "sql_beginning_selected.h"
 
 
+
+
+
+
 duf_sql_set_t std_leaf_set = {
   .fieldset =                   /* */
         /* " 'std-leaf' AS fieldset_id, " (* *) */
         "  fn.Pathid AS dirid " /* */
         ", 0 as ndirs, 0 as nfiles" /* */
-        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
-        ", fd.size AS filesize " /* */
+        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
         ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
         ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-        ", fd." DUF_SQL_IDNAME " AS dataid " /* */
         ", fd.mode AS filemode " /* */
-        ", md.md5sum1, md.md5sum2 " /* */
         ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
         ", fn." DUF_SQL_IDNAME " AS nameid " /* */
         ", md.dup5cnt AS nsame " /* */
-        ", mi.mime AS mime "    /* */
-        ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
-	", xm.model as camera"
-        /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
         ", fd.md5id AS md5id "  /* */
+        /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+        ", md.md5sum1, md.md5sum2 " /* */
+        /* */
+        ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+        ", mi.mime AS mime "    /* */
+        ", xm.model as camera " /* */
+        ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
+        ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
         ,
   .selector2 =                  /* */
         /* "SELECT %s " */
@@ -90,21 +95,23 @@ duf_sql_set_t std_ns_leaf_set = {
         /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
         " fn.Pathid AS dirid "  /* */
         ", 0 as ndirs, 0 as nfiles" /* */
-        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize, fd.exifid as exifid, fd.mimeid as mimeid " /* */
-        ", fd.size AS filesize " /* */
+        ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
         ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
         ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
-        ", fd." DUF_SQL_IDNAME " AS dataid " /* */
         ", fd.mode AS filemode " /* */
-        ", md.md5sum1, md.md5sum2 " /* */
         ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
         ", fn." DUF_SQL_IDNAME " AS nameid " /* */
         ", md.dup5cnt AS nsame " /* */
+        ", fd.md5id AS md5id "  /* */
+        /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+        ", md.md5sum1, md.md5sum2 " /* */
+	/* */
+	", fd.exifid as exifid, fd.mimeid as mimeid " /* */
+        ", fd.size AS filesize " /* */
+        ", fd." DUF_SQL_IDNAME " AS dataid " /* */
         ", mi.mime AS mime "    /* */
         ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
-	", xm.model as camera"
-        /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
-        ", fd.md5id AS md5id "  /* */
+        ", xm.model as camera"
         ,
   .selector2 =                  /* */
         /* "SELECT %s " */
@@ -113,7 +120,7 @@ duf_sql_set_t std_ns_leaf_set = {
         " LEFT JOIN " DUF_DBPREF "filedatas  AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
         " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
         " LEFT JOIN " DUF_DBPREF "mime       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-        " LEFT JOIN " DUF_DBPREF "exif       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+        " LEFT JOIN " DUF_DBPREF "exif       AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
         " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
         " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
         ,

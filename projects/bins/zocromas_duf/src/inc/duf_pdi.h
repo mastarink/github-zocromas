@@ -5,6 +5,8 @@
 
 duf_depthinfo_t *duf_pdi_create( void );
 
+int duf_pdi_reset( duf_depthinfo_t * pdi, int frecursive, int opendir );
+
 int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const char *real_path, int caninsert,
                                   const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int recursive,
                                   int opendir );

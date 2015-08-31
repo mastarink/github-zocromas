@@ -34,6 +34,16 @@
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
+/*
+TODO
+  1. good-date : 
+     choose from 
+       a. Date and Time (Original)  EXIF_TAG_DATE_TIME_ORIGINAL
+       b. Date and Time (Digitized) EXIF_TAG_DATE_TIME_DIGITIZED
+  2. Make difference by EXIF_TAG_SOFTWARE
+       a. digiKam-2.4.1
+       b. ....
+*/
 
 /* ########################################################################################## */
 static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );

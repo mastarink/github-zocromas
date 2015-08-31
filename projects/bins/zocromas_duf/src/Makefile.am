@@ -47,6 +47,7 @@ zocromas_duf_SOURCES=				   \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
 	mod_template_uni.c \
 	mod_dummy_uni.c	\
+	mod_dumplet.c	\
 	mod_tagit.c	\
 	mod_save_to.c	\
 	std_mod_sets.c \

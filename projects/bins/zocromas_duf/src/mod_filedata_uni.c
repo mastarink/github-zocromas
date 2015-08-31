@@ -118,22 +118,30 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
   .init_scan = NULL,
   .def_opendir = 1,
 
+
   .dirent_file_scan_before2 = register_pdifiledata,
+
+
 
 
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
-  .leaf = {.fieldset =          /* */
+  .leaf = {                     /* */
+           .fieldset =          /* */
            /* "'filedata-leaf' AS fieldset_id, " (* *) */
-           "fn.Pathid AS dirid, fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
+           "  fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks, strftime('%s', fd.mtim) AS mtime " /* */
-           ", dup5cnt AS nsame" /* */
+           ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
+           ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
+           ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
-           ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
+           ", md.dup5cnt AS nsame " /* */
            ", fd.md5id AS md5id" /* */
+           /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+           ", md.md5sum1, md.md5sum2 " /* */
            ,
            .selector2 =         /* */
            /* "SELECT %s " */
@@ -144,18 +152,9 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,
            .filter = NULL       /* */
-           ,
-#if 0
-           .selector_total2 =   /* */
-#  if 0
-           " FROM " DUF_DBPREF "paths AS p " /* */
-#  else
-           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-#  endif
-#endif
-           }
-  ,
-  .node = {.fieldset =          /* */
+           },
+  .node = {                     /* */
+           .fieldset =          /* */
            /* "'filedata-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
@@ -172,20 +171,15 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            " LEFT JOIN " DUF_DBPREF "pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #endif
            ,
-           .matcher = "pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
+           .matcher = "pt.parentid = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
            ,
            .filter = NULL       /* */
-           ,
-#if 0
-           .selector_total2 =   /* */
-           " /* fd */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-#endif
-           }
-  ,
-  .final_sql_seq = &final_sql   /* */
+           },
+  .final_sql_seq = &final_sql
 };
 
 /* ########################################################################################## */
+
 static int
 register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
