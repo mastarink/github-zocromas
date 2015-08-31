@@ -19,6 +19,8 @@
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
+
 #include "duf_levinfo_ref.h"
 
 
@@ -111,12 +113,13 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 
 
 
-
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
+  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
   .leaf = {                     /* */
            .fieldset =          /* */
+#if 0
            "'filenames-leaf' AS fieldset_id, " /* Never used!? */
            "  fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
@@ -142,6 +145,9 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,
            .filter = NULL       /* */
+#else
+	     NULL
+#endif
            },
   .node = {                     /* */
            .fieldset =          /* */

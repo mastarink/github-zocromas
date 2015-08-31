@@ -12,6 +12,8 @@
 #include "duf_maintenance.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
+
 #include "duf_levinfo_ref.h"
 
 #include "duf_sql.h"
@@ -54,9 +56,9 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
     sqlt = mas_strcat_x( sqlt, leaf_selector_total2 );
 #else
     if ( sccb->count_nodes )
-      sql_set = duf_get_node_sql_set( sccb );
+      sql_set = duf_get_sql_set( sccb , DUF_NODE_NODE);
     else
-      sql_set = duf_get_leaf_sql_set( sccb );
+      sql_set = duf_get_sql_set( sccb, DUF_NODE_LEAF );
 
     sqlt = duf_selector_total2sql( sql_set );
 #endif
@@ -188,7 +190,7 @@ TODO scan mode
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_node_sql_set( SCCB ) ) );
+    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_sql_set( SCCB, DUF_NODE_NODE ) ) );
   }
   if ( pr )
     *pr = rpr;

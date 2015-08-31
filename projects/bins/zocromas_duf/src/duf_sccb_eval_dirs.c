@@ -9,15 +9,19 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
+
 #include "duf_levinfo_ref.h"
 
 #include "duf_dir_scan2_stages.h"
+/* #include "duf_item_scan2.h" */
 
 #include "duf_sccb.h"
 #include "duf_sccb_def.h"
+#include "duf_sccbh_eval.h"
 
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */

@@ -65,26 +65,39 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
   .name = "exif",               /* */
   .def_opendir = 1,             /* */
   .leaf_scan_fd2 = dirent_contnt2, /* */
+/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {
            .fieldset =          /* */
            "'exif-leaf' AS fieldset_id, " /* */
-           " fn.Pathid AS dirid, fn.name AS filename " /* */
-           " , fn.name AS dfname, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           " , 0 as ndirs, 0 as nfiles" /* */
-           " , fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
-           " , fd.mode AS filemode " /* */
-           " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
-           " , fn." DUF_SQL_IDNAME " AS nameid " /* */
-           " , fd.md5id AS md5id" /* */
-           ,                    /* */
+           " fn.Pathid AS dirid " /* */
+           ", 0 as ndirs, 0 as nfiles" /* */
+           ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
+           ", STRFTIME( '%s',fd.mtim ) AS mtime " /* */
+           ", fd.mode AS filemode " /* */
+           ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
+           ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+           ", md.dup5cnt AS nsame " /* */
+           ", fd.md5id AS md5id" /* */
+           /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
+           ", md.md5sum1, md.md5sum2 " /* */
+           /* */
+           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+           ", mi.mime AS mime " /* */
+           ", xm.model as camera " /* */
+           ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
+           ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
+           ", xm.model as camera",
            .selector2 =         /* */
            " FROM " DUF_DBPREF " filenames AS fn " /* */
            " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
            " LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF "exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */

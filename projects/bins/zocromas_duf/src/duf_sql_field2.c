@@ -111,7 +111,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
            )
     {
       int have_pos = 0;
-      const duf_sql_set_t *leaf_set = duf_get_leaf_sql_set( SCCB );
+      const duf_sql_set_t *leaf_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
 
       *pvalue = __duf_sql_ull_by_name( leaf_set->fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )

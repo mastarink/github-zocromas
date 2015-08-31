@@ -13,31 +13,17 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* for DUF_ACT_FLAG( progress ) !ONLY! */
-#include "duf_option_defs.h"    /* for DUF_ACT_FLAG( progress ) !ONLY! */
 
-#include "duf_utils.h"          /* duf_percent */
-
+/* #include "duf_pdi.h" */
+#include "duf_pdi_ref.h"
 #include "duf_levinfo_ref.h"
-/* #include "duf_levinfo_updown.h" */
 
-#include "duf_pdi.h"
-#include "duf_sccb_def.h"
-#include "duf_sccb.h"
-
-
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
 #include "duf_sql.h"
-
 #include "duf_sql2.h"
 #include "duf_ufilter_bind.h"
+#include "duf_selector.h"
 
 #include "duf_sccbh_shortcuts.h"
-#include "duf_sccb_eval_dirs.h" /* for assert  */
-
-#include "duf_selector.h"
-#include "duf_leaf_scan2.h"
 
 #include "duf_sel_cb_leaf.h"
 #include "duf_sel_cb_node.h"
@@ -130,7 +116,7 @@ duf_scan_db_items_with_str_cb_sql( const char *csql_selector, duf_str_cb2_t str_
   DEBUG_ENDR( r );
 }
 
-static int
+int
 duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
   DEBUG_STARTR( r );
@@ -155,47 +141,5 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
   if ( sql_selector )
     mas_free( sql_selector );
   sql_selector = NULL;
-  DEBUG_ENDR( r );
-}
-
-/* 20150819.133354 */
-int
-duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh )
-{
-  DEBUG_STARTR( r );
-
-  const duf_sql_set_t *sql_set = NULL;
-
-  assert( str_cb2 == DUF_WRAPPED( duf_eval_sccbh_all ) || ( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb )
-          || ( str_cb2 == duf_eval_sccbh_db_leaf_str_cb ) );
-#ifdef MAS_TRACING
-  const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_LEAF ? "node" : "UNDEF" );
-#endif
-  DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
-  DUF_TRACE( scan, 2, "cb2 %s", set_type_title );
-  DUF_TRACE( scan, 2, "ql%llu / qn%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq, SCCB->title );
-  sql_set = duf_get_sql_set( SCCB, node_type, &r );
-
-/* calling duf_sel_cb_(node|leaf) for each record by sql */
-  if ( sql_set->selector2 && sql_set->fieldset )
-  {
-    DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set, str_cb2, sccbh, node_type ) );
-    if ( DUF_NOERROR( r ) )
-    {
-      if ( r > 0 )
-        DUF_TRACE( explain, 2, "%u records processed of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
-                   r, set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
-      else
-        DUF_TRACE( explain, 3, "no records found of type ≪%s≫ ; action ≪%s≫; diridpid:%llu",
-                   set_type_title, duf_uni_scan_action_title( SCCB ), duf_levinfo_dirid( PDI ) );
-    }
-  }
-  else
-  {
-    DUF_TRACE( explain, 0, "= ? ============ NO selector2 ≪%s≫", set_type_title );
-    DUF_MAKE_ERROR( r, DUF_ERROR_PTR );
-  }
-  DUF_TRACE( scan, 13, "(%d) end scan items str_cb2%c", r, str_cb2 ? '+' : '-' );
-
   DEBUG_ENDR( r );
 }

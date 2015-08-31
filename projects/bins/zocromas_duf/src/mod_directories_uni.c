@@ -118,11 +118,13 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .count_nodes = 1,
   .beginning_sql_seq = &sql_beginning_selected,
 
-  .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
+/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
+  .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {                     /* */
-           .fieldset =          /* */
+           .fieldset =          /* Never used!? */
+#if 0
            "'dirs-leaf' AS fieldset_id, " /* */
            "  fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
@@ -148,6 +150,9 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,
            .filter = NULL       /* */
+#else
+	     NULL
+#endif
            },
   .node = {                     /* */
            .fieldset =          /* */

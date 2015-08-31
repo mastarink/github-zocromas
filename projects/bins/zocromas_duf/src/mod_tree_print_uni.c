@@ -18,6 +18,8 @@
 #include "duf_config_ref.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
+
 #include "duf_levinfo_ref.h"
 
 
@@ -58,6 +60,7 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
   .leaf_scan2 = tree_leaf2,
 
   /* for "tree" 1 is much better in following 2 fields; BUT TODO: try 2 and 1 - may be good?! */
+/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
 #if 0

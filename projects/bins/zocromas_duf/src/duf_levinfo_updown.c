@@ -11,6 +11,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
 
 #include "duf_levinfo.h"
 #include "duf_levinfo_ref.h"

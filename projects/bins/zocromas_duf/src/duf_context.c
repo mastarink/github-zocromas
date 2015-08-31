@@ -31,7 +31,7 @@ duf_clear_context( duf_context_t * pcontext )
 }
 
 void *
-duf_context( duf_context_t * pcontext )
+duf_context( const duf_context_t * pcontext )
 {
   return pcontext ? pcontext->ptr : NULL;
 }

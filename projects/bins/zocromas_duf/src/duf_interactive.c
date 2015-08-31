@@ -20,6 +20,7 @@
 #include "duf_option_cmd.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
 #include "duf_levinfo_ref.h"
 
 #include "duf_begfin.h"

@@ -21,7 +21,9 @@
 #include "duf_levinfo_updown.h"
 #include "duf_levinfo_openclose.h"
 
-#include "duf_pdi.h"
+/* #include "duf_pdi.h" */
+#include "duf_pdi_ref.h"
+
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
 #include "duf_leaf_scan2.h"

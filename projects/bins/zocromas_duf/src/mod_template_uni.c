@@ -71,6 +71,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
   .dirent_dir_scan_before2 = template_de_dir_before2,
 
 
+/* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {.fieldset =          /* */

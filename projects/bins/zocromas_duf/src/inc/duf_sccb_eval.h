@@ -6,6 +6,5 @@ int duf_evaluate_sccb_array( duf_scan_callbacks_t ** sccb_sequence, int sccb_num
 
 int duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * table );
 
-/* int duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh ); */
 
 #endif

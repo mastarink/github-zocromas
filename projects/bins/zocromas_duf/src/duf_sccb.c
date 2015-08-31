@@ -15,12 +15,15 @@
 #include "duf_sccb.h"
 /* ###################################################################### */
 
-const duf_sql_set_t *
+static const duf_sql_set_t *
 duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
 {
   const duf_sql_set_t *set = NULL;
 
   assert( sccb );
+
+#if 0
+
   switch ( sccb->use_std_leaf )
   {
   case 0:
@@ -35,16 +38,27 @@ duf_get_leaf_sql_set( const duf_scan_callbacks_t * sccb )
   default:
     break;
   }
+#else
+  int index;
+
+  index = sccb->use_std_leaf;
+  if ( index > 0 )
+    set = ( index <= std_leaf_nsets ) ? &std_leaf_sets[index - 1] : NULL;
+  else
+    set = &sccb->leaf;
+  /* DUF_TRACE( temp, 0, "%d : %ld : %s", index, std_leaf_nsets, set->fieldset ); */
+#endif
   return set;
 }
 
-const duf_sql_set_t *
+static const duf_sql_set_t *
 duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
 {
   const duf_sql_set_t *set = NULL;
 
   assert( sccb );
 
+#if 0
   switch ( sccb->use_std_node )
   {
   case 0:
@@ -59,13 +73,22 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
   default:
     break;
   }
+#else
+  int index;
+
+  index = sccb->use_std_node;
+  if ( index > 0 )
+    set = ( index <= std_node_nsets ) ? &std_node_sets[index - 1] : NULL;
+  else
+    set = &sccb->node;
+  /* DUF_TRACE( temp, 0, "%d : %ld : %s", index, std_node_nsets, set->fieldset ); */
+#endif
   return set;
 }
 
 const duf_sql_set_t *
-duf_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type, int *pr )
+duf_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
 {
-  int r = 0;
   const duf_sql_set_t *set = NULL;
 
   assert( sccb );
@@ -83,11 +106,8 @@ duf_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type, i
     break;
   default:
     set = NULL;
-    DUF_MAKE_ERROR( r, DUF_ERROR_UNKNOWN );
     break;
   }
-  if ( pr )
-    *pr = r;
   return set;
 }
 

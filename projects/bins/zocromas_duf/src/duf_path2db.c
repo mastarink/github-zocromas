@@ -21,6 +21,7 @@
 #include "duf_levinfo_openclose.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
 
 #include "duf_sql_defs.h"
 #include "duf_selector.h"

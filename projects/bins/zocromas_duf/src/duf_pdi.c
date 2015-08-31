@@ -25,6 +25,9 @@
 /* #include "duf_levinfo_context.h" */
 #include "duf_context.h"
 
+#include "duf_pdi_ref.h"
+#include "duf_pdi_context.h"
+
 #include "duf_path2db.h"
 
 /* ###################################################################### */
@@ -149,27 +152,6 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* 
   DEBUG_ENDR( r );
 }
 
-void
-duf_pdi_set_context( duf_depthinfo_t * pdi, void *ctx )
-{
-  assert( pdi );
-  duf_set_context( &pdi->context, ctx );
-}
-
-void
-duf_pdi_set_context_destructor( duf_depthinfo_t * pdi, duf_void_voidp_t destr )
-{
-  assert( pdi );
-  duf_set_context_destructor( &pdi->context, destr );
-}
-
-void *
-duf_pdi_context( duf_depthinfo_t * pdi )
-{
-  assert( pdi );
-  return duf_context( &pdi->context );
-}
-
 int
 duf_pdi_close( duf_depthinfo_t * pdi )
 {
@@ -221,98 +203,6 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   }
   /* DUF_SHOW_ERROR( "clear idstatements" ); */
   DEBUG_ENDR( r );
-}
-
-int
-duf_pdi_max_filter( const duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-
-  assert( pdi );
-  if ( pdi->pu->max_seq && pdi->seq >= pdi->pu->max_seq )
-    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
-  else if ( pdi->pu->maxitems.files && pdi->items.files >= pdi->pu->maxitems.files )
-    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
-  else if ( pdi->pu->maxitems.dirs && pdi->items.dirs >= pdi->pu->maxitems.dirs )
-    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
-  else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
-    DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
-
-
-  /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
-  /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */
-  /*        && ( !pdi->pu->maxitems.dirs || ( pdi->items.dirs ) < pdi->pu->maxitems.dirs )       */
-  /*        && ( !pdi->pu->maxitems.total || ( pdi->items.total ) < pdi->pu->maxitems.total ) ); */
-  DEBUG_ENDR( r );
-}
-
-int
-duf_pdi_seq( const duf_depthinfo_t * pdi )
-{
-  return pdi ? pdi->seq : 0;
-}
-
-int
-duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d )
-{
-  return pdi ? d - pdi->topdepth : 0;
-}
-
-int
-duf_pdi_recursive( const duf_depthinfo_t * pdi )
-{
-  return pdi ? ( pdi->recursive ? 1 : 0 ) : 0;
-}
-
-int
-duf_pdi_opendir( const duf_depthinfo_t * pdi )
-{
-  return pdi ? ( pdi->opendir ? 1 : 0 ) : 0;
-}
-
-int
-duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
-{
-  DEBUG_STARTR( rd );
-
-  assert( pdi );
-  rd = pdi->opendir;
-  pdi->opendir = od;
-  DUF_TRACE( fs, 3, "set opendir:%d", od );
-
-  DEBUG_ENDRN( rd );
-}
-
-int
-duf_pdi_depth( const duf_depthinfo_t * pdi )
-{
-  return pdi ? pdi->depth : 0;
-}
-
-/* pdi->depth - pdi->topdepth */
-int
-duf_pdi_reldepth( const duf_depthinfo_t * pdi )
-{
-  return pdi ? duf_pdi_deltadepth( pdi, pdi->depth ) : 0;
-}
-
-void
-duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
-{
-  if ( pdi )
-    pdi->topdepth = pdi->depth;
-}
-
-int
-duf_pdi_topdepth( const duf_depthinfo_t * pdi )
-{
-  return pdi ? pdi->topdepth : 0;
-}
-
-int
-duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
-{
-  return pdi ? pdi->maxdepth : 0;
 }
 
 /* pdi->topdepth + pdi->depth - pdi->topdepth === pdi->depth */

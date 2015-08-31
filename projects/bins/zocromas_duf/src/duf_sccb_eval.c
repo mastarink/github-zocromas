@@ -23,72 +23,13 @@
 #include "duf_option_defs.h"
 
 #include "duf_sccbh_shortcuts.h"
+
+#include "duf_sccbh_eval.h"
+
 /* ###################################################################### */
 #include "duf_sccb_eval.h"
 /* ###################################################################### */
 
-/* 20150819.164652 */
-static int
-duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
-{
-  DEBUG_STARTR( r );
-
-  DUF_E_NO( DUF_ERROR_TOO_DEEP );
-  assert( sccbh );
-  assert( SCCB );
-
-  DUF_TRACE( scan, 2, "scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-
-  DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
-
-  if ( r >= 0 && DUF_ACT_FLAG( summary ) )
-  {
-    DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( SCCB ) );
-
-    DUF_PRINTF( 0, " summary; seq:     %llu", PDI->seq );
-    DUF_PRINTF( 0, " summary; seq-leaf:%llu", PDI->seq_leaf );
-    DUF_PRINTF( 0, " summary; seq-node:%llu", PDI->seq_node );
-    if ( PU->max_seq )
-      DUF_PRINTF( 0, " of %llu (max-seq)", PU->max_seq );
-    if ( DUF_ACT_FLAG( summary ) )
-      DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
-  }
-  DUF_TRACE( scan, 2, "/scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
-  DUF_E_YES( DUF_ERROR_TOO_DEEP );
-  DEBUG_ENDR( r );
-}
-
-#ifdef MAS_WRAP_FUNC
-/* 20150819.164643 */
-static int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh ) /* duf_eval_sccbh_all */
-{
-  DEBUG_STARTR( r );
-  if ( sccbh && SCCB )
-  {
-    /* DOR( r, duf_scan_beginning_sql( sccb ) ); */
-
-    DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( SCCB ) );
-    DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
-
-    {
-      HCHANGES = 0;
-      /* - evaluate sccb for each string from duf_config->targ[cv] as path
-       * - store number of changes to *pchanges */
-#  if 0
-      DOR( r, duf_sccbh_eval_each_path( sccbh ) );
-#  else
-      if ( duf_levinfo_path( PDI ) )
-        DOR( r, duf_eval_sccbh_all_and_summary( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
-#  endif
-    }
-  }
-  else
-  {
-    DUF_MAKE_ERROR( r, DUF_ERROR_SCCB );
-  }
-  DEBUG_ENDR( r );
-}
-#endif
 /*
  * make/evaluate sccb
  * ******************
