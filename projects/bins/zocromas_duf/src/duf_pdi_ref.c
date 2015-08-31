@@ -125,3 +125,29 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
 {
   return pdi ? pdi->maxdepth : 0;
 }
+/* pdi->topdepth + pdi->depth - pdi->topdepth === pdi->depth */
+int
+duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
+{
+  int rd = 0;
+
+  if ( duf_pdi_recursive( pdi ) )
+    rd = d - duf_pdi_maxdepth( pdi ) < delta; /* d - maxdepth < delta */
+  else
+    rd = duf_pdi_deltadepth( pdi, d ) <= delta; /* d - topdepth <= delta */
+  /* rd= duf_pdi_topdepth( pdi ) + duf_pdi_reldepth( pdi ) < duf_pdi_maxdepth( pdi ); */
+  return rd;
+}
+
+int
+duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta )
+{
+  return duf_pdi_is_good_depth_d( pdi, delta, pdi->depth );
+}
+
+void
+duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes )
+{
+  if ( pdi )
+    pdi->changes += changes;
+}

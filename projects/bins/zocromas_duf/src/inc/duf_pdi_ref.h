@@ -21,5 +21,14 @@ int duf_pdi_opendir( const duf_depthinfo_t * pdi );
 int duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od );
 
 
+
+int duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d );
+int duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta );
+
+
+void duf_pdi_reg_changes( duf_depthinfo_t * pdi, int changes );
+
+
+
 #endif
 
