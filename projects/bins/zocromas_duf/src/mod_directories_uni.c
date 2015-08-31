@@ -123,7 +123,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   /* filename for debug only */
   .leaf = {                     /* */
            .fieldset =          /* */
-           /* "'dirs-leaf' AS fieldset_id, " (* *) */
+           "'dirs-leaf' AS fieldset_id, " /* */
            "  fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
@@ -136,6 +136,8 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            ", fd.md5id AS md5id" /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
            ", md.md5sum1, md.md5sum2 " /* */
+           ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
+           ", fd.size AS filesize " /* */
            ,
            .selector2 =         /* */
            /* "SELECT %s " */
@@ -149,7 +151,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            },
   .node = {                     /* */
            .fieldset =          /* */
-           /* "'dirs-node' AS fieldset_id, " (* *) */
+           "'dirs-node' AS fieldset_id, " /* */
            " pt." DUF_SQL_IDNAME " AS dirid " /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */

@@ -95,8 +95,11 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
     {
       rpr = 0;
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
+#if 0
       dirid = duf_sql_column_long_long( pstmt, 0 );
-
+#else
+      dirid=DUF_GET_UFIELD2( dirid );
+#endif
       assert( DUF_GET_UFIELD2( dirid ) == dirid );
 
       DUF_TRACE( select, 1, "S:%s (%llu,'%s') ~ '%s'; dirid:%llu", sqlv, duf_levinfo_dirid_up( pdi ), truedirname,
