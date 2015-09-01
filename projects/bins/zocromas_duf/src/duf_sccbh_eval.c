@@ -78,21 +78,13 @@ int DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( duf_sccb_handle_t * sccbh ) 
   DEBUG_STARTR( r );
   if ( sccbh && SCCB )
   {
-    /* DOR( r, duf_scan_beginning_sql( sccb ) ); */
-
     DUF_TRACE( explain, 0, "scan targ; action title: %s", duf_uni_scan_action_title( SCCB ) );
     DUF_TRACE( action, 1, "%" DUF_ACTION_TITLE_FMT ": inited scan", duf_uni_scan_action_title( SCCB ) );
 
     {
       HCHANGES = 0;
-      /* - evaluate sccb for each string from duf_config->targ[cv] as path
-       * - store number of changes to *pchanges */
-#  if 0
-      DOR( r, duf_sccbh_eval_each_path( sccbh ) );
-#  else
       if ( duf_levinfo_path( PDI ) )
         DOR( r, duf_eval_sccbh_all_and_summary( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
-#  endif
     }
   }
   else
@@ -199,6 +191,7 @@ duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   }
   DEBUG_ENDR( r );
 }
+
 /*20150820.085447
  * call corresponding callback (by dir/regular)
  *   for each direntry from filesystem with necessary info:

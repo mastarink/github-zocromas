@@ -1,6 +1,12 @@
 find duf_sccb_eval.c
 sfind duf_sccb_eval.h
 
+tab sfind duf_pdi_sccb_eval.c
+sfind duf_pdi_sccb_eval.h
+
+tab sfind duf_sccb_eval_std.c
+sfind duf_sccb_eval_std.h
+
 tab sfind duf_sccbh_eval.c
 sfind duf_sccbh_eval.h
 

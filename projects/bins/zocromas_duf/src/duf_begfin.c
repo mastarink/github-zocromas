@@ -6,7 +6,6 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"
 #include "duf_status_ref.h"
 
 /* #include "duf_path2db.h" */

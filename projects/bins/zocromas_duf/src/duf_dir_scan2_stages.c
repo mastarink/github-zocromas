@@ -7,7 +7,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* DUF_TRACE */
+#include "duf_config_ref.h"     /* DUF_ACT_FLAG => DUF_OPTION */
 
 #include "duf_levinfo_ref.h"
 

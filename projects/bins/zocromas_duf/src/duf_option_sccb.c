@@ -16,6 +16,7 @@
 #include "duf_pdi.h"
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
+#include "duf_sccb_eval_std.h"
 
 #include "duf_levinfo_ref.h"
 #include "duf_maindb.h"
@@ -55,7 +56,11 @@ duf_option_$_list_sccb( int x )
 void
 duf_option_$_evaluate_sccb( const char *names )
 {
+#if 0
   ( void ) duf_evaluate_sccb_named_list( names, duf_action_table(  ) );
+#else
+  ( void ) duf_evaluate_sccb_named_list_std( names );
+#endif
 }
 
 void

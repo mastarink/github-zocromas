@@ -2,20 +2,10 @@
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
-#include <mastar/wrap/mas_memory.h>
+/* #include <mastar/wrap/mas_memory.h> */
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
-
-#include "duf_utils.h"
-
-#include "duf_config_ref.h"
-
-#include "duf_pdi.h"
-#include "duf_levinfo_ref.h"
-
-#include "duf_option_defs.h"
-#include "duf_option_find.h"
 
 #include "duf_begfin.h"
 #include "duf_sql2.h"

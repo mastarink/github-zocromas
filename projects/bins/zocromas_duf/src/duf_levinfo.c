@@ -12,6 +12,7 @@
 #include "duf_sql_field.h"
 
 #include "duf_levinfo_ref.h"
+#include "duf_levinfo_ref_def.h"
 #include "duf_levinfo_context.h"
 
 /* ###################################################################### */
@@ -76,7 +77,14 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
     /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
   }
   pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
+}
 
+/* 20150901.173353 */
+void
+duf_levinfo_init_level( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
+                        int is_leaf )
+{
+  duf_levinfo_init_level_d( pdi, itemname, dirid, ndirs, nfiles, is_leaf, pdi->depth );
 }
 
 int
