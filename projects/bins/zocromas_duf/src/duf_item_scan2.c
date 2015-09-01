@@ -23,6 +23,7 @@
 #include "duf_ufilter_bind.h"
 #include "duf_selector.h"
 
+#include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"
 
 #include "duf_sel_cb_leaf.h"
@@ -121,6 +122,9 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
 {
   DEBUG_STARTR( r );
   char *sql_selector = NULL;
+
+  /* TODO sql_set is needless here, accessible via duf_get_sql_set( SCCB, node_type ) */
+  assert( duf_get_sql_set( SCCB, node_type ) == sql_set );
 
 #ifdef MAS_TRACING
   const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_LEAF ? "node" : "UNDEF" );

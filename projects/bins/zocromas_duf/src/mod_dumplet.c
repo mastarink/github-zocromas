@@ -11,6 +11,7 @@
 
 #include "duf_config_ref.h"
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_updown.h"
 #include "duf_levinfo_ref.h"
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
@@ -153,9 +154,13 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   DOR( r, duf_pdi_init_from_dirid( &di, duf_levinfo_dirid( pdi ), 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */
         ) );
 
+  /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */
+  /* DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), 0,0, 1 (* is_leaf *)  ) ); */
+
   DUF_TRACE( mod, 2, "@@dumplet       %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
   DUF_TRACE( mod, 2, "@@@dumplet       %s : %s", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ) );
   duf_pdi_shut( &di );
+  assert( 0 );
 #endif
 
   DEBUG_ENDR( r );

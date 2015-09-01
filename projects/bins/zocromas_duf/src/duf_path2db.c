@@ -385,7 +385,7 @@ duf_path_component2db( duf_depthinfo_t * pdi, const char *dirname, int caninsert
     /* assert( ( s1[0] == '/' && s1[1] == 0 && dirname[0] == 0 ) || 0 == strcmp( s1, dirname ) ); */
   }
   /* duf_levinfo_godown_openat_dh: 1. check depth; 2. duf_levinfo_godown */
-  DOR( r, duf_levinfo_godown_openat_dh( pdi, /* 0 (* dirid *), */ dirname, /* 0 (* ndirs *) , 0 (* nfiles *) , */ 0 /* is_leaf */  ) );
+  DOR( r, duf_levinfo_godown_openat_dh( pdi, dirname, 0 /* is_leaf */  ) );
   /* DOR( r, duf_levinfo_openat_dh( pdi ) ); (* levinfo depth 1 level lower *) */
   DOR( r, duf_path_component_here2db( pdi, /* dirname, */ caninsert, sql_set /* node_selector2 */ , pparentid ) );
 
@@ -440,7 +440,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
  *   
  *     depth + 1
  * */
-        DOR( r, duf_path_component2db( pdi, path, caninsert, sql_set /* node_selector2 */ , &parentid ) );
+        DOR( r, duf_path_component2db( pdi, path, caninsert, sql_set, &parentid ) );
         if ( DUF_NOERROR( r ) )
           duf_levinfo_set_dirid( pdi, parentid );
         DUF_TRACE( path, 1, "@@@@#%-5llu (parentid)    [%40s]", parentid, path );

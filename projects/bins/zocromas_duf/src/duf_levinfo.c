@@ -51,7 +51,7 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
 
 /* 20150831.000000 */
 void
-duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname /*, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles*/,
+duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned long long dirid, unsigned long long ndirs, unsigned long long nfiles,
                           int is_leaf, int d )
 {
   assert( pdi );
@@ -61,15 +61,10 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname /*, unsign
 #if 0
   pdi->levinfo[d].lev_dh.dirid = dirid;
 #endif
-  
-#if 0
-  assert( dirid == 0 );
+  /* assert( dirid == 0 ); (* ?? *) */
   pdi->levinfo[d].dirid = dirid;
-  assert( ndirs == 0 );
   pdi->levinfo[d].numdir = ndirs;
-  assert( nfiles == 0 );
   pdi->levinfo[d].numfile = nfiles;
-#endif
   if ( itemname )
   {
     /* DUF_SHOW_ERROR( "BEFORE NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
@@ -77,4 +72,5 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname /*, unsign
     /* DUF_SHOW_ERROR( "NEW LEVEL %d %s %p", d, pdi->levinfo[d].itemname, pdi->levinfo[d].itemname ); */
   }
   pdi->levinfo[d].is_leaf = is_leaf ? 1 : 0;
+
 }

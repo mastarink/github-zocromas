@@ -51,7 +51,7 @@ duf_scan_fs_with2scanners_lower( struct dirent *de, duf_depthinfo_t * pdi, duf_s
 
   is_leaf = ( de->d_type != DT_DIR );
 /* --> */
-  DOR( r, duf_levinfo_godown( pdi, /* 0 (* dirid *), */ de->d_name, /* 0 (* ndirs *) , 0 (* nfiles *) , */ is_leaf ) );
+  DOR( r, duf_levinfo_godown( pdi, de->d_name, is_leaf ) );
   {
     DOR( r, duf_scan_fs_with_scanner_here( pdi, is_leaf ? scanner_dirent_reg2 : scanner_dirent_dir2 ) );
   }
