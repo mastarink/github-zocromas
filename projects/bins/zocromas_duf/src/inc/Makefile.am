@@ -42,6 +42,7 @@ noinst_HEADERS=duf.h \
 	duf_option_restore.h \
 	duf_options_enum.h duf_options.h duf_option_types.h \
 	duf_path2db.h \
+	duf_path2dirid.h    \
 	duf_tags.h \
 	duf_pdi.h duf_pdi_credel.h duf_pdi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
 	duf_prepare_actions.h \

@@ -22,17 +22,23 @@
 #include "duf_begfin.h"
 /* ###################################################################### */
 
-
+#if 0
 static int
 duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   DOR( r, duf_bind_ufilter_uni( pstmt, ttarg ) );
+#if 0
   duf_ufilter_delete( global_status.selection_bound_ufilter );
+#if 0
   global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
-
+#else
+  global_status.selection_bound_ufilter = duf_ufilter_clone( duf_config->pu );
+#endif
+#endif
   DEBUG_ENDR( r );
 }
+#endif
 
 int
 duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind_cb_t callback, const duf_argvc_t * ttarg )
@@ -92,7 +98,11 @@ duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title )
 {
   DEBUG_STARTR( r );
 
+#if 0
   DOR( r, duf_eval_sql_sequence_cb( ssql, title, bind ? duf_bind_ufilter : NULL, NULL ) );
+#else
+  DOR( r, duf_eval_sql_sequence_cb( ssql, title, bind ? duf_bind_ufilter_uni : NULL, NULL ) );
+#endif
 
   DEBUG_ENDR( r );
 }

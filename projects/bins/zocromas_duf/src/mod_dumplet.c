@@ -20,7 +20,8 @@
 
 #include "duf_mod_defs.h"
 
-#include "duf_path2db.h"
+/* #include "duf_path2db.h" */
+#include "duf_path2dirid.h"
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"

@@ -14,3 +14,6 @@ tab sfind duf_pdi_stmt.c
 sfind duf_pdi_stmt.h
 
 
+tab sfind duf_context.c
+sfind duf_context.h
+

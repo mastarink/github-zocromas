@@ -17,7 +17,9 @@ typedef struct
 {
   int actions_done;
   /* int selection_done; */
+#if 0
   duf_ufilter_t *selection_bound_ufilter;
+#endif
   duf_tmp_t *tmp;
 } duf_status_t;
 

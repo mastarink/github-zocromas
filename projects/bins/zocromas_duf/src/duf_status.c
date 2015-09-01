@@ -57,8 +57,10 @@ global_status_reset( void )
 {
   duf_tmp_delete( global_status.tmp );
   global_status.tmp = NULL;
+#if 0
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = NULL;
+#endif
 }
 
 __attribute__ ( ( constructor( 101 ) ) )

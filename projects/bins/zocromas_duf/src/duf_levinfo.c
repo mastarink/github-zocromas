@@ -6,6 +6,8 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_context.h"
+
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_context.h"
 
@@ -15,8 +17,8 @@
 
 
 
-void
-duf_levinfo_clear_li( duf_levinfo_t * pli )
+static void
+duf_li_clear( duf_levinfo_t * pli )
 {
   assert( pli );
   assert( pli->lev_dh.dfd == 0 );
@@ -30,7 +32,11 @@ duf_levinfo_clear_li( duf_levinfo_t * pli )
   if ( pli->fullpath )
     mas_free( pli->fullpath );
   pli->fullpath = NULL;
+#if 0  
   duf_levinfo_clear_context( pli );
+#else
+  duf_clear_context( &pli->context );
+#endif
   memset( pli, 0, sizeof( *pli ) );
 }
 
@@ -40,7 +46,7 @@ duf_levinfo_clear_level_d( duf_depthinfo_t * pdi, int d )
   assert( pdi );
   assert( pdi->levinfo );
   assert( d >= 0 );
-  duf_levinfo_clear_li( &pdi->levinfo[d] );
+  duf_li_clear( &pdi->levinfo[d] );
 }
 
 /* 20150831.000000 */

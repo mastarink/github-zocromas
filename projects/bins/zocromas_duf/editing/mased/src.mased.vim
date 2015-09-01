@@ -47,9 +47,9 @@ sfind duf_begfin.h
 tab sfind  duf_path2db.c
 sfind duf_path2db.h
 
+tab sfind  duf_path2dirid.c
+sfind duf_path2dirid.h
+
 tab sfind  duf_tags.c
 sfind duf_tags.h
-
-tab sfind duf_context.c
-sfind duf_context.h
 

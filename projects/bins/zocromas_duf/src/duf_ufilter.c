@@ -112,7 +112,7 @@ duf_ufilter_clone( const duf_ufilter_t * pusrc )
   }
   return pu;
 }
-
+#if 0
 duf_ufilter_t *
 duf_ufilter_create_from( const duf_ufilter_t * pusrc )
 {
@@ -123,3 +123,4 @@ duf_ufilter_create_from( const duf_ufilter_t * pusrc )
     duf_ufilter_copy( pu, pusrc );
   return pu;
 }
+#endif
