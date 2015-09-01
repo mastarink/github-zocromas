@@ -84,7 +84,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 
       /* filename from db same as duf_levinfo_itemname( pdi ) */
       assert( 0 == strcmp( filename, dfn ) );
-      DOR( r, duf_levinfo_dbopenat_dh( PDI, pstmt, 1 /* is_leaf */  ) );
+      /* DOR( r, duf_levinfo_pstmt2levinfo_dh( PDI, pstmt, 1 (* is_leaf *)  ) ); */
       {
         duf_levinfo_t *l = duf_levinfo_ptr( PDI );
 

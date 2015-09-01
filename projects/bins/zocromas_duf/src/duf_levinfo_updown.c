@@ -1,3 +1,4 @@
+/* #include <string.h> */
 #include <assert.h>
 
 
@@ -106,6 +107,48 @@ duf_levinfo_godown_dnn( duf_depthinfo_t * pdi, unsigned long long dirid, const c
   DEBUG_ENDR( r );
 }
 
+static int
+duf_levinfo_godown_db( duf_depthinfo_t * pdi, int is_leaf, duf_sqlite_stmt_t * pstmt )
+{
+  DEBUG_STARTR( r );
+
+  assert( pdi );
+
+  DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
+  if ( DUF_NOERROR( r ) )
+  {
+    int d;
+
+    d = ++pdi->depth;
+    assert( pdi->depth >= 0 );
+    assert( d >= 0 );
+    assert( d == pdi->depth );
+    /* assume only level 0 may have dirid==0 -- AND: simply dirid not set */
+    /* assert( d == 0 || ( d > 0 && dirid  ) ); */
+
+    /*!! if ( d <= pdi->maxdepth ) */
+    {
+      assert( pdi->levinfo );
+
+      assert( duf_levinfo_dirid( pdi ) == 0 );
+      assert( !pdi->levinfo[d].itemname );
+      DOR( r, duf_levinfo_dbinit_level_d( pdi, pstmt, is_leaf, d ) );
+      assert( duf_levinfo_dirid( pdi ) != 0 );
+
+      DUF_TRACE( explain, 2, "level down: %d; ≪%s≫  [%s]", d, is_leaf ? "leaf" : "node", duf_levinfo_itemshowname( pdi ) );
+      if ( is_leaf )
+        DUF_TRACE( scan, 12, "  " DUF_DEPTH_PFMT ": scan leaf    =>           - %s", duf_pdi_depth( pdi ), duf_levinfo_itemshowname( pdi ) );
+      else
+      {
+        duf_levinfo_countdown_dirs( pdi );
+        DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node:   =>  by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
+                   duf_levinfo_itemshowname( pdi ) );
+      }
+    }
+  }
+  DEBUG_ENDR( r );
+}
+
 int
 duf_levinfo_godown( duf_depthinfo_t * pdi, const char *itemname, int is_leaf )
 {
@@ -136,40 +179,21 @@ duf_levinfo_godown_openat_dh( duf_depthinfo_t * pdi, const char *itemname, int i
   return duf_levinfo_godown_openat_dnn_dh( pdi, 0 /* dirid */ , itemname, 0 /* ndirs */ , 0 /*nfiles */ , is_leaf );
 }
 
-static int
-duf_levinfo_godown_dbopenat_dnn_dh( duf_depthinfo_t * pdi, unsigned long long dirid, const char *itemname, unsigned long long ndirs,
-                                    unsigned long long nfiles, int is_leaf, duf_sqlite_stmt_t * pstmt )
+int
+duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, int is_leaf, duf_sqlite_stmt_t * pstmt )
 {
   DEBUG_STARTR( r );
 
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
   if ( r >= 0 )
   {
-    assert( dirid == 0 );
-#if 0
-    DOR_NOE( r, duf_levinfo_godown_dnn( pdi, dirid, itemname, ndirs, nfiles, is_leaf ), DUF_ERROR_TOO_DEEP );
-#else
-    /* DUF_GET_UFIELD2( dirid ) needless! can be 0 */
-    DOR_NOE( r, duf_levinfo_godown_dnn( pdi, DUF_GET_UFIELD2( dirid ), DUF_GET_SFIELD2( dfname ), DUF_GET_UFIELD2( ndirs ), DUF_GET_UFIELD2( nfiles ), is_leaf ),
-             DUF_ERROR_TOO_DEEP );
-#endif
+    DOR_NOE( r, duf_levinfo_godown_db( pdi, is_leaf, pstmt ), DUF_ERROR_TOO_DEEP );
     {
       int rd;
 
       rd = r;
       /* do same as duf_levinfo_openat_dh, but from db: */
-      DUF_E_NO( DUF_ERROR_OPENAT_ENOENT );
-      DOR( r, duf_levinfo_dbopenat_dh( pdi, pstmt, is_leaf ) );
-      DUF_E_YES( DUF_ERROR_OPENAT_ENOENT );
 
-      if ( rd >= 0 && duf_levinfo_item_deleted( pdi ) )
-        DUF_CLEAR_ERROR( r, DUF_ERROR_OPENAT_ENOENT );
-
-      if ( duf_levinfo_item_deleted( pdi ) )
-      {
-        DUF_TRACE( fs, 0, "@@(%d;%d;D:%d)? levinfo u/d openated %s; dfd:%d", r, rd, duf_levinfo_item_deleted( pdi ), duf_levinfo_itemshowname( pdi ),
-                   duf_levinfo_dfd( pdi ) );
-      }
       if ( r < 0 && rd >= 0 )
         duf_levinfo_goup( pdi );
     }
@@ -177,12 +201,6 @@ duf_levinfo_godown_dbopenat_dnn_dh( duf_depthinfo_t * pdi, unsigned long long di
   DEBUG_ENDR_NOE( r, DUF_ERROR_TOO_DEEP );
 }
 
-int
-duf_levinfo_godown_dbopenat_dh( duf_depthinfo_t * pdi, int is_leaf, duf_sqlite_stmt_t * pstmt )
-{
-  return duf_levinfo_godown_dbopenat_dnn_dh( pdi, 0 /* dirid */ , NULL /* itemname */ , 0 /* ndirs */ ,
-                                             0 /* nfiles */ , is_leaf, pstmt );
-}
 
 int
 duf_levinfo_goup( duf_depthinfo_t * pdi )
