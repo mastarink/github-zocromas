@@ -5,18 +5,18 @@
 #  include "sql_beginning_types.h"
 
 
-typedef int ( *duf_scan_hook_init_t ) ( duf_depthinfo_t * pdi );
+/* typedef int ( *duf_scan_hook_init_t ) ( duf_depthinfo_t * pdi ); */
 
-typedef int ( *duf_scanner_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned long long pathid, */ duf_depthinfo_t * pdi );
+typedef int ( *duf_scanner_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* this is callback of type: duf_scan_hook_dir_t : */
-typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, /* unsigned long long pathid, */ duf_depthinfo_t * pdi );
+/* typedef int ( *duf_scan_hook2_dir_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi ); */
 
 /* this is callback of type: duf_scan_hook_file_t : */
 typedef int ( *duf_scan_hook2_file_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 typedef int ( *duf_scan_hook2_item_t ) ( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
-typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, /* const struct stat * pst_file, */ duf_depthinfo_t * pdi );
+/* typedef int ( *duf_scan_hook2_file_fd_t ) ( duf_sqlite_stmt_t * pstmt, int fd, duf_depthinfo_t * pdi ); */
 
 /* typedef int ( *duf_scan_hook2_dirent_t ) ( duf_depthinfo_t * pdi ); */
 
@@ -35,7 +35,7 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_hand
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
 
-typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
+/* typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s (* duf_sccb_handle_t *)  * sccbh ); */
 
 #  if 0
 
