@@ -131,24 +131,32 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
   assert( duf_levinfo_dbstat( pdi ) );
 
+#if 0
   {
-    duf_depthinfo_t DUF_UNUSED di = {.depth = -1,
-      .seq = 0,
-      .levinfo = NULL,
-      .pu = NULL,
-      .opendir = 1,
-    };
     char *path = NULL;
 
-    DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL, 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */  ) );
-    path = duf_dirid2path( &di, duf_levinfo_dirid( pdi ), &r );
+    path = duf_dirid2path( duf_levinfo_dirid( pdi ), &r );
+    DUF_TRACE( mod, 2, "@@dumplet       %s", path );
     DUF_TRACE( mod, 2, "@@@dumplet       %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
     DUF_TRACE( mod, 2, "@@@dumplet id2p: %s", path );
     mas_free( path );
     path = NULL;
-    duf_pdi_shut( &di );
     assert( 0 );
   }
+#else
+  duf_depthinfo_t DUF_UNUSED di = {.depth = -1,
+    .seq = 0,
+    .levinfo = NULL,
+    .pu = NULL,
+    .opendir = 1,
+  };
+  DOR( r, duf_pdi_init_from_dirid( &di, duf_levinfo_dirid( pdi ), 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */
+        ) );
+
+  DUF_TRACE( mod, 2, "@@dumplet       %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
+  DUF_TRACE( mod, 2, "@@@dumplet       %s : %s", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ) );
+  duf_pdi_shut( &di );
+#endif
 
   DEBUG_ENDR( r );
 }

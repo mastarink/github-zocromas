@@ -18,8 +18,9 @@ typedef enum
 
 typedef struct duf_dirhandle_s
 {
+#if 0
   unsigned long long dirid;
-
+#endif
   int dfd;
   int rs;
   int rdb;

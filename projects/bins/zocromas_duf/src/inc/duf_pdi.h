@@ -4,8 +4,10 @@
 #  include "duf_levinfo_types.h"
 
 
-int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set, int recursive,
+int DUF_WRAPPED( duf_pdi_init ) ( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set, int frecursive,
                                   int opendir );
+int duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, unsigned long long dirid, int caninsert, const duf_sql_set_t * sql_set, int frecursive,
+                             int opendir );
 
 #  if 0
 int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_ufilter_t * pu, const char *node_selector2, int recursive,

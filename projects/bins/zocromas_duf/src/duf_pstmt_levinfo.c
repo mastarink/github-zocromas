@@ -28,7 +28,9 @@ duf_pstmt_levinfo_godown_dbopenat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t
   DUF_TRACE( scan, 10, "before duf_levinfo_godown() : dirID:%llu", DUF_GET_UFIELD2( dirid ) );
   DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
-  DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, 0, DUF_GET_SFIELD2( dfname ), DUF_GET_UFIELD2( ndirs ), DUF_GET_UFIELD2( nfiles ), is_leaf, pstmt ) );
+  DOR( r,
+       duf_levinfo_godown_dbopenat_dh( pdi, /* 0 (* dirid?!? *) , */ DUF_GET_SFIELD2( dfname ),
+                                       /* DUF_GET_UFIELD2( ndirs ), DUF_GET_UFIELD2( nfiles ), */ is_leaf, pstmt ) );
 
   assert( r < 0 || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
 

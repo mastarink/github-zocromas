@@ -18,6 +18,7 @@
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_credel.h"
 #include "duf_context.h"
+#include "duf_path2dirid.h"
 
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
@@ -52,6 +53,20 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     if ( real_path )
       DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */  ) );
   }
+  DEBUG_ENDR( r );
+}
+
+int
+duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, unsigned long long dirid, int caninsert, const duf_sql_set_t * sql_set, int frecursive, int opendir )
+{
+  DEBUG_STARTR( r );
+  char *path = NULL;
+
+  path = duf_dirid2path( dirid, &r );
+  DUF_TRACE( temp, 0, "%d: %s", r, path );
+  DOR( r, duf_pdi_init( pdi, path, caninsert, sql_set, frecursive, opendir ) );
+  DUF_TRACE( temp, 0, "%d: %s / %s", r, path, duf_levinfo_path( pdi ) );
+  mas_free( path );
   DEBUG_ENDR( r );
 }
 

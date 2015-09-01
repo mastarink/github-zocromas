@@ -128,7 +128,7 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
 }
 
 char *
-duf_dirid2path( duf_depthinfo_t * pdi, unsigned long long dirid, int *pr )
+duf_dirid2path( unsigned long long dirid, int *pr )
 {
   char *path = NULL;
 
@@ -137,27 +137,40 @@ duf_dirid2path( duf_depthinfo_t * pdi, unsigned long long dirid, int *pr )
   int done = 0;
   int depth = 0;
 
+  duf_depthinfo_t DUF_UNUSED di = {.depth = -1,
+    .seq = 0,
+    .levinfo = NULL,
+    .pu = NULL,
+    .opendir = 1,
+  };
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL, 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */  ) );
+
   do
   {
     char *name = NULL;
 
-    name = duf_dirid2name_existed( pdi, dirid, &dirid, &r );
+    name = duf_dirid2name_existed( &di, dirid, &dirid, &r );
     DUF_TRACE( temp, 0, "@@%u: #%llu %s", depth, dirid, name );
-    if ( name && *name )
+    if ( name )
     {
       char *t;
 
       t = path;
-      path = mas_strdup( "/" );
-      path = mas_strcat_x( path, name );
+      /* (name && !*name) means "/" */
+      path = mas_strdup( name );
+
+      path = mas_strcat_x( path, "/" );
       path = mas_strcat_x( path, t );
       mas_free( t );
       depth++;
     }
     else
       done = 1;
+    mas_free( name );
   }
   while ( !done );
+  duf_pdi_shut( &di );
+
   if ( pr )
     *pr = r;
   DEBUG_ENDS( path );
