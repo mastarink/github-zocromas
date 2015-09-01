@@ -1,6 +1,9 @@
 find duf_pdi.c
 sfind duf_pdi.h
 
+tab sfind duf_pdi_credel.c
+sfind duf_pdi_credel.h
+
 tab sfind duf_pdi_ref.c
 sfind duf_pdi_ref.h
 

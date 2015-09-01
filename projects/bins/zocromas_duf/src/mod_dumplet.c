@@ -145,7 +145,7 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     DUF_TRACE( mod, 2, "@@@dumplet id2p: %s", path );
     mas_free( path );
     path = NULL;
-    duf_pdi_close( &di );
+    duf_pdi_shut( &di );
     assert( 0 );
   }
 

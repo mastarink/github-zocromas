@@ -16,7 +16,7 @@
 
 
 void
-duf_clear_context( duf_context_t * pcontext )
+duf_clear_context( duf_levinfo_context_t * pcontext )
 {
   if ( pcontext )
   {
@@ -31,13 +31,13 @@ duf_clear_context( duf_context_t * pcontext )
 }
 
 void *
-duf_context( const duf_context_t * pcontext )
+duf_context( const duf_levinfo_context_t * pcontext )
 {
   return pcontext ? pcontext->ptr : NULL;
 }
 
 void
-duf_set_context( duf_context_t * pcontext, void *ptr )
+duf_set_context( duf_levinfo_context_t * pcontext, void *ptr )
 {
   duf_clear_context( pcontext );
   assert( pcontext );
@@ -45,7 +45,7 @@ duf_set_context( duf_context_t * pcontext, void *ptr )
 }
 
 void
-duf_set_context_destructor( duf_context_t * pcontext, duf_void_voidp_t destr )
+duf_set_context_destructor( duf_levinfo_context_t * pcontext, duf_void_voidp_t destr )
 {
   assert( pcontext );
   pcontext->destructor = destr;

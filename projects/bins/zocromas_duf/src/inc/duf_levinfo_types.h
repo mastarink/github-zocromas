@@ -31,8 +31,20 @@ typedef struct
 {
   void *ptr;
   duf_void_voidp_t destructor;
-} duf_context_t;
+} duf_levinfo_context_t;
 
+typedef struct
+{
+  unsigned long long dirent_content2;
+} duf_modcnts_t;
+
+typedef struct
+{
+  int *id;
+  duf_sqlite_stmt_t *pstmt;
+} duf_idstmt_t;
+
+/********************************************************************************************/
 
 typedef struct
 {
@@ -47,21 +59,10 @@ typedef struct
   long numfile;
   char *fullpath;
   char *itemname;
-  duf_context_t context;
+  duf_levinfo_context_t context;
   duf_dirhandle_t lev_dh;
 } duf_levinfo_t;
 
-
-typedef struct
-{
-  unsigned long long dirent_content2;
-} duf_modcnts_t;
-
-typedef struct
-{
-  int *id;
-  duf_sqlite_stmt_t *pstmt;
-} duf_idstmt_t;
 
 typedef struct duf_depthinfo_s
 {
@@ -80,7 +81,7 @@ typedef struct duf_depthinfo_s
   unsigned long long seq_node;
   duf_items_t items;
   const duf_ufilter_t *pu;
-  duf_context_t context;
+  duf_levinfo_context_t context;
   int num_idstatements;
   /* duf_sqlite_stmt_t **statements; */
   duf_idstmt_t *idstatements;

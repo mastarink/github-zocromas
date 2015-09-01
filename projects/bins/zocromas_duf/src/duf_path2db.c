@@ -535,7 +535,7 @@ duf_path2dirid( const char *path, const duf_sql_set_t * sql_set, int *pr )
     if ( DUF_NOERROR( rpr ) )
       dirid = duf_levinfo_dirid( &di );
     /* xchanges = di.changes; --- needless!? */
-    duf_pdi_close( &di );
+    duf_pdi_shut( &di );
   }
   mas_free( real_path );
   if ( pr )

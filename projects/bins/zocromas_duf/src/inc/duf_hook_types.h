@@ -35,7 +35,7 @@ typedef int ( *duf_str_cb2_t ) ( duf_sqlite_stmt_t * pstmt, struct duf_sccb_hand
  * duf_sel_cb_node		:		, sel_cb_udata_unused
 */
 
-/* typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s (* duf_sccb_handle_t *)  * sccbh ); */
+typedef int ( *duf_sel_cb2_t ) ( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb, struct duf_sccb_handle_s /* duf_sccb_handle_t */  * sccbh );
 
 #  if 0
 

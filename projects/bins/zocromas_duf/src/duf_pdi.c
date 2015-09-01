@@ -29,17 +29,6 @@
 /* ###################################################################### */
 
 
-duf_depthinfo_t *
-duf_pdi_create( void )
-{
-  duf_depthinfo_t *pdi;
-
-  pdi = mas_malloc( sizeof( duf_depthinfo_t ) );
-  memset( pdi, 0, sizeof( duf_depthinfo_t ) );
-
-  return pdi;
-}
-
 int
 duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
@@ -100,7 +89,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, con
   /* frec = pdi && !frecursive ? duf_pdi_recursive( pdi ) : frecursive; */
   frec = pdi && frecursive < 0 ? duf_pdi_recursive( pdi ) : frecursive;
   od = pdi && pdi->opendir;
-  duf_pdi_close( pdi );
+  duf_pdi_shut( pdi );
   pdi->pu = pu;
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , sql_set /* node_selector2 */ , frec /* frecursive */ ,
                                         od /* opendir */  ) );
@@ -147,7 +136,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* 
 }
 
 int
-duf_pdi_close( duf_depthinfo_t * pdi )
+duf_pdi_shut( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
@@ -155,6 +144,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   if ( pdi->inited )
   {
     duf_clear_context( &pdi->context );
+    duf_levinfo_delete( pdi );
 
     for ( int i = 0; /* r>=0 && */ i < pdi->num_idstatements; r = 0, i++ )
       DOR( r, duf_pdi_finalize_idstmt( pdi, i ) );
@@ -166,7 +156,6 @@ duf_pdi_close( duf_depthinfo_t * pdi )
     /* pdi->xstatements = NULL;      */
 
     pdi->num_idstatements = 0;
-    duf_levinfo_delete( pdi );
     /* global_status.changes += pdi->changes; */
     pdi->inited = 0;
     pdi->opendir = 0;

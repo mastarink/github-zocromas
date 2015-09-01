@@ -12,7 +12,7 @@
 
 
 #include "duf_dbg.h"
-#include "duf_pdi.h"
+#include "duf_pdi_credel.h"
 
 #include "duf_ufilter.h"
 
@@ -125,9 +125,7 @@ duf_cfg_delete( duf_config_t * cfg )
   if ( cfg )
   {
 /* xchanges = di.changes; --- needless!? */
-    duf_pdi_close( cfg->pdi );
-    mas_free( cfg->pdi );
-    cfg->pdi = NULL;
+    duf_pdi_kill( &cfg->pdi );
 
     duf_ufilter_delete( cfg->pu );
     cfg->pu = NULL;
