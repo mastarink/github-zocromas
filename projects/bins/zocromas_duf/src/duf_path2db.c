@@ -255,8 +255,7 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_s
           {
             /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dirname='%s'", parentid, duf_levinfo_itemshowname( pdi ) ); */
             DUF_SHOW_ERROR( "(2) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
-            if ( rpr >= 0 )
-              DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
+            DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
           }
           assert( dirid );
           DUF_TRACE( collect, 1, "inserted (SQLITE_OK) dirid=%llu:'%s'", dirid, duf_levinfo_itemshowname( pdi ) );
