@@ -11,12 +11,23 @@
 #  define DUF_CONSTRAINT_IGNORE_NO DUF_FALSE
 #  define DUF_CONSTRAINT_IGNORE_YES DUF_TRUE
 
-#    define DUF_DBPREF "main."
+#  define DUF_DBADMALIAS "dufadm"
+
+#  define DUF_DBPREF "main."
 #  ifdef MAS_SPLIT_DB
-#    define DUF_DBADMPREF "adm."
+#    define DUF_DBADMPREF DUF_DBADMALIAS "."
 #  else
 #    define DUF_DBADMPREF DUF_DBPREF
 #  endif
+
+#  define DUF_DBTEMPALIAS "duftemp"
+
+#  ifdef MAS_SPLIT_DB
+#    define DUF_DBTEMPPREF DUF_DBTEMPALIAS "."
+#  else
+#    define DUF_DBTEMPPREF DUF_DBPREF
+#  endif
+
 
 /* ###################################################################### */
 

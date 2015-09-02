@@ -39,7 +39,7 @@ duf_dirname_insert_path_table( duf_depthinfo_t * pdi, int *pchanges )
   int changes = 0;
 
   static const char *sql =
-        "INSERT OR IGNORE INTO " DUF_DBPREF "paths ( dev, inode, dirname, parentid ) VALUES (:Dev, :iNode, :dirName, :parentdirID )";
+        "INSERT OR IGNORE INTO " DUF_SQL_TABLES_PATHS_FULL " ( dev, inode, dirname, parentid ) VALUES (:Dev, :iNode, :dirName, :parentdirID )";
 
 
   DUF_SQL_START_STMT( pdi, insert_path_table, sql, r, pstmt );
@@ -166,7 +166,7 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * 
           ", tf.numfiles AS nfiles" /* */
           ", td.numdirs AS ndirs  " /*      */
           ,
-    .selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
+    .selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
           " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
     " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dirname=:dirName)"
@@ -177,7 +177,7 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * 
         ", tf.numfiles AS nfiles" /* */
         ", td.numdirs AS ndirs  " /*      */
         ;
-  const char *def_node_selector2 = " FROM " DUF_DBPREF "paths AS pt " /* */
+  const char *def_node_selector2 = " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
         " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL " AS td ON (td.pathid=pt." DUF_SQL_IDNAME ") " /*      */
         " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.pathid=pt." DUF_SQL_IDNAME ") " /*      */
         " WHERE " DUF_DBPREF "pt.ParentId=:parentdirID AND (:dirName IS NULL OR dirname=:dirName)";

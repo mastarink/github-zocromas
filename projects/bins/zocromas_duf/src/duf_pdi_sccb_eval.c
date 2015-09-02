@@ -88,6 +88,21 @@ duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, 
 }
 
 int
+duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, const char *arg, duf_ufilter_t * pu )
+{
+  DEBUG_STARTR( r );
+  duf_argvc_t targ = {.argc = 0,.argv = NULL };
+  if ( !arg )
+    arg = duf_levinfo_path( pdi );
+  targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
+
+  DOR( r, duf_evaluate_pdi_sccb_name( name, table, pdi, &targ, pu ) );
+
+  mas_del_argv( targ.argc, targ.argv, 0 );
+  DEBUG_ENDR( r );
+}
+
+int
 duf_evaluate_pdi_sccb_named_list( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
                                   duf_ufilter_t * pu )
 {

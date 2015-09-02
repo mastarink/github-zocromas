@@ -11,6 +11,6 @@ int duf_evaluate_pdi_sccb_namen( const char *name, size_t len, const duf_action_
                                  duf_ufilter_t * pu );
 int duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu );
 
+int duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, const char *arg, duf_ufilter_t * pu );
 
 #endif
-

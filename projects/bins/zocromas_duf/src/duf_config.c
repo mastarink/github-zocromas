@@ -55,6 +55,7 @@ duf_cfg_create( void )
   }
   cfg->db.main.name = mas_strdup( "duf-main.db" );
   cfg->db.adm.name = mas_strdup( "duf-adm.db" );
+  cfg->db.temp.name = mas_strdup( "duf-temp.db" );
   cfg->cli.trace.any = cfg->cli.trace.error += 1;
   /* cfg->cli.trace.fs += 1; */
   cfg->cli.trace.temp += 1;
@@ -151,11 +152,17 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.adm.name );
     cfg->db.adm.name = NULL;
 
-    mas_free( cfg->db.opened_name );
-    cfg->db.opened_name = NULL;
-
     mas_free( cfg->db.adm.fpath );
     cfg->db.adm.fpath = NULL;
+
+    mas_free( cfg->db.temp.name );
+    cfg->db.temp.name = NULL;
+
+    mas_free( cfg->db.temp.fpath );
+    cfg->db.temp.fpath = NULL;
+
+    mas_free( cfg->db.opened_name );
+    cfg->db.opened_name = NULL;
 
     mas_free( cfg->save.path );
     cfg->save.path = NULL;

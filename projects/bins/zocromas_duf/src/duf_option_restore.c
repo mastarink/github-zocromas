@@ -193,6 +193,7 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_STR( codeval, ptr, TRACE_FILE, file, cli.trace.output, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, DB_DIRECTORY, dir, db, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_ADM, name, db.adm, maxlen );
+  DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_ADM, name, db.temp, maxlen );
   DUF_OPTION_RESTORE_STR( codeval, ptr, DB_NAME_MAIN, name, db.main, maxlen );
   /* DUF_OPTION_RESTORE_STR( FILE, file, cli.trace ); */
 }

@@ -26,8 +26,10 @@ const duf_longval_extended_table_t optable_str = {
   {
    {.o = {DO_Q( "db-directory" ) /*     */ , DO_A_R /* */ , DO_V( DB_DIRECTORY )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, db.dir ) /*                                                      */ , DO_H( db directory ) /*                     */ },
-   {.o = {DO_Q( "db-name-adm" ) /*      */ , DO_A_R /* */ , DO_V( DB_NAME_ADM )} /*        */ , DO_CL( CONTROL ) /* */ ,
+   {.o = {DO_Q( "db-adm-name" ) /*      */ , DO_A_R /* */ , DO_V( DB_NAME_ADM )} /*        */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, db.adm.name ) /*                                                 */ , DO_H( db name adm ) /*                      */ },
+   {.o = {DO_Q( "db-temp-name" ) /*      */ , DO_A_R /* */ , DO_V( DB_NAME_TEMP )} /*        */ , DO_CL( CONTROL ) /* */ ,
+    /*      */ DO_OC( STR, db.temp.name ) /*                                                 */ , DO_H( db name temp ) /*                      */ },
    {.o = {DO_Q( "db-name" ) /*          */ , DO_A_R /* */ , DO_V( DB_NAME_MAIN )} /*       */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, db.main.name ) /*                                                */ , DO_H( db name main ) /*                     */ },
    {.o = {DO_Q( "open-db" ) /*          */ , DO_A_N /*  */ , DO_V( DB_OPEN )} /*           */ , DO_CL( NODESC ) /*  */

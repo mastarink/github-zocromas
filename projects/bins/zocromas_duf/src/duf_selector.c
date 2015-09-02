@@ -74,12 +74,6 @@ duf_selector2sql( const duf_sql_set_t * sql_set )
   return sql;
 }
 
-/*
-SELECT COUNT(*) AS nf  FROM main.paths AS pt  LEFT JOIN common_pathtot_dirs  AS td ON (td.Pathid=pt.rowid)  LEFT JOIN common_pathtot_files AS tf ON (tf.Pathid=pt.rowid)  WHERE pt.ParentId = :parentdirID  AND ( :dirName IS NULL OR dirname=:dirName )
-SELECT COUNT(*) AS nf  FROM paths AS p 
-
-*/
-
 /* 20150819.133525 */
 char *
 duf_selector_total2sql( const duf_sql_set_t * sql_set )

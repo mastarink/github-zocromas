@@ -21,6 +21,9 @@
 
 #include "duf_mod_defs.h"
 
+#include "duf_sccb_eval_std.h"
+
+
 /* #include "duf_path2db.h" */
 #include "duf_path2dirid.h"
 
@@ -157,8 +160,13 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */
   DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), 1 /* is_leaf */  ) );
   {
+    duf_ufilter_t uf DUF_UNUSED = {.md5id = pdi->pu->md5id };
+
     DUF_TRACE( mod, 2, "@@dumplet       %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
     DUF_TRACE( mod, 2, "@@@dumplet       %s : %s", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ) );
+
+    /* "selected" tables should be different!? */
+    /* DOR( r, duf_evaluate_pdi_sccb_std( "tree", &di, NULL (* &uf *)  ) ); */
   }
   duf_pdi_shut( &di );
   assert( 0 );

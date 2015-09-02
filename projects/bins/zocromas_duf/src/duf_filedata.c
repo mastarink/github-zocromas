@@ -20,6 +20,8 @@
 #include "duf_sql.h"
 #include "duf_sql2.h"
 
+#include "sql_beginning_tables.h"
+
 
 /* ###################################################################### */
 #include "duf_filedata.h"
@@ -30,7 +32,9 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
 {
   int rpr = 0;
   unsigned long long dataid = 0;
-  const char *sql = "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_DBPREF "filedatas INDEXED BY filedatas_uniq WHERE dev=:Dev AND inode=:iNode";
+  const char *sql =
+        "SELECT " DUF_SQL_IDNAME " AS dataid FROM " DUF_SQL_TABLES_FILEDATAS_FULL
+        " INDEXED BY " DUF_SQL_TABLES_FILEDATAS "_uniq WHERE dev=:Dev AND inode=:iNode";
 
   DEBUG_START(  );
 
@@ -63,6 +67,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
 {
   int rpr = 0;
   unsigned long long dataid = 0;
+
   /* const struct stat *pst_file = NULL; */
 
   DEBUG_START(  );
@@ -74,7 +79,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
 
     if ( !duf_config->cli.disable.flag.insert )
     {
-      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "filedatas  " /* */
+      const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_FILEDATAS_FULL /* */
             " (dev,   inode,  size,  mode,  nlink,  uid,  gid,  blksize,  blocks,  atim,  atimn,  mtim,  mtimn,  ctim,  ctimn) " /* */
             " VALUES "          /* */
             " (:Dev, :iNode, :Size, :Mode, :nLink, :UID, :GID, :blkSize, :Blocks, " /* */
@@ -82,7 +87,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
 
       DUF_SQL_START_STMT( pdi, insert_filedata, sql, rpr, pstmt );
       DUF_TRACE( insert, 0, "S:%s", sql );
-      
+
       DUF_SQL_BIND_LL( Dev, duf_levinfo_stat_dev( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( iNode, duf_levinfo_stat_inode( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( Mode, duf_levinfo_stat_mode( pdi ), rpr, pstmt );
@@ -92,11 +97,11 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
       DUF_SQL_BIND_LL( GID, duf_levinfo_stat_gid( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( blkSize, duf_levinfo_stat_blksize( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( Blocks, duf_levinfo_stat_blocks( pdi ), rpr, pstmt );
- 
+
       DUF_SQL_BIND_LL( aTim, duf_levinfo_stat_asec( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( mTim, duf_levinfo_stat_msec( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( cTim, duf_levinfo_stat_csec( pdi ), rpr, pstmt );
-     
+
       DUF_SQL_BIND_LL( aTimn, duf_levinfo_stat_ansec( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( mTimn, duf_levinfo_stat_mnsec( pdi ), rpr, pstmt );
       DUF_SQL_BIND_LL( cTimn, duf_levinfo_stat_cnsec( pdi ), rpr, pstmt );
@@ -110,7 +115,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
     {
       if ( ( rpr == DUF_SQL_CONSTRAINT || !rpr ) && !changes )
       {
-        dataid = duf_pdistat2file_dataid_existed( pdi,  pr );
+        dataid = duf_pdistat2file_dataid_existed( pdi, pr );
       }
       else if ( !rpr /* assume SQLITE_OK */  && changes )
       {

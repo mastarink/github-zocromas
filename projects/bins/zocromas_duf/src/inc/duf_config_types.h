@@ -17,6 +17,7 @@ typedef struct
   char *dir;
   duf_db_config_t main;
   duf_db_config_t adm;
+  duf_db_config_t temp;
   char *opened_name;
 } duf_dbs_config_t;
 

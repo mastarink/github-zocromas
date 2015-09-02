@@ -2,3 +2,4 @@
 --enable-tracing
 --enable-wrap-func
 --enable-tracing-options
+--enable-split-db

@@ -46,7 +46,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
           "UPDATE " DUF_DBPREF "sd5 SET dup2cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_DBPREF "sd5 AS sd " /* */
-          " JOIN " DUF_DBPREF "filedatas AS fd ON (fd.sd5id=sd." DUF_SQL_IDNAME ") " /* */
+          " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.sd5id=sd." DUF_SQL_IDNAME ") " /* */
           " WHERE " DUF_DBPREF "sd5." DUF_SQL_IDNAME "=sd." DUF_SQL_IDNAME ")" /* */
           /* " WHERE " DUF_DBPREF "sd5.sd5sum1=sd.sd5sum1 AND " DUF_DBPREF "sd5.sd5sum2=sd.sd5sum2)" (* *) */
           ,
@@ -86,8 +86,8 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            ,
            .selector2 =         /* */
            /* "SELECT %s " */
-           " FROM " DUF_DBPREF "filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
@@ -101,16 +101,6 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            " 1 "                /* */
            ,
            .count_aggregate = "distinct fd." DUF_SQL_IDNAME
-#if 0
-           ,
-           .selector_total2 =   /* */
-           " FROM " DUF_DBPREF "filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-           " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
-           " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
-           ,                    /* */
-#endif
            }
   ,
   .node = {.fieldset =          /* */
@@ -122,7 +112,7 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           " FROM " DUF_DBPREF "paths AS pt " /* */
+           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0
@@ -314,7 +304,7 @@ sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
 
       if ( !duf_config->cli.disable.flag.update )
       {
-        DOR( r, duf_sql( "UPDATE " DUF_DBPREF "filedatas SET sd5id=%llu WHERE " DUF_SQL_IDNAME "=%lld", &changes, sd5id, filedataid ) );
+        DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET sd5id=%llu WHERE " DUF_SQL_IDNAME "=%lld", &changes, sd5id, filedataid ) );
         duf_pdi_reg_changes( pdi, changes );
       }
     }

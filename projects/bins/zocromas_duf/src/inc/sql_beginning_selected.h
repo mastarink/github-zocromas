@@ -1,30 +1,31 @@
 #ifndef SQL_BEGINNING_SELECTED_H
 #  define SQL_BEGINNING_SELECTED_H
 
-#include "sql_beginning_tables.h"
+#  include "sql_beginning_tables.h"
 
-/* #  define DUF_SQL_SELECTED_TEMPORARY "TEMPORARY" */
-#  ifdef DUF_SQL_SELECTED_TEMPORARY
-#    define DUF_SQL_SELECTED_TEMPORARY_STRING DUF_SQL_SELECTED_TEMPORARY
-#  else
-#    define DUF_SQL_SELECTED_TEMPORARY_STRING
-#  endif
 
 #  define DUF_SQL_SELECTED_TMP_FILENAMES  "t_selected_filenames"
 #  define DUF_SQL_SELECTED_TMP_PATHS "t_selected_paths"
 #  define DUF_SQL_SELECTED_TMP_PATHTOT_FILES "t_selected_pathtot_files"
 #  define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS "t_selected_pathtot_dirs"
 
-#  if 0
-#    define DUF_SQL_SELECTED_TMP_FILENAMES_FULL  DUF_DBPREF DUF_SQL_SELECTED_TMP_FILENAMES
-#    define DUF_SQL_SELECTED_TMP_PATHS_FULL DUF_DBPREF DUF_SQL_SELECTED_TMP_PATHS
-#    define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL DUF_DBPREF DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-#    define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL DUF_DBPREF DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
+#  if 1
+#    ifdef DUF_SQL_SELECTED_TEMPORARY
+#      define DUF_SQL_SELECTED_TMP_FILENAMES_FULL           DUF_SQL_SELECTED_TMP_FILENAMES
+#      define DUF_SQL_SELECTED_TMP_PATHS_FULL               DUF_SQL_SELECTED_TMP_PATHS
+#      define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL       DUF_SQL_SELECTED_TMP_PATHTOT_FILES
+#      define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL        DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
+#    else
+#      define DUF_SQL_SELECTED_TMP_FILENAMES_FULL     DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_FILENAMES
+#      define DUF_SQL_SELECTED_TMP_PATHS_FULL         DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_PATHS
+#      define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_PATHTOT_FILES
+#      define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL  DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
+#    endif
 #  else
-#    define DUF_SQL_SELECTED_TMP_FILENAMES_FULL  DUF_SQL_SELECTED_TMP_FILENAMES
-#    define DUF_SQL_SELECTED_TMP_PATHS_FULL DUF_SQL_SELECTED_TMP_PATHS
-#    define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-#    define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
+#    define DUF_SQL_SELECTED_TMP_FILENAMES_FULL           DUF_SQL_SELECTED_TMP_FILENAMES
+#    define DUF_SQL_SELECTED_TMP_PATHS_FULL               DUF_SQL_SELECTED_TMP_PATHS
+#    define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL       DUF_SQL_SELECTED_TMP_PATHTOT_FILES
+#    define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL        DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
 #  endif
 
 #  include "sql_beginning_types.h"
@@ -56,8 +57,8 @@
         "    (:minExifSame IS NULL OR  x.dupexifcnt>=:minExifSame                         ) AND"  \
         "    (:maxExifSame IS NULL OR  md.dup5cnt  <=:maxExifSame                         ) AND"  \
         "    ( ( :GSameAs  IS NULL OR :GSamePathID IS NULL ) "  \
-        "                          OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM filenames AS fnb "  \
-        "                                   JOIN " DUF_DBPREF "filedatas AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
+        "                          OR md." DUF_SQL_IDNAME "=(SELECT fdb.md5id FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb "  \
+        "                                   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fnb.dataid=fdb." DUF_SQL_IDNAME ") "  \
         "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
         "                  ) " \
 	" AND ( " \

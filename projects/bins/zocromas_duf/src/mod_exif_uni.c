@@ -54,7 +54,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 static duf_sql_sequence_t final_sql = {
   .done = 0,.sql = {
                     "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
-                    " FROM " DUF_DBPREF "filedatas AS fd " /* */
+                    " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
                     " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
                     " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
                     , NULL}
@@ -94,8 +94,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
            ", xm.model as camera",
            .selector2 =         /* */
-           " FROM " DUF_DBPREF " filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
            " LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF "exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
@@ -114,8 +114,8 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
 #if 0
            ,
            .selector_total2 =   /* */
-           " FROM " DUF_DBPREF " filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF " filedatas AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
+           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
@@ -133,7 +133,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,                    /* */
            .selector2 =         /* */
-           " FROM " DUF_DBPREF " paths AS pt " /* */
+           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0
@@ -783,7 +783,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
               if ( 1 )
               {
-                const char *sql = " UPDATE " DUF_DBPREF " filedatas SET exifid = :exifID WHERE " DUF_SQL_IDNAME " = :dataID ";
+                const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = :exifID WHERE " DUF_SQL_IDNAME " = :dataID ";
 
                 DUF_SQL_START_STMT( pdi, update_exif, sql, r, pstmt_update );
                 DUF_TRACE( mod, 3, " S: %s ", sql );
@@ -796,7 +796,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
               }
               else
               {
-                DOR( r, duf_sql( " UPDATE " DUF_DBPREF " filedatas SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid, dataid ) );
+                DOR( r, duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid, dataid ) );
                 duf_pdi_reg_changes( pdi, changes );
               }
 

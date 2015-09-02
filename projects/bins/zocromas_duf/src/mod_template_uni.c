@@ -86,20 +86,13 @@ duf_scan_callbacks_t duf_template_callbacks = {
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
-           .selector2 = " FROM " DUF_DBPREF "filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+           .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
            ,
            .matcher = " fn.pathid = :parentdirID" /* */
            ,
            .filter = NULL       /* */
-           ,
-#if 0
-           .selector_total2 =   /* */
-           " FROM " DUF_DBPREF "filenames AS fn " /* */
-           " LEFT JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
-#endif
            },
   .node = {.fieldset =          /* */
            /* "'tmpl-node' AS fieldset_id, " (* *) */
@@ -110,7 +103,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
            ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks, STRFTIME( '%s', pt.mtim ) AS mtime " /* */
            ,
            .selector2 =         /* */
-           " FROM " DUF_DBPREF "paths AS pt " /* */
+           " FROM " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_DIRS_FULL "  AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") " /* */
            " LEFT JOIN " DUF_SQL_TABLES_TMP_PATHTOT_FILES_FULL " AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") " /* */
 #if 0

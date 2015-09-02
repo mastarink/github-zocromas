@@ -3,6 +3,7 @@
 #include "duf_defs.h"
 #include "duf_sql_defs.h"
 
+#include "sql_beginning_tables.h"
 /* ###################################################################### */
 #include "sql_beginning_create.h"
 /* ###################################################################### */
@@ -31,15 +32,15 @@ duf_sql_sequence_t sql_beginning_clear = {.done = 0,
           "DROP TABLE IF EXISTS crc32",
           "DROP TABLE IF EXISTS exif",
           "DROP TABLE IF EXISTS exif_model",
-          "DROP TABLE IF EXISTS filedatas",
+          "DROP TABLE IF EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL,
           "DROP TABLE IF EXISTS filefilter",
-          "DROP TABLE IF EXISTS filenames",
+          "DROP TABLE IF EXISTS " DUF_SQL_TABLES_FILENAMES_FULL,
           "DROP TABLE IF EXISTS log",
           "DROP TABLE IF EXISTS md5",
           "DROP TABLE IF EXISTS mdpath",
           "DROP TABLE IF EXISTS mime",
           "DROP TABLE IF EXISTS path_pairs",
-          "DROP TABLE IF EXISTS paths",
+          "DROP TABLE IF EXISTS " DUF_SQL_TABLES_PATHS_FULL,
           "DROP TABLE IF EXISTS sd5",
           "DROP TABLE IF EXISTS sizes",
           "DROP TABLE IF EXISTS tags",
@@ -85,7 +86,7 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
 /***                                                                                             ******/
 /******************************************************************************************************/
           "CREATE TABLE IF NOT EXISTS " /* */
-          DUF_DBPREF "filedatas ("
+          DUF_SQL_TABLES_FILEDATAS_FULL " ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
@@ -94,11 +95,9 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           ", uid INTEGER NOT NULL, gid INTEGER NOT NULL" /* */
           ", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /* */
           ", size INTEGER NOT NULL" /* */
-
           ", atim REAL NOT NULL, atimn INTEGER NOT NULL" /* */
           ", mtim REAL NOT NULL, mtimn INTEGER NOT NULL" /* */
           ", ctim REAL NOT NULL, ctimn INTEGER NOT NULL" /* */
-
           ", md5id INTEGER"     /* */
           ", sd5id INTEGER"     /* */
           ", crc32id INTEGER"   /* */
@@ -116,28 +115,28 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           ", FOREIGN KEY(size) REFERENCES sizes(size) " /* */
 #endif
           ")",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_exifid ON filedatas (exifid)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_mimeid ON filedatas (mimeid)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_sd5id ON filedatas (sd5id)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_crc32id ON filedatas (crc32id)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_md5id ON filedatas (md5id)",
-/*"CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filestatus ON filedatas (filestatus)", */
-/*"CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_filetype ON filedatas (filetype)", */
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_size ON filedatas (size)",
-/*"CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uid ON filedatas (uid)", */
-/*"CREATE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_gid ON filedatas (gid)", */
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "filedatas_uniq ON filedatas (dev,inode)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_exifid ON " DUF_SQL_TABLES_FILEDATAS " (exifid)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_mimeid ON " DUF_SQL_TABLES_FILEDATAS " (mimeid)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_sd5id ON " DUF_SQL_TABLES_FILEDATAS " (sd5id)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_crc32id ON " DUF_SQL_TABLES_FILEDATAS " (crc32id)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_md5id ON " DUF_SQL_TABLES_FILEDATAS " (md5id)",
+/*"CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_filestatus ON " DUF_SQL_TABLES_FILEDATAS " (filestatus)", */
+/*"CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_filetype ON " DUF_SQL_TABLES_FILEDATAS " (filetype)", */
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_size ON " DUF_SQL_TABLES_FILEDATAS " (size)",
+/*"CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_uid ON " DUF_SQL_TABLES_FILEDATAS " (uid)", */
+/*"CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_gid ON " DUF_SQL_TABLES_FILEDATAS " (gid)", */
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_uniq ON " DUF_SQL_TABLES_FILEDATAS " (dev,inode)",
 
-          "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "duf_filedatas_lastupdated " /* */
+          "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_lastupdated " /* */
           " AFTER UPDATE OF dev,inode,mode,nlink,uid,gid,blksize,blocks,size,sd5id,crc32id,md5id" /* */
           ",atim,atimn,mtim,mtimn,ctim,ctimn,filetype,filestatus " /* */
-          " ON filedatas FOR EACH ROW BEGIN " /* */
-          "   UPDATE filedatas SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+          " ON " DUF_SQL_TABLES_FILEDATAS " FOR EACH ROW BEGIN " /* */
+          "   UPDATE " DUF_SQL_TABLES_FILEDATAS " SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "filenames (" /* */
+          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL " (" /* */
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
@@ -146,23 +145,24 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           ", Pathid INTEGER NOT NULL" /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-          ", FOREIGN KEY(dataid) REFERENCES filedatas(" DUF_SQL_IDNAME ") " /* */
-          ", FOREIGN KEY(Pathid) REFERENCES paths(" DUF_SQL_IDNAME ") )",
-          "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "filenames_filename ON filenames (name)",
-          "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "filenames_dataid ON filenames (dataid)",
-          "CREATE INDEX IF NOT EXISTS        " DUF_DBPREF "filenames_Pathid ON filenames (Pathid)",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "filenames_uniq ON filenames (Pathid,name)",
+          ", FOREIGN KEY(dataid) REFERENCES " DUF_SQL_TABLES_FILEDATAS "(" DUF_SQL_IDNAME ") " /* */
+          ", FOREIGN KEY(Pathid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") )",
+
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_FILENAMES_FULL "_filename ON " DUF_SQL_TABLES_FILENAMES " (name)",
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_FILENAMES_FULL "_dataid ON " DUF_SQL_TABLES_FILENAMES " (dataid)",
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_TABLES_FILENAMES_FULL "_Pathid ON " DUF_SQL_TABLES_FILENAMES " (Pathid)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_uniq ON " DUF_SQL_TABLES_FILENAMES " (Pathid,name)",
 
 
-          "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "filenames_lastupdated " /* */
-          " AFTER UPDATE OF dataid,name,Pathid ON filenames " /* */
+          "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_FILENAMES_FULL "_lastupdated " /* */
+          " AFTER UPDATE OF dataid,name,Pathid ON " DUF_SQL_TABLES_FILENAMES /* */
           " FOR EACH ROW BEGIN " /* */
-          "   UPDATE filenames SET last_updated=DATETIME()  WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+          "   UPDATE " DUF_SQL_TABLES_FILENAMES " SET last_updated=DATETIME()  WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-          "CREATE TABLE IF NOT EXISTS " DUF_DBPREF "paths ("
+          "CREATE TABLE IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL " ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, " /* */
 #endif
@@ -171,30 +171,28 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           ", mode INTEGER, nlink INTEGER" /* */
           ", uid INTEGER, gid INTEGER" /* */
           ", blksize INTEGER, blocks INTEGER" /* */
-          ", size INTEGER" /* */
-          
-	  ", atim REAL, atimn INTEGER" /* */
+          ", size INTEGER"      /* */
+          ", atim REAL, atimn INTEGER" /* */
           ", mtim REAL, mtimn INTEGER" /* */
           ", ctim REAL, ctimn INTEGER" /* */
-
           ", dirname TEXT, parentid INTEGER " /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-          ", FOREIGN KEY(parentid) REFERENCES paths(" DUF_SQL_IDNAME ") )",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "paths_dirname ON paths (dirname)",
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "paths_dev_uniq ON paths (dev,inode)",
+          ", FOREIGN KEY(parentid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") )",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dirname ON " DUF_SQL_TABLES_PATHS " (dirname)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev_uniq ON " DUF_SQL_TABLES_PATHS " (dev,inode)",
 
-/*"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "paths_parent1_uniq ON paths (parentid," DUF_SQL_IDNAME ")", */
+/*"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parent1_uniq ON " DUF_SQL_TABLES_PATHS " (parentid," DUF_SQL_IDNAME ")", */
 
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "paths_parent2_uniq ON paths (parentid,dirname)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "paths_dev ON paths (dev)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "paths_inode ON paths (inode)",
-          "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "paths_parentid ON paths (parentid)",
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parent2_uniq ON " DUF_SQL_TABLES_PATHS " (parentid,dirname)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_dev ON " DUF_SQL_TABLES_PATHS " (dev)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_inode ON " DUF_SQL_TABLES_PATHS " (inode)",
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_parentid ON " DUF_SQL_TABLES_PATHS " (parentid)",
 
-          "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "paths_lastupdated " /* */
-          " AFTER UPDATE OF dev,inode,dirname,parentid  ON paths " /* */
+          "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_PATHS_FULL "_lastupdated " /* */
+          " AFTER UPDATE OF dev,inode,dirname,parentid  ON " DUF_SQL_TABLES_PATHS " " /* */
           " FOR EACH ROW BEGIN " /* */
-          "   UPDATE paths SET last_updated=DATETIME()  WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+          "   UPDATE " DUF_SQL_TABLES_PATHS " SET last_updated=DATETIME()  WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
@@ -273,7 +271,8 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "crc32_dup ON crc32 (dup32cnt)",
           "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "crc32_lastupdated " /* */
           " AFTER UPDATE OF crc32sum ON crc32 " /* */
-          " FOR EACH ROW BEGIN    UPDATE crc32 SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+          " FOR EACH ROW BEGIN " /* */
+          "    UPDATE crc32 SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
@@ -289,7 +288,8 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "sd5_dup ON sd5 (dup2cnt)",
           "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "sd5_lastupdated " /* */
           " AFTER UPDATE OF sd5sum1, sd5sum1 ON sd5 " /* */
-          " FOR EACH ROW BEGIN    UPDATE sd5 SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+          " FOR EACH ROW BEGIN " /* */
+          "    UPDATE sd5 SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
@@ -305,7 +305,8 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "md5_md5sum ON md5 (md5sum1,md5sum2)",
           "CREATE TRIGGER IF NOT EXISTS " DUF_DBPREF "md5_lastupdated " /* */
           " AFTER UPDATE OF md5sum1, md5sum1 ON md5 " /* */
-          " FOR EACH ROW BEGIN    UPDATE md5 SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
+          " FOR EACH ROW BEGIN " /* */
+          "    UPDATE md5 SET last_updated=DATETIME() WHERE " DUF_SQL_IDNAME "=OLD." DUF_SQL_IDNAME " ; END",
 
 /******************************************************************************************************/
 /***                                                                                             ******/
@@ -348,7 +349,7 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           ", fixed INTEGER"     /* */
           ", broken_date TEXT " /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
-          /* ", FOREIGN KEY(" DUF_SQL_IDNAME ") REFERENCES filedatas(exifid) " */
+          /* ", FOREIGN KEY(" DUF_SQL_IDNAME ") REFERENCES " DUF_SQL_TABLES_FILEDATAS "(exifid) " */
           " )",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_d ON exif (modelid, date_time)",
           "CREATE INDEX IF NOT EXISTS " DUF_DBPREF "exif_m_id ON exif (modelid)",
@@ -375,11 +376,10 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
           " tagnameid INTEGER NOT NULL, " /* */
           " itemtype TEXT NOT NULL, " /* */
           " itemid INTEGER NOT NULL, inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')) " /* */
-          /*          " , FOREIGN KEY(itemid)  REFERENCES paths(" DUF_SQL_IDNAME ") " *//* */
+          /*          " , FOREIGN KEY(itemid)  REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") " *//* */
           " , FOREIGN KEY(tagnameid) REFERENCES tagnames(" DUF_SQL_IDNAME ") "
-          " , FOREIGN KEY(itemid) REFERENCES filenames(" DUF_SQL_IDNAME ") "
-          " , FOREIGN KEY(itemid) REFERENCES paths(" DUF_SQL_IDNAME ") "
-	    " )",
+          " , FOREIGN KEY(itemid) REFERENCES " DUF_SQL_TABLES_FILENAMES "(" DUF_SQL_IDNAME ") "
+          " , FOREIGN KEY(itemid) REFERENCES " DUF_SQL_TABLES_PATHS "(" DUF_SQL_IDNAME ") " " )",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_DBPREF "tags_uniq ON tags (tagnameid, itemid)",
 
 /******************************************************************************************************/

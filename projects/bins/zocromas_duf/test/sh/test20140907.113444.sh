@@ -232,7 +232,7 @@ uni-scan
 db-directory=$dbdir
 
 db-name=temp.db
-db-name-adm=adm.db
+db-adm-name=adm.db
 
 
 # format=filesize,prefix,dirid,dirid_space,nfiles,nfiles_space,ndirs,ndirs_space,seq,nsame,md5,md5id,inode,filename,realpath,dataid,exifid,mimeid,nlink,human
