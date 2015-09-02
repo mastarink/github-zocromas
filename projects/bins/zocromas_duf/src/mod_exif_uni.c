@@ -53,9 +53,9 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {
   .done = 0,.sql = {
-                    "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
+                    "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
                     " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
-                    " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
+                    " JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
                     " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
                     , NULL}
 };
@@ -96,11 +96,11 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-           " LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF "exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
@@ -116,9 +116,9 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .selector_total2 =   /* */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " exif AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " sizes as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
            ,                    /* */
 #endif
            },                   /* */
@@ -169,7 +169,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 
     if ( need_id )
     {
-      const char *sql = "SELECT " DUF_SQL_IDNAME " AS modelid FROM " DUF_DBPREF "exif_model WHERE model=:Model";
+      const char *sql = "SELECT " DUF_SQL_IDNAME " AS modelid FROM " DUF_SQL_TABLES_EXIF_MODEL_FULL " WHERE model=:Model";
 
       DUF_SQL_START_STMT( pdi, select_model, sql, lr, pstmt_select );
       DUF_TEST_R( lr );
@@ -191,7 +191,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
 
     if ( !modelid && !duf_config->cli.disable.flag.insert )
     {
-      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "exif_model ( model ) VALUES ( :Model )";
+      const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_EXIF_MODEL_FULL " ( model ) VALUES ( :Model )";
 
       DUF_SQL_START_STMT( pdi, insert_model, sql, lr, pstmt_insert );
       DUF_TEST_R( lr );
@@ -243,7 +243,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
     if ( need_id )
     {
       const char *sql =
-            "SELECT " DUF_SQL_IDNAME " AS exifid FROM " DUF_DBPREF "exif WHERE ( :modelID IS NULL OR modelid=:modelID ) "
+            "SELECT " DUF_SQL_IDNAME " AS exifid FROM " DUF_SQL_TABLES_EXIF_FULL " WHERE ( :modelID IS NULL OR modelid=:modelID ) "
             " AND date_time=datetime(:timeEpoch, 'unixepoch')";
 
       DUF_SQL_START_STMT( pdi, select_exif, sql, lr, pstmt_select );
@@ -275,7 +275,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
     {
       int changes = 0;
       const char *sql =
-            "INSERT OR IGNORE INTO " DUF_DBPREF "exif ( modelid, date_time, broken_date, fixed ) "
+            "INSERT OR IGNORE INTO " DUF_SQL_TABLES_EXIF_FULL " ( modelid, date_time, broken_date, fixed ) "
             " VALUES ( :modelID, datetime(:timeEpoch, 'unixepoch'), :origTime, :dtFixed )";
 
       DUF_SQL_START_STMT( pdi, insert_exif, sql, lr, pstmt_insert );
@@ -381,6 +381,7 @@ duf_exif_get_time( ExifData * edata, int *pdate_changed, char *stime_original, s
       /* DUF_SHOW_ERROR( "@@@@@@@@@@@@@@ %s", stime_original ); */
       DUF_TRACE( exif, 3, "stime_original:%s", stime_original );
       /* 2008:06:21 13:18:19 */
+      /* 0123:56:89 12:45:78 */
       if ( lr >= 0 )
       {
         char *pq;
@@ -796,7 +797,9 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
               }
               else
               {
-                DOR( r, duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid, dataid ) );
+                DOR( r,
+                     duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid,
+                              dataid ) );
                 duf_pdi_reg_changes( pdi, changes );
               }
 

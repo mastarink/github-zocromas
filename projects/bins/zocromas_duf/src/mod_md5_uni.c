@@ -44,11 +44,11 @@ static int md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
-          "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /* */
-          " FROM " DUF_DBPREF "md5 AS md " /* */
+          "UPDATE " DUF_SQL_TABLES_MD5_FULL " SET dup5cnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_SQL_TABLES_MD5_FULL " AS md " /* */
           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.md5id=md." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_DBPREF "md5." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")" /* */
-          /* " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)" (* *) */
+          " WHERE " DUF_SQL_TABLES_MD5_FULL "." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")" /* */
+          /* " WHERE " DUF_SQL_TABLES_MD5_FULL ".md5sum1=md.md5sum1 AND " DUF_SQL_TABLES_MD5_FULL ".md5sum2=md.md5sum2)" (* *) */
           ,
 #if 0
           "INSERT OR IGNORE INTO " DUF_DBPREF "pathtot_dirs (Pathid, numdirs) " /* */
@@ -63,7 +63,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
           "INSERT OR IGNORE INTO path_pairs (samefiles, Pathid1, Pathid2) SELECT count(*), fna.Pathid AS Pathid1, fnb.Pathid  AS Pathid2" /* */
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fna" /* */
           "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fda ON (fna.dataid=fda.rowid)" /* */
-          "   JOIN md5 AS mda ON (fda.md5id=mda.rowid)" /* */
+          "   JOIN " DUF_SQL_TABLES_MD5_FULL " AS mda ON (fda.md5id=mda.rowid)" /* */
           "   JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fdb ON (fdb.md5id=mda.rowid)" /* */
           "   JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fnb ON (fdb.rowid=fnb.dataid)" /* */
           " WHERE Pathid1 < Pathid2 AND fna.name=fnb.name" /* */
@@ -109,9 +109,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            /* "SELECT %s " */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-           " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
-           " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
@@ -128,9 +128,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            .selector_total2 =   /* */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-           " LEFT JOIN " DUF_DBPREF "md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
-           " LEFT JOIN " DUF_DBPREF "sd5 AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SD5_FULL " AS sd ON (sd." DUF_SQL_IDNAME "=fd.sd5id)" /* */
            ,                    /* */
 #endif
            }
@@ -158,11 +158,6 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName )" /* */
            ,
            .filter = NULL       /* */
-           ,
-#if 0
-           .selector_total2 =   /* */
-           " /* md5 */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-#endif
            },
   .final_sql_seq = &final_sql,
 };
@@ -186,7 +181,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     if ( !duf_config->cli.disable.flag.insert )
     {
 #if 1
-      static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "md5 ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
+      static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MD5_FULL " ( md5sum1, md5sum2 ) VALUES ( :md5sum1, :md5sum2 )";
 
       DUF_TRACE( md5, 0, "%016llx%016llx %s%s", md64[1], md64[0], real_path, msg );
       DUF_SQL_START_STMT( pdi, insert_md5, sql, lr, pstmt );
@@ -197,7 +192,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       DUF_SQL_CHANGES( changes, lr, pstmt );
       DUF_SQL_END_STMT( insert_md5, lr, pstmt );
 #else
-      lr = duf_sql( "INSERT OR IGNORE INTO " DUF_DBPREF "md5 (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
+      lr = duf_sql( "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MD5_FULL " (md5sum1,md5sum2) VALUES ('%lld','%lld')", &changes, md64[1], md64[0] );
 #endif
     }
     duf_pdi_reg_changes( pdi, changes );
@@ -209,7 +204,7 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
                              &csccbh, /* */
-                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_DBPREF "md5 WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
+                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_SQL_TABLES_MD5_FULL " WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
       }
     }
     else if ( !lr /* assume SQLITE_OK */  )

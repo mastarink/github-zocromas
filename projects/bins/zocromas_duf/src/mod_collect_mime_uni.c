@@ -47,11 +47,11 @@ static int dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 static duf_sql_sequence_t final_sql = { /* */
   .done = 0,
   .sql = {
-          "UPDATE " DUF_DBPREF "mime SET dupmimecnt=(SELECT COUNT(*) " /* */
-          " FROM  " DUF_DBPREF "mime      AS mi " /* */
+          "UPDATE " DUF_SQL_TABLES_MIME_FULL " SET dupmimecnt=(SELECT COUNT(*) " /* */
+          " FROM  " DUF_SQL_TABLES_MIME_FULL "      AS mi " /* */
           " JOIN  " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.mimeid=mi." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_DBPREF "mime." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
-          /* " WHERE " DUF_DBPREF "mime.mime=mi.mime)" (* *) */
+          " WHERE " DUF_SQL_TABLES_MIME_FULL "." DUF_SQL_IDNAME "=mi." DUF_SQL_IDNAME ")" /* */
+          /* " WHERE " DUF_SQL_TABLES_MIME_FULL ".mime=mi.mime)" (* *) */
           ,
 
 
@@ -93,9 +93,9 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " FROM      " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            /* Q_FROM( filenames, fn ) (* *) */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF " mime      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "      AS mi ON ( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            /* Q_JOIN_ID( fd, mime, mi, mimeid) */
-           " LEFT JOIN " DUF_DBPREF " sizes     AS sz ON ( sz.size   = fd.size               ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL "     AS sz ON ( sz.size   = fd.size               ) " /* */
            /* Q_JOIN_SYN( fd, sizes, sz, size ) (* *) */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
@@ -151,9 +151,9 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
     if ( need_id )
     {
-      const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_DBPREF "mime WHERE mime = :Mime";
+      const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime = :Mime";
 
-      /* const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_DBPREF "mime WHERE mime=:Mime AND charset=:charSet" ; */
+      /* const char *sql = "SELECT " DUF_SQL_IDNAME " AS mimeid FROM " DUF_SQL_TABLES_MIME_FULL " WHERE mime=:Mime AND charset=:charSet" ; */
 
       DUF_SQL_START_STMT( pdi, select_mime, sql, lr, pstmt_select );
       DUF_SQL_BIND_S( Mime, mime, lr, pstmt_select );
@@ -174,9 +174,9 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
 
     if ( !mimeid && !duf_config->cli.disable.flag.insert )
     {
-      const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime ) VALUES ( :Mime )";
+      const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime ) VALUES ( :Mime )";
 
-      /* "INSERT OR IGNORE INTO " DUF_DBPREF "mime ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
+      /* "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime, charset, tail ) VALUES (:Mime, :charSet, :Tail )"; */
 
       DUF_SQL_START_STMT( pdi, insert_mime, sql, lr, pstmt_insert );
       DUF_TRACE( mod, 3, " S: %s ", sql );

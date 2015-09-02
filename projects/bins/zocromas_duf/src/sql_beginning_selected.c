@@ -22,10 +22,10 @@ duf_sql_sequence_t sql_beginning_selected = {
           /* ",NULL AS last_updated,NULL AS inow" */
           "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn LEFT " /* */
           "        JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-          "   LEFT JOIN " DUF_DBPREF "md5  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-          "   LEFT JOIN " DUF_DBPREF "exif  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-          "   LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-          "   LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "  AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "  AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+          "   LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
           "      WHERE "        /* */
           DUF_SQL_UFILTER_BINDINGS /* */
           /* " GROUP BY nameid " (* *) */
@@ -69,8 +69,7 @@ duf_sql_sequence_t sql_beginning_selected = {
           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
           " GROUP BY fn.Pathid " /* */ ,
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (rowid) " /* */        ,
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-          " (Pathid)"
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (Pathid)"
           /* */ ,
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES
           " (numfiles)"
@@ -85,7 +84,7 @@ duf_sql_sequence_t sql_beginning_selected = {
           " AS numdirs "        /* */
           " FROM "              /* */
 #if 0
-          DUF_SQL_TABLES_PATHS_FULL " "  /* */
+          DUF_SQL_TABLES_PATHS_FULL " " /* */
 #else
           DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
           " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp.rowid ) " /* */
@@ -95,8 +94,7 @@ duf_sql_sequence_t sql_beginning_selected = {
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (rowid) " /* */        ,
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid)" /* */
           ,
-          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
-          " (numdirs)",
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (numdirs)",
 
           "END",
           NULL}

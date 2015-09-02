@@ -660,7 +660,14 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
               "-= \"\" =-" );
 
   DUF_PRINTF( 0, "  run --db-name=photo.db -dfR  --trace-mod=2 --with-mime-type=image/jpeg --with-camera=2110 "
-              " --save-dir=save/%%Tx{%%Y}/%%a/%%Tx{%%B/%%d/%%H%%M%%S}/%%M --evaluate-sccb=save_to /home/mastar/big/misc/media/photo  	- %s", "-= \"\" =-" );
+              " --save-dir=save/%%Tx{%%Y}/%%a/%%Tx{%%B/%%d/%%H%%M%%S}/%%M --evaluate-sccb=save_to /home/mastar/big/misc/media/photo  	- %s",
+              "-= \"\" =-" );
+
+
+  DUF_PRINTF( 0, "========================= as for 20150902.181551 ============" );
+  DUF_PRINTF( 0, "  run  --db-name=200105.db  --drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif "
+              " --progress  /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run  --db-name=200105.db  -dfR  --with-mime=image/jpeg --ls /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 

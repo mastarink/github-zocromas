@@ -73,46 +73,46 @@ duf_main_db_info( void )
       {.title = "zero files",.count = 1,.labels = {"#", NULL}
        ,.sql =
        "SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME
-       ") JOIN sizes as sz ON (sz.size=fd.size) where fd.size=0"}
+       ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) where fd.size=0"}
       ,
       {.title = "nonzero files",.count = 1,.labels = {"#", NULL}
        ,.sql =
        "SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME
-       ") JOIN sizes as sz ON (sz.size=fd.size) where fd.size>0"}
+       ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) where fd.size>0"}
       ,
       {.title = "names",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
        ,.sql = "SELECT count(*), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM " DUF_SQL_TABLES_FILENAMES_FULL ""}
       ,
       {.title = "names 2",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN md5 AS md ON (md." DUF_SQL_IDNAME
+       "SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME
        "=fd.md5id)"}
       ,
       {.title = "distinct md5id",.count = 1,.labels = {"#", NULL}
        ,.sql =
-       "SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN md5 AS md ON (md."
+       "SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md."
        DUF_SQL_IDNAME "=fd.md5id)"}
       ,
-      {.title = "n/z sizes",.count = 5,.labels = {"#", "min size", "max size", "@min inow", "@max inow", NULL}
-       ,.sql = "SELECT count(*), min(size), max(size), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM sizes where size>0"}
+      {.title = "n/z Sizes",.count = 5,.labels = {"#", "min size", "max size", "@min inow", "@max inow", NULL}
+       ,.sql = "SELECT count(*), min(size), max(size), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM " DUF_SQL_TABLES_SIZES_FULL " where size>0"}
       ,
-      {.title = "z sizes",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
-       ,.sql = "SELECT count(*), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM sizes where size=0"}
+      {.title = "z Sizes",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
+       ,.sql = "SELECT count(*), strftime('%s',min(inow)), strftime('%s',max(inow)) FROM " DUF_SQL_TABLES_SIZES_FULL " where size=0"}
       ,
       {.title = "dup sets by size",.count = 1,.labels = {"#", NULL}
-       ,.sql = "SELECT count(*) FROM sizes where dupzcnt>1"}
+       ,.sql = "SELECT count(*) FROM " DUF_SQL_TABLES_SIZES_FULL " where dupzcnt>1"}
       ,
-      {.title = "md5's",.count = 1,.labels = {"#", "@min inow", "@max inow", NULL}
-       ,.sql = "SELECT count(*), strftime('%s',min(md.inow)), strftime('%s',max(md.inow)) FROM md5 AS md"}
+      {.title = "Md5's",.count = 1,.labels = {"#", "@min inow", "@max inow", NULL}
+       ,.sql = "SELECT count(*), strftime('%s',min(md.inow)), strftime('%s',max(md.inow)) FROM " DUF_SQL_TABLES_MD5_FULL " AS md"}
       ,
-      {.title = "dup sets by md5's",.count = 1,.labels = {"#", NULL}
-       ,.sql = "SELECT count(*) FROM md5 AS md where dup5cnt>1"}
+      {.title = "dup sets by Md5's",.count = 1,.labels = {"#", NULL}
+       ,.sql = "SELECT count(*) FROM " DUF_SQL_TABLES_MD5_FULL " AS md where dup5cnt>1"}
       ,
-      {.title = "mime's",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
-       ,.sql = "SELECT count(*), strftime('%s',min(mi.inow)), strftime('%s',max(mi.inow)) FROM mime AS mi"}
+      {.title = "Mime's",.count = 3,.labels = {"#", "@min inow", "@max inow", NULL}
+       ,.sql = "SELECT count(*), strftime('%s',min(mi.inow)), strftime('%s',max(mi.inow)) FROM " DUF_SQL_TABLES_MIME_FULL " AS mi"}
       ,
-      {.title = "dup sets by mime's",.count = 1,.labels = {"#", NULL}
-       ,.sql = "SELECT count(*) FROM mime AS mi where dupmimecnt>1"}
+      {.title = "dup sets by Mime's",.count = 1,.labels = {"#", NULL}
+       ,.sql = "SELECT count(*) FROM " DUF_SQL_TABLES_MIME_FULL " AS mi where dupmimecnt>1"}
       ,
       {.title = "exif's",.count = 3,.labels = {"#", "@min date_time", "@max date_time", "@min inow", "@max inow", NULL}
        ,.sql =
@@ -130,14 +130,14 @@ duf_main_db_info( void )
     /*
        SELECT  count(*), min(pt.inow), max(pt.inow), max(numdirs), max(numfiles) FROM " DUF_SQL_TABLES_PATHS_FULL " as pt LEFT JOIN pathtot_dirs AS td ON (td.Pathid=pt." DUF_SQL_IDNAME ") LEFT JOIN pathtot_files AS tf ON (tf.Pathid=pt." DUF_SQL_IDNAME ") ;
        SELECT count(*), datetime(min(mtim), 'unixepoch'), datetime(max(mtim), 'unixepoch'), min(inow), max(inow) FROM filedatas where mtim>320000000 and mtim<1600000000
-       SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN sizes as sz ON (sz.size=fd.size) where fd.size>0;
-       SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN sizes as sz ON (sz.size=fd.size) where fd.size=0;
+       SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) where fd.size>0;
+       SELECT count(*) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size) where fd.size=0;
        SELECT count(*), min(inow), max(inow)                                                                     FROM " DUF_SQL_TABLES_FILENAMES_FULL ";
-       SELECT count(*), max(size), min(size), min(inow), max(inow)                                               FROM sizes; 
-       SELECT count(*) FROM sizes where dupzcnt>1;
-       SELECT count(*) FROM md5 AS md;   
-       SELECT count(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
-       SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN md5 AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
+       SELECT count(*), max(size), min(size), min(inow), max(inow)                                               FROM " DUF_SQL_TABLES_SIZES_FULL "; 
+       SELECT count(*) FROM " DUF_SQL_TABLES_SIZES_FULL " where dupzcnt>1;
+       SELECT count(*) FROM " DUF_SQL_TABLES_MD5_FULL " AS md;   
+       SELECT count(*)              FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
+       SELECT count(distinct md5id) FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn JOIN filedatas AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id);
      */
     for ( int iop = 0; iop < sizeof( infod ) / sizeof( infod[0] ); iop++ )
     {

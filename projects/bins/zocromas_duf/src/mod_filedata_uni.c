@@ -44,20 +44,20 @@ static int register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo
 static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
 #if 0
-          "UPDATE " DUF_DBPREF "md5 SET dup5cnt=(SELECT COUNT(*) " /* */
+          "UPDATE " DUF_SQL_TABLES_MD5_FULL " SET dup5cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
-          " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_DBPREF "md5." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")" /* */
-          /* " WHERE " DUF_DBPREF "md5.md5sum1=md.md5sum1 AND " DUF_DBPREF "md5.md5sum2=md.md5sum2)" */
+          " JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (fd.md5id=md." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_SQL_TABLES_MD5_FULL "." DUF_SQL_IDNAME "=md." DUF_SQL_IDNAME ")" /* */
+          /* " WHERE " DUF_SQL_TABLES_MD5_FULL ".md5sum1=md.md5sum1 AND " DUF_SQL_TABLES_MD5_FULL ".md5sum2=md.md5sum2)" */
           ,
-          "UPDATE " DUF_DBPREF "exif SET dupexifcnt=(SELECT COUNT(*) " /* */
+          "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
-          " JOIN " DUF_DBPREF "exif AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
-          " WHERE exif." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
+          " JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON (fd.exifid=x." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_SQL_TABLES_EXIF_FULL "." DUF_SQL_IDNAME "=x." DUF_SQL_IDNAME " AND fixed IS NULL ) WHERE fixed IS NULL" /* */
           ,
 #endif
-          "DELETE FROM " DUF_DBPREF "sizes",
-          "INSERT OR IGNORE INTO " DUF_DBPREF "sizes (size, dupzcnt) " /* */
+          "DELETE FROM " DUF_SQL_TABLES_SIZES_FULL "",
+          "INSERT OR IGNORE INTO " DUF_SQL_TABLES_SIZES_FULL " (size, dupzcnt) " /* */
           "SELECT size, COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd GROUP BY fd.size" /* */
           ,
@@ -102,7 +102,7 @@ static duf_sql_sequence_t final_sql = {.done = 0,
           /*       " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " (* *)                                         */
           /*       " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ")" (* *)                */
           /*       " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (fn.Pathid=p." DUF_SQL_IDNAME ")" (* *)                           */
-          /*       " JOIN " DUF_DBPREF "md5 AS md ON (fd.md5id=md." DUF_SQL_IDNAME ")",                                 */
+          /*       " JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON (fd.md5id=md." DUF_SQL_IDNAME ")",                                 */
 
           /* *INDENT-ON*  */
 
@@ -151,13 +151,13 @@ duf_scan_callbacks_t duf_filedata_callbacks = {
            /* "SELECT %s " */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON ( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_DBPREF "md5 AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
+           " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL " AS md ON ( md." DUF_SQL_IDNAME " = fd.md5id ) " /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,
            .filter = NULL       /* */
 #else
-	     NULL
+           NULL
 #endif
            },
   .node = {                     /* */

@@ -44,11 +44,11 @@ static int crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * p
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {.done = 0,
   .sql = {
-          "UPDATE " DUF_DBPREF "crc32 SET dup32cnt=(SELECT COUNT(*) " /* */
-          " FROM " DUF_DBPREF "crc32 AS c32 " /* */
+          "UPDATE " DUF_SQL_TABLES_CRC32_FULL " SET dup32cnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_SQL_TABLES_CRC32_FULL " AS c32 " /* */
           " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fd.crc32id=c32." DUF_SQL_IDNAME ") " /* */
-          " WHERE " DUF_DBPREF "crc32." DUF_SQL_IDNAME "=c32." DUF_SQL_IDNAME ")" /* */
-          /* " WHERE " DUF_DBPREF "crc32.crc32sum=c32.crc32sum )" (* *) */
+          " WHERE " DUF_SQL_TABLES_CRC32_FULL "." DUF_SQL_IDNAME "=c32." DUF_SQL_IDNAME ")" /* */
+          /* " WHERE " DUF_SQL_TABLES_CRC32_FULL ".crc32sum=c32.crc32sum )" (* *) */
           ,
           NULL,
           }
@@ -90,8 +90,8 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            /* "SELECT %s " */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
-           " LEFT JOIN " DUF_DBPREF "crc32 AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_CRC32_FULL " AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
            ,                    /* */
@@ -157,7 +157,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
     if ( !duf_config->cli.disable.flag.insert )
     {
 #if 1
-      static const char *sql = "INSERT OR IGNORE INTO " DUF_DBPREF "crc32 (crc32sum) VALUES (:crc32sum)";
+      static const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_CRC32_FULL " (crc32sum) VALUES (:crc32sum)";
 
       DUF_TRACE( crc32, 10, "%0lx %s%s", crc32sum, real_path, filename );
       DUF_SQL_START_STMT( pdi, insert_crc32, sql, lr, pstmt );
@@ -180,7 +180,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
                              &csccbh, /* */
-                             "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_DBPREF "crc32 WHERE crc32sum='%lld'", crc32sum );
+                             "SELECT " DUF_SQL_IDNAME " AS crc32id FROM " DUF_SQL_TABLES_CRC32_FULL " WHERE crc32sum='%lld'", crc32sum );
       }
     }
     else if ( !lr /* assume SQLITE_OK */  )

@@ -37,14 +37,14 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
    ", xm.model as camera",
    .selector2 =                 /* */
-   " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS fn " /* */
-   /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
+   " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS fns " /* */
+   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-   " LEFT JOIN " DUF_DBPREF "mime       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-   " LEFT JOIN " DUF_DBPREF "exif       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-   " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
    ,
    .matcher = " fn.Pathid=:parentdirID " /* */
    /* */
@@ -79,11 +79,11 @@ duf_sql_set_t std_leaf_sets[] = { /* */
      " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
      /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
      " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-     " LEFT JOIN " DUF_DBPREF "md5        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-     " LEFT JOIN " DUF_DBPREF "mime       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-     " LEFT JOIN " DUF_DBPREF "exif       AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-     " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-     " LEFT JOIN " DUF_DBPREF "sizes as sz ON (sz.size=fd.size)" /* */
+     " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+     " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
+     " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+     " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+     " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
      ,
      .matcher = " fn.Pathid=:parentdirID " /* */
      /* " ORDER BY fn." DUF_SQL_IDNAME " " *//* */
