@@ -52,7 +52,7 @@ duf_eval_sql_one_of_seq_cb( const char *sql, const char *title, duf_bind_cb_t ca
   /* r = duf_sql( *p, &changes ); */
   DORF( r, duf_main_db_open );
   if ( selected_db )
-    worksql = tmpsql = duf_insert_selected_db( sql, selected_db );
+    worksql = tmpsql = duf_expand_selected_db( sql, selected_db );
   else
     worksql = sql;
   {
@@ -97,8 +97,10 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
     int DUF_UNUSED changes = 0;
 #endif
 
-    if ( DUF_NOERROR( r ) && psql && *psql && ssql->beginend )
+    if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
+    {
       DOR( r, duf_eval_sql_one_of_seq_cb( "BEGIN", title, callback, ttarg, NULL, &changes ) );
+    }
 
     while ( DUF_NOERROR( r ) && psql && *psql )
     {
@@ -113,8 +115,10 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
                  psql - psql0, *psql, changes, r < 0 ? "FAIL" : "OK" );
       psql++;
     }
-    if ( DUF_NOERROR( r ) && psql && *psql && ssql->beginend )
+    if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
+    {
       DOR( r, duf_eval_sql_one_of_seq_cb( "END", title, callback, ttarg, NULL, &changes ) );
+    }
     ssql->done++;
 
   }
@@ -125,6 +129,7 @@ int
 duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title, const char *selected_db )
 {
   DEBUG_STARTR( r );
+
 
 #if 0
   DOR( r, duf_eval_sql_sequence_cb( ssql, title, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );

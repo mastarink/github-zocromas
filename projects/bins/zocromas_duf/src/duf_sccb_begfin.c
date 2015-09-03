@@ -8,6 +8,8 @@
 #include "duf_sccb.h"
 #include "duf_begfin.h"
 
+#include "duf_maindb.h"
+
 /* ###################################################################### */
 #include "duf_sccb_begfin.h"
 /* ###################################################################### */
@@ -20,7 +22,9 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb, char *selected_db )
 
   DUF_TRACE( sql, 0, "beginning_sql '%s'",
              ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
+
   duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , selected_db );
+
   DEBUG_ENDR( r );
 }
 

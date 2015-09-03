@@ -113,7 +113,7 @@ duf_cfg_create( void )
     /*   }                                                                                                                                        */
     /* }                                                                                                                                          */
   }
-  cfg->pdi = duf_pdi_create(  );
+  cfg->pdi = duf_pdi_create( "selected" );
   assert( cfg->pu );
   assert( cfg->longopts_table );
 

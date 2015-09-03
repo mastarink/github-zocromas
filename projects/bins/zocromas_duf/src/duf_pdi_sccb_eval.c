@@ -19,6 +19,9 @@
 
 #include "duf_sccbh_eval.h"
 
+#include "duf_maindb.h"
+
+
 /* ###################################################################### */
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */
@@ -53,6 +56,8 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t
   DUF_TRACE( path, 0, "@ (to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
   {
     duf_sccb_handle_t *sccbh = NULL;
+
+
 
     sccbh = duf_open_sccb_handle( pdi, sccb, ptarg->argc, ptarg->argv, pu, &r );
 

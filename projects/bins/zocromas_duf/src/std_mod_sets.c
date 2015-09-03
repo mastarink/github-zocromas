@@ -14,7 +14,7 @@
 
 duf_sql_set_t std_leaf_sets[] = { /* */
   {                             /* */
-   .set_selected_db = 1, /* */
+   .set_selected_db = 0, /* */
    .fieldset =                  /* */
    " 'std-leaf' AS fieldset_id, " /* */
    "  fn.Pathid AS dirid "      /* */
@@ -101,7 +101,7 @@ size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 duf_sql_set_t std_node_sets[] = { /* */
   {
-   .set_selected_db = 1, /* */
+   .set_selected_db = 0, /* */
    .fieldset =                  /* */
    "'std-node' AS fieldset_id, " /* */
    " pt." DUF_SQL_IDNAME " AS dirid" /* */

@@ -33,6 +33,8 @@
 #include "duf_maindb_info.h"
 
 #include "duf_begfin.h"
+#include "duf_selector.h"
+
 #include "sql_beginning_common.h"
 #include "sql_beginning_tables.h"
 #include "sql_beginning_vacuum.h"
@@ -42,6 +44,25 @@
 #include "duf_maindb.h"
 /* ###################################################################### */
 
+int
+duf_main_db_attach_selected( const char *name )
+{
+  DEBUG_STARTR( r );
+  static const char *sql = "ATTACH DATABASE '${DB_PATH}${SELECTED_DB}' AS duf${SELECTED_DB}";
+  char *worksql;
+
+  worksql = duf_expand_selected_db( sql, name );
+  DORF( r, duf_main_db_open );
+  DUF_TRACE( temp, 0, "@@@@@attach selected database %s", worksql );
+
+  DUF_TRACE( explain, 0, "attach selected database %s", worksql );
+  DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+  DUF_SQL_STEP( r, pstmt );
+  DUF_SQL_END_STMT_NOPDI( r, pstmt );
+  DUF_TRACE( temp, 0, "@@@@attached selected database %s", worksql );
+  mas_free( worksql );
+  DEBUG_ENDR( r );
+}
 
 static int
 duf_main_db_locate( void )
@@ -260,6 +281,9 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
   }
+
+  /* DOR( r, duf_main_db_attach_selected( "dumplet" ) ); */
+
 #if 0
   if ( duf_config->db.selected.fpath )
   {

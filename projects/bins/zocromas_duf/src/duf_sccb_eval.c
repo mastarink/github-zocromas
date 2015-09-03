@@ -22,25 +22,29 @@
 int
 duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
 {
+  assert( duf_config->pdi->pdi_name );
   return duf_evaluate_pdi_sccb( duf_config->pdi, &duf_config->targ, duf_config->pu, sccb );
 }
 
 int
 duf_evaluate_sccb_namen( const char *name, size_t len, const duf_action_table_t * table )
 {
+  assert( duf_config->pdi->pdi_name );
   return duf_evaluate_pdi_sccb_namen( name, len, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
 }
 
 int
 duf_evaluate_sccb_name( const char *name, const duf_action_table_t * table )
 {
+  assert( duf_config->pdi->pdi_name );
   return duf_evaluate_pdi_sccb_name( name, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
 }
 
 int
 duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * table )
 {
-  return duf_evaluate_pdi_sccb_named_list(names, table, duf_config->pdi, &duf_config->targ, duf_config->pu);
+  assert( duf_config->pdi->pdi_name );
+  return duf_evaluate_pdi_sccb_named_list( names, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
 }
 
 #if 0
@@ -70,6 +74,7 @@ duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
 
   int cnt = 0;
 
+  assert( duf_config->pdi->pdi_name );
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
 
   for ( int astep = 0; r >= 0 && astep < sccb_num; astep++ )

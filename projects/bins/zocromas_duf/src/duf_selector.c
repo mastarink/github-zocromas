@@ -10,6 +10,7 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
+#include "duf_config_ref.h"
 
 #include "duf_maintenance.h"
 
@@ -26,12 +27,14 @@ duf_getvar( const char *name, const char *arg )
 
   if ( 0 == strcmp( name, "SELECTED_DB" ) )
     str = ( char * ) arg;
+  else if ( 0 == strcmp( name, "DB_PATH" ) )
+    str = ( char * ) duf_config->db.dir;
   DUF_TRACE( temp, 10, "@@%s :: %s => %s", name, arg, str );
   return str;
 }
 
 char *
-duf_insert_selected_db( const char *sql, const char *dbname )
+duf_expand_selected_db( const char *sql, const char *dbname )
 {
   char *nsql;
 
@@ -69,7 +72,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db )
       {
         char *tsql;
 
-        tsql = duf_insert_selected_db( sql_set->DUF_SELECTOR, selected_db );
+        tsql = duf_expand_selected_db( sql_set->DUF_SELECTOR, selected_db );
         sql = mas_strcat_x( sql, tsql );
         mas_free( tsql );
       }
@@ -142,18 +145,17 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db )
 
       if ( sql_set->set_selected_db )
       {
-        char *tmpsql;
+        char *tsql;
 
-        assert( selected_db );
-        tmpsql = duf_sql_mprintf( sql_set->DUF_SELECTOR, selected_db );
-        DUF_TRACE( temp, 0, "@@@2[%s] %s => %s", selected_db, sql_set->DUF_SELECTOR, tmpsql );
-        sql = mas_strcat_x( sql, tmpsql );
-        sqlite3_free( tmpsql );
+        tsql = duf_expand_selected_db( sql_set->DUF_SELECTOR, selected_db );
+        sql = mas_strcat_x( sql, tsql );
+        mas_free( tsql );
       }
       else
       {
         sql = mas_strcat_x( sql, sql_set->DUF_SELECTOR );
       }
+
 
 #if 1
       if ( sql_set->filter )

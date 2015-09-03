@@ -35,6 +35,9 @@
 
 #include "duf_option_defs.h"
 
+
+#include "duf_maindb.h"
+
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccbh_eval.h"
@@ -116,6 +119,9 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
     DUF_TRACE( scan, 2, "cb2 %s", set_type_title );
     DUF_TRACE( scan, 2, "ql%llu / qn%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq, SCCB->title );
+    
+
+
     DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set, str_cb2, sccbh, node_type ) );
     if ( DUF_NOERROR( r ) )
     {

@@ -30,6 +30,7 @@
 
 #include "duf_item_scan2.h"
 
+#include "duf_maindb.h"
 #include "duf_sccbh_shortcuts.h"
 /* ###################################################################### */
 #include "duf_sccb_handle.h"
@@ -63,7 +64,7 @@ duf_count_total_items( const duf_sccb_handle_t *sccbh, int *pr )
     else
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
 
-    sqlt = duf_selector_total2sql( sql_set, PDI->selected_db );
+    sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name );
 #endif
     if ( sqlt )
     {
@@ -165,7 +166,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
-    DOR( rpr, duf_scan_beginning_sql( sccb, pdi->selected_db ) );
+    DOR( rpr, duf_scan_beginning_sql( sccb, pdi->pdi_name ) );
     DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
     {
       int rt = 0;

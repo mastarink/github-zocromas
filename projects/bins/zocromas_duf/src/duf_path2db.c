@@ -187,7 +187,7 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * 
   assert( pdi );
 
 #if 1
-  sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->selected_db  );
+  sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name  );
 #else
   sqlv = mas_strdup( "SELECT " );
   sqlv = mas_strcat_x( sqlv, def_node_fieldset2 );

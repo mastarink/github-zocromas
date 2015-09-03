@@ -27,6 +27,9 @@
 /* #include "duf_path2db.h" */
 #include "duf_path2dirid.h"
 
+#include "duf_maindb.h"
+
+
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"
 
@@ -147,12 +150,13 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     path = NULL;
     assert( 0 );
   }
-#else
+#elif 0
   duf_depthinfo_t DUF_UNUSED di = {.depth = -1,
     .seq = 0,
     .levinfo = NULL,
     .pu = NULL,
     .opendir = 1,
+    .pdi_name = "dumplet_pdi"
   };
   DOR( r, duf_pdi_init_from_dirid( &di, duf_levinfo_dirid( pdi ), 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */
         ) );
@@ -169,7 +173,8 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     /* DOR( r, duf_evaluate_pdi_sccb_std( "tree", &di, NULL (* &uf *)  ) ); */
   }
   duf_pdi_shut( &di );
-  assert( 0 );
+#else
+  DUF_TRACE(temp, 0, "@@@ %llu", DUF_GET_UFIELD2(md5id));
 #endif
 
   DEBUG_ENDR( r );

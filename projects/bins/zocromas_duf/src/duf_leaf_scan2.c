@@ -13,6 +13,7 @@
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"
 
+
 #include "duf_sccbh_shortcuts.h"
 
 /* ###################################################################### */
@@ -34,7 +35,7 @@ int
 duf_eval_sccbh_db_leaf_fd_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  
+
   PDI->items.total++;
   PDI->items.files++;
 
@@ -65,10 +66,10 @@ int
 duf_eval_sccbh_db_leaf_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );
-  
+
   PDI->items.total++;
   PDI->items.files++;
- 
+
   DUF_TRACE( fs, 0, "@ %d:%s ", duf_levinfo_item_deleted( PDI ), duf_levinfo_itemshowname( PDI ) );
   {
     duf_scan_hook2_file_t scanner = duf_levinfo_item_deleted( PDI ) ? SCCB->leaf_scan2_deleted : SCCB->leaf_scan2;

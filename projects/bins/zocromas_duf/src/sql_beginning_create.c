@@ -50,9 +50,10 @@ duf_sql_sequence_t sql_beginning_clear = {.done = 0,
           NULL}
 };
 
-duf_sql_sequence_t sql_beginning_create = {.done = 0,
+duf_sql_sequence_t sql_beginning_create = {
+  .done = 0,
+  .beginend = 1,
   .sql = {
-          "BEGIN" /* */ ,
           "CREATE TABLE IF NOT EXISTS " DUF_DBADMPREF "log ("
 #ifdef DUF_USE_IDCOL
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement,"
@@ -384,6 +385,5 @@ duf_sql_sequence_t sql_beginning_create = {.done = 0,
 /******************************************************************************************************/
 
 
-          "END" /* */ ,
           NULL}
 };

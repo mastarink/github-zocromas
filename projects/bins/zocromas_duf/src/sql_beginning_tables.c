@@ -10,8 +10,8 @@
 
 duf_sql_sequence_t sql_beginning_tables = {
   .done = 0,
+  .beginend = 1,
   .sql = {
-          "BEGIN" /* */ ,
 
 #ifndef DUF_SQL_TTABLES_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL /* */ ,
@@ -69,6 +69,5 @@ duf_sql_sequence_t sql_beginning_tables = {
            *
            *  - see mod_integrity_uni.c
            * */
-          "END" /* */ ,
           NULL}
 };
