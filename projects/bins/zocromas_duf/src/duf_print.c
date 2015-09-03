@@ -264,7 +264,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pdi->levinfo[pdi->depth].items.files );
+    snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.files );
     ok++;
     break;
   case DUF_SFMT_CHR_NDIRS:                    /* ndirs */
@@ -277,7 +277,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       snprintf( format, fbsz, "%%llu" );
 #endif
 
-    snprintf( pbuffer, bfsz, format, pdi->levinfo[pdi->depth].items.dirs );
+    snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.dirs );
     ok++;
     break;
   case DUF_SFMT_CHR_DATAID:                    /* dataid */

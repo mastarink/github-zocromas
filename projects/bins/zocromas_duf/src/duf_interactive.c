@@ -54,7 +54,7 @@ duf_interactive( void )
   /* (* xchanges = di.changes; --- needless!? *) */
   /* duf_pdi_close( &duf_config->di );           */
   assert( duf_config->pdi );
-  assert( duf_config->pdi->levinfo );
+  assert( duf_config->pdi->pathinfo.levinfo );
   /* if ( r >= 0 ) */
   {
     char *duf_rl_buffer = NULL;

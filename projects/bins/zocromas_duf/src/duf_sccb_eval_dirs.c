@@ -105,7 +105,7 @@ int DUF_WRAPPED( duf_eval_sccbh_all ) ( duf_sqlite_stmt_t * pstmt_selector, duf_
   DEBUG_STARTR( r );
 
   assert( PDI );
-  assert( PDI->depth >= 0 );
+  assert( PDI->pathinfo.depth >= 0 );
   /* assert( pstmt_selector ); */
 
 #  ifdef MAS_TRACING

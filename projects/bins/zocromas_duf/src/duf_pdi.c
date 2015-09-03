@@ -92,7 +92,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
   if ( !pdi->inited )
   {
     pdi->inited = 1;
-    pdi->depth = -1;
+    pdi->pathinfo.depth = -1;
     DUF_TRACE( temp, 0, "@@@@@pdi_name %s", pdi->pdi_name );
     /* if ( !pdi->pdi_name )                       */
     /*   pdi->pdi_name =  "selected"; */
@@ -101,7 +101,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     {
       DORN( r, duf_pathdepth( real_path ) );
       if ( r >= 0 )
-        pdi->topdepth = r;
+        pdi->pathinfo.topdepth = r;
     }
     if ( !pdi->attached_selected )
     {
@@ -115,10 +115,10 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
       }
       pdi->attached_selected = 1;
     }
-    assert( pdi->depth == -1 );
-    DOR( r, duf_levinfo_create( pdi, pdi->topdepth, frecursive, opendir ) ); /* depth = -1 */
-    assert( r < 0 || pdi->levinfo );
-    /* assert( pdi->depth == -1 ); */
+    assert( pdi->pathinfo.depth == -1 );
+    DOR( r, duf_levinfo_create( pdi, pdi->pathinfo.topdepth, frecursive, opendir ) ); /* depth = -1 */
+    assert( r < 0 || pdi->pathinfo.levinfo );
+    /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
       DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */  ) );
 
@@ -158,7 +158,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
     DUF_TRACE( explain, 0, "added path: %s", real_path );
     /* DUF_TRACE( path, 10, "diridpid: %llu", duf_levinfo_dirid( pdi ) ); */
   }
-  /* TODO */ assert( pdi->levinfo );
+  /* TODO */ assert( pdi->pathinfo.levinfo );
   DEBUG_ENDR( r );
 }
 #endif
@@ -246,7 +246,7 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     /* global_status.changes += pdi->changes; */
     pdi->inited = 0;
     pdi->opendir = 0;
-    pdi->depth = pdi->topdepth = 0;
+    pdi->pathinfo.depth = pdi->pathinfo.topdepth = 0;
     pdi->maxdepth = 0;
     pdi->changes = 0;
     pdi->pu = 0;
@@ -258,9 +258,9 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     assert( !pdi->items.dirs );
     assert( !pdi->items.total );
     assert( !pdi->maxdepth );
-    assert( !pdi->topdepth );
-    assert( !pdi->depth );
-    assert( !pdi->levinfo );
+    assert( !pdi->pathinfo.topdepth );
+    assert( !pdi->pathinfo.depth );
+    assert( !pdi->pathinfo.levinfo );
     assert( !pdi->changes );
     assert( !pdi->seq_node );
     assert( !pdi->seq_leaf );

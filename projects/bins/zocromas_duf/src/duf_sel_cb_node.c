@@ -46,7 +46,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
 {
   DEBUG_STARTR( r );
   assert( PDI );
-  assert( PDI->depth >= 0 );
+  assert( PDI->pathinfo.depth >= 0 );
 
   /* data from db at pstmt */
 
@@ -59,7 +59,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     /*@ 1. go down + dbopenat */
     DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 0 /* is_leaf */  ) );
     DUF_TRACE( scan, 6, "(%s) NODE down %s", duf_error_name( r ), duf_levinfo_path( PDI ) );
-    assert( PDI->depth >= 0 );
+    assert( PDI->pathinfo.depth >= 0 );
 
     if ( r >= 0 )               /* levinfo_down OK */
     {

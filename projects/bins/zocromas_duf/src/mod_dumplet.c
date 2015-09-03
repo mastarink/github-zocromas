@@ -174,7 +174,12 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
   }
   duf_pdi_shut( &di );
 #else
-  DUF_TRACE(temp, 0, "@@@ %llu", DUF_GET_UFIELD2(md5id));
+  DUF_TRACE( temp, 0, "@@@ %llu", DUF_GET_UFIELD2( md5id ) );
+  /*
+   * TODO
+   * 1. SELECT ... FROM .... LEFT JOIN .... LEFT JOIN .... WHERE fd.md5id=DUF_GET_UFIELD2(md5id)
+   * 2. dirid2path ...
+   * */
 #endif
 
   DEBUG_ENDR( r );

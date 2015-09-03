@@ -217,7 +217,7 @@ duf_print_file_info_nfiles( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfo
   if ( duf_config->cli.bformat.v.flag.nfiles && ( !bformat || bformat->v.flag.nfiles ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{nfiles}" ) );
-    DUF_PRINTF( 0, ".(%6llu) ", pdi->levinfo[pdi->depth].items.files );
+    DUF_PRINTF( 0, ".(%6llu) ", pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.files );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );
@@ -242,7 +242,7 @@ duf_print_file_info_ndirs( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, duf_bfor
   if ( duf_config->cli.bformat.v.flag.ndirs && ( !bformat || bformat->v.flag.ndirs ) )
   {
     DUF_DEBUG( 12, DUF_PRINTF( 0, ".{ndirs}" ) );
-    DUF_PRINTF( 0, ".{%6llu} ", pdi->levinfo[pdi->depth].items.dirs );
+    DUF_PRINTF( 0, ".{%6llu} ", pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.dirs );
     ok++;
   }
   DUF_DEBUG( 13, DUF_PRINTF( 0, ".▣" ) );

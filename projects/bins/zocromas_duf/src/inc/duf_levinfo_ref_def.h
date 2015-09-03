@@ -7,7 +7,7 @@
 	  _typ _ref2 result = (0); \
 	  assert( pdi ); \
 	  /* if ( pdi->opendir ) */ \
-	  result = duf_levinfo_ ## _name ## _d( pdi, pdi->depth ); \
+	  result = duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.depth ); \
 	  return result; \
 	}
 
@@ -16,7 +16,7 @@
 	duf_levinfo_ ## _name ## _up(  duf_depthinfo_t * pdi ) \
 	{ \
 	  assert( pdi ); \
-	  return pdi->depth > 0 ? duf_levinfo_ ## _name ## _d( pdi, pdi->depth - 1 ) : 0; \
+	  return pdi->pathinfo.depth > 0 ? duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.depth - 1 ) : 0; \
 	}
 
 #define DUF_LEVINFO_F(_typ, _name) DUF_LEVINFO_F_PLUS(_typ, _name, , )
@@ -42,7 +42,7 @@
 	  _typ _ref2 result = (0); \
 	  assert( pdi ); \
 	  /* if ( pdi->opendir ) */ \
-	  result = duf_levinfo_ ## _name ## _d( pdi, pdi->depth ); \
+	  result = duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.depth ); \
 	  return result; \
 	}
 
@@ -58,14 +58,14 @@
   	_typ _ref2 duf_levinfo_ ## _name ## _up( const duf_depthinfo_t * pdi ) \
 	{ \
 	  assert( pdi ); \
-	  return pdi->depth > 0 ? duf_levinfo_ ## _name ## _d( pdi, pdi->depth - 1 ) : 0; \
+	  return pdi->pathinfo.depth > 0 ? duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.depth - 1 ) : 0; \
 	}
 
 #define DUF_LEVINFO_FC_TOP_PLUS(_typ, _name, _ref1, _ref2) \
   	_typ _ref2 duf_levinfo_ ## _name ## _top( const duf_depthinfo_t * pdi ) \
 	{ \
 	  assert( pdi ); \
-	  return pdi->depth > 0 ? duf_levinfo_ ## _name ## _d( pdi, pdi->topdepth ) : 0; \
+	  return pdi->pathinfo.depth > 0 ? duf_levinfo_ ## _name ## _d( pdi, pdi->pathinfo.topdepth ) : 0; \
 	}
 
 #define DUF_LEVINFO_FS_PLUS(_typ, _name, _ref1, _ref2) \
@@ -73,15 +73,15 @@
 	{ \
 	  assert( pdi ); \
 	  /* if ( pdi->opendir ) */ \
-	  duf_levinfo_set_ ## _name ## _d( pdi, setarg, pdi->depth ); \
+	  duf_levinfo_set_ ## _name ## _d( pdi, setarg, pdi->pathinfo.depth ); \
 	}
 
 #define DUF_LEVINFO_FS_UP_PLUS(_typ, _name, _ref1, _ref2) \
   	void duf_levinfo_set_ ## _name ## _up( duf_depthinfo_t * pdi, _typ setarg ) \
 	{ \
 	  assert( pdi ); \
-	  if ( pdi->depth > 0 ) \
-	    duf_levinfo_set_ ## _name ## _d( pdi, setarg, pdi->depth - 1 ); \
+	  if ( pdi->pathinfo.depth > 0 ) \
+	    duf_levinfo_set_ ## _name ## _d( pdi, setarg, pdi->pathinfo.depth - 1 ); \
 	}
 
 #define DUF_LEVINFO_FS(_typ, _name) DUF_LEVINFO_FS_PLUS(_typ, _name, , )

@@ -29,8 +29,8 @@ duf_levinfo_set_context_up_destructor( duf_depthinfo_t * pdi, duf_void_voidp_t d
   {
     int d;
 
-    d = pdi->depth - 1;
+    d = pdi->pathinfo.depth - 1;
     if ( d >= 0 )
-      duf_set_context_destructor( &pdi->levinfo[d].context, destr );
+      duf_set_context_destructor( &pdi->pathinfo.levinfo[d].context, destr );
   }
 }

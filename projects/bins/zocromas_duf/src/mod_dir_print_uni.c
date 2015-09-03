@@ -302,7 +302,7 @@ print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long path
 
       if ( !sformat )
         sformat = "%r\n";
-      DUF_TRACE( temp, 0, "%s : %s", duf_levinfo_path( pdi ), duf_levinfo_path_d( pdi, pdi->topdepth ) );
+      DUF_TRACE( temp, 0, "%s : %s", duf_levinfo_path( pdi ), duf_levinfo_path_d( pdi, pdi->pathinfo.topdepth ) );
       duf_print_sformat_file_info( pdi, &fi, sformat, ( duf_pdi_scb_t ) NULL, ( duf_pdi_scb_t ) NULL );
     }
   }

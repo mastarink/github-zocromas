@@ -18,9 +18,9 @@ typedef enum
 
 typedef struct duf_dirhandle_s
 {
-#if 0
+#  if 0
   unsigned long long dirid;
-#endif
+#  endif
   int dfd;
   int rs;
   int rdb;
@@ -64,6 +64,15 @@ typedef struct
   duf_dirhandle_t lev_dh;
 } duf_levinfo_t;
 
+typedef struct
+{
+  unsigned maxdepth;
+  int depth;                    /* signed !! */
+  int topdepth;                 /* signed !! */
+  /* duf_node_type_t node_type; */
+  /* char *path; */
+  duf_levinfo_t *levinfo;
+} duf_pathinfo_t;
 
 typedef struct duf_depthinfo_s
 {
@@ -74,11 +83,15 @@ typedef struct duf_depthinfo_s
   unsigned recursive:1;
   unsigned attached_selected:1;
   unsigned maxdepth;
+#if 0
   int depth;                    /* signed !! */
   int topdepth;                 /* signed !! */
   /* duf_node_type_t node_type; */
   /* char *path; */
   duf_levinfo_t *levinfo;
+#else
+  duf_pathinfo_t pathinfo;
+#endif
   unsigned long long changes;
   unsigned long long seq;
   unsigned long long seq_leaf;

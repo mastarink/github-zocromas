@@ -42,9 +42,14 @@ duf_path2dirid( const char *path, const duf_sql_set_t * sql_set, int *pr )
   real_path = duf_realpath( path, &rpr );
   if ( DUF_NOERROR( rpr ) )
   {
-    duf_depthinfo_t di = {.depth = -1,
+    duf_depthinfo_t di = {
       .seq = 0,
-      .levinfo = NULL,
+      .pathinfo =               /* */
+      {
+       .depth = -1,
+       .levinfo = NULL,
+       }
+      ,
       .pu = NULL,
       /* .opendir = sccb ? sccb->opendir : 0, */
       .opendir = 1,
@@ -70,7 +75,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
   char *name = NULL;
 
   DEBUG_START(  );
-  DUF_SQL_START_STMT( pdi, select_path, sqlv, rpr, pstmt );
+  DUF_SQL_START_STMT( pdi, dirid2name_existed, sqlv, rpr, pstmt );
   {
     DUF_SQL_BIND_LL( dirID, dirid, rpr, pstmt );
     DUF_SQL_STEP( rpr, pstmt );
@@ -88,7 +93,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
       DUF_TRACE( select, 10, "<NOT selected> (%d)", rpr );
     }
   }
-  DUF_SQL_END_STMT( select_path, rpr, pstmt );
+  DUF_SQL_END_STMT( dirid2name_existed, rpr, pstmt );
   if ( pr )
     *pr = rpr;
   DEBUG_ENDS( name );
@@ -137,9 +142,13 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   int done = 0;
   int depth = 0;
 
-  duf_depthinfo_t DUF_UNUSED di = {.depth = -1,
+  duf_depthinfo_t DUF_UNUSED di = {
     .seq = 0,
-    .levinfo = NULL,
+    .pathinfo =                 /* */
+    {
+     .depth = -1,
+     .levinfo = NULL,
+     },
     .pu = NULL,
     .opendir = 1,
   };

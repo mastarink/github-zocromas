@@ -42,7 +42,7 @@ duf_pdi_seq( const duf_depthinfo_t * pdi )
 int
 duf_pdi_deltadepth( const duf_depthinfo_t * pdi, int d )
 {
-  return pdi ? d - pdi->topdepth : 0;
+  return pdi ? d - pdi->pathinfo.topdepth : 0;
 }
 
 int
@@ -73,27 +73,27 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
 int
 duf_pdi_depth( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->depth : 0;
+  return pdi ? pdi->pathinfo.depth : 0;
 }
 
-/* pdi->depth - pdi->topdepth */
+/* pdi->pathinfo.depth - pdi->pathinfo.topdepth */
 int
 duf_pdi_reldepth( const duf_depthinfo_t * pdi )
 {
-  return pdi ? duf_pdi_deltadepth( pdi, pdi->depth ) : 0;
+  return pdi ? duf_pdi_deltadepth( pdi, pdi->pathinfo.depth ) : 0;
 }
 
 void
 duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
 {
   if ( pdi )
-    pdi->topdepth = pdi->depth;
+    pdi->pathinfo.topdepth = pdi->pathinfo.depth;
 }
 
 int
 duf_pdi_topdepth( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->topdepth : 0;
+  return pdi ? pdi->pathinfo.topdepth : 0;
 }
 
 int
@@ -101,7 +101,7 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
 {
   return pdi ? pdi->maxdepth : 0;
 }
-/* pdi->topdepth + pdi->depth - pdi->topdepth === pdi->depth */
+/* pdi->pathinfo.topdepth + pdi->pathinfo.depth - pdi->pathinfo.topdepth === pdi->pathinfo.depth */
 int
 duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
 {
@@ -118,7 +118,7 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
 int
 duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta )
 {
-  return duf_pdi_is_good_depth_d( pdi, delta, pdi->depth );
+  return duf_pdi_is_good_depth_d( pdi, delta, pdi->pathinfo.depth );
 }
 
 void

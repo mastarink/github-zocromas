@@ -10,6 +10,7 @@
 #include "duf_levinfo_context.h"
 #include "duf_context.h"
 
+#include "duf_pathinfo_ref.h"
 /* ###################################################################### */
 #include "duf_levinfo_ref.h"
 /* ###################################################################### */
@@ -20,10 +21,14 @@ duf_levinfo_t *
 duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
 {
   assert( pdi );
-  assert( pdi->levinfo );
   assert( pdi->inited );
+#if 0
   assert( d >= 0 );
-  return d >= 0 && pdi ? &pdi->levinfo[d] : NULL;
+  assert( pdi->pathinfo.levinfo );
+  return d >= 0 && pdi ? &pdi->pathinfo.levinfo[d] : NULL;
+#else
+  return duf_pathinfo_ptr_d( &pdi->pathinfo, d );
+#endif
 }
 /* *INDENT-OFF*  */
 DUF_LEVINFO_FC_REF( duf_levinfo_t , ptr )
@@ -379,16 +384,20 @@ DUF_LEVINFO_3GET( int, source, lev_dh.source )
 const char *
 duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
 {
+#if 0
   char *path = NULL;
-
+#else
+  const char *path = NULL;
+#endif
   assert( pdi );
   if ( pdi->inited )
   {
     assert( d >= 0 );
-    assert( pdi->levinfo );
+    assert( pdi->pathinfo.levinfo );
     assert( pdi->inited );
     if ( duf_levinfo_ptr_d( pdi, d )->is_leaf )
       d--;
+#if 0
     {
       assert( d >= 0 );
       if ( duf_levinfo_ptr_d( pdi, d )->fullpath )
@@ -404,8 +413,8 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
 
         for ( int i = 0; i <= d; i++ )
         {
-          assert( pdi->levinfo[i].itemname );
-          len += strlen( pdi->levinfo[i].itemname ) + 1;
+          assert( pdi->pathinfo.levinfo[i].itemname );
+          len += strlen( pdi->pathinfo.levinfo[i].itemname ) + 1;
         }
         path = mas_malloc( len );
         /* path = strcpy( path, pdi->path ); */
@@ -419,10 +428,10 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
             *p++ = '/';
           *p = 0;
           DUF_TRACE( path, 4, "path:%s", path );
-          l = strlen( pdi->levinfo[i].itemname );
+          l = strlen( pdi->pathinfo.levinfo[i].itemname );
           if ( l > 0 )
           {
-            strcpy( p, pdi->levinfo[i].itemname );
+            strcpy( p, pdi->pathinfo.levinfo[i].itemname );
             p += l;
             *p++ = '/';
           }
@@ -437,6 +446,9 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
       /*   DUF_SHOW_ERROR( "pdi->path not set" ); */
       /* }                                   */
     }
+#else
+    path = duf_pathinfo_path_d( &pdi->pathinfo, d );
+#endif
   }
 #if 0
   if ( !path )
