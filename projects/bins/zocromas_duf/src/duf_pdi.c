@@ -23,6 +23,12 @@
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 
+
+
+#include "duf_sql2.h"
+#include "duf_maindb.h"
+
+
 #include "duf_path2db.h"
 
 /* ###################################################################### */
@@ -40,18 +46,40 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
   {
     pdi->inited = 1;
     pdi->depth = -1;
+    pdi->selected_db = mas_strdup( "selected" );
     if ( real_path )
     {
       DORN( r, duf_pathdepth( real_path ) );
       if ( r >= 0 )
         pdi->topdepth = r;
     }
+#if 1
+    if ( !pdi->attached_selected )
+    {
+      static const char *sql = "ATTACH DATABASE '' AS duf";
+      char *worksql;
+
+      worksql = mas_strdup( sql );
+      worksql = mas_strcat_x( worksql, pdi->selected_db );
+      DORF( r, duf_main_db_open );
+      DUF_TRACE( temp, 0, "@@@@@attach selected database %s", worksql );
+
+      DUF_TRACE( explain, 0, "attach selected database %s", worksql );
+      DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_END_STMT( r, pstmt );
+      DUF_TRACE( temp, 0, "@@@@attached selected database %s", worksql );
+      pdi->attached_selected = 1;
+      mas_free( worksql );
+    }
+#endif
     assert( pdi->depth == -1 );
     DOR( r, duf_levinfo_create( pdi, pdi->topdepth, frecursive, opendir ) ); /* depth = -1 */
     assert( r < 0 || pdi->levinfo );
     /* assert( pdi->depth == -1 ); */
     if ( real_path )
       DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */  ) );
+
   }
   DEBUG_ENDR( r );
 }
@@ -93,8 +121,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
 
 static int
 duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_ufilter_t * pu,
-                const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int frecursive,
-                int opendir )
+                const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   int frec = 0;
@@ -158,6 +185,17 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
   assert( pdi );
   if ( pdi->inited )
   {
+#if 0
+    {
+      static const char *sql = "DETACH DATABASE " DUF_DBSELECTEDALIAS;
+
+      DUF_TRACE( temp, 0, "@@@detach selected database %s", sql );
+      DUF_TRACE( explain, 0, "detach selected database %s", sql );
+      DUF_SQL_START_STMT( pdi, detach, sql, r, pstmt );
+      DUF_SQL_STEP( r, pstmt );
+      DUF_SQL_END_STMT( r, pstmt );
+    }
+#endif
     duf_clear_context( &pdi->context );
     duf_levinfo_delete( pdi );
 
@@ -166,6 +204,9 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
 
     mas_free( pdi->idstatements );
     pdi->idstatements = NULL;
+
+    mas_free( pdi->selected_db );
+    pdi->selected_db = NULL;
 
     /* mas_free( pdi->xstatements ); */
     /* pdi->xstatements = NULL;      */

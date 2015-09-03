@@ -116,7 +116,7 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
   assert( pdi );
 
   {
-    sqlv = duf_selector2sql( &def_node_set );
+    sqlv = duf_selector2sql( &def_node_set, pdi->selected_db );
 
     name = _duf_dirid2name_existed( pdi, sqlv, dirid, pparentid, &rpr );
 

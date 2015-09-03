@@ -57,7 +57,7 @@ duf_scan_callbacks_t duf_save_to_callbacks = {
   .name = "save_to",
   .def_opendir = 1,
   .init_scan = save_to_init,
-  .beginning_sql_seq = &sql_beginning_selected,
+  .beginning_sql_seq = &sql_create_selected,
 
   .node_scan_before2 = save_to_node_before2,
   .node_scan_before2_deleted = save_to_node_before2_del,

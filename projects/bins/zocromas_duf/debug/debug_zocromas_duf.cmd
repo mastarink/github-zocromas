@@ -7,7 +7,7 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-b duf_sqlite.c:401
+b duf_sqlite.c:380
 
 run
 bt

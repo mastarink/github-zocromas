@@ -28,6 +28,24 @@
 #    define DUF_DBTEMPPREF DUF_DBPREF
 #  endif
 
+#  define DUF_DBSELECTEDALIAS "dufselected"
+
+#  ifdef MAS_SPLIT_DB
+#    define DUF_DBSELECTEDPREF DUF_DBSELECTEDALIAS "."
+#  else
+#    define DUF_DBSELECTEDPREF DUF_DBPREF
+#  endif
+
+#  define DUF_DBTOSETALIAS "duf${SELECTED_DB}"
+
+#  ifdef MAS_SPLIT_DB
+#    define DUF_DBTOSETPREF DUF_DBTOSETALIAS "."
+#  else
+#    define DUF_DBTOSETPREF DUF_DBPREF
+#  endif
+
+
+
 
 /* ###################################################################### */
 

@@ -3,7 +3,7 @@
 
 
 #  include "duf_sql_types.h"
-
+#  include "duf_sql_const.h"   /* DUF_SQL_ROW */
 
 int duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt );
 int duf_sql_step( duf_sqlite_stmt_t * stmt );

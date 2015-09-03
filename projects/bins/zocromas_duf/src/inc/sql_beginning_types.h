@@ -4,6 +4,8 @@
 typedef struct
 {
   unsigned done;
+  unsigned beginend;
+  unsigned set_selected_db;
   const char *sql[];
 } duf_sql_sequence_t;
 

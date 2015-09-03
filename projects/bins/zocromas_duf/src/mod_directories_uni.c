@@ -116,7 +116,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .dirent_dir_scan_before2 = register_pdidirectory,
 
   .count_nodes = 1,
-  .beginning_sql_seq = &sql_beginning_selected,
+  .beginning_sql_seq = &sql_create_selected,
 
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */

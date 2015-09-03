@@ -1,34 +1,11 @@
 #ifndef SQL_BEGINNING_SELECTED_H
 #  define SQL_BEGINNING_SELECTED_H
 
-#  include "sql_beginning_tables.h"
+
+#  include "sql_tables_defs.h"
+#  include "sql_selected_defs.h"
 
 
-#  define DUF_SQL_SELECTED_TMP_FILENAMES  "t_selected_filenames"
-#  define DUF_SQL_SELECTED_TMP_PATHS "t_selected_paths"
-#  define DUF_SQL_SELECTED_TMP_PATHTOT_FILES "t_selected_pathtot_files"
-#  define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS "t_selected_pathtot_dirs"
-
-#  if 1
-#    ifdef DUF_SQL_SELECTED_TEMPORARY
-#      define DUF_SQL_SELECTED_TMP_FILENAMES_FULL           DUF_SQL_SELECTED_TMP_FILENAMES
-#      define DUF_SQL_SELECTED_TMP_PATHS_FULL               DUF_SQL_SELECTED_TMP_PATHS
-#      define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL       DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-#      define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL        DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
-#    else
-#      define DUF_SQL_SELECTED_TMP_FILENAMES_FULL     DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_FILENAMES
-#      define DUF_SQL_SELECTED_TMP_PATHS_FULL         DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_PATHS
-#      define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-#      define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL  DUF_DBTEMPPREF DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
-#    endif
-#  else
-#    define DUF_SQL_SELECTED_TMP_FILENAMES_FULL           DUF_SQL_SELECTED_TMP_FILENAMES
-#    define DUF_SQL_SELECTED_TMP_PATHS_FULL               DUF_SQL_SELECTED_TMP_PATHS
-#    define DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL       DUF_SQL_SELECTED_TMP_PATHTOT_FILES
-#    define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL        DUF_SQL_SELECTED_TMP_PATHTOT_DIRS
-#  endif
-
-#  include "sql_beginning_types.h"
 
 #  define DUF_SQL_UFILTER_BINDINGS \
         "    (:minSize     IS NULL OR  fd.size     >=:minSize                             ) AND"  \
@@ -83,6 +60,7 @@
 /* " AND ((SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS ") == 0 OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.name='files-tagged-as' ))" \ */
 
 
-extern duf_sql_sequence_t sql_beginning_selected;
+#  include "sql_beginning_types.h"
+extern duf_sql_sequence_t sql_create_selected;
 
 #endif

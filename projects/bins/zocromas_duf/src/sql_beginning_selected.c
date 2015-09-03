@@ -9,10 +9,11 @@
 
 
 
-duf_sql_sequence_t sql_beginning_selected = {
+duf_sql_sequence_t sql_create_selected = {
   .done = 0,
+  .beginend = 1,
+  .set_selected_db = 1,
   .sql = {
-          "BEGIN",
 #ifndef DUF_SQL_SELECTED_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ ,
 #endif
@@ -96,6 +97,5 @@ duf_sql_sequence_t sql_beginning_selected = {
           ,
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (numdirs)",
 
-          "END",
           NULL}
 };

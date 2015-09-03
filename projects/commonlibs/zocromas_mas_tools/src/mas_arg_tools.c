@@ -79,8 +79,14 @@ mas_find_eq_value( const char *s )
   return s;
 }
 
+static char *
+mas_expand_getenv( const char *name, const char *arg )
+{
+  return getenv( name );
+}
+
 char *
-mas_expand_string( const char *str )
+mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *arg )
 {
   const char *doll = NULL;
   const char *beg = NULL;
@@ -137,7 +143,7 @@ mas_expand_string( const char *str )
       char *vv;
 
       vn = mas_strndup( start, end - start );
-      vv = getenv( vn );
+      vv = ( cb ) ( vn, arg );
       if ( vv && *vv )
       {
         snew = mas_strcat_x( snew, vv );
@@ -163,6 +169,12 @@ mas_expand_string( const char *str )
   /* fprintf( stderr, "@@@@@@@@@@ [%s] => [%s] ; start:[%s] ; end:[%s]\n", cstr, snew, start, end ); */
 
   return snew;
+}
+
+char *
+mas_expand_string( const char *str )
+{
+  return mas_expand_string_cb_arg( str, mas_expand_getenv, NULL );
 }
 
 const char *

@@ -21,9 +21,12 @@
 
 #include "duf_sccb_def.h"
 #include "duf_sccb.h"
+#include "duf_selector.h"
 
 #include "duf_sccb_begfin.h"
 #include "duf_ufilter_bind.h"
+
+
 
 #include "duf_item_scan2.h"
 
@@ -33,17 +36,17 @@
 /* ###################################################################### */
 
 static unsigned long long
-duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
+duf_count_total_items( const duf_sccb_handle_t *sccbh, int *pr )
 {
   DEBUG_STARTULL( cnt );
   int rpr = DUF_ERROR_TOTALS;
 
   /* const char *leaf_selector_total2 = NULL; */
 
-  assert( sccb );
-  /* leaf_selector_total2 = duf_get_leaf_sql_set( sccb )->selector_total2; */
+  assert( SCCB );
+  /* leaf_selector_total2 = duf_get_leaf_sql_set( SCCB )->selector_total2; */
 
-  if ( sccb )
+  if ( SCCB )
   {
     char *sqlt = NULL;
     const duf_sql_set_t *sql_set = NULL;
@@ -55,12 +58,12 @@ duf_count_total_items( const duf_scan_callbacks_t * sccb, int *pr )
     sqlt = mas_strcat_x( sqlt, " " );
     sqlt = mas_strcat_x( sqlt, leaf_selector_total2 );
 #else
-    if ( sccb->count_nodes )
-      sql_set = duf_get_sql_set( sccb , DUF_NODE_NODE);
+    if ( SCCB->count_nodes )
+      sql_set = duf_get_sql_set( SCCB , DUF_NODE_NODE);
     else
-      sql_set = duf_get_sql_set( sccb, DUF_NODE_LEAF );
+      sql_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
 
-    sqlt = duf_selector_total2sql( sql_set );
+    sqlt = duf_selector_total2sql( sql_set, PDI->selected_db );
 #endif
     if ( sqlt )
     {
@@ -161,13 +164,13 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PDI = pdi;
     SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
-    DUF_TRACE( sql, 0, "beginning_sql for '%s'", sccb->title );
-    DOR( rpr, duf_scan_beginning_sql( sccb ) );
-    DUF_TRACE( sql, 0, "/beginning_sql for '%s'", sccb->title );
+    DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
+    DOR( rpr, duf_scan_beginning_sql( sccb, pdi->selected_db ) );
+    DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
     {
       int rt = 0;
 
-      TOTITEMS = duf_count_total_items( SCCB, &rt ); /* reference */
+      TOTITEMS = duf_count_total_items( sccbh, &rt ); /* reference */
       DUF_TRACE( temporary, 0, "counted for %s... %lld", SCCB->title, TOTITEMS );
 /* total_files for progress bar only :( */
       /* assert(TOTITEMS=38); */

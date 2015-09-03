@@ -52,7 +52,7 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optname );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optargg );
 
-  DOR( r, duf_eval_sql_sequence_cb( &tmpseq, NULL, duf_bind_tmp, &ttarg ) );
+  DOR( r, duf_eval_sql_sequence_cb( &tmpseq, NULL, duf_bind_tmp, &ttarg, NULL /* selected_db */ ) );
   mas_del_argv( ttarg.argc, ttarg.argv, 0 );
   DEBUG_ENDR( r );
 }

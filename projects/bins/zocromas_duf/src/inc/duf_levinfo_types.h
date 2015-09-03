@@ -70,6 +70,7 @@ typedef struct duf_depthinfo_s
   unsigned inited:1;
   unsigned opendir:1;
   unsigned recursive:1;
+  unsigned attached_selected:1;
   unsigned maxdepth;
   int depth;                    /* signed !! */
   int topdepth;                 /* signed !! */
@@ -86,6 +87,7 @@ typedef struct duf_depthinfo_s
   int num_idstatements;
   /* duf_sqlite_stmt_t **statements; */
   duf_idstmt_t *idstatements;
+  char *selected_db;
   /* int **xstatements; */
   duf_modcnts_t cnts;
 } duf_depthinfo_t;

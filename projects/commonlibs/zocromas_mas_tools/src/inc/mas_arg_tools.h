@@ -4,8 +4,11 @@
 #  define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
 #  define mas_strncat_x(...)  mas_strncat_xt (__VA_ARGS__)
 
+typedef char *( *mas_arg_get_cb_arg_t ) ( const char *name, const char *arg );
+
 size_t mas_wordlen( const char *s );
 char *mas_chomp( char *s );
+char *mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *arg );
 char *mas_expand_string( const char *str );
 int mas_strcmp2( const char *s1, const char *s2 );
 int mas_strcmpv( const char *s1, const char *s2, char **vval );

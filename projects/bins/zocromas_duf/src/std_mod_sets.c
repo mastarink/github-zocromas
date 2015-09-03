@@ -12,9 +12,9 @@
 #include "sql_beginning_selected.h"
 
 
-
 duf_sql_set_t std_leaf_sets[] = { /* */
   {                             /* */
+   .set_selected_db = 1, /* */
    .fieldset =                  /* */
    " 'std-leaf' AS fieldset_id, " /* */
    "  fn.Pathid AS dirid "      /* */
@@ -101,6 +101,7 @@ size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 duf_sql_set_t std_node_sets[] = { /* */
   {
+   .set_selected_db = 1, /* */
    .fieldset =                  /* */
    "'std-node' AS fieldset_id, " /* */
    " pt." DUF_SQL_IDNAME " AS dirid" /* */
@@ -119,11 +120,6 @@ duf_sql_set_t std_node_sets[] = { /* */
    .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
    ,
    .filter = NULL               /* */
-   ,
-#if 0
-   .selector_total2 =           /* */
-   " /* std */ FROM " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS p " /* */
-#endif
    }
   ,
   {

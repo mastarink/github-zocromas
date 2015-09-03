@@ -51,7 +51,7 @@ duf_main_db_locate( void )
   if ( duf_config->db.dir && duf_config->db.main.name )
   {
     DUF_TRACE( explain, 0, "setting config->db.main.fpath by db.dir: %s and db.main.name: %s", duf_config->db.dir, duf_config->db.main.name );
-    /* TODO move db.main.fpath and db.adm.fpath and db.temp.fpath from duf_config to tmp etc. - it's not config values */
+    /* TODO move db.main.fpath and db.adm.fpath and db.tempo.fpath from duf_config to tmp etc. - it's not config values */
     /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", duf_config->db.dir, duf_config->db.main.name ); */
     duf_config->db.main.fpath = mas_strdup( duf_config->db.dir );
     duf_config->db.main.fpath = mas_strcat_x( duf_config->db.main.fpath, "/" );
@@ -75,23 +75,44 @@ duf_main_db_locate( void )
       duf_config->db.adm.fpath = mas_strcat_x( duf_config->db.adm.fpath, duf_config->db.adm.name );
       DUF_TRACE( explain, 0, "config->db.adm.fpath set: %s", duf_config->db.adm.fpath );
     }
-    if ( duf_config->db.temp.name )
+    if ( duf_config->db.tempo.name )
     {
-      DUF_TRACE( explain, 0, "setting config->db.temp.fpath by db.dir: %s and db.temp.name: %s", duf_config->db.dir, duf_config->db.temp.name );
-      duf_config->db.temp.fpath = mas_strdup( duf_config->db.dir );
-      duf_config->db.temp.fpath = mas_strcat_x( duf_config->db.temp.fpath, "/" );
+      DUF_TRACE( explain, 0, "setting config->db.tempo.fpath by db.dir: %s and db.tempo.name: %s", duf_config->db.dir, duf_config->db.tempo.name );
+      duf_config->db.tempo.fpath = mas_strdup( duf_config->db.dir );
+      duf_config->db.tempo.fpath = mas_strcat_x( duf_config->db.tempo.fpath, "/" );
       {
         char *n;
 
         n = strchr( duf_config->db.main.name, '.' );
         if ( !n )
           n = duf_config->db.main.name + strlen( duf_config->db.main.name );
-        duf_config->db.temp.fpath = mas_strncat_x( duf_config->db.temp.fpath, duf_config->db.main.name, n - duf_config->db.main.name );
-        duf_config->db.temp.fpath = mas_strcat_x( duf_config->db.temp.fpath, "_$_" );
+        duf_config->db.tempo.fpath = mas_strncat_x( duf_config->db.tempo.fpath, duf_config->db.main.name, n - duf_config->db.main.name );
+        duf_config->db.tempo.fpath = mas_strcat_x( duf_config->db.tempo.fpath, "_$_" );
       }
-      duf_config->db.temp.fpath = mas_strcat_x( duf_config->db.temp.fpath, duf_config->db.temp.name );
-      DUF_TRACE( explain, 0, "config->db.temp.fpath set: %s", duf_config->db.temp.fpath );
+      duf_config->db.tempo.fpath = mas_strcat_x( duf_config->db.tempo.fpath, duf_config->db.tempo.name );
+      DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", duf_config->db.tempo.fpath );
     }
+#if 0
+    if ( duf_config->db.selected.name )
+    {
+      DUF_TRACE( explain, 0, "setting config->db.selected.fpath by db.dir: %s and db.selected.name: %s", duf_config->db.dir,
+                 duf_config->db.selected.name );
+      duf_config->db.selected.fpath = mas_strdup( duf_config->db.dir );
+      duf_config->db.selected.fpath = mas_strcat_x( duf_config->db.selected.fpath, "/" );
+      {
+        char *n;
+
+        n = strchr( duf_config->db.main.name, '.' );
+        if ( !n )
+          n = duf_config->db.main.name + strlen( duf_config->db.main.name );
+        duf_config->db.selected.fpath = mas_strncat_x( duf_config->db.selected.fpath, duf_config->db.main.name, n - duf_config->db.main.name );
+        duf_config->db.selected.fpath = mas_strcat_x( duf_config->db.selected.fpath, "_$_" );
+      }
+      duf_config->db.selected.fpath = mas_strcat_x( duf_config->db.selected.fpath, duf_config->db.selected.name );
+      DUF_TRACE( explain, 0, "config->db.selected.fpath set: %s", duf_config->db.selected.fpath );
+    }
+#endif
+
 #endif
 
     if ( duf_config->db.main.fpath )
@@ -99,7 +120,8 @@ duf_main_db_locate( void )
       DUF_TRACE( any, 0, "dbfile: %s", duf_config->db.main.fpath );
 #ifdef MAS_SPLIT_DB
       DUF_TRACE( any, 0, "adm dbfile: %s", duf_config->db.adm.fpath );
-      DUF_TRACE( any, 0, "temp dbfile: %s", duf_config->db.temp.fpath );
+      DUF_TRACE( any, 0, "tempo dbfile: %s", duf_config->db.tempo.fpath );
+      /* DUF_TRACE( any, 0, "selected dbfile: %s", duf_config->db.selected.fpath ); */
 #endif
     }
     else
@@ -154,7 +176,7 @@ duf_main_db_create_tables( void )
   if ( DUF_CLI_FLAG( dry_run ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
   else
-    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL );
+    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL /* title */, NULL /* selected.db */ );
 
   DEBUG_ENDR( r );
 }
@@ -170,7 +192,7 @@ duf_main_db_pre_action( void )
     if ( DUF_CLI_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
     else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL );
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL /* title */, NULL /* selected.db */ );
     global_status.actions_done++;
   }
   else
@@ -185,7 +207,7 @@ duf_main_db_pre_action( void )
     if ( DUF_CLI_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
     else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL );
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL /* title */, NULL /* selected.db */ );
     global_status.actions_done++;
   }
   else
@@ -202,7 +224,7 @@ duf_main_db_pre_action( void )
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
-  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL );
+  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL /* title */, NULL /* selected.db */ );
 
   DEBUG_ENDR( r );
 }
@@ -217,7 +239,7 @@ duf_main_db_tune( void )
     static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBADMALIAS;
     char *sql;
 
-    sql = sqlite3_mprintf( sqlf, duf_config->db.adm.fpath );
+    sql = duf_sql_mprintf( sqlf, duf_config->db.adm.fpath );
     DUF_TRACE( explain, 0, "attach adm database %s", duf_config->db.adm.fpath );
     DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
     /* DUF_SQL_BIND_S( dbfPath, duf_config->db.adm.fpath, r, pstmt ); */
@@ -225,19 +247,35 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
   }
-  if ( duf_config->db.temp.fpath )
+  if ( duf_config->db.tempo.fpath )
   {
     static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBTEMPALIAS;
     char *sql;
 
-    sql = sqlite3_mprintf( sqlf, duf_config->db.temp.fpath );
-    DUF_TRACE( explain, 0, "attach temp database %s -- %s", duf_config->db.temp.fpath, sql );
+    sql = duf_sql_mprintf( sqlf, duf_config->db.tempo.fpath );
+    DUF_TRACE( explain, 0, "attach tempo database %s -- %s", duf_config->db.tempo.fpath, sql );
     DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
-    /* DUF_SQL_BIND_S( dbfPath, duf_config->db.temp.fpath, r, pstmt ); */
+    /* DUF_SQL_BIND_S( dbfPath, duf_config->db.tempo.fpath, r, pstmt ); */
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
   }
+#if 0
+  if ( duf_config->db.selected.fpath )
+  {
+    static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBSELECTEDALIAS;
+    char *sql;
+
+    sql = duf_sql_mprintf( sqlf, duf_config->db.selected.fpath );
+    DUF_TRACE( explain, 0, "attach selected database %s -- %s", duf_config->db.selected.fpath, sql );
+    DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
+    /* DUF_SQL_BIND_S( dbfPath, duf_config->db.selected.fpath, r, pstmt ); */
+    DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    sqlite3_free( sql );
+  }
+#endif
+
 #endif
 
 #if 0
@@ -264,7 +302,7 @@ duf_main_db_tune( void )
   }
 #endif
 /* TODO : part to only after possible tables creation */
-  DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL ) ); /* PRAGMAs etc. */
+  DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL /* title */, NULL /* selected.db */ ) ); /* PRAGMAs etc. */
   DEBUG_ENDR( r );
 }
 
@@ -305,7 +343,7 @@ duf_main_db_close( int ra )
 
 #if 0
     {
-#ifdef MAS_SPLIT_DB
+#  ifdef MAS_SPLIT_DB
       if ( duf_config->db.adm.fpath )
       {
         static const char *sql = "DETACH DATABASE 'adm'";
@@ -315,16 +353,16 @@ duf_main_db_close( int ra )
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }
-      if ( duf_config->db.temp.fpath )
+      if ( duf_config->db.tempo.fpath )
       {
-        static const char *sql = "DETACH DATABASE 'temp'";
+        static const char *sql = "DETACH DATABASE 'tempo'";
 
-        DUF_TRACE( explain, 0, "detach temp database %s -- %s", duf_config->db.temp.fpath, sql );
+        DUF_TRACE( explain, 0, "detach tempo database %s -- %s", duf_config->db.tempo.fpath, sql );
         DUF_SQL_START_STMT_NOPDI( sql, r, pstmt );
         DUF_SQL_STEP( r, pstmt );
         DUF_SQL_END_STMT_NOPDI( r, pstmt );
       }
-#endif
+#  endif
     }
 #endif
     /* don't DOR it directly! call allways! */

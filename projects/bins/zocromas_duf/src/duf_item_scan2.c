@@ -131,7 +131,7 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
 #endif
 
   if ( r >= 0 )
-    sql_selector = duf_selector2sql( sql_set );
+    sql_selector = duf_selector2sql( sql_set, PDI->selected_db );
 
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );
   DUF_TRACE( scan, 10, "[%s] (slctr2) #%llu: \"%s\"", set_type_title, duf_levinfo_dirid( PDI ), duf_levinfo_itemshowname( PDI ) );

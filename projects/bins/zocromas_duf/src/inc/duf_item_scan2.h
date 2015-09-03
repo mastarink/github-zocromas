@@ -8,7 +8,6 @@
 int duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh,
                                            duf_node_type_t node_type );
 
-char *duf_selector_total2sql( const duf_sql_set_t * sql_set );
 
 
 #endif

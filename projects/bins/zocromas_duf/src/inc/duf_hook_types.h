@@ -46,6 +46,7 @@ typedef struct
 {
   unsigned use_std_fieldset:1;
   unsigned use_std_selector2:1;
+  unsigned set_selected_db:1;
   const char *fieldset;
   /* const char *selector; */
   const char *selector2;

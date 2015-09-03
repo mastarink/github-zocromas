@@ -44,7 +44,7 @@ duf_scan_callbacks_t duf_tagit_callbacks = {
   .name = "tagit",
   .def_opendir = 0,
   .init_scan = tagit_init,
-  .beginning_sql_seq = &sql_beginning_selected,
+  .beginning_sql_seq = &sql_create_selected,
 
   .node_scan_before2 = tagit_node_before2,
   .node_scan_before2_deleted = tagit_node_before2_del,

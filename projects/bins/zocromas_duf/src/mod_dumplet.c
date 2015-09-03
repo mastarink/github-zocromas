@@ -48,7 +48,7 @@ duf_scan_callbacks_t duf_dumplet_callbacks = {
   .name = "dumplet",
   .def_opendir = 0,
   .init_scan = dumplet_init,
-  .beginning_sql_seq = &sql_beginning_selected,
+  .beginning_sql_seq = &sql_create_selected,
 
   .node_scan_before2 = dumplet_node_before2,
   .node_scan_before2_deleted = dumplet_node_before2_del,
