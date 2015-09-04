@@ -58,7 +58,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
 
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
-  if ( r >= 0 && DUF_ACTG_FLAG( summary ) )
+  if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( summary ) )
   {
     DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( SCCB ) );
 

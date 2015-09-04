@@ -22,6 +22,9 @@ int
 duf_levinfo_if_statat_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
+  assert( pdi );
+  assert( d >= 0 );
+
   if ( !duf_levinfo_stat_d( pdi, d ) )
     DOR( r, duf_levinfo_statat_dh_d( pdi, d ) );
   DEBUG_ENDR( r );
@@ -36,10 +39,10 @@ int
 duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
-
   assert( pdi );
-  assert( pdi->pathinfo.levinfo );
   assert( d >= 0 );
+
+  assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.levinfo[d].itemname );
   assert( r < 0 || d > 0 || !duf_levinfo_ptr_d( pdi, d - 1 ) );
   assert( r < 0 || d > 0 || *duf_levinfo_itemtruename_d( pdi, d ) == 0 );

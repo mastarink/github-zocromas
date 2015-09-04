@@ -69,7 +69,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
   assert( PDI->pathinfo.depth >= 0 );
 
-  if ( r >= 0 )                 /* levinfo_down OK */
+  if ( DUF_NOERROR( r ) )                 /* levinfo_down OK */
   {
 
     DUF_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_leaf, PDI->seq, TOTITEMS, SCCB->title );
@@ -105,7 +105,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       assert( str_cb2 == duf_eval_sccbh_db_leaf_fd_str_cb || str_cb2 == duf_eval_sccbh_db_leaf_str_cb );
 #if 1
       DOR( r, ( str_cb2 ) ( pstmt, sccbh ) );
-      if ( r >= 0 )
+      if ( DUF_NOERROR( r ) )
       {
         PDI->seq++;
         PDI->seq_leaf++;

@@ -132,7 +132,7 @@ filenames_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * p
 
   DOPR( r, dataid = duf_pdistat2file_dataid_existed( pdi, /* duf_levinfo_stat( pdi ), */ &r ) );
 
-  if ( r >= 0 && fname && duf_levinfo_dirid_up( pdi ) )
+  if ( DUF_NOERROR( r ) && fname && duf_levinfo_dirid_up( pdi ) )
   {
     int changes = 0;
 

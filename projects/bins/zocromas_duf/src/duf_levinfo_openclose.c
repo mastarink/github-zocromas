@@ -20,12 +20,11 @@ int
 duf_levinfo_if_openat_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
+  assert( pdi );
   assert( d >= 0 );
-  if ( !duf_levinfo_opened_dh_d( pdi, d ) )
-  {
+
+  if ( duf_levinfo_opened_dh_d( pdi, d ) <= 0 )
     DOR( r, duf_levinfo_openat_dh_d( pdi, d ) );
-    DUF_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
-  }
   DUF_TRACE( levinfo, 5, "%d", duf_levinfo_dfd_d( pdi, d ) );
   assert( duf_levinfo_dfd_d( pdi, d ) > 0 );
   DEBUG_ENDR( r );
@@ -35,10 +34,13 @@ DUF_LEVINFO_F( int, if_openat_dh )
 DUF_LEVINFO_F_UP( int, if_openat_dh )
 /* *INDENT-ON*  */
 
+/* 20150904.120545 */
 int
 duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
+  assert( pdi );
+  assert( d >= 0 );
 
   assert( pdi );
   assert( pdi->pathinfo.levinfo );
@@ -103,77 +105,28 @@ DUF_LEVINFO_F( int, openat_dh )
 DUF_LEVINFO_F_UP( int, openat_dh )
 /* *INDENT-ON*  */
 
-#if 0
-int
-duf_levinfo_open_dh( duf_depthinfo_t * pdi, const char *path )
-{
-  DEBUG_STARTR( r );
-  int d = pdi->pathinfo.depth;
-  char *real_path = NULL;
-
-  assert( pdi );
-  assert( pdi->pathinfo.levinfo );
-
-  if ( path )
-  {
-    real_path = mas_malloc( PATH_MAX );
-    if ( real_path )
-    {
-      *real_path = 0;
-      if ( !realpath( path, real_path ) )
-        DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
-    }
-    else
-      DUF_MAKE_ERROR( r, DUF_ERROR_MEMORY );
-  }
-
-  if ( pdi->opendir )
-  {
-    assert( d >= 0 );
-    duf_dirhandle_t *pdhlev = &pdi->pathinfo.levinfo[d].lev_dh;
-
-    /* if ( S_ISBLK( stX.st_mode ) ) */
-    /* {                             */
-    /* }                             */
-
-    if ( r >= 0 && real_path )
-      DOR( r, duf_open_dh( pdhlev, real_path ) );
-    if ( DUF_IS_ERROR( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR( r, DUF_ERROR_OPENAT_ENOENT ) )
-    {
-      pdi->pathinfo.levinfo[d].deleted = 1;
-      r = 0;
-    }
-    if ( r >= 0 )
-      assert( pdhlev->dfd );
-  }
-/*     {                                        */
-/* #ifdef DUF_NO_ECONOMY                        */
-/*       if ( r >= 0 )                          */
-/*         pdi->path = real_path;               */
-/*       else                                   */
-/*         mas_free( real_path );               */
-/* #else                                        */
-/*       if ( r >= 0 )                          */
-/*         pdi->path = mas_strdup( real_path ); */
-/*       mas_free( real_path );                 */
-/* #endif                                       */
-/*     }                                        */
-  DEBUG_ENDR( r );
-}
-#endif
 /************************************************************************/
 
-
-/* returns handle >0 */
+/* 20150904.120515 */
+/* returns handle >0 
+ * <0 --- ERROR?
+ * */
 int
 duf_levinfo_opened_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
+  assert( pdi );
+  assert( d >= 0 );
 #if 0
   if ( pdi->opendir || duf_levinfo_dfd_d( pdi, d ) )
     DOR( r, duf_opened_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
 #else
   DOR( r, duf_levinfo_dfd_d( pdi, d ) );
+#endif
+#if 0
+  if ( d < 0 )
+    d = 0;
+  assert( d > 0 );
 #endif
   /*
    * duf_levinfo_dfd_d( pdi, d )    returns : duf_levinfo_ptr_d( pdi, d )->lev_dh.dfd
@@ -188,14 +141,20 @@ DUF_LEVINFO_F_UP( int, opened_dh )
 /* *INDENT-ON*  */
 
 /************************************************************************/
-
+/* 20150904.120506 */
 int
 duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
 {
   DEBUG_STARTR( r );
+  assert( pdi );
+  assert( d >= 0 );
 
-  if ( duf_levinfo_dfd_d( pdi, d ) )
+  if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
+#if 0
     DOR( r, duf_close_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
+#else
+    DOR( r, duf_close_dh( duf_levinfo_pdh_d( pdi, d ) ) );
+#endif
   assert( duf_levinfo_dfd_d( pdi, d ) == 0 );
 
   DEBUG_ENDR( r );

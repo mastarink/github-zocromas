@@ -105,7 +105,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
       {
         /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dirname='%s'", parentid, duf_levinfo_itemname( pdi ) ); */
         DUF_SHOW_ERROR( "(1) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
-        if ( rpr >= 0 )
+        if ( DUF_NOERROR( rpr ) )
           DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
       }
       else
@@ -113,7 +113,7 @@ _duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const char *sqlv, int
         DUF_TRACE( explain, 2, "   ≪%s≫ in db as %llu @ %llu", duf_levinfo_itemshowname( pdi ), dirid, duf_levinfo_dirid_up( pdi ) );
       }
       assert( dirid );
-      if ( rpr >= 0 )
+      if ( DUF_NOERROR( rpr ) )
       {
         duf_levinfo_t *pli;
 
@@ -294,7 +294,7 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_s
         {
           /* DUF_SHOW_ERROR( "no dirid by parentid=%llu and dirname='%s'", parentid, duf_levinfo_itemshowname( pdi ) ); */
           DUF_SHOW_ERROR( "(2) no dirid by parentid=%llu and dirname='%s'", duf_levinfo_dirid_up( pdi ), duf_levinfo_itemshowname( pdi ) );
-          if ( rpr >= 0 )
+          if ( DUF_NOERROR( rpr ) )
             DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
         }
         else
@@ -345,7 +345,7 @@ duf_path_component_here2db( duf_depthinfo_t * pdi, int caninsert, const duf_sql_
     {
       DUF_TRACE( path, 0, "@@@dir added : %s (changes:%d)", duf_levinfo_itemshowname( pdi ), changes );
       DUF_TRACE( explain, 0, "added ID: %llu for ≪%s≫", parentid, duf_levinfo_itemshowname( pdi ) );
-      if ( r >= 0 )
+      if ( DUF_NOERROR( r ) )
         r = changes;
     }
     else
@@ -417,7 +417,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
     path = real_path;
 
     DUF_TRACE( path, 0, "@@@@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
-    while ( r >= 0 && path && *path )
+    while ( DUF_NOERROR( r ) && path && *path )
     {
       char *nextdir = path;
 
@@ -475,7 +475,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
   }
   DUF_TRACE( fs, 0, "set (restore) opendir to %d", od );
   duf_pdi_set_opendir( pdi, od ); /* restore saved open status */
-  if ( r >= 0 && !parentid )
+  if ( DUF_NOERROR( r ) && !parentid )
     DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   DEBUG_ENDR( r );
 }

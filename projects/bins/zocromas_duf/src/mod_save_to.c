@@ -172,11 +172,11 @@ duf_copy_to( duf_depthinfo_t * pdi, const char *save_path )
             if ( lw != len )
               DUF_MAKE_ERROR( r, DUF_ERROR_PATH );
           }
-          while ( r >= 0 && len > 0 );
+          while ( DUF_NOERROR( r ) && len > 0 );
         }
       }
       fclose( fw );
-      if ( r >= 0 )
+      if ( DUF_NOERROR( r ) )
       {
         int ry;
         struct timeval times[2];
@@ -223,7 +223,7 @@ save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
 /* filename from db same as duf_levinfo_itemname( pdi ) */
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
-  assert( duf_levinfo_opened_dh( pdi ) || duf_levinfo_item_deleted( pdi ) );
+  assert( duf_levinfo_opened_dh( pdi ) > 0 || duf_levinfo_item_deleted( pdi ) );
   assert( duf_levinfo_stat( pdi ) || duf_levinfo_item_deleted( pdi ) );
 
 #endif
@@ -255,7 +255,7 @@ save_to_de_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 
       sl = save_path;
       assert( duf_levinfo_dfd_top( pdi ) );
-      while ( r >= 0 && sl && *sl )
+      while ( DUF_NOERROR( r ) && sl && *sl )
       {
         struct stat stdir;
 

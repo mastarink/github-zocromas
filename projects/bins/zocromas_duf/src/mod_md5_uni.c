@@ -204,7 +204,8 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
                              &csccbh, /* */
-                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_SQL_TABLES_MD5_FULL " WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1], md64[0] );
+                             "SELECT " DUF_SQL_IDNAME " AS md5id FROM " DUF_SQL_TABLES_MD5_FULL " WHERE md5sum1='%lld' AND md5sum2='%lld'", md64[1],
+                             md64[0] );
       }
     }
     else if ( !lr /* assume SQLITE_OK */  )
@@ -255,7 +256,7 @@ duf_make_md5_uni( int fd, unsigned char *pmd )
         int maxcnt = 0;
         int cnt = 0;
 
-        while ( r >= 0 && ( maxcnt == 0 || cnt++ < maxcnt ) )
+        while ( DUF_NOERROR( r ) && ( maxcnt == 0 || cnt++ < maxcnt ) )
         {
           int ry;
 

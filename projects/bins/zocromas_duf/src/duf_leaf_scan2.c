@@ -41,7 +41,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *
   PDI->items.files++;
 
   DOR_NOE( r, duf_levinfo_if_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
-  assert( r < 0 || duf_levinfo_opened_dh( PDI ) || duf_levinfo_item_deleted( PDI ) );
+  assert( r < 0 || duf_levinfo_opened_dh( PDI ) > 0 || duf_levinfo_item_deleted( PDI ) );
 
   DOR_NOE( r, duf_levinfo_if_statat_dh( PDI ), DUF_ERROR_FS_DISABLED );
   assert( r < 0 || duf_levinfo_stat( PDI ) || duf_levinfo_item_deleted( PDI ) );

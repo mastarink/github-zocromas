@@ -59,7 +59,7 @@ duf_eval_sql_one_of_seq_cb( const char *sql, const char *title, duf_bind_cb_t ca
     DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
     if ( callback )
       DOR( r, ( callback ) ( pstmt, ttarg ) );
-    if ( r >= 0 )
+    if ( DUF_NOERROR( r ) )
     {
       DUF_SQL_STEP( r, pstmt );
 /* DUF_SHOW_ERROR( "@@@ %s", duf_error_name(r) ); */

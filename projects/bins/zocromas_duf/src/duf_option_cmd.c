@@ -53,7 +53,7 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   DUF_TRACE( options, 6, "vseparator:'%c'; name:`%s`; arg:`%s`", vseparator, name, arg );
 
   extended = duf_find_name_long_no( name, arg ? 1 : 0, xtended, 1 /* soft */ , pno, &rpr );
-  if ( rpr >= 0 && parg )
+  if ( DUF_NOERROR( rpr ) && parg )
     *parg = arg;
   else
     mas_free( arg );
@@ -124,7 +124,7 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
     DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
     if ( r > 0 )
       found += r;
-    /* if ( r >= 0 ) */
+    /* if ( DUF_NOERROR( r ) ) */
     /*   break;      */
   }
   DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );

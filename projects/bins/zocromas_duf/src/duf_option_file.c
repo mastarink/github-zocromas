@@ -85,7 +85,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f )
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 1, "@@@stream stage:%d", istage );
-  while ( r >= 0 && f && !feof( f ) )
+  while ( DUF_NOERROR( r ) && f && !feof( f ) )
   {
     char buffer[1024];
     char *s;

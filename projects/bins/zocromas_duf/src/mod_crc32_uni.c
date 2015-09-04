@@ -228,7 +228,7 @@ duf_make_crc32_uni( int fd, unsigned long *pcrc32sum )
       int maxcnt = 1;
 
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
-      while ( r >= 0 && cnt++ < maxcnt )
+      while ( DUF_NOERROR( r ) && cnt++ < maxcnt )
       {
         int rr;
 
@@ -282,7 +282,7 @@ crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file
     DOR( r, duf_make_crc32_uni( duf_levinfo_dfd( pdi ), &crc32sum ) );
 
   content_cnt++;
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     unsigned long long crc32id = 0;
 
@@ -290,12 +290,12 @@ crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file
 
 
     crc32id = duf_insert_crc32_uni( pdi, crc32sum, filename /* for dbg message only */ , 1 /*need_id */ , &r );
-    if ( r >= 0 && crc32id )
+    if ( DUF_NOERROR( r ) && crc32id )
     {
       int changes = 0;
 
       pdi->cnts.dirent_content2++;
-      if ( r >= 0 && !duf_config->cli.disable.flag.update )
+      if ( DUF_NOERROR( r ) && !duf_config->cli.disable.flag.update )
         DOR( r, duf_sql( "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET crc32id=%llu WHERE " DUF_SQL_IDNAME "=%lld", &changes, crc32id, filedataid ) );
       duf_pdi_reg_changes( pdi, changes );
       DUF_TEST_R( r );

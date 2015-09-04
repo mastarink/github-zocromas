@@ -48,7 +48,7 @@ duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
   {
     const char **psql = sccb->final_sql_seq;
 
-    while ( r >= 0 && psql && *psql )
+    while (  DUF_NOERROR( r ) && psql && *psql )
     {
       int changes = 0;
 

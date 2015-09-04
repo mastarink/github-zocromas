@@ -115,9 +115,9 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_sccb_handle_t * sccbh, c
 
     if ( !sql_set->fieldset )
       DUF_MAKE_ERROR( r, DUF_ERROR_SQL_NO_FIELDSET );
-    if ( r >= 0 )
+    if ( DUF_NOERROR( r ) )
       sql = duf_selector2sql( sql_set );
-    if ( r >= 0 )
+    if ( DUF_NOERROR( r ) )
     {
       const char *csql;
 
@@ -136,7 +136,7 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_sccb_handle_t * sccbh, c
     if ( sql )
       mas_free( sql );
     sql = NULL;
-    if ( r >= 0 )
+    if ( DUF_NOERROR( r ) )
       duf_levinfo_set_items_files( PDI, cnt );
   }
   /* else                 */

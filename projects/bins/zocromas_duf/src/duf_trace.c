@@ -50,14 +50,11 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
   /* 
    * needless??
    *
-  assert( signum != '-' ); (* '-' means there is no config pointer *)
+   assert( signum != '-' ); (* '-' means there is no config pointer *)
    *
    * see definition of DUF_TRACE_WHAT_C at duf_trace_defs_what.h
    *
    * */
-#ifndef DUF_NOTIMING
-  double timec;
-#endif
   if ( trace_mode == DUF_TRACE_MODE_errorr )
   {
     r_ = duf_vtrace_error( trace_mode, name, level, minlevel, funcid, linid, flags, nerr, out, prefix, fmt, args );
@@ -70,7 +67,6 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
     int highlight = 0;
 
 #ifndef DUF_NOTIMING
-    int rt;
     struct timeval tv;
 #endif
     {
@@ -115,11 +111,18 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
       fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" T_FN_FMT "s:", signum, level, minlevel, uname, linid, pfuncid );
     }
 #ifndef DUF_NOTIMING
-    rt = gettimeofday( &tv, NULL );
-    timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-    if ( rt >= 0 )
     {
-      fprintf( out, "%-7.4f:", timec - time0 );
+      int ry;
+
+      ry = gettimeofday( &tv, NULL );
+      if ( ry >= 0 )
+      {
+#  ifndef DUF_NOTIMING
+        double timec = 0.;
+#  endif
+        timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
+        fprintf( out, "%-7.4f:", timec - time0 );
+      }
     }
 #endif
     {

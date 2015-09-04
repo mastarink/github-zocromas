@@ -18,35 +18,42 @@
 #include "duf_pathinfo_ref.h"
 /* ###################################################################### */
 
-
+/* 20150904.122230 */
 duf_levinfo_t *
 duf_pathinfo_ptr_d( const duf_pathinfo_t * pi, int d )
 {
+  assert( pi );
   assert( d >= 0 );
   assert( pi->levinfo );
-  return d >= 0 && pi ? &pi->levinfo[d] : NULL;
+
+  return pi ? &pi->levinfo[d] : NULL;
 }
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC_REF( duf_levinfo_t , ptr )
 DUF_PATHINFO_FC_UP_REF( duf_levinfo_t , ptr )
 /* *INDENT-ON*  */
 
-
+/* 20150904.122234 */
 const char *
 duf_pathinfo_path_d( const duf_pathinfo_t * pi, int d )
 {
   char *path = NULL;
+  duf_levinfo_t *pli;
 
-  assert( d >= 0 );
-  if ( duf_pathinfo_ptr_d( pi, d )->fullpath )
+  pli = duf_pathinfo_ptr_d( pi, d );
+  assert( pli );
+
+  if ( pli->fullpath )
   {
-    path = duf_pathinfo_ptr_d( pi, d )->fullpath;
+    path = pli->fullpath;
   }
   else
   {
     size_t len = 2;
     char *p;
 
+    assert( pi );
+    assert( d >= 0 );
     for ( int i = 0; i <= d; i++ )
     {
       assert( pi->levinfo[i].itemname );
@@ -73,7 +80,7 @@ duf_pathinfo_path_d( const duf_pathinfo_t * pi, int d )
       *p = 0;
     }
     assert( d >= 0 );
-    duf_pathinfo_ptr_d( pi, d )->fullpath = path;
+    pli->fullpath = path;
     DUF_TRACE( path, 4, "fullpath:%s", path );
   }
   return path;
@@ -85,7 +92,7 @@ DUF_PATHINFO_FC_TOP( const char *, path )
 /* *INDENT-ON*  */
 
 
-
+/* 20150904.122510 */
 const char *
 duf_pathinfo_relpath_d( const duf_pathinfo_t * pi, int d )
 {
@@ -103,6 +110,7 @@ DUF_PATHINFO_FC( const char *, relpath )
 DUF_PATHINFO_FC_UP( const char *, relpath )
 /* *INDENT-ON*  */
 
+/* 20150904.122152 */
 const char *
 duf_pathinfo_path_q( const duf_pathinfo_t * pi, const char *q )
 {
@@ -112,16 +120,14 @@ duf_pathinfo_path_q( const duf_pathinfo_t * pi, const char *q )
   return p ? p : q;
 }
 
+/* 20150904.122155 */
 char *
 duf_pathinfo_path_qdup( const duf_pathinfo_t * pi, const char *q )
 {
-  char *path = NULL;
   const char *p;
 
   p = duf_pathinfo_path_q( pi, q );
-  if ( p )
-    path = mas_strdup( p );
-  return path;
+  return p ? mas_strdup( p ) : NULL;
 }
 
 /* *INDENT-OFF*  */
@@ -130,13 +136,13 @@ DUF_PATHINFO_4GET( int, dfd, lev_dh.dfd )
 
 
 
-
+/* 20150904.122200 */
 const char *
 duf_pathinfo_itemshowname_d( const duf_pathinfo_t * pi, int d )
 {
   const char *n = NULL;
 
-  n = duf_pathinfo_ptr_d( pi, d )->itemname;
+  n = duf_pathinfo_itemtruename_d( pi, d );
   /* return n ? ( *n ? n : "/" ) : n; */
   return n && !*n ? "/" : n;
 }
@@ -146,6 +152,7 @@ DUF_PATHINFO_FC_REF( const char, itemshowname )
 DUF_PATHINFO_FC_UP_REF( const char, itemshowname )
 /* *INDENT-ON*  */
 
+/* 20150904.122206 */
 const char *
 duf_pathinfo_itemshowname_q( const duf_pathinfo_t * pi, const char *q )
 {
@@ -155,12 +162,17 @@ duf_pathinfo_itemshowname_q( const duf_pathinfo_t * pi, const char *q )
   return p ? p : q;
 }
 
+/* 20150904.122209 */
 const char *
 duf_pathinfo_itemtruename_d( const duf_pathinfo_t * pi, int d )
 {
   const char *n = NULL;
 
-  n = duf_pathinfo_ptr_d( pi, d )->itemname;
+  duf_levinfo_t *pli;
+
+  pli = duf_pathinfo_ptr_d( pi, d );
+
+  n = pli ? pli->itemname : NULL;
   /* return n ? ( *n ? n : "/" ) : n; */
   return n;
 }
@@ -170,6 +182,7 @@ DUF_PATHINFO_FC_REF( const char, itemtruename )
 DUF_PATHINFO_FC_UP_REF( const char, itemtruename )
 /* *INDENT-ON*  */
 
+/* 20150904.122217 */
 const char *
 duf_pathinfo_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
 {
@@ -180,6 +193,7 @@ duf_pathinfo_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
 }
 
 /************************************************************************/
+/* 20150904.122223 */
 struct stat *
 duf_pathinfo_stat_d( const duf_pathinfo_t * pi, int d )
 {
@@ -187,8 +201,12 @@ duf_pathinfo_stat_d( const duf_pathinfo_t * pi, int d )
 
   /* if ( pdi->opendir ) */
   {
-    if ( duf_pathinfo_ptr_d( pi, d )->lev_dh.rs > 0 && duf_pathinfo_ptr_d( pi, d )->lev_dh.source == DUF_DH_SOURCE_FS )
-      pst = &duf_pathinfo_ptr_d( pi, d )->lev_dh.st;
+    duf_dirhandle_t *pdh;
+
+    pdh = duf_pathinfo_pdh_d( pi, d );
+
+    if ( pdh->rs > 0 && pdh->source == DUF_DH_SOURCE_FS )
+      pst = &pdh->st;
   }
   /* TODO NOT here: assert( pst->st_dev ); 
    * (used to check presence, so no stat is OK)
@@ -200,6 +218,9 @@ DUF_PATHINFO_FC_REF( struct stat, stat )
 DUF_PATHINFO_FC_UP_REF( struct stat, stat )
 /* *INDENT-ON*  */
 
+/* *INDENT-OFF*  */
+DUF_PATHINFO_3GET_REF( duf_dirhandle_t, pdh, lev_dh )
+/* *INDENT-ON*  */
 
 DUF_PATHINFO_ST_FLD_NAME( ino, inode );
 DUF_PATHINFO_ST_FLD( dev );

@@ -116,7 +116,7 @@ duf_evaluate_pdi_sccb_named_list( const char *names, const duf_action_table_t * 
 
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
-  while ( r >= 0 && pnames && *pnames )
+  while (  DUF_NOERROR( r ) && pnames && *pnames )
   {
     size_t len = 0;
     const char *ename = NULL;

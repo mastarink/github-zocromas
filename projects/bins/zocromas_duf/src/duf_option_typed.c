@@ -127,7 +127,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
  * return class id for options to display the help
  * */
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     unsigned doplus = 0;
     char *byteptr = NULL;
@@ -336,7 +336,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
       case DUF_OPTION_VTYPE_NONE:
         DUF_TRACE( options, +3, "vtype NONE" );
 #if 0
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED ); // Why was ???
         /* DUF_TEST_R( r ); */
 #endif
@@ -362,7 +362,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PNUM" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           DUF_QPNUMOPT( noo, r, unsigned, duf_strtol_suff );
         }
@@ -388,7 +388,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype NLL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           DUF_NUMOPT( noo, r, unsigned long long, 0, duf_strtoll_suff );
         }
@@ -449,7 +449,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         {
           if ( extended->invert )
             nof = !nof;
-          if ( r >= 0 )
+          if ( DUF_NOERROR( r ) )
           {
             unsigned *pi;
 
@@ -466,7 +466,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PFLAG" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
 
@@ -477,7 +477,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         break;
       case DUF_OPTION_VTYPE_SFLAG:
         DUF_TRACE( options, +3, "vtype SFLAG" );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           unsigned short *pis;
 
@@ -493,7 +493,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype NOSFLAG" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
 
@@ -506,7 +506,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PSFLAG" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           unsigned *pi;
 
@@ -520,7 +520,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +0, "@@vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           char **pstr;
 
@@ -540,7 +540,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PSTR" );
 
 
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           char **pstr;
 
@@ -568,7 +568,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
       case DUF_OPTION_VTYPE_PAA:
         DUF_TRACE( options, +3, "vtype PAA" );
 
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           duf_argvc_t *parg;
 
@@ -594,7 +594,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
       case DUF_OPTION_VTYPE_TDB:
         DUF_TRACE( options, +3, "vtype TDB" );
 
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( noo )
           {
@@ -622,7 +622,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PDISTR" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( optargg && *optargg )
           {
@@ -641,7 +641,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PDINUM" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 && extended->m_hasoff == 1 )
+        if ( DUF_NOERROR( r ) && extended->m_hasoff == 1 )
         {
           /* if ( optargg && *optargg )                                                                                              */
           /*   DOR( r, duf_pdi_reinit_anypath( *( ( duf_depthinfo_t ** ) byteptr ), optargg, &duf_config->u, 0 (* recursive *)  ) ); */
@@ -653,7 +653,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype PDISCCB" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           duf_sccb_handle_t csccbh = {
             .pdi = duf_config->pdi,
@@ -697,7 +697,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype VI_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.via.func )
             ( extended->call.fdesc.via.func ) ( extended->call.fdesc.via.arg );
@@ -709,7 +709,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype VS_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.vsa.func )
             ( extended->call.fdesc.vsa.func ) ( extended->call.fdesc.vsa.arg );
@@ -721,7 +721,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype A_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           assert( duf_config->carg.argv );
           if ( extended->call.fdesc.a.func )
@@ -732,7 +732,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype AA_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           assert( duf_config->carg.argc );
           assert( duf_config->carg.argv );
@@ -745,7 +745,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype VV_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.vv.func )
             ( extended->call.fdesc.vv.func ) (  );
@@ -755,7 +755,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype N_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.n.func )
             ( extended->call.fdesc.n.func ) ( duf_strtol_suff( optargg, &r ) );
@@ -765,7 +765,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype TN_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.tn.func )
             ( extended->call.fdesc.tn.func ) ( &duf_config->targ.argc, &duf_config->targ.argv, duf_strtol_suff( optargg, &r ) );
@@ -775,7 +775,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype TS_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.ts.func )
             ( extended->call.fdesc.ts.func ) ( &duf_config->targ.argc, &duf_config->targ.argv, optargg );
@@ -785,7 +785,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype S_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.s.func )
             ( extended->call.fdesc.s.func ) ( optargg );
@@ -795,7 +795,7 @@ duf_clarify_opt_typed( const duf_longval_extended_t * extended, const char *opta
         DUF_TRACE( options, +3, "vtype FILE" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
-        if ( r >= 0 )
+        if ( DUF_NOERROR( r ) )
         {
           DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s)", extended->o.name );
           DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr );

@@ -67,7 +67,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
     duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
 
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
     DOR( r, duf_env_options( istage ) );
   er = r;
   DUF_TRACE( options, +2, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
@@ -80,14 +80,14 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 #endif
 
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     DOR( r, duf_infile_options( istage ) );
     fr = r;
   }
   DUF_TRACE( options, +2, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name( r ) );
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     DOR( r, duf_cli_options( istage ) );
     or = r;
@@ -96,7 +96,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
 #if 1
 /* duf_indirect_options - only for next stage  */
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     DOR( r, duf_indirect_options( istage ) );
     ir = r;
@@ -149,7 +149,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 
 #if 0
 /* duf_stdin_options - only for next stage, can be executed only once (direct stdin reading!)  */
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     DOR( r, duf_stdin_options( istage ) );
     ir = r;

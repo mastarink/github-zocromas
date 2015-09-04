@@ -228,7 +228,7 @@ duf_make_sd5_uni( int fd, unsigned char *pmd )
         int maxcnt = 2;
         int cnt = 0;
 
-        while ( r >= 0 && ( maxcnt == 0 || cnt++ < maxcnt ) )
+        while ( DUF_NOERROR( r ) && ( maxcnt == 0 || cnt++ < maxcnt ) )
         {
           int rr;
 
@@ -288,7 +288,7 @@ sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_n
   for ( int i = 0; i < sizeof( amd5 ) / sizeof( amd5[0] ); i++ )
     amd5r[i] = amd5[sizeof( amd5 ) / sizeof( amd5[0] ) - i - 1];
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     unsigned long long sd5id = 0;
     unsigned long long *pmd;

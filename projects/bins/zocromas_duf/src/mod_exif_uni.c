@@ -528,7 +528,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
       /* lseek( fd, -bufsz * maxcnt, SEEK_END ); */
       /* exif_loader_write_file */
-      while ( r >= 0 && cnt++ < maxcnt )
+      while ( DUF_NOERROR( r ) && cnt++ < maxcnt )
       {
         int rr;
 
@@ -560,7 +560,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
       }
       mas_free( buffer );
       DUF_CLEAR_ERROR( r, DUF_ERROR_EOF, DUF_ERROR_EXIF_END );
-      if ( r >= 0 )
+      if ( DUF_NOERROR( r ) )
       {
         ExifData *edata = NULL;
 
@@ -570,7 +570,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
         edata = exif_loader_get_data( loader );
         exif_loader_unref( loader );
-        if ( r >= 0 && edata /* && edata->size */  )
+        if ( DUF_NOERROR( r ) && edata /* && edata->size */  )
         {
           /* ??? exif_entry_free( entry ); */
           char stime_original[1024] =
@@ -748,7 +748,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 #endif
             if ( !entry )
               DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_NO_MODEL );
-            if ( r >= 0 && !exif_entry_get_value( entry, tmodel, sizeof( tmodel ) ) )
+            if ( DUF_NOERROR( r ) && !exif_entry_get_value( entry, tmodel, sizeof( tmodel ) ) )
               DUF_MAKE_ERROR( r, DUF_ERROR_EXIF_NO_MODEL );
             if ( *tmodel )
             {
@@ -778,7 +778,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
             DUF_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
 
-            if ( r >= 0 && exifid && !duf_config->cli.disable.flag.update )
+            if ( DUF_NOERROR( r ) && exifid && !duf_config->cli.disable.flag.update )
             {
               int changes = 0;
 

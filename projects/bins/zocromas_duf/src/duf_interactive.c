@@ -55,7 +55,7 @@ duf_interactive( void )
   /* duf_pdi_close( &duf_config->di );           */
   assert( duf_config->pdi );
   assert( duf_config->pdi->pathinfo.levinfo );
-  /* if ( r >= 0 ) */
+  /* if ( DUF_NOERROR( r ) ) */
   {
     char *duf_rl_buffer = NULL;
     static char rl_prompt[256 * 10] = "";
@@ -81,7 +81,7 @@ duf_interactive( void )
     add_history( "recursive" );
     add_history( "no-recursive" );
 
-    while ( r >= 0 && DUF_ACTG_FLAG( interactive ) )
+    while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) )
     {
       r = 0;
 #if 0

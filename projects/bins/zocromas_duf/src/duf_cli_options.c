@@ -93,7 +93,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
     }
   }
 #endif
-  while ( r >= 0
+  while ( DUF_NOERROR( r )
           && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
   {
     DUF_TRACE( options, +2, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );

@@ -58,7 +58,7 @@ duf_action_path( char *tpath )
   DUF_TRACE( path, 0, "@[%s] %s", tpath, duf_levinfo_path( duf_config->pdi ) );
 
 /* --add-path									*/ DEBUG_STEP(  );
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
     DUF_TRACE( explain, 0, "to add path %s", tpath );
@@ -130,7 +130,7 @@ duf_action_path( char *tpath )
 
 #  if 0
   else
-if ( r >= 0 /* && DUF_ACTG_FLAG( uni_scan ) */  )
+if ( DUF_NOERROR( r ) /* && DUF_ACTG_FLAG( uni_scan ) */  )
 {
   /* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
   DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
@@ -193,7 +193,7 @@ duf_action( void )
 #endif
 
 #if 0
-  for ( int ia = duf_config->targ_offset; r >= 0 && ia < duf_config->targ.argc; ia++ )
+  for ( int ia = duf_config->targ_offset; DUF_NOERROR( r ) && ia < duf_config->targ.argc; ia++ )
   {
     DUF_TRACE( path, 0, "@%d. [%s] %s", ia, duf_config->targ.argv[ia], duf_levinfo_path( duf_config->pdi ) );
     DOR( r, duf_action_path( duf_config->targ.argv[ia] ) );
@@ -220,7 +220,7 @@ duf_action( void )
     }
 
     DOR( r, duf_interactive_options( DUF_OPTION_STAGE_INTERACTIVE ) );
-    while ( r >= 0 && ia < duf_config->targ.argc )
+    while ( DUF_NOERROR( r ) && ia < duf_config->targ.argc )
     {
       istage = DUF_OPTION_STAGE_LOOP;
       DUF_TRACE( pdi, 1, "@@@c->pdi inited:%d", duf_config->pdi->inited );

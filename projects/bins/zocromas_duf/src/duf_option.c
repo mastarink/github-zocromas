@@ -101,7 +101,7 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   }
   DUF_TRACE( options, +2, "parse option codeval: %d (%c) longindex:%d [--%s] (%s)", codeval, codeval > ' '
              && codeval <= 'z' ? codeval : '?', longindex, extended ? extended->o.name : "?", duf_error_name( r ) );
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     if ( extended )
     {

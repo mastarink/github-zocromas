@@ -66,7 +66,7 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
 
   if ( pdi->pathinfo.levinfo )
   {
-    while ( r >= 0 && pdi->pathinfo.depth >= 0 )
+    while ( DUF_NOERROR( r ) && pdi->pathinfo.depth >= 0 )
     {
       duf_levinfo_goup( pdi );
     }

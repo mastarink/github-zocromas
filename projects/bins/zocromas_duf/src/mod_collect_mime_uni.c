@@ -230,7 +230,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
 
   DUF_TRACE( mod, 0, " mime" );
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
   {
     const char *mime = NULL;
 
@@ -281,7 +281,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
           tail = mas_strdup( p );
         mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , &r );
         DUF_TEST_R( r );
-        if ( r >= 0 && mimeid && !duf_config->cli.disable.flag.update )
+        if ( DUF_NOERROR( r ) && mimeid && !duf_config->cli.disable.flag.update )
         {
           int changes = 0;
 

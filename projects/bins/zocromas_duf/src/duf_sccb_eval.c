@@ -53,7 +53,7 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
 {
   DEBUG_STARTR( r );
   DUF_PRINTF( 0, "SCCBS" );
-  for ( int astep = 0; r >= 0 && astep < sccb_num; astep++ )
+  for ( int astep = 0; DUF_NOERROR( r ) && astep < sccb_num; astep++ )
   {
     if ( psccbs[astep] )
     {
@@ -77,7 +77,7 @@ duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
   assert( duf_config->pdi->pdi_name );
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( duf_config->pdi ) );
 
-  for ( int astep = 0; r >= 0 && astep < sccb_num; astep++ )
+  for ( int astep = 0; DUF_NOERROR( r ) && astep < sccb_num; astep++ )
   {
     if ( psccbs[astep] )
     {

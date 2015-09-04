@@ -155,7 +155,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
 
   DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set, frecursive, opendir ) );
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r )  )
   {
     DUF_TRACE( explain, 1, "converted to real_path: %s", real_path );
     DUF_TRACE( explain, 0, "added path: %s", real_path );

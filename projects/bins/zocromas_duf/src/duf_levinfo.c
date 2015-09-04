@@ -59,8 +59,8 @@ duf_levinfo_init_level_d( duf_depthinfo_t * pdi, const char *itemname, unsigned 
                           int is_leaf, int d )
 {
   assert( pdi );
-  assert( pdi->pathinfo.levinfo );
   assert( d >= 0 );
+  assert( pdi->pathinfo.levinfo );
   duf_levinfo_clear_level_d( pdi, d );
 #if 0
   pdi->pathinfo.levinfo[d].lev_dh.dirid = dirid;
@@ -93,8 +93,8 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, in
   DEBUG_STARTR( r );
 
   assert( pdi );
-  assert( pdi->pathinfo.levinfo );
   assert( d >= 0 );
+  assert( pdi->pathinfo.levinfo );
 
   duf_levinfo_t *pli;
 

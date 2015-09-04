@@ -130,7 +130,7 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
   const char *set_type_title = node_type == DUF_NODE_LEAF ? "leaf" : ( node_type == DUF_NODE_LEAF ? "node" : "UNDEF" );
 #endif
 
-  if ( r >= 0 )
+  if ( DUF_NOERROR( r ) )
     sql_selector = duf_selector2sql( sql_set, PDI->pdi_name );
 
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );

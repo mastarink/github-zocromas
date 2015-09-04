@@ -46,11 +46,11 @@ duf_cfg_create( void )
     }
   }
   {
-    int rt;
+    int ry;
     struct timeval tv;
 
-    rt = gettimeofday( &tv, NULL );
-    if ( rt >= 0 )
+    ry = gettimeofday( &tv, NULL );
+    if ( ry >= 0 )
       cfg->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
   cfg->db.main.name = mas_strdup( "duf-main.db" );

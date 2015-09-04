@@ -109,7 +109,7 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg_unuse
     DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
     duf_clear_filepath( &fp );
-    if ( r >= 0 && !fp.dirid )
+    if ( DUF_NOERROR( r ) && !fp.dirid )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
 #if 1
