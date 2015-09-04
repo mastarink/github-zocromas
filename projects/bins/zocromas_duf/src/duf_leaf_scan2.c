@@ -8,10 +8,11 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* DUF_TRACE */
+/* #include "duf_config_ref.h"     (* DUF_TRACE *) */
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_stat.h"
 
 
 #include "duf_sccbh_shortcuts.h"

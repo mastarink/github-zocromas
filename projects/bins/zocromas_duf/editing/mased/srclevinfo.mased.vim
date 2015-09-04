@@ -7,6 +7,9 @@ sfind duf_levinfo_credel.h
 tab sfind duf_levinfo_openclose.c
 sfind duf_levinfo_openclose.h
 
+tab sfind duf_levinfo_stat.c
+sfind duf_levinfo_stat.h
+
 tab sfind duf_levinfo_context.c
 sfind duf_levinfo_context.h
 

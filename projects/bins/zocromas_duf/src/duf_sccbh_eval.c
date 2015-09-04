@@ -22,6 +22,7 @@
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_openclose.h"
+#include "duf_levinfo_stat.h"
 
 #include "duf_sccb.h"
 #include "duf_sccb_eval_dirs.h"

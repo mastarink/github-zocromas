@@ -19,7 +19,7 @@
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
-#include "duf_levinfo_openclose.h"
+/* #include "duf_levinfo_openclose.h" */
 
 /* #include "duf_pdi.h" */
 #include "duf_pdi_ref.h"
