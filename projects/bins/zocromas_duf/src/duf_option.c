@@ -23,7 +23,7 @@
 
 DUF_WRAPSTATIC int
 duf_clarify_opt_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                const duf_longval_extended_table_t * xtable, int no )
+                      const duf_longval_extended_table_t * xtable, int no )
 {
   DEBUG_STARTR( r );
   if ( extended )
@@ -40,12 +40,12 @@ duf_clarify_opt_full( const duf_longval_extended_t * extended, const char *optar
 
     if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
     {
-      DUF_TRACE( explain, 1, "@old opt for %s", extended?extended->o.name:NULL  );
+      DUF_TRACE( explain, 1, "@old opt for %s", extended ? extended->o.name : NULL );
       DOZR( r, duf_clarify_opt_old( extended, optargg, istage, xtable ) );
     }
     else
     {
-      DUF_TRACE( explain, 1, "@no old opt for %s", extended?extended->o.name:NULL );
+      DUF_TRACE( explain, 1, "@no old opt for %s", extended ? extended->o.name : NULL );
     }
     DUF_TRACE( options, +4, "cli options r: %d", r );
     DUF_TRACE( options, +3, "parsed CLI option:  %s  %s", duf_option_description_x_tmp( -1, extended, NULL ), duf_error_name( r ) );
@@ -59,7 +59,7 @@ duf_clarify_opt_full( const duf_longval_extended_t * extended, const char *optar
 #ifdef MAS_WRAP_FUNC
 int
 DUF_WRAPPED( duf_clarify_opt_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                                const duf_longval_extended_table_t * xtable, int no )
+                                      const duf_longval_extended_table_t * xtable, int no )
 {
   DEBUG_STARTR( r );
 
@@ -88,14 +88,14 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
   if ( longindex < 0 )
   {
     extended = duf_find_codeval_extended_std( codeval, &xtable, &r );
-    DUF_TEST_R( r );
-    DUF_TRACE( options, +2, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
+    /* DUF_TEST_R1( r ); */
+    DUF_TRACE( options, +2, "@@%s found by codeval of option %d (%c) => [--%s] (%s)", extended ? "" : "not", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
   }
   else if ( !extended )
   {
     extended = duf_longindex2extended( longindex, &xtable, &r );
-    DUF_TEST_R( r );
+    /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +2, "@@found by codeval of option %d (%c) => [--%s] (%s)", codeval, codeval > ' '
                && codeval <= 'z' ? codeval : '?', extended ? extended->o.name : "?", duf_error_name( r ) );
   }
@@ -124,6 +124,5 @@ duf_parse_option( duf_option_code_t codeval, int longindex, const char *optargg,
         break;
       }
   }
-  DUF_TRACE( options, +2, "* options r: %d; codeval:%d;", r, codeval );
   DEBUG_ENDR( r );
 }

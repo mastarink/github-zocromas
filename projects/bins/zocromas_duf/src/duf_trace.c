@@ -126,7 +126,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
     }
 #endif
     {
-      static char *hls[] = { "1;33;41", "1;33;44", "1;37;46", "1;7;33;41", "30;47" };
+      static char *hls[] = { "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
       if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
         fprintf( out, "\x1b[%sm ", hls[highlight] );
       else if ( highlight )

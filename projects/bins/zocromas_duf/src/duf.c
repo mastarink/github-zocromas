@@ -122,10 +122,12 @@ duf_main_with_config( int argc, char **argv )
 
   DOR( r, duf_main_db( argc, argv ) ); /* XXX XXX XXX XXX XXX XXX */
 
+#if 0
   DUF_PUTS( 0, "------------------------------------(*)" );
-  DUF_PRINTF( 0, " duf_main_db ended" );
+  DUF_PRINTF( 0, "------- duf_main_db ended --------" );
   DUF_TEST_R( r );              /* don't remove! */
   DUF_PUTS( 0, "---------------------------------------------(o)" );
+#endif
 
   if ( DUF_IF_TRACE( options ) )
     DOR( r, duf_show_options( argv[0] ) );
@@ -149,7 +151,7 @@ duf_main_with_config( int argc, char **argv )
   }
 #endif
 
-  DEBUG_ENDRN( r );
+  DEBUG_ENDR( r );
 }
 
 static int
@@ -161,17 +163,20 @@ duf_main( int argc, char **argv )
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 
   DUF_TRACE( explain, 1, "@main with config" );
-  DOR( r, duf_main_with_config( argc, argv ) ); /* XXX XXX XXX XXX */
-  if ( r < 0 )
-    DUF_SHOW_ERROR( "(%d:%s) %s", r, duf_error_name( r ), argv[0] );
+  DOR_NOE( r, duf_main_with_config( argc, argv ) /* XXX XXX XXX XXX */ , DUF_ERROR_OPTION_NOT_FOUND );
+  if ( !DUF_NOERROR( r ) )
+  {
+    DUF_SHOW_ERROR( "@@@(%d:%s) ", r, duf_error_name( r ) );
+    DUF_SHOW_ERROR( "@@         at %s", argv[0] );
+  }
 
   duf_config_delete(  );
 
 /* make exit status */
   DUF_CLEAR_ERROR( r, DUF_ERROR_MAX_REACHED, DUF_ERROR_NO_ACTIONS );
-  r = r < 0 ? 31 : 0;
+  r = !DUF_NOERROR( r ) ? 31 : 0;
 
-  DEBUG_ENDRN( r );
+  DEBUG_ENDR( r );
 }
 
 /*

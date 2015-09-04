@@ -69,24 +69,20 @@
 /*                         || _rval==DUF_ERROR_MAX_DEPTH  \      */
 /*         )                                                     */
 /* #  define DUF_TEST_R(_rval)     ( DUF_E_NO(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),DUF_TEST_RX( _rval ),DUF_E_YES(DUF_ERROR_MAX_REACHED,DUF_ERROR_MAX_SEQ_REACHED,DUF_ERROR_MAX_DEPTH,0),_rval ) */
-#  define DUF_TEST_R(_rval)	DUF_TEST_RX( _rval )
+#  define DUF_TEST_R(_rval)	(DUF_TEST_RX( _rval ))
+#  define DUF_TEST_R1(_rval)	(duf_force_ereport(1 /*count*/),DUF_TEST_RX( _rval ))
+/* #  define DUF_TEST_R2(_rval)    (duf_force_ereport(2 (*count*)),DUF_TEST_RX( _rval )) */
 
 #  define DUF_TEST_R_NOE(_rval, ...)	DUF_E_NO(  __VA_ARGS__ );DUF_TEST_R(_rval);DUF_E_YES( __VA_ARGS__ )
 
 
 
 
-#  ifdef DUF_T_NOIF
-/* #    define DUF_TEST_RQ(_rval, _cond)   ( ( !(_cond) ) ? DUF_TEST_R( _rval ) : 0 ) */
-/* error message if arg is < 0, except some predefines */
-#    define DUF_TEST_RN(_rval)	   ( ( _rval<0 ) ? DUF_TEST_R( _rval ) : 0 )
-/* #    define DUF_TEST_RQN(_rval, _cond)  ( ( !(_cond) ) ? DUF_TEST_RQ( _rval ) : 0 ) */
-#  else
-/* #    define DUF_TEST_RQ(_rval, _cond)   if ( !(_cond) ) DUF_TEST_R( _rval ) */
-/* error message if arg is < 0, except some predefines */
-#    define DUF_TEST_RN(_rval)	     if ( _rval<0 ) DUF_TEST_R( _rval )
-/* #    define DUF_TEST_RQN(_rval, _cond)  if ( !(_cond) ) DUF_TEST_RQ( _rval ) */
-#  endif
+/* #  ifdef DUF_T_NOIF                                                          */
+/* #    define DUF_TEST_RN(_rval)     ( ( _rval<0 ) ? DUF_TEST_R( _rval ) : 0 ) */
+/* #  else                                                                      */
+/* #    define DUF_TEST_RN(_rval)       if ( _rval<0 ) DUF_TEST_R( _rval )      */
+/* #  endif                                                                     */
 
 
 /* #  define DUF_TEST_RR(_rval)      if ( _rval!=DUF_SQL_ROW && _rval!=DUF_SQL_DONE ) DUF_TEST_R( _rval ) */

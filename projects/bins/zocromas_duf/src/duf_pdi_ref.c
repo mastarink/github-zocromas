@@ -67,7 +67,7 @@ duf_pdi_set_opendir( duf_depthinfo_t * pdi, int od )
   pdi->opendir = od;
   DUF_TRACE( fs, 3, "set opendir:%d", od );
 
-  DEBUG_ENDRN( rd );
+  DEBUG_ENDR( rd );
 }
 
 int

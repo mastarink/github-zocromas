@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +27,7 @@ static int count_error[DUF_ERROR_COUNT] = { 0 };
 static int max_show_count_error[DUF_ERROR_COUNT] = { 0 };
 
 static long _made_errors = 0;
+static int force_ereport = 0;
 
 #define MAX_ERRORS 1000
 typedef struct
@@ -44,6 +46,12 @@ __attribute__ ( ( destructor( 65535 ) ) )
 {
   mas_free( global_error_list );
   global_error_list = NULL;
+}
+
+void
+duf_force_ereport( int count )
+{
+  force_ereport = count;
 }
 
 duf_error_code_t
@@ -118,7 +126,7 @@ duf_set_ereport( int once, int enable, int abs, duf_error_code_t rtest )
 }
 
 void
-duf_vset_ereport( int once, int enable, int abs, va_list args )
+duf_vset_mereport( int once, int enable, int abs, va_list args )
 {
   duf_error_code_t rtest = 0;
 
@@ -138,7 +146,7 @@ duf_set_mereport( int once, int enable, int abs, ... )
   va_list args;
 
   va_start( args, abs );
-  duf_vset_ereport( once, enable, abs, args );
+  duf_vset_mereport( once, enable, abs, args );
   va_end( args );
 }
 
@@ -171,7 +179,7 @@ _duf_get_ereport( duf_error_code_t rtest, int maxerr )
   {
     if ( errindex < 0 )
     {
-      re = 0;                    /* sql ? ? ? */
+      re = 0;                   /* sql ? ? ? */
     }
     else if ( errindex >= 0 && errindex < maxerr
               && ( max_show_count_error[errindex] <= 0 || count_error[errindex] < max_show_count_error[errindex] - 1 ) )
@@ -194,7 +202,17 @@ duf_get_ereport( duf_error_code_t rtest )
 {
   int re = 0;
 
-  DOCF( re, _duf_get_ereport, rtest, DUF_ERROR_COUNT );
+  if ( rtest < 0 )
+  {
+    if ( force_ereport > 0 )
+    {
+      re = force_ereport--;
+    }
+    else
+    {
+      DOCF( re, _duf_get_ereport, rtest, DUF_ERROR_COUNT );
+    }
+  }
   return re;
 }
 

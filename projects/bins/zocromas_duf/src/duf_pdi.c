@@ -109,7 +109,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     if ( real_path )
     {
-      DORN( r, duf_pathdepth( real_path ) );
+      DOR( r, duf_pathdepth( real_path ) );
       if ( DUF_NOERROR( r ) )
         pdi->pathinfo.topdepth = r;
     }

@@ -96,7 +96,7 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
   while ( DUF_NOERROR( r )
           && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
   {
-    DUF_TRACE( options, +2, "getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
+    DUF_TRACE( options, +2, "@@@getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
  * duf_parse_option return
  *        oclass (>0) for "help" options
@@ -104,12 +104,38 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
  * or  errorcode (<0) for error
  * */
     DOR( r, duf_parse_option( codeval, longindex, optarg, istage ) );
+    /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +4, "cli options r: %d", r );
-    DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
+    if ( optind > 0 )
+      DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind - 1, duf_config->carg.argv[optind - 1] );
+    if ( optind >= 0 )
+      DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
 
     if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION ) )
     {
-      DUF_SHOW_ERROR( "Invalid option -- '%c' optind=%d/%s opt=%u/%c", optopt, optind, duf_config->carg.argv[optind - 1], codeval, codeval );
+      const char *arg;
+      static const char *msg = "Invalid option";
+
+      arg = duf_config->carg.argv[optind - 1];
+      if ( optopt && codeval > ' ' && codeval <= 'z' )
+      {
+        if ( duf_config->cli.dbg.verbose == 0 )
+          DUF_SHOW_ERROR( "@@@@@%s '-%c'", msg, optopt );
+        else
+        {
+          if ( codeval == '?' )
+            DUF_SHOW_ERROR( "@@@@@%s '-%c' arg[%d]=\"%s\"", msg, optopt, optind, arg );
+          else
+            DUF_SHOW_ERROR( "@@@@@%s '-%c' arg[%d]=\"%s\" [%u/%c]", msg, optopt, optind, arg, codeval, codeval );
+        }
+      }
+      else
+      {
+        if ( duf_config->cli.dbg.verbose == 0 )
+          DUF_SHOW_ERROR( "@@@@@%s '%s' ", msg, arg );
+        else
+          DUF_SHOW_ERROR( "@@@@@%s '%s' arg[%d]=\"%s\" [%u/%c]", msg, arg, optind, arg, codeval, codeval );
+      }
     }
     cnt++;
   }
@@ -127,11 +153,11 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
 
     duf_config->targ_offset = duf_reorder_at_sign( duf_config->targ.argc, duf_config->targ.argv );
 
- 
+
 
     /* targ.argv becomes valid here - may init pdi etc. */
   }
- 
+
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 

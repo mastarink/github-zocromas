@@ -27,7 +27,7 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {DO_Q( "trace-trace" ) /*      */ , DO_A_O /* */ , DO_V( TRACE_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.trace ) /*    */ , DO_STAGE_ANY /*                   */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-flags" ) /*      */ , DO_A_O /* */ , DO_V( FLAGS_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( UPLUS, cli.trace.trace ) /*    */ , DO_STAGE_ANY /*                   */ , DO_H( trace .... ) /*                       */ },
+    /*      */ DO_OC( UPLUS, cli.trace.flags ) /*    */ , DO_STAGE_ANY /*                   */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-pdi" ) /*        */ , DO_A_O /* */ , DO_V( PDI_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.pdi ) /*    */ , DO_STAGE_ANY /*                     */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-levinfo" ) /*    */ , DO_A_O /* */ , DO_V( LEVINFO_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,

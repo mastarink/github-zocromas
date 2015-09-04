@@ -120,7 +120,7 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
   {
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
     /* PF0( "table %s; search %s", xtable->o.name, string ); */
-    DORN( r, duf_execute_cmd_long_xtable( string, xtable, vseparator, istage ) );
+    DOR( r, duf_execute_cmd_long_xtable( string, xtable, vseparator, istage ) );
     DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
     if ( r > 0 )
       found += r;

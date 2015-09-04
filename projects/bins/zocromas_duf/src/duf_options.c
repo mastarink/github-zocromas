@@ -49,7 +49,16 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( temp, 0, "this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
 #ifdef MAS_TRACING
   int er = 0, fr = 0, or = 0, ir = 0, tr = 0;
 #else
