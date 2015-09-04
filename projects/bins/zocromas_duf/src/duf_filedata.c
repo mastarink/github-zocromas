@@ -113,11 +113,11 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
     DUF_TRACE( select, 2, "<changes> : %d", changes );
     if ( need_id )
     {
-      if ( ( rpr == DUF_SQL_CONSTRAINT || !rpr ) && !changes )
+      if ( ( rpr == DUF_SQL_CONSTRAINT || DUF_NOERROR( rpr ) ) && !changes )
       {
         dataid = duf_pdistat2file_dataid_existed( pdi, pr );
       }
-      else if ( !rpr /* assume SQLITE_OK */  && changes )
+      else if ( DUF_NOERROR( rpr ) /* assume SQLITE_OK */  && changes )
       {
         dataid = duf_sql_last_insert_rowid(  );
         if ( !dataid )

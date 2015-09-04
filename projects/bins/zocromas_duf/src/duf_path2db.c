@@ -273,7 +273,7 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_s
         }
       }
 #else
-      if ( ( rpr == DUF_SQL_CONSTRAINT || !rpr ) && !changes )
+      if ( ( rpr == DUF_SQL_CONSTRAINT || DUF_NOERROR( rpr ) ) && !changes )
       {
         /* DUF_SQL_CONSTRAINT should be impossible from now */
         /*  !changes should be impossible from now too */
@@ -287,7 +287,7 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_s
           DUF_MAKE_ERROR( rpr, DUF_ERROR_NOT_IN_DB );
         }
       }
-      else if ( !rpr /* assume SQLITE_OK */  && changes )
+      else if ( DUF_NOERROR( rpr ) /* assume SQLITE_OK */  && changes )
       {
         dirid = duf_sql_last_insert_rowid(  );
         if ( !dirid )

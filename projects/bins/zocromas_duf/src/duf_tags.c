@@ -35,7 +35,7 @@ duf_add_tagname( duf_depthinfo_t * pdi, const char *tag_name, int *pr )
     DUF_SQL_END_STMT( insert_tagname, rpr, pstmt );
   }
   DUF_TRACE( path, 2, "@           inserting tag_name; tag_name %s; changes:%u", tag_name, changes );
-  if ( ( rpr == DUF_SQL_CONSTRAINT || !rpr ) && !changes )
+  if ( ( rpr == DUF_SQL_CONSTRAINT || DUF_NOERROR( rpr ) ) && !changes )
   {
     DUF_SQL_START_STMT( pdi, select_tagname, sqlv, rpr, pstmt );
     DUF_SQL_BIND_S( tagName, tag_name, rpr, pstmt );
@@ -83,7 +83,7 @@ duf_add_tag( duf_depthinfo_t * pdi, const char *itemtype, unsigned long long ite
     DUF_SQL_END_STMT( insert_tag, rpr, pstmt );
   }
   DUF_TRACE( path, 2, "@           inserting tag; tag_name %s; changes:%u", tag_name, changes );
-  if ( ( DUF_IS_ERROR( rpr, DUF_SQL_CONSTRAINT ) || !rpr ) && !changes )
+  if ( ( DUF_IS_ERROR( rpr, DUF_SQL_CONSTRAINT ) || DUF_NOERROR( rpr ) ) && !changes )
   {
     DUF_SQL_START_STMT( pdi, select_tag, sqlv, rpr, pstmt );
     DUF_SQL_BIND_LL( tagNameID, tagnameid, rpr, pstmt );
