@@ -135,7 +135,7 @@ duf_levinfo_dbinit_level_d( duf_depthinfo_t * pdi, duf_sqlite_stmt_t * pstmt, in
       /* pdhlev->st.st_atim =; */
       /* pdhlev->st.st_mtim =; */
       /* pdhlev->st.st_ctim =; */
-      DUF_TRACE( fs, 10, "(%d)? levinfo openated %s; dfd:%d", r, pdi->pathinfo.levinfo[d].itemname, pdhlev->dfd );
+      DUF_TRACE( levinfo, 10, "(%d)? levinfo openated %s; dfd:%d", r, pdi->pathinfo.levinfo[d].itemname, pdhlev->dfd );
       pdhlev->rdb++;
       pdhlev->source = DUF_DH_SOURCE_DB;
 

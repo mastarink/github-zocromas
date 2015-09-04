@@ -176,7 +176,7 @@ static int
 duf_main_db_optionally_remove_files( void )
 {
   DEBUG_STARTR( r );
-  if ( DUF_ACT_FLAG( remove_database ) )
+  if ( DUF_ACTG_FLAG( remove_database ) )
   {
     DUF_TRACE( explain, 0, "     option %s, removing database", DUF_OPT_FLAG_NAME( REMOVE_DATABASE ) );
     DORF( r, duf_main_db_remove_files );
@@ -194,7 +194,7 @@ duf_main_db_create_tables( void )
   DEBUG_STARTR( r );
   DUF_TRACE( explain, 0, "     option %s : to check / create db tables", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   /* DOR( r, duf_check_tables(  ) ); */
-  if ( DUF_CLI_FLAG( dry_run ) )
+  if ( DUF_CLIG_FLAG( dry_run ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
   else
     DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL /* title */, NULL /* selected.db */ );
@@ -207,10 +207,10 @@ duf_main_db_pre_action( void )
 {
   DEBUG_STARTR( r );
 /* --drop-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 && DUF_ACT_FLAG( drop_tables ) )
+  if ( r >= 0 && DUF_ACTG_FLAG( drop_tables ) )
   {
     DUF_TRACE( explain, 0, "drop (zero) tables: option %s", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
-    if ( DUF_CLI_FLAG( dry_run ) )
+    if ( DUF_CLIG_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
     else
       DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL /* title */, NULL /* selected.db */ );
@@ -220,12 +220,12 @@ duf_main_db_pre_action( void )
   {
     DUF_TRACE( explain, 1, "no %s option, not dropping tables", DUF_OPT_FLAG_NAME( DROP_TABLES ) );
   }
-  if ( r >= 0 && DUF_ACT_FLAG( vacuum ) )
+  if ( r >= 0 && DUF_ACTG_FLAG( vacuum ) )
   {
     /* static const char *sql = "VACUUM"; */
 
     /* DUF_TRACE( explain, 0, "[ %s ]  option %s", sql, DUF_OPT_FLAG_NAME( VACUUM ) ); */
-    if ( DUF_CLI_FLAG( dry_run ) )
+    if ( DUF_CLIG_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
     else
       DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL /* title */, NULL /* selected.db */ );
@@ -236,7 +236,7 @@ duf_main_db_pre_action( void )
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( VACUUM ) );
   }
 /* --create-tables								*/ DEBUG_STEP(  );
-  if ( r >= 0 /* && DUF_ACT_FLAG( create_tables ) */  )
+  if ( r >= 0 /* && DUF_ACTG_FLAG( create_tables ) */  )
   {
     DOR( r, duf_main_db_create_tables(  ) );
     global_status.actions_done++;
@@ -342,7 +342,6 @@ duf_main_db_open( void )
   }
   if ( !duf_config->db.opened )
   {
-    DUF_TRACE( temp, 0, "@@@@@@db not opened!" );
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
     DORF( r, duf_sql_open, duf_config->db.main.fpath );

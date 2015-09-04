@@ -58,8 +58,12 @@ typedef struct
 
 typedef struct
 {
+  unsigned trace;
   unsigned dry_run;
+  unsigned flags;
   unsigned explain;
+  unsigned pdi;
+  unsigned levinfo;
 
   unsigned action;
   unsigned any;

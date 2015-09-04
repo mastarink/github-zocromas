@@ -57,7 +57,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
 
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
-  if ( r >= 0 && DUF_ACT_FLAG( summary ) )
+  if ( r >= 0 && DUF_ACTG_FLAG( summary ) )
   {
     DUF_PRINTF( 0, "%s", duf_uni_scan_action_title( SCCB ) );
 
@@ -66,7 +66,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
     DUF_PRINTF( 0, " summary; seq-node:%llu", PDI->seq_node );
     if ( PU->max_seq )
       DUF_PRINTF( 0, " of %llu (max-seq)", PU->max_seq );
-    if ( DUF_ACT_FLAG( summary ) )
+    if ( DUF_ACTG_FLAG( summary ) )
       DUF_PRINTF( 0, " summary; changes:%llu", HCHANGES );
   }
   DUF_TRACE( scan, 2, "/scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
@@ -119,7 +119,6 @@ duf_eval_sccbh_db_items_str_cb( duf_node_type_t node_type, duf_str_cb2_t str_cb2
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 4. set '%s' str_cb2%c", set_type_title, str_cb2 ? '+' : '-' );
     DUF_TRACE( scan, 2, "cb2 %s", set_type_title );
     DUF_TRACE( scan, 2, "ql%llu / qn%llu / q%llu %s", PDI->seq_leaf, PDI->seq_node, PDI->seq, SCCB->title );
-    
 
 
     DOR( r, duf_scan_db_items_with_str_cb_sql_set( sql_set, str_cb2, sccbh, node_type ) );
@@ -173,7 +172,7 @@ duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
  *
  * */
   /* scan this files in this directory */
-  if ( DUF_ACT_FLAG( files ) )
+  if ( DUF_ACTG_FLAG( files ) )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     if ( SCCB->leaf_scan_fd2 )

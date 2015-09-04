@@ -39,7 +39,8 @@
 #include "duf_pdi.h"
 /* ###################################################################### */
 
-int
+/* 20150904.090635 */
+static int
 duf_pdi_attach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
 {
   DEBUG_STARTR( r );
@@ -48,20 +49,25 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
 
   worksql = duf_expand_selected_db( sql, pdi_name );
   DORF( r, duf_main_db_open );
-  DUF_TRACE( temp, 0, "@@@@@attach selected database %s", worksql );
 
   DUF_TRACE( explain, 0, "attach selected database %s", worksql );
-  /* DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt ); */
+#if 1
+  DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
+#else
   DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+#endif
   DUF_SQL_STEP( r, pstmt );
+#if 1
+  DUF_SQL_END_STMT( r, pstmt );
+#else
   DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  /* DUF_SQL_END_STMT( r, pstmt ); */
-  DUF_TRACE( temp, 0, "@@@@attached selected database %s", worksql );
+#endif
   mas_free( worksql );
   DEBUG_ENDR( r );
 }
 
-int
+/* 20150904.090641 */
+static int
 duf_pdi_detach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
 {
   DEBUG_STARTR( r );
@@ -69,20 +75,26 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
   char *worksql;
 
   worksql = duf_expand_selected_db( sql, pdi_name );
-  /* DORF( r, duf_main_db_open ); */
-  DUF_TRACE( temp, 0, "@@@@@detach selected database %s", worksql );
+  DUF_TRACE( pdi, 0, "@@@@@detach selected database %s", worksql );
 
   DUF_TRACE( explain, 0, "detach selected database %s", worksql );
-  /* DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt ); */
+#if 1
+  DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
+#else
   DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+#endif
   DUF_SQL_STEP( r, pstmt );
+#if 1
+  DUF_SQL_END_STMT( r, pstmt );
+#else
   DUF_SQL_END_STMT_NOPDI( r, pstmt );
-  /* DUF_SQL_END_STMT( r, pstmt ); */
-  DUF_TRACE( temp, 0, "@@@@detached selected database %s", worksql );
+#endif
+  DUF_TRACE( pdi, 0, "@@@@detached selected database %s", worksql );
   mas_free( worksql );
   DEBUG_ENDR( r );
 }
 
+/* 20150904.085609 */
 int
 duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
@@ -91,28 +103,20 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
   assert( pdi );
   if ( !pdi->inited )
   {
+    assert( real_path );
     pdi->inited = 1;
     pdi->pathinfo.depth = -1;
-    DUF_TRACE( temp, 0, "@@@@@pdi_name %s", pdi->pdi_name );
-    /* if ( !pdi->pdi_name )                       */
-    /*   pdi->pdi_name =  "selected"; */
-    DUF_TRACE( temp, 0, "@@@@@pdi_name %s", pdi->pdi_name );
+    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     if ( real_path )
     {
       DORN( r, duf_pathdepth( real_path ) );
-      if ( r >= 0 )
+      if ( DUF_NOERROR( r ) )
         pdi->pathinfo.topdepth = r;
     }
     if ( !pdi->attached_selected )
     {
       if ( pdi->pdi_name )
-      {
         DOR( r, duf_pdi_attach_selected( pdi, pdi->pdi_name ) );
-        /* 
-           DOR( r, duf_pdi_detach_selected( pdi, pdi->pdi_name ) );
-           DOR( r, duf_pdi_attach_selected( pdi, pdi->pdi_name ) );
-         */
-      }
       pdi->attached_selected = 1;
     }
     assert( pdi->pathinfo.depth == -1 );
@@ -120,38 +124,37 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     assert( r < 0 || pdi->pathinfo.levinfo );
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
-      DOR( r, duf_real_path2db( pdi, caninsert /* caninsert */ , real_path, sql_set /* node_selector2 */  ) );
+      DOR( r, duf_real_path2db( pdi, caninsert, real_path, sql_set ) );
 
+    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
   DEBUG_ENDR( r );
 }
 
+/* 20150904.085510 */
 int
 duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, unsigned long long dirid, int caninsert, const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
 
-  DUF_TRACE( temp, 0, "@@@@@pdi_name %s", pdi->pdi_name );
   path = duf_dirid2path( dirid, &r );
-  DUF_TRACE( temp, 0, "%d: %s", r, path );
-  DUF_TRACE( temp, 0, "@@@@@pdi_name %s", pdi->pdi_name );
+  DUF_TRACE( pdi, 0, "%d: %s", r, path );
   DOR( r, duf_pdi_init( pdi, path, caninsert, sql_set, frecursive, opendir ) );
-  DUF_TRACE( temp, 0, "%d: %s / %s", r, path, duf_levinfo_path( pdi ) );
+  DUF_TRACE( pdi, 0, "%d: %s / %s", r, path, duf_levinfo_path( pdi ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }
 
 #ifdef MAS_WRAP_FUNC
+/* 20150904.085443 */
 int
-duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */ ,
-                   int frecursive, int opendir )
+duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set /* node_selector2 */ , frecursive, opendir ) );
+  DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set, frecursive, opendir ) );
 
-  DUF_TEST_R( r );
   if ( r >= 0 )
   {
     DUF_TRACE( explain, 1, "converted to real_path: %s", real_path );
@@ -163,61 +166,59 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
 }
 #endif
 
+/* 20150904.090827 */
 static int
 duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const duf_ufilter_t * pu,
                 const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   int frec = 0;
-  int od;
 
+  assert( pdi );
   assert( real_path && *real_path == '/' );
-  /* frec = pdi && !frecursive ? duf_pdi_recursive( pdi ) : frecursive; */
-  frec = pdi && frecursive < 0 ? duf_pdi_recursive( pdi ) : frecursive;
-  od = pdi && pdi->opendir;
+  DUF_TRACE( pdi, 0, "@@@@(duf_pdi_recursive(pdi):%d) real_path:%s", duf_pdi_recursive( pdi ), real_path );
+  frec = frecursive < 0 ? duf_pdi_recursive( pdi ) : frecursive;
   duf_pdi_shut( pdi );
   pdi->pu = pu;
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert /* caninsert */ , sql_set /* node_selector2 */ , frec /* frecursive */ ,
-                                        od /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert, sql_set, frec, opendir ) );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
   DEBUG_ENDR( r );
 }
 
+/* 20150904.091522 */
 int
-duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert, const duf_sql_set_t * sql_set /* const char *node_selector2 */  )
+duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert, const duf_sql_set_t * sql_set, int frecursive )
 {
   DEBUG_STARTR( r );
   char *real_path = NULL;
 
   real_path = duf_realpath( cpath, &r );
   {
-    DUF_TRACE( temp, 2, "cpath:%s; real_path:%s", cpath, real_path );
+    DUF_TRACE( pdi, 0, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
     assert( pdi->pdi_name );
-    DOR( r, duf_pdi_reinit( pdi, real_path, caninsert /* caninsert */ , duf_config->pu /* pu */ , sql_set /* node_selector2 */ ,
-                            DUF_U_FLAG( recursive ) /* recursive */ ,
-                            duf_pdi_opendir( pdi ) ) );
+    DOR( r, duf_pdi_reinit( pdi, real_path, caninsert, duf_config->pu, sql_set, frecursive, duf_pdi_opendir( pdi ) ) );
+    DUF_TRACE( pdi, 0, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
   }
   mas_free( real_path );
   DEBUG_ENDR( r );
 }
 
+/* 20150904.091517 */
 int
-duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set /* const char *node_selector2 */ , int frecursive, int opendir )
+duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set, int frecursive, int opendir )
 {
   DEBUG_STARTR( r );
   char *path = NULL;
-
-  /* int frecursive = 0; */
 
   {
     const char *cpath = NULL;
 
     cpath = duf_levinfo_path( pdi );
+    DUF_TRACE( pdi, 0, "@@(frecursive:%d/%d) cpath:%s", frecursive, duf_pdi_recursive( pdi ), cpath );
     if ( cpath )
       path = mas_strdup( cpath );
-    /* frecursive = pdi->recursive; */
   }
-  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , sql_set /* node_selector2 *//*, duf_config->pu, frecursive */  ) );
+  DOR( r, duf_pdi_reinit_anypath( pdi, path, 0 /* canisert */ , sql_set, frecursive ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }
@@ -233,17 +234,13 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     duf_clear_context( &pdi->context );
     duf_levinfo_delete( pdi );
 
-    for ( int i = 0; /* r>=0 && */ i < pdi->num_idstatements; r = 0, i++ )
+    for ( int i = 0; i < pdi->num_idstatements; r = 0, i++ )
       DOR( r, duf_pdi_finalize_idstmt( pdi, i ) );
 
     mas_free( pdi->idstatements );
     pdi->idstatements = NULL;
 
-    /* mas_free( pdi->xstatements ); */
-    /* pdi->xstatements = NULL;      */
-
     pdi->num_idstatements = 0;
-    /* global_status.changes += pdi->changes; */
     pdi->inited = 0;
     pdi->opendir = 0;
     pdi->pathinfo.depth = pdi->pathinfo.topdepth = 0;
@@ -271,10 +268,10 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     assert( !pdi->idstatements );
     assert( !pdi->pu );
   }
-  /* DUF_SHOW_ERROR( "clear idstatements" ); */
   DEBUG_ENDR( r );
 }
 
+/* 20150904.085731 */
 int
 duf_pdi_close( duf_depthinfo_t * pdi )
 {

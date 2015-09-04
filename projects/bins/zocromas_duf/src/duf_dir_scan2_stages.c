@@ -7,7 +7,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* DUF_ACT_FLAG => DUF_OPTION */
+#include "duf_config_ref.h"     /* DUF_ACTG_FLAG => DUF_OPTION */
 
 #include "duf_levinfo_ref.h"
 
@@ -38,7 +38,7 @@
  \
       diridpdi = duf_levinfo_dirid( PDI ); \
       DUF_TRACE( scan, 4, "? scan node [" #stagename "]2 by %5llu", diridpdi ); \
-      if ( DUF_ACT_FLAG( dirs ) ) \
+      if ( DUF_ACTG_FLAG( dirs ) ) \
       { \
 	PDI->items.total++; \
 	PDI->items.dirs++; \
@@ -84,7 +84,7 @@
     { \
       DEBUG_STARTR( r ); \
  \
-      if ( DUF_ACT_FLAG( dirs ) ) \
+      if ( DUF_ACTG_FLAG( dirs ) ) \
       { \
 	PDI->items.total++; \
 	PDI->items.dirs++; \

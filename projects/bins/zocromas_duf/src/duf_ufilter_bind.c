@@ -97,7 +97,7 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg_unuse
     mas_free( t );
   }
 
-  DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACT_FLAG( fast ), r, pstmt );
+  DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
   DUF_SQL_BIND_LL_NZ_OPT( OPTION_VAL_WITH_TAG_FILE, DUF_OPTION_VAL_WITH_TAG_FILE, r, pstmt );
 
 

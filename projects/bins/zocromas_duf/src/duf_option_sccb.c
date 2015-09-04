@@ -13,7 +13,10 @@
 
 
 #include "duf_prepare_actions.h"
+
 #include "duf_pdi.h"
+#include "duf_pdi_ref.h"
+
 #include "duf_sccb.h"
 #include "duf_sccb_eval.h"
 #include "duf_sccb_eval_std.h"
@@ -98,7 +101,7 @@ duf_option_$_cd( const char *s )
     {
       int rt = 0;
 
-      DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL ) );
+      DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL, duf_pdi_recursive( duf_config->pdi ) ) );
       DUF_TRACE( temp, 0, "(r:%d)", rt );
     }
     mas_free( new_path );

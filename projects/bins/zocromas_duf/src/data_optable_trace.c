@@ -24,6 +24,15 @@ const duf_longval_extended_table_t optable_trace = {
    {.o = {DO_Q( "trace-all" ) /*        */ , DO_A_O /* */ , DO_V( ALL_TRACE )} /*          */ , DO_CL( TRACE ) /*   */
     /*                                                                                      */ , DO_H( trace .... ) /*                       */ },
 
+   {.o = {DO_Q( "trace-trace" ) /*      */ , DO_A_O /* */ , DO_V( TRACE_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.trace ) /*    */ , DO_STAGE_ANY /*                   */ , DO_H( trace .... ) /*                       */ },
+   {.o = {DO_Q( "trace-flags" ) /*      */ , DO_A_O /* */ , DO_V( FLAGS_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.trace ) /*    */ , DO_STAGE_ANY /*                   */ , DO_H( trace .... ) /*                       */ },
+   {.o = {DO_Q( "trace-pdi" ) /*        */ , DO_A_O /* */ , DO_V( PDI_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.pdi ) /*    */ , DO_STAGE_ANY /*                     */ , DO_H( trace .... ) /*                       */ },
+   {.o = {DO_Q( "trace-levinfo" ) /*    */ , DO_A_O /* */ , DO_V( LEVINFO_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.levinfo ) /*    */ , DO_STAGE_ANY /*                 */ , DO_H( trace .... ) /*                       */ },
+
    {.o = {DO_Q( "trace-dry" ) /*        */ , DO_A_N /* */ , DO_V( DRY_RUN_TRACE )} /*      */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.dry_run ) /*   */ , DO_STAGE_ANY /*                  */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-action" ) /*     */ , DO_A_O /* */ , DO_V( ACTION_TRACE )} /*       */ , DO_CL( TRACE ) /*   */ ,

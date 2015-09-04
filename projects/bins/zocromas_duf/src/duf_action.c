@@ -62,9 +62,9 @@ duf_action_path( char *tpath )
   {
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_FLAG_NAME( ADD_PATH ) );
     DUF_TRACE( explain, 0, "to add path %s", tpath );
-    if ( DUF_ACT_FLAG( add_path ) )
+    if ( DUF_ACTG_FLAG( add_path ) )
     {
-      if ( DUF_CLI_FLAG( dry_run ) )
+      if ( DUF_CLIG_FLAG( dry_run ) )
         DUF_PRINTF( 0, "%s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( ADD_PATH ) );
       else
       {
@@ -77,7 +77,7 @@ duf_action_path( char *tpath )
         DUF_TRACE( path, 0, "@[%s] %s", tpath, duf_levinfo_path( duf_config->pdi ) );
 
         DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, tpath, 1 /* caninsert */ ,
-                                        NULL /* node_selector2 *//* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
+                                        NULL /* node_selector2 *//* , duf_config->pu, DUF_UG_FLAG( recursive ) */  ) );
 
         /* DOR( r, duf_add_path_uni( tpath, node_selector2 ) ); */
         /* DOR( r, DUF_WRAPPED( duf_pdi_init ) ( duf_config->pdi, real_path, 1 (* caninsert ~ "root" *) , node_selector2, */
@@ -89,7 +89,7 @@ duf_action_path( char *tpath )
 
     {
       DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, tpath, 0 /* caninsert */ ,
-                                      NULL /* node_selector2 *//* , duf_config->pu, DUF_U_FLAG( recursive ) */  ) );
+                                      NULL /* node_selector2 *//* , duf_config->pu, DUF_UG_FLAG( recursive ) */  ) );
 
       /* stage DUF_OPTION_STAGE_FIRST  (1) - needs pdi inited with argv, which is known only after stage 0 */
 
@@ -130,7 +130,7 @@ duf_action_path( char *tpath )
 
 #  if 0
   else
-if ( r >= 0 /* && DUF_ACT_FLAG( uni_scan ) */  )
+if ( r >= 0 /* && DUF_ACTG_FLAG( uni_scan ) */  )
 {
   /* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
   DORF( r, DUF_WRAPPED( duf_evaluate_all_at_config ) ); /* each targ.argv; reinit will be made */
@@ -218,13 +218,14 @@ duf_action( void )
 #  endif
       DOR( r, duf_indirect_options( istage ) );
     }
-    
+
     DOR( r, duf_interactive_options( DUF_OPTION_STAGE_INTERACTIVE ) );
     while ( r >= 0 && ia < duf_config->targ.argc )
     {
       istage = DUF_OPTION_STAGE_LOOP;
+      DUF_TRACE( pdi, 1, "@@@c->pdi inited:%d", duf_config->pdi->inited );
       DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targ.argv[ia], 7 /* caninsert */ ,
-                                      NULL /* node_selector2 */  ) );
+                                      NULL /* node_selector2 */ , DUF_UG_FLAG( recursive ) ) );
       if ( duf_levinfo_path( duf_config->pdi ) )
       {
         DOR( r, duf_cli_options( istage ) );

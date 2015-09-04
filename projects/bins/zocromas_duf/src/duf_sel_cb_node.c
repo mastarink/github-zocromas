@@ -12,8 +12,8 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* for DUF_ACT_FLAG( progress ) !ONLY! */
-#include "duf_option_defs.h"    /* for DUF_ACT_FLAG( progress ) !ONLY! */
+#include "duf_config_ref.h"     /* for DUF_ACTG_FLAG( progress ) !ONLY! */
+#include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
 
 #include "duf_utils.h"          /* duf_percent */
 
@@ -67,7 +67,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
       PDI->seq_node++;
 
       DUF_TRACE( scan_dir, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_node, PDI->seq, TOTITEMS, SCCB->title );
-      if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACT_FLAG( progress ) )
+      if ( SCCB->count_nodes && !SCCB->no_progress && TOTITEMS > 0 && DUF_ACTG_FLAG( progress ) )
       {
         long long m;
 

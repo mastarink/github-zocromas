@@ -28,8 +28,10 @@
   _typ _ref2 \
   duf_levinfo_ ## _name ## _d( const duf_depthinfo_t * pdi, int d ) \
   { \
+    duf_levinfo_t *pli; \
+    pli=duf_levinfo_ptr_d( pdi, d ); \
     _typ  _ref2 __val; \
-    __val=((_cond)?(_ref1 duf_levinfo_ptr_d( pdi, d )->_fld):((_typ _ref2) 0)); \
+    __val=(pli && (_cond)?(_ref1 pli->_fld):((_typ _ref2) 0)); \
     return __val _suffix; \
   }
 
@@ -96,7 +98,9 @@
   duf_levinfo_ ## _name ## _d( const duf_depthinfo_t * pdi, int d ) \
   { \
     _typ  _ref2 __val; \
-    __val=((_cond)?(_ref1 duf_levinfo_ptr_d( pdi, d )->_fld):((_typ _ref2) 0)); \
+    duf_levinfo_t *pli; \
+    pli=duf_levinfo_ptr_d( pdi, d ); \
+    __val=(pli && (_cond)?(_ref1 pli->_fld):((_typ _ref2) 0)); \
     return __val _suffix; \
   } \
    \
@@ -125,7 +129,9 @@
   void \
   duf_levinfo_set_ ## _name ## _d( duf_depthinfo_t * pdi, _typ __newval, int d ) \
   { \
-    duf_levinfo_ptr_d( pdi, d )->_fld = __newval _suffix; \
+    duf_levinfo_t *pli; \
+    pli=duf_levinfo_ptr_d( pdi, d ); \
+    if (pli) pli->_fld = __newval _suffix; \
   } \
    \
   DUF_LEVINFO_FS_PLUS( _typ, _name, _ref1, _ref2 ) \

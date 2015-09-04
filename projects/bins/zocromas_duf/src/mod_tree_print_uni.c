@@ -170,7 +170,7 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 #else
     DOR(r, duf_fileinfo( pstmt, pdi, &fi ));
 #endif
-    if ( DUF_ACT_FLAG( use_binformat ) )
+    if ( DUF_ACTG_FLAG( use_binformat ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
         DUF_PUTSL( 0 );
@@ -269,7 +269,7 @@ tree_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   /* fi.md5id = md5id; */
   /* fi.md5sum1 = md5sum1; */
   /* fi.md5sum2 = md5sum2; */
-  if ( DUF_ACT_FLAG( use_binformat ) )
+  if ( DUF_ACTG_FLAG( use_binformat ) )
   {
     if ( duf_print_bformat_file_info( pdi, &fi, &bformat, duf_sql_print_tree_prefix_uni, ( duf_pdi_cb_t ) NULL ) > 0 )
       DUF_PUTSL( 0 );

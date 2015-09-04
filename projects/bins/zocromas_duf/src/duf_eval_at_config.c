@@ -53,10 +53,10 @@ duf_evaluate_all_at_config( void )
     DUF_TRACE( action, 0, "%d actions set; %s", asteps, r < 0 ? "FAIL" : "" );
 /* <body> */
 #if 0
-  if ( DUF_ACT_FLAG( show_sccbs ) )
+  if ( DUF_ACTG_FLAG( show_sccbs ) )
     DOR( r, duf_show_sccb_sequence( ppscan_callbacks, asteps ) );
 #endif
-  if ( DUF_ACT_FLAG( do_sccbs ) )
+  if ( DUF_ACTG_FLAG( do_sccbs ) )
     DOR( r, duf_evaluate_sccb_array( ppscan_callbacks, asteps, &global_status.actions_done ) );
 /* </body> */
 

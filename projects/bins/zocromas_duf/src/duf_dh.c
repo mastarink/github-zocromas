@@ -25,29 +25,26 @@
 
 /* 20150820.142734 */
 static int
-_duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name )
+_duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *path )
 {
   DEBUG_STARTR( r );
-  int updfd = 0;
 
-  updfd = pdhandleup ? pdhandleup->dfd : 0;
-  if ( pdhandle && pdhandleup && name && pdhandleup->dfd )
+  if ( pdhandle && path /* && pdhandleup && pdhandleup->dfd */  )
   {
     int ry = 0;
+    int updfd = 0;
 
-    ry = fstatat( updfd, name, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
-    DUF_TRACE( fs, 5, "lowlev. fstatated (%d) ≪%s≫", ry, name );
+    updfd = pdhandleup ? pdhandleup->dfd : 0;
 
-    pdhandle->rs = ry;
-    if ( !pdhandle->rs )
-      pdhandle->rs++;
-    pdhandle->source = DUF_DH_SOURCE_FS;
+    /* fstatat: If pathname is absolute, then dirfd is ignored. */
+    ry = fstatat( updfd, path, &pdhandle->st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT );
+    DUF_TRACE( fs, 5, "lowlev. fstatated (%d) ≪%s≫", ry, path );
 
     if ( ry < 0 )
     {
       if ( errno == ENOENT )
       {
-        DUF_SHOW_ERROR( "No such entry %s", name );
+        DUF_SHOW_ERROR( "No such entry %s", path );
         DUF_MAKE_ERROR( r, DUF_ERROR_STATAT_ENOENT );
       }
       else
@@ -56,15 +53,20 @@ _duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
         char *s;
 
         s = strerror_r( errno, serr, sizeof( serr ) );
-        DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; name:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, name, updfd );
+        DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s' ; at-dfd:%d", ry, errno, s ? s : serr, path, updfd );
         DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
       }
     }
+    pdhandle->rs = ry;
+    if ( !pdhandle->rs )
+      pdhandle->rs++;
+    if ( DUF_NOERROR( r ) )
+      pdhandle->source = DUF_DH_SOURCE_FS;
   }
   else
   {
-    DUF_SHOW_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; name:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
-                    name ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
+    DUF_SHOW_ERROR( "parameter error pdhandle:%d; pdhandleup:%d; path:%d; pdhandleup->dfd:%d", pdhandle ? 1 : 0, pdhandleup ? 1 : 0,
+                    path ? 1 : 0, pdhandleup && pdhandleup->dfd ? 1 : 0 );
     DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
   }
   DEBUG_ENDR( r );
@@ -93,12 +95,13 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   DEBUG_STARTR( r );
 
-#ifdef DUF_TMP_ASSERT0
-  assert( 0 );
-#endif
   if ( pdhandle && path )
   {
     int ry = 0;
+
+
+
+
 
     ry = stat( path, &pdhandle->st );
     DUF_TRACE( fs, 5, "lowlev. stated (%d) ≪%s≫", r, path );
@@ -117,21 +120,20 @@ _duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 
         s = strerror_r( errno, serr, sizeof( serr ) );
         DUF_SHOW_ERROR( "(%d) errno:%d statat_dh :%s; path:'%s'", ry, errno, s ? s : serr, path );
-        DUF_MAKE_ERROR( r, DUF_ERROR_STATAT );
+        DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
       }
     }
 
     pdhandle->rs = ry;
     if ( !pdhandle->rs )
       pdhandle->rs++;
-
-    duf_config->nopen++;
-    DUF_TRACE( fs, 5, "opened %s (%u - %u = %u)", path, duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose );
+    if ( DUF_NOERROR( r ) )
+      pdhandle->source = DUF_DH_SOURCE_FS;
   }
   else if ( !path )
   {
     DUF_SHOW_ERROR( "parameter error pdhandle:%d; path:%d;", pdhandle ? 1 : 0, path ? 1 : 0 );
-    DUF_MAKE_ERROR( r, DUF_ERROR_ARGUMENT );
+    DUF_MAKE_ERROR( r, DUF_ERROR_STAT );
   }
   DUF_TRACE( fs, 5, "(%d)? stated %s", r, path );
   DEBUG_ENDR( r );
@@ -340,7 +342,8 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
     assert( pdhandle->dfd );
     if ( pdhandle->dfd )
     {
-      int ry=0;
+      int ry = 0;
+
       ry = close( pdhandle->dfd );
       DUF_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
       if ( ry )

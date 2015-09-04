@@ -127,18 +127,18 @@ duf_clarify_opt_old( const duf_longval_extended_t * extended, const char *optarg
        * i.e.
        *  --create-tables --uni-scan --recursive ...
        *  */
-      DUF_ACT_FLAG( create_tables ) = /* */
-            DUF_ACT_FLAG( add_path ) = /* */
-            /* DUF_ACT_FLAG( uni_scan ) = (* *) */
-            DUF_U_FLAG( recursive ) = /* */
-            DUF_ACT_FLAG( files ) = /* */
-            DUF_ACT_FLAG( dirs ) = /* */
-            DUF_ACT_FLAG( dirent ) = /* */
-            DUF_ACT_FLAG( sd5 ) = /* */
-            DUF_ACT_FLAG( md5 ) = /* */
-            DUF_ACT_FLAG( crc32 ) = /* */
-            DUF_ACT_FLAG( filedata ) = /* */
-            DUF_ACT_FLAG( filenames ) = /* */
+      DUF_ACTG_FLAG( create_tables ) = /* */
+            DUF_ACTG_FLAG( add_path ) = /* */
+            /* DUF_ACTG_FLAG( uni_scan ) = (* *) */
+            DUF_UG_FLAG( recursive ) = /* */
+            DUF_ACTG_FLAG( files ) = /* */
+            DUF_ACTG_FLAG( dirs ) = /* */
+            DUF_ACTG_FLAG( dirent ) = /* */
+            DUF_ACTG_FLAG( sd5 ) = /* */
+            DUF_ACTG_FLAG( md5 ) = /* */
+            DUF_ACTG_FLAG( crc32 ) = /* */
+            DUF_ACTG_FLAG( filedata ) = /* */
+            DUF_ACTG_FLAG( filenames ) = /* */
             1;
       break;
 #endif
@@ -228,112 +228,112 @@ duf_clarify_opt_old( const duf_longval_extended_t * extended, const char *optarg
           switch ( rs )
           {
           case DUF_FORMAT_DEPTH:
-            DUF_FORMAT_FLAG_NUM( depth ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( depth ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SEQ:
-            DUF_FORMAT_FLAG_NUM( seq ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( seq ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SEQ_NODE:
-            DUF_FORMAT_FLAG_NUM( seq_node ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( seq_node ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SEQ_LEAF:
-            DUF_FORMAT_FLAG_NUM( seq_leaf ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( seq_leaf ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_PREFIX:
-            DUF_FORMAT_FLAG_NUM( prefix ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( prefix ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SUFFIX:
-            DUF_FORMAT_FLAG_NUM( suffix ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( suffix ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DIRID:
-            DUF_FORMAT_FLAG_NUM( dirid ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( dirid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DIRID_SPACE:
-            DUF_FORMAT_FLAG_NUM( dirid_space ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( dirid_space ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NFILES:
-            DUF_FORMAT_FLAG_NUM( nfiles ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( nfiles ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NFILES_SPACE:
-            DUF_FORMAT_FLAG_NUM( nfiles_space ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( nfiles_space ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NDIRS:
-            DUF_FORMAT_FLAG_NUM( ndirs ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( ndirs ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NDIRS_SPACE:
-            DUF_FORMAT_FLAG_NUM( ndirs_space ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( ndirs_space ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_REALPATH:
-            DUF_FORMAT_FLAG_NUM( realpath ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( realpath ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_INODE:
-            DUF_FORMAT_FLAG_NUM( inode ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( inode ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MODE:
-            DUF_FORMAT_FLAG_NUM( mode ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( mode ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NLINK:
-            DUF_FORMAT_FLAG_NUM( nlink ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( nlink ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_USER:
-            DUF_FORMAT_FLAG_NUM( user ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( user ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_GROUP:
-            DUF_FORMAT_FLAG_NUM( group ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( group ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILESIZE:
-            DUF_FORMAT_FLAG_NUM( filesize ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( filesize ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MTIME:
-            DUF_FORMAT_FLAG_NUM( mtime ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( mtime ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_FILENAME:
-            DUF_FORMAT_FLAG_NUM( filename ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( filename ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SD5:
-            DUF_FORMAT_FLAG_NUM( sd5 ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( sd5 ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_SD5ID:
-            DUF_FORMAT_FLAG_NUM( sd5id ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( sd5id ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MD5:
-            DUF_FORMAT_FLAG_NUM( md5 ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( md5 ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MD5ID:
-            DUF_FORMAT_FLAG_NUM( md5id ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( md5id ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_CRC32:
-            DUF_FORMAT_FLAG_NUM( crc32 ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( crc32 ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_CRC32ID:
-            DUF_FORMAT_FLAG_NUM( crc32id ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( crc32id ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NAMEID:
-            DUF_FORMAT_FLAG_NUM( nameid ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( nameid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MIME:
-            DUF_FORMAT_FLAG_NUM( mime ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( mime ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_MIMEID:
-            DUF_FORMAT_FLAG_NUM( mimeid ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( mimeid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_EXIFID:
-            DUF_FORMAT_FLAG_NUM( exifid ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( exifid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_EXIFDT:
-            DUF_FORMAT_FLAG_NUM( exifdt ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( exifdt ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_HUMAN:
-            DUF_FORMAT_FLAG_NUM( human ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( human ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_DATAID:
-            DUF_FORMAT_FLAG_NUM( dataid ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_FLAG_NUM( dataid ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_NSAME:
-            DUF_FORMAT_NUM( nsame ) = value == NULL ? 1 : nvalue;
+            DUF_FORMATW_NUM( nsame ) = value == NULL ? 1 : nvalue;
             break;
           case DUF_FORMAT_OFFSET:
-            DUF_FORMAT_NUM( offset ) = value == NULL ? 0 : nvalue;
+            DUF_FORMATW_NUM( offset ) = value == NULL ? 0 : nvalue;
             break;
           }
           DUF_TRACE( options, 2, "rs:%d [%s:%s:%s] FORMAT bits: %llx", rs, poptarg, hlp, value ? value : "nil", duf_config->cli.bformat.v.bit );

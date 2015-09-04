@@ -57,12 +57,10 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t
   {
     duf_sccb_handle_t *sccbh = NULL;
 
-
-
     sccbh = duf_open_sccb_handle( pdi, sccb, ptarg->argc, ptarg->argv, pu, &r );
-
-    DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
-
+    {
+      DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
+    }
     duf_close_sccb_handle( sccbh );
   }
   DEBUG_ENDR( r );

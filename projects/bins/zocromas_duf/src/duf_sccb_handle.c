@@ -37,7 +37,7 @@
 /* ###################################################################### */
 
 static unsigned long long
-duf_count_total_items( const duf_sccb_handle_t *sccbh, int *pr )
+duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
 {
   DEBUG_STARTULL( cnt );
   int rpr = DUF_ERROR_TOTALS;
@@ -60,7 +60,7 @@ duf_count_total_items( const duf_sccb_handle_t *sccbh, int *pr )
     sqlt = mas_strcat_x( sqlt, leaf_selector_total2 );
 #else
     if ( SCCB->count_nodes )
-      sql_set = duf_get_sql_set( SCCB , DUF_NODE_NODE);
+      sql_set = duf_get_sql_set( SCCB, DUF_NODE_NODE );
     else
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
 
@@ -194,7 +194,9 @@ TODO scan mode
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_sql_set( SCCB, DUF_NODE_NODE ) ) );
+    DOR( rpr,
+         duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_sql_set( SCCB, DUF_NODE_NODE ),
+                                 duf_pdi_recursive( PDI ) ) );
   }
   if ( pr )
     *pr = rpr;

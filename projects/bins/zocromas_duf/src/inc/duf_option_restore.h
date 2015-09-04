@@ -17,7 +17,7 @@ void duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxle
   DUF_OPTION_RESTORETV(ocode, ptr, b, up, lo, pref, value, maxlen)
 
 #  define DUF_OPTION_RESTORET( ocode, ptr, typ, up, lo, _ref, pref, maxlen) \
-  DUF_OPTION_RESTORETV( ocode, ptr, typ, up, lo, pref, DUF_OPTION(pref _ref lo), maxlen)
+  DUF_OPTION_RESTORETV( ocode, ptr, typ, up, lo, pref, DUF_OPTIONG(pref _ref lo), maxlen)
 
 
 

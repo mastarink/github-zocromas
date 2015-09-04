@@ -19,7 +19,7 @@
 
 #  define DUF_DEBUG(_lev, ...)  if ( DUF_IF_DEBUGN( _lev ) ) {  __VA_ARGS__ ; }
 
-#  define T(_fmt, ...) DUF_TRACE(temp,0,"[T] #@#@# "_fmt,__VA_ARGS__)
+#  define T(_fmt, ...) DUF_TRACE(temp,0,"@"_fmt,__VA_ARGS__)
 
 
 #endif

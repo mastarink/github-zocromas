@@ -54,7 +54,7 @@ duf_interactive_options( duf_option_stage_t istage )
   add_history( "no-recursive" );
 #endif
   add_history( "cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/human/" );
-  while ( r >= 0 && DUF_ACT_FLAG( interactive ) && isatty( STDIN_FILENO ) )
+  while ( r >= 0 && DUF_ACTG_FLAG( interactive ) && isatty( STDIN_FILENO ) )
   {
     char *rl_buffer = NULL, *s = NULL;
 
@@ -93,7 +93,7 @@ duf_interactive_options( duf_option_stage_t istage )
 
         DUF_CLEAR_ERROR(r, DUF_ERROR_OPTION_NOT_FOUND);
 
-        DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACT_FLAG( interactive ), duf_config->pdi ? 1 : 0 );
+        DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACTG_FLAG( interactive ), duf_config->pdi ? 1 : 0 );
         mas_free( xs );
       }
       free( rl_buffer );

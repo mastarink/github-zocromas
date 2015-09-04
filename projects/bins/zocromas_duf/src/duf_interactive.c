@@ -81,11 +81,11 @@ duf_interactive( void )
     add_history( "recursive" );
     add_history( "no-recursive" );
 
-    while ( r >= 0 && DUF_ACT_FLAG( interactive ) )
+    while ( r >= 0 && DUF_ACTG_FLAG( interactive ) )
     {
       r = 0;
 #if 0
-      if ( DUF_ACT_FLAG( beginning_sql ) )
+      if ( DUF_ACTG_FLAG( beginning_sql ) )
       {
         /* TODO:reset selection */
         sql_beginning_tables.done = 0;
@@ -94,7 +94,7 @@ duf_interactive( void )
 #endif
       /* DOR( r, duf_scan_beginning_ssql( &sql_beginning_tables, 0, NULL ) ); */
       DOR( r,
-           duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */ , DUF_U_FLAG( recursive ),
+           duf_pdi_reinit_oldpath( duf_config->pdi, NULL /* const char *node_selector2 */ , DUF_UG_FLAG( recursive ),
                                    duf_pdi_opendir( duf_config->pdi ) ) );
 
       if ( duf_config && duf_config->pdi )
