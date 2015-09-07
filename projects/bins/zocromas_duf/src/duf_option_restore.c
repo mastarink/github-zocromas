@@ -128,7 +128,7 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, SAMPLE, sample, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, DELETED, deleted, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, DIRENT, dirent, maxlen );
-  
+
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, MDPATH, mdpath, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, MD5, md5, maxlen );
   DUF_OPTION_RESTORE_TRACE( codeval, ptr, SD5, sd5, maxlen );
@@ -159,21 +159,25 @@ duf_restore_some_option( char *ptr, duf_option_code_t codeval, size_t maxlen )
   DUF_OPTION_RESTORE_NUM( codeval, ptr, SAMPUPD, sampupd, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, DIRENT, dirent, cli.act, maxlen );
 
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, MDPATH, mdpath_obs, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, MD5, md5_obs, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, SD5, sd5_obs, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, CRC32, crc32_obs, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, MIME, mime_obs, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, EXIF, exif_obs, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, COLLECT, collect_obs, cli.act, maxlen );
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, MDPATH, mdpath_obs, cli.act, maxlen );   */
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, MD5, md5_obs, cli.act, maxlen );         */
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, SD5, sd5_obs, cli.act, maxlen );         */
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, CRC32, crc32_obs, cli.act, maxlen );     */
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, MIME, mime_obs, cli.act, maxlen );       */
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, EXIF, exif_obs, cli.act, maxlen );       */
+  /* DUF_OPTION_RESTORE_FLAG( codeval, ptr, COLLECT, collect_obs, cli.act, maxlen ); */
 
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, INTEGRITY, integrity, cli.act, maxlen );
 #if 0
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, PRINT, print, cli.act, maxlen );
   DUF_OPTION_RESTORE_FLAG( codeval, ptr, TREE, tree, cli.act, maxlen );
 #endif
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, FILES, files, cli.act, maxlen );
-  DUF_OPTION_RESTORE_FLAG( codeval, ptr, DIRS, dirs, cli.act, maxlen );
+
+  /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, ALLOW_FILES, allow_files, cli.act, maxlen );
+  /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS */
+  DUF_OPTION_RESTORE_FLAG( codeval, ptr, ALLOW_DIRS, allow_dirs, cli.act, maxlen );
+
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_CALCULATE, calculate, cli,.disable, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_INSERT, insert, cli,.disable, maxlen );
   DUF_OPTION_RESTORE_FLAGG( codeval, ptr, DISABLE_UPDATE, update, cli,.disable, maxlen );

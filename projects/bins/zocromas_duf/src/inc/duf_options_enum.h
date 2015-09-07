@@ -50,10 +50,13 @@ typedef enum
 
   /* actions */
   DUF_OPTION_VAL_FLAG_COLLECT = 'i',
-  DUF_OPTION_VAL_FLAG_FILES = 'f',
-  DUF_OPTION_VAL_FLAG_DIRS = 'd',
+  /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
+  DUF_OPTION_VAL_FLAG_ALLOW_FILES = 'f',
+  /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS */
+  DUF_OPTION_VAL_FLAG_ALLOW_DIRS = 'd',
   DUF_OPTION_VAL_FLAG_DIRENT = 'E',
 
+  /* obsolete */
   DUF_OPTION_VAL_FLAG_FILEDATA = 'D',
   DUF_OPTION_VAL_FLAG_FILENAMES = 'n',
   DUF_OPTION_VAL_FLAG_SD5 = '2',
@@ -61,6 +64,7 @@ typedef enum
   DUF_OPTION_VAL_FLAG_MD5 = '5',
   DUF_OPTION_VAL_FLAG_MIME = 'e',
   DUF_OPTION_VAL_FLAG_EXIF = 'X',
+  /* /obsolete */
 
 
 /*==================================================*/

@@ -202,14 +202,14 @@ duf_find_name_long_no( const char *name, int witharg, const duf_longval_extended
   const duf_longval_extended_t *extended = NULL;
 
   extended = duf_find_name_long( name, witharg, xtended, soft, &rpr );
-  DUF_TRACE( options, 1, "@@name:%s; extended:%d", name, extended ? 1 : 0 );
+  DUF_TRACE( options, 4, "@@name:%s; extended:%d", name, extended ? 1 : 0 );
   if ( extended )
     DUF_TRACE( options, 3, "@(%s) found name:`%s`", duf_error_name( rpr ), extended->o.name );
-  DUF_TRACE( options, 4, "name:%s; witharg:%d; soft:%d", name, witharg, soft );
+  DUF_TRACE( options, 6, "name:%s; witharg:%d; soft:%d", name, witharg, soft );
   if ( pno && rpr == DUF_ERROR_OPTION_NOT_FOUND )
   {
     *pno = 0;
-    DUF_TRACE( options, 4, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );
+    DUF_TRACE( options, 6, "(try 'no') name:%s; witharg:%d; soft:%d", name, witharg, soft );
     if ( rpr == DUF_ERROR_OPTION_NOT_FOUND && 0 == strncmp( name, DUF_NO_PREFIX, strlen( DUF_NO_PREFIX ) )
          && strlen( name ) > strlen( DUF_NO_PREFIX ) )
     {

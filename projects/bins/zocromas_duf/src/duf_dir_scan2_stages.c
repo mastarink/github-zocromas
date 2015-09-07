@@ -38,7 +38,7 @@
  \
       diridpdi = duf_levinfo_dirid( PDI ); \
       DUF_TRACE( scan, 4, "? scan node [" #stagename "]2 by %5llu", diridpdi ); \
-      if ( DUF_ACTG_FLAG( dirs ) ) \
+      if ( DUF_ACTG_FLAG( allow_dirs ) ) \
       { \
 	PDI->items.total++; \
 	PDI->items.dirs++; \
@@ -68,8 +68,8 @@
       } \
       else if ( SCCB->node_scan_ ## stagename ## 2 ) \
       { \
-	DUF_TRACE( explain, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_DIRS ) ); \
-	DUF_TRACE( scan, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_DIRS ) ); \
+	DUF_TRACE( explain, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_ALLOW_DIRS ) ); \
+	DUF_TRACE( scan, 1, "to scan node " #stagename "2 use %s", DUF_OPT_NAME( FLAG_ALLOW_DIRS ) ); \
       } \
       else \
       { \

@@ -39,11 +39,11 @@
         "                                     WHERE fnb.name = :GSameAs AND fnb.Pathid=:GSamePathID ) "  \
         "                  ) " \
 	" AND ( " \
-	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.oval= :OPTION_VAL_WITH_TAG_FILE) == 0 " \
+	"            (SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File) == 0 " \
 	"         OR " \
 	"            fn.rowid IN (SELECT itemid FROM tags AS t LEFT JOIN  tagnames AS tn ON (t.tagnameid=tn.rowid) " \
 	"                         WHERE itemtype='filename' and tn.name IN " \
-	"                                          (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.oval= :OPTION_VAL_WITH_TAG_FILE ))  " \
+	"                                          (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))  " \
 	"     ) " \
 	" AND " \
         "  ( :Camera       IS NULL OR xm.model     LIKE :Camera                            ) AND "  \
@@ -53,11 +53,11 @@
 	" 1 "
 
 
-        /* "         OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.oval= :OPTION_VAL_WITH_TAG_FILE ))" \ */
+        /* "         OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.oval= :Option_Val_With_Tag_File ))" \ */
 
         /* " AND (:TagDir  IS NULL OR tgn.name=:TagDir)" \  */
         /* " AND (:TagFile IS NULL OR tgn.name=:TagFile)" \ */
-/* " AND ((SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS ") == 0 OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS " AS tbo WHERE tbo.name='files-tagged-as' ))" \ */
+/* " AND ((SELECT COUNT(*) AS C FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL ") == 0 OR tgn.name IN (SELECT arg FROM " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " AS tbo WHERE tbo.name='files-tagged-as' ))" \ */
 
 
 #  include "sql_beginning_types.h"

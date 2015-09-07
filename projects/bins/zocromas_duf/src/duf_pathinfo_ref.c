@@ -239,3 +239,34 @@ DUF_PATHINFO_ST_TYP_FLD_NAME( long, mtim.tv_nsec, mnsec );
 DUF_PATHINFO_ST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
 
 /************************************************************************/
+void
+duf_pathinfo_set_topdepth( duf_pathinfo_t * pi )
+{
+  if ( pi )
+  {
+    pi->topdepth = pi->depth;
+    DUF_TRACE( temp, 0, "@@@set top depth %d", pi->depth );
+  }
+}
+
+int
+duf_pathinfo_topdepth( const duf_pathinfo_t * pi )
+{
+  return pi ? pi->topdepth : 0;
+}
+
+int
+duf_pathinfo_depth( const duf_pathinfo_t * pi )
+{
+  return pi ? pi->depth : 0;
+}
+
+int
+duf_pathinfo_deltadepth_d( const duf_pathinfo_t * pi, int d )
+{
+  return pi ? d - duf_pathinfo_topdepth( pi ) : 0;
+}
+/* *INDENT-OFF*  */
+DUF_PATHINFO_FC( int, deltadepth )
+DUF_PATHINFO_FC_UP( int, deltadepth )
+/* *INDENT-ON*  */

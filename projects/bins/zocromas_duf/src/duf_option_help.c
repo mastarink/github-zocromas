@@ -736,20 +736,22 @@ duf_flag2code( duf_config_act_flags_combo_t fset )
     CHECK_FLAG_ID_ROW( create_tables, CREATE_TABLES ),
     CHECK_FLAG_ID_ROW( add_path, ADD_PATH ),
 
-    CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),
-    CHECK_FLAG_ID_ROW( md5_obs, MD5 ),
-    CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ),
-    CHECK_FLAG_ID_ROW( mime_obs, MIME ),
-    CHECK_FLAG_ID_ROW( exif_obs, EXIF ),
+    /* CHECK_FLAG_ID_ROW( sd5_obs, SD5 ),     */
+    /* CHECK_FLAG_ID_ROW( md5_obs, MD5 ),     */
+    /* CHECK_FLAG_ID_ROW( crc32_obs, CRC32 ), */
+    /* CHECK_FLAG_ID_ROW( mime_obs, MIME ),   */
+    /* CHECK_FLAG_ID_ROW( exif_obs, EXIF ),   */
 
     CHECK_FLAG_ID_ROW( mdpath_obs, MDPATH ),
 
-    CHECK_FLAG_ID_ROW( dirs, DIRS ),
-    CHECK_FLAG_ID_ROW( files, FILES ),
+    /* 20150907.122929 renamed  FILES -> ALLOW_FILES */
+    CHECK_FLAG_ID_ROW( allow_dirs, ALLOW_DIRS ),
+    /* 20150907.122929 renamed  DIRS -> ALLOW_DIRS */
+    CHECK_FLAG_ID_ROW( allow_files, ALLOW_FILES ),
 
-    CHECK_FLAG_ID_ROW( dirent, DIRENT ),
-    CHECK_FLAG_ID_ROW( filedata, FILEDATA ),
-    CHECK_FLAG_ID_ROW( filenames, FILENAMES ),
+    /* CHECK_FLAG_ID_ROW( dirent, DIRENT ), */
+    /* CHECK_FLAG_ID_ROW( filedata, FILEDATA ), */
+    /* CHECK_FLAG_ID_ROW( filenames, FILENAMES ), */
 
     CHECK_FLAG_ID_ROW( integrity, INTEGRITY ),
     CHECK_FLAG_ID_ROW( collect_obs, COLLECT ),

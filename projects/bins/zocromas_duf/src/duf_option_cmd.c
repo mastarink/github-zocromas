@@ -67,8 +67,8 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   return extended;
 }
 
-int
-duf_execute_cmd_long_xtable( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage )
+static int
+duf_execute_cmd_xtable( const char *string, const duf_longval_extended_table_t * xtable, char vseparator, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
@@ -82,13 +82,13 @@ duf_execute_cmd_long_xtable( const char *string, const duf_longval_extended_tabl
     int no = 0;
 
     extended = duf_find_cmd_long_no( string, xtended, vseparator, &arg, &no, &r );
-    DUF_TRACE( options, 1, "string:%s; no:%d extended(+-):%d", string, no, extended ? 1 : 0 );
+    DUF_TRACE( options, 4, "string:%s; no:%d extended(+-):%d", string, no, extended ? 1 : 0 );
 
     if ( extended )
     {
-      DUF_TRACE( options, 3, "@(%s) found cmd #%d for %s", duf_error_name( r ), found, extended->o.name );
+      DUF_TRACE( options, 1, "@(%s) found cmd #%d for %s", duf_error_name( r ), found, extended->o.name );
       DORF( r, DUF_WRAPPED( duf_clarify_opt_full ), extended, arg, istage, xtable, no );
-      DUF_TRACE( options, 1, "@(%s) full #%d done for %s", duf_error_name( r ), found, extended->o.name );
+      DUF_TRACE( options, 4, "@(%s) full #%d done for %s", duf_error_name( r ), found, extended->o.name );
       found += ( extended ? 1 : 0 );
     }
     else
@@ -120,7 +120,7 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
   {
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
     /* PF0( "table %s; search %s", xtable->o.name, string ); */
-    DOR( r, duf_execute_cmd_long_xtable( string, xtable, vseparator, istage ) );
+    DOR( r, duf_execute_cmd_xtable( string, xtable, vseparator, istage ) );
     DUF_TRACE( options, 10, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
     if ( r > 0 )
       found += r;
@@ -132,7 +132,7 @@ duf_execute_cmd_long_xtables( const char *string, const duf_longval_extended_tab
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
-    DUF_SHOW_ERROR( "Invalid command -- '%s'", string );
+    DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s'", string );
   }
   DEBUG_ENDR( r );
 }
@@ -142,7 +142,7 @@ duf_execute_cmd_long_xtables_std( const char *string, char vseparator, duf_optio
 {
   DEBUG_STARTR( r );
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
-  DUF_TRACE( options, 0, "(%d) executed cmd", r );
+  DUF_TRACE( options, 4, "(%d) executed cmd", r );
   DOR( r, duf_execute_cmd_long_xtables( string, lo_extended_table_multi, vseparator, istage ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND, DUF_ERROR_MAX_SEQ_REACHED );
 }

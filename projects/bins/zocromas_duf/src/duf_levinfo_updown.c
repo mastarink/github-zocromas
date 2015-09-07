@@ -48,15 +48,20 @@ duf_levinfo_check_depth( const duf_depthinfo_t * pdi, int is_leaf )
   assert( pdi );
   {
     int delta;
+    int rgd = 0;
 
     delta = ( is_leaf ? 1 : 0 );
     delta = 0;
     /* if ( duf_pdi_recursive( pdi ) )               */
     /* {                                             */
     if ( duf_pdi_depth( pdi ) > duf_pdi_maxdepth( pdi ) )
+    {
       DUF_MAKE_ERROR( r, DUF_ERROR_LEVINFO_SIZE );
-    else if ( !duf_pdi_is_good_depth( pdi, delta ) )
+    }
+    else if ( !( rgd = duf_pdi_is_good_depth( pdi, delta ) ) )
+    {
       DUF_MAKE_ERROR( r, DUF_ERROR_TOO_DEEP );
+    }
 
     if ( !DUF_NOERROR( r ) )
       DUF_TRACE( depth, 0, "(%d) DEPTH: d=%d; max:%d; top:%d; delta:%d; R:%d; ", r, duf_pdi_depth( pdi ), duf_pdi_maxdepth( pdi ),
@@ -135,6 +140,7 @@ duf_levinfo_godown_db( duf_depthinfo_t * pdi, int is_leaf, duf_sqlite_stmt_t * p
   assert( pdi );
 
   DOR( r, duf_levinfo_check_depth( pdi, is_leaf ) );
+  DUF_TRACE( temp, 5, "@@(%s) maxdepth:%d;", duf_error_name( r ), duf_pdi_maxdepth( pdi ) );
   if ( DUF_NOERROR( r ) )
   {
     int d;

@@ -7,6 +7,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_pdi_ref.h"
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
 
@@ -29,6 +30,7 @@ duf_pstmt_levinfo_godown_dbopenat_dh( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t
   DUF_TRACE( explain, 2, "@ sel cb2 node" );
 
   DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, is_leaf, pstmt ) );
+  DUF_TRACE( sccbh, 0, "@@(%s) maxdepth:%d;", duf_error_name( r ), duf_pdi_maxdepth( pdi ) );
 
   assert( r < 0 || DUF_GET_UFIELD2( dirid ) == duf_levinfo_dirid( pdi ) ); /* was set by duf_levinfo_godown */
 

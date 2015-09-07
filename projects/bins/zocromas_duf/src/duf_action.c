@@ -32,7 +32,7 @@
 
 
 #include "duf_pdi.h"
-#include "duf_interactive.h"
+/* #include "duf_interactive.h" */
 
 #include "duf_sql_defs.h"
 
@@ -164,7 +164,6 @@ duf_action( void )
 {
   DEBUG_STARTR( r );
 
-
   /* assert( !duf_levinfo_path( duf_config->pdi ) ); */
 
   DUF_TRACE( explain, 0, "to do actions" );
@@ -208,6 +207,7 @@ duf_action( void )
 
     /* XXX XXX see duf_option_$_evaluate_sccb for "main events" XXX XXX ( through --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif ) */
 
+    DUF_TRACE( pdi, 1, "@@@@c->pdi inited:%d; duf_levinfo_path( duf_config->pdi ):%s", duf_config->pdi->inited, duf_levinfo_path( duf_config->pdi ) );
     if ( duf_levinfo_path( duf_config->pdi ) )
     {
       DOR( r, duf_cli_options( istage ) );
@@ -223,7 +223,7 @@ duf_action( void )
     while ( DUF_NOERROR( r ) && ia < duf_config->targ.argc )
     {
       istage = DUF_OPTION_STAGE_LOOP;
-      DUF_TRACE( pdi, 1, "@@@c->pdi inited:%d", duf_config->pdi->inited );
+      DUF_TRACE( pdi, 1, "@@@c->pdi inited:%d; targ.argv[%d]:%s", duf_config->pdi->inited, ia, duf_config->targ.argv[ia] );
       DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targ.argv[ia], 7 /* caninsert */ ,
                                       NULL /* node_selector2 */ , DUF_UG_FLAG( recursive ) ) );
       if ( duf_levinfo_path( duf_config->pdi ) )

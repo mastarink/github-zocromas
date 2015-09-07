@@ -100,10 +100,12 @@ duf_evaluate_all_at_config_wrap( void )
     optnames = duf_option_names( DUF_OPTION_VAL_FLAG_COLLECT );
     dirent_optnames = duf_option_names( DUF_OPTION_VAL_FLAG_DIRENT );
     DUF_TRACE( explain, 0, "to collect something   use %s", optnames );
-    DUF_TRACE( explain, 0, "to collect directories use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_DIRS ), dirent_optnames );
+    DUF_TRACE( explain, 0, "to collect directories use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_ALLOW_DIRS ), dirent_optnames );
+#if 0
     DUF_TRACE( explain, 0, "to collect file data   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILEDATA ), dirent_optnames );
     DUF_TRACE( explain, 0, "tO collect file names  use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILENAMES ), dirent_optnames );
     DUF_TRACE( explain, 0, "to collect md5 names   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_MD5 ), dirent_optnames );
+#endif
     DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
     DUF_PUTSL( 0 );
     DUF_PUTSL( 0 );

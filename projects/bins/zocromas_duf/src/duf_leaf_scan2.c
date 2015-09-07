@@ -40,6 +40,7 @@ duf_eval_sccbh_db_leaf_fd_str_cb( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *
   PDI->items.total++;
   PDI->items.files++;
 
+  DUF_TRACE(sccbh, 0, "@@@@T");
   DOR_NOE( r, duf_levinfo_if_openat_dh( PDI ), DUF_ERROR_FS_DISABLED );
   assert( r < 0 || duf_levinfo_opened_dh( PDI ) > 0 || duf_levinfo_item_deleted( PDI ) );
 

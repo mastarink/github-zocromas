@@ -11,6 +11,7 @@ typedef struct
   unsigned create_tables:1;
   unsigned add_path:1;
 
+  /* obsolete */
   unsigned sd5_obs:1;
   unsigned md5_obs:1;
   unsigned crc32_obs:1;
@@ -18,8 +19,8 @@ typedef struct
   unsigned exif_obs:1;
   unsigned mdpath_obs:1;
 
-  unsigned dirs:1;
-  unsigned files:1;
+  unsigned allow_dirs:1;
+  unsigned allow_files:1;
 
   unsigned dirent:1;
   unsigned filedata:1;

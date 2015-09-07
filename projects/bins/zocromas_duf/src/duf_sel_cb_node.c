@@ -61,7 +61,7 @@ duf_sel_cb2_node( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
     DUF_TRACE( scan, 6, "(%s) NODE down %s", duf_error_name( r ), duf_levinfo_path( PDI ) );
     assert( PDI->pathinfo.depth >= 0 );
 
-    if ( DUF_NOERROR( r ) )               /* levinfo_down OK */
+    if ( DUF_NOERROR( r ) )     /* levinfo_down OK */
     {
       PDI->seq++;
       PDI->seq_node++;

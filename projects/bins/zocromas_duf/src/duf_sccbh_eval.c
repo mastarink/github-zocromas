@@ -56,6 +56,7 @@ duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
 
   DUF_TRACE( scan, 2, "scan a+s by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
+  DUF_TRACE( sccbh, 0, "eval sccbh all (%d)", sccbh ? 1 : 0 );
   DORF( r, DUF_WRAPPED( duf_eval_sccbh_all ), ( duf_sqlite_stmt_t * ) NULL, sccbh ); /* XXX XXX XXX XXX XXX XXX */
 
   if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( summary ) )
@@ -173,7 +174,9 @@ duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
  *
  * */
   /* scan this files in this directory */
-  if ( DUF_ACTG_FLAG( files ) )
+  DUF_TRACE( sccbh, 0, "%s: allow_files:%d; leaf_scan_fd2:%d; leaf_scan:%d;", SCCB->name, DUF_ACTG_FLAG( allow_files ), SCCB->leaf_scan_fd2 ? 1 : 0,
+             SCCB->leaf_scan2 ? 1 : 0 );
+  if ( DUF_ACTG_FLAG( allow_files ) )
   {
     DUF_SCCB_PDI( DUF_TRACE, scan, 10 + duf_pdi_reldepth( PDI ), PDI, " >>> 2." );
     if ( SCCB->leaf_scan_fd2 )
@@ -189,7 +192,7 @@ duf_sccbh_eval_db_leaves( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t * sccbh )
   }
   else if ( SCCB->leaf_scan_fd2 )
   {
-    DUF_TRACE( explain, 0, "to scan fd2 use %s", DUF_OPT_NAME( FLAG_FILES ) );
+    DUF_TRACE( explain, 0, "to scan fd2 use %s", DUF_OPT_NAME( FLAG_ALLOW_FILES ) );
   }
   else
   {

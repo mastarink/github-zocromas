@@ -175,6 +175,14 @@ int duf_pathinfo_closeat_dh_up( duf_pathinfo_t * pi );
 
 
 
+int duf_pathinfo_depth( const duf_pathinfo_t * pi );
+void duf_pathinfo_set_topdepth( duf_pathinfo_t * pi );
+
+int duf_pathinfo_topdepth( const duf_pathinfo_t * pi );
+
+int duf_pathinfo_deltadepth_d( const duf_pathinfo_t * pi, int d );
+int duf_pathinfo_deltadepth( const duf_pathinfo_t * pi );
+int duf_pathinfo_deltadepth_up( const duf_pathinfo_t * pi );
 
 
 

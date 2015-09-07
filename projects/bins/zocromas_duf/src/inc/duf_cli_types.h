@@ -67,8 +67,6 @@ typedef struct
 
   unsigned action;
   unsigned any;
-  unsigned sccb;
-  unsigned sccbh;
   unsigned calls;
   unsigned collect;
   unsigned crc32;
@@ -110,6 +108,9 @@ typedef struct
   unsigned update;
   unsigned io;
   unsigned verbose;
+  
+  unsigned sccb;
+  unsigned sccbh;
   duf_config_output_t output;
 } duf_config_cli_trace_t;
 

@@ -27,7 +27,7 @@ duf_cli_option_shorts( const duf_longval_extended_table_t ** xtables )
 
   while ( ( xtable = *xtables++ ) )
   {
-const    duf_longval_extended_t *xtended;
+    const duf_longval_extended_t *xtended;
 
     xtended = xtable->table;
     while ( xtended->o.name )

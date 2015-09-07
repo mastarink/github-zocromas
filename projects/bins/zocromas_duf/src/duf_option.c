@@ -52,7 +52,7 @@ duf_clarify_opt_full( const duf_longval_extended_t * extended, const char *optar
   }
   else
     DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED );
-  DUF_TRACE( options, 0, "@r:%s; xname:%s; arg:%s; istage:%d; no:%d", duf_error_name( r ), extended ? extended->o.name : "?", optargg, istage, no );
+  DUF_TRACE( options, 0, "@(%s) xname:%s; arg:%s; istage:%d; no:%d", duf_error_name( r ), extended ? extended->o.name : "?", optargg, istage, no );
   DEBUG_ENDR( r );
 }
 

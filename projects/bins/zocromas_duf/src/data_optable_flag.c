@@ -57,24 +57,20 @@ const duf_longval_extended_table_t optable_flag = {
 
 
 
-   {.o = {DO_Q( "crc32" ) /*            */ , DO_A_N /* */ , DO_VF( CRC32 )} /*             */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, crc32_obs ) /*                         */ , DO_H( collect crc32 ) /*                    */ },
 
    {.o = {DO_Q( "dirent" ) /*           */ , DO_A_N /* */ , DO_VF( DIRENT )} /*            */ , DO_CL( COLLECT ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirent ) /*                            */ , DO_H( dirent ) /*                           */ },
-   {.o = {DO_Q( "directories" ) /*      */ , DO_A_N /* */ , DO_VF( DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirs ), DO_STAGE_ANY /*                */ , DO_H( collect dir info ) /*                 */ },
-   {.o = {DO_Q( "dirs" ) /*             */ , DO_A_N /* */ , DO_VF( DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, dirs ) /*                              */ , DO_H( get dir info ) /*      */ },
+   
+   /* 20150907.122946 renames directories --> allow-directories */
+   {.o = {DO_Q( "allow-directories" ) /*      */ , DO_A_N /* */ , DO_VF( ALLOW_DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ), DO_STAGE_ANY /*                */ , DO_H( collect dir info ) /*                 */ },
+   /* 20150907.122956 renames dirs --> allow-dirs */
+   {.o = {DO_Q( "allow-dirs" ) /*             */ , DO_A_N /* */ , DO_VF( ALLOW_DIRS )} /*              */ , DO_CL( COLLECT ) /* */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_dirs ) /*                              */ , DO_H( get dir info ) /*      */ },
+   /* renames files --> allow-files */
+   {.o = {DO_Q( "allow-files" ) /*            */ , DO_A_N /* */ , DO_VF( ALLOW_FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
+    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, allow_files ), DO_STAGE_ANY /*               */ , DO_H( get file info ) /*                    */ },
 
-   {.o = {DO_Q( "exif" ) /*             */ , DO_A_N /* */ , DO_VF( EXIF )} /*              */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, exif_obs ) /*                          */ , DO_H( collect exif data ) /*                */ },
-   {.o = {DO_Q( "filedata" ) /*         */ , DO_A_N /* */ , DO_VF( FILEDATA )} /*          */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, filedata ) /*                          */ , DO_H( get filedata ) /*                     */ },
-   {.o = {DO_Q( "filenames" ) /*        */ , DO_A_N /* */ , DO_VF( FILENAMES )} /*         */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, filenames ) /*                         */ , DO_H( get filenames ) /*                    */ },
-   {.o = {DO_Q( "files" ) /*            */ , DO_A_N /* */ , DO_VF( FILES )} /*             */ , DO_CL( COLLECT ) /* */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, files ), DO_STAGE_ANY /*               */ , DO_H( get file info ) /*                    */ },
 
    {.o = {DO_Q( "info" ) /*             */ , DO_A_N /* */ , DO_VF( INFO )} /*              */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, info ) /*                              */ , DO_H( db info ) /*                          */ },
@@ -99,8 +95,6 @@ const duf_longval_extended_table_t optable_flag = {
    {.o = {DO_Q( "remove-database" ) /*  */ , DO_A_N /* */ , DO_VF( REMOVE_DATABASE )} /*   */ , DO_CL( SYSTEM ) /*      */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, remove_database ) /*                   */ , DO_H(  .... ) /*                            */ },
 
-   {.o = {DO_Q( "sd5" ) /*              */ , DO_A_N /* */ , DO_VF( SD5 )} /*               */ , DO_CL( SCAN ) /*    */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, sd5_obs ) /*                           */ , DO_H( collect sd5 data ) /*                 */ },
    {.o = {DO_Q( "summary" ) /*          */ , DO_A_N /* */ , DO_VF( SUMMARY )} /*           */ , DO_CL( REFERENCE ) /* */ ,
     /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, summary ) /*                           */ , DO_H( summary ) /*                          */ },
 

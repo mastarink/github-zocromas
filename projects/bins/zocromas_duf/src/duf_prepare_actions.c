@@ -47,7 +47,7 @@ static duf_action_table_t actions_table[] = {
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_directories_callbacks,
-   .on.flag = {.collect_obs = 1,.dirent = 1,.dirs = 1}
+   .on.flag = {.collect_obs = 1,.dirent = 1,.allow_dirs = 1}
    },
   {.tovector = 1,.in_use = 1,
    .sccb = &duf_filedata_callbacks,
