@@ -28,7 +28,6 @@ noinst_HEADERS=duf.h \
 	duf_flags_types.h \
 	duf_fun_types.h \
 	duf_hook_types.h \
-	duf_interactive.h \
 	duf_selector.h \
 	duf_item_scan2.h duf_leaf_scan2.h  duf_sel_cb_leaf.h duf_sel_cb_node.h  duf_pstmt_levinfo.h \
 	duf_item_types.h \

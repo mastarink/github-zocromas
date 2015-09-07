@@ -120,21 +120,21 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
       if ( optopt && codeval > ' ' && codeval <= 'z' )
       {
         if ( duf_config->cli.dbg.verbose == 0 )
-          DUF_SHOW_ERROR( "@@@@@%s '-%c'", msg, optopt );
+          DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '-%c'      ", msg, optopt );
         else
         {
           if ( codeval == '?' )
-            DUF_SHOW_ERROR( "@@@@@%s '-%c' arg[%d]=\"%s\"", msg, optopt, optind, arg );
+            DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '-%c' arg[%d]=\"%s\"", msg, optopt, optind, arg );
           else
-            DUF_SHOW_ERROR( "@@@@@%s '-%c' arg[%d]=\"%s\" [%u/%c]", msg, optopt, optind, arg, codeval, codeval );
+            DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '-%c' arg[%d]=\"%s\" [%u/%c]", msg, optopt, optind, arg, codeval, codeval );
         }
       }
       else
       {
         if ( duf_config->cli.dbg.verbose == 0 )
-          DUF_SHOW_ERROR( "@@@@@%s '%s' ", msg, arg );
+          DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '%s'                  ", msg, arg );
         else
-          DUF_SHOW_ERROR( "@@@@@%s '%s' arg[%d]=\"%s\" [%u/%c]", msg, arg, optind, arg, codeval, codeval );
+          DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '%s' arg[%d]=\"%s\" [%u/%c]", msg, arg, optind, arg, codeval, codeval );
       }
     }
     cnt++;

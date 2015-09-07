@@ -15,6 +15,8 @@ typedef enum
   
   DUF_TRACE_MODE_action,
   DUF_TRACE_MODE_any,
+  DUF_TRACE_MODE_sccb,
+  DUF_TRACE_MODE_sccbh,
   DUF_TRACE_MODE_calls,
   DUF_TRACE_MODE_collect,
   DUF_TRACE_MODE_crc32,

@@ -67,6 +67,8 @@ typedef struct
 
   unsigned action;
   unsigned any;
+  unsigned sccb;
+  unsigned sccbh;
   unsigned calls;
   unsigned collect;
   unsigned crc32;

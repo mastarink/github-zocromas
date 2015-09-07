@@ -46,76 +46,78 @@ duf_convert_fmt( char *format, size_t fbsz, const char *fmt, const char *tail )
 }
 
 /***
+   %a : camera
+   %A : dataid
+   %C : color
+   %D : ndirs
+   %e : mime
+   %E : mimeid
+   %f : filename
+   %F : nfiles
+   %g : group
    %h : depth
+   %I : dirid
+   %@ : md5sum
+   %M : md5id
+   %m : mode
+   %N : nameid
+   %n : nlink
+   %O : inode
+   %p : move to position
+   %P : prefix
    %Q : seq
    %q : seq_node
-   %# : seq_leaf
-   %M : md5id
-   %S : nsame
-   %P : prefix
-   %I : dirid
-   %F : nfiles
-   %D : ndirs
-   %A : dataid
-   %~ : suffix
-   %O : inode
-   %m : mode
-   %n : nlink
-   %u : user
-   %g : group
-   %z : filesize
-   %tm : mtime
-   %ta : mtime
-   %tc : mtime
-   %tx : exif datetime
    %r : realpath
    %R : relative realpath (relative to 'top level')
-   %f : filename
-   %@ : md5sum
-   %X : exifid
-   %E : mimeid
-   %e : mime
-   %N : nameid
-   %a : camera
-   %p : move to position
+   %# : seq_leaf
+   %S : nsame
    %s : << space >>
+   %~ : suffix
+   %ta : mtime
+   %tc : mtime
+   %tm : mtime
+   %tx : exif datetime
+   %u : user
+   %X : exifid
+   %z : filesize
 
 ***/
 typedef enum
 {
-  DUF_SFMT_CHR_DEPTH = 'h',
-  DUF_SFMT_CHR_SEQ = 'Q',
-  DUF_SFMT_CHR_SEQ_NODE = 'q',
-  DUF_SFMT_CHR_SEQ_LEAF = '#',
-  DUF_SFMT_CHR_MD5ID = 'M',
-  DUF_SFMT_CHR_NSAME = 'S',
-  DUF_SFMT_CHR_PREFIX = 'P',
-  DUF_SFMT_CHR_DIRID = 'I',
-  DUF_SFMT_CHR_NFILES = 'F',
-  DUF_SFMT_CHR_NDIRS = 'D',
-  DUF_SFMT_CHR_DATAID = 'A',
-  DUF_SFMT_CHR_SUFFIX = '~',
-  DUF_SFMT_CHR_INODE = 'O',
-  DUF_SFMT_CHR_MODE = 'm',
-  DUF_SFMT_CHR_NLINK = 'n',
-  DUF_SFMT_CHR_USER = 'u',
-  DUF_SFMT_CHR_GROUP = 'g',
-  DUF_SFMT_CHR_FILESIZE = 'Z',
-  DUF_SFMT_CHR_FILESIZEH = 'z',
-  DUF_SFMT_CHR_MTIME1 = 't',
-  DUF_SFMT_CHR_MTIME2 = 'T',
-  DUF_SFMT_CHR_REALPATH = 'r',
-  DUF_SFMT_CHR_RELATIVE_PATH = 'R',
-  DUF_SFMT_CHR_FILENAME = 'f',
-  DUF_SFMT_CHR_MD5SUM = '@',
-  DUF_SFMT_CHR_EXIFID = 'X',
-  DUF_SFMT_CHR_MIMEID = 'E',
-  DUF_SFMT_CHR_MIME = 'e',
-  DUF_SFMT_CHR_NAMEID = 'N',
-  DUF_SFMT_CHR_CAMERA = 'a',
-  DUF_SFMT_CHR_MOVE_TO_POSITION = 'p',
-  DUF_SFMT_CHR_UNDERLINE ='_',
-  DUF_SFMT_CHR_SPACE = 's'
+  DUF_SFMT_CHR_SUFFIX = /*             */ '~',
+  DUF_SFMT_CHR_MD5SUM = /*             */ '@',
+  DUF_SFMT_CHR_SEQ_LEAF = /*           */ '#',
+  DUF_SFMT_CHR_UNDERLINE = /*          */ '_',
+  DUF_SFMT_CHR_CAMERA = /*             */ 'a',
+  DUF_SFMT_CHR_DATAID = /*             */ 'A',
+  DUF_SFMT_CHR_COLOR = /*              */ 'c',
+  DUF_SFMT_CHR_NDIRS = /*              */ 'D',
+  DUF_SFMT_CHR_MIME = /*               */ 'e',
+  DUF_SFMT_CHR_MIMEID = /*             */ 'E',
+  DUF_SFMT_CHR_FILENAME = /*           */ 'f',
+  DUF_SFMT_CHR_NFILES = /*             */ 'F',
+  DUF_SFMT_CHR_GROUP = /*              */ 'g',
+  DUF_SFMT_CHR_DEPTH = /*              */ 'h',
+  DUF_SFMT_CHR_DIRID = /*              */ 'I',
+  DUF_SFMT_CHR_MODE = /*               */ 'm',
+  DUF_SFMT_CHR_MD5ID = /*              */ 'M',
+  DUF_SFMT_CHR_NLINK = /*              */ 'n',
+  DUF_SFMT_CHR_NAMEID = /*             */ 'N',
+  DUF_SFMT_CHR_INODE = /*              */ 'O',
+  DUF_SFMT_CHR_MOVE_TO_POSITION = /*   */ 'p',
+  DUF_SFMT_CHR_PREFIX = /*             */ 'P',
+  DUF_SFMT_CHR_SEQ_NODE = /*           */ 'q',
+  DUF_SFMT_CHR_SEQ = /*                */ 'Q',
+  DUF_SFMT_CHR_REALPATH = /*           */ 'r',
+  DUF_SFMT_CHR_RELATIVE_PATH = /*      */ 'R',
+  DUF_SFMT_CHR_SPACE = /*              */ 's',
+  DUF_SFMT_CHR_NSAME = /*              */ 'S',
+  DUF_SFMT_CHR_MTIME1 = /*             */ 't',
+  DUF_SFMT_CHR_MTIME2 = /*             */ 'T',
+  DUF_SFMT_CHR_USER = /*               */ 'u',
+  DUF_SFMT_CHR_EXIFID = /*             */ 'X',
+  DUF_SFMT_CHR_FILESIZEH = /*          */ 'z',
+  DUF_SFMT_CHR_FILESIZE = /*           */ 'Z',
 } duf_sformat_char_t;
 
 static int
@@ -138,7 +140,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
   c = *fmt++;
   switch ( c )
   {
-  case DUF_SFMT_CHR_DEPTH:                    /* depth */
+  case DUF_SFMT_CHR_DEPTH:     /* depth */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "u" );
 #else
@@ -151,7 +153,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, duf_pdi_reldepth( pdi ) );
     ok++;
     break;
-  case DUF_SFMT_CHR_SEQ:                    /* seq */
+  case DUF_SFMT_CHR_SEQ:       /* seq */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -164,7 +166,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pdi->seq );
     ok++;
     break;
-  case DUF_SFMT_CHR_SEQ_NODE:                    /* seq_node */
+  case DUF_SFMT_CHR_SEQ_NODE:  /* seq_node */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -177,7 +179,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pdi->seq_node );
     ok++;
     break;
-  case DUF_SFMT_CHR_SEQ_LEAF:                    /* seq_leaf */
+  case DUF_SFMT_CHR_SEQ_LEAF:  /* seq_leaf */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -190,7 +192,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pdi->seq_leaf );
     ok++;
     break;
-  case DUF_SFMT_CHR_MD5ID:                    /* md5id */
+  case DUF_SFMT_CHR_MD5ID:     /* md5id */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -202,7 +204,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pfi->md5id );
     ok++;
     break;
-  case DUF_SFMT_CHR_NSAME:                    /* nsame */
+  case DUF_SFMT_CHR_NSAME:     /* nsame */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -215,11 +217,11 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->nsame );
     ok++;
     break;
-  case DUF_SFMT_CHR_UNDERLINE:                    /* underline */
+  case DUF_SFMT_CHR_UNDERLINE: /* underline */
     memset( pbuffer, '_', v > 0 ? v : ( v < 0 ? -v : 1 ) );
     ok++;
     break;
-  case DUF_SFMT_CHR_SPACE:                    /* space */
+  case DUF_SFMT_CHR_SPACE:     /* space */
     /* pbuffer += strlen( pbuffer ); */
     memset( pbuffer, ' ', v > 0 ? v : ( v < 0 ? -v : 1 ) );
     ok++;
@@ -234,14 +236,14 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_PREFIX:                    /* prefix */
+  case DUF_SFMT_CHR_PREFIX:    /* prefix */
     if ( prefix_scb )
     {
       ( prefix_scb ) ( pbuffer, bfsz, pdi );
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_DIRID:                    /* dirid */
+  case DUF_SFMT_CHR_DIRID:     /* dirid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -254,7 +256,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, duf_levinfo_nodedirid( pdi ) );
     ok++;
     break;
-  case DUF_SFMT_CHR_NFILES:                    /* nfiles */
+  case DUF_SFMT_CHR_NFILES:    /* nfiles */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -267,7 +269,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.files );
     ok++;
     break;
-  case DUF_SFMT_CHR_NDIRS:                    /* ndirs */
+  case DUF_SFMT_CHR_NDIRS:     /* ndirs */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -280,7 +282,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pdi->pathinfo.levinfo[pdi->pathinfo.depth].items.dirs );
     ok++;
     break;
-  case DUF_SFMT_CHR_DATAID:                    /* dataid */
+  case DUF_SFMT_CHR_DATAID:    /* dataid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -293,9 +295,20 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pfi->dataid );
     ok++;
     break;
-  case DUF_SFMT_CHR_SUFFIX:                    /* suffix */
+  case DUF_SFMT_CHR_COLOR:     /* color */
+    {
+      static char *hls[] = { "", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
+
+      if ( v > 0 && v < sizeof( hls ) )
+        snprintf( pbuffer, bfsz, "\x1b[%sm", hls[v] );
+      else
+        snprintf( pbuffer, bfsz, "\x1b[%sm", hls[0] );
+      ok++;
+    }
     break;
-  case DUF_SFMT_CHR_INODE:                    /* inode */
+  case DUF_SFMT_CHR_SUFFIX:    /* suffix */
+    break;
+  case DUF_SFMT_CHR_INODE:     /* inode */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -308,7 +321,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_ino );
     ok++;
     break;
-  case DUF_SFMT_CHR_MODE:                    /* mode */
+  case DUF_SFMT_CHR_MODE:      /* mode */
     {
       char modebuf[] = "----------";
       char *pmode = modebuf;
@@ -344,7 +357,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_NLINK:                    /* nlink */
+  case DUF_SFMT_CHR_NLINK:     /* nlink */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -357,7 +370,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_nlink );
     ok++;
     break;
-  case DUF_SFMT_CHR_USER:                    /* user */
+  case DUF_SFMT_CHR_USER:      /* user */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -370,7 +383,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_uid );
     ok++;
     break;
-  case DUF_SFMT_CHR_GROUP:                    /* group */
+  case DUF_SFMT_CHR_GROUP:     /* group */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -383,7 +396,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, ( unsigned long long ) pfi->st.st_gid );
     ok++;
     break;
-  case DUF_SFMT_CHR_FILESIZE:                    /* filesize */
+  case DUF_SFMT_CHR_FILESIZE:  /* filesize */
     {
       unsigned long long sz = pfi->st.st_size;
 
@@ -401,7 +414,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_FILESIZEH:                    /* filesize */
+  case DUF_SFMT_CHR_FILESIZEH: /* filesize */
     {
       unsigned long long sz = pfi->st.st_size;
 
@@ -463,8 +476,8 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       }
     }
     break;
-  case DUF_SFMT_CHR_MTIME1:                    /* time */
-  case DUF_SFMT_CHR_MTIME2:                    /* time */
+  case DUF_SFMT_CHR_MTIME1:    /* time */
+  case DUF_SFMT_CHR_MTIME2:    /* time */
     {
       time_t timet;
       struct tm time_tm, *ptime_tm;
@@ -493,7 +506,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
         fmt--;
       }
       ptime_tm = localtime_r( &timet, &time_tm );
-      switch ( (char)c )
+      switch ( ( char ) c )
       {
       case DUF_SFMT_CHR_MTIME1:
         strftime( stime, sizeof( stime ), "%b %d %Y %H:%M:%S", ptime_tm );
@@ -537,7 +550,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_REALPATH:                    /* realpath */
+  case DUF_SFMT_CHR_REALPATH:  /* realpath */
     {
       const char *real_path = NULL;
 
@@ -555,7 +568,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_RELATIVE_PATH:                    /* relative realpath */
+  case DUF_SFMT_CHR_RELATIVE_PATH: /* relative realpath */
     {
       const char *rel_real_path = NULL;
 
@@ -574,7 +587,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
       ok++;
     }
     break;
-  case DUF_SFMT_CHR_FILENAME:                    /* filename */
+  case DUF_SFMT_CHR_FILENAME:  /* filename */
     {
 #if 1
       duf_convert_fmt( format, fbsz, fmt0, "s" );
@@ -605,14 +618,14 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     pbuffer += strlen( pbuffer );
     break;
 #endif
-  case DUF_SFMT_CHR_MD5SUM:                    /* md5sum */
+  case DUF_SFMT_CHR_MD5SUM:    /* md5sum */
     if ( pfi->md5sum1 || pfi->md5sum2 )
       snprintf( pbuffer, bfsz, "%016llx%016llx", pfi->md5sum1, pfi->md5sum2 );
     else
       snprintf( pbuffer, bfsz, "%-32s", "-" );
     ok++;
     break;
-  case DUF_SFMT_CHR_EXIFID:                    /* exifid */
+  case DUF_SFMT_CHR_EXIFID:    /* exifid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -625,7 +638,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pfi->exifid );
     ok++;
     break;
-  case DUF_SFMT_CHR_CAMERA:                    /* camera */
+  case DUF_SFMT_CHR_CAMERA:    /* camera */
     if ( pfi->camera )
     {
 #if 1
@@ -641,7 +654,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     }
     ok++;
     break;
-  case DUF_SFMT_CHR_MIMEID:                    /* mimeid */
+  case DUF_SFMT_CHR_MIMEID:    /* mimeid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else
@@ -654,7 +667,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pfi->mimeid );
     ok++;
     break;
-  case DUF_SFMT_CHR_MIME:                    /* mime */
+  case DUF_SFMT_CHR_MIME:      /* mime */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "s" );
 #else
@@ -667,7 +680,7 @@ duf_sformat_id( const char **pfmt, char **ppbuffer, size_t position, size_t bfsz
     snprintf( pbuffer, bfsz, format, pfi->mime );
     ok++;
     break;
-  case DUF_SFMT_CHR_NAMEID:                    /* nameid */
+  case DUF_SFMT_CHR_NAMEID:    /* nameid */
 #if 1
     duf_convert_fmt( format, fbsz, fmt0, "llu" );
 #else

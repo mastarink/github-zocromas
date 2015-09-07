@@ -5,7 +5,7 @@ noinst_PROGRAMS=mtest
 #noinst_HEADERS=....cdef ....cdef
 
 zocromas_duf_SOURCES=				   \
-	duf.c duf_interactive.c				\
+	duf.c 			\
 	duf_maindb_info.c duf_maindb.c duf_action.c		    \
 	duf_dbg.c duf_config.c duf_status.c	     \
 	duf_ufilter.c duf_ufilter_bind.c \

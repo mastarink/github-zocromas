@@ -48,6 +48,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
   char *worksql;
 
   worksql = duf_expand_selected_db( sql, pdi_name );
+  DUF_TRACE( pdi, 0, "@@@to open db and attach %s", pdi->pdi_name );
   DORF( r, duf_main_db_open );
 
   DUF_TRACE( explain, 0, "attach selected database %s", worksql );
@@ -106,7 +107,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     assert( real_path );
     pdi->inited = 1;
     pdi->pathinfo.depth = -1;
-    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
+    DUF_TRACE( pdi, 8, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     if ( real_path )
     {
       DOR( r, duf_pathdepth( real_path ) );
@@ -126,7 +127,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     if ( real_path )
       DOR( r, duf_real_path2db( pdi, caninsert, real_path, sql_set ) );
 
-    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
+    DUF_TRACE( pdi, 8, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
   DEBUG_ENDR( r );
 }
@@ -139,9 +140,9 @@ duf_pdi_init_from_dirid( duf_depthinfo_t * pdi, unsigned long long dirid, int ca
   char *path = NULL;
 
   path = duf_dirid2path( dirid, &r );
-  DUF_TRACE( pdi, 0, "%d: %s", r, path );
+  DUF_TRACE( pdi, 8, "%d: %s", r, path );
   DOR( r, duf_pdi_init( pdi, path, caninsert, sql_set, frecursive, opendir ) );
-  DUF_TRACE( pdi, 0, "%d: %s / %s", r, path, duf_levinfo_path( pdi ) );
+  DUF_TRACE( pdi, 8, "%d: %s / %s", r, path, duf_levinfo_path( pdi ) );
   mas_free( path );
   DEBUG_ENDR( r );
 }
@@ -155,7 +156,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
 
   DOR( r, duf_pdi_init( pdi, real_path, caninsert, sql_set, frecursive, opendir ) );
 
-  if ( DUF_NOERROR( r )  )
+  if ( DUF_NOERROR( r ) )
   {
     DUF_TRACE( explain, 1, "converted to real_path: %s", real_path );
     DUF_TRACE( explain, 0, "added path: %s", real_path );
@@ -176,7 +177,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, con
 
   assert( pdi );
   assert( real_path && *real_path == '/' );
-  DUF_TRACE( pdi, 0, "@@@@(duf_pdi_recursive(pdi):%d) real_path:%s", duf_pdi_recursive( pdi ), real_path );
+  DUF_TRACE( pdi, 8, "@@@@(duf_pdi_recursive(pdi):%d) real_path:%s", duf_pdi_recursive( pdi ), real_path );
   frec = frecursive < 0 ? duf_pdi_recursive( pdi ) : frecursive;
   duf_pdi_shut( pdi );
   pdi->pu = pu;
@@ -194,10 +195,10 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert,
 
   real_path = duf_realpath( cpath, &r );
   {
-    DUF_TRACE( pdi, 0, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+    DUF_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
     assert( pdi->pdi_name );
     DOR( r, duf_pdi_reinit( pdi, real_path, caninsert, duf_config->pu, sql_set, frecursive, duf_pdi_opendir( pdi ) ) );
-    DUF_TRACE( pdi, 0, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+    DUF_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
   }
   mas_free( real_path );
   DEBUG_ENDR( r );
@@ -214,7 +215,7 @@ duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set, in
     const char *cpath = NULL;
 
     cpath = duf_levinfo_path( pdi );
-    DUF_TRACE( pdi, 0, "@@(frecursive:%d/%d) cpath:%s", frecursive, duf_pdi_recursive( pdi ), cpath );
+    DUF_TRACE( pdi, 8, "@@(frecursive:%d/%d) cpath:%s", frecursive, duf_pdi_recursive( pdi ), cpath );
     if ( cpath )
       path = mas_strdup( cpath );
   }

@@ -39,6 +39,13 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.action ) /*    */ , DO_STAGE_ANY /*                  */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-any" ) /*        */ , DO_A_O /* */ , DO_V( ANY_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.any ), DO_STAGE_ANY /*                               */ , DO_H( trace .... ) /*                       */ },
+   
+   {.o = {DO_Q( "trace-sccb" ) /*        */ , DO_A_O /* */ , DO_V( SCCB_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.sccb ), DO_STAGE_ANY /*                               */ , DO_H( trace .... ) /*                       */ },
+
+   {.o = {DO_Q( "trace-sccbh" ) /*        */ , DO_A_O /* */ , DO_V( SCCBH_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
+    /*      */ DO_OC( UPLUS, cli.trace.sccbh ), DO_STAGE_ANY /*                               */ , DO_H( trace .... ) /*                       */ },
+
    {.o = {DO_Q( "trace-calls" ) /*      */ , DO_A_O /* */ , DO_V( CALLS_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.calls ), DO_STAGE_ANY /*                             */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-depth" ) /*      */ , DO_A_O /* */ , DO_V( CALLS_TRACE )} /*        */ , DO_CL( TRACE ) /*   */ ,

@@ -53,7 +53,26 @@ duf_interactive_options( duf_option_stage_t istage )
   add_history( "recursive" );
   add_history( "no-recursive" );
 #endif
-  add_history( "cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/zocromas_duf/human/" );
+
+  if ( duf_config->cli.output.history_filename )
+    read_history( duf_config->cli.output.history_filename );
+  {
+    HISTORY_STATE *phstate;
+
+    DUF_TRACE( temp, 0, "HISTORY:%s", duf_config->cli.output.history_filename );
+    phstate = history_get_history_state(  );
+    if ( phstate->length == 0 )
+    {
+      add_history( "quit" );
+      add_history( "lsfiles" );
+      add_history( "cd /" );
+    }
+    else
+    {
+      for(int i=0;i<phstate->length; i++){}
+    }
+    DUF_TRACE( temp, 0, "@@history length:%d; offset:%d", phstate->length, phstate->offset );
+  }
   while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) && isatty( STDIN_FILENO ) )
   {
     char *rl_buffer = NULL, *s = NULL;
@@ -61,12 +80,11 @@ duf_interactive_options( duf_option_stage_t istage )
     DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
     snprintf( rl_prompt, sizeof( rl_prompt ), "%s:%s> ", "db", duf_levinfo_path( duf_config->pdi ) );
 
-    DUF_TRACE( temp, 0, "HISTORY:%s", duf_config->cli.output.history_filename );
-    if ( duf_config->cli.output.history_filename )
-      read_history( duf_config->cli.output.history_filename );
+
 
     while ( !rl_buffer )
       rl_buffer = readline( rl_prompt );
+
 
     s = rl_buffer;
     if ( s && *s )
@@ -91,7 +109,7 @@ duf_interactive_options( duf_option_stage_t istage )
  * */
         DOR( r, duf_execute_cmd_long_xtables_std( xs, ' ', istage ) );
 
-        DUF_CLEAR_ERROR(r, DUF_ERROR_OPTION_NOT_FOUND);
+        DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
 
         DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACTG_FLAG( interactive ), duf_config->pdi ? 1 : 0 );
         mas_free( xs );

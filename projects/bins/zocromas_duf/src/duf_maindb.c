@@ -44,7 +44,8 @@
 #include "duf_maindb.h"
 /* ###################################################################### */
 
-int
+#if 0
+static int
 duf_main_db_attach_selected( const char *name )
 {
   DEBUG_STARTR( r );
@@ -63,6 +64,7 @@ duf_main_db_attach_selected( const char *name )
   mas_free( worksql );
   DEBUG_ENDR( r );
 }
+#endif
 
 static int
 duf_main_db_locate( void )
