@@ -46,7 +46,7 @@ duf_pdi_deltadepth_d( const duf_depthinfo_t * pdi, int d )
 #if 0
   return pdi ? d - pdi->pathinfo.topdepth : 0;
 #else
-  return pdi ? duf_pathinfo_deltadepth_d( &pdi->pathinfo, d ) : 0;
+  return pdi ? duf_pi_deltadepth_d( &pdi->pathinfo, d ) : 0;
 #endif
 }
 
@@ -81,7 +81,7 @@ duf_pdi_depth( const duf_depthinfo_t * pdi )
 #if 0
   return pdi ? pdi->pathinfo.depth : 0;
 #else
-  return pdi ? duf_pathinfo_depth( &pdi->pathinfo ) : 0;
+  return pdi ? duf_pi_depth( &pdi->pathinfo ) : 0;
 #endif
 }
 
@@ -92,7 +92,7 @@ duf_pdi_reldepth( const duf_depthinfo_t * pdi )
 #if 0
   return pdi ? duf_pdi_deltadepth_d( pdi, pdi->pathinfo.depth ) : 0;
 #else
-  return pdi ? duf_pathinfo_deltadepth( &pdi->pathinfo ) : 0;
+  return pdi ? duf_pi_deltadepth( &pdi->pathinfo ) : 0;
 #endif
 }
 
@@ -103,7 +103,7 @@ duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
   if ( pdi )
     pdi->pathinfo.topdepth = pdi->pathinfo.depth;
 #else
-  duf_pathinfo_set_topdepth( &pdi->pathinfo );
+  duf_pi_set_topdepth( &pdi->pathinfo );
 #endif
 }
 
@@ -113,7 +113,7 @@ duf_pdi_topdepth( const duf_depthinfo_t * pdi )
 #if 0
   return pdi ? pdi->pathinfo.topdepth : 0;
 #else
-  return pdi ? duf_pathinfo_topdepth( &pdi->pathinfo ) : 0;
+  return pdi ? duf_pi_topdepth( &pdi->pathinfo ) : 0;
 #endif
 
 }

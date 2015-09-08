@@ -104,7 +104,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
   assert( pdi );
   if ( !pdi->inited )
   {
-    assert( real_path );
+    /* assert( real_path ); */
     pdi->inited = 1;
     pdi->pathinfo.depth = -1;
     DUF_TRACE( pdi, 8, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );

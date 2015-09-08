@@ -31,22 +31,15 @@ duf_check_stage( duf_option_stage_t istage, const duf_longval_extended_t * exten
   DUF_TRACE( options, 3, "checking stage; istage:%d tflag:%d tuse:%d tminmax:%d/%d", istage, xtable->stage.flag, xtable->use_stage,
              xtable->stage.min, xtable->stage.max );
   r0 = ( istage == -1 );
-  /* DUF_PRINTF( 0, "1.  (%d)  check_stage:%s: %d", istage, extended->o.name, r0 ); */
   r0 = r0 || extended->stage.flag;
-  /* DUF_PRINTF( 0, "2.  (%d)  check_stage:%s: %d", istage, extended->o.name, r0 ); */
   r1 = ( !extended->use_stage || ( extended->stage.min <= istage && extended->stage.max >= istage ) );
-  /* DUF_PRINTF( 0, "3a. (%d)  check_stage:%s: %d [%d:%d]", istage, extended->o.name, r1, extended->stage.min, extended->stage.max ); */
   r2 = ( !xtable || ( !xtable->use_stage || ( xtable->stage.min <= istage && xtable->stage.max >= istage ) ) );
-  /* DUF_PRINTF( 0, "3b. (%d)  check_stage:%s: %d [%d:%d]", istage, extended->o.name, r2, xtable ? xtable->stage.min : 999,
-     xtable ? xtable->stage.max : 999 ); */
   r0 = r0 || ( r1 && r2 );
-  /* DUF_PRINTF( 0, "%d:%s: sm:%lx [%x]", istage, extended->o.name, xtable->stage_mask, ( 1 << istage ) ); */
   if ( ( extended->use_stage_mask && ( extended->stage_mask & ( 1 << istage ) ) )
        || ( xtable->use_stage_mask && ( xtable->stage_mask & ( 1 << istage ) ) ) )
   {
     r0 = 0;
   }
-  /* DUF_PRINTF( 0, "3.  (%d)  check_stage:%s: %d", istage, extended->o.name, r0 ); */
 
   DUF_TRACE( options, 2, "checked stage; istage:%d; r0:%d", istage, r0 );
   return r0;

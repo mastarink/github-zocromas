@@ -17,8 +17,9 @@
 #include "duf_ufilter.h"
 
 #include "duf_option_extended.h"
+#include "duf_option_names.h"
 
-#include "duf_config_ref.h"
+/* #include "duf_config_ref.h" */
 /* ###################################################################### */
 #include "duf_config.h"
 /* ###################################################################### */
@@ -58,6 +59,7 @@ duf_cfg_create( void )
   cfg->db.tempo.name = mas_strdup( "duf-tempo.db" );
   cfg->db.selected.name = mas_strdup( "duf-selected.db" );
   cfg->cli.trace.any = cfg->cli.trace.error += 1;
+  cfg->cli.trace.options = 1;
   /* cfg->cli.trace.fs += 1; */
   cfg->cli.trace.temp += 1;
 
@@ -116,6 +118,8 @@ duf_cfg_create( void )
   cfg->pdi = duf_pdi_create( "selected" );
   assert( cfg->pu );
   assert( cfg->longopts_table );
+
+
 
 
   return cfg;
@@ -241,12 +245,21 @@ duf_cfg_delete( duf_config_t * cfg )
 }
 
 void
-duf_config_create( void )
+duf_config_create( int argc, char **argv )
 {
   duf_config = duf_cfg_create(  );
   assert( duf_config );
 #ifdef MAS_TRACING
   duf_config4trace = duf_config;
+
+  duf_config->carg.argc = argc;
+  duf_config->carg.argv = argv;
+  if ( !duf_config->cli.shorts )
+    duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
+
+
+
+
   assert( duf_config4trace );
 #endif
 }

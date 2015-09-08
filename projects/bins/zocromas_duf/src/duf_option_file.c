@@ -74,7 +74,7 @@ duf_infile( int dot, const char *at, const char *filename, int *pr )
  *            4.2. chomp each string (line),
  *            4.3. drop comments (lines started with '#' or '#' prefixed with spaces)
  *            4.4. call mas_expand_string to expand string (my zocromas_mas_tools library)
- *            4.5. call duf_execute_cmd_long_xtables_std to parse/process/execute option
+ *            4.5. call duf_exec_cmd_long_xtables_std to parse/process/execute option
  *            4.6. close configuration file
  * */
 
@@ -105,14 +105,14 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f )
         xs = mas_expand_string( s );
         DUF_TRACE( explain, 0, "expanded config line %s", xs );
 /* 
- * duf_execute_cmd_long_xtables_std return codeval>0 for "help" option
+ * duf_exec_cmd_long_xtables_std return codeval>0 for "help" option
  *   =0 for other option
  *   errorcode<0 for error
  * */
-        DOR( r, duf_execute_cmd_long_xtables_std( xs, '=', istage ) );
+        DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage ) );
 
 
-        DUF_TRACE( options, 0, "executed cmd; r=%d; xs=%s", r, xs );
+        DUF_TRACE( options, 5, "executed cmd; r=%d; xs=%s", r, xs );
         mas_free( xs );
       }
     }
@@ -215,7 +215,11 @@ duf_infile_options_at_file( duf_option_stage_t istage, const char *filename )
 int
 duf_infile_options( duf_option_stage_t istage )
 {
-  return duf_infile_options_at_file( istage, DUF_CONFIG_FILE_NAME );
+  DEBUG_STARTR( r );
+  DUF_TRACE( options, 0, "@@@@(%d) source: infile(%s)", istage, DUF_CONFIG_FILE_NAME );
+  if ( istage == DUF_OPTION_STAGE_SETUP )
+    DOR( r, duf_infile_options_at_file( istage, DUF_CONFIG_FILE_NAME ) );
+  DEBUG_ENDR( r );
 }
 
 /* duf_stdin_options - can be executed only once (direct stdin reading!)  */
@@ -225,10 +229,11 @@ duf_stdin_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
   static int done = 0;
 
-  if ( !done )
+  DUF_TRACE( options, 0, "@@@@(%d) source: stdin", istage );
+  if (  !done )
   {
     DUF_TRACE( options, 4, "@@@ isatty: %d:%d:%d", isatty( STDIN_FILENO ), isatty( STDOUT_FILENO ), isatty( STDERR_FILENO ) );
-    if ( !isatty( STDIN_FILENO ) )
+    if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  && !isatty( STDIN_FILENO )  )
     {
       DOR( r, duf_infile_options_at_stream( istage, stdin ) );
       done = 1;
@@ -246,6 +251,7 @@ duf_indirect_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
+  DUF_TRACE( options, 0, "@@@@(%d) source: indirect", istage );
   DUF_TRACE( temp, 2, ">> targc:%d targ_offset:%d", duf_config->targ.argc, duf_config->targ_offset );
   for ( int ia = 0; ia < duf_config->targ_offset; ia++ )
   {

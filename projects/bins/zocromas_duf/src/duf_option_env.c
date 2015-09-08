@@ -55,7 +55,9 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
       DUF_TRACE( explain, 0, "env s: \"%s\"", s );
       xs = mas_expand_string( s );
       DUF_TRACE( explain, 0, "env xs: \"%s\"", xs );
-      DOR( r, duf_execute_cmd_long_xtables_std( xs, '=', istage ) );
+
+      DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage ) );
+
       mas_free( xs );
     }
     mas_free( s );
@@ -78,5 +80,6 @@ duf_env_options( duf_option_stage_t istage )
 {
   const char *varname = "MSH_DUF_OPTIONS";
 
+  DUF_TRACE( options, 0, "@@@@(%d) source: evn(%s)" , istage, varname );
   return duf_env_options_at_var( istage, varname );
 }

@@ -69,7 +69,7 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t
 }
 
 int
-duf_evaluate_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
+duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
                              duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
@@ -89,7 +89,7 @@ duf_evaluate_pdi_sccb_namen( const char *name, size_t len, const duf_action_tabl
 int
 duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu )
 {
-  return duf_evaluate_pdi_sccb_namen( name, strlen( name ), table, pdi, ptarg, pu );
+  return duf_ev_pdi_sccb_namen( name, strlen( name ), table, pdi, ptarg, pu );
 }
 
 int
@@ -108,7 +108,7 @@ duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * tabl
 }
 
 int
-duf_evaluate_pdi_sccb_named_list( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
+duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
                                   duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
@@ -128,7 +128,7 @@ duf_evaluate_pdi_sccb_named_list( const char *names, const duf_action_table_t * 
       len = ename - pnames;
     else
       len = strlen( pnames );
-    DOR( r, duf_evaluate_pdi_sccb_namen( pnames, len, table, pdi, ptarg, pu ) );
+    DOR( r, duf_ev_pdi_sccb_namen( pnames, len, table, pdi, ptarg, pu ) );
     if ( DUF_NOERROR( r ) )
       ok++;
     /* DUF_PRINTF( 0, "pnames:%s; ename:%s", pnames, ename ); */

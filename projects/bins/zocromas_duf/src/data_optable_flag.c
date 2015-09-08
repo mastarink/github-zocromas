@@ -52,9 +52,10 @@ const duf_longval_extended_table_t optable_flag = {
 #endif
    {.o = {DO_Q( "recursive" ) /*        */ , DO_A_N /* */ , DO_VF( RECURSIVE )} /*         */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( SFLAG, v ), DO_FL( u, recursive ), DO_STAGE_ANY /*                    */ , DO_H( recursive ) /*                        */ },
+#if 0
    {.o = {DO_Q( "if-recursive" ) /*     */ , DO_A_N} /*                                    */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OU( PSFLAG, v ), DO_FL( u, recursive ) /*                                 */ , DO_H( recursive ) /*                        */ },
-
+#endif
 
 
 

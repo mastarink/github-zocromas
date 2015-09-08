@@ -47,10 +47,11 @@
 #include "duf_config_ref.h"
 #include "duf_config.h"
 
+#include "duf_pdi.h"
 
 #include "duf_options.h"
 #include "duf_option_names.h"
-
+#include "duf_option_defs.h"
 
 
 #include "duf_maindb.h"
@@ -116,11 +117,21 @@ duf_main_with_config( int argc, char **argv )
 
   DUF_TRACE( any, 1, "any test" );
 
-  DOR_NOE( r, duf_all_options( argc, argv, DUF_OPTION_STAGE_DEFAULT ), DUF_ERROR_OPTION_NOT_FOUND );
+
+  DOR_NOE( r, duf_all_options(  /* argc, argv, */ DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
+
+  DOR( r,
+       DUF_WRAPPED( duf_pdi_init ) ( duf_config->pdi, NULL /* real_path */ , 0 /* caninsert */ , NULL /* sql_set */ ,
+                                     DUF_UG_FLAG( recursive ) /* frecursive */ ,
+                                     1 /* opendir */  ) );
+
+
 
   DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
 
-  DOR( r, duf_main_db( argc, argv ) ); /* XXX XXX XXX XXX XXX XXX */
+  /* XXX XXX XXX XXX XXX XXX */
+  DOR( r, duf_main_db( argc, argv ) ); /* duf_action (  ) + duf_main_db_close  */
+  /* XXX XXX XXX XXX XXX XXX */
 
 #if 0
   DUF_PUTS( 0, "------------------------------------(*)" );
@@ -158,7 +169,7 @@ static int
 duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
-  duf_config_create(  );
+  duf_config_create( argc, argv );
 
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 

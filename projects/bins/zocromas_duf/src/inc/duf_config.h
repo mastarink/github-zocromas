@@ -4,7 +4,7 @@
 duf_config_t *duf_cfg_create( void );
 void duf_cfg_delete( duf_config_t * cfg );
 
-void duf_config_create( void );
+void duf_config_create( int argc, char **argv );
 void duf_config_delete( void );
 
 int duf_config_show( void );

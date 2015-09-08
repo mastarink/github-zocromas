@@ -73,6 +73,8 @@ zocromas_duf_SOURCES=				   \
 	data_optable_sccb.c \
 	data_optable_info.c \
 	data_optable_interactive.c \
+	data_optable_io.c \
+	data_optable_experimental.c \
 	data_optable.c
 
 #	duf_item_match2.c

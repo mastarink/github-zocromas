@@ -416,12 +416,12 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
 
     path = real_path;
 
-    DUF_TRACE( path, 0, "@@@@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
+    DUF_TRACE( path, 6, "@@@@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
     while ( DUF_NOERROR( r ) && path && *path )
     {
       char *nextdir = path;
 
-      DUF_TRACE( path, 4, "@@       -prepare path:[%40s]\tunder %llu", path, parentid );
+      DUF_TRACE( path, 8, "@@       -prepare path:[%40s]\tunder %llu", path, parentid );
       {
         /* extracting pathname component */
         while ( nextdir && *nextdir && *nextdir != '/' )
@@ -431,7 +431,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
       }
       {
 
-        DUF_TRACE( path, 1, "@@      +prepared path:[%40s]\tup to [%s]", path, nextdir );
+        DUF_TRACE( path, 6, "@@      +prepared path:[%40s]\tup to [%s]", path, nextdir );
 /* now path is pathname component;
  *
  * store/check it to db
@@ -444,7 +444,7 @@ _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const 
         DOR( r, duf_path_component2db( pdi, path, caninsert, sql_set, &parentid ) );
         if ( DUF_NOERROR( r ) )
           duf_levinfo_set_dirid( pdi, parentid );
-        DUF_TRACE( path, 1, "@@@@#%-5llu (parentid)    [%40s]", parentid, path );
+        DUF_TRACE( path, 6, "@@@@#%-5llu (parentid)    [%40s]", parentid, path );
 /*        if ( r < 0 )
           DUF_SHOW_ERROR( "No such entry %s [%s]", real_path, path ); */
         DUF_TRACE( path, 2, "@r:%d;next                 [%40s]  #%llu:%s", r, path, parentid, nextdir && *nextdir ? nextdir : "-=NONE=-" );
@@ -494,7 +494,7 @@ duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const
   /* assert( pdi->depth == -1 ); */
 
   real_path = mas_strdup( rpath );
-  DUF_TRACE( path, 0, "@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
+  DUF_TRACE( path, 6, "@@@%s PATHID for       [%40s]", caninsert ? "ADD" : "GET", real_path );
   {
     DUF_TRACE( explain, 0, "real_path: ≪%s≫", real_path );
     /* _duf_real_path2db

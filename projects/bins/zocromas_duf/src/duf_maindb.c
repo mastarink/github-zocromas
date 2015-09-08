@@ -29,6 +29,8 @@
 #include "duf_sql2.h"
 
 #include "duf_action.h"
+#include "duf_options.h"
+#include "duf_pdi.h"
 
 #include "duf_maindb_info.h"
 
@@ -115,7 +117,7 @@ duf_main_db_locate( void )
       duf_config->db.tempo.fpath = mas_strcat_x( duf_config->db.tempo.fpath, duf_config->db.tempo.name );
       DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", duf_config->db.tempo.fpath );
     }
-#if 0
+#  if 0
     if ( duf_config->db.selected.name )
     {
       DUF_TRACE( explain, 0, "setting config->db.selected.fpath by db.dir: %s and db.selected.name: %s", duf_config->db.dir,
@@ -134,7 +136,7 @@ duf_main_db_locate( void )
       duf_config->db.selected.fpath = mas_strcat_x( duf_config->db.selected.fpath, duf_config->db.selected.name );
       DUF_TRACE( explain, 0, "config->db.selected.fpath set: %s", duf_config->db.selected.fpath );
     }
-#endif
+#  endif
 
 #endif
 
@@ -199,7 +201,7 @@ duf_main_db_create_tables( void )
   if ( DUF_CLIG_FLAG( dry_run ) )
     DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( CREATE_TABLES ) );
   else
-    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL /* title */, NULL /* selected.db */ );
+    DORF( r, duf_eval_sql_sequence, &sql_beginning_create, 0, NULL /* title */ , NULL /* selected.db */  );
 
   DEBUG_ENDR( r );
 }
@@ -215,7 +217,7 @@ duf_main_db_pre_action( void )
     if ( DUF_CLIG_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( DROP_TABLES ) );
     else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL /* title */, NULL /* selected.db */ );
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_clear, 0, NULL /* title */ , NULL /* selected.db */  );
     global_status.actions_done++;
   }
   else
@@ -230,7 +232,7 @@ duf_main_db_pre_action( void )
     if ( DUF_CLIG_FLAG( dry_run ) )
       DUF_PRINTF( 0, "DRY %s : action '%s'", DUF_OPT_FLAG_NAME( DRY_RUN ), DUF_OPT_FLAG_NAME2( VACUUM ) );
     else
-      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL /* title */, NULL /* selected.db */ );
+      DORF( r, duf_eval_sql_sequence, &sql_beginning_vacuum, 0, NULL /* title */ , NULL /* selected.db */  );
     global_status.actions_done++;
   }
   else
@@ -247,7 +249,7 @@ duf_main_db_pre_action( void )
   {
     DUF_TRACE( explain, 1, "no %s option", DUF_OPT_FLAG_NAME( CREATE_TABLES ) );
   }
-  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL /* title */, NULL /* selected.db */ );
+  DORF( r, duf_eval_sql_sequence, &sql_beginning_tables, 0, NULL /* title */ , NULL /* selected.db */  );
 
   DEBUG_ENDR( r );
 }
@@ -286,7 +288,7 @@ duf_main_db_tune( void )
 
   /* DOR( r, duf_main_db_attach_selected( "dumplet" ) ); */
 
-#if 0
+#  if 0
   if ( duf_config->db.selected.fpath )
   {
     static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBSELECTEDALIAS;
@@ -300,7 +302,7 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
   }
-#endif
+#  endif
 
 #endif
 
@@ -328,7 +330,7 @@ duf_main_db_tune( void )
   }
 #endif
 /* TODO : part to only after possible tables creation */
-  DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL /* title */, NULL /* selected.db */ ) ); /* PRAGMAs etc. */
+  DOR( r, duf_eval_sql_sequence( &sql_beginning_common, 0, NULL /* title */ , NULL /* selected.db */  ) ); /* PRAGMAs etc. */
   DEBUG_ENDR( r );
 }
 
@@ -489,7 +491,21 @@ duf_main_db( int argc, char **argv )
     DORF( r, duf_store_log, duf_config->targ.argc, duf_config->targ.argv );
 #endif
 
+#if 0
   DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+#else
+  DUF_TRACE( path, 0, "@@@@@@path@pdi#FIRST: %s", duf_levinfo_path( duf_config->pdi ) );
+
+  /* if ( duf_levinfo_path( duf_config->pdi ) ) */
+  DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  for ( int ia = duf_config->targ_offset; DUF_NOERROR( r ) && ia < duf_config->targ.argc; ia++ )
+  {
+    DOR( r, duf_pdi_reinit_anypath( duf_config->pdi, duf_config->targ.argv[ia], 7 /* caninsert */ ,
+                                    NULL /* node_selector2 */ , DUF_UG_FLAG( recursive ) ) );
+    DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( duf_config->pdi ) );
+    DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  }
+#endif
   DORF( r, duf_main_db_close, r ); /* [@] */
   DEBUG_ENDR( r );
 }

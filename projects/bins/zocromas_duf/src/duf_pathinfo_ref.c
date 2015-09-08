@@ -20,7 +20,7 @@
 
 /* 20150904.122230 */
 duf_levinfo_t *
-duf_pathinfo_ptr_d( const duf_pathinfo_t * pi, int d )
+duf_pi_ptr_d( const duf_pathinfo_t * pi, int d )
 {
   assert( pi );
   assert( d >= 0 );
@@ -35,12 +35,12 @@ DUF_PATHINFO_FC_UP_REF( duf_levinfo_t , ptr )
 
 /* 20150904.122234 */
 const char *
-duf_pathinfo_path_d( const duf_pathinfo_t * pi, int d )
+duf_pi_path_d( const duf_pathinfo_t * pi, int d )
 {
   char *path = NULL;
   duf_levinfo_t *pli;
 
-  pli = duf_pathinfo_ptr_d( pi, d );
+  pli = duf_pi_ptr_d( pi, d );
   assert( pli );
 
   if ( pli->fullpath )
@@ -94,15 +94,15 @@ DUF_PATHINFO_FC_TOP( const char *, path )
 
 /* 20150904.122510 */
 const char *
-duf_pathinfo_relpath_d( const duf_pathinfo_t * pi, int d )
+duf_pi_relpath_d( const duf_pathinfo_t * pi, int d )
 {
   const char *toppath;
   const char *path;
   size_t len;
 
-  toppath = duf_pathinfo_path_top( pi );
+  toppath = duf_pi_path_top( pi );
   len = strlen( toppath );
-  path = duf_pathinfo_path_d( pi, d );
+  path = duf_pi_path_d( pi, d );
   return path + len;
 }
 /* *INDENT-OFF*  */
@@ -112,21 +112,21 @@ DUF_PATHINFO_FC_UP( const char *, relpath )
 
 /* 20150904.122152 */
 const char *
-duf_pathinfo_path_q( const duf_pathinfo_t * pi, const char *q )
+duf_pi_path_q( const duf_pathinfo_t * pi, const char *q )
 {
   const char *p;
 
-  p = duf_pathinfo_path( pi );
+  p = duf_pi_path( pi );
   return p ? p : q;
 }
 
 /* 20150904.122155 */
 char *
-duf_pathinfo_path_qdup( const duf_pathinfo_t * pi, const char *q )
+duf_pi_path_qdup( const duf_pathinfo_t * pi, const char *q )
 {
   const char *p;
 
-  p = duf_pathinfo_path_q( pi, q );
+  p = duf_pi_path_q( pi, q );
   return p ? mas_strdup( p ) : NULL;
 }
 
@@ -138,11 +138,11 @@ DUF_PATHINFO_4GET( int, dfd, lev_dh.dfd )
 
 /* 20150904.122200 */
 const char *
-duf_pathinfo_itemshowname_d( const duf_pathinfo_t * pi, int d )
+duf_pi_itemshowname_d( const duf_pathinfo_t * pi, int d )
 {
   const char *n = NULL;
 
-  n = duf_pathinfo_itemtruename_d( pi, d );
+  n = duf_pi_itemtruename_d( pi, d );
   /* return n ? ( *n ? n : "/" ) : n; */
   return n && !*n ? "/" : n;
 }
@@ -154,23 +154,23 @@ DUF_PATHINFO_FC_UP_REF( const char, itemshowname )
 
 /* 20150904.122206 */
 const char *
-duf_pathinfo_itemshowname_q( const duf_pathinfo_t * pi, const char *q )
+duf_pi_itemshowname_q( const duf_pathinfo_t * pi, const char *q )
 {
   const char *p;
 
-  p = duf_pathinfo_itemshowname( pi );
+  p = duf_pi_itemshowname( pi );
   return p ? p : q;
 }
 
 /* 20150904.122209 */
 const char *
-duf_pathinfo_itemtruename_d( const duf_pathinfo_t * pi, int d )
+duf_pi_itemtruename_d( const duf_pathinfo_t * pi, int d )
 {
   const char *n = NULL;
 
   duf_levinfo_t *pli;
 
-  pli = duf_pathinfo_ptr_d( pi, d );
+  pli = duf_pi_ptr_d( pi, d );
 
   n = pli ? pli->itemname : NULL;
   /* return n ? ( *n ? n : "/" ) : n; */
@@ -184,18 +184,18 @@ DUF_PATHINFO_FC_UP_REF( const char, itemtruename )
 
 /* 20150904.122217 */
 const char *
-duf_pathinfo_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
+duf_pi_itemtruename_q( const duf_pathinfo_t * pi, const char *q )
 {
   const char *p;
 
-  p = duf_pathinfo_itemtruename( pi );
+  p = duf_pi_itemtruename( pi );
   return p ? p : q;
 }
 
 /************************************************************************/
 /* 20150904.122223 */
 struct stat *
-duf_pathinfo_stat_d( const duf_pathinfo_t * pi, int d )
+duf_pi_stat_d( const duf_pathinfo_t * pi, int d )
 {
   struct stat *pst = NULL;
 
@@ -203,7 +203,7 @@ duf_pathinfo_stat_d( const duf_pathinfo_t * pi, int d )
   {
     duf_dirhandle_t *pdh;
 
-    pdh = duf_pathinfo_pdh_d( pi, d );
+    pdh = duf_pi_pdh_d( pi, d );
 
     if ( pdh->rs > 0 && pdh->source == DUF_DH_SOURCE_FS )
       pst = &pdh->st;
@@ -240,31 +240,28 @@ DUF_PATHINFO_ST_TYP_FLD_NAME( long, ctim.tv_nsec, cnsec );
 
 /************************************************************************/
 void
-duf_pathinfo_set_topdepth( duf_pathinfo_t * pi )
+duf_pi_set_topdepth( duf_pathinfo_t * pi )
 {
   if ( pi )
-  {
     pi->topdepth = pi->depth;
-    DUF_TRACE( temp, 0, "@@@set top depth %d", pi->depth );
-  }
 }
 
 int
-duf_pathinfo_topdepth( const duf_pathinfo_t * pi )
+duf_pi_topdepth( const duf_pathinfo_t * pi )
 {
   return pi ? pi->topdepth : 0;
 }
 
 int
-duf_pathinfo_depth( const duf_pathinfo_t * pi )
+duf_pi_depth( const duf_pathinfo_t * pi )
 {
   return pi ? pi->depth : 0;
 }
 
 int
-duf_pathinfo_deltadepth_d( const duf_pathinfo_t * pi, int d )
+duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 {
-  return pi ? d - duf_pathinfo_topdepth( pi ) : 0;
+  return pi ? d - duf_pi_topdepth( pi ) : 0;
 }
 /* *INDENT-OFF*  */
 DUF_PATHINFO_FC( int, deltadepth )

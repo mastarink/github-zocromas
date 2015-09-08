@@ -1,6 +1,8 @@
+#include <assert.h>
+
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
-
 #include <mastar/tools/mas_arg_tools.h>
 
 #include "duf_maintenance.h"
@@ -66,7 +68,7 @@ duf_reorder_at_sign( int argc, char *argv[] )
 }
 
 int
-duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
+duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
@@ -98,12 +100,12 @@ duf_parse_cli_options( const char *shorts, duf_option_stage_t istage )
   {
     DUF_TRACE( options, +2, "@@@getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
- * duf_parse_option return
+ * duf_parse_exec_option return
  *        oclass (>0) for "help" options
  *                =0  for normal options
  * or  errorcode (<0) for error
  * */
-    DOR( r, duf_parse_option( codeval, longindex, optarg, istage ) );
+    DOR( r, duf_parse_exec_option( codeval, longindex, optarg, istage ) ); /* => duf_clarify_xcmd_full */
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +4, "cli options r: %d", r );
     if ( optind > 0 )
@@ -166,15 +168,17 @@ duf_cli_options( duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
+  assert( duf_config );
+
+  DUF_TRACE( options, 0, "@@@@(%d) source: cli" ,istage);
 #if 0
   /* Don't use it before all oprions got */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 #endif
   DUF_TRACE( options, +2, "cli options..." );
-  if ( duf_config )
-  {
-    DOR( r, duf_parse_cli_options( duf_config->cli.shorts, istage ) );
-  }
+  
+  DOR( r, duf_parse_exec_cli_options( duf_config->cli.shorts, istage ) );
+
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name( r ) );
 #if 0
   /* Don't use it before all options processed */

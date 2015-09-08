@@ -30,7 +30,7 @@ int
 duf_evaluate_sccb_namen( const char *name, size_t len, const duf_action_table_t * table )
 {
   assert( duf_config->pdi->pdi_name );
-  return duf_evaluate_pdi_sccb_namen( name, len, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
+  return duf_ev_pdi_sccb_namen( name, len, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
 }
 
 int
@@ -44,7 +44,7 @@ int
 duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * table )
 {
   assert( duf_config->pdi->pdi_name );
-  return duf_evaluate_pdi_sccb_named_list( names, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
+  return duf_ev_pdi_named_sccbs( names, table, duf_config->pdi, &duf_config->targ, duf_config->pu );
 }
 
 #if 0

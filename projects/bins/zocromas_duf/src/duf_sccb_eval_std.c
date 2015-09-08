@@ -37,9 +37,9 @@ duf_evaluate_sccb_name_std( const char *name )
 }
 
 int
-duf_evaluate_pdi_sccb_namen_std( const char *name, size_t len, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu )
+duf_ev_pdi_sccb_namen_std( const char *name, size_t len, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu )
 {
-  return duf_evaluate_pdi_sccb_namen( name, len, duf_action_table(  ), pdi, ptarg, pu );
+  return duf_ev_pdi_sccb_namen( name, len, duf_action_table(  ), pdi, ptarg, pu );
 }
 
 int

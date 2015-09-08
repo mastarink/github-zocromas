@@ -24,7 +24,7 @@
 
 
 int
-duf_clarify_opt_old( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
+duf_clarify_xcmd_old( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
                            const duf_longval_extended_table_t * xtable )
 {
   DEBUG_STARTR( r );

@@ -77,23 +77,28 @@ duf_option_$_cd( const char *s )
 {
   if ( s && *s )
   {
+#if 1
     char *new_path = NULL;
 
-    if ( duf_levinfo_path( duf_config->pdi ) && *s && *s != '/' )
+    if ( duf_levinfo_path( duf_config->pdi ) )
     {
-      if ( *s != '/' )
+      if ( *s == '/' )
+      {
+        new_path = mas_strdup( s );
+      }
+      else
       {
         new_path = mas_strdup( duf_levinfo_path( duf_config->pdi ) );
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
         new_path = mas_strcat_x( new_path, s );
       }
-      else
-      {
-        new_path = mas_strdup( s );
-      }
     }
     else if ( *s == '/' )
+    {
+      new_path = mas_strdup( s );
+    }
+    else
     {
       new_path = mas_strdup( s );
     }
@@ -102,8 +107,14 @@ duf_option_$_cd( const char *s )
       int rt = 0;
 
       DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL, duf_pdi_recursive( duf_config->pdi ) ) );
-      DUF_TRACE( temp, 0, "(r:%d)", rt );
     }
     mas_free( new_path );
+#else
+    {
+      int rt = 0;
+
+      DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, s, 1 /* caninsert */ , NULL, duf_pdi_recursive( duf_config->pdi ) ) );
+    }
+#endif
   }
 }

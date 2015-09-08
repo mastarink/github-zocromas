@@ -13,21 +13,19 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_cli_options.h"
 
 #include "duf_config_ref.h"
-#include "duf_maindb.h"
-
-/* #include "duf_pdi.h" */
-/* #include "duf_levinfo.h" */
-/* #include "duf_levinfo_ref.h" */
-
-
+/* #include "duf_maindb.h" */
 
 
 #include "duf_option_file.h"
 #include "duf_option_extended.h"
 #include "duf_option_env.h"
+#include "duf_cli_options.h"
+#include "duf_option_interactive.h"
+
+#include "duf_option_defs.h"
+
 #include "duf_option_names.h"
 #include "duf_option_restore.h"
 /* #include "duf_option.h" */
@@ -44,11 +42,29 @@
  * 2. call duf_infile_options, i.e. get options/settings from configuration file(s)
  * 3. call duf_cli_options, i.e. get options/settings from command line
  * */
+
+/*
+ * TODO join duf_action and duf_all_options
+ *
+ *
+ * duf_action								| duf_all_options
+ * with istage = DUF_OPTION_STAGE_FIRST					| with istage
+ * 									|  
+ * 									|
+ * 									|  - duf_env_options
+ * 									|  - duf_infile_options
+ *   - duf_cli_options( istage )					|  - duf_cli_options
+ *   - duf_stdin_options( istage )					|
+ *   - duf_indirect_options( istage )					|  - duf_indirect_options
+ *   - duf_interactive_options( DUF_OPTION_STAGE_INTERACTIVE )		|
+ * */
+
 int
-duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
+duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 {
   DEBUG_STARTR( r );
 
+  assert( duf_config );
   DUF_TRACE( temp, 0, "@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
 #if 0
   DUF_TRACE( temp, 0, "@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
@@ -61,58 +77,79 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
   DUF_TRACE( temp, 0, "@@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
   DUF_TRACE( temp, 0, "@@@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
 #endif
+
+
 #ifdef MAS_TRACING
-  int er = 0, fr = 0, or = 0, ir = 0, tr = 0;
+  int er = 0, fr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, or = 0, ir = 0, tr = 0;
+  int DUF_UNUSED er = 0, fr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
 #endif
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
 
-  duf_config->carg.argc = argc;
-  duf_config->carg.argv = argv;
-
-
-
-
-  if ( !duf_config->cli.shorts )
-    duf_config->cli.shorts = duf_cli_option_shorts( lo_extended_table_multi );
-
-
+#if 1
+#  define DUF_OPTSRC(_r, _xr, _name, _istage)  \
+  { \
+    if ( DUF_NOERROR( r ) ) \
+    { \
+      DOR( _r, duf_ ## _name ## _options( _istage ) ); \
+      _xr = _r; \
+    } \
+    DUF_TRACE( options, +2, "@got " #_name " options; " #_xr ":%d (%c)  %s", _xr, _xr > ' ' && _xr < 'z' ? _xr : '-', duf_error_name( r ) ); \
+  }
+  DUF_OPTSRC( r, er, env, istage ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+  DUF_OPTSRC( r, fr, infile, istage );
+  DUF_OPTSRC( r, or, cli, istage );
+  DUF_OPTSRC( r, isi, stdin, istage );
+  DUF_OPTSRC( r, ir, indirect, istage );
+  if ( DUF_ACTG_FLAG( interactive ) )
+    DUF_OPTSRC( r, iir, interactive, istage );
+#else
   if ( DUF_NOERROR( r ) )
-    DOR( r, duf_env_options( istage ) );
-  er = r;
+  {
+    DOR( r, duf_env_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+    er = r;
+  }
   DUF_TRACE( options, +2, "@got env options; er:%d (%c)  %s", er, er > ' ' && er < 'z' ? er : '-', duf_error_name( r ) );
 
-#ifdef MAS_TRACING
-  for ( int ia = 0; ia < duf_config->carg.argc; ia++ )
-  {
-    DUF_TRACE( temp, 2, "this is temp DUF_TRACE again - cargv[%d]='%s'", ia, duf_config->carg.argv[ia] );
-  }
-#endif
-
-
   if ( DUF_NOERROR( r ) )
   {
-    DOR( r, duf_infile_options( istage ) );
+    DOR( r, duf_infile_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     fr = r;
   }
   DUF_TRACE( options, +2, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name( r ) );
 
   if ( DUF_NOERROR( r ) )
   {
-    DOR( r, duf_cli_options( istage ) );
+    DOR( r, duf_cli_options( istage ) ); /* => duf_parse_exec_option => duf_clarify_xcmd_full => duf_clarify_xcmd_(typed|old) */
     or = r;
   }
   DUF_TRACE( options, +2, "@got cli options; or:%d (%c)  %s", or, or > ' ' && or < 'z' ? or : '-', duf_error_name( r ) );
 
-#if 1
+#  if 1
+  if ( DUF_NOERROR( r ) )
+  {
+    DOR( r, duf_stdin_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+    isi = r;
+  }
+  DUF_TRACE( options, +2, "@got indirect options; or:%d (%c)  %s", isi, isi > ' ' && isi < 'z' ? isi : '-', duf_error_name( r ) );
+#  endif
+
+#  if 1
 /* duf_indirect_options - only for next stage  */
   if ( DUF_NOERROR( r ) )
   {
-    DOR( r, duf_indirect_options( istage ) );
+    DOR( r, duf_indirect_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     ir = r;
   }
   DUF_TRACE( options, +2, "@got indirect options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
+#  endif
+
+  if ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) )
+  {
+    DOR( r, duf_interactive_options( istage ) );
+    iir = r;
+  }
+  DUF_TRACE( options, +2, "@got indirect options; or:%d (%c)  %s", iir, iir > ' ' && iir < 'z' ? iir : '-', duf_error_name( r ) );
 #endif
 
 #ifdef MAS_TRACING
@@ -168,7 +205,7 @@ duf_all_options( int argc, char *argv[], duf_option_stage_t istage )
   DUF_TRACE( options, +2, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; ir: %d; tr: %d; r: %s", or, fr, er, ir, tr, duf_error_name( r ) );
+  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; isi: %d; ir: %d; iir: %d; tr: %d; r: %s", or, fr, er, isi, ir, iir, tr, duf_error_name( r ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 

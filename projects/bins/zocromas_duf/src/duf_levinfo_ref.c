@@ -27,7 +27,7 @@ duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi->pathinfo.levinfo );
   return d >= 0 && pdi ? &pdi->pathinfo.levinfo[d] : NULL;
 #else
-  return ( d <= pdi->maxdepth ) ? duf_pathinfo_ptr_d( &pdi->pathinfo, d ) : NULL;
+  return ( d <= pdi->maxdepth ) ? duf_pi_ptr_d( &pdi->pathinfo, d ) : NULL;
 #endif
 }
 /* *INDENT-OFF*  */
@@ -390,7 +390,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
   const char *path = NULL;
 #endif
   assert( pdi );
-  if ( pdi->inited )
+  if ( pdi->inited && d >= 0 )
   {
     assert( d >= 0 );
     assert( pdi->pathinfo.levinfo );
@@ -447,7 +447,7 @@ duf_levinfo_path_d( const duf_depthinfo_t * pdi, int d )
       /* }                                   */
     }
 #else
-    path = duf_pathinfo_path_d( &pdi->pathinfo, d );
+    path = duf_pi_path_d( &pdi->pathinfo, d );
 #endif
   }
 #if 0

@@ -55,37 +55,48 @@
 #  define DO_XFUNC(_f)	    { DO_SET_FUNC(_f)	   }
 #  define DO_XFUNCA(_f, _a) { DO_SET_FUNC(_f), .arg=_a }
 
-#  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) }}
-#  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f)      }}
-
-/* void f( .via.arg ) -- */
-#  define DO_VIA_CALL(_f, _a)		DO_SET_VTYPE( VIA_CALL ), DO_SET_CALLA(via, _f, _a)
-#  define DO_VIA_CALLH(_cl)		DO_VIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl)
-#  define DO_VIA_CALLCL(_f, _cl)	DO_VIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl)
+#  define DO_SET_CALLA(_id, _f, _a)	.call={.fdesc={ ._id=DO_XFUNCA(_f, _a) }} /**/
+#  define DO_SET_CALL(_id, _f)		.call={.fdesc={ ._id=DO_XFUNC(_f)      }} /**/
+      /* */
+      /* void f( .via.arg ) -- *//* call with numeric (int) arg from table (VIA:void-int-arg) */
+#  define DO_VIA_CALL(_f, _a)		DO_SET_VTYPE( VIA_CALL ), DO_SET_CALLA(via, _f, _a) /**/
+#  define DO_VIA_CALLH(_cl)		DO_VIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl) /**/
+#  define DO_VIA_CALLCL(_f, _cl)	DO_VIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl) /**/
+      /* */
 /* void f( int argc, char *const *argv ) */
-#  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f)
+#  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f) /**/
+      /* */
 /* void f( duf_cargvc_t arg ) */
-#  define DO_AA_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(aa, _f)
+#  define DO_AA_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(aa, _f) /**/
 /*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL(t, _f) */
+      /* */
 /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) */
-#  define DO_TN_CALL(_f)        DO_SET_VTYPE( TN_CALL ), DO_SET_CALL(tn, _f)
-/* void f( void ) */
-#  define DO_VV_CALL(_f)        DO_SET_VTYPE( VV_CALL ), DO_SET_CALL(vv, _f)
+#  define DO_TN_CALL(_f)        DO_SET_VTYPE( TN_CALL ), DO_SET_CALL(tn, _f) /**/
+      /* */
+      /* void f( void ) *//* call with nothing (VV:void-void) */
+#  define DO_VV_CALL(_f)        DO_SET_VTYPE( VV_CALL ), DO_SET_CALL(vv, _f) /**/
+      /* */
 /* void f( duf_strtol_suff( optargg, &r ) ) */
-#  define DO_N_CALL(_f)         DO_SET_VTYPE( N_CALL ), DO_SET_CALL(n, _f)
+#  define DO_N_CALL(_f)         DO_SET_VTYPE( N_CALL ), DO_SET_CALL(n, _f) /**/
+      /* */
 /* void f( &duf_config->targc, &duf_config->targv, optargg ) */
-#  define DO_TS_CALL(_f)        DO_SET_VTYPE( TS_CALL ), DO_SET_CALL(ts, _f)
+#  define DO_TS_CALL(_f)        DO_SET_VTYPE( TS_CALL ), DO_SET_CALL(ts, _f) /**/
+      /* */
 /* void f( optargg ) */
-#  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f)
-/* void f( .vsa.arg ) -- */
-#  define DO_VSA_CALL(_f, _a)		DO_SET_VTYPE( VSA_CALL ), DO_SET_CALLA(vsa, _f, _a)
-#  define DO_TDB( ) 	DO_SET_VTYPE( TDB )
-
-#  define DO_SET_STAGE(_min, _max) .stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.use_stage=1
-#  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag)
-#  define DO_STAGE_ANY		DO_SET_STAGE(DEFAULT, ANY)
-
-#  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v
-#  define DO_STG_NOT(_v) DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) )
-
+#  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f) /**/
+      /* */
+      /* void f( .vsa.arg ) -- *//* call with constant string arg from table (VSA:void-string-arg) */
+#  define DO_VSA_CALL(_f, _a)		DO_SET_VTYPE( VSA_CALL ), DO_SET_CALLA(vsa, _f, _a) /**/
+      /* */
+#  define DO_TDB( ) 	DO_SET_VTYPE( TDB ) /**/
+      /* */
+#  define DO_SET_STAGE(_min, _max) .stage={.min= DUF_OPTION_STAGE_ ## _min, .max= DUF_OPTION_STAGE_ ## _max},.use_stage=1 /**/
+      /* */
+#  define DO_AT_STAGE(_stag)	DO_SET_STAGE(_stag, _stag) /**/
+      /* */
+#  define DO_STAGE_ANY		DO_SET_STAGE(SETUP, ANY) /**/
+      /* */
+#  define DO_STG_MASK(_v) .use_stage_mask=1, .stage_mask= _v /**/
+      /* */
+#  define DO_STG_NOT(_v) DO_STG_MASK( (1<< DUF_OPTION_STAGE_ ## _v ) ) /**/
 #endif

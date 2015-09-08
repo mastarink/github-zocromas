@@ -2,20 +2,20 @@
 #  define DUF_PATHINFO_REF_DEF_H
 
 
-#define DUF_PATHINFO_F_PLUS(_typ, _name, _ref1, _ref2) _typ duf_pathinfo_ ## _name(  duf_pathinfo_t * pi ) \
+#define DUF_PATHINFO_F_PLUS(_typ, _name, _ref1, _ref2) _typ duf_pi_ ## _name(  duf_pathinfo_t * pi ) \
 	{ \
 	  _typ _ref2 result = (0); \
 	  assert( pi ); \
-	  result = duf_pathinfo_ ## _name ## _d( pi, pi->depth ); \
+	  result = duf_pi_ ## _name ## _d( pi, pi->depth ); \
 	  return result; \
 	}
 
 #define DUF_PATHINFO_F_UP_PLUS(_typ, _name, _ref1, _ref2) \
   	_typ _ref2 \
-	duf_pathinfo_ ## _name ## _up(  duf_pathinfo_t * pi ) \
+	duf_pi_ ## _name ## _up(  duf_pathinfo_t * pi ) \
 	{ \
 	  assert( pi ); \
-	  return pi->depth > 0 ? duf_pathinfo_ ## _name ## _d( pi, pi->depth - 1 ) : 0; \
+	  return pi->depth > 0 ? duf_pi_ ## _name ## _d( pi, pi->depth - 1 ) : 0; \
 	}
 
 #define DUF_PATHINFO_F(_typ, _name) DUF_PATHINFO_F_PLUS(_typ, _name, , )
@@ -25,10 +25,10 @@
 
 #define DUF_PATHINFO_FC_D_PLUS(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
   _typ _ref2 \
-  duf_pathinfo_ ## _name ## _d( const duf_pathinfo_t * pi, int d ) \
+  duf_pi_ ## _name ## _d( const duf_pathinfo_t * pi, int d ) \
   { \
     _typ  _ref2 __val; \
-    __val=((_cond)?(_ref1 duf_pathinfo_ptr_d( pi, d )->_fld):((_typ _ref2) 0)); \
+    __val=((_cond)?(_ref1 duf_pi_ptr_d( pi, d )->_fld):((_typ _ref2) 0)); \
     return __val _suffix; \
   }
 
@@ -36,11 +36,11 @@
 
 #define DUF_PATHINFO_FC_PLUS(_typ, _name, _ref1, _ref2) \
   	_typ _ref2 \
-	duf_pathinfo_ ## _name( const duf_pathinfo_t * pi ) \
+	duf_pi_ ## _name( const duf_pathinfo_t * pi ) \
 	{ \
 	  _typ _ref2 result = (0); \
 	  assert( pi ); \
-	  result = duf_pathinfo_ ## _name ## _d( pi, pi->depth ); \
+	  result = duf_pi_ ## _name ## _d( pi, pi->depth ); \
 	  return result; \
 	}
 
@@ -53,17 +53,17 @@
 #define DUF_PATHINFO_FC_TOP_REF(_typ, _name) DUF_PATHINFO_FC_TOP_PLUS(_typ, _name, &, *)
 
 #define DUF_PATHINFO_FC_UP_PLUS(_typ, _name, _ref1, _ref2) \
-  	_typ _ref2 duf_pathinfo_ ## _name ## _up( const duf_pathinfo_t * pi ) \
+  	_typ _ref2 duf_pi_ ## _name ## _up( const duf_pathinfo_t * pi ) \
 	{ \
 	  assert( pi ); \
-	  return pi->depth > 0 ? duf_pathinfo_ ## _name ## _d( pi, pi->depth - 1 ) : 0; \
+	  return pi->depth > 0 ? duf_pi_ ## _name ## _d( pi, pi->depth - 1 ) : 0; \
 	}
 
 #define DUF_PATHINFO_FC_TOP_PLUS(_typ, _name, _ref1, _ref2) \
-  	_typ _ref2 duf_pathinfo_ ## _name ## _top( const duf_pathinfo_t * pi ) \
+  	_typ _ref2 duf_pi_ ## _name ## _top( const duf_pathinfo_t * pi ) \
 	{ \
 	  assert( pi ); \
-	  return pi->depth > 0 ? duf_pathinfo_ ## _name ## _d( pi, pi->topdepth ) : 0; \
+	  return pi->depth > 0 ? duf_pi_ ## _name ## _d( pi, pi->topdepth ) : 0; \
 	}
 
 #define DUF_PATHINFO_FS_PLUS(_typ, _name, _ref1, _ref2) \
@@ -90,10 +90,10 @@
 
 #define DUF_PATHINFO_3GET_PLUS_OLD(_typ, _name, _fld, _cond, _ref1, _ref2, _suffix) \
   _typ _ref2 \
-  duf_pathinfo_ ## _name ## _d( const duf_pathinfo_t * pi, int d ) \
+  duf_pi_ ## _name ## _d( const duf_pathinfo_t * pi, int d ) \
   { \
     _typ  _ref2 __val; \
-    __val=((_cond)?(_ref1 duf_pathinfo_ptr_d( pi, d )->_fld):((_typ _ref2) 0)); \
+    __val=((_cond)?(_ref1 duf_pi_ptr_d( pi, d )->_fld):((_typ _ref2) 0)); \
     return __val _suffix; \
   } \
    \
@@ -122,7 +122,7 @@
   void \
   duf_pathinfo_set_ ## _name ## _d( duf_pathinfo_t * pi, _typ __newval, int d ) \
   { \
-    duf_pathinfo_ptr_d( pi, d )->_fld = __newval _suffix; \
+    duf_pi_ptr_d( pi, d )->_fld = __newval _suffix; \
   } \
    \
   DUF_PATHINFO_FS_PLUS( _typ, _name, _ref1, _ref2 ) \
@@ -141,7 +141,7 @@
   { \
    struct stat *st; \
   \
-   st = duf_pathinfo_stat( pi ); \
+   st = duf_pi_stat( pi ); \
    return st ? st->st_ ## _fld : 0; \
  }
 
@@ -157,7 +157,7 @@
   { \
    struct stat *st; \
   \
-   st = duf_pathinfo_dbstat( pi ); \
+   st = duf_pi_dbstat( pi ); \
    return st ? st->st_ ## _fld : 0; \
  }
 

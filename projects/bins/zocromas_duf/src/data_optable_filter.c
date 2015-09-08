@@ -162,12 +162,6 @@ const duf_longval_extended_table_t optable_filter = {
 
    {.o = {DO_Q( "same-as-md5" ) /*      */ , DO_A_R /* */ , DO_V( SAME_AS )} /*            */ , DO_CL( FILTER ) /*  */ ,
     /*      */ DO_OU( STR, same_md5 ) /*                                                    */ , DO_H( same md5 ) /*                         */ },
-#if 0
-   {.o = {DO_Q( "same-md5" ) /*           */ , DO_A_O} /*                                  */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OU( PSTR, same_md5 ), DO_AT_STAGE( 1 ) /*                                 */ , DO_H( same md5 ) /*                         */ },
-   {.o = {DO_Q( "same-md5" ) /*           */ , DO_A_O} /*                                  */ , DO_CL( CONTROL ) /*  */ ,
-    /*      */ DO_OC( FLAG, cli.act.v ), DO_FL( act, beginning_sql ), DO_AT_STAGE( 1 ) /*   */ , DO_H( same md5 ) /*                         */ },
-#endif
 
    {.o = {.name = NULL}}
    }
