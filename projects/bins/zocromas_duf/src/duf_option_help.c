@@ -670,6 +670,11 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --db-name=200105.db  -dfR  --with-mime=image/jpeg --ls /home/mastar/big/misc/media/photo/dvd/dvd1/200105  	- %s",
               "-= \"\" =-" );
 
+
+  DUF_PRINTF( 0, "========================= as for 20150908.155827 ============" );
+  DUF_PRINTF( 0, "  run  --trace-path=1 -dfR --trace-options=2 --output-file=/dev/pts/30 --min-same=5 "
+              " --cd=/home/mastar/big/ --tree /home/mastar/big/misc/develop/autotools/zoc/projects/ /home/mastar/big/misc 	- %s", "-= \"\" =-" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

@@ -174,7 +174,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
           doplus = 1;
       case DUF_OPTION_VTYPE_NUM: /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
-        DUF_TRACE( options, +3, "vtype NUM" );
+        DUF_TRACE( options, +1, "vtype NUM --%s=%s", extended->o.name, optargg?optargg:"" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         DUF_NUMOPT( noo, r, unsigned, doplus, duf_strtol_suff );
@@ -532,7 +532,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
         {
           DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s)", extended->o.name );
-          DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr );
+          DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr, duf_config->cli.output.header );
           /* {                                                                                 */
           /*   char start_time[128] = "??";                                                    */
           /*                                                                                   */

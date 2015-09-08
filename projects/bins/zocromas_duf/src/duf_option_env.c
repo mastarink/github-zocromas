@@ -29,7 +29,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
 
   eo = getenv( envvarname );
 
-  DUF_TRACE( options, 0, "getting env options from variable %s", envvarname );
+  DUF_TRACE( options, 0, "@@@@(%d) source: env(%s)" , istage, envvarname );
   peo = eo;
   while ( peo && *peo )
   {
@@ -80,6 +80,5 @@ duf_env_options( duf_option_stage_t istage )
 {
   const char *varname = "MSH_DUF_OPTIONS";
 
-  DUF_TRACE( options, 0, "@@@@(%d) source: evn(%s)" , istage, varname );
   return duf_env_options_at_var( istage, varname );
 }

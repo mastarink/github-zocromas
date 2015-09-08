@@ -52,25 +52,22 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t
 {
   DEBUG_STARTR( r );
 
+  duf_sccb_handle_t *sccbh = NULL;
 
-  DUF_TRACE( path, 0, "@ (to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
+  DUF_TRACE( sccb, 0, "to open sccb handle %s", sccb->name );
+  DUF_TRACE( path, 0, "@(to open sccbh) levinfo_path: %s", duf_levinfo_path( pdi ) );
+  sccbh = duf_open_sccb_handle( pdi, sccb, ptarg->argc, ptarg->argv, pu, &r );
   {
-    duf_sccb_handle_t *sccbh = NULL;
-
-    DUF_TRACE( sccb, 0, "to open sccb handle %s", sccb->name );
-    sccbh = duf_open_sccb_handle( pdi, sccb, ptarg->argc, ptarg->argv, pu, &r );
-    {
-      DUF_TRACE( sccbh, 0, "opened(?) sccb handle (%d)", sccbh ? 1 : 0 );
-      DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
-    }
-    duf_close_sccb_handle( sccbh );
+    DUF_TRACE( sccbh, 0, "opened(?) sccb handle (%d)", sccbh ? 1 : 0 );
+    DOR( r, DUF_WRAPPED( duf_eval_sccbh_all_and_summary ) ( sccbh ) ); /* XXX XXX XXX XXX XXX XXX */
   }
+  duf_close_sccb_handle( sccbh );
   DEBUG_ENDR( r );
 }
 
 int
 duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
-                             duf_ufilter_t * pu )
+                       duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
   const duf_action_table_t *act = NULL;
@@ -79,7 +76,7 @@ duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * 
     act = duf_find_sccb_by_namen( name, len, table ); /* XXX XXX */
   if ( act )
   {
-    DUF_TRACE( path, 0, "@ (to duf_evaluate_sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
+    DUF_TRACE( path, 0, "@(to evaluate pdi sccb) [%s] levinfo_path: %s", act->sccb->name, duf_levinfo_path( pdi ) );
 
     DOR( r, duf_evaluate_pdi_sccb( pdi, ptarg, pu, act->sccb ) ); /* XXX XXX XXX XXX */
   }
@@ -108,8 +105,7 @@ duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * tabl
 }
 
 int
-duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
-                                  duf_ufilter_t * pu )
+duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
 

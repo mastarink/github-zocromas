@@ -54,6 +54,7 @@ typedef struct
   char *file;
   FILE *out;
   char *history_filename;
+  char *header;
 } duf_config_output_t;
 
 typedef struct

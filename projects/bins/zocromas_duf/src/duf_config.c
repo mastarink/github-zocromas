@@ -59,7 +59,7 @@ duf_cfg_create( void )
   cfg->db.tempo.name = mas_strdup( "duf-tempo.db" );
   cfg->db.selected.name = mas_strdup( "duf-selected.db" );
   cfg->cli.trace.any = cfg->cli.trace.error += 1;
-  cfg->cli.trace.options = 1;
+  /* cfg->cli.trace.options = 1; */
   /* cfg->cli.trace.fs += 1; */
   cfg->cli.trace.temp += 1;
 
@@ -234,6 +234,9 @@ duf_cfg_delete( duf_config_t * cfg )
 
       mas_free( cfg->cli.output.history_filename );
       cfg->cli.output.history_filename = NULL;
+
+      mas_free( cfg->cli.output.header );
+      cfg->cli.output.header = NULL;
 
       mas_free( cfg->cli.output.sformat_dirs_gen );
       cfg->cli.output.sformat_dirs_gen = NULL;

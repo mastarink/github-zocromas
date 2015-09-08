@@ -25,7 +25,7 @@
 		  ( *p ) += __v; \
 		else \
 		  ( *p ) = __v; \
-		DUF_TRACE( options, 7, "%s : number set:%llu", extended->o.name, (unsigned long long) __v ); \
+		DUF_TRACE( options, 4, "%s : number set:%llu", extended->o.name, (unsigned long long) __v ); \
 	      } \
 	    } \
 	  } \
@@ -77,7 +77,7 @@
 		{ \
 		  mm->min = mm->max = __v.min; \
 		} \
-		DUF_TRACE( options, 1, "%s: min/max set:%llu", extended->o.name, (unsigned long long) __v.min ); \
+		DUF_TRACE( options, 4, "%s: min/max set:%llu", extended->o.name, (unsigned long long) __v.min ); \
 	      } \
 	    } \
 	    else \
@@ -85,7 +85,7 @@
 	      mm->flag = 1; \
 	      mm->min = extended->call.value.u; \
 	      mm->max = extended->call.value2.u; \
-	      DUF_TRACE( options, 1, "%s: min/max set:%llu:%llu", extended->o.name, \
+	      DUF_TRACE( options, 4, "%s: min/max set:%llu:%llu", extended->o.name, \
 		  (unsigned long long) extended->call.value.u,  (unsigned long long) extended->call.value2.u ); \
 	    } \
 	  } \
@@ -110,7 +110,7 @@
 	    if ( __rl < 0 ) \
 	    {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	    else \
-	    { DUF_TRACE( options, 1, #_mix "%s: set:%llu", extended->o.name, (unsigned long long) mm->_mix ); } \
+	    { DUF_TRACE( options, 4, #_mix "%s: set:%llu", extended->o.name, (unsigned long long) mm->_mix ); } \
 	  } \
 	} \
 	else \
@@ -119,7 +119,7 @@
 	} \
       }
 
-#define DUF_OUTPUTFILE_A(_no, _rt, _typ, _defoptarg, _defout) \
+#define DUF_OUTPUTFILE_A(_no, _rt, _typ, _defoptarg, _defout, _hdr) \
       if(_rt>=0) \
       { \
 	if( !_no ) \
@@ -132,6 +132,7 @@
 	  if ( extended->m_hasoff == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */ \
 	  { \
 	    DOR(__rl, duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u )); \
+	    if (mm->out && _hdr) { fprintf( mm->out, _hdr ); } \
 	    if ( __rl < 0 ) \
 	    {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
 	  } \
@@ -141,7 +142,7 @@
 	  DOR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
-#define DUF_OUTPUTFILE(_no, _rt, _typ, _defout) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout)
+#define DUF_OUTPUTFILE(_no, _rt, _typ, _defout, _hdr) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout, _hdr)
 
 
 #endif

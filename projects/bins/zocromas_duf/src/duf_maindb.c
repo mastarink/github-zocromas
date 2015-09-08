@@ -494,7 +494,7 @@ duf_main_db( int argc, char **argv )
 #if 0
   DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
 #else
-  DUF_TRACE( path, 0, "@@@@@@path@pdi#FIRST: %s", duf_levinfo_path( duf_config->pdi ) );
+  DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( duf_config->pdi ) );
 
   /* if ( duf_levinfo_path( duf_config->pdi ) ) */
   DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
