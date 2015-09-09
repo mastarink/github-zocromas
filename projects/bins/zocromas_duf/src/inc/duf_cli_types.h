@@ -124,6 +124,7 @@ typedef struct
   duf_config_cli_trace_t trace;
   duf_config_output_t output;
   duf_bformat_combo_t bformat;
+  char option_delimiter;
   char *shorts;
   /* long limit; */
 } duf_config_cli_t;

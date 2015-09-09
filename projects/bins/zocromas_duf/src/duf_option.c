@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 
 #include <mastar/wrap/mas_std_def.h>
@@ -8,6 +9,8 @@
 #include "duf_maintenance.h"
 
 /* #include "duf_config_ref.h" */
+#include "duf_status.h"
+#include "duf_status_ref.h"
 
 /* #include "duf_option_defs.h" */
 #include "duf_option_find.h"
@@ -20,10 +23,9 @@
 #include "duf_option.h"
 /* ###################################################################### */
 
-
 DUF_WRAPSTATIC int
 duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                      const duf_longval_extended_table_t * xtable, int no )
+                       const duf_longval_extended_table_t * xtable, int no, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   if ( extended )
@@ -36,7 +38,7 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
     DUF_TRACE( options, +2, "xname:%s; arg:%s; istage:%d; no:%d", extended ? extended->o.name : "?", optargg, istage, no );
 
 /* TODO : register  extended + optargg for further use */
-
+    global_status_register_xcmd( extended, optargg, istage, no, source );
     DOR( r, duf_clarify_xcmd_typed( extended, optargg, istage, xtable, no ) );
     DUF_TRACE( options, +3, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
 
@@ -62,12 +64,12 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
 #ifdef MAS_WRAP_FUNC
 int
 DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage,
-                                      const duf_longval_extended_table_t * xtable, int no )
+                                       const duf_longval_extended_table_t * xtable, int no, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
 
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_PARSED );
-  DOR( r, duf_clarify_xcmd_full( extended, optargg, istage, xtable, no ) );
+  DOR( r, duf_clarify_xcmd_full( extended, optargg, istage, xtable, no, source ) );
   DUF_TRACE( options, +2, "xname:%s; arg:%s; no:%d", extended ? extended->o.name : "?", optargg, no );
   DEBUG_E_YES( DUF_ERROR_OPTION_NOT_PARSED );
   DEBUG_ENDR( r );
@@ -79,7 +81,7 @@ DUF_WRAPPED( duf_clarify_xcmd_full ) ( const duf_longval_extended_t * extended, 
  * or errorcode (<0) for error
  * */
 int
-duf_parse_exec_option( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage )
+duf_parse_exec_option( duf_option_code_t codeval, int longindex, const char *optargg, duf_option_stage_t istage, duf_option_source_t source )
 {
   DEBUG_STARTR( r );
   const duf_longval_extended_t *extended = NULL;
@@ -108,7 +110,7 @@ duf_parse_exec_option( duf_option_code_t codeval, int longindex, const char *opt
   {
     if ( extended )
     {
-      DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, 0 /* no */  ) );
+      DOR( r, DUF_WRAPPED( duf_clarify_xcmd_full ) ( extended, optargg, istage, xtable, 0 /* no */ , source ) );
     }
     else                        /* switch is useless !... */
       switch ( ( int ) codeval )

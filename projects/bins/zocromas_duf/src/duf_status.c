@@ -17,7 +17,7 @@
 
 duf_status_t global_status;
 
-duf_tmp_t *
+static duf_tmp_t *
 duf_tmp_create( void )
 {
   duf_tmp_t *tmp = NULL;
@@ -27,7 +27,7 @@ duf_tmp_create( void )
   return tmp;
 }
 
-void
+static void
 duf_tmp_delete( duf_tmp_t * tmp )
 {
   if ( tmp )
@@ -45,7 +45,31 @@ duf_tmp_delete( duf_tmp_t * tmp )
     mas_free( tmp );
   }
 }
+void
+global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int no, duf_option_source_t source )
+{
+#define XCMDS_STEP 64
+  if ( global_status.n_xcmds == global_status.alloc_xcmds )
+  {
+    size_t z, n;
 
+    z = global_status.alloc_xcmds;
+    global_status.alloc_xcmds += XCMDS_STEP;
+    n = global_status.alloc_xcmds * sizeof( duf_xcmd_t );
+    global_status.xcmds = mas_realloc( global_status.xcmds, n );
+    memset( global_status.xcmds + z * sizeof( duf_xcmd_t ), 0, XCMDS_STEP * sizeof( duf_xcmd_t ) );
+  }
+  {
+    int pos;
+
+    pos = global_status.n_xcmds++;
+    global_status.xcmds[pos].extended = extended;
+    global_status.xcmds[pos].optargg = mas_strdup( optargg );
+    global_status.xcmds[pos].istage = istage;
+    global_status.xcmds[pos].no = no;
+    global_status.xcmds[pos].source = source;
+  }
+}
 void
 global_status_init( void )
 {
@@ -61,6 +85,14 @@ global_status_reset( void )
   duf_ufilter_delete( global_status.selection_bound_ufilter );
   global_status.selection_bound_ufilter = NULL;
 #endif
+  if ( global_status.xcmds )
+  {
+    for ( int pos = 0; pos < global_status.n_xcmds; pos++ )
+    {
+      mas_free(global_status.xcmds[pos].optargg);
+    }
+    mas_free(global_status.xcmds);
+  }  
 }
 
 __attribute__ ( ( constructor( 101 ) ) )
@@ -74,6 +106,6 @@ __attribute__ ( ( destructor( 101 ) ) )
 {
   global_status_reset(  );
 #ifdef MAS_TRACEMEM
-  print_memlist( FL, stdout );
+  print_memlist_msg( FL, stdout, "\n\x1b[1;7;44;35m@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<  1.", "\n\x1b[1;7;46;37m@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<  2.", "MEMORY FREE", "  >@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\x1b[0m" );
 #endif
 }

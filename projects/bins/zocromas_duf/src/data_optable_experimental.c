@@ -50,9 +50,12 @@ const duf_longval_extended_table_t optable_experimental = {
     DO_H( pdi cd ) /*                           */ },
 #else
    {.o = {DO_N( cd ) /*                 */ , DO_A_O /*  */ , DO_V( CD )} /*                */ , DO_CL( CONTROL ) /*    */ ,
-    /*      */ DO_S_CALL( cd ), DO_STG_NOT( LOOP ),DO_SET_STAGE( FIRST, INTERACTIVE ) /*                                      */ ,
+    /*      */ DO_S_CALL( cd ), DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*                                      */ ,
     DO_H( pdi cd ) /*                           */ },
 #endif
+
+   {.o = {DO_Q( "option-delimiter" ) /* */ , DO_A_R /* */ , DO_V( OPTION_DELIMITER )} /*   */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OC( XCHR, cli.option_delimiter ) /*                                       */ , DO_H( history filename ) /*                 */ },
 
 
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },
@@ -65,4 +68,3 @@ const duf_longval_extended_table_t optable_experimental = {
 
 /* vi: et ft=c colorcolumn=3,44,59,60,95,96,123,145,146
 */
-

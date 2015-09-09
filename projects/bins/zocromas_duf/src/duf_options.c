@@ -17,17 +17,17 @@
 #include "duf_config_ref.h"
 /* #include "duf_maindb.h" */
 
-
-#include "duf_option_file.h"
 #include "duf_option_extended.h"
-#include "duf_option_env.h"
-#include "duf_cli_options.h"
-#include "duf_option_interactive.h"
+
+#include "duf_options_file.h"
+#include "duf_options_env.h"
+#include "duf_options_cli.h"
+#include "duf_options_interactive.h"
 
 #include "duf_option_defs.h"
 
 #include "duf_option_names.h"
-#include "duf_option_restore.h"
+/* #include "duf_option_restore.h" */
 /* #include "duf_option.h" */
 
 /* ###################################################################### */
@@ -214,6 +214,7 @@ int
 duf_show_options( const char *a0 )
 {
   DEBUG_STARTR( r );
+#if 0
   int oseq = 0;
 
   DUF_TRACE( options, +2, "%s", a0 );
@@ -230,5 +231,6 @@ duf_show_options( const char *a0 )
     }
   }
   DUF_TRACE( options, +2, " --" );
+#endif
   DEBUG_ENDR( r );
 }

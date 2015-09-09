@@ -18,7 +18,7 @@
 #include "duf_option_descr.h"
 #include "duf_option_extended.h"
 #include "duf_option_names.h"
-#include "duf_option_restore.h"
+/* #include "duf_option_restore.h" */
 #include "duf_option.h"
 
 /* ###################################################################### */
@@ -674,9 +674,17 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "========================= as for 20150908.155827 ============" );
   DUF_PRINTF( 0, "  run  --trace-path=1 -dfR --trace-options=2 --output-file=/dev/pts/30 --min-same=5 "
               " --cd=/home/mastar/big/ --tree /home/mastar/big/misc/develop/autotools/zoc/projects/ /home/mastar/big/misc 	- %s", "-= \"\" =-" );
-
   DUF_PRINTF( 0, "  rm aaa ; run  --trace-file=aaa  --trace-path=0 -dfR --trace-options=2  --output-file=/dev/pts/30  --min-same=5 "
               " --cd=/home/mastar/big/misc/ --tree ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150909.120534 ============" );
+  DUF_PRINTF( 0, "  export MSH_DUF_AOPTIONS='trace-options=3' 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  export MSH_DUF_ZOPTIONS='option-delimiter=3b' 	- %s", "-= \"hex(';')=3b\" =-" );
+  DUF_PRINTF( 0, "  export MSH_DUF_OPTIONS='trace-path=1;trace-options=1' 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run -dfR --db-name=down.db --output-file=/dev/pts/30  --md5id=26284 --cd=/ --tree ; date > /dev/pts/3 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  echo 'tree:ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  echo ':;tree;ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  echo ':@tree@ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 
@@ -687,12 +695,14 @@ void
 duf_option_$_version( void )
 {
   extern int __MAS_LINK_DATE__, __MAS_LINK_TIME__;
-  char *sargv1, *sargv2;
+  char *sargv1;
+
+  /* char *sargv2; */
 
   DEBUG_START(  );
 
   sargv1 = mas_argv_string( duf_config->carg.argc, duf_config->carg.argv, 1 );
-  sargv2 = duf_restore_some_options( duf_config->carg.argv[0] );
+  /* sargv2 = duf_restore_some_options( duf_config->carg.argv[0] ); */
 
   DUF_PRINTF( 0, "CFLAGS:          (%s)", MAS_CFLAGS );
   DUF_PRINTF( 0, "LDFLAGS:         (%s)", MAS_LDFLAGS );
@@ -716,13 +726,13 @@ duf_option_$_version( void )
 
   DUF_PUTSL( 0 );
   DUF_PRINTF( 0, "args:            (%s)", sargv1 );
-  DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 );
+  /* DUF_PRINTF( 0, "restored opts:   (%s)", sargv2 ); */
 
   DUF_PUTSL( 0 );
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", duf_config->config_path );
   DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( duf_config->cli.v.sbit ), duf_config->cli.v.sbit );
   DUF_PRINTF( 0, "pu->      [%2lu]   %x", sizeof( duf_config->pu->v.sbit ), duf_config->pu->v.sbit );
-  mas_free( sargv2 );
+  /* mas_free( sargv2 ); */
   mas_free( sargv1 );
   DEBUG_END(  );
 }

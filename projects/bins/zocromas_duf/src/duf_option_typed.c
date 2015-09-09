@@ -174,11 +174,12 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
           doplus = 1;
       case DUF_OPTION_VTYPE_NUM: /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
-        DUF_TRACE( options, +1, "vtype NUM --%s=%s", extended->o.name, optargg ? optargg : "" );
+        DUF_TRACE( options, 0, "vtype NUM --%s='%s'", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         DUF_NUMOPT( noo, r, unsigned, doplus, duf_strtol_suff );
 
+        DUF_TRACE( options, 0, "(%d) vtype NUM --%s='%s'", r, extended->o.name, optargg ? optargg : "" );
         break;
       case DUF_OPTION_VTYPE_NUML: /* stage SETUP *//* not used ?! */
         DUF_TRACE( options, +3, "vtype NL" );
@@ -300,6 +301,26 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         }
         break;
 #endif
+      case DUF_OPTION_VTYPE_XCHR: /* stage SETUP */
+        DUF_TRACE( options, +0, "@@vtype XCHR for %s='%s'", extended->o.name, optargg ? optargg : "" );
+        if ( noo )
+          DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
+        if ( DUF_NOERROR( r ) )
+        {
+          char *pchr;
+
+          pchr = ( char * ) byteptr;
+          if ( optargg )
+          {
+            unsigned cc = 0;
+
+            sscanf( optargg, "%x", &cc );
+            *pchr = ( char ) cc;
+            DUF_TRACE( options, +0, "char set(%x):'%c'/'%c' @%p/%p", cc, cc, duf_config->cli.option_delimiter, &duf_config->cli.option_delimiter,
+                       pchr );
+          }
+        }
+        break;
       case DUF_OPTION_VTYPE_STR: /* stage SETUP */
         /* FIXME DUF_OPTION_VTYPE_PSTR vs. DUF_OPTION_VTYPE_STR */
         DUF_TRACE( options, +0, "@@vtype STR for %s='%s'", extended->o.name, optargg ? optargg : "" );

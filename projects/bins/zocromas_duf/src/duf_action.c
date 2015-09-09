@@ -16,9 +16,10 @@
 #include "duf_utils_path.h"
 
 
-#include "duf_cli_options.h"
-#include "duf_option_interactive.h"
-#include "duf_option_file.h"
+#include "duf_options_cli.h"
+#include "duf_options_interactive.h"
+#include "duf_options_file.h"
+
 #include "duf_option_names.h"
 #include "duf_option_defs.h"
 

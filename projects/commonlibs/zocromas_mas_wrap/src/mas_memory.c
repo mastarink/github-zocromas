@@ -123,15 +123,16 @@ static mas_mem_head_t *memar[4096];
 int mas_mem_disable_print_usage = 0;
 
 static int
-_print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
+_print_memlist( const char *func, int line, int fn_f, int s_f, FILE * f, const char *msg1, const char *msg2, const char *msg3 )
 {
   int h = 0;
   int r = -1;
 
   if ( f && !mas_mem_disable_print_usage )
   {
-    r = fprintf( f, "WMWMOMWMWM" );
     r = 0;
+    if ( r >= 0 && msg1 )
+      r = fprintf( f, msg1 );
     for ( int im = 0; r >= 0 && im < ( sizeof( memar ) / sizeof( memar[0] ) ); im++ )
     {
       if ( memar[im] )
@@ -166,9 +167,11 @@ _print_memlist( FILE * f, const char *func, int line, int fn_f, int s_f )
         }
       }
     }
-    if ( !h && r >= 0 )
-      r = fprintf( f, "<<EMP MEMT>>" );
+    if ( !h && r >= 0 && msg2 )
+      r = fprintf( f, msg2 );
     /* r = fprintf( f, "** EMPTY MEMORY TABLE ** %s:%u", func, line ); */
+    if ( r >= 0 && msg3 )
+      r = fprintf( f, msg3 );
 
     /* if ( r >= 0 )                    */
     /*   r = fprintf( f, "[%d]\n", r ); */
@@ -205,15 +208,24 @@ print_memlist_any( const char *func, int line, int cnt, ... )
 }
 
 int
+print_memlist_msg( const char *func, int line, FILE * f, const char *msg1a, const char *msg1b, const char *msg2, const char *msg3 )
+{
+  int r;
+
+  r = _print_memlist( func, line, 0, 0, f, msg1a ? msg1a : "WMWMOMWMWM", msg2 ? msg2 : "<<EMP MEMT>>", msg3 );
+  /* _print_memlist( f, func, line, 1, 0 ); */
+
+  /* if ( r <= 0 ) */
+  _print_memlist( func, line, 1, 1, f, msg1b ? msg1b : ( msg1a ? msg1a : "WMWMOMWMWM" ), msg2 ? msg2 : "<<EMP MEMT>>", msg3 );
+  return r;
+}
+
+int
 print_memlist( const char *func, int line, FILE * f )
 {
   int r;
 
-  r = _print_memlist( f, func, line, 0, 0 );
-  /* _print_memlist( f, func, line, 1, 0 ); */
-
-  /* if ( r <= 0 ) */
-  _print_memlist( f, func, line, 1, 1 );
+  r = print_memlist_msg( func, line, f, NULL, NULL, NULL, NULL );
   return r;
 }
 

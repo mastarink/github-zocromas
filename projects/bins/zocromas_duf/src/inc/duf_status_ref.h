@@ -5,5 +5,3 @@
 extern duf_status_t global_status;
 
 #endif
-
-

@@ -45,6 +45,10 @@ const duf_longval_extended_table_t optable_str = {
    {.o = {DO_Q( "save-directory" ) /*   */ , DO_A_R /* */ , DO_V( SAVE_DIRECTORY )} /*     */ , DO_CL( CONTROL ) /* */ ,
     /*      */ DO_OC( STR, save.path ) /*                                                   */ , DO_H( save path ) /*                        */ },
 
+   {.o = {DO_Q( "history-file" ) /*      */ , DO_A_R /* */ , DO_V( HISTORY_FILE )} /*      */ , DO_CL( CONTROL ) /*  */ ,
+    /*      */ DO_OC( STR, cli.output.history_filename ) /*                                 */ , DO_H( history filename ) /*                         */ },
+
+
    {.o = {.name = NULL}}
    }
 };

@@ -20,7 +20,7 @@
 
 #include "duf_option_defs.h"
 #include "duf_option_names.h"
-#include "duf_option_restore.h"
+/* #include "duf_option_restore.h" */
 
 #include "duf_levinfo_ref.h"
 
@@ -406,6 +406,7 @@ static int DUF_UNUSED
 duf_store_log( int argc, char *const argv[] )
 {
   DEBUG_STARTR( r );
+#if 0
   /* if ( argv ) */
   {
     char *sargv1, *sargv2;
@@ -435,6 +436,7 @@ duf_store_log( int argc, char *const argv[] )
     mas_free( sargv2 );
     mas_free( sargv1 );
   }
+#endif
   DEBUG_ENDR( r );
 }
 
