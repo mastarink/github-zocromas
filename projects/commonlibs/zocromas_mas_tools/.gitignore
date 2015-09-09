@@ -1,3 +1,4 @@
 sh0/
 mtest
 .auxdir
+config.h.in~
