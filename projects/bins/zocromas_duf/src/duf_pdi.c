@@ -193,14 +193,17 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert,
   DEBUG_STARTR( r );
   char *real_path = NULL;
 
-  real_path = duf_realpath( cpath, &r );
+  if ( cpath )
   {
-    DUF_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
-    assert( pdi->pdi_name );
-    DOR( r, duf_pdi_reinit( pdi, real_path, caninsert, duf_config->pu, sql_set, frecursive, duf_pdi_opendir( pdi ) ) );
-    DUF_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+    real_path = duf_realpath( cpath, &r );
+    {
+      DUF_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+      assert( pdi->pdi_name );
+      DOR( r, duf_pdi_reinit( pdi, real_path, caninsert, duf_config->pu, sql_set, frecursive, duf_pdi_opendir( pdi ) ) );
+      DUF_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
+    }
+    mas_free( real_path );
   }
-  mas_free( real_path );
   DEBUG_ENDR( r );
 }
 

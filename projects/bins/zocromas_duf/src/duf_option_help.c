@@ -675,6 +675,9 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  run  --trace-path=1 -dfR --trace-options=2 --output-file=/dev/pts/30 --min-same=5 "
               " --cd=/home/mastar/big/ --tree /home/mastar/big/misc/develop/autotools/zoc/projects/ /home/mastar/big/misc 	- %s", "-= \"\" =-" );
 
+  DUF_PRINTF( 0, "  rm aaa ; run  --trace-file=aaa  --trace-path=0 -dfR --trace-options=2  --output-file=/dev/pts/30  --min-same=5 "
+              " --cd=/home/mastar/big/misc/ --tree ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
+
   DUF_PRINTF( 0, "=============================================================" );
 
   DEBUG_END(  );

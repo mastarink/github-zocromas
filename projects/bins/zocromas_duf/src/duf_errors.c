@@ -469,6 +469,7 @@ duf_error_name( duf_error_code_t c )
     DUF_ERROR_NAME( DUF_ERROR_SQL_NO_TABLE ), /* */
     DUF_ERROR_NAME( DUF_ERROR_MEMORY ), /* */
     DUF_ERROR_NAME( DUF_ERROR_ARGUMENT ),
+    DUF_ERROR_NAME( DUF_ERROR_FILE_EXISTS ),
 /*========================================*/
     DUF_ERROR_NAME( DUF_ERROR_ERROR_MAX ),
   };

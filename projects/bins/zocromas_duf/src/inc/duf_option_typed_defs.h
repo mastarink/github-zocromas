@@ -134,7 +134,7 @@
 	    DOR(__rl, duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u )); \
 	    if (mm->out && _hdr) { fprintf( mm->out, _hdr ); } \
 	    if ( __rl < 0 ) \
-	    {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
+	    {  DOR(_rt, __rl); } \
 	  } \
 	} \
 	else \

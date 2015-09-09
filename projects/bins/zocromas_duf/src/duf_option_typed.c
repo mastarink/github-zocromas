@@ -49,7 +49,7 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
   {
     DUF_SHOW_ERROR( "can't open file %s for writing file exists %llu / %llu chr:%d\n", pname, ( unsigned long long ) st.st_dev,
                     ( unsigned long long ) st.st_rdev, S_ISCHR( st.st_mode ) );
-    DOR( rpr, DUF_ERROR_OPTION_VALUE );
+    DOR( rpr, DUF_ERROR_FILE_EXISTS );
   }
   else
   {
@@ -57,7 +57,7 @@ duf_open_file_special( const char *pname, char **popenedname, int *pr )
     if ( !newfile )
     {
       DUF_SHOW_ERROR( "can't open file %s\n", pname );
-      DOR( rpr, DUF_ERROR_OPTION_VALUE );
+      DOR( rpr, DUF_ERROR_OPEN );
     }
   }
   if ( pr )
@@ -174,7 +174,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
           doplus = 1;
       case DUF_OPTION_VTYPE_NUM: /* stage SETUP *//* --max-...; --min-...; --output-level; --use-format; etc. (misc) */
-        DUF_TRACE( options, +1, "vtype NUM --%s=%s", extended->o.name, optargg?optargg:"" );
+        DUF_TRACE( options, +1, "vtype NUM --%s=%s", extended->o.name, optargg ? optargg : "" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         DUF_NUMOPT( noo, r, unsigned, doplus, duf_strtol_suff );

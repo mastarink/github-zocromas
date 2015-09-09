@@ -39,7 +39,7 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.action ) /*    */ , DO_STAGE_ANY /*                  */ , DO_H( trace .... ) /*                       */ },
    {.o = {DO_Q( "trace-any" ) /*        */ , DO_A_O /* */ , DO_V( ANY_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.any ), DO_STAGE_ANY /*                               */ , DO_H( trace .... ) /*                       */ },
-   
+
    {.o = {DO_Q( "trace-sccb" ) /*        */ , DO_A_O /* */ , DO_V( SCCB_TRACE )} /*          */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( UPLUS, cli.trace.sccb ), DO_STAGE_ANY /*                               */ , DO_H( trace .... ) /*                       */ },
 
@@ -120,7 +120,7 @@ const duf_longval_extended_table_t optable_trace = {
     /*      */ DO_OC( UPLUS, cli.trace.io ), DO_STAGE_ANY /*                                */ , DO_H( trace .... ) /*                       */ },
 
    {.o = {DO_Q( "trace-file" ) /*       */ , DO_A_R /* */ , DO_V( TRACE_FILE )} /*         */ , DO_CL( TRACE ) /*   */ ,
-    /*      */ DO_OC( FILE, cli.trace.output ), DO_STAGE_ANY /*                             */ , DO_H( trace output to file ) /*             */ },
+    /*      */ DO_OC( FILE, cli.trace.output ), DO_AT_STAGE( SETUP ) /*                     */ , DO_H( trace output to file ) /*             */ },
    {.o = {DO_Q( "trace-stderr" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDERR )} /*       */ , DO_CL( TRACE ) /*   */ ,
     /*      */ DO_OC( FILE, cli.trace.output ),.call = {.value = {.u = 2}} /*               */ , DO_H( trace output to stderr ) /*           */ },
    {.o = {DO_Q( "trace-stdout" ) /*     */ , DO_A_N /* */ , DO_V( TRACE_STDOUT )} /*       */ , DO_CL( TRACE ) /*   */ ,
