@@ -490,7 +490,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
             ( extended->call.fdesc.a.func ) ( duf_config->carg.argc, duf_config->carg.argv );
         }
         break;
-      case DUF_OPTION_VTYPE_AA_CALL: /* stage Not? SETUP *//*  *//* call with carg (AA:argv-argv) */
+      case DUF_OPTION_VTYPE_AA_CALL: /* stage Not? SETUP *//* call with carg (AA:argv-argv) */
         DUF_TRACE( options, +3, "vtype AA_CALL" );
         if ( noo )
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
@@ -553,7 +553,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
         {
           DUF_TRACE( io, 0, "DUF_OUTPUTFILE (%s)", extended->o.name );
-          DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr, duf_config->cli.output.header );
+          DUF_OUTPUTFILE( noo, r, duf_config_output_t, stderr );
           /* {                                                                                 */
           /*   char start_time[128] = "??";                                                    */
           /*                                                                                   */

@@ -8,4 +8,3 @@ int duf_levinfo_delete( duf_depthinfo_t * pdi );
 
 
 #endif
-

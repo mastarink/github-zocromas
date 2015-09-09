@@ -119,7 +119,7 @@
 	} \
       }
 
-#define DUF_OUTPUTFILE_A(_no, _rt, _typ, _defoptarg, _defout, _hdr) \
+#define DUF_OUTPUTFILE_A(_no, _rt, _typ, _defoptarg, _defout ) \
       if(_rt>=0) \
       { \
 	if( !_no ) \
@@ -132,7 +132,7 @@
 	  if ( extended->m_hasoff == 1 /* && (s || extended->call.value.u */ ) /* if  extended->m_hasoff == 1, then mcfg_offset is offset */ \
 	  { \
 	    DOR(__rl, duf_set_file_special( s, &mm->file, &mm->out, _defout, extended->call.value.u )); \
-	    if (mm->out && _hdr) { fprintf( mm->out, _hdr ); } \
+	    if (mm->out && mm->header) { fprintf( mm->out, mm->header ); } \
 	    if ( __rl < 0 ) \
 	    {  DOR(_rt, __rl); } \
 	  } \
@@ -142,7 +142,7 @@
 	  DOR(_rt, DUF_ERROR_OPTION); \
 	} \
       }
-#define DUF_OUTPUTFILE(_no, _rt, _typ, _defout, _hdr) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout, _hdr)
+#define DUF_OUTPUTFILE(_no, _rt, _typ, _defout ) DUF_OUTPUTFILE_A(_no, _rt, _typ, NULL, _defout )
 
 
 #endif

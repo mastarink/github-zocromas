@@ -129,6 +129,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
 
     DUF_TRACE( pdi, 8, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
+
   DEBUG_ENDR( r );
 }
 

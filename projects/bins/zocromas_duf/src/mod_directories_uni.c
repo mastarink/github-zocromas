@@ -44,6 +44,7 @@ static int register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinf
 
 static duf_sql_sequence_t final_sql = /* */
 {
+  .name="final @ directories",
   .done = 0,
   .sql = {
 #if 0

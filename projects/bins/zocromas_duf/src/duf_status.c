@@ -45,8 +45,10 @@ duf_tmp_delete( duf_tmp_t * tmp )
     mas_free( tmp );
   }
 }
+
 void
-global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int no, duf_option_source_t source )
+global_status_register_xcmd( const duf_longval_extended_t * extended, const char *optargg, duf_option_stage_t istage, int no,
+                             duf_option_source_t source )
 {
 #define XCMDS_STEP 64
   if ( global_status.n_xcmds == global_status.alloc_xcmds )
@@ -70,6 +72,7 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
     global_status.xcmds[pos].source = source;
   }
 }
+
 void
 global_status_init( void )
 {
@@ -89,10 +92,10 @@ global_status_reset( void )
   {
     for ( int pos = 0; pos < global_status.n_xcmds; pos++ )
     {
-      mas_free(global_status.xcmds[pos].optargg);
+      mas_free( global_status.xcmds[pos].optargg );
     }
-    mas_free(global_status.xcmds);
-  }  
+    mas_free( global_status.xcmds );
+  }
 }
 
 __attribute__ ( ( constructor( 101 ) ) )
@@ -104,8 +107,10 @@ __attribute__ ( ( constructor( 101 ) ) )
 __attribute__ ( ( destructor( 101 ) ) )
      static void destructor_global_status( void )
 {
+#define DUF_MEM_ROW "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
   global_status_reset(  );
 #ifdef MAS_TRACEMEM
-  print_memlist_msg( FL, stdout, "\n\x1b[1;7;44;35m@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<  1.", "\n\x1b[1;7;46;37m@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<  2.", "MEMORY FREE", "  >@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\x1b[0m" );
+  print_memlist_msg( FL, stdout, "\n\x1b[1;7;44;35m" DUF_MEM_ROW "<  1.", "\n\x1b[1;7;46;37m" DUF_MEM_ROW "<  2.", "MEMORY FREE",
+                     "  >" DUF_MEM_ROW "\x1b[0m" );
 #endif
 }

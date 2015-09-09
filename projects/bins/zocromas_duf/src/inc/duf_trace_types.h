@@ -51,6 +51,7 @@ typedef enum
   DUF_TRACE_MODE_sd5,
   DUF_TRACE_MODE_select,
   DUF_TRACE_MODE_seq,
+  DUF_TRACE_MODE_db,
   DUF_TRACE_MODE_sql,
   DUF_TRACE_MODE_sqlite,
   DUF_TRACE_MODE_statistics,

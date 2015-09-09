@@ -44,6 +44,7 @@ static int filenames_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_dept
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = { /* */
+  .name="final @ ...",
   .done = 0,
   .sql = {
           NULL,

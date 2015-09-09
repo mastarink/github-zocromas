@@ -18,6 +18,7 @@
 #include "duf_ufilter_bind.h"
 
 #include "duf_selector.h"
+
 /* ###################################################################### */
 #include "duf_begfin.h"
 /* ###################################################################### */
@@ -96,7 +97,9 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
 #else
     int DUF_UNUSED changes = 0;
 #endif
-
+    assert( ssql );
+    assert( ssql->name );
+    DUF_TRACE( db, 0, "@@@@ssql:%s", ssql->name );
     if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
     {
       DOR( r, duf_eval_sql_one_of_seq_cb( "BEGIN", title, callback, ttarg, NULL, &changes ) );

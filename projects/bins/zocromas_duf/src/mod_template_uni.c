@@ -38,6 +38,7 @@
 /* ########################################################################################## */
 DUF_MOD_DECLARE_ALL_FUNCS( template )
      static duf_sql_sequence_t final_sql = {.done = 0,
+       .name = "final @ ...",
        .sql = {
 
 

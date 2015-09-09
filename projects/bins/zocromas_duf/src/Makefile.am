@@ -30,6 +30,7 @@ zocromas_duf_SOURCES=				   \
 	duf_dirent_scan2.c					 \
 								  \
 	duf_context.c	\
+	duf_li_credel.c \
 	duf_levinfo.c duf_levinfo_ref.c duf_levinfo_credel.c duf_levinfo_openclose.c duf_levinfo_stat.c \
 	duf_levinfo_updown.c duf_levinfo_context.c	\
 	duf_pathinfo_ref.c \

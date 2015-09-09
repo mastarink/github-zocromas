@@ -9,8 +9,9 @@
 
 
 duf_sql_sequence_t sql_beginning_vacuum = {.done = 0,
+  .name = "vacuum",
   .sql = {
-            "VACUUM",
+          "VACUUM",
 
-            NULL}
+          NULL}
 };

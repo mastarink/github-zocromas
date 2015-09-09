@@ -43,6 +43,7 @@ static int crc32_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * p
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {.done = 0,
+  .name="final @ ...",
   .sql = {
           "UPDATE " DUF_SQL_TABLES_CRC32_FULL " SET dup32cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_CRC32_FULL " AS c32 " /* */

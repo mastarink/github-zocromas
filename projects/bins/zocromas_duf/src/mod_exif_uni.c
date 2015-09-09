@@ -52,6 +52,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {
+  .name="final @ ...",
   .done = 0,.sql = {
                     "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
                     " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */

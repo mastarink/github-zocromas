@@ -71,6 +71,7 @@ typedef struct
   int topdepth;                 /* signed !! */
   /* duf_node_type_t node_type; */
   /* char *path; */
+  size_t levinfo_count;
   duf_levinfo_t *levinfo;
 } duf_pathinfo_t;
 

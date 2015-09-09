@@ -27,7 +27,10 @@ tags
 tagnames
 */
 
-duf_sql_sequence_t sql_beginning_clear = {.done = 0,
+duf_sql_sequence_t sql_beginning_clear = /* */
+{
+  .name = "clear (drop tables)",
+  .done = 0,
   .sql = {
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_CRC32_FULL,
           "DROP TABLE IF EXISTS " DUF_SQL_TABLES_EXIF_FULL,
@@ -51,6 +54,7 @@ duf_sql_sequence_t sql_beginning_clear = {.done = 0,
 };
 
 duf_sql_sequence_t sql_beginning_create = {
+  .name = "create (main tables)",
   .done = 0,
   .beginend = 1,
   .sql = {

@@ -8,11 +8,10 @@
 
 #include "duf_levinfo_updown.h"
 
+#include "duf_pathinfo_ref.h"
 /* ###################################################################### */
 #include "duf_levinfo_credel.h"
 /* ###################################################################### */
-
-
 
 
 /* create level-control array, open 0 level */
@@ -25,7 +24,6 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
 
   if ( !pdi->pathinfo.levinfo )
   {
-    size_t lsz;
     int max_rel_depth = 0;
 
     max_rel_depth = pdi && pdi->pu ? pdi->pu->max_rel_depth : 20;
@@ -36,10 +34,26 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
       pdi->maxdepth = max_rel_depth + ( pathdepth ? pathdepth : 20 );
       pdi->recursive = recursive ? 1 : 0;
       pdi->opendir = opendir ? 1 : 0;
-      lsz = sizeof( pdi->pathinfo.levinfo[0] ) * ( pdi->maxdepth + 3 );
-      pdi->pathinfo.levinfo = mas_malloc( lsz );
+
+#if 0
+      {
+        size_t lsz;
+
+        pdi->pathinfo.levinfo_count = pdi->maxdepth + 3;
+#  if 0
+        lsz = sizeof( pdi->pathinfo.levinfo[0] ) * ( pdi->maxdepth + 3 );
+#  else
+        lsz = sizeof( duf_levinfo_t ) * ( pdi->pathinfo.levinfo_count );
+#  endif
+        pdi->pathinfo.levinfo = mas_malloc( lsz );
+        memset( pdi->pathinfo.levinfo, 0, lsz );
+      }
+#else
+      duf_pi_levinfo_create( &pdi->pathinfo, pdi->maxdepth + 3 );
+#endif
+
+
       assert( pdi->pathinfo.levinfo );
-      memset( pdi->pathinfo.levinfo, 0, lsz );
       assert( pdi->pathinfo.depth == -1 );
     }
     else

@@ -26,6 +26,7 @@
 DUF_MOD_DECLARE_ALL_FUNCS( dummy )
 /* ########################################################################################## */
      static duf_sql_sequence_t final_sql = { /* */
+       .name = "final @ ...",
        .done = 0,
        .sql = {
                NULL,

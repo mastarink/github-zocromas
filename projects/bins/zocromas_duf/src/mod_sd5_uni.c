@@ -43,6 +43,7 @@ static int sd5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {.done = 0,
+  .name="final @ sd5",
   .sql = {
           "UPDATE " DUF_SQL_TABLES_SD5_FULL " SET dup2cnt=(SELECT COUNT(*) " /* */
 	           " FROM " DUF_SQL_TABLES_SD5_FULL " AS sd " /* */

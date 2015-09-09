@@ -9,6 +9,7 @@
 #include "duf_maintenance.h"
 
 
+#include "duf_pathinfo_ref.h"
 #include "duf_pdi.h"
 
 /* ###################################################################### */
@@ -28,6 +29,62 @@ duf_pdi_create( const char *name )
     pdi->pdi_name = mas_strdup( name );
     pdi->created_name = 1;
   }
+  return pdi;
+}
+
+void
+duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc )
+{
+  char *pdname;
+
+  pdname = pdidst->pdi_name;
+#if 1
+  memcpy( pdidst, pdisrc, sizeof( duf_depthinfo_t ) );
+#else
+  *pdidst = *pdisrc;
+#endif
+  pdidst->pdi_name = pdname;
+  if ( !pdidst->pdi_name )
+  {
+    pdidst->created_name = pdisrc->created_name;
+    if ( pdisrc->created_name )
+      pdidst->pdi_name = mas_strdup( pdisrc->pdi_name );
+    else
+      pdidst->pdi_name = pdisrc->pdi_name;
+  }
+  pdidst->num_idstatements = 0;
+  pdidst->idstatements = NULL;
+  /* assert( pdisrc->num_idstatements == 0 ); */
+  /* assert( !pdisrc->idstatements ); */
+
+  duf_pi_copy( &pdidst->pathinfo, &pdisrc->pathinfo );
+#if 0
+  duf_items_copy( pdidst->items, pdisrc->items );
+#else
+  /* it's OK: no allocations at duf_items_t */
+#endif
+
+  pdidst->context.ptr = NULL;
+#if 0
+  duf_levinfo_context_copy( pdidst->context, pdisrc->context );
+#else
+  assert( !pdisrc->context.ptr );
+#endif
+
+#if 0
+  duf_modcnts_copy( pdidst->cnts, pdisrc->cnts );
+#else
+  /* it's OK: no allocations at duf_modcnts_t */
+#endif
+}
+
+duf_depthinfo_t *
+duf_pdi_clone( duf_depthinfo_t * pdisrc )
+{
+  duf_depthinfo_t *pdi = NULL;
+
+  pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */ );
+  duf_pdi_copy( pdi, pdisrc );
   return pdi;
 }
 

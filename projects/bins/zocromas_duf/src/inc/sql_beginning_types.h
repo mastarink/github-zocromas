@@ -3,6 +3,7 @@
 
 typedef struct
 {
+  const char *name;
   unsigned done;
   unsigned beginend;
   unsigned set_selected_db;

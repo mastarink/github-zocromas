@@ -12,6 +12,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_pdi.h"
+#include "duf_pdi_credel.h"
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"
@@ -162,7 +163,12 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     PARGV = targv;
 
     PU = pu;
+#if 1
+    PDI = duf_pdi_clone( pdi );
+    PDICLONED = 1;
+#else
     PDI = pdi;
+#endif
     SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
@@ -194,9 +200,8 @@ TODO scan mode
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    DOR( rpr,
-         duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_sql_set( SCCB, DUF_NODE_NODE ),
-                                 duf_pdi_recursive( PDI ) ) );
+    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_sql_set( SCCB, DUF_NODE_NODE ),
+                                      duf_pdi_recursive( PDI ) ) );
   }
   if ( pr )
     *pr = rpr;
@@ -212,6 +217,8 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
     /* final */
     DUF_TRACE( scan, 6, "final sql %s", SCCB->title );
     DOR( r, duf_scan_final_sql( SCCB ) );
+    if ( PDICLONED )
+      duf_pdi_delete( PDI );
     mas_free( sccbh );
   }
   DEBUG_ENDR( r );

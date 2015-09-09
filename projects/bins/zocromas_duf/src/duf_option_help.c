@@ -682,9 +682,15 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  export MSH_DUF_ZOPTIONS='option-delimiter=3b' 	- %s", "-= \"hex(';')=3b\" =-" );
   DUF_PRINTF( 0, "  export MSH_DUF_OPTIONS='trace-path=1;trace-options=1' 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run -dfR --db-name=down.db --output-file=/dev/pts/30  --md5id=26284 --cd=/ --tree ; date > /dev/pts/3 	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  echo 'tree:ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  echo ':;tree;ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
-  DUF_PRINTF( 0, "  echo ':@tree@ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  echo 'tree:ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  echo ':;tree;ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  echo ':@tree@ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s",
+              "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run -dfR --output-file=/dev/pts/30 --trace-db=2 --max-seq=24 --cd=/ --ls "
+              " --echo=\"@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\" --ls --cd=.. --echo=\"@2@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\""
+              " --ls  ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
 
   DUF_PRINTF( 0, "=============================================================" );
 
@@ -735,6 +741,13 @@ duf_option_$_version( void )
   /* mas_free( sargv2 ); */
   mas_free( sargv1 );
   DEBUG_END(  );
+}
+
+void
+duf_option_$_echo( const char *arg )
+{
+  /* T("@@@@@@ +++++++++++++++++++++++++++++ '%s'", optargg); */
+  DUF_PRINTF( 0, "%s", arg );
 }
 
 duf_option_code_t

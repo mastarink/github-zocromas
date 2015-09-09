@@ -42,7 +42,10 @@
 static int md5_dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
-static duf_sql_sequence_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = /* */
+{
+  .name = "final @ md5",
+  .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_MD5_FULL " SET dup5cnt=(SELECT COUNT(*) " /* */
           " FROM " DUF_SQL_TABLES_MD5_FULL " AS md " /* */

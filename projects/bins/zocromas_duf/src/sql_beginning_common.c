@@ -9,6 +9,7 @@
 
 
 duf_sql_sequence_t sql_beginning_common = {.done = 0,
+  .name="common",
   .sql = {
           "PRAGMA synchronous = OFF" /* */ ,
           "PRAGMA encoding = 'UTF-8'" /* */ ,

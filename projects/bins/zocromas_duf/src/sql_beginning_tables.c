@@ -9,6 +9,7 @@
 
 
 duf_sql_sequence_t sql_beginning_tables = {
+  .name="tables (create tmp tables)",
   .done = 0,
   .beginend = 1,
   .sql = {

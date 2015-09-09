@@ -102,6 +102,7 @@ typedef struct
   unsigned sd5;
   unsigned select;
   unsigned seq;
+  unsigned db;
   unsigned sql;
   unsigned sqlite;
   unsigned statistics;

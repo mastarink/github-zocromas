@@ -127,6 +127,7 @@ duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf
     DOR( r, duf_ev_pdi_sccb_namen( pnames, len, table, pdi, ptarg, pu ) );
     if ( DUF_NOERROR( r ) )
       ok++;
+    /* DUF_SHOW_ERROR( "(%d) sccb not found: %s", r, names ); */
     /* DUF_PRINTF( 0, "pnames:%s; ename:%s", pnames, ename ); */
     if ( ename && *ename )
       pnames = ename + 1;
@@ -136,7 +137,7 @@ duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf
   }
   if ( !ok )
   {
-    DUF_SHOW_ERROR( "sccb not found: %s", names );
+    /* DUF_SHOW_ERROR( "sccb not found: %s", names ); */
   }
   DEBUG_ENDR( r );
 }

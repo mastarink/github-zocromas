@@ -63,26 +63,26 @@
 #  define DO_VIA_CALLH(_cl)		DO_VIA_CALL( smart_help, DUF_OPTION_CLASS_ ## _cl) /**/
 #  define DO_VIA_CALLCL(_f, _cl)	DO_VIA_CALL( _f, DUF_OPTION_CLASS_ ## _cl) /**/
       /* */
-/* void f( int argc, char *const *argv ) */
+      /* void f( int argc, char *const *argv ) *//* call with carg[cv] (A:argv) */
 #  define DO_A_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(a, _f) /**/
       /* */
-/* void f( duf_cargvc_t arg ) */
+      /* void f( duf_cargvc_t arg ) *//* call with carg (AA:argv-argv) */
 #  define DO_AA_CALL(_f)		DO_SET_VTYPE( A_CALL ), DO_SET_CALL(aa, _f) /**/
 /*#define DO_T_CALL(_f)         DO_SET_VTYPE( T_CALL ), DO_SET_CALL(t, _f) */
       /* */
-/* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) */
+      /* void f( &duf_config->targc, &duf_config->targv, duf_strtol_suff( optargg, &r ) ) *//* call with targ[cv] + numeric optarg (TN: targ and numeric) */
 #  define DO_TN_CALL(_f)        DO_SET_VTYPE( TN_CALL ), DO_SET_CALL(tn, _f) /**/
       /* */
       /* void f( void ) *//* call with nothing (VV:void-void) */
 #  define DO_VV_CALL(_f)        DO_SET_VTYPE( VV_CALL ), DO_SET_CALL(vv, _f) /**/
       /* */
-/* void f( duf_strtol_suff( optargg, &r ) ) */
+      /* void f( duf_strtol_suff( optargg, &r ) ) *//* call with numeric optarg (N:numeric) */
 #  define DO_N_CALL(_f)         DO_SET_VTYPE( N_CALL ), DO_SET_CALL(n, _f) /**/
       /* */
-/* void f( &duf_config->targc, &duf_config->targv, optargg ) */
+      /* void f( &duf_config->targc, &duf_config->targv, optargg ) *//* call with targ[cv] + string optarg (TS: targ and string) */
 #  define DO_TS_CALL(_f)        DO_SET_VTYPE( TS_CALL ), DO_SET_CALL(ts, _f) /**/
       /* */
-/* void f( optargg ) */
+      /* void f( optargg ) *//* call with string optarg (S: string) */
 #  define DO_S_CALL(_f)         DO_SET_VTYPE( S_CALL ), DO_SET_CALL(s, _f) /**/
       /* */
       /* void f( .vsa.arg ) -- *//* call with constant string arg from table (VSA:void-string-arg) */

@@ -10,6 +10,7 @@
 
 
 duf_sql_sequence_t sql_create_selected = {
+  .name="selected (create selected tables)",
   .done = 0,
   .beginend = 1,
   .set_selected_db = 1,

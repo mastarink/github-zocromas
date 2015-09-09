@@ -19,4 +19,6 @@ void duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s );
 
 void duf_option_$_list_options( long n );
 
+void duf_option_$_echo( const char *arg );
+
 #endif

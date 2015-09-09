@@ -133,6 +133,7 @@ struct duf_sccb_handle_s
   duf_cargvc_t parg;
 #  endif
   const duf_ufilter_t *pu;
+  int pdi_cloned;
   duf_depthinfo_t *pdi;
   unsigned long long changes;
   const duf_scan_callbacks_t *sccb;

@@ -41,7 +41,10 @@ static int register_pdifiledata( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo
 /* ########################################################################################## */
 
 
-static duf_sql_sequence_t final_sql = {.done = 0,
+static duf_sql_sequence_t final_sql = /* */
+{
+  .name = "final @ ...",
+  .done = 0,
   .sql = {
 #if 0
           "UPDATE " DUF_SQL_TABLES_MD5_FULL " SET dup5cnt=(SELECT COUNT(*) " /* */

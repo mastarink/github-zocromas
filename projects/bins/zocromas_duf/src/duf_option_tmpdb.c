@@ -40,6 +40,7 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
 {
   DEBUG_STARTR( r );
   static duf_sql_sequence_t DUF_UNUSED tmpseq = { /* */
+    .name="tmpseq",
     .sql = {
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " (oval, name, arg) VALUES (:optVal, :optName, :optArg) " /* */
             , NULL}
