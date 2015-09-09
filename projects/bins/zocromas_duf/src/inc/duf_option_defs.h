@@ -1,14 +1,19 @@
 #ifndef MAS_DUF_OPTION_DEFS_H
 #  define MAS_DUF_OPTION_DEFS_H
 
-
+#include "duf_config_ref.h"
 /* */
-#  define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), duf_config->_lo)
+#  define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))
 #  define DUF_OPTIONG_F(_lo)        DUF_OPTIONG(_lo)
 #  define DUF_OPTIONG_N(_lo)        DUF_OPTIONG(_lo)
 #  define DUF_OPTIONG_A(_lo, _a)    DUF_OPTIONG(_lo)._a
 
-#  define DUF_OPTIONW(_lo)          duf_config->_lo
+#  define DUF_OPTIONA(_lo)          DUF_CONFIGA(_lo)
+#  define DUF_OPTIONA_F(_lo)        DUF_OPTIONA(_lo)
+#  define DUF_OPTIONA_N(_lo)        DUF_OPTIONA(_lo)
+#  define DUF_OPTIONA_A(_lo, _a)    DUF_OPTIONA(_lo)._a
+
+#  define DUF_OPTIONW(_lo)          DUF_CONFIGW(_lo)
 #  define DUF_OPTIONW_F(_lo)        DUF_OPTIONW(_lo)
 #  define DUF_OPTIONW_N(_lo)        DUF_OPTIONW(_lo)
 #  define DUF_OPTIONW_A(_lo, _a)    DUF_OPTIONW(_lo)._a

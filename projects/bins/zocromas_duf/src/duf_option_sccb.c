@@ -80,7 +80,7 @@ duf_option_$_cd( const char *s )
 #if 1
     char *new_path = NULL;
 
-    if ( duf_levinfo_path( duf_config->pdi ) )
+    if ( duf_levinfo_path( DUF_CONFIGG( pdi ) ) )
     {
       if ( *s == '/' )
       {
@@ -88,7 +88,7 @@ duf_option_$_cd( const char *s )
       }
       else
       {
-        new_path = mas_strdup( duf_levinfo_path( duf_config->pdi ) );
+        new_path = mas_strdup( duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
         if ( new_path[strlen( new_path ) - 1] != '/' )
           new_path = mas_strcat_x( new_path, "/" );
         new_path = mas_strcat_x( new_path, s );
@@ -102,18 +102,18 @@ duf_option_$_cd( const char *s )
     {
       new_path = mas_strdup( s );
     }
-    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( duf_config->pdi ) );
+    DUF_TRACE( path, 0, "cd to %s (now: %s)", new_path, duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
     {
       int rt = 0;
 
-      DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, new_path, 1 /* caninsert */ , NULL, duf_pdi_recursive( duf_config->pdi ) ) );
+      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, 1 /* caninsert */ , NULL, duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
     }
     mas_free( new_path );
 #else
     {
       int rt = 0;
 
-      DOR( rt, duf_pdi_reinit_anypath( duf_config->pdi, s, 1 /* caninsert */ , NULL, duf_pdi_recursive( duf_config->pdi ) ) );
+      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), s, 1 /* caninsert */ , NULL, duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
     }
 #endif
   }

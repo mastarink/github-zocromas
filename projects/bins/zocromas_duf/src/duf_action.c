@@ -56,6 +56,7 @@
  *   - duf_interactive_options( DUF_OPTION_STAGE_INTERACTIVE )		|
  * */
 
+#if 0
 DUF_WRAPSTATIC int
 duf_action( void )
 {
@@ -116,6 +117,7 @@ duf_action( void )
   DEBUG_ENDR( r );
 }
 
+
 #ifdef MAS_WRAP_FUNC
 int
 duf_action_wrap( void /* int argc, char **argv */  )
@@ -134,4 +136,5 @@ duf_action_wrap( void /* int argc, char **argv */  )
 
   DEBUG_ENDR( r );
 }
+#endif
 #endif

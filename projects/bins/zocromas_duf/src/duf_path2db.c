@@ -9,7 +9,7 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_config_ref.h" /* cli.disable.flag.insert */
+#include "duf_config_ref.h"     /* cli.disable.flag.insert */
 
 #include "duf_levinfo_ref.h"
 #include "duf_levinfo_updown.h"
@@ -188,7 +188,7 @@ duf_dirname_pdistat2dirid_existed( duf_depthinfo_t * pdi, const duf_sql_set_t * 
   assert( pdi );
 
 #if 1
-  sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name  );
+  sqlv = duf_selector2sql( sql_set ? sql_set : &def_node_set, pdi->pdi_name );
 #else
   sqlv = mas_strdup( "SELECT " );
   sqlv = mas_strcat_x( sqlv, def_node_fieldset2 );
@@ -232,7 +232,7 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_s
     dirid = duf_dirname_pdistat2dirid_existed( pdi, sql_set /* node_selector2 */ , pr );
     DUF_TRACE( path, 2, "(%d) dirid before insert: %llu for '%s' at %llu", rpr, dirid, duf_levinfo_itemtruename( pdi ), duf_levinfo_dirid_up( pdi ) );
 
-    if ( dirid <= 0 && caninsert && !duf_config->cli.disable.flag.insert )
+    if ( dirid <= 0 && caninsert && !DUF_CONFIGG( cli.disable.flag.insert ) )
     {
       DOR( rpr, duf_dirname_insert_path_table( pdi, &changes ) );
     }

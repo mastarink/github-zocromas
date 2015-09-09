@@ -191,14 +191,14 @@ print_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
         int use;
         duf_filedirformat_t *fmt;
 
-        use = duf_config->cli.output.as_formats.use - 1;
-        fmt = &duf_config->cli.output.as_formats.list;
+        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        fmt = DUF_CONFIGA( cli.output.as_formats.list );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
         if ( !sformat )
-          sformat = duf_config->cli.output.sformat_files_gen;
+          sformat = DUF_CONFIGG( cli.output.sformat_files_gen );
         if ( !sformat )
-          sformat = duf_config->cli.output.sformat_files_list;
+          sformat = DUF_CONFIGG( cli.output.sformat_files_list );
       }
 
       if ( !sformat )
@@ -265,7 +265,7 @@ print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long path
     /* fi.md5id = md5id; */
     /* fi.md5sum1 = md5sum1; */
     /* fi.md5sum2 = md5sum2; */
-    DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", bformat.v.bit, bformat.v.flag.seq, duf_config->cli.bformat.v.bit ) );
+    DUF_DEBUG( 0, PF( "at module : %llx (%d) :: %llx", bformat.v.bit, bformat.v.flag.seq, DUF_CONFIGG( cli.bformat.v.bit ) ) );
     if ( DUF_ACTG_FLAG( use_binformat ) )
     {
       if ( duf_print_bformat_file_info( pdi, &fi, &bformat, ( duf_pdi_cb_t ) NULL, ( duf_pdi_cb_t ) NULL ) > 0 )
@@ -286,17 +286,17 @@ print_node_before2( duf_sqlite_stmt_t * pstmt_unused, /* unsigned long long path
         int use;
         duf_filedirformat_t *fmt;
 
-        use = duf_config->cli.output.as_formats.use - 1;
-        fmt = &duf_config->cli.output.as_formats.list;
+        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        fmt = DUF_CONFIGA( cli.output.as_formats.list );
         DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
         if ( use >= 0 && use < fmt->dirs.argc && !sformat )
           sformat = fmt->dirs.argv[use];
         DUF_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = duf_config->cli.output.sformat_dirs_gen;
+          sformat = DUF_CONFIGG( cli.output.sformat_dirs_gen );
         DUF_TRACE( temp, 5, "sformat B: %s", sformat );
         if ( !sformat )
-          sformat = duf_config->cli.output.sformat_dirs_list;
+          sformat = DUF_CONFIGG( cli.output.sformat_dirs_list );
         DUF_TRACE( temp, 5, "sformat C: %s", sformat );
       }
 

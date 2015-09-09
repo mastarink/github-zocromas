@@ -120,9 +120,9 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
 /*   char *names = NULL;                                                                                 */
 /*   int cnt = 0;                                                                                        */
 /*                                                                                                       */
-/*   for ( int ilong = 0; duf_config->longopts_table[ilong].name && ilong < lo_extended_count; ilong++ ) */
+/*   for ( int ilong = 0; DUF_CONFIGG(longopts_table)[ilong].name && ilong < lo_extended_count; ilong++ ) */
 /*   {                                                                                                   */
-/*     if ( duf_config->longopts_table[ilong].val == codeval )                                           */
+/*     if ( DUF_CONFIGG(longopts_table)[ilong].val == codeval )                                           */
 /*     {                                                                                                 */
 /*       const char *spaces = "                                                            ";            */
 /*       size_t l;                                                                                       */
@@ -133,8 +133,8 @@ duf_option_names_d( duf_option_code_t codeval, const char *delim )
 /*       else                                                                                            */
 /*         names = mas_strcat_x( names, delim ? delim : " | " );                                         */
 /*       names = mas_strcat_x( names, "--" );                                                            */
-/*       names = mas_strcat_x( names, duf_config->longopts_table[ilong].name );                          */
-/*       l = strlen( duf_config->longopts_table[ilong].name );                                           */
+/*       names = mas_strcat_x( names, DUF_CONFIGG(longopts_table)[ilong].name );                          */
+/*       l = strlen( DUF_CONFIGG(longopts_table)[ilong].name );                                           */
 /*       if ( l < mln )                                                                                  */
 /*         names = mas_strncat_x( names, spaces, mln - l );                                              */
 /*       cnt++;                                                                                          */

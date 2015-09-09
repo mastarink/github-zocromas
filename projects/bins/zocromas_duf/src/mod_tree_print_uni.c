@@ -168,7 +168,7 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     fi.md5sum1 = md5sum1;
     fi.md5sum2 = md5sum2;
 #else
-    DOR(r, duf_fileinfo( pstmt, pdi, &fi ));
+    DOR( r, duf_fileinfo( pstmt, pdi, &fi ) );
 #endif
     if ( DUF_ACTG_FLAG( use_binformat ) )
     {
@@ -182,9 +182,9 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
       const char *sformat_pref = NULL;
       const char *sformat = NULL;
 
-      sformat_pref = duf_config->cli.output.sformat_prefix_gen_tree;
+      sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_gen_tree );
       if ( !sformat_pref )
-        sformat_pref = duf_config->cli.output.sformat_prefix_files_tree;
+        sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_files_tree );
 
       if ( !sformat_pref )
         sformat_pref = "_%-6M =%-4S%P";
@@ -196,17 +196,17 @@ tree_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
         int use;
         duf_filedirformat_t *fmt;
 
-        use = duf_config->cli.output.as_formats.use - 1;
-        fmt = &duf_config->cli.output.as_formats.tree;
+        use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+        fmt = DUF_CONFIGA( cli.output.as_formats.tree );
         DUF_TRACE( temp, 5, "use:%d; files.argc:%d", use, fmt->files.argc );
         if ( use >= 0 && use < fmt->files.argc && !sformat )
           sformat = fmt->files.argv[use];
         DUF_TRACE( temp, 5, "sformat A: %s", sformat );
         if ( !sformat )
-          sformat = duf_config->cli.output.sformat_files_gen;
+          sformat = DUF_CONFIGG( cli.output.sformat_files_gen );
         DUF_TRACE( temp, 5, "sformat B: %s", sformat );
         if ( !sformat )
-          sformat = duf_config->cli.output.sformat_files_tree;
+          sformat = DUF_CONFIGG( cli.output.sformat_files_tree );
         DUF_TRACE( temp, 5, "sformat C: %s", sformat );
       }
       if ( !sformat )
@@ -281,9 +281,9 @@ tree_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
     const char *sformat_pref = NULL;
     const char *sformat = NULL;
 
-    sformat_pref = duf_config->cli.output.sformat_prefix_gen_tree;
+    sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_gen_tree );
     if ( !sformat_pref )
-      sformat_pref = duf_config->cli.output.sformat_prefix_dirs_tree;
+      sformat_pref = DUF_CONFIGG( cli.output.sformat_prefix_dirs_tree );
 
     if ( !sformat_pref )
       sformat_pref = " %6s  %4s%P";
@@ -294,17 +294,17 @@ tree_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
       int use;
       duf_filedirformat_t *fmt;
 
-      use = duf_config->cli.output.as_formats.use - 1;
-      fmt = &duf_config->cli.output.as_formats.tree;
+      use = DUF_CONFIGG( cli.output.as_formats.use ) - 1;
+      fmt = DUF_CONFIGA( cli.output.as_formats.tree );
       DUF_TRACE( temp, 5, "use:%d; dirs.argc:%d", use, fmt->dirs.argc );
       if ( use >= 0 && use < fmt->dirs.argc && !sformat )
         sformat = fmt->dirs.argv[use];
       DUF_TRACE( temp, 5, "sformat A: %s", sformat );
       if ( !sformat )
-        sformat = duf_config->cli.output.sformat_dirs_gen;
+        sformat = DUF_CONFIGG( cli.output.sformat_dirs_gen );
       DUF_TRACE( temp, 5, "sformat B: %s", sformat );
       if ( !sformat )
-        sformat = duf_config->cli.output.sformat_dirs_tree;
+        sformat = DUF_CONFIGG( cli.output.sformat_dirs_tree );
       DUF_TRACE( temp, 5, "sformat C: %s", sformat );
     }
 
@@ -385,7 +385,8 @@ duf_sql_print_tree_sprefix_uni( char *pbuffer, size_t bfsz, duf_depthinfo_t * pd
                /* DUF_PRINTF( 0, ".rd%d", duf_pdi_reldepth( pdi ) ); */
                DUF_PRINTF( 0, ".@%-3ld", ndu ); /* */
                DUF_PRINTF( 0, ".%c%c", nduc, leafc ); /* */
-               DUF_PRINTF( 1, ".0x%02x]", flags ); );
+               DUF_PRINTF( 1, ".0x%02x]", flags );
+           );
     {
 #if 0
       {

@@ -78,7 +78,7 @@ duf_statat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->cli.disable.flag.fs )
+  if ( DUF_CONFIGG( cli.disable.flag.fs ) )
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
   }
@@ -145,7 +145,7 @@ duf_stat_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   DEBUG_STARTR( r );
 
-  if ( !duf_config->cli.disable.flag.fs )
+  if ( !DUF_CONFIGG( cli.disable.flag.fs ) )
   {
     DOR( r, _duf_stat_dh( pdhandle, path ) );
   }
@@ -197,9 +197,9 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
       if ( !pdhandle->rs )
         pdhandle->rs++;
 
-      duf_config->nopen++;
-      DUF_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, duf_config->nopen, duf_config->nclose,
-                 duf_config->nopen - duf_config->nclose, pdhandle->dfd );
+      DUF_CONFIGW( nopen )++;
+      DUF_TRACE( fs, 5, "openated %s (%u - %u = %u) h%u", name, DUF_CONFIGG( nopen ), DUF_CONFIGG( nclose ),
+                 DUF_CONFIGG( nopen ) - DUF_CONFIGG( nclose ), pdhandle->dfd );
     }
     else if ( ry < 0 && errno == ENOENT )
     {
@@ -229,7 +229,7 @@ duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, c
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->cli.disable.flag.fs )
+  if ( DUF_CONFIGG( cli.disable.flag.fs ) )
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
   }
@@ -290,7 +290,7 @@ duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->cli.disable.flag.fs )
+  if ( DUF_CONFIGG( cli.disable.flag.fs ) )
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
   }
@@ -320,7 +320,7 @@ duf_opened_dh( duf_dirhandle_t * pdhandle )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->cli.disable.flag.fs )
+  if ( DUF_CONFIGG( cli.disable.flag.fs ) )
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
   }
@@ -356,8 +356,9 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
         DUF_SHOW_ERROR( "close dfd:%d", pdhandle->dfd );
         DUF_MAKE_ERROR( r, DUF_ERROR_CLOSE );
       }
-      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose, pdhandle->dfd );
-      duf_config->nclose++;
+      DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", DUF_CONFIGG( nopen ), DUF_CONFIGG( nclose ), DUF_CONFIGG( nopen ) - DUF_CONFIGG( nclose ),
+                 pdhandle->dfd );
+      DUF_CONFIGW( nclose )++;
     }
     else
     {
@@ -375,7 +376,7 @@ duf_close_dh( duf_dirhandle_t * pdhandle )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->cli.disable.flag.fs )
+  if ( DUF_CONFIGG( cli.disable.flag.fs ) )
   {
     DUF_MAKE_ERROR( r, DUF_ERROR_FS_DISABLED );
   }
@@ -391,7 +392,7 @@ _duf_check_dh( const char *msg )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, duf_config->nopen, duf_config->nclose, duf_config->nopen - duf_config->nclose );
+  DUF_TRACE( fs, 2, "%s (%u - %u = %u)", msg, DUF_CONFIGG( nopen ), DUF_CONFIGG( nclose ), DUF_CONFIGG( nopen ) - DUF_CONFIGG( nclose ) );
   DEBUG_ENDR( r );
 }
 
@@ -400,7 +401,7 @@ duf_check_dh( const char *msg )
 {
   DEBUG_STARTR( r );
 
-  /* if ( !duf_config->cli.disable.flag.fs ) */
+  /* if ( !DUF_CONFIGG(cli.disable.flag.fs ) ) */
   {
     DOR( r, _duf_check_dh( msg ) );
   }

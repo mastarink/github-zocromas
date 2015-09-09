@@ -141,7 +141,7 @@ static int
 tagit_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  if ( duf_config->tag.file )
+  if ( DUF_CONFIGG( tag.file ) )
   {
 #ifdef MAS_TRACING
     assert( !duf_levinfo_dfd( pdi ) );
@@ -150,7 +150,7 @@ tagit_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     assert( duf_levinfo_dbstat( pdi ) );
 #endif
 
-    duf_add_tag( pdi, "filename", duf_levinfo_nameid( pdi ), duf_config->tag.file ? duf_config->tag.file : "NONE", &r );
+    duf_add_tag( pdi, "filename", duf_levinfo_nameid( pdi ), DUF_CONFIGG( tag.file ) ? DUF_CONFIGG( tag.file ) : "NONE", &r );
 
     DUF_TRACE( mod, 2, "@@tagit %s", duf_levinfo_path( pdi ) );
   }
@@ -174,9 +174,10 @@ static int
 tagit_node_before2( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  if ( duf_config->tag.dir )
+  if ( DUF_CONFIGG( tag.dir ) )
   {
-    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", duf_config->tag.dir, duf_config->tag.file, duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( tag.dir ), DUF_CONFIGG( tag.file ), duf_levinfo_path( pdi ),
+               duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 #  ifdef MAS_TRACING
@@ -205,9 +206,10 @@ tagit_node_middle2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->tag.dir )
+  if ( DUF_CONFIGG( tag.dir ) )
   {
-    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", duf_config->tag.dir, duf_config->tag.file, duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( tag.dir ), DUF_CONFIGG( tag.file ), duf_levinfo_path( pdi ),
+               duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 #  ifdef MAS_TRACING
@@ -224,7 +226,7 @@ tagit_node_middle2_del( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 #ifdef MAS_TRACING
-  DUF_TRACE( mod, 1, "@(%s:%s)tagit node middle %s : %s", duf_config->tag.dir, duf_config->tag.file, duf_levinfo_path( pdi ),
+  DUF_TRACE( mod, 1, "@(%s:%s)tagit node middle %s : %s", DUF_CONFIGG( tag.dir ), DUF_CONFIGG( tag.file ), duf_levinfo_path( pdi ),
              DUF_GET_SFIELD2( filename ) );
 #endif
 
@@ -236,9 +238,10 @@ tagit_node_after2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
-  if ( duf_config->tag.dir )
+  if ( DUF_CONFIGG( tag.dir ) )
   {
-    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", duf_config->tag.dir, duf_config->tag.file, duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
+    DUF_TRACE( mod, 1, "(%s:%s)tagit %s : %s", DUF_CONFIGG( tag.dir ), DUF_CONFIGG( tag.file ), duf_levinfo_path( pdi ),
+               duf_levinfo_itemshowname( pdi ) );
 
 #if 0
 #  ifdef MAS_TRACING

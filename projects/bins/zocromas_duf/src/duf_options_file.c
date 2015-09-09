@@ -24,7 +24,7 @@
  * open configuration file
  *         with path combined from dir and filename, possibly prefixed by dot
  * ***********************
- * ?! replaces duf_config->config_path
+ * ?! replaces DUF_CONFIGG( config_path )
  * return FILE *, optionally indirectly return error code (errno)
  * */
 static FILE *
@@ -34,9 +34,9 @@ duf_infilepath( const char *filepath, int *pr )
 
   f = fopen( filepath, "r" );
 
-  mas_free( duf_config->config_path );
-  duf_config->config_path = mas_strdup( filepath );
-  DUF_TRACE( options, 0, "opened conf file %s %s", duf_config->config_path, f ? "Ok" : "FAIL" );
+  mas_free( DUF_CONFIGG( config_path ) );
+  DUF_CONFIGW( config_path ) = mas_strdup( filepath );
+  DUF_TRACE( options, 0, "opened conf file %s %s", DUF_CONFIGG( config_path ), f ? "Ok" : "FAIL" );
   if ( !f && pr )
     *pr = errno;
   return f;
@@ -234,18 +234,22 @@ duf_stdin_options( duf_option_stage_t istage )
   static int done = 0;
 
   DUF_TRACE( options, 0, "@@@@(%d) source: stdin", istage );
-  if ( !done )
+  if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  )
   {
-    DUF_TRACE( options, 4, "@@@ isatty: %d:%d:%d", isatty( STDIN_FILENO ), isatty( STDOUT_FILENO ), isatty( STDERR_FILENO ) );
-    if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  && !isatty( STDIN_FILENO ) )
+    if ( !done )
     {
-      DOR( r, duf_infile_options_at_stream( istage, stdin, DUF_OPTION_SOURCE_STDIN ) );
-      done = 1;
+      DUF_TRACE( options, 4, "@@@ isatty: %d:%d:%d", isatty( STDIN_FILENO ), isatty( STDOUT_FILENO ), isatty( STDERR_FILENO ) );
+      if ( !isatty( STDIN_FILENO ) )
+      {
+        DOR( r, duf_infile_options_at_stream( istage, stdin, DUF_OPTION_SOURCE_STDIN ) );
+        done = 1;
+      }
     }
-  }
-  else
-  {
-    DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
+    else
+    {
+      /* DUF_MAKE_ERROR( r, DUF_ERROR_OPEN ); */
+      /* assert(0); */
+    }
   }
   DEBUG_ENDR( r );
 }
@@ -256,12 +260,12 @@ duf_indirect_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
 
   DUF_TRACE( options, 0, "@@@@(%d) source: indirect", istage );
-  DUF_TRACE( temp, 2, ">> targc:%d targ_offset:%d", duf_config->targ.argc, duf_config->targ_offset );
-  for ( int ia = 0; ia < duf_config->targ_offset; ia++ )
+  DUF_TRACE( temp, 2, ">> targc:%d targ_offset:%d", DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ_offset ) );
+  for ( int ia = 0; ia < DUF_CONFIGG( targ_offset ); ia++ )
   {
     const char *cf;
 
-    cf = duf_config->targ.argv[ia];
+    cf = DUF_CONFIGG( targ.argv[ia] );
     DUF_TRACE( temp, 2, ">> targv[%d]='%s'", ia, cf );
     if ( cf && *cf == '@' )
     {

@@ -32,7 +32,7 @@ duf_interactive_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
   static char rl_prompt[256 * 10] = "";
 
-  if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */ )
+  if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  )
   {
     DUF_TRACE( options, 0, "@@@@(%d) source: interactive", istage );
     if ( !*rl_prompt )
@@ -56,8 +56,8 @@ duf_interactive_options( duf_option_stage_t istage )
     add_history( "no-recursive" );
 #endif
     {
-      if ( duf_config->cli.output.history_filename )
-        read_history( duf_config->cli.output.history_filename );
+      if ( DUF_CONFIGG( cli.output.history_filename ) )
+        read_history( DUF_CONFIGG( cli.output.history_filename ) );
       {
         HISTORY_STATE *phstate;
 
@@ -79,15 +79,15 @@ duf_interactive_options( duf_option_stage_t istage )
               DUF_PRINTF( 0, "%s:%s", he->timestamp, he->line );
           }
         }
-        DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, duf_config->cli.output.history_filename );
+        DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) );
       }
       while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) && isatty( STDIN_FILENO ) )
       {
         char *rl_buffer = NULL, *s = NULL;
 
-        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( duf_config->pdi ) );
+        DUF_TRACE( path, 0, "@path@pdi: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
         snprintf( rl_prompt, sizeof( rl_prompt ), "A-F:%d;A-D:%d; %s:%s> ", DUF_ACTG_FLAG( allow_files ), DUF_ACTG_FLAG( allow_dirs ), "db",
-                  duf_levinfo_path( duf_config->pdi ) );
+                  duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
         while ( !rl_buffer )
           rl_buffer = readline( rl_prompt );
         s = rl_buffer;
@@ -110,16 +110,17 @@ duf_interactive_options( duf_option_stage_t istage )
  *   =0 for other option
  *   errorcode<0 for error
  * */
-            DOR( r, duf_exec_cmd_long_xtables_std( xs, ' ', istage, DUF_OPTION_SOURCE_INTERACTIVE  ) );
+            DOR( r, duf_exec_cmd_long_xtables_std( xs, ' ', istage, DUF_OPTION_SOURCE_INTERACTIVE ) );
             DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACTG_FLAG( interactive ), duf_config->pdi ? 1 : 0 );
+            DUF_TRACE( options, 0, "@@@@executed cmd; r=%d; xs=%s [i/a:%d] pdi:%d;", r, xs, DUF_ACTG_FLAG( interactive ),
+                       DUF_CONFIGG( pdi ) ? 1 : 0 );
             mas_free( xs );
           }
           free( rl_buffer );
           rl_buffer = NULL;
         }
-        if ( duf_config->cli.output.history_filename )
-          write_history( duf_config->cli.output.history_filename );
+        if ( DUF_CONFIGG( cli.output.history_filename ) )
+          write_history( DUF_CONFIGG( cli.output.history_filename ) );
       }
     }
   }

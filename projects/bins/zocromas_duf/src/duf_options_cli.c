@@ -81,22 +81,22 @@ duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
   opterr = 0;
   optind = 1;
 #if 0
-  carg.argc = duf_config->carg.argc;
-  carg.argv = duf_config->carg.argv;
+  carg.argc = DUF_CONFIGG( carg.argc );
+  carg.argv = DUF_CONFIGG( carg.argv );
 #else
-  carg = duf_config->carg;
+  carg = DUF_CONFIGG( carg );
 #endif
-  DUF_TRACE( options, +2, "parse cli options (%d)...", duf_config->longopts_table ? 1 : 0 );
+  DUF_TRACE( options, +2, "parse cli options (%d)...", DUF_CONFIGG( longopts_table ) ? 1 : 0 );
 #if 0
   {
-    for ( const duf_option_t * po = duf_config->longopts_table; po && po->name; po++ )
+    for ( const duf_option_t * po = DUF_CONFIGG( longopts_table ); po && po->name; po++ )
     {
-      DUF_TRACE( options, +4, "L:%3ld. %s", ( po - duf_config->longopts_table ), po->name );
+      DUF_TRACE( options, +4, "L:%3ld. %s", ( po - DUF_CONFIGG( longopts_table ) ), po->name );
     }
   }
 #endif
   while ( DUF_NOERROR( r )
-          && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, duf_config->longopts_table, &longindex ) ) >= 0 ) )
+          && ( ( int ) ( longindex = -1, codeval = getopt_long( carg.argc, carg.argv, shorts, DUF_CONFIGG( longopts_table ), &longindex ) ) >= 0 ) )
   {
     DUF_TRACE( options, +2, "@@@getopt_long codeval: %d (%c) longindex:%d", codeval, codeval > ' ' && codeval <= 'z' ? codeval : '?', longindex );
 /*
@@ -109,19 +109,19 @@ duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
     /* DUF_TEST_R1( r ); */
     DUF_TRACE( options, +4, "cli options r: %d", r );
     if ( optind > 0 )
-      DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind - 1, duf_config->carg.argv[optind - 1] );
+      DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind - 1, DUF_CONFIGG( carg.argv )[optind - 1] );
     if ( optind >= 0 )
-      DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
+      DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind, DUF_CONFIGG( carg.argv )[optind] );
 
     if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION ) )
     {
       const char *arg;
       static const char *msg = "Invalid option";
 
-      arg = duf_config->carg.argv[optind - 1];
+      arg = DUF_CONFIGG( carg.argv )[optind - 1];
       if ( optopt && codeval > ' ' && codeval <= 'z' )
       {
-        if ( duf_config->cli.dbg.verbose == 0 )
+        if ( DUF_CONFIGG( cli.dbg.verbose ) == 0 )
           DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '-%c'      ", msg, optopt );
         else
         {
@@ -133,7 +133,7 @@ duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
       }
       else
       {
-        if ( duf_config->cli.dbg.verbose == 0 )
+        if ( DUF_CONFIGG( cli.dbg.verbose ) == 0 )
           DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '%s'                  ", msg, arg );
         else
           DUF_SHOW_ERROR( "@@@@@@@@@@@  %s '%s' arg[%d]=\"%s\" [%u/%c]", msg, arg, optind, arg, codeval, codeval );
@@ -144,16 +144,17 @@ duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
 
   DUF_TRACE( options, +2, "optind:%d; carg.argc:%d", optind, carg.argc );
   DUF_TRACE( explain, 0, "parsed %d CLI options %s", cnt, duf_error_name( r ) );
-  if ( istage == 0 && optind < duf_config->carg.argc )
+  if ( istage == 0 && optind < DUF_CONFIGG( carg.argc ) )
   {
-    mas_del_argv( duf_config->targ.argc, duf_config->targ.argv, 0 );
-    duf_config->targ.argc = 0;
-    duf_config->targ.argv = NULL;
+    mas_del_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ), 0 );
+    DUF_CONFIGW( targ.argc ) = 0;
+    DUF_CONFIGW( targ.argv ) = NULL;
 
-    DUF_TRACE( options, +2, "(for targ) carg.argv[%d]=\"%s\"", optind, duf_config->carg.argv[optind] );
-    duf_config->targ.argc = mas_add_argv_argv( duf_config->targ.argc, &duf_config->targ.argv, duf_config->carg.argc, duf_config->carg.argv, optind );
+    DUF_TRACE( options, +2, "(for targ) carg.argv[%d]=\"%s\"", optind, DUF_CONFIGG( carg.argv )[optind] );
+    DUF_CONFIGW( targ.argc ) =
+          mas_add_argv_argv( DUF_CONFIGG( targ.argc ), DUF_CONFIGA( targ.argv ), DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ), optind );
 
-    duf_config->targ_offset = duf_reorder_at_sign( duf_config->targ.argc, duf_config->targ.argv );
+    DUF_CONFIGW( targ_offset ) = duf_reorder_at_sign( DUF_CONFIGG( targ.argc ), DUF_CONFIGG( targ.argv ) );
 
 
 
@@ -170,14 +171,14 @@ duf_cli_options( duf_option_stage_t istage )
 
   assert( duf_config );
 
-  DUF_TRACE( options, 0, "@@@@(%d) source: cli" ,istage);
+  DUF_TRACE( options, 0, "@@@@(%d) source: cli", istage );
 #if 0
   /* Don't use it before all oprions got */
   duf_dbgfunc( DBG_START, __func__, __LINE__ );
 #endif
   DUF_TRACE( options, +2, "cli options..." );
-  
-  DOR( r, duf_parse_exec_cli_options( duf_config->cli.shorts, istage ) );
+
+  DOR( r, duf_parse_exec_cli_options( DUF_CONFIGG( cli.shorts ), istage ) );
 
   DUF_TRACE( explain, 2, "cli options  %s", duf_error_name( r ) );
 #if 0
@@ -188,4 +189,4 @@ duf_cli_options( duf_option_stage_t istage )
 }
 
   /* if ( code==DUF_OPTION_ ## up  ) \                                                                                                          */
-  /*   printf("[%d : %c] %s %d :: %d\n", code, code>' ' && code <= 'z' ? code : '-', #up, duf_config->pref.lo, duf_config->cli.trace.sample); \ */
+  /*   printf("[%d : %c] %s %d :: %d\n", code, code>' ' && code <= 'z' ? code : '-', #up, DUF_CONFIGG(pref.lo), DUF_CONFIGG(cli.trace.sample)); \ */

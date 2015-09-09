@@ -65,17 +65,17 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DEBUG_STARTR( r );
 
   assert( duf_config );
-  DUF_TRACE( temp, 0, "@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
 #if 0
-  DUF_TRACE( temp, 0, "@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
-  DUF_TRACE( temp, 0, "@@@@@@@@@@this is temp DUF_TRACE :%d", duf_config->cli.trace.temp );
+  DUF_TRACE( temp, 0, "@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
+  DUF_TRACE( temp, 0, "@@@@@@@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
 #endif
 
 
@@ -220,7 +220,7 @@ duf_show_options( const char *a0 )
   DUF_TRACE( options, +2, "%s", a0 );
   for ( duf_option_code_t codeval = DUF_OPTION_VAL_NONE; codeval < DUF_OPTION_VAL_MAX_LONG; codeval++ )
   {
-#define BUFSZ 1024 * 4
+#  define BUFSZ 1024 * 4
     char buffer[BUFSZ] = "";
 
     duf_restore_some_option( buffer, codeval, BUFSZ );

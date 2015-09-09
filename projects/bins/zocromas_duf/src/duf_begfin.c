@@ -32,9 +32,9 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
 #  if 0
   duf_ufilter_delete( global_status.selection_bound_ufilter );
 #    if 0
-  global_status.selection_bound_ufilter = duf_ufilter_create_from( duf_config->pu );
+  global_status.selection_bound_ufilter = duf_ufilter_create_from( DUF_CONFIGG( pu ) );
 #    else
-  global_status.selection_bound_ufilter = duf_ufilter_clone( duf_config->pu );
+  global_status.selection_bound_ufilter = duf_ufilter_clone( DUF_CONFIGG( pu ) );
 #    endif
 #  endif
   DEBUG_ENDR( r );

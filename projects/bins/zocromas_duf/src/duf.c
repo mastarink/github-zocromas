@@ -120,10 +120,9 @@ duf_main_with_config( int argc, char **argv )
 
   DOR_NOE( r, duf_all_options(  /* argc, argv, */ DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
 
-  DOR( r,
-       DUF_WRAPPED( duf_pdi_init ) ( duf_config->pdi, NULL /* real_path */ , 0 /* caninsert */ , NULL /* sql_set */ ,
-                                     DUF_UG_FLAG( recursive ) /* frecursive */ ,
-                                     1 /* opendir */  ) );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), NULL /* real_path */ , 0 /* caninsert */ , NULL /* sql_set */ ,
+                                        DUF_UG_FLAG( recursive ) /* frecursive */ ,
+                                        1 /* opendir */  ) );
 
 
 
@@ -147,7 +146,7 @@ duf_main_with_config( int argc, char **argv )
   {
     extern int mas_mem_disable_print_usage __attribute__ ( ( weak ) );
 
-    if ( &mas_mem_disable_print_usage && duf_config->cli.disable.flag.memusage )
+    if ( &mas_mem_disable_print_usage && DUF_CONFIGG( cli.disable.flag.memusage ) )
     {
       mas_mem_disable_print_usage = 1;
     }

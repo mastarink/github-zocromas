@@ -45,7 +45,7 @@ static int dirent_content2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = { /* */
-  .name="final @ ...",
+  .name = "final @ ...",
   .done = 0,
   .sql = {
           "UPDATE " DUF_SQL_TABLES_MIME_FULL " SET dupmimecnt=(SELECT COUNT(*) " /* */
@@ -106,8 +106,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " sz.size > 0                               AND " /* */
            " 1 "                /* */
            ,
-           .count_aggregate = "distinct fd." DUF_SQL_IDNAME
-           },
+           .count_aggregate = "distinct fd." DUF_SQL_IDNAME},
   .node = {.fieldset =          /* */
            "'mime-node' AS fieldset_id, " /* */
            "pt." DUF_SQL_IDNAME " AS dirid" /* */
@@ -173,7 +172,7 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       DUF_SQL_END_STMT( select_mime, lr, pstmt_select );
     }
 
-    if ( !mimeid && !duf_config->cli.disable.flag.insert )
+    if ( !mimeid && !DUF_CONFIGG( cli.disable.flag.insert ) )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_MIME_FULL " ( mime ) VALUES ( :Mime )";
 
@@ -282,7 +281,7 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
           tail = mas_strdup( p );
         mimeid = duf_insert_mime_uni( pdi, mimet, charset, tail, 1 /*need_id */ , &r );
         DUF_TEST_R( r );
-        if ( DUF_NOERROR( r ) && mimeid && !duf_config->cli.disable.flag.update )
+        if ( DUF_NOERROR( r ) && mimeid && !DUF_CONFIGG( cli.disable.flag.update ) )
         {
           int changes = 0;
 
@@ -303,7 +302,8 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
           }
           else
           {
-            DOR( r, duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, mimeid, dataid ) );
+            DOR( r,
+                 duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, mimeid, dataid ) );
             duf_pdi_reg_changes( pdi, changes );
           }
 

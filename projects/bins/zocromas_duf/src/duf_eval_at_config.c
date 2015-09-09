@@ -75,7 +75,7 @@ duf_evaluate_all_at_config( void )
  *     - call init  from ppscan_callbacks[astep]
  *     - do beginning sql set  from ppscan_callbacks[astep]
  *     - via duf_sccb_each_targv:
- *         - evaluate ppscan_callbacks[astep] for each string  from duf_config->targ[cv] as path
+ *         - evaluate ppscan_callbacks[astep] for each string  from DUF_CONFIGG(targ)[cv] as path
  *     - do final sql set from ppscan_callbacks[astep]
  * */
 #ifdef MAS_WRAP_FUNC

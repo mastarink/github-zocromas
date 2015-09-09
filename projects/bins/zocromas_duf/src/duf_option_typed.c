@@ -140,10 +140,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
       byteptr = ( ( ( char * ) duf_config ) + extended->m_offset );
       break;
     case DUF_OFFSET_depthinfo:
-      byteptr = ( ( ( char * ) duf_config->pdi ) + extended->m_offset );
+      byteptr = ( ( ( char * ) DUF_CONFIGG( pdi ) ) + extended->m_offset );
       break;
     case DUF_OFFSET_ufilter:
-      byteptr = ( ( ( char * ) duf_config->pu ) + extended->m_offset );
+      byteptr = ( ( ( char * ) DUF_CONFIGG( pu ) ) + extended->m_offset );
       break;
     }
 
@@ -316,7 +316,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 
             sscanf( optargg, "%x", &cc );
             *pchr = ( char ) cc;
-            DUF_TRACE( options, +0, "char set(%x):'%c'/'%c' @%p/%p", cc, cc, duf_config->cli.option_delimiter, &duf_config->cli.option_delimiter,
+            DUF_TRACE( options, +0, "char set(%x):'%c'/'%c' @%p/%p", cc, cc, DUF_CONFIGG( cli.option_delimiter ), DUF_CONFIGA( cli.option_delimiter ),
                        pchr );
           }
         }
@@ -485,9 +485,9 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
         {
-          assert( duf_config->carg.argv );
+          assert( DUF_CONFIGG( carg.argv ) );
           if ( extended->call.fdesc.a.func )
-            ( extended->call.fdesc.a.func ) ( duf_config->carg.argc, duf_config->carg.argv );
+            ( extended->call.fdesc.a.func ) ( DUF_CONFIGG( carg.argc ), DUF_CONFIGG( carg.argv ) );
         }
         break;
       case DUF_OPTION_VTYPE_AA_CALL: /* stage Not? SETUP *//* call with carg (AA:argv-argv) */
@@ -496,10 +496,10 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
           DOR( r, DUF_ERROR_OPTION_NOT_PARSED );
         if ( DUF_NOERROR( r ) )
         {
-          assert( duf_config->carg.argc );
-          assert( duf_config->carg.argv );
+          assert( DUF_CONFIGG( carg.argc ) );
+          assert( DUF_CONFIGG( carg.argv ) );
           if ( extended->call.fdesc.aa.func )
-            ( extended->call.fdesc.aa.func ) ( duf_config->carg );
+            ( extended->call.fdesc.aa.func ) ( DUF_CONFIGG( carg ) );
         }
         break;
 
@@ -530,7 +530,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.tn.func )
-            ( extended->call.fdesc.tn.func ) ( &duf_config->targ.argc, &duf_config->targ.argv, duf_strtol_suff( optargg, &r ) );
+            ( extended->call.fdesc.tn.func ) ( DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), duf_strtol_suff( optargg, &r ) );
         }
         break;
       case DUF_OPTION_VTYPE_TS_CALL: /* stage Not? SETUP *//* call with targ[cv] + string optarg (TS: targ and string) */
@@ -540,7 +540,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         if ( DUF_NOERROR( r ) )
         {
           if ( extended->call.fdesc.ts.func )
-            ( extended->call.fdesc.ts.func ) ( &duf_config->targ.argc, &duf_config->targ.argv, optargg );
+            ( extended->call.fdesc.ts.func ) ( DUF_CONFIGA( targ.argc ), DUF_CONFIGA( targ.argv ), optargg );
         }
         break;
         /* 

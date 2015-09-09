@@ -150,7 +150,7 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** psccbs, int max_asteps )
     {
       duf_scan_callbacks_t *sccb = act->sccb;
 
-      if ( act->tovector && ( duf_config->cli.act.v.bit & act->on.bit ) == act->on.bit && ( duf_config->cli.act.v.bit & act->off.bit ) == 0 )
+      if ( act->tovector && ( DUF_CONFIGG(cli.act.v.bit) & act->on.bit ) == act->on.bit && ( DUF_CONFIGG(cli.act.v.bit) & act->off.bit ) == 0 )
       {
         if ( sccb )
         {
@@ -161,13 +161,13 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** psccbs, int max_asteps )
         else
         {
           DUF_TRACE( action, 0, "action not prepared (no sccb): %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
-                     duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
+                     DUF_CONFIGG(cli.act.v.bit), act->on.bit, act->off.bit );
         }
       }
       else
       {
         DUF_TRACE( action, 0, "action not prepared: %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
-                   duf_config->cli.act.v.bit, act->on.bit, act->off.bit );
+                   DUF_CONFIGG(cli.act.v.bit), act->on.bit, act->off.bit );
       }
     }
   }
@@ -179,13 +179,13 @@ duf_config2sccb_vector_sample( duf_scan_callbacks_t ** psccbs, int max_asteps )
 {
   int asteps = 0;
 
-  if ( duf_config->cli.act.sample )
+  if ( DUF_CONFIGG(cli.act.sample) )
   {
     extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
 
     DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPLE ) );
-    assert( asteps + duf_config->cli.act.sample < max_asteps );
-    for ( int i = 0; i < duf_config->cli.act.sample && asteps < max_asteps; i++ )
+    assert( asteps + DUF_CONFIGG(cli.act.sample) < max_asteps );
+    for ( int i = 0; i < DUF_CONFIGG(cli.act.sample) && asteps < max_asteps; i++ )
     {
       duf_scan_callbacks_t *sccb = &duf_sample_callbacks;
 
@@ -201,7 +201,7 @@ duf_config2sccb_vector_sample( duf_scan_callbacks_t ** psccbs, int max_asteps )
   }
 
   assert( asteps < max_asteps );
-  if ( duf_config->cli.act.sampupd )
+  if ( DUF_CONFIGG(cli.act.sampupd) )
   {
     extern duf_scan_callbacks_t duf_sampupd_callbacks __attribute( ( weak ) );
     duf_scan_callbacks_t *sccb = &duf_sampupd_callbacks;
