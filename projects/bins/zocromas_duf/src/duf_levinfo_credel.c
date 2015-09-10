@@ -9,6 +9,7 @@
 #include "duf_levinfo_updown.h"
 
 #include "duf_pathinfo_ref.h"
+#include "duf_pathinfo_credel.h"
 /* ###################################################################### */
 #include "duf_levinfo_credel.h"
 /* ###################################################################### */
@@ -31,11 +32,11 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
     /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
     if ( max_rel_depth /* FIXME */  )
     {
-      pdi->maxdepth = max_rel_depth + ( pathdepth ? pathdepth : 20 );
+      pdi->pathinfo.maxdepth = max_rel_depth + ( pathdepth ? pathdepth : 20 );
       pdi->recursive = recursive ? 1 : 0;
       pdi->opendir = opendir ? 1 : 0;
 
-      duf_pi_levinfo_create( &pdi->pathinfo, pdi->maxdepth + 3 );
+      duf_pi_levinfo_create( &pdi->pathinfo, pdi->pathinfo.maxdepth + 3 );
       assert( pdi->pathinfo.levinfo );
       assert( pdi->pathinfo.depth == -1 );
     }
@@ -50,7 +51,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
   {
   }
 #else
-  duf_pi_levinfo_create( &pdi->pathinfo, pdi->maxdepth + 3 );
+  duf_pi_levinfo_create( &pdi->pathinfo, pdi->pathinfo.maxdepth + 3 );
   assert( pdi->pathinfo.levinfo );
   assert( pdi->pathinfo.depth == -1 );
 #endif

@@ -9,7 +9,9 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_pathinfo_ref.h"
+/* #include "duf_pathinfo_ref.h" */
+#include "duf_pathinfo_credel.h"
+
 #include "duf_pdi.h"
 
 /* ###################################################################### */

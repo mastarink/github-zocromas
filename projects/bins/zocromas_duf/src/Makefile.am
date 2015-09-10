@@ -8,7 +8,7 @@ zocromas_duf_SOURCES=				   \
 	duf.c 			\
 	duf_maindb_info.c duf_maindb.c		    \
 	duf_dbg.c duf_config.c duf_status.c	     \
-	duf_ufilter.c duf_ufilter_bind.c \
+	duf_ufilter.c duf_ufilter_ref.c duf_ufilter_bind.c \
 	duf_options.c duf_option.c duf_option_old.c  duf_option_tmpdb.c duf_option_typed.c  \
 	duf_option_find.c duf_options_table.c		\
 	duf_option_descr.c		\
@@ -33,7 +33,7 @@ zocromas_duf_SOURCES=				   \
 	duf_li_credel.c \
 	duf_levinfo.c duf_levinfo_ref.c duf_levinfo_credel.c duf_levinfo_openclose.c duf_levinfo_stat.c \
 	duf_levinfo_updown.c duf_levinfo_context.c	\
-	duf_pathinfo_ref.c \
+	duf_pathinfo_credel.c duf_pathinfo_ref.c \
 	duf_pdi.c duf_pdi_credel.c duf_pdi_ref.c duf_pdi_context.c duf_pdi_stmt.c			\
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \

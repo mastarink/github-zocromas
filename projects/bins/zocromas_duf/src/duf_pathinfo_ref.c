@@ -12,6 +12,8 @@
 #include "duf_li_credel.h"
 #include "duf_context.h"
 
+#include "duf_utils_path.h"     /* duf_pathdepth */
+
 #include "duf_dh.h"
 
 
@@ -255,6 +257,18 @@ duf_pi_topdepth( const duf_pathinfo_t * pi )
 }
 
 int
+duf_pi_maxdepth( const duf_pathinfo_t * pi )
+{
+  return pi ? pi->maxdepth : 0;
+}
+
+duf_levinfo_t *
+duf_pi_levinfo( const duf_pathinfo_t * pi )
+{
+  return pi ? pi->levinfo : NULL;
+}
+
+int
 duf_pi_depth( const duf_pathinfo_t * pi )
 {
   return pi ? pi->depth : 0;
@@ -269,27 +283,3 @@ duf_pi_deltadepth_d( const duf_pathinfo_t * pi, int d )
 DUF_PATHINFO_FC( int, deltadepth )
 DUF_PATHINFO_FC_UP( int, deltadepth )
 /* *INDENT-ON*  */
-
-int
-duf_pi_levinfo_create( duf_pathinfo_t * pi, size_t count )
-{
-  DEBUG_STARTR( r );
-
-  assert( pi );
-  if ( count )
-  {
-    pi->levinfo_count = count;
-    pi->levinfo = duf_li_create( pi->levinfo_count );
-    assert( pi->levinfo );
-  }
-  DEBUG_ENDR( r );
-}
-
-void
-duf_pi_copy( duf_pathinfo_t * pidst, const duf_pathinfo_t * pisrc )
-{
-  assert( pidst );
-  assert( pisrc );
-  memcpy( pidst, pisrc, sizeof( duf_pathinfo_t ) );
-  pidst->levinfo = duf_li_clone( pisrc->levinfo, pisrc->levinfo_count );
-}

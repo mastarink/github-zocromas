@@ -10,6 +10,11 @@
 /* ###################################################################### */
 
 
+const duf_ufilter_t *
+duf_pdi_pu( const duf_depthinfo_t * pdi )
+{
+  return pdi ? pdi->pu : NULL;
+}
 
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
@@ -96,6 +101,16 @@ duf_pdi_reldepth( const duf_depthinfo_t * pdi )
 #endif
 }
 
+int
+duf_pdi_topdepth( const duf_depthinfo_t * pdi )
+{
+#if 0
+  return pdi ? pdi->pathinfo.topdepth : 0;
+#else
+  return pdi ? duf_pi_topdepth( &pdi->pathinfo ) : 0;
+#endif
+}
+
 void
 duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
 {
@@ -108,20 +123,18 @@ duf_pdi_set_topdepth( duf_depthinfo_t * pdi )
 }
 
 int
-duf_pdi_topdepth( const duf_depthinfo_t * pdi )
-{
-#if 0
-  return pdi ? pdi->pathinfo.topdepth : 0;
-#else
-  return pdi ? duf_pi_topdepth( &pdi->pathinfo ) : 0;
-#endif
-
-}
-
-int
 duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->maxdepth : 0;
+#if 0
+  return pdi ? pdi->pathinfo.maxdepth : 0;
+#else
+  return pdi ? duf_pi_maxdepth( &pdi->pathinfo ) : 0;
+#endif
+}
+duf_levinfo_t *
+duf_pdi_levinfo( const duf_depthinfo_t * pdi )
+{
+  return pdi ? duf_pi_levinfo( &pdi->pathinfo ) : NULL;
 }
 
 /* pdi->pathinfo.topdepth + pdi->pathinfo.depth - pdi->pathinfo.topdepth === pdi->pathinfo.depth */
@@ -132,8 +145,8 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
 
   if ( duf_pdi_recursive( pdi ) )
   {
-    rd = d - duf_pdi_maxdepth( pdi ) < delta; /* d - maxdepth < delta */
-    DUF_TRACE( temp, 5, "(%d>0) d:%d - maxdepth:%d < delta:%d", ( rd ), d, duf_pdi_maxdepth( pdi ), delta );
+    rd = d - duf_pdi_maxdepth( pdi ) < delta; /* d - pathinfo.maxdepth < delta */
+    DUF_TRACE( temp, 5, "(%d>0) d:%d - pathinfo.maxdepth:%d < delta:%d", ( rd ), d, duf_pdi_maxdepth( pdi ), delta );
   }
   else
   {

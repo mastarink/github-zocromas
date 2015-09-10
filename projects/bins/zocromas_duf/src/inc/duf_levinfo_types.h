@@ -82,7 +82,7 @@ typedef struct duf_depthinfo_s
   unsigned inited:1;
   unsigned opendir:1;
   unsigned recursive:1;
-  unsigned maxdepth;
+  /* unsigned maxdepth; */
 #if 0
   int depth;                    /* signed !! */
   int topdepth;                 /* signed !! */

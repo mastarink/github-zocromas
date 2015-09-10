@@ -26,6 +26,9 @@ sfind duf_levinfo_ref_def.h
 tab sfind duf_pstmt_levinfo.c
 sfind duf_pstmt_levinfo.h
 
+tab sfind duf_pathinfo_credel.c
+sfind duf_pathinfo_credel.h
+
 tab sfind duf_pathinfo_ref.c
 sfind duf_pathinfo_ref.h
 sfind duf_pathinfo_ref_def.h

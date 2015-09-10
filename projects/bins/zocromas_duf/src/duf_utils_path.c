@@ -40,7 +40,7 @@ duf_pathdepth( const char *path )
     }
     r = 0;
   }
-  return r<0?r:depth;
+  return r < 0 ? r : depth;
 }
 
 char *

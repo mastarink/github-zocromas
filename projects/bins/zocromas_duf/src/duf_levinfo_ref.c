@@ -27,7 +27,7 @@ duf_levinfo_ptr_d( const duf_depthinfo_t * pdi, int d )
   assert( pdi->pathinfo.levinfo );
   return d >= 0 && pdi ? &pdi->pathinfo.levinfo[d] : NULL;
 #else
-  return ( d <= pdi->maxdepth ) ? duf_pi_ptr_d( &pdi->pathinfo, d ) : NULL;
+  return ( d <= pdi->pathinfo.maxdepth ) ? duf_pi_ptr_d( &pdi->pathinfo, d ) : NULL;
 #endif
 }
 /* *INDENT-OFF*  */

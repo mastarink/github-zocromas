@@ -32,7 +32,7 @@ noinst_HEADERS=duf.h \
 	duf_li_credel.h \
 	duf_levinfo_context.h duf_levinfo_credel.h duf_levinfo.h duf_levinfo_openclose.h duf_levinfo_stat.h \
 	duf_levinfo_ref_def.h duf_levinfo_ref.h duf_levinfo_types.h duf_levinfo_updown.h \
-	duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
+	duf_pathinfo_credel.h duf_pathinfo_ref_def.h duf_pathinfo_ref.h \
 	duf_maindb_info.h duf_maindb.h \
 	duf_maintenance.h \
 	duf_match.h \
@@ -77,7 +77,7 @@ noinst_HEADERS=duf.h \
 	duf_trace.h \
 	duf_trace_types.h \
 	duf_ufilter_types.h \
-	duf_ufilter.h duf_ufilter_bind.h \
+	duf_ufilter.h duf_ufilter_ref.h duf_ufilter_bind.h \
 	duf_eval_at_config.h \
 	duf_sys_wrap.h duf_utils.h \
 	duf_utils_path.h \

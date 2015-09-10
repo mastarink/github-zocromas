@@ -24,6 +24,10 @@
 #include "duf_pdi_ref.h"
 #include "duf_pdi_stmt.h"
 
+#include "duf_pathinfo_ref.h"
+#include "duf_pathinfo_credel.h"
+
+#include "duf_ufilter_ref.h"
 
 
 #include "duf_sql2.h"
@@ -57,7 +61,7 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
     worksql = duf_expand_selected_db( sql, pdi_name );
     DUF_TRACE( pdi, 0, "@@@to open db and attach %s", pdi->pdi_name );
     global_status.db_attached_selected = mas_strdup( pdi_name );
-    DUF_TRACE( db, 0, "@@@@ssql:%s", sql );
+    DUF_TRACE( db, 0, "@@@@@@ssql:%s", sql );
     DUF_TRACE( explain, 0, "attach selected database %s", worksql );
 #if 1
     DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
@@ -115,8 +119,9 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
   {
     /* assert( real_path ); */
     pdi->inited = 1;
-    pdi->pathinfo.depth = -1;
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
+#if 0
+    pdi->pathinfo.depth = -1;
     if ( real_path )
     {
       DOR( r, duf_pathdepth( real_path ) );
@@ -132,12 +137,25 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
       /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
       assert( max_rel_depth /* FIXME */  );
       {
-        pdi->maxdepth = max_rel_depth + ( pdi->pathinfo.topdepth ? pdi->pathinfo.topdepth : 20 );
-        pdi->recursive = frecursive ? 1 : 0;
-        pdi->opendir = opendir ? 1 : 0;
+        pdi->pathinfo.maxdepth = max_rel_depth + ( pdi->pathinfo.topdepth ? pdi->pathinfo.topdepth : 20 );
       }
     }
+#else
+
+#  if 0
+    duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, pdi->pu ? pdi->pu->max_rel_depth : 0 );
+#  else
+    duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, duf_ufilter_max_rel_depth( duf_pdi_pu( pdi ) ) );
+#  endif
+
+#endif
+    pdi->recursive = frecursive ? 1 : 0;
+    pdi->opendir = opendir ? 1 : 0;
+#if 0
     DOR( r, duf_levinfo_create( pdi, pdi->pathinfo.topdepth, frecursive, opendir ) ); /* depth = -1 */
+#else
+    DOR( r, duf_levinfo_create( pdi, duf_pdi_topdepth( pdi ), frecursive, opendir ) ); /* depth = -1 */
+#endif
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     assert( r < 0 || pdi->pathinfo.levinfo );
 
@@ -184,7 +202,7 @@ duf_pdi_init_wrap( duf_depthinfo_t * pdi, const char *real_path, int caninsert, 
     DUF_TRACE( explain, 0, "added path: %s", real_path );
     /* DUF_TRACE( path, 10, "diridpid: %llu", duf_levinfo_dirid( pdi ) ); */
   }
-  /* TODO */ assert( pdi->pathinfo.levinfo );
+  /* TODO */ assert( duf_pdi_levinfo( pdi ) );
   DEBUG_ENDR( r );
 }
 #endif
@@ -200,7 +218,7 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, con
   assert( pdi );
   assert( !real_path || *real_path == '/' );
   frec = frecursive < 0 ? duf_pdi_recursive( pdi ) : frecursive;
-  duf_pdi_shut( pdi );
+  DOR( r, duf_pdi_shut( pdi ) );
   pdi->pu = pu;
   DUF_TRACE( pdi, 0, "@@@frecursive:%d; duf_pdi_recursive( pdi ):%d; frec:%d; reinit real_path:%s", frecursive, duf_pdi_recursive( pdi ), frec,
              real_path );
@@ -216,7 +234,7 @@ duf_pdi_reinit_min( duf_depthinfo_t * pdi )
   const char *rpath;
 
   rpath = duf_levinfo_path( pdi );
-  DOR( r, duf_pdi_reinit( pdi, rpath, 0 /* caninsert */ , pdi->pu, NULL /* sql_set */ , -1, pdi->opendir ) );
+  DOR( r, duf_pdi_reinit( pdi, rpath, 0 /* caninsert */ , duf_pdi_pu( pdi ), NULL /* sql_set */ , -1, pdi->opendir ) );
   DEBUG_ENDR( r );
 }
 
@@ -271,7 +289,7 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
   if ( pdi->inited )
   {
     duf_clear_context( &pdi->context );
-    duf_levinfo_delete( pdi );
+    DOR( r, duf_levinfo_delete( pdi ) );
 
     for ( int i = 0; i < pdi->num_idstatements; r = 0, i++ )
       DOR( r, duf_pdi_finalize_idstmt( pdi, i ) );
@@ -282,8 +300,16 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     pdi->num_idstatements = 0;
     pdi->inited = 0;
     pdi->opendir = 0;
+#if 0
     pdi->pathinfo.depth = pdi->pathinfo.topdepth = 0;
-    pdi->maxdepth = 0;
+    pdi->pathinfo.maxdepth = 0;
+    assert( !pdi->pathinfo.maxdepth );
+    assert( !pdi->pathinfo.topdepth );
+    assert( !pdi->pathinfo.depth );
+    assert( !pdi->pathinfo.levinfo );
+#else
+    DOR( r, duf_pi_shut( &pdi->pathinfo ) );
+#endif
     pdi->changes = 0;
     pdi->pu = 0;
     pdi->items.dirs = pdi->items.files = pdi->items.total = 0;
@@ -293,10 +319,6 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     assert( !pdi->items.files );
     assert( !pdi->items.dirs );
     assert( !pdi->items.total );
-    assert( !pdi->maxdepth );
-    assert( !pdi->pathinfo.topdepth );
-    assert( !pdi->pathinfo.depth );
-    assert( !pdi->pathinfo.levinfo );
     assert( !pdi->changes );
     assert( !pdi->seq_node );
     assert( !pdi->seq_leaf );
@@ -315,7 +337,7 @@ int
 duf_pdi_close( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  duf_pdi_shut( pdi );
+  DOR( r, duf_pdi_shut( pdi ) );
   if ( pdi->pdi_name && global_status.db_attached_selected )
   {
     assert( 0 == strcmp( global_status.db_attached_selected, pdi->pdi_name ) );
