@@ -172,9 +172,10 @@ duf_cfg_delete( duf_config_t * cfg )
     mas_free( cfg->db.selected.fpath );
     cfg->db.selected.fpath = NULL;
 
+#if 0
     mas_free( cfg->db.opened_name );
     cfg->db.opened_name = NULL;
-
+#endif
     mas_free( cfg->save.path );
     cfg->save.path = NULL;
 

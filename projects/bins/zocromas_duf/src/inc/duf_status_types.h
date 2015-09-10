@@ -25,6 +25,8 @@ typedef struct
 typedef struct
 {
   int actions_done;
+  char *db_attached_selected;
+  char *db_opened_name;
   /* int selection_done; */
 #if 0
   duf_ufilter_t *selection_bound_ufilter;

@@ -7,9 +7,7 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-b duf_pdi_credel.c:25
-b duf_pdi.c:107
-b duf_maindb.c:499
+b duf_maindb.c:369
 
 run
 bt

@@ -13,13 +13,13 @@ typedef struct
 
 typedef struct
 {
-  unsigned opened:1;
+  /* unsigned opened:1; */
   char *dir;
   duf_db_config_t main;
   duf_db_config_t adm;
   duf_db_config_t tempo;
   duf_db_config_t selected;
-  char *opened_name;
+  /* char *opened_name; */
 } duf_dbs_config_t;
 
 typedef struct

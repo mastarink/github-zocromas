@@ -747,13 +747,6 @@ duf_option_$_version( void )
   DEBUG_END(  );
 }
 
-void
-duf_option_$_echo( const char *arg )
-{
-  /* T("@@@@@@ +++++++++++++++++++++++++++++ '%s'", optargg); */
-  DUF_PRINTF( 0, "%s", arg );
-}
-
 duf_option_code_t
 duf_flag2code( duf_config_act_flags_combo_t fset )
 {
@@ -956,36 +949,6 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
   }
 #endif
   DEBUG_END(  );
-}
-
-void
-duf_option_$_list_targ( int *ptargc, char ***ptargv, long n )
-{
-  if ( ptargc && ptargv )
-  {
-    int targc = *ptargc;
-    char **targv = *ptargv;
-
-    if ( targc && targv )
-      for ( int ia = 0; ia < targc; ia++ )
-      {
-        DUF_PRINTF( 0, "%s %d. %s", n == ia ? "*" : " ", ia, targv[ia] );
-      }
-  }
-}
-
-void
-duf_option_$_clear_targ( int *ptargc, char ***ptargv, long n )
-{
-  if ( ptargc && ptargv && n == 0 )
-    *ptargc = mas_argv_delete( *ptargc, *ptargv );
-}
-
-void
-duf_option_$_add_targ( int *ptargc, char ***ptargv, const char *s )
-{
-  if ( ptargc && ptargv )
-    *ptargc = mas_add_argv_arg( *ptargc, ptargv, s );
 }
 
 void

@@ -95,7 +95,13 @@ global_status_reset( void )
       mas_free( global_status.xcmds[pos].optargg );
     }
     mas_free( global_status.xcmds );
+    global_status.xcmds=NULL;
   }
+
+  mas_free( global_status.db_attached_selected );
+  global_status.db_attached_selected = NULL;
+  mas_free( global_status.db_opened_name );
+  global_status.db_opened_name = NULL;
 }
 
 __attribute__ ( ( constructor( 101 ) ) )

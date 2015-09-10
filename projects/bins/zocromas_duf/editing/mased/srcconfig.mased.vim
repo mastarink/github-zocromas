@@ -34,6 +34,9 @@ sfind duf_option_cmd.h
 tab sfind duf_option_help.c
 sfind duf_option_help.h
 
+tab sfind duf_option_misc.c
+sfind duf_option_misc.h
+
 tab sfind duf_option_extended.c
 sfind duf_option_extended.h
 

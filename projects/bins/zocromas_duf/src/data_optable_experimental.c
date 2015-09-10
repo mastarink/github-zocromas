@@ -7,7 +7,7 @@
 #include "duf_optable_def.h"
 
 
-#include "duf_option_help.h"
+#include "duf_option_misc.h"
 #include "duf_option_sccb.h"    /* FIXME : temp for duf_option_$_cd               */
 
 /*

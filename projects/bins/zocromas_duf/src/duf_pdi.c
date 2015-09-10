@@ -28,7 +28,7 @@
 
 #include "duf_sql2.h"
 #include "duf_maindb.h"
-
+#include "duf_status_ref.h"
 
 #include "duf_path2db.h"
 
@@ -44,26 +44,34 @@ static int
 duf_pdi_attach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
 {
   DEBUG_STARTR( r );
-  static const char *sql = "ATTACH DATABASE '${DB_PATH}${SELECTED_DB}' AS duf${SELECTED_DB}";
-  char *worksql;
 
-  worksql = duf_expand_selected_db( sql, pdi_name );
-  DUF_TRACE( pdi, 0, "@@@to open db and attach %s", pdi->pdi_name );
+  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, global_status.db_attached_selected );
   DORF( r, duf_main_db_open );
+  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, global_status.db_attached_selected );
+  /* assert( global_status.db_attached_selected == NULL ); */
+  if ( !global_status.db_attached_selected )
+  {
+    static const char *sql = "ATTACH DATABASE '${DB_PATH}${SELECTED_DB}' AS duf${SELECTED_DB}";
+    char *worksql;
 
-  DUF_TRACE( explain, 0, "attach selected database %s", worksql );
+    worksql = duf_expand_selected_db( sql, pdi_name );
+    DUF_TRACE( pdi, 0, "@@@to open db and attach %s", pdi->pdi_name );
+    global_status.db_attached_selected = mas_strdup( pdi_name );
+    DUF_TRACE( db, 0, "@@@@ssql:%s", sql );
+    DUF_TRACE( explain, 0, "attach selected database %s", worksql );
 #if 1
-  DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
+    DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
 #else
-  DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
+    DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
 #endif
-  DUF_SQL_STEP( r, pstmt );
+    DUF_SQL_STEP( r, pstmt );
 #if 1
-  DUF_SQL_END_STMT( r, pstmt );
+    DUF_SQL_END_STMT( r, pstmt );
 #else
-  DUF_SQL_END_STMT_NOPDI( r, pstmt );
+    DUF_SQL_END_STMT_NOPDI( r, pstmt );
 #endif
-  mas_free( worksql );
+    mas_free( worksql );
+  }
   DEBUG_ENDR( r );
 }
 
@@ -102,32 +110,45 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
   DEBUG_STARTR( r );
 
   assert( pdi );
+  DUF_TRACE( pdi, 0, "@@@frecursive:%d; real_path:%s", frecursive, real_path );
   if ( !pdi->inited )
   {
     /* assert( real_path ); */
     pdi->inited = 1;
     pdi->pathinfo.depth = -1;
-    DUF_TRACE( pdi, 8, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
+    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     if ( real_path )
     {
       DOR( r, duf_pathdepth( real_path ) );
       if ( DUF_NOERROR( r ) )
         pdi->pathinfo.topdepth = r;
     }
-    if ( !pdi->attached_selected )
-    {
-      if ( pdi->pdi_name )
-        DOR( r, duf_pdi_attach_selected( pdi, pdi->pdi_name ) );
-      pdi->attached_selected = 1;
-    }
     assert( pdi->pathinfo.depth == -1 );
+    {
+      int max_rel_depth = 0;
+
+      max_rel_depth = pdi && pdi->pu ? pdi->pu->max_rel_depth : 20;
+      assert( pdi->pathinfo.depth == -1 );
+      /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
+      assert( max_rel_depth /* FIXME */  );
+      {
+        pdi->maxdepth = max_rel_depth + ( pdi->pathinfo.topdepth ? pdi->pathinfo.topdepth : 20 );
+        pdi->recursive = frecursive ? 1 : 0;
+        pdi->opendir = opendir ? 1 : 0;
+      }
+    }
     DOR( r, duf_levinfo_create( pdi, pdi->pathinfo.topdepth, frecursive, opendir ) ); /* depth = -1 */
+    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     assert( r < 0 || pdi->pathinfo.levinfo );
+
+    if ( pdi->pdi_name )
+      DOR( r, duf_pdi_attach_selected( pdi, pdi->pdi_name ) );
+
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
       DOR( r, duf_real_path2db( pdi, caninsert, real_path, sql_set ) );
 
-    DUF_TRACE( pdi, 8, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
+    DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
   }
 
   DEBUG_ENDR( r );
@@ -177,13 +198,25 @@ duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert, con
   int frec = 0;
 
   assert( pdi );
-  assert( real_path && *real_path == '/' );
-  DUF_TRACE( pdi, 8, "@@@@(duf_pdi_recursive(pdi):%d) real_path:%s", duf_pdi_recursive( pdi ), real_path );
+  assert( !real_path || *real_path == '/' );
   frec = frecursive < 0 ? duf_pdi_recursive( pdi ) : frecursive;
   duf_pdi_shut( pdi );
   pdi->pu = pu;
+  DUF_TRACE( pdi, 0, "@@@frecursive:%d; duf_pdi_recursive( pdi ):%d; frec:%d; reinit real_path:%s", frecursive, duf_pdi_recursive( pdi ), frec,
+             real_path );
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( pdi, real_path, caninsert, sql_set, frec, opendir ) );
   /*OR: return duf_pdi_init( pdi, real_path, 0 ); */
+  DEBUG_ENDR( r );
+}
+
+int
+duf_pdi_reinit_min( duf_depthinfo_t * pdi )
+{
+  DEBUG_STARTR( r );
+  const char *rpath;
+
+  rpath = duf_levinfo_path( pdi );
+  DOR( r, duf_pdi_reinit( pdi, rpath, 0 /* caninsert */ , pdi->pu, NULL /* sql_set */ , -1, pdi->opendir ) );
   DEBUG_ENDR( r );
 }
 
@@ -200,7 +233,8 @@ duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert,
     {
       DUF_TRACE( pdi, 8, "@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
       assert( pdi->pdi_name );
-      DOR( r, duf_pdi_reinit( pdi, real_path, caninsert, DUF_CONFIGG(pu), sql_set, frecursive, duf_pdi_opendir( pdi ) ) );
+      DUF_TRACE( pdi, 0, "@@@reinit_a real_path:%s", real_path );
+      DOR( r, duf_pdi_reinit( pdi, real_path, caninsert, DUF_CONFIGG( pu ), sql_set, frecursive, duf_pdi_opendir( pdi ) ) );
       DUF_TRACE( pdi, 8, "@@@(FREC:%d/%d) cpath:%s; real_path:%s", DUF_UG_FLAG( recursive ), duf_pdi_recursive( pdi ), cpath, real_path );
     }
     mas_free( real_path );
@@ -282,8 +316,12 @@ duf_pdi_close( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   duf_pdi_shut( pdi );
-  if ( pdi->pdi_name && pdi->attached_selected )
+  if ( pdi->pdi_name && global_status.db_attached_selected )
+  {
+    assert( 0 == strcmp( global_status.db_attached_selected, pdi->pdi_name ) );
     DOR( r, duf_pdi_detach_selected( pdi, pdi->pdi_name ) );
-  pdi->attached_selected = 0;
+  }
+  mas_free( global_status.db_attached_selected );
+  global_status.db_attached_selected = NULL;
   DEBUG_ENDR( r );
 }

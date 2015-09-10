@@ -17,6 +17,7 @@ int duf_pdi_reinit( duf_depthinfo_t * pdi, const char *real_path, int caninsert,
 
 int duf_pdi_reinit_oldpath( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set, int recursive, int opendir );
 int duf_pdi_reinit_anypath( duf_depthinfo_t * pdi, const char *cpath, int caninsert, const duf_sql_set_t * sql_set, int frecursive );
+int duf_pdi_reinit_min( duf_depthinfo_t * pdi );
 int duf_pdi_shut( duf_depthinfo_t * pdi );
 int duf_pdi_close( duf_depthinfo_t * pdi );
 

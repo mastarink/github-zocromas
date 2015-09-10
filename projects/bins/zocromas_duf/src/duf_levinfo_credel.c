@@ -21,7 +21,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
   DEBUG_STARTR( r );
 
   assert( pdi );
-
+#if 0
   if ( !pdi->pathinfo.levinfo )
   {
     int max_rel_depth = 0;
@@ -35,24 +35,7 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
       pdi->recursive = recursive ? 1 : 0;
       pdi->opendir = opendir ? 1 : 0;
 
-#if 0
-      {
-        size_t lsz;
-
-        pdi->pathinfo.levinfo_count = pdi->maxdepth + 3;
-#  if 0
-        lsz = sizeof( pdi->pathinfo.levinfo[0] ) * ( pdi->maxdepth + 3 );
-#  else
-        lsz = sizeof( duf_levinfo_t ) * ( pdi->pathinfo.levinfo_count );
-#  endif
-        pdi->pathinfo.levinfo = mas_malloc( lsz );
-        memset( pdi->pathinfo.levinfo, 0, lsz );
-      }
-#else
       duf_pi_levinfo_create( &pdi->pathinfo, pdi->maxdepth + 3 );
-#endif
-
-
       assert( pdi->pathinfo.levinfo );
       assert( pdi->pathinfo.depth == -1 );
     }
@@ -66,6 +49,11 @@ duf_levinfo_create( duf_depthinfo_t * pdi, int pathdepth, int recursive, int ope
   else
   {
   }
+#else
+  duf_pi_levinfo_create( &pdi->pathinfo, pdi->maxdepth + 3 );
+  assert( pdi->pathinfo.levinfo );
+  assert( pdi->pathinfo.depth == -1 );
+#endif
   DEBUG_ENDR( r );
 }
 
@@ -76,7 +64,7 @@ duf_levinfo_delete( duf_depthinfo_t * pdi )
   DEBUG_STARTR( r );
 
   assert( pdi );
-  assert( pdi->pathinfo.levinfo );
+  /* assert( pdi->pathinfo.levinfo ); */
 
   if ( pdi->pathinfo.levinfo )
   {
