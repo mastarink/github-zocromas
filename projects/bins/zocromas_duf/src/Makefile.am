@@ -6,7 +6,7 @@ noinst_PROGRAMS=mtest
 
 zocromas_duf_SOURCES=				   \
 	duf.c 			\
-	duf_maindb_info.c duf_maindb.c duf_action.c		    \
+	duf_maindb_info.c duf_maindb.c		    \
 	duf_dbg.c duf_config.c duf_status.c	     \
 	duf_ufilter.c duf_ufilter_bind.c \
 	duf_options.c duf_option.c duf_option_old.c  duf_option_tmpdb.c duf_option_typed.c  \

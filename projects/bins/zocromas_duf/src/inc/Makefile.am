@@ -7,7 +7,6 @@ noinst_HEADERS=duf.h \
 	sql_beginning_vacuum.h \
 	sql_beginning_tables.h \
 	sql_beginning_types.h \
-	duf_action.h \
 	duf_base_types.h \
 	duf_cli_types.h \
 	duf_config4trace_ref.h duf_config.h duf_config_ref.h duf_config_types.h \
