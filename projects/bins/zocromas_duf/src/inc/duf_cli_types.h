@@ -40,6 +40,7 @@ typedef struct
 typedef struct
 {
   unsigned level;
+  unsigned fun_width;
   unsigned handleid;
   duf_asformats_t as_formats;
   char *sformat_dirs_tree;

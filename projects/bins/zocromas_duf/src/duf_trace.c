@@ -12,11 +12,13 @@
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
+#include "duf_config_ref.h"
 #include "duf_print_defs.h"
 #include "duf_errors.h"
 
 
 /* ###################################################################### */
+#include "duf_utils_print.h"
 #include "duf_trace.h"
 /* ###################################################################### */
 
@@ -34,9 +36,9 @@ duf_vtrace_error( duf_trace_mode_t trace_mode, const char *name, int level, duf_
 
     s = duf_error_name( ern );
     if ( ern < 0 && s )
-      fprintf( out, "\n  [%s] (#%d; i.e.%d)\n", duf_error_name( ern ), ern, duf_errindex( ern ) );
+      DUF_FPRINTFNE( 0, out, "\n  [%s] (#%d; i.e.%d)\n", duf_error_name( ern ), ern, duf_errindex( ern ) );
     else
-      fprintf( out, "Error rv=%d\n", ern );
+      DUF_FPRINTFNE( 0, out, "Error rv=%d\n", ern );
   }
   return r_;
 }
@@ -64,11 +66,13 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
     char uname[10], *puname;
     int noeol = 0;
     int noinfo = 0;
-    int highlight = 0;
+
+    /* int highlight = 0; */
 
 #ifndef DUF_NOTIMING
     struct timeval tv;
 #endif
+#if 0
     {
       int valid;
 
@@ -97,6 +101,7 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
       }
       while ( fmt += valid, valid );
     }
+#endif
     if ( !noinfo )
     {
       const char *pfuncid;
@@ -108,7 +113,19 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
       for ( int i = 0; i < sizeof( uname - 1 ) && name[i]; i++ )
         *puname++ = toupper( name[i] );
       *puname = 0;
-      fprintf( out, "%c%2d:%2d [%-7s] %3u:%-" T_FN_FMT "s:", signum, level, minlevel, uname, linid, pfuncid );
+      DUF_FPRINTFNE( 0, out, "%c%2d:%2d ", signum, level, minlevel );
+      DUF_FPRINTFNE( 0, out, "[%-7s] ", uname );
+      DUF_FPRINTFNE( 0, out, "%3u:", linid );
+#if 0
+      DUF_FPRINTFNE( 0, out, "%-" T_FN_FMT "s", pfuncid );
+#else
+      {
+        char xfmt[128];
+
+        snprintf( xfmt, sizeof( xfmt ), "%%-%ds", duf_config->cli.output.fun_width ? duf_config->cli.output.fun_width : T_FN_FMTN );
+        DUF_FPRINTFNE( 0, out, xfmt, pfuncid );
+      }
+#endif
     }
 #ifndef DUF_NOTIMING
     {
@@ -121,43 +138,47 @@ duf_vtrace( duf_trace_mode_t trace_mode, duf_trace_submode_t trace_submode, cons
         double timec = 0.;
 #  endif
         timec = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
-        fprintf( out, "%-7.4f:", timec - time0 );
+        DUF_FPRINTFNE( 0, out, " :%-6.4f:", timec - time0 );
       }
     }
 #endif
+#if 0
     {
       static char *hls[] = { "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
       if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
-        fprintf( out, "\x1b[%sm ", hls[highlight] );
+        DUF_FPRINTFNE( 0, out, "\x1b[%sm ", hls[highlight] );
       else if ( highlight )
-        fprintf( out, "\x1b[%sm ", hls[0] );
+        DUF_FPRINTFNE( 0, out, "\x1b[%sm ", hls[0] );
       else
-        fprintf( out, " " );
+        DUF_FPRINTFNE( 0, out, " " );
     }
+#endif
     if ( prefix && *prefix )
     {
-      r_ = fprintf( out, "%15s%s", prefix ? prefix : " ", prefix ? " " : "  " );
+      r_ = DUF_FPRINTFNE( 0, out, "%15s%s", prefix ? prefix : " ", prefix ? " " : "  " );
     }
     else
     {
-      r_ = fprintf( out, " " );
+      r_ = DUF_FPRINTFNE( 0, out, " " );
     }
     {
-      r_ = vfprintf( out, fmt, args );
+      r_ = DUF_VFPRINTFNE( 0, out, fmt, args );
     }
+#if 0
     if ( highlight )
-      fprintf( out, "\x1b[m" );
+      DUF_FPRINTFNE( 0, out, "\x1b[m" );
+#endif
     if ( flags & DUF_TRACE_FLAG_SYSTEM )
     {
       char serr[1024] = "Why?";
       char *s;
 
       s = strerror_r( nerr, serr, sizeof( serr ) - 1 );
-      fprintf( out, "; errno:(%d) [%s]", nerr, s );
+      DUF_FPRINTFNE( 0, out, "; errno:(%d) [%s]", nerr, s );
     }
     if ( !noeol )
     {
-      fprintf( out, "\n" );
+      DUF_FPRINTFNE( 0, out, "\n" );
     }
   }
   return r_;

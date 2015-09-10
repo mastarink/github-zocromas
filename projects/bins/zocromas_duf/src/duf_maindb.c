@@ -366,7 +366,7 @@ duf_main_db_open( void )
 #endif
   {
     assert( !global_status.db_attached_selected );
-    DUF_TRACE( db, 0, "@@@@to open db %s", DUF_CONFIGG( db.main.name ) );
+    DUF_TRACE( db, 0, "@@@@@to open db %s", DUF_CONFIGG( db.main.name ) );
     DORF( r, duf_main_db_locate );
     DORF( r, duf_main_db_optionally_remove_files );
     DORF( r, duf_sql_open, DUF_CONFIGG( db.main.fpath ) );

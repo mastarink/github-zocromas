@@ -9,14 +9,16 @@
 
 
 int
-duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
+duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, va_list args )
 {
   int ry = -1;
+  int colorize = 1;
 
   if ( level >= minlevel )
   {
     char rf = 0;
     const char *pfuncid;
+    int highlight = 0;
 
     pfuncid = funcid;
     /* if ( 0 == strncmp( pfuncid, "duf_", 4 ) ) */
@@ -28,6 +30,9 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
     /* : - prefix, no cr    */
     if ( rf == '.' || rf == ':' || rf == ';' || rf == '+' )
       fmt++;
+
+
+
     if ( ifexit )
     {
       fprintf( out, "[DIE] @ %d:%d %3u:%-" P_FN_FMT "s: ", level, minlevel, linid, pfuncid );
@@ -36,10 +41,64 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
     {
       fprintf( out, "%d:%d %3u:%-" P_FN_FMT "s: ", level, minlevel, linid, funcid );
     }
+    if ( colorize )
     {
+      int valid;
+
+#if 0
+      do
+      {
+        valid = 0;
+        if ( *fmt == '@' )
+        {
+          valid = 1;
+          highlight++;
+        }
+      }
+      while ( fmt += valid, valid );
+      {
+        static char *hls[] = { "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47" };
+        if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
+          fprintf( out, "\x1b[%sm ", hls[highlight] );
+        else if ( highlight )
+          fprintf( out, "\x1b[%sm ", hls[0] );
+        else
+          fprintf( out, " " );
+      }
       ry = vfprintf( out, fmt, args );
+      if ( highlight )
+        fprintf( out, "\x1b[m" );
+#else
+      char buf[1024 * 4];
+      const char *pbuf = buf;
+
+      ry = vsnprintf( buf, sizeof( buf ), fmt, args );
+      do
+      {
+        valid = 0;
+        if ( *pbuf == '@' )
+        {
+          valid = 1;
+          highlight++;
+        }
+      }
+      while ( pbuf += valid, valid );
+      {
+        static char *hls[] = {
+          "1;39", "1;7;37;40", "1;33;41", "1;7;32;44", "1;7;108;33", "1;7;108;32", "1;33;44", "1;37;46", "1;7;33;41", "7;101;35", "30;47"
+        };
+        if ( highlight > 0 && highlight < sizeof( hls ) / sizeof( hls[0] ) )
+          fprintf( out, "\x1b[%sm", hls[highlight] );
+        else if ( highlight )
+          fprintf( out, "\x1b[%sm", hls[0] );
+        /* fprintf( out, "%s", pbuf ); */
+        fwrite( pbuf, 1, strlen( pbuf ), out );
+        if ( highlight )
+          fprintf( out, "\x1b[m" );
+      }
+#endif
     }
-    if ( rf != '.' && rf != ':' )
+    if ( rf != '.' && rf != ':' && !noeol )
     {
       fprintf( out, "\n" );
     }
@@ -54,13 +113,13 @@ duf_vprintf( int level, int minlevel, int ifexit, const char *funcid, int linid,
 }
 
 int
-duf_printf( int level, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
+duf_printf( int level, int noeol, int minlevel, int ifexit, const char *funcid, int linid, FILE * out, const char *fmt, ... )
 {
   int ry = 0;
   va_list args;
 
   va_start( args, fmt );
-  ry = duf_vprintf( level, minlevel, ifexit, funcid, linid, out, fmt, args );
+  ry = duf_vprintf( level, noeol, minlevel, ifexit, funcid, linid, out, fmt, args );
   va_end( args );
   return ry;
 }
