@@ -28,7 +28,7 @@
  *
  * */
 int
-duf_string_options_at_string( duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
+duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_option_source_t source, const char *cmdstr, char delim )
 {
   DEBUG_STARTR( r );
 
@@ -70,7 +70,7 @@ duf_string_options_at_string( duf_option_stage_t istage, duf_option_source_t sou
         xs = mas_expand_string( s );
         DUF_TRACE( explain, 0, "xs: \"%s\"", xs );
 
-        DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, source ) );
+        DOR( r, duf_exec_cmd_long_xtables_std( xs, vseparator, istage, source ) );
 
         mas_free( xs );
       }

@@ -306,5 +306,31 @@ duf_config_optionally_show( void )
     DUF_TRACE( explain, 0, "not showing config: not verbose" );
   }
 
+#if 0
+  /* Obsolete ??? */
+  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( pu )->maxitems.total );
+  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( pu )->maxitems.files );
+  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( pu )->maxitems.dirs );
+  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( pu )->dirfiles.min );
+  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( pu )->dirfiles.max );
+#endif
+
+#ifdef MAS_TRACING
+  {
+    char *sif = NULL;
+
+    sif = mas_argv_string( duf_config->pu->globx.include_fs_files.argc, duf_config->pu->globx.include_fs_files.argv, 0 );
+    DUF_TRACE( temporary, 0, "@ include-fs %s", sif );
+    mas_free( sif );
+  }
+  {
+    char *sif = NULL;
+
+    sif = mas_argv_string( duf_config->pu->globx.exclude_fs_files.argc, duf_config->pu->globx.exclude_fs_files.argv, 0 );
+    DUF_TRACE( temporary, 0, "@ exclude-fs %s", sif );
+    mas_free( sif );
+  }
+#endif
+
   DEBUG_ENDR( r );
 }

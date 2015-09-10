@@ -15,6 +15,7 @@
 
 
 /* ###################################################################### */
+#include "duf_options.h"
 #include "duf_options_string.h"
 #include "duf_options_file.h"
 /* ###################################################################### */
@@ -113,7 +114,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
 #if 0
         DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, source ? source : DUF_OPTION_SOURCE_STREAM ) );
 #else
-        DOR( r, duf_string_options_at_string( istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
+        DOR( r, duf_string_options_at_string( 0 /* vseparator */,  istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
 #endif
 
         DUF_TRACE( options, 5, "executed cmd; r=%d; xs=%s", r, xs );
@@ -149,7 +150,7 @@ duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath 
 }
 
 static int
-duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdir, const char *filename )
+duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdir, const char *filename, int optional )
 {
   DEBUG_STARTR( r );
   FILE *f = NULL;
@@ -176,7 +177,7 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
     fclose( f );
     DUF_TRACE( explain, 0, "read config file" );
   }
-  else
+  else if ( !optional )
   {
     DUF_TRACE( explain, 0, "read config file" );
     DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
@@ -192,7 +193,7 @@ duf_infile_options_at_dir_and_file( duf_option_stage_t istage, const char *cfgdi
  * 2. call duf_infile_options_at_dir_and_file
  * */
 int
-duf_infile_options_at_file( duf_option_stage_t istage, const char *filename )
+duf_infile_options_at_file( duf_option_stage_t istage, const char *filename, int optional )
 {
   DEBUG_STARTR( r );
   const char *cfgdir = NULL;
@@ -204,7 +205,7 @@ duf_infile_options_at_file( duf_option_stage_t istage, const char *filename )
  *   =0 for other option
  *   errorcode<0 for error
  * */
-  DOR( r, duf_infile_options_at_dir_and_file( istage, cfgdir, filename ) );
+  DOR( r, duf_infile_options_at_dir_and_file( istage, cfgdir, filename, optional ) );
 
   DEBUG_ENDR( r );
 }
@@ -217,14 +218,86 @@ duf_infile_options_at_file( duf_option_stage_t istage, const char *filename )
  * 2. call duf_infile_options_at_file
  * */
 int
-duf_infile_options( duf_option_stage_t istage )
+duf_incfgf_options( duf_option_stage_t istage, const char *bfilename, int optional )
 {
   DEBUG_STARTR( r );
-  DUF_TRACE( options, 0, "@@@@(%d) source: infile(%s)", istage, DUF_CONFIG_FILE_NAME );
-  if ( istage == DUF_OPTION_STAGE_SETUP )
-    DOR( r, duf_infile_options_at_file( istage, DUF_CONFIG_FILE_NAME ) );
+  char *filename;
+
+  filename = mas_strdup( bfilename );
+  filename = mas_strcat_x( filename, ".conf" );
+  DUF_TRACE( options, 0, "@@@@(%d) source: infile(%s)", istage, filename );
+
+  DOR( r, duf_infile_options_at_file( istage, filename, optional ) );
+
+  mas_free( filename );
   DEBUG_ENDR( r );
 }
+
+int
+duf_incfg_options( duf_option_stage_t istage )
+{
+  DEBUG_STARTR( r );
+
+  if ( istage == DUF_OPTION_STAGE_SETUP )
+    DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME, 0 ) );
+
+  DEBUG_ENDR( r );
+}
+
+#if 0
+int
+duf_incfg_src_options( duf_option_stage_t istage, duf_option_source_t src )
+{
+  DEBUG_STARTR( r );
+  char *bfilename;
+
+  static const char *tail[] = {
+    [DUF_OPTION_SOURCE_NONE] = "none",
+    [DUF_OPTION_SOURCE_ENV] = "env",
+    [DUF_OPTION_SOURCE_STDIN] = "stdin",
+    [DUF_OPTION_SOURCE_STREAM] = "stream",
+    [DUF_OPTION_SOURCE_FILE] = "file",
+    [DUF_OPTION_SOURCE_CFG] = "cfg",
+    [DUF_OPTION_SOURCE_CLI] = "cli",
+    [DUF_OPTION_SOURCE_INTERACTIVE] = "interactive",
+  };
+  if ( istage > DUF_OPTION_SOURCE_NONE && istage < DUF_OPTION_SOURCE_MAX )
+  {
+    bfilename = mas_strdup( DUF_CONFIG_FILE_NAME );
+    bfilename = mas_strcat_x( bfilename, "_" );
+    bfilename = mas_strcat_x( bfilename, tail[src] );
+    DOR( r, duf_incfgf_options( istage, bfilename, 1 /* optional */  ) );
+    mas_free( bfilename );
+  }
+
+  DEBUG_ENDR( r );
+}
+#endif
+int
+duf_incfg_stg_options( duf_option_stage_t istage )
+{
+  DEBUG_STARTR( r );
+
+  if ( istage > DUF_OPTION_STAGE_ANY && istage < DUF_OPTION_STAGE_MAX )
+  {
+    char *bfilename;
+    const char *sn;
+
+    sn = duf_stage_name( istage );
+    if ( sn )
+    {
+      bfilename = mas_strdup( DUF_CONFIG_FILE_NAME );
+      bfilename = mas_strcat_x( bfilename, "_" );
+      bfilename = mas_strcat_x( bfilename, sn );
+      DOR( r, duf_incfgf_options( istage, bfilename, 1 /* optional */  ) );
+      mas_free( bfilename );
+    }
+  }
+
+  DEBUG_ENDR( r );
+}
+
+
 
 /* duf_stdin_options - can be executed only once (direct stdin reading!)  */
 int
@@ -239,7 +312,7 @@ duf_stdin_options( duf_option_stage_t istage )
     if ( !done )
     {
       DUF_TRACE( options, 4, "@@@ isatty: %d:%d:%d", isatty( STDIN_FILENO ), isatty( STDOUT_FILENO ), isatty( STDERR_FILENO ) );
-      if ( !isatty( STDIN_FILENO ) )
+      if ( !isatty( STDIN_FILENO ) /* only when stdin is NOT tty */  )
       {
         DOR( r, duf_infile_options_at_stream( istage, stdin, DUF_OPTION_SOURCE_STDIN ) );
         done = 1;

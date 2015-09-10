@@ -2,7 +2,7 @@
 #  define MAS_DUF_OPTIONS_DEF_H
 
 #  define DUF_CONFIG_PATH_FROM_ENV "MSHDIRS_CONF_DIR"
-#  define DUF_CONFIG_FILE_NAME "zocromas_duf.conf"
+#  define DUF_CONFIG_FILE_NAME "zocromas_duf"
 
 /* #  define DUF_DECLARE_OPTION(_name)                                         */
 /* #  define DUF_DECLARE_OPTION_V(_name, _val) DUF_OPTION_VAL_ ## _name = _val */

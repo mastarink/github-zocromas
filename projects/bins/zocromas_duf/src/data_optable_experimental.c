@@ -59,7 +59,7 @@ const duf_longval_extended_table_t optable_experimental = {
     /*      */ DO_OC( XCHR, cli.option_delimiter ) /*                                       */ , DO_H( history filename ) /*                 */ },
 
    {.o = {DO_Q( "echo" ) /*             */ , DO_A_R /* */ , DO_V( ECHO )} /*               */ , DO_CL( NODESC ) /*  */
-    , DO_S_CALL( echo ) /*       */ , DO_AT_STAGE( FIRST ) /*                        */ , DO_H(  ... ) /*                             */ },
+    , DO_S_CALL( echo ) /* */ , DO_STG_NOT( LOOP ), DO_SET_STAGE( FIRST, INTERACTIVE ) /*   */ , DO_H(  ... ) /*                             */ },
 
 
    {.o = {DO_Q( "test-option" ) /*      */ , DO_A_R /* */ , DO_V( TEST )} /*               */ , DO_CL( DEBUG ) /*   */ , DO_H(  .... ) /*    */ },

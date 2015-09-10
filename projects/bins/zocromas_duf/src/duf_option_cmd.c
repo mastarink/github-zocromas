@@ -14,6 +14,7 @@
 #include "duf_option.h"
 
 /* ###################################################################### */
+#include "duf_options.h"
 #include "duf_option_cmd.h"
 /* ###################################################################### */
 
@@ -33,6 +34,11 @@ duf_find_cmd_long_no( const char *string, const duf_longval_extended_t * xtended
   case ' ':
     barg = endn = strpbrk( string, "\t\r\n " );
     while ( barg && *barg && strchr( "\t\r\n ", *barg ) )
+      barg++;
+    break;
+  case 0:
+    barg = endn = strpbrk( string, "\t\r\n =" );
+    while ( barg && *barg && strchr( "\t\r\n =", *barg ) )
       barg++;
     break;
   default:
@@ -132,7 +138,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
   if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
-    DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s'", string );
+    DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_stage_name( istage ) );
   }
   DEBUG_ENDR( r );
 }

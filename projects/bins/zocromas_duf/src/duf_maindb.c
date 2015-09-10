@@ -496,32 +496,13 @@ duf_main_db( int argc, char **argv )
 
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
-  DORF( r, duf_config_optionally_show );
-  /* DORF( r, duf_main_db_open ); */
 
-  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( pu )->maxitems.total );
-  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( pu )->maxitems.files );
-  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( pu )->maxitems.dirs );
-  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( pu )->dirfiles.min );
-  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( pu )->dirfiles.max );
-#ifdef MAS_TRACING
-  {
-    char *sif = NULL;
+  /* I. duf_all_options -- STAGE_SETUP */
+  DOR_NOE( r, duf_all_options( DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
+  DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
 
-    sif = mas_argv_string( DUF_CONFIGG( pu )->globx.include_fs_files.argc, DUF_CONFIGG( pu )->globx.include_fs_files.argv, 0 );
-    DUF_TRACE( temporary, 0, "@ include-fs %s", sif );
-    mas_free( sif );
-  }
-  {
-    char *sif = NULL;
-
-    sif = mas_argv_string( DUF_CONFIGG( pu )->globx.exclude_fs_files.argc, DUF_CONFIGG( pu )->globx.exclude_fs_files.argv, 0 );
-    DUF_TRACE( temporary, 0, "@ exclude-fs %s", sif );
-    mas_free( sif );
-  }
-#endif
   DUF_TEST_RX_START( r );
-  DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name( r ) );
+  /* > */ DUF_SHOW_ERROR( "db not opened @ %s ( %s )", DUF_CONFIGG( db.main.fpath ), duf_error_name( r ) );
   DUF_TEST_RX_END( r );
 
 #if 0
@@ -530,23 +511,29 @@ duf_main_db( int argc, char **argv )
 #endif
 
 #if 0
+  /* to be removed as obsolete */
   DORF( r, DUF_WRAPPED( duf_action ) /* , argc, argv */  ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
 #else
-
+  /* call of duf_pdi_init -- after duf_all_options( DUF_OPTION_STAGE_SETUP ), before duf_all_options, DUF_OPTION_STAGE_(FIRST|INTERACTIVE) */
   DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), NULL /* real_path */ , 0 /* caninsert */ , NULL /* sql_set */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 
   DUF_TRACE( path, 0, "@@@path@pdi#FIRST: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
 
-  /* if ( duf_levinfo_path( DUF_CONFIGG(pdi) ) ) */
-  DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
-  for ( int ia = DUF_CONFIGG( targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( targ.argc ); ia++ )
+  /* II. duf_all_options -- (STAGE_FIRST + STAGE_LOOP)  or STAGE_INTERACTIVE */
+  if ( DUF_ACTG_FLAG( interactive ) )
+    DORF( r, duf_all_options, DUF_OPTION_STAGE_INTERACTIVE ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+  else
   {
-    DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), DUF_CONFIGG( targ.argv )[ia], 7 /* caninsert */ ,
-                                    NULL /* node_selector2 */ , DUF_UG_FLAG( recursive ) ) );
-    DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
-    DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+    DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+    for ( int ia = DUF_CONFIGG( targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( targ.argc ); ia++ )
+    {
+      DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), DUF_CONFIGG( targ.argv )[ia], 7 /* caninsert */ ,
+                                      NULL /* node_selector2 */ , DUF_UG_FLAG( recursive ) ) );
+      DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );
+      DORF( r, duf_all_options, DUF_OPTION_STAGE_LOOP ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
+    }
   }
 #endif
   DORF( r, duf_main_db_close, r ); /* [@] */

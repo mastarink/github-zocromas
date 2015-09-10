@@ -18,6 +18,7 @@ typedef enum
   DUF_OPTION_SOURCE_CFG,
   DUF_OPTION_SOURCE_CLI,
   DUF_OPTION_SOURCE_INTERACTIVE,
+  DUF_OPTION_SOURCE_MAX,
 } duf_option_source_t;
 
 typedef enum

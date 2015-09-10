@@ -70,7 +70,7 @@ duf_env_options_at_var( duf_option_stage_t istage, const char *envvarname )
     }
   }
 #else
-  DOR( r, duf_string_options_at_string( istage, DUF_OPTION_SOURCE_ENV, eo,  0) );
+  DOR( r, duf_string_options_at_string( '=', istage, DUF_OPTION_SOURCE_ENV, eo, 0 ) );
 #endif
   DUF_TRACE( explain, 0, "got env options from %s", envvarname );
   DEBUG_ENDR( r );

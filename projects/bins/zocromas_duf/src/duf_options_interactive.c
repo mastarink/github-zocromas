@@ -32,7 +32,7 @@ duf_interactive_options( duf_option_stage_t istage )
   DEBUG_STARTR( r );
   static char rl_prompt[256 * 10] = "";
 
-  if ( istage == DUF_OPTION_STAGE_FIRST /* XXX ???? XXX */  )
+  if ( istage == DUF_OPTION_STAGE_INTERACTIVE /* XXX ???? XXX */  )
   {
     DUF_TRACE( options, 0, "@@@@(%d) source: interactive", istage );
     if ( !*rl_prompt )
@@ -83,7 +83,8 @@ duf_interactive_options( duf_option_stage_t istage )
         DUF_TRACE( temp, 0, "@@history length:%d; offset:%d; file:%s", phstate->length, phstate->offset, DUF_CONFIGG( cli.output.history_filename ) );
       }
 #endif
-      while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) && isatty( STDIN_FILENO ) )
+      while ( DUF_NOERROR( r ) && DUF_ACTG_FLAG( interactive ) /* don't remove: this is for quit */ 
+              && isatty( STDIN_FILENO ) /* only when stdin is tty */  )
       {
         char *rl_buffer = NULL, *s = NULL;
 

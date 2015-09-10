@@ -116,17 +116,6 @@ duf_main_with_config( int argc, char **argv )
   DEBUG_STARTR( r );
 
   DUF_TRACE( any, 1, "any test" );
-
-
-  DOR_NOE( r, duf_all_options(  /* argc, argv, */ DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
-
-#if 0
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), NULL /* real_path */ , 0 /* caninsert */ , NULL /* sql_set */ ,
-                                        DUF_UG_FLAG( recursive ) /* frecursive */ ,
-                                        1 /* opendir */  ) );
-#endif
-
-
   DUF_TRACE( explain, 0, "to run duf_main_db( argc, argv )" );
 
   /* XXX XXX XXX XXX XXX XXX */
@@ -141,7 +130,7 @@ duf_main_with_config( int argc, char **argv )
 #endif
 
   if ( DUF_IF_TRACE( options ) )
-    DOR( r, duf_show_options( argv[0] ) );
+    DOR( r, duf_show_options( argv[0] ) ); /* FIXME similar to duf_config_optionally_show, called from duf_main_db called above this ??? FIXME */
 
 #ifdef MAS_TRACEMEM
   {

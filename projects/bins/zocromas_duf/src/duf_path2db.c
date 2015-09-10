@@ -319,7 +319,6 @@ duf_dirname_pdistat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_s
   }
   if ( pr )
     *pr = rpr;
-  assert( !need_id || dirid );
   DEBUG_ENDULL( dirid );
   return dirid;
 }

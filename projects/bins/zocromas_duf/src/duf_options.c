@@ -80,24 +80,25 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 
 
 #ifdef MAS_TRACING
-  int er = 0, fr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
+  int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
+  int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
 #endif
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
 
 #if 1
-#  define DUF_OPTSRC(_r, _xr, _name, _istage)  \
+#  define DUF_OPTSRC(_r, _xr, _name,  ...)  \
   { \
     if ( DUF_NOERROR( r ) ) \
     { \
-      DOR( _r, duf_ ## _name ## _options( _istage ) ); \
+      DORF( _r, duf_ ## _name ## _options,  __VA_ARGS__ ); \
       _xr = _r; \
     } \
     DUF_TRACE( options, +2, "@got " #_name " options; " #_xr ":%d (%c)  %s", _xr, _xr > ' ' && _xr < 'z' ? _xr : '-', duf_error_name( r ) ); \
   }
   DUF_OPTSRC( r, er, env, istage ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
-  DUF_OPTSRC( r, fr, infile, istage );
+  DUF_OPTSRC( r, fr, incfg, istage );
+  DUF_OPTSRC( r, sr, incfg_stg, istage );
   DUF_OPTSRC( r, or, cli, istage );
   DUF_OPTSRC( r, isi, stdin, istage );
   DUF_OPTSRC( r, ir, indirect, istage );
@@ -113,7 +114,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 
   if ( DUF_NOERROR( r ) )
   {
-    DOR( r, duf_infile_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
+    DOR( r, duf_cfg_options( istage ) ); /* => duf_exec_cmd_long_xtables_std => duf_exec_cmd_xtable => duf_clarify_xcmd_full */
     fr = r;
   }
   DUF_TRACE( options, +2, "@got infile options; fr:%d (%c)  %s", fr, fr > ' ' && fr < 'z' ? fr : '-', duf_error_name( r ) );
@@ -205,7 +206,8 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DUF_TRACE( options, +2, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; er: %d; isi: %d; ir: %d; iir: %d; tr: %d; r: %s", or, fr, er, isi, ir, iir, tr, duf_error_name( r ) );
+  DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, tr,
+             duf_error_name( r ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
 
@@ -233,4 +235,17 @@ duf_show_options( const char *a0 )
   DUF_TRACE( options, +2, " --" );
 #endif
   DEBUG_ENDR( r );
+}
+
+const char *
+duf_stage_name( duf_option_stage_t istage )
+{
+  static const char *tail[] = {
+    [DUF_OPTION_STAGE_SETUP] = "setup",
+    [DUF_OPTION_STAGE_FIRST] = "first",
+    [DUF_OPTION_STAGE_LOOP] = "loop",
+    [DUF_OPTION_STAGE_INTERACTIVE] = "interactive",
+    NULL
+  };
+  return ( istage > DUF_OPTION_STAGE_ANY && istage < DUF_OPTION_STAGE_MAX ) ? tail[istage] : NULL;
 }
