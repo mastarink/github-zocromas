@@ -224,7 +224,7 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
     if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
       DOR( r, duf_levinfo_closeat_dh_d( pdi, d ) );
 
-    assert( pdi->pathinfo.levinfo[d].lev_dh.dfd == 0 );
+    assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || pdi->pathinfo.levinfo[d].lev_dh.dfd == 0 );
 
     DUF_TEST_R( r );
     if ( !DUF_NOERROR( r ) )

@@ -40,6 +40,7 @@ duf_li_copy( duf_levinfo_t * plidst, const duf_levinfo_t * plisrc, size_t count 
   {
     plidst[i].fullpath = mas_strdup( plisrc[i].fullpath );
     plidst[i].itemname = mas_strdup( plisrc[i].itemname );
+    plidst[i].lev_dh.opened_copy = 1;
     memset( &plidst[i].context, 0, sizeof( plidst[i].context ) );
     assert( !plisrc[i].context.ptr );
     assert( !plisrc[i].context.destructor );

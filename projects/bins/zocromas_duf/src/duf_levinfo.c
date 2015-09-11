@@ -25,7 +25,7 @@ static void
 duf_li_clear( duf_levinfo_t * pli )
 {
   assert( pli );
-  assert( pli->lev_dh.dfd == 0 );
+  assert( pli->lev_dh.opened_copy || pli->lev_dh.dfd == 0 );
   if ( pli->itemname )
   {
     /* DUF_SHOW_ERROR( "CLEAR %s %p", pli->itemname, pli->itemname ); */

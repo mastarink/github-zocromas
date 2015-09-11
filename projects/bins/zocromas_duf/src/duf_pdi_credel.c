@@ -87,6 +87,7 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc )
 
   pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */ );
   duf_pdi_copy( pdi, pdisrc );
+  DUF_TRACE(pdi, 0, "@@@@@@cloned pdi %p <= %p", pdi, pdisrc );
   return pdi;
 }
 

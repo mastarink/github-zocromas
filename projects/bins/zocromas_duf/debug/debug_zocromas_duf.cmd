@@ -7,7 +7,7 @@ define hook-quit
 end
 handle SIGPIPE nostop noprint
 
-b duf_maindb.c:369
+b duf_levinfo_openclose.c:172
 
 run
 bt

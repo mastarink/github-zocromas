@@ -22,6 +22,7 @@
 #include "duf_dh.h"
 /* ###################################################################### */
 
+static unsigned long open_serial = 0;
 
 /* 20150820.142734 */
 static int
@@ -188,6 +189,8 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
     if ( ry > 0 )
     {
       pdhandle->dfd = ry;
+      pdhandle->serial = ++open_serial;
+      DUF_TRACE( fs, 0, "@@@@@openat #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
 
       DUF_TRACE( explain, 5, "lowlev. opened (%d) ≪%s≫", pdhandle->dfd, name );
 
@@ -223,6 +226,7 @@ _duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, 
   DEBUG_ENDR( r );
 }
 
+
 /* 20150820.142704 */
 int
 duf_openat_dh( duf_dirhandle_t * pdhandle, const duf_dirhandle_t * pdhandleup, const char *name, int asfile )
@@ -252,10 +256,12 @@ _duf_open_dh( duf_dirhandle_t * pdhandle, const char *path )
     int ry = 0;
 
     ry = open( path, O_DIRECTORY | O_NOFOLLOW | O_PATH | O_RDONLY );
-    DUF_TRACE( fs, 0, "lowlev. opened (%d) ≪%s≫", r, path );
+    DUF_TRACE( fs, 2, "lowlev. opened (%d) ≪%s≫", r, path );
     if ( ry >= 0 )
     {
       pdhandle->dfd = ry;
+      pdhandle->serial = ++open_serial;
+      DUF_TRACE( fs, 0, "@@@@@open #%lu. %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
       DOR( r, duf_stat_dh( pdhandle, path ) );
     }
     else
@@ -345,6 +351,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
       int ry = 0;
 
       ry = close( pdhandle->dfd );
+      DUF_TRACE( fs, 0, "@@@@ #%lu. close %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
       DUF_TRACE( explain, 5, "lowlev. closed (%d)", pdhandle->dfd );
       if ( ry )
       {
@@ -352,9 +359,17 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
           /* for debug only!!! */
           /* assert( pdhandle->dfd < 1000 ); */
         }
+        {
+          char serr[1024] = "";
+          char *s;
 
-        DUF_SHOW_ERROR( "close dfd:%d", pdhandle->dfd );
-        DUF_MAKE_ERROR( r, DUF_ERROR_CLOSE );
+          s = strerror_r( errno, serr, sizeof( serr ) );
+          DUF_SHOW_ERROR( "(%d) errno:%d close :%s;  dfd:%d", ry, errno, s ? s : serr, pdhandle->dfd );
+          DUF_MAKE_ERROR( r, DUF_ERROR_CLOSE );
+          assert( 0 );
+        }
+
+        DUF_TEST_R( r );
       }
       DUF_TRACE( fs, 5, "closed (%u - %u = %u)  h%u", DUF_CONFIGG( nopen ), DUF_CONFIGG( nclose ), DUF_CONFIGG( nopen ) - DUF_CONFIGG( nclose ),
                  pdhandle->dfd );
@@ -366,6 +381,7 @@ _duf_close_dh( duf_dirhandle_t * pdhandle )
       DUF_SHOW_ERROR( "parameter error pdhandleup->dfd:%d", pdhandle && pdhandle->dfd ? 1 : 0 );
     }
 
+    DUF_TRACE( fs, 0, "@@@@ #%lu. closed %p : %d", pdhandle->serial, pdhandle, pdhandle->dfd );
     pdhandle->dfd = 0;
   }
   DEBUG_ENDR( r );

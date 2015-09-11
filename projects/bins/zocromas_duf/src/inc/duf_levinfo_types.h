@@ -21,6 +21,8 @@ typedef struct duf_dirhandle_s
 #  if 0
   unsigned long long dirid;
 #  endif
+  int opened_copy;
+  unsigned long serial;
   int dfd;
   int rs;
   int rdb;

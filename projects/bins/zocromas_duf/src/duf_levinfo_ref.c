@@ -377,6 +377,10 @@ DUF_LEVINFO_4GET( int, dfd, lev_dh.dfd )
 DUF_LEVINFO_3GET( int, source, lev_dh.source )
 /* *INDENT-ON*  */
 
+/* *INDENT-OFF*  */
+DUF_LEVINFO_3GET( int, opened_copy, lev_dh.opened_copy )
+/* *INDENT-ON*  */
+
 
 
 /************************************************************************/

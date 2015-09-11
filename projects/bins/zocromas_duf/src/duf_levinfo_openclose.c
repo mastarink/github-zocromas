@@ -140,6 +140,21 @@ DUF_LEVINFO_F( int, opened_dh )
 DUF_LEVINFO_F_UP( int, opened_dh )
 /* *INDENT-ON*  */
 
+int
+duf_levinfo_opened_here_dh_d( duf_depthinfo_t * pdi, int d )
+{
+  DEBUG_STARTR( r );
+  if ( !duf_levinfo_opened_copy_d( pdi, d ) )
+    DOR( r, duf_levinfo_opened_dh_d( pdi, d ) );
+  DEBUG_ENDR( r );
+}
+
+/* *INDENT-OFF*  */
+DUF_LEVINFO_F( int, opened_here_dh )
+DUF_LEVINFO_F_UP( int, opened_here_dh )
+/* *INDENT-ON*  */
+
+
 /************************************************************************/
 /* 20150904.120506 */
 int
@@ -149,13 +164,15 @@ duf_levinfo_closeat_dh_d( duf_depthinfo_t * pdi, int d )
   assert( pdi );
   assert( d >= 0 );
 
-  if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )
+  if ( duf_levinfo_opened_here_dh_d( pdi, d ) > 0 )
+  {
 #if 0
     DOR( r, duf_close_dh( &duf_levinfo_ptr_d( pdi, d )->lev_dh ) );
 #else
     DOR( r, duf_close_dh( duf_levinfo_pdh_d( pdi, d ) ) );
 #endif
-  assert( duf_levinfo_dfd_d( pdi, d ) == 0 );
+  }
+  assert( !duf_levinfo_opened_here_dh_d( pdi, d ) || duf_levinfo_dfd_d( pdi, d ) == 0 );
 
   DEBUG_ENDR( r );
 }
