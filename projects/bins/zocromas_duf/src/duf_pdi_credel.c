@@ -54,6 +54,8 @@ duf_pdi_copy( duf_depthinfo_t * pdidst, duf_depthinfo_t * pdisrc )
     else
       pdidst->pdi_name = pdisrc->pdi_name;
   }
+  pdidst->db_attached_selected = mas_strdup( pdisrc->db_attached_selected );
+  pdidst->attached_copy = 1;
   pdidst->num_idstatements = 0;
   pdidst->idstatements = NULL;
   /* assert( pdisrc->num_idstatements == 0 ); */
@@ -85,26 +87,32 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc )
 {
   duf_depthinfo_t *pdi = NULL;
 
-  pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */ );
+  pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */  );
   duf_pdi_copy( pdi, pdisrc );
-  DUF_TRACE(pdi, 0, "@@@@@@cloned pdi %p <= %p", pdi, pdisrc );
+  DUF_TRACE( pdi, 0, "@@@@@@cloned pdi %p <= %p", pdi, pdisrc );
   return pdi;
 }
 
-void
+
+int 
 duf_pdi_delete( duf_depthinfo_t * pdi )
 {
-  duf_pdi_shut( pdi );
+  DEBUG_STARTR( r );
+
+  DOR( r, duf_pdi_close( pdi ) );
   if ( pdi->created_name )
     mas_free( pdi->pdi_name );
   pdi->pdi_name = NULL;
   mas_free( pdi );
+  DEBUG_ENDR( r );
 }
 
-void
+int
 duf_pdi_kill( duf_depthinfo_t ** ppdi )
 {
+  DEBUG_STARTR( r );
   if ( ppdi )
-    duf_pdi_delete( *ppdi );
+    DOR(r, duf_pdi_delete( *ppdi ));
   *ppdi = NULL;
+  DEBUG_ENDR( r );
 }

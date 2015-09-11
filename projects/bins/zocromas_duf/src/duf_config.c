@@ -54,10 +54,10 @@ duf_cfg_create( void )
     if ( ry >= 0 )
       cfg->loadtime = ( ( double ) tv.tv_sec ) + ( ( double ) tv.tv_usec ) / 1.0E6;
   }
-  cfg->db.main.name = mas_strdup( "duf-main.db" );
-  cfg->db.adm.name = mas_strdup( "duf-adm.db" );
-  cfg->db.tempo.name = mas_strdup( "duf-tempo.db" );
-  cfg->db.selected.name = mas_strdup( "duf-selected.db" );
+  cfg->db.main.name = mas_strdup( "duf-main" );
+  cfg->db.adm.name = mas_strdup( "duf-adm" );
+  cfg->db.tempo.name = mas_strdup( "duf-tempo" );
+  cfg->db.selected.name = mas_strdup( "duf-selected" );
   cfg->cli.trace.any = cfg->cli.trace.error += 1;
   /* cfg->cli.trace.options = 1; */
   /* cfg->cli.trace.fs += 1; */

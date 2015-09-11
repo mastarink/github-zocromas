@@ -79,7 +79,7 @@ mas_find_eq_value( const char *s )
   return s;
 }
 
-static char *
+static const char *
 mas_expand_getenv( const char *name, const char *arg )
 {
   return getenv( name );
@@ -140,7 +140,7 @@ mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char *
     if ( end > start )
     {
       char *vn;
-      char *vv;
+      const char *vv;
 
       vn = mas_strndup( start, end - start );
       vv = ( cb ) ( vn, arg );

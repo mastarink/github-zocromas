@@ -62,14 +62,20 @@ duf_option_$_evaluate_sccb( const char *names )
 #if 0
   ( void ) duf_evaluate_sccb_named_list( names, duf_action_table(  ) );
 #else
-  ( void ) duf_evaluate_sccb_named_list_std( names );
+  int r = 0;
+
+  DOR( r, duf_evaluate_sccb_named_list_std( names ) );
+
 #endif
 }
 
 void
 duf_option_$_db_open( void )
 {
-  ( void ) duf_main_db_open(  );
+  int rt = 0;
+
+  DOR( rt, duf_main_db_open(  ) );
+  DUF_TEST_R( rt );
 }
 
 void

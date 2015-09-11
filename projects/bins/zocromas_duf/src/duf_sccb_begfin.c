@@ -23,7 +23,7 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb, char *selected_db )
   DUF_TRACE( sql, 0, "beginning_sql '%s'",
              ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
 
-  duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , selected_db );
+ DOR( r, duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , selected_db ));
 
   DEBUG_ENDR( r );
 }
@@ -33,7 +33,7 @@ duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
-  duf_eval_sql_sequence( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */, NULL /* selected.db */ );
+ DOR( r,  duf_eval_sql_sequence( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */, NULL /* selected.db */ ));
   DEBUG_ENDR( r );
 }
 

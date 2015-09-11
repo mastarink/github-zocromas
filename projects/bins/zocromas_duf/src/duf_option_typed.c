@@ -411,7 +411,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
 #endif
           }
           else if ( optargg && *optargg )
-            duf_tmpdb_add( extended->o.val, extended->o.name, optargg );
+            DOR( r, duf_tmpdb_add( extended->o.val, extended->o.name, optargg ) );
         }
         break;
         /*

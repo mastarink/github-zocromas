@@ -38,6 +38,7 @@
 #include "duf_begfin.h"
 #include "duf_selector.h"
 
+#include "sql_tables_defs.h"
 #include "sql_beginning_common.h"
 #include "sql_beginning_tables.h"
 #include "sql_beginning_vacuum.h"
@@ -80,9 +81,11 @@ duf_main_db_locate( void )
     /* TODO move db.main.fpath and db.adm.fpath and db.tempo.fpath from duf_config to tmp etc. - it's not config values */
     /* DUF_TRACE( action, 4, "db.dir:%s; db.name:%s", DUF_CONFIGG(db.dir), DUF_CONFIGG(db.main.name) ); */
     mas_free( DUF_CONFIGW( db.main.fpath ) );
+    /* TODO to use something like duf_expand_selected_db() here TODO */
     DUF_CONFIGW( db.main.fpath ) = mas_strdup( DUF_CONFIGG( db.dir ) );
     DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), "/" );
     DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), DUF_CONFIGG( db.main.name ) );
+    DUF_CONFIGW( db.main.fpath ) = mas_strcat_x( DUF_CONFIGG( db.main.fpath ), ".db" );
     DUF_TRACE( explain, 0, "config->db.main.fpath set: %s", DUF_CONFIGG( db.main.fpath ) );
 #ifdef MAS_SPLIT_DB
     if ( DUF_CONFIGG( db.adm.name ) )
@@ -101,8 +104,10 @@ duf_main_db_locate( void )
         DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), "_$_" );
       }
       DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), DUF_CONFIGG( db.adm.name ) );
+      DUF_CONFIGW( db.adm.fpath ) = mas_strcat_x( DUF_CONFIGG( db.adm.fpath ), ".db" );
       DUF_TRACE( explain, 0, "config->db.adm.fpath set: %s", DUF_CONFIGG( db.adm.fpath ) );
     }
+#ifndef DUF_SQL_TTABLES_TEMPORARY
     if ( DUF_CONFIGG( db.tempo.name ) )
     {
       DUF_TRACE( explain, 0, "setting config->db.tempo.fpath by db.dir: %s and db.tempo.name: %s", DUF_CONFIGG( db.dir ),
@@ -120,8 +125,10 @@ duf_main_db_locate( void )
         DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), "_$_" );
       }
       DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), DUF_CONFIGG( db.tempo.name ) );
+      DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), ".db" );
       DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", DUF_CONFIGG( db.tempo.fpath ) );
     }
+#endif
 #  if 0
     if ( DUF_CONFIGG( db.selected.name ) )
     {
@@ -151,7 +158,9 @@ duf_main_db_locate( void )
       DUF_TRACE( any, 0, "dbfile: %s", DUF_CONFIGG( db.main.fpath ) );
 #ifdef MAS_SPLIT_DB
       DUF_TRACE( any, 0, "adm dbfile: %s", DUF_CONFIGG( db.adm.fpath ) );
+#ifndef DUF_SQL_TTABLES_TEMPORARY
       DUF_TRACE( any, 0, "tempo dbfile: %s", DUF_CONFIGG( db.tempo.fpath ) );
+#endif
       /* DUF_TRACE( any, 0, "selected dbfile: %s", DUF_CONFIGG(db.selected.fpath) ); */
 #endif
     }
@@ -278,6 +287,7 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
   }
+#ifndef DUF_SQL_TTABLES_TEMPORARY
   if ( DUF_CONFIGG( db.tempo.fpath ) )
   {
     static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBTEMPALIAS;
@@ -291,7 +301,7 @@ duf_main_db_tune( void )
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
   }
-
+#endif
   /* DOR( r, duf_main_db_attach_selected( "dumplet" ) ); */
 
 #  if 0

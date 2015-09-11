@@ -4,7 +4,7 @@
 #  define mas_strcat_x(...)  mas_strcat_xt (__VA_ARGS__)
 #  define mas_strncat_x(...)  mas_strncat_xt (__VA_ARGS__)
 
-typedef char *( *mas_arg_get_cb_arg_t ) ( const char *name, const char *arg );
+typedef const char *( *mas_arg_get_cb_arg_t ) ( const char *name, const char *arg );
 
 size_t mas_wordlen( const char *s );
 char *mas_chomp( char *s );

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
@@ -35,6 +36,8 @@
 #include "duf_status_ref.h"
 
 #include "duf_path2db.h"
+#include "sql_tables_defs.h"
+#include "duf_begfin.h"
 
 #include "duf_selector.h"
 
@@ -44,66 +47,41 @@
 /* ###################################################################### */
 
 /* 20150904.090635 */
+#ifdef DUF_ATTACH_PATTERN
 static int
-duf_pdi_attach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
+duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-
-  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, global_status.db_attached_selected );
-  DORF( r, duf_main_db_open );
-  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, global_status.db_attached_selected );
+  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
+  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
   /* assert( global_status.db_attached_selected == NULL ); */
-  if ( !global_status.db_attached_selected )
+  if ( !pdi->db_attached_selected )
   {
-    static const char *sql = "ATTACH DATABASE '${DB_PATH}${SELECTED_DB}' AS duf${SELECTED_DB}";
-    char *worksql;
+    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_PATTERN "' AS duf${PDI_NAME}";
+    int changes = 0;
 
-    worksql = duf_expand_selected_db( sql, pdi_name );
-    DUF_TRACE( pdi, 0, "@@@to open db and attach %s", pdi->pdi_name );
-    global_status.db_attached_selected = mas_strdup( pdi_name );
-    DUF_TRACE( db, 0, "@@@@@@ssql:%s", sql );
-    DUF_TRACE( explain, 0, "attach selected database %s", worksql );
-#if 1
-    DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
-#else
-    DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
-#endif
-    DUF_SQL_STEP( r, pstmt );
-#if 1
-    DUF_SQL_END_STMT( r, pstmt );
-#else
-    DUF_SQL_END_STMT_NOPDI( r, pstmt );
-#endif
-    mas_free( worksql );
+    pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
+    T( "%p attach %s", pdi, pdi->db_attached_selected );
+
+    DOR( r, duf_eval_sql_one_cb( sql, NULL, NULL, pdi->db_attached_selected, &changes ) );
   }
   DEBUG_ENDR( r );
 }
+#endif
 
 /* 20150904.090641 */
-static int
-duf_pdi_detach_selected( duf_depthinfo_t * pdi, const char *pdi_name )
+static int DUF_UNUSED
+duf_pdi_detach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  static const char *sql = "DETACH DATABASE 'duf${SELECTED_DB}'";
-  char *worksql;
+  static const char *sql1 = "DETACH DATABASE 'duf${PDI_NAME}'";
 
-  worksql = duf_expand_selected_db( sql, pdi_name );
-  DUF_TRACE( pdi, 0, "@@@@@detach selected database %s", worksql );
+  int changes = 0;
 
-  DUF_TRACE( explain, 0, "detach selected database %s", worksql );
-#if 1
-  DUF_SQL_START_STMT( pdi, attach, worksql, r, pstmt );
-#else
-  DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
-#endif
-  DUF_SQL_STEP( r, pstmt );
-#if 1
-  DUF_SQL_END_STMT( r, pstmt );
-#else
-  DUF_SQL_END_STMT_NOPDI( r, pstmt );
-#endif
-  DUF_TRACE( pdi, 0, "@@@@detached selected database %s", worksql );
-  mas_free( worksql );
+
+  DOR( r, duf_eval_sql_one_cb( sql1, NULL, NULL, pdi->pdi_name, &changes ) );
+  T( "(%d) DETACH changes:%d", r, changes );
+
   DEBUG_ENDR( r );
 }
 
@@ -159,9 +137,11 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     assert( r < 0 || pdi->pathinfo.levinfo );
 
+  DORF( r, duf_main_db_open );
+#ifdef DUF_ATTACH_PATTERN
     if ( pdi->pdi_name )
-      DOR( r, duf_pdi_attach_selected( pdi, pdi->pdi_name ) );
-
+      DOR( r, duf_pdi_attach_selected( pdi ) );
+#endif
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
       DOR( r, duf_real_path2db( pdi, caninsert, real_path, sql_set ) );
@@ -338,12 +318,36 @@ duf_pdi_close( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
   DOR( r, duf_pdi_shut( pdi ) );
-  if ( pdi->pdi_name && global_status.db_attached_selected )
+  if ( pdi->pdi_name && pdi->db_attached_selected && !pdi->attached_copy )
   {
-    assert( 0 == strcmp( global_status.db_attached_selected, pdi->pdi_name ) );
-    DOR( r, duf_pdi_detach_selected( pdi, pdi->pdi_name ) );
+    assert( 0 == strcmp( pdi->db_attached_selected, pdi->pdi_name ) );
+    DOR( r, duf_main_db_close( r ) );
+#ifdef DUF_ATTACH_PATTERN
+#  if 0
+    DOR( r, duf_pdi_detach_selected( pdi ) );
+#  endif
+    {
+      int ry DUF_UNUSED = 0;
+      char *selected_db_file;
+
+      selected_db_file = duf_expand_selected_db( DUF_ATTACH_PATTERN, pdi->db_attached_selected );
+      T( "@@@@A selected_db_file:%s", selected_db_file );
+#  if 0
+      ry = unlink( selected_db_file );
+      {
+        char serr[1024] = "";
+        char *s;
+
+        s = strerror_r( errno, serr, sizeof( serr ) );
+        DUF_SHOW_ERROR( "(%d) errno:%d unlink :%s;", ry, errno, s ? s : serr );
+      }
+#  endif
+      T( "@@@@@B selected_db_file:%s", selected_db_file );
+      mas_free( selected_db_file );
+    }
+#endif
   }
-  mas_free( global_status.db_attached_selected );
-  global_status.db_attached_selected = NULL;
+  mas_free( pdi->db_attached_selected );
+  pdi->db_attached_selected = NULL;
   DEBUG_ENDR( r );
 }

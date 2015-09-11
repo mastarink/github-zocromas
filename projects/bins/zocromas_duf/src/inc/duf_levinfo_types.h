@@ -21,7 +21,7 @@ typedef struct duf_dirhandle_s
 #  if 0
   unsigned long long dirid;
 #  endif
-  int opened_copy;
+  unsigned opened_copy:1;
   unsigned long serial;
   int dfd;
   int rs;
@@ -81,19 +81,21 @@ typedef struct duf_depthinfo_s
 {
   char *pdi_name;
   unsigned created_name:1;
+  unsigned attached_copy:1;
+  char *db_attached_selected;  
   unsigned inited:1;
   unsigned opendir:1;
   unsigned recursive:1;
   /* unsigned maxdepth; */
-#if 0
+#  if 0
   int depth;                    /* signed !! */
   int topdepth;                 /* signed !! */
   /* duf_node_type_t node_type; */
   /* char *path; */
   duf_levinfo_t *levinfo;
-#else
+#  else
   duf_pathinfo_t pathinfo;
-#endif
+#  endif
   unsigned long long changes;
   unsigned long long seq;
   unsigned long long seq_leaf;

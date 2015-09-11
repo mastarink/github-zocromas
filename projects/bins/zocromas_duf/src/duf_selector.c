@@ -5,6 +5,10 @@
 #include <assert.h>
 #include <unistd.h>
 
+#include <sys/types.h>
+#include <unistd.h>
+
+
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
@@ -59,15 +63,26 @@ duf_unref_fieldset( const char *fieldset )
   return fieldset;
 }
 
-static char *
-duf_getvar( const char *name, const char *arg )
+static const char *
+duf_xsdb_getvar( const char *name, const char *arg )
 {
   char *str = NULL;
+  static char buf[1024];
 
-  if ( 0 == strcmp( name, "SELECTED_DB" ) )
+  if ( 0 == strcmp( name, "PDI_NAME" ) )
     str = ( char * ) arg;
   else if ( 0 == strcmp( name, "DB_PATH" ) )
     str = ( char * ) duf_config->db.dir;
+  else if ( 0 == strcmp( name, "PID" ) )
+  {
+    str = ( char * ) buf;
+    snprintf( buf, sizeof( buf ), "%u", getpid(  ) );
+  }
+  else if ( 0 == strcmp( name, "DB_NAME" ) )
+  {
+    str = duf_config->db.main.name;
+    T("@@@@@@name:%s : %s", name, str);
+  }
   DUF_TRACE( temp, 10, "@@%s :: %s => %s", name, arg, str );
   return str;
 }
@@ -77,7 +92,7 @@ duf_expand_selected_db( const char *sql, const char *dbname )
 {
   char *nsql;
 
-  nsql = mas_expand_string_cb_arg( sql, duf_getvar, dbname );
+  nsql = mas_expand_string_cb_arg( sql, duf_xsdb_getvar, dbname );
   DUF_TRACE( temp, 10, "@@@SQL:%s => %s", sql, nsql );
   return nsql;
 }

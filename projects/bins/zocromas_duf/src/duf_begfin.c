@@ -41,9 +41,8 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
 }
 #endif
 
-static int
-duf_eval_sql_one_of_seq_cb( const char *sql, const char *title, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db,
-                            int *pchanges )
+int
+duf_eval_sql_one_cb( const char *sql, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db, int *pchanges )
 {
   DEBUG_STARTR( r );
   int changes = 0;
@@ -51,7 +50,9 @@ duf_eval_sql_one_of_seq_cb( const char *sql, const char *title, duf_bind_cb_t ca
   char *tmpsql = NULL;
 
   /* r = duf_sql( *p, &changes ); */
+#if 0
   DORF( r, duf_main_db_open );
+#endif
   if ( selected_db )
     worksql = tmpsql = duf_expand_selected_db( sql, selected_db );
   else
@@ -102,7 +103,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
     DUF_TRACE( db, 0, "@@@@@@ssql:%s", ssql->name );
     if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
     {
-      DOR( r, duf_eval_sql_one_of_seq_cb( "BEGIN", title, callback, ttarg, NULL, &changes ) );
+      DOR( r, duf_eval_sql_one_cb( "BEGIN", callback, ttarg, NULL, &changes ) );
     }
 
     while ( DUF_NOERROR( r ) && psql && *psql )
@@ -112,7 +113,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
       DUF_TRACE( select, 0, "beginning psql #%d: %s", nn, *psql );
 
       assert( ( ssql->set_selected_db && selected_db ) || ( !ssql->set_selected_db && !selected_db ) );
-      DOR( r, duf_eval_sql_one_of_seq_cb( *psql, title, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes ) );
+      DOR( r, duf_eval_sql_one_cb( *psql, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes ) );
 
       DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", title ? title : "no-title",
                  psql - psql0, *psql, changes, r < 0 ? "FAIL" : "OK" );
@@ -120,7 +121,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
     }
     if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
     {
-      DOR( r, duf_eval_sql_one_of_seq_cb( "END", title, callback, ttarg, NULL, &changes ) );
+      DOR( r, duf_eval_sql_one_cb( "END", callback, ttarg, NULL, &changes ) );
     }
     ssql->done++;
 
