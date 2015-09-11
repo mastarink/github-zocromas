@@ -55,6 +55,7 @@ noinst_HEADERS=duf.h \
 	duf_sccb_eval_dirs.h  \
 	duf_service.h \
 	mod_exif.h \
+	std_fieldsets.h \
 	std_mod_sets.h \
 	duf_mod_defs.h \
 	duf_print.h duf_printb.h duf_fileinfo.h \

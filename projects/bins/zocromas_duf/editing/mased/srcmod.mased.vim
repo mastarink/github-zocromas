@@ -35,6 +35,10 @@ tab sfind mod_save_to.c
 tab sfind mod_dir_print_uni.c
 
 tab sfind mod_tree_print_uni.c
+
+tab sfind std_fieldsets.c
+sfind std_fieldsets.h
+
 tab sfind std_mod_sets.c
 sfind std_mod_sets.h
 

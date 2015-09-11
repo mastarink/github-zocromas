@@ -92,4 +92,5 @@ duf_option_$_echo( const char *arg )
 {
   /* T("@@@@@@ +++++++++++++++++++++++++++++ '%s'", optargg); */
   DUF_PRINTF( 0, "%s", arg );
+    T( "@@@@@@@@ ECHO %d - %s", 3, arg );
 }

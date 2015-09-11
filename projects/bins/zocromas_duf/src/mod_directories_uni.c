@@ -157,7 +157,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            },
   .node = {                     /* */
            .fieldset =          /* */
-           "'dirs-node' AS fieldset_id, " /* */
+           /* "'dirs-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid " /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname,  pt.parentid " /* */

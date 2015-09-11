@@ -216,7 +216,9 @@ duf_levinfo_goup( duf_depthinfo_t * pdi )
     DUF_TRACE( scan, 10, "  " DUF_DEPTH_PFMT ": scan node: <=    by %5llu - %s", duf_pdi_depth( pdi ), duf_levinfo_dirid( pdi ),
                duf_levinfo_itemshowname( pdi ) );
   {
-    int d = pdi->pathinfo.depth--;
+    int d;
+
+    d = pdi->pathinfo.depth--;
 
     assert( d >= 0 );
     if ( duf_levinfo_opened_dh_d( pdi, d ) > 0 )

@@ -4,6 +4,7 @@
 
 #include "duf_maintenance.h"
 
+#include "duf_ufilter_ref.h"
 #include "duf_pathinfo_ref.h"
 /* ###################################################################### */
 #include "duf_pdi_ref.h"
@@ -16,12 +17,14 @@ duf_pdi_pu( const duf_depthinfo_t * pdi )
   return pdi ? pdi->pu : NULL;
 }
 
+/* needless?!? TODO */
 int
 duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
 
   assert( pdi );
+#if 0
   if ( pdi->pu->max_seq && pdi->seq >= pdi->pu->max_seq )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
   else if ( pdi->pu->maxitems.files && pdi->items.files >= pdi->pu->maxitems.files )
@@ -30,7 +33,10 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
   else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
+#else
+  DOR(r, duf_ufilter_max_filter( pdi->pu, pdi->seq, &pdi->items ));
 
+#endif
 
   /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
   /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */
@@ -131,6 +137,7 @@ duf_pdi_maxdepth( const duf_depthinfo_t * pdi )
   return pdi ? duf_pi_maxdepth( &pdi->pathinfo ) : 0;
 #endif
 }
+
 duf_levinfo_t *
 duf_pdi_levinfo( const duf_depthinfo_t * pdi )
 {
@@ -151,8 +158,12 @@ duf_pdi_is_good_depth_d( const duf_depthinfo_t * pdi, int delta, int d )
   else
   {
     rd = duf_pdi_deltadepth_d( pdi, d ) <= delta; /* d - topdepth <= delta */
-    DUF_TRACE( temp, 5, "(%d>0) pdi->pathinfo.topdepth:%d; duf_pdi_deltadepth_d( pdi, %d ):%d <= delta:%d;", ( rd ), d,
+    DUF_TRACE( temp, 5, "(%d>0) duf_pdi_topdepth(pdi):%d; duf_pdi_deltadepth_d( pdi, %d ):%d <= delta:%d;", ( rd ), d,
+#if 0
                pdi->pathinfo.topdepth, duf_pdi_deltadepth_d( pdi, d ), delta );
+#else
+               duf_pdi_topdepth( pdi ), duf_pdi_deltadepth_d( pdi, d ), delta );
+#endif
   }
 
 
@@ -166,7 +177,11 @@ duf_pdi_is_good_depth( const duf_depthinfo_t * pdi, int delta )
 {
   int rd = 0;
 
+#if 0
   rd = duf_pdi_is_good_depth_d( pdi, delta, pdi->pathinfo.depth );
+#else
+  rd = duf_pdi_is_good_depth_d( pdi, delta, duf_pdi_depth( pdi ) );
+#endif
   return rd;
 }
 

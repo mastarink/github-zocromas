@@ -16,9 +16,48 @@
 
 #include "duf_sql.h"
 
+#include "duf_hook_types.h"
+#include "duf_scan_types.h"
+
+#include "std_fieldsets.h"
 /* ###################################################################### */
 #include "duf_selector.h"
 /* ###################################################################### */
+
+const char *
+duf_find_fieldset( const char *fieldset_name )
+{
+  const char *set = NULL;
+  duf_fieldset_t *fs;
+
+  fs = all_fieldsets;
+  while ( fs && fs->name )
+  {
+    if ( 0 == strcmp( fieldset_name, fs->name ) )
+    {
+      set = fs->set;
+      break;
+    }
+    fs++;
+  }
+  return set;
+}
+
+const char *
+duf_unref_fieldset( const char *fieldset )
+{
+  if ( fieldset )
+  {
+    if ( *fieldset == '#' )
+    {
+      const char *fsn;
+
+      fsn = fieldset + 1;
+      fieldset = duf_find_fieldset( fsn );
+    }
+  }
+  return fieldset;
+}
 
 static char *
 duf_getvar( const char *name, const char *arg )
@@ -66,7 +105,7 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db )
       int has_where = 0;
 
       sql = mas_strdup( "SELECT " );
-      sql = mas_strcat_x( sql, sql_set->fieldset );
+      sql = mas_strcat_x( sql, duf_unref_fieldset( sql_set->fieldset ) );
       sql = mas_strcat_x( sql, " " );
       if ( sql_set->set_selected_db )
       {

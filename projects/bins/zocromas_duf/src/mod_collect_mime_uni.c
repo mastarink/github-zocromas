@@ -78,7 +78,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {.fieldset =          /* */
-           "'mime-leaf' AS fieldset_id, " /* */
+           /* "'mime-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid, fn.name AS filename " /* */
            ", fn.name AS dfname, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
@@ -108,7 +108,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            ,
            .count_aggregate = "distinct fd." DUF_SQL_IDNAME},
   .node = {.fieldset =          /* */
-           "'mime-node' AS fieldset_id, " /* */
+           /* "'mime-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */

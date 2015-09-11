@@ -565,7 +565,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
         }
         break;
       }
-      DUF_TRACE( options, 0, "@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", duf_error_name( r ),
+      DUF_TRACE( options, 0, "@@@@@(%s)         this (%2d:%2d:%2d) stage; vtype=%2d; xname:%-20s; arg:'%s'; no:%d", duf_error_name( r ),
                  istage, extended->stage.min, extended->stage.max, extended->vtype, extended ? extended->o.name : "?", optargg ? optargg : "", noo );
     }
     else

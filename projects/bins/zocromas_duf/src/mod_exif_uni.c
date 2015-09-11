@@ -74,7 +74,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
   /* filename for debug only */
   .leaf = {
            .fieldset =          /* */
-           "'exif-leaf' AS fieldset_id, " /* */
+           /* "'exif-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
@@ -125,7 +125,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            },                   /* */
   .node = {
            .fieldset =          /* */
-           "'exif-node' AS fieldset_id, " /* */
+           /* "'exif-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
            ", pt.dirname, pt.dirname AS dfname, pt.parentid " /* */

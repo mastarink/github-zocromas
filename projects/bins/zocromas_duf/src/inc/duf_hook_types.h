@@ -2,6 +2,7 @@
 #  define MAS_DUF_HOOK_TYPES_H
 
 #  include "duf_record_types.h"
+#  include "duf_scan_types.h" /* duf_node_type_t */
 #  include "sql_beginning_types.h"
 
 
@@ -153,7 +154,11 @@ typedef struct
 } duf_action_table_t;
 
 
-
+typedef struct  {
+  duf_node_type_t type;
+  const char *name;
+  const char *set;
+} duf_fieldset_t;
 
 
 #endif

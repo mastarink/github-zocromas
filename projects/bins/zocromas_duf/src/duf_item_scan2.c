@@ -95,13 +95,13 @@ duf_scan_db_row_with_str_cb( duf_sqlite_stmt_t * pstmt_selector, duf_str_cb2_t s
  * 2. duf_scan_db_row_with_str_cb for each row from db by ufilter
  * */
 static int
-duf_scan_db_items_with_str_cb_sql( const char *csql_selector, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
+duf_scan_db_items_with_str_cb_sql( const char *sql_selector, duf_str_cb2_t str_cb2, duf_sccb_handle_t * sccbh, duf_node_type_t node_type )
 {
   DEBUG_STARTR( r );
 
-  DUF_SQL_START_STMT_NOPDI( csql_selector, r, pstmt_selector );
-  DUF_TRACE( select, 1, "S:%s", csql_selector );
-
+  DUF_SQL_START_STMT_NOPDI( sql_selector, r, pstmt_selector );
+  DUF_TRACE( select, 1, "S:%s", sql_selector );
+/* XXX With parent ! XXX */
   DUF_SQL_BIND_LL( parentdirID, duf_levinfo_dirid( PDI ), r, pstmt_selector );
   duf_bind_ufilter_uni( pstmt_selector, NULL );
 

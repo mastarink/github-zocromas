@@ -114,7 +114,7 @@ duf_infile_options_at_stream( duf_option_stage_t istage, FILE * f, duf_option_so
 #if 0
         DOR( r, duf_exec_cmd_long_xtables_std( xs, '=', istage, source ? source : DUF_OPTION_SOURCE_STREAM ) );
 #else
-        DOR( r, duf_string_options_at_string( 0 /* vseparator */,  istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
+        DOR( r, duf_string_options_at_string( 0 /* vseparator */ , istage, source ? source : DUF_OPTION_SOURCE_STREAM, xs, 0 ) );
 #endif
 
         DUF_TRACE( options, 5, "executed cmd; r=%d; xs=%s", r, xs );
@@ -243,6 +243,17 @@ duf_incfg_options( duf_option_stage_t istage )
 
   DEBUG_ENDR( r );
 }
+
+int
+duf_incfg_last_options( duf_option_stage_t istage )
+{
+  DEBUG_STARTR( r );
+
+  DOR( r, duf_incfgf_options( istage, DUF_CONFIG_FILE_NAME "_last", 0 ) );
+
+  DEBUG_ENDR( r );
+}
+
 
 #if 0
 int

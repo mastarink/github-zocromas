@@ -83,9 +83,9 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
 
 
 #ifdef MAS_TRACING
-  int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
+  int er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #else
-  int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, tr = 0;
+  int DUF_UNUSED er = 0, fr = 0, sr = 0, or = 0, isi = 0, ir = 0, iir = 0, lr = 0, tr = 0;
 #endif
   DEBUG_E_NO( DUF_ERROR_OPTION_NOT_FOUND );
 
@@ -107,6 +107,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DUF_OPTSRC( r, ir, indirect, istage );
   if ( DUF_ACTG_FLAG( interactive ) )
     DUF_OPTSRC( r, iir, interactive, istage );
+  DUF_OPTSRC( r, lr, incfg_last, istage );
 #else
   if ( DUF_NOERROR( r ) )
   {
@@ -209,7 +210,7 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DUF_TRACE( options, +2, "@got stdin options; or:%d (%c)  %s", ir, ir > ' ' && ir < 'z' ? ir : '-', duf_error_name( r ) );
 #endif
 
-  DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, tr,
+  DUF_TRACE( explain, 2, "or: %d; fr: %d; sr: %d; er: %d; isi: %d; ir: %d; iir: %d; lr: %d; tr: %d; r: %s", or, fr, sr, er, isi, ir, iir, lr, tr,
              duf_error_name( r ) );
   DEBUG_ENDR_YES( r, DUF_ERROR_OPTION_NOT_FOUND );
 }
