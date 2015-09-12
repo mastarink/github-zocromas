@@ -44,7 +44,7 @@ static int register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinf
 
 static duf_sql_sequence_t final_sql = /* */
 {
-  .name="final @ directories",
+  .name = "final @ directories",
   .done = 0,
   .sql = {
 #if 0
@@ -152,7 +152,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
            ,
            .filter = NULL       /* */
 #else
-	     NULL
+           NULL
 #endif
            },
   .node = {                     /* */
@@ -216,7 +216,7 @@ register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 /* fname === */
   DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
-  ( void ) duf_dirname_pdistat2dirid( pdi, 1 /* caninsert */ , /* duf_levinfo_itemname( pdi ), duf_levinfo_stat( pdi ), */
-                                      &duf_directories_callbacks.node, 0 /*need_id */ , &changes, &r );
+  DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
+                                  &duf_directories_callbacks.node, 0 /*need_id */ , &changes ) );
   DEBUG_ENDR( r );
 }
