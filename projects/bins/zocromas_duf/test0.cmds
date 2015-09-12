@@ -1,0 +1,9 @@
+# run --drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress .
+# -P: add-path; -O: create-tables; -R: recursive; -f: allow-files
+drop-tables
+add-path
+create-tables
+recursive
+allow-files
+progress
+evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif
