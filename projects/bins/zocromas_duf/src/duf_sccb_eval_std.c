@@ -10,7 +10,7 @@
 #include "duf_maintenance.h"
 
 
-#include "duf_prepare_actions.h"
+#include "duf_action_table.h"
 #include "duf_sccb_eval.h"
 #include "duf_pdi_sccb_eval.h"
 /* ###################################################################### */

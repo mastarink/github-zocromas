@@ -42,48 +42,11 @@
 #include "duf_selector.h"
 
 
+#include "duf_pdi_attach.h"
 /* ###################################################################### */
 #include "duf_pdi.h"
 /* ###################################################################### */
 
-/* 20150904.090635 */
-#ifdef DUF_ATTACH_PATTERN
-static int
-duf_pdi_attach_selected( duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
-  DUF_TRACE( pdi, 0, "@@@@ opened:%s; db_attached_selected:%s", global_status.db_opened_name, pdi->db_attached_selected );
-  /* assert( global_status.db_attached_selected == NULL ); */
-  if ( !pdi->db_attached_selected )
-  {
-    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_PATTERN "' AS duf${PDI_NAME}";
-    int changes = 0;
-
-    pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-    T( "%p attach %s", pdi, pdi->db_attached_selected );
-
-    DOR( r, duf_eval_sql_one_cb( sql, NULL, NULL, pdi->db_attached_selected, &changes ) );
-  }
-  DEBUG_ENDR( r );
-}
-#endif
-
-/* 20150904.090641 */
-static int DUF_UNUSED
-duf_pdi_detach_selected( duf_depthinfo_t * pdi )
-{
-  DEBUG_STARTR( r );
-  static const char *sql1 = "DETACH DATABASE 'duf${PDI_NAME}'";
-
-  int changes = 0;
-
-
-  DOR( r, duf_eval_sql_one_cb( sql1, NULL, NULL, pdi->pdi_name, &changes ) );
-  T( "(%d) DETACH changes:%d", r, changes );
-
-  DEBUG_ENDR( r );
-}
 
 /* 20150904.085609 */
 int
@@ -138,7 +101,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     assert( r < 0 || pdi->pathinfo.levinfo );
 
   DORF( r, duf_main_db_open );
-#ifdef DUF_ATTACH_PATTERN
+#ifdef DUF_ATTACH_SELECTED_PATTERN
     if ( pdi->pdi_name )
       DOR( r, duf_pdi_attach_selected( pdi ) );
 #endif
@@ -322,7 +285,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
   {
     assert( 0 == strcmp( pdi->db_attached_selected, pdi->pdi_name ) );
     DOR( r, duf_main_db_close( r ) );
-#ifdef DUF_ATTACH_PATTERN
+#ifdef DUF_ATTACH_SELECTED_PATTERN
 #  if 0
     DOR( r, duf_pdi_detach_selected( pdi ) );
 #  endif
@@ -330,7 +293,7 @@ duf_pdi_close( duf_depthinfo_t * pdi )
       int ry DUF_UNUSED = 0;
       char *selected_db_file;
 
-      selected_db_file = duf_expand_selected_db( DUF_ATTACH_PATTERN, pdi->db_attached_selected );
+      selected_db_file = duf_expand_selected_db( DUF_ATTACH_SELECTED_PATTERN, pdi->db_attached_selected );
       T( "@@@@A selected_db_file:%s", selected_db_file );
 #  if 0
       ry = unlink( selected_db_file );

@@ -39,6 +39,8 @@
 
 #include <time.h>
 #include <assert.h>
+#include <signal.h>
+
 
 #include <mastar/wrap/mas_std_def.h>
 
@@ -67,7 +69,7 @@
 /* ###################################################################### */
 
 /*
-Ideas: count for each dir pair number of matching files => path_pairs
+TODO Ideas: count for each dir pair number of matching files => path_pairs
 
 INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fna.Pathid, fnb.Pathid
 	FROM filenames AS fna
@@ -78,9 +80,6 @@ INSERT OR IGNORE INTO path_pairs (samecnt, pathid1, pathid2) SELECT count(*), fn
   WHERE fna.Pathid != fnb.Pathid
   GROUP BY mda.rowid;
 */
-/*
- *  - (DBG) ..._disable_print_usage
- * */
 __attribute__ ( ( constructor( 101 ) ) )
      static void constructor_main( void )
 {
@@ -159,6 +158,9 @@ duf_main( int argc, char **argv )
 {
   DEBUG_STARTR( r );
   duf_config_create( argc, argv );
+
+  /* raise( SIGABRT ); */
+  /* *( ( int * ) NULL ) = 0; */
 
   DUF_E_MAX( 1, DUF_ERROR_MAX_SEQ_REACHED );
 

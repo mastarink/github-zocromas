@@ -133,17 +133,17 @@ duf_infile_options_at_filepath( duf_option_stage_t istage, const char *filepath 
 
   f = duf_infilepath( filepath, NULL );
 
-  DUF_TRACE( explain, 0, "to read config file" );
+  DUF_TRACE( options, 0, "to read config file %s", filepath );
   if ( f )
   {
     DOR( r, duf_infile_options_at_stream( istage, f, DUF_OPTION_SOURCE_FILE ) );
 
     fclose( f );
-    DUF_TRACE( explain, 0, "read config file" );
+    DUF_TRACE( options, 0, "read config file %s", filepath );
   }
   else
   {
-    DUF_TRACE( explain, 0, "read config file" );
+    DUF_TRACE( options, 0, "fail to read config file %s", filepath );
     DUF_MAKE_ERROR( r, DUF_ERROR_OPEN );
   }
   DEBUG_ENDR( r );

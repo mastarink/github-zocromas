@@ -14,123 +14,12 @@
 #include "duf_sccb.h"
 
 /* ###################################################################### */
+#include "duf_action_table.h"
 #include "duf_prepare_actions.h"
 /* ###################################################################### */
 
 
 
-extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ), /* */
-  duf_directories_callbacks __attribute( ( weak ) ), /* */
-  duf_filedata_callbacks __attribute( ( weak ) ), /* */
-  duf_filenames_callbacks __attribute( ( weak ) ), /* */
-  duf_collect_openat_crc32_callbacks __attribute( ( weak ) ), /* */
-  duf_collect_openat_sd5_callbacks __attribute( ( weak ) ), /* */
-  duf_collect_openat_md5_callbacks __attribute( ( weak ) ), /* */
-  duf_collect_mime_callbacks __attribute( ( weak ) ), duf_collect_exif_callbacks __attribute( ( weak ) ), /* */
-      /* duf_collect_mdpath_callbacks __attribute( ( weak ) ), */
-      /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
-  duf_print_tree_callbacks __attribute( ( weak ) ), /* */
-  duf_print_dir_callbacks __attribute( ( weak ) ), /* */
-  duf_sample_callbacks __attribute( ( weak ) ), /* */
-  duf_sampupd_callbacks __attribute( ( weak ) ), /* */
-  duf_dummy_callbacks __attribute( ( weak ) ), /* */
-  duf_dumplet_callbacks,        /* */
-  duf_tagit_callbacks __attribute( ( weak ) ), /* */
-  duf_save_to_callbacks __attribute( ( weak ) ), /* */
-  duf_template_callbacks __attribute( ( weak ) ), /* */
-  duf_bpbpbpbp_$_pbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbpbp __attribute( ( weak ) );
-
-static duf_action_table_t actions_table[] = {
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_integrity_callbacks,
-   .on.flag = {.integrity = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_directories_callbacks,
-   .on.flag = {.collect_obs = 1,.dirent = 1,.allow_dirs = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_filedata_callbacks,
-   .on.flag = {.collect_obs = 1,.dirent = 1,.filedata = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_filenames_callbacks,
-   .on.flag = {.collect_obs = 1,.dirent = 1,.filenames = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_openat_crc32_callbacks,
-   .on.flag = {.collect_obs = 1,.crc32_obs = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_openat_sd5_callbacks,
-   .on.flag = {.collect_obs = 1,.sd5_obs = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_openat_md5_callbacks,
-   .on.flag = {.collect_obs = 1,.md5_obs = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_mime_callbacks,
-   .on.flag = {.collect_obs = 1,.mime_obs = 1}
-   },
-  {.tovector = 1,.in_use = 1,
-   .sccb = &duf_collect_exif_callbacks,
-   .on.flag = {.collect_obs = 1,.exif_obs = 1}
-   },
-  /* {.sccb = &duf_collect_mdpath_callbacks, */
-  /*  .on.flag = {.mdpath = 1}},             */
-  {.tovector = 0,.in_use = 0,
-   .sccb = &duf_sample_callbacks,
-   },
-  {.tovector = 0,.in_use = 0,
-   .sccb = &duf_sampupd_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_template_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_tagit_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_save_to_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_dummy_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_dumplet_callbacks,
-   },
-
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_print_tree_callbacks,
-#if 0
-   .on.flag = {.print = 1,.tree = 1},
-#endif
-   .off.flag = {.md5_obs = 1}
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_print_dir_callbacks,
-#if 0
-   .on.flag = {.print = 1},
-#endif
-   .off.flag = {.md5_obs = 1
-#if 0
-                ,.tree = 1
-#endif
-                }
-   },
-  /* {.sccb = &duf_print_md5_callbacks, */
-  /*  .on.flag = {.print = 1,.md5 = 1}, */
-  /*  },                                */
-  {.sccb = NULL,.end_of_table = 1},
-};
-
-
-duf_action_table_t *
-duf_action_table( void )
-{
-  return actions_table;
-}
 
 /*
  * "convert" «duf_config» representation of tasks/actions into «sccb» list (duf_scan_callbacks_t),
