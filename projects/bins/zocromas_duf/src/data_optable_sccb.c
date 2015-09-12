@@ -35,6 +35,8 @@ const duf_longval_extended_table_t optable_sccb = {
    {.o = {DO_Q( "tree" ) /*             */ , DO_A_N /*  */ , DO_V( TREE )} /*              */ , DO_CL( NODESC ) /*  */
     , DO_VSA_CALL( evaluate_sccb, "tree" ) /* */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H(  ... ) /*                             */ },
 
+   {.o = {DO_Q( "call-file" ) /*        */ , DO_A_R /*  */ , DO_V( CALL_FILE )} /*         */ , DO_CL( NODESC ) /*  */
+    , DO_S_CALL( call_file ) /*         */ , DO_SET_STAGE( FIRST, LOOP ) /*                 */ , DO_H(  ... ) /*                             */ },
 
 
 

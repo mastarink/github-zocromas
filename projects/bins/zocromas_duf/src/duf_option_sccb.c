@@ -25,6 +25,7 @@
 #include "duf_maindb.h"
 
 
+#include "duf_options_file.h"
 /* #include "duf_option_descr.h" */
 /* #include "duf_option_extended.h" */
 /* #include "duf_option_names.h" */
@@ -67,6 +68,14 @@ duf_option_$_evaluate_sccb( const char *names )
   DOR( r, duf_evaluate_sccb_named_list_std( names ) );
 
 #endif
+}
+
+void
+duf_option_$_call_file( const char *name )
+{
+  int r DUF_UNUSED = 0;
+
+  duf_infile_options_at_filepath( DUF_OPTION_STAGE_ANY, name );
 }
 
 void
