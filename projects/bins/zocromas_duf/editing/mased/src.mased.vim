@@ -35,12 +35,6 @@ sfind duf_sel_cb_node.h
 " tab sfind duf_path.c
 " sfind duf_path.h
 
-tab sfind  duf_path2db.c
-sfind duf_path2db.h
-
-tab sfind  duf_path2dirid.c
-sfind duf_path2dirid.h
-
 tab sfind  duf_tags.c
 sfind duf_tags.h
 

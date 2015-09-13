@@ -14,7 +14,7 @@
 	duf_main_db
 	  duf_main_db_open
 	  duf_action
-	    duf_evaluate_all_at_config
+	    duf_eval_all_at_config
 	  duf_main_db_close
 
 

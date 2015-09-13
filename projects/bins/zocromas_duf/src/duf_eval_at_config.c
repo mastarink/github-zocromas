@@ -23,6 +23,7 @@
 /* ###################################################################### */
 
 
+#if 0 /* useless */
 
 /* make/evaluate «duf_config» configured tasks
  *       - global variable duf_config must be created/inited and set
@@ -32,9 +33,9 @@
  * 2. prepare «sample» sccb's by calling duf_set_actions_sample
  * 3. make/evaluate sccb sequence/list by calling duf_evaluate_sccb_array
  * */
-/* TODO with new interface duf_evaluate_all_at_config is needless; remove also corresponding options */
+/* TODO with new interface duf_eval_all_at_config is needless; remove also corresponding options */
 DUF_WRAPSTATIC int
-duf_evaluate_all_at_config( void )
+duf_eval_all_at_config( void )
 {
   DEBUG_STARTR( r );
   int max_asteps = 210;
@@ -67,7 +68,7 @@ duf_evaluate_all_at_config( void )
 }
 
 /*
- * split from duf_evaluate_all_at_config  20140901.213001
+ * split from duf_eval_all_at_config  20140901.213001
  * last function revision ...
  *
  * for each sccb at modules matching preset (options etc.) conditions:
@@ -79,8 +80,7 @@ duf_evaluate_all_at_config( void )
  *     - do final sql set from ppscan_callbacks[astep]
  * */
 #ifdef MAS_WRAP_FUNC
-int
-duf_evaluate_all_at_config_wrap( void )
+int DUF_WRAPPED( duf_eval_all_at_config ) ( void )
 {
   DEBUG_STARTR( r );
 
@@ -88,7 +88,7 @@ duf_evaluate_all_at_config_wrap( void )
   DUF_TRACE( explain, 0, "scan all; setting actions" );
   DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
 
-  DOR( r, duf_evaluate_all_at_config(  ) );
+  DOR( r, duf_eval_all_at_config(  ) );
 
 
   if ( DUF_IS_ERROR( r, DUF_ERROR_NO_ACTIONS ) )
@@ -101,11 +101,11 @@ duf_evaluate_all_at_config_wrap( void )
     dirent_optnames = duf_option_names( DUF_OPTION_VAL_FLAG_DIRENT );
     DUF_TRACE( explain, 0, "to collect something   use %s", optnames );
     DUF_TRACE( explain, 0, "to collect directories use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_ALLOW_DIRS ), dirent_optnames );
-#if 0
+#  if 0
     DUF_TRACE( explain, 0, "to collect file data   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILEDATA ), dirent_optnames );
     DUF_TRACE( explain, 0, "tO collect file names  use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_FILENAMES ), dirent_optnames );
     DUF_TRACE( explain, 0, "to collect md5 names   use %s WITH %s AND %s", optnames, DUF_OPT_NAME2( FLAG_MD5 ), dirent_optnames );
-#endif
+#  endif
     DUF_TRACE( explain, 0, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" );
     DUF_PUTSL( 0 );
     DUF_PUTSL( 0 );
@@ -119,4 +119,6 @@ duf_evaluate_all_at_config_wrap( void )
   /*   DUF_SHOW_ERROR( "code: %d", r );                */
   DEBUG_ENDR( r );
 }
+#endif
+
 #endif
