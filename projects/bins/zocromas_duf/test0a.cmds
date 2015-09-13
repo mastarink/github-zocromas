@@ -1,0 +1,13 @@
+# run --drop-tables  -PO -fR  --evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif --progress .
+# -P: add-path; -O: create-tables; -R: recursive; -f: allow-files
+recursive
+allow-files
+allow-directories
+drop-tables
+add-path
+create-tables
+progress
+cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/
+evaluate-sccb=dirs,filedata,filenames,crc32,sd5,md5,mime,exif
+call test1a.cmds
+
