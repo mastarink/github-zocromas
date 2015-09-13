@@ -21,7 +21,7 @@
 #include "duf_pdi_stmt.h"
 
 #include "duf_sql_defs.h"
-#include "duf_selector.h"
+#include "evsql_selector.h"
 
 #include "duf_sql.h"
 #include "duf_sql2.h"

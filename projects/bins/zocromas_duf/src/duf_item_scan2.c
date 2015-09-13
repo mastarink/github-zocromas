@@ -21,7 +21,7 @@
 /* #include "duf_sql.h" */
 #include "duf_sql2.h"
 #include "duf_ufilter_bind.h"
-#include "duf_selector.h"
+#include "evsql_selector.h"
 
 #include "duf_sccb.h"
 #include "duf_sccbh_shortcuts.h"

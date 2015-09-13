@@ -20,12 +20,11 @@ zocromas_duf_SOURCES=				   \
 	duf_path2db.c    \
 	duf_path2dirid.c    \
 	duf_tags.c					     \
-	duf_selector.c \
 	duf_item_scan2.c duf_leaf_scan2.c duf_sel_cb_leaf.c duf_sel_cb_node.c  duf_pstmt_levinfo.c		      \
 	duf_eval_at_config.c \
 	duf_action_table.c \
 	duf_prepare_actions.c   \
-	evsql_begfin.c \
+	evsql_begfin.c evsql_selector.c \
 	duf_sccb.c duf_sccb_handle.c  duf_sccbh_eval.c duf_pdi_sccb_eval.c duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \
 	duf_sccb_eval_dirs.c  \
 	duf_dir_scan2_stages.c	\

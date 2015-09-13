@@ -26,7 +26,6 @@ noinst_HEADERS=duf.h \
 	duf_flags_types.h \
 	duf_fun_types.h \
 	duf_hook_types.h \
-	duf_selector.h \
 	duf_item_scan2.h duf_leaf_scan2.h  duf_sel_cb_leaf.h duf_sel_cb_node.h  duf_pstmt_levinfo.h \
 	duf_item_types.h \
 	duf_li_credel.h \
@@ -51,7 +50,7 @@ noinst_HEADERS=duf.h \
 	duf_print_defs.h \
 	duf_record_types.h \
 	duf_scan_types.h \
-	evsql_begfin.h \
+	evsql_begfin.h evsql_selector.h \
 	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_eval.h duf_pdi_sccb_eval.h duf_sccb_eval.h duf_sccb_eval_std.h duf_sccb_begfin.h duf_sccbh_shortcuts.h \
 	duf_sccb_eval_dirs.h  \
 	duf_service.h \
