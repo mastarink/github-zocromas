@@ -32,14 +32,21 @@ const duf_longval_extended_table_t optable_io = {
     /*      */ DO_OC( NUM, cli.output.fun_width ) /*    */ , DO_AT_STAGE( SETUP ) /*        */ , DO_H( output fun width ) /*                 */ },
    {.o = {DO_Q( "output-header" ) /*    */ , DO_A_O /* */ , DO_V( OUTPUT_HEADER )} /*      */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( STR, cli.output.header ) /*       */ , DO_AT_STAGE( SETUP ) /*        */ , DO_H( output header ) /*                    */ },
+
    {.o = {DO_Q( "output-file" ) /*      */ , DO_A_R /* */ , DO_V( OUTPUT_FILE )} /*        */ , DO_CL( PRINT ) /*   */ ,
     /*      */ DO_OC( FILE, cli.output ) /*             */ , DO_AT_STAGE( SETUP ) /*        */ , DO_H( output to file ) /*                   */ },
+   {.o = {DO_Q( "set-output-file" ) /*  */ , DO_A_R /* */ , DO_V( OUTPUT_FILE )} /*        */ , DO_CL( PRINT ) /*   */ ,
+    /*      */ DO_OC( FILE, cli.output ) /*   */ , DO_SET_STAGE( FIRST, INTERACTIVE ) /*    */ , DO_H( output to file ) /*                   */ },
+
    {.o = {DO_Q( "output-stderr" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDERR )} /*      */ , DO_CL( PRINT ) /* */
-    ,.call = {.value = {.u = 2}}, /* */ DO_OC( FILE, cli.output ) /* */ , DO_AT_STAGE( SETUP ) /* */
-    /*                                                                                            */ , DO_H( output to stderr ) /*           */ },
+    ,.call = {.value = {.u = 2}}, /* */ DO_OC( FILE, cli.output ) /* */ , DO_AT_STAGE( SETUP ) /* */ , DO_H( output to stderr ) /*           */ },
+   {.o = {DO_Q( "set-output-stderr" ) /* */ , DO_A_N /* */ , DO_V( OUTPUT_STDERR )} /*     */ , DO_CL( PRINT ) /* */
+    ,.call = {.value = {.u = 2}}, /* */ DO_OC( FILE, cli.output ), DO_SET_STAGE( FIRST, INTERACTIVE ) /* */ , DO_H( output to stderr ) /*     */},
+
    {.o = {DO_Q( "output-stdout" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDOUT )} /*      */ , DO_CL( PRINT ) /* */
-    ,.call = {.value = {.u = 1}}, /* */ DO_OC( FILE, cli.output ) /*  */ , DO_AT_STAGE( SETUP ) /* */
-    /*                                                                                      */ , DO_H( output to stdout ) /*                 */ },
+    ,.call = {.value = {.u = 1}}, /* */ DO_OC( FILE, cli.output ), DO_AT_STAGE( SETUP ) /*  */ , DO_H( output to stdout ) /*                 */ },
+   {.o = {DO_Q( "set-output-stdout" ) /*    */ , DO_A_N /* */ , DO_V( OUTPUT_STDOUT )} /*  */ , DO_CL( PRINT ) /* */
+    ,.call = {.value = {.u = 1}}, /* */ DO_OC( FILE, cli.output ), DO_SET_STAGE( FIRST, INTERACTIVE ) /* */ , DO_H( output to stdout ) /*    */ },
 
 
    {.o = {.name = NULL}}

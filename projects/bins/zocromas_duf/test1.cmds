@@ -4,7 +4,7 @@ allow-files
 allow-directories
 output-file=/dev/pts/5
 trace-db 2
-max-seq 240
+set-max-seq 240
 cd /home/mastar/big/misc/develop/autotools/zoc/projects/bins/
 tree
 echo=@@@ 1 ============================================ ${TIME(%Y%m%d %T)} @@

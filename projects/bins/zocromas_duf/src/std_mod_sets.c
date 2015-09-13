@@ -17,6 +17,7 @@
 
 duf_sql_set_t std_leaf_sets[] = { /* */
   {                             /* */
+   .type = DUF_NODE_LEAF,
    .set_selected_db = 0,        /* */
    .fieldset =                  /* */
 #if 0
@@ -46,6 +47,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
 #endif
    ,
    .selector2 =                 /* */
+#if 0
    " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS fns " /* */
    " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
@@ -54,6 +56,9 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
+#else
+   "#std-leaf"
+#endif
    ,
    .matcher = " fn.Pathid=:parentdirID " /* */
    /* */
@@ -64,6 +69,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    }
   ,                             /* */
   {                             /* */
+   .type = DUF_NODE_LEAF,
    .fieldset =                  /* */
 #if 0
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
@@ -117,8 +123,10 @@ size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 duf_sql_set_t std_node_sets[] = { /* */
   {
+   .type = DUF_NODE_NODE,
    .set_selected_db = 0,        /* */
    .fieldset =                  /* */
+#if 0
    /* "'std-node' AS fieldset_id, " (* *) */
    " pt." DUF_SQL_IDNAME " AS dirid" /* */
    ", pt." DUF_SQL_IDNAME " AS nameid " /* */
@@ -126,6 +134,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+#else
+   "#std-node"
+#endif
    ,
    .selector2 =                 /* */
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
@@ -139,7 +150,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    }
   ,
   {
+   .type = DUF_NODE_NODE,
    .fieldset =                  /* */
+#if 0
    /* "'std-ns-node' AS fieldset_id, " (* *) */
    " pt." DUF_SQL_IDNAME " AS dirid" /* */
    ", pt." DUF_SQL_IDNAME " AS nameid " /* */
@@ -147,6 +160,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    ", tf.numfiles AS nfiles, td.numdirs AS ndirs, tf.maxsize AS maxsize, tf.minsize AS minsize " /* */
    ", pt.size AS filesize, pt.mode AS filemode, pt.dev, pt.uid, pt.gid, pt.nlink, pt.inode, pt.rdev, pt.blksize, pt.blocks " /* */
    ", STRFTIME( '%s', pt.mtim ) AS mtime " /* */
+#else
+   "#std-node"
+#endif
    ,
    .selector2 =                 /* */
    " FROM      " DUF_SQL_TABLES_PATHS_FULL " AS pt " /* */

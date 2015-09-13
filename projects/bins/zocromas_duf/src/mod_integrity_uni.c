@@ -82,10 +82,5 @@ duf_scan_callbacks_t duf_integrity_callbacks = {
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
-  .leaf = {.fieldset = NULL,
-           .selector2 = NULL}
-  ,
-  .node = {.selector2 = NULL}
-  ,
   .final_sql_seq = &final_sql,
 };

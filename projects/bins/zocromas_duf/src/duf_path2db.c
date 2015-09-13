@@ -297,7 +297,7 @@ duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_
             DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
           }
         }
-        assert( 0 );            /*  */
+        /* assert( 0 );            (*  *) */
       }
 
       DUF_TEST_R( r );

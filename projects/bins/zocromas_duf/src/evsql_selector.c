@@ -24,12 +24,13 @@
 #include "duf_scan_types.h"
 
 #include "std_fieldsets.h"
+#include "std_selectors.h"
 /* ###################################################################### */
 #include "evsql_selector.h"
 /* ###################################################################### */
 
-const char *
-duf_find_fieldset( const char *fieldset_name )
+static const char *
+duf_find_std_fieldset( const char *fieldset_name, duf_node_type_t type )
 {
   const char *set = NULL;
   duf_fieldset_t *fs;
@@ -37,7 +38,7 @@ duf_find_fieldset( const char *fieldset_name )
   fs = all_fieldsets;
   while ( fs && fs->name )
   {
-    if ( 0 == strcmp( fieldset_name, fs->name ) )
+    if ( type == fs->type && 0 == strcmp( fieldset_name, fs->name ) )
     {
       set = fs->set;
       break;
@@ -47,8 +48,28 @@ duf_find_fieldset( const char *fieldset_name )
   return set;
 }
 
-const char *
-duf_unref_fieldset( const char *fieldset )
+static const char *
+duf_find_std_selector( const char *selector_name, duf_node_type_t type )
+{
+  const char *selector = NULL;
+  duf_selector_t *sl;
+
+  sl = all_selectors;
+  while ( sl && sl->name )
+  {
+    if ( type == sl->type && 0 == strcmp( selector_name, sl->name ) )
+    {
+      selector = sl->selector2;
+      break;
+    }
+    sl++;
+  }
+  return selector;
+}
+
+
+static const char *
+duf_unref_fieldset( const char *fieldset, duf_node_type_t type )
 {
   if ( fieldset )
   {
@@ -57,11 +78,28 @@ duf_unref_fieldset( const char *fieldset )
       const char *fsn;
 
       fsn = fieldset + 1;
-      fieldset = duf_find_fieldset( fsn );
+      fieldset = duf_find_std_fieldset( fsn, type );
     }
   }
   return fieldset;
 }
+
+static const char *
+duf_unref_selector( const char *selector, duf_node_type_t type )
+{
+  if ( selector )
+  {
+    if ( *selector == '#' )
+    {
+      const char *sln;
+
+      sln = selector + 1;
+      selector = duf_find_std_selector( sln, type );
+    }
+  }
+  return selector;
+}
+
 
 static const char *
 duf_xsdb_getvar( const char *name, const char *arg )
@@ -81,7 +119,7 @@ duf_xsdb_getvar( const char *name, const char *arg )
   else if ( 0 == strcmp( name, "DB_NAME" ) )
   {
     str = duf_config->db.main.name;
-    T("@@@@@@name:%s : %s", name, str);
+    T( "@@@@@@name:%s : %s", name, str );
   }
   DUF_TRACE( temp, 10, "@@%s :: %s => %s", name, arg, str );
   return str;
@@ -120,19 +158,19 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db )
       int has_where = 0;
 
       sql = mas_strdup( "SELECT " );
-      sql = mas_strcat_x( sql, duf_unref_fieldset( sql_set->fieldset ) );
+      sql = mas_strcat_x( sql, duf_unref_fieldset( sql_set->fieldset, sql_set->type ) );
       sql = mas_strcat_x( sql, " " );
       if ( sql_set->set_selected_db )
       {
         char *tsql;
 
-        tsql = duf_expand_selected_db( sql_set->DUF_SELECTOR, selected_db );
+        tsql = duf_expand_selected_db( duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type ), selected_db );
         sql = mas_strcat_x( sql, tsql );
         mas_free( tsql );
       }
       else
       {
-        sql = mas_strcat_x( sql, sql_set->DUF_SELECTOR );
+        sql = mas_strcat_x( sql, duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type ) );
       }
 #if 1
       if ( sql_set->filter )
@@ -201,13 +239,13 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db )
       {
         char *tsql;
 
-        tsql = duf_expand_selected_db( sql_set->DUF_SELECTOR, selected_db );
+        tsql = duf_expand_selected_db( duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type ), selected_db );
         sql = mas_strcat_x( sql, tsql );
         mas_free( tsql );
       }
       else
       {
-        sql = mas_strcat_x( sql, sql_set->DUF_SELECTOR );
+        sql = mas_strcat_x( sql, duf_unref_selector( sql_set->DUF_SELECTOR, sql_set->type ) );
       }
 
 

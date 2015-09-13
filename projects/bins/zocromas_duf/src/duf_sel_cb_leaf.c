@@ -65,7 +65,7 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
   assert( PDI->pathinfo.depth >= 0 );
 
-  if ( DUF_GET_UFIELD2( md5id ) )
+  if ( 0 && DUF_GET_UFIELD2( md5id ) )
   {
     T( "@@@MD5:%llu - to take list of same files here", DUF_GET_UFIELD2( md5id ) );
   }

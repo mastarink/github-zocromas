@@ -74,7 +74,9 @@ duf_scan_callbacks_t duf_template_callbacks = {
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {.fieldset =          /* */
+  .leaf = {
+           .type = DUF_NODE_LEAF,
+           .fieldset =          /* */
            /* "'tmpl-leaf' AS fieldset_id, " (* *) */
            " fn.pathid AS dirid " /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
@@ -94,7 +96,9 @@ duf_scan_callbacks_t duf_template_callbacks = {
            ,
            .filter = NULL       /* */
            },
-  .node = {.fieldset =          /* */
+  .node = {
+           .type = DUF_NODE_NODE,
+           .fieldset =          /* */
            /* "'tmpl-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */

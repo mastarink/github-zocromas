@@ -69,6 +69,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .count_nodes = 1,
   .leaf = {                     /* */
+           .type = DUF_NODE_LEAF,
            .fieldset =          /* */
 #if 0
            "'filenames-leaf' AS fieldset_id, " /* Never used!? */
@@ -101,6 +102,7 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 #endif
            },
   .node = {                     /* */
+           .type = DUF_NODE_NODE,
            .fieldset =          /* */
            "'filenames-node' AS fieldset_id, " /* */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */

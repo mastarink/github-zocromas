@@ -73,6 +73,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {                     /* */
+           .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            /* "'crc32-leaf' AS fieldset_id, " (* *) */
            "fn.Pathid AS dirid " /* */
@@ -105,7 +106,9 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            ,                    /* */
            .count_aggregate = "distinct fd." DUF_SQL_IDNAME}
   ,
-  .node = {.fieldset =          /* */
+  .node = {
+           .type = DUF_NODE_NODE,
+           .fieldset =          /* */
            /* "'crc32-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */
@@ -176,7 +179,10 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long crc32sum, const char 
     {
       if ( need_id )
       {
-        duf_scan_callbacks_t sccb = {.leaf.fieldset = "crc32id" };
+        duf_scan_callbacks_t sccb = {
+          .leaf.type = DUF_NODE_LEAF,
+          .leaf.fieldset = "crc32id"
+        };
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &crc32id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
                              &csccbh, /* */

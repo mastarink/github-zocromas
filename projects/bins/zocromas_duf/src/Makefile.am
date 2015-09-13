@@ -55,7 +55,7 @@ zocromas_duf_SOURCES=				   \
 	mod_dumplet.c	\
 	mod_tagit.c	\
 	mod_save_to.c	\
-	std_fieldsets.c \
+	std_fieldsets.c std_selectors.c \
 	std_mod_sets.c \
 	sql_beginning_selected.c \
 	sql_beginning_common.c \

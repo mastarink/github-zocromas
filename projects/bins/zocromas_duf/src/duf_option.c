@@ -117,15 +117,18 @@ duf_parse_exec_option( duf_option_code_t codeval, int longindex, const char *opt
       {
       case ':':
         DUF_MAKE_ERROR( r, DUF_ERROR_OPTION_VALUE );
-        DUF_TRACE( options, +4, "* options r: %d", r );
+	DUF_TEST_R( r );
+        DUF_TRACE( options, +0, "* options r: %d", r );
         break;
       case '?':
         DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
-        DUF_TRACE( options, +4, "* options r: %d", r );
+	DUF_TEST_R( r );
+        DUF_TRACE( options, +0, "* options r: %d", r );
         break;
       default:
         DUF_MAKE_ERROR( r, DUF_ERROR_OPTION );
-        DUF_TRACE( options, +4, "* options r: %d; codeval:%d;", r, codeval );
+	DUF_TEST_R( r );
+        DUF_TRACE( options, +0, "* options r: %d; codeval:%d;", r, codeval );
         break;
       }
   }

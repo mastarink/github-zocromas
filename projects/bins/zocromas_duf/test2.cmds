@@ -4,7 +4,7 @@ allow-files
 allow-directories
 output-file=/dev/pts/6
 trace-db 2
-max-seq 24
+set-max-seq 24
 cd /
 ls
 echo=@@@ 1 ============================================ ${TIME(%Y%m%d %T)} @@

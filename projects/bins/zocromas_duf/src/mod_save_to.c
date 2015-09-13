@@ -81,22 +81,6 @@ duf_scan_callbacks_t duf_save_to_callbacks = {
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL,   /* */
-#if 0
-           .selector_total2 = NULL, /* */
-#endif
-           },
-  .node = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL    /* */
-           ,
-#if 0
-           .selector_total2 =   /* */
-           " /* dum */ FROM " DUF_SQL_TABLES_PATHS_FULL " AS p " /* */
-#endif
-           },
   .final_sql_seq = &final_sql,
 };
 

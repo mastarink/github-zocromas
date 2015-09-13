@@ -58,8 +58,22 @@ global_status_register_xcmd( const duf_longval_extended_t * extended, const char
     z = global_status.alloc_xcmds;
     global_status.alloc_xcmds += XCMDS_STEP;
     n = global_status.alloc_xcmds * sizeof( duf_xcmd_t );
+#if 0
     global_status.xcmds = mas_realloc( global_status.xcmds, n );
-    memset( global_status.xcmds + z * sizeof( duf_xcmd_t ), 0, XCMDS_STEP * sizeof( duf_xcmd_t ) );
+#else
+    {
+      duf_xcmd_t *xc;
+
+      xc = mas_malloc( n );
+      if ( global_status.xcmds )
+      {
+        memcpy( xc, global_status.xcmds, n );
+        mas_free( global_status.xcmds );
+      }
+      global_status.xcmds = xc;
+    }
+#endif
+    memset( global_status.xcmds + z, 0, XCMDS_STEP * sizeof( duf_xcmd_t ) );
   }
   {
     int pos;
@@ -95,7 +109,7 @@ global_status_reset( void )
       mas_free( global_status.xcmds[pos].optargg );
     }
     mas_free( global_status.xcmds );
-    global_status.xcmds=NULL;
+    global_status.xcmds = NULL;
   }
 
   mas_free( global_status.db_attached_selected );

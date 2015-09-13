@@ -60,7 +60,7 @@ noinst_HEADERS=duf.h \
 	duf_mod_defs.h \
 	duf_print.h duf_printb.h duf_fileinfo.h \
 	duf_sql2.h \
-	duf_sql_const.h \
+	duf_sql_const.h std_selectors.h \
 	duf_sql_defs.h \
 	duf_sql_field2.h \
 	duf_sql_field.h \

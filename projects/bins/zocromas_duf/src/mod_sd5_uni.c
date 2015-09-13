@@ -72,7 +72,9 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {.fieldset =          /* */
+  .leaf = {
+           .type = DUF_NODE_LEAF,
+           .fieldset =          /* */
            /* "'sd5-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
@@ -103,7 +105,9 @@ duf_scan_callbacks_t duf_collect_openat_sd5_callbacks = {
            ,
            .count_aggregate = "distinct fd." DUF_SQL_IDNAME}
   ,
-  .node = {.fieldset =          /* */
+  .node = {
+           .type = DUF_NODE_NODE,
+           .fieldset =          /* */
            /* "'sd5-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */
            ", pt." DUF_SQL_IDNAME " AS nameid " /* */

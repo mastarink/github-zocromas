@@ -63,19 +63,6 @@ duf_scan_callbacks_t duf_print_tree_callbacks = {
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 2,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 1,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-#if 0
-  .leaf = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL,   /* */
-           .selector_total2 = NULL /* */
-           }
-  ,
-  .node = {
-           .fieldset = NULL,    /* */
-           .selector2 = NULL    /* */
-           }
-#endif
-  /* , .final_sql_seq = &final_sql, */
 };
 
 /* ########################################################################################## */

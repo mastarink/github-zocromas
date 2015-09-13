@@ -18,7 +18,7 @@
 	    { \
 	      __v = _conv( optargg, &__rl ); \
 	      if ( __rl < 0 ) \
-	      { DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
+	      { DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION_VALUE);DUF_TEST_R( _rt ); } \
 	      else \
 	      { \
 		if ( _dopls && ( *optargg=='-' || *optargg=='+' ) ) \
@@ -60,7 +60,7 @@
 		c = *optargg++; \
 	      __v.min = _conv( optargg, &__rl ); \
 	      if ( __rl < 0 ) \
-	      { DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
+	      { DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION_VALUE); DUF_TEST_R( _rt ); } \
 	      else \
 	      { \
 		if ( c=='+' ) \
@@ -108,7 +108,7 @@
 	    mm->flag = 1; \
 	    mm->_mix = _conv( optargg, &__rl ); \
 	    if ( __rl < 0 ) \
-	    {  DOR(_rt, DUF_ERROR_OPTION_VALUE); } \
+	    {  DUF_MAKE_ERROR(_rt, DUF_ERROR_OPTION_VALUE);DUF_TEST_R( _rt ); } \
 	    else \
 	    { DUF_TRACE( options, 4, #_mix "%s: set:%llu", extended->o.name, (unsigned long long) mm->_mix ); } \
 	  } \

@@ -95,7 +95,9 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
 /* TODO : exp;ain values of use_std_leaf and use_std_node TODO */
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
-  .leaf = {.fieldset =          /* */
+  .leaf = {
+           .type = DUF_NODE_LEAF,
+           .fieldset =          /* */
            /* "'md5-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
            ", 0 as ndirs, 0 as nfiles" /* */
@@ -139,6 +141,7 @@ duf_scan_callbacks_t duf_collect_openat_md5_callbacks = {
            }
   ,                             /* */
   .node = {                     /* */
+           .type = DUF_NODE_NODE,
            .fieldset =          /* */
            /* "'md5-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */
@@ -203,7 +206,10 @@ duf_insert_md5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
     {
       if ( need_id )
       {
-        duf_scan_callbacks_t sccb = {.leaf.fieldset = "md5id" };
+        duf_scan_callbacks_t sccb = {
+          .leaf.type = DUF_NODE_LEAF,
+	  .leaf.fieldset = "md5id"
+	};
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &md5id, STR_CB_DEF, STR_CB_UDATA_DEF, /* */
                              &csccbh, /* */
