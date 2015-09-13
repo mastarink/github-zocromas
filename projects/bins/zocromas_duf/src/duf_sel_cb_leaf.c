@@ -9,29 +9,25 @@
 
 #include <mastar/tools/mas_arg_tools.h>
 
-
 #include "duf_maintenance.h"
-
-#include "duf_config_ref.h"     /* for DUF_ACTG_FLAG( progress ) !ONLY! */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 #include "duf_option_defs.h"    /* for DUF_ACTG_FLAG( progress ) !ONLY! */
 
 #include "duf_utils.h"          /* duf_percent */
 
 #include "duf_levinfo_ref.h"
-#include "duf_levinfo_updown.h"
-/* #include "duf_levinfo_openclose.h" */
+#include "duf_levinfo_updown.h" /* duf_levinfo_goup */
 
-/* #include "duf_pdi.h" */
-#include "duf_pdi_ref.h"
+#include "duf_pdi_ref.h"        /* duf_pdi_depth */
 
-#include "duf_sccb_def.h"
-#include "duf_sccb.h"
-#include "duf_leaf_scan2.h"
+#include "duf_sccb_def.h"       /* DUF_SCCB_PDI */
+#include "duf_sccb.h"           /* duf_uni_scan_action_title */
+#include "duf_leaf_scan2.h"     /* duf_eval_sccbh_db_leaf_fd_str_cb and duf_eval_sccbh_db_leaf_str_cb */
 
-#include "duf_sql_defs.h"
-#include "duf_sql_field.h"
+#include "duf_sql_defs.h"       /* DUF_GET_UFIELD2 */
+#include "duf_sql_field.h"      /* __duf_sql_ull_by_name2 for DUF_GET_UFIELD2 */
 
-#include "duf_sccbh_shortcuts.h"
+#include "duf_sccbh_shortcuts.h" /* PDI etc. */
 #include "duf_pstmt_levinfo.h"
 
 /* ###################################################################### */
@@ -69,7 +65,12 @@ duf_sel_cb2_leaf( duf_sqlite_stmt_t * pstmt, duf_str_cb2_t str_cb2, duf_sccb_han
   DOR( r, duf_pstmt_levinfo_godown_dbopenat_dh( pstmt, PDI, 1 /* is_leaf */  ) );
   assert( PDI->pathinfo.depth >= 0 );
 
-  if ( DUF_NOERROR( r ) )                 /* levinfo_down OK */
+  if ( DUF_GET_UFIELD2( md5id ) )
+  {
+    T( "@@@MD5:%llu - to take list of same files here", DUF_GET_UFIELD2( md5id ) );
+  }
+
+  if ( DUF_NOERROR( r ) )       /* levinfo_down OK */
   {
 
     DUF_TRACE( scan_reg, 0, "* qn%llu/q%llu T%llu %s", PDI->seq_leaf, PDI->seq, TOTITEMS, SCCB->title );

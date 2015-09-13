@@ -48,7 +48,7 @@
 
 /* 20150912.094647 */
 #ifdef DUF_ATTACH_SELECTED_PATTERN
- int
+int
 duf_pdi_attach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
@@ -63,14 +63,14 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
     pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
     T( "%p attach %s", pdi, pdi->db_attached_selected );
 
-    DOR( r, duf_eval_sql_one_cb( sql, NULL, NULL, pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql, pdi->db_attached_selected, &changes ) );
   }
   DEBUG_ENDR( r );
 }
 #endif
 
 /* 20150904.090641 */
- int DUF_UNUSED
+int DUF_UNUSED
 duf_pdi_detach_selected( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
@@ -79,9 +79,8 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   int changes = 0;
 
 
-  DOR( r, duf_eval_sql_one_cb( sql1, NULL, NULL, pdi->pdi_name, &changes ) );
+  DOR( r, duf_eval_sql_one( sql1, pdi->pdi_name, &changes ) );
   T( "(%d) DETACH changes:%d", r, changes );
 
   DEBUG_ENDR( r );
 }
-

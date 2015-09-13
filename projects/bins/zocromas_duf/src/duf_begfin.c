@@ -41,6 +41,14 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
 }
 #endif
 
+/* 20150913.101022
+ *  evaluate one sql statement with callback
+ * 1. expand sql statement with duf variables ${...}
+ * 2. prepare statement
+ * 3. make callback for ...?
+ * 4. sql ONE step, store changes, no any selects
+ * 5. end statement
+ * */
 int
 duf_eval_sql_one_cb( const char *sql, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db, int *pchanges )
 {
@@ -79,6 +87,20 @@ duf_eval_sql_one_cb( const char *sql, duf_bind_cb_t callback, const duf_argvc_t 
   DEBUG_ENDR( r );
 }
 
+/* 20150913.101952
+ *  evaluate one sql statement without callback 
+ * */
+int
+duf_eval_sql_one( const char *sql, const char *selected_db, int *pchanges )
+{
+  DEBUG_STARTR( r );
+  DOR( r, duf_eval_sql_one_cb( sql, NULL, NULL, selected_db, pchanges ) );
+  DEBUG_ENDR( r );
+}
+
+/* 20150913.101143
+ *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END
+ * */
 int
 duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db )
 {
@@ -129,6 +151,9 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
   DEBUG_ENDR( r );
 }
 
+/* 20150913.101143
+ *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END, without callback
+ * */
 int
 duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title, const char *selected_db )
 {
