@@ -1,5 +1,5 @@
-#ifndef   MAS_DUF_BEGFIN_H
-#  define MAS_DUF_BEGFIN_H
+#ifndef   MAS_EVSQL_BEGFIN_H
+#  define MAS_EVSQL_BEGFIN_H
 
 /* 20150913.101022
  * 1. expand sql statement with duf variables ${...}

@@ -25,7 +25,7 @@ zocromas_duf_SOURCES=				   \
 	duf_eval_at_config.c \
 	duf_action_table.c \
 	duf_prepare_actions.c   \
-	duf_begfin.c \
+	evsql_begfin.c \
 	duf_sccb.c duf_sccb_handle.c  duf_sccbh_eval.c duf_pdi_sccb_eval.c duf_sccb_eval.c duf_sccb_eval_std.c duf_sccb_begfin.c \
 	duf_sccb_eval_dirs.c  \
 	duf_dir_scan2_stages.c	\

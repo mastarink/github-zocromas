@@ -51,7 +51,7 @@ noinst_HEADERS=duf.h \
 	duf_print_defs.h \
 	duf_record_types.h \
 	duf_scan_types.h \
-	duf_sccb_begfin.h \
+	evsql_begfin.h \
 	duf_sccb.h duf_sccb_def.h duf_sccb_handle.h duf_sccbh_eval.h duf_pdi_sccb_eval.h duf_sccb_eval.h duf_sccb_eval_std.h duf_sccb_begfin.h duf_sccbh_shortcuts.h \
 	duf_sccb_eval_dirs.h  \
 	duf_service.h \

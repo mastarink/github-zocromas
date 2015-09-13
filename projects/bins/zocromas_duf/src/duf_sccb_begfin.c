@@ -6,7 +6,7 @@
 #include "duf_maintenance.h"
 
 #include "duf_sccb.h"
-#include "duf_begfin.h"
+#include "evsql_begfin.h"
 
 #include "duf_maindb.h"
 

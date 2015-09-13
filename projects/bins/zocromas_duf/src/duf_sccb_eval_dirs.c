@@ -81,6 +81,7 @@ duf_eval_sccbh_all( duf_sqlite_stmt_t * pstmt_selector, duf_sccb_handle_t * sccb
     DUF_TRACE( scan, 4, "scan stage by %5llu:%s; %s", duf_levinfo_dirid( PDI ), duf_uni_scan_action_title( SCCB ), duf_levinfo_path( PDI ) );
 
     DUF_TRACE( sccbh, 5, "%d. stage (%s)", nn, duf_uni_scan_action_title( SCCB ) );
+    /* XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX */
     DOR( r, ( *pstage ) ( pstmt_selector, sccbh ) );
     /*                                                     */ DUF_TRACE( scan, 4, "[%llu]", duf_levinfo_dirid( PDI ) );
   }

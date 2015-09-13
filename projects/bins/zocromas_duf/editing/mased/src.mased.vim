@@ -40,9 +40,6 @@ sfind duf_ufilter_bind.h
 " tab sfind duf_file_pathid2.c
 " sfind duf_file_pathid2.h
 
-tab sfind duf_begfin.c
-sfind duf_begfin.h
-
 
 " tab sfind duf_path.c
 " sfind duf_path.h
