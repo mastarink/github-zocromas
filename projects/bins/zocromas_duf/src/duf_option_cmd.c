@@ -136,7 +136,7 @@ duf_exec_cmd_long_xtables( const char *string, const duf_longval_extended_table_
   DUF_TRACE( options, 6, "(%d:%s) executed cmd; xs=%s", r, duf_error_name( r ), string );
   if ( found )
     DUF_CLEAR_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND );
-  if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) )
+  if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) )
   {
     DUF_SHOW_ERROR( "@@@@@@@Invalid command -- '%s' at %s stage", string, duf_stage_name( istage ) );
   }

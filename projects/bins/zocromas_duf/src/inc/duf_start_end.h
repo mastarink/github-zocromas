@@ -18,7 +18,7 @@
 												DUF_ENDRETT(_rt)
 /* #  define DUF_ENDRQ(_rt,_cond)    DUF_TEST_RQ(_rt,_cond);                                       DUF_ENDRETT(_rt) */
 /* #  define DUF_ENDRN(_rt)          DUF_TEST_RN(_rt);                                             DUF_ENDRETT(_rt, int) */
-#  define DUF_ENDR3(_rt3)         DUF_TEST_R( DUF_SQLITE_ERROR_CODE(_rt3) );                    DUF_ENDRETT(_rt3, int)
+#  define DUF_ENDR3(_rt3)         DUF_TEST_R( DUF_SQLITE2R_ERROR_CODE(_rt3) );                    DUF_ENDRETT(_rt3, int)
 #  define DUF_ENDULL(_rt)                                                                       DUF_ENDRETT(_rt, unsigned long long)
 #  define DUF_ENDS(_s)                                                                          DUF_ENDRETT(_s, char *)
 #  define DUF_ENDCS(_s)                                                                          DUF_ENDRETT(_s, const char *)

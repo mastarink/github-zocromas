@@ -189,7 +189,6 @@ static int
 register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
-  int changes = 0;
 
 
 #if 0
@@ -219,6 +218,6 @@ register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
-                                  &duf_directories_callbacks.node, 0 /*need_id */ , &changes ) );
+                                  &duf_directories_callbacks.node, 0 /* need_id - no error (1=error) if there is no record */  ) );
   DEBUG_ENDR( r );
 }

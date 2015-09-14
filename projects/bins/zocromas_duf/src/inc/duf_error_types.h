@@ -1,7 +1,7 @@
 #ifndef MAS_DUF_ERROR_TYPES_H
 #  define MAS_DUF_ERROR_TYPES_H
 
-#  define DUF_SQLITE_ERROR_CODE(r3c) duf_sqlite_error_code(r3c)
+#  define DUF_SQLITE2R_ERROR_CODE(r3c) duf_sqlite2r_error_code(r3c)
 
 typedef enum
 {

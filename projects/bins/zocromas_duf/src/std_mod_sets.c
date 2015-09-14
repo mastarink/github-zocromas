@@ -98,6 +98,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
 #endif
    ,
    .selector2 =                 /* */
+#if 0
    " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
    /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
    " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
@@ -106,6 +107,9 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
+#else
+   "#std-leaf"
+#endif
    ,
    .matcher = " fn.Pathid=:parentdirID " /* */
    /* " ORDER BY fn." DUF_SQL_IDNAME " " *//* */

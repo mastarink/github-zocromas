@@ -91,7 +91,7 @@ int DUF_WRAPPED( duf_eval_all_at_config ) ( void )
   DOR( r, duf_eval_all_at_config(  ) );
 
 
-  if ( DUF_IS_ERROR( r, DUF_ERROR_NO_ACTIONS ) )
+  if ( DUF_IS_ERROR_N( r, DUF_ERROR_NO_ACTIONS ) )
   {
     char *optnames = NULL;
     char *dirent_optnames = NULL;
@@ -113,7 +113,7 @@ int DUF_WRAPPED( duf_eval_all_at_config ) ( void )
     mas_free( optnames );
   }
 
-  /* if ( DUF_IS_ERROR( r, DUF_ERROR_MAX_REACHED ) )   */
+  /* if ( DUF_IS_ERROR_N( r, DUF_ERROR_MAX_REACHED ) )   */
   /*   DUF_TRACE( action, 0, "Maximum reached ...." ); */
   /* else if ( r < 0 )                                 */
   /*   DUF_SHOW_ERROR( "code: %d", r );                */

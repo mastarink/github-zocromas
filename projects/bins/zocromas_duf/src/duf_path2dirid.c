@@ -79,7 +79,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
   {
     DUF_SQL_BIND_LL( dirID, dirid, rpr, pstmt );
     DUF_SQL_STEP( rpr, pstmt );
-    if ( DUF_IS_ERROR( rpr, DUF_SQL_ROW ) )
+    if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
     {
       rpr = 0;
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
@@ -106,7 +106,6 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
 
   DEBUG_START(  );
 
-  int rpr = 0;
   char *sqlv = NULL;
 
   duf_sql_set_t def_node_set = {
@@ -121,14 +120,14 @@ duf_dirid2name_existed( duf_depthinfo_t * pdi, unsigned long long dirid, unsigne
   assert( pdi );
 
   {
-    sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name );
+    sqlv = duf_selector2sql( &def_node_set, pdi->pdi_name, pr );
+    if ( sqlv )
+    {
+      name = _duf_dirid2name_existed( pdi, sqlv, dirid, pparentid, pr );
 
-    name = _duf_dirid2name_existed( pdi, sqlv, dirid, pparentid, &rpr );
-
-    mas_free( sqlv );
+      mas_free( sqlv );
+    }
   }
-  if ( pr )
-    *pr = rpr;
   DEBUG_ENDS( name );
 }
 

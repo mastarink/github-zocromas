@@ -760,7 +760,9 @@ duf_print_sformat_file_info( duf_depthinfo_t * pdi, duf_fileinfo_t * pfi, const 
   char *buffer;
 
   buffer = duf_sformat_file_info( pdi, pfi, format, prefix_scb, suffix_scb, &ok );
+  /* DUF_WRITES( 0, "[[[" ); */
   DUF_WRITES( 0, buffer );
+  /* DUF_WRITES( 0, "]]]" ); */
   mas_free( buffer );
   return ok;
 }

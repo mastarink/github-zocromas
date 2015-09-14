@@ -4,7 +4,8 @@
 #  include <sqlite3.h>
 
 
-int duf_sqlite_error_code( int r3 );
+int duf_sqlite2r_error_code( int r3 );
+int duf_r2sqlite_error_code( int rt );
 
 int duf_sqlite_open( const char *dbpath );
 int duf_sqlite_close( void );

@@ -69,6 +69,7 @@ duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
       if ( highlight )
         fprintf( out, "\x1b[m" );
 #else
+      /* TODO make new fmt with preset colors */
       char buf[1024 * 4];
       const char *pbuf = buf;
 

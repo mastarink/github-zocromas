@@ -43,7 +43,7 @@ duf_clarify_xcmd_full( const duf_longval_extended_t * extended, const char *opta
     DUF_TRACE( options, +3, "parsed typed:`%s`   %s", extended->o.name, duf_error_name( r ) );
 
 
-    if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
+    if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_PARSED ) && !no )
     {
       DUF_TRACE( explain, 1, "@old opt for %s", extended ? extended->o.name : NULL );
       DOZR( r, duf_clarify_xcmd_old( extended, optargg, istage, xtable ) );

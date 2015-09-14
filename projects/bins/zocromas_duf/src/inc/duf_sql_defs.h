@@ -46,5 +46,5 @@
 #  define DUF_SFIELD2OPT(name) const char*         DUF_SET_SFIELD2OPT(name)
 #  define DUF_UFIELD2OPT(name) unsigned long long  DUF_SET_UFIELD2OPT(name)
 
-#  define DOR3( _rval, _x ) DOR(_rval, DUF_SQLITE_ERROR_CODE(_x))
+#  define DOR3( _rval, _x ) DOR(_rval, DUF_SQLITE2R_ERROR_CODE(_x))
 #endif

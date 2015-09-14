@@ -85,7 +85,7 @@ duf_levinfo_openat_dh_d( duf_depthinfo_t * pdi, int d )
                  duf_levinfo_itemshowname_d( pdi, d ), pdhlev->dfd );
     }
     assert( r <= 0 || pdhlev->dfd );
-    if ( DUF_IS_ERROR( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR( r, DUF_ERROR_OPENAT_ENOENT ) )
+    if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) )
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
       DUF_TRACE( levinfo, r < 0 ? 0 : 2, "@(%d)? levinfo [deleted] %s : %s; opendir:%d", r, duf_levinfo_path_d( pdi, d ),

@@ -61,12 +61,12 @@ duf_levinfo_statat_dh_d( duf_depthinfo_t * pdi, int d )
     assert( r < 0 || d == 0 || ( pdhuplev && pdhuplev->dfd ) );
     DOR( r, duf_statat_dh( pdhlev, pdhuplev, duf_levinfo_itemshowname_d( pdi, d ) ) );
     DUF_TRACE( levinfo, 10, "(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );
-    if ( DUF_IS_ERROR( r, DUF_ERROR_STATAT_ENOENT ) )
+    if ( DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) )
       DUF_SHOW_ERROR( "No such entry %s/%s (%s)", duf_levinfo_path_d( pdi, d ), duf_levinfo_itemtruename_d( pdi, d ),
                       duf_levinfo_itemshowname_d( pdi, d ) );
 
     assert( r < 0 || pdhlev->st.st_dev );
-    if ( DUF_IS_ERROR( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR( r, DUF_ERROR_OPENAT_ENOENT ) ) /* FIXME ?? */
+    if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPEN_ENOENT ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPENAT_ENOENT ) ) /* FIXME ?? */
     {
       pdi->pathinfo.levinfo[d].deleted = 1;
       DUF_TRACE( levinfo, 10, "@@@(%d)? levinfo statated %s", r, pdi->pathinfo.levinfo[d].itemname );

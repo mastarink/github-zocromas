@@ -100,7 +100,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const char *real_path, int caninsert, const
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
     assert( r < 0 || pdi->pathinfo.levinfo );
 
-  DORF( r, duf_main_db_open );
+    DORF( r, duf_main_db_open );
 #ifdef DUF_ATTACH_SELECTED_PATTERN
     if ( pdi->pdi_name )
       DOR( r, duf_pdi_attach_selected( pdi ) );

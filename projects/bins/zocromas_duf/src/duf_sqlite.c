@@ -23,13 +23,23 @@
 static sqlite3 *pDb = NULL;
 
 int
-duf_sqlite_error_code( int r3 )
+duf_sqlite2r_error_code( int r3 )
 {
   int rt;
 
   rt = ( r3 == SQLITE_OK ) ? 0 : ( r3 > 0 ? DUF_SQLITE_ERROR_BASE + r3 : r3 );
   return rt;
 }
+
+int
+duf_r2sqlite_error_code( int rt )
+{
+  int r3;
+
+  r3 = ( rt == 0 ) ? SQLITE_OK : ( rt < 0 ? rt - DUF_SQLITE_ERROR_BASE : rt );
+  return r3;
+}
+
 
 int
 duf_sqlite_open( const char *dbpath )
@@ -380,7 +390,14 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
     DUF_SHOW_ERROR( "{%d:%d} can't prepare SQL:[%s] - %s", sqlite3_errcode( pDb ), sqlite3_extended_errcode( pDb ), sql, sqlite3_errmsg( pDb ) );
     if ( sqlite3_strglob( "no such table: *", sqlite3_errmsg( pDb ) ) == 0 )
     {
-      r3 = DUF_ERROR_SQL_NO_TABLE;
+/* changed DUF_ERROR_SQL_NO_TABLE => duf_r2sqlite_error_code(DUF_ERROR_SQL_NO_TABLE)
+ * Not tested */
+      r3 = duf_r2sqlite_error_code( DUF_ERROR_SQL_NO_TABLE ); /* FIXME : this is r3, not r; so DUF_ERROR_SQL_NO_TABLE is wrong */
+      assert( duf_sqlite2r_error_code( r3 ) == DUF_ERROR_SQL_NO_TABLE );
+      assert( 0 );
+    }
+    else
+    {
       assert( 0 );
     }
   }

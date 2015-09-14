@@ -36,7 +36,7 @@ duf_scan_fs_with_scanner_here( duf_depthinfo_t * pdi, duf_scanner_t scanner )
     if ( scanner )
       DOR( r, ( scanner ) ( NULL /* pstmt */ , pdi ) );
   }
-  else if ( DUF_IS_ERROR( r, DUF_ERROR_STATAT_ENOENT ) )
+  else if ( DUF_IS_ERROR_N( r, DUF_ERROR_STATAT_ENOENT ) )
   {
     DUF_SHOW_ERROR( "No such entry %s/%s", duf_levinfo_path( pdi ), duf_levinfo_itemshowname( pdi ) );
     DUF_MAKE_ERROR( r, DUF_ERROR_STAT );

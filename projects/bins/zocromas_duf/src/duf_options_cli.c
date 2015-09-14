@@ -113,7 +113,7 @@ duf_parse_exec_cli_options( const char *shorts, duf_option_stage_t istage )
     if ( optind >= 0 )
       DUF_TRACE( options, +2, "carg.argv[%d]=\"%s\"", optind, DUF_CONFIGG( carg.argv )[optind] );
 
-    if ( DUF_IS_ERROR( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR( r, DUF_ERROR_OPTION ) )
+    if ( DUF_IS_ERROR_N( r, DUF_ERROR_OPTION_NOT_FOUND ) || DUF_IS_ERROR_N( r, DUF_ERROR_OPTION ) )
     {
       const char *arg;
       static const char *msg = "Invalid option";

@@ -131,7 +131,7 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
 #endif
 
   if ( DUF_NOERROR( r ) )
-    sql_selector = duf_selector2sql( sql_set, PDI->pdi_name );
+    sql_selector = duf_selector2sql( sql_set, PDI->pdi_name, &r );
 
 
   DUF_TRACE( scan, 14, "sql:%s", sql_selector );
@@ -143,8 +143,8 @@ duf_scan_db_items_with_str_cb_sql_set( const duf_sql_set_t * sql_set, duf_str_cb
  *     ( duf_str_cb2_scan_file_fd )
  * */
   DOR( r, duf_scan_db_items_with_str_cb_sql( sql_selector, str_cb2, sccbh, node_type ) );
-  if ( sql_selector )
-    mas_free( sql_selector );
+  mas_free( sql_selector );
   sql_selector = NULL;
+  
   DEBUG_ENDR( r );
 }

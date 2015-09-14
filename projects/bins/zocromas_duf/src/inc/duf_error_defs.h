@@ -96,16 +96,16 @@
     			&& (_rval)!=SQLITE_DONE \
     					) ?		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d)", \
-					    DUF_SQLITE_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE_ERROR_CODE(_rval) \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) \
 					    ) : 0 )
 #    define DUF_TEST_R3S(_rval, _xstr) 	( (_rval \
     			&& (_rval)!=SQLITE_ROW \
     			&& (_rval)!=SQLITE_DONE \
     					) ?		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d) {%s}", \
-					    DUF_SQLITE_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE_ERROR_CODE(_rval), _xstr \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval), _xstr \
 					    ) : 0 )
 #  else
 #    define DUF_TEST_R3(_rval)	if (_rval \
@@ -113,16 +113,16 @@
     			&& (_rval)!=SQLITE_DONE \
     					)		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d)", \
-					    DUF_SQLITE_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE_ERROR_CODE(_rval) \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) \
 					    )
 #    define DUF_TEST_R3S(_rval, _xstr) 	if (_rval \
     			&& (_rval)!=SQLITE_ROW \
     			&& (_rval)!=SQLITE_DONE \
     					)		\
 					DUF_SHOW_ERROR_TEST( "sqlite3 [%s] (#%d) {%s}", \
-					    DUF_SQLITE_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE_ERROR_CODE(_rval)) : "-", \
-					    DUF_SQLITE_ERROR_CODE(_rval), _xstr \
+					    DUF_SQLITE2R_ERROR_CODE(_rval) < 0 ? duf_error_name(DUF_SQLITE2R_ERROR_CODE(_rval)) : "-", \
+					    DUF_SQLITE2R_ERROR_CODE(_rval), _xstr \
 					    )
 #  endif
 
@@ -134,7 +134,8 @@
 /* ###################################################################### */
 #  define DUF_CLEAR_ERROR(_rt, ...)  _rt=duf_clear_error( _rt, __VA_ARGS__, 0 )
 #  define DUF_CLEARED_ERROR(_rt, ...)  (0==(_rt=duf_clear_error( _rt, __VA_ARGS__, 0 )))
-#  define DUF_IS_ERROR(_rt, _er) ( _rt == _er )
+#  define DUF_IS_ERROR_N(_rt, _er) ( _rt == _er )
+#  define DUF_IS_ERROR(_rt) ( _rt < 0 )
 #  define DUF_NOERROR(_rt) ( _rt >= 0 )
 
 #endif

@@ -65,9 +65,9 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
     else
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
 
-    sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name );
+    sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
 #endif
-    if ( sqlt )
+    if ( DUF_NOERROR( rpr ) && sqlt )
     {
       const char *csql;
 
@@ -174,6 +174,7 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
     DOR( rpr, duf_scan_beginning_sql( sccb, pdi->pdi_name ) );
     DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
+    if (DUF_NOERROR(rpr))
     {
       int rt = 0;
 
@@ -185,7 +186,6 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
       DUF_TRACE( temporary, 0, "@@@@ %llu items registered in db", TOTITEMS );
       DUF_TRACE( explain, 0, "%llu items registered in db", TOTITEMS );
     }
-
 /*
 TODO scan mode
   1. direct, like now
