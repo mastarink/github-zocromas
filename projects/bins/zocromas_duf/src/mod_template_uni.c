@@ -98,6 +98,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
            },
   .node = {
            .type = DUF_NODE_NODE,
+   .expand_sql = 1,        /* */
            .fieldset =          /* */
            /* "'tmpl-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */

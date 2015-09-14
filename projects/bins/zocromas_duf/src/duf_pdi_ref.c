@@ -11,6 +11,12 @@
 /* ###################################################################### */
 
 
+duf_depthinfo_t *
+duf_pdi_root( duf_depthinfo_t * pdi )
+{
+  return pdi->root_pdi ? pdi->root_pdi : pdi;
+}
+
 const duf_ufilter_t *
 duf_pdi_pu( const duf_depthinfo_t * pdi )
 {
@@ -34,7 +40,7 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
   else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
 #else
-  DOR(r, duf_ufilter_max_filter( pdi->pu, pdi->seq, &pdi->items ));
+  DOR( r, duf_ufilter_max_filter( pdi->pu, pdi->seq, &pdi->items ) );
 
 #endif
 

@@ -741,7 +741,7 @@ duf_option_$_version( void )
   DUF_PUTSL( 0 );
   DUF_PRINTF( 0, "config from %s ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", DUF_CONFIGG( config_path ) );
   DUF_PRINTF( 0, "cli.      [%2lu]   %x", sizeof( DUF_CONFIGG( cli.v.sbit ) ), DUF_CONFIGG( cli.v.sbit ) );
-  DUF_PRINTF( 0, "pu->      [%2lu]   %x", sizeof( DUF_CONFIGG( pu )->v.sbit ), DUF_CONFIGG( pu )->v.sbit );
+  DUF_PRINTF( 0, "puz->      [%2lu]   %x", sizeof( DUF_CONFIGG( puz )->v.sbit ), DUF_CONFIGG( puz )->v.sbit );
   /* mas_free( sargv2 ); */
   mas_free( sargv1 );
   DEBUG_END(  );
@@ -897,10 +897,10 @@ duf_option_$_showflags(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, ">>> %lx", ( ( unsigned long ) 1 ) << ( ( sizeof( unsigned long ) * 8 ) - 1 ) );
 
   {
-    unsigned u = DUF_CONFIGG( pu )->v.sbit;
+    unsigned u = DUF_CONFIGG( puz )->v.sbit;
 
-    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( pu )->v ), sizeof( typeof( u ) ),
-                ( unsigned long ) DUF_CONFIGG( pu )->v.sbit );
+    DUF_PRINTF( 0, "u   [%2lu->%2lu]   %8lx :: ", sizeof( DUF_CONFIGG( puz )->v ), sizeof( typeof( u ) ),
+                ( unsigned long ) DUF_CONFIGG( puz )->v.sbit );
 
     typeof( u ) mask = ( ( typeof( u ) ) 1 ) << ( ( sizeof( u ) * 8 ) - 1 );
 

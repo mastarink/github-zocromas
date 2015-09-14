@@ -47,8 +47,9 @@ typedef struct
 {
   unsigned use_std_fieldset:1;
   unsigned use_std_selector2:1;
-  unsigned set_selected_db:1;
+  unsigned expand_sql:1;
   duf_node_type_t type;
+  const char *name;
   const char *fieldset;
   /* const char *selector; */
   const char *selector2;
@@ -134,7 +135,7 @@ struct duf_sccb_handle_s
 #  else
   duf_cargvc_t parg;
 #  endif
-  const duf_ufilter_t *pu;
+  const duf_ufilter_t *pu_x;
   int pdi_cloned;
   duf_depthinfo_t *pdi;
   unsigned long long changes;

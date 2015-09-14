@@ -36,8 +36,8 @@ duf_cfg_create( void )
   cfg = mas_malloc( sizeof( duf_config_t ) );
   memset( cfg, 0, sizeof( duf_config_t ) );
 
-  cfg->pu = duf_ufilter_create(  );
-  assert( cfg->pu );
+  cfg->puz = duf_ufilter_create(  );
+  assert( cfg->puz );
   if ( 0 )
   {
     cfg->db.dir = mas_strdup( getenv( "MSH_SHN_PROJECTS_DIR" ) );
@@ -116,7 +116,7 @@ duf_cfg_create( void )
     /* }                                                                                                                                          */
   }
   cfg->pdi = duf_pdi_create( "selected" );
-  assert( cfg->pu );
+  assert( cfg->puz );
   assert( cfg->longopts_table );
 
 
@@ -133,8 +133,8 @@ duf_cfg_delete( duf_config_t * cfg )
 /* xchanges = di.changes; --- needless!? */
     duf_pdi_kill( &cfg->pdi );
 
-    duf_ufilter_delete( cfg->pu );
-    cfg->pu = NULL;
+    duf_ufilter_delete( cfg->puz );
+    cfg->puz = NULL;
 
     mas_free( cfg->config_path );
     cfg->config_path = NULL;
@@ -308,25 +308,25 @@ duf_config_optionally_show( void )
 
 #if 0
   /* Obsolete ??? */
-  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( pu )->maxitems.total );
-  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( pu )->maxitems.files );
-  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( pu )->maxitems.dirs );
-  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( pu )->dirfiles.min );
-  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( pu )->dirfiles.max );
+  DUF_TRACE( temporary, 0, "@ maxitems.total %lld", DUF_CONFIGG( puz )->maxitems.total );
+  DUF_TRACE( temporary, 0, "@ maxitems.files %lld", DUF_CONFIGG( puz )->maxitems.files );
+  DUF_TRACE( temporary, 0, "@ maxitems.dirs %lld", DUF_CONFIGG( puz )->maxitems.dirs );
+  DUF_TRACE( temporary, 0, "@ dirfiles.min %u", DUF_CONFIGG( puz )->dirfiles.min );
+  DUF_TRACE( temporary, 0, "@ dirfiles.max %u", DUF_CONFIGG( puz )->dirfiles.max );
 #endif
 
 #ifdef MAS_TRACING
   {
     char *sif = NULL;
 
-    sif = mas_argv_string( duf_config->pu->globx.include_fs_files.argc, duf_config->pu->globx.include_fs_files.argv, 0 );
+    sif = mas_argv_string( duf_config->puz->globx.include_fs_files.argc, duf_config->puz->globx.include_fs_files.argv, 0 );
     DUF_TRACE( temporary, 0, "@ include-fs %s", sif );
     mas_free( sif );
   }
   {
     char *sif = NULL;
 
-    sif = mas_argv_string( duf_config->pu->globx.exclude_fs_files.argc, duf_config->pu->globx.exclude_fs_files.argv, 0 );
+    sif = mas_argv_string( duf_config->puz->globx.exclude_fs_files.argc, duf_config->puz->globx.exclude_fs_files.argv, 0 );
     DUF_TRACE( temporary, 0, "@ exclude-fs %s", sif );
     mas_free( sif );
   }

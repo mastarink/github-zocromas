@@ -79,7 +79,7 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   int changes = 0;
 
 
-  DOR( r, duf_eval_sql_one( sql1, pdi->pdi_name, &changes ) );
+  DOR( r, duf_eval_sql_one( sql1, pdi->pu, pdi->pdi_name, &changes ) );
   T( "(%d) DETACH changes:%d", r, changes );
 
   DEBUG_ENDR( r );

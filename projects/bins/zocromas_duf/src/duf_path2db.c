@@ -36,10 +36,8 @@
 static int duf_levinfo_stat_insert2db( duf_depthinfo_t * pdi, int *pchanges );
 static int duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv );
 static int duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t * sql_set );
-int duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id );
 static int duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, const duf_sql_set_t * sql_set );
 static int _duf_real_path2db( duf_depthinfo_t * pdi, char *real_path, int caninsert, const duf_sql_set_t * sql_set );
-int duf_real_path2db( duf_depthinfo_t * pdi, int caninsert, const char *rpath, const duf_sql_set_t * sql_set );
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***/
@@ -231,7 +229,7 @@ duf_set_dirid_and_nums_from_sql_set( duf_depthinfo_t * pdi, const duf_sql_set_t 
 
 /* TODO remake to pdiitem2dirid */
 int
-duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id )
+_duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set, int need_id )
 {
   DEBUG_STARTR( r );
 
@@ -314,6 +312,14 @@ duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_
   DEBUG_ENDR( r );
 }
 
+int
+duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set_t * sql_set )
+{
+  DEBUG_STARTR( r );
+  DOR( r, _duf_levinfo_stat2dirid( pdi, caninsert, sql_set, 1 ) );
+  DEBUG_ENDR( r );
+}
+
 static int
 duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *dirname, int caninsert, const duf_sql_set_t * sql_set )
 {
@@ -328,7 +334,7 @@ duf_levinfo_down_stat2dirid( duf_depthinfo_t * pdi, const char *dirname, int can
 
   assert( !DUF_NOERROR( r ) || up_d + 1 == duf_pdi_depth( pdi ) );
 
-  DOR( r, duf_levinfo_stat2dirid( pdi, caninsert, sql_set /* node_selector2 */ , 1 /* need_id   - error (0= not) if there is no record */  ) );
+  DOR( r, duf_levinfo_stat2dirid( pdi, caninsert, sql_set /* node_selector2 *//*, 1 -- need_id   - error (0= not) if there is no record */  ) );
 
   DEBUG_ENDR( r );
 }

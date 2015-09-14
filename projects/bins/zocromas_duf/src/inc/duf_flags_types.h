@@ -68,13 +68,13 @@ typedef union
 typedef struct
 {
   unsigned recursive:1;
-} duf_ufilter_flags_t;
+} duf_rfilter_flags_t;
 
 typedef union
 {
-  duf_ufilter_flags_t flag;
+  duf_rfilter_flags_t flag;
   unsigned short sbit;
-} duf_ufilter_flags_combo_t;
+} duf_rfilter_flags_combo_t;
 
 /* ######################################## */
 
@@ -94,7 +94,7 @@ typedef union
 typedef union
 {
   duf_config_act_flags_t act;
-  duf_ufilter_flags_t u;
+  duf_rfilter_flags_t rec_etc;
   duf_config_cli_flags_t cli;
   duf_config_cli_disable_flags_t disable;
   unsigned bit;

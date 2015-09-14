@@ -50,7 +50,7 @@ duf_bind_ufilter( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
  * 5. end statement
  * */
 int
-duf_eval_sql_one_cb( const char *sql, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db, int *pchanges )
+duf_eval_sql_one_cb( const char *sql, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db, int *pchanges )
 {
   DEBUG_STARTR( r );
   int changes = 0;
@@ -62,13 +62,13 @@ duf_eval_sql_one_cb( const char *sql, duf_bind_cb_t callback, const duf_argvc_t 
   DORF( r, duf_main_db_open );
 #endif
   if ( selected_db )
-    worksql = tmpsql = duf_expand_selected_db( sql, selected_db );
+    worksql = tmpsql = duf_expand_sql( sql, selected_db );
   else
     worksql = sql;
   {
     DUF_SQL_START_STMT_NOPDI( worksql, r, pstmt );
     if ( callback )
-      DOR( r, ( callback ) ( pstmt, ttarg ) );
+      DOR( r, ( callback ) ( pstmt, pu, ttarg ) );
     if ( DUF_NOERROR( r ) )
     {
       DUF_SQL_STEP( r, pstmt );
@@ -91,10 +91,10 @@ duf_eval_sql_one_cb( const char *sql, duf_bind_cb_t callback, const duf_argvc_t 
  *  evaluate one sql statement without callback 
  * */
 int
-duf_eval_sql_one( const char *sql, const char *selected_db, int *pchanges )
+duf_eval_sql_one( const char *sql, const duf_ufilter_t * pu, const char *selected_db, int *pchanges )
 {
   DEBUG_STARTR( r );
-  DOR( r, duf_eval_sql_one_cb( sql, NULL, NULL, selected_db, pchanges ) );
+  DOR( r, duf_eval_sql_one_cb( sql, pu, NULL /* cb */, NULL /* ttarg */, selected_db, pchanges ) );
   DEBUG_ENDR( r );
 }
 
@@ -102,7 +102,8 @@ duf_eval_sql_one( const char *sql, const char *selected_db, int *pchanges )
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END
  * */
 int
-duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind_cb_t callback, const duf_argvc_t * ttarg, const char *selected_db )
+duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, const duf_ufilter_t * pu, duf_bind_cb_t callback, const duf_argvc_t * ttarg,
+                          const char *selected_db )
 {
   DEBUG_STARTR( r );
 
@@ -125,7 +126,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
     DUF_TRACE( db, 0, "@@@@@@ssql:%s", ssql->name );
     if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
     {
-      DOR( r, duf_eval_sql_one_cb( "BEGIN", callback, ttarg, NULL, &changes ) );
+      DOR( r, duf_eval_sql_one_cb( "BEGIN", pu, callback, ttarg, NULL, &changes ) );
     }
 
     while ( DUF_NOERROR( r ) && psql && *psql )
@@ -135,7 +136,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
       DUF_TRACE( select, 0, "beginning psql #%d: %s", nn, *psql );
 
       assert( ( ssql->set_selected_db && selected_db ) || ( !ssql->set_selected_db && !selected_db ) );
-      DOR( r, duf_eval_sql_one_cb( *psql, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes ) );
+      DOR( r, duf_eval_sql_one_cb( *psql, pu, callback, ttarg, ssql->set_selected_db ? selected_db : NULL, &changes ) );
 
       DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": beginning SQL %lu; [%s] changes:%d; %s", title ? title : "no-title",
                  psql - psql0, *psql, changes, r < 0 ? "FAIL" : "OK" );
@@ -143,7 +144,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
     }
     if ( DUF_NOERROR( r ) && psql0 && *psql0 && ssql->beginend )
     {
-      DOR( r, duf_eval_sql_one_cb( "END", callback, ttarg, NULL, &changes ) );
+      DOR( r, duf_eval_sql_one_cb( "END", pu, callback, ttarg, NULL, &changes ) );
     }
     ssql->done++;
 
@@ -155,15 +156,15 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, duf_bind
  *  evaluate each sql statement from the sequence, possibly wrapped with BEGIN/END, without callback
  * */
 int
-duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title, const char *selected_db )
+duf_eval_sql_sequence( duf_sql_sequence_t * ssql, int bind, const char *title, const duf_ufilter_t * pu, const char *selected_db )
 {
   DEBUG_STARTR( r );
 
 
 #if 0
-  DOR( r, duf_eval_sql_sequence_cb( ssql, title, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );
+  DOR( r, duf_eval_sql_sequence_cb( ssql, title, pu, bind ? duf_bind_ufilter : NULL, NULL /* ttarg */ , selected_db ) );
 #else
-  DOR( r, duf_eval_sql_sequence_cb( ssql, title, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db ) );
+  DOR( r, duf_eval_sql_sequence_cb( ssql, title, pu, bind ? duf_bind_ufilter_uni : NULL, NULL /* ttarg */ , selected_db ) );
 #endif
 
   DEBUG_ENDR( r );

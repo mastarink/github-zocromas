@@ -35,7 +35,7 @@ zocromas_duf_SOURCES=				   \
 	duf_levinfo.c duf_levinfo_ref.c duf_levinfo_credel.c duf_levinfo_openclose.c duf_levinfo_stat.c \
 	duf_levinfo_updown.c duf_levinfo_context.c	\
 	duf_pathinfo_credel.c duf_pathinfo_ref.c \
-	duf_pdi.c duf_pdi_attach.c duf_pdi_credel.c duf_pdi_ref.c duf_pdi_context.c duf_pdi_stmt.c			\
+	duf_pdi.c duf_pdi_reinit.c duf_pdi_attach.c duf_pdi_credel.c duf_pdi_ref.c duf_pdi_context.c duf_pdi_stmt.c			\
 	duf_dirent.c 						    \
 	duf_sys_wrap.c duf_utils.c duf_utils_path.c duf_utils_print.c duf_match.c   \
 	duf_errors.c  duf_trace.c				      \

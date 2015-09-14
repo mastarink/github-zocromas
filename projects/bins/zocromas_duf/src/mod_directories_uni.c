@@ -1,34 +1,15 @@
 #define DUF_SQL_PDI_STMT
 
-
-
-
-
-
-
 #include <assert.h>
 #include <string.h>
 
 #include <mastar/wrap/mas_std_def.h>
 #include <mastar/wrap/mas_memory.h>
 
-
 #include "duf_maintenance.h"
 
-
-
-
-
-
-/* #include "duf_pdi.h" */
 #include "duf_levinfo_ref.h"
-
-
 #include "duf_sql_defs.h"
-
-
-
-
 
 #include "duf_path2db.h"        /* duf_dirname2dirid */
 
@@ -124,6 +105,7 @@ duf_scan_callbacks_t duf_directories_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {                     /* */
+           .name = "dirs leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* Never used!? */
 #if 0
@@ -157,7 +139,9 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 #endif
            },
   .node = {                     /* */
+           .name = "dirs node",
            .type = DUF_NODE_NODE,
+   .expand_sql = 1,        /* */
            .fieldset =          /* */
            /* "'dirs-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid " /* */
@@ -218,6 +202,6 @@ register_pdidirectory( duf_sqlite_stmt_t * pstmt_unused, duf_depthinfo_t * pdi )
   DUF_TRACE( mod, 0, "@ scan entry dir 2 by %s", duf_levinfo_itemshowname( pdi ) );
 
   DOR( r, duf_levinfo_stat2dirid( pdi, 1 /* caninsert */ ,
-                                  &duf_directories_callbacks.node, 0 /* need_id - no error (1=error) if there is no record */  ) );
+                                  &duf_directories_callbacks.node /*, 0 need_id - no error (1=error) if there is no record */  ) );
   DEBUG_ENDR( r );
 }

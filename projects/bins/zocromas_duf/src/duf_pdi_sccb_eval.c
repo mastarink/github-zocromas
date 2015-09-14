@@ -48,7 +48,7 @@ duf_find_sccb_by_namen( const char *name, size_t namelen, const duf_action_table
  * 5. «close» sccb handle - by calling duf_close_sccb_handle
  * */
 int
-duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu, duf_scan_callbacks_t * sccb )
+duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufilter_t * pu, duf_scan_callbacks_t * sccb )
 {
   DEBUG_STARTR( r );
 
@@ -65,7 +65,7 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t
     int r1 = 0;
 
     DOR( r1, duf_close_sccb_handle( sccbh ) );
-    if ( DUF_NOERROR( r )  && !DUF_NOERROR( r1 ) )
+    if ( DUF_NOERROR( r ) && !DUF_NOERROR( r1 ) )
       r = r1;
   }
   DEBUG_ENDR( r );
@@ -73,10 +73,12 @@ duf_evaluate_pdi_sccb( duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t
 
 int
 duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg,
-                       duf_ufilter_t * pu )
+                       const duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
   const duf_action_table_t *act = NULL;
+
+  assert( pdi );
 
   if ( DUF_NOERROR( r ) )
     act = duf_find_sccb_by_namen( name, len, table ); /* XXX XXX */
@@ -90,16 +92,22 @@ duf_ev_pdi_sccb_namen( const char *name, size_t len, const duf_action_table_t * 
 }
 
 int
-duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu )
+duf_evaluate_pdi_sccb_name( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufilter_t * pu )
 {
+  assert( pdi );
+
   return duf_ev_pdi_sccb_namen( name, strlen( name ), table, pdi, ptarg, pu );
 }
 
 int
-duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, const char *arg, duf_ufilter_t * pu )
+duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * table, duf_depthinfo_t * pdi, const char *arg, const duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
+
   duf_argvc_t targ = {.argc = 0,.argv = NULL };
+
+  assert( pdi );
+
   if ( !arg )
     arg = duf_levinfo_path( pdi );
   targ.argc = mas_add_argv_arg( targ.argc, &targ.argv, arg );
@@ -111,15 +119,20 @@ duf_evaluate_pdi_sccb_name_at( const char *name, const duf_action_table_t * tabl
 }
 
 int
-duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, duf_ufilter_t * pu )
+duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf_depthinfo_t * pdi, duf_argvc_t * ptarg, const duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
 
   int ok = 0;
   const char *pnames;
 
+  assert( pdi );
+  assert( pdi->pu == pu );
+
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );
+
+
   while ( DUF_NOERROR( r ) && pnames && *pnames )
   {
     size_t len = 0;

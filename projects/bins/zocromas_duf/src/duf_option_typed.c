@@ -143,7 +143,7 @@ duf_clarify_xcmd_typed( const duf_longval_extended_t * extended, const char *opt
       byteptr = ( ( ( char * ) DUF_CONFIGG( pdi ) ) + extended->m_offset );
       break;
     case DUF_OFFSET_ufilter:
-      byteptr = ( ( ( char * ) DUF_CONFIGG( pu ) ) + extended->m_offset );
+      byteptr = ( ( ( char * ) DUF_CONFIGG( puz ) ) + extended->m_offset );
       break;
     }
 

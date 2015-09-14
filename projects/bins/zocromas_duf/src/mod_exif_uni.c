@@ -73,6 +73,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   /* filename for debug only */
   .leaf = {
+           .name = "exif leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            /* "'exif-leaf' AS fieldset_id, " (* *) */
@@ -125,7 +126,9 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
 #endif
            },                   /* */
   .node = {
+           .name = "exif node",
            .type = DUF_NODE_NODE,
+   .expand_sql = 1,        /* */
            .fieldset =          /* */
            /* "'exif-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDNAME " AS dirid" /* */

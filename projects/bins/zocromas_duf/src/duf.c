@@ -49,8 +49,6 @@
 #include "duf_config_ref.h"
 #include "duf_config.h"
 
-#include "duf_pdi.h"
-
 #include "duf_options.h"
 #include "duf_option_names.h"
 #include "duf_option_defs.h"

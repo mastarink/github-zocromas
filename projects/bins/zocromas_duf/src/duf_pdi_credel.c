@@ -9,7 +9,7 @@
 #include "duf_maintenance.h"
 
 
-/* #include "duf_pathinfo_ref.h" */
+#include "duf_pdi_ref.h"
 #include "duf_pathinfo_credel.h"
 
 #include "duf_pdi.h"
@@ -89,12 +89,13 @@ duf_pdi_clone( duf_depthinfo_t * pdisrc )
 
   pdi = duf_pdi_create( NULL /* pdisrc->pdi_name */  );
   duf_pdi_copy( pdi, pdisrc );
-  DUF_TRACE( pdi, 0, "@@@@@@cloned pdi %p <= %p", pdi, pdisrc );
+  pdi->root_pdi = duf_pdi_root( pdisrc );
+  DUF_TRACE( pdi, 0, "@@@@@@cloned pdi %p <= %p (%p:%p:%p:%p)", pdi, pdisrc, pdi->root_pdi, pdisrc, duf_pdi_root( pdisrc ), pdisrc->root_pdi );
   return pdi;
 }
 
 
-int 
+int
 duf_pdi_delete( duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
@@ -112,7 +113,7 @@ duf_pdi_kill( duf_depthinfo_t ** ppdi )
 {
   DEBUG_STARTR( r );
   if ( ppdi )
-    DOR(r, duf_pdi_delete( *ppdi ));
+    DOR( r, duf_pdi_delete( *ppdi ) );
   *ppdi = NULL;
   DEBUG_ENDR( r );
 }

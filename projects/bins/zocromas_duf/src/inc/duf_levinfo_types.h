@@ -82,8 +82,9 @@ typedef struct duf_depthinfo_s
   char *pdi_name;
   unsigned created_name:1;
   unsigned attached_copy:1;
-  char *db_attached_selected;  
+  char *db_attached_selected;
   unsigned inited:1;
+  unsigned sql_beginning_done:1;
   unsigned opendir:1;
   unsigned recursive:1;
   /* unsigned maxdepth; */
@@ -108,6 +109,7 @@ typedef struct duf_depthinfo_s
   duf_idstmt_t *idstatements;
   /* int **xstatements; */
   duf_modcnts_t cnts;
+  struct duf_depthinfo_s *root_pdi;
 } duf_depthinfo_t;
 
 #endif

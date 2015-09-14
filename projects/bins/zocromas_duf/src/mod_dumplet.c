@@ -136,31 +136,28 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     path = NULL;
     assert( 0 );
   }
-#elif 0
-  duf_depthinfo_t DUF_UNUSED di = {.depth = -1,
-    .seq = 0,
-    .levinfo = NULL,
-    .pu = NULL,
-    .opendir = 1,
+#elif 1
+  static duf_depthinfo_t di = {
     .pdi_name = "dumplet_pdi"
   };
-  DOR( r, duf_pdi_init_from_dirid( &di, duf_levinfo_dirid( pdi ), 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */
-        ) );
-
+  duf_ufilter_t uf = {.md5id.flag = 1,.md5id.min = DUF_GET_UFIELD2( md5id ),.md5id.max = DUF_GET_UFIELD2( md5id ) };
+  T( "@@@@@Wow %s", "X" );
+  DOR( r, duf_pdi_init_from_dirid( &di, &uf, duf_levinfo_dirid( pdi ), NULL /* node_selector2 */ , 0 /* caninsert */ , 1 /* recursive */ ,
+                                   0 /* opendir */  ) );
   /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */
   DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), 1 /* is_leaf */  ) );
   {
-    duf_ufilter_t uf DUF_UNUSED = {.md5id = pdi->pu->md5id };
 
-    DUF_TRACE( mod, 2, "@@dumplet       %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
-    DUF_TRACE( mod, 2, "@@@dumplet       %s : %s", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ) );
-
+    DUF_TRACE( mod, 2, "@@@dumplet %s : %s", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ) );
+    assert( di.pu == &uf );
     /* "selected" tables should be different!? */
-    /* DOR( r, duf_evaluate_pdi_sccb_std( "tree", &di, NULL (* &uf *)  ) ); */
+    DOR( r, duf_evaluate_pdi_sccb_std( "tree", &di, &uf ) );
+    T( "@@@@@%llu : %llu", uf.md5id.min, uf.md5id.max );
   }
+  assert( 0 );
   duf_pdi_shut( &di );
 #else
-  DUF_TRACE( temp, 0, "@@@ %llu", DUF_GET_UFIELD2( md5id ) );
+  DUF_TRACE( temp, 0, "@@@ md5id=%llu", DUF_GET_UFIELD2( md5id ) );
   /*
    * TODO
    * 1. SELECT ... FROM .... LEFT JOIN .... LEFT JOIN .... WHERE fd.md5id=DUF_GET_UFIELD2(md5id)

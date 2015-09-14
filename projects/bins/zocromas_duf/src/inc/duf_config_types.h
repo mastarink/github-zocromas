@@ -31,7 +31,7 @@ typedef struct
 {
   char *help_string;
   double loadtime;
-  duf_ufilter_t *pu;
+  duf_ufilter_t *puz;
   duf_option_t *longopts_table;
   duf_config_cli_t cli;
   duf_dbs_config_t db;

@@ -3,6 +3,7 @@
 
 #  include "duf_levinfo_types.h"
 
+duf_depthinfo_t *duf_pdi_root( duf_depthinfo_t * pdi );
 
 const duf_ufilter_t *duf_pdi_pu( const duf_depthinfo_t * pdi );
 

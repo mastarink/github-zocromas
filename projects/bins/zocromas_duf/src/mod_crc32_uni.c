@@ -73,6 +73,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
   .use_std_leaf = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .use_std_node = 0,            /* 1 : preliminary selection; 2 : direct (beginning_sql_seq=NULL recommended in many cases) */
   .leaf = {                     /* */
+           .name = "crc32 leaf",
            .type = DUF_NODE_LEAF,
            .fieldset =          /* */
            /* "'crc32-leaf' AS fieldset_id, " (* *) */
@@ -107,7 +108,9 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            .count_aggregate = "distinct fd." DUF_SQL_IDNAME}
   ,
   .node = {
+           .name = "crc32 node",
            .type = DUF_NODE_NODE,
+   .expand_sql = 1,        /* */
            .fieldset =          /* */
            /* "'crc32-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */

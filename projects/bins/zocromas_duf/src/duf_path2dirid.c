@@ -31,9 +31,12 @@
 #include "duf_path2dirid.h"
 /* ###################################################################### */
 
-/* 20150901.121302 */
+/* 20150901.121302
+ * use temporary inited pdi
+ * to get dirid for path
+ * */
 unsigned long long
-duf_path2dirid( const char *path, const duf_sql_set_t * sql_set, int *pr )
+duf_path2dirid( const char *path, int *pr )
 {
   int rpr = 0;
   char *real_path;
@@ -42,21 +45,17 @@ duf_path2dirid( const char *path, const duf_sql_set_t * sql_set, int *pr )
   real_path = duf_realpath( path, &rpr );
   if ( DUF_NOERROR( rpr ) )
   {
-    duf_depthinfo_t di = {
-      .seq = 0,
-      .pathinfo =               /* */
-      {
-       .depth = -1,
-       .levinfo = NULL,
-       }
-      ,
-      .pu = NULL,
-      /* .opendir = sccb ? sccb->opendir : 0, */
-      .opendir = 1,
-      /* .name = real_path, */
-    };
-    DOR( rpr,
-         DUF_WRAPPED( duf_pdi_init ) ( &di, real_path, 0 /* caninsert */ , sql_set /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */  ) );
+    duf_depthinfo_t di = { 0 };
+
+#if 0
+    DOR( rpr, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , real_path, NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
+                                            0 /* opendir */  ) );
+#else
+    DOR( rpr, duf_pdi_init_min( &di, real_path ) );
+#endif
+
+
+
     if ( DUF_NOERROR( rpr ) )
       dirid = duf_levinfo_dirid( &di );
     /* xchanges = di.changes; --- needless!? */
@@ -86,7 +85,6 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
       name = mas_strdup( DUF_GET_SFIELD2( name ) );
       if ( pparentid )
         *pparentid = DUF_GET_UFIELD2( parentid );
-      DUF_TRACE( temp, 0, "%s", DUF_GET_SFIELD2( name ) );
     }
     else
     {
@@ -141,24 +139,18 @@ duf_dirid2path( unsigned long long dirid, int *pr )
   int done = 0;
   int depth = 0;
 
-  duf_depthinfo_t DUF_UNUSED di = {
-    .seq = 0,
-    .pathinfo =                 /* */
-    {
-     .depth = -1,
-     .levinfo = NULL,
-     },
-    .pu = NULL,
-    .opendir = 1,
-  };
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL, 0 /* caninsert */ , NULL /* node_selector2 */ , 1 /* recursive */ , 0 /* opendir */  ) );
-
+  duf_depthinfo_t DUF_UNUSED di = { 0 };
+#if 0
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, NULL /* pu */ , NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
+                                        0 /* opendir */  ) );
+#else
+  DOR( r, duf_pdi_init_min( &di, NULL /* real_path */  ) );
+#endif
   do
   {
     char *name = NULL;
 
     name = duf_dirid2name_existed( &di, dirid, &dirid, &r );
-    DUF_TRACE( temp, 0, "@@%u: #%llu %s", depth, dirid, name );
     if ( name )
     {
       char *t;

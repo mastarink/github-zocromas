@@ -12,12 +12,12 @@
 duf_sql_sequence_t sql_create_selected = {
   .name="selected (create selected tables)",
   .done = 0,
-  .beginend = 1,
+  .beginend = 0,
   .set_selected_db = 1,
   .sql = {
-/* #ifndef DUF_SQL_SELECTED_TEMPORARY */
+#ifndef DUF_SQL_SELECTED_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ ,
-/* #endif */
+#endif
           "CREATE  " DUF_SQL_SELECTED_TEMPORARY_STRING "  TABLE  " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */
           " AS "                /* */
           " SELECT fn." DUF_SQL_IDNAME " AS rowid, fn." DUF_SQL_IDNAME " AS nameid "
@@ -36,9 +36,9 @@ duf_sql_sequence_t sql_create_selected = {
           ,
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_nameid ON " DUF_SQL_SELECTED_TMP_FILENAMES " (nameid) " /* */        ,
 
-/* #ifndef DUF_SQL_SELECTED_TEMPORARY */
+#ifndef DUF_SQL_SELECTED_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ ,
-/* #endif */
+#endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
           " WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
           "   ( SELECT sel.rowid as fid, fn.dataid AS did, p.rowid as parentid " /* */
@@ -57,9 +57,9 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ ,
 
 
-/* #ifndef DUF_SQL_SELECTED_TEMPORARY */
+#ifndef DUF_SQL_SELECTED_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ ,
-/* #endif */
+#endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */
           " AS "                /* */
           " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
@@ -77,9 +77,9 @@ duf_sql_sequence_t sql_create_selected = {
           " (numfiles)"
           /* */ ,
 
-/* #ifndef DUF_SQL_SELECTED_TEMPORARY */
+#ifndef DUF_SQL_SELECTED_TEMPORARY
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */ ,
-/* #endif */
+#endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
           " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) " /* */

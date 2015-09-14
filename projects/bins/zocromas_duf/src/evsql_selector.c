@@ -130,12 +130,12 @@ duf_xsdb_getvar( const char *name, const char *arg )
 }
 
 char *
-duf_expand_selected_db( const char *sql, const char *dbname )
+duf_expand_sql( const char *sql, const char *dbname )
 {
   char *nsql;
 
   nsql = mas_expand_string_cb_arg( sql, duf_xsdb_getvar, dbname );
-  DUF_TRACE( temp, 10, "@@@SQL:%s => %s", sql, nsql );
+  /* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
   return nsql;
 }
 
@@ -170,11 +170,12 @@ duf_selector2sql( const duf_sql_set_t * sql_set, const char *selected_db, int *p
         sql = mas_strdup( "SELECT " );
         sql = mas_strcat_x( sql, fieldset );
         sql = mas_strcat_x( sql, " " );
-        if ( sql_set->set_selected_db )
+
+        if ( sql_set->expand_sql )
         {
           char *tsql;
 
-          tsql = duf_expand_selected_db( selector, selected_db );
+          tsql = duf_expand_sql( selector, selected_db );
           sql = mas_strcat_x( sql, tsql );
           mas_free( tsql );
         }
@@ -250,17 +251,18 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         sql = mas_strcat_x( sql, ") AS nf" );
         sql = mas_strcat_x( sql, " " );
 
-        if ( sql_set->set_selected_db )
+        if ( sql_set->expand_sql )
         {
           char *tsql;
 
-          tsql = duf_expand_selected_db( selector, selected_db );
+          tsql = duf_expand_sql( selector, selected_db );
           sql = mas_strcat_x( sql, tsql );
           mas_free( tsql );
         }
         else
         {
           sql = mas_strcat_x( sql, selector );
+	  T("SQL:%s", sql);
         }
 
 

@@ -14,7 +14,7 @@
 
 #include "duf_action_table.h"
 
-#include "duf_pdi.h"
+#include "duf_pdi_reinit.h"
 #include "duf_pdi_ref.h"
 
 #include "duf_sccb.h"
@@ -121,14 +121,16 @@ duf_option_$_cd( const char *s )
     {
       int rt = 0;
 
-      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, 1 /* caninsert */ , NULL, duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
+      T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( pdi ), duf_pdi_root( DUF_CONFIGG( pdi ) )->sql_beginning_done );
+      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), new_path, NULL, 1 /* caninsert */ , duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
     }
     mas_free( new_path );
 #else
     {
       int rt = 0;
 
-      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), s, 1 /* caninsert */ , NULL, duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
+      T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( pdi ), duf_pdi_root( DUF_CONFIGG( pdi ) )->sql_beginning_done );
+      DOR( rt, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), s, NULL, 1 /* caninsert */ , duf_pdi_recursive( DUF_CONFIGG( pdi ) ) ) );
     }
 #endif
   }

@@ -450,8 +450,8 @@ duf_sqlite_step( duf_sqlite_stmt_t * stmt )
   DUF_TRACE( sqlite, 2, "  step" );
   assert( r3 != SQLITE_MISUSE );
   /* assert( r3 != SQLITE_LOCKED ); */
-  assert( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW );
   DUF_TEST_R3( r3 );
+  assert( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW );
   return r3;
 }
 

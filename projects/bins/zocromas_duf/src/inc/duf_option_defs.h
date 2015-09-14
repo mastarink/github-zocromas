@@ -30,12 +30,12 @@
 #  define DUF_CLIW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., cli)
 #  define DUF_ACTW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., cli.act)
 #  define DUF_FORMATW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ., cli.bformat)
-#  define DUF_UW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ->, pu)
+#  define DUF_UW_FLAG(_lo)	DUF_OPTIONW_FLAG(_lo, ->, puz)
 
 #  define DUF_CLIG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli)
 #  define DUF_ACTG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli.act)
 #  define DUF_FORMATG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ., cli.bformat)
-#  define DUF_UG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ->, pu)
+#  define DUF_UG_FLAG(_lo)	DUF_OPTIONG_FLAG(_lo, ->, puz)
 
 
 

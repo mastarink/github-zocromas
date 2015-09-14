@@ -44,7 +44,7 @@ noinst_HEADERS=duf.h \
 	duf_path2db.h \
 	duf_path2dirid.h    \
 	duf_tags.h \
-	duf_pdi.h duf_pdi_attach.h duf_pdi_credel.h duf_pdi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
+	duf_pdi.h duf_pdi_reinit.h duf_pdi_attach.h duf_pdi_credel.h duf_pdi_ref.h duf_pdi_context.h duf_pdi_stmt.h duf_pdi_types.h \
 	duf_action_table.h \
 	duf_prepare_actions.h \
 	duf_print_defs.h \

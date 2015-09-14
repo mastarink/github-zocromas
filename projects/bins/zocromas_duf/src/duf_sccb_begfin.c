@@ -8,32 +8,35 @@
 #include "duf_sccb.h"
 #include "evsql_begfin.h"
 
+#include "duf_sccbh_shortcuts.h"
 #include "duf_maindb.h"
 
 /* ###################################################################### */
 #include "duf_sccb_begfin.h"
 /* ###################################################################### */
 
-
 int
-duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb, char *selected_db )
+duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb, char *selected_db, const duf_ufilter_t *pu )
 {
   DEBUG_STARTR( r );
 
   DUF_TRACE( sql, 0, "beginning_sql '%s'",
              ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
 
- DOR( r, duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , selected_db ));
+  DOR( r, duf_eval_sql_sequence( sccb->beginning_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ ,
+                                 pu, selected_db ) );
 
   DEBUG_ENDR( r );
 }
 
 int
-duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
+duf_scan_final_sql( const duf_scan_callbacks_t * sccb, const duf_ufilter_t *pu )
 {
   DEBUG_STARTR( r );
 
- DOR( r,  duf_eval_sql_sequence( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */, NULL /* selected.db */ ));
+  DOR( r,
+       duf_eval_sql_sequence( sccb->final_sql_seq, 1 /* bind */ , duf_uni_scan_action_title( sccb ) /* title */ , pu ,
+                              NULL /* selected.db */  ) );
   DEBUG_ENDR( r );
 }
 
@@ -48,7 +51,7 @@ duf_scan_final_sql( const duf_scan_callbacks_t * sccb )
   {
     const char **psql = sccb->final_sql_seq;
 
-    while (  DUF_NOERROR( r ) && psql && *psql )
+    while ( DUF_NOERROR( r ) && psql && *psql )
     {
       int changes = 0;
 

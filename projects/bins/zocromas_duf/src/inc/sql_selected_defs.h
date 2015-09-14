@@ -1,10 +1,10 @@
 #ifndef SQL_SELECTED_DEFS_H
 #  define SQL_SELECTED_DEFS_H
 
-#  define DUF_SQL_SELECTED_TMP_FILENAMES  "t_selected_filenames"
-#  define DUF_SQL_SELECTED_TMP_PATHS "t_selected_paths"
-#  define DUF_SQL_SELECTED_TMP_PATHTOT_FILES "t_selected_pathtot_files"
-#  define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS "t_selected_pathtot_dirs"
+#  define DUF_SQL_SELECTED_TMP_FILENAMES  "${PDI_NAME}_selected_filenames"
+#  define DUF_SQL_SELECTED_TMP_PATHS "${PDI_NAME}_selected_paths"
+#  define DUF_SQL_SELECTED_TMP_PATHTOT_FILES "${PDI_NAME}_selected_pathtot_files"
+#  define DUF_SQL_SELECTED_TMP_PATHTOT_DIRS "${PDI_NAME}_selected_pathtot_dirs"
 
 #  if 1
 #    ifdef DUF_SQL_SELECTED_TEMPORARY

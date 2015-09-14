@@ -11,8 +11,8 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_pdi.h"
 #include "duf_pdi_credel.h"
+#include "duf_pdi_reinit.h"
 #include "duf_pdi_ref.h"
 
 #include "duf_levinfo_ref.h"
@@ -64,7 +64,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_NODE );
     else
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
-
+    T( "@sql_set->name:%s", sql_set->name );
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
 #endif
     if ( DUF_NOERROR( rpr ) && sqlt )
@@ -78,7 +78,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       csql = sqlt;
       DUF_TRACE( temp, 5, "count by %s", csql );
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
-      duf_bind_ufilter_uni( pstmt, NULL );
+      duf_bind_ufilter_uni( pstmt, PU, NULL );
       DUF_SQL_STEP( rpr, pstmt );
       if ( rpr == DUF_SQL_ROW )
       {
@@ -146,6 +146,24 @@ duf_count_db_items2( duf_sel_cb2_match_t match_cb2, duf_sccb_handle_t * sccbh, c
   DEBUG_ENDR( r );
 }
 #endif
+
+int
+duf_sccbh_beginning_sql( const duf_sccb_handle_t * sccbh, const duf_ufilter_t * pu )
+{
+  DEBUG_STARTR( r );
+  T( "PDI:%p:%p:[%d]:%s", PDI, duf_pdi_root( PDI ), duf_pdi_root( PDI )->sql_beginning_done, PDI->pdi_name );
+  if ( !duf_pdi_root( PDI )->sql_beginning_done )
+  {
+    DOR( r, duf_scan_beginning_sql( SCCB, PDI->pdi_name, pu ) );
+    if ( DUF_NOERROR( r ) )
+    {
+      duf_pdi_root( PDI )->sql_beginning_done = 1;
+    }
+  }
+  T( "PDI:%p:%p:[%d]:%s", PDI, duf_pdi_root( PDI ), duf_pdi_root( PDI )->sql_beginning_done, PDI->pdi_name );
+  DEBUG_ENDR( r );
+}
+
 duf_sccb_handle_t *
 duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, int targc, char *const *targv, const duf_ufilter_t * pu, int *pr )
 {
@@ -172,9 +190,13 @@ duf_open_sccb_handle( duf_depthinfo_t * pdi, const duf_scan_callbacks_t * sccb, 
     SCCB = sccb;
     /* duf_scan_qbeginning_sql( sccb ); */
     DUF_TRACE( sql, 0, "@@beginning_sql for '%s'", sccb->title );
-    DOR( rpr, duf_scan_beginning_sql( sccb, pdi->pdi_name ) );
+#if 0
+    DOR( rpr, duf_scan_beginning_sql( sccb, pdi->pdi_name, ( duf_ufilter_t * ) NULL /* pu */  ) );
+#else
+    DOR( rpr, duf_sccbh_beginning_sql( sccbh, pu ) );
+#endif
     DUF_TRACE( sql, 0, "@@/beginning_sql for '%s'", sccb->title );
-    if (DUF_NOERROR(rpr))
+    if ( DUF_NOERROR( rpr ) )
     {
       int rt = 0;
 
@@ -200,7 +222,8 @@ TODO scan mode
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), 0 /* caninsert */ , duf_get_sql_set( SCCB, DUF_NODE_NODE ),
+    T( "@@[%p] sql_beginning_done:%d", PDI, duf_pdi_root( PDI )->sql_beginning_done );
+    DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ ,
                                       duf_pdi_recursive( PDI ) ) );
   }
   if ( pr )
@@ -216,7 +239,7 @@ duf_close_sccb_handle( duf_sccb_handle_t * sccbh )
   {
     /* final */
     DUF_TRACE( scan, 6, "final sql %s", SCCB->title );
-    DOR( r, duf_scan_final_sql( SCCB ) );
+    DOR( r, duf_scan_final_sql( SCCB, ( duf_ufilter_t * ) NULL /* pu */  ) );
     if ( PDICLONED )
       duf_pdi_delete( PDI );
     mas_free( sccbh );

@@ -19,7 +19,7 @@
 
 
 static int
-duf_bind_tmp( duf_sqlite_stmt_t * pstmt, const duf_argvc_t * ttarg )
+duf_bind_tmp( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu_unused, const duf_argvc_t * ttarg )
 {
   DEBUG_STARTR( r );
   if ( ttarg && ttarg->argc >= 2 && ttarg->argv )
@@ -40,7 +40,7 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
 {
   DEBUG_STARTR( r );
   static duf_sql_sequence_t DUF_UNUSED tmpseq = { /* */
-    .name="tmpseq",
+    .name = "tmpseq",
     .sql = {
             "INSERT OR IGNORE INTO " DUF_SQL_TABLES_TMP_TDB_OPTIONS_FULL " (oval, name, arg) VALUES (:optVal, :optName, :optArg) " /* */
             , NULL}
@@ -53,7 +53,7 @@ duf_tmpdb_add( int oval, const char *optname, const char *optargg )
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optname );
   ttarg.argc = mas_add_argv_arg( ttarg.argc, &ttarg.argv, optargg );
 
-  DOR( r, duf_eval_sql_sequence_cb( &tmpseq, NULL, duf_bind_tmp, &ttarg, NULL /* selected_db */ ) );
+  DOR( r, duf_eval_sql_sequence_cb( &tmpseq, NULL /* title */ , ( duf_ufilter_t * ) NULL /* pu */ , duf_bind_tmp, &ttarg, NULL /* selected_db */  ) );
   mas_del_argv( ttarg.argc, ttarg.argv, 0 );
   DEBUG_ENDR( r );
 }

@@ -41,7 +41,7 @@ typedef struct
 
 typedef struct
 {
-  duf_ufilter_flags_combo_t v;
+  duf_rfilter_flags_combo_t v;
   unsigned max_rel_depth;
   unsigned long long max_seq;
   duf_items_t maxitems;
@@ -53,21 +53,21 @@ typedef struct
   /* unsigned long long mimeid; */
   /* unsigned long long exifid; */
   duf_limitsll_t size;
-  duf_limits_t same;
-  duf_limits_t exifsame;
-  duf_limits_t mimesame;
-  duf_limits_t nameid;
-  duf_limits_t dirid;
+  duf_limitsll_t same;
+  duf_limitsll_t exifsame;
+  duf_limitsll_t mimesame;
+  duf_limitsll_t nameid;
+  duf_limitsll_t dirid;
   duf_limitsll_t mtime;
   duf_limitsll_t atime;
   duf_limitsll_t ctime;
   duf_limitsll_t exifdt;
-  duf_limits_t inode;
-  duf_limits_t md5id;
-  duf_limits_t sd5id;
-  duf_limits_t crc32id;
-  duf_limits_t mimeid;
-  duf_limits_t exifid;
+  duf_limitsll_t inode;
+  duf_limitsll_t md5id;
+  duf_limitsll_t sd5id;
+  duf_limitsll_t crc32id;
+  duf_limitsll_t mimeid;
+  duf_limitsll_t exifid;
   duf_itemtag_t tag;
   char *glob_db;
   char *glob_db_include;

@@ -17,8 +17,9 @@
 
 duf_sql_set_t std_leaf_sets[] = { /* */
   {                             /* */
+    .name="std leaf one",
    .type = DUF_NODE_LEAF,
-   .set_selected_db = 0,        /* */
+   .expand_sql = 1,        /* */
    .fieldset =                  /* */
 #if 0
    /* " 'std-leaf' AS fieldset_id, " (* *) */
@@ -69,7 +70,9 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    }
   ,                             /* */
   {                             /* */
+    .name="std leaf two",
    .type = DUF_NODE_LEAF,
+   .expand_sql = 1,        /* */
    .fieldset =                  /* */
 #if 0
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
@@ -127,8 +130,9 @@ size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 duf_sql_set_t std_node_sets[] = { /* */
   {
+    .name="std node one",
    .type = DUF_NODE_NODE,
-   .set_selected_db = 0,        /* */
+   .expand_sql = 1,        /* */
    .fieldset =                  /* */
 #if 0
    /* "'std-node' AS fieldset_id, " (* *) */
@@ -143,10 +147,14 @@ duf_sql_set_t std_node_sets[] = { /* */
 #endif
    ,
    .selector2 =                 /* */
+#if 1
    " FROM      " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
    " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS pt ON( pts.parentid = pt.rowid ) " /* */
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "  AS td ON ( td.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
    " LEFT JOIN " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "  AS tf ON ( tf.Pathid = pt." DUF_SQL_IDNAME " ) " /* */
+#else
+   "#std-node"
+#endif
    ,
    .matcher = " pt.ParentId=:parentdirID AND ( :dirName IS NULL OR dirname=:dirName ) " /* */
    ,
@@ -154,7 +162,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    }
   ,
   {
+    .name="std node two",
    .type = DUF_NODE_NODE,
+   .expand_sql = 1,        /* */
    .fieldset =                  /* */
 #if 0
    /* "'std-ns-node' AS fieldset_id, " (* *) */

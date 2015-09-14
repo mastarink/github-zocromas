@@ -49,7 +49,7 @@ duf_direntry_filter( const struct dirent *de )
     break;
   case DT_REG:
 
-    rx = duf_filename_match( DUF_CONFIGA( pu->globx ), de->d_name );
+    rx = duf_filename_match( DUF_CONFIGA( puz->globx ), de->d_name );
 
 /* #include <fnmatch.h>                                                   */
 /*     int fnmatch( const char *pattern, const char *string, int flags ); */
