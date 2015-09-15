@@ -70,7 +70,7 @@ duf_vprintf( int level, int noeol, int minlevel, int ifexit, const char *funcid,
         fprintf( out, "\x1b[m" );
 #else
       /* TODO make new fmt with preset colors */
-      char buf[1024 * 4];
+      char buf[1024 * 64];
       const char *pbuf = buf;
 
       ry = vsnprintf( buf, sizeof( buf ), fmt, args );

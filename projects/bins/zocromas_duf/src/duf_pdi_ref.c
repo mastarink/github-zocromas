@@ -20,7 +20,7 @@ duf_pdi_root( duf_depthinfo_t * pdi )
 const duf_ufilter_t *
 duf_pdi_pu( const duf_depthinfo_t * pdi )
 {
-  return pdi ? pdi->pu : NULL;
+  return pdi ? pdi->pup : NULL;
 }
 
 /* needless?!? TODO */
@@ -31,23 +31,23 @@ duf_pdi_max_filter( const duf_depthinfo_t * pdi )
 
   assert( pdi );
 #if 0
-  if ( pdi->pu->max_seq && pdi->seq >= pdi->pu->max_seq )
+  if ( pdi->pup->max_seq && pdi->seq >= pdi->pup->max_seq )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_SEQ_REACHED );
-  else if ( pdi->pu->maxitems.files && pdi->items.files >= pdi->pu->maxitems.files )
+  else if ( pdi->pup->maxitems.files && pdi->items.files >= pdi->pup->maxitems.files )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
-  else if ( pdi->pu->maxitems.dirs && pdi->items.dirs >= pdi->pu->maxitems.dirs )
+  else if ( pdi->pup->maxitems.dirs && pdi->items.dirs >= pdi->pup->maxitems.dirs )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
-  else if ( pdi->pu->maxitems.total && pdi->items.total >= pdi->pu->maxitems.total )
+  else if ( pdi->pup->maxitems.total && pdi->items.total >= pdi->pup->maxitems.total )
     DUF_MAKE_ERROR( r, DUF_ERROR_MAX_REACHED );
 #else
-  DOR( r, duf_ufilter_max_filter( pdi->pu, pdi->seq, &pdi->items ) );
+  DOR( r, duf_ufilter_max_filter( pdi->pup, pdi->seq, &pdi->items ) );
 
 #endif
 
-  /* rv = ( ( !pdi->pu->max_seq || pdi->seq <= pdi->pu->max_seq )                                  */
-  /*        && ( !pdi->pu->maxitems.files || ( pdi->items.files ) < pdi->pu->maxitems.files )    */
-  /*        && ( !pdi->pu->maxitems.dirs || ( pdi->items.dirs ) < pdi->pu->maxitems.dirs )       */
-  /*        && ( !pdi->pu->maxitems.total || ( pdi->items.total ) < pdi->pu->maxitems.total ) ); */
+  /* rv = ( ( !pdi->pup->max_seq || pdi->seq <= pdi->pup->max_seq )                                  */
+  /*        && ( !pdi->pup->maxitems.files || ( pdi->items.files ) < pdi->pup->maxitems.files )    */
+  /*        && ( !pdi->pup->maxitems.dirs || ( pdi->items.dirs ) < pdi->pup->maxitems.dirs )       */
+  /*        && ( !pdi->pup->maxitems.total || ( pdi->items.total ) < pdi->pup->maxitems.total ) ); */
   DEBUG_ENDR( r );
 }
 

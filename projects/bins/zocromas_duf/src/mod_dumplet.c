@@ -119,6 +119,7 @@ static int
 dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
 {
   DEBUG_STARTR( r );
+  const char *DUF_UNUSED rs = NULL;
 
   assert( !duf_levinfo_dfd( pdi ) );
   assert( 0 == strcmp( DUF_GET_SFIELD2( filename ), duf_levinfo_itemtruename( pdi ) ) );
@@ -137,33 +138,47 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     assert( 0 );
   }
 #elif 1
-  static duf_depthinfo_t di = {
+  duf_depthinfo_t di = {
     .pdi_name = "dumplet_pdi"
   };
   duf_ufilter_t uf = {.md5id.flag = 1,.md5id.min = DUF_GET_UFIELD2( md5id ),.md5id.max = DUF_GET_UFIELD2( md5id ) };
-  T( "@@@@@Wow %s", "X" );
-  DOR( r, duf_pdi_init_from_dirid( &di, &uf, duf_levinfo_dirid( pdi ), NULL /* node_selector2 */ , 0 /* caninsert */ , 1 /* recursive */ ,
+  duf_ufilter_t DUF_UNUSED uf1 = {.same.flag = 1,.same.min = 6,.same.max = 6 };
+#  if 0
+  DOR( r, duf_pdi_init_from_dirid( &di, &uf, duf_levinfo_dirid( pdi ), NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
                                    0 /* opendir */  ) );
+#  else
+
+  T( "@@@@@@>>> %s", di.pdi_name );
+  T( "@@@@@@>>> %s", di.pdi_name );
+  T( "@@@@@@>>> %s", di.pdi_name );
+  T( "@@@@@@>>> %s", di.pdi_name );
+  T( "@@@@@@>>> %s", di.pdi_name );
+  T( "@@@@@@>>> %s", di.pdi_name );
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( &di, &uf, duf_levinfo_path( pdi ), NULL /* sql_set */ , 0 /* caninsert */ , 1 /* recursive */ ,
+                                        0 /* opendir */  ) );
+#  endif
   /* DOR( r, duf_levinfo_godown_dbopenat_dh( pdi, duf_levinfo_itemtruename( pdi ), 1 (* is_leaf *) , pstmt_files ) ); */
   DOR( r, duf_levinfo_godown_openat_dh( &di, duf_levinfo_itemtruename( pdi ), 1 /* is_leaf */  ) );
+  if ( DUF_NOERROR( r ) )
   {
 
-    DUF_TRACE( mod, 2, "@@@dumplet %s : %s", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ) );
-    assert( di.pu == &uf );
+    DUF_TRACE( mod, 2, "@@@dumplet  %s : %s -- %d", duf_levinfo_path( &di ), duf_levinfo_itemtruename( &di ),
+               duf_pdi_root( pdi )->sql_beginning_done );
     /* "selected" tables should be different!? */
     DOR( r, duf_evaluate_pdi_sccb_std( "tree", &di, &uf ) );
+    assert( di.pup == &uf );
     T( "@@@@@%llu : %llu", uf.md5id.min, uf.md5id.max );
   }
-  assert( 0 );
+  rs = duf_error_name( r );
   duf_pdi_shut( &di );
 #else
-  DUF_TRACE( temp, 0, "@@@ md5id=%llu", DUF_GET_UFIELD2( md5id ) );
   /*
    * TODO
    * 1. SELECT ... FROM .... LEFT JOIN .... LEFT JOIN .... WHERE fd.md5id=DUF_GET_UFIELD2(md5id)
    * 2. dirid2path ...
    * */
 #endif
+  DUF_TRACE( temp, 0, "@@@@@@@ md5id=%llu", DUF_GET_UFIELD2( md5id ) );
 
   DEBUG_ENDR( r );
 }

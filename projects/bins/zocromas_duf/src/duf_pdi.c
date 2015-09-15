@@ -21,11 +21,15 @@
 #include "duf_pathinfo_credel.h"
 #include "duf_ufilter_ref.h"
 
+#include "sql_tables_defs.h"
+
 #include "duf_maindb.h"
 
 #include "duf_path2db.h"
 
+#include "evsql_selector.h"
 /* ###################################################################### */
+#include "duf_pdi_attach.h"
 #include "duf_pdi.h"
 /* ###################################################################### */
 
@@ -44,7 +48,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
   {
     /* assert( real_path ); */
     pdi->inited = 1;
-    pdi->pu = pu;
+    pdi->pup = pu;
     DUF_TRACE( pdi, 0, "@@@(frecursive:%d/%d) real_path:%s", frecursive, duf_pdi_recursive( pdi ), real_path );
 #if 0
     pdi->pathinfo.depth = -1;
@@ -58,7 +62,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     {
       int max_rel_depth = 0;
 
-      max_rel_depth = pdi && pdi->pu ? pdi->pu->max_rel_depth : 20;
+      max_rel_depth = pdi && pdi->pup ? pdi->pup->max_rel_depth : 20;
       assert( pdi->pathinfo.depth == -1 );
       /* DUF_TRACE( temp, 0, "@@@@@@@ %u", max_rel_depth ); */
       assert( max_rel_depth /* FIXME */  );
@@ -69,7 +73,7 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
 #else
 
 #  if 0
-    duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, pdi->pu ? pdi->pu->max_rel_depth : 0 );
+    duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, pdi->pup ? pdi->pup->max_rel_depth : 0 );
 #  else
     duf_pi_set_max_rel_depth( &pdi->pathinfo, real_path, duf_ufilter_max_rel_depth( duf_pdi_pu( pdi ) ) );
 #  endif
@@ -87,8 +91,19 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
 
     DORF( r, duf_main_db_open );
 #ifdef DUF_ATTACH_SELECTED_PATTERN
+#  ifdef DUF_SQL_SELECTED_TEMPORARY
+#    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
     if ( pdi->pdi_name )
+    {
       DOR( r, duf_pdi_attach_selected( pdi ) );
+      T( "@@@@ATTACH: %s", pdi->pdi_name );
+    }
+#else
+#  ifndef DUF_SQL_SELECTED_TEMPORARY
+#    error Wrong "DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
+    T( "@@@@OFF ATTACH: %s", pdi->pdi_name );
 #endif
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
@@ -140,7 +155,7 @@ duf_pdi_init_at_config( void )
 {
   DEBUG_STARTR( r );
 #if 0
-  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), DUF_CONFIGG( pdi )->pu, NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ ,
+  DOR( r, DUF_WRAPPED( duf_pdi_init ) ( DUF_CONFIGG( pdi ), DUF_CONFIGG( pdi )->pup, NULL /* real_path */ , NULL /* sql_set */ , 0 /* caninsert */ ,
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #else
@@ -148,7 +163,7 @@ duf_pdi_init_at_config( void )
                                         DUF_UG_FLAG( recursive ) /* frecursive */ ,
                                         1 /* opendir */  ) );
 #endif
-  assert( DUF_CONFIGX( pdi )->pu == DUF_CONFIGX( puz ) );
+  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
 
   DEBUG_ENDR( r );
 }
@@ -200,7 +215,7 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     DOR( r, duf_pi_shut( &pdi->pathinfo ) );
 #endif
     pdi->changes = 0;
-    pdi->pu = 0;
+    pdi->pup = 0;
     pdi->items.dirs = pdi->items.files = pdi->items.total = 0;
     pdi->seq = pdi->seq_node = pdi->seq_leaf = 0;
     assert( !pdi->inited );
@@ -216,7 +231,7 @@ duf_pdi_shut( duf_depthinfo_t * pdi )
     assert( !pdi->context.destructor );
     assert( !pdi->num_idstatements );
     assert( !pdi->idstatements );
-    assert( !pdi->pu );
+    assert( !pdi->pup );
   }
   DEBUG_ENDR( r );
 }
@@ -232,6 +247,10 @@ duf_pdi_close( duf_depthinfo_t * pdi )
     assert( 0 == strcmp( pdi->db_attached_selected, pdi->pdi_name ) );
     DOR( r, duf_main_db_close( r ) );
 #ifdef DUF_ATTACH_SELECTED_PATTERN
+#  ifdef DUF_SQL_SELECTED_TEMPORARY
+#    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
+
 #  if 0
     DOR( r, duf_pdi_detach_selected( pdi ) );
 #  endif
@@ -239,8 +258,8 @@ duf_pdi_close( duf_depthinfo_t * pdi )
       int ry DUF_UNUSED = 0;
       char *selected_db_file;
 
-      selected_db_file = duf_expand_selected_db( DUF_ATTACH_SELECTED_PATTERN, pdi->db_attached_selected );
-      T( "@@@@A selected_db_file:%s", selected_db_file );
+      selected_db_file = duf_expand_sql( DUF_ATTACH_SELECTED_PATTERN, pdi->db_attached_selected );
+      /* T( "@@@@DETACH: selected_db_file:%s", selected_db_file ); */
 #  if 0
       ry = unlink( selected_db_file );
       {
@@ -254,6 +273,10 @@ duf_pdi_close( duf_depthinfo_t * pdi )
       T( "@@@@@B selected_db_file:%s", selected_db_file );
       mas_free( selected_db_file );
     }
+#else
+#  ifndef DUF_SQL_SELECTED_TEMPORARY
+#    error Wrong "DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
 #endif
   }
   mas_free( pdi->db_attached_selected );

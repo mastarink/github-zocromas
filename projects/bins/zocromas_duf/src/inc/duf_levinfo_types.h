@@ -102,7 +102,7 @@ typedef struct duf_depthinfo_s
   unsigned long long seq_leaf;
   unsigned long long seq_node;
   duf_items_t items;
-  const duf_ufilter_t *pu;
+  const duf_ufilter_t *pup;
   duf_levinfo_context_t context;
   int num_idstatements;
   /* duf_sqlite_stmt_t **statements; */

@@ -62,17 +62,16 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
   assert( DUF_CONFIGX( puz ) );
 #else
 #  define DUF_SQL_BIND_PAIR( _fld, _name ) \
-  if ( DUF_CONFIGG(puz)->_name.flag ) \
+  if ( pu->_name.flag ) \
   { \
     DUF_SQL_BIND_LL_NZ_OPT( min ## _fld, pu->_name.min, r, pstmt ); \
     DUF_SQL_BIND_LL_NZ_OPT( max ## _fld, pu->_name.max, r, pstmt ); \
   }
-  /* assert( pu == DUF_CONFIGX( puz ) ); */
-  /* assert( pu ); */
   if ( !pu )
     return 0;
 #endif
-
+  /* T( "@@@@@same: %llu:%llu", pu->same.min, pu->same.max ); */
+  /* T( "@@@@@@md5id: %llu:%llu", pu->md5id.min, pu->md5id.max ); */
   DUF_SQL_BIND_PAIR( Size, size );
   DUF_SQL_BIND_PAIR( Same, same );
   DUF_SQL_BIND_PAIR( ExifSame, exifsame );
@@ -85,28 +84,28 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
   DUF_SQL_BIND_PAIR( Sd2ID, sd5id );
   DUF_SQL_BIND_PAIR( MimeID, mimeid );
   DUF_SQL_BIND_PAIR( ExifID, exifid );
-  if ( DUF_CONFIGG( puz )->mime.type )
+  if ( pu->mime.type )
   {
-    DUF_SQL_BIND_S_OPT( MimeType, DUF_CONFIGG( puz )->mime.type, r, pstmt );
+    DUF_SQL_BIND_S_OPT( MimeType, pu->mime.type, r, pstmt );
   }
-  if ( DUF_CONFIGG( puz )->glob_db )
+  if ( pu->glob_db )
   {
-    DUF_SQL_BIND_S_OPT( GName, DUF_CONFIGG( puz )->glob_db, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GName, pu->glob_db, r, pstmt );
   }
-  if ( DUF_CONFIGG( puz )->glob_db_include )
+  if ( pu->glob_db_include )
   {
-    DUF_SQL_BIND_S_OPT( GNameI, DUF_CONFIGG( puz )->glob_db_include, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GNameI, pu->glob_db_include, r, pstmt );
   }
-  if ( DUF_CONFIGG( puz )->glob_db_exclude )
+  if ( pu->glob_db_exclude )
   {
-    DUF_SQL_BIND_S_OPT( GNameX, DUF_CONFIGG( puz )->glob_db_exclude, r, pstmt );
+    DUF_SQL_BIND_S_OPT( GNameX, pu->glob_db_exclude, r, pstmt );
   }
-  if ( DUF_CONFIGG( puz )->exif.camera )
+  if ( pu->exif.camera )
   {
     char *t;
 
     t = mas_strdup( "%" );
-    t = mas_strcat_x( t, DUF_CONFIGG( puz )->exif.camera );
+    t = mas_strcat_x( t, pu->exif.camera );
     t = mas_strcat_x( t, "%" );
     DUF_SQL_BIND_S_OPT( Camera, t, r, pstmt );
     mas_free( t );
@@ -115,11 +114,11 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
   DUF_SQL_BIND_LL_NZ_OPT( fFast, DUF_ACTG_FLAG( fast ), r, pstmt );
 
 
-  if ( DUF_CONFIGG( puz )->same_md5 )
+  if ( pu->same_md5 )
   {
     duf_filepath_t fp;
 
-    DOR( r, duf_init_filepath( &fp, DUF_CONFIGG( puz )->same_md5 ) );
+    DOR( r, duf_init_filepath( &fp, pu->same_md5 ) );
     DUF_SQL_BIND_LL_NZ_OPT( GSamePathID, fp.dirid, r, pstmt );
     DUF_SQL_BIND_S_OPT( GSameAs, fp.name, r, pstmt );
     duf_clear_filepath( &fp );
@@ -127,13 +126,13 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
   }
 #if 1
-  if ( DUF_CONFIGG( puz )->tag.file )
+  if ( pu->tag.file )
   {
-    DUF_SQL_BIND_S_OPT( TagFile, DUF_CONFIGG( puz )->tag.file, r, pstmt );
+    DUF_SQL_BIND_S_OPT( TagFile, pu->tag.file, r, pstmt );
   }
-  if ( DUF_CONFIGG( puz )->tag.dir )
+  if ( pu->tag.dir )
   {
-    DUF_SQL_BIND_S_OPT( TagDir, DUF_CONFIGG( puz )->tag.dir, r, pstmt );
+    DUF_SQL_BIND_S_OPT( TagDir, pu->tag.dir, r, pstmt );
   }
   DUF_SQL_BIND_LL_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_WITH_TAG_FILE, r, pstmt );
 #endif

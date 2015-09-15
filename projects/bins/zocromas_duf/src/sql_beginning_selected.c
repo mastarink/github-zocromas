@@ -1,21 +1,33 @@
 #include <string.h>
 
 #include "duf_defs.h"
+#include "sql_tables_defs.h"
 #include "duf_sql_defs.h"
 
 /* ###################################################################### */
 #include "sql_beginning_selected.h"
 /* ###################################################################### */
 
+#ifdef DUF_ATTACH_SELECTED_PATTERN
+#  ifdef DUF_SQL_SELECTED_TEMPORARY
+#    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
+#else
+#  ifndef DUF_SQL_SELECTED_TEMPORARY
+#    error Wrong "DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
+#endif
 
-
+/* TODO :
+ * DROP + CREATE AS => CREATE + DELETE + INSERT SELECT 
+ * */
 duf_sql_sequence_t sql_create_selected = {
-  .name="selected (create selected tables)",
+  .name = "selected (create selected tables)",
   .done = 0,
   .beginend = 0,
   .set_selected_db = 1,
   .sql = {
-#ifndef DUF_SQL_SELECTED_TEMPORARY
+#ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ ,
 #endif
           "CREATE  " DUF_SQL_SELECTED_TEMPORARY_STRING "  TABLE  " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */
@@ -36,7 +48,7 @@ duf_sql_sequence_t sql_create_selected = {
           ,
 //"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_nameid ON " DUF_SQL_SELECTED_TMP_FILENAMES " (nameid) " /* */        ,
 
-#ifndef DUF_SQL_SELECTED_TEMPORARY
+#ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ ,
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
@@ -57,7 +69,7 @@ duf_sql_sequence_t sql_create_selected = {
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ ,
 
 
-#ifndef DUF_SQL_SELECTED_TEMPORARY
+#ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ ,
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */
@@ -77,7 +89,7 @@ duf_sql_sequence_t sql_create_selected = {
           " (numfiles)"
           /* */ ,
 
-#ifndef DUF_SQL_SELECTED_TEMPORARY
+#ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */ ,
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */

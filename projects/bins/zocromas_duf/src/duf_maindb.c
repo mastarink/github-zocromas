@@ -126,7 +126,7 @@ duf_main_db_locate( void )
         DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), "_$_" );
       }
       DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), DUF_CONFIGG( db.tempo.name ) );
-      if ( 0 != strcmp( DUF_CONFIGG( db.tempo.fpath + strlen( DUF_CONFIGG( db.tempo.fpath ) a ) - 3 ), ".db" ) )
+      if ( 0 != strcmp( DUF_CONFIGG( db.tempo.fpath + strlen( DUF_CONFIGG( db.tempo.fpath ) ) - 3 ), ".db" ) )
         DUF_CONFIGW( db.tempo.fpath ) = mas_strcat_x( DUF_CONFIGG( db.tempo.fpath ), ".db" );
       DUF_TRACE( explain, 0, "config->db.tempo.fpath set: %s", DUF_CONFIGG( db.tempo.fpath ) );
     }
@@ -273,6 +273,22 @@ duf_main_db_pre_action( void )
   DEBUG_ENDR( r );
 }
 
+
+
+
+#ifdef DUF_ATTACH_TTABLES_PATTERN
+#ifdef DUF_SQL_TTABLES_TEMPORARY
+#error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#endif
+#else
+#ifndef DUF_SQL_TTABLES_TEMPORARY
+#error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#endif
+#endif
+
+
+
+
 static int
 duf_main_db_tune( void )
 {
@@ -280,6 +296,7 @@ duf_main_db_tune( void )
 #ifdef MAS_SPLIT_DB
   if ( DUF_CONFIGG( db.adm.fpath ) )
   {
+#  if 0
     static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBADMALIAS;
     char *sql;
 
@@ -290,10 +307,17 @@ duf_main_db_tune( void )
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
+#  else
+    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_COMMON_PATTERN "adm.db' AS " DUF_DBADMALIAS;
+
+    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
+#  endif
   }
+
 #  ifndef DUF_SQL_TTABLES_TEMPORARY
   if ( DUF_CONFIGG( db.tempo.fpath ) )
   {
+#    if 0
     static const char *sqlf = "ATTACH DATABASE '%s' AS " DUF_DBTEMPALIAS;
     char *sql;
 
@@ -304,6 +328,11 @@ duf_main_db_tune( void )
     DUF_SQL_STEP( r, pstmt );
     DUF_SQL_END_STMT_NOPDI( r, pstmt );
     sqlite3_free( sql );
+#    else
+    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_TTABLES_PATTERN "temp.db' AS " DUF_DBTEMPALIAS;
+
+    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , DUF_DBTEMPALIAS, NULL /* &changes */  ) );
+#    endif
   }
 #  endif
   /* DOR( r, duf_main_db_attach_selected( "dumplet" ) ); */
@@ -535,7 +564,7 @@ duf_main_db( int argc, char **argv )
                                         1 /* opendir */  ) );
 #  else
   DOR( r, duf_pdi_init_at_config(  ) );
-  assert( DUF_CONFIGX( pdi )->pu == DUF_CONFIGX( puz ) );
+  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
 
 #  endif
 

@@ -41,7 +41,7 @@
 #include "evsql_begfin.h"
 #include "evsql_selector.h"
 
-
+#include "sql_selected_defs.h"
 /* ###################################################################### */
 #include "duf_pdi_attach.h"
 /* ###################################################################### */
@@ -57,14 +57,17 @@ duf_pdi_attach_selected( duf_depthinfo_t * pdi )
   /* assert( global_status.db_attached_selected == NULL ); */
   if ( !pdi->db_attached_selected )
   {
-    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_SELECTED_PATTERN "' AS duf${PDI_NAME}";
+    static const char *sql = "ATTACH DATABASE '" DUF_ATTACH_SELECTED_PATTERN "' AS " DUF_DBSELECTEDALIAS;
+    static const char *sql1 = "DROP  TABLE IF EXISTS " DUF_DBSELECTEDALIAS "." DUF_SQL_SELECTED_TMP_FILENAMES;
     int changes = 0;
 
     pdi->db_attached_selected = mas_strdup( pdi->pdi_name );
-    T( "%p attach %s", pdi, pdi->db_attached_selected );
+    T( "%p ATTACH %s : %s", pdi, pdi->db_attached_selected, sql );
 
-    DOR( r, duf_eval_sql_one( sql, pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
+    DOR( r, duf_eval_sql_one( sql1, ( duf_ufilter_t * ) NULL /* pu */ , pdi->db_attached_selected, &changes ) );
   }
+  T( "%p post ATTACH %s", pdi, pdi->db_attached_selected );
   DEBUG_ENDR( r );
 }
 #endif
@@ -79,7 +82,7 @@ duf_pdi_detach_selected( duf_depthinfo_t * pdi )
   int changes = 0;
 
 
-  DOR( r, duf_eval_sql_one( sql1, pdi->pu, pdi->pdi_name, &changes ) );
+  DOR( r, duf_eval_sql_one( sql1, pdi->pup, pdi->pdi_name, &changes ) );
   T( "(%d) DETACH changes:%d", r, changes );
 
   DEBUG_ENDR( r );

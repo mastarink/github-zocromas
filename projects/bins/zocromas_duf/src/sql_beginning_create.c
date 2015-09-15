@@ -387,7 +387,13 @@ duf_sql_sequence_t sql_beginning_create = {
 /******************************************************************************************************/
 /***                                                                                             ******/
 /******************************************************************************************************/
-
+	"CREATE  VIEW  IF NOT EXISTS " DUF_DBPREF "v_selected_filenames AS  SELECT fn.rowid AS rowid, fn.rowid AS nameid  "
+	  " FROM " DUF_DBPREF "filenames AS fn LEFT "
+	  " JOIN " DUF_DBPREF "filedatas AS fd ON (fn.dataid=fd.rowid) "
+	  " LEFT JOIN " DUF_DBPREF "md5  AS md ON (md.rowid=fd.md5id) "
+	  " LEFT JOIN " DUF_DBPREF "exif  AS x ON (x.rowid=fd.exifid) "
+	  " LEFT JOIN " DUF_DBPREF "exif_model AS xm ON (x.modelid=xm.rowid) "
+	  " LEFT JOIN " DUF_DBPREF "mime AS mi ON( fd.mimeid = mi.rowid )",
 
           NULL}
 };

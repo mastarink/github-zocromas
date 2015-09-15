@@ -64,7 +64,6 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_NODE );
     else
       sql_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
-    T( "@sql_set->name:%s", sql_set->name );
     sqlt = duf_selector_total2sql( sql_set, PDI->pdi_name, &rpr );
 #endif
     if ( DUF_NOERROR( rpr ) && sqlt )
@@ -151,7 +150,6 @@ int
 duf_sccbh_beginning_sql( const duf_sccb_handle_t * sccbh, const duf_ufilter_t * pu )
 {
   DEBUG_STARTR( r );
-  T( "PDI:%p:%p:[%d]:%s", PDI, duf_pdi_root( PDI ), duf_pdi_root( PDI )->sql_beginning_done, PDI->pdi_name );
   if ( !duf_pdi_root( PDI )->sql_beginning_done )
   {
     DOR( r, duf_scan_beginning_sql( SCCB, PDI->pdi_name, pu ) );
@@ -160,7 +158,6 @@ duf_sccbh_beginning_sql( const duf_sccb_handle_t * sccbh, const duf_ufilter_t * 
       duf_pdi_root( PDI )->sql_beginning_done = 1;
     }
   }
-  T( "PDI:%p:%p:[%d]:%s", PDI, duf_pdi_root( PDI ), duf_pdi_root( PDI )->sql_beginning_done, PDI->pdi_name );
   DEBUG_ENDR( r );
 }
 

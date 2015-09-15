@@ -387,7 +387,9 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
   DUF_TRACE( sqlite, 2, "  [%s]", sql );
   if ( r3 == SQLITE_ERROR )
   {
-    DUF_SHOW_ERROR( "{%d:%d} can't prepare SQL:[%s] - %s", sqlite3_errcode( pDb ), sqlite3_extended_errcode( pDb ), sql, sqlite3_errmsg( pDb ) );
+    const char *em = sqlite3_errmsg( pDb );
+
+    DUF_SHOW_ERROR( "{%d:%d} can't prepare SQL:[%s] - %s", sqlite3_errcode( pDb ), sqlite3_extended_errcode( pDb ), sql, em );
     if ( sqlite3_strglob( "no such table: *", sqlite3_errmsg( pDb ) ) == 0 )
     {
 /* changed DUF_ERROR_SQL_NO_TABLE => duf_r2sqlite_error_code(DUF_ERROR_SQL_NO_TABLE)
@@ -448,10 +450,18 @@ duf_sqlite_step( duf_sqlite_stmt_t * stmt )
 
   r3 = sqlite3_step( stmt );
   DUF_TRACE( sqlite, 2, "  step" );
-  assert( r3 != SQLITE_MISUSE );
   /* assert( r3 != SQLITE_LOCKED ); */
   DUF_TEST_R3( r3 );
-  assert( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW );
+  if ( !( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW ) )
+  {
+    int r = 0;
+    const char *DUF_UNUSED t;
+
+    t = duf_error_name( r );
+    DUF_TRACE( temp, 0, "%s", duf_error_name( r ) );
+  }
+  /* assert( r3 != SQLITE_MISUSE );                                      */
+  /* assert( r3 == SQLITE_OK || r3 == SQLITE_DONE || r3 == SQLITE_ROW ); */
   return r3;
 }
 

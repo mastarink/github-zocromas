@@ -127,7 +127,7 @@ duf_ev_pdi_named_sccbs( const char *names, const duf_action_table_t * table, duf
   const char *pnames;
 
   assert( pdi );
-  assert( pdi->pu == pu );
+  assert( pdi->pup == pu );
 
   pnames = names;
   DUF_TRACE( path, 0, "@levinfo_path: %s", duf_levinfo_path( pdi ) );

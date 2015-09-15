@@ -142,7 +142,7 @@ duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
 
   DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_prepare( sql, pstmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
 
-  DUF_TRACE( sql, 2, " [[%s]]", sql );
+  DUF_TRACE( sql, 2, "          [[%s]]", sql );
   DEBUG_ENDR( r );
 }
 
@@ -151,9 +151,8 @@ duf_sql_step( duf_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( sql, 2, " [[%s]]", sqlite3_sql( stmt ) );
   DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_step( stmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
-  DUF_TRACE( sql, 0, " [[%s]]", sqlite3_sql( stmt ) );
+  DUF_TRACE( sql, 0, "(%s) [[%s]]", duf_error_name(r), sqlite3_sql( stmt ) );
   DEBUG_ENDR( r );
 }
 
