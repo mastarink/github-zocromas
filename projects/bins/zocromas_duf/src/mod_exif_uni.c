@@ -26,8 +26,9 @@
 #include "duf_sql_defs.h"
 #include "duf_sql_field.h"
 
+
+
 #include "duf_sql.h"
-#include "duf_sql1.h" /* duf_sql : TODO:to be removed!! */
 #include "duf_sql2.h"
 
 
@@ -52,7 +53,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi );
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = {
-  .name="final @ ...",
+  .name = "final @ ...",
   .done = 0,.sql = {
                     "UPDATE " DUF_SQL_TABLES_EXIF_FULL " SET dupexifcnt=(SELECT COUNT(*) " /* */
                     " FROM " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd " /* */
@@ -128,7 +129,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
   .node = {
            .name = "exif node",
            .type = DUF_NODE_NODE,
-   .expand_sql = 1,        /* */
+           .expand_sql = 1,     /* */
            .fieldset =          /* */
            /* "'exif-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDNAME " AS dirid" /* */
@@ -195,7 +196,7 @@ duf_insert_model_uni( duf_depthinfo_t * pdi, const char *model, int need_id, int
       DUF_SQL_END_STMT( select_model, lr, pstmt_select );
     }
 
-    if ( !modelid && !DUF_CONFIGG(cli.disable.flag.insert) )
+    if ( !modelid && !DUF_CONFIGG( cli.disable.flag.insert ) )
     {
       const char *sql = "INSERT OR IGNORE INTO " DUF_SQL_TABLES_EXIF_MODEL_FULL " ( model ) VALUES ( :Model )";
 
@@ -277,7 +278,7 @@ duf_insert_exif_uni( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi, const cha
       /*   DUF_SHOW_ERROR( "exifid NOT SELECTED" ); */
     }
 
-    if ( !exifid && !DUF_CONFIGG(cli.disable.flag.insert) )
+    if ( !exifid && !DUF_CONFIGG( cli.disable.flag.insert ) )
     {
       int changes = 0;
       const char *sql =
@@ -784,7 +785,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
 
             DUF_TRACE( exif, 3, "exifid:%llu; dataid:%llu; model:'%s'; datetime:%ld", exifid, dataid, model, ( long ) timeepoch );
 
-            if ( DUF_NOERROR( r ) && exifid && !DUF_CONFIGG(cli.disable.flag.update) )
+            if ( DUF_NOERROR( r ) && exifid && !DUF_CONFIGG( cli.disable.flag.update ) )
             {
               int changes = 0;
 
@@ -801,16 +802,6 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
                 DUF_SQL_CHANGES( changes, r, pstmt_update );
                 DUF_SQL_END_STMT( update_exif, r, pstmt_update );
               }
-              else
-              {
-	/* TODO duf_sql -> DUF_SQL_START_STMT + DUF_SQL_BIND_ ... + DUF_SQL_STEP + DUF_SQL_END_STMT */
-                DOR( r,
-                     duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid,
-                              dataid ) );
-                duf_pdi_reg_changes( pdi, changes );
-              }
-
-
               DUF_TEST_R( r );
             }
           }
@@ -845,5 +836,6 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
     DUF_TEST_R( r );
   }
   DUF_CLEAR_ERROR( r, DUF_ERROR_EXIF_NO_DATE );
+
   DEBUG_ENDR( r );
 }

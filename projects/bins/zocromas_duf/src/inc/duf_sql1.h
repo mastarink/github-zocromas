@@ -13,7 +13,7 @@ int duf_sql_exec_msg( const char *sql, const char *msg );
 int duf_sql( const char *sqlfmt, int *pchanges, ... ) __attribute__ ( ( format( __printf__, 1, 3 ) ) );
 
 int duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                    duf_sccb_handle_t * sccbh, const char *sqlfmt, ... );
+                    duf_sccb_handle_t * sccbh, const char *sqlfmt, ... ) __attribute__ ( ( format( __printf__, 6, 7 ) ) );
 
 /* int duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,       */
 /*                      duf_depthinfo_t * pdi, duf_scan_callbacks_t * sccb, const char *sqlfmt, va_list args ); */

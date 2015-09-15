@@ -13,7 +13,6 @@
 
 #include "duf_path2db.h"        /* duf_dirname2dirid */
 
-/* #include "duf_dbg.h" */
 
 #include "sql_beginning_selected.h"
 #include "sql_beginning_tables.h"

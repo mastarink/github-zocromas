@@ -30,7 +30,7 @@
 
 
 #include "duf_sql.h"
-#include "duf_sql1.h" /* duf_sql : TODO:to be removed!! */
+/* #include "duf_sql1.h"           (* duf_sql : TODO:to be removed!! *) */
 #include "duf_sql2.h"
 
 /* #include "duf_dbg.h" */
@@ -113,7 +113,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
   .node = {
            .name = "mime node",
            .type = DUF_NODE_NODE,
-   .expand_sql = 1,        /* */
+           .expand_sql = 1,     /* */
            .fieldset =          /* */
            /* "'mime-node' AS fieldset_id, " (* *) */
            "pt." DUF_SQL_IDNAME " AS dirid" /* */
@@ -292,28 +292,20 @@ dirent_content2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_file_needl
         {
           int changes = 0;
 
-          DUF_UFIELD2( dataid );
+          DUF_UFIELD2( filedataid );
 
-          if ( 1 )
-          {
-            const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = :mimeID WHERE " DUF_SQL_IDNAME " = :dataID ";
+          const char *sql = " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = :mimeID WHERE " DUF_SQL_IDNAME " = :dataID ";
 
-            DUF_SQL_START_STMT( pdi, update_mime, sql, r, pstmt_update );
-            DUF_TRACE( mod, 3, " S: %s ", sql );
-            DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
-            DUF_SQL_BIND_LL( dataID, dataid, r, pstmt_update );
-            DUF_SQL_STEP( r, pstmt_update );
-            /* DUF_TEST_R(r); */
-            DUF_SQL_CHANGES( changes, r, pstmt_update );
-            DUF_SQL_END_STMT( update_mime, r, pstmt_update );
-          }
-          else
-          {
-	/* TODO duf_sql -> DUF_SQL_START_STMT + DUF_SQL_BIND_ ... + DUF_SQL_STEP + DUF_SQL_END_STMT */
-            DOR( r,
-                 duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET mimeid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, mimeid, dataid ) );
-            duf_pdi_reg_changes( pdi, changes );
-          }
+          DUF_SQL_START_STMT( pdi, update_mime, sql, r, pstmt_update );
+          DUF_TRACE( mod, 3, " S: %s ", sql );
+          DUF_SQL_BIND_LL( mimeID, mimeid, r, pstmt_update );
+          DUF_SQL_BIND_LL( dataID, filedataid, r, pstmt_update );
+          DUF_SQL_STEP( r, pstmt_update );
+          /* DUF_TEST_R(r); */
+          DUF_SQL_CHANGES( changes, r, pstmt_update );
+          DUF_SQL_END_STMT( update_mime, r, pstmt_update );
+
+          duf_pdi_reg_changes( pdi, changes );
 
 
           DUF_TEST_R( r );
