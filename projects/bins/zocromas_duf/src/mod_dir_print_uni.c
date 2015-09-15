@@ -63,7 +63,11 @@ duf_scan_callbacks_t duf_print_dir_callbacks = {
   .name = "listing",
   .init_scan = NULL,            /* */
   .no_progress = 1,
+#if 0
   .beginning_sql_seq = &sql_create_selected,
+#else
+  .beginning_sql_seq = &sql_update_selected,
+#endif
   /* .node_scan_before = scan_node_before, */
   .node_scan_before2 = print_node_before2,
   /* .leaf_scan = print_leaf, */

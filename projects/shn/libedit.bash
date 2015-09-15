@@ -232,6 +232,7 @@ shn_gvimer_plus_mased ()
   if [[ $file =~ ^(.*):(.*)$ ]] ; then
     a=${BASH_REMATCH[1]}
     b=${BASH_REMATCH[2]}
+#   shn_msg "name parts a:$a; b:$b"
     if [[ $a =~ ^[[:digit:]]+$ ]] ; then
       file=$b
       fline=$a
@@ -239,15 +240,18 @@ shn_gvimer_plus_mased ()
       file=$a
       fline=$b
     fi
-    shn_msg "$file -- $fline"
+#   shn_msg "$file -- $fline"
   fi
   if ! [[ $file == *.* ]] ; then
-    fileq=$( grep -rl --inc='*.c' "^$file\>(" )
+#   shn_msg "Looking for function $file"
+    fileq=$( grep -rl --inc='*.c' "^$file\>(" src/ )
     if [[ $fileq ]] ; then
+#     shn_msg "Found function $file : $fileq"
       file=$fileq
     fi
   fi
   typf=`shn_gvimer_plus_filtyp "${file:-*.c}"`
+# shn_msg "typf=$typf for '$file'"
   shn_dbgmsg "gvimer_plus_mased 2 typf:$typf"
   if [[ "$file" == */* ]]; then
       filef=$file
@@ -261,6 +265,7 @@ shn_gvimer_plus_mased ()
 	  shn_msg "(libedit $MSH_SHN_LIBEDIT_LOADED) found '$filef'"
       fi
   fi
+# shn_msg "filef='$filef' for file='$file'"
 #   echo "@ typf:$typf for ${file} -> $filef line $fline" >&2
   local rfile=`/usr/bin/realpath $filef`
   shn_dbgmsg "rfile:$rfile" 
@@ -310,7 +315,8 @@ shn_gvimer_plus ()
     shn_dbgmsg "gvimer $LINENO $@"
     if [[ $mased_dir ]] && [[ -d $mased_dir ]] && [[ $localvim_dir ]] && [[ -d $localvim_dir ]] ; then
         shn_dbgmsg "gvimer $LINENO $@"
-        if [[ -n "$@" ]]; then
+        if [[ "$@" ]]; then
+#  shn_msg "Looking for $@"
             shn_dbgmsg "gvimer $LINENO $@"
             shn_gvimer_plus_mased $@ && return 0
             shn_gvimer_plus_nomased   $@ && return 0
@@ -336,7 +342,6 @@ shn_gvimer_plus ()
 }
 function shn_file_edit ()
 {
-
   if [[ "$@" ]] ; then
     shn_project_file_cd $@
 # export MSH_SHN_DEBUG=yes

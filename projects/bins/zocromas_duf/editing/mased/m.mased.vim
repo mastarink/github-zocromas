@@ -10,6 +10,8 @@ sfind srcsccb.mased.vim
 sfind cdef.mased.vim
 sfind srciface.mased.vim
 " sfind src1.mased.vim
+sfind srcevsql.mased.vim
+
 tab sfind srctypes.mased.vim
 sfind srcconfig.mased.vim
 sfind srcmod.mased.vim

@@ -53,7 +53,11 @@ duf_scan_callbacks_t duf_dumplet_callbacks = {
   .name = "dumplet",
   .def_opendir = 0,
   .init_scan = dumplet_init,
+#if 0
   .beginning_sql_seq = &sql_create_selected,
+#else
+  .beginning_sql_seq = &sql_update_selected,
+#endif
 
   .node_scan_before2 = dumplet_node_before2,
   .node_scan_before2_deleted = dumplet_node_before2_del,
@@ -164,7 +168,7 @@ dumplet_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     {
       DUF_TRACE( mod, 0, "@@@dumplet  %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
       /* "selected" tables should be different!? */
-      DOR_NOE( r, duf_evaluate_pdi_sccb_std( "tree", &di, &uf ), DUF_ERROR_NOT_IN_DB );
+      DOR_NOE( r, duf_evaluate_pdi_sccb_std( "listing", &di, &uf ), DUF_ERROR_NOT_IN_DB );
       DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
       DUF_TEST_R( r );
       assert( di.pup == &uf );

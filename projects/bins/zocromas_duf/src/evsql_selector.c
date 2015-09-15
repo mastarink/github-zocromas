@@ -262,7 +262,6 @@ duf_selector_total2sql( const duf_sql_set_t * sql_set, const char *selected_db, 
         else
         {
           sql = mas_strcat_x( sql, selector );
-	  T("SQL:%s", sql);
         }
 
 
