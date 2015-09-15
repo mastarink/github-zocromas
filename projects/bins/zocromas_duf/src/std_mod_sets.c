@@ -50,7 +50,7 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    .selector2 =                 /* */
 #if 0
    " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS fns " /* */
-   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " /* */
+   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns.nameid=fn." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
    " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */

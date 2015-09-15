@@ -62,5 +62,6 @@
 
 #  include "sql_beginning_types.h"
 extern duf_sql_sequence_t sql_create_selected;
+extern duf_sql_sequence_t sql_update_selected;
 
 #endif

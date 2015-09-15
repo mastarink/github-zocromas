@@ -58,6 +58,7 @@ zocromas_duf_SOURCES=				   \
 	std_fieldsets.c std_selectors.c \
 	std_mod_sets.c \
 	sql_beginning_selected.c \
+	sql_update_selected.c \
 	sql_beginning_common.c \
 	sql_beginning_create.c \
 	sql_beginning_vacuum.c \

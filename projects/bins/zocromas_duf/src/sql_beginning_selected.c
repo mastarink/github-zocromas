@@ -28,11 +28,11 @@ duf_sql_sequence_t sql_create_selected = {
   .set_selected_db = 1,
   .sql = {
 #ifdef DUF_SQL_SELECTED_DROP
-          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ ,
+          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ , /* XXX */
 #endif
           "CREATE  " DUF_SQL_SELECTED_TEMPORARY_STRING "  TABLE  " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */
           " AS "                /* */
-          " SELECT fn." DUF_SQL_IDNAME " AS rowid, fn." DUF_SQL_IDNAME " AS nameid "
+          " SELECT fn." DUF_SQL_IDNAME ", fn." DUF_SQL_IDNAME " AS nameid "
           /* ",NULL AS last_updated,NULL AS inow" */
           "   FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn LEFT " /* */
           "        JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
@@ -43,30 +43,27 @@ duf_sql_sequence_t sql_create_selected = {
           "      WHERE "        /* */
           DUF_SQL_UFILTER_BINDINGS /* */
           /* " GROUP BY nameid " (* *) */
-          ,
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_FILENAMES " (rowid) " /* */
-          ,
-//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_nameid ON " DUF_SQL_SELECTED_TMP_FILENAMES " (nameid) " /* */        ,
+          ,                     /* XXX */
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL "_fnid ON " DUF_SQL_SELECTED_TMP_FILENAMES " (nameid) " /* */ , /* XXX */
 
 #ifdef DUF_SQL_SELECTED_DROP
-          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ ,
+          "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
           " WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
-          "   ( SELECT sel.rowid as fid, fn.dataid AS did, p.rowid as parentid " /* */
-          "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.rowid=fn.rowid) " /* */
-          "         LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (p.rowid=fn.Pathid) " /* */
+          "   ( SELECT sel.nameid as fid, fn.dataid AS did, p." DUF_SQL_IDNAME " as parentid " /* */
+          "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
+          "         LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS p ON (p." DUF_SQL_IDNAME "=fn.Pathid) " /* */
           " UNION "             /* */
           " SELECT fid, did, pp.parentid as parentid " /* */
           " FROM parents_cte "  /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " as pp ON( pp.rowid = parents_cte.parentid ) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " as pp ON( pp." DUF_SQL_IDNAME " = parents_cte.parentid ) " /* */
           " ) "                 /* */
-          " SELECT fid, did, parentid FROM parents_cte WHERE parentid IS NOT NULL GROUP BY ParentId " /* */ ,
+          " SELECT fid, did, parentid FROM parents_cte WHERE parentid IS NOT NULL GROUP BY ParentId " /* */ , /* XXX */
 
-//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_PATHS " (rowid) " /* */        ,
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_fid ON " DUF_SQL_SELECTED_TMP_PATHS " (fid)" /* */ ,
           "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_did ON " DUF_SQL_SELECTED_TMP_PATHS " (did)" /* */ ,
-          "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ ,
+          "CREATE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL "_parentid ON " DUF_SQL_SELECTED_TMP_PATHS " (parentid)" /* */ , /* XXX */
 
 
 #ifdef DUF_SQL_SELECTED_DROP
@@ -78,37 +75,36 @@ duf_sql_sequence_t sql_create_selected = {
 #if 0
           " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
 #else
-          " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.rowid=fn.rowid) " /* */
+          " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
 #endif
           " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
-          " GROUP BY fn.Pathid " /* */ ,
-//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (rowid) " /* */        ,
+          " GROUP BY fn.Pathid " /* */ , /* XXX */
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES " (Pathid)"
-          /* */ ,
+                                /* */ ,
+                                /* XXX */
           "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL "_numfiles ON " DUF_SQL_SELECTED_TMP_PATHTOT_FILES
           " (numfiles)"
-          /* */ ,
+                                /* */ ,
+                                /* XXX */
 
 #ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */ ,
 #endif
           "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
-          " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) " /* */
-          " AS numdirs "        /* */
+          " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) AS numdirs "        /* */
           " FROM "              /* */
 #if 0
           DUF_SQL_TABLES_PATHS_FULL " " /* */
 #else
           DUF_SQL_SELECTED_TMP_PATHS_FULL " AS pts " /* */
-          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp.rowid ) " /* */
+          " LEFT JOIN " DUF_SQL_TABLES_PATHS_FULL " AS ptsp ON( pts.parentid = ptsp." DUF_SQL_IDNAME " ) " /* */
 #endif
           " JOIN " DUF_SQL_TABLES_PATHS_FULL " AS parents ON( parents." DUF_SQL_IDNAME " = ptsp.parentid ) " /* */
-          " GROUP BY parents." DUF_SQL_IDNAME " " /* */ ,
-//"CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_rowid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (rowid) " /* */        ,
-          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid)" /* */
-          ,
-          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (numdirs)",
+          " GROUP BY parents." DUF_SQL_IDNAME " ", /* XXX */
+          "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_Pathid ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (Pathid)", /* XXX */
+          "CREATE INDEX IF NOT EXISTS        " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL "_numdirs ON " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS " (numdirs)", /* XXX */
 
           NULL}
 };
