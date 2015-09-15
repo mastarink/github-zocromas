@@ -45,7 +45,7 @@
 /* ###################################################################### */
 
 /* 20150819.164652 */
-static int
+DUF_WRAPSTATIC int
 duf_eval_sccbh_all_and_summary( duf_sccb_handle_t * sccbh )
 {
   DEBUG_STARTR( r );

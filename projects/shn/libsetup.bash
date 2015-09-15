@@ -55,7 +55,7 @@ function shn_setup_global_dirs
     MSH_SHN_DIRS[save]="${MSH_SHN_DIRS[admin]}/saved"
     MSH_SHN_DIRS[savedist]="${MSH_SHN_DIRS[save]}/dist"
     MSH_SHN_DIRS[savegentoo]="${MSH_SHN_DIRS[save]}/gentoo"
-    MSH_SHN_DIRS[ebuilds]="$MSH_SHN_PROJECTS_DIR/ebuilds"
+    MSH_SHN_DIRS[ebuilds]="$MSH_SHN_PROJECTS_DIR/gentoo/ebuilds"
     MSH_SHN_DIRS[ebuild]="${MSH_SHN_DIRS[ebuilds]}/mas-tar"
     MSH_SHN_DIRS[install]="${MSH_SHN_DIRS[admin]}/install"
     MSH_SHN_DIRS[flavour]="${MSH_SHN_DIRS[install]}/${MSH_SHN_FLAVOUR:-default}"

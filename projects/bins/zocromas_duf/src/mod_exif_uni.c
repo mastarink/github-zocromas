@@ -27,7 +27,7 @@
 #include "duf_sql_field.h"
 
 #include "duf_sql.h"
-#include "duf_sql1.h"
+#include "duf_sql1.h" /* duf_sql : TODO:to be removed!! */
 #include "duf_sql2.h"
 
 
@@ -803,6 +803,7 @@ static int dirent_contnt2( duf_sqlite_stmt_t * pstmt, /* const struct stat *pst_
               }
               else
               {
+	/* TODO duf_sql -> DUF_SQL_START_STMT + DUF_SQL_BIND_ ... + DUF_SQL_STEP + DUF_SQL_END_STMT */
                 DOR( r,
                      duf_sql( " UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET exifid = %llu WHERE " DUF_SQL_IDNAME " = %lld", &changes, exifid,
                               dataid ) );

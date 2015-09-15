@@ -29,7 +29,7 @@
 #include "duf_sql_field2.h"
 
 #include "duf_sql.h"
-#include "duf_sql1.h"
+#include "duf_sql1.h" /* duf_sql_select : TODO:to be removed!! */
 #include "duf_sql2.h"
 
 /* #include "duf_dbg.h" */
@@ -182,6 +182,7 @@ duf_insert_sd5_uni( duf_depthinfo_t * pdi, unsigned long long *md64, const char 
       {
         duf_scan_callbacks_t sccb = {.leaf.fieldset = "sd5id" };
         duf_sccb_handle_t csccbh = {.sccb = &sccb };
+	/* TODO duf_sql_select -> DUF_SQL_START_STMT + DUF_SQL_BIND_ ... + DUF_SQL_STEP + DUF_SQL_END_STMT */
         lr = duf_sql_select( duf_sel_cb_field_by_sccb, &sd5id, STR_CB_DEF, STR_CB_UDATA_DEF,
                              &csccbh,
                              "SELECT " DUF_SQL_IDNAME " AS sd5id FROM " DUF_SQL_TABLES_SD5_FULL " WHERE sd5sum1='%lld' AND sd5sum2='%lld'", md64[1],

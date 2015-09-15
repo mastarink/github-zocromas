@@ -76,6 +76,7 @@ function shn_build_xcommand ()
 	    shn_errmsg "$cmd_base $@ ------"
 	    shn_show_errors $errname
 #    shn_msg "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+	    shn_msg "N 1 $errname"
 	    retcode=1
 	  fi
 	else
@@ -85,6 +86,7 @@ function shn_build_xcommand ()
 	  ! [[ "${MSH_SHN_DIRS[error]}" ]]     && shn_errmsg 2.3 ${MSH_SHN_DIRS[error]}
 	  ! [[ -d "${MSH_SHN_DIRS[error]}" ]]  && shn_errmsg 2.4 ${MSH_SHN_DIRS[error]}
 	  ! [[ -x "$cmd" ]]                   && shn_errmsg 2.5 $cmd
+	  shn_msg "N 2"
 	  retcode=1
 	fi
 	popd &>/dev/null
@@ -97,6 +99,7 @@ function shn_build_xcommand ()
   else
     shn_errmsg 5 "error dir : ${MSH_SHN_DIRS[error]}"
   fi
+  shn_msg "N 3"
   return $retcode
 }
 function shn_xcommand ()
@@ -387,7 +390,7 @@ function shn_build_dist ()
     if shn_build_common_make distcheck ; then
       shn_msgns make distcheck ok
     else
-      shn_errmsg "distcheck"
+      shn_errmsg "`pwd` distcheck"
       return $?
     fi
     shn_msgns '⇒ «dist»'
@@ -424,7 +427,8 @@ function shn_build_ebuild_update ()
 {
   local retval=0
   local ebuild_prefix='' distname ebname
-  local ebuild_dir=${MSH_SHN_DIRS[ebuild]}/${ebuild_prefix}${MSH_SHN_PROJECT_NAME}
+  local ebuild_dir
+  ebuild_dir=${MSH_SHN_DIRS[ebuild]}/${ebuild_prefix}${MSH_SHN_PROJECT_NAME}
   shn_dbgmsg "ebuild_dir:$ebuild_dir"
   if ! [[ -d "$ebuild_dir" ]] ; then
     shn_mkdir "$ebuild_dir"
@@ -435,7 +439,7 @@ function shn_build_ebuild_update ()
 	&& pushd $ebuild_dir >/dev/null ; then
     ebname_base=$( ls -1tr *.ebuild 2>/dev/null | tail -1 )
     if ! [[ "$ebname_base" ]] || ! [[ -f $ebname_base ]] ; then
-      shn_errmsg $LINENO $FUNCNAME E
+      shn_errmsg "1. $FUNCNAME E No file $ebname_base at $ebuild_dir; '${MSH_SHN_DIRS[ebuild]}'; '${MSH_SHN_PROJECT_NAME}' "
       return 1
     fi
     shn_dbgmsg "ebname_base:$ebname_base"

@@ -58,9 +58,9 @@ noinst_HEADERS=duf.h \
 	std_fieldsets.h \
 	std_mod_sets.h \
 	duf_mod_defs.h \
-	duf_print.h duf_printb.h duf_fileinfo.h \
+	duf_print.h duf_printb.h duf_fileinfo.h duf_format_types.h \
 	duf_sql2.h \
-	duf_sql_const.h std_selectors.h \
+	duf_sql_const.h std_selectors.h duf_sql_types.h \
 	duf_sql_defs.h \
 	duf_sql_field2.h \
 	duf_sql_field.h \
@@ -82,7 +82,8 @@ noinst_HEADERS=duf.h \
 	duf_eval_at_config.h \
 	duf_sys_wrap.h duf_utils.h \
 	duf_utils_path.h \
-	duf_utils_print.h
+	duf_utils_print.h \
+	duf_sql1.h
 
 #	duf_item_match2.h	
 #	duf_file_pathid2.h
@@ -93,5 +94,4 @@ noinst_HEADERS=duf.h \
 #	duf_sql_field1.h
 #	duf_uni_scan1.h
 #
-#	duf_sql1.h
 

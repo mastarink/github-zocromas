@@ -3,7 +3,11 @@
 
 #include "duf_config_ref.h"
 /* */
+#ifdef MAS_TRACING
 #  define DUF_OPTIONG(_lo)          (DUF_TRACE(flags, 0, "FLAG %s", # _lo), DUF_CONFIGG(_lo))
+#else
+#  define DUF_OPTIONG(_lo)          DUF_CONFIGG(_lo)
+#endif
 #  define DUF_OPTIONG_F(_lo)        DUF_OPTIONG(_lo)
 #  define DUF_OPTIONG_N(_lo)        DUF_OPTIONG(_lo)
 #  define DUF_OPTIONG_A(_lo, _a)    DUF_OPTIONG(_lo)._a

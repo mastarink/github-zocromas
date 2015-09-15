@@ -111,9 +111,7 @@ duf_eval_sql_sequence_cb( duf_sql_sequence_t * ssql, const char *title, const du
   {
     const char **psql = ssql->sql;
 
-#ifdef MAS_TRACING
     const char **psql0 = psql;
-#endif
     int nn = 0;
 
 #ifdef MAS_TRACING

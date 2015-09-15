@@ -7,7 +7,7 @@
 
 #include "duf_maintenance.h"
 
-#include "duf_config_ref.h"     /* DUF_ACTG_FLAG => DUF_OPTION */
+/* #include "duf_config_ref.h"     (* DUF_ACTG_FLAG => DUF_OPTION *) */
 
 #include "duf_levinfo_ref.h"
 
@@ -80,11 +80,11 @@
 #else
 #  define DUF_SCAN_DB_NODE_IMPLEMENT_FUNCTION(stagename) \
     int \
-    duf_scan_db_node_## stagename ## _with_sccbh( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
+    duf_sccbh_eval_db_node_## stagename( duf_sqlite_stmt_t * pstmt, duf_sccb_handle_t *sccbh ) \
     { \
       DEBUG_STARTR( r ); \
  \
-      if ( DUF_ACTG_FLAG( dirs ) ) \
+      if ( DUF_ACTG_FLAG( allow_dirs ) ) \
       { \
 	PDI->items.total++; \
 	PDI->items.dirs++; \
@@ -94,14 +94,13 @@
 	  if ( SCCB->node_scan_ ## stagename ## 2_deleted ) \
 	  { \
 	     /* scanner = SCCB->node_scan_ ## stagename ## 2_deleted */ \
-	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, PDI ) ); \
+	    DOR( r, SCCB->node_scan_ ## stagename ## 2_deleted( pstmt, /* diridpdi, */ PDI ) ); \
 	  } \
-	  DUF_TRACE( deleted, 0, "DELETED" ); \
 	} \
 	else if ( SCCB->node_scan_ ## stagename ## 2 ) \
 	{ \
 	  /* scanner = SCCB->node_scan_ ## stagename ## 2 */ \
-	  DOR( r, SCCB->node_scan_ ## stagename ## 2( pstmt,  PDI ) ); \
+	  DOR( r, SCCB->node_scan_ ## stagename ## 2( pstmt, /* diridpdi, */ PDI ) ); \
 	} \
       } \
       DEBUG_ENDR( r ); \
