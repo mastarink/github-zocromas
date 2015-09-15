@@ -1,4 +1,5 @@
 find sql_beginning_selected.c
+sfind sql_update_selected.c 
 sfind sql_beginning_selected.h
 sfind sql_selected_defs.h
 
