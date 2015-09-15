@@ -97,13 +97,11 @@ duf_pdi_init( duf_depthinfo_t * pdi, const duf_ufilter_t * pu, const char *real_
     if ( pdi->pdi_name )
     {
       DOR( r, duf_pdi_attach_selected( pdi ) );
-      T( "@@@@ATTACH: %s", pdi->pdi_name );
     }
 #else
 #  ifndef DUF_SQL_SELECTED_TEMPORARY
 #    error Wrong "DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
 #  endif
-    T( "@@@@OFF ATTACH: %s", pdi->pdi_name );
 #endif
     /* assert( pdi->pathinfo.depth == -1 ); */
     if ( real_path )
@@ -259,7 +257,6 @@ duf_pdi_close( duf_depthinfo_t * pdi )
       char *selected_db_file;
 
       selected_db_file = duf_expand_sql( DUF_ATTACH_SELECTED_PATTERN, pdi->db_attached_selected );
-      /* T( "@@@@DETACH: selected_db_file:%s", selected_db_file ); */
 #  if 0
       ry = unlink( selected_db_file );
       {
@@ -270,7 +267,6 @@ duf_pdi_close( duf_depthinfo_t * pdi )
         DUF_SHOW_ERROR( "(%d) errno:%d unlink :%s;", ry, errno, s ? s : serr );
       }
 #  endif
-      T( "@@@@@B selected_db_file:%s", selected_db_file );
       mas_free( selected_db_file );
     }
 #else

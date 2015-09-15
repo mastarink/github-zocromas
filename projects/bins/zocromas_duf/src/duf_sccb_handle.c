@@ -219,7 +219,6 @@ TODO scan mode
     {
       DUF_TRACE( explain, 0, "no init scan" );
     }
-    T( "@@[%p] sql_beginning_done:%d", PDI, duf_pdi_root( PDI )->sql_beginning_done );
     DOR( rpr, duf_pdi_reinit_anypath( PDI, duf_levinfo_path( PDI ), duf_get_sql_set( SCCB, DUF_NODE_NODE ), 0 /* caninsert */ ,
                                       duf_pdi_recursive( PDI ) ) );
   }

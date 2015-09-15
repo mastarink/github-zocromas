@@ -20,7 +20,7 @@ duf_scan_beginning_sql( const duf_scan_callbacks_t * sccb, char *selected_db, co
 {
   DEBUG_STARTR( r );
 
-  DUF_TRACE( temp, 0, "pu->md5id:%llu:%llu", pu ? pu->md5id.min : 99999, pu ? pu->md5id.min : 99999 );
+  DUF_TRACE( sql, 0, "pu->md5id:%llu:%llu", pu ? pu->md5id.min : 99999, pu ? pu->md5id.min : 99999 );
   DUF_TRACE( sql, 0, "beginning_sql '%s'",
              ( sccb && sccb->beginning_sql_seq && sccb->beginning_sql_seq->sql ) ? *sccb->beginning_sql_seq->sql : "?" );
 

@@ -306,8 +306,10 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
   {
     if ( DUF_NOERROR( r ) )
       DUF_MAKE_ERROR( r, DUF_ERROR_NOT_IN_DB );
+#if 0
     DUF_SHOW_ERROR( "@@@@@@@@(%s) no dirid by parentid=%llu and dirname='%s'", duf_error_name( r ), duf_levinfo_dirid_up( pdi ),
                     duf_levinfo_itemshowname( pdi ) );
+#endif
   }
   DEBUG_ENDR( r );
 }

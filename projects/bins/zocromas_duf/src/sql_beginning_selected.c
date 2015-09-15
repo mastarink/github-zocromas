@@ -30,7 +30,7 @@ duf_sql_sequence_t sql_create_selected = {
 #ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ , /* XXX */
 #endif
-          "CREATE  " DUF_SQL_SELECTED_TEMPORARY_STRING "  TABLE  " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */
+          "CREATE  " DUF_SQL_SELECTED_TEMPORARY_STRING "  TABLE IF NOT EXISTS  " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */
           " AS "                /* */
           " SELECT fn." DUF_SQL_IDNAME ", fn." DUF_SQL_IDNAME " AS nameid "
           /* ",NULL AS last_updated,NULL AS inow" */
@@ -49,7 +49,7 @@ duf_sql_sequence_t sql_create_selected = {
 #ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHS_FULL /* */ , /* XXX */
 #endif
-          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
+          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS  " DUF_SQL_SELECTED_TMP_PATHS_FULL " AS " /* */
           " WITH RECURSIVE parents_cte(fid, did, parentid) AS " /* */
           "   ( SELECT sel.nameid as fid, fn.dataid AS did, p." DUF_SQL_IDNAME " as parentid " /* */
           "      FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS sel LEFT JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (sel.nameid=fn." DUF_SQL_IDNAME ") " /* */
@@ -69,7 +69,7 @@ duf_sql_sequence_t sql_create_selected = {
 #ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */ ,
 #endif
-          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */
+          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_FILES_FULL /* */
           " AS "                /* */
           " SELECT fn.Pathid AS Pathid, COUNT(*) AS numfiles, min( size ) AS minsize, max( size ) AS maxsize " /* */
 #if 0
@@ -91,7 +91,7 @@ duf_sql_sequence_t sql_create_selected = {
 #ifdef DUF_SQL_SELECTED_DROP
           "DROP TABLE IF EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */ ,
 #endif
-          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
+          "CREATE " DUF_SQL_SELECTED_TEMPORARY_STRING " TABLE IF NOT EXISTS " DUF_SQL_SELECTED_TMP_PATHTOT_DIRS_FULL /* */
           " AS "                /* */
           " SELECT parents." DUF_SQL_IDNAME " AS Pathid, COUNT( * ) AS numdirs "        /* */
           " FROM "              /* */
