@@ -20,6 +20,7 @@ commonlibs/zocromas_mas_listener
 commonlibs/zocromas_mas_options
 commonlibs/zocromas_mas_cliopts
 commonlibs/zocromas_mas_init
+commonlibs/zocromas_mas_sqlite
 modules/zocmds/zocromas_zocmds1
 modules/zocmds/zocromas_zocmds2
 modules/protos/xcromas
