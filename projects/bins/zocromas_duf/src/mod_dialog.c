@@ -151,7 +151,7 @@ dialog_leaf2( duf_sqlite_stmt_t * pstmt, duf_depthinfo_t * pdi )
     {
       DUF_TRACE( mod, 0, "@@@dialog  %s : %s", duf_levinfo_path( pdi ), duf_levinfo_itemtruename( pdi ) );
       /* "selected" tables should be different!? */
-      DOR_NOE( r, duf_evaluate_pdi_sccb_std( "listing", &di /*, &uf */  ), DUF_ERROR_NOT_IN_DB );
+      DOR_NOE( r, duf_ev_pdi_evname_std( &di, "listing" /*, &uf */  ), DUF_ERROR_NOT_IN_DB );
       DUF_CLEAR_ERROR( r, DUF_ERROR_NOT_IN_DB );
       DUF_TEST_R( r );
       assert( di.pup == &uf );

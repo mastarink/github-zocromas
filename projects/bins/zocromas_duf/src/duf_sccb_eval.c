@@ -20,35 +20,31 @@
 
 
 int
-duf_evaluate_sccb( duf_scan_callbacks_t * sccb )
+duf_ev_sccb( duf_scan_callbacks_t * sccb )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_pdi_sccb( DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */ , sccb );
+  return duf_ev_pdi_sccb( DUF_CONFIGG( pdi ), sccb, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 int
-duf_evaluate_sccb_namen( const char *name, size_t len, const duf_action_table_t * table )
+duf_ev_evnamen( const char *name, size_t len, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_ev_pdi_sccb_namen( name, len, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  return duf_ev_pdi_evnamen( DUF_CONFIGG( pdi ), name, len, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 int
-duf_evaluate_sccb_name( const char *name, const duf_action_table_t * table )
+duf_ev_evname( const char *name, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_pdi_sccb_name( name, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  return duf_ev_pdi_evname( DUF_CONFIGG( pdi ), name, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 int
-duf_evaluate_sccb_named_list( const char *names, const duf_action_table_t * table )
+duf_ev_evnamed_list( const char *names, const duf_action_table_t * table )
 {
   assert( DUF_CONFIGX( pdi )->pdi_name );
-  assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_ev_pdi_named_sccbs( names, table, DUF_CONFIGG( pdi ), DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
+  return duf_ev_pdi_evnamed_list( DUF_CONFIGG( pdi ), names, table, DUF_CONFIGA( targ ) /*, DUF_CONFIGG( puz ) */  );
 }
 
 #if 0
@@ -69,10 +65,10 @@ duf_show_sccb_sequence( duf_scan_callbacks_t ** psccbs, int sccb_num )
 #endif
 /*
  * for each sccb from sequence/list (with given size - # of items) make/evaluate the task
- *    by calling duf_evaluate_sccb
+ *    by calling duf_ev_sccb
  * */
 int
-duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
+duf_ev_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt )
 {
   DEBUG_STARTR( r );
 
@@ -87,7 +83,7 @@ duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
     {
       DUF_TRACE( action, 2, "%" DUF_ACTION_TITLE_FMT ": astep %d", duf_uni_scan_action_title( psccbs[astep] ), astep );
 
-      /* duf_evaluate_sccb:
+      /* duf_ev_sccb:
        * do everything needed from sccb, i.e. :
        * - call init  from psccbs[astep]
        * - do beginning sql set  from psccbs[astep]
@@ -95,7 +91,7 @@ duf_evaluate_sccb_array( duf_scan_callbacks_t ** psccbs, int sccb_num, int *pcnt
        *     - evaluate psccbs[astep] for each string  from DUF_CONFIGG(targ)[cv] as path
        *     - store number of changes to *pchanges
        * - do final sql set from psccbs[astep]
-       * XXX  XXX */ DOR( r, duf_evaluate_sccb( psccbs[astep] /* sccb */  ) );
+       * XXX  XXX */ DOR( r, duf_ev_sccb( psccbs[astep] /* sccb */  ) );
       cnt++;
     }
   }

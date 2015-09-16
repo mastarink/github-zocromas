@@ -17,7 +17,7 @@
 /* ###################################################################### */
 
 
-
+#if 0
 int
 __duf_sql_pos_by_name( const char *name, duf_record_t * precord, int *phave, int optional )
 {
@@ -87,10 +87,11 @@ __duf_sql_ull_by_name( const char *name, duf_record_t * precord, int *phave, int
   ptr = __duf_sql_val_by_name( name, precord, phave, optional );
   return ptr ? strtoll( ptr, NULL, 10 ) : 0;
 }
-
+#endif
 /* 
  * this is callback of type:duf_sel_cb_t (second range; ; sel_cb)
  * */
+#if 0
 int
 duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb_t str_cb_unused, void *str_cb_udata_unused,
                           duf_sccb_handle_t * sccbh )
@@ -109,7 +110,7 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
            )
     {
       int have_pos = 0;
-      const duf_sql_set_t *leaf_set = duf_get_sql_set( SCCB, DUF_NODE_LEAF );
+      const duf_sql_set_t *leaf_set = duf_sccb_get_sql_set( SCCB, DUF_NODE_LEAF );
 
       *pvalue = __duf_sql_ull_by_name( leaf_set->fieldset, precord, &have_pos, 0 );
       if ( have_pos >= 0 )
@@ -136,3 +137,4 @@ duf_sel_cb_field_by_sccb( duf_record_t * precord, void *sel_cb_udata, duf_str_cb
   }
   return r_;
 }
+#endif

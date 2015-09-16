@@ -20,49 +20,49 @@
 
 
 int
-duf_evaluate_sccb_named_list_std( const char *names )
+duf_ev_evnamed_list_std( const char *names )
 {
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_sccb_named_list( names, duf_action_table(  ) );
+  return duf_ev_evnamed_list( names, duf_action_table(  ) );
 }
 
 int
-duf_evaluate_sccb_namen_std( const char *name, size_t len )
+duf_ev_evnamen_std( const char *name, size_t len )
 {
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_sccb_namen( name, len, duf_action_table(  ) );
+  return duf_ev_evnamen( name, len, duf_action_table(  ) );
 }
 
 int
-duf_evaluate_sccb_name_std( const char *name )
+duf_ev_evname_std( const char *name )
 {
   assert( DUF_CONFIGX( pdi )->pup == DUF_CONFIGX( puz ) );
-  return duf_evaluate_sccb_name( name, duf_action_table(  ) );
+  return duf_ev_evname( name, duf_action_table(  ) );
 }
 
 int
-duf_ev_pdi_sccb_namen_std( const char *name, size_t len, duf_depthinfo_t * pdi, duf_argvc_t * ptarg/*, duf_ufilter_t * pu */ )
+duf_ev_pdi_evnamen_std_pt( duf_depthinfo_t * pdi, const char *name, size_t len, duf_argvc_t * ptarg /*, duf_ufilter_t * pu */  )
 {
-  return duf_ev_pdi_sccb_namen( name, len, duf_action_table(  ), pdi, ptarg/*, pu*/ );
+  return duf_ev_pdi_evnamen( pdi, name, len, duf_action_table(  ), ptarg /*, pu */  );
 }
 
 int
-duf_evaluate_pdi_sccb_name_std( const char *name, duf_depthinfo_t * pdi, duf_argvc_t * ptarg/*, duf_ufilter_t * pu */ )
+duf_ev_pdi_evname_std_pt( duf_depthinfo_t * pdi, const char *name, duf_argvc_t * ptarg /*, duf_ufilter_t * pu */  )
 {
-  return duf_evaluate_pdi_sccb_name( name, duf_action_table(  ), pdi, ptarg/*, pu*/ );
+  return duf_ev_pdi_evname( pdi, name, duf_action_table(  ), ptarg /*, pu */  );
 }
 
 int
-duf_evaluate_pdi_sccb_name_std_at( const char *name, duf_depthinfo_t * pdi, const char *arg/*, duf_ufilter_t * pu */ )
+duf_ev_pdi_evname_std_at( duf_depthinfo_t * pdi, const char *name, const char *arg /*, duf_ufilter_t * pu */  )
 {
-  return duf_evaluate_pdi_sccb_name_at( name, duf_action_table(  ), pdi, arg/*, pu*/ );
+  return duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), arg /*, pu */  );
 }
 
 int
-duf_evaluate_pdi_sccb_std( const char *name, duf_depthinfo_t * pdi/*, duf_ufilter_t * pu */)
+duf_ev_pdi_evname_std( duf_depthinfo_t * pdi, const char *name /*, duf_ufilter_t * pu */  )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, duf_evaluate_pdi_sccb_name_at( name, duf_action_table(  ), pdi, NULL /*, pu*/ ) );
+  DOR( r, duf_ev_pdi_evname_at( pdi, name, duf_action_table(  ), NULL /*, pu */  ) );
   DEBUG_ENDR( r );
 }

@@ -87,7 +87,7 @@ duf_get_node_sql_set( const duf_scan_callbacks_t * sccb )
 }
 
 const duf_sql_set_t *
-duf_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
+duf_sccb_get_sql_set( const duf_scan_callbacks_t * sccb, duf_node_type_t node_type )
 {
   const duf_sql_set_t *set = NULL;
 
