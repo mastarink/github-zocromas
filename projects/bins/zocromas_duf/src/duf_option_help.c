@@ -689,12 +689,22 @@ duf_option_$_examples(  /* int argc, char *const *argv */ void )
   DUF_PRINTF( 0, "  echo ':@tree@ls' | run -dfR --db-name=down.db --output-file=/dev/pts/30 --md5id=16288  --cd=/ ; date > /dev/pts/30 	- %s",
               "-= \"\" =-" );
   DUF_PRINTF( 0, "  run -dfR --output-file=/dev/pts/30 --trace-db=2 --max-seq=24 --cd=/ --ls "
-              " --echo=\"@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\" --ls --cd=.. --echo=\"@2@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\""
+              " --echo=\"@1@@@@@@@@@@@@@@@@@@@@@@@\" --ls --cd=.. --echo=\"@2@@@@@@@@@@@@@@@@@@@@@@@\""
               " --ls  ; date > /dev/pts/30 	- %s", "-= \"\" =-" );
   DUF_PRINTF( 0, "  run -dfR --output-file=/dev/pts/30 --trace-db=2 --max-seq=24 --cd=/ --ls "
-              " --echo=\"'@1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`date`'\" --ls --cd=.. "
-              " --echo=\"'@2@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`date`'\" --ls "
-              " --echo=\"'@3@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`date`'\" 	- %s", "-= \"\" =-" );
+              " --echo=\"'@1@@@@@@@@@@@@@@@@@@@@@@@`date`'\" --ls --cd=.. "
+              " --echo=\"'@2@@@@@@@@@@@@@@@@@@@@@@@`date`'\" --ls " " --echo=\"'@3@@@@@@@@@@@@@@@@@@@@@@@`date`'\" 	- %s", "-= \"\" =-" );
+
+  DUF_PRINTF( 0, "========================= as for 20150916.095253 ============" );
+  DUF_PRINTF( 0, "  run -dfR --filename=IMAG0691.jpg --db-name=photo --evaluate=tree  /	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run -dfR --dataid=11062 --db-name=photo --evaluate=tree  /	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run -dfR --dataid=11063 --filename=IMAG0692.jpg --db-name=photo --evaluate=listing  /	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR --min-datasame=2 --evaluate=tree	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR --min-sizesame=2 --evaluate=tree	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR --min-mimesame=2 --evaluate=tree	- %s", "-= \"\" =-" );
+  DUF_PRINTF( 0, "  run . -dfR --min-exifsame=2 --evaluate=tree	- %s", "-= \"\" =-" );
+
+
 
   DUF_PRINTF( 0, "=============================================================" );
 

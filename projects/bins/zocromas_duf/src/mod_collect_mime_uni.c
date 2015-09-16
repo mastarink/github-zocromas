@@ -83,12 +83,16 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            .fieldset =          /* */
            /* "'mime-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid, fn.name AS filename " /* */
-           ", fn.name AS dfname, fd.size AS filesize, fd." DUF_SQL_IDNAME " as dataid " /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
+           ", fn.name AS dfname, fd.size AS filesize " /* */
+           " , fd." DUF_SQL_IDNAME " AS filedataid " /* */
+           " , fd." DUF_SQL_IDNAME " AS dataid " /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            "  "                 /* */
-           ", strftime('%s',fd.mtim)   AS mtime " /* */
+           ", STRFTIME('%s',fd.mtim)   AS mtime " /* */
            ", fd.mode               AS filemode " /* */
+           ", mi.dupmimecnt         AS nsame " /* */
+           ", sz.dupzcnt            AS dupzcnt " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            ", fd.md5id              AS md5id " /* */
@@ -109,7 +113,7 @@ duf_scan_callbacks_t duf_collect_mime_callbacks = {
            " sz.size > 0                               AND " /* */
            " 1 "                /* */
            ,
-           .count_aggregate = "distinct fd." DUF_SQL_IDNAME},
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME},
   .node = {
            .name = "mime node",
            .type = DUF_NODE_NODE,

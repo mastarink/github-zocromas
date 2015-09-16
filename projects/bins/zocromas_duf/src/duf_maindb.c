@@ -277,13 +277,13 @@ duf_main_db_pre_action( void )
 
 
 #ifdef DUF_ATTACH_TTABLES_PATTERN
-#ifdef DUF_SQL_TTABLES_TEMPORARY
-#error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
-#endif
+#  ifdef DUF_SQL_TTABLES_TEMPORARY
+#    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
 #else
-#ifndef DUF_SQL_TTABLES_TEMPORARY
-#error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
-#endif
+#  ifndef DUF_SQL_TTABLES_TEMPORARY
+#    error "Wrong DUF_ATTACH_SELECTED_PATTERN / DUF_SQL_SELECTED_TEMPORARY : add include sql_tables_defs.h"
+#  endif
 #endif
 
 
@@ -540,6 +540,9 @@ duf_main_db( int argc, char **argv )
   DUF_VERBOSE( 0, "verbose test 0> %d %s", 17, "hello" );
   DUF_VERBOSE( 1, "verbose test 1> %d %s", 17, "hello" );
 
+  /* DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) ); */
+
+
   /* I. duf_all_options -- STAGE_SETUP */
   DOR_NOE( r, duf_all_options( DUF_OPTION_STAGE_SETUP ), DUF_ERROR_OPTION_NOT_FOUND );
   DORF( r, duf_config_optionally_show ); /* FIXME similar to duf_show_options, called from duf_main_with_config after calling duf_main_db ??? FIXME */
@@ -578,7 +581,6 @@ duf_main_db( int argc, char **argv )
     DORF( r, duf_all_options, DUF_OPTION_STAGE_FIRST ); /* XXX XXX XXX XXX XXX XXX XXX XXX */
     for ( int ia = DUF_CONFIGG( targ_offset ); DUF_NOERROR( r ) && ia < DUF_CONFIGG( targ.argc ); ia++ )
     {
-      T( "@@[%p] sql_beginning_done:%d", DUF_CONFIGG( pdi ), duf_pdi_root( DUF_CONFIGG( pdi ) )->sql_beginning_done );
       DOR( r, duf_pdi_reinit_anypath( DUF_CONFIGG( pdi ), DUF_CONFIGG( targ.argv )[ia],
                                       NULL /* node_selector2 */ , 7 /* caninsert */ , DUF_UG_FLAG( recursive ) ) );
       DUF_TRACE( path, 0, "@@@@@@path@pdi#LOOP: %s", duf_levinfo_path( DUF_CONFIGG( pdi ) ) );

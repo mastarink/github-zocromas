@@ -17,9 +17,9 @@
 
 duf_sql_set_t std_leaf_sets[] = { /* */
   {                             /* */
-    .name="std leaf one",
+   .name = "std leaf one",
    .type = DUF_NODE_LEAF,
-   .expand_sql = 1,        /* */
+   .expand_sql = 1,             /* */
    .fieldset =                  /* */
 #if 0
    /* " 'std-leaf' AS fieldset_id, " (* *) */
@@ -38,6 +38,8 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+           ", md.dup5cnt            AS dup5cnt " /* */
+           ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -70,9 +72,9 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    }
   ,                             /* */
   {                             /* */
-    .name="std leaf two",
+   .name = "std leaf no sel",
    .type = DUF_NODE_LEAF,
-   .expand_sql = 1,        /* */
+   .expand_sql = 1,             /* */
    .fieldset =                  /* */
 #if 0
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
@@ -91,16 +93,18 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+           ", md.dup5cnt            AS dup5cnt " /* */
+           ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
    ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
    ", xm.model AS camera "      /* */
 #else
-   "#std-leaf"
+   "#std-ns-leaf"
 #endif
    ,
-   .selector2 =                 /* */
+   .selector2 =                 /* ns: without selected table(s) : DUF_SQL_TABLES_FILENAMES_FULL, not DUF_SQL_SELECTED_TMP_FILENAMES_FULL */
 #if 0
    " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
    /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
@@ -111,10 +115,10 @@ duf_sql_set_t std_leaf_sets[] = { /* */
    " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
    " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
 #else
-   "#std-leaf"
+   "#std-ns-leaf"
 #endif
    ,
-   .matcher = " fn.Pathid=:parentdirID " /* */
+   .matcher = " fn.Pathid=:parentdirID " /*  +pu  */
    /* " ORDER BY fn." DUF_SQL_IDNAME " " *//* */
    ,
    .filter =                    /* */
@@ -130,9 +134,9 @@ size_t std_leaf_nsets = sizeof( std_leaf_sets ) / sizeof( std_leaf_sets[0] );
 
 duf_sql_set_t std_node_sets[] = { /* */
   {
-    .name="std node one",
+   .name = "std node one",
    .type = DUF_NODE_NODE,
-   .expand_sql = 1,        /* */
+   .expand_sql = 1,             /* */
    .fieldset =                  /* */
 #if 0
    /* "'std-node' AS fieldset_id, " (* *) */
@@ -162,9 +166,9 @@ duf_sql_set_t std_node_sets[] = { /* */
    }
   ,
   {
-    .name="std node two",
+   .name = "std node two",
    .type = DUF_NODE_NODE,
-   .expand_sql = 1,        /* */
+   .expand_sql = 1,             /* */
    .fieldset =                  /* */
 #if 0
    /* "'std-ns-node' AS fieldset_id, " (* *) */

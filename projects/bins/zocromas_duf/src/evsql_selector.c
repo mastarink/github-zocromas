@@ -106,7 +106,7 @@ duf_unref_selector( const char *selector, duf_node_type_t type, int *pr )
 
 
 static const char *
-duf_xsdb_getvar( const char *name, const char *arg )
+duf_expand_sql_xsdb_getvar( const char *name, const char *arg )
 {
   char *str = NULL;
   static char buf[1024];
@@ -123,7 +123,6 @@ duf_xsdb_getvar( const char *name, const char *arg )
   else if ( 0 == strcmp( name, "DB_NAME" ) )
   {
     str = duf_config->db.main.name;
-    T( "@@@@@@name:%s : %s", name, str );
   }
   DUF_TRACE( temp, 10, "@@%s :: %s => %s", name, arg, str );
   return str;
@@ -134,7 +133,7 @@ duf_expand_sql( const char *sql, const char *dbname )
 {
   char *nsql;
 
-  nsql = mas_expand_string_cb_arg( sql, duf_xsdb_getvar, dbname );
+  nsql = mas_expand_string_cb_arg( sql, duf_expand_sql_xsdb_getvar, dbname );
   /* DUF_TRACE( temp, 0, "@@@SQL:%s => %s", sql, nsql ); */
   return nsql;
 }

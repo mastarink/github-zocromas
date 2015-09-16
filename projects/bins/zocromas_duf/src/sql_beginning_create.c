@@ -97,7 +97,8 @@ duf_sql_sequence_t sql_beginning_create = {
           DUF_SQL_IDNAME " INTEGER PRIMARY KEY autoincrement, "
 #endif
           "dev INTEGER NOT NULL, rdev INTEGER, inode INTEGER NOT NULL" /* */
-          ", mode INTEGER NOT NULL, nlink INTEGER NOT NULL" /* */
+          ", mode INTEGER NOT NULL " /* */
+	  ", nlink INTEGER NOT NULL" /* */
           ", uid INTEGER NOT NULL, gid INTEGER NOT NULL" /* */
           ", blksize INTEGER NOT NULL, blocks INTEGER NOT NULL" /* */
           ", size INTEGER NOT NULL" /* */
@@ -110,6 +111,7 @@ duf_sql_sequence_t sql_beginning_create = {
           ", mimeid INTEGER"    /* */
           ", exifid INTEGER"    /* */
           ", filetype TEXT, filestatus INTEGER" /* */
+	  ", dupdatacnt INTEGER " /* */
           ", last_updated REAL" /* */
           ", inow REAL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'))" /* */
           ", FOREIGN KEY(md5id)   REFERENCES " DUF_SQL_TABLES_MD5 "  (" DUF_SQL_IDNAME ") " /* */
@@ -131,6 +133,7 @@ duf_sql_sequence_t sql_beginning_create = {
           "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_size       ON " DUF_SQL_TABLES_FILEDATAS " (size)",
 /*        "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_uid        ON " DUF_SQL_TABLES_FILEDATAS " (uid)", */
 /*        "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_gid        ON " DUF_SQL_TABLES_FILEDATAS " (gid)", */
+          "CREATE        INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_dup        ON " DUF_SQL_TABLES_FILEDATAS " (dupdatacnt)",
           "CREATE UNIQUE INDEX IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_uniq       ON " DUF_SQL_TABLES_FILEDATAS " (dev,inode)",
 
           "CREATE TRIGGER IF NOT EXISTS " DUF_SQL_TABLES_FILEDATAS_FULL "_lastupdated " /* */

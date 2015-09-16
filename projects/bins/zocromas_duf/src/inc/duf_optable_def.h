@@ -16,6 +16,7 @@
 #  define DO_VX( _vid, ... ) DO_SET_VAL( DUF_OPTION_VAL_ ##  __VA_ARGS__  ## _vid )
 #  define DO_V( _vid )  DO_VX( _vid )
 #  define DO_VF( _vid ) DO_VX( _vid, FLAG_ )
+#  define DO_VUF( _vid ) DO_VX( _vid, FILTER_ )
 
 #  define DO_SET_OCLASS(_ocl) .oclass = _ocl
 #  define DO_CL( _cl )  DO_SET_OCLASS( DUF_OPTION_CLASS_ ## _cl )

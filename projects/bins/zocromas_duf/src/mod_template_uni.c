@@ -80,11 +80,15 @@ duf_scan_callbacks_t duf_template_callbacks = {
            /* "'tmpl-leaf' AS fieldset_id, " (* *) */
            " fn.pathid AS dirid " /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize" /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
-           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
-           ", dup5cnt AS nsame " /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
+           ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           ", md.dup5cnt            AS nsame " /* */
+           ", md.dup5cnt            AS dup5cnt " /* */
+           ", sz.dupzcnt            AS dupzcnt " /* */
            ", fd." DUF_SQL_IDNAME " AS filenameid" /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+           ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
+           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
            ", fd.mode AS filemode, md.md5sum1, md.md5sum2 " /* */
            ", fd.md5id AS md5id" /* */
            ,
@@ -98,7 +102,7 @@ duf_scan_callbacks_t duf_template_callbacks = {
            },
   .node = {
            .type = DUF_NODE_NODE,
-   .expand_sql = 1,        /* */
+           .expand_sql = 1,     /* */
            .fieldset =          /* */
            /* "'tmpl-node' AS fieldset_id, " (* *) */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */

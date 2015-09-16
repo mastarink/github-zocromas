@@ -79,7 +79,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            .fieldset =          /* */
            /* "'exif-leaf' AS fieldset_id, " (* *) */
            " fn.Pathid AS dirid " /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s',fd.mtim ) AS mtime " /* */
@@ -87,16 +87,19 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
            ", md.dup5cnt AS nsame " /* */
+           ", md.dup5cnt            AS dup5cnt " /* */
+           ", sz.dupzcnt            AS dupzcnt " /* */
            ", fd.md5id AS md5id" /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
            ", md.md5sum1, md.md5sum2 " /* */
            /* */
+           " , fd." DUF_SQL_IDNAME " AS filedataid " /* */
            ", fd." DUF_SQL_IDNAME " AS dataid " /* */
            ", mi.mime AS mime " /* */
-           ", xm.model as camera " /* */
+           ", xm.model AS camera " /* */
            ", STRFTIME( '%s', x.date_time ) AS exifdt " /* */
-           ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
-           ", xm.model as camera",
+           ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
+           ", xm.model AS camera",
            .selector2 =         /* */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
@@ -104,7 +107,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
            ,
            .matcher = " fn.Pathid = :parentdirID " /* */
            ,                    /* */
@@ -114,7 +117,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " mi.mime='image/jpeg'                        AND" /* */
            " 1 "                /* */
            ,                    /* */
-           .count_aggregate = "distinct fd." DUF_SQL_IDNAME
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME
 #if 0
            ,
            .selector_total2 =   /* */
@@ -122,7 +125,7 @@ duf_scan_callbacks_t duf_collect_exif_callbacks = {
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON( fn.dataid = fd." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL " AS mi ON( fd.mimeid = mi." DUF_SQL_IDNAME " ) " /* */
            " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL " AS x ON( fd.exifid = x." DUF_SQL_IDNAME " ) " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
            ,                    /* */
 #endif
            },                   /* */

@@ -22,7 +22,7 @@
 /* ###################################################################### */
 
 static const char *
-duf_xsdb_getvar( const char *name, const char *arg )
+duf_string_options_at_string_xsdb_getvar( const char *name, const char *arg )
 {
   static char buf[256];
   size_t len;
@@ -92,7 +92,7 @@ duf_string_options_at_string( char vseparator, duf_option_stage_t istage, duf_op
         char *xs;
 
         DUF_TRACE( explain, 0, "s: \"%s\"", s );
-        xs = mas_expand_string_cb_arg( s, duf_xsdb_getvar, NULL );
+        xs = mas_expand_string_cb_arg( s, duf_string_options_at_string_xsdb_getvar, NULL );
         {
           char *xs1;
 

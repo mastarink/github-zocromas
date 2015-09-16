@@ -40,6 +40,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -67,6 +69,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    }
   ,
   {
@@ -89,6 +93,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    }
   ,
   {
@@ -111,6 +117,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", crc.dup32cnt          AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.crc32id            AS crc32id" /* */
    ", crc.crc32sum "            /* */
    }
@@ -135,6 +143,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    }
   ,
   {
@@ -157,6 +167,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -184,6 +196,8 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */
@@ -193,7 +207,7 @@ static duf_fieldset_t _all_fieldsets[] = {
    }
   ,
   {
-   .name = "std-ns-leaf",
+   .name = "std-ns-leaf", /* same as std-leaf */
    .type = DUF_NODE_LEAF,
    .set =
    /* " 'std-ns-leaf' AS fieldset_id, " (* *) */
@@ -210,8 +224,11 @@ static duf_fieldset_t _all_fieldsets[] = {
    ", md.md5sum1, md.md5sum2 "  /* */
    ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
    ", fd." DUF_SQL_IDNAME " AS dataid " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    /* */
    ", md.dup5cnt            AS nsame " /* */
+   ", md.dup5cnt            AS dup5cnt " /* */
+   ", sz.dupzcnt            AS dupzcnt " /* */
    ", fd.exifid AS exifid "     /* */
    ", fd.mimeid AS mimeid "     /* */
    ", mi.mime AS mime "         /* */

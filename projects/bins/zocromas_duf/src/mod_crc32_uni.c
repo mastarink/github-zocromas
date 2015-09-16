@@ -78,11 +78,14 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            .fieldset =          /* */
            /* "'crc32-leaf' AS fieldset_id, " (* *) */
            "fn.Pathid AS dirid " /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
-           " , fd." DUF_SQL_IDNAME " AS filedataid, fd.inode AS inode " /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
+           " , fd." DUF_SQL_IDNAME " AS filedataid " /* */
+           " , fd." DUF_SQL_IDNAME " AS dataid " /* */
+           " , fd.inode AS inode " /* */
            " , fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
-           " , fd.dev, fd.uid, fd.gid, fd.nlink, strftime('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
+           " , fd.dev, fd.uid, fd.gid, fd.nlink, STRFTIME('%s',fd.mtim) AS mtime, fd.rdev, fd.blksize, fd.blocks " /* */
            " , crc.dup32cnt AS nsame " /* */
+           " , sz.dupzcnt            AS dupzcnt " /* */
            " , fn." DUF_SQL_IDNAME " AS filenameid " /* */
            " , fn." DUF_SQL_IDNAME " AS nameid " /* */
            " , fd.mode AS filemode, crc.crc32sum " /* */
@@ -93,7 +96,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            /* "SELECT %s " */
            " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
            " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " as sz ON (sz.size=fd.size)" /* */
+           " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
            " LEFT JOIN " DUF_SQL_TABLES_CRC32_FULL " AS crc ON (crc." DUF_SQL_IDNAME "=fd.crc32id)" /* */
            ,
            .matcher = " fn.Pathid=:parentdirID " /* */
@@ -105,7 +108,7 @@ duf_scan_callbacks_t duf_collect_openat_crc32_callbacks = {
            " 1 "                /* */
            /*, .group=" fd." DUF_SQL_IDNAME */
            ,                    /* */
-           .count_aggregate = "distinct fd." DUF_SQL_IDNAME}
+           .count_aggregate = "DISTINCT fd." DUF_SQL_IDNAME}
   ,
   .node = {
            .name = "crc32 node",

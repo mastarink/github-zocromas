@@ -114,18 +114,20 @@ duf_scan_callbacks_t duf_directories_callbacks = {
 #if 0
            "'dirs-leaf' AS fieldset_id, " /* */
            "  fn.Pathid AS dirid " /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+           ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
+           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
            ", md.dup5cnt AS nsame " /* */
            ", fd.md5id AS md5id" /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
            ", md.md5sum1, md.md5sum2 " /* */
-           ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
+           ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
            ", fd.size AS filesize " /* */
            ,
            .selector2 =         /* */

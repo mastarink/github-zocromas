@@ -75,7 +75,11 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
   DUF_SQL_BIND_PAIR( Size, size );
   DUF_SQL_BIND_PAIR( Same, same );
   DUF_SQL_BIND_PAIR( ExifSame, exifsame );
+  DUF_SQL_BIND_PAIR( SizeSame, sizesame );
+  DUF_SQL_BIND_PAIR( DataSame, datasame );
+  DUF_SQL_BIND_PAIR( MimeSame, mimesame );
   DUF_SQL_BIND_PAIR( NameID, nameid );
+  DUF_SQL_BIND_PAIR( DataID, dataid );
   DUF_SQL_BIND_PAIR( DirID, dirid );
   DUF_SQL_BIND_PAIR( MTime, mtime );
   DUF_SQL_BIND_PAIR( ExifDT, exifdt );
@@ -87,6 +91,10 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
   if ( pu->mime.type )
   {
     DUF_SQL_BIND_S_OPT( MimeType, pu->mime.type, r, pstmt );
+  }
+  if ( pu->filename )
+  {
+    DUF_SQL_BIND_S_OPT( Name, pu->filename, r, pstmt );
   }
   if ( pu->glob_db )
   {
@@ -134,7 +142,7 @@ duf_bind_ufilter_uni( duf_sqlite_stmt_t * pstmt, const duf_ufilter_t * pu, const
   {
     DUF_SQL_BIND_S_OPT( TagDir, pu->tag.dir, r, pstmt );
   }
-  DUF_SQL_BIND_LL_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_WITH_TAG_FILE, r, pstmt );
+  DUF_SQL_BIND_LL_NZ_OPT( Option_Val_With_Tag_File, DUF_OPTION_VAL_FILTER_WITH_TAG_FILE, r, pstmt );
 #endif
   DEBUG_ENDR( r );
 }

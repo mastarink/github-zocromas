@@ -33,6 +33,9 @@ duf_ufilter_delete( duf_ufilter_t * pu )
   /* Don't forget to update duf_ufilter_copy too */
   if ( pu )
   {
+    mas_free( pu->filename );
+    pu->filename = NULL;
+
     mas_free( pu->glob_db );
     pu->glob_db = NULL;
 

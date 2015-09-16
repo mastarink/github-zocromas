@@ -44,11 +44,15 @@ static int filenames_de_file_before2( duf_sqlite_stmt_t * pstmt_unused, duf_dept
 
 /* ########################################################################################## */
 static duf_sql_sequence_t final_sql = { /* */
-  .name="final @ ...",
+  .name = "final @ ...",
   .done = 0,
   .sql = {
-          NULL,
-          }
+          "UPDATE " DUF_SQL_TABLES_FILEDATAS_FULL " SET dupdatacnt=(SELECT COUNT(*) " /* */
+          " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+          " JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+          " WHERE " DUF_SQL_TABLES_FILEDATAS_FULL "." DUF_SQL_IDNAME "=fd." DUF_SQL_IDNAME ")" /* */
+          , 
+	  NULL}
 };
 
 /* ########################################################################################## */
@@ -74,18 +78,20 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
 #if 0
            "'filenames-leaf' AS fieldset_id, " /* Never used!? */
            "  fn.Pathid AS dirid " /* */
-           ", 0 as ndirs, 0 as nfiles" /* */
+           ", 0 AS ndirs, 0 AS nfiles" /* */
            ", fn.name AS filename, fn.name AS dfname, fd.size AS filesize " /* */
            ", fd.dev, fd.uid, fd.gid, fd.nlink, fd.inode, fd.rdev, fd.blksize, fd.blocks " /* */
            ", STRFTIME( '%s', fd.mtim ) AS mtime " /* */
            ", fd.mode AS filemode " /* */
            ", fn." DUF_SQL_IDNAME " AS filenameid " /* */
            ", fn." DUF_SQL_IDNAME " AS nameid " /* */
+           ", fd." DUF_SQL_IDNAME " AS filedataid " /* */
+           ", fd." DUF_SQL_IDNAME " AS dataid " /* */
            ", md.dup5cnt AS nsame " /* */
            ", fd.md5id AS md5id" /* */
            /* ", md." DUF_SQL_IDNAME " AS md5id " (* *) */
            ", md.md5sum1, md.md5sum2 " /* */
-           ", fd.exifid as exifid, fd.mimeid as mimeid " /* */
+           ", fd.exifid AS exifid, fd.mimeid AS mimeid " /* */
            ", fd.size AS filesize " /* */
            ,
            .selector2 =         /* */
@@ -98,12 +104,12 @@ duf_scan_callbacks_t duf_filenames_callbacks = {
            ,
            .filter = NULL       /* */
 #else
-	     NULL
+           NULL
 #endif
            },
   .node = {                     /* */
            .type = DUF_NODE_NODE,
-   .expand_sql = 1,        /* */
+           .expand_sql = 1,     /* */
            .fieldset =          /* */
            "'filenames-node' AS fieldset_id, " /* */
            " pt." DUF_SQL_IDNAME " AS dirid" /* */

@@ -65,7 +65,6 @@ duf_all_options(  /* int argc, char *argv[], */ duf_option_stage_t istage )
   DEBUG_STARTR( r );
 
   assert( duf_config );
-  DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
 #if 0
   DUF_TRACE( temp, 0, "@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );
   DUF_TRACE( temp, 0, "@@@@this is temp DUF_TRACE :%d", DUF_CONFIGG( cli.trace.temp ) );

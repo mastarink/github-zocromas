@@ -56,6 +56,8 @@ typedef struct
   duf_limitsll_t same;
   duf_limitsll_t exifsame;
   duf_limitsll_t mimesame;
+  duf_limitsll_t datasame;
+  duf_limitsll_t sizesame;
   duf_limitsll_t nameid;
   duf_limitsll_t dataid;
   duf_limitsll_t dirid;
@@ -70,6 +72,7 @@ typedef struct
   duf_limitsll_t mimeid;
   duf_limitsll_t exifid;
   duf_itemtag_t tag;
+  char *filename;
   char *glob_db;
   char *glob_db_include;
   char *glob_db_exclude;

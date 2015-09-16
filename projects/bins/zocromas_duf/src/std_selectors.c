@@ -26,26 +26,26 @@ static duf_selector_t _all_selectors[] = {
   {
    .name = "std-leaf",
    .type = DUF_NODE_LEAF,
-   .selector2 = " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL " AS fns " /* */
-   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns.nameid=fn." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
+   .selector2 = " FROM " DUF_SQL_SELECTED_TMP_FILENAMES_FULL /* */ " AS fns " /* */
+   " JOIN " DUF_SQL_TABLES_FILENAMES_FULL /*                    */ " AS fn ON (fns.nameid=fn." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL /*               */ " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL /*                   */ " AS sz ON (sz.size=fd.size)" /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*                     */ " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL /*                    */ " AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL /*              */ " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
    },
   {
-   .name = "std-ns-leaf", /* ns: without selected table(s) */
+   .name = "std-ns-leaf",       /* ns: without selected table(s) */
    .type = DUF_NODE_LEAF,
-   .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL " AS fn " /* */
+   .selector2 = " FROM " DUF_SQL_TABLES_FILENAMES_FULL /*       */ " AS fn " /* */
    /* " JOIN " DUF_SQL_TABLES_FILENAMES_FULL " AS fn ON (fns." DUF_SQL_IDNAME "=fn." DUF_SQL_IDNAME ") " (* *) */
-   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL "        AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL "       AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL "       AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
-   " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL " AS sz ON (sz.size=fd.size)" /* */
+   " LEFT JOIN " DUF_SQL_TABLES_FILEDATAS_FULL /*               */ " AS fd ON (fn.dataid=fd." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_SIZES_FULL /*                   */ " AS sz ON (sz.size=fd.size)" /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MD5_FULL /*                     */ " AS md ON (md." DUF_SQL_IDNAME "=fd.md5id) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_FULL /*                    */ " AS x  ON (x." DUF_SQL_IDNAME "=fd.exifid) " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_EXIF_MODEL_FULL /*              */ " AS xm ON (x.modelid=xm." DUF_SQL_IDNAME ") " /* */
+   " LEFT JOIN " DUF_SQL_TABLES_MIME_FULL /*                    */ " AS mi ON (mi." DUF_SQL_IDNAME "=fd.mimeid) " /* */
    },
   {.name = NULL,.selector2 = NULL}
 };
