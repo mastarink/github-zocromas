@@ -22,7 +22,7 @@ AX_LIB_SQLITE3([3.8])
 PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])
 AC_SUBST(GLIB_CFLAGS)
 
-PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools])
+PKG_CHECK_MODULES([DEPS], [zocromas_mas_tools zocromas_mas_sqlite])
 
 AC_CHECK_LIB([readline], [readline])
 

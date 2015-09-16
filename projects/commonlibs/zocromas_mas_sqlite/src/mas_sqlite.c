@@ -14,6 +14,12 @@
 /* int mas_constraint = SQLITE_CONSTRAINT; */
 static sqlite3 *pDb = NULL;
 
+sqlite3 *
+mas_sqlite_pdb( void )
+{
+  return pDb;
+}
+
 int
 mas_sqlite2r_error_code( int r3 )
 {

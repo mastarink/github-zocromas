@@ -8,6 +8,10 @@
 int mas_sqlite2r_error_code( int r3 );
 int mas_r2sqlite_error_code( int rt );
 
+
+sqlite3 *mas_sqlite_pdb( void );
+
+
 int mas_sqlite_open( const char *dbpath );
 int mas_sqlite_close( void );
 

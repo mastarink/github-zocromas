@@ -10,12 +10,14 @@
 
 #include "duf_config_ref.h"
 
-#include "duf_sqlite.h"
+#include "duf_sql_error.h"
+
+#include "duf_sqlite_select.h"
+#include <mastar/sqlite/mas_sqlite.h>
 
 /* ###################################################################### */
 #include "duf_sql.h"
 /* ###################################################################### */
-
 
 int
 duf_sql_open( const char *dbpath )
@@ -24,7 +26,7 @@ duf_sql_open( const char *dbpath )
   int r3 = 0;
 
   DUF_TRACE( explain, 0, "open database if fpath set; fpath:%s", DUF_CONFIGG( db.main.fpath ) );
-  DOR( r, DUF_SQLITE2R_ERROR_CODE( ( r3 = duf_sqlite_open( dbpath ) ) ) );
+  DOR( r, DUF_SQLITE2R_ERROR_CODE( ( r3 = mas_sqlite_open( dbpath ) ) ) );
   DUF_TRACE( sql, 1, "open database; dbpath:%s : %d", dbpath, r );
   DUF_TRACE( explain, 0, "opened (?%d) database", r );
   DEBUG_ENDR( r );
@@ -34,7 +36,7 @@ int
 duf_sql_close( void )
 {
   DEBUG_STARTR( r );
-  DOR( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_close(  ) ) );
+  DOR( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_close(  ) ) );
   DEBUG_ENDR( r );
 }
 
@@ -43,7 +45,7 @@ duf_sql_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_exec_c( sql, constraint_ignore, pchanges ) ) );
+  DOR( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_exec_c( sql, constraint_ignore, pchanges ) ) );
 
   DEBUG_ENDR( r );
 }
@@ -55,7 +57,7 @@ duf_vsql_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args 
 
 
   DUF_TRACE( sql, 1, " [[%s]]", fmt );
-  DOR( r, DUF_SQLITE2R_ERROR_CODE( duf_vsqlite_c( fmt, constraint_ignore, pchanges, args ) ) );
+  DOR( r, DUF_SQLITE2R_ERROR_CODE( mas_vsqlite_c( fmt, constraint_ignore, pchanges, args ) ) );
   DUF_TRACE( sql, 1, " [[%s]] : %d", fmt, r );
   DEBUG_ENDR( r );
 }
@@ -73,7 +75,7 @@ duf_sql_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, v
 unsigned long long
 duf_sql_last_insert_rowid( void )
 {
-  return duf_sqlite_last_insert_rowid(  );
+  return mas_sqlite_last_insert_rowid(  );
 }
 
 /************************************************************************/
@@ -134,42 +136,42 @@ duf_sql_select( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, vo
 }
 
 int
-duf_sql_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
+duf_sql_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
 {
   DEBUG_STARTR( r );
 
-  DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_prepare( sql, pstmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
+  DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_prepare( sql, pstmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
 
   DUF_TRACE( sql, 2, "          [[%s]]", sql );
   DEBUG_ENDR( r );
 }
 
 int
-duf_sql_step( duf_sqlite_stmt_t * stmt )
+duf_sql_step( mas_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
 
-  DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_step( stmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
+  DOR_NOE( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_step( stmt ) ), DUF_SQL_ROW, DUF_SQL_DONE );
   DUF_TRACE( sql, 0, "(%s) [[%s]]", duf_error_name( r ), sqlite3_sql( stmt ) );
   DEBUG_ENDR( r );
 }
 
 int
-duf_sql_finalize( duf_sqlite_stmt_t * stmt )
+duf_sql_finalize( mas_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_finalize( stmt ) ) );
+  DOR( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_finalize( stmt ) ) );
   DUF_TRACE( sql, 6, "-" );
   DEBUG_ENDR( r );
 }
 
 int
-duf_sql_reset( duf_sqlite_stmt_t * stmt )
+duf_sql_reset( mas_sqlite_stmt_t * stmt )
 {
   DEBUG_STARTR( r );
 
-  DOR( r, DUF_SQLITE2R_ERROR_CODE( duf_sqlite_reset( stmt ) ) );
+  DOR( r, DUF_SQLITE2R_ERROR_CODE( mas_sqlite_reset( stmt ) ) );
   DUF_TRACE( sql, 6, "-" );
   DEBUG_ENDR( r );
 }
@@ -179,39 +181,39 @@ duf_sql_changes( void )
 {
   int changes = 0;
 
-  changes = duf_sqlite_changes(  );
+  changes = mas_sqlite_changes(  );
   DUF_TRACE( sql, 4, "changes=%d", changes );
   return changes;
 }
 
 int
-duf_sql_column_int( duf_sqlite_stmt_t * stmt, int icol )
+duf_sql_column_int( mas_sqlite_stmt_t * stmt, int icol )
 {
-  return duf_sqlite_column_int( stmt, icol );
+  return mas_sqlite_column_int( stmt, icol );
 }
 
 long long
-duf_sql_column_long_long( duf_sqlite_stmt_t * stmt, int icol )
+duf_sql_column_long_long( mas_sqlite_stmt_t * stmt, int icol )
 {
-  return duf_sqlite_column_long_long( stmt, icol );
+  return mas_sqlite_column_long_long( stmt, icol );
 }
 
 const char *
-duf_sql_column_string( duf_sqlite_stmt_t * stmt, int icol )
+duf_sql_column_string( mas_sqlite_stmt_t * stmt, int icol )
 {
-  return duf_sqlite_column_string( stmt, icol );
+  return mas_sqlite_column_string( stmt, icol );
 }
 
 const char *
-duf_sql_column_name( duf_sqlite_stmt_t * stmt, int index )
+duf_sql_column_name( mas_sqlite_stmt_t * stmt, int index )
 {
-  return duf_sqlite_column_name( stmt, index );
+  return mas_sqlite_column_name( stmt, index );
 }
 
 int
-duf_sql_column_count( duf_sqlite_stmt_t * stmt )
+duf_sql_column_count( mas_sqlite_stmt_t * stmt )
 {
-  return duf_sqlite_column_count( stmt );
+  return mas_sqlite_column_count( stmt );
 }
 
 static char *
@@ -219,7 +221,7 @@ duf_sql_vmprintf( const char *fmt, va_list args )
 {
   char *s = NULL;
 
-  s = duf_sqlite_vmprintf( fmt, args );
+  s = mas_sqlite_vmprintf( fmt, args );
   return s;
 }
 
@@ -239,5 +241,5 @@ duf_sql_mprintf( const char *fmt, ... )
 /* static void             */
 /* duf_sql_free( char *s ) */
 /* {                       */
-/*   duf_sqlite_free( s ); */
+/*   mas_sqlite_free( s ); */
 /* }                       */

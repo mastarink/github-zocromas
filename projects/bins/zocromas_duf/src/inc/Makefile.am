@@ -65,8 +65,10 @@ noinst_HEADERS=duf.h \
 	duf_sql_stmt_defs.h \
 	duf_sql_bind.h \
 	duf_sql_field.h \
+	duf_sql_error.h \
 	duf_sql.h \
 	duf_sqlite.h \
+	duf_sqlite_select.h \
 	duf_status.h duf_status_ref.h duf_status_types.h \
 	duf_trace_defs.h \
 	duf_trace_defs_if.h \
