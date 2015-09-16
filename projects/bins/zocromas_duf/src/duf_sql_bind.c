@@ -10,7 +10,6 @@
 
 #include "duf_config_ref.h"
 
-/* #include "duf_sqlite.h" */
 #include <mastar/sqlite/mas_sqlite.h>
 
 /* ###################################################################### */
