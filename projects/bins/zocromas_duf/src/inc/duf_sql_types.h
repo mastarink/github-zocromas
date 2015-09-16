@@ -2,7 +2,6 @@
 #  define MAS_DUF_SQL_TYPES_H
 
 #include <mastar/sqlite/mas_sqlite_types.h>
-#include <sqlite3.h>
 typedef mas_sqlite_stmt_t duf_sqlite_stmt_t ;
 typedef mas_sqexe_cb_t duf_sqexe_cb_t;
 
