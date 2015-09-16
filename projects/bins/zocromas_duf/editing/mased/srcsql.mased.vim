@@ -4,6 +4,7 @@ sfind duf_sql2.h
 
 tab sfind duf_sql_error.c
 sfind duf_sql_error.h
+sfind duf_sql_types.h
 
 tab sfind duf_sql_defs.h 
 sfind duf_sql_stmt_defs.h 

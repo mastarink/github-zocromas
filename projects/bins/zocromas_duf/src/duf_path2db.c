@@ -133,9 +133,9 @@ duf_set_dirid_and_nums_from_sql( duf_depthinfo_t * pdi, const char *sqlv )
 
     DUF_SQL_BIND_S( dirName, truedirname, r, pstmt );
     DUF_SQL_STEP( r, pstmt );
-    if ( DUF_IS_ERROR_N( r, DUF_SQL_ROW ) )
+    if ( DUF_IS_ERROR_N( r, MAS_SQL_ROW ) )
     {
-      DUF_CLEAR_ERROR( r, DUF_SQL_ROW );
+      DUF_CLEAR_ERROR( r, MAS_SQL_ROW );
 
       DUF_TRACE( select, 0, "<selected> %s", sqlv );
 
@@ -274,7 +274,7 @@ _duf_levinfo_stat2dirid( duf_depthinfo_t * pdi, int caninsert, const duf_sql_set
       }
       else
       {
-        if ( DUF_IS_ERROR_N( r, DUF_SQL_CONSTRAINT ) )
+        if ( DUF_IS_ERROR_N( r, MAS_SQL_CONSTRAINT ) )
         {
           if ( caninsert )
           {

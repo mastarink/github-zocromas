@@ -81,7 +81,7 @@ _duf_dirid2name_existed( duf_depthinfo_t * pdi, const char *sqlv, unsigned long 
   {
     DUF_SQL_BIND_LL( dirID, dirid, rpr, pstmt );
     DUF_SQL_STEP( rpr, pstmt );
-    if ( DUF_IS_ERROR_N( rpr, DUF_SQL_ROW ) )
+    if ( DUF_IS_ERROR_N( rpr, MAS_SQL_ROW ) )
     {
       rpr = 0;
       DUF_TRACE( select, 0, "<selected> %s", sqlv );

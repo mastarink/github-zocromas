@@ -172,13 +172,13 @@ duf_insert_mime_uni( duf_depthinfo_t * pdi, const char *mime, const char *chs, c
       /* DUF_SQL_BIND_S( charSet, chs, lr, pstmt_select ); */
       /* DUF_SQL_BIND_S( Tail, tail, lr, pstmt_select ); */
       DUF_SQL_STEP( lr, pstmt_select );
-      if ( lr == DUF_SQL_ROW )
+      if ( lr == MAS_SQL_ROW )
       {
         DUF_TRACE( mod, 0, "<selected>" );
         mimeid = duf_sql_column_long_long( pstmt_select, 0 );
         lr = 0;
       }
-      if ( lr == DUF_SQL_DONE )
+      if ( lr == MAS_SQL_DONE )
         lr = 0;
       DUF_TEST_R( lr );
       DUF_SQL_END_STMT( select_mime, lr, pstmt_select );

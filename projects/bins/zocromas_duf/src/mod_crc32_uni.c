@@ -161,7 +161,7 @@ duf_pdistat2file_crc32id_existed( duf_depthinfo_t * pdi, unsigned long crc32sum,
   DUF_TRACE( select, 3, "S:%s", sql );
   DUF_SQL_BIND_LL( Crc32sum, crc32sum, rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  if ( rpr == DUF_SQL_ROW )
+  if ( rpr == MAS_SQL_ROW )
   {
     DUF_TRACE( select, 10, "<selected>" );
     /* crc32id = duf_sql_column_long_long( pstmt, 0 ); */
@@ -210,7 +210,7 @@ duf_insert_crc32_uni( duf_depthinfo_t * pdi, unsigned long long crc32sum, const 
       insert_cnt++;
     }
     duf_pdi_reg_changes( pdi, changes );
-    if ( ( lr == DUF_SQL_CONSTRAINT || !lr ) && !changes )
+    if ( ( lr == MAS_SQL_CONSTRAINT || !lr ) && !changes )
     {
       if ( need_id )
       {

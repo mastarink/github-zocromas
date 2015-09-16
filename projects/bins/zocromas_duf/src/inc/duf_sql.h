@@ -1,7 +1,8 @@
 #ifndef MAS_DUF_SQL_H
 #  define MAS_DUF_SQL_H
 
-#  include "duf_sql_const.h"
+/* #  include "duf_sql_const.h" */
+#  include <mastar/sqlite/mas_sqlite_const.h>
 
 
 int duf_sql_open( const char *dbpath );

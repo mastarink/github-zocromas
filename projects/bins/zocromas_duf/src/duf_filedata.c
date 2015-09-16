@@ -45,7 +45,7 @@ duf_pdistat2file_dataid_existed( duf_depthinfo_t * pdi, int *pr )
   DUF_SQL_BIND_LL( Dev, duf_levinfo_stat_dev( pdi ), rpr, pstmt );
   DUF_SQL_BIND_LL( iNode, duf_levinfo_stat_inode( pdi ), rpr, pstmt );
   DUF_SQL_STEP( rpr, pstmt );
-  if ( rpr == DUF_SQL_ROW )
+  if ( rpr == MAS_SQL_ROW )
   {
     DUF_TRACE( select, 10, "<selected>" );
     dataid = duf_sql_column_long_long( pstmt, 0 );
@@ -115,7 +115,7 @@ duf_pdistat2file_dataid( duf_depthinfo_t * pdi, /* const struct stat *pst_file, 
     DUF_TRACE( select, 2, "<changes> : %d", changes );
     if ( need_id )
     {
-      if ( ( rpr == DUF_SQL_CONSTRAINT || DUF_NOERROR( rpr ) ) && !changes )
+      if ( ( rpr == MAS_SQL_CONSTRAINT || DUF_NOERROR( rpr ) ) && !changes )
       {
         dataid = duf_pdistat2file_dataid_existed( pdi, pr );
       }

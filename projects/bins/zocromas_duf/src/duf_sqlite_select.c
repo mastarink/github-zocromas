@@ -12,7 +12,6 @@
 
 #include "duf_config_ref.h"
 
-#include "duf_sql_const.h"
 #include "duf_sql_error.h"
 
 #include <mastar/sqlite/mas_sqlite.h>

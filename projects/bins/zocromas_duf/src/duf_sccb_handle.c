@@ -75,7 +75,7 @@ duf_count_total_items( const duf_sccb_handle_t * sccbh, int *pr )
       DUF_SQL_START_STMT_NOPDI( csql, rpr, pstmt );
       duf_bind_ufilter_uni( pstmt, PU, NULL );
       DUF_SQL_STEP( rpr, pstmt );
-      if ( rpr == DUF_SQL_ROW )
+      if ( rpr == MAS_SQL_ROW )
       {
         cnt = duf_sql_column_long_long( pstmt, 0 );
         rpr = 0;
