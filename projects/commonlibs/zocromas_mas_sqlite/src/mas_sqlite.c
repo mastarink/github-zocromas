@@ -11,11 +11,11 @@
 /* ###################################################################### */
 
 
-/* int duf_constraint = SQLITE_CONSTRAINT; */
+/* int mas_constraint = SQLITE_CONSTRAINT; */
 static sqlite3 *pDb = NULL;
 
 int
-duf_sqlite2r_error_code( int r3 )
+mas_sqlite2r_error_code( int r3 )
 {
   int rt;
 
@@ -24,7 +24,7 @@ duf_sqlite2r_error_code( int r3 )
 }
 
 int
-duf_r2sqlite_error_code( int rt )
+mas_r2sqlite_error_code( int rt )
 {
   int r3;
 
@@ -34,7 +34,7 @@ duf_r2sqlite_error_code( int rt )
 
 
 int
-duf_sqlite_open( const char *dbpath )
+mas_sqlite_open( const char *dbpath )
 {
   int r3 = 0;
 
@@ -52,7 +52,7 @@ duf_sqlite_open( const char *dbpath )
 }
 
 int
-duf_sqlite_close( void )
+mas_sqlite_close( void )
 {
   int r3 = 0;
 
@@ -66,7 +66,7 @@ duf_sqlite_close( void )
 }
 
 static int
-duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg )
+mas_sqlite_execcb( const char *sql, mas_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg )
 {
   int r3 = SQLITE_OK;
   char *emsg = ( char * ) NULL;
@@ -87,18 +87,18 @@ duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, i
 }
 
 static int
-duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
+mas_sqlite_exec( const char *sql, int *pchanges, char **pemsg )
 {
-  return duf_sqlite_execcb( sql, ( duf_sqexe_cb_t ) NULL, ( void * ) NULL, pchanges, pemsg );
+  return mas_sqlite_execcb( sql, ( mas_sqexe_cb_t ) NULL, ( void * ) NULL, pchanges, pemsg );
 }
 
 int
-duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
+mas_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 {
   int r3;
   char *emsg = NULL;
 
-  r3 = duf_sqlite_exec( sql, pchanges, &emsg );
+  r3 = mas_sqlite_exec( sql, pchanges, &emsg );
 #if 0
   if ( r3 != SQLITE_OK && !( r3 == SQLITE_CONSTRAINT && constraint_ignore ) )
     DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" );
@@ -110,12 +110,12 @@ duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 }
 
 /* static int                                                                             */
-/* duf_sqlite_exec_e( const char *sql, int *pchanges )                                    */
+/* mas_sqlite_exec_e( const char *sql, int *pchanges )                                    */
 /* {                                                                                      */
 /*   int r3;                                                                              */
 /*   char *emsg = NULL;                                                                   */
 /*                                                                                        */
-/*   r3 = duf_sqlite_exec( sql, pchanges, &emsg );                                        */
+/*   r3 = mas_sqlite_exec( sql, pchanges, &emsg );                                        */
 /*   if ( r3 != SQLITE_OK )                                                               */
 /*     DUF_SHOW_ERROR( "(%d) SQL '%s' in [%s]", r3, emsg ? emsg : "-", sql ? sql : "?" ); */
 /*   if ( emsg )                                                                          */
@@ -127,14 +127,14 @@ duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges )
 
 
 int
-duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args )
+mas_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list args )
 {
   int r3 = 0;
   char *sql;
 
 
-  sql = duf_sqlite_vmprintf( fmt, args );
-  r3 = duf_sqlite_exec_c( sql, constraint_ignore, pchanges );
+  sql = mas_sqlite_vmprintf( fmt, args );
+  r3 = mas_sqlite_exec_c( sql, constraint_ignore, pchanges );
 
   sqlite3_free( sql );
   sql = NULL;
@@ -143,7 +143,7 @@ duf_vsqlite_c( const char *fmt, int constraint_ignore, int *pchanges, va_list ar
 }
 
 unsigned long long
-duf_sqlite_last_insert_rowid( void )
+mas_sqlite_last_insert_rowid( void )
 {
   unsigned long long li = 0;
 
@@ -153,7 +153,7 @@ duf_sqlite_last_insert_rowid( void )
 }
 
 int
-duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
+mas_sqlite_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt )
 {
   int r3 = 0;
   const char *tail = NULL;
@@ -169,11 +169,11 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
 #endif
     if ( sqlite3_strglob( "no such table: *", sqlite3_errmsg( pDb ) ) == 0 )
     {
-/* changed DUF_ERROR_SQL_NO_TABLE => duf_r2sqlite_error_code(DUF_ERROR_SQL_NO_TABLE)
+/* changed DUF_ERROR_SQL_NO_TABLE => mas_r2sqlite_error_code(DUF_ERROR_SQL_NO_TABLE)
  * Not tested */
 #if 0
-      r3 = duf_r2sqlite_error_code( DUF_ERROR_SQL_NO_TABLE ); /* FIXME : this is r3, not r; so DUF_ERROR_SQL_NO_TABLE is wrong */
-      assert( duf_sqlite2r_error_code( r3 ) == DUF_ERROR_SQL_NO_TABLE );
+      r3 = mas_r2sqlite_error_code( DUF_ERROR_SQL_NO_TABLE ); /* FIXME : this is r3, not r; so DUF_ERROR_SQL_NO_TABLE is wrong */
+      assert( mas_sqlite2r_error_code( r3 ) == DUF_ERROR_SQL_NO_TABLE );
 #endif
       assert( 0 );
     }
@@ -222,7 +222,7 @@ duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt )
 #define SQLITE_DONE        101  // sqlite3_step() has finished executing
 **/
 int
-duf_sqlite_step( duf_sqlite_stmt_t * stmt )
+mas_sqlite_step( mas_sqlite_stmt_t * stmt )
 {
   int r3;
 
@@ -234,7 +234,7 @@ duf_sqlite_step( duf_sqlite_stmt_t * stmt )
     int r = 0;
     const char *DUF_UNUSED t;
 
-    t = duf_error_name( r );
+    t = mas_error_name( r );
 #endif
   }
   /* assert( r3 != SQLITE_MISUSE );                                      */
@@ -243,7 +243,7 @@ duf_sqlite_step( duf_sqlite_stmt_t * stmt )
 }
 
 int
-duf_sqlite_finalize( duf_sqlite_stmt_t * stmt )
+mas_sqlite_finalize( mas_sqlite_stmt_t * stmt )
 {
   int r3;
 
@@ -252,7 +252,7 @@ duf_sqlite_finalize( duf_sqlite_stmt_t * stmt )
 }
 
 int
-duf_sqlite_reset( duf_sqlite_stmt_t * stmt )
+mas_sqlite_reset( mas_sqlite_stmt_t * stmt )
 {
   int r3;
 
@@ -261,7 +261,7 @@ duf_sqlite_reset( duf_sqlite_stmt_t * stmt )
 }
 
 int
-duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name )
+mas_sqlite_bind_parameter_index( mas_sqlite_stmt_t * stmt, const char *name )
 {
   int r3 = 0;
 
@@ -272,7 +272,7 @@ duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name )
 
 
 int
-duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val )
+mas_sqlite_bind_long_long( mas_sqlite_stmt_t * stmt, int num, long long val )
 {
   int r3 = 0;
   sqlite3_int64 val64;
@@ -283,7 +283,7 @@ duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val )
 }
 
 int
-duf_sqlite_bind_int( duf_sqlite_stmt_t * stmt, int num, int val )
+mas_sqlite_bind_int( mas_sqlite_stmt_t * stmt, int num, int val )
 {
   int r3 = 0;
 
@@ -292,7 +292,7 @@ duf_sqlite_bind_int( duf_sqlite_stmt_t * stmt, int num, int val )
 }
 
 int
-duf_sqlite_bind_null( duf_sqlite_stmt_t * stmt, int num )
+mas_sqlite_bind_null( mas_sqlite_stmt_t * stmt, int num )
 {
   int r3 = 0;
 
@@ -301,7 +301,7 @@ duf_sqlite_bind_null( duf_sqlite_stmt_t * stmt, int num )
 }
 
 int
-duf_sqlite_bind_double( duf_sqlite_stmt_t * stmt, int num, double val )
+mas_sqlite_bind_double( mas_sqlite_stmt_t * stmt, int num, double val )
 {
   int r3 = 0;
 
@@ -310,7 +310,7 @@ duf_sqlite_bind_double( duf_sqlite_stmt_t * stmt, int num, double val )
 }
 
 int
-duf_sqlite_bind_string( duf_sqlite_stmt_t * stmt, int num, const char *val )
+mas_sqlite_bind_string( mas_sqlite_stmt_t * stmt, int num, const char *val )
 {
   int r3 = 0;
 
@@ -319,7 +319,7 @@ duf_sqlite_bind_string( duf_sqlite_stmt_t * stmt, int num, const char *val )
 }
 
 int
-duf_sqlite_changes( void )
+mas_sqlite_changes( void )
 {
   int changes = 0;
 
@@ -328,25 +328,25 @@ duf_sqlite_changes( void )
 }
 
 long long
-duf_sqlite_column_long_long( duf_sqlite_stmt_t * stmt, int icol )
+mas_sqlite_column_long_long( mas_sqlite_stmt_t * stmt, int icol )
 {
   return sqlite3_column_int64( stmt, icol );
 }
 
 int
-duf_sqlite_column_int( duf_sqlite_stmt_t * stmt, int icol )
+mas_sqlite_column_int( mas_sqlite_stmt_t * stmt, int icol )
 {
   return sqlite3_column_int( stmt, icol );
 }
 
 const char *
-duf_sqlite_column_string( duf_sqlite_stmt_t * stmt, int icol )
+mas_sqlite_column_string( mas_sqlite_stmt_t * stmt, int icol )
 {
   return ( const char * ) sqlite3_column_text( stmt, icol );
 }
 
 const char *
-duf_sqlite_column_name( duf_sqlite_stmt_t * stmt, int index )
+mas_sqlite_column_name( mas_sqlite_stmt_t * stmt, int index )
 {
   const char *str;
 
@@ -355,7 +355,7 @@ duf_sqlite_column_name( duf_sqlite_stmt_t * stmt, int index )
 }
 
 int
-duf_sqlite_column_count( duf_sqlite_stmt_t * stmt )
+mas_sqlite_column_count( mas_sqlite_stmt_t * stmt )
 {
   int cnt;
 
@@ -364,7 +364,7 @@ duf_sqlite_column_count( duf_sqlite_stmt_t * stmt )
 }
 
 char *
-duf_sqlite_vmprintf( const char *fmt, va_list args )
+mas_sqlite_vmprintf( const char *fmt, va_list args )
 {
   char *s = NULL;
 
@@ -373,7 +373,7 @@ duf_sqlite_vmprintf( const char *fmt, va_list args )
 }
 
 /* static char *                              */
-/* duf_sqlite_mprintf( const char *fmt, ... ) */
+/* mas_sqlite_mprintf( const char *fmt, ... ) */
 /* {                                          */
 /*   char *s = NULL;                          */
 /*   va_list args;                            */
@@ -385,13 +385,13 @@ duf_sqlite_vmprintf( const char *fmt, va_list args )
 /* }                                          */
 
 /* static void                */
-/* duf_sqlite_free( char *s ) */
+/* mas_sqlite_free( char *s ) */
 /* {                          */
 /*   sqlite3_free( s );       */
 /* }                          */
 
 void
-duf_sqlite_clear_bindings( duf_sqlite_stmt_t * stmt )
+mas_sqlite_clear_bindings( mas_sqlite_stmt_t * stmt )
 {
   sqlite3_clear_bindings( stmt );
 }

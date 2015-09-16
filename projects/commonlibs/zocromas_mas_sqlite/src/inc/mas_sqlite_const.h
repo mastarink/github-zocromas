@@ -2,7 +2,6 @@
 #  define MAS_SQLITE_CONST_H
 
 #  include <sqlite3.h>
-/* #  include "duf_sql_types.h" */
 
 typedef enum
 {

@@ -5,65 +5,65 @@
 #  include "mas_sqlite_types.h"
 
 
-int duf_sqlite2r_error_code( int r3 );
-int duf_r2sqlite_error_code( int rt );
+int mas_sqlite2r_error_code( int r3 );
+int mas_r2sqlite_error_code( int rt );
 
-int duf_sqlite_open( const char *dbpath );
-int duf_sqlite_close( void );
+int mas_sqlite_open( const char *dbpath );
+int mas_sqlite_close( void );
 
 
-/* int duf_sqlite_execcb_e( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges ); */
-/* int duf_sqlite_execcb( const char *sql, duf_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg ); */
-/* int duf_sqlite_exec( const char *sql, int *pchanges, char **pemsg ); */
-int duf_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges );
+/* int mas_sqlite_execcb_e( const char *sql, mas_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges ); */
+/* int mas_sqlite_execcb( const char *sql, mas_sqexe_cb_t sqexe_cb, void *sqexe_data, int *pchanges, char **pemsg ); */
+/* int mas_sqlite_exec( const char *sql, int *pchanges, char **pemsg ); */
+int mas_sqlite_exec_c( const char *sql, int constraint_ignore, int *pchanges );
 
-/* int duf_sqlite_exec_e( const char *sql, int *pchanges ); */
+/* int mas_sqlite_exec_e( const char *sql, int *pchanges ); */
 
-int duf_vsqlite_c( const char *sqlfmt, int constraint_ignore, int *pchanges, va_list args );
+int mas_vsqlite_c( const char *sqlfmt, int constraint_ignore, int *pchanges, va_list args );
 
-/* int duf_vsqlite_e( const char *fmt, int *pchanges, va_list args ); */
+/* int mas_vsqlite_e( const char *fmt, int *pchanges, va_list args ); */
 
 #if 0
-int duf_sqlite_vselect( duf_sel_cb_t sel_cb, void *sel_cb_udata, duf_str_cb_t str_cb, void *str_cb_udata,
-                        duf_sccb_handle_t * sccbh, const char *sqlfmt, va_list args );
+int mas_sqlite_vselect( mas_sel_cb_t sel_cb, void *sel_cb_udata, mas_str_cb_t str_cb, void *str_cb_udata,
+                        mas_sccb_handle_t * sccbh, const char *sqlfmt, va_list args );
 #endif
 
-unsigned long long duf_sqlite_last_insert_rowid( void );
+unsigned long long mas_sqlite_last_insert_rowid( void );
 
-int duf_sqlite_prepare( const char *sql, duf_sqlite_stmt_t ** pstmt );
-int duf_sqlite_step( duf_sqlite_stmt_t * stmt );
-int duf_sqlite_finalize( duf_sqlite_stmt_t * stmt );
-int duf_sqlite_reset( duf_sqlite_stmt_t * stmt );
+int mas_sqlite_prepare( const char *sql, mas_sqlite_stmt_t ** pstmt );
+int mas_sqlite_step( mas_sqlite_stmt_t * stmt );
+int mas_sqlite_finalize( mas_sqlite_stmt_t * stmt );
+int mas_sqlite_reset( mas_sqlite_stmt_t * stmt );
 
-int duf_sqlite_bind_parameter_index( duf_sqlite_stmt_t * stmt, const char *name );
+int mas_sqlite_bind_parameter_index( mas_sqlite_stmt_t * stmt, const char *name );
 
-int duf_sqlite_bind_long_long( duf_sqlite_stmt_t * stmt, int num, long long val );
-int duf_sqlite_bind_int( duf_sqlite_stmt_t * stmt, int num, int val );
-int duf_sqlite_bind_null( duf_sqlite_stmt_t * stmt, int num );
-int duf_sqlite_bind_double( duf_sqlite_stmt_t * stmt, int num, double val );
-int duf_sqlite_bind_string( duf_sqlite_stmt_t * stmt, int num, const char *val );
+int mas_sqlite_bind_long_long( mas_sqlite_stmt_t * stmt, int num, long long val );
+int mas_sqlite_bind_int( mas_sqlite_stmt_t * stmt, int num, int val );
+int mas_sqlite_bind_null( mas_sqlite_stmt_t * stmt, int num );
+int mas_sqlite_bind_double( mas_sqlite_stmt_t * stmt, int num, double val );
+int mas_sqlite_bind_string( mas_sqlite_stmt_t * stmt, int num, const char *val );
 
-int duf_sqlite_changes( void );
+int mas_sqlite_changes( void );
 
-long long duf_sqlite_column_long_long( duf_sqlite_stmt_t * stmt, int icol );
-int duf_sqlite_column_int( duf_sqlite_stmt_t * stmt, int icol );
-const char *duf_sqlite_column_string( duf_sqlite_stmt_t * stmt, int icol );
-
-
+long long mas_sqlite_column_long_long( mas_sqlite_stmt_t * stmt, int icol );
+int mas_sqlite_column_int( mas_sqlite_stmt_t * stmt, int icol );
+const char *mas_sqlite_column_string( mas_sqlite_stmt_t * stmt, int icol );
 
 
 
-const char *duf_sqlite_column_name( duf_sqlite_stmt_t * stmt, int index );
-int duf_sqlite_column_count( duf_sqlite_stmt_t * stmt );
+
+
+const char *mas_sqlite_column_name( mas_sqlite_stmt_t * stmt, int index );
+int mas_sqlite_column_count( mas_sqlite_stmt_t * stmt );
 
 
 
-char *duf_sqlite_vmprintf( const char *fmt, va_list args );
+char *mas_sqlite_vmprintf( const char *fmt, va_list args );
 
-/* char *duf_sqlite_mprintf( const char *fmt, ... ); */
+/* char *mas_sqlite_mprintf( const char *fmt, ... ); */
 
-/* void duf_sqlite_free( char *s ); */
-void duf_sqlite_clear_bindings( duf_sqlite_stmt_t * stmt );
+/* void mas_sqlite_free( char *s ); */
+void mas_sqlite_clear_bindings( mas_sqlite_stmt_t * stmt );
 
 
 
