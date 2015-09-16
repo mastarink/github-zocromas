@@ -1,8 +1,7 @@
-find  mod_template_uni.c
-tab sfind  mod_dummy_uni.c
+find  mod_dummy_uni.c
 tab sfind  mod_dumplet.c
+tab sfind  mod_dialog.c
 
-tab sfind  mod_integrity_uni.c
 
 tab sfind mod_filenames_uni.c
 " tab sfind mod_collect_noopenat_uni.c

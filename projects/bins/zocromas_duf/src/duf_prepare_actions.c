@@ -39,7 +39,7 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** psccbs, int max_asteps )
     {
       duf_scan_callbacks_t *sccb = act->sccb;
 
-      if ( act->tovector && ( DUF_CONFIGG(cli.act.v.bit) & act->on.bit ) == act->on.bit && ( DUF_CONFIGG(cli.act.v.bit) & act->off.bit ) == 0 )
+      if ( act->tovector && ( DUF_CONFIGG( cli.act.v.bit ) & act->on.bit ) == act->on.bit && ( DUF_CONFIGG( cli.act.v.bit ) & act->off.bit ) == 0 )
       {
         if ( sccb )
         {
@@ -50,60 +50,15 @@ duf_config2sccb_vector( duf_scan_callbacks_t ** psccbs, int max_asteps )
         else
         {
           DUF_TRACE( action, 0, "action not prepared (no sccb): %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
-                     DUF_CONFIGG(cli.act.v.bit), act->on.bit, act->off.bit );
+                     DUF_CONFIGG( cli.act.v.bit ), act->on.bit, act->off.bit );
         }
       }
       else
       {
         DUF_TRACE( action, 0, "action not prepared: %s : %x on:%x off:%x", duf_uni_scan_action_title( sccb ),
-                   DUF_CONFIGG(cli.act.v.bit), act->on.bit, act->off.bit );
+                   DUF_CONFIGG( cli.act.v.bit ), act->on.bit, act->off.bit );
       }
     }
-  }
-  return asteps;
-}
-
-int
-duf_config2sccb_vector_sample( duf_scan_callbacks_t ** psccbs, int max_asteps )
-{
-  int asteps = 0;
-
-  if ( DUF_CONFIGG(cli.act.sample) )
-  {
-    extern duf_scan_callbacks_t duf_sample_callbacks /* __attribute( ( weak ) ) */ ;
-
-    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPLE ) );
-    assert( asteps + DUF_CONFIGG(cli.act.sample) < max_asteps );
-    for ( int i = 0; i < DUF_CONFIGG(cli.act.sample) && asteps < max_asteps; i++ )
-    {
-      duf_scan_callbacks_t *sccb = &duf_sample_callbacks;
-
-      DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sample #%d", asteps );
-      DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-      if ( sccb )
-        psccbs[asteps++] = sccb;
-    }
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( SAMPLE ) );
-  }
-
-  assert( asteps < max_asteps );
-  if ( DUF_CONFIGG(cli.act.sampupd) )
-  {
-    extern duf_scan_callbacks_t duf_sampupd_callbacks __attribute( ( weak ) );
-    duf_scan_callbacks_t *sccb = &duf_sampupd_callbacks;
-
-    DUF_TRACE( explain, 0, "     option %s", DUF_OPT_NAME( SAMPUPD ) );
-    DUF_TRACE( explain, 0, "◇◇◇◇◇◇ set action ≪sampupd≫ #%d", asteps );
-    DUF_TRACE( action, 0, "#%d action prepared: %s", asteps, duf_uni_scan_action_title( sccb ) );
-    if ( sccb )
-      psccbs[asteps++] = sccb;
-  }
-  else
-  {
-    DUF_TRACE( explain, 1, "no %s option or no callback", DUF_OPT_NAME( SAMPUPD ) );
   }
   return asteps;
 }

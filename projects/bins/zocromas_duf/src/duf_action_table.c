@@ -21,10 +21,6 @@
 
 static duf_action_table_t actions_table[] = {
   {.tovector = 1,.in_use = 1,
-   .sccb = &duf_integrity_callbacks,
-   .on.flag = {.integrity = 1}
-   },
-  {.tovector = 1,.in_use = 1,
    .sccb = &duf_directories_callbacks,
    .on.flag = {.collect_obs = 1,.dirent = 1,.allow_dirs = 1}
    },
@@ -58,15 +54,6 @@ static duf_action_table_t actions_table[] = {
    },
   /* {.sccb = &duf_collect_mdpath_callbacks, */
   /*  .on.flag = {.mdpath = 1}},             */
-  {.tovector = 0,.in_use = 0,
-   .sccb = &duf_sample_callbacks,
-   },
-  {.tovector = 0,.in_use = 0,
-   .sccb = &duf_sampupd_callbacks,
-   },
-  {.tovector = 0,.in_use = 1,
-   .sccb = &duf_template_callbacks,
-   },
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_tagit_callbacks,
    },
@@ -78,6 +65,9 @@ static duf_action_table_t actions_table[] = {
    },
   {.tovector = 0,.in_use = 1,
    .sccb = &duf_dumplet_callbacks,
+   },
+  {.tovector = 0,.in_use = 1,
+   .sccb = &duf_dialog_callbacks,
    },
 
   {.tovector = 0,.in_use = 1,

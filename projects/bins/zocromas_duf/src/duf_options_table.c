@@ -11,22 +11,8 @@
 #include "duf_option_help.h"
 #include "duf_options.h"
 
-/* man getopt_long */
 
-extern duf_scan_callbacks_t duf_integrity_callbacks __attribute( ( weak ) ),
-      duf_directories_callbacks __attribute( ( weak ) ),
-      duf_filedata_callbacks __attribute( ( weak ) ),
-      duf_filenames_callbacks __attribute( ( weak ) ),
-      duf_collect_openat_crc32_callbacks __attribute( ( weak ) ),
-      duf_collect_openat_sd5_callbacks __attribute( ( weak ) ),
-      duf_collect_openat_md5_callbacks __attribute( ( weak ) ),
-      duf_collect_mime_callbacks __attribute( ( weak ) ), duf_collect_exif_callbacks __attribute( ( weak ) ),
-      /* duf_collect_mdpath_callbacks __attribute( ( weak ) ), */
-      /* duf_print_md5_callbacks __attribute( ( weak ) ),      */
- 
-      duf_print_tree_callbacks __attribute( ( weak ) ),
-      duf_print_dir_callbacks __attribute( ( weak ) ),
-      duf_bubububububububububububububububububububububububububububububububububububu __attribute( ( weak ) );
+/* man getopt_long */
 
 
 

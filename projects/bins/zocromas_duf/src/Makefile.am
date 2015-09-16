@@ -44,15 +44,14 @@ zocromas_duf_SOURCES=				   \
 	duf_sqlite.c duf_sql.c duf_sql_field.c duf_sql_field2.c	       \
 									\
 	mod_dir_print_uni.c		mod_tree_print_uni.c		 \
-	mod_integrity_uni.c						   \
 	mod_filenames_uni.c		mod_filedata_uni.c		    \
 	mod_directories_uni.c						     \
 	mod_md5_uni.c	mod_sd5_uni.c					      \
 	mod_crc32_uni.c							       \
 	mod_collect_mime_uni.c		mod_exif_uni.c				\
-	mod_template_uni.c \
 	mod_dummy_uni.c	\
 	mod_dumplet.c	\
+	mod_dialog.c	\
 	mod_tagit.c	\
 	mod_save_to.c	\
 	std_fieldsets.c std_selectors.c \

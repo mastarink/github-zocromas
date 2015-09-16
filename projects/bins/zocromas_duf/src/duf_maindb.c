@@ -335,7 +335,6 @@ duf_main_db_tune( void )
 #    endif
   }
 #  endif
-  /* DOR( r, duf_main_db_attach_selected( "dumplet" ) ); */
 
 #  if 0
   if ( DUF_CONFIGG( db.selected.fpath ) )
